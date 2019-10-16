@@ -2,607 +2,839 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 508A5ECE59D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D81ECE58F
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AED22067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B14EC20650
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:05:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZToEAPtP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390471AbfJPBEN (ORCPT
+        id S2390481AbfJPBF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 21:04:13 -0400
-Received: from mga12.intel.com ([192.55.52.136]:48303 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390456AbfJPBEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 21:04:12 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 18:04:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,301,1566889200"; 
-   d="scan'208";a="347269011"
-Received: from lingshan-mobl5.ccr.corp.intel.com (HELO localhost.localdomain) ([10.249.68.79])
-  by orsmga004.jf.intel.com with ESMTP; 15 Oct 2019 18:04:04 -0700
-From:   Zhu Lingshan <lingshan.zhu@intel.com>
-To:     mst@redhat.com, jasowang@redhat.com, alex.williamson@redhat.com
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        dan.daly@intel.com, cunming.liang@intel.com, tiwei.bie@intel.com,
-        jason.zeng@intel.com, zhiyuan.lv@intel.com,
-        Zhu Lingshan <lingshan.zhu@intel.com>
-Subject: [RFC 2/2] vhost: IFC VF vdpa layer
-Date:   Wed, 16 Oct 2019 09:03:18 +0800
-Message-Id: <20191016010318.3199-3-lingshan.zhu@intel.com>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20191016010318.3199-1-lingshan.zhu@intel.com>
-References: <20191016010318.3199-1-lingshan.zhu@intel.com>
+        Tue, 15 Oct 2019 21:05:58 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43645 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730479AbfJPBF6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 21:05:58 -0400
+Received: by mail-pf1-f194.google.com with SMTP id a2so13571087pfo.10
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 18:05:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=zp0CljUbHcIrXRgZew+mmxH1uaF9H66gh4EBaCME65c=;
+        b=ZToEAPtPf/ACtQS02jzGQWwwN/0xpG9ilemI5PvWJDsZcBq2vH/SBLe2eP6jONdqZc
+         IF4AAEVw6DeaIw9dv3O9SOh0y5Jjdkm7HfBK6z9ExD8O+xm13/iC1y4bO5FiUOjPLqH3
+         88CRMbqf3UxfXYt7WJHkK+cqhim2jGRXQcD2VmQd7lQYLhoownKQuWrVryQucfhtOTt8
+         ODOElQgHx47PiCeAatYNFNHNSI0ZsKswVdJweLJBonjIhSVgXsj9nzOyIZIT5BD/NeRB
+         K9CQc+75o09NxdTqFxSOQQmR296eTM09TsKmyeSdYFHGo8D/4y1o1/ehao6M/4tsc8di
+         20sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=zp0CljUbHcIrXRgZew+mmxH1uaF9H66gh4EBaCME65c=;
+        b=kpUZoNe946r/GW1hC1ZoRhgkckH80HZiPk4w08gd1cHiGmySU3C1mrQrFZzQxU0Y4p
+         lyLQ0qLYmg8dCKDZBlDjZn1KNrwJWAIT0FoJ12qx+LE+sssOueLT7R6xuZn/O4OVmlPL
+         pkTRE5MmAeeNBCEo8+8h7FKAjonjTg9F1/GcdbustEvA+29ehPl5XkZatbpcAV8eaIf+
+         jSau59BgD9WFSRTNpO+5YG3lpnx9kI/zOC9oz+qxvElc1VWdkyDsU1txpx6D1elyYgHI
+         7U8DYnyEuiaCr8qYru5RMSXC0MAXqLLP5Ma8sjZVUWjvI/aFeTsnNAu2oCWvasNQqjo+
+         mflg==
+X-Gm-Message-State: APjAAAW+mJ64/Ao1vLLxRob9dxG0qUsaV6Xn10BOF8W0ZZOJ1ccM//rF
+        PEYlnJSXiyRPDzVYBAHaqxYE9o0kNIA=
+X-Google-Smtp-Source: APXvYqzXv8+hgWu4RlO1Zhhodb2B714zwNj2oo+OFHNFF69flYvU6v05heqMxISgyy0jCFpMafaBfQ==
+X-Received: by 2002:a63:3303:: with SMTP id z3mr1165657pgz.353.1571187956065;
+        Tue, 15 Oct 2019 18:05:56 -0700 (PDT)
+Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
+        by smtp.googlemail.com with ESMTPSA id n15sm453714pjt.13.2019.10.15.18.05.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 18:05:55 -0700 (PDT)
+From:   Steve Longerbeam <slongerbeam@gmail.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        linux-kernel@vger.kernel.org (open list),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX
+        / MXC ARM ARCHITECTURE)
+Subject: [PATCH 1/2] clocksource/drivers/imx: add input capture support
+Date:   Tue, 15 Oct 2019 18:05:43 -0700
+Message-Id: <20191016010544.14561-2-slongerbeam@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191016010544.14561-1-slongerbeam@gmail.com>
+References: <20191016010544.14561-1-slongerbeam@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit introduced IFC VF operations for vdpa, which complys to
-vhost_mdev interfaces, handles IFC VF initialization,
-configuration and removal.
+This patch adds support for the input capture function in the
+i.MX GPT. Output compare and input capture functions are mixed
+in the same register block, so we need to modify the irq ack/enable/
+disable primitives to not stomp on the other function.
 
-Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
+The input capture API is modelled after request/free irq:
+
+typedef void (*mxc_icap_handler_t)(int, void *, ktime_t);
+
+int mxc_request_input_capture(unsigned int chan,
+			      mxc_icap_handler_t handler,
+			      unsigned long capflags, void *dev_id);
+
+    - chan: the channel number being requested (0 or 1).
+
+    - handler: a callback when there is an input capture event. The
+      handler is given the channel number, the dev_id, and a ktime_t
+      marking the input capture event.
+
+    - capflags: IRQF_TRIGGER_RISING and/or IRQF_TRIGGER_FALLING. If
+      both are specified, events will be triggered on both rising and
+      falling edges of the input capture signal.
+
+    - dev_id: a context pointer given back to the handler.
+
+void mxc_free_input_capture(unsigned int chan, void *dev_id);
+
+    This disables the given input capture channel in the GPT.
+
+Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
 ---
- drivers/vhost/ifcvf/ifcvf_main.c | 541 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 541 insertions(+)
- create mode 100644 drivers/vhost/ifcvf/ifcvf_main.c
+ drivers/clocksource/timer-imx-gpt.c | 479 +++++++++++++++++++++++++---
+ include/linux/mxc_icap.h            |  16 +
+ 2 files changed, 445 insertions(+), 50 deletions(-)
+ create mode 100644 include/linux/mxc_icap.h
 
-diff --git a/drivers/vhost/ifcvf/ifcvf_main.c b/drivers/vhost/ifcvf/ifcvf_main.c
-new file mode 100644
-index 000000000000..c48a29969a85
---- /dev/null
-+++ b/drivers/vhost/ifcvf/ifcvf_main.c
-@@ -0,0 +1,541 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2019 Intel Corporation.
-+ */
-+
-+#include <linux/interrupt.h>
+diff --git a/drivers/clocksource/timer-imx-gpt.c b/drivers/clocksource/timer-imx-gpt.c
+index 706c0d0ff56c..200777e4f104 100644
+--- a/drivers/clocksource/timer-imx-gpt.c
++++ b/drivers/clocksource/timer-imx-gpt.c
+@@ -5,9 +5,11 @@
+ //  Copyright (C) 2006-2007 Pavel Pisa (ppisa@pikron.com)
+ //  Copyright (C) 2008 Juergen Beisert (kernel@pengutronix.de)
+ 
 +#include <linux/module.h>
-+#include <linux/mdev.h>
-+#include <linux/pci.h>
-+#include <linux/sysfs.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/clockchips.h>
++#include <linux/timecounter.h>
+ #include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/err.h>
+@@ -16,6 +18,8 @@
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/of_irq.h>
++#include <linux/platform_device.h>
++#include <linux/mxc_icap.h>
+ #include <soc/imx/timer.h>
+ 
+ /*
+@@ -49,16 +53,52 @@
+ #define V2_TCTL_CLK_PER		(2 << 6)
+ #define V2_TCTL_CLK_OSC_DIV8	(5 << 6)
+ #define V2_TCTL_FRR		(1 << 9)
++#define V2_TCTL_IM1_BIT		16
++#define V2_TCTL_IM2_BIT		18
++#define V2_IM_DISABLE		0
++#define V2_IM_RISING		1
++#define V2_IM_FALLING		2
++#define V2_IM_BOTH		3
+ #define V2_TCTL_24MEN		(1 << 10)
+ #define V2_TPRER_PRE24M		12
+ #define V2_IR			0x0c
++#define V2_IR_OF1		(1 << 0)
++#define V2_IR_IF1		(1 << 3)
++#define V2_IR_IF2		(1 << 4)
+ #define V2_TSTAT		0x08
+ #define V2_TSTAT_OF1		(1 << 0)
++#define V2_TSTAT_IF1		(1 << 3)
++#define V2_TSTAT_IF2		(1 << 4)
+ #define V2_TCN			0x24
+ #define V2_TCMP			0x10
++#define V2_TCAP1		0x1c
++#define V2_TCAP2		0x20
+ 
+ #define V2_TIMER_RATE_OSC_DIV8	3000000
+ 
++struct imx_timer;
 +
-+#include "ifcvf_base.h"
++struct icap_channel {
++	struct imx_timer *imxtm;
 +
-+#define VERSION_STRING	"0.1"
-+#define DRIVER_AUTHOR	"Intel Corporation"
-+#define IFCVF_DRIVER_NAME	"ifcvf"
++	int chan;
 +
-+static irqreturn_t ifcvf_intr_handler(int irq, void *arg)
++	u32 cnt_reg;
++	u32 irqen_bit;
++	u32 status_bit;
++	u32 mode_bit;
++
++	mxc_icap_handler_t handler;
++	void *dev_id;
++
++	struct cyclecounter cc;
++	struct timecounter tc;
++};
++
++/* FIXME, for now can't find icap unless it's statically allocated */
++static struct icap_channel icap_channel[2];
++static DEFINE_SPINLOCK(icap_lock);
++
+ struct imx_timer {
+ 	enum imx_gpt_type type;
+ 	void __iomem *base;
+@@ -74,12 +114,20 @@ struct imx_gpt_data {
+ 	int reg_tstat;
+ 	int reg_tcn;
+ 	int reg_tcmp;
+-	void (*gpt_setup_tctl)(struct imx_timer *imxtm);
+-	void (*gpt_irq_enable)(struct imx_timer *imxtm);
+-	void (*gpt_irq_disable)(struct imx_timer *imxtm);
+-	void (*gpt_irq_acknowledge)(struct imx_timer *imxtm);
++	void (*gpt_oc_setup_tctl)(struct imx_timer *imxtm);
++	void (*gpt_oc_irq_enable)(struct imx_timer *imxtm);
++	void (*gpt_oc_irq_disable)(struct imx_timer *imxtm);
++	void (*gpt_oc_irq_acknowledge)(struct imx_timer *imxtm);
++	bool (*gpt_is_oc_irq)(struct imx_timer *imxtm, unsigned int tstat);
+ 	int (*set_next_event)(unsigned long evt,
+ 			      struct clock_event_device *ced);
++
++	void (*gpt_ic_irq_enable)(struct icap_channel *ic);
++	void (*gpt_ic_irq_disable)(struct icap_channel *ic);
++	void (*gpt_ic_irq_acknowledge)(struct icap_channel *ic);
++	bool (*gpt_is_ic_irq)(struct icap_channel *ic, unsigned int tstat);
++	void (*gpt_ic_enable)(struct icap_channel *ic, unsigned int mode);
++	void (*gpt_ic_disable)(struct icap_channel *ic);
+ };
+ 
+ static inline struct imx_timer *to_imx_timer(struct clock_event_device *ced)
+@@ -87,52 +135,144 @@ static inline struct imx_timer *to_imx_timer(struct clock_event_device *ced)
+ 	return container_of(ced, struct imx_timer, ced);
+ }
+ 
+-static void imx1_gpt_irq_disable(struct imx_timer *imxtm)
++static void imx1_gpt_oc_irq_disable(struct imx_timer *imxtm)
+ {
+ 	unsigned int tmp;
+ 
+ 	tmp = readl_relaxed(imxtm->base + MXC_TCTL);
+ 	writel_relaxed(tmp & ~MX1_2_TCTL_IRQEN, imxtm->base + MXC_TCTL);
+ }
+-#define imx21_gpt_irq_disable imx1_gpt_irq_disable
++#define imx21_gpt_oc_irq_disable imx1_gpt_oc_irq_disable
+ 
+-static void imx31_gpt_irq_disable(struct imx_timer *imxtm)
++static void imx31_gpt_oc_irq_disable(struct imx_timer *imxtm)
+ {
+-	writel_relaxed(0, imxtm->base + V2_IR);
++	unsigned int tmp;
++
++	tmp = readl_relaxed(imxtm->base + V2_IR);
++	writel_relaxed(tmp & ~V2_IR_OF1, imxtm->base + V2_IR);
+ }
+-#define imx6dl_gpt_irq_disable imx31_gpt_irq_disable
++#define imx6dl_gpt_oc_irq_disable imx31_gpt_oc_irq_disable
+ 
+-static void imx1_gpt_irq_enable(struct imx_timer *imxtm)
++static void imx1_gpt_oc_irq_enable(struct imx_timer *imxtm)
+ {
+ 	unsigned int tmp;
+ 
+ 	tmp = readl_relaxed(imxtm->base + MXC_TCTL);
+ 	writel_relaxed(tmp | MX1_2_TCTL_IRQEN, imxtm->base + MXC_TCTL);
+ }
+-#define imx21_gpt_irq_enable imx1_gpt_irq_enable
++#define imx21_gpt_oc_irq_enable imx1_gpt_oc_irq_enable
+ 
+-static void imx31_gpt_irq_enable(struct imx_timer *imxtm)
++static void imx31_gpt_oc_irq_enable(struct imx_timer *imxtm)
+ {
+-	writel_relaxed(1<<0, imxtm->base + V2_IR);
++	unsigned int tmp;
++
++	tmp = readl_relaxed(imxtm->base + V2_IR);
++	writel_relaxed(tmp | V2_IR_OF1, imxtm->base + V2_IR);
+ }
+-#define imx6dl_gpt_irq_enable imx31_gpt_irq_enable
++#define imx6dl_gpt_oc_irq_enable imx31_gpt_oc_irq_enable
+ 
+-static void imx1_gpt_irq_acknowledge(struct imx_timer *imxtm)
++static void imx1_gpt_oc_irq_acknowledge(struct imx_timer *imxtm)
+ {
+ 	writel_relaxed(0, imxtm->base + MX1_2_TSTAT);
+ }
+ 
+-static void imx21_gpt_irq_acknowledge(struct imx_timer *imxtm)
++static void imx21_gpt_oc_irq_acknowledge(struct imx_timer *imxtm)
+ {
+ 	writel_relaxed(MX2_TSTAT_CAPT | MX2_TSTAT_COMP,
+ 				imxtm->base + MX1_2_TSTAT);
+ }
+ 
+-static void imx31_gpt_irq_acknowledge(struct imx_timer *imxtm)
++static bool imx1_gpt_is_oc_irq(struct imx_timer *imxtm, unsigned int tstat)
 +{
-+	struct vring_info *vring = arg;
-+
-+	if (vring->cb.callback)
-+		return vring->cb.callback(vring->cb.private);
-+
-+	return IRQ_HANDLED;
++	return true;
 +}
 +
-+static u64 ifcvf_mdev_get_features(struct mdev_device *mdev)
++static bool imx21_gpt_is_oc_irq(struct imx_timer *imxtm, unsigned int tstat)
 +{
-+	return IFC_SUPPORTED_FEATURES;
++	return (tstat & MX2_TSTAT_COMP) != 0;
 +}
 +
-+static int ifcvf_mdev_set_features(struct mdev_device *mdev, u64 features)
++static bool imx31_gpt_is_oc_irq(struct imx_timer *imxtm, unsigned int tstat)
 +{
-+	struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
-+	struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
++	return (tstat & V2_TSTAT_OF1) != 0;
++}
++#define imx6dl_gpt_is_oc_irq imx31_gpt_is_oc_irq
 +
-+	vf->req_features = features;
++static void imx31_gpt_oc_irq_acknowledge(struct imx_timer *imxtm)
+ {
+ 	writel_relaxed(V2_TSTAT_OF1, imxtm->base + V2_TSTAT);
+ }
+-#define imx6dl_gpt_irq_acknowledge imx31_gpt_irq_acknowledge
++#define imx6dl_gpt_oc_irq_acknowledge imx31_gpt_oc_irq_acknowledge
 +
-+	return 0;
++static void imx31_gpt_ic_irq_disable(struct icap_channel *ic)
++{
++	struct imx_timer *imxtm = ic->imxtm;
++	unsigned int tmp;
++
++	tmp = readl_relaxed(imxtm->base + V2_IR);
++	tmp &= ~ic->irqen_bit;
++	writel_relaxed(tmp, imxtm->base + V2_IR);
++}
++#define imx6dl_gpt_ic_irq_disable imx31_gpt_ic_irq_disable
++
++static void imx31_gpt_ic_irq_enable(struct icap_channel *ic)
++{
++	struct imx_timer *imxtm = ic->imxtm;
++	unsigned int tmp;
++
++	tmp = readl_relaxed(imxtm->base + V2_IR);
++	tmp |= ic->irqen_bit;
++	writel_relaxed(tmp, imxtm->base + V2_IR);
++}
++#define imx6dl_gpt_ic_irq_enable imx31_gpt_ic_irq_enable
++
++static void imx31_gpt_ic_irq_acknowledge(struct icap_channel *ic)
++{
++	struct imx_timer *imxtm = ic->imxtm;
++
++	writel_relaxed(ic->status_bit, imxtm->base + V2_TSTAT);
++}
++#define imx6dl_gpt_ic_irq_acknowledge imx31_gpt_ic_irq_acknowledge
++
++static bool imx1_gpt_is_ic_irq(struct icap_channel *ic, unsigned int tstat)
++{
++	return false;
++}
++#define imx21_gpt_is_ic_irq imx1_gpt_is_ic_irq
++
++static bool imx31_gpt_is_ic_irq(struct icap_channel *ic, unsigned int tstat)
++{
++	return (tstat & ic->status_bit) != 0;
++}
++#define imx6dl_gpt_is_ic_irq imx31_gpt_is_ic_irq
++
++static void imx31_gpt_ic_enable(struct icap_channel *ic, unsigned int mode)
++{
++	struct imx_timer *imxtm = ic->imxtm;
++	unsigned int tctl, mask;
++
++	mask = 0x3 << ic->mode_bit;
++	mode <<= ic->mode_bit;
++
++	tctl = readl_relaxed(imxtm->base + MXC_TCTL);
++	tctl &= ~mask;
++	tctl |= mode;
++	writel_relaxed(tctl, imxtm->base + MXC_TCTL);
++}
++#define imx6dl_gpt_ic_enable imx31_gpt_ic_enable
++
++static void imx31_gpt_ic_disable(struct icap_channel *ic)
++{
++	struct imx_timer *imxtm = ic->imxtm;
++	unsigned int tctl, mask;
++
++	mask = 0x3 << ic->mode_bit;
++
++	tctl = readl_relaxed(imxtm->base + MXC_TCTL);
++	tctl &= ~mask;
++	writel_relaxed(tctl, imxtm->base + MXC_TCTL);
++}
++#define imx6dl_gpt_ic_disable imx31_gpt_ic_disable
+ 
+ static void __iomem *sched_clock_reg;
+ 
+@@ -150,6 +290,19 @@ static unsigned long imx_read_current_timer(void)
+ }
+ #endif
+ 
++static u64 mxc_clocksource_read(struct clocksource *cs)
++{
++	return mxc_read_sched_clock();
 +}
 +
-+static u64 ifcvf_mdev_get_vq_state(struct mdev_device *mdev, u16 qid)
-+{
-+	struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
-+	struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
++static struct clocksource clocksource_mxc = {
++	.name = "mxc_timer1",
++	.rating = 200,
++	.mask = CLOCKSOURCE_MASK(32),
++	.read = mxc_clocksource_read,
++	.flags = CLOCK_SOURCE_IS_CONTINUOUS,
++};
 +
-+	return vf->vring[qid].last_avail_idx;
-+}
-+
-+static int ifcvf_mdev_set_vq_state(struct mdev_device *mdev, u16 qid, u64 num)
-+{
-+	struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
-+	struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
-+
-+	vf->vring[qid].last_used_idx = num;
-+	vf->vring[qid].last_avail_idx = num;
-+
-+	return 0;
-+}
-+
-+static int ifcvf_mdev_set_vq_address(struct mdev_device *mdev, u16 idx,
-+				     u64 desc_area, u64 driver_area,
-+				     u64 device_area)
-+{
-+	struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
-+	struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
-+
-+	vf->vring[idx].desc = desc_area;
-+	vf->vring[idx].avail = driver_area;
-+	vf->vring[idx].used = device_area;
-+
-+	return 0;
-+}
-+
-+static void ifcvf_mdev_set_vq_num(struct mdev_device *mdev, u16 qid, u32 num)
-+{
-+	struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
-+	struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
-+
-+	vf->vring[qid].size = num;
-+}
-+
-+static void ifcvf_mdev_set_vq_ready(struct mdev_device *mdev,
-+				u16 qid, bool ready)
-+{
-+
-+	struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
-+	struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
-+
-+	vf->vring[qid].ready = ready;
-+}
-+
-+static bool ifcvf_mdev_get_vq_ready(struct mdev_device *mdev, u16 qid)
-+{
-+
-+	struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
-+	struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
-+
-+	return vf->vring[qid].ready;
-+}
-+
-+static void ifcvf_mdev_set_vq_cb(struct mdev_device *mdev, u16 idx,
-+				 struct virtio_mdev_callback *cb)
-+{
-+	struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
-+	struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
-+
-+	vf->vring[idx].cb = *cb;
-+}
-+
-+static void ifcvf_mdev_kick_vq(struct mdev_device *mdev, u16 idx)
-+{
-+	struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
-+	struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
-+
-+	ifcvf_notify_queue(vf, idx);
-+}
-+
-+static u8 ifcvf_mdev_get_status(struct mdev_device *mdev)
-+{
-+	struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
-+	struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
-+
-+	return vf->status;
-+}
-+
-+static u32 ifcvf_mdev_get_generation(struct mdev_device *mdev)
-+{
-+	struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
-+	struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
-+
-+	return vf->generation;
-+}
-+
-+static int ifcvf_mdev_get_version(struct mdev_device *mdev)
-+{
-+	return VIRTIO_MDEV_VERSION;
-+}
-+
-+static u32 ifcvf_mdev_get_device_id(struct mdev_device *mdev)
-+{
-+	return IFCVF_DEVICE_ID;
-+}
-+
-+static u32 ifcvf_mdev_get_vendor_id(struct mdev_device *mdev)
-+{
-+	return IFCVF_VENDOR_ID;
-+}
-+
-+static u16 ifcvf_mdev_get_vq_align(struct mdev_device *mdev)
-+{
-+	return IFCVF_QUEUE_ALIGNMENT;
-+}
-+
-+static int ifcvf_start_datapath(void *private)
-+{
-+	int i, ret;
-+	struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(private);
-+
-+	for (i = 0; i < (IFCVF_MAX_QUEUE_PAIRS * 2); i++) {
-+		if (!vf->vring[i].ready)
-+			break;
-+
-+		if (!vf->vring[i].size)
-+			break;
-+
-+		if (!vf->vring[i].desc || !vf->vring[i].avail ||
-+			!vf->vring[i].used)
-+			break;
-+	}
-+	vf->nr_vring = i;
-+
-+	ret = ifcvf_start_hw(vf);
-+	return ret;
-+}
-+
-+static int ifcvf_stop_datapath(void *private)
-+{
-+	struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(private);
+ static int __init mxc_clocksource_init(struct imx_timer *imxtm)
+ {
+ 	unsigned int c = clk_get_rate(imxtm->clk_per);
+@@ -164,8 +317,7 @@ static int __init mxc_clocksource_init(struct imx_timer *imxtm)
+ 	sched_clock_reg = reg;
+ 
+ 	sched_clock_register(mxc_read_sched_clock, 32, c);
+-	return clocksource_mmio_init(reg, "mxc_timer1", c, 200, 32,
+-			clocksource_mmio_readl_up);
++	return clocksource_register_hz(&clocksource_mxc, c);
+ }
+ 
+ /* clock event */
+@@ -205,14 +357,14 @@ static int mxc_shutdown(struct clock_event_device *ced)
+ 	u32 tcn;
+ 
+ 	/* Disable interrupt in GPT module */
+-	imxtm->gpt->gpt_irq_disable(imxtm);
++	imxtm->gpt->gpt_oc_irq_disable(imxtm);
+ 
+ 	tcn = readl_relaxed(imxtm->base + imxtm->gpt->reg_tcn);
+ 	/* Set event time into far-far future */
+ 	writel_relaxed(tcn - 3, imxtm->base + imxtm->gpt->reg_tcmp);
+ 
+ 	/* Clear pending interrupt */
+-	imxtm->gpt->gpt_irq_acknowledge(imxtm);
++	imxtm->gpt->gpt_oc_irq_acknowledge(imxtm);
+ 
+ #ifdef DEBUG
+ 	printk(KERN_INFO "%s: changing mode\n", __func__);
+@@ -226,7 +378,7 @@ static int mxc_set_oneshot(struct clock_event_device *ced)
+ 	struct imx_timer *imxtm = to_imx_timer(ced);
+ 
+ 	/* Disable interrupt in GPT module */
+-	imxtm->gpt->gpt_irq_disable(imxtm);
++	imxtm->gpt->gpt_oc_irq_disable(imxtm);
+ 
+ 	if (!clockevent_state_oneshot(ced)) {
+ 		u32 tcn = readl_relaxed(imxtm->base + imxtm->gpt->reg_tcn);
+@@ -234,7 +386,7 @@ static int mxc_set_oneshot(struct clock_event_device *ced)
+ 		writel_relaxed(tcn - 3, imxtm->base + imxtm->gpt->reg_tcmp);
+ 
+ 		/* Clear pending interrupt */
+-		imxtm->gpt->gpt_irq_acknowledge(imxtm);
++		imxtm->gpt->gpt_oc_irq_acknowledge(imxtm);
+ 	}
+ 
+ #ifdef DEBUG
+@@ -247,7 +399,7 @@ static int mxc_set_oneshot(struct clock_event_device *ced)
+ 	 * to call mxc_set_next_event() or shutdown clock after
+ 	 * mode switching
+ 	 */
+-	imxtm->gpt->gpt_irq_enable(imxtm);
++	imxtm->gpt->gpt_oc_irq_enable(imxtm);
+ 
+ 	return 0;
+ }
+@@ -260,12 +412,29 @@ static irqreturn_t mxc_timer_interrupt(int irq, void *dev_id)
+ 	struct clock_event_device *ced = dev_id;
+ 	struct imx_timer *imxtm = to_imx_timer(ced);
+ 	uint32_t tstat;
 +	int i;
+ 
+ 	tstat = readl_relaxed(imxtm->base + imxtm->gpt->reg_tstat);
+ 
+-	imxtm->gpt->gpt_irq_acknowledge(imxtm);
++	for (i = 0; i < 2; i++) {
++		struct icap_channel *ic = &icap_channel[i];
++		ktime_t timestamp;
+ 
+-	ced->event_handler(ced);
++		if (!imxtm->gpt->gpt_is_ic_irq(ic, tstat))
++			continue;
 +
-+	for (i = 0; i < IFCVF_MAX_QUEUES; i++)
-+		vf->vring[i].cb.callback = NULL;
++		imxtm->gpt->gpt_ic_irq_acknowledge(ic);
 +
-+	ifcvf_stop_hw(vf);
++		timestamp = ns_to_ktime(timecounter_read(&ic->tc));
 +
-+	return 0;
-+}
-+
-+static void ifcvf_reset_vring(struct ifcvf_adapter *adapter)
-+{
-+	int i;
-+	struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
-+
-+	for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
-+		vf->vring[i].last_used_idx = 0;
-+		vf->vring[i].last_avail_idx = 0;
-+		vf->vring[i].desc = 0;
-+		vf->vring[i].avail = 0;
-+		vf->vring[i].used = 0;
-+		vf->vring[i].ready = 0;
-+		vf->vring->cb.callback = NULL;
-+		vf->vring->cb.private = NULL;
-+	}
-+}
-+
-+static void ifcvf_mdev_set_status(struct mdev_device *mdev, u8 status)
-+{
-+	struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
-+	struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
-+
-+	vf->status = status;
-+
-+	if (status == 0) {
-+		ifcvf_stop_datapath(adapter);
-+		ifcvf_reset_vring(adapter);
-+		return;
++		if (ic->handler)
++			ic->handler(ic->chan, ic->dev_id, timestamp);
 +	}
 +
-+	if (status & VIRTIO_CONFIG_S_DRIVER_OK) {
-+		ifcvf_start_datapath(adapter);
-+		return;
++	if (imxtm->gpt->gpt_is_oc_irq(imxtm, tstat)) {
++		imxtm->gpt->gpt_oc_irq_acknowledge(imxtm);
++		ced->event_handler(ced);
 +	}
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -295,16 +464,16 @@ static int __init mxc_clockevent_init(struct imx_timer *imxtm)
+ 	return setup_irq(imxtm->irq, act);
+ }
+ 
+-static void imx1_gpt_setup_tctl(struct imx_timer *imxtm)
++static void imx1_gpt_oc_setup_tctl(struct imx_timer *imxtm)
+ {
+ 	u32 tctl_val;
+ 
+ 	tctl_val = MX1_2_TCTL_FRR | MX1_2_TCTL_CLK_PCLK1 | MXC_TCTL_TEN;
+ 	writel_relaxed(tctl_val, imxtm->base + MXC_TCTL);
+ }
+-#define imx21_gpt_setup_tctl imx1_gpt_setup_tctl
++#define imx21_gpt_oc_setup_tctl imx1_gpt_oc_setup_tctl
+ 
+-static void imx31_gpt_setup_tctl(struct imx_timer *imxtm)
++static void imx31_gpt_oc_setup_tctl(struct imx_timer *imxtm)
+ {
+ 	u32 tctl_val;
+ 
+@@ -317,7 +486,7 @@ static void imx31_gpt_setup_tctl(struct imx_timer *imxtm)
+ 	writel_relaxed(tctl_val, imxtm->base + MXC_TCTL);
+ }
+ 
+-static void imx6dl_gpt_setup_tctl(struct imx_timer *imxtm)
++static void imx6dl_gpt_oc_setup_tctl(struct imx_timer *imxtm)
+ {
+ 	u32 tctl_val;
+ 
+@@ -338,10 +507,12 @@ static const struct imx_gpt_data imx1_gpt_data = {
+ 	.reg_tstat = MX1_2_TSTAT,
+ 	.reg_tcn = MX1_2_TCN,
+ 	.reg_tcmp = MX1_2_TCMP,
+-	.gpt_irq_enable = imx1_gpt_irq_enable,
+-	.gpt_irq_disable = imx1_gpt_irq_disable,
+-	.gpt_irq_acknowledge = imx1_gpt_irq_acknowledge,
+-	.gpt_setup_tctl = imx1_gpt_setup_tctl,
++	.gpt_oc_irq_enable = imx1_gpt_oc_irq_enable,
++	.gpt_oc_irq_disable = imx1_gpt_oc_irq_disable,
++	.gpt_oc_irq_acknowledge = imx1_gpt_oc_irq_acknowledge,
++	.gpt_is_oc_irq = imx1_gpt_is_oc_irq,
++	.gpt_is_ic_irq = imx1_gpt_is_ic_irq,
++	.gpt_oc_setup_tctl = imx1_gpt_oc_setup_tctl,
+ 	.set_next_event = mx1_2_set_next_event,
+ };
+ 
+@@ -349,10 +520,12 @@ static const struct imx_gpt_data imx21_gpt_data = {
+ 	.reg_tstat = MX1_2_TSTAT,
+ 	.reg_tcn = MX1_2_TCN,
+ 	.reg_tcmp = MX1_2_TCMP,
+-	.gpt_irq_enable = imx21_gpt_irq_enable,
+-	.gpt_irq_disable = imx21_gpt_irq_disable,
+-	.gpt_irq_acknowledge = imx21_gpt_irq_acknowledge,
+-	.gpt_setup_tctl = imx21_gpt_setup_tctl,
++	.gpt_oc_irq_enable = imx21_gpt_oc_irq_enable,
++	.gpt_oc_irq_disable = imx21_gpt_oc_irq_disable,
++	.gpt_oc_irq_acknowledge = imx21_gpt_oc_irq_acknowledge,
++	.gpt_is_oc_irq = imx21_gpt_is_oc_irq,
++	.gpt_is_ic_irq = imx21_gpt_is_ic_irq,
++	.gpt_oc_setup_tctl = imx21_gpt_oc_setup_tctl,
+ 	.set_next_event = mx1_2_set_next_event,
+ };
+ 
+@@ -360,27 +533,160 @@ static const struct imx_gpt_data imx31_gpt_data = {
+ 	.reg_tstat = V2_TSTAT,
+ 	.reg_tcn = V2_TCN,
+ 	.reg_tcmp = V2_TCMP,
+-	.gpt_irq_enable = imx31_gpt_irq_enable,
+-	.gpt_irq_disable = imx31_gpt_irq_disable,
+-	.gpt_irq_acknowledge = imx31_gpt_irq_acknowledge,
+-	.gpt_setup_tctl = imx31_gpt_setup_tctl,
++	.gpt_oc_irq_enable = imx31_gpt_oc_irq_enable,
++	.gpt_oc_irq_disable = imx31_gpt_oc_irq_disable,
++	.gpt_oc_irq_acknowledge = imx31_gpt_oc_irq_acknowledge,
++	.gpt_is_oc_irq = imx31_gpt_is_oc_irq,
++	.gpt_oc_setup_tctl = imx31_gpt_oc_setup_tctl,
+ 	.set_next_event = v2_set_next_event,
++
++	/* input capture methods */
++	.gpt_ic_irq_enable = imx31_gpt_ic_irq_enable,
++	.gpt_ic_irq_disable = imx31_gpt_ic_irq_disable,
++	.gpt_ic_irq_acknowledge = imx31_gpt_ic_irq_acknowledge,
++	.gpt_is_ic_irq = imx31_gpt_is_ic_irq,
++	.gpt_ic_enable = imx31_gpt_ic_enable,
++	.gpt_ic_disable = imx31_gpt_ic_disable,
+ };
+ 
+ static const struct imx_gpt_data imx6dl_gpt_data = {
+ 	.reg_tstat = V2_TSTAT,
+ 	.reg_tcn = V2_TCN,
+ 	.reg_tcmp = V2_TCMP,
+-	.gpt_irq_enable = imx6dl_gpt_irq_enable,
+-	.gpt_irq_disable = imx6dl_gpt_irq_disable,
+-	.gpt_irq_acknowledge = imx6dl_gpt_irq_acknowledge,
+-	.gpt_setup_tctl = imx6dl_gpt_setup_tctl,
++	.gpt_oc_irq_enable = imx6dl_gpt_oc_irq_enable,
++	.gpt_oc_irq_disable = imx6dl_gpt_oc_irq_disable,
++	.gpt_oc_irq_acknowledge = imx6dl_gpt_oc_irq_acknowledge,
++	.gpt_is_oc_irq = imx6dl_gpt_is_oc_irq,
++	.gpt_oc_setup_tctl = imx6dl_gpt_oc_setup_tctl,
+ 	.set_next_event = v2_set_next_event,
++
++	/* input capture methods */
++	.gpt_ic_irq_enable = imx6dl_gpt_ic_irq_enable,
++	.gpt_ic_irq_disable = imx6dl_gpt_ic_irq_disable,
++	.gpt_ic_irq_acknowledge = imx6dl_gpt_ic_irq_acknowledge,
++	.gpt_is_ic_irq = imx6dl_gpt_is_ic_irq,
++	.gpt_ic_enable = imx6dl_gpt_ic_enable,
++	.gpt_ic_disable = imx6dl_gpt_ic_disable,
+ };
+ 
++static u64 gpt_ic_read(const struct cyclecounter *cc)
++{
++	struct icap_channel *ic = container_of(cc, struct icap_channel, cc);
++	struct imx_timer *imxtm = ic->imxtm;
++
++	return readl_relaxed(imxtm->base + ic->cnt_reg);
 +}
 +
-+static u16 ifcvf_mdev_get_queue_max(struct mdev_device *mdev)
++int mxc_request_input_capture(unsigned int chan, mxc_icap_handler_t handler,
++			      unsigned long capflags, void *dev_id)
 +{
-+	return IFCVF_MAX_QUEUES;
-+}
-+
-+static struct virtio_mdev_device_ops ifc_mdev_ops = {
-+	.get_features  = ifcvf_mdev_get_features,
-+	.set_features  = ifcvf_mdev_set_features,
-+	.get_status    = ifcvf_mdev_get_status,
-+	.set_status    = ifcvf_mdev_set_status,
-+	.get_queue_max = ifcvf_mdev_get_queue_max,
-+	.get_vq_state   = ifcvf_mdev_get_vq_state,
-+	.set_vq_state   = ifcvf_mdev_set_vq_state,
-+	.set_vq_cb      = ifcvf_mdev_set_vq_cb,
-+	.set_vq_ready   = ifcvf_mdev_set_vq_ready,
-+	.get_vq_ready	= ifcvf_mdev_get_vq_ready,
-+	.set_vq_num     = ifcvf_mdev_set_vq_num,
-+	.set_vq_address = ifcvf_mdev_set_vq_address,
-+	.kick_vq        = ifcvf_mdev_kick_vq,
-+	.get_generation	= ifcvf_mdev_get_generation,
-+	.get_version	= ifcvf_mdev_get_version,
-+	.get_device_id	= ifcvf_mdev_get_device_id,
-+	.get_vendor_id	= ifcvf_mdev_get_vendor_id,
-+	.get_vq_align	= ifcvf_mdev_get_vq_align,
-+};
-+
-+static int ifcvf_init_msix(struct ifcvf_adapter *adapter)
-+{
-+	int vector, i, ret, irq;
-+	struct pci_dev *pdev = to_pci_dev(adapter->dev);
-+	struct ifcvf_hw *vf = &adapter->vf;
-+
-+	ret = pci_alloc_irq_vectors(pdev, IFCVF_MAX_INTR,
-+			IFCVF_MAX_INTR, PCI_IRQ_MSIX);
-+	if (ret < 0) {
-+		IFC_ERR(adapter->dev, "Failed to alloc irq vectors.\n");
-+		return ret;
-+	}
-+
-+	for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
-+		vector = i + IFCVF_MSI_QUEUE_OFF;
-+		irq = pci_irq_vector(pdev, vector);
-+		ret = request_irq(irq, ifcvf_intr_handler, 0,
-+				pci_name(pdev), &vf->vring[i]);
-+		if (ret) {
-+			IFC_ERR(adapter->dev,
-+				"Failed to request irq for vq %d.\n", i);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void ifcvf_destroy_adapter(struct ifcvf_adapter *adapter)
-+{
-+	int i, vector, irq;
-+	struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
-+	struct pci_dev *pdev = to_pci_dev(adapter->dev);
-+
-+	for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
-+		vector = i + IFCVF_MSI_QUEUE_OFF;
-+		irq = pci_irq_vector(pdev, vector);
-+		free_irq(irq, &vf->vring[i]);
-+	}
-+}
-+
-+static ssize_t name_show(struct kobject *kobj, struct device *dev, char *buf)
-+{
-+	const char *name = "vhost accelerator (virtio ring compatible)";
-+
-+	return sprintf(buf, "%s\n", name);
-+}
-+MDEV_TYPE_ATTR_RO(name);
-+
-+static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
-+			       char *buf)
-+{
-+	return sprintf(buf, "%s\n", VIRTIO_MDEV_DEVICE_API_STRING);
-+}
-+MDEV_TYPE_ATTR_RO(device_api);
-+
-+static ssize_t available_instances_show(struct kobject *kobj,
-+					struct device *dev, char *buf)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	struct ifcvf_adapter *adapter = pci_get_drvdata(pdev);
-+
-+	return sprintf(buf, "%d\n", adapter->mdev_count);
-+}
-+
-+MDEV_TYPE_ATTR_RO(available_instances);
-+
-+static ssize_t type_show(struct kobject *kobj,
-+			struct device *dev, char *buf)
-+{
-+	return sprintf(buf, "%s\n", "net");
-+}
-+
-+MDEV_TYPE_ATTR_RO(type);
-+
-+
-+static struct attribute *mdev_types_attrs[] = {
-+	&mdev_type_attr_name.attr,
-+	&mdev_type_attr_device_api.attr,
-+	&mdev_type_attr_available_instances.attr,
-+	&mdev_type_attr_type.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group mdev_type_group = {
-+	.name  = "vdpa_virtio",
-+	.attrs = mdev_types_attrs,
-+};
-+
-+static struct attribute_group *mdev_type_groups[] = {
-+	&mdev_type_group,
-+	NULL,
-+};
-+
-+const struct attribute_group *mdev_dev_groups[] = {
-+	NULL,
-+};
-+
-+static int ifcvf_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
-+{
-+	struct device *dev = mdev_parent_dev(mdev);
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	struct ifcvf_adapter *adapter = pci_get_drvdata(pdev);
++	struct imx_timer *imxtm;
++	struct icap_channel *ic;
++	unsigned long flags;
++	u64 start_cycles;
 +	int ret = 0;
++	u32 mode;
 +
-+	mutex_lock(&adapter->mdev_lock);
++	/* we only care about rising and falling flags */
++	capflags &= (IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING);
 +
-+	if (adapter->mdev_count < 1) {
-+		ret = -EINVAL;
++	if (chan > 1 || !handler || !capflags)
++		return -EINVAL;
++
++	ic = &icap_channel[chan];
++	imxtm = ic->imxtm;
++
++	if (!imxtm->gpt->gpt_ic_enable)
++		return -ENODEV;
++
++	spin_lock_irqsave(&icap_lock, flags);
++
++	if (ic->handler) {
++		ret = -EBUSY;
 +		goto out;
 +	}
 +
-+	mdev_set_class_id(mdev, MDEV_ID_VHOST);
-+	mdev_set_dev_ops(mdev, &ifc_mdev_ops);
++	ic->handler = handler;
++	ic->dev_id = dev_id;
 +
-+	mdev_set_drvdata(mdev, adapter);
-+	mdev_set_iommu_device(mdev_dev(mdev), dev);
++	switch (capflags) {
++	case IRQF_TRIGGER_RISING:
++		mode = V2_IM_RISING;
++		break;
++	case IRQF_TRIGGER_FALLING:
++		mode = V2_IM_FALLING;
++		break;
++	default:
++		mode = V2_IM_BOTH;
++		break;
++	}
 +
-+	INIT_LIST_HEAD(&adapter->dma_maps);
-+	adapter->mdev_count--;
++	/* ack any pending input capture interrupt before enabling */
++	imxtm->gpt->gpt_ic_irq_acknowledge(ic);
++
++	/*
++	 * initialize the cyclecounter. The input capture is capturing
++	 * from the mxc clocksource, so it has the same mask/shift/mult.
++	 */
++	memset(&ic->cc, 0, sizeof(ic->cc));
++	ic->cc.read = gpt_ic_read;
++	ic->cc.mask = clocksource_mxc.mask;
++	ic->cc.shift = clocksource_mxc.shift;
++	ic->cc.mult = clocksource_mxc.mult;
++
++	/* initialize a timecounter for the input capture */
++	start_cycles = mxc_read_sched_clock();
++	timecounter_init(&ic->tc, &ic->cc, ktime_get_ns());
++	/*
++	 * timecounter_init() read the last captured timer count, but
++	 * that's not the start cycle counter, so update it with the
++	 * real start cycles.
++	 */
++	ic->tc.cycle_last = start_cycles;
++
++	imxtm->gpt->gpt_ic_enable(ic, mode);
++	imxtm->gpt->gpt_ic_irq_enable(ic);
 +
 +out:
-+	mutex_unlock(&adapter->mdev_lock);
++	spin_unlock_irqrestore(&icap_lock, flags);
 +	return ret;
 +}
++EXPORT_SYMBOL_GPL(mxc_request_input_capture);
 +
-+static int ifcvf_mdev_remove(struct mdev_device *mdev)
++void mxc_free_input_capture(unsigned int chan, void *dev_id)
 +{
-+	struct device *dev = mdev_parent_dev(mdev);
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	struct ifcvf_adapter *adapter = pci_get_drvdata(pdev);
++	struct imx_timer *imxtm;
++	struct icap_channel *ic;
++	unsigned long flags;
 +
-+	mutex_lock(&adapter->mdev_lock);
-+	adapter->mdev_count++;
-+	mutex_unlock(&adapter->mdev_lock);
++	if (chan > 1)
++		return;
 +
-+	return 0;
++	ic = &icap_channel[chan];
++	imxtm = ic->imxtm;
++
++	if (!imxtm->gpt->gpt_ic_disable)
++		return;
++
++	spin_lock_irqsave(&icap_lock, flags);
++
++	if (!ic->handler || dev_id != ic->dev_id)
++		goto out;
++
++	imxtm->gpt->gpt_ic_irq_disable(ic);
++	imxtm->gpt->gpt_ic_disable(ic);
++
++	ic->handler = NULL;
++	ic->dev_id = NULL;
++out:
++	spin_unlock_irqrestore(&icap_lock, flags);
 +}
++EXPORT_SYMBOL_GPL(mxc_free_input_capture);
 +
-+static struct mdev_parent_ops ifcvf_mdev_fops = {
-+	.owner			= THIS_MODULE,
-+	.supported_type_groups	= mdev_type_groups,
-+	.mdev_attr_groups	= mdev_dev_groups,
-+	.create			= ifcvf_mdev_create,
-+	.remove			= ifcvf_mdev_remove,
-+};
+ static int __init _mxc_timer_init(struct imx_timer *imxtm)
+ {
+-	int ret;
++	struct icap_channel *ic;
++	int i, ret;
+ 
+ 	switch (imxtm->type) {
+ 	case GPT_TYPE_IMX1:
+@@ -416,14 +722,23 @@ static int __init _mxc_timer_init(struct imx_timer *imxtm)
+ 	writel_relaxed(0, imxtm->base + MXC_TCTL);
+ 	writel_relaxed(0, imxtm->base + MXC_TPRER); /* see datasheet note */
+ 
+-	imxtm->gpt->gpt_setup_tctl(imxtm);
++	imxtm->gpt->gpt_oc_setup_tctl(imxtm);
+ 
+ 	/* init and register the timer to the framework */
+ 	ret = mxc_clocksource_init(imxtm);
+ 	if (ret)
+ 		return ret;
+ 
+-	return mxc_clockevent_init(imxtm);
++	ret = mxc_clockevent_init(imxtm);
++	if (ret)
++		return ret;
 +
-+static int ifcvf_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct ifcvf_adapter *adapter;
-+	struct ifcvf_hw *vf;
-+	int ret, i;
-+
-+	adapter = kzalloc(sizeof(struct ifcvf_adapter), GFP_KERNEL);
-+	if (adapter == NULL) {
-+		ret = -ENOMEM;
-+		goto fail;
-+	}
-+
-+	mutex_init(&adapter->mdev_lock);
-+	adapter->mdev_count = 1;
-+	adapter->dev = dev;
-+
-+	pci_set_drvdata(pdev, adapter);
-+
-+	ret = pci_enable_device(pdev);
-+	if (ret) {
-+		IFC_ERR(adapter->dev, "Failed to enable device.\n");
-+		goto free_adapter;
-+	}
-+
-+	ret = pci_request_regions(pdev, IFCVF_DRIVER_NAME);
-+	if (ret) {
-+		IFC_ERR(adapter->dev, "Failed to request MMIO region.\n");
-+		goto disable_device;
-+	}
-+
-+	pci_set_master(pdev);
-+
-+	ret = ifcvf_init_msix(adapter);
-+	if (ret) {
-+		IFC_ERR(adapter->dev, "Failed to initialize MSIX.\n");
-+		goto free_msix;
-+	}
-+
-+	vf = &adapter->vf;
-+	for (i = 0; i < IFCVF_PCI_MAX_RESOURCE; i++) {
-+		vf->mem_resource[i].phys_addr = pci_resource_start(pdev, i);
-+		vf->mem_resource[i].len = pci_resource_len(pdev, i);
-+		if (!vf->mem_resource[i].len) {
-+			vf->mem_resource[i].addr = NULL;
-+			continue;
-+		}
-+
-+		vf->mem_resource[i].addr = pci_iomap_range(pdev, i, 0,
-+				vf->mem_resource[i].len);
-+		if (!vf->mem_resource[i].addr) {
-+			IFC_ERR(adapter->dev, "Failed to map IO resource %d\n",
-+				i);
-+			return -1;
-+		}
-+	}
-+
-+	if (ifcvf_init_hw(vf, pdev) < 0)
-+		return -1;
-+
-+	ret = mdev_register_device(dev, &ifcvf_mdev_fops);
-+	if (ret) {
-+		IFC_ERR(adapter->dev,  "Failed to register mdev device\n");
-+		goto destroy_adapter;
++	for (i = 0; i < 2; i++) {
++		ic = &icap_channel[i];
++		ic->imxtm = imxtm;
 +	}
 +
 +	return 0;
-+
-+destroy_adapter:
-+	ifcvf_destroy_adapter(adapter);
-+free_msix:
-+	pci_free_irq_vectors(pdev);
-+	pci_release_regions(pdev);
-+disable_device:
-+	pci_disable_device(pdev);
-+free_adapter:
-+	kfree(adapter);
-+fail:
-+	return ret;
-+}
-+
-+static void ifcvf_remove(struct pci_dev *pdev)
+ }
+ 
+ void __init mxc_timer_init(unsigned long pbase, int irq, enum imx_gpt_type type)
+@@ -445,6 +760,70 @@ void __init mxc_timer_init(unsigned long pbase, int irq, enum imx_gpt_type type)
+ 	_mxc_timer_init(imxtm);
+ }
+ 
++/*
++ * a platform driver is needed in order to acquire pinmux
++ * for input capture pins. The probe call is also useful
++ * for setting up the input capture channel structures.
++ */
++static int mxc_timer_probe(struct platform_device *pdev)
 +{
-+	struct device *dev = &pdev->dev;
-+	struct ifcvf_adapter *adapter = pci_get_drvdata(pdev);
-+	struct ifcvf_hw *vf;
++	struct icap_channel *ic;
 +	int i;
 +
-+	mdev_unregister_device(dev);
-+
-+	vf = &adapter->vf;
-+	for (i = 0; i < IFCVF_PCI_MAX_RESOURCE; i++) {
-+		if (vf->mem_resource[i].addr) {
-+			pci_iounmap(pdev, vf->mem_resource[i].addr);
-+			vf->mem_resource[i].addr = NULL;
++	/* setup the input capture channels */
++	for (i = 0; i < 2; i++) {
++		ic = &icap_channel[i];
++		ic->chan = i;
++		if (i == 0) {
++			ic->cnt_reg = V2_TCAP1;
++			ic->irqen_bit = V2_IR_IF1;
++			ic->status_bit = V2_TSTAT_IF1;
++			ic->mode_bit = V2_TCTL_IM1_BIT;
++		} else {
++			ic->cnt_reg = V2_TCAP2;
++			ic->irqen_bit = V2_IR_IF2;
++			ic->status_bit = V2_TSTAT_IF2;
++			ic->mode_bit = V2_TCTL_IM2_BIT;
 +		}
 +	}
 +
-+	ifcvf_destroy_adapter(adapter);
-+	pci_free_irq_vectors(pdev);
-+
-+	pci_release_regions(pdev);
-+	pci_disable_device(pdev);
-+
-+	kfree(adapter);
++	return 0;
 +}
 +
-+static struct pci_device_id ifcvf_pci_ids[] = {
-+	{ PCI_DEVICE_SUB(IFCVF_VENDOR_ID,
-+			IFCVF_DEVICE_ID,
-+			IFCVF_SUBSYS_VENDOR_ID,
-+			IFCVF_SUBSYS_DEVICE_ID) },
-+	{ 0 },
-+};
-+MODULE_DEVICE_TABLE(pci, ifcvf_pci_ids);
-+
-+static struct pci_driver ifcvf_driver = {
-+	.name     = IFCVF_DRIVER_NAME,
-+	.id_table = ifcvf_pci_ids,
-+	.probe    = ifcvf_probe,
-+	.remove   = ifcvf_remove,
-+};
-+
-+static int __init ifcvf_init_module(void)
++static int mxc_timer_remove(struct platform_device *pdev)
 +{
-+	int ret;
-+
-+	ret = pci_register_driver(&ifcvf_driver);
-+	return ret;
++	return 0;
 +}
 +
-+static void __exit ifcvf_exit_module(void)
-+{
-+	pci_unregister_driver(&ifcvf_driver);
-+}
++static const struct of_device_id timer_of_match[] = {
++	{ .compatible = "fsl,imx1-gpt" },
++	{ .compatible = "fsl,imx21-gpt" },
++	{ .compatible = "fsl,imx27-gpt" },
++	{ .compatible = "fsl,imx31-gpt" },
++	{ .compatible = "fsl,imx25-gpt" },
++	{ .compatible = "fsl,imx50-gpt" },
++	{ .compatible = "fsl,imx51-gpt" },
++	{ .compatible = "fsl,imx53-gpt" },
++	{ .compatible = "fsl,imx6q-gpt" },
++	{ .compatible = "fsl,imx6dl-gpt" },
++	{ .compatible = "fsl,imx6sl-gpt" },
++	{ .compatible = "fsl,imx6sx-gpt" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, timer_of_match);
 +
-+module_init(ifcvf_init_module);
-+module_exit(ifcvf_exit_module);
++static struct platform_driver mxc_timer_pdrv = {
++	.probe		= mxc_timer_probe,
++	.remove		= mxc_timer_remove,
++	.driver		= {
++		.name	= "mxc-timer",
++		.owner	= THIS_MODULE,
++		.of_match_table	= timer_of_match,
++	},
++};
 +
-+MODULE_LICENSE("GPL v2");
-+MODULE_VERSION(VERSION_STRING);
-+MODULE_AUTHOR(DRIVER_AUTHOR);
++module_platform_driver(mxc_timer_pdrv);
++
+ static int __init mxc_timer_init_dt(struct device_node *np,  enum imx_gpt_type type)
+ {
+ 	struct imx_timer *imxtm;
+diff --git a/include/linux/mxc_icap.h b/include/linux/mxc_icap.h
+new file mode 100644
+index 000000000000..fa5ffdf3b589
+--- /dev/null
++++ b/include/linux/mxc_icap.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * i.MX GPT Input Capture support.
++ *
++ * Copyright (C) 2015 Mentor Graphics, Inc. All Rights Reserved.
++ */
++#ifndef __MXC_ICAP_H__
++#define __MXC_ICAP_H__
++
++typedef void (*mxc_icap_handler_t)(int, void *, ktime_t);
++
++int mxc_request_input_capture(unsigned int chan, mxc_icap_handler_t handler,
++			      unsigned long capflags, void *dev_id);
++void mxc_free_input_capture(unsigned int chan, void *dev_id);
++
++#endif
 -- 
-2.16.4
+2.17.1
 
