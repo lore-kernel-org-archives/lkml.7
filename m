@@ -2,237 +2,152 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7975FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17758FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA4D120663
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9F1A20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:56:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Husn15un"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393737AbfJPNzJ (ORCPT
+        id S2404357AbfJPN4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:55:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37496 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388087AbfJPNzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:55:09 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9256D6908A;
-        Wed, 16 Oct 2019 13:55:07 +0000 (UTC)
-Received: from [10.36.116.19] (ovpn-116-19.ams2.redhat.com [10.36.116.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 69A4C100EBD4;
-        Wed, 16 Oct 2019 13:55:01 +0000 (UTC)
-Subject: Re: [PATCH RFC v3 6/9] mm: Allow to offline PageOffline() pages with
- a reference count of 0
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtualization@lists.linux-foundation.org,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Juergen Gross <jgross@suse.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Yu Zhao <yuzhao@google.com>, Minchan Kim <minchan@kernel.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-References: <20190919142228.5483-1-david@redhat.com>
- <20190919142228.5483-7-david@redhat.com>
- <20191016114321.GX317@dhcp22.suse.cz>
- <bd38d88d-19a7-275a-386d-f37cb76a3390@redhat.com>
- <20191016134519.GC317@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <2aef8477-7d12-63a8-e273-9eae8712d5c2@redhat.com>
-Date:   Wed, 16 Oct 2019 15:55:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 16 Oct 2019 09:56:02 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:40885 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388087AbfJPN4C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:56:02 -0400
+Received: by mail-il1-f194.google.com with SMTP id o16so2676860ilq.7;
+        Wed, 16 Oct 2019 06:56:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9evKAakxTzcQ7kdnAG8O0duW0PQfeoTSmI1HDrhmXzs=;
+        b=Husn15unpBnUiUApRTjryg0iOFD/ZK/bLuqbpAPz1y8/BIXb3io3FkV5CUojUXZ6qH
+         uVvs4/pOdYWTADJVc5t8EFH8a8FQc6wf/WFnunoJ+N+Dz0F2zyPUuIe8IfEojjAghKUD
+         iKroHh+kGvUwsxahclwyS0d/8QrbQWzSpx8fkFwDVFuzMrdaJAafYPpfO7WYaGRDhqYB
+         iY/VS4F2aOH++PsfXp2d9npik0xMU8ghyZa2D440LmTLKXYH1piRBkP30RpnT9O9j2DE
+         vwISrPEn4qbcfa0Lf263v6DODZ8U0mEUOQcX//5oOpq+YZfX+7U3Bml0ddWlzKdIyNfk
+         ejyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9evKAakxTzcQ7kdnAG8O0duW0PQfeoTSmI1HDrhmXzs=;
+        b=DSDZO6Z+Wl3oqS7rpcszUjBTVLAICh4tjZ4jgv/n5Fm9M4sWIzM1gPneXFi+sMEgbt
+         v58mJgqAxdjJb23QQBR92XHkrCo+znCGOUDAvOsDNQ78LcZZShjNIp0BzZVWkuhXp5Xx
+         +Lm0zDJtrWW9By2vTuR92bMLzxvU7lj1Kp3y2wKzSmA6KYWolnP7IhTf0rqhP9dMH1DV
+         iWUE6wVp2RgEu3VQnvNsRYjiNQv9ppw8w2Y7sR2jGp3lQdrtMp+6NdUxLvIV9f45WePu
+         PQq63SFmu2UY6EwFCXy3HtwEv14baAmT5zBqDNTR+T/SA98iCjAMDrQdDZlabw26MO3M
+         hHAg==
+X-Gm-Message-State: APjAAAW27ii1urg6ksLs4fTVivlinVRLkk3g01D9nthFnyZ/ikCOYvCK
+        WgFF7cjfe+/pcBbabJFD6qKTTba9uqTn9giQWyc=
+X-Google-Smtp-Source: APXvYqz6T1Cj2dTtiLoaoLYVvqyfZ7Zqfc1a9CSHlOX32P7IvKsXtPYe1zmRiq06cQd+YD+kYrow42edQZqwlqMfuCQ=
+X-Received: by 2002:a92:8384:: with SMTP id p4mr11801473ilk.276.1571234159767;
+ Wed, 16 Oct 2019 06:55:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191016134519.GC317@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 16 Oct 2019 13:55:08 +0000 (UTC)
+References: <20191001233923.16514-1-aford173@gmail.com> <20191001233923.16514-5-aford173@gmail.com>
+ <20191009233130.GA1002@bogus> <CAHCN7xLCvN1v00H10KUX625awz+nea6rhA_LYnftspjaZ+od-g@mail.gmail.com>
+ <CAL_JsqJoPda6Oj14WTdm737Mydn+pzvdqkyCPry+zU7drheq=g@mail.gmail.com>
+In-Reply-To: <CAL_JsqJoPda6Oj14WTdm737Mydn+pzvdqkyCPry+zU7drheq=g@mail.gmail.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Wed, 16 Oct 2019 08:55:48 -0500
+Message-ID: <CAHCN7xLN99HyZRBr-CkxvkZntx3LfBd5ELcdLPjPRH7kLKr2uw@mail.gmail.com>
+Subject: Re: [PATCH V4 2/3] dt-bindings: Add Logic PD Type 28 display panel
+To:     Rob Herring <robh@kernel.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.10.19 15:45, Michal Hocko wrote:
-> On Wed 16-10-19 14:50:30, David Hildenbrand wrote:
->> On 16.10.19 13:43, Michal Hocko wrote:
->>> On Thu 19-09-19 16:22:25, David Hildenbrand wrote:
->>>> virtio-mem wants to allow to offline memory blocks of which some parts
->>>> were unplugged, especially, to later offline and remove completely
->>>> unplugged memory blocks. The important part is that PageOffline() has
->>>> to remain set until the section is offline, so these pages will never
->>>> get accessed (e.g., when dumping). The pages should not be handed
->>>> back to the buddy (which would require clearing PageOffline() and
->>>> result in issues if offlining fails and the pages are suddenly in the
->>>> buddy).
->>>>
->>>> Let's use "PageOffline() + reference count = 0" as a sign to
->>>> memory offlining code that these pages can simply be skipped when
->>>> offlining, similar to free or HWPoison pages.
->>>>
->>>> Pass flags to test_pages_isolated(), similar as already done for
->>>> has_unmovable_pages(). Use a new flag to indicate the
->>>> requirement of memory offlining to skip over these special pages.
->>>>
->>>> In has_unmovable_pages(), make sure the pages won't be detected as
->>>> movable. This is not strictly necessary, however makes e.g.,
->>>> alloc_contig_range() stop early, trying to isolate such page blocks -
->>>> compared to failing later when testing if all pages were isolated.
->>>>
->>>> Also, make sure that when a reference to a PageOffline() page is
->>>> dropped, that the page will not be returned to the buddy.
->>>>
->>>> memory devices (like virtio-mem) that want to make use of this
->>>> functionality have to make sure to synchronize against memory offlining,
->>>> using the memory hotplug notifier.
->>>>
->>>> Alternative: Allow to offline with a reference count of 1
->>>> and use some other sign in the struct page that offlining is permitted.
->>>
->>> Few questions. I do not see onlining code to take care of this special
->>> case. What should happen when offline && online?
->>
->> Once offline, the memmap is garbage. When onlining again:
->>
->> a) memmap will be re-initialized
->> b) online_page_callback_t will be called for every page in the section. The
->> driver can mark them offline again and not give them to the buddy.
->> c) section will be marked online.
-> 
-> But we can skip those pages when onlining and keep them in the offline
-> state right? We do not poison offlined pages.
+On Wed, Oct 16, 2019 at 8:15 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Oct 15, 2019 at 6:04 PM Adam Ford <aford173@gmail.com> wrote:
+> >
+> > On Wed, Oct 9, 2019 at 6:31 PM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Tue, Oct 01, 2019 at 06:39:22PM -0500, Adam Ford wrote:
+> > > > This patch adds documentation of device tree bindings for the WVGA panel
+> > > > Logic PD Type 28 display.
+> > > >
+> > > > Signed-off-by: Adam Ford <aford173@gmail.com>
+> > > > ---
+> > > > V4:  Update per Rob H's suggestions and copy other panel yaml example from 5.4-rc1
+> > > > V3:  Correct build errors from 'make dt_binding_check'
+> > >
+> > > The example still fails to build here.
+> >
+> > I cannot replicate the build error on 5.4-RC3 at least for this
+> > binding on V4 of the patch.  I get build error on other bindings.
+> >
+> > $ make dt_binding_check ARCH=arm
+> > scripts/kconfig/conf  --syncconfig Kconfig
+> >   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+> > /home/aford/src/linux/Documentation/devicetree/bindings/net/adi,adin.yaml:
+> > ignoring, error in schema 'adi,rx-internal-delay-ps'
+> > warning: no schema found in file:
+> > Documentation/devicetree/bindings/net/adi,adin.yaml
+> > /home/aford/src/linux/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml:
+> > ignoring, error in schema '0'
+> > warning: no schema found in file:
+> > Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
+> >   CHKDT   Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
+> >   ....
+> >   CHKDT   Documentation/devicetree/bindings/display/panel/tpo,tpg110.yaml
+> >   CHKDT   Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml
+> >   CHKDT   Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
+> >   CHKDT   Documentation/devicetree/bindings/display/panel/ronbo,rb070d30.yaml
+> >  ...
+> >  CHKDT   Documentation/devicetree/bindings/media/allwinner,sun4i-a10-ir.yaml
+> >   CHKDT   Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+> > Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml:
+> > $id: path/filename 'arm/allwinner,sun4i-a10-csi.yaml' doesn't match
+> > actual filename
+> > Documentation/devicetree/bindings/Makefile:12: recipe for target
+> > 'Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts'
+> > failed
+> > make[1]: *** [Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts]
+> > Error 1
+> > Makefile:1263: recipe for target 'dt_binding_check' failed
+> > make: *** [dt_binding_check] Error 2
+> >
+> >
+> > I took out some of the logs to make it less chatty.  I don't know
+> > anything about yaml or what the expectations are, so if there is a
+> > test beyond 'make dt_binding_check' please let me know.
+>
+> Perhaps 'make -k' is needed because of the other failures. Or try on
+> top of linux-next which should all be fixed.
 
-Right now, I do that via the online_page_callback_t call (similar to 
-HyperV), as the memmap is basically garbage and not trustworthy.
+Thanks.  I didn't know about the '-k'  I replaced GPIO_ACTIVE_HIGH
+with 0 and it seems to have fixed the error.
+Sorry about all the noise.  Hopefully I did it right.  There is a V5
+patch waiting now starting at [1]
 
-> 
-> There is state stored in the struct page. In other words this shouldn't
-> be really different from HWPoison pages. I cannot find the code that is
-> doing that and maybe we don't handle that. But we cannot simply online
-> hwpoisoned page. Offlining the range will not make a broken memory OK
-> all of the sudden. And your usecase sounds similar to me.
+[1] - https://patchwork.kernel.org/patch/11193399/
 
-Sorry to say, but whenever we online memory the memmap is overwritten, 
-because there is no way you could tell it contains garbage or not. You 
-have to assume it is garbage. (my recent patch even poisons the memmap 
-when offlining, which helped to find a lot of these "garbage memmap" BUGs)
+adam
 
-online_pages()
-	...
-	move_pfn_range_to_zone(zone, pfn, nr_pages, NULL);
-	...
-		memmap_init_zone()
-			-> memmap initialized
 
-So yes, offlining memory with HWPoison and re-onlining it effectively 
-drops HWPoison markers. On the next access, you will trigger a new HWPoison.
 
-> 
->> The driver that marked these pages to be skipped when offlining is
->> responsible for registering the online_page_callback_t callback where these
->> pages will get excluded.
->>
->> This is exactly the same as when onling a memory block that is partially
->> populated (e.g., HpyerV balloon right now).
->>
->> So it's effectively "re-initializing the memmap using the driver knowledge"
->> when onlining.
-> 
-> I am not sure I follow. So you exclude those pages when onlining?
 
-Exactly, using the online_page callback. The pages will - again - be 
-marked PG_offline with a refcount of 0. They will not be put to the buddy.
-
-> 
->>> Should we allow to try_remove_memory to succeed with these pages?
->>
->> I think we should first properly offline them (mark sections offline and
->> memory blocks, fixup numbers, shrink zones ...). The we can cleanly remove
->> the memory. (see [PATCH RFC v3 8/9] mm/memory_hotplug: Introduce
->> offline_and_remove_memory())
-> 
-> I will have a look, but just to quick question. try_remove_memory would
-> fail if the range is offline (via user interface) but there are still some
-> pages in the driver Offline state?
-
-try_remove_memory() does not check any memmap (because it is garbage), 
-it only makes sure that the memory blocks are properly marked as 
-offline. (IOW, device_offline() was called on the memory block).
-
-> 
->> Once offline, the memmap is irrelevant and try_remove_memory() can do its
->> job.
->>
->>> Do we really have hook into __put_page? Why do we even care about the
->>> reference count of those pages? Wouldn't it be just more consistent to
->>> elevate the reference count (I guess this is what you suggest in the
->>> last paragraph) and the virtio driver would return that page to the
->>> buddy by regular put_page. This is also related to the above question
->>> about the physical memory remove.
->>
->> Returning them to the buddy is problematic for various reasons. Let's have a
->> look at __offline_pages():
->>
->> 1) start_isolate_page_range()
->> -> offline pages with a reference count of one will be detected as unmovable
->> -> BAD, we abort right away. We could hack around that.
->>
->> 2) memory_notify(MEM_GOING_OFFLINE, &arg);
->> -> Here, we could release all pages to the buddy, clearing PG_offline
->> -> BAD, PF_offline must not be cleared so dumping tools will not touch
->>     these pages. I don't see a way to hack around that.
->>
->> 3) scan_movable_pages() ...
->>
->> 4a) memory_notify(MEM_OFFLINE, &arg);
->>
->> Perfect, it worked. Sections are offline.
->>
->> 4b) undo_isolate_page_range(start_pfn, end_pfn, MIGRATE_MOVABLE);
->>      memory_notify(MEM_CANCEL_OFFLINE, &arg);
->>
->> -> Offlining failed for whatever reason.
->> -> Pages are in the buddy, but we already un-isolated them. BAD.
->>
->> By not going via the buddy we avoid these issues and can leave PG_offline
->> set until the section is fully offline. Something that is very desirable for
->> virtio-mem (and as far as I can tell also HyperV in the future).
-> 
-> I am not sure I follow. Maybe my original question was confusing. Let me
-> ask again. Why do we need to hook into __put_page?
-
-Just replied again answering this question, before I read this mail :)
-
-Thanks!
-
--- 
-
-Thanks,
-
-David / dhildenb
+>
+> Rob
