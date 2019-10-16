@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B03FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3F8FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60D5121925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5974721925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:02:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263342;
-	bh=HlXTXboAkyqn6FY2CDGUTPyMyBNKFPuj4tbRyDGzV/s=;
+	s=default; t=1571263345;
+	bh=LWgLsoX1gvGw1i0WlasUv7H00ezR1kmu8IDt3Rw9Tqc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HKdU1EJU3wWzUjlEQdNCYAszChLNvIbmc+JkHmCZMhNtBFo857Sr2UGkpc/ZAuJ61
-	 b2BNb0YhWE33+ojUe/ysm/8taUdiSwwd4JRGZqua/FRCFXpZEx16o6tedEe5asNicv
-	 GuLoK8+K/S+eDD6lp0SGt3qEy9PesYPYzzz7a/lE=
+	b=V92ZoFNrPAuoVxlZmPFTZPSL3jeXUzqkTcy2P6D/ESuL/25Z/WUijmhpXH4BMqvhM
+	 wJXIvbKfHrLSJhNYY5dmQWeKBRCg76KGhoakN9LmrHJFmB4Wdyn278w0lVmYAYDDvy
+	 VvDYnccZEcT6/rGYSA2Jq0DYo0q1+zlCgKeMbWsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439000AbfJPWCU (ORCPT
+        id S2438618AbfJPV7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:02:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54996 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:59:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438629AbfJPV7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:59:48 -0400
+        id S2438255AbfJPV6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:58:46 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7565222C2;
-        Wed, 16 Oct 2019 21:59:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D12921925;
+        Wed, 16 Oct 2019 21:58:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263187;
-        bh=HlXTXboAkyqn6FY2CDGUTPyMyBNKFPuj4tbRyDGzV/s=;
+        s=default; t=1571263125;
+        bh=LWgLsoX1gvGw1i0WlasUv7H00ezR1kmu8IDt3Rw9Tqc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k/CyfTCIX1EV+QTUN51ZTjm1qMte5gzW23M/0PxSODfdTQh4TNqKSxknpfSzJ6BB2
-         jWcoULZ9wFQm0+xq0RtZqfUTGbzWBJKI7CnT1pJdqSo/8DXSIINzJDGM7hx2JK/h39
-         0VA3hR1S9DWMyqhp+aT0DQ9bw7dyNYqESf2FY6gE=
+        b=MMO22C3vrL2NCjHF4a1PDkzz1MWUCBFY+u+7hgu4WbAOsE1jBAnkIEURyHMDW8+IZ
+         9htgkeUgwWg9nhn4i02qI8bD/+PrXYXOTShQwhHm4Zpf5Wqook0iQY8EaJTl0+4wcA
+         O42kXFWTMFtLGTEMHG+dLDcm2z1DuudSGVos0YKo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Wysochanski <dwysocha@redhat.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.3 074/112] cifs: use cifsInodeInfo->open_file_lock while iterating to avoid a panic
-Date:   Wed, 16 Oct 2019 14:51:06 -0700
-Message-Id: <20191016214903.885682488@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Dan Carpenter <dan.carpenter@gmail.com>
+Subject: [PATCH 5.3 049/112] Staging: fbtft: fix memory leak in fbtft_framebuffer_alloc
+Date:   Wed, 16 Oct 2019 14:50:41 -0700
+Message-Id: <20191016214855.334419989@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
 References: <20191016214844.038848564@linuxfoundation.org>
@@ -60,167 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Wysochanski <dwysocha@redhat.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit cb248819d209d113e45fed459773991518e8e80b upstream.
+commit 5bdea6060618cfcf1459dca137e89aee038ac8b9 upstream.
 
-Commit 487317c99477 ("cifs: add spinlock for the openFileList to
-cifsInodeInfo") added cifsInodeInfo->open_file_lock spin_lock to protect
-the openFileList, but missed a few places where cifs_inode->openFileList
-was enumerated.  Change these remaining tcon->open_file_lock to
-cifsInodeInfo->open_file_lock to avoid panic in is_size_safe_to_change.
+In fbtft_framebuffer_alloc the error handling path should take care of
+releasing frame buffer after it is allocated via framebuffer_alloc, too.
+Therefore, in two failure cases the goto destination is changed to
+address this issue.
 
-[17313.245641] RIP: 0010:is_size_safe_to_change+0x57/0xb0 [cifs]
-[17313.245645] Code: 68 40 48 89 ef e8 19 67 b7 f1 48 8b 43 40 48 8d 4b 40 48 8d 50 f0 48 39 c1 75 0f eb 47 48 8b 42 10 48 8d 50 f0 48 39 c1 74 3a <8b> 80 88 00 00 00 83 c0 01 a8 02 74 e6 48 89 ef c6 07 00 0f 1f 40
-[17313.245649] RSP: 0018:ffff94ae1baefa30 EFLAGS: 00010202
-[17313.245654] RAX: dead000000000100 RBX: ffff88dc72243300 RCX: ffff88dc72243340
-[17313.245657] RDX: dead0000000000f0 RSI: 00000000098f7940 RDI: ffff88dd3102f040
-[17313.245659] RBP: ffff88dd3102f040 R08: 0000000000000000 R09: ffff94ae1baefc40
-[17313.245661] R10: ffffcdc8bb1c4e80 R11: ffffcdc8b50adb08 R12: 00000000098f7940
-[17313.245663] R13: ffff88dc72243300 R14: ffff88dbc8f19600 R15: ffff88dc72243428
-[17313.245667] FS:  00007fb145485700(0000) GS:ffff88dd3e000000(0000) knlGS:0000000000000000
-[17313.245670] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[17313.245672] CR2: 0000026bb46c6000 CR3: 0000004edb110003 CR4: 00000000007606e0
-[17313.245753] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[17313.245756] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[17313.245759] PKRU: 55555554
-[17313.245761] Call Trace:
-[17313.245803]  cifs_fattr_to_inode+0x16b/0x580 [cifs]
-[17313.245838]  cifs_get_inode_info+0x35c/0xa60 [cifs]
-[17313.245852]  ? kmem_cache_alloc_trace+0x151/0x1d0
-[17313.245885]  cifs_open+0x38f/0x990 [cifs]
-[17313.245921]  ? cifs_revalidate_dentry_attr+0x3e/0x350 [cifs]
-[17313.245953]  ? cifsFileInfo_get+0x30/0x30 [cifs]
-[17313.245960]  ? do_dentry_open+0x132/0x330
-[17313.245963]  do_dentry_open+0x132/0x330
-[17313.245969]  path_openat+0x573/0x14d0
-[17313.245974]  do_filp_open+0x93/0x100
-[17313.245979]  ? __check_object_size+0xa3/0x181
-[17313.245986]  ? audit_alloc_name+0x7e/0xd0
-[17313.245992]  do_sys_open+0x184/0x220
-[17313.245999]  do_syscall_64+0x5b/0x1b0
-
-Fixes: 487317c99477 ("cifs: add spinlock for the openFileList to cifsInodeInfo")
-
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Fixes: c296d5f9957c ("staging: fbtft: core support")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20190930030949.28615-1-navid.emamdoost@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/file.c |   27 +++++++++++----------------
- 1 file changed, 11 insertions(+), 16 deletions(-)
+ drivers/staging/fbtft/fbtft-core.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -1853,13 +1853,12 @@ struct cifsFileInfo *find_readable_file(
- {
- 	struct cifsFileInfo *open_file = NULL;
- 	struct cifs_sb_info *cifs_sb = CIFS_SB(cifs_inode->vfs_inode.i_sb);
--	struct cifs_tcon *tcon = cifs_sb_master_tcon(cifs_sb);
- 
- 	/* only filter by fsuid on multiuser mounts */
- 	if (!(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_MULTIUSER))
- 		fsuid_only = false;
- 
--	spin_lock(&tcon->open_file_lock);
-+	spin_lock(&cifs_inode->open_file_lock);
- 	/* we could simply get the first_list_entry since write-only entries
- 	   are always at the end of the list but since the first entry might
- 	   have a close pending, we go through the whole list */
-@@ -1871,7 +1870,7 @@ struct cifsFileInfo *find_readable_file(
- 				/* found a good file */
- 				/* lock it so it will not be closed on us */
- 				cifsFileInfo_get(open_file);
--				spin_unlock(&tcon->open_file_lock);
-+				spin_unlock(&cifs_inode->open_file_lock);
- 				return open_file;
- 			} /* else might as well continue, and look for
- 			     another, or simply have the caller reopen it
-@@ -1879,7 +1878,7 @@ struct cifsFileInfo *find_readable_file(
- 		} else /* write only file */
- 			break; /* write only files are last so must be done */
- 	}
--	spin_unlock(&tcon->open_file_lock);
-+	spin_unlock(&cifs_inode->open_file_lock);
- 	return NULL;
- }
- 
-@@ -1890,7 +1889,6 @@ cifs_get_writable_file(struct cifsInodeI
- {
- 	struct cifsFileInfo *open_file, *inv_file = NULL;
- 	struct cifs_sb_info *cifs_sb;
--	struct cifs_tcon *tcon;
- 	bool any_available = false;
- 	int rc = -EBADF;
- 	unsigned int refind = 0;
-@@ -1910,16 +1908,15 @@ cifs_get_writable_file(struct cifsInodeI
+--- a/drivers/staging/fbtft/fbtft-core.c
++++ b/drivers/staging/fbtft/fbtft-core.c
+@@ -714,7 +714,7 @@ struct fb_info *fbtft_framebuffer_alloc(
+ 	if (par->gamma.curves && gamma) {
+ 		if (fbtft_gamma_parse_str(par, par->gamma.curves, gamma,
+ 					  strlen(gamma)))
+-			goto alloc_fail;
++			goto release_framebuf;
  	}
  
- 	cifs_sb = CIFS_SB(cifs_inode->vfs_inode.i_sb);
--	tcon = cifs_sb_master_tcon(cifs_sb);
- 
- 	/* only filter by fsuid on multiuser mounts */
- 	if (!(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_MULTIUSER))
- 		fsuid_only = false;
- 
--	spin_lock(&tcon->open_file_lock);
-+	spin_lock(&cifs_inode->open_file_lock);
- refind_writable:
- 	if (refind > MAX_REOPEN_ATT) {
--		spin_unlock(&tcon->open_file_lock);
-+		spin_unlock(&cifs_inode->open_file_lock);
- 		return rc;
+ 	/* Transmit buffer */
+@@ -731,7 +731,7 @@ struct fb_info *fbtft_framebuffer_alloc(
+ 	if (txbuflen > 0) {
+ 		txbuf = devm_kzalloc(par->info->device, txbuflen, GFP_KERNEL);
+ 		if (!txbuf)
+-			goto alloc_fail;
++			goto release_framebuf;
+ 		par->txbuf.buf = txbuf;
+ 		par->txbuf.len = txbuflen;
  	}
- 	list_for_each_entry(open_file, &cifs_inode->openFileList, flist) {
-@@ -1931,7 +1928,7 @@ refind_writable:
- 			if (!open_file->invalidHandle) {
- 				/* found a good writable file */
- 				cifsFileInfo_get(open_file);
--				spin_unlock(&tcon->open_file_lock);
-+				spin_unlock(&cifs_inode->open_file_lock);
- 				*ret_file = open_file;
- 				return 0;
- 			} else {
-@@ -1951,7 +1948,7 @@ refind_writable:
- 		cifsFileInfo_get(inv_file);
- 	}
+@@ -753,6 +753,9 @@ struct fb_info *fbtft_framebuffer_alloc(
  
--	spin_unlock(&tcon->open_file_lock);
-+	spin_unlock(&cifs_inode->open_file_lock);
+ 	return info;
  
- 	if (inv_file) {
- 		rc = cifs_reopen_file(inv_file, false);
-@@ -1966,7 +1963,7 @@ refind_writable:
- 		cifsFileInfo_put(inv_file);
- 		++refind;
- 		inv_file = NULL;
--		spin_lock(&tcon->open_file_lock);
-+		spin_lock(&cifs_inode->open_file_lock);
- 		goto refind_writable;
- 	}
- 
-@@ -4405,17 +4402,15 @@ static int cifs_readpage(struct file *fi
- static int is_inode_writable(struct cifsInodeInfo *cifs_inode)
- {
- 	struct cifsFileInfo *open_file;
--	struct cifs_tcon *tcon =
--		cifs_sb_master_tcon(CIFS_SB(cifs_inode->vfs_inode.i_sb));
- 
--	spin_lock(&tcon->open_file_lock);
-+	spin_lock(&cifs_inode->open_file_lock);
- 	list_for_each_entry(open_file, &cifs_inode->openFileList, flist) {
- 		if (OPEN_FMODE(open_file->f_flags) & FMODE_WRITE) {
--			spin_unlock(&tcon->open_file_lock);
-+			spin_unlock(&cifs_inode->open_file_lock);
- 			return 1;
- 		}
- 	}
--	spin_unlock(&tcon->open_file_lock);
-+	spin_unlock(&cifs_inode->open_file_lock);
- 	return 0;
- }
++release_framebuf:
++	framebuffer_release(info);
++
+ alloc_fail:
+ 	vfree(vmem);
  
 
 
