@@ -2,198 +2,311 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D07FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11BCDFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11BA32067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D09B12067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:11:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="f/FhoMQM";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="H5VrYAlk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="YGZYNDR8";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="l6we3dkA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405428AbfJPQLF (ORCPT
+        id S2405459AbfJPQLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:11:05 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:52142 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2405297AbfJPQLE (ORCPT
+        Wed, 16 Oct 2019 12:11:10 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:14475 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392037AbfJPQLJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:11:04 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9GG9DpB017694;
-        Wed, 16 Oct 2019 09:10:52 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=GfoXv/Fqrk3PRrOlR1VGGxedXFlxXp5lwUxvKUBzTd0=;
- b=f/FhoMQMas9VfT21hDDC5oindrZWOB/z/4gLjBwZ583Qh/AmJreIdBJr/ckT9CA/XF07
- YV9az2kR89mcKf1EpP3+4ZMbrgYctxmCuYq0EXBKUnGP0uASC9604XFfrJq1rRIC+FTd
- oatDC3o2LplByf9lpneQ4p+T+xgSLYsH4vc= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2vmtajk77s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 16 Oct 2019 09:10:52 -0700
-Received: from ash-exhub104.TheFacebook.com (2620:10d:c0a8:82::d) by
- ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 16 Oct 2019 09:10:51 -0700
-Received: from NAM03-BY2-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.175) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 16 Oct 2019 09:10:51 -0700
+        Wed, 16 Oct 2019 12:11:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1571242269; x=1602778269;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=HQF9P0w86Pfws7Y8lRbISGrDWdFNXqpNiHUzI0GxU5M=;
+  b=YGZYNDR8D/yuDtySYLYDX9jyfm8bAHH7HU/5JVclPxvL33yj8doQBX4h
+   nAEg+rYjlQlm1DlPnrIJMmmnrjZNTWlRzV2r8E5DXMX9x9Xtq7s6vOPK0
+   D9ae7ThVLkaJTlCHjDtBKOuIgBPSJ8mNiMwiMZ7g3I+ipbrsFfDzoNVzY
+   5pjqKKl4JrIsk6iAf3qYG4UePuoDpSYI2+AbYZ3b4vyUkfAqNuGn9v74g
+   ESIRd7azJLaT3W5naQZG7bYUPAX01QncEnnmfwznMHPGuBQnarnuEujTX
+   EOE0waDEZErBBKkt4gKJYrhxXt2Ix3c0w0aDxJlQxlfSMrG9oVd5fYbXV
+   w==;
+IronPort-SDR: xJfXiNJL0gmbdzY84JKja55rhMmP1lDimz8oVteHhbCcUqSLmQ+K3Y/TA/VDvGlKGo9846udhl
+ 8KDYcVjhMCJCl8JiA7HUOJHwBYJY3d9HvbDJ9WfeMOV30Fx6FB85ajDfRvtaeCIisWUSxNV2Dv
+ 02NzGr+gOXqcXC/9QMRhH3LCZywBwV5PW8oU2wWFub9TomJhfVKAGrubmQPzEcd5vC8lq1Vm4o
+ F5FqYcwZcs36DOmdkJfQrh5yP8v3KRndDrQ26FvTgj86m1mKI/n3vg75mf5xyHJI1n3AaYjk1b
+ 2Qw=
+X-IronPort-AV: E=Sophos;i="5.67,304,1566835200"; 
+   d="scan'208";a="121448343"
+Received: from mail-dm3nam03lp2058.outbound.protection.outlook.com (HELO NAM03-DM3-obe.outbound.protection.outlook.com) ([104.47.41.58])
+  by ob1.hgst.iphmx.com with ESMTP; 17 Oct 2019 00:11:08 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nfLE0fn41+yTPiDi/hC18IO5rB4yuKvMPcrN4B+4C1K0vAinG3VbSDmwfoRQ5fU3XbKFelD7ATRe2WftkP/oeGTEE1qOBVPFD+7MbUCgGEhw7OBbxSLuQWA0UXDaZnuf+A4tbXrtFSLHZ2MXKe1S8kK1C+Am9qWazn+OAt20xQnB+9gMoU72P6WJHKUoxLIxDhKJQd0FuFDyU5rAEeNuhbGoT6NQuNLooPxKi4pD8uvI9y7h+AXimpqUXdKs31xfR0uaJcSWghCdcQDZkbQFBYF6Wc9A+UTLdj18tOjuEtY0MQQDrClDGHgYn5d+vQsRcC9jTZtOar8iUu1K3Jw+YQ==
+ b=F0ASHp/JLrwkyvs8iSG88sgmaQ3ffZJ/8rhZKMIN7duZVaI2OZqzZtb/iWLe0QtPKLq2tWyTqK7f7Y7mAyTenXYsBiwgqj7UmdMgZK/MzdEjxe2K2l5JkdKmF68OIBFMWwBbT8my75fVWsTxLWuXxNpYLy1xiWEYbY+rq/LKKqwFi8xzIrCy31Pr0kLwSQm7aTTOAtnFLvMFYMsCzovMTAyjk2Ql/2K9Nh0AgbFisCwFCwKPkHR5rJ8tomTVOH2Q/ZyGFmEqcRaxrD5sCz25pGeScvpKNpCv41AGzsbf7hblTX3/3UBAQuADWGAgXkzM965fqjEN+R1R67gPBCXMdA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GfoXv/Fqrk3PRrOlR1VGGxedXFlxXp5lwUxvKUBzTd0=;
- b=ln4FznQYIlDzVGKe/nQ+sXfvL0zJZEekx9qJw4rn/pGa5eHjSr7uRfBc9v2EGZ+xICStfW69yY00px3xrEjPBjHqy5KRkBFpWNf3AVcAeTFSHbmicIBytqPCvypgvBcPmC7gvJK2x/BSb+kEytdFTEMjSUC4lOqeROb/T/kJt+WoikR/Yjt7Zrr+TWR6DiivH9ZjvcoIco8aG8h/YOxqhvsOHO/Jrm6Fm7I0Ln/GybLTFLK5vrTQf2ewQh1kyz6wdx1ARPP0tnPOl44WiCEVXIp82o/bl/OpmbJgWFQTycXmdaokJ8rPWIIN5NSfu+DxsmUOsFzIJJCWhF6yr6yi7Q==
+ bh=xI8rW9lgwMgfuuA+l4LpZS8ywasprBg2yLcjwHr5178=;
+ b=WiFi/cR/MAqREONLIxXRD+EZ2qoM54wEApaks0bR8atD58dSCW4qbYq4XG3HgV9KLLy8gea69AtvT9f8Rb6riAYN2RApjGVe1WbzVhvdw4IdA8MEsZPqBA7Q/YBlFCf5qe20J2/J3waWtePHqwXSF9ouHeCa+TepeON1QBg1lTKxGLIIBAF4rqu++kT1FgjwsJu0CNhUNS5DKBH5aAlsea0j/+QQmRQpLxN0Pl8i/j4Qs8xxL7Q5NPmMWytmy6O96d9oH5oYRj3bJTBiCIJLMx7mNgHUDm6YcPYheJMaatE+JdsPESGbFQ9wFUTS2YlBz6jesF3mKOEtCLtHs8LgLg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GfoXv/Fqrk3PRrOlR1VGGxedXFlxXp5lwUxvKUBzTd0=;
- b=H5VrYAlkUO2VBUbmsLMebxxx9jOHT64a+oa0efAD2xP0cmDVATH8wq+yzSF3hA9eSh9E/5497tDTPBXsWemfkBpH0OEXWS1rygtcicBLRnG2bupqzSDmKyUilwx2VSI56RoKzVJDyEbiYjNCZk3nHR9S9pW4y5rTh0yutBMyZ80=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
- MWHPR15MB1360.namprd15.prod.outlook.com (10.173.228.148) with Microsoft SMTP
+ bh=xI8rW9lgwMgfuuA+l4LpZS8ywasprBg2yLcjwHr5178=;
+ b=l6we3dkAg92BZtG8+MWmV2PTmhb3tN9xD5iOLITbiQAw8RSMUQpxJcHfyZO5Jq/jCjDPnA2DZhwvJhStf0ayKDSp+Wlpc3eREac8lcDuWfeCLdTRaGUhAxyl6jrJAtuOCqhLQwSG0bP8712L5FuECPVD69+XZaZqGP5Fyq6L/mQ=
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
+ MN2PR04MB6397.namprd04.prod.outlook.com (52.132.170.135) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.18; Wed, 16 Oct 2019 16:10:49 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::fdc8:5546:bace:15f5]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::fdc8:5546:bace:15f5%5]) with mapi id 15.20.2347.023; Wed, 16 Oct 2019
- 16:10:49 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-CC:     open list <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
-        Kernel Team <Kernel-team@fb.com>,
-        "william.kucharski@oracle.com" <william.kucharski@oracle.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Subject: Re: [PATCH 4/4] uprobe: only do FOLL_SPLIT_PMD for uprobe register
-Thread-Topic: [PATCH 4/4] uprobe: only do FOLL_SPLIT_PMD for uprobe register
-Thread-Index: AQHVg/TTl1jUwKEEhEe4JMFjXQBksqddLX+AgABDI4A=
-Date:   Wed, 16 Oct 2019 16:10:49 +0000
-Message-ID: <CE3DD093-E5B4-4C98-A7B7-3B05D7732D3C@fb.com>
-References: <20191016073731.4076725-1-songliubraving@fb.com>
- <20191016073731.4076725-5-songliubraving@fb.com>
- <20191016121031.GA31585@redhat.com>
-In-Reply-To: <20191016121031.GA31585@redhat.com>
+ 15.20.2347.17; Wed, 16 Oct 2019 16:11:06 +0000
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::1454:87a:13b0:d3a]) by MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::1454:87a:13b0:d3a%7]) with mapi id 15.20.2347.023; Wed, 16 Oct 2019
+ 16:11:06 +0000
+From:   Anup Patel <Anup.Patel@wdc.com>
+To:     Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>
+CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Graf <graf@amazon.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Anup Patel <anup@brainfault.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Anup Patel <Anup.Patel@wdc.com>
+Subject: [PATCH v9 15/22] RISC-V: KVM: Implement ONE REG interface for FP
+ registers
+Thread-Topic: [PATCH v9 15/22] RISC-V: KVM: Implement ONE REG interface for FP
+ registers
+Thread-Index: AQHVhDxQHlLxgir5ykyEtKqS8mr7Gg==
+Date:   Wed, 16 Oct 2019 16:11:06 +0000
+Message-ID: <20191016160649.24622-16-anup.patel@wdc.com>
+References: <20191016160649.24622-1-anup.patel@wdc.com>
+In-Reply-To: <20191016160649.24622-1-anup.patel@wdc.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3594.4.19)
-x-originating-ip: [2620:10d:c090:200::1:35f7]
+x-clientproxiedby: MAXPR01CA0098.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:5d::16) To MN2PR04MB6061.namprd04.prod.outlook.com
+ (2603:10b6:208:d8::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Anup.Patel@wdc.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [106.51.27.162]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f833eda3-5037-4061-1739-08d752536944
-x-ms-traffictypediagnostic: MWHPR15MB1360:
+x-ms-office365-filtering-correlation-id: 88e5a04e-cafd-4a5a-d0c6-08d752537313
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: MN2PR04MB6397:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR15MB136008E9AF88264DB162F3E8B3920@MWHPR15MB1360.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-microsoft-antispam-prvs: <MN2PR04MB63970B50F603AE67BB47762C8D920@MN2PR04MB6397.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:854;
 x-forefront-prvs: 0192E812EC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39860400002)(396003)(366004)(376002)(136003)(189003)(199004)(6116002)(64756008)(8676002)(6512007)(66556008)(6246003)(6506007)(54906003)(316002)(229853002)(478600001)(81156014)(86362001)(71200400001)(486006)(476003)(71190400001)(33656002)(50226002)(81166006)(6436002)(186003)(102836004)(46003)(66476007)(76116006)(66446008)(6916009)(446003)(305945005)(66946007)(53546011)(11346002)(2616005)(7736002)(76176011)(14444005)(2906002)(14454004)(256004)(99286004)(6486002)(25786009)(4326008)(36756003)(8936002)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1360;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(396003)(376002)(39860400002)(136003)(199004)(189003)(71190400001)(71200400001)(66556008)(66476007)(66446008)(64756008)(66946007)(6116002)(3846002)(66066001)(76176011)(52116002)(256004)(99286004)(25786009)(7416002)(14454004)(4326008)(478600001)(7736002)(8676002)(305945005)(110136005)(476003)(54906003)(86362001)(2616005)(11346002)(446003)(316002)(102836004)(81166006)(486006)(55236004)(44832011)(5660300002)(50226002)(26005)(9456002)(186003)(8936002)(36756003)(1076003)(6436002)(6512007)(2906002)(6486002)(386003)(81156014)(6506007);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6397;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gD7QeNp7jW9EDkRJgYqRFBP3Z2osBfBS4C+DiI5k2mQ3+1rGYlPIWPSrj2sUpLJjKtHjDstYIliFdYbN3DcFdD1gHjw5Vv2o5l05VtgeCNwdOhF7DIUKUfExfQlo1Hp1gI1c7b9iSmQ4phnjk69b3yrt8uz7ReTy8nnA55QVg6lk56CPtnCT1C7f78LF8OKcrPGYpS04SBIqaoTBv7RJ2jR0s9R2sNNxSm0yM/9GiVI/GMHmW/ezK2XraW4s8YHaJ/OGiH1DzzeFUQTSUXhn/pataKhs8PTOn2RqvgbVKGkoVw8GHLLn5Xu6rjEzKWez+lyUh3TUhv09vr7B9sJOxUZj8a8lepPI+wzXYwdyo2u014nZNHOTz+NEsljyFRlL+fididLNVRFmpBV9HB5435qlHQ4qvmrXMxkLwFDAjPo=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E81786F0A079F04B926518CE3CA6CF2D@namprd15.prod.outlook.com>
+x-microsoft-antispam-message-info: Y0kSxOnQNnUt8FG3whYnWHdcXvUjfJGD13Iwu/NgX+y7EU3mjzB1DymY9NyQmN84PKhOmAS4DLVNFCqqW0KUBXIM0iZ3BpMCB0H0oB4NL3gS1gPSYh8UuBqK19ObqgPJYIQjbd8UvuRlj+9bpBsIyTyFshjqbOrpi1S503ct9tktfBrn4AyV+5Ym+l9xhewX5mgGwa277ea2rXwxvr5hTIO28BYk0+B/IVQcswqGBXr/MwTCKrFv/sUcisW9di98YxTzhxUaLDADeQMcVQb5IZIyArY6/fC5WfcO5qNx40rSrdWOC1px3CREralta5t32vqdBv5Vc/l964x2WqULT0NS/LKr36nc+Fg/aB6UMAFc3CS2DE7JuokTphoiVLN9naOhw+qtc89pU3HdSNxhgqnYiEm/7Zwx77+dx7QrW0E=
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: f833eda3-5037-4061-1739-08d752536944
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Oct 2019 16:10:49.5778
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 88e5a04e-cafd-4a5a-d0c6-08d752537313
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Oct 2019 16:11:06.4385
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: n60JP/0m0vc2RSQreU45iujkoUxM7EwykTgNYbS6RqMGzG6c9MLtUKOwp/ROEZrkGlYjAwRDatefkUNv+wIoDQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1360
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-16_07:2019-10-16,2019-10-16 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0 mlxscore=0
- mlxlogscore=999 suspectscore=0 bulkscore=0 clxscore=1015 impostorscore=0
- malwarescore=0 spamscore=0 lowpriorityscore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910160135
-X-FB-Internal: deliver
+X-MS-Exchange-CrossTenant-userprincipalname: bIJMuzjr60sFwBSrZAwJz/tiuUvMinzeg3hzug1L8w+RtcF+kPCNHsypRK3LQvKsgR4u7kZ4gAfCI2Sygtk0Aw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6397
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Atish Patra <atish.patra@wdc.com>
 
+Add a KVM_GET_ONE_REG/KVM_SET_ONE_REG ioctl interface for floating
+point registers such as F0-F31 and FCSR. This support is added for
+both 'F' and 'D' extensions.
 
-> On Oct 16, 2019, at 5:10 AM, Oleg Nesterov <oleg@redhat.com> wrote:
->=20
-> On 10/16, Song Liu wrote:
->>=20
->> --- a/kernel/events/uprobes.c
->> +++ b/kernel/events/uprobes.c
->> @@ -474,14 +474,17 @@ int uprobe_write_opcode(struct arch_uprobe *auprob=
-e, struct mm_struct *mm,
->> 	struct vm_area_struct *vma;
->> 	int ret, is_register, ref_ctr_updated =3D 0;
->> 	bool orig_page_huge =3D false;
->> +	unsigned int gup_flags =3D FOLL_FORCE;
->>=20
->> 	is_register =3D is_swbp_insn(&opcode);
->> 	uprobe =3D container_of(auprobe, struct uprobe, arch);
->>=20
->> retry:
->> +	if (is_register)
->> +		gup_flags |=3D FOLL_SPLIT_PMD;
->> 	/* Read the page with vaddr into memory */
->> -	ret =3D get_user_pages_remote(NULL, mm, vaddr, 1,
->> -			FOLL_FORCE | FOLL_SPLIT_PMD, &old_page, &vma, NULL);
->> +	ret =3D get_user_pages_remote(NULL, mm, vaddr, 1, gup_flags,
->> +				    &old_page, &vma, NULL);
->> 	if (ret <=3D 0)
->> 		return ret;
->>=20
->> @@ -489,6 +492,9 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe,=
- struct mm_struct *mm,
->> 	if (ret <=3D 0)
->> 		goto put_old;
->>=20
->> +	WARN(!is_register && PageCompound(old_page),
->> +	     "uprobe unregister should never work on compound page\n");
->=20
-> But this can happen with the change above. You can't know if *vaddr was
-> previously changed by install_breakpoint() or not.
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
+Signed-off-by: Anup Patel <anup.patel@wdc.com>
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+Reviewed-by: Alexander Graf <graf@amazon.com>
+---
+ arch/riscv/include/uapi/asm/kvm.h |  10 +++
+ arch/riscv/kvm/vcpu.c             | 104 ++++++++++++++++++++++++++++++
+ 2 files changed, 114 insertions(+)
 
-> If not, verify_opcode() should likely save us, but we can't rely on it.
-> Say, someone can write "int3" into vm_file at uprobe->offset.
-
-I think this won't really happen. With is_register =3D=3D false, we already=
+diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uapi/as=
+m/kvm.h
+index 997b85f6fded..19811823ab70 100644
+--- a/arch/riscv/include/uapi/asm/kvm.h
++++ b/arch/riscv/include/uapi/asm/kvm.h
+@@ -96,6 +96,16 @@ struct kvm_riscv_csr {
+ #define KVM_REG_RISCV_CSR_REG(name)	\
+ 		(offsetof(struct kvm_riscv_csr, name) / sizeof(unsigned long))
 =20
-know opcode is not "int3", so current call must be from set_orig_insn().=20
-Therefore, old_page must be installed by uprobe, and cannot be compound.
-
-The other way is not guaranteed. With is_register =3D=3D true, it is still
-possible current call is from set_orig_insn(). However, we do not rely
-on this path.=20
-
-Does this make sense? Or did I miss anything?
-
->=20
-> And I am not sure it is safe to continue in this case, I'd suggest to
-> return -EWHATEVER to avoid the possible crash.
-
-I think we can return -ESOMETHING here to be safe. However, if the=20
-analysis above makes sense, it is not necessary.=20
-
-Thanks,
-Song
-
++/* F extension registers are mapped as type4 */
++#define KVM_REG_RISCV_FP_F		(0x04 << KVM_REG_RISCV_TYPE_SHIFT)
++#define KVM_REG_RISCV_FP_F_REG(name)	\
++		(offsetof(struct __riscv_f_ext_state, name) / sizeof(u32))
++
++/* D extension registers are mapped as type 5 */
++#define KVM_REG_RISCV_FP_D		(0x05 << KVM_REG_RISCV_TYPE_SHIFT)
++#define KVM_REG_RISCV_FP_D_REG(name)	\
++		(offsetof(struct __riscv_d_ext_state, name) / sizeof(u64))
++
+ #endif
+=20
+ #endif /* __LINUX_KVM_RISCV_H */
+diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+index 7ed556979b89..092b209644de 100644
+--- a/arch/riscv/kvm/vcpu.c
++++ b/arch/riscv/kvm/vcpu.c
+@@ -430,6 +430,98 @@ static int kvm_riscv_vcpu_set_reg_csr(struct kvm_vcpu =
+*vcpu,
+ 	return 0;
+ }
+=20
++static int kvm_riscv_vcpu_get_reg_fp(struct kvm_vcpu *vcpu,
++				     const struct kvm_one_reg *reg,
++				     unsigned long rtype)
++{
++	struct kvm_cpu_context *cntx =3D &vcpu->arch.guest_context;
++	unsigned long isa =3D vcpu->arch.isa;
++	unsigned long __user *uaddr =3D
++			(unsigned long __user *)(unsigned long)reg->addr;
++	unsigned long reg_num =3D reg->id & ~(KVM_REG_ARCH_MASK |
++					    KVM_REG_SIZE_MASK |
++					    rtype);
++	void *reg_val;
++
++	if ((rtype =3D=3D KVM_REG_RISCV_FP_F) &&
++	    riscv_isa_extension_available(&isa, f)) {
++		if (KVM_REG_SIZE(reg->id) !=3D sizeof(u32))
++			return -EINVAL;
++		if (reg_num =3D=3D KVM_REG_RISCV_FP_F_REG(fcsr))
++			reg_val =3D &cntx->fp.f.fcsr;
++		else if ((KVM_REG_RISCV_FP_F_REG(f[0]) <=3D reg_num) &&
++			  reg_num <=3D KVM_REG_RISCV_FP_F_REG(f[31]))
++			reg_val =3D &cntx->fp.f.f[reg_num];
++		else
++			return -EINVAL;
++	} else if ((rtype =3D=3D KVM_REG_RISCV_FP_D) &&
++		   riscv_isa_extension_available(&isa, d)) {
++		if (reg_num =3D=3D KVM_REG_RISCV_FP_D_REG(fcsr)) {
++			if (KVM_REG_SIZE(reg->id) !=3D sizeof(u32))
++				return -EINVAL;
++			reg_val =3D &cntx->fp.d.fcsr;
++		} else if ((KVM_REG_RISCV_FP_D_REG(f[0]) <=3D reg_num) &&
++			   reg_num <=3D KVM_REG_RISCV_FP_D_REG(f[31])) {
++			if (KVM_REG_SIZE(reg->id) !=3D sizeof(u64))
++				return -EINVAL;
++			reg_val =3D &cntx->fp.d.f[reg_num];
++		} else
++			return -EINVAL;
++	} else
++		return -EINVAL;
++
++	if (copy_to_user(uaddr, reg_val, KVM_REG_SIZE(reg->id)))
++		return -EFAULT;
++
++	return 0;
++}
++
++static int kvm_riscv_vcpu_set_reg_fp(struct kvm_vcpu *vcpu,
++				     const struct kvm_one_reg *reg,
++				     unsigned long rtype)
++{
++	struct kvm_cpu_context *cntx =3D &vcpu->arch.guest_context;
++	unsigned long isa =3D vcpu->arch.isa;
++	unsigned long __user *uaddr =3D
++			(unsigned long __user *)(unsigned long)reg->addr;
++	unsigned long reg_num =3D reg->id & ~(KVM_REG_ARCH_MASK |
++					    KVM_REG_SIZE_MASK |
++					    rtype);
++	void *reg_val;
++
++	if ((rtype =3D=3D KVM_REG_RISCV_FP_F) &&
++	    riscv_isa_extension_available(&isa, f)) {
++		if (KVM_REG_SIZE(reg->id) !=3D sizeof(u32))
++			return -EINVAL;
++		if (reg_num =3D=3D KVM_REG_RISCV_FP_F_REG(fcsr))
++			reg_val =3D &cntx->fp.f.fcsr;
++		else if ((KVM_REG_RISCV_FP_F_REG(f[0]) <=3D reg_num) &&
++			  reg_num <=3D KVM_REG_RISCV_FP_F_REG(f[31]))
++			reg_val =3D &cntx->fp.f.f[reg_num];
++		else
++			return -EINVAL;
++	} else if ((rtype =3D=3D KVM_REG_RISCV_FP_D) &&
++		   riscv_isa_extension_available(&isa, d)) {
++		if (reg_num =3D=3D KVM_REG_RISCV_FP_D_REG(fcsr)) {
++			if (KVM_REG_SIZE(reg->id) !=3D sizeof(u32))
++				return -EINVAL;
++			reg_val =3D &cntx->fp.d.fcsr;
++		} else if ((KVM_REG_RISCV_FP_D_REG(f[0]) <=3D reg_num) &&
++			   reg_num <=3D KVM_REG_RISCV_FP_D_REG(f[31])) {
++			if (KVM_REG_SIZE(reg->id) !=3D sizeof(u64))
++				return -EINVAL;
++			reg_val =3D &cntx->fp.d.f[reg_num];
++		} else
++			return -EINVAL;
++	} else
++		return -EINVAL;
++
++	if (copy_from_user(reg_val, uaddr, KVM_REG_SIZE(reg->id)))
++		return -EFAULT;
++
++	return 0;
++}
++
+ static int kvm_riscv_vcpu_set_reg(struct kvm_vcpu *vcpu,
+ 				  const struct kvm_one_reg *reg)
+ {
+@@ -439,6 +531,12 @@ static int kvm_riscv_vcpu_set_reg(struct kvm_vcpu *vcp=
+u,
+ 		return kvm_riscv_vcpu_set_reg_core(vcpu, reg);
+ 	else if ((reg->id & KVM_REG_RISCV_TYPE_MASK) =3D=3D KVM_REG_RISCV_CSR)
+ 		return kvm_riscv_vcpu_set_reg_csr(vcpu, reg);
++	else if ((reg->id & KVM_REG_RISCV_TYPE_MASK) =3D=3D KVM_REG_RISCV_FP_F)
++		return kvm_riscv_vcpu_set_reg_fp(vcpu, reg,
++						 KVM_REG_RISCV_FP_F);
++	else if ((reg->id & KVM_REG_RISCV_TYPE_MASK) =3D=3D KVM_REG_RISCV_FP_D)
++		return kvm_riscv_vcpu_set_reg_fp(vcpu, reg,
++						 KVM_REG_RISCV_FP_D);
+=20
+ 	return -EINVAL;
+ }
+@@ -452,6 +550,12 @@ static int kvm_riscv_vcpu_get_reg(struct kvm_vcpu *vcp=
+u,
+ 		return kvm_riscv_vcpu_get_reg_core(vcpu, reg);
+ 	else if ((reg->id & KVM_REG_RISCV_TYPE_MASK) =3D=3D KVM_REG_RISCV_CSR)
+ 		return kvm_riscv_vcpu_get_reg_csr(vcpu, reg);
++	else if ((reg->id & KVM_REG_RISCV_TYPE_MASK) =3D=3D KVM_REG_RISCV_FP_F)
++		return kvm_riscv_vcpu_get_reg_fp(vcpu, reg,
++						 KVM_REG_RISCV_FP_F);
++	else if ((reg->id & KVM_REG_RISCV_TYPE_MASK) =3D=3D KVM_REG_RISCV_FP_D)
++		return kvm_riscv_vcpu_get_reg_fp(vcpu, reg,
++						 KVM_REG_RISCV_FP_D);
+=20
+ 	return -EINVAL;
+ }
+--=20
+2.17.1
 
