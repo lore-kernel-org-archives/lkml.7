@@ -2,158 +2,132 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8DFECE588
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA1DC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9123820650
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:21:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Sy7Putdl"
+	by mail.kernel.org (Postfix) with ESMTP id 9E68220650
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:21:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389849AbfJPJVG (ORCPT
+        id S2391926AbfJPJV2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 05:21:06 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:57076 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfJPJVG (ORCPT
+        Wed, 16 Oct 2019 05:21:28 -0400
+Received: from mail.savoirfairelinux.com ([208.88.110.44]:55206 "EHLO
+        mail.savoirfairelinux.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfJPJV2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 05:21:06 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9G9Kr7s071869;
-        Wed, 16 Oct 2019 04:20:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571217653;
-        bh=PLuJcSKgaQ8mRN+wH71BWt4hh/2bsw+qMNRwX9D5RiY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Sy7PutdlDJseS+D5+unm6Pqx3aYTvCkhnD0/jG2WrT+Pmo7bjaRsdhCYkoEWtve9O
-         RyQVaBFkYAuO9OOBGuncVws4jshTqb8jPu0iikDqBeE3zWJKu59nFR6j/0kn33N7SF
-         iy/ZI90adnuRzhRfqGYV3LDzyCWg8zsltZ8HxFsk=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9G9KrVk111708
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 16 Oct 2019 04:20:53 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 16
- Oct 2019 04:20:52 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 16 Oct 2019 04:20:52 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9G9Ko4Y001962;
-        Wed, 16 Oct 2019 04:20:50 -0500
-Subject: Re: [PATCH 1/2] usb: cdns3: fix cdns3_core_init_role()
-To:     Pawel Laszczak <pawell@cadence.com>,
-        "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-CC:     "peter.chen@nxp.com" <peter.chen@nxp.com>,
-        "nsekhar@ti.com" <nsekhar@ti.com>,
-        Rahul Kumar <kurahul@cadence.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20191007121601.25996-1-rogerq@ti.com>
- <20191007121601.25996-2-rogerq@ti.com>
- <BYAPR07MB470974496C7C59FDE615E5F3DD920@BYAPR07MB4709.namprd07.prod.outlook.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <715c8f74-2790-6546-66ae-c0aea53946ed@ti.com>
-Date:   Wed, 16 Oct 2019 12:20:49 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 16 Oct 2019 05:21:28 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.savoirfairelinux.com (Postfix) with ESMTP id 7DD609C02F3;
+        Wed, 16 Oct 2019 05:21:26 -0400 (EDT)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+        by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id HYlKbr2B05BK; Wed, 16 Oct 2019 05:21:25 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.savoirfairelinux.com (Postfix) with ESMTP id CCB989C03A3;
+        Wed, 16 Oct 2019 05:21:25 -0400 (EDT)
+X-Virus-Scanned: amavisd-new at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+        by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id DtRpUWLBM3Fo; Wed, 16 Oct 2019 05:21:25 -0400 (EDT)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [192.168.48.237])
+        by mail.savoirfairelinux.com (Postfix) with ESMTP id 900CB9C02F3;
+        Wed, 16 Oct 2019 05:21:25 -0400 (EDT)
+Date:   Wed, 16 Oct 2019 05:21:25 -0400 (EDT)
+From:   Gilles Doffe <gilles.doffe@savoirfairelinux.com>
+To:     shawnguo <shawnguo@kernel.org>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        rennes <rennes@savoirfairelinux.com>,
+        =?utf-8?Q?J=C3=A9rome?= Oufella 
+        <jerome.oufella@savoirfairelinux.com>,
+        robh+dt <robh+dt@kernel.org>,
+        mark rutland <mark.rutland@arm.com>,
+        s hauer <s.hauer@pengutronix.de>,
+        kernel <kernel@pengutronix.de>, festevam <festevam@gmail.com>,
+        linux-imx <linux-imx@nxp.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Message-ID: <1837032218.9373931.1571217685548.JavaMail.zimbra@savoirfairelinux.com>
+In-Reply-To: <20191007112430.GD7150@dragon>
+References: <20190916104353.7278-1-gilles.doffe@savoirfairelinux.com> <20191007112430.GD7150@dragon>
+Subject: Re: [PATCH v3] ARM: dts: imx6qdl-rex: add gpio expander pca9535
 MIME-Version: 1.0
-In-Reply-To: <BYAPR07MB470974496C7C59FDE615E5F3DD920@BYAPR07MB4709.namprd07.prod.outlook.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Mailer: Zimbra 8.8.11_GA_3737 (ZimbraWebClient - GC76 (Linux)/8.8.11_GA_3737)
+Thread-Topic: imx6qdl-rex: add gpio expander pca9535
+Thread-Index: 0SgUHsAJvXpg4HUlY55gc/ziL2JF9g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pawel,
+----- Le 7 Oct 19, à 13:24, shawnguo shawnguo@kernel.org a écrit :
 
-On 16/10/2019 07:32, Pawel Laszczak wrote:
-> Hi Roger
-> 
->>
->> At startup we should trigger the HW state machine
->> only if it is OTG mode. Otherwise we should just
->> start the respective role.
->>
->> Initialize idle role by default. If we don't do this then
->> cdns3_idle_role_stop() is not called when switching to
->> host/device role and so lane switch mechanism
->> doesn't work. This results to super-speed device not working
->> in one orientation if it was plugged before driver probe.
->>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+> On Mon, Sep 16, 2019 at 12:43:53PM +0200, Gilles DOFFE wrote:
+>> The pca9535 gpio expander is present on the Rex baseboard, but missing
+>> from the dtsi.
+>> The pca9535 is on i2c2 bus which is common to the three SOM
+>> variants (Basic/Pro/Ultra), thus it is activated by default.
+>> 
+>> Add also the new gpio controller and the associated interrupt line
+>> MX6QDL_PAD_NANDF_CS3__GPIO6_IO16.
+>> 
+>> Signed-off-by: Gilles DOFFE <gilles.doffe@savoirfairelinux.com>
 >> ---
->> drivers/usb/cdns3/core.c | 20 +++++++++++++++++++-
->> 1 file changed, 19 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/usb/cdns3/core.c b/drivers/usb/cdns3/core.c
->> index 06f1e105be4e..1109dc5a4c39 100644
->> --- a/drivers/usb/cdns3/core.c
->> +++ b/drivers/usb/cdns3/core.c
->> @@ -160,10 +160,28 @@ static int cdns3_core_init_role(struct cdns3 *cdns)
->> 	if (ret)
->> 		goto err;
->>
->> -	if (cdns->dr_mode != USB_DR_MODE_OTG) {
->> +	/* Initialize idle role to start with */
->> +	ret = cdns3_role_start(cdns, USB_ROLE_NONE);
->> +	if (ret)
->> +		goto err;
+>>  arch/arm/boot/dts/imx6qdl-rex.dtsi | 19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
+>> 
+>> diff --git a/arch/arm/boot/dts/imx6qdl-rex.dtsi
+>> b/arch/arm/boot/dts/imx6qdl-rex.dtsi
+>> index 97f1659144ea..8a748ca1b108 100644
+>> --- a/arch/arm/boot/dts/imx6qdl-rex.dtsi
+>> +++ b/arch/arm/boot/dts/imx6qdl-rex.dtsi
+>> @@ -132,6 +132,19 @@
+>>  	pinctrl-0 = <&pinctrl_i2c2>;
+>>  	status = "okay";
+>>  
+>> +	pca9535: gpio8@27 {
+> 
+> gpio-expander might be a better node name?
+> 
+> Shawn
+
+Indeed, v4 incoming. ;)
+
+Thank you Shawn.
+
+> 
+>> +		compatible = "nxp,pca9535";
+>> +		reg = <0x27>;
+>> +		gpio-controller;
+>> +		#gpio-cells = <2>;
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&pinctrl_pca9535>;
+>> +		interrupt-parent = <&gpio6>;
+>> +		interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
+>> +		interrupt-controller;
+>> +		#interrupt-cells = <2>;
+>> +	};
 >> +
->> +	switch (cdns->dr_mode) {
->> +	case USB_DR_MODE_UNKNOWN:
-> 
-> One note in this place. USB_DR_MODE_UNKNOWN is not possible in this place.
-> If cdns->dr_mode will be USB_DR_MODE_UNKNOWN then driver returns -EINVAL
-
-At which place? I could not find.
-
-> some line before after returning form cdns3_drd_update_mode and in consequence
-> it jump to err label.
-> 
-> Maybe for better readability it this condition should be treated here also as error.
-> 
->> +	case USB_DR_MODE_OTG:
->> 		ret = cdns3_hw_role_switch(cdns);
->> 		if (ret)
->> 			goto err;
->> +		break;
->> +	case USB_DR_MODE_PERIPHERAL:
->> +		ret = cdns3_role_start(cdns, USB_ROLE_DEVICE);
->> +		if (ret)
->> +			goto err;
->> +		break;
->> +	case USB_DR_MODE_HOST:
->> +		ret = cdns3_role_start(cdns, USB_ROLE_HOST);
->> +		if (ret)
->> +			goto err;
->> +		break;
->> 	}
->>
->> 	return ret;
-> 
-> Reviewed-by: Pawel Laszczak <pawell@cadence.com>
-> Tested-by: Pawel Laszczak <pawell@cadence.com>
-> 
-> --
-> Regards,
-> Pawel
-> 
-
--- 
-cheers,
--roger
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>>  	eeprom@57 {
+>>  		compatible = "atmel,24c02";
+>>  		reg = <0x57>;
+>> @@ -237,6 +250,12 @@
+>>  			>;
+>>  		};
+>>  
+>> +		pinctrl_pca9535: pca9535 {
+>> +			fsl,pins = <
+>> +				MX6QDL_PAD_NANDF_CS3__GPIO6_IO16	0x17059
+>> +		   >;
+>> +		};
+>> +
+>>  		pinctrl_uart1: uart1grp {
+>>  			fsl,pins = <
+>>  				MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
+>> --
+>> 2.20.1
