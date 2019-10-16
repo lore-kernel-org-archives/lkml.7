@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C702BFA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 379D6ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 959BC218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD4C218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263287;
-	bh=P8VP79BX6VLd11OdM13gm+XaraRpOZIAdjO17JtNup0=;
+	s=default; t=1571263294;
+	bh=HCHL/0b7wsmiqEtQgSxAV7TiQ81FqSzff9r9X6rGXcU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YzMu5jtvNQJMurHeJiDh8dQAsNqg6y4DkuEXDD1b1nT015cJjuC4KliAwSPiylsWx
-	 A79stxs6EZ8QI/TNkCqUKa6IliDkmAjZKqZ7Mi0/9DRw3P26snw80pUcSAG0e5hrD2
-	 0UojP22blvni6F+P29bS9wpzjVHO1WbsgoaAtyPY=
+	b=Z5mfOALAm/69bbHpaMQkOH8EBkDhIB3i6zwB5bf6/S6PuqPi0fNaqXG7JjhWo8wv0
+	 Zwi0kTw8P/vkVXgzBag0qGs/OButdpgjoivHwNCNLjt83yXvuXpjPJuzW8yPJNxIBj
+	 ZfdbTYsF1/DhrZPHU98um9KB0bdsnPDx5r3eIP2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438888AbfJPWAs (ORCPT
+        id S2438847AbfJPWAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:00:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54666 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:00:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438579AbfJPV7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:59:39 -0400
+        id S2438521AbfJPV73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:59:29 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 965AE218DE;
-        Wed, 16 Oct 2019 21:59:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38610218DE;
+        Wed, 16 Oct 2019 21:59:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263178;
-        bh=P8VP79BX6VLd11OdM13gm+XaraRpOZIAdjO17JtNup0=;
+        s=default; t=1571263169;
+        bh=HCHL/0b7wsmiqEtQgSxAV7TiQ81FqSzff9r9X6rGXcU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1+d/7vvf2R2rF28fXFK5fbpwklrQ9xPxc1cL8JAAVbrBr78UlL2Ct3oMJr0QBBpm+
-         0rDD3d2jJxhoAzxJSrlFWiZG6rf4QA0mzcoRmMV8nO8hEXpxLuO57h/SPxXT+6AkWG
-         daI+eK+zBbkdZXDsDsvcbKvHjXJYA0/Ss9RO1Vgw=
+        b=ecYO2DUNllefL2QgnUUuXp+/B2AdMHl/onEUGWDoMbqmof7sYIhmh37WghTe7y9cJ
+         GhdmK5sXYnvw+Keki4hMd69HcAfImtqVVE13KkmNrLYMW2nxNrMSD+8YGqMIzrY0im
+         VllLuaiuLJHhuM8qnaQkFoPCxH45ZBpEoO7QpKd8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.3 106/112] tracing: Get trace_array reference for available_tracers files
-Date:   Wed, 16 Oct 2019 14:51:38 -0700
-Message-Id: <20191016214907.120363545@linuxfoundation.org>
+        stable@vger.kernel.org, Sean Paul <sean@poorly.run>,
+        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
+        Leho Kraav <leho@kraav.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: [PATCH 5.3 097/112] drm/i915: Bump skl+ max plane width to 5k for linear/x-tiled
+Date:   Wed, 16 Oct 2019 14:51:29 -0700
+Message-Id: <20191016214906.115287254@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
 References: <20191016214844.038848564@linuxfoundation.org>
@@ -59,67 +64,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Ville Syrjälä <ville.syrjala@linux.intel.com>
 
-commit 194c2c74f5532e62c218adeb8e2b683119503907 upstream.
+commit dc7890995e04bacb45ab21e0daaeae1e7c803eb3 upstream.
 
-As instances may have different tracers available, we need to look at the
-trace_array descriptor that shows the list of the available tracers for the
-instance. But there's a race between opening the file and an admin
-deleting the instance. The trace_array_get() needs to be called before
-accessing the trace_array.
+The officially validated plane width limit is 4k on skl+, however
+we already had people using 5k displays before we started to enforce
+the limit. Also it seems Windows allows 5k resolutions as well
+(though not sure if they do it with one plane or two).
+
+According to hw folks 5k should work with the possible
+exception of the following features:
+- Ytile (already limited to 4k)
+- FP16 (already limited to 4k)
+- render compression (already limited to 4k)
+- KVMR sprite and cursor (don't care)
+- horizontal panning (need to verify this)
+- pipe and plane scaling (need to verify this)
+
+So apart from last two items on that list we are already
+fine. We should really verify what happens with those last
+two items but I don't have a 5k display on hand atm so it'll
+have to wait.
+
+In the meantime let's just bump the limit back up to 5k since
+several users have already been using it without apparent issues.
+At least we'll be no worse off than we were prior to lowering
+the limits.
 
 Cc: stable@vger.kernel.org
-Fixes: 607e2ea167e56 ("tracing: Set up infrastructure to allow tracers for instances")
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Sean Paul <sean@poorly.run>
+Cc: José Roberto de Souza <jose.souza@intel.com>
+Tested-by: Leho Kraav <leho@kraav.com>
+Fixes: 372b9ffb5799 ("drm/i915: Fix skl+ max plane width")
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=111501
+Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190905135044.2001-1-ville.syrjala@linux.intel.com
+Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Reviewed-by: Sean Paul <sean@poorly.run>
+(cherry picked from commit bed34ef544f9ab37ab349c04cf4142282c4dcf5d)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace.c |   17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/i915/display/intel_display.c |   15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4355,9 +4355,14 @@ static int show_traces_open(struct inode
- 	if (tracing_disabled)
- 		return -ENODEV;
- 
-+	if (trace_array_get(tr) < 0)
-+		return -ENODEV;
-+
- 	ret = seq_open(file, &show_traces_seq_ops);
--	if (ret)
-+	if (ret) {
-+		trace_array_put(tr);
- 		return ret;
-+	}
- 
- 	m = file->private_data;
- 	m->private = tr;
-@@ -4365,6 +4370,14 @@ static int show_traces_open(struct inode
- 	return 0;
- }
- 
-+static int show_traces_release(struct inode *inode, struct file *file)
-+{
-+	struct trace_array *tr = inode->i_private;
-+
-+	trace_array_put(tr);
-+	return seq_release(inode, file);
-+}
-+
- static ssize_t
- tracing_write_stub(struct file *filp, const char __user *ubuf,
- 		   size_t count, loff_t *ppos)
-@@ -4395,8 +4408,8 @@ static const struct file_operations trac
- static const struct file_operations show_traces_fops = {
- 	.open		= show_traces_open,
- 	.read		= seq_read,
--	.release	= seq_release,
- 	.llseek		= seq_lseek,
-+	.release	= show_traces_release,
- };
- 
- static ssize_t
+--- a/drivers/gpu/drm/i915/display/intel_display.c
++++ b/drivers/gpu/drm/i915/display/intel_display.c
+@@ -3291,7 +3291,20 @@ static int skl_max_plane_width(const str
+ 	switch (fb->modifier) {
+ 	case DRM_FORMAT_MOD_LINEAR:
+ 	case I915_FORMAT_MOD_X_TILED:
+-		return 4096;
++		/*
++		 * Validated limit is 4k, but has 5k should
++		 * work apart from the following features:
++		 * - Ytile (already limited to 4k)
++		 * - FP16 (already limited to 4k)
++		 * - render compression (already limited to 4k)
++		 * - KVMR sprite and cursor (don't care)
++		 * - horizontal panning (TODO verify this)
++		 * - pipe and plane scaling (TODO verify this)
++		 */
++		if (cpp == 8)
++			return 4096;
++		else
++			return 5120;
+ 	case I915_FORMAT_MOD_Y_TILED_CCS:
+ 	case I915_FORMAT_MOD_Yf_TILED_CCS:
+ 		/* FIXME AUX plane? */
 
 
