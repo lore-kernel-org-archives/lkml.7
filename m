@@ -2,57 +2,53 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 340A6FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9189AFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1C02218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:06:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 692A821925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:06:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263603;
-	bh=7GqnbcH+r90nThr865WG1XKok01vq2QVJ4b1QhEQN5Y=;
+	s=default; t=1571263606;
+	bh=Do8Ps45Db9i2Kq5cWrhLAuBtarWPj5Gh4AhA8R5NR3c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ICXvsuKtKU21PnEnN34vMhRfMeddmSwm6hCn+tMz9rI7BLl2XGShHbwNq2hpd6E1e
-	 S0mZIfW2+di5Y9miFBTGWgyph9nBp73OmXBBz8I/Xixsj6FZxj1l525dRFwk5tQ66A
-	 dLWlLWkEBl08lf40u0CMrV6yry4K7IL0c0/UgUSo=
+	b=DaS3ME/7FUuBNvKisGVbgdxzYfossl/+AO5aVuHTiMfjP8eNDQKGQT+P4D7Vw1FCs
+	 r++rhOoCpO716TNpDA2ofd3Rcsm0K7JXbhqTyGwpegye/c6BEzSAHsIQooILTXfzHg
+	 1G2H8UkWv6Nn+Mhnq6X/0wWny7pxZviw4dE0GtSo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406728AbfJPV60 (ORCPT
+        id S2407000AbfJPWGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:58:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50410 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:06:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395490AbfJPV5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:57:36 -0400
+        id S2438151AbfJPV62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:58:28 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09BE421D7F;
-        Wed, 16 Oct 2019 21:57:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D169D21925;
+        Wed, 16 Oct 2019 21:58:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263056;
-        bh=7GqnbcH+r90nThr865WG1XKok01vq2QVJ4b1QhEQN5Y=;
+        s=default; t=1571263108;
+        bh=Do8Ps45Db9i2Kq5cWrhLAuBtarWPj5Gh4AhA8R5NR3c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=awH4RzxIok22DVVp1t0MXqdhkXkftAlVjSkM5CQGMLjv8OmxITV0sCnaa7ku3Sd5a
-         A0DKa8rcvz3+EeDrYNQIYecTQ+gyjx39zWFpz46lUFy+N3Yge8ASx7SNTwnwbolXuY
-         6k/ceNGO4cOxzEG1TAffWwq4JFv0riDVP3gCcgkM=
+        b=fMEx1bvUJA6EeZXYfad5vqy/m2aGNaV+Y89Rv/EgKLfU9xkyRjmE5SZMwjE9yTbaI
+         gUOmm9nuSLFeYp+zBa/cucjMexd2BvZGnYBXSjvkNBKdHxK3SbIWObWiPiZTolvQ/i
+         rGuIBGZzT0fbgJ3f+Fca77Wb3Y6Gqs7ADgGaivV8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hung-Te Lin <hungte@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 58/81] firmware: google: increment VPD key_len properly
-Date:   Wed, 16 Oct 2019 14:51:09 -0700
-Message-Id: <20191016214843.336805131@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.3 031/112] USB: usblcd: fix I/O after disconnect
+Date:   Wed, 16 Oct 2019 14:50:23 -0700
+Message-Id: <20191016214853.185824638@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
-References: <20191016214805.727399379@linuxfoundation.org>
+In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
+References: <20191016214844.038848564@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,48 +58,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 442f1e746e8187b9deb1590176f6b0ff19686b11 ]
+commit eb7f5a490c5edfe8126f64bc58b9ba2edef0a425 upstream.
 
-Commit 4b708b7b1a2c ("firmware: google: check if size is valid when
-decoding VPD data") adds length checks, but the new vpd_decode_entry()
-function botched the logic -- it adds the key length twice, instead of
-adding the key and value lengths separately.
+Make sure to stop all I/O on disconnect by adding a disconnected flag
+which is used to prevent new I/O from being started and by stopping all
+ongoing I/O before returning.
 
-On my local system, this means vpd.c's vpd_section_create_attribs() hits
-an error case after the first attribute it parses, since it's no longer
-looking at the correct offset. With this patch, I'm back to seeing all
-the correct attributes in /sys/firmware/vpd/...
+This also fixes a potential use-after-free on driver unbind in case the
+driver data is freed before the completion handler has run.
 
-Fixes: 4b708b7b1a2c ("firmware: google: check if size is valid when decoding VPD data")
-Cc: <stable@vger.kernel.org>
-Cc: Hung-Te Lin <hungte@chromium.org>
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
-Link: https://lore.kernel.org/r/20190930214522.240680-1-briannorris@chromium.org
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable <stable@vger.kernel.org>	# 7bbe990c989e
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20190926091228.24634-7-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+
 ---
- drivers/firmware/google/vpd_decode.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/misc/usblcd.c |   33 +++++++++++++++++++++++++++++++--
+ 1 file changed, 31 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/firmware/google/vpd_decode.c b/drivers/firmware/google/vpd_decode.c
-index e75abe9fa122c..6c7ab2ba85d2f 100644
---- a/drivers/firmware/google/vpd_decode.c
-+++ b/drivers/firmware/google/vpd_decode.c
-@@ -62,7 +62,7 @@ static int vpd_decode_entry(const u32 max_len, const u8 *input_buf,
- 	if (max_len - consumed < *entry_len)
- 		return VPD_FAIL;
+--- a/drivers/usb/misc/usblcd.c
++++ b/drivers/usb/misc/usblcd.c
+@@ -18,6 +18,7 @@
+ #include <linux/slab.h>
+ #include <linux/errno.h>
+ #include <linux/mutex.h>
++#include <linux/rwsem.h>
+ #include <linux/uaccess.h>
+ #include <linux/usb.h>
  
--	consumed += decoded_len;
-+	consumed += *entry_len;
- 	*_consumed = consumed;
- 	return VPD_OK;
+@@ -57,6 +58,8 @@ struct usb_lcd {
+ 							   using up all RAM */
+ 	struct usb_anchor	submitted;		/* URBs to wait for
+ 							   before suspend */
++	struct rw_semaphore	io_rwsem;
++	unsigned long		disconnected:1;
+ };
+ #define to_lcd_dev(d) container_of(d, struct usb_lcd, kref)
+ 
+@@ -142,6 +145,13 @@ static ssize_t lcd_read(struct file *fil
+ 
+ 	dev = file->private_data;
+ 
++	down_read(&dev->io_rwsem);
++
++	if (dev->disconnected) {
++		retval = -ENODEV;
++		goto out_up_io;
++	}
++
+ 	/* do a blocking bulk read to get data from the device */
+ 	retval = usb_bulk_msg(dev->udev,
+ 			      usb_rcvbulkpipe(dev->udev,
+@@ -158,6 +168,9 @@ static ssize_t lcd_read(struct file *fil
+ 			retval = bytes_read;
+ 	}
+ 
++out_up_io:
++	up_read(&dev->io_rwsem);
++
+ 	return retval;
  }
--- 
-2.20.1
-
+ 
+@@ -237,11 +250,18 @@ static ssize_t lcd_write(struct file *fi
+ 	if (r < 0)
+ 		return -EINTR;
+ 
++	down_read(&dev->io_rwsem);
++
++	if (dev->disconnected) {
++		retval = -ENODEV;
++		goto err_up_io;
++	}
++
+ 	/* create a urb, and a buffer for it, and copy the data to the urb */
+ 	urb = usb_alloc_urb(0, GFP_KERNEL);
+ 	if (!urb) {
+ 		retval = -ENOMEM;
+-		goto err_no_buf;
++		goto err_up_io;
+ 	}
+ 
+ 	buf = usb_alloc_coherent(dev->udev, count, GFP_KERNEL,
+@@ -278,6 +298,7 @@ static ssize_t lcd_write(struct file *fi
+ 	   the USB core will eventually free it entirely */
+ 	usb_free_urb(urb);
+ 
++	up_read(&dev->io_rwsem);
+ exit:
+ 	return count;
+ error_unanchor:
+@@ -285,7 +306,8 @@ error_unanchor:
+ error:
+ 	usb_free_coherent(dev->udev, count, buf, urb->transfer_dma);
+ 	usb_free_urb(urb);
+-err_no_buf:
++err_up_io:
++	up_read(&dev->io_rwsem);
+ 	up(&dev->limit_sem);
+ 	return retval;
+ }
+@@ -325,6 +347,7 @@ static int lcd_probe(struct usb_interfac
+ 
+ 	kref_init(&dev->kref);
+ 	sema_init(&dev->limit_sem, USB_LCD_CONCURRENT_WRITES);
++	init_rwsem(&dev->io_rwsem);
+ 	init_usb_anchor(&dev->submitted);
+ 
+ 	dev->udev = usb_get_dev(interface_to_usbdev(interface));
+@@ -422,6 +445,12 @@ static void lcd_disconnect(struct usb_in
+ 	/* give back our minor */
+ 	usb_deregister_dev(interface, &lcd_class);
+ 
++	down_write(&dev->io_rwsem);
++	dev->disconnected = 1;
++	up_write(&dev->io_rwsem);
++
++	usb_kill_anchored_urbs(&dev->submitted);
++
+ 	/* decrement our usage count */
+ 	kref_put(&dev->kref, lcd_delete);
+ 
 
 
