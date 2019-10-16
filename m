@@ -2,50 +2,54 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D3EFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B42FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01F14207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 564C5207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263942;
-	bh=Qe3ssngl+iI31CVqlySl7zSBeFLqt0/1fydfQVk9lF0=;
+	s=default; t=1571263948;
+	bh=7GqnbcH+r90nThr865WG1XKok01vq2QVJ4b1QhEQN5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ivCrdlvs5ddD4vdh6eFz4DPePEhw94O6BeKO5AZrdHeatRJbT/WYn47RoukA4VXlo
-	 FdGlObgQ3mmBZZ+UOVg0mKIRJT8e3ZIpCHzUHv4P5fmCXPzF2NnSlr7DbSD6vFjiQZ
-	 yiYUnabwg54bBux2zADmaKb6xtKGJgDSH2Ro1Kio=
+	b=pM6QNwqJgosg91vw84xXgsKy07qtaJGSSSZL+hfgJDsenJ3hc7XLVD43IYkvZSr7H
+	 qUUeb4p37YwjDVqewM96rOzGBWmCR4AqlZIZmXwx0Vtel3dnQWB8Vvwc8Naq1C/IZf
+	 fa6coBSrEyE4F0K9giL7+UuHMK68JJYjK/8izN8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406645AbfJPV41 (ORCPT
+        id S2406659AbfJPWM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:56:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47564 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:12:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403919AbfJPV4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:56:10 -0400
+        id S2406628AbfJPV4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:56:21 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14BE821D7C;
-        Wed, 16 Oct 2019 21:56:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA0D221925;
+        Wed, 16 Oct 2019 21:56:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262970;
-        bh=Qe3ssngl+iI31CVqlySl7zSBeFLqt0/1fydfQVk9lF0=;
+        s=default; t=1571262980;
+        bh=7GqnbcH+r90nThr865WG1XKok01vq2QVJ4b1QhEQN5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RBcYT3Bo4Zx0YguReE3spHrqf+1vDCZ0Smu7NgvFt7E/GXQr5i6DEUYBCzAygH8h8
-         qoqdvx6mtD3SgpldwWY+9DKE6Ue8EDluFY65X/wSykrYWk1a+oYW8ueV17gu9QjbMq
-         BNfxELCybjFmyQpvJrBae1RtZG72mOQ2O4lct9MY=
+        b=2JkH+MvONciyf/yd7aWjhLhjk5FkVr7AlfaNH8jhbTLBq08k9pU5826W44KxYPROD
+         HpTNGpH8m9LXLDYoW69s+uU93jprg73Gfa//epjGX72vQG2emTl31JVUvtami9RLeS
+         0bFNAHWbaWWExRMYmJsrBAqxWLWEYIhexsoBfT3E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 05/65] USB: yurex: fix NULL-derefs on disconnect
-Date:   Wed, 16 Oct 2019 14:50:19 -0700
-Message-Id: <20191016214758.841340240@linuxfoundation.org>
+        stable@vger.kernel.org, Hung-Te Lin <hungte@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 50/65] firmware: google: increment VPD key_len properly
+Date:   Wed, 16 Oct 2019 14:51:04 -0700
+Message-Id: <20191016214835.824729336@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
 References: <20191016214756.457746573@linuxfoundation.org>
@@ -58,92 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Brian Norris <briannorris@chromium.org>
 
-commit aafb00a977cf7d81821f7c9d12e04c558c22dc3c upstream.
+[ Upstream commit 442f1e746e8187b9deb1590176f6b0ff19686b11 ]
 
-The driver was using its struct usb_interface pointer as an inverted
-disconnected flag, but was setting it to NULL without making sure all
-code paths that used it were done with it.
+Commit 4b708b7b1a2c ("firmware: google: check if size is valid when
+decoding VPD data") adds length checks, but the new vpd_decode_entry()
+function botched the logic -- it adds the key length twice, instead of
+adding the key and value lengths separately.
 
-Before commit ef61eb43ada6 ("USB: yurex: Fix protection fault after
-device removal") this included the interrupt-in completion handler, but
-there are further accesses in dev_err and dev_dbg statements in
-yurex_write() and the driver-data destructor (sic!).
+On my local system, this means vpd.c's vpd_section_create_attribs() hits
+an error case after the first attribute it parses, since it's no longer
+looking at the correct offset. With this patch, I'm back to seeing all
+the correct attributes in /sys/firmware/vpd/...
 
-Fix this by unconditionally stopping also the control URB at disconnect
-and by using a dedicated disconnected flag.
-
-Note that we need to take a reference to the struct usb_interface to
-avoid a use-after-free in the destructor whenever the device was
-disconnected while the character device was still open.
-
-Fixes: aadd6472d904 ("USB: yurex.c: remove dbg() usage")
-Fixes: 45714104b9e8 ("USB: yurex.c: remove err() usage")
-Cc: stable <stable@vger.kernel.org>     # 3.5: ef61eb43ada6
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191009153848.8664-6-johan@kernel.org
+Fixes: 4b708b7b1a2c ("firmware: google: check if size is valid when decoding VPD data")
+Cc: <stable@vger.kernel.org>
+Cc: Hung-Te Lin <hungte@chromium.org>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Guenter Roeck <groeck@chromium.org>
+Link: https://lore.kernel.org/r/20190930214522.240680-1-briannorris@chromium.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/misc/yurex.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/firmware/google/vpd_decode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/misc/yurex.c
-+++ b/drivers/usb/misc/yurex.c
-@@ -64,6 +64,7 @@ struct usb_yurex {
+diff --git a/drivers/firmware/google/vpd_decode.c b/drivers/firmware/google/vpd_decode.c
+index e75abe9fa122c..6c7ab2ba85d2f 100644
+--- a/drivers/firmware/google/vpd_decode.c
++++ b/drivers/firmware/google/vpd_decode.c
+@@ -62,7 +62,7 @@ static int vpd_decode_entry(const u32 max_len, const u8 *input_buf,
+ 	if (max_len - consumed < *entry_len)
+ 		return VPD_FAIL;
  
- 	struct kref		kref;
- 	struct mutex		io_mutex;
-+	unsigned long		disconnected:1;
- 	struct fasync_struct	*async_queue;
- 	wait_queue_head_t	waitq;
- 
-@@ -111,6 +112,7 @@ static void yurex_delete(struct kref *kr
- 				dev->int_buffer, dev->urb->transfer_dma);
- 		usb_free_urb(dev->urb);
- 	}
-+	usb_put_intf(dev->interface);
- 	usb_put_dev(dev->udev);
- 	kfree(dev);
+-	consumed += decoded_len;
++	consumed += *entry_len;
+ 	*_consumed = consumed;
+ 	return VPD_OK;
  }
-@@ -209,7 +211,7 @@ static int yurex_probe(struct usb_interf
- 	init_waitqueue_head(&dev->waitq);
- 
- 	dev->udev = usb_get_dev(interface_to_usbdev(interface));
--	dev->interface = interface;
-+	dev->interface = usb_get_intf(interface);
- 
- 	/* set up the endpoint information */
- 	iface_desc = interface->cur_altsetting;
-@@ -320,8 +322,9 @@ static void yurex_disconnect(struct usb_
- 
- 	/* prevent more I/O from starting */
- 	usb_poison_urb(dev->urb);
-+	usb_poison_urb(dev->cntl_urb);
- 	mutex_lock(&dev->io_mutex);
--	dev->interface = NULL;
-+	dev->disconnected = 1;
- 	mutex_unlock(&dev->io_mutex);
- 
- 	/* wakeup waiters */
-@@ -409,7 +412,7 @@ static ssize_t yurex_read(struct file *f
- 	dev = file->private_data;
- 
- 	mutex_lock(&dev->io_mutex);
--	if (!dev->interface) {		/* already disconnected */
-+	if (dev->disconnected) {		/* already disconnected */
- 		mutex_unlock(&dev->io_mutex);
- 		return -ENODEV;
- 	}
-@@ -444,7 +447,7 @@ static ssize_t yurex_write(struct file *
- 		goto error;
- 
- 	mutex_lock(&dev->io_mutex);
--	if (!dev->interface) {		/* already disconnected */
-+	if (dev->disconnected) {		/* already disconnected */
- 		mutex_unlock(&dev->io_mutex);
- 		retval = -ENODEV;
- 		goto error;
+-- 
+2.20.1
+
 
 
