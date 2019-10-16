@@ -2,87 +2,91 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 362C1ECE59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36EECECE58F
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E6A12067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:48:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qU7sjU5u"
+	by mail.kernel.org (Postfix) with ESMTP id 111E32084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:50:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390382AbfJPAs3 (ORCPT
+        id S2390385AbfJPAup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 20:48:29 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41042 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbfJPAs2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 20:48:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pf6bbQYx9hUE+6rFYONnUuY9TK+2idQNGK21XGkY2xo=; b=qU7sjU5uXXip0NogETsugUAi3
-        jtRE/3LcBLi9RdoLLx/XlPfCCqP/SEyUzVoQs8WqvIypx8a18jDctjkK4Re6BQG2NHTAYVe2clHx9
-        Fc3+P2BkHiuODGY67O+nE61aVcc/8GpDa/jzNwRrmBaE2id/NXw+dKOwpSr6xQnMsQ4fuePOFe+js
-        JIH8ZaatXc+A7TE44A1jvUJ6kUvX7Z+zadosMUcWzpR9cy44tC5hgJou/w2EXK7tpk4l7WdxUdnN+
-        jZ8v5qs2XXayMAz4jgQI/jbaEXemK0icN8biguipxmOtXSmNRCQ8+4zKpkdeeh7JWzTQO0Suarzpb
-        TMB4py35Q==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iKXUD-0005ri-Tc; Wed, 16 Oct 2019 00:48:21 +0000
-Date:   Tue, 15 Oct 2019 17:48:21 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Thomas Zimmermann <tzimmermann@suse.de>, Tim.Bird@sony.com,
-        jani.nikula@linux.intel.com, corbet@lwn.net,
-        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-fpga@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH] kernel-doc: rename the kernel-doc directive 'functions'
- to 'specific'
-Message-ID: <20191016004821.GI32665@bombadil.infradead.org>
-References: <20191013055359.23312-1-changbin.du@gmail.com>
- <875zkrd7nq.fsf@intel.com>
- <ECADFF3FD767C149AD96A924E7EA6EAF977CAF09@USCULXMSG01.am.sony.com>
- <7e7557b5-469f-3e63-6254-53dab2d7234a@suse.de>
- <20191015115439.GE32665@bombadil.infradead.org>
- <20191016000322.7dnuwvxqtdbg7clq@mail.google.com>
+        Tue, 15 Oct 2019 20:50:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60778 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726315AbfJPAup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 20:50:45 -0400
+Received: from [10.44.0.22] (unknown [103.48.210.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4AC62067B;
+        Wed, 16 Oct 2019 00:50:43 +0000 (UTC)
+Subject: Re: [PATCH 10/34] m68k/coldfire: Use CONFIG_PREEMPTION
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org
+References: <20191015191821.11479-1-bigeasy@linutronix.de>
+ <20191015191821.11479-11-bigeasy@linutronix.de>
+From:   Greg Ungerer <gerg@linux-m68k.org>
+Message-ID: <39d20c16-50a4-34f5-f98c-979138bf1a29@linux-m68k.org>
+Date:   Wed, 16 Oct 2019 10:50:41 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191016000322.7dnuwvxqtdbg7clq@mail.google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191015191821.11479-11-bigeasy@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 08:03:24AM +0800, Changbin Du wrote:
-> On Tue, Oct 15, 2019 at 04:54:39AM -0700, Matthew Wilcox wrote:
-> > On Tue, Oct 15, 2019 at 11:25:53AM +0200, Thomas Zimmermann wrote:
-> > > > My preference would be to use 'symbols'.  I tried to come up with something
-> > > > but 'symbols' is better than anything I came up with.
-> > > 
-> > > Maybe 'interfaces' or 'artifacts'. The term 'symbols' is just as
-> > > imprecise as 'functions'.
-> > 
-> > I suggested 'identifier' because that's the term used in the C spec (6.2.1):
-> > 
-> > : An identifier can denote an object; a function; a tag or a member
-> > : of a structure, union, or enumeration; a typedef name; a label name;
-> > : a macro name; or a macro parameter.
->
-> I also prefer this one now. I was looking for something like this. My original
-> idea is 'prototype', but that is only for function.
+Hi Sebastian,
 
-We could also go with 'declaration' or 'definition'.  But I prefer
-'identifier'.
+On 16/10/19 5:17 am, Sebastian Andrzej Siewior wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
+> Both PREEMPT and PREEMPT_RT require the same functionality which today
+> depends on CONFIG_PREEMPT.
+> 
+> Switch the entry code over to use CONFIG_PREEMPTION.
+> 
+> Cc: Greg Ungerer <gerg@linux-m68k.org>
+
+Acked-by: Greg Ungerer <gerg@linux-m68k.org>
+
+Do you want me to take this via the m68knommu git tree?
+Or are you taking the whole series via some other tree?
+
+Regards
+Greg
+
+
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: linux-m68k@lists.linux-m68k.org
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+>   arch/m68k/coldfire/entry.S | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/m68k/coldfire/entry.S b/arch/m68k/coldfire/entry.S
+> index 52d312d5b4d4f..d43a02795a4a4 100644
+> --- a/arch/m68k/coldfire/entry.S
+> +++ b/arch/m68k/coldfire/entry.S
+> @@ -108,7 +108,7 @@ ENTRY(system_call)
+>   	btst	#5,%sp@(PT_OFF_SR)	/* check if returning to kernel */
+>   	jeq	Luser_return		/* if so, skip resched, signals */
+>   
+> -#ifdef CONFIG_PREEMPT
+> +#ifdef CONFIG_PREEMPTION
+>   	movel	%sp,%d1			/* get thread_info pointer */
+>   	andl	#-THREAD_SIZE,%d1	/* at base of kernel stack */
+>   	movel	%d1,%a0
+> 
