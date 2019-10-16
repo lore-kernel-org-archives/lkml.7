@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 405ACECE58F
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 02:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFA7ECE59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 02:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 185B421848
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 02:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D7E920663
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 02:57:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571194667;
-	bh=DihgHlZEMX3o1zUkM1gf7Grg+nBtfSOlyb+CoUK+JT8=;
+	s=default; t=1571194672;
+	bh=Wpce9udaw5lqxb8qndTEni/7j4Wvb9sSHAxCu/D1goI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M9W5VV0c+JtPkotEZCZ/AArug6GpC5aR+LJyfgNDAqC5fJfwZAqCTesgUB27CcmXK
-	 4nWq+TUbdmlp2gCqIzxyvG1mPzy8WYxedW52OsZFNefmPxHDsrOiqk246N1EzSDmS5
-	 XK4cZ8vhVwA+iKzx/FbHwtG326kv34i2553qLKWY=
+	b=fV0G8UNKdeY5LRI4wOfjQrnIsiwyKLKUfGmGEuWqE13m8HLVw3FidagnQCAsoFBxM
+	 i4Q6Q4LB6RQTWA5riRRx3k2RlFOZsmljWk2lBIwyLx1V6tYTZYupPc4ArYRvG+kLf+
+	 g/BRJyIAgxp2Q2zkZIcBBzRCPF9G9Ks45IOS9p38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390800AbfJPC5p (ORCPT
+        id S2390823AbfJPC5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 22:57:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53424 "EHLO mail.kernel.org"
+        Tue, 15 Oct 2019 22:57:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390789AbfJPC5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 22:57:42 -0400
+        id S2390806AbfJPC5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 22:57:48 -0400
 Received: from lenoir.home (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56F5E21835;
-        Wed, 16 Oct 2019 02:57:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B429217D6;
+        Wed, 16 Oct 2019 02:57:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571194661;
-        bh=DihgHlZEMX3o1zUkM1gf7Grg+nBtfSOlyb+CoUK+JT8=;
+        s=default; t=1571194667;
+        bh=Wpce9udaw5lqxb8qndTEni/7j4Wvb9sSHAxCu/D1goI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uLn5DIcEBu/dZJ4AktKW+T1QQaa85Ia/ASKaiTQb1JfwVnB5Gep0J7NOmhftFyEDx
-         wKBhXzL/D1DlpO2I59yMRh8yAIwQmau29/iGE2ofHMk8DD1QvTOP3JcJfasdvgdK06
-         p2TMI2zQz41gySU0WX+f3qK6NWSNZIiuXSAl+5sA=
+        b=Pb26N5+KY7ykJCza9xsXU/tVLP0iceei6SxEUxG+wf0FphmiiVPzY2F07/4+LDCeP
+         SCySMffDZZPzBrbmZLOAv/Uinv+vSeFa2q8g7l4eJaKqLfBhyzwMpQfAITXPiYVuG4
+         1M045mlqy4dGdPr9cwHvXMBHB+zqz2484D57sUwk=
 From:   Frederic Weisbecker <frederic@kernel.org>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Frederic Weisbecker <frederic@kernel.org>,
@@ -52,9 +52,9 @@ Cc:     Frederic Weisbecker <frederic@kernel.org>,
         Ingo Molnar <mingo@kernel.org>,
         Viresh Kumar <viresh.kumar@linaro.org>,
         Pavel Machek <pavel@ucw.cz>
-Subject: [PATCH 12/14] procfs: Use vtime aware kcpustat accessor to fetch CPUTIME_SYSTEM
-Date:   Wed, 16 Oct 2019 04:56:58 +0200
-Message-Id: <20191016025700.31277-13-frederic@kernel.org>
+Subject: [PATCH 14/14] leds: Use vtime aware kcpustat accessor to fetch CPUTIME_SYSTEM
+Date:   Wed, 16 Oct 2019 04:57:00 +0200
+Message-Id: <20191016025700.31277-15-frederic@kernel.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016025700.31277-1-frederic@kernel.org>
 References: <20191016025700.31277-1-frederic@kernel.org>
@@ -70,6 +70,8 @@ it to start fixing frozen kcpustat values on nohz_full CPUs.
 
 Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>
 Cc: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Rik van Riel <riel@surriel.com>
@@ -77,31 +79,22 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Wanpeng Li <wanpengli@tencent.com>
 Cc: Ingo Molnar <mingo@kernel.org>
 ---
- fs/proc/stat.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/leds/trigger/ledtrig-activity.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/proc/stat.c b/fs/proc/stat.c
-index 80c305f206bb..5c6bd0ae3802 100644
---- a/fs/proc/stat.c
-+++ b/fs/proc/stat.c
-@@ -124,7 +124,7 @@ static int show_stat(struct seq_file *p, void *v)
- 
- 		user += kcs->cpustat[CPUTIME_USER];
- 		nice += kcs->cpustat[CPUTIME_NICE];
--		system += kcs->cpustat[CPUTIME_SYSTEM];
-+		system += kcpustat_field(kcs, CPUTIME_SYSTEM, i);
- 		idle += get_idle_time(kcs, i);
- 		iowait += get_iowait_time(kcs, i);
- 		irq += kcs->cpustat[CPUTIME_IRQ];
-@@ -162,7 +162,7 @@ static int show_stat(struct seq_file *p, void *v)
- 		/* Copy values here to work around gcc-2.95.3, gcc-2.96 */
- 		user = kcs->cpustat[CPUTIME_USER];
- 		nice = kcs->cpustat[CPUTIME_NICE];
--		system = kcs->cpustat[CPUTIME_SYSTEM];
-+		system = kcpustat_field(kcs, CPUTIME_SYSTEM, i);
- 		idle = get_idle_time(kcs, i);
- 		iowait = get_iowait_time(kcs, i);
- 		irq = kcs->cpustat[CPUTIME_IRQ];
+diff --git a/drivers/leds/trigger/ledtrig-activity.c b/drivers/leds/trigger/ledtrig-activity.c
+index 6a72b7e13719..ddfc5edd07c8 100644
+--- a/drivers/leds/trigger/ledtrig-activity.c
++++ b/drivers/leds/trigger/ledtrig-activity.c
+@@ -59,7 +59,7 @@ static void led_activity_function(struct timer_list *t)
+ 	for_each_possible_cpu(i) {
+ 		curr_used += kcpustat_cpu(i).cpustat[CPUTIME_USER]
+ 			  +  kcpustat_cpu(i).cpustat[CPUTIME_NICE]
+-			  +  kcpustat_cpu(i).cpustat[CPUTIME_SYSTEM]
++			  +  kcpustat_field(&kcpustat_cpu(i), CPUTIME_SYSTEM, i)
+ 			  +  kcpustat_cpu(i).cpustat[CPUTIME_SOFTIRQ]
+ 			  +  kcpustat_cpu(i).cpustat[CPUTIME_IRQ];
+ 		cpus++;
 -- 
 2.23.0
 
