@@ -2,98 +2,110 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02224FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 061D0C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA3B32168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCF3A2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:53:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OyRfN2Aj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q/4lJtDI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392146AbfJPJwv (ORCPT
+        id S2392159AbfJPJxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 05:52:51 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41830 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729546AbfJPJwv (ORCPT
+        Wed, 16 Oct 2019 05:53:44 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39620 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729546AbfJPJxo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 05:52:51 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q7so14370036pfh.8
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 02:52:51 -0700 (PDT)
+        Wed, 16 Oct 2019 05:53:44 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v17so2029045wml.4
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 02:53:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QWF8mjNiT97Y4Yu34Asbv40t0M1Iiy1fzG350OTTfxo=;
-        b=OyRfN2AjU/zwDJtW2CPORsAfs4PwytUhC1ypdFgrGTCPuc9R0BBosbQYcKeQygIPKr
-         McZ+W/bCqe+m0bPl9mQgFre61jTN5Q1sn4X45qbx3++tLN5BT+XkQgBAIAPNMLXDVPbX
-         KmGPXIXdxE11LT3plJ2aMbVA7eU+XFKFeg3JA=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Kwit4G7LvIBlpjMFksUWZpjvME4pHOuEuRyY1aF5G6s=;
+        b=Q/4lJtDIdRVDo6AbijTWkrkhxgBk+lTJgWFSycEa0BN78vdIUxg2fMx4KI9KvzRPNX
+         y53Jh8ZidY1qmv89VYRIWWXFIAPYzUEdkJlIfaiXLiIZtOcFjSiIg7O64Qb3Xyqo/Bz5
+         CNW3/Z+WyZjE3fC/d5nqM1haY6G0qr0Nwz6l0iCaxDvoXVu1KL/HGWs0suf0gtRkWRYv
+         xSnCunnttl6QvtglzGXOFTwTTz98vgcgv/FwLuALECX3nPnqqk8DUKCbkLqd+EjZmZf4
+         wSaBV7Dz+b1zPaTo3zfOcjuwty4DK1Fp14/1/1a/EAxxSBhoddv231SYzvPzTCf8A7+u
+         XpMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QWF8mjNiT97Y4Yu34Asbv40t0M1Iiy1fzG350OTTfxo=;
-        b=LZKquFnQ90uW9bxRPH7TVJv0ZT0G/Y+IaZnDd7qcBwKdf8B+Nr4WcPx2EtLQ9k1lCD
-         lpNoYr2UBEsVhLsWf2NtNvTIGZeuFaTPe9ArClojyra6BRL7gzfSMIQhLbnM86af5OA8
-         0rJGEIEjs6qrh1DMD5Er5/SWJjjKYk8DkOa2d+Sr+VhdKuHtn8NSVRLRA48IXMgYYJow
-         v497Yp6Ukcb+Ub9VuXAmFEyXP9T/eDql44RZiH9i/qucqBw6XSg1i/yeZVAHyoQYXZNZ
-         GVm2XlFBGifpRQQDoLRSdiI3ogLykGp4Q1jFX/PQ9nUa6yR6KqMzBg9hkJj7VsZjeLde
-         1++g==
-X-Gm-Message-State: APjAAAWLkwCfUWsjKzX4jSu83jO2jKXqr+vqh+xqdWRcV+cR7L6GbKdH
-        5gClGjrVdcmNOckKUohGrg6lcg==
-X-Google-Smtp-Source: APXvYqzMYt1/QR51QpPbDB/T2Np2kF1ttwoTTGshOFnZ92nrBInOM49017vQwrwHKqikCFhoRTKq+g==
-X-Received: by 2002:a62:3441:: with SMTP id b62mr42023107pfa.12.1571219570728;
-        Wed, 16 Oct 2019 02:52:50 -0700 (PDT)
-Received: from acourbot.tok.corp.google.com ([2401:fa00:8f:203:93d9:de4d:e834:3086])
-        by smtp.gmail.com with ESMTPSA id g20sm24199694pfo.73.2019.10.16.02.52.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 02:52:49 -0700 (PDT)
-From:   Alexandre Courbot <acourbot@chromium.org>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Alexandre Courbot <gnurou@gmail.com>
-Subject: [PATCH] media: Documentation: v4l: fix section depth
-Date:   Wed, 16 Oct 2019 18:52:39 +0900
-Message-Id: <20191016095239.132921-1-acourbot@chromium.org>
-X-Mailer: git-send-email 2.23.0.700.g56cf767bdb-goog
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Kwit4G7LvIBlpjMFksUWZpjvME4pHOuEuRyY1aF5G6s=;
+        b=BuIWnUcNUEkfLhI5dKRdQVrHJMpx8znEFW7bRXOgfZKZ4QDaEP8WxEEpbF56NFPJA7
+         UR8vpdObgu35XmBxnSbyrAPOv0qH+VaK3+ABUOi5D0EEHGbW1Boar3WvGqtUCfKfFFw8
+         on60JQRxjyUEp7JlT+YYWVq99Sbup2eLHS4e/gb8YqhgYZfsLckUd4D8+d45MC79d7Ke
+         f6jfKQHAx6bNcLEqvfrUj/IlIWAVV7tZ3J891e8vGsdhmaoHPXs6RCCicY/COwvxDZLc
+         uQCvUlAD9ayw1QbwNmhjs1qziRrfoLR8GPU8JdqiGxGfPDsBBdiRJ1jn9eRNEF9v7ixX
+         QMEA==
+X-Gm-Message-State: APjAAAWKV2cDTAOQskU4Y7fG6XIahD3bqwYz9uMmKD4VbFcH31i4ej3G
+        ovElqoWzfcInJ7UmGGexKKZm/w==
+X-Google-Smtp-Source: APXvYqxKdZ3eBlcd7GVcpsuMPVIZNQlRRyz6O8bf4SQ93Tj2YOu8T31DuQRmb/wFB5nTllHgQo71EQ==
+X-Received: by 2002:a1c:5458:: with SMTP id p24mr2489286wmi.32.1571219622135;
+        Wed, 16 Oct 2019 02:53:42 -0700 (PDT)
+Received: from dell ([95.149.164.86])
+        by smtp.gmail.com with ESMTPSA id c4sm24024710wru.31.2019.10.16.02.53.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 16 Oct 2019 02:53:41 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 10:53:38 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Subject: Re: [PATCH] mfd: mt6397: fix probe after changing mt6397-core
+Message-ID: <20191016095338.GD4365@dell>
+References: <20191003185323.24646-1-frank-w@public-files.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191003185323.24646-1-frank-w@public-files.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The request API documentation introduced a new section which should have
-been a subsection. Fix this.
+On Thu, 03 Oct 2019, Frank Wunderlich wrote:
 
-Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
-Signed-off-by: Alexandre Courbot <gnurou@gmail.com>
----
- Documentation/media/uapi/mediactl/request-api.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> Part 3 from this series [1] was not merged due to wrong splitting
+> and breaks mt6323 pmic on bananapi-r2
+> 
+> dmesg prints this line and at least switch is not initialized on bananapi-r2
+> 
+> mt6397 1000d000.pwrap:mt6323: unsupported chip: 0x0
+> 
+> this patch contains only the probe-changes and chip_data structs
+> from original part 3 by Hsin-Hsiung Wang
+> 
+> Fixes: a4872e80ce7d2a1844328176dbf279d0a2b89bdb mfd: mt6397: Extract IRQ related code from core driver
 
-diff --git a/Documentation/media/uapi/mediactl/request-api.rst b/Documentation/media/uapi/mediactl/request-api.rst
-index a74c82d95609..01abe8103bdd 100644
---- a/Documentation/media/uapi/mediactl/request-api.rst
-+++ b/Documentation/media/uapi/mediactl/request-api.rst
-@@ -53,8 +53,8 @@ with different configurations in advance, knowing that the configuration will be
- applied when needed to get the expected result. Configuration values at the time
- of request completion are also available for reading.
- 
--Usage
--=====
-+General Usage
-+-------------
- 
- The Request API extends the Media Controller API and cooperates with
- subsystem-specific APIs to support request usage. At the Media Controller
+I've fixed this line to use the standard formatting.
+
+> [1] https://patchwork.kernel.org/project/linux-mediatek/list/?series=164155
+> 
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> ---
+>  drivers/mfd/mt6397-core.c | 64 ++++++++++++++++++++++++---------------
+>  1 file changed, 40 insertions(+), 24 deletions(-)
+
+Applied, thanks.
+
 -- 
-2.23.0
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
