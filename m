@@ -2,123 +2,144 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B20C2ECE597
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 285ECECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88F1B21D7A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:58:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cwkRzJle"
+	by mail.kernel.org (Postfix) with ESMTP id EEAAA2089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:02:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440541AbfJQQ6P (ORCPT
+        id S2440550AbfJQRCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:58:15 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:32774 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436726AbfJQQ6P (ORCPT
+        Thu, 17 Oct 2019 13:02:10 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:46881 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732079AbfJQRCK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 12:58:15 -0400
-Received: by mail-ua1-f67.google.com with SMTP id u31so898546uah.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 09:58:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Kg//lwLZKtUtC71sdaS25fpU23PcwtzpAkjkp/pwT2U=;
-        b=cwkRzJlepyoqyV1SYCC3uqvtuAB5npIfHD0177oRQgGm8B1l4ShBmYxu9y4hxVqJ9h
-         pD8ZFYzF/gAAfz9pSCW4MOCW0Mx1zBeflWcPROFKUR0Yb+EYE/WqYpyoB1e1ONZ59gpP
-         KzRrGZJPhDOiWuSiHaFVW0rjz6ZdRnLUWouQz8pXFjqrNXuryGyxrcUEyNlHgkQJ02g4
-         kVeUK95AC/zB/sYoAvrAnxQ3h0anP48sED3MP3Rpjta1/xcQ7UTlUpOFOHwYfirlGiCX
-         xC6+cxQ+ZqhuwIr3/M1k4i1p677dD6IQzsZJgTzgF93jgjIlotMH4DNm3GFegkDQ9i4B
-         osTg==
+        Thu, 17 Oct 2019 13:02:10 -0400
+Received: by mail-io1-f70.google.com with SMTP id t15so162475ios.13
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 10:02:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Kg//lwLZKtUtC71sdaS25fpU23PcwtzpAkjkp/pwT2U=;
-        b=uLABrxlPFULB7o3h54R5gD1NDgTgvaVyZHuKlkYcF+ILMSvAQK8AnOyS+ynW10yIn8
-         DQNzoLF0Ux4lyYP3mBblzcBcjAUHGgSXPEMcLnseT4pBhJaWWOY4pT97X45mYrrRjqrF
-         HUgzf5YvG1QpqEN1XclmqCpHSo0goWnMIBFI3cwl4W0gMc6sZ8zYoHn5yC5ZiCE9yOtc
-         Mvtpo+ZtXFhATuetoiPlozkVqTaUZ4Ne/oCsWj3P9yDMSCAS+lmH8sxsVAmo2y0CPIVf
-         UKwoqm+5rNOy/wwOTv0aKdKBxxwZyAC2JqUnvcduMCtMB7v/PxYTtZz/AVHgQvgDF+A0
-         BmWg==
-X-Gm-Message-State: APjAAAVoW6xvzNV6Za018RExsox2LJUw+ASFjg1RAo7Wdc9lESTZY1Uf
-        ZAPZHQAHD4wZQN13BZLz+d19sfZhC5rEegJoBOzbDQ==
-X-Google-Smtp-Source: APXvYqyFO3ESXXkXBsBnMUusCukEWK9SCPYTcJ99h7r3Nfp8ePIiJudukiqQJ2LAUFg0xMCeDD6tgaD3LMszehfxXtw=
-X-Received: by 2002:ab0:3748:: with SMTP id i8mr2917457uat.50.1571331493690;
- Thu, 17 Oct 2019 09:58:13 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to
+         :content-transfer-encoding;
+        bh=EnYsU47HL2XSkkVZREiAvQYTdM81+PHfRCGT/VEHxcI=;
+        b=MzBHrE0ku+CcXQEYOo4EOBEFOEn2kyqd229vsSeWRt6re+fc/2U0FF1rUTg/PH7LbS
+         bDVHfEo0rhQ86ZBbXEFp6LJWVON3R0cUtmme4hDXCBs7regL7XNXLspYyzhJBVxjTLzp
+         VbpMQ6lgnmu72rrMhpmXeqXpEX+4e21aZoUE0wXyqlGDFooPSCoqIPiUFpenjpRqQGbO
+         J70IDu0fA7SV0+QmXtjpmAyGoaoiFWli/QV/VthHd8N23aAf/ZLoo6DbEoHUC110UUPY
+         T3LpB6QH0aSgRzaf2B77r3L1SmbqGqcjHRlfln+1dGNeIlRbafW9OGdlcLDj5vkbg1fB
+         /Uqw==
+X-Gm-Message-State: APjAAAUyYf93l+erWD9Tld9BydAHQo2ldDUvWAywI/Z8LGieNzrijYo6
+        W5SI+X4r7+EsjLdzTkzKo35w5LcsjQ+X/LFgXcBoeUWseuVe
+X-Google-Smtp-Source: APXvYqxen8Of1iSDjpw3u7bRKKCDhaZk8HxXleczjhHf6mM3uT90OG6ex9Ks5pxcps8gIp67wNIVq58SkyVZB3BZG/oAX0RMPhuA
 MIME-Version: 1.0
-References: <20191016221148.F9CCD155@viggo.jf.intel.com> <CALvZod5wdToX6bx4Bnwx9AgrzY3xkmE0OMH61f88hKxeGX+tvA@mail.gmail.com>
- <496566a6-2581-17f4-a4f2-e5def7f97582@intel.com>
-In-Reply-To: <496566a6-2581-17f4-a4f2-e5def7f97582@intel.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Thu, 17 Oct 2019 09:58:01 -0700
-Message-ID: <CALvZod7kqjPJcdNQu3CO0+GU=0PyUE1YZgrDJcs8dBHpKbLkSg@mail.gmail.com>
-Subject: Re: [PATCH 0/4] [RFC] Migrate Pages in lieu of discard
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Adams <jwadams@google.com>,
-        "Chen, Tim C" <tim.c.chen@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a02:3081:: with SMTP id q123mr4311612jaq.24.1571331727632;
+ Thu, 17 Oct 2019 10:02:07 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 10:02:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000073309e05951e2dc1@google.com>
+Subject: WARNING in bdev_read
+From:   syzbot <syzbot+787bcbef9b5fec61944b@syzkaller.appspotmail.com>
+To:     alexander.levin@microsoft.com, davem@davemloft.net,
+        devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
+        paulmck@linux.ibm.com, syzkaller-bugs@googlegroups.com,
+        valdis.kletnieks@vt.edu
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 7:26 AM Dave Hansen <dave.hansen@intel.com> wrote:
->
-> On 10/16/19 8:45 PM, Shakeel Butt wrote:
-> > On Wed, Oct 16, 2019 at 3:49 PM Dave Hansen <dave.hansen@linux.intel.com> wrote:
-> >> This set implements a solution to these problems.  At the end of the
-> >> reclaim process in shrink_page_list() just before the last page
-> >> refcount is dropped, the page is migrated to persistent memory instead
-> >> of being dropped.
-> ..> The memory cgroup part of the story is missing here. Since PMEM is
-> > treated as slow DRAM, shouldn't its usage be accounted to the
-> > corresponding memcg's memory/memsw counters and the migration should
-> > not happen for memcg limit reclaim? Otherwise some jobs can hog the
-> > whole PMEM.
->
-> My expectation (and I haven't confirmed this) is that the any memory use
-> is accounted to the owning cgroup, whether it is DRAM or PMEM.  memcg
-> limit reclaim and global reclaim both end up doing migrations and
-> neither should have a net effect on the counters.
->
-
-Hmm I didn't see the memcg charge migration in the code on demotion.
-So, in the code [patch 3] the counters are being decremented as DRAM
-is freed but not incremented for PMEM.
-
-> There is certainly a problem here because DRAM is a more valuable
-> resource vs. PMEM, and memcg accounts for them as if they were equally
-> valuable.  I really want to see memcg account for this cost discrepancy
-> at some point, but I'm not quite sure what form it would take.  Any
-> feedback from you heavy memcg users out there would be much appreciated.
->
-
-There are two apparent use-cases i.e. explicit (apps moving their
-pages to PMEM to reduce cost) and implicit (admin moves cold pages to
-PMEM transparently to the apps) for the PMEM. In the implicit case, I
-see both DRAM and PMEM as same resource from the perspective of memcg
-limits i.e. same memcg counter, something like cgroup v1's  memsw).
-For the explicit case, maybe separate counters make sense like cgroup
-v2's memory and swap.
-
-> > Also what happens when PMEM is full? Can the memory migrated to PMEM
-> > be reclaimed (or discarded)?
->
-> Yep.  The "migration path" can be as long as you want, but once the data
-> hits a "terminal node" it will stop getting migrated and normal discard
-> at the end of reclaim happens.
-
-I might have missed it but I didn't see the migrated pages inserted
-back to LRUs. If they are not in LRU, the reclaimer will never see
-them.
+SGVsbG8sDQoNCnN5emJvdCBmb3VuZCB0aGUgZm9sbG93aW5nIGNyYXNoIG9uOg0KDQpIRUFEIGNv
+bW1pdDogICAgYmM4OGY4NWMga3RocmVhZDogbWFrZSBfX2t0aHJlYWRfcXVldWVfZGVsYXllZF93
+b3JrIHN0YXRpYw0KZ2l0IHRyZWU6ICAgICAgIHVwc3RyZWFtDQpjb25zb2xlIG91dHB1dDogaHR0
+cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20veC9sb2cudHh0P3g9MTRlMjU2MDhlMDAwMDANCmtl
+cm5lbCBjb25maWc6ICBodHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94Ly5jb25maWc/eD1l
+MGFjNGQ5YjM1MDQ2MzQzDQpkYXNoYm9hcmQgbGluazogaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3Bv
+dC5jb20vYnVnP2V4dGlkPTc4N2JjYmVmOWI1ZmVjNjE5NDRiDQpjb21waWxlcjogICAgICAgZ2Nj
+IChHQ0MpIDkuMC4wIDIwMTgxMjMxIChleHBlcmltZW50YWwpDQpzeXogcmVwcm86ICAgICAgaHR0
+cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20veC9yZXByby5zeXo/eD0xNTlmZDM1MzYwMDAwMA0K
+QyByZXByb2R1Y2VyOiAgIGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvcmVwcm8uYz94
+PTE3ZTgyMTczNjAwMDAwDQoNClRoZSBidWcgd2FzIGJpc2VjdGVkIHRvOg0KDQpjb21taXQgYzQ4
+YzlmN2ZmMzJiOGIzOTY1YTA4ZTQwZWI2NzYzNjgyZDkwNWI1ZA0KQXV0aG9yOiBWYWxkaXMgS2zE
+k3RuaWVrcyA8dmFsZGlzLmtsZXRuaWVrc0B2dC5lZHU+DQpEYXRlOiAgIFdlZCBBdWcgMjggMTY6
+MDg6MTcgMjAxOSArMDAwMA0KDQogICAgIHN0YWdpbmc6IGV4ZmF0OiBhZGQgZXhmYXQgZmlsZXN5
+c3RlbSBjb2RlIHRvIHN0YWdpbmcNCg0KYmlzZWN0aW9uIGxvZzogIGh0dHBzOi8vc3l6a2FsbGVy
+LmFwcHNwb3QuY29tL3gvYmlzZWN0LnR4dD94PTE1NGEzMjI3NjAwMDAwDQpmaW5hbCBjcmFzaDog
+ICAgaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20veC9yZXBvcnQudHh0P3g9MTc0YTMyMjc2
+MDAwMDANCmNvbnNvbGUgb3V0cHV0OiBodHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94L2xv
+Zy50eHQ/eD0xMzRhMzIyNzYwMDAwMA0KDQpJTVBPUlRBTlQ6IGlmIHlvdSBmaXggdGhlIGJ1Zywg
+cGxlYXNlIGFkZCB0aGUgZm9sbG93aW5nIHRhZyB0byB0aGUgY29tbWl0Og0KUmVwb3J0ZWQtYnk6
+IHN5emJvdCs3ODdiY2JlZjliNWZlYzYxOTQ0YkBzeXprYWxsZXIuYXBwc3BvdG1haWwuY29tDQpG
+aXhlczogYzQ4YzlmN2ZmMzJiICgic3RhZ2luZzogZXhmYXQ6IGFkZCBleGZhdCBmaWxlc3lzdGVt
+IGNvZGUgdG8gc3RhZ2luZyIpDQoNCltFWEZBVF0gdHJ5aW5nIHRvIG1vdW50Li4uDQotLS0tLS0t
+LS0tLS1bIGN1dCBoZXJlIF0tLS0tLS0tLS0tLS0NCltFWEZBVF0gTm8gYmgsIGRldmljZSBzZWVt
+cyB3cm9uZyBvciB0byBiZSBlamVjdGVkLg0KV0FSTklORzogQ1BVOiAwIFBJRDogOTQyNSBhdCBk
+cml2ZXJzL3N0YWdpbmcvZXhmYXQvZXhmYXRfYmxrZGV2LmM6NjIgIA0KYmRldl9yZWFkKzB4MjU4
+LzB4MmIwIGRyaXZlcnMvc3RhZ2luZy9leGZhdC9leGZhdF9ibGtkZXYuYzo2Mg0KS2VybmVsIHBh
+bmljIC0gbm90IHN5bmNpbmc6IHBhbmljX29uX3dhcm4gc2V0IC4uLg0KQ1BVOiAwIFBJRDogOTQy
+NSBDb21tOiBzeXotZXhlY3V0b3IwNDAgTm90IHRhaW50ZWQgNS40LjAtcmMzKyAjMA0KSGFyZHdh
+cmUgbmFtZTogR29vZ2xlIEdvb2dsZSBDb21wdXRlIEVuZ2luZS9Hb29nbGUgQ29tcHV0ZSBFbmdp
+bmUsIEJJT1MgIA0KR29vZ2xlIDAxLzAxLzIwMTENCkNhbGwgVHJhY2U6DQogIF9fZHVtcF9zdGFj
+ayBsaWIvZHVtcF9zdGFjay5jOjc3IFtpbmxpbmVdDQogIGR1bXBfc3RhY2srMHgxNzIvMHgxZjAg
+bGliL2R1bXBfc3RhY2suYzoxMTMNCiAgcGFuaWMrMHgyZTMvMHg3NWMga2VybmVsL3BhbmljLmM6
+MjIxDQogIF9fd2Fybi5jb2xkKzB4MmYvMHgzNSBrZXJuZWwvcGFuaWMuYzo1ODINCiAgcmVwb3J0
+X2J1ZysweDI4OS8weDMwMCBsaWIvYnVnLmM6MTk1DQogIGZpeHVwX2J1ZyBhcmNoL3g4Ni9rZXJu
+ZWwvdHJhcHMuYzoxNzkgW2lubGluZV0NCiAgZml4dXBfYnVnIGFyY2gveDg2L2tlcm5lbC90cmFw
+cy5jOjE3NCBbaW5saW5lXQ0KICBkb19lcnJvcl90cmFwKzB4MTFiLzB4MjAwIGFyY2gveDg2L2tl
+cm5lbC90cmFwcy5jOjI3Mg0KICBkb19pbnZhbGlkX29wKzB4MzcvMHg1MCBhcmNoL3g4Ni9rZXJu
+ZWwvdHJhcHMuYzoyOTENCiAgaW52YWxpZF9vcCsweDIzLzB4MzAgYXJjaC94ODYvZW50cnkvZW50
+cnlfNjQuUzoxMDI4DQpSSVA6IDAwMTA6YmRldl9yZWFkKzB4MjU4LzB4MmIwIGRyaXZlcnMvc3Rh
+Z2luZy9leGZhdC9leGZhdF9ibGtkZXYuYzo2Mg0KQ29kZTogZmYgZGYgODAgM2MgMDIgMDAgMGYg
+ODQgNTEgZmYgZmYgZmYgNGMgODkgZTcgZTggOWUgMDUgM2EgZmMgZTkgNDQgZmYgIA0KZmYgZmYg
+ZTggMTQgYTggZmUgZmIgNDggYzcgYzcgMjAgMGIgM2QgODggZTggYzAgZWEgY2YgZmIgPDBmPiAw
+YiBlYiA4YSBlOCAgDQo3ZiAwNCAzYSBmYyBlOSAxNyBmZSBmZiBmZiBlOCBiNSAwNCAzYSBmYyBl
+OSA5OSBmZQ0KUlNQOiAwMDE4OmZmZmY4ODgwYTRkNzdhZDAgRUZMQUdTOiAwMDAxMDI4Mg0KUkFY
+OiAwMDAwMDAwMDAwMDAwMDAwIFJCWDogMDAwMDAwMDAwMDAwMDAwMCBSQ1g6IDAwMDAwMDAwMDAw
+MDAwMDANClJEWDogMDAwMDAwMDAwMDAwMDAwMCBSU0k6IGZmZmZmZmZmODE1Y2I2NDYgUkRJOiBm
+ZmZmZWQxMDE0OWFlZjRjDQpSQlA6IGZmZmY4ODgwYTRkNzdiMTAgUjA4OiBmZmZmODg4MDk5YmE0
+NDAwIFIwOTogZmZmZmVkMTAxNWQwNDEwMQ0KUjEwOiBmZmZmZWQxMDE1ZDA0MTAwIFIxMTogZmZm
+Zjg4ODBhZTgyMDgwNyBSMTI6IDAwMDAwMDAwMDAwMDAwMDANClIxMzogZmZmZjg4ODA4N2Q0MDAw
+MCBSMTQ6IDAwMDAwMDAwMDAwMDAwMDEgUjE1OiAwMDAwMDAwMDAwMDAwMjAwDQogIHNlY3Rvcl9y
+ZWFkKzB4MTU2LzB4MWUwIGRyaXZlcnMvc3RhZ2luZy9leGZhdC9leGZhdF9jb3JlLmM6MzYxNQ0K
+ICBmZnNNb3VudFZvbCBkcml2ZXJzL3N0YWdpbmcvZXhmYXQvZXhmYXRfc3VwZXIuYzozNzQgW2lu
+bGluZV0NCiAgZXhmYXRfZmlsbF9zdXBlci5jb2xkKzB4NGQ2LzB4ZGJhIGRyaXZlcnMvc3RhZ2lu
+Zy9leGZhdC9leGZhdF9zdXBlci5jOjM4NjkNCiAgbW91bnRfYmRldisweDMwNC8weDNjMCBmcy9z
+dXBlci5jOjE0MTUNCiAgZXhmYXRfZnNfbW91bnQrMHgzNS8weDQwIGRyaXZlcnMvc3RhZ2luZy9l
+eGZhdC9leGZhdF9zdXBlci5jOjM5MzYNCiAgbGVnYWN5X2dldF90cmVlKzB4MTA4LzB4MjIwIGZz
+L2ZzX2NvbnRleHQuYzo2NDcNCiAgdmZzX2dldF90cmVlKzB4OGUvMHgzMDAgZnMvc3VwZXIuYzox
+NTQ1DQogIGRvX25ld19tb3VudCBmcy9uYW1lc3BhY2UuYzoyODIzIFtpbmxpbmVdDQogIGRvX21v
+dW50KzB4MTQzZC8weDFkMTAgZnMvbmFtZXNwYWNlLmM6MzE0Mw0KICBrc3lzX21vdW50KzB4ZGIv
+MHgxNTAgZnMvbmFtZXNwYWNlLmM6MzM1Mg0KICBfX2RvX3N5c19tb3VudCBmcy9uYW1lc3BhY2Uu
+YzozMzY2IFtpbmxpbmVdDQogIF9fc2Vfc3lzX21vdW50IGZzL25hbWVzcGFjZS5jOjMzNjMgW2lu
+bGluZV0NCiAgX194NjRfc3lzX21vdW50KzB4YmUvMHgxNTAgZnMvbmFtZXNwYWNlLmM6MzM2Mw0K
+ICBkb19zeXNjYWxsXzY0KzB4ZmEvMHg3NjAgYXJjaC94ODYvZW50cnkvY29tbW9uLmM6MjkwDQog
+IGVudHJ5X1NZU0NBTExfNjRfYWZ0ZXJfaHdmcmFtZSsweDQ5LzB4YmUNClJJUDogMDAzMzoweDQ0
+MDE3OQ0KQ29kZTogMTggODkgZDAgYzMgNjYgMmUgMGYgMWYgODQgMDAgMDAgMDAgMDAgMDAgMGYg
+MWYgMDAgNDggODkgZjggNDggODkgZjcgIA0KNDggODkgZDYgNDggODkgY2EgNGQgODkgYzIgNGQg
+ODkgYzggNGMgOGIgNGMgMjQgMDggMGYgMDUgPDQ4PiAzZCAwMSBmMCBmZiAgDQpmZiAwZiA4MyBm
+YiAxMyBmYyBmZiBjMyA2NiAyZSAwZiAxZiA4NCAwMCAwMCAwMCAwMA0KUlNQOiAwMDJiOjAwMDA3
+ZmZmMGY5MDI5OTggRUZMQUdTOiAwMDAwMDI0NiBPUklHX1JBWDogMDAwMDAwMDAwMDAwMDBhNQ0K
+UkFYOiBmZmZmZmZmZmZmZmZmZmRhIFJCWDogMDAzMDY1NmM2OTY2MmYyZSBSQ1g6IDAwMDAwMDAw
+MDA0NDAxNzkNClJEWDogMDAwMDAwMDAyMDAwMDIwMCBSU0k6IDAwMDAwMDAwMjAwMDAxYzAgUkRJ
+OiAwMDAwMDAwMDIwMDAwNDAwDQpSQlA6IDAwMDAwMDAwMDA2Y2EwMTggUjA4OiAwMDAwMDAwMDAw
+MDAwMDAwIFIwOTogMDAwMDAwMDAwMDAwMDAwMA0KUjEwOiAwMDAwMDAwMDAyODAwMDAxIFIxMTog
+MDAwMDAwMDAwMDAwMDI0NiBSMTI6IDAwMDAwMDAwMDA0MDFhMDANClIxMzogMDAwMDAwMDAwMDQw
+MWE5MCBSMTQ6IDAwMDAwMDAwMDAwMDAwMDAgUjE1OiAwMDAwMDAwMDAwMDAwMDAwDQpLZXJuZWwg
+T2Zmc2V0OiBkaXNhYmxlZA0KUmVib290aW5nIGluIDg2NDAwIHNlY29uZHMuLg0KDQoNCi0tLQ0K
+VGhpcyBidWcgaXMgZ2VuZXJhdGVkIGJ5IGEgYm90LiBJdCBtYXkgY29udGFpbiBlcnJvcnMuDQpT
+ZWUgaHR0cHM6Ly9nb28uZ2wvdHBzbUVKIGZvciBtb3JlIGluZm9ybWF0aW9uIGFib3V0IHN5emJv
+dC4NCnN5emJvdCBlbmdpbmVlcnMgY2FuIGJlIHJlYWNoZWQgYXQgc3l6a2FsbGVyQGdvb2dsZWdy
+b3Vwcy5jb20uDQoNCnN5emJvdCB3aWxsIGtlZXAgdHJhY2sgb2YgdGhpcyBidWcgcmVwb3J0LiBT
+ZWU6DQpodHRwczovL2dvby5nbC90cHNtRUojc3RhdHVzIGZvciBob3cgdG8gY29tbXVuaWNhdGUg
+d2l0aCBzeXpib3QuDQpGb3IgaW5mb3JtYXRpb24gYWJvdXQgYmlzZWN0aW9uIHByb2Nlc3Mgc2Vl
+OiBodHRwczovL2dvby5nbC90cHNtRUojYmlzZWN0aW9uDQpzeXpib3QgY2FuIHRlc3QgcGF0Y2hl
+cyBmb3IgdGhpcyBidWcsIGZvciBkZXRhaWxzIHNlZToNCmh0dHBzOi8vZ29vLmdsL3Rwc21FSiN0
+ZXN0aW5nLXBhdGNoZXMNCg==
