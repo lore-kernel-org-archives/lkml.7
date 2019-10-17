@@ -2,98 +2,180 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 282A2ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 924B4ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB5EB20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DE2520854
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:29:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="etL/U/YU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LZ2BxUT3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409041AbfJQL12 (ORCPT
+        id S2439711AbfJQL3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 07:27:28 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34842 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405872AbfJQL11 (ORCPT
+        Thu, 17 Oct 2019 07:29:47 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53339 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405872AbfJQL3q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 07:27:27 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m7so2160458lji.2
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 04:27:26 -0700 (PDT)
+        Thu, 17 Oct 2019 07:29:46 -0400
+Received: by mail-wm1-f68.google.com with SMTP id i16so2174076wmd.3
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 04:29:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=u27O11IXpE4QvzJ/zXnS9tRoa9paocA4KgwexhvBV0A=;
-        b=etL/U/YUGzssW4XgyN4D34Kd6ceXI5McsWW1RMa8MzO0QVp315FdEoKzbfZO23zUE1
-         RtM4VFBSm1kJ2nyanIMyGUYcLMxKeryAxkGU125tY9H6Pv9ScpZ4JETL1haWnelhenFP
-         37o7c+Pb2PUjH5v4WNvZn1rvbQBv1r7e85naEyjRq0k9bIDxORHI3kEqhTcIipMj9aeF
-         0nckySMYQs37OaNh7T3RWcZ0a2qn3CNerYAgWW9FYuwwmIgXIyxC4AAe5XbuzHzM4UtM
-         0g+dn6cLoXAUjTqCcspUkSQwybPp9l+U5RZk5A6Sts2kOYJ/xYctqJfqFrhVXCEJoX1F
-         8iwA==
+        bh=y25SQvHW6/7riw64/wdhH01byzi//dz718QUhzJWQoM=;
+        b=LZ2BxUT3XYkN17tFc8dU93+VqpMf/c0mPGTp3UVIyg3upGlb3iY+XDdf1yfAjNQUV9
+         MEbhUG/4TIwoL/i8Lg8m5fewSbe3O7KW9XX4meNTSrHGz/tZpRsIOHp0b43jn04q0XCI
+         lO2jcDZa4Y8HiPEG3fP63QY6pTT7blXEh1CEunMeL+cA/8ticCfbt7sVTYaoXZEXw1ke
+         5sRkxNtiy98Ej84gJCr8gbkGZ+Xxk1gqz+P34xf6RGTNU0XuTkJ9F5jUvo8ZbLcpK/t2
+         wEUD0CrW6jFNo5lUiEKuA4upAA7nY7xJYPs35VaGodmJRe61wsS6q1Mh0BQ+ZhYxEVZu
+         Z/lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=u27O11IXpE4QvzJ/zXnS9tRoa9paocA4KgwexhvBV0A=;
-        b=IP3ssWd2SZQOGwyunK0rY9toPkYexzaQkiIrybVYHo5cJa4sNsZATWkCgoxPu3sfs9
-         X3JgOOK6c1zSz75t19aFK7PqlIMm1rneLkzxBw8cn93Ywk/ud7gsdZPukKuOsFWdB4YY
-         vyvu9HhodVVgHsSHuy/GYplIG/8hsLfPCOPx+LixYoK/xaSX5M9/+wmMhRKNxgQ7rIcU
-         6+qUFYVCLcuxi6dHP7Oi3W/geqpnskkae8+Yn3QOEVVZrDbhF5II+6IZTX7gtfY0P34b
-         CSs4usKHWpsT7ou2H7JPdHpRnkcXJSsczJffSbUmaBUijJabiSvTwMYwRrZZ+pjYvS1w
-         t5KQ==
-X-Gm-Message-State: APjAAAWS5nEMhbiHrrntc8Rrc7JfzI5hr1W0Jm2xWdBP8Nk2uCuwuwAf
-        V+mAJzqPnS4s/bGgM+3JvK+pmw==
-X-Google-Smtp-Source: APXvYqx4QY/DUy+spdzmA2DFZYHvqz6zJNE6ZDiq/1MRsKG1tmvmCLaALR6USc4RJjFTmU7YV4CkjA==
-X-Received: by 2002:a2e:b4a8:: with SMTP id q8mr2152296ljm.106.1571311645987;
-        Thu, 17 Oct 2019 04:27:25 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id q24sm1165212lfa.94.2019.10.17.04.27.25
+        bh=y25SQvHW6/7riw64/wdhH01byzi//dz718QUhzJWQoM=;
+        b=i/ubqchxKxBQEZNXeFqhLemNK4dy4a/lJUSYk98FWc1hyB8PA9VEGKlvX693viK7Xz
+         2WkiQtAOCqKgoOmpqdNz/rzhKoU1gtn/7+g9U25h5zSFj1ds0np+TGIBND1u1fSRj2Wj
+         gMadx9MP23++r6e1SXLpHTHxXh3MbFvClB5XHfWdxfLSRcGXigoi95+/QTRhMypxeCEh
+         OBoX77x64yeyE9QN6SuZgISw37/+QfQSABhGx53QMpZop44s2tz5X+oL51s08FS+H40G
+         iwkNepq53phju1jmONOsN9Etm9/MAP0s9fz2ooUw0odv/RMh6sLhdek1tSSvlAWDuUTh
+         fChA==
+X-Gm-Message-State: APjAAAUQ5SJXc2QRINsrQa7KpFMNJLVpbBXdAvkXJ3hM75hretIl7Ckq
+        lFVJJHfUSCyXmTK8ajWqcO3E0Q==
+X-Google-Smtp-Source: APXvYqy315waZYadAwtLx/wuKd4IUjaUiXe5iNXNBULrE+UNqPPTqxikRQdXUrJkHirN8ZpFE3jJ2w==
+X-Received: by 2002:a1c:e057:: with SMTP id x84mr2365727wmg.72.1571311784048;
+        Thu, 17 Oct 2019 04:29:44 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id q22sm1795666wmj.5.2019.10.17.04.29.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 04:27:25 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 456311001A2; Thu, 17 Oct 2019 14:27:24 +0300 (+03)
-Date:   Thu, 17 Oct 2019 14:27:24 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Dave Hansen <dave.hansen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        dan.j.williams@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH 2/4] mm/migrate: Defer allocating new page until needed
-Message-ID: <20191017112724.f74v2xqgb6swo7w7@box>
-References: <20191016221148.F9CCD155@viggo.jf.intel.com>
- <20191016221151.854D5735@viggo.jf.intel.com>
+        Thu, 17 Oct 2019 04:29:43 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 12:29:41 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Kiran Gunda <kgunda@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH V7 6/6] backlight: qcom-wled: Add auto string detection
+ logic
+Message-ID: <20191017112941.qqvgboyambzw63i3@holly.lan>
+References: <1571220826-7740-1-git-send-email-kgunda@codeaurora.org>
+ <1571220826-7740-7-git-send-email-kgunda@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191016221151.854D5735@viggo.jf.intel.com>
+In-Reply-To: <1571220826-7740-7-git-send-email-kgunda@codeaurora.org>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 03:11:51PM -0700, Dave Hansen wrote:
+On Wed, Oct 16, 2019 at 03:43:46PM +0530, Kiran Gunda wrote:
+> The auto string detection algorithm checks if the current WLED
+> sink configuration is valid. It tries enabling every sink and
+> checks if the OVP fault is observed. Based on this information
+> it detects and enables the valid sink configuration.
+> Auto calibration will be triggered when the OVP fault interrupts
+> are seen frequently thereby it tries to fix the sink configuration.
 > 
-> From: Keith Busch <keith.busch@intel.com>
+> The auto-detection also kicks in when the connected LED string
+> of the display-backlight malfunctions (because of damage) and
+> requires the damaged string to be turned off to prevent the
+> complete panel and/or board from being damaged.
 > 
-> Migrating pages had been allocating the new page before it was actually
-> needed. Subsequent operations may still fail, which would have to handle
-> cleaning up the newly allocated page when it was never used.
-> 
-> Defer allocating the page until we are actually ready to make use of
-> it, after locking the original page. This simplifies error handling,
-> but should not have any functional change in behavior. This is just
-> refactoring page migration so the main part can more easily be reused
-> by other code.
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
 
-Well, the functional change I see is that now we allocate a new page under
-page lock of old page.
+It's a complex bit of code but I'm OK with it in principle. Everything
+below is about small details and/or nitpicking.
 
-It *should* be fine, but it has to be call out in the commit message.
 
--- 
- Kirill A. Shutemov
+> +static void wled_ovp_work(struct work_struct *work)
+> +{
+> +	struct wled *wled = container_of(work,
+> +					 struct wled, ovp_work.work);
+> +	enable_irq(wled->ovp_irq);
+> +}
+> +
+
+A bit of commenting about why we have to wait 10ms before enabling the
+OVP interrupt would be appreciated.
+
+
+> +static irqreturn_t wled_ovp_irq_handler(int irq, void *_wled)
+> +{
+> +	struct wled *wled = _wled;
+> +	int rc;
+> +	u32 int_sts, fault_sts;
+> +
+> +	rc = regmap_read(wled->regmap,
+> +			 wled->ctrl_addr + WLED3_CTRL_REG_INT_RT_STS, &int_sts);
+> +	if (rc < 0) {
+> +		dev_err(wled->dev, "Error in reading WLED3_INT_RT_STS rc=%d\n",
+> +			rc);
+> +		return IRQ_HANDLED;
+> +	}
+> +
+> +	rc = regmap_read(wled->regmap, wled->ctrl_addr +
+> +			 WLED3_CTRL_REG_FAULT_STATUS, &fault_sts);
+> +	if (rc < 0) {
+> +		dev_err(wled->dev, "Error in reading WLED_FAULT_STATUS rc=%d\n",
+> +			rc);
+> +		return IRQ_HANDLED;
+> +	}
+> +
+> +	if (fault_sts &
+> +		(WLED3_CTRL_REG_OVP_FAULT_BIT | WLED3_CTRL_REG_ILIM_FAULT_BIT))
+> +		dev_dbg(wled->dev, "WLED OVP fault detected, int_sts=%x fault_sts= %x\n",
+> +			int_sts, fault_sts);
+> +
+> +	if (fault_sts & WLED3_CTRL_REG_OVP_FAULT_BIT) {
+> +		mutex_lock(&wled->lock);
+> +		disable_irq_nosync(wled->ovp_irq);
+
+We're currently running the threaded ISR for this irq. Do we really need
+to disable it?
+
+> +
+> +		if (wled_auto_detection_required(wled))
+> +			wled_auto_string_detection(wled);
+> +
+> +		enable_irq(wled->ovp_irq);
+> +
+> +		mutex_unlock(&wled->lock);
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+
+Snip.
+
+
+> +static int wled_remove(struct platform_device *pdev)
+> +{
+> +	struct wled *wled = dev_get_drvdata(&pdev->dev);
+> +
+> +	cancel_delayed_work_sync(&wled->ovp_work);
+> +	mutex_destroy(&wled->lock);
+
+Have the irq handlers been disabled at this point?
+
+Also, if you want to destroy the mutex shouldn't that code be 
+introduced in the same patch that introduces the mutex?
+> +
+> +	return 0;
+> +}
+
+
+Daniel.
