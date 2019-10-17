@@ -2,87 +2,106 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3595DC4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 03:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 275A7C4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 03:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15C442082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 03:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 058FB2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 03:55:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407675AbfJQDyQ (ORCPT
+        id S2407690AbfJQDy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 23:54:16 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:42844 "EHLO huawei.com"
+        Wed, 16 Oct 2019 23:54:58 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:44232 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2392243AbfJQDyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 23:54:16 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0BF5C6F2F1AB8227FC87;
-        Thu, 17 Oct 2019 11:54:14 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 17 Oct 2019 11:54:07 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     Steve French <sfrench@samba.org>
-CC:     YueHaibing <yuehaibing@huawei.com>, <linux-cifs@vger.kernel.org>,
-        <samba-technical@lists.samba.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH -next] CIFS: remove set but not used variables 'cinode' and 'netfid'
-Date:   Thu, 17 Oct 2019 03:53:51 +0000
-Message-ID: <20191017035351.125013-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        id S2392243AbfJQDy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 23:54:58 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 6627B91EAA8B04B71AA2;
+        Thu, 17 Oct 2019 11:54:56 +0800 (CST)
+Received: from [127.0.0.1] (10.177.29.68) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
+ 11:54:55 +0800
+Message-ID: <5DA7E60E.4060206@huawei.com>
+Date:   Thu, 17 Oct 2019 11:54:54 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
+To:     Jerome Pouiller <Jerome.Pouiller@silabs.com>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RESEND v2] staging: wfx: fix an undefined reference error
+ when CONFIG_MMC=m
+References: <1570811647-64905-1-git-send-email-zhongjiang@huawei.com> <5DA13F17.6090409@huawei.com> <2927969.oKuMf0pyRb@pc-42> <2864258.2Qbmp6UNZe@pc-42>
+In-Reply-To: <2864258.2Qbmp6UNZe@pc-42>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.29.68]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+On 2019/10/14 18:06, Jerome Pouiller wrote:
+> On Monday 14 October 2019 11:53:19 CEST Jérôme Pouiller wrote:
+> [...]
+>> Hello Zhong,
+>>
+>> Now, I see the problem. It happens when CONFIG_MMC=m and CONFIG_WFX=y
+>> (if CONFIG_WFX=m, it works).
+>>
+>> I think the easiest way to solve problem is to disallow CONFIG_WFX=y if 
+>> CONFIG_MMC=m.
+>>
+>> This solution impacts users who want to use SPI bus with configuration:
+>> CONFIG_WFX=y + CONFIG_SPI=y + CONFIG_MMC=m. However, I think this is a
+>> twisted case. So, I think it won't be missed.
+>>
+>> I think that patch below do the right thing:
+>>
+>> -----8<----------8<----------------------8<-----------------
+>>
+>> diff --git i/drivers/staging/wfx/Kconfig w/drivers/staging/wfx/Kconfig
+>> index 9b8a1c7a9e90..833f3b05b6b4 100644
+>> --- i/drivers/staging/wfx/Kconfig
+>> +++ w/drivers/staging/wfx/Kconfig
+>> @@ -1,7 +1,7 @@
+>>  config WFX
+>>         tristate "Silicon Labs wireless chips WF200 and further"
+>>         depends on MAC80211
+>> -       depends on (SPI || MMC)
+>> +       depends on (MMC=m && m) || MMC=y || (SPI && MMC!=m)
+>>         help
+>>           This is a driver for Silicons Labs WFxxx series (WF200 and further)
+>>           chipsets. This chip can be found on SPI or SDIO buses.
+>>
+>>
+>>
+> An alternative (more understandable?):
+>
+> diff --git i/drivers/staging/wfx/Kconfig w/drivers/staging/wfx/Kconfig
+> index 9b8a1c7a9e90..83ee4d0ca8c6 100644
+> --- i/drivers/staging/wfx/Kconfig
+> +++ w/drivers/staging/wfx/Kconfig
+> @@ -1,6 +1,7 @@
+>  config WFX
+>         tristate "Silicon Labs wireless chips WF200 and further"
+>         depends on MAC80211
+> +       depends on MMC || !MMC # do not allow WFX=y if MMC=m
+>         depends on (SPI || MMC)
+>         help
+>           This is a driver for Silicons Labs WFxxx series (WF200 and further)
+>
+>
+Hi,  Jerome
 
-fs/cifs/file.c: In function 'cifs_flock':
-fs/cifs/file.c:1704:8: warning:
- variable 'netfid' set but not used [-Wunused-but-set-variable]
+It's better to understandable.
+Could you send the patch or want to repost by me?
 
-fs/cifs/file.c:1702:24: warning:
- variable 'cinode' set but not used [-Wunused-but-set-variable]
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- fs/cifs/file.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-index 936e03892e2a..02a81dc6861a 100644
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -1699,9 +1699,7 @@ int cifs_flock(struct file *file, int cmd, struct file_lock *fl)
- 	bool posix_lck = false;
- 	struct cifs_sb_info *cifs_sb;
- 	struct cifs_tcon *tcon;
--	struct cifsInodeInfo *cinode;
- 	struct cifsFileInfo *cfile;
--	__u16 netfid;
- 	__u32 type;
- 
- 	rc = -EACCES;
-@@ -1716,8 +1714,6 @@ int cifs_flock(struct file *file, int cmd, struct file_lock *fl)
- 	cifs_read_flock(fl, &type, &lock, &unlock, &wait_flag,
- 			tcon->ses->server);
- 	cifs_sb = CIFS_FILE_SB(file);
--	netfid = cfile->fid.netfid;
--	cinode = CIFS_I(file_inode(file));
- 
- 	if (cap_unix(tcon->ses) &&
- 	    (CIFS_UNIX_FCNTL_CAP & le64_to_cpu(tcon->fsUnixInfo.Capability)) &&
-
-
+Thanks,
+zhong jiang
 
