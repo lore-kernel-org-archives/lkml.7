@@ -2,147 +2,125 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A7CECE597
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A5DECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C81B921925
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:48:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YOJSGNdH"
+	by mail.kernel.org (Postfix) with ESMTP id 8F5922089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:48:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571334505;
+	bh=v34jWqxmNeAMOoNfEOFlbq2+WSKHjXcMGhvRy6ZMeig=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=Wl6jE2hKnfkk649iRKKfZW2GJ0BnrdXQEgx2Jq2O3rBDFWs7oX+94Fer5jwt/wzI6
+	 ovcjEsjnUoiUbYjRVpffrnMl+ns2A53EnF8W0eVdfyIujbiys+BW4FK+89VJ7baKQc
+	 nVeatYumA8pizpmATz9OIfZEo75Sitk5shTP04NQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437149AbfJQRsQ (ORCPT
+        id S1730666AbfJQRsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 13:48:16 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54616 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437222AbfJQRqi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 13:46:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=JoWYe6Vw3Po4m3FC1eS1aSF6GNt+BYWJoAwerG5jalc=; b=YOJSGNdHD2jVDmHKAZ5RVQSwZW
-        I1+D9gXHmJYXOUcFNKj14k4yp812uQ1UfiHkLGmH5DQclsczuD17LZOXT/ejrv+Poj20UhvnzBo7D
-        o43qFDc6T6LBz2k4Xk7M9LoI5DRgN17u1XapHnunkbJC3dNdaQNtFKt4OvOQtLWHb+hA8HjOM6GyQ
-        Q9kQuspP8Kdi9QzusidafkjJCPbE3b1LdjEQY8/K0Faf807uNZwNt5L8ejhM6WndrO8ICRDvGxRDH
-        MV5Ig+6MKj7bal5K7uxWLa4j33GEP4H+ZTVHakrbRWCxdNMbUAWbd3+B16stT3BEtwY1PG2Lhosaw
-        b9lTecnQ==;
-Received: from [2001:4bb8:18c:d7b:c70:4a89:bc61:3] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iL9qo-0005hq-EV; Thu, 17 Oct 2019 17:46:14 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org
-Cc:     linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-mtd@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 07/21] parisc: remove __ioremap
-Date:   Thu, 17 Oct 2019 19:45:40 +0200
-Message-Id: <20191017174554.29840-8-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191017174554.29840-1-hch@lst.de>
-References: <20191017174554.29840-1-hch@lst.de>
+        Thu, 17 Oct 2019 13:48:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47148 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437169AbfJQRsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 13:48:21 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F08422089C;
+        Thu, 17 Oct 2019 17:48:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571334501;
+        bh=v34jWqxmNeAMOoNfEOFlbq2+WSKHjXcMGhvRy6ZMeig=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=M262+xKAyWHA0QeAIq39nDeoMvMpkBRJ6TbbsDN/MDmB4cd9yD90JsNNrxuEY5arz
+         uXHFuLaJGR2Sfw3uBWNd775l1T0L5DfcHX2dKE0HQnIB+FRr8bsvdWlkd5jSlZNEqM
+         AuZS6lW8VkEDJWWEBWlqhsbkz8rROA031xEABvQo=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191016122343.GM2654@vkoul-mobl>
+References: <20190917091623.3453-1-vkoul@kernel.org> <20190917161000.DAFF3206C2@mail.kernel.org> <20191016122343.GM2654@vkoul-mobl>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clk: qcom: gcc: Add missing clocks in SM8150
+User-Agent: alot/0.8.1
+Date:   Thu, 17 Oct 2019 10:48:20 -0700
+Message-Id: <20191017174820.F08422089C@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__ioremap is always called with the _PAGE_NO_CACHE, so fold the whole
-thing and rename it to ioremap.  This allows allows to remove the
-special EISA quirk to force _PAGE_NO_CACHE.
+Quoting Vinod Koul (2019-10-16 05:23:43)
+> Hi Steve,
+>=20
+> Looks like I missed replying to this one, apologies!
+>=20
+> On 17-09-19, 09:09, Stephen Boyd wrote:
+> > Quoting Vinod Koul (2019-09-17 02:16:23)
+> > > The initial upstreaming of SM8150 GCC driver missed few clock so add
+> > > them up now.
+> > >=20
+> > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > > ---
+> >=20
+> > Should have some sort of fixes tag?
+>=20
+> Not really, the drivers to use these clks are not upstream so we dont
+> miss it yet
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/parisc/include/asm/io.h | 11 +----------
- arch/parisc/mm/ioremap.c     | 10 ++++------
- 2 files changed, 5 insertions(+), 16 deletions(-)
+Ok.
 
-diff --git a/arch/parisc/include/asm/io.h b/arch/parisc/include/asm/io.h
-index 93d37010b375..46212b52c23e 100644
---- a/arch/parisc/include/asm/io.h
-+++ b/arch/parisc/include/asm/io.h
-@@ -127,16 +127,7 @@ static inline void gsc_writeq(unsigned long long val, unsigned long addr)
- /*
-  * The standard PCI ioremap interfaces
-  */
--
--extern void __iomem * __ioremap(unsigned long offset, unsigned long size, unsigned long flags);
--
--/* Most machines react poorly to I/O-space being cacheable... Instead let's
-- * define ioremap() in terms of ioremap_nocache().
-- */
--static inline void __iomem * ioremap(unsigned long offset, unsigned long size)
--{
--	return __ioremap(offset, size, _PAGE_NO_CACHE);
--}
-+void __iomem *ioremap(unsigned long offset, unsigned long size);
- #define ioremap_nocache(off, sz)	ioremap((off), (sz))
- #define ioremap_wc			ioremap_nocache
- #define ioremap_uc			ioremap_nocache
-diff --git a/arch/parisc/mm/ioremap.c b/arch/parisc/mm/ioremap.c
-index f29f682352f0..6e7c005aa09b 100644
---- a/arch/parisc/mm/ioremap.c
-+++ b/arch/parisc/mm/ioremap.c
-@@ -25,7 +25,7 @@
-  * have to convert them into an offset in a page-aligned mapping, but the
-  * caller shouldn't need to know that small detail.
-  */
--void __iomem * __ioremap(unsigned long phys_addr, unsigned long size, unsigned long flags)
-+void __iomem *ioremap(unsigned long phys_addr, unsigned long size)
- {
- 	void __iomem *addr;
- 	struct vm_struct *area;
-@@ -36,10 +36,8 @@ void __iomem * __ioremap(unsigned long phys_addr, unsigned long size, unsigned l
- 	unsigned long end = phys_addr + size - 1;
- 	/* Support EISA addresses */
- 	if ((phys_addr >= 0x00080000 && end < 0x000fffff) ||
--	    (phys_addr >= 0x00500000 && end < 0x03bfffff)) {
-+	    (phys_addr >= 0x00500000 && end < 0x03bfffff))
- 		phys_addr |= F_EXTEND(0xfc000000);
--		flags |= _PAGE_NO_CACHE;
--	}
- #endif
- 
- 	/* Don't allow wraparound or zero size */
-@@ -65,7 +63,7 @@ void __iomem * __ioremap(unsigned long phys_addr, unsigned long size, unsigned l
- 	}
- 
- 	pgprot = __pgprot(_PAGE_PRESENT | _PAGE_RW | _PAGE_DIRTY |
--			  _PAGE_ACCESSED | flags);
-+			  _PAGE_ACCESSED | _PAGE_NO_CACHE);
- 
- 	/*
- 	 * Mappings have to be page-aligned
-@@ -90,7 +88,7 @@ void __iomem * __ioremap(unsigned long phys_addr, unsigned long size, unsigned l
- 
- 	return (void __iomem *) (offset + (char __iomem *)addr);
- }
--EXPORT_SYMBOL(__ioremap);
-+EXPORT_SYMBOL(ioremap);
- 
- void iounmap(const volatile void __iomem *io_addr)
- {
--- 
-2.20.1
+>=20
+> >=20
+> > >  drivers/clk/qcom/gcc-sm8150.c | 172 ++++++++++++++++++++++++++++++++=
+++
+> > >  1 file changed, 172 insertions(+)
+> > >=20
+> > > diff --git a/drivers/clk/qcom/gcc-sm8150.c b/drivers/clk/qcom/gcc-sm8=
+150.c
+> > > index 12ca2d14797f..13d4d14a5744 100644
+> > > --- a/drivers/clk/qcom/gcc-sm8150.c
+> > > +++ b/drivers/clk/qcom/gcc-sm8150.c
+> > > @@ -1616,6 +1616,38 @@ static struct clk_branch gcc_gpu_cfg_ahb_clk =
+=3D {
+> > >         },
+> > >  };
+> > > =20
+> > > +static struct clk_branch gcc_gpu_gpll0_clk_src =3D {
+> > > +       .halt_check =3D BRANCH_HALT_SKIP,
+> >=20
+> > Why skip?
+>=20
+> I will explore and add comments for that
+>=20
+> > > +       .clkr =3D {
+> > > +               .enable_reg =3D 0x52004,
+> > > +               .enable_mask =3D BIT(15),
+> > > +               .hw.init =3D &(struct clk_init_data){
+> > > +                       .name =3D "gcc_gpu_gpll0_clk_src",
+> > > +                       .parent_hws =3D (const struct clk_hw *[]){
+> > > +                               &gpll0.clkr.hw },
+> > > +                       .num_parents =3D 1,
+> > > +                       .flags =3D CLK_SET_RATE_PARENT,
+> > > +                       .ops =3D &clk_branch2_ops,
+> > > +               },
+> > > +       },
+> > > +};
+> > > +
+> > > +static struct clk_branch gcc_gpu_gpll0_div_clk_src =3D {
+> > > +       .halt_check =3D BRANCH_HALT_SKIP,
+> >=20
+> > Why skip?
+> >=20
+
+Any answer from the explorations?
 
