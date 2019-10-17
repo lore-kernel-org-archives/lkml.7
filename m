@@ -2,81 +2,242 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0347AFA3728
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD12FA3728
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CABF5218DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:47:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571276878;
-	bh=Bj6PbMkOEWn9QUa6k3iFedlOuXbKcM5250I2nBSp67o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MspomqO+SezCTtNFduffJe7TDCjGHMLSvGZmPdiLRCpD51hxkApT4FcnBjKZ5fXIE
-	 pfbXPaKDGLBtYTc+diGFdbLYU3J0I/h85jygxHGEMyVccIFK/kpMKqEjai8ITNaivM
-	 S3reb0K/e+3bnwD48ZLgCEgph/uKJKjT07hPnJYQ=
+	by mail.kernel.org (Postfix) with ESMTP id 9290521A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:50:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391824AbfJQBr5 (ORCPT
+        id S2391883AbfJQBux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 21:47:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44628 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727387AbfJQBr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 21:47:57 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CF0820854;
-        Thu, 17 Oct 2019 01:47:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571276876;
-        bh=Bj6PbMkOEWn9QUa6k3iFedlOuXbKcM5250I2nBSp67o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ir7ngdOqhiJz3NTtmaOmn3xa+J2uzoKwXIbPUViyXiqku47l7kGoSZOx9UeyBqIZc
-         I9cfE2AD0W7O+4DNVAzlMaPasxXt0H8QUYSw8tgIN3Yu4t4Jvxi9PP/QBFFYzxQ2Wd
-         tWJdXqurmSnpZN0QJxyfssuwP6g98d7J08OT6VQo=
-Date:   Wed, 16 Oct 2019 18:47:55 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     syzbot <syzbot+76a43f2b4d34cfc53548@syzkaller.appspotmail.com>
-Cc:     akpm@osdl.org, deepa.kernel@gmail.com, hch@infradead.org,
-        jlayton@kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lkundrak@v3.sk,
-        syzkaller-bugs@googlegroups.com, tklauser@nuerscht.ch,
-        trond.myklebust@fys.uio.no, viro@zeniv.linux.org.uk
-Subject: Re: KASAN: use-after-free Read in mnt_warn_timestamp_expiry
-Message-ID: <20191017014755.GA1552@sol.localdomain>
-Mail-Followup-To: syzbot <syzbot+76a43f2b4d34cfc53548@syzkaller.appspotmail.com>,
-        akpm@osdl.org, deepa.kernel@gmail.com, hch@infradead.org,
-        jlayton@kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lkundrak@v3.sk,
-        syzkaller-bugs@googlegroups.com, tklauser@nuerscht.ch,
-        trond.myklebust@fys.uio.no, viro@zeniv.linux.org.uk
-References: <0000000000007f489b0595115374@google.com>
+        Wed, 16 Oct 2019 21:50:53 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:36560 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2391717AbfJQBux (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 21:50:53 -0400
+X-UUID: 5abb0a063f3348d5a0de588d3f47792e-20191017
+X-UUID: 5abb0a063f3348d5a0de588d3f47792e-20191017
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 497781176; Thu, 17 Oct 2019 09:50:47 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 17 Oct 2019 09:50:44 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 17 Oct 2019 09:50:44 +0800
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Walter Wu <walter-zh.wu@mediatek.com>
+Subject: [PATCH v2 1/2] kasan: detect negative size in memory operation function
+Date:   Thu, 17 Oct 2019 09:50:44 +0800
+Message-ID: <20191017015044.8586-1-walter-zh.wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0000000000007f489b0595115374@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 06:42:11PM -0700, syzbot wrote:
-> ==================================================================
-> BUG: KASAN: use-after-free in mnt_warn_timestamp_expiry+0x4a/0x250
-> fs/namespace.c:2471
-> Read of size 8 at addr ffff888099937328 by task syz-executor.1/18510
-> 
+KASAN missed detecting size is negative numbers in memset(), memcpy(),
+and memmove(), it will cause out-of-bounds bug, so needs to be detected
+by KASAN.
 
-Looks like a duplicate of this:
+If size is negative numbers, then it has three reasons to be
+defined as heap-out-of-bounds bug type.
+1) Casting negative numbers to size_t would indeed turn up as
+   a large size_t and its value will be larger than ULONG_MAX/2,
+   so that this can qualify as out-of-bounds.
+2) If KASAN has new bug type and user-space passes negative size,
+   then there are duplicate reports. So don't produce new bug type
+   in order to prevent duplicate reports by some systems (e.g. syzbot)
+   to report the same bug twice.
+3) When size is negative numbers, it may be passed from user-space.
+   So we always print heap-out-of-bounds in order to prevent that
+   kernel-space and user-space have the same bug but have duplicate
+   reports.
 
-#syz dup: KASAN: use-after-free Read in do_mount
+KASAN report:
 
-See the existing thread and proposed fix here:
-https://lkml.kernel.org/linux-fsdevel/000000000000805e5505945a234b@google.com/T/#u
+ BUG: KASAN: heap-out-of-bounds in kmalloc_memmove_invalid_size+0x70/0xa0
+ Read of size 18446744073709551608 at addr ffffff8069660904 by task cat/72
 
-- Eric
+ CPU: 2 PID: 72 Comm: cat Not tainted 5.4.0-rc1-next-20191004ajb-00001-gdb8af2f372b2-dirty #1
+ Hardware name: linux,dummy-virt (DT)
+ Call trace:
+  dump_backtrace+0x0/0x288
+  show_stack+0x14/0x20
+  dump_stack+0x10c/0x164
+  print_address_description.isra.9+0x68/0x378
+  __kasan_report+0x164/0x1a0
+  kasan_report+0xc/0x18
+  check_memory_region+0x174/0x1d0
+  memmove+0x34/0x88
+  kmalloc_memmove_invalid_size+0x70/0xa0
+
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=199341
+
+Changes in v2:
+Fix the indentation bug, thanks for the reminder Matthew.
+
+Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+Reported-by: Dmitry Vyukov <dvyukov@google.com>
+Suggested-by: Dmitry Vyukov <dvyukov@google.com>
+Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Alexander Potapenko <glider@google.com>
+---
+ mm/kasan/common.c         | 13 ++++++++-----
+ mm/kasan/generic.c        |  5 +++++
+ mm/kasan/generic_report.c | 18 ++++++++++++++++++
+ mm/kasan/tags.c           |  5 +++++
+ mm/kasan/tags_report.c    | 18 ++++++++++++++++++
+ 5 files changed, 54 insertions(+), 5 deletions(-)
+
+diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+index 6814d6d6a023..16a370023425 100644
+--- a/mm/kasan/common.c
++++ b/mm/kasan/common.c
+@@ -102,7 +102,8 @@ EXPORT_SYMBOL(__kasan_check_write);
+ #undef memset
+ void *memset(void *addr, int c, size_t len)
+ {
+-	check_memory_region((unsigned long)addr, len, true, _RET_IP_);
++	if (!check_memory_region((unsigned long)addr, len, true, _RET_IP_))
++		return NULL;
+ 
+ 	return __memset(addr, c, len);
+ }
+@@ -110,8 +111,9 @@ void *memset(void *addr, int c, size_t len)
+ #undef memmove
+ void *memmove(void *dest, const void *src, size_t len)
+ {
+-	check_memory_region((unsigned long)src, len, false, _RET_IP_);
+-	check_memory_region((unsigned long)dest, len, true, _RET_IP_);
++	if (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
++	    !check_memory_region((unsigned long)dest, len, true, _RET_IP_))
++		return NULL;
+ 
+ 	return __memmove(dest, src, len);
+ }
+@@ -119,8 +121,9 @@ void *memmove(void *dest, const void *src, size_t len)
+ #undef memcpy
+ void *memcpy(void *dest, const void *src, size_t len)
+ {
+-	check_memory_region((unsigned long)src, len, false, _RET_IP_);
+-	check_memory_region((unsigned long)dest, len, true, _RET_IP_);
++	if (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
++	    !check_memory_region((unsigned long)dest, len, true, _RET_IP_))
++		return NULL;
+ 
+ 	return __memcpy(dest, src, len);
+ }
+diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
+index 616f9dd82d12..02148a317d27 100644
+--- a/mm/kasan/generic.c
++++ b/mm/kasan/generic.c
+@@ -173,6 +173,11 @@ static __always_inline bool check_memory_region_inline(unsigned long addr,
+ 	if (unlikely(size == 0))
+ 		return true;
+ 
++	if (unlikely((long)size < 0)) {
++		kasan_report(addr, size, write, ret_ip);
++		return false;
++	}
++
+ 	if (unlikely((void *)addr <
+ 		kasan_shadow_to_mem((void *)KASAN_SHADOW_START))) {
+ 		kasan_report(addr, size, write, ret_ip);
+diff --git a/mm/kasan/generic_report.c b/mm/kasan/generic_report.c
+index 36c645939bc9..52a92c7db697 100644
+--- a/mm/kasan/generic_report.c
++++ b/mm/kasan/generic_report.c
+@@ -107,6 +107,24 @@ static const char *get_wild_bug_type(struct kasan_access_info *info)
+ 
+ const char *get_bug_type(struct kasan_access_info *info)
+ {
++	/*
++	 * If access_size is negative numbers, then it has three reasons
++	 * to be defined as heap-out-of-bounds bug type.
++	 * 1) Casting negative numbers to size_t would indeed turn up as
++	 *    a large size_t and its value will be larger than ULONG_MAX/2,
++	 *    so that this can qualify as out-of-bounds.
++	 * 2) If KASAN has new bug type and user-space passes negative size,
++	 *    then there are duplicate reports. So don't produce new bug type
++	 *    in order to prevent duplicate reports by some systems
++	 *    (e.g. syzbot) to report the same bug twice.
++	 * 3) When size is negative numbers, it may be passed from user-space.
++	 *    So we always print heap-out-of-bounds in order to prevent that
++	 *    kernel-space and user-space have the same bug but have duplicate
++	 *    reports.
++	 */
++	if ((long)info->access_size < 0)
++		return "heap-out-of-bounds";
++
+ 	if (addr_has_shadow(info->access_addr))
+ 		return get_shadow_bug_type(info);
+ 	return get_wild_bug_type(info);
+diff --git a/mm/kasan/tags.c b/mm/kasan/tags.c
+index 0e987c9ca052..b829535a3ad7 100644
+--- a/mm/kasan/tags.c
++++ b/mm/kasan/tags.c
+@@ -86,6 +86,11 @@ bool check_memory_region(unsigned long addr, size_t size, bool write,
+ 	if (unlikely(size == 0))
+ 		return true;
+ 
++	if (unlikely((long)size < 0)) {
++		kasan_report(addr, size, write, ret_ip);
++		return false;
++	}
++
+ 	tag = get_tag((const void *)addr);
+ 
+ 	/*
+diff --git a/mm/kasan/tags_report.c b/mm/kasan/tags_report.c
+index 969ae08f59d7..f7ae474aef3a 100644
+--- a/mm/kasan/tags_report.c
++++ b/mm/kasan/tags_report.c
+@@ -36,6 +36,24 @@
+ 
+ const char *get_bug_type(struct kasan_access_info *info)
+ {
++	/*
++	 * If access_size is negative numbers, then it has three reasons
++	 * to be defined as heap-out-of-bounds bug type.
++	 * 1) Casting negative numbers to size_t would indeed turn up as
++	 *    a large size_t and its value will be larger than ULONG_MAX/2,
++	 *    so that this can qualify as out-of-bounds.
++	 * 2) If KASAN has new bug type and user-space passes negative size,
++	 *    then there are duplicate reports. So don't produce new bug type
++	 *    in order to prevent duplicate reports by some systems
++	 *    (e.g. syzbot) to report the same bug twice.
++	 * 3) When size is negative numbers, it may be passed from user-space.
++	 *    So we always print heap-out-of-bounds in order to prevent that
++	 *    kernel-space and user-space have the same bug but have duplicate
++	 *    reports.
++	 */
++	if ((long)info->access_size < 0)
++		return "heap-out-of-bounds";
++
+ #ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
+ 	struct kasan_alloc_meta *alloc_meta;
+ 	struct kmem_cache *cache;
+-- 
+2.18.0
+
