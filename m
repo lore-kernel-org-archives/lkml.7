@@ -2,106 +2,96 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53020ECE599
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 00:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90366ECE599
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 00:06:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E03420872
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 00:01:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="dzbRP1Y3"
+	by mail.kernel.org (Postfix) with ESMTP id 62B0B218DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 00:06:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571270811;
+	bh=DbAnuXxxI4ql/mIxS5Ri9OMBjzaKAjXqFG3gEGJ1gCQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=i6D2UWHrbdVIW/ZvXwSx+/ghE8Mkuhusvrntxbwc7WW3PllIJAbLAKn82KnZgLgkU
+	 EyGYTgKHxGIIxsQxzOjwyOJ2fatUSaUbdtVZwKP727JFNGqqiJM/gi+1GAFaz1LvXf
+	 2dQvbqYcXjpQuWxf2ulf2jzX5AqIuw2hHoOtMEsk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395523AbfJQABi (ORCPT
+        id S2438098AbfJQAGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 20:01:38 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:46580 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727859AbfJQABh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 20:01:37 -0400
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x9H01SqF029001;
-        Thu, 17 Oct 2019 09:01:29 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x9H01SqF029001
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1571270489;
-        bh=ePR8/62tTCV9RgFvpCZdnwGUvBiPGJw/lxcq6lSwPM4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dzbRP1Y31JzhX9BNHKICCH6zsVtJmG82lxYJpYOb+3NC7vVZM3X8lvOTtkNyR2kqV
-         mQo5yi7s/mjTM/Mmfb+GNVJO1/9dPkmrntIbupNDmqnr2IALvgmo+tQMw3o6Zj+kal
-         ID7GZR4kLSGYyVCUKfBN14YkdSbLpoUgFL0XNkAd9VC0GYjDjxjge74wDakY7CXwvU
-         drzIiInnKCXKIfFlS53jEu9LM1mZK4bp9T71NT/Fe3fgaF0IXiKSHbKpnV0BBfkdtH
-         SsVIbO7Rslu6nl30AJruW+gswIequS+z2l5NLAUTWePZi8y3b26/R5INVwwuqYiyki
-         len2PZ/LJAmcQ==
-X-Nifty-SrcIP: [209.85.221.182]
-Received: by mail-vk1-f182.google.com with SMTP id w3so110240vkm.3;
-        Wed, 16 Oct 2019 17:01:29 -0700 (PDT)
-X-Gm-Message-State: APjAAAX7574wub97hpEIxzT+UrBKIiOZA0/9W0q4QkzQszp05NTwyYGU
-        pohmTyL1BzjmzPNH8mQ8QS9838gGgOtfmXca25s=
-X-Google-Smtp-Source: APXvYqxOKQo7+/EYmjvOrOWieFNkZ8gbZ2aF2PsHAio8Amlr0gcqt1WR0T3ky/yS2Q/fy1HG7YLp4MhVvSVOBGoCD5o=
-X-Received: by 2002:a1f:1881:: with SMTP id 123mr464954vky.26.1571270488067;
- Wed, 16 Oct 2019 17:01:28 -0700 (PDT)
+        Wed, 16 Oct 2019 20:06:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59308 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729236AbfJQAGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 20:06:50 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A08320872;
+        Thu, 17 Oct 2019 00:06:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571270809;
+        bh=DbAnuXxxI4ql/mIxS5Ri9OMBjzaKAjXqFG3gEGJ1gCQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Xz1C1hik3XHTqGfPEVqTo9ImbCcmors0wQuV4afL0eLWgsqqfDHIPmcGMmrSHBA8w
+         D/szxMBGp/eS2TcvxYEmlnspxC0QqMIUztNT+FdeFI1ZkBeNjiqYKemRCibMMVU95h
+         b655V++6gZTcUWL8kQ1TVhzJVSSFEaazEnFKkxhA=
+Date:   Thu, 17 Oct 2019 01:06:45 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, catalin.marinas@arm.com, dave.martin@arm.com
+Subject: Re: [PATCH 0/3] arm64: Fix support for systems without FP/SIMD
+Message-ID: <20191017000644.uudhadekbeei73uy@willie-the-truck>
+References: <20191010171517.28782-1-suzuki.poulose@arm.com>
 MIME-Version: 1.0
-References: <20191015064906.13833-1-efremov@linux.com>
-In-Reply-To: <20191015064906.13833-1-efremov@linux.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 17 Oct 2019 09:00:52 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATn62wLjwEFSVESRNXJAVHkcJ2hFFPbR8xbVHjXwONrcw@mail.gmail.com>
-Message-ID: <CAK7LNATn62wLjwEFSVESRNXJAVHkcJ2hFFPbR8xbVHjXwONrcw@mail.gmail.com>
-Subject: Re: [PATCH] modpost: add NOFAIL to strdup call
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191010171517.28782-1-suzuki.poulose@arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 3:49 PM Denis Efremov <efremov@linux.com> wrote:
->
-> Add NOFAIL check for the strdup call, since the function
-> allocates memory and can return NULL. All strdup calls in
-> modpost are checked with NOFAIL.
->
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
->  scripts/mod/modpost.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-> index 936d3ad23c83..8e8975065cbc 100644
-> --- a/scripts/mod/modpost.c
-> +++ b/scripts/mod/modpost.c
-> @@ -384,7 +384,7 @@ static struct symbol *sym_add_exported(const char *name, const char *namespace,
->                 }
->         }
->         free(s->namespace);
-> -       s->namespace = namespace ? strdup(namespace) : NULL;
-> +       s->namespace = namespace ? NOFAIL(strdup(namespace)) : NULL;
+On Thu, Oct 10, 2019 at 06:15:14PM +0100, Suzuki K Poulose wrote:
+> This series fixes the original support for systems without FP/SIMD.
+> We have three set of issues with the current code :
+> 
+> 1) We detect the absence of FP/SIMD after the SMP cpus are brought
+> online (i.e, SYSTEM scope). This means, some of the early kernel threads
+> could run with their TIF_FOREIGN_FPSTATE flag set which might be
+> inherited by applications forked by them (e.g, modprobe from initramfs).
+> 
+> Also we allow a hotplugged CPU to boot successfully even if it doesn't
+> have the FP/SIMD when we have decided otherwise at boot and have now
+> advertised the ELF HWCAP for the userspace.
+> Fix this by turning this to a BOOT_RESTRICTED_CPU_LOCAL feature to
+> allow the detection of the feature the very moment a CPU turns up
+> without FP/SIMD and also prevent a conflict after SMP boot.
+> 
+> 2) As mentioned above, some tasks could have the TIF flag set,
+> which will never be cleared after we detect the capability.
+> Thus they could get stuck indefinitely in do_notfiy_resume().
+> Fix this by clearing the TIF flag for such tasks but continuing
+> to avoid the save/restore of the FP state.
+> 
+> 3) The compat ELF_HWCAP bits are statically initialised to indicate
+> that the FP/SIMD support is available. This must be updated dynamically
+> to provide the correct flags to the userspace.
+> 
+> Tested with a 32bit Debian Jessie fs on Fast model (with and without
+> FP support).
+> 
+> Suzuki K Poulose (3):
+>   arm64: cpufeature: Fix the type of no FP/SIMD capability
+>   arm64: nofpsmid: Clear TIF_FOREIGN_FPSTATE flag for early tasks
+>   arm64: cpufeature: Set the FP/SIMD compat HWCAP bits properly
 
-This is correct, but I will put it off
-because otherwise if would cause a conflict against this patch:
+This looks alright apart from Dave's comments on patch 2. Do you plan to
+address those at all? Some of it looks like scope for future work, but there
+are also some questions about the mechanics of the patch.
 
-https://lore.kernel.org/patchwork/patch/1138151/
-
-That patch is adding NOFAIL().
-
-
-
-
->         s->preloaded = 0;
->         s->vmlinux   = is_vmlinux(mod->name);
->         s->kernel    = 0;
-> --
-> 2.21.0
->
-
-
--- 
-Best Regards
-Masahiro Yamada
+Will
