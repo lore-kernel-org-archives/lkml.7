@@ -2,108 +2,95 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F5CFA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 321C1ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52EAB21D7A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0233021925
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:57:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gky3tV9L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BcMp4pfG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395170AbfJQR5N (ORCPT
+        id S2441201AbfJQR5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 13:57:13 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49616 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394797AbfJQR5M (ORCPT
+        Thu, 17 Oct 2019 13:57:22 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:43558 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733171AbfJQR5U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 13:57:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Lveu2b/3PvukfmV9kCWYR6WLjRarWs0ASDrcIDPvYdY=; b=Gky3tV9LY2NLX/LaH7kfv4PIg/
-        qn+Qvm7X9ybIAcvokaloMb0K57vXT/ZTdoJypKvVxK40D8CXjh4kEqqqsHWCcAEWzwoydslnr5OvM
-        SAI+1v7seXYb9ppUvsRHAwjxs9oOklhxSip4uCdlL7JLMcRZA5Tj46SDXRXi0dlbFu3lSHmygVm47
-        FmawoT2KEXEjmogOqbTh3PEztq87KEnjGduIV7BSRr+JFBkcrpd4GUG3/kaG7H2ILk6Iiy2f+KItU
-        pJn3EExAve0OSpYHhwM5FiLTDEUeQV7ifL9mMyAfedvP/fSU6edtCkd9uDsDboBBE8rL+DhRwxSKI
-        3Bs+o96Q==;
-Received: from [2001:4bb8:18c:d7b:c70:4a89:bc61:3] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iLA1K-0001XK-DD; Thu, 17 Oct 2019 17:57:06 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "Darrick J . Wong" <darrick.wong@oracle.com>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 14/14] iomap: pass a struct page to iomap_finish_page_writeback
-Date:   Thu, 17 Oct 2019 19:56:24 +0200
-Message-Id: <20191017175624.30305-15-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191017175624.30305-1-hch@lst.de>
-References: <20191017175624.30305-1-hch@lst.de>
+        Thu, 17 Oct 2019 13:57:20 -0400
+Received: by mail-il1-f195.google.com with SMTP id t5so2904819ilh.10;
+        Thu, 17 Oct 2019 10:57:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WcS5hYdP3pCxm/yZLIGrFm7va/wuB5toN9M7cwBJfq4=;
+        b=BcMp4pfGIFOkf4xxZpY2CD5fOpV+6Bj+/idbEiDyJxt8lqnXd3BVwPpM6QI7ja6+aC
+         TwG4M7vMynFU9QefpWHLDy9erHpgm4+zTzlX+6+qXJQjIvo1y3AxxKMIChANbvT58y/D
+         7Vb908VUCtNaCeGApGvG6TAFpgFPwg2GmOdbx37rhNuZ4K0mD3ULJMNZ3/Sbg0M4ks2F
+         5eQsVXgVW1yU/LpdjCGtU/AKeK9aIdyUeVYZCFDh6tPeLMNs1q7HWaz3WrXh2Y3u8cfm
+         UoMsLXLym1pooH607OikvQwcu9wFJWEo3nokTGPMVgy8MzgJIPQ/RBc/szzs7bBNEGWq
+         mTQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WcS5hYdP3pCxm/yZLIGrFm7va/wuB5toN9M7cwBJfq4=;
+        b=StpBZvcdLrnee8TWJmWaDm9B7mntFCFenfaejkF/dVEcV3z9G+B2ANsrqrkni93+8h
+         4dUNqTWMadvk/9fHPpcK7SevEFjBN2vuvFBwdseqHe5TidGx1YiEO4uIucIxaaHIFzb7
+         EtH/umQ+YNtAhKXE1sNahmZAsF3pTbCkovobRUBn/G7ZKl1SEdbvFdfH9oSgYP8rGgS8
+         2bJxf3FcpX/7SzTdhT3rrmPKg6guf1YFVXstDGNwFJ3t3iUhmsrXUc+zHlr62olt3Vzy
+         MprKVD+bWVbp0qmprWLDN1ggNO1SC5MkAJkvEmq7vyiw5qHuUaXv3rYAvmrTPE9y/0ef
+         PMsg==
+X-Gm-Message-State: APjAAAXUjVviVrFmSHtKaGxZuWJdGPD9hMXQtJdiISupSZGl908xB1Jf
+        N4xRfngeGpFaIgZbM8eXSDGNuyYjSpbDFAFjdx4=
+X-Google-Smtp-Source: APXvYqykU6l9b4dn91QLAmg0FiFZO3jTjHvdjb5410032UJVHmHeljk5z6DlHlsHPFhD+w3YNWHsIQg0GHMBWHSh/bM=
+X-Received: by 2002:a92:d652:: with SMTP id x18mr4948635ilp.58.1571335038402;
+ Thu, 17 Oct 2019 10:57:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20191002114626.12407-1-aford173@gmail.com> <1550E9D9-43ED-4345-A9AF-6D9F097FC64E@holtmann.org>
+In-Reply-To: <1550E9D9-43ED-4345-A9AF-6D9F097FC64E@holtmann.org>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Thu, 17 Oct 2019 12:57:06 -0500
+Message-ID: <CAHCN7xKA9-K4uYU9oFW+A7ywc8TGixNa-yHJgL7uSTbyXnisTQ@mail.gmail.com>
+Subject: Re: [PATCH] Revert "Bluetooth: hci_ll: set operational frequency earlier"
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        Sebastian Reichel <sre@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No need to pass the full bio_vec.
+On Wed, Oct 16, 2019 at 1:36 PM Marcel Holtmann <marcel@holtmann.org> wrote:
+>
+> Hi Adam,
+>
+> > As nice as it would be to update firmware faster, that patch broke
+> > at least two different boards, an OMAP4+WL1285 based Motorola Droid
+> > 4, as reported by Sebasian Reichel and the Logic PD i.MX6Q +
+> > WL1837MOD.
+> >
+> > This reverts commit a2e02f38eff84f199c8e32359eb213f81f270047.
+> >
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
+>
+> patch has been applied to bluetooth-next tree.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/iomap/buffered-io.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Any change this can get pushed upstream to stable?  (including 5.4?)
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index bb96499c352f..755b75424a97 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -1110,13 +1110,13 @@ vm_fault_t iomap_page_mkwrite(struct vm_fault *vmf, const struct iomap_ops *ops)
- EXPORT_SYMBOL_GPL(iomap_page_mkwrite);
- 
- static void
--iomap_finish_page_writeback(struct inode *inode, struct bio_vec *bvec,
-+iomap_finish_page_writeback(struct inode *inode, struct page *page,
- 		int error)
- {
--	struct iomap_page *iop = to_iomap_page(bvec->bv_page);
-+	struct iomap_page *iop = to_iomap_page(page);
- 
- 	if (error) {
--		SetPageError(bvec->bv_page);
-+		SetPageError(page);
- 		mapping_set_error(inode->i_mapping, -EIO);
- 	}
- 
-@@ -1124,7 +1124,7 @@ iomap_finish_page_writeback(struct inode *inode, struct bio_vec *bvec,
- 	WARN_ON_ONCE(iop && atomic_read(&iop->write_count) <= 0);
- 
- 	if (!iop || atomic_dec_and_test(&iop->write_count))
--		end_page_writeback(bvec->bv_page);
-+		end_page_writeback(page);
- }
- 
- /*
-@@ -1156,7 +1156,7 @@ iomap_finish_ioend(struct iomap_ioend *ioend, int error)
- 
- 		/* walk each page on bio, ending page IO on them */
- 		bio_for_each_segment_all(bv, bio, iter_all)
--			iomap_finish_page_writeback(inode, bv, error);
-+			iomap_finish_page_writeback(inode, bv->bv_page, error);
- 		bio_put(bio);
- 	}
- 
--- 
-2.20.1
-
+adam
+>
+> Regards
+>
+> Marcel
+>
