@@ -2,116 +2,178 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD12FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC4CFA372D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9116521D7F
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:26:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tvvXCKtp"
+	by mail.kernel.org (Postfix) with ESMTP id 7EDAC20820
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:26:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439110AbfJQI0q (ORCPT
+        id S2439156AbfJQI0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 04:26:46 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44398 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438938AbfJQI0e (ORCPT
+        Thu, 17 Oct 2019 04:26:50 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:11565 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2408266AbfJQI0a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 04:26:34 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q21so1142643pfn.11;
-        Thu, 17 Oct 2019 01:26:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=Xb7qs12MemfKVWtSykgYZkO32TotNiSe8AbElBYtURY=;
-        b=tvvXCKtpyNKDe2hsKEadS4wQBy88bOUVWID/PEDJjxydVxbn8lc/gw/1VmSwPvjLnD
-         JNsyamF20conyCO9V0PkRfGdBoQ1nLt7i7YEvfr7xQAJLn2zCtsBtY5bttjNOGZFJ5d/
-         1P40XadGaxb5zq1tnadLiAgCZ1E32B2Z+YlzbV8GTCP3Zn4vbsGLEtKXyMt+hVQObOCp
-         SExNW6VXfIv5haZgQWh5xK1Tih2TjcM85u4iMHDIs/sqGx4fDIaZXfUKvQdcwnJvma+t
-         SEASIkinGS51D7jyaYydZgxpt8RSlNtSbdC/xXnPlgVC6uqiSMb4ydlokr8pNK8udN+C
-         dW7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Xb7qs12MemfKVWtSykgYZkO32TotNiSe8AbElBYtURY=;
-        b=FHHmvI81CZ6+ihnel21LAKmJQptQDtNO4AgZKC8JQnRjmMYSzjAojBe0Wxa81vb4s8
-         jMfnpNvwFZ+f2mGFMhvRiUkCSzjTptD9vPjT+hquESRGXmN1uH0RoPxlxPVJBG0hddTy
-         anVktmakZU4sMajPtxxoH3+jhAa3P+Q0quEOGJIy0q8+EMOUF3jtcZDtqcD4vIlxR6I1
-         xUM0af27qrekqu7BjqjPsRQgEa6C+KZFbXkudhrSo0WoaBUBVsdz4TBTJGpRmaBGOD8V
-         ugLnikkhSxdKk1o/QiXG1f5OLYWKOeKPIVAuJy3gca8IpEKNvKFcMEYO+1BDqFPR7gvF
-         /Rbw==
-X-Gm-Message-State: APjAAAXY55EDdnv9zznFNsAtDeJFcIGxYR79fcwNRn8StP6n00eZJ9NR
-        oTUKSz44BTsBw0BZ1mtJDts=
-X-Google-Smtp-Source: APXvYqwfzKNIaADxeZzbyjxc4Rv0Xni12tW0pUklkueISnMwSTc29z/rvrIzvUc0FJHPIv+OhzlgZg==
-X-Received: by 2002:a65:4c8b:: with SMTP id m11mr2891634pgt.25.1571300794153;
-        Thu, 17 Oct 2019 01:26:34 -0700 (PDT)
-Received: from Gentoo ([103.231.90.172])
-        by smtp.gmail.com with ESMTPSA id f21sm991386pgh.85.2019.10.17.01.26.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Oct 2019 01:26:33 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 13:56:22 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     yamada.masahiro@socionext.com, michal.lkml@markovi.net
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rdunlap@infradead.org
-Subject: [RFC] scripts : mkmakefile : change name to create_makefile
-Message-ID: <20191017082619.GA22508@Gentoo>
+        Thu, 17 Oct 2019 04:26:30 -0400
+X-UUID: de8f5d26d7db4dff96a3408a8889521b-20191017
+X-UUID: de8f5d26d7db4dff96a3408a8889521b-20191017
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <min.guo@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1563663995; Thu, 17 Oct 2019 16:26:16 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 17 Oct 2019 16:26:14 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 17 Oct 2019 16:26:13 +0800
+From:   <min.guo@mediatek.com>
+To:     Bin Liu <b-liu@ti.com>, Rob Herring <robh+dt@kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        <chunfeng.yun@mediatek.com>, <linux-usb@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <tony@atomide.com>,
+        <hdegoede@redhat.com>, Min Guo <min.guo@mediatek.com>
+Subject: [PATCH RESEND v7 2/6] arm: dts: mt2701: Add usb2 device nodes
+Date:   Thu, 17 Oct 2019 16:25:50 +0800
+Message-ID: <20191017082554.27953-3-min.guo@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20191017082554.27953-1-min.guo@mediatek.com>
+References: <20191017082554.27953-1-min.guo@mediatek.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="AhhlLboLdkugWU4S"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 8970BAFCD99880B6ECB00EF9FCDCE6C4C1DFF7C4FB63CD24EA70B392BC0959C12000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Min Guo <min.guo@mediatek.com>
 
---AhhlLboLdkugWU4S
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add musb nodes and usb2 phy nodes for MT2701
 
-Hi,
+Signed-off-by: Min Guo <min.guo@mediatek.com>
+---
+changes in v7:
+1. Change usb connector child node compatible as "gpio-usb-b-connector" 
 
-It would be good, if we can change the name of the script to more
-explicit name ,which also tell us the purpose of the script by just
-looking at it.=20
+changes in v6:
+1. Modify usb connector child node
 
-The present name "mkmakefile" is perfectly alright for the people ,who
-are technically inclined not so with other, who wants to understand.
+changes in v5:
+1. Add usb connector child node
 
-This my understanding.
+changes in v4:
+1. no changes
 
-Present Script Name :  mkmakefile
+changes in v3:
+1. no changes
 
-Change Script name  : create_makefile
+changes in v2:
+1. Remove phy-names
+---
+ arch/arm/boot/dts/mt2701-evb.dts | 21 +++++++++++++++++++++
+ arch/arm/boot/dts/mt2701.dtsi    | 33 +++++++++++++++++++++++++++++++++
+ 2 files changed, 54 insertions(+)
 
-Please shed some light.
+diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
+index 88f8fd2..05ba43c 100644
+--- a/arch/arm/boot/dts/mt2701-evb.dts
++++ b/arch/arm/boot/dts/mt2701-evb.dts
+@@ -6,6 +6,7 @@
+  */
+ 
+ /dts-v1/;
++#include <dt-bindings/gpio/gpio.h>
+ #include "mt2701.dtsi"
+ 
+ / {
+@@ -61,6 +62,15 @@
+ 		>;
+ 		default-brightness-level = <9>;
+ 	};
++
++	usb_vbus: regulator@0 {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&pio 45 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
+ };
+ 
+ &auxadc {
+@@ -230,3 +240,14 @@
+ &uart0 {
+ 	status = "okay";
+ };
++
++&usb2 {
++	status = "okay";
++	connector{
++		compatible = "gpio-usb-b-connector";
++		label = "micro-USB";
++		type = "micro";
++		id-gpios = <&pio 44 GPIO_ACTIVE_HIGH>;
++		vbus-supply = <&usb_vbus>;
++	};
++};
+diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+index 51e1305..80a3b55 100644
+--- a/arch/arm/boot/dts/mt2701.dtsi
++++ b/arch/arm/boot/dts/mt2701.dtsi
+@@ -671,6 +671,39 @@
+ 		};
+ 	};
+ 
++	usb2: usb@11200000 {
++		compatible = "mediatek,mt2701-musb",
++			     "mediatek,mtk-musb";
++		reg = <0 0x11200000 0 0x1000>;
++		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-names = "mc";
++		phys = <&u2port2 PHY_TYPE_USB2>;
++		dr_mode = "otg";
++		clocks = <&pericfg CLK_PERI_USB0>,
++			 <&pericfg CLK_PERI_USB0_MCU>,
++			 <&pericfg CLK_PERI_USB_SLV>;
++		clock-names = "main","mcu","univpll";
++		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
++		status = "disabled";
++	};
++
++	u2phy0: usb-phy@11210000 {
++		compatible = "mediatek,generic-tphy-v1";
++		reg = <0 0x11210000 0 0x0800>;
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		status = "okay";
++
++		u2port2: usb-phy@1a1c4800 {
++			reg = <0 0x11210800 0 0x0100>;
++			clocks = <&topckgen CLK_TOP_USB_PHY48M>;
++			clock-names = "ref";
++			#phy-cells = <1>;
++			status = "okay";
++		};
++	};
++
+ 	ethsys: syscon@1b000000 {
+ 		compatible = "mediatek,mt2701-ethsys", "syscon";
+ 		reg = <0 0x1b000000 0 0x1000>;
+-- 
+1.9.1
 
-Thanks,
-Bhaskar
-
---AhhlLboLdkugWU4S
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl2oJagACgkQsjqdtxFL
-KRVvaAgAhf9g5o+HCmnaDBDG2b0Z5drT1VO2BHh1DyVl9KwI2PpbMG9ToezruMF8
-rHKhg249Xz9xTiCvXr337T5BsU39YJ8Wss33aZ0Ptk3BjbDK/kTabQjf1Giv3Akw
-TorrQUMLQ/lLvLx43T4ASIAQaPJ/Bi9ZZQ27fWqVqIS+7OTODHWMko5YKMuRwRt1
-tSiy59ontancJwdnEcy9+KK+W1yaSqZrgTPJLwjmM++ZJ55iWb6i/JHQVDCBaAEj
-rVRhiRj2gicK/z3dm1eG034B4MS36a2dyVjb5bnZZcBYYM82fMN5/1n0LMYHV2Cf
-F76YHImeUWu5RnA1GJ15rSv0fJNgxg==
-=NzPR
------END PGP SIGNATURE-----
-
---AhhlLboLdkugWU4S--
