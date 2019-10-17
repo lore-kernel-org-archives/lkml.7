@@ -2,133 +2,90 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1124BFA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08486FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E44C22089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2CBD21D7A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:25:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405601AbfJQLUZ (ORCPT
+        id S2408961AbfJQLZw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 07:20:25 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:39708 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1728143AbfJQLUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 07:20:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3A73C1BB2;
-        Thu, 17 Oct 2019 04:19:58 -0700 (PDT)
-Received: from [10.1.195.43] (unknown [10.1.195.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AEB5F3F718;
-        Thu, 17 Oct 2019 04:19:56 -0700 (PDT)
-Subject: Re: [RFC PATCH v3 4/6] sched/cpufreq: Introduce sugov_cpu_ramp_boost
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     linux-pm@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
-        rjw@rjwysocki.net, viresh.kumar@linaro.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, qperret@qperret.net,
-        patrick.bellasi@matbug.net, dh.han@samsung.com
-References: <20191011134500.235736-1-douglas.raillard@arm.com>
- <20191011134500.235736-5-douglas.raillard@arm.com>
- <87e6ce4f-af41-c585-7b48-81b5c7f45ef0@arm.com>
-From:   Douglas Raillard <douglas.raillard@arm.com>
-Organization: ARM
-Message-ID: <18a910f3-261e-18fb-931e-e024b2a20f0b@arm.com>
-Date:   Thu, 17 Oct 2019 12:19:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Thu, 17 Oct 2019 07:25:52 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:38098 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405615AbfJQLZw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 07:25:52 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-229-IgOKeQaCO-2JqkfwN87PQg-1; Thu, 17 Oct 2019 12:25:48 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 17 Oct 2019 12:25:48 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 17 Oct 2019 12:25:48 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Michal Hocko' <mhocko@kernel.org>, Pavel Machek <pavel@denx.de>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: RE: [PATCH 4.19 56/81] kernel/sysctl.c: do not override max_threads
+ provided by userspace
+Thread-Topic: [PATCH 4.19 56/81] kernel/sysctl.c: do not override max_threads
+ provided by userspace
+Thread-Index: AQHVhNrFkztCyRMcd0qNqS+/WALIZaderzAw
+Date:   Thu, 17 Oct 2019 11:25:47 +0000
+Message-ID: <b41558c732384c6280f0fe18823aa7e1@AcuMS.aculab.com>
+References: <20191016214805.727399379@linuxfoundation.org>
+ <20191016214842.621065901@linuxfoundation.org> <20191017105940.GA5966@amd>
+ <20191017110516.GG24485@dhcp22.suse.cz>
+In-Reply-To: <20191017110516.GG24485@dhcp22.suse.cz>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-In-Reply-To: <87e6ce4f-af41-c585-7b48-81b5c7f45ef0@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB-large
-Content-Transfer-Encoding: 7bit
+X-MC-Unique: IgOKeQaCO-2JqkfwN87PQg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Michal Hocko
+> Sent: 17 October 2019 12:05
+...
+> > Plus, I don't see any locking here, should this be WRITE_ONCE() at
+> > minimum?
+> 
+> Why would that matter? Do you expect several root processes race to set
+> the value?
 
+One of them wins. No one is going to notice is the value is set an extra time.
 
-On 10/17/19 9:57 AM, Dietmar Eggemann wrote:
-> On 11/10/2019 15:44, Douglas RAILLARD wrote:
-> 
-> [...]
-> 
->> @@ -181,6 +185,42 @@ static void sugov_deferred_update(struct sugov_policy *sg_policy, u64 time,
->>   	}
->>   }
->>   
->> +static unsigned long sugov_cpu_ramp_boost(struct sugov_cpu *sg_cpu)
->> +{
->> +	return READ_ONCE(sg_cpu->ramp_boost);
->> +}
->> +
->> +static unsigned long sugov_cpu_ramp_boost_update(struct sugov_cpu *sg_cpu)
->> +{
->> +	struct rq *rq = cpu_rq(sg_cpu->cpu);
->> +	unsigned long util_est_enqueued;
->> +	unsigned long util_avg;
->> +	unsigned long boost = 0;
->> +
->> +	util_est_enqueued = READ_ONCE(rq->cfs.avg.util_est.enqueued);
->> +	util_avg = READ_ONCE(rq->cfs.avg.util_avg);
->> +
->> +	/*
->> +	 * Boost when util_avg becomes higher than the previous stable
->> +	 * knowledge of the enqueued tasks' set util, which is CPU's
->> +	 * util_est_enqueued.
->> +	 *
->> +	 * We try to spot changes in the workload itself, so we want to
->> +	 * avoid the noise of tasks being enqueued/dequeued. To do that,
->> +	 * we only trigger boosting when the "amount of work' enqueued
-> 
-> s/"amount of work'/"amount of work" or 'amount of work'
-> 
-> [...]
-> 
->> @@ -552,6 +593,8 @@ static unsigned int sugov_next_freq_shared(struct sugov_cpu *sg_cpu, u64 time)
->>   		unsigned long j_util, j_max;
->>   
->>   		j_util = sugov_get_util(j_sg_cpu);
->> +		if (j_sg_cpu == sg_cpu)
->> +			sugov_cpu_ramp_boost_update(sg_cpu);
-> 
-> Can you not call this already in sugov_update_shared(), like in the
-> sugov_update_single() case?
+WRITE_ONCE() is rarely required.
+Probably only if other code is going to update the value after seeing the first write.
+(eg if you are unlocking a mutex - although they have to be more complex)
 
-The next commit in the series needs to aggregate the ramp_boost of all CPUs in the policy,
-so this call will end up here anyway, unless we want to set the value at previous level and
-query it back again in the loop. I don't mind either way, but since no option seem
-faster than the other, I went for clustering the ramp boost code rather than spreading it at
-all levels.
+READ_ONCE() is a different matter.
+IMHO the compiler shouldn't be allowed to do more reads than the source requests.
 
+	David
 
-> diff --git a/kernel/sched/cpufreq_schedutil.c
-> b/kernel/sched/cpufreq_schedutil.c
-> index e35c20b42780..4c53f63a537d 100644
-> --- a/kernel/sched/cpufreq_schedutil.c
-> +++ b/kernel/sched/cpufreq_schedutil.c
-> @@ -595,8 +595,6 @@ static unsigned int sugov_next_freq_shared(struct
-> sugov_cpu *sg_cpu, u64 time)
->                  unsigned long j_util, j_max;
-> 
->                  j_util = sugov_get_util(j_sg_cpu);
-> -               if (j_sg_cpu == sg_cpu)
-> -                       sugov_cpu_ramp_boost_update(sg_cpu);
->                  j_max = j_sg_cpu->max;
->                  j_util = sugov_iowait_apply(j_sg_cpu, time, j_util, j_max);
-> 
-> @@ -625,6 +623,7 @@ sugov_update_shared(struct update_util_data *hook,
-> u64 time, unsigned int flags)
->          ignore_dl_rate_limit(sg_cpu, sg_policy);
-> 
->          if (sugov_should_update_freq(sg_policy, time)) {
-> +               sugov_cpu_ramp_boost_update(sg_cpu);
->                  next_f = sugov_next_freq_shared(sg_cpu, time);
-> 
-> [...]
-> 
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
