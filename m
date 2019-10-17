@@ -7,260 +7,172 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A53AECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 837E7FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99524214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5641C2067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:50:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="R5kUAa28"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aTsjheut"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437038AbfJQNtS (ORCPT
+        id S2437097AbfJQNuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 09:49:18 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:36847 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436880AbfJQNtS (ORCPT
+        Thu, 17 Oct 2019 09:50:52 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33684 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436795AbfJQNuv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 09:49:18 -0400
-Received: by mail-il1-f194.google.com with SMTP id z2so2098801ilb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 06:49:16 -0700 (PDT)
+        Thu, 17 Oct 2019 09:50:51 -0400
+Received: by mail-lj1-f194.google.com with SMTP id a22so2676585ljd.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 06:50:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Son4OYF2Y1agrYSzVjXzdtqWR13KfwPc90XQEzvHzJY=;
-        b=R5kUAa28wdXHnMAHTg1Cwt7oJ8I+/1ddwLuXV4RHs0SAknbj80dbqg5xu/VAf+D9k1
-         RRmgg7qu3HyZJqMuguPBKjd67pJbQ7ZUdSgvMuYnwjnjfp6mjYkeDTSXirAxJSpKMJbl
-         ZJoVz77GPl1uI99Vd03i/OxLtuao7qNL307jY=
+         :cc:content-transfer-encoding;
+        bh=p6nZR/9Zua3DBUg48vEj5YlDbRJuasAgse2qjxSDyG0=;
+        b=aTsjheutNHe5MwDJvJZW4RNku/5SRLLaXe5w4XHpTIunmwpx0T1oQxsgApN7PjaE55
+         P+2kTxXDA3TzYOCqyv1TcPQ9kmJ4oSZFTB/5+wzforLM4VJcoLH0o5jLyzqISi/atUWx
+         y+DIw60egJgWRN/TCadXJ2covwHR2iyzOUKnqgqzt7t7hEK7LpS2rDxhz+WWaPJFMAOz
+         sFv3MUCzbwuhXfseGJlwasKHDA+tnMsuYsHGl2rCCkn4GaI4nVMqQs/4zihAFp4VBYrZ
+         dCGpkMS5y4CIMWBK8SuE55wpK1teF5WTE/f/DW2gMzZBSPE6uFX89wUjM0IORfVAOvxv
+         Pwgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Son4OYF2Y1agrYSzVjXzdtqWR13KfwPc90XQEzvHzJY=;
-        b=GJV/LF4uVr3OoIyYM2Cggq+36FQ3FERMPjePtSJVXrdXn3oHT0JQ8f5KtLMPemqtvw
-         n/uoDfUHF5Jguv9XJdAopSc+dH3xItWMAK7bd1c9PxgYDn+HpWMrlTVnhqJuLFX6jtvC
-         29IuIZ8t3mZh35VF1216dyPSIWE7AroAIisDwn9ukuDhudmvfh8DOO8GU1uFNLn4kzC3
-         UGzQcnOf8p5rdJwwsnD6/wpO2wRRvv7Z7QJGJIK5jDb2EwTPY86yD84JGuh9/saQVXT9
-         SWg0MjN4L8Cc4JbMdff9lfxD40flqeiQ7D8VKM+cJMSBO/JRiZjnNIq5ERi/LS2zlf/2
-         bciw==
-X-Gm-Message-State: APjAAAUDgIeHTSt+1z/89DjVWw2KkrItEMy/APJcmgslteWDsmi4sFNK
-        5eYmLYF9Tr1d2IVaux0dRKzQkftMjdZS8Pfvsbcb4A==
-X-Google-Smtp-Source: APXvYqz6JUSGUI7GEkDLMmO5W2uSstaHjxwDXL88+sXpB3FTcGOaQSu5XtGh0s5YjrEy9ojzal0OC/Xpya/A553NzIo=
-X-Received: by 2002:a92:b604:: with SMTP id s4mr3858585ili.28.1571320156027;
- Thu, 17 Oct 2019 06:49:16 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=p6nZR/9Zua3DBUg48vEj5YlDbRJuasAgse2qjxSDyG0=;
+        b=L/KNyuMpoWJ67TLVfDkK17KklhYzOzfJ/HznSYQpzzns2hGFvu3VGZMTw67ZdbECib
+         7xTTluah2WiyEinyd3F0n/GRC6rCuF9BLhv/t7p07sx25RWLEoG1Q8PBNBOcsRVSp0F9
+         vik5f0ip4sLDhpSJUf25hPB4uzmlefylLHegnJzRO5sNahu8WLy6V/0BQL72wy+OaXQF
+         ZWgNzRs1EV8pCdcti12MUKivJcj7AiwBHEVVPogCe20TDvnAq6ylRZ9pk9V5yU7Tk7bo
+         OTCGEWctot+NiNKBoLbyKmXCLxkTb7jemmWsgt+wcr/Rib/bFw2nzU9ZlkDgRb4v44sO
+         BtqA==
+X-Gm-Message-State: APjAAAUNsGviKIvOTS0pkd8Vp5CUgPwZ4igJCWoPgRA4YvryRRtaq78w
+        bewjR5CnJxhPeOXsGNj1dgj1AjBG69y8ilAjBxydZg==
+X-Google-Smtp-Source: APXvYqxsLEekNjXlvonl6W01f55s+jm+722adMbT3F4aVqSq4V3+hFuNs1+zd8cN0Wu8IFzcPvF/owb36ZacegEECbk=
+X-Received: by 2002:a2e:85cf:: with SMTP id h15mr2712280ljj.141.1571320249772;
+ Thu, 17 Oct 2019 06:50:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190919052822.10403-1-jagan@amarulasolutions.com>
- <20190919052822.10403-2-jagan@amarulasolutions.com> <6797961.eJj5WIFbM9@phil>
- <CAMty3ZDKaywoPxCSD-5N2pLjtGmZ-dZ7ZgUOJqiB1V_9rfR26A@mail.gmail.com>
- <87eezolynl.fsf@archiso.i-did-not-set--mail-host-address--so-tickle-me>
- <CAMty3ZD8uHsj0Jzs08sKG0JXfC6MU0MHdKs=kw4m5rupnoTtqg@mail.gmail.com> <109d708e-d182-fafa-44ad-0e6e0f813e0d@fivetechno.de>
-In-Reply-To: <109d708e-d182-fafa-44ad-0e6e0f813e0d@fivetechno.de>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Thu, 17 Oct 2019 19:19:04 +0530
-Message-ID: <CAMty3ZBu2WRJV9X6_ZAXBfpBs42p04Ph7amFpfO64iOQM-Sw_w@mail.gmail.com>
-Subject: Re: [PATCH 1/6] arm64: dts: rockchip: Fix rk3399-roc-pc pwm2 pin
-To:     Markus Reichl <m.reichl@fivetechno.de>
-Cc:     Levin Du <djw@t-chip.com.cn>, Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Akash Gajjar <akash@openedev.com>,
-        Da Xue <da@lessconfused.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <20191016214805.727399379@linuxfoundation.org>
+In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 17 Oct 2019 19:20:38 +0530
+Message-ID: <CA+G9fYvnW2RGuz0nkkfQdxpFc=8ftSEXmiS7Vz_B2H9RsParXQ@mail.gmail.com>
+Subject: Re: [PATCH 4.19 00/81] 4.19.80-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Markus,
-
-On Thu, Oct 17, 2019 at 6:56 PM Markus Reichl <m.reichl@fivetechno.de> wrote:
+On Thu, 17 Oct 2019 at 03:27, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> Hi Jagan,
+> This is the start of the stable review cycle for the 4.19.80 release.
+> There are 81 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> your patch fixes booting my rk3399-roc-pc with 5.4.0-rc3-next-20191017.
-> Without your patch roc-pc hangs here:
-> [    9.703526] pwm-regulator: supplied by regulator-dummy
-
-Thanks for testing this.
-
-Indeed the same change available in BSP
-https://github.com/FireflyTeam/kernel/blob/stable-4.4-rk3399-linux/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi#L1184
-
-I'm waiting for Levin response on this issue, need to update commit
-information accordingly.
-
+> Responses should be made by Fri 18 Oct 2019 09:43:41 PM UTC.
+> Anything received after that time might be too late.
 >
-> Am 16.10.19 um 19:09 schrieb Jagan Teki:
-> > Hi Levin,
-> >
-> > On Tue, Oct 8, 2019 at 8:42 AM <djw@t-chip.com.cn> wrote:
-> >>
-> >> Jagan Teki <jagan@amarulasolutions.com> writes:
-> >>
-> >> > Hi Heiko,
-> >> >
-> >> > On Mon, Sep 30, 2019 at 2:51 AM Heiko Stuebner <heiko@sntech.de> wrote:
-> >> >>
-> >> >> Hi Jagan,
-> >> >>
-> >> >> Am Donnerstag, 19. September 2019, 07:28:17 CEST schrieb Jagan Teki:
-> >> >> > ROC-PC is not able to boot linux console if PWM2_d is
-> >> >> > unattached to any pinctrl logic.
-> >> >> >
-> >> >> > To be precise the linux boot hang with last logs as,
-> >> >> > ...
-> >> >> > .....
-> >> >> > [    0.003367] Console: colour dummy device 80x25
-> >> >> > [    0.003788] printk: console [tty0] enabled
-> >> >> > [    0.004178] printk: bootconsole [uart8250] disabled
-> >> >> >
-> >> >> > In ROC-PC the PWM2_d pin is connected to LOG_DVS_PWM of
-> >> >> > VDD_LOG. So, for normal working operations this needs to
-> >> >> > active and pull-down.
-> >> >> >
-> >> >> > This patch fix, by attaching pinctrl active and pull-down
-> >> >> > the pwm2.
-> >> >>
-> >> >> This looks highly dubious on first glance. The pwm subsystem nor
-> >> >> the Rockchip pwm driver do not do any pinctrl handling.
-> >> >>
-> >> >> So I don't really see where that "active" pinctrl state is supposed
-> >> >> to come from.
-> >> >>
-> >> >> Comparing with the pwm driver in the vendor tree I see that there
-> >> >> is such a state defined there. But that code there also looks strange
-> >> >> as that driver never again leaves this active state after entering it.
-> >> >>
-> >> >> Also for example all the Gru devices run with quite a number of pwm-
-> >> >> regulators without needing additional fiddling with the pwm itself, so
-> >> >> I don't really see why that should be different here.
-> >> >
-> >> > I deed, I was supposed to think the same. but the vendor kernel dts
-> >> > from firefly do follow the pwm2 pinctrl [1]. I wouldn't find any
-> >> > information other than this vensor information, ie one of the reason I
-> >> > have marked "Levin Du" who initially supported this board.
-> >> >
-> >> > One, think I have seen was this pinctrl active fixed the boot hang.
-> >> > any inputs from would be very helpful.
-> >> >
-> >> > Levin Du, any inputs?
-> >> >
-> >> > [1] https://github.com/FireflyTeam/kernel/blob/stable-4.4-rk3399-linux/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi#L1184
-> >> >
-> >>
-> >> A grep of the `pwm2` shows that there's such block in rk3399-nanopi4.dtsi:
-> >>
-> >>     &pwm2 {
-> >>             pinctrl-names = "active";
-> >>             pinctrl-0 = <&pwm2_pin_pull_down>;
-> >>             status = "okay";
-> >>     };
-> >>
-> >> But last time I checked, using the mainline U-Boot (the roc-rk3399-pc is
-> >> in mainline now) with mainline linux v5.2-rc7, no such setting is
-> >> necessary, and the board boots happily.
-> >>
-> >> I cannot find the use of "active" pinctrl state in the
-> >> `drivers/pwm/pwm-rockchip.c`. If the pinctrl state needs to be setup as
-> >> default, the `pinctrl-names` needs to be "default" or "init" (see
-> >> `drivers/base/pinctrl.c`) .
-> >>
-> >> Jagan, what version of board do you use? I checked with
-> >> "ROC-RK3399-PC-V1.0-A 2018-07-12".
-> >
-> > I have ROC-RK3399-PC-V1.A 2018.09.25 and powering with TYPE-C0 port.
-> >
-> > And here the boot log
-> >
-> > [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd034]
-> > [    0.000000] Linux version 5.4.0-rc3-next-20191016
-> > (jagan@jagan-XPS-13-9350) (gcc version 6.3.1 20170109 (Linaro GCC
-> > 6.3-2017.02)) #1 SMP PREEMPT Wed Oct 16 21:17:23 IST 2019
-> > [    0.000000] Machine model: Firefly ROC-RK3399-PC Board
-> > [    0.000000] earlycon: uart8250 at MMIO32 0x00000000ff1a0000 (options '')
-> > [    0.000000] printk: bootconsole [uart8250] enabled
-> > [    0.000000] efi: Getting EFI parameters from FDT:
-> > [    0.000000] efi: UEFI not found.
-> > [    0.000000] cma: Reserved 32 MiB at 0x000000003e000000
-> > [    0.000000] NUMA: No NUMA configuration found
-> > [    0.000000] NUMA: Faking a node at [mem
-> > 0x0000000000200000-0x00000000f7ffffff]
-> > [    0.000000] NUMA: NODE_DATA [mem 0xf77ef100-0xf77f0fff]
-> > [    0.000000] Zone ranges:
-> > [    0.000000]   DMA      [mem 0x0000000000200000-0x000000003fffffff]
-> > [    0.000000]   DMA32    [mem 0x0000000040000000-0x00000000f7ffffff]
-> > [    0.000000]   Normal   empty
-> > [    0.000000] Movable zone start for each node
-> > [    0.000000] Early memory node ranges
-> > [    0.000000]   node   0: [mem 0x0000000000200000-0x00000000f7ffffff]
-> > [    0.000000] Initmem setup node 0 [mem 0x0000000000200000-0x00000000f7ffffff]
-> > [    0.000000] psci: probing for conduit method from DT.
-> > [    0.000000] psci: PSCIv1.1 detected in firmware.
-> > [    0.000000] psci: Using standard PSCI v0.2 function IDs
-> > [    0.000000] psci: MIGRATE_INFO_TYPE not supported.
-> > [    0.000000] psci: SMC Calling Convention v1.1
-> > [    0.000000] percpu: Embedded 22 pages/cpu s52952 r8192 d28968 u90112
-> > [    0.000000] Detected VIPT I-cache on CPU0
-> > [    0.000000] CPU features: detected: ARM erratum 845719
-> > [    0.000000] CPU features: detected: GIC system register CPU interface
-> > [    0.000000] Speculative Store Bypass Disable mitigation not required
-> > [    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 999432
-> > [    0.000000] Policy zone: DMA32
-> > [    0.000000] Kernel command line:
-> > earlycon=uart8250,mmio32,0xff1a0000 root=/dev/mmcblk1p1 rootwait
-> > [    0.000000] Dentry cache hash table entries: 524288 (order: 10,
-> > 4194304 bytes, linear)
-> > [    0.000000] Inode-cache hash table entries: 262144 (order: 9,
-> > 2097152 bytes, linear)
-> > [    0.000000] mem auto-init: stack:off, heap alloc:off, heap free:off
-> > [    0.000000] software IO TLB: mapped [mem 0x3a000000-0x3e000000] (64MB)
-> > [    0.000000] Memory: 3856004K/4061184K available (12028K kernel
-> > code, 1870K rwdata, 6440K rodata, 5056K init, 451K bss, 172412K
-> > reserved, 32768K cma-reserved)
-> > [    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=6, Nodes=1
-> > [    0.000000] rcu: Preemptible hierarchical RCU implementation.
-> > [    0.000000] rcu:     RCU restricting CPUs from NR_CPUS=256 to nr_cpu_ids=6.
-> > [    0.000000]  Tasks RCU enabled.
-> > [    0.000000] rcu: RCU calculated value of scheduler-enlistment delay
-> > is 25 jiffies.
-> > [    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=6
-> > [    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
-> > [    0.000000] GICv3: GIC: Using split EOI/Deactivate mode
-> > [    0.000000] GICv3: 256 SPIs implemented
-> > [    0.000000] GICv3: 0 Extended SPIs implemented
-> > [    0.000000] GICv3: Distributor has no Range Selector support
-> > [    0.000000] GICv3: 16 PPIs implemented
-> > [    0.000000] GICv3: no VLPI support, no direct LPI support
-> > [    0.000000] GICv3: CPU0: found redistributor 0 region 0:0x00000000fef00000
-> > [    0.000000] ITS [mem 0xfee20000-0xfee3ffff]
-> > [    0.000000] ITS@0x00000000fee20000: allocated 65536 Devices
-> > @f6880000 (flat, esz 8, psz 64K, shr 0)
-> > [    0.000000] ITS: using cache flushing for cmd queue
-> > [    0.000000] GICv3: using LPI property table @0x00000000f6840000
-> > [    0.000000] GIC: using cache flushing for LPI property table
-> > [    0.000000] GICv3: CPU0: using allocated LPI pending table
-> > @0x00000000f6850000
-> > [    0.000000] GICv3: GIC: PPI partition interrupt-partition-0[0] {
-> > /cpus/cpu@0[0] /cpus/cpu@1[1] /cpus/cpu@2[2] /cpus/cpu@3[3] }
-> > [    0.000000] GICv3: GIC: PPI partition interrupt-partition-1[1] {
-> > /cpus/cpu@100[4] /cpus/cpu@101[5] }
-> > [    0.000000] random: get_random_bytes called from
-> > start_kernel+0x2b8/0x454 with crng_init=0
-> > [    0.000000] arch_timer: cp15 timer(s) running at 24.00MHz (phys).
-> > [    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff
-> > max_cycles: 0x588fe9dc0, max_idle_ns: 440795202592 ns
-> > [    0.000006] sched_clock: 56 bits at 24MHz, resolution 41ns, wraps
-> > every 4398046511097ns
-> > [    0.003201] Console: colour dummy device 80x25
-> > [    0.003624] printk: console [tty0] enabled
-> > [    0.004020] printk: bootconsole [uart8250] disabled
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.80-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
 >
-> I had to put "console=ttyS2,1500000" in kernel command line to get further logging beyond this point.
+> thanks,
+>
+> greg k-h
+>
 
-Noted, thanks.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.19.80-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: 99661e9ccf9206876ca8f509555b7b0d3e45cc13
+git describe: v4.19.79-82-g99661e9ccf92
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.79-82-g99661e9ccf92
+
+
+No regressions (compared to build v4.19.79)
+
+No fixes (compared to build v4.19.79)
+
+Ran 23644 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-fs-tests
+* ltp-ipc-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* ssuite
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
