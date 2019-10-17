@@ -2,150 +2,89 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2722ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33910ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 935BC21848
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:18:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571336283;
-	bh=SR+bTSpFdod0Pmckp7adJ/ibEnctQOUUmhnuvOQCrjY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HFxC9YwbsmS/gIQkBGD54c7u8hLnyPOpGd1mXFFpL7MFyCsDAcU2Xery2kEo5lSL8
-	 +WsWB5jVZFqtDm4dko+sHQoBU70AXtFM38l/EtmTcsQQWKo0kH8vMzU0omJ4jK558c
-	 xWuhRR0QeQUKwiEmC+7Q3/FetQ41acGfNkNa/Rqw=
+	by mail.kernel.org (Postfix) with ESMTP id 013D920659
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:19:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=didiksetiawan.com header.i=ds@didiksetiawan.com header.b="BKsGMwn/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441243AbfJQSSC (ORCPT
+        id S2441260AbfJQSS6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 14:18:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57902 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438601AbfJQSSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 14:18:02 -0400
-Received: from localhost (unknown [192.55.54.60])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78A0420659;
-        Thu, 17 Oct 2019 18:18:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571336280;
-        bh=SR+bTSpFdod0Pmckp7adJ/ibEnctQOUUmhnuvOQCrjY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RkTngsv/1miXtFdWrcmt1WxD7vnDnHdpunA+SOr9P2/TvBDfb8M9X/TVQm8/BNYl1
-         /ah1UqwxSf42djwPhxXDYrM8gkSc8vvloXnEcxjykfTzwn+2CKdx5qfuktu09gIoOU
-         Fe8DldLn8f7+VsWb+IdxBoFJS4qSBQmy0O3JoTiM=
-Date:   Thu, 17 Oct 2019 11:18:00 -0700
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     linux-usb@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Windsor <dwindsor@gmail.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: [PATCH RFC 3/3] vhost, kcov: collect coverage from vhost_worker
-Message-ID: <20191017181800.GB1094415@kroah.com>
-References: <cover.1571333592.git.andreyknvl@google.com>
- <af26317c0efd412dd660e81d548a173942f8a0ad.1571333592.git.andreyknvl@google.com>
+        Thu, 17 Oct 2019 14:18:58 -0400
+Received: from sender4-of-o54.zoho.com ([136.143.188.54]:21412 "EHLO
+        sender4-of-o54.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438465AbfJQSS6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 14:18:58 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1571336301; cv=none; 
+        d=zoho.com; s=zohoarc; 
+        b=lagggj9ZXvDDIV7/derIiQExwv5MI/xc+UOh4ezgQDExS+e69htC0j1LdG0HVtmhv6ln2ZyYCQ+RqWcJzaJAsjr9Ty6qdOWWyOYBAVKfWRa70zq+N9VeB4r3ObtV3im93CfvTt1G4Mb+P9aBYWdJSe0s7Y4ZGprySexbizifByg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
+        t=1571336301; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=e+DmBc0k0wkI4KLvSKQhrZ/7KcWo1MMr/deLd6MWJZw=; 
+        b=DEQm9onx0wvrGf0Sm1Orwas4WGPoFuhShAwcodKfRhhnKfQrJSNFSWVzO2p4x9dBHAIpQefkpuyV0wo18pYmNCtWZftC+sSe9ZCAraU/+gB8bVoY8ByPtYoMIQyXzng+Ozi9szULxQ5+u9eATzE98Vd1D4/zQvKFNfi7Hd8XpB8=
+ARC-Authentication-Results: i=1; mx.zoho.com;
+        dkim=pass  header.i=didiksetiawan.com;
+        spf=pass  smtp.mailfrom=ds@didiksetiawan.com;
+        dmarc=pass header.from=<ds@didiksetiawan.com> header.from=<ds@didiksetiawan.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1571336301;
+        s=zoho; d=didiksetiawan.com; i=ds@didiksetiawan.com;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
+        l=858; bh=e+DmBc0k0wkI4KLvSKQhrZ/7KcWo1MMr/deLd6MWJZw=;
+        b=BKsGMwn/vwAMgIMD/sdhSg9h7UfVgn9L1HdJMnoPBM55UzU9rRITVizYVXGzWtwA
+        tSv3c/gsToA0d1NGvSSEnmhKqTYTkSscye0W4Yn0iGosn6c9z0CEUr5ZdbvmbSCD/oJ
+        ncmTvHP6HmUINU5tN+/Ydsl+dOCH19ZRMZFC134M=
+Received: from thinkpad-e420s (120.188.94.47 [120.188.94.47]) by mx.zohomail.com
+        with SMTPS id 1571336299478949.125726423069; Thu, 17 Oct 2019 11:18:19 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 01:18:08 +0700
+From:   Didik Setiawan <ds@didiksetiawan.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 00/79] 4.4.197-stable review
+Message-ID: <20191017181808.GA8883@thinkpad-e420s>
+References: <20191016214729.758892904@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <af26317c0efd412dd660e81d548a173942f8a0ad.1571333592.git.andreyknvl@google.com>
+In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
 User-Agent: Mutt/1.12.2 (2019-09-21)
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 07:44:15PM +0200, Andrey Konovalov wrote:
-> This patch adds kcov_remote_start/kcov_remote_stop annotations to the
-> vhost_worker function, which is responsible for processing vhost works.
-> Since vhost_worker is spawned when a vhost device instance is created,
-> the common kcov handle is used for kcov_remote_start/stop annotations.
+On Wed, Oct 16, 2019 at 02:49:35PM -0700, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.197 release.
+> There are 79 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> ---
->  drivers/vhost/vhost.c | 15 +++++++++++++++
->  drivers/vhost/vhost.h |  3 +++
->  2 files changed, 18 insertions(+)
+> Responses should be made by Fri 18 Oct 2019 09:43:41 PM UTC.
+> Anything received after that time might be too late.
 > 
-> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> index 36ca2cf419bf..71a349f6b352 100644
-> --- a/drivers/vhost/vhost.c
-> +++ b/drivers/vhost/vhost.c
-> @@ -357,7 +357,13 @@ static int vhost_worker(void *data)
->  		llist_for_each_entry_safe(work, work_next, node, node) {
->  			clear_bit(VHOST_WORK_QUEUED, &work->flags);
->  			__set_current_state(TASK_RUNNING);
-> +#ifdef CONFIG_KCOV
-> +			kcov_remote_start(dev->kcov_handle);
-> +#endif
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.197-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+ 
+Compiled, booted, and no regressions found on my x86_64 system.
 
-Shouldn't you hide these #ifdefs in a .h file?  This is not a "normal"
-kernel coding style at all.
+Thanks,
+Didik Setiawan 
 
->  			work->fn(work);
-> +#ifdef CONFIG_KCOV
-> +			kcov_remote_stop();
-> +#endif
->  			if (need_resched())
->  				schedule();
->  		}
-> @@ -546,6 +552,9 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
->  
->  	/* No owner, become one */
->  	dev->mm = get_task_mm(current);
-> +#ifdef CONFIG_KCOV
-> +	dev->kcov_handle = current->kcov_handle;
-> +#endif
->  	worker = kthread_create(vhost_worker, dev, "vhost-%d", current->pid);
->  	if (IS_ERR(worker)) {
->  		err = PTR_ERR(worker);
-> @@ -571,6 +580,9 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
->  	if (dev->mm)
->  		mmput(dev->mm);
->  	dev->mm = NULL;
-> +#ifdef CONFIG_KCOV
-> +	dev->kcov_handle = 0;
-> +#endif
->  err_mm:
->  	return err;
->  }
-> @@ -682,6 +694,9 @@ void vhost_dev_cleanup(struct vhost_dev *dev)
->  	if (dev->worker) {
->  		kthread_stop(dev->worker);
->  		dev->worker = NULL;
-> +#ifdef CONFIG_KCOV
-> +		dev->kcov_handle = 0;
-> +#endif
->  	}
->  	if (dev->mm)
->  		mmput(dev->mm);
-> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
-> index e9ed2722b633..010ca1ebcbd5 100644
-> --- a/drivers/vhost/vhost.h
-> +++ b/drivers/vhost/vhost.h
-> @@ -173,6 +173,9 @@ struct vhost_dev {
->  	int iov_limit;
->  	int weight;
->  	int byte_weight;
-> +#ifdef CONFIG_KCOV
-> +	u64 kcov_handle;
-> +#endif
-
-Why is this a #ifdef at all here?
-
-thanks,
-
-greg k-h
