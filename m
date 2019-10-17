@@ -2,160 +2,148 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11268FA3736
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A32A5ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD34F21848
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:29:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="O8UQs3OC"
+	by mail.kernel.org (Postfix) with ESMTP id 569052089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:30:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571329812;
+	bh=LSn0Us39YQvpgHpBtDuP+bFAOJpzc9IBTOH2uPj6gn0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=F4Ux8GPFJSobVH3IFuAf6MGsuPOmFGba8srqAv5UIi5aRrtQAJ8greSUOmuqlrbcw
+	 gYPgVm+MMd96zHWSxeAngMDwteih8fX8DPC8wV0MmYsz7RAga9cQ+TRDwUXbEZzqu8
+	 sAojVJJJiOeE0WbGpWHxqCCkCgN2YQyIDCKPeR7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406521AbfJQQ3C (ORCPT
+        id S2440402AbfJQQaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:29:02 -0400
-Received: from mail-eopbgr810081.outbound.protection.outlook.com ([40.107.81.81]:28000
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2392968AbfJQQ3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 12:29:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WiDZgM+jZUQzqe3p1ykxmkdNHwobsLyO/PMKNskJO9t8ZjA7nonCFkATtoVMJk2hhbhHeLOAP9aKNqojt1GSwGs5DTarcXjPKdbUxgOKBARNBMXminYTnxQxs+faMZ8kqJyc/PX/u4kA0UFC9UExVoRx/HZsXCg9NHn/1CKeCwTfJ21Q653H+tGSWWoO9/je8O0T4Orhxg/6vSdTCJ+VC0s77TnjuCodRoopKaOo8gcNLzE1TKv4aNRlUc7OXBR2uziqutyyjj+FKfd5bo3LZHwBYGL72+VvQrPNe7bbpRIfs/5PZ1e7Olx4y1Hnfhg57I2BP9PV7KxJ/6dLghcQaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/IOvRIRGh3Bl9lOTZKpGMLh5eFo5cLcEhWhin3LkuYs=;
- b=mx6W1/iRBfq3h09IGzQuog9M9MFEe1nKQRXoIlifPCb+qdkVQI3tErcKUe6u5Q06b3jv1yGo9rwWNwN1FlhSKj4fiZ+5NkDxl8Yp7KytJsvIOFfZLIzMGboGf0V8IY1OL0q6PKTZnCI6jYwdXTOylH8zOdr311xh7zHuctlnhm2HrwMZYaRAJQ3CG+xleNb9a+IslNwx5vfgor8Z97lsmxnaqFaLvXGYYqGIYAtpPUaSUAD2ngbX/JTdIntBOvoyJrEZU1/EeGTBxYbk8C/oby8vcNdYOCqfSlXBzAz5J1qjY3wIJsOxo0mI6/+PQaNLZ+3uK0+V5Kml9cCArPWrmw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/IOvRIRGh3Bl9lOTZKpGMLh5eFo5cLcEhWhin3LkuYs=;
- b=O8UQs3OCsj0YIfI04XJ0sMCPfFdkFWMTTRGfDTAZNiSQcK+0O8sCfGZurw7chdOi7+j3oRAmX30EosubysH5lICtI38qVKDZbzWoN4boySxX4avtPId5GtbWySZBGaeZ2JAJGweVhYuyKdapuV9zpL8TJFrGrI0h8q6PgIRSRNI=
-Received: from MN2PR05MB6208.namprd05.prod.outlook.com (20.178.241.91) by
- MN2PR05MB6464.namprd05.prod.outlook.com (20.178.246.202) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.16; Thu, 17 Oct 2019 16:28:56 +0000
-Received: from MN2PR05MB6208.namprd05.prod.outlook.com
- ([fe80::f9be:d2d8:1003:99b5]) by MN2PR05MB6208.namprd05.prod.outlook.com
- ([fe80::f9be:d2d8:1003:99b5%6]) with mapi id 15.20.2347.021; Thu, 17 Oct 2019
- 16:28:56 +0000
-From:   Ajay Kaher <akaher@vmware.com>
-To:     Vlastimil Babka <vbabka@suse.cz>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-CC:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "punit.agrawal@arm.com" <punit.agrawal@arm.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "mszeredi@redhat.com" <mszeredi@redhat.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Srivatsa Bhat <srivatsab@vmware.com>,
-        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
-        Alexey Makhalov <amakhalov@vmware.com>,
-        Srinidhi Rao <srinidhir@vmware.com>,
-        Vikash Bansal <bvikas@vmware.com>,
-        Anish Swaminathan <anishs@vmware.com>,
-        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
-        Steven Rostedt <srostedt@vmware.com>,
-        "stable@kernel.org" <stable@kernel.org>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: Re: [PATCH v2 6/8] mm: prevent get_user_pages() from overflowing page
- refcount
-Thread-Topic: [PATCH v2 6/8] mm: prevent get_user_pages() from overflowing
- page refcount
-Thread-Index: AQHVfffGKc9CRR2dekieWi7B72DxaadSSqyAgA0lZIA=
-Date:   Thu, 17 Oct 2019 16:28:56 +0000
-Message-ID: <BF0587E3-D104-4DB2-B972-9BC4FD4CA014@vmware.com>
-References: <1570581863-12090-1-git-send-email-akaher@vmware.com>
- <1570581863-12090-7-git-send-email-akaher@vmware.com>
- <f899be71-4bc0-d07b-f650-d85a335cdebb@suse.cz>
-In-Reply-To: <f899be71-4bc0-d07b-f650-d85a335cdebb@suse.cz>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=akaher@vmware.com; 
-x-originating-ip: [2405:204:549c:9b0:157a:adf0:3cf7:b301]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 513f87e1-ea4d-4795-d702-08d7531f1b79
-x-ms-traffictypediagnostic: MN2PR05MB6464:|MN2PR05MB6464:|MN2PR05MB6464:
-x-ms-exchange-purlcount: 2
-x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR05MB64641D91921390EA8EFC8BDDBB6D0@MN2PR05MB6464.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 01930B2BA8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(396003)(136003)(376002)(39860400002)(199004)(189003)(66446008)(478600001)(6436002)(14454004)(25786009)(71190400001)(71200400001)(102836004)(966005)(2501003)(99286004)(6512007)(186003)(6486002)(8676002)(86362001)(8936002)(14444005)(81166006)(229853002)(81156014)(76176011)(6306002)(33656002)(5660300002)(256004)(11346002)(2616005)(476003)(316002)(64756008)(66556008)(446003)(305945005)(4326008)(91956017)(76116006)(66476007)(6506007)(110136005)(54906003)(486006)(66946007)(6246003)(7736002)(7416002)(6116002)(2906002)(46003)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6464;H:MN2PR05MB6208.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nAdprhsS138QtDDDkafsVykjYk77snaXupS/KIR+mseVAiTfMB+5jYns5YrenXsB5rDKvwof3VIJWVAhYGy04Ay4bDgsb3Mi2yhHjyDqJTuPivHDh0l1LA5VMn11pZ/UDjOxGsBuHzjmODWyHe0w4pt8vla/VGeoR/k7mO6irRWJoPm65Qr5t86GEeXT11owk+oS1bPA/dLkdHg3gQ3JhVbBVSjQ42oPl+mDDhHvMRNMXWH4+PwRgYS0G8kXjchAFwaFugi1va6r6DeJneB5WAn7w2I+LRlMsyDtFhUI/er66f43wWTg0LZmZLGnxSZEk2NAILufdXlGVPfMpcxC1jKNO+r65l3AOtTE8h5ph6HL7A9j9FvSrUlQg1l8WKGKTfFz49Piy3fNEIhUl1qJ6iSzMPMzu2t2na0KQRiBnsO5bgYYDxFteZ7KpzoBPWWRsvt8vPvxMMiRZ0BjzaLl/g==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BD83800ADC0A5B448D372E251057C55B@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 17 Oct 2019 12:30:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54410 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730640AbfJQQaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 12:30:10 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E66FB2089C;
+        Thu, 17 Oct 2019 16:30:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571329809;
+        bh=LSn0Us39YQvpgHpBtDuP+bFAOJpzc9IBTOH2uPj6gn0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=baztz8B1d3q8sTc8jXA1FQd061EDD0qfMar9TInei1bhpAWcztw/XO5ka5YUo0t+Z
+         ONBYyr8f0yQINsfp3XcaLWZh958ZAg4Kwgzjlytr9jhJlsu8S3Njk0WWckQYOLujjy
+         VIe5SyRXzf8hSOpO7bfb4YftuqOxMmfht8Hv0C+E=
+Date:   Thu, 17 Oct 2019 09:30:07 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     bpf <bpf@vger.kernel.org>, netdev <netdev@vger.kernel.org>
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        syzbot <syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: kernel panic: stack is corrupted in __lock_acquire (4)
+Message-ID: <20191017163007.GC726@sol.localdomain>
+Mail-Followup-To: bpf <bpf@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        syzbot <syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <0000000000009b3b80058af452ae@google.com>
+ <0000000000000ec274059185a63e@google.com>
+ <CACT4Y+aT5z65OZE6_TQieU5zUYWDvDtAogC45f6ifLkshBK2iw@mail.gmail.com>
+ <20191017162505.GB726@sol.localdomain>
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 513f87e1-ea4d-4795-d702-08d7531f1b79
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Oct 2019 16:28:56.5166
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PtfFgwfZeoqoCqJLxuv3Tgabwx3ThrmFhK+hVl6vN3QRHJDdr3/KF3dxzLkZqrgM9YAeLMKaASyIjbN/AcxbHA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6464
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191017162505.GB726@sol.localdomain>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQrvu79PbiAwOS8xMC8xOSwgNjo0MyBQTSwgIlZsYXN0aW1pbCBCYWJrYSIgPHZiYWJrYUBzdXNl
-LmN6PiB3cm90ZToNCg0KPj4gUmVwb3J0ZWQtYnk6IEphbm4gSG9ybiA8amFubmhAZ29vZ2xlLmNv
-bT4NCj4+IEFja2VkLWJ5OiBNYXR0aGV3IFdpbGNveCA8d2lsbHlAaW5mcmFkZWFkLm9yZz4NCj4+
-IENjOiBzdGFibGVAa2VybmVsLm9yZw0KPj4gU2lnbmVkLW9mZi1ieTogTGludXMgVG9ydmFsZHMg
-PHRvcnZhbGRzQGxpbnV4LWZvdW5kYXRpb24ub3JnPg0KPj4gWyA0LjQueSBiYWNrcG9ydCBub3Rl
-czoNCj4+ICAgQWpheTogQWRkZWQgbG9jYWwgdmFyaWFibGUgJ2Vycicgd2l0aC1pbiBmb2xsb3df
-aHVnZXRsYl9wYWdlKCkNCj4+ICAgICAgICAgZnJvbSAyYmU3Y2ZlZDk5NWUsIHRvIHJlc29sdmUg
-Y29tcGlsYXRpb24gZXJyb3INCj4+ICAgU3JpdmF0c2E6IFJlcGxhY2VkIGNhbGwgdG8gZ2V0X3Bh
-Z2VfZm9sbCgpIHdpdGggdHJ5X2dldF9wYWdlX2ZvbGwoKSBdDQo+PiBTaWduZWQtb2ZmLWJ5OiBT
-cml2YXRzYSBTLiBCaGF0IChWTXdhcmUpIDxzcml2YXRzYUBjc2FpbC5taXQuZWR1Pg0KPj4gU2ln
-bmVkLW9mZi1ieTogQWpheSBLYWhlciA8YWthaGVyQHZtd2FyZS5jb20+DQo+PiAtLS0NCj4+ICBt
-bS9ndXAuYyAgICAgfCA0MyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0t
-LS0tDQo+PiAgbW0vaHVnZXRsYi5jIHwgMTYgKysrKysrKysrKysrKysrLQ0KPj4gIDIgZmlsZXMg
-Y2hhbmdlZCwgNDcgaW5zZXJ0aW9ucygrKSwgMTIgZGVsZXRpb25zKC0pDQo+ICAgIA0KPiBUaGlz
-IHNlZW1zIHRvIGhhdmUgdGhlIHNhbWUgaXNzdWUgYXMgdGhlIDQuOSBzdGFibGUgdmVyc2lvbiBb
-MV0sIGluIG5vdA0KPiB0b3VjaGluZyB0aGUgYXJjaC1zcGVjaWZpYyBndXAuYyB2YXJpYW50cy4N
-Cj4gICAgDQo+IFsxXQ0KPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzY2NTAzMjNmLWRi
-YzktZjA2OS0wMDBiLWY2YjBmOTQxYTA2NUBzdXNlLmN6Lw0KDQpUaGFua3MgVmxhc3RpbWlsIGZv
-ciBoaWdobGlnaHRpbmcgdGhpcyBoZXJlLg0KDQpZZXMsIGFyY2gtc3BlY2lmaWMgZ3VwLmMgdmFy
-aWFudHMgYWxzbyBuZWVkIHRvIGhhbmRsZSBub3Qgb25seSBmb3IgNC40LnksDQpob3dldmVyIGl0
-IHNob3VsZCBiZSBoYW5kbGVkIHRpbGwgNC4xOS55LiBJIGJlbGlldmUgaXQncyBiZXR0ZXIgdG8g
-c3RhcnQNCmZyb20gNC4xOS55IGFuZCB0aGVuIGJhY2twb3J0IHRob3NlIGNoYW5nZXMgdGlsbCA0
-LjQueS4NCg0KQWZmZWN0ZWQgYXJlYXMgb2YgZ3VwLmMgKHdoZXJlIHBhZ2UtPmNvdW50IGhhdmUg
-YmVlbiB1c2VkKSBhcmU6DQojMTogZ2V0X3BhZ2UoKSB1c2VkIGluIHRoZXNlIGZpbGVzIGFuZCB0
-aGlzIGlzIHNhZmUgYXMNCiAgICAgICBpdCdzIGRlZmluZWQgaW4gbW0uaCAoaGVyZSBpdCdzIGFs
-cmVhZHkgdGFrZW4gY2FyZSBvZikNCiMyOiBnZXRfaGVhZF9wYWdlX211bHRpcGxlKCkgaGFzIGZv
-bGxvd2luZzoNCiAgICAgICAgICAgICAgIFZNX0JVR19PTl9QQUdFKHBhZ2VfY291bnQocGFnZSkg
-PT0gMCwgcGFnZSk7DQogICAgICAgICAgIE5lZWQgdG8gY2hhbmdlIHRoaXMgdG86DQogICAgICAg
-ICAgICAgICBWTV9CVUdfT05fUEFHRShwYWdlX3JlZl96ZXJvX29yX2Nsb3NlX3RvX292ZXJmbG93
-KHBhZ2UpLCBwYWdlKTsNCiMzOiBTb21lIG9mIHRoZSBmaWxlcyBoYXZlIHVzZWQgcGFnZV9jYWNo
-ZV9nZXRfc3BlY3VsYXRpdmUoKSwNCiAgICAgICBwYWdlX2NhY2hlX2FkZF9zcGVjdWxhdGl2ZSgp
-IHdpdGggY29tYmluYXRpb24gb2YgY29tcG91bmRfaGVhZCgpLA0KICAgICAgIHRoaXMgc2NlbmFy
-aW8gbmVlZHMgdG8gYmUgaGFuZGxlZCBhcyBpdCB3YXMgaGFuZGxlZCBoZXJlOg0KICAgICAgICAg
-ICBodHRwczovL2xvcmUua2VybmVsLm9yZy9zdGFibGUvMTU3MDU4MTg2My0xMjA5MC03LWdpdC1z
-ZW5kLWVtYWlsLWFrYWhlckB2bXdhcmUuY29tLw0KDQpQbGVhc2Ugc2hhcmUgd2l0aCBtZSBhbnkg
-c3VnZ2VzdGlvbnMgb3IgcGF0Y2hlcyBpZiB5b3UgaGF2ZSBhbHJlYWR5ICANCndvcmtlZCBvbiB0
-aGlzLg0KDQpDb3VsZCB3ZSBoYW5kbGUgYXJjaC1zcGVjaWZpYyBndXAuYyBpbiBkaWZmZXJlbnQg
-cGF0Y2ggc2V0cyBhbmQgDQpsZXQgdGhlc2UgcGF0Y2hlcyB0byBtZXJnZSB0byA0LjQueT8NCg0K
-LSBBamF5DQoNCg0K
+On Thu, Oct 17, 2019 at 09:25:05AM -0700, Eric Biggers wrote:
+> On Sun, Sep 01, 2019 at 08:23:42PM -0700, 'Dmitry Vyukov' via syzkaller-bugs wrote:
+> > On Sun, Sep 1, 2019 at 3:48 PM syzbot
+> > <syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com> wrote:
+> > >
+> > > syzbot has found a reproducer for the following crash on:
+> > >
+> > > HEAD commit:    38320f69 Merge branch 'Minor-cleanup-in-devlink'
+> > > git tree:       net-next
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=13d74356600000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=1bbf70b6300045af
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=83979935eb6304f8cd46
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1008b232600000
+> > 
+> > Stack corruption + bpf maps in repro triggers some bells. +bpf mailing list.
+> > 
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com
+> > >
+> > > Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in:
+> > > __lock_acquire+0x36fa/0x4c30 kernel/locking/lockdep.c:3907
+> > > CPU: 0 PID: 8662 Comm: syz-executor.4 Not tainted 5.3.0-rc6+ #153
+> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > > Google 01/01/2011
+> > > Call Trace:
+> > > Kernel Offset: disabled
+> > > Rebooting in 86400 seconds..
+> > >
+> 
+> This is still reproducible on latest net tree, but using a different kconfig I
+> was able to get a more informative crash output.  Apparently tcp_bpf_unhash() is
+> being called recursively.  Anyone know why this might happen?
+> 
+> This is using the syzkaller language reproducer linked above -- I ran it with:
+> 
+> 	syz-execprog -threaded=1 -collide=1 -cover=0 -repeat=0 -procs=8 -sandbox=none -enable=net_dev,net_reset,tun syz_bpf.txt
+> 
+> Crash report on net/master:
+> 
+> PANIC: double fault, error_code: 0x0
+> CPU: 3 PID: 8328 Comm: syz-executor Not tainted 5.4.0-rc1-00118-ge497c20e2036 #31
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20191013_105130-anatol 04/01/2014
+> RIP: 0010:mark_lock+0x4/0x640 kernel/locking/lockdep.c:3631
+> Code: a2 7f 27 01 85 c0 0f 84 f3 42 00 00 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 66 66 2e 0f 1f 84 00 00 00 00 00 55 48 89 e5 <41> 57 41 56 41 55 41 54 53 48 83 ec 18 83 fa 08 76 21 44 8b 25 ab
+> RSP: 0018:ffffc9000010d000 EFLAGS: 00010046
+> RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000000000
+> RDX: 0000000000000008 RSI: ffff888071f92dd8 RDI: ffff888071f92600
+> RBP: ffffc9000010d000 R08: 0000000000000000 R09: 0000000000022023
+> R10: 00000000000000c8 R11: 0000000000000000 R12: ffff888071f92600
+> R13: ffff888071f92dd8 R14: 0000000000000023 R15: 0000000000000000
+> FS:  00007ff9f7765700(0000) GS:ffff88807fd80000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: ffffc9000010cff8 CR3: 000000000221d000 CR4: 00000000003406e0
+> Call Trace:
+>  <IRQ>
+>  mark_usage kernel/locking/lockdep.c:3592 [inline]
+>  __lock_acquire+0x22f/0xf80 kernel/locking/lockdep.c:3909
+>  lock_acquire+0x99/0x170 kernel/locking/lockdep.c:4487
+>  rcu_lock_acquire include/linux/rcupdate.h:208 [inline]
+>  rcu_read_lock include/linux/rcupdate.h:599 [inline]
+>  tcp_bpf_unhash+0x33/0x1d0 net/ipv4/tcp_bpf.c:549
+>  tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
+>  tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
+>  tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
+>  tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
+[...]
+
+Recursive tcp_bpf_unhash() also showed up in
+"BUG: unable to handle kernel paging request in tls_prots"
+(https://lkml.kernel.org/lkml/000000000000d7bcbb058c3758a1@google.com/T/)
+which was claimed to be fixed by
+"bpf: sockmap/tls, close can race with map free".
+But that fix was months ago; this crash is on latest net tree.
+
+- Eric
