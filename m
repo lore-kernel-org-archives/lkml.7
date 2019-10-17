@@ -2,170 +2,127 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B98ECE599
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C403ECE599
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63A812082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:19:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FJ7Cx4ok"
+	by mail.kernel.org (Postfix) with ESMTP id 57FA12082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:24:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393107AbfJQBTU (ORCPT
+        id S2395085AbfJQBYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 21:19:20 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:46441 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390047AbfJQBTT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 21:19:19 -0400
-Received: by mail-qt1-f196.google.com with SMTP id u22so1063844qtq.13;
-        Wed, 16 Oct 2019 18:19:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Z/aa8wHXCxV3tmXbr+VMzZQ5IcQ3POWlrtZSRfFXe4U=;
-        b=FJ7Cx4okQv21cjqq5YL4ofsxJpaiekvZBcfdJ7bUCEG/x5mqYU4yhbJPlGZ5EMoqCV
-         Rr4J7NHIymCg9kxlE/b7KwyW85qj5XEKEZ2zxaZrI9QoNJqea0fZy7JQ69yJwlA/5lVD
-         +wpgld+msBPX1ogIOVnPCwIypZBk2P38h9324ayHnCT4ruoAsYX2nRKVdvC6hAMAE/MM
-         c6MrgrhT2J8V6lbQgoyngUkfTanQ6Hs259l1lvhTsoQDVhJav2Innl9gS6c9Cb6yw7UR
-         8FDqaISP4JzjUrKJgUFw0qIlX49KI/Cq9h1EgbyO61GyVeaVpSYml2GIRXpGVsjrFWfx
-         EqTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Z/aa8wHXCxV3tmXbr+VMzZQ5IcQ3POWlrtZSRfFXe4U=;
-        b=TgjC7MMbdRk3Dw9XBMmKPph8TjomJghQdGclKptiW7a50CtFwp5VMmu5RjvBuQpRV6
-         eBL6FbpPnfTUe9yBuHx8lokwtu8Jdcndq8Kcr3fzLGaUQkC/ApeQxqylvmrUPK4aucLt
-         4ub0oKEJsda+/RFkb9aNUBiBKKcs15eb3q5RlEUHMuPrDY03kRjKsE1L7kuPeYh74/S4
-         Y55SyFUZRhr3xReIG4Nj736KKiCasgRMsFQv/Ic4FMv2t0bgKNtmViadFi8zdPmXkeDD
-         WPbDKzsKi/VyUib1Jk9yzwC5yCvFEjgTSf43xyaZFKYR3y99gA5u00kQClIw3qxYEedi
-         Qeug==
-X-Gm-Message-State: APjAAAUp4QKqt46dwUXMaBpz73hL3Xd1LkezO8rpXaLIlQQvWXJmCtug
-        lpPWtJDwfvYsb2L7NmlMAoA=
-X-Google-Smtp-Source: APXvYqxoIdiNy2IByAPfJ9y7fcryTSpguig8XZ62D2TJBAdSQUI8qaExu06MD7B60mVtCn7kdQgQaQ==
-X-Received: by 2002:a0c:8867:: with SMTP id 36mr1175545qvm.177.1571275158353;
-        Wed, 16 Oct 2019 18:19:18 -0700 (PDT)
-Received: from localhost.localdomain ([201.53.210.37])
-        by smtp.gmail.com with ESMTPSA id v68sm375528qkd.109.2019.10.16.18.19.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 18:19:17 -0700 (PDT)
-From:   Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-To:     outreachy-kernel@googlegroups.com, sudipm.mukherjee@gmail.com,
-        teddy.wang@siliconmotion.com, gregkh@linuxfoundation.org,
-        linux-fbdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
-        trivial@kernel.org
-Cc:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-Subject: [PATCH] staging: sm750fb: format description of parameters the to kernel doc format
-Date:   Wed, 16 Oct 2019 22:18:49 -0300
-Message-Id: <20191017011849.6081-1-gabrielabittencourt00@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 16 Oct 2019 21:24:00 -0400
+Received: from mga07.intel.com ([134.134.136.100]:50725 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388782AbfJQBX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 21:23:59 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 18:23:58 -0700
+X-IronPort-AV: E=Sophos;i="5.67,305,1566889200"; 
+   d="scan'208";a="189863183"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.239.13.123]) ([10.239.13.123])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 16 Oct 2019 18:23:55 -0700
+Subject: Re: [PATCH v9 09/17] x86/split_lock: Handle #AC exception for split
+ lock
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org
+References: <3ec328dc-2763-9da5-28d6-e28970262c58@redhat.com>
+ <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de>
+ <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com>
+ <alpine.DEB.2.21.1910161244060.2046@nanos.tec.linutronix.de>
+ <3a12810b-1196-b70a-aa2e-9fe17dc7341a@redhat.com>
+ <b2c42a64-eb42-1f18-f609-42eec3faef18@intel.com>
+ <d2fc3cbe-1506-94fc-73a4-8ed55dc9337d@redhat.com>
+ <20191016154116.GA5866@linux.intel.com>
+ <d235ed9a-314c-705c-691f-b31f2f8fa4e8@redhat.com>
+ <20191016162337.GC5866@linux.intel.com>
+ <20191016174200.GF5866@linux.intel.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <54cba514-23bb-5a96-f5f7-10520d1f0df2@intel.com>
+Date:   Thu, 17 Oct 2019 09:23:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191016174200.GF5866@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cluster comments that describes parameters of functions and create one
-single comment before the function in kernel doc format.
+On 10/17/2019 1:42 AM, Sean Christopherson wrote:
+> On Wed, Oct 16, 2019 at 09:23:37AM -0700, Sean Christopherson wrote:
+>> On Wed, Oct 16, 2019 at 05:43:53PM +0200, Paolo Bonzini wrote:
+>>> On 16/10/19 17:41, Sean Christopherson wrote:
+>>>> On Wed, Oct 16, 2019 at 04:08:14PM +0200, Paolo Bonzini wrote:
+>>>>> SIGBUS (actually a new KVM_EXIT_INTERNAL_ERROR result from KVM_RUN is
+>>>>> better, but that's the idea) is for when you're debugging guests.
+>>>>> Global disable (or alternatively, disable SMT) is for production use.
+>>>>
+>>>> Alternatively, for guests without split-lock #AC enabled, what if KVM were
+>>>> to emulate the faulting instruction with split-lock detection temporarily
+>>>> disabled?
+>>>
+>>> Yes we can get fancy, but remember that KVM is not yet supporting
+>>> emulation of locked instructions.  Adding it is possible but shouldn't
+>>> be in the critical path for the whole feature.
+>>
+>> Ah, didn't realize that.  I'm surprised emulating all locks with cmpxchg
+>> doesn't cause problems (or am I misreading the code?).  Assuming I'm
+>> reading the code correctly, the #AC path could kick all other vCPUS on
+>> emulation failure and then retry emulation to "guarantee" success.  Though
+>> that's starting to build quite the house of cards.
+> 
+> Ugh, doesn't the existing emulation behavior create another KVM issue?
+> KVM uses a locked cmpxchg in emulator_cmpxchg_emulated() and the address
+> is guest controlled, e.g. a guest could coerce the host into disabling
+> split-lock detection via the host's #AC handler by triggering emulation
+> and inducing an #AC in the emulator.
+>
 
-Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
----
- drivers/staging/sm750fb/sm750_accel.c | 65 +++++++++++++++------------
- 1 file changed, 37 insertions(+), 28 deletions(-)
+Exactly right.
 
-diff --git a/drivers/staging/sm750fb/sm750_accel.c b/drivers/staging/sm750fb/sm750_accel.c
-index dbcbbd1055da..d5564cd60f3b 100644
---- a/drivers/staging/sm750fb/sm750_accel.c
-+++ b/drivers/staging/sm750fb/sm750_accel.c
-@@ -130,20 +130,24 @@ int sm750_hw_fillrect(struct lynx_accel *accel,
- 	return 0;
- }
- 
--int sm750_hw_copyarea(
--struct lynx_accel *accel,
--unsigned int sBase,  /* Address of source: offset in frame buffer */
--unsigned int sPitch, /* Pitch value of source surface in BYTE */
--unsigned int sx,
--unsigned int sy,     /* Starting coordinate of source surface */
--unsigned int dBase,  /* Address of destination: offset in frame buffer */
--unsigned int dPitch, /* Pitch value of destination surface in BYTE */
--unsigned int Bpp,    /* Color depth of destination surface */
--unsigned int dx,
--unsigned int dy,     /* Starting coordinate of destination surface */
--unsigned int width,
--unsigned int height, /* width and height of rectangle in pixel value */
--unsigned int rop2)   /* ROP value */
-+/**
-+ * @sBase: Address of source: offset in frame buffer
-+ * @sPitch: Pitch value of source surface in BYTE
-+ * @sx, @sy: Starting coordinate of source surface
-+ * @dBase: Address of destination: offset in frame buffer
-+ * @dPitch: Pitch value of destination surface in BYTE
-+ * @Bpp: Color depth of destination surface
-+ * @dx, @dy: Starting coordinate of destination surface
-+ * @width, @height: width and height of rectangle in pixel value
-+ * @rop2: ROP value
-+ */
-+int sm750_hw_copyarea(struct lynx_accel *accel,
-+		      unsigned int sBase, unsigned int sPitch,
-+		      unsigned int sx, unsigned int sy,
-+		      unsigned int dBase, unsigned int dPitch,
-+		      unsigned int Bpp, unsigned int dx, unsigned int dy,
-+		      unsigned int width, unsigned int height,
-+		      unsigned int rop2)
- {
- 	unsigned int nDirection, de_ctrl;
- 
-@@ -288,20 +292,25 @@ static unsigned int deGetTransparency(struct lynx_accel *accel)
- 	return de_ctrl;
- }
- 
--int sm750_hw_imageblit(struct lynx_accel *accel,
--		 const char *pSrcbuf, /* pointer to start of source buffer in system memory */
--		 u32 srcDelta,          /* Pitch value (in bytes) of the source buffer, +ive means top down and -ive mean button up */
--		 u32 startBit, /* Mono data can start at any bit in a byte, this value should be 0 to 7 */
--		 u32 dBase,    /* Address of destination: offset in frame buffer */
--		 u32 dPitch,   /* Pitch value of destination surface in BYTE */
--		 u32 bytePerPixel,      /* Color depth of destination surface */
--		 u32 dx,
--		 u32 dy,       /* Starting coordinate of destination surface */
--		 u32 width,
--		 u32 height,   /* width and height of rectangle in pixel value */
--		 u32 fColor,   /* Foreground color (corresponding to a 1 in the monochrome data */
--		 u32 bColor,   /* Background color (corresponding to a 0 in the monochrome data */
--		 u32 rop2)     /* ROP value */
-+/**
-+ * @pSrcbuf: pointer to start of source buffer in system memory
-+ * @srcDelta: Pitch value (in bytes) of the source buffer, +ive means top down
-+ * and -ive mean button up
-+ * @startBit: Mono data can start at any bit in a byte, this value should be
-+ * 0 to 7
-+ * @dBase: Address of destination: offset in frame buffer
-+ * @dPitch: Pitch value of destination surface in BYTE
-+ * @bytePerPixel: Color depth of destination surface
-+ * @dx, @dy: Starting coordinate of destination surface
-+ * @width, @height: width and height of rectangle in pixel value
-+ * @fColor: Foreground color (corresponding to a 1 in the monochrome data
-+ * @bColor: Background color (corresponding to a 0 in the monochrome data
-+ * @rop2: ROP value
-+ */
-+int sm750_hw_imageblit(struct lynx_accel *accel, const char *pSrcbuf,
-+		       u32 srcDelta, u32 startBit, u32 dBase, u32 dPitch,
-+		       u32 bytePerPixel, u32 dx, u32 dy, u32 width,
-+		       u32 height, u32 fColor, u32 bColor, u32 rop2)
- {
- 	unsigned int ulBytesPerScan;
- 	unsigned int ul4BytesPerScan;
--- 
-2.20.1
+I have tested with force_emulation_prefix. It did go into the #AC 
+handler and disable the split-lock detection in host.
 
+However, without force_emulation_prefix enabled, I'm not sure whether 
+malicious guest can create the case causing the emulation with a lock 
+prefix and going to the emulator_cmpxchg_emulated().
+I found it impossible without force_emulation_prefix enabled and I'm not 
+familiar with emulation at all. If I missed something, please let me know.
+
+>>> How would you disable split-lock detection temporarily?  Just tweak
+>>> MSR_TEST_CTRL for the time of running the one instruction, and cross
+>>> fingers that the sibling doesn't notice?
+>>
+>> Tweak MSR_TEST_CTRL, with logic to handle the scenario where split-lock
+>> detection is globally disable during emulation (so KVM doesn't
+>> inadvertantly re-enable it).
+>>
+>> There isn't much for the sibling to notice.  The kernel would temporarily
+>> allow split-locks on the sibling, but that's a performance issue and isn't
+>> directly fatal.  A missed #AC in the host kernel would only delay the
+>> inevitable global disabling of split-lock.  A missed #AC in userspace would
+>> again just delay the inevitable SIGBUS.
