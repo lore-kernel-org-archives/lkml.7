@@ -2,92 +2,105 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B96FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE1EECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEB1020872
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 885A120872
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:03:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NUVNIEv/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LtEzZSBy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438053AbfJQSDU (ORCPT
+        id S2438086AbfJQSD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 14:03:20 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42822 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438028AbfJQSDT (ORCPT
+        Thu, 17 Oct 2019 14:03:28 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34268 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730483AbfJQSD2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 14:03:19 -0400
-Received: by mail-pl1-f194.google.com with SMTP id g9so176633plj.9;
-        Thu, 17 Oct 2019 11:03:18 -0700 (PDT)
+        Thu, 17 Oct 2019 14:03:28 -0400
+Received: by mail-pf1-f196.google.com with SMTP id b128so2155505pfa.1;
+        Thu, 17 Oct 2019 11:03:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=9oCmTVnAEa32nAb5BJZQ/i4PUlAhvohf94rvuYIrx2g=;
-        b=NUVNIEv/vBTToTobEZUT+Up2ImRUo3WbNnWudxlqRnZg8/Rz7kuU2do0p4DnqwGP+8
-         l2K9y1GOX2sy5jvuyb/BO1TYSHbEiOBRxlUM3PGNXOj1MLMpFIao0V05BzbWGsKxf95/
-         MlKIUj7bViGKM6AF0jyfgvlQLgxCpjXERdJjyphs5HEWlW0Mw4vNVL8xNbpY67yQ9xcU
-         u4Kzk/YVWytel/M+jDTirfTeo5qeQteYKVVmKHLBTGFIr0zZJDJTHOZFlWlId/HB4MSg
-         PEjCcsCtaFBezs1qxLmRVFD3twH509vw0RJW8uBx78dolhb6EtSw8I95I4B8ezsicoD6
-         NZvQ==
+        bh=sB2aUDJLuFeOLSWpmQCdl6ISD4YnW5irtx4fCSZlFFU=;
+        b=LtEzZSByCFb0s1oUS8I3zGFbUZg0fr4lFmNlgHAzVxXXqrGhXn6YkTnwppjKEUd9vd
+         /6h0JsBrHDqWEf7qeFNInKDzbwOWSUuKmcMchahnfuSRkwntCqxFbHpmjiPSO2pCt32s
+         zbkEdqtXKGt9LzZZqRWD5Rv0Mqrawopex0ftXChnEV87au/6a0oQ07+XTyijSDXWguQD
+         kw5K8cQ8o/zjDPCuTlzwuG5bcKcFL+OJVPafuDbAxnBi3jB+jPtZDYeYBd7jiWIGXzHX
+         QwtQTt91xF5lliKn5iJRyzVRp175uN9jM0v8ZpKaiuvXWd5BNiwqfTwmoc9Uo5aW1Iyq
+         jYrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9oCmTVnAEa32nAb5BJZQ/i4PUlAhvohf94rvuYIrx2g=;
-        b=LyUbW/PK/Yi9BZ4l4Pr2MMGLYO9fhr7wMcEti8srraQNLXJOoalZ8KsvC3CzHyp4uy
-         b66F5q1oRA5lx3CZNreoADuSx/UNyCyWjiyjAGJCEd61+59cQ3ZQjRRB9vm1VwwirqYX
-         dVnqEnhfVf0PDurWiRKew5zcL1FzlW9qwnRcSdUumxaaXksbHYTYrgTChH/3BXJn8EDq
-         E/w06dK7+XoLQe3IitOl25uh3HrXcXRJSZIl5jf1FXsrnrDXohcFLO/pHKlZn+TOjdLs
-         rD0miULTeaBLeJMPi9SQ2vo9E4GuIEF1DcvctAg26w/9o2y4mmkn6AIO5UTSohgpkdpC
-         AyZA==
-X-Gm-Message-State: APjAAAUyknB4+t0+CGvFcG6mmmrsIxPVauomo2HzA+tzSH5KYrNkvT/H
-        9DEcvFuDmxlXMMoyQoYuZzQ=
-X-Google-Smtp-Source: APXvYqw8etUNVn8kVOfD8cH7NLuy7T1NE4l5lDQl4N7hYJO1CH46vHNr8pz1dmU7+pIcqgJRn6anLg==
-X-Received: by 2002:a17:902:9a92:: with SMTP id w18mr5260334plp.223.1571335397608;
-        Thu, 17 Oct 2019 11:03:17 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g4sm3514798pfo.33.2019.10.17.11.03.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 17 Oct 2019 11:03:17 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 11:03:15 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.9 00/92] 4.9.197-stable review
-Message-ID: <20191017180315.GB29239@roeck-us.net>
-References: <20191016214759.600329427@linuxfoundation.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sB2aUDJLuFeOLSWpmQCdl6ISD4YnW5irtx4fCSZlFFU=;
+        b=D6jvnnL6WZiARusb5XwzqitoNCSD6hhZWO+gfhT/Z/NYKjUU/bkh4QQBkQ9HGF45+/
+         /lfegBYVm4d+KW3cwSHYMdFifX/mwRFg73eLJAL78PE9EkHmFsMM96M0ZHnJhAiAetZy
+         ZNA4OuyMK6UmiJFpP/+sQgU2Iy012umytiUFYB45wgaCT17gGl8YbUU5i6Yj7qN6dvfV
+         AVGvIY/PSQFacxEq7qFDXv/XBTZ5wF64M063Cyj5NOJRKMY0P7mZj4wosrqV3up8Mc8G
+         j+yPp6JxU+C5rNKUrNIiat6g0PSgGdi3JkC8TLmIyP/3HFDBMILwsi3WkakbkslmtqMa
+         naSg==
+X-Gm-Message-State: APjAAAVQtTEjRCTujPPcmy0UKspmJej67byZ1Ij2I+kPrl/PNTtBMqQm
+        OUT0nuq0w5nLEU/SAXUgDWU=
+X-Google-Smtp-Source: APXvYqyd7IPL6DMWZBFYBl58qOoK1v+NPvmlpAxCka4WadnK6QqcStAmgdh5DM+NIHq/X4IgewnWqw==
+X-Received: by 2002:a17:90a:b78c:: with SMTP id m12mr5970486pjr.12.1571335407183;
+        Thu, 17 Oct 2019 11:03:27 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id q204sm3614927pfc.11.2019.10.17.11.03.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 11:03:26 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 11:03:23 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [PATCH 1/2] input: edt-ft5x06 - add polled input support
+Message-ID: <20191017180323.GJ35946@dtor-ws>
+References: <20190430185859.24015-1-nsaenzjulienne@suse.de>
+ <f029cb51eb99b9a51743b87cb736ec66e8ec0ae5.camel@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <f029cb51eb99b9a51743b87cb736ec66e8ec0ae5.camel@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 02:49:33PM -0700, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.197 release.
-> There are 92 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri 18 Oct 2019 09:43:41 PM UTC.
-> Anything received after that time might be too late.
-> 
+Hi Nicolas,
 
-Build results:
-	total: 172 pass: 172 fail: 0
-Qemu test results:
-	total: 356 pass: 356 fail: 0
+On Wed, Jun 12, 2019 at 01:57:46PM +0200, Nicolas Saenz Julienne wrote:
+> On Tue, 2019-04-30 at 20:58 +0200, Nicolas Saenz Julienne wrote:
+> > Some hardware configurations might pass on providing an interrupt line.
+> > In that case there is always the option to use a polled input approach.
+> > This patch adapts the driver for it.
+> > 
+> > The polled approach is only triggered if no interrupt is provided by the
+> > firmware or platform data.
+> > 
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > ---
+> 
+> Ping :)
 
-Guenter
+I reworked the polling in input devices so we no longer need to create a
+separate input_polled_dev instances and instead have regular input
+device work in polled mode by calling
+
+	error = input_setup_polling(input_dev, poll_fn);
+	...
+
+Please adjust your patch and resubmit.
+
+Thanks.
+
+-- 
+Dmitry
