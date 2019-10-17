@@ -2,179 +2,131 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28735FA3735
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A80FA3735
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F32B020869
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:42:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77EAF20869
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:43:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="V1qAI/AZ"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="1W6T+By6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406436AbfJQMmp (ORCPT
+        id S2406480AbfJQMnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 08:42:45 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:22586 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726214AbfJQMmp (ORCPT
+        Thu, 17 Oct 2019 08:43:05 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45742 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392868AbfJQMnE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:42:45 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9HCfBaw021784;
-        Thu, 17 Oct 2019 14:42:06 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=L26QXalVQR9HzDI3UJ1eXufxROWoddqJ9iUBDb8vL5I=;
- b=V1qAI/AZc8ULJzhq8rHQoCKUBO4QKrCmM+Tds8x0tAjcOGhCYNT6xlel6P3uOLpsS44M
- pj79D+qYzGG4je4AZbY9LPDKuDuUP2SwVsNA0L6MVKgAFbCvVvSf2XQAQ6U2mQPOOwo0
- L+MKHi3atsGEWE71HnO/s8Zquh8eGx6b/c4C0v83kl5n7VNZ4Cimu+/eK7I0BYkgvtiH
- w++len1Su7YNIAxZNCmCz649vwJGEP3Emlyg2EFkU3jxMUZx9wXYqJxnOJ0eDOEcbKmx
- xOWIuL9U5/l79s3uf/kjye0pNHKfMUHWyYLNwAUYkeK3qT/g67/Icj/f/3dAmL6fua7O uw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2vk4kxbu5b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 17 Oct 2019 14:42:06 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0C6D510002A;
-        Thu, 17 Oct 2019 14:42:06 +0200 (CEST)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EEED32B5663;
-        Thu, 17 Oct 2019 14:42:05 +0200 (CEST)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 17 Oct
- 2019 14:42:05 +0200
-Received: from localhost (10.201.20.122) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 17 Oct 2019 14:42:04
- +0200
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <wim@linux-watchdog.org>, <linux@roeck-us.net>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <alexandre.torgue@st.com>
-CC:     <linux-watchdog@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] dt-bindings: watchdog: Convert stm32 watchdog bindings to json-schema
-Date:   Thu, 17 Oct 2019 14:41:59 +0200
-Message-ID: <20191017124159.13869-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Thu, 17 Oct 2019 08:43:04 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r5so2158823wrm.12
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 05:43:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HGYfQMOQQ/Llw7JM+7jrZqk8jvWFbqivJs1N/X/ktYU=;
+        b=1W6T+By6Fyb2jmC1zIN29lxvN1RfimvyqGZm/IyNd0V+jAhEnMuR3HyZpQgzrmOhLk
+         PVRFTAfV/ZKXqr6U/08O1Ez3u3mVXh5UF45EOmJyN3i4IzE3ozHnHpbxebhjZ94shBvL
+         gHXflbn54dpLGUVRAM6N1AIiKogkN2aPAmJCtXER0fMyKruwAyjCtnCp3Rdk4VX76zV8
+         vxUCyNaqnutYi9qbxamM5qop4YUgQPt/9Tt21OPAYxz34RRWnzsq5SkxwtK6D7YJZOTA
+         WmDUDbMaLCyxAVbKdVFhHQMpTO7XA2cyDMEkk1fNYHBI9fnGNSx8oQhGeCqkQaUCwJaf
+         ML8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HGYfQMOQQ/Llw7JM+7jrZqk8jvWFbqivJs1N/X/ktYU=;
+        b=BHsP6UtNSXG2SM2S3o3FRygrzRkeXsIemKMgjyT8R9wckQYfqHbR1zjOEEQ+Lhfs+V
+         /UqiGG8Rp2x9zB/ue6UTw3FpMnFbgCVtLH4PRSB9FqRXsefxEAnby3KMCGWL7lXAVEoO
+         9F9fSRcaq4dMjHjRuiANpLfyXl0kjUBQoqNOvq8o/xVyq/KMemIGMIoqHivj7HJX9oQP
+         3gxql4yjK2UZAfbyJqnzEHzXgZKlFeIogMJj/RWVsXni/TFZxEzFPccjY1EPxuHdSjlW
+         IooDDmRfhhUN6fWZjl08qkxhMI7Q/CaLbp/FbmOyVms+HDolQwxxnt2MgNCCTr7SNR1Q
+         u1bA==
+X-Gm-Message-State: APjAAAW17O2PVw6DaEI7sLJzBqGCTwZoiY3GodHq5glfgoj5v9S7sCsM
+        DlnmGK38ghi5xk0xiM34VpggzQ==
+X-Google-Smtp-Source: APXvYqxSTrTbdDOJVZ/NSpsLlPLKMh5bomXVvJWF0PlOY6wiEaCsHR6FF/GB5VdIRYS1B4NMgrdXsA==
+X-Received: by 2002:a05:6000:1190:: with SMTP id g16mr2819078wrx.133.1571316182250;
+        Thu, 17 Oct 2019 05:43:02 -0700 (PDT)
+Received: from netronome.com ([2001:982:756:703:d63d:7eff:fe99:ac9d])
+        by smtp.gmail.com with ESMTPSA id k8sm576756wrg.15.2019.10.17.05.43.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 17 Oct 2019 05:43:01 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 14:43:01 +0200
+From:   Simon Horman <simon.horman@netronome.com>
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        linux-kernel@lists.codethink.co.uk,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] RFC: Bluetooth: missed cpu_to_le16 conversion in
+ hci_init4_req
+Message-ID: <20191017124300.fktzd27yy2t7gcqx@netronome.com>
+References: <20191016113943.19256-1-ben.dooks@codethink.co.uk>
+ <20191016122022.kz4xzx4hzmtuoh5l@netronome.com>
+ <BFA3CB11-5FD8-4BD8-9DDA-62707AB84626@holtmann.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.20.122]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-17_04:2019-10-17,2019-10-17 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BFA3CB11-5FD8-4BD8-9DDA-62707AB84626@holtmann.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the STM32 watchdog binding to DT schema format using json-schema
+On Wed, Oct 16, 2019 at 08:42:48PM +0200, Marcel Holtmann wrote:
+> Hi Simon,
+> 
+> >> It looks like in hci_init4_req() the request is being
+> >> initialised from cpu-endian data but the packet is specified
+> >> to be little-endian. This causes an warning from sparse due
+> >> to __le16 to u16 conversion.
+> >> 
+> >> Fix this by using cpu_to_le16() on the two fields in the packet.
+> >> 
+> >> net/bluetooth/hci_core.c:845:27: warning: incorrect type in assignment (different base types)
+> >> net/bluetooth/hci_core.c:845:27:    expected restricted __le16 [usertype] tx_len
+> >> net/bluetooth/hci_core.c:845:27:    got unsigned short [usertype] le_max_tx_len
+> >> net/bluetooth/hci_core.c:846:28: warning: incorrect type in assignment (different base types)
+> >> net/bluetooth/hci_core.c:846:28:    expected restricted __le16 [usertype] tx_time
+> >> net/bluetooth/hci_core.c:846:28:    got unsigned short [usertype] le_max_tx_time
+> >> 
+> >> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> >> ---
+> >> Cc: Marcel Holtmann <marcel@holtmann.org>
+> >> Cc: Johan Hedberg <johan.hedberg@gmail.com>
+> >> Cc: "David S. Miller" <davem@davemloft.net>
+> >> Cc: linux-bluetooth@vger.kernel.org
+> >> Cc: netdev@vger.kernel.org
+> >> Cc: linux-kernel@vger.kernel.org
+> >> ---
+> >> net/bluetooth/hci_core.c | 4 ++--
+> >> 1 file changed, 2 insertions(+), 2 deletions(-)
+> >> 
+> >> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+> >> index 04bc79359a17..b2559d4bed81 100644
+> >> --- a/net/bluetooth/hci_core.c
+> >> +++ b/net/bluetooth/hci_core.c
+> >> @@ -842,8 +842,8 @@ static int hci_init4_req(struct hci_request *req, unsigned long opt)
+> >> 	if (hdev->le_features[0] & HCI_LE_DATA_LEN_EXT) {
+> >> 		struct hci_cp_le_write_def_data_len cp;
+> >> 
+> >> -		cp.tx_len = hdev->le_max_tx_len;
+> >> -		cp.tx_time = hdev->le_max_tx_time;
+> >> +		cp.tx_len = cpu_to_le16(hdev->le_max_tx_len);
+> >> +		cp.tx_time = cpu_to_le16(hdev->le_max_tx_time);
+> > 
+> > I would suggest that the naming of the le_ fields of struct hci_dev
+> > implies that the values stored in those fields should be little endian
+> > (but those that are more than bone byte wide are not).
+> 
+> the le_ stands for Low Energy and not for Little Endian.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- .../devicetree/bindings/watchdog/st,stm32-iwdg.txt | 26 -----------
- .../bindings/watchdog/st,stm32-iwdg.yaml           | 54 ++++++++++++++++++++++
- 2 files changed, 54 insertions(+), 26 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
- create mode 100644 Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.yaml
-
-diff --git a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
-deleted file mode 100644
-index d8f4430b0a13..000000000000
---- a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
-+++ /dev/null
-@@ -1,26 +0,0 @@
--STM32 Independent WatchDoG (IWDG)
-----------------------------------
--
--Required properties:
--- compatible: Should be either:
--  - "st,stm32-iwdg"
--  - "st,stm32mp1-iwdg"
--- reg: Physical base address and length of the registers set for the device
--- clocks: Reference to the clock entry lsi. Additional pclk clock entry
--  is required only for st,stm32mp1-iwdg.
--- clock-names: Name of the clocks used.
--  "lsi" for st,stm32-iwdg
--  "lsi", "pclk" for st,stm32mp1-iwdg
--
--Optional Properties:
--- timeout-sec: Watchdog timeout value in seconds.
--
--Example:
--
--iwdg: watchdog@40003000 {
--	compatible = "st,stm32-iwdg";
--	reg = <0x40003000 0x400>;
--	clocks = <&clk_lsi>;
--	clock-names = "lsi";
--	timeout-sec = <32>;
--};
-diff --git a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.yaml b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.yaml
-new file mode 100644
-index 000000000000..edec96d53e6b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/watchdog/st,stm32-iwdg.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics STM32 Independent WatchDoG (IWDG) bindings
-+
-+maintainers:
-+  - Yannick Fertre <yannick.fertre@st.com>
-+
-+allOf: 
-+  - $ref: "watchdog.yaml#"
-+
-+properties:
-+  compatible:
-+    enum:
-+      - st,stm32-iwdg
-+      - st,stm32mp1-iwdg
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: Low speed clock
-+      - description: Optional peripheral clock
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    items:
-+      enums: [ lsi, pclk ]
-+    minItems: 1
-+    maxItems: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    watchdog@5a002000 {
-+      compatible = "st,stm32mp1-iwdg";
-+      reg = <0x5a002000 0x400>;
-+      clocks = <&rcc IWDG2>, <&rcc CK_LSI>;
-+      clock-names = "pclk", "lsi";
-+      timeout-sec = <32>;
-+    };
-+
-+...
--- 
-2.15.0
-
+Thanks, in that case I have no objections.
