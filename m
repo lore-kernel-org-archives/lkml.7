@@ -2,229 +2,109 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B54ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B21B2ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B436521835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:02:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ODXUKTq6"
+	by mail.kernel.org (Postfix) with ESMTP id 84DA021835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:04:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395495AbfJQUC3 (ORCPT
+        id S2436887AbfJQUEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 16:02:29 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40818 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393263AbfJQUC2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 16:02:28 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 7so3847958ljw.7
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 13:02:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=uyfTpc4uoGGfUXhiiQ1ULESUjtJAjGktU/a6QTF0Zxk=;
-        b=ODXUKTq6gV6Zgod339kE7rlWH0ZnqPl50KwGglJq5xCspeReCHnduUb4AEu3vi4e91
-         HiDEvxN6Cea4dbNCmZa5h3CySEQAqwknzeog8qejMsL2mUcmJCtl7aGsCN0L4uwvZ6N5
-         o/jhjerrNZxplOaJXZkIT0nHd21x4oqgULlstIPItodHfnnzb37w7EOPg+EOX3p/CKL+
-         5VZiP32aIaSqJCHhREt/zwIZsiCwyUbM+7IRJcNWjWbu1oCsscAfFOR/MycSsagKUics
-         XCQXUNZyU7MwHpjkrdFWnNu0wNqDO7BelKt9XD2SY8GJmXaahzmZgqxB6eZ2kppDdEHK
-         B5Sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uyfTpc4uoGGfUXhiiQ1ULESUjtJAjGktU/a6QTF0Zxk=;
-        b=VFzshWNeyYpXzFm/35riLsIDJ3btYeV8vNGsMSunnWcFu8KlSpG7U5K6l111QF9HnH
-         HeYEp+rqoScKIX9Cjhs3NkYTKP1SSaMxjh4YPhcQPYosH5VSQWdl2o+/fO6ytxy3rE2d
-         IWF3VEKpkrTIXI+bqgiMi33EhWkFO49uWJGOVI6RcKkX6G/6VJVCYVhLp80/uhIkS2Xf
-         kWnRKj/IHxD/GEMDHX02/rodJBJZafWXdLgvsHU/qM+3KiBGouUBvOmOztioP7tQ9C9U
-         RwYwQmeBRAT7RJGCxPwHrjiIVEWKJyWYNILXG/OTqpCTwyza9t1ana920YvYq5gmJbjr
-         sqUA==
-X-Gm-Message-State: APjAAAVSgJvosy9mxBgLitIrr9e6rp95aZ1T1LGczArqhPgcyxOhm0C+
-        0q1gthrYN7IglZtnZdBUskh26QEIzOKS1iNJKcwCeg==
-X-Google-Smtp-Source: APXvYqz7YfwiA1STU4iQjyXHFbERzSURVwH4loWX5wkYhcI2X5zdovKfhKrbF7BblnhYxlc1K6FFMYSctkyjJv+atac=
-X-Received: by 2002:a2e:5354:: with SMTP id t20mr3675619ljd.227.1571342546083;
- Thu, 17 Oct 2019 13:02:26 -0700 (PDT)
+        Thu, 17 Oct 2019 16:04:12 -0400
+Received: from mga14.intel.com ([192.55.52.115]:18958 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2394622AbfJQUEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 16:04:12 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 13:04:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,309,1566889200"; 
+   d="scan'208";a="396381851"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga005.fm.intel.com with ESMTP; 17 Oct 2019 13:04:11 -0700
+Date:   Thu, 17 Oct 2019 13:04:11 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     Jim Mattson <jmattson@google.com>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [PATCH v7 3/7] KVM: VMX: Pass through CET related MSRs to Guest
+Message-ID: <20191017200411.GL20903@linux.intel.com>
+References: <20190927021927.23057-1-weijiang.yang@intel.com>
+ <20190927021927.23057-4-weijiang.yang@intel.com>
+ <CALMp9eT3HJ3S6Mzzntje2Kb4m-y86GvkhaNXun-mLJukEy6wbA@mail.gmail.com>
+ <20191009061509.GB27851@local-michael-cet-test>
 MIME-Version: 1.0
-References: <20191016214729.758892904@linuxfoundation.org>
-In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 18 Oct 2019 01:32:14 +0530
-Message-ID: <CA+G9fYvfDTFpba=XTMvOebUjJO1x3keK_cYiEq_x28OEHnatpw@mail.gmail.com>
-Subject: Re: [PATCH 4.4 00/79] 4.4.197-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009061509.GB27851@local-michael-cet-test>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019 at 03:23, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.4.197 release.
-> There are 79 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri 18 Oct 2019 09:43:41 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.4.197-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+On Wed, Oct 09, 2019 at 02:15:09PM +0800, Yang Weijiang wrote:
+> On Wed, Oct 02, 2019 at 11:18:32AM -0700, Jim Mattson wrote:
+> > > +       kvm_xss = kvm_supported_xss();
+> > > +       cet_en = guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
+> > > +                guest_cpuid_has(vcpu, X86_FEATURE_IBT);
+> > > +       /*
+> > > +        * U_CET is a must for USER CET, per CET spec., U_CET and PL3_SPP are
+> > > +        * a bundle for USER CET xsaves.
+> > > +        */
+> > > +       if (cet_en && (kvm_xss & XFEATURE_MASK_CET_USER)) {
+> > > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_U_CET, MSR_TYPE_RW);
+> > > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL3_SSP, MSR_TYPE_RW);
+> > > +       }
+> > 
+> > Since this is called from vmx_cpuid_update, what happens if cet_en was
+> > previously true and now it's false?
+> > 
+> Yes, it's likely, but guest CPUID usually is fixed before
+> guest is launched, do you have any suggestion?
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Re-enable interception.  kvm_x86_ops->cpuid_update() is only called in
+the ioctl flow, i.e. it's not performance critical.
 
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.4.197-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.4.y
-git commit: cb63cd392f388e3874d4bc23b0090c3e137bf22d
-git describe: v4.4.196-80-gcb63cd392f38
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
-ld/v4.4.196-80-gcb63cd392f38
-
-
-No regressions (compared to build v4.4.196)
-
-
-No fixes (compared to build v4.4.196)
-
-Ran 12991 total tests in the following environments and test suites.
-
-Environments
---------------
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* kselftest
-* kvm-unit-tests
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-open-posix-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* network-basic-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* libhugetlbfs
-* install-android-platform-tools-r2600
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.4.197-rc1
-git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
-git branch: 4.4.197-rc1-hikey-20191016-586
-git commit: 8ef378ea28b5d306c5655fc0b219b8dc01fb1b3f
-git describe: 4.4.197-rc1-hikey-20191016-586
-Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
--oe/build/4.4.197-rc1-hikey-20191016-586
-
-
-No regressions (compared to build 4.4.197-rc1-hikey-20191016-585)
-
-
-No fixes (compared to build 4.4.197-rc1-hikey-20191016-585)
-
-Ran 1523 total tests in the following environments and test suites.
-
-Environments
---------------
-- hi6220-hikey - arm64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+> > > +       /*
+> > > +        * S_CET is a must for KERNEL CET, PL0_SSP ... PL2_SSP are a bundle
+> > > +        * for CET KERNEL xsaves.
+> > > +        */
+> > > +       if (cet_en && (kvm_xss & XFEATURE_MASK_CET_KERNEL)) {
+> > > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_S_CET, MSR_TYPE_RW);
+> > > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL0_SSP, MSR_TYPE_RW);
+> > > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL1_SSP, MSR_TYPE_RW);
+> > > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL2_SSP, MSR_TYPE_RW);
+> > > +
+> > > +               /* SSP_TAB only available for KERNEL SHSTK.*/
+> > > +               if (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
+> > > +                       vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_INT_SSP_TAB,
+> > > +                                                     MSR_TYPE_RW);
+> > > +       }
+> > > +}
+> > > +
+> > >  static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
+> > >  {
+> > >         struct vcpu_vmx *vmx = to_vmx(vcpu);
+> > > @@ -7025,6 +7062,8 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
+> > >         if (boot_cpu_has(X86_FEATURE_INTEL_PT) &&
+> > >                         guest_cpuid_has(vcpu, X86_FEATURE_INTEL_PT))
+> > >                 update_intel_pt_cfg(vcpu);
+> > > +
+> > > +       vmx_intercept_cet_msrs(vcpu);
+> > >  }
+> > >
+> > >  static void vmx_set_supported_cpuid(u32 func, struct kvm_cpuid_entry2 *entry)
+> > > --
+> > > 2.17.2
+> > >
