@@ -2,183 +2,102 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0BDCA9EB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 22:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF6DCA9EC8
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 22:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9944F21D7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 22:51:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571352692;
-	bh=JCkVVIGFBjonZ5IQnBrvCbDuPYG+7plh4+zsJ2HH5nU=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=Rvzpq3WSBlrQNimEfyY1mqzZf+5DdLnMTBF1Lee7y3nut1fxdB0To5MJbqejq0G8+
-	 8Pvj1MyqHeHCH1/tQBX6H7TknucTO9WyDWcrwmHc2HFh0s+VkMjTXkaImVG6uaVSrQ
-	 HCPcBC5rE73JRm5dnhjyuFB+S58ftygYPFSbysvA=
+	by mail.kernel.org (Postfix) with ESMTP id 8C5BB21D80
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 22:56:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HTBpYroK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441666AbfJQWvb (ORCPT
+        id S2438343AbfJQW4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 18:51:31 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:43766 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438320AbfJQWva (ORCPT
+        Thu, 17 Oct 2019 18:56:03 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43141 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389846AbfJQW4C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 18:51:30 -0400
-Received: by mail-il1-f194.google.com with SMTP id t5so3718290ilh.10
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 15:51:29 -0700 (PDT)
+        Thu, 17 Oct 2019 18:56:02 -0400
+Received: by mail-pl1-f196.google.com with SMTP id f21so1846702plj.10
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 15:56:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/eF/L3m73e+e1oQsDpVEkuWHj3baK6hMXuTSH0BtWMA=;
-        b=VOnh4QxHOkSB/aw6xuc4s2CW/EmlVg6shi8Vepao5j5TUeNZ/0Q6MBunp97DOYuO8Z
-         lqRSovVOI8nWSlUE2Xcc+jOs8iCqdhc7QQwhAVGO92Bywg8YWmUJNfgeMbQ4TZalYuHZ
-         H1ZrclA8HFOcApR60QFv7rgaOjdHkJ7JvGw1Q=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=H7fAk6Ny4DJQ5l4MTTiOy6lM7oc/Wj2NcDwRmnBk5mc=;
+        b=HTBpYroKSBaPUtGEak9yuDbAiftxZm4Y06bRyoXf4yy479H26dVNgqyfTelLzVrwkd
+         mWP51goHVTam5bBvJMd9DxEAHtJZe819kIY7kSEldm/gVL1u3Rk1NU7uNBzGplKZ4QmN
+         MRj1JjAOK73X2IOpNx6TK85mAIQ/Z8zxrHX8YKw3La+MRIFEpTWGHADtgZHHJCE25RLK
+         qOUONxOwcCHXWIDNEFn53oYoLw5KgDkQz6qGXo9zyYLyN6ulGlF5QX8S+G/rnIRlkqGB
+         PHHIpR7nQkzrzU90dlfJ3AEUyOK429glHW9o0u7txbuuEpTfV0ZFrLzI53ilUfKa/bXS
+         5lgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/eF/L3m73e+e1oQsDpVEkuWHj3baK6hMXuTSH0BtWMA=;
-        b=f2U42fj4oCwyHvG8CT/uaiRkrXErzWIsJY1se/QpenGwkyIHwIFfNnbe0JZitMT1D0
-         3WAOlrCvizQmFuAwExqaO5zlTeDMDIkqCfJnjChJ0+QupiT3LfHaQRKswCYigjM/wZOl
-         rGS7AeendhIfHMj9lY+myIQDRYZZKE/bzPkvdW6bcVlP/8uRTiZsrW5SlpKYGK4LZgyL
-         eb1qJiYmAa6njiunDFrziM8IiRZ+6hZWfYwpvapQH3Rf0T24xR3hHjxzcCaYq1RzJpE+
-         VMbwnB+KUwJsD+9jjmqBpcZ+rG2YkMvDCATBPfzTPWIS9CzE/IjTanl511OXKriRv7gy
-         u0Sg==
-X-Gm-Message-State: APjAAAVOp1+U86rdM4raF3iwoUkzNASiMW6cBjEHeyJeocmealy3JE7U
-        NFZQtBga+5aEzAX5ZkPNvXufOKyFRv0WdA==
-X-Google-Smtp-Source: APXvYqwg26CF9upmlevG8JNy+vFcQXWOUpGE5JAzgz0/XPmngcr3LqkRmJOakfbKR22lkLCFEB48ww==
-X-Received: by 2002:a92:1d5c:: with SMTP id d89mr6407901ild.94.1571352689406;
-        Thu, 17 Oct 2019 15:51:29 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id m9sm1677403ilc.44.2019.10.17.15.51.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Oct 2019 15:51:28 -0700 (PDT)
-Subject: Re: [PATCH v2] selftests: Add kselftest-all and kselftest-install
- targets
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        yamada.masahiro@socionext.com, michal.lkml@markovi.net,
-        shuah@kernel.org
-Cc:     linux-kbuild@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20190926224014.28910-1-skhan@linuxfoundation.org>
- <87sgnttpoq.fsf@mpe.ellerman.id.au>
- <adcfcda4-c36e-c222-4964-f83b5f3d0097@linuxfoundation.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <7d8056fe-ddb3-1831-d18f-deed4e0d3a76@linuxfoundation.org>
-Date:   Thu, 17 Oct 2019 16:51:27 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=H7fAk6Ny4DJQ5l4MTTiOy6lM7oc/Wj2NcDwRmnBk5mc=;
+        b=VHQEmOfSkrMbdbSDB2aRlcW+8B/3dASMUHu11wq2IUyJSZbvkIVRLIIVHZvwrNN4KV
+         fLmHrFmP4s0CKgyQQwX6cQIPSLswvCe0s98dMz6RrdMegymcDYglEzAY8kkvbuQXhSyn
+         0Q/R5BDfNbeA9j+H5+sQooJs5Mq+Rh9s/AztouaRZTXMFcR+kBF8gVaFR8oRlBLUbOQ/
+         F/M8Q8zK5PDsCfvMasl6USylBCGWFGarw+o3ckwdsHPvu+S1xdWLLWSInSw9gg4OMwdQ
+         zWiXBH6sqQ2LJ2BsFYgnIbpaBiWyk/+GIWix0cISa4LWq1w9z6IHlaEaVQVpYVzy33hP
+         CDaQ==
+X-Gm-Message-State: APjAAAU7YeRe43rvbkmg6QRAzRccpHS5fhZC+in393Ro9kqK4qLS2uMt
+        6e8JeHVZu6HEe04A4Bg7moNPsmOg4og=
+X-Google-Smtp-Source: APXvYqyrOw1FIEd/vQvX0yHxqzUjxYrKB+jDFUhQZAJ+1gX2nk4jHPUlXGyn/miCjzxIwudaEuS0EQ==
+X-Received: by 2002:a17:902:8305:: with SMTP id bd5mr2057661plb.184.1571352961749;
+        Thu, 17 Oct 2019 15:56:01 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id d20sm4325548pfq.88.2019.10.17.15.56.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 15:56:00 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 15:55:58 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: defconfig: Enable SN65DSI86 display bridge
+Message-ID: <20191017225558.GA4500@tuxbook-pro>
+References: <20190926230209.47592-1-jeffrey.l.hugo@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <adcfcda4-c36e-c222-4964-f83b5f3d0097@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190926230209.47592-1-jeffrey.l.hugo@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/16/19 10:08 AM, Shuah Khan wrote:
-> On 10/15/19 8:00 PM, Michael Ellerman wrote:
->> Hi Shuah,
->>
->> I know this has been merged already, so this is just FYI and in case it
->> helps anyone else who's tracking down build failures.
->>
-> 
-> Thanks for letting me know. I have been sending updates about
-> breakages. Will send an update with this info.
-> 
->> Sorry I didn't reply before you merged it, I was on leave.
->>
->> Shuah Khan <skhan@linuxfoundation.org> writes:
->>> Add kselftest-all target to build tests from the top level
->>> Makefile. This is to simplify kselftest use-cases for CI and
->>> distributions where build and test systems are different.
->>>
->>> Current kselftest target builds and runs tests on a development
->>> system which is a developer use-case.
->>>
->>> Add kselftest-install target to install tests from the top level
->>> Makefile. This is to simplify kselftest use-cases for CI and
->>> distributions where build and test systems are different.
->>>
->>> This change addresses requests from developers and testers to add
->>> support for installing kselftest from the main Makefile.
->>>
->>> In addition, make the install directory the same when install is
->>> run using "make kselftest-install" or by running kselftest_install.sh.
->>> Also fix the INSTALL_PATH variable conflict between main Makefile and
->>> selftests Makefile.
->> ...
->>> diff --git a/tools/testing/selftests/Makefile 
->>> b/tools/testing/selftests/Makefile
->>> index c3feccb99ff5..bad18145ed1a 100644
->>> --- a/tools/testing/selftests/Makefile
->>> +++ b/tools/testing/selftests/Makefile
->>> @@ -171,9 +171,12 @@ run_pstore_crash:
->>>   # 1. output_dir=kernel_src
->>>   # 2. a separate output directory is specified using O= KBUILD_OUTPUT
->>>   # 3. a separate output directory is specified using KBUILD_OUTPUT
->>> +# Avoid conflict with INSTALL_PATH set by the main Makefile
->>>   #
->>> -INSTALL_PATH ?= $(BUILD)/install
->>> -INSTALL_PATH := $(abspath $(INSTALL_PATH))
->>> +KSFT_INSTALL_PATH ?= $(BUILD)/kselftest_install
->>
->> This change broke all my CI, because the tests no longer install in the
->> place it's expecting them :/
->>
-> 
-> Sorry about that.
-> 
->> I can fix it by explicitly specifying the install path in my CI scripts.
->>
->>> +KSFT_INSTALL_PATH := $(abspath $(KSFT_INSTALL_PATH))
->>> +# Avoid changing the rest of the logic here and lib.mk.
->>> +INSTALL_PATH := $(KSFT_INSTALL_PATH)
->>
-> 
-> 
-> I searched all the selftests Makefiles for it and convinced myself that,
-> the above would take care of it for these cases. I searched powerpc
-> Makefiles so this doesn't break it. Didn't think about the CI.
-> 
-> android/Makefile:    mkdir -p $(INSTALL_PATH)
-> android/Makefile:    install -t $(INSTALL_PATH) $(TEST_PROGS) 
-> $(TEST_PROGS_EXTENDED) $(TEST_FILES)
-> android/Makefile:        $(MAKE) OUTPUT=$$BUILD_TARGET -C $$SUBDIR 
-> INSTALL_PATH=$(INSTALL_PATH)/$$SUBDIR install; \
-> futex/Makefile:    mkdir -p $(INSTALL_PATH)
-> futex/Makefile:    install -t $(INSTALL_PATH) $(TEST_PROGS) 
-> $(TEST_PROGS_EXTENDED) $(TEST_FILES)
-> futex/Makefile:        $(MAKE) OUTPUT=$$BUILD_TARGET -C $$SUBDIR 
-> INSTALL_PATH=$(INSTALL_PATH)/$$SUBDIR install; \
-> sparc64/Makefile:    mkdir -p $(INSTALL_PATH)
-> sparc64/Makefile:    install -t $(INSTALL_PATH) $(TEST_PROGS) 
-> $(TEST_PROGS_EXTENDED) $(TEST_FILES)
-> sparc64/Makefile:        $(MAKE) OUTPUT=$$BUILD_TARGET -C $$SUBDIR 
-> INSTALL_PATH=$(INSTALL_PATH)/$$SUBDIR install; \
-> 
-> 
->> But because the over-rideable variable changed from INSTALL_PATH to
->> KSFT_INSTALL_PATH I will need to export both of them in order for my CI
->> to work with old and new kernels.
-> 
-> My mistake. I overlooked that this could be overridden and could
-> be in used in CI scripts.
-> 
->>
+On Thu 26 Sep 16:02 PDT 2019, Jeffrey Hugo wrote:
 
-Can you send me your CI script for testing my changes? I also want
-to make sure I don't break your CI again.
+> This enables display on the Lenovo Yoga C630 by connecting the DSI output
+> from the SoC to the eDP input of the panel.
+> 
+> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-thanks,
--- Shuah
+Applied, thanks
+
+> ---
+>  arch/arm64/configs/defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 0134a84481f8..f318836bb9b8 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -541,6 +541,7 @@ CONFIG_DRM_MSM=m
+>  CONFIG_DRM_TEGRA=m
+>  CONFIG_DRM_PANEL_SIMPLE=m
+>  CONFIG_DRM_SII902X=m
+> +CONFIG_DRM_TI_SN65DSI86=m
+>  CONFIG_DRM_I2C_ADV7511=m
+>  CONFIG_DRM_VC4=m
+>  CONFIG_DRM_ETNAVIV=m
+> -- 
+> 2.17.1
+> 
