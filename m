@@ -2,163 +2,105 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B96FA3735
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 514BDFA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA0221835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:39:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571330351;
-	bh=cyl3WhMybIr77IMhD4M/HzNDauAIjbHPEXJUqLnsdyI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zWIwRVmOvP/dq91pzOt8gy/j2bEH1PvpApm9apklyv2WsQ6NQb9yhgjv60qeWac2w
-	 0DXi6DPLP7b7sAdAI2/qDeXR57LnmmJfnaSEtT98FvE11TWu9ngZY5TDPO44DpwvNZ
-	 x+DELUUJsa3wudcYUr7Tr0RDMfa/cmdaTiWpF3jU=
+	by mail.kernel.org (Postfix) with ESMTP id 21F0521848
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:39:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L5dLzOre"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440485AbfJQQjJ (ORCPT
+        id S2440495AbfJQQjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:39:09 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46420 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729529AbfJQQjJ (ORCPT
+        Thu, 17 Oct 2019 12:39:19 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:41468 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729529AbfJQQjT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 12:39:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=sf8bXsEJ/gzi9qX1n3MNwbVkGFNy3+em1T/PTgOoIT8=; b=dFeTnLcQm7koViz9LdetehxIn
-        ZaE2dDqWvOxXHpKQCSdnXBm9INDomi6AfUvhaQY1T4ErhRMYP+Ka49ykZvSLxM5KW9+vLQwT2jquP
-        VYrKT8gseZspi8qEWErv4DfzppEuXlviU23K7J8beHI7TymT/lYpZHVq2EBJfmGJu2caQ=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iL8nq-0001RY-8s; Thu, 17 Oct 2019 16:39:06 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 641542742BAC; Thu, 17 Oct 2019 17:39:05 +0100 (BST)
-Date:   Thu, 17 Oct 2019 17:39:05 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Cc:     "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>
-Subject: Re: [PATCH 5.3 112/112] ASoC: sgtl5000: add ADC mute control
-Message-ID: <20191017163905.GH4976@sirena.co.uk>
-References: <20191016214907.599726506@linuxfoundation.org>
- <20191016220044.GB11473@sirena.co.uk>
- <20191016221025.GA990599@kroah.com>
- <20191016223518.GC11473@sirena.co.uk>
- <20191016232358.GA994597@kroah.com>
- <de9630e5-341f-b48d-029a-ef1a516bf820@skidata.com>
- <AM6PR05MB653568E379699EE907E146BDF96D0@AM6PR05MB6535.eurprd05.prod.outlook.com>
- <CAGgjyvFQQ4E5VfZ3nwFu+7UiGOmkyXK-n9PHjo1p=iYNX5JrPw@mail.gmail.com>
- <20191017111122.GA4976@sirena.co.uk>
- <b90f4cfc04686a669d145b5c5e7e59e2edf58779.camel@toradex.com>
+        Thu, 17 Oct 2019 12:39:19 -0400
+Received: by mail-yb1-f195.google.com with SMTP id 206so897112ybc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 09:39:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vYJvPdDl3T7Fx646ASlNZBmczwkC7H3BSoulK6E2T3I=;
+        b=L5dLzOreODZtz1fC6R658TQwqBXto0USF2KYsRzaAvcvOCiUwEbkp6P5PvMEs44M0I
+         JCSKtrJl55eSbC8ndDhVh1NmUSrMQcOPQC543hljZtgROp448B88vZ2/yI0ib41HDDoK
+         tPRnGmmoUIDibih651Fnt9rTGmwhv0x04fS6a5ZbMMukW+VYWAupBqC6dOPguuX0K0CD
+         SA44uo2bDMlXVm1hKuv7Lp1uvGn9L0pQ2IHRPUzTR834W1SQBDSAy4N+e2/Xt51BDfuT
+         HYShlFdUAiLrpHDbm8LESk4Xx2PIcuL5hLAXPkErrcCvAqxO5ArsXdEbfOiDehwjcJvC
+         6KJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vYJvPdDl3T7Fx646ASlNZBmczwkC7H3BSoulK6E2T3I=;
+        b=kREyQAMrB+rOASW80+vDA+CIaB5GQlUhhj7j3PSRup49aSfppJ4fIhaAHhkKlZSTcF
+         z0BSYPAvRKU1hUjzfglqfXdG6bP0th2vPmtgKUfRiU7RmWKQbJUawr0/URynIfjJruTm
+         hjkBBvWiDsLTDSvkAqR3haWcMY2WeTweyqRupKF7k95iTN9xMIPS8YjA1Ya3H3FY0dIs
+         ZatrTcz7trIsuZDK1eSIqsP7y/ZH3nKVuGTTWVOxVZlt/Gr3Z+U8xsgny0JoiNYo/sv1
+         5acdX5EVI2FXyeguoeagHQMk/whp1jziiE8biBsqN3p4qUldcQR2krcSc5Z2GRTVJ2ij
+         RNQA==
+X-Gm-Message-State: APjAAAUi92I1I/9HNr+LzDOP39jNnrS9lxdnVfxM2eMLS6RwuKG/AjrI
+        yNgkca8FTndeasjC5NZwqc3kX3YeHMZk41aAzQKgmA==
+X-Google-Smtp-Source: APXvYqxdYvRwKra9r9/E+OOqWK7PsmcGav4kYCUYznmop5C9tp4Z3WcERTqCA2rhAHcIwWJPWLpbrclmbwc5zuy3oDY=
+X-Received: by 2002:a25:4292:: with SMTP id p140mr2700421yba.147.1571330356542;
+ Thu, 17 Oct 2019 09:39:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bpVaumkpfGNUagdU"
-Content-Disposition: inline
-In-Reply-To: <b90f4cfc04686a669d145b5c5e7e59e2edf58779.camel@toradex.com>
-X-Cookie: Shut off engine before fueling.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191016221148.F9CCD155@viggo.jf.intel.com> <CABCjUKDWRJO9s68qhKQGXzrW39KqfZzZhoOX0HgDcnv-RxJZPw@mail.gmail.com>
+ <85512332-d9d4-6a72-0b42-a8523abc1b5f@intel.com>
+In-Reply-To: <85512332-d9d4-6a72-0b42-a8523abc1b5f@intel.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Thu, 17 Oct 2019 09:39:04 -0700
+Message-ID: <CALvZod7S4jeXqLvu7fTbeGTZy8czfTdsd+v45dGsi70zEt39yg@mail.gmail.com>
+Subject: Re: [PATCH 0/4] [RFC] Migrate Pages in lieu of discard
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Suleiman Souhlal <suleiman@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Oct 17, 2019 at 9:32 AM Dave Hansen <dave.hansen@intel.com> wrote:
+>
+> On 10/17/19 9:01 AM, Suleiman Souhlal wrote:
+> > One problem that came up is that if you get into direct reclaim,
+> > because persistent memory can have pretty low write throughput, you
+> > can end up stalling users for a pretty long time while migrating
+> > pages.
+>
+> Basically, you're saying that memory load spikes turn into latency spikes?
+>
+> FWIW, we have been benchmarking this sucker with benchmarks that claim
+> to care about latency.  In general, compared to DRAM, we do see worse
+> latency, but nothing catastrophic yet.  I'd be interested if you have
+> any workloads that act as reasonable proxies for your latency requirements.
+>
+> > Because of that, we moved to a solution based on the proactive reclaim
+> > of idle pages, that was presented at LSFMM earlier this year:
+> > https://lwn.net/Articles/787611/ .
+>
+> I saw the presentation.  The feedback in the room as I remember it was
+> that proactive reclaim essentially replaced the existing reclaim
+> mechanism, to which the audience was not receptive.  Have folks opinions
+> changed on that, or are you looking for other solutions?
+>
 
---bpVaumkpfGNUagdU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I am currently working on a solution which shares the mechanisms
+between regular and proactive reclaim. The interested users/admins can
+setup proactive reclaim otherwise the regular reclaim will work on low
+memory. I will have something in one/two months and will post the
+patches.
 
-On Thu, Oct 17, 2019 at 02:16:09PM +0000, Oleksandr Suvorov wrote:
-
-> All versions of driver sgtl5000 (since creating in 2011) has a bug in
-> sgtl5000_probe():
-> ...
->        snd_soc_write(codec, SGTL5000_CHIP_ANA_CTRL,
->                        SGTL5000_HP_ZCD_EN |
->                        SGTL5000_ADC_ZCD_EN);
-> ...
-> This command rewrites the whole register value instead of just enabling
-> ZCD feature for headphone and adc.
-
-> This register has bits for HP/LineOut/ADC muting, thus sgtl5000_probe()
-> always unmutes HP/LineOut/ADC.
-
-Yes, or at the very least this is a badly documented bit of intentional
-code.  I suspect it may be the latter but at this point we can't tell.
-
-> 1. drop this patch and revert 631bc8f0134ae in stable versions 4.19,
-> 5.2, 5.3.
-> So the bug with unmuting all outputs and ADC on device probing will
-> still present in all kernel versions that include sgtl500 codec driver.
-
-This patch here being adding the userspace control of the switch and
-631bc8f0134ae being the patch that made the ZC change only update the
-specific bits rather than write an absolute value to the register.  This
-means that we end up with the audio unmuted but no user control over
-this at runtime.  From a user perspective I think this is fine, it's not
-ideal that there's no control but they can still record.
-
-Please include human readable descriptions of things like commits and
-issues being discussed in e-mail in your mails, this makes them much
-easier for humans to read.
-
-> 2. keep 631bc8f0134ae and add 694b14554d75f to 4.19, 5.2 and 5.3.
-
-This means the patch that makes ZC only update the ZC bits and also the
-patch that makes the mutes user controllable, the default being muted.
-As I pointed out up thread this would mean that someone upgrading to a
-newer stable may need to change their userspace to do the unmute instead
-of having things unconditionally unmuted by the driver.  This is not
-really what people expect from stable updates, we want them to be able
-to pull these in without thinking about it.  i
-
-To backport the addition of the controls to stable we'd need an
-additional change which sets the default for this control to unmuted,
-there's a case for having such a change upstream regardless but it's
-still not clear if any of these changes are really fixes in the sense
-that we mean for stable.
-
-> 3. add 631bc8f0134ae to 4.4, 4.9 and 4.14
->    add 694b14554d75f to 4.4-5.3
->    add 904a987345258 to 4.4
-
-This is basically the same as 2 except it adds some more user
-controllable mute controls with 904a987345258 and does different things
-in different versions for reasons I'm not clear on.  It has the same
-issue.
-
-> So this bug will be fixed in all supported versions.
-
-It is not clear that this is even a bug in the first place, it's not
-full functionality but that doesn't mean that it's a bug it just means
-that there's some missing functionality.
-
---bpVaumkpfGNUagdU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2omSgACgkQJNaLcl1U
-h9BFtwf/WoLBa6iKrS4oD2smJ7x7F9F12LWoy914JRUB1yrc5XVpYCUlO49bY3e5
-qFaPCMJi1VGslhCnWai614kNU4Utca3R04QaWyniljAiQuJdFz4GBDJCfeQgjr10
-rp082YJoky/l6d7uelGhsUmDgWIDtQVgs5Hnc/NniR0/94QAc55fh5TRSZD9U4KI
-7yuMh7kU9zl/05aHVIJ+YmrBuk7TqmCLAcfMqSfpeolvt5I0WvC4KyB0A0C7Ybbg
-0bpuIwzSMXsNPTo36fcoUvMhOaRxJ4TYchz65+wGWnLKVH8l3V3agJgKf60atwrd
-fc93BCk7uqBfZG+SxKFKhL3urP/vKw==
-=tOWv
------END PGP SIGNATURE-----
-
---bpVaumkpfGNUagdU--
+Shakeel
