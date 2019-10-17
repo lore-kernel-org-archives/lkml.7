@@ -2,169 +2,149 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1EFFA372B
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90059ECE599
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53A3321D80
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:25:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="kPLzGqgg"
+	by mail.kernel.org (Postfix) with ESMTP id 6D4132082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:26:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406914AbfJQBZj (ORCPT
+        id S2394864AbfJQB0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 21:25:39 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36988 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394713AbfJQBZi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 21:25:38 -0400
-Received: by mail-pl1-f194.google.com with SMTP id u20so295272plq.4
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 18:25:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=OYfGHq7Ua8XlIFWVnYrWlfnb+Qaiu3AuIcv4KZ3ENBU=;
-        b=kPLzGqggNUsPFDxV/H8ftNKVOlHtZarUZ2uO5M1Cl+hwXsMbW/vTrWwIjhfQ+3DWYJ
-         BAJOSuNbGvc+wZSDF5mXHgUtEzM/UBmDJTY+ncpQRCjrnopVjD47CaQs12J79yMzbmaJ
-         2HoVzjwx6/PntMBB3luM9yU1+3Xh96sr83vp0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OYfGHq7Ua8XlIFWVnYrWlfnb+Qaiu3AuIcv4KZ3ENBU=;
-        b=UD4suJEqKZfRGPt/1W4gpN97HXqeQG0hgkxWDbNFbsQVJavfO/gr0P3kYjs3YJwFfG
-         I/GrSZIPNGzsbhnASnIpkI/DPqQOVGkC/KxiIzTmYO0wdgsvTB81B5NzaVtA/290wA7O
-         cAJ4qhPBLPGRNiSvukfbb2RVGjUB3NYubkuwIrWksKa5wmdTZvGfNARLajHC5cIVLKqP
-         /RAef+UBAc7fw1ISw1NYXBHq+nXunD5/4B8dpO2atPNsZizOpWUDe/TT67LByEHQNFGF
-         RXDWvaInWfK8Q107UILVXP7tsCGp5cGLxA2aoF1WUTfgTUlpSePFIM704MMayakqFIS5
-         roXA==
-X-Gm-Message-State: APjAAAWf+QKbv4S0ERp6YQgKPMQL1oi2huO8TTAqXvhpX9EMWSLVsE3u
-        z5WnanY8jWAI2+X6YB+PoR1qfA==
-X-Google-Smtp-Source: APXvYqwQlBhRRBicY30cw6VPEISaJYd+4/odDPgj5HED+MoQwNbayPMmtq4wGs1t8T3sUU1Hp+309g==
-X-Received: by 2002:a17:902:8ec1:: with SMTP id x1mr1189452plo.314.1571275537371;
-        Wed, 16 Oct 2019 18:25:37 -0700 (PDT)
-Received: from localhost (ppp167-251-205.static.internode.on.net. [59.167.251.205])
-        by smtp.gmail.com with ESMTPSA id d4sm381964pjs.9.2019.10.16.18.25.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 18:25:36 -0700 (PDT)
-From:   Daniel Axtens <dja@axtens.net>
-To:     kasan-dev@googlegroups.com, linux-mm@kvack.org, x86@kernel.org,
-        aryabinin@virtuozzo.com, glider@google.com, luto@kernel.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        dvyukov@google.com, christophe.leroy@c-s.fr
-Cc:     linuxppc-dev@lists.ozlabs.org, gor@linux.ibm.com,
-        Daniel Axtens <dja@axtens.net>
-Subject: [PATCH v9 5/5] kasan debug: track pages allocated for vmalloc shadow
-Date:   Thu, 17 Oct 2019 12:25:06 +1100
-Message-Id: <20191017012506.28503-6-dja@axtens.net>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191017012506.28503-1-dja@axtens.net>
-References: <20191017012506.28503-1-dja@axtens.net>
+        Wed, 16 Oct 2019 21:26:01 -0400
+Received: from mga17.intel.com ([192.55.52.151]:24463 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727430AbfJQB0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 21:26:00 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 18:26:00 -0700
+X-IronPort-AV: E=Sophos;i="5.67,305,1566889200"; 
+   d="scan'208";a="189863500"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.239.13.123]) ([10.239.13.123])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 16 Oct 2019 18:25:57 -0700
+Subject: Re: [PATCH 1/4] KVM: VMX: rename {vmx,nested_vmx}_vcpu_setup
+ functions
+To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191015164033.87276-1-xiaoyao.li@intel.com>
+ <20191015164033.87276-2-xiaoyao.li@intel.com>
+ <82a41967-98ca-1bc8-fce3-77aaf18b0c1a@oracle.com>
+ <7d4f2202-d200-f24c-d4cb-dcdfdda7f3b7@intel.com>
+ <2cb1e187-c633-e11c-985c-24ad1e5434c2@oracle.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <b5e42cff-146d-d802-ce9b-e9b3299b9da9@intel.com>
+Date:   Thu, 17 Oct 2019 09:25:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <2cb1e187-c633-e11c-985c-24ad1e5434c2@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide the current number of vmalloc shadow pages in
-/sys/kernel/debug/kasan/vmalloc_shadow_pages.
+On 10/17/2019 2:09 AM, Krish Sadhukhan wrote:
+> 
+> On 10/15/19 6:27 PM, Xiaoyao Li wrote:
+>> On 10/16/2019 6:05 AM, Krish Sadhukhan wrote:
+>>>
+>>>
+>>> On 10/15/2019 09:40 AM, Xiaoyao Li wrote:
+>>>> Rename {vmx,nested_vmx}_vcpu_setup to {vmx,nested_vmx}_vmcs_setup,
+>>>> to match what they really do.
+>>>>
+>>>> No functional change.
+>>>>
+>>>> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+>>>> ---
+>>>>   arch/x86/kvm/vmx/nested.c | 2 +-
+>>>>   arch/x86/kvm/vmx/nested.h | 2 +-
+>>>>   arch/x86/kvm/vmx/vmx.c    | 9 +++------
+>>>>   3 files changed, 5 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+>>>> index 5e231da00310..7935422d311f 100644
+>>>> --- a/arch/x86/kvm/vmx/nested.c
+>>>> +++ b/arch/x86/kvm/vmx/nested.c
+>>>> @@ -5768,7 +5768,7 @@ static int vmx_set_nested_state(struct 
+>>>> kvm_vcpu *vcpu,
+>>>>       return ret;
+>>>>   }
+>>>> -void nested_vmx_vcpu_setup(void)
+>>>> +void nested_vmx_vmcs_setup(void)
+>>>>   {
+>>>>       if (enable_shadow_vmcs) {
+>>>>           vmcs_write64(VMREAD_BITMAP, __pa(vmx_vmread_bitmap));
+>>>> diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
+>>>> index 187d39bf0bf1..2be1ba7482c9 100644
+>>>> --- a/arch/x86/kvm/vmx/nested.h
+>>>> +++ b/arch/x86/kvm/vmx/nested.h
+>>>> @@ -11,7 +11,7 @@ void nested_vmx_setup_ctls_msrs(struct 
+>>>> nested_vmx_msrs *msrs, u32 ept_caps,
+>>>>                   bool apicv);
+>>>>   void nested_vmx_hardware_unsetup(void);
+>>>>   __init int nested_vmx_hardware_setup(int (*exit_handlers[])(struct 
+>>>> kvm_vcpu *));
+>>>> -void nested_vmx_vcpu_setup(void);
+>>>> +void nested_vmx_vmcs_setup(void);
+>>>>   void nested_vmx_free_vcpu(struct kvm_vcpu *vcpu);
+>>>>   int nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu, bool 
+>>>> from_vmentry);
+>>>>   bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 
+>>>> exit_reason);
+>>>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>>>> index e660e28e9ae0..58b77a882426 100644
+>>>> --- a/arch/x86/kvm/vmx/vmx.c
+>>>> +++ b/arch/x86/kvm/vmx/vmx.c
+>>>> @@ -4161,15 +4161,12 @@ static void ept_set_mmio_spte_mask(void)
+>>>>   #define VMX_XSS_EXIT_BITMAP 0
+>>>> -/*
+>>>> - * Sets up the vmcs for emulated real mode.
+>>>> - */
+>>>> -static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
+>>>> +static void vmx_vmcs_setup(struct vcpu_vmx *vmx)
+>>>>   {
+>>>>       int i;
+>>>>       if (nested)
+>>>> -        nested_vmx_vcpu_setup();
+>>>> +        nested_vmx_vmcs_setup();
+>>>>       if (cpu_has_vmx_msr_bitmap())
+>>>>           vmcs_write64(MSR_BITMAP, __pa(vmx->vmcs01.msr_bitmap));
+>>>> @@ -6777,7 +6774,7 @@ static struct kvm_vcpu *vmx_create_vcpu(struct 
+>>>> kvm *kvm, unsigned int id)
+>>>>       cpu = get_cpu();
+>>>>       vmx_vcpu_load(&vmx->vcpu, cpu);
+>>>>       vmx->vcpu.cpu = cpu;
+>>>> -    vmx_vcpu_setup(vmx);
+>>>> +    vmx_vmcs_setup(vmx);
+>>>>       vmx_vcpu_put(&vmx->vcpu);
+>>>>       put_cpu();
+>>>>       if (cpu_need_virtualize_apic_accesses(&vmx->vcpu)) {
+>>>
+>>> May be we should rename vmx_vcpu_reset() to vmx_vmcs_reset()  as well  ?
+>>
+>> Not really. vmx_vcpu_reset() not only resets vmcs but also the 
+>> emulated field of vmx vcpu.
+> 
+> It would be a better organization of the code if the resetting of the 
+> VMCS fields were placed in a separate function.
+> 
 
-Signed-off-by: Daniel Axtens <dja@axtens.net>
+OK, will do it in next version.
 
----
-
-v8: rename kasan_vmalloc/shadow_pages -> kasan/vmalloc_shadow_pages
-
-On v4 (no dynamic freeing), I saw the following approximate figures
-on my test VM:
-
- - fresh boot: 720
- - after test_vmalloc: ~14000
-
-With v5 (lazy dynamic freeing):
-
- - boot: ~490-500
- - running modprobe test_vmalloc pushes the figures up to sometimes
-    as high as ~14000, but they drop down to ~560 after the test ends.
-    I'm not sure where the extra sixty pages are from, but running the
-    test repeately doesn't cause the number to keep growing, so I don't
-    think we're leaking.
- - with vmap_stack, spawning tasks pushes the figure up to ~4200, then
-    some clearing kicks in and drops it down to previous levels again.
----
- mm/kasan/common.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
-
-diff --git mm/kasan/common.c mm/kasan/common.c
-index 81521d180bec..ac05038afa5a 100644
---- mm/kasan/common.c
-+++ mm/kasan/common.c
-@@ -35,6 +35,7 @@
- #include <linux/vmalloc.h>
- #include <linux/bug.h>
- #include <linux/uaccess.h>
-+#include <linux/debugfs.h>
- 
- #include <asm/tlbflush.h>
- 
-@@ -750,6 +751,8 @@ core_initcall(kasan_memhotplug_init);
- #endif
- 
- #ifdef CONFIG_KASAN_VMALLOC
-+static u64 vmalloc_shadow_pages;
-+
- static int kasan_populate_vmalloc_pte(pte_t *ptep, unsigned long addr,
- 				      void *unused)
- {
-@@ -782,6 +785,7 @@ static int kasan_populate_vmalloc_pte(pte_t *ptep, unsigned long addr,
- 	if (likely(pte_none(*ptep))) {
- 		set_pte_at(&init_mm, addr, ptep, pte);
- 		page = 0;
-+		vmalloc_shadow_pages++;
- 	}
- 	spin_unlock(&init_mm.page_table_lock);
- 	if (page)
-@@ -836,6 +840,7 @@ static int kasan_depopulate_vmalloc_pte(pte_t *ptep, unsigned long addr,
- 		pte_clear(&init_mm, addr, ptep);
- 		flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
- 		free_page(page);
-+		vmalloc_shadow_pages--;
- 	}
- 	spin_unlock(&init_mm.page_table_lock);
- 
-@@ -954,4 +959,25 @@ void kasan_release_vmalloc(unsigned long start, unsigned long end,
- 				       (unsigned long)shadow_end);
- 	}
- }
-+
-+static __init int kasan_init_debugfs(void)
-+{
-+	struct dentry *root, *count;
-+
-+	root = debugfs_create_dir("kasan", NULL);
-+	if (IS_ERR(root)) {
-+		if (PTR_ERR(root) == -ENODEV)
-+			return 0;
-+		return PTR_ERR(root);
-+	}
-+
-+	count = debugfs_create_u64("vmalloc_shadow_pages", 0444, root,
-+				   &vmalloc_shadow_pages);
-+
-+	if (IS_ERR(count))
-+		return PTR_ERR(root);
-+
-+	return 0;
-+}
-+late_initcall(kasan_init_debugfs);
- #endif
--- 
-2.20.1
-
+> Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+> 
