@@ -2,147 +2,136 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FD5ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D65ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5018621A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:37:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571323062;
-	bh=UNI1RVEUVyJZgOCPSuehWxBlm9XTCYYx3S1BUA2rAEY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vlPVbbUQ2u2riCdolTJZcWHwV2hLD2vUq1edGj+FdJ1tddCq8GsS82awUMYR8R3pA
-	 5sMvyweDTJB66+bd8uwIavTKh96SZQFlpxLCE5aT0emLYHoD05U0ibt/5T7qH8kW1c
-	 C9EJPwRjzA9BYF/bPkmsEeLOUS0K+Voe8f08AtM0=
+	by mail.kernel.org (Postfix) with ESMTP id E911D21A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:39:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403872AbfJQOhl (ORCPT
+        id S2403995AbfJQOjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 10:37:41 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40278 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726583AbfJQOhk (ORCPT
+        Thu, 17 Oct 2019 10:39:02 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:40934 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403882AbfJQOjC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:37:40 -0400
-Received: by mail-ot1-f67.google.com with SMTP id y39so2078450ota.7;
-        Thu, 17 Oct 2019 07:37:40 -0700 (PDT)
+        Thu, 17 Oct 2019 10:39:02 -0400
+Received: by mail-io1-f70.google.com with SMTP id r20so3547554ioh.7
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 07:39:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EVefoS1uox1PXbNp8a2dEzENp3d5CAL7i63ZLMJgDfE=;
-        b=ouZRnhvp200sk7eGPGvKGLsf8vspduaNXWgvCMORq3OgQ4m/FOEwzbr1xuOr+AT/uL
-         wkfRLAobQO7LI6VSUl/Rg9Hk15/nrJTL4uOKgwOKsRabEkJ80spTN8ROnNHVADRFD3eF
-         pS3CaX2Ruidk6IGWFxSQD8oOvo9d7xZOI+bu/K4UGgxhmYVRpPaSdmoDO9JFtLheCLaB
-         d+2xwyYtWsBhBx/E1G4Io7NYbBA6bFNoSS/XONOWn2kthiioU9QR+fSDKquvdkc+0n5c
-         oho8r/G3UEJ8+A+LSy2+ag4tuUtCHVU+cm9sZSrsCMvzrNE43KRgoSh2q9U5yU22XjOp
-         Wxtw==
-X-Gm-Message-State: APjAAAUMxsELcUg2sMAy6ng2iojN4sEyYgpGvpYePEB+T1FDySkTXycb
-        H6d5tkOaRQt4YPVh+unoQrzdy04=
-X-Google-Smtp-Source: APXvYqwMb70hm3fWXirGCzrqwCzu4GcP6vYWFZa5Tyv1x+cngwflxxpcOVSGp1wCM55OXRAM1LbZUg==
-X-Received: by 2002:a05:6830:17db:: with SMTP id p27mr3446871ota.258.1571323059553;
-        Thu, 17 Oct 2019 07:37:39 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id x140sm560586oix.42.2019.10.17.07.37.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 07:37:38 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 09:37:38 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V5 2/3] dt-bindings: Add Logic PD Type 28 display panel
-Message-ID: <20191017143738.GA10960@bogus>
-References: <20191016135147.7743-1-aford173@gmail.com>
- <20191016135147.7743-2-aford173@gmail.com>
- <20191016144018.GG5175@pendragon.ideasonboard.com>
- <CAHCN7xJhHHoia_o4rb0VgvCP71X94Pvem684F2quMijNNpNxVA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to:content-transfer-encoding;
+        bh=hr+qfDhJzeJp7vdkzu9IVbT0tbr9FcNOmsYLOuY0drc=;
+        b=Bb67zxxXuIT3pmmSZ9LI0FhxXCSDOV/Q6YNN8UDuo/bEC+PfeKZM6aVFssS4j4mEXM
+         53YRLUJ/TsFCtwrTpxhmt1yT7bZZRqwWAdwHlC1SGu3EHzPHpKraGa4yGfkB1GXJDq/9
+         s0u62GUG0GWl5QGxkzmg+ZD+bE3p6EIXgwwzbGyxL9MS95g66yAbdtdMOacyxipIl5U5
+         19nOh3UtGxgEejb5QSLu8ghQMps4lVv9tM6ecWkQh4yo5s5cba4LMCK+f7HLc4FGoGVf
+         q1sKYo/gf4XlTtseS3t92MKklDE7SXoXDOqKhSLGne7JYqsV7dwPtv3Xe6KMR9QJUc2j
+         VJPQ==
+X-Gm-Message-State: APjAAAXMASj+GT8wAlN3v9GfuTtFcjdpHyWpQOlY6Qd8EYlkIfDB41Pm
+        SBN0uh8v0rZQgovXMJ8k2uV6uQ2VH1gYdS//Pxdj+ZtJVGXo
+X-Google-Smtp-Source: APXvYqycSdc0bHPvjNcUJNsQsbiFtG9+IS4525FsG0pfAD/U1fz7FElgotqdAQu6ehb5JwQXExFrbgbywmtq+gLMF7imXWpexlDk
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHCN7xJhHHoia_o4rb0VgvCP71X94Pvem684F2quMijNNpNxVA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a92:5f06:: with SMTP id t6mr4260706ilb.203.1571323140873;
+ Thu, 17 Oct 2019 07:39:00 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 07:39:00 -0700
+In-Reply-To: <1571320940.5264.11.camel@suse.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a3ab9005951c2d39@google.com>
+Subject: Re: KMSAN: uninit-value in ax88172a_bind
+From:   syzbot <syzbot+a8d4acdad35e6bbca308@syzkaller.appspotmail.com>
+To:     allison@lohutok.net, davem@davemloft.net, glider@google.com,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+        oneukum@suse.com, opensource@jilayne.com, swinslow@gmail.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 09:55:11AM -0500, Adam Ford wrote:
-> On Wed, Oct 16, 2019 at 9:40 AM Laurent Pinchart
-> <laurent.pinchart@ideasonboard.com> wrote:
-> >
-> > Hi Adam,
-> >
-> > Thank you for the patch.
-> >
-> > On Wed, Oct 16, 2019 at 08:51:46AM -0500, Adam Ford wrote:
-> > > This patch adds documentation of device tree bindings for the WVGA panel
-> > > Logic PD Type 28 display.
-> > >
-> > > Signed-off-by: Adam Ford <aford173@gmail.com>
-> > > ---
-> > > V5:  Replace GPIO_ACTIVE_HIGH with 0 to fix make dt_binding_check -k
-> > > V4:  Update per Rob H's suggestions and copy other panel yaml example from 5.4-rc1
-> > > V3:  Correct build errors from 'make dt_binding_check'
-> > > V2:  Use YAML instead of TXT for binding
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml b/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
-> > > new file mode 100644
-> > > index 000000000000..2834287b8d88
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
-> > > @@ -0,0 +1,42 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/display/panel/logicpd,type28.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Logic PD Type 28 4.3" WQVGA TFT LCD panel
-> > > +
-> > > +maintainers:
-> > > +  - Adam Ford <aford173@gmail.com>
-> > > +
-> > > +allOf:
-> > > +  - $ref: panel-common.yaml#
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: logicpd,type28
-> > > +
-> > > +  power-supply: true
-> > > +  enable-gpios: true
-> > > +  backlight: true
-> > > +  port: true
-> > > +
-> > > +required:
-> > > +  - compatible
-> >
-> > Should the port be required too ? Apart from that,
-> 
-> I supposed that's true, but I used ampire,am-480272h3tmqw-t01h.yaml as
-> the example, and it doesn't list it as a required item.
-> Is there anything else I need to address?  I feel like I'm trying to
-> hit a moving target.
-
-'port' can be omitted because the panel can be a child node of 
-the display controller instead. That's decided by the display controller 
-binding, not the panel binding.
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-Rob
+SGVsbG8sDQoNCnN5emJvdCBoYXMgdGVzdGVkIHRoZSBwcm9wb3NlZCBwYXRjaCBidXQgdGhlIHJl
+cHJvZHVjZXIgc3RpbGwgdHJpZ2dlcmVkICANCmNyYXNoOg0Ka2VybmVsIEJVRyBhdCBkcml2ZXJz
+L25ldC9waHkvbWRpb19idXMuYzpMSU5FIQ0KDQphc2l4IDUtMTowLjc4IGV0aDE6IHVucmVnaXN0
+ZXIgJ2FzaXgnIHVzYi1kdW1teV9oY2QuNC0xLCBBU0lYIEFYODgxNzJBIFVTQiAgDQoyLjAgRXRo
+ZXJuZXQNCmFzaXggNS0xOjAuNzggZXRoMSAodW5yZWdpc3RlcmVkKTogZGVyZWdpc3RlcmluZyBt
+ZGlvIGJ1cyDvv70b77+9I++/ve+/ve+/ve+/vQgNCi0tLS0tLS0tLS0tLVsgY3V0IGhlcmUgXS0t
+LS0tLS0tLS0tLQ0Ka2VybmVsIEJVRyBhdCBkcml2ZXJzL25ldC9waHkvbWRpb19idXMuYzo0NTMh
+DQppbnZhbGlkIG9wY29kZTogMDAwMCBbIzFdIFNNUA0KQ1BVOiAxIFBJRDogMTE4NTUgQ29tbTog
+a3dvcmtlci8xOjQgTm90IHRhaW50ZWQgNS40LjAtcmMyKyAjMA0KSGFyZHdhcmUgbmFtZTogR29v
+Z2xlIEdvb2dsZSBDb21wdXRlIEVuZ2luZS9Hb29nbGUgQ29tcHV0ZSBFbmdpbmUsIEJJT1MgIA0K
+R29vZ2xlIDAxLzAxLzIwMTENCldvcmtxdWV1ZTogdXNiX2h1Yl93cSBodWJfZXZlbnQNClJJUDog
+MDAxMDptZGlvYnVzX3VucmVnaXN0ZXIrMHgyZTMvMHgzNTAgZHJpdmVycy9uZXQvcGh5L21kaW9f
+YnVzLmM6NDUzDQpDb2RlOiBlOCBkMiBkMiA1ZiBmZSBlYiAzYiA4YiA3ZCBkNCBlOCA2OCBkMiA5
+YyBmYiBlOSA3OCBmZCBmZiBmZiA4YiAzYSBlOCAgDQo1YyBkMiA5YyBmYiA0MSA4MyBmZSAwMiAw
+ZiA4NCA5MyBmZCBmZiBmZiBlOCBhZCAyNiAzOCBmYiA8MGY+IDBiIDQ0IDg5IGY3ICANCmU4IDQz
+IGQyIDljIGZiIDRkIDg1IGZmIDc1IGE1IGU4IDk5IDI2IDM4IGZiIDQ4IDhiDQpSU1A6IDAwMTg6
+ZmZmZjg4ODA4ZTgwZjNmMCBFRkxBR1M6IDAwMDEwMjkzDQpSQVg6IGZmZmZmZmZmODY2OWUxOTMg
+UkJYOiAwMDAwMDAwMDAwMDAwMDAwIFJDWDogZmZmZjg4ODA5MGVkM2M4MA0KUkRYOiAwMDAwMDAw
+MDAwMDAwMDAwIFJTSTogZmZmZmVhMDAwMmM0ZDMxMCBSREk6IDAwMDAwMDAwOGRjM2MzMTgNClJC
+UDogZmZmZjg4ODA4ZTgwZjQ0OCBSMDg6IDAwMDAwMDAwMDAwMDAwMDIgUjA5OiBmZmZmODg4MjFm
+Yzk5YzM4DQpSMTA6IDAwMDAwMDAwMDAwMDAwMDQgUjExOiBmZmZmZmZmZjg2NjY4N2IwIFIxMjog
+ZmZmZjg4ODA4ZGMzYzMxOA0KUjEzOiAwMDAwMDAwMDAwMDAwMDAwIFIxNDogMDAwMDAwMDAxZTM5
+MjY4MCBSMTU6IGZmZmY4ODgwOTBlZDQ2MjgNCkZTOiAgMDAwMDAwMDAwMDAwMDAwMCgwMDAwKSBH
+UzpmZmZmODg4MTJmZDAwMDAwKDAwMDApIGtubEdTOjAwMDAwMDAwMDAwMDAwMDANCkNTOiAgMDAx
+MCBEUzogMDAwMCBFUzogMDAwMCBDUjA6IDAwMDAwMDAwODAwNTAwMzMNCkNSMjogMDAwMDAwMDAw
+MDcxMzZiNCBDUjM6IDAwMDAwMDAwOGI4ZmQwMDAgQ1I0OiAwMDAwMDAwMDAwMTQwNmUwDQpEUjA6
+IDAwMDAwMDAwMDAwMDAwMDAgRFIxOiAwMDAwMDAwMDAwMDAwMDAwIERSMjogMDAwMDAwMDAwMDAw
+MDAwMA0KRFIzOiAwMDAwMDAwMDAwMDAwMDAwIERSNjogMDAwMDAwMDBmZmZlMGZmMCBEUjc6IDAw
+MDAwMDAwMDAwMDA0MDANCkNhbGwgVHJhY2U6DQogIGF4ODgxNzJhX3JlbW92ZV9tZGlvIGRyaXZl
+cnMvbmV0L3VzYi9heDg4MTcyYS5jOjEyNCBbaW5saW5lXQ0KICBheDg4MTcyYV91bmJpbmQrMHgx
+MTkvMHgxYTAgZHJpdmVycy9uZXQvdXNiL2F4ODgxNzJhLmM6Mjc0DQogIHVzYm5ldF9kaXNjb25u
+ZWN0KzB4MjA5LzB4NjYwIGRyaXZlcnMvbmV0L3VzYi91c2JuZXQuYzoxNjExDQogIHVzYl91bmJp
+bmRfaW50ZXJmYWNlKzB4M2EyLzB4ZGQwIGRyaXZlcnMvdXNiL2NvcmUvZHJpdmVyLmM6NDIzDQog
+IF9fZGV2aWNlX3JlbGVhc2VfZHJpdmVyIGRyaXZlcnMvYmFzZS9kZC5jOjExMzQgW2lubGluZV0N
+CiAgZGV2aWNlX3JlbGVhc2VfZHJpdmVyX2ludGVybmFsKzB4OTZmLzB4ZDgwIGRyaXZlcnMvYmFz
+ZS9kZC5jOjExNjUNCiAgZGV2aWNlX3JlbGVhc2VfZHJpdmVyKzB4NGIvMHg2MCBkcml2ZXJzL2Jh
+c2UvZGQuYzoxMTg4DQogIGJ1c19yZW1vdmVfZGV2aWNlKzB4NGJmLzB4NjcwIGRyaXZlcnMvYmFz
+ZS9idXMuYzo1MzINCiAgZGV2aWNlX2RlbCsweGNkNS8weDFjYjAgZHJpdmVycy9iYXNlL2NvcmUu
+YzoyMzc1DQogIHVzYl9kaXNhYmxlX2RldmljZSsweDU2Ny8weDExNTAgZHJpdmVycy91c2IvY29y
+ZS9tZXNzYWdlLmM6MTI0MQ0KICB1c2JfZGlzY29ubmVjdCsweDUxZS8weGQ2MCBkcml2ZXJzL3Vz
+Yi9jb3JlL2h1Yi5jOjIxOTkNCiAgaHViX3BvcnRfY29ubmVjdCBkcml2ZXJzL3VzYi9jb3JlL2h1
+Yi5jOjQ5NDkgW2lubGluZV0NCiAgaHViX3BvcnRfY29ubmVjdF9jaGFuZ2UgZHJpdmVycy91c2Iv
+Y29yZS9odWIuYzo1MjEzIFtpbmxpbmVdDQogIHBvcnRfZXZlbnQgZHJpdmVycy91c2IvY29yZS9o
+dWIuYzo1MzU5IFtpbmxpbmVdDQogIGh1Yl9ldmVudCsweDNmZDAvMHg3MmYwIGRyaXZlcnMvdXNi
+L2NvcmUvaHViLmM6NTQ0MQ0KICBwcm9jZXNzX29uZV93b3JrKzB4MTU3Mi8weDFlZjAga2VybmVs
+L3dvcmtxdWV1ZS5jOjIyNjkNCiAgd29ya2VyX3RocmVhZCsweDExMWIvMHgyNDYwIGtlcm5lbC93
+b3JrcXVldWUuYzoyNDE1DQogIGt0aHJlYWQrMHg0YjUvMHg0ZjAga2VybmVsL2t0aHJlYWQuYzoy
+NTYNCiAgcmV0X2Zyb21fZm9yaysweDM1LzB4NDAgYXJjaC94ODYvZW50cnkvZW50cnlfNjQuUzoz
+NTUNCk1vZHVsZXMgbGlua2VkIGluOg0KLS0tWyBlbmQgdHJhY2UgYzJkYzBmOTM0NWE1NTA4OSBd
+LS0tDQpSSVA6IDAwMTA6bWRpb2J1c191bnJlZ2lzdGVyKzB4MmUzLzB4MzUwIGRyaXZlcnMvbmV0
+L3BoeS9tZGlvX2J1cy5jOjQ1Mw0KQ29kZTogZTggZDIgZDIgNWYgZmUgZWIgM2IgOGIgN2QgZDQg
+ZTggNjggZDIgOWMgZmIgZTkgNzggZmQgZmYgZmYgOGIgM2EgZTggIA0KNWMgZDIgOWMgZmIgNDEg
+ODMgZmUgMDIgMGYgODQgOTMgZmQgZmYgZmYgZTggYWQgMjYgMzggZmIgPDBmPiAwYiA0NCA4OSBm
+NyAgDQplOCA0MyBkMiA5YyBmYiA0ZCA4NSBmZiA3NSBhNSBlOCA5OSAyNiAzOCBmYiA0OCA4Yg0K
+UlNQOiAwMDE4OmZmZmY4ODgwOGU4MGYzZjAgRUZMQUdTOiAwMDAxMDI5Mw0KUkFYOiBmZmZmZmZm
+Zjg2NjllMTkzIFJCWDogMDAwMDAwMDAwMDAwMDAwMCBSQ1g6IGZmZmY4ODgwOTBlZDNjODANClJE
+WDogMDAwMDAwMDAwMDAwMDAwMCBSU0k6IGZmZmZlYTAwMDJjNGQzMTAgUkRJOiAwMDAwMDAwMDhk
+YzNjMzE4DQpSQlA6IGZmZmY4ODgwOGU4MGY0NDggUjA4OiAwMDAwMDAwMDAwMDAwMDAyIFIwOTog
+ZmZmZjg4ODIxZmM5OWMzOA0KUjEwOiAwMDAwMDAwMDAwMDAwMDA0IFIxMTogZmZmZmZmZmY4NjY2
+ODdiMCBSMTI6IGZmZmY4ODgwOGRjM2MzMTgNClIxMzogMDAwMDAwMDAwMDAwMDAwMCBSMTQ6IDAw
+MDAwMDAwMWUzOTI2ODAgUjE1OiBmZmZmODg4MDkwZWQ0NjI4DQpGUzogIDAwMDAwMDAwMDAwMDAw
+MDAoMDAwMCkgR1M6ZmZmZjg4ODEyZmQwMDAwMCgwMDAwKSBrbmxHUzowMDAwMDAwMDAwMDAwMDAw
+DQpDUzogIDAwMTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAwMDAwMDgwMDUwMDMzDQpDUjI6
+IDAwMDAwMDAwMDA3MTM2YjQgQ1IzOiAwMDAwMDAwMDhiOGZkMDAwIENSNDogMDAwMDAwMDAwMDE0
+MDZlMA0KRFIwOiAwMDAwMDAwMDAwMDAwMDAwIERSMTogMDAwMDAwMDAwMDAwMDAwMCBEUjI6IDAw
+MDAwMDAwMDAwMDAwMDANCkRSMzogMDAwMDAwMDAwMDAwMDAwMCBEUjY6IDAwMDAwMDAwZmZmZTBm
+ZjAgRFI3OiAwMDAwMDAwMDAwMDAwNDAwDQoNCg0KVGVzdGVkIG9uOg0KDQpjb21taXQ6ICAgICAg
+ICAgZmExNjkwMjUga21zYW46IGdldCByaWQgb2YgdW51c2VkIHN0YXRpYyBmdW5jdGlvbnMgaW4g
+a21zYS4uDQpnaXQgdHJlZTogICAgICAgaHR0cHM6Ly9naXRodWIuY29tL2dvb2dsZS9rbXNhbi5n
+aXQNCmNvbnNvbGUgb3V0cHV0OiBodHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94L2xvZy50
+eHQ/eD0xN2ExMjhjZjYwMDAwMA0Ka2VybmVsIGNvbmZpZzogIGh0dHBzOi8vc3l6a2FsbGVyLmFw
+cHNwb3QuY29tL3gvLmNvbmZpZz94PTQ5NTQ4Nzk4ZTg3ZDMyZDcNCmRhc2hib2FyZCBsaW5rOiBo
+dHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS9idWc/ZXh0aWQ9YThkNGFjZGFkMzVlNmJiY2Ez
+MDgNCmNvbXBpbGVyOiAgICAgICBjbGFuZyB2ZXJzaW9uIDkuMC4wICgvaG9tZS9nbGlkZXIvbGx2
+bS9jbGFuZyAgDQo4MGZlZTI1Nzc2YzJmYjYxZTc0YzFlY2IxYTUyMzM3NWMyNTAwYjY5KQ0KcGF0
+Y2g6ICAgICAgICAgIGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvcGF0Y2guZGlmZj94
+PTEzMWEzMjI3NjAwMDAwDQoNCg==
