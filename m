@@ -2,81 +2,105 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B378AECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DABC8ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 843F021835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8C242064B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:11:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="w0icLiUh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ojv0y5NO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502019AbfJQLKF (ORCPT
+        id S2502038AbfJQLLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 07:10:05 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:39936 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393652AbfJQLKE (ORCPT
+        Thu, 17 Oct 2019 07:11:23 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:32864 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392327AbfJQLLX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 07:10:04 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9HBA2qh074180;
-        Thu, 17 Oct 2019 06:10:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571310602;
-        bh=36lj4RvL90wzg2T6qM8w0kFLM+Ly3Ln3Vm8scPP+eLA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=w0icLiUhM5cPQzrVzEak9HGrWAqTCJlfSHaTEes+LOXYLE2qgXTv1DdHLxIBGjwsv
-         Mbo8S74dv/KXqDSh/I4SVRYLfMntc5fWBskhSTktN53r7xGKldY6N5XsQvC+0No1w6
-         CrxuPLnI38/QIFDOrOWfYXHrKJ8NFHSH7W+RvgoI=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9HBA2lT103516
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 17 Oct 2019 06:10:02 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 17
- Oct 2019 06:10:01 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 17 Oct 2019 06:10:01 -0500
-Received: from [172.24.190.212] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9HB9wrB092302;
-        Thu, 17 Oct 2019 06:10:00 -0500
-Subject: Re: [PATCH] ARM: davinci: dm365-evm: Add Fixed regulators needed for
- tlv320aic3101
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <bgolaszewski@baylibre.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190830102252.22488-1-peter.ujfalusi@ti.com>
-From:   Sekhar Nori <nsekhar@ti.com>
-Message-ID: <e2e10e39-aa21-1c53-75b2-18013937a841@ti.com>
-Date:   Thu, 17 Oct 2019 16:39:57 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 17 Oct 2019 07:11:23 -0400
+Received: by mail-wr1-f68.google.com with SMTP id b9so1885744wrs.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 04:11:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+zYZA+RgbruuoZvP4gkp7U+7iA9beMBCPXED1O6rxro=;
+        b=Ojv0y5NOzDLkEhMe+JvYEQ5b68BsGM46pvx0kl7Scs0gXDS6BmgeIZuqZb6REC5csc
+         0LcdLYiFote/zJL4TQLOI4dlimKEvU2jxYwSf94j9n3z5kai++Y8KXpmEonGdnTGL13B
+         gbro3mPG58ZggyTYyTfR6lH9gJrtmZCgdfAS/xATycYBeY1i383OgUhjqRu9wOip/ukr
+         pqhy4pFxZ3b8ekWCqV7UKacLskxCValbHEeCU9VDeD6Zps3jfQLxHL+VRFclSQJdEOAD
+         BUz/q2ec1vg60IAstc9b7rz5USv1l+a5CkH3RrnuhzoJy5n9oLFghrylBWxxDtQD3mPp
+         axTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+zYZA+RgbruuoZvP4gkp7U+7iA9beMBCPXED1O6rxro=;
+        b=nK7uIoaa5TAtG+tQvLf4VZTfVDQYWFAnU8wqsofh+Ta4CAjOAtQ+YoEGqmf3pTIl1o
+         3UCbAgzzbbsCR2XT4u9mS4xkTIbjKR35+FMPJ9Wt0fLa+lOMjMfYktstY6Fbwg6r933q
+         gfXbKCd1VPpXmH/kvAYhOB5y0fK+yk8CqXNudSguswTpYdHAe/ktqWubuIJCnocKBGAn
+         j+ZWsKSbwnzagCGxufWvyFxDcn+T5bX+MLnFvFL8WyCjHFPzNXgnt4jDk9jHGf8Kh050
+         LDDyOgVQL2wSUEeBW9P4B8Am90/uV+9B2MXObkV7KvS3hJChieV+KceECaZqVCi4h0E+
+         jOJQ==
+X-Gm-Message-State: APjAAAUpfKaWc56b5XSBEEFWJUdohZszt/MLgs/Stb0sPAmt3VBk+geB
+        hENY8mXKUm+UxEFB9Oq68wic734xcZU=
+X-Google-Smtp-Source: APXvYqzL2rz8o/7HAh35iFK8WOl7olxFOTAEgWWsnB008UBi/LWdcLZvpXnwlj6NQC5/VD0TIl7kBQ==
+X-Received: by 2002:adf:df05:: with SMTP id y5mr2740030wrl.84.1571310680779;
+        Thu, 17 Oct 2019 04:11:20 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:7687:11a4:4657:121d])
+        by smtp.gmail.com with ESMTPSA id a204sm2447892wmh.21.2019.10.17.04.11.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 04:11:20 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 12:11:16 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Douglas Raillard <douglas.raillard@arm.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        mingo@redhat.com, rjw@rjwysocki.net, viresh.kumar@linaro.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, qperret@qperret.net,
+        patrick.bellasi@matbug.net, dh.han@samsung.com
+Subject: Re: [RFC PATCH v3 0/6] sched/cpufreq: Make schedutil energy aware
+Message-ID: <20191017111116.GA27006@google.com>
+References: <20191011134500.235736-1-douglas.raillard@arm.com>
+ <20191014145315.GZ2311@hirez.programming.kicks-ass.net>
+ <a1ce67d7-62c3-b78b-1d87-23ef4dbc2274@arm.com>
+ <20191017095015.GI2311@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20190830102252.22488-1-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191017095015.GI2311@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/08/19 3:52 PM, Peter Ujfalusi wrote:
-> The codec driver needs correct regulators in order to probe.
-> Both VCC_3V3 and VCC_1V8 is always on fixed regulators on the board.
+On Thursday 17 Oct 2019 at 11:50:15 (+0200), Peter Zijlstra wrote:
+> Now, the thing is, we use map_util_freq() in more places, and should we
+> not reflect this increase in C for all of them? That is, why is this
+> patch changing get_next_freq() and not map_util_freq().
 > 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> I don't think that question is answered in the Changelogs.
+> 
+> Exactly because it does change the energy consumption (it must) should
+> that not also be reflected in the EAS logic?
 
-Applied for v5.4
+Right that shouldn't hurt and keep things consistent. That probably
+won't have a huge impact in practice (the boost should be != 0 only when
+the util signals haven't converged IIUC, which is a case where the EAS
+calculation is already 'wrong' anyway), but that still feels like the
+right thing to do.
+
+> I'm still thinking about the exact means you're using to raise C; that
+> is, the 'util - util_est' as cost_margin. It hurts my brain still.
+
++1 ...
 
 Thanks,
-Sekhar
+Quentin
