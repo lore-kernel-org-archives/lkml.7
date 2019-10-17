@@ -2,107 +2,90 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5288FA3728
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BB0FA372B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A2892053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:43:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KRNCLJb5"
+	by mail.kernel.org (Postfix) with ESMTP id 94E7121A49
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571280648;
+	bh=sTZxZi+EvaRc2jbPlVYU7AjokigXvgJH+X0xEfGPUv8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WG7GOPNj908RsjbKRI68B9jrvhrYcXR1WtkmzEGrqljYEOguxQiX3oUrf90A61ER+
+	 HNN4jMeX1E2QOgdqNq/fZEJhwoYwSBwnT/lJYnkcfZ4m2gfsPiTCxk7lgPql45RCIM
+	 v3OD9DbS899uuhCDrQjAJLng4X6iiMfiCBr2VtEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407442AbfJQCnX (ORCPT
+        id S2390441AbfJQCup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 22:43:23 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42024 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388198AbfJQCnV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 22:43:21 -0400
-Received: by mail-pl1-f194.google.com with SMTP id e5so363131pls.9
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 19:43:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yrqLYMo728235YBWz2v13YUKhg9+UyvipsJm/DfRcsU=;
-        b=KRNCLJb5VccX6YbkyBGLsjizRwutMxkJvqbOSEwLHZcbFZ/MC2xT6oQyeYv9kHx3a5
-         SIw6ymVVh5WR2KDSpUwWsyC5U8+mQrvW2yhX8VHGz68x02gbVIdivs78/pT3nFJJ4ees
-         1B8sTSmuEiURIOkLYN2RoHc+SwBmmQ5YPp8SvKDOZFnU8uwpZS+jcZNo070uJGmdmt72
-         upnkJ8pzw+v2BhUmhG5VTQSvai4pBSo/0xge8yX/S3RyJo5LQCPGud+wCekEwUJwHyqg
-         BSuw8pL2Sur5K2nD7WPERt/A8p6zLMDeAAPSm4reMyN41Y8IHjPxnStvRSVhFvS+84g0
-         aSHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yrqLYMo728235YBWz2v13YUKhg9+UyvipsJm/DfRcsU=;
-        b=kvleuemgBxzkH5OC33jitsEebjg/zVxnVvQLbxsnsabag/3Gs9duRdKY6PH+4w8+UQ
-         hR5nLVt65LpNPlOCYs+pCxtBeLL6vOWXcZpdxoUCDz3+UWnhEcGNf8NeBavW4ltQmOnq
-         PcXkxGHkqqMmrpOK5197h9BX04wkpeSOIWIghfF4Je72/MAFFnQAzoVIhIJe63zRhrsP
-         1EVgTutB/p4LN7RJyp7Gb8zt58jQ1OPqMNm7TdTObK4IdLGYpFF2h8o5sZTTh0I5m+g+
-         qzEm7p4k6LUBw+26grmj4GJfSiRrnR+GQ2ErnrWFh7qIWWjTEMWN3nLHOfEI0ExGs+3c
-         qmUw==
-X-Gm-Message-State: APjAAAV6ZRdxAiFqur9M3lfrIS8S3ajvylxOnbW0/jgBfaUO4Qirw+Lr
-        TirCyIuRSJNxe35QosGT+Kp3nw==
-X-Google-Smtp-Source: APXvYqzBSm5KQJhD1bgMwV0FdJUZEJEIfD+nzymxlKuEgr074kmwn3aWvd/ylkFk2SznWsMkZyei7w==
-X-Received: by 2002:a17:902:a5c9:: with SMTP id t9mr1380197plq.99.1571280200592;
-        Wed, 16 Oct 2019 19:43:20 -0700 (PDT)
-Received: from localhost ([122.172.151.112])
-        by smtp.gmail.com with ESMTPSA id d20sm473357pfq.88.2019.10.16.19.43.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 16 Oct 2019 19:43:19 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 08:13:18 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>, nico@fluxnic.net
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] cpufreq: merge arm_big_little and vexpress-spc
-Message-ID: <20191017024318.axs37rs4zy2wb5xh@vireshk-i7>
-References: <20191016110344.15259-1-sudeep.holla@arm.com>
+        Wed, 16 Oct 2019 22:50:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53648 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387605AbfJQCuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 22:50:44 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 513B02082C;
+        Thu, 17 Oct 2019 02:50:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571280643;
+        bh=sTZxZi+EvaRc2jbPlVYU7AjokigXvgJH+X0xEfGPUv8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=afxeJDH/81paRLGTdPmdSynz/VZVcaJhJ/ksjLu+kHtd/GhLRX/5QARl8xJDAeG5W
+         gnAgfBrO9zfE3Hg46Y1q0QiHAmh9UMxcK6t3WmXIMPSy6BvPE0tcfgoXbDIWRcfgul
+         6G6Cam211FrrxDBwBgTHAI96UkwO1XeF19sZFd4I=
+Date:   Wed, 16 Oct 2019 19:50:41 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     syzbot <syzbot+76a43f2b4d34cfc53548@syzkaller.appspotmail.com>,
+        akpm@osdl.org, deepa.kernel@gmail.com, hch@infradead.org,
+        jlayton@kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lkundrak@v3.sk,
+        syzkaller-bugs@googlegroups.com, tklauser@nuerscht.ch,
+        trond.myklebust@fys.uio.no
+Subject: Re: KASAN: use-after-free Read in mnt_warn_timestamp_expiry
+Message-ID: <20191017025041.GC1552@sol.localdomain>
+Mail-Followup-To: Al Viro <viro@zeniv.linux.org.uk>,
+        syzbot <syzbot+76a43f2b4d34cfc53548@syzkaller.appspotmail.com>,
+        akpm@osdl.org, deepa.kernel@gmail.com, hch@infradead.org,
+        jlayton@kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lkundrak@v3.sk,
+        syzkaller-bugs@googlegroups.com, tklauser@nuerscht.ch,
+        trond.myklebust@fys.uio.no
+References: <0000000000007f489b0595115374@google.com>
+ <20191017014755.GA1552@sol.localdomain>
+ <20191017015853.GR26530@ZenIV.linux.org.uk>
+ <20191017022705.GB1552@sol.localdomain>
+ <20191017023735.GS26530@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191016110344.15259-1-sudeep.holla@arm.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20191017023735.GS26530@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Nico in case he has any issues with this series.
+On Thu, Oct 17, 2019 at 03:37:35AM +0100, Al Viro wrote:
+> On Wed, Oct 16, 2019 at 07:27:05PM -0700, Eric Biggers wrote:
+> 
+> > How about the following?
+> > 
+> > 	pr_warn("%s filesystem being %s at %s supports timestamps until %04ld (0x%llx)\n",
+> > 		sb->s_type->name,
+> > 		is_mounted(mnt) ? "remounted" : "mounted",
+> > 		mntpath,
+> > 		tm.tm_year+1900, (unsigned long long)sb->s_time_max);
+> > 
+> > I think more people would understand "remounted" than "reconfigured".  Also,
+> > is_mounted(mnt) seems like a better choice than mnt_has_parent(real_mount(mnt)).
+> 
+> Works for me(tm).  Care to fold that into your patch and resend?
+> 
 
-On 16-10-19, 12:03, Sudeep Holla wrote:
-> Hi,
-> 
-> Since vexpress-spc is the sole user of arm_big_little cpufreq driver,
-> there's no point in keeping it separate anymore. I wanted to post these
-> patches for ages but kept postponing for no reason.
-> 
-> Regards,
-> Sudeep
-> 
-> Sudeep Holla (3):
->   cpufreq: scpi: remove stale/outdated comment about the driver
->   cpufreq: merge arm_big_little and vexpress-spc
->   cpufreq: simplify and remove lots of debug messages
-> 
->  MAINTAINERS                            |   5 +-
->  drivers/cpufreq/Kconfig.arm            |  12 +-
->  drivers/cpufreq/Makefile               |   2 -
->  drivers/cpufreq/arm_big_little.c       | 658 -------------------------
->  drivers/cpufreq/arm_big_little.h       |  43 --
->  drivers/cpufreq/scpi-cpufreq.c         |   2 -
->  drivers/cpufreq/vexpress-spc-cpufreq.c | 559 ++++++++++++++++++++-
->  7 files changed, 539 insertions(+), 742 deletions(-)
->  delete mode 100644 drivers/cpufreq/arm_big_little.c
->  delete mode 100644 drivers/cpufreq/arm_big_little.h
-> 
-> --
-> 2.17.1
-
--- 
-viresh
+Sent: https://lkml.kernel.org/linux-fsdevel/20191017024814.61980-1-ebiggers@kernel.org/T/#u
