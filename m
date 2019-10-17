@@ -2,123 +2,117 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5391AFA372B
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3544FA372B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 329BA2089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AB482089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:28:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xWq5Hkde"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408156AbfJQH0t (ORCPT
+        id S2392768AbfJQH2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 03:26:49 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:55633 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404931AbfJQH0s (ORCPT
+        Thu, 17 Oct 2019 03:28:53 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:32812 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728553AbfJQH2x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 03:26:48 -0400
-X-Originating-IP: 86.250.200.211
-Received: from aptenodytes (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 0F2BAE0008;
-        Thu, 17 Oct 2019 07:26:45 +0000 (UTC)
-Date:   Thu, 17 Oct 2019 09:26:45 +0200
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     mripard@kernel.org, mchehab@kernel.org, gregkh@linuxfoundation.org,
-        wens@csie.org, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] staging: media: cedrus: use
- devm_platform_ioremap_resource() to simplify code
-Message-ID: <20191017072645.GA2778@aptenodytes>
-References: <20191016085604.21076-1-yuehaibing@huawei.com>
+        Thu, 17 Oct 2019 03:28:53 -0400
+Received: by mail-wr1-f65.google.com with SMTP id b9so1081846wrs.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 00:28:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=lF+fgIZSn/XvW94K1ywke5vKThCmmdz9k3RaVW32JlY=;
+        b=xWq5Hkde3q45K4PbAUMZnkHurefRtmRtgiCvKkBapdsqHhyI8Ee7NQgVyP0caZIy8i
+         SkmQ1egZd2Ipk6BGM4y6AVJW9nvC+Xn8N8JdeokHXHBrBw4QK+COO33atNrzxg5d5lav
+         nShDhgKGvxrmhHC9vz8BbXNWLBmsygaC5TapuRj9Lr9nwSYxpai6/9KlgrpXoTYA5lqH
+         OEvuPup2lrG4cV2HbEGs8pg6Rhl7OlfjgoiMTd8ia7/O0zkZLEgPWYTKYVTKHGVrScGl
+         6AeR9WuzrW03UrS+S7023opAzP3oRUr//UNnL+2NOnOuZLLH1pcxvM7LRDRO/YGJw6dG
+         +Iqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=lF+fgIZSn/XvW94K1ywke5vKThCmmdz9k3RaVW32JlY=;
+        b=AsqJ8fT4Yz0hB2nydXPAEKYBedtYbSs3BjXlEVVrkwxuGzMFxQrAVDld95tw+15M2F
+         +JFsYL23yE/7dIqQxxQTcts6i0AApcjT/azqg6X0lvk56iiNABd6+/QC0pevcg76cVn2
+         8GoLV2bdtXpRzaVE7rtrM1pQtCZTjsVNyL8Fu0s3h9ImGCc/oKM3Wh6wflYCEfQvnjVi
+         Hw+66y5+sNQ6Ksd0Da/Y9aNIAAzSnaMbpeBPnoOeMC1SMBw9ToDjokDkdNz4mW5FdTeg
+         pRWabIY1MPLrgU+DoVd5pZQhr7/mNBNNYYZqWpIbpOAGyD+ANaQo64Wq+bX2rkgQvq1z
+         YZRg==
+X-Gm-Message-State: APjAAAXL4nTX/2ncyT1NdaV+EfjddmWhAd4DbTMSZ+3mn5v3Lgpu7Tj9
+        xGtoCOt/tmYiBIP2pYa1aVXMKg==
+X-Google-Smtp-Source: APXvYqxLpxoVGENRd1K1D0H43oFwhZes7gObxyyPv4AuhrB11kRaylbvgtEsJSg5Sud7bDf5lrdTVg==
+X-Received: by 2002:a5d:6709:: with SMTP id o9mr1655680wru.116.1571297331032;
+        Thu, 17 Oct 2019 00:28:51 -0700 (PDT)
+Received: from dell ([95.149.164.47])
+        by smtp.gmail.com with ESMTPSA id r140sm1610799wme.47.2019.10.17.00.28.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 17 Oct 2019 00:28:50 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 08:28:49 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Wen Su <Wen.Su@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, wsd_upstream@mediatek.com
+Subject: Re: [PATCH 2/4] mfd: Add for PMIC MT6359 registers definition
+Message-ID: <20191017072849.GL4365@dell>
+References: <1571218786-15073-1-git-send-email-Wen.Su@mediatek.com>
+ <1571218786-15073-3-git-send-email-Wen.Su@mediatek.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="9jxsPFA5p3P2qPhR"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191016085604.21076-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1571218786-15073-3-git-send-email-Wen.Su@mediatek.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 16 Oct 2019, Wen Su wrote:
 
---9jxsPFA5p3P2qPhR
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> From: "wen.su" <wen.su@mediatek.com>
 
-Hi,
+Should be:
 
-On Wed 16 Oct 19, 16:56, YueHaibing wrote:
-> Use devm_platform_ioremap_resource() to simplify the code a bit.
-> This is detected by coccinelle.
+  From: Wen Su <wen.su@mediatek.com>
 
-This is still:
-Acked-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> This adds MediaTek PMIC MT6359 registers definition for the
+> following sub modules:
+> 
+> - Regulator
+> - RTC
+> - Interrupt
+> 
+> Signed-off-by: wen.su <wen.su@mediatek.com>
 
-Please collect the tag in your next version, if there's a need for one.
+Same here.  Please change your Git config.
 
-Cheers,
-
-Paul
-
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
->  drivers/staging/media/sunxi/cedrus/cedrus_hw.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->=20
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c b/drivers/sta=
-ging/media/sunxi/cedrus/cedrus_hw.c
-> index a942cd9..f19b87c 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> @@ -146,7 +146,6 @@ static irqreturn_t cedrus_irq(int irq, void *data)
->  int cedrus_hw_probe(struct cedrus_dev *dev)
->  {
->  	const struct cedrus_variant *variant;
-> -	struct resource *res;
->  	int irq_dec;
->  	int ret;
-> =20
-> @@ -225,8 +224,7 @@ int cedrus_hw_probe(struct cedrus_dev *dev)
->  		goto err_sram;
->  	}
-> =20
-> -	res =3D platform_get_resource(dev->pdev, IORESOURCE_MEM, 0);
-> -	dev->base =3D devm_ioremap_resource(dev->dev, res);
-> +	dev->base =3D devm_platform_ioremap_resource(dev->pdev, 0);
->  	if (IS_ERR(dev->base)) {
->  		dev_err(dev->dev, "Failed to map registers\n");
-> =20
-> --=20
-> 2.7.4
->=20
->=20
+>  include/linux/mfd/mt6359/registers.h | 531 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 531 insertions(+)
+>  create mode 100644 include/linux/mfd/mt6359/registers.h
 
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Once you've fixed the above, please add my:
 
---9jxsPFA5p3P2qPhR
-Content-Type: application/pgp-signature; name="signature.asc"
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl2oF7UACgkQ3cLmz3+f
-v9EItgf9GvoiVbIh3tmX/jiHYvuTXM7tm9aRYWoFX7LVixCUoe6h+o7qBdsHSBks
-RxI0BSWHEEieShZlIK0Fyof7bx04lEbJc072Bp31b6xFJxdQ1w+xatMjwfh5bILZ
-jcAHPnMwKntbmetL8qPB2pDcq//vDYvGOkN73ZqFPO8kCU6rYxX0+Y/Eaw0be7EB
-2Duq2Rm0E7OswN9jebQ4fm4tpt4bZj4qX7h4tUkwFKGpzzt4jYyaqpr5jQ7Bw1LK
-nyn5TAVJPA9P+Mo5P59R+2E4HX6DKma2jy5lRSnZddG2iR1F3kh1MbOs1qUothp4
-PvvSH42W4cFR1G5Q+dbvEK4UAWOqQA==
-=pqsv
------END PGP SIGNATURE-----
-
---9jxsPFA5p3P2qPhR--
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
