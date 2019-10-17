@@ -2,130 +2,107 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4482FA373A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA09ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF3042064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 889252064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502462AbfJQMgJ (ORCPT
+        id S2502467AbfJQMhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 08:36:09 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:43172 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502451AbfJQMgJ (ORCPT
+        Thu, 17 Oct 2019 08:37:14 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:51893 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729184AbfJQMhO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:36:09 -0400
-Received: by mail-io1-f70.google.com with SMTP id i2so2997221ioo.10
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 05:36:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=5t4yqDt+mBIkGJEjjJGiGmX6FdFp97lRinnPxkeZsbg=;
-        b=fedkuiiFuS6gy8VyOM9grTgA/rkDVEr/45AfsvHcYNrtpOMAFQc/3qk6LNzpDSiQaH
-         dBwGbDJbr4zICwnXkf4SocN/CJoqzjt10XJGvW2SxsRVCuAKFd0ZsMARL0Jyz/6RQLFr
-         XCGJ4AVEQehoe4g7Zf4Js9YL957y3o2TvSuGpw2545CBSQDcLm8Q2h/LjIghYSj3rjyx
-         F2S3iPsovkfcvO6g04xYc4MapCnK0HeNOjtlG1D/1p4HHCChTPCSLhBT1GyuY25S/2JN
-         6Yctnf8yq5UnwK+ORrIOr2Ijh71k/8+qymavH6SJfCrX0YmlxFlG4b14uR02+jaG5DJz
-         t2aQ==
-X-Gm-Message-State: APjAAAXzGw4Dnz4WaR1PgpnXb7gWWKF2wTwYuwV/n1jEZITT3yy2xcOo
-        Z5sE3OcurCAgaM5AJSXJkiluyJH2MfXuES8eDRqbonDphuT1
-X-Google-Smtp-Source: APXvYqzB8gJtlUXLPgJonp1LfCe0tLXtXHbbpq4ADGFI8YMv/2ntWneIkikxCxslAZV/kWQ6JCcMn2qAGmAut/KPw4CjeFynQQ4/
+        Thu, 17 Oct 2019 08:37:14 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01451;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TfJXjjY_1571315822;
+Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0TfJXjjY_1571315822)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 17 Oct 2019 20:37:11 +0800
+From:   Wen Yang <wenyang@linux.alibaba.com>
+To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>
+Cc:     xlpang@linux.alibaba.com, zhiche.yy@alibaba-inc.com,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] checkpatch: add checks for fixes tags
+Date:   Thu, 17 Oct 2019 20:37:01 +0800
+Message-Id: <20191017123701.45562-1-wenyang@linux.alibaba.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-X-Received: by 2002:a02:bb01:: with SMTP id y1mr3062982jan.117.1571315768264;
- Thu, 17 Oct 2019 05:36:08 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 05:36:08 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000328b2905951a7667@google.com>
-Subject: KCSAN: data-race in task_dump_owner / task_dump_owner
-From:   syzbot <syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com>
-To:     adobriyan@gmail.com, akpm@linux-foundation.org,
-        casey@schaufler-ca.com, christian@brauner.io, elver@google.com,
-        keescook@chromium.org, kent.overstreet@gmail.com,
-        khlebnikov@yandex-team.ru, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mhocko@suse.com, shakeelb@google.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+SHA1 should be at least 12 digits long, as suggested
+by Stephen:
+Https://lkml.org/lkml/2019/9/10/626
+Https://lkml.org/lkml/2019/7/10/304
 
-syzbot found the following crash on:
+And the fixes tag should also be capitalized (Fixes:),
+as suggested by David:
+Https://lkml.org/lkml/2019/10/1/1067
 
-HEAD commit:    d724f94f x86, kcsan: Enable KCSAN for x86
-git tree:       https://github.com/google/ktsan.git kcsan
-console output: https://syzkaller.appspot.com/x/log.txt?x=17884db3600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c0906aa620713d80
-dashboard link: https://syzkaller.appspot.com/bug?extid=e392f8008a294fdf8891
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Add checks to the above issues.
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KCSAN: data-race in task_dump_owner / task_dump_owner
-
-write to 0xffff8881255bb7fc of 4 bytes by task 7804 on cpu 0:
-  task_dump_owner+0xd8/0x260 fs/proc/base.c:1742
-  pid_update_inode+0x3c/0x70 fs/proc/base.c:1818
-  pid_revalidate+0x91/0xd0 fs/proc/base.c:1841
-  d_revalidate fs/namei.c:765 [inline]
-  d_revalidate fs/namei.c:762 [inline]
-  lookup_fast+0x7cb/0x7e0 fs/namei.c:1613
-  walk_component+0x6d/0xe80 fs/namei.c:1804
-  link_path_walk.part.0+0x5d3/0xa90 fs/namei.c:2139
-  link_path_walk fs/namei.c:2070 [inline]
-  path_openat+0x14f/0x3530 fs/namei.c:3532
-  do_filp_open+0x11e/0x1b0 fs/namei.c:3563
-  do_sys_open+0x3b3/0x4f0 fs/open.c:1089
-  __do_sys_open fs/open.c:1107 [inline]
-  __se_sys_open fs/open.c:1102 [inline]
-  __x64_sys_open+0x55/0x70 fs/open.c:1102
-  do_syscall_64+0xcf/0x2f0 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-write to 0xffff8881255bb7fc of 4 bytes by task 7813 on cpu 1:
-  task_dump_owner+0xd8/0x260 fs/proc/base.c:1742
-  pid_update_inode+0x3c/0x70 fs/proc/base.c:1818
-  pid_revalidate+0x91/0xd0 fs/proc/base.c:1841
-  d_revalidate fs/namei.c:765 [inline]
-  d_revalidate fs/namei.c:762 [inline]
-  lookup_fast+0x7cb/0x7e0 fs/namei.c:1613
-  walk_component+0x6d/0xe80 fs/namei.c:1804
-  lookup_last fs/namei.c:2271 [inline]
-  path_lookupat.isra.0+0x13a/0x5a0 fs/namei.c:2316
-  filename_lookup+0x145/0x2d0 fs/namei.c:2346
-  user_path_at_empty+0x4c/0x70 fs/namei.c:2606
-  user_path_at include/linux/namei.h:60 [inline]
-  vfs_statx+0xd9/0x190 fs/stat.c:187
-  vfs_stat include/linux/fs.h:3188 [inline]
-  __do_sys_newstat+0x51/0xb0 fs/stat.c:341
-  __se_sys_newstat fs/stat.c:337 [inline]
-  __x64_sys_newstat+0x3a/0x50 fs/stat.c:337
-  do_syscall_64+0xcf/0x2f0 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 7813 Comm: ps Not tainted 5.3.0+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-==================================================================
-
-
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Cc: Andy Whitcroft <apw@canonical.com> (maintainer:CHECKPATCH)
+Cc: Joe Perches <joe@perches.com> (maintainer:CHECKPATCH)
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: linux-kernel@vger.kernel.org (open list)
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ scripts/checkpatch.pl | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index a85d719df1f4..daefd0c546ff 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -2925,7 +2925,7 @@ sub process {
+ 		}
+ 
+ # check for invalid commit id
+-		if ($in_commit_log && $line =~ /(^fixes:|\bcommit)\s+([0-9a-f]{6,40})\b/i) {
++		if ($in_commit_log && $line =~ /(\bcommit)\s+([0-9a-f]{6,40})\b/i) {
+ 			my $id;
+ 			my $description;
+ 			($id, $description) = git_commit_info($2, undef, undef);
+@@ -2935,6 +2935,25 @@ sub process {
+ 			}
+ 		}
+ 
++# check for invalid fixes tag
++		if ($in_commit_log && $line =~ /(^fixes:)\s+([0-9a-f]{6,40})\b/i) {
++			my $id;
++			my $description;
++			($id, $description) = git_commit_info($2, undef, undef);
++			if (!defined($id)) {
++				WARN("UNKNOWN_COMMIT_ID",
++				     "Unknown commit id '$2', maybe rebased or not pulled?\n" . $herecurr);
++			}
++			if ($1 ne "Fixes:") {
++				WARN("FIXES_TAG_STYLE",
++				     "The fixes tag should be capitalized (Fixes:).\n" . $hereprev);
++			}
++			if (length($2) < 12) {
++				WARN("FIXES_TAG_STYLE",
++				     "SHA1 should be at least 12 digits long.\n" . $hereprev);
++			}
++		}
++
+ # ignore non-hunk lines and lines being removed
+ 		next if (!$hunk_line || $line =~ /^-/);
+ 
+-- 
+2.23.0
+
