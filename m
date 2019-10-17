@@ -2,157 +2,156 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D076ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5756FA3730
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E1B420663
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80A7F20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:33:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="BOTULZab"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439462AbfJQJca (ORCPT
+        id S2405597AbfJQJdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 05:32:30 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47754 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2439448AbfJQJc1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 05:32:27 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9H9SASk119626
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 05:32:26 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vpnpmr2pm-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 05:32:26 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Thu, 17 Oct 2019 10:32:24 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 17 Oct 2019 10:32:20 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9H9VlF338404410
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 17 Oct 2019 09:31:47 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 312884C04A;
-        Thu, 17 Oct 2019 09:32:19 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9C4A44C052;
-        Thu, 17 Oct 2019 09:32:16 +0000 (GMT)
-Received: from bangoria.ibmuc.com (unknown [9.199.56.216])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 17 Oct 2019 09:32:16 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-To:     christophe.leroy@c-s.fr, mpe@ellerman.id.au, mikey@neuling.org
-Cc:     npiggin@gmail.com, benh@kernel.crashing.org, paulus@samba.org,
-        naveen.n.rao@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: [PATCH v6 3/7] Powerpc/Watchpoint: Fix ptrace code that muck around with address/len
-Date:   Thu, 17 Oct 2019 15:02:00 +0530
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191017093204.7511-1-ravi.bangoria@linux.ibm.com>
-References: <20191017093204.7511-1-ravi.bangoria@linux.ibm.com>
+        Thu, 17 Oct 2019 05:33:09 -0400
+Received: from mail-eopbgr780087.outbound.protection.outlook.com ([40.107.78.87]:15539
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730379AbfJQJdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 05:33:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=k2EC0L4E3ucE0+lZR6CVZeinYlRHsMNLESOR6GPGZJTV+MRh8/e8+dpzqLdZFaj+NBeAiwWAfo0kF2XOpnWiyMNe74KzqWerbbu8NyOMLWfjHUqExSTC4jLMD/HwiII0pB0fUoTdkzPGDm8XsC+EyVTADQTWiEdmWUKzuw15PhSdR84nhTi+r4GEvPe27WPDLCF8Sk2AXBjiKnWSPeft0crdNQIZl+3TSAXVCZXYw/Gu32EODB2IY7ha5ToGu/IyGh9qtCRblA27/0A5rVSjt2eguZKQDuqnlWO0w6NuV/58M/NoGrEiZoAwZqM7dNl9I/Awe8GaSB0qFsxNVxPE2w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HWow3HfrVKIDprZArFQqovx80ZCZB5a3BFHSA73eCn8=;
+ b=MCS3UezBc1ck9IQnbgqY4qj+KXg5gg7DjIqCha2SDVw+F0GRVnBwKud0FtkHMs5UM+sUWpHfjRuyzUpN2kSLYIhr5+DcNtT18ZxLPHl7pfNQBLUf1HsFXMxhmNXAytGFWnGzmEsWjyfXCcc3960DE1beBwu8QOPunGOrXWwwmbiCgd7ZlxOcErEOG18j1Gi0PaU+Bbf4I8l06mZUyWamWsal8A4a16+vDmEjpfJPl/7Mk48+3x9tb5BgTKi0XPOkNo1f0JBTUx9hCSQTgpGSQs9l9zsu5yAovmLt6V545pSYDFDhwGXuMCf2EEx4kJ3UlbShcpYQONWEX6Kigv1nvA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HWow3HfrVKIDprZArFQqovx80ZCZB5a3BFHSA73eCn8=;
+ b=BOTULZabuTRLBR15oLPqCXPoXP7U3KsxEwPD5HpdLQBPXVlrShozQ83gQt5IsOflO4k/XRWppwpAqd4qkcObKfQB7HlyXLFtb6M+t//xR7mBtzXsgxQ2wux4V9eHx1LU1wqXKdxeGIxBWgN1q6uNS5hiFbgmrTrAVWpYwiCsuog=
+Received: from DM6PR12MB3868.namprd12.prod.outlook.com (10.255.173.213) by
+ DM6PR12MB2889.namprd12.prod.outlook.com (20.179.71.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Thu, 17 Oct 2019 09:33:06 +0000
+Received: from DM6PR12MB3868.namprd12.prod.outlook.com
+ ([fe80::64dd:646d:6fa1:15a1]) by DM6PR12MB3868.namprd12.prod.outlook.com
+ ([fe80::64dd:646d:6fa1:15a1%4]) with mapi id 15.20.2347.023; Thu, 17 Oct 2019
+ 09:33:06 +0000
+From:   vishnu <vravulap@amd.com>
+To:     Mark Brown <broonie@kernel.org>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>
+CC:     "RAVULAPATI, VISHNU VARDHAN RAO" 
+        <Vishnuvardhanrao.Ravulapati@amd.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "Mukunda, Vijendar" <Vijendar.Mukunda@amd.com>,
+        Maruthi Srinivas Bayyavarapu <Maruthi.Bayyavarapu@amd.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/7] ASoC: amd: No need PCI-MSI interrupts
+Thread-Topic: [PATCH 1/7] ASoC: amd: No need PCI-MSI interrupts
+Thread-Index: AQHVd/NK02/86+8bwUqA0+UYmDRNb6dGCguAgAABq4CADmkpAIAK7WKA
+Date:   Thu, 17 Oct 2019 09:33:06 +0000
+Message-ID: <76668467-5edf-407a-a063-50f322fe785d@amd.com>
+References: <1569891524-18875-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+ <BN6PR12MB18093C8EDE60811B3D917DEAF79D0@BN6PR12MB1809.namprd12.prod.outlook.com>
+ <20191001172941.GC4786@sirena.co.uk>
+ <f9b1c3d5-6e02-354f-91b6-3b57e2f88bde@amd.com>
+In-Reply-To: <f9b1c3d5-6e02-354f-91b6-3b57e2f88bde@amd.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BMXPR01CA0010.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:d::20) To DM6PR12MB3868.namprd12.prod.outlook.com
+ (2603:10b6:5:1c8::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Vishnuvardhanrao.Ravulapati@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.159.251]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ebdd151c-22e3-43c9-da08-08d752e50403
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: DM6PR12MB2889:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR12MB288917FDC6A7A2DABC1542C9E76D0@DM6PR12MB2889.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 01930B2BA8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(366004)(39860400002)(396003)(199004)(189003)(6506007)(76176011)(66066001)(8676002)(14454004)(66556008)(66476007)(31686004)(66946007)(66446008)(64756008)(102836004)(81156014)(81166006)(25786009)(7736002)(386003)(53546011)(316002)(6636002)(305945005)(478600001)(99286004)(5660300002)(31696002)(36756003)(52116002)(71190400001)(71200400001)(186003)(2906002)(26005)(54906003)(110136005)(11346002)(486006)(446003)(6246003)(476003)(4326008)(2616005)(8936002)(229853002)(6486002)(6116002)(3846002)(6436002)(6512007)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2889;H:DM6PR12MB3868.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2Owyg3vey/bbRRPUuiE4r6gGsNDieu63N8gN+h5DW9+TTzQG9CsKln/ih9mwWXLGWnhlhuj1TEjp30cuFhE2LuqcC0zgGd/0dPYXYUtzOKRsb/lKe5yVSu7kb1/uqi7dqBpKFI2GSNhHjS1p/Vq5s7Ve8nqITOqBDAaSZ3N/woZJyvGEoaBwXVIWlO0G2c3ssJ3gh3Alrk81BwX+FV+1QQ8rzki63mgohTTwWjx+4nKxGMc7EZ87/8ZIiScObMDsZayIfUoGtkM9VDOftiwVAlOpTfatJGhlE1Ze6vVveDtMG3hXgDyRUoHTrI4d1jHlA5zjbE2aAM8aOuPl4szDqcX6oNEhNGUvtL5IHm4YCZfjsAk9qDb8NGcg2TGKrs8MIvd461PjMVNDsnUl9XWtV7RDzrDFR2NzOfJn6WysYTA=
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <C7CB0298D99CA54F859578B2C90D58F1@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19101709-0016-0000-0000-000002B8DE00
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19101709-0017-0000-0000-0000331A0550
-Message-Id: <20191017093204.7511-4-ravi.bangoria@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-17_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910170083
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ebdd151c-22e3-43c9-da08-08d752e50403
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Oct 2019 09:33:06.6003
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: T6L64v7ix7nt9h3njGjGJ/3ghJxcUv3MD1V5D4JVcSU4O0akqffgYeoU5VHWqdSYDcxmx5XshF+bTM0NBsaFZA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2889
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ptrace_set_debugreg() does not consider new length while overwriting
-the watchpoint. Fix that. ppc_set_hwdebug() aligns watchpoint address
-to doubleword boundary but does not change the length. If address range
-is crossing doubleword boundary and length is less then 8, we will loose
-samples from second doubleword. So fix that as well.
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
----
- arch/powerpc/include/asm/hw_breakpoint.h | 4 ++--
- arch/powerpc/kernel/ptrace.c             | 9 +++------
- 2 files changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/hw_breakpoint.h b/arch/powerpc/include/asm/hw_breakpoint.h
-index ea91ac7f5a27..27ac6f5d2891 100644
---- a/arch/powerpc/include/asm/hw_breakpoint.h
-+++ b/arch/powerpc/include/asm/hw_breakpoint.h
-@@ -34,6 +34,8 @@ struct arch_hw_breakpoint {
- #define HW_BRK_TYPE_PRIV_ALL	(HW_BRK_TYPE_USER | HW_BRK_TYPE_KERNEL | \
- 				 HW_BRK_TYPE_HYP)
- 
-+#define HW_BREAKPOINT_ALIGN 0x7
-+
- #define DABR_MAX_LEN	8
- #define DAWR_MAX_LEN	512
- 
-@@ -48,8 +50,6 @@ struct pmu;
- struct perf_sample_data;
- struct task_struct;
- 
--#define HW_BREAKPOINT_ALIGN 0x7
--
- extern int hw_breakpoint_slots(int type);
- extern int arch_bp_generic_fields(int type, int *gen_bp_type);
- extern int arch_check_bp_in_kernelspace(struct arch_hw_breakpoint *hw);
-diff --git a/arch/powerpc/kernel/ptrace.c b/arch/powerpc/kernel/ptrace.c
-index c861b12337bd..8ea6f01531f1 100644
---- a/arch/powerpc/kernel/ptrace.c
-+++ b/arch/powerpc/kernel/ptrace.c
-@@ -2440,6 +2440,7 @@ static int ptrace_set_debugreg(struct task_struct *task, unsigned long addr,
- 	if (bp) {
- 		attr = bp->attr;
- 		attr.bp_addr = hw_brk.address;
-+		attr.bp_len = DABR_MAX_LEN;
- 		arch_bp_generic_fields(hw_brk.type, &attr.bp_type);
- 
- 		/* Enable breakpoint */
-@@ -2881,7 +2882,7 @@ static long ppc_set_hwdebug(struct task_struct *child,
- 	if ((unsigned long)bp_info->addr >= TASK_SIZE)
- 		return -EIO;
- 
--	brk.address = bp_info->addr & ~7UL;
-+	brk.address = bp_info->addr & ~HW_BREAKPOINT_ALIGN;
- 	brk.type = HW_BRK_TYPE_TRANSLATE;
- 	brk.len = DABR_MAX_LEN;
- 	if (bp_info->trigger_type & PPC_BREAKPOINT_TRIGGER_READ)
-@@ -2889,10 +2890,6 @@ static long ppc_set_hwdebug(struct task_struct *child,
- 	if (bp_info->trigger_type & PPC_BREAKPOINT_TRIGGER_WRITE)
- 		brk.type |= HW_BRK_TYPE_WRITE;
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
--	/*
--	 * Check if the request is for 'range' breakpoints. We can
--	 * support it if range < 8 bytes.
--	 */
- 	if (bp_info->addr_mode == PPC_BREAKPOINT_MODE_RANGE_INCLUSIVE)
- 		len = bp_info->addr2 - bp_info->addr;
- 	else if (bp_info->addr_mode == PPC_BREAKPOINT_MODE_EXACT)
-@@ -2905,7 +2902,7 @@ static long ppc_set_hwdebug(struct task_struct *child,
- 
- 	/* Create a new breakpoint request if one doesn't exist already */
- 	hw_breakpoint_init(&attr);
--	attr.bp_addr = (unsigned long)bp_info->addr & ~HW_BREAKPOINT_ALIGN;
-+	attr.bp_addr = (unsigned long)bp_info->addr;
- 	attr.bp_len = len;
- 	arch_bp_generic_fields(brk.type, &attr.bp_type);
- 
--- 
-2.21.0
+On 11/10/19 3:03 AM, vishnu wrote:
+> Hi,
+> Please find my inline comments.
+>=20
+> Thanks,
+> Vishnu
+>=20
+> On 01/10/19 10:59 PM, Mark Brown wrote:
+>> On Tue, Oct 01, 2019 at 05:23:43PM +0000, Deucher, Alexander wrote:
+>>
+>>>> ACP-PCI controller driver does not depends msi interrupts.
+>>>> So removed msi related pci functions which have no use and does not=20
+>>>> impact
+>>>> on existing functionality.
+>>
+>>> In general, however, aren't MSIs preferred to legacy interrupts?
+>>
+>> As I understand it.=A0 Or at the very least I'm not aware of any situati=
+on
+>> where they're harmful.=A0 It'd be good to have a clear explanation of wh=
+y
+>> we're removing the support.
+>=20
+> Actually our device is audio device and it does not depends on MSI`s.
+> So we thought to remove it as it has no purpose or meaning to have
+> this code in our audio based ACP-PCI driver.
+>=20
+>>> Doesn't the driver have to opt into MSI support?=A0 As such, won't
+>>> removing this code effectively disable MSI support?
+>>
+>> Yes.
+>=20
+>=20
 
+Hi Mark,
+
+Any updates on this patch.
+
+Regards,
+Vishnu
