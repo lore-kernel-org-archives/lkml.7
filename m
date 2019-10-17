@@ -2,103 +2,96 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB74FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68877FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B76021D7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:30:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pek2pn2Q"
+	by mail.kernel.org (Postfix) with ESMTP id 4186A21A49
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:31:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503677AbfJQVaL (ORCPT
+        id S2438015AbfJQVbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 17:30:11 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38707 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732322AbfJQVaK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 17:30:10 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w3so2087423pgt.5;
-        Thu, 17 Oct 2019 14:30:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=h/bBHRGusj98Ie+f89J7SFLKi2fjMoUyMTs7iY5sfPs=;
-        b=pek2pn2QOW42nThx78gpJ5eiILVpMLYfOI2e8D3iR7iPQEXoh5JdfF1Qu0FK+lGCHM
-         rhfvKLT4pa4vyKPCXuC6ecbmlRgJ2DH0ExZpiTPGHFMzCxwIPx8rSFDC6a/nTc8U03EU
-         RSqVFnQjyyHLm8AfXh4B4IWcgdXPwx0CwLwXZ/hksT3qm9lntnIDOo9Ng6cqVcPFJhUw
-         zhZ4K5ms0I/s4cvJNumxUpuDMNz/dO4PSh0qADEHotDYexzHpDuUk+2AwM9S2b4MbP2H
-         xolo2psfzeukidI6shOdZtzIfta+BsGZA8faGmCVcxjXbSVVbFzMpzlWMR4E9holJ3GS
-         2EmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=h/bBHRGusj98Ie+f89J7SFLKi2fjMoUyMTs7iY5sfPs=;
-        b=oKpuBNtIzHQcR+wOMfl67oEDoQl5vFHiI43HzOUW14j8xCqZ2mNETK7b6bOLIQB464
-         HAe8xcV9AmENbIJ1xqD/irj+8v9aH3FIjUiyd6fQy5lw8Qj5womFVCxMxixDMLOthZlJ
-         JK50TLk79jE+tyyI7v/rEgSN0t3c3UX4EEsGiKY6r1y/Lsy/+ct8o4O+HbQ6HVhhUkag
-         TIwUxDilq/RaPKScHSHgp75aOiNRsQedIsrvQm5YGFpZYdAzUyhBaihbiaWLpdzGzr/g
-         YbK/mEzpHezNwfyxsX7I1VruwrYubDj0nlp+30JEP23DaxFWgR8QsnTdO6Z8ZFj0KX+9
-         +MwQ==
-X-Gm-Message-State: APjAAAVffWPSXpeoAsoii0Lc/WBZy7ji5SGclms1OVeMPGFo/wObFo4B
-        NfDCWTKfakYKp16eie8ZWMc=
-X-Google-Smtp-Source: APXvYqwQH11M5d3vGXCkqWTsm7amqBAPjHqccTvWu4XC7F8fg2mPRURwIMBKTQC90afxBF7EvjNckg==
-X-Received: by 2002:a17:90a:1b49:: with SMTP id q67mr7023570pjq.115.1571347809693;
-        Thu, 17 Oct 2019 14:30:09 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id w6sm4297898pfw.84.2019.10.17.14.30.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 14:30:09 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        c-hbandi@codeaurora.org, bgodavar@codeaurora.org
-Cc:     linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH] Bluetooth: hci_qca: Add delay for wcn3990 stability
-Date:   Thu, 17 Oct 2019 14:29:55 -0700
-Message-Id: <20191017212955.6266-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 17 Oct 2019 17:31:33 -0400
+Received: from mga05.intel.com ([192.55.52.43]:63851 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732322AbfJQVbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 17:31:32 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 14:31:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,309,1566889200"; 
+   d="scan'208";a="186628235"
+Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
+  by orsmga007.jf.intel.com with ESMTP; 17 Oct 2019 14:31:31 -0700
+Received: from orsmsx114.amr.corp.intel.com (10.22.240.10) by
+ ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 17 Oct 2019 14:31:31 -0700
+Received: from orsmsx115.amr.corp.intel.com ([169.254.4.146]) by
+ ORSMSX114.amr.corp.intel.com ([169.254.8.228]) with mapi id 14.03.0439.000;
+ Thu, 17 Oct 2019 14:31:31 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>
+CC:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "bberg@redhat.com" <bberg@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "ckellner@redhat.com" <ckellner@redhat.com>
+Subject: RE: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal
+ throttle messages
+Thread-Topic: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal
+ throttle messages
+Thread-Index: AQHVgtVLxuJrYmx6hUyzyzJQOp33Lqdb2lSAgABPIQCAATmTgIAAYKeAgAGZqlA=
+Date:   Thu, 17 Oct 2019 21:31:30 +0000
+Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F4A57D0@ORSMSX115.amr.corp.intel.com>
+References: <2c2b65c23be3064504566c5f621c1f37bf7e7326.camel@redhat.com>
+ <20191014212101.25719-1-srinivas.pandruvada@linux.intel.com>
+ <20191015084833.GD2311@hirez.programming.kicks-ass.net>
+ <f481b4ab6dfebbc0637c843e5f1cd4ddfd4bd60b.camel@linux.intel.com>
+ <20191016081405.GO2328@hirez.programming.kicks-ass.net>
+ <20191016140001.GF1138@zn.tnic>
+In-Reply-To: <20191016140001.GF1138@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMmMwOGJhZGYtMjM2My00NGFiLTkwMmUtNDg4YzY3YzM1ZTNmIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiXC9Bc091SUtLUDBrWXp3RHdWRHkzMEw4TE1BWHFyRFNla0VXV3pQNytFY3BTaENmMmJzbWJiR2JGUnBJb3dUd0cifQ==
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On the msm8998 mtp, the response to the baudrate change command is never
-received.  On the Lenovo Miix 630, the response to the baudrate change
-command is corrupted - "Frame reassembly failed (-84)".
-
-Adding a 50ms delay before re-enabling flow to receive the baudrate change
-command response from the wcn3990 addesses both issues, and allows
-bluetooth to become functional.
-
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- drivers/bluetooth/hci_qca.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index e3164c200eac..265fc60c3850 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -1156,8 +1156,10 @@ static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
- 		host_set_baudrate(hu, speed);
- 
- error:
--		if (qca_is_wcn399x(soc_type))
-+		if (qca_is_wcn399x(soc_type)) {
-+			msleep(50);
- 			hci_uart_set_flow_control(hu, false);
-+		}
- 
- 		if (soc_type == QCA_WCN3990) {
- 			/* Wait for the controller to send the vendor event
--- 
-2.17.1
-
+Pj4gVGhhdCBhbGwgc291bmRzIGxpa2UgdGhlIHByaW50ayBzaG91bGQgYmUgZG93bmdyYWRlZCB0
+b28sIGl0IGlzIG5vdCBhDQo+PiBLRVJOX0NSSVQgd2FybmluZy4gSXQgaXMgbW9yZSBhIG5vdGlm
+aWNhdGlvbiB0aGF0IHdlJ3JlIGdldHRpbmcgd2FybS4NCj4NCj4gUmlnaHQsIGFuZCBJIHRoaW5r
+IHdlIHNob3VsZCB0YWtlIEJlbmphbWluJ3MgcGF0Y2ggYWZ0ZXIgYWxsIC0gcGVyaGFwcw0KPiBl
+dmVuIHRhZyBpdCBmb3Igc3RhYmxlIGlmIHRoYXQgbWVzc2FnZSBpcyBhbm5veWluZyBwZW9wbGUg
+dG9vIG11Y2ggLSBhbmQNCj4gU3Jpbml2YXMgY2FuIGRvIHRoZSBkeW5hbWljIHRoaW5nIG9udG9w
+Lg0KDQpUaGF0IHNvdW5kcyBsaWtlIHRoZSByaWdodCBzaG9ydCB0ZXJtIGFjdGlvbi4NCg0KRGVw
+ZW5kaW5nIG9uIHdoYXQgd2UgZW5kIHVwIHdpdGggZnJvbSBTcmluaXZhcyAuLi4gd2UgbWF5IHdh
+bnQNCnRvIHJlY29uc2lkZXIgdGhlIHNldmVyaXR5LiAgVGhlIGJhc2ljIHByZW1pc2Ugb2YgU3Jp
+bml2YXMnIHBhdGNoDQppcyB0byBhdm9pZCBwcmludGluZyBhbnl0aGluZyBmb3Igc2hvcnQgZXhj
+dXJzaW9ucyBhYm92ZSB0ZW1wZXJhdHVyZQ0KdGhyZXNob2xkLiBCdXQgdGhlIGVmZmVjdCBvZiB0
+aGF0IGlzIHRoYXQgd2hlbiB3ZSBmaW5kIHRoZSBjb3JlL3BhY2thZ2UNCnN0YXlpbmcgYWJvdmUg
+dGVtcGVyYXR1cmUgZm9yIGFuIGV4dGVuZGVkIHBlcmlvZCBvZiB0aW1lLCB3ZSBhcmUNCmluIGEg
+c2VyaW91cyBzaXR1YXRpb24gd2hlcmUgc29tZSBhY3Rpb24gbWF5IGJlIG5lZWRlZC4gRS5nLg0K
+bW92ZSB0aGUgbGFwdG9wIG9mZiB0aGUgc29mdCBzdXJmYWNlIHRoYXQgaXMgYmxvY2tpbmcgdGhl
+IGFpciB2ZW50cy4NCg0KLVRvbnkNCg==
