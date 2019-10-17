@@ -6,118 +6,102 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B24ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BEECFA3732
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FDAE21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B9C521848
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:21:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408473AbfJQJV2 (ORCPT
+        id S2439394AbfJQJVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 05:21:28 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:52407 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731152AbfJQJV1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 05:21:27 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iL1xv-0004OU-Aq; Thu, 17 Oct 2019 11:21:03 +0200
-Date:   Thu, 17 Oct 2019 11:20:56 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andrei Vagin <avagin@gmail.com>
-cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCHv7 01/33] ns: Introduce Time Namespace
-In-Reply-To: <20191016233342.GA3075@gmail.com>
-Message-ID: <alpine.DEB.2.21.1910171039500.1824@nanos.tec.linutronix.de>
-References: <20191011012341.846266-1-dima@arista.com> <20191011012341.846266-2-dima@arista.com> <80af93da-d497-81de-2a2a-179bb3bc852d@arm.com> <alpine.DEB.2.21.1910161230070.2046@nanos.tec.linutronix.de> <20191016233342.GA3075@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 17 Oct 2019 05:21:49 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:36454 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1731152AbfJQJVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 05:21:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 059EF1684;
+        Thu, 17 Oct 2019 02:21:24 -0700 (PDT)
+Received: from [192.168.0.9] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A9B13F718;
+        Thu, 17 Oct 2019 02:21:22 -0700 (PDT)
+Subject: Re: [RFC PATCH v3 5/6] sched/cpufreq: Boost schedutil frequency ramp
+ up
+To:     Douglas RAILLARD <douglas.raillard@arm.com>,
+        linux-kernel@vger.kernel.org
+Cc:     linux-pm@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
+        rjw@rjwysocki.net, viresh.kumar@linaro.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, qperret@qperret.net,
+        patrick.bellasi@matbug.net, dh.han@samsung.com
+References: <20191011134500.235736-1-douglas.raillard@arm.com>
+ <20191011134500.235736-6-douglas.raillard@arm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <4235a01d-26ee-418c-b78a-6c6109deda1d@arm.com>
+Date:   Thu, 17 Oct 2019 11:21:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191011134500.235736-6-douglas.raillard@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrei!
+On 11/10/2019 15:44, Douglas RAILLARD wrote:
 
-On Wed, 16 Oct 2019, Andrei Vagin wrote:
-> On Wed, Oct 16, 2019 at 12:39:11PM +0200, Thomas Gleixner wrote:
-> > Nah.
-> > 
-> > config TIME_NS
-> > 	bool "TIME namespace"
-> > 	depends on GENERIC_VDSO_TIME_NS
-> 
-> I was thinking to fix this by the same way with a small difference.
-> 
-> If GENERIC_GETTIMEOFDAY isn't set, it should be safe to allow enabling
-> TIME_NS. In this case, clock_gettime works via system call and we don't
-> have arch-specific code in this case. Does this sound reasonable?
-> 
->         depends on (!GENERIC_GETTIMEOFDAY || GENERIC_VDSO_TIME_NS)
+[...]
 
-No, that's wrong. If GENERIC_GETTIMEOFDAY is not set, then the architecture
-still might have its own VDSO implementation and we agreed in Vancouver a
-year ago that we are not going to support per architecture time namespace
-VDSO implementations.
+> @@ -539,6 +543,7 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
+>  	unsigned long util, max;
+>  	unsigned int next_f;
+>  	bool busy;
+> +	unsigned long ramp_boost = 0;
 
-So if at all then you want:
+Shouldn't always order local variable declarations from longest to
+shortest line?
 
-   depends on HAVE_GENERIC_VDSO && (!GENERIC_GETTIMEOFDAY || GENERIC_VDSO_TIME_NS)
+>  	sugov_iowait_boost(sg_cpu, time, flags);
+>  	sg_cpu->last_update = time;
+> @@ -552,10 +557,10 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
+>  	busy = !sg_policy->need_freq_update && sugov_cpu_is_busy(sg_cpu);
+>  
+>  	util = sugov_get_util(sg_cpu);
+> -	sugov_cpu_ramp_boost_update(sg_cpu);
+> +	ramp_boost = sugov_cpu_ramp_boost_update(sg_cpu);
+>  	max = sg_cpu->max;
+>  	util = sugov_iowait_apply(sg_cpu, time, util, max);
+> -	next_f = get_next_freq(sg_policy, util, max);
+> +	next_f = get_next_freq(sg_policy, util, max, ramp_boost);
+>  	/*
+>  	 * Do not reduce the frequency if the CPU has not been idle
+>  	 * recently, as the reduction is likely to be premature then.
+> @@ -587,6 +592,8 @@ static unsigned int sugov_next_freq_shared(struct sugov_cpu *sg_cpu, u64 time)
+>  	struct cpufreq_policy *policy = sg_policy->policy;
+>  	unsigned long util = 0, max = 1;
+>  	unsigned int j;
+> +	unsigned long ramp_boost = 0;
+> +	unsigned long j_ramp_boost = 0;
 
-But that's crap, really.
+Shouldn't always order local variable declarations from longest to
+shortest line?
 
-The reason why HAVE_GENERIC_VDSO and GENERIC_GETTIMEOFDAY exist as separate
-config items is not a functional issue. It's there to ease the migration to
-the generic VDSO implementation. Having generic VDSO in production without
-implementing GENERIC_GETTIMEOFDAY does not make any sense at all.
+>  	for_each_cpu(j, policy->cpus) {
+>  		struct sugov_cpu *j_sg_cpu = &per_cpu(sugov_cpu, j);
+> @@ -594,7 +601,11 @@ static unsigned int sugov_next_freq_shared(struct sugov_cpu *sg_cpu, u64 time)
+>  
+>  		j_util = sugov_get_util(j_sg_cpu);
+>  		if (j_sg_cpu == sg_cpu)
+> -			sugov_cpu_ramp_boost_update(sg_cpu);
+> +			j_ramp_boost = sugov_cpu_ramp_boost_update(sg_cpu);
+> +		else
+> +			j_ramp_boost = sugov_cpu_ramp_boost(j_sg_cpu);
+> +		ramp_boost = max(ramp_boost, j_ramp_boost);
 
-The architectures which implement VDSO are:
+Ah, that's why you call sugov_cpu_ramp_boost_update() from
+sugov_next_freq_shared() in 4/6. So sugov_cpu_ramp_boost_update() is
+more a sugov_cpu_ramp_boost(..., int update)? Minor detail though.
 
-    arm, arm64, mips, nds32, powerpc, riscv, s390, sparc, x86, um
-
-arm64, mips, x86 use the generic VDSO. Patches for arm are floating
-around. UM is special as it just traps into the syscalls. No idea about the
-rest. Vincenzo might know.
-
-The bad news is that we have no information (except on arm which has a
-config switch for VDSO) whether an architecture provides VDSO support or
-not.
-
-So unless you add something like
-
-   config HAS_VDSO
-   	  bool
-
-which is selected by all architectures which provide VDSO support, the only
-sane solution is to depend on GENERIC_VDSO_TIME_NS.
-
-TBH, I would not even bother. The architectures which matter and are going
-to use time namespaces already support VDSO and they need to move to the
-generic implementation anyway as we discussed and agreed on in Vancouver.
-
-Providing time name spaces for the non VDSO archs is a purely academic
-exercise.
-
-Thanks,
-
-	tglx
+[...]
