@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C70A8FA3738
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2943FFA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED4B20854
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05DBE21835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:49:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502888AbfJQMta (ORCPT
+        id S2502814AbfJQMtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 08:49:30 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4211 "EHLO huawei.com"
+        Thu, 17 Oct 2019 08:49:13 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:57294 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2502798AbfJQMt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:49:26 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2A57B420EF2CCB0F76C4;
-        Thu, 17 Oct 2019 20:49:05 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
- 20:48:54 +0800
+        id S2502793AbfJQMtK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 08:49:10 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 2FE54EC8D68941494BFA;
+        Thu, 17 Oct 2019 20:49:07 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
+ 20:48:56 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <linus.walleij@linaro.org>, <manivannan.sadhasivam@linaro.org>,
         <afaerber@suse.de>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
@@ -43,9 +42,9 @@ CC:     <linux-arm-kernel@lists.infradead.org>,
         <haojian.zhuang@gmail.com>, <wens@csie.org>,
         <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <agross@kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 21/30] pinctrl: vt8500: use devm_platform_ioremap_resource() to simplify code
-Date:   Thu, 17 Oct 2019 20:26:31 +0800
-Message-ID: <20191017122640.22976-22-yuehaibing@huawei.com>
+Subject: [PATCH -next 22/30] pinctrl: xway: use devm_platform_ioremap_resource() to simplify code
+Date:   Thu, 17 Oct 2019 20:26:32 +0800
+Message-ID: <20191017122640.22976-23-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20191017122640.22976-1-yuehaibing@huawei.com>
 References: <20191017122640.22976-1-yuehaibing@huawei.com>
@@ -63,24 +62,26 @@ This is detected by coccinelle.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/pinctrl/vt8500/pinctrl-wmt.c | 4 +---
+ drivers/pinctrl/pinctrl-xway.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/vt8500/pinctrl-wmt.c b/drivers/pinctrl/vt8500/pinctrl-wmt.c
-index 4d5cd7d..ea910a1 100644
---- a/drivers/pinctrl/vt8500/pinctrl-wmt.c
-+++ b/drivers/pinctrl/vt8500/pinctrl-wmt.c
-@@ -553,10 +553,8 @@ int wmt_pinctrl_probe(struct platform_device *pdev,
- 		      struct wmt_pinctrl_data *data)
+diff --git a/drivers/pinctrl/pinctrl-xway.c b/drivers/pinctrl/pinctrl-xway.c
+index 913d38f..5e3f31b 100644
+--- a/drivers/pinctrl/pinctrl-xway.c
++++ b/drivers/pinctrl/pinctrl-xway.c
+@@ -1705,12 +1705,10 @@ static int pinmux_xway_probe(struct platform_device *pdev)
  {
- 	int err;
+ 	const struct of_device_id *match;
+ 	const struct pinctrl_xway_soc *xway_soc;
 -	struct resource *res;
+ 	int ret, i;
  
+ 	/* get and remap our register range */
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	data->base = devm_ioremap_resource(&pdev->dev, res);
-+	data->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(data->base))
- 		return PTR_ERR(data->base);
+-	xway_info.membase[0] = devm_ioremap_resource(&pdev->dev, res);
++	xway_info.membase[0] = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(xway_info.membase[0]))
+ 		return PTR_ERR(xway_info.membase[0]);
  
 -- 
 2.7.4
