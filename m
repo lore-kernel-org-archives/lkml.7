@@ -2,84 +2,103 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.9 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC49FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB74FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D8B821A49
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B76021D7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:30:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JJ5+RO1n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pek2pn2Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441531AbfJQVaH (ORCPT
+        id S2503677AbfJQVaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 17:30:07 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43116 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732322AbfJQVaH (ORCPT
+        Thu, 17 Oct 2019 17:30:11 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38707 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732322AbfJQVaK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 17:30:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ddG8SSBXeHtQJjnOT9zp0H8FqPeFjXG/6++DCHq7Y3U=; b=JJ5+RO1nbc5RPXZO0h8IMN4RJ
-        e92r1vlygPa33RKRyNJyhKhytJAub1NRP3EaTujMAZl7OvCs1I3acpPRcZeLqDKm3P8+A31HJ1dRv
-        qqz4YGTTjlrDrWU+OpL0DdUbusmT3CUTm1ecX+92yCADv+YPQ+ZZ9sDxIHcTupHFxdfD2754ibbmi
-        //0P8Is0nHvoBtpa187gKKefIpwRsd3FDDDKW6Pe7H9LUHkEHAwSUZ0Y+kUuzHhTME+Z1mC2KnFTi
-        380ntvNi2DXS3/iaUZ4VfkfZj1wBtXQWyPb3NllLt1x64Of0/ebu550yrNnzx9GwyfsnmFF/OxG6Y
-        3kRyO+msg==;
-Received: from [177.158.182.196] (helo=sandy.ghostprotocols.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iLDLO-00028t-6U; Thu, 17 Oct 2019 21:30:02 +0000
-Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
-        id EE3DA11E4; Thu, 17 Oct 2019 18:29:52 -0300 (BRT)
-Date:   Thu, 17 Oct 2019 18:29:52 -0300
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: Re: [PATCH 1/2] perf: Iterate on tep event arrays directly
-Message-ID: <20191017212952.GA3884@redhat.com>
-References: <20191017210521.465613686@goodmis.org>
- <20191017210636.061448713@goodmis.org>
- <20191017212431.GF3600@kernel.org>
- <20191017172823.15f242eb@gandalf.local.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191017172823.15f242eb@gandalf.local.home>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.5.20 (2009-12-10)
+        Thu, 17 Oct 2019 17:30:10 -0400
+Received: by mail-pg1-f194.google.com with SMTP id w3so2087423pgt.5;
+        Thu, 17 Oct 2019 14:30:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=h/bBHRGusj98Ie+f89J7SFLKi2fjMoUyMTs7iY5sfPs=;
+        b=pek2pn2QOW42nThx78gpJ5eiILVpMLYfOI2e8D3iR7iPQEXoh5JdfF1Qu0FK+lGCHM
+         rhfvKLT4pa4vyKPCXuC6ecbmlRgJ2DH0ExZpiTPGHFMzCxwIPx8rSFDC6a/nTc8U03EU
+         RSqVFnQjyyHLm8AfXh4B4IWcgdXPwx0CwLwXZ/hksT3qm9lntnIDOo9Ng6cqVcPFJhUw
+         zhZ4K5ms0I/s4cvJNumxUpuDMNz/dO4PSh0qADEHotDYexzHpDuUk+2AwM9S2b4MbP2H
+         xolo2psfzeukidI6shOdZtzIfta+BsGZA8faGmCVcxjXbSVVbFzMpzlWMR4E9holJ3GS
+         2EmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=h/bBHRGusj98Ie+f89J7SFLKi2fjMoUyMTs7iY5sfPs=;
+        b=oKpuBNtIzHQcR+wOMfl67oEDoQl5vFHiI43HzOUW14j8xCqZ2mNETK7b6bOLIQB464
+         HAe8xcV9AmENbIJ1xqD/irj+8v9aH3FIjUiyd6fQy5lw8Qj5womFVCxMxixDMLOthZlJ
+         JK50TLk79jE+tyyI7v/rEgSN0t3c3UX4EEsGiKY6r1y/Lsy/+ct8o4O+HbQ6HVhhUkag
+         TIwUxDilq/RaPKScHSHgp75aOiNRsQedIsrvQm5YGFpZYdAzUyhBaihbiaWLpdzGzr/g
+         YbK/mEzpHezNwfyxsX7I1VruwrYubDj0nlp+30JEP23DaxFWgR8QsnTdO6Z8ZFj0KX+9
+         +MwQ==
+X-Gm-Message-State: APjAAAVffWPSXpeoAsoii0Lc/WBZy7ji5SGclms1OVeMPGFo/wObFo4B
+        NfDCWTKfakYKp16eie8ZWMc=
+X-Google-Smtp-Source: APXvYqwQH11M5d3vGXCkqWTsm7amqBAPjHqccTvWu4XC7F8fg2mPRURwIMBKTQC90afxBF7EvjNckg==
+X-Received: by 2002:a17:90a:1b49:: with SMTP id q67mr7023570pjq.115.1571347809693;
+        Thu, 17 Oct 2019 14:30:09 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id w6sm4297898pfw.84.2019.10.17.14.30.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 14:30:09 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        c-hbandi@codeaurora.org, bgodavar@codeaurora.org
+Cc:     linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH] Bluetooth: hci_qca: Add delay for wcn3990 stability
+Date:   Thu, 17 Oct 2019 14:29:55 -0700
+Message-Id: <20191017212955.6266-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Oct 17, 2019 at 05:28:23PM -0400, Steven Rostedt escreveu:
-> On Thu, 17 Oct 2019 18:24:31 -0300
-> Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
-> 
-> > I'll add a:
-> > 
-> > Fixes: bb3dd7e7c4d5 ("tools lib traceevent, perf tools: Move struct tep_handler definition in a local header file")
-> > Cc: stable@vger.kernel.org : v4.20+
-> > 
-> > As this is when this problem starts causing the segfault when generating
-> > python scripts from perf.data files with multiple tracepoint events, ok?
-> 
-> Sure, go ahead. I realized I forgot to add a Fixes tag when sending it.
+On the msm8998 mtp, the response to the baudrate change command is never
+received.  On the Lenovo Miix 630, the response to the baudrate change
+command is corrupted - "Frame reassembly failed (-84)".
 
-np, I added it, thanks for the prompt fix!
+Adding a 50ms delay before re-enabling flow to receive the baudrate change
+command response from the wcn3990 addesses both issues, and allows
+bluetooth to become functional.
 
-- Arnaldo
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ drivers/bluetooth/hci_qca.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index e3164c200eac..265fc60c3850 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -1156,8 +1156,10 @@ static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
+ 		host_set_baudrate(hu, speed);
+ 
+ error:
+-		if (qca_is_wcn399x(soc_type))
++		if (qca_is_wcn399x(soc_type)) {
++			msleep(50);
+ 			hci_uart_set_flow_control(hu, false);
++		}
+ 
+ 		if (soc_type == QCA_WCN3990) {
+ 			/* Wait for the controller to send the vendor event
+-- 
+2.17.1
+
