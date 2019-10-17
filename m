@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A97DFECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB02ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 881F921A49
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D462089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:20:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440009AbfJQOU3 (ORCPT
+        id S2440065AbfJQOUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 10:20:29 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:48009 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394998AbfJQOU1 (ORCPT
+        Thu, 17 Oct 2019 10:20:34 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:50449 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2440027AbfJQOUb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:20:27 -0400
+        Thu, 17 Oct 2019 10:20:31 -0400
 X-Originating-IP: 86.207.98.53
 Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
         (Authenticated sender: gregory.clement@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 4201F20009;
-        Thu, 17 Oct 2019 14:20:25 +0000 (UTC)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id B2D26E000A;
+        Thu, 17 Oct 2019 14:20:28 +0000 (UTC)
 From:   Gregory CLEMENT <gregory.clement@bootlin.com>
 To:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
         linux-kernel@vger.kernel.org
@@ -34,9 +34,9 @@ Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
         linux-arm-kernel@lists.infradead.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH 4/7] spi: atmel: Remove useless private field
-Date:   Thu, 17 Oct 2019 16:18:43 +0200
-Message-Id: <20191017141846.7523-5-gregory.clement@bootlin.com>
+Subject: [PATCH 7/7] spi: atmel: Improve CS0 case support on AT91RM9200
+Date:   Thu, 17 Oct 2019 16:18:46 +0200
+Message-Id: <20191017141846.7523-8-gregory.clement@bootlin.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191017141846.7523-1-gregory.clement@bootlin.com>
 References: <20191017141846.7523-1-gregory.clement@bootlin.com>
@@ -47,79 +47,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the conversion to GPIO descriptor, the GPIO used as chip select,
-can be directly access from the spi_device struct. So there is no need
-to keep the field npcs_pin.
+Thanks to the recent change in this driver, it is now possible to
+prevent using the CS0 with GPIO during setup. It then allows to remove
+the special handling of this case in the cs_activate() and
+cs_deactivate() functions.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 ---
- drivers/spi/spi-atmel.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+ drivers/spi/spi-atmel.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
-index b511df6a4846..19600de40422 100644
+index ac5e2ddf9e1b..d88e2aa64839 100644
 --- a/drivers/spi/spi-atmel.c
 +++ b/drivers/spi/spi-atmel.c
-@@ -284,7 +284,6 @@ struct atmel_spi {
- 
- /* Controller-specific per-slave state */
- struct atmel_spi_device {
--	struct gpio_desc	*npcs_pin;
- 	u32			csr;
- };
- 
-@@ -347,8 +346,8 @@ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
- 		}
+@@ -371,7 +371,7 @@ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
  
  		mr = spi_readl(as, MR);
--		if (asd->npcs_pin)
--			gpiod_set_value(asd->npcs_pin, 1);
+ 		mr = SPI_BFINS(PCS, ~(1 << chip_select), mr);
+-		if (spi->cs_gpiod && spi->chip_select != 0)
 +		if (spi->cs_gpiod)
-+			gpiod_set_value(spi->cs_gpiod, 1);
- 	} else {
- 		u32 cpol = (spi->mode & SPI_CPOL) ? SPI_BIT(CPOL) : 0;
- 		int i;
-@@ -364,8 +363,8 @@ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
- 
- 		mr = spi_readl(as, MR);
- 		mr = SPI_BFINS(PCS, ~(1 << spi->chip_select), mr);
--		if (asd->npcs_pin && spi->chip_select != 0)
--			gpiod_set_value(asd->npcs_pin, 1);
-+		if (spi->cs_gpiod && spi->chip_select != 0)
-+			gpiod_set_value(spi->cs_gpiod, 1);
+ 			gpiod_set_value(spi->cs_gpiod, 1);
  		spi_writel(as, MR, mr);
  	}
+@@ -402,7 +402,7 @@ static void cs_deactivate(struct atmel_spi *as, struct spi_device *spi)
  
-@@ -374,7 +373,6 @@ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
- 
- static void cs_deactivate(struct atmel_spi *as, struct spi_device *spi)
- {
--	struct atmel_spi_device *asd = spi->controller_state;
- 	u32 mr;
- 
- 	/* only deactivate *this* device; sometimes transfers to
-@@ -388,10 +386,10 @@ static void cs_deactivate(struct atmel_spi *as, struct spi_device *spi)
- 
- 	dev_dbg(&spi->dev, "DEactivate NPCS, mr %08x\n", mr);
- 
--	if (!asd->npcs_pin)
-+	if (!spi->cs_gpiod)
+ 	if (!spi->cs_gpiod)
  		spi_writel(as, CR, SPI_BIT(LASTXFER));
- 	else if (atmel_spi_is_v2(as) || spi->chip_select != 0)
--		gpiod_set_value(asd->npcs_pin, 0);
-+		gpiod_set_value(spi->cs_gpiod, 0);
+-	else if (atmel_spi_is_v2(as) || spi->chip_select != 0)
++	else
+ 		gpiod_set_value(spi->cs_gpiod, 0);
  }
  
- static void atmel_spi_lock(struct atmel_spi *as) __acquires(&as->lock)
-@@ -1205,9 +1203,6 @@ static int atmel_spi_setup(struct spi_device *spi)
- 		if (!asd)
- 			return -ENOMEM;
+@@ -1193,7 +1193,16 @@ static void initialize_native_cs_for_gpio(struct atmel_spi *as)
+ 	if (!master->cs_gpiods)
+ 		return; /* No CS GPIO */
  
--		if (spi->cs_gpiod)
--			asd->npcs_pin = spi->cs_gpiod;
--
- 		spi->controller_state = asd;
- 	}
+-	for (i = 0; i < 4; i++)
++	/*
++	 * On the first version of the controller (AT91RM9200), CS0
++	 * can't be used associated with GPIO
++	 */
++	if (atmel_spi_is_v2(as))
++		i = 0;
++	else
++		i = 1;
++
++	for (; i < 4; i++)
+ 		if (master->cs_gpiods[i])
+ 			as->native_cs_free |= BIT(i);
  
 -- 
 2.23.0
