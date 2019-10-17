@@ -2,235 +2,118 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD53CA9EB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2A4CA9EB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34C2021D80
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1646E21D7A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:08:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKxRTbc/"
+	dkim=pass (2048-bit key) header.d=mbobrowski-org.20150623.gappssmtp.com header.i=@mbobrowski-org.20150623.gappssmtp.com header.b="P9ne7A9V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441700AbfJQXAT (ORCPT
+        id S2441716AbfJQXIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 19:00:19 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37106 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389846AbfJQXAS (ORCPT
+        Thu, 17 Oct 2019 19:08:22 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44405 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2441702AbfJQXIW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 19:00:18 -0400
-Received: by mail-pl1-f194.google.com with SMTP id u20so1864942plq.4;
-        Thu, 17 Oct 2019 16:00:18 -0700 (PDT)
+        Thu, 17 Oct 2019 19:08:22 -0400
+Received: by mail-pg1-f196.google.com with SMTP id e10so2201381pgd.11
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 16:08:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=mbobrowski-org.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Hn50OmnbePcUrBFpzCHHjPlWMo4Zv5ggnBIvFTVy/1c=;
-        b=EKxRTbc/ylIrzdUg8QwmKQ8lCf0hAqdDeh7kx/8psoxYyYcnXino7rOgEcNjfGI882
-         SWuMmPHiQwkyXmBWHlCLx5flrLT49Pw9Fozp9qoSX0TanKLSGsQqRZNfszGrDnBHNbzW
-         s8tK/i+6izd8u/sopL1my3YcDip0WwTJ4muqUvWY/wSu3nflp2PMfF/Mj9xJM3tV0dcf
-         p2qu730FSxykyDoX50RRzK2zDH5hp3awi1fWrmRLUtLlVxbgkJPwh7PpBqodSEEvD/Tk
-         0PuRLvxpSNscDg62NjiImYB1C9jUV+mU7RdLcf9y8Yexs/LbZFz6q43Gydrt0d7T8U1x
-         UvxQ==
+        bh=98GpYLRwSkTQW+31mE56KMoWjsDPbX3fOPDTfwNIEJY=;
+        b=P9ne7A9VWvIgJ2CO0Eq3g3Kuwsg77OIPUU+GUMXqFkhK5opoPq3Il7YFz+76EO/J+t
+         7QHE4Aa6cQMU7X2JhpLe3yAyTAaLF5dtPVAkZa0M2g4Ixr6Usjl5mItPREAGWevki8rq
+         ngIG77OZuG6GQMqfLAtfu/F/e9wekmOYLZQWeo38NfDgj/NkBIO4ScpZr00AYYlcZZC5
+         OKtHkwEQDctGBeSTwEH9caCaMmriRHAgWvOHonl9dKWoOkGJwRoKWfM4geEtbeDP/Ico
+         tCrVeZ/0+dk1GqzmjU9kl/zbuu3nmGqOiLdOxNzZH49j0tNMfIHi9qcb5fo8To4wJQHP
+         xRRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Hn50OmnbePcUrBFpzCHHjPlWMo4Zv5ggnBIvFTVy/1c=;
-        b=QzNOZmy3kattwDsp0cRbq/5OYM8QCjyXkp3yqNAFd53Bc6+hLU8Cb62t0umUKe7iyb
-         cya9GA1v/v03ng/9JOgRldDxkVbnS0MzZSbppEVYUkzE+4G83+9rtlujdiymome9TCwj
-         sd5rqFGkivHDAeuwbHdH8Qy36Sug/jin/T70UoLA9ZCRAJRpqU03HlsC/IUX3UN09KAR
-         G2D7CARR7X2fIN/l+2Ih+wsa/+jo1e2iYRhKMaO1Ib6fQwpGiT9+e+uhjZsOmAuZJANm
-         Ptga4pBGROjyw43gcOX4BCLwDSylDp7ucNiO/siuYUzv75ndtUjw33G9+UmwzHR/RbvH
-         2WfQ==
-X-Gm-Message-State: APjAAAUuVJICoz/Zb707vVBV5pMumMAjYqWZdMxGbfbCGGuZWD1lOY1n
-        hvov4TiJ+d077OYj+5YjAhtcEm/w1MkSyg==
-X-Google-Smtp-Source: APXvYqz+WwsKwsdDNjzRsnSV94v64w6bbgu3jT8vSj22GVocsgOFK1fOyebcH1wRnKPCgbOk+baYUw==
-X-Received: by 2002:a17:902:6bc4:: with SMTP id m4mr6573308plt.103.1571353217991;
-        Thu, 17 Oct 2019 16:00:17 -0700 (PDT)
-Received: from Gentoo ([103.231.90.170])
-        by smtp.gmail.com with ESMTPSA id h8sm4437245pfo.64.2019.10.17.16.00.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Oct 2019 16:00:17 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 04:30:03 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     yamada.masahiro@socionext.com, michal.lkml@markovi.net,
-        bfields@fieldses.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scripts : prune-kernel : prune kernels generalized way
-Message-ID: <20191017230000.GA13667@Gentoo>
-References: <20191017063126.2005-1-unixbhaskar@gmail.com>
- <7965fdbe-eb2b-1178-61c3-ad54fa147fb3@infradead.org>
+        bh=98GpYLRwSkTQW+31mE56KMoWjsDPbX3fOPDTfwNIEJY=;
+        b=M/iXwADY9PBpx1yBCpcEWERAzrvuxZe5rqyknLE7J+e21G+z5LK5LkIQhnQ1B/97AK
+         sgWpMdvMjhHky8qWurdM15rQ4l/eATB66ajaZxSo5ZloNz/KKDfpVWwc/zlYIuy6z8F6
+         12NsVBoRFdkxgjSK6d/lzuv9daDnuaP4ofg5UruqC15pajZa6rxPdgPWmu005eQsPoY0
+         +aO67WbLmFFVAaYlL/zvZdNwtBN8/SRjbk7X2pSdijYgTqyYMWO0AYZj4MZpW00xarWj
+         W9NE4mZVc3jfItQibynDtNGLMIRkd/kyS9YLfmI1PubWTMZIJBrj7N9BngozQ/MsqC97
+         maJA==
+X-Gm-Message-State: APjAAAVDIoo6jzIXKi56IiDd9d+y5oksXCE0tWmwCEKzJXsP287ziBay
+        2FkxVdmy5G7gkZLEze8l2n3I
+X-Google-Smtp-Source: APXvYqyYF3m9FhGnMdMs4e2xcow7BtBbKNzso2k1mf749r04JEdi6TI4LKrua9x0eLSiK5Xnypurvw==
+X-Received: by 2002:a63:41c7:: with SMTP id o190mr6771050pga.6.1571353701420;
+        Thu, 17 Oct 2019 16:08:21 -0700 (PDT)
+Received: from bobrowski ([110.232.114.101])
+        by smtp.gmail.com with ESMTPSA id t11sm3418848pjy.10.2019.10.17.16.08.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 16:08:20 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 10:08:14 +1100
+From:   Matthew Bobrowski <mbobrowski@mbobrowski.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Dave Chinner <dchinner@redhat.com>
+Subject: Re: [PATCH 01/14] iomap: iomap that extends beyond EOF should be
+ marked dirty
+Message-ID: <20191017230814.GB31874@bobrowski>
+References: <20191017175624.30305-1-hch@lst.de>
+ <20191017175624.30305-2-hch@lst.de>
+ <20191017183917.GL13108@magnolia>
+ <20191017215613.GN16973@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="IJpNTDwzlM2Ie8A6"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7965fdbe-eb2b-1178-61c3-ad54fa147fb3@infradead.org>
+In-Reply-To: <20191017215613.GN16973@dread.disaster.area>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Oct 18, 2019 at 08:56:13AM +1100, Dave Chinner wrote:
+> On Thu, Oct 17, 2019 at 11:39:17AM -0700, Darrick J. Wong wrote:
+> > On Thu, Oct 17, 2019 at 07:56:11PM +0200, Christoph Hellwig wrote:
+> > > From: Dave Chinner <dchinner@redhat.com>
+> > > 
+> > > When doing a direct IO that spans the current EOF, and there are
+> > > written blocks beyond EOF that extend beyond the current write, the
+> > > only metadata update that needs to be done is a file size extension.
+> > > 
+> > > However, we don't mark such iomaps as IOMAP_F_DIRTY to indicate that
+> > > there is IO completion metadata updates required, and hence we may
+> > > fail to correctly sync file size extensions made in IO completion
+> > > when O_DSYNC writes are being used and the hardware supports FUA.
+> > > 
+> > > Hence when setting IOMAP_F_DIRTY, we need to also take into account
+> > > whether the iomap spans the current EOF. If it does, then we need to
+> > > mark it dirty so that IO completion will call generic_write_sync()
+> > > to flush the inode size update to stable storage correctly.
+> > > 
+> > > Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > 
+> > Looks ok, but need fixes tag.  Also, might it be wise to split off the
+> > ext4 section into a separate patch so that it can be backported
+> > separately?
+> 
+> I 've done a bit more digging on this, and the ext4 part is not
+> needed for DAX as IOMAP_F_DIRTY is only used in the page fault path
+> and hence can't change the file size. As such, this only affects
+> direct IO. Hence the ext4 hunk can be added to the ext4 iomap-dio
+> patchset that is being developed rather than being in this patch.
 
---IJpNTDwzlM2Ie8A6
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Noted, thanks Dave. I've incorporated the ext4 related change into my patch
+series.
 
-On 13:16 Thu 17 Oct 2019, Randy Dunlap wrote:
->On 10/16/19 11:31 PM, Bhaskar Chowdhury wrote:
->> This patch will remove old kernel from the system in a selective way.
->>=20
->> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
->> ---
->> For Randy :
->> =E2=9C=94 ~/git-linux/linux-kbuild [master|AM/REBASE =E2=86=91=C2=B78|=
-=E2=9C=94]
->> 11:42 $ ./scripts/checkpatch.pl -f
->> scripts/0001-Fix-all-the-concern-raised-by-Randy.patch
->> total: 0 errors, 0 warnings, 93 lines checked
->>=20
->> scripts/0001-Fix-all-the-concern-raised-by-Randy.patch has no obvious
->> style problems and is ready for submission.
->>=20
->> scripts/prune-kernel | 75 ++++++++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 75 insertions(+)
->>=20
->> diff --git a/scripts/prune-kernel b/scripts/prune-kernel
->> index e69de29bb2d1..9461ae2bc122 100755
->> --- a/scripts/prune-kernel
->> +++ b/scripts/prune-kernel
->> @@ -0,0 +1,75 @@
->> +#!/bin/bash
->> +# SPDX-License-Identifier: GPL-2.0
->> +
->> +# because I use CONFIG_LOCALVERSION_AUTO, not the same version again and
->> +# again, /boot and /lib/modules/ eventually fill up.
->> +# Dumb script to purge that stuff:
->> +
->> +#for f in "$@"
->> +#do
->> +#        if rpm -qf "/lib/modules/$f" >/dev/null; then
->> +#                echo "keeping $f (installed from rpm)"
->> +#        elif [ $(uname -r) =3D "$f" ]; then
->> +#                echo "keeping $f (running kernel) "
->> +#        else
->> +#                echo "removing $f"
->> +#                rm -f "/boot/initramfs-$f.img" "/boot/System.map-$f"
->> +#                rm -f "/boot/vmlinuz-$f"   "/boot/config-$f"
->> +#                rm -rf "/lib/modules/$f"
->> +#                new-kernel-pkg --remove $f
->> +#        fi
->> +#done
->> +boot_dir=3D/boot
->> +modules_dir=3D/lib/modules
->> +function remove_old_kernel(){
->> +	cd $boot_dir
->> +	rm -If vmlinuz-$kernel_version System.map-$kernel_version config-$kern=
-el_verison
->
->typo/spello: not tested:                                                  =
-^^^^^^^^^^^^^^
->
-/face palm
->> +}
->> +function remove_old_kernel_modules_dir(){
->> +	cd $modules_dir
->> +	rm -rf $modules_version
->> +}
->> +printf "\n\n Enlist the installed kernels \n\n"
->> +
->> +find $boot_dir -name "vmlinuz-*" -type f  -exec ls -1 {} \;
->> +
->> +printf "\n\n\n Please give the kernel version to remove: %s"
->> +read kernel_version
->> +if [[ $kernel_version -eq "" ]];then
->> +	printf "You have forgotten the version to give for removal"
->
->No message needed IMO -- just exit.
->
-I though busy user mind should be reminded what they miss, so the msg.=20
->> +	exit 1
->> +else
->> +        remove_old_kernel
->> +fi
->> +
->> +printf "\n\n Enlist the installed modules directory \n\n"
->> +
->> +find $modules_dir  -maxdepth 0 -type d -exec ls -1 {} \;
->> +
->> +printf "\n\n Please give the full modules directory name to remove: %s"
->> +read modules_version
->> +if [[ $modules_version -eq "" ]];then
->> +	printf "You have forgotten to give the modules dir to remove"
->
->ditto.
->
-Same login like above if it reaches here, which should not.
->> +else
->> +        remove_old_kernel_modules_dir
->> +fi
->> +
->> +printf "\n\n Removed kernel version: $kernel_version and associated mod=
-ules: $modules_version ...Done \n"
->> +while :
->> +  do
->> +     printf "\n\n Do you want to remove another?[YN] : %s"
->> +     read response
->> +
->> +       if [[ $response =3D=3D "Y" ]];then
->
->Odd indentation here.  Some lines use tab, some lines use spaces.
->
-Don't know how fix this bloody thing.
->> +	printf "Please give another version to remove : %s"
->> +	read kernel_version
->> +	remove_old_kernel
->> +	printf "\n\n Please give the full modules directory name to remove: %s"
->> +	read modules_version
->> +	remove_old_kernel_modules_dir
->> +        printf "\n\n Removed kernel version: $kernel_version and associ=
-ated modules: $modules_version ...Done \n"
->> +
->> +      elif [[ $response =3D=3D "N" ]];then
->> +	   exit 1
->> +      fi
->> +  done
->> --
->> 2.21.0
->
->
->And lastly, 'patch' will apply this patch cleanly, but it ends up with
->almost all of this patch inserted into the new prune-kernel source file
->before the current contents of the prune-kernel source file,
->so I think that the emailed patch file has a problem.
->
-Duh! that shit ...should have realized it before ...
->--=20
->~Randy
->
-Thanks Randy for the heads up.
-
---IJpNTDwzlM2Ie8A6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl2o8m0ACgkQsjqdtxFL
-KRU9GAf+K+uMac1DNj+yAGyQcaXyUs3kvQtBfyLEacjl2ppnCzu7cLIAhtHAAFaK
-Tc025f13QdHL8oYH6HS7ME/SyrDqgHUeulk0vWU9QzmnC+wU2NEnYcX5vXhHfXL/
-gbhlR0UV7L8BNpPUQ6KNr/2UNugTdaDMdL2vfBd7qIo7jDGXZxF1elFTBqZXwU47
-QZ/MG/9h3/E8yVc1EtbT9/WsuQOhGDH7+1djciMi4P0leYEmfXlC/hBxkREqq1ps
-C6DxdyOWzaVE4aFzCz7C2/qJsETB2DH5cilo+txZZKIeterftdUbxS9rGbFVCLGN
-nqRgM1vaRiBdtiEAdcEoIGqP5832bQ==
-=Cl31
------END PGP SIGNATURE-----
-
---IJpNTDwzlM2Ie8A6--
+--<M>--
