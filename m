@@ -2,102 +2,101 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8341AFA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F2FFA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62D862089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85DD320650
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:26:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571322367;
+	bh=I6Dg/qNeVAPfx20vBVrnFd28E/MLWBIV0w67nh1h4YQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Gi8Jph9p2IpGIt+4m44R95GEf2DeUfenzj9Try4jEdEouO8VltcVyToO9lw3pYUpw
+	 w5KBDJ88g11RSP8bT+4j+mMOhmN/dwyOgpQfvr2WKCKN/AwvXAu1a++d3uC3pgpNso
+	 5a02+ynv7gkHu2kukVJOEybhKEXC7t9o/39kHIbY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395301AbfJQOZT (ORCPT
+        id S2395342AbfJQO0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 10:25:19 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:38830 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727671AbfJQOZT (ORCPT
+        Thu, 17 Oct 2019 10:26:06 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39199 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbfJQO0G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:25:19 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-35-wLuQ8dFnOzq0PfuTddZlqw-1; Thu, 17 Oct 2019 15:25:15 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 17 Oct 2019 15:25:14 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 17 Oct 2019 15:25:14 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Yunfeng Ye' <yeyunfeng@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-CC:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "wuyun.wu@huawei.com" <wuyun.wu@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
-        "linfeilong@huawei.com" <linfeilong@huawei.com>
-Subject: RE: [PATCH V2] arm64: psci: Reduce waiting time of
- cpu_psci_cpu_kill()
-Thread-Topic: [PATCH V2] arm64: psci: Reduce waiting time of
- cpu_psci_cpu_kill()
-Thread-Index: AQHVhO5+Vr2ETd8AWEKYYhhOaw9ZuKde3Cgg///1GwCAABHQgA==
-Date:   Thu, 17 Oct 2019 14:25:14 +0000
-Message-ID: <173d1913031b4ecb88f0c6e421cc5cf8@AcuMS.aculab.com>
-References: <18068756-0f39-6388-3290-cf03746e767d@huawei.com>
- <9df267db-e647-a81d-16bb-b8bfb06c2624@huawei.com>
- <20191016153221.GA8978@bogus>
- <0f550044-9ed2-5f72-1335-73417678ba45@huawei.com>
- <c97c87b52f474463bc30ff8033a57e0c@AcuMS.aculab.com>
- <1cd555f0-4074-36b7-8426-6f01130051d2@huawei.com>
-In-Reply-To: <1cd555f0-4074-36b7-8426-6f01130051d2@huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 17 Oct 2019 10:26:06 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w144so2308717oia.6;
+        Thu, 17 Oct 2019 07:26:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sQj/zBJhKuYRwFrLjvxrReZ/y/Qrf1kIMamU374hlqc=;
+        b=TgBvVrtwgt8A2GIPPBS7e3PhVv83wU1UM7mkt3BVq0OUzBtFPVYg/0ZMR55HXcTShs
+         2kFPumqY3Es7qz6FGS2OK0pR+UJEaZ/K3RUNKh4Ppf3HPr3iMb2oG7I0MVGsMqJuFnWc
+         OoOu0nN9JbJT8SKdS5CCCq0e9ovGd43qP2iRcwFaRR4ovPhX0T9i7wgPXmuORjTL4dIy
+         NugM3aUF9xan5uw6zoj5gAk4IOQZVAOCyB7h+iTjJcjY2DIEwXcQzg0vRj1fpvYgdoTt
+         nagyCldx1zHrEsiWXsKYtKKm60h1vaao8hj7mE2RyDwQon5L8iDrUcesgTw0WssDCsel
+         gvuQ==
+X-Gm-Message-State: APjAAAW3iMPyalQ9R9mNCCumzUAhCESNdvB5FcA2UXhsWQ0FJZe6lzEa
+        jCRDKag1UNbAOIOKM9+lEMNax3cVv6GX47aTkAQ=
+X-Google-Smtp-Source: APXvYqyHqI57//nv0LBbPo/BFK5Uwcsm94CifotPrIepSBfB4ttX0otcR0MrYfziN5z+uOK2DyWqugjfMV6c8EtnZ0E=
+X-Received: by 2002:a05:6808:917:: with SMTP id w23mr3333732oih.68.1571322364933;
+ Thu, 17 Oct 2019 07:26:04 -0700 (PDT)
 MIME-Version: 1.0
-X-MC-Unique: wLuQ8dFnOzq0PfuTddZlqw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+References: <20191016194450.68959-1-helgaas@kernel.org>
+In-Reply-To: <20191016194450.68959-1-helgaas@kernel.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 17 Oct 2019 16:25:52 +0200
+Message-ID: <CAJZ5v0gKShBYor_80qfP8F_4oCKKxDefjbqRzr5GrqHOV6-Yog@mail.gmail.com>
+Subject: Re: [PATCH] PCI/PM: Note that PME can be generated from D0
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogWXVuZmVuZyBZZQ0KID4gU2VudDogMTcgT2N0b2JlciAyMDE5IDE1OjIwDQo+IE9uIDIw
-MTkvMTAvMTcgMjI6MDAsIERhdmlkIExhaWdodCB3cm90ZToNCj4gPiBGcm9tOiBZdW5mZW5nIFll
-DQo+ID4+IFNlbnQ6IDE3IE9jdG9iZXIgMjAxOSAxNDoyNg0KPiA+IC4uLg0KPiA+Pj4+IC0JZm9y
-IChpID0gMDsgaSA8IDEwOyBpKyspIHsNCj4gPj4+PiArCWkgPSAwOw0KPiA+Pj4+ICsJdGltZW91
-dCA9IGppZmZpZXMgKyBtc2Vjc190b19qaWZmaWVzKDEwMCk7DQo+ID4+Pj4gKwlkbyB7DQo+ID4+
-Pj4gIAkJZXJyID0gcHNjaV9vcHMuYWZmaW5pdHlfaW5mbyhjcHVfbG9naWNhbF9tYXAoY3B1KSwg
-MCk7DQo+ID4+Pj4gIAkJaWYgKGVyciA9PSBQU0NJXzBfMl9BRkZJTklUWV9MRVZFTF9PRkYpIHsN
-Cj4gPj4+PiAgCQkJcHJfaW5mbygiQ1BVJWQga2lsbGVkLlxuIiwgY3B1KTsNCj4gPj4+PiAgCQkJ
-cmV0dXJuIDA7DQo+ID4+Pj4gIAkJfQ0KPiA+Pj4+DQo+ID4+Pj4gLQkJbXNsZWVwKDEwKTsNCj4g
-Pj4+PiAtCQlwcl9pbmZvKCJSZXRyeWluZyBhZ2FpbiB0byBjaGVjayBmb3IgQ1BVIGtpbGxcbiIp
-Ow0KPiA+Pj4NCj4gPj4+IFlvdSBkcm9wcGVkIHRoaXMgbWVzc2FnZSwgYW55IHBhcnRpY3VsYXIg
-cmVhc29uID8NCj4gPj4+DQo+ID4+IFdoZW4gcmVkdWNlIHRoZSB0aW1lIGludGVydmFsIHRvIDFt
-cywgdGhlIHByaW50IG1lc3NhZ2UgbWF5YmUgaW5jcmVhc2UgMTAgdGltZXMuDQo+ID4+IG9uIHRo
-ZSBvdGhlciBoYW5kLCBjcHVfcHNjaV9jcHVfa2lsbCgpIHdpbGwgcHJpbnQgbWVzc2FnZSBvbiBz
-dWNjZXNzIG9yIGZhaWx1cmUsIHdoaWNoDQo+ID4+IHRoaXMgcmV0cnkgbG9nIGlzIG5vdCB2ZXJ5
-IG5lY2Vzc2FyeS4gb2YgY291cmNlLCBJIHRoaW5rIHVzZSBwcl9pbmZvX29uY2UoKSBpbnN0ZWFk
-IG9mDQo+ID4+IHByX2luZm8oKSBpcyBiZXR0ZXIuDQo+ID4NCj4gPiBNYXliZSB5b3Ugc2hvdWxk
-IHByaW50IGluIG9uIChzYXkpIHRoZSAxMHRoIHRpbWUgYXJvdW5kIHRoZSBsb29wLg0KPiA+DQo+
-IENhbiBpdCBsaWtlIHRoaXM6DQo+ICAgcHJfaW5mbygiQ1BVJWQga2lsbGVkIHdpdGggJWQgbG9v
-cHMuXG4iLCBjcHUsIGxvb3BzKTsNCj4gDQo+IElmIHB1dCB0aGUgbnVtYmVyIG9mIHdhaXRpbmcg
-dGltZXMgaW4gdGhlIHN1Y2Nlc3NmdWwgcHJpbnRpbmcgbWVzc2FnZSwgaXQgaXMNCj4gbm90IG5l
-Y2Vzc2FyeSB0byBwcmludCB0aGUgIlJldHJ5aW5nIC4uLiIgbWVzc2FnZS4NCg0KVGhhdCBkZXBl
-bmRzIG9uIHdoZXRoZXIgeW91IHdhbnQgdG8ga25vdyBob3cgbG9uZyBpdCB0b29rIG9yIHdoeSB0
-aGUgc3lzdGVtDQppcyAnc3R1Y2snLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNz
-IExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAx
-UFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+On Wed, Oct 16, 2019 at 9:44 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>
+> Per PCIe r5.0 sec 7.5.2.1, PME may be generated from D0, so update
+> Documentation/power/pci.rst to reflect that.
+>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 
+Good catch:
+
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+> ---
+>  Documentation/power/pci.rst | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/power/pci.rst b/Documentation/power/pci.rst
+> index db41a770a2f5..a90e82c70a3b 100644
+> --- a/Documentation/power/pci.rst
+> +++ b/Documentation/power/pci.rst
+> @@ -130,8 +130,8 @@ a full power-on reset sequence and the power-on defaults are restored to the
+>  device by hardware just as at initial power up.
+>
+>  PCI devices supporting the PCI PM Spec can be programmed to generate PMEs
+> -while in a low-power state (D1-D3), but they are not required to be capable
+> -of generating PMEs from all supported low-power states.  In particular, the
+> +while in any power state (D0-D3), but they are not required to be capable
+> +of generating PMEs from all supported power states.  In particular, the
+>  capability of generating PMEs from D3cold is optional and depends on the
+>  presence of additional voltage (3.3Vaux) allowing the device to remain
+>  sufficiently active to generate a wakeup signal.
+> --
+> 2.23.0.700.g56cf767bdb-goog
+>
