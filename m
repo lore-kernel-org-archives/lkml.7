@@ -2,176 +2,112 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F18EAFA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAF2FA3733
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCA1C214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:48:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B36B20869
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:49:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408977AbfJQKsq (ORCPT
+        id S2408991AbfJQKtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 06:48:46 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4200 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404935AbfJQKsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 06:48:46 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A2180ED5B096681864B1;
-        Thu, 17 Oct 2019 18:48:44 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.75) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 17 Oct 2019 18:48:43 +0800
-From:   Daode Huang <huangdaode@hisilicon.com>
-To:     <jason@lakedaemon.net>, <andrew@lunn.ch>,
-        <gregory.clement@bootlin.com>, <sebastian.hesselbarth@gmail.com>,
-        <tglx@linutronix.de>, <maz@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <nm@ti.com>, <t-kristo@ti.com>, <ssantosh@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH v2] use devm_platform_ioremap_resource() for irqchip drivers
-Date:   Thu, 17 Oct 2019 18:45:54 +0800
-Message-ID: <1571309154-241085-1-git-send-email-huangdaode@hisilicon.com>
-X-Mailer: git-send-email 2.8.1
+        Thu, 17 Oct 2019 06:49:04 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:40285 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404935AbfJQKtD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 06:49:03 -0400
+X-Originating-IP: 86.207.98.53
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 57C6360007;
+        Thu, 17 Oct 2019 10:49:00 +0000 (UTC)
+Date:   Thu, 17 Oct 2019 12:48:59 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>
+Subject: Re: [RFC PATCH 09/13] mfd: rtc: support RTC on ROHM BD71828 with
+ BD70528 driver
+Message-ID: <20191017104859.GC3125@piout.net>
+References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+ <9ccc83f3dfd0fd0dc8178adf41b52115f960c45a.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+ <20191017101225.GB3125@piout.net>
+ <a1aa91f74b41033fed4a7106247f48f9b9f78bd9.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.75]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a1aa91f74b41033fed4a7106247f48f9b9f78bd9.camel@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daode Huang <huangdaode@hislicon.com>
+On 17/10/2019 10:36:44+0000, Vaittinen, Matti wrote:
+> Hello Alexandre,
+> 
+> Thanks for quick check! I'll be off for the rest of the week but I will
+> re-work this patch at next week :) I agree with you regarding most of
+> the comments.
+> 
+> > > +
+> > > +
+> > > +/*
+> > > + * RTC definitions shared between
+> > > + *
+> > > + * BD70528
+> > > + * and BD71828
+> > > + */
+> > > +
+> > > +#define ROHM_BD1_MASK_RTC_SEC		0x7f
+> > > +#define ROHM_BD1_MASK_RTC_MINUTE	0x7f
+> > > +#define ROHM_BD1_MASK_RTC_HOUR_24H	0x80
+> > > +#define ROHM_BD1_MASK_RTC_HOUR_PM	0x20
+> > > +#define ROHM_BD1_MASK_RTC_HOUR		0x3f
+> > > +#define ROHM_BD1_MASK_RTC_DAY		0x3f
+> > > +#define ROHM_BD1_MASK_RTC_WEEK		0x07
+> > > +#define ROHM_BD1_MASK_RTC_MONTH		0x1f
+> > > +#define ROHM_BD1_MASK_RTC_YEAR		0xff
+> > > +#define ROHM_BD1_MASK_ALM_EN		0x7
+> > > +
+> > 
+> > All that renaming is distracting and useless. Please resubmit without
+> > renaming defines, structs and functions to make it easier to review.
+> 
+> I would prefer renaming because it makes it clearly visible which
+> defines/structs/functions are common for both PMICs and which are PMIC
+> specific. But I really understand the problem of spotting real changes.
+> Would it be Ok if I did renaming in separate patch which does not bring
+> in any other changes - and then the functional changes in separate
+> patch?
+> 
 
-Use the new helper that wraps the calls to platform_get_resource()
-and devm_ioremap_resource() together
+No, unless you can guarantee that all future PMICs from rohm matching
+the wildcard will use this driver.
 
-Signed-off-by: Daode Huang <huangdaode@hislicon.com>
----
-changes in v2
-    - address the commnents from Marc
-
----
- drivers/irqchip/irq-mvebu-icu.c   | 4 +---
- drivers/irqchip/irq-mvebu-pic.c   | 4 +---
- drivers/irqchip/irq-stm32-exti.c  | 4 +---
- drivers/irqchip/irq-ti-sci-inta.c | 4 +---
- drivers/irqchip/irq-ts4800.c      | 4 +---
- 5 files changed, 5 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
-index 547045d..a54e4cd 100644
---- a/drivers/irqchip/irq-mvebu-icu.c
-+++ b/drivers/irqchip/irq-mvebu-icu.c
-@@ -347,7 +347,6 @@ builtin_platform_driver(mvebu_icu_subset_driver);
- static int mvebu_icu_probe(struct platform_device *pdev)
- {
- 	struct mvebu_icu *icu;
--	struct resource *res;
- 	int i;
- 
- 	icu = devm_kzalloc(&pdev->dev, sizeof(struct mvebu_icu),
-@@ -357,8 +356,7 @@ static int mvebu_icu_probe(struct platform_device *pdev)
- 
- 	icu->dev = &pdev->dev;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	icu->base = devm_ioremap_resource(&pdev->dev, res);
-+	icu->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(icu->base)) {
- 		dev_err(&pdev->dev, "Failed to map icu base address.\n");
- 		return PTR_ERR(icu->base);
-diff --git a/drivers/irqchip/irq-mvebu-pic.c b/drivers/irqchip/irq-mvebu-pic.c
-index eec6395..d6ade62 100644
---- a/drivers/irqchip/irq-mvebu-pic.c
-+++ b/drivers/irqchip/irq-mvebu-pic.c
-@@ -124,14 +124,12 @@ static int mvebu_pic_probe(struct platform_device *pdev)
- 	struct device_node *node = pdev->dev.of_node;
- 	struct mvebu_pic *pic;
- 	struct irq_chip *irq_chip;
--	struct resource *res;
- 
- 	pic = devm_kzalloc(&pdev->dev, sizeof(struct mvebu_pic), GFP_KERNEL);
- 	if (!pic)
- 		return -ENOMEM;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	pic->base = devm_ioremap_resource(&pdev->dev, res);
-+	pic->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(pic->base))
- 		return PTR_ERR(pic->base);
- 
-diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
-index e00f2fa..0f9b949 100644
---- a/drivers/irqchip/irq-stm32-exti.c
-+++ b/drivers/irqchip/irq-stm32-exti.c
-@@ -811,7 +811,6 @@ static int stm32_exti_probe(struct platform_device *pdev)
- 	struct irq_domain *parent_domain, *domain;
- 	struct stm32_exti_host_data *host_data;
- 	const struct stm32_exti_drv_data *drv_data;
--	struct resource *res;
- 
- 	host_data = devm_kzalloc(dev, sizeof(*host_data), GFP_KERNEL);
- 	if (!host_data)
-@@ -849,8 +848,7 @@ static int stm32_exti_probe(struct platform_device *pdev)
- 	if (!host_data->chips_data)
- 		return -ENOMEM;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	host_data->base = devm_ioremap_resource(dev, res);
-+	host_data->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(host_data->base)) {
- 		dev_err(dev, "Unable to map registers\n");
- 		return PTR_ERR(host_data->base);
-diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
-index ef4d625..004cc8f 100644
---- a/drivers/irqchip/irq-ti-sci-inta.c
-+++ b/drivers/irqchip/irq-ti-sci-inta.c
-@@ -519,7 +519,6 @@ static int ti_sci_inta_irq_domain_probe(struct platform_device *pdev)
- 	struct device_node *parent_node, *node;
- 	struct ti_sci_inta_irq_domain *inta;
- 	struct device *dev = &pdev->dev;
--	struct resource *res;
- 	int ret;
- 
- 	node = dev_of_node(dev);
-@@ -567,8 +566,7 @@ static int ti_sci_inta_irq_domain_probe(struct platform_device *pdev)
- 		return PTR_ERR(inta->global_event);
- 	}
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	inta->base = devm_ioremap_resource(dev, res);
-+	inta->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(inta->base))
- 		return -ENODEV;
- 
-diff --git a/drivers/irqchip/irq-ts4800.c b/drivers/irqchip/irq-ts4800.c
-index 2325fb3..589a8a1 100644
---- a/drivers/irqchip/irq-ts4800.c
-+++ b/drivers/irqchip/irq-ts4800.c
-@@ -94,15 +94,13 @@ static int ts4800_ic_probe(struct platform_device *pdev)
- 	struct device_node *node = pdev->dev.of_node;
- 	struct ts4800_irq_data *data;
- 	struct irq_chip *irq_chip;
--	struct resource *res;
- 	int parent_irq;
- 
- 	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
- 	if (!data)
- 		return -ENOMEM;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	data->base = devm_ioremap_resource(&pdev->dev, res);
-+	data->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(data->base))
- 		return PTR_ERR(data->base);
- 
 -- 
-2.8.1
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
