@@ -2,153 +2,92 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C59E8FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5383CFA3735
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9972421D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:42:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TJ7k3wmZ"
+	by mail.kernel.org (Postfix) with ESMTP id 3595320854
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:46:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440331AbfJQOmj (ORCPT
+        id S2440342AbfJQOqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 10:42:39 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34103 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437444AbfJQOmj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:42:39 -0400
-Received: by mail-io1-f67.google.com with SMTP id q1so3342426ion.1;
-        Thu, 17 Oct 2019 07:42:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yZfbOZSDn+GBucwbwmrlt57XdpVLll7ReX3tKoRiDII=;
-        b=TJ7k3wmZkSmZRGwxzXl8ni5apLcRVgyHgXlVZmTN853xTgCywU/jS0DRpyulXktKFA
-         Wp5w0u7G+QgTFBqleHVpdPHvgKQw8R/XFCh+6Aaryw5X//uTOMzLki38ytR1UJuFoq+C
-         3g0hW5wewWMw4tgNkkLZTLKUqgtUXoi66j6vHQn1vIu6wOChW22lKO84gWBbDo/wWpe2
-         1mdY3E1meYerma5fd4CpxB9XcYkjqRuqVXmcn7SoTH+6V5tFUbn095naw9fDWlnv3y49
-         nS/tHvzPsGSsWryqvHENpkEL2d0Doru2/Z10qEJnaJN2n7qglLiQ1KcLwGkPhcs0YyMd
-         /sqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yZfbOZSDn+GBucwbwmrlt57XdpVLll7ReX3tKoRiDII=;
-        b=FGoYEhAPJfi1CRKp+yQSirErGNcpNX3mcAzH+wm7aU8Lu78y2tZwvG0qwBaGCD171d
-         6UmWq8/pkpfuw09y6ISSWVO3ipxGndSAnMSPXsCuYbpU3mPKlFgLiKopJ5scqJlii6zP
-         02wswYSDtNYmCjW85IW3RpH62aIZ/wFcJ+3LgzDkfPCtAR6q771r7mNflG7THbzWqEko
-         aOkL3y5a5W01CE9EJAp04f8vFuDcLqMzLy8PgNX9ih12wx/ebED05OwXExKwBsIqp8Ji
-         3da1Y9c4gISQZh1yEYS8GSsfIZQjS0iR7J00RE8WmR0PmMwzlofXdX0sM1+JhyPzDizZ
-         9Edw==
-X-Gm-Message-State: APjAAAVRiOVTS8hAzTFLcHq79AbitSZzCAac347Tzq1V0UjQhg6nbUhO
-        IYTratwtiTbToaJW3F5vdmUsScTOW5eP3gTAz/g=
-X-Google-Smtp-Source: APXvYqxLMVhS21hkfBuFNR8qm6HuMhexXhE0GwnhHg2kroaMYxz+FIVQK8husib62kCR6sWcwBK85nJh3Drpu3O6VnU=
-X-Received: by 2002:a5d:83c1:: with SMTP id u1mr3466467ior.78.1571323357719;
- Thu, 17 Oct 2019 07:42:37 -0700 (PDT)
+        Thu, 17 Oct 2019 10:46:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38618 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2403882AbfJQOqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 10:46:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 66C19B6AD;
+        Thu, 17 Oct 2019 14:46:38 +0000 (UTC)
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Luis Henriques <lhenriques@suse.com>
+Subject: [PATCH] ceph: Fix use-after-free in __ceph_remove_cap
+Date:   Thu, 17 Oct 2019 15:46:36 +0100
+Message-Id: <20191017144636.28617-1-lhenriques@suse.com>
 MIME-Version: 1.0
-References: <20191016135147.7743-1-aford173@gmail.com> <20191016135147.7743-2-aford173@gmail.com>
- <20191016144018.GG5175@pendragon.ideasonboard.com> <CAHCN7xJhHHoia_o4rb0VgvCP71X94Pvem684F2quMijNNpNxVA@mail.gmail.com>
- <20191017143738.GA10960@bogus>
-In-Reply-To: <20191017143738.GA10960@bogus>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Thu, 17 Oct 2019 09:42:25 -0500
-Message-ID: <CAHCN7xJidCBmKL+BTWi_ZmiFyq-bjzzaJBYkQPyUBT+uKJVdaA@mail.gmail.com>
-Subject: Re: [PATCH V5 2/3] dt-bindings: Add Logic PD Type 28 display panel
-To:     Rob Herring <robh@kernel.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 9:37 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Oct 16, 2019 at 09:55:11AM -0500, Adam Ford wrote:
-> > On Wed, Oct 16, 2019 at 9:40 AM Laurent Pinchart
-> > <laurent.pinchart@ideasonboard.com> wrote:
-> > >
-> > > Hi Adam,
-> > >
-> > > Thank you for the patch.
-> > >
-> > > On Wed, Oct 16, 2019 at 08:51:46AM -0500, Adam Ford wrote:
-> > > > This patch adds documentation of device tree bindings for the WVGA panel
-> > > > Logic PD Type 28 display.
-> > > >
-> > > > Signed-off-by: Adam Ford <aford173@gmail.com>
-> > > > ---
-> > > > V5:  Replace GPIO_ACTIVE_HIGH with 0 to fix make dt_binding_check -k
-> > > > V4:  Update per Rob H's suggestions and copy other panel yaml example from 5.4-rc1
-> > > > V3:  Correct build errors from 'make dt_binding_check'
-> > > > V2:  Use YAML instead of TXT for binding
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml b/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..2834287b8d88
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
-> > > > @@ -0,0 +1,42 @@
-> > > > +# SPDX-License-Identifier: GPL-2.0
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/display/panel/logicpd,type28.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Logic PD Type 28 4.3" WQVGA TFT LCD panel
-> > > > +
-> > > > +maintainers:
-> > > > +  - Adam Ford <aford173@gmail.com>
-> > > > +
-> > > > +allOf:
-> > > > +  - $ref: panel-common.yaml#
-> > > > +
-> > > > +properties:
-> > > > +  compatible:
-> > > > +    const: logicpd,type28
-> > > > +
-> > > > +  power-supply: true
-> > > > +  enable-gpios: true
-> > > > +  backlight: true
-> > > > +  port: true
-> > > > +
-> > > > +required:
-> > > > +  - compatible
-> > >
-> > > Should the port be required too ? Apart from that,
-> >
-> > I supposed that's true, but I used ampire,am-480272h3tmqw-t01h.yaml as
-> > the example, and it doesn't list it as a required item.
-> > Is there anything else I need to address?  I feel like I'm trying to
-> > hit a moving target.
->
-> 'port' can be omitted because the panel can be a child node of
-> the display controller instead. That's decided by the display controller
-> binding, not the panel binding.
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
+KASAN reports a use-after-free when running xfstest generic/531, with the
+following trace:
 
-Thank you.  Sorry it took a while to get there.
+[  293.903362]  kasan_report+0xe/0x20
+[  293.903365]  rb_erase+0x1f/0x790
+[  293.903370]  __ceph_remove_cap+0x201/0x370
+[  293.903375]  __ceph_remove_caps+0x4b/0x70
+[  293.903380]  ceph_evict_inode+0x4e/0x360
+[  293.903386]  evict+0x169/0x290
+[  293.903390]  __dentry_kill+0x16f/0x250
+[  293.903394]  dput+0x1c6/0x440
+[  293.903398]  __fput+0x184/0x330
+[  293.903404]  task_work_run+0xb9/0xe0
+[  293.903410]  exit_to_usermode_loop+0xd3/0xe0
+[  293.903413]  do_syscall_64+0x1a0/0x1c0
+[  293.903417]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-adam
->
-> Rob
+This happens because __ceph_remove_cap() may queue a cap release
+(__ceph_queue_cap_release) which can be scheduled before that cap is
+removed from the inode list with
+
+	rb_erase(&cap->ci_node, &ci->i_caps);
+
+And, when this finally happens, the use-after-free will occur.
+
+This can be fixed by protecting the rb_erase with the s_cap_lock spinlock,
+which is used by ceph_send_cap_releases(), before the cap is freed.
+
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+---
+ fs/ceph/caps.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+index d3b9c9d5c1bd..21ee38cabe98 100644
+--- a/fs/ceph/caps.c
++++ b/fs/ceph/caps.c
+@@ -1089,13 +1089,13 @@ void __ceph_remove_cap(struct ceph_cap *cap, bool queue_release)
+ 	}
+ 	cap->cap_ino = ci->i_vino.ino;
+ 
+-	spin_unlock(&session->s_cap_lock);
+-
+ 	/* remove from inode list */
+ 	rb_erase(&cap->ci_node, &ci->i_caps);
+ 	if (ci->i_auth_cap == cap)
+ 		ci->i_auth_cap = NULL;
+ 
++	spin_unlock(&session->s_cap_lock);
++
+ 	if (removed)
+ 		ceph_put_cap(mdsc, cap);
+ 
