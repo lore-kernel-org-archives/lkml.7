@@ -7,62 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBBFFA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF4CFA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A101F20872
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 941B221A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:03:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571328202;
-	bh=zciE6zvcpsijnNLJZWP6YJk7DXC8kCO7A8ZYz/9RWhU=;
+	s=default; t=1571328205;
+	bh=5rjSNoxPE9fD3sIR5BPxdqJYQ5b4yQqoWp+8NmhjCXY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aI8rNPMR8fJ7an7NOjEx2kAWvBOWurgyw71YYoa5y4rhlROQBraPYmRkfEQotIVp3
-	 81Rl9V7vemd0w62az377Us5naygrG3cfKqKJrnTPifVWfdkgPuL+kfIzlKDB14vPQu
-	 GCqQV8GMqzflHexjHRUBMwIOhu8B218xXwMT/wgQ=
+	b=qGmbt8dYTCkTUhRwNm8nFxCtToK0J2WzS08Jn/eiawuQ3KhxOS8a9SrYJ0lWRuZtJ
+	 GmN6VbAM5sHo2v5SqSsD0hHcTjBfin9sgHXJqLYKAzDI2YUn3OmWdsVrvIO7Jas4t5
+	 UehE+wkRNu8ZC04CIVnjnEQ8clbK9iDZhizAWDJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439995AbfJQQDV (ORCPT
+        id S2440091AbfJQQDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:03:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46738 "EHLO mail.kernel.org"
+        Thu, 17 Oct 2019 12:03:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725294AbfJQQDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 12:03:21 -0400
+        id S1725294AbfJQQDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 12:03:23 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4192321D7F;
-        Thu, 17 Oct 2019 16:03:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51D3A21925;
+        Thu, 17 Oct 2019 16:03:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571328199;
-        bh=zciE6zvcpsijnNLJZWP6YJk7DXC8kCO7A8ZYz/9RWhU=;
+        s=default; t=1571328202;
+        bh=5rjSNoxPE9fD3sIR5BPxdqJYQ5b4yQqoWp+8NmhjCXY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uRdcnRWOVUVXl4hfcDpnawnPF6DBJYq3BvqPa0Fz9xUuRZx4Ec3G1zB+Ke800j3az
-         GvSkFxVdzffH98FrKCTSJ+E6g91rBbP8VZFMAJM2FflwV3ncWbPLPqbWaGEV0Dm0cc
-         9sDxm4l6bcNjqiX8UbDD1J1UHCiNFNr1kxAEBkqg=
+        b=asIo83PHuw34j73wIB8+kAgrSij6y64qkAQ5YYwNRbgLwq6bpGhtLwVbAaHQlI4/W
+         IW1wt9Zc7PYxI709XYgrR8i4FMnQaKpe2q0oxhLBnyKkbMr3jDj/Qa/pXfaES+9VfL
+         qsGboyQR36pE58UnCdPjxlQMuojO3S7jpER/64us=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Yunfeng Ye <yeyunfeng@huawei.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Feilong Lin <linfeilong@huawei.com>,
-        Hu Shiyuan <hushiyuan@huawei.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Martin KaFai Lau <kafai@fb.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 03/11] perf tools: Fix resource leak of closedir() on the error paths
-Date:   Thu, 17 Oct 2019 13:02:53 -0300
-Message-Id: <20191017160301.20888-4-acme@kernel.org>
+Subject: [PATCH 04/11] perf annotate: Fix multiple memory and file descriptor leaks
+Date:   Thu, 17 Oct 2019 13:02:54 -0300
+Message-Id: <20191017160301.20888-5-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191017160301.20888-1-acme@kernel.org>
 References: <20191017160301.20888-1-acme@kernel.org>
@@ -73,72 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-Both build_mem_topology() and rm_rf_depth_pat() have resource leaks of
-closedir() on the error paths.
+Store SYMBOL_ANNOTATE_ERRNO__BPF_MISSING_BTF in variable *ret*, instead
+of returning in the middle of the function and leaking multiple
+resources: prog_linfo, btf, s and bfdf.
 
-Fix this by calling closedir() before function returns.
-
-Fixes: e2091cedd51b ("perf tools: Add MEM_TOPOLOGY feature to perf data file")
-Fixes: cdb6b0235f17 ("perf tools: Add pattern name checking to rm_rf")
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Addresses-Coverity-ID: 1454832 ("Structurally dead code")
+Fixes: 11aad897f6d1 ("perf annotate: Don't return -1 for error when doing BPF disassembly")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Feilong Lin <linfeilong@huawei.com>
-Cc: Hu Shiyuan <hushiyuan@huawei.com>
-Cc: Igor Lubashev <ilubashe@akamai.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Link: http://lore.kernel.org/lkml/cd5f7cd2-b80d-6add-20a1-32f4f43e0744@huawei.com
+Link: http://lore.kernel.org/lkml/20191014171047.GA30850@embeddedor
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 4 +++-
- tools/perf/util/util.c   | 6 ++++--
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ tools/perf/util/annotate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 86d9396cb131..becc2d109423 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -1296,8 +1296,10 @@ static int build_mem_topology(struct memory_node *nodes, u64 size, u64 *cntp)
- 			continue;
- 
- 		if (WARN_ONCE(cnt >= size,
--			      "failed to write MEM_TOPOLOGY, way too many nodes\n"))
-+			"failed to write MEM_TOPOLOGY, way too many nodes\n")) {
-+			closedir(dir);
- 			return -1;
-+		}
- 
- 		ret = memory_node__read(&nodes[cnt++], idx);
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 4036c7f7b0fb..e42bf572358c 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1758,7 +1758,7 @@ static int symbol__disassemble_bpf(struct symbol *sym,
+ 	info_node = perf_env__find_bpf_prog_info(dso->bpf_prog.env,
+ 						 dso->bpf_prog.id);
+ 	if (!info_node) {
+-		return SYMBOL_ANNOTATE_ERRNO__BPF_MISSING_BTF;
++		ret = SYMBOL_ANNOTATE_ERRNO__BPF_MISSING_BTF;
+ 		goto out;
  	}
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index 5eda6e19c947..ae56c766eda1 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -154,8 +154,10 @@ static int rm_rf_depth_pat(const char *path, int depth, const char **pat)
- 		if (!strcmp(d->d_name, ".") || !strcmp(d->d_name, ".."))
- 			continue;
- 
--		if (!match_pat(d->d_name, pat))
--			return -2;
-+		if (!match_pat(d->d_name, pat)) {
-+			ret =  -2;
-+			break;
-+		}
- 
- 		scnprintf(namebuf, sizeof(namebuf), "%s/%s",
- 			  path, d->d_name);
+ 	info_linear = info_node->info_linear;
 -- 
 2.21.0
 
