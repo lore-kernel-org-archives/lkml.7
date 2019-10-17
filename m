@@ -2,123 +2,166 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE12ECE599
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A58FA3728
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7D5821925
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C486D21928
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:32:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="Axfwq3U5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bANEqDbT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406975AbfJQCcT (ORCPT
+        id S2407006AbfJQCc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 22:32:19 -0400
-Received: from mail-eopbgr1400137.outbound.protection.outlook.com ([40.107.140.137]:15671
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389860AbfJQCcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 22:32:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AOLTXdie2jbGcSB8wRzAu/x6RKKt9QIxrB7Pt0U7CzH2iCk3paXhv+uaD48mdtLb0QVRPblRGah7+rL7Aa/rBFIeuCBjx9ZAW+6iSK3HtvzVN9ebo0BuyPkQ1nouYaFjXBzVyAXmjJ3ilr4aHmAdgjhLCLN4MTQMq3c6MH8VM6W+2oplzy87I4cnY6AH2xThUy/0W3o0XiL1RlIa3JK4GlXEZ4bQ2ZJGNMvvN2VY4e+b7xCRS4TypowCB5Hff1IO0sK0GpwDjyTWNqkux4uRPRWMlzv9c/vFoW4SJyN7pCTuh9dCJNqXFtwo+k3cBUL1271xRSnJyz2uUGnSe5ecbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ypibnnDy2Tltr6OEbpKVMxiISIXXNKDK5fG1Buhs8VA=;
- b=Z2+r/SQv2XUBkkeGGKk7xiN72fHWNr4lj97mY/HCOoyQ6YJy0MmpsvIkFz20mUoCjU9109B/kvS/1yfNiYeqb7uNHYypJ6QO/U/0D0I0TV2AB7n36FmvcdbNMSsFg4E82m4pId3m0oJ/9LUvJuuEGYVdO59qhY7aMUrgOgJLOuyzLk9iAkdrQGjAENYqS+FZ18zyfp3YecoQoQaEyU0RnnyYgtAuAmZwso73V1+xEPy4jAkMoo9vzuBw++4vJR7WqEFefHOq5gVGGiYuA8eGI8xcK/ucYlH+f0CPIyrbDLJrBa0cbbdOo85d3hzrdIuqI9DKkI92iJr0aBgSRJU+tw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        Wed, 16 Oct 2019 22:32:26 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41331 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406977AbfJQCcZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 22:32:25 -0400
+Received: by mail-pg1-f194.google.com with SMTP id t3so384870pga.8
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 19:32:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ypibnnDy2Tltr6OEbpKVMxiISIXXNKDK5fG1Buhs8VA=;
- b=Axfwq3U59lKjdla6fPHs3CCkSmVIkJN3STLx8WdO/ScwSd7hUyq82jkgzyOC1oKQAu4llZ150J9I0zEAbzWLyTqECm8HbJSv//khCGf1lNJ2uEcN59ZGrcOHCzp3/41XnAOqBIhHaHkHa4kJOUTotBoER1NofJKac7CBrONtsHk=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB2960.jpnprd01.prod.outlook.com (20.177.102.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.21; Thu, 17 Oct 2019 02:32:14 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::548:32de:c810:1947]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::548:32de:c810:1947%4]) with mapi id 15.20.2347.023; Thu, 17 Oct 2019
- 02:32:14 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Simon Horman <horms@verge.net.au>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] MAINTAINERS: Add Marek and Shimoda-san as R-Car PCIE
- co-maintainers
-Thread-Topic: [PATCH] MAINTAINERS: Add Marek and Shimoda-san as R-Car PCIE
- co-maintainers
-Thread-Index: AQHVhBm2hDyM+Q9Dm0i41nHHfxWio6deHaEg
-Date:   Thu, 17 Oct 2019 02:32:14 +0000
-Message-ID: <TYAPR01MB454495E9D84990F00AA9BB3DD86D0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <20191016120249.16776-1-horms@verge.net.au>
-In-Reply-To: <20191016120249.16776-1-horms@verge.net.au>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [150.249.235.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f5cb7170-89e3-45c2-5dbd-08d752aa3879
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: TYAPR01MB2960:|TYAPR01MB2960:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TYAPR01MB296055C2142DABDD75054425D86D0@TYAPR01MB2960.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 01930B2BA8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(346002)(136003)(366004)(376002)(39860400002)(189003)(199004)(26005)(186003)(7696005)(86362001)(99286004)(478600001)(76116006)(316002)(52536014)(33656002)(110136005)(4744005)(71190400001)(5660300002)(14454004)(54906003)(25786009)(102836004)(6506007)(71200400001)(66066001)(76176011)(4326008)(486006)(6116002)(3846002)(11346002)(446003)(476003)(229853002)(2906002)(6436002)(256004)(74316002)(7736002)(66556008)(305945005)(6246003)(66446008)(8676002)(8936002)(81166006)(81156014)(55016002)(64756008)(66476007)(66946007)(9686003);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB2960;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +0QWIFcKDD07O4i856xK2FMaMQSBiC+R7v/8TEREebojkOvsTpPj9+rYvrU3e4cNiRLKOoMjMpnWfQeeVsFIpt2UBE/4mRTBIf683TAFk5D0npc3m8GNChrHv4xThR2vQgUSpus9h1Mp3UNBfMKUY3Lg5kqKz4c5HWQl0x+o13d2QIZdAD/A1gbX7woG7/BFXAVsR0ikPtbcKJXTbrAGyUsvoz7h1/KVbyAIKTruXplkBKYE6Qj1njqZobdEDGlT/0xPoAGNePguTY8+nKBQuKZd4zKc1I7DRgc+vdnWk+f6RNL+84/8DNV7gFWMsAnDU/YdQVIxHpCcp911Jk6xPcXDkV++qQoE4NuQLbvT40Nv5LGzodfbNQOkAfBirTIRAcUpIR0isGtIMb39mbE/DOoEuow6S/EPcnSteklBiQU=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NPAr1Y/6RmmsLEQ10dbAoa3w6mNhq7l8B4FyO36+FNg=;
+        b=bANEqDbTdQk9HYMVNTeTQeijBkzkQEDgI/vM8EDRaIJAHyCDzT88KvjeRnxfKGVEQJ
+         8wAphIUcOo9MHxknHt6ssKGh9pdSBaGHplHuOFZ4yl3v2RYXratVXrKa6NioyO4GZeet
+         FAGgMY2x5adUb8+9KHiMXszAeYyVZZi9eYfnpL3zFjbF/luP+bMQGWeSaESiFDSBvUIF
+         svuCq8juseqK7d1ntvF03psEetQ9DzqTSaNhvk1WdbKWj4nH7bZ+olNAVGUNUSvjByMf
+         ggikUfF3dPv4hZ4EuGcZBedEur7sCnsZnBA3L4OTYRKFcFfDou+bCXkFIriXWnv8t1hF
+         NP6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NPAr1Y/6RmmsLEQ10dbAoa3w6mNhq7l8B4FyO36+FNg=;
+        b=AXTlDT5wagMBYKVpbs+8vRabCUdcoKZwt78NI2IcG7FlnuLNUz3zwMnXBI1LUlMdxy
+         ilFBPR/vL4uxyhuN/aUrHNkuBqwYEgWUVKcWi/6LY2g675s9ffyYhVLoXTtCW866E9nm
+         gxlgN0d+kC+ovJ2F9hQ0cI0fwpPjIoRT0YpU2paS7F+X/jYmezPU9E7qiiLyJ1aKht9M
+         8AylTgXprhei6SkyB7hWZLAvDcPJHeu8HWh3ADDUTpFMZUr3QEx3HbQpqgodqXNaKpm7
+         hygo/1WOMt2q3CzraaSvp7Nmk3pwTUFIBkP/N5n9aL2nYS5uDzk29kG5IxHIFGLWJu10
+         caDg==
+X-Gm-Message-State: APjAAAWO0GF8x5fmB7KhHojdRZ+ctQusMvoXi0gWpPndP3XLv1uJ+JOu
+        fZywnhEqKzqKUnx9zBqmr4aa8g==
+X-Google-Smtp-Source: APXvYqz5shTMozOO+le27yYCcEjZyQNN1/1kuVMtaMcV30IXLdT/kFc0mJ/04wjSjLtPONjZzySKIA==
+X-Received: by 2002:a63:18d:: with SMTP id 135mr1472362pgb.326.1571279545065;
+        Wed, 16 Oct 2019 19:32:25 -0700 (PDT)
+Received: from localhost ([122.172.151.112])
+        by smtp.gmail.com with ESMTPSA id n66sm517724pfn.90.2019.10.16.19.32.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 16 Oct 2019 19:32:24 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 08:02:22 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 06/17] dt-bindings: cpufreq: Add binding for NVIDIA
+ Tegra20/30
+Message-ID: <20191017023222.krufquqemad4kmbv@vireshk-i7>
+References: <20191015211618.20758-1-digetx@gmail.com>
+ <20191015211618.20758-7-digetx@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5cb7170-89e3-45c2-5dbd-08d752aa3879
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Oct 2019 02:32:14.0471
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lojHi/RbjhxXkmb6Tepxkf1riaSYtXD0JqbCWVRhtdOH9IyeFum+Nqfb6Gm+zV0KfNVpUshgrdaALBN8P/X+/JQfMNPrB/NFUqflAp2cmCqrweSoFT34GwzAyeLIHq/4
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2960
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015211618.20758-7-digetx@gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Simon-san,
+On 16-10-19, 00:16, Dmitry Osipenko wrote:
+> Add device-tree binding that describes CPU frequency-scaling hardware
+> found on NVIDIA Tegra20/30 SoCs.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  .../cpufreq/nvidia,tegra20-cpufreq.txt        | 56 +++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+> new file mode 100644
+> index 000000000000..daeca6ae6b76
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+> @@ -0,0 +1,56 @@
+> +Binding for NVIDIA Tegra20 CPUFreq
+> +==================================
+> +
+> +Required properties:
+> +- clocks: Must contain an entry for the CPU clock.
+> +  See ../clocks/clock-bindings.txt for details.
+> +- operating-points-v2: See ../bindings/opp/opp.txt for details.
+> +- #cooling-cells: Should be 2. See ../thermal/thermal.txt for details.
+> +
+> +For each opp entry in 'operating-points-v2' table:
+> +- opp-supported-hw: Two bitfields indicating:
+> +	On Tegra20:
+> +	1. CPU process ID mask
+> +	2. SoC speedo ID mask
+> +
+> +	On Tegra30:
+> +	1. CPU process ID mask
+> +	2. CPU speedo ID mask
+> +
+> +	A bitwise AND is performed against these values and if any bit
+> +	matches, the OPP gets enabled.
+> +
+> +- opp-microvolt: CPU voltage triplet.
+> +
+> +Optional properties:
+> +- cpu-supply: Phandle to the CPU power supply.
+> +
+> +Example:
+> +	regulators {
+> +		cpu_reg: regulator0 {
+> +			regulator-name = "vdd_cpu";
+> +		};
+> +	};
+> +
+> +	cpu0_opp_table: opp_table0 {
+> +		compatible = "operating-points-v2";
+> +
+> +		opp@456000000 {
+> +			clock-latency-ns = <125000>;
+> +			opp-microvolt = <825000 825000 1125000>;
+> +			opp-supported-hw = <0x03 0x0001>;
+> +			opp-hz = /bits/ 64 <456000000>;
+> +		};
+> +
+> +		...
+> +	};
+> +
+> +	cpus {
+> +		cpu@0 {
+> +			compatible = "arm,cortex-a9";
+> +			clocks = <&tegra_car TEGRA20_CLK_CCLK>;
+> +			operating-points-v2 = <&cpu0_opp_table>;
+> +			cpu-supply = <&cpu_reg>;
+> +			#cooling-cells = <2>;
+> +		};
+> +	};
 
-> From: Simon Horman, Sent: Wednesday, October 16, 2019 9:03 PM
->=20
-> At the end of the v5.3 upstream development cycle I stepped down
-> from my role at Renesas.
->=20
-> Pass maintainership of the R-Car PCIE to Marek and Shimoda-san.
->=20
-> Signed-off-by: Simon Horman <horms@verge.net.au>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Thank you very much for your support until now!
-
-Acked-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-
-Best regards,
-Yoshihiro Shimoda
-
+-- 
+viresh
