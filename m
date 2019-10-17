@@ -2,125 +2,137 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A146CECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCA9ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66ECA21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:51:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TXbco3b/"
+	by mail.kernel.org (Postfix) with ESMTP id AD69D21835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:56:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440703AbfJQTvr (ORCPT
+        id S2392669AbfJQT4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 15:51:47 -0400
-Received: from mail-qt1-f181.google.com ([209.85.160.181]:43965 "EHLO
-        mail-qt1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387813AbfJQTvq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 15:51:46 -0400
-Received: by mail-qt1-f181.google.com with SMTP id t20so5368394qtr.10
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 12:51:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nwb+TLGvaK5abbl4c2O/7USzkNsNwN9gnqMgo5pwQ7A=;
-        b=TXbco3b/mPY+0lWIgFIOKODiAkRkW4s2OyVS9oVCx85mR0ouxw0YXVrvqSE5V9tGfB
-         KpAi0KI1G9ogfHvML3vmxoYQKdhzkje7+WDpgQzBAEQR6WDL76DWY41wQZebckl4N+9K
-         8effqyTjLyNPFvGxeORwRozecikvflrJ+mIA/KdKT61wKxQmpcB6s/VKS007iCet2M0m
-         bOhYOhPM/NF3mcEehM5bA8MX/6h/lGxsiQQYMbbOIhq9Nj8a26EdzOJslqbBWnLrRvuJ
-         6m5a7xFwlH65YomolsQ+O6Y/KkgPHLLLKcKeK/CV96UEl/O9tE7nNaVae6/2k450hRZf
-         115g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nwb+TLGvaK5abbl4c2O/7USzkNsNwN9gnqMgo5pwQ7A=;
-        b=GoNrdgeqWapidLaiB2KnAiuAXP4urJvX+AA10y8Els6ma1PUQ8djsaQbaQYRekpLjy
-         iA0XDXut6loLTslq8zBwbWg+3B+eRul5LWTtNxVYaBH2/debZr06jOPm6p39UgOx5OVi
-         pGhL5eFPTCGjB6KyZvJkfrfOW6MyvXZf1ruf7+XRudj3+RcDZ+W6jK6AeokNzmoKmjZ/
-         7vvzvClE3RnejiK+anABlumCSdN98jHJH0ZOklqEmrwcM+cge81uBeGxK01Osp4O/hBs
-         uncQ+00ON9q9228Hw9yIHsRY9zD2MG2XwJyagaYnZGs8FYfLRmm1NQHOElLez9UJn8jZ
-         Akog==
-X-Gm-Message-State: APjAAAX6WnegSUYtaLhCgc6/n8VBy9nbYt3qSXL8tNuRsw3iKXkEo4TS
-        zDQcPjbU1gdd9f0ngcB2m+M=
-X-Google-Smtp-Source: APXvYqwWP+JoNTwvarM+RIuNuh95kaaHRw1v880pgYlwH7Qyobqhkj7rJq6EVY6k48sSY+mmsIhNrw==
-X-Received: by 2002:ac8:2ccc:: with SMTP id 12mr5922846qtx.49.1571341903800;
-        Thu, 17 Oct 2019 12:51:43 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([177.195.211.77])
-        by smtp.gmail.com with ESMTPSA id a190sm1924312qkf.118.2019.10.17.12.51.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 12:51:43 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7B51B4DD66; Thu, 17 Oct 2019 16:51:40 -0300 (-03)
-Date:   Thu, 17 Oct 2019 16:51:40 -0300
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [BUG] libtraceevent: perf script -g python segfaults
-Message-ID: <20191017195140.GD3600@kernel.org>
-References: <20191017154205.GC8974@kernel.org>
- <20191017143841.317b26b5@gandalf.local.home>
- <20191017144114.48e25298@gandalf.local.home>
- <20191017192832.GB3600@kernel.org>
- <20191017153733.630cd5eb@gandalf.local.home>
- <20191017194907.GC3600@kernel.org>
+        Thu, 17 Oct 2019 15:56:44 -0400
+Received: from mga03.intel.com ([134.134.136.65]:54060 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727383AbfJQT4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 15:56:44 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 12:56:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,308,1566889200"; 
+   d="scan'208";a="226287773"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga002.fm.intel.com with ESMTP; 17 Oct 2019 12:56:41 -0700
+Date:   Thu, 17 Oct 2019 12:56:42 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [PATCH v7 5/7] kvm: x86: Add CET CR4 bit and XSS support
+Message-ID: <20191017195642.GJ20903@linux.intel.com>
+References: <20190927021927.23057-1-weijiang.yang@intel.com>
+ <20190927021927.23057-6-weijiang.yang@intel.com>
+ <CALMp9eStz-VCv5G60KFtumQ8W1Jqf9bOcK_=KwL1P3LLjgajnQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191017194907.GC3600@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CALMp9eStz-VCv5G60KFtumQ8W1Jqf9bOcK_=KwL1P3LLjgajnQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Oct 17, 2019 at 04:49:08PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Thu, Oct 17, 2019 at 03:37:33PM -0400, Steven Rostedt escreveu:
-> > On Thu, 17 Oct 2019 16:28:32 -0300
-> > Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
-> > 
-> > > Em Thu, Oct 17, 2019 at 02:41:14PM -0400, Steven Rostedt escreveu:
-> > > > On Thu, 17 Oct 2019 14:38:41 -0400
-> > > > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > > >   
-> > > > >  struct tep_event *trace_find_next_event(struct tep_handle *pevent,
-> > > > >  					struct tep_event *event)
-> > > > >  {
-> > > > > +	static struct tep_event **all_events;
-> > > > >  	static int idx;
-> > > > >  	int events_count;
-> > > > > -	struct tep_event *all_events;  
-> > > > 
-> > > > If we are going to use static variables, let's make them all static and
-> > > > optimize it a little more...  
-> > > 
-> > > I'll test it, but can't you have this somewhere else, i.e. at
-> > > tep_handle perhaps?
-> > > 
-> > >
-> > 
-> > Or we can nuke the function entirely, it's a rather silly helper
-> > anyway. Just do this:
+On Wed, Oct 02, 2019 at 12:05:23PM -0700, Jim Mattson wrote:
+> On Thu, Sep 26, 2019 at 7:17 PM Yang Weijiang <weijiang.yang@intel.com> wrote:
+> >
+> > CR4.CET(bit 23) is master enable bit for CET feature.
+> > Previously, KVM did not support setting any bits in XSS
+> > so it's hardcoded to check and inject a #GP if Guest
+> > attempted to write a non-zero value to XSS, now it supports
+> > CET related bits setting.
+> >
+> > Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> > ---
+> >  arch/x86/include/asm/kvm_host.h |  4 +++-
+> >  arch/x86/kvm/cpuid.c            | 11 +++++++++--
+> >  arch/x86/kvm/vmx/vmx.c          |  6 +-----
+> >  3 files changed, 13 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> > index d018df8c5f32..8f97269d6d9f 100644
+> > --- a/arch/x86/include/asm/kvm_host.h
+> > +++ b/arch/x86/include/asm/kvm_host.h
+> > @@ -90,7 +90,8 @@
+> >                           | X86_CR4_PGE | X86_CR4_PCE | X86_CR4_OSFXSR | X86_CR4_PCIDE \
+> >                           | X86_CR4_OSXSAVE | X86_CR4_SMEP | X86_CR4_FSGSBASE \
+> >                           | X86_CR4_OSXMMEXCPT | X86_CR4_LA57 | X86_CR4_VMXE \
+> > -                         | X86_CR4_SMAP | X86_CR4_PKE | X86_CR4_UMIP))
+> > +                         | X86_CR4_SMAP | X86_CR4_PKE | X86_CR4_UMIP \
+> > +                         | X86_CR4_CET))
+> >
+> >  #define CR8_RESERVED_BITS (~(unsigned long)X86_CR8_TPR)
+> >
+> > @@ -623,6 +624,7 @@ struct kvm_vcpu_arch {
+> >
+> >         u64 xcr0;
+> >         u64 guest_supported_xcr0;
+> > +       u64 guest_supported_xss;
+> >         u32 guest_xstate_size;
+> >
+> >         struct kvm_pio_request pio;
+> > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> > index 0a47b9e565be..dd3ddc6daa58 100644
+> > --- a/arch/x86/kvm/cpuid.c
+> > +++ b/arch/x86/kvm/cpuid.c
+> > @@ -120,8 +120,15 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+> >         }
+> >
+> >         best = kvm_find_cpuid_entry(vcpu, 0xD, 1);
+> > -       if (best && (best->eax & (F(XSAVES) | F(XSAVEC))))
+> > -               best->ebx = xstate_required_size(vcpu->arch.xcr0, true);
+> > +       if (best && (best->eax & (F(XSAVES) | F(XSAVEC)))) {
 > 
-> I like it, that is a good nuke use, nice button to press! :-)
+> Is XSAVEC alone sufficient? Don't we explicitly need XSAVES to
+> save/restore the extended state components enumerated by IA32_XSS?
+
+Hmm, I think the check would be ok as-is if vcpu->arch.ia32_xss is used
+below, as ia32_xss is guaranteed to be zero if XSAVES isn't supported.
+
+> > +               u64 kvm_xss = kvm_supported_xss();
+> > +
+> > +               best->ebx =
+> > +                       xstate_required_size(vcpu->arch.xcr0 | kvm_xss, true);
 > 
-> Testing it now...
+> Shouldn't this size be based on the *current* IA32_XSS value, rather
+> than the supported IA32_XSS bits? (i.e.
+> s/kvm_xss/vcpu->arch.ia32_xss/)
 
-Reported-by: Daniel Bristot de Oliveira <bristot@redhat.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Ya.
 
-Works like a charm, thanks!
+> > +               vcpu->arch.guest_supported_xss = best->ecx & kvm_xss;
+> 
+> Shouldn't unsupported bits in best->ecx be masked off, so that the
+> guest CPUID doesn't mis-report the capabilities of the vCPU?
 
-- Arnaldo
+I thought KVM liked to let userspace blow off their foot whenever possible?
+KVM already enumerated what features are supported, it's a userspace bug
+if it ignores the enumeration.
+
+> > +       } else {
+> > +               vcpu->arch.guest_supported_xss = 0;
+> > +       }
+> >
+> >         /*
