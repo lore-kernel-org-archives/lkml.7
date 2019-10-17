@@ -2,203 +2,537 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBFFFA3730
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80042FA3730
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0996214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:49:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="DReowP9P"
+	by mail.kernel.org (Postfix) with ESMTP id 4D1F22089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:50:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501884AbfJQJtg (ORCPT
+        id S2405672AbfJQJuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 05:49:36 -0400
-Received: from mail-eopbgr00111.outbound.protection.outlook.com ([40.107.0.111]:36430
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2408604AbfJQJte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 05:49:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MwC5W+z0DZ0LWyvVd3hbhu7jR67LHUXmUz8xJRDLb6ZCrr9pgvHqYGfzCNot2EPV6C7Izqb8UI7ZNh3TzCCtE+qlMrKgIQxUmUukULjb4tNJdvzFEpdsrgmy/VBUbrsbtl0cAjfdLqZo8Qp+AT1v2pf5gCgrLdNPa+hyhn7JsxSd/NYDTMoYMf5CT3+t7ZouhnDBW2Gt+naEFepwHd4Xi1cYkc+DYQKJBmg8Vs6H9CeGkVgVzcqz3VvW9QInpYG8NxLUWbqoB3r7MiVdadt5kZSA01iPDJbuF7uCdTNyc6kFfK8SZqDB7Vflhji6D5ptYfFhnJxdltY1Vx6EJ0U+xA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VzWGnT4TnrM9aYvkdn87wU1dHZ/J0gIwvBS8ewwQ2vQ=;
- b=cK2EdCSV51RlD+mGaqY2G04LXq2PtPZnpVNF9Ed/NWXujLOrS/6AM5qiGy+aJD1/8hE1lEqdyyXo9HFnzU2xglrRYVNtmSRuJcs4oDyH6ZPYMqqMrn7B9DoWrdEhMJWcMhyftYDRBMZY9M84tw3jxXPUkfe0CU4/3MegMYbPZG708xEkxwiR8SC1jZU9KaMCR22H2ZP4Zd8r70DaMcjZL5bqjT6ougD2Cjq8ZUpc3Fr6wKiICR/FaFkGov7O5Y3gUZEdObQ7So+ZmXDe3ESyPKWICFg5/Zvuk9aWWBW4m7uWgJlIvsQEoPO97LnsEflJ6lRP/uOzthYHtsEgFvOUsA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VzWGnT4TnrM9aYvkdn87wU1dHZ/J0gIwvBS8ewwQ2vQ=;
- b=DReowP9PrA6jyPpG9nM2S7ihKlXFmNqM7aN2DeerjY15gbzEyoecnXLZ1k4/glj9Vt14nL7rlxe/vHnzKQzmYQqSbpd3Xe8ENijcbyAwwZPEgMvMAXt7dDDdehpFCE9oDum1Hy9Y1UgTl6hS9YKJbhBN+Vu9DjCgKBr+WqIgQbw=
-Received: from AM6PR05MB6535.eurprd05.prod.outlook.com (20.179.18.212) by
- AM6PR05MB5752.eurprd05.prod.outlook.com (20.178.93.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16; Thu, 17 Oct 2019 09:49:29 +0000
-Received: from AM6PR05MB6535.eurprd05.prod.outlook.com
- ([fe80::c9f9:f21d:d401:7f35]) by AM6PR05MB6535.eurprd05.prod.outlook.com
- ([fe80::c9f9:f21d:d401:7f35%5]) with mapi id 15.20.2347.023; Thu, 17 Oct 2019
- 09:49:29 +0000
-From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>
-Subject: Re: Fw: [PATCH 5.3 112/112] ASoC: sgtl5000: add ADC mute control
-Thread-Topic: Fw: [PATCH 5.3 112/112] ASoC: sgtl5000: add ADC mute control
-Thread-Index: AQHVhG0Ij7c91vwKuUSFHKdUuJ/EO6dd0XYAgAACtYCAAAbzAIAADZkAgACmrgCAAAL9b4AABQSA
-Date:   Thu, 17 Oct 2019 09:49:27 +0000
-Message-ID: <CAGgjyvFQQ4E5VfZ3nwFu+7UiGOmkyXK-n9PHjo1p=iYNX5JrPw@mail.gmail.com>
-References: <20191016214844.038848564@linuxfoundation.org>
- <20191016214907.599726506@linuxfoundation.org>
- <20191016220044.GB11473@sirena.co.uk> <20191016221025.GA990599@kroah.com>
- <20191016223518.GC11473@sirena.co.uk> <20191016232358.GA994597@kroah.com>
- <de9630e5-341f-b48d-029a-ef1a516bf820@skidata.com>
- <AM6PR05MB653568E379699EE907E146BDF96D0@AM6PR05MB6535.eurprd05.prod.outlook.com>
-In-Reply-To: <AM6PR05MB653568E379699EE907E146BDF96D0@AM6PR05MB6535.eurprd05.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MN2PR02CA0001.namprd02.prod.outlook.com
- (2603:10b6:208:fc::14) To AM6PR05MB6535.eurprd05.prod.outlook.com
- (2603:10a6:20b:74::20)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=oleksandr.suvorov@toradex.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-gm-message-state: APjAAAXFxm2q5WyUVTnxMM8xw52UMqOjUTRMOKwrhkQOY9w9jLu7dSRu
-        Xqk4T+0LsFXaZ8DUKsVEsz+OMZyWKoWqQUyLmLc=
-x-google-smtp-source: APXvYqyH2ppRmiq9VrxhsH6fAnFBjlgOAv2elKu6LcbUoPIPKIb6dF6A//QqAEa/PGft7UANMmORAJAPcWmAICBzP6w=
-x-received: by 2002:a0c:ff2a:: with SMTP id x10mr2955793qvt.44.1571305763269;
- Thu, 17 Oct 2019 02:49:23 -0700 (PDT)
-x-gmail-original-message-id: <CAGgjyvFQQ4E5VfZ3nwFu+7UiGOmkyXK-n9PHjo1p=iYNX5JrPw@mail.gmail.com>
-x-originating-ip: [209.85.160.172]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f11cd712-64ca-421f-5ffc-08d752e74c75
-x-ms-traffictypediagnostic: AM6PR05MB5752:
-x-microsoft-antispam-prvs: <AM6PR05MB57526397B29089062F7DDA50F96D0@AM6PR05MB5752.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:758;
-x-forefront-prvs: 01930B2BA8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(396003)(136003)(366004)(39850400004)(51914003)(199004)(189003)(54906003)(95326003)(5660300002)(478600001)(186003)(14454004)(316002)(110136005)(2906002)(71190400001)(14444005)(86362001)(256004)(71200400001)(25786009)(6116002)(3846002)(11346002)(8676002)(8936002)(66066001)(55446002)(305945005)(66476007)(64756008)(52116002)(386003)(498394004)(6506007)(7736002)(81166006)(99286004)(61266001)(102836004)(26005)(53546011)(55236004)(450100002)(81156014)(107886003)(6246003)(76176011)(9686003)(446003)(476003)(486006)(229853002)(6486002)(44832011)(6512007)(66946007)(6436002)(66446008)(4326008)(66556008);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR05MB5752;H:AM6PR05MB6535.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: p1cC6s2aAIjXeh4AcWBs2CL3bTovSul/TXytXgLTEG2y83yVaP0mJDV5aYvQe9PDzZ8KJPXngfKrLhXsvB3QdfoZJQKn/qip/0md/OIQTAalPEYNrIXhd23DiCni9beywSyBCNWroCcOgVqvMX8Wj5CKFrsrfaCX/Q85K3fTPAh6LJeiS4ifyq22nnXTnw7vC4rnCq3Jng2/W4QivfC2RAfEydnheGm+kNg+kYarsNAjCyDdp0RSJYFGQPjGE7iOlFEnQtHrqXmqf9Fo1OYn4tZhkIEjdmzk4EeSASlT5saDpKr+wAMwGbh1Sw9mhoxpSpoMOqyOFaAmafOYfTumRaHQaVTk0f30KqzlkM4Ej3oEz45HXM2UI1wZSZBP9wA4BfFpuaYyjl4xLgzdLupZwQmjnYJoYArJGh6IQUORn1c=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5938ED5D0A95C44D9EE88C6C6FBA92D2@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 17 Oct 2019 05:50:20 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44277 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389021AbfJQJuT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 05:50:19 -0400
+Received: by mail-lj1-f194.google.com with SMTP id m13so1815888ljj.11;
+        Thu, 17 Oct 2019 02:50:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=B4nV+UMiZrRWL8NEUT7jJ6/dkCR9n2JxEkHQ4ehIxzM=;
+        b=b4+xMxBxIu2ZW2R/fqIFmS/H3npM3/A4AwX1wC8YnKGWhcy0OlfNzDpRoV89uPTTAH
+         xZ3DKxc5cGi7aFg1Ip/15fOiVRYz5fJzrbHorqOfTA09WekX8N4CSJYX4dGkCS08F9UD
+         mJ97OcQxNQfl43h4B7zq4G9EVDNtFRMt1fmC2dP9I3pW23Y/uKpGHekbsHVx7BZp39+/
+         0Gp2nWHEXkUyXU/msp+um4IZOPSUtj0G4WoFouAj3IWQFItF2H8EGKV6DjRudntY+NSu
+         ixz3MifPyLbKuZYK+t5IvlInosuWlQP5zN6o6Zohy6ssKjLivglc8+ys44mn34Jn76Ee
+         3GTg==
+X-Gm-Message-State: APjAAAW+3F8+T7qyBX1alRiskc6nPpIfw8zujjLZ4wuPyC4nLKLvwA40
+        F8R2TnhSAFP+Cz/o0iJ371I=
+X-Google-Smtp-Source: APXvYqzSwV1BhukVKHENWapfjw2isCLKtid/wZQjRFv92sxqnTof8z7xJBjsvHhvBnBoPBkAyj52uQ==
+X-Received: by 2002:a05:651c:1022:: with SMTP id w2mr1852748ljm.189.1571305814382;
+        Thu, 17 Oct 2019 02:50:14 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id v6sm749994ljh.66.2019.10.17.02.50.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 02:50:13 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 12:50:01 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [RFC PATCH 07/13] regulator: bd71828: enhanced run-level support
+Message-ID: <5955d7d2a0e71c1a2d0b217bc2a764fa836bcec8.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f11cd712-64ca-421f-5ffc-08d752e74c75
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Oct 2019 09:49:27.1347
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kYRA6FV/n5wade9sGxK4U+jO44+eqgfW5WY6Cue23x1If1TCBimeuFABdxLIjjj0OpBodnIBROieJW6hAF2UPGkN2y4YiZa/mtkMPF8betE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB5752
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiAxNy8xMC8yMDE5IDAxOjIzLCBHcmVnIEtyb2FoLUhhcnRtYW4gd3JvdGU6DQo+ID4gT24g
-V2VkLCBPY3QgMTYsIDIwMTkgYXQgMTE6MzU6MThQTSArMDEwMCwgTWFyayBCcm93biB3cm90ZToN
-Cj4gPj4gT24gV2VkLCBPY3QgMTYsIDIwMTkgYXQgMDM6MTA6MjVQTSAtMDcwMCwgR3JlZyBLcm9h
-aC1IYXJ0bWFuIHdyb3RlOg0KPiA+Pj4gT24gV2VkLCBPY3QgMTYsIDIwMTkgYXQgMTE6MDA6NDRQ
-TSArMDEwMCwgTWFyayBCcm93biB3cm90ZToNCj4gPj4+PiBPbiBXZWQsIE9jdCAxNiwgMjAxOSBh
-dCAwMjo1MTo0NFBNIC0wNzAwLCBHcmVnIEtyb2FoLUhhcnRtYW4gd3JvdGU6DQo+ID4+Pj4+IEZy
-b206IE9sZWtzYW5kciBTdXZvcm92IDxvbGVrc2FuZHIuc3V2b3JvdkB0b3JhZGV4LmNvbT4NCj4g
-Pj4NCj4gPj4+Pj4gY29tbWl0IDY5NGIxNDU1NGQ3NWYyYTFhZTExMTIwMmU3MTg2MGQ1OGI0MzRh
-MjEgdXBzdHJlYW0uDQo+ID4+DQo+ID4+Pj4+IFRoaXMgY29udHJvbCBtdXRlL3VubXV0ZSB0aGUg
-QURDIGlucHV0IG9mIFNHVEw1MDAwDQo+ID4+Pj4+IHVzaW5nIGl0cyBDSElQX0FOQV9DVFJMIHJl
-Z2lzdGVyLg0KPiA+Pg0KPiA+Pj4+IFRoaXMgc2VlbXMgbGlrZSBhIG5ldyBmZWF0dXJlIGFuZCBu
-b3QgYW4gb2J2aW91cyBjYW5kaWRhdGUgZm9yIHN0YWJsZT8NCj4gPj4NCj4gPj4+IHRoZXJlIHdh
-cyBhIGxvbmcgZW1haWwgZnJvbSBSaWNoYXJkIHRoYXQgc2FpZDoNCj4gPj4+ICAgICBVcHN0cmVh
-bSBjb21taXQgNjMxYmM4ZjAxMzRhICgiQVNvQzogc2d0bDUwMDA6IEZpeCBvZiB1bm11dGUNCj4g
-Pj4+ICAgICBvdXRwdXRzIG9uIHByb2JlIiksIHdoaWNoIGlzIGU5ZjYyMWVmYWViZCBpbiB2NS4z
-IHJlcGxhY2VkDQo+ID4+PiAgICAgc25kX3NvY19jb21wb25lbnRfd3JpdGUgd2l0aCBzbmRfc29j
-X2NvbXBvbmVudF91cGRhdGVfYml0cyBhbmQNCj4gPj4+ICAgICB0aGVyZWZvcmUgbm8gbG9uZ2Vy
-IGNsZWFyZWQgdGhlIE1VVEVfQURDIGZsYWcuIFRoaXMgY2F1c2VkIHRoZQ0KPiA+Pj4gICAgIEFE
-QyB0byBzdGF5IG11dGVkIGFuZCByZWNvcmRpbmcgZG9lc24ndCB3b3JrIGFueSBsb25nZXIuIFRo
-aXMNCj4gPj4+ICAgICBwYXRjaCBmaXhlcyB0aGlzIHByb2JsZW0gYnkgYWRkaW5nIGEgU3dpdGNo
-IGNvbnRyb2wgZm9yDQo+ID4+PiAgICAgTVVURV9BREMuDQo+ID4+DQo+ID4+PiBUaGF0J3Mgd2h5
-IEkgdG9vayB0aGlzLiAgSWYgdGhpcyBpc24ndCB0cnVlLCBJJ2xsIGJlIGdsYWQgdG8gZHJvcCB0
-aGlzLg0KPiA+Pg0KPiA+PiBUaGF0J3MgcHJvYmFibHkgbm90IGFuIGFwcHJvcHJpYXRlIGZpeCBm
-b3Igc3RhYmxlIC0gaXQncyBnb2luZyB0byBhZGQgYQ0KPiA+PiBuZXcgY29udHJvbCB3aGljaCB1
-c2VycyB3aWxsIG5lZWQgdG8gbWFudWFsbHkgc2V0IChvciBob3BlIHRoZWlyDQo+ID4+IHVzZXJz
-cGFjZSBhdXRvbWF0aWNhbGx5IGZpZ3VyZXMgb3V0IHRoYXQgaXQgc2hvdWxkIHNldCBmb3IgdGhl
-bSwgbW9yZQ0KPiA+PiBhZHZhbmNlZCB1c2Vyc3BhY2VzIGxpa2UgUHVsc2VBdWRpbyBzaG91bGQp
-IHdoaWNoIGlzbid0IGEgZHJvcCBpbiBmaXguDQo+ID4+IFlvdSBjb3VsZCBlaXRoZXIgZHJvcCB0
-aGUgYmFja3BvcnQgdGhhdCB3YXMgZG9uZSBmb3IgemVybyBjcm9zcyBvciB0YWtlDQo+ID4+IGEg
-bmV3IHBhdGNoIHRoYXQgY2xlYXJzIHRoZSBNVVRFX0FEQyBmbGFnIChyYXRoZXIgdGhhbiBwdW50
-aW5nIHRvDQo+ID4+IHVzZXJzcGFjZSB0byBkbyBzbyksIG9yIGp1c3QgYmUgT0sgd2l0aCB3aGF0
-IHlvdSd2ZSBnb3QgYXQgdGhlIG1pbnV0ZQ0KPiA+PiB3aGljaCBtaWdodCBiZSBmaW5lIGdpdmVu
-IHRoZSBsYWNrIG9mIHVzZXIgcmVwb3J0cy4NCg0KTWFyaywgb2J2aW91c2x5IHRoaXMgaXMgbm90
-IGEgTkVXIGZlYXR1cmUuIFRoaXMgcGF0Y2ggYWRkcyBMT1NUDQpzdGFuZGFyZCBjb250cm9sLg0K
-DQpQbGVhc2UgbG9vayBpbnRvIG90aGVyIGNvZGVjczoNCg0KJCBncmVwIC1SICdTT0NfU0lOR0xF
-KCJDYXB0dXJlIFN3aXRjaCInIHNvdW5kL3NvYy8NCnNvdW5kL3NvYy9jb2RlY3Mvc2d0bDUwMDAu
-Yy5vcmlnOiBTT0NfU0lOR0xFKCJDYXB0dXJlIFN3aXRjaCIsDQpTR1RMNTAwMF9DSElQX0FOQV9D
-VFJMLCAwLCAxLCAxKSwNCnNvdW5kL3NvYy9jb2RlY3Mvd205NzA1LmM6IFNPQ19TSU5HTEUoIkNh
-cHR1cmUgU3dpdGNoIiwgQUM5N19SRUNfR0FJTiwNCjE1LCAxLCAxKSwNCnNvdW5kL3NvYy9jb2Rl
-Y3Mvd205NzEzLmM6U09DX1NJTkdMRSgiQ2FwdHVyZSBTd2l0Y2giLCBBQzk3X0NELCAxNSwgMSwg
-MSksDQpzb3VuZC9zb2MvY29kZWNzL3dtOTcxMi5jOlNPQ19TSU5HTEUoIkNhcHR1cmUgU3dpdGNo
-IiwgQUM5N19SRUNfR0FJTiwgMTUsIDEsIDEpLA0KDQpBbmQgZXZlbjoNCg0KJCBncmVwIC1SICdT
-T0NfU0lOR0xFKCIuKkNhcHR1cmUgU3dpdGNoIicgc291bmQvc29jLw0Kc291bmQvc29jL2NvZGVj
-cy9sbTQ5NDUzLmM6IFNPQ19TSU5HTEUoIlBvcnQxIENhcHR1cmUgU3dpdGNoIiwNCkxNNDk0NTNf
-UDBfQVVESU9fUE9SVDFfQkFTSUNfUkVHLA0Kc291bmQvc29jL2NvZGVjcy9sbTQ5NDUzLmM6IFNP
-Q19TSU5HTEUoIlBvcnQyIENhcHR1cmUgU3dpdGNoIiwNCkxNNDk0NTNfUDBfQVVESU9fUE9SVDJf
-QkFTSUNfUkVHLA0Kc291bmQvc29jL2NvZGVjcy9zZ3RsNTAwMC5jLm9yaWc6IFNPQ19TSU5HTEUo
-IkNhcHR1cmUgU3dpdGNoIiwNClNHVEw1MDAwX0NISVBfQU5BX0NUUkwsIDAsIDEsIDEpLA0Kc291
-bmQvc29jL2NvZGVjcy9tYzEzNzgzLmM6IFNPQ19TSU5HTEUoIkxpbmUgaW4gQ2FwdHVyZSBTd2l0
-Y2giLA0KTUMxMzc4M19BVURJT19SWDEsIDEwLCAxLCAwKSwNCnNvdW5kL3NvYy9jb2RlY3MvYWs0
-NjQyLmM6IFNPQ19TSU5HTEUoIkFMQyBDYXB0dXJlIFN3aXRjaCIsIEFMQ19DVEwxLCA1LCAxLCAw
-KSwNCnNvdW5kL3NvYy9jb2RlY3MvYWRhdTE3MDEuYzogU09DX1NJTkdMRSgiTWFzdGVyIENhcHR1
-cmUgU3dpdGNoIiwNCkFEQVUxNzAxX0RTUENUUkwsIDQsIDEsIDApLA0Kc291bmQvc29jL2NvZGVj
-cy9hbGM1NjMyLmM6IFNPQ19TSU5HTEUoIkRNSUMgRW4gQ2FwdHVyZSBTd2l0Y2giLA0Kc291bmQv
-c29jL2NvZGVjcy9hbGM1NjMyLmM6IFNPQ19TSU5HTEUoIkRNSUMgUHJlRmlsdGVyIENhcHR1cmUg
-U3dpdGNoIiwNCnNvdW5kL3NvYy9jb2RlY3Mvd205NzA1LmM6IFNPQ19TSU5HTEUoIkNhcHR1cmUg
-U3dpdGNoIiwgQUM5N19SRUNfR0FJTiwNCjE1LCAxLCAxKSwNCnNvdW5kL3NvYy9jb2RlY3MvYWRh
-dTE5NzcuYzogU09DX1NJTkdMRSgiQURDIiAjeCAiIEhpZ2hwYXNzLUZpbHRlcg0KQ2FwdHVyZSBT
-d2l0Y2giLCBcDQpzb3VuZC9zb2MvY29kZWNzL2FkYXUxOTc3LmM6IFNPQ19TSU5HTEUoIkFEQyIg
-I3ggIiBEQyBTdWJ0cmFjdGlvbg0KQ2FwdHVyZSBTd2l0Y2giLCBcDQpzb3VuZC9zb2MvY29kZWNz
-L2lzYWJlbGxlLmM6IFNPQ19TSU5HTEUoIlVMQVRYMTIgQ2FwdHVyZSBTd2l0Y2giLA0KSVNBQkVM
-TEVfVUxBVFgxMl9JTlRGX0NGR19SRUcsDQpzb3VuZC9zb2MvY29kZWNzL2FkMTk4MC5jOlNPQ19T
-SU5HTEUoIlBDTSBDYXB0dXJlIFN3aXRjaCIsDQpBQzk3X1JFQ19HQUlOLCAxNSwgMSwgMSksDQpz
-b3VuZC9zb2MvY29kZWNzL2FkMTk4MC5jOlNPQ19TSU5HTEUoIlBob25lIENhcHR1cmUgU3dpdGNo
-IiwNCkFDOTdfUEhPTkUsIDE1LCAxLCAxKSwNCnNvdW5kL3NvYy9jb2RlY3Mvd204NzMxLmM6U09D
-X1NJTkdMRSgiTWljIENhcHR1cmUgU3dpdGNoIiwNCldNODczMV9BUEFOQSwgMSwgMSwgMSksDQpz
-b3VuZC9zb2MvY29kZWNzL3VkYTEzODAuYzovKiovIFNPQ19TSU5HTEUoIkFEQyBDYXB0dXJlIFN3
-aXRjaCIsDQpVREExMzgwX1BHQSwgMTUsIDEsIDEpLCAvKiBNVF9BREMgKi8NCnNvdW5kL3NvYy9j
-b2RlY3Mvd205NzEzLmM6U09DX1NJTkdMRSgiQ2FwdHVyZSBTd2l0Y2giLCBBQzk3X0NELCAxNSwg
-MSwgMSksDQpzb3VuZC9zb2MvY29kZWNzL2VzODMxNi5jOiBTT0NfU0lOR0xFKCJBTEMgQ2FwdHVy
-ZSBTd2l0Y2giLA0KRVM4MzE2X0FEQ19BTEMxLCA2LCAxLCAwKSwNCnNvdW5kL3NvYy9jb2RlY3Mv
-c2d0bDUwMDAuYzogU09DX1NJTkdMRSgiQ2FwdHVyZSBTd2l0Y2giLA0KU0dUTDUwMDBfQ0hJUF9B
-TkFfQ1RSTCwgMCwgMSwgMSksDQpzb3VuZC9zb2MvY29kZWNzL3RsdjMyMGFpYzMxeHguYzogU09D
-X1NJTkdMRSgiQURDIENhcHR1cmUgU3dpdGNoIiwNCkFJQzMxWFhfQURDRkdBLCA3LCAxLCAxKSwN
-CnNvdW5kL3NvYy9jb2RlY3MvZGE3MjEwLmM6IFNPQ19TSU5HTEUoIkF1eDIgQ2FwdHVyZSBTd2l0
-Y2giLA0KREE3MjEwX0FVWDIsIDIsIDEsIDApLA0Kc291bmQvc29jL2NvZGVjcy93bTk3MTIuYzpT
-T0NfU0lOR0xFKCJDYXB0dXJlIFN3aXRjaCIsIEFDOTdfUkVDX0dBSU4sIDE1LCAxLCAxKSwNCg0K
-Z2l0IGJsYW1lIHNvdW5kL3NvYy9jb2RlY3Mvd205NzA1LmMNCi4uLg0KOTI3YjBhZWE5M2JiMyAo
-SWFuIE1vbHRvbiAgICAgICAgIDIwMDktMDEtMTkgMTc6MjM6MTEgKzAwMDAgIDg3KQ0KIFNPQ19T
-SU5HTEUoIkNhcHR1cmUgU3dpdGNoIiwgQUM5N19SRUNfR0FJTiwgMTUsIDEsIDEpLA0KLi4uDQoN
-ClRoaXMgY29udHJvbCB3YXMgYWRkZWQgbm90IGxhdGVyIHRoYW4gMjAwOSwgc28gSSBkb3VidCBt
-eSBwYXRjaCBjb3VsZA0KYnJlYWsgc29tZXRoaW5nIGluIGN1cnJlbnQgdXNlci1sYW5kLg0KDQo+
-ID4NCj4gPiBPaywgSSdsbCBnbGFkbHkgZ28gZHJvcCBpdCwgdGhhbmtzIQ0KPg0KPiBNYXJrLCB0
-aGFua3MgZm9yIHRoZSBjbGFyaWZpY2F0aW9uISBJIGhhdmVuJ3QgdGhvdWdodCBvZiBicmVha2lu
-Zw0KPiBhbnl0aGluZyB3aXRoIHRoZSBiYWNrcG9ydCBhcyBpdCB3b3JrZWQgZmluZSBmb3Igb3Vy
-IGFwcGxpY2F0aW9uLg0KDQotLSANCkJlc3QgcmVnYXJkcw0KT2xla3NhbmRyIFN1dm9yb3YNCg0K
-VG9yYWRleCBBRw0KQWx0c2FnZW5zdHJhc3NlIDUgfCA2MDQ4IEhvcncvTHV6ZXJuIHwgU3dpdHpl
-cmxhbmQgfCBUOiArNDEgNDEgNTAwDQo0ODAwIChtYWluIGxpbmUpDQo=
+Support changing run-level via I2C and add in-kernel API for allowing
+run time changes of run-level voltages.
+
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+ drivers/regulator/bd71828-regulator.c | 266 ++++++++++++++++++++++----
+ include/linux/mfd/rohm-bd71828.h      |   3 +
+ 2 files changed, 232 insertions(+), 37 deletions(-)
+
+diff --git a/drivers/regulator/bd71828-regulator.c b/drivers/regulator/bd71828-regulator.c
+index 36f5aef941e5..d5d0dcee90cf 100644
+--- a/drivers/regulator/bd71828-regulator.c
++++ b/drivers/regulator/bd71828-regulator.c
+@@ -19,6 +19,12 @@
+ #include <linux/regulator/machine.h>
+ #include <linux/regulator/of_regulator.h>
+ 
++/* Drivers should not do this. But we provide this custom kernel interface
++ * for users to switch the run-level. Hence we need to get the rdev from
++ * struct regulator
++ */
++#include "internal.h"
++
+ #define MAX_GPIO_DVS_BUCKS 4
+ #define DVS_RUN_LEVELS 4
+ 
+@@ -39,7 +45,10 @@ struct bd71828_regulator_data {
+ 	const struct reg_init *reg_inits;
+ 	int reg_init_amnt;
+ 	struct run_lvl_ctrl run_lvl[DVS_RUN_LEVELS];
++	struct mutex dvs_lock;
+ 	struct gpio_descs *gps;
++	struct regmap *regmap;
++	bool allow_runlvl;
+ };
+ 
+ static const struct reg_init buck1_inits[] = {
+@@ -225,7 +234,7 @@ static int set_runlevel_voltage(struct regmap *regmap,
+ 	return ret;
+ }
+ 
+-static int buck_set_gpio_hw_dvs_levels(struct device_node *np,
++static int buck_set_runlvl_hw_dvs_levels(struct device_node *np,
+ 				       const struct regulator_desc *desc,
+ 				       struct regulator_config *cfg)
+ {
+@@ -245,11 +254,12 @@ static int buck_set_gpio_hw_dvs_levels(struct device_node *np,
+ 
+ 	data = container_of(desc, struct bd71828_regulator_data, desc);
+ 
++	mutex_lock(&data->dvs_lock);
+ 	for (i = 0; i < DVS_RUN_LEVELS; i++) {
+ 		ret = of_property_read_u32(np, props[i], &uv);
+ 		if (ret) {
+ 			if (ret != -EINVAL)
+-				return ret;
++				goto unlock_out;
+ 			uv = 0;
+ 		}
+ 		if (uv) {
+@@ -259,7 +269,7 @@ static int buck_set_gpio_hw_dvs_levels(struct device_node *np,
+ 			ret = set_runlevel_voltage(cfg->regmap, desc, uv, i);
+ 
+ 			if (ret)
+-				return ret;
++				goto unlock_out;
+ 
+ 			ret = regmap_update_bits(cfg->regmap, en_reg,
+ 						 en_masks[i], en_masks[i]);
+@@ -268,10 +278,15 @@ static int buck_set_gpio_hw_dvs_levels(struct device_node *np,
+ 						 en_masks[i], 0);
+ 		}
+ 		if (ret)
+-			return ret;
++			goto unlock_out;
+ 	}
+ 
+-	return rohm_regulator_set_dvs_levels(&data->dvs, np, desc, cfg->regmap);
++	ret = rohm_regulator_set_dvs_levels(&data->dvs, np, desc, cfg->regmap);
++
++unlock_out:
++	mutex_unlock(&data->dvs_lock);
++
++	return ret;
+ }
+ 
+ static int ldo6_parse_dt(struct device_node *np,
+@@ -324,11 +339,40 @@ static int bd71828_dvs_gpio_set_run_level(struct bd71828_regulator_data *rd,
+ 	return gpiod_set_array_value_cansleep(rd->gps->ndescs, rd->gps->desc,
+ 				     rd->gps->info, values);
+ }
++
++/* Get current run level when RUN levels are controlled using I2C */
++static int bd71828_dvs_i2c_set_run_level(struct regmap *regmap,
++					 int lvl)
++{
++	unsigned int reg;
++
++	reg = lvl << (ffs(BD71828_MASK_RUN_LVL_CTRL) - 1);
++
++	return regmap_update_bits(regmap, BD71828_REG_PS_CTRL_3,
++				  BD71828_MASK_RUN_LVL_CTRL, reg);
++}
++/* Get current run level when RUN levels are controlled using I2C */
++static int bd71828_dvs_i2c_get_run_level(struct regmap *regmap,
++					 struct bd71828_regulator_data *rd)
++{
++	int ret;
++	unsigned int val;
++
++	ret = regmap_read(regmap, BD71828_REG_PS_CTRL_3, &val);
++	if (ret)
++		return ret;
++
++	ret = (val & BD71828_MASK_RUN_LVL_CTRL);
++	ret >>= ffs(BD71828_MASK_RUN_LVL_CTRL) - 1;
++
++	return ret;
++}
++
++/* Get current RUN level when run levels are controlled by GPIO */
+ static int bd71828_dvs_gpio_get_run_level(struct bd71828_regulator_data *rd)
+ {
+ 	int run_level;
+ 	int ret;
+-
+ 	DECLARE_BITMAP(values, 2);
+ 
+ 	values[0] = 0;
+@@ -346,47 +390,131 @@ static int bd71828_dvs_gpio_get_run_level(struct bd71828_regulator_data *rd)
+ 	return run_level;
+ }
+ 
++/*
++ * To be used when BD71828 regulator is controlled by RUN levels
++ * via I2C instead of GPIO
++ */
++static int bd71828_dvs_i2c_is_enabled(struct regulator_dev *rdev)
++{
++	struct bd71828_regulator_data *data = rdev_get_drvdata(rdev);
++	int ret;
++
++	mutex_lock(&data->dvs_lock);
++	ret = bd71828_dvs_i2c_get_run_level(rdev->regmap, data);
++	if (ret < 0)
++		goto unlock_out;
++
++	ret = data->run_lvl[ret].enabled;
++
++unlock_out:
++	mutex_unlock(&data->dvs_lock);
++
++	return ret;
++}
++
++/*
++ * To be used when BD71828 regulator is controlled by RUN levels
++ * via GPIO
++ */
+ static int bd71828_dvs_gpio_is_enabled(struct regulator_dev *rdev)
+ {
+ 	struct bd71828_regulator_data *data = rdev_get_drvdata(rdev);
+ 	int ret;
+ 
+-	// TODO: lock GPIO state (Is this needed)
++	mutex_lock(&data->dvs_lock);
+ 	ret = bd71828_dvs_gpio_get_run_level(data);
+-	if (ret < 0)
++	if (ret < 0 || ret >= DVS_RUN_LEVELS)
+ 		goto unlock_out;
+ 
+ 	ret = data->run_lvl[ret].enabled;
+ 
+ unlock_out:
+-	//TODO: unlock
++	mutex_unlock(&data->dvs_lock);
+ 
+ 	return ret;
+ }
+ 
++/*
++ * To be used when BD71828 regulator is controlled by RUN levels
++ * via I2C instead of GPIO
++ */
++static int bd71828_dvs_i2c_get_voltage(struct regulator_dev *rdev)
++{
++	int ret;
++	struct bd71828_regulator_data *data = rdev_get_drvdata(rdev);
++
++	mutex_lock(&data->dvs_lock);
++	ret = bd71828_dvs_i2c_get_run_level(rdev->regmap, data);
++	if (ret < 0)
++		goto unlock_out;
++
++	ret = data->run_lvl[ret].voltage;
++
++unlock_out:
++	mutex_unlock(&data->dvs_lock);
++
++	return ret;
++}
++
++/*
++ * To be used when BD71828 regulator is controlled by RUN levels
++ * via GPIO
++ */
+ static int bd71828_dvs_gpio_get_voltage(struct regulator_dev *rdev)
+ {
+ 	int ret;
+ 	struct bd71828_regulator_data *data = rdev_get_drvdata(rdev);
+ 
+-	// TODO: lock GPIO state (Is this needed)
++	mutex_lock(&data->dvs_lock);
+ 	ret = bd71828_dvs_gpio_get_run_level(data);
+-	if (ret < 0)
++	if (ret < 0 || DVS_RUN_LEVELS <= ret)
+ 		goto unlock_out;
+ 
+ 	ret = data->run_lvl[ret].voltage;
+ 
+ unlock_out:
+-	//TODO: unlock
++	mutex_unlock(&data->dvs_lock);
++
++	return ret;
++}
++
++/**
++ * bd71828_set_runlevel_voltage - change run-level voltage
++ *
++ * @regulator:  pointer to regulator for which the run-level voltage is changed
++ * @uv:		New voltage for run-level in micro volts
++ * @level:	run-level for which the voltage is to be changed
++ *
++ * Changes the run-level voltage for given regulator
++ */
++int bd71828_set_runlevel_voltage(struct regulator *regulator, unsigned int uv,
++				 unsigned int level)
++{
++	struct regulator_dev *rdev = regulator->rdev;
++	struct bd71828_regulator_data *data = rdev_get_drvdata(rdev);
++	int ret;
++
++	if (!data || !data->allow_runlvl)
++		return -EINVAL;
++
++	mutex_lock(&data->dvs_lock);
++	ret = set_runlevel_voltage(rdev->regmap, rdev->desc, uv, level);
++	mutex_unlock(&data->dvs_lock);
+ 
+ 	return ret;
+ }
++EXPORT_SYMBOL(bd71828_set_runlevel_voltage);
+ 
+ static const struct regulator_ops dvs_buck_gpio_ops = {
+ 	.is_enabled = bd71828_dvs_gpio_is_enabled,
+ 	.get_voltage = bd71828_dvs_gpio_get_voltage,
+ };
+ 
++static const struct regulator_ops dvs_buck_i2c_ops = {
++	.is_enabled = bd71828_dvs_i2c_is_enabled,
++	.get_voltage = bd71828_dvs_i2c_get_voltage,
++};
++
+ static const struct regulator_ops bd71828_buck_ops = {
+ 	.enable = regulator_enable_regmap,
+ 	.disable = regulator_disable_regmap,
+@@ -972,17 +1100,72 @@ static const struct bd71828_regulator_data bd71828_rdata[] = {
+ };
+ 
+ struct bd71828_gpio_cfg {
+-	unsigned int gpiobucks;
++	bool use_gpio;
++	unsigned int runlvl;
+ 	struct gpio_descs *gps;
+ };
+ 
++static void mark_regulator_runlvl_controlled(struct device *dev,
++					     struct device_node *np,
++					     struct bd71828_gpio_cfg *g)
++{
++	int i;
++
++	for (i = 1; i <= ARRAY_SIZE(bd71828_rdata); i++) {
++		if (!of_node_name_eq(np, bd71828_rdata[i-1].desc.of_match))
++			continue;
++		switch (i) {
++		case 1:
++		case 2:
++		case 6:
++		case 7:
++			g->runlvl |= 1 << (i - 1);
++			dev_dbg(dev, "buck %d runlevel controlled\n", i);
++			break;
++		default:
++			dev_err(dev,
++				"Only bucks 1,2,6,7 support run-level dvs\n");
++			break;
++		}
++	}
++}
++
++static int get_runcontrolled_bucks_dt(struct device *dev,
++				      struct bd71828_gpio_cfg *g)
++{
++	struct device_node *np;
++	struct device_node *nproot = dev->of_node;
++	const char *prop = "rohm,dvs-runlvl-ctrl";
++
++	g->runlvl = 0;
++
++	nproot = of_get_child_by_name(nproot, "regulators");
++	if (!nproot) {
++		dev_err(dev, "failed to find regulators node\n");
++		return -ENODEV;
++	}
++	for_each_child_of_node(nproot, np)
++		if (of_property_read_bool(np, prop))
++			mark_regulator_runlvl_controlled(dev, np, g);
++
++	of_node_put(nproot);
++	return 0;
++}
++
+ static int check_dt_for_gpio_controls(struct device *d,
+ 				      struct bd71828_gpio_cfg *g)
+ {
+-	int ret, i;
+-	struct device_node *np = d->of_node;
+-	const char *prop = "rohm,dvs_gpio_bucks";
+-	uint32_t bucks[MAX_GPIO_DVS_BUCKS];
++	int ret;
++
++	ret = get_runcontrolled_bucks_dt(d, g);
++	if (ret)
++		return ret;
++
++	g->use_gpio = false;
++
++	/* If the run level control is not requested by any bucks we're done */
++	if (!g->runlvl)
++		return 0;
+ 
+ 	g->gps = devm_gpiod_get_array(d, "rohm,dvs-vsel", GPIOD_OUT_LOW);
+ 
+@@ -996,22 +1179,14 @@ static int check_dt_for_gpio_controls(struct device *d,
+ 	if (g->gps->ndescs != 2)
+ 		return -ENOENT;
+ 
+-	ret = of_property_read_variable_u32_array(np, prop, bucks, 0,
+-						  ARRAY_SIZE(bucks));
+-
+-	if (ret < 0) {
+-		if (ret == -EOVERFLOW)
+-			return -EINVAL;
+-	}
+-	for (i = 0; i < ret; i++)
+-		g->gpiobucks |= 1 << bucks[i];
++	g->use_gpio = true;
+ 
+ 	return 0;
+ }
+ 
+-static void set_buck_gpio_controlled(struct rohm_regmap_dev *bd71828,
+-				     struct bd71828_regulator_data *rd,
+-				     struct bd71828_gpio_cfg *g)
++static void set_buck_runlvl_controlled(struct rohm_regmap_dev *bd71828,
++				      struct bd71828_regulator_data *rd,
++				      struct bd71828_gpio_cfg *g)
+ {
+ 	switch (rd->desc.id) {
+ 	case BD71828_BUCK1:
+@@ -1033,9 +1208,16 @@ static void set_buck_gpio_controlled(struct rohm_regmap_dev *bd71828,
+ 	 * Disallow setters. Get voltages/enable states based
+ 	 * on current RUN level
+ 	 */
+-	rd->gps = g->gps;
+-	rd->desc.ops = &dvs_buck_gpio_ops;
+-	rd->desc.of_parse_cb = buck_set_gpio_hw_dvs_levels;
++
++	rd->allow_runlvl = true;
++
++	if (g->use_gpio) {
++		rd->gps = g->gps;
++		rd->desc.ops = &dvs_buck_gpio_ops;
++	} else {
++		rd->desc.ops = &dvs_buck_i2c_ops;
++	}
++	rd->desc.of_parse_cb = buck_set_runlvl_hw_dvs_levels;
+ }
+ 
+ static ssize_t show_runlevel(struct device *dev,
+@@ -1044,10 +1226,14 @@ static ssize_t show_runlevel(struct device *dev,
+ 	int runlevel;
+ 	struct bd71828_regulator_data *rd = dev_get_drvdata(dev);
+ 
+-	if (!rd || !rd->gps)
++	if (!rd)
+ 		return -ENOENT;
+ 
+-	runlevel = bd71828_dvs_gpio_get_run_level(rd);
++	if (!rd->gps)
++		runlevel = bd71828_dvs_i2c_get_run_level(rd->regmap, rd);
++	else
++		runlevel = bd71828_dvs_gpio_get_run_level(rd);
++
+ 	if (runlevel < 0)
+ 		return runlevel;
+ 
+@@ -1063,7 +1249,10 @@ static ssize_t set_runlevel(struct device *dev, struct device_attribute *attr,
+ 	if (kstrtol(buf, 0, &val) != 0)
+ 		return -EINVAL;
+ 
+-	val = bd71828_dvs_gpio_set_run_level(rd, val);
++	if (rd->gps)
++		val = bd71828_dvs_gpio_set_run_level(rd, val);
++	else
++		val = bd71828_dvs_i2c_set_run_level(rd->regmap, val);
+ 	if (val)
+ 		return val;
+ 
+@@ -1133,8 +1322,11 @@ static int bd71828_probe(struct platform_device *pdev)
+ 		/* Use bd71828_rdata as template */
+ 		rd[i] = bd71828_rdata[i];
+ 
+-		if (gcfg.gpiobucks & (1 << i))
+-			set_buck_gpio_controlled(bd71828, &rd[i], &gcfg);
++		mutex_init(&rd[i].dvs_lock);
++		if (gcfg.runlvl & (1 << i))
++			set_buck_runlvl_controlled(bd71828, &rd[i], &gcfg);
++
++		rd[i].regmap = bd71828->regmap;
+ 	}
+ 
+ 	config.regmap = bd71828->regmap;
+diff --git a/include/linux/mfd/rohm-bd71828.h b/include/linux/mfd/rohm-bd71828.h
+index eb0557eb5314..5f15c6a309e6 100644
+--- a/include/linux/mfd/rohm-bd71828.h
++++ b/include/linux/mfd/rohm-bd71828.h
+@@ -422,4 +422,7 @@ enum {
+ #define BD71828_OUT_TYPE_OPEN_DRAIN			0x0
+ #define BD71828_OUT_TYPE_CMOS				0x2
+ 
++int bd71828_set_runlevel_voltage(struct regulator *regulator, unsigned int uv,
++				 unsigned int level);
++
+ #endif /* __LINUX_MFD_BD71828_H__ */
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
