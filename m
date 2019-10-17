@@ -2,134 +2,115 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 035ABFA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 175F7ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C511621835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9BDE21835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:08:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qDpcNx0M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VhSJpgBr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503374AbfJQTH2 (ORCPT
+        id S2503379AbfJQTIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 15:07:28 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:56398 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503363AbfJQTH2 (ORCPT
+        Thu, 17 Oct 2019 15:08:21 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:35785 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2441359AbfJQTIV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 15:07:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+iW1UtqQMUkClFUP9OfZlGcJ+KCRuTpNF/TmgYgEt/U=; b=qDpcNx0MrDAxV3GnJa1A1QBrl
-        LL68RwtKOpen/rD5D+jpGbpw5+hc1x2D026QEBabOT0ees4y12rAy5nSS4GP3BnW8tpN4LUj18pnJ
-        IVqQ37CIMfGDNo2TZhFN2UWA/07SrsI7pR4lOoChHRVT5XOYFuZKPhD9JldIfu02/DxU2UsbZnksd
-        VKIbAJfH1RbOzLJ1ei+g2SazqlbY1h0nndbWi5c2cUV0cIB54q7U8sCmlarmns6F8gZUuPv3nFfxS
-        IV/l4I53sLlRnjnrtLG8p+RsPJLa2P90vxBWcIdkoQ/nt4ZWc2kF5HI5e9BMtoCSw9mRHqPucTXen
-        NtMDFjJIg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iLB7A-0005Tu-9Y; Thu, 17 Oct 2019 19:07:12 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BCD86980D8F; Thu, 17 Oct 2019 21:07:08 +0200 (CEST)
-Date:   Thu, 17 Oct 2019 21:07:08 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Douglas Raillard <douglas.raillard@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        mingo@redhat.com, rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, qperret@qperret.net,
-        patrick.bellasi@matbug.net, dh.han@samsung.com
-Subject: Re: [RFC PATCH v3 0/6] sched/cpufreq: Make schedutil energy aware
-Message-ID: <20191017190708.GF22902@worktop.programming.kicks-ass.net>
-References: <20191011134500.235736-1-douglas.raillard@arm.com>
- <20191014145315.GZ2311@hirez.programming.kicks-ass.net>
- <a1ce67d7-62c3-b78b-1d87-23ef4dbc2274@arm.com>
- <20191017095015.GI2311@hirez.programming.kicks-ass.net>
- <7edb1b73-54e7-5729-db5d-6b3b1b616064@arm.com>
+        Thu, 17 Oct 2019 15:08:21 -0400
+Received: by mail-yb1-f195.google.com with SMTP id i6so1057121ybe.2;
+        Thu, 17 Oct 2019 12:08:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/XGjJBGWBzNHoBfXlGLk+OFOUnYWPc8VecafOj7/Jo8=;
+        b=VhSJpgBrLMCK1kZpbEwgcDek/uMN0XUbiXNrZCe8gK9eZn7uvq7SKxl4VmPjSHioUh
+         KJtE7K/HQddcP2uXNS/wLBzBQmEOzHAr8XxoK4n4lhOEGrqcvgaN3FVcxNDCin9KlP+6
+         /Au77xgl+afURlUk0KY+dBCYlIe5+tSLx0qgaQ72mtDzLQAFTHTkZmmZPB2qZzstRL40
+         BQIVyO4jnQedWySrc7E2azJUqKYnNgGjqcCJOIhd3o97oR5knc3xGUW2Wo8qhmVfT+tp
+         B5vNK3n/DVpe9UWyglHNgBRv4ghi8TLU3jkbuDmKnh0dzNuoUq1ujVav0akjEE3NeLk5
+         X+5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/XGjJBGWBzNHoBfXlGLk+OFOUnYWPc8VecafOj7/Jo8=;
+        b=CzLs/KTgO5rdZC4rKkeuTN3V6W7yV/DfnVqEcHbL+r/2lsg1N01I3m5CwcU0lMpyOt
+         T9RCe23/FKh6CDpkYsBqMkK8/jE7wM5wAVzC4OiYfijWifes7yiesyF6Fr3y9T80Fhmd
+         fxcUYySE3GqRFrs7zS4+/esIcTDpYTp1KYS0PMorppgeEcZIFKMJRzmF8XE3qjDP+Ps8
+         lOWH2d+nUZLJ0FRhmImO0c/m6NW3xb26tbmWNMm2QChwURC8MFGbxyXyrS1PlO/Dr+6I
+         Fx+Jr4Xk+0GuPLFCCd9J9N4frnNJFvZxiZo+lbwoC7dY+veHGtHmmva0s/fTSBWY0l2f
+         VYvA==
+X-Gm-Message-State: APjAAAXKCidn12MtgMzCeTldgagbF8wXagOWQwoo5tj3EkjBLl+1qLC6
+        83xtMel9Y7KcMeE5XJI2PkAFw4Cv
+X-Google-Smtp-Source: APXvYqwJLh+hMtSO+Bw+p8QZlDDig5Lb+bOqC9lSM8DmwCTTMj+7tQTS3nDUweew7iQSoT3+AbNLvg==
+X-Received: by 2002:a25:cf01:: with SMTP id f1mr3556762ybg.386.1571339300559;
+        Thu, 17 Oct 2019 12:08:20 -0700 (PDT)
+Received: from [192.168.1.62] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id a64sm737640ywe.92.2019.10.17.12.08.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 17 Oct 2019 12:08:19 -0700 (PDT)
+Subject: Re: [PATCH] dtc: fix spelling mistake "mmory" -> "memory"
+To:     Colin King <colin.king@canonical.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>
+References: <20190911093123.11312-1-colin.king@canonical.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <4aa3bcde-1ad1-98ec-8deb-4a8ab1bbb41c@gmail.com>
+Date:   Thu, 17 Oct 2019 14:08:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7edb1b73-54e7-5729-db5d-6b3b1b616064@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190911093123.11312-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 03:23:04PM +0100, Douglas Raillard wrote:
-> On 10/17/19 10:50 AM, Peter Zijlstra wrote:
+Hi Rob,
 
-> > I'm still thinking about the exact means you're using to raise C; that
-> > is, the 'util - util_est' as cost_margin. It hurts my brain still.
+
+On 09/11/2019 04:31, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> util_est is currently the best approximation of the actual portion of the CPU the task needs:
-> 1) for periodic tasks, it's not too far from the duty cycle, and is always higher
+> There is a spelling mistake in an error message. Fix it.
 > 
-> 2) for aperiodic tasks, it (indirectly) takes into account the total time it took
->   to complete the previous activation, so the signal is not 100% composed of logical signals
->   only relevant for periodic tasks (although it's a big part of it).
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  scripts/dtc/fdtput.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> 3) Point 1) and 2) together allows util_est to adapt to periodic tasks that changes
-> their duty cycle over time, without needing a very long history (the last task period
-> is sufficient).
+> diff --git a/scripts/dtc/fdtput.c b/scripts/dtc/fdtput.c
+> index a363c3cabc59..3755e5f68a5a 100644
+> --- a/scripts/dtc/fdtput.c
+> +++ b/scripts/dtc/fdtput.c
+> @@ -84,7 +84,7 @@ static int encode_value(struct display_info *disp, char **arg, int arg_count,
+>  			value_size = (upto + len) + 500;
+>  			value = realloc(value, value_size);
+>  			if (!value) {
+> -				fprintf(stderr, "Out of mmory: cannot alloc "
+> +				fprintf(stderr, "Out of memory: cannot alloc "
+>  					"%d bytes\n", value_size);
+>  				return -1;
+>  			}
 > 
-> For periodic tasks, the distance between instantaneous util_avg and the actual task
-> duty cycle indicates somehow what is our best guess of the (potential) change in the task
-> duty cycle.
-> 
-> util_est is the threshold (assuming util_avg increasing) for util_avg after which we know
-> for sure that even if the task stopped right now, its duty cycle would be higher than
-> during the previous period.
-> This means for a given task and with (util >= util_est):
-> 
-> 1) util - util_est == 0 means the task duty cycle will be equal to the one during
->   during the previous activation, if the tasks stopped executing right now.
-> 
-> 2) util - util_est > 0 means the task duty cycle will be higher to the one during
->   during the previous activation, if the tasks stopped executing right now.
 
-So far I can follow, 2) is indeed a fairly sane indication that
-utilization is growing.
+This is a very old version of the upstream file.  update-dtc-source.sh does
+not pull new versions of this file.
 
-> Using the difference (util - util_est) will therefore give these properties to the boost signal:
-> * no boost will be applied as long as the task has a constant or decreasing duty cycle.
-> 
-> * when we can detect that the duty cycle increases, we temporarily increase the frequency.
->   We start with a slight increase, and the longer we wait for the current period to finish,
->   the more we boost, since the more likely it is that the task has a much larger duty cycle
->   than anticipated. More specifically, the evaluation of "how much more" is done the exact
->   same way as it is done for PELT, since the dynamic of the boost is "inherited" from PELT.
+We don't actually build fdtput, is there any reason to not just remove
+scripts/dtc/fdtput.c?
 
-Right, because as long it keeps running, util_est will not be changed,
-so the difference will continue to increase.
-
-What I don't see is how that that difference makes sense as input to:
-
-  cost(x) : (1 + x) * cost_j
-
-I suppose that limits the additional OPP to twice the previously
-selected cost / efficiency (see the confusion from that other email).
-But given that efficency drops (or costs rise) for higher OPPs that
-still doesn't really make sense..
-
-> Now if the task is aperiodic, the boost will allow reaching the highest frequency faster,
-> which may or may not be desired. Ultimately, it's not more or less wrong than just picking
-> the freq based on util_est alone, since util_est is already somewhat meaningless for aperiodic
-> tasks. It just allows reaching the max freq at some point without waiting for too long, which is
-> all what we can do without more info on the task.
-> 
-> When applying these boosting rules on the runqueue util signals, we are able to detect if at least one
-> task needs boosting according to these rules. That only holds as long as the history we look at is
-> the result of a stable set of tasks, i.e. no tasks added or removed from the rq.
-
-So while I agree that 2) is a reasonable signal to work from, everything
-that comes after is still much confusing me.
-
+-Frank
