@@ -2,115 +2,126 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E206FFA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB47FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B680920820
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:26:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="TKjxRtPw"
+	by mail.kernel.org (Postfix) with ESMTP id 375BF21835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:26:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437743AbfJQO0r (ORCPT
+        id S2437782AbfJQO0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 10:26:47 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37064 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbfJQO0r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:26:47 -0400
-Received: by mail-ed1-f68.google.com with SMTP id r4so1904337edy.4
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 07:26:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=pTZm79Y77en4+WVH2R/MS/mKWiM//Hl1RgvICjEclrk=;
-        b=TKjxRtPwWpvtdWaMYbV45LyV9HVOzaOpAFbMpF2wo5zHCbYg0VRPUUtdJ1VyU2CUc6
-         l/GfxXIxUHAzOJXFyL/sOqbcEBBADqp8Pq1no/2KigSG5eGP/nwp1ooFXzgeBH8HEdjO
-         GmJV/kE/BTVPJEGV8LKAdzay5o0rhZDFgVvRTWl/8/mJ/iwqxTg0IqZ6T9qTkiFc8x78
-         2EcQkBTDbFH6XEMf1N3dkNFpK4jjV2/42IkyvXgNWCq+s3Q6czyEmpaIe60dwwf0EJUc
-         0QeFMbdS9HQHYMtc2JQUheqYhHhaL2gcvWIPxKnh27DvXjcivpklLdfmftATrLQDcDfZ
-         nO4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=pTZm79Y77en4+WVH2R/MS/mKWiM//Hl1RgvICjEclrk=;
-        b=Cjr/tct8anbLW6llDm3S3g/ro7y7PBesUY/RfilGeBTj8nUz4P6JLhddo1GOlRoiNG
-         IXJymbwnvTbn1nbwANU46bN7bGklyGd6/w6vhpDCNpEEa3wXaCFXbv8RW2KNYXHq+bZM
-         72hgaqTcqltMY7D3pf1e3Iv73KGnLgEUzPG+mwyvkj/t/WBIBvvCGB5FJtH+qcDb3EFB
-         cerFItpTDYsLtP46q/+wwM9z4ry/FYu8Xl9aZOnDKjiaXthl4uX0dljQ7Pw48T5ZehqI
-         dlZ6HFxicMpqNqRzDTS8qo5Wde9xXMEnQ3E/UTe7TcI5PGhK0nX6VZHCbDszgUIqx/PO
-         IXuQ==
-X-Gm-Message-State: APjAAAVKOoCpD2ieIbgmMc+kQ6DPkjPCw+ToRpLVGcVZfn2QQgZp4iUY
-        N+uJ2QUaqTDVlQQX57VvlW2RbgCXonNHjuz6KQfEaw==
-X-Google-Smtp-Source: APXvYqziFMNgpgw2iHsErr96SyZ2uSmSqs5rGVbMozjNUXiBuLfqaEtdRt8edlaf9N0bltup9A+f3kj+ItWHzZYFDds=
-X-Received: by 2002:aa7:dd0f:: with SMTP id i15mr4281166edv.0.1571322404589;
- Thu, 17 Oct 2019 07:26:44 -0700 (PDT)
+        Thu, 17 Oct 2019 10:26:52 -0400
+Received: from mga04.intel.com ([192.55.52.120]:55219 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726545AbfJQO0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 10:26:52 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 07:26:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,308,1566889200"; 
+   d="scan'208";a="200404372"
+Received: from hma13-mobl.amr.corp.intel.com (HELO [10.251.16.117]) ([10.251.16.117])
+  by orsmga006.jf.intel.com with ESMTP; 17 Oct 2019 07:26:50 -0700
+Subject: Re: [PATCH 0/4] [RFC] Migrate Pages in lieu of discard
+To:     Shakeel Butt <shakeelb@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Adams <jwadams@google.com>,
+        "Chen, Tim C" <tim.c.chen@intel.com>
+References: <20191016221148.F9CCD155@viggo.jf.intel.com>
+ <CALvZod5wdToX6bx4Bnwx9AgrzY3xkmE0OMH61f88hKxeGX+tvA@mail.gmail.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <496566a6-2581-17f4-a4f2-e5def7f97582@intel.com>
+Date:   Thu, 17 Oct 2019 07:26:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191016200034.1342308-1-pasha.tatashin@soleen.com>
-In-Reply-To: <20191016200034.1342308-1-pasha.tatashin@soleen.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Thu, 17 Oct 2019 10:26:33 -0400
-Message-ID: <CA+CK2bC2KwWufE1DWa4szn_hQ1dbjDVHgYUu7=J4O_kvKXTrHg@mail.gmail.com>
-Subject: Re: [PATCH v7 00/25] arm64: MMU enabled kexec relocation
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>,
-        James Morris <jmorris@namei.org>,
-        Sasha Levin <sashal@kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        kexec mailing list <kexec@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        linux-mm <linux-mm@kvack.org>,
-        Mark Rutland <mark.rutland@arm.com>, steve.capper@arm.com,
-        rfontana@redhat.com, Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CALvZod5wdToX6bx4Bnwx9AgrzY3xkmE0OMH61f88hKxeGX+tvA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> https://lore.kernel.org/lkml/45a2f0b8-5bac-8b5d-d595-f92e9acb27ad@arm.com
-> > +     /* Map relocation function va == pa */
-> > +     rc = trans_pgd_map_page(&info, trans_ttbr0,  __va(kern_reloc),
-> > +                             kern_reloc, PAGE_KERNEL_EXEC);
-> > +     if (rc)
-> > +             return rc;
-> James wrote:
-> You can't do this with the page table helpers. We support platforms
-> with no memory in range of TTBR0's VA space. See dd006da21646f
->
-> You will need some idmapped memory to turn the MMU off on a system
-> that booted at EL1. This will need to be in a set of page tables
-> that the helpers can't easily touch - so it should only be a single
-> page. (like the arch code's existing idmap - although that may
-> have been overwritten).
->
-> (I have a machine where this is a problem, if I get the time I will
-> have a stab at making hibernate's safe page idmaped).
-> ---
->
-> As I understand, there are platforms where TTBR0 cannot include all
-> physical memory for idmap. However, kexec must have at least one page
-> idmapped (kimage->control_code_page) to be able to relocate kernel
-> while MMU is enabled:
->
-> I am still trying to fully understand the problem:
-> CONFIG_ARM64_VA_BITS must be smaller than 48 and physical memory must
-> start at a high address for this problem to occur.
->
-> Why can't we simply decrease T0SZ to cover all physical memory?
+On 10/16/19 8:45 PM, Shakeel Butt wrote:
+> On Wed, Oct 16, 2019 at 3:49 PM Dave Hansen <dave.hansen@linux.intel.com> wrote:
+>> This set implements a solution to these problems.  At the end of the
+>> reclaim process in shrink_page_list() just before the last page
+>> refcount is dropped, the page is migrated to persistent memory instead
+>> of being dropped.
+..> The memory cgroup part of the story is missing here. Since PMEM is
+> treated as slow DRAM, shouldn't its usage be accounted to the
+> corresponding memcg's memory/memsw counters and the migration should
+> not happen for memcg limit reclaim? Otherwise some jobs can hog the
+> whole PMEM.
 
-Is there a way to reproduce this platform with qemu?
+My expectation (and I haven't confirmed this) is that the any memory use
+is accounted to the owning cgroup, whether it is DRAM or PMEM.  memcg
+limit reclaim and global reclaim both end up doing migrations and
+neither should have a net effect on the counters.
 
-Pasha
+There is certainly a problem here because DRAM is a more valuable
+resource vs. PMEM, and memcg accounts for them as if they were equally
+valuable.  I really want to see memcg account for this cost discrepancy
+at some point, but I'm not quite sure what form it would take.  Any
+feedback from you heavy memcg users out there would be much appreciated.
+
+> Also what happens when PMEM is full? Can the memory migrated to PMEM
+> be reclaimed (or discarded)?
+
+Yep.  The "migration path" can be as long as you want, but once the data
+hits a "terminal node" it will stop getting migrated and normal discard
+at the end of reclaim happens.
