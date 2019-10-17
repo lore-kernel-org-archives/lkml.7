@@ -2,137 +2,156 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1C5CA9EC8
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B1DCA9EC8
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B72621D7A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79BBF21D80
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:43:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571355835;
+	bh=0EcaWaedR8Ckg+AhTfjvMemxm+9X5GNiQRm9Lmclzcw=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=yOFhCpwwR6aZ2cxxkybVz5P5UsUWGiNTCXG5HacKge99pAt2OAGZWzVQt/cL48U7f
+	 z4Jg/Gm+2PQOFOr77WR1fUgKya2iBBA2+atuvTxDlI8veSaOhRIMylKrKNw9mM0Y0g
+	 RcmV6AjHtDmZHtGqa2vWAFuA5iuSr3wUbJ17L0vs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441795AbfJQXkK (ORCPT
+        id S2441803AbfJQXny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 19:40:10 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:33554 "EHLO gloria.sntech.de"
+        Thu, 17 Oct 2019 19:43:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438560AbfJQXkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 19:40:09 -0400
-Received: from remote.shanghaihotelholland.com ([46.44.148.63] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iLFNE-0004OT-M8; Fri, 18 Oct 2019 01:40:04 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Andy Yan <andy.yan@rock-chips.com>
-Cc:     kever.yang@rock-chips.com, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add basic dts for RK3308 EVB
-Date:   Fri, 18 Oct 2019 01:39:58 +0200
-Message-ID: <120878573.PH0Dm224ES@phil>
-In-Reply-To: <20191017030520.32420-1-andy.yan@rock-chips.com>
-References: <20191017030242.32219-1-andy.yan@rock-chips.com> <20191017030520.32420-1-andy.yan@rock-chips.com>
+        id S1732678AbfJQXnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 19:43:53 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A94C21D7A;
+        Thu, 17 Oct 2019 23:43:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571355833;
+        bh=0EcaWaedR8Ckg+AhTfjvMemxm+9X5GNiQRm9Lmclzcw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=oslJZmmo5xyVYMHQM/H+3KnxSZ2knfk1fGOUYQ2WjOPbi92IpUtaKxPApI0o8OjgJ
+         TneDFARiK9K6jQfpHAnsGUvEdLOlIe9zNf/9cxYIq+nM67FXpKlsvvpgwc0Re0290h
+         IeqwsyMj5gf4A79SIBcafOUpyk7sM9nM2n1p2Kxs=
+Date:   Fri, 18 Oct 2019 00:43:49 +0100
+From:   Will Deacon <will@kernel.org>
+To:     torvalds@linux-foundation.org
+Cc:     catalin.marinas@arm.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM Kernel Mailing List 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [GIT PULL] arm64: Fixes for -rc4
+Message-ID: <20191017234348.wcbbo2njexn7ixpk@willie-the-truck>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+Hi Linus,
 
-Am Donnerstag, 17. Oktober 2019, 05:05:20 CEST schrieb Andy Yan:
-> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> index c82c5e57d44c..b680c4b8b2c9 100644
-> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> @@ -447,6 +447,11 @@ properties:
->            - const: rockchip,r88
->            - const: rockchip,rk3368
->  
-> +      - description: Rockchip RK3308 Evaluation board
-> +        items:
-> +          - const: rockchip,rk3308-evb
-> +          - const: rockchip,rk3308
-> +
->        - description: Rockchip RK3228 Evaluation board
->          items:
->            - const: rockchip,rk3228-evb
+Please pull these arm64 fixes for -rc4. The main thing here is a
+long-awaited workaround for a CPU erratum on ThunderX2 which we have
+developed in conjunction with engineers from Cavium/Marvell. At the moment,
+the workaround is unconditionally enabled for affected CPUs at runtime
+but we may add a command-line option to disable it in future if performance
+numbers show up indicating a significant cost for real workloads.
 
-Rob likes the binding addition to be a separate patch.
+The other fixes are summarised in the tag.
 
-> +	vdd_log: vdd_core: vdd-core {
-> +		compatible = "pwm-regulator";
-> +		pwms = <&pwm0 0 5000 1>;
-> +		regulator-name = "vdd_core";
-> +		regulator-min-microvolt = <827000>;
-> +		regulator-max-microvolt = <1340000>;
-> +		regulator-init-microvolt = <1015000>;
-> +		regulator-early-min-microvolt = <1015000>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		regulator-settling-time-up-us = <250>;
-> +		status = "okay";
+Note that the workaround code ended up being based on -rc2, so I had a
+bit of a faff trying to generate the right diffstat for this pull request
+after merging that branch into our fixes branch based on -rc1. In the end
+I had to emulate the pull locally because I couldn't figure out how to
+drive request-pull correctly despite the shortlog being correct. I'd love
+to know what I should've done instead.
 
-It's a board-regulator, so always "okay", no need for a status.
+Thanks,
 
-In general for regulators, please create an actual regulator tree, with
-correctly modelled supply-chains following the naming according
-to the board schematics. See for example rk3399-gru for a nice example.
+Will
 
-> +	};
-> +
-> +	vdd_1v0: vdd-1v0 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vdd_1v0";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		regulator-min-microvolt = <1000000>;
-> +		regulator-max-microvolt = <1000000>;
+--->8
 
-As noted above, missing vin-supply
+The following changes since commit 3e7c93bd04edfb0cae7dad1215544c9350254b8f:
 
-> +	};
-> +
+  arm64: armv8_deprecated: Checking return value for memory allocation (2019-10-08 13:34:04 +0100)
 
-> +	vccio_flash: vccio-flash {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vccio_flash";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +	};
-> +
-> +	vcc_phy: vcc-phy-regulator {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc_phy";
-> +		regulator-always-on;
-> +		regulator-boot-on;
+are available in the git repository at:
 
-This is the classic example of not following the schematics.
-I.e. no Rockchip board I know has a regulator named "vcc_phy"
-that is completely unconnected, yet all boards in the vendor tree
-have this regulator ;-) ... so as I said, please follow the schematics.
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
 
-> +	};
-> +
-> +	vbus_host: vbus-host-regulator {
-> +		compatible = "regulator-fixed";
-> +		enable-active-high;
-> +		gpio = <&gpio0 RK_PC5 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&usb_drv>;
-> +		regulator-name = "vbus_host";
-> +	};
-> +};
-> +
+for you to fetch changes up to 777d062e5bee0e3c0751cdcbce116a76ee2310ec:
 
+  Merge branch 'errata/tx2-219' into for-next/fixes (2019-10-17 13:42:42 -0700)
 
-Thanks
-Heiko
+----------------------------------------------------------------
+arm64 fixes for -rc4
 
+- Work around Cavium/Marvell ThunderX2 erratum #219
 
+- Fix regression in mlock() ABI caused by sign-extension of TTBR1 addresses
+
+- More fixes to the spurious kernel fault detection logic
+
+- Fix pathological preemption race when enabling some CPU features at boot
+
+- Drop broken kcore macros in favour of generic implementations
+
+- Fix userspace view of ID_AA64ZFR0_EL1 when SVE is disabled
+
+- Avoid NULL dereference on allocation failure during hibernation
+
+----------------------------------------------------------------
+Chris von Recklinghausen (1):
+      arm64: Fix kcore macros after 52-bit virtual addressing fallout
+
+Julien Grall (1):
+      arm64: cpufeature: Treat ID_AA64ZFR0_EL1 as RAZ when SVE is not enabled
+
+Julien Thierry (1):
+      arm64: entry.S: Do not preempt from IRQ before all cpufeatures are enabled
+
+Marc Zyngier (4):
+      arm64: KVM: Trap VM ops when ARM64_WORKAROUND_CAVIUM_TX2_219_TVM is set
+      arm64: Enable workaround for Cavium TX2 erratum 219 when running SMT
+      arm64: Avoid Cavium TX2 erratum 219 when switching TTBR
+      arm64: Allow CAVIUM_TX2_ERRATUM_219 to be selected
+
+Mark Rutland (1):
+      arm64: mm: fix inverted PAR_EL1.F check
+
+Pavel Tatashin (1):
+      arm64: hibernate: check pgd table allocation
+
+Will Deacon (2):
+      arm64: tags: Preserve tags for addresses translated via TTBR1
+      Merge branch 'errata/tx2-219' into for-next/fixes
+
+Yang Yingliang (1):
+      arm64: sysreg: fix incorrect definition of SYS_PAR_EL1_F
+
+ Documentation/arm64/silicon-errata.rst |  2 +
+ arch/arm64/Kconfig                     | 17 +++++++++
+ arch/arm64/include/asm/asm-uaccess.h   |  7 ++--
+ arch/arm64/include/asm/cpucaps.h       |  4 +-
+ arch/arm64/include/asm/memory.h        | 10 ++++-
+ arch/arm64/include/asm/pgtable.h       |  3 --
+ arch/arm64/include/asm/sysreg.h        |  2 +-
+ arch/arm64/kernel/cpu_errata.c         | 38 +++++++++++++++++++
+ arch/arm64/kernel/cpufeature.c         | 15 +++++---
+ arch/arm64/kernel/entry.S              |  8 ++--
+ arch/arm64/kernel/hibernate.c          |  9 ++++-
+ arch/arm64/kernel/process.c            | 18 +++++++++
+ arch/arm64/kvm/hyp/switch.c            | 69 +++++++++++++++++++++++++++++++++-
+ arch/arm64/mm/fault.c                  |  6 ++-
+ include/linux/sched.h                  |  1 +
+ 15 files changed, 186 insertions(+), 23 deletions(-)
