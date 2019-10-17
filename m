@@ -6,79 +6,73 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C58ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E25DECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 613C22082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B75E2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:02:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393223AbfJQLCK (ORCPT
+        id S2393417AbfJQLCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 07:02:10 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4201 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728464AbfJQLCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 07:02:09 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E76A0E8CD5B2E1654BFD;
-        Thu, 17 Oct 2019 19:02:06 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.132) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 17 Oct 2019 19:02:00 +0800
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-To:     <netdev@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     yuqi jin <jinyuqi@huawei.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "Jose Abreu" <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Maxime Coquelin" <mcoquelin.stm32@gmail.com>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>
-Subject: [PATCH] net: stmmac: Fix the problem of tso_xmit
-Date:   Thu, 17 Oct 2019 18:59:10 +0800
-Message-ID: <1571309950-43543-1-git-send-email-zhangshaokun@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 17 Oct 2019 07:02:32 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:52506 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393253AbfJQLCc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 07:02:32 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iL3Y3-0002YT-Ar; Thu, 17 Oct 2019 12:02:27 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iL3Y2-00082E-TZ; Thu, 17 Oct 2019 12:02:26 +0100
+From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        cluster-devel@redhat.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] gfs2: make gfs2_fs_parameters static
+Date:   Thu, 17 Oct 2019 12:02:25 +0100
+Message-Id: <20191017110225.30841-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.132]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yuqi jin <jinyuqi@huawei.com>
+The gfs2_fs_parameters is not used outside the unit
+it is declared in, so make it static.
 
-When the address width of DMA is greater than 32, the packet header occupies
-a BD descriptor. The starting address of the data should be added to the
-header length.
+Fixes the following sparse warning:
 
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Signed-off-by: yuqi jin <jinyuqi@huawei.com>
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+fs/gfs2/ops_fstype.c:1331:39: warning: symbol 'gfs2_fs_parameters' was not declared. Should it be static?
+
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 1 +
- 1 file changed, 1 insertion(+)
+Cc: Bob Peterson <rpeterso@redhat.com>
+Cc: Andreas Gruenbacher <agruenba@redhat.com>
+Cc: cluster-devel@redhat.com
+Cc: linux-kernel@vger.kernel.org
+---
+ fs/gfs2/ops_fstype.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index c76a1336a451..3e02e64c5fa0 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2995,6 +2995,7 @@ static netdev_tx_t stmmac_tso_xmit(struct sk_buff *skb, struct net_device *dev)
- 	} else {
- 		stmmac_set_desc_addr(priv, first, des);
- 		tmp_pay_len = pay_len;
-+		des += proto_hdr_len;
- 	}
+diff --git a/fs/gfs2/ops_fstype.c b/fs/gfs2/ops_fstype.c
+index 681b44682b0d..ebdef1c5f580 100644
+--- a/fs/gfs2/ops_fstype.c
++++ b/fs/gfs2/ops_fstype.c
+@@ -1328,7 +1328,7 @@ static const struct fs_parameter_enum gfs2_param_enums[] = {
+ 	{}
+ };
  
- 	stmmac_tso_allocator(priv, des, tmp_pay_len, (nfrags == 0), queue);
+-const struct fs_parameter_description gfs2_fs_parameters = {
++static const struct fs_parameter_description gfs2_fs_parameters = {
+ 	.name = "gfs2",
+ 	.specs = gfs2_param_specs,
+ 	.enums = gfs2_param_enums,
 -- 
-2.7.4
+2.23.0
 
