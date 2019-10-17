@@ -2,106 +2,170 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C345EFA372D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2D7FA372D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 961A320820
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:25:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sSSWDSRc"
+	by mail.kernel.org (Postfix) with ESMTP id 6D7392089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:26:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408237AbfJQIZv (ORCPT
+        id S2408251AbfJQI0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 04:25:51 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:51732 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390082AbfJQIZv (ORCPT
+        Thu, 17 Oct 2019 04:26:21 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:30197 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387581AbfJQI0U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 04:25:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=lwJxn9QBi3wt/6dfD+wqzvEQfXxlMoAjM2J8+Itpyoc=; b=sSSWDSRcexzsb2xf3aHmyAa/I
-        XdhMJr2FL9dMfRcV5eKO/MagVWWOrIvZbGSJXNW0SLqxvIdM/NCDx57wIkYqRp+IXs0tOAEkqbA+Y
-        dy3ngfwqYaQM4xrLHrZuKTZ9wUvSt1RiglPDvEjwSf/08yUBS5CDYqveFN9dbPKgunTc922e5+Fcl
-        hy1YaPnHMu83yHVytxJPSwUk9PG1tjSZpBVOF4ET9J4Qm7TLPsTQL/86ijbvnRz7p5BTqs7UUn6NB
-        1RoH4GNNGwCtlOrRioGrsluOS6klVyndyCFOldqmUOMjl+u7gPgApGNCQpYj0jFPaKdDhSyNdcRLM
-        VUSdGsvxw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iL16J-0003yN-QC; Thu, 17 Oct 2019 08:25:40 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 32BAE304637;
-        Thu, 17 Oct 2019 10:24:42 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7311F200DE9E1; Thu, 17 Oct 2019 10:25:37 +0200 (CEST)
-Date:   Thu, 17 Oct 2019 10:25:37 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Douglas Raillard <douglas.raillard@arm.com>
-Cc:     Patrick Bellasi <patrick.bellasi@arm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>
-Subject: Re: [PATCH] sched/fair: util_est: fast ramp-up EWMA on utilization
- increases
-Message-ID: <20191017082537.GX2328@hirez.programming.kicks-ass.net>
-References: <20190620150555.15717-1-patrick.bellasi@arm.com>
- <CAKfTPtDTfyBvfwE6_gtjxJoPNS6YGQ7rrLcjg_M-jr=YSc+FNA@mail.gmail.com>
- <20190628100751.lpcwsouacsi2swkm@e110439-lin>
- <20190628123800.GS3419@hirez.programming.kicks-ass.net>
- <20190628140057.7aujh2wsk7wtqib3@e110439-lin>
- <20190802094725.ploqfarz7fj7vrtp@e110439-lin>
- <20191014145218.GI2328@hirez.programming.kicks-ass.net>
- <48adc956-77a4-e293-29d9-cd8b82a40ae8@arm.com>
+        Thu, 17 Oct 2019 04:26:20 -0400
+X-UUID: ac8042f2d8c74c4bab2f984771d7d9bd-20191017
+X-UUID: ac8042f2d8c74c4bab2f984771d7d9bd-20191017
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <min.guo@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1164182793; Thu, 17 Oct 2019 16:26:08 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 17 Oct 2019 16:26:04 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 17 Oct 2019 16:26:03 +0800
+From:   <min.guo@mediatek.com>
+To:     Bin Liu <b-liu@ti.com>, Rob Herring <robh+dt@kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        <chunfeng.yun@mediatek.com>, <linux-usb@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <tony@atomide.com>,
+        <hdegoede@redhat.com>, Min Guo <min.guo@mediatek.com>
+Subject: [PATCH RESEND v7 0/6] Add MediaTek MUSB Controller Driver
+Date:   Thu, 17 Oct 2019 16:25:48 +0800
+Message-ID: <20191017082554.27953-1-min.guo@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <48adc956-77a4-e293-29d9-cd8b82a40ae8@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 5873172F392C39E2384854588EDDAB7493890FBB8452BFEB0DE11811A9F88D1E2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 05:16:02PM +0100, Douglas Raillard wrote:
+From: Min Guo <min.guo@mediatek.com>
 
-> random idea: Since these things are much easier to understand by looking at a graph
-> of util over time, we may agree on some mailing-list-friendly way to convey graphs.
+These patches introduce the MediaTek MUSB controller driver.
 
-I don't think that this patch warrants something like that. It is fairly
-clear what it does.
+The driver can be configured as Dual-Role Device (DRD),
+Peripheral Only and Host Only modes. This has beed tested on
+MT2701 with a variety of devices in host mode and with the 
+f_mass gadget driver in peripheral mode, plugging otg cables
+in/out a lot of times in all possible imaginable plug orders.
 
-For other stuff, maybe.
+changes in v7:
+changes of dt-bindings and DTS:
+1. Change compatible string
+2. Change usb connector child node compatible as "gpio-usb-b-connector" 
 
-> For example, a simple CSV with:
-> * before/after delimiters (line of # or =)
-> * graph title
-> * one point per signal transition, so that it can be plotted with gnuplot style "steps" or matplotlib drawstyle='steps-post'
-> * consistent column names:
->    - time: in seconds (scientific notation for nanoseconds)
->    - activation: 1 when the task is actually running, 0 otherwise
->     (so it can be turned into transparent coloured bands like using gnuplot filledcurves, like in [1])
->    - util: util_avg of the task being talked about
-> 
-> The delimiters allow writing a scripts to render graphs directly out of an mbox file or ML archive URL.
-> This won't solve the issue for the commit message itself, but that may ease the ML discussions.
+changes in v6:
+changes of dt-bindings:
+1. Modify usb connector child node
+changes of DTS:
+1. Modify usb connector child node
+changes of driver:
+1. Add of_platform_populate in probe to populate connector platform_devices
+   from device tree data
+2. Replace extcon with usb role switch mechanism to support dual-role mode,
+   depends on [1]
+3. Remove set vbus function
 
-Something like that could work; mutt can easily pipe emails into
-scripts. OTOH gnuplot also has ASCII output, so one can easily stick
-something like that into email.
+    [1] [v6,09/10] usb: roles: add USB Type-B GPIO connector driver
+        https://patchwork.kernel.org/patch/10966361/
+
+changes in v5:
+changes of dt-bindings suggested by Rob:
+1. Modify compatible as 
+- compatible : should be one of:
+               "mediatek,mt-2701"
+               ...
+               followed by "mediatek,mtk-musb"
+2. Add usb connector child node
+changes of DTS:
+1. Add usb connector child node
+changes of driver suggested by Bin:
+1. Replace musb_readb() with musb_clearb() to clear dma pending interrupts
+2. Replace musb_readb() with musb_clearb() to clear common/tx/rx pending interrupts
+3. Make musb_clearb/w() return the value of musb_readb/w()
+
+changes in v4:
+changes of dt-bindings suggested by Sergei:
+1. String alignment
+changes of driver suggested by Tony and Bin:
+1. Add a new patch for set/get_toggle()
+2. Add a new patch for noirq type of dma
+3. Add a new patch musb_clearb/w()
+4. Abondon patch "usb: musb: Delete the const attribute of addr parameter in readb/w/l hooks"
+
+changes in v3:
+changes of driver suggested by Bin:
+1. Add a new patch for musb_readb/w/l() to remove const attribute 
+2. Use is_out as function parameter in set_toggle/get_toggle() hooks
+3. Remove 'u8/u16 data' parameter in clearb/w() hooks
+4. Remove musb_default_clearb/w()
+5. Replace musb_readb/w() with musb_clearb/w() to clear pending interrupts 
+6. Add comments to clearb/w() hooks
+7. Replace musb_save_toggle() with musb->io.get_toggle()
+8. Replace musb_set_toggle() with musb->io.set_toggle()
+
+changes in v2:
+changes of dt-bindings suggested by Rob and Bin:
+1. Modify DRC to DRD
+2. Drop the "<soc-model>-musb" in compatible
+3. Remove phy-names
+4. Add space after comma in clock-names
+dtsi:
+1. Remove phy-names
+changes of driver suggested by Bin:
+1. Add a new patch for musb_set_toggle
+2. Add summarize of MediaTek musb controller differences in the commit log
+3. Abondon patch "usb: musb: Move musbhsdma macro definition to musb_dma.h"
+4. Add "|| COMPILE_TEST" in Kconfig
+5. Add musb_clearb() and musb_clearw() hooks
+6. Add get_toggle() and set_toggle() hooks
+7. Replace musb_readl() with musb_readw() to read 16bit toggle register
+8. Move MediaTek's private toggle registers from musb_regs.h to mediatek.c
+9. Create musbhs_dma_controller_create_noirq()
+
+Min Guo (6):
+  dt-bindings: usb: musb: Add support for MediaTek musb controller
+  arm: dts: mt2701: Add usb2 device nodes
+  usb: musb: Add get/set toggle hooks
+  usb: musb: Add noirq type of dma create interface
+  usb: musb: Add musb_clearb/w() interface
+  usb: musb: Add support for MediaTek musb controller
+
+ .../devicetree/bindings/usb/mediatek,musb.txt      |  55 ++
+ arch/arm/boot/dts/mt2701-evb.dts                   |  21 +
+ arch/arm/boot/dts/mt2701.dtsi                      |  33 ++
+ drivers/usb/musb/Kconfig                           |   9 +-
+ drivers/usb/musb/Makefile                          |   1 +
+ drivers/usb/musb/mediatek.c                        | 582 +++++++++++++++++++++
+ drivers/usb/musb/musb_core.c                       |  74 ++-
+ drivers/usb/musb/musb_core.h                       |  13 +-
+ drivers/usb/musb/musb_dma.h                        |   9 +
+ drivers/usb/musb/musb_host.c                       |  46 +-
+ drivers/usb/musb/musb_io.h                         |  12 +-
+ drivers/usb/musb/musbhsdma.c                       |  56 +-
+ drivers/usb/musb/sunxi.c                           |   4 +-
+ drivers/usb/musb/tusb6010.c                        |   2 +-
+ 14 files changed, 845 insertions(+), 72 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
+ create mode 100644 drivers/usb/musb/mediatek.c
+
+-- 
+1.9.1
 
