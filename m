@@ -2,120 +2,100 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 832ECFA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5EB1FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 598032067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78BDC20872
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:11:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CWD0eZJm"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="vLPVBc0j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440437AbfJQQLW (ORCPT
+        id S2440443AbfJQQLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:11:22 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37294 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405983AbfJQQLV (ORCPT
+        Thu, 17 Oct 2019 12:11:50 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41726 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406402AbfJQQLu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 12:11:21 -0400
-Received: by mail-qt1-f194.google.com with SMTP id n17so4390084qtr.4
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 09:11:20 -0700 (PDT)
+        Thu, 17 Oct 2019 12:11:50 -0400
+Received: by mail-pl1-f196.google.com with SMTP id t10so1341608plr.8
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 09:11:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=L9pt9Z55SHz6CG8upac+m8pqudIdzOY9Z9V3JtoTFX8=;
-        b=CWD0eZJmqBiH2XE8MyKfBza0dcM0g01SotBgRXr/jbjJ/BOwr06jeARYbxsc/fJ4k/
-         TReD3Pbkg3ynJIY2bI/So7Q7DG5+/WASBbvlAiMhoGHBHrXWD4m4AFPXTkOF6Hvofd4m
-         OH3eI2jzaBfJx3R8k4uds85G6pKmgdUVzAr5zwjcxExp3qjxJkfqYcKLR5Zq5Ohyy3aE
-         g0fXnM0cjyILXWCs0x0XCoRZ+5yJHf7IIx1+mZoGhm8YQvXiKKt82frSAiBaATeT8D4M
-         sBi4OR+8isHHgHJQfzVq64qsVtKCfCfrKm8iD5Sawsj96w1w0kaklB3kcanvbcmHX11w
-         IbNQ==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=wqUCKXUJo8X5AAnTpFmKsNohxpW+m6dhYvogWfd9F4U=;
+        b=vLPVBc0jLKrHi5fVflv9YxU/hVeu/thLp/A8Y8zkskX6Ye5Dy5BmCgU3KC62KpH5UH
+         51cd+d34DJAoNncm6/3zAa9GnGflQHLPvRvBm3tMsYg5p7bBWqWsyg+oDbz8kfaC1uJ0
+         JYm8MiUvFwitfQfmeZmHcysj4jHd7g9nj9kDP66XDTCZybnLhlVKdSPQuuS6xmLmevIz
+         dcphuhkju0GyADHd3MBg0wPM1M3B89A1FF+glmpcimwLNMBCm1CWAqk6+5IcSY63yzN2
+         M7+f8NEN+zuoAvlR/dJRptbELXTr3PAx+hA2K9iHhVtMouQnQGdPTynkkPJ2r1DqKw5c
+         vMgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=L9pt9Z55SHz6CG8upac+m8pqudIdzOY9Z9V3JtoTFX8=;
-        b=r0wakd5uxMs+oxDa6wOKROItKCn5VqEpAuqtNZeHiBM4ARj8+vssEIpdjUV//4cAFe
-         wfewpqnzDo2WLRPvepGS+AqLKmn4sZgxAPnKqRLQKBw/ElK09q0melTFOs9W3TGgT3FV
-         OGGdAkbakfMJ0yDK6DGqtYXqr6vY/+BGa25OJDZcrjdQd5EyRGb8jpAU4YCBQbyKfYDK
-         uqLkiGkgfGqmVLrctZjh1E3E6wDeU9yP7ymtkiVZ0FKS+ipA8PD5Us+yNVKVbA5tgIc/
-         c7vXgEVFLt4t6rZzct7VoQEjcWofe2XoX0EYvr1s3yN1zfZiXq6yjLxlA/5a0wCffndh
-         w3Qg==
-X-Gm-Message-State: APjAAAXoFuOxVvU2LbziEWzJnQaNTMP54ig3eoxecuN5VuJGjuov47tT
-        vmd7J/zmY3X5zyInMVcLxp9M4jxO8WpqdA==
-X-Google-Smtp-Source: APXvYqxYhvCvZWcFbwrydpNgASDDloMQUYWOtz8vH+NDsrbwUIQjGAXIfppyoDcdfl0T4JGQ5gT6+Q==
-X-Received: by 2002:a05:6214:2c:: with SMTP id b12mr4686466qvr.10.1571328679237;
-        Thu, 17 Oct 2019 09:11:19 -0700 (PDT)
-Received: from [192.168.1.169] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.gmail.com with ESMTPSA id g3sm1219423qkb.117.2019.10.17.09.11.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Oct 2019 09:11:18 -0700 (PDT)
-Subject: Re: [PATCH v3 1/7] PM/Domains: Add support for retrieving genpd
- performance states information
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-References: <1571254641-13626-1-git-send-email-thara.gopinath@linaro.org>
- <1571254641-13626-2-git-send-email-thara.gopinath@linaro.org>
- <CAPDyKFr76VHypqGxYL-1HS3uu3_KYeO+dGJ7q1Nj=uXiQgY98A@mail.gmail.com>
-Cc:     Eduardo Valentin <edubezval@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, amit.kucheria@verdurent.com,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <5DA892A5.5070007@linaro.org>
-Date:   Thu, 17 Oct 2019 12:11:17 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=wqUCKXUJo8X5AAnTpFmKsNohxpW+m6dhYvogWfd9F4U=;
+        b=K/fuZ47z3qMVD+zHWiUfMfRcm4NLoKL55f48Eb6M2xvpWQ8+6D5oncYYthOcE/kwjq
+         JfH4PepYsQWOIGYic+08YnKeZCUxPFa2ll7tUPuTz2xB9kXUyFyVvHc5yYLce2swc499
+         TsKPbAB4cFA6L8XSejkcpHjOffVnpIzjlzjE9HaURGl3x8RSaDG57MzCtt8B9sWW4yom
+         fesTABMsl8FKc8HEXPCuF5DGSmNohERlTiPN5ocU/bL/4eDpNCjLUHjdwdzZkI5y8UYh
+         Fzw9syNAGhS8CNlhXlVhE9E/Q9cymH7q6qSZEjd6k0zLp5s9o5uEqYkiPZIFWn5FVtMd
+         umvg==
+X-Gm-Message-State: APjAAAWRjCnI9mW0xjvEuAxHpOyPTXYQ7BQ/x0llLRfQaooDq7VwcTW5
+        OTeN6AyqOrJco/mjTd3tUtWdjWEXj30=
+X-Google-Smtp-Source: APXvYqw6QWneFJB+QPd5Fr8J5Si4FPeSBOTzKJY8p7VwP6wPLB9npxHWIpL+GLPUVWu+FaDir8cNQg==
+X-Received: by 2002:a17:902:9a84:: with SMTP id w4mr4790832plp.186.1571328709262;
+        Thu, 17 Oct 2019 09:11:49 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:d8f2:392e:5b44:157d])
+        by smtp.gmail.com with ESMTPSA id e3sm2578093pjs.15.2019.10.17.09.11.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 17 Oct 2019 09:11:48 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] arm64: dts: meson: sm1: add audio support
+In-Reply-To: <7ho8ygfxo7.fsf@baylibre.com>
+References: <20191009082708.6337-1-jbrunet@baylibre.com> <7h7e54hdif.fsf@baylibre.com> <7ho8ygfxo7.fsf@baylibre.com>
+Date:   Thu, 17 Oct 2019 09:11:48 -0700
+Message-ID: <7hsgnrbbcr.fsf@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFr76VHypqGxYL-1HS3uu3_KYeO+dGJ7q1Nj=uXiQgY98A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/17/2019 04:49 AM, Ulf Hansson wrote:
-> On Wed, 16 Oct 2019 at 21:37, Thara Gopinath <thara.gopinath@linaro.org> wrote:
->>
->> Add two new APIs in the genpd framework,
->> dev_pm_genpd_get_performance_state to return the current performance
->> state of a power domain and dev_pm_genpd_performance_state_count to
->> return the total number of performance states supported by a
->> power domain. Since the genpd framework does not maintain
->> a count of number of performance states supported by a power domain,
->> introduce a new callback(.get_performance_state_count) that can be used
->> to retrieve this information from power domain drivers.
->>
->> These APIs are added to aid the implementation of a power domain as
->> a warming device. Linux kernel cooling device framework(into which
->> warming device can be plugged in) requires during initialization to be
->> provided with the maximum number of states that can be supported. When
->> a power domain acts as a warming device, the max state is the max number
->> of perfomrance states supported by the power domain. The cooling
->> device framework implements API to retrieve the current state of the
->> cooling device. This in turn translates to the current performance
->> state of the power domain.
->>
->> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> 
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> 
-Thanks Ulf! Do you think this patch be merged separate from the series.
-Then I can drop it from the series.
+Kevin Hilman <khilman@baylibre.com> writes:
 
--- 
-Warm Regards
-Thara
+> Kevin Hilman <khilman@baylibre.com> writes:
+>
+>> Jerome Brunet <jbrunet@baylibre.com> writes:
+>>
+>>> This patchset adds audio support on the sm1 SoC family and the
+>>> sei610 platform
+>>
+>> Queued for v5.5.
+>>
+>>> Kevin, The patchset depends on:
+>>>  - The ARB binding merged by Philipp [0]
+>>>  - The audio clock controller bindings I just applied. A tag is
+>>>    available for you here [1]
+>>
+>> I've pulled both of those into v5.5/dt64 so that branch is buildable
+>> standlone.
+>>
+>> Thanks for details on the dependencies.
+>
+> Just noticed that all of these had "meson" in the subject instead of
+> "amlogic".  Fixed up when applying.
+
+Ignore me, "meson" in the original is correct.
+
+Kevin
