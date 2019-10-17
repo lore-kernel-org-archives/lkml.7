@@ -6,66 +6,66 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B00FA3730
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 702F1ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47B9721A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F6D320663
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:32:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439446AbfJQJc0 (ORCPT
+        id S2439483AbfJQJce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 05:32:26 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63698 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2393479AbfJQJcY (ORCPT
+        Thu, 17 Oct 2019 05:32:34 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29188 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2439458AbfJQJca (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 05:32:24 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9H9Pwdr007664
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 05:32:23 -0400
+        Thu, 17 Oct 2019 05:32:30 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9H9JQKh013693
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 05:32:29 -0400
 Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vpnnr87gt-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vpnjn8g5u-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 05:32:22 -0400
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 05:32:29 -0400
 Received: from localhost
         by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Thu, 17 Oct 2019 10:32:19 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        Thu, 17 Oct 2019 10:32:27 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
         by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 17 Oct 2019 10:32:17 +0100
+        Thu, 17 Oct 2019 10:32:23 +0100
 Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9H9WGI135258606
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9H9WMNn35520648
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 17 Oct 2019 09:32:16 GMT
+        Thu, 17 Oct 2019 09:32:22 GMT
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 39B3F4C059;
-        Thu, 17 Oct 2019 09:32:16 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 738954C044;
+        Thu, 17 Oct 2019 09:32:22 +0000 (GMT)
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0B6A14C046;
-        Thu, 17 Oct 2019 09:32:13 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 93FCC4C050;
+        Thu, 17 Oct 2019 09:32:19 +0000 (GMT)
 Received: from bangoria.ibmuc.com (unknown [9.199.56.216])
         by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 17 Oct 2019 09:32:12 +0000 (GMT)
+        Thu, 17 Oct 2019 09:32:19 +0000 (GMT)
 From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 To:     christophe.leroy@c-s.fr, mpe@ellerman.id.au, mikey@neuling.org
 Cc:     npiggin@gmail.com, benh@kernel.crashing.org, paulus@samba.org,
         naveen.n.rao@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
         linux-kernel@vger.kernel.org,
         Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: [PATCH v6 2/7] Powerpc/Watchpoint: Fix length calculation for unaligned target
-Date:   Thu, 17 Oct 2019 15:01:59 +0530
+Subject: [PATCH v6 4/7] Powerpc/Watchpoint: Don't ignore extraneous exceptions blindly
+Date:   Thu, 17 Oct 2019 15:02:01 +0530
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191017093204.7511-1-ravi.bangoria@linux.ibm.com>
 References: <20191017093204.7511-1-ravi.bangoria@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19101709-0028-0000-0000-000003AADD5C
+x-cbid: 19101709-0028-0000-0000-000003AADD5F
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19101709-0029-0000-0000-0000246CF9A7
-Message-Id: <20191017093204.7511-3-ravi.bangoria@linux.ibm.com>
+x-cbparentid: 19101709-0029-0000-0000-0000246CF9AA
+Message-Id: <20191017093204.7511-5-ravi.bangoria@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-17_04:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -78,208 +78,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Watchpoint match range is always doubleword(8 bytes) aligned on
-powerpc. If the given range is crossing doubleword boundary, we
-need to increase the length such that next doubleword also get
-covered. Ex,
+On Powerpc, watchpoint match range is double-word granular. On a
+watchpoint hit, DAR is set to the first byte of overlap between
+actual access and watched range. And thus it's quite possible that
+DAR does not point inside user specified range. Ex, say user creates
+a watchpoint with address range 0x1004 to 0x1007. So hw would be
+configured to watch from 0x1000 to 0x1007. If there is a 4 byte
+access from 0x1002 to 0x1005, DAR will point to 0x1002 and thus
+interrupt handler considers it as extraneous, but it's actually not,
+because part of the access belongs to what user has asked.
 
-          address   len = 6 bytes
-                |=========.
-   |------------v--|------v--------|
-   | | | | | | | | | | | | | | | | |
-   |---------------|---------------|
-    <---8 bytes--->
+Instead of blindly ignoring the exception, get actual address range
+by analysing an instruction, and ignore only if actual range does
+not overlap with user specified range.
 
-In such case, current code configures hw as:
-  start_addr = address & ~HW_BREAKPOINT_ALIGN
-  len = 8 bytes
-
-And thus read/write in last 4 bytes of the given range is ignored.
-Fix this by including next doubleword in the length.
+Note: The behavior is unchanged for 8xx.
 
 Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 ---
- arch/powerpc/include/asm/hw_breakpoint.h |  2 +
- arch/powerpc/kernel/dawr.c               |  6 +--
- arch/powerpc/kernel/hw_breakpoint.c      | 67 +++++++++++++++++-------
- arch/powerpc/kernel/process.c            |  3 ++
- arch/powerpc/kernel/ptrace.c             |  1 +
- 5 files changed, 56 insertions(+), 23 deletions(-)
+ arch/powerpc/kernel/hw_breakpoint.c | 52 +++++++++++++++++------------
+ 1 file changed, 31 insertions(+), 21 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/hw_breakpoint.h b/arch/powerpc/include/asm/hw_breakpoint.h
-index 4a887e85a5f4..ea91ac7f5a27 100644
---- a/arch/powerpc/include/asm/hw_breakpoint.h
-+++ b/arch/powerpc/include/asm/hw_breakpoint.h
-@@ -14,6 +14,7 @@ struct arch_hw_breakpoint {
- 	unsigned long	address;
- 	u16		type;
- 	u16		len; /* length of the target data symbol */
-+	u16		hw_len; /* length programmed in hw */
- };
- 
- /* Note: Don't change the the first 6 bits below as they are in the same order
-@@ -73,6 +74,7 @@ static inline void hw_breakpoint_disable(void)
- 	brk.address = 0;
- 	brk.type = 0;
- 	brk.len = 0;
-+	brk.hw_len = 0;
- 	if (ppc_breakpoint_available())
- 		__set_breakpoint(&brk);
- }
-diff --git a/arch/powerpc/kernel/dawr.c b/arch/powerpc/kernel/dawr.c
-index 5f66b95b6858..cc14aa6c4a1b 100644
---- a/arch/powerpc/kernel/dawr.c
-+++ b/arch/powerpc/kernel/dawr.c
-@@ -30,10 +30,10 @@ int set_dawr(struct arch_hw_breakpoint *brk)
- 	 * DAWR length is stored in field MDR bits 48:53.  Matches range in
- 	 * doublewords (64 bits) baised by -1 eg. 0b000000=1DW and
- 	 * 0b111111=64DW.
--	 * brk->len is in bytes.
-+	 * brk->hw_len is in bytes.
- 	 * This aligns up to double word size, shifts and does the bias.
- 	 */
--	mrd = ((brk->len + 7) >> 3) - 1;
-+	mrd = ((brk->hw_len + 7) >> 3) - 1;
- 	dawrx |= (mrd & 0x3f) << (63 - 53);
- 
- 	if (ppc_md.set_dawr)
-@@ -54,7 +54,7 @@ static ssize_t dawr_write_file_bool(struct file *file,
- 				    const char __user *user_buf,
- 				    size_t count, loff_t *ppos)
- {
--	struct arch_hw_breakpoint null_brk = {0, 0, 0};
-+	struct arch_hw_breakpoint null_brk = {0};
- 	size_t rc;
- 
- 	/* Send error to user if they hypervisor won't allow us to write DAWR */
 diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
-index 677041cb3c3e..f36274d426ed 100644
+index f36274d426ed..58ce3d37c2a3 100644
 --- a/arch/powerpc/kernel/hw_breakpoint.c
 +++ b/arch/powerpc/kernel/hw_breakpoint.c
-@@ -126,6 +126,49 @@ int arch_bp_generic_fields(int type, int *gen_bp_type)
- 	return 0;
+@@ -222,33 +222,49 @@ void thread_change_pc(struct task_struct *tsk, struct pt_regs *regs)
+ 	tsk->thread.last_hit_ubp = NULL;
  }
  
-+/*
-+ * Watchpoint match range is always doubleword(8 bytes) aligned on
-+ * powerpc. If the given range is crossing doubleword boundary, we
-+ * need to increase the length such that next doubleword also get
-+ * covered. Ex,
-+ *
-+ *          address   len = 6 bytes
-+ *                |=========.
-+ *   |------------v--|------v--------|
-+ *   | | | | | | | | | | | | | | | | |
-+ *   |---------------|---------------|
-+ *    <---8 bytes--->
-+ *
-+ * In this case, we should configure hw as:
-+ *   start_addr = address & ~HW_BREAKPOINT_ALIGN
-+ *   len = 16 bytes
-+ *
-+ * @start_addr and @end_addr are inclusive.
-+ */
-+static int hw_breakpoint_validate_len(struct arch_hw_breakpoint *hw)
-+{
-+	u16 max_len = DABR_MAX_LEN;
-+	u16 hw_len;
-+	unsigned long start_addr, end_addr;
-+
-+	start_addr = hw->address & ~HW_BREAKPOINT_ALIGN;
-+	end_addr = (hw->address + hw->len - 1) | HW_BREAKPOINT_ALIGN;
-+	hw_len = end_addr - start_addr + 1;
-+
-+	if (dawr_enabled()) {
-+		max_len = DAWR_MAX_LEN;
-+		/* DAWR region can't cross 512 bytes boundary */
-+		if ((start_addr >> 9) != (end_addr >> 9))
-+			return -EINVAL;
-+	}
-+
-+	if (hw_len > max_len)
-+		return -EINVAL;
-+
-+	hw->hw_len = hw_len;
-+	return 0;
-+}
-+
- /*
-  * Validate the arch-specific HW Breakpoint register settings
-  */
-@@ -133,9 +176,9 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
- 			     const struct perf_event_attr *attr,
- 			     struct arch_hw_breakpoint *hw)
+-static bool is_larx_stcx_instr(struct pt_regs *regs, unsigned int instr)
++static bool dar_within_range(unsigned long dar, struct arch_hw_breakpoint *info)
  {
--	int ret = -EINVAL, length_max;
-+	int ret = -EINVAL;
+-	int ret, type;
+-	struct instruction_op op;
++	return ((info->address <= dar) && (dar - info->address < info->len));
++}
  
--	if (!bp)
-+	if (!bp || !attr->bp_len)
- 		return ret;
+-	ret = analyse_instr(&op, regs, instr);
+-	type = GETTYPE(op.type);
+-	return (!ret && (type == LARX || type == STCX));
++static bool
++dar_range_overlaps(unsigned long dar, int size, struct arch_hw_breakpoint *info)
++{
++	return ((dar <= info->address + info->len - 1) &&
++		(dar + size - 1 >= info->address));
+ }
  
- 	hw->type = HW_BRK_TYPE_TRANSLATE;
-@@ -155,26 +198,10 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
- 	hw->address = attr->bp_addr;
- 	hw->len = attr->bp_len;
+ /*
+  * Handle debug exception notifications.
+  */
+ static bool stepping_handler(struct pt_regs *regs, struct perf_event *bp,
+-			     unsigned long addr)
++			     struct arch_hw_breakpoint *info)
+ {
+ 	unsigned int instr = 0;
++	int ret, type, size;
++	struct instruction_op op;
++	unsigned long addr = info->address;
+ 
+ 	if (__get_user_inatomic(instr, (unsigned int *)regs->nip))
+ 		goto fail;
+ 
+-	if (is_larx_stcx_instr(regs, instr)) {
++	ret = analyse_instr(&op, regs, instr);
++	type = GETTYPE(op.type);
++	size = GETSIZE(op.type);
++
++	if (!ret && (type == LARX || type == STCX)) {
+ 		printk_ratelimited("Breakpoint hit on instruction that can't be emulated."
+ 				   " Breakpoint at 0x%lx will be disabled.\n", addr);
+ 		goto disable;
+ 	}
+ 
++	/*
++	 * If it's extraneous event, we still need to emulate/single-
++	 * step the instruction, but we don't generate an event.
++	 */
++	if (size && !dar_range_overlaps(regs->dar, size, info))
++		info->type |= HW_BRK_TYPE_EXTRANEOUS_IRQ;
++
+ 	/* Do not emulate user-space instructions, instead single-step them */
+ 	if (user_mode(regs)) {
+ 		current->thread.last_hit_ubp = bp;
+@@ -280,7 +296,6 @@ int hw_breakpoint_handler(struct die_args *args)
+ 	struct perf_event *bp;
+ 	struct pt_regs *regs = args->regs;
+ 	struct arch_hw_breakpoint *info;
+-	unsigned long dar = regs->dar;
+ 
+ 	/* Disable breakpoints during exception handling */
+ 	hw_breakpoint_disable();
+@@ -312,19 +327,14 @@ int hw_breakpoint_handler(struct die_args *args)
+ 		goto out;
+ 	}
  
 -	/*
--	 * Since breakpoint length can be a maximum of HW_BREAKPOINT_LEN(8)
--	 * and breakpoint addresses are aligned to nearest double-word
--	 * HW_BREAKPOINT_ALIGN by rounding off to the lower address, the
--	 * 'symbolsize' should satisfy the check below.
+-	 * Verify if dar lies within the address range occupied by the symbol
+-	 * being watched to filter extraneous exceptions.  If it doesn't,
+-	 * we still need to single-step the instruction, but we don't
+-	 * generate an event.
 -	 */
- 	if (!ppc_breakpoint_available())
- 		return -ENODEV;
--	length_max = DABR_MAX_LEN; /* DABR */
--	if (dawr_enabled()) {
--		length_max = DAWR_MAX_LEN; /* 64 doublewords */
--		/* DAWR region can't cross 512 boundary */
--		if ((attr->bp_addr >> 9) !=
--		    ((attr->bp_addr + attr->bp_len - 1) >> 9))
--			return -EINVAL;
--	}
--	if (hw->len >
--	    (length_max - (hw->address & HW_BREAKPOINT_ALIGN)))
--		return -EINVAL;
--	return 0;
-+
-+	return hw_breakpoint_validate_len(hw);
- }
+ 	info->type &= ~HW_BRK_TYPE_EXTRANEOUS_IRQ;
+-	if (!((bp->attr.bp_addr <= dar) &&
+-	      (dar - bp->attr.bp_addr < bp->attr.bp_len)))
+-		info->type |= HW_BRK_TYPE_EXTRANEOUS_IRQ;
+-
+-	if (!IS_ENABLED(CONFIG_PPC_8xx) && !stepping_handler(regs, bp, info->address))
+-		goto out;
++	if (IS_ENABLED(CONFIG_PPC_8xx)) {
++		if (!dar_within_range(regs->dar, info))
++			info->type |= HW_BRK_TYPE_EXTRANEOUS_IRQ;
++	} else {
++		if (!stepping_handler(regs, bp, info))
++			goto out;
++	}
  
- /*
-diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-index 639ceae7da9d..4df94b6e2f32 100644
---- a/arch/powerpc/kernel/process.c
-+++ b/arch/powerpc/kernel/process.c
-@@ -715,6 +715,8 @@ static void set_debug_reg_defaults(struct thread_struct *thread)
- {
- 	thread->hw_brk.address = 0;
- 	thread->hw_brk.type = 0;
-+	thread->hw_brk.len = 0;
-+	thread->hw_brk.hw_len = 0;
- 	if (ppc_breakpoint_available())
- 		set_breakpoint(&thread->hw_brk);
- }
-@@ -816,6 +818,7 @@ static inline bool hw_brk_match(struct arch_hw_breakpoint *a,
- 		return false;
- 	if (a->len != b->len)
- 		return false;
-+	/* no need to check hw_len. it's calculated from address and len */
- 	return true;
- }
- 
-diff --git a/arch/powerpc/kernel/ptrace.c b/arch/powerpc/kernel/ptrace.c
-index f22e773a416a..c861b12337bd 100644
---- a/arch/powerpc/kernel/ptrace.c
-+++ b/arch/powerpc/kernel/ptrace.c
-@@ -2426,6 +2426,7 @@ static int ptrace_set_debugreg(struct task_struct *task, unsigned long addr,
- 	hw_brk.address = data & (~HW_BRK_TYPE_DABR);
- 	hw_brk.type = (data & HW_BRK_TYPE_DABR) | HW_BRK_TYPE_PRIV_ALL;
- 	hw_brk.len = DABR_MAX_LEN;
-+	hw_brk.hw_len = DABR_MAX_LEN;
- 	set_bp = (data) && (hw_brk.type & HW_BRK_TYPE_RDWR);
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
- 	bp = thread->ptrace_bps[0];
+ 	/*
+ 	 * As a policy, the callback is invoked in a 'trigger-after-execute'
 -- 
 2.21.0
 
