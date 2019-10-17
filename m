@@ -2,179 +2,137 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEB0CA9EC8
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1C5CA9EC8
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C979021D7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B72621D7A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:40:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441776AbfJQXiZ (ORCPT
+        id S2441795AbfJQXkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 19:38:25 -0400
-Received: from mga14.intel.com ([192.55.52.115]:32452 "EHLO mga14.intel.com"
+        Thu, 17 Oct 2019 19:40:10 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:33554 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438560AbfJQXiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 19:38:25 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 16:38:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,309,1566889200"; 
-   d="scan'208";a="221564530"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga004.fm.intel.com with ESMTP; 17 Oct 2019 16:38:24 -0700
-Date:   Thu, 17 Oct 2019 16:38:24 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org
-Subject: Re: [RFD] x86/split_lock: Request to Intel
-Message-ID: <20191017233824.GA23654@linux.intel.com>
-References: <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de>
- <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com>
- <c3ff2fb3-4380-fb07-1fa3-15896a09e748@intel.com>
- <d30652bb-89fa-671a-5691-e2c76af231d0@redhat.com>
- <8808c9ac-0906-5eec-a31f-27cbec778f9c@intel.com>
- <alpine.DEB.2.21.1910161519260.2046@nanos.tec.linutronix.de>
- <ba2c0aab-1d7c-5cfd-0054-ac2c266c1df3@redhat.com>
- <alpine.DEB.2.21.1910171322530.1824@nanos.tec.linutronix.de>
- <20191017172312.GC20903@linux.intel.com>
- <alpine.DEB.2.21.1910172207010.1869@nanos.tec.linutronix.de>
+        id S2438560AbfJQXkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 19:40:09 -0400
+Received: from remote.shanghaihotelholland.com ([46.44.148.63] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iLFNE-0004OT-M8; Fri, 18 Oct 2019 01:40:04 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Andy Yan <andy.yan@rock-chips.com>
+Cc:     kever.yang@rock-chips.com, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add basic dts for RK3308 EVB
+Date:   Fri, 18 Oct 2019 01:39:58 +0200
+Message-ID: <120878573.PH0Dm224ES@phil>
+In-Reply-To: <20191017030520.32420-1-andy.yan@rock-chips.com>
+References: <20191017030242.32219-1-andy.yan@rock-chips.com> <20191017030520.32420-1-andy.yan@rock-chips.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1910172207010.1869@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 11:31:15PM +0200, Thomas Gleixner wrote:
-> On Thu, 17 Oct 2019, Sean Christopherson wrote:
-> > On Thu, Oct 17, 2019 at 02:29:45PM +0200, Thomas Gleixner wrote:
-> > > The more I look at this trainwreck, the less interested I am in merging any
-> > > of this at all.
-> > > 
-> > > The fact that it took Intel more than a year to figure out that the MSR is
-> > > per core and not per thread is yet another proof that this industry just
-> > > works by pure chance.
-> > > 
-> > > There is a simple way out of this misery:
-> > > 
-> > >   Intel issues a microcode update which does:
-> > > 
-> > >     1) Convert the OR logic of the AC enable bit in the TEST_CTRL MSR to
-> > >        AND logic, i.e. when one thread disables AC it's automatically
-> > >        disabled on the core.
-> > > 
-> > >        Alternatively it supresses the #AC when the current thread has it
-> > >        disabled.
-> > > 
-> > >     2) Provide a separate bit which indicates that the AC enable logic is
-> > >        actually AND based or that #AC is supressed when the current thread
-> > >        has it disabled.
-> > > 
-> > >     Which way I don't really care as long as it makes sense.
-> > 
-> > The #AC bit doesn't use OR-logic, it's straight up shared, i.e. writes on
-> > one CPU are immediately visible on its sibling CPU.
-> 
-> That's less horrible than I read out of your initial explanation.
-> 
-> Thankfully all of this is meticulously documented in the SDM ...
+Hi Andy,
 
-Preaching to the choir on this one...
+Am Donnerstag, 17. Oktober 2019, 05:05:20 CEST schrieb Andy Yan:
+> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> index c82c5e57d44c..b680c4b8b2c9 100644
+> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
+> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> @@ -447,6 +447,11 @@ properties:
+>            - const: rockchip,r88
+>            - const: rockchip,rk3368
+>  
+> +      - description: Rockchip RK3308 Evaluation board
+> +        items:
+> +          - const: rockchip,rk3308-evb
+> +          - const: rockchip,rk3308
+> +
+>        - description: Rockchip RK3228 Evaluation board
+>          items:
+>            - const: rockchip,rk3228-evb
 
-> Though it changes the picture radically. The truly shared MSR allows
-> regular software synchronization without IPIs and without an insane amount
-> of corner case handling.
-> 
-> So as you pointed out we need a per core state, which is influenced by:
-> 
->  1) The global enablement switch
-> 
->  2) Host induced #AC
-> 
->  3) Guest induced #AC
-> 
->     A) Guest has #AC handling
-> 
->     B) Guest has no #AC handling
-> 
-> #1:
-> 
->    - OFF: #AC is globally disabled
-> 
->    - ON:  #AC is globally enabled
-> 
->    - FORCE: same as ON but #AC is enforced on guests
-> 
-> #2:
-> 
->    If the host triggers an #AC then the #AC has to be force disabled on the
->    affected core independent of the state of #1. Nothing we can do about
->    that and once the initial wave of #AC issues is fixed this should not
->    happen on production systems. That disables #3 even for the #3.A case
->    for simplicity sake.
-> 
-> #3:
-> 
->    A) Guest has #AC handling
->     
->       #AC is forwarded to the guest. No further action required aside of
->       accounting
-> 
->    B) Guest has no #AC handling
-> 
->       If #AC triggers the resulting action depends on the state of #1:
-> 
->       	 - FORCE: Guest is killed with SIGBUS or whatever the virt crowd
-> 	   	  thinks is the appropriate solution
->          - ON: #AC triggered state is recorded per vCPU and the MSR is
-> 	   	toggled on VMENTER/VMEXIT in software from that point on.
->
-> So the only interesting case is #3.B and #1.state == ON. There you need
-> serialization of the state and the MSR write between the cores, but only
-> when the vCPU triggered an #AC. Until then, nothing to do.
+Rob likes the binding addition to be a separate patch.
 
-And "vCPU triggered an #AC" should include an explicit check in KVM's
-emulator.
+> +	vdd_log: vdd_core: vdd-core {
+> +		compatible = "pwm-regulator";
+> +		pwms = <&pwm0 0 5000 1>;
+> +		regulator-name = "vdd_core";
+> +		regulator-min-microvolt = <827000>;
+> +		regulator-max-microvolt = <1340000>;
+> +		regulator-init-microvolt = <1015000>;
+> +		regulator-early-min-microvolt = <1015000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-settling-time-up-us = <250>;
+> +		status = "okay";
 
-> vmenter()
-> {
-> 	if (vcpu->ac_disable)
-> 		this_core_disable_ac();
-> }
-> 
-> vmexit()
-> {
-> 	if (vcpu->ac_disable) {
-> 		this_core_enable_ac();
-> }
-> 
-> this_core_dis/enable_ac() takes the global state into account and has the
-> necessary serialization in place.
+It's a board-regulator, so always "okay", no need for a status.
 
-Overall, looks good to me.  Although Tony's mail makes it obvious we need
-to sync internally...
+In general for regulators, please create an actual regulator tree, with
+correctly modelled supply-chains following the naming according
+to the board schematics. See for example rk3399-gru for a nice example.
+
+> +	};
+> +
+> +	vdd_1v0: vdd-1v0 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vdd_1v0";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <1000000>;
+> +		regulator-max-microvolt = <1000000>;
+
+As noted above, missing vin-supply
+
+> +	};
+> +
+
+> +	vccio_flash: vccio-flash {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vccio_flash";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +	};
+> +
+> +	vcc_phy: vcc-phy-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc_phy";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+
+This is the classic example of not following the schematics.
+I.e. no Rockchip board I know has a regulator named "vcc_phy"
+that is completely unconnected, yet all boards in the vendor tree
+have this regulator ;-) ... so as I said, please follow the schematics.
+
+> +	};
+> +
+> +	vbus_host: vbus-host-regulator {
+> +		compatible = "regulator-fixed";
+> +		enable-active-high;
+> +		gpio = <&gpio0 RK_PC5 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&usb_drv>;
+> +		regulator-name = "vbus_host";
+> +	};
+> +};
+> +
+
+
+Thanks
+Heiko
+
+
