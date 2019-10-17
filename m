@@ -2,121 +2,123 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87554C4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5391AFA372B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5909821835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:25:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F9UsfomG"
+	by mail.kernel.org (Postfix) with ESMTP id 329BA2089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:26:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408145AbfJQHZz (ORCPT
+        id S2408156AbfJQH0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 03:25:55 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43088 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405115AbfJQHZy (ORCPT
+        Thu, 17 Oct 2019 03:26:49 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:55633 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404931AbfJQH0s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 03:25:54 -0400
-Received: by mail-wr1-f66.google.com with SMTP id j18so1034106wrq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 00:25:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=jAAT95spfsOy4+Rq+gH+u3lTOCghLhGj68CKdrx98lE=;
-        b=F9UsfomGr2CNeYykZN6yZitMfmX8fyJmBmymlewoU1PXc2q1Vn6t2I3rLUE0QWoC+8
-         MhGZC1Xxu/HAPvWEqxlCLTCRMaaDSMkAqReNf/vsQmeJgSro0pTbKA1qHoespSFtIU4T
-         hckNX80j47KRUy7XU7YRVWBJJrOhFo29SE2b0tDHsFp6jwXQK2NKPBZS9NbwhF5Qrclh
-         wEK1zOlExz/lr5gS1h3P4ujA4JxsgbbgXtH2moIUZpERKAVb7XpXk5V1UuFSDK+DHnkO
-         HEdCkGHQMMEirfde1nue9BKxA5pg2UOVVQ7LOxvfko9gpIMy1XcL/1RyLnOW7FZBzwn0
-         GIrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=jAAT95spfsOy4+Rq+gH+u3lTOCghLhGj68CKdrx98lE=;
-        b=dbUSsjHvuzj/+tJ2AxdQT99czLRBxdQrNuY42pwRLZsaAvg8gpwk8d4q6e+OqI2sQK
-         LvQzkM22Ml7DfNEN1DSg3837nFizAN4Pqn6klGwC79cBSmttv3pVjERVv22d7th/Hr4i
-         0L2AnN93ElOLViZXkosDL/up+ozFP7Joi1AZbAO857TOWEqNUGy2ox94FIcMTVcIJnbm
-         dJnb14kZ0TUoZRnuJZrOstIfbgy4rzWlNggkLNz0KVKiC7s//e3/pO9ZJWApgEyCPSKE
-         DFD5KJataMjCSHFKpGLQppyHKoAwRdfLTBMmtdU2sB23QHIwYJt0os0aslfelppqv4y+
-         CkuA==
-X-Gm-Message-State: APjAAAVKkKZ6AhiewXYjomzqKMVg3CwkKPzvrAAWE3zNx2a0AhuIxWJ9
-        qf1YgmzAJOiPZDlv7r8OvqhtNg==
-X-Google-Smtp-Source: APXvYqx9/y1nF0ofABrlWuRvb2aHc8qYFhZp9RVTdgQNYYfN+rH7FOQdXwZFWhoItjuvwj7hH3/jTA==
-X-Received: by 2002:a5d:630b:: with SMTP id i11mr1554836wru.87.1571297152660;
-        Thu, 17 Oct 2019 00:25:52 -0700 (PDT)
-Received: from dell ([95.149.164.47])
-        by smtp.gmail.com with ESMTPSA id o22sm1351495wra.96.2019.10.17.00.25.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 17 Oct 2019 00:25:51 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 08:25:50 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v5 0/7] backlight: gpio: simplify the driver
-Message-ID: <20191017072550.GK4365@dell>
-References: <20191007033200.13443-1-brgl@bgdev.pl>
- <20191014081220.GK4545@dell>
- <CACRpkda9Kco-bVPw1OA6FMpQ1L8dZ4WFJ227wTCM9rh5JE7-+A@mail.gmail.com>
- <20191016130536.222vsi5whkoy6vzo@uno.localdomain>
+        Thu, 17 Oct 2019 03:26:48 -0400
+X-Originating-IP: 86.250.200.211
+Received: from aptenodytes (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 0F2BAE0008;
+        Thu, 17 Oct 2019 07:26:45 +0000 (UTC)
+Date:   Thu, 17 Oct 2019 09:26:45 +0200
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     mripard@kernel.org, mchehab@kernel.org, gregkh@linuxfoundation.org,
+        wens@csie.org, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] staging: media: cedrus: use
+ devm_platform_ioremap_resource() to simplify code
+Message-ID: <20191017072645.GA2778@aptenodytes>
+References: <20191016085604.21076-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="9jxsPFA5p3P2qPhR"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191016130536.222vsi5whkoy6vzo@uno.localdomain>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191016085604.21076-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 16 Oct 2019, Jacopo Mondi wrote:
 
-> Hi, sorry for not having replied earlier
-> 
-> On Wed, Oct 16, 2019 at 02:56:57PM +0200, Linus Walleij wrote:
-> > On Mon, Oct 14, 2019 at 10:12 AM Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > > >  arch/sh/boards/mach-ecovec24/setup.c         |  33 ++++--
-> > >
-> > > I guess we're just waiting for the SH Acks now?
-> >
-> > The one maintainer with this board is probably overloaded.
-> >
-> > I would say just apply it, it can't hold back the entire series.
-> 
-> I've been able to resurect the Ecovec, and I've also been given a copy
-> of its schematics file a few weeks ago.
-> 
-> It's in my TODO list to test this series but I didn't manage to find
-> time. If I pinky promise I get back to you before end of the week,
-> could you wait for me ? :)
+--9jxsPFA5p3P2qPhR
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes, no problem.
+Hi,
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+On Wed 16 Oct 19, 16:56, YueHaibing wrote:
+> Use devm_platform_ioremap_resource() to simplify the code a bit.
+> This is detected by coccinelle.
+
+This is still:
+Acked-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+
+Please collect the tag in your next version, if there's a need for one.
+
+Cheers,
+
+Paul
+
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/staging/media/sunxi/cedrus/cedrus_hw.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c b/drivers/sta=
+ging/media/sunxi/cedrus/cedrus_hw.c
+> index a942cd9..f19b87c 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+> @@ -146,7 +146,6 @@ static irqreturn_t cedrus_irq(int irq, void *data)
+>  int cedrus_hw_probe(struct cedrus_dev *dev)
+>  {
+>  	const struct cedrus_variant *variant;
+> -	struct resource *res;
+>  	int irq_dec;
+>  	int ret;
+> =20
+> @@ -225,8 +224,7 @@ int cedrus_hw_probe(struct cedrus_dev *dev)
+>  		goto err_sram;
+>  	}
+> =20
+> -	res =3D platform_get_resource(dev->pdev, IORESOURCE_MEM, 0);
+> -	dev->base =3D devm_ioremap_resource(dev->dev, res);
+> +	dev->base =3D devm_platform_ioremap_resource(dev->pdev, 0);
+>  	if (IS_ERR(dev->base)) {
+>  		dev_err(dev->dev, "Failed to map registers\n");
+> =20
+> --=20
+> 2.7.4
+>=20
+>=20
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--9jxsPFA5p3P2qPhR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl2oF7UACgkQ3cLmz3+f
+v9EItgf9GvoiVbIh3tmX/jiHYvuTXM7tm9aRYWoFX7LVixCUoe6h+o7qBdsHSBks
+RxI0BSWHEEieShZlIK0Fyof7bx04lEbJc072Bp31b6xFJxdQ1w+xatMjwfh5bILZ
+jcAHPnMwKntbmetL8qPB2pDcq//vDYvGOkN73ZqFPO8kCU6rYxX0+Y/Eaw0be7EB
+2Duq2Rm0E7OswN9jebQ4fm4tpt4bZj4qX7h4tUkwFKGpzzt4jYyaqpr5jQ7Bw1LK
+nyn5TAVJPA9P+Mo5P59R+2E4HX6DKma2jy5lRSnZddG2iR1F3kh1MbOs1qUothp4
+PvvSH42W4cFR1G5Q+dbvEK4UAWOqQA==
+=pqsv
+-----END PGP SIGNATURE-----
+
+--9jxsPFA5p3P2qPhR--
