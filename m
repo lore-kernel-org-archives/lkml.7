@@ -5,71 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7601DFA372B
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DBEFA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EDCD21D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D26C621835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:43:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z/tCFqJZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k+WXYrgl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503518AbfJQUnQ (ORCPT
+        id S2503281AbfJQUnE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 16:43:16 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45152 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502953AbfJQUmt (ORCPT
+        Thu, 17 Oct 2019 16:43:04 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35439 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502634AbfJQUmp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 16:42:49 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y72so2361447pfb.12;
-        Thu, 17 Oct 2019 13:42:49 -0700 (PDT)
+        Thu, 17 Oct 2019 16:42:45 -0400
+Received: by mail-pl1-f195.google.com with SMTP id c3so1709895plo.2;
+        Thu, 17 Oct 2019 13:42:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vAKokueiClfgZWoQCwU8Jqzeem8xmhIKqG8ZDiQeajw=;
-        b=Z/tCFqJZa3I/4A0KsK3WCQ/C81WwubeVJRmnywGwef2pwV/hdLrBaJgsq9kU2uIeLJ
-         bnG0t3ls8hgwX0VXXMzH1hkYJngOLZMn20F28VSnQ2r0URsV6b+MTZ3newLpB5Kb+14U
-         CT/CSxJJM9Wp9RpD1AWZ8Z5CmKDcXpxBOuHsKd33slbKH67tQHu2927Kk4iRhrp2cQGQ
-         XmDijMACki6S8Wp0GjlcubP4awb7fqB53748fOWmEcRJ3D2Tqvlmzaw2CE81nt3fUq9p
-         LljZ0f/ot3LJLvrpG4mw3d51ST0KHo8vz7xifta9geDsvH/sOkwTR9Vz8ESHqIodjo3G
-         ScUg==
+        bh=H6A+MfE+mY9j5A0d4q4ouMrSZpQoTdVP4FH8jGsUc3A=;
+        b=k+WXYrglf1NX0PyOCClEtSAiyMd1d7VM1QfO5Sz85fU55TkwlyrfQb94f/wcfBlHIp
+         jtrR25t1UA8j8jT1RrlKH85PCFh0i19Z3DCvfiZcpnMXOIYvq6ZpUG33JRtJm0VVEQiS
+         w/hBJwuhMuxg14pZAdEjZobPIiSBkhxsPFFQkb3gvR56z47E9fp3zCl/fR6i/mCGQnOM
+         Lz7DEpsLbzlI9StZFSQxQj4ERwMGQZ6n470f6zGxBZM0KVFvAz9D59/SlTiym9ImweAY
+         J7Px9i9GMYxtMUvgtrPW9P4+xVrwFvrwkPBZB4fg8FS4VZOLRbpXbtWVuPa7nv+vgA+f
+         lwwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vAKokueiClfgZWoQCwU8Jqzeem8xmhIKqG8ZDiQeajw=;
-        b=p56lAOBrNU//aXSSD9DhzoedRoLulIQYaJJuFLkrddcE2c7wY7EIq2tbiMqyriqkYu
-         ebcCJz19/geEpfWlSfUinxaKpTl/suV6JfD6CRyNr2XN1FQs2GbMehE6O5Rxgjp9ILMO
-         QJRXUkM7uXmPc6NXLGj7Dpv98UVKVFUFW7ykgHS8ebCKggF5Gw89oIsMbeExLF7VS3qI
-         QI0QjUPjqdTRRmHUS4YwmddqgERHDJSViSBGhjBN5m6zPeuhcSTZFVhxUjhoAr/I2WMt
-         TB+98xRZzUwnIAdos4MDk9iF4SbUkLKi3fTxQ5INEtXfZ5Scrf38lksgn2xA+L3n4M9u
-         b8hw==
-X-Gm-Message-State: APjAAAUQYrCgEYAPUlhzVZBHXN2woGvsWa/DDry8uwsm2Ov1GiCj64R1
-        23F6A3DSB6ohnspFVxh3S+P9eksv
-X-Google-Smtp-Source: APXvYqzH9x3QO97QM5v5WDXftzGu4GhSKU97aN9yWLR1958al8HyrCnk+VADoa/38Jwj5CAFQLKWGw==
-X-Received: by 2002:a17:90a:e001:: with SMTP id u1mr6682395pjy.102.1571344968381;
-        Thu, 17 Oct 2019 13:42:48 -0700 (PDT)
+        bh=H6A+MfE+mY9j5A0d4q4ouMrSZpQoTdVP4FH8jGsUc3A=;
+        b=n3GUk5WW6v691CbHgoG4DOrlnKx7Co8wRAZbNcOz0iy18LmL/MU5rXOXQpsE8Q3vO6
+         mEoitlqbck1o8XhsUIQ1xqTZ68dDZQx6JV8oQ+RI01eVPlNincnbT13Vrsz31YilQN8r
+         Vs3d6OQZ7vIl0zKFx5hXhyVRHReBeQfEXdVh1iazO1V3a0+lSFjJZOPROvloZF2EQcm8
+         1j6JviDesRlLLO2ks6g0EuQsfKmcCUpUXccMfN7w0gGi5iKtmyGS/57Zh1+jEpM1c6HE
+         2iyoPxG47wv+VYihlQmp2Fk6VqYtZvR6Bh4yYcqbgtmQNLtmzrQ3HRBbSX3hxDZ0y6Qp
+         m6aQ==
+X-Gm-Message-State: APjAAAWF2p/2J7tnXDQrN/l/f22u7gOf0i9QVSGxR4XSTeC0COBPDfpo
+        uTzE316mI6+Kv45gE8Ort0fPj0ll
+X-Google-Smtp-Source: APXvYqz4i9wKh+YGYMbY0xagOCVnLgkjnbA9wVaJThtTGwv52eBWzmKDT82iWZQZOG9wBygSM0aiuQ==
+X-Received: by 2002:a17:902:a70f:: with SMTP id w15mr6044474plq.146.1571344963132;
+        Thu, 17 Oct 2019 13:42:43 -0700 (PDT)
 Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id b3sm4626365pfd.125.2019.10.17.13.42.47
+        by smtp.gmail.com with ESMTPSA id b3sm4626365pfd.125.2019.10.17.13.42.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 13:42:47 -0700 (PDT)
+        Thu, 17 Oct 2019 13:42:41 -0700 (PDT)
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     linux-input@vger.kernel.org
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Brian Masney <masneyb@onstation.org>,
-        Jonathan Bakker <xc-racer2@live.ca>,
         Luca Weiss <luca@z3ntu.xyz>,
         Maximilian Luz <luzmaximilian@gmail.com>,
-        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Richard Fontana <rfontana@redhat.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 20/22] Input: bma150 - switch to using polled mode of input devices
-Date:   Thu, 17 Oct 2019 13:42:14 -0700
-Message-Id: <20191017204217.106453-21-dmitry.torokhov@gmail.com>
+Subject: [PATCH 16/22] Input: rb532_button - switch to using polled mode of input devices
+Date:   Thu, 17 Oct 2019 13:42:10 -0700
+Message-Id: <20191017204217.106453-17-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
 In-Reply-To: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
 References: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
@@ -81,276 +78,90 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 We have added polled mode to the normal input devices with the intent of
-retiring input_polled_dev. This converts bma150 driver to use the polling
-mode of standard input devices and removes dependency on INPUT_POLLDEV.
+retiring input_polled_dev. This converts rb532_button driver to use
+the polling mode of standard input devices and removes dependency on
+INPUT_POLLDEV.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
 
- drivers/input/misc/Kconfig  |   1 -
- drivers/input/misc/bma150.c | 155 ++++++++++--------------------------
- 2 files changed, 44 insertions(+), 112 deletions(-)
+ drivers/input/misc/Kconfig        |  1 -
+ drivers/input/misc/rb532_button.c | 32 ++++++++++++++++---------------
+ 2 files changed, 17 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index e1309cb190e1..438ec07e3b62 100644
+index c27a9ee4ef9a..102e993bbd6b 100644
 --- a/drivers/input/misc/Kconfig
 +++ b/drivers/input/misc/Kconfig
-@@ -100,7 +100,6 @@ config INPUT_ATMEL_CAPTOUCH
- config INPUT_BMA150
- 	tristate "BMA150/SMB380 acceleration sensor support"
- 	depends on I2C
+@@ -633,7 +633,6 @@ config INPUT_RB532_BUTTON
+ 	tristate "Mikrotik Routerboard 532 button interface"
+ 	depends on MIKROTIK_RB532
+ 	depends on GPIOLIB
 -	select INPUT_POLLDEV
  	help
- 	  Say Y here if you have Bosch Sensortec's BMA150 or SMB380
- 	  acceleration sensor hooked to an I2C bus.
-diff --git a/drivers/input/misc/bma150.c b/drivers/input/misc/bma150.c
-index d65b008a3c7a..a9d984da95f3 100644
---- a/drivers/input/misc/bma150.c
-+++ b/drivers/input/misc/bma150.c
-@@ -14,7 +14,6 @@
- #include <linux/module.h>
- #include <linux/i2c.h>
- #include <linux/input.h>
+ 	  Say Y here if you want support for the S1 button built into
+ 	  Mikrotik's Routerboard 532.
+diff --git a/drivers/input/misc/rb532_button.c b/drivers/input/misc/rb532_button.c
+index 3c43024f4527..190a80e1e2c1 100644
+--- a/drivers/input/misc/rb532_button.c
++++ b/drivers/input/misc/rb532_button.c
+@@ -5,7 +5,7 @@
+  * Copyright (C) 2009  Phil Sutter <n0-1@freewrt.org>
+  */
+ 
 -#include <linux/input-polldev.h>
- #include <linux/interrupt.h>
- #include <linux/delay.h>
- #include <linux/slab.h>
-@@ -123,7 +122,6 @@
- 
- struct bma150_data {
- 	struct i2c_client *client;
--	struct input_polled_dev *input_polled;
- 	struct input_dev *input;
- 	u8 mode;
- };
-@@ -336,13 +334,16 @@ static irqreturn_t bma150_irq_thread(int irq, void *dev)
- 	return IRQ_HANDLED;
++#include <linux/input.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/gpio.h>
+@@ -46,32 +46,34 @@ static bool rb532_button_pressed(void)
+ 	return !val;
  }
  
--static void bma150_poll(struct input_polled_dev *dev)
-+static void bma150_poll(struct input_dev *input)
+-static void rb532_button_poll(struct input_polled_dev *poll_dev)
++static void rb532_button_poll(struct input_dev *input)
  {
--	bma150_report_xyz(dev->private);
-+	struct bma150_data *bma150 = input_get_drvdata(input);
-+
-+	bma150_report_xyz(bma150);
+-	input_report_key(poll_dev->input, RB532_BTN_KSYM,
+-			 rb532_button_pressed());
+-	input_sync(poll_dev->input);
++	input_report_key(input, RB532_BTN_KSYM, rb532_button_pressed());
++	input_sync(input);
  }
  
--static int bma150_open(struct bma150_data *bma150)
-+static int bma150_open(struct input_dev *input)
+ static int rb532_button_probe(struct platform_device *pdev)
  {
-+	struct bma150_data *bma150 = input_get_drvdata(input);
+-	struct input_polled_dev *poll_dev;
++	struct input_dev *input;
  	int error;
  
- 	error = pm_runtime_get_sync(&bma150->client->dev);
-@@ -362,44 +363,18 @@ static int bma150_open(struct bma150_data *bma150)
- 	return 0;
- }
+-	poll_dev = devm_input_allocate_polled_device(&pdev->dev);
+-	if (!poll_dev)
++	input = devm_input_allocate_device(&pdev->dev);
++	if (!input)
+ 		return -ENOMEM;
  
--static void bma150_close(struct bma150_data *bma150)
-+static void bma150_close(struct input_dev *input)
- {
-+	struct bma150_data *bma150 = input_get_drvdata(input);
-+
- 	pm_runtime_put_sync(&bma150->client->dev);
+-	poll_dev->poll = rb532_button_poll;
+-	poll_dev->poll_interval = RB532_BTN_RATE;
++	input->name = "rb532 button";
++	input->phys = "rb532/button0";
++	input->id.bustype = BUS_HOST;
  
- 	if (bma150->mode != BMA150_MODE_SLEEP)
- 		bma150_set_mode(bma150, BMA150_MODE_SLEEP);
- }
+-	poll_dev->input->name = "rb532 button";
+-	poll_dev->input->phys = "rb532/button0";
+-	poll_dev->input->id.bustype = BUS_HOST;
++	input_set_capability(input, EV_KEY, RB532_BTN_KSYM);
  
--static int bma150_irq_open(struct input_dev *input)
--{
--	struct bma150_data *bma150 = input_get_drvdata(input);
--
--	return bma150_open(bma150);
--}
--
--static void bma150_irq_close(struct input_dev *input)
--{
--	struct bma150_data *bma150 = input_get_drvdata(input);
--
--	bma150_close(bma150);
--}
--
--static void bma150_poll_open(struct input_polled_dev *ipoll_dev)
--{
--	struct bma150_data *bma150 = ipoll_dev->private;
--
--	bma150_open(bma150);
--}
--
--static void bma150_poll_close(struct input_polled_dev *ipoll_dev)
--{
--	struct bma150_data *bma150 = ipoll_dev->private;
--
--	bma150_close(bma150);
--}
--
- static int bma150_initialize(struct bma150_data *bma150,
--				       const struct bma150_cfg *cfg)
-+			     const struct bma150_cfg *cfg)
- {
- 	int error;
- 
-@@ -439,78 +414,14 @@ static int bma150_initialize(struct bma150_data *bma150,
- 	return bma150_set_mode(bma150, BMA150_MODE_SLEEP);
- }
- 
--static void bma150_init_input_device(struct input_dev *idev)
--{
--	idev->name = BMA150_DRIVER;
--	idev->phys = BMA150_DRIVER "/input0";
--	idev->id.bustype = BUS_I2C;
--
--	idev->evbit[0] = BIT_MASK(EV_ABS);
--	input_set_abs_params(idev, ABS_X, ABSMIN_ACC_VAL, ABSMAX_ACC_VAL, 0, 0);
--	input_set_abs_params(idev, ABS_Y, ABSMIN_ACC_VAL, ABSMAX_ACC_VAL, 0, 0);
--	input_set_abs_params(idev, ABS_Z, ABSMIN_ACC_VAL, ABSMAX_ACC_VAL, 0, 0);
--}
--
--static int bma150_register_input_device(struct bma150_data *bma150)
--{
--	struct input_dev *idev;
--	int error;
--
--	idev = devm_input_allocate_device(&bma150->client->dev);
--	if (!idev)
--		return -ENOMEM;
--
--	bma150_init_input_device(idev);
--
--	idev->open = bma150_irq_open;
--	idev->close = bma150_irq_close;
--	input_set_drvdata(idev, bma150);
--
--	bma150->input = idev;
--
--	error = input_register_device(idev);
--	if (error)
--		return error;
--
--	return 0;
--}
--
--static int bma150_register_polled_device(struct bma150_data *bma150)
--{
--	struct input_polled_dev *ipoll_dev;
--	int error;
--
--	ipoll_dev = devm_input_allocate_polled_device(&bma150->client->dev);
--	if (!ipoll_dev)
--		return -ENOMEM;
--
--	ipoll_dev->private = bma150;
--	ipoll_dev->open = bma150_poll_open;
--	ipoll_dev->close = bma150_poll_close;
--	ipoll_dev->poll = bma150_poll;
--	ipoll_dev->poll_interval = BMA150_POLL_INTERVAL;
--	ipoll_dev->poll_interval_min = BMA150_POLL_MIN;
--	ipoll_dev->poll_interval_max = BMA150_POLL_MAX;
--
--	bma150_init_input_device(ipoll_dev->input);
--
--	bma150->input_polled = ipoll_dev;
--	bma150->input = ipoll_dev->input;
--
--	error = input_register_polled_device(ipoll_dev);
--	if (error)
--		return error;
--
--	return 0;
--}
--
- static int bma150_probe(struct i2c_client *client,
--				  const struct i2c_device_id *id)
-+			const struct i2c_device_id *id)
- {
- 	const struct bma150_platform_data *pdata =
- 			dev_get_platdata(&client->dev);
- 	const struct bma150_cfg *cfg;
- 	struct bma150_data *bma150;
-+	struct input_dev *idev;
- 	int chip_id;
- 	int error;
- 
-@@ -550,11 +461,39 @@ static int bma150_probe(struct i2c_client *client,
- 	if (error)
- 		return error;
- 
--	if (client->irq > 0) {
--		error = bma150_register_input_device(bma150);
-+	idev = devm_input_allocate_device(&bma150->client->dev);
-+	if (!idev)
-+		return -ENOMEM;
-+
-+	input_set_drvdata(idev, bma150);
-+	bma150->input = idev;
-+
-+	idev->name = BMA150_DRIVER;
-+	idev->phys = BMA150_DRIVER "/input0";
-+	idev->id.bustype = BUS_I2C;
-+
-+	idev->open = bma150_open;
-+	idev->close = bma150_close;
-+
-+	input_set_abs_params(idev, ABS_X, ABSMIN_ACC_VAL, ABSMAX_ACC_VAL, 0, 0);
-+	input_set_abs_params(idev, ABS_Y, ABSMIN_ACC_VAL, ABSMAX_ACC_VAL, 0, 0);
-+	input_set_abs_params(idev, ABS_Z, ABSMIN_ACC_VAL, ABSMAX_ACC_VAL, 0, 0);
-+
-+	if (client->irq <= 0) {
-+		error = input_setup_polling(idev, bma150_poll);
- 		if (error)
- 			return error;
- 
-+		input_set_poll_interval(idev, BMA150_POLL_INTERVAL);
-+		input_set_min_poll_interval(idev, BMA150_POLL_MIN);
-+		input_set_max_poll_interval(idev, BMA150_POLL_MAX);
-+	}
-+
-+	error = input_register_device(idev);
+-	input_set_capability(poll_dev->input, EV_KEY, RB532_BTN_KSYM);
++	error = input_setup_polling(input, rb532_button_poll);
 +	if (error)
 +		return error;
 +
-+	if (client->irq > 0) {
- 		error = devm_request_threaded_irq(&client->dev, client->irq,
- 					NULL, bma150_irq_thread,
- 					IRQF_TRIGGER_RISING | IRQF_ONESHOT,
-@@ -565,10 +504,6 @@ static int bma150_probe(struct i2c_client *client,
- 				client->irq, error);
- 			return error;
- 		}
--	} else {
--		error = bma150_register_polled_device(bma150);
--		if (error)
--			return error;
- 	}
++	input_set_poll_interval(input, RB532_BTN_RATE);
  
- 	i2c_set_clientdata(client, bma150);
-@@ -585,8 +520,7 @@ static int bma150_remove(struct i2c_client *client)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM
--static int bma150_suspend(struct device *dev)
-+static int __maybe_unused bma150_suspend(struct device *dev)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
- 	struct bma150_data *bma150 = i2c_get_clientdata(client);
-@@ -594,14 +528,13 @@ static int bma150_suspend(struct device *dev)
- 	return bma150_set_mode(bma150, BMA150_MODE_SLEEP);
- }
- 
--static int bma150_resume(struct device *dev)
-+static int __maybe_unused bma150_resume(struct device *dev)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
- 	struct bma150_data *bma150 = i2c_get_clientdata(client);
- 
- 	return bma150_set_mode(bma150, BMA150_MODE_NORMAL);
- }
--#endif
- 
- static UNIVERSAL_DEV_PM_OPS(bma150_pm, bma150_suspend, bma150_resume, NULL);
+-	error = input_register_polled_device(poll_dev);
++	error = input_register_device(input);
+ 	if (error)
+ 		return error;
  
 -- 
 2.23.0.866.gb869b98d4c-goog
