@@ -2,134 +2,180 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C61FA3728
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E41BDFA3728
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC8B721A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:42:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="fbOwqr3f"
+	by mail.kernel.org (Postfix) with ESMTP id B598621A49
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:42:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437539AbfJQBmj (ORCPT
+        id S2405310AbfJQBmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 21:42:39 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37995 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391704AbfJQBmM (ORCPT
+        Wed, 16 Oct 2019 21:42:46 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:48233 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390862AbfJQBmL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 21:42:12 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 3so709227wmi.3
+        Wed, 16 Oct 2019 21:42:11 -0400
+Received: by mail-io1-f69.google.com with SMTP id w16so919471ioc.15
         for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 18:42:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=2/BQE6F3y5aL1teTaZDy6buval4vv3GU9ONSJI6xLxU=;
-        b=fbOwqr3f1yonOH0EUAEULr/cF8ezgOzn2jzCFjy4f/1dnYN3YPGJ0h4MznGJUcqkXI
-         eQ9LR/fOaQ9P2OIhHYgBc9bohUXOp03hGTevE8Nsb4xTg1eAZPk/emaMjE9lJDDqtmfr
-         MuGbQPzjdzBcFIwGZKKhugymzu0tyOtP6FE7nVg56JV4YtqjJ/5XjYFPC5PPA8vTkBUq
-         Yg8Szh+OLHCrSSeK1mKgPlRtPzRF/WhkhG6cxZjJLr2Ic6PI1G6sMU3V+s4qk2N5WGjZ
-         QDXSp+Uo4PQlHK0L/tqwwn+fgNRpUSktDho+PSHTMInJctudfZui4v6vF2C3bTKJnfe2
-         3qlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=2/BQE6F3y5aL1teTaZDy6buval4vv3GU9ONSJI6xLxU=;
-        b=qSwuLom5t2AgoU6rSRpuG+lu0xSclPaZYXyBA9i/Q2rqS2GYtqeATLbuwpyhmrRPtb
-         ipEkJneBSUrhuzAq5HeYbCRSS8epzwMILchp0l1krgZLC1Y+uvBt5ndaPnGp35oSmHyl
-         EQcaC+wzKH7KC6PjYuArEyLj5wsZM4DQNKbkooVLm/Q89OETx/CF+zYH6FmdJoO7FTYY
-         C0jPnUm9iS+7BtI7NIXPnBcaQUDIFlgKnDDB4IyWb2jhh3pwrotqcjZfHZ7hX0ES1cH6
-         Tu/2W1TDn2Nyyvcr/GMolSPwWI92ziuPNCF3rB6dUlatHNlrz/XfUUqr5IaFUz/HvhJe
-         xL3g==
-X-Gm-Message-State: APjAAAX8pbboG6pE2anzEbBgz9bKXTaxsOMXyNPTCZ8uoWRXKqBmLFrT
-        etH4lpfnmlGoBwWfYWO+YjStgIPQ1Ws=
-X-Google-Smtp-Source: APXvYqyeK3Q8YOSiK/Dd4vFWZkX9WpxTOHBZZQ3hhBCsHHGgkJNZamlZGeW8O7+ksYCrhLcXPI592w==
-X-Received: by 2002:a7b:ca4d:: with SMTP id m13mr505817wml.95.1571276530678;
-        Wed, 16 Oct 2019 18:42:10 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id o18sm726884wrm.11.2019.10.16.18.42.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 16 Oct 2019 18:42:10 -0700 (PDT)
-Message-ID: <5da7c6f2.1c69fb81.51d2b.325e@mx.google.com>
-Date:   Wed, 16 Oct 2019 18:42:10 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=WNUnDvR5EW3ljzuYUx0+ZKXpfmH7/fL3zE89YTfdpUM=;
+        b=HS1sfOMUngTsG6jBWRDX1GrzJveqpfIQp9iJxBtzntC3lhGLAGJL41T6VCCIYg4iLs
+         WfiVjI+mDiYNacm6Azc8pug0dLBZJDy9FAX/tdttfm+zyo86pxP7Q2DgV3hgY7zWytrT
+         nOJ7HYcxyR6/frJY2Bd2G7NVaLvKz+gQuUjM++HwcemeEa9wmgY+AikQ4+I+1aHni2ND
+         9mVwIE2QKn2sOQ+KDKXSi4fsDTMvAKFe3dPrfCYlMNIELneP1g54QTl0nqQSEYdEhUt6
+         LsfzMoyoZI2pMJEtRhx1sNsdx9MlqrM9GloIsxl0f4/YllYT8IlDjejlBm+4M78aJPjD
+         C17g==
+X-Gm-Message-State: APjAAAW5Fu/3qjj8iySsw7x6qs9RYSndCzy40214omZn75ZL8gsv1vhL
+        Y+0MWsM28ymmrU8ppyp6TX3cM5XxmlARxaKbgBHzSshijL7z
+X-Google-Smtp-Source: APXvYqzTwoDne4FjrmzPziIVvWHqUl67fjnOFKAkWPuPDGb88XbHnamy7va4mKsvFC3HHQGTepYm0HvajTYZ0fAwXCOtTGoYtd+O
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: linux-4.4.y
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: v4.4.196-80-g645def690295
-In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
-References: <20191016214729.758892904@linuxfoundation.org>
-Subject: Re: [PATCH 4.4 00/79] 4.4.197-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+X-Received: by 2002:a02:cd8e:: with SMTP id l14mr984070jap.30.1571276530724;
+ Wed, 16 Oct 2019 18:42:10 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 18:42:10 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007536530595115304@google.com>
+Subject: KMSAN: uninit-value in read_sensor_register (2)
+From:   syzbot <syzbot+64437af5c781a7f0e08e@syzkaller.appspotmail.com>
+To:     allison@lohutok.net, glider@google.com, gregkh@linuxfoundation.org,
+        hverkuil@xs4all.nl, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, mchehab@kernel.org,
+        swinslow@gmail.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.4.y boot: 80 boots: 2 failed, 72 passed with 6 offline (v=
-4.4.196-80-g645def690295)
+Hello,
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.4.y/kernel/v4.4.196-80-g645def690295/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.4.y=
-/kernel/v4.4.196-80-g645def690295/
+syzbot found the following crash on:
 
-Tree: stable-rc
-Branch: linux-4.4.y
-Git Describe: v4.4.196-80-g645def690295
-Git Commit: 645def69029558d1f5833e6b95e81180671da907
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 42 unique boards, 17 SoC families, 13 builds out of 190
+HEAD commit:    c2453450 kmsan: kcov: prettify the code unpoisoning area->..
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=14c95fe7600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3684f3c73f43899a
+dashboard link: https://syzkaller.appspot.com/bug?extid=64437af5c781a7f0e08e
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15e1a3a0e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=119f406b600000
 
-Boot Failures Detected:
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+64437af5c781a7f0e08e@syzkaller.appspotmail.com
 
-x86_64:
-    x86_64_defconfig:
-        gcc-8:
-            qemu_x86_64: 1 failed lab
+usb 1-1: New USB device found, idVendor=0ac8, idProduct=c301,  
+bcdDevice=8b.4c
+usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 1-1: config 0 descriptor??
+gspca_main: vc032x-2.14.0 probing 0ac8:c301
+gspca_vc032x: reg_w err -71
+=====================================================
+BUG: KMSAN: uninit-value in read_sensor_register+0x4b7/0xd30  
+drivers/media/usb/gspca/vc032x.c:2971
+CPU: 1 PID: 3904 Comm: kworker/1:2 Not tainted 5.4.0-rc3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  kmsan_report+0x14a/0x2f0 mm/kmsan/kmsan_report.c:109
+  __msan_warning+0x73/0xf0 mm/kmsan/kmsan_instr.c:245
+  read_sensor_register+0x4b7/0xd30 drivers/media/usb/gspca/vc032x.c:2971
+  vc032x_probe_sensor drivers/media/usb/gspca/vc032x.c:3032 [inline]
+  sd_init+0x2cf3/0x4530 drivers/media/usb/gspca/vc032x.c:3163
+  gspca_dev_probe2+0xe93/0x2230 drivers/media/usb/gspca/gspca.c:1532
+  gspca_dev_probe+0x346/0x3b0 drivers/media/usb/gspca/gspca.c:1605
+  sd_probe+0x8d/0xa0 drivers/media/usb/gspca/gl860/gl860.c:511
+  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
+  really_probe+0xd91/0x1f90 drivers/base/dd.c:552
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:721
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:828
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:430
+  __device_attach+0x489/0x750 drivers/base/dd.c:894
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:941
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:490
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2201
+  usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
+  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
+  usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
+  really_probe+0xd91/0x1f90 drivers/base/dd.c:552
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:721
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:828
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:430
+  __device_attach+0x489/0x750 drivers/base/dd.c:894
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:941
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:490
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2201
+  usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2536
+  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+  port_event drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x581d/0x72f0 drivers/usb/core/hub.c:5441
+  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
+  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+  kthread+0x4b5/0x4f0 kernel/kthread.c:256
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
 
-i386:
-    i386_defconfig:
-        gcc-8:
-            qemu_i386: 1 failed lab
+Uninit was created at:
+  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:150 [inline]
+  kmsan_internal_poison_shadow+0x60/0x110 mm/kmsan/kmsan.c:133
+  kmsan_slab_alloc+0xaa/0x130 mm/kmsan/kmsan_hooks.c:101
+  slab_alloc_node mm/slub.c:2792 [inline]
+  slab_alloc mm/slub.c:2801 [inline]
+  kmem_cache_alloc_trace+0x8c5/0xd20 mm/slub.c:2818
+  kmalloc include/linux/slab.h:556 [inline]
+  gspca_dev_probe2+0x30d/0x2230 drivers/media/usb/gspca/gspca.c:1464
+  gspca_dev_probe+0x346/0x3b0 drivers/media/usb/gspca/gspca.c:1605
+  sd_probe+0x8d/0xa0 drivers/media/usb/gspca/gl860/gl860.c:511
+  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
+  really_probe+0xd91/0x1f90 drivers/base/dd.c:552
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:721
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:828
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:430
+  __device_attach+0x489/0x750 drivers/base/dd.c:894
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:941
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:490
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2201
+  usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
+  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
+  usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
+  really_probe+0xd91/0x1f90 drivers/base/dd.c:552
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:721
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:828
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:430
+  __device_attach+0x489/0x750 drivers/base/dd.c:894
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:941
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:490
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2201
+  usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2536
+  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+  port_event drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x581d/0x72f0 drivers/usb/core/hub.c:5441
+  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
+  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+  kthread+0x4b5/0x4f0 kernel/kthread.c:256
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+=====================================================
 
-Offline Platforms:
-
-arm:
-
-    sunxi_defconfig:
-        gcc-8
-            sun5i-r8-chip: 1 offline lab
-
-    multi_v7_defconfig:
-        gcc-8
-            qcom-apq8064-cm-qs600: 1 offline lab
-            sun5i-r8-chip: 1 offline lab
-            sun7i-a20-bananapi: 1 offline lab
-
-    davinci_all_defconfig:
-        gcc-8
-            dm365evm,legacy: 1 offline lab
-
-    qcom_defconfig:
-        gcc-8
-            qcom-apq8064-cm-qs600: 1 offline lab
 
 ---
-For more info write to <info@kernelci.org>
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
