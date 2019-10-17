@@ -2,239 +2,179 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88898C4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 06:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E0BC4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 06:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 547462054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 06:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 192882054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 06:21:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MT+j5CpP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zjE7WN8Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436676AbfJQGTp (ORCPT
+        id S2407800AbfJQGVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 02:19:45 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33126 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731726AbfJQGTo (ORCPT
+        Thu, 17 Oct 2019 02:21:23 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46744 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404695AbfJQGVW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 02:19:44 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d22so623247pls.0;
-        Wed, 16 Oct 2019 23:19:43 -0700 (PDT)
+        Thu, 17 Oct 2019 02:21:22 -0400
+Received: by mail-lj1-f194.google.com with SMTP id d1so1175052ljl.13
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 23:21:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QXNThL61iykvUWhGRBE2Sei3pidpCRt9ew5jYInQMsE=;
-        b=MT+j5CpP/0k7ewHDhH/2ZWS8tireXxQUAmHMSSJnOel1MNd1I0YDpWAJItm9uOyAF9
-         v4ePeP4NCgdsf5WHhf9TH6QUWrdwjW2x6xmgQrjyQqC2QtU1etejEtKiIkpRt41jrePb
-         poAVFyRAIyVj/t+qLfzQ1QboGVfhFfiTyo+KeLVV5UwMfCpFMTvPBQwIVP9iwVUvjWBo
-         UxPvUBavX3znblhZjS5uUDtMi4sWIvd2ro27huD05XN2S7YwmcoV2ZpcH4INHmvVu1B/
-         bBVy97z+d8Tek8hThhOC+DBywIj8J125EApR6lw+RgkkxGgMZa8W/1bMrCdlGIfJWOzj
-         /2Kg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=vJwljksPMBM6dZICB00B0fndAGErly1ln+LuF+3T1Rg=;
+        b=zjE7WN8Zy0vPZUWHzZrqOD97ssZvZUOaL9dpeEI7xBaaBeXQE1LJKoBDcG+3XDkUhB
+         DIyU5B/rVpwBFbyeDFMMYA9A245D7hrI30lt2yrK992oRHIJKoSuA/rzidJ/VLg+ptit
+         SZYkPIJ09G8CKS/J9IPSZrAaQyokbacW3FpTnYSzMYyjFroLtsd7zVzVM3LHjJsyKxCb
+         TVu5nTiE916jxYnqkGbsOoK+OUo/muc+Pfr9kwd0ImvQVO6T8OIQBN9ViPn7evumH02I
+         Oh7HN9bQnu87n+Y+JIpxuAW3QVdCu1Gu+YA+7FKjkknUoSjqY3DZ2PwfwOgLL43QKeFk
+         7BFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QXNThL61iykvUWhGRBE2Sei3pidpCRt9ew5jYInQMsE=;
-        b=UauOYDKxwtmT9pS07FsxHEW+5+60IWMovrYK8uEupQcSZ54Pj9zjHm7skleJM3MH4W
-         zPTLdaZvZ+Iv0e64cGWEtCJfm56o8dFu8hh8EUQMzgiSo4JhouBzjJ66WXPGO0KU7EMn
-         jrpPB/2vbTRXynePvmgneuJMjFAk5Wb3WMN2Oyz7oqo1Xh8vSaje7LroavosLsnIqfM8
-         YNriIJ06N0vRt6ZeSQGHMcp/fXk3bJI35aJmEv33EaO3AjslF51XVTdWXtKriLJAMKPm
-         KeCTCtZNDPUfQCHqjBDiM32c1m+3bGAzHlJ/BVRpBx0Xdwg4aSb2bCppaJu0XI8IWJKp
-         Yy6g==
-X-Gm-Message-State: APjAAAV90sZyk+m9tRiB/gvEi0csCMrQchYBIpkWfSNyK5gODKC+4cus
-        tzOKr9KAFi6eBQsC45YJri3l+erEPTYCvg==
-X-Google-Smtp-Source: APXvYqyrpax+MI3Rb9eZZA6sFw4w1blnVEvZAG79hdRDFGhBgvjORiAtpdsA05CtaemZ99esgXxT7Q==
-X-Received: by 2002:a17:902:a717:: with SMTP id w23mr2282044plq.27.1571293183158;
-        Wed, 16 Oct 2019 23:19:43 -0700 (PDT)
-Received: from Gentoo ([103.231.91.35])
-        by smtp.gmail.com with ESMTPSA id ep10sm13555546pjb.2.2019.10.16.23.19.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 16 Oct 2019 23:19:42 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 11:49:28 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     yamada.masahiro@socionext.com, michal.lkml@markovi.net,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bfields@fieldses.org
-Subject: Re: [PATCH] scripts : prune-kernel : prune kernels generalized way
-Message-ID: <20191017061925.GA1274@Gentoo>
-References: <20191016061312.10626-1-unixbhaskar@gmail.com>
- <307349e6-69b0-b894-a2b9-edfd5b0fe4c7@infradead.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=vJwljksPMBM6dZICB00B0fndAGErly1ln+LuF+3T1Rg=;
+        b=P0xK2Dw/yn6WtaV+HdKYwjBoUW5s0CgVEDyAp1Fr2MC8OFyIaOAnkY+QrthKyCFQQW
+         B7KvFR52W9eBFjOJPUsr/tfNQPFYjSx3W5RAHyMfM72BFtPpirBflHddwB5BmzYBdYZA
+         Sr5YvHHKeqCl+BXNWfNcs3zUJZkikpZMjVMpcRG3blriw/EMJM1pS1FiXEUKeK1BdltG
+         sMmO05HcxyIOW6LIv5Dfbyi/eF1Ks5XnhS4wEnseVp9RVG1Xj3t/CDzzb+MLLK3flj70
+         F2nhK+BmcV3kd1CTxr5prI/u9sVyGNVA9Wc21J7SkRHQjYBLuogi0PvQxl8kGub/UH7F
+         CWAQ==
+X-Gm-Message-State: APjAAAXDZhFBRmWPgrySJ3UEkkC4bw1sjdn2km9XxHhYKp1CtPexZ4AM
+        h1U5kOBgJSzRFxrxvhZ5pqUTWxmkSHgoDpB+S42ok+OkHx0=
+X-Google-Smtp-Source: APXvYqxmmTxaeIoGxwbq8L1+RJyEQesoPePa6UviAVrooX49W5WsmJeeGXHxaWGK4+b7b5GbWQsKJ7zgLPRb3H0J8Fw=
+X-Received: by 2002:a2e:9702:: with SMTP id r2mr1116080lji.194.1571293280339;
+ Wed, 16 Oct 2019 23:21:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="azLHFNyN32YCQGCU"
-Content-Disposition: inline
-In-Reply-To: <307349e6-69b0-b894-a2b9-edfd5b0fe4c7@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191016214759.600329427@linuxfoundation.org>
+In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 17 Oct 2019 11:51:08 +0530
+Message-ID: <CA+G9fYtYEcvwRGpXFf+JnqZz+P=pgHZ4R9NAVezpSpq0BmEZvA@mail.gmail.com>
+Subject: Re: [PATCH 4.9 00/92] 4.9.197-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 17 Oct 2019 at 03:24, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.9.197 release.
+> There are 92 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri 18 Oct 2019 09:43:41 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.197-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
---azLHFNyN32YCQGCU
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-On 09:08 Wed 16 Oct 2019, Randy Dunlap wrote:
->On 10/15/19 11:13 PM, Bhaskar Chowdhury wrote:
->> This patch will remove old kernel from the system in a selective way.
->>
->> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
->> ---
->> Thanks, a bunch to Randy for the hand holding . :)
->
->Hi Bhaskar,
->
->First problem is that patch complains:
->
->checking file scripts/prune-kernel
->Using Plan A...
->patch: **** malformed patch at line 87: 2.21.0
->
->IOW, this patch does not apply cleanly.
+Summary
+------------------------------------------------------------------------
 
-Whoops! Sending the patch with all the corrections.=20
+kernel: 4.9.197-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: 5749cdc967d4817de5000f6054619fb41b4f4333
+git describe: v4.9.196-93-g5749cdc967d4
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.196-93-g5749cdc967d4
 
->More comments below.
->
->
->>  scripts/prune-kernel | 71 ++++++++++++++++++++++++++++++++++++--------
->>  1 file changed, 59 insertions(+), 12 deletions(-)
->>
->> diff --git a/scripts/prune-kernel b/scripts/prune-kernel
->> index e8aa940bc0a9..78dd4c854b2b 100755
->> --- a/scripts/prune-kernel
->> +++ b/scripts/prune-kernel
->> @@ -5,17 +5,64 @@
->>  # again, /boot and /lib/modules/ eventually fill up.
->>  # Dumb script to purge that stuff:
->>
->> +#for f in "$@"
->> +#do
->> +#        if rpm -qf "/lib/modules/$f" >/dev/null; then
->> +#                echo "keeping $f (installed from rpm)"
->> +#        elif [ $(uname -r) =3D "$f" ]; then
->> +#                echo "keeping $f (running kernel) "
->> +#        else
->> +#                echo "removing $f"
->> +#                rm -f "/boot/initramfs-$f.img" "/boot/System.map-$f"
->> +#                rm -f "/boot/vmlinuz-$f"   "/boot/config-$f"
->> +#                rm -rf "/lib/modules/$f"
->> +#                new-kernel-pkg --remove $f
->> +#        fi
->> +#done
->> +boot_dir=3D/boot
->> +modules_dir=3D/lib/modules
->> +
->> +function remove_old_kernel(){
->> +	cd $boot_dir
->> +	rm -If vmlinuz-$kenrel_version System.map-$kernel_version config-$kern=
-el_verison
->
->Typos:
->	               $kernel_version                                   $kernel_=
-version
->
->I.e., you can't have tested this.
->
-Fixed.
->> +}
->> +function remove_old_kernel_modules_dir(){
->> +	cd $modules_dir
->> +	rm -rf $modules_version
->> +}
->> +printf "\n\n Enlist the installed kernels \n\n"
->> +
->> +find $boot_dir -name "vmlinuz-*" -type f  -exec ls -1 {} \;
->> +
->> +printf "\n\n\n Please give the kernel version to remove: %s"
->> +read kernel_version
->> +
->
->If I enter nothing here, no need to call remove_old_kernel.
->
-Okay, terminate it there, because allowing defeat the purpose=20
-of the script.
->> +remove_old_kernel
->> +
->> +printf "\n\n Enlist the installed modules directory \n\n"
->> +
->> +find $modules_dir  -maxdepth 0 -type d -exec ls -1 {} \;
->> +
->> +printf "\n\n Please give the full modules directory name to remove: %s"
->> +read modules_version
->
->If I enter nothing here, don't call remove_old_kernel_modules_dir.
->
-It will not reach here, because we have terminated it above.
->> +
->> +remove_old_kernel_modules_dir
->> +
->> +printf "\n\n Removed kernel version: $kernel_version and associcated mo=
-dules: $modules_version ...Done \n"
->
->       typo:                                                associated
->
-Fixed.
->> +while :
->>  do
->
->Why is the "do" line missing a '+'?  The only do/done in the current script
->are already listed above as being commented out.
->
->> +printf "\n\n Do you want to remove another?[YN] : %s"
->> +read response
->> +
->> +if [[ $response =3D=3D "Y" ]];then
->> +	printf "Please give another version to remove : %s"
->> +	read kernel_version
->> +	remove_old_kernel
->> +	printf "\n\n Please give the full modules directory name to remove: %s"
->> +	read modules_version
->> +	remove_old_kernel_modules_dir
->> +elif [[ $response =3D=3D "N" ]];then
->> +	printf "\n\n Alright,no more. \n\n"
->
->Just exit, no printf needed.
->
->> +	exit 1
->> +fi
->>  done
 
->Same comment for "done" as for "do" above.
-I must have done something wrong that is why...now fixed it.
->
->> --
->> 2.21.0
->
->
-Thank you Randy, and extremely sorry to gobbles up your and everyones
-time...heck..
->--=20
->~Randy
+No regressions (compared to build v4.9.196)
 
---azLHFNyN32YCQGCU
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+No fixes (compared to build v4.9.196)
 
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl2oB+cACgkQsjqdtxFL
-KRUrzgf/ZWCjNSydZt2mQXRBXiVJJWlkezlaX9JwXvQOsapTS4qHalz1IrDqn4Lq
-y1Tlwqu8cNIwTtCkCnUOcU/2KWjcav+CdoO2/0pJWm2newn8pTtCGoBYQkrIvElX
-L12+g2wcEXMa2izMfRh1Ln9nJmyqyeHzRy+CxP1TsAwtgb0J/indWgCG1lxmp+Bq
-P7hv77Iwm+v89nV1i5QDjGimVhTl9FclspD1Qg/QKgYGwNNsTMth6By32UJUVUqc
-mwOz6CZXDdtAoGQA8B/PzN+3GeF8xiTMgWEJkW3K5CO/cFGxEdRf09tq8lL5AY75
-r6HGpL31CupheOnxUCtUUmCVKN3qdw==
-=0w9/
------END PGP SIGNATURE-----
+Ran 23358 total tests in the following environments and test suites.
 
---azLHFNyN32YCQGCU--
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* network-basic-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* prep-tmp-disk
+* ssuite
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
