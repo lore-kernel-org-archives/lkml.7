@@ -2,185 +2,94 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C62FA372B
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C47DBFA372B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5E8F214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:09:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LKlUZivU"
+	by mail.kernel.org (Postfix) with ESMTP id 999E321835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:11:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571296294;
+	bh=JvuF51h8KxllgVPcRQiZS5LFyHfBMMsnxNTMBDZ7fCo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JmPZUR8yZHEmoVKeOsk4O+U2pvSBPS0IqUXbL11dBi4TxZrTZXpjMYajkwYk8H0cT
+	 7f3d6wuqodGHmR7HnaqvFfmxN67y0JX9PIJV2nlXrn3CJrkIgi/fDJIL1hLAFSpH0U
+	 EJLLbsmc43KzzMLCChmeY0lWTUZUfZV9OmTr3uOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407916AbfJQHJE (ORCPT
+        id S2407927AbfJQHLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 03:09:04 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:40819 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390955AbfJQHJD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 03:09:03 -0400
-Received: by mail-yb1-f194.google.com with SMTP id s7so378710ybq.7;
-        Thu, 17 Oct 2019 00:09:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DSbs0/QEEgmADy+uvB3J9WS3y0uYupAbV9G4/iwiKTo=;
-        b=LKlUZivU99zESLkGMI4JigSZDHVXf8KBTGUnS+U1uFPat0D3OT1MwJOwYZUWLm0I8P
-         41kYKpLKDPZLs3S3PtA7ic/FpWRtuK31GovU6OdTLakp/FFghd4f0QeNAcC335X1DwIF
-         opMr6lRO/YvMQJZAm7++BU5wj6k7YBXmgCRuQoGLm7rwVYgE/NKs/JPX6NEC4gzgyEVY
-         +0Q2B2sGjs0DCNxNnSsbKT/wQZVPtw1uPD4oHYQm+ozDCHyqodf1D/WrA9k+JoWIje6A
-         fO33TBNz4pLp+qIkBEWsKZw+RMEhpmh8ryTi2Of5HYyaAeP60Tq7is+U/jobPYV8tnZV
-         yBuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DSbs0/QEEgmADy+uvB3J9WS3y0uYupAbV9G4/iwiKTo=;
-        b=sZxTZ+2KJCId99jNnlXaxqG3jcEnQExOy2B41hX17ap+kLB1H/h5HgkoTIOVqdbFZ8
-         zlyBtgtn5CKmLvo9yokdCQ+q/A4ekc6reLegth3TJ6XvN+REN397XjJEZOGMzGkjDAGn
-         kkygl2e8lSbE/IPKTSzvg1wY2sI1d6EITkLl2QbSoRlhKkyB4edh0bRxJ196fWat+iZQ
-         PkAOIb+4+mPS0vTt54/78VXnL/+j3b4m0qhiWVO/OR+MDD8519C+NUGkCBMzx4hwI3yf
-         dj3Q4tNnc64hQVQVQ7oe2K2ael/36orelFe5v860JPMZSAtmiYo2qabgpRpVqk8tCJm+
-         DSXw==
-X-Gm-Message-State: APjAAAWDXTugkJR539b9UQ21KZzs8XKTx5Wp1a+8RC3F5utCvuW0lxTA
-        GMTyYmrj02o6blQM4NEw22RfPxEZ76Jh6M2LN1s=
-X-Google-Smtp-Source: APXvYqwjLzRLqMjo02al4Z+VnHPSrn7zqUYHshfSiH2OnhimoSV01IJH6/02ZYbLhTr3tj67kX/r3rImnNB2kLiwcg8=
-X-Received: by 2002:a5b:788:: with SMTP id b8mr1075528ybq.509.1571296142395;
- Thu, 17 Oct 2019 00:09:02 -0700 (PDT)
+        Thu, 17 Oct 2019 03:11:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60062 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390955AbfJQHLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 03:11:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 09BBEB3B1;
+        Thu, 17 Oct 2019 07:11:31 +0000 (UTC)
+Date:   Thu, 17 Oct 2019 09:11:29 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Rientjes <rientjes@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] mm/page_alloc: Add alloc_contig_pages()
+Message-ID: <20191017071129.GB24485@dhcp22.suse.cz>
+References: <1571223765-10662-1-git-send-email-anshuman.khandual@arm.com>
+ <40b8375c-5291-b477-1519-fd7fa799a67d@redhat.com>
+ <cdcf77a5-e5c9-71ff-811d-ecd1c1e80f00@arm.com>
+ <20191016115119.GA317@dhcp22.suse.cz>
+ <fe8cae46-6bd8-88eb-d3fe-2740bb79ee58@redhat.com>
+ <20191016124149.GB317@dhcp22.suse.cz>
+ <97cadd99-d05e-3174-6532-fe18f0301ba7@arm.com>
+ <e37c16f5-7068-5359-a539-bee58e705122@redhat.com>
+ <c60b9e95-5c6c-fcb2-c8bb-13e7646ba8ea@arm.com>
 MIME-Version: 1.0
-References: <1571218608-15933-1-git-send-email-gkulkarni@marvell.com>
- <1571218608-15933-3-git-send-email-gkulkarni@marvell.com> <b8e1a637-faf4-4567-7d3e-a4f13dfa1cf0@huawei.com>
-In-Reply-To: <b8e1a637-faf4-4567-7d3e-a4f13dfa1cf0@huawei.com>
-From:   Ganapatrao Kulkarni <gklkml16@gmail.com>
-Date:   Thu, 17 Oct 2019 12:38:51 +0530
-Message-ID: <CAKTKpr4QoTDjbSxO4CvSH2sNvmrTJKjxi+RZH4mYfyDaaN96Sw@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] drivers/perf: Add CCPI2 PMU support in ThunderX2
- UNCORE driver.
-To:     John Garry <john.garry@huawei.com>
-Cc:     Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        Jan Glauber <jglauber@marvell.com>,
-        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
-        Robert Richter <rrichter@marvell.com>,
-        "will@kernel.org" <will@kernel.org>,
-        Zhangshaokun <zhangshaokun@hisilicon.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c60b9e95-5c6c-fcb2-c8bb-13e7646ba8ea@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+On Thu 17-10-19 10:44:41, Anshuman Khandual wrote:
+[...]
+> Does this add-on documentation look okay ? Should we also mention about the
+> possible reduction in chances of success during pfn block search for the
+> non-power-of-two cases as the implicit alignment will probably turn out to
+> be bigger than nr_pages itself ?
+> 
+>  * Requested nr_pages may or may not be power of two. The search for suitable
+>  * memory range in a zone happens in nr_pages aligned pfn blocks. But in case
+>  * when nr_pages is not power of two, an implicitly aligned pfn block search
+>  * will happen which in turn will impact allocated memory block's alignment.
+>  * In these cases, the size (i.e nr_pages) and the alignment of the allocated
+>  * memory will be different. This problem does not exist when nr_pages is power
+>  * of two where the size and the alignment of the allocated memory will always
+>  * be nr_pages.
 
-On Wed, Oct 16, 2019 at 7:01 PM John Garry <john.garry@huawei.com> wrote:
->
->
-> > +TX2_EVENT_ATTR(req_pktsent, CCPI2_EVENT_REQ_PKT_SENT);
-> > +TX2_EVENT_ATTR(snoop_pktsent, CCPI2_EVENT_SNOOP_PKT_SENT);
-> > +TX2_EVENT_ATTR(data_pktsent, CCPI2_EVENT_DATA_PKT_SENT);
-> > +TX2_EVENT_ATTR(gic_pktsent, CCPI2_EVENT_GIC_PKT_SENT);
-> > +
-> > +static struct attribute *ccpi2_pmu_events_attrs[] = {
-> > +     &tx2_pmu_event_attr_req_pktsent.attr.attr,
-> > +     &tx2_pmu_event_attr_snoop_pktsent.attr.attr,
-> > +     &tx2_pmu_event_attr_data_pktsent.attr.attr,
-> > +     &tx2_pmu_event_attr_gic_pktsent.attr.attr,
-> > +     NULL,
-> > +};
->
-> Hi Ganapatrao,
->
-> Have you considered adding these as uncore pmu-events in the perf tool?
->
-At the moment no, since the number of events exposed/listed are very few.
+I dunno, it sounds more complicated than really necessary IMHO. Callers
+shouldn't really be bothered by memory blocks and other really deep
+implementation details.. Wouldn't be the below sufficient?
 
-> Some advantages I see:
-> - perf list is not swamped with all these uncore events per PMU
-> For the Hisi uncore events, we get 100s of events (>600 on the board I
-> just tested, which is crazy)
-> - can add more description in the JSON files
-> - less stuff in the kernel
->
-> > +
-> >  static const struct attribute_group l3c_pmu_events_attr_group = {
-> >       .name = "events",
-> >       .attrs = l3c_pmu_events_attrs,
-> > @@ -174,6 +240,11 @@ static const struct attribute_group dmc_pmu_events_attr_group = {
-> >       .attrs = dmc_pmu_events_attrs,
-> >  };
->
-> [...]
->
-> >               tx2_pmu->attr_groups = l3c_pmu_attr_groups;
-> >               tx2_pmu->name = devm_kasprintf(dev, GFP_KERNEL,
-> >                               "uncore_l3c_%d", tx2_pmu->node);
-> > @@ -665,10 +846,13 @@ static struct tx2_uncore_pmu *tx2_uncore_pmu_init_dev(struct device *dev,
-> >               tx2_pmu->stop_event = uncore_stop_event_l3c;
-> >               break;
-> >       case PMU_TYPE_DMC:
-> > -             tx2_pmu->max_counters = TX2_PMU_MAX_COUNTERS;
-> > +             tx2_pmu->max_counters = TX2_PMU_DMC_L3C_MAX_COUNTERS;
-> > +             tx2_pmu->counters_mask = 0x3;
-> >               tx2_pmu->prorate_factor = TX2_PMU_DMC_CHANNELS;
-> >               tx2_pmu->max_events = DMC_EVENT_MAX;
-> > +             tx2_pmu->events_mask = 0x1f;
-> >               tx2_pmu->hrtimer_interval = TX2_PMU_HRTIMER_INTERVAL;
-> > +             tx2_pmu->hrtimer_callback = tx2_hrtimer_callback;
-> >               tx2_pmu->attr_groups = dmc_pmu_attr_groups;
-> >               tx2_pmu->name = devm_kasprintf(dev, GFP_KERNEL,
-> >                               "uncore_dmc_%d", tx2_pmu->node);
-> > @@ -676,6 +860,21 @@ static struct tx2_uncore_pmu *tx2_uncore_pmu_init_dev(struct device *dev,
-> >               tx2_pmu->start_event = uncore_start_event_dmc;
-> >               tx2_pmu->stop_event = uncore_stop_event_dmc;
-> >               break;
-> > +     case PMU_TYPE_CCPI2:
-> > +             /* CCPI2 has 8 counters */
-> > +             tx2_pmu->max_counters = TX2_PMU_CCPI2_MAX_COUNTERS;
-> > +             tx2_pmu->counters_mask = 0x7;
-> > +             tx2_pmu->prorate_factor = 1;
-> > +             tx2_pmu->max_events = CCPI2_EVENT_MAX;
-> > +             tx2_pmu->events_mask = 0x1ff;
-> > +             tx2_pmu->attr_groups = ccpi2_pmu_attr_groups;
-> > +             tx2_pmu->name = devm_kasprintf(dev, GFP_KERNEL,
-> > +                             "uncore_ccpi2_%d", tx2_pmu->node);
->
-> Do you need to check this for name == NULL?
->
-> > +             tx2_pmu->init_cntr_base = init_cntr_base_ccpi2;
-> > +             tx2_pmu->start_event = uncore_start_event_ccpi2;
-> > +             tx2_pmu->stop_event = uncore_stop_event_ccpi2;
-> > +             tx2_pmu->hrtimer_callback = NULL;
-> > +             break;
-> >       case PMU_TYPE_INVALID:
-> >               devm_kfree(dev, tx2_pmu);
-> >               return NULL;
-> > @@ -744,7 +943,9 @@ static int tx2_uncore_pmu_offline_cpu(unsigned int cpu,
-> >       if (cpu != tx2_pmu->cpu)
-> >               return 0;
-> >
-> > -     hrtimer_cancel(&tx2_pmu->hrtimer);
-> > +     if (tx2_pmu->hrtimer_callback)
-> > +             hrtimer_cancel(&tx2_pmu->hrtimer);
-> > +
-> >       cpumask_copy(&cpu_online_mask_temp, cpu_online_mask);
-> >       cpumask_clear_cpu(cpu, &cpu_online_mask_temp);
-> >       new_cpu = cpumask_any_and(
-> >
->
-> Thanks,
-> John
->
->
-
-Thanks,
-Ganapat
+The allocated memory is always aligned to a page boundary. If nr_pages
+is a power of two then the alignement is guaranteed to be to the given
+nr_pages (e.g. 1GB request would be aligned to 1GB).
+-- 
+Michal Hocko
+SUSE Labs
