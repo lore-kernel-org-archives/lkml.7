@@ -2,152 +2,134 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B96ECE599
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63733FA3728
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F12A218DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39729218DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:29:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AaHywvkM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406726AbfJQC2G (ORCPT
+        id S2406920AbfJQC3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 22:28:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56524 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389173AbfJQC2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 22:28:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 94D21AE8D;
-        Thu, 17 Oct 2019 02:28:04 +0000 (UTC)
-From:   Qu Wenruo <wqu@suse.com>
-To:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org
-Subject: [PATCH v2] tools/lib/traceevent, perf tools: Handle %pU format correctly
-Date:   Thu, 17 Oct 2019 10:28:00 +0800
-Message-Id: <20191017022800.31866-1-wqu@suse.com>
-X-Mailer: git-send-email 2.23.0
+        Wed, 16 Oct 2019 22:29:00 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45104 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404182AbfJQC27 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 22:28:59 -0400
+Received: by mail-pl1-f196.google.com with SMTP id u12so339350pls.12
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 19:28:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=mJUTEhX3TFcHtz27+83IOXuwWGxntrc9pvOqZY1hpgM=;
+        b=AaHywvkMSuy9OnV8rJbxorKjDSfBfAc1ciKJafM0KBuyZdEKajDgUAPvSRruvLwpUd
+         s+rQUukzTiEgkCgX9ldvv6cMt0gbvjKrDpPBLWtGtzHtvrxbH6RduRz8o7Oz8xGeausy
+         afnLLUqD6xKhLvHoiWflgql6wLjsl8xZjnq+1wfnTXNgfug7Z3XMLWGm51c5WHMjk8X8
+         rcUDp/d+Q9Gki6VzIj0FBWno9kMjvauIXpvrMUSWpe9GKmQ4rGGYIJ7VhHK+9ozUOm14
+         rg76exgPb9QRPsqoIquFELofX0VLBSiNdb5Efoqxmpwjvl2+q2cHgVZx0N6AEYiP7+5i
+         mUKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=mJUTEhX3TFcHtz27+83IOXuwWGxntrc9pvOqZY1hpgM=;
+        b=LUALfpi28GKK4KSpSqGyjAZW+dkqStfJAlg3cAeXSTUEJCtXbluiqvwFTF2Uyn4Z+F
+         A9Rh1E2MfpdkzHwy7ywYKl5/sQ96Iz6aohot5eWcDTKxbSnj0oMkBRVZ5wlI0hQFe16M
+         IJt9CjWzfuiTDL1QHTJIc7hZE4v2kBPnH1UjlUqlnKFzgU43OIDgALQmsbvgw9tx/8iQ
+         m2yM3X8AYG6a2xbUcA3K+msvfLfucJ2eYjHMP5zB3iUGrRFB+zfygRQbX+lujesiAVYG
+         6KgyYep09Eq72ytThwzVGZWuRWtlULXk3NLReU3It2zd/1wkNm9rGHyI7njUXsn+iaD8
+         mL1Q==
+X-Gm-Message-State: APjAAAWbN61ud+UhGSq3gA2NEYUh5v1mDKgMpf9d4S9wMqZj/jaiCKM4
+        AaAJXd7hLhP7HxZrWFHZagNFAQ==
+X-Google-Smtp-Source: APXvYqwNFLKLkCxw5ab420MkNxcVkjXE2Jlq4h5pXqtFv2s2iZhgQ3vv70QHp3Lxt9QjQiam6DFvtw==
+X-Received: by 2002:a17:902:d90e:: with SMTP id c14mr1427032plz.91.1571279337923;
+        Wed, 16 Oct 2019 19:28:57 -0700 (PDT)
+Received: from localhost ([122.172.151.112])
+        by smtp.gmail.com with ESMTPSA id x10sm448224pfr.44.2019.10.16.19.28.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 16 Oct 2019 19:28:56 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 07:58:54 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 11/17] ARM: dts: tegra20: Add CPU Operating
+ Performance Points
+Message-ID: <20191017022854.c23zgp3th7v4afa4@vireshk-i7>
+References: <20191015211618.20758-1-digetx@gmail.com>
+ <20191015211618.20758-12-digetx@gmail.com>
+ <20191016052323.w6hav4qqn3ybt55q@vireshk-i7>
+ <ba9d6de0-38dc-a851-cf0a-fb9d06461671@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ba9d6de0-38dc-a851-cf0a-fb9d06461671@gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[BUG]
-For btrfs related events, there is a field for fsid, but perf never
-parse it correctly.
+On 16-10-19, 16:21, Dmitry Osipenko wrote:
+> 16.10.2019 08:23, Viresh Kumar пишет:
+> > On 16-10-19, 00:16, Dmitry Osipenko wrote:
+> >> Operating Point are specified per HW version. The OPP voltages are kept
+> >> in a separate DTSI file because some boards may not define CPU regulator
+> >> in their device-tree if voltage scaling isn't necessary, like for example
+> >> in a case of tegra20-trimslice which is outlet-powered device.
+> >>
+> >> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> >> ---
+> >>  .../boot/dts/tegra20-cpu-opp-microvolt.dtsi   | 201 ++++++++++++
+> >>  arch/arm/boot/dts/tegra20-cpu-opp.dtsi        | 302 ++++++++++++++++++
+> >>  2 files changed, 503 insertions(+)
+> >>  create mode 100644 arch/arm/boot/dts/tegra20-cpu-opp-microvolt.dtsi
+> >>  create mode 100644 arch/arm/boot/dts/tegra20-cpu-opp.dtsi
+> >>
+> >> diff --git a/arch/arm/boot/dts/tegra20-cpu-opp-microvolt.dtsi b/arch/arm/boot/dts/tegra20-cpu-opp-microvolt.dtsi
+> >> new file mode 100644
+> >> index 000000000000..e85ffdbef876
+> >> --- /dev/null
+> >> +++ b/arch/arm/boot/dts/tegra20-cpu-opp-microvolt.dtsi
+> >> @@ -0,0 +1,201 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +
+> >> +/ {
+> >> +	cpu0_opp_table: cpu_opp_table0 {
+> >> +		opp@216000000_750 {
+> > 
+> > Maybe just drop the _750 (i.e. voltage) from the names as we don't generally
+> > follow it :)
+> 
+> The reason for the _750 postfix is that there are multiple OPPs for
+> 216MHz and they have different voltages for different versions of
+> hardware, thus those are separate OPPs and they can't be squashed into a
+> single OPP node.
 
- # perf trace -e btrfs:qgroup_meta_convert xfs_io -f -c "pwrite 0 4k" \
-   /mnt/btrfs/file1
-     0.000 xfs_io/77915 btrfs:qgroup_meta_reserve:(nil)U: refroot=5(FS_TREE) type=0x0 diff=2
-                                                  ^^^^^^ Not a correct UUID
-     ...
+Ah, okay. I missed that you are using supported-hw bindings.
 
-[CAUSE]
-The pretty_print() function doesn't handle the %pU format correctly.
-In fact it doesn't handle %pU as uuid at all.
-
-[FIX]
-Add a new function, print_uuid_arg(), to handle %pU correctly.
-
-Now perf trace can at least print fsid correctly:
-     0.000 xfs_io/79619 btrfs:qgroup_meta_reserve:23ad1511-dd83-47d4-a79c-e96625a15a6e refroot=5(FS_TREE) type=0x0 diff=2
-
-Signed-off-by: Qu Wenruo <wqu@suse.com>
----
-Changelog:
-v2:
-- Use more comment explaining the finetunings we skipped for %pU*
-- Use more elegant way to output uuid string
----
- tools/lib/traceevent/event-parse.c | 56 ++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
-
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index d948475585ce..3c9473f46efe 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -18,6 +18,7 @@
- #include <errno.h>
- #include <stdint.h>
- #include <limits.h>
-+#include <linux/uuid.h>
- #include <linux/time64.h>
- 
- #include <netinet/in.h>
-@@ -4508,6 +4509,45 @@ get_bprint_format(void *data, int size __maybe_unused,
- 	return format;
- }
- 
-+static void print_uuid_arg(struct trace_seq *s, void *data, int size,
-+			   struct tep_event *event, struct tep_print_arg *arg)
-+{
-+	unsigned char *buf;
-+	int i;
-+
-+	if (arg->type != TEP_PRINT_FIELD) {
-+		trace_seq_printf(s, "ARG TYPE NOT FIELID but %d", arg->type);
-+		return;
-+	}
-+
-+	if (!arg->field.field) {
-+		arg->field.field = tep_find_any_field(event, arg->field.name);
-+		if (!arg->field.field) {
-+			do_warning("%s: field %s not found",
-+				   __func__, arg->field.name);
-+			return;
-+		}
-+	}
-+	if (arg->field.field->size < 16) {
-+		trace_seq_printf(s, "INVALID UUID: size have %u expect 16",
-+				arg->field.field->size);
-+		return;
-+	}
-+	buf = data + arg->field.field->offset;
-+	/* first segment,  %02x *4 */
-+	for (i = 0; i < 4; i++, buf++)
-+		trace_seq_printf(s, "%02x", *buf);
-+
-+	/* 2nd, 3rd, 4th segment, each segment is "-%02x%02x" */
-+	for (i = 0; i < 3; i++, buf += 2)
-+		trace_seq_printf(s, "-%02x%02x", buf[i * 2], buf[i * 2 + 1]);
-+
-+	/* Final segment, '-' and '%02x' *6 */
-+	trace_seq_putc(s, '-');
-+	for (i = 0; i < 6; i++, buf++)
-+		trace_seq_printf(s, "%02x", *buf);
-+}
-+
- static void print_mac_arg(struct trace_seq *s, int mac, void *data, int size,
- 			  struct tep_event *event, struct tep_print_arg *arg)
- {
-@@ -5074,6 +5114,22 @@ static void pretty_print(struct trace_seq *s, void *data, int size, struct tep_e
- 						arg = arg->next;
- 						break;
- 					}
-+				} else if (*ptr == 'U') {
-+					/*
-+					 * %pU has several finetunings variants
-+					 * like %pUb and %pUL.
-+					 * Here we ignore them, default to
-+					 * byte-order no endian, lower case
-+					 * letters.
-+					 */
-+					if (isalpha(ptr[1]))
-+						ptr += 2;
-+					else
-+						ptr++;
-+
-+					print_uuid_arg(s, data, size, event, arg);
-+					arg = arg->next;
-+					break;
- 				}
- 
- 				/* fall through */
 -- 
-2.23.0
-
+viresh
