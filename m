@@ -2,213 +2,294 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB29FA3731
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4AA6FA3731
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1906C20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D21120663
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:48:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fwvF2pCK"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="PF17a64C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408370AbfJQIs1 (ORCPT
+        id S2408383AbfJQIss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 04:48:27 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:43703 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2393312AbfJQIs1 (ORCPT
+        Thu, 17 Oct 2019 04:48:48 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52131 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408364AbfJQIsr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 04:48:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571302105;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=P23yKEodgmnfGUw9sfhLwiVnwWH7sPsG4YJ+YL5V5tM=;
-        b=fwvF2pCKOpcVrn3xpwuRJX/NCFTTtSOmzmEOozk+/rsBhZK2Yb2TV9T+36inbKeSkRLyMp
-        hUbC8ycLT7Jb4if8UrOhRR7CAIejb+SnL+jXlKgD4ARA2tJVMhgvFmlpqu4aicSuqwrWXb
-        7zLwABIX18+oR3nKIOMDbcuMqHS7Amc=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-327-YFoeU68VNCuugA5ycGplQQ-1; Thu, 17 Oct 2019 04:48:23 -0400
-Received: by mail-qt1-f199.google.com with SMTP id o34so1580732qtf.22
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 01:48:23 -0700 (PDT)
+        Thu, 17 Oct 2019 04:48:47 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 7so1654075wme.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 01:48:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ABLJXVRMPFM4pBjF5MtvPjsU9wNvxgGgz98k9KABKpI=;
+        b=PF17a64CORHUVSvDRifR6t0U+QaHY0SKqGdGnvTTcrru79sqhAAXGH6HSdjaq2cdjS
+         CcpHuf6rNGpuxa+PlYMxn4isoV+C0Et/4/tzdrMj9uG0vH6zebbqfsSph3nVP0TQFysU
+         H1Jy6snrhBE4ar/G+trpHXjpEurwRgcecMUgiTGghi0y/soPmKbpHz9hbQDdfzQ7XjyD
+         hU2CZO7bChiJGKt7E2qHxoqBfSu4cIODG1cVG/ULE+s/5m+1rFnxqIF2spLdv3gGM4D5
+         X2nnwbiYmVsRCF1psZaQPuYGRZv3brqDQ4+fR6y5qPYW5DZxtvX60CTeDwCBoO653he/
+         EmcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ITrwUcZNhHdbR5/yJdBac5vGGHSYPWf4FBJkw33BU+U=;
-        b=CZ+a47qm3CxgRF7oPMJjiddjMBGPwUTu/gM97CxxfdfCmCIAfZN9evZiDzdpsOdBuO
-         fgXNR6CFj7QM11b2sNuoGSsoaXuYTtiF+zz+lIaK0jSHecTXAUdmSNeTQ/GSZcqhD4eH
-         i5zYqyOc4yr9Z3YX9oW0OBdLFvKbCguZOfGx9vcncBWJvEmOPJj9By9DSCKkViZhiQjS
-         2vrLSqQ1a4w6RltHy7iBSvkf93I504KZf0B3K+ysNtRcfzS/BBcPcmwPUjG0P7kmmE8n
-         yxdphXIGKwrBipRXENvNUmJne3It7jUoBngzB0hvv5//TRGsRmd+w0Fi6vYpDEToGwEf
-         MLGg==
-X-Gm-Message-State: APjAAAWjBKlnnORcOxvoT2TaYnw6zs+XjZQZ1bcMU5oUotNGfTvLUDJ6
-        OoU2mmV+2+KjAy6bwDPQD/xuTqy3LAqEKfGG4GjnLGu7lEh5xzJR5qZ9VnrYXP4LREZiWYcF9LW
-        kAPhxq/8Yyy0gES8R1pfqkpO50veE+HnwgN8fA9yi
-X-Received: by 2002:ac8:38bb:: with SMTP id f56mr2664260qtc.154.1571302101140;
-        Thu, 17 Oct 2019 01:48:21 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqw6KHex7FZUFA1EICrnIh9zS+/BKcB7zS+GZg/tObmOEO5bLx2+4/yRRVT89C+jjp59lTtx3kazw3v1B4kfIfg=
-X-Received: by 2002:ac8:38bb:: with SMTP id f56mr2664246qtc.154.1571302100911;
- Thu, 17 Oct 2019 01:48:20 -0700 (PDT)
+        bh=ABLJXVRMPFM4pBjF5MtvPjsU9wNvxgGgz98k9KABKpI=;
+        b=ouVG1yQGFZaXPsk1LqyQ6DnLl/yUomSxEMZLWal/8EQo6zdcE6Q0PTToIXVbcgmCXx
+         UJZ+y9ZncWcqWqCHerkQJyEk+XPoEunDZs3SvNZ5PeiRVrG808Xyi4/iM3OV0Ea9N3gq
+         wYUu4NBrrAy91uogcGx/QZk3/Ror+Rf4wreqgffzcFVekU+nCUrLxpVG4KFc+VS9d2bf
+         v+87N0w2iZjyCm0weoPs1G7V/Wi/w2QgZu3eWxxp8qnBoZxu6xa+/GHYPzyh3ClMS8tA
+         X+E4IVIQ/glc9+JZsMYp+U1ef3NcVTtZ7vgGK1Ua6mQmZHgfL+WOTUYZtgQln7tye0eA
+         zK7g==
+X-Gm-Message-State: APjAAAVOEyFMgoEFigmVJegEX+jTMkaUypeKa19SDsHcwFLnLgQ0nwdV
+        S2405YlrThirGRb8fOqqV1ohuipFn37hLHJf6vJytw==
+X-Google-Smtp-Source: APXvYqwwEer8++JvoI8Wa9EUAhuZDuzD4ABKrqyb2q4mQEDHCVptVgwsYmWiFSo0tLUhjapJgLK3/nQr4MSfWYqwX8Q=
+X-Received: by 2002:a1c:a697:: with SMTP id p145mr1734740wme.24.1571302124460;
+ Thu, 17 Oct 2019 01:48:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191016182935.5616-1-andrew.smirnov@gmail.com>
- <20191016182935.5616-3-andrew.smirnov@gmail.com> <CAO-hwJ++YWtX29YefGzaEfCLDA=npZwUxDCkDzxALAmLLqv7FQ@mail.gmail.com>
- <CAHQ1cqHcm2z4dTJ-3kx-_e3_1mpz9x_AQ+GP_j-nqL=3Gm-AtQ@mail.gmail.com>
-In-Reply-To: <CAHQ1cqHcm2z4dTJ-3kx-_e3_1mpz9x_AQ+GP_j-nqL=3Gm-AtQ@mail.gmail.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Thu, 17 Oct 2019 10:48:09 +0200
-Message-ID: <CAO-hwJJ8EJOtYYrsvh=bZKmMisRUADO-w6G7QRSGXe_-cdobUw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] HID: logitech-hidpp: rework device validation
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        Sam Bazely <sambazley@fastmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-        Austin Palmer <austinp@valvesoftware.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "3.8+" <stable@vger.kernel.org>
-X-MC-Unique: YFoeU68VNCuugA5ycGplQQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20191016160649.24622-1-anup.patel@wdc.com> <20191016160649.24622-2-anup.patel@wdc.com>
+In-Reply-To: <20191016160649.24622-2-anup.patel@wdc.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Thu, 17 Oct 2019 14:18:33 +0530
+Message-ID: <CAAhSdy3xV0UjDKUgHoKbyoeV5kaC9rVSy=qoBpF=XrrbT=W=-Q@mail.gmail.com>
+Subject: Re: [PATCH v9 01/22] RISC-V: Add bitmap reprensenting ISA features
+ common across CPUs
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Graf <graf@amazon.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 9:38 PM Andrey Smirnov <andrew.smirnov@gmail.com> w=
-rote:
->
-> On Wed, Oct 16, 2019 at 12:24 PM Benjamin Tissoires
-> <benjamin.tissoires@redhat.com> wrote:
-> >
-> > Hi Andrey,
-> >
-> > On Wed, Oct 16, 2019 at 8:30 PM Andrey Smirnov <andrew.smirnov@gmail.co=
-m> wrote:
-> > >
-> > > G920 device only advertises REPORT_ID_HIDPP_LONG and
-> > > REPORT_ID_HIDPP_VERY_LONG in its HID report descriptor, so querying
-> > > for REPORT_ID_HIDPP_SHORT with optional=3Dfalse will always fail and
-> > > prevent G920 to be recognized as a valid HID++ device.
-> > >
-> > > To fix this and improve some other aspects, modify
-> > > hidpp_validate_device() as follows:
-> > >
-> > >   - Inline the code of hidpp_validate_report() to simplify
-> > >     distingushing between non-present and invalid report descriptors
-> > >
-> > >   - Drop the check for id >=3D HID_MAX_IDS || id < 0 since all of our
-> > >     IDs are static and known to satisfy that at compile time
-> > >
-> > >   - Change the algorithms to check all possible report
-> > >     types (including very long report) and deem the device as a valid
-> > >     HID++ device if it supports at least one
-> > >
-> > >   - Treat invalid report length as a hard stop for the validation
-> > >     algorithm, meaning that if any of the supported reports has
-> > >     invalid length we assume the worst and treat the device as a
-> > >     generic HID device.
-> > >
-> > >   - Fold initialization of hidpp->very_long_report_length into
-> > >     hidpp_validate_device() since it already fetches very long report
-> > >     length and validates its value
-> > >
-> > > Fixes: fe3ee1ec007b ("HID: logitech-hidpp: allow non HID++ devices to=
- be handled by this module")
-> > > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D204191
-> > > Reported-by: Sam Bazely <sambazley@fastmail.com>
-> > > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > > Cc: Jiri Kosina <jikos@kernel.org>
-> > > Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> > > Cc: Henrik Rydberg <rydberg@bitmath.org>
-> > > Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
-> > > Cc: Austin Palmer <austinp@valvesoftware.com>
-> > > Cc: linux-input@vger.kernel.org
-> > > Cc: linux-kernel@vger.kernel.org
-> > > Cc: stable@vger.kernel.org # 5.2+
-> > > ---
-> > >  drivers/hid/hid-logitech-hidpp.c | 54 ++++++++++++++++++------------=
---
-> > >  1 file changed, 30 insertions(+), 24 deletions(-)
-> > >
-> > > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logit=
-ech-hidpp.c
-> > > index 85911586b3b6..8c4be991f387 100644
-> > > --- a/drivers/hid/hid-logitech-hidpp.c
-> > > +++ b/drivers/hid/hid-logitech-hidpp.c
-> > > @@ -3498,34 +3498,45 @@ static int hidpp_get_report_length(struct hid=
-_device *hdev, int id)
-> > >         return report->field[0]->report_count + 1;
-> > >  }
-> > >
-> > > -static bool hidpp_validate_report(struct hid_device *hdev, int id,
-> > > -                                 int expected_length, bool optional)
-> > > +static bool hidpp_validate_device(struct hid_device *hdev)
-> > >  {
-> > > -       int report_length;
-> > > +       struct hidpp_device *hidpp =3D hid_get_drvdata(hdev);
-> > > +       int id, report_length, supported_reports =3D 0;
-> > > +
-> > > +       id =3D REPORT_ID_HIDPP_SHORT;
-> > > +       report_length =3D hidpp_get_report_length(hdev, id);
-> > > +       if (report_length) {
-> > > +               if (report_length < HIDPP_REPORT_SHORT_LENGTH)
-> > > +                       goto bad_device;
-> > >
-> > > -       if (id >=3D HID_MAX_IDS || id < 0) {
-> > > -               hid_err(hdev, "invalid HID report id %u\n", id);
-> > > -               return false;
-> > > +               supported_reports++;
-> > >         }
-> > >
-> > > +       id =3D REPORT_ID_HIDPP_LONG;
-> > >         report_length =3D hidpp_get_report_length(hdev, id);
-> > > -       if (!report_length)
-> > > -               return optional;
-> > > +       if (report_length) {
-> > > +               if (report_length < HIDPP_REPORT_LONG_LENGTH)
-> > > +                       goto bad_device;
-> > >
-> > > -       if (report_length < expected_length) {
-> > > -               hid_warn(hdev, "not enough values in hidpp report %d\=
-n", id);
-> > > -               return false;
-> > > +               supported_reports++;
-> > >         }
-> > >
-> > > -       return true;
-> > > -}
-> > > +       id =3D REPORT_ID_HIDPP_VERY_LONG;
-> > > +       report_length =3D hidpp_get_report_length(hdev, id);
-> > > +       if (report_length) {
-> > > +               if (report_length > HIDPP_REPORT_LONG_LENGTH &&
-> > > +                   report_length < HIDPP_REPORT_VERY_LONG_MAX_LENGTH=
-)
-> >
-> > Can you double check the conditions here?
-> > It's late, but I think you inverted the tests as we expect the report
-> > length to be between HIDPP_REPORT_LONG_LENGTH and
-> > HIDPP_REPORT_VERY_LONG_MAX_LENGTH inclusive, while here this creates a
-> > bad_device.
->
-> Hmm, I think you are right. Not sure why I didn't catch it on G920
-> since it support very long reports AFAIR. Will re-spin and double
-> check in v3. Sorry about that.
->
+Hi Paul,
 
-Oh, the issue is that the very long HID++ reports on the G920 are
-HIDPP_REPORT_VERY_LONG_MAX_LENGTH long, which means the test will fail
-for those.
+On Wed, Oct 16, 2019 at 9:38 PM Anup Patel <Anup.Patel@wdc.com> wrote:
+>
+> This patch adds riscv_isa bitmap which represents Host ISA features
+> common across all Host CPUs. The riscv_isa is not same as elf_hwcap
+> because elf_hwcap will only have ISA features relevant for user-space
+> apps whereas riscv_isa will have ISA features relevant to both kernel
+> and user-space apps.
+>
+> One of the use-case for riscv_isa bitmap is in KVM hypervisor where
+> we will use it to do following operations:
+>
+> 1. Check whether hypervisor extension is available
+> 2. Find ISA features that need to be virtualized (e.g. floating
+>    point support, vector extension, etc.)
+>
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Reviewed-by: Alexander Graf <graf@amazon.com>
 
-Cheers,
-Benjamin
+Can you consider this patch for Linux-5.4-rcX ??
 
+Regards,
+Anup
+
+> ---
+>  arch/riscv/include/asm/hwcap.h | 22 +++++++++
+>  arch/riscv/kernel/cpufeature.c | 83 ++++++++++++++++++++++++++++++++--
+>  2 files changed, 102 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+> index 7ecb7c6a57b1..5989dd4426d1 100644
+> --- a/arch/riscv/include/asm/hwcap.h
+> +++ b/arch/riscv/include/asm/hwcap.h
+> @@ -8,6 +8,7 @@
+>  #ifndef __ASM_HWCAP_H
+>  #define __ASM_HWCAP_H
+>
+> +#include <linux/bits.h>
+>  #include <uapi/asm/hwcap.h>
+>
+>  #ifndef __ASSEMBLY__
+> @@ -22,5 +23,26 @@ enum {
+>  };
+>
+>  extern unsigned long elf_hwcap;
+> +
+> +#define RISCV_ISA_EXT_a                ('a' - 'a')
+> +#define RISCV_ISA_EXT_c                ('c' - 'a')
+> +#define RISCV_ISA_EXT_d                ('d' - 'a')
+> +#define RISCV_ISA_EXT_f                ('f' - 'a')
+> +#define RISCV_ISA_EXT_h                ('h' - 'a')
+> +#define RISCV_ISA_EXT_i                ('i' - 'a')
+> +#define RISCV_ISA_EXT_m                ('m' - 'a')
+> +#define RISCV_ISA_EXT_s                ('s' - 'a')
+> +#define RISCV_ISA_EXT_u                ('u' - 'a')
+> +
+> +#define RISCV_ISA_EXT_MAX      256
+> +
+> +unsigned long riscv_isa_extension_base(const unsigned long *isa_bitmap);
+> +
+> +#define riscv_isa_extension_mask(ext) BIT_MASK(RISCV_ISA_EXT_##ext)
+> +
+> +bool __riscv_isa_extension_available(const unsigned long *isa_bitmap, int bit);
+> +#define riscv_isa_extension_available(isa_bitmap, ext) \
+> +       __riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_##ext)
+> +
+>  #endif
+>  #endif
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+> index eaad5aa07403..64068d36658d 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
+> @@ -6,21 +6,64 @@
+>   * Copyright (C) 2017 SiFive
+>   */
+>
+> +#include <linux/bitmap.h>
+>  #include <linux/of.h>
+>  #include <asm/processor.h>
+>  #include <asm/hwcap.h>
+>  #include <asm/smp.h>
+>
+>  unsigned long elf_hwcap __read_mostly;
+> +
+> +/* Host ISA bitmap */
+> +static DECLARE_BITMAP(riscv_isa, RISCV_ISA_EXT_MAX) __read_mostly;
+> +
+>  #ifdef CONFIG_FPU
+>  bool has_fpu __read_mostly;
+>  #endif
+>
+> +/**
+> + * riscv_isa_extension_base() - Get base extension word
+> + *
+> + * @isa_bitmap: ISA bitmap to use
+> + * Return: base extension word as unsigned long value
+> + *
+> + * NOTE: If isa_bitmap is NULL then Host ISA bitmap will be used.
+> + */
+> +unsigned long riscv_isa_extension_base(const unsigned long *isa_bitmap)
+> +{
+> +       if (!isa_bitmap)
+> +               return riscv_isa[0];
+> +       return isa_bitmap[0];
+> +}
+> +EXPORT_SYMBOL_GPL(riscv_isa_extension_base);
+> +
+> +/**
+> + * __riscv_isa_extension_available() - Check whether given extension
+> + * is available or not
+> + *
+> + * @isa_bitmap: ISA bitmap to use
+> + * @bit: bit position of the desired extension
+> + * Return: true or false
+> + *
+> + * NOTE: If isa_bitmap is NULL then Host ISA bitmap will be used.
+> + */
+> +bool __riscv_isa_extension_available(const unsigned long *isa_bitmap, int bit)
+> +{
+> +       const unsigned long *bmap = (isa_bitmap) ? isa_bitmap : riscv_isa;
+> +
+> +       if (bit >= RISCV_ISA_EXT_MAX)
+> +               return false;
+> +
+> +       return test_bit(bit, bmap) ? true : false;
+> +}
+> +EXPORT_SYMBOL_GPL(__riscv_isa_extension_available);
+> +
+>  void riscv_fill_hwcap(void)
+>  {
+>         struct device_node *node;
+>         const char *isa;
+> -       size_t i;
+> +       char print_str[BITS_PER_LONG+1];
+> +       size_t i, j, isa_len;
+>         static unsigned long isa2hwcap[256] = {0};
+>
+>         isa2hwcap['i'] = isa2hwcap['I'] = COMPAT_HWCAP_ISA_I;
+> @@ -32,8 +75,11 @@ void riscv_fill_hwcap(void)
+>
+>         elf_hwcap = 0;
+>
+> +       bitmap_zero(riscv_isa, RISCV_ISA_EXT_MAX);
+> +
+>         for_each_of_cpu_node(node) {
+>                 unsigned long this_hwcap = 0;
+> +               unsigned long this_isa = 0;
+>
+>                 if (riscv_of_processor_hartid(node) < 0)
+>                         continue;
+> @@ -41,8 +87,24 @@ void riscv_fill_hwcap(void)
+>                 if (riscv_read_check_isa(node, &isa) < 0)
+>                         continue;
+>
+> -               for (i = 0; i < strlen(isa); ++i)
+> +               i = 0;
+> +               isa_len = strlen(isa);
+> +#if IS_ENABLED(CONFIG_32BIT)
+> +               if (!strncmp(isa, "rv32", 4))
+> +                       i += 4;
+> +#elif IS_ENABLED(CONFIG_64BIT)
+> +               if (!strncmp(isa, "rv64", 4))
+> +                       i += 4;
+> +#endif
+> +               for (; i < isa_len; ++i) {
+>                         this_hwcap |= isa2hwcap[(unsigned char)(isa[i])];
+> +                       /*
+> +                        * TODO: X, Y and Z extension parsing for Host ISA
+> +                        * bitmap will be added in-future.
+> +                        */
+> +                       if ('a' <= isa[i] && isa[i] < 'x')
+> +                               this_isa |= (1UL << (isa[i] - 'a'));
+> +               }
+>
+>                 /*
+>                  * All "okay" hart should have same isa. Set HWCAP based on
+> @@ -53,6 +115,11 @@ void riscv_fill_hwcap(void)
+>                         elf_hwcap &= this_hwcap;
+>                 else
+>                         elf_hwcap = this_hwcap;
+> +
+> +               if (riscv_isa[0])
+> +                       riscv_isa[0] &= this_isa;
+> +               else
+> +                       riscv_isa[0] = this_isa;
+>         }
+>
+>         /* We don't support systems with F but without D, so mask those out
+> @@ -62,7 +129,17 @@ void riscv_fill_hwcap(void)
+>                 elf_hwcap &= ~COMPAT_HWCAP_ISA_F;
+>         }
+>
+> -       pr_info("elf_hwcap is 0x%lx\n", elf_hwcap);
+> +       memset(print_str, 0, sizeof(print_str));
+> +       for (i = 0, j = 0; i < BITS_PER_LONG; i++)
+> +               if (riscv_isa[0] & BIT_MASK(i))
+> +                       print_str[j++] = (char)('a' + i);
+> +       pr_info("riscv: ISA extensions %s\n", print_str);
+> +
+> +       memset(print_str, 0, sizeof(print_str));
+> +       for (i = 0, j = 0; i < BITS_PER_LONG; i++)
+> +               if (elf_hwcap & BIT_MASK(i))
+> +                       print_str[j++] = (char)('a' + i);
+> +       pr_info("riscv: ELF capabilities %s\n", print_str);
+>
+>  #ifdef CONFIG_FPU
+>         if (elf_hwcap & (COMPAT_HWCAP_ISA_F | COMPAT_HWCAP_ISA_D))
+> --
+> 2.17.1
+>
