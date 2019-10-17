@@ -2,326 +2,153 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D47C4FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE687FA372E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CF2D2089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4D7520820
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:24:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408213AbfJQIYf (ORCPT
+        id S2408225AbfJQIYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 04:24:35 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:35128 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S2387581AbfJQIYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 04:24:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D67728;
-        Thu, 17 Oct 2019 01:24:05 -0700 (PDT)
-Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.40.130])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 583123F6C4;
-        Thu, 17 Oct 2019 01:24:00 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Hildenbrand <david@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH V3] mm/page_alloc: Add alloc_contig_pages()
-Date:   Thu, 17 Oct 2019 13:54:06 +0530
-Message-Id: <1571300646-32240-1-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 17 Oct 2019 04:24:37 -0400
+Received: from skedge03.snt-world.com ([91.208.41.68]:58852 "EHLO
+        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387581AbfJQIYg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 04:24:36 -0400
+Received: from sntmail10s.snt-is.com (unknown [10.203.32.183])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge03.snt-world.com (Postfix) with ESMTPS id 2BE8A80315A;
+        Thu, 17 Oct 2019 10:24:28 +0200 (CEST)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail10s.snt-is.com
+ (10.203.32.183) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 17 Oct
+ 2019 10:24:27 +0200
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1713.004; Thu, 17 Oct 2019 10:24:27 +0200
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "NXP Linux Team" <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 00/10] Add support for more Kontron i.MX6UL/ULL SoMs and
+ boards
+Thread-Topic: [PATCH 00/10] Add support for more Kontron i.MX6UL/ULL SoMs and
+ boards
+Thread-Index: AQHVhDNGmnCbI2WJmkisIF0qUQi7cqdeW9UAgAAC0AA=
+Date:   Thu, 17 Oct 2019 08:24:27 +0000
+Message-ID: <6e6f9cf4-85b3-35e3-1238-11e39855bc08@kontron.de>
+References: <20191016150622.21753-1-frieder.schrempf@kontron.de>
+ <20191017081422.65m5dtqznsanfftp@pengutronix.de>
+In-Reply-To: <20191017081422.65m5dtqznsanfftp@pengutronix.de>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BA37A90C250EE84C8A16A2B38DF077EF@snt-world.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 2BE8A80315A.ADCFA
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: aisheng.dong@nxp.com, andrew.smirnov@gmail.com,
+        davem@davemloft.net, devicetree@vger.kernel.org, festevam@gmail.com,
+        gregkh@linuxfoundation.org, jonathan.cameron@huawei.com,
+        kernel@pengutronix.de, krzk@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, m.felsch@pengutronix.de,
+        manivannan.sadhasivam@linaro.org, mark.rutland@arm.com,
+        mchehab+samsung@kernel.org, paulmck@linux.ibm.com,
+        robh+dt@kernel.org, robh@kernel.org, s.hauer@pengutronix.de,
+        shawnguo@kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HugeTLB helper alloc_gigantic_page() implements fairly generic allocation
-method where it scans over various zones looking for a large contiguous pfn
-range before trying to allocate it with alloc_contig_range(). Other than
-deriving the requested order from 'struct hstate', there is nothing HugeTLB
-specific in there. This can be made available for general use to allocate
-contiguous memory which could not have been allocated through the buddy
-allocator.
-
-alloc_gigantic_page() has been split carving out actual allocation method
-which is then made available via new alloc_contig_pages() helper wrapped
-under CONFIG_CONTIG_ALLOC. All references to 'gigantic' have been replaced
-with more generic term 'contig'. Allocated pages here should be freed with
-free_contig_range() or by calling __free_page() on each allocated page.
-
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org
-Acked-by: David Hildenbrand <david@redhat.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
-This is based on https://patchwork.kernel.org/patch/11190213/
-
-Changes in V3:
-
-- Added an in-code comment per Michal and David
-
-Changes in V2:
-
-- Rephrased patch subject per David
-- Fixed all typos per David
-- s/order/contiguous
-
-Changes from [V5,1/2] mm/hugetlb: Make alloc_gigantic_page()...
-
-- alloc_contig_page() takes nr_pages instead of order per Michal
-- s/gigantic/contig on all related functions
-
- include/linux/gfp.h |   2 +
- mm/hugetlb.c        |  77 +--------------------------------
- mm/page_alloc.c     | 101 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 105 insertions(+), 75 deletions(-)
-
-diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-index fb07b503dc45..1a11d4857027 100644
---- a/include/linux/gfp.h
-+++ b/include/linux/gfp.h
-@@ -589,6 +589,8 @@ static inline bool pm_suspended_storage(void)
- /* The below functions must be run on a range from a single zone. */
- extern int alloc_contig_range(unsigned long start, unsigned long end,
- 			      unsigned migratetype, gfp_t gfp_mask);
-+extern struct page *alloc_contig_pages(unsigned long nr_pages, gfp_t gfp_mask,
-+				       int nid, nodemask_t *nodemask);
- #endif
- void free_contig_range(unsigned long pfn, unsigned int nr_pages);
- 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 985ee15eb04b..a5c2c880af27 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -1023,85 +1023,12 @@ static void free_gigantic_page(struct page *page, unsigned int order)
- }
- 
- #ifdef CONFIG_CONTIG_ALLOC
--static int __alloc_gigantic_page(unsigned long start_pfn,
--				unsigned long nr_pages, gfp_t gfp_mask)
--{
--	unsigned long end_pfn = start_pfn + nr_pages;
--	return alloc_contig_range(start_pfn, end_pfn, MIGRATE_MOVABLE,
--				  gfp_mask);
--}
--
--static bool pfn_range_valid_gigantic(struct zone *z,
--			unsigned long start_pfn, unsigned long nr_pages)
--{
--	unsigned long i, end_pfn = start_pfn + nr_pages;
--	struct page *page;
--
--	for (i = start_pfn; i < end_pfn; i++) {
--		page = pfn_to_online_page(i);
--		if (!page)
--			return false;
--
--		if (page_zone(page) != z)
--			return false;
--
--		if (PageReserved(page))
--			return false;
--
--		if (page_count(page) > 0)
--			return false;
--
--		if (PageHuge(page))
--			return false;
--	}
--
--	return true;
--}
--
--static bool zone_spans_last_pfn(const struct zone *zone,
--			unsigned long start_pfn, unsigned long nr_pages)
--{
--	unsigned long last_pfn = start_pfn + nr_pages - 1;
--	return zone_spans_pfn(zone, last_pfn);
--}
--
- static struct page *alloc_gigantic_page(struct hstate *h, gfp_t gfp_mask,
- 		int nid, nodemask_t *nodemask)
- {
--	unsigned int order = huge_page_order(h);
--	unsigned long nr_pages = 1 << order;
--	unsigned long ret, pfn, flags;
--	struct zonelist *zonelist;
--	struct zone *zone;
--	struct zoneref *z;
--
--	zonelist = node_zonelist(nid, gfp_mask);
--	for_each_zone_zonelist_nodemask(zone, z, zonelist, gfp_zone(gfp_mask), nodemask) {
--		spin_lock_irqsave(&zone->lock, flags);
-+	unsigned long nr_pages = 1UL << huge_page_order(h);
- 
--		pfn = ALIGN(zone->zone_start_pfn, nr_pages);
--		while (zone_spans_last_pfn(zone, pfn, nr_pages)) {
--			if (pfn_range_valid_gigantic(zone, pfn, nr_pages)) {
--				/*
--				 * We release the zone lock here because
--				 * alloc_contig_range() will also lock the zone
--				 * at some point. If there's an allocation
--				 * spinning on this lock, it may win the race
--				 * and cause alloc_contig_range() to fail...
--				 */
--				spin_unlock_irqrestore(&zone->lock, flags);
--				ret = __alloc_gigantic_page(pfn, nr_pages, gfp_mask);
--				if (!ret)
--					return pfn_to_page(pfn);
--				spin_lock_irqsave(&zone->lock, flags);
--			}
--			pfn += nr_pages;
--		}
--
--		spin_unlock_irqrestore(&zone->lock, flags);
--	}
--
--	return NULL;
-+	return alloc_contig_pages(nr_pages, gfp_mask, nid, nodemask);
- }
- 
- static void prep_new_huge_page(struct hstate *h, struct page *page, int nid);
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index cd1dd0712624..fe76be55c9d5 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -8499,6 +8499,107 @@ int alloc_contig_range(unsigned long start, unsigned long end,
- 				pfn_max_align_up(end), migratetype);
- 	return ret;
- }
-+
-+static int __alloc_contig_pages(unsigned long start_pfn,
-+				unsigned long nr_pages, gfp_t gfp_mask)
-+{
-+	unsigned long end_pfn = start_pfn + nr_pages;
-+
-+	return alloc_contig_range(start_pfn, end_pfn, MIGRATE_MOVABLE,
-+				  gfp_mask);
-+}
-+
-+static bool pfn_range_valid_contig(struct zone *z, unsigned long start_pfn,
-+				   unsigned long nr_pages)
-+{
-+	unsigned long i, end_pfn = start_pfn + nr_pages;
-+	struct page *page;
-+
-+	for (i = start_pfn; i < end_pfn; i++) {
-+		page = pfn_to_online_page(i);
-+		if (!page)
-+			return false;
-+
-+		if (page_zone(page) != z)
-+			return false;
-+
-+		if (PageReserved(page))
-+			return false;
-+
-+		if (page_count(page) > 0)
-+			return false;
-+
-+		if (PageHuge(page))
-+			return false;
-+	}
-+	return true;
-+}
-+
-+static bool zone_spans_last_pfn(const struct zone *zone,
-+				unsigned long start_pfn, unsigned long nr_pages)
-+{
-+	unsigned long last_pfn = start_pfn + nr_pages - 1;
-+
-+	return zone_spans_pfn(zone, last_pfn);
-+}
-+
-+/**
-+ * alloc_contig_pages() -- tries to find and allocate contiguous range of pages
-+ * @nr_pages:	Number of contiguous pages to allocate
-+ * @gfp_mask:	GFP mask to limit search and used during compaction
-+ * @nid:	Target node
-+ * @nodemask:	Mask for other possible nodes
-+ *
-+ * This routine is a wrapper around alloc_contig_range(). It scans over zones
-+ * on an applicable zonelist to find a contiguous pfn range which can then be
-+ * tried for allocation with alloc_contig_range(). This routine is intended
-+ * for allocation requests which can not be fulfilled with the buddy allocator.
-+ *
-+ * The allocated memory is always aligned to a page boundary. If nr_pages is a
-+ * power of two then the alignment is guaranteed to be to the given nr_pages
-+ * (e.g. 1GB request would be aligned to 1GB).
-+ *
-+ * Allocated pages can be freed with free_contig_range() or by manually calling
-+ * __free_page() on each allocated page.
-+ *
-+ * Return: pointer to contiguous pages on success, or NULL if not successful.
-+ */
-+struct page *alloc_contig_pages(unsigned long nr_pages, gfp_t gfp_mask,
-+				int nid, nodemask_t *nodemask)
-+{
-+	unsigned long ret, pfn, flags;
-+	struct zonelist *zonelist;
-+	struct zone *zone;
-+	struct zoneref *z;
-+
-+	zonelist = node_zonelist(nid, gfp_mask);
-+	for_each_zone_zonelist_nodemask(zone, z, zonelist,
-+					gfp_zone(gfp_mask), nodemask) {
-+		spin_lock_irqsave(&zone->lock, flags);
-+
-+		pfn = ALIGN(zone->zone_start_pfn, nr_pages);
-+		while (zone_spans_last_pfn(zone, pfn, nr_pages)) {
-+			if (pfn_range_valid_contig(zone, pfn, nr_pages)) {
-+				/*
-+				 * We release the zone lock here because
-+				 * alloc_contig_range() will also lock the zone
-+				 * at some point. If there's an allocation
-+				 * spinning on this lock, it may win the race
-+				 * and cause alloc_contig_range() to fail...
-+				 */
-+				spin_unlock_irqrestore(&zone->lock, flags);
-+				ret = __alloc_contig_pages(pfn, nr_pages,
-+							gfp_mask);
-+				if (!ret)
-+					return pfn_to_page(pfn);
-+				spin_lock_irqsave(&zone->lock, flags);
-+			}
-+			pfn += nr_pages;
-+		}
-+		spin_unlock_irqrestore(&zone->lock, flags);
-+	}
-+	return NULL;
-+}
- #endif /* CONFIG_CONTIG_ALLOC */
- 
- void free_contig_range(unsigned long pfn, unsigned int nr_pages)
--- 
-2.20.1
-
+SGkgTWFyY28sDQoNCk9uIDE3LjEwLjE5IDEwOjE0LCBNYXJjbyBGZWxzY2ggd3JvdGU6DQo+IEhp
+IEZyaWVkZXIsDQo+IA0KPiBPbiAxOS0xMC0xNiAxNTowNiwgU2NocmVtcGYgRnJpZWRlciB3cm90
+ZToNCj4+IEZyb206IEZyaWVkZXIgU2NocmVtcGYgPGZyaWVkZXIuc2NocmVtcGZAa29udHJvbi5k
+ZT4NCj4+DQo+PiBJbiBvcmRlciB0byBzdXBwb3J0IG1vcmUgb2YgdGhlIGkuTVg2VUwvVUxMLWJh
+c2VkIFNvTXMgYW5kIGJvYXJkcyBieQ0KPj4gS29udHJvbiBFbGVjdHJvbmljcyBHbWJILCB3ZSBy
+ZXN0cnVjdHVyZSB0aGUgZGV2aWNldHJlZXMgdG8gc2hhcmUgY29tbW9uDQo+PiBwYXJ0cyBhbmQg
+YWRkIG5ldyBkZXZpY2V0cmVlcyBmb3IgdGhlIG1pc3NpbmcgYm9hcmRzLg0KPj4NCj4+IEN1cnJl
+bnRseSB0aGVyZSBhcmUgdGhlIGZvbGxvd2luZyBTb00gZmxhdm9yczoNCj4+ICAgICogTjYzMTA6
+IFNvTSB3aXRoIGkuTVg2VUwtMiwgMjU2TUIgUkFNLCAyNTZNQiBTUEkgTkFORA0KPj4gICAgKiBO
+NjMxMTogU29NIHdpdGggaS5NWDZVTC0yLCA1MTJNQiBSQU0sIDUxMk1CIFNQSSBOQU5EIChuZXcp
+DQo+PiAgICAqIE42NDExOiBTb00gd2l0aCBpLk1YNlVMTCwgNTEyTUIgUkFNLCA1MTJNQiBTUEkg
+TkFORCAobmV3KQ0KPj4NCj4+IEVhY2ggb2YgdGhlIFNvTXMgYWxzbyBmZWF0dXJlcyAxTUIgU1BJ
+IE5PUiBhbmQgYW4gRXRoZXJuZXQgUEhZLiBUaGUgY2Fycmllcg0KPj4gYm9hcmQgZm9yIHRoZSBl
+dmFsa2l0IGlzIHRoZSBzYW1lIGZvciBhbGwgU29Ncy4NCj4+DQo+PiBGcmllZGVyIFNjaHJlbXBm
+ICgxMCk6DQo+PiAgICBBUk06IGR0czogaW14NnVsLWtvbnRyb24tbjYzMTA6IE1vdmUgY29tbW9u
+IFNvTSBub2RlcyB0byBhIHNlcGFyYXRlDQo+PiAgICAgIGZpbGUNCj4+ICAgIEFSTTogZHRzOiBB
+ZGQgc3VwcG9ydCBmb3IgdHdvIG1vcmUgS29udHJvbiBTb01zIE42MzExIGFuZCBONjQxMQ0KPj4g
+ICAgQVJNOiBkdHM6IGlteDZ1bC1rb250cm9uLW42MzEwLXM6IE1vdmUgY29tbW9uIG5vZGVzIHRv
+IGEgc2VwYXJhdGUgZmlsZQ0KPj4gICAgQVJNOiBkdHM6IEFkZCBzdXBwb3J0IGZvciB0d28gbW9y
+ZSBLb250cm9uIGV2YWxraXQgYm9hcmRzICdONjMxMSBTJw0KPj4gICAgICBhbmQgJ042NDExIFMn
+DQo+PiAgICBBUk06IGR0czogaW14NnVsLWtvbnRyb24tbjZ4MXg6IEFkZCAnY2hvc2VuJyBub2Rl
+IHdpdGggJ3N0ZG91dC1wYXRoJw0KPj4gICAgQVJNOiBkdHM6IGlteDZ1bC1rb250cm9uLW42eDF4
+LXM6IFNwZWNpZnkgYnVzLXdpZHRoIGZvciBTRCBjYXJkIGFuZA0KPj4gICAgICBlTU1DDQo+PiAg
+ICBBUk06IGR0czogaW14NnVsLWtvbnRyb24tbjZ4MXgtczogQWRkIHZidXMtc3VwcGx5IGFuZCBv
+dmVyY3VycmVudA0KPj4gICAgICBwb2xhcml0eSB0byB1c2Igbm9kZXMNCj4+ICAgIEFSTTogZHRz
+OiBpbXg2dWwta29udHJvbi1uNngxeC1zOiBSZW1vdmUgYW4gb2Jzb2xldGUgY29tbWVudCBhbmQg
+Zml4DQo+PiAgICAgIGluZGVudGF0aW9uDQo+PiAgICBkdC1iaW5kaW5nczogYXJtOiBmc2w6IEFk
+ZCBtb3JlIEtvbnRyb24gaS5NWDZVTC9VTEwgY29tcGF0aWJsZXMNCj4+ICAgIE1BSU5UQUlORVJT
+OiBBZGQgYW4gZW50cnkgZm9yIEtvbnRyb24gRWxlY3Ryb25pY3MgQVJNIGJvYXJkIHN1cHBvcnQN
+Cj4gDQo+IERpZCB5b3Ugc2VuZCBhbGwgcGF0Y2hlcyB0byBzYW1lIFRvOiBhbmQgQ2M6Pw0KDQpO
+bywgSSBoYXZlIGEgc2NyaXB0IHRoYXQgcnVucyBnZXRfbWFpbnRhaW5lci5wbCBmb3IgZWFjaCBw
+YXRjaC4gU28gdGhlIA0KcmVjaXBpZW50cyBtaWdodCBkaWZmZXIuIEkgb25seSBoYWQgS3J6eXN6
+dG9mIGFuZCBSb2IgYXMgaGFyZC1jb2RlZCANCnJlY2lwaWVudHMgZm9yIHRoZSB3aG9sZSBzZXJp
+ZXMuDQoNCkRvIHlvdSB0aGluayBJIHNob3VsZCBjaGFuZ2UgdGhpcyBzbyBlYWNoIHJlY2lwaWVu
+dCByZWNlaXZlcyB0aGUgd2hvbGUgDQpzZXJpZXM/DQoNClRoYW5rcywNCkZyaWVkZXINCg0KPiAN
+Cj4gUmVnYXJkcywNCj4gICAgTWFyY28NCj4gDQo+Pg0KPj4gICAuLi4vZGV2aWNldHJlZS9iaW5k
+aW5ncy9hcm0vZnNsLnlhbWwgICAgICAgICAgfCAgMTQgKw0KPj4gICBNQUlOVEFJTkVSUyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDYgKw0KPj4gICBhcmNoL2FybS9ib290
+L2R0cy9pbXg2dWwta29udHJvbi1uNjMxMC1zLmR0cyAgfCA0MDUgKy0tLS0tLS0tLS0tLS0tLS0N
+Cj4+ICAgLi4uL2Jvb3QvZHRzL2lteDZ1bC1rb250cm9uLW42MzEwLXNvbS5kdHNpICAgIHwgIDk1
+ICstLS0NCj4+ICAgYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLWtvbnRyb24tbjYzMTEtcy5kdHMg
+IHwgIDE2ICsNCj4+ICAgLi4uL2Jvb3QvZHRzL2lteDZ1bC1rb250cm9uLW42MzExLXNvbS5kdHNp
+ICAgIHwgIDQwICsrDQo+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC1rb250cm9uLW42eDF4
+LXMuZHRzaSB8IDQyMiArKysrKysrKysrKysrKysrKysNCj4+ICAgLi4uL2R0cy9pbXg2dWwta29u
+dHJvbi1uNngxeC1zb20tY29tbW9uLmR0c2kgIHwgMTI5ICsrKysrKw0KPj4gICBhcmNoL2FybS9i
+b290L2R0cy9pbXg2dWxsLWtvbnRyb24tbjY0MTEtcy5kdHMgfCAgMTYgKw0KPj4gICAuLi4vYm9v
+dC9kdHMvaW14NnVsbC1rb250cm9uLW42NDExLXNvbS5kdHNpICAgfCAgNDAgKysNCj4+ICAgMTAg
+ZmlsZXMgY2hhbmdlZCwgNjg1IGluc2VydGlvbnMoKyksIDQ5OCBkZWxldGlvbnMoLSkNCj4+ICAg
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC1rb250cm9uLW42MzEx
+LXMuZHRzDQo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9ib290L2R0cy9pbXg2dWwt
+a29udHJvbi1uNjMxMS1zb20uZHRzaQ0KPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0v
+Ym9vdC9kdHMvaW14NnVsLWtvbnRyb24tbjZ4MXgtcy5kdHNpDQo+PiAgIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBhcmNoL2FybS9ib290L2R0cy9pbXg2dWwta29udHJvbi1uNngxeC1zb20tY29tbW9uLmR0
+c2kNCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwta29u
+dHJvbi1uNjQxMS1zLmR0cw0KPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9k
+dHMvaW14NnVsbC1rb250cm9uLW42NDExLXNvbS5kdHNpDQo+Pg0KPj4gLS0gDQo+PiAyLjE3LjEN
+Cj4+DQo+Pg0KPiA=
