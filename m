@@ -2,89 +2,319 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B8BECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F26ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C0D20854
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:28:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=didiksetiawan.com header.i=ds@didiksetiawan.com header.b="jNyQSO+b"
+	by mail.kernel.org (Postfix) with ESMTP id D9C012067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:31:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571337072;
+	bh=IV+cWtaOQJxopX8bb9NsKQkIySeOnN3YyR9a6kMHAqM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=M4Oxp7z6qjeti3Wt5nx6qD5NIyhDUnsb2kHVZnHxbIFu3YRG9XU8sF+hP5W1wNDI4
+	 Tvwvon2C9Y9w5oZHOvE20SIoBEOgSNfIpJAudO//8iFKHNCoA8Q95j85OUQpaySBKm
+	 uz7yeKSnYYy7NJHZx6sIlZxl/bR8/wc/Mykoayfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404167AbfJQS2n (ORCPT
+        id S2404433AbfJQSbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 14:28:43 -0400
-Received: from sender4-of-o54.zoho.com ([136.143.188.54]:21438 "EHLO
-        sender4-of-o54.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbfJQS2m (ORCPT
+        Thu, 17 Oct 2019 14:31:10 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38160 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731227AbfJQSbJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 14:28:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1571336886; cv=none; 
-        d=zoho.com; s=zohoarc; 
-        b=MhuZhCQgJHYDrgw8cC//3uQq8vZWxyB9CGvOMjItBylHiicLr4jP3Uc/GnVgmWnf8BUKGDCNMNRpUcCMANfDhS8/6WUeajstUUtyjgmzvqR+/vwJARAZmIvoaAANEd/B13p15qA+LkTEq/nudGePZ8peQuXjFfIVNskCX6z1i6M=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1571336886; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=F+liBd7cRQPKt5qsBRXr+b5y8EgSj8dkms2tEibAHsA=; 
-        b=EFKxlzp2Ve0OaGyBAlFWWJmOBjLlBIyMVyWWEuYBb3jaQPSGWeJb3xGB71LVjIoXi/uioaVwdfXwfi2seY90MfKGwJ62QincRacCTXKKwxVxrxi86FfJhpACaQrWOPWrXm3gaw9PjUjvRptbgx3sGvxu7IPW7kZLJyntdccjIOo=
-ARC-Authentication-Results: i=1; mx.zoho.com;
-        dkim=pass  header.i=didiksetiawan.com;
-        spf=pass  smtp.mailfrom=ds@didiksetiawan.com;
-        dmarc=pass header.from=<ds@didiksetiawan.com> header.from=<ds@didiksetiawan.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1571336886;
-        s=zoho; d=didiksetiawan.com; i=ds@didiksetiawan.com;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
-        l=861; bh=F+liBd7cRQPKt5qsBRXr+b5y8EgSj8dkms2tEibAHsA=;
-        b=jNyQSO+bdQk11LRLVcEqqZSc5wCY9BFK1kdRuzX/mjqsJoDDzxNKrCFSrE0b37hC
-        MRI4hRepOK/w8ORAZaBJmfTPwYIubqgKw1Lp9JOK+R02dY2OMQZPjmeBLJipKWd82FN
-        son1eG/8BKlITZHZMwkpEJf8QxT0Nx8JNDkZHK2k=
-Received: from thinkpad-e420s (120.188.94.47 [120.188.94.47]) by mx.zohomail.com
-        with SMTPS id 15713368863401022.4214258563576; Thu, 17 Oct 2019 11:28:06 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 01:27:57 +0700
-From:   Didik Setiawan <ds@didiksetiawan.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.14 00/65] 4.14.150-stable review
-Message-ID: <20191017182757.GA9339@thinkpad-e420s>
-References: <20191016214756.457746573@linuxfoundation.org>
+        Thu, 17 Oct 2019 14:31:09 -0400
+Received: by mail-ot1-f68.google.com with SMTP id e11so2764206otl.5;
+        Thu, 17 Oct 2019 11:31:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OnxgCaPx91Saoqy8npEJzvJj20RILVf3jGePsqx/d+Y=;
+        b=axB+eSX3ohxhK8SK+y0s66fYpluc3IXt3xtes8L0Q8x+n/R9ljjy10vtYr4T8+iwos
+         CDLd5mzkv/m/G7O9zvQw4+FxwKLCOhpSvF8376VBBs/DiEn1EIwWLg0XcYijEnB0Vhsz
+         ArCFfrhzybk7uXc9rIBD/dLaN1qqGAHmkR0Xf1fZcBEL01oDGxaa50nLTFlhktaPyG1j
+         0ltHm0sk4gfnY2rdek3tutzuZwwT5iN8ImYX7l+Mb92FVxa6bsRWm+58bfqdkc1E0zvL
+         eGK9Vp2aVsQi1OEYdmj0wmMALds9HDX8XzsWuFm5RSZj343tDP7Jq5CP7HIpwNwyClye
+         LM4w==
+X-Gm-Message-State: APjAAAVJOoKF2q8VOwjBO/qMvT4FveyDg3NN6Arm3wyIdj3vgeoGq7OP
+        uNpmeobodXFok2S3symwyg==
+X-Google-Smtp-Source: APXvYqzLK+ftRPrSCHWviqWQFqjBZcgp7MpXsGy8NEdBzpkgNxxRyOnRAPZEAr7eo9Ro2kqizxeUfw==
+X-Received: by 2002:a9d:7398:: with SMTP id j24mr4392143otk.287.1571337068346;
+        Thu, 17 Oct 2019 11:31:08 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id y137sm718064oie.53.2019.10.17.11.31.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 11:31:07 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 13:31:06 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v3 1/6] dt-bindings: mfd: max77650: convert the binding
+ document to yaml
+Message-ID: <20191017183106.GA11667@bogus>
+References: <20191017071234.8719-1-brgl@bgdev.pl>
+ <20191017071234.8719-2-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-ZohoMailClient: External
+In-Reply-To: <20191017071234.8719-2-brgl@bgdev.pl>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 02:50:14PM -0700, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.150 release.
-> There are 65 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Thu, Oct 17, 2019 at 09:12:29AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> Responses should be made by Fri 18 Oct 2019 09:43:41 PM UTC.
-> Anything received after that time might be too late.
+> Convert the binding document for MAX77650 core MFD module to YAML.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.150-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  .../devicetree/bindings/mfd/max77650.txt      |  46 ------
+>  .../devicetree/bindings/mfd/max77650.yaml     | 151 ++++++++++++++++++
+>  2 files changed, 151 insertions(+), 46 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/max77650.yaml
 > 
-> thanks,
-> 
-> greg k-h
- 
-Compiled, booted, and no regressions found on my x86_64 system.
+> diff --git a/Documentation/devicetree/bindings/mfd/max77650.txt b/Documentation/devicetree/bindings/mfd/max77650.txt
+> deleted file mode 100644
+> index b529d8d19335..000000000000
+> --- a/Documentation/devicetree/bindings/mfd/max77650.txt
+> +++ /dev/null
+> @@ -1,46 +0,0 @@
+> -MAX77650 ultra low-power PMIC from Maxim Integrated.
+> -
+> -Required properties:
+> --------------------
+> -- compatible:		Must be "maxim,max77650"
+> -- reg:			I2C device address.
+> -- interrupts:		The interrupt on the parent the controller is
+> -			connected to.
+> -- interrupt-controller: Marks the device node as an interrupt controller.
+> -- #interrupt-cells:	Must be <2>.
+> -
+> -- gpio-controller:	Marks the device node as a gpio controller.
+> -- #gpio-cells:		Must be <2>. The first cell is the pin number and
+> -			the second cell is used to specify the gpio active
+> -			state.
+> -
+> -Optional properties:
+> ---------------------
+> -gpio-line-names:	Single string containing the name of the GPIO line.
+> -
+> -The GPIO-controller module is represented as part of the top-level PMIC
+> -node. The device exposes a single GPIO line.
+> -
+> -For device-tree bindings of other sub-modules (regulator, power supply,
+> -LEDs and onkey) refer to the binding documents under the respective
+> -sub-system directories.
+> -
+> -For more details on GPIO bindings, please refer to the generic GPIO DT
+> -binding document <devicetree/bindings/gpio/gpio.txt>.
+> -
+> -Example:
+> ---------
+> -
+> -	pmic@48 {
+> -		compatible = "maxim,max77650";
+> -		reg = <0x48>;
+> -
+> -		interrupt-controller;
+> -		interrupt-parent = <&gpio2>;
+> -		#interrupt-cells = <2>;
+> -		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+> -
+> -		gpio-controller;
+> -		#gpio-cells = <2>;
+> -		gpio-line-names = "max77650-charger";
+> -	};
+> diff --git a/Documentation/devicetree/bindings/mfd/max77650.yaml b/Documentation/devicetree/bindings/mfd/max77650.yaml
+> new file mode 100644
+> index 000000000000..66a447e1cf56
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/max77650.yaml
+> @@ -0,0 +1,151 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/max77650.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MAX77650 ultra low-power PMIC from Maxim Integrated.
+> +
+> +maintainers:
+> +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> +
+> +description: |
+> +  This document describes the DT properties of the core MFD controller.
 
-Thanks,
-Didik Setiawan 
+So does every file in this directory.
 
+Describe what this chip is.
+
+> +
+> +  The GPIO-controller module is represented as part of the top-level PMIC
+> +  node. The device exposes a single GPIO line.
+> +
+> +  For device-tree bindings of other sub-modules (regulator, power supply,
+> +  LEDs and onkey) refer to the binding documents under the respective
+> +  sub-system directories.
+> +
+> +  For more details on GPIO bindings, please refer to the generic GPIO DT
+> +  binding document <devicetree/bindings/gpio/gpio.txt>.
+
+Also fairly useless and another reference to maintain...
+
+> +
+> +properties:
+> +  compatible:
+> +    const: maxim,max77650
+> +
+> +  reg:
+> +    description:
+> +      I2C device address.
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 2
+> +    description:
+> +      The first cell is the IRQ number, the second cell is the trigger type.
+> +
+> +  gpio-controller: true
+> +
+> +  "#gpio-cells":
+> +    const: 2
+> +    description:
+> +      The first cell is the pin number and the second cell is used to specify
+> +      the gpio active state.
+> +
+> +  gpio-line-names:
+> +    maxItems: 1
+> +    description:
+> +      Single string containing the name of the GPIO line.
+> +
+> +  regulators:
+> +    $ref: ../regulator/max77650-regulator.yaml
+
+Not bisectable... This patch needs to come last.
+
+> +
+> +  charger:
+> +    $ref: ../power/supply/max77650-charger.yaml
+> +
+> +  leds:
+> +    $ref: ../leds/leds-max77650.yaml
+> +
+> +  onkey:
+> +    $ref: ../input/max77650-onkey.yaml
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - "#interrupt-cells"
+> +  - gpio-controller
+> +  - "#gpio-cells"
+
+None of the child nodes are required?
+
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/input/linux-event-codes.h>
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        pmic@48 {
+> +            compatible = "maxim,max77650";
+> +            reg = <0x48>;
+> +
+> +            interrupt-controller;
+> +            interrupt-parent = <&gpio2>;
+> +            #interrupt-cells = <2>;
+> +            interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+> +
+> +            gpio-controller;
+> +            #gpio-cells = <2>;
+> +            gpio-line-names = "max77650-charger";
+> +
+> +            regulators {
+> +                compatible = "maxim,max77650-regulator";
+> +
+> +                max77650_ldo: regulator@0 {
+> +                    regulator-compatible = "ldo";
+> +                    regulator-name = "max77650-ldo";
+> +                    regulator-min-microvolt = <1350000>;
+> +                    regulator-max-microvolt = <2937500>;
+> +                };
+> +
+> +                max77650_sbb0: regulator@1 {
+> +                    regulator-compatible = "sbb0";
+> +                    regulator-name = "max77650-sbb0";
+> +                    regulator-min-microvolt = <800000>;
+> +                    regulator-max-microvolt = <1587500>;
+> +                };
+> +            };
+> +
+> +            charger {
+> +                compatible = "maxim,max77650-charger";
+> +                input-voltage-min-microvolt = <4200000>;
+> +                input-current-limit-microamp = <285000>;
+> +            };
+> +
+> +            leds {
+> +                compatible = "maxim,max77650-led";
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                led@0 {
+> +                    reg = <0>;
+> +                    label = "blue:usr0";
+> +                };
+> +
+> +                led@1 {
+> +                    reg = <1>;
+> +                    label = "red:usr1";
+> +                    linux,default-trigger = "heartbeat";
+> +                };
+> +
+> +                led@2 {
+> +                    reg = <2>;
+> +                    label = "green:usr2";
+> +                };
+> +            };
+> +
+> +            onkey {
+> +                compatible = "maxim,max77650-onkey";
+> +                linux,code = <KEY_END>;
+> +                maxim,onkey-slide;
+> +            };
+> +        };
+> +    };
+> -- 
+> 2.23.0
+> 
