@@ -2,403 +2,231 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6089FA372B
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC67ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F69B21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:54:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571349287;
-	bh=HNernHeQNkI9ZI1uOMqc+iioICgMIESVxwP1/MU5mo0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lqPe2wPP09VJB1NYqWjjypJi1Zn5c7A3uTN6HW6RtRYprCw4/XqEHEJ8qYq115t56
-	 sc+CrKqg0I1kJsgrZwybnf4JJbQ/Ijs/iw2a2EzecJlH/tIxUZBmmLXZNrU9ycdtqb
-	 hVwVhhzC58gk4H1C5itF2I0KV1P27VNJI3JOWCZU=
+	by mail.kernel.org (Postfix) with ESMTP id 7093921835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:55:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jeyw1ZDd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406655AbfJQVyq (ORCPT
+        id S2406801AbfJQVzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 17:54:46 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44857 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391375AbfJQVyq (ORCPT
+        Thu, 17 Oct 2019 17:55:25 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36887 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391375AbfJQVzY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 17:54:46 -0400
-Received: by mail-oi1-f196.google.com with SMTP id w6so3481480oie.11;
-        Thu, 17 Oct 2019 14:54:45 -0700 (PDT)
+        Thu, 17 Oct 2019 17:55:24 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p1so2123174pgi.4
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 14:55:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MJq2EdV7BErF5lJZPOikwtBvnPNcMCKE+E09QYJDAoE=;
+        b=Jeyw1ZDd5uAKRjJQmfyb+T0v/f6rIVWTceUIwX20g2+Ga6I91WfJuBnTL/DPxTZL5z
+         HKJjnkJAncD5XImoBq7AkDzdyK97rJN/7OH0yKTx8fzWkLRU1nyrjtxhEcw8zzso+0U2
+         DJNGBkyCFX7HUwCQF+cTvU0l7AsQXoDkoevKLz3/HfKu55M/n9GQXtxQkwzao4e7UJAt
+         W44oCFETT+1Hrfn9p/iGgjnkyGZMFObQP/F3nt5x+0IWbC4EIUW38BB7Srk5IZT63tzm
+         SCfHVu2649tchRM12hl8UrKMunl00VbS/rcr8+rQayKOIAhfuW3jbPskVlbfAmqjS92i
+         ygcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aQCZKf9ailcF03pnXlPkAwqQ3rLsx9yMvh7O6ph+QSs=;
-        b=tTuRUGtZdQ/eZRAfouRNQTYj+FBQoANJeC4zldP/kRcyRDlwd9X9djv5/26VAf62Hd
-         ypp+XMt/xpdux7CrG06aQpm9CrbC84uTjTZ+ll9FbffLYZ0JzCvNXnCaxsGNNiXqQn2+
-         dOyQSR2t5oJ/aHbrhTLvx2O3JtkLO8JnKpr0FGljigeK7ugn33o8q82h9vFGvxUB87zF
-         ZSrPgmoEmrjaw8qPj4ud66hqB4pOTgoxY0InQo2G5T26EI8xRflDClgspiVXlr0lAmhG
-         qj7cqir+48Q1A8O7DAFnu75S7izuuvidTyv1FSkbEmnlkoYfQiTxfoyTtCWc1SThdj9Q
-         Xa7w==
-X-Gm-Message-State: APjAAAWmt8crBCU7oR9ZB0Va/tn63fRFU/jgWqH9glqLjZ9+w8kDtI/p
-        F+4lQGZEHvn+J++sFW5hFopqkeoq9pk/z2ylSm4=
-X-Google-Smtp-Source: APXvYqzcf2Bhi5Rwm096VgkVTaWUch/12FDSjn1LdbwkGkNyTmsUIsd1MWObcH0TsbcTpOdGeaLdErFzsPvMmS7W+ts=
-X-Received: by 2002:aca:d706:: with SMTP id o6mr5254329oig.57.1571349284653;
- Thu, 17 Oct 2019 14:54:44 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MJq2EdV7BErF5lJZPOikwtBvnPNcMCKE+E09QYJDAoE=;
+        b=GQ14+qT3Y63JleWbNcPQkX+JQngh/PEL0+cso4pK98cUv0eTXfRYOTKw4F06PFYn/d
+         YHdj/obmQsesSURivj/Cf1hMSgyOoL3VhzY/ZQA0T34ytvcdy+zN9e0ZCBzj7QRCXL9K
+         ueWetqDg8hu1h89i13unsYqqcB2GRz/3b/9ZbbTJDqbMZmfSm0MjYIKPnmsUyNdes4to
+         AO7XQjVQAPmtIaMm3zLoVIs0EzrPgOScxu8fSdyL+xWy/RlfNYKXd1wEvHNadM8NLLM0
+         lKGimdUU2ZReO9cumMywN/+lkPtjXVhCl/ltHcuei4nUS+64SdV9bChhw/NPVfKij29/
+         jGqA==
+X-Gm-Message-State: APjAAAWqVtj/M/M7wJzc9W9YevCppj2OcnucPvLnGzT6YVzH9b1otdJR
+        hQRVkngBSz39yeYS053JQWE=
+X-Google-Smtp-Source: APXvYqw78bUK9yECzvnmzVx8o9WcY5erYsU7dMfmJka8ZozhZHP1ynlTvAkvFQxYqlruVSaWIpHZTg==
+X-Received: by 2002:aa7:93de:: with SMTP id y30mr2552141pff.98.1571349321994;
+        Thu, 17 Oct 2019 14:55:21 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id y8sm3577837pgs.34.2019.10.17.14.55.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 17 Oct 2019 14:55:21 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 14:54:53 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        broonie@kernel.org, alsa-devel@alsa-project.org,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: fsl_asrc: refine the setting of internal clock
+ divider
+Message-ID: <20191017215452.GA19069@Asurada-Nvidia.nvidia.com>
+References: <1571293268-5146-1-git-send-email-shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-References: <157118756627.2063440.9878062995925617180.stgit@dwillia2-desk3.amr.corp.intel.com>
- <157118763172.2063440.5191864450230023329.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <157118763172.2063440.5191864450230023329.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 17 Oct 2019 23:54:33 +0200
-Message-ID: <CAJZ5v0gAypDeb3VEVb-n_gAbXO+enQ64Q5biZidc7Xb-ohPozA@mail.gmail.com>
-Subject: Re: [PATCH v7 12/12] acpi/numa/hmat: Register "soft reserved" memory
- as an "hmem" device
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Len Brown <lenb@kernel.org>,
-        Keith Busch <kbusch@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571293268-5146-1-git-send-email-shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 3:14 AM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> Memory that has been tagged EFI_MEMORY_SP, and has performance
-> properties described by the ACPI HMAT is expected to have an application
-> specific consumer.
->
-> Those consumers may want 100% of the memory capacity to be reserved from
-> any usage by the kernel. By default, with this enabling, a platform
-> device is created to represent this differentiated resource.
->
-> The device-dax "hmem" driver claims these devices by default and
-> provides an mmap interface for the target application.  If the
-> administrator prefers, the hmem resource range can be made available to
-> the core-mm via the device-dax hotplug facility, kmem, to online the
-> memory with its own numa node.
->
-> This was tested with an emulated HMAT produced by qemu (with the pending
-> HMAT enabling patches), and "efi_fake_mem=8G@9G:0x40000" on the kernel
-> command line to mark the memory ranges associated with node2 and node3
-> as EFI_MEMORY_SP.
->
-> qemu numa configuration options:
->
-> -numa node,mem=4G,cpus=0-19,nodeid=0
-> -numa node,mem=4G,cpus=20-39,nodeid=1
-> -numa node,mem=4G,nodeid=2
-> -numa node,mem=4G,nodeid=3
-> -numa dist,src=0,dst=0,val=10
-> -numa dist,src=0,dst=1,val=21
-> -numa dist,src=0,dst=2,val=21
-> -numa dist,src=0,dst=3,val=21
-> -numa dist,src=1,dst=0,val=21
-> -numa dist,src=1,dst=1,val=10
-> -numa dist,src=1,dst=2,val=21
-> -numa dist,src=1,dst=3,val=21
-> -numa dist,src=2,dst=0,val=21
-> -numa dist,src=2,dst=1,val=21
-> -numa dist,src=2,dst=2,val=10
-> -numa dist,src=2,dst=3,val=21
-> -numa dist,src=3,dst=0,val=21
-> -numa dist,src=3,dst=1,val=21
-> -numa dist,src=3,dst=2,val=21
-> -numa dist,src=3,dst=3,val=10
-> -numa hmat-lb,initiator=0,target=0,hierarchy=memory,data-type=access-latency,base-lat=10,latency=5
-> -numa hmat-lb,initiator=0,target=0,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=5
-> -numa hmat-lb,initiator=0,target=1,hierarchy=memory,data-type=access-latency,base-lat=10,latency=10
-> -numa hmat-lb,initiator=0,target=1,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=10
-> -numa hmat-lb,initiator=0,target=2,hierarchy=memory,data-type=access-latency,base-lat=10,latency=15
-> -numa hmat-lb,initiator=0,target=2,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=15
-> -numa hmat-lb,initiator=0,target=3,hierarchy=memory,data-type=access-latency,base-lat=10,latency=20
-> -numa hmat-lb,initiator=0,target=3,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=20
-> -numa hmat-lb,initiator=1,target=0,hierarchy=memory,data-type=access-latency,base-lat=10,latency=10
-> -numa hmat-lb,initiator=1,target=0,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=10
-> -numa hmat-lb,initiator=1,target=1,hierarchy=memory,data-type=access-latency,base-lat=10,latency=5
-> -numa hmat-lb,initiator=1,target=1,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=5
-> -numa hmat-lb,initiator=1,target=2,hierarchy=memory,data-type=access-latency,base-lat=10,latency=15
-> -numa hmat-lb,initiator=1,target=2,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=15
-> -numa hmat-lb,initiator=1,target=3,hierarchy=memory,data-type=access-latency,base-lat=10,latency=20
-> -numa hmat-lb,initiator=1,target=3,hierarchy=memory,data-type=access-bandwidth,base-bw=20,bandwidth=20
->
-> Result:
->
-> # daxctl list -RDu
-> [
->   {
->     "path":"\/platform\/hmem.1",
->     "id":1,
->     "size":"4.00 GiB (4.29 GB)",
->     "align":2097152,
->     "devices":[
->       {
->         "chardev":"dax1.0",
->         "size":"4.00 GiB (4.29 GB)"
->       }
->     ]
->   },
->   {
->     "path":"\/platform\/hmem.0",
->     "id":0,
->     "size":"4.00 GiB (4.29 GB)",
->     "align":2097152,
->     "devices":[
->       {
->         "chardev":"dax0.0",
->         "size":"4.00 GiB (4.29 GB)"
->       }
->     ]
->   }
-> ]
->
-> # cat /proc/iomem
-> [..]
-> 240000000-43fffffff : Soft Reserved
->   240000000-33fffffff : hmem.0
->     240000000-33fffffff : dax0.0
->   340000000-43fffffff : hmem.1
->     340000000-43fffffff : dax1.0
->
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: Keith Busch <kbusch@kernel.org>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Hello Shengjiu,
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Thu, Oct 17, 2019 at 02:21:08PM +0800, Shengjiu Wang wrote:
+> For P2P output, the output divider should align with the output sample
 
+I think we should avoid "P2P" (or "M2M") keyword in the mainline
+code as we know M2M will never get merged while somebody working
+with the mainline and caring about new feature might be confused.
+
+> rate, if use ideal sample rate, there will be a lot of overload, which
+> would cause underrun.
+
+If I understand it correctly, setting to ideal ratio provides a
+faster converting speed but increases the load of the processor
+of ASRC. So we choose a slower converting speed here since real-
+time playback mode doesn't really need a faster conversion?
+
+It makes sense to me, yet I feel that the delay at the beginning
+of the audio playback might be longer as a compromise. I am okay
+with this decision though...
+
+> The maximum divider of asrc clock is 1024, but there is no judgement
+> for this limitaion in driver, which may cause the divider setting not
+> correct.
+> 
+> For non-ideal ratio mode, the clock rate should divide the sample rate
+> with no remainder, and the quotient should be less than 1024.
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 > ---
->  drivers/acpi/numa/Kconfig |    1
->  drivers/acpi/numa/hmat.c  |  136 +++++++++++++++++++++++++++++++++++++++++----
->  2 files changed, 125 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/acpi/numa/Kconfig b/drivers/acpi/numa/Kconfig
-> index acbd5aa76e40..fcf2e556d69d 100644
-> --- a/drivers/acpi/numa/Kconfig
-> +++ b/drivers/acpi/numa/Kconfig
-> @@ -9,6 +9,7 @@ config ACPI_HMAT
->         bool "ACPI Heterogeneous Memory Attribute Table Support"
->         depends on ACPI_NUMA
->         select HMEM_REPORTING
-> +       select MEMREGION
->         help
->          If set, this option has the kernel parse and report the
->          platform's ACPI HMAT (Heterogeneous Memory Attributes Table),
-> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-> index 4707eb9dd07b..eaa5a0f93dec 100644
-> --- a/drivers/acpi/numa/hmat.c
-> +++ b/drivers/acpi/numa/hmat.c
-> @@ -8,12 +8,18 @@
->   * the applicable attributes with the node's interfaces.
+>  sound/soc/fsl/fsl_asrc.c | 40 +++++++++++++++++++++++++++++++---------
+>  1 file changed, 31 insertions(+), 9 deletions(-)
+> 
+> diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
+> index 0bf91a6f54b9..44d05ec28bd3 100644
+> --- a/sound/soc/fsl/fsl_asrc.c
+> +++ b/sound/soc/fsl/fsl_asrc.c
+> @@ -260,7 +260,7 @@ static int fsl_asrc_set_ideal_ratio(struct fsl_asrc_pair *pair,
+>   * of struct asrc_config which includes in/output sample rate, width, channel
+>   * and clock settings.
 >   */
->
-> +#define pr_fmt(fmt) "acpi/hmat: " fmt
-> +#define dev_fmt(fmt) "acpi/hmat: " fmt
-> +
->  #include <linux/acpi.h>
->  #include <linux/bitops.h>
->  #include <linux/device.h>
->  #include <linux/init.h>
->  #include <linux/list.h>
-> +#include <linux/mm.h>
-> +#include <linux/platform_device.h>
->  #include <linux/list_sort.h>
-> +#include <linux/memregion.h>
->  #include <linux/memory.h>
->  #include <linux/mutex.h>
->  #include <linux/node.h>
-> @@ -49,6 +55,7 @@ struct memory_target {
->         struct list_head node;
->         unsigned int memory_pxm;
->         unsigned int processor_pxm;
-> +       struct resource memregions;
->         struct node_hmem_attrs hmem_attrs;
->         struct list_head caches;
->         struct node_cache_attrs cache_attrs;
-> @@ -104,22 +111,36 @@ static __init void alloc_memory_initiator(unsigned int cpu_pxm)
->         list_add_tail(&initiator->node, &initiators);
->  }
->
-> -static __init void alloc_memory_target(unsigned int mem_pxm)
-> +static __init void alloc_memory_target(unsigned int mem_pxm,
-> +               resource_size_t start, resource_size_t len)
+> -static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
+> +static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair, bool p2p)
 >  {
->         struct memory_target *target;
->
->         target = find_mem_target(mem_pxm);
-> -       if (target)
-> -               return;
-> -
-> -       target = kzalloc(sizeof(*target), GFP_KERNEL);
-> -       if (!target)
-> -               return;
-> +       if (!target) {
-> +               target = kzalloc(sizeof(*target), GFP_KERNEL);
-> +               if (!target)
-> +                       return;
-> +               target->memory_pxm = mem_pxm;
-> +               target->processor_pxm = PXM_INVAL;
-> +               target->memregions = (struct resource) {
-> +                       .name   = "ACPI mem",
-> +                       .start  = 0,
-> +                       .end    = -1,
-> +                       .flags  = IORESOURCE_MEM,
-> +               };
-> +               list_add_tail(&target->node, &targets);
-> +               INIT_LIST_HEAD(&target->caches);
-> +       }
->
-> -       target->memory_pxm = mem_pxm;
-> -       target->processor_pxm = PXM_INVAL;
-> -       list_add_tail(&target->node, &targets);
-> -       INIT_LIST_HEAD(&target->caches);
-> +       /*
-> +        * There are potentially multiple ranges per PXM, so record each
-> +        * in the per-target memregions resource tree.
-> +        */
-> +       if (!__request_region(&target->memregions, start, len, "memory target",
-> +                               IORESOURCE_MEM))
-> +               pr_warn("failed to reserve %#llx - %#llx in pxm: %d\n",
-> +                               start, start + len, mem_pxm);
->  }
->
->  static __init const char *hmat_data_type(u8 type)
-> @@ -452,7 +473,7 @@ static __init int srat_parse_mem_affinity(union acpi_subtable_headers *header,
->                 return -EINVAL;
->         if (!(ma->flags & ACPI_SRAT_MEM_ENABLED))
->                 return 0;
-> -       alloc_memory_target(ma->proximity_domain);
-> +       alloc_memory_target(ma->proximity_domain, ma->base_address, ma->length);
->         return 0;
->  }
->
-> @@ -613,10 +634,91 @@ static void hmat_register_target_perf(struct memory_target *target)
->         node_set_perf_attrs(mem_nid, &target->hmem_attrs, 0);
->  }
->
-> +static void hmat_register_target_device(struct memory_target *target,
-> +               struct resource *r)
-> +{
-> +       /* define a clean / non-busy resource for the platform device */
-> +       struct resource res = {
-> +               .start = r->start,
-> +               .end = r->end,
-> +               .flags = IORESOURCE_MEM,
-> +       };
-> +       struct platform_device *pdev;
-> +       struct memregion_info info;
-> +       int rc, id;
+>  	struct asrc_config *config = pair->config;
+>  	struct fsl_asrc *asrc_priv = pair->asrc_priv;
+> @@ -268,7 +268,8 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
+>  	enum asrc_word_width input_word_width;
+>  	enum asrc_word_width output_word_width;
+>  	u32 inrate, outrate, indiv, outdiv;
+> -	u32 clk_index[2], div[2];
+> +	u32 clk_index[2], div[2], rem[2];
+> +	u64 clk_rate;
+>  	int in, out, channels;
+>  	int pre_proc, post_proc;
+>  	struct clk *clk;
+> @@ -351,7 +352,9 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
+>  	/* We only have output clock for ideal ratio mode */
+>  	clk = asrc_priv->asrck_clk[clk_index[ideal ? OUT : IN]];
+>  
+> -	div[IN] = clk_get_rate(clk) / inrate;
+> +	clk_rate = clk_get_rate(clk);
+
+The fsl_asrc.c file has config.inclk being set to INCLK_NONE and
+this sets the "ideal" in this function to true. So, although we
+tend to not use ideal ratio setting for p2p cases, yet the input
+clock is still not physically connected, so we still use output
+clock for div[IN] calculation?
+
+I am thinking something simplier: if we decided not to use ideal
+ratio for "P2P", instead of adding "bool p2p" with the confusing
+"ideal" in this function, could we just set config.inclk to the
+same clock as the output one for "P2P"? By doing so, "P2P" won't
+go through ideal ratio mode while still having a clock rate from
+the output clock for div[IN] calculation here.
+
+> +	rem[IN] = do_div(clk_rate, inrate);
+> +	div[IN] = (u32)clk_rate;
+>  	if (div[IN] == 0) {
+
+Could we check div[IN] and rem[IN] here? Like:
+  	if (div[IN] == 0 || div[IN] > 1024) {
+		pair_err();
+		goto out;
+	}
+
+	if (!ideal && rem[IN]) {
+		pair_err();
+		goto out;
+	}
+
+According to your commit log, I think the max-1024 limitation
+should be applied to all cases, not confined to "!ideal" cases
+right? And we should add some comments also, indicating it is
+limited by hardware.
+
+>  		pair_err("failed to support input sample rate %dHz by asrck_%x\n",
+>  				inrate, clk_index[ideal ? OUT : IN]);
+> @@ -360,11 +363,20 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
+>  
+>  	clk = asrc_priv->asrck_clk[clk_index[OUT]];
+>  
+> -	/* Use fixed output rate for Ideal Ratio mode (INCLK_NONE) */
+> -	if (ideal)
+> -		div[OUT] = clk_get_rate(clk) / IDEAL_RATIO_RATE;
+> -	else
+> -		div[OUT] = clk_get_rate(clk) / outrate;
+> +	/*
+> +	 * When P2P mode, output rate should align with the out samplerate.
+> +	 * if set too high output rate, there will be lots of Overload.
+> +	 * When M2M mode, output rate should also need to align with the out
+
+For this "should", do you actually mean "M2M could also"? Sorry,
+I'm just trying to understand everyting here, not intentionally
+being picky at words. My understanding is that we still keep the
+ideal ratio setting because "M2M" still uses it.
+
+> +	 * samplerate, but M2M must use less time to achieve good performance.
+> +	 */
+> +	clk_rate = clk_get_rate(clk);
+> +	if (p2p || !ideal) {
+> +		rem[OUT] = do_div(clk_rate, outrate);
+> +		div[OUT] = clk_rate;
+> +	} else {
+> +		rem[OUT] = do_div(clk_rate, IDEAL_RATIO_RATE);
+> +		div[OUT] = clk_rate;
+> +	}
+>  
+>  	if (div[OUT] == 0) {
+>  		pair_err("failed to support output sample rate %dHz by asrck_%x\n",
+> @@ -372,6 +384,16 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
+>  		return -EINVAL;
+>  	}
+>  
+> +	if (!ideal && (div[IN] > 1024 || div[OUT] > 1024 ||
+> +		       rem[IN] != 0 || rem[OUT] != 0)) {
+> +	if (!ideal && (div[IN] > 1024 || div[OUT] > 1024 || rem[IN] || rem[OUT] != 0)) {
+
+So for ideal == true, these limitaions are not applied any more?
+Remember that the "ideal" is true for "p2p == true" cases here.
+
+> +		pair_err("The divider can't be used for non ideal mode\n");
+> +		return -EINVAL;
+> +	}
 > +
-> +       rc = region_intersects(res.start, resource_size(&res), IORESOURCE_MEM,
-> +                       IORES_DESC_SOFT_RESERVED);
-> +       if (rc != REGION_INTERSECTS)
-> +               return;
-> +
-> +       id = memregion_alloc(GFP_KERNEL);
-> +       if (id < 0) {
-> +               pr_err("memregion allocation failure for %pr\n", &res);
-> +               return;
-> +       }
-> +
-> +       pdev = platform_device_alloc("hmem", id);
-> +       if (!pdev) {
-> +               pr_err("hmem device allocation failure for %pr\n", &res);
-> +               goto out_pdev;
-> +       }
-> +
-> +       pdev->dev.numa_node = acpi_map_pxm_to_online_node(target->memory_pxm);
-> +       info = (struct memregion_info) {
-> +               .target_node = acpi_map_pxm_to_node(target->memory_pxm),
-> +       };
-> +       rc = platform_device_add_data(pdev, &info, sizeof(info));
-> +       if (rc < 0) {
-> +               pr_err("hmem memregion_info allocation failure for %pr\n", &res);
-> +               goto out_pdev;
-> +       }
-> +
-> +       rc = platform_device_add_resources(pdev, &res, 1);
-> +       if (rc < 0) {
-> +               pr_err("hmem resource allocation failure for %pr\n", &res);
-> +               goto out_resource;
-> +       }
-> +
-> +       rc = platform_device_add(pdev);
-> +       if (rc < 0) {
-> +               dev_err(&pdev->dev, "device add failed for %pr\n", &res);
-> +               goto out_resource;
-> +       }
-> +
-> +       return;
-> +
-> +out_resource:
-> +       put_device(&pdev->dev);
-> +out_pdev:
-> +       memregion_free(id);
-> +}
-> +
-> +static __init void hmat_register_target_devices(struct memory_target *target)
-> +{
-> +       struct resource *res;
-> +
-> +       /*
-> +        * Do not bother creating devices if no driver is available to
-> +        * consume them.
-> +        */
-> +       if (!IS_ENABLED(CONFIG_DEV_DAX_HMEM))
-> +               return;
-> +
-> +       for (res = target->memregions.child; res; res = res->sibling)
-> +               hmat_register_target_device(target, res);
-> +}
-> +
->  static void hmat_register_target(struct memory_target *target)
->  {
->         int nid = pxm_to_node(target->memory_pxm);
->
-> +       /*
-> +        * Devices may belong to either an offline or online
-> +        * node, so unconditionally add them.
-> +        */
-> +       hmat_register_target_devices(target);
-> +
->         /*
->          * Skip offline nodes. This can happen when memory
->          * marked EFI_MEMORY_SP, "specific purpose", is applied
-> @@ -677,11 +779,21 @@ static __init void hmat_free_structures(void)
->         struct target_cache *tcache, *cnext;
->
->         list_for_each_entry_safe(target, tnext, &targets, node) {
-> +               struct resource *res, *res_next;
-> +
->                 list_for_each_entry_safe(tcache, cnext, &target->caches, node) {
->                         list_del(&tcache->node);
->                         kfree(tcache);
->                 }
-> +
->                 list_del(&target->node);
-> +               res = target->memregions.child;
-> +               while (res) {
-> +                       res_next = res->sibling;
-> +                       __release_region(&target->memregions, res->start,
-> +                                       resource_size(res));
-> +                       res = res_next;
-> +               }
->                 kfree(target);
->         }
->
->
+> +	/* Divider range is [1, 1024] */
+> +	div[IN] = min_t(u32, 1024, div[IN]);
+> +	div[OUT] = min_t(u32, 1024, div[OUT]);
+
+Hmm, this looks like we want to allow ideal ratio cases and p2p
+cases to operate any way, even if the divider wasn't within the
+range to get the in/out rates from the output clock?
