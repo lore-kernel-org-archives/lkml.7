@@ -2,107 +2,56 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A38E6FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41AA3ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7513820869
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1724120869
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:24:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503481AbfJQTXf (ORCPT
+        id S2503492AbfJQTYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 15:23:35 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:54085 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S2503463AbfJQTXf (ORCPT
+        Thu, 17 Oct 2019 15:24:16 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:40864 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407055AbfJQTYQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 15:23:35 -0400
-Received: (qmail 18603 invoked by uid 500); 17 Oct 2019 15:23:34 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 17 Oct 2019 15:23:34 -0400
-Date:   Thu, 17 Oct 2019 15:23:34 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
-cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        USB list <linux-usb@vger.kernel.org>,
-        <linux-block@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: reeze while write on external usb 3.0 hard disk [Bug 204095]
-In-Reply-To: <20191017175306.GA3014@lazy.lzy>
-Message-ID: <Pine.LNX.4.44L0.1910171522200.18407-100000@netrider.rowland.org>
-MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+        Thu, 17 Oct 2019 15:24:16 -0400
+Received: from localhost (unknown [IPv6:2603:3023:50c:85e1:5314:1b70:2a53:887e])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5273814047D0B;
+        Thu, 17 Oct 2019 12:24:15 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 15:24:14 -0400 (EDT)
+Message-Id: <20191017.152414.1062784675771205824.davem@davemloft.net>
+To:     yuehaibing@huawei.com
+Cc:     santosh.shilimkar@oracle.com, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net/rds: Remove unnecessary null check
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191015114736.16928-1-yuehaibing@huawei.com>
+References: <20191015114736.16928-1-yuehaibing@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.2
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 17 Oct 2019 12:24:15 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019, Piergiorgio Sartor wrote:
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Tue, 15 Oct 2019 19:47:36 +0800
 
-> > Here is one more thing you can try.  I have no idea whether it will 
-> > make any difference, but the Changelog entry for the patch you 
-> > identified suggests that it might help.
-> > 
-> > Alan Stern
-> > 
-> > 
-> > 
-> > Index: usb-devel/drivers/usb/storage/scsiglue.c
-> > ===================================================================
-> > --- usb-devel.orig/drivers/usb/storage/scsiglue.c
-> > +++ usb-devel/drivers/usb/storage/scsiglue.c
-> > @@ -68,7 +68,6 @@ static const char* host_info(struct Scsi
-> >  static int slave_alloc (struct scsi_device *sdev)
-> >  {
-> >  	struct us_data *us = host_to_us(sdev->host);
-> > -	int maxp;
-> >  
-> >  	/*
-> >  	 * Set the INQUIRY transfer length to 36.  We don't use any of
-> > @@ -78,15 +77,6 @@ static int slave_alloc (struct scsi_devi
-> >  	sdev->inquiry_len = 36;
-> >  
-> >  	/*
-> > -	 * USB has unusual scatter-gather requirements: the length of each
-> > -	 * scatterlist element except the last must be divisible by the
-> > -	 * Bulk maxpacket value.  Fortunately this value is always a
-> > -	 * power of 2.  Inform the block layer about this requirement.
-> > -	 */
-> > -	maxp = usb_maxpacket(us->pusb_dev, us->recv_bulk_pipe, 0);
-> > -	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
-> > -
-> > -	/*
-> >  	 * Some host controllers may have alignment requirements.
-> >  	 * We'll play it safe by requiring 512-byte alignment always.
-> >  	 */
+> Null check before dma_pool_destroy is redundant, so remove it.
+> This is detected by coccinelle.
 > 
-> Hi,
-> 
-> I tested the patch.
-> 
-> Assumming I did everything properly, add patch,
-> test, issue not showing up, remove patch, re-test,
-> issue present.
-> 
-> It seems this patch you provide solves the issue.
-> 
-> Thanks a lot for the support and the solution.
-> 
-> I guess now this patch will be integrated into
-> mainline sometimes.
-> Please let me know, in this thread or directly, in
-> which kernel it will be available.
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-I'm busy for the next few days, but I will submit the patch next week.
-
-> Thanks again, it would be for me impossible to
-> solve without your support,
-
-You're welcome.
-
-Alan Stern
-
+Applied.
