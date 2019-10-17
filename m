@@ -2,114 +2,182 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C39CFA3737
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2280ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D10521835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75B5621835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:59:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571309992;
+	bh=avDvV06GeNVfkTqzcuIkU4j8QnVKFVCAaWPDX3Yk5Ws=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rA0JuE+zhOxwX6B/kf77VmTQhGHVXFXq0IzUJkhT8D5LPmD6rn/xmjOVY2DhTNA3R
+	 cox33gMjsY7D8YJao/LjD9kWmL4U0djAzrmK/lVDObeW07xvaticwS2j/q7t8EX9rf
+	 0Duj2VYScqQdtmKpH2hbWWoRXnxE9s+ajrlvqwFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409258AbfJQK7q (ORCPT
+        id S2409269AbfJQK7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 06:59:46 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:41679 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409238AbfJQK7n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 06:59:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51034 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2409234AbfJQK7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 17 Oct 2019 06:59:43 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 092D6801B4; Thu, 17 Oct 2019 12:59:24 +0200 (CEST)
-Date:   Thu, 17 Oct 2019 12:59:40 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Michal Hocko <mhocko@suse.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 4.19 56/81] kernel/sysctl.c: do not override max_threads
- provided by userspace
-Message-ID: <20191017105940.GA5966@amd>
-References: <20191016214805.727399379@linuxfoundation.org>
- <20191016214842.621065901@linuxfoundation.org>
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E163B10C092E;
+        Thu, 17 Oct 2019 10:59:42 +0000 (UTC)
+Received: from krava.brq.redhat.com (unknown [10.43.17.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 99D7D5D713;
+        Thu, 17 Oct 2019 10:59:40 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: [PATCH 08/10] libperf: Keep count of failed tests
+Date:   Thu, 17 Oct 2019 12:59:16 +0200
+Message-Id: <20191017105918.20873-9-jolsa@kernel.org>
+In-Reply-To: <20191017105918.20873-1-jolsa@kernel.org>
+References: <20191017105918.20873-1-jolsa@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="rwEMma7ioTxnRzrJ"
-Content-Disposition: inline
-In-Reply-To: <20191016214842.621065901@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Thu, 17 Oct 2019 10:59:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Keeping the count of failed tests, so we
+get better output with failures, like:
 
---rwEMma7ioTxnRzrJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+  # make tests
+  ...
+  running static:
+  - running test-cpumap.c...OK
+  - running test-threadmap.c...OK
+  - running test-evlist.c...FAILED test-evlist.c:53 failed to create evsel2
+  FAILED test-evlist.c:163 failed to create evsel2
+  FAILED test-evlist.c:287 failed count
+    FAILED (3)
+  - running test-evsel.c...OK
+  running dynamic:
+  - running test-cpumap.c...OK
+  - running test-threadmap.c...OK
+  - running test-evlist.c...FAILED test-evlist.c:53 failed to create evsel2
+  FAILED test-evlist.c:163 failed to create evsel2
+  FAILED test-evlist.c:287 failed count
+    FAILED (3)
+  - running test-evsel.c...OK
+ ...
 
-Hi!
+Link: http://lkml.kernel.org/n/tip-wi78jndi8ymzw7dq11mwxsld@git.kernel.org
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/perf/lib/include/internal/tests.h | 20 +++++++++++++++++---
+ tools/perf/lib/tests/test-cpumap.c      |  2 +-
+ tools/perf/lib/tests/test-evlist.c      |  2 +-
+ tools/perf/lib/tests/test-evsel.c       |  2 +-
+ tools/perf/lib/tests/test-threadmap.c   |  2 +-
+ 5 files changed, 21 insertions(+), 7 deletions(-)
 
-> From: Michal Hocko <mhocko@suse.com>
->=20
-> commit b0f53dbc4bc4c371f38b14c391095a3bb8a0bb40 upstream.
->=20
-> Partially revert 16db3d3f1170 ("kernel/sysctl.c: threads-max observe
-> limits") because the patch is causing a regression to any workload which
-> needs to override the auto-tuning of the limit provided by kernel.
->=20
-> set_max_threads is implementing a boot time guesstimate to provide a
-> sensible limit of the concurrently running threads so that runaways will
-> not deplete all the memory.  This is a good thing in general but there
-> are workloads which might need to increase this limit for an application
-> to run (reportedly WebSpher MQ is affected) and that is simply not
-> possible after the mentioned change.  It is also very dubious to
-> override an admin decision by an estimation that doesn't have any direct
-> relation to correctness of the kernel operation.
->=20
-> Fix this by dropping set_max_threads from sysctl_max_threads so any
-> value is accepted as long as it fits into MAX_THREADS which is important
-> to check because allowing more threads could break internal robust futex
-> restriction.  While at it, do not use MIN_THREADS as the lower boundary
-> because it is also only a heuristic for automatic estimation and admin
-> might have a good reason to stop new threads to be created even when
-> below this limit.
+diff --git a/tools/perf/lib/include/internal/tests.h b/tools/perf/lib/include/internal/tests.h
+index b7a20cd24ee1..2093e8868a67 100644
+--- a/tools/perf/lib/include/internal/tests.h
++++ b/tools/perf/lib/include/internal/tests.h
+@@ -4,14 +4,28 @@
+ 
+ #include <stdio.h>
+ 
+-#define __T_START fprintf(stdout, "- running %s...", __FILE__)
+-#define __T_OK    fprintf(stdout, "OK\n")
+-#define __T_FAIL  fprintf(stdout, "FAIL\n")
++int tests_failed;
++
++#define __T_START					\
++do {							\
++	fprintf(stdout, "- running %s...", __FILE__);	\
++	fflush(NULL);					\
++	tests_failed = 0;				\
++} while (0)
++
++#define __T_END								\
++do {									\
++	if (tests_failed)						\
++		fprintf(stdout, "  FAILED (%d)\n", tests_failed);	\
++	else								\
++		fprintf(stdout, "OK\n");				\
++} while (0)
+ 
+ #define __T(text, cond)                                                          \
+ do {                                                                             \
+ 	if (!(cond)) {                                                           \
+ 		fprintf(stderr, "FAILED %s:%d %s\n", __FILE__, __LINE__, text);  \
++		tests_failed++;                                                  \
+ 		return -1;                                                       \
+ 	}                                                                        \
+ } while (0)
+diff --git a/tools/perf/lib/tests/test-cpumap.c b/tools/perf/lib/tests/test-cpumap.c
+index aa34c20df07e..c8d45091e7c2 100644
+--- a/tools/perf/lib/tests/test-cpumap.c
++++ b/tools/perf/lib/tests/test-cpumap.c
+@@ -26,6 +26,6 @@ int main(int argc, char **argv)
+ 	perf_cpu_map__put(cpus);
+ 	perf_cpu_map__put(cpus);
+ 
+-	__T_OK;
++	__T_END;
+ 	return 0;
+ }
+diff --git a/tools/perf/lib/tests/test-evlist.c b/tools/perf/lib/tests/test-evlist.c
+index d8c52ebfa53a..9a80c310ac0f 100644
+--- a/tools/perf/lib/tests/test-evlist.c
++++ b/tools/perf/lib/tests/test-evlist.c
+@@ -407,6 +407,6 @@ int main(int argc, char **argv)
+ 	test_mmap_thread();
+ 	test_mmap_cpus();
+ 
+-	__T_OK;
++	__T_END;
+ 	return 0;
+ }
+diff --git a/tools/perf/lib/tests/test-evsel.c b/tools/perf/lib/tests/test-evsel.c
+index 1b6c4285ac2b..135722ac965b 100644
+--- a/tools/perf/lib/tests/test-evsel.c
++++ b/tools/perf/lib/tests/test-evsel.c
+@@ -130,6 +130,6 @@ int main(int argc, char **argv)
+ 	test_stat_thread();
+ 	test_stat_thread_enable();
+ 
+-	__T_OK;
++	__T_END;
+ 	return 0;
+ }
+diff --git a/tools/perf/lib/tests/test-threadmap.c b/tools/perf/lib/tests/test-threadmap.c
+index 8c5f47247d9e..7dc4d6fbedde 100644
+--- a/tools/perf/lib/tests/test-threadmap.c
++++ b/tools/perf/lib/tests/test-threadmap.c
+@@ -26,6 +26,6 @@ int main(int argc, char **argv)
+ 	perf_thread_map__put(threads);
+ 	perf_thread_map__put(threads);
+ 
+-	__T_OK;
++	__T_END;
+ 	return 0;
+ }
+-- 
+2.21.0
 
-Ok, why not, but I smell followup work could be done:
-
-> @@ -2635,7 +2635,7 @@ int sysctl_max_threads(struct ctl_table
->  	if (ret || !write)
->  		return ret;
-> =20
-> -	set_max_threads(threads);
-> +	max_threads =3D threads;
-> =20
-
-AFAICT set_max_threads can now become __init.
-
-Plus, I don't see any locking here, should this be WRITE_ONCE() at
-minimum?
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---rwEMma7ioTxnRzrJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXahJnAAKCRAw5/Bqldv6
-8nnSAJ93EKfZiFpMOP6vxmg0xv4YDaJHZwCfSSzb0+Qy7cL+rT76+htVDXzStUw=
-=uEos
------END PGP SIGNATURE-----
-
---rwEMma7ioTxnRzrJ--
