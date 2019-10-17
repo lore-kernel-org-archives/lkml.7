@@ -2,163 +2,204 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B7FFA3732
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4ADECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A203D20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 489B020663
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:43:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PBJfc4iK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393786AbfJQJnJ (ORCPT
+        id S2393883AbfJQJnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 05:43:09 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35865 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbfJQJnI (ORCPT
+        Thu, 17 Oct 2019 05:43:47 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36036 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726750AbfJQJnq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 05:43:08 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v24so1839151ljj.3;
-        Thu, 17 Oct 2019 02:43:07 -0700 (PDT)
+        Thu, 17 Oct 2019 05:43:46 -0400
+Received: by mail-wm1-f66.google.com with SMTP id m18so1821973wmc.1;
+        Thu, 17 Oct 2019 02:43:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=j33Q+AxJlhfJ2zQyBdLBD2zOlPBTBa+TDiJdmF/d4B0=;
+        b=PBJfc4iKYLoGVwZHVtTO0lO3ez5BpGeXPZAlj4Qxx0c4NWNvQiQJdK1Zm22yFqjtaV
+         XO4FHG92jwHETc95eBaAqW8My3/55VjWzgdzO1Z7VFGBKZ6/SSKp6CTcrfC3PtlNKUqL
+         Gz5RKw3w65f80M9hxVCyoUP5nbQbEGYqA7zONJtbqiZZSQ4kJoIXDkriUorZx149Ov6V
+         hp2VI/XVNAKT6jIOvk6lx29b+UyYLiw1dTHMppE7KWb8k9vetl5lYmF5oE0pBsoCnQOR
+         RSu0PTM8fVta3TCkFFq1fEmhNZJQ4CHICquFivetIufuHrOzmlAiCgVnt5JDfNQxaSMU
+         /cUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=w4waBAdvy4UQosRJ9zSozjZupMev2dHO+f/Dvftkbl8=;
-        b=JUXpD1X2VeDfXdaWBVeYiwH1l0JOSYcjqXpBBpZmL5JJsxo1ojqvv4aowYsf4NLsf0
-         +onl7YHV90Xog+Dc+KASUX8D0v1J9yHBSGklw+7XKWreG3BMR10eGGbhj3aqjGJX9U/7
-         uiKUTrnM5xlC6ce2v01QsLJisqyaCyZ6hoNYy1UzZzs3Wa8OwKtYb18lQ4IBxCyfGcGr
-         kEl5mrwzpVI8wNaPiJs2dnVhd3xubWVd4qbXg/7ky0KZETd4+yJ56Qu8e2HRZPn6pLy4
-         bqFenwzMSE0WC6y7gHYA2oA1cc/SWOYG0fPqhhSyIvKwVIdfPf4MOnnA4qby1EHjdcw/
-         bEPQ==
-X-Gm-Message-State: APjAAAWe+Ks6FEDolsaD7/PP2UUyOjGOA6H1Gd1FQURoPV202U3aHagy
-        OkK4qqzras6h68UYIIMAKPE=
-X-Google-Smtp-Source: APXvYqz8XtT+GDN8yAvJChXBJIn6PPjoVQsNya0269c1+8EHZPyhkW8aqP9ci9aVY1j4INmD9W3ksg==
-X-Received: by 2002:a2e:9e85:: with SMTP id f5mr1793634ljk.247.1571305386310;
-        Thu, 17 Oct 2019 02:43:06 -0700 (PDT)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id i21sm793392lfl.44.2019.10.17.02.43.04
+        bh=j33Q+AxJlhfJ2zQyBdLBD2zOlPBTBa+TDiJdmF/d4B0=;
+        b=Qo9E6J49rYFa2ZNpWd2ckIpFOhYaaqhgw1JA7U44usOR5nqZEIACEj5Sl++pp7iID8
+         iZk+oJra5DXIVsEpr4uZzIjA8eFQZ7/Tq1LIQF3Imsh4M3luaLAu9gYzHZF3HUMWUjjd
+         xWfmUmuMhZPNfE/3Y/YOHYC2amv2e1ZLuOVsCan9hZOZ0pY8kHodcOH/uI9/SokJ1Qr6
+         VtrfU35FXnZPlku0iHy6L9BMJNBC3xdSbsmbvfEuUFdkv3qgPfYkLjSP3IVOyKrAsVtU
+         Oa7p+2S1HOzpIuU3EM/SLshKTT3xhdwjYmS+aMzMQh2pDJ+uMSTuypR2fO2Xbgje8g3l
+         ACJg==
+X-Gm-Message-State: APjAAAU3UptI2OkoEaNJNLcjJ2TJlY71ZsJoFAJw9VwbkcLyQyelt4PF
+        mTgJxKa92fQjHhlSDOcUB1U=
+X-Google-Smtp-Source: APXvYqxHJt9ec/ig4bgPywnDn38DGreAT5nDreVbx5QqzUYuzF0nTYOT9L67QUVhr9q6+o+HntA0Mw==
+X-Received: by 2002:a05:600c:21d2:: with SMTP id x18mr2121283wmj.146.1571305423433;
+        Thu, 17 Oct 2019 02:43:43 -0700 (PDT)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id l6sm2029963wmg.2.2019.10.17.02.43.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 02:43:05 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 12:42:57 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [RFC PATCH 02/13] mfd: input: bd71828: Add power-key support
-Message-ID: <5b69d8cabbd5f6421b73714c6d4fb3442b6efc43.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+        Thu, 17 Oct 2019 02:43:42 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 10:43:41 +0100
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
+Subject: Re: [PATCH V3 0/7] mdev based hardware virtio offloading support
+Message-ID: <20191017094341.GF23557@stefanha-x1.localdomain>
+References: <20191011081557.28302-1-jasowang@redhat.com>
+ <20191014174946.GC5359@stefanha-x1.localdomain>
+ <6d12ad8f-8137-e07d-d735-da59a326e8ed@redhat.com>
+ <20191015143720.GA13108@stefanha-x1.localdomain>
+ <ba81e603-cb7d-b152-8fae-97f070a7e460@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Pql/uPZNXIm1JCle"
 Content-Disposition: inline
-In-Reply-To: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <ba81e603-cb7d-b152-8fae-97f070a7e460@redhat.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use gpio_keys to send power input-event to user-space when power
-button (short) press is detected.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- drivers/mfd/rohm-bd71828.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+--Pql/uPZNXIm1JCle
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/mfd/rohm-bd71828.c b/drivers/mfd/rohm-bd71828.c
-index b7de79e1fcdb..f77ba1ec3e99 100644
---- a/drivers/mfd/rohm-bd71828.c
-+++ b/drivers/mfd/rohm-bd71828.c
-@@ -4,7 +4,9 @@
- //
- // ROHM BD71828 PMIC driver
- 
-+#include <linux/gpio_keys.h>
- #include <linux/i2c.h>
-+#include <linux/input.h>
- #include <linux/interrupt.h>
- #include <linux/ioport.h>
- #include <linux/irq.h>
-@@ -15,6 +17,18 @@
- #include <linux/regmap.h>
- #include <linux/types.h>
- 
-+static struct gpio_keys_button button = {
-+	.code = KEY_POWER,
-+	.gpio = -1,
-+	.type = EV_KEY,
-+};
-+
-+static struct gpio_keys_platform_data bd71828_powerkey_data = {
-+	.buttons = &button,
-+	.nbuttons = 1,
-+	.name = "bd71828-pwrkey",
-+};
-+
- static const struct resource rtc_irqs[] = {
- 	DEFINE_RES_IRQ_NAMED(BD71828_INT_RTC0, "bd71828-rtc-alm-0"),
- 	DEFINE_RES_IRQ_NAMED(BD71828_INT_RTC1, "bd71828-rtc-alm-1"),
-@@ -36,6 +50,10 @@ static struct mfd_cell bd71828_mfd_cells[] = {
- 		.name = "bd70528-rtc",
- 		.resources = rtc_irqs,
- 		.num_resources = ARRAY_SIZE(rtc_irqs),
-+	}, {
-+		.name = "gpio-keys",
-+		.platform_data = &bd71828_powerkey_data,
-+		.pdata_size = sizeof(bd71828_powerkey_data),
- 	},
- };
- 
-@@ -288,9 +306,19 @@ static int bd71828_i2c_probe(struct i2c_client *i2c,
- 		dev_err(&i2c->dev, "Failed to add IRQ chip\n");
- 		return ret;
- 	}
-+
- 	dev_dbg(&i2c->dev, "Registered %d IRQs for chip\n",
- 		bd71828_irq_chip.num_irqs);
- 
-+	ret = regmap_irq_get_virq(irq_data, BD71828_INT_SHORTPUSH);
-+
-+	if (ret < 0) {
-+		dev_err(&i2c->dev, "Failed to get the power-key IRQ\n");
-+		return ret;
-+	}
-+
-+	button.irq = ret;
-+
- 	ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
- 				   bd71828_mfd_cells,
- 				   ARRAY_SIZE(bd71828_mfd_cells), NULL, 0,
--- 
-2.21.0
+On Thu, Oct 17, 2019 at 09:42:53AM +0800, Jason Wang wrote:
+>=20
+> On 2019/10/15 =E4=B8=8B=E5=8D=8810:37, Stefan Hajnoczi wrote:
+> > On Tue, Oct 15, 2019 at 11:37:17AM +0800, Jason Wang wrote:
+> > > On 2019/10/15 =E4=B8=8A=E5=8D=881:49, Stefan Hajnoczi wrote:
+> > > > On Fri, Oct 11, 2019 at 04:15:50PM +0800, Jason Wang wrote:
+> > > > > There are hardware that can do virtio datapath offloading while h=
+aving
+> > > > > its own control path. This path tries to implement a mdev based
+> > > > > unified API to support using kernel virtio driver to drive those
+> > > > > devices. This is done by introducing a new mdev transport for vir=
+tio
+> > > > > (virtio_mdev) and register itself as a new kind of mdev driver. T=
+hen
+> > > > > it provides a unified way for kernel virtio driver to talk with m=
+dev
+> > > > > device implementation.
+> > > > >=20
+> > > > > Though the series only contains kernel driver support, the goal i=
+s to
+> > > > > make the transport generic enough to support userspace drivers. T=
+his
+> > > > > means vhost-mdev[1] could be built on top as well by resuing the
+> > > > > transport.
+> > > > >=20
+> > > > > A sample driver is also implemented which simulate a virito-net
+> > > > > loopback ethernet device on top of vringh + workqueue. This could=
+ be
+> > > > > used as a reference implementation for real hardware driver.
+> > > > >=20
+> > > > > Consider mdev framework only support VFIO device and driver right=
+ now,
+> > > > > this series also extend it to support other types. This is done
+> > > > > through introducing class id to the device and pairing it with
+> > > > > id_talbe claimed by the driver. On top, this seris also decouple
+> > > > > device specific parents ops out of the common ones.
+> > > > I was curious so I took a quick look and posted comments.
+> > > >=20
+> > > > I guess this driver runs inside the guest since it registers virtio
+> > > > devices?
+> > >=20
+> > > It could run in either guest or host. But the main focus is to run in=
+ the
+> > > host then we can use virtio drivers in containers.
+> > >=20
+> > >=20
+> > > > If this is used with physical PCI devices that support datapath
+> > > > offloading then how are physical devices presented to the guest wit=
+hout
+> > > > SR-IOV?
+> > >=20
+> > > We will do control path meditation through vhost-mdev[1] and vhost-vf=
+io[2].
+> > > Then we will present a full virtio compatible ethernet device for gue=
+st.
+> > >=20
+> > > SR-IOV is not a must, any mdev device that implements the API defined=
+ in
+> > > patch 5 can be used by this framework.
+> > What I'm trying to understand is: if you want to present a virtio-pci
+> > device to the guest (e.g. using vhost-mdev or vhost-vfio), then how is
+> > that related to this patch series?
+>=20
+>=20
+> This series introduce some infrastructure that would be used by vhost-mde=
+v:
+>=20
+> 1) allow new type of mdev devices/drivers other than vfio (through class_=
+id
+> and device ops)
+>=20
+> 2) a set of virtio specific callbacks that will be used by both vhost-mdev
+> and virtio-mdev defined in patch 5
+>=20
+> Then vhost-mdev can be implemented on top: a new mdev class id but reuse =
+the
+> callback defined in 2. Through this way the parent can provides a single =
+set
+> of callbacks (device ops) for both kernel virtio driver (through
+> virtio-mdev) or userspace virtio driver (through vhost-mdev).
 
+Okay, thanks for explaining!
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+Stefan
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+--Pql/uPZNXIm1JCle
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2oN8wACgkQnKSrs4Gr
+c8gqswf/fQBq+qX21L3QGLUXUsf7OZ9kLP3ksR+9RYfGDJaFva/fV/aULknTmAiO
+OA0s+Eiw7K5Hy2ooKGPQXPYgAJhgnHqmhKgOEdsOGDWyCilYAiJzk/YXkpPvaCTp
+ovWC5Fz/shXyY3m2YGPXuwnWjbCam7cqMCRVPrmzJWoS6kdvsYsPxBVnhGFOm0Ms
+gbll/8mZQDQWsOZ8ZFeXLXCcHifXaiLa+yiGcZfxtV37oHsSapT+MOXEstGy4jEe
+uvos/V8tSLLMOJ+zgMYGOI0oOJIejMOrLU2zxPlktTbBVcM1RQtpJL69F30gi89K
+qCue5w57Z1UNfPVbXLiobIkPcZBGVw==
+=EXDt
+-----END PGP SIGNATURE-----
+
+--Pql/uPZNXIm1JCle--
