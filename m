@@ -2,98 +2,135 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B305FA372B
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE54FA372B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20FE120820
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67E6421835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:16:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408000AbfJQHQc (ORCPT
+        id S2408043AbfJQHQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 03:16:32 -0400
-Received: from mga03.intel.com ([134.134.136.65]:58545 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726208AbfJQHQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 03:16:31 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 00:16:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,306,1566889200"; 
-   d="scan'208";a="208177221"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002.jf.intel.com with ESMTP; 17 Oct 2019 00:16:29 -0700
-Received: from andy by smile with local (Exim 4.92.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iL01M-0008Pi-8X; Thu, 17 Oct 2019 10:16:28 +0300
-Date:   Thu, 17 Oct 2019 10:16:28 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v5 10/14] software node: rename is_array to is_inline
-Message-ID: <20191017071628.GD32742@smile.fi.intel.com>
-References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
- <20191011230721.206646-11-dmitry.torokhov@gmail.com>
- <20191014073720.GH32742@smile.fi.intel.com>
- <20191015182206.GF105649@dtor-ws>
- <20191016075940.GP32742@smile.fi.intel.com>
- <20191016165430.GD35946@dtor-ws>
+        Thu, 17 Oct 2019 03:16:40 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4236 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726208AbfJQHQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 03:16:39 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 928A792B0572A31F7EC2;
+        Thu, 17 Oct 2019 15:16:36 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.75) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 17 Oct 2019 15:16:32 +0800
+From:   Daode Huang <huangdaode@hisilicon.com>
+To:     <jason@lakedaemon.net>, <andrew@lunn.ch>,
+        <gregory.clement@bootlin.com>, <sebastian.hesselbarth@gmail.com>,
+        <tglx@linutronix.de>, <maz@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <nm@ti.com>, <t-kristo@ti.com>, <ssantosh@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH] use devm_platform_ioremap_resource() for irqchip drivers
+Date:   Thu, 17 Oct 2019 15:13:43 +0800
+Message-ID: <1571296423-208359-1-git-send-email-huangdaode@hisilicon.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191016165430.GD35946@dtor-ws>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 09:54:30AM -0700, Dmitry Torokhov wrote:
-> On Wed, Oct 16, 2019 at 10:59:40AM +0300, Andy Shevchenko wrote:
-> > On Tue, Oct 15, 2019 at 11:22:06AM -0700, Dmitry Torokhov wrote:
-> > > On Mon, Oct 14, 2019 at 10:37:20AM +0300, Andy Shevchenko wrote:
-> > > > On Fri, Oct 11, 2019 at 04:07:17PM -0700, Dmitry Torokhov wrote:
+From: Daode Huang <huangdaode@hislicon.com>
 
-> > > > 'stored inline' -> 'embedded in the &struct...' ?
-> > > 
-> > > I was trying to have a link "stored inline" -> "is_inline".
-> > > 
-> > > Do we want to change the flag to be "is_embedded"?
-> > 
-> > In dictionaries I have
-> > 
-> > embedded <-> unilateral
-> 
-> Are you trying to show synonym or antonym here? But I am pretty sure
-> "unilateral" is either.
+Use the new helper that wraps the calls to platform_get_resource()
+and devm_ioremap_resource() together
 
-Antonyms. The 'unilateral' is marked as so in the dictionary.
+Signed-off-by: Daode Huang <huangdaode@hislicon.com>
+---
+ drivers/irqchip/irq-mvebu-icu.c   | 3 +--
+ drivers/irqchip/irq-mvebu-pic.c   | 3 +--
+ drivers/irqchip/irq-stm32-exti.c  | 3 +--
+ drivers/irqchip/irq-ti-sci-inta.c | 3 +--
+ drivers/irqchip/irq-ts4800.c      | 3 +--
+ 5 files changed, 5 insertions(+), 10 deletions(-)
 
-> Antonyms for our use of "embedded" are likely "detached" or
-> "disconnected".
-> 
-> > inline <-> ???
-> 
-> "out of line" but I still believe "stored separately" explains precisely
-> what we have here.
-
-No, 'out of line' is idiom with a special meaning.
-
+diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
+index 547045d..ddf9b0d 100644
+--- a/drivers/irqchip/irq-mvebu-icu.c
++++ b/drivers/irqchip/irq-mvebu-icu.c
+@@ -357,8 +357,7 @@ static int mvebu_icu_probe(struct platform_device *pdev)
+ 
+ 	icu->dev = &pdev->dev;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	icu->base = devm_ioremap_resource(&pdev->dev, res);
++	icu->base = devm_platform_ioremap_resource(pdev, res);
+ 	if (IS_ERR(icu->base)) {
+ 		dev_err(&pdev->dev, "Failed to map icu base address.\n");
+ 		return PTR_ERR(icu->base);
+diff --git a/drivers/irqchip/irq-mvebu-pic.c b/drivers/irqchip/irq-mvebu-pic.c
+index eec6395..0c3520d 100644
+--- a/drivers/irqchip/irq-mvebu-pic.c
++++ b/drivers/irqchip/irq-mvebu-pic.c
+@@ -130,8 +130,7 @@ static int mvebu_pic_probe(struct platform_device *pdev)
+ 	if (!pic)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	pic->base = devm_ioremap_resource(&pdev->dev, res);
++	pic->base = devm_platform_ioremap_resource(pdev, res);
+ 	if (IS_ERR(pic->base))
+ 		return PTR_ERR(pic->base);
+ 
+diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
+index e00f2fa..7f5500e 100644
+--- a/drivers/irqchip/irq-stm32-exti.c
++++ b/drivers/irqchip/irq-stm32-exti.c
+@@ -849,8 +849,7 @@ static int stm32_exti_probe(struct platform_device *pdev)
+ 	if (!host_data->chips_data)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	host_data->base = devm_ioremap_resource(dev, res);
++	host_data->base = devm_platform_ioremap_resource(pdev, res);
+ 	if (IS_ERR(host_data->base)) {
+ 		dev_err(dev, "Unable to map registers\n");
+ 		return PTR_ERR(host_data->base);
+diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
+index ef4d625..d2ad3cc 100644
+--- a/drivers/irqchip/irq-ti-sci-inta.c
++++ b/drivers/irqchip/irq-ti-sci-inta.c
+@@ -567,8 +567,7 @@ static int ti_sci_inta_irq_domain_probe(struct platform_device *pdev)
+ 		return PTR_ERR(inta->global_event);
+ 	}
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	inta->base = devm_ioremap_resource(dev, res);
++	inta->base = devm_platform_ioremap_resource(pdev, res);
+ 	if (IS_ERR(inta->base))
+ 		return -ENODEV;
+ 
+diff --git a/drivers/irqchip/irq-ts4800.c b/drivers/irqchip/irq-ts4800.c
+index 2325fb3..f1cefa9 100644
+--- a/drivers/irqchip/irq-ts4800.c
++++ b/drivers/irqchip/irq-ts4800.c
+@@ -101,8 +101,7 @@ static int ts4800_ic_probe(struct platform_device *pdev)
+ 	if (!data)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	data->base = devm_ioremap_resource(&pdev->dev, res);
++	data->base = devm_platform_ioremap_resource(pdev, res);
+ 	if (IS_ERR(data->base))
+ 		return PTR_ERR(data->base);
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.8.1
 
