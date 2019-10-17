@@ -2,112 +2,201 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAF2FA3733
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DB0FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B36B20869
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F04D120869
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:49:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408991AbfJQKtE (ORCPT
+        id S2409010AbfJQKtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 06:49:04 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:40285 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404935AbfJQKtD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 06:49:03 -0400
-X-Originating-IP: 86.207.98.53
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 57C6360007;
-        Thu, 17 Oct 2019 10:49:00 +0000 (UTC)
-Date:   Thu, 17 Oct 2019 12:48:59 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>
-Subject: Re: [RFC PATCH 09/13] mfd: rtc: support RTC on ROHM BD71828 with
- BD70528 driver
-Message-ID: <20191017104859.GC3125@piout.net>
-References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
- <9ccc83f3dfd0fd0dc8178adf41b52115f960c45a.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
- <20191017101225.GB3125@piout.net>
- <a1aa91f74b41033fed4a7106247f48f9b9f78bd9.camel@fi.rohmeurope.com>
+        Thu, 17 Oct 2019 06:49:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:6584 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404935AbfJQKtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 06:49:05 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 625A62E97D5;
+        Thu, 17 Oct 2019 10:49:04 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-185.pek2.redhat.com [10.72.12.185])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5A5E55D721;
+        Thu, 17 Oct 2019 10:48:39 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com, Jason Wang <jasowang@redhat.com>
+Subject: [PATCH V4 0/6] mdev based hardware virtio offloading support
+Date:   Thu, 17 Oct 2019 18:48:30 +0800
+Message-Id: <20191017104836.32464-1-jasowang@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a1aa91f74b41033fed4a7106247f48f9b9f78bd9.camel@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 17 Oct 2019 10:49:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/10/2019 10:36:44+0000, Vaittinen, Matti wrote:
-> Hello Alexandre,
-> 
-> Thanks for quick check! I'll be off for the rest of the week but I will
-> re-work this patch at next week :) I agree with you regarding most of
-> the comments.
-> 
-> > > +
-> > > +
-> > > +/*
-> > > + * RTC definitions shared between
-> > > + *
-> > > + * BD70528
-> > > + * and BD71828
-> > > + */
-> > > +
-> > > +#define ROHM_BD1_MASK_RTC_SEC		0x7f
-> > > +#define ROHM_BD1_MASK_RTC_MINUTE	0x7f
-> > > +#define ROHM_BD1_MASK_RTC_HOUR_24H	0x80
-> > > +#define ROHM_BD1_MASK_RTC_HOUR_PM	0x20
-> > > +#define ROHM_BD1_MASK_RTC_HOUR		0x3f
-> > > +#define ROHM_BD1_MASK_RTC_DAY		0x3f
-> > > +#define ROHM_BD1_MASK_RTC_WEEK		0x07
-> > > +#define ROHM_BD1_MASK_RTC_MONTH		0x1f
-> > > +#define ROHM_BD1_MASK_RTC_YEAR		0xff
-> > > +#define ROHM_BD1_MASK_ALM_EN		0x7
-> > > +
-> > 
-> > All that renaming is distracting and useless. Please resubmit without
-> > renaming defines, structs and functions to make it easier to review.
-> 
-> I would prefer renaming because it makes it clearly visible which
-> defines/structs/functions are common for both PMICs and which are PMIC
-> specific. But I really understand the problem of spotting real changes.
-> Would it be Ok if I did renaming in separate patch which does not bring
-> in any other changes - and then the functional changes in separate
-> patch?
-> 
+Hi all:
 
-No, unless you can guarantee that all future PMICs from rohm matching
-the wildcard will use this driver.
+There are hardwares that can do virtio datapath offloading while
+having its own control path. This path tries to implement a mdev based
+unified API to support using kernel virtio driver to drive those
+devices. This is done by introducing a new mdev transport for virtio
+(virtio_mdev) and register itself as a new kind of mdev driver. Then
+it provides a unified way for kernel virtio driver to talk with mdev
+device implementation.
+
+Though the series only contains kernel driver support, the goal is to
+make the transport generic enough to support userspace drivers. This
+means vhost-mdev[1] could be built on top as well by resuing the
+transport.
+
+A sample driver is also implemented which simulate a virito-net
+loopback ethernet device on top of vringh + workqueue. This could be
+used as a reference implementation for real hardware driver.
+
+Also a real ICF VF driver was also posted here[2] which is a good
+reference for vendors who is interested in their own virtio datapath
+offloading product.
+
+Consider mdev framework only support VFIO device and driver right now,
+this series also extend it to support other types. This is done
+through introducing class id to the device and pairing it with
+id_talbe claimed by the driver. On top, this seris also decouple
+device specific parents ops out of the common ones.
+
+Pktgen test was done with virito-net + mvnet loop back device.
+
+Please review.
+
+[1] https://lkml.org/lkml/2019/9/26/15
+[2] https://lkml.org/lkml/2019/10/15/1226
+
+Changes from V3:
+
+- document that class id (device ops) must be specified in create()
+- add WARN() when trying to set class_id when it has already set
+- add WARN() when class_id is not specified in create() and correctly
+  return an error in this case
+- correct the prototype of mdev_set_class() in the doc
+- add documention of mdev_set_class()
+- remove the unnecessary "class_id_fail" label when class id is not
+  specified in create()
+- convert id_table in vfio_mdev to const
+- move mdev_set_class and its friends after mdev_uuid()
+- suqash the patch of bus uevent into patch of introducing class id
+- tweak the words in the docs per Cornelia suggestion
+- tie class_id and device ops through class specific initialization
+  routine like mdev_set_vfio_ops()
+- typos fixes in the docs of virtio-mdev callbacks
+- document the usage of virtqueues in struct virtio_mdev_device
+- remove the useless vqs array in struct virtio_mdev_device
+- rename MDEV_ID_XXX to MDEV_CLASS_ID_XXX
+
+Changes from V2:
+
+- fail when class_id is not specified
+- drop the vringh patch
+- match the doc to the code
+- tweak the commit log
+- move device_ops from parent to mdev device
+- remove the unused MDEV_ID_VHOST
+
+Changes from V1:
+
+- move virtio_mdev.c to drivers/virtio
+- store class_id in mdev_device instead of mdev_parent
+- store device_ops in mdev_device instead of mdev_parent
+- reorder the patch, vringh fix comes first
+- really silent compiling warnings
+- really switch to use u16 for class_id
+- uevent and modpost support for mdev class_id
+- vraious tweaks per comments from Parav
+
+Changes from RFC-V2:
+
+- silent compile warnings on some specific configuration
+- use u16 instead u8 for class id
+- reseve MDEV_ID_VHOST for future vhost-mdev work
+- introduce "virtio" type for mvnet and make "vhost" type for future
+  work
+- add entries in MAINTAINER
+- tweak and typos fixes in commit log
+
+Changes from RFC-V1:
+
+- rename device id to class id
+- add docs for class id and device specific ops (device_ops)
+- split device_ops into seperate headers
+- drop the mdev_set_dma_ops()
+- use device_ops to implement the transport API, then it's not a part
+  of UAPI any more
+- use GFP_ATOMIC in mvnet sample device and other tweaks
+- set_vring_base/get_vring_base support for mvnet device
+
+Jason Wang (6):
+  mdev: class id support
+  modpost: add support for mdev class id
+  mdev: introduce device specific ops
+  mdev: introduce virtio device and its device ops
+  virtio: introduce a mdev based transport
+  docs: sample driver to demonstrate how to implement virtio-mdev
+    framework
+
+ .../driver-api/vfio-mediated-device.rst       |  22 +-
+ MAINTAINERS                                   |   2 +
+ drivers/gpu/drm/i915/gvt/kvmgt.c              |  17 +-
+ drivers/s390/cio/vfio_ccw_ops.c               |  17 +-
+ drivers/s390/crypto/vfio_ap_ops.c             |  13 +-
+ drivers/vfio/mdev/mdev_core.c                 |  38 +
+ drivers/vfio/mdev/mdev_driver.c               |  22 +
+ drivers/vfio/mdev/mdev_private.h              |   2 +
+ drivers/vfio/mdev/vfio_mdev.c                 |  45 +-
+ drivers/virtio/Kconfig                        |   7 +
+ drivers/virtio/Makefile                       |   1 +
+ drivers/virtio/virtio_mdev.c                  | 409 +++++++++++
+ include/linux/mdev.h                          |  55 +-
+ include/linux/mod_devicetable.h               |   8 +
+ include/linux/vfio_mdev.h                     |  52 ++
+ include/linux/virtio_mdev.h                   | 151 ++++
+ samples/Kconfig                               |   7 +
+ samples/vfio-mdev/Makefile                    |   1 +
+ samples/vfio-mdev/mbochs.c                    |  19 +-
+ samples/vfio-mdev/mdpy.c                      |  19 +-
+ samples/vfio-mdev/mtty.c                      |  17 +-
+ samples/vfio-mdev/mvnet.c                     | 691 ++++++++++++++++++
+ scripts/mod/devicetable-offsets.c             |   3 +
+ scripts/mod/file2alias.c                      |  10 +
+ 24 files changed, 1541 insertions(+), 87 deletions(-)
+ create mode 100644 drivers/virtio/virtio_mdev.c
+ create mode 100644 include/linux/vfio_mdev.h
+ create mode 100644 include/linux/virtio_mdev.h
+ create mode 100644 samples/vfio-mdev/mvnet.c
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.19.1
+
