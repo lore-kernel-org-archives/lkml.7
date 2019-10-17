@@ -2,91 +2,107 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4772FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 22:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FA1FA372B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 22:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79D0421D7A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 22:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AE4521D7A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 22:19:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PRYDbzXt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="axQUnDMy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438247AbfJQWS4 (ORCPT
+        id S2441607AbfJQWTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 18:18:56 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34746 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388926AbfJQWS4 (ORCPT
+        Thu, 17 Oct 2019 18:19:02 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36913 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388926AbfJQWTC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 18:18:56 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b128so2534560pfa.1;
-        Thu, 17 Oct 2019 15:18:55 -0700 (PDT)
+        Thu, 17 Oct 2019 18:19:02 -0400
+Received: by mail-pg1-f195.google.com with SMTP id p1so2155804pgi.4;
+        Thu, 17 Oct 2019 15:19:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=C169RwbVuJRbGp34GilCowuduOX6yRZWq0x40Zztun8=;
-        b=PRYDbzXtZ/SI+Iz1Fdv8VRKfhYh4ZHVpkTLQPJas85E17XDmyjw05WJM5WqTVF3OV7
-         xb0AYHe3JCgUXM6LIJs5p6dio/JbX5mFLXahRZRbLq8VybPWftUt78kXrMDXuThD38w4
-         UczpItN4bYOd3Q4Pm/Vj8NR8zaTyIqyPV+0eHDz9W/Pv9YdBC4N1GdSM6rKjwBDax/+M
-         UvFr89PmEhmqQAbT8CmkzcbH05MEKOqBuy5DrHPNz588kU5+3LSDApsk/CU5l9FvPsuj
-         0buXhrOLyU01YJa+8TiTmImdaP8rvUqlU+JEI8rQY8/EUVziv00mnzq24vQM0e/ZUPjO
-         hC/Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=s9fEJB25cDAPZY3DtNOH/wi7012sGuVONlLEMVLYyf8=;
+        b=axQUnDMyeNB3/EBhJoamiIXm331hdjS2hnK5N9pblD1OxnwedQ3V6CMj6cVPR6Fcfu
+         MNJDZvPyfpOzBdqO+RCfBnMfW3hnJZZ+YJoDxb93dWQfgX0pRAjFxospgckErGSQ9Y9A
+         ucp4yAg7SrCfR4vpit0Vl0AEraOTK05B4ViqW2kUHhMQ5jcViq8OUGQuT9zDeWvIxDKr
+         aeF82II1p/2Ov8ZNLlwKPESxfsxfM/KH85VYXV95VOi42ekEWQEY6WCLCiTJYC0k2aHC
+         Vuh63hMlaGeDQyNpYvKIQ7Ig56TDcTzCy9dTu4v4M4BkRNygN1aAqMDFtj82y6q+areT
+         343Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=C169RwbVuJRbGp34GilCowuduOX6yRZWq0x40Zztun8=;
-        b=Urx4aNv/+/XoQqqH+egkLCA0O9qqIewzaBmWvla65kcd2jEg9+jk5qxcb1gK4GkymS
-         p26diKl3FzcS71c+b9vnQWWhhgVdYff9+6za1wQOkMrXQtbn2kNreFA82xKAKKoVXdcF
-         00eTKVkqT42G66WOR1Gx9j2O6SLuN5aXSDDhG7BnMzqa1QJe6uZdCItqYQnlEtZbHnTy
-         4FX5mHHYWMXcAj0WSB+hDb0TNYHv5lXgPXuNU7KjoIL1jRXziw3MXrxqVV2DQ9XjDLJY
-         nnVtQg/Ga/z9hZc7ivb1fLh1OTO3mO4yv3/k9wTQzOPOl+z7gFyOvn532DGjFk+LU3p5
-         qTeQ==
-X-Gm-Message-State: APjAAAXc6YIUWjfcDNEYojCmY2Gam6qRFIEEsKM0gtc6lYeuMDFd+Sy7
-        KRtz6ZBOZ7JqqAiKCjj60Lc=
-X-Google-Smtp-Source: APXvYqxoawBsnwxFpbUrvD8qh7zE5Su3nWTf9ECIFvUO/tdKYDdF9ZiLNySJn6V+TeRpO0csw44STQ==
-X-Received: by 2002:a63:b61:: with SMTP id a33mr6765327pgl.247.1571350735122;
-        Thu, 17 Oct 2019 15:18:55 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=s9fEJB25cDAPZY3DtNOH/wi7012sGuVONlLEMVLYyf8=;
+        b=CYRDDrPt5L26GvFzEYtJGCPSHf87OdvCH2O9YZivW133v+XIFV50BUmB45cG5bRj3A
+         PD9NTYArVrTQz267H41XQyer4lbeN0qa35gk3/7Gv7QDKdv29Yg63MFiq7qbJ+uELDer
+         qFZTuHlAuNoZVYIQMjzQ6/0iD2hJwduIzYnb8dZ8JRK28TVQz2NxlX5SMKJg3djmxWHn
+         Ik70ky17EB9GSBPi4S3vFGZkX1TGEQpgzRD1Vlt+hm0LgpTsxqmq7UD2v4DbtailEOMn
+         RmaXRVl8Mx9K8RlMtoprdnPwEkfCDoBOpLAMdVH41/OSzi8hJt6AW6IIXnNxzmPUX0h8
+         LW3w==
+X-Gm-Message-State: APjAAAUKpnS5Okbg5b32Gn1KJRX9wxDZ5v1pCeRP4q19nAd73EVE1sp9
+        kRsl3JCkC9R4nZcjHpV6Wdz4iRi5
+X-Google-Smtp-Source: APXvYqw00sZLsNXkGPnJwatQdx2ULrHHTTRCvR4qpWroQu8ngO/9MBDtK0DT14bo6sYn2qSNTjaG9A==
+X-Received: by 2002:a62:1889:: with SMTP id 131mr2738020pfy.21.1571350741437;
+        Thu, 17 Oct 2019 15:19:01 -0700 (PDT)
 Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id a8sm3441912pff.5.2019.10.17.15.18.53
+        by smtp.gmail.com with ESMTPSA id a8sm3441912pff.5.2019.10.17.15.19.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 15:18:54 -0700 (PDT)
+        Thu, 17 Oct 2019 15:19:01 -0700 (PDT)
 From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 To:     agross@kernel.org, bjorn.andersson@linaro.org
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [RFC PATCH 0/4] Enable msm8998 bluetooth
-Date:   Thu, 17 Oct 2019 15:18:39 -0700
-Message-Id: <20191017221843.8130-1-jeffrey.l.hugo@gmail.com>
+Subject: [RFC PATCH 1/4] arm64: dts: qcom: msm8998: Add blsp1 BAM
+Date:   Thu, 17 Oct 2019 15:18:40 -0700
+Message-Id: <20191017221843.8130-2-jeffrey.l.hugo@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191017221843.8130-1-jeffrey.l.hugo@gmail.com>
+References: <20191017221843.8130-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series enables bluetooth on the msm8998 platforms.  However,
-without fixes under discussion [1] and [2], the init process will fail,
-leaving bluetooth non-functional.  Perhaps it is best to wait until the
-dependencies meet acceptance before taking this series.
+The BAM in the blsp1 block can be used as a DMA engine to offload work
+when managing any of the peripherals in the blsp.
 
-[1] - https://lkml.org/lkml/2019/10/17/599
-[2] - https://lkml.org/lkml/2019/10/17/975 
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Jeffrey Hugo (4):
-  arm64: dts: qcom: msm8998: Add blsp1 BAM
-  arm64: dts: qcom: msm8998: Add blsp1_uart3
-  arm64: dts: qcom: msm8998-mtp: Enable bluetooth
-  arm64: dts: qcom: msm8998-clamshell: Enable bluetooth
-
- .../boot/dts/qcom/msm8998-clamshell.dtsi      | 17 ++++++++++++
- arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi     | 14 ++++++++++
- arch/arm64/boot/dts/qcom/msm8998-pins.dtsi    | 13 +++++++++
- arch/arm64/boot/dts/qcom/msm8998.dtsi         | 27 +++++++++++++++++++
- 4 files changed, 71 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index e42177952690..a3465f6bae84 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -1201,6 +1201,19 @@
+ 			status = "disabled";
+ 		};
+ 
++		blsp1_dma: dma@c144000 {
++			compatible = "qcom,bam-v1.7.0";
++			reg = <0x0c144000 0x25000>;
++			interrupts = <GIC_SPI 238 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "bam_clk";
++			#dma-cells = <1>;
++			qcom,ee = <0>;
++			qcom,controlled-remotely;
++			num-channels = <18>;
++			qcom,num-ees = <4>;
++		};
++
+ 		blsp1_i2c1: i2c@c175000 {
+ 			compatible = "qcom,i2c-qup-v2.2.1";
+ 			reg = <0x0c175000 0x600>;
 -- 
 2.17.1
 
