@@ -2,93 +2,121 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E2EFA3732
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B531CFA3730
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E1FC20869
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C59720869
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:27:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="P28/9b/e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408492AbfJQJ04 (ORCPT
+        id S2408497AbfJQJ1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 05:26:56 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:36650 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1732676AbfJQJ0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 05:26:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3A3D1993;
-        Thu, 17 Oct 2019 02:26:30 -0700 (PDT)
-Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3D84F3F718;
-        Thu, 17 Oct 2019 02:26:30 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 10:26:28 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] cpufreq: merge arm_big_little and vexpress-spc
-Message-ID: <20191017092628.GD8978@bogus>
-References: <20191016110344.15259-1-sudeep.holla@arm.com>
- <20191016110344.15259-3-sudeep.holla@arm.com>
- <20191017023936.vgkdfnyaz3r4k74z@vireshk-i7>
+        Thu, 17 Oct 2019 05:27:45 -0400
+Received: from mail2.skidata.com ([91.230.2.91]:2716 "EHLO mail2.skidata.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392048AbfJQJ1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 05:27:45 -0400
+X-Greylist: delayed 430 seconds by postgrey-1.27 at vger.kernel.org; Thu, 17 Oct 2019 05:27:44 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
+  t=1571304464; x=1602840464;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=+j+Yjp8dnjM1nQr3RyLaL94Bw4QJ0SOznlwHGpyhZDE=;
+  b=P28/9b/eGSIKvxrqT/J3K6Ej3bnL6syWkhXehvuGH+z1LA7GrMiLl4P3
+   DfB1ENAcURaYO7WnPLabRmfshS+6oQhtzoK4AIx1+qJquKuSvI9UJybwq
+   GWzvKLr0AGyx+/QqtG9Er+JF4pfG6VUMCkJcIDL6V4I+3f+JwXP0vk6bC
+   hkQDQxEloesneJ4ogMbjSzm33kHi8cAcpz7+0bShWyFkvL3ZpyZOmG2Ip
+   Q4nd7RBB6Q5xa8bOfdK62OkG2acDi1nJ563SFMlXrkxTCGL5dyYIY1tgW
+   j5jX4YO1F8V1h6PfpB/BNTuXLV4DkuXgFQiRukg+mv8sVI2jRCKOC4y/r
+   Q==;
+IronPort-SDR: tD3ZTSbdZaCQ6ehfqXJxsB7/tK0f4C8+Wd3DkRP0hldWJcMQgtu5BiK9/3sOQzd4cpV/MzPh7C
+ gwUUaaJdEP77JUrYIcCweplChEajj2CgOeFaUDcvW4OQCc87Dbuw0NaXwfnJwagDbiVMRhTbfJ
+ X5aik8g4tYaQPppclIGjyGkrijcFSrZkf4FuPr+1ZJurPw6PLodiGS5L5uJ/SjfSVGjNKr3B2E
+ uS4eYe5C4MzWZtgKm+I4n4XscfkTg1O9KXHz8SjyEXxDTvw0RB+HMKHyw0D+sIN2WCLucNdKbg
+ KN4=
+X-IronPort-AV: E=Sophos;i="5.67,307,1566856800"; 
+   d="scan'208";a="2381611"
+Subject: Re: [PATCH 5.3 112/112] ASoC: sgtl5000: add ADC mute control
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>
+References: <20191016214844.038848564@linuxfoundation.org>
+ <20191016214907.599726506@linuxfoundation.org>
+ <20191016220044.GB11473@sirena.co.uk> <20191016221025.GA990599@kroah.com>
+ <20191016223518.GC11473@sirena.co.uk> <20191016232358.GA994597@kroah.com>
+From:   Richard Leitner <richard.leitner@skidata.com>
+Message-ID: <de9630e5-341f-b48d-029a-ef1a516bf820@skidata.com>
+Date:   Thu, 17 Oct 2019 11:20:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191017023936.vgkdfnyaz3r4k74z@vireshk-i7>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191016232358.GA994597@kroah.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [192.168.111.252]
+X-ClientProxiedBy: sdex4srv.skidata.net (192.168.111.82) To
+ sdex5srv.skidata.net (192.168.111.83)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 08:09:36AM +0530, Viresh Kumar wrote:
-> On 16-10-19, 12:03, Sudeep Holla wrote:
-> > arm_big_little cpufreq driver was designed as a generic big little
-> > driver that could be used by any platform and make use of bL switcher.
-> > Over years alternate solutions have be designed and merged to deal with
-> > bL/HMP systems like EAS.
-> >
-> > Also since no other driver made use of generic arm_big_little cpufreq
-> > driver except Vexpress SPC, we can merge them together as vexpress-spc
-> > driver used only on Vexpress TC2(CA15_CA7) platform.
-> >
-> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > ---
-> >  MAINTAINERS                            |   5 +-
-> >  drivers/cpufreq/Kconfig.arm            |  12 +-
-> >  drivers/cpufreq/Makefile               |   2 -
-> >  drivers/cpufreq/arm_big_little.c       | 658 ------------------------
-> >  drivers/cpufreq/arm_big_little.h       |  43 --
-> >  drivers/cpufreq/vexpress-spc-cpufreq.c | 661 ++++++++++++++++++++++++-
-> >  6 files changed, 652 insertions(+), 729 deletions(-)
-> >  delete mode 100644 drivers/cpufreq/arm_big_little.c
-> >  delete mode 100644 drivers/cpufreq/arm_big_little.h
->
-> The delta produced here is enormous probably because you copy/pasted things. I
-> am wondering if using git mv to rename arm_big_little.c and then move spc bits
-> into it will make this delta smaller to review ?
->
 
-Yes, I did a quick try but slightly different order. As I need the final
-driver to be vexpress-spc-cpufreq.c, I am thinking of first merging
-vexpress-spc-cpufreq.c into arm_big_little.c and then renaming it back
-later. Does that sound good ?
+On 17/10/2019 01:23, Greg Kroah-Hartman wrote:
+> On Wed, Oct 16, 2019 at 11:35:18PM +0100, Mark Brown wrote:
+>> On Wed, Oct 16, 2019 at 03:10:25PM -0700, Greg Kroah-Hartman wrote:
+>>> On Wed, Oct 16, 2019 at 11:00:44PM +0100, Mark Brown wrote:
+>>>> On Wed, Oct 16, 2019 at 02:51:44PM -0700, Greg Kroah-Hartman wrote:
+>>>>> From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+>>
+>>>>> commit 694b14554d75f2a1ae111202e71860d58b434a21 upstream.
+>>
+>>>>> This control mute/unmute the ADC input of SGTL5000
+>>>>> using its CHIP_ANA_CTRL register.
+>>
+>>>> This seems like a new feature and not an obvious candidate for stable?
+>>
+>>> there was a long email from Richard that said:
+>>> 	Upstream commit 631bc8f0134a ("ASoC: sgtl5000: Fix of unmute
+>>> 	outputs on probe"), which is e9f621efaebd in v5.3 replaced
+>>> 	snd_soc_component_write with snd_soc_component_update_bits and
+>>> 	therefore no longer cleared the MUTE_ADC flag. This caused the
+>>> 	ADC to stay muted and recording doesn't work any longer. This
+>>> 	patch fixes this problem by adding a Switch control for
+>>> 	MUTE_ADC.
+>>
+>>> That's why I took this.  If this isn't true, I'll be glad to drop this.
+>>
+>> That's probably not an appropriate fix for stable - it's going to add a
+>> new control which users will need to manually set (or hope their
+>> userspace automatically figures out that it should set for them, more
+>> advanced userspaces like PulseAudio should) which isn't a drop in fix.
+>> You could either drop the backport that was done for zero cross or take
+>> a new patch that clears the MUTE_ADC flag (rather than punting to
+>> userspace to do so), or just be OK with what you've got at the minute
+>> which might be fine given the lack of user reports.
+> 
+> Ok, I'll gladly go drop it, thanks!
 
-drivers/cpufreq/arm_big_little.c       | 78 ++++++++++++++++++++------
-drivers/cpufreq/arm_big_little.h       | 43 --------------
-drivers/cpufreq/vexpress-spc-cpufreq.c | 71 -----------------------
-6 files changed, 68 insertions(+), 145 deletions(-)
-delete mode 100644 drivers/cpufreq/arm_big_little.h
-delete mode 100644 drivers/cpufreq/vexpress-spc-cpufreq.c
+Mark, thanks for the clarification! I haven't thought of breaking 
+anything with the backport as it worked fine for our application.
 
-If we first rename arm_big_little.c, then we need change the final name
-otherwise we end up with same delta as the new name file will be merged
-into vexpress-spc-cpufreq.c
+Greg, just to be sure:
 
---
-Regards,
-Sudeep
+Are you going to drop this patch and revert e9f621efaebd for v5.3?
+
+Or should I send a patch which clears the MUTE_ADC flag like Mark
+suggested?
+
+thanks & regards;Richard.L
