@@ -2,434 +2,182 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B80FA3736
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A5FECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ACFD2089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:01:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="K09jKPWj"
+	by mail.kernel.org (Postfix) with ESMTP id BE72721848
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:01:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502266AbfJQMBw (ORCPT
+        id S2502279AbfJQMB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 08:01:52 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34554 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502216AbfJQMBg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:01:36 -0400
-Received: by mail-wm1-f67.google.com with SMTP id y135so6874082wmc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 05:01:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=YhNYXZxyWc5/5zd0BcPX1GtvYGOXWbRr6Z1Gccorw3E=;
-        b=K09jKPWjRqj9s2xlHTuPqAlA6ZWszjBve+yC8pv/s7Z0o/1newfdUZys9sN+WE5S/7
-         pWSkpzA3Mx1tdkZT28NLo5a9tYjRRRoXWTyOz3up2xuMxuklqwxaihxalUtjeqVXf1d4
-         a80qlpHg3NWwRMSZXJ0U06yWRCHCf461rB1Us=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=YhNYXZxyWc5/5zd0BcPX1GtvYGOXWbRr6Z1Gccorw3E=;
-        b=ocbmyVORvoW0mrFPQ5mjXw3vpTxqz6IINd9hFT/uBhdzNvOxLTIxSqWtDaqllGZ8C/
-         Fk7PzDUAt+t0KapHisLhdk3K98G3z8alvIai9ONlrRG06+Xg21OF413N9fu3TqRfPGxp
-         677Vb7vf1ZjG2EGSiQfmOZUV2xN/jzPr/4NWzk19+CRhvVoJZ0J1VRW5f/MPLSZleLTO
-         P9qmP8hgdkZQ5fgz6eC2LvHir3juSaxeKAj79x+RdYIr4VNnB1Ux4UC5ORolZSGEAmMq
-         LCczBVIj0hwDTx+7wUIf++BQEh/sKR/SlK3yf8L23LPFY3+zG6yMbrEODo2oAhmweaHf
-         esWA==
-X-Gm-Message-State: APjAAAV5Ic8ia2orx9ic3m8KDMfdpJhVz11mUV5kYxQKUmvcSvnsB+ZY
-        zvtO0JsSxKkLlG3vKWueM8gpSQ==
-X-Google-Smtp-Source: APXvYqz5pQPqMSvuIpH4+2pEu5cEMHl7N47K2RMX5fRB+ruAa0y1QKpVXw+jDTu27fbYUYRpZTGIJQ==
-X-Received: by 2002:a05:600c:21d7:: with SMTP id x23mr2576593wmj.6.1571313691267;
-        Thu, 17 Oct 2019 05:01:31 -0700 (PDT)
-Received: from shitalt.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id y1sm2317949wrw.6.2019.10.17.05.01.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 17 Oct 2019 05:01:30 -0700 (PDT)
-From:   Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
-To:     =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Vikram Prakash <vikram.prakash@broadcom.com>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vikas Gupta <vikas.gupta@broadcom.com>,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        tee-dev@lists.linaro.org, bcm-kernel-feedback-list@broadcom.com,
-        netdev@vger.kernel.org,
-        Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
-Subject: [PATCH V2 1/3] firmware: broadcom: add OP-TEE based BNXT f/w manager
-Date:   Thu, 17 Oct 2019 17:31:20 +0530
-Message-Id: <1571313682-28900-2-git-send-email-sheetal.tigadoli@broadcom.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1571313682-28900-1-git-send-email-sheetal.tigadoli@broadcom.com>
-References: <1571313682-28900-1-git-send-email-sheetal.tigadoli@broadcom.com>
+        Thu, 17 Oct 2019 08:01:58 -0400
+Received: from mga17.intel.com ([192.55.52.151]:63187 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2502256AbfJQMBv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 08:01:51 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 05:01:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,307,1566889200"; 
+   d="asc'?scan'208";a="226141770"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga002.fm.intel.com with ESMTP; 17 Oct 2019 05:01:48 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Christopher S . Hall" <christopher.s.hall@intel.com>
+Subject: Re: [RFC PATCH 1/5] x86: tsc: add tsc to art helpers
+In-Reply-To: <alpine.DEB.2.21.1910171256580.1824@nanos.tec.linutronix.de>
+References: <20190716072038.8408-1-felipe.balbi@linux.intel.com> <20190716072038.8408-2-felipe.balbi@linux.intel.com> <alpine.DEB.2.21.1907160952040.1767@nanos.tec.linutronix.de> <87y2zvt1hk.fsf@gmail.com> <alpine.DEB.2.21.1908151458560.1923@nanos.tec.linutronix.de> <87y2y4vk4g.fsf@gmail.com> <alpine.DEB.2.21.1910171256580.1824@nanos.tec.linutronix.de>
+Date:   Thu, 17 Oct 2019 15:01:44 +0300
+Message-ID: <871rvblgwn.fsf@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vikas Gupta <vikas.gupta@broadcom.com>
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-This driver registers on TEE bus to interact with OP-TEE based
-BNXT firmware management modules
 
-Signed-off-by: Vikas Gupta <vikas.gupta@broadcom.com>
-Signed-off-by: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
----
- drivers/firmware/broadcom/Kconfig             |   8 +
- drivers/firmware/broadcom/Makefile            |   1 +
- drivers/firmware/broadcom/tee_bnxt_fw.c       | 283 ++++++++++++++++++++++++++
- include/linux/firmware/broadcom/tee_bnxt_fw.h |  14 ++
- 4 files changed, 306 insertions(+)
- create mode 100644 drivers/firmware/broadcom/tee_bnxt_fw.c
- create mode 100644 include/linux/firmware/broadcom/tee_bnxt_fw.h
+Hi,
 
-diff --git a/drivers/firmware/broadcom/Kconfig b/drivers/firmware/broadcom/Kconfig
-index d03ed8e..79505ad 100644
---- a/drivers/firmware/broadcom/Kconfig
-+++ b/drivers/firmware/broadcom/Kconfig
-@@ -22,3 +22,11 @@ config BCM47XX_SPROM
- 	  In case of SoC devices SPROM content is stored on a flash used by
- 	  bootloader firmware CFE. This driver provides method to ssb and bcma
- 	  drivers to read SPROM on SoC.
-+
-+config TEE_BNXT_FW
-+	bool "Broadcom BNXT firmware manager"
-+	depends on (ARCH_BCM_IPROC && OPTEE) || COMPILE_TEST
-+	default ARCH_BCM_IPROC
-+	help
-+	  This module help to manage firmware on Broadcom BNXT device. The module
-+	  registers on tee bus and invoke calls to manage firmware on BNXT device.
-diff --git a/drivers/firmware/broadcom/Makefile b/drivers/firmware/broadcom/Makefile
-index 72c7fdc..17c5061 100644
---- a/drivers/firmware/broadcom/Makefile
-+++ b/drivers/firmware/broadcom/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-$(CONFIG_BCM47XX_NVRAM)		+= bcm47xx_nvram.o
- obj-$(CONFIG_BCM47XX_SPROM)		+= bcm47xx_sprom.o
-+obj-$(CONFIG_TEE_BNXT_FW)		+= tee_bnxt_fw.o
-diff --git a/drivers/firmware/broadcom/tee_bnxt_fw.c b/drivers/firmware/broadcom/tee_bnxt_fw.c
-new file mode 100644
-index 0000000..1e1e54c
---- /dev/null
-+++ b/drivers/firmware/broadcom/tee_bnxt_fw.c
-@@ -0,0 +1,283 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 Broadcom.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/tee_drv.h>
-+#include <linux/uuid.h>
-+
-+#include <linux/firmware/broadcom/tee_bnxt_fw.h>
-+
-+#define MAX_SHM_MEM_SZ	SZ_4M
-+
-+#define MAX_TEE_PARAM_ARRY_MEMB		4
-+
-+#define HANDLE_ERROR(ret, tee_ret, cmd)					\
-+do {									\
-+	if ((ret < 0) || (tee_ret != 0)) {				\
-+		dev_err(pvt_data.dev,					\
-+			#cmd " invoke failed TEE err: %x, ret:%x\n",	\
-+			tee_ret, ret);					\
-+		return -EINVAL;						\
-+	}								\
-+} while (0)
-+
-+enum ta_cmd {
-+	/*
-+	 * TA_CMD_BNXT_FASTBOOT - boot bnxt device by copying f/w into sram
-+	 *
-+	 *	param[0] unused
-+	 *	param[1] unused
-+	 *	param[2] unused
-+	 *	param[3] unused
-+	 *
-+	 * Result:
-+	 *	TEE_SUCCESS - Invoke command success
-+	 *	TEE_ERROR_ITEM_NOT_FOUND - Corrupt f/w image found on memory
-+	 */
-+	TA_CMD_BNXT_FASTBOOT = 0,
-+
-+	/*
-+	 * TA_CMD_BNXT_COPY_COREDUMP - copy the core dump into shm
-+	 *
-+	 *	param[0] (in value) - value.a: offset, data to be copied from
-+	 *			      value.b: size of the data
-+	 *	param[1] unused
-+	 *	param[2] unused
-+	 *	param[3] unused
-+	 *
-+	 * Result:
-+	 *	TEE_SUCCESS - Invoke command success
-+	 *	TEE_ERROR_BAD_PARAMETERS - Incorrect input param
-+	 *	TEE_ERROR_ITEM_NOT_FOUND - Corrupt core dump
-+	 */
-+	TA_CMD_BNXT_COPY_COREDUMP = 3,
-+};
-+
-+/**
-+ * struct tee_bnxt_fw_private - OP-TEE bnxt private data
-+ * @dev:		OP-TEE based bnxt device.
-+ * @ctx:		OP-TEE context handler.
-+ * @session_id:		TA session identifier.
-+ */
-+struct tee_bnxt_fw_private {
-+	struct device *dev;
-+	struct tee_context *ctx;
-+	u32 session_id;
-+	struct tee_shm *fw_shm_pool;
-+};
-+
-+static struct tee_bnxt_fw_private pvt_data;
-+
-+static inline void prepare_args(int cmd,
-+				struct tee_ioctl_invoke_arg *inv_arg,
-+				struct tee_param *param)
-+{
-+	memset(inv_arg, 0, sizeof(*inv_arg));
-+	memset(param, 0, (MAX_TEE_PARAM_ARRY_MEMB * sizeof(*param)));
-+
-+	inv_arg->func = cmd;
-+	inv_arg->session = pvt_data.session_id;
-+	inv_arg->num_params = MAX_TEE_PARAM_ARRY_MEMB;
-+
-+	/* Fill invoke cmd params */
-+	switch (cmd) {
-+	case TA_CMD_BNXT_COPY_COREDUMP:
-+		param[0].attr = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT;
-+		param[0].u.memref.shm = pvt_data.fw_shm_pool;
-+		param[0].u.memref.size = MAX_SHM_MEM_SZ;
-+		param[0].u.memref.shm_offs = 0;
-+		param[1].attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT;
-+		break;
-+	case TA_CMD_BNXT_FASTBOOT:
-+	default:
-+		/* Nothing to do */
-+		break;
-+	}
-+}
-+
-+/**
-+ * tee_bnxt_fw_load() - Load the bnxt firmware
-+ *		    Uses an OP-TEE call to start a secure
-+ *		    boot process.
-+ * Returns 0 on success, negative errno otherwise.
-+ */
-+int tee_bnxt_fw_load(void)
-+{
-+	int ret = 0;
-+	struct tee_ioctl_invoke_arg inv_arg;
-+	struct tee_param param[MAX_TEE_PARAM_ARRY_MEMB];
-+
-+	if (!pvt_data.ctx)
-+		return -ENODEV;
-+
-+	prepare_args(TA_CMD_BNXT_FASTBOOT, &inv_arg, param);
-+
-+	ret = tee_client_invoke_func(pvt_data.ctx, &inv_arg, param);
-+	HANDLE_ERROR(ret, inv_arg.ret, TA_CMD_BNXT_FASTBOOT);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(tee_bnxt_fw_load);
-+
-+/**
-+ * tee_bnxt_copy_coredump() - Copy coredump from the allocated memory
-+ *			    Uses an OP-TEE call to copy coredump
-+ * @buf:	desintation buffer where core dump is copied into
-+ * @offset:	offset from the base address of core dump area
-+ * @size:	size of the dump
-+ *
-+ * Returns 0 on success, negative errno otherwise.
-+ */
-+int tee_bnxt_copy_coredump(void *buf, u32 offset, u32 size)
-+{
-+	struct tee_ioctl_invoke_arg inv_arg;
-+	struct tee_param param[MAX_TEE_PARAM_ARRY_MEMB];
-+	void *core_data;
-+	u32 rbytes = size;
-+	u32 nbytes = 0;
-+	int ret = 0;
-+
-+	if (!pvt_data.ctx)
-+		return -ENODEV;
-+
-+	if (!buf)
-+		return -EINVAL;
-+
-+	prepare_args(TA_CMD_BNXT_COPY_COREDUMP, &inv_arg, param);
-+
-+	while (rbytes)  {
-+		nbytes = rbytes;
-+
-+		nbytes = min_t(u32, rbytes, param[0].u.memref.size);
-+
-+		/* Fill additional invoke cmd params */
-+		param[1].u.value.a = offset;
-+		param[1].u.value.b = nbytes;
-+
-+		ret = tee_client_invoke_func(pvt_data.ctx, &inv_arg, param);
-+		HANDLE_ERROR(ret, inv_arg.ret, TA_CMD_BNXT_COPY_COREDUMP);
-+
-+		core_data = tee_shm_get_va(pvt_data.fw_shm_pool, 0);
-+		if (IS_ERR(core_data)) {
-+			dev_err(pvt_data.dev, "tee_shm_get_va failed\n");
-+			return PTR_ERR(core_data);
-+		}
-+
-+		memcpy(buf, core_data, nbytes);
-+
-+		rbytes -= nbytes;
-+		buf += nbytes;
-+		offset += nbytes;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(tee_bnxt_copy_coredump);
-+
-+static int optee_ctx_match(struct tee_ioctl_version_data *ver, const void *data)
-+{
-+	if (ver->impl_id == TEE_IMPL_ID_OPTEE)
-+		return 1;
-+	else
-+		return 0;
-+}
-+
-+static int tee_bnxt_fw_probe(struct device *dev)
-+{
-+	struct tee_client_device *bnxt_device = to_tee_client_device(dev);
-+	int ret, err = -ENODEV;
-+	struct tee_ioctl_open_session_arg sess_arg;
-+	struct tee_shm *fw_shm_pool;
-+
-+	memset(&sess_arg, 0, sizeof(sess_arg));
-+
-+	/* Open context with TEE driver */
-+	pvt_data.ctx = tee_client_open_context(NULL, optee_ctx_match, NULL,
-+					       NULL);
-+	if (IS_ERR(pvt_data.ctx))
-+		return -ENODEV;
-+
-+	/* Open session with Bnxt load Trusted App */
-+	memcpy(sess_arg.uuid, bnxt_device->id.uuid.b, TEE_IOCTL_UUID_LEN);
-+	sess_arg.clnt_login = TEE_IOCTL_LOGIN_PUBLIC;
-+	sess_arg.num_params = 0;
-+
-+	ret = tee_client_open_session(pvt_data.ctx, &sess_arg, NULL);
-+	if ((ret < 0) || (sess_arg.ret != 0)) {
-+		dev_err(dev, "tee_client_open_session failed, err: %x\n",
-+			sess_arg.ret);
-+		err = -EINVAL;
-+		goto out_ctx;
-+	}
-+	pvt_data.session_id = sess_arg.session;
-+
-+	pvt_data.dev = dev;
-+
-+	fw_shm_pool = tee_shm_alloc(pvt_data.ctx, MAX_SHM_MEM_SZ,
-+				    TEE_SHM_MAPPED | TEE_SHM_DMA_BUF);
-+	if (IS_ERR(fw_shm_pool)) {
-+		tee_client_close_context(pvt_data.ctx);
-+		dev_err(pvt_data.dev, "tee_shm_alloc failed\n");
-+		err = PTR_ERR(fw_shm_pool);
-+		goto out_sess;
-+	}
-+
-+	pvt_data.fw_shm_pool = fw_shm_pool;
-+
-+	return 0;
-+
-+out_sess:
-+	tee_client_close_session(pvt_data.ctx, pvt_data.session_id);
-+out_ctx:
-+	tee_client_close_context(pvt_data.ctx);
-+
-+	return err;
-+}
-+
-+static int tee_bnxt_fw_remove(struct device *dev)
-+{
-+	tee_client_close_session(pvt_data.ctx, pvt_data.session_id);
-+	tee_client_close_context(pvt_data.ctx);
-+	pvt_data.ctx = NULL;
-+
-+	return 0;
-+}
-+
-+static const struct tee_client_device_id tee_bnxt_fw_id_table[] = {
-+	{UUID_INIT(0x6272636D, 0x2019, 0x0716,
-+		    0x42, 0x43, 0x4D, 0x5F, 0x53, 0x43, 0x48, 0x49)},
-+	{}
-+};
-+
-+MODULE_DEVICE_TABLE(tee, tee_bnxt_fw_id_table);
-+
-+static struct tee_client_driver tee_bnxt_fw_driver = {
-+	.id_table	= tee_bnxt_fw_id_table,
-+	.driver		= {
-+		.name		= KBUILD_MODNAME,
-+		.bus		= &tee_bus_type,
-+		.probe		= tee_bnxt_fw_probe,
-+		.remove		= tee_bnxt_fw_remove,
-+	},
-+};
-+
-+static int __init tee_bnxt_fw_mod_init(void)
-+{
-+	return driver_register(&tee_bnxt_fw_driver.driver);
-+}
-+
-+static void __exit tee_bnxt_fw_mod_exit(void)
-+{
-+	driver_unregister(&tee_bnxt_fw_driver.driver);
-+}
-+
-+module_init(tee_bnxt_fw_mod_init);
-+module_exit(tee_bnxt_fw_mod_exit);
-+
-+MODULE_AUTHOR("Broadcom");
-+MODULE_DESCRIPTION("Broadcom bnxt firmware manager");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/firmware/broadcom/tee_bnxt_fw.h b/include/linux/firmware/broadcom/tee_bnxt_fw.h
-new file mode 100644
-index 0000000..f24c82d
---- /dev/null
-+++ b/include/linux/firmware/broadcom/tee_bnxt_fw.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: BSD-2-Clause */
-+/*
-+ * Copyright 2019 Broadcom.
-+ */
-+
-+#ifndef _BROADCOM_TEE_BNXT_FW_H
-+#define _BROADCOM_TEE_BNXT_FW_H
-+
-+#include <linux/types.h>
-+
-+int tee_bnxt_fw_load(void);
-+int tee_bnxt_copy_coredump(void *buf, u32 offset, u32 size);
-+
-+#endif /* _BROADCOM_TEE_BNXT_FW_H */
--- 
-1.9.1
+Thomas Gleixner <tglx@linutronix.de> writes:
+>> Thomas Gleixner <tglx@linutronix.de> writes:
+>> > On Thu, 15 Aug 2019, Felipe Balbi wrote:
+>> >> Thomas Gleixner <tglx@linutronix.de> writes:
+>> >> > On Tue, 16 Jul 2019, Felipe Balbi wrote:
+>> >> >
+>> >> > So some information what those interfaces are used for and why they=
+ are
+>> >> > needed would be really helpful.
+>> >>=20
+>> >> Okay, I have some more details about this. The TGPIO device itself us=
+es
+>> >> ART since TSC is not directly available to anything other than the
+>> >> CPU. The 'problem' here is that reading ART incurs extra latency which
+>> >> we would like to avoid. Therefore, we use TSC and scale it to
+>> >> nanoseconds which, would be the same as ART to ns.
+>> >
+>> > Fine. But that's not really correct:
+>> >
+>> >       TSC =3D art_to_tsc_offset + ART * scale;
+>>=20
+>> From silicon folks I got the equation:
+>>=20
+>> ART =3D ECX * EBX / EAX;
+>
+> What is the content of ECX/EBX/EAX and where is it coming from?
 
+Since last email, I got a bit of extra information about how all of
+these should work.
+
+ECX contains crystal rate of TSC, EBX and EAX contain constants for
+converting between TSC and ART.
+
+So, ART =3D tsc_cycles * EBX/EAX, this will give me ART cycles. Also, the
+time gpio IP needs ART cycles to be written to its comparator
+registers, but the PTP framework wants time in nanoseconds.
+
+Therefore we need two new conversion functions:
+convert_tsc_to_art_cycles() and something which gives us current TSC in
+nanoseconds.
+
+>> If I'm reading this correctly, that's basically what
+>> native_calibrate_tsc() does (together with some error checking the safe
+>> defaults). Couldn't we, instead, just have a single function like below?
+>>=20
+>> u64 convert_tsc_to_art_ns()
+>> {
+>> 	return x86_platform.calibrate_tsc();
+>> }
+>
+> Huch? How is that supposed to work? calibrate_tsc() returns the TSC
+> frequency.
+
+Yup, that was a total brain fart.
+
+>> Another way would be extract the important parts from
+>> native_calibrate_tsc() into a separate helper. This would safe another
+>> call to cpuid(0x15,...);
+>
+> What for?
+>
+> The relation between TSC and ART is already established via detect_art()
+> which reads all relevant data out of CPUID(ART_CPUID_LEAF).
+>
+> We use exactly that information for convert_art_to_tsc() so the obvious
+> solution for calculating ART from TSC is to do the reverse operation.
+>
+> convert_art_to_tsc()
+> {
+>         rem =3D do_div(art, art_to_tsc_denominator);
+>
+>         res =3D art * art_to_tsc_numerator;
+>         tmp =3D rem * art_to_tsc_numerator;
+>
+>         do_div(tmp, art_to_tsc_denominator);
+>         res +=3D tmp + art_to_tsc_offset;
+> }
+>
+> which is translated into math:
+>
+>       TSC =3D ART * SCALE + OFFSET
+>
+> where
+>
+>       SCALE =3D N / D
+>
+> and
+>
+>       N =3D CPUID(ART_CPUID_LEAF).EAX
+>       D =3D CPUID(ART_CPUID_LEAF).EBX
+>
+> So the obvious reverse operation is:
+>
+>      ART =3D (TSC - OFFSET) / SCALE;
+>
+> Translating that into code should not be rocket science.
+
+Right, that's where we got after talking to other folks.
+
+Do you have any preferences for the function names? Or does
+convert_tsc_to_art() sound ok?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl2oWCgACgkQzL64meEa
+mQaskg//UjTHS4UimreqJKDM7FsvbGB2vp3sEB2o2x6PGs69BwPUJzruHrSPmWxF
+IT3YOZdQU4RX3T4K8q283FKJ6oUViOHEoGMN7C9ey83mrl8GkC8Pl1uxXOefwPxA
+cvEuoCMagJofHl54D7J9kLuCw2dugRFuWSqs+Xy1duZKC0vWm0w+qxR0R+K8Y5tq
+EpPc/LFm5hyxqZnvsiexWUF2RcGZ/qA6G655/AZ1AZxXh4l8XbnnTpjBr6eZOsTT
+9DkYSzQ/PciUmPA4fswB1aXgXBtONJckpLw6BMdW1Y/BR66d5CVeaXbaiv6awq53
+PH+R0qsqsVlFyG4KsbjM1CPIq4GlndMlmGd5G3Eklxnv96veT0KpLeSZjF2VocTu
+1ewKWZLJnGLIIW7PUR/Lwmpt0ATUzWNKJaY4IOhnXztjuaNyTWrSuoTVgkd4LyKn
+pCqfUa+lSKuRETbkEa02iJKIbfSWr7EKeFknGfO3cGRShgwSb/tGNSfmdnKwxFuy
++qAFR6xCTLg/zdG0vIFv8LF+y+k3E02QPI4pYClQr3pEiLKap17dIcGXVQ2D0cfm
+/IP9tLQ2btt2JXjEbcnm1VxqgelSjG+0jJwQXhEHelKt9p4Qcby+5w95PQSHkR1H
+dx3L3iC0znAC6fjLDySgjqHpHCwFHMw5yDUEIYpvXUrKMMpiYH8=
+=NUAn
+-----END PGP SIGNATURE-----
+--=-=-=--
