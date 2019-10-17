@@ -2,134 +2,105 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0287AFA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE62FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D333520854
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E388021D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:47:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571323653;
+	bh=bY/VafwpVthFD/FxhIEMVzABCKxfcnbJ1BrKllziJc0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BAI19H2/rbbteQHqGjCLsrBc4/e/gwmEQQv53XD/XyZGv+09gDjk1WA1s1kZ8DdXv
+	 toxAOkgJubBCiFLAOMfSR8GEIMNLRXGyQZ4yTW4XmMsqc91QVbK/C7RF9T6YvyMh6P
+	 dWm4gVXY8ohn4kdQCz2VfYW2h84X1IpMt3MFvR30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502734AbfJQOrW (ORCPT
+        id S2502978AbfJQOrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 10:47:22 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:56365 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2440344AbfJQOrU (ORCPT
+        Thu, 17 Oct 2019 10:47:31 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41581 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502912AbfJQOra (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:47:20 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-98.corp.google.com [104.133.0.98] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x9HEl8g9010903
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 17 Oct 2019 10:47:10 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 6B6B7420458; Thu, 17 Oct 2019 10:47:08 -0400 (EDT)
-Date:   Thu, 17 Oct 2019 10:47:08 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Vegard Nossum <vegard.nossum@oracle.com>
-Cc:     Pratyush Yadav <me@yadavpratyush.com>, workflows@vger.kernel.org,
-        Git Mailing List <git@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        Eric Wong <e@80x24.org>
-Subject: Re: email as a bona fide git transport
-Message-ID: <20191017144708.GI25548@mit.edu>
-References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
- <20191016150020.cr6jgfpd2c6fyg7t@yadavpratyush.com>
- <a1c33600-14e6-be37-c026-8d8b8e4bad92@oracle.com>
- <20191017131140.GG25548@mit.edu>
- <507d7293-964a-048b-2de6-98e7e7982cfb@oracle.com>
+        Thu, 17 Oct 2019 10:47:30 -0400
+Received: by mail-ot1-f65.google.com with SMTP id g13so2099227otp.8;
+        Thu, 17 Oct 2019 07:47:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Z80ioQYPpNmtk8h1xfkOdNkYcIk//+vGn82l24tC3Ec=;
+        b=ayFVzTCztGpLtHspAthIPiMYYdPoNhmCaXJgQ+lV9/WwBkYzWFUJVF0zu1pjx7BMJX
+         nEhEcRbq4j85JmRtBKWx+3vAt54mCp7lfZdLBn8nBQoJSkslmZBS4sjpvsco0moLHWsS
+         /D79Dt/zK9hTR6unTy9yPmyes47Q6a3HNP1loaUEPRMKNXJoteJ+DNGJ9vV2BKxA/kfZ
+         acO+lAm++1UshfO54ZsCnsy5A1C04iZH9IoCY1NvmrClYdxAo5o+aEHeFfN2PF9Atp5l
+         VPEf18TAOwSuU+yzNZrClJ6cYwRAGE7xuNYgYkp0TdL+ZY64kEwAaR5bsOB1fDIPGRjF
+         lQbQ==
+X-Gm-Message-State: APjAAAUzLXPU+TIwYEAz8v9ClPNKQ9lCSxPfreSYlInq/Bic9J27aSn6
+        SxrM+bTroocV1j9Pko77Yw==
+X-Google-Smtp-Source: APXvYqxedbXcwY+kWj3j3VwNg1snNtfWuxZ2dsQ49jnmZZAQU7CyljXQg+V0/vcDbf7GjJYWKlOB0Q==
+X-Received: by 2002:a9d:6858:: with SMTP id c24mr3254047oto.124.1571323649229;
+        Thu, 17 Oct 2019 07:47:29 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s66sm636635otb.65.2019.10.17.07.47.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 07:47:28 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 09:47:27 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jack Pham <jackp@codeaurora.org>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [RFC][PATCH v3 08/11] dt-bindings: usb: generic: Add
+ role-switch-default-host binding
+Message-ID: <20191017144727.GA27542@bogus>
+References: <20191016033340.1288-1-john.stultz@linaro.org>
+ <20191016033340.1288-9-john.stultz@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <507d7293-964a-048b-2de6-98e7e7982cfb@oracle.com>
+In-Reply-To: <20191016033340.1288-9-john.stultz@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 04:01:33PM +0200, Vegard Nossum wrote:
+On Wed, 16 Oct 2019 03:33:37 +0000, John Stultz wrote:
+> Add binding to configure the default role the controller
+> assumes is host mode when the usb role is USB_ROLE_NONE.
 > 
-> In your example, couldn't Darrick simply base his xfs work on the latest
-> xfs branch that was pulled by Linus? That should be up to date with all
-> things xfs without having any of the things that made Linus's tree not
-> work for him.
-
-Sure, but sometimes there are changes in subsystems which the file
-system depends upon that were also merged by Linus.  So for example,
-the ext4 branch might be based on v5.3-rc4, and gets pulled after v5.3
-is released, along with a huge number of other subsystem trees, so the
-delta between v5.3 and v5.3-rc1 is ***huge***.
-
-So while I could base my development on my previous ext4.git branch
-(based off of v5.3-rc4), at *some* point I need to be able to sync up
-with upstream.  And the usual way to do this is to start a new
-development branch based on (for example) v5.4-rc2, or in some cases
-v5.4-rc4.
-
-We could keep the development branch on based off of v5.3-rc4, and
-wait until things stablize, and *then* merge in v5.4-rcX, when
-v5.4-rcX is finally stable, but that makes for a more complex merge,
-and so it means that things like "git log origin..master" don't really
-work any more.  So the preferred development practice is very much....
-
-   rc2 o --> patch 1 --> patch 2 --> ... --> patch N 
-(origin)                                     (master)
-
-Where the "master" branch gets merged into the rewinding "dev" branch
-(which works much like git's pu branch), and where the "master" branch
-is what Linus will merge at the next merge window.
-
-> Otherwise, you could apply the stabilisation patches and then do your
-> final testing in a branch that merges that with your patchset, like so:
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> CC: ShuFan Lee <shufan_lee@richtek.com>
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Cc: Yu Chen <chenyu56@huawei.com>
+> Cc: Felipe Balbi <balbi@kernel.org>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: Jun Li <lijun.kernel@gmail.com>
+> Cc: Valentin Schneider <valentin.schneider@arm.com>
+> Cc: Jack Pham <jackp@codeaurora.org>
+> Cc: linux-usb@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/usb/generic.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
->    rc1 o -----> fixup A ------> fixup B ---->o merge (tested)
-> (base)  \                                   /
->          \                                 /
->           ---> patch 001 --> patch 002 -->o patchset (submitted)
 
-I cloud do that, but remember that the checked out kernel tree is
-about a gigabyte (this assumes using git clone --shared, so it doesn't
-include the git pack files, and this is source only; the object files
-are another 2.6 GB).  I could keep separate checked out trees, and
-separate build trees, but that burns a lot of disk/SSD space.  Or I
-could switch back and forth by using "git checkout" between the
-development branch and the branch with the stablization patches, but
-then I'm constantly having to rebuild the object files, and ccache
-only helps so much.
-
-So it's much simpler to put the fixup patches at the on top of the
-origin, and then mail them out without having to play git branch
-rebasing gymnastics.  When the patch series is finally ready to roll,
-then the maintainer will apply the patch series on a clean branch,
-since hopefully by then -rc3 or -rc4 is finally stable enough to use
-as an origin point.
-
-So the idea is that developer might be sending out revisions of their
-patches on top of -rc1 plus fixup patches, but then the final version
-of the patch series, after a few rounds of review, gets applied on top
-of -rc3 or -rc4.
-
-> I think the more difficult problem to solve might be how to ensure that
-> the base commit is actually public/reachable when this is the intention.
-> A bot watching the mailing list could always respond with a "Hey, I
-> don't have that, could you rebase the series or push it somewhere?". But
-> it would be even better if git could tell you when you're about to
-> submit a patch. Maybe something like:
-> 
->   git send-email --ensure-reachable-from [remote] rev^^..
-> 
-> In the worst case, I guess the base commit will just not be available --
-> the email will still have a sha1 on it, though, and which might still be
-> usable as an identifier for the patch/patchset. If not, it's still not
-> worse than the current workflow (which would still work).
-
-... or what we can do is allow the developer to specify the intended
-base --- e.g., -rc1, even though his patchset was against "-rc1 plus fixups".
-
-	     	       	     	  	     - Ted
+Reviewed-by: Rob Herring <robh@kernel.org>
