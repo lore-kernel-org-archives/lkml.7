@@ -2,101 +2,115 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F2FFA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E206FFA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85DD320650
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:26:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571322367;
-	bh=I6Dg/qNeVAPfx20vBVrnFd28E/MLWBIV0w67nh1h4YQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Gi8Jph9p2IpGIt+4m44R95GEf2DeUfenzj9Try4jEdEouO8VltcVyToO9lw3pYUpw
-	 w5KBDJ88g11RSP8bT+4j+mMOhmN/dwyOgpQfvr2WKCKN/AwvXAu1a++d3uC3pgpNso
-	 5a02+ynv7gkHu2kukVJOEybhKEXC7t9o/39kHIbY=
+	by mail.kernel.org (Postfix) with ESMTP id B680920820
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:26:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="TKjxRtPw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395342AbfJQO0G (ORCPT
+        id S2437743AbfJQO0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 10:26:06 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39199 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbfJQO0G (ORCPT
+        Thu, 17 Oct 2019 10:26:47 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:37064 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbfJQO0r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:26:06 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w144so2308717oia.6;
-        Thu, 17 Oct 2019 07:26:05 -0700 (PDT)
+        Thu, 17 Oct 2019 10:26:47 -0400
+Received: by mail-ed1-f68.google.com with SMTP id r4so1904337edy.4
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 07:26:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=pTZm79Y77en4+WVH2R/MS/mKWiM//Hl1RgvICjEclrk=;
+        b=TKjxRtPwWpvtdWaMYbV45LyV9HVOzaOpAFbMpF2wo5zHCbYg0VRPUUtdJ1VyU2CUc6
+         l/GfxXIxUHAzOJXFyL/sOqbcEBBADqp8Pq1no/2KigSG5eGP/nwp1ooFXzgeBH8HEdjO
+         GmJV/kE/BTVPJEGV8LKAdzay5o0rhZDFgVvRTWl/8/mJ/iwqxTg0IqZ6T9qTkiFc8x78
+         2EcQkBTDbFH6XEMf1N3dkNFpK4jjV2/42IkyvXgNWCq+s3Q6czyEmpaIe60dwwf0EJUc
+         0QeFMbdS9HQHYMtc2JQUheqYhHhaL2gcvWIPxKnh27DvXjcivpklLdfmftATrLQDcDfZ
+         nO4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sQj/zBJhKuYRwFrLjvxrReZ/y/Qrf1kIMamU374hlqc=;
-        b=TgBvVrtwgt8A2GIPPBS7e3PhVv83wU1UM7mkt3BVq0OUzBtFPVYg/0ZMR55HXcTShs
-         2kFPumqY3Es7qz6FGS2OK0pR+UJEaZ/K3RUNKh4Ppf3HPr3iMb2oG7I0MVGsMqJuFnWc
-         OoOu0nN9JbJT8SKdS5CCCq0e9ovGd43qP2iRcwFaRR4ovPhX0T9i7wgPXmuORjTL4dIy
-         NugM3aUF9xan5uw6zoj5gAk4IOQZVAOCyB7h+iTjJcjY2DIEwXcQzg0vRj1fpvYgdoTt
-         nagyCldx1zHrEsiWXsKYtKKm60h1vaao8hj7mE2RyDwQon5L8iDrUcesgTw0WssDCsel
-         gvuQ==
-X-Gm-Message-State: APjAAAW3iMPyalQ9R9mNCCumzUAhCESNdvB5FcA2UXhsWQ0FJZe6lzEa
-        jCRDKag1UNbAOIOKM9+lEMNax3cVv6GX47aTkAQ=
-X-Google-Smtp-Source: APXvYqyHqI57//nv0LBbPo/BFK5Uwcsm94CifotPrIepSBfB4ttX0otcR0MrYfziN5z+uOK2DyWqugjfMV6c8EtnZ0E=
-X-Received: by 2002:a05:6808:917:: with SMTP id w23mr3333732oih.68.1571322364933;
- Thu, 17 Oct 2019 07:26:04 -0700 (PDT)
+         :message-id:subject:to;
+        bh=pTZm79Y77en4+WVH2R/MS/mKWiM//Hl1RgvICjEclrk=;
+        b=Cjr/tct8anbLW6llDm3S3g/ro7y7PBesUY/RfilGeBTj8nUz4P6JLhddo1GOlRoiNG
+         IXJymbwnvTbn1nbwANU46bN7bGklyGd6/w6vhpDCNpEEa3wXaCFXbv8RW2KNYXHq+bZM
+         72hgaqTcqltMY7D3pf1e3Iv73KGnLgEUzPG+mwyvkj/t/WBIBvvCGB5FJtH+qcDb3EFB
+         cerFItpTDYsLtP46q/+wwM9z4ry/FYu8Xl9aZOnDKjiaXthl4uX0dljQ7Pw48T5ZehqI
+         dlZ6HFxicMpqNqRzDTS8qo5Wde9xXMEnQ3E/UTe7TcI5PGhK0nX6VZHCbDszgUIqx/PO
+         IXuQ==
+X-Gm-Message-State: APjAAAVKOoCpD2ieIbgmMc+kQ6DPkjPCw+ToRpLVGcVZfn2QQgZp4iUY
+        N+uJ2QUaqTDVlQQX57VvlW2RbgCXonNHjuz6KQfEaw==
+X-Google-Smtp-Source: APXvYqziFMNgpgw2iHsErr96SyZ2uSmSqs5rGVbMozjNUXiBuLfqaEtdRt8edlaf9N0bltup9A+f3kj+ItWHzZYFDds=
+X-Received: by 2002:aa7:dd0f:: with SMTP id i15mr4281166edv.0.1571322404589;
+ Thu, 17 Oct 2019 07:26:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191016194450.68959-1-helgaas@kernel.org>
-In-Reply-To: <20191016194450.68959-1-helgaas@kernel.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 17 Oct 2019 16:25:52 +0200
-Message-ID: <CAJZ5v0gKShBYor_80qfP8F_4oCKKxDefjbqRzr5GrqHOV6-Yog@mail.gmail.com>
-Subject: Re: [PATCH] PCI/PM: Note that PME can be generated from D0
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
+References: <20191016200034.1342308-1-pasha.tatashin@soleen.com>
+In-Reply-To: <20191016200034.1342308-1-pasha.tatashin@soleen.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Thu, 17 Oct 2019 10:26:33 -0400
+Message-ID: <CA+CK2bC2KwWufE1DWa4szn_hQ1dbjDVHgYUu7=J4O_kvKXTrHg@mail.gmail.com>
+Subject: Re: [PATCH v7 00/25] arm64: MMU enabled kexec relocation
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        James Morris <jmorris@namei.org>,
+        Sasha Levin <sashal@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        kexec mailing list <kexec@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        linux-mm <linux-mm@kvack.org>,
+        Mark Rutland <mark.rutland@arm.com>, steve.capper@arm.com,
+        rfontana@redhat.com, Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 9:44 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> https://lore.kernel.org/lkml/45a2f0b8-5bac-8b5d-d595-f92e9acb27ad@arm.com
+> > +     /* Map relocation function va == pa */
+> > +     rc = trans_pgd_map_page(&info, trans_ttbr0,  __va(kern_reloc),
+> > +                             kern_reloc, PAGE_KERNEL_EXEC);
+> > +     if (rc)
+> > +             return rc;
+> James wrote:
+> You can't do this with the page table helpers. We support platforms
+> with no memory in range of TTBR0's VA space. See dd006da21646f
 >
-> From: Bjorn Helgaas <bhelgaas@google.com>
+> You will need some idmapped memory to turn the MMU off on a system
+> that booted at EL1. This will need to be in a set of page tables
+> that the helpers can't easily touch - so it should only be a single
+> page. (like the arch code's existing idmap - although that may
+> have been overwritten).
 >
-> Per PCIe r5.0 sec 7.5.2.1, PME may be generated from D0, so update
-> Documentation/power/pci.rst to reflect that.
->
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-
-Good catch:
-
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
+> (I have a machine where this is a problem, if I get the time I will
+> have a stab at making hibernate's safe page idmaped).
 > ---
->  Documentation/power/pci.rst | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/Documentation/power/pci.rst b/Documentation/power/pci.rst
-> index db41a770a2f5..a90e82c70a3b 100644
-> --- a/Documentation/power/pci.rst
-> +++ b/Documentation/power/pci.rst
-> @@ -130,8 +130,8 @@ a full power-on reset sequence and the power-on defaults are restored to the
->  device by hardware just as at initial power up.
+> As I understand, there are platforms where TTBR0 cannot include all
+> physical memory for idmap. However, kexec must have at least one page
+> idmapped (kimage->control_code_page) to be able to relocate kernel
+> while MMU is enabled:
 >
->  PCI devices supporting the PCI PM Spec can be programmed to generate PMEs
-> -while in a low-power state (D1-D3), but they are not required to be capable
-> -of generating PMEs from all supported low-power states.  In particular, the
-> +while in any power state (D0-D3), but they are not required to be capable
-> +of generating PMEs from all supported power states.  In particular, the
->  capability of generating PMEs from D3cold is optional and depends on the
->  presence of additional voltage (3.3Vaux) allowing the device to remain
->  sufficiently active to generate a wakeup signal.
-> --
-> 2.23.0.700.g56cf767bdb-goog
+> I am still trying to fully understand the problem:
+> CONFIG_ARM64_VA_BITS must be smaller than 48 and physical memory must
+> start at a high address for this problem to occur.
 >
+> Why can't we simply decrease T0SZ to cover all physical memory?
+
+Is there a way to reproduce this platform with qemu?
+
+Pasha
