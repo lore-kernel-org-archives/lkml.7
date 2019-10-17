@@ -2,101 +2,81 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8854FA3735
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34B8ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C904E2089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CACE2089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:22:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2L+jAG8Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440463AbfJQQVs (ORCPT
+        id S2440479AbfJQQWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:21:48 -0400
-Received: from mga11.intel.com ([192.55.52.93]:33920 "EHLO mga11.intel.com"
+        Thu, 17 Oct 2019 12:22:19 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:50846 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391091AbfJQQVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 12:21:48 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 09:21:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,308,1566889200"; 
-   d="scan'208";a="347809155"
-Received: from eshoguli-mobl1.ccr.corp.intel.com (HELO localhost) ([10.252.19.56])
-  by orsmga004.jf.intel.com with ESMTP; 17 Oct 2019 09:21:42 -0700
-Date:   Thu, 17 Oct 2019 19:21:41 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-integrity@vger.kernel.org,
-        David Safford <david.safford@ge.com>,
-        Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Peter Huewe <peterhuewe@gmx.de>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tpm: Salt tpm_get_random() result with get_random_bytes()
-Message-ID: <20191017162141.GA6667@linux.intel.com>
-References: <20191015124702.633-1-jarkko.sakkinen@linux.intel.com>
- <20191015170450.GB5444@ziepe.ca>
- <20191016103805.GA10184@linux.intel.com>
- <20191016104322.GC10184@linux.intel.com>
- <20191016160908.GA3637@ziepe.ca>
+        id S2391091AbfJQQWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 12:22:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=yYGDmTWdpok/xWnLGj7w6mA7xTyvaVCtiqcsC3AJCpQ=; b=2L+jAG8Ywqn73DSlznFpAet952
+        vUroIflGLGIMEnu3QNwOuXpyLOY/ZGjiT7ph2pfGXhZQT98B8J/3fdzZvqx8YG07Q8c2jMQF1n8e9
+        BoT+kzWK4wzK04r0iA8e+q2ZdrlJO8okRbkptmRX7YAZVwz+3MWII9AgeCnMJ20Ibd8w=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iL8XW-0005Du-AQ; Thu, 17 Oct 2019 18:22:14 +0200
+Date:   Thu, 17 Oct 2019 18:22:14 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 2/2] net: lpc_eth: parse phy nodes from device tree
+Message-ID: <20191017162214.GS17013@lunn.ch>
+References: <20191017094757.26885-1-alexandre.belloni@bootlin.com>
+ <20191017094757.26885-2-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191016160908.GA3637@ziepe.ca>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20191017094757.26885-2-alexandre.belloni@bootlin.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 01:09:08PM -0300, Jason Gunthorpe wrote:
-> On Wed, Oct 16, 2019 at 01:43:22PM +0300, Jarkko Sakkinen wrote:
-> > On Wed, Oct 16, 2019 at 01:38:05PM +0300, Jarkko Sakkinen wrote:
-> > > On Tue, Oct 15, 2019 at 02:04:50PM -0300, Jason Gunthorpe wrote:
-> > > > On Tue, Oct 15, 2019 at 03:47:02PM +0300, Jarkko Sakkinen wrote:
-> > > > > Salt the result that comes from the TPM RNG with random bytes from the
-> > > > > kernel RNG. This will allow to use tpm_get_random() as a substitute for
-> > > > > get_random_bytes().  TPM could have a bug (making results predicatable),
-> > > > > backdoor or even an inteposer in the bus. Salting gives protections
-> > > > > against these concerns.
-> > > > 
-> > > > Seems like a dangerous use case, why would any kernel user that cared
-> > > > about quality of randomness ever call a tpm_* API to get quality
-> > > > random data?
-> > > 
-> > > This is related to this discussion:
-> > > 
-> > > https://lore.kernel.org/linux-integrity/CAE=NcrY3BTvD-L2XP6bsO=9oAJLtSD0wYpUymVkAGAnYObsPzQ@mail.gmail.com/T/#t
-> > > 
-> > > I could also move this to the call site.
-> > 
-> > But I hear you anyway.
-> > 
-> > I think for trusted keys the best strategy would be to do
-> > exactly this:
-> > 
-> > 1. Generate one random value with get_random_bytes_arch()
-> > 2. Generate another with backend specific technology (we
-> >    have now two TPM and TEE) if an RNG available.
-> > 3. Xor the values together.
+On Thu, Oct 17, 2019 at 11:47:57AM +0200, Alexandre Belloni wrote:
+> When connected to a micrel phy, phy_find_first doesn't work properly
+> because the first phy found is on address 0, the broadcast address but, the
+> first thing the phy driver is doing is disabling this broadcast address.
+> The phy is then available only on address 1 but the mdio driver doesn't
+> know about it.
 > 
-> Feels like something the random core should handle - maybe some way to
-> say 'my trust model requires trust in this RNG' and then the random
-> core can more heavily weight data from that RNG
+> Instead, register the mdio bus using of_mdiobus_register and try to find
+> the phy description in device tree before falling back to phy_find_first.
+> 
+> This ultimately also allows to describe the interrupt the phy is connected
+> to.
+> 
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-Yeah, I think. I'll study these emails threads and RNG implementation
-a bit when I have more time. Now I think I lack some knowledge to say
-anything educated so better to take a step back and go back to the
-drawing board.
+Hi Alexandre
 
-Thank you for the suggestion.
+It is normal to have a cover note for a patch series.
 
-/Jarkko
+Otherwise:
+
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
