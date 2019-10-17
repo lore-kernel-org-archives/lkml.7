@@ -2,130 +2,147 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70B8ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A7CECE597
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C26032089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C81B921925
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:48:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lrnfU3QJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YOJSGNdH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394652AbfJQRsK (ORCPT
+        id S2437149AbfJQRsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 13:48:10 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:39465 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbfJQRsI (ORCPT
+        Thu, 17 Oct 2019 13:48:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54616 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437222AbfJQRqi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 13:48:08 -0400
-Received: by mail-yw1-f68.google.com with SMTP id k127so4282ywc.6
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 10:48:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kEBrFsENgcN61lOs9AAz0c8wQaRYi7TYeszZxNnhUsM=;
-        b=lrnfU3QJ7otQlwWjO4pAUFcP9Ivd0EezGXjOZGgwJsaUn3vMWY0n0vZdhD/O8rwgnW
-         UApMMVA3HxJRbEEWHpuHh0/uNk44uWdYySDwUcdqQQvfvhD5wofSacQxnzvwhxseGzIf
-         a4XbOkOQ44NlrlXWhg65xSFMWVtxejYcxnrU3B5KpA1urKff0jXY2NkxGjGM/2PQscBn
-         /xDJLf4bHORqiVwmDhacdSuBFM4z1p1qGu+MVuNYslsFVPbD9obU6vBFXiJRtwfaEhe4
-         jtdBv+evbrAlruOhvrNIwg7Ycla4ED8hMIZT7SbpueT6yf8HOE6ihSj7UyZxAZ7dhndt
-         u2Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kEBrFsENgcN61lOs9AAz0c8wQaRYi7TYeszZxNnhUsM=;
-        b=Df2kqM1P/tR13t+0PR2meP3uBsoLwWExESwHX/ONsKnl9oZrN68VizA1nixDJivNbq
-         jmT/nYC8emVld8iKfHU/kXNfhUlaWvU+lQSbDLy1KsppJJ3vDwjTb6dql3+rWAoMPH8T
-         ZNb4VkptfJrZ4R8MOa1pSqzVr7Deq4oqE2q0nZDqz1tmBpzmgn/tWE0IHh41nieWe04G
-         hu35kcj/38MdJSWgE/weBH7HGTW1v6mxWK87uucnDQsyNEzIDGslm/wM7l3FNzXTMcR9
-         g/zMrJ0js6Uf7cMEvzhVj4sc5F5sBBL+u+FeohdFhIM0nzifpXYkmnt+9hcSUrNJatHV
-         kj/w==
-X-Gm-Message-State: APjAAAVFyJDLv6m2CZjXpOqvEPvqGSzo1BvfST0RKMpRVpqQ01C1XK1Q
-        fdW32k1vTNYooP/Xmr+sjIA=
-X-Google-Smtp-Source: APXvYqypEkDpkpvJLvwo0RW9wv/cB4PSe6I1y5z0kWxQNb7G9m1qNvmjUZ6BwuTg4EpQgxBhgvkvQQ==
-X-Received: by 2002:a81:6d57:: with SMTP id i84mr3762089ywc.417.1571334487239;
-        Thu, 17 Oct 2019 10:48:07 -0700 (PDT)
-Received: from [192.168.1.62] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id p10sm660977ywc.19.2019.10.17.10.48.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Oct 2019 10:48:06 -0700 (PDT)
-Subject: Re: [PATCH 10/10] of/device: Don't NULLify match table in
- of_match_device() with CONFIG_OF=n
-To:     Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-References: <20191004214334.149976-1-swboyd@chromium.org>
- <20191004214334.149976-11-swboyd@chromium.org>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <6ce47827-55e4-dd15-6a05-f25a2f8a8bb7@gmail.com>
-Date:   Thu, 17 Oct 2019 12:47:59 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Thu, 17 Oct 2019 13:46:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=JoWYe6Vw3Po4m3FC1eS1aSF6GNt+BYWJoAwerG5jalc=; b=YOJSGNdHD2jVDmHKAZ5RVQSwZW
+        I1+D9gXHmJYXOUcFNKj14k4yp812uQ1UfiHkLGmH5DQclsczuD17LZOXT/ejrv+Poj20UhvnzBo7D
+        o43qFDc6T6LBz2k4Xk7M9LoI5DRgN17u1XapHnunkbJC3dNdaQNtFKt4OvOQtLWHb+hA8HjOM6GyQ
+        Q9kQuspP8Kdi9QzusidafkjJCPbE3b1LdjEQY8/K0Faf807uNZwNt5L8ejhM6WndrO8ICRDvGxRDH
+        MV5Ig+6MKj7bal5K7uxWLa4j33GEP4H+ZTVHakrbRWCxdNMbUAWbd3+B16stT3BEtwY1PG2Lhosaw
+        b9lTecnQ==;
+Received: from [2001:4bb8:18c:d7b:c70:4a89:bc61:3] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iL9qo-0005hq-EV; Thu, 17 Oct 2019 17:46:14 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org
+Cc:     linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-mtd@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 07/21] parisc: remove __ioremap
+Date:   Thu, 17 Oct 2019 19:45:40 +0200
+Message-Id: <20191017174554.29840-8-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191017174554.29840-1-hch@lst.de>
+References: <20191017174554.29840-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20191004214334.149976-11-swboyd@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/04/2019 16:43, Stephen Boyd wrote:
-> This effectively reverts 1db73ae39a97 ("of/device: Nullify match table
-> in of_match_device() for CONFIG_OF=n") because that commit makes it more
-> surprising to users of this API that the arguments may never be
-> referenced by any code. This is because the pre-processor will replace
-> the argument with NULL and then the match table will be left unreferenced
-> by any code but the compiler optimizer doesn't know to drop it. This can
-> lead to compilers warning that match tables are unused, when we really
-> want to pass the match table to the API but have the compiler see that
-> it's all inlined and not used and then drop the match table while
-> silencing the warning. We're being too smart here and not giving the
-> compiler the chance to do dead code elimination.
-> 
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
-> 
-> Please ack or pick for immediate merge so the last patch can be merged.
-> 
->  include/linux/of_device.h | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-> index 8d31e39dd564..3f8ca55bc693 100644
-> --- a/include/linux/of_device.h
-> +++ b/include/linux/of_device.h
-> @@ -93,13 +93,11 @@ static inline int of_device_uevent_modalias(struct device *dev,
->  
->  static inline void of_device_node_put(struct device *dev) { }
->  
-> -static inline const struct of_device_id *__of_match_device(
-> +static inline const struct of_device_id *of_match_device(
->  		const struct of_device_id *matches, const struct device *dev)
->  {
->  	return NULL;
->  }
-> -#define of_match_device(matches, dev)	\
-> -	__of_match_device(of_match_ptr(matches), (dev))
->  
->  static inline struct device_node *of_cpu_device_node_get(int cpu)
->  {
-> 
+__ioremap is always called with the _PAGE_NO_CACHE, so fold the whole
+thing and rename it to ioremap.  This allows allows to remove the
+special EISA quirk to force _PAGE_NO_CACHE.
 
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/parisc/include/asm/io.h | 11 +----------
+ arch/parisc/mm/ioremap.c     | 10 ++++------
+ 2 files changed, 5 insertions(+), 16 deletions(-)
 
-Acked-by: Frank Rowand <frowand.list@gmail.com>
+diff --git a/arch/parisc/include/asm/io.h b/arch/parisc/include/asm/io.h
+index 93d37010b375..46212b52c23e 100644
+--- a/arch/parisc/include/asm/io.h
++++ b/arch/parisc/include/asm/io.h
+@@ -127,16 +127,7 @@ static inline void gsc_writeq(unsigned long long val, unsigned long addr)
+ /*
+  * The standard PCI ioremap interfaces
+  */
+-
+-extern void __iomem * __ioremap(unsigned long offset, unsigned long size, unsigned long flags);
+-
+-/* Most machines react poorly to I/O-space being cacheable... Instead let's
+- * define ioremap() in terms of ioremap_nocache().
+- */
+-static inline void __iomem * ioremap(unsigned long offset, unsigned long size)
+-{
+-	return __ioremap(offset, size, _PAGE_NO_CACHE);
+-}
++void __iomem *ioremap(unsigned long offset, unsigned long size);
+ #define ioremap_nocache(off, sz)	ioremap((off), (sz))
+ #define ioremap_wc			ioremap_nocache
+ #define ioremap_uc			ioremap_nocache
+diff --git a/arch/parisc/mm/ioremap.c b/arch/parisc/mm/ioremap.c
+index f29f682352f0..6e7c005aa09b 100644
+--- a/arch/parisc/mm/ioremap.c
++++ b/arch/parisc/mm/ioremap.c
+@@ -25,7 +25,7 @@
+  * have to convert them into an offset in a page-aligned mapping, but the
+  * caller shouldn't need to know that small detail.
+  */
+-void __iomem * __ioremap(unsigned long phys_addr, unsigned long size, unsigned long flags)
++void __iomem *ioremap(unsigned long phys_addr, unsigned long size)
+ {
+ 	void __iomem *addr;
+ 	struct vm_struct *area;
+@@ -36,10 +36,8 @@ void __iomem * __ioremap(unsigned long phys_addr, unsigned long size, unsigned l
+ 	unsigned long end = phys_addr + size - 1;
+ 	/* Support EISA addresses */
+ 	if ((phys_addr >= 0x00080000 && end < 0x000fffff) ||
+-	    (phys_addr >= 0x00500000 && end < 0x03bfffff)) {
++	    (phys_addr >= 0x00500000 && end < 0x03bfffff))
+ 		phys_addr |= F_EXTEND(0xfc000000);
+-		flags |= _PAGE_NO_CACHE;
+-	}
+ #endif
+ 
+ 	/* Don't allow wraparound or zero size */
+@@ -65,7 +63,7 @@ void __iomem * __ioremap(unsigned long phys_addr, unsigned long size, unsigned l
+ 	}
+ 
+ 	pgprot = __pgprot(_PAGE_PRESENT | _PAGE_RW | _PAGE_DIRTY |
+-			  _PAGE_ACCESSED | flags);
++			  _PAGE_ACCESSED | _PAGE_NO_CACHE);
+ 
+ 	/*
+ 	 * Mappings have to be page-aligned
+@@ -90,7 +88,7 @@ void __iomem * __ioremap(unsigned long phys_addr, unsigned long size, unsigned l
+ 
+ 	return (void __iomem *) (offset + (char __iomem *)addr);
+ }
+-EXPORT_SYMBOL(__ioremap);
++EXPORT_SYMBOL(ioremap);
+ 
+ void iounmap(const volatile void __iomem *io_addr)
+ {
+-- 
+2.20.1
+
