@@ -2,118 +2,92 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDC1FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA2BECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6607C2089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5C0720872
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:02:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CzfaisiV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YT1OUWT5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395178AbfJQSAE (ORCPT
+        id S2437966AbfJQSC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 14:00:04 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42669 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727241AbfJQSAE (ORCPT
+        Thu, 17 Oct 2019 14:02:58 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35459 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403968AbfJQSC4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 14:00:04 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q12so2124357pff.9;
-        Thu, 17 Oct 2019 11:00:03 -0700 (PDT)
+        Thu, 17 Oct 2019 14:02:56 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p30so1806998pgl.2;
+        Thu, 17 Oct 2019 11:02:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=5llPGiQesTZRbdQZS+LGFIWEO3rSCU/NACr08ZgLNjA=;
-        b=CzfaisiVCNaVNalq0C+r17YG01hqWDcgSnWXfTb0t1WnHGaP3YbRAPBjXZpOVZBI1w
-         Pn138x3tkDf7RDTz4b8CE51hfOlNaqyExppRHrMUMLL/4D/Yw12dAzi2Q0iuNIbDyzWq
-         fW9hJTsP6NkBUXdab9UzuvOgY3uWonWuHEyxjFWrk5VJAEuxN2vz+yjBRfn8Xd9poNbQ
-         KoDo6a8+ugw48GLG7y+LaVJGf2mlJCEsupYTni2apeby+c0n/d4542H+lrTlkoHkgOxH
-         gS8sN0P0hHtd3JrJb5LozZZrjeN8oRzGA33HXl5uSq7zMwmN+49l8LaU/4rwFwaAVgY/
-         nmtw==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=p+yS83MygakS1KCBwVQcnvCy+jIMv5rCDjVZzHk9bJQ=;
+        b=YT1OUWT5CKqOigca3AV3M1lsMclwyw//RdVyxfmMqMfK7DkKyV32RgAs/o40On7TZY
+         iqw7DfNywwMptM2jUQRC3QtJ7tcdF1eOW1aW73j2QDemOH7kHSvDzpQcE72Elw1s4BYN
+         vCpJGBVe08undQAQyipewtv7RO8Clag7j7Halt9aeTRvvvM4p+ey/gyTZwFWBZ/9ewOq
+         bOYNdVVeZAhojWXVuIX37U/LJnSRuNmcmN3nKPL9qs/SXlMF3CKpWcY4m9H5yy+M5NlD
+         xCZQFzu6qCmDZHnDkEM2cKW34F6F/ZXVJZQkuDO3GJmHlTzASWFQsSJFPljUzRVpwpap
+         ABqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=5llPGiQesTZRbdQZS+LGFIWEO3rSCU/NACr08ZgLNjA=;
-        b=tzvfugzqvdaXrQpwxV9U5izayX1zsz//agNlcKudkyIKq839A24IlzU5TjB2T8lWNk
-         YKu+Q5QEPzCDpgGFiQXgzCiziZ7vP00yFMgSYYIur/hNo37ixmpoEJjFpVymCewpPxGp
-         J4Wf5i2OPOHzbyluA1700BkPbn0XZRdQ3TBH0lfjWwGxEGM0URwdmt3sCHDW6XlqN/Eg
-         mnN1p7u5uZn7by9TuGU4Ubdf+CGQDltRfVWpi+TLKQjWv0b6YOdPgSll2aJOxQ5gx9a/
-         ncQyYCJxMiSb4HpgVLnTgfgehbcDn4csw27wxkl1JkFiTi9/rxBQPxII2Mi3uyP+G1nO
-         Fcmw==
-X-Gm-Message-State: APjAAAU23BRGSh+rycmUR25KH2mits9Kcm8Cam+dK/IDzrLtI95l3Pmf
-        rgEDpykOLrPfA7iuODnOdosdpQE6
-X-Google-Smtp-Source: APXvYqxHGLaWJ8OER5XtH+HG+t/nA2kXO/TwtrQD6rTV+iO4uPlrxaUp7qRPGBp0iRNVB7UHGaEuoQ==
-X-Received: by 2002:a17:90a:304:: with SMTP id 4mr6016053pje.128.1571335202990;
-        Thu, 17 Oct 2019 11:00:02 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id 202sm3526050pfu.161.2019.10.17.11.00.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 11:00:02 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 11:00:00 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [git pull] Input updates for v5.4-rc3
-Message-ID: <20191017180000.GA201965@dtor-ws>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=p+yS83MygakS1KCBwVQcnvCy+jIMv5rCDjVZzHk9bJQ=;
+        b=Nz4shm5Na4DRMnTtrQV9RoIp8xxw5xRyw7E5UhrUbY4oIwaztUA9LfjNd9bCD/W7Jh
+         6cGxsf/MQYECd4XAaZ6FikCCrinRrDdC2yWkPhZpijlPUpBxjqTEAfRwoFvtv3feqMxX
+         1pdHPMBvR3IdmzXRPv3KAtzp45MkiPMggNxZmNGH0VrIohM4Vgn2KAMT4hogNzqqqsos
+         Uoa5fBeAjmoCtrJoxG6t2eApuwxzjCiNFw9tiPrCiuOoZRSJSwXSCPAo+HOUqDjGItWS
+         C0jjPGBVU1V4ktaGKsbwVyxdKq4Zc5xYXQ4vU4ddYEkIuDucMv2RbDMaGW+EPql9RVLp
+         ejkA==
+X-Gm-Message-State: APjAAAVZRx6O4lkBMOflB7GxbZrsyhXWj+Qo2n6XyxZ/0kCVeQ2/QRDr
+        Q7zOvpyBoZqLWn4j+NHP4eg=
+X-Google-Smtp-Source: APXvYqz9FwFV5ls8d18O6sph7QTMr4Ky4vJmGk+01F4UD19Vdm2FTn0eZ0n9ihEdjarVwacJEJOVJw==
+X-Received: by 2002:a17:90a:3702:: with SMTP id u2mr5905597pjb.57.1571335376226;
+        Thu, 17 Oct 2019 11:02:56 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i126sm3833749pfc.29.2019.10.17.11.02.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 17 Oct 2019 11:02:54 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 11:02:52 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 00/79] 4.4.197-stable review
+Message-ID: <20191017180252.GA29239@roeck-us.net>
+References: <20191016214729.758892904@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed, Oct 16, 2019 at 02:49:35PM -0700, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.197 release.
+> There are 79 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri 18 Oct 2019 09:43:41 PM UTC.
+> Anything received after that time might be too late.
+> 
 
-Please pull from:
+Build results:
+	total: 170 pass: 170 fail: 0
+Qemu test results:
+	total: 324 pass: 324 fail: 0
 
-	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
-
-to receive updates for the input subsystem. The main change is that we
-are reverting blanket enablement of SMBus mode for devices with Elan
-touchpads that report BIOS release date as 2018+ because there are older
-boxes with updated BIOSes that still do not work well in SMbus mode.
-We will have to establish whitelist for SMBus mode it looks like.
-
-Changelog:
----------
-
-Evan Green (1):
-      Input: synaptics-rmi4 - avoid processing unknown IRQs
-
-Hans de Goede (1):
-      Input: soc_button_array - partial revert of support for newer surface devices
-
-Kai-Heng Feng (1):
-      Revert "Input: elantech - enable SMBus on new (2018+) systems"
-
-Marco Felsch (1):
-      Input: da9063 - fix capability and drop KEY_SLEEP
-
-Yauhen Kharuzhy (1):
-      Input: goodix - add support for 9-bytes reports
-
-Diffstat:
---------
-
- drivers/input/misc/da9063_onkey.c     |  5 +--
- drivers/input/misc/soc_button_array.c | 17 +++++++---
- drivers/input/mouse/elantech.c        | 55 +++++++++++++++++----------------
- drivers/input/rmi4/rmi_driver.c       |  6 +++-
- drivers/input/touchscreen/goodix.c    | 58 ++++++++++++++++++++++++++++++-----
- 5 files changed, 97 insertions(+), 44 deletions(-)
-
-Thanks.
-
-
--- 
-Dmitry
+Guenter
