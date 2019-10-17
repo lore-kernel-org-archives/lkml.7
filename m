@@ -2,272 +2,136 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA26ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1EFECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 779B421835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFF8E20820
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:31:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r4PBZeTZ"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="IRf4ihOH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409386AbfJQRaM (ORCPT
+        id S2409454AbfJQRbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 13:30:12 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:40508 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403997AbfJQRaL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 13:30:11 -0400
-Received: by mail-qt1-f193.google.com with SMTP id m61so4742011qte.7
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 10:30:11 -0700 (PDT)
+        Thu, 17 Oct 2019 13:31:11 -0400
+Received: from mail-eopbgr720041.outbound.protection.outlook.com ([40.107.72.41]:10976
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2403997AbfJQRbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 13:31:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UH8+6M+sYbEZ0TUmn+VyuPbuuth70In2K6PKuiXV3Ctq2DVbtCNALHqdX2h+TKhfU1Y68AaBWQA+LF8Jt9tkn7dH06OU1N4AD1iYvvgJwe+V8zZ2A6pp9CjmnidFH6xcaxfMuysw1QNSV1rO+VS+n8JIGMZe0WOQCkvsuEBr7qiBfaccMJCExM94rSco47AdX6GMCZnmWM3CBVUri8D0BcNDKu4qz1VVjViPTesL/YP11btgJTeo7DO+L8zJZodOpqcllBNR1N+0oFaY7gCa2Mr0tdwwDy3jKex7k0D6TYLivSyKJ5Q2WAw4Qdlvjj02pecAULWVh+ZZPtsIuVKuyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6EJrloD6vPKhlZk1ojtZnL4MZFTip2P9JOkoQPjliYU=;
+ b=YntZKG6KWBu+qEudDt2RtG4pSQvFfNbZ6lutdtwDX48RvdHpTCE//Ky1CoFXGL/i5+mIad97hd4uXXg6JwloJhzOeWtdZT9bG37OZGncQF3PYmHGPteZ+QC+8BDYxJZ3XLJCbHHV0lOs0EVzkowg3eb51toIxt1cp5h5tNdiySgAHoyaE1aP+27IfiAWZHKOFv3TyCxQydker7RMmWCXyLbE+6iYf8dHs/VagrFFvKIYHI6ESD5edplNqBdA5mOc4CU5ZA9x+UJroYGg3VGBaI6s7TUc97nj0EI2l7t+vivjgKfL8gskaiZNqTIQcMvL+wDYs8LDOHwJG9IrDi1QgQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mGX9vaIDCI1sotCJkjHfZClQz41tv8YOiR2cF1zYR8o=;
-        b=r4PBZeTZRvmKSicf/qeeQ3WDUVJ0oxwq3nL78LEr2+yzBe+kclAGtXrIbpRwJmNe0Y
-         4obRbiov/a45KfzMYulGIL9dUxX/zPY0JzDtt0i9paARxuFAe5e9rkqLuf1IMLMqEGh/
-         gxV16Nx99yfyV7IfRHiL2riav95kMsGx5vhAlJzRmInpq2OhoNb1nMKlyTNxJrz1kWft
-         VZH20v3B/X+y+hqkUijDx3FQuYC98fMwNQzUgz34QAzF9lwzd5iZmnWkRYk60EK9FtxA
-         16XE9MUpAiMvZaJxS3Zd+h8wbqz7tAQKqo4iQtuUpimKBvH+MqoRYmb4jXrC5fQqAawr
-         y4mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mGX9vaIDCI1sotCJkjHfZClQz41tv8YOiR2cF1zYR8o=;
-        b=mB3MaNpjTJLrqSKkXX/BkFEmdB2MFcLOkqiXPNqeUby6TRvRt5RRJxPKesx6EQsMq6
-         AhO19cNnV7+H7zcLhkkKx99GJSpAO/gpHbPgKruxbEz+xfJKsB/wDyKvd1IhFrcaQlJR
-         AHohSXg963ZVgzGBqSHnpsx/xe/6zjP3CKCPbXLpI0qRwpZydaGNxW6RzTqMp88w8FUs
-         yzNDJs5x/j3TM1xindFdNnNIVk0LGnjNbs2Y+dkIb6z+fSFXpZX7CxVTuvFixKUdBOTF
-         Gqzxt6KKoqz2F1aQB31K/QvsidxFZodE9arRG9BwgHgGfmqf6EHrmVL/ruoCUnhgWCby
-         ZUbQ==
-X-Gm-Message-State: APjAAAUPKCBJyKA+NXARUmleKI+dHClqUDhOJYxAuZrYPhihILie8jUU
-        9AnBk4Fp2RjjNzabqGDc4Rk7n16k847sRtJ42Wk=
-X-Google-Smtp-Source: APXvYqxi/0Y1+0VN4xY6fSyHkuKRpmFoO3njU6Rtkx5NAvOrmnVruOIHR9lBcMQHBCEBfPsBx860CU1nyde/HZOsMM0=
-X-Received: by 2002:aed:3b65:: with SMTP id q34mr5153897qte.376.1571333410639;
- Thu, 17 Oct 2019 10:30:10 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6EJrloD6vPKhlZk1ojtZnL4MZFTip2P9JOkoQPjliYU=;
+ b=IRf4ihOHy5Mrh0ld9mBodVBkMjqoCt97mNz4olXH/NZsas2CnYGeebwQGoIyRxUd5q0+j3BxHe+cLEmuaPtK7Vg9f6xBxhoOm8cnoluqeDEEFwuvsPiglvOJX5VS9ubtokV/vgXv2lz/SkP2solONJWnqUzbxZ6YiO5YtOmoqRA=
+Received: from BN7PR12MB2593.namprd12.prod.outlook.com (20.176.27.87) by
+ BN7PR12MB2737.namprd12.prod.outlook.com (20.176.178.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Thu, 17 Oct 2019 17:30:28 +0000
+Received: from BN7PR12MB2593.namprd12.prod.outlook.com
+ ([fe80::dd2e:828d:7e1e:7c66]) by BN7PR12MB2593.namprd12.prod.outlook.com
+ ([fe80::dd2e:828d:7e1e:7c66%7]) with mapi id 15.20.2347.024; Thu, 17 Oct 2019
+ 17:30:28 +0000
+From:   "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>
+To:     Chen Wandun <chenwandun@huawei.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/amdgpu/display: fix compile error
+Thread-Topic: [PATCH] drm/amdgpu/display: fix compile error
+Thread-Index: AQHVhLH9di/Fe7Wqu0O6Jc++P2KAEqdfF7wA
+Date:   Thu, 17 Oct 2019 17:30:28 +0000
+Message-ID: <8a7cb551-5f1c-c37d-97a6-53c62ebee7ee@amd.com>
+References: <1571293172-116998-1-git-send-email-chenwandun@huawei.com>
+In-Reply-To: <1571293172-116998-1-git-send-email-chenwandun@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YTBPR01CA0017.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:14::30) To BN7PR12MB2593.namprd12.prod.outlook.com
+ (2603:10b6:408:25::23)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Sunpeng.Li@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.55.250]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bf64009e-62dc-450f-535b-08d75327b401
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: BN7PR12MB2737:|BN7PR12MB2737:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN7PR12MB2737B89FC29AE3BF5776CC21826D0@BN7PR12MB2737.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-forefront-prvs: 01930B2BA8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(39860400002)(376002)(366004)(346002)(199004)(189003)(7736002)(53546011)(26005)(305945005)(102836004)(4001150100001)(2906002)(86362001)(14454004)(2501003)(6116002)(3846002)(186003)(2201001)(81156014)(81166006)(25786009)(71190400001)(8676002)(110136005)(316002)(8936002)(486006)(256004)(2616005)(476003)(11346002)(31696002)(446003)(71200400001)(478600001)(31686004)(6506007)(66946007)(6306002)(66556008)(64756008)(6246003)(66446008)(229853002)(36756003)(6512007)(6486002)(66476007)(52116002)(966005)(76176011)(5660300002)(99286004)(6436002)(66066001)(386003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR12MB2737;H:BN7PR12MB2593.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 81V/ELmK3uLJOvWIwuTQMvrCaPbspmG46EC5deatQa2N1YsNE9O3PS4CVtqwRZ42508fzLsozJSbPPFYD3liGue2iTF6T+ySHBR1gvI35XauVSQlrIupgHCKtk+w88yoFc1Ps4RBOau4yRcghwcAFb1qdbo0HzO1G9BrKP+9SduuOtrcPErSD0EzzuINEDFf/uwF15/mPJvLepqgZvukF6OpWsPOv/pLvcafwG1GRdvgPnE9WMD2UF2llIR9sFfemQwGxZSr5rMN5dOuyfpFZT9vhR0X/o0A7l9W1SrjueOX5+59CK2P0v/5KkOt7WOCXHuoNCAXjDTlIwQteOPp8fWtGPlrh6eHxes/xI1dxoOeb39dBCFYzwZLEgDEOaARVg439X8NKjtuixFgdHXTafe48j+Sv0UU6Dg5bdzPwnpHVTYqtTSYELMEccKIrke/waJ5svRQxe1ikUmmDCgDhA==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <EF17B48017FF9A42BFB774A7DBDEFA28@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191016221148.F9CCD155@viggo.jf.intel.com> <20191016221152.BF2171A3@viggo.jf.intel.com>
-In-Reply-To: <20191016221152.BF2171A3@viggo.jf.intel.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Thu, 17 Oct 2019 10:30:00 -0700
-Message-ID: <CAHbLzkp_2UD50Vt8f_atxKcz4x8J3GB3YzTqMOd6Src_y2Yg2g@mail.gmail.com>
-Subject: Re: [PATCH 3/4] mm/vmscan: Attempt to migrate page in lieu of discard
-To:     Dave Hansen <dave.hansen@linux.intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Keith Busch <keith.busch@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf64009e-62dc-450f-535b-08d75327b401
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Oct 2019 17:30:28.7309
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5Qvfk8TAnqR7WqMuDVyv39uacfNE7h1qgojNuWY5wjEnrZdqClxfeIwV6mO1OeDH
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR12MB2737
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 3:14 PM Dave Hansen <dave.hansen@linux.intel.com> wrote:
->
->
-> From: Keith Busch <keith.busch@intel.com>
->
-> If a memory node has a preferred migration path to demote cold pages,
-> attempt to move those inactive pages to that migration node before
-> reclaiming. This will better utilize available memory, provide a faster
-> tier than swapping or discarding, and allow such pages to be reused
-> immediately without IO to retrieve the data.
->
-> Much like swap, this is an opt-in feature that requires user defining
-> where to send pages when reclaiming them. When handling anonymous pages,
-> this will be considered before swap if enabled. Should the demotion fail
-> for any reason, the page reclaim will proceed as if the demotion feature
-> was not enabled.
->
-> Some places we would like to see this used:
->
->   1. Persistent memory being as a slower, cheaper DRAM replacement
->   2. Remote memory-only "expansion" NUMA nodes
->   3. Resolving memory imbalances where one NUMA node is seeing more
->      allocation activity than another.  This helps keep more recent
->      allocations closer to the CPUs on the node doing the allocating.
->
-> Signed-off-by: Keith Busch <keith.busch@intel.com>
-> Co-developed-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-> ---
->
->  b/include/linux/migrate.h        |    6 ++++
->  b/include/trace/events/migrate.h |    3 +-
->  b/mm/debug.c                     |    1
->  b/mm/migrate.c                   |   51 +++++++++++++++++++++++++++++++++++++++
->  b/mm/vmscan.c                    |   27 ++++++++++++++++++++
->  5 files changed, 87 insertions(+), 1 deletion(-)
->
-> diff -puN include/linux/migrate.h~0005-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard include/linux/migrate.h
-> --- a/include/linux/migrate.h~0005-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard 2019-10-16 15:06:58.090952593 -0700
-> +++ b/include/linux/migrate.h   2019-10-16 15:06:58.103952593 -0700
-> @@ -25,6 +25,7 @@ enum migrate_reason {
->         MR_MEMPOLICY_MBIND,
->         MR_NUMA_MISPLACED,
->         MR_CONTIG_RANGE,
-> +       MR_DEMOTION,
->         MR_TYPES
->  };
->
-> @@ -79,6 +80,7 @@ extern int migrate_huge_page_move_mappin
->  extern int migrate_page_move_mapping(struct address_space *mapping,
->                 struct page *newpage, struct page *page, enum migrate_mode mode,
->                 int extra_count);
-> +extern int migrate_demote_mapping(struct page *page);
->  #else
->
->  static inline void putback_movable_pages(struct list_head *l) {}
-> @@ -105,6 +107,10 @@ static inline int migrate_huge_page_move
->         return -ENOSYS;
->  }
->
-> +static inline int migrate_demote_mapping(struct page *page)
-> +{
-> +       return -ENOSYS;
-> +}
->  #endif /* CONFIG_MIGRATION */
->
->  #ifdef CONFIG_COMPACTION
-> diff -puN include/trace/events/migrate.h~0005-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard include/trace/events/migrate.h
-> --- a/include/trace/events/migrate.h~0005-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard  2019-10-16 15:06:58.092952593 -0700
-> +++ b/include/trace/events/migrate.h    2019-10-16 15:06:58.103952593 -0700
-> @@ -20,7 +20,8 @@
->         EM( MR_SYSCALL,         "syscall_or_cpuset")            \
->         EM( MR_MEMPOLICY_MBIND, "mempolicy_mbind")              \
->         EM( MR_NUMA_MISPLACED,  "numa_misplaced")               \
-> -       EMe(MR_CONTIG_RANGE,    "contig_range")
-> +       EM( MR_CONTIG_RANGE,    "contig_range")                 \
-> +       EMe(MR_DEMOTION,        "demotion")
->
->  /*
->   * First define the enums in the above macros to be exported to userspace
-> diff -puN mm/debug.c~0005-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard mm/debug.c
-> --- a/mm/debug.c~0005-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard      2019-10-16 15:06:58.094952593 -0700
-> +++ b/mm/debug.c        2019-10-16 15:06:58.103952593 -0700
-> @@ -25,6 +25,7 @@ const char *migrate_reason_names[MR_TYPE
->         "mempolicy_mbind",
->         "numa_misplaced",
->         "cma",
-> +       "demotion",
->  };
->
->  const struct trace_print_flags pageflag_names[] = {
-> diff -puN mm/migrate.c~0005-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard mm/migrate.c
-> --- a/mm/migrate.c~0005-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard    2019-10-16 15:06:58.097952593 -0700
-> +++ b/mm/migrate.c      2019-10-16 15:06:58.104952593 -0700
-> @@ -1119,6 +1119,57 @@ out:
->         return rc;
->  }
->
-> +static struct page *alloc_demote_node_page(struct page *page, unsigned long node)
-> +{
-> +       /*
-> +        * The flags are set to allocate only on the desired node in the
-> +        * migration path, and to fail fast if not immediately available. We
-> +        * are already doing memory reclaim, we don't want heroic efforts to
-> +        * get a page.
-> +        */
-> +       gfp_t mask = GFP_NOWAIT | __GFP_NOWARN | __GFP_NORETRY |
-> +                       __GFP_NOMEMALLOC | __GFP_THISNODE | __GFP_MOVABLE;
-> +       struct page *newpage;
-> +
-> +       if (PageTransHuge(page)) {
-> +               mask |= __GFP_COMP;
-> +               newpage = alloc_pages_node(node, mask, HPAGE_PMD_ORDER);
-> +               if (newpage)
-> +                       prep_transhuge_page(newpage);
-> +       } else
-> +               newpage = alloc_pages_node(node, mask, 0);
-> +
-> +       return newpage;
-> +}
-> +
-> +/**
-> + * migrate_demote_mapping() - Migrate this page and its mappings to its
-> + *                            demotion node.
-> + * @page: A locked, isolated, non-huge page that should migrate to its current
-> + *        node's demotion target, if available. Since this is intended to be
-> + *        called during memory reclaim, all flag options are set to fail fast.
-> + *
-> + * @returns: MIGRATEPAGE_SUCCESS if successful, -errno otherwise.
-> + */
-> +int migrate_demote_mapping(struct page *page)
-> +{
-> +       int next_nid = next_migration_node(page_to_nid(page));
-> +
-> +       VM_BUG_ON_PAGE(!PageLocked(page), page);
-> +       VM_BUG_ON_PAGE(PageHuge(page), page);
-> +       VM_BUG_ON_PAGE(PageLRU(page), page);
-> +
-> +       if (next_nid < 0)
-> +               return -ENOSYS;
-> +       if (PageTransHuge(page) && !thp_migration_supported())
-> +               return -ENOMEM;
-> +
-> +       /* MIGRATE_ASYNC is the most light weight and never blocks.*/
-> +       return __unmap_and_move(alloc_demote_node_page, NULL, next_nid,
-> +                               page, MIGRATE_ASYNC, MR_DEMOTION);
-> +}
-> +
-> +
->  /*
->   * gcc 4.7 and 4.8 on arm get an ICEs when inlining unmap_and_move().  Work
->   * around it.
-> diff -puN mm/vmscan.c~0005-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard mm/vmscan.c
-> --- a/mm/vmscan.c~0005-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard     2019-10-16 15:06:58.099952593 -0700
-> +++ b/mm/vmscan.c       2019-10-16 15:06:58.105952593 -0700
-> @@ -1262,6 +1262,33 @@ static unsigned long shrink_page_list(st
->                         ; /* try to reclaim the page below */
->                 }
->
-> +               if (!PageHuge(page)) {
-> +                       int rc = migrate_demote_mapping(page);
-> +
-> +                       /*
-> +                        * -ENOMEM on a THP may indicate either migration is
-> +                        * unsupported or there was not enough contiguous
-> +                        * space. Split the THP into base pages and retry the
-> +                        * head immediately. The tail pages will be considered
-> +                        * individually within the current loop's page list.
-> +                        */
-> +                       if (rc == -ENOMEM && PageTransHuge(page) &&
-> +                           !split_huge_page_to_list(page, page_list))
-> +                               rc = migrate_demote_mapping(page);
-
-I recalled when Keith posted the patch at the first time, I raised
-question about why not just migrating THP in a whole? The
-migrate_pages() could handle this. If it fails, it just fallbacks to
-base page.
-
-Since the most optimistic gfp flags are used, it should not trap into
-nested direct reclaim. The migrate_pages() should just return failure
-then fallback to base page.
-
-> +
-> +                       if (rc == MIGRATEPAGE_SUCCESS) {
-> +                               unlock_page(page);
-> +                               if (likely(put_page_testzero(page)))
-> +                                       goto free_it;
-> +                               /*
-> +                                * Speculative reference will free this page,
-> +                                * so leave it off the LRU.
-> +                                */
-> +                               nr_reclaimed++;
-> +                               continue;
-> +                       }
-> +               }
-> +
->                 /*
->                  * Anonymous process memory has backing store?
->                  * Try to allocate it some swap space here.
-> _
->
+VGhpcyBoYXMgYWxyZWFkeSBiZWVuIGZpeGVkIGhlcmU6DQpodHRwczovL3BhdGNod29yay5mcmVl
+ZGVza3RvcC5vcmcvcGF0Y2gvMzM2MTk1Lw0KDQpTaG91bGQgYmUgbWlycm9yZWQgb24gQWxleCdz
+IHRyZWUgc29vbi4NCg0KVGhhbmtzLA0KTGVvDQoNCk9uIDIwMTktMTAtMTcgMjoxOSBhLm0uLCBD
+aGVuIFdhbmR1biB3cm90ZToNCj4gRnJvbTogQ2hlbndhbmR1biA8Y2hlbndhbmR1bkBodWF3ZWku
+Y29tPg0KPiANCj4gZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvLi4vZGlzcGxheS9kYy9kY24y
+MC9kY24yMF9yZXNvdXJjZS5jOjE5MTM6NDg6IGVycm9yOiBzdHJ1Y3QgZGNfY3J0Y190aW1pbmdf
+ZmxhZ3MgaGFzIG5vIG1lbWJlciBuYW1lZCBEU0MNCj4gICAgaWYgKHJlc19jdHgtPnBpcGVfY3R4
+W2ldLnN0cmVhbS0+dGltaW5nLmZsYWdzLkRTQykNCj4gCQkJCQkJXg0KPiBkcml2ZXJzL2dwdS9k
+cm0vYW1kL2FtZGdwdS8uLi9kaXNwbGF5L2RjL2RjbjIwL2RjbjIwX3Jlc291cmNlLmM6MTkxNDo3
+MzogZXJyb3I6IHN0cnVjdCBkY19jcnRjX3RpbWluZyBoYXMgbm8gbWVtYmVyIG5hbWVkIGRzY19j
+ZmcNCj4gICAgcGlwZXNbcGlwZV9jbnRdLmRvdXQub3V0cHV0X2JwcCA9IHJlc19jdHgtPnBpcGVf
+Y3R4W2ldLnN0cmVhbS0+dGltaW5nLmRzY19jZmcuYml0c19wZXJfcGl4ZWwgLyAxNi4wOw0KPiAJ
+CQkJCQkJCQleDQo+IFNpZ25lZC1vZmYtYnk6IENoZW53YW5kdW4gPGNoZW53YW5kdW5AaHVhd2Vp
+LmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvZGMvZGNuMjAvZGNu
+MjBfcmVzb3VyY2UuYyB8IDIgKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykN
+Cj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvZGMvZGNuMjAv
+ZGNuMjBfcmVzb3VyY2UuYyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9kYy9kY24yMC9k
+Y24yMF9yZXNvdXJjZS5jDQo+IGluZGV4IDkxNGUzNzguLjRmMDMzMTggMTAwNjQ0DQo+IC0tLSBh
+L2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9kYy9kY24yMC9kY24yMF9yZXNvdXJjZS5jDQo+
+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9kYy9kY24yMC9kY24yMF9yZXNvdXJj
+ZS5jDQo+IEBAIC0xOTEwLDggKzE5MTAsMTAgQEAgaW50IGRjbjIwX3BvcHVsYXRlX2RtbF9waXBl
+c19mcm9tX2NvbnRleHQoDQo+ICAJCQlwaXBlc1twaXBlX2NudF0uZG91dC5vdXRwdXRfYnBwID0g
+b3V0cHV0X2JwYyAqIDM7DQo+ICAJCX0NCj4gIA0KPiArI2lmZGVmIENPTkZJR19EUk1fQU1EX0RD
+X0RTQ19TVVBQT1JUDQo+ICAJCWlmIChyZXNfY3R4LT5waXBlX2N0eFtpXS5zdHJlYW0tPnRpbWlu
+Zy5mbGFncy5EU0MpDQo+ICAJCQlwaXBlc1twaXBlX2NudF0uZG91dC5vdXRwdXRfYnBwID0gcmVz
+X2N0eC0+cGlwZV9jdHhbaV0uc3RyZWFtLT50aW1pbmcuZHNjX2NmZy5iaXRzX3Blcl9waXhlbCAv
+IDE2LjA7DQo+ICsjZW5kaWYNCj4gIA0KPiAgCQkvKiB0b2RvOiBkZWZhdWx0IG1heCBmb3Igbm93
+LCB1bnRpbCB0aGVyZSBpcyBsb2dpYyByZWZsZWN0aW5nIHRoaXMgaW4gZGMqLw0KPiAgCQlwaXBl
+c1twaXBlX2NudF0uZG91dC5vdXRwdXRfYnBjID0gMTI7DQo+IA0K
