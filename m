@@ -2,134 +2,85 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 333E2ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5509ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 008FF20872
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:00:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jpj35KVo"
+	by mail.kernel.org (Postfix) with ESMTP id 8AFA921835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:01:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571328080;
+	bh=hW6huek/OCNo03LBsH5IaDKCEp+GDUUB0WU02dwM/i8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=z6y/jbIRMO51LCXPItnpEVa1lmUgrhKQbCqEyyfpvXHmVt4P2g3GsLKADT6vyGYO7
+	 iedvCYpDMcrmd8gzQXpqpuRClOBL6lmUamisCShQM0cMdJlrDvqQOCJD8bRmJTPtmO
+	 gfZDYtITnwJyxuXCWNIo9NM9aeZM0DO4TNH3eo0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439423AbfJQQAw (ORCPT
+        id S2439513AbfJQQBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:00:52 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43997 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436580AbfJQQAv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 12:00:51 -0400
-Received: by mail-pf1-f195.google.com with SMTP id a2so1927035pfo.10;
-        Thu, 17 Oct 2019 09:00:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bKHsm49AjH+9+kS10xeon3ScfYzXimBKCUXUhQczC7c=;
-        b=Jpj35KVo3sVfoKljx8sot28XsdRaIvkCMLBzWb6ssHzRgOFI+FN4uKedm44mjoDrGG
-         KsGYXZE5gJ3gxbO9dga++kYO/US86ElI0Jz/QWSN/N1H1pMOnBGsBvEV0IqRmPT7JyBI
-         6CKKU86QwjL6k3026BX6S/KoJrl0N03SFf6OvJgwFn0NpBwNIzbfVM+7jM6oieiq3Uyy
-         wcIWZkUbloVvbhh4rFzcWJtDVBcnFcb4u/0CaaShng1iWg2SbGMWd9ymJb88Ncv5Ncsl
-         egttf6ReYdLp2EWOAWaKmsZrdbgLlcq3+A3qLPd4mnidRb9svzpyDIP4zcQKS5iACMFY
-         LJ0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bKHsm49AjH+9+kS10xeon3ScfYzXimBKCUXUhQczC7c=;
-        b=Ri/D+WRmVfl9IfiZCeG9NnI8W3vjmz/jLq+5KUk/HNnrVqlSbkrbKb7bWR6l054xW0
-         AqhSINKazIy/sxSyo6P2Lntkrho8/ntLwuNcrQT9y0RlTlNaR6x74/3nZsptHjNozzgQ
-         h3uvjUEsTX9Dj5jjWxlonn7iiH/kXC3WNX/4X5A/8zZXud0rLP7SCR4NTdQ1spuA2fg7
-         +AXbtyiIiHH0oWO/urm3wo/TSocdBs83Lqt3K9noGF6TIGX53yZ09Db8cLXx9KdEbeu2
-         uyY3bmFJa4iPpTVC08jt+ioWqHnPsRXebMi/fsNiETB7aEpiVNVEM9K3s7Dyb9zkEQ9e
-         GUMQ==
-X-Gm-Message-State: APjAAAWawKHXhYd5p8P6SJ9/4mNqzzHbjHvhwJ/XJG5sbDhJvIoVsSkz
-        TFiZ8REgfzCJ4s3eXI7el9xKdWPW
-X-Google-Smtp-Source: APXvYqxdUs3K8kdiwaLrIGbUOjwLrBiCkBP9lXNhqoPWli5kV2DcKOLnS8b57cZ07KNDaTySvpea2Q==
-X-Received: by 2002:a17:90a:356a:: with SMTP id q97mr5232709pjb.50.1571328050138;
-        Thu, 17 Oct 2019 09:00:50 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id w134sm3502756pfd.4.2019.10.17.09.00.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 09:00:48 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 09:00:46 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v5 10/14] software node: rename is_array to is_inline
-Message-ID: <20191017160046.GF35946@dtor-ws>
-References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
- <20191011230721.206646-11-dmitry.torokhov@gmail.com>
- <20191014073720.GH32742@smile.fi.intel.com>
- <20191015182206.GF105649@dtor-ws>
- <20191016075940.GP32742@smile.fi.intel.com>
- <20191016165430.GD35946@dtor-ws>
- <20191017071628.GD32742@smile.fi.intel.com>
+        Thu, 17 Oct 2019 12:01:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45984 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436580AbfJQQBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 12:01:18 -0400
+Received: from localhost (unknown [192.55.54.60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A39620872;
+        Thu, 17 Oct 2019 16:01:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571328078;
+        bh=hW6huek/OCNo03LBsH5IaDKCEp+GDUUB0WU02dwM/i8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fU38KlaRL7+XxryfBW2q/qTk9vRR7R2oGrGGuM+F4hhU4Rp48QFtSbl+PgEnSVz8a
+         p10R9pwGqbyRa2y8tCIzQ5ZYTi8TSEEBxUQlcElVRzIKp/TWQNkkLrvLSV51NbNNA2
+         0jG6bjMZ5/WakDxSy+bm3uFQIk/nH+RQNWhvkYiM=
+Date:   Thu, 17 Oct 2019 09:01:17 -0700
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     sashal@kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Dave Wysochanski <dwysocha@redhat.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: Re: [PATCH 4.19 62/81] cifs: use cifsInodeInfo->open_file_lock while
+ iterating to avoid a panic
+Message-ID: <20191017160117.GA1083277@kroah.com>
+References: <20191016214805.727399379@linuxfoundation.org>
+ <20191016214843.979454273@linuxfoundation.org>
+ <20191017085538.GA5847@amd>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191017071628.GD32742@smile.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191017085538.GA5847@amd>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 10:16:28AM +0300, Andy Shevchenko wrote:
-> On Wed, Oct 16, 2019 at 09:54:30AM -0700, Dmitry Torokhov wrote:
-> > On Wed, Oct 16, 2019 at 10:59:40AM +0300, Andy Shevchenko wrote:
-> > > On Tue, Oct 15, 2019 at 11:22:06AM -0700, Dmitry Torokhov wrote:
-> > > > On Mon, Oct 14, 2019 at 10:37:20AM +0300, Andy Shevchenko wrote:
-> > > > > On Fri, Oct 11, 2019 at 04:07:17PM -0700, Dmitry Torokhov wrote:
+On Thu, Oct 17, 2019 at 10:55:39AM +0200, Pavel Machek wrote:
+> Hi!
 > 
-> > > > > 'stored inline' -> 'embedded in the &struct...' ?
-> > > > 
-> > > > I was trying to have a link "stored inline" -> "is_inline".
-> > > > 
-> > > > Do we want to change the flag to be "is_embedded"?
-> > > 
-> > > In dictionaries I have
-> > > 
-> > > embedded <-> unilateral
+> > From: Dave Wysochanski <dwysocha@redhat.com>
 > > 
-> > Are you trying to show synonym or antonym here? But I am pretty sure
-> > "unilateral" is either.
+> > Commit 487317c99477 ("cifs: add spinlock for the openFileList to
+> > cifsInodeInfo") added cifsInodeInfo->open_file_lock spin_lock to protect
 > 
-> Antonyms. The 'unilateral' is marked as so in the dictionary.
-
-OK, that is not something that I would ever think of as an antonym, so
-even though I am not a native speaker I do not think we should be using
-it here as documentation and comments are supposed to be understood by
-all people from around the world and not by English majors only.
-
-Out of curiosity, is this dictionary available online? I would really
-want to see to what particular meaning of "embedded" they assign
-"unilateral" as antonym so that I know better next time I see it used.
-
-> 
-> > Antonyms for our use of "embedded" are likely "detached" or
-> > "disconnected".
+> > Fixes: 487317c99477 ("cifs: add spinlock for the openFileList to cifsInodeInfo")
 > > 
-> > > inline <-> ???
-> > 
-> > "out of line" but I still believe "stored separately" explains precisely
-> > what we have here.
+> > CC: Stable <stable@vger.kernel.org>
+> > Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+> > Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+> > Signed-off-by: Steve French <stfrench@microsoft.com>
 > 
-> No, 'out of line' is idiom with a special meaning.
+> This is missing upstream commit ID and a signoff.
 
-Yes, and it is also a well defined term in CS.
+Good catch, Sasha forgot to do that :(
 
-Thanks.
+I'll go fix that now, thanks.
 
--- 
-Dmitry
+greg k-h
