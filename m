@@ -2,104 +2,104 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C3CECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCB4ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5B13214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2797421835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:48:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502538AbfJQMqb (ORCPT
+        id S2502552AbfJQMsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 08:46:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35992 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389259AbfJQMqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:46:31 -0400
-Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com [209.85.210.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0FFA97FDFA
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 12:46:31 +0000 (UTC)
-Received: by mail-ot1-f70.google.com with SMTP id h13so1041938otk.20
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 05:46:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vaWTT7JqqW/omoel2Kh7+Tx9nZC4ZDq/vWAR367HkMc=;
-        b=Si/S9EPiBZDU4YXa+TmuLbbd0USbu8sBlTASMisBuqp3ig7AnmyVzkeHDx3+YW5fYv
-         w2qigVFua/oMZFbKZnXgSH8T8CWw7T1jDmuygF1eLcjuCJeDrCixbeQep65zOB8lYv3D
-         szq50xJHSeUt5/JYAdY+RvGBF0b+SWuJ5TtfIiM+k6J9s7tRt3ncOIpne6VtWLVmfCg0
-         LxWjFy+GQLR96DiCBztVe+NjgnF6a5IGeq+94h0bSv6Zgo5uXJJT85c8meYpCafS3RY3
-         eFfSY2HG5R4QW+nFN8XXuaMAB+YZRWhFFuKXibcw3SJO0RHi1fCDq6qobsUq6MRIum9/
-         3ESg==
-X-Gm-Message-State: APjAAAX7dcHBaa3KN7FpJL60/jlpf9MuX8YvJDCm0hPA5RuA4RWi/Z1M
-        /NoRzohq+Y0ZZyusqQPfeF09wG1Sq2X0xwC94npGUqOUWf1+lSKz7oRmqpntUJ+lxr2s6QRK9S5
-        Kp48Ls98T8sbYD98a8w3fGQCiAscfOjbtTndYMTk2
-X-Received: by 2002:a9d:578c:: with SMTP id q12mr2894077oth.185.1571316390464;
-        Thu, 17 Oct 2019 05:46:30 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqymPkeFxkVdqnQC5LbPy95EWMAssDeF/PPOZOqn+xXKlKhhjqCK4Yb0h5AV9GEqyNDK0ze/wDlm4K38c45cWow=
-X-Received: by 2002:a9d:578c:: with SMTP id q12mr2894065oth.185.1571316390261;
- Thu, 17 Oct 2019 05:46:30 -0700 (PDT)
+        Thu, 17 Oct 2019 08:48:14 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4203 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729344AbfJQMsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 08:48:13 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 2EBA61F014ACEAE9646D;
+        Thu, 17 Oct 2019 20:48:11 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
+ 20:48:04 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <linus.walleij@linaro.org>, <manivannan.sadhasivam@linaro.org>,
+        <afaerber@suse.de>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
+        <sbranden@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
+        <jesper.nilsson@axis.com>, <lars.persson@axis.com>,
+        <ludovic.desroches@microchip.com>, <nicolas.ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <baruch@tkos.co.il>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@axis.com>, <linux-oxnas@groups.io>,
+        <linux-renesas-soc@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <vz@mleia.com>, <narmstrong@baylibre.com>,
+        <geert+renesas@glider.be>, <daniel@zonque.org>,
+        <haojian.zhuang@gmail.com>, <wens@csie.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <agross@kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next 01/30] pinctrl: pxa25x: use devm_platform_ioremap_resource() to simplify code
+Date:   Thu, 17 Oct 2019 20:26:11 +0800
+Message-ID: <20191017122640.22976-2-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20191017122640.22976-1-yuehaibing@huawei.com>
+References: <20191017122640.22976-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-References: <20191017110225.30841-1-ben.dooks@codethink.co.uk> <25bb4857-950e-592a-b2ba-7730867742b3@redhat.com>
-In-Reply-To: <25bb4857-950e-592a-b2ba-7730867742b3@redhat.com>
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-Date:   Thu, 17 Oct 2019 14:46:19 +0200
-Message-ID: <CAHc6FU7V6PK4OhzqiELiG8cXi5jhpV7whe5Dx5jbL_69LxzUpg@mail.gmail.com>
-Subject: Re: [Cluster-devel] [PATCH] gfs2: make gfs2_fs_parameters static
-To:     Andrew Price <anprice@redhat.com>
-Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        linux-kernel@lists.codethink.co.uk,
-        cluster-devel <cluster-devel@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 1:42 PM Andrew Price <anprice@redhat.com> wrote:
-> On 17/10/2019 12:02, Ben Dooks (Codethink) wrote:
-> > The gfs2_fs_parameters is not used outside the unit
-> > it is declared in, so make it static.
-> >
-> > Fixes the following sparse warning:
-> >
-> > fs/gfs2/ops_fstype.c:1331:39: warning: symbol 'gfs2_fs_parameters' was not declared. Should it be static?
-> >
-> > Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> > ---
-> > Cc: Bob Peterson <rpeterso@redhat.com>
-> > Cc: Andreas Gruenbacher <agruenba@redhat.com>
-> > Cc: cluster-devel@redhat.com
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> >   fs/gfs2/ops_fstype.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/fs/gfs2/ops_fstype.c b/fs/gfs2/ops_fstype.c
-> > index 681b44682b0d..ebdef1c5f580 100644
-> > --- a/fs/gfs2/ops_fstype.c
-> > +++ b/fs/gfs2/ops_fstype.c
-> > @@ -1328,7 +1328,7 @@ static const struct fs_parameter_enum gfs2_param_enums[] = {
-> >       {}
-> >   };
-> >
-> > -const struct fs_parameter_description gfs2_fs_parameters = {
-> > +static const struct fs_parameter_description gfs2_fs_parameters = {
-> >       .name = "gfs2",
-> >       .specs = gfs2_param_specs,
-> >       .enums = gfs2_param_enums,
-> >
->
-> Looks good to me.
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
 
-Andy, I've added a reviewed-by tag for you and pushed this to for-next.
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/pinctrl/pxa/pinctrl-pxa25x.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-Thanks,
-Andreas
+diff --git a/drivers/pinctrl/pxa/pinctrl-pxa25x.c b/drivers/pinctrl/pxa/pinctrl-pxa25x.c
+index 8d12470..9564069 100644
+--- a/drivers/pinctrl/pxa/pinctrl-pxa25x.c
++++ b/drivers/pinctrl/pxa/pinctrl-pxa25x.c
+@@ -216,25 +216,20 @@ static int pxa25x_pinctrl_probe(struct platform_device *pdev)
+ 	void __iomem *base_af[8];
+ 	void __iomem *base_dir[4];
+ 	void __iomem *base_sleep[4];
+-	struct resource *res;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	base_af[0] = devm_ioremap_resource(&pdev->dev, res);
++	base_af[0] = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(base_af[0]))
+ 		return PTR_ERR(base_af[0]);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	base_dir[0] = devm_ioremap_resource(&pdev->dev, res);
++	base_dir[0] = devm_platform_ioremap_resource(pdev, 1);
+ 	if (IS_ERR(base_dir[0]))
+ 		return PTR_ERR(base_dir[0]);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+-	base_dir[3] = devm_ioremap_resource(&pdev->dev, res);
++	base_dir[3] = devm_platform_ioremap_resource(pdev, 2);
+ 	if (IS_ERR(base_dir[3]))
+ 		return PTR_ERR(base_dir[3]);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 3);
+-	base_sleep[0] = devm_ioremap_resource(&pdev->dev, res);
++	base_sleep[0] = devm_platform_ioremap_resource(pdev, 3);
+ 	if (IS_ERR(base_sleep[0]))
+ 		return PTR_ERR(base_sleep[0]);
+ 
+-- 
+2.7.4
+
+
