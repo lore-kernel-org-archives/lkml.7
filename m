@@ -2,156 +2,123 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5756FA3730
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F63FA3730
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80A7F20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:33:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="BOTULZab"
+	by mail.kernel.org (Postfix) with ESMTP id 91F7920663
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:35:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405597AbfJQJdJ (ORCPT
+        id S2393751AbfJQJfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 05:33:09 -0400
-Received: from mail-eopbgr780087.outbound.protection.outlook.com ([40.107.78.87]:15539
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730379AbfJQJdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 05:33:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k2EC0L4E3ucE0+lZR6CVZeinYlRHsMNLESOR6GPGZJTV+MRh8/e8+dpzqLdZFaj+NBeAiwWAfo0kF2XOpnWiyMNe74KzqWerbbu8NyOMLWfjHUqExSTC4jLMD/HwiII0pB0fUoTdkzPGDm8XsC+EyVTADQTWiEdmWUKzuw15PhSdR84nhTi+r4GEvPe27WPDLCF8Sk2AXBjiKnWSPeft0crdNQIZl+3TSAXVCZXYw/Gu32EODB2IY7ha5ToGu/IyGh9qtCRblA27/0A5rVSjt2eguZKQDuqnlWO0w6NuV/58M/NoGrEiZoAwZqM7dNl9I/Awe8GaSB0qFsxNVxPE2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HWow3HfrVKIDprZArFQqovx80ZCZB5a3BFHSA73eCn8=;
- b=MCS3UezBc1ck9IQnbgqY4qj+KXg5gg7DjIqCha2SDVw+F0GRVnBwKud0FtkHMs5UM+sUWpHfjRuyzUpN2kSLYIhr5+DcNtT18ZxLPHl7pfNQBLUf1HsFXMxhmNXAytGFWnGzmEsWjyfXCcc3960DE1beBwu8QOPunGOrXWwwmbiCgd7ZlxOcErEOG18j1Gi0PaU+Bbf4I8l06mZUyWamWsal8A4a16+vDmEjpfJPl/7Mk48+3x9tb5BgTKi0XPOkNo1f0JBTUx9hCSQTgpGSQs9l9zsu5yAovmLt6V545pSYDFDhwGXuMCf2EEx4kJ3UlbShcpYQONWEX6Kigv1nvA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HWow3HfrVKIDprZArFQqovx80ZCZB5a3BFHSA73eCn8=;
- b=BOTULZabuTRLBR15oLPqCXPoXP7U3KsxEwPD5HpdLQBPXVlrShozQ83gQt5IsOflO4k/XRWppwpAqd4qkcObKfQB7HlyXLFtb6M+t//xR7mBtzXsgxQ2wux4V9eHx1LU1wqXKdxeGIxBWgN1q6uNS5hiFbgmrTrAVWpYwiCsuog=
-Received: from DM6PR12MB3868.namprd12.prod.outlook.com (10.255.173.213) by
- DM6PR12MB2889.namprd12.prod.outlook.com (20.179.71.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16; Thu, 17 Oct 2019 09:33:06 +0000
-Received: from DM6PR12MB3868.namprd12.prod.outlook.com
- ([fe80::64dd:646d:6fa1:15a1]) by DM6PR12MB3868.namprd12.prod.outlook.com
- ([fe80::64dd:646d:6fa1:15a1%4]) with mapi id 15.20.2347.023; Thu, 17 Oct 2019
- 09:33:06 +0000
-From:   vishnu <vravulap@amd.com>
-To:     Mark Brown <broonie@kernel.org>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>
-CC:     "RAVULAPATI, VISHNU VARDHAN RAO" 
-        <Vishnuvardhanrao.Ravulapati@amd.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "Mukunda, Vijendar" <Vijendar.Mukunda@amd.com>,
-        Maruthi Srinivas Bayyavarapu <Maruthi.Bayyavarapu@amd.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/7] ASoC: amd: No need PCI-MSI interrupts
-Thread-Topic: [PATCH 1/7] ASoC: amd: No need PCI-MSI interrupts
-Thread-Index: AQHVd/NK02/86+8bwUqA0+UYmDRNb6dGCguAgAABq4CADmkpAIAK7WKA
-Date:   Thu, 17 Oct 2019 09:33:06 +0000
-Message-ID: <76668467-5edf-407a-a063-50f322fe785d@amd.com>
-References: <1569891524-18875-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
- <BN6PR12MB18093C8EDE60811B3D917DEAF79D0@BN6PR12MB1809.namprd12.prod.outlook.com>
- <20191001172941.GC4786@sirena.co.uk>
- <f9b1c3d5-6e02-354f-91b6-3b57e2f88bde@amd.com>
-In-Reply-To: <f9b1c3d5-6e02-354f-91b6-3b57e2f88bde@amd.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
+        Thu, 17 Oct 2019 05:35:36 -0400
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:37327 "EHLO
+        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728150AbfJQJfg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 05:35:36 -0400
+Received: from mailgate01.nec.co.jp ([114.179.233.122])
+        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x9H9ZI2v031655
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 17 Oct 2019 18:35:18 +0900
+Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9H9ZIZk017697;
+        Thu, 17 Oct 2019 18:35:18 +0900
+Received: from mail02.kamome.nec.co.jp (mail02.kamome.nec.co.jp [10.25.43.5])
+        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9H9XxSD007541;
+        Thu, 17 Oct 2019 18:35:18 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.152] [10.38.151.152]) by mail01b.kamome.nec.co.jp with ESMTP id BT-MMP-9601025; Thu, 17 Oct 2019 18:34:11 +0900
+Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
+ BPXC24GP.gisp.nec.co.jp ([10.38.151.152]) with mapi id 14.03.0439.000; Thu,
+ 17 Oct 2019 18:34:11 +0900
+From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     Qian Cai <cai@lca.pw>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        David Hildenbrand <david@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: Re: memory offline infinite loop after soft offline
+Thread-Topic: memory offline infinite loop after soft offline
+Thread-Index: AQHVgHtyUduz67i7AUWqxWZ+Pu+7vadZPeAAgATGWAA=
+Date:   Thu, 17 Oct 2019 09:34:10 +0000
+Message-ID: <20191017093410.GA19973@hori.linux.bs1.fc.nec.co.jp>
+References: <1570829564.5937.36.camel@lca.pw>
+ <20191014083914.GA317@dhcp22.suse.cz>
+In-Reply-To: <20191014083914.GA317@dhcp22.suse.cz>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: BMXPR01CA0010.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:d::20) To DM6PR12MB3868.namprd12.prod.outlook.com
- (2603:10b6:5:1c8::21)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Vishnuvardhanrao.Ravulapati@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.159.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ebdd151c-22e3-43c9-da08-08d752e50403
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: DM6PR12MB2889:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR12MB288917FDC6A7A2DABC1542C9E76D0@DM6PR12MB2889.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 01930B2BA8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(366004)(39860400002)(396003)(199004)(189003)(6506007)(76176011)(66066001)(8676002)(14454004)(66556008)(66476007)(31686004)(66946007)(66446008)(64756008)(102836004)(81156014)(81166006)(25786009)(7736002)(386003)(53546011)(316002)(6636002)(305945005)(478600001)(99286004)(5660300002)(31696002)(36756003)(52116002)(71190400001)(71200400001)(186003)(2906002)(26005)(54906003)(110136005)(11346002)(486006)(446003)(6246003)(476003)(4326008)(2616005)(8936002)(229853002)(6486002)(6116002)(3846002)(6436002)(6512007)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2889;H:DM6PR12MB3868.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2Owyg3vey/bbRRPUuiE4r6gGsNDieu63N8gN+h5DW9+TTzQG9CsKln/ih9mwWXLGWnhlhuj1TEjp30cuFhE2LuqcC0zgGd/0dPYXYUtzOKRsb/lKe5yVSu7kb1/uqi7dqBpKFI2GSNhHjS1p/Vq5s7Ve8nqITOqBDAaSZ3N/woZJyvGEoaBwXVIWlO0G2c3ssJ3gh3Alrk81BwX+FV+1QQ8rzki63mgohTTwWjx+4nKxGMc7EZ87/8ZIiScObMDsZayIfUoGtkM9VDOftiwVAlOpTfatJGhlE1Ze6vVveDtMG3hXgDyRUoHTrI4d1jHlA5zjbE2aAM8aOuPl4szDqcX6oNEhNGUvtL5IHm4YCZfjsAk9qDb8NGcg2TGKrs8MIvd461PjMVNDsnUl9XWtV7RDzrDFR2NzOfJn6WysYTA=
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <C7CB0298D99CA54F859578B2C90D58F1@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+x-originating-ip: [10.34.125.150]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <692601B2CEEE6741AC8F87F189667CC0@gisp.nec.co.jp>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ebdd151c-22e3-43c9-da08-08d752e50403
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Oct 2019 09:33:06.6003
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: T6L64v7ix7nt9h3njGjGJ/3ghJxcUv3MD1V5D4JVcSU4O0akqffgYeoU5VHWqdSYDcxmx5XshF+bTM0NBsaFZA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2889
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+T24gTW9uLCBPY3QgMTQsIDIwMTkgYXQgMTA6Mzk6MTRBTSArMDIwMCwgTWljaGFsIEhvY2tvIHdy
+b3RlOg0KPiBPbiBGcmkgMTEtMTAtMTkgMTc6MzI6NDQsIFFpYW4gQ2FpIHdyb3RlOg0KPiA+ICMg
+L29wdC9sdHAvcnVudGVzdC9iaW4vbW92ZV9wYWdlczEyDQo+ID4gbW92ZV9wYWdlczEyLmM6MjYz
+OiBJTkZPOiBGcmVlIFJBTSAyNTg5ODg5Mjgga0INCj4gPiBtb3ZlX3BhZ2VzMTIuYzoyODE6IElO
+Rk86IEluY3JlYXNpbmcgMjA0OGtCIGh1Z2VwYWdlcyBwb29sIG9uIG5vZGUgMCB0byA0DQo+ID4g
+bW92ZV9wYWdlczEyLmM6MjkxOiBJTkZPOiBJbmNyZWFzaW5nIDIwNDhrQiBodWdlcGFnZXMgcG9v
+bCBvbiBub2RlIDggdG8gNA0KPiA+IG1vdmVfcGFnZXMxMi5jOjIwNzogSU5GTzogQWxsb2NhdGlu
+ZyBhbmQgZnJlZWluZyA0IGh1Z2VwYWdlcyBvbiBub2RlIDANCj4gPiBtb3ZlX3BhZ2VzMTIuYzoy
+MDc6IElORk86IEFsbG9jYXRpbmcgYW5kIGZyZWVpbmcgNCBodWdlcGFnZXMgb24gbm9kZSA4DQo+
+ID4gbW92ZV9wYWdlczEyLmM6MTk3OiBQQVNTOiBCdWcgbm90IHJlcHJvZHVjZWQNCj4gPiBtb3Zl
+X3BhZ2VzMTIuYzoxOTc6IFBBU1M6IEJ1ZyBub3QgcmVwcm9kdWNlZA0KPiA+IA0KPiA+IGZvciBt
+ZW0gaW4gJChscyAtZCAvc3lzL2RldmljZXMvc3lzdGVtL21lbW9yeS9tZW1vcnkqKTsgZG8NCj4g
+PiDCoMKgwqDCoMKgwqDCoMKgZWNobyBvZmZsaW5lID4gJG1lbS9zdGF0ZQ0KPiA+IMKgwqDCoMKg
+wqDCoMKgwqBlY2hvIG9ubGluZSA+ICRtZW0vc3RhdGUNCj4gPiBkb25lDQo+ID4gDQo+ID4gVGhh
+dCBMVFAgbW92ZV9wYWdlczEyIHRlc3Qgd2lsbCBmaXJzdCBtYWR2aXNlKE1BRFZfU09GVF9PRkZM
+SU5FKSBmb3IgYSByYW5nZS4NCj4gPiBUaGVuLCBvbmUgb2YgImVjaG8gb2ZmbGluZSIgd2lsbCB0
+cmlnZ2VyIGFuIGluZmluaXRlIGxvb3AgaW4gX19vZmZsaW5lX3BhZ2VzKCkNCj4gPiBoZXJlLA0K
+PiA+IA0KPiA+IAkJLyogY2hlY2sgYWdhaW4gKi8NCj4gPiAJCXJldCA9IHdhbGtfc3lzdGVtX3Jh
+bV9yYW5nZShzdGFydF9wZm4sIGVuZF9wZm4gLSBzdGFydF9wZm4sDQo+ID4gCQkJCQnCoMKgwqDC
+oE5VTEwsIGNoZWNrX3BhZ2VzX2lzb2xhdGVkX2NiKTsNCj4gPiAJfSB3aGlsZSAocmV0KTsNCj4g
+PiANCj4gPiBiZWNhdXNlIGNoZWNrX3BhZ2VzX2lzb2xhdGVkX2NiKCkgYWx3YXlzIHJldHVybiAt
+RUJVU1kgZnJvbQ0KPiA+IHRlc3RfcGFnZXNfaXNvbGF0ZWQoKSwNCj4gPiANCj4gPiANCj4gPiAJ
+cGZuID0gX190ZXN0X3BhZ2VfaXNvbGF0ZWRfaW5fcGFnZWJsb2NrKHN0YXJ0X3BmbiwgZW5kX3Bm
+biwNCj4gPiAJCQkJCQlza2lwX2h3cG9pc29uZWRfcGFnZXMpOw0KPiA+ICAgICAgICAgLi4uDQo+
+ID4gICAgICAgICByZXR1cm4gcGZuIDwgZW5kX3BmbiA/IC1FQlVTWSA6IDA7DQo+ID4gDQo+ID4g
+VGhlIHJvb3QgY2F1c2UgaXMgaW4gX190ZXN0X3BhZ2VfaXNvbGF0ZWRfaW5fcGFnZWJsb2NrKCkg
+d2hlcmUgInBmbiIgaXMgYWx3YXlzDQo+ID4gbGVzcyB0aGFuICJlbmRfcGZuIiBiZWNhdXNlIHRo
+ZSBhc3NvY2lhdGVkIHBhZ2UgaXMgbm90IGEgUGFnZUJ1ZGR5Lg0KPiA+IA0KPiA+IAl3aGlsZSAo
+cGZuIDwgZW5kX3Bmbikgew0KPiA+IAkuLi4NCj4gPiAJCWVsc2UNCj4gPiAJCQlicmVhazsNCj4g
+PiANCj4gPiAJcmV0dXJuIHBmbjsNCj4gDQo+IEhtbSwgdGhpcyBpcyBpbnRlcmVzdGluZy4gSSB3
+b3VsZCBleHBlY3QgdGhhdCB0aGlzIHdvdWxkIGhpdCB0aGUNCj4gcHJldmlvdXMgYnJhbmNoDQo+
+IAlpZiAoc2tpcF9od3BvaXNvbmVkX3BhZ2VzICYmIFBhZ2VIV1BvaXNvbihwYWdlKSkNCj4gYW5k
+IHNraXAgb3ZlciBod3BvaXNvbmVkIHBhZ2UuIEJ1dCBJIGNhbm5vdCBzZWVtIHRvIGZpbmQgdGhh
+dCB3ZSB3b3VsZA0KPiBtYXJrIGFsbCB0YWlsIHBhZ2VzIEhXUG9pc29uIGFzIHdlbGwgYW5kIHNv
+IGFueSB0YWlsIHBhZ2Ugc2VlbSB0bw0KPiBjb25mdXNlIF9fdGVzdF9wYWdlX2lzb2xhdGVkX2lu
+X3BhZ2VibG9jay4NCj4gDQo+IE9zY2FyIGlzIHJld3JpdGluZyB0aGUgaHdwb2lzb24gaW1wbGVt
+ZW50YXRpb24gYnV0IEkgYW0gbm90IHN1cmUNCj4gaG93L3doZXRoZXIgaGUgaXMgaGFuZGxpbmcg
+dGhpcyBjYXNlIGRpZmZlcmVudGx5LiBOYW95YSwgc2hvdWxkbid0IHdlIGRvDQo+IHRoZSBmb2xs
+b3dpbmcgYXQgbGVhc3Q/DQoNCk15IGFwcG9sb2d5IGZvciBsYXRlIHJlc3BvbnNlLg0KDQo+IC0t
+LQ0KPiBkaWZmIC0tZ2l0IGEvbW0vcGFnZV9pc29sYXRpb24uYyBiL21tL3BhZ2VfaXNvbGF0aW9u
+LmMNCj4gaW5kZXggODljMTljMGZlYWRiLi41ZmIzZmVlMTZmZGUgMTAwNjQ0DQo+IC0tLSBhL21t
+L3BhZ2VfaXNvbGF0aW9uLmMNCj4gKysrIGIvbW0vcGFnZV9pc29sYXRpb24uYw0KPiBAQCAtMjc0
+LDcgKzI3NCw3IEBAIF9fdGVzdF9wYWdlX2lzb2xhdGVkX2luX3BhZ2VibG9jayh1bnNpZ25lZCBs
+b25nIHBmbiwgdW5zaWduZWQgbG9uZyBlbmRfcGZuLA0KPiAgCQkJICogc2ltcGxlIHdheSB0byB2
+ZXJpZnkgdGhhdCBhcyBWTV9CVUdfT04oKSwgdGhvdWdoLg0KPiAgCQkJICovDQo+ICAJCQlwZm4g
+Kz0gMSA8PCBwYWdlX29yZGVyKHBhZ2UpOw0KPiAtCQllbHNlIGlmIChza2lwX2h3cG9pc29uZWRf
+cGFnZXMgJiYgUGFnZUhXUG9pc29uKHBhZ2UpKQ0KPiArCQllbHNlIGlmIChza2lwX2h3cG9pc29u
+ZWRfcGFnZXMgJiYgUGFnZUhXUG9pc29uKGNvbXBvdW5kX2hlYWQocGFnZSkpKQ0KPiAgCQkJLyog
+QSBIV1BvaXNvbmVkIHBhZ2UgY2Fubm90IGJlIGFsc28gUGFnZUJ1ZGR5ICovDQo+ICAJCQlwZm4r
+KzsNCj4gIAkJZWxzZQ0KDQpUaGlzIGZpeCBsb29rcyBnb29kIHRvIG1lLiBUaGUgb3JpZ2luYWwg
+Y29kZSBvbmx5IGFkZHJlc3NlcyBod3BvaXNvbmVkIDRrQi1wYWdlLA0Kd2Ugc2VlbSB0byBoYXZl
+IHRoaXMgaXNzdWUgc2luY2UgdGhlIGZvbGxvd2luZyBjb21taXQsDQoNCiAgY29tbWl0IGIwMjNm
+NDY4MTNjZGU2ZTNiOGE4YzI0ZjQzMmZmOWMxZmQ4ZTlhNjQNCiAgQXV0aG9yOiBXZW4gQ29uZ3lh
+bmcgPHdlbmN5QGNuLmZ1aml0c3UuY29tPg0KICBEYXRlOiAgIFR1ZSBEZWMgMTEgMTY6MDA6NDUg
+MjAxMiAtMDgwMA0KICANCiAgICAgIG1lbW9yeS1ob3RwbHVnOiBza2lwIEhXUG9pc29uZWQgcGFn
+ZSB3aGVuIG9mZmxpbmluZyBwYWdlcw0KDQphbmQgZXh0ZW5zaW9uIG9mIExUUCBjb3ZlcmFnZSBm
+aW5hbGx5IGRpc2NvdmVyZWQgdGhpcy4NCg0KVGhhbmtzLA0KTmFveWEgSG9yaWd1Y2hp
 
-
-On 11/10/19 3:03 AM, vishnu wrote:
-> Hi,
-> Please find my inline comments.
->=20
-> Thanks,
-> Vishnu
->=20
-> On 01/10/19 10:59 PM, Mark Brown wrote:
->> On Tue, Oct 01, 2019 at 05:23:43PM +0000, Deucher, Alexander wrote:
->>
->>>> ACP-PCI controller driver does not depends msi interrupts.
->>>> So removed msi related pci functions which have no use and does not=20
->>>> impact
->>>> on existing functionality.
->>
->>> In general, however, aren't MSIs preferred to legacy interrupts?
->>
->> As I understand it.=A0 Or at the very least I'm not aware of any situati=
-on
->> where they're harmful.=A0 It'd be good to have a clear explanation of wh=
-y
->> we're removing the support.
->=20
-> Actually our device is audio device and it does not depends on MSI`s.
-> So we thought to remove it as it has no purpose or meaning to have
-> this code in our audio based ACP-PCI driver.
->=20
->>> Doesn't the driver have to opt into MSI support?=A0 As such, won't
->>> removing this code effectively disable MSI support?
->>
->> Yes.
->=20
->=20
-
-Hi Mark,
-
-Any updates on this patch.
-
-Regards,
-Vishnu
