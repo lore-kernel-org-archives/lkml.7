@@ -2,1015 +2,528 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74458FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8F6FA3735
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16B332089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:25:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571329512;
-	bh=fPrtoSkKMsDeod5OZwvm0K5duu8oXgEkGwYB4ma7Zss=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=u/dCn47VZwVD8kPn2/Uvw9B3WhgttkSUbKxQu46NF9skkdUsd9FihOSvcDNZbYhCb
-	 RPQG8z3N+omfNABG5rbPeYfNKCXPK3D2B8urBHv8P3lwFzuQ4Rqq4wY79yQScILqfl
-	 ee4YTulKsd6GLzStNoAY8X67Na7lCkFsNuJNkhxA=
+	by mail.kernel.org (Postfix) with ESMTP id 63AC42089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:28:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502512AbfJQQZK (ORCPT
+        id S2406386AbfJQQ2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:25:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53748 "EHLO mail.kernel.org"
+        Thu, 17 Oct 2019 12:28:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41872 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389403AbfJQQZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 12:25:10 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2392968AbfJQQ2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 12:28:31 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B5E52089C;
-        Thu, 17 Oct 2019 16:25:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571329506;
-        bh=fPrtoSkKMsDeod5OZwvm0K5duu8oXgEkGwYB4ma7Zss=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HPOryjVKrcnnHlYQkl3OmzXuLChwXrzfvKBUSKX7ZN5u5CmoJC+8fWEKpYtZI/u3P
-         yKC+TmApLupJEimNcc/1m+As4J1jggCCmF1NLUAH26zx5xajf+qLFVaT42dn3cH1tg
-         YVxQw7L8u1bxIoicQgVLvR0oIvfDM37Rye3iwSUI=
-Date:   Thu, 17 Oct 2019 09:25:05 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     bpf <bpf@vger.kernel.org>, netdev <netdev@vger.kernel.org>
-Cc:     syzbot <syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: kernel panic: stack is corrupted in __lock_acquire (4)
-Message-ID: <20191017162505.GB726@sol.localdomain>
-Mail-Followup-To: bpf <bpf@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzbot <syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-References: <0000000000009b3b80058af452ae@google.com>
- <0000000000000ec274059185a63e@google.com>
- <CACT4Y+aT5z65OZE6_TQieU5zUYWDvDtAogC45f6ifLkshBK2iw@mail.gmail.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id E6AA6300BCE9;
+        Thu, 17 Oct 2019 16:28:30 +0000 (UTC)
+Received: from localhost (unknown [10.36.118.91])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5DDC119C7F;
+        Thu, 17 Oct 2019 16:28:30 +0000 (UTC)
+Date:   Thu, 17 Oct 2019 17:28:29 +0100
+From:   "Richard W.M. Jones" <rjones@redhat.com>
+To:     Mike Christie <mchristi@redhat.com>
+Cc:     syzbot <syzbot+24c12fa8d218ed26011a@syzkaller.appspotmail.com>,
+        axboe@kernel.dk, josef@toxicpanda.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nbd@other.debian.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: INFO: task hung in nbd_ioctl
+Message-ID: <20191017162829.GA3888@redhat.com>
+References: <000000000000b1b1ee0593cce78f@google.com>
+ <5D93C2DD.10103@redhat.com>
+ <20191017140330.GB25667@redhat.com>
+ <5DA88D2F.7080907@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+aT5z65OZE6_TQieU5zUYWDvDtAogC45f6ifLkshBK2iw@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <5DA88D2F.7080907@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 17 Oct 2019 16:28:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 01, 2019 at 08:23:42PM -0700, 'Dmitry Vyukov' via syzkaller-bugs wrote:
-> On Sun, Sep 1, 2019 at 3:48 PM syzbot
-> <syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com> wrote:
-> >
-> > syzbot has found a reproducer for the following crash on:
-> >
-> > HEAD commit:    38320f69 Merge branch 'Minor-cleanup-in-devlink'
-> > git tree:       net-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=13d74356600000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=1bbf70b6300045af
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=83979935eb6304f8cd46
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1008b232600000
+On Thu, Oct 17, 2019 at 10:47:59AM -0500, Mike Christie wrote:
+> On 10/17/2019 09:03 AM, Richard W.M. Jones wrote:
+> > On Tue, Oct 01, 2019 at 04:19:25PM -0500, Mike Christie wrote:
+> >> Hey Josef and nbd list,
+> >>
+> >> I had a question about if there are any socket family restrictions for nbd?
+> > 
+> > In normal circumstances, in userspace, the NBD protocol would only be
+> > used over AF_UNIX or AF_INET/AF_INET6.
+> > 
+> > There's a bit of confusion because netlink is used by nbd-client to
+> > configure the NBD device, setting things like block size and timeouts
+> > (instead of ioctl which is deprecated).  I think you don't mean this
+> > use of netlink?
 > 
-> Stack corruption + bpf maps in repro triggers some bells. +bpf mailing list.
+> I didn't. It looks like it is just a bad test.
 > 
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com
-> >
-> > Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in:
-> > __lock_acquire+0x36fa/0x4c30 kernel/locking/lockdep.c:3907
-> > CPU: 0 PID: 8662 Comm: syz-executor.4 Not tainted 5.3.0-rc6+ #153
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Call Trace:
-> > Kernel Offset: disabled
-> > Rebooting in 86400 seconds..
-> >
+> For the automated test in this thread the test created a AF_NETLINK
+> socket and passed it into the NBD_SET_SOCK ioctl. That is what got used
+> for the NBD_DO_IT ioctl.
+> 
+> I was not sure if the test creator picked any old socket and it just
+> happened to pick one nbd never supported, or it was trying to simulate
+> sockets that did not support the shutdown method.
+> 
+> I attached the automated test that got run (test.c).
 
-This is still reproducible on latest net tree, but using a different kconfig I
-was able to get a more informative crash output.  Apparently tcp_bpf_unhash() is
-being called recursively.  Anyone know why this might happen?
+I'd say it sounds like a bad test, but I'm not familiar with syzkaller
+nor how / from where it generates these tests.  Did someone report a
+bug and then syzkaller wrote this test?
 
-This is using the syzkaller language reproducer linked above -- I ran it with:
+Rich.
 
-	syz-execprog -threaded=1 -collide=1 -cover=0 -repeat=0 -procs=8 -sandbox=none -enable=net_dev,net_reset,tun syz_bpf.txt
+> > 
+> >> The bug here is that some socket familys do not support the
+> >> sock->ops->shutdown callout, and when nbd calls kernel_sock_shutdown
+> >> their callout returns -EOPNOTSUPP. That then leaves recv_work stuck in
+> >> nbd_read_stat -> sock_xmit -> sock_recvmsg. My patch added a
+> >> flush_workqueue call, so for socket familys like AF_NETLINK in this bug
+> >> we hang like we see below.
+> >>
+> >> I can just remove the flush_workqueue call in that code path since it's
+> >> not needed there, but it leaves the original bug my patch was hitting
+> >> where we leave the recv_work running which can then result in leaked
+> >> resources, or possible use after free crashes and you still get the hang
+> >> if you remove the module.
+> >>
+> >> It looks like we have used kernel_sock_shutdown for a while so I thought
+> >> we might never have supported sockets that did not support the callout.
+> >> Is that correct? If so then I can just add a check for this in
+> >> nbd_add_socket and fix that bug too.
+> > 
+> > Rich.
+> > 
+> >> On 09/30/2019 05:39 PM, syzbot wrote:
+> >>> Hello,
+> >>>
+> >>> syzbot found the following crash on:
+> >>>
+> >>> HEAD commit:    bb2aee77 Add linux-next specific files for 20190926
+> >>> git tree:       linux-next
+> >>> console output: https://syzkaller.appspot.com/x/log.txt?x=13385ca3600000
+> >>> kernel config:  https://syzkaller.appspot.com/x/.config?x=e60af4ac5a01e964
+> >>> dashboard link:
+> >>> https://syzkaller.appspot.com/bug?extid=24c12fa8d218ed26011a
+> >>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> >>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12abc2a3600000
+> >>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11712c05600000
+> >>>
+> >>> The bug was bisected to:
+> >>>
+> >>> commit e9e006f5fcf2bab59149cb38a48a4817c1b538b4
+> >>> Author: Mike Christie <mchristi@redhat.com>
+> >>> Date:   Sun Aug 4 19:10:06 2019 +0000
+> >>>
+> >>>     nbd: fix max number of supported devs
+> >>>
+> >>> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1226f3c5600000
+> >>> final crash:    https://syzkaller.appspot.com/x/report.txt?x=1126f3c5600000
+> >>> console output: https://syzkaller.appspot.com/x/log.txt?x=1626f3c5600000
+> >>>
+> >>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> >>> Reported-by: syzbot+24c12fa8d218ed26011a@syzkaller.appspotmail.com
+> >>> Fixes: e9e006f5fcf2 ("nbd: fix max number of supported devs")
+> >>>
+> >>> INFO: task syz-executor390:8778 can't die for more than 143 seconds.
+> >>> syz-executor390 D27432  8778   8777 0x00004004
+> >>> Call Trace:
+> >>>  context_switch kernel/sched/core.c:3384 [inline]
+> >>>  __schedule+0x828/0x1c20 kernel/sched/core.c:4065
+> >>>  schedule+0xd9/0x260 kernel/sched/core.c:4132
+> >>>  schedule_timeout+0x717/0xc50 kernel/time/timer.c:1871
+> >>>  do_wait_for_common kernel/sched/completion.c:83 [inline]
+> >>>  __wait_for_common kernel/sched/completion.c:104 [inline]
+> >>>  wait_for_common kernel/sched/completion.c:115 [inline]
+> >>>  wait_for_completion+0x29c/0x440 kernel/sched/completion.c:136
+> >>>  flush_workqueue+0x40f/0x14c0 kernel/workqueue.c:2826
+> >>>  nbd_start_device_ioctl drivers/block/nbd.c:1272 [inline]
+> >>>  __nbd_ioctl drivers/block/nbd.c:1347 [inline]
+> >>>  nbd_ioctl+0xb2e/0xc44 drivers/block/nbd.c:1387
+> >>>  __blkdev_driver_ioctl block/ioctl.c:304 [inline]
+> >>>  blkdev_ioctl+0xedb/0x1c20 block/ioctl.c:606
+> >>>  block_ioctl+0xee/0x130 fs/block_dev.c:1954
+> >>>  vfs_ioctl fs/ioctl.c:47 [inline]
+> >>>  file_ioctl fs/ioctl.c:539 [inline]
+> >>>  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:726
+> >>>  ksys_ioctl+0xab/0xd0 fs/ioctl.c:743
+> >>>  __do_sys_ioctl fs/ioctl.c:750 [inline]
+> >>>  __se_sys_ioctl fs/ioctl.c:748 [inline]
+> >>>  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:748
+> >>>  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+> >>>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> >>> RIP: 0033:0x4452d9
+> >>> Code: Bad RIP value.
+> >>> RSP: 002b:00007ffde928d288 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> >>> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004452d9
+> >>> RDX: 0000000000000000 RSI: 000000000000ab03 RDI: 0000000000000004
+> >>> RBP: 0000000000000000 R08: 00000000004025b0 R09: 00000000004025b0
+> >>> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402520
+> >>> R13: 00000000004025b0 R14: 0000000000000000 R15: 0000000000000000
+> >>> INFO: task syz-executor390:8778 blocked for more than 143 seconds.
+> >>>       Not tainted 5.3.0-next-20190926 #0
+> >>> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> >>> syz-executor390 D27432  8778   8777 0x00004004
+> >>> Call Trace:
+> >>>  context_switch kernel/sched/core.c:3384 [inline]
+> >>>  __schedule+0x828/0x1c20 kernel/sched/core.c:4065
+> >>>  schedule+0xd9/0x260 kernel/sched/core.c:4132
+> >>>  schedule_timeout+0x717/0xc50 kernel/time/timer.c:1871
+> >>>  do_wait_for_common kernel/sched/completion.c:83 [inline]
+> >>>  __wait_for_common kernel/sched/completion.c:104 [inline]
+> >>>  wait_for_common kernel/sched/completion.c:115 [inline]
+> >>>  wait_for_completion+0x29c/0x440 kernel/sched/completion.c:136
+> >>>  flush_workqueue+0x40f/0x14c0 kernel/workqueue.c:2826
+> >>>  nbd_start_device_ioctl drivers/block/nbd.c:1272 [inline]
+> >>>  __nbd_ioctl drivers/block/nbd.c:1347 [inline]
+> >>>  nbd_ioctl+0xb2e/0xc44 drivers/block/nbd.c:1387
+> >>>  __blkdev_driver_ioctl block/ioctl.c:304 [inline]
+> >>>  blkdev_ioctl+0xedb/0x1c20 block/ioctl.c:606
+> >>>  block_ioctl+0xee/0x130 fs/block_dev.c:1954
+> >>>  vfs_ioctl fs/ioctl.c:47 [inline]
+> >>>  file_ioctl fs/ioctl.c:539 [inline]
+> >>>  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:726
+> >>>  ksys_ioctl+0xab/0xd0 fs/ioctl.c:743
+> >>>  __do_sys_ioctl fs/ioctl.c:750 [inline]
+> >>>  __se_sys_ioctl fs/ioctl.c:748 [inline]
+> >>>  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:748
+> >>>  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+> >>>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> >>> RIP: 0033:0x4452d9
+> >>> Code: Bad RIP value.
+> >>> RSP: 002b:00007ffde928d288 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> >>> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004452d9
+> >>> RDX: 0000000000000000 RSI: 000000000000ab03 RDI: 0000000000000004
+> >>> RBP: 0000000000000000 R08: 00000000004025b0 R09: 00000000004025b0
+> >>> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402520
+> >>> R13: 00000000004025b0 R14: 0000000000000000 R15: 0000000000000000
+> >>>
+> >>> Showing all locks held in the system:
+> >>> 1 lock held by khungtaskd/1066:
+> >>>  #0: ffffffff88faad80 (rcu_read_lock){....}, at:
+> >>> debug_show_all_locks+0x5f/0x27e kernel/locking/lockdep.c:5337
+> >>> 2 locks held by kworker/u5:0/1525:
+> >>>  #0: ffff8880923d0d28 ((wq_completion)knbd0-recv){+.+.}, at:
+> >>> __write_once_size include/linux/compiler.h:226 [inline]
+> >>>  #0: ffff8880923d0d28 ((wq_completion)knbd0-recv){+.+.}, at:
+> >>> arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
+> >>>  #0: ffff8880923d0d28 ((wq_completion)knbd0-recv){+.+.}, at:
+> >>> atomic64_set include/asm-generic/atomic-instrumented.h:855 [inline]
+> >>>  #0: ffff8880923d0d28 ((wq_completion)knbd0-recv){+.+.}, at:
+> >>> atomic_long_set include/asm-generic/atomic-long.h:40 [inline]
+> >>>  #0: ffff8880923d0d28 ((wq_completion)knbd0-recv){+.+.}, at:
+> >>> set_work_data kernel/workqueue.c:620 [inline]
+> >>>  #0: ffff8880923d0d28 ((wq_completion)knbd0-recv){+.+.}, at:
+> >>> set_work_pool_and_clear_pending kernel/workqueue.c:647 [inline]
+> >>>  #0: ffff8880923d0d28 ((wq_completion)knbd0-recv){+.+.}, at:
+> >>> process_one_work+0x88b/0x1740 kernel/workqueue.c:2240
+> >>>  #1: ffff8880a63b7dc0 ((work_completion)(&args->work)){+.+.}, at:
+> >>> process_one_work+0x8c1/0x1740 kernel/workqueue.c:2244
+> >>> 1 lock held by rsyslogd/8659:
+> >>> 2 locks held by getty/8749:
+> >>>  #0: ffff888098c08090 (&tty->ldisc_sem){++++}, at:
+> >>> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+> >>>  #1: ffffc90005f112e0 (&ldata->atomic_read_lock){+.+.}, at:
+> >>> n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+> >>> 2 locks held by getty/8750:
+> >>>  #0: ffff88808f10b090 (&tty->ldisc_sem){++++}, at:
+> >>> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+> >>>  #1: ffffc90005f2d2e0 (&ldata->atomic_read_lock){+.+.}, at:
+> >>> n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+> >>> 2 locks held by getty/8751:
+> >>>  #0: ffff88809a6be090 (&tty->ldisc_sem){++++}, at:
+> >>> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+> >>>  #1: ffffc90005f192e0 (&ldata->atomic_read_lock){+.+.}, at:
+> >>> n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+> >>> 2 locks held by getty/8752:
+> >>>  #0: ffff8880a48af090 (&tty->ldisc_sem){++++}, at:
+> >>> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+> >>>  #1: ffffc90005f352e0 (&ldata->atomic_read_lock){+.+.}, at:
+> >>> n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+> >>> 2 locks held by getty/8753:
+> >>>  #0: ffff88808c599090 (&tty->ldisc_sem){++++}, at:
+> >>> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+> >>>  #1: ffffc90005f212e0 (&ldata->atomic_read_lock){+.+.}, at:
+> >>> n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+> >>> 2 locks held by getty/8754:
+> >>>  #0: ffff88808f1a8090 (&tty->ldisc_sem){++++}, at:
+> >>> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+> >>>  #1: ffffc90005f392e0 (&ldata->atomic_read_lock){+.+.}, at:
+> >>> n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+> >>> 2 locks held by getty/8755:
+> >>>  #0: ffff88809ab33090 (&tty->ldisc_sem){++++}, at:
+> >>> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+> >>>  #1: ffffc90005f012e0 (&ldata->atomic_read_lock){+.+.}, at:
+> >>> n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+> >>>
+> >>> =============================================
+> >>>
+> >>> NMI backtrace for cpu 1
+> >>> CPU: 1 PID: 1066 Comm: khungtaskd Not tainted 5.3.0-next-20190926 #0
+> >>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> >>> Google 01/01/2011
+> >>> Call Trace:
+> >>>  __dump_stack lib/dump_stack.c:77 [inline]
+> >>>  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+> >>>  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
+> >>>  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
+> >>>  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+> >>>  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
+> >>>  check_hung_uninterruptible_tasks kernel/hung_task.c:269 [inline]
+> >>>  watchdog+0xc99/0x1360 kernel/hung_task.c:353
+> >>>  kthread+0x361/0x430 kernel/kthread.c:255
+> >>>  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> >>> Sending NMI from CPU 1 to CPUs 0:
+> >>> NMI backtrace for cpu 0 skipped: idling at native_safe_halt+0xe/0x10
+> >>> arch/x86/include/asm/irqflags.h:60
+> >>>
+> >>>
+> >>> ---
+> >>> This bug is generated by a bot. It may contain errors.
+> >>> See https://goo.gl/tpsmEJ for more information about syzbot.
+> >>> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> >>>
+> >>> syzbot will keep track of this bug report. See:
+> >>> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> >>> For information about bisection process see:
+> >>> https://goo.gl/tpsmEJ#bisection
+> >>> syzbot can test patches for this bug, for details see:
+> >>> https://goo.gl/tpsmEJ#testing-patches
+> > 
+> 
 
-Crash report on net/master:
+> // autogenerated by syzkaller (https://github.com/google/syzkaller)
+> 
+> #define _GNU_SOURCE
+> 
+> #include <dirent.h>
+> #include <endian.h>
+> #include <errno.h>
+> #include <fcntl.h>
+> #include <setjmp.h>
+> #include <signal.h>
+> #include <stdarg.h>
+> #include <stdbool.h>
+> #include <stdint.h>
+> #include <stdio.h>
+> #include <stdlib.h>
+> #include <string.h>
+> #include <sys/prctl.h>
+> #include <sys/stat.h>
+> #include <sys/syscall.h>
+> #include <sys/types.h>
+> #include <sys/wait.h>
+> #include <time.h>
+> #include <unistd.h>
+> 
+> static __thread int skip_segv;
+> static __thread jmp_buf segv_env;
+> 
+> static void segv_handler(int sig, siginfo_t* info, void* ctx)
+> {
+>   uintptr_t addr = (uintptr_t)info->si_addr;
+>   const uintptr_t prog_start = 1 << 20;
+>   const uintptr_t prog_end = 100 << 20;
+>   if (__atomic_load_n(&skip_segv, __ATOMIC_RELAXED) &&
+>       (addr < prog_start || addr > prog_end)) {
+>     _longjmp(segv_env, 1);
+>   }
+>   exit(sig);
+> }
+> 
+> static void install_segv_handler(void)
+> {
+>   struct sigaction sa;
+>   memset(&sa, 0, sizeof(sa));
+>   sa.sa_handler = SIG_IGN;
+>   syscall(SYS_rt_sigaction, 0x20, &sa, NULL, 8);
+>   syscall(SYS_rt_sigaction, 0x21, &sa, NULL, 8);
+>   memset(&sa, 0, sizeof(sa));
+>   sa.sa_sigaction = segv_handler;
+>   sa.sa_flags = SA_NODEFER | SA_SIGINFO;
+>   sigaction(SIGSEGV, &sa, NULL);
+>   sigaction(SIGBUS, &sa, NULL);
+> }
+> 
+> #define NONFAILING(...)                                                        \
+>   {                                                                            \
+>     __atomic_fetch_add(&skip_segv, 1, __ATOMIC_SEQ_CST);                       \
+>     if (_setjmp(segv_env) == 0) {                                              \
+>       __VA_ARGS__;                                                             \
+>     }                                                                          \
+>     __atomic_fetch_sub(&skip_segv, 1, __ATOMIC_SEQ_CST);                       \
+>   }
+> 
+> static void sleep_ms(uint64_t ms)
+> {
+>   usleep(ms * 1000);
+> }
+> 
+> static uint64_t current_time_ms(void)
+> {
+>   struct timespec ts;
+>   if (clock_gettime(CLOCK_MONOTONIC, &ts))
+>     exit(1);
+>   return (uint64_t)ts.tv_sec * 1000 + (uint64_t)ts.tv_nsec / 1000000;
+> }
+> 
+> static bool write_file(const char* file, const char* what, ...)
+> {
+>   char buf[1024];
+>   va_list args;
+>   va_start(args, what);
+>   vsnprintf(buf, sizeof(buf), what, args);
+>   va_end(args);
+>   buf[sizeof(buf) - 1] = 0;
+>   int len = strlen(buf);
+>   int fd = open(file, O_WRONLY | O_CLOEXEC);
+>   if (fd == -1)
+>     return false;
+>   if (write(fd, buf, len) != len) {
+>     int err = errno;
+>     close(fd);
+>     errno = err;
+>     return false;
+>   }
+>   close(fd);
+>   return true;
+> }
+> 
+> static long syz_open_dev(volatile long a0, volatile long a1, volatile long a2)
+> {
+>   if (a0 == 0xc || a0 == 0xb) {
+>     char buf[128];
+>     sprintf(buf, "/dev/%s/%d:%d", a0 == 0xc ? "char" : "block", (uint8_t)a1,
+>             (uint8_t)a2);
+>     return open(buf, O_RDWR, 0);
+>   } else {
+>     char buf[1024];
+>     char* hash;
+>     NONFAILING(strncpy(buf, (char*)a0, sizeof(buf) - 1));
+>     buf[sizeof(buf) - 1] = 0;
+>     while ((hash = strchr(buf, '#'))) {
+>       *hash = '0' + (char)(a1 % 10);
+>       a1 /= 10;
+>     }
+>     return open(buf, a2, 0);
+>   }
+> }
+> 
+> static void kill_and_wait(int pid, int* status)
+> {
+>   kill(-pid, SIGKILL);
+>   kill(pid, SIGKILL);
+>   int i;
+>   for (i = 0; i < 100; i++) {
+>     if (waitpid(-1, status, WNOHANG | __WALL) == pid)
+>       return;
+>     usleep(1000);
+>   }
+>   DIR* dir = opendir("/sys/fs/fuse/connections");
+>   if (dir) {
+>     for (;;) {
+>       struct dirent* ent = readdir(dir);
+>       if (!ent)
+>         break;
+>       if (strcmp(ent->d_name, ".") == 0 || strcmp(ent->d_name, "..") == 0)
+>         continue;
+>       char abort[300];
+>       snprintf(abort, sizeof(abort), "/sys/fs/fuse/connections/%s/abort",
+>                ent->d_name);
+>       int fd = open(abort, O_WRONLY);
+>       if (fd == -1) {
+>         continue;
+>       }
+>       if (write(fd, abort, 1) < 0) {
+>       }
+>       close(fd);
+>     }
+>     closedir(dir);
+>   } else {
+>   }
+>   while (waitpid(-1, status, __WALL) != pid) {
+>   }
+> }
+> 
+> static void setup_test()
+> {
+>   prctl(PR_SET_PDEATHSIG, SIGKILL, 0, 0, 0);
+>   setpgrp();
+>   write_file("/proc/self/oom_score_adj", "1000");
+> }
+> 
+> static void execute_one(void);
+> 
+> #define WAIT_FLAGS __WALL
+> 
+> static void loop(void)
+> {
+>   int iter;
+>   for (iter = 0; iter < 1; iter++) {
+>     int pid = fork();
+>     if (pid < 0)
+>       exit(1);
+>     if (pid == 0) {
+>       setup_test();
+>       execute_one();
+>       exit(0);
+>     }
+>     int status = 0;
+>     uint64_t start = current_time_ms();
+>     for (;;) {
+>       if (waitpid(-1, &status, WNOHANG | WAIT_FLAGS) == pid)
+>         break;
+>       sleep_ms(1);
+>       if (current_time_ms() - start < 5 * 1000)
+>         continue;
+>       kill_and_wait(pid, &status);
+>       break;
+>     }
+>   }
+> }
+> 
+> uint64_t r[3] = {0xffffffffffffffff, 0xffffffffffffffff, 0xffffffffffffffff};
+> 
+> void execute_one(void)
+> {
+>   intptr_t res = 0;
+>   res = syscall(__NR_socket, 0x10, 2, 2);
+>   if (res != -1)
+>     r[0] = res;
+>   NONFAILING(memcpy((void*)0x20000080, "/dev/nbd#\000", 10));
+>   res = syz_open_dev(0x20000080, 0, 0);
+>   if (res != -1)
+>     r[1] = res;
+>   res = syz_open_dev(0, 0, 0);
+>   if (res != -1)
+>     r[2] = res;
+>   syscall(__NR_ioctl, r[2], 0xab00, r[0]);
+>   syscall(__NR_ioctl, r[1], 0xab03, 0);
+> }
+> int main(void)
+> {
+>   syscall(__NR_mmap, 0x20000000, 0x1000000, 3, 0x32, -1, 0);
+>   install_segv_handler();
+>   loop();
+>   return 0;
+> }
 
-PANIC: double fault, error_code: 0x0
-CPU: 3 PID: 8328 Comm: syz-executor Not tainted 5.4.0-rc1-00118-ge497c20e2036 #31
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20191013_105130-anatol 04/01/2014
-RIP: 0010:mark_lock+0x4/0x640 kernel/locking/lockdep.c:3631
-Code: a2 7f 27 01 85 c0 0f 84 f3 42 00 00 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 66 66 2e 0f 1f 84 00 00 00 00 00 55 48 89 e5 <41> 57 41 56 41 55 41 54 53 48 83 ec 18 83 fa 08 76 21 44 8b 25 ab
-RSP: 0018:ffffc9000010d000 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000000000
-RDX: 0000000000000008 RSI: ffff888071f92dd8 RDI: ffff888071f92600
-RBP: ffffc9000010d000 R08: 0000000000000000 R09: 0000000000022023
-R10: 00000000000000c8 R11: 0000000000000000 R12: ffff888071f92600
-R13: ffff888071f92dd8 R14: 0000000000000023 R15: 0000000000000000
-FS:  00007ff9f7765700(0000) GS:ffff88807fd80000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffc9000010cff8 CR3: 000000000221d000 CR4: 00000000003406e0
-Call Trace:
- <IRQ>
- mark_usage kernel/locking/lockdep.c:3592 [inline]
- __lock_acquire+0x22f/0xf80 kernel/locking/lockdep.c:3909
- lock_acquire+0x99/0x170 kernel/locking/lockdep.c:4487
- rcu_lock_acquire include/linux/rcupdate.h:208 [inline]
- rcu_read_lock include/linux/rcupdate.h:599 [inline]
- tcp_bpf_unhash+0x33/0x1d0 net/ipv4/tcp_bpf.c:549
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_set_state+0xc1/0x220 net/ipv4/tcp.c:2249
- tcp_done+0x39/0xe0 net/ipv4/tcp.c:3854
- tcp_reset+0x5b/0x130 net/ipv4/tcp_input.c:4125
- tcp_validate_incoming+0x323/0x450 net/ipv4/tcp_input.c:5486
- tcp_rcv_established+0x138/0x6f0 net/ipv4/tcp_input.c:5694
- tcp_v6_do_rcv+0xce/0x3f0 net/ipv6/tcp_ipv6.c:1378
- tcp_v6_rcv+0xb75/0xcc0 net/ipv6/tcp_ipv6.c:1610
- ip6_protocol_deliver_rcu+0xc8/0x540 net/ipv6/ip6_input.c:409
- ip6_input_finish+0x57/0xf0 net/ipv6/ip6_input.c:450
- NF_HOOK include/linux/netfilter.h:305 [inline]
- NF_HOOK include/linux/netfilter.h:299 [inline]
- ip6_input+0x40/0x1f0 net/ipv6/ip6_input.c:459
- dst_input include/net/dst.h:442 [inline]
- ip6_rcv_finish net/ipv6/ip6_input.c:76 [inline]
- ip6_rcv_finish+0x2f/0x60 net/ipv6/ip6_input.c:66
- NF_HOOK include/linux/netfilter.h:305 [inline]
- NF_HOOK include/linux/netfilter.h:299 [inline]
- ipv6_rcv+0x16a/0x220 net/ipv6/ip6_input.c:284
- __netif_receive_skb_one_core+0x4e/0x70 net/core/dev.c:5010
- __netif_receive_skb+0x13/0x60 net/core/dev.c:5124
- process_backlog+0xcd/0x210 net/core/dev.c:5955
- napi_poll net/core/dev.c:6392 [inline]
- net_rx_action+0xf1/0x3a0 net/core/dev.c:6460
- __do_softirq+0xc1/0x40d kernel/softirq.c:292
- do_softirq_own_stack+0x2a/0x40 arch/x86/entry/entry_64.S:1082
- </IRQ>
- do_softirq.part.0+0x44/0x50 kernel/softirq.c:337
- do_softirq arch/x86/include/asm/preempt.h:26 [inline]
- __local_bh_enable_ip+0xc6/0xd0 kernel/softirq.c:189
- local_bh_enable include/linux/bottom_half.h:32 [inline]
- inet_csk_listen_stop+0x14d/0x300 net/ipv4/inet_connection_sock.c:993
- tcp_close+0x433/0x4e0 net/ipv4/tcp.c:2352
- inet_release+0x30/0x60 net/ipv4/af_inet.c:427
- inet6_release+0x2c/0x40 net/ipv6/af_inet6.c:470
- __sock_release+0x31/0x90 net/socket.c:590
- sock_close+0x13/0x20 net/socket.c:1268
- __fput+0xca/0x250 fs/file_table.c:280
- ____fput+0x9/0x10 fs/file_table.c:313
- task_work_run+0x7b/0xb0 kernel/task_work.c:113
- exit_task_work include/linux/task_work.h:22 [inline]
- do_exit+0x292/0xb30 kernel/exit.c:817
- do_group_exit+0x4b/0xc0 kernel/exit.c:921
- get_signal+0x132/0xb70 kernel/signal.c:2734
- do_signal+0x2f/0x270 arch/x86/kernel/signal.c:815
- exit_to_usermode_loop+0x5d/0xa0 arch/x86/entry/common.c:159
- prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
- syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
- do_syscall_64+0x145/0x1a0 arch/x86/entry/common.c:300
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x46165d
-Code: Bad RIP value.
-RSP: 002b:00007ff9f7764c58 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
-RAX: 00000000002774e4 RBX: 000000000052bf00 RCX: 000000000046165d
-RDX: ffffffffffffffc1 RSI: 00000000200005c0 RDI: 0000000000000006
-RBP: 0000000000000006 R08: 0000000000000000 R09: 1201000000003618
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000004f3d48 R14: 00000000004b258c R15: 00007ff9f77656bc
-Kernel panic - not syncing: Machine halted.
-CPU: 3 PID: 8328 Comm: syz-executor Not tainted 5.4.0-rc1-00118-ge497c20e2036 #31
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20191013_105130-anatol 04/01/2014
-Call Trace:
- <#DF>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x70/0x9a lib/dump_stack.c:113
- panic+0xfb/0x2ba kernel/panic.c:220
- df_debug+0x29/0x33 arch/x86/kernel/doublefault.c:81
- do_double_fault+0x99/0x100 arch/x86/kernel/traps.c:420
- double_fault+0x2a/0x30 arch/x86/entry/entry_64.S:1030
-RIP: 0010:mark_lock+0x4/0x640 kernel/locking/lockdep.c:3631
-Code: a2 7f 27 01 85 c0 0f 84 f3 42 00 00 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 66 66 2e 0f 1f 84 00 00 00 00 00 55 48 89 e5 <41> 57 41 56 41 55 41 54 53 48 83 ec 18 83 fa 08 76 21 44 8b 25 ab
-RSP: 0018:ffffc9000010d000 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000000000
-RDX: 0000000000000008 RSI: ffff888071f92dd8 RDI: ffff888071f92600
-RBP: ffffc9000010d000 R08: 0000000000000000 R09: 0000000000022023
-R10: 00000000000000c8 R11: 0000000000000000 R12: ffff888071f92600
-R13: ffff888071f92dd8 R14: 0000000000000023 R15: 0000000000000000
- </#DF>
- <IRQ>
- mark_usage kernel/locking/lockdep.c:3592 [inline]
- __lock_acquire+0x22f/0xf80 kernel/locking/lockdep.c:3909
- lock_acquire+0x99/0x170 kernel/locking/lockdep.c:4487
- rcu_lock_acquire include/linux/rcupdate.h:208 [inline]
- rcu_read_lock include/linux/rcupdate.h:599 [inline]
- tcp_bpf_unhash+0x33/0x1d0 net/ipv4/tcp_bpf.c:549
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
- tcp_set_state+0xc1/0x220 net/ipv4/tcp.c:2249
- tcp_done+0x39/0xe0 net/ipv4/tcp.c:3854
- tcp_reset+0x5b/0x130 net/ipv4/tcp_input.c:4125
- tcp_validate_incoming+0x323/0x450 net/ipv4/tcp_input.c:5486
- tcp_rcv_established+0x138/0x6f0 net/ipv4/tcp_input.c:5694
- tcp_v6_do_rcv+0xce/0x3f0 net/ipv6/tcp_ipv6.c:1378
- tcp_v6_rcv+0xb75/0xcc0 net/ipv6/tcp_ipv6.c:1610
- ip6_protocol_deliver_rcu+0xc8/0x540 net/ipv6/ip6_input.c:409
- ip6_input_finish+0x57/0xf0 net/ipv6/ip6_input.c:450
- NF_HOOK include/linux/netfilter.h:305 [inline]
- NF_HOOK include/linux/netfilter.h:299 [inline]
- ip6_input+0x40/0x1f0 net/ipv6/ip6_input.c:459
- dst_input include/net/dst.h:442 [inline]
- ip6_rcv_finish net/ipv6/ip6_input.c:76 [inline]
- ip6_rcv_finish+0x2f/0x60 net/ipv6/ip6_input.c:66
- NF_HOOK include/linux/netfilter.h:305 [inline]
- NF_HOOK include/linux/netfilter.h:299 [inline]
- ipv6_rcv+0x16a/0x220 net/ipv6/ip6_input.c:284
- __netif_receive_skb_one_core+0x4e/0x70 net/core/dev.c:5010
- __netif_receive_skb+0x13/0x60 net/core/dev.c:5124
- process_backlog+0xcd/0x210 net/core/dev.c:5955
- napi_poll net/core/dev.c:6392 [inline]
- net_rx_action+0xf1/0x3a0 net/core/dev.c:6460
- __do_softirq+0xc1/0x40d kernel/softirq.c:292
- do_softirq_own_stack+0x2a/0x40 arch/x86/entry/entry_64.S:1082
- </IRQ>
- do_softirq.part.0+0x44/0x50 kernel/softirq.c:337
- do_softirq arch/x86/include/asm/preempt.h:26 [inline]
- __local_bh_enable_ip+0xc6/0xd0 kernel/softirq.c:189
- local_bh_enable include/linux/bottom_half.h:32 [inline]
- inet_csk_listen_stop+0x14d/0x300 net/ipv4/inet_connection_sock.c:993
- tcp_close+0x433/0x4e0 net/ipv4/tcp.c:2352
- inet_release+0x30/0x60 net/ipv4/af_inet.c:427
- inet6_release+0x2c/0x40 net/ipv6/af_inet6.c:470
- __sock_release+0x31/0x90 net/socket.c:590
- sock_close+0x13/0x20 net/socket.c:1268
- __fput+0xca/0x250 fs/file_table.c:280
- ____fput+0x9/0x10 fs/file_table.c:313
- task_work_run+0x7b/0xb0 kernel/task_work.c:113
- exit_task_work include/linux/task_work.h:22 [inline]
- do_exit+0x292/0xb30 kernel/exit.c:817
- do_group_exit+0x4b/0xc0 kernel/exit.c:921
- get_signal+0x132/0xb70 kernel/signal.c:2734
- do_signal+0x2f/0x270 arch/x86/kernel/signal.c:815
- exit_to_usermode_loop+0x5d/0xa0 arch/x86/entry/common.c:159
- prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
- syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
- do_syscall_64+0x145/0x1a0 arch/x86/entry/common.c:300
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x46165d
-Code: Bad RIP value.
-RSP: 002b:00007ff9f7764c58 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
-RAX: 00000000002774e4 RBX: 000000000052bf00 RCX: 000000000046165d
-RDX: ffffffffffffffc1 RSI: 00000000200005c0 RDI: 0000000000000006
-RBP: 0000000000000006 R08: 0000000000000000 R09: 1201000000003618
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000004f3d48 R14: 00000000004b258c R15: 00007ff9f77656bc
-Kernel Offset: disabled
-Rebooting in 5 seconds..
+
+-- 
+Richard Jones, Virtualization Group, Red Hat http://people.redhat.com/~rjones
+Read my programming and virtualization blog: http://rwmj.wordpress.com
+Fedora Windows cross-compiler. Compile Windows programs, test, and
+build Windows installers. Over 100 libraries supported.
+http://fedoraproject.org/wiki/MinGW
