@@ -2,96 +2,110 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90366ECE599
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 00:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AE6ECE599
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 00:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62B0B218DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 00:06:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571270811;
-	bh=DbAnuXxxI4ql/mIxS5Ri9OMBjzaKAjXqFG3gEGJ1gCQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i6D2UWHrbdVIW/ZvXwSx+/ghE8Mkuhusvrntxbwc7WW3PllIJAbLAKn82KnZgLgkU
-	 EyGYTgKHxGIIxsQxzOjwyOJ2fatUSaUbdtVZwKP727JFNGqqiJM/gi+1GAFaz1LvXf
-	 2dQvbqYcXjpQuWxf2ulf2jzX5AqIuw2hHoOtMEsk=
+	by mail.kernel.org (Postfix) with ESMTP id DEB9420872
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 00:07:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q39xbnBA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438098AbfJQAGu (ORCPT
+        id S2438644AbfJQAHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 20:06:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729236AbfJQAGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 20:06:50 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A08320872;
-        Thu, 17 Oct 2019 00:06:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571270809;
-        bh=DbAnuXxxI4ql/mIxS5Ri9OMBjzaKAjXqFG3gEGJ1gCQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Xz1C1hik3XHTqGfPEVqTo9ImbCcmors0wQuV4afL0eLWgsqqfDHIPmcGMmrSHBA8w
-         D/szxMBGp/eS2TcvxYEmlnspxC0QqMIUztNT+FdeFI1ZkBeNjiqYKemRCibMMVU95h
-         b655V++6gZTcUWL8kQ1TVhzJVSSFEaazEnFKkxhA=
-Date:   Thu, 17 Oct 2019 01:06:45 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, catalin.marinas@arm.com, dave.martin@arm.com
-Subject: Re: [PATCH 0/3] arm64: Fix support for systems without FP/SIMD
-Message-ID: <20191017000644.uudhadekbeei73uy@willie-the-truck>
-References: <20191010171517.28782-1-suzuki.poulose@arm.com>
+        Wed, 16 Oct 2019 20:07:10 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:40845 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729236AbfJQAHK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 20:07:10 -0400
+Received: by mail-qk1-f196.google.com with SMTP id y144so233272qkb.7;
+        Wed, 16 Oct 2019 17:07:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ZguwGHkKiTqA9eXWGz+ucfugQsHP1T25nPopQKfBpM4=;
+        b=Q39xbnBARE+lypH4GuZW0nbu7H94Q2f5dW1u/kr8F4dlTRfLvX9NYZCQDr0pVAl9Du
+         o6ZavB/pjbqxBj5Y5A7dpHDgJSA2mBq5GfyocL9rXQ9FauMgBkcJ/VhyDrj+t9BhEnRO
+         CUCRidHBaOLaBKPj9QKbUdTWGxKeu4yme10hnKT+CZvOY8Q8oa5POmmF2n2tivdMNEjj
+         kfQ0dbT4E7fjkHkmBD1JlDN4yXgRflrrTiII+d2XH2eRmRD8scqesH2+VkdFwJv1EH7R
+         3l0bfo/+kEjEh/MBtzofKeg+jrJyyWGGBUxfLtNHIsSWYqbWAMQc7J6KZNYv/B7kOsgy
+         jiuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZguwGHkKiTqA9eXWGz+ucfugQsHP1T25nPopQKfBpM4=;
+        b=O7JeOuwE7pUKeyztO+w7NesbWrdtODWqzAYqXaP9RBZtCqHTxcrcXIAEn97lIvHCXK
+         V4FNbz7aRf7ErpJ9wDuI9zQOEc5PCkkzepgRb9XWWyAfRSjcEqAsSf0KBndofwq8/jO5
+         RIu55OfKTkdM7k00JzCiLj/xxnA5KZDrLQ1288D1iBudzrTiedmffVdzdiG5f40GTXNk
+         cRWe4udznpIWK3OgQb3sro1hEgxCU4OEAkVVq6cpz9aK1AzKzXkiRxNWf1R33T18fNfe
+         9DD4Ax+jyXyt/aqrNS6p5cy65p7j832HWpy9AVoPqi3c1eX30/3cBPhajuL2q0iCX1a1
+         SeSw==
+X-Gm-Message-State: APjAAAVbxqjCv4JFjcKoWk6JuK50Oa5+k6d7/TeI+uVFjZdet/ps1oen
+        +Va8NxzBrDIFHn6pqpSQ/E03Qs45
+X-Google-Smtp-Source: APXvYqy1lBQZcYGLdE7jsm9s8kpvhqaYFZjHmNNt0eaWgw6mv9u9bAx8A/5rkb2HmyEYYfFQX43qSw==
+X-Received: by 2002:a05:620a:2158:: with SMTP id m24mr697731qkm.350.1571270829408;
+        Wed, 16 Oct 2019 17:07:09 -0700 (PDT)
+Received: from eaf ([181.47.179.0])
+        by smtp.gmail.com with ESMTPSA id r7sm280728qkf.124.2019.10.16.17.07.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 17:07:08 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 21:07:03 -0300
+From:   Ernesto =?utf-8?Q?A=2E_Fern=C3=A1ndez?= 
+        <ernesto.mnd.fernandez@gmail.com>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] hfsplus: add a check for hfs_bnode_find
+Message-ID: <20191017000703.GA4271@eaf>
+References: <20191016120621.304-1-hslester96@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191010171517.28782-1-suzuki.poulose@arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191016120621.304-1-hslester96@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 06:15:14PM +0100, Suzuki K Poulose wrote:
-> This series fixes the original support for systems without FP/SIMD.
-> We have three set of issues with the current code :
-> 
-> 1) We detect the absence of FP/SIMD after the SMP cpus are brought
-> online (i.e, SYSTEM scope). This means, some of the early kernel threads
-> could run with their TIF_FOREIGN_FPSTATE flag set which might be
-> inherited by applications forked by them (e.g, modprobe from initramfs).
-> 
-> Also we allow a hotplugged CPU to boot successfully even if it doesn't
-> have the FP/SIMD when we have decided otherwise at boot and have now
-> advertised the ELF HWCAP for the userspace.
-> Fix this by turning this to a BOOT_RESTRICTED_CPU_LOCAL feature to
-> allow the detection of the feature the very moment a CPU turns up
-> without FP/SIMD and also prevent a conflict after SMP boot.
-> 
-> 2) As mentioned above, some tasks could have the TIF flag set,
-> which will never be cleared after we detect the capability.
-> Thus they could get stuck indefinitely in do_notfiy_resume().
-> Fix this by clearing the TIF flag for such tasks but continuing
-> to avoid the save/restore of the FP state.
-> 
-> 3) The compat ELF_HWCAP bits are statically initialised to indicate
-> that the FP/SIMD support is available. This must be updated dynamically
-> to provide the correct flags to the userspace.
-> 
-> Tested with a 32bit Debian Jessie fs on Fast model (with and without
-> FP support).
-> 
-> Suzuki K Poulose (3):
->   arm64: cpufeature: Fix the type of no FP/SIMD capability
->   arm64: nofpsmid: Clear TIF_FOREIGN_FPSTATE flag for early tasks
->   arm64: cpufeature: Set the FP/SIMD compat HWCAP bits properly
+Hi,
 
-This looks alright apart from Dave's comments on patch 2. Do you plan to
-address those at all? Some of it looks like scope for future work, but there
-are also some questions about the mechanics of the patch.
+On Wed, Oct 16, 2019 at 08:06:20PM +0800, Chuhong Yuan wrote:
+> hfs_brec_update_parent misses a check for hfs_bnode_find and may miss
+> the failure.
+> Add a check for it like what is done in again.
+> 
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> ---
+>  fs/hfsplus/brec.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/fs/hfsplus/brec.c b/fs/hfsplus/brec.c
+> index 1918544a7871..22bada8288c4 100644
+> --- a/fs/hfsplus/brec.c
+> +++ b/fs/hfsplus/brec.c
+> @@ -434,6 +434,8 @@ static int hfs_brec_update_parent(struct hfs_find_data *fd)
+>  			new_node->parent = tree->root;
+>  		}
+>  		fd->bnode = hfs_bnode_find(tree, new_node->parent);
+> +		if (IS_ERR(fd->bnode))
+> +			return PTR_ERR(fd->bnode);
 
-Will
+You shouldn't just return here, you still hold a reference to new_node.
+The call to hfs_bnode_find() after the again label seems to be making a
+similar mistake.
+
+I don't think either one can actually fail though, because the parent
+nodes have all been read and hashed before, haven't they?
+
+>  		/* create index key and entry */
+>  		hfs_bnode_read_key(new_node, fd->search_key, 14);
+>  		cnid = cpu_to_be32(new_node->this);
+> -- 
+> 2.20.1
+> 
