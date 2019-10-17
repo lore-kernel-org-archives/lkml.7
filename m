@@ -1,72 +1,123 @@
 Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAE3FA3730
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B24ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCB7C20869
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:21:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FDAE21835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:21:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404158AbfJQJVJ (ORCPT
+        id S2408473AbfJQJV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 05:21:09 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2432 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731152AbfJQJVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 05:21:09 -0400
-Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 3EA592D8AD9CA59F8AAD;
-        Thu, 17 Oct 2019 17:21:07 +0800 (CST)
-Received: from DGGEMM423-HUB.china.huawei.com (10.1.198.40) by
- DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 17 Oct 2019 17:21:06 +0800
-Received: from DGGEMM527-MBX.china.huawei.com ([169.254.6.34]) by
- dggemm423-hub.china.huawei.com ([10.1.198.40]) with mapi id 14.03.0439.000;
- Thu, 17 Oct 2019 17:21:01 +0800
-From:   huangdaode <huangdaode@hisilicon.com>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
-        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        "alexandre.torgue@st.com" <alexandre.torgue@st.com>,
-        "nm@ti.com" <nm@ti.com>, "t-kristo@ti.com" <t-kristo@ti.com>,
-        "ssantosh@kernel.org" <ssantosh@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: =?gb2312?B?s7e72DogW1BBVENIXSB1c2UgZGV2bV9wbGF0Zm9ybV9pb3JlbWFwX3Jlc291?=
- =?gb2312?Q?rce()_for_irqchip_drivers?=
-Thread-Topic: [PATCH] use devm_platform_ioremap_resource() for irqchip
- drivers
-Thread-Index: AdWEzDCnTEOo/fABek625E0pBMISbQ==
-X-CallingTelephoneNumber: IPM.Note
-X-VoiceMessageDuration: 1
-X-FaxNumberOfPages: 0
-Date:   Thu, 17 Oct 2019 09:21:00 +0000
-Message-ID: <E20AE017F0DBA04DA661272787510F9813D297BF@DGGEMM527-MBX.china.huawei.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.61.13.197]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Thu, 17 Oct 2019 05:21:28 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52407 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731152AbfJQJV1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 05:21:27 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iL1xv-0004OU-Aq; Thu, 17 Oct 2019 11:21:03 +0200
+Date:   Thu, 17 Oct 2019 11:20:56 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andrei Vagin <avagin@gmail.com>
+cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCHv7 01/33] ns: Introduce Time Namespace
+In-Reply-To: <20191016233342.GA3075@gmail.com>
+Message-ID: <alpine.DEB.2.21.1910171039500.1824@nanos.tec.linutronix.de>
+References: <20191011012341.846266-1-dima@arista.com> <20191011012341.846266-2-dima@arista.com> <80af93da-d497-81de-2a2a-179bb3bc852d@arm.com> <alpine.DEB.2.21.1910161230070.2046@nanos.tec.linutronix.de> <20191016233342.GA3075@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-aHVhbmdkYW9kZSC9q7O3u9jTyrz+obBbUEFUQ0hdIHVzZSBkZXZtX3BsYXRmb3JtX2lvcmVtYXBf
-cmVzb3VyY2UoKSBmb3IgaXJxY2hpcCBkcml2ZXJzobGhow==
+Andrei!
+
+On Wed, 16 Oct 2019, Andrei Vagin wrote:
+> On Wed, Oct 16, 2019 at 12:39:11PM +0200, Thomas Gleixner wrote:
+> > Nah.
+> > 
+> > config TIME_NS
+> > 	bool "TIME namespace"
+> > 	depends on GENERIC_VDSO_TIME_NS
+> 
+> I was thinking to fix this by the same way with a small difference.
+> 
+> If GENERIC_GETTIMEOFDAY isn't set, it should be safe to allow enabling
+> TIME_NS. In this case, clock_gettime works via system call and we don't
+> have arch-specific code in this case. Does this sound reasonable?
+> 
+>         depends on (!GENERIC_GETTIMEOFDAY || GENERIC_VDSO_TIME_NS)
+
+No, that's wrong. If GENERIC_GETTIMEOFDAY is not set, then the architecture
+still might have its own VDSO implementation and we agreed in Vancouver a
+year ago that we are not going to support per architecture time namespace
+VDSO implementations.
+
+So if at all then you want:
+
+   depends on HAVE_GENERIC_VDSO && (!GENERIC_GETTIMEOFDAY || GENERIC_VDSO_TIME_NS)
+
+But that's crap, really.
+
+The reason why HAVE_GENERIC_VDSO and GENERIC_GETTIMEOFDAY exist as separate
+config items is not a functional issue. It's there to ease the migration to
+the generic VDSO implementation. Having generic VDSO in production without
+implementing GENERIC_GETTIMEOFDAY does not make any sense at all.
+
+The architectures which implement VDSO are:
+
+    arm, arm64, mips, nds32, powerpc, riscv, s390, sparc, x86, um
+
+arm64, mips, x86 use the generic VDSO. Patches for arm are floating
+around. UM is special as it just traps into the syscalls. No idea about the
+rest. Vincenzo might know.
+
+The bad news is that we have no information (except on arm which has a
+config switch for VDSO) whether an architecture provides VDSO support or
+not.
+
+So unless you add something like
+
+   config HAS_VDSO
+   	  bool
+
+which is selected by all architectures which provide VDSO support, the only
+sane solution is to depend on GENERIC_VDSO_TIME_NS.
+
+TBH, I would not even bother. The architectures which matter and are going
+to use time namespaces already support VDSO and they need to move to the
+generic implementation anyway as we discussed and agreed on in Vancouver.
+
+Providing time name spaces for the non VDSO archs is a purely academic
+exercise.
+
+Thanks,
+
+	tglx
