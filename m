@@ -2,118 +2,131 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99709ECE597
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F3FECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77F902089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ADE520640
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:17:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UqdxRMLr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440640AbfJQRPB (ORCPT
+        id S2391068AbfJQRRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 13:15:01 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:41934 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1728639AbfJQRO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 13:14:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E266328;
-        Thu, 17 Oct 2019 10:14:38 -0700 (PDT)
-Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8ADDE3F718;
-        Thu, 17 Oct 2019 10:14:37 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 18:14:32 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [RFT][PATCH 0/3] cpufreq / PM: QoS: Introduce frequency QoS and
- use it in cpufreq
-Message-ID: <20191017171432.GA32485@bogus>
-References: <2811202.iOFZ6YHztY@kreacher>
- <20191016142343.GB5330@bogus>
+        Thu, 17 Oct 2019 13:17:20 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:40585 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728639AbfJQRRU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 13:17:20 -0400
+Received: by mail-yw1-f66.google.com with SMTP id e205so1129686ywc.7;
+        Thu, 17 Oct 2019 10:17:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+9eX1MUum3PI76hS1tjfDJ+ZIzB1yDgtmV+ggxFwwtM=;
+        b=UqdxRMLrEuLlz104kxAuC02Xt4KZmxvTPqnrgdjPr3YmWGZWEKl65qYYythlichA2B
+         dJ8dklOzPysvkU/8dOHZNxY+gE8w6cIaTSjBYYQThc91zXHF4gOhKTyYoQeXSrPzruaW
+         zjyNq+gysxpvZIHvRXQhhWRdPud6Oq0VssWufPdQ+fuQjuQaO7SZYeiNrhW+Pep7Svwb
+         EgY1i2A/KHtDDdj+I3m4sd7g3DVHNwfKE1j8ECxieeHOcwYGYUbEvZBYZB/oMuNYWyja
+         ldoiJs3YmN+ogZvUMjjops8qRL43FAU9e3Dk8Zup/BFyJ+iwrjJZhpc8f7vXNZSXI3gF
+         GR5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+9eX1MUum3PI76hS1tjfDJ+ZIzB1yDgtmV+ggxFwwtM=;
+        b=bLv9ruVNOie8aNmLOgYtvXkO4e86cy2XRUx6HDm08FB0EXoKRbYSwBydhPnF6ldQX3
+         5tqLVfiARarV3ioP/afNrpHMoPv3cvR3V3P+5H0IlDrtyXqciKK9czwGlWW2UbAG79Tb
+         l6Vcz3bNLSEqe21TxaEiS1fj6DVJF1Y1oMSz8Q3ESh1kmexoDbE+Orz9IiHaWmEMgV8J
+         9n0q710MyP+Ij8IJnfITViykI1fan8L7vndoE8OPEDTDpbgARDabaGiFel8OolL9ZACu
+         h9h/zObjUbxL0q0QwI/tkYmLPQnJksLgatzkpGWqtVmOUR3rBy4hGWhUjWEJYrYT+PIq
+         NNsw==
+X-Gm-Message-State: APjAAAVBTUZsHXd6GI/8wQLCuDOUjiw7y0DahLJUp27DOEJtiFpTHdt8
+        ruu81sjVnr/o6t6V8BM54pAsEGEs
+X-Google-Smtp-Source: APXvYqxuximjpgYnrT1kXVim7da4XtaRKQh6Mifj1K/sRgrxcX24CukW4NLVJ/umqwBBgieYtyk8tw==
+X-Received: by 2002:a81:a485:: with SMTP id b127mr3381626ywh.184.1571332639579;
+        Thu, 17 Oct 2019 10:17:19 -0700 (PDT)
+Received: from [192.168.1.62] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id y67sm792211ywd.63.2019.10.17.10.17.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 17 Oct 2019 10:17:19 -0700 (PDT)
+Subject: Re: [PATCH] of: unittest: Use platform_get_irq_optional() for
+ non-existing interrupt
+To:     Rob Herring <robh+dt@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191016143142.28854-1-geert+renesas@glider.be>
+ <5da7a675.1c69fb81.a888.0911@mx.google.com>
+ <CAMuHMdXnTOaM+4SUkzpYXNeFbJtaG_kRzFLJRhVPCVNcOUB0qA@mail.gmail.com>
+ <CAL_JsqL9YPowxntVPax868hi+sN3vgCa2aSSySzjg==--c7aDA@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <d4b336ab-3a80-be4b-7a56-88cf98eb19aa@gmail.com>
+Date:   Thu, 17 Oct 2019 12:17:11 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191016142343.GB5330@bogus>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAL_JsqL9YPowxntVPax868hi+sN3vgCa2aSSySzjg==--c7aDA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 03:23:43PM +0100, Sudeep Holla wrote:
-> On Wed, Oct 16, 2019 at 12:37:58PM +0200, Rafael J. Wysocki wrote:
-> > Hi All,
-> >
-> > The motivation for this series is to address the problem discussed here:
-> >
-> > https://lore.kernel.org/linux-pm/5ad2624194baa2f53acc1f1e627eb7684c577a19.1562210705.git.viresh.kumar@linaro.org/T/#md2d89e95906b8c91c15f582146173dce2e86e99f
-> >
-> > and also reported here:
-> >
-> > https://lore.kernel.org/linux-pm/20191015155735.GA29105@bogus/
-> >
-> > Plus, generally speaking, using the policy CPU as a proxy for the policy
-> > with respect to PM QoS does not feel particularly straightforward to me
-> > and adds extra complexity.
-> >
-> > Anyway, the first patch adds frequency QoS that is based on "raw" PM QoS (kind
-> > of in analogy with device PM QoS) and is just about min and max frequency
-> > requests (no direct relationship to devices).
-> >
-> > The second patch switches over cpufreq and its users to the new frequency QoS.
-> > [The Fixes: tag has been tentatively added to it.]
-> >
-> > The third one removes frequency request types from device PM QoS.
-> >
-> > Unfortunately, the patches are rather big, but also they are quite
-> > straightforward.
-> >
-> > I didn't have the time to test this series, so giving it a go would be much
-> > appreciated.
->
-> Thanks for the spinning these patches so quickly.
->
-For the record, I thought of providing the crash that this series fixes.
-After applying [1] which fixes the boot issue I was seeing on TC2, I started
-seeing the below crash, which this series fixes.
+On 10/17/2019 07:51, Rob Herring wrote:
+> On Thu, Oct 17, 2019 at 1:59 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>>
+>> Hi Stephen,
+>>
+>> On Thu, Oct 17, 2019 at 1:23 AM Stephen Boyd <swboyd@chromium.org> wrote:
+>>> Quoting Geert Uytterhoeven (2019-10-16 07:31:42)
+>>>> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+>>>> index 9efae29722588a35..34da22f8b0660989 100644
+>>>> --- a/drivers/of/unittest.c
+>>>> +++ b/drivers/of/unittest.c
+>>>> @@ -1121,7 +1121,7 @@ static void __init of_unittest_platform_populate(void)
+>>>>                 np = of_find_node_by_path("/testcase-data/testcase-device2");
+>>>>                 pdev = of_find_device_by_node(np);
+>>>>                 unittest(pdev, "device 2 creation failed\n");
+>>>> -               irq = platform_get_irq(pdev, 0);
+>>>> +               irq = platform_get_irq_optional(pdev, 0);
+>>>>                 unittest(irq < 0 && irq != -EPROBE_DEFER,
+>>>
+>>> This is a test to make sure that irq failure doesn't return probe defer.
+>>> Do we want to silence the error message that we're expecting to see?
 
-FWIW,
-Tested-by: Sudeep Holla <sudeep.holla@arm.com>
+No, we do not want to silence an error message that we are expecting to see.
 
---
 
-Unable to handle kernel paging request at virtual address 31b2c303
-pgd = 772b96e1
-[31b2c303] *pgd=a4050003, *pmd=00000000
-Internal error: Oops: 206 [#1] SMP THUMB2
-Modules linked in:
-CPU: 1 PID: 518 Comm: bash Not tainted 5.4.0-rc3-00062-g6e3a7fd7a87e-dirty #123
-Hardware name: ARM-Versatile Express
-PC is at blocking_notifier_chain_unregister+0x2a/0x78
-LR is at blocking_notifier_chain_unregister+0x1b/0x78
-Flags: NzCv  IRQs on  FIQs off  Mode SVC_32  ISA Thumb  Segment user
-Control: 70c5387d  Table: a57b08c0  DAC: 55555555
-Process bash (pid: 518, stack limit = 0x018ebe57)
-(blocking_notifier_chain_unregister) from (dev_pm_qos_remove_notifier+0x5d/0xb4)
-(dev_pm_qos_remove_notifier) from (cpufreq_policy_free+0x77/0xc8)
-(cpufreq_policy_free) from (subsys_interface_unregister+0x4f/0x80)
-(subsys_interface_unregister) from (cpufreq_unregister_driver+0x29/0x6c)
-(cpufreq_unregister_driver) from (bL_cpufreq_switcher_notifier+0x41/0x4c)
-(bL_cpufreq_switcher_notifier) from (notifier_call_chain+0x3d/0x58)
-(notifier_call_chain) from (blocking_notifier_call_chain+0x29/0x38)
-(blocking_notifier_call_chain) from (bL_activation_notify+0x13/0x40)
-(bL_activation_notify) from (bL_switcher_active_store+0x59/0x190)
-(bL_switcher_active_store) from (kernfs_fop_write+0x85/0x12c)
-(kernfs_fop_write) from (__vfs_write+0x21/0x130)
-(__vfs_write) from (vfs_write+0x6b/0xfc)
-(vfs_write) from (ksys_write+0x6d/0x90)
-(ksys_write) from (ret_fast_syscall+0x1/0x5a)
+>>
+>> I think so.  We're not interested in error messages for expected failures,
+>> only in error messages for unittest() failures.
+
+platform_get_irq() is precisely the function that we are trying to test here.
+
+
+> 
+> The unittests start with a warning that error messages will be seen.
+> OTOH, we didn't get a message here before.
+Getting error messages from places outside of unittest.c is just the
+nature of the devicetree selftest beast.
+
+-Frank
+
+> 
+> Rob
+> 
+
