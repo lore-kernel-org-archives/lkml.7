@@ -2,249 +2,334 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7D5FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4EEFA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9C921835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C05AF21835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:43:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b8aIqbUI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OyXVm1JD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503450AbfJQUnM (ORCPT
+        id S2503548AbfJQUnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 16:43:12 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37940 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502902AbfJQUms (ORCPT
+        Thu, 17 Oct 2019 16:43:21 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43969 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503004AbfJQUmw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 16:42:48 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w8so1702233plq.5;
-        Thu, 17 Oct 2019 13:42:48 -0700 (PDT)
+        Thu, 17 Oct 2019 16:42:52 -0400
+Received: by mail-pf1-f195.google.com with SMTP id a2so2367254pfo.10;
+        Thu, 17 Oct 2019 13:42:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5BIGpmeokH2sY4/0NRYi8Dgb6NHFzLHS/Fu+tgAQ27o=;
-        b=b8aIqbUI+I12/63O85JG9GaYo6uedNwIl8VfTpEuBFBxE/m4bCa4XEiHS5/ooQrJja
-         2RrVlk0otj/5twmTfarVPgwBpU07spppv4SgF8/gg/lsFoYNn4HjfcXjtIMSXBB+jx3W
-         ruD92QMS6MF6R/kcmTjB4seN+rXiEltoLWqqLjK376eOJ3Xa2epzyYCDmvXPkepsLvxX
-         snP6s73ez0/84xfqnslmWgMAD8oyJq3df3tAIrD8uHCRzdZeVpiM80Hfmlo1+780rrSd
-         TUeh2SLnx/MAhkqDIR1EPKMlaX5N7tEXcqS1U9HVWln9JYcxRdDzkrZfgCFpkVKNyGmN
-         6s+w==
+        bh=ds3G9FC0CpY1fgUg7Wus7vKJj7ThQbDWX2QzY5C/6q0=;
+        b=OyXVm1JDEyJk8c/QlnGaThqWEmWDu/Iyv569RjAgsGUes6zgtZyuRQ4T5KNzDcQgJv
+         9KEjsjTe948KgIn/KYs6bYtdDlOiaLEwmDZRVsvKZsp9hbmYMjhwJzmx0+x0ix+xYcT6
+         wOjPTsXw1Y7FI4Q+IK/mncyx+5e55Csk8pfzRUd4RNFfa6Cs9kBUVnxeU8sFhbYtbRL7
+         COL2vG1TYJaQ+a4fPP/hlmDJLUUHH+qsoIeQ9zTgK1Ea4w0CVODq99CbZfiKQmxi9KB9
+         duBXmsUb5gQmOi/7UZ6DpPC0weierdL536SFvQaw5tg0H+Mln/uu6y5BlY28tv5eTXkr
+         Zs3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5BIGpmeokH2sY4/0NRYi8Dgb6NHFzLHS/Fu+tgAQ27o=;
-        b=BsA4qq60pZb+PHJQZMPawJ0Im32zyhuuhOIHLb9AIzipxmZjlWiQjntC6FVlSe/OxA
-         Ah6FG1UeWavchSKCWONby15cZTZt0iLstJIFmJE7hp8ghSmod0UdOHiYVJF2g/MVfi3y
-         2omP/BWNjWHu/b92suA3NS5ScIt5f7GyZTlJyYrLCpCTzIuE2Fsn4uPzX0ob3jN2BDAp
-         8oAnAcy1TTQT9wv219UWaO8sy9wEj9QPeoYPmiAhg8SlUi8FBSxm7YxwSpqh45USWhiS
-         XIOLF+0rOr4sNRzbk8XQmuFWs/HC0Im/bqbU4neXELPDm93lpOHGnkQwUb4t+tHtXNKj
-         m+Tg==
-X-Gm-Message-State: APjAAAUxLO04oJCKw5oewjOl5HuP+W9QeV5YGOsF8Jjy9BPz85bR5/YD
-        CHiIIGWnuxcgfhUf4IpAqUW6fSBz
-X-Google-Smtp-Source: APXvYqzMrPPmPFf8xEra5/XAodpUzGqyd3bDtsf2KLXUA3HeM6peOxzXezE2E84VvGvFodf2W6YLoA==
-X-Received: by 2002:a17:902:bb92:: with SMTP id m18mr5740841pls.297.1571344967359;
-        Thu, 17 Oct 2019 13:42:47 -0700 (PDT)
+        bh=ds3G9FC0CpY1fgUg7Wus7vKJj7ThQbDWX2QzY5C/6q0=;
+        b=bj3yGyuVkR6EWYc0NlPKmM+2quLrwYFQYuJOur211kpnKOCcfJDAqU8kLB2ZtkRMgF
+         OUSprCE1u/NGsABfFqms8M7KiUKIDij7KHWjckDXco9f1HvBQAfnoMffkv4+J2ZuyJi0
+         hCgno4DrFXr9W9W5S9G7KRUUO5N5NUz8bMaOCzI4+10jOgIsQufkbMfwH4Gjcdo/B9ZI
+         bt5zD+yULv/f4MogE8fo1rk5m3q/ZCvC7bOLUwARGU3MxYJTImuVrMboePqxuQLSV7H6
+         wutbceXazBjFS8hDc0hJOUtQm4AvkRA7eeBwEX6x8eEesZklT7195hdBZu2AdQ0cMqHp
+         zf/g==
+X-Gm-Message-State: APjAAAX4YpBZO5va9ZzHd6RhCBedClQ4VsIEJ8ERsCxWJ+iNwUsDBGCB
+        hsHGs/hjApNoK4ll9/owhg5i9CsI
+X-Google-Smtp-Source: APXvYqw5jhqwnF/JJWYXhizL1iPuN5xVmMPI63oZqQ+KNqheNo82aL5C6DGxpyEyHSDecG6AXcnuNQ==
+X-Received: by 2002:a17:90a:8d82:: with SMTP id d2mr6730121pjo.31.1571344970491;
+        Thu, 17 Oct 2019 13:42:50 -0700 (PDT)
 Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id b3sm4626365pfd.125.2019.10.17.13.42.46
+        by smtp.gmail.com with ESMTPSA id b3sm4626365pfd.125.2019.10.17.13.42.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 13:42:46 -0700 (PDT)
+        Thu, 17 Oct 2019 13:42:49 -0700 (PDT)
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     linux-input@vger.kernel.org
-Cc:     Jonathan Bakker <xc-racer2@live.ca>,
-        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+Cc:     Alexios Zavras <alexios.zavras@intel.com>,
         Allison Randal <allison@lohutok.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Luca Weiss <luca@z3ntu.xyz>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 19/22] Input: bma150 - use managed resources helpers
-Date:   Thu, 17 Oct 2019 13:42:13 -0700
-Message-Id: <20191017204217.106453-20-dmitry.torokhov@gmail.com>
+Subject: [PATCH 22/22] Input: kxtj9 - switch to using polled mode of input devices
+Date:   Thu, 17 Oct 2019 13:42:16 -0700
+Message-Id: <20191017204217.106453-23-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
 In-Reply-To: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
 References: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Bakker <xc-racer2@live.ca>
+We have added polled mode to the normal input devices with the intent of
+retiring input_polled_dev. This converts kxtj9 driver to use the polling
+mode of standard input devices and removes dependency on INPUT_POLLDEV.
 
-The driver can be cleaned up by using managed resource helpers.
+note that with regular input devices handling polling, there is no longer a
+benefit in having separate INPUT_KXTJ9_POLLED_MODE config option.
 
-Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Patchwork-Id: 10794333
-[dtor: do not explicitly set parent of input device since we are using devm]
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+
 ---
 
- drivers/input/misc/bma150.c | 51 ++++++++++---------------------------
- 1 file changed, 14 insertions(+), 37 deletions(-)
+ drivers/input/misc/Kconfig |   7 --
+ drivers/input/misc/kxtj9.c | 152 +++++++++----------------------------
+ 2 files changed, 37 insertions(+), 122 deletions(-)
 
-diff --git a/drivers/input/misc/bma150.c b/drivers/input/misc/bma150.c
-index 735d3a46f44b..d65b008a3c7a 100644
---- a/drivers/input/misc/bma150.c
-+++ b/drivers/input/misc/bma150.c
-@@ -439,13 +439,11 @@ static int bma150_initialize(struct bma150_data *bma150,
- 	return bma150_set_mode(bma150, BMA150_MODE_SLEEP);
- }
+diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+index 438ec07e3b62..7e2e658d551c 100644
+--- a/drivers/input/misc/Kconfig
++++ b/drivers/input/misc/Kconfig
+@@ -404,13 +404,6 @@ config INPUT_KXTJ9
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called kxtj9.
  
--static void bma150_init_input_device(struct bma150_data *bma150,
--						struct input_dev *idev)
-+static void bma150_init_input_device(struct input_dev *idev)
- {
- 	idev->name = BMA150_DRIVER;
- 	idev->phys = BMA150_DRIVER "/input0";
- 	idev->id.bustype = BUS_I2C;
--	idev->dev.parent = &bma150->client->dev;
- 
- 	idev->evbit[0] = BIT_MASK(EV_ABS);
- 	input_set_abs_params(idev, ABS_X, ABSMIN_ACC_VAL, ABSMAX_ACC_VAL, 0, 0);
-@@ -458,11 +456,11 @@ static int bma150_register_input_device(struct bma150_data *bma150)
- 	struct input_dev *idev;
- 	int error;
- 
--	idev = input_allocate_device();
-+	idev = devm_input_allocate_device(&bma150->client->dev);
- 	if (!idev)
- 		return -ENOMEM;
- 
--	bma150_init_input_device(bma150, idev);
-+	bma150_init_input_device(idev);
- 
- 	idev->open = bma150_irq_open;
- 	idev->close = bma150_irq_close;
-@@ -471,10 +469,8 @@ static int bma150_register_input_device(struct bma150_data *bma150)
- 	bma150->input = idev;
- 
- 	error = input_register_device(idev);
--	if (error) {
--		input_free_device(idev);
-+	if (error)
- 		return error;
--	}
- 
- 	return 0;
- }
-@@ -484,7 +480,7 @@ static int bma150_register_polled_device(struct bma150_data *bma150)
- 	struct input_polled_dev *ipoll_dev;
- 	int error;
- 
--	ipoll_dev = input_allocate_polled_device();
-+	ipoll_dev = devm_input_allocate_polled_device(&bma150->client->dev);
- 	if (!ipoll_dev)
- 		return -ENOMEM;
- 
-@@ -496,16 +492,14 @@ static int bma150_register_polled_device(struct bma150_data *bma150)
- 	ipoll_dev->poll_interval_min = BMA150_POLL_MIN;
- 	ipoll_dev->poll_interval_max = BMA150_POLL_MAX;
- 
--	bma150_init_input_device(bma150, ipoll_dev->input);
-+	bma150_init_input_device(ipoll_dev->input);
- 
- 	bma150->input_polled = ipoll_dev;
- 	bma150->input = ipoll_dev->input;
- 
- 	error = input_register_polled_device(ipoll_dev);
--	if (error) {
--		input_free_polled_device(ipoll_dev);
-+	if (error)
- 		return error;
--	}
- 
- 	return 0;
- }
-@@ -531,7 +525,7 @@ static int bma150_probe(struct i2c_client *client,
- 		return -EINVAL;
- 	}
- 
--	bma150 = kzalloc(sizeof(struct bma150_data), GFP_KERNEL);
-+	bma150 = devm_kzalloc(&client->dev, sizeof(*bma150), GFP_KERNEL);
- 	if (!bma150)
- 		return -ENOMEM;
- 
-@@ -544,7 +538,7 @@ static int bma150_probe(struct i2c_client *client,
- 				dev_err(&client->dev,
- 					"IRQ GPIO conf. error %d, error %d\n",
- 					client->irq, error);
--				goto err_free_mem;
-+				return error;
- 			}
- 		}
- 		cfg = &pdata->cfg;
-@@ -554,14 +548,14 @@ static int bma150_probe(struct i2c_client *client,
- 
- 	error = bma150_initialize(bma150, cfg);
- 	if (error)
--		goto err_free_mem;
-+		return error;
- 
- 	if (client->irq > 0) {
- 		error = bma150_register_input_device(bma150);
- 		if (error)
--			goto err_free_mem;
-+			return error;
- 
--		error = request_threaded_irq(client->irq,
-+		error = devm_request_threaded_irq(&client->dev, client->irq,
- 					NULL, bma150_irq_thread,
- 					IRQF_TRIGGER_RISING | IRQF_ONESHOT,
- 					BMA150_DRIVER, bma150);
-@@ -569,13 +563,12 @@ static int bma150_probe(struct i2c_client *client,
- 			dev_err(&client->dev,
- 				"irq request failed %d, error %d\n",
- 				client->irq, error);
--			input_unregister_device(bma150->input);
--			goto err_free_mem;
-+			return error;
- 		}
- 	} else {
- 		error = bma150_register_polled_device(bma150);
- 		if (error)
--			goto err_free_mem;
-+			return error;
- 	}
- 
- 	i2c_set_clientdata(client, bma150);
-@@ -583,28 +576,12 @@ static int bma150_probe(struct i2c_client *client,
- 	pm_runtime_enable(&client->dev);
- 
- 	return 0;
+-config INPUT_KXTJ9_POLLED_MODE
+-	bool "Enable polling mode support"
+-	depends on INPUT_KXTJ9
+-	select INPUT_POLLDEV
+-	help
+-	  Say Y here if you need accelerometer to work in polling mode.
 -
--err_free_mem:
--	kfree(bma150);
--	return error;
+ config INPUT_POWERMATE
+ 	tristate "Griffin PowerMate and Contour Jog support"
+ 	depends on USB_ARCH_HAS_HCD
+diff --git a/drivers/input/misc/kxtj9.c b/drivers/input/misc/kxtj9.c
+index a86544d575f8..52313c6e3fb3 100644
+--- a/drivers/input/misc/kxtj9.c
++++ b/drivers/input/misc/kxtj9.c
+@@ -11,7 +11,6 @@
+ #include <linux/module.h>
+ #include <linux/slab.h>
+ #include <linux/input/kxtj9.h>
+-#include <linux/input-polldev.h>
+ 
+ #define NAME			"kxtj9"
+ #define G_MAX			8000
+@@ -71,9 +70,6 @@ struct kxtj9_data {
+ 	struct i2c_client *client;
+ 	struct kxtj9_platform_data pdata;
+ 	struct input_dev *input_dev;
+-#ifdef CONFIG_INPUT_KXTJ9_POLLED_MODE
+-	struct input_polled_dev *poll_dev;
+-#endif
+ 	unsigned int last_poll_interval;
+ 	u8 shift;
+ 	u8 ctrl_reg1;
+@@ -282,48 +278,6 @@ static void kxtj9_input_close(struct input_dev *dev)
+ 	kxtj9_disable(tj9);
  }
  
- static int bma150_remove(struct i2c_client *client)
- {
--	struct bma150_data *bma150 = i2c_get_clientdata(client);
+-static void kxtj9_init_input_device(struct kxtj9_data *tj9,
+-					      struct input_dev *input_dev)
+-{
+-	__set_bit(EV_ABS, input_dev->evbit);
+-	input_set_abs_params(input_dev, ABS_X, -G_MAX, G_MAX, FUZZ, FLAT);
+-	input_set_abs_params(input_dev, ABS_Y, -G_MAX, G_MAX, FUZZ, FLAT);
+-	input_set_abs_params(input_dev, ABS_Z, -G_MAX, G_MAX, FUZZ, FLAT);
 -
- 	pm_runtime_disable(&client->dev);
+-	input_dev->name = "kxtj9_accel";
+-	input_dev->id.bustype = BUS_I2C;
+-}
+-
+-static int kxtj9_setup_input_device(struct kxtj9_data *tj9)
+-{
+-	struct input_dev *input_dev;
+-	int err;
+-
+-	input_dev = devm_input_allocate_device(&tj9->client->dev);
+-	if (!input_dev) {
+-		dev_err(&tj9->client->dev, "input device allocate failed\n");
+-		return -ENOMEM;
+-	}
+-
+-	tj9->input_dev = input_dev;
+-
+-	input_dev->open = kxtj9_input_open;
+-	input_dev->close = kxtj9_input_close;
+-	input_set_drvdata(input_dev, tj9);
+-
+-	kxtj9_init_input_device(tj9, input_dev);
+-
+-	err = input_register_device(tj9->input_dev);
+-	if (err) {
+-		dev_err(&tj9->client->dev,
+-			"unable to register input polled device %s: %d\n",
+-			tj9->input_dev->name, err);
+-		return err;
+-	}
+-
+-	return 0;
+-}
+-
+ /*
+  * When IRQ mode is selected, we need to provide an interface to allow the user
+  * to change the output data rate of the part.  For consistency, we are using
+@@ -389,12 +343,10 @@ static struct attribute_group kxtj9_attribute_group = {
+ 	.attrs = kxtj9_attributes
+ };
  
--	if (client->irq > 0) {
--		free_irq(client->irq, bma150);
--		input_unregister_device(bma150->input);
+-
+-#ifdef CONFIG_INPUT_KXTJ9_POLLED_MODE
+-static void kxtj9_poll(struct input_polled_dev *dev)
++static void kxtj9_poll(struct input_dev *input)
+ {
+-	struct kxtj9_data *tj9 = dev->private;
+-	unsigned int poll_interval = dev->poll_interval;
++	struct kxtj9_data *tj9 = input_get_drvdata(input);
++	unsigned int poll_interval = input_get_poll_interval(input);
+ 
+ 	kxtj9_report_acceleration_data(tj9);
+ 
+@@ -404,61 +356,6 @@ static void kxtj9_poll(struct input_polled_dev *dev)
+ 	}
+ }
+ 
+-static void kxtj9_polled_input_open(struct input_polled_dev *dev)
+-{
+-	struct kxtj9_data *tj9 = dev->private;
+-
+-	kxtj9_enable(tj9);
+-}
+-
+-static void kxtj9_polled_input_close(struct input_polled_dev *dev)
+-{
+-	struct kxtj9_data *tj9 = dev->private;
+-
+-	kxtj9_disable(tj9);
+-}
+-
+-static int kxtj9_setup_polled_device(struct kxtj9_data *tj9)
+-{
+-	int err;
+-	struct input_polled_dev *poll_dev;
+-
+-	poll_dev = devm_input_allocate_polled_device(&tj9->client->dev);
+-	if (!poll_dev) {
+-		dev_err(&tj9->client->dev,
+-			"Failed to allocate polled device\n");
+-		return -ENOMEM;
+-	}
+-
+-	tj9->poll_dev = poll_dev;
+-	tj9->input_dev = poll_dev->input;
+-
+-	poll_dev->private = tj9;
+-	poll_dev->poll = kxtj9_poll;
+-	poll_dev->open = kxtj9_polled_input_open;
+-	poll_dev->close = kxtj9_polled_input_close;
+-
+-	kxtj9_init_input_device(tj9, poll_dev->input);
+-
+-	err = input_register_polled_device(poll_dev);
+-	if (err) {
+-		dev_err(&tj9->client->dev,
+-			"Unable to register polled device, err=%d\n", err);
+-		return err;
+-	}
+-
+-	return 0;
+-}
+-
+-#else
+-
+-static inline int kxtj9_setup_polled_device(struct kxtj9_data *tj9)
+-{
+-	return -ENOSYS;
+-}
+-
+-#endif
+-
+ static void kxtj9_platform_exit(void *data)
+ {
+ 	struct kxtj9_data *tj9 = data;
+@@ -494,6 +391,7 @@ static int kxtj9_probe(struct i2c_client *client,
+ 	const struct kxtj9_platform_data *pdata =
+ 			dev_get_platdata(&client->dev);
+ 	struct kxtj9_data *tj9;
++	struct input_dev *input_dev;
+ 	int err;
+ 
+ 	if (!i2c_check_functionality(client->adapter,
+@@ -538,15 +436,44 @@ static int kxtj9_probe(struct i2c_client *client,
+ 	tj9->ctrl_reg1 = tj9->pdata.res_12bit | tj9->pdata.g_range;
+ 	tj9->last_poll_interval = tj9->pdata.init_interval;
+ 
++	input_dev = devm_input_allocate_device(&client->dev);
++	if (!input_dev) {
++		dev_err(&client->dev, "input device allocate failed\n");
++		return -ENOMEM;
++	}
++
++	input_set_drvdata(input_dev, tj9);
++	tj9->input_dev = input_dev;
++
++	input_dev->name = "kxtj9_accel";
++	input_dev->id.bustype = BUS_I2C;
++
++	input_dev->open = kxtj9_input_open;
++	input_dev->close = kxtj9_input_close;
++
++	input_set_abs_params(input_dev, ABS_X, -G_MAX, G_MAX, FUZZ, FLAT);
++	input_set_abs_params(input_dev, ABS_Y, -G_MAX, G_MAX, FUZZ, FLAT);
++	input_set_abs_params(input_dev, ABS_Z, -G_MAX, G_MAX, FUZZ, FLAT);
++
++	if (client->irq <= 0) {
++		err = input_setup_polling(input_dev, kxtj9_poll);
++		if (err)
++			return err;
++	}
++
++	err = input_register_device(input_dev);
++	if (err) {
++		dev_err(&client->dev,
++			"unable to register input polled device %s: %d\n",
++			input_dev->name, err);
++		return err;
++	}
++
+ 	if (client->irq) {
+ 		/* If in irq mode, populate INT_CTRL_REG1 and enable DRDY. */
+ 		tj9->int_ctrl |= KXTJ9_IEN | KXTJ9_IEA | KXTJ9_IEL;
+ 		tj9->ctrl_reg1 |= DRDYE;
+ 
+-		err = kxtj9_setup_input_device(tj9);
+-		if (err)
+-			return err;
+-
+ 		err = devm_request_threaded_irq(&client->dev, client->irq,
+ 						NULL, kxtj9_isr,
+ 						IRQF_TRIGGER_RISING |
+@@ -563,11 +490,6 @@ static int kxtj9_probe(struct i2c_client *client,
+ 			dev_err(&client->dev, "sysfs create failed: %d\n", err);
+ 			return err;
+ 		}
+-
 -	} else {
--		input_unregister_polled_device(bma150->input_polled);
--		input_free_polled_device(bma150->input_polled);
--	}
--
--	kfree(bma150);
--
- 	return 0;
- }
+-		err = kxtj9_setup_polled_device(tj9);
+-		if (err)
+-			return err;
+ 	}
  
+ 	return 0;
 -- 
 2.23.0.866.gb869b98d4c-goog
 
