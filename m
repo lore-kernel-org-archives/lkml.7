@@ -2,109 +2,181 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B21B2ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 860AAFA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84DA021835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FCF720869
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:17:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RPpVQXS8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436887AbfJQUEM (ORCPT
+        id S2436887AbfJQUQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 16:04:12 -0400
-Received: from mga14.intel.com ([192.55.52.115]:18958 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394622AbfJQUEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 16:04:12 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 13:04:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,309,1566889200"; 
-   d="scan'208";a="396381851"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga005.fm.intel.com with ESMTP; 17 Oct 2019 13:04:11 -0700
-Date:   Thu, 17 Oct 2019 13:04:11 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     Jim Mattson <jmattson@google.com>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Subject: Re: [PATCH v7 3/7] KVM: VMX: Pass through CET related MSRs to Guest
-Message-ID: <20191017200411.GL20903@linux.intel.com>
-References: <20190927021927.23057-1-weijiang.yang@intel.com>
- <20190927021927.23057-4-weijiang.yang@intel.com>
- <CALMp9eT3HJ3S6Mzzntje2Kb4m-y86GvkhaNXun-mLJukEy6wbA@mail.gmail.com>
- <20191009061509.GB27851@local-michael-cet-test>
+        Thu, 17 Oct 2019 16:16:45 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33824 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731007AbfJQUQo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 16:16:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=YSZmUS/jSHsiXcNQj6myxGhskWjrj0i1uOmUtq65oy4=; b=RPpVQXS83BTZs6P+43MlInnC2
+        xxBoq0mPZQjnXCAKg0PbgxYhn7IvrHW8sjIxZeb26molpGO5vztrWLrQAbZP0RTx5BooB3SW6QHur
+        qWqId3kP5P2TZTjlbz8Mw48WJ+NHcsc0ZsSjUYh8yNCq754Zy9g+aoRUVlVE1gRjXFBidU/r8on90
+        TyY1ZhGcymB2zfLJNrCUs/uwbNpAAxttGsovb4lDnvRhtdcpcBSgNVfYyspFv8+IQ4n+J993w2abg
+        2E3wauXKAlryTAw65lfXg3Y28CZWbwN3S1uzO339hIEDkENkIQlPwNCrOXoRbkiUIWNUuG0yUk5bH
+        2OzHhqAcQ==;
+Received: from [2601:1c0:6280:3f0::9ef4]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iLCCR-0002Iu-4c; Thu, 17 Oct 2019 20:16:43 +0000
+Subject: Re: [PATCH] scripts : prune-kernel : prune kernels generalized way
+To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>,
+        yamada.masahiro@socionext.com, michal.lkml@markovi.net
+Cc:     bfields@fieldses.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191017063126.2005-1-unixbhaskar@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <7965fdbe-eb2b-1178-61c3-ad54fa147fb3@infradead.org>
+Date:   Thu, 17 Oct 2019 13:16:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009061509.GB27851@local-michael-cet-test>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191017063126.2005-1-unixbhaskar@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 02:15:09PM +0800, Yang Weijiang wrote:
-> On Wed, Oct 02, 2019 at 11:18:32AM -0700, Jim Mattson wrote:
-> > > +       kvm_xss = kvm_supported_xss();
-> > > +       cet_en = guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
-> > > +                guest_cpuid_has(vcpu, X86_FEATURE_IBT);
-> > > +       /*
-> > > +        * U_CET is a must for USER CET, per CET spec., U_CET and PL3_SPP are
-> > > +        * a bundle for USER CET xsaves.
-> > > +        */
-> > > +       if (cet_en && (kvm_xss & XFEATURE_MASK_CET_USER)) {
-> > > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_U_CET, MSR_TYPE_RW);
-> > > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL3_SSP, MSR_TYPE_RW);
-> > > +       }
-> > 
-> > Since this is called from vmx_cpuid_update, what happens if cet_en was
-> > previously true and now it's false?
-> > 
-> Yes, it's likely, but guest CPUID usually is fixed before
-> guest is launched, do you have any suggestion?
+On 10/16/19 11:31 PM, Bhaskar Chowdhury wrote:
+> This patch will remove old kernel from the system in a selective way.
+> 
+> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+> ---
+> For Randy :
+> ✔ ~/git-linux/linux-kbuild [master|AM/REBASE ↑·8|✔]
+> 11:42 $ ./scripts/checkpatch.pl -f
+> scripts/0001-Fix-all-the-concern-raised-by-Randy.patch
+> total: 0 errors, 0 warnings, 93 lines checked
+> 
+> scripts/0001-Fix-all-the-concern-raised-by-Randy.patch has no obvious
+> style problems and is ready for submission.
+> 
+> scripts/prune-kernel | 75 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 75 insertions(+)
+> 
+> diff --git a/scripts/prune-kernel b/scripts/prune-kernel
+> index e69de29bb2d1..9461ae2bc122 100755
+> --- a/scripts/prune-kernel
+> +++ b/scripts/prune-kernel
+> @@ -0,0 +1,75 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +# because I use CONFIG_LOCALVERSION_AUTO, not the same version again and
+> +# again, /boot and /lib/modules/ eventually fill up.
+> +# Dumb script to purge that stuff:
+> +
+> +#for f in "$@"
+> +#do
+> +#        if rpm -qf "/lib/modules/$f" >/dev/null; then
+> +#                echo "keeping $f (installed from rpm)"
+> +#        elif [ $(uname -r) = "$f" ]; then
+> +#                echo "keeping $f (running kernel) "
+> +#        else
+> +#                echo "removing $f"
+> +#                rm -f "/boot/initramfs-$f.img" "/boot/System.map-$f"
+> +#                rm -f "/boot/vmlinuz-$f"   "/boot/config-$f"
+> +#                rm -rf "/lib/modules/$f"
+> +#                new-kernel-pkg --remove $f
+> +#        fi
+> +#done
+> +boot_dir=/boot
+> +modules_dir=/lib/modules
+> +function remove_old_kernel(){
+> +	cd $boot_dir
+> +	rm -If vmlinuz-$kernel_version System.map-$kernel_version config-$kernel_verison
 
-Re-enable interception.  kvm_x86_ops->cpuid_update() is only called in
-the ioctl flow, i.e. it's not performance critical.
+typo/spello: not tested:                                                  ^^^^^^^^^^^^^^
 
-> > > +       /*
-> > > +        * S_CET is a must for KERNEL CET, PL0_SSP ... PL2_SSP are a bundle
-> > > +        * for CET KERNEL xsaves.
-> > > +        */
-> > > +       if (cet_en && (kvm_xss & XFEATURE_MASK_CET_KERNEL)) {
-> > > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_S_CET, MSR_TYPE_RW);
-> > > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL0_SSP, MSR_TYPE_RW);
-> > > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL1_SSP, MSR_TYPE_RW);
-> > > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL2_SSP, MSR_TYPE_RW);
-> > > +
-> > > +               /* SSP_TAB only available for KERNEL SHSTK.*/
-> > > +               if (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
-> > > +                       vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_INT_SSP_TAB,
-> > > +                                                     MSR_TYPE_RW);
-> > > +       }
-> > > +}
-> > > +
-> > >  static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
-> > >  {
-> > >         struct vcpu_vmx *vmx = to_vmx(vcpu);
-> > > @@ -7025,6 +7062,8 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
-> > >         if (boot_cpu_has(X86_FEATURE_INTEL_PT) &&
-> > >                         guest_cpuid_has(vcpu, X86_FEATURE_INTEL_PT))
-> > >                 update_intel_pt_cfg(vcpu);
-> > > +
-> > > +       vmx_intercept_cet_msrs(vcpu);
-> > >  }
-> > >
-> > >  static void vmx_set_supported_cpuid(u32 func, struct kvm_cpuid_entry2 *entry)
-> > > --
-> > > 2.17.2
-> > >
+> +}
+> +function remove_old_kernel_modules_dir(){
+> +	cd $modules_dir
+> +	rm -rf $modules_version
+> +}
+> +printf "\n\n Enlist the installed kernels \n\n"
+> +
+> +find $boot_dir -name "vmlinuz-*" -type f  -exec ls -1 {} \;
+> +
+> +printf "\n\n\n Please give the kernel version to remove: %s"
+> +read kernel_version
+> +if [[ $kernel_version -eq "" ]];then
+> +	printf "You have forgotten the version to give for removal"
+
+No message needed IMO -- just exit.
+
+> +	exit 1
+> +else
+> +        remove_old_kernel
+> +fi
+> +
+> +printf "\n\n Enlist the installed modules directory \n\n"
+> +
+> +find $modules_dir  -maxdepth 0 -type d -exec ls -1 {} \;
+> +
+> +printf "\n\n Please give the full modules directory name to remove: %s"
+> +read modules_version
+> +if [[ $modules_version -eq "" ]];then
+> +	printf "You have forgotten to give the modules dir to remove"
+
+ditto.
+
+> +else
+> +        remove_old_kernel_modules_dir
+> +fi
+> +
+> +printf "\n\n Removed kernel version: $kernel_version and associated modules: $modules_version ...Done \n"
+> +while :
+> +  do
+> +     printf "\n\n Do you want to remove another?[YN] : %s"
+> +     read response
+> +
+> +       if [[ $response == "Y" ]];then
+
+Odd indentation here.  Some lines use tab, some lines use spaces.
+
+> +	printf "Please give another version to remove : %s"
+> +	read kernel_version
+> +	remove_old_kernel
+> +	printf "\n\n Please give the full modules directory name to remove: %s"
+> +	read modules_version
+> +	remove_old_kernel_modules_dir
+> +        printf "\n\n Removed kernel version: $kernel_version and associated modules: $modules_version ...Done \n"
+> +
+> +      elif [[ $response == "N" ]];then
+> +	   exit 1
+> +      fi
+> +  done
+> --
+> 2.21.0
+
+
+And lastly, 'patch' will apply this patch cleanly, but it ends up with
+almost all of this patch inserted into the new prune-kernel source file
+before the current contents of the prune-kernel source file,
+so I think that the emailed patch file has a problem.
+
+-- 
+~Randy
+
