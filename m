@@ -2,201 +2,101 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DB0FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC81FA3733
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F04D120869
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3608E20869
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:50:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gvaLQc3s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409010AbfJQKtG (ORCPT
+        id S2409021AbfJQKt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 06:49:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:6584 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404935AbfJQKtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 06:49:05 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 625A62E97D5;
-        Thu, 17 Oct 2019 10:49:04 +0000 (UTC)
-Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-185.pek2.redhat.com [10.72.12.185])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5A5E55D721;
-        Thu, 17 Oct 2019 10:48:39 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
-Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com, Jason Wang <jasowang@redhat.com>
-Subject: [PATCH V4 0/6] mdev based hardware virtio offloading support
-Date:   Thu, 17 Oct 2019 18:48:30 +0800
-Message-Id: <20191017104836.32464-1-jasowang@redhat.com>
+        Thu, 17 Oct 2019 06:49:58 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42580 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405514AbfJQKt6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 06:49:58 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n14so1776606wrw.9;
+        Thu, 17 Oct 2019 03:49:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fIm13RJUdsjeiq3hJO+LRS6P63Y3wZKzfqSnK5T6+m4=;
+        b=gvaLQc3sMRVsTJLruxL3YmkrGyGTSNyIe7SJCD+1DyFqzwpUx0bA7TT09OSdboUWyd
+         KtgxwRXGt9nepTHYpXuwxdn2h1ABxRMNVjY/Ur1Wt9I+yT5BevFsGq+73B7Nx/bM8Yl6
+         1Zi+R+vQz+onZn+8thqOZ9xpXilz3PFxHVZQoUHamONobmvaXCX/6db80/OO/57febXk
+         gxaLK7jfziYlU3eRPVCWoW172Ghx1w3yWXJcj+hSo57HNTC/0dwzgS2jh1l0+T2ngL51
+         6Gipw3nstrCyxGgycd9clejHkg3qB3+29DWYfgTjkbT5EE+2jMh6ffz4L9l8JvyTidXV
+         n02w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fIm13RJUdsjeiq3hJO+LRS6P63Y3wZKzfqSnK5T6+m4=;
+        b=gDyOl8ZNSJXhrOXEgEU41TV31VeXWGwv83Kf92SMmCdIdDx0o9vczXB183lxETxvoi
+         ZV4mpnH7ilk4hXe+h1cUMl4zmPEs66mAAl5X7ENwkc51uJBW3fX2Fn6vZuTLdUQg1PX4
+         upIqCEwHr03w7hcOa4iVKMA261+N4IYntU6ZpW95CmOXggRSELcvap/29EtoXz9GQaZQ
+         D+xzItEcemvjDNsEf5fxyKl8XhYccOJ86lGG3sAmXl4rlj7DO6/kGhw6Pi+Udx860u18
+         NzIR80a22mt6HWlfE16UIUkw3iFVaXPbnbkNLNgZbhgSWcrtSPYZ/PxDMVuBZj2EDbBf
+         +m6Q==
+X-Gm-Message-State: APjAAAUIfhuzTpXjcU3fVy2sz8EWDjciKlpCC8mG/mkExHig217Abfa1
+        TNAePkpMTk49sK7UuYTed5ApPRFR
+X-Google-Smtp-Source: APXvYqxCkpMJCRc1f2g8hfyk+ysEKyE/K4jlFPKvoj+15CpVg7QLoBg00GJftvwSexPnqCdDF+i2dQ==
+X-Received: by 2002:adf:cf11:: with SMTP id o17mr2438760wrj.284.1571309395771;
+        Thu, 17 Oct 2019 03:49:55 -0700 (PDT)
+Received: from [192.168.1.4] (ip-86-49-35-8.net.upcbroadband.cz. [86.49.35.8])
+        by smtp.gmail.com with ESMTPSA id r20sm2405202wrg.61.2019.10.17.03.49.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Oct 2019 03:49:54 -0700 (PDT)
+Subject: Re: [PATCH] MAINTAINERS: Add Marek and Shimoda-san as R-Car PCIE
+ co-maintainers
+To:     Simon Horman <horms@verge.net.au>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191016120249.16776-1-horms@verge.net.au>
+From:   Marek Vasut <marek.vasut@gmail.com>
+Message-ID: <9cdcef5a-8717-3d76-30e7-f781253e2201@gmail.com>
+Date:   Thu, 17 Oct 2019 12:49:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 17 Oct 2019 10:49:04 +0000 (UTC)
+In-Reply-To: <20191016120249.16776-1-horms@verge.net.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all:
+On 10/16/19 2:02 PM, Simon Horman wrote:
+> At the end of the v5.3 upstream development cycle I stepped down
+> from my role at Renesas.
+> 
+> Pass maintainership of the R-Car PCIE to Marek and Shimoda-san.
+> 
+> Signed-off-by: Simon Horman <horms@verge.net.au>
 
-There are hardwares that can do virtio datapath offloading while
-having its own control path. This path tries to implement a mdev based
-unified API to support using kernel virtio driver to drive those
-devices. This is done by introducing a new mdev transport for virtio
-(virtio_mdev) and register itself as a new kind of mdev driver. Then
-it provides a unified way for kernel virtio driver to talk with mdev
-device implementation.
-
-Though the series only contains kernel driver support, the goal is to
-make the transport generic enough to support userspace drivers. This
-means vhost-mdev[1] could be built on top as well by resuing the
-transport.
-
-A sample driver is also implemented which simulate a virito-net
-loopback ethernet device on top of vringh + workqueue. This could be
-used as a reference implementation for real hardware driver.
-
-Also a real ICF VF driver was also posted here[2] which is a good
-reference for vendors who is interested in their own virtio datapath
-offloading product.
-
-Consider mdev framework only support VFIO device and driver right now,
-this series also extend it to support other types. This is done
-through introducing class id to the device and pairing it with
-id_talbe claimed by the driver. On top, this seris also decouple
-device specific parents ops out of the common ones.
-
-Pktgen test was done with virito-net + mvnet loop back device.
-
-Please review.
-
-[1] https://lkml.org/lkml/2019/9/26/15
-[2] https://lkml.org/lkml/2019/10/15/1226
-
-Changes from V3:
-
-- document that class id (device ops) must be specified in create()
-- add WARN() when trying to set class_id when it has already set
-- add WARN() when class_id is not specified in create() and correctly
-  return an error in this case
-- correct the prototype of mdev_set_class() in the doc
-- add documention of mdev_set_class()
-- remove the unnecessary "class_id_fail" label when class id is not
-  specified in create()
-- convert id_table in vfio_mdev to const
-- move mdev_set_class and its friends after mdev_uuid()
-- suqash the patch of bus uevent into patch of introducing class id
-- tweak the words in the docs per Cornelia suggestion
-- tie class_id and device ops through class specific initialization
-  routine like mdev_set_vfio_ops()
-- typos fixes in the docs of virtio-mdev callbacks
-- document the usage of virtqueues in struct virtio_mdev_device
-- remove the useless vqs array in struct virtio_mdev_device
-- rename MDEV_ID_XXX to MDEV_CLASS_ID_XXX
-
-Changes from V2:
-
-- fail when class_id is not specified
-- drop the vringh patch
-- match the doc to the code
-- tweak the commit log
-- move device_ops from parent to mdev device
-- remove the unused MDEV_ID_VHOST
-
-Changes from V1:
-
-- move virtio_mdev.c to drivers/virtio
-- store class_id in mdev_device instead of mdev_parent
-- store device_ops in mdev_device instead of mdev_parent
-- reorder the patch, vringh fix comes first
-- really silent compiling warnings
-- really switch to use u16 for class_id
-- uevent and modpost support for mdev class_id
-- vraious tweaks per comments from Parav
-
-Changes from RFC-V2:
-
-- silent compile warnings on some specific configuration
-- use u16 instead u8 for class id
-- reseve MDEV_ID_VHOST for future vhost-mdev work
-- introduce "virtio" type for mvnet and make "vhost" type for future
-  work
-- add entries in MAINTAINER
-- tweak and typos fixes in commit log
-
-Changes from RFC-V1:
-
-- rename device id to class id
-- add docs for class id and device specific ops (device_ops)
-- split device_ops into seperate headers
-- drop the mdev_set_dma_ops()
-- use device_ops to implement the transport API, then it's not a part
-  of UAPI any more
-- use GFP_ATOMIC in mvnet sample device and other tweaks
-- set_vring_base/get_vring_base support for mvnet device
-
-Jason Wang (6):
-  mdev: class id support
-  modpost: add support for mdev class id
-  mdev: introduce device specific ops
-  mdev: introduce virtio device and its device ops
-  virtio: introduce a mdev based transport
-  docs: sample driver to demonstrate how to implement virtio-mdev
-    framework
-
- .../driver-api/vfio-mediated-device.rst       |  22 +-
- MAINTAINERS                                   |   2 +
- drivers/gpu/drm/i915/gvt/kvmgt.c              |  17 +-
- drivers/s390/cio/vfio_ccw_ops.c               |  17 +-
- drivers/s390/crypto/vfio_ap_ops.c             |  13 +-
- drivers/vfio/mdev/mdev_core.c                 |  38 +
- drivers/vfio/mdev/mdev_driver.c               |  22 +
- drivers/vfio/mdev/mdev_private.h              |   2 +
- drivers/vfio/mdev/vfio_mdev.c                 |  45 +-
- drivers/virtio/Kconfig                        |   7 +
- drivers/virtio/Makefile                       |   1 +
- drivers/virtio/virtio_mdev.c                  | 409 +++++++++++
- include/linux/mdev.h                          |  55 +-
- include/linux/mod_devicetable.h               |   8 +
- include/linux/vfio_mdev.h                     |  52 ++
- include/linux/virtio_mdev.h                   | 151 ++++
- samples/Kconfig                               |   7 +
- samples/vfio-mdev/Makefile                    |   1 +
- samples/vfio-mdev/mbochs.c                    |  19 +-
- samples/vfio-mdev/mdpy.c                      |  19 +-
- samples/vfio-mdev/mtty.c                      |  17 +-
- samples/vfio-mdev/mvnet.c                     | 691 ++++++++++++++++++
- scripts/mod/devicetable-offsets.c             |   3 +
- scripts/mod/file2alias.c                      |  10 +
- 24 files changed, 1541 insertions(+), 87 deletions(-)
- create mode 100644 drivers/virtio/virtio_mdev.c
- create mode 100644 include/linux/vfio_mdev.h
- create mode 100644 include/linux/virtio_mdev.h
- create mode 100644 samples/vfio-mdev/mvnet.c
+Co-maintainer model is great:
+Acked-by: Marek Vasut <marek.vasut+renesas@gmail.com>
 
 -- 
-2.19.1
-
+Best regards,
+Marek Vasut
