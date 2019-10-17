@@ -2,90 +2,108 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7317BFA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D43F2ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DB1121848
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A848621A49
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:34:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571330059;
-	bh=Tn+koxulxw6ocFxiBhGjkALSnZCiOhXdANJ79cpjiGg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NSvDymIm67mH+CdOxc9AJ2Q5T92zhMU4if+3if23Hhes86JDRaKlirnqcGFgeCDXZ
-	 7Vk/JOZh0kvbvfU3+o3Gbep7ZSGaP9rVj6PlTFKtWlUFKj9VpZgG9CqBdXmwnTZ7E7
-	 yMnsQaEM2k25XH2rHsOWc6nQihu/cqWdW8dpWWPY=
+	s=default; t=1571330084;
+	bh=W1fi+yiqxSMbIlkGbbuMcV9cOsU/c1cjMnKa89DCUd8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=kWrGJxHo6RYigCo+qQTBbL+kqRBQE/425M+MY8T+nqw8dyAvegOgQY1lzGXVMJmUL
+	 +zekwVEop008YZsUdx5rq1XwkqdalbbFevLB+D22LxuUGDR5CP7A1LetCHEmq3pB23
+	 tSQ3/rCFaLIxdPkUFHrrIZzzw5rI5k7jiHB5Wzss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408129AbfJQQeR (ORCPT
+        id S2408359AbfJQQen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:34:17 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46045 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730640AbfJQQeR (ORCPT
+        Thu, 17 Oct 2019 12:34:43 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34833 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393857AbfJQQel (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 12:34:17 -0400
-Received: by mail-oi1-f193.google.com with SMTP id o205so2665891oib.12;
-        Thu, 17 Oct 2019 09:34:16 -0700 (PDT)
+        Thu, 17 Oct 2019 12:34:41 -0400
+Received: by mail-oi1-f194.google.com with SMTP id x3so2723353oig.2;
+        Thu, 17 Oct 2019 09:34:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vb3NEiIkWc24DZr6uWoBxgdelPca9NnceF0V+QvAIKw=;
-        b=i/fXgxgUFPvE7kHhydPJuhtaLi/83P/d1JqrFT4vpaTDdx8JrdCbiq4XTXqiNJ2/cN
-         lXYGrgdyEfg6jGgLz+fsXFGdBaeK346j7viHL/S8TsSJIPr4TkY2523CoKs70s5/y/A9
-         S9v3jFOxcxrM5l7Rjv+hLD2WCsYWdnPhqYUoy6v+CUpuwpBtDnWvpEp117zoY62B9Sia
-         MBQkMde0r9RThLlc6RyqDMOQOs1+ZAhTZ94Z4qwmSrjZbJZVf0y8q3HzFd+0sJJdOQGx
-         quu8c5OEGmxTdCbR+yOxxC6QbaacBt0jrMr2aFdMMmf2iPNbx2BIjsbqBsirS9DFjeXn
-         beOQ==
-X-Gm-Message-State: APjAAAXHstFfEkBLB3HIrDUhpueT4ZLKxnljFdXYAGpPZV/xgpFiadIb
-        z8Q/H7ab4XnDqT7IqvsI9UuPEqs=
-X-Google-Smtp-Source: APXvYqwYD3AVF2BEc4z/z1+7K+G6abfOyaOtFugvE8+kSzC7ebxIK8XRx1dysXuBGpnXjDYiPl/uow==
-X-Received: by 2002:a54:468b:: with SMTP id k11mr4125215oic.174.1571330056063;
-        Thu, 17 Oct 2019 09:34:16 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a21sm631814oia.27.2019.10.17.09.34.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 09:34:15 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 11:34:14 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        DTML <devicetree@vger.kernel.org>
-Subject: Re: [PATCH] libfdt: reduce the number of headers included from
- libfdt_env.h
-Message-ID: <20191017163414.GA4205@bogus>
-References: <20190617162123.24920-1-yamada.masahiro@socionext.com>
- <CAK7LNATtqhxPcDneW0QOkw-5NyPNP06Qv0bYTe7A_gCiHMiU7A@mail.gmail.com>
- <CAK7LNASMwqy0ZUZ=kTJ7MJ6OJNa=+vbj5444xzmubJ8+6vO=sg@mail.gmail.com>
- <CAK7LNAS=9yGqMQ9eoM4L0hhvuFRYhg6S4i6J3Ou9vcB1Npj4BQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PTweReGzWRV6Ob0sCHbhOekauupQAppLGL1gzS8TcKs=;
+        b=pe9wF3D7Kl6nB4c9mowgsk+ThJW8q9PSq+ivgjpZzgoQuAtK20bJviLymZe7UKCdw0
+         mJVlQzxDvL9DuDg6s9DB7vkG19y/oxgWV3w6YiGH8t+a7zXbp/TGkqL1pz3R5bfwJWys
+         +F9wJteJPyaoiXUswxnEAdFnpPj0yGYWFLgfzQ6qmtIjhNotK555sI2oDRIzxPDCzYAm
+         hmwhcI/9x1559oUC2HxrWG7O6T21BIGT0Xj5tF6TYcXY/seo+19Z6PxYbJfeV62/gHXA
+         rqJ1/b5wl7LBUqVpu7WSUQdksmQYUPmg8YV10wEHSCMprEpXSI+TqgI0D0rvLANqhbsQ
+         n4iA==
+X-Gm-Message-State: APjAAAUeawEOwNz7YVRhZ+kYtlvXEHr6skB4Nk+n3OoHw/LeFO7k/Fa6
+        uN4Re11HXK3Y4GZZ3HeTvpnYXS7AUoRUpbBnUxQ=
+X-Google-Smtp-Source: APXvYqxdtwn4csBmwqLiWGMGaWig215MMPVHzs3sAF65tbKccsRNu9C3I2YhQmoUAwnEvbh1AfpL5ERkR4gfKHL+voQ=
+X-Received: by 2002:aca:b6c5:: with SMTP id g188mr4177262oif.103.1571330080233;
+ Thu, 17 Oct 2019 09:34:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNAS=9yGqMQ9eoM4L0hhvuFRYhg6S4i6J3Ou9vcB1Npj4BQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <2811202.iOFZ6YHztY@kreacher> <20191016142343.GB5330@bogus>
+ <20191017095725.izchzl7enfylvpf3@vireshk-i7> <20191017095942.GF8978@bogus>
+In-Reply-To: <20191017095942.GF8978@bogus>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 17 Oct 2019 18:34:28 +0200
+Message-ID: <CAJZ5v0ixS8ZS93Fgj8XGUMGcLdAy+Fgwp5z3QirccNSiiwLtDA@mail.gmail.com>
+Subject: Re: [RFT][PATCH 0/3] cpufreq / PM: QoS: Introduce frequency QoS and
+ use it in cpufreq
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Osipenko <digetx@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 08:01:46PM +0900, Masahiro Yamada wrote:
-> Hi Andrew,
-> 
-> Could you pick up this to akpm tree?
-> https://lore.kernel.org/patchwork/patch/1089856/
-> 
-> I believe this is correct, and a good clean-up.
-> 
-> I pinged the DT maintainers, but they did not respond.
+On Thu, Oct 17, 2019 at 12:00 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+> On Thu, Oct 17, 2019 at 03:27:25PM +0530, Viresh Kumar wrote:
+> > On 16-10-19, 15:23, Sudeep Holla wrote:
+> > > Thanks for the spinning these patches so quickly.
+> > >
+> > > I did give it a spin, but unfortunately it doesn't fix the bug I reported.
+> > > So I looked at my bug report in detail and looks like the cpufreq_driver
+> > > variable is set to NULL at that point and it fails to dereference it
+> > > while trying to execute:
+> > >     ret = cpufreq_driver->verify(new_policy);
+> > > (Hint verify is at offset 0x1c/28)
+> > >
+> > > So I suspect some race as this platform with bL switcher tries to
+> > > unregister and re-register the cpufreq driver during the boot.
+> > >
+> > > I need to spend more time on this as reverting the initial PM QoS patch
+> > > to cpufreq.c makes the issue disappear.
 
-Sorry I missed this. Things outside my normal paths fall thru the 
-cracks.
+I guess you mean commit 67d874c3b2c6 ("cpufreq: Register notifiers
+with the PM QoS framework")?
 
-I'll apply it now.
+That would make sense, because it added the cpufreq_notifier_min() and
+cpufreq_notifier_max() that trigger handle_update() via
+schedule_work().
 
-Rob
+[BTW, Viresh, it looks like cpufreq_set_policy() should still ensure
+that the new min is less than the new max, because the QoS doesn't do
+that.]
+
+> > Is this easily reproducible ? cpufreq_driver == NULL shouldn't be the case, it
+> > get updated only once while registering/unregistering cpufreq drivers. That is
+> > the last thing which can go wrong from my point of view :)
+> >
+>
+> Yes, if I boot my TC2 with bL switcher enabled, it always crashes on boot.
+
+It does look like handle_update() races with
+cpufreq_unregister_driver() and cpufreq_remove_dev (called from there
+indirectly) does look racy.
