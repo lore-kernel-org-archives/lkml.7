@@ -2,161 +2,151 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FAC5FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8446FC4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 100B42089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:50:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d8XbFKyU"
+	by mail.kernel.org (Postfix) with ESMTP id 657C121925
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:51:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732650AbfJQHuM (ORCPT
+        id S2404909AbfJQHvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 03:50:12 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41913 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfJQHuL (ORCPT
+        Thu, 17 Oct 2019 03:51:36 -0400
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:58019 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728735AbfJQHvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 03:50:11 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p4so1129015wrm.8;
-        Thu, 17 Oct 2019 00:50:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=oGjvr5hp9EJMVELthmx8VDqL9EDDYsUzQ79Pl9p8iWs=;
-        b=d8XbFKyUcvle4NGbuJFQAXvY6UVGdxME8GBF7Wz0yfI03iL3MqQfFX93U4RhJKsr8i
-         Cl/mDAVROC8vhtIC5nwLXsItKAXMLZehn626vrwy7Razi6vwp/7v07Q/KIrIkD1IF3/Z
-         HGgckLS8BKF7C+R2tNucJsHCEENcee+2ZVqVrs5ZpVHdddzfBkr/57lRRlT0V4TUyoO0
-         Nr9zHF1cTQk11nLX7nnOGzMFJ+VVOBDYwVb+EDHICvPG+UIS11RfBXzzf12mzzkFdrvj
-         9QqVzEOap/cf27vs9JpJOIjLhbIOJlbdNo68UKqk0NHJ+wsOmCDz57EAh/DAHZrfUeqN
-         l2lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=oGjvr5hp9EJMVELthmx8VDqL9EDDYsUzQ79Pl9p8iWs=;
-        b=BNh+q3f6UvI6FZss0JNqyM4bpCV7l/C7fkFo696DlucGZOQQm3aBMq0P/Mwn2DyozD
-         XfthXMk91DICzT4wzT873PwTK5hX47cpboxlEIQ2aaJAY/PNqWbcEb3mSUZG+fIbMRBN
-         YHwb/B2jenbtZEK9ilxdGmGvE9Vw1wSOgZ2yjVCroksimKpbudIGuMAEOlbjlcc5gUwg
-         qQKZV8mRu1kxMC5dZ5LQeCz7P17prhjA34FDD2NVYGsrcFEwAsIS1ybxXnsALpoDd9XH
-         Vrw66ZWMHlo9ZGSyAKp8CVC2F+lJUP+bEdXHrLW+RDHUx7oVTrlgY17XQQESgRdvdlnJ
-         AyqA==
-X-Gm-Message-State: APjAAAVgJwdsul4a4+XHLwg3rFwhB/bSQeis4lai4M4X3NiKJenpjeny
-        n2Fwp7pn5FlGfYBxRhjsERU=
-X-Google-Smtp-Source: APXvYqxxiGQBlJy6UJiI0bKvNipvgqd2D7FO59gwJsgMZMN/WA60a3r82lazYwCSWHeFmn4TieY2Eg==
-X-Received: by 2002:a5d:69c8:: with SMTP id s8mr1713270wrw.167.1571298609805;
-        Thu, 17 Oct 2019 00:50:09 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id u25sm1366158wml.4.2019.10.17.00.50.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 17 Oct 2019 00:50:08 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 09:50:08 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
-Message-ID: <20191017075008.2uqgdimo3hrktj3i@pali>
-References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
- <20190829205631.uhz6jdboneej3j3c@pali>
- <184209.1567120696@turing-police>
- <20190829233506.GT5281@sasha-vm>
- <20190830075647.wvhrx4asnkrfkkwk@pali>
- <20191016140353.4hrncxa5wkx47oau@pali>
- <20191016143113.GS31224@sasha-vm>
- <20191016160349.pwghlg566hh2o7id@pali>
- <20191016203317.GU31224@sasha-vm>
+        Thu, 17 Oct 2019 03:51:35 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id L0ZEiNQokPduvL0ZHitZi9; Thu, 17 Oct 2019 09:51:32 +0200
+Subject: Re: [PATCH v3 5/6] media: sun4i: Add H3 deinterlace driver
+To:     Jernej Skrabec <jernej.skrabec@siol.net>, mripard@kernel.org,
+        wens@csie.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+References: <20191016192807.1278987-1-jernej.skrabec@siol.net>
+ <20191016192807.1278987-6-jernej.skrabec@siol.net>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <d768b2bc-a942-03a6-253d-4bcc31f1b11e@xs4all.nl>
+Date:   Thu, 17 Oct 2019 09:51:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191016192807.1278987-6-jernej.skrabec@siol.net>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191016203317.GU31224@sasha-vm>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-CMAE-Envelope: MS4wfFzjUTWPxOlTU4hlEoCPjG/vSnr5xKQMF8XCQ+SW2mlaLMTpQxaZ4EILqCiVCuh6PT0/ZGWxxDnt9eqTiqgrU30Ii5IcSv5qXVgZKrKwRQi+3s/KXvlH
+ cW3X33jRHUWkl54rP0BkXftU0szeQJ0072L78iJO5WHkMZWfgWh3+Eu0GlW9LYPLUreGywKDX382EmsMo//teqCpW8UzBd3qtfur6RZwyfW/PVnpXHTX8w54
+ 3NATx7a3KgEanmyT+7lBoLehSIZJPcE3ExuqcJ85gypFZE3mPBaYNeWWbhMdOjn9xy72VKc7+rhYNrXfCbI4r1GAWenmaRGgPck9UZ/QvmmnKfCv6MfEjGzF
+ mCa2bWuWOcPyvM0/TmOQgX5PPXzDQLe+f2LNK1WgOHJKCM3W4NGwSwCyk+GUWKj7cdJF40IruCU3/x3I05XQifPut6thHfBVH4LS/N5AEienYd4m/Ga7z/2p
+ H1UtYUZCGmnxHATQJZxlSooZhRP/qiBbjU3WvKAlGacH643rIINbhwIy/mE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 16 October 2019 16:33:17 Sasha Levin wrote:
-> On Wed, Oct 16, 2019 at 06:03:49PM +0200, Pali Rohár wrote:
-> > On Wednesday 16 October 2019 10:31:13 Sasha Levin wrote:
-> > > On Wed, Oct 16, 2019 at 04:03:53PM +0200, Pali Rohár wrote:
-> > > > On Friday 30 August 2019 09:56:47 Pali Rohár wrote:
-> > > > > On Thursday 29 August 2019 19:35:06 Sasha Levin wrote:
-> > > > > > With regards to missing specs/docs/whatever - our main concern with this
-> > > > > > release was that we want full interoperability, which is why the spec
-> > > > > > was made public as-is without modifications from what was used
-> > > > > > internally. There's no "secret sauce" that Microsoft is hiding here.
-> > > > >
-> > > > > Ok, if it was just drop of "current version" of documentation then it
-> > > > > makes sense.
-> > > > >
-> > > > > > How about we give this spec/code time to get soaked and reviewed for a
-> > > > > > bit, and if folks still feel (in a month or so?) that there are missing
-> > > > > > bits of information related to exfat, I'll be happy to go back and try
-> > > > > > to get them out as well.
-> > > >
-> > > > Hello Sasha!
-> > > >
-> > > > Now one month passed, so do you have some information when missing parts
-> > > > of documentation like TexFAT would be released to public?
-> > > 
-> > > Sure, I'll see if I can get an approval to open it up.
-> > 
-> > Ok!
-> > 
-> > > Can I assume you will be implementing TexFAT support once the spec is
-> > > available?
-> > 
-> > I cannot promise that I would implement something which I do not know
-> > how is working... It depends on how complicated TexFAT is and also how
-> > future exfat support in kernel would look like.
-> > 
-> > But I'm interesting in implementing it.
+On 10/16/19 9:28 PM, Jernej Skrabec wrote:
+> Allwinner H3 SoC contains deinterlace unit, which has several modes of
+> operation - bypass, weave, bob and mixed (advanced) mode. I don't know
+> how mixed mode works, but according to Allwinner it gives best results,
+> so they use it exclusively. Currently this mode is also hardcoded here.
 > 
-> It looks like the reason this wasn't made public along with the exFAT
-> spec is that TexFAT is pretty much dead - it's old, there are no users
-> we are aware of, and digging it out of it's grave to make it public is
-> actually quite the headache.
+> For each interleaved frame queued, this driver produces 2 deinterlaced
+> frames. Deinterlaced frames are based on 2 consequtive output buffers,
+> except for the first 2, where same output buffer is given to peripheral
+> as current and previous.
 > 
-> Is this something you actually have a need for? an entity that has a
-> requirement for TexFAT?
+> There is no documentation for this core, so register layout and fixed
+> values were taken from BSP driver.
+> 
+> I'm not sure if maximum size of the image unit is capable to process is
+> governed by size of "flag" buffers, frequency or it really is some HW
+> limitation. Currently driver can process full HD image in ~15ms (7.5ms
+> for each capture buffer), which allows to process 1920x1080@60i video
+> smoothly in real time.
+> 
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  MAINTAINERS                                   |    7 +
+>  drivers/media/platform/sunxi/Kconfig          |    1 +
+>  drivers/media/platform/sunxi/Makefile         |    1 +
+>  drivers/media/platform/sunxi/sun8i-di/Kconfig |   11 +
+>  .../media/platform/sunxi/sun8i-di/Makefile    |    2 +
+>  .../media/platform/sunxi/sun8i-di/sun8i-di.c  | 1020 +++++++++++++++++
+>  .../media/platform/sunxi/sun8i-di/sun8i-di.h  |  237 ++++
+>  7 files changed, 1279 insertions(+)
+>  create mode 100644 drivers/media/platform/sunxi/sun8i-di/Kconfig
+>  create mode 100644 drivers/media/platform/sunxi/sun8i-di/Makefile
+>  create mode 100644 drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
+>  create mode 100644 drivers/media/platform/sunxi/sun8i-di/sun8i-di.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c7b48525822a..c375455125fb 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4646,6 +4646,13 @@ M:	"Maciej W. Rozycki" <macro@linux-mips.org>
+>  S:	Maintained
+>  F:	drivers/net/fddi/defxx.*
+>  
+> +DEINTERLACE DRIVERS FOR ALLWINNER H3
+> +M:	Jernej Skrabec <jernej.skrabec@siol.net>
+> +L:	linux-media@vger.kernel.org
+> +T:	git git://linuxtv.org/media_tree.git
+> +S:	Maintained
+> +F:	drivers/media/platform/sunxi/sun8i-di/
+> +
+>  DELL SMBIOS DRIVER
+>  M:	Pali Rohár <pali.rohar@gmail.com>
+>  M:	Mario Limonciello <mario.limonciello@dell.com>
+> diff --git a/drivers/media/platform/sunxi/Kconfig b/drivers/media/platform/sunxi/Kconfig
+> index 71808e93ac2e..d7a5621bf327 100644
+> --- a/drivers/media/platform/sunxi/Kconfig
+> +++ b/drivers/media/platform/sunxi/Kconfig
+> @@ -1,2 +1,3 @@
+>  source "drivers/media/platform/sunxi/sun4i-csi/Kconfig"
+>  source "drivers/media/platform/sunxi/sun6i-csi/Kconfig"
+> +source "drivers/media/platform/sunxi/sun8i-di/Kconfig"
 
-Hi!
+This is a m2m driver, so this belongs in drivers/media/platform/Kconfig in the
+Memory-to-memory section.
 
-I do not have device with requirements for TexFAT. The first reason why
-I wanted to use TexFAT was that it it the only way how to use more FAT
-tables (e.g. secondary for backup) and information for that is missing
-in released exFAT specification. This could bring better data recovery.
+> diff --git a/drivers/media/platform/sunxi/Makefile b/drivers/media/platform/sunxi/Makefile
+> index a05127529006..3878cb4efdc2 100644
+> --- a/drivers/media/platform/sunxi/Makefile
+> +++ b/drivers/media/platform/sunxi/Makefile
+> @@ -1,2 +1,3 @@
+>  obj-y		+= sun4i-csi/
+>  obj-y		+= sun6i-csi/
+> +obj-y		+= sun8i-di/
+> diff --git a/drivers/media/platform/sunxi/sun8i-di/Kconfig b/drivers/media/platform/sunxi/sun8i-di/Kconfig
+> new file mode 100644
+> index 000000000000..dbd77a61e3b3
+> --- /dev/null
+> +++ b/drivers/media/platform/sunxi/sun8i-di/Kconfig
+> @@ -0,0 +1,11 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +config VIDEO_SUN8I_DEINTERLACE
+> +	tristate "Allwinner Deinterlace driver"
+> +	depends on VIDEO_DEV && VIDEO_V4L2
+> +	depends on HAS_DMA
+> +	depends on OF
+> +	depends on PM
+> +	select VIDEOBUF2_DMA_CONTIG
+> +	select V4L2_MEM2MEM_DEV
+> +	help
+> +	   Support for the Allwinner Deinterlace unit found on some SoCs.
 
-> I'd would rather spend my time elsewhere than digging TexFAT out of it's grave.
+Shouldn't this depend on ARCH_SUNXI || COMPILE_TEST?
+And also on COMMON_CLK?
 
-Ok.
+Regards,
 
-I was hoping that it would be possible to easily use secondary FAT table
-(from TexFAT extension) for redundancy without need to implement full
-TexFAT, which could be also backward compatible with systems which do
-not implement TexFAT extension at all. Similarly like using FAT32 disk
-with two FAT tables is possible also on system which use first FAT
-table.
-
-> Is there anything else in the exFAT spec that is missing (and someone
-> actually wants/uses)?
-
-Currently I do not know.
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
+	Hans
