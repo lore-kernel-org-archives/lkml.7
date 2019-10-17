@@ -2,159 +2,123 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D36E5ECE599
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE12ECE599
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A24402053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7D5821925
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:32:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RoGFrF8C"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="Axfwq3U5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404394AbfJQCcP (ORCPT
+        id S2406975AbfJQCcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 22:32:15 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43254 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389860AbfJQCcO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 22:32:14 -0400
-Received: by mail-pg1-f194.google.com with SMTP id i32so378176pgl.10
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 19:32:14 -0700 (PDT)
+        Wed, 16 Oct 2019 22:32:19 -0400
+Received: from mail-eopbgr1400137.outbound.protection.outlook.com ([40.107.140.137]:15671
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389860AbfJQCcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 22:32:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AOLTXdie2jbGcSB8wRzAu/x6RKKt9QIxrB7Pt0U7CzH2iCk3paXhv+uaD48mdtLb0QVRPblRGah7+rL7Aa/rBFIeuCBjx9ZAW+6iSK3HtvzVN9ebo0BuyPkQ1nouYaFjXBzVyAXmjJ3ilr4aHmAdgjhLCLN4MTQMq3c6MH8VM6W+2oplzy87I4cnY6AH2xThUy/0W3o0XiL1RlIa3JK4GlXEZ4bQ2ZJGNMvvN2VY4e+b7xCRS4TypowCB5Hff1IO0sK0GpwDjyTWNqkux4uRPRWMlzv9c/vFoW4SJyN7pCTuh9dCJNqXFtwo+k3cBUL1271xRSnJyz2uUGnSe5ecbw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ypibnnDy2Tltr6OEbpKVMxiISIXXNKDK5fG1Buhs8VA=;
+ b=Z2+r/SQv2XUBkkeGGKk7xiN72fHWNr4lj97mY/HCOoyQ6YJy0MmpsvIkFz20mUoCjU9109B/kvS/1yfNiYeqb7uNHYypJ6QO/U/0D0I0TV2AB7n36FmvcdbNMSsFg4E82m4pId3m0oJ/9LUvJuuEGYVdO59qhY7aMUrgOgJLOuyzLk9iAkdrQGjAENYqS+FZ18zyfp3YecoQoQaEyU0RnnyYgtAuAmZwso73V1+xEPy4jAkMoo9vzuBw++4vJR7WqEFefHOq5gVGGiYuA8eGI8xcK/ucYlH+f0CPIyrbDLJrBa0cbbdOo85d3hzrdIuqI9DKkI92iJr0aBgSRJU+tw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=X6tAGv7Xz958wWNHO8Bq64KdhKc5wOL6Vmp5Zs/f1LQ=;
-        b=RoGFrF8CxXw6l3KRULwiAKo4CcCIvLMii/JVsVD7bQjijehEko5h7HIW5ws5tpRsLn
-         k4uFFJYB2b4/Jo3YHMn7rIn2CJTiPXBQTpKun+gnprs0VObBH4ZXp0ohNA1VbKJNUsN2
-         CVuxt2wtZombnBTgLJ/Lvu4ZZvKo0YFTIrFv0BU19bafe9nhQNFuvdkhKj6wPsXKlSxG
-         +vWOZAfh87/ny1Pvy+iCA/46sORy+Yr/YNrOsCiwV9os9JCSvzMxsHsX6HhTAUvcyaUE
-         vd9iTuvj1F5mQYM2wf4Ce+N7+TGjXldWbDlgJtOf3zWKDQ1vXgr2ksSZVD9F4vRfXFdf
-         E8KA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=X6tAGv7Xz958wWNHO8Bq64KdhKc5wOL6Vmp5Zs/f1LQ=;
-        b=Kx3y9FLO7Qohy9sCjRcjJKj9Jt5POKVIfwniSuAeDAvWRvyA3pk0jx/mcIBj8wqwSA
-         6e0iEGuzs2arF+RSZ8LxHSmkvvQgX79mKaFnCfxR1hjQRuJBiqpRwP+7jwLLJ8pdV2ed
-         7rnJeoSFYIQYJKZZ8vfk0sF8JAvHgfBpdHN9pKo2wlPxIl8lA8REK6GiWCGb/hIowDyt
-         +lSZJpZECCiS63dBSqlV236v8pXoMu19/512tHnRS9ukUdkokOKfGSx0Je/ehzGpWpeC
-         HhCYm50Fqgmi2tQEH5nLU+B7m4nb0f7UwPQU9pZyHpD9gtsAxWuYGySw+aNt8of40Yy7
-         6OSw==
-X-Gm-Message-State: APjAAAVFwnptRzerukyGKOsUl/VA7TiWSmr4WdaiSeaQmLS715nm+75X
-        PV3bSPWP2OMhw0cfO3TkxCDLfg==
-X-Google-Smtp-Source: APXvYqy7ws3cNv9Ac3aA6W8EqM60vbSd5fn0dl5fR0g/r08zv/z7EMVvkW8HP3i7QE/yNMauN7v89Q==
-X-Received: by 2002:a17:90a:8508:: with SMTP id l8mr1387293pjn.15.1571279533556;
-        Wed, 16 Oct 2019 19:32:13 -0700 (PDT)
-Received: from localhost ([122.172.151.112])
-        by smtp.gmail.com with ESMTPSA id w6sm488958pfj.17.2019.10.16.19.32.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 16 Oct 2019 19:32:12 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 08:02:10 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Peter Geis <pgwipeout@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 07/17] cpufreq: tegra20: Use generic cpufreq-dt driver
- (Tegra30 supported now)
-Message-ID: <20191017023210.x5vavl542hdkrivw@vireshk-i7>
-References: <20191015211618.20758-1-digetx@gmail.com>
- <20191015211618.20758-8-digetx@gmail.com>
- <20191016051802.rrxv56vtvxfm6qqe@vireshk-i7>
- <13a9ebd6-8dce-0217-d306-defb8eb6fb96@gmail.com>
- <CAMdYzYoasuEobJLC4RLW_5WCNGnaKtTth0xKov0tUQuDhkX3EA@mail.gmail.com>
- <b4eca03d-f86c-8e07-e04a-612e02820bd0@gmail.com>
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ypibnnDy2Tltr6OEbpKVMxiISIXXNKDK5fG1Buhs8VA=;
+ b=Axfwq3U59lKjdla6fPHs3CCkSmVIkJN3STLx8WdO/ScwSd7hUyq82jkgzyOC1oKQAu4llZ150J9I0zEAbzWLyTqECm8HbJSv//khCGf1lNJ2uEcN59ZGrcOHCzp3/41XnAOqBIhHaHkHa4kJOUTotBoER1NofJKac7CBrONtsHk=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB2960.jpnprd01.prod.outlook.com (20.177.102.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.21; Thu, 17 Oct 2019 02:32:14 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::548:32de:c810:1947]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::548:32de:c810:1947%4]) with mapi id 15.20.2347.023; Thu, 17 Oct 2019
+ 02:32:14 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Simon Horman <horms@verge.net.au>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] MAINTAINERS: Add Marek and Shimoda-san as R-Car PCIE
+ co-maintainers
+Thread-Topic: [PATCH] MAINTAINERS: Add Marek and Shimoda-san as R-Car PCIE
+ co-maintainers
+Thread-Index: AQHVhBm2hDyM+Q9Dm0i41nHHfxWio6deHaEg
+Date:   Thu, 17 Oct 2019 02:32:14 +0000
+Message-ID: <TYAPR01MB454495E9D84990F00AA9BB3DD86D0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <20191016120249.16776-1-horms@verge.net.au>
+In-Reply-To: <20191016120249.16776-1-horms@verge.net.au>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [150.249.235.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f5cb7170-89e3-45c2-5dbd-08d752aa3879
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: TYAPR01MB2960:|TYAPR01MB2960:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TYAPR01MB296055C2142DABDD75054425D86D0@TYAPR01MB2960.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 01930B2BA8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(346002)(136003)(366004)(376002)(39860400002)(189003)(199004)(26005)(186003)(7696005)(86362001)(99286004)(478600001)(76116006)(316002)(52536014)(33656002)(110136005)(4744005)(71190400001)(5660300002)(14454004)(54906003)(25786009)(102836004)(6506007)(71200400001)(66066001)(76176011)(4326008)(486006)(6116002)(3846002)(11346002)(446003)(476003)(229853002)(2906002)(6436002)(256004)(74316002)(7736002)(66556008)(305945005)(6246003)(66446008)(8676002)(8936002)(81166006)(81156014)(55016002)(64756008)(66476007)(66946007)(9686003);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB2960;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +0QWIFcKDD07O4i856xK2FMaMQSBiC+R7v/8TEREebojkOvsTpPj9+rYvrU3e4cNiRLKOoMjMpnWfQeeVsFIpt2UBE/4mRTBIf683TAFk5D0npc3m8GNChrHv4xThR2vQgUSpus9h1Mp3UNBfMKUY3Lg5kqKz4c5HWQl0x+o13d2QIZdAD/A1gbX7woG7/BFXAVsR0ikPtbcKJXTbrAGyUsvoz7h1/KVbyAIKTruXplkBKYE6Qj1njqZobdEDGlT/0xPoAGNePguTY8+nKBQuKZd4zKc1I7DRgc+vdnWk+f6RNL+84/8DNV7gFWMsAnDU/YdQVIxHpCcp911Jk6xPcXDkV++qQoE4NuQLbvT40Nv5LGzodfbNQOkAfBirTIRAcUpIR0isGtIMb39mbE/DOoEuow6S/EPcnSteklBiQU=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b4eca03d-f86c-8e07-e04a-612e02820bd0@gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f5cb7170-89e3-45c2-5dbd-08d752aa3879
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Oct 2019 02:32:14.0471
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lojHi/RbjhxXkmb6Tepxkf1riaSYtXD0JqbCWVRhtdOH9IyeFum+Nqfb6Gm+zV0KfNVpUshgrdaALBN8P/X+/JQfMNPrB/NFUqflAp2cmCqrweSoFT34GwzAyeLIHq/4
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2960
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16-10-19, 21:19, Dmitry Osipenko wrote:
-> 16.10.2019 17:58, Peter Geis пишет:
-> > On Wed, Oct 16, 2019 at 9:29 AM Dmitry Osipenko <digetx@gmail.com> wrote:
-> >>
-> >> 16.10.2019 08:18, Viresh Kumar пишет:
-> >>> On 16-10-19, 00:16, Dmitry Osipenko wrote:
-> >>>> Re-parenting to intermediate clock is supported now by the clock driver
-> >>>> and thus there is no need in a customized CPUFreq driver, all that code
-> >>>> is common for both Tegra20 and Tegra30. The available CPU freqs are now
-> >>>> specified in device-tree in a form of OPPs, all users should update their
-> >>>> device-trees.
-> >>>>
-> >>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> >>>> ---
-> >>>>  drivers/cpufreq/Kconfig.arm          |   4 +-
-> >>>>  drivers/cpufreq/cpufreq-dt-platdev.c |   2 +
-> >>>>  drivers/cpufreq/tegra20-cpufreq.c    | 236 ++++++---------------------
-> >>>>  3 files changed, 55 insertions(+), 187 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-> >>>> index a905796f7f85..2118c45d0acd 100644
-> >>>> --- a/drivers/cpufreq/Kconfig.arm
-> >>>> +++ b/drivers/cpufreq/Kconfig.arm
-> >>>> @@ -301,8 +301,8 @@ config ARM_TANGO_CPUFREQ
-> >>>>      default y
-> >>>>
-> >>>>  config ARM_TEGRA20_CPUFREQ
-> >>>> -    tristate "Tegra20 CPUFreq support"
-> >>>> -    depends on ARCH_TEGRA
-> >>>> +    bool "Tegra20 CPUFreq support"
-> >>>
-> >>> Google is currently working on the GKI (generic kernel image) project where they
-> >>> want to use a single kernel image with modules for all kind of android devices.
-> >>> And for that they need all such drivers to be built as module. Since this is
-> >>> already an module, I would ask you to keep it as is instead of moving it to bool
-> >>> here. Else some google guy will switch it back as module later on.
-> >>>
-> >>> LGTM otherwise. Nice work. Thanks.
-> >>>
-> >>
-> >> Okay, I'll keep the modularity in v2.
-> >>
-> >> Although, tegra20-cpufreq isn't a driver anymore because now it merely
-> >> prepares OPP table for the cpufreq-dt driver, which is really a one-shot
-> >> action that is enough to do during boot and thus modularity is a bit
-> >> redundant here.
-> > 
-> > I doubt Google will care much, since Android has moved on to aarch64.
-> > Do they even support arm32 any more?
-> 
-> Yes, I don't think there is a real need to care about Google. They won't
-> use pure upstream and won't care about older hardware any ways.
+Hi Simon-san,
 
-Well, using (almost) pure upstream is the idea I believe. And the thing is they
-want to use a single multi-platform image which should be as small as possible
-in size. So it won't have any drivers or platform stuff (if possible) and
-everything is module.
+> From: Simon Horman, Sent: Wednesday, October 16, 2019 9:03 PM
+>=20
+> At the end of the v5.3 upstream development cycle I stepped down
+> from my role at Renesas.
+>=20
+> Pass maintainership of the R-Car PCIE to Marek and Shimoda-san.
+>=20
+> Signed-off-by: Simon Horman <horms@verge.net.au>
 
-I am not sure about arm32/64 thing though. And it is okay if you don't want to
-care about Google right now. That was just some side knowledge I had :)
+Thank you very much for your support until now!
 
--- 
-viresh
+Acked-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+Best regards,
+Yoshihiro Shimoda
+
