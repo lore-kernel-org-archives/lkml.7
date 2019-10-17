@@ -2,443 +2,179 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4075DFA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28735FA3735
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D406214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F32B020869
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:42:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="V1qAI/AZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406407AbfJQMmI (ORCPT
+        id S2406436AbfJQMmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 08:42:08 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:47639 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406331AbfJQMmI (ORCPT
+        Thu, 17 Oct 2019 08:42:45 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:22586 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726214AbfJQMmp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:42:08 -0400
-X-Originating-IP: 2.224.242.101
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id E9679240005;
-        Thu, 17 Oct 2019 12:41:59 +0000 (UTC)
-Date:   Thu, 17 Oct 2019 14:43:49 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli+renesas@fpond.eu, airlied@linux.ie,
-        daniel@ffwll.ch, linux-renesas-soc@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 3/8] drm: rcar-du: Add support for CMM
-Message-ID: <20191017124349.ncay2wc75bwpcd7d@uno.localdomain>
-References: <20191016085548.105703-1-jacopo+renesas@jmondi.org>
- <20191016085548.105703-4-jacopo+renesas@jmondi.org>
- <20191016134526.GD5175@pendragon.ideasonboard.com>
+        Thu, 17 Oct 2019 08:42:45 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9HCfBaw021784;
+        Thu, 17 Oct 2019 14:42:06 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=L26QXalVQR9HzDI3UJ1eXufxROWoddqJ9iUBDb8vL5I=;
+ b=V1qAI/AZc8ULJzhq8rHQoCKUBO4QKrCmM+Tds8x0tAjcOGhCYNT6xlel6P3uOLpsS44M
+ pj79D+qYzGG4je4AZbY9LPDKuDuUP2SwVsNA0L6MVKgAFbCvVvSf2XQAQ6U2mQPOOwo0
+ L+MKHi3atsGEWE71HnO/s8Zquh8eGx6b/c4C0v83kl5n7VNZ4Cimu+/eK7I0BYkgvtiH
+ w++len1Su7YNIAxZNCmCz649vwJGEP3Emlyg2EFkU3jxMUZx9wXYqJxnOJ0eDOEcbKmx
+ xOWIuL9U5/l79s3uf/kjye0pNHKfMUHWyYLNwAUYkeK3qT/g67/Icj/f/3dAmL6fua7O uw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2vk4kxbu5b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 17 Oct 2019 14:42:06 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0C6D510002A;
+        Thu, 17 Oct 2019 14:42:06 +0200 (CEST)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EEED32B5663;
+        Thu, 17 Oct 2019 14:42:05 +0200 (CEST)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 17 Oct
+ 2019 14:42:05 +0200
+Received: from localhost (10.201.20.122) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 17 Oct 2019 14:42:04
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <wim@linux-watchdog.org>, <linux@roeck-us.net>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <alexandre.torgue@st.com>
+CC:     <linux-watchdog@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH] dt-bindings: watchdog: Convert stm32 watchdog bindings to json-schema
+Date:   Thu, 17 Oct 2019 14:41:59 +0200
+Message-ID: <20191017124159.13869-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="s2atx54st7begqc2"
-Content-Disposition: inline
-In-Reply-To: <20191016134526.GD5175@pendragon.ideasonboard.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-Originating-IP: [10.201.20.122]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-17_04:2019-10-17,2019-10-17 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Convert the STM32 watchdog binding to DT schema format using json-schema
 
---s2atx54st7begqc2
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ .../devicetree/bindings/watchdog/st,stm32-iwdg.txt | 26 -----------
+ .../bindings/watchdog/st,stm32-iwdg.yaml           | 54 ++++++++++++++++++++++
+ 2 files changed, 54 insertions(+), 26 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.yaml
 
-Hi Laurent,
+diff --git a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
+deleted file mode 100644
+index d8f4430b0a13..000000000000
+--- a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
++++ /dev/null
+@@ -1,26 +0,0 @@
+-STM32 Independent WatchDoG (IWDG)
+----------------------------------
+-
+-Required properties:
+-- compatible: Should be either:
+-  - "st,stm32-iwdg"
+-  - "st,stm32mp1-iwdg"
+-- reg: Physical base address and length of the registers set for the device
+-- clocks: Reference to the clock entry lsi. Additional pclk clock entry
+-  is required only for st,stm32mp1-iwdg.
+-- clock-names: Name of the clocks used.
+-  "lsi" for st,stm32-iwdg
+-  "lsi", "pclk" for st,stm32mp1-iwdg
+-
+-Optional Properties:
+-- timeout-sec: Watchdog timeout value in seconds.
+-
+-Example:
+-
+-iwdg: watchdog@40003000 {
+-	compatible = "st,stm32-iwdg";
+-	reg = <0x40003000 0x400>;
+-	clocks = <&clk_lsi>;
+-	clock-names = "lsi";
+-	timeout-sec = <32>;
+-};
+diff --git a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.yaml b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.yaml
+new file mode 100644
+index 000000000000..edec96d53e6b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.yaml
+@@ -0,0 +1,54 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/watchdog/st,stm32-iwdg.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics STM32 Independent WatchDoG (IWDG) bindings
++
++maintainers:
++  - Yannick Fertre <yannick.fertre@st.com>
++
++allOf: 
++  - $ref: "watchdog.yaml#"
++
++properties:
++  compatible:
++    enum:
++      - st,stm32-iwdg
++      - st,stm32mp1-iwdg
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: Low speed clock
++      - description: Optional peripheral clock
++    minItems: 1
++    maxItems: 2
++
++  clock-names:
++    items:
++      enums: [ lsi, pclk ]
++    minItems: 1
++    maxItems: 2
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    watchdog@5a002000 {
++      compatible = "st,stm32mp1-iwdg";
++      reg = <0x5a002000 0x400>;
++      clocks = <&rcc IWDG2>, <&rcc CK_LSI>;
++      clock-names = "pclk", "lsi";
++      timeout-sec = <32>;
++    };
++
++...
+-- 
+2.15.0
 
-On Wed, Oct 16, 2019 at 04:45:26PM +0300, Laurent Pinchart wrote:
-> Hi Jacopo,
->
-> Thank you for the patch.
->
-> On Wed, Oct 16, 2019 at 10:55:43AM +0200, Jacopo Mondi wrote:
-> > Add a driver for the R-Car Display Unit Color Correction Module.
-> >
-> > In most of Gen3 SoCs, each DU output channel is provided with a CMM unit
-> > to perform image enhancement and color correction.
-> >
-> > Add support for CMM through a driver that supports configuration of
-> > the 1-dimensional LUT table. More advanced CMM features will be
-> > implemented on top of this initial one.
-> >
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > ---
-> >  drivers/gpu/drm/rcar-du/Kconfig    |   7 +
-> >  drivers/gpu/drm/rcar-du/Makefile   |   1 +
-> >  drivers/gpu/drm/rcar-du/rcar_cmm.c | 212 +++++++++++++++++++++++++++++
-> >  drivers/gpu/drm/rcar-du/rcar_cmm.h |  58 ++++++++
-> >  4 files changed, 278 insertions(+)
-> >  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.c
-> >  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.h
-> >
-> > diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
-> > index 1529849e217e..539d232790d1 100644
-> > --- a/drivers/gpu/drm/rcar-du/Kconfig
-> > +++ b/drivers/gpu/drm/rcar-du/Kconfig
-> > @@ -13,6 +13,13 @@ config DRM_RCAR_DU
-> >  	  Choose this option if you have an R-Car chipset.
-> >  	  If M is selected the module will be called rcar-du-drm.
-> >
-> > +config DRM_RCAR_CMM
-> > +	bool "R-Car DU Color Management Module (CMM) Support"
-> > +	depends on DRM && OF
-> > +	depends on DRM_RCAR_DU
-> > +	help
-> > +	  Enable support for R-Car Color Management Module (CMM).
-> > +
-> >  config DRM_RCAR_DW_HDMI
-> >  	tristate "R-Car DU Gen3 HDMI Encoder Support"
-> >  	depends on DRM && OF
-> > diff --git a/drivers/gpu/drm/rcar-du/Makefile b/drivers/gpu/drm/rcar-du/Makefile
-> > index 6c2ed9c46467..4d1187ccc3e5 100644
-> > --- a/drivers/gpu/drm/rcar-du/Makefile
-> > +++ b/drivers/gpu/drm/rcar-du/Makefile
-> > @@ -15,6 +15,7 @@ rcar-du-drm-$(CONFIG_DRM_RCAR_LVDS)	+= rcar_du_of.o \
-> >  rcar-du-drm-$(CONFIG_DRM_RCAR_VSP)	+= rcar_du_vsp.o
-> >  rcar-du-drm-$(CONFIG_DRM_RCAR_WRITEBACK) += rcar_du_writeback.o
-> >
-> > +obj-$(CONFIG_DRM_RCAR_CMM)		+= rcar_cmm.o
-> >  obj-$(CONFIG_DRM_RCAR_DU)		+= rcar-du-drm.o
-> >  obj-$(CONFIG_DRM_RCAR_DW_HDMI)		+= rcar_dw_hdmi.o
-> >  obj-$(CONFIG_DRM_RCAR_LVDS)		+= rcar_lvds.o
-> > diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.c b/drivers/gpu/drm/rcar-du/rcar_cmm.c
-> > new file mode 100644
-> > index 000000000000..4170626208cf
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.c
-> > @@ -0,0 +1,212 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * rcar_cmm.c -- R-Car Display Unit Color Management Module
-> > + *
-> > + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > + */
-> > +
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pm_runtime.h>
-> > +
-> > +#include <drm/drm_color_mgmt.h>
-> > +
-> > +#include "rcar_cmm.h"
-> > +
-> > +#define CM2_LUT_CTRL		0x0000
-> > +#define CM2_LUT_CTRL_LUT_EN	BIT(0)
-> > +#define CM2_LUT_TBL_BASE	0x0600
-> > +#define CM2_LUT_TBL(__i)	(CM2_LUT_TBL_BASE + (__i) * 4)
-> > +
-> > +struct rcar_cmm {
-> > +	void __iomem *base;
-> > +
-> > +	/*
-> > +	 * @lut:		1D-LUT state
-> > +	 * @lut.enabled:	1D-LUT enabled flag
-> > +	 */
-> > +	struct {
-> > +		bool enabled;
-> > +	} lut;
-> > +};
-> > +
-> > +static inline int rcar_cmm_read(struct rcar_cmm *rcmm, u32 reg)
-> > +{
-> > +	return ioread32(rcmm->base + reg);
-> > +}
-> > +
-> > +static inline void rcar_cmm_write(struct rcar_cmm *rcmm, u32 reg, u32 data)
-> > +{
-> > +	iowrite32(data, rcmm->base + reg);
-> > +}
-> > +
-> > +/*
-> > + * rcar_cmm_lut_write() - Scale the DRM LUT table entries to hardware precision
-> > + *			  and write to the CMM registers
-> > + * @rcmm: Pointer to the CMM device
-> > + * @drm_lut: Pointer to the DRM LUT table
-> > + */
-> > +static void rcar_cmm_lut_write(struct rcar_cmm *rcmm,
-> > +			       const struct drm_color_lut *drm_lut)
-> > +{
-> > +	unsigned int i;
-> > +
-> > +	for (i = 0; i < CM2_LUT_SIZE; ++i) {
-> > +		u32 entry = drm_color_lut_extract(drm_lut[i].red, 8) << 16
-> > +			  | drm_color_lut_extract(drm_lut[i].green, 8) << 8
-> > +			  | drm_color_lut_extract(drm_lut[i].blue, 8);
-> > +
-> > +		rcar_cmm_write(rcmm, CM2_LUT_TBL(i), entry);
-> > +	}
-> > +}
-> > +
-> > +/*
-> > + * rcar_cmm_setup() - Configure the CMM unit
-> > + * @pdev: The platform device associated with the CMM instance
-> > + * @config: The CMM unit configuration
-> > + *
-> > + * Configure the CMM unit with the given configuration. Currently enabling,
-> > + * disabling and programming of the 1-D LUT unit is supported.
->
-> Did you miss the comment in the previous version about explaining when
-> rcar_cmm_setup() can be called (basically requiring the CMM to be
-> enabled) ? I can fix this when applying if you tell me what I should
-> write.
->
-
-No I didn't.
-
-As the DU is the only user of this function, I don't get why we should
-specify here which is the order of the calls, as they are performed by
-the crct driver in the right order already.
-
-Please feel free to add whatever you consider appropriate to this
-comment section when applying.
-
-Thanks
-   j
-
-> > + *
-> > + * TODO: Add support for LUT double buffer operations to avoid updating the
-> > + * LUT table entries while a frame is being displayed.
-> > + */
-> > +int rcar_cmm_setup(struct platform_device *pdev,
-> > +		   const struct rcar_cmm_config *config)
-> > +{
-> > +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
-> > +
-> > +	/* Disable LUT if no table is provided. */
-> > +	if (!config->lut.table) {
-> > +		if (rcmm->lut.enabled) {
-> > +			rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
-> > +			rcmm->lut.enabled = false;
-> > +		}
-> > +
-> > +		return 0;
-> > +	}
-> > +
-> > +	/* Enable LUT and program the new gamma table values. */
-> > +	if (!rcmm->lut.enabled) {
-> > +		rcar_cmm_write(rcmm, CM2_LUT_CTRL, CM2_LUT_CTRL_LUT_EN);
-> > +		rcmm->lut.enabled = true;
-> > +	}
-> > +
-> > +	rcar_cmm_lut_write(rcmm, config->lut.table);
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(rcar_cmm_setup);
-> > +
-> > +/*
-> > + * rcar_cmm_enable() - Enable the CMM unit
-> > + * @pdev: The platform device associated with the CMM instance
-> > + *
-> > + * When the output of the corresponding DU channel is routed to the CMM unit,
-> > + * the unit shall be enabled before the DU channel is started, and remain
-> > + * enabled until the channel is stopped. The CMM unit shall be disabled with
-> > + * rcar_cmm_disable().
-> > + *
-> > + * Calls to rcar_cmm_enable() and rcar_cmm_disable() are not reference-counted.
-> > + * It is an error to attempt to enable an already enabled CMM unit, or to
-> > + * attempt to disable a disabled unit.
-> > + */
-> > +int rcar_cmm_enable(struct platform_device *pdev)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = pm_runtime_get_sync(&pdev->dev);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(rcar_cmm_enable);
-> > +
-> > +/*
-> > + * rcar_cmm_disable() - Disable the CMM unit
-> > + * @pdev: The platform device associated with the CMM instance
-> > + *
-> > + * See rcar_cmm_enable() for usage information.
-> > + *
-> > + * Disabling the CMM unit disable all the internal processing blocks. The CMM
-> > + * state shall thus be restored with rcar_cmm_setup() when re-enabling the CMM
-> > + * unit after the next rcar_cmm_enable() call.
-> > + */
-> > +void rcar_cmm_disable(struct platform_device *pdev)
-> > +{
-> > +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
-> > +
-> > +	rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
-> > +	rcmm->lut.enabled = false;
-> > +
-> > +	pm_runtime_put(&pdev->dev);
-> > +}
-> > +EXPORT_SYMBOL_GPL(rcar_cmm_disable);
-> > +
-> > +/*
-> > + * rcar_cmm_init() - Initialize the CMM unit
-> > + * @pdev: The platform device associated with the CMM instance
-> > + *
-> > + * Return: 0 on success, -EPROBE_DEFER if the CMM is not available yet,
-> > + *         -ENODEV if the DRM_RCAR_CMM config option is disabled
-> > + */
-> > +int rcar_cmm_init(struct platform_device *pdev)
-> > +{
-> > +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
-> > +
-> > +	if (!rcmm)
-> > +		return -EPROBE_DEFER;
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(rcar_cmm_init);
-> > +
-> > +static int rcar_cmm_probe(struct platform_device *pdev)
-> > +{
-> > +	struct rcar_cmm *rcmm;
-> > +
-> > +	rcmm = devm_kzalloc(&pdev->dev, sizeof(*rcmm), GFP_KERNEL);
-> > +	if (!rcmm)
-> > +		return -ENOMEM;
-> > +	platform_set_drvdata(pdev, rcmm);
-> > +
-> > +	rcmm->base = devm_platform_ioremap_resource(pdev, 0);
-> > +	if (IS_ERR(rcmm->base))
-> > +		return PTR_ERR(rcmm->base);
-> > +
-> > +	pm_runtime_enable(&pdev->dev);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int rcar_cmm_remove(struct platform_device *pdev)
-> > +{
-> > +	pm_runtime_disable(&pdev->dev);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id rcar_cmm_of_table[] = {
-> > +	{ .compatible = "renesas,rcar-gen3-cmm", },
-> > +	{ .compatible = "renesas,rcar-gen2-cmm", },
-> > +	{ },
-> > +};
-> > +MODULE_DEVICE_TABLE(of, rcar_cmm_of_table);
-> > +
-> > +static struct platform_driver rcar_cmm_platform_driver = {
-> > +	.probe		= rcar_cmm_probe,
-> > +	.remove		= rcar_cmm_remove,
-> > +	.driver		= {
-> > +		.name	= "rcar-cmm",
-> > +		.of_match_table = rcar_cmm_of_table,
-> > +	},
-> > +};
-> > +
-> > +module_platform_driver(rcar_cmm_platform_driver);
-> > +
-> > +MODULE_AUTHOR("Jacopo Mondi <jacopo+renesas@jmondi.org>");
-> > +MODULE_DESCRIPTION("Renesas R-Car CMM Driver");
-> > +MODULE_LICENSE("GPL v2");
-> > diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.h b/drivers/gpu/drm/rcar-du/rcar_cmm.h
-> > new file mode 100644
-> > index 000000000000..b5f7ec6db04a
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.h
-> > @@ -0,0 +1,58 @@
-> > +/* SPDX-License-Identifier: GPL-2.0+ */
-> > +/*
-> > + * rcar_cmm.h -- R-Car Display Unit Color Management Module
-> > + *
-> > + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > + */
-> > +
-> > +#ifndef __RCAR_CMM_H__
-> > +#define __RCAR_CMM_H__
-> > +
-> > +#define CM2_LUT_SIZE		256
-> > +
-> > +struct drm_color_lut;
-> > +struct platform_device;
-> > +
-> > +/**
-> > + * struct rcar_cmm_config - CMM configuration
-> > + *
-> > + * @lut:	1D-LUT configuration
-> > + * @lut.table:	1D-LUT table entries. Disable LUT operations when NULL
-> > + */
-> > +struct rcar_cmm_config {
-> > +	struct {
-> > +		struct drm_color_lut *table;
-> > +	} lut;
-> > +};
-> > +
-> > +#if IS_ENABLED(CONFIG_DRM_RCAR_CMM)
-> > +int rcar_cmm_init(struct platform_device *pdev);
-> > +
-> > +int rcar_cmm_enable(struct platform_device *pdev);
-> > +void rcar_cmm_disable(struct platform_device *pdev);
-> > +
-> > +int rcar_cmm_setup(struct platform_device *pdev,
-> > +		   const struct rcar_cmm_config *config);
-> > +#else
-> > +static inline int rcar_cmm_init(struct platform_device *pdev)
-> > +{
-> > +	return -ENODEV;
-> > +}
-> > +
-> > +static inline int rcar_cmm_enable(struct platform_device *pdev)
-> > +{
-> > +	return 0;
-> > +}
-> > +
-> > +static inline void rcar_cmm_disable(struct platform_device *pdev)
-> > +{
-> > +}
-> > +
-> > +static inline int rcar_cmm_setup(struct platform_device *pdev,
-> > +				 const struct rcar_cmm_config *config)
-> > +{
-> > +	return 0;
-> > +}
-> > +#endif /* IS_ENABLED(CONFIG_DRM_RCAR_CMM) */
-> > +
-> > +#endif /* __RCAR_CMM_H__ */
->
-> --
-> Regards,
->
-> Laurent Pinchart
-
---s2atx54st7begqc2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl2oYgUACgkQcjQGjxah
-VjwiBQ//eQ3+KakGd43Q45rEyakp7nVinWW6wZfvMBCF+aci17r47cWw8q9AsVT+
-/Hxi4ujAHOdAsMpBT/rUODlSK5beGWk+tmxeTHkTF0J5Xfj8tmduKcXIdONf+k1Y
-eOLK24MXCgAFbG6jSe4XzBewt+5BoSBSQOKpxkosKB1Rrge1aZmnXAvnNd/EHDW1
-ZuHGl803ohm9TQlXtzpilGxr/9o0qmilshgLMLzuuHl8RZQDoY4JiuY4k/p6z0s1
-MsNSxrJyGmVAPEyhs6GdPQPElebOqOKe2/0qBx5WoReP34IWaO4t+tr+8tDMKKHm
-BasPS/92dTu2c41Mg9KD44hmMVfc1OC97Am3vRLfV80dcEbr9d+NAI3Qd70VYIA1
-3X2mKC+2n3dNox6FQVV3XHVIUu3qhQnwPNDZPdOnpzU3fjLOZAqA3IdQEDxY7Rmg
-sOMo0FPiSaBF33P2Eq1lH8mgHmYMtOripC4pZEHHoUeGwVrZ/Hu65FfohjcDXLc3
-NxgzI1TDblBU1K59fjJy019SNk4QXCRNLhKiiJPACBjRsp4CEiLBwLjitbV8EEwU
-5dbM2l3vM2Kq+Skz8SEJtDorqi/ZzntL5g3iZMMT4XPanUJ+siTbER07MS2CluDY
-sx98L6zpiL2QPNgXo2wfNBeN94ZoIWp8rhlMHKv1iRsghBEc/cE=
-=Ad+p
------END PGP SIGNATURE-----
-
---s2atx54st7begqc2--
