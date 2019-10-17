@@ -2,220 +2,220 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8363ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C27ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DCAF2089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C69B2089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:53:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437384AbfJQRxX (ORCPT
+        id S2437446AbfJQRx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 13:53:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:8340 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437206AbfJQRxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 13:53:23 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 20DFA8AC6FB;
-        Thu, 17 Oct 2019 17:53:22 +0000 (UTC)
-Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A39035C1D6;
-        Thu, 17 Oct 2019 17:53:10 +0000 (UTC)
-Date:   Thu, 17 Oct 2019 11:53:10 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-Subject: Re: [PATCH V4 3/6] mdev: introduce device specific ops
-Message-ID: <20191017115310.0481cc52@x1.home>
-In-Reply-To: <20191017170755.15506ada.cohuck@redhat.com>
-References: <20191017104836.32464-1-jasowang@redhat.com>
-        <20191017104836.32464-4-jasowang@redhat.com>
-        <20191017170755.15506ada.cohuck@redhat.com>
-Organization: Red Hat
+        Thu, 17 Oct 2019 13:53:28 -0400
+Received: from vsmx011.vodafonemail.xion.oxcs.net ([153.92.174.89]:17955 "EHLO
+        vsmx011.vodafonemail.xion.oxcs.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2437206AbfJQRx0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 13:53:26 -0400
+Received: from vsmx003.vodafonemail.xion.oxcs.net (unknown [192.168.75.197])
+        by mta-5-out.mta.xion.oxcs.net (Postfix) with ESMTP id 27ADA59DAE0;
+        Thu, 17 Oct 2019 17:53:23 +0000 (UTC)
+Received: from lazy.lzy (unknown [93.212.126.195])
+        by mta-7-out.mta.xion.oxcs.net (Postfix) with ESMTPA id 7C51A5399ED;
+        Thu, 17 Oct 2019 17:53:08 +0000 (UTC)
+Received: from lazy.lzy (localhost [127.0.0.1])
+        by lazy.lzy (8.15.2/8.14.5) with ESMTPS id x9HHr7x3003086
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 17 Oct 2019 19:53:07 +0200
+Received: (from red@localhost)
+        by lazy.lzy (8.15.2/8.15.2/Submit) id x9HHr6gB003085;
+        Thu, 17 Oct 2019 19:53:06 +0200
+Date:   Thu, 17 Oct 2019 19:53:06 +0200
+From:   Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        USB list <linux-usb@vger.kernel.org>,
+        linux-block@vger.kernel.org,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: reeze while write on external usb 3.0 hard disk [Bug 204095]
+Message-ID: <20191017175306.GA3014@lazy.lzy>
+References: <20191013181116.GA3858@lazy.lzy>
+ <Pine.LNX.4.44L0.1910161258081.1304-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Thu, 17 Oct 2019 17:53:22 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.1910161258081.1304-100000@iolanthe.rowland.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-VADE-STATUS: LEGIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019 17:07:55 +0200
-Cornelia Huck <cohuck@redhat.com> wrote:
-
-> On Thu, 17 Oct 2019 18:48:33 +0800
-> Jason Wang <jasowang@redhat.com> wrote:
+On Wed, Oct 16, 2019 at 01:01:20PM -0400, Alan Stern wrote:
+> On Sun, 13 Oct 2019, Piergiorgio Sartor wrote:
 > 
-> > Currently, except for the create and remove, the rest of
-> > mdev_parent_ops is designed for vfio-mdev driver only and may not help
-> > for kernel mdev driver. With the help of class id, this patch
-> > introduces device specific callbacks inside mdev_device
-> > structure. This allows different set of callback to be used by
-> > vfio-mdev and virtio-mdev.
+> > On Mon, Sep 30, 2019 at 08:25:01PM +0200, Piergiorgio Sartor wrote:
+> > > On Sun, Sep 29, 2019 at 09:01:48PM -0400, Alan Stern wrote:
+> > > > On Sun, 29 Sep 2019, Piergiorgio Sartor wrote:
+> > > > 
+> > > > > On Wed, Sep 25, 2019 at 02:31:58PM -0400, Alan Stern wrote:
+> > > > > > On Wed, 25 Sep 2019, Piergiorgio Sartor wrote:
+> > > > > > 
+> > > > > > > On Mon, Aug 26, 2019 at 07:38:33PM +0200, Piergiorgio Sartor wrote:
+> > > > > > > > On Tue, Aug 20, 2019 at 06:37:22PM +0200, Piergiorgio Sartor wrote:
+> > > > > > > > > On Tue, Aug 20, 2019 at 09:23:26AM +0200, Christoph Hellwig wrote:
+> > > > > > > > > > On Mon, Aug 19, 2019 at 10:14:25AM -0400, Alan Stern wrote:
+> > > > > > > > > > > Let's bring this to the attention of some more people.
+> > > > > > > > > > > 
+> > > > > > > > > > > It looks like the bug that was supposed to be fixed by commit
+> > > > > > > > > > > d74ffae8b8dd ("usb-storage: Add a limitation for
+> > > > > > > > > > > blk_queue_max_hw_sectors()"), which is part of 5.2.5, but apparently
+> > > > > > > > > > > the bug still occurs.
+> > > > > > > > > > 
+> > > > > > > > > > Piergiorgio,
+> > > > > > > > > > 
+> > > > > > > > > > can you dump the content of max_hw_sectors_kb file for your USB storage
+> > > > > > > > > > device and send that to this thread?
+> > > > > > > > > 
+> > > > > > > > > Hi all,
+> > > > > > > > > 
+> > > > > > > > > for both kernels, 5.1.20 (working) and 5.2.8 (not working),
+> > > > > > > > > the content of /sys/dev/x:y/queue/max_hw_sectors_kb is 512
+> > > > > > > > > for USB storage devices (2.0 and 3.0).
+> > > > > > > > > 
+> > > > > > > > > This is for the PC showing the issue.
+> > > > > > > > > 
+> > > > > > > > > In an other PC, which does not show the issus at the moment,
+> > > > > > > > > the values are 120, for USB2.0, and 256, for USB3.0.
+> > > > 
+> > > > > > One thing you can try is git bisect from 5.1.20 (or maybe just 5.1.0)  
+> > > > > > to 5.2.8.  If you can identify a particular commit which caused the
+> > > > > > problem to start, that would help.
+> > > > > 
+> > > > > OK, I tried a bisect (2 days compilations...).
+> > > > > Assuming I've done everything correctly (how to
+> > > > > test this? How to remove the guilty patch?), this
+> > > > > was the result:
+> > > > > 
+> > > > > 09324d32d2a0843e66652a087da6f77924358e62 is the first bad commit
+> > > > > commit 09324d32d2a0843e66652a087da6f77924358e62
+> > > > > Author: Christoph Hellwig <hch@lst.de>
+> > > > > Date:   Tue May 21 09:01:41 2019 +0200
+> > > > > 
+> > > > >     block: force an unlimited segment size on queues with a virt boundary
+> > > > > 
+> > > > >     We currently fail to update the front/back segment size in the bio when
+> > > > >     deciding to allow an otherwise gappy segement to a device with a
+> > > > >     virt boundary.  The reason why this did not cause problems is that
+> > > > >     devices with a virt boundary fundamentally don't use segments as we
+> > > > >     know it and thus don't care.  Make that assumption formal by forcing
+> > > > >     an unlimited segement size in this case.
+> > > > > 
+> > > > >     Fixes: f6970f83ef79 ("block: don't check if adjacent bvecs in one bio can be mergeable")
+> > > > >     Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > > >     Reviewed-by: Ming Lei <ming.lei@redhat.com>
+> > > > >     Reviewed-by: Hannes Reinecke <hare@suse.com>
+> > > > >     Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> > > > > 
+> > > > > :040000 040000 57ba04a02f948022c0f6ba24bfa36f3b565b2440 8c925f71ce75042529c001bf244b30565d19ebf3 M      block
+> > > > > 
+> > > > > What to do now?
+> > > > 
+> > > > Here's how to verify that the bisection got a correct result.  First, 
+> > > > do a git checkout of commit 09324d32d2a0, build the kernel, and make 
+> > > > sure that it exhibits the problem.
+> > > > 
+> > > > Next, have git write out the contents of that commit in the form of a
+> > > > patch (git show commit-id >patchfile), and revert it (git apply -R
+> > > > patchfile).  Build the kernel from that tree, and make sure that it
+> > > > does not exhibit the problem.  If it doesn't, you have definitely shown
+> > > > that this commit is the cause (or at least, is _one_ of the causes).
+> > > 
+> > > I tried as suggested, i.e. jumping to commit
+> > > 09324d32d2a0843e66652a087da6f77924358e62, testing,
+> > > removing the patch, testing.
+> > > The result was as expected.
+> > > I was able to reproduce the issue with the commit,
+> > > I was not able to reproduce it without.
+> > > It seems this patch / commit is causing the problem.
+> > > Directly or indirectly.
+> > > 
+> > > What are the next steps?
 > > 
-> > Signed-off-by: Jason Wang <jasowang@redhat.com>
-> > ---
-> >  .../driver-api/vfio-mediated-device.rst       | 25 +++++----
-> >  MAINTAINERS                                   |  1 +
-> >  drivers/gpu/drm/i915/gvt/kvmgt.c              | 18 ++++---
-> >  drivers/s390/cio/vfio_ccw_ops.c               | 18 ++++---
-> >  drivers/s390/crypto/vfio_ap_ops.c             | 14 +++--
-> >  drivers/vfio/mdev/mdev_core.c                 | 18 +++++--
-> >  drivers/vfio/mdev/mdev_private.h              |  1 +
-> >  drivers/vfio/mdev/vfio_mdev.c                 | 37 ++++++-------
-> >  include/linux/mdev.h                          | 45 ++++------------
-> >  include/linux/vfio_mdev.h                     | 52 +++++++++++++++++++
-> >  samples/vfio-mdev/mbochs.c                    | 20 ++++---
-> >  samples/vfio-mdev/mdpy.c                      | 20 ++++---
-> >  samples/vfio-mdev/mtty.c                      | 18 ++++---
-> >  13 files changed, 184 insertions(+), 103 deletions(-)
-> >  create mode 100644 include/linux/vfio_mdev.h
+> > Hi all,
 > > 
-> > diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Documentation/driver-api/vfio-mediated-device.rst
-> > index f9a78d75a67a..0cca84d19603 100644
-> > --- a/Documentation/driver-api/vfio-mediated-device.rst
-> > +++ b/Documentation/driver-api/vfio-mediated-device.rst
-> > @@ -152,11 +152,22 @@ callbacks per mdev parent device, per mdev type, or any other categorization.
-> >  Vendor drivers are expected to be fully asynchronous in this respect or
-> >  provide their own internal resource protection.)
-> >  
-> > -The callbacks in the mdev_parent_ops structure are as follows:
-> > -
-> > -* open: open callback of mediated device
-> > -* close: close callback of mediated device
-> > -* ioctl: ioctl callback of mediated device
-> > +As multiple types of mediated devices may be supported, the device
-> > +must set up the class id and the device specific callbacks in create()  
+> > I tested kernel 5.3.5 (Fedora kernel-5.3.5-200.fc30.x86_64),
+> > with same problematic results.
+> > 
+> > Again, what should be done now?
+> > Could you please revert the patch?
+> > 
+> > Or is there something else to check?
 > 
-> s/in create()/in the create()/
+> Here is one more thing you can try.  I have no idea whether it will 
+> make any difference, but the Changelog entry for the patch you 
+> identified suggests that it might help.
 > 
-> > +callback. E.g for vfio-mdev device it needs to be done through:  
+> Alan Stern
 > 
-> "Each class provides a helper function to do so; e.g. for vfio-mdev
-> devices, the function to be called is:"
 > 
-> ?
 > 
-> > +
-> > +    int mdev_set_vfio_ops(struct mdev_device *mdev,
-> > +                          const struct vfio_mdev_ops *vfio_ops);
-> > +
-> > +The class id (set to MDEV_CLASS_ID_VFIO) is used to match a device  
-> 
-> "(set by this helper function to MDEV_CLASS_ID_VFIO)" ?
-> 
-> > +with an mdev driver via its id table. The device specific callbacks
-> > +(specified in *ops) are obtainable via mdev_get_dev_ops() (for use by  
-> 
-> "(specified in *vfio_ops by the caller)" ?
-> 
-> > +the mdev bus driver). A vfio-mdev device (class id MDEV_CLASS_ID_VFIO)
-> > +uses the following device-specific ops:
-> > +
-> > +* open: open callback of vfio mediated device
-> > +* close: close callback of vfio mediated device
-> > +* ioctl: ioctl callback of vfio mediated device
-> >  * read : read emulation callback
-> >  * write: write emulation callback
-> >  * mmap: mmap emulation callback
-> > @@ -167,10 +178,6 @@ register itself with the mdev core driver::
-> >  	extern int  mdev_register_device(struct device *dev,
-> >  	                                 const struct mdev_parent_ops *ops);
-> >  
-> > -It is also required to specify the class_id in create() callback through::
-> > -
-> > -	int mdev_set_class(struct mdev_device *mdev, u16 id);
-> > -  
-> 
-> I'm wondering if this patch set should start out with introducing
-> helper functions already (i.e. don't introduce mdev_set_class(), but
-> start out with mdev_set_class_vfio() which will gain the *vfio_ops
-> argument in this patch.)
+> Index: usb-devel/drivers/usb/storage/scsiglue.c
+> ===================================================================
+> --- usb-devel.orig/drivers/usb/storage/scsiglue.c
+> +++ usb-devel/drivers/usb/storage/scsiglue.c
+> @@ -68,7 +68,6 @@ static const char* host_info(struct Scsi
+>  static int slave_alloc (struct scsi_device *sdev)
+>  {
+>  	struct us_data *us = host_to_us(sdev->host);
+> -	int maxp;
+>  
+>  	/*
+>  	 * Set the INQUIRY transfer length to 36.  We don't use any of
+> @@ -78,15 +77,6 @@ static int slave_alloc (struct scsi_devi
+>  	sdev->inquiry_len = 36;
+>  
+>  	/*
+> -	 * USB has unusual scatter-gather requirements: the length of each
+> -	 * scatterlist element except the last must be divisible by the
+> -	 * Bulk maxpacket value.  Fortunately this value is always a
+> -	 * power of 2.  Inform the block layer about this requirement.
+> -	 */
+> -	maxp = usb_maxpacket(us->pusb_dev, us->recv_bulk_pipe, 0);
+> -	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
+> -
+> -	/*
+>  	 * Some host controllers may have alignment requirements.
+>  	 * We'll play it safe by requiring 512-byte alignment always.
+>  	 */
 
-Yes, it would be cleaner, but is it really worth the churn?  Correct me
-if I'm wrong, but I think we get to the same point after this patch and
-aside from the function name itself, the difference is really just that
-the class_id is briefly exposed to the parent driver, right?  Thanks,
+Hi,
 
-Alex
- 
-> >  However, the mdev_parent_ops structure is not required in the function call
-> >  that a driver should use to unregister itself with the mdev core driver::
-> >    
-> 
-> (...)
-> 
-> > diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-> > index 3a9c52d71b4e..d0f3113c8071 100644
-> > --- a/drivers/vfio/mdev/mdev_core.c
-> > +++ b/drivers/vfio/mdev/mdev_core.c
-> > @@ -45,15 +45,23 @@ void mdev_set_drvdata(struct mdev_device *mdev, void *data)
-> >  }
-> >  EXPORT_SYMBOL(mdev_set_drvdata);
-> >  
-> > -/* Specify the class for the mdev device, this must be called during
-> > - * create() callback.
-> > +/* Specify the VFIO device ops for the mdev device, this
-> > + * must be called during create() callback for VFIO mdev device.
-> >   */  
-> 
-> /*
->  * Specify the mdev device to be a VFIO mdev device, and set the
->  * VFIO devices ops for it. This must be called from the create()
->  * callback for VFIO mdev devices.
->  */
-> 
-> ?
-> 
-> > -void mdev_set_class(struct mdev_device *mdev, u16 id)
-> > +void mdev_set_vfio_ops(struct mdev_device *mdev,
-> > +		       const struct vfio_mdev_device_ops *vfio_ops)
-> >  {
-> >  	WARN_ON(mdev->class_id);
-> > -	mdev->class_id = id;
-> > +	mdev->class_id = MDEV_CLASS_ID_VFIO;
-> > +	mdev->device_ops = vfio_ops;
-> >  }
-> > -EXPORT_SYMBOL(mdev_set_class);
-> > +EXPORT_SYMBOL(mdev_set_vfio_ops);
-> > +
-> > +const void *mdev_get_dev_ops(struct mdev_device *mdev)
-> > +{
-> > +	return mdev->device_ops;
-> > +}
-> > +EXPORT_SYMBOL(mdev_get_dev_ops);
-> >  
-> >  struct device *mdev_dev(struct mdev_device *mdev)
-> >  {  
-> 
-> (...)
-> 
-> The code change looks good to me; I'm just wondering if we should
-> introduce mdev_set_class() at all (see above).
+I tested the patch.
 
+Assumming I did everything properly, add patch,
+test, issue not showing up, remove patch, re-test,
+issue present.
+
+It seems this patch you provide solves the issue.
+
+Thanks a lot for the support and the solution.
+
+I guess now this patch will be integrated into
+mainline sometimes.
+Please let me know, in this thread or directly, in
+which kernel it will be available.
+
+Thanks again, it would be for me impossible to
+solve without your support,
+
+bye,
+
+-- 
+
+piergiorgio
