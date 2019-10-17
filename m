@@ -5,68 +5,70 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DBEFA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52312ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D26C621835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A7D721835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:43:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k+WXYrgl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CbQAgdz0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503281AbfJQUnE (ORCPT
+        id S2503237AbfJQUnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 16:43:04 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35439 "EHLO
+        Thu, 17 Oct 2019 16:43:02 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42318 "EHLO
         mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502634AbfJQUmp (ORCPT
+        with ESMTP id S2502472AbfJQUmk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 16:42:45 -0400
-Received: by mail-pl1-f195.google.com with SMTP id c3so1709895plo.2;
-        Thu, 17 Oct 2019 13:42:44 -0700 (PDT)
+        Thu, 17 Oct 2019 16:42:40 -0400
+Received: by mail-pl1-f195.google.com with SMTP id g9so383799plj.9;
+        Thu, 17 Oct 2019 13:42:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=H6A+MfE+mY9j5A0d4q4ouMrSZpQoTdVP4FH8jGsUc3A=;
-        b=k+WXYrglf1NX0PyOCClEtSAiyMd1d7VM1QfO5Sz85fU55TkwlyrfQb94f/wcfBlHIp
-         jtrR25t1UA8j8jT1RrlKH85PCFh0i19Z3DCvfiZcpnMXOIYvq6ZpUG33JRtJm0VVEQiS
-         w/hBJwuhMuxg14pZAdEjZobPIiSBkhxsPFFQkb3gvR56z47E9fp3zCl/fR6i/mCGQnOM
-         Lz7DEpsLbzlI9StZFSQxQj4ERwMGQZ6n470f6zGxBZM0KVFvAz9D59/SlTiym9ImweAY
-         J7Px9i9GMYxtMUvgtrPW9P4+xVrwFvrwkPBZB4fg8FS4VZOLRbpXbtWVuPa7nv+vgA+f
-         lwwQ==
+        bh=+B6qJ2+sSOJxH3bWqT0dnUTKHAsVIIfgBFCuwwzUvjw=;
+        b=CbQAgdz0/oATooI3JAjctya7d07Tum22kSzH0rlFQExxNDjvC1yAx+owKU4ysP3SKD
+         9yb7s2uIEH/105h8+GSQVl60hNegEwtDz0vlIpGCiNerVAwyPJBhFzsip7BRAVbx5NGq
+         6Q4fkJEmZbjtMlcSuRFk/4AsziJR4GtD3brq1dS20KStyj8folSpT5flYwr1W1ocIiYC
+         WF1I3L6RWhgaYEzacOIm2hOviTTmZ1GcOraxZs2DZMJ0fhuRpaqmZ1Qls112sxOCzyZT
+         0l081m5qb7VDyMaBTq2YnVEVCX+654J2CfYaNjDBhFcGIBoKSx+iWrdznAFwS0UlIGJN
+         3N7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=H6A+MfE+mY9j5A0d4q4ouMrSZpQoTdVP4FH8jGsUc3A=;
-        b=n3GUk5WW6v691CbHgoG4DOrlnKx7Co8wRAZbNcOz0iy18LmL/MU5rXOXQpsE8Q3vO6
-         mEoitlqbck1o8XhsUIQ1xqTZ68dDZQx6JV8oQ+RI01eVPlNincnbT13Vrsz31YilQN8r
-         Vs3d6OQZ7vIl0zKFx5hXhyVRHReBeQfEXdVh1iazO1V3a0+lSFjJZOPROvloZF2EQcm8
-         1j6JviDesRlLLO2ks6g0EuQsfKmcCUpUXccMfN7w0gGi5iKtmyGS/57Zh1+jEpM1c6HE
-         2iyoPxG47wv+VYihlQmp2Fk6VqYtZvR6Bh4yYcqbgtmQNLtmzrQ3HRBbSX3hxDZ0y6Qp
-         m6aQ==
-X-Gm-Message-State: APjAAAWF2p/2J7tnXDQrN/l/f22u7gOf0i9QVSGxR4XSTeC0COBPDfpo
-        uTzE316mI6+Kv45gE8Ort0fPj0ll
-X-Google-Smtp-Source: APXvYqz4i9wKh+YGYMbY0xagOCVnLgkjnbA9wVaJThtTGwv52eBWzmKDT82iWZQZOG9wBygSM0aiuQ==
-X-Received: by 2002:a17:902:a70f:: with SMTP id w15mr6044474plq.146.1571344963132;
-        Thu, 17 Oct 2019 13:42:43 -0700 (PDT)
+        bh=+B6qJ2+sSOJxH3bWqT0dnUTKHAsVIIfgBFCuwwzUvjw=;
+        b=OI5DjDt70xeaWZ3UVs8Ox8XuHFgkNsmiOVNtGC9dY6ufWJwVuvsPzYp4pqLYaSkhE1
+         QEhOs1xXlxDGswBtMSNG8/2RXEuV26v+2L6JaGv3InefdvJGKeJZG8VBkZNE7bKHTyE5
+         EIa2Q6wg4Pa2A5eAzXV6brm5/DQ0RVdfEMhnKJYI2Si9T8/Zxv13X2sN7sKwP343iFpR
+         ETct7ehRcbbze0xLTWbgygufmdWUey4QNOi2hzC6/uZlsdiWSp27fRj0FbSnHU6d7/cO
+         nlaR+oVTp7RpQ/FqPVJLK6MUUFQtJO5Ma9nB0fGehUCL3wULvppr9K12YQ/Hvz51c/Mu
+         rF3w==
+X-Gm-Message-State: APjAAAU6xyUhow34h3e6Ov9YtiVD0vaRKS5VxFiLeXFey/JO6YW//jGt
+        oRBBZD0ALiOSt53L5fEMgH2DbfXR
+X-Google-Smtp-Source: APXvYqzI5gLW8a6HyzNcyCcjJkOmrrq46EKMuhYNuMDZbqFmTjdU0b+0s1BXJwbfkAOFURuuW1V+4A==
+X-Received: by 2002:a17:902:6acb:: with SMTP id i11mr5767468plt.273.1571344957746;
+        Thu, 17 Oct 2019 13:42:37 -0700 (PDT)
 Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id b3sm4626365pfd.125.2019.10.17.13.42.41
+        by smtp.gmail.com with ESMTPSA id b3sm4626365pfd.125.2019.10.17.13.42.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 13:42:41 -0700 (PDT)
+        Thu, 17 Oct 2019 13:42:36 -0700 (PDT)
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     linux-input@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+Cc:     Allison Randal <allison@lohutok.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Brian Masney <masneyb@onstation.org>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
         Luca Weiss <luca@z3ntu.xyz>,
         Maximilian Luz <luzmaximilian@gmail.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 16/22] Input: rb532_button - switch to using polled mode of input devices
-Date:   Thu, 17 Oct 2019 13:42:10 -0700
-Message-Id: <20191017204217.106453-17-dmitry.torokhov@gmail.com>
+Subject: [PATCH 12/22] Input: cobalt_btns - switch to using polled mode of input devices
+Date:   Thu, 17 Oct 2019 13:42:06 -0700
+Message-Id: <20191017204217.106453-13-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
 In-Reply-To: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
 References: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
@@ -78,61 +80,66 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 We have added polled mode to the normal input devices with the intent of
-retiring input_polled_dev. This converts rb532_button driver to use
+retiring input_polled_dev. This converts cobalt_btns driver to use
 the polling mode of standard input devices and removes dependency on
 INPUT_POLLDEV.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
 
- drivers/input/misc/Kconfig        |  1 -
- drivers/input/misc/rb532_button.c | 32 ++++++++++++++++---------------
- 2 files changed, 17 insertions(+), 16 deletions(-)
+ drivers/input/misc/Kconfig       |  1 -
+ drivers/input/misc/cobalt_btns.c | 26 ++++++++++++++------------
+ 2 files changed, 14 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index c27a9ee4ef9a..102e993bbd6b 100644
+index 248e3b40bd24..05520bf4e31d 100644
 --- a/drivers/input/misc/Kconfig
 +++ b/drivers/input/misc/Kconfig
-@@ -633,7 +633,6 @@ config INPUT_RB532_BUTTON
- 	tristate "Mikrotik Routerboard 532 button interface"
- 	depends on MIKROTIK_RB532
- 	depends on GPIOLIB
+@@ -326,7 +326,6 @@ config INPUT_IXP4XX_BEEPER
+ config INPUT_COBALT_BTNS
+ 	tristate "Cobalt button interface"
+ 	depends on MIPS_COBALT
 -	select INPUT_POLLDEV
  	help
- 	  Say Y here if you want support for the S1 button built into
- 	  Mikrotik's Routerboard 532.
-diff --git a/drivers/input/misc/rb532_button.c b/drivers/input/misc/rb532_button.c
-index 3c43024f4527..190a80e1e2c1 100644
---- a/drivers/input/misc/rb532_button.c
-+++ b/drivers/input/misc/rb532_button.c
-@@ -5,7 +5,7 @@
-  * Copyright (C) 2009  Phil Sutter <n0-1@freewrt.org>
-  */
+ 	  Say Y here if you want to support MIPS Cobalt button interface.
  
+diff --git a/drivers/input/misc/cobalt_btns.c b/drivers/input/misc/cobalt_btns.c
+index f7c1693fc6bb..b1624f5414ee 100644
+--- a/drivers/input/misc/cobalt_btns.c
++++ b/drivers/input/misc/cobalt_btns.c
+@@ -4,7 +4,7 @@
+  *
+  *  Copyright (C) 2007-2008  Yoichi Yuasa <yuasa@linux-mips.org>
+  */
 -#include <linux/input-polldev.h>
 +#include <linux/input.h>
+ #include <linux/io.h>
+ #include <linux/ioport.h>
  #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/gpio.h>
-@@ -46,32 +46,34 @@ static bool rb532_button_pressed(void)
- 	return !val;
- }
+@@ -32,10 +32,9 @@ struct buttons_dev {
+ 	void __iomem *reg;
+ };
  
--static void rb532_button_poll(struct input_polled_dev *poll_dev)
-+static void rb532_button_poll(struct input_dev *input)
+-static void handle_buttons(struct input_polled_dev *dev)
++static void handle_buttons(struct input_dev *input)
  {
--	input_report_key(poll_dev->input, RB532_BTN_KSYM,
--			 rb532_button_pressed());
--	input_sync(poll_dev->input);
-+	input_report_key(input, RB532_BTN_KSYM, rb532_button_pressed());
-+	input_sync(input);
- }
+-	struct buttons_dev *bdev = dev->private;
+-	struct input_dev *input = dev->input;
++	struct buttons_dev *bdev = input_get_drvdata(input);
+ 	uint32_t status;
+ 	int i;
  
- static int rb532_button_probe(struct platform_device *pdev)
+@@ -62,7 +61,6 @@ static void handle_buttons(struct input_polled_dev *dev)
+ static int cobalt_buttons_probe(struct platform_device *pdev)
  {
+ 	struct buttons_dev *bdev;
 -	struct input_polled_dev *poll_dev;
-+	struct input_dev *input;
- 	int error;
+ 	struct input_dev *input;
+ 	struct resource *res;
+ 	int error, i;
+@@ -81,15 +79,12 @@ static int cobalt_buttons_probe(struct platform_device *pdev)
+ 
+ 	memcpy(bdev->keymap, cobalt_map, sizeof(bdev->keymap));
  
 -	poll_dev = devm_input_allocate_polled_device(&pdev->dev);
 -	if (!poll_dev)
@@ -140,25 +147,27 @@ index 3c43024f4527..190a80e1e2c1 100644
 +	if (!input)
  		return -ENOMEM;
  
--	poll_dev->poll = rb532_button_poll;
--	poll_dev->poll_interval = RB532_BTN_RATE;
-+	input->name = "rb532 button";
-+	input->phys = "rb532/button0";
-+	input->id.bustype = BUS_HOST;
+-	poll_dev->private = bdev;
+-	poll_dev->poll = handle_buttons;
+-	poll_dev->poll_interval = BUTTONS_POLL_INTERVAL;
++	input_set_drvdata(input, bdev);
  
--	poll_dev->input->name = "rb532 button";
--	poll_dev->input->phys = "rb532/button0";
--	poll_dev->input->id.bustype = BUS_HOST;
-+	input_set_capability(input, EV_KEY, RB532_BTN_KSYM);
+-	input = poll_dev->input;
+ 	input->name = "Cobalt buttons";
+ 	input->phys = "cobalt/input0";
+ 	input->id.bustype = BUS_HOST;
+@@ -104,7 +99,14 @@ static int cobalt_buttons_probe(struct platform_device *pdev)
+ 		__set_bit(bdev->keymap[i], input->keybit);
+ 	__clear_bit(KEY_RESERVED, input->keybit);
  
--	input_set_capability(poll_dev->input, EV_KEY, RB532_BTN_KSYM);
-+	error = input_setup_polling(input, rb532_button_poll);
+-	error = input_register_polled_device(poll_dev);
++
++	error = input_setup_polling(input, handle_buttons);
 +	if (error)
 +		return error;
 +
-+	input_set_poll_interval(input, RB532_BTN_RATE);
- 
--	error = input_register_polled_device(poll_dev);
++	input_set_poll_interval(input, BUTTONS_POLL_INTERVAL);
++
 +	error = input_register_device(input);
  	if (error)
  		return error;
