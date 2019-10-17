@@ -2,88 +2,94 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBD2CA9EB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B97CCA9EB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB8021852
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC5BB21D7A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:57:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WqZCRkRh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441811AbfJQXxV (ORCPT
+        id S2441843AbfJQX5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 19:53:21 -0400
-Received: from mga17.intel.com ([192.55.52.151]:50947 "EHLO mga17.intel.com"
+        Thu, 17 Oct 2019 19:57:02 -0400
+Received: from ozlabs.org ([203.11.71.1]:48947 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729190AbfJQXxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 19:53:20 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 16:53:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,309,1566889200"; 
-   d="scan'208";a="200547487"
-Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
-  by orsmga006.jf.intel.com with ESMTP; 17 Oct 2019 16:53:20 -0700
-Received: from orsmsx121.amr.corp.intel.com (10.22.225.226) by
- ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 17 Oct 2019 16:53:19 -0700
-Received: from orsmsx115.amr.corp.intel.com ([169.254.4.146]) by
- ORSMSX121.amr.corp.intel.com ([169.254.10.88]) with mapi id 14.03.0439.000;
- Thu, 17 Oct 2019 16:53:19 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "bberg@redhat.com" <bberg@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "ckellner@redhat.com" <ckellner@redhat.com>
-Subject: RE: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal
- throttle messages
-Thread-Topic: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal
- throttle messages
-Thread-Index: AQHVgtVLxuJrYmx6hUyzyzJQOp33Lqdb2lSAgABPIQCAATmTgIAAYKeAgAGZqlCAAHqDgP//rfgg
-Date:   Thu, 17 Oct 2019 23:53:18 +0000
-Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F4A6045@ORSMSX115.amr.corp.intel.com>
-References: <2c2b65c23be3064504566c5f621c1f37bf7e7326.camel@redhat.com>
- <20191014212101.25719-1-srinivas.pandruvada@linux.intel.com>
- <20191015084833.GD2311@hirez.programming.kicks-ass.net>
- <f481b4ab6dfebbc0637c843e5f1cd4ddfd4bd60b.camel@linux.intel.com>
- <20191016081405.GO2328@hirez.programming.kicks-ass.net>
- <20191016140001.GF1138@zn.tnic>
- <3908561D78D1C84285E8C5FCA982C28F7F4A57D0@ORSMSX115.amr.corp.intel.com>
- <20191017214445.GG14441@zn.tnic>
-In-Reply-To: <20191017214445.GG14441@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMGYzOWExNTUtM2Q3Ny00Y2Y4LTkyZjQtMjc1ODlkMDQwNDQzIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiczZkajBFc09rN0pkd1dWYWNXYkxYVlpxOWhkWW9qSHRCNTBtYlAyN1B3akpvK1RXYlVrSmVTNHdhY0ttR2w4TCJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1729190AbfJQX5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 19:57:01 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46vR0V3b79z9sPV;
+        Fri, 18 Oct 2019 10:56:58 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1571356618;
+        bh=K13U+AUFHnw6L6dQYDvLcinbUAJeMsLlIuOy4kBBer4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WqZCRkRhp4/4inRmp5XtNf0tPg2jyec1xXylhSZRn9Wsne5SxbSgl/Nb4LXBx0JaH
+         Z+Zh6TF+8FF8t9VRCqeCFWobHD3WbNq+zyfZkGJfJKlBI577JsOJKoY9Mp3UPQ6Od/
+         B3p60GrUGlgINtu3mkun9L5CvytijQQ4/QZ/vUgJ5UBwZ/GfyJMk8A8ywouB2Pk3uo
+         wxMggGCi+CPQe6NXYbdTU1SioRl+LzD5oGuQ35IC0lXU8UOgIy/4pXe6B9kHtNse73
+         rYs2vyNuLcm0w5mufm3n6PY4d8gkka1KBl/SU2H9jpohSGcIurx2jXIt46ioY2urc8
+         rcfH+UT2sX38Q==
+Date:   Fri, 18 Oct 2019 10:56:57 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: linux-next: build warning after merge of the bpf-next tree
+Message-ID: <20191018105657.4584ec67@canb.auug.org.au>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/RzygGg_XqUDEQwGIY_nGvDE";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAqIHdlIHRocm90dGxlIHRoZSBtYWNoaW5lIGZyb20gd2l0aGluIHRoZSBrZXJuZWwgLSB3aGF0
-ZXZlciB0aGF0IG1heSBtZWFuDQo+ICogaWYgdGhhdCBkb2Vzbid0IGhlbHAsIHdlIHN0b3Agc2No
-ZWR1bGluZyAhcm9vdCB0YXNrcw0KPiAqIGlmIHRoYXQgZG9lc24ndCBoZWxwLCB3ZSBoYWx0DQoN
-ClRoZSBzaWxpY29uIHdpbGwgZG8gdGhhdCAiaGFsdCIgc3RlcCBhbGwgYnkgaXRzZWxmIGlmIHRo
-ZSB0ZW1wZXJhdHVyZQ0KY29udGludWVzIHRvIHJpc2UgYW5kIGhpdHMgdGhlIGhpZ2hlc3Qgb2Yg
-dGhlIHRlbXBlcmF0dXJlIHRocmVzaG9sZHMuDQoNCi1Ub255DQo=
+--Sig_/RzygGg_XqUDEQwGIY_nGvDE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+After merging the bpf-next tree, today's linux-next build (powerpc
+ppc64_defconfig) produced this warning:
+
+WARNING: 2 bad relocations
+c000000001998a48 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_start
+c000000001998a50 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_end
+
+Introduced by commit
+
+  8580ac9404f6 ("bpf: Process in-kernel BTF")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/RzygGg_XqUDEQwGIY_nGvDE
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2o/8kACgkQAVBC80lX
+0Gwzvwf/eU6rk1Dlj9jbIO6m14+31QNvZjmfiYayLy62FobBqj7lD6s86RJ5XdrM
+kOTNRDsf/bC5mVwZKVS3daTojZX3xXl0RHe1JCV5fzagL1Mxfmlw613dyRqGBSXp
+Vz7ToIV63qXfPmqPxf19LbQhwtDOFprKi1fPV+TyKJRyp/DFiNI2b+Lm+KkBt9R6
+VTFai3eBNCWjJCnZmYfQ6w/B0yX1Hkn/DQ1I+OBm4lYOjEjLhf7NCliEAYSEOiM0
+9JiHhQ2iOcHhRm++ykqMvPSGTHuC7+mxglYfrFI0SsjrWrowIo9Wy8bc44V2LKnL
+vKxuVTQNsm8SW1FS9fRFbt9xs4dYJg==
+=Ajn9
+-----END PGP SIGNATURE-----
+
+--Sig_/RzygGg_XqUDEQwGIY_nGvDE--
