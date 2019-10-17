@@ -2,183 +2,108 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16EB0ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D169ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1C9421925
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:35:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571337348;
-	bh=6l3fi7Q82QLESy+YjYbTO8gfD17TXcmgRvWle/Mcw38=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eaTfMqarWR1YO56+TogMgWcsy7mFcs+7EK+73T0TPWvzjkzRklM0lJ6iOsFCyJBY1
-	 voQ4tAeXO3uGzuZDB1PiLPKax71lz58nsEeyg7jola6r9fPYGDHJ8Jug3DNlq/jwvh
-	 dv/JC/PycpSn6rGK+s3C11PVvrO02wmzpE66LDcU=
+	by mail.kernel.org (Postfix) with ESMTP id 5242921925
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:36:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UHG/4bLF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438916AbfJQSfr (ORCPT
+        id S2438982AbfJQSgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 14:35:47 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34632 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438870AbfJQSfq (ORCPT
+        Thu, 17 Oct 2019 14:36:02 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33263 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438924AbfJQSgB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 14:35:46 -0400
-Received: by mail-ot1-f68.google.com with SMTP id m19so2801629otp.1;
-        Thu, 17 Oct 2019 11:35:45 -0700 (PDT)
+        Thu, 17 Oct 2019 14:36:01 -0400
+Received: by mail-wr1-f66.google.com with SMTP id b9so3520070wrs.0;
+        Thu, 17 Oct 2019 11:35:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=L/172PFesHWuvzNopt4c4XlSQQptfEWlNlsUsPCP8v8=;
+        b=UHG/4bLFtFCzmfzkVGc2ImqhRoK5hPPugYe10a7h/AHV34r//c3q8LQl4Uj67cTlbN
+         JoCk/UwGu+U8SRK2B1kbvqi4b1zjVtdw6qbWArTZsOG4XLgW34gTamVTiIoRw5JfAow7
+         o/7y+KYslgzzN/Vs8xkqNYoxXo8S98QVbnQry/NnNc9kdsybo+1TqjbpWc0156S9NjE/
+         QPp2znoHrt5f62rqIbsgH6NkXL6su3ENXfz9DmK8TQPazqy72sTIaisWe50NqX5JsEg6
+         Hfd4PuerKUUD/Pf5A8rdUty3wYr1lW+daPacXsvGVJ3/aOUhHtCLAFGlp46QbmB+a3GN
+         IFjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rLXeE5tDWR528aYmAdtQR/tQKMyidpkE7QGnDFQ38Io=;
-        b=IcFJY0gnT0UBrPh6/Cy32lwDFrIAMwNa2l/ci9KluKFFRFA6SWoGKaKhUDcoVsX9Ou
-         Ai/ss2cbSHiuri++vruETpVOrxtXd34lBUyk/bhjf7M8dVceYrLlzviSRe7wal9h47mT
-         oMAjhr0S0kZIcABStm9kT9QElbGVIe9rip74s6nfNRxq095rQK0FB7t2b4su1jyUvltJ
-         NBkCO2jCqUHXmvi+/Y+suodU74/3txTHzObDKByvOuZzQ3TJJEzUjnhedqD2fIkbo/q6
-         3ogRz3EouCAELh+ViJOTbvjdetnTIp3exaizxpAU1fSUp5Lnb8ZtXvV6Pbpo6PilLezO
-         NSTg==
-X-Gm-Message-State: APjAAAUiKQgCWMhuQp2Aumq5JkLmHLapAeAhxJ8I3vJgPsfPVrlfHf3J
-        1GjYuH0nqGQR13b4Tc+f+g==
-X-Google-Smtp-Source: APXvYqx1QhuF+1Hdzlmm+RA+5TKr7r6oHJCWnwtex4XEqDWWEc7Ao9vjGEquEZQuo0+tlgF0u4VyvA==
-X-Received: by 2002:a9d:6a0c:: with SMTP id g12mr4020150otn.141.1571337345362;
-        Thu, 17 Oct 2019 11:35:45 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q14sm790999otc.50.2019.10.17.11.35.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 11:35:44 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 13:35:43 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v3 3/6] dt-bindings: regulator: max77650: convert the
- binding document to yaml
-Message-ID: <20191017183543.GA28403@bogus>
-References: <20191017071234.8719-1-brgl@bgdev.pl>
- <20191017071234.8719-4-brgl@bgdev.pl>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=L/172PFesHWuvzNopt4c4XlSQQptfEWlNlsUsPCP8v8=;
+        b=HiYL7h45vzGsQQ3790sHprLwSnZM/+wG3N+7iJSNRrO+II9lFf/fWFd5wKAv0bOEvA
+         zPQX+373akAhichskeG3maRRTGb92xUTkN0nrJyq2AyJJczih0YYN5SXY5/sUdWKhHei
+         rMRthONEUu17OT8iXNUlW5Cznt9pt1ZENiiVFIRUt2sAQ6qRPFDF+f1hN6u+nNwpEyvX
+         bxJ/3epNx1FNJ6RKimUy9vQTJvV9GsJGxsUt4HO3kSxOk9T/7Z3CEy6rj6FnmYeraOGO
+         I/wmEK/oghptcEd6BDcwAsHwKh/HlF5oLKQfglP9HghVx9QK99HdU1ZxUl+R0nuDzepm
+         R+aA==
+X-Gm-Message-State: APjAAAWPEaylYRwu4IygTC1S+/BKDsDL21ATcUbm+I9+eLxIcOpLrswD
+        fbjBZaLFA8HF8Bmkd69dj3qDTTDf
+X-Google-Smtp-Source: APXvYqxnhdYQusvYfFeUZHFuap0s7BvTLgqmJZXqKtYnH7Ct6SqR++6A5hhIRnW3QcZVratWlK/KXQ==
+X-Received: by 2002:adf:ee81:: with SMTP id b1mr3923610wro.58.1571337358592;
+        Thu, 17 Oct 2019 11:35:58 -0700 (PDT)
+Received: from [10.230.29.119] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id a14sm2540026wmm.44.2019.10.17.11.35.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Oct 2019 11:35:57 -0700 (PDT)
+Subject: Re: [PATCH v1 4/4] net: dsa: add support for Atheros AR9331 build-in
+ switch
+To:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Chris Snook <chris.snook@gmail.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Vivien Didelot <vivien.didelot@gmail.com>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org
+References: <20191014061549.3669-1-o.rempel@pengutronix.de>
+ <20191014061549.3669-5-o.rempel@pengutronix.de>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <2ad26bdc-e099-ded6-1337-5793aba0958d@gmail.com>
+Date:   Thu, 17 Oct 2019 11:35:48 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191017071234.8719-4-brgl@bgdev.pl>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191014061549.3669-5-o.rempel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 09:12:31AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Convert the binding document for MAX77650 regulator module to YAML.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  .../bindings/regulator/max77650-regulator.txt | 41 -------------------
->  .../regulator/max77650-regulator.yaml         | 31 ++++++++++++++
->  2 files changed, 31 insertions(+), 41 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/regulator/max77650-regulator.txt
->  create mode 100644 Documentation/devicetree/bindings/regulator/max77650-regulator.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/max77650-regulator.txt b/Documentation/devicetree/bindings/regulator/max77650-regulator.txt
-> deleted file mode 100644
-> index f1cbe813c30f..000000000000
-> --- a/Documentation/devicetree/bindings/regulator/max77650-regulator.txt
-> +++ /dev/null
-> @@ -1,41 +0,0 @@
-> -Regulator driver for MAX77650 PMIC from Maxim Integrated.
-> -
-> -This module is part of the MAX77650 MFD device. For more details
-> -see Documentation/devicetree/bindings/mfd/max77650.txt.
-> -
-> -The regulator controller is represented as a sub-node of the PMIC node
-> -on the device tree.
-> -
-> -The device has a single LDO regulator and a SIMO buck-boost regulator with
-> -three independent power rails.
-> -
-> -Required properties:
-> ---------------------
-> -- compatible:		Must be "maxim,max77650-regulator"
-> -
-> -Each rail must be instantiated under the regulators subnode of the top PMIC
-> -node. Up to four regulators can be defined. For standard regulator properties
-> -refer to Documentation/devicetree/bindings/regulator/regulator.txt.
-> -
-> -Available regulator compatible strings are: "ldo", "sbb0", "sbb1", "sbb2".
-> -
-> -Example:
-> ---------
-> -
-> -	regulators {
-> -		compatible = "maxim,max77650-regulator";
-> -
-> -		max77650_ldo: regulator@0 {
-> -			regulator-compatible = "ldo";
-> -			regulator-name = "max77650-ldo";
-> -			regulator-min-microvolt = <1350000>;
-> -			regulator-max-microvolt = <2937500>;
-> -		};
-> -
-> -		max77650_sbb0: regulator@1 {
-> -			regulator-compatible = "sbb0";
-> -			regulator-name = "max77650-sbb0";
-> -			regulator-min-microvolt = <800000>;
-> -			regulator-max-microvolt = <1587500>;
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/regulator/max77650-regulator.yaml b/Documentation/devicetree/bindings/regulator/max77650-regulator.yaml
-> new file mode 100644
-> index 000000000000..a8770742836d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/max77650-regulator.yaml
-> @@ -0,0 +1,31 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/regulator/max77650-regulator.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Regulator driver for MAX77650 PMIC from Maxim Integrated.
-> +
-> +maintainers:
-> +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> +
-> +description: |
-> +  This module is part of the MAX77650 MFD device. For more details
-> +  see Documentation/devicetree/bindings/mfd/max77650.txt.
 
-.yaml?
 
-> +
-> +  The regulator controller is represented as a sub-node of the PMIC node
-> +  on the device tree.
-> +
-> +  The device has a single LDO regulator and a SIMO buck-boost regulator with
-> +  three independent power rails.
-> +
-> +properties:
-> +  compatible:
-> +    const: maxim,max77650-regulator
-> +
-> +patternProperties:
-> +  "^regulator@[0-3]$":
-> +    $ref: "regulator.yaml#"
-> +
-> +required:
-> +  - compatible
-> -- 
-> 2.23.0
-> 
+On 10/13/2019 11:15 PM, Oleksij Rempel wrote:
+> Provide basic support for Atheros AR9331 build-in switch. So far it
+> works as port multiplexer without any hardware offloading support.
+
+I glanced through the functional parts of the code, and it looks pretty
+straight forward, since there is no offloading done so far, do you plan
+on adding bridge offload eventually if nothing more?
+
+When you submit v2, I would suggest splitting the tagger code from the
+switch driver code, just to make them easier to review.
+
+Thanks!
+-- 
+Florian
