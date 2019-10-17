@@ -2,99 +2,121 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C628FECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D935FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E55720854
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 063B120854
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:23:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571336582;
+	bh=+e0gXwXtGqCEQVqbX9RZ1mw14/QSJwBEEYBBp4N2eFc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Na0MExSUizuvzNALBIQU3e7FgDa+e5ZWuYReHYZeFeZhLPHfEYWI4XQOK7BlRCZRu
+	 b40SUeIytlo6GvNmG5LfmypZv6/USazrUkA4psj3NQYqh59kx+uvc9iDkUsP2qnWHj
+	 hGfBVPm/2ycMDY268m7yEaBVC6QKABrIUKo2a+LQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503340AbfJQSWt (ORCPT
+        id S2441389AbfJQSXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 14:22:49 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45963 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503289AbfJQSWc (ORCPT
+        Thu, 17 Oct 2019 14:23:00 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41770 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438481AbfJQSW6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 14:22:32 -0400
-Received: by mail-pg1-f195.google.com with SMTP id r1so1805178pgj.12
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 11:22:32 -0700 (PDT)
+        Thu, 17 Oct 2019 14:22:58 -0400
+Received: by mail-oi1-f196.google.com with SMTP id g81so2984443oib.8;
+        Thu, 17 Oct 2019 11:22:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding:cc:from:to;
-        bh=2KT/1Ua4Ne08bIcLoxtdMsARQdKvdiD630BlGhWeLtw=;
-        b=bQdsL2rit3I8H2bpx70ulWWPrHJc7vIUSejZbeDRN1emDkd+ay3R6vqsS4trKRooF/
-         wiJ9r1y2JSxvuG6XD04geCd7VLHBU2KO6OV4X5+JR6URhHczxgiuCbnirmufbEJKYNv2
-         P7LpL0rGwWab0mGE5A6qYchOiHRPCW7AabHmkN5ratW3aCSCb9HfNobF0xEInXsDFYzD
-         ECP+/a08RD2e9cqvlepQYp3lfzv0ayvPb3SryTLgPUgd/VrjImP+GKgCmoSyAugAOPCZ
-         cdPXVSOjB/i5A/BgrYVTOPXoKJkVRT3R60DXONE/i64XSpisr9DKa6J+TUIIA0fxaCaL
-         uivg==
-X-Gm-Message-State: APjAAAWeE0pmK0SYAPuSjYTnJbjlvDTSwc+/FTye92itm5ucWhdSEXvk
-        eDixIJimiuxHZKcwiS39aJfGYw==
-X-Google-Smtp-Source: APXvYqzRFMnoGzdJ2pTmCdShwyvvireoh2sq3hfvaMP0TW/8NOqgFYu+GU8GpPpVrwDdC5UWEBAmzA==
-X-Received: by 2002:a63:5423:: with SMTP id i35mr5812604pgb.128.1571336551338;
-        Thu, 17 Oct 2019 11:22:31 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id u5sm4007226pfl.25.2019.10.17.11.22.30
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+Bk+owFUyFzKLHxVQ9TZGi955m3fUTDdG0rIAOhgZF4=;
+        b=t/2+zWJyIVGYFiSuVM5vGDE63Fz5raip/EpAbiht03WczwzGnJ7JVFoWuR1GbhIknz
+         rdJHsRAbi3szLECM8X4s0XR5eOgIg/JkaQKzyc8o2n7jtcwGdpXvFf4Jt9PmQo3egxhm
+         Rs+jxfrccYfMJyHooHUkYegvBKurSHi6UwFkJoUndna1IH1HU7v7dYCBS+PTcMv6EklT
+         6Uq7MURR0sqryfcAnQ/WiIR11zMSuYpxc07zpEy8fV+48/cJq5AA/pqnh7VaWLFBJtGY
+         /QGICPpG+QIeb8H6gwPBVxqSJdI8nr2j0plUGjsPDlE5xhBz7Q1TRG4lJ21NEK0m41sY
+         7FPA==
+X-Gm-Message-State: APjAAAXDnX8GhcHpiiWqmReUp5PRgLwCqD+lIYO59GTfUnhuuPhUEVB7
+        L95zk8WAW1X+shmpOADCvw==
+X-Google-Smtp-Source: APXvYqxoyB6LIwYRwOT7YZvltCww+hzSZ2xpYH5QFe7x2JQodAk8yt9q3uBJpfEDLYt0WE9APEi6/A==
+X-Received: by 2002:aca:110b:: with SMTP id 11mr4377794oir.135.1571336577100;
+        Thu, 17 Oct 2019 11:22:57 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 21sm686623oin.26.2019.10.17.11.22.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 11:22:30 -0700 (PDT)
-Subject: [PATCH 1/3] ia64: Use the generic msi.h
-Date:   Thu, 17 Oct 2019 11:19:35 -0700
-Message-Id: <20191017181937.7004-2-palmer@sifive.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191017181937.7004-1-palmer@sifive.com>
-References: <20191017181937.7004-1-palmer@sifive.com>
+        Thu, 17 Oct 2019 11:22:56 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 13:22:55 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Manish Narani <manish.narani@xilinx.com>
+Cc:     ulf.hansson@linaro.org, mark.rutland@arm.com,
+        adrian.hunter@intel.com, michal.simek@xilinx.com,
+        jolly.shah@xilinx.com, rajan.vaja@xilinx.com,
+        nava.manne@xilinx.com, mdf@kernel.org, linux-mmc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, git@xilinx.com
+Subject: Re: [PATCH v3 4/8] dt-bindings: mmc: arasan: Add optional properties
+ for Arasan SDHCI
+Message-ID: <20191017182255.GA7053@bogus>
+References: <1571293310-92563-1-git-send-email-manish.narani@xilinx.com>
+ <1571293310-92563-5-git-send-email-manish.narani@xilinx.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Cc:     tony.luck@intel.com, fenghua.yu@intel.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, bhelgaas@google.com, will@kernel.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        kstewart@linuxfoundation.org, pbonzini@redhat.com,
-        firoz.khan@linaro.org, yamada.masahiro@socionext.com,
-        longman@redhat.com, mingo@kernel.org, peterz@infradead.org,
-        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-pci@vger.kernel.org
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     Christoph Hellwig <hch@infradead.org>, michal.simek@xilinx.com,
-        helgaas@kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571293310-92563-5-git-send-email-manish.narani@xilinx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Without this I can't enable PCI_MSI_IRQ_DOMAIN, which as far as I can
-tell only depends on generic functionality provided by msi.h.
-PCI_MSI_IRQ_DOMAIN has historically had a whitelist of supported
-architectures, but that list is getting long enough that it's cleaner to
-just enable it everywhere.
+On Thu, Oct 17, 2019 at 11:51:46AM +0530, Manish Narani wrote:
+> Add optional propeties for Arasan SDHCI which are used to set clk delays
 
-This builds with an ia64 defconfig, but I have no access to ia64 and
-therefor can't even boot test it.
+properties
 
-Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
----
- arch/ia64/include/asm/Kbuild | 1 +
- 1 file changed, 1 insertion(+)
+> for different speed modes in the controller.
+> 
+> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> ---
+>  .../devicetree/bindings/mmc/arasan,sdhci.txt      | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> index b51e40b2e0c5..e0369dd7fb18 100644
+> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> @@ -46,6 +46,21 @@ Optional Properties:
+>      properly. Test mode can be used to force the controller to function.
+>    - xlnx,int-clock-stable-broken: when present, the controller always reports
+>      that the internal clock is stable even when it is not.
+> +  - clk-phase-legacy: Input/Output Clock Delay pair in degrees for Legacy Mode.
+> +  - clk-phase-mmc-hs: Input/Output Clock Delay pair degrees for MMC HS.
+> +  - clk-phase-sd-hs: Input/Output Clock Delay pair in degrees for SD HS.
+> +  - clk-phase-uhs-sdr12: Input/Output Clock Delay pair in degrees for SDR12.
+> +  - clk-phase-uhs-sdr25: Input/Output Clock Delay pair in degrees for SDR25.
+> +  - clk-phase-uhs-sdr50: Input/Output Clock Delay pair in degrees for SDR50.
+> +  - clk-phase-uhs-sdr104: Input/Output Clock Delay pair in degrees for SDR104.
+> +  - clk-phase-uhs-ddr50: Input/Output Clock Delay pair in degrees for SD DDR50.
+> +  - clk-phase-mmc-ddr52: Input/Output Clock Delay pair in degrees for MMC DDR52.
+> +  - clk-phase-mmc-hs200: Input/Output Clock Delay pair in degrees for MMC HS200.
+> +  - clk-phase-mmc-hs400: Input/Output Clock Delay pair in degrees for MMC HS400.
 
-diff --git a/arch/ia64/include/asm/Kbuild b/arch/ia64/include/asm/Kbuild
-index 390393667d3b..22d6dbefa7d7 100644
---- a/arch/ia64/include/asm/Kbuild
-+++ b/arch/ia64/include/asm/Kbuild
-@@ -6,6 +6,7 @@ generic-y += irq_work.h
- generic-y += kvm_para.h
- generic-y += mcs_spinlock.h
- generic-y += mm-arch-hooks.h
-+generic-y += msi.h
- generic-y += preempt.h
- generic-y += trace_clock.h
- generic-y += vtime.h
--- 
-2.21.0
+Should be common?
 
+Range of values?
+
+> +
+> +  Above mentioned are the clock (phase) delays which are to be configured in the
+> +  controller while switching to particular speed mode. If not specified, driver
+> +  will configure the default value defined for particular mode in it.
+>  
+>  Example:
+>  	sdhci@e0100000 {
+> -- 
+> 2.17.1
+> 
