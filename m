@@ -2,29 +2,29 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDDDFA3736
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B2FFA3739
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57F4820854
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB07220854
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:48:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502683AbfJQMsk (ORCPT
+        id S2502697AbfJQMsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 08:48:40 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:60128 "EHLO huawei.com"
+        Thu, 17 Oct 2019 08:48:45 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:60332 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2502653AbfJQMsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:48:36 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 44A7D8F936FF819573C2;
-        Thu, 17 Oct 2019 20:48:33 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
- 20:48:24 +0800
+        id S2502681AbfJQMsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 08:48:43 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id AED7093E256819B6443D;
+        Thu, 17 Oct 2019 20:48:38 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
+ 20:48:29 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <linus.walleij@linaro.org>, <manivannan.sadhasivam@linaro.org>,
         <afaerber@suse.de>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
@@ -42,9 +42,9 @@ CC:     <linux-arm-kernel@lists.infradead.org>,
         <haojian.zhuang@gmail.com>, <wens@csie.org>,
         <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <agross@kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 09/30] pinctrl: sunxi: use devm_platform_ioremap_resource() to simplify code
-Date:   Thu, 17 Oct 2019 20:26:19 +0800
-Message-ID: <20191017122640.22976-10-yuehaibing@huawei.com>
+Subject: [PATCH -next 11/30] pinctrl: msm: use devm_platform_ioremap_resource() to simplify code
+Date:   Thu, 17 Oct 2019 20:26:21 +0800
+Message-ID: <20191017122640.22976-12-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20191017122640.22976-1-yuehaibing@huawei.com>
 References: <20191017122640.22976-1-yuehaibing@huawei.com>
@@ -62,31 +62,23 @@ This is detected by coccinelle.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/pinctrl/sunxi/pinctrl-sunxi.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/pinctrl/qcom/pinctrl-msm.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index 0cbca30..b35c324 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -1385,7 +1385,6 @@ int sunxi_pinctrl_init_with_variant(struct platform_device *pdev,
- 	struct pinctrl_pin_desc *pins;
- 	struct sunxi_pinctrl *pctl;
- 	struct pinmux_ops *pmxops;
--	struct resource *res;
- 	int i, ret, last_pin, pin_idx;
- 	struct clk *clk;
- 
-@@ -1396,8 +1395,7 @@ int sunxi_pinctrl_init_with_variant(struct platform_device *pdev,
- 
- 	raw_spin_lock_init(&pctl->lock);
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	pctl->membase = devm_ioremap_resource(&pdev->dev, res);
-+	pctl->membase = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(pctl->membase))
- 		return PTR_ERR(pctl->membase);
- 
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 763da0b..62fcae9 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -1150,8 +1150,7 @@ int msm_pinctrl_probe(struct platform_device *pdev,
+ 				return PTR_ERR(pctrl->regs[i]);
+ 		}
+ 	} else {
+-		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-		pctrl->regs[0] = devm_ioremap_resource(&pdev->dev, res);
++		pctrl->regs[0] = devm_platform_ioremap_resource(pdev, 0);
+ 		if (IS_ERR(pctrl->regs[0]))
+ 			return PTR_ERR(pctrl->regs[0]);
+ 	}
 -- 
 2.7.4
 
