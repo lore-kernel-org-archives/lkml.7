@@ -2,112 +2,145 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB81FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA50FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A58421835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:00:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="CggdjClI"
+	by mail.kernel.org (Postfix) with ESMTP id B593A21848
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:00:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571328033;
+	bh=MJNtM0gGXpObzCT2JelP1fq2yMAZ27mOcUIIpChX9qY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rppj6YVOKyZDCTR/fv/xttmEhVCmwJ8V+XEMfEb4T6hW07KNt8gm84gtWGMof3qI5
+	 6hDIvXlmOycyzAAsbMu8sU9hWEwD9Rpc6UgW1ynl8pA7ZnYCaleiGAZfYX/1Zn9JZA
+	 AKrVeYQ59r/0kaHkZKJoKmuKoLQAERrxq1TLXrD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437257AbfJQQA0 (ORCPT
+        id S2438990AbfJQQAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:00:26 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38229 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394068AbfJQQA0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 12:00:26 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 3so3111725wmi.3
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 09:00:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=K92xI+/RkXkPNl+cGfvbqFzqM/p/1yJ006GVWjx3IVs=;
-        b=CggdjClIWcSoRXgef5gv0ShuIOG24Za8FzwWf9E4ClyF7n+mPqXeJ+FYEV/bIW1lnx
-         nAc/I/Iq4ZR73NYNSACNxdqyFO39HgzTtoQT/r5XTknAPVFalD3lDMOvpaxTbAQJTp+w
-         us20Uh8RDWgTOgAD0JxhShJoOFBAidBAO5YK6k3Y0ynId+jEVP9jeQgHk+FBqiuPezbE
-         SQfo1I0Q2muik78pHRAXWiFsoKyGUMi9pg/ZCDOgNOiBeF2Awq/HcccVeXQKOtlbWCvO
-         oxPi6LgaOFvLUEmQdOOuqwqw806kCTizmxPdN53ELPDSOdUt3b7sh5t2h33BzZoGGYj5
-         t3VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=K92xI+/RkXkPNl+cGfvbqFzqM/p/1yJ006GVWjx3IVs=;
-        b=FVYEijYUrltrM+iz7gki6PuVgH4RBFOeHrKfYoKiQ+sun0ZDnH4tNRCQoOTtwLlbNP
-         8ZlhKwBKHjP3wfSGjjDLYeRFx4gfZmB6L03XQbUP6bghnWEF8BWL2obJ8+/GS6YpCaex
-         XUTlmbFycwhDn0ml/ARnsFZ+lPtSTQ911IMJ8jD9sn6G2TZZ37dc2rJ2odfe8tggFYFA
-         OzF/ieQM663SsLxKVNVIqP8o+aHyZ1TfbhRbHjsGSWZSqLebTE7iAyx3+b9o+tKXI1ZD
-         3Ol+7XBTfUCVD2nzhrNRvcSwjDl9umyXCHKn2ldmBlnzHWJQbzbH0Pg5AuF6tqp1p4br
-         YABQ==
-X-Gm-Message-State: APjAAAVW9pboaoWlFP6V+ZrFAST+3c/xace2aBSxJO+RYNsuj8lnSiD7
-        vDl7pct0HMN0QVpSxsOmBj1JAw==
-X-Google-Smtp-Source: APXvYqxU9x5KGD/Ua0mSg1w0b4PXk+F6jDtTrWq3r+9vIpk0bZLy8thz/z4qpoSUhgJ4QRtxB4X/Jw==
-X-Received: by 2002:a1c:20d8:: with SMTP id g207mr3538145wmg.79.1571328023876;
-        Thu, 17 Oct 2019 09:00:23 -0700 (PDT)
-Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id z13sm2538882wrq.51.2019.10.17.09.00.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 09:00:22 -0700 (PDT)
-References: <20191009082708.6337-1-jbrunet@baylibre.com> <7h7e54hdif.fsf@baylibre.com> <7ho8ygfxo7.fsf@baylibre.com>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] arm64: dts: meson: sm1: add audio support
-In-reply-to: <7ho8ygfxo7.fsf@baylibre.com>
-Date:   Thu, 17 Oct 2019 18:00:21 +0200
-Message-ID: <1j1rvb2wh6.fsf@starbuckisacylon.baylibre.com>
+        Thu, 17 Oct 2019 12:00:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45618 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436715AbfJQQAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 12:00:31 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D29D521835;
+        Thu, 17 Oct 2019 16:00:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571328030;
+        bh=MJNtM0gGXpObzCT2JelP1fq2yMAZ27mOcUIIpChX9qY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bPI16PNPk8Rfcbn3KXIe6pk14cZKallPkfJI/6Wj+wbb1o1Dj5QouFruB4yslOdVd
+         JNLwbbPX4hkwgQYi0KCZNgI7jR+Tymds3yHFyHwKm1/a8Ux2CndwxhuEcDyL5Mj4K9
+         bRarDWPQIkzz7EIfrgXF76q9tVdEb4YT17uVSbgc=
+Date:   Thu, 17 Oct 2019 09:00:28 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     syzbot <syzbot+6455648abc28dbdd1e7f@syzkaller.appspotmail.com>,
+        aou@eecs.berkeley.edu, David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris James Morris <jmorris@namei.org>,
+        keyrings@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: WARNING: refcount bug in find_key_to_update
+Message-ID: <20191017160028.GA726@sol.localdomain>
+Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
+        syzbot <syzbot+6455648abc28dbdd1e7f@syzkaller.appspotmail.com>,
+        aou@eecs.berkeley.edu, David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris James Morris <jmorris@namei.org>,
+        keyrings@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <000000000000830fe50595115344@google.com>
+ <00000000000071e2fc05951229ad@google.com>
+ <CAHk-=wjFozfjV34_qy3_Z155uz_Z7qFVfE8h=_9ceGU-SVk9hA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjFozfjV34_qy3_Z155uz_Z7qFVfE8h=_9ceGU-SVk9hA@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Oct 17, 2019 at 08:53:06AM -0700, Linus Torvalds wrote:
+> On Wed, Oct 16, 2019 at 7:42 PM syzbot
+> <syzbot+6455648abc28dbdd1e7f@syzkaller.appspotmail.com> wrote:
+> >
+> > syzbot has bisected this bug to 0570bc8b7c9b ("Merge tag
+> >  'riscv/for-v5.3-rc1' ...")
+> 
+> Yeah, that looks unlikely. The only non-riscv changes are from
+> documentation updates and moving a config variable around.
+> 
+> Looks like the crash is quite unlikely, and only happens in one out of
+> ten runs for the ones it has happened to.
+> 
+> The backtrace looks simple enough, though:
+> 
+>   RIP: 0010:refcount_inc_checked+0x2b/0x30 lib/refcount.c:156
+>    __key_get include/linux/key.h:281 [inline]
+>    find_key_to_update+0x67/0x80 security/keys/keyring.c:1127
+>    key_create_or_update+0x4e5/0xb20 security/keys/key.c:905
+>    __do_sys_add_key security/keys/keyctl.c:132 [inline]
+>    __se_sys_add_key security/keys/keyctl.c:72 [inline]
+>    __x64_sys_add_key+0x219/0x3f0 security/keys/keyctl.c:72
+>    do_syscall_64+0xd0/0x540 arch/x86/entry/common.c:296
+>    entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> which to me implies that there's some locking bug, and somebody
+> released the key without holding a lock.
+> 
+> That code looks a bit confused to me. Releasing a key without holding
+> a lock looks permitted, but if that's the case then __key_get() is
+> complete garbage. It would need to use 'refcount_inc_not_zero()' and
+> failure would require failing the caller.
+> 
+> But I haven't followed the key locking rules, so who knows. That "put
+> without lock" scenario would explain the crash, though.
+> 
+> David?
+> 
 
-On Wed 16 Oct 2019 at 18:43, Kevin Hilman <khilman@baylibre.com> wrote:
+Yes this is a bogus bisection.
 
-> Kevin Hilman <khilman@baylibre.com> writes:
->
->> Jerome Brunet <jbrunet@baylibre.com> writes:
->>
->>> This patchset adds audio support on the sm1 SoC family and the
->>> sei610 platform
->>
->> Queued for v5.5.
->>
->>> Kevin, The patchset depends on:
->>>  - The ARB binding merged by Philipp [0]
->>>  - The audio clock controller bindings I just applied. A tag is
->>>    available for you here [1]
->>
->> I've pulled both of those into v5.5/dt64 so that branch is buildable
->> standlone.
->>
->> Thanks for details on the dependencies.
->
-> Just noticed that all of these had "meson" in the subject instead of
-> "amlogic".  Fixed up when applying.
+The key is supposed to have refcount >= 1 since it's in a keyring.
+So some bug is causing it to have refcount 0.  Perhaps some place calling
+key_put() too many times.
 
-From what I can see in the git history I have always used
-"arm64: dts: meson:" in the subject.
+Unfortunately I can't get the reproducer to work locally.
 
-Did we decide to that change this recently ?
+Note that there are 2 other syzbot reports that look related.
+No reproducers for them, though:
 
-If so
- * Sorry I missed that discussion
- * Should MAINTAINERS be updated to grep on "amlogic" as well as "meson" ?
+Title:              KASAN: use-after-free Read in key_put
+Last occurred:      1 day ago
+Reported:           28 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=f13750b1124e01191250cf930086dcc40740fa30
+Original thread:    https://lore.kernel.org/lkml/0000000000008c3e590592cf4b7f@google.com/T/#u
 
->
-> Thanks,
->
-> Kevin
+Title:              KASAN: use-after-free Read in keyring_compare_object
+Last occurred:      49 days ago
+Reported:           84 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=529ab6a98286c2a97c445988a62760a58d4a1d4b
+Original thread:    https://lore.kernel.org/lkml/000000000000038ef6058e6f3592@google.com/T/#u
 
+- Eric
