@@ -2,123 +2,203 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7238FA3728
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1E9FA372C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEBDD2082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3720121A49
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:25:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W67N6dd7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395547AbfJQBYs convert rfc822-to-8bit (ORCPT
+        id S2405629AbfJQBZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 21:24:48 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:48123 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389094AbfJQBYs (ORCPT
+        Wed, 16 Oct 2019 21:25:15 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54006 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389094AbfJQBZO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 21:24:48 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x9H1OSdP000991, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCAS12.realtek.com.tw[172.21.6.16])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x9H1OSdP000991
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 17 Oct 2019 09:24:28 +0800
-Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
- RTITCAS12.realtek.com.tw ([::1]) with mapi id 14.03.0439.000; Thu, 17 Oct
- 2019 09:24:27 +0800
-From:   Pkshih <pkshih@realtek.com>
-To:     Laura Abbott <labbott@redhat.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nicolas Waisman <nico@semmle.com>
-Subject: RE: [PATCH] rtlwifi: Fix potential overflow on P2P code
-Thread-Topic: [PATCH] rtlwifi: Fix potential overflow on P2P code
-Thread-Index: AQHVhGRS0Eb+pvqKg0iKoQwx5Knt06deCEZw
-Date:   Thu, 17 Oct 2019 01:24:26 +0000
-Message-ID: <5B2DA6FDDF928F4E855344EE0A5C39D1D5C84368@RTITMBSVM04.realtek.com.tw>
-References: <20191016205716.2843-1-labbott@redhat.com>
-In-Reply-To: <20191016205716.2843-1-labbott@redhat.com>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.69.95]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 16 Oct 2019 21:25:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=gv/VRh25JbZQV0A+0eeM+TeAGlcaRb1tnq4YaJG9kPE=; b=W67N6dd7dSkMcvncpQwxMkwPL
+        TOyrZS2j0dKWlaB+WNuXwdFwC5v7jWlIf/ne3H/f5JI4ADBgLbXpAV6g2AqWnZXJnpJdqR6j1Lgmo
+        L6SsDXvS789U5sBQ705V3Sh1+JuGe5r0lZ+HFdf2VRF/yunIcpwQJxSvxiQp2f62IEJ0Z+tr04hUC
+        OfRx7oIvNPJaP/5ndCFXThR580JdmaBhmeZdWVqnCz16Hlg7WZ4IXyzO6WUPxWuAm+zLyihkpxwBL
+        zFu31K8B9JscExhcq4b060R/oWzKi1i90pXHXowzSCGl62Hbd11+rDYRGK76sCH94sFpnqcgChZEB
+        N2gSnNemA==;
+Received: from [2601:1c0:6280:3f0::9ef4]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iKuXQ-00051e-AJ; Thu, 17 Oct 2019 01:25:12 +0000
+Subject: Re: [PATCH] staging: sm750fb: format description of parameters the to
+ kernel doc format
+To:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
+        outreachy-kernel@googlegroups.com, sudipm.mukherjee@gmail.com,
+        teddy.wang@siliconmotion.com, gregkh@linuxfoundation.org,
+        linux-fbdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
+        trivial@kernel.org
+References: <20191017011849.6081-1-gabrielabittencourt00@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <799632e2-a328-d72b-397d-3ee6b5e87e06@infradead.org>
+Date:   Wed, 16 Oct 2019 18:25:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <20191017011849.6081-1-gabrielabittencourt00@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+On 10/16/19 6:18 PM, Gabriela Bittencourt wrote:
+> Cluster comments that describes parameters of functions and create one
+> single comment before the function in kernel doc format.
 
-> -----Original Message-----
-> From: linux-wireless-owner@vger.kernel.org [mailto:linux-wireless-owner@vger.kernel.org] On Behalf
-> Of Laura Abbott
-> Sent: Thursday, October 17, 2019 4:57 AM
-> To: Pkshih; Kalle Valo
-> Cc: Laura Abbott; David S. Miller; linux-wireless@vger.kernel.org; netdev@vger.kernel.org;
-> linux-kernel@vger.kernel.org; Nicolas Waisman
-> Subject: [PATCH] rtlwifi: Fix potential overflow on P2P code
-> 
-> Nicolas Waisman noticed that even though noa_len is checked for
-> a compatible length it's still possible to overrun the buffers
-> of p2pinfo since there's no check on the upper bound of noa_num.
-> Bounds check noa_num against P2P_MAX_NOA_NUM.
-> 
-> Reported-by: Nicolas Waisman <nico@semmle.com>
-> Signed-off-by: Laura Abbott <labbott@redhat.com>
+Good plan.
+
+How did you test this patch?
+
+> Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
 > ---
-> Compile tested only as this was reported to the security list.
-> ---
->  drivers/net/wireless/realtek/rtlwifi/ps.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+>  drivers/staging/sm750fb/sm750_accel.c | 65 +++++++++++++++------------
+>  1 file changed, 37 insertions(+), 28 deletions(-)
 > 
-> diff --git a/drivers/net/wireless/realtek/rtlwifi/ps.c b/drivers/net/wireless/realtek/rtlwifi/ps.c
-> index 70f04c2f5b17..c5cff598383d 100644
-> --- a/drivers/net/wireless/realtek/rtlwifi/ps.c
-> +++ b/drivers/net/wireless/realtek/rtlwifi/ps.c
-> @@ -754,6 +754,13 @@ static void rtl_p2p_noa_ie(struct ieee80211_hw *hw, void *data,
->  				return;
->  			} else {
->  				noa_num = (noa_len - 2) / 13;
-> +				if (noa_num > P2P_MAX_NOA_NUM) {
-> +					RT_TRACE(rtlpriv, COMP_INIT, DBG_LOUD,
-> +						 "P2P notice of absence: invalid noa_num.%d\n",
-> +						 noa_num);
-> +					return;
+> diff --git a/drivers/staging/sm750fb/sm750_accel.c b/drivers/staging/sm750fb/sm750_accel.c
+> index dbcbbd1055da..d5564cd60f3b 100644
+> --- a/drivers/staging/sm750fb/sm750_accel.c
+> +++ b/drivers/staging/sm750fb/sm750_accel.c
+> @@ -130,20 +130,24 @@ int sm750_hw_fillrect(struct lynx_accel *accel,
+>  	return 0;
+>  }
+>  
+> -int sm750_hw_copyarea(
+> -struct lynx_accel *accel,
+> -unsigned int sBase,  /* Address of source: offset in frame buffer */
+> -unsigned int sPitch, /* Pitch value of source surface in BYTE */
+> -unsigned int sx,
+> -unsigned int sy,     /* Starting coordinate of source surface */
+> -unsigned int dBase,  /* Address of destination: offset in frame buffer */
+> -unsigned int dPitch, /* Pitch value of destination surface in BYTE */
+> -unsigned int Bpp,    /* Color depth of destination surface */
+> -unsigned int dx,
+> -unsigned int dy,     /* Starting coordinate of destination surface */
+> -unsigned int width,
+> -unsigned int height, /* width and height of rectangle in pixel value */
+> -unsigned int rop2)   /* ROP value */
+> +/**
 
-As the discussion at <security@kernel.org>, I think it'd be better to use
-the min between noa_num and P2P_MAX_NOA_NUM, and fall through the code instead
-of return. Because ignore all NoA isn't better than apply two of them.
+Missing function name and short description.  Documentation/doc-guide/kernel-doc.rst says:
 
+The general format of a function and function-like macro kernel-doc comment is::
 
-> +				}
-> +
->  			}
->  			noa_index = ie[3];
->  			if (rtlpriv->psc.p2p_ps_info.p2p_ps_mode ==
-> @@ -848,6 +855,13 @@ static void rtl_p2p_action_ie(struct ieee80211_hw *hw, void *data,
->  				return;
->  			} else {
->  				noa_num = (noa_len - 2) / 13;
-> +				if (noa_num > P2P_MAX_NOA_NUM) {
-> +					RT_TRACE(rtlpriv, COMP_FW, DBG_LOUD,
-> +						 "P2P notice of absence: invalid noa_len.%d\n",
-> +						 noa_len);
-> +					return;
-> +
-> +				}
->  			}
->  			noa_index = ie[3];
->  			if (rtlpriv->psc.p2p_ps_info.p2p_ps_mode ==
-> --
-> 2.21.0
+  /**
+   * function_name() - Brief description of function.
+   * @arg1: Describe the first argument.
+   * @arg2: Describe the second argument.
+   *        One can provide multiple line descriptions
+   *        for arguments.
+   *
+   * A longer description, with more discussion of the function function_name()
+   * that might be useful to those using or modifying it. Begins with an
+   * empty comment line, and may include additional embedded empty
+   * comment lines.
+   *
+   * The longer description may have multiple paragraphs.
+   *
+   * Context: Describes whether the function can sleep, what locks it takes,
+   *          releases, or expects to be held. It can extend over multiple
+   *          lines.
+   * Return: Describe the return value of function_name.
+   *
+   * The return value description can also have multiple paragraphs, and should
+   * be placed at the end of the comment block.
+   */
 
+> + * @sBase: Address of source: offset in frame buffer
+> + * @sPitch: Pitch value of source surface in BYTE
+> + * @sx, @sy: Starting coordinate of source surface
+
+Those should be on separate lines.
+
+> + * @dBase: Address of destination: offset in frame buffer
+> + * @dPitch: Pitch value of destination surface in BYTE
+> + * @Bpp: Color depth of destination surface
+> + * @dx, @dy: Starting coordinate of destination surface
+
+Ditto.
+
+> + * @width, @height: width and height of rectangle in pixel value
+> + * @rop2: ROP value
+> + */
+> +int sm750_hw_copyarea(struct lynx_accel *accel,
+> +		      unsigned int sBase, unsigned int sPitch,
+> +		      unsigned int sx, unsigned int sy,
+> +		      unsigned int dBase, unsigned int dPitch,
+> +		      unsigned int Bpp, unsigned int dx, unsigned int dy,
+> +		      unsigned int width, unsigned int height,
+> +		      unsigned int rop2)
+>  {
+>  	unsigned int nDirection, de_ctrl;
+>  
+> @@ -288,20 +292,25 @@ static unsigned int deGetTransparency(struct lynx_accel *accel)
+>  	return de_ctrl;
+>  }
+>  
+> -int sm750_hw_imageblit(struct lynx_accel *accel,
+> -		 const char *pSrcbuf, /* pointer to start of source buffer in system memory */
+> -		 u32 srcDelta,          /* Pitch value (in bytes) of the source buffer, +ive means top down and -ive mean button up */
+> -		 u32 startBit, /* Mono data can start at any bit in a byte, this value should be 0 to 7 */
+> -		 u32 dBase,    /* Address of destination: offset in frame buffer */
+> -		 u32 dPitch,   /* Pitch value of destination surface in BYTE */
+> -		 u32 bytePerPixel,      /* Color depth of destination surface */
+> -		 u32 dx,
+> -		 u32 dy,       /* Starting coordinate of destination surface */
+> -		 u32 width,
+> -		 u32 height,   /* width and height of rectangle in pixel value */
+> -		 u32 fColor,   /* Foreground color (corresponding to a 1 in the monochrome data */
+> -		 u32 bColor,   /* Background color (corresponding to a 0 in the monochrome data */
+> -		 u32 rop2)     /* ROP value */
+> +/**
+
+Similar comments here...
+
+> + * @pSrcbuf: pointer to start of source buffer in system memory
+> + * @srcDelta: Pitch value (in bytes) of the source buffer, +ive means top down
+> + * and -ive mean button up
+> + * @startBit: Mono data can start at any bit in a byte, this value should be
+> + * 0 to 7
+> + * @dBase: Address of destination: offset in frame buffer
+> + * @dPitch: Pitch value of destination surface in BYTE
+> + * @bytePerPixel: Color depth of destination surface
+> + * @dx, @dy: Starting coordinate of destination surface
+> + * @width, @height: width and height of rectangle in pixel value
+> + * @fColor: Foreground color (corresponding to a 1 in the monochrome data
+> + * @bColor: Background color (corresponding to a 0 in the monochrome data
+> + * @rop2: ROP value
+> + */
+> +int sm750_hw_imageblit(struct lynx_accel *accel, const char *pSrcbuf,
+> +		       u32 srcDelta, u32 startBit, u32 dBase, u32 dPitch,
+> +		       u32 bytePerPixel, u32 dx, u32 dy, u32 width,
+> +		       u32 height, u32 fColor, u32 bColor, u32 rop2)
+>  {
+>  	unsigned int ulBytesPerScan;
+>  	unsigned int ul4BytesPerScan;
+> 
+
+Thanks.
+-- 
+~Randy
