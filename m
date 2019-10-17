@@ -2,115 +2,120 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A86C4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37ADAC4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC322082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09A3F2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:48:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ROM9pgBt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qOCBOGJL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438470AbfJQHr6 (ORCPT
+        id S2438538AbfJQHsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 03:47:58 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52268 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387930AbfJQHr6 (ORCPT
+        Thu, 17 Oct 2019 03:48:32 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:33600 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387930AbfJQHsb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 03:47:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CB9qLsgKsb2C8+4Pa5xdxWx+A9UkvlFXKVU3Kno+WKQ=; b=ROM9pgBtdot+ZohnyfyN8rdcZ
-        OnZ56n50MaSVgCFWyn/mfioM0Z/iPxkd+ok0AGd9nDuhgSiNNa8MyhbNtGWojGKV8O1AZPltF1rJh
-        CZ74niaLUFK+aGgq15s4Ghuto3JTCVqhumynY8qZl88AdgJds45NcyFxwCeAJX92mZkCO1jFju0wv
-        DskF/8TNBHofVES1ofHgClvFvy+aCvWTgQ/dtXeGROi6+719bFGOLxlJdwsbuW6Vwo5p4EojIDtlR
-        Nq7w3d0cuSzC0vSjbfIFXPzynwwk9ig1TpN8gDSovFeOESzxG8ucveivrVVnw3Inxvn3bvlTiYPn5
-        JaT7idCPQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iL0VR-0008Vj-Jw; Thu, 17 Oct 2019 07:47:33 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CFD2530018A;
-        Thu, 17 Oct 2019 09:46:34 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1CA14203BFA9E; Thu, 17 Oct 2019 09:47:30 +0200 (CEST)
-Date:   Thu, 17 Oct 2019 09:47:30 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Alexander Potapenko <glider@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        dave.hansen@linux.intel.com, David Howells <dhowells@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-efi@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [PATCH 1/8] kcsan: Add Kernel Concurrency Sanitizer
- infrastructure
-Message-ID: <20191017074730.GW2328@hirez.programming.kicks-ass.net>
-References: <20191016083959.186860-1-elver@google.com>
- <20191016083959.186860-2-elver@google.com>
- <20191016184346.GT2328@hirez.programming.kicks-ass.net>
- <CANpmjNP4b9Eo3ZKE6maBs4ANS7K7sLiVB2CbebQnCH09TB+hZQ@mail.gmail.com>
+        Thu, 17 Oct 2019 03:48:31 -0400
+Received: by mail-ed1-f66.google.com with SMTP id c4so979823edl.0;
+        Thu, 17 Oct 2019 00:48:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8B+VL6RjXg5KMDSHhbVjjx3TQz+ogXFR8+wGExPxeGQ=;
+        b=qOCBOGJLloO3vmyqaRI+6T72uldMbOQsHidQ6BRi2voae07zuY8uRplwWLvQULhXAq
+         EnhD5ORTI/u17427MXfItSfVk86MDBU2dRcWm4hlr8ZZFxwSiYp/c6XF6OARVLEZviYF
+         kGTgQFbtkjVo5BmhvtD9Ee7JuVIglLO4jxCUh2Vy7l0CRUXmrRdydt+Xihue/MAH9X6y
+         ghpJmSx2ExE8r65ZdJyXWNBAbaIwqAnRojflSTV30kOrfqBZep5b0CJjh+9y0zRwVtMA
+         djKD41iFnE5eKX1WXfVJR+OR8RaZvcbkt4GRNePH2E8fbIc6XIY2gOoCtwGbg/Ab6/ZL
+         rM/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8B+VL6RjXg5KMDSHhbVjjx3TQz+ogXFR8+wGExPxeGQ=;
+        b=lIETvUVjsKDYQI7Wn0ZB8lGELC7af379TRY4FRJ40FAiFnr2WS+nOCcdSpUPWrQNKJ
+         kWc0XyKkj4EJZPM4vI3lBmhfCfNXS/9brRLHei0Taz+cSrzKbljoNauqFM92beGSgd8Z
+         P32kWWZr5bDrooCV1T7vJjIRz54bZClTNgn5LYtTwntqlYUOovdpc148ta0JitqGF5Zf
+         P5M2cRhCeJGaBIr57uMzQIaCAjM5YoEbm5lBA95SbyZiBX6hW+7htyuBgjuLqGfn/s2u
+         G1s2rFZ0PrjawD5zSI7WZICvaC1GUytffsQly9UZ4xAm4nJqxLQ8OMabGQ9vRQUZ8JT+
+         G+6Q==
+X-Gm-Message-State: APjAAAWW/L5nYV3Lo/9jpisMd3GdA3k+tsKRtZSY89sTdlhRKWZJP+x1
+        nam7tDGFRw36bg+2+yr2aaSQyCLmCwztFyP02AjNO20m
+X-Google-Smtp-Source: APXvYqzLkBj4wrmLsp0uHhkF+gPgoWTWlVybA1KoNGKYa6VGb9+7wEs3hq1+1i16D7MxY4U9nT+RrTGKqmUpwpVle+c=
+X-Received: by 2002:aa7:d410:: with SMTP id z16mr2360627edq.40.1571298509980;
+ Thu, 17 Oct 2019 00:48:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNP4b9Eo3ZKE6maBs4ANS7K7sLiVB2CbebQnCH09TB+hZQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191016105604.8036-1-hslester96@gmail.com> <8de93390-ae04-4278-bb34-aa175c659c23@st.com>
+In-Reply-To: <8de93390-ae04-4278-bb34-aa175c659c23@st.com>
+From:   Chuhong Yuan <hslester96@gmail.com>
+Date:   Thu, 17 Oct 2019 15:48:19 +0800
+Message-ID: <CANhBUQ0MvXYm4iLcx5gWyq=0VMmafRAJ7TsTtUuOT0YwgBcAOA@mail.gmail.com>
+Subject: Re: [PATCH] media: st-mipid02: add a check for devm_gpiod_get_optional
+To:     Mickael GUENE <mickael.guene@st.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 09:34:05PM +0200, Marco Elver wrote:
-> On Wed, 16 Oct 2019 at 20:44, Peter Zijlstra <peterz@infradead.org> wrote:
-> > > +     /*
-> > > +      * Disable interrupts & preemptions, to ignore races due to accesses in
-> > > +      * threads running on the same CPU.
-> > > +      */
-> > > +     local_irq_save(irq_flags);
-> > > +     preempt_disable();
-> >
-> > Is there a point to that preempt_disable() here?
-> 
-> We want to avoid being preempted while the watchpoint is set up;
-> otherwise, we would report data-races for CPU-local data, which is
-> incorrect.
+On Thu, Oct 17, 2019 at 1:43 PM Mickael GUENE <mickael.guene@st.com> wrote:
+>
+> Hello Chuhong,
+>
+>  Is this check necessary ?
+> since looking into code it seems to me devm_gpiod_get_optional() can only
+> return NULL in case of error due to following check in devm_gpiod_get_index_optional()
+>         if (IS_ERR(desc)) {
+>                 if (PTR_ERR(desc) == -ENOENT)
+>                         return NULL;
+>         }
+>  And in that case reset_gpio is not used
+>
 
-Disabling IRQs already very much disables preemption. There is
-absolutely no point in doing preempt_disable() when the whole section
-already runs with IRQs disabled.
+The problem may not be a null return value, but a returned error,
+which is a minus value,
+like -EPROBE_DEFER or -EINVAL returned by gpiod_find in gpiod_get_index.
+In these cases, devm_gpiod_get_index_optional will not return null but
+return the error.
+Therefore, this check is necessary.
+
+> Regards
+> Mickael
+>
+> On 10/16/19 12:56, Chuhong Yuan wrote:
+> > mipid02_probe misses a check for devm_gpiod_get_optional and may miss
+> > the failure.
+> > Add a check to fix the problem.
+> >
+> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> > ---
+> >  drivers/media/i2c/st-mipid02.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/drivers/media/i2c/st-mipid02.c b/drivers/media/i2c/st-mipid02.c
+> > index 81285b8d5cfb..d38e888b0a43 100644
+> > --- a/drivers/media/i2c/st-mipid02.c
+> > +++ b/drivers/media/i2c/st-mipid02.c
+> > @@ -971,6 +971,9 @@ static int mipid02_probe(struct i2c_client *client)
+> >       bridge->reset_gpio = devm_gpiod_get_optional(dev, "reset",
+> >                                                    GPIOD_OUT_HIGH);
+> >
+> > +     if (IS_ERR(bridge->reset_gpio))
+> > +             return PTR_ERR(bridge->reset_gpio);
+> > +
+> >       ret = mipid02_get_regulators(bridge);
+> >       if (ret) {
+> >               dev_err(dev, "failed to get regulators %d", ret);
+> >
