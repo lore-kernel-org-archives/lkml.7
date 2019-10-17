@@ -2,143 +2,144 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 403D9ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AC4FA3736
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16F8E20854
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:52:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pxijlpnJ"
+	by mail.kernel.org (Postfix) with ESMTP id B200920854
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:56:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390637AbfJQMwb (ORCPT
+        id S1732550AbfJQM4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 08:52:31 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35746 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732434AbfJQMwa (ORCPT
+        Thu, 17 Oct 2019 08:56:12 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34814 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729124AbfJQM4L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:52:30 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m7so2447136lji.2
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 05:52:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QrLNGivHk+MX8xmqPNs4VJfLnymqhdD216JwoEaih2o=;
-        b=pxijlpnJvH+0Meiyj9IJb82BApkYa5Amf8UD++PDk2Vmv6edkmCzoFFXCRLntxyrC1
-         mLkWZCG6OSWH+5i+vHjTerMGjh9sWPTJes3VNAUhsCvYuQnTCdR4Tg7ba2ic4lRik6KE
-         JG2/FQ276AuTq9GpU+msGysKBTdy0rzz/xr4IuUdwM/l5r5qC8kKsIfyn2meaOzRInGT
-         o5ksIUdYOzr8rmUJLsCOb/VBis8RXjC35uW1/4glW/GT3AVSC4oswPriEz6NnvJNAVm/
-         zsW1cnRSp0R4crrk2JCd+r+mabjMCA2aBmK670MduETPO6SboZEEuq/rHegWThVf6NzS
-         nS6Q==
+        Thu, 17 Oct 2019 08:56:11 -0400
+Received: by mail-oi1-f194.google.com with SMTP id 83so2065618oii.1;
+        Thu, 17 Oct 2019 05:56:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QrLNGivHk+MX8xmqPNs4VJfLnymqhdD216JwoEaih2o=;
-        b=F3KEeuJJJd+2CyW1GcXu86aglEanKmDrckjBErrlfZzvP563OCsmyy2xJoVyR+l13O
-         Pwu/mudiFtyh6hZ6vjxz59ZgMYXK3GHigJVvfebu8w8B3bpzwe7H4WtcxODRq5neMOz6
-         K2JLfJspDqztCX+WsRSUjmDqxBaeUbxC8dy4LcbIPI1jOL6U/Iu28pDdc9eO5XFyEzgX
-         CIfmeMvLz58BON7KUcFLqI/Z/atDqJlXuHy4zdOmmylcpRsOzjdxaMsFPHVsFzsxGRQ3
-         lxeBAUk6bD2nLXSz1YJox0VYk6ygrSW4MK6Sn9K0X6AqJyq3fLY/46e2zep5wQQcDkDH
-         nTVg==
-X-Gm-Message-State: APjAAAUwtVnUJbMmMfppCol1mg1XjuAE6KZscEJm3IdacOjSdeAwDpJY
-        NtYmQHnRwpluJFx1ZT+tVm1dm6MFpIPWjdg5EF5o+L+7shU=
-X-Google-Smtp-Source: APXvYqzkqvovU/sudHAtBIJQ9t1ZDyznyMb/4m7doUJ9DprBLfCEEqxIwDTEJvxsF+Qg9xk6jO7VE2ktilr7QFgkKZo=
-X-Received: by 2002:a2e:1214:: with SMTP id t20mr2401231lje.191.1571316748450;
- Thu, 17 Oct 2019 05:52:28 -0700 (PDT)
+        bh=jCmtCgtBiiFJU5hn3NT2kzh4dnuPiZZINwubQDKuTj8=;
+        b=mzCNJtiF0wM7R/HS7yfby24LFO8AfqmXB166VUbWYuqW1gbKUB2L5gXYO2ka76MxPa
+         3V8PBywtIfRmMVYN9no9UcdwAFKZn5e2XkPOKufaoRkB9MFJ8+dUsk8WGz+OptUQaY1i
+         aXRECxrAJv0Tun77j/0D0iAevFAYF2o6Y+cLrcIMJIRxu7gwzLOoGbbBYOYJZdH10EBx
+         y0q05ZlQ+MjdGeBa2BX0dkR8OKGTmZJiNKZVMFzlOTdZjmBuuMHPEA+I2E9LvDSA5CC4
+         Kp9zEFKF3NBMWTN8zdq5J7xWI8DaUIuzgenZNRa/slD7USPXyG2/sCFrUD+ryczNDefr
+         dEfg==
+X-Gm-Message-State: APjAAAUcoI07zU2TaTRB1FZSumS7BfZqfK0B5RlmVZ4ZISS2uC3f+C9M
+        ii/NTBfK54m3RpQ/p8VwBEV0JiWRyxT9kZAXCy6yOjbj
+X-Google-Smtp-Source: APXvYqy5RDhqMEfVOwJ6hvWU5q92MMw+x2vGvUbDRvxE2qxwk2Nmdc/1GS9R+iCxoIJcSopADXhaQZ5hycAFP/rqBpo=
+X-Received: by 2002:aca:230c:: with SMTP id e12mr2893076oie.153.1571316970585;
+ Thu, 17 Oct 2019 05:56:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
- <20191007000520.GA17116@linux.intel.com> <59b88042-9c56-c891-f75e-7c0719eb5ff9@linux.ibm.com>
- <20191008234935.GA13926@linux.intel.com> <20191008235339.GB13926@linux.intel.com>
- <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2B995@ALPMBAPA12.e2k.ad.ge.com>
- <20191014190033.GA15552@linux.intel.com> <1571081397.3728.9.camel@HansenPartnership.com>
- <20191016110031.GE10184@linux.intel.com> <1571229252.3477.7.camel@HansenPartnership.com>
- <20191016162543.GB6279@linux.intel.com> <1571253029.17520.5.camel@HansenPartnership.com>
-In-Reply-To: <1571253029.17520.5.camel@HansenPartnership.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Thu, 17 Oct 2019 18:22:17 +0530
-Message-ID: <CAFA6WYNNNTWXDrp_R3M60srGJYjJdRoaNpSnP54V_BinYYXTMA@mail.gmail.com>
-Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-To:     James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "Safford, David (GE Global Research, US)" <david.safford@ge.com>,
-        Ken Goldman <kgold@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+References: <20191016102520.124370-1-jacopo+renesas@jmondi.org>
+In-Reply-To: <20191016102520.124370-1-jacopo+renesas@jmondi.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 17 Oct 2019 14:55:58 +0200
+Message-ID: <CAMuHMdUH0LrZ6iEuN1aWCTt_-jpgp=EjxubMAVdp11HLL=ayyQ@mail.gmail.com>
+Subject: Re: [PATCH] iio: adc: max9611: Defer probe on POR read
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     linux-iio@vger.kernel.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019 at 00:40, James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
->
-> On Wed, 2019-10-16 at 19:25 +0300, Jarkko Sakkinen wrote:
-> > On Wed, Oct 16, 2019 at 08:34:12AM -0400, James Bottomley wrote:
-> > > reversible ciphers are generally frowned upon in random number
-> > > generation, that's why the krng uses chacha20.  In general I think
-> > > we shouldn't try to code our own mixing and instead should get the
-> > > krng to do it for us using whatever the algorithm du jour that the
-> > > crypto guys have blessed is.  That's why I proposed adding the TPM
-> > > output to the krng as entropy input and then taking the output of
-> > > the krng.
-> >
-> > It is already registered as hwrng. What else?
->
-> It only contributes entropy once at start of OS.
->
+Hi Jacopo,
 
-Why not just configure quality parameter of TPM hwrng as follows? It
-would automatically initiate a kthread during hwrng_init() to feed
-entropy from TPM to kernel random numbers pool (see:
-drivers/char/hw_random/core.c +142).
+CC i2c
 
-diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
-index 3d6d394..fcc3817 100644
---- a/drivers/char/tpm/tpm-chip.c
-+++ b/drivers/char/tpm/tpm-chip.c
-@@ -548,6 +548,7 @@ static int tpm_add_hwrng(struct tpm_chip *chip)
-                 "tpm-rng-%d", chip->dev_num);
-        chip->hwrng.name = chip->hwrng_name;
-        chip->hwrng.read = tpm_hwrng_read;
-+       chip->hwrng.quality = 1024; /* Here we assume TPM provides
-full entropy */
-        return hwrng_register(&chip->hwrng);
+On Wed, Oct 16, 2019 at 12:23 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> The max9611 driver tests communications with the chip by reading the die
+> temperature during the probe function. If the temperature register
+> POR (power-on reset) value is returned from the test read, defer probe to
+> give the chip a bit more time to properly exit from reset.
+>
+> Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
- }
+Thanks for your patch!
 
-> >  Was the issue that it is only used as seed when the rng is init'd
-> > first? I haven't at this point gone to the internals of krng.
->
-> Basically it was similar to your xor patch except I got the kernel rng
-> to do the mixing, so it would use the chacha20 cipher at the moment
-> until they decide that's unsafe and change it to something else:
->
-> https://lore.kernel.org/linux-crypto/1570227068.17537.4.camel@HansenPartnership.com/
->
-> It uses add_hwgenerator_randomness() to do the mixing.  It also has an
-> unmixed source so that read of the TPM hwrng device works as expected.
+> Geert,
+>   I've not been able to reproduce the issue on my boards (M3-N
+> Salvator-XS and M3-W Salvator-X). As you reported the issue you might be
+> able to reproduce it, could you please test this?
 
-Above suggestion is something similar to yours but utilizing the
-framework already provided via hwrng core.
+I can reproduce it on Salvator-XS with R-Car H3 ES2.0.
+According to my logs, I've seen the issue on all Salvator-X(S) boards,
+but not with the same frequency.  Probability is highest on H3 ES2.0
+(ca. 5% of the boots since I first saw the issue), followed by H3 ES1.0,
+M3-W, and M3-N.
 
--Sumit
+After more investigation, my findings are:
+  1. I cannot reproduce the issue if the max9611 driver is modular.
+     Is it related to using max9611 "too soon" after i2c bus init?
+     How can "i2c bus init" impact a slave device?
+     Perhaps due to pin configuration, e.g. changing from another pin
+     function or GPIO to function i2c4?
+  2. Adding a delay at the top of max9611_init() fixes the issue.
+     This would explain why the issue is less likely to happy on slower
+     SoCs like M3-N.
+  3. Disabling all other i2c slaves on i2c4 in DTS fixes the issue.
+     Before, max9611 was initialized last, so this moves init earlier,
+     contradicting theory #1.
+  4. Just disabling the adv7482 (which registers 11 dummies i2c slaves)
+     in DTS does not fix the issue.
 
+Unfortunately i2c4 is exposed on a 60-pin Samtec QSH connector only,
+for which I have no breakout adapter.
+
+Wolfram: do you have any clues?
+
+> Also, I opted for deferring probe instead of arbitrary repeat the
+> temperature read. What's your opinion?
+
+While this is probably OK if the max9611 driver is built-in, I'm afraid
+this may lead to unbounded delays for a reprobe in case the driver
+is modular.
+
+> --- a/drivers/iio/adc/max9611.c
+> +++ b/drivers/iio/adc/max9611.c
+> @@ -80,6 +80,7 @@
+>   * The complete formula to calculate temperature is:
+>   *     ((adc_read >> 7) * 1000) / (1 / 480 * 1000)
+>   */
+> +#define MAX9611_TEMP_POR               0x8000
+>  #define MAX9611_TEMP_MAX_POS           0x7f80
+>  #define MAX9611_TEMP_MAX_NEG           0xff80
+>  #define MAX9611_TEMP_MIN_NEG           0xd980
+> @@ -480,8 +481,10 @@ static int max9611_init(struct max9611_dev *max9611)
+>         if (ret)
+>                 return ret;
 >
-> James
+> -       regval &= MAX9611_TEMP_MASK;
+> +       if (regval == MAX9611_TEMP_POR)
+> +               return -EPROBE_DEFER;
 >
->
->
->
->
+> +       regval &= MAX9611_TEMP_MASK;
+>         if ((regval > MAX9611_TEMP_MAX_POS &&
+>              regval < MAX9611_TEMP_MIN_NEG) ||
+>              regval > MAX9611_TEMP_MAX_NEG) {
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
