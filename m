@@ -2,29 +2,28 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AA0ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2A4FA3730
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDBD6214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C760B21848
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:49:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439584AbfJQJtD (ORCPT
+        id S2439607AbfJQJtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 05:49:03 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:43275 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408705AbfJQJtA (ORCPT
+        Thu, 17 Oct 2019 05:49:12 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:54131 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408604AbfJQJs6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 05:49:00 -0400
-X-Originating-IP: 86.207.98.53
+        Thu, 17 Oct 2019 05:48:58 -0400
 Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
         (Authenticated sender: kamel.bouhara@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 7D61560014;
-        Thu, 17 Oct 2019 09:48:57 +0000 (UTC)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 6955320000A;
+        Thu, 17 Oct 2019 09:48:56 +0000 (UTC)
 From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Nicolas Ferre <nicolas.ferre@microchip.com>,
@@ -34,48 +33,30 @@ To:     Rob Herring <robh+dt@kernel.org>,
 Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Kamel Bouhara <kamel.bouhara@bootlin.com>
-Subject: [PATCH 1/2] dt-bindings: arm: at91: Document SmartKiz board binding
-Date:   Thu, 17 Oct 2019 11:48:52 +0200
-Message-Id: <20191017094853.14669-2-kamel.bouhara@bootlin.com>
+Subject: [PATCH 0/2] Add DTS for Smartkiz support
+Date:   Thu, 17 Oct 2019 11:48:51 +0200
+Message-Id: <20191017094853.14669-1-kamel.bouhara@bootlin.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191017094853.14669-1-kamel.bouhara@bootlin.com>
-References: <20191017094853.14669-1-kamel.bouhara@bootlin.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document devicetree's bindings for the SAM9G25 SmartKiz board of
-Overkiz SAS.
+Yet another Overkiz's SAM9G25 based board and it's documentation.
 
-Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
----
- Documentation/devicetree/bindings/arm/atmel-at91.yaml | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Kamel Bouhara (2):
+  dt-bindings: arm: at91: Document SmartKiz board binding
+  ARM: at91: add support for SmartKiz board
 
-diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.yaml b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
-index 666462988179..f8053268cfa5 100644
---- a/Documentation/devicetree/bindings/arm/atmel-at91.yaml
-+++ b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
-@@ -49,8 +49,16 @@ properties:
-           - const: atmel,at91sam9x5
-           - const: atmel,at91sam9
- 
-+      - description: Overkiz SmartKiz Board
-+        items:
-+          - const: overkiz,smartkiz
-+          - const: atmel,at91sam9g25
-+          - const: atmel,at91sam9x5
-+          - const: atmel,at91sam9
-+
-       - items:
-           - enum:
-+              - atmel,at91sam9g25
-               - atmel,at91sam9g15
-               - atmel,at91sam9g25
-               - atmel,at91sam9g35
--- 
+ .../devicetree/bindings/arm/atmel-at91.yaml   |   8 ++
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/at91-smartkiz.dts           | 112 ++++++++++++++++++
+ 3 files changed, 121 insertions(+)
+ create mode 100644 arch/arm/boot/dts/at91-smartkiz.dts
+
+--
 2.23.0
 
