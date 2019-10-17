@@ -2,79 +2,87 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3E5FA3732
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F8EECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 986CF214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:54:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C6E220663
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:55:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439277AbfJQIyX (ORCPT
+        id S2439307AbfJQIzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 04:54:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47058 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439155AbfJQIyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 04:54:21 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F11C118C426E;
-        Thu, 17 Oct 2019 08:54:20 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 6D9AA5D9D5;
-        Thu, 17 Oct 2019 08:54:17 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu, 17 Oct 2019 10:54:19 +0200 (CEST)
-Date:   Thu, 17 Oct 2019 10:54:14 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-kernel@vger.kernel.org, aarcange@redhat.com,
-        akpm@linux-foundation.org, christian@kellner.me, cyphar@cyphar.com,
-        elena.reshetova@intel.com, guro@fb.com, jannh@google.com,
-        ldv@altlinux.org, linux-api@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, mhocko@suse.com, mingo@kernel.org,
-        peterz@infradead.org, shuah@kernel.org, tglx@linutronix.de,
-        viro@zeniv.linux.org.uk
-Subject: Re: [PATCH v2 1/5] pidfd: verify task is alive when printing fdinfo
-Message-ID: <20191017085414.GC17513@redhat.com>
-References: <20191015141332.4055-1-christian.brauner@ubuntu.com>
- <20191016153606.2326-1-christian.brauner@ubuntu.com>
- <20191016162408.GB31585@redhat.com>
- <20191016163107.5zwt6fmjyd5mkqqw@wittgenstein>
+        Thu, 17 Oct 2019 04:55:43 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:39004 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439083AbfJQIzm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 04:55:42 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 0CFD9801AD; Thu, 17 Oct 2019 10:55:24 +0200 (CEST)
+Date:   Thu, 17 Oct 2019 10:55:39 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>, sashal@kernel.org
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: Re: [PATCH 4.19 62/81] cifs: use cifsInodeInfo->open_file_lock while
+ iterating to avoid a panic
+Message-ID: <20191017085538.GA5847@amd>
+References: <20191016214805.727399379@linuxfoundation.org>
+ <20191016214843.979454273@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
 Content-Disposition: inline
-In-Reply-To: <20191016163107.5zwt6fmjyd5mkqqw@wittgenstein>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Thu, 17 Oct 2019 08:54:21 +0000 (UTC)
+In-Reply-To: <20191016214843.979454273@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/16, Christian Brauner wrote:
->
-> On Wed, Oct 16, 2019 at 06:24:09PM +0200, Oleg Nesterov wrote:
-> >
-> > And why task_ if it accepts pid+pid_type? May be pid_has_task() or
-> > something like this...
->
-> Given what I said above that might be a decent name.
->
-> >
-> > OK, since I can't suggest a better name I won't really argue. Feel free
-> > to add my reviewed-by to this series.
->
-> No, naming is important. Thanks for being picky about that too and I'll
-> happily resend. :)
 
-Thanks ;) May be pid_in_use() ? Up to you, anything which starts with pid_
-looks better to me than task_alive().
+--UugvWAfsgieZRqgk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Oleg.
+Hi!
 
+> From: Dave Wysochanski <dwysocha@redhat.com>
+>=20
+> Commit 487317c99477 ("cifs: add spinlock for the openFileList to
+> cifsInodeInfo") added cifsInodeInfo->open_file_lock spin_lock to protect
+
+> Fixes: 487317c99477 ("cifs: add spinlock for the openFileList to cifsInod=
+eInfo")
+>=20
+> CC: Stable <stable@vger.kernel.org>
+> Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+> Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+> Signed-off-by: Steve French <stfrench@microsoft.com>
+
+This is missing upstream commit ID and a signoff.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--UugvWAfsgieZRqgk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXagsigAKCRAw5/Bqldv6
+8i7xAKCBGixLen4sFo0D9/lNpClaoCvpPACfW/fRf88Do2+v0vyafH2nQEWlqeI=
+=skro
+-----END PGP SIGNATURE-----
+
+--UugvWAfsgieZRqgk--
