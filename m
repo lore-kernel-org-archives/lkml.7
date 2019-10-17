@@ -2,140 +2,109 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E769ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D8DECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52F5421848
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:43:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="mq5v6bkc"
+	by mail.kernel.org (Postfix) with ESMTP id 677D621848
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:46:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571330764;
+	bh=ST385NSYuwXC3f6iHRWFfEjB9cPothZhVKZ/sW1hOw8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=y6us0YRpEzZ80i5OgTQY2npTNB3ZvnXdAVoWhcDXcD02aEMFAKYCgEzcGDO/oQyJz
+	 s+6rCCc046uHny/xBymoCNyCyuoKAIsPLWH+KISEXyKy25MynYb6ii9JFm803el2ol
+	 annbd1+QQdIR6e/uX8V7c6UeLO2Mz8vOyIE2SZes=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503008AbfJQQnB (ORCPT
+        id S2502887AbfJQQqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:43:01 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:10950 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2502887AbfJQQm5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 12:42:57 -0400
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9HGV6rA003253
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 09:42:56 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=GOJk98uhPyGo6jkczqnhQiMYnPmAVYZKwD5wgDMMEkI=;
- b=mq5v6bkccQBlRlJBX9JafhKdSkicw458+1tuWO0KANGG+ERtKOKRumkZ6FyPBVBK1iK/
- JAFOSfFVL73w7TTKrEscRH6EooQitsFdfISVtp1Q/r+f17ZKiI+GLL3DnDMgccf7mR20
- boFB4Aa9xb8DGkGoyzYYjU9GbBQYE/k9rIA= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2vp5k0e297-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 09:42:56 -0700
-Received: from 2401:db00:2120:80e1:face:0:29:0 (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Thu, 17 Oct 2019 09:42:55 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 6F1B362E1477; Thu, 17 Oct 2019 09:42:53 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <akpm@linux-foundation.org>
-CC:     <matthew.wilcox@oracle.com>, <kernel-team@fb.com>,
-        <william.kucharski@oracle.com>, <kirill.shutemov@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Oleg Nesterov <oleg@redhat.com>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v2 5/5] uprobe: only do FOLL_SPLIT_PMD for uprobe register
-Date:   Thu, 17 Oct 2019 09:42:22 -0700
-Message-ID: <20191017164223.2762148-6-songliubraving@fb.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191017164223.2762148-1-songliubraving@fb.com>
-References: <20191017164223.2762148-1-songliubraving@fb.com>
-X-FB-Internal: Safe
+        Thu, 17 Oct 2019 12:46:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33046 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390763AbfJQQqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 12:46:03 -0400
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31D8C21848;
+        Thu, 17 Oct 2019 16:46:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571330762;
+        bh=ST385NSYuwXC3f6iHRWFfEjB9cPothZhVKZ/sW1hOw8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=za4tq5vxbNcSvvLnkN6A9TiO1Idkq04/ElICw324HADDcbqcrZtHySN/UFkGpqzvW
+         5SPz+zqRqt3aBCThINGWrnWstht1//SGm9z4eOMyfns6G03+y9OZvvFhne1HgJfgFe
+         LEDiVOWasXy37i0RToY6/Nr5ZfRTrXe0sEYHiaRk=
+Received: by mail-qt1-f170.google.com with SMTP id m61so4531685qte.7;
+        Thu, 17 Oct 2019 09:46:02 -0700 (PDT)
+X-Gm-Message-State: APjAAAWGsu9DQAHHBggPKhAYq9vG/0ncSmEDj5GLkws++eBUb5vnypRg
+        hJmZiLFN8GtnYkqjZwm1wa6P//ONZSbC72UsbQ==
+X-Google-Smtp-Source: APXvYqwxmloo/IijujMedfKeIrZqpNiMPv1IfUbUmiboin2+5egtsuLRNN7GW7JwEX6FcQMEjc3eB3oVnwY1SUOJQIY=
+X-Received: by 2002:ac8:44d9:: with SMTP id b25mr5010364qto.300.1571330761301;
+ Thu, 17 Oct 2019 09:46:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-17_05:2019-10-17,2019-10-17 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0
- suspectscore=0 bulkscore=0 clxscore=1015 mlxscore=0 mlxlogscore=770
- impostorscore=0 priorityscore=1501 phishscore=0 lowpriorityscore=0
- malwarescore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1908290000 definitions=main-1910170149
-X-FB-Internal: deliver
+References: <20191016040920.8511-1-biwen.li@nxp.com> <bfdb97c1-76f4-52d9-7f02-c62bed8192ce@axentia.se>
+In-Reply-To: <bfdb97c1-76f4-52d9-7f02-c62bed8192ce@axentia.se>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 17 Oct 2019 11:45:49 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqK_BOSZ=UNP-L7OpuNsFUAqWBhAjCObex+0xtkYp=7c+A@mail.gmail.com>
+Message-ID: <CAL_JsqK_BOSZ=UNP-L7OpuNsFUAqWBhAjCObex+0xtkYp=7c+A@mail.gmail.com>
+Subject: Re: [v3,1/2] dt-bindings: i2c: support property idle-state
+To:     Peter Rosin <peda@axentia.se>
+Cc:     Biwen Li <biwen.li@nxp.com>,
+        "leoyang.li@nxp.com" <leoyang.li@nxp.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Attaching uprobe to text section in THP splits the PMD mapped page table
-into PTE mapped entries. On uprobe detach, we would like to regroup PMD
-mapped page table entry to regain performance benefit of THP.
+On Thu, Oct 17, 2019 at 10:38 AM Peter Rosin <peda@axentia.se> wrote:
+>
+> On 2019-10-16 06:09, Biwen Li wrote:
+> > This supports property idle-state
+> >
+> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> > ---
+> > Change in v3:
+> >       - update subject and description
+> >       - add some information for property idle-state
+> >
+> > Change in v2:
+> >       - update subject and description
+> >       - add property idle-state
+> >
+> >  Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> > index 30ac6a60f041..7abda506b828 100644
+> > --- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> > +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> > @@ -25,6 +25,8 @@ Required Properties:
+> >  Optional Properties:
+> >
+> >    - reset-gpios: Reference to the GPIO connected to the reset input.
+> > +  - idle-state: if present, overrides i2c-mux-idle-disconnect,
+> > +    Please refer to Documentation/devicetree/bindings/mux/mux-controller.txt
+> >    - i2c-mux-idle-disconnect: Boolean; if defined, forces mux to disconnect all
+> >      children in idle state. This is necessary for example, if there are several
+> >      multiplexers on the bus and the devices behind them use same I2C addresses.
+> >
+>
+> Rob, should i2c-mux-idle-disconnect perhaps be deprecated here? Is that
+> appropriate?
+>
+> idle-state provides a super-set of what i2c-mux-idle-disconnect provides.
 
-However, the regroup is broken For perf_event based trace_uprobe. This is
-because perf_event based trace_uprobe calls uprobe_unregister twice on
-close: first in TRACE_REG_PERF_CLOSE, then in TRACE_REG_PERF_UNREGISTER.
-The second call will split the PMD mapped page table entry, which is not
-the desired behavior.
+Yes, seems like it and it is not too widely used.
 
-Fix this by only use FOLL_SPLIT_PMD for uprobe register case.
-
-Add a WARN() to confirm uprobe unregister never work on huge pages, and
-abort the operation when this WARN() triggers.
-
-Fixes: 5a52c9df62b4 ("uprobe: use FOLL_SPLIT_PMD instead of FOLL_SPLIT")
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
----
- kernel/events/uprobes.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 94d38a39d72e..c74761004ee5 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -474,14 +474,17 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
- 	struct vm_area_struct *vma;
- 	int ret, is_register, ref_ctr_updated = 0;
- 	bool orig_page_huge = false;
-+	unsigned int gup_flags = FOLL_FORCE;
- 
- 	is_register = is_swbp_insn(&opcode);
- 	uprobe = container_of(auprobe, struct uprobe, arch);
- 
- retry:
-+	if (is_register)
-+		gup_flags |= FOLL_SPLIT_PMD;
- 	/* Read the page with vaddr into memory */
--	ret = get_user_pages_remote(NULL, mm, vaddr, 1,
--			FOLL_FORCE | FOLL_SPLIT_PMD, &old_page, &vma, NULL);
-+	ret = get_user_pages_remote(NULL, mm, vaddr, 1, gup_flags,
-+				    &old_page, &vma, NULL);
- 	if (ret <= 0)
- 		return ret;
- 
-@@ -489,6 +492,12 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
- 	if (ret <= 0)
- 		goto put_old;
- 
-+	if (WARN(!is_register && PageCompound(old_page),
-+		 "uprobe unregister should never work on compound page\n")) {
-+		ret = -EINVAL;
-+		goto put_old;
-+	}
-+
- 	/* We are going to replace instruction, update ref_ctr. */
- 	if (!ref_ctr_updated && uprobe->ref_ctr_offset) {
- 		ret = update_ref_ctr(uprobe, mm, is_register ? 1 : -1);
--- 
-2.17.1
-
+Rob
