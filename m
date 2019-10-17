@@ -2,111 +2,137 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 999F6C4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 826E0FA372C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7198920820
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FF9A21835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:25:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405068AbfJQHV3 (ORCPT
+        id S2408130AbfJQHZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 03:21:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:25095 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727132AbfJQHV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 03:21:28 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 635F33090FD6;
-        Thu, 17 Oct 2019 07:21:28 +0000 (UTC)
-Received: from [10.36.117.42] (ovpn-117-42.ams2.redhat.com [10.36.117.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7F990600C8;
-        Thu, 17 Oct 2019 07:21:25 +0000 (UTC)
-Subject: Re: [PATCH V2] mm/page_alloc: Add alloc_contig_pages()
-To:     Michal Hocko <mhocko@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        David Rientjes <rientjes@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-kernel@vger.kernel.org
-References: <1571223765-10662-1-git-send-email-anshuman.khandual@arm.com>
- <40b8375c-5291-b477-1519-fd7fa799a67d@redhat.com>
- <cdcf77a5-e5c9-71ff-811d-ecd1c1e80f00@arm.com>
- <20191016115119.GA317@dhcp22.suse.cz>
- <fe8cae46-6bd8-88eb-d3fe-2740bb79ee58@redhat.com>
- <20191016124149.GB317@dhcp22.suse.cz>
- <97cadd99-d05e-3174-6532-fe18f0301ba7@arm.com>
- <e37c16f5-7068-5359-a539-bee58e705122@redhat.com>
- <c60b9e95-5c6c-fcb2-c8bb-13e7646ba8ea@arm.com>
- <20191017071129.GB24485@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <bfc3b281-79d1-1d8f-337d-c01acc29ab30@redhat.com>
-Date:   Thu, 17 Oct 2019 09:21:24 +0200
+        Thu, 17 Oct 2019 03:25:20 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9032 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405115AbfJQHZU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 03:25:20 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9H7MNJW070057
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 03:25:18 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vph4kvp2g-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 03:25:18 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
+        Thu, 17 Oct 2019 08:25:15 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 17 Oct 2019 08:25:11 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9H7PALV46006782
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 17 Oct 2019 07:25:10 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7FE3AAE058;
+        Thu, 17 Oct 2019 07:25:10 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9F867AE05A;
+        Thu, 17 Oct 2019 07:25:07 +0000 (GMT)
+Received: from JAVRIS.in.ibm.com (unknown [9.102.28.44])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 17 Oct 2019 07:25:07 +0000 (GMT)
+Subject: Re: [PATCH v3 3/3] selftests/livepatch: Test interaction with
+ ftrace_enabled
+To:     Joe Lawrence <joe.lawrence@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>, rostedt@goodmis.org,
+        mingo@redhat.com, jpoimboe@redhat.com, jikos@kernel.org,
+        pmladek@suse.com
+Cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        shuah@kernel.org, linux-kselftest@vger.kernel.org
+References: <20191016113316.13415-1-mbenes@suse.cz>
+ <20191016113316.13415-4-mbenes@suse.cz>
+ <61b8e995-f5a2-8094-8e91-1a60019d2916@linux.vnet.ibm.com>
+ <d4e9e2a0-51e7-e86e-9f6d-237a6c3b0204@redhat.com>
+From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Date:   Thu, 17 Oct 2019 12:55:05 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-In-Reply-To: <20191017071129.GB24485@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <d4e9e2a0-51e7-e86e-9f6d-237a6c3b0204@redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 17 Oct 2019 07:21:28 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19101707-0016-0000-0000-000002B8D112
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101707-0017-0000-0000-00003319F7A1
+Message-Id: <65e9f12d-4f93-ca49-1238-1894d63ab09a@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-17_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910170064
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.10.19 09:11, Michal Hocko wrote:
-> On Thu 17-10-19 10:44:41, Anshuman Khandual wrote:
-> [...]
->> Does this add-on documentation look okay ? Should we also mention about the
->> possible reduction in chances of success during pfn block search for the
->> non-power-of-two cases as the implicit alignment will probably turn out to
->> be bigger than nr_pages itself ?
+On 10/17/19 3:17 AM, Joe Lawrence wrote:
+> On 10/16/19 1:06 PM, Kamalesh Babulal wrote:
+>> On 10/16/19 5:03 PM, Miroslav Benes wrote:
+>>> From: Joe Lawrence <joe.lawrence@redhat.com>
+>>>
+>>> Since livepatching depends upon ftrace handlers to implement "patched"
+>>> code functionality, verify that the ftrace_enabled sysctl value
+>>> interacts with livepatch registration as expected.  At the same time,
+>>> ensure that ftrace_enabled is set and part of the test environment
+>>> configuration that is saved and restored when running the selftests.
+>>>
+>>> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+>>> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
 >>
->>   * Requested nr_pages may or may not be power of two. The search for suitable
->>   * memory range in a zone happens in nr_pages aligned pfn blocks. But in case
->>   * when nr_pages is not power of two, an implicitly aligned pfn block search
->>   * will happen which in turn will impact allocated memory block's alignment.
->>   * In these cases, the size (i.e nr_pages) and the alignment of the allocated
->>   * memory will be different. This problem does not exist when nr_pages is power
->>   * of two where the size and the alignment of the allocated memory will always
->>   * be nr_pages.
+>> [...]
+>>> diff --git a/tools/testing/selftests/livepatch/test-ftrace.sh b/tools/testing/selftests/livepatch/test-ftrace.sh
+>>> new file mode 100755
+>>> index 000000000000..e2a76887f40a
+>>> --- /dev/null
+>>> +++ b/tools/testing/selftests/livepatch/test-ftrace.sh
+>>
+>> This test fails due to wrong file permissions, with the warning:
+>>
+>> # Warning: file test-ftrace.sh is not executable, correct this.
+>> not ok 4 selftests: livepatch: test-ftrace.sh
+>>
 > 
-> I dunno, it sounds more complicated than really necessary IMHO. Callers
-> shouldn't really be bothered by memory blocks and other really deep
-> implementation details.. Wouldn't be the below sufficient?
+> Hi Kamalesh,
 > 
-> The allocated memory is always aligned to a page boundary. If nr_pages
-> is a power of two then the alignement is guaranteed to be to the given
-
-s/alignement/alignment/
-
-and "the PFN is guaranteed to be aligned to nr_pages" (the address is 
-aligned to nr_pages*PAGE_SIZE)
-
-> nr_pages (e.g. 1GB request would be aligned to 1GB).
+> Thanks for testing.  This error is weird as the git log says new file mode: 100755.  'git am' of Miroslav's patchset gives me a new test-ftrace.sh with "Access: (0775/-rwxrwxr-x)"  Did you apply the mbox directly or.. ?
 > 
 
-I'd probably add "This function will miss allocation opportunities if 
-nr_pages is not a power of two (and the implicit alignment is bogus)."
+Hi Joe,
+
+Thanks, I was using patch command to apply the patches and using git am
+helped. Sorry for the noise. The test cases passes now, without the issue
+I previously reported:
+
+[...]
+# TEST: livepatch interaction with ftrace_enabled sysctl ... ok
+ok 4 selftests: livepatch: test-ftrace.sh
+
+Long story is that the patch command version installed on the test machine
+doesn't understand new file mode permission from the git diff, updating
+the patch version creates the patch with 755 mode.
 
 -- 
+Kamalesh
 
-Thanks,
-
-David / dhildenb
