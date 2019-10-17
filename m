@@ -2,128 +2,100 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8C1FA3728
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA31ECE599
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D18E218DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4290A218DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:26:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="DPl0z3hl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404249AbfJQCXg (ORCPT
+        id S2406633AbfJQC0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 22:23:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55420 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727328AbfJQCXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 22:23:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 87BE6B235;
-        Thu, 17 Oct 2019 02:23:33 +0000 (UTC)
-From:   Qu Wenruo <wqu@suse.com>
-To:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org
-Subject: [PATCH v2] btrfs: qgroup: Fix wrong parameter order for trace events
-Date:   Thu, 17 Oct 2019 10:23:29 +0800
-Message-Id: <20191017022329.31545-1-wqu@suse.com>
-X-Mailer: git-send-email 2.23.0
+        Wed, 16 Oct 2019 22:26:32 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:41183 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727328AbfJQC0b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 22:26:31 -0400
+Received: by mail-qt1-f195.google.com with SMTP id v52so1286043qtb.8
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 19:26:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QYYIz0DpXt+S96zKsPkYJbopZGRxz9flW9WuWLOogaQ=;
+        b=DPl0z3hlFDrtFfUjhG/QNSp37MnO5lnNjz+RDVaYKEe9dx44OSQaiUs6jPgU1mlu+d
+         GQCin+43NLsVlgi9RzYf+tI/v8b9tJjEPefiv3E2pYhpEp/PDLCDXOXBc48gTlgbGATs
+         0ZDFck9LGWXjDpiuxxN/KMfjk2ALdUgI6P2xLFRdBBCRKSkvrBWX7rxWV4d6qXRxf9Un
+         z2b5jV5twiUT24rOl6BJCgI1A0bAXsL8BSPuzwFH2MSOD2QVZaGw6E8KNPIHMd+IFlV4
+         mJ+1OEqgH/WqxY7vxSTcY4bGsgAVXkaOtc/BstJ24QyN0sm7QAWaa926M5fJWb3OLiC5
+         Dd4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QYYIz0DpXt+S96zKsPkYJbopZGRxz9flW9WuWLOogaQ=;
+        b=Bm5p5inp7iehC/e3+fodIdRdCXamdxjFjS7tH6jHvyR40B6G8BbKuFBpNsiy/prNwI
+         EEDvWA/slCp3tWjzJ5/iSd1621dk2oD/K4FYbw6dp5bQPSI7kEZBr83pkkF6W76P4dTz
+         9wWSfG/Cgh9q0a8UP2QHIY1X7aPKqt5gmV7NzgxIScJQv6YJkmIGTP4Z9OvSyqRsz+Ii
+         9NPdmBrhOImP2lrxh36HrL8KNFRr1vhFn0VEOS+vm4YmfjdkBpCHEqa9ppj7RSRJymCu
+         7XsVC63Rkbl0B9G9B3fatxBrfJ2nVfaT74Avrb+JLvDTfQOLciJEebBTXFvxtiTv1uuZ
+         mPcA==
+X-Gm-Message-State: APjAAAUvrmucT9luQZwqJzj5MNt0xOeqlh+9VXwxMN7HYIl3Ed+iup75
+        fnDZ+ibmGiAjMEx+El8O+BE/K2GjrQsY6rALYyyZLQ==
+X-Google-Smtp-Source: APXvYqyQj2ZLctUSSL3V9JNUsWb05JdfRipaPfh6FHbT8hGhFaGCyPxwpFtBc+PUDLv4I6g5Tcjv2ImmCdkpX+suV3c=
+X-Received: by 2002:a0c:c792:: with SMTP id k18mr1397138qvj.154.1571279189073;
+ Wed, 16 Oct 2019 19:26:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191016015408.11091-1-chiu@endlessm.com>
+In-Reply-To: <20191016015408.11091-1-chiu@endlessm.com>
+From:   Chris Chiu <chiu@endlessm.com>
+Date:   Thu, 17 Oct 2019 10:26:18 +0800
+Message-ID: <CAB4CAwen5y7Z4GU7YgpVafyGexxaMDLzrZ949t9p+LiZ9TxAPA@mail.gmail.com>
+Subject: Re: [PATCH v2] rtl8xxxu: fix RTL8723BU connection failure issue after
+ warm reboot
+To:     Jes Sorensen <Jes.Sorensen@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        David Miller <davem@davemloft.net>
+Cc:     linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[BUG]
-For btrfs:qgroup_meta_reserve event, the trace event can output garbage:
-qgroup_meta_reserve: 9c7f6acc-b342-4037-bc47-7f6e4d2232d7: refroot=5(FS_TREE) type=DATA diff=2
-qgroup_meta_reserve: 9c7f6acc-b342-4037-bc47-7f6e4d2232d7: refroot=5(FS_TREE) type=0x258792 diff=2
+On Wed, Oct 16, 2019 at 9:54 AM Chris Chiu <chiu@endlessm.com> wrote:
+>
+> The RTL8723BU has problems connecting to AP after each warm reboot.
+> Sometimes it returns no scan result, and in most cases, it fails
+> the authentication for unknown reason. However, it works totally
+> fine after cold reboot.
+>
+> Compare the value of register SYS_CR and SYS_CLK_MAC_CLK_ENABLE
+> for cold reboot and warm reboot, the registers imply that the MAC
+> is already powered and thus some procedures are skipped during
+> driver initialization. Double checked the vendor driver, it reads
+> the SYS_CR and SYS_CLK_MAC_CLK_ENABLE also but doesn't skip any
+> during initialization based on them. This commit only tells the
+> RTL8723BU to do full initialization without checking MAC status.
+>
+> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+Signed-off-by: Jes Sorensen <Jes.Sorensen@gmail.com>
 
-Since we're in qgroup_meta_reserve() trace event, the @type should never
-be DATA, while diff must be aligned to sectorsize (4K in this case).
+Sorry, I forgot to add Jes.
 
-Only UUID and refroot is correct.
-
-[CAUSE]
-There are two causes for this bug:
-
-- Bad parameter order
-  For trace event btrfs:qgroup_meta_reserve, we're passing wrong
-  parameters.
-
-  The correct parameters are:
-  struct btrfs_root, s64 diff, int type.
-
-  However the used order is:
-  struct btrfs_root, int type, s64 diff.
-
-- @type is not even assigned
-  What I was doing !? /facepalm
-
-[FIX]
-Fix the super stupid bug.
-
-Now everything works fine:
-qgroup_meta_reserve: 0477ad60-9aeb-4040-8a03-1900844d46ba: refroot=5(FS_TREE) type=META_PERTRANS diff=81920
-qgroup_meta_reserve: 0477ad60-9aeb-4040-8a03-1900844d46ba: refroot=5(FS_TREE) type=META_PREALLOC diff=16384
-qgroup_meta_reserve: 0477ad60-9aeb-4040-8a03-1900844d46ba: refroot=5(FS_TREE) type=META_PREALLOC diff=0
-qgroup_meta_reserve: 0477ad60-9aeb-4040-8a03-1900844d46ba: refroot=5(FS_TREE) type=META_PREALLOC diff=16384
-qgroup_meta_reserve: 0477ad60-9aeb-4040-8a03-1900844d46ba: refroot=5(FS_TREE) type=META_PREALLOC diff=-16384
-qgroup_meta_reserve: 0477ad60-9aeb-4040-8a03-1900844d46ba: refroot=5(FS_TREE) type=META_PREALLOC diff=16384
-qgroup_meta_reserve: 0477ad60-9aeb-4040-8a03-1900844d46ba: refroot=5(FS_TREE) type=META_PREALLOC diff=-16384
-qgroup_meta_reserve: 0477ad60-9aeb-4040-8a03-1900844d46ba: refroot=5(FS_TREE) type=META_PREALLOC diff=16384
-qgroup_meta_reserve: 0477ad60-9aeb-4040-8a03-1900844d46ba: refroot=5(FS_TREE) type=META_PREALLOC diff=-16384
-
-Fixes: 4ee0d8832c2e ("btrfs: qgroup: Update trace events for metadata reservation")
-Signed-off-by: Qu Wenruo <wqu@suse.com>
----
-Changelog:
-v2:
-- Use more accurate comment about the fintuning options
-- Use more elegant method to output uuid
----
- fs/btrfs/qgroup.c            | 4 ++--
- include/trace/events/btrfs.h | 1 +
- 2 files changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
-index c4bb69941c77..3ad151655eb8 100644
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -3629,7 +3629,7 @@ int __btrfs_qgroup_reserve_meta(struct btrfs_root *root, int num_bytes,
- 		return 0;
- 
- 	BUG_ON(num_bytes != round_down(num_bytes, fs_info->nodesize));
--	trace_qgroup_meta_reserve(root, type, (s64)num_bytes);
-+	trace_qgroup_meta_reserve(root, (s64)num_bytes, type);
- 	ret = qgroup_reserve(root, num_bytes, enforce, type);
- 	if (ret < 0)
- 		return ret;
-@@ -3676,7 +3676,7 @@ void __btrfs_qgroup_free_meta(struct btrfs_root *root, int num_bytes,
- 	 */
- 	num_bytes = sub_root_meta_rsv(root, num_bytes, type);
- 	BUG_ON(num_bytes != round_down(num_bytes, fs_info->nodesize));
--	trace_qgroup_meta_reserve(root, type, -(s64)num_bytes);
-+	trace_qgroup_meta_reserve(root, -(s64)num_bytes, type);
- 	btrfs_qgroup_free_refroot(fs_info, root->root_key.objectid,
- 				  num_bytes, type);
- }
-diff --git a/include/trace/events/btrfs.h b/include/trace/events/btrfs.h
-index 5df604de4f11..0ebcaa153f93 100644
---- a/include/trace/events/btrfs.h
-+++ b/include/trace/events/btrfs.h
-@@ -1710,6 +1710,7 @@ TRACE_EVENT(qgroup_meta_reserve,
- 	TP_fast_assign_btrfs(root->fs_info,
- 		__entry->refroot	= root->root_key.objectid;
- 		__entry->diff		= diff;
-+		__entry->type		= type;
- 	),
- 
- 	TP_printk_btrfs("refroot=%llu(%s) type=%s diff=%lld",
--- 
-2.23.0
-
+Chris
+> ---
+>
+> Note:
+>   v2: fix typo of commit message
+>
+>
