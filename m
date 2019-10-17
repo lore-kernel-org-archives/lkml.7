@@ -2,132 +2,200 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5D2ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 22:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC68EFA372B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 22:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6456821D7A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 22:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C261920854
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 22:21:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gASX5gWQ"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="f1f/EC99"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441641AbfJQWTP (ORCPT
+        id S2406654AbfJQWVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 18:19:15 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40024 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388926AbfJQWTK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 18:19:10 -0400
-Received: by mail-pf1-f196.google.com with SMTP id x127so2511544pfb.7;
-        Thu, 17 Oct 2019 15:19:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=8JZTh5GOv/vPwyj1Z/f9GyQeqhW8aV/ynLQgCI/BrPs=;
-        b=gASX5gWQMRaeKcinMDBoM1N8EXgDHtZviu7s6BZ2htkSiNOQfvkU7rGiZBP8dIUXKQ
-         GUpRJxrCPZ+bNYjj8gM3eubGHRO1YsmxhA+7Yw8sLrCmBV6VpPsIOqt2/Wz6Abjya8R2
-         mDTBwhJH47QGfFvM6YU6goBxEd1ZWh+eOKZOxn2ozQBJ773igmeFk+dDeiJ1d7JVpXu1
-         4rwwqwemuoXSBmTFjHR/8dXRv57xZIjWzDy6AibvNeQ36kyNNvu+zOP11j/FTbYOqzmP
-         Y0KXukY1wxELBi2Enpkd7KLoKZWKPbBlwcx5H/gt0jZC+AcNO+qtAwVrDaj2i7flFnIA
-         J33A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=8JZTh5GOv/vPwyj1Z/f9GyQeqhW8aV/ynLQgCI/BrPs=;
-        b=dLeQtLWfCa9ONr7yyp9YMNcKGtj8xTcbjmRwuDA5pYwO9FVi4Fr0zy/TJ3AzENzVTl
-         lW9nApOkPRpzI6/R/fwcrvEAq/BnDD6JX53X0bEjmO7/s+mhdc0orn6iFs/Na/u2Ch/6
-         nCv7ye8nrAkBRr0VLvOQQKJ838MUz7nFYGgjHRf6irkChS6LCepL+F/c9iC0hAIAT7zA
-         6aUthhk+7ul6yRuc2mni7zOTrwZ2wA80KBNhYaxlToqlhX7GxtQOojzZf/oCLDOU5MVc
-         U+hK4RYisNP7ZJ81mk47hnjVdvhjla8B2MrfW2BwyBnZTqJlaEQ/ef1mZDMZMQh6O3uL
-         nIDg==
-X-Gm-Message-State: APjAAAXxjXoVvAxU3uPs8IYl7AdXyqTN8K7GYqdAoTCjKnw1zpPB4xEZ
-        0Hq+48YUpU3FRdi8TQuCNOU=
-X-Google-Smtp-Source: APXvYqyT5pYhGkPtGA3klMmcwFm1aXTk0WQ7BdE9vjcp/7RSs3rStsEZKxZL4Q3f/XLgP0EvJnrlcg==
-X-Received: by 2002:a62:4d04:: with SMTP id a4mr2719467pfb.60.1571350747912;
-        Thu, 17 Oct 2019 15:19:07 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id a8sm3441912pff.5.2019.10.17.15.19.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 15:19:07 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     agross@kernel.org, bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [RFC PATCH 4/4] arm64: dts: qcom: msm8998-clamshell: Enable bluetooth
-Date:   Thu, 17 Oct 2019 15:18:43 -0700
-Message-Id: <20191017221843.8130-5-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191017221843.8130-1-jeffrey.l.hugo@gmail.com>
-References: <20191017221843.8130-1-jeffrey.l.hugo@gmail.com>
+        Thu, 17 Oct 2019 18:21:17 -0400
+Received: from ozlabs.org ([203.11.71.1]:57779 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388926AbfJQWVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 18:21:17 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46vNt20NFPz9sP3;
+        Fri, 18 Oct 2019 09:21:13 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1571350874;
+        bh=+xNI/izo+oEF7ZVHXnsd65aDt7mIJZA3YoA5Ho3A6nY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=f1f/EC99WEbF1GMsbzUtUyOEdS+UFfEGinjVVnKu30uAmJw5HJUs45vU+V98Wria0
+         yr6TRVF7syL26LB84sPIJwBc82BwWO3YqgFzNIip7QG52I0Pbfks1H4QK/cJCaXxHt
+         QZvbamKt0EQRkF822EwfsXKMu7avatGVAPgDVfNoPgQNv8aBolCXUpLNGJr+5qumbY
+         NroGgjVLZGEZmBUDQz2UWGg2m7kMy8+38a4enYVVm5TW9H6rjZMTe4Q514MwwRrdt0
+         6ZpfOsqheQT+g9UynCp8KtxKxorcnzwB3KMcdL7yZtfFS89bXAq6kiPwQabTt42D+W
+         waPmLcraEYxIw==
+Date:   Fri, 18 Oct 2019 09:20:56 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Anson Huang <Anson.Huang@nxp.com>, Peng Fan <peng.fan@nxp.com>
+Subject: linux-next: manual merge of the clk tree with the imx-mxs tree
+Message-ID: <20191018092056.53500e75@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/0ZbPSUm+R+oFM9TfRuR9Ok0";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bluetooth is provided by a wcn3990, which is connected to the main SoC via
-blsp1_uart3.
+--Sig_/0ZbPSUm+R+oFM9TfRuR9Ok0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Hi all,
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi b/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
-index 8c35c1f54e32..ab24d415acc0 100644
---- a/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
-@@ -60,6 +60,20 @@
- 	};
- };
- 
-+&blsp1_uart3 {
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "qcom,wcn3990-bt";
-+
-+		vddio-supply = <&vreg_s4a_1p8>;
-+		vddxo-supply = <&vreg_l7a_1p8>;
-+		vddrf-supply = <&vreg_l17a_1p3>;
-+		vddch0-supply = <&vreg_l25a_3p3>;
-+		max-speed = <3200000>;
-+	};
-+};
-+
- &dsi0 {
- 	status = "okay";
- 
-@@ -209,6 +223,7 @@
- 		vreg_l7a_1p8: l7 {
- 			regulator-min-microvolt = <1800000>;
- 			regulator-max-microvolt = <1800000>;
-+			regulator-allow-set-load;
- 		};
- 		vreg_l8a_1p2: l8 {
- 			regulator-min-microvolt = <1200000>;
-@@ -249,6 +264,7 @@
- 		vreg_l17a_1p3: l17 {
- 			regulator-min-microvolt = <1304000>;
- 			regulator-max-microvolt = <1304000>;
-+			regulator-allow-set-load;
- 		};
- 		vreg_l18a_2p7: l18 {
- 			regulator-min-microvolt = <2704000>;
-@@ -284,6 +300,7 @@
- 		vreg_l25a_3p3: l25 {
- 			regulator-min-microvolt = <3104000>;
- 			regulator-max-microvolt = <3312000>;
-+			regulator-allow-set-load;
- 		};
- 		vreg_l26a_1p2: l26 {
- 			regulator-min-microvolt = <1200000>;
--- 
-2.17.1
+Today's linux-next merge of the clk tree got a conflict in:
 
+  drivers/clk/imx/clk-imx8mn.c
+
+between commit:
+
+  0ae4fbc63c31 ("clk: imx8mn: Use common 1443X/1416X PLL clock structure")
+
+from the imx-mxs tree and commit:
+
+  727e12cde9f6 ("clk: imx: imx8mn: drop unused pll enum")
+
+from the clk tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/clk/imx/clk-imx8mn.c
+index 7a5590b967d5,ccd05321f043..000000000000
+--- a/drivers/clk/imx/clk-imx8mn.c
++++ b/drivers/clk/imx/clk-imx8mn.c
+@@@ -25,20 -25,75 +25,6 @@@ static u32 share_count_disp
+  static u32 share_count_pdm;
+  static u32 share_count_nand;
+ =20
+- enum {
+- 	ARM_PLL,
+- 	GPU_PLL,
+- 	VPU_PLL,
+- 	SYS_PLL1,
+- 	SYS_PLL2,
+- 	SYS_PLL3,
+- 	DRAM_PLL,
+- 	AUDIO_PLL1,
+- 	AUDIO_PLL2,
+- 	VIDEO_PLL2,
+- 	NR_PLLS,
+ -static const struct imx_pll14xx_rate_table imx8mn_pll1416x_tbl[] =3D {
+ -	PLL_1416X_RATE(1800000000U, 225, 3, 0),
+ -	PLL_1416X_RATE(1600000000U, 200, 3, 0),
+ -	PLL_1416X_RATE(1500000000U, 375, 3, 1),
+ -	PLL_1416X_RATE(1400000000U, 350, 3, 1),
+ -	PLL_1416X_RATE(1200000000U, 300, 3, 1),
+ -	PLL_1416X_RATE(1000000000U, 250, 3, 1),
+ -	PLL_1416X_RATE(800000000U,  200, 3, 1),
+ -	PLL_1416X_RATE(750000000U,  250, 2, 2),
+ -	PLL_1416X_RATE(700000000U,  350, 3, 2),
+ -	PLL_1416X_RATE(600000000U,  300, 3, 2),
+ -};
+ -
+ -static const struct imx_pll14xx_rate_table imx8mn_audiopll_tbl[] =3D {
+ -	PLL_1443X_RATE(393216000U, 262, 2, 3, 9437),
+ -	PLL_1443X_RATE(361267200U, 361, 3, 3, 17511),
+ -};
+ -
+ -static const struct imx_pll14xx_rate_table imx8mn_videopll_tbl[] =3D {
+ -	PLL_1443X_RATE(650000000U, 325, 3, 2, 0),
+ -	PLL_1443X_RATE(594000000U, 198, 2, 2, 0),
+ -};
+ -
+ -static const struct imx_pll14xx_rate_table imx8mn_drampll_tbl[] =3D {
+ -	PLL_1443X_RATE(650000000U, 325, 3, 2, 0),
+ -};
+ -
+ -static struct imx_pll14xx_clk imx8mn_audio_pll =3D {
+ -		.type =3D PLL_1443X,
+ -		.rate_table =3D imx8mn_audiopll_tbl,
+ -		.rate_count =3D ARRAY_SIZE(imx8mn_audiopll_tbl),
+ -};
+ -
+ -static struct imx_pll14xx_clk imx8mn_video_pll =3D {
+ -		.type =3D PLL_1443X,
+ -		.rate_table =3D imx8mn_videopll_tbl,
+ -		.rate_count =3D ARRAY_SIZE(imx8mn_videopll_tbl),
+ -};
+ -
+ -static struct imx_pll14xx_clk imx8mn_dram_pll =3D {
+ -		.type =3D PLL_1443X,
+ -		.rate_table =3D imx8mn_drampll_tbl,
+ -		.rate_count =3D ARRAY_SIZE(imx8mn_drampll_tbl),
+ -};
+ -
+ -static struct imx_pll14xx_clk imx8mn_arm_pll =3D {
+ -		.type =3D PLL_1416X,
+ -		.rate_table =3D imx8mn_pll1416x_tbl,
+ -		.rate_count =3D ARRAY_SIZE(imx8mn_pll1416x_tbl),
+ -};
+ -
+ -static struct imx_pll14xx_clk imx8mn_gpu_pll =3D {
+ -		.type =3D PLL_1416X,
+ -		.rate_table =3D imx8mn_pll1416x_tbl,
+ -		.rate_count =3D ARRAY_SIZE(imx8mn_pll1416x_tbl),
+ -};
+ -
+ -static struct imx_pll14xx_clk imx8mn_vpu_pll =3D {
+ -		.type =3D PLL_1416X,
+ -		.rate_table =3D imx8mn_pll1416x_tbl,
+ -		.rate_count =3D ARRAY_SIZE(imx8mn_pll1416x_tbl),
+ -};
+ -
+ -static struct imx_pll14xx_clk imx8mn_sys_pll =3D {
+ -		.type =3D PLL_1416X,
+ -		.rate_table =3D imx8mn_pll1416x_tbl,
+ -		.rate_count =3D ARRAY_SIZE(imx8mn_pll1416x_tbl),
+--};
+--
+  static const char * const pll_ref_sels[] =3D { "osc_24m", "dummy", "dummy=
+", "dummy", };
+  static const char * const audio_pll1_bypass_sels[] =3D {"audio_pll1", "au=
+dio_pll1_ref_sel", };
+  static const char * const audio_pll2_bypass_sels[] =3D {"audio_pll2", "au=
+dio_pll2_ref_sel", };
+
+--Sig_/0ZbPSUm+R+oFM9TfRuR9Ok0
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2o6UgACgkQAVBC80lX
+0Gw0Pgf9Gys26CCFsELgvNekrkEmnRC4e92+uxqyHzLtKBtZ3R6BrTVb7APIuwU2
+OE7YNRgbQhhk9pWcg5ON5uNU3FSorXnU3Z2dqod9vMsUz3UF20Sgn8Lry8NhCwC6
+pOpNnbBRpsEtVG0evT0eYrf6sgE6Fb8oMcpZanxy27POW/q1OABPP5OzWE4agMGo
+7ObO0PtcEzqnX20Kfx9JQLcy7P9S+VG0hUIjRU5Urkt2jBkapbpgfdVxVKqH8j/T
+cqAHmb9D+H3qMPiBVY2kNCC0rK7MryNv/fdH+UKXdF5ldm2jArabpfpTu2QmDDRl
+c3qu0Ux4fS76yGh90YUBOAXvIhqkIA==
+=UMPV
+-----END PGP SIGNATURE-----
+
+--Sig_/0ZbPSUm+R+oFM9TfRuR9Ok0--
