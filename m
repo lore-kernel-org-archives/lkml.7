@@ -2,168 +2,965 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E82FFA3735
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48365ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16AB321848
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:24:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WMgijF4m"
+	by mail.kernel.org (Postfix) with ESMTP id 0A3132064B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:24:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409368AbfJQMYR (ORCPT
+        id S2502248AbfJQMYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 08:24:17 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:47332 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728554AbfJQMYR (ORCPT
+        Thu, 17 Oct 2019 08:24:37 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:58851 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728554AbfJQMYg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:24:17 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9HC9Pug014774;
-        Thu, 17 Oct 2019 12:24:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=2SOi+yOvifARKTdZueuOWwzS6KmvruH+Cv9v65kxebg=;
- b=WMgijF4mCJHTNbCWNF+6WBUnk0LMSICmdN+PfRdJJGNvlPMJlErr0D/Ybys2x3zLVTHB
- xAhrEipmmMUlWU4Tqa96MzPW8KQFuhOw/rTCKyucJfBzg7pcIHS5KaX4mPfKJCLEpcaL
- vYH84951E0cWzV22BRgSh3JYQw5cBezWpJ/i2vowvAo57zGHKphhdaahj3oeDFlakkMs
- f0DvElYXbWJSJ+QG2WAmWYNCZp0r4cdq+0FrWcD8WRlwTSFM3OARKxZpznzRYBH9VPSg
- TgHwAJKtMdEPud5Xk1k4s6N6dkjm96Xze204BjsK+qY5o4YU+oft324x++BfhI6sHVzG 6A== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2vk7frnrtv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 17 Oct 2019 12:24:08 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9HCMtB4032584;
-        Thu, 17 Oct 2019 12:24:08 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2vpf13s0ju-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 17 Oct 2019 12:24:08 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9HCO4lD004813;
-        Thu, 17 Oct 2019 12:24:04 GMT
-Received: from [10.175.56.189] (/10.175.56.189)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 17 Oct 2019 12:24:04 +0000
-Subject: Re: email as a bona fide git transport
-To:     Pratyush Yadav <me@yadavpratyush.com>
-Cc:     workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        Eric Wong <e@80x24.org>
-References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
- <20191016150020.cr6jgfpd2c6fyg7t@yadavpratyush.com>
-From:   Vegard Nossum <vegard.nossum@oracle.com>
-Message-ID: <a1c33600-14e6-be37-c026-8d8b8e4bad92@oracle.com>
-Date:   Thu, 17 Oct 2019 14:23:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 17 Oct 2019 08:24:36 -0400
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: kamel.bouhara@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id C7E4A100017;
+        Thu, 17 Oct 2019 12:24:31 +0000 (UTC)
+From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kamel Bouhara <kamel.bouhara@bootlin.com>,
+        =?UTF-8?q?K=C3=A9vin=20RAYMOND?= <k.raymond@overkiz.com>,
+        Mickael GARDET <m.gardet@overkiz.com>
+Subject: [PATCH 2/2] ARM: dts: at91: add a common kizbox2 dtsi file
+Date:   Thu, 17 Oct 2019 14:24:18 +0200
+Message-Id: <20191017122418.18855-1-kamel.bouhara@bootlin.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191017094028.14259-1-kamel.bouhara@bootlin.com>
+References: <20191017094028.14259-1-kamel.bouhara@bootlin.com>
 MIME-Version: 1.0
-In-Reply-To: <20191016150020.cr6jgfpd2c6fyg7t@yadavpratyush.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9412 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910170114
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9412 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910170113
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There are three different boards available depending on the PCB
+(3 antennas support and several revison). Add a dtsi file to share
+common binding between all kizbox2 boards.
 
-On 10/16/19 5:00 PM, Pratyush Yadav wrote:
-> On 16/10/19 12:22PM, Vegard Nossum wrote:
-> Just to play the devil's advocate, even though I'm in favor of something
-> like this, I'll add in another disadvantage:
-> 
-> - The maintainer can't make small edits before pushing the changes out.
-> 
-> I do that every now and then for git-gui, and Junio does that sometimes
-> for Git. I don't know if the folks over at Linux do something like this,
-> but using '--exact' would mean that contributors would have to send a
-> re-roll for even minor changes. Its mostly an inconvenience instead of a
-> problem, but I thought I'd point it out.
+Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+Signed-off-by: Kévin RAYMOND <k.raymond@overkiz.com>
+Signed-off-by: Mickael GARDET <m.gardet@overkiz.com>
+---
+ arch/arm/boot/dts/Makefile                 |   6 +-
+ arch/arm/boot/dts/at91-kizbox.dts          | 173 +++++++-------
+ arch/arm/boot/dts/at91-kizbox2-0.dts       |  17 ++
+ arch/arm/boot/dts/at91-kizbox2-1.dts       |  22 ++
+ arch/arm/boot/dts/at91-kizbox2-2.dts       |  26 +++
+ arch/arm/boot/dts/at91-kizbox2-3.dts       |  30 +++
+ arch/arm/boot/dts/at91-kizbox2-rev2.dts    |  34 +++
+ arch/arm/boot/dts/at91-kizbox2.dts         | 244 -------------------
+ arch/arm/boot/dts/at91-kizbox2_common.dtsi | 258 +++++++++++++++++++++
+ 9 files changed, 477 insertions(+), 333 deletions(-)
+ create mode 100644 arch/arm/boot/dts/at91-kizbox2-0.dts
+ create mode 100644 arch/arm/boot/dts/at91-kizbox2-1.dts
+ create mode 100644 arch/arm/boot/dts/at91-kizbox2-2.dts
+ create mode 100644 arch/arm/boot/dts/at91-kizbox2-3.dts
+ create mode 100644 arch/arm/boot/dts/at91-kizbox2-rev2.dts
+ delete mode 100644 arch/arm/boot/dts/at91-kizbox2.dts
+ create mode 100644 arch/arm/boot/dts/at91-kizbox2_common.dtsi
 
-I don't think this is a problem.
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 3bda216c41be..c976b72a4c94 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -45,7 +45,11 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
+ 	at91sam9x25ek.dtb \
+ 	at91sam9x35ek.dtb
+ dtb-$(CONFIG_SOC_SAM_V7) += \
+-	at91-kizbox2.dtb \
++	at91-kizbox2-0.dtb \
++	at91-kizbox2-1.dtb \
++	at91-kizbox2-2.dtb \
++	at91-kizbox2-rev2.dtb \
++	at91-kizbox2-3.dtb \
+ 	at91-kizbox3-hs.dtb \
+ 	at91-nattis-2-natte-2.dtb \
+ 	at91-sama5d27_som1_ek.dtb \
+diff --git a/arch/arm/boot/dts/at91-kizbox.dts b/arch/arm/boot/dts/at91-kizbox.dts
+index 90996eaf73b2..9eb1ea750159 100644
+--- a/arch/arm/boot/dts/at91-kizbox.dts
++++ b/arch/arm/boot/dts/at91-kizbox.dts
+@@ -28,85 +28,6 @@
+ 		};
+ 	};
+ 
+-	ahb {
+-		apb {
+-			tcb0: timer@fffa0000 {
+-				timer@0 {
+-					compatible = "atmel,tcb-timer";
+-					reg = <0>, <1>;
+-				};
+-
+-				timer@2 {
+-					compatible = "atmel,tcb-timer";
+-					reg = <2>;
+-				};
+-			};
+-
+-			macb0: ethernet@fffc4000 {
+-				phy-mode = "mii";
+-				pinctrl-0 = <&pinctrl_macb_rmii
+-				             &pinctrl_macb_rmii_mii_alt>;
+-				status = "okay";
+-			};
+-
+-			usart3: serial@fffd0000 {
+-				status = "okay";
+-			};
+-
+-			dbgu: serial@fffff200 {
+-				status = "okay";
+-			};
+-
+-			watchdog@fffffd40 {
+-				timeout-sec = <15>;
+-				atmel,max-heartbeat-sec = <16>;
+-				atmel,min-heartbeat-sec = <0>;
+-				status = "okay";
+-			};
+-		};
+-
+-		usb0: ohci@500000 {
+-			num-ports = <1>;
+-			status = "okay";
+-		};
+-
+-		ebi: ebi@10000000 {
+-			status = "okay";
+-
+-			nand_controller: nand-controller {
+-				status = "okay";
+-				pinctrl-0 = <&pinctrl_nand_cs &pinctrl_nand_rb>;
+-				pinctrl-names = "default";
+-
+-				nand@3 {
+-					reg = <0x3 0x0 0x800000>;
+-					rb-gpios = <&pioC 13 GPIO_ACTIVE_HIGH>;
+-					cs-gpios = <&pioC 14 GPIO_ACTIVE_HIGH>;
+-					nand-bus-width = <8>;
+-					nand-ecc-mode = "soft";
+-					nand-on-flash-bbt;
+-					label = "atmel_nand";
+-
+-					partitions {
+-						compatible = "fixed-partitions";
+-						#address-cells = <1>;
+-						#size-cells = <1>;
+-
+-						bootstrap@0 {
+-							label = "bootstrap";
+-							reg = <0x0 0x20000>;
+-						};
+-
+-						ubi@20000 {
+-							label = "ubi";
+-							reg = <0x20000 0x7fe0000>;
+-						};
+-					};
+-				};
+-			};
+-		};
+-	};
+-
+ 	gpio_keys {
+ 		compatible = "gpio-keys";
+ 		#address-cells = <1>;
+@@ -127,15 +48,6 @@
+ 		};
+ 	};
+ 
+-	i2c-gpio-0 {
+-		status = "okay";
+-
+-		rtc: pcf8563@51 {
+-			compatible = "nxp,pcf8563";
+-			reg = <0x51>;
+-		};
+-	};
+-
+ 	pwm_leds {
+ 		compatible = "pwm-leds";
+ 
+@@ -179,3 +91,88 @@
+ 			     &pinctrl_tcb1_tiob0>;
+ 	};
+ };
++
++&tcb0 {
++	timer@0 {
++		compatible = "atmel,tcb-timer";
++		reg = <0>, <1>;
++	};
++
++	timer@2 {
++		compatible = "atmel,tcb-timer";
++		reg = <2>;
++	};
++};
++
++&ebi {
++	status = "okay";
++};
++
++&nand_controller {
++	status = "okay";
++	pinctrl-0 = <&pinctrl_nand_cs &pinctrl_nand_rb>;
++	pinctrl-names = "default";
++
++	nand@3 {
++		reg = <0x3 0x0 0x800000>;
++		rb-gpios = <&pioC 13 GPIO_ACTIVE_HIGH>;
++		cs-gpios = <&pioC 14 GPIO_ACTIVE_HIGH>;
++		nand-bus-width = <8>;
++		nand-ecc-mode = "soft";
++		nand-on-flash-bbt;
++		label = "atmel_nand";
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			bootstrap@0 {
++				label = "bootstrap";
++				reg = <0x0 0x20000>;
++			};
++
++			ubi@20000 {
++				label = "ubi";
++				reg = <0x20000 0x7fe0000>;
++			};
++		};
++	};
++};
++
++&macb0 {
++	phy-mode = "mii";
++	pinctrl-0 = <&pinctrl_macb_rmii
++		     &pinctrl_macb_rmii_mii_alt>;
++	status = "okay";
++};
++
++&usart3 {
++	status = "okay";
++};
++
++&dbgu {
++	status = "okay";
++};
++
++&watchdog {
++	timeout-sec = <15>;
++	atmel,max-heartbeat-sec = <16>;
++	atmel,min-heartbeat-sec = <0>;
++	status = "okay";
++};
++
++&usb0 {
++	num-ports = <1>;
++	status = "okay";
++};
++
++&i2c-gpio-0 {
++	status = "okay";
++
++	rtc: pcf8563@51 {
++		compatible = "nxp,pcf8563";
++		reg = <0x51>;
++	};
++};
++
+diff --git a/arch/arm/boot/dts/at91-kizbox2-0.dts b/arch/arm/boot/dts/at91-kizbox2-0.dts
+new file mode 100644
+index 000000000000..fd3f81fc0526
+--- /dev/null
++++ b/arch/arm/boot/dts/at91-kizbox2-0.dts
+@@ -0,0 +1,17 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * at91-kizbox2-0.dts - Device Tree file for the Kizbox 2 board
++ *
++ * Copyright (C) 2015 Overkiz SAS
++ *
++ * Authors: Antoine Aubert <a.aubert@overkiz.com>
++ *          Kévin Raymond <k.raymond@overkiz.com>
++ */
++/dts-v1/;
++#include "at91-kizbox2_common.dtsi"
++
++/ {
++	model = "Overkiz Kizbox 2 Mother Board";
++	compatible = "overkiz,kizbox2-0", "atmel,sama5d31",
++		     "atmel,sama5d3", "atmel,sama5";
++};
+diff --git a/arch/arm/boot/dts/at91-kizbox2-1.dts b/arch/arm/boot/dts/at91-kizbox2-1.dts
+new file mode 100644
+index 000000000000..00b26b5be466
+--- /dev/null
++++ b/arch/arm/boot/dts/at91-kizbox2-1.dts
+@@ -0,0 +1,22 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * at91-kizbox2-1.dts - Device Tree file for the Kizbox 2 with one
++ * head board
++ *
++ * Copyright (C) 2015 Overkiz SAS
++ *
++ * Authors: Antoine Aubert <a.aubert@overkiz.com>
++ *          Kévin Raymond <k.raymond@overkiz.com>
++ */
++/dts-v1/;
++#include "at91-kizbox2_common.dtsi"
++
++/ {
++	model = "Overkiz Kizbox 2 with one head";
++	compatible = "overkiz,kizbox2-1", "atmel,sama5d31",
++		     "atmel,sama5d3", "atmel,sama5";
++};
++
++&usart1 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/at91-kizbox2-2.dts b/arch/arm/boot/dts/at91-kizbox2-2.dts
+new file mode 100644
+index 000000000000..7251c14878cd
+--- /dev/null
++++ b/arch/arm/boot/dts/at91-kizbox2-2.dts
+@@ -0,0 +1,26 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * at91-kizbox2-2.dts - Device Tree file for the Kizbox2 with
++ * two head board
++ *
++ * Copyright (C) 2015 Overkiz SAS
++ *
++ * Authors: Antoine Aubert <a.aubert@overkiz.com>
++ *	    Kévin Raymond <k.raymond@overkiz.com>
++ */
++/dts-v1/;
++#include "at91-kizbox2_common.dtsi"
++
++/ {
++	model = "Overkiz Kizbox 2 with two heads";
++	compatible = "overkiz,kizbox2-2", "atmel,sama5d31",
++		     "atmel,sama5d3", "atmel,sama5";
++};
++
++&usart1 {
++	status = "okay";
++};
++
++&usart2 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/at91-kizbox2-3.dts b/arch/arm/boot/dts/at91-kizbox2-3.dts
+new file mode 100644
+index 000000000000..004854eae512
+--- /dev/null
++++ b/arch/arm/boot/dts/at91-kizbox2-3.dts
+@@ -0,0 +1,30 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * at91-kizbox2-3.dts - Device Tree file for the Kizbox2 with three
++ * heads board
++ *
++ * Copyright (C) 2015 Overkiz SAS
++ *
++ * Authors: Antoine Aubert <a.aubert@overkiz.com>
++ *          Kévin Raymond <k.raymond@overkiz.com>
++ */
++/dts-v1/;
++#include "at91-kizbox2_common.dtsi"
++
++/ {
++	model = "Overkiz Kizbox 2 with three heads";
++	compatible = "overkiz,kizbox2-3", "atmel,sama5d31",
++		     "atmel,sama5d3", "atmel,sama5";
++};
++
++&usart0 {
++	status = "okay";
++};
++
++&usart1 {
++	status = "okay";
++};
++
++&usart2 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/at91-kizbox2-rev2.dts b/arch/arm/boot/dts/at91-kizbox2-rev2.dts
+new file mode 100644
+index 000000000000..00d7185e186a
+--- /dev/null
++++ b/arch/arm/boot/dts/at91-kizbox2-rev2.dts
+@@ -0,0 +1,34 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * at91-kizbox2-rev2.dts - Device Tree file for the Kizbox2 rev2 with
++ * two heads board
++ *
++ * Copyright (C) 2017 Overkiz SAS
++ *
++ * Author: Kévin Raymond <k.raymond@overkiz.com>
++ */
++/dts-v1/;
++#include "at91-kizbox2_common.dtsi"
++
++/ {
++	model = "Overkiz Kizbox 2 Rev 2 with two heads";
++	compatible = "overkiz,kizbox2-rev2", "atmel,sama5d31",
++		     "atmel,sama5d3", "atmel,sama5";
++
++	ahb {
++		gpio_keys {
++			user {
++				status = "disabled";
++			};
++		};
++	};
++};
++
++&usart1 {
++	status = "okay";
++};
++
++&usart2 {
++	status = "okay";
++};
++
+diff --git a/arch/arm/boot/dts/at91-kizbox2.dts b/arch/arm/boot/dts/at91-kizbox2.dts
+deleted file mode 100644
+index 86d821884bd4..000000000000
+--- a/arch/arm/boot/dts/at91-kizbox2.dts
++++ /dev/null
+@@ -1,244 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-or-later
+-/*
+- * at91-kizbox2.dts - Device Tree file for Overkiz Kizbox 2 board
+- *
+- * Copyright (C) 2014 Gaël PORTAY <g.portay@overkiz.com>
+- */
+-/dts-v1/;
+-#include "sama5d31.dtsi"
+-#include <dt-bindings/pwm/pwm.h>
+-
+-/ {
+-	model = "Overkiz Kizbox 2";
+-	compatible = "overkiz,kizbox2", "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
+-
+-	chosen {
+-		bootargs = "ubi.mtd=ubi";
+-		stdout-path = &dbgu;
+-	};
+-
+-	memory {
+-		reg = <0x20000000 0x10000000>;
+-	};
+-
+-	clocks {
+-		slow_xtal {
+-			clock-frequency = <32768>;
+-		};
+-
+-		main_xtal {
+-			clock-frequency = <12000000>;
+-		};
+-	};
+-
+-	ahb {
+-		apb {
+-			i2c1: i2c@f0018000 {
+-				status = "okay";
+-
+-				pmic: act8865@5b {
+-					compatible = "active-semi,act8865";
+-					reg = <0x5b>;
+-					status = "okay";
+-
+-					regulators {
+-						vcc_1v8_reg: DCDC_REG1 {
+-							regulator-name = "VCC_1V8";
+-							regulator-min-microvolt = <1800000>;
+-							regulator-max-microvolt = <1800000>;
+-							regulator-always-on;
+-						};
+-
+-						vcc_1v2_reg: DCDC_REG2 {
+-							regulator-name = "VCC_1V2";
+-							regulator-min-microvolt = <1200000>;
+-							regulator-max-microvolt = <1200000>;
+-							regulator-always-on;
+-						};
+-
+-						vcc_3v3_reg: DCDC_REG3 {
+-							regulator-name = "VCC_3V3";
+-							regulator-min-microvolt = <3300000>;
+-							regulator-max-microvolt = <3300000>;
+-							regulator-always-on;
+-						};
+-
+-						vddfuse_reg: LDO_REG1 {
+-							regulator-name = "FUSE_2V5";
+-							regulator-min-microvolt = <2500000>;
+-							regulator-max-microvolt = <2500000>;
+-						};
+-
+-						vddana_reg: LDO_REG2 {
+-							regulator-name = "VDDANA";
+-							regulator-min-microvolt = <3300000>;
+-							regulator-max-microvolt = <3300000>;
+-							regulator-always-on;
+-						};
+-
+-						vled_reg: LDO_REG3 {
+-							regulator-name = "VLED";
+-							regulator-min-microvolt = <3300000>;
+-							regulator-max-microvolt = <3300000>;
+-							regulator-always-on;
+-						};
+-
+-						v3v8_rf_reg: LDO_REG4 {
+-							regulator-name = "V3V8_RF";
+-							regulator-min-microvolt = <3800000>;
+-							regulator-max-microvolt = <3800000>;
+-							regulator-always-on;
+-						};
+-					};
+-				};
+-			};
+-
+-			tcb0: timer@f0010000 {
+-				timer@0 {
+-					compatible = "atmel,tcb-timer";
+-					reg = <0>;
+-				};
+-
+-				timer@1 {
+-					compatible = "atmel,tcb-timer";
+-					reg = <1>;
+-				};
+-			};
+-
+-			usart0: serial@f001c000 {
+-				status = "okay";
+-			};
+-
+-			usart1: serial@f0020000 {
+-				status = "okay";
+-			};
+-
+-			pwm0: pwm@f002c000 {
+-				pinctrl-names = "default";
+-				pinctrl-0 = <&pinctrl_pwm0_pwmh0_1
+-					     &pinctrl_pwm0_pwmh1_1
+-					     &pinctrl_pwm0_pwmh2_0>;
+-				status = "okay";
+-			};
+-
+-			adc0: adc@f8018000 {
+-				atmel,adc-vref = <3333>;
+-				status = "okay";
+-			};
+-
+-			usart2: serial@f8020000 {
+-				status = "okay";
+-			};
+-
+-			macb1: ethernet@f802c000 {
+-				phy-mode = "rmii";
+-				status = "okay";
+-			};
+-
+-			dbgu: serial@ffffee00 {
+-				status = "okay";
+-			};
+-
+-			watchdog@fffffe40 {
+-				status = "okay";
+-			};
+-		};
+-
+-		usb1: ohci@600000 {
+-			status = "okay";
+-		};
+-
+-		usb2: ehci@700000 {
+-			status = "okay";
+-		};
+-
+-		ebi: ebi@10000000 {
+-			pinctrl-0 = <&pinctrl_ebi_nand_addr>;
+-			pinctrl-names = "default";
+-			status = "okay";
+-
+-			nand_controller: nand-controller {
+-				status = "okay";
+-
+-				nand@3 {
+-					reg = <0x3 0x0 0x2>;
+-					atmel,rb = <0>;
+-					nand-bus-width = <8>;
+-					nand-ecc-mode = "hw";
+-					nand-ecc-strength = <4>;
+-					nand-ecc-step-size = <512>;
+-					nand-on-flash-bbt;
+-					label = "atmel_nand";
+-
+-					partitions {
+-						compatible = "fixed-partitions";
+-						#address-cells = <1>;
+-						#size-cells = <1>;
+-
+-						bootstrap@0 {
+-							label = "bootstrap";
+-							reg = <0x0 0x20000>;
+-						};
+-
+-						ubi@20000 {
+-							label = "ubi";
+-							reg = <0x20000 0x7fe0000>;
+-						};
+-					};
+-				};
+-			};
+-		};
+-	};
+-
+-	gpio_keys {
+-		compatible = "gpio-keys";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		prog {
+-			label = "PB_PROG";
+-			gpios = <&pioE 27 GPIO_ACTIVE_LOW>;
+-			linux,code = <0x102>;
+-			wakeup-source;
+-		};
+-
+-		reset {
+-			label = "PB_RST";
+-			gpios = <&pioE 29 GPIO_ACTIVE_LOW>;
+-			linux,code = <0x100>;
+-			wakeup-source;
+-		};
+-
+-		user {
+-			label = "PB_USER";
+-			gpios = <&pioE 31 GPIO_ACTIVE_HIGH>;
+-			linux,code = <0x101>;
+-			wakeup-source;
+-		};
+-	};
+-
+-	pwm_leds {
+-		compatible = "pwm-leds";
+-
+-		blue {
+-			label = "pwm:blue:user";
+-			pwms = <&pwm0 2 10000000 0>;
+-			max-brightness = <255>;
+-			linux,default-trigger = "default-on";
+-		};
+-
+-		green {
+-			label = "pwm:green:user";
+-			pwms = <&pwm0 1 10000000 0>;
+-			max-brightness = <255>;
+-			linux,default-trigger = "default-on";
+-		};
+-
+-		red {
+-			label = "pwm:red:user";
+-			pwms = <&pwm0 0 10000000 0>;
+-			max-brightness = <255>;
+-			linux,default-trigger = "default-on";
+-		};
+-	};
+-};
+diff --git a/arch/arm/boot/dts/at91-kizbox2_common.dtsi b/arch/arm/boot/dts/at91-kizbox2_common.dtsi
+new file mode 100644
+index 000000000000..b8f644e4cf22
+--- /dev/null
++++ b/arch/arm/boot/dts/at91-kizbox2_common.dtsi
+@@ -0,0 +1,258 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * at91-kizbox2_common.dtsi - Device Tree Include file for
++ * Overkiz Kizbox 2 family SoC
++ *
++ * Copyright (C) 2014-2018 Overkiz SAS
++ *
++ * Authors: Antoine Aubert <a.aubert@overkiz.com>
++ *          Gaël Portay <g.portay@overkiz.com>
++ *          Kévin Raymond <k.raymond@overkiz.com>
++ */
++#include "sama5d31.dtsi"
++
++/ {
++	chosen {
++		bootargs = "ubi.mtd=ubi";
++		stdout-path = &dbgu;
++	};
++
++	memory {
++		reg = <0x20000000 0x10000000>;
++	};
++
++	clocks {
++		slow_xtal {
++			clock-frequency = <32768>;
++		};
++
++		main_xtal {
++			clock-frequency = <12000000>;
++		};
++	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		prog {
++			label = "PB_PROG";
++			gpios = <&pioE 27 GPIO_ACTIVE_LOW>;
++			linux,code = <0x102>;
++			wakeup-source;
++		};
++
++		reset {
++			label = "PB_RST";
++			gpios = <&pioE 29 GPIO_ACTIVE_LOW>;
++			linux,code = <0x100>;
++			wakeup-source;
++		};
++
++		user {
++			label = "PB_USER";
++			gpios = <&pioE 31 GPIO_ACTIVE_HIGH>;
++			linux,code = <0x101>;
++			wakeup-source;
++		};
++	};
++
++	pwm_leds {
++		compatible = "pwm-leds";
++
++		blue {
++			label = "pwm:blue:user";
++			pwms = <&pwm0 2 10000000 0>;
++			max-brightness = <255>;
++			linux,default-trigger = "none";
++		};
++
++		green {
++			label = "pwm:green:user";
++			pwms = <&pwm0 1 10000000 0>;
++			max-brightness = <255>;
++			linux,default-trigger = "default-on";
++		};
++
++		red {
++			label = "pwm:red:user";
++			pwms = <&pwm0 0 10000000 0>;
++			max-brightness = <255>;
++			linux,default-trigger = "default-on";
++		};
++	};
++};
++
++&i2c1 {
++	status = "okay";
++
++	pmic: act8865@5b {
++		compatible = "active-semi,act8865";
++		reg = <0x5b>;
++		status = "okay";
++
++		regulators {
++			vcc_1v8_reg: DCDC_REG1 {
++				regulator-name = "VCC_1V8";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++			};
++
++			vcc_1v2_reg: DCDC_REG2 {
++				regulator-name = "VCC_1V2";
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
++				regulator-always-on;
++			};
++
++			vcc_3v3_reg: DCDC_REG3 {
++				regulator-name = "VCC_3V3";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vddfuse_reg: LDO_REG1 {
++				regulator-name = "FUSE_2V5";
++				regulator-min-microvolt = <2500000>;
++				regulator-max-microvolt = <2500000>;
++			};
++
++			vddana_reg: LDO_REG2 {
++				regulator-name = "VDDANA";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vled_reg: LDO_REG3 {
++				regulator-name = "VLED";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			v3v8_rf_reg: LDO_REG4 {
++				regulator-name = "V3V8_RF";
++				regulator-min-microvolt = <3800000>;
++				regulator-max-microvolt = <3800000>;
++				regulator-always-on;
++			};
++		};
++	};
++};
++
++&usart0 {
++	atmel,use-dma-rx;
++	atmel,use-dma-tx;
++	status = "disabled";
++};
++
++&usart1 {
++	atmel,use-dma-rx;
++	atmel,use-dma-tx;
++	status = "disabled";
++};
++
++&usart2 {
++	atmel,use-dma-rx;
++	atmel,use-dma-tx;
++	status = "disabled";
++};
++
++&pwm0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm0_pwmh0_1
++		     &pinctrl_pwm0_pwmh1_1
++		     &pinctrl_pwm0_pwmh2_0>;
++	status = "okay";
++};
++
++&adc0 {
++	atmel,adc-vref = <3333>;
++	status = "okay";
++};
++
++&macb1 {
++	phy-mode = "rmii";
++	status = "okay";
++};
++
++&dbgu {
++	status = "okay";
++};
++
++&watchdog {
++	status = "okay";
++};
++
++&ebi {
++	pinctrl-0 = <&pinctrl_ebi_nand_addr>;
++	pinctrl-names = "default";
++	status = "okay";
++};
++
++&nand_controller {
++	status = "okay";
++
++	nand@3 {
++		reg = <0x3 0x0 0x2>;
++		atmel,rb = <0>;
++		nand-bus-width = <8>;
++		nand-ecc-mode = "hw";
++		nand-ecc-strength = <4>;
++		nand-ecc-step-size = <512>;
++		nand-on-flash-bbt;
++		label = "atmel_nand";
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			bootstrap@0 {
++				label = "bootstrap";
++				reg = <0x0 0x20000>;
++			};
++
++			ubi@20000 {
++				label = "ubi";
++				reg = <0x20000 0x7fe0000>;
++			};
++		};
++	};
++};
++
++&usb1 {
++	status = "okay";
++};
++
++&usb2 {
++	status = "okay";
++};
++
++// WMBUS (inverted with IO in the latest schematic)
++&pinctrl_usart0 {
++	atmel,pins =
++		<AT91_PIOD 17 AT91_PERIPH_A AT91_PINCTRL_NONE
++		 AT91_PIOD 18 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
++		 AT91_PIOE 2 AT91_PERIPH_GPIO AT91_PINCTRL_MULTI_DRIVE>;
++};
++
++// RTS
++&pinctrl_usart1 {
++	atmel,pins =
++		<AT91_PIOB 28 AT91_PERIPH_A AT91_PINCTRL_NONE
++		 AT91_PIOB 29 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
++		 AT91_PIOE 7 AT91_PERIPH_GPIO AT91_PINCTRL_MULTI_DRIVE>;
++};
++
++// IO (inverted with WMBUS in the latest schematic)
++&pinctrl_usart2 {
++	atmel,pins =
++		<AT91_PIOE 25 AT91_PERIPH_B AT91_PINCTRL_NONE
++		 AT91_PIOE 26 AT91_PERIPH_B AT91_PINCTRL_PULL_UP
++		 AT91_PIOE 8 AT91_PERIPH_GPIO AT91_PINCTRL_MULTI_DRIVE>;
++};
+-- 
+2.23.0
 
-The point of 'git am --exact' is not for maintainers per se (although
-they should use it if they don't have any manual changes to make), but
-for the bot that keeps track of patchsets submitted via email.
-
-The important part is that there is a git reference to the patchset that
-was submitted in the patchset that was merged. You could see it as the
-maintainer rolling a new version of the patchset locally and merging
-that instead of merging what was submitted directly.
-
-Of course, this relies strongly on actually having (correct) sha1
-references to previous versions inside the changelog. In my original
-idea, this reference would only appear inside the merge commit that
-binds the patchset together to minimise churn, although maybe it is
-feasible to also append it to each patch -- in that case, the "patchset"
-command from my first email is not sufficient to create a new version of
-a patchset.
-
-> One more question, not strictly related to your proposal: right now,
-> when I apply patches from contributors, I pass '-s' to 'am', so the
-> applied commit would have my sign-off. The way I see it, that sign-off
-> is supposed to signify that I have the right to push out the commit to
-> the "main" repo, just like the author's sign-off means that they have
-> the right to send me that commit.
-> 
-> Looking at git.git, I notice that Junio does the same. The new '--exact'
-> would be incompatible with '-s', correct (since the commit message has
-> changed, the SHA1 would also change)? So firstly, make sure you account
-> for something like that if you haven't already (I haven't found the time
-> to read your patches yet). Secondly, is it all right for the maintainer
-> to just not sign-off on the commits they push out?
-
-In the Linux kernel at least, only the front-line maintainers add their
-signoffs; higher-level maintainers take pull requests and don't add
-their own sign-offs. Only Linus (and Greg, perhaps) has commit rights to
-the main repository, but he only signs off on the patches that he either
-writes himself or applies directly from email.
-
-In any case, I don't think this is a concern because of what I wrote
-above -- somebody who wants to add their signoff can do it by
-essentially rolling a new version of the patchset that has the signoff,
-but refers to the sha1 that was submitted to them by the patchset author
-so that you can still find the original commits (without the signoffs)
-and reviews/discussions.
-
-I don't want to create extra work for maintainers, so I think any
-solution should involve having the existing git tools/workflows do the
-right thing automatically.
-
-How about this? If 'git am' or 'git am -s' (without --exact) finds an
-email patch where the exact commit metadata is present, it automatically
-appends a line to the changelog saying where it was taken from:
-
-     Submitted-as: 111122223333444455556666777788889999aaaa
-
-or
-
-     Applied-from: 111122223333444455556666777788889999aaaa
-
-Although, again, this would modify the changelog of the patch itself
-rather than just the changelog of the merge commit... Maybe this is
-enough and we can have the "patchset" command also add references to
-previous versions of each patch rather than the patchset as a whole.
-
-
-Vegard
