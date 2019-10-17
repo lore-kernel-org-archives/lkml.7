@@ -2,124 +2,143 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B70DECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E21FCFA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF9420869
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:23:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rgiTnz8T"
+	by mail.kernel.org (Postfix) with ESMTP id BF48E2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:26:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394497AbfJQNXa (ORCPT
+        id S2394556AbfJQN0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 09:23:30 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54935 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727834AbfJQNXa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 09:23:30 -0400
-Received: by mail-wm1-f65.google.com with SMTP id p7so2552096wmp.4
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 06:23:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=w6ztz66F+XUhul9dF9IbLT3GjbciXy1TD14N9xxwUhc=;
-        b=rgiTnz8TbEsBCg1prLfdv0eg5SkZU1fwa2hpfuDtD1TuNuH56nwGXcWjVe2rDdSsgL
-         My2TSbqBqTP+SxFwAQLulcSksIdQb1hTv9Ths5+IufIjuYBOBslMoy9vUCRjlQZH1NHN
-         vY+gEtpTNqLG8aYs7eLaJ40/Bh7fiNh35pXrJQYBnd43/wsMXkfjQRyyEpW6hBdd7l7I
-         KZTbEJRTZFPZ2o9c1ced83Z91QmSCbwDBChTjt8pCZ6Ry+va7Izul+/iEh7glpwWJA7j
-         TUkVfotpb9T4QIJA5w10qaXrTrxVOdYe9Wn799NoWJgQ1BzzUTWzjPsZfF95wp9SJmoF
-         8iRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=w6ztz66F+XUhul9dF9IbLT3GjbciXy1TD14N9xxwUhc=;
-        b=NC1WgDZwwmsQ4CCE2abGlWASKkB7DvXhZ6x98KWUhOWBMG71OjOFrPhLA5gIcWaOAU
-         u+bAPMviBxppdUCZhCTyQO58DJXP9n8W2tQIJsrDj37YzctPNSlyNX1mhgh9whBAQnbC
-         l+ot2E8Oafug6vkKo89UDwy+6blkG/kNM7h86Pt+DXhoYZzkFvMr/PfekIGebgbGJWyF
-         bC1Bd16upbP+r2d90U2uvY/7Rq/kXc4N7/i3F0ic18VpfY6mbYPExZz13sHqmPH97x2Z
-         dfIv1QWIikPj+a2POm/laz/00T9Lz8ufKJQ1CHwUQjHV0P41/evRdCCQuwFHAxQC99jn
-         LGQg==
-X-Gm-Message-State: APjAAAW+WXSYPf57O7xdvjIa9Qzi/a2Av7jQdhwXDShMzlYLkEWSj7za
-        AFHXjn6Hm7qnv14f002DxC2WvQ==
-X-Google-Smtp-Source: APXvYqwLUwrX7DMEERuphZrAscX4CgBPVWC13LFneIeTdrAl+0BB4RRBD8tasC+m2a4yQj8hK+OrtQ==
-X-Received: by 2002:a1c:1ad6:: with SMTP id a205mr2748694wma.110.1571318606936;
-        Thu, 17 Oct 2019 06:23:26 -0700 (PDT)
-Received: from dell ([95.149.164.47])
-        by smtp.gmail.com with ESMTPSA id q14sm2703400wre.27.2019.10.17.06.23.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 17 Oct 2019 06:23:26 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 14:23:24 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH 29/34] backlight/jornada720: Use CONFIG_PREEMPTION
-Message-ID: <20191017132324.GP4365@dell>
-References: <20191015191821.11479-1-bigeasy@linutronix.de>
- <20191015191821.11479-30-bigeasy@linutronix.de>
- <20191017113707.lsjwlhi6b4ittcpe@holly.lan>
+        Thu, 17 Oct 2019 09:26:31 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:35704 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726686AbfJQN0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 09:26:31 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 2A379D7E05CBE2145065;
+        Thu, 17 Oct 2019 21:26:29 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
+ 21:26:19 +0800
+Subject: Re: [PATCH V2] arm64: psci: Reduce waiting time of
+ cpu_psci_cpu_kill()
+To:     Sudeep Holla <sudeep.holla@arm.com>
+CC:     David Laight <David.Laight@ACULAB.COM>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "wuyun.wu@huawei.com" <wuyun.wu@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>, <hushiyuan@huawei.com>,
+        <linfeilong@huawei.com>
+References: <18068756-0f39-6388-3290-cf03746e767d@huawei.com>
+ <9df267db-e647-a81d-16bb-b8bfb06c2624@huawei.com>
+ <20191016153221.GA8978@bogus>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Message-ID: <0f550044-9ed2-5f72-1335-73417678ba45@huawei.com>
+Date:   Thu, 17 Oct 2019 21:26:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191017113707.lsjwlhi6b4ittcpe@holly.lan>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191016153221.GA8978@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019, Daniel Thompson wrote:
 
-> On Tue, Oct 15, 2019 at 09:18:16PM +0200, Sebastian Andrzej Siewior wrote:
-> > From: Thomas Gleixner <tglx@linutronix.de>
-> > 
-> > CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
-> > Both PREEMPT and PREEMPT_RT require the same functionality which today
-> > depends on CONFIG_PREEMPT.
-> > 
-> > Switch the Kconfig dependency to CONFIG_PREEMPTION.
-> > 
-> > Cc: Lee Jones <lee.jones@linaro.org>
-> > Cc: Daniel Thompson <daniel.thompson@linaro.org>
-> > Cc: Jingoo Han <jingoohan1@gmail.com>
-> > Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> > Cc: dri-devel@lists.freedesktop.org
-> > Cc: linux-fbdev@vger.kernel.org
-> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> > [bigeasy: +LCD_HP700]
-> > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+
+On 2019/10/16 23:32, Sudeep Holla wrote:
+> On Wed, Oct 09, 2019 at 12:45:16PM +0800, Yunfeng Ye wrote:
+>> If psci_ops.affinity_info() fails, it will sleep 10ms, which will not
+>> take so long in the right case. Use usleep_range() instead of msleep(),
+>> reduce the waiting time, and give a chance to busy wait before sleep.
+>>
+>> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+>> ---
+>> V1->V2:
+>> - use usleep_range() instead of udelay() after waiting for a while
+>>
+>>  arch/arm64/kernel/psci.c | 17 +++++++++++++----
+>>  1 file changed, 13 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+>> index c9f72b2..99b3122 100644
+>> --- a/arch/arm64/kernel/psci.c
+>> +++ b/arch/arm64/kernel/psci.c
+>> @@ -82,6 +82,7 @@ static void cpu_psci_cpu_die(unsigned int cpu)
+>>  static int cpu_psci_cpu_kill(unsigned int cpu)
+>>  {
+>>  	int err, i;
+>> +	unsigned long timeout;
+>>
+>>  	if (!psci_ops.affinity_info)
+>>  		return 0;
+>> @@ -91,16 +92,24 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
+>>  	 * while it is dying. So, try again a few times.
+>>  	 */
+>>
+>> -	for (i = 0; i < 10; i++) {
+>> +	i = 0;
+>> +	timeout = jiffies + msecs_to_jiffies(100);
+>> +	do {
+>>  		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
+>>  		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
+>>  			pr_info("CPU%d killed.\n", cpu);
+>>  			return 0;
+>>  		}
+>>
+>> -		msleep(10);
+>> -		pr_info("Retrying again to check for CPU kill\n");
 > 
-> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> You dropped this message, any particular reason ?
 > 
-> (I know... the review for this particular patch is trivial but an
-> Acked-by from a maintainer means something specific and it is Lee
-> Jones who coordinates landing cross sub-system patch sets for
-> backlight).
+When reduce the time interval to 1ms, the print message maybe increase 10 times.
+on the other hand, cpu_psci_cpu_kill() will print message on success or failure, which
+this retry log is not very necessary. of cource, I think use pr_info_once() instead of
+pr_info() is better.
 
-Right.  Thanks Dan.
+thanks.
 
-So what are the OP's expectations in that regard?  I see this is a
-large set and I am only privy to this patch, thus lack wider
-visibility.  Does this patch depend on others, or is it independent?
-I'm happy to take it, but wish to avoid bisectability issues in the
-next release kernel.
+>> -	}
+>> +		/* busy-wait max 1ms */
+>> +		if (i++ < 100) {
+>> +			cond_resched();
+>> +			udelay(10);
+>> +			continue;
+> 
+> Why can't it be simple like loop of 100 * msleep(1) instead of loop of
+> 10 * msleep(10). The above initial busy wait for 1 ms looks too much
+> optimised for your setup where it takes 50-500us, what if it take just
+> over 1 ms ?
+> 
+msleep() is implemented by jiffies. when HZ=100 or HZ=250, msleep(1) is not
+accurate. so I think usleep_range() is better. 1 ms looks simple and good, but how
+about 100us is better? I refer a function sunxi_mc_smp_cpu_kill(), it use
+usleep_range(50, 100).
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+thanks.
+
+> We need more generic solution.
+> 
+> --
+> Regards,
+> Sudeep
+> 
+> .
+> 
+
