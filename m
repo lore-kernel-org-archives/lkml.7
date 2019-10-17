@@ -2,165 +2,194 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B4AECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97222ECE597
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 610D62089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 618042089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:14:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="IxyRXtmE";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="RetwhDem"
+	dkim=pass (1024-bit key) header.d=verimatrix.com header.i=@verimatrix.com header.b="KABAa4BW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440611AbfJQRNn (ORCPT
+        id S2440627AbfJQRO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 13:13:43 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:54756 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728639AbfJQRNm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 13:13:42 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9HHDCOS028122;
-        Thu, 17 Oct 2019 10:13:13 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=pb6wQ58kECY1I+U6SSmxvdp0wbHKaREq/oGLxzF32HA=;
- b=IxyRXtmENCz15qtrHhiFEFj8w/fUxuaAtg6i8IiRIuz2p5m9GLhEXfJshKeVKBBXDqFa
- P9y7IPupWtFgwey7xs04YVDPNsnVfFTgFUxzeUm9XDdIXNJh+ZWx6bo5nG7td7Am1vCT
- OFsn/kXOLGQCbFgcIOTfY4vcLN7jeyyHjiE= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2vpj8rttsf-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 17 Oct 2019 10:13:13 -0700
-Received: from prn-hub05.TheFacebook.com (2620:10d:c081:35::129) by
- prn-hub01.TheFacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Thu, 17 Oct 2019 10:12:52 -0700
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.29) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Thu, 17 Oct 2019 10:12:52 -0700
+        Thu, 17 Oct 2019 13:14:58 -0400
+Received: from mail-eopbgr710075.outbound.protection.outlook.com ([40.107.71.75]:21568
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728639AbfJQRO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 13:14:57 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c/7VgeXEz1DUbD72wEDe9JQM39K31sbs7wUwKXhEQubOuJMnxk0Qf+gy4zdd5sANTm+YtE5FAkIKhMYsa7vpq54qSuu2J1MAcu8ommccJepyQqXb81i3TgofS2r4RqJg9trLD8FK1shlYtOwn5Fu+RAdkrTWwm554tUDgvZMANGC7M0cro7scgd5YP3XxYDaDQRWpqcikDIZf+vXeCXGBE83oHUF7yPr6TEEsy4yHvTV2t6XSx+b5Fy9I+QhfuFYykxVBZrBCZsCPmtumB5XiNm2NOQNmeYKvFzyeguOlMqdv3RxH0Fyvb/PxmpWYJ1lnxivBX0HsQoGpTwWuEcFQA==
+ b=TSHB97b/zAEi15EsGrbKQjQe75tSTYBTaTTxD/5odaTB96XQbIu3o6B2bRN7oTCYfjl8JooFOEQXMZFWFSNWQclmOmB/T+J0QQHKOjEQjlgipkXIll9iLhbfZY+5EnhtSY8c8hRpDPjgOoHt2H3Xy8+krMFr6UsDzuVXw31iur1YUYq2okjtDH3YPFR49o9krry0il+RwQCiznSYdliQZvcJNpMvRurcH1MruvmWb8e/DlMuhbHjfoiErTSIvLhtNC0ucDGipPVGw6ssHHcg39kIh+vRzU+WYycNzBo4nl9xL626SlgantfNSXjwmqr3V5j/Po1vvukBWYgwCuuptg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pb6wQ58kECY1I+U6SSmxvdp0wbHKaREq/oGLxzF32HA=;
- b=hkJKUxkUmn2kt5FvNnTVpNZGEItCni3U8/m1EdG2CmxrgnvNjEyQHpFteYSgzJ+yPIn2DmW1Xv5sGgqW5QqrBCg9FC8WDtRxfkFGDQJbnzn39vfyucfVb1jk07l3n1yPFc8hHnVSaUNqsQx38YuIHzhPV3fOrfASi7msg8/ks+0Q3mnPH8WikTg6jQ0/6kTn7PKjCpX7veUC1bivWgFUOpRSSszCd6YPr81de4RNU7A9vqiKFy9b20ZOENAJWOKv6uiaLzNmZ/js7eeFdL9LeCLzft53p+DYgoyb/l2doqXph3iKjdf90jh628Mrvc8inbdVyus6xBDxXyaMKH2RkQ==
+ bh=iaYbGk8wdhmAk9YVnVygO79tpxZjGidIkv15JoRx+6g=;
+ b=YsM+83L9zLMhrmd6y3l678gZYpL2RiIdIZedo/fWFM5GawnVmlVVdcU6UVhp54UhCJU1EYsZ5onIfdKd/1MpC7rZ81vnvfTDNvClBGHb1BOQ7FBsuNza7+pidGYGga304kp/K4jHMuAOIlSHQ/n30dFlDuuZsgaCZFHKcXMKeiNwFbxwwdcsxZksuda7XJEvr9hS3GMrxvxohJxzXaA9BVVaV0ozZWNLnuC5gaTcZjfk/ZoO4wkQqqq7f/CQnarfDc2G+jzq3f9XU19iHw6qgzaH1AxSaI1oZ+0kVtAL2pEzXUOp9byFwjfTuBqx1Y+5Ej2mh06tv4+FGwwrRwi1cQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
+ smtp.mailfrom=verimatrix.com; dmarc=pass action=none
+ header.from=verimatrix.com; dkim=pass header.d=verimatrix.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=verimatrix.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pb6wQ58kECY1I+U6SSmxvdp0wbHKaREq/oGLxzF32HA=;
- b=RetwhDemGZNhDNjR0/B9XO9pHbvHGDSgn0BArWmsFyFMBpAgwAp06QRkjS/AriEP43qSbE4cKI9TJQ/CkSpKq8FkMAN4KDK2T6+WgHDmBqIBAHDNIq3dJmbzScaKCH7IRhwufAirONpwDcc6/XLafL4D2ej98xpUwaVpNdddJdk=
-Received: from DM6PR15MB3210.namprd15.prod.outlook.com (20.179.48.219) by
- DM6PR15MB3657.namprd15.prod.outlook.com (10.141.166.23) with Microsoft SMTP
+ bh=iaYbGk8wdhmAk9YVnVygO79tpxZjGidIkv15JoRx+6g=;
+ b=KABAa4BWK09Isa/UshMW931KBx/gKn6cAgdQUU8fq6jkTHSE5zTqaSByCfOCDBOhGnXdQpn5fIYO5B6rQybFX3LeYguReT09wEbajwyLCvt9g321V3WvfxndHM6bvAq+KTHzgRwn9ZsqoAbuzxYfaB2Gtr/GBYNTK5bCtBRGPs8=
+Received: from MN2PR20MB2973.namprd20.prod.outlook.com (52.132.172.86) by
+ MN2PR20MB2573.namprd20.prod.outlook.com (20.179.145.202) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.18; Thu, 17 Oct 2019 17:12:50 +0000
-Received: from DM6PR15MB3210.namprd15.prod.outlook.com
- ([fe80::cc98:c18d:1e80:b856]) by DM6PR15MB3210.namprd15.prod.outlook.com
- ([fe80::cc98:c18d:1e80:b856%7]) with mapi id 15.20.2347.023; Thu, 17 Oct 2019
- 17:12:50 +0000
-From:   Martin Lau <kafai@fb.com>
-To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-CC:     "linux-kernel@lists.codethink.co.uk" 
-        <linux-kernel@lists.codethink.co.uk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+ 15.20.2347.19; Thu, 17 Oct 2019 17:14:14 +0000
+Received: from MN2PR20MB2973.namprd20.prod.outlook.com
+ ([fe80::b986:4f02:3206:31e4]) by MN2PR20MB2973.namprd20.prod.outlook.com
+ ([fe80::b986:4f02:3206:31e4%7]) with mapi id 15.20.2347.023; Thu, 17 Oct 2019
+ 17:14:14 +0000
+From:   Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
+To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        "linux-kernel@lists.codethink.co.uk" 
+        <linux-kernel@lists.codethink.co.uk>
+CC:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: bpf: type fixes for __be16/__be32
-Thread-Topic: [PATCH] net: bpf: type fixes for __be16/__be32
-Thread-Index: AQHVhBM2W//eT1DINk23xn+IqGSGKadfFAuA
-Date:   Thu, 17 Oct 2019 17:12:50 +0000
-Message-ID: <20191017171247.3yjbepx3jzs4zort@kafai-mbp.dhcp.thefacebook.com>
-References: <20191016111635.20089-1-ben.dooks@codethink.co.uk>
-In-Reply-To: <20191016111635.20089-1-ben.dooks@codethink.co.uk>
+Subject: RE: [PATCH] crypto: inside-secure - fix type of buffer in
+ eip197_write_firmware
+Thread-Topic: [PATCH] crypto: inside-secure - fix type of buffer in
+ eip197_write_firmware
+Thread-Index: AQHVhBfWMp/OQ1W3YkiqzB+SEDRBb6dfDogA
+Date:   Thu, 17 Oct 2019 17:14:14 +0000
+Message-ID: <MN2PR20MB29739F7E3C145AB915E4A2DECA6D0@MN2PR20MB2973.namprd20.prod.outlook.com>
+References: <20191016114945.30451-1-ben.dooks@codethink.co.uk>
+In-Reply-To: <20191016114945.30451-1-ben.dooks@codethink.co.uk>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR1701CA0001.namprd17.prod.outlook.com
- (2603:10b6:301:14::11) To DM6PR15MB3210.namprd15.prod.outlook.com
- (2603:10b6:5:163::27)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::1:ee07]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pvanleeuwen@verimatrix.com; 
+x-originating-ip: [188.204.2.113]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e232720c-252e-4746-1ba8-08d753253d4c
-x-ms-traffictypediagnostic: DM6PR15MB3657:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR15MB36574FAFF58A6DA9586733B5D56D0@DM6PR15MB3657.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:200;
+x-ms-office365-filtering-correlation-id: afd25bc5-bc6a-4a23-e759-08d753256f7d
+x-ms-traffictypediagnostic: MN2PR20MB2573:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <MN2PR20MB2573916281DAF864A4636563CA6D0@MN2PR20MB2573.namprd20.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:241;
 x-forefront-prvs: 01930B2BA8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(376002)(346002)(396003)(366004)(136003)(189003)(199004)(9686003)(54906003)(46003)(5660300002)(14444005)(6512007)(256004)(86362001)(316002)(99286004)(25786009)(6916009)(229853002)(446003)(476003)(52116002)(486006)(11346002)(478600001)(14454004)(6486002)(305945005)(7736002)(6436002)(76176011)(102836004)(66556008)(66476007)(64756008)(66446008)(6246003)(6116002)(66946007)(4326008)(1076003)(8676002)(81156014)(81166006)(71190400001)(71200400001)(8936002)(386003)(6506007)(186003)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR15MB3657;H:DM6PR15MB3210.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(366004)(39850400004)(136003)(396003)(13464003)(189003)(199004)(110136005)(2501003)(15974865002)(5660300002)(26005)(74316002)(305945005)(7736002)(186003)(14454004)(86362001)(99286004)(71200400001)(71190400001)(54906003)(66476007)(64756008)(66556008)(66066001)(66946007)(66446008)(76116006)(316002)(3846002)(33656002)(478600001)(6506007)(6116002)(53546011)(6436002)(102836004)(14444005)(256004)(76176011)(2906002)(9686003)(476003)(446003)(25786009)(11346002)(486006)(8936002)(6246003)(81156014)(7696005)(55016002)(81166006)(4326008)(52536014)(229853002)(8676002)(18886075002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR20MB2573;H:MN2PR20MB2973.namprd20.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: verimatrix.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: QvZzgJid9cvf7wkd9TQ3viHoIDLRfQiXUadJu6p8n81wHE1KhEwhNIytGs/vLKKinW0YXokHRM3roBd1k8N36pvo3N8MbtIH64Y7uuLuJUSfnW1VucY81QqdRcID2+oQf2kicMnhjDimWtVrejNBDAvDT5JYLYtG/mMvHZvawbVL6l8u57Aqcu/Nt0caXTMn1pya1mqDz6x9BpzFiAH7SxTNF6F5w01kJ+lloxL3cYFjGHX9mn8TeX1WY/+7PsVVF/3I62bgLLX0wtqAAf/Pna6jZES5M9xttMuHIqdBeeqQNTKT6Y/zUpwpayiVi6fB0Q0k0r6tUl5bi9A11kAxeCg9gdFYAUZk5ZeQOTGKkMj6RzzrjSracgS/Dtbup65CdQnMsUQXdILX2kvkmxFM5eXSaXNyFTApgHkeDtMDdm8=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <45438FE95DB0104D83D9B560BE073214@namprd15.prod.outlook.com>
+x-microsoft-antispam-message-info: 6FMcDumLldHLfPvqpqnXp/UxdpN2rqd2IcWcjnxJmMFOKrER+uaVgo2fc8K4So2gRYGYXMAfXNOwdzQJ32/nQOw2R6drBteexg29DqRGHg3+H4GW6iOqLsp/rFNyZ1tDUl8nb6gBylxhFMFGJsGfbcISYVd/9QK2oAF+ix6zzkFGltlIqmu13BQuqTD8q/EMftqy4RlRUs9N4rgSErzBR+lZkxRB2o0XH1LXEdYyjo8t9SN3zlWWhW916e/WU5EbqYDSO8Y/Zlv7jHeNH77EVb5EzLH4AQx8AP0xxYK2mSq45VFD8dNefMpkq/QNOYBeh1VchKGgpICKrSDO7p8eEugMHGLSPDfrSVhA+ewZZz6EGeme7jT5pmYzw3o6idOH7UsOdjROOhB4sk0y2ekmbVsIvwAjRIWK2+vQsa8MHfU=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: e232720c-252e-4746-1ba8-08d753253d4c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Oct 2019 17:12:50.5736
+X-OriginatorOrg: verimatrix.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: afd25bc5-bc6a-4a23-e759-08d753256f7d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Oct 2019 17:14:14.4652
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-id: dcb260f9-022d-4495-8602-eae51035a0d0
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hxKP3BNRiRRpNns/6kQO4pMPW8Ptt4Nv/Es9DS1c6EfZixQfXb/BlVv1sbKRqXXf
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR15MB3657
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-17_05:2019-10-17,2019-10-17 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=628
- clxscore=1011 spamscore=0 impostorscore=0 priorityscore=1501
- lowpriorityscore=0 suspectscore=0 malwarescore=0 adultscore=0 bulkscore=0
- mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910170154
-X-FB-Internal: deliver
+X-MS-Exchange-CrossTenant-userprincipalname: t/1TdEPrvy/7lo8TVXxL4kYk5pGbKL2zcO5m41ifD8JUTgQL759k5fOGpA4jd2d3i9DrHP4+aEPxixhvtViZNM8QrO/eTYFWzHwHlZ5VPV8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR20MB2573
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 12:16:35PM +0100, Ben Dooks (Codethink) wrote:
-> In bpf_skb_load_helper_8_no_cache and
-> bpf_skb_load_helper_16_no_cache they
-> read a u16/u32 where actually these
-> are __be16 and __be32.
+> -----Original Message-----
+> From: linux-crypto-owner@vger.kernel.org <linux-crypto-owner@vger.kernel.=
+org> On Behalf Of Ben
+> Dooks (Codethink)
+> Sent: Wednesday, October 16, 2019 1:50 PM
+> To: linux-kernel@lists.codethink.co.uk
+> Cc: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>; Antoine Tenart
+> <antoine.tenart@bootlin.com>; Herbert Xu <herbert@gondor.apana.org.au>; D=
+avid S. Miller
+> <davem@davemloft.net>; linux-crypto@vger.kernel.org; linux-kernel@vger.ke=
+rnel.org
+> Subject: [PATCH] crypto: inside-secure - fix type of buffer in eip197_wri=
+te_firmware
 >=20
-> Fix the following by making the types
-> match:
+> In eip197_write_firmware() the firmware buffer is sent using
+> writel(be32_to_cpu(),,,) this produces a number of warnings.
 >=20
-> net/core/filter.c:215:32: warning: cast to restricted __be16
-> net/core/filter.c:215:32: warning: cast to restricted __be16
-> net/core/filter.c:215:32: warning: cast to restricted __be16
-> net/core/filter.c:215:32: warning: cast to restricted __be16
-> net/core/filter.c:215:32: warning: cast to restricted __be16
-> net/core/filter.c:215:32: warning: cast to restricted __be16
-> net/core/filter.c:215:32: warning: cast to restricted __be16
-> net/core/filter.c:215:32: warning: cast to restricted __be16
-> net/core/filter.c:242:32: warning: cast to restricted __be32
-> net/core/filter.c:242:32: warning: cast to restricted __be32
-> net/core/filter.c:242:32: warning: cast to restricted __be32
-> net/core/filter.c:242:32: warning: cast to restricted __be32
-> net/core/filter.c:242:32: warning: cast to restricted __be32
-> net/core/filter.c:242:32: warning: cast to restricted __be32
-> net/core/filter.c:242:32: warning: cast to restricted __be32
-> net/core/filter.c:242:32: warning: cast to restricted __be32
-> net/core/filter.c:242:32: warning: cast to restricted __be32
-> net/core/filter.c:242:32: warning: cast to restricted __be32
-> net/core/filter.c:242:32: warning: cast to restricted __be32
-> net/core/filter.c:242:32: warning: cast to restricted __be32
-Acked-by: Martin KaFai Lau <kafai@fb.com>
+> Note, should this really be cpu_to_be32()  ?
+>=20
+No, it should certainly not be cpu_to_be32() since the HW itself is most
+definitely little endian, so that would not make sense to me.
+
+Actually, I don't think either solution would be correct on a big-endian
+CPU. But I don't have any big-endian CPU available to test that theory.
+
+What I believe must happen is that the bytes must *always* be swapped=20
+here, regardless of the endianness of the CPU. And with a little-endian
+CPU, be32_to_cpu() coincidentally always does that.
+
+Basically, what we need here is: read a dword (32 bits) from the memory
+subsystem and write it back to the memory subsystem with bytes reversed.
+
+Does the kernel have any dedicated function for just always swapping?
+
+Anyway: NACK on this patch for now due to this.
+
+> drivers/crypto/inside-secure/safexcel.c:306:17: warning: cast to restrict=
+ed __be32
+> drivers/crypto/inside-secure/safexcel.c:306:17: warning: cast to restrict=
+ed __be32
+> drivers/crypto/inside-secure/safexcel.c:306:17: warning: cast to restrict=
+ed __be32
+> drivers/crypto/inside-secure/safexcel.c:306:17: warning: cast to restrict=
+ed __be32
+> drivers/crypto/inside-secure/safexcel.c:306:17: warning: cast to restrict=
+ed __be32
+> drivers/crypto/inside-secure/safexcel.c:306:17: warning: cast to restrict=
+ed __be32
+>=20
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> ---
+> Cc: Antoine Tenart <antoine.tenart@bootlin.com>
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: linux-crypto@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/crypto/inside-secure/safexcel.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/crypto/inside-secure/safexcel.c b/drivers/crypto/ins=
+ide-secure/safexcel.c
+> index 223d1bfdc7e6..dd33f6dda295 100644
+> --- a/drivers/crypto/inside-secure/safexcel.c
+> +++ b/drivers/crypto/inside-secure/safexcel.c
+> @@ -298,13 +298,13 @@ static void eip197_init_firmware(struct safexcel_cr=
+ypto_priv *priv)
+>  static int eip197_write_firmware(struct safexcel_crypto_priv *priv,
+>  				  const struct firmware *fw)
+>  {
+> -	const u32 *data =3D (const u32 *)fw->data;
+> +	const __be32 *data =3D (const __be32 *)fw->data;
+>  	int i;
+>=20
+>  	/* Write the firmware */
+> -	for (i =3D 0; i < fw->size / sizeof(u32); i++)
+> +	for (i =3D 0; i < fw->size / sizeof(__be32); i++)
+>  		writel(be32_to_cpu(data[i]),
+> -		       priv->base + EIP197_CLASSIFICATION_RAMS + i * sizeof(u32));
+> +		       priv->base + EIP197_CLASSIFICATION_RAMS + i * sizeof(__be32));
+>=20
+>  	/* Exclude final 2 NOPs from size */
+>  	return i - EIP197_FW_TERMINAL_NOPS;
+> --
+> 2.23.0
+
+Regards,
+Pascal van Leeuwen
+Silicon IP Architect, Multi-Protocol Engines @ Verimatrix
+www.insidesecure.com
+
