@@ -2,180 +2,285 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8590ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 153F7FA3733
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B60DB20869
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCCE420869
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:05:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="agjScbws"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501896AbfJQKDu (ORCPT
+        id S2408727AbfJQKFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 06:03:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49484 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404501AbfJQKDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 06:03:50 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9019C30833CB;
-        Thu, 17 Oct 2019 10:03:49 +0000 (UTC)
-Received: from [10.36.117.42] (ovpn-117-42.ams2.redhat.com [10.36.117.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2989E60872;
-        Thu, 17 Oct 2019 10:03:48 +0000 (UTC)
-Subject: Re: memory offline infinite loop after soft offline
-To:     Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-References: <1570829564.5937.36.camel@lca.pw>
- <20191014083914.GA317@dhcp22.suse.cz>
- <20191017093410.GA19973@hori.linux.bs1.fc.nec.co.jp>
- <20191017100106.GF24485@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <17d5ed8c-4a0f-55c5-7474-3ae5e4263784@redhat.com>
-Date:   Thu, 17 Oct 2019 12:03:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20191017100106.GF24485@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 17 Oct 2019 10:03:49 +0000 (UTC)
+        Thu, 17 Oct 2019 06:05:17 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:39758 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404501AbfJQKFR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 06:05:17 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191017100515euoutp025f10cd9a3fff75064b3c6f97f0e13c10~OZyHgdnRj0341003410euoutp02D
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 10:05:15 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191017100515euoutp025f10cd9a3fff75064b3c6f97f0e13c10~OZyHgdnRj0341003410euoutp02D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1571306715;
+        bh=WZzHqq1DVw7L/gU03idhKnRpdfEeIrjG/o5hYZyD5YI=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=agjScbwsSzh4afHs0XsUpjzKcamQ8yFlyI9kTIbWCWaz9SixrT7lrUhGbbXyAxIlO
+         NngDEzSih31gaK4BJyoFavUd6OCGqVJ434pDdoZlVSwCpi/SO/4V7de3U9NPXoUbdu
+         zH3ua0Z6S3chxZRKzdMt9/n7ezXp9LExz2RwUIFU=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191017100514eucas1p134d3dcf94ce16229e1732bdec6aa6be9~OZyHFrQpE2229722297eucas1p1f;
+        Thu, 17 Oct 2019 10:05:14 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 8D.7B.04309.ADC38AD5; Thu, 17
+        Oct 2019 11:05:14 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191017100514eucas1p2e189e26e887c9cdd2209357c91846641~OZyGyuWql2843028430eucas1p2R;
+        Thu, 17 Oct 2019 10:05:14 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191017100514eusmtrp1efebf268c33c61a8dfbc80fa7073cf98~OZyGx_qTC0791507915eusmtrp1A;
+        Thu, 17 Oct 2019 10:05:14 +0000 (GMT)
+X-AuditID: cbfec7f4-ae1ff700000010d5-43-5da83cda55ed
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 96.06.04117.ADC38AD5; Thu, 17
+        Oct 2019 11:05:14 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191017100513eusmtip176430d2a89cb3f0183793dcb1118bfe0~OZyGLXaaA1893918939eusmtip1w;
+        Thu, 17 Oct 2019 10:05:13 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Maciej Falkowski <m.falkowski@samsung.com>
+Subject: [PATCH v3] dt-bindings: sound: Convert Samsung Exynos5433 TM2(E)
+ audio complex with WM5110 codec to dt-schema
+Date:   Thu, 17 Oct 2019 12:05:06 +0200
+Message-Id: <20191017100506.4036-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgleLIzCtJLcpLzFFi42LZduznOd1bNitiDdYe0ba4cvEQk8XGGetZ
+        LaY+fMJmMf/IOVaL8+c3sFt8u9LBZHF51xw2ixnn9zFZPGhex2ax9shddov/e3awWxx+087q
+        wOOx4XMTm8fOWXfZPTat6mTz6NuyitHj8ya5ANYoLpuU1JzMstQifbsErozvF+4xFxzRqXh9
+        4xZjA+MfxS5GTg4JAROJ5jUTmLsYuTiEBFYwSmyavpMdwvnCKPHs4mVWkCohgc+MEh+WwXV8
+        +XYWqmg5o0TXnRcIHbPuHwLrYBMwlOh628UGYosI1EmcPXOEEcRmFrjEJLFlIyeILSxQIbHy
+        RidYnEVAVWL/orvsIDavgI3EvH0QvRIC8hKrNxwAu09C4D+bxL7WxywQCReJZ70bmSFsYYlX
+        x7ewQ9gyEqcn97BANDQzSjw8t5YdwulhlLjcNIMRospa4vDxi0CncgCdpCmxfpc+RNhR4tS5
+        tYwgYQkBPokbbwUhjuaTmLRtOjNEmFeio00IolpNYtbxdXBrD164BHWOh8SGNU8ZISEXK/Fr
+        +w72CYxysxB2LWBkXMUonlpanJueWmyUl1quV5yYW1yal66XnJ+7iRGYPk7/O/5lB+OuP0mH
+        GAU4GJV4eF8wL48VYk0sK67MPcQowcGsJMI7v2VJrBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHe
+        aoYH0UIC6YklqdmpqQWpRTBZJg5OqQZG60smH+J3BB4STr1/+toHptNPVRLlhepW+cd/971w
+        ujG8OnVancy0utxUzqaPaed5mnOv1EpaPZ3bL91+R/TWFO8Pt34q6zbo2tX31asZ/b568uFz
+        2zbhsO5PCozlnGJloue+h+kwZi5TnJLB4Xfzg/WPzYd+u5xsu3u1MEu26U2l5t15744rsRRn
+        JBpqMRcVJwIA7YPiyhsDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPLMWRmVeSWpSXmKPExsVy+t/xu7q3bFbEGpw6L2px5eIhJouNM9az
+        Wkx9+ITNYv6Rc6wW589vYLf4dqWDyeLyrjlsFjPO72OyeNC8js1i7ZG77Bb/9+xgtzj8pp3V
+        gcdjw+cmNo+ds+6ye2xa1cnm0bdlFaPH501yAaxRejZF+aUlqQoZ+cUltkrRhhZGeoaWFnpG
+        JpZ6hsbmsVZGpkr6djYpqTmZZalF+nYJehnfL9xjLjiiU/H6xi3GBsY/il2MnBwSAiYSX76d
+        Ze9i5OIQEljKKLH55UFGiISMxMlpDawQtrDEn2tdbBBFnxglFjbsZwZJsAkYSnS9hUiICDQx
+        ShzbPJMFxGEWuMEksX9OB5DDwSEsUCbRtNIFpIFFQFVi/6K77CA2r4CNxLx9IM0gG+QlVm84
+        wDyBkWcBI8MqRpHU0uLc9NxiI73ixNzi0rx0veT83E2MwMDdduznlh2MXe+CDzEKcDAq8fC+
+        YF4eK8SaWFZcmXuIUYKDWUmEd37Lklgh3pTEyqrUovz4otKc1OJDjKZAyycyS4km5wOjKq8k
+        3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA+OEmZrJNWffS835m7Zr
+        5T7fJRviXffcWK3+9pHZNAYLZk3xhzE9ckEXHrB+XatkvZfvzeoD/2a4iFifZs4Krd+7ceZu
+        026G+OPX3eufTclyWshRfqoqOO5a6D2xddxLXvqGzYi+tNCEP9ZiJ7ftI9/3F1bJnWZ08zjc
+        /Eyr5cTNc2o973fu9hJWYinOSDTUYi4qTgQA5RldUXICAAA=
+X-CMS-MailID: 20191017100514eucas1p2e189e26e887c9cdd2209357c91846641
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191017100514eucas1p2e189e26e887c9cdd2209357c91846641
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191017100514eucas1p2e189e26e887c9cdd2209357c91846641
+References: <CGME20191017100514eucas1p2e189e26e887c9cdd2209357c91846641@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.10.19 12:01, Michal Hocko wrote:
-> On Thu 17-10-19 09:34:10, Naoya Horiguchi wrote:
->> On Mon, Oct 14, 2019 at 10:39:14AM +0200, Michal Hocko wrote:
-> [...]
->>> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
->>> index 89c19c0feadb..5fb3fee16fde 100644
->>> --- a/mm/page_isolation.c
->>> +++ b/mm/page_isolation.c
->>> @@ -274,7 +274,7 @@ __test_page_isolated_in_pageblock(unsigned long pfn, unsigned long end_pfn,
->>>   			 * simple way to verify that as VM_BUG_ON(), though.
->>>   			 */
->>>   			pfn += 1 << page_order(page);
->>> -		else if (skip_hwpoisoned_pages && PageHWPoison(page))
->>> +		else if (skip_hwpoisoned_pages && PageHWPoison(compound_head(page)))
->>>   			/* A HWPoisoned page cannot be also PageBuddy */
->>>   			pfn++;
->>>   		else
->>
->> This fix looks good to me. The original code only addresses hwpoisoned 4kB-page,
->> we seem to have this issue since the following commit,
-> 
-> Thanks a lot for double checking Naoya!
->   
->>    commit b023f46813cde6e3b8a8c24f432ff9c1fd8e9a64
->>    Author: Wen Congyang <wency@cn.fujitsu.com>
->>    Date:   Tue Dec 11 16:00:45 2012 -0800
->>    
->>        memory-hotplug: skip HWPoisoned page when offlining pages
->>
->> and extension of LTP coverage finally discovered this.
-> 
-> Qian, could you give the patch some testing?
-> ---
-> 
->  From 441a9515dcdb29bb0ca39ff995632907d959032f Mon Sep 17 00:00:00 2001
-> From: Michal Hocko <mhocko@suse.com>
-> Date: Thu, 17 Oct 2019 11:49:15 +0200
-> Subject: [PATCH] hugetlb, memory_hotplug: fix HWPoisoned tail pages properly
-> MIME-Version: 1.0
-> Content-Type: text/plain; charset=UTF-8
-> Content-Transfer-Encoding: 8bit
-> 
-> Qian Cai has noticed that hwpoisoned hugetlb pages prevent memory
-> offlining from making a forward progress. He has nailed down the issue
-> to be __test_page_isolated_in_pageblock always returning EBUSY because
-> of soft offlined page:
-> [  101.665160][ T8885] pfn = 77501, end_pfn = 78000
-> [  101.665245][ T8885] page:c00c000001dd4040 refcount:0 mapcount:0
-> mapping:0000000000000000 index:0x0
-> [  101.665329][ T8885] flags: 0x3fffc000000000()
-> [  101.665391][ T8885] raw: 003fffc000000000 0000000000000000 ffffffff01dd0500
-> 0000000000000000
-> [  101.665498][ T8885] raw: 0000000000000000 0000000000000000 00000000ffffffff
-> 0000000000000000
-> [  101.665588][ T8885] page dumped because: soft_offline
-> [  101.665639][ T8885] page_owner tracks the page as freed
-> [  101.665697][ T8885] page last allocated via order 5, migratetype Movable,
-> gfp_mask
-> 0x346cca(GFP_HIGHUSER_MOVABLE|__GFP_NOWARN|__GFP_RETRY_MAYFAIL|__GFP_COMP|__GFP_
-> THISNODE)
-> [  101.665924][ T8885]  prep_new_page+0x3c0/0x440
-> [  101.665962][ T8885]  get_page_from_freelist+0x2568/0x2bb0
-> [  101.666059][ T8885]  __alloc_pages_nodemask+0x1b4/0x670
-> [  101.666115][ T8885]  alloc_fresh_huge_page+0x244/0x6e0
-> [  101.666183][ T8885]  alloc_migrate_huge_page+0x30/0x70
-> [  101.666254][ T8885]  alloc_new_node_page+0xc4/0x380
-> [  101.666325][ T8885]  migrate_pages+0x3b4/0x19e0
-> [  101.666375][ T8885]  do_move_pages_to_node.isra.29.part.30+0x44/0xa0
-> [  101.666464][ T8885]  kernel_move_pages+0x498/0xfc0
-> [  101.666520][ T8885]  sys_move_pages+0x28/0x40
-> [  101.666643][ T8885]  system_call+0x5c/0x68
-> [  101.666665][ T8885] page last free stack trace:
-> [  101.666704][ T8885]  __free_pages_ok+0xa4c/0xd40
-> [  101.666773][ T8885]  update_and_free_page+0x2dc/0x5b0
-> [  101.666821][ T8885]  free_huge_page+0x2dc/0x740
-> [  101.666875][ T8885]  __put_compound_page+0x64/0xc0
-> [  101.666926][ T8885]  putback_active_hugepage+0x228/0x390
-> [  101.666990][ T8885]  migrate_pages+0xa78/0x19e0
-> [  101.667048][ T8885]  soft_offline_page+0x314/0x1050
-> [  101.667117][ T8885]  sys_madvise+0x1068/0x1080
-> [  101.667185][ T8885]  system_call+0x5c/0x68
-> 
-> The reason is that __test_page_isolated_in_pageblock doesn't recognize
-> hugetlb tail pages as the HWPoison bit is not transferred from the head
-> page. Pfn walker then doesn't recognize those pages and so EBUSY is
-> returned up the call chain.
-> 
-> The proper fix would be to handle HWPoison throughout the huge page but
-> considering there is a WIP to rework that code considerably let's go
-> with a simple and easily backportable workaround and simply check the
-> the head of a compound page for the HWPoison flag.
-> 
-> Reported-and-analyzed-by: Qian Cai <cai@lca.pw>
-> Fixes: b023f46813cd ("memory-hotplug: skip HWPoisoned page when offlining pages")
-> Cc: stable
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
-> ---
->   mm/page_isolation.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-> index 89c19c0feadb..5fb3fee16fde 100644
-> --- a/mm/page_isolation.c
-> +++ b/mm/page_isolation.c
-> @@ -274,7 +274,7 @@ __test_page_isolated_in_pageblock(unsigned long pfn, unsigned long end_pfn,
->   			 * simple way to verify that as VM_BUG_ON(), though.
->   			 */
->   			pfn += 1 << page_order(page);
-> -		else if (skip_hwpoisoned_pages && PageHWPoison(page))
-> +		else if (skip_hwpoisoned_pages && PageHWPoison(compound_head(page)))
->   			/* A HWPoisoned page cannot be also PageBuddy */
->   			pfn++;
->   		else
-> 
+From: Maciej Falkowski <m.falkowski@samsung.com>
 
-With the extended description, this makes sense to me now :)
+Convert Samsung Exynos5433 TM2(E) audio complex with WM5110 codec to
+newer dt-schema format.
 
-Acked-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+[mszyprow: reordered non-standard properties, added list of values
+ for widgets, minor other fixes]
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ .../bindings/sound/samsung,tm2-audio.txt      | 42 --------
+ .../bindings/sound/samsung,tm2-audio.yaml     | 99 +++++++++++++++++++
+ 2 files changed, 99 insertions(+), 42 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/samsung,tm2-audio.yaml
 
+diff --git a/Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt b/Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
+deleted file mode 100644
+index f5ccc12ddc00..000000000000
+--- a/Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
++++ /dev/null
+@@ -1,42 +0,0 @@
+-Samsung Exynos5433 TM2(E) audio complex with WM5110 codec
+-
+-Required properties:
+-
+- - compatible		 : "samsung,tm2-audio"
+- - model		 : the user-visible name of this sound complex
+- - audio-codec		 : the first entry should be phandle of the wm5110 audio
+-			   codec node, as described in ../mfd/arizona.txt;
+-			   the second entry should be phandle of the HDMI
+-			   transmitter node
+- - i2s-controller	 : the list of phandle and argument tuples pointing to
+-			   I2S controllers, the first entry should be I2S0 and
+-			   the second one I2S1
+- - audio-amplifier	 : the phandle of the MAX98504 amplifier
+- - samsung,audio-routing : a list of the connections between audio components;
+-			   each entry is a pair of strings, the first being the
+-			   connection's sink, the second being the connection's
+-			   source; valid names for sources and sinks are the
+-			   WM5110's and MAX98504's pins and the jacks on the
+-			   board: HP, SPK, Main Mic, Sub Mic, Third Mic,
+-			   Headset Mic
+- - mic-bias-gpios	 : GPIO pin that enables the Main Mic bias regulator
+-
+-
+-Example:
+-
+-sound {
+-	compatible = "samsung,tm2-audio";
+-	audio-codec = <&wm5110>, <&hdmi>;
+-	i2s-controller = <&i2s0 0>, <&i2s1 0>;
+-	audio-amplifier = <&max98504>;
+-	mic-bias-gpios = <&gpr3 2 0>;
+-	model = "wm5110";
+-	samsung,audio-routing =
+-		"HP", "HPOUT1L",
+-		"HP", "HPOUT1R",
+-		"SPK", "SPKOUT",
+-		"SPKOUT", "HPOUT2L",
+-		"SPKOUT", "HPOUT2R",
+-		"Main Mic", "MICBIAS2",
+-		"IN1R", "Main Mic";
+-};
+diff --git a/Documentation/devicetree/bindings/sound/samsung,tm2-audio.yaml b/Documentation/devicetree/bindings/sound/samsung,tm2-audio.yaml
+new file mode 100644
+index 000000000000..c9178d928ad4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/samsung,tm2-audio.yaml
+@@ -0,0 +1,99 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/samsung,tm2-audio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Samsung Exynos SoC Exynos5433 TM2(E) audio complex with WM5110 codec
++
++maintainers:
++  - Krzysztof Kozlowski <krzk@kernel.org>
++  - Sylwester Nawrocki <s.nawrocki@samsung.com>
++
++properties:
++  compatible:
++    const: samsung,tm2-audio
++
++  model:
++    $ref: /schemas/types.yaml#/definitions/string
++    description: The user-visible name of this sound complex.
++
++  i2s-controller:
++    allOf:
++    - $ref: /schemas/types.yaml#/definitions/phandle-array
++    - items:
++       - description: phandle of the I2S0.
++       - description: phandle of the I2S1.
++
++  audio-codec:
++    allOf:
++    - $ref: /schemas/types.yaml#/definitions/phandle-array
++    - items:
++       - description: |
++            phandle of the wm5110 audio codec node,
++            as described in ../mfd/arizona.txt;
++       - description: phandle of the HDMI transmitter node.
++
++  audio-amplifier:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: phandle of the MAX98504 amplifier.
++
++  mic-bias-gpios:
++    description: GPIO pin that enables the Main Mic bias regulator.
++    maxItems: 1
++
++  samsung,audio-routing:
++    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
++    description: |
++      List of the connections between audio components.
++      Each entry is a pair of strings, the first being the
++      connection's sink, the second being the connection's
++      source. Valid names for sources and sinks are:
++      the WM5110's pins:
++         "HPOUT1L",
++         "HPOUT1R",
++         "HPOUT2L",
++         "HPOUT2R",
++         "HPOUT3L",
++         "HPOUT3R",
++      MAX98504's pins:
++         "SPKOUT"
++      and the jacks on the board:
++         "HP",
++         "SPK",
++         "RCV",
++         "Main Mic",
++         "Sub Mic",
++         "Third Mic",
++         "Headset Mic".
++
++required:
++  - compatible
++  - model
++  - i2s-controller
++  - audio-codec
++  - audio-amplifier
++  - mic-bias-gpios
++  - samsung,audio-routing
++
++additionalProperties: false
++
++examples:
++  - |
++    sound {
++        compatible = "samsung,tm2-audio";
++        model = "wm5110";
++        i2s-controller = <&i2s0 0>, <&i2s1 0>;
++        audio-codec = <&wm5110>, <&hdmi>;
++        audio-amplifier = <&max98504>;
++        mic-bias-gpios = <&gpr3>;
++        samsung,audio-routing =
++                "HP", "HPOUT1L",
++                "HP", "HPOUT1R",
++                "SPK", "SPKOUT",
++                "SPKOUT", "HPOUT2L",
++                "SPKOUT", "HPOUT2R",
++                "Main Mic", "MICBIAS2",
++                "IN1R", "Main Mic";
++    };
++
 -- 
+2.17.1
 
-Thanks,
-
-David / dhildenb
