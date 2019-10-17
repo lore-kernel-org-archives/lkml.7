@@ -2,119 +2,202 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0613DECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD1BECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF5A02089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 947BD2089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:43:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b7uU5/qV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mqNVAvA6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408917AbfJQKkX (ORCPT
+        id S2408868AbfJQKnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 06:40:23 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43301 "EHLO
+        Thu, 17 Oct 2019 06:43:23 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38794 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392759AbfJQKkW (ORCPT
+        with ESMTP id S1727268AbfJQKnW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 06:40:22 -0400
-Received: by mail-wr1-f66.google.com with SMTP id j18so1739565wrq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 03:40:21 -0700 (PDT)
+        Thu, 17 Oct 2019 06:43:22 -0400
+Received: by mail-wr1-f66.google.com with SMTP id o15so1337115wru.5;
+        Thu, 17 Oct 2019 03:43:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4/6DDVX5d7vla6YdRzzXi4A/aTsU47xXCqt0sHgvNJI=;
-        b=b7uU5/qVvchaiINd/RS0pySCibpjekZMTg/nCw+/HXBI9+Pgl7stu+UXnaTclMwT2c
-         1eSJ6U8y/kb8M1WgcPZOLSTv6OXOcO25YZcQZG2grBznUUDslBfqnFr9Jlw/4MLtKFPD
-         7aA7N4g/X4vxA9wQOr6VyDwq4TihE4t4c4sDW44y7O4yXnVgH1sLhn5Nja2QNct+rj3F
-         K0z8IIOiatmGjZycmkdmpMbojJoje8yEnfzRdaJDKnTCTvw9HSQesdS7n8mrM7dn7Kmb
-         tP7FGCYPvfvjF2uD16kWYro16YyetybjigpBNCUbWxJHvm5vKma38U0cAvyntr+HK2Ot
-         qQ1A==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gS/OXdkGtVPAlZZeqcYEO2ANkJNPbPf75+gRouTgeNk=;
+        b=mqNVAvA6k6WIODYFnCempZMPIaU2hjvqF3Cboy/TkcOu0zCNKkhbBPDRGQsAGXvPC9
+         Bl19M/lKuBUbLnujNMf+ZjggL5LCT9VZ6CjHZd5f90gxLqygxafX/ga/RylWocHNOTIa
+         POrNjhRWLMXYxAVJswA9bArTcsc6/wWZHDApRmWn1Zk9EkokU6h6b/9ma56CP/pTd1/L
+         ckKNQJwZqLyJSdzwDPcLGyjb631T1DLvjjPE5Chc3Upgp4UnJ5Nu26kVMEodXREL/+lh
+         mKdPL1t36ZDgJvPHPutGtq60DggMG13F0iM51R2lyr4DRtlizBd4ZDTvWqFhXqLahplD
+         3F6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4/6DDVX5d7vla6YdRzzXi4A/aTsU47xXCqt0sHgvNJI=;
-        b=KpCPTdhLb/oyVm+pR2qnB7zccxrWXdOT1cqhkSSFET+by+RpyyU6LCBdDaLwci0hEE
-         49M/9o3jK5cMj6N/0C3Yh+hLaB8x8sLBS/rnw+raaxbDRceuovuSk3ukPfkE0749lrV5
-         dkbIpWlaKwHQ6Rtul5+vk8V6+xFXgDDkro2zgtsFng5G396jrSJa02s4R9bSLl0oUSGV
-         GOp6ZJ+oaWzYVR0DFln6g243QgA5NwbLort/WaBgkcbJxDbtcHxHBrj0y1hCr/GF8XR4
-         2I9UB2SHHTmEz47WbowrWoQ3fP9zdRnZgx1aYJ6gpbw/kuAJvcVSFIXJjne5uvyWZezK
-         yrYQ==
-X-Gm-Message-State: APjAAAV7rI27SeEF0CVBSB9u7lWlwH4q9ZLFvjRxFN402F+JUIXwVzmM
-        xedaTrdztt5I3JSpZatjWYY3GpduKkLsjOm/xvodjg==
-X-Google-Smtp-Source: APXvYqyC2edEc9qfn+I1WvpyzxwBarwmlWbf4ewvcSmG/uzwfHbxRt8+59/qqTKVy660i6Wd6+svULPi91Gp2L9gNog=
-X-Received: by 2002:adf:dd8b:: with SMTP id x11mr2393112wrl.113.1571308820493;
- Thu, 17 Oct 2019 03:40:20 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gS/OXdkGtVPAlZZeqcYEO2ANkJNPbPf75+gRouTgeNk=;
+        b=ZnO+MNtGaGZR9WjoGTKD3ueCBeN1sqGcylgeCs2fBSHK3bMrNBcJlQO4SsQLBhrKM4
+         FgZ199q14t4w6+S2zt0Ti5OkS2gq4rdxLjGPXvcO0n0jgcK6NP4aIbSb8WXMSmMzwW6l
+         YZwtANodnL5L9XEz6PicXz8rnMqEZqCXdA6fP1vqP0BgkKRJLU5srJ6hY6vanzxYp+AF
+         DtzrerFH8Vas5shsBK0l5cBcEvG9Yfc94nbxc/+HMVLux3SXeEo0b7JGWuFfj8hdXtGE
+         65AMUunT/PK2vYf/1i/WgGSljGt4tTUK6uQ2JugWNXSSSN7ZJkWHivx+WvgqEN0p+6pS
+         CSfA==
+X-Gm-Message-State: APjAAAVb4iWrM5u5WW2d4HnkDG3iDBUQ4mMN6dq+StN8h8Nf/SF65oHS
+        lW21u+ma8DFFvnRUZzFJEuM=
+X-Google-Smtp-Source: APXvYqzgeKrX3IXkmbMwb/JRu8uN/KxUrI0womG13xUUqx3NTQksgSG7V8XUPCB3kTevtDmMj2RGzg==
+X-Received: by 2002:adf:a157:: with SMTP id r23mr2305967wrr.51.1571308997822;
+        Thu, 17 Oct 2019 03:43:17 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id q19sm2376466wra.89.2019.10.17.03.43.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 03:43:14 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 12:43:13 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     linux-pwm@vger.kernel.org, kernel-team@android.com,
+        Mark Salyzyn <salyzyn@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] pwm: Convert period and duty cycle to u64
+Message-ID: <20191017104313.GA3122066@ulmo>
+References: <1571191899-6150-1-git-send-email-gurus@codeaurora.org>
+ <1571191899-6150-2-git-send-email-gurus@codeaurora.org>
+ <20191016101539.GC1303817@ulmo>
+ <20191017060247.GA12487@codeaurora.org>
 MIME-Version: 1.0
-References: <20191011103902.3145-1-wuxy@bitland.com.cn>
-In-Reply-To: <20191011103902.3145-1-wuxy@bitland.com.cn>
-From:   Tomasz Figa <tfiga@google.com>
-Date:   Thu, 17 Oct 2019 19:40:08 +0900
-Message-ID: <CAAFQd5Btb22tdJD74bmwYqaCYukeoX=aRUdoobpBdXX1W67LdQ@mail.gmail.com>
-Subject: Re: [PATCH] media: ov5695: enable vsync pin output
-To:     wuxy@bitland.com.cn
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        dongchun.zhu@mediatek.corp-partner.google.com,
-        Nicolas Boichat <drinkcat@google.com>,
-        wuxy <wuxy@bitland.corp-partner.google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rwEMma7ioTxnRzrJ"
+Content-Disposition: inline
+In-Reply-To: <20191017060247.GA12487@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xingyu,
 
-On Fri, Oct 11, 2019 at 7:39 PM <wuxy@bitland.com.cn> wrote:
->
-> From: wuxy <wuxy@bitland.corp-partner.google.com>
->
+--rwEMma7ioTxnRzrJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for the patch! Please see my comments inline.
+On Wed, Oct 16, 2019 at 11:02:47PM -0700, Guru Das Srinagesh wrote:
+> On Wed, Oct 16, 2019 at 12:15:39PM +0200, Thierry Reding wrote:
+> > On Tue, Oct 15, 2019 at 07:11:39PM -0700, Guru Das Srinagesh wrote:
+> > > Because period and duty cycle are defined as ints with units of
+> > > nanoseconds, the maximum time duration that can be set is limited to
+> > > ~2.147 seconds. Change their definitions to u64 so that higher durati=
+ons
+> > > may be set.
+> > >=20
+> > > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> > > ---
+> > >  drivers/pwm/core.c  |  4 ++--
+> > >  drivers/pwm/sysfs.c | 10 +++++-----
+> > >  include/linux/pwm.h | 16 ++++++++--------
+> > >  3 files changed, 15 insertions(+), 15 deletions(-)
+> >=20
+> > Actually, we can't do that without further preparatory work. The reason
+> > is that consumers use the period and duty_cycle members in computations
+> > of their own, which lead to errors such as this:
+> >=20
+> > 	armv7l-unknown-linux-gnueabihf-ld: drivers/video/backlight/pwm_bl.o: i=
+n function `pwm_backlight_probe':
+> > 	pwm_bl.c:(.text+0x3b0): undefined reference to `__aeabi_uldivmod'
+> >=20
+> > So I think we need to audit all consumers carefully and make sure that
+> > they use do_div() where necessary to avoid such errors.
+> >=20
+> > Thierry
+>=20
+> Hi Thierry,
+>=20
+> I would like to try doing the preparatory work by fixing the errors seen
+> in consumers so that this u64 patch may be applied without issues.
+>=20
+> Before sending the patch, I tried "make"-ing for arm, arm64 and i386
+> architectures to check for compilation/linking errors and encountered
+> none. I see that the above error arises from using a cross-compiler for
+> arm v7, which I haven't tried yet.
+>=20
+> Could you please provide details of the compile tests that you run at
+> your end? I could then try to reproduce the errors you see in the
+> consumer drivers and fix them. Please do share any other ideas or
+> suggestions you may have in this regard.
 
-> For Kukui project, the ov5695 vsync signal needs to
-> be set to output,from ov5695 datasheet,the related
-> register control methods as follows:
->
-> 0x3002 Bit[7] FISIN/VSYNC output enable
-> 0x3010 Bit[7] enable FISIN/VSYNC as GPIO controlled by register
-> 0x3008 Bit[7] register control FISIN/VSYNC output
->
-> TEST= boot to shell
->
-> Signed-off-by: Xingyu Wu <wuxy@bitland.corp-partner.google.com>
-> ---
->  drivers/media/i2c/ov5695.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/media/i2c/ov5695.c b/drivers/media/i2c/ov5695.c
-> index 34b7046d9702..71f0eae6037b 100644
-> --- a/drivers/media/i2c/ov5695.c
-> +++ b/drivers/media/i2c/ov5695.c
-> @@ -300,6 +300,9 @@ static const struct regval ov5695_global_regs[] = {
->   * mipi_datarate per lane 840Mbps
->   */
->  static const struct regval ov5695_2592x1944_regs[] = {
-> +       {0x3002, 0x80},
+I keep a set of scripts in the pwm/ subdirectory of the following
+repository:
 
-The original value of 0xa1 that was in ov5695_global_regs[], has the
-0x80 bit set already.
+	https://github.com/thierryreding/scripts
 
-> +       {0x3008, 0x80},
-> +       {0x3010, 0x80},
+Typically what I do is run:
 
-Doesn't this configure the pin to an always-1 output GPIO? I believe
-the correct settings for both bits should be 0 and 0 for the pin to be
-driven by the hardware vsync generator.
+	$ /path/to/scripts.git/pwm/build --jobs 13 --color
 
-Best regards,
-Tomasz
+That requires a bit of setup for the cross-compilers. I have the
+following in my ~/.cross-compile file:
+
+	path: $HOME/pbs-stage1/bin:$HOME/toolchain/avr32/bin:$HOME/toolchain/unico=
+re32/bin
+	arm: armv7l-unknown-linux-gnueabihf-
+	arm64: aarch64-unknown-linux-gnu-
+	avr32: avr32-
+	blackfin: bfin-unknown-elf-
+	mips: mips-linux-gnu-
+	unicore32: unicore32-linux-
+	riscv: riscv64-linux-gnu-
+	x86:
+	x86_64:
+
+The blackfin and unicore32 builds are expected to fail because the
+blackfin architecture was removed and there's no recent enough kernel
+publicly available for unicore32.
+
+The last two entries in .cross-compile indicate that builds are native,
+so regular gcc from the build system will be used.
+
+Most of these compilers I've built from scratch using pbs-stage1:
+
+	https://github.com/thierryreding/pbs-stage1
+
+Note that I don't guarantee that that build system works for anyone but
+myself, but I'd be happy to hear feedback if you decide to use it. That
+said, you can probably find prebuilt toolchains for all of the above in
+a number of locations, like:
+
+	https://mirrors.edge.kernel.org/pub/tools/crosstool/
+
+or:
+
+	https://toolchains.bootlin.com/
+
+Thierry
+
+--rwEMma7ioTxnRzrJ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2oRb4ACgkQ3SOs138+
+s6Eubg//QRlhY2yWMvDbi5TV86IHTijMq1mWsuyUNHqqIur8iqDzT8pyJfV13YP/
+5CwTfBxc1LzYGzRq4woVEZiffrazudhVsjS0jA1ElxSRJX7RLG40KxVuGYH2fkCq
+MU0kn0wZEIPCpAVyMr1/g8KQLc9QmGBcL5sPB2wUpKRsAmL3nSyZIiNtJkEM2d5g
+w2V+YFN1ISY+gqp45f2v1jWWn+hSz6v1xzCyBIoaE80SPQ0aiU261ma/bARrUSzQ
+MNFvpyBf8Fbc9PsWKq/cU3qEj7EDK9kFkZp8EqwBnr+tDCIDCxLLdGIt25q8mIQT
+Gzgu2wO6NHcCH3wrKDzPiZUulwtiQ6XJfC+p7+77F3/SNSKFL2jL+cnc7P19F/Ub
+W1KhCuraOjZvuSqS+hpiUUfKOw//gl2fsYcyEVgxT7xIKGflI9dcFWLB1tPe9LZP
+vD2CXMsz5lsNV+hZN8gtFKt2A3LR902tovfYPqhbm2wy0oOakExbQGZPDWgN36iX
+rgy7v+YDUj8MOSRowGmESniRIlYG7WfS063B/E+TASTfQonJ5UVZSc1oyKcWCh8Q
+WkUHY3qW0SUqC4JrBOpyRJMAgYHVWuLI7vj8VcyyckwhqU3B3hkJO0KcQT4Vo8kY
+YF7GsDp55zzoH563Tm3stx+uurmrA749F5QU5IZ6rZFe1itXaVQ=
+=g7bs
+-----END PGP SIGNATURE-----
+
+--rwEMma7ioTxnRzrJ--
