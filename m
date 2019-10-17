@@ -2,79 +2,135 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B41FA3728
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 00:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2783FA372B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 00:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A769B20659
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 00:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86BE720659
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 00:57:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ox1kz4/u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404114AbfJQA4c (ORCPT
+        id S2395182AbfJQA5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 20:56:32 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50590 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726521AbfJQA4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 20:56:32 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E9824814F5D5CF5B9A39;
-        Thu, 17 Oct 2019 08:56:30 +0800 (CST)
-Received: from [127.0.0.1] (10.74.149.191) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
- 08:56:22 +0800
-Subject: Re: [PATCH net-next 00/12] net: hns3: add some bugfixes and
- optimizations
-To:     David Miller <davem@davemloft.net>, <jakub.kicinski@netronome.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>
-References: <1571210231-29154-1-git-send-email-tanhuazhong@huawei.com>
- <20191016101943.415d73cf@cakuba.netronome.com>
- <20191016.135003.672960397161023411.davem@davemloft.net>
-From:   tanhuazhong <tanhuazhong@huawei.com>
-Message-ID: <c21c51ee-428a-4cd6-38ac-4b9279d42fcd@huawei.com>
-Date:   Thu, 17 Oct 2019 08:56:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
+        Wed, 16 Oct 2019 20:57:45 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:41030 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbfJQA5p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 20:57:45 -0400
+Received: by mail-qk1-f193.google.com with SMTP id p10so324327qkg.8;
+        Wed, 16 Oct 2019 17:57:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aTGJwtX3gaFJhfVoluMU8ZGAYiXGalHVfNd4SW8h3wE=;
+        b=Ox1kz4/ubMjY0NqMhSvT3o7i8b1ksljfLJIysx6uJPIP2yRWgaBpyjuJip6NCAsxXW
+         eI6pUQX1p0dzLjXIRU65G0ymCZmCJTb6sxNJVh83rgjxHF0V1RkyiDwzIObcotrTQcUL
+         xN4ONDLFOtBvp/pmrwIFbmNIqvP/HmMLg80WW2NeJs06uZd63KAjYIT+GdGY0FLrbvC+
+         RZ7nmMLb8gYfC9BgSaao3j9+UYa0VTVgTOL4HKZBoj8el2GQIi158v16B3BUNnue4hho
+         Vf/gzHQTIOXqaPn4LIueompNv0lcl7ipGHJuftywmGONHrlUahNlP3VkRt8gQuXWBGP5
+         xtaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aTGJwtX3gaFJhfVoluMU8ZGAYiXGalHVfNd4SW8h3wE=;
+        b=kR+02EOAaxNGiBZATR9ys47LmbxHp1bX2q56EJ2z59rHh9mdfK+2tsQY3ZBog8hjdT
+         LHMvjqPvmh6Wn0FATcQpfvCJprDWnInR0LO+vLcaZWINQITtbGdM2iEP73YiIX6mxSCD
+         TJC8N3SbL/P1K5NjAl3+MbkqZMJJEdjIOJklcZ0G3k2fo9HtU904oTqfdN57mJmwEygv
+         ylPzO8KR/qJdm6Khefw50UqDw81WCq0t6OCMqmV07nmnEX9vVVqJqBq82URFeJMs781V
+         z4RLDFwi0G5VAmtDCbQcEDjsT34DbvRPArHsZY7rDCwnl/t6Nlv5rtkSKHIVfN2OH7an
+         fWvQ==
+X-Gm-Message-State: APjAAAXA9mRjl17sm015nB8a0c+6VeadQdJYDOUcgBWmWOIazqav0jM3
+        2O7/k6CW1OTlxiYee1q6V/0=
+X-Google-Smtp-Source: APXvYqw+Is0zFWxxVXLgNAjD5ji4cCtuKQRAnjkgkQc5G9iAjtGzrF4ecvJ23ZYSA/DEUWls6TVR5g==
+X-Received: by 2002:a05:620a:98c:: with SMTP id x12mr820763qkx.323.1571273862463;
+        Wed, 16 Oct 2019 17:57:42 -0700 (PDT)
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id x12sm619050qtb.32.2019.10.16.17.57.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 16 Oct 2019 17:57:41 -0700 (PDT)
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+        by mailauth.nyi.internal (Postfix) with ESMTP id E2DB022025;
+        Wed, 16 Oct 2019 20:57:40 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Wed, 16 Oct 2019 20:57:40 -0400
+X-ME-Sender: <xms:hLynXcZXTDVQW7tG4chaOnZhLkN2c_L2wmdkfpI7j_ISf5ekFmdMDw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrjeeigdefjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepuehoqhhunhcuhfgv
+    nhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucfkphepuddtuddrke
+    eirdeguddrvdduvdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhm
+    thhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvd
+    dqsghoqhhunheppehfihigmhgvrdhnrghmvgesfhhigihmvgdrnhgrmhgvnecuvehluhhs
+    thgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:hLynXfLGr8-_sWO0fjTZIsG1Fw8PfzGIZ5TFLXYIH83mAw6a-JJdmw>
+    <xmx:hLynXaCcDgi12eMZ0Bx8PCeWvTGfGvx-5qJ9Pofcwm9UDca4-HdncA>
+    <xmx:hLynXUrxAb3L1i1zdg-K4vtQ-HuVjafjUS_HbDquhQ4zggNxagluvA>
+    <xmx:hLynXZD2Da2FGrkW1PNxbT17aIUbukOR2z_EkwOhnp5AZMPPhJZm_A>
+Received: from localhost (unknown [101.86.41.212])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B150ED6005B;
+        Wed, 16 Oct 2019 20:57:39 -0400 (EDT)
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Cc:     Boqun Feng <boqun.feng@gmail.com>,
+        Lan Tianyu <Tianyu.Lan@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        linux-hyperv@vger.kernel.org, Joerg Roedel <joro@8bytes.org>
+Subject: [PATCH] drivers: iommu: hyperv: Make HYPERV_IOMMU only available on x86
+Date:   Thu, 17 Oct 2019 08:57:03 +0800
+Message-Id: <20191017005711.2013647-1-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191016.135003.672960397161023411.davem@davemloft.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.149.191]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Currently hyperv-iommu is implemented in a x86 specific way, for
+example, apic is used. So make the HYPERV_IOMMU Kconfig depend on X86
+as a preparation for enabling HyperV on architecture other than x86.
 
+Cc: Lan Tianyu <Tianyu.Lan@microsoft.com>
+Cc: Michael Kelley <mikelley@microsoft.com>
+Cc: linux-hyperv@vger.kernel.org
+Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
+---
 
-On 2019/10/17 1:50, David Miller wrote:
-> From: Jakub Kicinski <jakub.kicinski@netronome.com>
-> Date: Wed, 16 Oct 2019 10:19:43 -0700
-> 
->> On Wed, 16 Oct 2019 15:16:59 +0800, Huazhong Tan wrote:
->>> This patch-set includes some bugfixes and code optimizations
->>> for the HNS3 ethernet controller driver.
->>
->> The code LGTM, mostly, but it certainly seems like patches 2, 3 and 4
->> should be a separate series targeting the net tree :(
-> 
-> Agreed, there are legitimate bug fixes.
-> 
-> I have to say that I see this happening a lot, hns3 bug fixes targetting
-> net-next in a larger series of cleanups and other kinds of changes.
-> 
-> Please handle this delegation properly.  Send bug fixes as a series targetting
-> 'net', and send everything else targetting 'net-next'.
-> 
+Without this patch, I could observe compile error:
 
-ok, thanks.
+| drivers/iommu/hyperv-iommu.c:17:10: fatal error: asm/apic.h: No such
+| file or directory
+|   17 | #include <asm/apic.h>
+|      |          ^~~~~~~~~~~~
 
-> .
-> 
+, after apply Michael's ARM64 on HyperV enablement patchset.
+
+ drivers/iommu/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+index e3842eabcfdd..f1086eaed41c 100644
+--- a/drivers/iommu/Kconfig
++++ b/drivers/iommu/Kconfig
+@@ -467,7 +467,7 @@ config QCOM_IOMMU
+ 
+ config HYPERV_IOMMU
+ 	bool "Hyper-V x2APIC IRQ Handling"
+-	depends on HYPERV
++	depends on HYPERV && X86
+ 	select IOMMU_API
+ 	default HYPERV
+ 	help
+-- 
+2.23.0
 
