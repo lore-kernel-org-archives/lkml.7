@@ -2,68 +2,139 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44864FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B7AFA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2157820872
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CF8320872
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:08:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393981AbfJQQFJ (ORCPT
+        id S2393743AbfJQQIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:05:09 -0400
-Received: from mga07.intel.com ([134.134.136.100]:48344 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728391AbfJQQFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 12:05:09 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 09:05:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,308,1566889200"; 
-   d="scan'208";a="186531520"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga007.jf.intel.com with ESMTP; 17 Oct 2019 09:05:08 -0700
-Date:   Thu, 17 Oct 2019 09:05:08 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH] KVM: X86: Make fpu allocation a common function
-Message-ID: <20191017160508.GA20903@linux.intel.com>
-References: <20191014162247.61461-1-xiaoyao.li@intel.com>
- <87y2xn462e.fsf@vitty.brq.redhat.com>
- <d14d22e2-d74c-ed73-b5bb-3ed5eb087deb@redhat.com>
- <6cc430c1-5729-c2d3-df11-3bf1ec1272f8@intel.com>
- <245dcfe2-d167-fdec-a371-506352d3c684@redhat.com>
- <11318bab-a377-bb8c-b881-76331c92f11e@intel.com>
- <10300339-e4cb-57b0-ac2f-474604551df0@redhat.com>
+        Thu, 17 Oct 2019 12:08:50 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:41907 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727856AbfJQQIt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 12:08:49 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=zhiyuan2048@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TfKEIQ6_1571328524;
+Received: from houzhiyuandeMacBook-Pro.local(mailfrom:zhiyuan2048@linux.alibaba.com fp:SMTPD_---0TfKEIQ6_1571328524)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 18 Oct 2019 00:08:45 +0800
+Subject: Re: [PATCH net] net: sched: act_mirred: drop skb's dst_entry in
+ ingress redirection
+To:     Eric Dumazet <eric.dumazet@gmail.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191012071620.8595-1-zhiyuan2048@linux.alibaba.com>
+ <2d816fb6-befb-aaeb-328b-539507022a22@gmail.com>
+ <31b4e85e-bdf8-6462-dc79-06ff8d98b6cf@linux.alibaba.com>
+ <4d23d69d-f716-afb4-8db6-c21b5ccd7c44@gmail.com>
+From:   Zhiyuan Hou <zhiyuan2048@linux.alibaba.com>
+Message-ID: <6dc2ea66-1bab-5ea5-e139-afb90a5c1352@linux.alibaba.com>
+Date:   Fri, 18 Oct 2019 00:08:44 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <10300339-e4cb-57b0-ac2f-474604551df0@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <4d23d69d-f716-afb4-8db6-c21b5ccd7c44@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 11:41:05AM +0200, Paolo Bonzini wrote:
-> On 16/10/19 09:48, Xiaoyao Li wrote:
-> > BTW, could you have a look at the series I sent yesterday to refactor
-> > the vcpu creation flow, which is inspired partly by this issue. Any
-> > comment and suggestion is welcomed since I don't want to waste time on
-> > wrong direction.
-> 
-> Yes, that's the series from which I'll take your patch.
 
-Can you hold off on taking that patch?  I'm pretty sure we can do more
-cleanup in that area, with less code.
+On 2019/10/14 8:46 下午, Eric Dumazet wrote:
+>
+> On 10/14/19 12:07 AM, Zhiyuan Hou wrote:
+>> On 2019/10/12 6:59 下午, Eric Dumazet wrote:
+>>> On 10/12/19 12:16 AM, Zhiyuan Hou wrote:
+>>>> In act_mirred's ingress redirection, if the skb's dst_entry is valid
+>>>> when call function netif_receive_skb, the fllowing l3 stack process
+>>>> (ip_rcv_finish_core) will check dst_entry and skip the routing
+>>>> decision. Using the old dst_entry is unexpected and may discard the
+>>>> skb in some case. For example dst->dst_input points to dst_discard.
+>>>>
+>>>> This patch drops the skb's dst_entry before calling netif_receive_skb
+>>>> so that the skb can be made routing decision like a normal ingress
+>>>> skb.
+>>>>
+>>>> Signed-off-by: Zhiyuan Hou <zhiyuan2048@linux.alibaba.com>
+>>>> ---
+>>>>    net/sched/act_mirred.c | 5 ++++-
+>>>>    1 file changed, 4 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/net/sched/act_mirred.c b/net/sched/act_mirred.c
+>>>> index 9ce073a05414..6108a64c0cd5 100644
+>>>> --- a/net/sched/act_mirred.c
+>>>> +++ b/net/sched/act_mirred.c
+>>>> @@ -18,6 +18,7 @@
+>>>>    #include <linux/gfp.h>
+>>>>    #include <linux/if_arp.h>
+>>>>    #include <net/net_namespace.h>
+>>>> +#include <net/dst.h>
+>>>>    #include <net/netlink.h>
+>>>>    #include <net/pkt_sched.h>
+>>>>    #include <net/pkt_cls.h>
+>>>> @@ -298,8 +299,10 @@ static int tcf_mirred_act(struct sk_buff *skb, const struct tc_action *a,
+>>>>          if (!want_ingress)
+>>>>            err = dev_queue_xmit(skb2);
+>>>> -    else
+>>>> +    else {
+>>>> +        skb_dst_drop(skb2);
+>>>>            err = netif_receive_skb(skb2);
+>>>> +    }
+>>>>          if (err) {
+>>>>    out:
+>>>>
+>>> Why is dst_discard used ?
+>> When send a skb from local to external, the dst->dst_input will be
+>> assigned dst_discard after routing decision. So if we redirect these
+>> skbs to ingress stack, it will be dropped.
+>>
+>> For ipvlan l2 mode or macvlan, clsact egress filters on master deivce
+>> may also meet these skbs even if they came from slave device. Ingress
+>> redirection on these skbs may drop them on l3 stack.
+> Can you please add a test, so that we can see what you are trying to do exactly ?
+Sure. Suppose a linux box has two interfaces (eth0 and eth1). We
+create a vrf (vrf0) and put eth1 in it, as following commands:
+
+   # ip link add vrf0 type vrf table 10
+   # ip link set dev vrf0 up
+   # ip link set eth1 master vrf0
+
+Then let's intercept some egress flows through eth0 and redirect them
+to vrf0 using act_mirred.
+
+   # ip route add table 10 ...   # add routes to vrf0
+   # tc qdisc add dev eth0 clsact
+   # tc filter add dev eth0  egress proto ip u32 \
+        match ip dst 10.0.0.0/24 \
+        action mirred ingress redirect dev eth1
+
+We expect that the matching skb will be received or forwarded via
+vrf0's route table. But the fact is, the skb is dropped as commit log
+notes.
+>
+>
+>
+>
+>>> This could actually drop packets, for loopback.
+>>>
+>>> A Fixes: tag would tremendously help, I wonder if you are not working around
+>>> the other issue Wei was tracking yesterday ( https://www.spinics.net/lists/netdev/msg604397.html )
+>> No, this is a different issue ^_^.
+> Please add a Fixes: tag then.
+Yes, I will add following tag in v2.
+Fixes: 53592b364001 ("net/sched: act_mirred: Implement ingress actions")
+>
+> Thanks.
