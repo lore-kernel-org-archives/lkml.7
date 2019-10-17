@@ -2,85 +2,125 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5509ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC0AFA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AFA921835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:01:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571328080;
-	bh=hW6huek/OCNo03LBsH5IaDKCEp+GDUUB0WU02dwM/i8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z6y/jbIRMO51LCXPItnpEVa1lmUgrhKQbCqEyyfpvXHmVt4P2g3GsLKADT6vyGYO7
-	 iedvCYpDMcrmd8gzQXpqpuRClOBL6lmUamisCShQM0cMdJlrDvqQOCJD8bRmJTPtmO
-	 gfZDYtITnwJyxuXCWNIo9NM9aeZM0DO4TNH3eo0w=
+	by mail.kernel.org (Postfix) with ESMTP id 7685B20872
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:01:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g5hMI5kx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439513AbfJQQBT (ORCPT
+        id S2439597AbfJQQBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:01:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436580AbfJQQBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 12:01:18 -0400
-Received: from localhost (unknown [192.55.54.60])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A39620872;
-        Thu, 17 Oct 2019 16:01:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571328078;
-        bh=hW6huek/OCNo03LBsH5IaDKCEp+GDUUB0WU02dwM/i8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fU38KlaRL7+XxryfBW2q/qTk9vRR7R2oGrGGuM+F4hhU4Rp48QFtSbl+PgEnSVz8a
-         p10R9pwGqbyRa2y8tCIzQ5ZYTi8TSEEBxUQlcElVRzIKp/TWQNkkLrvLSV51NbNNA2
-         0jG6bjMZ5/WakDxSy+bm3uFQIk/nH+RQNWhvkYiM=
-Date:   Thu, 17 Oct 2019 09:01:17 -0700
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     sashal@kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Dave Wysochanski <dwysocha@redhat.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: Re: [PATCH 4.19 62/81] cifs: use cifsInodeInfo->open_file_lock while
- iterating to avoid a panic
-Message-ID: <20191017160117.GA1083277@kroah.com>
-References: <20191016214805.727399379@linuxfoundation.org>
- <20191016214843.979454273@linuxfoundation.org>
- <20191017085538.GA5847@amd>
+        Thu, 17 Oct 2019 12:01:45 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:45262 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388567AbfJQQBo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 12:01:44 -0400
+Received: by mail-yw1-f67.google.com with SMTP id x65so1028437ywf.12
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 09:01:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=POEbKiu2fpwZ1QYGdQ3ulL/vn9gYu3XJ/PYCzV6tS1M=;
+        b=g5hMI5kxqdtZ26qFVTG0mIIHzCTy2wv7pAqugF2x0aOmsZRu3JJOMH49Vgj5WvQaUI
+         PT2t4M/hIdmFhIGsKjToPX7xZkUNPjIqxowbDYhXNUDNnVhnVS+EjnKJiw/FEfXx68KK
+         XYdF86TxjqCN94emMWZ2iSp3U+mZWflTkLqcJf4NLI26lmuQ0t1Pqd10vDwxCAXxwupx
+         m/n708oPr4x8pp1Y/Xw9/oa6VwHT4kRs6FxvRM5tehLqezrS7MDWfQI/vlUm8bQtC/J/
+         YdZSRf1KE/gjgr9U2g2o8ug9nytMu4mQ3id8dcfNno1rIfjjt2qIVNR/bv3/QsoVl9r5
+         Z19g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=POEbKiu2fpwZ1QYGdQ3ulL/vn9gYu3XJ/PYCzV6tS1M=;
+        b=D0jEmb2VShCjAN/MMtU948Xb3gt8yoC2s3sFRdtLA2U9Jx5FYim4vu1JvQHpnjFket
+         QkepnyKljS6UGewlQ4NRDteK2zSEYEPF4uPOqMG9IYFiVb4qVdreDgMZVYPS093jLZqL
+         AsCRfPTZ2cgpYJcGeHC+3agsHDFMwsBTvL/5o7o3s6tXzNCRatkK7MbXnWjEHtYTNeHX
+         uoqWc3tqo/DEBmWiJGvuUdQM1OgkJwyjO+3n0rz7vr2cu8CzdU6dW3Y1il18LVJf4yPi
+         ojTNEgfqgX/8YHJERNC+e32KiI2KY4iDViQcTKT7KH9wtSX8tOqH45IelF9tnPCZoTQb
+         tFvA==
+X-Gm-Message-State: APjAAAXuwhYE3xjhqflSC3JoIZ6clSah2AbjXEWcu8RhkHmbzmMF+MbG
+        hdx4v0we7K1mDBWiKhX2yN7HgW47Wt3EIvaq/d9jdg==
+X-Google-Smtp-Source: APXvYqyafii/mt+JYS5iwe9OB8ELAj+7pFClz4MBP4sDjY3OuO43IiyT/gJaF5D4PC/yxshcUBDxdMllcXti4wpM+sw=
+X-Received: by 2002:a81:2d41:: with SMTP id t62mr3387017ywt.368.1571328100270;
+ Thu, 17 Oct 2019 09:01:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191017085538.GA5847@amd>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191016221148.F9CCD155@viggo.jf.intel.com>
+In-Reply-To: <20191016221148.F9CCD155@viggo.jf.intel.com>
+From:   Suleiman Souhlal <suleiman@google.com>
+Date:   Fri, 18 Oct 2019 01:01:28 +0900
+Message-ID: <CABCjUKDWRJO9s68qhKQGXzrW39KqfZzZhoOX0HgDcnv-RxJZPw@mail.gmail.com>
+Subject: Re: [PATCH 0/4] [RFC] Migrate Pages in lieu of discard
+To:     Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     Linux Kernel <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        dan.j.williams@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 10:55:39AM +0200, Pavel Machek wrote:
-> Hi!
-> 
-> > From: Dave Wysochanski <dwysocha@redhat.com>
-> > 
-> > Commit 487317c99477 ("cifs: add spinlock for the openFileList to
-> > cifsInodeInfo") added cifsInodeInfo->open_file_lock spin_lock to protect
-> 
-> > Fixes: 487317c99477 ("cifs: add spinlock for the openFileList to cifsInodeInfo")
-> > 
-> > CC: Stable <stable@vger.kernel.org>
-> > Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-> > Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
-> > Signed-off-by: Steve French <stfrench@microsoft.com>
-> 
-> This is missing upstream commit ID and a signoff.
+On Thu, Oct 17, 2019 at 7:14 AM Dave Hansen <dave.hansen@linux.intel.com> wrote:
+>
+> We're starting to see systems with more and more kinds of memory such
+> as Intel's implementation of persistent memory.
+>
+> Let's say you have a system with some DRAM and some persistent memory.
+> Today, once DRAM fills up, reclaim will start and some of the DRAM
+> contents will be thrown out.  Allocations will, at some point, start
+> falling over to the slower persistent memory.
+>
+> That has two nasty properties.  First, the newer allocations can end
+> up in the slower persistent memory.  Second, reclaimed data in DRAM
+> are just discarded even if there are gobs of space in persistent
+> memory that could be used.
+>
+> This set implements a solution to these problems.  At the end of the
+> reclaim process in shrink_page_list() just before the last page
+> refcount is dropped, the page is migrated to persistent memory instead
+> of being dropped.
+>
+> While I've talked about a DRAM/PMEM pairing, this approach would
+> function in any environment where memory tiers exist.
+>
+> This is not perfect.  It "strands" pages in slower memory and never
+> brings them back to fast DRAM.  Other things need to be built to
+> promote hot pages back to DRAM.
+>
+> This is part of a larger patch set.  If you want to apply these or
+> play with them, I'd suggest using the tree from here.  It includes
+> autonuma-based hot page promotion back to DRAM:
+>
+>         http://lkml.kernel.org/r/c3d6de4d-f7c3-b505-2e64-8ee5f70b2118@intel.com
+>
+> This is also all based on an upstream mechanism that allows
+> persistent memory to be onlined and used as if it were volatile:
+>
+>         http://lkml.kernel.org/r/20190124231441.37A4A305@viggo.jf.intel.com
+>
 
-Good catch, Sasha forgot to do that :(
+We prototyped something very similar to this patch series in the past.
 
-I'll go fix that now, thanks.
+One problem that came up is that if you get into direct reclaim,
+because persistent memory can have pretty low write throughput, you
+can end up stalling users for a pretty long time while migrating
+pages.
 
-greg k-h
+To mitigate that, we tried changing background reclaim to start
+migrating much earlier (but not otherwise reclaiming), however it
+drastically increased the code complexity and still had the chance of
+not being able to catch up with pressure.
+
+Because of that, we moved to a solution based on the proactive reclaim
+of idle pages, that was presented at LSFMM earlier this year:
+https://lwn.net/Articles/787611/ .
+
+-- Suleiman
