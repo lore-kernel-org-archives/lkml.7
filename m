@@ -2,294 +2,202 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4AA6FA3731
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D55FFA3732
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D21120663
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6C90214E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:49:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="PF17a64C"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IUKqTmqF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408383AbfJQIss (ORCPT
+        id S2408362AbfJQItp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 04:48:48 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52131 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408364AbfJQIsr (ORCPT
+        Thu, 17 Oct 2019 04:49:45 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:44389 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728835AbfJQIto (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 04:48:47 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 7so1654075wme.1
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 01:48:45 -0700 (PDT)
+        Thu, 17 Oct 2019 04:49:44 -0400
+Received: by mail-ua1-f66.google.com with SMTP id n2so405438ual.11
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 01:49:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ABLJXVRMPFM4pBjF5MtvPjsU9wNvxgGgz98k9KABKpI=;
-        b=PF17a64CORHUVSvDRifR6t0U+QaHY0SKqGdGnvTTcrru79sqhAAXGH6HSdjaq2cdjS
-         CcpHuf6rNGpuxa+PlYMxn4isoV+C0Et/4/tzdrMj9uG0vH6zebbqfsSph3nVP0TQFysU
-         H1Jy6snrhBE4ar/G+trpHXjpEurwRgcecMUgiTGghi0y/soPmKbpHz9hbQDdfzQ7XjyD
-         hU2CZO7bChiJGKt7E2qHxoqBfSu4cIODG1cVG/ULE+s/5m+1rFnxqIF2spLdv3gGM4D5
-         X2nnwbiYmVsRCF1psZaQPuYGRZv3brqDQ4+fR6y5qPYW5DZxtvX60CTeDwCBoO653he/
-         EmcQ==
+        bh=DaflTEVqXP6LU9FxmV75EoYog54RQTLQQw4v75TOTAw=;
+        b=IUKqTmqFFzQ2b4BQBIsKoTrBhfiYGq2mYaYO3/uCdCMjrl4wpVxrmQfx8pVtDqIZpK
+         NQrxGlPVsbCAj4p6LTHTMKZp+Ynp0nZqjZqqz8d7hS+M2SyTMiBtsBZ9I9cA7K8gpn4e
+         p+tCRmc9my6VCQP17s5svfH33t3aGfqF+KZ2kHlVc9HLq7RkBfNzL3Ml5f+h/nRL+tc8
+         dk0t7Stwhrz75oF+hUVOaOj9oJvjCfYVWwW8fByApBNkikgsEOt1ZK3fjsIOKfgp3Zgw
+         vl5bM0cY6bi49vB1Yg1kxFnxLQ3u2D/eLY/etKWIv9rCMBFa6PiXGzoZ7yJhv84gSgCd
+         lg+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ABLJXVRMPFM4pBjF5MtvPjsU9wNvxgGgz98k9KABKpI=;
-        b=ouVG1yQGFZaXPsk1LqyQ6DnLl/yUomSxEMZLWal/8EQo6zdcE6Q0PTToIXVbcgmCXx
-         UJZ+y9ZncWcqWqCHerkQJyEk+XPoEunDZs3SvNZ5PeiRVrG808Xyi4/iM3OV0Ea9N3gq
-         wYUu4NBrrAy91uogcGx/QZk3/Ror+Rf4wreqgffzcFVekU+nCUrLxpVG4KFc+VS9d2bf
-         v+87N0w2iZjyCm0weoPs1G7V/Wi/w2QgZu3eWxxp8qnBoZxu6xa+/GHYPzyh3ClMS8tA
-         X+E4IVIQ/glc9+JZsMYp+U1ef3NcVTtZ7vgGK1Ua6mQmZHgfL+WOTUYZtgQln7tye0eA
-         zK7g==
-X-Gm-Message-State: APjAAAVOEyFMgoEFigmVJegEX+jTMkaUypeKa19SDsHcwFLnLgQ0nwdV
-        S2405YlrThirGRb8fOqqV1ohuipFn37hLHJf6vJytw==
-X-Google-Smtp-Source: APXvYqwwEer8++JvoI8Wa9EUAhuZDuzD4ABKrqyb2q4mQEDHCVptVgwsYmWiFSo0tLUhjapJgLK3/nQr4MSfWYqwX8Q=
-X-Received: by 2002:a1c:a697:: with SMTP id p145mr1734740wme.24.1571302124460;
- Thu, 17 Oct 2019 01:48:44 -0700 (PDT)
+        bh=DaflTEVqXP6LU9FxmV75EoYog54RQTLQQw4v75TOTAw=;
+        b=RzbP1Zdaaox/TA1Ykw853hNaCdQvDuzUhVIN9gLH3C1S/Tko6HEVEuWjgX15haQJOa
+         WK1mheP99bK1h8Fg6TDPs1WD4S9jjUcPGTpJJRBwGx/hiF5QYoqpD8h5jOhFNsV2vxda
+         EaYxjgRZUFlzdy5D38xRW7Gjxhl4S7Kgk/xoF+sU1bOmd/RQLkBPaYcJX6D1jVzUebpT
+         iLcj0I28sPwssSlAbEG/mNLQHjTz602+f+U7FXzZ5ESOu4BpqeKF4cjeFc7TkT68vZ1S
+         J8EHkEXSGdnPY2rsGWm08AQlJQ8H/03WraPnrdaaPtDBEiPmoXDUiZVFsSVNw36kC56r
+         OnIg==
+X-Gm-Message-State: APjAAAWtBF34Ti7TqezjZ+FLux0x4HPC19xe1QNLkOK/BozHBIHNeQtC
+        pd3ClAic3dG+WuUQV+COQZxYbdvyhxbtNKqVunMAQg==
+X-Google-Smtp-Source: APXvYqxdmCYgFKPRO+7PXjW4nJXM3EioJGdjGXSK++d7xB9AYzs/OlNUFWCIT2GRX6CHidVWOeQ/XzB9ieDFL1zhXlE=
+X-Received: by 2002:ab0:331a:: with SMTP id r26mr1618970uao.104.1571302183129;
+ Thu, 17 Oct 2019 01:49:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191016160649.24622-1-anup.patel@wdc.com> <20191016160649.24622-2-anup.patel@wdc.com>
-In-Reply-To: <20191016160649.24622-2-anup.patel@wdc.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Thu, 17 Oct 2019 14:18:33 +0530
-Message-ID: <CAAhSdy3xV0UjDKUgHoKbyoeV5kaC9rVSy=qoBpF=XrrbT=W=-Q@mail.gmail.com>
-Subject: Re: [PATCH v9 01/22] RISC-V: Add bitmap reprensenting ISA features
- common across CPUs
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>,
+References: <1571254641-13626-1-git-send-email-thara.gopinath@linaro.org> <1571254641-13626-2-git-send-email-thara.gopinath@linaro.org>
+In-Reply-To: <1571254641-13626-2-git-send-email-thara.gopinath@linaro.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 17 Oct 2019 10:49:07 +0200
+Message-ID: <CAPDyKFr76VHypqGxYL-1HS3uu3_KYeO+dGJ7q1Nj=uXiQgY98A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/7] PM/Domains: Add support for retrieving genpd
+ performance states information
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     Eduardo Valentin <edubezval@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Graf <graf@amazon.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, amit.kucheria@verdurent.com,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+On Wed, 16 Oct 2019 at 21:37, Thara Gopinath <thara.gopinath@linaro.org> wrote:
+>
+> Add two new APIs in the genpd framework,
+> dev_pm_genpd_get_performance_state to return the current performance
+> state of a power domain and dev_pm_genpd_performance_state_count to
+> return the total number of performance states supported by a
+> power domain. Since the genpd framework does not maintain
+> a count of number of performance states supported by a power domain,
+> introduce a new callback(.get_performance_state_count) that can be used
+> to retrieve this information from power domain drivers.
+>
+> These APIs are added to aid the implementation of a power domain as
+> a warming device. Linux kernel cooling device framework(into which
+> warming device can be plugged in) requires during initialization to be
+> provided with the maximum number of states that can be supported. When
+> a power domain acts as a warming device, the max state is the max number
+> of perfomrance states supported by the power domain. The cooling
+> device framework implements API to retrieve the current state of the
+> cooling device. This in turn translates to the current performance
+> state of the power domain.
+>
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 
-On Wed, Oct 16, 2019 at 9:38 PM Anup Patel <Anup.Patel@wdc.com> wrote:
->
-> This patch adds riscv_isa bitmap which represents Host ISA features
-> common across all Host CPUs. The riscv_isa is not same as elf_hwcap
-> because elf_hwcap will only have ISA features relevant for user-space
-> apps whereas riscv_isa will have ISA features relevant to both kernel
-> and user-space apps.
->
-> One of the use-case for riscv_isa bitmap is in KVM hypervisor where
-> we will use it to do following operations:
->
-> 1. Check whether hypervisor extension is available
-> 2. Find ISA features that need to be virtualized (e.g. floating
->    point support, vector extension, etc.)
->
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> Reviewed-by: Alexander Graf <graf@amazon.com>
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-Can you consider this patch for Linux-5.4-rcX ??
+Kind regards
+Uffe
 
-Regards,
-Anup
 
 > ---
->  arch/riscv/include/asm/hwcap.h | 22 +++++++++
->  arch/riscv/kernel/cpufeature.c | 83 ++++++++++++++++++++++++++++++++--
->  2 files changed, 102 insertions(+), 3 deletions(-)
+>  drivers/base/power/domain.c | 37 +++++++++++++++++++++++++++++++++++++
+>  include/linux/pm_domain.h   | 13 +++++++++++++
+>  2 files changed, 50 insertions(+)
 >
-> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
-> index 7ecb7c6a57b1..5989dd4426d1 100644
-> --- a/arch/riscv/include/asm/hwcap.h
-> +++ b/arch/riscv/include/asm/hwcap.h
-> @@ -8,6 +8,7 @@
->  #ifndef __ASM_HWCAP_H
->  #define __ASM_HWCAP_H
+> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> index cc85e87..507e530 100644
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -408,6 +408,43 @@ int dev_pm_genpd_set_performance_state(struct device *dev, unsigned int state)
+>  }
+>  EXPORT_SYMBOL_GPL(dev_pm_genpd_set_performance_state);
 >
-> +#include <linux/bits.h>
->  #include <uapi/asm/hwcap.h>
->
->  #ifndef __ASSEMBLY__
-> @@ -22,5 +23,26 @@ enum {
->  };
->
->  extern unsigned long elf_hwcap;
-> +
-> +#define RISCV_ISA_EXT_a                ('a' - 'a')
-> +#define RISCV_ISA_EXT_c                ('c' - 'a')
-> +#define RISCV_ISA_EXT_d                ('d' - 'a')
-> +#define RISCV_ISA_EXT_f                ('f' - 'a')
-> +#define RISCV_ISA_EXT_h                ('h' - 'a')
-> +#define RISCV_ISA_EXT_i                ('i' - 'a')
-> +#define RISCV_ISA_EXT_m                ('m' - 'a')
-> +#define RISCV_ISA_EXT_s                ('s' - 'a')
-> +#define RISCV_ISA_EXT_u                ('u' - 'a')
-> +
-> +#define RISCV_ISA_EXT_MAX      256
-> +
-> +unsigned long riscv_isa_extension_base(const unsigned long *isa_bitmap);
-> +
-> +#define riscv_isa_extension_mask(ext) BIT_MASK(RISCV_ISA_EXT_##ext)
-> +
-> +bool __riscv_isa_extension_available(const unsigned long *isa_bitmap, int bit);
-> +#define riscv_isa_extension_available(isa_bitmap, ext) \
-> +       __riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_##ext)
-> +
->  #endif
->  #endif
-> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-> index eaad5aa07403..64068d36658d 100644
-> --- a/arch/riscv/kernel/cpufeature.c
-> +++ b/arch/riscv/kernel/cpufeature.c
-> @@ -6,21 +6,64 @@
->   * Copyright (C) 2017 SiFive
->   */
->
-> +#include <linux/bitmap.h>
->  #include <linux/of.h>
->  #include <asm/processor.h>
->  #include <asm/hwcap.h>
->  #include <asm/smp.h>
->
->  unsigned long elf_hwcap __read_mostly;
-> +
-> +/* Host ISA bitmap */
-> +static DECLARE_BITMAP(riscv_isa, RISCV_ISA_EXT_MAX) __read_mostly;
-> +
->  #ifdef CONFIG_FPU
->  bool has_fpu __read_mostly;
->  #endif
->
-> +/**
-> + * riscv_isa_extension_base() - Get base extension word
-> + *
-> + * @isa_bitmap: ISA bitmap to use
-> + * Return: base extension word as unsigned long value
-> + *
-> + * NOTE: If isa_bitmap is NULL then Host ISA bitmap will be used.
-> + */
-> +unsigned long riscv_isa_extension_base(const unsigned long *isa_bitmap)
+> +int dev_pm_genpd_get_performance_state(struct device *dev)
 > +{
-> +       if (!isa_bitmap)
-> +               return riscv_isa[0];
-> +       return isa_bitmap[0];
-> +}
-> +EXPORT_SYMBOL_GPL(riscv_isa_extension_base);
+> +       struct generic_pm_domain *genpd;
+> +       unsigned int state;
 > +
-> +/**
-> + * __riscv_isa_extension_available() - Check whether given extension
-> + * is available or not
-> + *
-> + * @isa_bitmap: ISA bitmap to use
-> + * @bit: bit position of the desired extension
-> + * Return: true or false
-> + *
-> + * NOTE: If isa_bitmap is NULL then Host ISA bitmap will be used.
-> + */
-> +bool __riscv_isa_extension_available(const unsigned long *isa_bitmap, int bit)
+> +       genpd = dev_to_genpd_safe(dev);
+> +       if (IS_ERR(genpd))
+> +               return -ENODEV;
+> +
+> +       genpd_lock(genpd);
+> +       state = genpd->performance_state;
+> +       genpd_unlock(genpd);
+> +
+> +       return state;
+> +}
+> +EXPORT_SYMBOL_GPL(dev_pm_genpd_get_performance_state);
+> +
+> +int dev_pm_genpd_performance_state_count(struct device *dev)
 > +{
-> +       const unsigned long *bmap = (isa_bitmap) ? isa_bitmap : riscv_isa;
+> +       struct generic_pm_domain *genpd;
+> +       int count;
 > +
-> +       if (bit >= RISCV_ISA_EXT_MAX)
-> +               return false;
+> +       genpd = dev_to_genpd_safe(dev);
+> +       if (IS_ERR(genpd))
+> +               return -ENODEV;
 > +
-> +       return test_bit(bit, bmap) ? true : false;
+> +       if (unlikely(!genpd->get_performance_state_count))
+> +               return -EINVAL;
+> +
+> +       genpd_lock(genpd);
+> +       count = genpd->get_performance_state_count(genpd);
+> +       genpd_unlock(genpd);
+> +
+> +       return count;
 > +}
-> +EXPORT_SYMBOL_GPL(__riscv_isa_extension_available);
+> +EXPORT_SYMBOL_GPL(dev_pm_genpd_performance_state_count);
 > +
->  void riscv_fill_hwcap(void)
+>  static int _genpd_power_on(struct generic_pm_domain *genpd, bool timed)
 >  {
->         struct device_node *node;
->         const char *isa;
-> -       size_t i;
-> +       char print_str[BITS_PER_LONG+1];
-> +       size_t i, j, isa_len;
->         static unsigned long isa2hwcap[256] = {0};
+>         unsigned int state_idx = genpd->state_idx;
+> diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
+> index baf02ff..e88e57f 100644
+> --- a/include/linux/pm_domain.h
+> +++ b/include/linux/pm_domain.h
+> @@ -117,6 +117,7 @@ struct generic_pm_domain {
+>                                                  struct dev_pm_opp *opp);
+>         int (*set_performance_state)(struct generic_pm_domain *genpd,
+>                                      unsigned int state);
+> +       int (*get_performance_state_count)(struct generic_pm_domain *genpd);
+>         struct gpd_dev_ops dev_ops;
+>         s64 max_off_time_ns;    /* Maximum allowed "suspended" time. */
+>         bool max_off_time_changed;
+> @@ -204,6 +205,8 @@ int pm_genpd_init(struct generic_pm_domain *genpd,
+>                   struct dev_power_governor *gov, bool is_off);
+>  int pm_genpd_remove(struct generic_pm_domain *genpd);
+>  int dev_pm_genpd_set_performance_state(struct device *dev, unsigned int state);
+> +int dev_pm_genpd_get_performance_state(struct device *dev);
+> +int dev_pm_genpd_performance_state_count(struct device *dev);
 >
->         isa2hwcap['i'] = isa2hwcap['I'] = COMPAT_HWCAP_ISA_I;
-> @@ -32,8 +75,11 @@ void riscv_fill_hwcap(void)
+>  extern struct dev_power_governor simple_qos_governor;
+>  extern struct dev_power_governor pm_domain_always_on_gov;
+> @@ -251,6 +254,16 @@ static inline int dev_pm_genpd_set_performance_state(struct device *dev,
+>         return -ENOTSUPP;
+>  }
 >
->         elf_hwcap = 0;
->
-> +       bitmap_zero(riscv_isa, RISCV_ISA_EXT_MAX);
+> +static inline int dev_pm_genpd_get_performance_state(struct device *dev)
+> +{
+> +       return -ENOTSUPP;
+> +}
 > +
->         for_each_of_cpu_node(node) {
->                 unsigned long this_hwcap = 0;
-> +               unsigned long this_isa = 0;
->
->                 if (riscv_of_processor_hartid(node) < 0)
->                         continue;
-> @@ -41,8 +87,24 @@ void riscv_fill_hwcap(void)
->                 if (riscv_read_check_isa(node, &isa) < 0)
->                         continue;
->
-> -               for (i = 0; i < strlen(isa); ++i)
-> +               i = 0;
-> +               isa_len = strlen(isa);
-> +#if IS_ENABLED(CONFIG_32BIT)
-> +               if (!strncmp(isa, "rv32", 4))
-> +                       i += 4;
-> +#elif IS_ENABLED(CONFIG_64BIT)
-> +               if (!strncmp(isa, "rv64", 4))
-> +                       i += 4;
-> +#endif
-> +               for (; i < isa_len; ++i) {
->                         this_hwcap |= isa2hwcap[(unsigned char)(isa[i])];
-> +                       /*
-> +                        * TODO: X, Y and Z extension parsing for Host ISA
-> +                        * bitmap will be added in-future.
-> +                        */
-> +                       if ('a' <= isa[i] && isa[i] < 'x')
-> +                               this_isa |= (1UL << (isa[i] - 'a'));
-> +               }
->
->                 /*
->                  * All "okay" hart should have same isa. Set HWCAP based on
-> @@ -53,6 +115,11 @@ void riscv_fill_hwcap(void)
->                         elf_hwcap &= this_hwcap;
->                 else
->                         elf_hwcap = this_hwcap;
+> +static inline int dev_pm_genpd_performance_state_count(struct device *dev)
+> +{
+> +       return -ENOTSUPP;
+> +}
 > +
-> +               if (riscv_isa[0])
-> +                       riscv_isa[0] &= this_isa;
-> +               else
-> +                       riscv_isa[0] = this_isa;
->         }
->
->         /* We don't support systems with F but without D, so mask those out
-> @@ -62,7 +129,17 @@ void riscv_fill_hwcap(void)
->                 elf_hwcap &= ~COMPAT_HWCAP_ISA_F;
->         }
->
-> -       pr_info("elf_hwcap is 0x%lx\n", elf_hwcap);
-> +       memset(print_str, 0, sizeof(print_str));
-> +       for (i = 0, j = 0; i < BITS_PER_LONG; i++)
-> +               if (riscv_isa[0] & BIT_MASK(i))
-> +                       print_str[j++] = (char)('a' + i);
-> +       pr_info("riscv: ISA extensions %s\n", print_str);
-> +
-> +       memset(print_str, 0, sizeof(print_str));
-> +       for (i = 0, j = 0; i < BITS_PER_LONG; i++)
-> +               if (elf_hwcap & BIT_MASK(i))
-> +                       print_str[j++] = (char)('a' + i);
-> +       pr_info("riscv: ELF capabilities %s\n", print_str);
->
->  #ifdef CONFIG_FPU
->         if (elf_hwcap & (COMPAT_HWCAP_ISA_F | COMPAT_HWCAP_ISA_D))
+>  #define simple_qos_governor            (*(struct dev_power_governor *)(NULL))
+>  #define pm_domain_always_on_gov                (*(struct dev_power_governor *)(NULL))
+>  #endif
 > --
-> 2.17.1
+> 2.1.4
 >
