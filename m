@@ -2,142 +2,147 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7BDECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FD5ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E39E21A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5018621A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:37:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571323062;
+	bh=UNI1RVEUVyJZgOCPSuehWxBlm9XTCYYx3S1BUA2rAEY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vlPVbbUQ2u2riCdolTJZcWHwV2hLD2vUq1edGj+FdJ1tddCq8GsS82awUMYR8R3pA
+	 5sMvyweDTJB66+bd8uwIavTKh96SZQFlpxLCE5aT0emLYHoD05U0ibt/5T7qH8kW1c
+	 C9EJPwRjzA9BYF/bPkmsEeLOUS0K+Voe8f08AtM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440321AbfJQOeh (ORCPT
+        id S2403872AbfJQOhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 10:34:37 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:9921 "EHLO
-        mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726583AbfJQOeh (ORCPT
+        Thu, 17 Oct 2019 10:37:41 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40278 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726583AbfJQOhk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:34:37 -0400
-X-IronPort-AV: E=Sophos;i="5.67,308,1566856800"; 
-   d="scan'208";a="323053838"
-Received: from portablejulia.rsr.lip6.fr ([132.227.76.63])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 16:34:34 +0200
-Date:   Thu, 17 Oct 2019 16:34:33 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: julia@hadrien
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-cc:     Himanshu Jha <himanshujha199640@gmail.com>,
-        Linus Torvalds <torvalds@linuxfoundation.org>,
-        kernel-janitors@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        tglx@linutronix.de, Marc Zyngier <maz@kernel.org>,
-        linux-kernel@vger.kernel.org, yamada.masahiro@socionext.com
-Subject: Re: [PATCH] coccinelle: api/devm_platform_ioremap_resource: remove
- useless script
-In-Reply-To: <20191017142237.9734-1-alexandre.belloni@bootlin.com>
-Message-ID: <alpine.DEB.2.21.1910171633150.5777@hadrien>
-References: <20191017142237.9734-1-alexandre.belloni@bootlin.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 17 Oct 2019 10:37:40 -0400
+Received: by mail-ot1-f67.google.com with SMTP id y39so2078450ota.7;
+        Thu, 17 Oct 2019 07:37:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EVefoS1uox1PXbNp8a2dEzENp3d5CAL7i63ZLMJgDfE=;
+        b=ouZRnhvp200sk7eGPGvKGLsf8vspduaNXWgvCMORq3OgQ4m/FOEwzbr1xuOr+AT/uL
+         wkfRLAobQO7LI6VSUl/Rg9Hk15/nrJTL4uOKgwOKsRabEkJ80spTN8ROnNHVADRFD3eF
+         pS3CaX2Ruidk6IGWFxSQD8oOvo9d7xZOI+bu/K4UGgxhmYVRpPaSdmoDO9JFtLheCLaB
+         d+2xwyYtWsBhBx/E1G4Io7NYbBA6bFNoSS/XONOWn2kthiioU9QR+fSDKquvdkc+0n5c
+         oho8r/G3UEJ8+A+LSy2+ag4tuUtCHVU+cm9sZSrsCMvzrNE43KRgoSh2q9U5yU22XjOp
+         Wxtw==
+X-Gm-Message-State: APjAAAUMxsELcUg2sMAy6ng2iojN4sEyYgpGvpYePEB+T1FDySkTXycb
+        H6d5tkOaRQt4YPVh+unoQrzdy04=
+X-Google-Smtp-Source: APXvYqwMb70hm3fWXirGCzrqwCzu4GcP6vYWFZa5Tyv1x+cngwflxxpcOVSGp1wCM55OXRAM1LbZUg==
+X-Received: by 2002:a05:6830:17db:: with SMTP id p27mr3446871ota.258.1571323059553;
+        Thu, 17 Oct 2019 07:37:39 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id x140sm560586oix.42.2019.10.17.07.37.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 07:37:38 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 09:37:38 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V5 2/3] dt-bindings: Add Logic PD Type 28 display panel
+Message-ID: <20191017143738.GA10960@bogus>
+References: <20191016135147.7743-1-aford173@gmail.com>
+ <20191016135147.7743-2-aford173@gmail.com>
+ <20191016144018.GG5175@pendragon.ideasonboard.com>
+ <CAHCN7xJhHHoia_o4rb0VgvCP71X94Pvem684F2quMijNNpNxVA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHCN7xJhHHoia_o4rb0VgvCP71X94Pvem684F2quMijNNpNxVA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 16, 2019 at 09:55:11AM -0500, Adam Ford wrote:
+> On Wed, Oct 16, 2019 at 9:40 AM Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+> >
+> > Hi Adam,
+> >
+> > Thank you for the patch.
+> >
+> > On Wed, Oct 16, 2019 at 08:51:46AM -0500, Adam Ford wrote:
+> > > This patch adds documentation of device tree bindings for the WVGA panel
+> > > Logic PD Type 28 display.
+> > >
+> > > Signed-off-by: Adam Ford <aford173@gmail.com>
+> > > ---
+> > > V5:  Replace GPIO_ACTIVE_HIGH with 0 to fix make dt_binding_check -k
+> > > V4:  Update per Rob H's suggestions and copy other panel yaml example from 5.4-rc1
+> > > V3:  Correct build errors from 'make dt_binding_check'
+> > > V2:  Use YAML instead of TXT for binding
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml b/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
+> > > new file mode 100644
+> > > index 000000000000..2834287b8d88
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
+> > > @@ -0,0 +1,42 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/display/panel/logicpd,type28.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Logic PD Type 28 4.3" WQVGA TFT LCD panel
+> > > +
+> > > +maintainers:
+> > > +  - Adam Ford <aford173@gmail.com>
+> > > +
+> > > +allOf:
+> > > +  - $ref: panel-common.yaml#
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: logicpd,type28
+> > > +
+> > > +  power-supply: true
+> > > +  enable-gpios: true
+> > > +  backlight: true
+> > > +  port: true
+> > > +
+> > > +required:
+> > > +  - compatible
+> >
+> > Should the port be required too ? Apart from that,
+> 
+> I supposed that's true, but I used ampire,am-480272h3tmqw-t01h.yaml as
+> the example, and it doesn't list it as a required item.
+> Is there anything else I need to address?  I feel like I'm trying to
+> hit a moving target.
 
+'port' can be omitted because the panel can be a child node of 
+the display controller instead. That's decided by the display controller 
+binding, not the panel binding.
 
-On Thu, 17 Oct 2019, Alexandre Belloni wrote:
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-> While it is useful for new drivers to use devm_platform_ioremap_resource,
-> this script is currently used to spam maintainers, often updating very old
-> drivers. The net benefit is the removal of 2 lines of code in the driver
-> but the review load for the maintainers is huge. As of now, more that 560
-> patches have been sent, some of them obviously broken, as in:
->
-> https://lore.kernel.org/lkml/9bbcce19c777583815c92ce3c2ff2586@www.loen.fr/
->
-> Remove the script to reduce the spam.
-
-OK.
-
-Acked-by: Julia Lawall <Julia.Lawall@lip6.fr>
-
->
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> ---
->  .../api/devm_platform_ioremap_resource.cocci  | 60 -------------------
->  1 file changed, 60 deletions(-)
->  delete mode 100644 scripts/coccinelle/api/devm_platform_ioremap_resource.cocci
->
-> diff --git a/scripts/coccinelle/api/devm_platform_ioremap_resource.cocci b/scripts/coccinelle/api/devm_platform_ioremap_resource.cocci
-> deleted file mode 100644
-> index 56a2e261d61d..000000000000
-> --- a/scripts/coccinelle/api/devm_platform_ioremap_resource.cocci
-> +++ /dev/null
-> @@ -1,60 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> -/// Use devm_platform_ioremap_resource helper which wraps
-> -/// platform_get_resource() and devm_ioremap_resource() together.
-> -///
-> -// Confidence: High
-> -// Copyright: (C) 2019 Himanshu Jha GPLv2.
-> -// Copyright: (C) 2019 Julia Lawall, Inria/LIP6. GPLv2.
-> -// Keywords: platform_get_resource, devm_ioremap_resource,
-> -// Keywords: devm_platform_ioremap_resource
-> -
-> -virtual patch
-> -virtual report
-> -
-> -@r depends on patch && !report@
-> -expression e1, e2, arg1, arg2, arg3;
-> -identifier id;
-> -@@
-> -
-> -(
-> -- id = platform_get_resource(arg1, IORESOURCE_MEM, arg2);
-> -|
-> -- struct resource *id = platform_get_resource(arg1, IORESOURCE_MEM, arg2);
-> -)
-> -  ... when != id
-> -- e1 = devm_ioremap_resource(arg3, id);
-> -+ e1 = devm_platform_ioremap_resource(arg1, arg2);
-> -  ... when != id
-> -? id = e2
-> -
-> -@r1 depends on patch && !report@
-> -identifier r.id;
-> -type T;
-> -@@
-> -
-> -- T *id;
-> -  ...when != id
-> -
-> -@r2 depends on report && !patch@
-> -identifier id;
-> -expression e1, e2, arg1, arg2, arg3;
-> -position j0;
-> -@@
-> -
-> -(
-> -  id = platform_get_resource(arg1, IORESOURCE_MEM, arg2);
-> -|
-> -  struct resource *id = platform_get_resource(arg1, IORESOURCE_MEM, arg2);
-> -)
-> -  ... when != id
-> -  e1@j0 = devm_ioremap_resource(arg3, id);
-> -  ... when != id
-> -? id = e2
-> -
-> -@script:python depends on report && !patch@
-> -e1 << r2.e1;
-> -j0 << r2.j0;
-> -@@
-> -
-> -msg = "WARNING: Use devm_platform_ioremap_resource for %s" % (e1)
-> -coccilib.report.print_report(j0[0], msg)
-> --
-> 2.21.0
->
->
+Rob
