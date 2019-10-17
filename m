@@ -2,116 +2,133 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BA5ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 854DAECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 921FF20869
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58BE320869
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:24:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439420AbfJQJW0 (ORCPT
+        id S2405351AbfJQJYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 05:22:26 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:36512 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1731152AbfJQJWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 05:22:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 803C3168F;
-        Thu, 17 Oct 2019 02:21:58 -0700 (PDT)
-Received: from [192.168.1.103] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 094333F718;
-        Thu, 17 Oct 2019 02:21:49 -0700 (PDT)
-Subject: Re: [PATCHv7 01/33] ns: Introduce Time Namespace
-To:     Andrei Vagin <avagin@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-References: <20191011012341.846266-1-dima@arista.com>
- <20191011012341.846266-2-dima@arista.com>
- <80af93da-d497-81de-2a2a-179bb3bc852d@arm.com>
- <alpine.DEB.2.21.1910161230070.2046@nanos.tec.linutronix.de>
- <20191016233342.GA3075@gmail.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <f37e6f71-09f6-4391-e6ef-974c4476c8a0@arm.com>
-Date:   Thu, 17 Oct 2019 10:23:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 17 Oct 2019 05:24:12 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4238 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1733031AbfJQJYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 05:24:11 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 2190D78F2197008800FB;
+        Thu, 17 Oct 2019 17:24:10 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
+ 17:24:03 +0800
+Subject: =?UTF-8?B?UmU6IOetlOWkjTogW1BBVENIXSB1c2UgZGV2bV9wbGF0Zm9ybV9pb3Jl?=
+ =?UTF-8?Q?map=5fresource=28=29_for_irqchip_drivers?=
+To:     huangdaode <huangdaode@hisilicon.com>,
+        Marc Zyngier <maz@kernel.org>
+References: <1571296423-208359-1-git-send-email-huangdaode@hisilicon.com>
+ <9bbcce19c777583815c92ce3c2ff2586@www.loen.fr>
+ <E20AE017F0DBA04DA661272787510F9813D297B0@DGGEMM527-MBX.china.huawei.com>
+CC:     "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        "alexandre.torgue@st.com" <alexandre.torgue@st.com>,
+        "nm@ti.com" <nm@ti.com>, "t-kristo@ti.com" <t-kristo@ti.com>,
+        "ssantosh@kernel.org" <ssantosh@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <3a98da01-4f69-2624-e49f-5e2316c433e0@huawei.com>
+Date:   Thu, 17 Oct 2019 17:24:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-In-Reply-To: <20191016233342.GA3075@gmail.com>
-Content-Type: text/plain; charset=koi8-r
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <E20AE017F0DBA04DA661272787510F9813D297B0@DGGEMM527-MBX.china.huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrei,
-
-On 10/17/19 12:33 AM, Andrei Vagin wrote:
->>> Having CONFIG_TIME_NS "default y" makes so that the option is selected even on
->>> the architectures that have no support for time namespaces.
->>> The direct consequence is that the fallbacks defined in this patch are never
->>> selected and this ends up in kernel compilation errors due to missing symbols.
->>>
->>> The error below shows what happens on arm64 (similar behavior on other
->>> architectures):
->>>
->>> aarch64-linux-gnu-ld: kernel/time/namespace.o: in function `timens_on_fork':
->>> kernel/time/namespace.c:321: undefined reference to `vdso_join_timens'
->>>
->>> My proposal is to keep TIME_NS "default n" (just remove "default y"), let the
->>> architectures that enable time namespaces select it and make CONFIG_TIME_NS
->>> select GENERIC_VDSO_TIME_NS if arch has HAVE_GENERIC_VDSO.
->> Nah.
+On 2019/10/17 17:20, huangdaode wrote:
+> Hi Marc
+> I am just doing the coccicheck using the command "make coccicheck M=drivers/irqchip/", and it report 
+> $ make coccicheck M=drivers/irqchip/
+> .......
+> drivers/irqchip//irq-mvebu-icu.c:361:1-10: WARNING: Use devm_platform_ioremap_resource for icu -> base
+> drivers/irqchip//irq-ts4800.c:105:1-11: WARNING: Use devm_platform_ioremap_resource for data -> base
+> drivers/irqchip//irq-mvebu-pic.c:134:1-10: WARNING: Use devm_platform_ioremap_resource for pic -> base
+> drivers/irqchip//irq-ti-sci-inta.c:571:1-11: WARNING: Use devm_platform_ioremap_resource for inta -> base
+> drivers/irqchip//irq-stm32-exti.c:853:1-16: WARNING: Use devm_platform_ioremap_resource for host_data -> base
+> 
+> so just fix the WARNING. 
+> 
+> And after  apply the patch, I do the compile, it's OK, but I lack of hardware to test it. 
+> That's the case. 
+> 
+> MBR.
+> Thanks
+> 
+> -----邮件原件-----
+> 发件人: Marc Zyngier [mailto:maz@kernel.org] 
+> 发送时间: 2019年10月17日 16:24
+> 收件人: huangdaode <huangdaode@hisilicon.com>
+> 抄送: jason@lakedaemon.net; andrew@lunn.ch; gregory.clement@bootlin.com; sebastian.hesselbarth@gmail.com; tglx@linutronix.de; mcoquelin.stm32@gmail.com; alexandre.torgue@st.com; nm@ti.com; t-kristo@ti.com; ssantosh@kernel.org; linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; linux-stm32@st-md-mailman.stormreply.com
+> 主题: Re: [PATCH] use devm_platform_ioremap_resource() for irqchip drivers
+> 
+> On 2019-10-17 08:13, Daode Huang wrote:
+>> From: Daode Huang <huangdaode@hislicon.com>
 >>
->> config TIME_NS
->> 	bool "TIME namespace"
->> 	depends on GENERIC_VDSO_TIME_NS
-> I was thinking to fix this by the same way with a small difference.
+>> Use the new helper that wraps the calls to platform_get_resource() and 
+>> devm_ioremap_resource() together
+>>
+>> Signed-off-by: Daode Huang <huangdaode@hislicon.com>
+>> ---
+>>  drivers/irqchip/irq-mvebu-icu.c   | 3 +--
+>>  drivers/irqchip/irq-mvebu-pic.c   | 3 +--
+>>  drivers/irqchip/irq-stm32-exti.c  | 3 +--  
+>> drivers/irqchip/irq-ti-sci-inta.c | 3 +--
+>>  drivers/irqchip/irq-ts4800.c      | 3 +--
+>>  5 files changed, 5 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/drivers/irqchip/irq-mvebu-icu.c 
+>> b/drivers/irqchip/irq-mvebu-icu.c index 547045d..ddf9b0d 100644
+>> --- a/drivers/irqchip/irq-mvebu-icu.c
+>> +++ b/drivers/irqchip/irq-mvebu-icu.c
+>> @@ -357,8 +357,7 @@ static int mvebu_icu_probe(struct platform_device
+>> *pdev)
+>>
+>>  	icu->dev = &pdev->dev;
+>>
+>> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> -	icu->base = devm_ioremap_resource(&pdev->dev, res);
+>> +	icu->base = devm_platform_ioremap_resource(pdev, res);
+
+It should be :
+
++	icu->base = devm_platform_ioremap_resource(pdev, 0);
+
 > 
-> If GENERIC_GETTIMEOFDAY isn't set, it should be safe to allow enabling
-> TIME_NS. In this case, clock_gettime works via system call and we don't
-> have arch-specific code in this case. Does this sound reasonable?
+> void __iomem *devm_platform_ioremap_resource(struct platform_device *pdev,
+>                                               unsigned int index)
 > 
->         depends on (!GENERIC_GETTIMEOFDAY || GENERIC_VDSO_TIME_NS)
+> What could possibly go wrong? I'd suggest you start compiling (and possibly
+> testing) the code you change before sending patches...
+> 
+>          M.
+> --
+> Jazz is not dead. It just smells funny...
+> 
 
-This option would not work because not all the architectures have been converted
-to the unified vdso approach. For example if you try to build ppc64 that does
-not set GENERIC_GETTIMEOFDAY but has vdso support you would get:
-
-powerpc64-linux-ld: warning: orphan section `.gnu.hash' from `linker stubs'
-being placed in section `.gnu.hash'.
-kernel/time/namespace.o: In function `.timens_set_vvar_page.isra.2.part.3':
-namespace.c:(.text+0x178): undefined reference to `.arch_get_vdso_data'
-kernel/time/namespace.o: In function `.timens_install':
-namespace.c:(.text+0x798): undefined reference to `.vdso_join_timens'
-kernel/time/namespace.o: In function `.timens_on_fork':
-namespace.c:(.text+0x90c): undefined reference to `.vdso_join_timens'
-/home/vinfra01/Projects/linux/Makefile:1074: recipe for target 'vmlinux' failed
-make[1]: *** [vmlinux] Error 1
-make[1]: Leaving directory '/home/vinfra01/Projects/linux-out'
-Makefile:179: recipe for target 'sub-make' failed
-make: *** [sub-make] Error 2
-
--- 
-Regards,
-Vincenzo
