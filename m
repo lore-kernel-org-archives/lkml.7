@@ -2,249 +2,116 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7903AFA3735
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B79ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F2E12089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E9162089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:55:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501911AbfJQJx6 (ORCPT
+        id S2393878AbfJQJzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 05:53:58 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40738 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392771AbfJQJx5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 05:53:57 -0400
-Received: by mail-lf1-f65.google.com with SMTP id f23so1358255lfk.7;
-        Thu, 17 Oct 2019 02:53:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YKPy157MyxNTX58VqQMXSnzeJYWY0GCmPfKZ6W0ULhc=;
-        b=rDTEECv7WTiPAgVts7xMKp8piDOzwOkXm4MzUZ/OHY78PZtaG3b3WWy7rapmP85BTX
-         fbHHQBEj11UxIdok8cvdIF6WMJodITozIMnWp7VAmey5bVmYr2d68bFyumzGyZ2ymxnv
-         2Lp/VTrl9jO+Ty6Qb0mYfMe5hj54rtCffxdAmmZ1MVb0pO4L5/kRPBy7/oqjIwVI9ftt
-         oiqnZnu2ydXzE4jfd1xTX62/W+9Yf58svc8gW4+jOPn9cqPQ4JziMRiKL91pv21Z+2jm
-         VpRG73S4DWF/rgphZvlHCzpe4f/w4QuqU3mi5PBaYbpsl+4dPFD4MmXhQrW79a5rl429
-         z9gg==
-X-Gm-Message-State: APjAAAW+0H0tQOuIfl/SNGuwrdE4mi4UBxZY15EqdG+jFy8zx3MimClg
-        U8xUjcqr/Ku7TH39F50NEYs=
-X-Google-Smtp-Source: APXvYqzH0eJcI2UWEQVJS48oRBLJNfl3hwzsygFtbv1eR1wWDleoxyWr9Uk8fywm1gi13AVN4Xm+qQ==
-X-Received: by 2002:a19:40c7:: with SMTP id n190mr1768219lfa.37.1571306033549;
-        Thu, 17 Oct 2019 02:53:53 -0700 (PDT)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id k23sm911286ljc.13.2019.10.17.02.53.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 02:53:53 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 12:53:39 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [RFC PATCH 11/13] led: bd71828: Support LED outputs on ROHM BD71828
- PMIC
-Message-ID: <af1fb3e010d5f34502d354369b88fa28639f587d.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+        Thu, 17 Oct 2019 05:55:22 -0400
+Received: from mga06.intel.com ([134.134.136.31]:14110 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727873AbfJQJzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 05:55:22 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 02:55:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,307,1566889200"; 
+   d="scan'208";a="397481623"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 17 Oct 2019 02:55:20 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iL2V6-0002GT-3D; Thu, 17 Oct 2019 12:55:20 +0300
+Date:   Thu, 17 Oct 2019 12:55:20 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Subject: [GIT PULL] platform-drivers-x86 for 5.4-3
+Message-ID: <20191017095520.GA8671@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ROHM BD71828 power management IC has two LED outputs for charge status
-and button pressing indications. The LED outputs can also be forced
-bs SW so add driver allowing to use these LEDs for other indications
-as well.
+Hi Linus,
 
-Leds are controlled by SW using 'Force ON' bits. Please note the
-constrains mentioned in data-sheet:
-1. If one LED is forced ON - then also the other LED is forced.
-	=> You can't use SW control to force ON one LED and allow HW
-	   to control the other.
-2. You can't force both LEDs OFF. If the FORCE bit for both LED's is
-   zero, then LEDs are controlled by HW and indicate button/charger
-   states as explained in data-sheet.
+Few small fixes for v5.4-rc4. The bunch was in linux-next for few days.
+No conflicts with current master.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- drivers/leds/Kconfig        | 10 ++++
- drivers/leds/Makefile       |  1 +
- drivers/leds/leds-bd71828.c | 97 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 108 insertions(+)
- create mode 100644 drivers/leds/leds-bd71828.c
+Thanks,
 
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index b0fdeef10bd9..ec59f28bcb39 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -529,6 +529,16 @@ config LEDS_BD2802
- 	  This option enables support for BD2802GU RGB LED driver chips
- 	  accessed via the I2C bus.
- 
-+config LEDS_BD71828
-+	tristate "LED driver for LED pins on ROHM BD71828 PMIC"
-+	depends on LEDS_CLASS
-+	depends on I2C
-+	help
-+	  This option enables support for LED outputs located on ROHM
-+	   BD71828 power management IC. ROHM BD71828 has two led output pins
-+	   which can be left to indicate HW states or controlled by SW. Say
-+	   yes here if you want to enable SW control for these LEDs.
-+
- config LEDS_INTEL_SS4200
- 	tristate "LED driver for Intel NAS SS4200 series"
- 	depends on LEDS_CLASS
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index 41fb073a39c1..2a8f6a8e4c7c 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -15,6 +15,7 @@ obj-$(CONFIG_LEDS_AN30259A)		+= leds-an30259a.o
- obj-$(CONFIG_LEDS_BCM6328)		+= leds-bcm6328.o
- obj-$(CONFIG_LEDS_BCM6358)		+= leds-bcm6358.o
- obj-$(CONFIG_LEDS_BD2802)		+= leds-bd2802.o
-+obj-$(CONFIG_LEDS_BD71828)		+= leds-bd71828.o
- obj-$(CONFIG_LEDS_CPCAP)		+= leds-cpcap.o
- obj-$(CONFIG_LEDS_LOCOMO)		+= leds-locomo.o
- obj-$(CONFIG_LEDS_LM3530)		+= leds-lm3530.o
-diff --git a/drivers/leds/leds-bd71828.c b/drivers/leds/leds-bd71828.c
-new file mode 100644
-index 000000000000..2427619444f5
---- /dev/null
-+++ b/drivers/leds/leds-bd71828.c
-@@ -0,0 +1,97 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2019 ROHM Semiconductors
-+
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/kernel.h>
-+#include <linux/leds.h>
-+#include <linux/mfd/rohm-bd71828.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+
-+#define BD71828_LED_TO_DATA(l) ((l)->id == ID_GREEN_LED ? \
-+	container_of((l), struct bd71828_leds, green) : \
-+	container_of((l), struct bd71828_leds, amber))
-+
-+enum {
-+	ID_GREEN_LED,
-+	ID_AMBER_LED,
-+	ID_NMBR_OF,
-+};
-+
-+struct bd71828_led {
-+	int id;
-+	struct led_classdev l;
-+	u8 force_mask;
-+};
-+
-+struct bd71828_leds {
-+	struct rohm_regmap_dev *bd71828;
-+	struct bd71828_led green;
-+	struct bd71828_led amber;
-+};
-+
-+static int bd71828_led_brightness_set(struct led_classdev *led_cdev,
-+				      enum led_brightness value)
-+{
-+	struct bd71828_led *l = container_of(led_cdev, struct bd71828_led, l);
-+	struct bd71828_leds *data;
-+	unsigned int val = BD71828_LED_OFF;
-+
-+	data = BD71828_LED_TO_DATA(l);
-+	if (value != LED_OFF)
-+		val = BD71828_LED_ON;
-+
-+	return regmap_update_bits(data->bd71828->regmap, BD71828_REG_LED_CTRL,
-+			    l->force_mask, val);
-+}
-+
-+static int bd71828_led_probe(struct platform_device *pdev)
-+{
-+	struct rohm_regmap_dev *bd71828;
-+	struct bd71828_leds *l;
-+	struct bd71828_led *g, *a;
-+	static const char *GNAME = "bd71828-green-led";
-+	static const char *ANAME = "bd71828-amber-led";
-+	int ret;
-+
-+	pr_info("bd71828 LED driver probed\n");
-+
-+	bd71828 = dev_get_drvdata(pdev->dev.parent);
-+	l = devm_kzalloc(&pdev->dev, sizeof(*l), GFP_KERNEL);
-+	if (!l)
-+		return -ENOMEM;
-+	l->bd71828 = bd71828;
-+	a = &l->amber;
-+	g = &l->green;
-+	a->id = ID_AMBER_LED;
-+	g->id = ID_GREEN_LED;
-+	a->force_mask = BD71828_MASK_LED_AMBER;
-+	g->force_mask = BD71828_MASK_LED_GREEN;
-+
-+	a->l.name = ANAME;
-+	g->l.name = GNAME;
-+	a->l.brightness_set_blocking = bd71828_led_brightness_set;
-+	g->l.brightness_set_blocking = bd71828_led_brightness_set;
-+
-+	ret = devm_led_classdev_register(&pdev->dev, &g->l);
-+	if (ret)
-+		return ret;
-+
-+	return devm_led_classdev_register(&pdev->dev, &a->l);
-+}
-+
-+static struct platform_driver bd71828_led_driver = {
-+	.driver = {
-+		.name  = "bd71828-led",
-+	},
-+	.probe  = bd71828_led_probe,
-+};
-+
-+module_platform_driver(bd71828_led_driver);
-+
-+MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
-+MODULE_DESCRIPTION("ROHM BD71828 LED driver");
-+MODULE_LICENSE("GPL");
--- 
-2.21.0
+With Best Regards,
+Andy Shevchenko
 
+The following changes since commit da0c9ea146cbe92b832f1b0f694840ea8eb33cce:
+
+  Linux 5.4-rc2 (2019-10-06 14:27:30 -0700)
+
+are available in the Git repository at:
+
+  git://git.infradead.org/linux-platform-drivers-x86.git tags/platform-drivers-x86-v5.4-3
+
+for you to fetch changes up to 832392db9747b9c95724d37fc6a5dadd3d4ec514:
+
+  platform/x86: i2c-multi-instantiate: Fail the probe if no IRQ provided (2019-10-14 15:31:50 +0300)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v5.4-3
+
+Users of Intel P-Unit IPC driver might be surprised by harmless warning.
+Thus, switch to API which doesn't issue a warning at all.
+
+I²C multi-instantiate driver continues to add slave devices even when IRQ
+resource is not found. For devices in the market IRQ resource is mandatory,
+so, fail the ->probe() of the parent driver to avoid slaves being probed.
+
+Avoid compiler warning due to unused variable in Classmate laptop driver.
+
+The following is an automated git shortlog grouped by driver:
+
+classmate-laptop:
+ -  remove unused variable
+
+i2c-multi-instantiate:
+ -  Fail the probe if no IRQ provided
+
+intel_punit_ipc:
+ -  Avoid error message when retrieving IRQ
+
+----------------------------------------------------------------
+Andy Shevchenko (2):
+      platform/x86: intel_punit_ipc: Avoid error message when retrieving IRQ
+      platform/x86: i2c-multi-instantiate: Fail the probe if no IRQ provided
+
+yu kuai (1):
+      platform/x86: classmate-laptop: remove unused variable
+
+ drivers/platform/x86/classmate-laptop.c      | 12 ------------
+ drivers/platform/x86/i2c-multi-instantiate.c |  1 +
+ drivers/platform/x86/intel_punit_ipc.c       |  3 +--
+ 3 files changed, 2 insertions(+), 14 deletions(-)
 
 -- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+With Best Regards,
+Andy Shevchenko
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+
