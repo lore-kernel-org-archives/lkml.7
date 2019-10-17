@@ -2,196 +2,88 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2080ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFDD0FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BBA12089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:54:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="gHR4LGnD"
+	by mail.kernel.org (Postfix) with ESMTP id CD3EA2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:59:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409351AbfJQLyt (ORCPT
+        id S2502199AbfJQL75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 07:54:49 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:52992 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405897AbfJQLys (ORCPT
+        Thu, 17 Oct 2019 07:59:57 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:54449 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502168AbfJQL75 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 07:54:48 -0400
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191017115446epoutp0221bea41cbe7c11db36f460b85e058244~ObRvxSkV62917329173epoutp02P
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 11:54:46 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191017115446epoutp0221bea41cbe7c11db36f460b85e058244~ObRvxSkV62917329173epoutp02P
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1571313286;
-        bh=9jV+kSGWbjQY3QvQJzMos5sqI2aE1dpYKztG7UbH68A=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=gHR4LGnDr4iUJ3zL/aYHCxxWOxKqretNZjynw6lhO1gOD9Nby9PtajjzSOQ79ILT5
-         fU8pGaWUkOEaTj7dUT7EWUlp+rnBBCWCvwo11gHbo/Oat9niU+EgwL+QzhSbZHqT5K
-         aLMYYPbSfCwh909fKgnKd6A5VM1Kr46l5R/v6+Lw=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20191017115445epcas5p4642bb0cc615a62bb58ecf0c0974b16ed~ObRvAodTo0364603646epcas5p46;
-        Thu, 17 Oct 2019 11:54:45 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        10.A4.04480.58658AD5; Thu, 17 Oct 2019 20:54:45 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191017115445epcas5p12e882471c2acd7638bbeeaa9b33bb241~ObRuap1UT0913209132epcas5p1o;
-        Thu, 17 Oct 2019 11:54:45 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191017115445epsmtrp202e637636c962f2cb870b74a6d9a1e02~ObRuZ3tvo1901719017epsmtrp2M;
-        Thu, 17 Oct 2019 11:54:45 +0000 (GMT)
-X-AuditID: b6c32a4b-cbbff70000001180-f7-5da856852954
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        8A.01.03889.58658AD5; Thu, 17 Oct 2019 20:54:45 +0900 (KST)
-Received: from pankjsharma02 (unknown [107.111.85.32]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191017115442epsmtip1a4e186875488c19cac22a86b5f75bb33~ObRsGbf3a2659326593epsmtip1i;
-        Thu, 17 Oct 2019 11:54:42 +0000 (GMT)
-From:   "pankj.sharma" <pankj.sharma@samsung.com>
-To:     "'Jeroen Hofstee'" <jhofstee@victronenergy.com>,
-        "'Simon Horman'" <simon.horman@netronome.com>
-Cc:     "'kbuild test robot'" <lkp@intel.com>, <kbuild-all@lists.01.org>,
-        <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <wg@grandegger.com>,
-        <mkl@pengutronix.de>, <davem@davemloft.net>,
-        <eugen.hristev@microchip.com>, <ludovic.desroches@microchip.com>,
-        <pankaj.dubey@samsung.com>, <rcsekar@samsung.com>,
-        "'Sriram Dash'" <sriram.dash@samsung.com>
-In-Reply-To: <1921cfe4-0ee0-e2a5-6696-df5f612c6c56@victronenergy.com>
-Subject: RE: [PATCH] can: m_can: fix boolreturn.cocci warnings
-Date:   Thu, 17 Oct 2019 17:24:41 +0530
-Message-ID: <000f01d584e1$ab1907b0$014b1710$@samsung.com>
+        Thu, 17 Oct 2019 07:59:57 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iL4Re-0004FF-2H; Thu, 17 Oct 2019 12:59:54 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iL4Rd-0003dW-6v; Thu, 17 Oct 2019 12:59:53 +0100
+From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] remoteproc: fix argument 2 of rproc_mem_entry_init
+Date:   Thu, 17 Oct 2019 12:59:52 +0100
+Message-Id: <20191017115952.13935-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-us
-Thread-Index: AQFBl3stLMda2COLQ4+xvzWrGT0LJgGMJ+EIAU1Heb8BtkGFyQF4xXLRAVs56cYDWI5Z86gwscDw
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0gUURTGuTszO7NLa+OoddKIXFDQfFLRFGYPKgaKsMj+sKy2HNR0N9nR
-        0gjK8hErqYimbVI+UkwtwVbxjflINCwfZUUhlFq6pj00tdKs3Vvkf7/7feecjw8uQ3AfKEcm
-        XBct6nWaSLVcSVa3url5Jh4uCfa50beJz32aQPLNcx0kX/KpieK7UwYQXzqbRfD9dbly3nzl
-        nZwfvfeC4isKMkn+Ud4KvqBqmuaNPTUU/7JWwb+soPmiwVpq+3LBdPeVTPjS9xoJhQ1jMiHl
-        5i9SeDNXhITslLeEkLbgI6SaSpEwVblGyHj4mQ5QBin9QsTI8LOi3tv/hDKsvamMiMrnYl9X
-        e11CXTYGpGCA3QDZVY2UASkZjq1HUD5YLrMYHPsVweIMi42ZP2zMkRsQY90wx+uw3ohgvKMN
-        4cc4guz5KmTZlrPekHl5gbSwPRsCuYm9tGWIYJMJKO8fkFsMBbsbhpoMtIXtWH/4UTRmjSZZ
-        F5j/mG3VVexmWHz1nsJsC503hq1HCXYdFOePE7jDWvg+UkxhfSWMtbfRODgIWo2z1mBgu2iI
-        L2yR4YVdkJL8nMJsB+YOE43ZEaYmG+WYIyC/Po3ElWMhKccOy9ug+VmuVSZYN6io88axNnDt
-        57AMT6vgahKHp10ha2QSYV4Nb949+HtcgNSpZDodORuXFDMuKWZcUsb4PywPkaVolRglaUNF
-        aWPUep14zkvSaKUYXajXqTPaSmT9fu57a1Dlk30tiGWQepmqJqAkmKM0Z6U4bQsChlDbq24n
-        3AnmVCGauPOi/sxxfUykKLUgJ4ZUr1RlUM+PcmyoJlqMEMUoUf/PlTEKx0uIchkrM+/YPzqv
-        mThd7w2pQYuDij53vtM5sKDgQuyByoySg0VxgXn3hqRbYUpTDhfaPTHka7p/qNXj25atOb7O
-        5oGF0UmHYaVH78Ug0WHg2PX0dL/xLtWRX90Ns66pRIPtx/vzVKbfjF4b09fs/njCMJ3pdJJ0
-        2OMZvjevJ36nr5qUwjS+7oRe0vwGSX7vy3oDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLIsWRmVeSWpSXmKPExsWy7bCSnG5r2IpYg/tNPBZzzrewWBz4cZzF
-        YsX7fawWZ7uvMVqs+j6V2eLyrjlsFq+aH7FZvFh7ndVi/aIpLBbHFohZLNr6hd1i1oUdrBY3
-        dnJa3FjPbrH03k5WB36PLStvMnl8vHSb0WPxnpdMHt2z/7F43PmxlNFjevdDZo/+vwYefVtW
-        MXp83iTnMengB/YArigum5TUnMyy1CJ9uwSujGXH5zAW/BGsuH5iCmMD42K+LkYODgkBE4lX
-        jXldjFwcQgK7GSWuTf7CAhGXkVj8ubqLkRPIFJZY+e85O0TNS0aJqZ3bGEESbAL6ElOa/rKA
-        2CICKRJrb54EK2IWmMossWfja2aIjtnMEtdvX2cDqeIUcJV4vK+LHcQWFrCT+LX0JROIzSKg
-        KvHnzXSwOK+ApcT/m89YIWxBiZMzn4BtYBbQlnh68ymcvWwhyAKQ8xQkfj5dxgoRF5d4efQI
-        O8RFURKHZ31nn8AoPAvJqFlIRs1CMmoWkvYFjCyrGCVTC4pz03OLDQuM8lLL9YoTc4tL89L1
-        kvNzNzGCI1lLawfjiRPxhxgFOBiVeHh3BKyIFWJNLCuuzD3EKMHBrCTCO79lSawQb0piZVVq
-        UX58UWlOavEhRmkOFiVxXvn8Y5FCAumJJanZqakFqUUwWSYOTqkGxgV+617oCbJ6dBuYiv/q
-        aXz5Yv1v/h/3t7yy2aNQHSkT9NhiiV1BgfOfV3bf5rT2CprZP7Kfu1L+IQOvgGrsrfk5i3Zf
-        fL/dcdOll3Zt7SLpm6zf2e4uib3JpvVX/7Nh4+Ijytwv2ZT+7DZfo+U94cDKWwJf5KdlX5vb
-        lLh2+qX3+TXFrn/nLFdiKc5INNRiLipOBAD4UIJS4AIAAA==
-X-CMS-MailID: 20191017115445epcas5p12e882471c2acd7638bbeeaa9b33bb241
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20191015083235epcas5p3344c1a176f616a7f83833f6a704a4f2a
-References: <1571052844-22633-1-git-send-email-pankj.sharma@samsung.com>
-        <20191014150428.xhhc43ovkxm6oxf2@332d0cec05f4>
-        <20191015055718.mypn63s2ovgwipk3@netronome.com>
-        <9ad7810b-2205-3227-7ef9-0272f3714839@victronenergy.com>
-        <20191015071311.yssgqhoax46lfa7l@netronome.com>
-        <CGME20191015083235epcas5p3344c1a176f616a7f83833f6a704a4f2a@epcas5p3.samsung.com>
-        <1921cfe4-0ee0-e2a5-6696-df5f612c6c56@victronenergy.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Jeroen Hofstee <jhofstee=40victronenergy.com>
-> Subject: Re: =5BPATCH=5D can: m_can: fix boolreturn.cocci warnings
->=20
-> Hello Simon,
->=20
-> On 10/15/19 9:13 AM, Simon Horman wrote:
-> > On Tue, Oct 15, 2019 at 06:37:54AM +0000, Jeroen Hofstee wrote:
-> >> Hi,
-> >>
-> >> On 10/15/19 7:57 AM, Simon Horman wrote:
-> >>> On Mon, Oct 14, 2019 at 11:04:28PM +0800, kbuild test robot wrote:
-> >>>> From: kbuild test robot <lkp=40intel.com>
-> >>>>
-> >>>> drivers/net/can/m_can/m_can.c:783:9-10: WARNING: return of 0/1 in
-> >>>> function 'is_protocol_err' with return type bool
-> >>>>
-> >>>>    Return statements in functions returning bool should use
-> >>>>    true/false instead of 1/0.
-> >>>> Generated by: scripts/coccinelle/misc/boolreturn.cocci
-> >>>>
-> >>>> Fixes: 46946163ac61 (=22can: m_can: add support for handling
-> >>>> arbitration error=22)
-> >>>> CC: Pankaj Sharma <pankj.sharma=40samsung.com>
-> >>>> Signed-off-by: kbuild test robot <lkp=40intel.com>
-> >>>> ---
-> >>>>
-> >>>> url:    https://github.com/0day-ci/linux/commits/Pankaj-Sharma/can-
-> m_can-add-support-for-handling-arbitration-error/20191014-193532
-> >>>>
-> >>>>    m_can.c =7C    4 ++--
-> >>>>    1 file changed, 2 insertions(+), 2 deletions(-)
-> >>>>
-> >>>> --- a/drivers/net/can/m_can/m_can.c
-> >>>> +++ b/drivers/net/can/m_can/m_can.c
-> >>>> =40=40 -780,9 +780,9 =40=40 static inline bool is_lec_err(u32 psr)
-> >>>>    static inline bool is_protocol_err(u32 irqstatus)
-> >>>>    =7B
-> >>>>    	if (irqstatus & IR_ERR_LEC_31X)
-> >>>> -		return 1;
-> >>>> +		return true;
-> >>>>    	else
-> >>>> -		return 0;
-> >>>> +		return false;
-> >>>>    =7D
-> >>>>
-> >>>>    static int m_can_handle_protocol_error(struct net_device *dev,
-> >>>> u32 irqstatus)
-> >>>>
-> >>> <2c>
-> >>> Perhaps the following is a nicer way to express this (completely unte=
-sted):
-> >>>
-> >>> 	return =21=21(irqstatus & IR_ERR_LEC_31X); </2c>
-> >>
-> >> Really...., =21=21 for bool / _Bool types? why not simply:
-> >>
-> >> static inline bool is_protocol_err(u32 irqstatus)
-> >> 	return irqstatus & IR_ERR_LEC_31X;
+The rproc_mem_entry_init() call takes a pointer to a vm
+as the second argument. The code is currently using a
+plain 0 as "NULL". Change to using NULL to fix the
+following sparse warnings:
 
-Thank you. Will Modify in v2.
+drivers/remoteproc/remoteproc_core.c:339:49: warning: Using plain integer as NULL pointer
+drivers/remoteproc/remoteproc_core.c:916:46: warning: Using plain integer as NULL pointer
 
-> >> =7D
-> > Good point, silly me.
->=20
->=20
-> For clarity, I am commenting on the suggestion made by the tool, not the =
-patch
-> itself..
->=20
-> Regards,
->=20
-> Jeroen
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+---
+Cc: Ohad Ben-Cohen <ohad@wizery.com>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: linux-remoteproc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/remoteproc/remoteproc_core.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index 3c5fbbbfb0f1..943af836fa0f 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -336,7 +336,8 @@ int rproc_alloc_vring(struct rproc_vdev *rvdev, int i)
+ 			return -ENOMEM;
+ 	} else {
+ 		/* Register carveout in in list */
+-		mem = rproc_mem_entry_init(dev, 0, 0, size, rsc->vring[i].da,
++		mem = rproc_mem_entry_init(dev, NULL, 0,
++					   size, rsc->vring[i].da,
+ 					   rproc_alloc_carveout,
+ 					   rproc_release_carveout,
+ 					   "vdev%dvring%d",
+@@ -913,7 +914,7 @@ static int rproc_handle_carveout(struct rproc *rproc,
+ 	}
+ 
+ 	/* Register carveout in in list */
+-	carveout = rproc_mem_entry_init(dev, 0, 0, rsc->len, rsc->da,
++	carveout = rproc_mem_entry_init(dev, NULL, 0, rsc->len, rsc->da,
+ 					rproc_alloc_carveout,
+ 					rproc_release_carveout, rsc->name);
+ 	if (!carveout) {
+-- 
+2.23.0
 
