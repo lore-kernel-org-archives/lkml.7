@@ -2,118 +2,140 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D5FECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC35FFA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FF7821A49
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95AE32064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:49:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LyDa0ifV"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="otkwOVuM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394970AbfJQUsK (ORCPT
+        id S2437067AbfJQUtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 16:48:10 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46823 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728420AbfJQUsJ (ORCPT
+        Thu, 17 Oct 2019 16:49:33 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:40634 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728420AbfJQUtd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 16:48:09 -0400
-Received: by mail-pg1-f196.google.com with SMTP id e15so2006718pgu.13
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 13:48:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:to:cc:subject:user-agent:date;
-        bh=gx3DSxvx8ltZUKzpBMBDSoOp0YvfoQmYP1b2jQLzjTA=;
-        b=LyDa0ifVkL7+cRQNqU4ahaZLAGNiBCG/A79JhFoz/TB2ib8zIIK/XQtdy+aseHDQDV
-         AI0T254tfPYqcV5PK+RSNavvydgC04gJCgKSlg4fCdL4DsFkCYLHReAjCu+5OOR8yQao
-         hwnAEOLSelUCfBqxKCYO2Holpza4y+F5VNbEc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
-         :user-agent:date;
-        bh=gx3DSxvx8ltZUKzpBMBDSoOp0YvfoQmYP1b2jQLzjTA=;
-        b=V0oYAceKYtubn/7frAeCLjb+BFA8OE4vDrDBo8ZIRBgeKMI5vjTfjneV2lPzVlNq6m
-         OwuiQm8ymtBhOoDdRnmoeSb0uMICb/fHRJ4Sp6GLynjsnk7DfQz2te1y0cqzNBeChXBk
-         Gp4wJ4kpWJFDetVjQiur7SrUaZIdhKGVAfLE+oWpDYyrYqPCuQyg5CL9NsL3Vi7op0YZ
-         ccUrSOuRlk1m+8P/WspLFSmvyAVBmXaF/PZMOkNJDHlXHkPxQvsIDem8g3V0OSmlGAQX
-         iMV21ZVysXJmURYCHHiT7QJ2zZ01sSfSGhCSkX9UmA1aMd9F6C1pQsLOQxSqatQWkMKV
-         tCDA==
-X-Gm-Message-State: APjAAAWuJxlv3jHnBzqE65AHhcKVpyzu7VZtcz5LjmPJPL2R47n5urZE
-        HT63lpgVI/6+Fdii70O1kDL5gQ==
-X-Google-Smtp-Source: APXvYqw8EyhFH+SgRLU1IKKnBMNFY1QxBBrBGQr9eMg1c+35NIB9KypzDsaiJp/I7Cjf5re52fYpFA==
-X-Received: by 2002:a63:d757:: with SMTP id w23mr5839776pgi.19.1571345287356;
-        Thu, 17 Oct 2019 13:48:07 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id w134sm3979527pfd.4.2019.10.17.13.48.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 13:48:06 -0700 (PDT)
-Message-ID: <5da8d386.1c69fb81.4cb85.a19a@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 17 Oct 2019 16:49:33 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9HKdV1T080013;
+        Thu, 17 Oct 2019 20:49:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=25IO1oLsQE+/ECgN1OQ0SznJdZ92tH/ZPgQjpNHO8gc=;
+ b=otkwOVuMYbP9eBbux6ELH5UTvaZKjgwNTbDuTr2mgVZsGzAS1CxJ2YMMIaYq87QGrnIa
+ 9Y8fFTUVMkA0skUy68TgAh1Q/8CqD+PnZisaiimswhu3OIiSy8HnYFS24UQpwJADCH88
+ J5o6MHT3CIGbdUBLUSmtUJbp2TjwqJDxLEPBZ5SuA0HpVwUqJH107Dsf8Gpw8QfKaNIG
+ xrg78qrjtfPyCusADvaEzm59mjxNeuRutU/pouXCHXsxuUocL0ykJnz7vqHaHFvPvL7x
+ K4uX/eGU6VITXFwAepAA+ZpJIu/Rz0InTkAt7FY6Rym+3HBzihUz7umJh7pVUrtAM0b4 7Q== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2vk7frrrp3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 17 Oct 2019 20:49:14 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9HKcbNb186077;
+        Thu, 17 Oct 2019 20:49:13 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2vpcm3kmh8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 17 Oct 2019 20:49:13 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9HKnB1A004209;
+        Thu, 17 Oct 2019 20:49:11 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 17 Oct 2019 20:49:11 +0000
+Date:   Thu, 17 Oct 2019 13:49:09 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: lift the xfs writepage code into iomap v8
+Message-ID: <20191017204909.GO13108@magnolia>
+References: <20191017175624.30305-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAL_JsqLf+dLgva+xYNr56xQx3fsLNWsdJBxaJo8nyJDtRxoiyA@mail.gmail.com>
-References: <20191004214334.149976-1-swboyd@chromium.org> <20191004214334.149976-11-swboyd@chromium.org> <6ce47827-55e4-dd15-6a05-f25a2f8a8bb7@gmail.com> <CAL_JsqLf+dLgva+xYNr56xQx3fsLNWsdJBxaJo8nyJDtRxoiyA@mail.gmail.com>
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH 10/10] of/device: Don't NULLify match table in of_match_device() with CONFIG_OF=n
-User-Agent: alot/0.8.1
-Date:   Thu, 17 Oct 2019 13:48:06 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191017175624.30305-1-hch@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=650
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910170186
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=735 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910170186
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rob Herring (2019-10-17 13:24:23)
-> On Thu, Oct 17, 2019 at 12:48 PM Frank Rowand <frowand.list@gmail.com> wr=
-ote:
-> >
-> > On 10/04/2019 16:43, Stephen Boyd wrote:
-> > > This effectively reverts 1db73ae39a97 ("of/device: Nullify match table
-> > > in of_match_device() for CONFIG_OF=3Dn") because that commit makes it=
- more
-> > > surprising to users of this API that the arguments may never be
-> > > referenced by any code. This is because the pre-processor will replace
-> > > the argument with NULL and then the match table will be left unrefere=
-nced
-> > > by any code but the compiler optimizer doesn't know to drop it. This =
-can
-> > > lead to compilers warning that match tables are unused, when we really
-> > > want to pass the match table to the API but have the compiler see that
-> > > it's all inlined and not used and then drop the match table while
-> > > silencing the warning. We're being too smart here and not giving the
-> > > compiler the chance to do dead code elimination.
-> > >
-> > > Cc: Arnd Bergmann <arnd@arndb.de>
-> > > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Cc: Frank Rowand <frowand.list@gmail.com>
-> > > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> > > ---
-> > >
-> > > Please ack or pick for immediate merge so the last patch can be merge=
-d.
->=20
-> As this one is the last patch, I guess you don't want it picked up by its=
-elf.
->=20
-> It seems everyone has acked rather than applying. Do you want me to
-> take the series?
->=20
+On Thu, Oct 17, 2019 at 07:56:10PM +0200, Christoph Hellwig wrote:
+> Hi Darrick,
+> 
+> this series cleans up the xfs writepage code and then lifts it to
+> fs/iomap/ so that it could be use by other file system.
+> 
+> Note: the submit_ioend hook has not been renamed.  Feel free to
+> rename it if you really dislike the name.
 
-It would be great if you could take the series.
+Heh, ok.  ->prepare_ioend it is.
 
-Mark applied the ASoC and spi patches. I guess you can try to see if
-those merged into mainline and then base on top, or just apply the same
-patches on your tree and let the duplicates drop out in the merge path.
+Is a v3 of "iomap and xfs COW cleanups" coming soon?
 
+--D
+
+> 
+> Changes since v7:
+>  - fix various commit log typos
+>  - fix up various comments
+>  - move some of the iomap tracepoint additions to an earlier patch
+>  - rebased on top of "iomap: iomap that extends beyond EOF should be
+>    marked dirty"
+> 
+> Changes since v6:
+>  - actually add trace.c to the patch
+>  - move back to the old order that massages XFS into shape and then
+>    lifts the code to iomap
+>  - cleanup iomap_ioend_compare
+>  - cleanup the add_to_ioend checks
+> 
+> Changes since v5:
+>  - move the tracing code to fs/iomap/trace.[ch]
+>  - fix a bisection issue with the tracing code
+>  - add an assert that xfs_end_io now only gets "complicated" completions
+>  - better document the iomap_writeback_ops methods in iomap.h
+> 
+> Changes since v4:
+>  - rebased on top 5.4-rc1
+>  - drop the addition of list_pop / list_pop_entry
+>  - re-split a few patches to better fit Darricks scheme of keeping the
+>    iomap additions separate from the XFS switchover
+> 
+> Changes since v3:
+>  - re-split the pages to add new code to iomap and then switch xfs to
+>    it later (Darrick)
+> 
+> Changes since v2:
+>  - rebased to v5.3-rc1
+>  - folded in a few changes from the gfs2 enablement series
+> 
+> Changes since v1:
+>  - rebased to the latest xfs for-next tree
+>  - keep the preallocated transactions for size updates
+>  - rename list_pop to list_pop_entry and related cleanups
+>  - better document the nofs context handling
+>  - document that the iomap tracepoints are not a stable API
