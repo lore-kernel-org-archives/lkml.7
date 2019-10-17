@@ -2,131 +2,162 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE134FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1784BECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACBB621A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB1C020872
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:09:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gEiSFnKk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502978AbfJQVGn (ORCPT
+        id S2441114AbfJQVJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 17:06:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34762 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394965AbfJQVGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 17:06:38 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F089D21D7A;
-        Thu, 17 Oct 2019 21:06:36 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.92.2)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1iLCyi-00069h-6K; Thu, 17 Oct 2019 17:06:36 -0400
-Message-Id: <20191017210636.061448713@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Thu, 17 Oct 2019 17:05:22 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 1/2] perf: Iterate on tep event arrays directly
-References: <20191017210521.465613686@goodmis.org>
+        Thu, 17 Oct 2019 17:09:43 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:44430 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732368AbfJQVJm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 17:09:42 -0400
+Received: by mail-lf1-f68.google.com with SMTP id q12so2981606lfc.11;
+        Thu, 17 Oct 2019 14:09:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HOFkrgxD7hQMpORsHMPA1Bb0bytoS+eIDnRxl+dcGGk=;
+        b=gEiSFnKkyv/kMZ8TrHPhHZnc/XrKI9vUmKfvTV9OWGEXXypvWYaLn5jBKlpzI08eqB
+         R9RAJ+Yti5Egc8KxNcdaE6eNsOO4UumKxV/q4h8Mvs0x4aFeRVb9+CjOEzCX8pXNUh2T
+         e/ThPX+i2DDzSfUDtnj/nNdH6s/RSbDc1hKw7grbhAGPk3tkHQPPgTs+QIFPnVklDwbL
+         9RqoY7SXBaxLwVqFgN6s1kXluVn1brwvYl4qjSkIwfvj0/sTmRUrKFEyGfiwGU5/Gh6X
+         SIl75AdQYUsXycefrN8D96kbQzfOs7zePICnYnkhyOmkVfate+Hg/f4vO2ZuTwfCeJwK
+         /C7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HOFkrgxD7hQMpORsHMPA1Bb0bytoS+eIDnRxl+dcGGk=;
+        b=Lwbu+WE0Fv2/VY1/g0quQG3GMmPgVLQI/Bm3AlpIXLJGpQCCSTbDY9gwSGAMAu1YUU
+         zqUj3s3vvlnW+N9mrShSEQtZHqx5t0lu/rzS2EH7eN3IDd18M/QVhg3tPhfqyOYpNXp1
+         fzxqz3IzrKjIdgNRiPpVE1k26/aEx8ZNHxLS2b4RGBKmquwYXQ1tJG1CUlSxpBTjLynC
+         h7YODdyw735uo39Jy634zzpP3rjqNo1YZ6aE9EXXtQKpFWYYmeYlLJPWqgvcilRBTSj+
+         6RF+8eH4cq0YsIxy+MDGXo85/RD5FRaNOl9OwtzxQ+SXe5nJ3MfubNEZRIsDw511wxhf
+         GVZQ==
+X-Gm-Message-State: APjAAAXK9B8M/08PPiOeiJz8teiBbFZqc2F30IPth9W5D6sr+N1ZQVJO
+        4CNUWQxpB7tVxRu+rob/742jidgO
+X-Google-Smtp-Source: APXvYqxHDXj6BpIX2gyGyIEnQLfJIrn7KaQ8V30SlJHDxzeh4kjvcoPZ4eJOQW3brVFR/iDnJPB2Xw==
+X-Received: by 2002:a19:148:: with SMTP id 69mr3893055lfb.76.1571346577994;
+        Thu, 17 Oct 2019 14:09:37 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id 25sm1872338lje.58.2019.10.17.14.09.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Oct 2019 14:09:37 -0700 (PDT)
+Subject: Re: [PATCH v1 07/17] cpufreq: tegra20: Use generic cpufreq-dt driver
+ (Tegra30 supported now)
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Peter Geis <pgwipeout@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191015211618.20758-1-digetx@gmail.com>
+ <20191015211618.20758-8-digetx@gmail.com>
+ <20191016051802.rrxv56vtvxfm6qqe@vireshk-i7>
+ <13a9ebd6-8dce-0217-d306-defb8eb6fb96@gmail.com>
+ <CAMdYzYoasuEobJLC4RLW_5WCNGnaKtTth0xKov0tUQuDhkX3EA@mail.gmail.com>
+ <b4eca03d-f86c-8e07-e04a-612e02820bd0@gmail.com>
+ <20191017023210.x5vavl542hdkrivw@vireshk-i7>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <f4d6ba51-c2ac-4ddb-5acc-c4825aa6a793@gmail.com>
+Date:   Fri, 18 Oct 2019 00:09:35 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+In-Reply-To: <20191017023210.x5vavl542hdkrivw@vireshk-i7>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+17.10.2019 05:32, Viresh Kumar пишет:
+> On 16-10-19, 21:19, Dmitry Osipenko wrote:
+>> 16.10.2019 17:58, Peter Geis пишет:
+>>> On Wed, Oct 16, 2019 at 9:29 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+>>>>
+>>>> 16.10.2019 08:18, Viresh Kumar пишет:
+>>>>> On 16-10-19, 00:16, Dmitry Osipenko wrote:
+>>>>>> Re-parenting to intermediate clock is supported now by the clock driver
+>>>>>> and thus there is no need in a customized CPUFreq driver, all that code
+>>>>>> is common for both Tegra20 and Tegra30. The available CPU freqs are now
+>>>>>> specified in device-tree in a form of OPPs, all users should update their
+>>>>>> device-trees.
+>>>>>>
+>>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>>> ---
+>>>>>>  drivers/cpufreq/Kconfig.arm          |   4 +-
+>>>>>>  drivers/cpufreq/cpufreq-dt-platdev.c |   2 +
+>>>>>>  drivers/cpufreq/tegra20-cpufreq.c    | 236 ++++++---------------------
+>>>>>>  3 files changed, 55 insertions(+), 187 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+>>>>>> index a905796f7f85..2118c45d0acd 100644
+>>>>>> --- a/drivers/cpufreq/Kconfig.arm
+>>>>>> +++ b/drivers/cpufreq/Kconfig.arm
+>>>>>> @@ -301,8 +301,8 @@ config ARM_TANGO_CPUFREQ
+>>>>>>      default y
+>>>>>>
+>>>>>>  config ARM_TEGRA20_CPUFREQ
+>>>>>> -    tristate "Tegra20 CPUFreq support"
+>>>>>> -    depends on ARCH_TEGRA
+>>>>>> +    bool "Tegra20 CPUFreq support"
+>>>>>
+>>>>> Google is currently working on the GKI (generic kernel image) project where they
+>>>>> want to use a single kernel image with modules for all kind of android devices.
+>>>>> And for that they need all such drivers to be built as module. Since this is
+>>>>> already an module, I would ask you to keep it as is instead of moving it to bool
+>>>>> here. Else some google guy will switch it back as module later on.
+>>>>>
+>>>>> LGTM otherwise. Nice work. Thanks.
+>>>>>
+>>>>
+>>>> Okay, I'll keep the modularity in v2.
+>>>>
+>>>> Although, tegra20-cpufreq isn't a driver anymore because now it merely
+>>>> prepares OPP table for the cpufreq-dt driver, which is really a one-shot
+>>>> action that is enough to do during boot and thus modularity is a bit
+>>>> redundant here.
+>>>
+>>> I doubt Google will care much, since Android has moved on to aarch64.
+>>> Do they even support arm32 any more?
+>>
+>> Yes, I don't think there is a real need to care about Google. They won't
+>> use pure upstream and won't care about older hardware any ways.
+> 
+> Well, using (almost) pure upstream is the idea I believe. And the thing is they
+> want to use a single multi-platform image which should be as small as possible
+> in size. So it won't have any drivers or platform stuff (if possible) and
+> everything is module.
+> 
+> I am not sure about arm32/64 thing though. And it is okay if you don't want to
+> care about Google right now. That was just some side knowledge I had :)
+> 
 
-Instead of calling a useless (and broken) helper function to get the next
-event of a tep event array, just get the array directly and iterate over it.
-
-Note, the broken part was from trace_find_next_event() which after this will
-no longer be used, and can be removed.
-
-Link: http://lkml.kernel.org/r/20191017153733.630cd5eb@gandalf.local.home
-
-Reported-by: Daniel Bristot de Oliveira <bristot@redhat.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- tools/perf/util/scripting-engines/trace-event-perl.c   | 8 ++++++--
- tools/perf/util/scripting-engines/trace-event-python.c | 9 +++++++--
- 2 files changed, 13 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
-index 15961854ba67..741f040648b5 100644
---- a/tools/perf/util/scripting-engines/trace-event-perl.c
-+++ b/tools/perf/util/scripting-engines/trace-event-perl.c
-@@ -539,10 +539,11 @@ static int perl_stop_script(void)
- 
- static int perl_generate_script(struct tep_handle *pevent, const char *outfile)
- {
-+	int i, not_first, count, nr_events;
-+	struct tep_event **all_events;
- 	struct tep_event *event = NULL;
- 	struct tep_format_field *f;
- 	char fname[PATH_MAX];
--	int not_first, count;
- 	FILE *ofp;
- 
- 	sprintf(fname, "%s.pl", outfile);
-@@ -603,8 +604,11 @@ sub print_backtrace\n\
- }\n\n\
- ");
- 
-+	nr_events = tep_get_events_count(pevent);
-+	all_events = tep_list_events(pevent, TEP_EVENT_SORT_ID);
- 
--	while ((event = trace_find_next_event(pevent, event))) {
-+	for (i = 0; all_events && i < nr_events; i++) {
-+		event = all_events[i];
- 		fprintf(ofp, "sub %s::%s\n{\n", event->system, event->name);
- 		fprintf(ofp, "\tmy (");
- 
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 5d341efc3237..93c03b39cd9c 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -1687,10 +1687,11 @@ static int python_stop_script(void)
- 
- static int python_generate_script(struct tep_handle *pevent, const char *outfile)
- {
-+	int i, not_first, count, nr_events;
-+	struct tep_event **all_events;
- 	struct tep_event *event = NULL;
- 	struct tep_format_field *f;
- 	char fname[PATH_MAX];
--	int not_first, count;
- 	FILE *ofp;
- 
- 	sprintf(fname, "%s.py", outfile);
-@@ -1735,7 +1736,11 @@ static int python_generate_script(struct tep_handle *pevent, const char *outfile
- 	fprintf(ofp, "def trace_end():\n");
- 	fprintf(ofp, "\tprint(\"in trace_end\")\n\n");
- 
--	while ((event = trace_find_next_event(pevent, event))) {
-+	nr_events = tep_get_events_count(pevent);
-+	all_events = tep_list_events(pevent, TEP_EVENT_SORT_ID);
-+
-+	for (i = 0; all_events && i < nr_events; i++) {
-+		event = all_events[i];
- 		fprintf(ofp, "def %s__%s(", event->system, event->name);
- 		fprintf(ofp, "event_name, ");
- 		fprintf(ofp, "context, ");
--- 
-2.23.0
-
-
+I'll leave the module part as-is for now.
