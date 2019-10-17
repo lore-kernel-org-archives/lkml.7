@@ -2,286 +2,361 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD13AFA3735
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AE5FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 937262082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A434D2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:03:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439802AbfJQODe (ORCPT
+        id S2439815AbfJQODn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 10:03:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39264 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727542AbfJQODe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:03:34 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9815B65F7B;
-        Thu, 17 Oct 2019 14:03:32 +0000 (UTC)
-Received: from localhost (unknown [10.36.118.91])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C4CD060C5D;
-        Thu, 17 Oct 2019 14:03:31 +0000 (UTC)
-Date:   Thu, 17 Oct 2019 15:03:30 +0100
-From:   "Richard W.M. Jones" <rjones@redhat.com>
-To:     Mike Christie <mchristi@redhat.com>
-Cc:     syzbot <syzbot+24c12fa8d218ed26011a@syzkaller.appspotmail.com>,
-        axboe@kernel.dk, josef@toxicpanda.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, nbd@other.debian.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: INFO: task hung in nbd_ioctl
-Message-ID: <20191017140330.GB25667@redhat.com>
-References: <000000000000b1b1ee0593cce78f@google.com>
- <5D93C2DD.10103@redhat.com>
+        Thu, 17 Oct 2019 10:03:43 -0400
+Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:57646 "EHLO
+        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727542AbfJQODn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 10:03:43 -0400
+X-Greylist: delayed 2202 seconds by postgrey-1.27 at vger.kernel.org; Thu, 17 Oct 2019 10:03:41 EDT
+Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
+        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1iL5nq-0005dJ-1S; Thu, 17 Oct 2019 15:26:54 +0200
+X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
+        linuxbbg.five-lan.de
+Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
+        (authenticated bits=0)
+        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id x9HDQp2F004459
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Thu, 17 Oct 2019 15:26:52 +0200
+Subject: Re: [PATCH 1/6] arm64: dts: rockchip: Fix rk3399-roc-pc pwm2 pin
+To:     Jagan Teki <jagan@amarulasolutions.com>,
+        Levin Du <djw@t-chip.com.cn>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Akash Gajjar <akash@openedev.com>,
+        Da Xue <da@lessconfused.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <20190919052822.10403-1-jagan@amarulasolutions.com>
+ <20190919052822.10403-2-jagan@amarulasolutions.com> <6797961.eJj5WIFbM9@phil>
+ <CAMty3ZDKaywoPxCSD-5N2pLjtGmZ-dZ7ZgUOJqiB1V_9rfR26A@mail.gmail.com>
+ <87eezolynl.fsf@archiso.i-did-not-set--mail-host-address--so-tickle-me>
+ <CAMty3ZD8uHsj0Jzs08sKG0JXfC6MU0MHdKs=kw4m5rupnoTtqg@mail.gmail.com>
+From:   Markus Reichl <m.reichl@fivetechno.de>
+Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
+ 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
+ eD/Xv4SsK2JTO4nkQYw8
+Organization: five technologies GmbH
+Message-ID: <109d708e-d182-fafa-44ad-0e6e0f813e0d@fivetechno.de>
+Date:   Thu, 17 Oct 2019 15:26:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5D93C2DD.10103@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 17 Oct 2019 14:03:32 +0000 (UTC)
+In-Reply-To: <CAMty3ZD8uHsj0Jzs08sKG0JXfC6MU0MHdKs=kw4m5rupnoTtqg@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="Mkl0xAKohbcENoFuufIfKYeOWfNDdwTbC"
+X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1571321021;fd13738b;
+X-HE-SMSGID: 1iL5nq-0005dJ-1S
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 04:19:25PM -0500, Mike Christie wrote:
-> Hey Josef and nbd list,
-> 
-> I had a question about if there are any socket family restrictions for nbd?
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--Mkl0xAKohbcENoFuufIfKYeOWfNDdwTbC
+Content-Type: multipart/mixed; boundary="eKrkufQi7b6iPRdhDHIVSCqbS78ZKOHkV";
+ protected-headers="v1"
+From: Markus Reichl <m.reichl@fivetechno.de>
+To: Jagan Teki <jagan@amarulasolutions.com>, Levin Du <djw@t-chip.com.cn>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+ devicetree <devicetree@vger.kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ linux-kernel <linux-kernel@vger.kernel.org>,
+ "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+ Rob Herring <robh+dt@kernel.org>, Akash Gajjar <akash@openedev.com>,
+ Da Xue <da@lessconfused.com>,
+ linux-amarula <linux-amarula@amarulasolutions.com>,
+ linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Message-ID: <109d708e-d182-fafa-44ad-0e6e0f813e0d@fivetechno.de>
+Subject: Re: [PATCH 1/6] arm64: dts: rockchip: Fix rk3399-roc-pc pwm2 pin
+References: <20190919052822.10403-1-jagan@amarulasolutions.com>
+ <20190919052822.10403-2-jagan@amarulasolutions.com> <6797961.eJj5WIFbM9@phil>
+ <CAMty3ZDKaywoPxCSD-5N2pLjtGmZ-dZ7ZgUOJqiB1V_9rfR26A@mail.gmail.com>
+ <87eezolynl.fsf@archiso.i-did-not-set--mail-host-address--so-tickle-me>
+ <CAMty3ZD8uHsj0Jzs08sKG0JXfC6MU0MHdKs=kw4m5rupnoTtqg@mail.gmail.com>
+In-Reply-To: <CAMty3ZD8uHsj0Jzs08sKG0JXfC6MU0MHdKs=kw4m5rupnoTtqg@mail.gmail.com>
 
-In normal circumstances, in userspace, the NBD protocol would only be
-used over AF_UNIX or AF_INET/AF_INET6.
+--eKrkufQi7b6iPRdhDHIVSCqbS78ZKOHkV
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: quoted-printable
 
-There's a bit of confusion because netlink is used by nbd-client to
-configure the NBD device, setting things like block size and timeouts
-(instead of ioctl which is deprecated).  I think you don't mean this
-use of netlink?
+Hi Jagan,
 
-> The bug here is that some socket familys do not support the
-> sock->ops->shutdown callout, and when nbd calls kernel_sock_shutdown
-> their callout returns -EOPNOTSUPP. That then leaves recv_work stuck in
-> nbd_read_stat -> sock_xmit -> sock_recvmsg. My patch added a
-> flush_workqueue call, so for socket familys like AF_NETLINK in this bug
-> we hang like we see below.
-> 
-> I can just remove the flush_workqueue call in that code path since it's
-> not needed there, but it leaves the original bug my patch was hitting
-> where we leave the recv_work running which can then result in leaked
-> resources, or possible use after free crashes and you still get the hang
-> if you remove the module.
-> 
-> It looks like we have used kernel_sock_shutdown for a while so I thought
-> we might never have supported sockets that did not support the callout.
-> Is that correct? If so then I can just add a check for this in
-> nbd_add_socket and fix that bug too.
+your patch fixes booting my rk3399-roc-pc with 5.4.0-rc3-next-20191017.
+Without your patch roc-pc hangs here:
+[    9.703526] pwm-regulator: supplied by regulator-dummy
 
-Rich.
+Am 16.10.19 um 19:09 schrieb Jagan Teki:
+> Hi Levin,
+>=20
+> On Tue, Oct 8, 2019 at 8:42 AM <djw@t-chip.com.cn> wrote:
+>>
+>> Jagan Teki <jagan@amarulasolutions.com> writes:
+>>
+>> > Hi Heiko,
+>> >
+>> > On Mon, Sep 30, 2019 at 2:51 AM Heiko Stuebner <heiko@sntech.de> wro=
+te:
+>> >>
+>> >> Hi Jagan,
+>> >>
+>> >> Am Donnerstag, 19. September 2019, 07:28:17 CEST schrieb Jagan Teki=
+:
+>> >> > ROC-PC is not able to boot linux console if PWM2_d is
+>> >> > unattached to any pinctrl logic.
+>> >> >
+>> >> > To be precise the linux boot hang with last logs as,
+>> >> > ...
+>> >> > .....
+>> >> > [    0.003367] Console: colour dummy device 80x25
+>> >> > [    0.003788] printk: console [tty0] enabled
+>> >> > [    0.004178] printk: bootconsole [uart8250] disabled
+>> >> >
+>> >> > In ROC-PC the PWM2_d pin is connected to LOG_DVS_PWM of
+>> >> > VDD_LOG. So, for normal working operations this needs to
+>> >> > active and pull-down.
+>> >> >
+>> >> > This patch fix, by attaching pinctrl active and pull-down
+>> >> > the pwm2.
+>> >>
+>> >> This looks highly dubious on first glance. The pwm subsystem nor
+>> >> the Rockchip pwm driver do not do any pinctrl handling.
+>> >>
+>> >> So I don't really see where that "active" pinctrl state is supposed=
 
-> On 09/30/2019 05:39 PM, syzbot wrote:
-> > Hello,
-> > 
-> > syzbot found the following crash on:
-> > 
-> > HEAD commit:    bb2aee77 Add linux-next specific files for 20190926
-> > git tree:       linux-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=13385ca3600000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=e60af4ac5a01e964
-> > dashboard link:
-> > https://syzkaller.appspot.com/bug?extid=24c12fa8d218ed26011a
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12abc2a3600000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11712c05600000
-> > 
-> > The bug was bisected to:
-> > 
-> > commit e9e006f5fcf2bab59149cb38a48a4817c1b538b4
-> > Author: Mike Christie <mchristi@redhat.com>
-> > Date:   Sun Aug 4 19:10:06 2019 +0000
-> > 
-> >     nbd: fix max number of supported devs
-> > 
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1226f3c5600000
-> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=1126f3c5600000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=1626f3c5600000
-> > 
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+24c12fa8d218ed26011a@syzkaller.appspotmail.com
-> > Fixes: e9e006f5fcf2 ("nbd: fix max number of supported devs")
-> > 
-> > INFO: task syz-executor390:8778 can't die for more than 143 seconds.
-> > syz-executor390 D27432  8778   8777 0x00004004
-> > Call Trace:
-> >  context_switch kernel/sched/core.c:3384 [inline]
-> >  __schedule+0x828/0x1c20 kernel/sched/core.c:4065
-> >  schedule+0xd9/0x260 kernel/sched/core.c:4132
-> >  schedule_timeout+0x717/0xc50 kernel/time/timer.c:1871
-> >  do_wait_for_common kernel/sched/completion.c:83 [inline]
-> >  __wait_for_common kernel/sched/completion.c:104 [inline]
-> >  wait_for_common kernel/sched/completion.c:115 [inline]
-> >  wait_for_completion+0x29c/0x440 kernel/sched/completion.c:136
-> >  flush_workqueue+0x40f/0x14c0 kernel/workqueue.c:2826
-> >  nbd_start_device_ioctl drivers/block/nbd.c:1272 [inline]
-> >  __nbd_ioctl drivers/block/nbd.c:1347 [inline]
-> >  nbd_ioctl+0xb2e/0xc44 drivers/block/nbd.c:1387
-> >  __blkdev_driver_ioctl block/ioctl.c:304 [inline]
-> >  blkdev_ioctl+0xedb/0x1c20 block/ioctl.c:606
-> >  block_ioctl+0xee/0x130 fs/block_dev.c:1954
-> >  vfs_ioctl fs/ioctl.c:47 [inline]
-> >  file_ioctl fs/ioctl.c:539 [inline]
-> >  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:726
-> >  ksys_ioctl+0xab/0xd0 fs/ioctl.c:743
-> >  __do_sys_ioctl fs/ioctl.c:750 [inline]
-> >  __se_sys_ioctl fs/ioctl.c:748 [inline]
-> >  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:748
-> >  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > RIP: 0033:0x4452d9
-> > Code: Bad RIP value.
-> > RSP: 002b:00007ffde928d288 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> > RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004452d9
-> > RDX: 0000000000000000 RSI: 000000000000ab03 RDI: 0000000000000004
-> > RBP: 0000000000000000 R08: 00000000004025b0 R09: 00000000004025b0
-> > R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402520
-> > R13: 00000000004025b0 R14: 0000000000000000 R15: 0000000000000000
-> > INFO: task syz-executor390:8778 blocked for more than 143 seconds.
-> >       Not tainted 5.3.0-next-20190926 #0
-> > "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> > syz-executor390 D27432  8778   8777 0x00004004
-> > Call Trace:
-> >  context_switch kernel/sched/core.c:3384 [inline]
-> >  __schedule+0x828/0x1c20 kernel/sched/core.c:4065
-> >  schedule+0xd9/0x260 kernel/sched/core.c:4132
-> >  schedule_timeout+0x717/0xc50 kernel/time/timer.c:1871
-> >  do_wait_for_common kernel/sched/completion.c:83 [inline]
-> >  __wait_for_common kernel/sched/completion.c:104 [inline]
-> >  wait_for_common kernel/sched/completion.c:115 [inline]
-> >  wait_for_completion+0x29c/0x440 kernel/sched/completion.c:136
-> >  flush_workqueue+0x40f/0x14c0 kernel/workqueue.c:2826
-> >  nbd_start_device_ioctl drivers/block/nbd.c:1272 [inline]
-> >  __nbd_ioctl drivers/block/nbd.c:1347 [inline]
-> >  nbd_ioctl+0xb2e/0xc44 drivers/block/nbd.c:1387
-> >  __blkdev_driver_ioctl block/ioctl.c:304 [inline]
-> >  blkdev_ioctl+0xedb/0x1c20 block/ioctl.c:606
-> >  block_ioctl+0xee/0x130 fs/block_dev.c:1954
-> >  vfs_ioctl fs/ioctl.c:47 [inline]
-> >  file_ioctl fs/ioctl.c:539 [inline]
-> >  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:726
-> >  ksys_ioctl+0xab/0xd0 fs/ioctl.c:743
-> >  __do_sys_ioctl fs/ioctl.c:750 [inline]
-> >  __se_sys_ioctl fs/ioctl.c:748 [inline]
-> >  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:748
-> >  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > RIP: 0033:0x4452d9
-> > Code: Bad RIP value.
-> > RSP: 002b:00007ffde928d288 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> > RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004452d9
-> > RDX: 0000000000000000 RSI: 000000000000ab03 RDI: 0000000000000004
-> > RBP: 0000000000000000 R08: 00000000004025b0 R09: 00000000004025b0
-> > R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402520
-> > R13: 00000000004025b0 R14: 0000000000000000 R15: 0000000000000000
-> > 
-> > Showing all locks held in the system:
-> > 1 lock held by khungtaskd/1066:
-> >  #0: ffffffff88faad80 (rcu_read_lock){....}, at:
-> > debug_show_all_locks+0x5f/0x27e kernel/locking/lockdep.c:5337
-> > 2 locks held by kworker/u5:0/1525:
-> >  #0: ffff8880923d0d28 ((wq_completion)knbd0-recv){+.+.}, at:
-> > __write_once_size include/linux/compiler.h:226 [inline]
-> >  #0: ffff8880923d0d28 ((wq_completion)knbd0-recv){+.+.}, at:
-> > arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
-> >  #0: ffff8880923d0d28 ((wq_completion)knbd0-recv){+.+.}, at:
-> > atomic64_set include/asm-generic/atomic-instrumented.h:855 [inline]
-> >  #0: ffff8880923d0d28 ((wq_completion)knbd0-recv){+.+.}, at:
-> > atomic_long_set include/asm-generic/atomic-long.h:40 [inline]
-> >  #0: ffff8880923d0d28 ((wq_completion)knbd0-recv){+.+.}, at:
-> > set_work_data kernel/workqueue.c:620 [inline]
-> >  #0: ffff8880923d0d28 ((wq_completion)knbd0-recv){+.+.}, at:
-> > set_work_pool_and_clear_pending kernel/workqueue.c:647 [inline]
-> >  #0: ffff8880923d0d28 ((wq_completion)knbd0-recv){+.+.}, at:
-> > process_one_work+0x88b/0x1740 kernel/workqueue.c:2240
-> >  #1: ffff8880a63b7dc0 ((work_completion)(&args->work)){+.+.}, at:
-> > process_one_work+0x8c1/0x1740 kernel/workqueue.c:2244
-> > 1 lock held by rsyslogd/8659:
-> > 2 locks held by getty/8749:
-> >  #0: ffff888098c08090 (&tty->ldisc_sem){++++}, at:
-> > ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-> >  #1: ffffc90005f112e0 (&ldata->atomic_read_lock){+.+.}, at:
-> > n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
-> > 2 locks held by getty/8750:
-> >  #0: ffff88808f10b090 (&tty->ldisc_sem){++++}, at:
-> > ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-> >  #1: ffffc90005f2d2e0 (&ldata->atomic_read_lock){+.+.}, at:
-> > n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
-> > 2 locks held by getty/8751:
-> >  #0: ffff88809a6be090 (&tty->ldisc_sem){++++}, at:
-> > ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-> >  #1: ffffc90005f192e0 (&ldata->atomic_read_lock){+.+.}, at:
-> > n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
-> > 2 locks held by getty/8752:
-> >  #0: ffff8880a48af090 (&tty->ldisc_sem){++++}, at:
-> > ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-> >  #1: ffffc90005f352e0 (&ldata->atomic_read_lock){+.+.}, at:
-> > n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
-> > 2 locks held by getty/8753:
-> >  #0: ffff88808c599090 (&tty->ldisc_sem){++++}, at:
-> > ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-> >  #1: ffffc90005f212e0 (&ldata->atomic_read_lock){+.+.}, at:
-> > n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
-> > 2 locks held by getty/8754:
-> >  #0: ffff88808f1a8090 (&tty->ldisc_sem){++++}, at:
-> > ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-> >  #1: ffffc90005f392e0 (&ldata->atomic_read_lock){+.+.}, at:
-> > n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
-> > 2 locks held by getty/8755:
-> >  #0: ffff88809ab33090 (&tty->ldisc_sem){++++}, at:
-> > ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-> >  #1: ffffc90005f012e0 (&ldata->atomic_read_lock){+.+.}, at:
-> > n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
-> > 
-> > =============================================
-> > 
-> > NMI backtrace for cpu 1
-> > CPU: 1 PID: 1066 Comm: khungtaskd Not tainted 5.3.0-next-20190926 #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Call Trace:
-> >  __dump_stack lib/dump_stack.c:77 [inline]
-> >  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-> >  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
-> >  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
-> >  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
-> >  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
-> >  check_hung_uninterruptible_tasks kernel/hung_task.c:269 [inline]
-> >  watchdog+0xc99/0x1360 kernel/hung_task.c:353
-> >  kthread+0x361/0x430 kernel/kthread.c:255
-> >  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> > Sending NMI from CPU 1 to CPUs 0:
-> > NMI backtrace for cpu 0 skipped: idling at native_safe_halt+0xe/0x10
-> > arch/x86/include/asm/irqflags.h:60
-> > 
-> > 
-> > ---
-> > This bug is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> > 
-> > syzbot will keep track of this bug report. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> > For information about bisection process see:
-> > https://goo.gl/tpsmEJ#bisection
-> > syzbot can test patches for this bug, for details see:
-> > https://goo.gl/tpsmEJ#testing-patches
+>> >> to come from.
+>> >>
+>> >> Comparing with the pwm driver in the vendor tree I see that there
+>> >> is such a state defined there. But that code there also looks stran=
+ge
+>> >> as that driver never again leaves this active state after entering =
+it.
+>> >>
+>> >> Also for example all the Gru devices run with quite a number of pwm=
+-
+>> >> regulators without needing additional fiddling with the pwm itself,=
+ so
+>> >> I don't really see why that should be different here.
+>> >
+>> > I deed, I was supposed to think the same. but the vendor kernel dts
+>> > from firefly do follow the pwm2 pinctrl [1]. I wouldn't find any
+>> > information other than this vensor information, ie one of the reason=
+ I
+>> > have marked "Levin Du" who initially supported this board.
+>> >
+>> > One, think I have seen was this pinctrl active fixed the boot hang.
+>> > any inputs from would be very helpful.
+>> >
+>> > Levin Du, any inputs?
+>> >
+>> > [1] https://github.com/FireflyTeam/kernel/blob/stable-4.4-rk3399-lin=
+ux/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi#L1184
+>> >
+>>
+>> A grep of the `pwm2` shows that there's such block in rk3399-nanopi4.d=
+tsi:
+>>
+>>     &pwm2 {
+>>             pinctrl-names =3D "active";
+>>             pinctrl-0 =3D <&pwm2_pin_pull_down>;
+>>             status =3D "okay";
+>>     };
+>>
+>> But last time I checked, using the mainline U-Boot (the roc-rk3399-pc =
+is
+>> in mainline now) with mainline linux v5.2-rc7, no such setting is
+>> necessary, and the board boots happily.
+>>
+>> I cannot find the use of "active" pinctrl state in the
+>> `drivers/pwm/pwm-rockchip.c`. If the pinctrl state needs to be setup a=
+s
+>> default, the `pinctrl-names` needs to be "default" or "init" (see
+>> `drivers/base/pinctrl.c`) .
+>>
+>> Jagan, what version of board do you use? I checked with
+>> "ROC-RK3399-PC-V1.0-A 2018-07-12".
+>=20
+> I have ROC-RK3399-PC-V1.A 2018.09.25 and powering with TYPE-C0 port.
+>=20
+> And here the boot log
+>=20
+> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd034]
+> [    0.000000] Linux version 5.4.0-rc3-next-20191016
+> (jagan@jagan-XPS-13-9350) (gcc version 6.3.1 20170109 (Linaro GCC
+> 6.3-2017.02)) #1 SMP PREEMPT Wed Oct 16 21:17:23 IST 2019
+> [    0.000000] Machine model: Firefly ROC-RK3399-PC Board
+> [    0.000000] earlycon: uart8250 at MMIO32 0x00000000ff1a0000 (options=
+ '')
+> [    0.000000] printk: bootconsole [uart8250] enabled
+> [    0.000000] efi: Getting EFI parameters from FDT:
+> [    0.000000] efi: UEFI not found.
+> [    0.000000] cma: Reserved 32 MiB at 0x000000003e000000
+> [    0.000000] NUMA: No NUMA configuration found
+> [    0.000000] NUMA: Faking a node at [mem
+> 0x0000000000200000-0x00000000f7ffffff]
+> [    0.000000] NUMA: NODE_DATA [mem 0xf77ef100-0xf77f0fff]
+> [    0.000000] Zone ranges:
+> [    0.000000]   DMA      [mem 0x0000000000200000-0x000000003fffffff]
+> [    0.000000]   DMA32    [mem 0x0000000040000000-0x00000000f7ffffff]
+> [    0.000000]   Normal   empty
+> [    0.000000] Movable zone start for each node
+> [    0.000000] Early memory node ranges
+> [    0.000000]   node   0: [mem 0x0000000000200000-0x00000000f7ffffff]
+> [    0.000000] Initmem setup node 0 [mem 0x0000000000200000-0x00000000f=
+7ffffff]
+> [    0.000000] psci: probing for conduit method from DT.
+> [    0.000000] psci: PSCIv1.1 detected in firmware.
+> [    0.000000] psci: Using standard PSCI v0.2 function IDs
+> [    0.000000] psci: MIGRATE_INFO_TYPE not supported.
+> [    0.000000] psci: SMC Calling Convention v1.1
+> [    0.000000] percpu: Embedded 22 pages/cpu s52952 r8192 d28968 u90112=
 
--- 
-Richard Jones, Virtualization Group, Red Hat http://people.redhat.com/~rjones
-Read my programming and virtualization blog: http://rwmj.wordpress.com
-Fedora Windows cross-compiler. Compile Windows programs, test, and
-build Windows installers. Over 100 libraries supported.
-http://fedoraproject.org/wiki/MinGW
+> [    0.000000] Detected VIPT I-cache on CPU0
+> [    0.000000] CPU features: detected: ARM erratum 845719
+> [    0.000000] CPU features: detected: GIC system register CPU interfac=
+e
+> [    0.000000] Speculative Store Bypass Disable mitigation not required=
+
+> [    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 9=
+99432
+> [    0.000000] Policy zone: DMA32
+> [    0.000000] Kernel command line:
+> earlycon=3Duart8250,mmio32,0xff1a0000 root=3D/dev/mmcblk1p1 rootwait
+> [    0.000000] Dentry cache hash table entries: 524288 (order: 10,
+> 4194304 bytes, linear)
+> [    0.000000] Inode-cache hash table entries: 262144 (order: 9,
+> 2097152 bytes, linear)
+> [    0.000000] mem auto-init: stack:off, heap alloc:off, heap free:off
+> [    0.000000] software IO TLB: mapped [mem 0x3a000000-0x3e000000] (64M=
+B)
+> [    0.000000] Memory: 3856004K/4061184K available (12028K kernel
+> code, 1870K rwdata, 6440K rodata, 5056K init, 451K bss, 172412K
+> reserved, 32768K cma-reserved)
+> [    0.000000] SLUB: HWalign=3D64, Order=3D0-3, MinObjects=3D0, CPUs=3D=
+6, Nodes=3D1
+> [    0.000000] rcu: Preemptible hierarchical RCU implementation.
+> [    0.000000] rcu:     RCU restricting CPUs from NR_CPUS=3D256 to nr_c=
+pu_ids=3D6.
+> [    0.000000]  Tasks RCU enabled.
+> [    0.000000] rcu: RCU calculated value of scheduler-enlistment delay
+> is 25 jiffies.
+> [    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=3D16, nr_cpu=
+_ids=3D6
+> [    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+> [    0.000000] GICv3: GIC: Using split EOI/Deactivate mode
+> [    0.000000] GICv3: 256 SPIs implemented
+> [    0.000000] GICv3: 0 Extended SPIs implemented
+> [    0.000000] GICv3: Distributor has no Range Selector support
+> [    0.000000] GICv3: 16 PPIs implemented
+> [    0.000000] GICv3: no VLPI support, no direct LPI support
+> [    0.000000] GICv3: CPU0: found redistributor 0 region 0:0x00000000fe=
+f00000
+> [    0.000000] ITS [mem 0xfee20000-0xfee3ffff]
+> [    0.000000] ITS@0x00000000fee20000: allocated 65536 Devices
+> @f6880000 (flat, esz 8, psz 64K, shr 0)
+> [    0.000000] ITS: using cache flushing for cmd queue
+> [    0.000000] GICv3: using LPI property table @0x00000000f6840000
+> [    0.000000] GIC: using cache flushing for LPI property table
+> [    0.000000] GICv3: CPU0: using allocated LPI pending table
+> @0x00000000f6850000
+> [    0.000000] GICv3: GIC: PPI partition interrupt-partition-0[0] {
+> /cpus/cpu@0[0] /cpus/cpu@1[1] /cpus/cpu@2[2] /cpus/cpu@3[3] }
+> [    0.000000] GICv3: GIC: PPI partition interrupt-partition-1[1] {
+> /cpus/cpu@100[4] /cpus/cpu@101[5] }
+> [    0.000000] random: get_random_bytes called from
+> start_kernel+0x2b8/0x454 with crng_init=3D0
+> [    0.000000] arch_timer: cp15 timer(s) running at 24.00MHz (phys).
+> [    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff
+> max_cycles: 0x588fe9dc0, max_idle_ns: 440795202592 ns
+> [    0.000006] sched_clock: 56 bits at 24MHz, resolution 41ns, wraps
+> every 4398046511097ns
+> [    0.003201] Console: colour dummy device 80x25
+> [    0.003624] printk: console [tty0] enabled
+> [    0.004020] printk: bootconsole [uart8250] disabled
+
+I had to put "console=3DttyS2,1500000" in kernel command line to get furt=
+her logging beyond this point.
+
+>=20
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+>=20
+
+Gru=C3=9F,
+--=20
+Markus Reichl
+
+
+--eKrkufQi7b6iPRdhDHIVSCqbS78ZKOHkV--
+
+--Mkl0xAKohbcENoFuufIfKYeOWfNDdwTbC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAEBCAAdFiEEVKeIeBh0ZWJOldzLOiXeDmsa/bIFAl2obBsACgkQOiXeDmsa
+/bI9KQwAgQfw3C+rC34IN8Q9bXiz6TNeMZKEMllj2WeYpNb5Jjv46Df6sJ2NDFTI
+LLlGGcdm0nCcS/EQPeQaJd47ezOonE+0J7SV9W/JCku9agyYNv+pBFfS83zGkwFZ
+Z+mKgdjedqrcEwtGrhVChVxFJm1wHJ5u8NkQHcY9CIw5Z8kS91mO3vXqtu2qU3p8
+csS/aJb4suWiSUSyuwWcKCnOMJAf6AB+b6HQEZiiM6hyQqJqQequ3RmAo3YPLTOo
+REKCHSdUrK/x2NstwWSuu2pooHcH4jnvo4hCkG7jp08MJJsw7UlSVgua0PSvoDbj
+5bWAVb/nJ768yrdhFFJHVwIjDj9HuTbrXwANZz6EZZOvDa2m3wqUbS2Oq39QUXeI
+ImH6vQQjmB9dCiuiLNYFcS1R0JgIHIXl2+Mh95sVjjZYDDX7PrLZ8fpZgkjqI7VB
+X88BQBvBz/y6IaVoqNGJd2aGEapS9X3HaTHJ+YqY5m+Y4dKEMMDMDBIvlf/5A3x3
+QFaC6ens
+=AEAy
+-----END PGP SIGNATURE-----
+
+--Mkl0xAKohbcENoFuufIfKYeOWfNDdwTbC--
