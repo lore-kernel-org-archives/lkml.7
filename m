@@ -2,166 +2,180 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA22ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 204DFECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8ED320872
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB9F921835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:23:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h34txVx8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440689AbfJQRXO (ORCPT
+        id S2440703AbfJQRXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 13:23:14 -0400
-Received: from mga09.intel.com ([134.134.136.24]:62788 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436760AbfJQRXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 13:23:14 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 10:23:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,308,1566889200"; 
-   d="scan'208";a="226245158"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga002.fm.intel.com with ESMTP; 17 Oct 2019 10:23:12 -0700
-Date:   Thu, 17 Oct 2019 10:23:12 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org
-Subject: Re: [RFD] x86/split_lock: Request to Intel
-Message-ID: <20191017172312.GC20903@linux.intel.com>
-References: <20190925180931.GG31852@linux.intel.com>
- <3ec328dc-2763-9da5-28d6-e28970262c58@redhat.com>
- <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de>
- <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com>
- <c3ff2fb3-4380-fb07-1fa3-15896a09e748@intel.com>
- <d30652bb-89fa-671a-5691-e2c76af231d0@redhat.com>
- <8808c9ac-0906-5eec-a31f-27cbec778f9c@intel.com>
- <alpine.DEB.2.21.1910161519260.2046@nanos.tec.linutronix.de>
- <ba2c0aab-1d7c-5cfd-0054-ac2c266c1df3@redhat.com>
- <alpine.DEB.2.21.1910171322530.1824@nanos.tec.linutronix.de>
+        Thu, 17 Oct 2019 13:23:46 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:37177 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2440691AbfJQRXq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 13:23:46 -0400
+Received: by mail-yb1-f193.google.com with SMTP id z125so949112ybc.4;
+        Thu, 17 Oct 2019 10:23:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=g4SwHxHxwUtGIc9mmokYvDhJJMdlpqG1ecdzFzwqRlU=;
+        b=h34txVx8ucMiFbmTWddJEkas2yAoXSC+13vmb2G7hCUvp4vaspUU8vFRYqLjm53tDo
+         BDApU8qS7TCyQPBy07RCc5/bDa74S6v04Q8LOgEOGhepumRdKgO1ITXMm1KgGCQrxo9b
+         iw3dQYbeGZjBnw3TBQBm4ZrhAyYpMQrSC5HLNOLSTynKQTH8Dm8zcrcj8+ouR5x89ybV
+         8oKMZ5R+hZBRNAr/4ym7c6DLevjD9+tTVr1wXZ4GflQsIrxU/lS+JXUfL4AVfUJ7nlyO
+         3EJ4Pm2O0/BU9eh5VWtHrP4FBu1J17eVgB9LLCCvOuxapGHx1A71n6QyKHVZ/87TItdb
+         Glzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=g4SwHxHxwUtGIc9mmokYvDhJJMdlpqG1ecdzFzwqRlU=;
+        b=TTQoxDUubLwyGyDulhB08IjAtmK/vX6jc+Yw79cItd6YGXylUkw1S4ZqWOes6PL040
+         lRSJoJdUiRTuoCGd/HFecKcva8r78iM8n2XVn9dcje0i83r/8bW1B+WdWd6D+8rX+48B
+         hQMLuV/+eRwisANcIYkSOaAZWFtM7HfyKABkPUgWPQi7ENJwIJc3lxIbO3Yrky/sPbds
+         B6nnZQZ2NEvRwaLK8beLt5X82sjT3PGV1ZEVYWz6L1oORhPTVYgraUFocv45y5tiXrhl
+         TMSofkK9GVYNRfYvRNPJONx8/GHftUZVbC/aaKxNW0QU58XIIxa0a4UlddL9EWgV/cr4
+         +szg==
+X-Gm-Message-State: APjAAAWdC6rTTU4d2u0d3Q/J1RHc4LKx87J0eyqCFqgHvY46BC9nDkyj
+        2qjeakI4CJ+EGLCEfLq8x4I=
+X-Google-Smtp-Source: APXvYqz4/M/zkk0eMGkkmtOXHiC9/m0GHu5KKeC6Y5Iqeve3J9W6tXgs+D8krka7J8mVpWRhc+ApsA==
+X-Received: by 2002:a25:da02:: with SMTP id n2mr2997587ybf.115.1571333025368;
+        Thu, 17 Oct 2019 10:23:45 -0700 (PDT)
+Received: from [192.168.1.62] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id l24sm658196ywh.108.2019.10.17.10.23.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 17 Oct 2019 10:23:44 -0700 (PDT)
+Subject: Re: [PATCH] libfdt: reduce the number of headers included from
+ libfdt_env.h
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        DTML <devicetree@vger.kernel.org>
+References: <20190617162123.24920-1-yamada.masahiro@socionext.com>
+ <CAK7LNATtqhxPcDneW0QOkw-5NyPNP06Qv0bYTe7A_gCiHMiU7A@mail.gmail.com>
+ <CAK7LNASMwqy0ZUZ=kTJ7MJ6OJNa=+vbj5444xzmubJ8+6vO=sg@mail.gmail.com>
+ <CAK7LNAS=9yGqMQ9eoM4L0hhvuFRYhg6S4i6J3Ou9vcB1Npj4BQ@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <57c33deb-651b-3357-0e5a-95379be8a965@gmail.com>
+Date:   Thu, 17 Oct 2019 12:23:37 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1910171322530.1824@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAK7LNAS=9yGqMQ9eoM4L0hhvuFRYhg6S4i6J3Ou9vcB1Npj4BQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 02:29:45PM +0200, Thomas Gleixner wrote:
-> The more I look at this trainwreck, the less interested I am in merging any
-> of this at all.
+On 10/16/2019 06:01, Masahiro Yamada wrote:
+> Hi Andrew,
 > 
-> The fact that it took Intel more than a year to figure out that the MSR is
-> per core and not per thread is yet another proof that this industry just
-> works by pure chance.
+> Could you pick up this to akpm tree?
+> https://lore.kernel.org/patchwork/patch/1089856/
 > 
-> There is a simple way out of this misery:
+> I believe this is correct, and a good clean-up.
 > 
->   Intel issues a microcode update which does:
+> I pinged the DT maintainers, but they did not respond.
+
+Sorry for the delay in responding.
+
+libfdt_env.h is imported from an upstream project, using
+the script scripts/dtc/update-dtc-source.sh.  Inside
+that script are some 'sed' commands to modify the
+imported files before committing them.  Please add
+a sed command to make the change that the proposed
+patch makes.
+
+Thanks,
+
+Frank
+
 > 
->     1) Convert the OR logic of the AC enable bit in the TEST_CTRL MSR to
->        AND logic, i.e. when one thread disables AC it's automatically
->        disabled on the core.
+> Thanks.
 > 
->        Alternatively it supresses the #AC when the current thread has it
->        disabled.
 > 
->     2) Provide a separate bit which indicates that the AC enable logic is
->        actually AND based or that #AC is supressed when the current thread
->        has it disabled.
 > 
->     Which way I don't really care as long as it makes sense.
-
-The #AC bit doesn't use OR-logic, it's straight up shared, i.e. writes on
-one CPU are immediately visible on its sibling CPU.  It doesn't magically
-solve the problem, but I don't think we need IPIs to coordinate between
-siblings, e.g. wouldn't something like this work?  The per-cpu things
-being pointers that are shared by siblings.
-
-void split_lock_disable(void)
-{
-        spinlock_t *ac_lock = this_cpu_ptr(split_lock_ac_lock);
-
-	spin_lock(ac_lock);
-        if (this_cpu_inc_return(*split_lock_ac_disabled) == 1)
-                WRMSR(RDMSR() & ~bit);
-        spin_unlock(ac_lock);
-}
-
-void split_lock_enable(void)
-{
-        spinlock_t *ac_lock = this_cpu_ptr(split_lock_ac_lock);
-
-	spin_lock(ac_lock);
-        if (this_cpu_dec_return(*split_lock_ac_disabled) == 0)
-                WRMSR(RDMSR() | bit);
-        spin_unlock(ac_lock);
-}
-
-
-To avoid the spin_lock and WRMSR latency on every VM-Enter and VM-Exit,
-actions (3a) and (4a) from your matrix (copied below) could be changed to
-only do split_lock_disable() if the guest actually generates an #AC, and
-then do split_lock_enable() on the next VM-Exit.  Assuming even legacy
-guests are somewhat sane and rarely do split-locks, lazily disabling the
-control would eliminate most of the overhead and would also reduce the
-time that the sibling CPU is running in the host without #AC protection.
-
-
-N | #AC       | #AC enabled | SMT | Ctrl    | Guest | Action
-R | available | on host     |     | exposed | #AC   |
---|-----------|-------------|-----|---------|-------|---------------------
-  |           |             |     |         |       |
-0 | N         |     x       |  x  |   N     |   x   | None
-  |           |             |     |         |       |
-1 | Y         |     N       |  x  |   N     |   x   | None
-  |           |             |     |         |       |
-2 | Y         |     Y       |  x  |   Y     |   Y   | Forward to guest
-  |           |             |     |         |       |
-3 | Y         |     Y       |  N  |   Y     |   N   | A) Store in vCPU and
-  |           |             |     |         |       |    toggle on VMENTER/EXIT
-  |           |             |     |         |       |
-  |           |             |     |         |       | B) SIGBUS or KVM exit code
-  |           |             |     |         |       |
-4 | Y         |     Y       |  Y  |   Y     |   N   | A) Disable globally on
-  |           |             |     |         |       |    host. Store in vCPU/guest
-  |           |             |     |         |       |    state and evtl. reenable
-  |           |             |     |         |       |    when guest goes away.
-  |           |             |     |         |       | 
-  |           |             |     |         |       | B) SIGBUS or KVM exit code
-
-
-> If that's not going to happen, then we just bury the whole thing and put it
-> on hold until a sane implementation of that functionality surfaces in
-> silicon some day in the not so foreseeable future.
 > 
-> Seriously, this makes only sense when it's by default enabled and not
-> rendered useless by VIRT. Otherwise we never get any reports and none of
-> the issues are going to be fixed.
+> On Mon, Aug 19, 2019 at 1:36 PM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+>>
+>> On Thu, Aug 1, 2019 at 11:30 AM Masahiro Yamada
+>> <yamada.masahiro@socionext.com> wrote:
+>>>
+>>> On Tue, Jun 18, 2019 at 1:21 AM Masahiro Yamada
+>>> <yamada.masahiro@socionext.com> wrote:
+>>>>
+>>>> Currently, libfdt_env.h includes <linux/kernel.h> just for INT_MAX.
+>>>>
+>>>> <linux/kernel.h> pulls in a lots of broat.
+>>>>
+>>>> Thanks to commit 54d50897d544 ("linux/kernel.h: split *_MAX and *_MIN
+>>>> macros into <linux/limits.h>"), <linux/kernel.h> can be replaced with
+>>>> <linux/limits.h>.
+>>>>
+>>>> This saves including dozens of headers.
+>>>>
+>>>> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>>>> ---
+>>>
+>>> ping?
+>>
+>> ping x2.
+>>
+>>
+>>
+>>
+>>>
+>>>
+>>>>  include/linux/libfdt_env.h | 2 +-
+>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
+>>>> index edb0f0c30904..2231eb855e8f 100644
+>>>> --- a/include/linux/libfdt_env.h
+>>>> +++ b/include/linux/libfdt_env.h
+>>>> @@ -2,7 +2,7 @@
+>>>>  #ifndef LIBFDT_ENV_H
+>>>>  #define LIBFDT_ENV_H
+>>>>
+>>>> -#include <linux/kernel.h>      /* For INT_MAX */
+>>>> +#include <linux/limits.h>      /* For INT_MAX */
+>>>>  #include <linux/string.h>
+>>>>
+>>>>  #include <asm/byteorder.h>
+>>>> --
+>>>> 2.17.1
+>>>>
+>>>
+>>>
+>>> --
+>>> Best Regards
+>>> Masahiro Yamada
+>>
+>>
+>>
+>> --
+>> Best Regards
+>> Masahiro Yamada
 > 
-> Thanks,
 > 
-> 	tglx
+> 
+
