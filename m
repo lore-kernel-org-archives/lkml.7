@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 770EBECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E383FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E04D20650
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 151FF21D7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:39:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440037AbfJQTjr (ORCPT
+        id S2439943AbfJQTjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 15:39:47 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:45066 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437753AbfJQTjq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 17 Oct 2019 15:39:46 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:45054 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437644AbfJQTjp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 15:39:45 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iLBce-0006fW-06; Thu, 17 Oct 2019 19:39:44 +0000
+        id 1iLBcd-0006f9-Ec; Thu, 17 Oct 2019 19:39:43 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-scsi@vger.kernel.org
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
-Subject: [RFC PATCH 6/8] sg_read(): get rid of access_ok()/__copy_..._user()
-Date:   Thu, 17 Oct 2019 20:39:23 +0100
-Message-Id: <20191017193925.25539-6-viro@ZenIV.linux.org.uk>
+Subject: [RFC PATCH 3/8] sg_write(): __get_user() can fail...
+Date:   Thu, 17 Oct 2019 20:39:20 +0100
+Message-Id: <20191017193925.25539-3-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191017193925.25539-1-viro@ZenIV.linux.org.uk>
 References: <20191017193659.GA18702@ZenIV.linux.org.uk>
@@ -42,62 +42,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-Use copy_..._user() instead, both in sg_read() and in sg_read_oxfer().
-And don't open-code memdup_user()...
-
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- drivers/scsi/sg.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+ drivers/scsi/sg.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
-index 3702f66493f7..9f6534a025cd 100644
+index 026628aa556d..4c62237cdf37 100644
 --- a/drivers/scsi/sg.c
 +++ b/drivers/scsi/sg.c
-@@ -429,16 +429,10 @@ sg_read(struct file *filp, char __user *buf, size_t count, loff_t * ppos)
- 	SCSI_LOG_TIMEOUT(3, sg_printk(KERN_INFO, sdp,
- 				      "sg_read: count=%d\n", (int) count));
+@@ -640,13 +640,15 @@ sg_write(struct file *filp, const char __user *buf, size_t count, loff_t * ppos)
+ 	if (count < (SZ_SG_HEADER + 6))
+ 		return -EIO;	/* The minimum scsi command length is 6 bytes. */
  
--	if (!access_ok(buf, count))
--		return -EFAULT;
- 	if (sfp->force_packid && (count >= SZ_SG_HEADER)) {
--		old_hdr = kmalloc(SZ_SG_HEADER, GFP_KERNEL);
--		if (!old_hdr)
--			return -ENOMEM;
--		if (__copy_from_user(old_hdr, buf, SZ_SG_HEADER)) {
--			retval = -EFAULT;
--			goto free_old_hdr;
--		}
-+		old_hdr = memdup_user(buf, SZ_SG_HEADER);
-+		if (IS_ERR(old_hdr))
-+			return PTR_ERR(old_hdr);
- 		if (old_hdr->reply_len < 0) {
- 			if (count >= SZ_SG_IO_HDR) {
- 				sg_io_hdr_t __user *p = (void __user *)buf;
-@@ -529,7 +523,7 @@ sg_read(struct file *filp, char __user *buf, size_t count, loff_t * ppos)
- 
- 	/* Now copy the result back to the user buffer.  */
- 	if (count >= SZ_SG_HEADER) {
--		if (__copy_to_user(buf, old_hdr, SZ_SG_HEADER)) {
-+		if (copy_to_user(buf, old_hdr, SZ_SG_HEADER)) {
- 			retval = -EFAULT;
- 			goto free_old_hdr;
- 		}
-@@ -1960,12 +1954,12 @@ sg_read_oxfer(Sg_request * srp, char __user *outp, int num_read_xfer)
- 	num = 1 << (PAGE_SHIFT + schp->page_order);
- 	for (k = 0; k < schp->k_use_sg && schp->pages[k]; k++) {
- 		if (num > num_read_xfer) {
--			if (__copy_to_user(outp, page_address(schp->pages[k]),
-+			if (copy_to_user(outp, page_address(schp->pages[k]),
- 					   num_read_xfer))
- 				return -EFAULT;
- 			break;
- 		} else {
--			if (__copy_to_user(outp, page_address(schp->pages[k]),
-+			if (copy_to_user(outp, page_address(schp->pages[k]),
- 					   num))
- 				return -EFAULT;
- 			num_read_xfer -= num;
++	buf += SZ_SG_HEADER;
++	if (__get_user(opcode, buf))
++		return -EFAULT;
++
+ 	if (!(srp = sg_add_request(sfp))) {
+ 		SCSI_LOG_TIMEOUT(1, sg_printk(KERN_INFO, sdp,
+ 					      "sg_write: queue full\n"));
+ 		return -EDOM;
+ 	}
+-	buf += SZ_SG_HEADER;
+-	__get_user(opcode, buf);
+ 	mutex_lock(&sfp->f_mutex);
+ 	if (sfp->next_cmd_len > 0) {
+ 		cmd_size = sfp->next_cmd_len;
 -- 
 2.11.0
 
