@@ -2,137 +2,121 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 826E0FA372C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87554C4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FF9A21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5909821835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:25:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F9UsfomG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408130AbfJQHZU (ORCPT
+        id S2408145AbfJQHZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 03:25:20 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9032 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2405115AbfJQHZU (ORCPT
+        Thu, 17 Oct 2019 03:25:55 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43088 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405115AbfJQHZy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 03:25:20 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9H7MNJW070057
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 03:25:18 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vph4kvp2g-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 03:25:18 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
-        Thu, 17 Oct 2019 08:25:15 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 17 Oct 2019 08:25:11 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9H7PALV46006782
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 17 Oct 2019 07:25:10 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7FE3AAE058;
-        Thu, 17 Oct 2019 07:25:10 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9F867AE05A;
-        Thu, 17 Oct 2019 07:25:07 +0000 (GMT)
-Received: from JAVRIS.in.ibm.com (unknown [9.102.28.44])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 17 Oct 2019 07:25:07 +0000 (GMT)
-Subject: Re: [PATCH v3 3/3] selftests/livepatch: Test interaction with
- ftrace_enabled
-To:     Joe Lawrence <joe.lawrence@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>, rostedt@goodmis.org,
-        mingo@redhat.com, jpoimboe@redhat.com, jikos@kernel.org,
-        pmladek@suse.com
-Cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        shuah@kernel.org, linux-kselftest@vger.kernel.org
-References: <20191016113316.13415-1-mbenes@suse.cz>
- <20191016113316.13415-4-mbenes@suse.cz>
- <61b8e995-f5a2-8094-8e91-1a60019d2916@linux.vnet.ibm.com>
- <d4e9e2a0-51e7-e86e-9f6d-237a6c3b0204@redhat.com>
-From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Date:   Thu, 17 Oct 2019 12:55:05 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Thu, 17 Oct 2019 03:25:54 -0400
+Received: by mail-wr1-f66.google.com with SMTP id j18so1034106wrq.10
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 00:25:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=jAAT95spfsOy4+Rq+gH+u3lTOCghLhGj68CKdrx98lE=;
+        b=F9UsfomGr2CNeYykZN6yZitMfmX8fyJmBmymlewoU1PXc2q1Vn6t2I3rLUE0QWoC+8
+         MhGZC1Xxu/HAPvWEqxlCLTCRMaaDSMkAqReNf/vsQmeJgSro0pTbKA1qHoespSFtIU4T
+         hckNX80j47KRUy7XU7YRVWBJJrOhFo29SE2b0tDHsFp6jwXQK2NKPBZS9NbwhF5Qrclh
+         wEK1zOlExz/lr5gS1h3P4ujA4JxsgbbgXtH2moIUZpERKAVb7XpXk5V1UuFSDK+DHnkO
+         HEdCkGHQMMEirfde1nue9BKxA5pg2UOVVQ7LOxvfko9gpIMy1XcL/1RyLnOW7FZBzwn0
+         GIrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=jAAT95spfsOy4+Rq+gH+u3lTOCghLhGj68CKdrx98lE=;
+        b=dbUSsjHvuzj/+tJ2AxdQT99czLRBxdQrNuY42pwRLZsaAvg8gpwk8d4q6e+OqI2sQK
+         LvQzkM22Ml7DfNEN1DSg3837nFizAN4Pqn6klGwC79cBSmttv3pVjERVv22d7th/Hr4i
+         0L2AnN93ElOLViZXkosDL/up+ozFP7Joi1AZbAO857TOWEqNUGy2ox94FIcMTVcIJnbm
+         dJnb14kZ0TUoZRnuJZrOstIfbgy4rzWlNggkLNz0KVKiC7s//e3/pO9ZJWApgEyCPSKE
+         DFD5KJataMjCSHFKpGLQppyHKoAwRdfLTBMmtdU2sB23QHIwYJt0os0aslfelppqv4y+
+         CkuA==
+X-Gm-Message-State: APjAAAVKkKZ6AhiewXYjomzqKMVg3CwkKPzvrAAWE3zNx2a0AhuIxWJ9
+        qf1YgmzAJOiPZDlv7r8OvqhtNg==
+X-Google-Smtp-Source: APXvYqx9/y1nF0ofABrlWuRvb2aHc8qYFhZp9RVTdgQNYYfN+rH7FOQdXwZFWhoItjuvwj7hH3/jTA==
+X-Received: by 2002:a5d:630b:: with SMTP id i11mr1554836wru.87.1571297152660;
+        Thu, 17 Oct 2019 00:25:52 -0700 (PDT)
+Received: from dell ([95.149.164.47])
+        by smtp.gmail.com with ESMTPSA id o22sm1351495wra.96.2019.10.17.00.25.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 17 Oct 2019 00:25:51 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 08:25:50 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v5 0/7] backlight: gpio: simplify the driver
+Message-ID: <20191017072550.GK4365@dell>
+References: <20191007033200.13443-1-brgl@bgdev.pl>
+ <20191014081220.GK4545@dell>
+ <CACRpkda9Kco-bVPw1OA6FMpQ1L8dZ4WFJ227wTCM9rh5JE7-+A@mail.gmail.com>
+ <20191016130536.222vsi5whkoy6vzo@uno.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <d4e9e2a0-51e7-e86e-9f6d-237a6c3b0204@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19101707-0016-0000-0000-000002B8D112
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19101707-0017-0000-0000-00003319F7A1
-Message-Id: <65e9f12d-4f93-ca49-1238-1894d63ab09a@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-17_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910170064
+In-Reply-To: <20191016130536.222vsi5whkoy6vzo@uno.localdomain>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/17/19 3:17 AM, Joe Lawrence wrote:
-> On 10/16/19 1:06 PM, Kamalesh Babulal wrote:
->> On 10/16/19 5:03 PM, Miroslav Benes wrote:
->>> From: Joe Lawrence <joe.lawrence@redhat.com>
->>>
->>> Since livepatching depends upon ftrace handlers to implement "patched"
->>> code functionality, verify that the ftrace_enabled sysctl value
->>> interacts with livepatch registration as expected.  At the same time,
->>> ensure that ftrace_enabled is set and part of the test environment
->>> configuration that is saved and restored when running the selftests.
->>>
->>> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
->>> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
->>
->> [...]
->>> diff --git a/tools/testing/selftests/livepatch/test-ftrace.sh b/tools/testing/selftests/livepatch/test-ftrace.sh
->>> new file mode 100755
->>> index 000000000000..e2a76887f40a
->>> --- /dev/null
->>> +++ b/tools/testing/selftests/livepatch/test-ftrace.sh
->>
->> This test fails due to wrong file permissions, with the warning:
->>
->> # Warning: file test-ftrace.sh is not executable, correct this.
->> not ok 4 selftests: livepatch: test-ftrace.sh
->>
+On Wed, 16 Oct 2019, Jacopo Mondi wrote:
+
+> Hi, sorry for not having replied earlier
 > 
-> Hi Kamalesh,
+> On Wed, Oct 16, 2019 at 02:56:57PM +0200, Linus Walleij wrote:
+> > On Mon, Oct 14, 2019 at 10:12 AM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > > >  arch/sh/boards/mach-ecovec24/setup.c         |  33 ++++--
+> > >
+> > > I guess we're just waiting for the SH Acks now?
+> >
+> > The one maintainer with this board is probably overloaded.
+> >
+> > I would say just apply it, it can't hold back the entire series.
 > 
-> Thanks for testing.  This error is weird as the git log says new file mode: 100755.  'git am' of Miroslav's patchset gives me a new test-ftrace.sh with "Access: (0775/-rwxrwxr-x)"  Did you apply the mbox directly or.. ?
+> I've been able to resurect the Ecovec, and I've also been given a copy
+> of its schematics file a few weeks ago.
 > 
+> It's in my TODO list to test this series but I didn't manage to find
+> time. If I pinky promise I get back to you before end of the week,
+> could you wait for me ? :)
 
-Hi Joe,
-
-Thanks, I was using patch command to apply the patches and using git am
-helped. Sorry for the noise. The test cases passes now, without the issue
-I previously reported:
-
-[...]
-# TEST: livepatch interaction with ftrace_enabled sysctl ... ok
-ok 4 selftests: livepatch: test-ftrace.sh
-
-Long story is that the patch command version installed on the test machine
-doesn't understand new file mode permission from the git diff, updating
-the patch version creates the patch with 755 mode.
+Yes, no problem.
 
 -- 
-Kamalesh
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
