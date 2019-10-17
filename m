@@ -4,32 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABCEFA3736
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B6EECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D92B721848
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2592F21A49
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:21:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440192AbfJQOVq (ORCPT
+        id S2440172AbfJQOVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 10:21:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40578 "EHLO mx1.suse.de"
+        Thu, 17 Oct 2019 10:21:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40594 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2440145AbfJQOVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:21:39 -0400
+        id S2440119AbfJQOVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 10:21:35 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4F446B48D;
-        Thu, 17 Oct 2019 14:21:37 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 5D255B496;
+        Thu, 17 Oct 2019 14:21:34 +0000 (UTC)
 From:   Oscar Salvador <osalvador@suse.de>
 To:     n-horiguchi@ah.jp.nec.com
 Cc:     mhocko@kernel.org, mike.kravetz@oracle.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, Oscar Salvador <osalvador@suse.de>
-Subject: [RFC PATCH v2 13/16] mm,hwpoison: Take pages off the buddy when hard-offlining
-Date:   Thu, 17 Oct 2019 16:21:20 +0200
-Message-Id: <20191017142123.24245-14-osalvador@suse.de>
+Subject: [RFC PATCH v2 06/16] mm,hwpoison: Kill put_hwpoison_page
+Date:   Thu, 17 Oct 2019 16:21:13 +0200
+Message-Id: <20191017142123.24245-7-osalvador@suse.de>
 X-Mailer: git-send-email 2.13.7
 In-Reply-To: <20191017142123.24245-1-osalvador@suse.de>
 References: <20191017142123.24245-1-osalvador@suse.de>
@@ -38,95 +39,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to do as we do now for soft-offline, and take poisoned pages
-off the buddy allocator.
-Otherwise we could face [1] as well.
-
-[1] https://lore.kernel.org/linux-mm/20190826104144.GA7849@linux/T/#u
+After ("4e41a30c6d50: mm: hwpoison: adjust for new thp refcounting"),
+put_hwpoison_page got reduced to a put_page.
+Let us just use put_page instead.
 
 Signed-off-by: Oscar Salvador <osalvador@suse.de>
 ---
- mm/memory-failure.c | 33 ++++++++++++++++++++++++---------
- 1 file changed, 24 insertions(+), 9 deletions(-)
+ include/linux/mm.h  |  1 -
+ mm/memory-failure.c | 30 +++++++++++++++---------------
+ 2 files changed, 15 insertions(+), 16 deletions(-)
 
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index a646eb4dc993..d6dca8778cc2 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2788,7 +2788,6 @@ enum mf_flags {
+ extern int memory_failure(unsigned long pfn, int flags);
+ extern void memory_failure_queue(unsigned long pfn, int flags);
+ extern int unpoison_memory(unsigned long pfn);
+-#define put_hwpoison_page(page)	put_page(page)
+ extern int sysctl_memory_failure_early_kill;
+ extern int sysctl_memory_failure_recovery;
+ extern void shake_page(struct page *p, int access);
 diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 48eb314598e0..3d491c0d3f91 100644
+index 5ce634ddf9fa..3e73738a2246 100644
 --- a/mm/memory-failure.c
 +++ b/mm/memory-failure.c
-@@ -791,6 +791,14 @@ static int me_swapcache_clean(struct page *p, unsigned long pfn)
- 		return MF_FAILED;
- }
- 
-+static int me_huge_free_page(struct page *p)
-+{
-+	if (page_handle_poison(p, true, false))
-+		return MF_RECOVERED;
-+	else
-+		return MF_FAILED;
-+}
-+
- /*
-  * Huge pages. Needs work.
-  * Issues:
-@@ -818,8 +826,7 @@ static int me_huge_page(struct page *p, unsigned long pfn)
- 		 */
- 		if (PageAnon(hpage))
- 			put_page(hpage);
--		dissolve_free_huge_page(p);
--		res = MF_RECOVERED;
-+		res = me_huge_free_page(p);
- 		lock_page(hpage);
- 	}
- 
-@@ -1145,8 +1152,10 @@ static int memory_failure_hugetlb(unsigned long pfn, int flags)
- 			}
- 		}
+@@ -1107,7 +1107,7 @@ static int memory_failure_hugetlb(unsigned long pfn, int flags)
+ 		pr_err("Memory failure: %#lx: just unpoisoned\n", pfn);
+ 		num_poisoned_pages_dec();
  		unlock_page(head);
--		dissolve_free_huge_page(p);
--		action_result(pfn, MF_MSG_FREE_HUGE, MF_DELAYED);
-+		res = me_huge_free_page(p);
-+		if (res == MF_FAILED)
-+			num_poisoned_pages_dec();
-+		action_result(pfn, MF_MSG_FREE_HUGE, res);
+-		put_hwpoison_page(head);
++		put_page(head);
  		return 0;
  	}
  
-@@ -1307,6 +1316,12 @@ int memory_failure(unsigned long pfn, int flags)
- 
- 	if (PageHuge(p))
- 		return memory_failure_hugetlb(pfn, flags);
-+
-+	if (is_free_buddy_page(p) && page_handle_poison(p, true, false)) {
-+		action_result(pfn, MF_MSG_BUDDY, MF_RECOVERED);
-+		return 0;
-+	}
-+
- 	if (TestSetPageHWPoison(p)) {
- 		pr_err("Memory failure: %#lx: already hardware poisoned\n",
- 			pfn);
-@@ -1328,10 +1343,10 @@ int memory_failure(unsigned long pfn, int flags)
- 	 * that may make page_ref_freeze()/page_ref_unfreeze() mismatch.
- 	 */
- 	if (!get_hwpoison_page(p)) {
--		if (is_free_buddy_page(p)) {
--			action_result(pfn, MF_MSG_BUDDY, MF_DELAYED);
-+		if (is_free_buddy_page(p) && page_handle_poison(p, true, false)) {
-+			action_result(pfn, MF_MSG_BUDDY, MF_RECOVERED);
- 			return 0;
--		} else {
-+		} else if(!is_free_buddy_page(p)) {
- 			action_result(pfn, MF_MSG_KERNEL_HIGH_ORDER, MF_IGNORED);
+@@ -1299,7 +1299,7 @@ int memory_failure(unsigned long pfn, int flags)
+ 					pfn);
+ 			if (TestClearPageHWPoison(p))
+ 				num_poisoned_pages_dec();
+-			put_hwpoison_page(p);
++			put_page(p);
  			return -EBUSY;
  		}
-@@ -1354,8 +1369,8 @@ int memory_failure(unsigned long pfn, int flags)
- 	 */
- 	shake_page(p, 0);
- 	/* shake_page could have turned it free. */
--	if (!PageLRU(p) && is_free_buddy_page(p)) {
--		action_result(pfn, MF_MSG_BUDDY_2ND, MF_DELAYED);
-+	if (!PageLRU(p) && is_free_buddy_page(p) && page_handle_poison(p, true, false)) {
-+		action_result(pfn, MF_MSG_BUDDY_2ND, MF_RECOVERED);
+ 		unlock_page(p);
+@@ -1353,14 +1353,14 @@ int memory_failure(unsigned long pfn, int flags)
+ 		pr_err("Memory failure: %#lx: just unpoisoned\n", pfn);
+ 		num_poisoned_pages_dec();
+ 		unlock_page(p);
+-		put_hwpoison_page(p);
++		put_page(p);
  		return 0;
+ 	}
+ 	if (hwpoison_filter(p)) {
+ 		if (TestClearPageHWPoison(p))
+ 			num_poisoned_pages_dec();
+ 		unlock_page(p);
+-		put_hwpoison_page(p);
++		put_page(p);
+ 		return 0;
+ 	}
+ 
+@@ -1584,9 +1584,9 @@ int unpoison_memory(unsigned long pfn)
+ 	}
+ 	unlock_page(page);
+ 
+-	put_hwpoison_page(page);
++	put_page(page);
+ 	if (freeit && !(pfn == my_zero_pfn(0) && page_count(p) == 1))
+-		put_hwpoison_page(page);
++		put_page(page);
+ 
+ 	return 0;
+ }
+@@ -1644,7 +1644,7 @@ static int get_any_page(struct page *page, unsigned long pfn, int flags)
+ 		/*
+ 		 * Try to free it.
+ 		 */
+-		put_hwpoison_page(page);
++		put_page(page);
+ 		shake_page(page, 1);
+ 
+ 		/*
+@@ -1653,7 +1653,7 @@ static int get_any_page(struct page *page, unsigned long pfn, int flags)
+ 		ret = __get_any_page(page, pfn, 0);
+ 		if (ret == 1 && !PageLRU(page)) {
+ 			/* Drop page reference which is from __get_any_page() */
+-			put_hwpoison_page(page);
++			put_page(page);
+ 			pr_info("soft_offline: %#lx: unknown non LRU page type %lx (%pGp)\n",
+ 				pfn, page->flags, &page->flags);
+ 			return -EIO;
+@@ -1676,7 +1676,7 @@ static int soft_offline_huge_page(struct page *page, int flags)
+ 	lock_page(hpage);
+ 	if (PageHWPoison(hpage)) {
+ 		unlock_page(hpage);
+-		put_hwpoison_page(hpage);
++		put_page(hpage);
+ 		pr_info("soft offline: %#lx hugepage already poisoned\n", pfn);
+ 		return -EBUSY;
+ 	}
+@@ -1687,7 +1687,7 @@ static int soft_offline_huge_page(struct page *page, int flags)
+ 	 * get_any_page() and isolate_huge_page() takes a refcount each,
+ 	 * so need to drop one here.
+ 	 */
+-	put_hwpoison_page(hpage);
++	put_page(hpage);
+ 	if (!ret) {
+ 		pr_info("soft offline: %#lx hugepage failed to isolate\n", pfn);
+ 		return -EBUSY;
+@@ -1736,7 +1736,7 @@ static int __soft_offline_page(struct page *page, int flags)
+ 	wait_on_page_writeback(page);
+ 	if (PageHWPoison(page)) {
+ 		unlock_page(page);
+-		put_hwpoison_page(page);
++		put_page(page);
+ 		pr_info("soft offline: %#lx page already poisoned\n", pfn);
+ 		return -EBUSY;
+ 	}
+@@ -1751,7 +1751,7 @@ static int __soft_offline_page(struct page *page, int flags)
+ 	 * would need to fix isolation locking first.
+ 	 */
+ 	if (ret == 1) {
+-		put_hwpoison_page(page);
++		put_page(page);
+ 		pr_info("soft_offline: %#lx: invalidated\n", pfn);
+ 		SetPageHWPoison(page);
+ 		num_poisoned_pages_inc();
+@@ -1771,7 +1771,7 @@ static int __soft_offline_page(struct page *page, int flags)
+ 	 * Drop page reference which is came from get_any_page()
+ 	 * successful isolate_lru_page() already took another one.
+ 	 */
+-	put_hwpoison_page(page);
++	put_page(page);
+ 	if (!ret) {
+ 		LIST_HEAD(pagelist);
+ 		/*
+@@ -1815,7 +1815,7 @@ static int soft_offline_in_use_page(struct page *page, int flags)
+ 				pr_info("soft offline: %#lx: non anonymous thp\n", page_to_pfn(page));
+ 			else
+ 				pr_info("soft offline: %#lx: thp split failed\n", page_to_pfn(page));
+-			put_hwpoison_page(page);
++			put_page(page);
+ 			return -EBUSY;
+ 		}
+ 		unlock_page(page);
+@@ -1889,7 +1889,7 @@ int soft_offline_page(struct page *page, int flags)
+ 	if (PageHWPoison(page)) {
+ 		pr_info("soft offline: %#lx page already poisoned\n", pfn);
+ 		if (flags & MF_COUNT_INCREASED)
+-			put_hwpoison_page(page);
++			put_page(page);
+ 		return -EBUSY;
  	}
  
 -- 
