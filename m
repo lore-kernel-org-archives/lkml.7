@@ -2,90 +2,129 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E32C8ECE597
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31334ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8B5621835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:19:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571332796;
-	bh=fkXKLDfWaA7lFTgqJsrX3X37be5F5YLryM7NAGSqj1U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L+wORs0XKIZVmS9NUTGmo9dgN/ve3h+r+0M6x4baD6O6O4Ue9QoMNO14AwkSVjViB
-	 CNN0dKDAt8NzJs3RPihG9dnE0vcLVmbRi+1lyEjiJonI1eXcuKixCINWdQyBzxnruZ
-	 tnmTw+tOL5hNy+Q38/DIVMu+o+Je458hPucQzvx0=
+	by mail.kernel.org (Postfix) with ESMTP id 0718421925
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:20:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="shdaf3RG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440653AbfJQRTz (ORCPT
+        id S2440666AbfJQRUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 13:19:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37646 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728639AbfJQRTz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 13:19:55 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2069B20872;
-        Thu, 17 Oct 2019 17:19:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571332794;
-        bh=fkXKLDfWaA7lFTgqJsrX3X37be5F5YLryM7NAGSqj1U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Py7+YBWrBJXnll38jre94lW2Q7oCwuyUtBbvKH7kR/FpgwQE4QFlF7Vu4zgTDYx7E
-         CuAUcv68/FcvRvELbZA5jllBFZNOGfFk84D6bPt0XlWXmcl8fLNZsQoKcN52szir8a
-         9im9bonHnRDq+CdycxZBo62X8+oJ0iEshqG+6iFo=
-Date:   Thu, 17 Oct 2019 13:19:53 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Dave Wysochanski <dwysocha@redhat.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: Re: [PATCH 4.19 62/81] cifs: use cifsInodeInfo->open_file_lock while
- iterating to avoid a panic
-Message-ID: <20191017171953.GV31224@sasha-vm>
-References: <20191016214805.727399379@linuxfoundation.org>
- <20191016214843.979454273@linuxfoundation.org>
- <20191017085538.GA5847@amd>
- <20191017160117.GA1083277@kroah.com>
+        Thu, 17 Oct 2019 13:20:43 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37121 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728639AbfJQRUm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 13:20:42 -0400
+Received: by mail-qt1-f196.google.com with SMTP id n17so4721765qtr.4
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 10:20:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qhptbpId7hBoCEy521ZldkxQoZ8KyT+B+QjPOyNo5f4=;
+        b=shdaf3RG+fIKoGa0z2l/NkUI+QSGKKpOKxxaiF90zWPhsnEc8EiAfpbnd2S9OWAPAJ
+         bcXLZTUi9GwCYBdVmPOSWSCcd89tXJhLO+NdzZSsgLUKIlDDfCWi4Utzj7ZCjiVTRL60
+         +5iiurA6DXo4kxPiaGVaFeXWDicGzgQWmMmz2M5Fq0UfSVP7mmCcPRqR6d3rgrMxtWeD
+         LP8FY/MFZcmObD4HT4SftqKmi5sey/YfVCLhObskA3iO0k5TI9IcGzGp3Hgx4pVhX0Qs
+         peUUIw05kWHFGQ7VwaQWVpNVmgqrst7IIfpzuvN+eenxlKQPNeFghk3Ohm0mKY8VbctO
+         UIjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qhptbpId7hBoCEy521ZldkxQoZ8KyT+B+QjPOyNo5f4=;
+        b=h2IuL7174LuvvfJysRfT2xa2vpGuZ+ERZejiqTCykf34ffuXodWGrxubxT737wJGge
+         ncKzFUQ8c4+Wg+hhJWciUfVKFP+TWs1WeFZxnhfkWrp+Ew5WHmQdxMUHyjcf8mMXT8xg
+         J1kexkwogsneJv1MMr6L5AiEA519vvrnWfCO5vimNZu67E/bgzZzanKjap/S17uZQH1M
+         eOWOQQErMtNLMAYv99LM26oSYkJA+idm+C4PksHMFekEcUt6GErYpXEa5ChLumT9c13h
+         vUsbB2Oec4B9HEYWXnSoiXzZgJ0tKLBQbmh0eRHZ1KraewMzLNt7kPaYASq/QhIw0Yxr
+         M46A==
+X-Gm-Message-State: APjAAAVOEg6NxPAuXFTFJcmYz0ZZZZL9nPzolV0kS4qz/64SH0FMjbYm
+        n5bVUVtbOjBlzafeB9wd7GDOGcgAYgTVd5TqkW7orFthC7c=
+X-Google-Smtp-Source: APXvYqxdtktP+2U70vxHOqKva5KuxDofP+Rntw44AzYUZmxHU+3P46z5pumD6R+jgyMCQf7jp5NDIKNndOqoBhe57HY=
+X-Received: by 2002:ad4:530b:: with SMTP id y11mr4937814qvr.12.1571332841511;
+ Thu, 17 Oct 2019 10:20:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191017160117.GA1083277@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191016221148.F9CCD155@viggo.jf.intel.com> <CALvZod5wdToX6bx4Bnwx9AgrzY3xkmE0OMH61f88hKxeGX+tvA@mail.gmail.com>
+ <496566a6-2581-17f4-a4f2-e5def7f97582@intel.com>
+In-Reply-To: <496566a6-2581-17f4-a4f2-e5def7f97582@intel.com>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Thu, 17 Oct 2019 10:20:30 -0700
+Message-ID: <CAHbLzkq6cvS4L4DYnr+oyggfXzZTKegfpdNUi_XHA+-67HZYNA@mail.gmail.com>
+Subject: Re: [PATCH 0/4] [RFC] Migrate Pages in lieu of discard
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Shakeel Butt <shakeelb@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Adams <jwadams@google.com>,
+        "Chen, Tim C" <tim.c.chen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 09:01:17AM -0700, Greg Kroah-Hartman wrote:
->On Thu, Oct 17, 2019 at 10:55:39AM +0200, Pavel Machek wrote:
->> Hi!
->>
->> > From: Dave Wysochanski <dwysocha@redhat.com>
->> >
->> > Commit 487317c99477 ("cifs: add spinlock for the openFileList to
->> > cifsInodeInfo") added cifsInodeInfo->open_file_lock spin_lock to protect
->>
->> > Fixes: 487317c99477 ("cifs: add spinlock for the openFileList to cifsInodeInfo")
->> >
->> > CC: Stable <stable@vger.kernel.org>
->> > Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
->> > Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
->> > Signed-off-by: Steve French <stfrench@microsoft.com>
->>
->> This is missing upstream commit ID and a signoff.
+On Thu, Oct 17, 2019 at 7:26 AM Dave Hansen <dave.hansen@intel.com> wrote:
 >
->Good catch, Sasha forgot to do that :(
+> On 10/16/19 8:45 PM, Shakeel Butt wrote:
+> > On Wed, Oct 16, 2019 at 3:49 PM Dave Hansen <dave.hansen@linux.intel.com> wrote:
+> >> This set implements a solution to these problems.  At the end of the
+> >> reclaim process in shrink_page_list() just before the last page
+> >> refcount is dropped, the page is migrated to persistent memory instead
+> >> of being dropped.
+> ..> The memory cgroup part of the story is missing here. Since PMEM is
+> > treated as slow DRAM, shouldn't its usage be accounted to the
+> > corresponding memcg's memory/memsw counters and the migration should
+> > not happen for memcg limit reclaim? Otherwise some jobs can hog the
+> > whole PMEM.
+>
+> My expectation (and I haven't confirmed this) is that the any memory use
+> is accounted to the owning cgroup, whether it is DRAM or PMEM.  memcg
+> limit reclaim and global reclaim both end up doing migrations and
+> neither should have a net effect on the counters.
 
-I was actually thinking I'll need to replace it with David's patch. Let
-me look into it.
+Yes, your expectation is correct. As long as PMEM is a NUMA node, it
+is treated as regular memory by memcg. But, I don't think memcg limit
+reclaim should do migration since limit reclaim is used to reduce
+memory usage, but migration doesn't reduce usage, it just moves memory
+from one node to the other.
 
--- 
-Thanks,
-Sasha
+In my implementation, I just skip migration for memcg limit reclaim,
+please see: https://lore.kernel.org/linux-mm/1560468577-101178-7-git-send-email-yang.shi@linux.alibaba.com/
+
+>
+> There is certainly a problem here because DRAM is a more valuable
+> resource vs. PMEM, and memcg accounts for them as if they were equally
+> valuable.  I really want to see memcg account for this cost discrepancy
+> at some point, but I'm not quite sure what form it would take.  Any
+> feedback from you heavy memcg users out there would be much appreciated.
+
+We did have some demands to control the ratio between DRAM and PMEM as
+I mentioned in LSF/MM. Mel Gorman did suggest make memcg account DRAM
+and PMEM respectively or something similar.
+
+>
+> > Also what happens when PMEM is full? Can the memory migrated to PMEM
+> > be reclaimed (or discarded)?
+>
+> Yep.  The "migration path" can be as long as you want, but once the data
+> hits a "terminal node" it will stop getting migrated and normal discard
+> at the end of reclaim happens.
+
+I recalled I had a hallway conversation with Keith about this in
+LSF/MM. We all agree there should be not a cycle. But, IMHO, I don't
+think exporting migration path to userspace (or letting user to define
+migration path) and having multiple migration stops are good ideas in
+general.
+
+>
