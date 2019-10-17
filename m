@@ -2,155 +2,165 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4255BECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B4AECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA842089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 610D62089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:13:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pjO6HPCM"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="IxyRXtmE";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="RetwhDem"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440585AbfJQRKY (ORCPT
+        id S2440611AbfJQRNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 13:10:24 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43329 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728639AbfJQRKY (ORCPT
+        Thu, 17 Oct 2019 13:13:43 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:54756 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728639AbfJQRNm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 13:10:24 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i32so1702790pgl.10;
-        Thu, 17 Oct 2019 10:10:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=svqV4zOfagjPkCxlf2FnOeOhTBOGPslcQb282PoDogM=;
-        b=pjO6HPCM8bnE7QNBsxFGs3r/KvtDB2ekWoqRrMDeWfocoZ7Ma3Jd0IM4vJO3dU7+J7
-         Yuh59SQ59Q3SkZ5FSNj0y2QtEbTy+N0gIOGePAhtdbVucyqWUrLO+GgkhXy43CTbv86+
-         aikotljj6yEiaCTq7uYa88RI8Qt/weSlUEKmnYnf5VHn7EYAggA0kbM/wwbSAkuljzeP
-         fWWS+ocmU40Y8hp/pdF8JTDBoubFQXg9qA01qqcHuvdX6mGMi3kAJYaufu8M6kiFREle
-         BAHCqw6phjgJxcW72tBwRKPL4Mu6O9VI+ERVw/31Bugx3OEISCgwEAb/SIN6TCF3cdwc
-         bPQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=svqV4zOfagjPkCxlf2FnOeOhTBOGPslcQb282PoDogM=;
-        b=unRqWVMtka5sKzul8xbzC49XaC0RzpiBZ/PL4BQZx/k2v2djRjzy+zd32TWBpiYD82
-         E+IlpClwXFEq9WzFV0445IcTA46eo9f+xxTuuL5fll0hSCiady/1rcAEH8E53uJVrv1C
-         92SJ72wzWHiKErNgsYplMNKAa+CR8KIa447JWgfqjwkq0TuQeUlPfmkvXI5TKt81OGkC
-         qitTlmoUIMKiplhSEnabGI3WQMn+KaJccbtGT9rrPHUMk1rM+h4VUTLyxFdKsgZxfTCs
-         kK9PnnVFvwmd4j+BsUwTA5QpZRR88VqEaGE0p5ZvEV1m2PHfxb4Q4r643dLkssttc//j
-         GNQQ==
-X-Gm-Message-State: APjAAAUnXO7PuIv/rlGBDCBvNUszu7Xb8jHoBoHbwnbK9pt5gx/yAbda
-        WaYgvyVGf4ooJbn54fbMRdo=
-X-Google-Smtp-Source: APXvYqxxJcFRWKAOUQwVZB2ifmOzq2hrajjCg/H91fPDWrhev4BRbDpU0RT+y2MMjN6eZn5sJB7UEA==
-X-Received: by 2002:a62:7a8c:: with SMTP id v134mr1387010pfc.143.1571332223204;
-        Thu, 17 Oct 2019 10:10:23 -0700 (PDT)
-Received: from Gentoo ([103.231.91.74])
-        by smtp.gmail.com with ESMTPSA id a11sm3135357pfo.165.2019.10.17.10.10.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Oct 2019 10:10:22 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 22:40:09 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     yamada.masahiro@socionext.com, michal.lkml@markovi.net,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org
-Subject: Re: [PATCH] scripts : mksysmap : NM variable missed the value,so
- fixed
-Message-ID: <20191017171006.GA4995@Gentoo>
-References: <20191017102506.22192-1-unixbhaskar@gmail.com>
- <265d9be5-217d-3f67-ba94-095efdcf5787@infradead.org>
+        Thu, 17 Oct 2019 13:13:42 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9HHDCOS028122;
+        Thu, 17 Oct 2019 10:13:13 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=pb6wQ58kECY1I+U6SSmxvdp0wbHKaREq/oGLxzF32HA=;
+ b=IxyRXtmENCz15qtrHhiFEFj8w/fUxuaAtg6i8IiRIuz2p5m9GLhEXfJshKeVKBBXDqFa
+ P9y7IPupWtFgwey7xs04YVDPNsnVfFTgFUxzeUm9XDdIXNJh+ZWx6bo5nG7td7Am1vCT
+ OFsn/kXOLGQCbFgcIOTfY4vcLN7jeyyHjiE= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2vpj8rttsf-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 17 Oct 2019 10:13:13 -0700
+Received: from prn-hub05.TheFacebook.com (2620:10d:c081:35::129) by
+ prn-hub01.TheFacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Thu, 17 Oct 2019 10:12:52 -0700
+Received: from NAM01-SN1-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.29) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Thu, 17 Oct 2019 10:12:52 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c/7VgeXEz1DUbD72wEDe9JQM39K31sbs7wUwKXhEQubOuJMnxk0Qf+gy4zdd5sANTm+YtE5FAkIKhMYsa7vpq54qSuu2J1MAcu8ommccJepyQqXb81i3TgofS2r4RqJg9trLD8FK1shlYtOwn5Fu+RAdkrTWwm554tUDgvZMANGC7M0cro7scgd5YP3XxYDaDQRWpqcikDIZf+vXeCXGBE83oHUF7yPr6TEEsy4yHvTV2t6XSx+b5Fy9I+QhfuFYykxVBZrBCZsCPmtumB5XiNm2NOQNmeYKvFzyeguOlMqdv3RxH0Fyvb/PxmpWYJ1lnxivBX0HsQoGpTwWuEcFQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pb6wQ58kECY1I+U6SSmxvdp0wbHKaREq/oGLxzF32HA=;
+ b=hkJKUxkUmn2kt5FvNnTVpNZGEItCni3U8/m1EdG2CmxrgnvNjEyQHpFteYSgzJ+yPIn2DmW1Xv5sGgqW5QqrBCg9FC8WDtRxfkFGDQJbnzn39vfyucfVb1jk07l3n1yPFc8hHnVSaUNqsQx38YuIHzhPV3fOrfASi7msg8/ks+0Q3mnPH8WikTg6jQ0/6kTn7PKjCpX7veUC1bivWgFUOpRSSszCd6YPr81de4RNU7A9vqiKFy9b20ZOENAJWOKv6uiaLzNmZ/js7eeFdL9LeCLzft53p+DYgoyb/l2doqXph3iKjdf90jh628Mrvc8inbdVyus6xBDxXyaMKH2RkQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pb6wQ58kECY1I+U6SSmxvdp0wbHKaREq/oGLxzF32HA=;
+ b=RetwhDemGZNhDNjR0/B9XO9pHbvHGDSgn0BArWmsFyFMBpAgwAp06QRkjS/AriEP43qSbE4cKI9TJQ/CkSpKq8FkMAN4KDK2T6+WgHDmBqIBAHDNIq3dJmbzScaKCH7IRhwufAirONpwDcc6/XLafL4D2ej98xpUwaVpNdddJdk=
+Received: from DM6PR15MB3210.namprd15.prod.outlook.com (20.179.48.219) by
+ DM6PR15MB3657.namprd15.prod.outlook.com (10.141.166.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.18; Thu, 17 Oct 2019 17:12:50 +0000
+Received: from DM6PR15MB3210.namprd15.prod.outlook.com
+ ([fe80::cc98:c18d:1e80:b856]) by DM6PR15MB3210.namprd15.prod.outlook.com
+ ([fe80::cc98:c18d:1e80:b856%7]) with mapi id 15.20.2347.023; Thu, 17 Oct 2019
+ 17:12:50 +0000
+From:   Martin Lau <kafai@fb.com>
+To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+CC:     "linux-kernel@lists.codethink.co.uk" 
+        <linux-kernel@lists.codethink.co.uk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: bpf: type fixes for __be16/__be32
+Thread-Topic: [PATCH] net: bpf: type fixes for __be16/__be32
+Thread-Index: AQHVhBM2W//eT1DINk23xn+IqGSGKadfFAuA
+Date:   Thu, 17 Oct 2019 17:12:50 +0000
+Message-ID: <20191017171247.3yjbepx3jzs4zort@kafai-mbp.dhcp.thefacebook.com>
+References: <20191016111635.20089-1-ben.dooks@codethink.co.uk>
+In-Reply-To: <20191016111635.20089-1-ben.dooks@codethink.co.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR1701CA0001.namprd17.prod.outlook.com
+ (2603:10b6:301:14::11) To DM6PR15MB3210.namprd15.prod.outlook.com
+ (2603:10b6:5:163::27)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::1:ee07]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e232720c-252e-4746-1ba8-08d753253d4c
+x-ms-traffictypediagnostic: DM6PR15MB3657:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR15MB36574FAFF58A6DA9586733B5D56D0@DM6PR15MB3657.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:200;
+x-forefront-prvs: 01930B2BA8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(376002)(346002)(396003)(366004)(136003)(189003)(199004)(9686003)(54906003)(46003)(5660300002)(14444005)(6512007)(256004)(86362001)(316002)(99286004)(25786009)(6916009)(229853002)(446003)(476003)(52116002)(486006)(11346002)(478600001)(14454004)(6486002)(305945005)(7736002)(6436002)(76176011)(102836004)(66556008)(66476007)(64756008)(66446008)(6246003)(6116002)(66946007)(4326008)(1076003)(8676002)(81156014)(81166006)(71190400001)(71200400001)(8936002)(386003)(6506007)(186003)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR15MB3657;H:DM6PR15MB3210.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: QvZzgJid9cvf7wkd9TQ3viHoIDLRfQiXUadJu6p8n81wHE1KhEwhNIytGs/vLKKinW0YXokHRM3roBd1k8N36pvo3N8MbtIH64Y7uuLuJUSfnW1VucY81QqdRcID2+oQf2kicMnhjDimWtVrejNBDAvDT5JYLYtG/mMvHZvawbVL6l8u57Aqcu/Nt0caXTMn1pya1mqDz6x9BpzFiAH7SxTNF6F5w01kJ+lloxL3cYFjGHX9mn8TeX1WY/+7PsVVF/3I62bgLLX0wtqAAf/Pna6jZES5M9xttMuHIqdBeeqQNTKT6Y/zUpwpayiVi6fB0Q0k0r6tUl5bi9A11kAxeCg9gdFYAUZk5ZeQOTGKkMj6RzzrjSracgS/Dtbup65CdQnMsUQXdILX2kvkmxFM5eXSaXNyFTApgHkeDtMDdm8=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <45438FE95DB0104D83D9B560BE073214@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="h31gzZEtNLTqOjlF"
-Content-Disposition: inline
-In-Reply-To: <265d9be5-217d-3f67-ba94-095efdcf5787@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e232720c-252e-4746-1ba8-08d753253d4c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Oct 2019 17:12:50.5736
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hxKP3BNRiRRpNns/6kQO4pMPW8Ptt4Nv/Es9DS1c6EfZixQfXb/BlVv1sbKRqXXf
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR15MB3657
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-17_05:2019-10-17,2019-10-17 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=628
+ clxscore=1011 spamscore=0 impostorscore=0 priorityscore=1501
+ lowpriorityscore=0 suspectscore=0 malwarescore=0 adultscore=0 bulkscore=0
+ mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910170154
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---h31gzZEtNLTqOjlF
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 08:48 Thu 17 Oct 2019, Randy Dunlap wrote:
->On 10/17/19 3:25 AM, Bhaskar Chowdhury wrote:
->> This patch will provide the missing value for NM variable.
->>=20
->
->Hi,
->
->Does this patch fix some build error that you have encountered?
->If so, please describe it and how to cause it.
->
-Okay, I tried to do that ,the script spit out not finding the nm.
-Now, the sole reason being I misread it in the first place.
->
->> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
->> ---
->> TO all,
->> Adjusted the subject line, missed in previous one,sorry
->>=20
->>  scripts/mksysmap | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>=20
->> diff --git a/scripts/mksysmap b/scripts/mksysmap
->> index a35acc0d0b82..4b2f45c45f14 100755
->> --- a/scripts/mksysmap
->> +++ b/scripts/mksysmap
->> @@ -40,5 +40,5 @@
->>  # 'W' or 'w'. __crc_ are 'A' and placed in the middle
->>  # so we just ignore them to let readprofile continue to work.
->>  # (At least sparc64 has __crc_ in the middle).
->> -
->> +NM=3D$(which nm)
->
->That's not the POSIX way to do that.  It should be
->
->NM=3D$(command -v nm)
->
->But why is this needed at all?
->The top-level Makefile exports the NM variable (and many more) to scripts
->that it calls.
->
-Misread it.=20
->>  $NM -n $1 | grep -v '\( [aNUw] \)\|\(__crc_\)\|\( \$[adt]\)\|\( .L\)' >=
- $2
->> --
->> 2.21.0
->>=20
->
-Sorry about the noise. Thanks Randy for catch up lackluster stuff.
->
->--=20
->~Randy
->
-
---h31gzZEtNLTqOjlF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl2ooGoACgkQsjqdtxFL
-KRX5ywf+K6wUurRjCH9BENWJSsb7+xvmm88Qlg8XtNNjsZYa3GhJXwkVRJulTqqJ
-m9GKTCgwx+amP60CNSUjYguBfE/sUDVEBATsVKjHMz0ieosNVZwVvKoAQzhW8TXH
-TcmWvWnrr4cX4QmTc/4gAkfuLz2rnWg+jbtv/pOmvnaQ582VXCbyKJiXQJnVLT0A
-5GUJJdeDm/UGWTaR3pzdOz/yXLK+2YdEWH40aSTkQOVey29EjepW5tweMbOe9Rvd
-eSoDEhlYBVYEkwTids77GJjVQNKACSqPBEFD7+RYci1TiHvRx4PqP9RFCPxycdjA
-RgIBvteYuc432yRZBfQV9VZFxegsHw==
-=ZXiZ
------END PGP SIGNATURE-----
-
---h31gzZEtNLTqOjlF--
+On Wed, Oct 16, 2019 at 12:16:35PM +0100, Ben Dooks (Codethink) wrote:
+> In bpf_skb_load_helper_8_no_cache and
+> bpf_skb_load_helper_16_no_cache they
+> read a u16/u32 where actually these
+> are __be16 and __be32.
+>=20
+> Fix the following by making the types
+> match:
+>=20
+> net/core/filter.c:215:32: warning: cast to restricted __be16
+> net/core/filter.c:215:32: warning: cast to restricted __be16
+> net/core/filter.c:215:32: warning: cast to restricted __be16
+> net/core/filter.c:215:32: warning: cast to restricted __be16
+> net/core/filter.c:215:32: warning: cast to restricted __be16
+> net/core/filter.c:215:32: warning: cast to restricted __be16
+> net/core/filter.c:215:32: warning: cast to restricted __be16
+> net/core/filter.c:215:32: warning: cast to restricted __be16
+> net/core/filter.c:242:32: warning: cast to restricted __be32
+> net/core/filter.c:242:32: warning: cast to restricted __be32
+> net/core/filter.c:242:32: warning: cast to restricted __be32
+> net/core/filter.c:242:32: warning: cast to restricted __be32
+> net/core/filter.c:242:32: warning: cast to restricted __be32
+> net/core/filter.c:242:32: warning: cast to restricted __be32
+> net/core/filter.c:242:32: warning: cast to restricted __be32
+> net/core/filter.c:242:32: warning: cast to restricted __be32
+> net/core/filter.c:242:32: warning: cast to restricted __be32
+> net/core/filter.c:242:32: warning: cast to restricted __be32
+> net/core/filter.c:242:32: warning: cast to restricted __be32
+> net/core/filter.c:242:32: warning: cast to restricted __be32
+Acked-by: Martin KaFai Lau <kafai@fb.com>
