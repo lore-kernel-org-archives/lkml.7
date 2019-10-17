@@ -2,104 +2,249 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A78CECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED60ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62CC321835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB8AD21835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:12:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="lfbQyMAI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441504AbfJQTMA (ORCPT
+        id S2503432AbfJQTMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 15:12:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41848 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727646AbfJQTL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 15:11:59 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9E97B307D985;
-        Thu, 17 Oct 2019 19:11:58 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-123-81.rdu2.redhat.com [10.10.123.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 45D23600C8;
-        Thu, 17 Oct 2019 19:11:56 +0000 (UTC)
-Subject: Re: [PATCH 3/3] pci: Default to PCI_MSI_IRQ_DOMAIN
-To:     Palmer Dabbelt <palmer@sifive.com>,
-        Christoph Hellwig <hch@infradead.org>, michal.simek@xilinx.com,
-        helgaas@kernel.org
-Cc:     tony.luck@intel.com, fenghua.yu@intel.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, bhelgaas@google.com, will@kernel.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        kstewart@linuxfoundation.org, pbonzini@redhat.com,
-        firoz.khan@linaro.org, yamada.masahiro@socionext.com,
-        mingo@kernel.org, peterz@infradead.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-pci@vger.kernel.org
-References: <20191017181937.7004-1-palmer@sifive.com>
- <20191017181937.7004-4-palmer@sifive.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <38389bfa-3fb2-c941-9f9d-0fa573112c58@redhat.com>
-Date:   Thu, 17 Oct 2019 15:11:55 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 17 Oct 2019 15:12:40 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:51818 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727646AbfJQTMk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 15:12:40 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 58AE8500;
+        Thu, 17 Oct 2019 21:12:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1571339557;
+        bh=jQ9V6h0zWeyYaW8Zmk583wMAV/6WliM+8g0QtQHxVk4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lfbQyMAILzbxcx9/aX4CFOhwbZXjiuliYqjhde1uihy0pYkQQ3OROLGezklFjHvAY
+         HMrkFUL6wogLc0uUIrEDyrpaqfYEzw/rFU+zAiUeMmspYVdKixWmxcg1yNak9MWaFg
+         +7eiZJPEI089aTB0FouTrq0Leoc28TwU01LvMY2c=
+Date:   Thu, 17 Oct 2019 22:12:33 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli+renesas@fpond.eu, airlied@linux.ie,
+        daniel@ffwll.ch, linux-renesas-soc@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6.1 5/8] drm: rcar-du: crtc: Control CMM operations
+Message-ID: <20191017191233.GG4901@pendragon.ideasonboard.com>
+References: <20191016085548.105703-6-jacopo+renesas@jmondi.org>
+ <20191017134409.535740-1-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-In-Reply-To: <20191017181937.7004-4-palmer@sifive.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 17 Oct 2019 19:11:59 +0000 (UTC)
+Content-Disposition: inline
+In-Reply-To: <20191017134409.535740-1-jacopo+renesas@jmondi.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/17/19 2:19 PM, Palmer Dabbelt wrote:
-> As far as I can tell, the only reason there was an architecture
-> whitelist for PCI_MSI_IRQ_DOMAIN is because it requires msi.h.  I've
-> built this for all the architectures that play nice with make.cross, but
-> I haven't boot tested it anywhere.
->
-> Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
+Hi Jacopo,
+
+Thank you for the patch.
+
+On Thu, Oct 17, 2019 at 03:44:09PM +0200, Jacopo Mondi wrote:
+> Implement CMM handling in the crtc begin and enable atomic callbacks,
+> and enable CMM unit through the Display Extensional Functions
+> register at group setup time.
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
 > ---
->  drivers/pci/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index a304f5ea11b9..77c1428cd945 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -52,7 +52,7 @@ config PCI_MSI
->  	   If you don't know what to do here, say Y.
->  
->  config PCI_MSI_IRQ_DOMAIN
-> -	def_bool ARC || ARM || ARM64 || X86 || RISCV
-> +	def_bool y
->  	depends on PCI_MSI
->  	select GENERIC_MSI_IRQ_DOMAIN
->  
+> v6 -> v6.1
+> - Drop check for CMM in rcar_du_cmm_check as if the gamma_table property is
+>   available, a CMM unit for this CRTC was registered
+> - Add TODO note to investigate how the activation order of CMM and CRTC
+>   impact on the first displayed fram
 
-The linking of asm-generic/msi.h is currently enabled for
+Thank you :-)
 
-./arch/powerpc/include/asm/Kbuild:generic-y += msi.h
-./arch/arm/include/asm/Kbuild:generic-y += msi.h
-./arch/mips/include/asm/Kbuild:generic-y += msi.h
-./arch/riscv/include/asm/Kbuild:generic-y += msi.h
-./arch/arc/include/asm/Kbuild:generic-y += msi.h
-./arch/arm64/include/asm/Kbuild:generic-y += msi.h
-./arch/sparc/include/asm/Kbuild:generic-y += msi.h
+> ---
+> 
+>  drivers/gpu/drm/rcar-du/rcar_du_crtc.c  | 61 +++++++++++++++++++++++++
+>  drivers/gpu/drm/rcar-du/rcar_du_group.c | 10 ++++
+>  drivers/gpu/drm/rcar-du/rcar_du_regs.h  |  5 ++
+>  3 files changed, 76 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> index 23f1d6cc1719..3f0f16946f42 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> @@ -21,6 +21,7 @@
+>  #include <drm/drm_plane_helper.h>
+>  #include <drm/drm_vblank.h>
+> 
+> +#include "rcar_cmm.h"
+>  #include "rcar_du_crtc.h"
+>  #include "rcar_du_drv.h"
+>  #include "rcar_du_encoder.h"
+> @@ -474,6 +475,45 @@ static void rcar_du_crtc_wait_page_flip(struct rcar_du_crtc *rcrtc)
+>  	rcar_du_crtc_finish_page_flip(rcrtc);
+>  }
+> 
+> +/* -----------------------------------------------------------------------------
+> + * Color Management Module (CMM)
+> + */
+> +
+> +static int rcar_du_cmm_check(struct drm_crtc *crtc,
+> +			     struct drm_crtc_state *state)
+> +{
+> +	struct drm_property_blob *drm_lut = state->gamma_lut;
+> +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+> +	struct device *dev = rcrtc->dev->dev;
+> +
+> +	if (!drm_lut)
+> +		return 0;
+> +
+> +	/* We only accept fully populated LUT tables. */
+> +	if (drm_color_lut_size(drm_lut) != CM2_LUT_SIZE) {
+> +		dev_err(dev, "invalid gamma lut size: %lu bytes\n",
+> +			drm_lut->length);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void rcar_du_cmm_setup(struct drm_crtc *crtc)
+> +{
+> +	struct drm_property_blob *drm_lut = crtc->state->gamma_lut;
+> +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+> +	struct rcar_cmm_config cmm_config = {};
+> +
+> +	if (!rcrtc->cmm)
+> +		return;
+> +
+> +	if (drm_lut)
+> +		cmm_config.lut.table = (struct drm_color_lut *)drm_lut->data;
+> +
+> +	rcar_cmm_setup(rcrtc->cmm, &cmm_config);
+> +}
+> +
+>  /* -----------------------------------------------------------------------------
+>   * Start/Stop and Suspend/Resume
+>   */
+> @@ -619,6 +659,9 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
+>  	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+>  		rcar_du_vsp_disable(rcrtc);
+> 
+> +	if (rcrtc->cmm)
+> +		rcar_cmm_disable(rcrtc->cmm);
+> +
+>  	/*
+>  	 * Select switch sync mode. This stops display operation and configures
+>  	 * the HSYNC and VSYNC signals as inputs.
+> @@ -642,6 +685,11 @@ static int rcar_du_crtc_atomic_check(struct drm_crtc *crtc,
+>  {
+>  	struct rcar_du_crtc_state *rstate = to_rcar_crtc_state(state);
+>  	struct drm_encoder *encoder;
+> +	int ret;
+> +
+> +	ret = rcar_du_cmm_check(crtc, state);
+> +	if (ret)
+> +		return ret;
+> 
+>  	/* Store the routes from the CRTC output to the DU outputs. */
+>  	rstate->outputs = 0;
+> @@ -667,6 +715,8 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
+>  	struct rcar_du_crtc_state *rstate = to_rcar_crtc_state(crtc->state);
+>  	struct rcar_du_device *rcdu = rcrtc->dev;
+> 
+> +	if (rcrtc->cmm)
+> +		rcar_cmm_enable(rcrtc->cmm);
+>  	rcar_du_crtc_get(rcrtc);
+> 
+>  	/*
+> @@ -686,6 +736,13 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
+>  	}
+> 
+>  	rcar_du_crtc_start(rcrtc);
+> +
+> +	/*
+> +	 * TODO: The chip manual indicates that CMM tables should be written
+> +	 * after the DU channel has been activated. Investigate the impact
+> +	 * of this restriction on the first displayed frame.
+> +	 */
+> +	rcar_du_cmm_setup(crtc);
+>  }
+> 
+>  static void rcar_du_crtc_atomic_disable(struct drm_crtc *crtc,
+> @@ -739,6 +796,10 @@ static void rcar_du_crtc_atomic_begin(struct drm_crtc *crtc,
+>  	 */
+>  	rcar_du_crtc_get(rcrtc);
+> 
+> +	/* If the active state changed, we let .atomic_enable handle CMM. */
+> +	if (crtc->state->color_mgmt_changed && !crtc->state->active_changed)
+> +		rcar_du_cmm_setup(crtc);
+> +
+>  	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+>  		rcar_du_vsp_atomic_begin(rcrtc);
+>  }
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.c b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> index 9eee47969e77..88a783ceb3e9 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> @@ -135,6 +135,7 @@ static void rcar_du_group_setup_didsr(struct rcar_du_group *rgrp)
+>  static void rcar_du_group_setup(struct rcar_du_group *rgrp)
+>  {
+>  	struct rcar_du_device *rcdu = rgrp->dev;
+> +	u32 defr7 = DEFR7_CODE;
+> 
+>  	/* Enable extended features */
+>  	rcar_du_group_write(rgrp, DEFR, DEFR_CODE | DEFR_DEFE);
+> @@ -147,6 +148,15 @@ static void rcar_du_group_setup(struct rcar_du_group *rgrp)
+> 
+>  	rcar_du_group_setup_pins(rgrp);
+> 
+> +	/*
+> +	 * TODO: Handle routing of the DU output to CMM dynamically, as we
+> +	 * should bypass CMM completely when no color management feature is
+> +	 * used.
+> +	 */
+> +	defr7 |= (rgrp->cmms_mask & BIT(1) ? DEFR7_CMME1 : 0) |
+> +		 (rgrp->cmms_mask & BIT(0) ? DEFR7_CMME0 : 0);
+> +	rcar_du_group_write(rgrp, DEFR7, defr7);
+> +
+>  	if (rcdu->info->gen >= 2) {
+>  		rcar_du_group_setup_defr8(rgrp);
+>  		rcar_du_group_setup_didsr(rgrp);
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_regs.h b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> index bc87f080b170..fb9964949368 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> @@ -197,6 +197,11 @@
+>  #define DEFR6_MLOS1		(1 << 2)
+>  #define DEFR6_DEFAULT		(DEFR6_CODE | DEFR6_TCNE1)
+> 
+> +#define DEFR7			0x000ec
+> +#define DEFR7_CODE		(0x7779 << 16)
+> +#define DEFR7_CMME1		BIT(6)
+> +#define DEFR7_CMME0		BIT(4)
+> +
+>  /* -----------------------------------------------------------------------------
+>   * R8A7790-only Control Registers
+>   */
 
-Your patchset adds 2 more and x86 has its own asm/msi.h. That leads to a
-total of 10 archs, but there are 37 sub-directories under arch. It is
-possible that the other architectures don't have PCI_MSI set. Still it
-may be a bit risky to set it to "def_bool y".
+-- 
+Regards,
 
-Cheers,
-Longman
-
+Laurent Pinchart
