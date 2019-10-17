@@ -2,104 +2,84 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BA3FA3728
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DB0ECE599
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F36382053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:39:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o3f848n8"
+	by mail.kernel.org (Postfix) with ESMTP id CB07821925
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:42:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407302AbfJQCjl (ORCPT
+        id S2407323AbfJQCmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 22:39:41 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38001 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388036AbfJQCjl (ORCPT
+        Wed, 16 Oct 2019 22:42:02 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:36581 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388198AbfJQCmB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 22:39:41 -0400
-Received: by mail-pf1-f196.google.com with SMTP id h195so615902pfe.5
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 19:39:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zEFefyCYvjEsaVVPS2qn/8n4VOwk3cwSj8+ZMD6emik=;
-        b=o3f848n8kbDlHt5KBM6BXMuHOO1zMriF51e1YO2oquFVRSWl+42FqCRhHdlFOXs7E0
-         htfMHEtwXke3pWQMe0kQgl6GMwdSrOkuxPtkfvRV89PfS3/EY4I75fKsxwaf3y9gYAlE
-         HmN0NiMJRG4aiPIY0LIKOsrh1jjJBu+OMahIjB2n9NpdGqPoYZhAFyWwfkQGJYL49Y44
-         rNHpgMSIHpFvnG5A/nma2/D+350Oja329tWqeeKTUtm9yBmO6qJ0mELVvJvMOjE3XMzX
-         VEJ4yem+QkGzr0CxIRcyXz70mSKzXXqVD/ny5ci01XHOqTAcuBH6elHvn9lcjLcY+3vK
-         6zEw==
+        Wed, 16 Oct 2019 22:42:01 -0400
+Received: by mail-io1-f72.google.com with SMTP id g126so1246989iof.3
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 19:42:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zEFefyCYvjEsaVVPS2qn/8n4VOwk3cwSj8+ZMD6emik=;
-        b=mkjXP1uFMw7IAlSdQETM4NGT2cKyNybYI0rcRew6x39m5O5q01ityw0CQt0IsXB3ap
-         XqJXXXfWvK8+KNcrjXzVZtnzJoTLbpH/8uLcVAA5Y2SM9jM+PTXfwUYGRCzkqy8Lhq1/
-         OV8WyHxjpNXYbOeyzKm/cinqPDVMdpOLsG1uENEAjQfPaWKPo3ZNHRxXj0p5eOgM0WUu
-         1pNOPl3tvP7IH3gxF6xD1RjLiXxYgvSNV5XdTw2f3MHE2tqrlZm26OkzaeuBs2kzhzrZ
-         g6bnz+cb1Ms8nQYAugp12XwrWIpc0TvLu1lD/p//EgRnkm6Vtw4yiKU6N51z19SNIxEi
-         jjvw==
-X-Gm-Message-State: APjAAAWyIAHvrjlnfYD8YtMAx9wTdP7CBVQOKipcXlAJ7PTJ9TLZO1XG
-        L0cjg0GArSm6gZfsOEMSogVnYw==
-X-Google-Smtp-Source: APXvYqzdrRZBIUMnzPMVc2UOR1CHHTWtq4YXpulhQnyUqCEvFi6i5kz49j3bwFbo8NvjTfpRESnM7Q==
-X-Received: by 2002:aa7:970b:: with SMTP id a11mr972230pfg.37.1571279979302;
-        Wed, 16 Oct 2019 19:39:39 -0700 (PDT)
-Received: from localhost ([122.172.151.112])
-        by smtp.gmail.com with ESMTPSA id z12sm494571pfj.41.2019.10.16.19.39.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 16 Oct 2019 19:39:38 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 08:09:36 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] cpufreq: merge arm_big_little and vexpress-spc
-Message-ID: <20191017023936.vgkdfnyaz3r4k74z@vireshk-i7>
-References: <20191016110344.15259-1-sudeep.holla@arm.com>
- <20191016110344.15259-3-sudeep.holla@arm.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=7h0gQqNrYRzsWj9R4CAYCu9XOxzaPAZTOTXlm38+fvI=;
+        b=fOtYvrvlmA4cuYHd9VyqCVPLLSTW3hl3qdY63NBsTwmDvj2bBNWmQhVPBjcdMVmt2i
+         8ZgjQIlfVvSsH1q3ys3qOA+FZEwpGSfDhaHXpdMKcpDSwysTTQwPLlmEKQzkTec8l8DP
+         WTHV51dEJMz2ykqUTc510QX/Czby3qCKEb2OOTT9+4urgOmLkrsH3oynuvV4n1ijoYD/
+         40delF9Ecv4mCUIfz4rS745hZmUtBVeeh3/s+ey6UdhGlAbnl8E00PD5OoayVTTjxu3x
+         uw1Egx9+wjgNhlELax7KtdtCgy4KHp8v8CS2E/uBzoYBnrT2svsmttSle1Q4czSEsmN+
+         qYFQ==
+X-Gm-Message-State: APjAAAXUZPkJb4Ht83iS4irkSrnXh4p4UTmhYrbhbBf9zYez2EFe5y20
+        XNBPkkw63fTJ5WOaChWeZZW+WKz9ngId1uzQ58X6O57jN+Xs
+X-Google-Smtp-Source: APXvYqxm/PZKRcr2VOn2bSEPROOTxJZd4s/gFYz6yxRyhamcXwHcbHmC0uB12SwLAgbX/bUP1WUzw8YXMpgkcwGIQdZ6LiO9FDXe
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191016110344.15259-3-sudeep.holla@arm.com>
-User-Agent: NeoMutt/20180716-391-311a52
+X-Received: by 2002:a92:3b8b:: with SMTP id n11mr1162464ilh.135.1571280120830;
+ Wed, 16 Oct 2019 19:42:00 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 19:42:00 -0700
+In-Reply-To: <000000000000830fe50595115344@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000071e2fc05951229ad@google.com>
+Subject: Re: WARNING: refcount bug in find_key_to_update
+From:   syzbot <syzbot+6455648abc28dbdd1e7f@syzkaller.appspotmail.com>
+To:     aou@eecs.berkeley.edu, dhowells@redhat.com,
+        jarkko.sakkinen@linux.intel.com, jmorris@namei.org,
+        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        linux-security-module@vger.kernel.org, palmer@sifive.com,
+        serge@hallyn.com, syzkaller-bugs@googlegroups.com,
+        torvalds@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16-10-19, 12:03, Sudeep Holla wrote:
-> arm_big_little cpufreq driver was designed as a generic big little
-> driver that could be used by any platform and make use of bL switcher.
-> Over years alternate solutions have be designed and merged to deal with
-> bL/HMP systems like EAS.
-> 
-> Also since no other driver made use of generic arm_big_little cpufreq
-> driver except Vexpress SPC, we can merge them together as vexpress-spc
-> driver used only on Vexpress TC2(CA15_CA7) platform.
-> 
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  MAINTAINERS                            |   5 +-
->  drivers/cpufreq/Kconfig.arm            |  12 +-
->  drivers/cpufreq/Makefile               |   2 -
->  drivers/cpufreq/arm_big_little.c       | 658 ------------------------
->  drivers/cpufreq/arm_big_little.h       |  43 --
->  drivers/cpufreq/vexpress-spc-cpufreq.c | 661 ++++++++++++++++++++++++-
->  6 files changed, 652 insertions(+), 729 deletions(-)
->  delete mode 100644 drivers/cpufreq/arm_big_little.c
->  delete mode 100644 drivers/cpufreq/arm_big_little.h
+syzbot has bisected this bug to:
 
-The delta produced here is enormous probably because you copy/pasted things. I
-am wondering if using git mv to rename arm_big_little.c and then move spc bits
-into it will make this delta smaller to review ?
+commit 0570bc8b7c9b41deba6f61ac218922e7168ad648
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu Jul 18 19:26:59 2019 +0000
 
--- 
-viresh
+     Merge tag 'riscv/for-v5.3-rc1' of  
+git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11b6e2bb600000
+start commit:   bc88f85c kthread: make __kthread_queue_delayed_work static
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=13b6e2bb600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=15b6e2bb600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e0ac4d9b35046343
+dashboard link: https://syzkaller.appspot.com/bug?extid=6455648abc28dbdd1e7f
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11c8adab600000
+
+Reported-by: syzbot+6455648abc28dbdd1e7f@syzkaller.appspotmail.com
+Fixes: 0570bc8b7c9b ("Merge tag 'riscv/for-v5.3-rc1' of  
+git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
