@@ -2,69 +2,87 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9DCFA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 15:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB40ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 15:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D50A20872
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 15:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 544E5214E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 15:13:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571325184;
+	bh=A8/m6M9HuLwlYyb2KQGcVx13RvCHJI/AJoj8RynabGc=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=oN9zlLo1MGXUa3ebaBHitKAd/w3CgJSbycVLTgPws0RSmq/7hFstCGCDY7Mj0q9bt
+	 MgVGOIVWQCTqitbceSGOF47+MRVDhWnCseuajq74N/yGFXLp/j1EJnbP5Y2rEt7+tC
+	 TQQj2EEx48VwCVNI8iHa2byd6VISphdA6IQnSDWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409451AbfJQPLI (ORCPT
+        id S2404423AbfJQPNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 11:11:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60122 "EHLO mail.kernel.org"
+        Thu, 17 Oct 2019 11:13:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727600AbfJQPLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 11:11:08 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1732650AbfJQPNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 11:13:02 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 313DB20820;
-        Thu, 17 Oct 2019 15:11:07 +0000 (UTC)
-Date:   Thu, 17 Oct 2019 11:11:01 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Vegard Nossum <vegard.nossum@oracle.com>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Pratyush Yadav <me@yadavpratyush.com>,
-        workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        Eric Wong <e@80x24.org>
-Subject: Re: email as a bona fide git transport
-Message-ID: <20191017111101.1456faaf@gandalf.local.home>
-In-Reply-To: <507d7293-964a-048b-2de6-98e7e7982cfb@oracle.com>
-References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
-        <20191016150020.cr6jgfpd2c6fyg7t@yadavpratyush.com>
-        <a1c33600-14e6-be37-c026-8d8b8e4bad92@oracle.com>
-        <20191017131140.GG25548@mit.edu>
-        <507d7293-964a-048b-2de6-98e7e7982cfb@oracle.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F40B20820;
+        Thu, 17 Oct 2019 15:13:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571325181;
+        bh=A8/m6M9HuLwlYyb2KQGcVx13RvCHJI/AJoj8RynabGc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=MOP4lGJ81hYnZbhibH+BSl6KGk3lD4yUSr8mDfuID99CiWijd0RTYRcJeZYmFDHCp
+         krFLJfraPEROltP9j3MP7nhLAowjTr4GCQNBSSiQ+pB1bDWWOjwKvUR6RPOiYzjgJ2
+         5bWQ4Rj6uRWBUO/0zummQmeScoU2Z6CEc+8+7qHw=
+Subject: Re: [PATCH 5.3 000/112] 5.3.7-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20191016214844.038848564@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <acdb7f75-fa39-32ee-0e6d-ba0098a2ca35@kernel.org>
+Date:   Thu, 17 Oct 2019 09:13:00 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019 16:01:33 +0200
-Vegard Nossum <vegard.nossum@oracle.com> wrote:
+On 10/16/19 3:49 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.3.7 release.
+> There are 112 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri 18 Oct 2019 09:43:41 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.7-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-> In your example, couldn't Darrick simply base his xfs work on the latest
-> xfs branch that was pulled by Linus? That should be up to date with all
-> things xfs without having any of the things that made Linus's tree not
-> work for him.
+Compiled and booted on my test system. No dmesg regressions.
 
-Sure, but why?
-
-I thought this whole exercise is to make the process easier. This seems
-to be making it more complex. Now we are going to be demanding
-submitters to be basing their work on a specific (older) commit.
-
-I always tell people that submit to me, to base off of one of Linus's
-latest tags. That's what I do.
-
--- Steve
+thanks,
+-- Shuah
