@@ -2,100 +2,106 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA31ECE599
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C13ECE599
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4290A218DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:26:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="DPl0z3hl"
+	by mail.kernel.org (Postfix) with ESMTP id 3C23621925
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:27:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571279229;
+	bh=jyJMWrPWJgUkX+nFiCCYu/W+Q72iymLKiISBWzAG0ck=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=b34MeQwlV+b/NchP9/B/FOHBuarFZJYKnwHTaZsMJ7Gt6NHg2ADhs6oZvTvghPWTp
+	 Yb+CeDNhxtgY1jBiDHDcyJw26BmxDC3l9AA/nAKJlQ0HUByt/QLh7QrM2F0dKJK8Pd
+	 if4YK1LstNBsUkR+PEB4HByUqtvg6YN0FtKQ8uGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406633AbfJQC0c (ORCPT
+        id S2395350AbfJQC1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 22:26:32 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41183 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727328AbfJQC0b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 22:26:31 -0400
-Received: by mail-qt1-f195.google.com with SMTP id v52so1286043qtb.8
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 19:26:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QYYIz0DpXt+S96zKsPkYJbopZGRxz9flW9WuWLOogaQ=;
-        b=DPl0z3hlFDrtFfUjhG/QNSp37MnO5lnNjz+RDVaYKEe9dx44OSQaiUs6jPgU1mlu+d
-         GQCin+43NLsVlgi9RzYf+tI/v8b9tJjEPefiv3E2pYhpEp/PDLCDXOXBc48gTlgbGATs
-         0ZDFck9LGWXjDpiuxxN/KMfjk2ALdUgI6P2xLFRdBBCRKSkvrBWX7rxWV4d6qXRxf9Un
-         z2b5jV5twiUT24rOl6BJCgI1A0bAXsL8BSPuzwFH2MSOD2QVZaGw6E8KNPIHMd+IFlV4
-         mJ+1OEqgH/WqxY7vxSTcY4bGsgAVXkaOtc/BstJ24QyN0sm7QAWaa926M5fJWb3OLiC5
-         Dd4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QYYIz0DpXt+S96zKsPkYJbopZGRxz9flW9WuWLOogaQ=;
-        b=Bm5p5inp7iehC/e3+fodIdRdCXamdxjFjS7tH6jHvyR40B6G8BbKuFBpNsiy/prNwI
-         EEDvWA/slCp3tWjzJ5/iSd1621dk2oD/K4FYbw6dp5bQPSI7kEZBr83pkkF6W76P4dTz
-         9wWSfG/Cgh9q0a8UP2QHIY1X7aPKqt5gmV7NzgxIScJQv6YJkmIGTP4Z9OvSyqRsz+Ii
-         9NPdmBrhOImP2lrxh36HrL8KNFRr1vhFn0VEOS+vm4YmfjdkBpCHEqa9ppj7RSRJymCu
-         7XsVC63Rkbl0B9G9B3fatxBrfJ2nVfaT74Avrb+JLvDTfQOLciJEebBTXFvxtiTv1uuZ
-         mPcA==
-X-Gm-Message-State: APjAAAUvrmucT9luQZwqJzj5MNt0xOeqlh+9VXwxMN7HYIl3Ed+iup75
-        fnDZ+ibmGiAjMEx+El8O+BE/K2GjrQsY6rALYyyZLQ==
-X-Google-Smtp-Source: APXvYqyQj2ZLctUSSL3V9JNUsWb05JdfRipaPfh6FHbT8hGhFaGCyPxwpFtBc+PUDLv4I6g5Tcjv2ImmCdkpX+suV3c=
-X-Received: by 2002:a0c:c792:: with SMTP id k18mr1397138qvj.154.1571279189073;
- Wed, 16 Oct 2019 19:26:29 -0700 (PDT)
+        Wed, 16 Oct 2019 22:27:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48900 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389217AbfJQC1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 22:27:07 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82EF3218DE;
+        Thu, 17 Oct 2019 02:27:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571279226;
+        bh=jyJMWrPWJgUkX+nFiCCYu/W+Q72iymLKiISBWzAG0ck=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VJ40wKubdlpVLdGUsB0bnIi41pTho0dL70FLTLOoO8nvATt16RxGpwrzgzoEShUiP
+         EtCOUnDR0DxHrbwNGzHa4qiAht4XQdgz6DYj8gIu381zMi20qLtGzkQL3e0DHXueEs
+         pb75OJpTOlVC36awr0ypCikX47Kj/vqKvxc5kFrM=
+Date:   Wed, 16 Oct 2019 19:27:05 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     syzbot <syzbot+76a43f2b4d34cfc53548@syzkaller.appspotmail.com>,
+        akpm@osdl.org, deepa.kernel@gmail.com, hch@infradead.org,
+        jlayton@kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lkundrak@v3.sk,
+        syzkaller-bugs@googlegroups.com, tklauser@nuerscht.ch,
+        trond.myklebust@fys.uio.no
+Subject: Re: KASAN: use-after-free Read in mnt_warn_timestamp_expiry
+Message-ID: <20191017022705.GB1552@sol.localdomain>
+Mail-Followup-To: Al Viro <viro@zeniv.linux.org.uk>,
+        syzbot <syzbot+76a43f2b4d34cfc53548@syzkaller.appspotmail.com>,
+        akpm@osdl.org, deepa.kernel@gmail.com, hch@infradead.org,
+        jlayton@kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lkundrak@v3.sk,
+        syzkaller-bugs@googlegroups.com, tklauser@nuerscht.ch,
+        trond.myklebust@fys.uio.no
+References: <0000000000007f489b0595115374@google.com>
+ <20191017014755.GA1552@sol.localdomain>
+ <20191017015853.GR26530@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-References: <20191016015408.11091-1-chiu@endlessm.com>
-In-Reply-To: <20191016015408.11091-1-chiu@endlessm.com>
-From:   Chris Chiu <chiu@endlessm.com>
-Date:   Thu, 17 Oct 2019 10:26:18 +0800
-Message-ID: <CAB4CAwen5y7Z4GU7YgpVafyGexxaMDLzrZ949t9p+LiZ9TxAPA@mail.gmail.com>
-Subject: Re: [PATCH v2] rtl8xxxu: fix RTL8723BU connection failure issue after
- warm reboot
-To:     Jes Sorensen <Jes.Sorensen@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        David Miller <davem@davemloft.net>
-Cc:     linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191017015853.GR26530@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 9:54 AM Chris Chiu <chiu@endlessm.com> wrote:
->
-> The RTL8723BU has problems connecting to AP after each warm reboot.
-> Sometimes it returns no scan result, and in most cases, it fails
-> the authentication for unknown reason. However, it works totally
-> fine after cold reboot.
->
-> Compare the value of register SYS_CR and SYS_CLK_MAC_CLK_ENABLE
-> for cold reboot and warm reboot, the registers imply that the MAC
-> is already powered and thus some procedures are skipped during
-> driver initialization. Double checked the vendor driver, it reads
-> the SYS_CR and SYS_CLK_MAC_CLK_ENABLE also but doesn't skip any
-> during initialization based on them. This commit only tells the
-> RTL8723BU to do full initialization without checking MAC status.
->
-> Signed-off-by: Chris Chiu <chiu@endlessm.com>
-Signed-off-by: Jes Sorensen <Jes.Sorensen@gmail.com>
+On Thu, Oct 17, 2019 at 02:58:53AM +0100, Al Viro wrote:
+> On Wed, Oct 16, 2019 at 06:47:55PM -0700, Eric Biggers wrote:
+> > On Wed, Oct 16, 2019 at 06:42:11PM -0700, syzbot wrote:
+> > > ==================================================================
+> > > BUG: KASAN: use-after-free in mnt_warn_timestamp_expiry+0x4a/0x250
+> > > fs/namespace.c:2471
+> > > Read of size 8 at addr ffff888099937328 by task syz-executor.1/18510
+> > > 
+> > 
+> > Looks like a duplicate of this:
+> > 
+> > #syz dup: KASAN: use-after-free Read in do_mount
+> > 
+> > See the existing thread and proposed fix here:
+> > https://lkml.kernel.org/linux-fsdevel/000000000000805e5505945a234b@google.com/T/#u
+> 
+> FWIW, I'd go with your "move mnt_warn_timestamp_expiry() up".  However,
+> I'd probably turn the message into something like
+> 	foofs filesystem getting mounted at /mnt/barf supports...
+> And s/mounted/reconfigured/ if mnt_has_parent(mnt) is already true.
+> 
+> Objections?
+> 
 
-Sorry, I forgot to add Jes.
+How about the following?
 
-Chris
-> ---
->
-> Note:
->   v2: fix typo of commit message
->
->
+	pr_warn("%s filesystem being %s at %s supports timestamps until %04ld (0x%llx)\n",
+		sb->s_type->name,
+		is_mounted(mnt) ? "remounted" : "mounted",
+		mntpath,
+		tm.tm_year+1900, (unsigned long long)sb->s_time_max);
+
+I think more people would understand "remounted" than "reconfigured".  Also,
+is_mounted(mnt) seems like a better choice than mnt_has_parent(real_mount(mnt)).
+
+- Eric
