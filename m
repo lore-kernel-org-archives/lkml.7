@@ -2,120 +2,84 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E81C7C4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 06:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA52BFA372B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 06:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3DF620872
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 06:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D68E20872
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 06:59:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407871AbfJQG5j (ORCPT
+        id S2407855AbfJQG7i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 02:57:39 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:32902 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392691AbfJQG5j (ORCPT
+        Thu, 17 Oct 2019 02:59:38 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44512 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392672AbfJQG7i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 02:57:39 -0400
-Received: by mail-oi1-f196.google.com with SMTP id a15so1272803oic.0;
-        Wed, 16 Oct 2019 23:57:38 -0700 (PDT)
+        Thu, 17 Oct 2019 02:59:38 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w6so1217015oie.11;
+        Wed, 16 Oct 2019 23:59:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DpbexsAaJKGXtyeEN5Jk64plg1Z6QAlcAhFxTzBWpB0=;
-        b=naRJZscLNaz8RRrCMCCL8mkDxUYxseHyq6ogcswZh+/E7vSWPvhag8UtsdrdDjgyPl
-         AHhMfUh59TRuMLHEYjYs88In29hgmczsHNNJNKtqy17Z/cV2ZpDpCed6hBKKyy3PJ4Xj
-         BKEjmwv5GOA+0dqI0w9xz2utwTi3iAjXk5mEHOKc4PRWiJPZBVmFeVsvPAvsWLcnGqnh
-         IOBv3ZC2wZTgwnk2Dl5lUgDpBX7gd/rUn+cQVkIF5rGQ3/Rqy7Cjc71suLnQfp/2zRQJ
-         K+cH/E5n5uFnib8ZKPaoh7Wffh5oTcoXxvy8tSLatLAF4jTcK5BSEX1oqyqVwM/7/VkR
-         rCNg==
-X-Gm-Message-State: APjAAAWMZCC2YHHwdt2UvQmhHAphG4QMikRUkzDvfRlb3JA3JToEocUg
-        r+4GansHalsXAEYoxfGnkIM5pbIghKzFeP08uPSHQ9gp
-X-Google-Smtp-Source: APXvYqxGTAoSZtd+rRjTloaWngnXATMJw7NKpZEz+zg6U/MMfMCAOds74hz/UbHuy8M4x5XoparCCZdaSLj4Qh7pGv4=
-X-Received: by 2002:a54:4e89:: with SMTP id c9mr1775447oiy.148.1571295458039;
- Wed, 16 Oct 2019 23:57:38 -0700 (PDT)
+        bh=lAM1QnlrpsM8TOCfZsHr08AYy86y8/SONo11Ddop3Cs=;
+        b=b+FAQWEbTlLRU9rkE6MK+AnnO8lChnKASzG5hTShbua64pCKYitUUdUwt3Cmg2Fzel
+         W8SYZCGE1qNsLfyt/LpxYcwaoBk1DFqT1++h0pw9Gn+CI0un7IFRQf60+p4pChvkfQGg
+         2lLPb83vTqbRmt0g2ENd+Xvtsnt6zdlvuQkFAtAxvQ6hZuKD4l/kwNfA+KkuZj6tlN9L
+         6QqNg9OgdyV1HruWECeCdIJQKxJrymOH3wbs98l3Un0zTYffDOOz0V2t0a0Ma7Esfai+
+         CL4tYlxlhNgTobQc0mhyufVLpS/cfIqWY9SQXw4XuylNDwruCYv202++Tyc0xBtvD6J9
+         Ft4A==
+X-Gm-Message-State: APjAAAVmbURUHw9vH/C54Q2Ang5hzV0Z/1abHNyoXd2eH6dPmm9mFVFE
+        L3ojn1j9URlUG2wpV1tjeDYmKhexaZRctpZBYOw=
+X-Google-Smtp-Source: APXvYqwCWIWA46c9+2ibu2lu2wxMYclDxWIc7LElIoklo6xwtdbTkcmnF9WWwh63zDbG9fhts78KRSf4tfIJNtTn9/0=
+X-Received: by 2002:aca:230c:: with SMTP id e12mr1755052oie.153.1571295577291;
+ Wed, 16 Oct 2019 23:59:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191015155044.11858-1-ben.dooks@codethink.co.uk>
- <20191016122656.3jpmes4rnz47u5wc@verge.net.au> <TYAPR01MB45440369B72F2C994CF8C85FD86D0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYAPR01MB45440369B72F2C994CF8C85FD86D0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <20191016143142.28854-1-geert+renesas@glider.be> <5da7a675.1c69fb81.a888.0911@mx.google.com>
+In-Reply-To: <5da7a675.1c69fb81.a888.0911@mx.google.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 17 Oct 2019 08:57:26 +0200
-Message-ID: <CAMuHMdWsRDyUh0MzYNX=mQuuPem1NxArFOqXGVAba3TWGEXxWg@mail.gmail.com>
-Subject: Re: [PATCH] usb: renesas_usbhs: fix __le16 warnings
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Simon Horman <horms@verge.net.au>
-Cc:     "linux-kernel@lists.codethink.co.uk" 
-        <linux-kernel@lists.codethink.co.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Date:   Thu, 17 Oct 2019 08:59:26 +0200
+Message-ID: <CAMuHMdXnTOaM+4SUkzpYXNeFbJtaG_kRzFLJRhVPCVNcOUB0qA@mail.gmail.com>
+Subject: Re: [PATCH] of: unittest: Use platform_get_irq_optional() for
+ non-existing interrupt
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shimoda-san, Simon,
+Hi Stephen,
 
-On Thu, Oct 17, 2019 at 4:18 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> > From: Simon Horman, Sent: Wednesday, October 16, 2019 9:27 PM
-> <snip>
-> > > diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
-> > > index 4c3de777ef6c..a3c30b609433 100644
-> > > --- a/drivers/usb/renesas_usbhs/common.c
-> > > +++ b/drivers/usb/renesas_usbhs/common.c
-> > > @@ -162,17 +162,17 @@ void usbhs_usbreq_get_val(struct usbhs_priv *priv, struct usb_ctrlrequest *req)
-> > >     req->bRequest           = (val >> 8) & 0xFF;
-> > >     req->bRequestType       = (val >> 0) & 0xFF;
-> > >
-> > > -   req->wValue     = usbhs_read(priv, USBVAL);
-> > > -   req->wIndex     = usbhs_read(priv, USBINDX);
-> > > -   req->wLength    = usbhs_read(priv, USBLENG);
-> > > +   req->wValue     = cpu_to_le16(usbhs_read(priv, USBVAL));
-> > > +   req->wIndex     = cpu_to_le16(usbhs_read(priv, USBINDX));
-> > > +   req->wLength    = cpu_to_le16(usbhs_read(priv, USBLENG));
-> >
-> > usbhs_read is backed by readl which performs
-> > a le->cpu conversion. Rather than have a double conversion
-> > perhaps it would be nicer to introduce usbhs_read_le.
-> > Likewise for write.
+On Thu, Oct 17, 2019 at 1:23 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> Quoting Geert Uytterhoeven (2019-10-16 07:31:42)
+> > diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> > index 9efae29722588a35..34da22f8b0660989 100644
+> > --- a/drivers/of/unittest.c
+> > +++ b/drivers/of/unittest.c
+> > @@ -1121,7 +1121,7 @@ static void __init of_unittest_platform_populate(void)
+> >                 np = of_find_node_by_path("/testcase-data/testcase-device2");
+> >                 pdev = of_find_device_by_node(np);
+> >                 unittest(pdev, "device 2 creation failed\n");
+> > -               irq = platform_get_irq(pdev, 0);
+> > +               irq = platform_get_irq_optional(pdev, 0);
+> >                 unittest(irq < 0 && irq != -EPROBE_DEFER,
 >
-> I'm afraid but, I could not understand these comments.
-> At the moment, the usbhs_{read,write}() call io{read,write}16(),
-> not {read,write}l().
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/usb/renesas_usbhs/common.c?h=v5.4-rc3#n62
+> This is a test to make sure that irq failure doesn't return probe defer.
+> Do we want to silence the error message that we're expecting to see?
 
-ioread16() and readw() don't do byteswapping on ARM, as ARM is
-little-endian. Likewise, cpu_to_le16() is a no-op on ARM.
-
-Double swapping would matter only on a big-endian platform, and could
-indeed be avoided by introducing usbhs_read_le*() functions that are
-just wrappers around __raw_read16() on big-endian.
-However, until the Renesas USBHS IP core ends up on a big-endian
-platform, it's not worth doing that, IMHO.
-
-> > >  }
-> > >
-> > >  void usbhs_usbreq_set_val(struct usbhs_priv *priv, struct usb_ctrlrequest *req)
-> > >  {
-> > >     usbhs_write(priv, USBREQ,  (req->bRequest << 8) | req->bRequestType);
-> > > -   usbhs_write(priv, USBVAL,  req->wValue);
-> > > -   usbhs_write(priv, USBINDX, req->wIndex);
-> > > -   usbhs_write(priv, USBLENG, req->wLength);
-> > > +   usbhs_write(priv, USBVAL,  le16_to_cpu(req->wValue));
-> > > +   usbhs_write(priv, USBINDX, le16_to_cpu(req->wIndex));
-> > > +   usbhs_write(priv, USBLENG, le16_to_cpu(req->wLength));
-> > >
-> > >     usbhs_bset(priv, DCPCTR, SUREQ, SUREQ);
-> > >  }
+I think so.  We're not interested in error messages for expected failures,
+only in error messages for unittest() failures.
 
 Gr{oetje,eeting}s,
 
