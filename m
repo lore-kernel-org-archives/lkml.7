@@ -2,102 +2,114 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7A5ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFCEECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6999B21D7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:39:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Z5ozsxrL"
+	by mail.kernel.org (Postfix) with ESMTP id D81AC21A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:39:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571323194;
+	bh=6yDr0nzGqN9IaEPUi4DC5yF42ak0SHvnWEte06OjSJc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=d0bnCPWZ499Fj3ar2p0zk+S3mJmBV5dxqvE8Zbg6wiBrxIoLJ4r+Wqp4JAUDm8fLN
+	 tfyzrldf4KfAbH1JahZ/f3heWUkLpqU6fH37z8/NGZIysFyHS7Qk7YJitvGvaVKPye
+	 +EumXL27S8J4fMaIJrmCmY5acOlAA3IW0RVywfyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406416AbfJQOjS (ORCPT
+        id S2406526AbfJQOjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 10:39:18 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41346 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403882AbfJQOjS (ORCPT
+        Thu, 17 Oct 2019 10:39:53 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35474 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403882AbfJQOjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:39:18 -0400
-Received: by mail-qt1-f193.google.com with SMTP id c17so893991qtn.8
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 07:39:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=iPv4xGfmhNBcAudJ2m+U/PKGMmIbhs2/YkiMhF6fFPc=;
-        b=Z5ozsxrLAow7bEU7nWG80R2CgeNG8zQPVzUL28MShaR4HDycfhOGCi8NaffDyAPvgD
-         AIybmU8gw9TlH06J5Nu25r9iEAEFg/z7wjCu9bDYmbUcoBXw+plOlzkljXN+iUpVrvHe
-         PGlPrqiGayV2ryqP8DJu8SMiX8/842fiXxbfVj52XoDzxXNqvWQJbkq3yn2W8ZI2jG4n
-         DE2brcxf0FTMIcjPOygTmldJbycUwHlOhn1WI5Ac8dbJ3kAOm7ECVCqI30SsiNMJO0Te
-         /3WwkxredcNT8VESSObYg2jVa3gZ2otkmLjZtpTOKAm9DNMPn9V8XlYjdpzOKpf8Rg1z
-         x0Yg==
+        Thu, 17 Oct 2019 10:39:53 -0400
+Received: by mail-ot1-f66.google.com with SMTP id z6so2109168otb.2;
+        Thu, 17 Oct 2019 07:39:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=iPv4xGfmhNBcAudJ2m+U/PKGMmIbhs2/YkiMhF6fFPc=;
-        b=Bw3ZdjrX+1bad7szmLVdzmq8zsjEnNInDfH3k+xHrdJ8qNdwNOBPVayeT7z5cvivh9
-         +/fwjahXckRPxvgXYwjU7jrzNlA+e53XpdUPPFsLLFyexHa4oUAhe8RU0cxiz1qRYxb/
-         wtRKG3yjYL0gEF5uGwoTx+6jcXdX0JnZbblv5aM10/X1znDplEFbEecRSdzdPnv7bnuQ
-         bWNlx95M6uiPvTwioyOqQvoWKpI1rO+qWOeceUdxYrvarIQI85v55iFbzuYcCVbi+46e
-         UzN+muzZKcv6LHfCJkWOFDDNFfmGc5/+DKGB8IePh66A5MxdTg11+hckF6F3rk5nKMSr
-         vvYQ==
-X-Gm-Message-State: APjAAAVxRV93EW00C+eG9z8vml+GxBH7lsBkc1zlkXzPov0LWpoEdGX9
-        wdIhE6YRABJJxYHVKgA+RaK2AA==
-X-Google-Smtp-Source: APXvYqy7YdxTEZrz6r7lhrlzaTDa41hLtMCzXF8omQ5PUo8wn41x4fS6Wd2cEiqylNBXkJ0ldg5xJA==
-X-Received: by 2002:ac8:6144:: with SMTP id d4mr4164799qtm.282.1571323156758;
-        Thu, 17 Oct 2019 07:39:16 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id i66sm1135765qkb.105.2019.10.17.07.39.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Oct 2019 07:39:15 -0700 (PDT)
-Message-ID: <1571323153.5937.67.camel@lca.pw>
-Subject: Re: "Convert the AMD iommu driver to the dma-iommu api" is buggy
-From:   Qian Cai <cai@lca.pw>
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Tom Murphy <murphyt7@tcd.ie>, Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Date:   Thu, 17 Oct 2019 10:39:13 -0400
-In-Reply-To: <20191016154455.GG4695@suse.de>
-References: <1571237707.5937.58.camel@lca.pw>
-         <1571237982.5937.60.camel@lca.pw> <20191016154455.GG4695@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XKvgXvqjjk8TiIeEIKyQ/yG8pWMIH1hEHS2GUYJicX0=;
+        b=lZJ6836OI2pn12aL9PXTWeUTOzXE0J5n7XVlvoTCNoIwnIxK8Xvj4RdzXEn6ftbK46
+         3UF+8s5d2F9IEDUe3e5Z7at+zUaFMAxFXavbyasPb3N/GlL4g3kImnBJkgXOjDzm/dI1
+         hQxlfuFx8RFV1aqsUS8ffCGfzJ3AWxeyZsILv+D9UchXb0UY09oE9JpOBDiyMV5LFVAn
+         kzaftBvRAkedL9oEFpik3VqHM5Qk22VsDAGQE54EE1UgbpO7jBCkEXRGEjrZGenwLkkK
+         t8+Jjmo7n15+SzoKtaHglifBWdWJe4x006uKtgIkh+Kei4UsPhQJV+3VLriUw3rsqMMs
+         qneg==
+X-Gm-Message-State: APjAAAXPABB4f9qID33UKIwyk3G+WfeN2eV/p/0/TMM5gGhUgsrCB02r
+        ueOBujpfL8FS2UcSPnzF1g==
+X-Google-Smtp-Source: APXvYqyTwFiv7B8kcSPfWUsuQZ0ie4KxRI5EDe1Qf5K0ko9ok+SIKpmViiaHcvqOyxD96G6OJvSekQ==
+X-Received: by 2002:a9d:37a1:: with SMTP id x30mr3504866otb.49.1571323192328;
+        Thu, 17 Oct 2019 07:39:52 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w33sm647877otb.68.2019.10.17.07.39.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 07:39:51 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 09:39:51 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Yu Chen <chenyu56@huawei.com>, Felipe Balbi <balbi@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jack Pham <jackp@codeaurora.org>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [RFC][PATCH v3 04/11] dt-bindings: usb: dwc3: Allow clock list &
+ resets to be more flexible
+Message-ID: <20191017143950.GA11204@bogus>
+References: <20191016033340.1288-1-john.stultz@linaro.org>
+ <20191016033340.1288-5-john.stultz@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016033340.1288-5-john.stultz@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-10-16 at 17:44 +0200, Joerg Roedel wrote:
-> On Wed, Oct 16, 2019 at 10:59:42AM -0400, Qian Cai wrote:
-> > BTW, the previous x86 warning was from only reverted one patch "iommu: Add gfp
-> > parameter to iommu_ops::map" where proved to be insufficient. Now, pasting the
-> > correct warning.
+On Wed, Oct 16, 2019 at 03:33:33AM +0000, John Stultz wrote:
+> Rather then adding another device specific binding to support
+> hikey960, Rob Herring suggested we expand the current dwc3
+> binding to allow for variable numbers of clocks and resets.
 > 
-> Can you please test this small fix:
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> CC: ShuFan Lee <shufan_lee@richtek.com>
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Cc: Yu Chen <chenyu56@huawei.com>
+> Cc: Felipe Balbi <balbi@kernel.org>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: Jun Li <lijun.kernel@gmail.com>
+> Cc: Valentin Schneider <valentin.schneider@arm.com>
+> Cc: Jack Pham <jackp@codeaurora.org>
+> Cc: linux-usb@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Suggested-by: Rob Herring <Rob.Herring@arm.com>
 
-This works fine so far.
+Use my kernel.org email please.
 
-> 
-> diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-> index 78a2cca3ac5c..e7a4464e8594 100644
-> --- a/drivers/iommu/amd_iommu.c
-> +++ b/drivers/iommu/amd_iommu.c
-> @@ -2562,7 +2562,7 @@ static int amd_iommu_map(struct iommu_domain *dom, unsigned long iova,
->  	if (iommu_prot & IOMMU_WRITE)
->  		prot |= IOMMU_PROT_IW;
->  
-> -	ret = iommu_map_page(domain, iova, paddr, page_size, prot, GFP_KERNEL);
-> +	ret = iommu_map_page(domain, iova, paddr, page_size, prot, gfp);
->  
->  	domain_flush_np_cache(domain, iova, page_size);
->  
-> 
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/usb/dwc3.txt | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+
+Reviewed-by: Rob Herring <robh@kernel.org>
