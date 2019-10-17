@@ -2,121 +2,124 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B531CFA3730
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE633FA3730
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C59720869
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:27:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="P28/9b/e"
+	by mail.kernel.org (Postfix) with ESMTP id 903F821848
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:28:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571304485;
+	bh=71Gn97Vrnruwg/w4kqqAAh7f+VgYiYJZubzV77QaMxQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NMbbncSoG1wLa80aEBLcZCjg3+2tMox60NEi3lEwRvL3uZTdljigs1fPCON7iK76q
+	 0QwACBuHnxyJAJ/gZzSZvqSXIQEdl80IOWgSi2kIfD5MbegHMCgTwFP3tWJ7ZR8oLE
+	 XAC50XM9PX/WuYpHzkbPIHeNSC5jV6LQ+oRnO434=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408497AbfJQJ1p (ORCPT
+        id S2408511AbfJQJ2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 05:27:45 -0400
-Received: from mail2.skidata.com ([91.230.2.91]:2716 "EHLO mail2.skidata.com"
+        Thu, 17 Oct 2019 05:28:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392048AbfJQJ1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 05:27:45 -0400
-X-Greylist: delayed 430 seconds by postgrey-1.27 at vger.kernel.org; Thu, 17 Oct 2019 05:27:44 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
-  t=1571304464; x=1602840464;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=+j+Yjp8dnjM1nQr3RyLaL94Bw4QJ0SOznlwHGpyhZDE=;
-  b=P28/9b/eGSIKvxrqT/J3K6Ej3bnL6syWkhXehvuGH+z1LA7GrMiLl4P3
-   DfB1ENAcURaYO7WnPLabRmfshS+6oQhtzoK4AIx1+qJquKuSvI9UJybwq
-   GWzvKLr0AGyx+/QqtG9Er+JF4pfG6VUMCkJcIDL6V4I+3f+JwXP0vk6bC
-   hkQDQxEloesneJ4ogMbjSzm33kHi8cAcpz7+0bShWyFkvL3ZpyZOmG2Ip
-   Q4nd7RBB6Q5xa8bOfdK62OkG2acDi1nJ563SFMlXrkxTCGL5dyYIY1tgW
-   j5jX4YO1F8V1h6PfpB/BNTuXLV4DkuXgFQiRukg+mv8sVI2jRCKOC4y/r
-   Q==;
-IronPort-SDR: tD3ZTSbdZaCQ6ehfqXJxsB7/tK0f4C8+Wd3DkRP0hldWJcMQgtu5BiK9/3sOQzd4cpV/MzPh7C
- gwUUaaJdEP77JUrYIcCweplChEajj2CgOeFaUDcvW4OQCc87Dbuw0NaXwfnJwagDbiVMRhTbfJ
- X5aik8g4tYaQPppclIGjyGkrijcFSrZkf4FuPr+1ZJurPw6PLodiGS5L5uJ/SjfSVGjNKr3B2E
- uS4eYe5C4MzWZtgKm+I4n4XscfkTg1O9KXHz8SjyEXxDTvw0RB+HMKHyw0D+sIN2WCLucNdKbg
- KN4=
-X-IronPort-AV: E=Sophos;i="5.67,307,1566856800"; 
-   d="scan'208";a="2381611"
-Subject: Re: [PATCH 5.3 112/112] ASoC: sgtl5000: add ADC mute control
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>
-References: <20191016214844.038848564@linuxfoundation.org>
- <20191016214907.599726506@linuxfoundation.org>
- <20191016220044.GB11473@sirena.co.uk> <20191016221025.GA990599@kroah.com>
- <20191016223518.GC11473@sirena.co.uk> <20191016232358.GA994597@kroah.com>
-From:   Richard Leitner <richard.leitner@skidata.com>
-Message-ID: <de9630e5-341f-b48d-029a-ef1a516bf820@skidata.com>
-Date:   Thu, 17 Oct 2019 11:20:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1728150AbfJQJ2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 05:28:04 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2D3720869;
+        Thu, 17 Oct 2019 09:28:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571304483;
+        bh=71Gn97Vrnruwg/w4kqqAAh7f+VgYiYJZubzV77QaMxQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OQhpwzDFsBquCNw5d+S8kTpjuEPeg71p5ObVgjp4ZxTk+OSLm0rVlLn/Zo0I4scSc
+         rQauaiEk11f7VlIB0wkdhwDP/qmceaXDUnpUyh9eGx+HkzJ5geqZt3VNhxAb9/6piK
+         tXkh5UN3NfoSm4NL/vX5E6uW36F5cY7AegKTljxM=
+Date:   Thu, 17 Oct 2019 11:28:00 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        mchehab@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v3 5/6] media: sun4i: Add H3 deinterlace driver
+Message-ID: <20191017092800.old6jcyeoq3ruawv@gilmour>
+References: <20191016192807.1278987-1-jernej.skrabec@siol.net>
+ <20191016192807.1278987-6-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-In-Reply-To: <20191016232358.GA994597@kroah.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [192.168.111.252]
-X-ClientProxiedBy: sdex4srv.skidata.net (192.168.111.82) To
- sdex5srv.skidata.net (192.168.111.83)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="amvhyb5qqkqgtzi2"
+Content-Disposition: inline
+In-Reply-To: <20191016192807.1278987-6-jernej.skrabec@siol.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 17/10/2019 01:23, Greg Kroah-Hartman wrote:
-> On Wed, Oct 16, 2019 at 11:35:18PM +0100, Mark Brown wrote:
->> On Wed, Oct 16, 2019 at 03:10:25PM -0700, Greg Kroah-Hartman wrote:
->>> On Wed, Oct 16, 2019 at 11:00:44PM +0100, Mark Brown wrote:
->>>> On Wed, Oct 16, 2019 at 02:51:44PM -0700, Greg Kroah-Hartman wrote:
->>>>> From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
->>
->>>>> commit 694b14554d75f2a1ae111202e71860d58b434a21 upstream.
->>
->>>>> This control mute/unmute the ADC input of SGTL5000
->>>>> using its CHIP_ANA_CTRL register.
->>
->>>> This seems like a new feature and not an obvious candidate for stable?
->>
->>> there was a long email from Richard that said:
->>> 	Upstream commit 631bc8f0134a ("ASoC: sgtl5000: Fix of unmute
->>> 	outputs on probe"), which is e9f621efaebd in v5.3 replaced
->>> 	snd_soc_component_write with snd_soc_component_update_bits and
->>> 	therefore no longer cleared the MUTE_ADC flag. This caused the
->>> 	ADC to stay muted and recording doesn't work any longer. This
->>> 	patch fixes this problem by adding a Switch control for
->>> 	MUTE_ADC.
->>
->>> That's why I took this.  If this isn't true, I'll be glad to drop this.
->>
->> That's probably not an appropriate fix for stable - it's going to add a
->> new control which users will need to manually set (or hope their
->> userspace automatically figures out that it should set for them, more
->> advanced userspaces like PulseAudio should) which isn't a drop in fix.
->> You could either drop the backport that was done for zero cross or take
->> a new patch that clears the MUTE_ADC flag (rather than punting to
->> userspace to do so), or just be OK with what you've got at the minute
->> which might be fine given the lack of user reports.
-> 
-> Ok, I'll gladly go drop it, thanks!
+--amvhyb5qqkqgtzi2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Mark, thanks for the clarification! I haven't thought of breaking 
-anything with the backport as it worked fine for our application.
+Hi,
 
-Greg, just to be sure:
+I have a small comment that can definitely be addressed in a subsequent patch
 
-Are you going to drop this patch and revert e9f621efaebd for v5.3?
+On Wed, Oct 16, 2019 at 09:28:06PM +0200, Jernej Skrabec wrote:
+> +	dev->bus_clk = devm_clk_get(dev->dev, "bus");
+> +	if (IS_ERR(dev->bus_clk)) {
+> +		dev_err(dev->dev, "Failed to get bus clock\n");
+> +
+> +		return PTR_ERR(dev->bus_clk);
+> +	}
+> +
+> +	dev->mod_clk = devm_clk_get(dev->dev, "mod");
+> +	if (IS_ERR(dev->mod_clk)) {
+> +		dev_err(dev->dev, "Failed to get mod clock\n");
+> +
+> +		return PTR_ERR(dev->mod_clk);
+> +	}
+> +
+> +	dev->ram_clk = devm_clk_get(dev->dev, "ram");
+> +	if (IS_ERR(dev->ram_clk)) {
+> +		dev_err(dev->dev, "Failed to get ram clock\n");
+> +
+> +		return PTR_ERR(dev->ram_clk);
+> +	}
+> +
+> +	dev->rstc = devm_reset_control_get(dev->dev, NULL);
+> +	if (IS_ERR(dev->rstc)) {
+> +		dev_err(dev->dev, "Failed to get reset control\n");
+> +
+> +		return PTR_ERR(dev->rstc);
+> +	}
+> +
+> +	clk_set_rate_exclusive(dev->mod_clk, 300000000);
 
-Or should I send a patch which clears the MUTE_ADC flag like Mark
-suggested?
+clk_set_rate_exclusive puts a pretty big constraint on the clock tree,
+and we shouldn't really enforce it if the device is unused.
 
-thanks & regards;Richard.L
+I guess we should move it to the runtime_pm resume hook (with the
+put_exclusive call in suspend).
+
+Otherwise, that patch is
+Acked-by: Maxime Ripard <mripard@kernel.org>
+
+Maxime
+
+--amvhyb5qqkqgtzi2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXag0IAAKCRDj7w1vZxhR
+xaZsAP4ktQAK6tje3Cb2Qjis6/lKTHrygep8ppy1RAYh+5gmFgD/cmwwWzyQ42I7
+oxbLIVKna9bDTyghs0A+0vE3KpGYPgA=
+=4k1j
+-----END PGP SIGNATURE-----
+
+--amvhyb5qqkqgtzi2--
