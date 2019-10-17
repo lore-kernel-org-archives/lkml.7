@@ -2,126 +2,137 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB47FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8D7FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 375BF21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99DC721835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:27:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571322430;
+	bh=M1ucFBFcifo6VuiFzNF/QyK07Ut/0yJx9vvkXV040Pc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=YaNXqkwb61WXCLs6Ny16J+T0NrP76f2wr+oG/rnuCcwUrGvOLDk9KgrVrxAqSO+JN
+	 /MkrCbgctFx1ZhTOczPiaims+BJQK3cnQjJupQSzlqqHYsiQdfI8nRg/LGDHiwJVua
+	 rdF2dA/07NZKfRdsHS2+HpawDIulQCv//PoaD7z0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437782AbfJQO0w (ORCPT
+        id S2437852AbfJQO1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 10:26:52 -0400
-Received: from mga04.intel.com ([192.55.52.120]:55219 "EHLO mga04.intel.com"
+        Thu, 17 Oct 2019 10:27:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726545AbfJQO0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:26:52 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 07:26:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,308,1566889200"; 
-   d="scan'208";a="200404372"
-Received: from hma13-mobl.amr.corp.intel.com (HELO [10.251.16.117]) ([10.251.16.117])
-  by orsmga006.jf.intel.com with ESMTP; 17 Oct 2019 07:26:50 -0700
-Subject: Re: [PATCH 0/4] [RFC] Migrate Pages in lieu of discard
-To:     Shakeel Butt <shakeelb@google.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Adams <jwadams@google.com>,
-        "Chen, Tim C" <tim.c.chen@intel.com>
-References: <20191016221148.F9CCD155@viggo.jf.intel.com>
- <CALvZod5wdToX6bx4Bnwx9AgrzY3xkmE0OMH61f88hKxeGX+tvA@mail.gmail.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <496566a6-2581-17f4-a4f2-e5def7f97582@intel.com>
-Date:   Thu, 17 Oct 2019 07:26:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CALvZod5wdToX6bx4Bnwx9AgrzY3xkmE0OMH61f88hKxeGX+tvA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        id S1726545AbfJQO1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 10:27:09 -0400
+Received: from tzanussi-mobl9 (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D18C3214E0;
+        Thu, 17 Oct 2019 14:27:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571322428;
+        bh=M1ucFBFcifo6VuiFzNF/QyK07Ut/0yJx9vvkXV040Pc=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=dI35jmjmO7wAr1RdI3l64+XbXFazbFWT4VoOxk5d1r80QCIqGpMXNZPS+d3P3Rsp+
+         sQdqcC7ZoHug+AGTmeWhRYg8kLKk1ysck+uRLRE5Is9mZRknxE6MMNL78As5wz5InI
+         yd6SJlzLLk6vCzDz/1Pz1dKh7P7lcEXmbB3WXm7s=
+Message-ID: <1571322426.21909.13.camel@kernel.org>
+Subject: Re: [PATCH] tracing: fix "gfp_t" format for synthetic events
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     Zhengjun Xing <zhengjun.xing@linux.intel.com>, rostedt@goodmis.org,
+        mingo@redhat.com, tom.zanussi@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org
+Date:   Thu, 17 Oct 2019 09:27:06 -0500
+In-Reply-To: <20191017083813.31768-1-zhengjun.xing@linux.intel.com>
+References: <20191017083813.31768-1-zhengjun.xing@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1-1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/16/19 8:45 PM, Shakeel Butt wrote:
-> On Wed, Oct 16, 2019 at 3:49 PM Dave Hansen <dave.hansen@linux.intel.com> wrote:
->> This set implements a solution to these problems.  At the end of the
->> reclaim process in shrink_page_list() just before the last page
->> refcount is dropped, the page is migrated to persistent memory instead
->> of being dropped.
-..> The memory cgroup part of the story is missing here. Since PMEM is
-> treated as slow DRAM, shouldn't its usage be accounted to the
-> corresponding memcg's memory/memsw counters and the migration should
-> not happen for memcg limit reclaim? Otherwise some jobs can hog the
-> whole PMEM.
+Hi Zhengjun,
 
-My expectation (and I haven't confirmed this) is that the any memory use
-is accounted to the owning cgroup, whether it is DRAM or PMEM.  memcg
-limit reclaim and global reclaim both end up doing migrations and
-neither should have a net effect on the counters.
+On Thu, 2019-10-17 at 16:38 +0800, Zhengjun Xing wrote:
+> In the format of synthetic events, the "gfp_t" is shown as
+> "signed:1",
+> but in fact the "gfp_t" is "unsigned", should be shown as "signed:0".
+> The offset should be increased by the real size of each field, rather
+> than by the size of "u64".
+> 
+> The issue can be reproduced by the following commands:
+> 
+> echo 'memlatency u64 lat; unsigned int order; gfp_t gfp_flags; int
+> migratetype' > /sys/kernel/debug/tracing/synthetic_events
+> cat  /sys/kernel/debug/tracing/events/synthetic/memlatency/format
+> 
+> name: memlatency
+> ID: 2233
+> format:
+>         field:unsigned short
+> common_type;       offset:0;       size:2; signed:0;
+>         field:unsigned char
+> common_flags;       offset:2;       size:1; signed:0;
+>         field:unsigned char
+> common_preempt_count;       offset:3;       size:1; signed:0;
+>         field:int common_pid;   offset:4;       size:4; signed:1;
+> 
+>         field:u64 lat;  offset:8;       size:8; signed:0;
+>         field:unsigned int order;       offset:16;      size:4;
+> signed:0;
+>         field:gfp_t gfp_flags;  offset:24;      size:4; signed:1;
+>         field:int migratetype;  offset:32;      size:4; signed:1;
+> 
+> print fmt: "lat=%llu, order=%u, gfp_flags=%x, migratetype=%d", REC-
+> >lat, REC->order, REC->gfp_flags, REC->migratetype
+> 
+> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+> ---
+>  kernel/trace/trace_events_hist.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_events_hist.c
+> b/kernel/trace/trace_events_hist.c
+> index 57648c5aa679..7d70321d03b1 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -665,7 +665,7 @@ static int synth_event_define_fields(struct
+> trace_event_call *call)
+>  			offset += STR_VAR_LEN_MAX;
+>  			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
+>  		} else {
+> -			offset += sizeof(u64);
+> +			offset += size;
+>  			n_u64++;
+>  		}
+>  	}
 
-There is certainly a problem here because DRAM is a more valuable
-resource vs. PMEM, and memcg accounts for them as if they were equally
-valuable.  I really want to see memcg account for this cost discrepancy
-at some point, but I'm not quite sure what form it would take.  Any
-feedback from you heavy memcg users out there would be much appreciated.
+This part isn't correct - currently, all the synthetic event fields are
+u64, so doing this alone will mess things up.  The synthetic fields
+were defined to be u64 in order to simplify event generation - if we
+want to use the actual sizes, it would take a more extensive patch
+including the generation code as well.  Not sure the added complexity
+is worth it to save a few bytes in the ring buffer.
 
-> Also what happens when PMEM is full? Can the memory migrated to PMEM
-> be reclaimed (or discarded)?
+> @@ -679,6 +679,8 @@ static bool synth_field_signed(char *type)
+>  {
+>  	if (str_has_prefix(type, "u"))
+>  		return false;
+> +	if (strcmp(type, "gfp_t") == 0)
+> +		return false;
+>  
+>  	return true;
+>  }
 
-Yep.  The "migration path" can be as long as you want, but once the data
-hits a "terminal node" it will stop getting migrated and normal discard
-at the end of reclaim happens.
+
+This part is fine and makes sense.
+
+Thanks,
+
+Tom
