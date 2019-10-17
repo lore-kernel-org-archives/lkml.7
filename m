@@ -3,102 +3,178 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30128CA9EC8
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEB0CA9EC8
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06C3921D7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:35:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C979021D7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:38:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438671AbfJQXff (ORCPT
+        id S2441776AbfJQXiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 19:35:35 -0400
-Received: from gate.crashing.org ([63.228.1.57]:38654 "EHLO gate.crashing.org"
+        Thu, 17 Oct 2019 19:38:25 -0400
+Received: from mga14.intel.com ([192.55.52.115]:32452 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406743AbfJQXff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 19:35:35 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x9HNYwHU020037;
-        Thu, 17 Oct 2019 18:34:59 -0500
-Message-ID: <b99afb6c88f00279c68979f344a15a2c200ca67e.camel@kernel.crashing.org>
-Subject: Re: [PATCH v2] ftgmac100: Disable HW checksum generation on AST2500
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Vijay Khemka <vijaykhemka@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        Sai Dasari <sdasari@fb.com>
-Date:   Fri, 18 Oct 2019 10:34:57 +1100
-In-Reply-To: <071cf1eeefcbfc14633a13bc2d15ad7392987a88.camel@kernel.crashing.org>
-References: <20191011213027.2110008-1-vijaykhemka@fb.com>
-         <3a1176067b745fddfc625bbd142a41913ee3e3a1.camel@kernel.crashing.org>
-         <0C0BC813-5A84-403F-9C48-9447AAABD867@fb.com>
-         <071cf1eeefcbfc14633a13bc2d15ad7392987a88.camel@kernel.crashing.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S2438560AbfJQXiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 19:38:25 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 16:38:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,309,1566889200"; 
+   d="scan'208";a="221564530"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga004.fm.intel.com with ESMTP; 17 Oct 2019 16:38:24 -0700
+Date:   Thu, 17 Oct 2019 16:38:24 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org
+Subject: Re: [RFD] x86/split_lock: Request to Intel
+Message-ID: <20191017233824.GA23654@linux.intel.com>
+References: <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de>
+ <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com>
+ <c3ff2fb3-4380-fb07-1fa3-15896a09e748@intel.com>
+ <d30652bb-89fa-671a-5691-e2c76af231d0@redhat.com>
+ <8808c9ac-0906-5eec-a31f-27cbec778f9c@intel.com>
+ <alpine.DEB.2.21.1910161519260.2046@nanos.tec.linutronix.de>
+ <ba2c0aab-1d7c-5cfd-0054-ac2c266c1df3@redhat.com>
+ <alpine.DEB.2.21.1910171322530.1824@nanos.tec.linutronix.de>
+ <20191017172312.GC20903@linux.intel.com>
+ <alpine.DEB.2.21.1910172207010.1869@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1910172207010.1869@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-10-18 at 10:14 +1100, Benjamin Herrenschmidt wrote:
+On Thu, Oct 17, 2019 at 11:31:15PM +0200, Thomas Gleixner wrote:
+> On Thu, 17 Oct 2019, Sean Christopherson wrote:
+> > On Thu, Oct 17, 2019 at 02:29:45PM +0200, Thomas Gleixner wrote:
+> > > The more I look at this trainwreck, the less interested I am in merging any
+> > > of this at all.
+> > > 
+> > > The fact that it took Intel more than a year to figure out that the MSR is
+> > > per core and not per thread is yet another proof that this industry just
+> > > works by pure chance.
+> > > 
+> > > There is a simple way out of this misery:
+> > > 
+> > >   Intel issues a microcode update which does:
+> > > 
+> > >     1) Convert the OR logic of the AC enable bit in the TEST_CTRL MSR to
+> > >        AND logic, i.e. when one thread disables AC it's automatically
+> > >        disabled on the core.
+> > > 
+> > >        Alternatively it supresses the #AC when the current thread has it
+> > >        disabled.
+> > > 
+> > >     2) Provide a separate bit which indicates that the AC enable logic is
+> > >        actually AND based or that #AC is supressed when the current thread
+> > >        has it disabled.
+> > > 
+> > >     Which way I don't really care as long as it makes sense.
+> > 
+> > The #AC bit doesn't use OR-logic, it's straight up shared, i.e. writes on
+> > one CPU are immediately visible on its sibling CPU.
 > 
-> I don't understand what you are saying. You reported a problem with
-> IPV6 checksums generation. The HW doesn't support it. What's "not a
-> matter of unsupported csum" ?
+> That's less horrible than I read out of your initial explanation.
 > 
-> Your patch uses a *deprecated* bit to tell the network stack to only do
-> HW checksum generation on IPV4.
+> Thankfully all of this is meticulously documented in the SDM ...
+
+Preaching to the choir on this one...
+
+> Though it changes the picture radically. The truly shared MSR allows
+> regular software synchronization without IPIs and without an insane amount
+> of corner case handling.
 > 
-> This bit is deprecated for a reason, again, see skbuff.h. The right
-> approach, *which the driver already does*, is to tell the stack that we
-> support HW checksuming using NETIF_F_HW_CSUM, and then, in the transmit
-> handler, to call skb_checksum_help() to have the SW calculate the
-> checksum if it's not a supported type.
+> So as you pointed out we need a per core state, which is influenced by:
 > 
-> This is exactly what ftgmac100_prep_tx_csum() does. It only enables HW
-> checksum generation on supported types and uses skb_checksum_help()
-> otherwise, supported types being protocol ETH_P_IP and IP protocol
-> being raw IP, TCP and UDP.
+>  1) The global enablement switch
 > 
-> So this *should* have fallen back to SW for IPV6. So either something
-> in my code there is making an incorrect assumption, or something is
-> broken in skb_checksum_help() for IPV6 (which I somewhat doubt) or
-> something else I can't think of, but setting a *deprecated* flag is
-> definitely not the right answer, neither is completely disabling HW
-> checksumming.
+>  2) Host induced #AC
 > 
-> So can you investigate what's going on a bit more closely please ? I
-> can try myself, though I have very little experience with IPV6 and
-> probably won't have time before next week.
+>  3) Guest induced #AC
+> 
+>     A) Guest has #AC handling
+> 
+>     B) Guest has no #AC handling
+> 
+> #1:
+> 
+>    - OFF: #AC is globally disabled
+> 
+>    - ON:  #AC is globally enabled
+> 
+>    - FORCE: same as ON but #AC is enforced on guests
+> 
+> #2:
+> 
+>    If the host triggers an #AC then the #AC has to be force disabled on the
+>    affected core independent of the state of #1. Nothing we can do about
+>    that and once the initial wave of #AC issues is fixed this should not
+>    happen on production systems. That disables #3 even for the #3.A case
+>    for simplicity sake.
+> 
+> #3:
+> 
+>    A) Guest has #AC handling
+>     
+>       #AC is forwarded to the guest. No further action required aside of
+>       accounting
+> 
+>    B) Guest has no #AC handling
+> 
+>       If #AC triggers the resulting action depends on the state of #1:
+> 
+>       	 - FORCE: Guest is killed with SIGBUS or whatever the virt crowd
+> 	   	  thinks is the appropriate solution
+>          - ON: #AC triggered state is recorded per vCPU and the MSR is
+> 	   	toggled on VMENTER/VMEXIT in software from that point on.
+>
+> So the only interesting case is #3.B and #1.state == ON. There you need
+> serialization of the state and the MSR write between the cores, but only
+> when the vCPU triggered an #AC. Until then, nothing to do.
 
-I did get that piece of information from Aspeed: The HW checksum
-generation is supported if:
+And "vCPU triggered an #AC" should include an explicit check in KVM's
+emulator.
 
- - The length of UDP header is always 20 bytes.
- - The length of TCP and IP header have 4 * N bytes (N is 5 to 15).
+> vmenter()
+> {
+> 	if (vcpu->ac_disable)
+> 		this_core_disable_ac();
+> }
+> 
+> vmexit()
+> {
+> 	if (vcpu->ac_disable) {
+> 		this_core_enable_ac();
+> }
+> 
+> this_core_dis/enable_ac() takes the global state into account and has the
+> necessary serialization in place.
 
-Now these afaik are also the protocol limits, so it *should* work.
-
-Or am I missing something or some funky encaspulation/header format
-that can be used under some circumstances ?
-
-Cheers,
-Ben.
-
-
+Overall, looks good to me.  Although Tony's mail makes it obvious we need
+to sync internally...
