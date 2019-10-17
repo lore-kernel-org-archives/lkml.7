@@ -2,64 +2,71 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E92BEFA372B
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1204EFA372B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5E3C21D7A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D830121A49
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:28:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571347739;
+	bh=TO0yNu9Whn6Lp8lLVIfxOgVAK9V/+ggxJbbaHAZ3ENE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=GlPJgGj0cwAgReHw52ifnaIqKVUEDUAsAO/21HHjfHPIMJ7E5BUg0RQ/X0/Ahwvgo
+	 58sXtvchkx3T2lHpCZVFfqezk03bjK+abf6eBOM/Sf7Z2b7bIcwbXlh2h4/Kgd+Sgf
+	 4kfKpopqGO57m2qSMIH2RzfE2VQwl2bNmwOCgUFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503562AbfJQV20 (ORCPT
+        id S2503587AbfJQV26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 17:28:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40740 "EHLO mail.kernel.org"
+        Thu, 17 Oct 2019 17:28:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390402AbfJQV20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 17:28:26 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1727683AbfJQV26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 17:28:58 -0400
+Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFC7621A49;
-        Thu, 17 Oct 2019 21:28:24 +0000 (UTC)
-Date:   Thu, 17 Oct 2019 17:28:23 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 1/2] perf: Iterate on tep event arrays directly
-Message-ID: <20191017172823.15f242eb@gandalf.local.home>
-In-Reply-To: <20191017212431.GF3600@kernel.org>
-References: <20191017210521.465613686@goodmis.org>
-        <20191017210636.061448713@goodmis.org>
-        <20191017212431.GF3600@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEE1C21D7A;
+        Thu, 17 Oct 2019 21:28:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571347738;
+        bh=TO0yNu9Whn6Lp8lLVIfxOgVAK9V/+ggxJbbaHAZ3ENE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PMyU3Vw2ibjEVLh14210kOjWBIQ4PLI0jBxBiqk2UwvqbP5AD43BzGwlKS85cCEY9
+         f3Z6lOSU87RETH+/PwRj1Ui46HjllNBw+H8JX4xq5GwsROToZ1GUDX+wR48gZYr4CZ
+         fEUnYgAYGzGZCTTstE6TWfFf/ms7/YoszPGvOf8Y=
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 0/2] PCI/PM: Use dev_printk() when possible
+Date:   Thu, 17 Oct 2019 16:28:49 -0500
+Message-Id: <20191017212851.54237-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019 18:24:31 -0300
-Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-> I'll add a:
-> 
-> Fixes: bb3dd7e7c4d5 ("tools lib traceevent, perf tools: Move struct tep_handler definition in a local header file")
-> Cc: stable@vger.kernel.org : v4.20+
-> 
-> As this is when this problem starts causing the segfault when generating
-> python scripts from perf.data files with multiple tracepoint events, ok?
+Some PM messages, e.g., "PCI PM: Device state not saved by %pS\n", had no
+indication of what device was affected.  Add pci_WARN() and use it.
 
-Sure, go ahead. I realized I forgot to add a Fixes tag when sending it.
+Bjorn Helgaas (2):
+  PCI/PM: Use PCI dev_printk() wrappers for consistency
+  PCI/PM: Use pci_WARN() to include device information
 
--- Steve
+ drivers/pci/pci-driver.c | 45 ++++++++++++++++++++--------------------
+ include/linux/pci.h      |  8 +++++++
+ 2 files changed, 31 insertions(+), 22 deletions(-)
+
+-- 
+2.23.0.866.gb869b98d4c-goog
+
