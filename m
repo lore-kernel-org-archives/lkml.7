@@ -2,127 +2,146 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34ED7C4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 05:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 756CEFA372B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 05:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0666C2089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 05:43:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="dXj8TVEY"
+	by mail.kernel.org (Postfix) with ESMTP id 57C6D2067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 05:46:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394415AbfJQFnc (ORCPT
+        id S2404253AbfJQFqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 01:43:32 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:12320 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731603AbfJQFnc (ORCPT
+        Thu, 17 Oct 2019 01:46:43 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:35594 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727236AbfJQFqn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 01:43:32 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9H5fC25008085;
-        Thu, 17 Oct 2019 07:43:25 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=p/09wq1PSfYWS92X0S6/XOyJP24Y6whlcb1O9OKmBdU=;
- b=dXj8TVEYxlk2drKDKCEXJ+ewUYFx0mWN2Z/kG3vHixT7mjvvht8Lxa4qO4monsFFbG+E
- t37RQEWR242vxPbfsTvqhFlBGxuFwcHjnGCWO5dlwYe0X7erjdWXUpONUgU0OSMpQbK8
- 7RS8lTxxK8rXDtp/xpz6xUZReTsDLhUJ8PRjH/ZZt/uzceUgJeWTvsUtgv/p1dgDe32+
- F/c5mOuR/EsLbSjygQwHiCUrhAk1QXbs8B/KKUP0zVAiTEey/m/lw7Yktrwa3HwK/FRV
- coISWEgSUUF6pMyDCRIJR9QXeRyEwHV/65sne7d4yZLeFllX3ITrk5Ie1YFrJIFSIK8X 4w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2vk4a1ht4j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 17 Oct 2019 07:43:25 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CCEF1100038;
-        Thu, 17 Oct 2019 07:43:24 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag5node1.st.com [10.75.127.13])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C26B02A44A0;
-        Thu, 17 Oct 2019 07:43:24 +0200 (CEST)
-Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG5NODE1.st.com
- (10.75.127.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 17 Oct
- 2019 07:43:24 +0200
-Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
- SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
- 15.00.1473.003; Thu, 17 Oct 2019 07:43:24 +0200
-From:   Mickael GUENE <mickael.guene@st.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] media: st-mipid02: add a check for
- devm_gpiod_get_optional
-Thread-Topic: [PATCH] media: st-mipid02: add a check for
- devm_gpiod_get_optional
-Thread-Index: AQHVhBBYvH4VqO4jG0ud7QMMFFTos6deMe0A
-Date:   Thu, 17 Oct 2019 05:43:24 +0000
-Message-ID: <8de93390-ae04-4278-bb34-aa175c659c23@st.com>
-References: <20191016105604.8036-1-hslester96@gmail.com>
-In-Reply-To: <20191016105604.8036-1-hslester96@gmail.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.49]
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <A4E988153FB2A14DB32FDD3556453D02@st.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 17 Oct 2019 01:46:43 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R441e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TfHpT3B_1571291198;
+Received: from IT-C02W23QPG8WN.local(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0TfHpT3B_1571291198)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 17 Oct 2019 13:46:38 +0800
+Subject: Re: [PATCH] net: dsa: rtl8366rb: add missing of_node_put after
+ calling of_get_child_by_name
+To:     David Miller <davem@davemloft.net>
+Cc:     linus.walleij@linaro.org, xlpang@linux.alibaba.com,
+        zhiche.yy@alibaba-inc.com, andrew@lunn.ch,
+        vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190929070047.2515-1-wenyang@linux.alibaba.com>
+ <20191001.100341.1797056721948216269.davem@davemloft.net>
+From:   Wen Yang <wenyang@linux.alibaba.com>
+Message-ID: <7835e7c0-01e5-770e-788e-5f06f9ddf35e@linux.alibaba.com>
+Date:   Thu, 17 Oct 2019 13:46:38 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.1.1
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-17_02:2019-10-17,2019-10-17 signatures=0
+In-Reply-To: <20191001.100341.1797056721948216269.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Chuhong,
 
- Is this check necessary ?
-since looking into code it seems to me devm_gpiod_get_optional() can only
-return NULL in case of error due to following check in devm_gpiod_get_index=
-_optional()
-	if (IS_ERR(desc)) {
-		if (PTR_ERR(desc) =3D=3D -ENOENT)
-			return NULL;
-	}
- And in that case reset_gpio is not used
+On 2019/10/2 1:03 上午, David Miller wrote:
+> From: Wen Yang <wenyang@linux.alibaba.com>
+> Date: Sun, 29 Sep 2019 15:00:47 +0800
+> 
+>> of_node_put needs to be called when the device node which is got
+>> from of_get_child_by_name finished using.
+>> irq_domain_add_linear() also calls of_node_get() to increase refcount,
+>> so irq_domain will not be affected when it is released.
+>>
+>> fixes: d8652956cf37 ("net: dsa: realtek-smi: Add Realtek SMI driver")
+>> Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+> 
+> Please capitalize Fixes:, seriously I am very curious where did you
+> learned to specify the fixes tag non-capitalized?
+> 
+> Patch applied, t hanks.
+> 
 
-Regards
-Mickael
+Thank you for your comments.
 
-On 10/16/19 12:56, Chuhong Yuan wrote:
-> mipid02_probe misses a check for devm_gpiod_get_optional and may miss
-> the failure.
-> Add a check to fix the problem.
->=20
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
->  drivers/media/i2c/st-mipid02.c | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/drivers/media/i2c/st-mipid02.c b/drivers/media/i2c/st-mipid0=
-2.c
-> index 81285b8d5cfb..d38e888b0a43 100644
-> --- a/drivers/media/i2c/st-mipid02.c
-> +++ b/drivers/media/i2c/st-mipid02.c
-> @@ -971,6 +971,9 @@ static int mipid02_probe(struct i2c_client *client)
->  	bridge->reset_gpio =3D devm_gpiod_get_optional(dev, "reset",
->  						     GPIOD_OUT_HIGH);
-> =20
-> +	if (IS_ERR(bridge->reset_gpio))
-> +		return PTR_ERR(bridge->reset_gpio);
-> +
->  	ret =3D mipid02_get_regulators(bridge);
->  	if (ret) {
->  		dev_err(dev, "failed to get regulators %d", ret);
-> =
+We checked the code repository and found that both ‘Fixes’ and ‘fixes’
+are being used, such as:
+
+commit a53651ec93a8d7ab5b26c5390e0c389048b4b4b6
+…
+      net: ena: don't wake up tx queue when down
+…
+      fixes: 1738cd3ed342 (net: ena: Add a driver for Amazon Elastic
+Network Adapters (ENA))
+…
+
+And,
+
+commit 1df379924304b687263942452836db1d725155df
+…
+      clk: consoldiate the __clk_get_hw() declarations
+…
+
+      Fixes: 59fcdce425b7 ("clk: Remove ifdef for COMMON_CLK in
+clk-provider.h")
+      fixes: 73e0e496afda ("clkdev: Always allocate a struct clk and call
+__clk_get() w/ CCF")
+…
+
+
+It is also found that the sha1 following ‘Fixes:’ requires at least 12
+digits.
+
+So we plan to modify the checkpatch.pl script to check for these issues.
+
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index a85d719..ddcd2d0 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -2925,7 +2925,7 @@ sub process {
+   		}
+
+   # check for invalid commit id
+-		if ($in_commit_log && $line =~
+/(^fixes:|\bcommit)\s+([0-9a-f]{6,40})\b/i) {
++		if ($in_commit_log && $line =~ /(\bcommit)\s+([0-9a-f]{6,40})\b/i) {
+   			my $id;
+   			my $description;
+   			($id, $description) = git_commit_info($2, undef, undef);
+@@ -2935,6 +2935,25 @@ sub process {
+   			}
+   		}
+
++# check for fixes tag
++		if ($in_commit_log && $line =~ /(^fixes:)\s+([0-9a-f]{6,40})\b/i) {
++			my $id;
++			my $description;
++			($id, $description) = git_commit_info($2, undef, undef);
++			if (!defined($id)) {
++				WARN("UNKNOWN_COMMIT_ID",
++				     "Unknown commit id '$2', maybe rebased or not pulled?\n" .
+$herecurr);
++			}
++			if ($1 ne "Fixes") {
++				WARN("FIXES_TAG_STYLE",
++				     "The fixes tag should be capitalized (Fixes:).\n" . $hereprev);
++			}
++			if (length($2) < 12) {
++				WARN("FIXES_TAG_STYLE",
++				     "SHA1 should be at least 12 digits long.\n" . $hereprev);
++			}
++		}
++
+   # ignore non-hunk lines and lines being removed
+   		next if (!$hunk_line || $line =~ /^-/);
+
+--
+Best wishes,
+Wen Yang
