@@ -2,92 +2,214 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66419FA3736
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B6CECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B7812082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 436F52082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:19:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501936AbfJQKTU (ORCPT
+        id S2501949AbfJQKT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 06:19:20 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:38226 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S2408801AbfJQKTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 06:19:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7D311BC0;
-        Thu, 17 Oct 2019 03:18:46 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F40F3F718;
-        Thu, 17 Oct 2019 03:18:45 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 11:18:43 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-Cc:     linux-kernel@lists.codethink.co.uk,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: mvebu: mvebu_pcie_map_registers __iomem fix
-Message-ID: <20191017101843.GC9589@e121166-lin.cambridge.arm.com>
-References: <20191015161148.4413-1-ben.dooks@codethink.co.uk>
+        Thu, 17 Oct 2019 06:19:26 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:36454 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731515AbfJQKTE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 06:19:04 -0400
+Received: from [185.81.136.22] (helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iL2s0-0007tP-S3; Thu, 17 Oct 2019 10:19:01 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     oleg@redhat.com, linux-kernel@vger.kernel.org
+Cc:     aarcange@redhat.com, akpm@linux-foundation.org,
+        christian@kellner.me, cyphar@cyphar.com, elena.reshetova@intel.com,
+        guro@fb.com, jannh@google.com, ldv@altlinux.org,
+        linux-api@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        mhocko@suse.com, mingo@kernel.org, peterz@infradead.org,
+        shuah@kernel.org, tglx@linutronix.de, viro@zeniv.linux.org.uk,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH v3 2/5] test: verify fdinfo for pidfd of reaped process
+Date:   Thu, 17 Oct 2019 12:18:29 +0200
+Message-Id: <20191017101832.5985-2-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191017101832.5985-1-christian.brauner@ubuntu.com>
+References: <20191016153606.2326-1-christian.brauner@ubuntu.com>
+ <20191017101832.5985-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015161148.4413-1-ben.dooks@codethink.co.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 05:11:48PM +0100, Ben Dooks (Codethink) wrote:
-> Fix the return type of mvebu_pcie_map_registers in the
-> error path to have __iomem on it. Fixes the following
-> sparse warning:
-> 
-> drivers/pci/controller/pci-mvebu.c:716:31: warning: incorrect type in return expression (different address spaces)
-> drivers/pci/controller/pci-mvebu.c:716:31:    expected void [noderef] <asn:2> *
-> drivers/pci/controller/pci-mvebu.c:716:31:    got void *
-> 
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> ---
-> Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Andrew Murray <andrew.murray@arm.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/pci/controller/pci-mvebu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Test that the fdinfo field of a pidfd referring to a dead process
+correctly shows Pid: -1 and NSpid: -1.
 
-Applied to pci/misc, thanks.
+Cc: Christian Kellner <christian@kellner.me>
+Cc: linux-kselftest@vger.kernel.org
+Reviewed-by: Christian Kellner <christian@kellner.me>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+/* pidfd selftests */
+passed
 
-Lorenzo
+/* v1 */
+Link: https://lore.kernel.org/r/20191015141332.4055-2-christian.brauner@ubuntu.com
 
-> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-> index ed032e9a3156..153a64676bc9 100644
-> --- a/drivers/pci/controller/pci-mvebu.c
-> +++ b/drivers/pci/controller/pci-mvebu.c
-> @@ -713,7 +713,7 @@ static void __iomem *mvebu_pcie_map_registers(struct platform_device *pdev,
->  
->  	ret = of_address_to_resource(np, 0, &regs);
->  	if (ret)
-> -		return ERR_PTR(ret);
-> +		return (void __iomem *)ERR_PTR(ret);
->  
->  	return devm_ioremap_resource(&pdev->dev, &regs);
->  }
-> -- 
-> 2.23.0
-> 
+/* v2 */
+Link: https://lore.kernel.org/r/20191016153606.2326-2-christian.brauner@ubuntu.com
+unchanged
+
+/* v3 */
+unchanged
+---
+ .../selftests/pidfd/pidfd_fdinfo_test.c       | 59 ++++++++++++++-----
+ 1 file changed, 45 insertions(+), 14 deletions(-)
+
+diff --git a/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c b/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c
+index 3721be994abd..22558524f71c 100644
+--- a/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c
++++ b/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c
+@@ -113,11 +113,15 @@ static struct child clone_newns(int (*fn)(void *), void *args,
+ 	return ret;
+ }
+ 
++static inline void child_close(struct child *child)
++{
++	close(child->fd);
++}
++
+ static inline int child_join(struct child *child, struct error *err)
+ {
+ 	int r;
+ 
+-	(void)close(child->fd);
+ 	r = wait_for_pid(child->pid);
+ 	if (r < 0)
+ 		error_set(err, PIDFD_ERROR, "waitpid failed (ret %d, errno %d)",
+@@ -128,6 +132,12 @@ static inline int child_join(struct child *child, struct error *err)
+ 	return r;
+ }
+ 
++static inline int child_join_close(struct child *child, struct error *err)
++{
++	child_close(child);
++	return child_join(child, err);
++}
++
+ static inline void trim_newline(char *str)
+ {
+ 	char *pos = strrchr(str, '\n');
+@@ -136,8 +146,8 @@ static inline void trim_newline(char *str)
+ 		*pos = '\0';
+ }
+ 
+-static int verify_fdinfo_nspid(int pidfd, struct error *err,
+-			       const char *expect, ...)
++static int verify_fdinfo(int pidfd, struct error *err, const char *prefix,
++			 size_t prefix_len, const char *expect, ...)
+ {
+ 	char buffer[512] = {0, };
+ 	char path[512] = {0, };
+@@ -160,17 +170,20 @@ static int verify_fdinfo_nspid(int pidfd, struct error *err,
+ 				 pidfd);
+ 
+ 	while (getline(&line, &n, f) != -1) {
+-		if (strncmp(line, "NSpid:", 6))
++		char *val;
++
++		if (strncmp(line, prefix, prefix_len))
+ 			continue;
+ 
+ 		found = 1;
+ 
+-		r = strcmp(line + 6, buffer);
++		val = line + prefix_len;
++		r = strcmp(val, buffer);
+ 		if (r != 0) {
+ 			trim_newline(line);
+ 			trim_newline(buffer);
+-			error_set(err, PIDFD_FAIL, "NSpid: '%s' != '%s'",
+-				  line + 6, buffer);
++			error_set(err, PIDFD_FAIL, "%s '%s' != '%s'",
++				  prefix, val, buffer);
+ 		}
+ 		break;
+ 	}
+@@ -179,8 +192,8 @@ static int verify_fdinfo_nspid(int pidfd, struct error *err,
+ 	fclose(f);
+ 
+ 	if (found == 0)
+-		return error_set(err, PIDFD_FAIL, "NSpid not found for fd %d",
+-				 pidfd);
++		return error_set(err, PIDFD_FAIL, "%s not found for fd %d",
++				 prefix, pidfd);
+ 
+ 	return PIDFD_PASS;
+ }
+@@ -213,7 +226,7 @@ static int child_fdinfo_nspid_test(void *args)
+ 	}
+ 
+ 	pidfd = *(int *)args;
+-	r = verify_fdinfo_nspid(pidfd, &err, "\t0\n");
++	r = verify_fdinfo(pidfd, &err, "NSpid:", 6, "\t0\n");
+ 
+ 	if (r != PIDFD_PASS)
+ 		ksft_print_msg("NSpid fdinfo check failed: %s\n", err.msg);
+@@ -242,24 +255,42 @@ static void test_pidfd_fdinfo_nspid(void)
+ 	/* The children will have pid 1 in the new pid namespace,
+ 	 * so the line must be 'NSPid:\t<pid>\t1'.
+ 	 */
+-	verify_fdinfo_nspid(a.fd, &err, "\t%d\t%d\n", a.pid, 1);
+-	verify_fdinfo_nspid(b.fd, &err, "\t%d\t%d\n", b.pid, 1);
++	verify_fdinfo(a.fd, &err, "NSpid:", 6, "\t%d\t%d\n", a.pid, 1);
++	verify_fdinfo(b.fd, &err, "NSpid:", 6, "\t%d\t%d\n", b.pid, 1);
+ 
+ 	/* wait for the process, check the exit status and set
+ 	 * 'err' accordingly, if it is not already set.
+ 	 */
++	child_join_close(&a, &err);
++	child_join_close(&b, &err);
++
++	error_report(&err, test_name);
++}
++
++static void test_pidfd_dead_fdinfo(void)
++{
++	struct child a;
++	struct error err = {0, };
++	const char *test_name = "pidfd check fdinfo for dead process";
++
++	/* Create a new child in a new pid and mount namespace */
++	a = clone_newns(child_fdinfo_nspid_test, NULL, &err);
++	error_check(&err, test_name);
+ 	child_join(&a, &err);
+-	child_join(&b, &err);
+ 
++	verify_fdinfo(a.fd, &err, "Pid:", 4, "\t-1\n");
++	verify_fdinfo(a.fd, &err, "NSpid:", 6, "\t-1\n");
++	child_close(&a);
+ 	error_report(&err, test_name);
+ }
+ 
+ int main(int argc, char **argv)
+ {
+ 	ksft_print_header();
+-	ksft_set_plan(1);
++	ksft_set_plan(2);
+ 
+ 	test_pidfd_fdinfo_nspid();
++	test_pidfd_dead_fdinfo();
+ 
+ 	return ksft_exit_pass();
+ }
+-- 
+2.23.0
+
