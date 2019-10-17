@@ -2,242 +2,139 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD12FA3728
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6778EECE599
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9290521A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4263F21A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:51:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391883AbfJQBux (ORCPT
+        id S2391945AbfJQBv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 21:50:53 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:36560 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2391717AbfJQBux (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 21:50:53 -0400
-X-UUID: 5abb0a063f3348d5a0de588d3f47792e-20191017
-X-UUID: 5abb0a063f3348d5a0de588d3f47792e-20191017
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 497781176; Thu, 17 Oct 2019 09:50:47 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 17 Oct 2019 09:50:44 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 17 Oct 2019 09:50:44 +0800
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Walter Wu <walter-zh.wu@mediatek.com>
-Subject: [PATCH v2 1/2] kasan: detect negative size in memory operation function
-Date:   Thu, 17 Oct 2019 09:50:44 +0800
-Message-ID: <20191017015044.8586-1-walter-zh.wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Wed, 16 Oct 2019 21:51:27 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:57152 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2391717AbfJQBv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 21:51:26 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 0170162AEC5F4E90B742;
+        Thu, 17 Oct 2019 09:51:25 +0800 (CST)
+Received: from [127.0.0.1] (10.133.215.182) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
+ 09:51:14 +0800
+Subject: Re: [RFC PATCH 2/3] perf tools: Add support for "report" for some spe
+ events
+To:     James Clark <James.Clark@arm.com>,
+        Jeremy Linton <Jeremy.Linton@arm.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "jolsa@redhat.com" <jolsa@redhat.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "yao.jin@linux.intel.com" <yao.jin@linux.intel.com>,
+        "tmricht@linux.ibm.com" <tmricht@linux.ibm.com>,
+        "brueckner@linux.ibm.com" <brueckner@linux.ibm.com>,
+        "songliubraving@fb.com" <songliubraving@fb.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Kim Phillips <Kim.Phillips@amd.com>
+CC:     "gengdongjiu@huawei.com" <gengdongjiu@huawei.com>,
+        "wxf.wang@hisilicon.com" <wxf.wang@hisilicon.com>,
+        "liwei391@huawei.com" <liwei391@huawei.com>,
+        "huawei.libin@huawei.com" <huawei.libin@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "Al Grant" <Al.Grant@arm.com>, nd <nd@arm.com>
+References: <1564738813-10944-1-git-send-email-tanxiaojun@huawei.com>
+ <1564738813-10944-3-git-send-email-tanxiaojun@huawei.com>
+ <0ac06995-273c-034d-52a3-921ea0337be2@arm.com>
+ <016c1ce8-7220-75a2-43fa-0efe150f897c@huawei.com>
+ <805660ca-1cf3-4c7f-3aa2-61fed59afa8b@arm.com>
+ <637836d6-c884-1a55-7730-eeb45b590d39@huawei.com>
+ <b7e5ca2d-8c6c-8ab8-637e-a9aaebaf62a5@arm.com>
+ <2b1fc8c7-c0b9-f4b9-a24f-444bc22129af@huawei.com>
+ <335fedb8-128c-7d34-c5e8-15cd660fe12e@huawei.com>
+ <58bed363-41ee-e425-a36e-e3c69d1a4e90@arm.com>
+From:   Tan Xiaojun <tanxiaojun@huawei.com>
+Message-ID: <647c65eb-669c-e118-e2e7-bbc2a3143884@huawei.com>
+Date:   Thu, 17 Oct 2019 09:51:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+In-Reply-To: <58bed363-41ee-e425-a36e-e3c69d1a4e90@arm.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.215.182]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KASAN missed detecting size is negative numbers in memset(), memcpy(),
-and memmove(), it will cause out-of-bounds bug, so needs to be detected
-by KASAN.
+On 2019/10/16 18:12, James Clark wrote:
+> Hi Xiaojun,
+> 
+>>>
+>>> What do you mean when the user specifies "event:pp", if the SPE is available, configure and record the spe data directly via the perf event open syscall?
+>>> (perf.data itself is the same as using -e arm_spe_0//xxx?)
+>>
+>> I mean, for the perf record, if the user does not add ":pp" to these events, the original process is taken, and if ":pp" is added, the spe process is taken.
+>>
+> 
+> Yes we think this is the best way to do it considering that SPE has been implemented as a separate PMU and it will be very difficult to do it in the Kernel when the precise_ip attribute is set.
+> 
+> I think doing everything in userspace is easiest. This will at least mean that users of Perf don't have to be aware of the details of SPE to get precise sample data.
+> 
+> So if the user specifies "event:p" when SPE is available, the SPE PMU is automatically configured data is recorded. If the user also specifies -e arm_spe_0//xxx and wants to do some manual configuration, then that could override the automatic configuration.
+> 
+> 
+> James
+> 
+> 
+> 
 
-If size is negative numbers, then it has three reasons to be
-defined as heap-out-of-bounds bug type.
-1) Casting negative numbers to size_t would indeed turn up as
-   a large size_t and its value will be larger than ULONG_MAX/2,
-   so that this can qualify as out-of-bounds.
-2) If KASAN has new bug type and user-space passes negative size,
-   then there are duplicate reports. So don't produce new bug type
-   in order to prevent duplicate reports by some systems (e.g. syzbot)
-   to report the same bug twice.
-3) When size is negative numbers, it may be passed from user-space.
-   So we always print heap-out-of-bounds in order to prevent that
-   kernel-space and user-space have the same bug but have duplicate
-   reports.
+OK. I got it.
 
-KASAN report:
+I found a bug in the test. If I specify cpu_list(use -a or -C) when logging spe data, some events with "pid:0 tid:0" is logged. This is obviously wrong.
 
- BUG: KASAN: heap-out-of-bounds in kmalloc_memmove_invalid_size+0x70/0xa0
- Read of size 18446744073709551608 at addr ffffff8069660904 by task cat/72
+I want to solve this problem, but I haven't found out what went wrong.
 
- CPU: 2 PID: 72 Comm: cat Not tainted 5.4.0-rc1-next-20191004ajb-00001-gdb8af2f372b2-dirty #1
- Hardware name: linux,dummy-virt (DT)
- Call trace:
-  dump_backtrace+0x0/0x288
-  show_stack+0x14/0x20
-  dump_stack+0x10c/0x164
-  print_address_description.isra.9+0x68/0x378
-  __kasan_report+0x164/0x1a0
-  kasan_report+0xc/0x18
-  check_memory_region+0x174/0x1d0
-  memmove+0x34/0x88
-  kmalloc_memmove_invalid_size+0x70/0xa0
+--------------------------------------------------------------
+[root@server121 perf]# perf record -e arm_spe_0/branch_filter=1,ts_enable=1,pa_enable=1,load_filter=1,jitter=0,store_filter=1,min_latency=0/ -a
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 7.925 MB perf.data ]
+[root@server121 perf]# perf report -D > spe_dump.out
+[root@server121 perf]# vim spe_dump.out
 
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=199341
+--------------------------------------------------------------
+...
+0xd0330 [0x30]: event: 12
+.
+. ... raw event: size 48 bytes
+.  0000:  0c 00 00 00 00 00 30 00 00 00 00 00 00 00 00 00  ......0.........
+.  0010:  00 00 00 00 00 00 00 00 f8 d9 fe bd f7 08 02 00  ................
+.  0020:  00 00 00 00 00 00 00 00 4c bc 14 00 00 00 00 00  ........L.......
 
-Changes in v2:
-Fix the indentation bug, thanks for the reminder Matthew.
+0 572810090961400 0xd0330 [0x30]: PERF_RECORD_ITRACE_START pid: 0 tid: 0
 
-Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-Reported-by: Dmitry Vyukov <dvyukov@google.com>
-Suggested-by: Dmitry Vyukov <dvyukov@google.com>
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Alexander Potapenko <glider@google.com>
----
- mm/kasan/common.c         | 13 ++++++++-----
- mm/kasan/generic.c        |  5 +++++
- mm/kasan/generic_report.c | 18 ++++++++++++++++++
- mm/kasan/tags.c           |  5 +++++
- mm/kasan/tags_report.c    | 18 ++++++++++++++++++
- 5 files changed, 54 insertions(+), 5 deletions(-)
+0xd0438 [0x30]: event: 12
+.
+. ... raw event: size 48 bytes
+.  0000:  0c 00 00 00 00 00 30 00 00 00 00 00 00 00 00 00  ......0.........
+.  0010:  00 00 00 00 00 00 00 00 d8 ef fe bd f7 08 02 00  ................
+.  0020:  01 00 00 00 00 00 00 00 4d bc 14 00 00 00 00 00  ........M.......
 
-diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-index 6814d6d6a023..16a370023425 100644
---- a/mm/kasan/common.c
-+++ b/mm/kasan/common.c
-@@ -102,7 +102,8 @@ EXPORT_SYMBOL(__kasan_check_write);
- #undef memset
- void *memset(void *addr, int c, size_t len)
- {
--	check_memory_region((unsigned long)addr, len, true, _RET_IP_);
-+	if (!check_memory_region((unsigned long)addr, len, true, _RET_IP_))
-+		return NULL;
- 
- 	return __memset(addr, c, len);
- }
-@@ -110,8 +111,9 @@ void *memset(void *addr, int c, size_t len)
- #undef memmove
- void *memmove(void *dest, const void *src, size_t len)
- {
--	check_memory_region((unsigned long)src, len, false, _RET_IP_);
--	check_memory_region((unsigned long)dest, len, true, _RET_IP_);
-+	if (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
-+	    !check_memory_region((unsigned long)dest, len, true, _RET_IP_))
-+		return NULL;
- 
- 	return __memmove(dest, src, len);
- }
-@@ -119,8 +121,9 @@ void *memmove(void *dest, const void *src, size_t len)
- #undef memcpy
- void *memcpy(void *dest, const void *src, size_t len)
- {
--	check_memory_region((unsigned long)src, len, false, _RET_IP_);
--	check_memory_region((unsigned long)dest, len, true, _RET_IP_);
-+	if (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
-+	    !check_memory_region((unsigned long)dest, len, true, _RET_IP_))
-+		return NULL;
- 
- 	return __memcpy(dest, src, len);
- }
-diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
-index 616f9dd82d12..02148a317d27 100644
---- a/mm/kasan/generic.c
-+++ b/mm/kasan/generic.c
-@@ -173,6 +173,11 @@ static __always_inline bool check_memory_region_inline(unsigned long addr,
- 	if (unlikely(size == 0))
- 		return true;
- 
-+	if (unlikely((long)size < 0)) {
-+		kasan_report(addr, size, write, ret_ip);
-+		return false;
-+	}
-+
- 	if (unlikely((void *)addr <
- 		kasan_shadow_to_mem((void *)KASAN_SHADOW_START))) {
- 		kasan_report(addr, size, write, ret_ip);
-diff --git a/mm/kasan/generic_report.c b/mm/kasan/generic_report.c
-index 36c645939bc9..52a92c7db697 100644
---- a/mm/kasan/generic_report.c
-+++ b/mm/kasan/generic_report.c
-@@ -107,6 +107,24 @@ static const char *get_wild_bug_type(struct kasan_access_info *info)
- 
- const char *get_bug_type(struct kasan_access_info *info)
- {
-+	/*
-+	 * If access_size is negative numbers, then it has three reasons
-+	 * to be defined as heap-out-of-bounds bug type.
-+	 * 1) Casting negative numbers to size_t would indeed turn up as
-+	 *    a large size_t and its value will be larger than ULONG_MAX/2,
-+	 *    so that this can qualify as out-of-bounds.
-+	 * 2) If KASAN has new bug type and user-space passes negative size,
-+	 *    then there are duplicate reports. So don't produce new bug type
-+	 *    in order to prevent duplicate reports by some systems
-+	 *    (e.g. syzbot) to report the same bug twice.
-+	 * 3) When size is negative numbers, it may be passed from user-space.
-+	 *    So we always print heap-out-of-bounds in order to prevent that
-+	 *    kernel-space and user-space have the same bug but have duplicate
-+	 *    reports.
-+	 */
-+	if ((long)info->access_size < 0)
-+		return "heap-out-of-bounds";
-+
- 	if (addr_has_shadow(info->access_addr))
- 		return get_shadow_bug_type(info);
- 	return get_wild_bug_type(info);
-diff --git a/mm/kasan/tags.c b/mm/kasan/tags.c
-index 0e987c9ca052..b829535a3ad7 100644
---- a/mm/kasan/tags.c
-+++ b/mm/kasan/tags.c
-@@ -86,6 +86,11 @@ bool check_memory_region(unsigned long addr, size_t size, bool write,
- 	if (unlikely(size == 0))
- 		return true;
- 
-+	if (unlikely((long)size < 0)) {
-+		kasan_report(addr, size, write, ret_ip);
-+		return false;
-+	}
-+
- 	tag = get_tag((const void *)addr);
- 
- 	/*
-diff --git a/mm/kasan/tags_report.c b/mm/kasan/tags_report.c
-index 969ae08f59d7..f7ae474aef3a 100644
---- a/mm/kasan/tags_report.c
-+++ b/mm/kasan/tags_report.c
-@@ -36,6 +36,24 @@
- 
- const char *get_bug_type(struct kasan_access_info *info)
- {
-+	/*
-+	 * If access_size is negative numbers, then it has three reasons
-+	 * to be defined as heap-out-of-bounds bug type.
-+	 * 1) Casting negative numbers to size_t would indeed turn up as
-+	 *    a large size_t and its value will be larger than ULONG_MAX/2,
-+	 *    so that this can qualify as out-of-bounds.
-+	 * 2) If KASAN has new bug type and user-space passes negative size,
-+	 *    then there are duplicate reports. So don't produce new bug type
-+	 *    in order to prevent duplicate reports by some systems
-+	 *    (e.g. syzbot) to report the same bug twice.
-+	 * 3) When size is negative numbers, it may be passed from user-space.
-+	 *    So we always print heap-out-of-bounds in order to prevent that
-+	 *    kernel-space and user-space have the same bug but have duplicate
-+	 *    reports.
-+	 */
-+	if ((long)info->access_size < 0)
-+		return "heap-out-of-bounds";
-+
- #ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
- 	struct kasan_alloc_meta *alloc_meta;
- 	struct kmem_cache *cache;
--- 
-2.18.0
+1 572810090967000 0xd0438 [0x30]: PERF_RECORD_ITRACE_START pid: 0 tid: 0
+...
+--------------------------------------------------------------
+
+Thanks.
+Xiaojun.
 
