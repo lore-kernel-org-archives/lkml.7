@@ -2,132 +2,129 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0A3FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A039EC4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F08E52089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70FAD2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:49:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="J0MP7wHY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dt61Iqtl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438683AbfJQHs5 (ORCPT
+        id S2438731AbfJQHtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 03:48:57 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:2810 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390846AbfJQHs5 (ORCPT
+        Thu, 17 Oct 2019 03:49:41 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40362 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbfJQHtk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 03:48:57 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5da81ceb0000>; Thu, 17 Oct 2019 00:48:59 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 17 Oct 2019 00:48:56 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 17 Oct 2019 00:48:56 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 17 Oct
- 2019 07:48:56 +0000
-Received: from [10.19.108.113] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 17 Oct
- 2019 07:48:54 +0000
-Subject: Re: [PATCH v4 3/5] dt-bindings: phy: tegra: Add Tegra194 support
-To:     Rob Herring <robh@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        <linux-tegra@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Nagarjuna Kristam <nkristam@nvidia.com>
-References: <20191009024343.30218-1-jckuo@nvidia.com>
- <20191009024343.30218-4-jckuo@nvidia.com> <20191009233900.GA9109@bogus>
- <20191014131752.GF422231@ulmo>
- <CAL_Jsq+aKxfAir3skanfqmM+nFFzXPFL4eMa-+pq1kH-90YTbg@mail.gmail.com>
-X-Nvconfidentiality: public
-From:   JC Kuo <jckuo@nvidia.com>
-Message-ID: <57692050-8284-a31f-71fd-7441823f3f2b@nvidia.com>
-Date:   Thu, 17 Oct 2019 15:48:52 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 17 Oct 2019 03:49:40 -0400
+Received: by mail-oi1-f196.google.com with SMTP id k9so1336597oib.7
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 00:49:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cUHCv9N4xmS+l1KgWpk7F+i9WTYTBzhVIUBy6Hulrwk=;
+        b=dt61IqtloaZiwqdtmjmdhi8e3I0pzOWxPhzFhs+0FutgvUJ++FJOjdWO4BjIZxdya4
+         caOrhbydK56exS2QuA7Fd/bGjBtmOLqdRwkisDlBpmKuprQVBzPi+VbRWrE1Qg6x33eB
+         L75C7W/XAakRnGcEUuRBZ2z0un1gUplzXJroKi8gc4pISSeGK+cslFlF67xNbSnSkcrH
+         LFchrXP3xHyls9CwuwZQyeVw5GAWJqlGniCs+QihxmqhsqJFUxxUdUPgx8sH/6i8mrEB
+         sJzIy+1BqIQwiJztBJmzppL/ZLh/4Dco+FslmOq/Cu10P2FffFtoC2Vy5Qpl06EYeyt4
+         9GPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cUHCv9N4xmS+l1KgWpk7F+i9WTYTBzhVIUBy6Hulrwk=;
+        b=oFv9EcbO4DkHd/mgyRgndp3y0xXV4j4C+zKPy7+SPv9NhzpiJOTCEXaHvvGuK+Hcxt
+         wDT9nkOI5GvslX2f5AwHMm7xFa+z1AMJ22eyh+6lb162twPj36tVWYBJj0zlQASnCRUU
+         fa+bvfYtgshcQTRBbRmA6a4j2DZ3pt8XPVITe2PJaKXXDyhfQ2/L2byWFsWvr0WX0yFV
+         E2XA8AWOqKDC9/l3AwwmuMiTWzTgRxT1Wn/5+TftaJ1imsLlpfqUhaCPRI7raINr9DWS
+         LzUqBFhNHsyCapfPbd3ZXSwBzzhFDln9cBnGSOYvDQgtipJ1ucdjCQNvrXjbStFivxKu
+         eZcw==
+X-Gm-Message-State: APjAAAXCkBRSQ4VCfymOHRU+w1uQiPyJt4s9JfNjiWGPRwsPmjZiTM1y
+        67btZom2+iuKJYK8ytmGnwMJ0adKsLCE4WcNRpl3zg==
+X-Google-Smtp-Source: APXvYqw1eEq8EzjwYbx0MRbK18Xsa8AnqD+7ouVLKZUwR1kvjQzxQA3cqofqYXLP73Ei/x91O0n2XeJ8s6UCZGf1FOg=
+X-Received: by 2002:aca:55cb:: with SMTP id j194mr1913152oib.155.1571298579393;
+ Thu, 17 Oct 2019 00:49:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+aKxfAir3skanfqmM+nFFzXPFL4eMa-+pq1kH-90YTbg@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1571298539; bh=nIXBLya6bRUIuxRwlDLEPxSLP7joKF8reE7kSpNLl38=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=J0MP7wHYBCEfKBTs/ScBeIQ6GbtrNcqNyFlZAKn1s0n0c4EYsbdJuRD+0MGi4n//F
-         n9Osq2q7nMlc4FRJYZOTtgBCcnuipPXlXdLDPnwGzkuKogfOzKfb+y6so98Qxgkc0d
-         5BmEmxhdK/uCsV4LlzDWi/KvUFvkzNQwBXdoiQob/QyMc/mJJTv5zzpSVo9kqfFuRU
-         f8x0bsOkvM/8uBop1OCJwRSXu16r5aoN0bYR3YrIUeW0q6NkLdgNGkyd//MTZWXTWC
-         C/q4ANzzGy1cYWUQJT1j7OrmYEpOzgKcA6FC+axwM5svcij8jEIZJhNe3bnaZEimuj
-         qZ5PFweU7V7AQ==
+References: <20191016083959.186860-1-elver@google.com> <20191016083959.186860-2-elver@google.com>
+ <20191016184346.GT2328@hirez.programming.kicks-ass.net> <CANpmjNP4b9Eo3ZKE6maBs4ANS7K7sLiVB2CbebQnCH09TB+hZQ@mail.gmail.com>
+ <20191017074730.GW2328@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191017074730.GW2328@hirez.programming.kicks-ass.net>
+From:   Marco Elver <elver@google.com>
+Date:   Thu, 17 Oct 2019 09:49:27 +0200
+Message-ID: <CANpmjNPKbCrL+XzmMrnjqw+EYOa2H94cgE5sPJeuVONbCSqBHg@mail.gmail.com>
+Subject: Re: [PATCH 1/8] kcsan: Add Kernel Concurrency Sanitizer infrastructure
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Alexander Potapenko <glider@google.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        dave.hansen@linux.intel.com, David Howells <dhowells@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-efi@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thierry, Hi Rob, Hi Kishon,
-Please let me know your thoughts of the below implementation.
+On Thu, 17 Oct 2019 at 09:47, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Wed, Oct 16, 2019 at 09:34:05PM +0200, Marco Elver wrote:
+> > On Wed, 16 Oct 2019 at 20:44, Peter Zijlstra <peterz@infradead.org> wrote:
+> > > > +     /*
+> > > > +      * Disable interrupts & preemptions, to ignore races due to accesses in
+> > > > +      * threads running on the same CPU.
+> > > > +      */
+> > > > +     local_irq_save(irq_flags);
+> > > > +     preempt_disable();
+> > >
+> > > Is there a point to that preempt_disable() here?
+> >
+> > We want to avoid being preempted while the watchpoint is set up;
+> > otherwise, we would report data-races for CPU-local data, which is
+> > incorrect.
+>
+> Disabling IRQs already very much disables preemption. There is
+> absolutely no point in doing preempt_disable() when the whole section
+> already runs with IRQs disabled.
 
-1. Add a "bool disable_gen2" to "phy->attrs" structure.
-2. In _of_phy_get() of phy-core.c to add the follow to parse a generic property.
+Ah thanks for the clarification, in that case I assume it's safe to
+remove preempt_disable() for v2.
 
-	phy->attrs.disable_gen2 = of_property_read_bool(args.np,
-							"usb-disable-gen2");
-3. In individual phy driver, to add SOC/PHY specific programming accordingly.
-
-Thanks,
-JC
-
-On 10/14/19 9:40 PM, Rob Herring wrote:
-> On Mon, Oct 14, 2019 at 8:17 AM Thierry Reding <thierry.reding@gmail.com> wrote:
->>
->> On Wed, Oct 09, 2019 at 06:39:00PM -0500, Rob Herring wrote:
->>> On Wed, Oct 09, 2019 at 10:43:41AM +0800, JC Kuo wrote:
->>>> Extend the bindings to cover the set of features found in Tegra194.
->>>> Note that, technically, there are four more supplies connected to the
->>>> XUSB pad controller (DVDD_PEX, DVDD_PEX_PLL, HVDD_PEX and HVDD_PEX_PLL)
->>>> , but the power sequencing requirements of Tegra194 require these to be
->>>> under the control of the PMIC.
->>>>
->>>> Tegra194 XUSB PADCTL supports up to USB 3.1 Gen 2 speed, however, it is
->>>> possible for some platforms have long signal trace that could not
->>>> provide sufficient electrical environment for Gen 2 speed. To deal with
->>>> this, a new device node property "nvidia,disable-gen2" was added to
->>>> Tegra194 that be used to specifically disable Gen 2 speed for a
->>>> particular USB 3.0 port so that the port can be limited to Gen 1 speed
->>>> and avoid the instability.
->>>
->>> I suspect this may be a common issue and we should have a common
->>> property. Typically, this kind of property is in the controller though
->>> and supports multiple speed limits. See PCI bindings for inspiration.
->>
->> Given that support for gen 2 speeds is dependent on signal trace length,
->> it doesn't really make sense to restrict the whole controller to a given
->> speed if only the signal trace for a single port exceeds the limit for
->> which gen 2 would work.
->>
->> Also, the USB PHYs are in a different hardware block than the USB
->> controller, so this really is a property of the PHY block, not the USB
->> controller.
-> 
-> Okay, but still should be common for USB PHYs IMO.
-> 
-> Rob
-> 
+> --
+> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20191017074730.GW2328%40hirez.programming.kicks-ass.net.
