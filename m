@@ -2,131 +2,273 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A80FA3735
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E02ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77EAF20869
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:43:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="1W6T+By6"
+	by mail.kernel.org (Postfix) with ESMTP id 2F051214E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:43:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406480AbfJQMnF (ORCPT
+        id S2502389AbfJQMnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 08:43:05 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45742 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392868AbfJQMnE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:43:04 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r5so2158823wrm.12
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 05:43:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HGYfQMOQQ/Llw7JM+7jrZqk8jvWFbqivJs1N/X/ktYU=;
-        b=1W6T+By6Fyb2jmC1zIN29lxvN1RfimvyqGZm/IyNd0V+jAhEnMuR3HyZpQgzrmOhLk
-         PVRFTAfV/ZKXqr6U/08O1Ez3u3mVXh5UF45EOmJyN3i4IzE3ozHnHpbxebhjZ94shBvL
-         gHXflbn54dpLGUVRAM6N1AIiKogkN2aPAmJCtXER0fMyKruwAyjCtnCp3Rdk4VX76zV8
-         vxUCyNaqnutYi9qbxamM5qop4YUgQPt/9Tt21OPAYxz34RRWnzsq5SkxwtK6D7YJZOTA
-         WmDUDbMaLCyxAVbKdVFhHQMpTO7XA2cyDMEkk1fNYHBI9fnGNSx8oQhGeCqkQaUCwJaf
-         ML8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HGYfQMOQQ/Llw7JM+7jrZqk8jvWFbqivJs1N/X/ktYU=;
-        b=BHsP6UtNSXG2SM2S3o3FRygrzRkeXsIemKMgjyT8R9wckQYfqHbR1zjOEEQ+Lhfs+V
-         /UqiGG8Rp2x9zB/ue6UTw3FpMnFbgCVtLH4PRSB9FqRXsefxEAnby3KMCGWL7lXAVEoO
-         9F9fSRcaq4dMjHjRuiANpLfyXl0kjUBQoqNOvq8o/xVyq/KMemIGMIoqHivj7HJX9oQP
-         3gxql4yjK2UZAfbyJqnzEHzXgZKlFeIogMJj/RWVsXni/TFZxEzFPccjY1EPxuHdSjlW
-         IooDDmRfhhUN6fWZjl08qkxhMI7Q/CaLbp/FbmOyVms+HDolQwxxnt2MgNCCTr7SNR1Q
-         u1bA==
-X-Gm-Message-State: APjAAAW17O2PVw6DaEI7sLJzBqGCTwZoiY3GodHq5glfgoj5v9S7sCsM
-        DlnmGK38ghi5xk0xiM34VpggzQ==
-X-Google-Smtp-Source: APXvYqxSTrTbdDOJVZ/NSpsLlPLKMh5bomXVvJWF0PlOY6wiEaCsHR6FF/GB5VdIRYS1B4NMgrdXsA==
-X-Received: by 2002:a05:6000:1190:: with SMTP id g16mr2819078wrx.133.1571316182250;
-        Thu, 17 Oct 2019 05:43:02 -0700 (PDT)
-Received: from netronome.com ([2001:982:756:703:d63d:7eff:fe99:ac9d])
-        by smtp.gmail.com with ESMTPSA id k8sm576756wrg.15.2019.10.17.05.43.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 17 Oct 2019 05:43:01 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 14:43:01 +0200
-From:   Simon Horman <simon.horman@netronome.com>
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        linux-kernel@lists.codethink.co.uk,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] RFC: Bluetooth: missed cpu_to_le16 conversion in
- hci_init4_req
-Message-ID: <20191017124300.fktzd27yy2t7gcqx@netronome.com>
-References: <20191016113943.19256-1-ben.dooks@codethink.co.uk>
- <20191016122022.kz4xzx4hzmtuoh5l@netronome.com>
- <BFA3CB11-5FD8-4BD8-9DDA-62707AB84626@holtmann.org>
+        Thu, 17 Oct 2019 08:43:08 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:41714 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2392868AbfJQMnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 08:43:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 31C6F1993;
+        Thu, 17 Oct 2019 05:42:43 -0700 (PDT)
+Received: from dawn-kernel.cambridge.arm.com (unknown [10.1.197.116])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 63F353F718;
+        Thu, 17 Oct 2019 05:42:42 -0700 (PDT)
+Subject: Re: [PATCH 2/3] arm64: nofpsmid: Clear TIF_FOREIGN_FPSTATE flag for
+ early tasks
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com,
+        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
+        will@kernel.org
+References: <20191010171517.28782-1-suzuki.poulose@arm.com>
+ <20191010171517.28782-3-suzuki.poulose@arm.com>
+ <20191011112642.GF27757@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <1688a2b2-080c-40cc-ab41-df234aa447c0@arm.com>
+Date:   Thu, 17 Oct 2019 13:42:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BFA3CB11-5FD8-4BD8-9DDA-62707AB84626@holtmann.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191011112642.GF27757@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 08:42:48PM +0200, Marcel Holtmann wrote:
-> Hi Simon,
-> 
-> >> It looks like in hci_init4_req() the request is being
-> >> initialised from cpu-endian data but the packet is specified
-> >> to be little-endian. This causes an warning from sparse due
-> >> to __le16 to u16 conversion.
-> >> 
-> >> Fix this by using cpu_to_le16() on the two fields in the packet.
-> >> 
-> >> net/bluetooth/hci_core.c:845:27: warning: incorrect type in assignment (different base types)
-> >> net/bluetooth/hci_core.c:845:27:    expected restricted __le16 [usertype] tx_len
-> >> net/bluetooth/hci_core.c:845:27:    got unsigned short [usertype] le_max_tx_len
-> >> net/bluetooth/hci_core.c:846:28: warning: incorrect type in assignment (different base types)
-> >> net/bluetooth/hci_core.c:846:28:    expected restricted __le16 [usertype] tx_time
-> >> net/bluetooth/hci_core.c:846:28:    got unsigned short [usertype] le_max_tx_time
-> >> 
-> >> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> >> ---
-> >> Cc: Marcel Holtmann <marcel@holtmann.org>
-> >> Cc: Johan Hedberg <johan.hedberg@gmail.com>
-> >> Cc: "David S. Miller" <davem@davemloft.net>
-> >> Cc: linux-bluetooth@vger.kernel.org
-> >> Cc: netdev@vger.kernel.org
-> >> Cc: linux-kernel@vger.kernel.org
-> >> ---
-> >> net/bluetooth/hci_core.c | 4 ++--
-> >> 1 file changed, 2 insertions(+), 2 deletions(-)
-> >> 
-> >> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-> >> index 04bc79359a17..b2559d4bed81 100644
-> >> --- a/net/bluetooth/hci_core.c
-> >> +++ b/net/bluetooth/hci_core.c
-> >> @@ -842,8 +842,8 @@ static int hci_init4_req(struct hci_request *req, unsigned long opt)
-> >> 	if (hdev->le_features[0] & HCI_LE_DATA_LEN_EXT) {
-> >> 		struct hci_cp_le_write_def_data_len cp;
-> >> 
-> >> -		cp.tx_len = hdev->le_max_tx_len;
-> >> -		cp.tx_time = hdev->le_max_tx_time;
-> >> +		cp.tx_len = cpu_to_le16(hdev->le_max_tx_len);
-> >> +		cp.tx_time = cpu_to_le16(hdev->le_max_tx_time);
-> > 
-> > I would suggest that the naming of the le_ fields of struct hci_dev
-> > implies that the values stored in those fields should be little endian
-> > (but those that are more than bone byte wide are not).
-> 
-> the le_ stands for Low Energy and not for Little Endian.
+Hi Dave
 
-Thanks, in that case I have no objections.
+Thanks for the comments.
+
+On 11/10/2019 12:26, Dave Martin wrote:
+> On Thu, Oct 10, 2019 at 06:15:16PM +0100, Suzuki K Poulose wrote:
+>> We detect the absence of FP/SIMD after we boot the SMP CPUs, and by then
+>> we have kernel threads running already with TIF_FOREIGN_FPSTATE set which
+>> could be inherited by early userspace applications (e.g, modprobe triggered
+>> from initramfs). This could end up in the applications stuck in
+>> do_nofity_resume() as we never clear the TIF flag, once we now know that
+>> we don't support FP.
+>>
+>> Fix this by making sure that we clear the TIF_FOREIGN_FPSTATE flag
+>> for tasks which may have them set, as we would have done in the normal
+>> case, but avoiding touching the hardware state (since we don't support any).
+>>
+>> Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> ---
+>>   arch/arm64/kernel/fpsimd.c | 26 ++++++++++++++++----------
+>>   1 file changed, 16 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+>> index 37d3912cfe06..dfcdd077aeca 100644
+>> --- a/arch/arm64/kernel/fpsimd.c
+>> +++ b/arch/arm64/kernel/fpsimd.c
+>> @@ -1128,12 +1128,19 @@ void fpsimd_bind_state_to_cpu(struct user_fpsimd_state *st, void *sve_state,
+>>    */
+>>   void fpsimd_restore_current_state(void)
+>>   {
+>> -	if (!system_supports_fpsimd())
+>> -		return;
+>> -
+>>   	get_cpu_fpsimd_context();
+>> -
+>> -	if (test_and_clear_thread_flag(TIF_FOREIGN_FPSTATE)) {
+>> +	/*
+>> +	 * For the tasks that were created before we detected the absence of
+>> +	 * FP/SIMD, the TIF_FOREIGN_FPSTATE could be set via fpsimd_thread_switch()
+>> +	 * and/or could be inherited from the parent(init_task has this set). Even
+>> +	 * though userspace has not run yet, this could be inherited by the
+>> +	 * processes forked from one of those tasks (e.g, modprobe from initramfs).
+>> +	 * If the system doesn't support FP/SIMD, we must clear the flag for the
+>> +	 * tasks mentioned above, to indicate that the FPSTATE is clean (as we
+>> +	 * can't have one) to avoid looping for ever to clear the flag.
+>> +	 */
+>> +	if (test_and_clear_thread_flag(TIF_FOREIGN_FPSTATE) &&
+>> +	    system_supports_fpsimd()) {
+> 
+> I'm not too keen on this approach: elsewhere we just stub out all the
+> FPSIMD handling logic if !system_supports_fpsimd() -- I think we should
+> be using this test everywhere rather than relying on TIF_FOREIGN_FPSTATE.
+
+We used to do this. But the flag is not cleared anymore once we detect
+the absence of FP/SIMD.
+
+> Rather, I feel that TIF_FOREIGN_FPSTATE means "if this is a user task
+> and this task is current() and the system supports FPSIMD at all, this
+> task's FPSIMD state is not loaded in the cpu".
+
+Yes, that is  correct. However, we ran some tasks, even before we detected
+that the FPSIMD is missing. So, we need to clear the flag for those tasks
+to make sure the flag state is consistent, as explained in the comment.
+
+Another option is to clear this flag in fpsimd_thread_switch(), something like,
+rather than sprinkling the "flag fixup" everywhere:
+
+diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+index dfcdd077aeca..2d8091b6ebfb 100644
+--- a/arch/arm64/kernel/fpsimd.c
++++ b/arch/arm64/kernel/fpsimd.c
+@@ -982,9 +982,14 @@ void fpsimd_thread_switch(struct task_struct *next)
+  {
+         bool wrong_task, wrong_cpu;
+
+-       if (!system_supports_fpsimd())
++       if (!system_supports_fpsimd()) {
++               /*
++                * Clear any TIF flags which may have been set, before we
++                * detected the absense of FPSIMD.
++                */
++               clear_task_thread_flag(next, TIF_FOREIGN_FPSTATE);
+                 return;
+-
++       }
+         __get_cpu_fpsimd_context();
+
+
+And also at :
+
+diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+index a47462def04b..cd8e94d5dc8d 100644
+--- a/arch/arm64/kernel/process.c
++++ b/arch/arm64/kernel/process.c
+@@ -374,7 +374,10 @@ int copy_thread(unsigned long clone_flags, unsigned long 
+stack_start,
+          * Otherwise we could erroneously skip reloading the FPSIMD
+          * registers for p.
+          */
+-       fpsimd_flush_task_state(p);
++       if (system_supports_fpsimd())
++               fpsimd_flush_task_state(p);
++       else
++               clear_tsk_thread_flag(p, TIF_FOREIGN_FPSTATE);
+
+         if (likely(!(p->flags & PF_KTHREAD))) {
+                 *childregs = *current_pt_regs();
+
+
+That way we make sure the flag doesn't violate our assumption and we can
+bail out calling into the stubs with the existing checks.
+
+> 
+> I think we should ensure that any check on TIF_FOREIGN_FPSTATE is
+> shadowed by a check on system_supports_fpsimd() somewhere.  This already
+> exists in many places -- we just need to fill in the missing ones.
+> 
+> fpsimd_save() is a backend function that should only be called if
+> system_supports_fpsimd(), so that should not need any check internally,
+> but we should make sure that calls to this function are appropriately
+> protected with in if (system_supports_fpsimd()).
+
+Agree.
+
+> 
+> For other maintenance functions intended for outside callers:
+> 
+>   * fpsimd_bind_task_to_cpu()
+This was/is called from fpsimd_{update,restore}_current_state()
+which are protected with system_supports_fpsimd() check already.
+
+>   * fpsimd_bind_state_to_cpu()
+
+This is only used by the KVM code and will only be used after we
+have finalized the capabilities and thus we are covered by the
+system_supports_fpsimd() check in __hyp_handle_fpsimd() which
+sets the FP_ENABLED flag.
+
+>   * fpsimd_flush_task_state()
+
+This seemed rather innocent, but looking at the callers, I realise
+that we need the check in fpr_{get/set} for NT_REGS and return errors
+if we are asked to deal with FP regs.
+
+>   * fpsimd_save_and_flush_cpu_state()
+
+This must not be called and is only triggered from KVM (covered) and
+the PM notifier (which is not registered if fp/simd is missing).
+
+> 
+> the situation is less clear.  Does is make sense to call these at all
+> if !system_supports_fpsimd()?  I'm not currently sure.  We could at
+> least drop some WARN_ON() into these to check, after revieweing their
+> callsites.
+
+Sure, I agree.
+
+> 
+>>   		task_fpsimd_load();
+>>   		fpsimd_bind_task_to_cpu();
+>>   	}
+>> @@ -1148,17 +1155,16 @@ void fpsimd_restore_current_state(void)
+>>    */
+>>   void fpsimd_update_current_state(struct user_fpsimd_state const *state)
+>>   {
+>> -	if (!system_supports_fpsimd())
+>> -		return;
+>> -
+>>   	get_cpu_fpsimd_context();
+>>   
+>>   	current->thread.uw.fpsimd_state = *state;
+>>   	if (system_supports_sve() && test_thread_flag(TIF_SVE))
+>>   		fpsimd_to_sve(current);
+> 
+> Why should we do this stuff on a system that doesn't support FP?
+
+I was under the assumption that, !sve => !fpsimd. Otherwise, we have
+bigger problems with the code where we transfer sve state to fpsimd state
+without proper checks.
+
+>> -	task_fpsimd_load();
+>> -	fpsimd_bind_task_to_cpu();
+>> +	if (system_supports_fpsimd()) {
+>> +		task_fpsimd_load();
+>> +		fpsimd_bind_task_to_cpu();
+>> +	}
+>>   
+>>   	clear_thread_flag(TIF_FOREIGN_FPSTATE);
+
+
+> 
+> [...]
+> 
+> Not in scope for a stable fix, but:
+> 
+> It would be interesting to try to strip out TIF_FOREIGN_FPSTATE
+> entirely and do some benchmarks and irq latency measurements:
+> 
+> TIF_FOREIGN_FPSTATE is just a cached copy of the wrong_task || wrong_cpu
+> condition defined in fpsimd_thread_switch() --
+> 
+> That means we have to do maintenance on it all over the place to keep
+> it in sync with the condition it represents -- this has proven to be
+> a source of complexity and subtle bugs, as well as making the code
+> fragile to maintain.
+> 
+> The only point of all this is so that there is a thread flag for
+> do_notify_resume() to check.  Now that do_notify_resume() is C it would
+> be trivial to check the real condition -- there would be a cost
+> increase and interrupt latency increase here, but maybe not that much.
+> 
+> This wouldn't solve the whole problem, but it might remove a layer of
+> complexity.
+
+That is something I can take a look at.
+
+Cheers
+Suzuki
