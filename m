@@ -2,115 +2,134 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7A9FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0287AFA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C492A20854
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:47:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="IU2aHUGu"
+	by mail.kernel.org (Postfix) with ESMTP id D333520854
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:47:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440378AbfJQOrR (ORCPT
+        id S2502734AbfJQOrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 10:47:17 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:35515 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440344AbfJQOrQ (ORCPT
+        Thu, 17 Oct 2019 10:47:22 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:56365 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2440344AbfJQOrU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:47:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1571323636; x=1602859636;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=DhO81u4ZNcMxwucobpy3G4tWaQ8N0edqIV6MQOrjO4w=;
-  b=IU2aHUGumledk0nNowrgsI42+eLkn9RmUtV0Zm01MChovK1p5/5Gkv9p
-   Nv3oQJvXT3dFV7PjgRB/2Wu4MjL1pwslNeeTr834Eq8dC7iPV+Wln++AF
-   E3l62hJucLPCpL0pnOFe1J9stX6/rk+ghuWPKx/GoKnk8wR4u2AD4I8xK
-   o=;
-X-IronPort-AV: E=Sophos;i="5.67,308,1566864000"; 
-   d="scan'208";a="759881823"
-Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.124.125.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 17 Oct 2019 14:47:15 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (Postfix) with ESMTPS id 29913240B9F;
-        Thu, 17 Oct 2019 14:47:13 +0000 (UTC)
-Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 17 Oct 2019 14:47:13 +0000
-Received: from ua9e4f3715fbc5f.ant.amazon.com (10.43.160.153) by
- EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 17 Oct 2019 14:47:07 +0000
-From:   Hanna Hawa <hhhawa@amazon.com>
-To:     <axboe@kernel.dk>
-CC:     <linux-ide@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
-        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
-        <hhhawa@amazon.com>
-Subject: [PATCH 1/1] ahci: Add support for Amazon's Annapurna Labs SATA controller
-Date:   Thu, 17 Oct 2019 15:46:53 +0100
-Message-ID: <20191017144653.3429-1-hhhawa@amazon.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 17 Oct 2019 10:47:20 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-98.corp.google.com [104.133.0.98] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x9HEl8g9010903
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 17 Oct 2019 10:47:10 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 6B6B7420458; Thu, 17 Oct 2019 10:47:08 -0400 (EDT)
+Date:   Thu, 17 Oct 2019 10:47:08 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Vegard Nossum <vegard.nossum@oracle.com>
+Cc:     Pratyush Yadav <me@yadavpratyush.com>, workflows@vger.kernel.org,
+        Git Mailing List <git@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        Eric Wong <e@80x24.org>
+Subject: Re: email as a bona fide git transport
+Message-ID: <20191017144708.GI25548@mit.edu>
+References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
+ <20191016150020.cr6jgfpd2c6fyg7t@yadavpratyush.com>
+ <a1c33600-14e6-be37-c026-8d8b8e4bad92@oracle.com>
+ <20191017131140.GG25548@mit.edu>
+ <507d7293-964a-048b-2de6-98e7e7982cfb@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.153]
-X-ClientProxiedBy: EX13D14UWB004.ant.amazon.com (10.43.161.137) To
- EX13D19EUB003.ant.amazon.com (10.43.166.69)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <507d7293-964a-048b-2de6-98e7e7982cfb@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds basic support for Amazon's Annapurna Labs SATA
-controller.
+On Thu, Oct 17, 2019 at 04:01:33PM +0200, Vegard Nossum wrote:
+> 
+> In your example, couldn't Darrick simply base his xfs work on the latest
+> xfs branch that was pulled by Linus? That should be up to date with all
+> things xfs without having any of the things that made Linus's tree not
+> work for him.
 
-Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
----
- drivers/ata/ahci.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Sure, but sometimes there are changes in subsystems which the file
+system depends upon that were also merged by Linus.  So for example,
+the ext4 branch might be based on v5.3-rc4, and gets pulled after v5.3
+is released, along with a huge number of other subsystem trees, so the
+delta between v5.3 and v5.3-rc1 is ***huge***.
 
-diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
-index dd92faf197d5..8ac7e806aa97 100644
---- a/drivers/ata/ahci.c
-+++ b/drivers/ata/ahci.c
-@@ -56,6 +56,7 @@ enum board_ids {
- 	board_ahci_yes_fbs,
- 
- 	/* board IDs for specific chipsets in alphabetical order */
-+	board_ahci_al,
- 	board_ahci_avn,
- 	board_ahci_mcp65,
- 	board_ahci_mcp77,
-@@ -167,6 +168,13 @@ static const struct ata_port_info ahci_port_info[] = {
- 		.port_ops	= &ahci_ops,
- 	},
- 	/* by chipsets */
-+	[board_ahci_al] = {
-+		AHCI_HFLAGS	(AHCI_HFLAG_NO_PMP | AHCI_HFLAG_NO_MSI),
-+		.flags		= AHCI_FLAG_COMMON,
-+		.pio_mask	= ATA_PIO4,
-+		.udma_mask	= ATA_UDMA6,
-+		.port_ops	= &ahci_ops,
-+	},
- 	[board_ahci_avn] = {
- 		.flags		= AHCI_FLAG_COMMON,
- 		.pio_mask	= ATA_PIO4,
-@@ -415,6 +423,11 @@ static const struct pci_device_id ahci_pci_tbl[] = {
- 	{ PCI_VDEVICE(ATI, 0x4394), board_ahci_sb700 }, /* ATI SB700/800 */
- 	{ PCI_VDEVICE(ATI, 0x4395), board_ahci_sb700 }, /* ATI SB700/800 */
- 
-+	/* Amazon's Annapurna Labs support */
-+	{ PCI_DEVICE(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031),
-+		.class = PCI_CLASS_STORAGE_SATA_AHCI,
-+		.class_mask = 0xffffff,
-+		board_ahci_al },
- 	/* AMD */
- 	{ PCI_VDEVICE(AMD, 0x7800), board_ahci }, /* AMD Hudson-2 */
- 	{ PCI_VDEVICE(AMD, 0x7900), board_ahci }, /* AMD CZ */
--- 
-2.17.1
+So while I could base my development on my previous ext4.git branch
+(based off of v5.3-rc4), at *some* point I need to be able to sync up
+with upstream.  And the usual way to do this is to start a new
+development branch based on (for example) v5.4-rc2, or in some cases
+v5.4-rc4.
 
+We could keep the development branch on based off of v5.3-rc4, and
+wait until things stablize, and *then* merge in v5.4-rcX, when
+v5.4-rcX is finally stable, but that makes for a more complex merge,
+and so it means that things like "git log origin..master" don't really
+work any more.  So the preferred development practice is very much....
+
+   rc2 o --> patch 1 --> patch 2 --> ... --> patch N 
+(origin)                                     (master)
+
+Where the "master" branch gets merged into the rewinding "dev" branch
+(which works much like git's pu branch), and where the "master" branch
+is what Linus will merge at the next merge window.
+
+> Otherwise, you could apply the stabilisation patches and then do your
+> final testing in a branch that merges that with your patchset, like so:
+> 
+>    rc1 o -----> fixup A ------> fixup B ---->o merge (tested)
+> (base)  \                                   /
+>          \                                 /
+>           ---> patch 001 --> patch 002 -->o patchset (submitted)
+
+I cloud do that, but remember that the checked out kernel tree is
+about a gigabyte (this assumes using git clone --shared, so it doesn't
+include the git pack files, and this is source only; the object files
+are another 2.6 GB).  I could keep separate checked out trees, and
+separate build trees, but that burns a lot of disk/SSD space.  Or I
+could switch back and forth by using "git checkout" between the
+development branch and the branch with the stablization patches, but
+then I'm constantly having to rebuild the object files, and ccache
+only helps so much.
+
+So it's much simpler to put the fixup patches at the on top of the
+origin, and then mail them out without having to play git branch
+rebasing gymnastics.  When the patch series is finally ready to roll,
+then the maintainer will apply the patch series on a clean branch,
+since hopefully by then -rc3 or -rc4 is finally stable enough to use
+as an origin point.
+
+So the idea is that developer might be sending out revisions of their
+patches on top of -rc1 plus fixup patches, but then the final version
+of the patch series, after a few rounds of review, gets applied on top
+of -rc3 or -rc4.
+
+> I think the more difficult problem to solve might be how to ensure that
+> the base commit is actually public/reachable when this is the intention.
+> A bot watching the mailing list could always respond with a "Hey, I
+> don't have that, could you rebase the series or push it somewhere?". But
+> it would be even better if git could tell you when you're about to
+> submit a patch. Maybe something like:
+> 
+>   git send-email --ensure-reachable-from [remote] rev^^..
+> 
+> In the worst case, I guess the base commit will just not be available --
+> the email will still have a sha1 on it, though, and which might still be
+> usable as an identifier for the patch/patchset. If not, it's still not
+> worse than the current workflow (which would still work).
+
+... or what we can do is allow the developer to specify the intended
+base --- e.g., -rc1, even though his patchset was against "-rc1 plus fixups".
+
+	     	       	     	  	     - Ted
