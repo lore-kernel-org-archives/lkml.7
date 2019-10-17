@@ -2,139 +2,68 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F59ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D55F2ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6191C2064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9CE320650
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:39:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394569AbfJQThh (ORCPT
+        id S2439820AbfJQTjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 15:37:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44550 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727148AbfJQThg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 15:37:36 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8261320640;
-        Thu, 17 Oct 2019 19:37:35 +0000 (UTC)
-Date:   Thu, 17 Oct 2019 15:37:33 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [BUG] libtraceevent: perf script -g python segfaults
-Message-ID: <20191017153733.630cd5eb@gandalf.local.home>
-In-Reply-To: <20191017192832.GB3600@kernel.org>
-References: <20191017154205.GC8974@kernel.org>
-        <20191017143841.317b26b5@gandalf.local.home>
-        <20191017144114.48e25298@gandalf.local.home>
-        <20191017192832.GB3600@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 17 Oct 2019 15:39:45 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:45050 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437635AbfJQTjp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 15:39:45 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iLBcd-0006f2-4o; Thu, 17 Oct 2019 19:39:43 +0000
+From:   Al Viro <viro@ZenIV.linux.org.uk>
+To:     linux-scsi@vger.kernel.org
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
+Subject: [RFC PATCH 2/8] sg_new_write(): replace access_ok() + __copy_from_user() with copy_from_user()
+Date:   Thu, 17 Oct 2019 20:39:19 +0100
+Message-Id: <20191017193925.25539-2-viro@ZenIV.linux.org.uk>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191017193925.25539-1-viro@ZenIV.linux.org.uk>
+References: <20191017193659.GA18702@ZenIV.linux.org.uk>
+ <20191017193925.25539-1-viro@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019 16:28:32 -0300
-Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-> Em Thu, Oct 17, 2019 at 02:41:14PM -0400, Steven Rostedt escreveu:
-> > On Thu, 17 Oct 2019 14:38:41 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> >   
-> > >  struct tep_event *trace_find_next_event(struct tep_handle *pevent,
-> > >  					struct tep_event *event)
-> > >  {
-> > > +	static struct tep_event **all_events;
-> > >  	static int idx;
-> > >  	int events_count;
-> > > -	struct tep_event *all_events;  
-> > 
-> > If we are going to use static variables, let's make them all static and
-> > optimize it a little more...  
-> 
-> I'll test it, but can't you have this somewhere else, i.e. at
-> tep_handle perhaps?
-> 
->
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+ drivers/scsi/sg.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-Or we can nuke the function entirely, it's a rather silly helper
-anyway. Just do this:
-
--- Steve
-
-
-diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
-index b93f36b887b5..f1d5f564aa46 100644
---- a/tools/perf/util/scripting-engines/trace-event-perl.c
-+++ b/tools/perf/util/scripting-engines/trace-event-perl.c
-@@ -537,10 +537,11 @@ static int perl_stop_script(void)
- 
- static int perl_generate_script(struct tep_handle *pevent, const char *outfile)
- {
-+	int i, not_first, count, nr_events;
-+	struct tep_event **all_events;
- 	struct tep_event *event = NULL;
- 	struct tep_format_field *f;
- 	char fname[PATH_MAX];
--	int not_first, count;
- 	FILE *ofp;
- 
- 	sprintf(fname, "%s.pl", outfile);
-@@ -601,8 +602,11 @@ sub print_backtrace\n\
- }\n\n\
- ");
- 
-+	nr_events = tep_get_events_count(pevent);
-+	all_events = tep_list_events(pevent, TEP_EVENT_SORT_ID);
- 
--	while ((event = trace_find_next_event(pevent, event))) {
-+	for (i = 0; all_events && i < nr_events; i++) {
-+		event = all_events[i];
- 		fprintf(ofp, "sub %s::%s\n{\n", event->system, event->name);
- 		fprintf(ofp, "\tmy (");
- 
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 87ef16a1b17e..2a148a10d0de 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -1590,10 +1590,11 @@ static int python_stop_script(void)
- 
- static int python_generate_script(struct tep_handle *pevent, const char *outfile)
- {
-+	int i, not_first, count, nr_events;
-+	struct tep_event **all_events;
- 	struct tep_event *event = NULL;
- 	struct tep_format_field *f;
- 	char fname[PATH_MAX];
--	int not_first, count;
- 	FILE *ofp;
- 
- 	sprintf(fname, "%s.py", outfile);
-@@ -1638,7 +1639,11 @@ static int python_generate_script(struct tep_handle *pevent, const char *outfile
- 	fprintf(ofp, "def trace_end():\n");
- 	fprintf(ofp, "\tprint(\"in trace_end\")\n\n");
- 
--	while ((event = trace_find_next_event(pevent, event))) {
-+	nr_events = tep_get_events_count(pevent);
-+	all_events = tep_list_events(pevent, TEP_EVENT_SORT_ID);
-+
-+	for (i = 0; all_events && i < nr_events; i++) {
-+		event = all_events[i];
- 		fprintf(ofp, "def %s__%s(", event->system, event->name);
- 		fprintf(ofp, "event_name, ");
- 		fprintf(ofp, "context, ");
-
+diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
+index 634460421ce4..026628aa556d 100644
+--- a/drivers/scsi/sg.c
++++ b/drivers/scsi/sg.c
+@@ -763,11 +763,7 @@ sg_new_write(Sg_fd *sfp, struct file *file, const char __user *buf,
+ 		sg_remove_request(sfp, srp);
+ 		return -EMSGSIZE;
+ 	}
+-	if (!access_ok(hp->cmdp, hp->cmd_len)) {
+-		sg_remove_request(sfp, srp);
+-		return -EFAULT;	/* protects following copy_from_user()s + get_user()s */
+-	}
+-	if (__copy_from_user(cmnd, hp->cmdp, hp->cmd_len)) {
++	if (copy_from_user(cmnd, hp->cmdp, hp->cmd_len)) {
+ 		sg_remove_request(sfp, srp);
+ 		return -EFAULT;
+ 	}
+-- 
+2.11.0
 
