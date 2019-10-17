@@ -2,120 +2,103 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE72FA3732
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B01CFA3733
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57F60214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 223DE20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:59:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408420AbfJQI5s (ORCPT
+        id S2408431AbfJQI7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 04:57:48 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:35942 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S2408397AbfJQI5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 04:57:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0970B165C;
-        Thu, 17 Oct 2019 01:57:26 -0700 (PDT)
-Received: from [192.168.0.9] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3BF2B3F718;
-        Thu, 17 Oct 2019 01:57:24 -0700 (PDT)
-Subject: Re: [RFC PATCH v3 4/6] sched/cpufreq: Introduce sugov_cpu_ramp_boost
-To:     Douglas RAILLARD <douglas.raillard@arm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     linux-pm@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
-        rjw@rjwysocki.net, viresh.kumar@linaro.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, qperret@qperret.net,
-        patrick.bellasi@matbug.net, dh.han@samsung.com
-References: <20191011134500.235736-1-douglas.raillard@arm.com>
- <20191011134500.235736-5-douglas.raillard@arm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <87e6ce4f-af41-c585-7b48-81b5c7f45ef0@arm.com>
-Date:   Thu, 17 Oct 2019 10:57:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 17 Oct 2019 04:59:15 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:39075 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404051AbfJQI7O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 04:59:14 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id F3C74801AB; Thu, 17 Oct 2019 10:58:56 +0200 (CEST)
+Date:   Thu, 17 Oct 2019 10:59:12 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        Bob Moore <robert.moore@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 68/81] ACPICA: ACPI 6.3: PPTT add additional fields
+ in Processor Structure Flags
+Message-ID: <20191017085912.GA8594@amd>
+References: <20191016214805.727399379@linuxfoundation.org>
+ <20191016214846.058277835@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20191011134500.235736-5-douglas.raillard@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="Qxx1br4bt0+wmkIi"
+Content-Disposition: inline
+In-Reply-To: <20191016214846.058277835@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/10/2019 15:44, Douglas RAILLARD wrote:
 
-[...]
+--Qxx1br4bt0+wmkIi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> @@ -181,6 +185,42 @@ static void sugov_deferred_update(struct sugov_policy *sg_policy, u64 time,
->  	}
->  }
->  
-> +static unsigned long sugov_cpu_ramp_boost(struct sugov_cpu *sg_cpu)
-> +{
-> +	return READ_ONCE(sg_cpu->ramp_boost);
-> +}
-> +
-> +static unsigned long sugov_cpu_ramp_boost_update(struct sugov_cpu *sg_cpu)
-> +{
-> +	struct rq *rq = cpu_rq(sg_cpu->cpu);
-> +	unsigned long util_est_enqueued;
-> +	unsigned long util_avg;
-> +	unsigned long boost = 0;
-> +
-> +	util_est_enqueued = READ_ONCE(rq->cfs.avg.util_est.enqueued);
-> +	util_avg = READ_ONCE(rq->cfs.avg.util_avg);
-> +
-> +	/*
-> +	 * Boost when util_avg becomes higher than the previous stable
-> +	 * knowledge of the enqueued tasks' set util, which is CPU's
-> +	 * util_est_enqueued.
-> +	 *
-> +	 * We try to spot changes in the workload itself, so we want to
-> +	 * avoid the noise of tasks being enqueued/dequeued. To do that,
-> +	 * we only trigger boosting when the "amount of work' enqueued
+Hi!
 
-s/"amount of work'/"amount of work" or 'amount of work'
+> From: Erik Schmauss <erik.schmauss@intel.com>
+>=20
+> Commit b5eab512e7cffb2bb37c4b342b5594e9e75fd486 upstream.
 
-[...]
+So this introduces another format of "upstream" information. So far I
+had this:
 
-> @@ -552,6 +593,8 @@ static unsigned int sugov_next_freq_shared(struct sugov_cpu *sg_cpu, u64 time)
->  		unsigned long j_util, j_max;
->  
->  		j_util = sugov_get_util(j_sg_cpu);
-> +		if (j_sg_cpu == sg_cpu)
-> +			sugov_cpu_ramp_boost_update(sg_cpu);
+		ma =3D re.match(".*Upstream commit ([0-9a-f]*) .*", l)
+		...
+                ma =3D re.match("commit ([0-9a-f]*) upstream[.]*", l)
 
-Can you not call this already in sugov_update_shared(), like in the
-sugov_update_single() case?
+I believe this information belongs to the signoff area; it is
+important to know who pushed patch to the upstream and who is pusing
+it to the stable.
 
-diff --git a/kernel/sched/cpufreq_schedutil.c
-b/kernel/sched/cpufreq_schedutil.c
-index e35c20b42780..4c53f63a537d 100644
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -595,8 +595,6 @@ static unsigned int sugov_next_freq_shared(struct
-sugov_cpu *sg_cpu, u64 time)
-                unsigned long j_util, j_max;
+Could we just introduce "Upstream: <sha1>" tag and use it? It would
+improve consistency...
 
-                j_util = sugov_get_util(j_sg_cpu);
--               if (j_sg_cpu == sg_cpu)
--                       sugov_cpu_ramp_boost_update(sg_cpu);
-                j_max = j_sg_cpu->max;
-                j_util = sugov_iowait_apply(j_sg_cpu, time, j_util, j_max);
+Thanks,
+								Pavel
 
-@@ -625,6 +623,7 @@ sugov_update_shared(struct update_util_data *hook,
-u64 time, unsigned int flags)
-        ignore_dl_rate_limit(sg_cpu, sg_policy);
+> ACPICA commit c736ea34add19a3a07e0e398711847cd6b95affd
+>=20
+> Link: https://github.com/acpica/acpica/commit/c736ea34
+> Signed-off-by: Erik Schmauss <erik.schmauss@intel.com>
+> Signed-off-by: Bob Moore <robert.moore@intel.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Signed-off-by: John Garry <john.garry@huawei.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-        if (sugov_should_update_freq(sg_policy, time)) {
-+               sugov_cpu_ramp_boost_update(sg_cpu);
-                next_f = sugov_next_freq_shared(sg_cpu, time);
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-[...]
+--Qxx1br4bt0+wmkIi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXagtYAAKCRAw5/Bqldv6
+8iapAJ9+si17KDqJWrhQuFxEQ3CZZwcKGACgtPXzOyI93EkwZTPM2IPYFHLu8uQ=
+=+NSr
+-----END PGP SIGNATURE-----
+
+--Qxx1br4bt0+wmkIi--
