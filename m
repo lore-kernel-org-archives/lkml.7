@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A495ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C16ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0289D21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B259621835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:56:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dTyVYmoY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r4kYb7Ir"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437702AbfJQR4e (ORCPT
+        id S2437894AbfJQR4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 13:56:34 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46742 "EHLO
+        Thu, 17 Oct 2019 13:56:41 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47228 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394803AbfJQR4c (ORCPT
+        with ESMTP id S2437730AbfJQR4j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 13:56:32 -0400
+        Thu, 17 Oct 2019 13:56:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=QzGPehL/LYwSmCTY32Q5ZOorcnSwSCBwuqtJOILTM+M=; b=dTyVYmoY5u9vzph8Xkfu+KfudI
-        Fd3xKjuV3dylW/8NGdT138VCHTWV13ZhSnXSoy5yLz9p8f6TBCWGzMdKm0pi+avQXCP8+2cH8QoXL
-        2fRRnjCpbQrPDX51yty99IiMWa0KmdZqfPUd2P7s2AwuLZPveNrSZbw670KOtMceW9L5+32jtxqTB
-        qQTOnS3I93kPc1ODy3cIoxQqveMOJFNMjW2qQpZZ23tdo7RFFpaRMx8ln1SDqZPfPSHenbMDYeq5p
-        4GMjZ+yhS4R2tlbuoIRI+Cplqdy/1YKAoh5dRjlMa0WB56QRzl8HNnka/Sl5C/LYcn7Rj9136CI5D
-        SloKU/jA==;
+        bh=A/CR7PHPpcU/5/5I+dFoTTHqvSCjwPyHdxbff3qIeNU=; b=r4kYb7IrDCx/or/1brPaGMPC3W
+        17qLswbrjI6klyzXg3WPoiUaXTM7ugMuCmFUkWxsEb2T15jrsJacCFph67T/nRsC7SclGex3Eer1Z
+        hgUwXzVau2A2wacsglBNNAbLdqqlBjoo5iK3mQEbvGJSKnwM1qn5hMCsGZ7rp25Q2JzW3KZsHbiOZ
+        Ko/Xx0+/dbdIrvDx/naBRzPjog1l0GRvNkixaW1FkM7zXXc7hox7cRUqlmsL6DPJ5vbP0pzVTVu/y
+        Io1nCdcMNJD+Adb0QPD6fB6Gfs11xyTFO7k8OW5Zn3c2Lm4YpP3qbIw9IeFd3uR/nkSniaIdXclWB
+        sRl4iIpw==;
 Received: from [2001:4bb8:18c:d7b:c70:4a89:bc61:3] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iLA0j-0000gl-GW; Thu, 17 Oct 2019 17:56:29 +0000
+        id 1iLA0o-0000mM-Sh; Thu, 17 Oct 2019 17:56:35 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "Darrick J . Wong" <darrick.wong@oracle.com>
 Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
         Andreas Gruenbacher <agruenba@redhat.com>,
         linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org, Dave Chinner <dchinner@redhat.com>
-Subject: [PATCH 01/14] iomap: iomap that extends beyond EOF should be marked dirty
-Date:   Thu, 17 Oct 2019 19:56:11 +0200
-Message-Id: <20191017175624.30305-2-hch@lst.de>
+Subject: [PATCH 03/14] xfs: set IOMAP_F_NEW more carefully
+Date:   Thu, 17 Oct 2019 19:56:13 +0200
+Message-Id: <20191017175624.30305-4-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191017175624.30305-1-hch@lst.de>
 References: <20191017175624.30305-1-hch@lst.de>
@@ -58,83 +58,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+Don't set IOMAP_F_NEW if we COW over an existing allocated range, as
+these aren't strictly new allocations.  This is required to be able to
+use IOMAP_F_NEW to zero newly allocated blocks, which is required for
+the iomap code to fully support file systems that don't do delayed
+allocations or use unwritten extents.
 
-When doing a direct IO that spans the current EOF, and there are
-written blocks beyond EOF that extend beyond the current write, the
-only metadata update that needs to be done is a file size extension.
-
-However, we don't mark such iomaps as IOMAP_F_DIRTY to indicate that
-there is IO completion metadata updates required, and hence we may
-fail to correctly sync file size extensions made in IO completion
-when O_DSYNC writes are being used and the hardware supports FUA.
-
-Hence when setting IOMAP_F_DIRTY, we need to also take into account
-whether the iomap spans the current EOF. If it does, then we need to
-mark it dirty so that IO completion will call generic_write_sync()
-to flush the inode size update to stable storage correctly.
-
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/ext4/inode.c       | 9 ++++++++-
- fs/xfs/xfs_iomap.c    | 7 +++++++
- include/linux/iomap.h | 2 ++
- 3 files changed, 17 insertions(+), 1 deletion(-)
+ fs/xfs/xfs_iomap.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 516faa280ced..e9dc52537e5b 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -3523,9 +3523,16 @@ static int ext4_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 			return ret;
- 	}
- 
-+	/*
-+	 * Writes that span EOF might trigger an IO size update on completion,
-+	 * so consider them to be dirty for the purposes of O_DSYNC even if
-+	 * there is no other metadata changes being made or are pending here.
-+	 */
- 	iomap->flags = 0;
--	if (ext4_inode_datasync_dirty(inode))
-+	if (ext4_inode_datasync_dirty(inode) ||
-+	    offset + length > i_size_read(inode))
- 		iomap->flags |= IOMAP_F_DIRTY;
-+
- 	iomap->bdev = inode->i_sb->s_bdev;
- 	iomap->dax_dev = sbi->s_daxdev;
- 	iomap->offset = (u64)first_block << blkbits;
 diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-index f780e223b118..32993c2acbd9 100644
+index 699bbb81b8a8..f7b8b1329ddd 100644
 --- a/fs/xfs/xfs_iomap.c
 +++ b/fs/xfs/xfs_iomap.c
-@@ -1049,6 +1049,13 @@ xfs_file_iomap_begin(
- 	trace_xfs_iomap_alloc(ip, offset, length, XFS_DATA_FORK, &imap);
- 
- out_finish:
-+	/*
-+	 * Writes that span EOF might trigger an IO size update on completion,
-+	 * so consider them to be dirty for the purposes of O_DSYNC even if
-+	 * there is no other metadata changes pending or have been made here.
-+	 */
-+	if ((flags & IOMAP_WRITE) && offset + length > i_size_read(inode))
-+		iomap->flags |= IOMAP_F_DIRTY;
- 	return xfs_bmbt_to_iomap(ip, iomap, &imap, shared);
- 
- out_found:
-diff --git a/include/linux/iomap.h b/include/linux/iomap.h
-index 7aa5d6117936..24bd227d59f9 100644
---- a/include/linux/iomap.h
-+++ b/include/linux/iomap.h
-@@ -32,6 +32,8 @@ struct vm_fault;
-  *
-  * IOMAP_F_DIRTY indicates the inode has uncommitted metadata needed to access
-  * written data and requires fdatasync to commit them to persistent storage.
-+ * This needs to take into account metadata changes that *may* be made at IO
-+ * completion, such as file size updates from direct IO.
-  */
- #define IOMAP_F_NEW		0x01	/* blocks have been newly allocated */
- #define IOMAP_F_DIRTY		0x02	/* uncommitted metadata */
+@@ -707,9 +707,12 @@ xfs_file_iomap_begin_delay(
+ 	 * Flag newly allocated delalloc blocks with IOMAP_F_NEW so we punch
+ 	 * them out if the write happens to fail.
+ 	 */
+-	iomap_flags |= IOMAP_F_NEW;
+-	trace_xfs_iomap_alloc(ip, offset, count, whichfork,
+-			whichfork == XFS_DATA_FORK ? &imap : &cmap);
++	if (whichfork == XFS_DATA_FORK) {
++		iomap_flags |= IOMAP_F_NEW;
++		trace_xfs_iomap_alloc(ip, offset, count, whichfork, &imap);
++	} else {
++		trace_xfs_iomap_alloc(ip, offset, count, whichfork, &cmap);
++	}
+ done:
+ 	if (whichfork == XFS_COW_FORK) {
+ 		if (imap.br_startoff > offset_fsb) {
 -- 
 2.20.1
 
