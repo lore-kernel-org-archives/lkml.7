@@ -2,98 +2,81 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F399FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F98FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 051C92082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EB352082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:07:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SXqiXIX5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394064AbfJQLGs (ORCPT
+        id S2394156AbfJQLH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 07:06:48 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46786 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393490AbfJQLGr (ORCPT
+        Thu, 17 Oct 2019 07:07:28 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40448 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393638AbfJQLH1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 07:06:47 -0400
-Received: by mail-oi1-f193.google.com with SMTP id k25so1741318oiw.13;
-        Thu, 17 Oct 2019 04:06:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xq264avdxFHk508cQem+mTXa9WclaBEHw7v8NarZq3Q=;
-        b=Gc7lH4G83H7kITQOUn1I78qIOgloP8jA41Q2/h79pBcjw1VUx/0vq9KB7upMkd8rgz
-         VYJE3AaAEFTQpBquc7VRpdGiSG33JHZSBTMA1Jc1kfv+5HPnoHd8MFGDKufbobnkTHc9
-         JRdFEn/FthBPQxdgy7JNxSK+kq4HpyytOD+P00uJb0mWYWKZGLFHaB9bulifGddcuThf
-         ltW2mG9UmbRmtq2nLNoNXXSMyFxh9dn8OzJdzsrTSHULG1Mk8SMercygAGhhRBFQKaf9
-         is+Z+ui1TJnE+ukcKJP9MWZchVp+9G73AUf5e5ni1dG1rHELjduYaE7YXqvHNseGcj9M
-         SBVA==
-X-Gm-Message-State: APjAAAXg+MLMLoPeohteMx/ywjTsY9vy8xODlRWCGEymQ+/unDmLyC4W
-        BeRF39FaHDG9eCJ2+sj+6NqkuQI63LfL6R1ykBI=
-X-Google-Smtp-Source: APXvYqz8y41KYtwlkdo9YrxBXVwP9aJ3YeZEdb8/duG6c89kECObquyBVAr/FSo6o/8tUyTB7O0AYf5Yc8ymFWCtqfA=
-X-Received: by 2002:aca:882:: with SMTP id 124mr2730019oii.54.1571310406345;
- Thu, 17 Oct 2019 04:06:46 -0700 (PDT)
+        Thu, 17 Oct 2019 07:07:27 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9HB7K1a064246;
+        Thu, 17 Oct 2019 06:07:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571310440;
+        bh=gGHXuaGN6JWtNLkiVaFXPm/K1WA5sPtAM5owozosUj4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=SXqiXIX52GQ1nwaIZ0TlJqA/ZiugfcL1FvnC5U0t4UfqZtoOdy/7lgp/CRrhnG7Z6
+         CBuQhGrsQl6iX658NhAHg6yVchrj0o9QAQKVtHgbGbCDv9qfs2W/rTnTlefuqr3LHe
+         gZ5Hd1t0K5a3thM8xNTiVweF1qh01vWgMhnht5u8=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9HB7KBG042799
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 17 Oct 2019 06:07:20 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 17
+ Oct 2019 06:07:20 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 17 Oct 2019 06:07:20 -0500
+Received: from [172.24.190.212] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9HB7Hjo032997;
+        Thu, 17 Oct 2019 06:07:19 -0500
+Subject: Re: [PATCH] ARM: davinci: dm644x-evm: Add Fixed regulators needed for
+ tlv320aic33
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <bgolaszewski@baylibre.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190830102308.22586-1-peter.ujfalusi@ti.com>
+From:   Sekhar Nori <nsekhar@ti.com>
+Message-ID: <e6a03603-a901-56a8-c8ad-d528f2d51595@ti.com>
+Date:   Thu, 17 Oct 2019 16:37:17 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191016120249.16776-1-horms@verge.net.au> <20191017104616.GD9589@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20191017104616.GD9589@e121166-lin.cambridge.arm.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 17 Oct 2019 13:06:34 +0200
-Message-ID: <CAMuHMdUxGpfQi3mfxqr5s6vCRaL3qzrRtEVDMz0v7Cm6nmUDHg@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Add Marek and Shimoda-san as R-Car PCIE co-maintainers
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190830102308.22586-1-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lorenzo,
+On 30/08/19 3:53 PM, Peter Ujfalusi wrote:
+> The codec driver needs correct regulators in order to probe.
+> Both VCC_3.3V and VCC_1.8V is always on fixed regulators on the board.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-On Thu, Oct 17, 2019 at 12:46 PM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
-> On Wed, Oct 16, 2019 at 02:02:49PM +0200, Simon Horman wrote:
-> > At the end of the v5.3 upstream development cycle I stepped down
-> > from my role at Renesas.
-> >
-> > Pass maintainership of the R-Car PCIE to Marek and Shimoda-san.
-> >
-> > Signed-off-by: Simon Horman <horms@verge.net.au>
-> > ---
-> >  MAINTAINERS | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> Hi Geert,
->
-> are you picking this up or I should pick it up ?
->
-> Either way is fine by me.
+Applied for v5.4
 
-Please pick it up, as you are a drivers/pci/controller/ maintainer.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+Sekhar
