@@ -2,124 +2,168 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB66FA3733
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E82FFA3735
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3451B2089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16AB321848
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:24:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="L0Ta2upc"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WMgijF4m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406139AbfJQMYM (ORCPT
+        id S2409368AbfJQMYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 08:24:12 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:29160 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728554AbfJQMYL (ORCPT
+        Thu, 17 Oct 2019 08:24:17 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:47332 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728554AbfJQMYR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:24:11 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9HC6GwX019539;
-        Thu, 17 Oct 2019 14:24:05 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=TGt1UZEWqcZi9YT+7fgtBx5eJzJbTWv2BIm+L25kpBw=;
- b=L0Ta2upc63+LesPIf9zpg5X8gjJxtnke98PPYmA2N4SR0CFzxFvDxkBfI5lKQdAIrMQQ
- /TlLhBkwRrQjhNmawVaYTD3sv0uJ2Lkmq8QBc7tX2le8YWtLQeEbIlWYWyLkBhZDEvKj
- rMT4KbtUsKV3Z55je4eKqpjNCHehl3ocYOgL4m7vwiD/EZEBV8xaPCwE6S+R6hyT86Gy
- ljLdE8fP56sKG0hQOWCxtxuVhOMnABJUJ2vwtbEq/9rvjvWD49EOasls/g70j37ayYF2
- o5/rKhyjj92iBak0FNBABooiOvipeQ4meet5usgG4o4dnDaBhn4Ad2Qb6ASys9Gio5MZ eQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2vk4a1kt9c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 17 Oct 2019 14:24:05 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0248110002A;
-        Thu, 17 Oct 2019 14:24:05 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag5node1.st.com [10.75.127.13])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E7F832D378B;
-        Thu, 17 Oct 2019 14:24:04 +0200 (CEST)
-Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG5NODE1.st.com
- (10.75.127.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 17 Oct
- 2019 14:24:04 +0200
-Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
- SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
- 15.00.1473.003; Thu, 17 Oct 2019 14:24:04 +0200
-From:   Mickael GUENE <mickael.guene@st.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] media: st-mipid02: add a check for
- devm_gpiod_get_optional
-Thread-Topic: [PATCH] media: st-mipid02: add a check for
- devm_gpiod_get_optional
-Thread-Index: AQHVhBBYvH4VqO4jG0ud7QMMFFTos6deMe0AgAAi54CAAE0LAA==
-Date:   Thu, 17 Oct 2019 12:24:04 +0000
-Message-ID: <f42c4bea-8991-434f-48b4-bfbccfd29701@st.com>
-References: <20191016105604.8036-1-hslester96@gmail.com>
- <8de93390-ae04-4278-bb34-aa175c659c23@st.com>
- <CANhBUQ0MvXYm4iLcx5gWyq=0VMmafRAJ7TsTtUuOT0YwgBcAOA@mail.gmail.com>
-In-Reply-To: <CANhBUQ0MvXYm4iLcx5gWyq=0VMmafRAJ7TsTtUuOT0YwgBcAOA@mail.gmail.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.44]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EA298225B701124C81442B57DE375669@st.com>
-Content-Transfer-Encoding: base64
+        Thu, 17 Oct 2019 08:24:17 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9HC9Pug014774;
+        Thu, 17 Oct 2019 12:24:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=2SOi+yOvifARKTdZueuOWwzS6KmvruH+Cv9v65kxebg=;
+ b=WMgijF4mCJHTNbCWNF+6WBUnk0LMSICmdN+PfRdJJGNvlPMJlErr0D/Ybys2x3zLVTHB
+ xAhrEipmmMUlWU4Tqa96MzPW8KQFuhOw/rTCKyucJfBzg7pcIHS5KaX4mPfKJCLEpcaL
+ vYH84951E0cWzV22BRgSh3JYQw5cBezWpJ/i2vowvAo57zGHKphhdaahj3oeDFlakkMs
+ f0DvElYXbWJSJ+QG2WAmWYNCZp0r4cdq+0FrWcD8WRlwTSFM3OARKxZpznzRYBH9VPSg
+ TgHwAJKtMdEPud5Xk1k4s6N6dkjm96Xze204BjsK+qY5o4YU+oft324x++BfhI6sHVzG 6A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2vk7frnrtv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 17 Oct 2019 12:24:08 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9HCMtB4032584;
+        Thu, 17 Oct 2019 12:24:08 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2vpf13s0ju-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 17 Oct 2019 12:24:08 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9HCO4lD004813;
+        Thu, 17 Oct 2019 12:24:04 GMT
+Received: from [10.175.56.189] (/10.175.56.189)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 17 Oct 2019 12:24:04 +0000
+Subject: Re: email as a bona fide git transport
+To:     Pratyush Yadav <me@yadavpratyush.com>
+Cc:     workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        Eric Wong <e@80x24.org>
+References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
+ <20191016150020.cr6jgfpd2c6fyg7t@yadavpratyush.com>
+From:   Vegard Nossum <vegard.nossum@oracle.com>
+Message-ID: <a1c33600-14e6-be37-c026-8d8b8e4bad92@oracle.com>
+Date:   Thu, 17 Oct 2019 14:23:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-17_04:2019-10-17,2019-10-17 signatures=0
+In-Reply-To: <20191016150020.cr6jgfpd2c6fyg7t@yadavpratyush.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9412 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910170114
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9412 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910170113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gQ2h1aG9uZywNCg0KIFNvcnJ5IEkgbWlzc2VkICdpZiAoUFRSX0VSUihkZXNjKSA9PSAt
-RU5PRU5UKScgY2hlY2sgLi4uLg0KIENhbiB5b3UgaW4gdGhpcyBjYXNlIGFkZCBhbiBlcnJvciBt
-ZXNzYWdlID8NCg0KUmVnYXJkcw0KTWlja2FlbA0KIA0KT24gMTAvMTcvMTkgMDk6NDgsIENodWhv
-bmcgWXVhbiB3cm90ZToNCj4gT24gVGh1LCBPY3QgMTcsIDIwMTkgYXQgMTo0MyBQTSBNaWNrYWVs
-IEdVRU5FIDxtaWNrYWVsLmd1ZW5lQHN0LmNvbT4gd3JvdGU6DQo+Pg0KPj4gSGVsbG8gQ2h1aG9u
-ZywNCj4+DQo+PiAgSXMgdGhpcyBjaGVjayBuZWNlc3NhcnkgPw0KPj4gc2luY2UgbG9va2luZyBp
-bnRvIGNvZGUgaXQgc2VlbXMgdG8gbWUgZGV2bV9ncGlvZF9nZXRfb3B0aW9uYWwoKSBjYW4gb25s
-eQ0KPj4gcmV0dXJuIE5VTEwgaW4gY2FzZSBvZiBlcnJvciBkdWUgdG8gZm9sbG93aW5nIGNoZWNr
-IGluIGRldm1fZ3Bpb2RfZ2V0X2luZGV4X29wdGlvbmFsKCkNCj4+ICAgICAgICAgaWYgKElTX0VS
-UihkZXNjKSkgew0KPj4gICAgICAgICAgICAgICAgIGlmIChQVFJfRVJSKGRlc2MpID09IC1FTk9F
-TlQpDQo+PiAgICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gTlVMTDsNCj4+ICAgICAgICAg
-fQ0KPj4gIEFuZCBpbiB0aGF0IGNhc2UgcmVzZXRfZ3BpbyBpcyBub3QgdXNlZA0KPj4NCj4gDQo+
-IFRoZSBwcm9ibGVtIG1heSBub3QgYmUgYSBudWxsIHJldHVybiB2YWx1ZSwgYnV0IGEgcmV0dXJu
-ZWQgZXJyb3IsDQo+IHdoaWNoIGlzIGEgbWludXMgdmFsdWUsDQo+IGxpa2UgLUVQUk9CRV9ERUZF
-UiBvciAtRUlOVkFMIHJldHVybmVkIGJ5IGdwaW9kX2ZpbmQgaW4gZ3Bpb2RfZ2V0X2luZGV4Lg0K
-PiBJbiB0aGVzZSBjYXNlcywgZGV2bV9ncGlvZF9nZXRfaW5kZXhfb3B0aW9uYWwgd2lsbCBub3Qg
-cmV0dXJuIG51bGwgYnV0DQo+IHJldHVybiB0aGUgZXJyb3IuDQo+IFRoZXJlZm9yZSwgdGhpcyBj
-aGVjayBpcyBuZWNlc3NhcnkuDQo+IA0KPj4gUmVnYXJkcw0KPj4gTWlja2FlbA0KPj4NCj4+IE9u
-IDEwLzE2LzE5IDEyOjU2LCBDaHVob25nIFl1YW4gd3JvdGU6DQo+Pj4gbWlwaWQwMl9wcm9iZSBt
-aXNzZXMgYSBjaGVjayBmb3IgZGV2bV9ncGlvZF9nZXRfb3B0aW9uYWwgYW5kIG1heSBtaXNzDQo+
-Pj4gdGhlIGZhaWx1cmUuDQo+Pj4gQWRkIGEgY2hlY2sgdG8gZml4IHRoZSBwcm9ibGVtLg0KPj4+
-DQo+Pj4gU2lnbmVkLW9mZi1ieTogQ2h1aG9uZyBZdWFuIDxoc2xlc3Rlcjk2QGdtYWlsLmNvbT4N
-Cj4+PiAtLS0NCj4+PiAgZHJpdmVycy9tZWRpYS9pMmMvc3QtbWlwaWQwMi5jIHwgMyArKysNCj4+
-PiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKQ0KPj4+DQo+Pj4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvbWVkaWEvaTJjL3N0LW1pcGlkMDIuYyBiL2RyaXZlcnMvbWVkaWEvaTJjL3N0LW1p
-cGlkMDIuYw0KPj4+IGluZGV4IDgxMjg1YjhkNWNmYi4uZDM4ZTg4OGIwYTQzIDEwMDY0NA0KPj4+
-IC0tLSBhL2RyaXZlcnMvbWVkaWEvaTJjL3N0LW1pcGlkMDIuYw0KPj4+ICsrKyBiL2RyaXZlcnMv
-bWVkaWEvaTJjL3N0LW1pcGlkMDIuYw0KPj4+IEBAIC05NzEsNiArOTcxLDkgQEAgc3RhdGljIGlu
-dCBtaXBpZDAyX3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQpDQo+Pj4gICAgICAgYnJp
-ZGdlLT5yZXNldF9ncGlvID0gZGV2bV9ncGlvZF9nZXRfb3B0aW9uYWwoZGV2LCAicmVzZXQiLA0K
-Pj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEdQ
-SU9EX09VVF9ISUdIKTsNCj4+Pg0KPj4+ICsgICAgIGlmIChJU19FUlIoYnJpZGdlLT5yZXNldF9n
-cGlvKSkNCj4+PiArICAgICAgICAgICAgIHJldHVybiBQVFJfRVJSKGJyaWRnZS0+cmVzZXRfZ3Bp
-byk7DQo+Pj4gKw0KPj4+ICAgICAgIHJldCA9IG1pcGlkMDJfZ2V0X3JlZ3VsYXRvcnMoYnJpZGdl
-KTsNCj4+PiAgICAgICBpZiAocmV0KSB7DQo+Pj4gICAgICAgICAgICAgICBkZXZfZXJyKGRldiwg
-ImZhaWxlZCB0byBnZXQgcmVndWxhdG9ycyAlZCIsIHJldCk7DQo+Pj4=
+
+On 10/16/19 5:00 PM, Pratyush Yadav wrote:
+> On 16/10/19 12:22PM, Vegard Nossum wrote:
+> Just to play the devil's advocate, even though I'm in favor of something
+> like this, I'll add in another disadvantage:
+> 
+> - The maintainer can't make small edits before pushing the changes out.
+> 
+> I do that every now and then for git-gui, and Junio does that sometimes
+> for Git. I don't know if the folks over at Linux do something like this,
+> but using '--exact' would mean that contributors would have to send a
+> re-roll for even minor changes. Its mostly an inconvenience instead of a
+> problem, but I thought I'd point it out.
+
+I don't think this is a problem.
+
+The point of 'git am --exact' is not for maintainers per se (although
+they should use it if they don't have any manual changes to make), but
+for the bot that keeps track of patchsets submitted via email.
+
+The important part is that there is a git reference to the patchset that
+was submitted in the patchset that was merged. You could see it as the
+maintainer rolling a new version of the patchset locally and merging
+that instead of merging what was submitted directly.
+
+Of course, this relies strongly on actually having (correct) sha1
+references to previous versions inside the changelog. In my original
+idea, this reference would only appear inside the merge commit that
+binds the patchset together to minimise churn, although maybe it is
+feasible to also append it to each patch -- in that case, the "patchset"
+command from my first email is not sufficient to create a new version of
+a patchset.
+
+> One more question, not strictly related to your proposal: right now,
+> when I apply patches from contributors, I pass '-s' to 'am', so the
+> applied commit would have my sign-off. The way I see it, that sign-off
+> is supposed to signify that I have the right to push out the commit to
+> the "main" repo, just like the author's sign-off means that they have
+> the right to send me that commit.
+> 
+> Looking at git.git, I notice that Junio does the same. The new '--exact'
+> would be incompatible with '-s', correct (since the commit message has
+> changed, the SHA1 would also change)? So firstly, make sure you account
+> for something like that if you haven't already (I haven't found the time
+> to read your patches yet). Secondly, is it all right for the maintainer
+> to just not sign-off on the commits they push out?
+
+In the Linux kernel at least, only the front-line maintainers add their
+signoffs; higher-level maintainers take pull requests and don't add
+their own sign-offs. Only Linus (and Greg, perhaps) has commit rights to
+the main repository, but he only signs off on the patches that he either
+writes himself or applies directly from email.
+
+In any case, I don't think this is a concern because of what I wrote
+above -- somebody who wants to add their signoff can do it by
+essentially rolling a new version of the patchset that has the signoff,
+but refers to the sha1 that was submitted to them by the patchset author
+so that you can still find the original commits (without the signoffs)
+and reviews/discussions.
+
+I don't want to create extra work for maintainers, so I think any
+solution should involve having the existing git tools/workflows do the
+right thing automatically.
+
+How about this? If 'git am' or 'git am -s' (without --exact) finds an
+email patch where the exact commit metadata is present, it automatically
+appends a line to the changelog saying where it was taken from:
+
+     Submitted-as: 111122223333444455556666777788889999aaaa
+
+or
+
+     Applied-from: 111122223333444455556666777788889999aaaa
+
+Although, again, this would modify the changelog of the patch itself
+rather than just the changelog of the merge commit... Maybe this is
+enough and we can have the "patchset" command also add references to
+previous versions of each patch rather than the patchset as a whole.
+
+
+Vegard
