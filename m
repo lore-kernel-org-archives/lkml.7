@@ -2,245 +2,149 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1909EECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E69ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C38B521925
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10FC121835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:08:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="NgfrjT6G"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DVLsr7bB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395282AbfJQSHR (ORCPT
+        id S2395404AbfJQSIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 14:07:17 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:42428 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388188AbfJQSHR (ORCPT
+        Thu, 17 Oct 2019 14:08:02 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:56640 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388188AbfJQSIC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 14:07:17 -0400
-Received: by mail-qt1-f194.google.com with SMTP id w14so4893430qto.9
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 11:07:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=O8aPNDBxCNGS4hw55BtMCSSOHVJRAaIQa9yD2iMaQKo=;
-        b=NgfrjT6GBJThLJamv9Jn9DbzBJb/SDaoMWbX51RMkb5cxPW613VN1NNlJR+kJyUCyP
-         KCgtFs6BAl+2Mz8t/PmLg7eraChYFFBw4qDsHwL24KzKgSLGKxm6VjWSQLym15laEc6x
-         O8WD2OPPsJAdgJH2j885dSFJFkSxRZ0ZuOegnW+TrLMmjnSzuHmEzibW9FpJrJn9+TTm
-         y+2p/QaV7bmMQ4X1KtSLKnZ6+xupJgiW1+W0RAjtvNoTr83VAKHu9KgJHq1BOLGk02CI
-         zvYF2ShJ46lHeYtrA49Ouuz1o6JkTX27dkaMW/ei9PgnFpto/SgFdJ5RPvLhpPCM8hBz
-         pd0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=O8aPNDBxCNGS4hw55BtMCSSOHVJRAaIQa9yD2iMaQKo=;
-        b=TvbI/8DHSOL7h1dUwnX4jD6w8giDRX2h+ixs+NjFropYOL8wGUftu9+utONz4HCNz4
-         IZRzSu79fZ1xma8CFunwA9ipy+Aca+/jU0kQDPmerqM3xwwbbJeMEh0z0FDuluFjZT4p
-         BU4XdHUDUvEnGgJuRqxuqN3/6J8DncFesNkVunVt5pLmIE7PuXwqFd+TE8jwCT13uxb6
-         oKXdJN39EE+WqKl+flE3BIEdWevaDyoNcBOTup+7tJhnjSUB++aVkbsFc7EQYZ7F2K4d
-         Mlp1HaYjYEYpv/jbaNzHItdWhKDVPkE/kXaGs6yeLSE0Gv3k8oWnxBgzkR6iP93zcVDu
-         /CVA==
-X-Gm-Message-State: APjAAAUObB/37xRRwL6nsQzWrCYQlI+/UKZ+1MBWnaw5GeynjwK/UuoM
-        2O2/nqNO1DK3kfMIjocACYWJMnpm+8Y=
-X-Google-Smtp-Source: APXvYqy98Behq50Rx7i37NYt4U5mS/Bg7hgCs0GGPo47m3ccYSpSNKz15PxrzZe5ztPmy+H9lwTk5A==
-X-Received: by 2002:ac8:529a:: with SMTP id s26mr5134896qtn.238.1571335635529;
-        Thu, 17 Oct 2019 11:07:15 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id b1sm1237767qtr.17.2019.10.17.11.07.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Oct 2019 11:07:14 -0700 (PDT)
-Message-ID: <1571335633.5937.69.camel@lca.pw>
-Subject: Re: memory offline infinite loop after soft offline
-From:   Qian Cai <cai@lca.pw>
-To:     Michal Hocko <mhocko@kernel.org>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        David Hildenbrand <david@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Date:   Thu, 17 Oct 2019 14:07:13 -0400
-In-Reply-To: <20191017100106.GF24485@dhcp22.suse.cz>
-References: <1570829564.5937.36.camel@lca.pw>
-         <20191014083914.GA317@dhcp22.suse.cz>
-         <20191017093410.GA19973@hori.linux.bs1.fc.nec.co.jp>
-         <20191017100106.GF24485@dhcp22.suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 17 Oct 2019 14:08:02 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9HI4Bsc143709;
+        Thu, 17 Oct 2019 18:07:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=7mJKPixnndHdR4uQjuaPnAtpZhIWsL337zXt9AP/YOc=;
+ b=DVLsr7bBmim8k8IWyTNXyN95/RvlnWCxplT5OJjCdSkGGHW5oXhwxJsCDkyfFfQ1NHte
+ 570/rIUOAC/0su13gxo+bCwOeEeqHi3p6bDitFVUbsPQjzeB2z+n/czn5zqPq8COw4dQ
+ 8UXxzeihxI2bKcoUQNa02v51qKT3xFh+X2nLg1GYQL4cLTqg/7fuw2WJxoVyjpxxXoow
+ UU1DOooeLZo7p0JB1Yu8BgDHdR/xvAE+jxtPtwpHeQOOhvrhYlzKft28dwcMGML/R+K1
+ bwXxREFLrEipNbJGe/6TEKIdR7XCiZlY7Mx9I7dPnrwm1XNvv/OxhgxokVrKdQpP4jvJ CQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2vk6sr0505-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 17 Oct 2019 18:07:39 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9HI464k016545;
+        Thu, 17 Oct 2019 18:07:38 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2vp70qcemj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 17 Oct 2019 18:07:38 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9HI7Xgi028994;
+        Thu, 17 Oct 2019 18:07:34 GMT
+Received: from dhcp-10-175-161-223.vpn.oracle.com (/10.175.161.223)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 17 Oct 2019 18:07:33 +0000
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     brendanhiggins@google.com, linux-kselftest@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
+        keescook@chromium.org, yzaikin@google.com,
+        akpm@linux-foundation.org, yamada.masahiro@socionext.com,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
+        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
+        corbet@lwn.net, linux-doc@vger.kernel.org,
+        Alan Maguire <alan.maguire@oracle.com>
+Subject: [PATCH v3 linux-kselftest-test 0/6]  kunit: support building core/tests as modules
+Date:   Thu, 17 Oct 2019 19:07:13 +0100
+Message-Id: <1571335639-21675-1-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910170163
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910170163
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-10-17 at 12:01 +0200, Michal Hocko wrote:
-> On Thu 17-10-19 09:34:10, Naoya Horiguchi wrote:
-> > On Mon, Oct 14, 2019 at 10:39:14AM +0200, Michal Hocko wrote:
-> 
-> [...]
-> > > diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-> > > index 89c19c0feadb..5fb3fee16fde 100644
-> > > --- a/mm/page_isolation.c
-> > > +++ b/mm/page_isolation.c
-> > > @@ -274,7 +274,7 @@ __test_page_isolated_in_pageblock(unsigned long pfn, unsigned long end_pfn,
-> > >  			 * simple way to verify that as VM_BUG_ON(), though.
-> > >  			 */
-> > >  			pfn += 1 << page_order(page);
-> > > -		else if (skip_hwpoisoned_pages && PageHWPoison(page))
-> > > +		else if (skip_hwpoisoned_pages && PageHWPoison(compound_head(page)))
-> > >  			/* A HWPoisoned page cannot be also PageBuddy */
-> > >  			pfn++;
-> > >  		else
-> > 
-> > This fix looks good to me. The original code only addresses hwpoisoned 4kB-page,
-> > we seem to have this issue since the following commit,
-> 
-> Thanks a lot for double checking Naoya!
->  
-> >   commit b023f46813cde6e3b8a8c24f432ff9c1fd8e9a64
-> >   Author: Wen Congyang <wency@cn.fujitsu.com>
-> >   Date:   Tue Dec 11 16:00:45 2012 -0800
-> >   
-> >       memory-hotplug: skip HWPoisoned page when offlining pages
-> > 
-> > and extension of LTP coverage finally discovered this.
-> 
-> Qian, could you give the patch some testing?
+The current kunit execution model is to provide base kunit functionality
+and tests built-in to the kernel.  The aim of this series is to allow
+building kunit itself and tests as modules.  This in turn allows a
+simple form of selective execution; load the module you wish to test.
+In doing so, kunit itself (if also built as a module) will be loaded as
+an implicit dependency.
 
-Unfortunately, this does not solve the problem. It looks to me that in
-soft_offline_huge_page(), set_hwpoison_free_buddy_page() will only set
-PG_hwpoison for buddy pages, so the even the compound_head() has no PG_hwpoison
-set.
+Because this requires a core API modification - if a module delivers
+multiple suites, they must be declared with the kunit_test_suites()
+macro - we're proposing this patch set as a candidate to be applied to the
+test tree before too many kunit consumers appear.  We attempt to deal
+with existing consumers in patch 4.
 
-		if (PageBuddy(page_head) && page_order(page_head) >= order) {
-			if (!TestSetPageHWPoison(page))
-				hwpoisoned = true;
+Changes since v2:
+ - moved string-stream.h header to lib/kunit/string-stream-impl.h (Brendan)
+   (patch 1)
+ - split out non-exported interfaces in try-catch-impl.h (Brendan)
+   (patch 2)
+ - added kunit_find_symbol() and KUNIT_INIT_*SYMBOL to lookup non-exported
+   symbols. KUNIT_INIT_*SYMBOL() is defined so that a mismatch between
+   local symbol definition and definition of symbol in target will trigger
+   a compilation error when the object is compiled built-in (Brendan)
+   (patches 3, 4)
+ - removed #ifdef MODULE around module licenses (Randy, Brendan, Andy)
+   (patch 4)
+ - replaced kunit_test_suite() with kunit_test_suites() rather than
+   supporting both (Brendan) (patch 4)
+ - lookup sysctl_hung_task_timeout_secs as kunit may be built as a module
+   and the symbol may not be available (patch 5)
+ - fixed whitespace issues in doc (patch 6)
 
-The below is the dump_page() of the compound_head().
+Alan Maguire (6):
+  kunit: move string-stream.h to lib/kunit/string-stream-impl.h
+  kunit: hide unexported try-catch interface in try-catch-impl.h
+  kunit: add kunit_find_symbol() function for symbol lookup
+  kunit: allow kunit tests to be loaded as a module
+  kunit: allow kunit to be loaded as a module
+  kunit: update documentation to describe module-based build
 
-[  113.796632][ T8907] page:c00c000800458040 refcount:0 mapcount:0
-mapping:0000000000000000 index:0x0
-[  113.796716][ T8907] flags: 0x83fffc000000000()
-[  113.796764][ T8907] raw: 083fffc000000000 0000000000000000 ffffffff00450500
-0000000000000000
-[  113.796870][ T8907] raw: 0000000000000000 0000000000000000 00000000ffffffff
-0000000000000000
-[  113.796959][ T8907] page dumped because: soft offline compound_head()
-[  113.797037][ T8907] page_owner tracks the page as freed
-[  113.797086][ T8907] page last allocated via order 5, migratetype Movable,
-gfp_mask
-0x346cca(GFP_HIGHUSER_MOVABLE|__GFP_NOWARN|__GFP_RETRY_MAYFAIL|__GFP_COMP|__GFP_
-THISNODE)
-[  113.797262][ T8907]  prep_new_page+0x3c0/0x440
-[  113.797316][ T8907]  get_page_from_freelist+0x2568/0x2bb0
-[  113.797395][ T8907]  __alloc_pages_nodemask+0x1b4/0x670
-[  113.797443][ T8907]  alloc_fresh_huge_page+0xb8/0x300
-[  113.797493][ T8907]  alloc_migrate_huge_page+0x30/0x70
-[  113.797550][ T8907]  alloc_new_node_page+0xc4/0x380
-[  113.797609][ T8907]  migrate_pages+0x3b4/0x19e0
-[  113.797649][ T8907]  do_move_pages_to_node.isra.29.part.30+0x44/0xa0
-[  113.797713][ T8907]  kernel_move_pages+0x498/0xfc0
-[  113.797784][ T8907]  sys_move_pages+0x28/0x40
-[  113.797843][ T8907]  system_call+0x5c/0x68
-[  113.797895][ T8907] page last free stack trace:
-[  113.797947][ T8907]  __free_pages_ok+0xa4c/0xd40
-[  113.797991][ T8907]  update_and_free_page+0x2dc/0x5b0
-[  113.798059][ T8907]  free_huge_page+0x2dc/0x740
-[  113.798103][ T8907]  __put_compound_page+0x64/0xc0
-[  113.798171][ T8907]  putback_active_hugepage+0x228/0x390
-[  113.798219][ T8907]  migrate_pages+0xa78/0x19e0
-[  113.798273][ T8907]  soft_offline_page+0x314/0x1050
-[  113.798319][ T8907]  sys_madvise+0x1068/0x1080
-[  113.798381][ T8907]  system_call+0x5c/0x68
+ Documentation/dev-tools/kunit/faq.rst   |   3 +-
+ Documentation/dev-tools/kunit/index.rst |   3 +
+ Documentation/dev-tools/kunit/usage.rst |  16 +++++
+ include/kunit/assert.h                  |   3 +-
+ include/kunit/string-stream.h           |  51 -------------
+ include/kunit/test.h                    | 123 +++++++++++++++++++++++++++++---
+ include/kunit/try-catch.h               |  10 ---
+ kernel/sysctl-test.c                    |   4 +-
+ lib/Kconfig.debug                       |   2 +-
+ lib/kunit/Kconfig                       |   6 +-
+ lib/kunit/Makefile                      |   4 +-
+ lib/kunit/assert.c                      |   9 +++
+ lib/kunit/example-test.c                |   4 +-
+ lib/kunit/string-stream-impl.h          |  51 +++++++++++++
+ lib/kunit/string-stream-test.c          |  46 ++++++++----
+ lib/kunit/string-stream.c               |   3 +-
+ lib/kunit/test-test.c                   |  50 ++++++++++---
+ lib/kunit/test.c                        |  49 +++++++++++++
+ lib/kunit/try-catch-impl.h              |  23 ++++++
+ lib/kunit/try-catch.c                   |   6 ++
+ 20 files changed, 363 insertions(+), 103 deletions(-)
+ delete mode 100644 include/kunit/string-stream.h
+ create mode 100644 lib/kunit/string-stream-impl.h
+ create mode 100644 lib/kunit/try-catch-impl.h
 
-> ---
-> 
-> From 441a9515dcdb29bb0ca39ff995632907d959032f Mon Sep 17 00:00:00 2001
-> From: Michal Hocko <mhocko@suse.com>
-> Date: Thu, 17 Oct 2019 11:49:15 +0200
-> Subject: [PATCH] hugetlb, memory_hotplug: fix HWPoisoned tail pages properly
-> MIME-Version: 1.0
-> Content-Type: text/plain; charset=UTF-8
-> Content-Transfer-Encoding: 8bit
-> 
-> Qian Cai has noticed that hwpoisoned hugetlb pages prevent memory
-> offlining from making a forward progress. He has nailed down the issue
-> to be __test_page_isolated_in_pageblock always returning EBUSY because
-> of soft offlined page:
-> [  101.665160][ T8885] pfn = 77501, end_pfn = 78000
-> [  101.665245][ T8885] page:c00c000001dd4040 refcount:0 mapcount:0
-> mapping:0000000000000000 index:0x0
-> [  101.665329][ T8885] flags: 0x3fffc000000000()
-> [  101.665391][ T8885] raw: 003fffc000000000 0000000000000000 ffffffff01dd0500
-> 0000000000000000
-> [  101.665498][ T8885] raw: 0000000000000000 0000000000000000 00000000ffffffff
-> 0000000000000000
-> [  101.665588][ T8885] page dumped because: soft_offline
-> [  101.665639][ T8885] page_owner tracks the page as freed
-> [  101.665697][ T8885] page last allocated via order 5, migratetype Movable,
-> gfp_mask
-> 0x346cca(GFP_HIGHUSER_MOVABLE|__GFP_NOWARN|__GFP_RETRY_MAYFAIL|__GFP_COMP|__GFP_
-> THISNODE)
-> [  101.665924][ T8885]  prep_new_page+0x3c0/0x440
-> [  101.665962][ T8885]  get_page_from_freelist+0x2568/0x2bb0
-> [  101.666059][ T8885]  __alloc_pages_nodemask+0x1b4/0x670
-> [  101.666115][ T8885]  alloc_fresh_huge_page+0x244/0x6e0
-> [  101.666183][ T8885]  alloc_migrate_huge_page+0x30/0x70
-> [  101.666254][ T8885]  alloc_new_node_page+0xc4/0x380
-> [  101.666325][ T8885]  migrate_pages+0x3b4/0x19e0
-> [  101.666375][ T8885]  do_move_pages_to_node.isra.29.part.30+0x44/0xa0
-> [  101.666464][ T8885]  kernel_move_pages+0x498/0xfc0
-> [  101.666520][ T8885]  sys_move_pages+0x28/0x40
-> [  101.666643][ T8885]  system_call+0x5c/0x68
-> [  101.666665][ T8885] page last free stack trace:
-> [  101.666704][ T8885]  __free_pages_ok+0xa4c/0xd40
-> [  101.666773][ T8885]  update_and_free_page+0x2dc/0x5b0
-> [  101.666821][ T8885]  free_huge_page+0x2dc/0x740
-> [  101.666875][ T8885]  __put_compound_page+0x64/0xc0
-> [  101.666926][ T8885]  putback_active_hugepage+0x228/0x390
-> [  101.666990][ T8885]  migrate_pages+0xa78/0x19e0
-> [  101.667048][ T8885]  soft_offline_page+0x314/0x1050
-> [  101.667117][ T8885]  sys_madvise+0x1068/0x1080
-> [  101.667185][ T8885]  system_call+0x5c/0x68
-> 
-> The reason is that __test_page_isolated_in_pageblock doesn't recognize
-> hugetlb tail pages as the HWPoison bit is not transferred from the head
-> page. Pfn walker then doesn't recognize those pages and so EBUSY is
-> returned up the call chain.
-> 
-> The proper fix would be to handle HWPoison throughout the huge page but
-> considering there is a WIP to rework that code considerably let's go
-> with a simple and easily backportable workaround and simply check the
-> the head of a compound page for the HWPoison flag.
-> 
-> Reported-and-analyzed-by: Qian Cai <cai@lca.pw>
-> Fixes: b023f46813cd ("memory-hotplug: skip HWPoisoned page when offlining pages")
-> Cc: stable
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
-> ---
->  mm/page_isolation.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-> index 89c19c0feadb..5fb3fee16fde 100644
-> --- a/mm/page_isolation.c
-> +++ b/mm/page_isolation.c
-> @@ -274,7 +274,7 @@ __test_page_isolated_in_pageblock(unsigned long pfn, unsigned long end_pfn,
->  			 * simple way to verify that as VM_BUG_ON(), though.
->  			 */
->  			pfn += 1 << page_order(page);
-> -		else if (skip_hwpoisoned_pages && PageHWPoison(page))
-> +		else if (skip_hwpoisoned_pages && PageHWPoison(compound_head(page)))
->  			/* A HWPoisoned page cannot be also PageBuddy */
->  			pfn++;
->  		else
-> -- 
-> 2.20.1
-> 
+-- 
+1.8.3.1
+
