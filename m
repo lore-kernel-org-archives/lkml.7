@@ -2,71 +2,87 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D10FA3735
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E54FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19ED721D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A47222BD
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:47:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571323633;
+	bh=+yNBqGM13WFzNLYvcQevRPjhZ7CxtvC/1gGZ8J9iJeg=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=lpTsVNLLseWov12aNHAOFHAa7CSUqvoKaNM8O3dNBMsYO3e+UpwGQG0paA9NP3A6U
+	 WaoK/SoHKmqJqP9p8bWv70hB7181nevpFLJnxuSzoqr5ejySVkakazISfW2sBeAz4d
+	 Zk+kVSVW6Iz+KdBukIF22L+tXWKHaEuXUk1PtaHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440354AbfJQOqs (ORCPT
+        id S2440366AbfJQOrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 10:46:48 -0400
-Received: from mga11.intel.com ([192.55.52.93]:25615 "EHLO mga11.intel.com"
+        Thu, 17 Oct 2019 10:47:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440344AbfJQOqr (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:46:47 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 07:46:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,308,1566889200"; 
-   d="scan'208";a="208694484"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by fmsmga001.fm.intel.com with ESMTP; 17 Oct 2019 07:46:44 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id A50403002D7; Thu, 17 Oct 2019 07:46:44 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 07:46:44 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, kan.liang@intel.com,
-        yao.jin@intel.com
-Subject: Re: [PATCH v2] perf list: Separate the deprecated events
-Message-ID: <20191017144644.GV9933@tassilo.jf.intel.com>
-References: <20191017135214.18620-1-yao.jin@linux.intel.com>
+        id S2440344AbfJQOrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 10:47:11 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78E9321D7D;
+        Thu, 17 Oct 2019 14:47:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571323631;
+        bh=+yNBqGM13WFzNLYvcQevRPjhZ7CxtvC/1gGZ8J9iJeg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=NYnEVUHvIagpBG6KZGx8zwpmjJ7tsWYzp0yZnD5UDGGEQLpyKSNYYgWPctKKhZH5g
+         No93bb0yelAjFKdzU7eTi+ZKsusdDSWCykMJHYqQZuU1bzX1lztS/lxsjaECwBgMRD
+         uykWy/ZRgFLXf9pdZ2LpG87QfYNSZhuFZeHBKd8w=
+Subject: Re: [PATCH 4.9 00/92] 4.9.197-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20191016214759.600329427@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <fedf1d92-a801-e863-7a24-d8ca2118cdb9@kernel.org>
+Date:   Thu, 17 Oct 2019 08:47:09 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191017135214.18620-1-yao.jin@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->  v2:
->  ---
->  In v1, the deprecated events are hidden by default but they can be
->  displayed when option "--deprecated" is enabled. In v2, we don't use
->  the new option "--deprecated". Instead, we just display the deprecated
->  events under the title "--- Following are deprecated events ---".
+On 10/16/19 3:49 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.197 release.
+> There are 92 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri 18 Oct 2019 09:43:41 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.197-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-It's redundant with what the event description already says.
-If we always want to show it we don't need to do anything.
+Compiled and booted on my test system. No dmesg regressions.
 
-I really would much prefer to hide it. What's the point of showing
-something that people are not supposed to use?
-
-The only reason for keeping the deprecated events is to not
-break old scripts, but those don't care about perf list output.
-
-So I think the only sane option is to hide it by default.
-
--Andi
+thanks,
+-- Shuah
