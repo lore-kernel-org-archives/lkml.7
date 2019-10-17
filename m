@@ -2,191 +2,186 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95CEDECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53181ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DD3D2089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E72F21835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:52:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571305951;
+	bh=heLEKgwZ+8tjeXiZgv0CPgKfpmZiF5bmE7FHzvgHG+I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HDDazf0q7cAfcVR9mX6TJf3EEp3fuc8DgtMbFKWKb01y/D7aEyv/Li71VuV0vnnBI
+	 XHnHsE5PHAsIN5Qy/YaqzCp3fvb47SL/t4Hds4tzAQlK3mbOH7898Y5X+qQDOuqGFf
+	 U9HxTxs9SoJ4dyCdktgITNlYiFaQTmV+S7eODWE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439610AbfJQJwD (ORCPT
+        id S2439621AbfJQJwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 05:52:03 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44130 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393728AbfJQJwC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 05:52:02 -0400
-Received: by mail-lf1-f68.google.com with SMTP id q12so1333146lfc.11;
-        Thu, 17 Oct 2019 02:52:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=K0zNHSadiAOJfttlhL66NPc5o78JjTFcNPkPB09X5nE=;
-        b=cJyGGQ0HQsq5DmTgPLfK1WJOAQqYTx0g4EGpoKgg0rVnJpM3yHbiy3emLTAEzXD1rB
-         d76z8PbEGD3+k2OGknm6wJWa3z4z32cpayVDzBqtfaZf2tsnGfVmXrjaCldTwtk3MJv9
-         JLtd+GdYSskkD+z6tqHrlqKnG6upBGEFptEqW1+M9qN8Cy/R2Lq06OGyQwaKyPWTMsPc
-         fa3H1LBm1oAyamqrwGMBhNMluaThlC5EpKhl7uXbSpdrLYCuab1eX+SR/WXvc/7fOHlw
-         aqItyR89+jaqAwyTzWEX329NTr9FVcgwmkyzXtL6yQjXrWwa5MlmENZ1507YWP/xdNUF
-         el4A==
-X-Gm-Message-State: APjAAAV/AgCpNXatzlruVWbDB6zzSIL/jJnTZ4KWu0Lzn1FBDGPv0JoV
-        yhSTi5/Me6XI7Jy+WD9QOVA=
-X-Google-Smtp-Source: APXvYqxnjcbcNLqt1xVZyuxtYFzM8aZbmEkV+9NHKX2DqoXtWMnvHrGKh1xF1J3zIXzBKJwDHHFjmg==
-X-Received: by 2002:a19:48d6:: with SMTP id v205mr1725589lfa.27.1571305919615;
-        Thu, 17 Oct 2019 02:51:59 -0700 (PDT)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id g26sm887301lje.80.2019.10.17.02.51.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 02:51:58 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 12:51:45 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Thu, 17 Oct 2019 05:52:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36716 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393728AbfJQJw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 05:52:29 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B95B62089C;
+        Thu, 17 Oct 2019 09:52:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571305948;
+        bh=heLEKgwZ+8tjeXiZgv0CPgKfpmZiF5bmE7FHzvgHG+I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V+YmYI1z9eZrzwEKTLFUr4EVSMVwK9S3XiuOS6OyFaaq+ox6zAiNOaHGNcYHm9sEo
+         SylGURPaZBepmZVpjBV+KovC6jML6u+iyobMfY9FjT+yOtJc8+7QGJhbK5lE2hk0yb
+         +MHx+XDdULSnmYjPTqOAXJLSD3MyflKJ/JGrKKNw=
+Date:   Thu, 17 Oct 2019 11:52:25 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [RFC PATCH 08/13] regulator: bd71828: Support in-kernel APIs to
- change run-level
-Message-ID: <3275428ea15aed2de31e1304769273e5eb637829.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v10 5/6] arm64: dts: allwinner: a64: Add MIPI DSI pipeline
+Message-ID: <20191017095225.ntx647ivegaldlyf@gilmour>
+References: <20191005141913.22020-1-jagan@amarulasolutions.com>
+ <20191005141913.22020-6-jagan@amarulasolutions.com>
+ <20191007105708.raxavxk4n7bvxh7x@gilmour>
+ <CAMty3ZCiwOGgwbsjTHvEZhwHGhsgb6_FeBs9hHgLai9=rV2_HQ@mail.gmail.com>
+ <20191016080306.44pmo3rfmtnkgosq@gilmour>
+ <CAMty3ZCTE=W+TNRvdowec-eYB625j97uG8F3fzVMtRFsKsqFFQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qmuvblcb44ik4jdi"
 Content-Disposition: inline
-In-Reply-To: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAMty3ZCTE=W+TNRvdowec-eYB625j97uG8F3fzVMtRFsKsqFFQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add exported functions bd71828_set_runlevel and
-bd71828_get_runlevel for setting and getting the system run
-level.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- drivers/regulator/bd71828-regulator.c | 67 +++++++++++++++++++++++++++
- include/linux/mfd/rohm-bd71828.h      |  2 +
- 2 files changed, 69 insertions(+)
+--qmuvblcb44ik4jdi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/regulator/bd71828-regulator.c b/drivers/regulator/bd71828-regulator.c
-index d5d0dcee90cf..e242d829cbf5 100644
---- a/drivers/regulator/bd71828-regulator.c
-+++ b/drivers/regulator/bd71828-regulator.c
-@@ -505,6 +505,73 @@ int bd71828_set_runlevel_voltage(struct regulator *regulator, unsigned int uv,
- }
- EXPORT_SYMBOL(bd71828_set_runlevel_voltage);
- 
-+/**
-+ * bd71828_set_runlevel - change system run-level.
-+ *
-+ * @regulator:	pointer to one of the BD71828 regulators obtained by
-+ *		call to regulator_get
-+ * @level:	New run-level the system should enter
-+ *
-+ * Changes the system to run-level which was given as argument. This
-+ * operation will change state of all regulators which are set to be
-+ * controlled by run-levels. Note that 'regulator' must point to a
-+ * regulator which is controlled by run-levels.
-+ */
-+int bd71828_set_runlevel(struct regulator *regulator, unsigned int level)
-+{
-+	struct regulator_dev *rdev = regulator->rdev;
-+	struct bd71828_regulator_data *rd = rdev_get_drvdata(rdev);
-+
-+	if (!rd)
-+		return -ENOENT;
-+
-+	if (!rd || !rd->allow_runlvl)
-+		return -EINVAL;
-+
-+	if (rd->gps)
-+		return bd71828_dvs_gpio_set_run_level(rd, level);
-+
-+	return bd71828_dvs_i2c_set_run_level(rd->regmap, level);
-+}
-+EXPORT_SYMBOL(bd71828_set_runlevel);
-+
-+/**
-+ * bd71828_get_runlevel - get the current system run-level.
-+ *
-+ * @regulator:	pointer to one of the BD71828 regulators obtained by
-+ *		call to regulator_get
-+ * @level:	Pointer to value where current run-level is stored
-+ *
-+ * Returns the current system run-level. Note that 'regulator' must
-+ * point to a regulator which is controlled by run-levels.
-+ */
-+int bd71828_get_runlevel(struct regulator *regulator, unsigned int *level)
-+{
-+	struct regulator_dev *rdev = regulator->rdev;
-+	struct bd71828_regulator_data *rd = rdev_get_drvdata(rdev);
-+	int ret;
-+
-+	if (!rd)
-+		return -ENOENT;
-+
-+	if (!rd || !rd->allow_runlvl)
-+		return -EINVAL;
-+
-+	if (!rd->gps)
-+		ret = bd71828_dvs_i2c_get_run_level(rd->regmap, rd);
-+	else
-+		ret = bd71828_dvs_gpio_get_run_level(rd);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	*level = (unsigned int) ret;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(bd71828_get_runlevel);
-+
-+
- static const struct regulator_ops dvs_buck_gpio_ops = {
- 	.is_enabled = bd71828_dvs_gpio_is_enabled,
- 	.get_voltage = bd71828_dvs_gpio_get_voltage,
-diff --git a/include/linux/mfd/rohm-bd71828.h b/include/linux/mfd/rohm-bd71828.h
-index 5f15c6a309e6..bbbd4f118550 100644
---- a/include/linux/mfd/rohm-bd71828.h
-+++ b/include/linux/mfd/rohm-bd71828.h
-@@ -424,5 +424,7 @@ enum {
- 
- int bd71828_set_runlevel_voltage(struct regulator *regulator, unsigned int uv,
- 				 unsigned int level);
-+int bd71828_set_runlevel(struct regulator *regulator, unsigned int level);
-+int bd71828_get_runlevel(struct regulator *regulator, unsigned int *level);
- 
- #endif /* __LINUX_MFD_BD71828_H__ */
--- 
-2.21.0
+On Wed, Oct 16, 2019 at 02:19:44PM +0530, Jagan Teki wrote:
+> On Wed, Oct 16, 2019 at 1:33 PM Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > On Mon, Oct 14, 2019 at 05:37:50PM +0530, Jagan Teki wrote:
+> > > On Mon, Oct 7, 2019 at 4:27 PM Maxime Ripard <mripard@kernel.org> wrote:
+> > > >
+> > > > On Sat, Oct 05, 2019 at 07:49:12PM +0530, Jagan Teki wrote:
+> > > > > Add MIPI DSI pipeline for Allwinner A64.
+> > > > >
+> > > > > - dsi node, with A64 compatible since it doesn't support
+> > > > >   DSI_SCLK gating unlike A33
+> > > > > - dphy node, with A64 compatible with A33 fallback since
+> > > > >   DPHY on A64 and A33 is similar
+> > > > > - finally, attach the dsi_in to tcon0 for complete MIPI DSI
+> > > > >
+> > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > > Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+> > > > > ---
+> > > > >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 38 +++++++++++++++++++
+> > > > >  1 file changed, 38 insertions(+)
+> > > > >
+> > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > > > index 69128a6dfc46..ad4170b8aee0 100644
+> > > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > > > @@ -382,6 +382,12 @@
+> > > > >                                       #address-cells = <1>;
+> > > > >                                       #size-cells = <0>;
+> > > > >                                       reg = <1>;
+> > > > > +
+> > > > > +                                     tcon0_out_dsi: endpoint@1 {
+> > > > > +                                             reg = <1>;
+> > > > > +                                             remote-endpoint = <&dsi_in_tcon0>;
+> > > > > +                                             allwinner,tcon-channel = <1>;
+> > > > > +                                     };
+> > > > >                               };
+> > > > >                       };
+> > > > >               };
+> > > > > @@ -1003,6 +1009,38 @@
+> > > > >                       status = "disabled";
+> > > > >               };
+> > > > >
+> > > > > +             dsi: dsi@1ca0000 {
+> > > > > +                     compatible = "allwinner,sun50i-a64-mipi-dsi";
+> > > > > +                     reg = <0x01ca0000 0x1000>;
+> > > > > +                     interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+> > > > > +                     clocks = <&ccu CLK_BUS_MIPI_DSI>;
+> > > > > +                     clock-names = "bus";
+> > > >
+> > > > This won't validate with the bindings you have either here, since it
+> > > > still expects bus and mod.
+> > > >
+> > > > I guess in that cas, we can just drop clock-names, which will require
+> > > > a bit of work on the driver side as well.
+> > >
+> > > Okay.
+> > > mod clock is not required for a64, ie reason we have has_mod_clk quirk
+> > > patch. Adjust the clock-names: on dt-bindings would make sense here,
+> > > what do you think?
+> >
+> > I'm confused, what are you suggesting?
+>
+> Sorry for the confusion.
+>
+> The mod clock is not required for A64 and we have a patch for handling
+> mod clock using has_mod_clk quirk(on the series), indeed the mod clock
+> is available in A31 and not needed for A64. So, to satisfy this
+> requirement the clock-names on dt-bindings can update to make mod
+> clock-name is optional and bus clock is required.
 
+No, the bus clock name is not needed if there's only one clock.
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+> I'm not exactly sure, this is correct but trying to understand if it
+> is possible or not? something like
+>
+>    clocks:
+>       minItems: 1
+>       maxItems: 2
+>      items:
+>        - description: Bus Clock
+>        - description: Module Clock
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+That's correct.
+
+>    clock-names:
+>       minItems: 1
+>       maxItems: 2
+>      items:
+>        - const: bus
+>        - const: mod
+
+Here, just keep the current clock-names definition, and make it
+required only for SoCs that are not the A64
+
+Maxime
+
+--qmuvblcb44ik4jdi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXag52QAKCRDj7w1vZxhR
+xb61APwI3pT187DnoWidQOdHcwSDhwtfnY5i43XaAc7tdaAkdQEAp+g/w4/dneO3
+Vt2IfHqycYDGHUPJU8g6q4R6umrzPA0=
+=ObSz
+-----END PGP SIGNATURE-----
+
+--qmuvblcb44ik4jdi--
