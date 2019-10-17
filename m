@@ -2,159 +2,104 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B342EECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A78CECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8293121835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:11:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571339518;
-	bh=J1msCt9EwmYT+BnayX1hxz+j4qYoTzyVRUrqC5XV1rc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=moPEr4fqKmdMsLNJU+R2b1pcS4Qgx9e/2dnlaKHIporGsw4H0t/n9YBizGzkQTuD4
-	 2bKRegLMfk0cuoAW4vslcQtIa4OLKObTCWgkyhOvFISzNdL2vE2qsJpZbrh+yFgaNO
-	 6KZfZb0vGbe5q+zwWallXV6nhEKA/1UoFGq5q2Ts=
+	by mail.kernel.org (Postfix) with ESMTP id 62CC321835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:12:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441490AbfJQTL5 (ORCPT
+        id S2441504AbfJQTMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 15:11:57 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46355 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727646AbfJQTLz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 15:11:55 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 89so2832044oth.13;
-        Thu, 17 Oct 2019 12:11:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VfE4pHkEB0q49RVPM0ZsYNB/wm/zHNekWOHlQdV2NzA=;
-        b=h53hc919+OW05u0DILT0VltiM+EeOYyRBSPpdh5FUWwIxdNFDb375AGuKuS7UxGq1A
-         BQYyqowXplnd5svsCKifezkxgGtx4lTrNoAoaCqL1QFrqoYJedpI4HDpioih7cyhfpYc
-         hkVtOeUzdgoN6W1z0v9gtR+9WUbEon6ZW0uZeCpBA2Sz/ieKd//cy2/DwpukRnP8hO1y
-         QbrCLhb/hU2aU3iqy0WwQZknu+xxxnbtnkLqgHRn+/anIaFCtylm6lMQzDX1ZRpxn5Sy
-         bgJX05pDcJ5o4+RJnkmbaWDEZmLzPeSq1cb3JnLnMv8ybM6kALlxXbfCqUXyKbpQD6c9
-         lXNw==
-X-Gm-Message-State: APjAAAVCPYevpQ5AAVCyn5PdzYm/cxqGGhj3beLIoYa6VNaH9WQe+7J6
-        NQwYZe16wA0CewUDwNiCLxDW62rIsIMhpUyS4xw=
-X-Google-Smtp-Source: APXvYqydr6smfx+tDiMQxWxqDxB06hSqqxbKElnCI8osB6kbMr16aaHPV2O8ujoYLv0xdf3M9Rs3nqRDSIyG+R+mEy8=
-X-Received: by 2002:a9d:5a0f:: with SMTP id v15mr4515073oth.266.1571339514744;
- Thu, 17 Oct 2019 12:11:54 -0700 (PDT)
+        Thu, 17 Oct 2019 15:12:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41848 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727646AbfJQTL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 15:11:59 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9E97B307D985;
+        Thu, 17 Oct 2019 19:11:58 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-123-81.rdu2.redhat.com [10.10.123.81])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 45D23600C8;
+        Thu, 17 Oct 2019 19:11:56 +0000 (UTC)
+Subject: Re: [PATCH 3/3] pci: Default to PCI_MSI_IRQ_DOMAIN
+To:     Palmer Dabbelt <palmer@sifive.com>,
+        Christoph Hellwig <hch@infradead.org>, michal.simek@xilinx.com,
+        helgaas@kernel.org
+Cc:     tony.luck@intel.com, fenghua.yu@intel.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, bhelgaas@google.com, will@kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        kstewart@linuxfoundation.org, pbonzini@redhat.com,
+        firoz.khan@linaro.org, yamada.masahiro@socionext.com,
+        mingo@kernel.org, peterz@infradead.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-pci@vger.kernel.org
+References: <20191017181937.7004-1-palmer@sifive.com>
+ <20191017181937.7004-4-palmer@sifive.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <38389bfa-3fb2-c941-9f9d-0fa573112c58@redhat.com>
+Date:   Thu, 17 Oct 2019 15:11:55 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <cover.1571314830.git.amit.kucheria@linaro.org> <f1d7214951e4b2caa394c722b4d8aaca9cc2c4c4.1571314830.git.amit.kucheria@linaro.org>
-In-Reply-To: <f1d7214951e4b2caa394c722b4d8aaca9cc2c4c4.1571314830.git.amit.kucheria@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 17 Oct 2019 21:11:42 +0200
-Message-ID: <CAJZ5v0gAyaXHrWe5x6ctz_zawFvudgpTVFCuwieBM5s=FMXysQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/6] cpufreq: Initialise the governors in core_initcall
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>, agross@kernel.org,
-        Taniya Das <tdas@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191017181937.7004-4-palmer@sifive.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 17 Oct 2019 19:11:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 2:28 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+On 10/17/19 2:19 PM, Palmer Dabbelt wrote:
+> As far as I can tell, the only reason there was an architecture
+> whitelist for PCI_MSI_IRQ_DOMAIN is because it requires msi.h.  I've
+> built this for all the architectures that play nice with make.cross, but
+> I haven't boot tested it anywhere.
 >
-> Initialise the cpufreq governors earlier to allow for earlier
-> performance control during the boot process.
->
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-
-You also want to do that for the schedutil governor I think.
-
+> Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
 > ---
->  drivers/cpufreq/cpufreq_conservative.c | 2 +-
->  drivers/cpufreq/cpufreq_ondemand.c     | 2 +-
->  drivers/cpufreq/cpufreq_performance.c  | 2 +-
->  drivers/cpufreq/cpufreq_powersave.c    | 2 +-
->  drivers/cpufreq/cpufreq_userspace.c    | 2 +-
->  5 files changed, 5 insertions(+), 5 deletions(-)
+>  drivers/pci/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/cpufreq/cpufreq_conservative.c b/drivers/cpufreq/cpufreq_conservative.c
-> index b66e81c06a57..737ff3b9c2c0 100644
-> --- a/drivers/cpufreq/cpufreq_conservative.c
-> +++ b/drivers/cpufreq/cpufreq_conservative.c
-> @@ -346,7 +346,7 @@ struct cpufreq_governor *cpufreq_default_governor(void)
->         return CPU_FREQ_GOV_CONSERVATIVE;
->  }
->
-> -fs_initcall(cpufreq_gov_dbs_init);
-> +core_initcall(cpufreq_gov_dbs_init);
->  #else
->  module_init(cpufreq_gov_dbs_init);
->  #endif
-> diff --git a/drivers/cpufreq/cpufreq_ondemand.c b/drivers/cpufreq/cpufreq_ondemand.c
-> index dced033875bf..82a4d37ddecb 100644
-> --- a/drivers/cpufreq/cpufreq_ondemand.c
-> +++ b/drivers/cpufreq/cpufreq_ondemand.c
-> @@ -483,7 +483,7 @@ struct cpufreq_governor *cpufreq_default_governor(void)
->         return CPU_FREQ_GOV_ONDEMAND;
->  }
->
-> -fs_initcall(cpufreq_gov_dbs_init);
-> +core_initcall(cpufreq_gov_dbs_init);
->  #else
->  module_init(cpufreq_gov_dbs_init);
->  #endif
-> diff --git a/drivers/cpufreq/cpufreq_performance.c b/drivers/cpufreq/cpufreq_performance.c
-> index aaa04dfcacd9..def9afe0f5b8 100644
-> --- a/drivers/cpufreq/cpufreq_performance.c
-> +++ b/drivers/cpufreq/cpufreq_performance.c
-> @@ -50,5 +50,5 @@ MODULE_AUTHOR("Dominik Brodowski <linux@brodo.de>");
->  MODULE_DESCRIPTION("CPUfreq policy governor 'performance'");
->  MODULE_LICENSE("GPL");
->
-> -fs_initcall(cpufreq_gov_performance_init);
-> +core_initcall(cpufreq_gov_performance_init);
->  module_exit(cpufreq_gov_performance_exit);
-> diff --git a/drivers/cpufreq/cpufreq_powersave.c b/drivers/cpufreq/cpufreq_powersave.c
-> index c143dc237d87..1ae66019eb83 100644
-> --- a/drivers/cpufreq/cpufreq_powersave.c
-> +++ b/drivers/cpufreq/cpufreq_powersave.c
-> @@ -43,7 +43,7 @@ struct cpufreq_governor *cpufreq_default_governor(void)
->         return &cpufreq_gov_powersave;
->  }
->
-> -fs_initcall(cpufreq_gov_powersave_init);
-> +core_initcall(cpufreq_gov_powersave_init);
->  #else
->  module_init(cpufreq_gov_powersave_init);
->  #endif
-> diff --git a/drivers/cpufreq/cpufreq_userspace.c b/drivers/cpufreq/cpufreq_userspace.c
-> index cbd81c58cb8f..b43e7cd502c5 100644
-> --- a/drivers/cpufreq/cpufreq_userspace.c
-> +++ b/drivers/cpufreq/cpufreq_userspace.c
-> @@ -147,7 +147,7 @@ struct cpufreq_governor *cpufreq_default_governor(void)
->         return &cpufreq_gov_userspace;
->  }
->
-> -fs_initcall(cpufreq_gov_userspace_init);
-> +core_initcall(cpufreq_gov_userspace_init);
->  #else
->  module_init(cpufreq_gov_userspace_init);
->  #endif
-> --
-> 2.17.1
->
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index a304f5ea11b9..77c1428cd945 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -52,7 +52,7 @@ config PCI_MSI
+>  	   If you don't know what to do here, say Y.
+>  
+>  config PCI_MSI_IRQ_DOMAIN
+> -	def_bool ARC || ARM || ARM64 || X86 || RISCV
+> +	def_bool y
+>  	depends on PCI_MSI
+>  	select GENERIC_MSI_IRQ_DOMAIN
+>  
+
+The linking of asm-generic/msi.h is currently enabled for
+
+./arch/powerpc/include/asm/Kbuild:generic-y += msi.h
+./arch/arm/include/asm/Kbuild:generic-y += msi.h
+./arch/mips/include/asm/Kbuild:generic-y += msi.h
+./arch/riscv/include/asm/Kbuild:generic-y += msi.h
+./arch/arc/include/asm/Kbuild:generic-y += msi.h
+./arch/arm64/include/asm/Kbuild:generic-y += msi.h
+./arch/sparc/include/asm/Kbuild:generic-y += msi.h
+
+Your patchset adds 2 more and x86 has its own asm/msi.h. That leads to a
+total of 10 archs, but there are 37 sub-directories under arch. It is
+possible that the other architectures don't have PCI_MSI set. Still it
+may be a bit risky to set it to "def_bool y".
+
+Cheers,
+Longman
+
