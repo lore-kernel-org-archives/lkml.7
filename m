@@ -2,137 +2,117 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DC5FA3736
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B98ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B668F214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:57:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="Vmq2Abbl"
+	by mail.kernel.org (Postfix) with ESMTP id C65B620854
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:58:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571317084;
+	bh=5PvDqYIkD25UHCLqVbbqeGHt67Vbvi9W1p1aLs9NggU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=vJ7n7yki1BAPN3ZqLg9T3zzmDz2dcdwoDqsF5l/Yg+L3K81WQv9PLBVhzs90HM+LP
+	 R4QAatA0IhvnRR3n7bVyUGhTys1MDPLe3z/1ZAtFz5hgJRyJ4+SZZXkcFNDCuUD2bw
+	 CXi8agItlWL34dkvSPndNimNAGS+gyCIoC6COCYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390742AbfJQM5D (ORCPT
+        id S2390796AbfJQM6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 08:57:03 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:35336 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729124AbfJQM5C (ORCPT
+        Thu, 17 Oct 2019 08:58:03 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40762 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbfJQM6D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:57:02 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9HCqhFW030235;
-        Thu, 17 Oct 2019 08:56:35 -0400
-Received: from nam03-dm3-obe.outbound.protection.outlook.com (mail-dm3nam03lp2051.outbound.protection.outlook.com [104.47.41.51])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2vkbr7fjhq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 17 Oct 2019 08:56:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PRB/UO9KDMezPxdcbPKhZvE7XtEdQI8vFK82/0/A3Fvjb+nJyCY+VA2wxoYJ+1W1b7JE7b92cGRdhb1JJ9cZ3VJOlb3ttXHrEnyRkdTG0/d/D7mCWdp3SD6ZX7yIKZY+XoPKe1NKjlSbnhk4qGXPzfRmRZgLz19tKN2SweVx2m626PVzP7ndhfdRBFQHM5dSx5A/wGMI1OPBtfos4ulL9pncryWExBF+YxTQHGkdL+DTRQH4/Vxs7fatEysmTSKAeZX0kempzpqiCi+yFK/99Ee5n5jSyUE8pDInfObBYfKHAvIE5H1V4uQ+Ri1jJvxuM/Ch5OXPrCLzghiVije0+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/jEzNIWS78iD394zsIU+kwMdQAdMn854iUNm6kzD5pU=;
- b=BFWAYyAEx3lW1197CqePLORHD2K9TDFj+2S6RE0RemYw5hymwzoYagFak60/ARyl8fbC4m0lHiyYrGWoeCBmq+58xrgb4nuQpHGIrGO0oYsLvQGqWKGYwNdvWe9zZQ8W9/B5yv7qjs6XVuz6pDnQN/d+nkemthFT+47pz35jS/SeAexdPiXQpRmzzNfo/ucH49bZUtEcJHzAr3/hYAM9CopJaRwRzXW69tbTQgvWMlG0hHGvmUVGRar90ztrAGXg4PJbgHpiODpKitlXjaTWyIIef+nEDuiwtCeo8+9D6+HGQRxJMY0o39ku/Lf+v3froF0/ua2tTkUq3w/WUNYGcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/jEzNIWS78iD394zsIU+kwMdQAdMn854iUNm6kzD5pU=;
- b=Vmq2AbblDr+JqIl9kB2lcK2iY55nBkEC0BcpJ1eSLZVuumEqjLk1tp2T2L88DBnbPbT/sVIDRmF+l6n3C0PmFzDsdCZxh3XatKqsOGylLCs6/wLkMGGfNZijVuGorTzX5neP6piFg3XcdUvTth7/dJM56X82RxBKZx51oEhewlQ=
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com (20.180.12.152) by
- CH2PR03MB5160.namprd03.prod.outlook.com (20.180.5.77) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.22; Thu, 17 Oct 2019 12:56:33 +0000
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::99:71f2:a588:977c]) by CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::99:71f2:a588:977c%3]) with mapi id 15.20.2347.023; Thu, 17 Oct 2019
- 12:56:33 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "hslester96@gmail.com" <hslester96@gmail.com>
-CC:     "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] staging: iio: ad9834: add a check for devm_clk_get
-Thread-Topic: [PATCH] staging: iio: ad9834: add a check for devm_clk_get
-Thread-Index: AQHVhC2u3ScEUTGZY0uRy+gHxSSwk6dezFaA
-Date:   Thu, 17 Oct 2019 12:56:33 +0000
-Message-ID: <3acc69aceb04667ba34200f54c59b3d160ab2f5d.camel@analog.com>
-References: <20191016142540.26450-1-hslester96@gmail.com>
-In-Reply-To: <20191016142540.26450-1-hslester96@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [137.71.226.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3d75a178-172d-40c6-7fdf-08d75301700e
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: CH2PR03MB5160:
-x-ld-processed: eaa689b4-8f87-40e0-9c6f-7228de4d754a,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR03MB5160EBB5F48DCFB05DB9487EF96D0@CH2PR03MB5160.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 01930B2BA8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(136003)(346002)(39860400002)(366004)(189003)(199004)(316002)(25786009)(2616005)(6436002)(6506007)(4326008)(66946007)(6512007)(2501003)(8936002)(81166006)(66066001)(6916009)(54906003)(7736002)(476003)(81156014)(305945005)(486006)(8676002)(14454004)(5660300002)(446003)(11346002)(71200400001)(229853002)(26005)(2906002)(1361003)(186003)(4744005)(6486002)(76116006)(66446008)(14444005)(4001150100001)(478600001)(36756003)(66476007)(66556008)(102836004)(86362001)(71190400001)(76176011)(5640700003)(64756008)(3846002)(6116002)(99286004)(118296001)(6246003)(1411001)(2351001)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5160;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: iPqS4ortSntpe6dtG4EKDAp4RXlemLCcwMVL6zo5xBIcDv5aFHgxJnsQyljQWSOSU+Wsup3lX+5fff12MZkW4K7xET66FqDSCxYCW2hjreBsy89dOOh67SjmaMrfV0dgOug/isCRsEJydZ+sa1MQZ8xJMjQHdV0iMxGwAJzOwHi5+FA+fW3zwCHllj++BWgrO18Tz+8vUWgrsnHGn6xJks8o7bUdsS/qSFh1SIFooH/Cy0nDgPwuxyOuSoa4kbvHLZh7MSr5aKr7VbD+wbPf+0y467SzNsjIFxesMldVBUIjeek2LVuWtko62VEfyC8hMw1y+tPb5M1sWtICibZHylIvDxz+AN0etCbLO16pTAtAtOrvKyQJ/QtYURjWHk6oofFBgg5ZfX1GGJHjviVsDGo3/Q7L49W0t3IRkb8eE70=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6C0EAE7EA9B8014BB309E0A55CBE3A78@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 17 Oct 2019 08:58:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=fqfvJwGghxY/zvJczuG3/Ld93T9mcoCDDrIkbXWs7Sk=; b=po5ekprxuyc4XbZj/GiSZZOxK
+        XnmJuBTsnFVusvf8RHqb32e2q+BmM2FLOphxhDvtk100NFpDBCIJDmALheko0WV94K640qpsZBEf6
+        VDmAMk6fwXdR4STE0QPGHixD/qfmg5dirQ/+mR47pm+PwKrf69zIVmSnmJXN7wI3UzGAwQAfug5CB
+        NOQ2eO28le2sE8uQlLKcBeyvLXrRj4vbfixTaHuis7SrNbS+txcPtnMBawip8mC3BO8RKfnRsop4U
+        hGzu2L34yC0b1u++srYXLiy3fHJkhIsZro05OdLPxkzL4gBWXseVaW2TzTPGxfVYsTT75hKwlPOq3
+        XhVZZjgvw==;
+Received: from [179.95.49.118] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iL5Lp-0006o4-7D; Thu, 17 Oct 2019 12:57:57 +0000
+Date:   Thu, 17 Oct 2019 09:57:51 -0300
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <mripard@bootlin.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v8 3/3] media: cedrus: Add HEVC/H.265 decoding support
+Message-ID: <20191017095751.5a229051@coco.lan>
+In-Reply-To: <20190927143411.141526-4-paul.kocialkowski@bootlin.com>
+References: <20190927143411.141526-1-paul.kocialkowski@bootlin.com>
+        <20190927143411.141526-4-paul.kocialkowski@bootlin.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d75a178-172d-40c6-7fdf-08d75301700e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Oct 2019 12:56:33.5399
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EY3geQ+sXPcwlM9NaOpb//p9FgoqzujCmaENeD3LuS8h0xPQa2arqmfIsfbE5brTM+8ABQId08cwXZDKJPfZnZiZRHBdcktypzYV6YEL0xo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5160
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-17_04:2019-10-17,2019-10-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 phishscore=0 bulkscore=0 impostorscore=0 spamscore=0
- malwarescore=0 clxscore=1015 mlxscore=0 lowpriorityscore=0 adultscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910170119
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTEwLTE2IGF0IDIyOjI1ICswODAwLCBDaHVob25nIFl1YW4gd3JvdGU6DQo+
-IGFkOTgzNF9wcm9iZSBtaXNzZXMgYSBjaGVjayBmb3IgZGV2bV9jbGtfZ2V0IGFuZCBtYXkgY2F1
-c2UgcHJvYmxlbXMuDQo+IEFkZCBhIGNoZWNrIGxpa2Ugd2hhdCBhZDk4MzIgZG9lcyB0byBmaXgg
-aXQuDQo+IA0KDQpUaGlzIGNvdWxkIGFsc28gdXNlIGEgRml4ZXMgdGFnLCBidXQgbm90IGEgYmln
-IGRlYWwuDQoNClJldmlld2VkLWJ5OiBBbGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRydS5hcmRl
-bGVhbkBhbmFsb2cuY29tPg0KDQo+IFNpZ25lZC1vZmYtYnk6IENodWhvbmcgWXVhbiA8aHNsZXN0
-ZXI5NkBnbWFpbC5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9zdGFnaW5nL2lpby9mcmVxdWVuY3kv
-YWQ5ODM0LmMgfCA0ICsrKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykNCj4g
-DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvaWlvL2ZyZXF1ZW5jeS9hZDk4MzQuYw0K
-PiBiL2RyaXZlcnMvc3RhZ2luZy9paW8vZnJlcXVlbmN5L2FkOTgzNC5jDQo+IGluZGV4IDAzOGQ2
-NzMyYzNmZC4uMjMwMjY5NzhhNWE1IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3N0YWdpbmcvaWlv
-L2ZyZXF1ZW5jeS9hZDk4MzQuYw0KPiArKysgYi9kcml2ZXJzL3N0YWdpbmcvaWlvL2ZyZXF1ZW5j
-eS9hZDk4MzQuYw0KPiBAQCAtNDE3LDYgKzQxNywxMCBAQCBzdGF0aWMgaW50IGFkOTgzNF9wcm9i
-ZShzdHJ1Y3Qgc3BpX2RldmljZSAqc3BpKQ0KPiAgCXN0ID0gaWlvX3ByaXYoaW5kaW9fZGV2KTsN
-Cj4gIAltdXRleF9pbml0KCZzdC0+bG9jayk7DQo+ICAJc3QtPm1jbGsgPSBkZXZtX2Nsa19nZXQo
-JnNwaS0+ZGV2LCBOVUxMKTsNCj4gKwlpZiAoSVNfRVJSKHN0LT5tY2xrKSkgew0KPiArCQlyZXQg
-PSBQVFJfRVJSKHN0LT5tY2xrKTsNCj4gKwkJZ290byBlcnJvcl9kaXNhYmxlX3JlZzsNCj4gKwl9
-DQo+ICANCj4gIAlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoc3QtPm1jbGspOw0KPiAgCWlmIChy
-ZXQpIHsNCg==
+Em Fri, 27 Sep 2019 16:34:11 +0200
+Paul Kocialkowski <paul.kocialkowski@bootlin.com> escreveu:
+
+> This introduces support for HEVC/H.265 to the Cedrus VPU driver, with
+> both uni-directional and bi-directional prediction modes supported.
+> 
+> Field-coded (interlaced) pictures, custom quantization matrices and
+> 10-bit output are not supported at this point.
+> 
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> ---
+
+...
+
+> +		unsigned int ctb_size_luma =
+> +			1 << log2_max_luma_coding_block_size;
+
+Shifts like this is a little scary. "1" constant is signed. So, if
+log2_max_luma_coding_block_size is 31, the above logic has undefined
+behavior. Different archs and C compilers may handle it on different
+ways.
+
+> +#define VE_DEC_H265_LOW_ADDR_PRIMARY_CHROMA(a) \
+> +	(((a) << 24) & GENMASK(31, 24))
+
+Same applies here and on other similar macros. You need to enforce
+(a) to be unsigned, as otherwise the behavior is undefined.
+
+Btw, this is a recurrent pattern on this file. I would define a
+macro, e. g. something like:
+
+	#define MASK_BITS_AND_SHIFT(v, high, low) \
+		((UL(v) << low) & GENMASK(high, low))
+
+And use it for all similar patterns here.
+
+The best would be to include such macro at linux/bits.h, although some
+upstream discussion is required.
+
+So, for now, let's add it at this header file, but work upstream
+to have it merged there.
+
+
+Thanks,
+Mauro
