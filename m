@@ -2,361 +2,127 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AE5FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9B8ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A434D2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7126021835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:04:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571321051;
+	bh=Q+CIbW5hWN6LU9dHP1eWy5eKT4TsIQ0X62levLVmljg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ajPwtI/+kLtTPaYxKVsXPpCbuPtFb5TJBRgmgWBtFQBptBbe7Ii8paQFhGUoam7w0
+	 cvaIoeKaz5HTMb3pjqChypd+ncgdVNERWRFJsuHR0B9qQSH/0ztBQ9Vq1YevhQ5dtU
+	 F9IDzUrrH11Rt/I/ROawTi0THWWZ8P4cIiiCG+xA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439815AbfJQODn (ORCPT
+        id S2439820AbfJQOEK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 10:03:43 -0400
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:57646 "EHLO
-        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727542AbfJQODn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:03:43 -0400
-X-Greylist: delayed 2202 seconds by postgrey-1.27 at vger.kernel.org; Thu, 17 Oct 2019 10:03:41 EDT
-Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
-        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1iL5nq-0005dJ-1S; Thu, 17 Oct 2019 15:26:54 +0200
-X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
-        linuxbbg.five-lan.de
-Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
-        (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id x9HDQp2F004459
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Thu, 17 Oct 2019 15:26:52 +0200
-Subject: Re: [PATCH 1/6] arm64: dts: rockchip: Fix rk3399-roc-pc pwm2 pin
-To:     Jagan Teki <jagan@amarulasolutions.com>,
-        Levin Du <djw@t-chip.com.cn>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Akash Gajjar <akash@openedev.com>,
-        Da Xue <da@lessconfused.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-References: <20190919052822.10403-1-jagan@amarulasolutions.com>
- <20190919052822.10403-2-jagan@amarulasolutions.com> <6797961.eJj5WIFbM9@phil>
- <CAMty3ZDKaywoPxCSD-5N2pLjtGmZ-dZ7ZgUOJqiB1V_9rfR26A@mail.gmail.com>
- <87eezolynl.fsf@archiso.i-did-not-set--mail-host-address--so-tickle-me>
- <CAMty3ZD8uHsj0Jzs08sKG0JXfC6MU0MHdKs=kw4m5rupnoTtqg@mail.gmail.com>
-From:   Markus Reichl <m.reichl@fivetechno.de>
-Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
- 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
- eD/Xv4SsK2JTO4nkQYw8
-Organization: five technologies GmbH
-Message-ID: <109d708e-d182-fafa-44ad-0e6e0f813e0d@fivetechno.de>
-Date:   Thu, 17 Oct 2019 15:26:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 17 Oct 2019 10:04:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727542AbfJQOEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 10:04:10 -0400
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7258621848;
+        Thu, 17 Oct 2019 14:04:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571321048;
+        bh=Q+CIbW5hWN6LU9dHP1eWy5eKT4TsIQ0X62levLVmljg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=B3STYhDzZ4yKr8riMTRMxdXQ18ObBJlcjzutrorC5ZT6vGzaADCEN3oTnBA962ooX
+         RJ0Dfvgi2HxIEflMVaNQ33N2DhCDnOI23So8VfH1iS5DQW5p3Umhe0CwIJVl0hnlTX
+         GZSuTcMxvr3TtpzFXPtsycB2zTUR7B66JewywZ/o=
+Received: by mail-yb1-f177.google.com with SMTP id t4so731600ybk.3;
+        Thu, 17 Oct 2019 07:04:08 -0700 (PDT)
+X-Gm-Message-State: APjAAAWDQBYHcX6JFcpUnNoDA6ntka/jRCiPL4eOAHrdOoUy4hJGm/qc
+        IbLtc+Uxedq6etoLxd6jzagsJyGQV0w34dQ/0g==
+X-Google-Smtp-Source: APXvYqzYYUwsLXd2V5tk8mtnPoKQ8x+6MZmaA0AJXKDmtcnA6M7HsmYniLbbc+lpFZSkPNZkHf/TXCYoC1rvAZLN5TU=
+X-Received: by 2002:a25:3ce:: with SMTP id 197mr2185522ybd.255.1571321047509;
+ Thu, 17 Oct 2019 07:04:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAMty3ZD8uHsj0Jzs08sKG0JXfC6MU0MHdKs=kw4m5rupnoTtqg@mail.gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="Mkl0xAKohbcENoFuufIfKYeOWfNDdwTbC"
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1571321021;fd13738b;
-X-HE-SMSGID: 1iL5nq-0005dJ-1S
+References: <20191001061704.2399-1-peter.ujfalusi@ti.com> <20191001061704.2399-8-peter.ujfalusi@ti.com>
+ <20191010175232.GA24556@bogus> <ef07299b-eb43-d582-adb8-46f46681f9a5@ti.com> <d53f3bd7-d331-33c8-5232-c8f3cc9ac708@ti.com>
+In-Reply-To: <d53f3bd7-d331-33c8-5232-c8f3cc9ac708@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 17 Oct 2019 09:03:55 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKWVLMa=AJ+SNHjMRFpCk6cM=UPBgmmHVonOQ03a_zxXQ@mail.gmail.com>
+Message-ID: <CAL_JsqKWVLMa=AJ+SNHjMRFpCk6cM=UPBgmmHVonOQ03a_zxXQ@mail.gmail.com>
+Subject: Re: [PATCH v3 07/14] dt-bindings: dma: ti: Add document for K3 UDMA
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>, Keerthy <j-keerthy@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        Tony Lindgren <tony@atomide.com>, Vinod <vkoul@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---Mkl0xAKohbcENoFuufIfKYeOWfNDdwTbC
-Content-Type: multipart/mixed; boundary="eKrkufQi7b6iPRdhDHIVSCqbS78ZKOHkV";
- protected-headers="v1"
-From: Markus Reichl <m.reichl@fivetechno.de>
-To: Jagan Teki <jagan@amarulasolutions.com>, Levin Du <djw@t-chip.com.cn>
-Cc: Mark Rutland <mark.rutland@arm.com>,
- devicetree <devicetree@vger.kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- linux-kernel <linux-kernel@vger.kernel.org>,
- "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
- Rob Herring <robh+dt@kernel.org>, Akash Gajjar <akash@openedev.com>,
- Da Xue <da@lessconfused.com>,
- linux-amarula <linux-amarula@amarulasolutions.com>,
- linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Message-ID: <109d708e-d182-fafa-44ad-0e6e0f813e0d@fivetechno.de>
-Subject: Re: [PATCH 1/6] arm64: dts: rockchip: Fix rk3399-roc-pc pwm2 pin
-References: <20190919052822.10403-1-jagan@amarulasolutions.com>
- <20190919052822.10403-2-jagan@amarulasolutions.com> <6797961.eJj5WIFbM9@phil>
- <CAMty3ZDKaywoPxCSD-5N2pLjtGmZ-dZ7ZgUOJqiB1V_9rfR26A@mail.gmail.com>
- <87eezolynl.fsf@archiso.i-did-not-set--mail-host-address--so-tickle-me>
- <CAMty3ZD8uHsj0Jzs08sKG0JXfC6MU0MHdKs=kw4m5rupnoTtqg@mail.gmail.com>
-In-Reply-To: <CAMty3ZD8uHsj0Jzs08sKG0JXfC6MU0MHdKs=kw4m5rupnoTtqg@mail.gmail.com>
+On Tue, Oct 15, 2019 at 12:29 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>
+> Rob,
+>
+> On 10/11/19 10:30 AM, Peter Ujfalusi wrote:
+> >
+> > I have already moved the TR vs Packet mode channel selection, which does
+> > make sense as it was Linux's choice to use TR for certain cases.
+> >
+> > If I move these to code then we need to have big tables
+> > struct psil_config am654_psil[32767] = {};
+> > struct psil_config j721e_psil[32767] = {};
+>
+> After thinking about this a bit more, I think we can move all the PSI-L
+> endpoint configuration to the kernel as not all the 32767 threads are
+> actually in use. Sure it is going to be some amount of static data in
+> the kernel, but it is an acceptable compromise.
+>
+> The DMA binding can look like this:
+>
+> dmas = <&main_udmap 0xc400>,
+>        <&main_udmap 0x4400>;
+> dma-names = "tx", "rx";
+>
+> or
+> dmas = <&main_udmap 0x4400 UDMA_DIR_TX>,
+>        <&main_udmap 0x4400 UDMA_DIR_RX>;
+> dma-names = "tx", "rx";
+>
+> If I keep the direction.
+> 0xc400 is destination ID, which is 0x4400 | 0x8000 as per PSI-L
+> specification.
+> In the TRM only the source threads can be found as a map (thread IDs <
+> 0x7fff), but the binding document can cover this.
+>
+> This way we don't need another dtsi file and I can create the map in the
+> kernel.
+>
+> This will hide some details of the HW from DT, but since the PSI-L
+> thread configuration is static in hardware I believe it is acceptable.
+>
+> However we still have uncovered features in the binding or in code, like
+> a case when the RX does not have access to the DMA channel, only flows.
+> Not sure if I should reserve the direction parameter as an indication to
+> this or find other way.
+> Basically we communicate on the given PSI-L thread without having a DMA
+> channel as other core is owning the channel.
+>
+> What do you think?
 
---eKrkufQi7b6iPRdhDHIVSCqbS78ZKOHkV
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: quoted-printable
+Seems like a reasonable solution though I don't really follow the last issue.
 
-Hi Jagan,
-
-your patch fixes booting my rk3399-roc-pc with 5.4.0-rc3-next-20191017.
-Without your patch roc-pc hangs here:
-[    9.703526] pwm-regulator: supplied by regulator-dummy
-
-Am 16.10.19 um 19:09 schrieb Jagan Teki:
-> Hi Levin,
->=20
-> On Tue, Oct 8, 2019 at 8:42 AM <djw@t-chip.com.cn> wrote:
->>
->> Jagan Teki <jagan@amarulasolutions.com> writes:
->>
->> > Hi Heiko,
->> >
->> > On Mon, Sep 30, 2019 at 2:51 AM Heiko Stuebner <heiko@sntech.de> wro=
-te:
->> >>
->> >> Hi Jagan,
->> >>
->> >> Am Donnerstag, 19. September 2019, 07:28:17 CEST schrieb Jagan Teki=
-:
->> >> > ROC-PC is not able to boot linux console if PWM2_d is
->> >> > unattached to any pinctrl logic.
->> >> >
->> >> > To be precise the linux boot hang with last logs as,
->> >> > ...
->> >> > .....
->> >> > [    0.003367] Console: colour dummy device 80x25
->> >> > [    0.003788] printk: console [tty0] enabled
->> >> > [    0.004178] printk: bootconsole [uart8250] disabled
->> >> >
->> >> > In ROC-PC the PWM2_d pin is connected to LOG_DVS_PWM of
->> >> > VDD_LOG. So, for normal working operations this needs to
->> >> > active and pull-down.
->> >> >
->> >> > This patch fix, by attaching pinctrl active and pull-down
->> >> > the pwm2.
->> >>
->> >> This looks highly dubious on first glance. The pwm subsystem nor
->> >> the Rockchip pwm driver do not do any pinctrl handling.
->> >>
->> >> So I don't really see where that "active" pinctrl state is supposed=
-
->> >> to come from.
->> >>
->> >> Comparing with the pwm driver in the vendor tree I see that there
->> >> is such a state defined there. But that code there also looks stran=
-ge
->> >> as that driver never again leaves this active state after entering =
-it.
->> >>
->> >> Also for example all the Gru devices run with quite a number of pwm=
--
->> >> regulators without needing additional fiddling with the pwm itself,=
- so
->> >> I don't really see why that should be different here.
->> >
->> > I deed, I was supposed to think the same. but the vendor kernel dts
->> > from firefly do follow the pwm2 pinctrl [1]. I wouldn't find any
->> > information other than this vensor information, ie one of the reason=
- I
->> > have marked "Levin Du" who initially supported this board.
->> >
->> > One, think I have seen was this pinctrl active fixed the boot hang.
->> > any inputs from would be very helpful.
->> >
->> > Levin Du, any inputs?
->> >
->> > [1] https://github.com/FireflyTeam/kernel/blob/stable-4.4-rk3399-lin=
-ux/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi#L1184
->> >
->>
->> A grep of the `pwm2` shows that there's such block in rk3399-nanopi4.d=
-tsi:
->>
->>     &pwm2 {
->>             pinctrl-names =3D "active";
->>             pinctrl-0 =3D <&pwm2_pin_pull_down>;
->>             status =3D "okay";
->>     };
->>
->> But last time I checked, using the mainline U-Boot (the roc-rk3399-pc =
-is
->> in mainline now) with mainline linux v5.2-rc7, no such setting is
->> necessary, and the board boots happily.
->>
->> I cannot find the use of "active" pinctrl state in the
->> `drivers/pwm/pwm-rockchip.c`. If the pinctrl state needs to be setup a=
-s
->> default, the `pinctrl-names` needs to be "default" or "init" (see
->> `drivers/base/pinctrl.c`) .
->>
->> Jagan, what version of board do you use? I checked with
->> "ROC-RK3399-PC-V1.0-A 2018-07-12".
->=20
-> I have ROC-RK3399-PC-V1.A 2018.09.25 and powering with TYPE-C0 port.
->=20
-> And here the boot log
->=20
-> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd034]
-> [    0.000000] Linux version 5.4.0-rc3-next-20191016
-> (jagan@jagan-XPS-13-9350) (gcc version 6.3.1 20170109 (Linaro GCC
-> 6.3-2017.02)) #1 SMP PREEMPT Wed Oct 16 21:17:23 IST 2019
-> [    0.000000] Machine model: Firefly ROC-RK3399-PC Board
-> [    0.000000] earlycon: uart8250 at MMIO32 0x00000000ff1a0000 (options=
- '')
-> [    0.000000] printk: bootconsole [uart8250] enabled
-> [    0.000000] efi: Getting EFI parameters from FDT:
-> [    0.000000] efi: UEFI not found.
-> [    0.000000] cma: Reserved 32 MiB at 0x000000003e000000
-> [    0.000000] NUMA: No NUMA configuration found
-> [    0.000000] NUMA: Faking a node at [mem
-> 0x0000000000200000-0x00000000f7ffffff]
-> [    0.000000] NUMA: NODE_DATA [mem 0xf77ef100-0xf77f0fff]
-> [    0.000000] Zone ranges:
-> [    0.000000]   DMA      [mem 0x0000000000200000-0x000000003fffffff]
-> [    0.000000]   DMA32    [mem 0x0000000040000000-0x00000000f7ffffff]
-> [    0.000000]   Normal   empty
-> [    0.000000] Movable zone start for each node
-> [    0.000000] Early memory node ranges
-> [    0.000000]   node   0: [mem 0x0000000000200000-0x00000000f7ffffff]
-> [    0.000000] Initmem setup node 0 [mem 0x0000000000200000-0x00000000f=
-7ffffff]
-> [    0.000000] psci: probing for conduit method from DT.
-> [    0.000000] psci: PSCIv1.1 detected in firmware.
-> [    0.000000] psci: Using standard PSCI v0.2 function IDs
-> [    0.000000] psci: MIGRATE_INFO_TYPE not supported.
-> [    0.000000] psci: SMC Calling Convention v1.1
-> [    0.000000] percpu: Embedded 22 pages/cpu s52952 r8192 d28968 u90112=
-
-> [    0.000000] Detected VIPT I-cache on CPU0
-> [    0.000000] CPU features: detected: ARM erratum 845719
-> [    0.000000] CPU features: detected: GIC system register CPU interfac=
-e
-> [    0.000000] Speculative Store Bypass Disable mitigation not required=
-
-> [    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 9=
-99432
-> [    0.000000] Policy zone: DMA32
-> [    0.000000] Kernel command line:
-> earlycon=3Duart8250,mmio32,0xff1a0000 root=3D/dev/mmcblk1p1 rootwait
-> [    0.000000] Dentry cache hash table entries: 524288 (order: 10,
-> 4194304 bytes, linear)
-> [    0.000000] Inode-cache hash table entries: 262144 (order: 9,
-> 2097152 bytes, linear)
-> [    0.000000] mem auto-init: stack:off, heap alloc:off, heap free:off
-> [    0.000000] software IO TLB: mapped [mem 0x3a000000-0x3e000000] (64M=
-B)
-> [    0.000000] Memory: 3856004K/4061184K available (12028K kernel
-> code, 1870K rwdata, 6440K rodata, 5056K init, 451K bss, 172412K
-> reserved, 32768K cma-reserved)
-> [    0.000000] SLUB: HWalign=3D64, Order=3D0-3, MinObjects=3D0, CPUs=3D=
-6, Nodes=3D1
-> [    0.000000] rcu: Preemptible hierarchical RCU implementation.
-> [    0.000000] rcu:     RCU restricting CPUs from NR_CPUS=3D256 to nr_c=
-pu_ids=3D6.
-> [    0.000000]  Tasks RCU enabled.
-> [    0.000000] rcu: RCU calculated value of scheduler-enlistment delay
-> is 25 jiffies.
-> [    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=3D16, nr_cpu=
-_ids=3D6
-> [    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
-> [    0.000000] GICv3: GIC: Using split EOI/Deactivate mode
-> [    0.000000] GICv3: 256 SPIs implemented
-> [    0.000000] GICv3: 0 Extended SPIs implemented
-> [    0.000000] GICv3: Distributor has no Range Selector support
-> [    0.000000] GICv3: 16 PPIs implemented
-> [    0.000000] GICv3: no VLPI support, no direct LPI support
-> [    0.000000] GICv3: CPU0: found redistributor 0 region 0:0x00000000fe=
-f00000
-> [    0.000000] ITS [mem 0xfee20000-0xfee3ffff]
-> [    0.000000] ITS@0x00000000fee20000: allocated 65536 Devices
-> @f6880000 (flat, esz 8, psz 64K, shr 0)
-> [    0.000000] ITS: using cache flushing for cmd queue
-> [    0.000000] GICv3: using LPI property table @0x00000000f6840000
-> [    0.000000] GIC: using cache flushing for LPI property table
-> [    0.000000] GICv3: CPU0: using allocated LPI pending table
-> @0x00000000f6850000
-> [    0.000000] GICv3: GIC: PPI partition interrupt-partition-0[0] {
-> /cpus/cpu@0[0] /cpus/cpu@1[1] /cpus/cpu@2[2] /cpus/cpu@3[3] }
-> [    0.000000] GICv3: GIC: PPI partition interrupt-partition-1[1] {
-> /cpus/cpu@100[4] /cpus/cpu@101[5] }
-> [    0.000000] random: get_random_bytes called from
-> start_kernel+0x2b8/0x454 with crng_init=3D0
-> [    0.000000] arch_timer: cp15 timer(s) running at 24.00MHz (phys).
-> [    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff
-> max_cycles: 0x588fe9dc0, max_idle_ns: 440795202592 ns
-> [    0.000006] sched_clock: 56 bits at 24MHz, resolution 41ns, wraps
-> every 4398046511097ns
-> [    0.003201] Console: colour dummy device 80x25
-> [    0.003624] printk: console [tty0] enabled
-> [    0.004020] printk: bootconsole [uart8250] disabled
-
-I had to put "console=3DttyS2,1500000" in kernel command line to get furt=
-her logging beyond this point.
-
->=20
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
->=20
-
-Gru=C3=9F,
---=20
-Markus Reichl
-
-
---eKrkufQi7b6iPRdhDHIVSCqbS78ZKOHkV--
-
---Mkl0xAKohbcENoFuufIfKYeOWfNDdwTbC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAEBCAAdFiEEVKeIeBh0ZWJOldzLOiXeDmsa/bIFAl2obBsACgkQOiXeDmsa
-/bI9KQwAgQfw3C+rC34IN8Q9bXiz6TNeMZKEMllj2WeYpNb5Jjv46Df6sJ2NDFTI
-LLlGGcdm0nCcS/EQPeQaJd47ezOonE+0J7SV9W/JCku9agyYNv+pBFfS83zGkwFZ
-Z+mKgdjedqrcEwtGrhVChVxFJm1wHJ5u8NkQHcY9CIw5Z8kS91mO3vXqtu2qU3p8
-csS/aJb4suWiSUSyuwWcKCnOMJAf6AB+b6HQEZiiM6hyQqJqQequ3RmAo3YPLTOo
-REKCHSdUrK/x2NstwWSuu2pooHcH4jnvo4hCkG7jp08MJJsw7UlSVgua0PSvoDbj
-5bWAVb/nJ768yrdhFFJHVwIjDj9HuTbrXwANZz6EZZOvDa2m3wqUbS2Oq39QUXeI
-ImH6vQQjmB9dCiuiLNYFcS1R0JgIHIXl2+Mh95sVjjZYDDX7PrLZ8fpZgkjqI7VB
-X88BQBvBz/y6IaVoqNGJd2aGEapS9X3HaTHJ+YqY5m+Y4dKEMMDMDBIvlf/5A3x3
-QFaC6ens
-=AEAy
------END PGP SIGNATURE-----
-
---Mkl0xAKohbcENoFuufIfKYeOWfNDdwTbC--
+Rob
