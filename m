@@ -2,229 +2,73 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79932FA3735
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDF5ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 501CA2089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1099A214E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:42:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436720AbfJQNmd (ORCPT
+        id S2436765AbfJQNmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 09:42:33 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:56249 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436617AbfJQNmc (ORCPT
+        Thu, 17 Oct 2019 09:42:54 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:57832 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727368AbfJQNmy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 09:42:32 -0400
-X-Originating-IP: 2.224.242.101
-Received: from uno.lan (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 0EAFE1BF207;
-        Thu, 17 Oct 2019 13:42:25 +0000 (UTC)
-From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
-To:     laurent.pinchart@ideasonboard.com,
-        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli+renesas@fpond.eu
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>, airlied@linux.ie,
-        daniel@ffwll.ch, linux-renesas-soc@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6.1 5/8] drm: rcar-du: crtc: Control CMM operations
-Date:   Thu, 17 Oct 2019 15:44:09 +0200
-Message-Id: <20191017134409.535740-1-jacopo+renesas@jmondi.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016085548.105703-6-jacopo+renesas@jmondi.org>
-References: <20191016085548.105703-6-jacopo+renesas@jmondi.org>
+        Thu, 17 Oct 2019 09:42:54 -0400
+Received: from [167.98.27.226] (helo=xylophone)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iL63F-0007wo-MD; Thu, 17 Oct 2019 14:42:49 +0100
+Message-ID: <d1022cda6bd6ce73e9875644a5a2c65e4d554f37.camel@codethink.co.uk>
+Subject: Re: [Y2038] [PATCH v6 10/43] compat_ioctl: move rtc handling into
+ rtc-dev.c
+From:   Ben Hutchings <ben.hutchings@codethink.co.uk>
+To:     Arnd Bergmann <arnd@arndb.de>, Al Viro <viro@zeniv.linux.org.uk>
+Cc:     y2038@lists.linaro.org, linux-fsdevel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 17 Oct 2019 14:42:48 +0100
+In-Reply-To: <20191009191044.308087-10-arnd@arndb.de>
+References: <20191009190853.245077-1-arnd@arndb.de>
+         <20191009191044.308087-10-arnd@arndb.de>
+Organization: Codethink Ltd.
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement CMM handling in the crtc begin and enable atomic callbacks,
-and enable CMM unit through the Display Extensional Functions
-register at group setup time.
+On Wed, 2019-10-09 at 21:10 +0200, Arnd Bergmann wrote:
+> We no longer need the rtc compat handling to be in common code, now that
+> all drivers are either moved to the rtc-class framework, or (rarely)
+> exist in drivers/char for architectures without compat mode (m68k,
+> alpha and ia64, respectively).
+> 
+> I checked the list of ioctl commands in drivers, and the ones that are
+> not already handled are all compatible, again with the one exception of
+> m68k driver, which implements RTC_PLL_GET and RTC_PLL_SET, but has no
+> compat mode.
+>
+> Since the ioctl commands are either compatible or differ in both structure
+> and command code between 32-bit and 64-bit, we can merge the compat
+> handler into the native one and just implement the two common compat
+> commands (RTC_IRQP_READ, RTC_IRQP_SET) there.
+[...]
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+I don't think this can work properly on s390, because some of them take
+integers and some take pointers.
 
----
-v6 -> v6.1
-- Drop check for CMM in rcar_du_cmm_check as if the gamma_table property is
-  available, a CMM unit for this CRTC was registered
-- Add TODO note to investigate how the activation order of CMM and CRTC
-  impact on the first displayed fram
----
+Ben.
 
- drivers/gpu/drm/rcar-du/rcar_du_crtc.c  | 61 +++++++++++++++++++++++++
- drivers/gpu/drm/rcar-du/rcar_du_group.c | 10 ++++
- drivers/gpu/drm/rcar-du/rcar_du_regs.h  |  5 ++
- 3 files changed, 76 insertions(+)
-
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-index 23f1d6cc1719..3f0f16946f42 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-@@ -21,6 +21,7 @@
- #include <drm/drm_plane_helper.h>
- #include <drm/drm_vblank.h>
-
-+#include "rcar_cmm.h"
- #include "rcar_du_crtc.h"
- #include "rcar_du_drv.h"
- #include "rcar_du_encoder.h"
-@@ -474,6 +475,45 @@ static void rcar_du_crtc_wait_page_flip(struct rcar_du_crtc *rcrtc)
- 	rcar_du_crtc_finish_page_flip(rcrtc);
- }
-
-+/* -----------------------------------------------------------------------------
-+ * Color Management Module (CMM)
-+ */
-+
-+static int rcar_du_cmm_check(struct drm_crtc *crtc,
-+			     struct drm_crtc_state *state)
-+{
-+	struct drm_property_blob *drm_lut = state->gamma_lut;
-+	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
-+	struct device *dev = rcrtc->dev->dev;
-+
-+	if (!drm_lut)
-+		return 0;
-+
-+	/* We only accept fully populated LUT tables. */
-+	if (drm_color_lut_size(drm_lut) != CM2_LUT_SIZE) {
-+		dev_err(dev, "invalid gamma lut size: %lu bytes\n",
-+			drm_lut->length);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static void rcar_du_cmm_setup(struct drm_crtc *crtc)
-+{
-+	struct drm_property_blob *drm_lut = crtc->state->gamma_lut;
-+	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
-+	struct rcar_cmm_config cmm_config = {};
-+
-+	if (!rcrtc->cmm)
-+		return;
-+
-+	if (drm_lut)
-+		cmm_config.lut.table = (struct drm_color_lut *)drm_lut->data;
-+
-+	rcar_cmm_setup(rcrtc->cmm, &cmm_config);
-+}
-+
- /* -----------------------------------------------------------------------------
-  * Start/Stop and Suspend/Resume
-  */
-@@ -619,6 +659,9 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
- 	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
- 		rcar_du_vsp_disable(rcrtc);
-
-+	if (rcrtc->cmm)
-+		rcar_cmm_disable(rcrtc->cmm);
-+
- 	/*
- 	 * Select switch sync mode. This stops display operation and configures
- 	 * the HSYNC and VSYNC signals as inputs.
-@@ -642,6 +685,11 @@ static int rcar_du_crtc_atomic_check(struct drm_crtc *crtc,
- {
- 	struct rcar_du_crtc_state *rstate = to_rcar_crtc_state(state);
- 	struct drm_encoder *encoder;
-+	int ret;
-+
-+	ret = rcar_du_cmm_check(crtc, state);
-+	if (ret)
-+		return ret;
-
- 	/* Store the routes from the CRTC output to the DU outputs. */
- 	rstate->outputs = 0;
-@@ -667,6 +715,8 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
- 	struct rcar_du_crtc_state *rstate = to_rcar_crtc_state(crtc->state);
- 	struct rcar_du_device *rcdu = rcrtc->dev;
-
-+	if (rcrtc->cmm)
-+		rcar_cmm_enable(rcrtc->cmm);
- 	rcar_du_crtc_get(rcrtc);
-
- 	/*
-@@ -686,6 +736,13 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
- 	}
-
- 	rcar_du_crtc_start(rcrtc);
-+
-+	/*
-+	 * TODO: The chip manual indicates that CMM tables should be written
-+	 * after the DU channel has been activated. Investigate the impact
-+	 * of this restriction on the first displayed frame.
-+	 */
-+	rcar_du_cmm_setup(crtc);
- }
-
- static void rcar_du_crtc_atomic_disable(struct drm_crtc *crtc,
-@@ -739,6 +796,10 @@ static void rcar_du_crtc_atomic_begin(struct drm_crtc *crtc,
- 	 */
- 	rcar_du_crtc_get(rcrtc);
-
-+	/* If the active state changed, we let .atomic_enable handle CMM. */
-+	if (crtc->state->color_mgmt_changed && !crtc->state->active_changed)
-+		rcar_du_cmm_setup(crtc);
-+
- 	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
- 		rcar_du_vsp_atomic_begin(rcrtc);
- }
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.c b/drivers/gpu/drm/rcar-du/rcar_du_group.c
-index 9eee47969e77..88a783ceb3e9 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_group.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_group.c
-@@ -135,6 +135,7 @@ static void rcar_du_group_setup_didsr(struct rcar_du_group *rgrp)
- static void rcar_du_group_setup(struct rcar_du_group *rgrp)
- {
- 	struct rcar_du_device *rcdu = rgrp->dev;
-+	u32 defr7 = DEFR7_CODE;
-
- 	/* Enable extended features */
- 	rcar_du_group_write(rgrp, DEFR, DEFR_CODE | DEFR_DEFE);
-@@ -147,6 +148,15 @@ static void rcar_du_group_setup(struct rcar_du_group *rgrp)
-
- 	rcar_du_group_setup_pins(rgrp);
-
-+	/*
-+	 * TODO: Handle routing of the DU output to CMM dynamically, as we
-+	 * should bypass CMM completely when no color management feature is
-+	 * used.
-+	 */
-+	defr7 |= (rgrp->cmms_mask & BIT(1) ? DEFR7_CMME1 : 0) |
-+		 (rgrp->cmms_mask & BIT(0) ? DEFR7_CMME0 : 0);
-+	rcar_du_group_write(rgrp, DEFR7, defr7);
-+
- 	if (rcdu->info->gen >= 2) {
- 		rcar_du_group_setup_defr8(rgrp);
- 		rcar_du_group_setup_didsr(rgrp);
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_regs.h b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
-index bc87f080b170..fb9964949368 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_regs.h
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
-@@ -197,6 +197,11 @@
- #define DEFR6_MLOS1		(1 << 2)
- #define DEFR6_DEFAULT		(DEFR6_CODE | DEFR6_TCNE1)
-
-+#define DEFR7			0x000ec
-+#define DEFR7_CODE		(0x7779 << 16)
-+#define DEFR7_CMME1		BIT(6)
-+#define DEFR7_CMME0		BIT(4)
-+
- /* -----------------------------------------------------------------------------
-  * R8A7790-only Control Registers
-  */
---
-2.23.0
+-- 
+Ben Hutchings, Software Developer                         Codethink Ltd
+https://www.codethink.co.uk/                 Dale House, 35 Dale Street
+                                     Manchester, M1 2HF, United Kingdom
 
