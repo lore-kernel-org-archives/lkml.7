@@ -2,176 +2,150 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF57ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2722ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED0D620659
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:17:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1Hmfd7j"
+	by mail.kernel.org (Postfix) with ESMTP id 935BC21848
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:18:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571336283;
+	bh=SR+bTSpFdod0Pmckp7adJ/ibEnctQOUUmhnuvOQCrjY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HFxC9YwbsmS/gIQkBGD54c7u8hLnyPOpGd1mXFFpL7MFyCsDAcU2Xery2kEo5lSL8
+	 +WsWB5jVZFqtDm4dko+sHQoBU70AXtFM38l/EtmTcsQQWKo0kH8vMzU0omJ4jK558c
+	 xWuhRR0QeQUKwiEmC+7Q3/FetQ41acGfNkNa/Rqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441226AbfJQSRQ (ORCPT
+        id S2441243AbfJQSSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 14:17:16 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36896 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438601AbfJQSRQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 14:17:16 -0400
-Received: by mail-wm1-f68.google.com with SMTP id f22so3537102wmc.2;
-        Thu, 17 Oct 2019 11:17:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XgooItt3yunwxCJxadoUen7+696jxS3yzALjSNjUwlM=;
-        b=l1Hmfd7j/16bXUDYrMQfrgAM9KgZFGcfCEv2TrygM2pGHs/mVjXbKuN6kKcLeFCDvU
-         grU+Qze05EbFLX0Xt5bzgt4aDLP07IayYVowHfDo9j+7dbhGZhO309axcijHpFQ0yd05
-         Cb4wvYQds43buFxN55MXtIXFBoVqgwtFZLmOC7ab9R18dfAuTcqgg/kCzyV/4NXlVNu/
-         igWR16tVws9TbjyyiVro1JCAdnsg2Cl7mUJYQdoZ2QLy3wOZv7YLWRDNyvQQsj5cvQOF
-         0DP2sjOpN9fwIpaho7A3tppiGgX7NxOCLNc47fCTr7rk8P4gKS+lU6Z8s1azzNUIDiuQ
-         f2Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XgooItt3yunwxCJxadoUen7+696jxS3yzALjSNjUwlM=;
-        b=BjGokvomXxUJ3ZVMour77hYk4NolWVMojkSi7EAG8TMGCc39WNYbzJJZgRC4oXaipY
-         bzKdT3+hVxRk+usEfAJ0eSYYzBfTt3zm4/WOSkYxiViXPbf724ij4ftMgxR9q89MfrNm
-         mZcStf3Zw1utx9eMZCMrp81fO1H3JLsvjSt/rAEYTOLbZl03rartURoT2TYpcCCNLQsd
-         UQwUeVS2e6UOGHL3DnjLH9aiwpwKKdD1nszbl5pB5zv0PN2QYEWgb16WsCvVb4z+AUUl
-         9ZX2/LC2qJ6PMGsl2u2nlz6Xr7vE3c0ffnvzxQryB/H7hpulem7xuEc1GHTsxkT+tUw8
-         B6RQ==
-X-Gm-Message-State: APjAAAWL8GJ4HvJz92khCRxZLPDK9MZv0v1seLB1qbOomPTtNV6FD4vm
-        wc0jkk1hQWAghMR6JHA9BA==
-X-Google-Smtp-Source: APXvYqzh/xO8OFskYgrKCuP+R6Vt2W+4+5BbANuANKbP4dDWLu3Fjs2M4FolW21d9sW4iFNBbJ7Y8A==
-X-Received: by 2002:a7b:c1d2:: with SMTP id a18mr4064484wmj.7.1571336233230;
-        Thu, 17 Oct 2019 11:17:13 -0700 (PDT)
-Received: from avx2 ([46.53.250.235])
-        by smtp.gmail.com with ESMTPSA id a14sm2504313wmm.44.2019.10.17.11.17.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Oct 2019 11:17:12 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 21:17:09 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     Marco Elver <elver@google.com>
-Cc:     syzbot <syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com>,
+        Thu, 17 Oct 2019 14:18:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57902 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2438601AbfJQSSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 14:18:02 -0400
+Received: from localhost (unknown [192.55.54.60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78A0420659;
+        Thu, 17 Oct 2019 18:18:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571336280;
+        bh=SR+bTSpFdod0Pmckp7adJ/ibEnctQOUUmhnuvOQCrjY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RkTngsv/1miXtFdWrcmt1WxD7vnDnHdpunA+SOr9P2/TvBDfb8M9X/TVQm8/BNYl1
+         /ah1UqwxSf42djwPhxXDYrM8gkSc8vvloXnEcxjykfTzwn+2CKdx5qfuktu09gIoOU
+         Fe8DldLn8f7+VsWb+IdxBoFJS4qSBQmy0O3JoTiM=
+Date:   Thu, 17 Oct 2019 11:18:00 -0700
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     linux-usb@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        casey@schaufler-ca.com, christian@brauner.io,
-        Kees Cook <keescook@chromium.org>, kent.overstreet@gmail.com,
-        khlebnikov@yandex-team.ru, linux-fsdevel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, mhocko@suse.com,
-        shakeelb@google.com, syzkaller-bugs@googlegroups.com,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: KCSAN: data-race in task_dump_owner / task_dump_owner
-Message-ID: <20191017181709.GA5312@avx2>
-References: <000000000000328b2905951a7667@google.com>
- <CANpmjNPoBBJgMKLEAXs+bPhitF+WygseHgTkSJsuiK8WcsB==g@mail.gmail.com>
+        Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Windsor <dwindsor@gmail.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: [PATCH RFC 3/3] vhost, kcov: collect coverage from vhost_worker
+Message-ID: <20191017181800.GB1094415@kroah.com>
+References: <cover.1571333592.git.andreyknvl@google.com>
+ <af26317c0efd412dd660e81d548a173942f8a0ad.1571333592.git.andreyknvl@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANpmjNPoBBJgMKLEAXs+bPhitF+WygseHgTkSJsuiK8WcsB==g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <af26317c0efd412dd660e81d548a173942f8a0ad.1571333592.git.andreyknvl@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 02:56:47PM +0200, Marco Elver wrote:
-> Hi,
+On Thu, Oct 17, 2019 at 07:44:15PM +0200, Andrey Konovalov wrote:
+> This patch adds kcov_remote_start/kcov_remote_stop annotations to the
+> vhost_worker function, which is responsible for processing vhost works.
+> Since vhost_worker is spawned when a vhost device instance is created,
+> the common kcov handle is used for kcov_remote_start/stop annotations.
 > 
-> On Thu, 17 Oct 2019 at 14:36, syzbot
-> <syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    d724f94f x86, kcsan: Enable KCSAN for x86
-> > git tree:       https://github.com/google/ktsan.git kcsan
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=17884db3600000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=c0906aa620713d80
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=e392f8008a294fdf8891
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com
-> >
-> > ==================================================================
-> > BUG: KCSAN: data-race in task_dump_owner / task_dump_owner
-> >
-> > write to 0xffff8881255bb7fc of 4 bytes by task 7804 on cpu 0:
-> >   task_dump_owner+0xd8/0x260 fs/proc/base.c:1742
-> >   pid_update_inode+0x3c/0x70 fs/proc/base.c:1818
-> >   pid_revalidate+0x91/0xd0 fs/proc/base.c:1841
-> >   d_revalidate fs/namei.c:765 [inline]
-> >   d_revalidate fs/namei.c:762 [inline]
-> >   lookup_fast+0x7cb/0x7e0 fs/namei.c:1613
-> >   walk_component+0x6d/0xe80 fs/namei.c:1804
-> >   link_path_walk.part.0+0x5d3/0xa90 fs/namei.c:2139
-> >   link_path_walk fs/namei.c:2070 [inline]
-> >   path_openat+0x14f/0x3530 fs/namei.c:3532
-> >   do_filp_open+0x11e/0x1b0 fs/namei.c:3563
-> >   do_sys_open+0x3b3/0x4f0 fs/open.c:1089
-> >   __do_sys_open fs/open.c:1107 [inline]
-> >   __se_sys_open fs/open.c:1102 [inline]
-> >   __x64_sys_open+0x55/0x70 fs/open.c:1102
-> >   do_syscall_64+0xcf/0x2f0 arch/x86/entry/common.c:296
-> >   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >
-> > write to 0xffff8881255bb7fc of 4 bytes by task 7813 on cpu 1:
-> >   task_dump_owner+0xd8/0x260 fs/proc/base.c:1742
-> >   pid_update_inode+0x3c/0x70 fs/proc/base.c:1818
-> >   pid_revalidate+0x91/0xd0 fs/proc/base.c:1841
-> >   d_revalidate fs/namei.c:765 [inline]
-> >   d_revalidate fs/namei.c:762 [inline]
-> >   lookup_fast+0x7cb/0x7e0 fs/namei.c:1613
-> >   walk_component+0x6d/0xe80 fs/namei.c:1804
-> >   lookup_last fs/namei.c:2271 [inline]
-> >   path_lookupat.isra.0+0x13a/0x5a0 fs/namei.c:2316
-> >   filename_lookup+0x145/0x2d0 fs/namei.c:2346
-> >   user_path_at_empty+0x4c/0x70 fs/namei.c:2606
-> >   user_path_at include/linux/namei.h:60 [inline]
-> >   vfs_statx+0xd9/0x190 fs/stat.c:187
-> >   vfs_stat include/linux/fs.h:3188 [inline]
-> >   __do_sys_newstat+0x51/0xb0 fs/stat.c:341
-> >   __se_sys_newstat fs/stat.c:337 [inline]
-> >   __x64_sys_newstat+0x3a/0x50 fs/stat.c:337
-> >   do_syscall_64+0xcf/0x2f0 arch/x86/entry/common.c:296
-> >   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >
-> > Reported by Kernel Concurrency Sanitizer on:
-> > CPU: 1 PID: 7813 Comm: ps Not tainted 5.3.0+ #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > ==================================================================
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> ---
+>  drivers/vhost/vhost.c | 15 +++++++++++++++
+>  drivers/vhost/vhost.h |  3 +++
+>  2 files changed, 18 insertions(+)
 > 
-> My understanding is, that for every access to /proc/<pid>,
-> d_revalidate is called, and /proc-fs implementation simply says that
-> pid_revalidate always revalidates by rewriting uid/gid because "owning
-> task may have performed a setuid(), etc." presumably so every access
-> to a /proc/<pid> entry always has the right uid/gid (in effect
-> updating /proc/<pid> lazily via d_revalidate).
-> 
-> Is it possible that one of the tasks above could be preempted after
-> doing its writes to *ruid/*rgid, another thread writing some other
-> values (after setuid / seteuid), and then the preempted thread seeing
-> the other values? Assertion here should never fail:
-> === TASK 1 ===
-> | seteuid(1000);
-> | seteuid(0);
-> | stat("/proc/<pid-of-task-1>", &fstat);
-> | assert(fstat.st_uid == 0);
-> === TASK 2 ===
-> | stat("/proc/<pid-of-task-1>", ...);
+> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> index 36ca2cf419bf..71a349f6b352 100644
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -357,7 +357,13 @@ static int vhost_worker(void *data)
+>  		llist_for_each_entry_safe(work, work_next, node, node) {
+>  			clear_bit(VHOST_WORK_QUEUED, &work->flags);
+>  			__set_current_state(TASK_RUNNING);
+> +#ifdef CONFIG_KCOV
+> +			kcov_remote_start(dev->kcov_handle);
+> +#endif
 
-Is it the same as
-pid_revalidate() snapshots (uid,gid) correctly
-but writeback is done in any order?
+Shouldn't you hide these #ifdefs in a .h file?  This is not a "normal"
+kernel coding style at all.
+
+>  			work->fn(work);
+> +#ifdef CONFIG_KCOV
+> +			kcov_remote_stop();
+> +#endif
+>  			if (need_resched())
+>  				schedule();
+>  		}
+> @@ -546,6 +552,9 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
+>  
+>  	/* No owner, become one */
+>  	dev->mm = get_task_mm(current);
+> +#ifdef CONFIG_KCOV
+> +	dev->kcov_handle = current->kcov_handle;
+> +#endif
+>  	worker = kthread_create(vhost_worker, dev, "vhost-%d", current->pid);
+>  	if (IS_ERR(worker)) {
+>  		err = PTR_ERR(worker);
+> @@ -571,6 +580,9 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
+>  	if (dev->mm)
+>  		mmput(dev->mm);
+>  	dev->mm = NULL;
+> +#ifdef CONFIG_KCOV
+> +	dev->kcov_handle = 0;
+> +#endif
+>  err_mm:
+>  	return err;
+>  }
+> @@ -682,6 +694,9 @@ void vhost_dev_cleanup(struct vhost_dev *dev)
+>  	if (dev->worker) {
+>  		kthread_stop(dev->worker);
+>  		dev->worker = NULL;
+> +#ifdef CONFIG_KCOV
+> +		dev->kcov_handle = 0;
+> +#endif
+>  	}
+>  	if (dev->mm)
+>  		mmput(dev->mm);
+> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+> index e9ed2722b633..010ca1ebcbd5 100644
+> --- a/drivers/vhost/vhost.h
+> +++ b/drivers/vhost/vhost.h
+> @@ -173,6 +173,9 @@ struct vhost_dev {
+>  	int iov_limit;
+>  	int weight;
+>  	int byte_weight;
+> +#ifdef CONFIG_KCOV
+> +	u64 kcov_handle;
+> +#endif
+
+Why is this a #ifdef at all here?
+
+thanks,
+
+greg k-h
