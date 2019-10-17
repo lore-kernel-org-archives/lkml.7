@@ -2,148 +2,117 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A32A5ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1BCECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 569052089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:30:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571329812;
-	bh=LSn0Us39YQvpgHpBtDuP+bFAOJpzc9IBTOH2uPj6gn0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F4Ux8GPFJSobVH3IFuAf6MGsuPOmFGba8srqAv5UIi5aRrtQAJ8greSUOmuqlrbcw
-	 gYPgVm+MMd96zHWSxeAngMDwteih8fX8DPC8wV0MmYsz7RAga9cQ+TRDwUXbEZzqu8
-	 sAojVJJJiOeE0WbGpWHxqCCkCgN2YQyIDCKPeR7Q=
+	by mail.kernel.org (Postfix) with ESMTP id 3553621835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:32:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440402AbfJQQaL (ORCPT
+        id S2406498AbfJQQcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:30:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54410 "EHLO mail.kernel.org"
+        Thu, 17 Oct 2019 12:32:04 -0400
+Received: from mga09.intel.com ([134.134.136.24]:56534 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730640AbfJQQaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 12:30:10 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E66FB2089C;
-        Thu, 17 Oct 2019 16:30:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571329809;
-        bh=LSn0Us39YQvpgHpBtDuP+bFAOJpzc9IBTOH2uPj6gn0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=baztz8B1d3q8sTc8jXA1FQd061EDD0qfMar9TInei1bhpAWcztw/XO5ka5YUo0t+Z
-         ONBYyr8f0yQINsfp3XcaLWZh958ZAg4Kwgzjlytr9jhJlsu8S3Njk0WWckQYOLujjy
-         VIe5SyRXzf8hSOpO7bfb4YftuqOxMmfht8Hv0C+E=
-Date:   Thu, 17 Oct 2019 09:30:07 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     bpf <bpf@vger.kernel.org>, netdev <netdev@vger.kernel.org>
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        syzbot <syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: kernel panic: stack is corrupted in __lock_acquire (4)
-Message-ID: <20191017163007.GC726@sol.localdomain>
-Mail-Followup-To: bpf <bpf@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        syzbot <syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-References: <0000000000009b3b80058af452ae@google.com>
- <0000000000000ec274059185a63e@google.com>
- <CACT4Y+aT5z65OZE6_TQieU5zUYWDvDtAogC45f6ifLkshBK2iw@mail.gmail.com>
- <20191017162505.GB726@sol.localdomain>
+        id S1730640AbfJQQcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 12:32:03 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 09:32:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,308,1566889200"; 
+   d="scan'208";a="200437638"
+Received: from unknown (HELO [10.7.201.139]) ([10.7.201.139])
+  by orsmga006.jf.intel.com with ESMTP; 17 Oct 2019 09:32:02 -0700
+Subject: Re: [PATCH 0/4] [RFC] Migrate Pages in lieu of discard
+To:     Suleiman Souhlal <suleiman@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     Linux Kernel <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        dan.j.williams@intel.com
+References: <20191016221148.F9CCD155@viggo.jf.intel.com>
+ <CABCjUKDWRJO9s68qhKQGXzrW39KqfZzZhoOX0HgDcnv-RxJZPw@mail.gmail.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <85512332-d9d4-6a72-0b42-a8523abc1b5f@intel.com>
+Date:   Thu, 17 Oct 2019 09:32:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191017162505.GB726@sol.localdomain>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <CABCjUKDWRJO9s68qhKQGXzrW39KqfZzZhoOX0HgDcnv-RxJZPw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 09:25:05AM -0700, Eric Biggers wrote:
-> On Sun, Sep 01, 2019 at 08:23:42PM -0700, 'Dmitry Vyukov' via syzkaller-bugs wrote:
-> > On Sun, Sep 1, 2019 at 3:48 PM syzbot
-> > <syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com> wrote:
-> > >
-> > > syzbot has found a reproducer for the following crash on:
-> > >
-> > > HEAD commit:    38320f69 Merge branch 'Minor-cleanup-in-devlink'
-> > > git tree:       net-next
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=13d74356600000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=1bbf70b6300045af
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=83979935eb6304f8cd46
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1008b232600000
-> > 
-> > Stack corruption + bpf maps in repro triggers some bells. +bpf mailing list.
-> > 
-> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > Reported-by: syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com
-> > >
-> > > Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in:
-> > > __lock_acquire+0x36fa/0x4c30 kernel/locking/lockdep.c:3907
-> > > CPU: 0 PID: 8662 Comm: syz-executor.4 Not tainted 5.3.0-rc6+ #153
-> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > > Google 01/01/2011
-> > > Call Trace:
-> > > Kernel Offset: disabled
-> > > Rebooting in 86400 seconds..
-> > >
-> 
-> This is still reproducible on latest net tree, but using a different kconfig I
-> was able to get a more informative crash output.  Apparently tcp_bpf_unhash() is
-> being called recursively.  Anyone know why this might happen?
-> 
-> This is using the syzkaller language reproducer linked above -- I ran it with:
-> 
-> 	syz-execprog -threaded=1 -collide=1 -cover=0 -repeat=0 -procs=8 -sandbox=none -enable=net_dev,net_reset,tun syz_bpf.txt
-> 
-> Crash report on net/master:
-> 
-> PANIC: double fault, error_code: 0x0
-> CPU: 3 PID: 8328 Comm: syz-executor Not tainted 5.4.0-rc1-00118-ge497c20e2036 #31
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20191013_105130-anatol 04/01/2014
-> RIP: 0010:mark_lock+0x4/0x640 kernel/locking/lockdep.c:3631
-> Code: a2 7f 27 01 85 c0 0f 84 f3 42 00 00 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 66 66 2e 0f 1f 84 00 00 00 00 00 55 48 89 e5 <41> 57 41 56 41 55 41 54 53 48 83 ec 18 83 fa 08 76 21 44 8b 25 ab
-> RSP: 0018:ffffc9000010d000 EFLAGS: 00010046
-> RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000000000
-> RDX: 0000000000000008 RSI: ffff888071f92dd8 RDI: ffff888071f92600
-> RBP: ffffc9000010d000 R08: 0000000000000000 R09: 0000000000022023
-> R10: 00000000000000c8 R11: 0000000000000000 R12: ffff888071f92600
-> R13: ffff888071f92dd8 R14: 0000000000000023 R15: 0000000000000000
-> FS:  00007ff9f7765700(0000) GS:ffff88807fd80000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: ffffc9000010cff8 CR3: 000000000221d000 CR4: 00000000003406e0
-> Call Trace:
->  <IRQ>
->  mark_usage kernel/locking/lockdep.c:3592 [inline]
->  __lock_acquire+0x22f/0xf80 kernel/locking/lockdep.c:3909
->  lock_acquire+0x99/0x170 kernel/locking/lockdep.c:4487
->  rcu_lock_acquire include/linux/rcupdate.h:208 [inline]
->  rcu_read_lock include/linux/rcupdate.h:599 [inline]
->  tcp_bpf_unhash+0x33/0x1d0 net/ipv4/tcp_bpf.c:549
->  tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
->  tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
->  tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
->  tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
-[...]
+On 10/17/19 9:01 AM, Suleiman Souhlal wrote:
+> One problem that came up is that if you get into direct reclaim,
+> because persistent memory can have pretty low write throughput, you
+> can end up stalling users for a pretty long time while migrating
+> pages.
 
-Recursive tcp_bpf_unhash() also showed up in
-"BUG: unable to handle kernel paging request in tls_prots"
-(https://lkml.kernel.org/lkml/000000000000d7bcbb058c3758a1@google.com/T/)
-which was claimed to be fixed by
-"bpf: sockmap/tls, close can race with map free".
-But that fix was months ago; this crash is on latest net tree.
+Basically, you're saying that memory load spikes turn into latency spikes?
 
-- Eric
+FWIW, we have been benchmarking this sucker with benchmarks that claim
+to care about latency.  In general, compared to DRAM, we do see worse
+latency, but nothing catastrophic yet.  I'd be interested if you have
+any workloads that act as reasonable proxies for your latency requirements.
+
+> Because of that, we moved to a solution based on the proactive reclaim
+> of idle pages, that was presented at LSFMM earlier this year:
+> https://lwn.net/Articles/787611/ .
+
+I saw the presentation.  The feedback in the room as I remember it was
+that proactive reclaim essentially replaced the existing reclaim
+mechanism, to which the audience was not receptive.  Have folks opinions
+changed on that, or are you looking for other solutions?
+
