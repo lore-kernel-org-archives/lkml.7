@@ -2,262 +2,167 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34129FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA9DECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C0C020820
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C22921A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:33:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440303AbfJQO2e (ORCPT
+        id S2440248AbfJQOd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 10:28:34 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:32847 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731664AbfJQO2c (ORCPT
+        Thu, 17 Oct 2019 10:33:28 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34977 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726583AbfJQOd1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:28:32 -0400
-X-Originating-IP: 86.207.98.53
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 02998E0006;
-        Thu, 17 Oct 2019 14:28:26 +0000 (UTC)
-Date:   Thu, 17 Oct 2019 16:28:23 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [RFC PATCH 11/13] led: bd71828: Support LED outputs on ROHM
- BD71828 PMIC
-Message-ID: <20191017142823.GF3125@piout.net>
-References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
- <af1fb3e010d5f34502d354369b88fa28639f587d.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
- <c1e41315-42ad-fb9b-c9db-8b07d4293166@ti.com>
+        Thu, 17 Oct 2019 10:33:27 -0400
+Received: by mail-qt1-f195.google.com with SMTP id m15so3918533qtq.2;
+        Thu, 17 Oct 2019 07:33:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PxqpxXBkdXm8+PD0xJUGu+5NPhpp64cZpau/yKP1PZY=;
+        b=fTM5hjnOYN0BD62J4BVMJ5Bx14uPDXFzyayGQpcdL9pzHwLz2Mc/QrGm92hSRKXQEd
+         NLtFbUe0ZfIyIfyKuqT3ff3UxTPoY41KEOnD3H+tI8qL5ms1/9aNk9jVIhuR0nClc2jn
+         kdjZk4TIqG4Cqt8PZyACl1cY1HucjqEVIxDBghzWFLF7hdS6IabG90cILbH+YOEOJQtW
+         GGeZWrCSJIhl59JNYxe+zkCX93/ORN6Mk0en4w79UrK0CSrecuun7jltqFZXMceJI2a2
+         w6jjcuygfoJBbHtdXR/rUVLoZTWwZ3XoXmvjBz0M2VWGp6skb21S1bQvuW6DMv0itdNs
+         59kQ==
+X-Gm-Message-State: APjAAAVNYqCmHx8gdAeH4kZdadvGXNEG8j/4kE2GYvjp9ChbKwCHh22t
+        9yfRn/M1bWEv0hYnzVyK8J2MZB1CtJHk0GWV1QE=
+X-Google-Smtp-Source: APXvYqzvTygfLmPgy5cG7H73eugUrdFK6qsnTv2IvbiQ3RJPDn04cLz8yPwWU8xHjvUQ/3XK3Pv4SUukJRbVUi3ELPg=
+X-Received: by 2002:a05:6214:1150:: with SMTP id b16mr4100968qvt.197.1571322806412;
+ Thu, 17 Oct 2019 07:33:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c1e41315-42ad-fb9b-c9db-8b07d4293166@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191009190853.245077-1-arnd@arndb.de> <20191009191044.308087-10-arnd@arndb.de>
+ <d1022cda6bd6ce73e9875644a5a2c65e4d554f37.camel@codethink.co.uk>
+In-Reply-To: <d1022cda6bd6ce73e9875644a5a2c65e4d554f37.camel@codethink.co.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 17 Oct 2019 16:33:09 +0200
+Message-ID: <CAK8P3a0BYkPTSnQUmde2k+HVcg7XNihzWTEzrCD4d8G8ecO9-w@mail.gmail.com>
+Subject: Re: [Y2038] [PATCH v6 10/43] compat_ioctl: move rtc handling into rtc-dev.c
+To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/10/2019 09:04:48-0500, Dan Murphy wrote:
-> Matt
-> 
-> On 10/17/19 4:53 AM, Matti Vaittinen wrote:
-> > ROHM BD71828 power management IC has two LED outputs for charge status
-> > and button pressing indications. The LED outputs can also be forced
-> > bs SW so add driver allowing to use these LEDs for other indications
-> s/bs/by
-> > as well.
-> > 
-> > Leds are controlled by SW using 'Force ON' bits. Please note the
-> > constrains mentioned in data-sheet:
-> > 1. If one LED is forced ON - then also the other LED is forced.
-> > 	=> You can't use SW control to force ON one LED and allow HW
-> > 	   to control the other.
-> > 2. You can't force both LEDs OFF. If the FORCE bit for both LED's is
-> >     zero, then LEDs are controlled by HW and indicate button/charger
-> >     states as explained in data-sheet.
-> > 
-> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > ---
-> >   drivers/leds/Kconfig        | 10 ++++
-> >   drivers/leds/Makefile       |  1 +
-> >   drivers/leds/leds-bd71828.c | 97 +++++++++++++++++++++++++++++++++++++
-> >   3 files changed, 108 insertions(+)
-> >   create mode 100644 drivers/leds/leds-bd71828.c
-> > 
-> > diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> > index b0fdeef10bd9..ec59f28bcb39 100644
-> > --- a/drivers/leds/Kconfig
-> > +++ b/drivers/leds/Kconfig
-> > @@ -529,6 +529,16 @@ config LEDS_BD2802
-> >   	  This option enables support for BD2802GU RGB LED driver chips
-> >   	  accessed via the I2C bus.
-> > +config LEDS_BD71828
-> > +	tristate "LED driver for LED pins on ROHM BD71828 PMIC"
-> > +	depends on LEDS_CLASS
-> doesn't this have a dependency on MFD_ROHM_BD71828
-> > +	depends on I2C
-> > +	help
-> > +	  This option enables support for LED outputs located on ROHM
-> > +	   BD71828 power management IC. ROHM BD71828 has two led output pins
-> > +	   which can be left to indicate HW states or controlled by SW. Say
-> > +	   yes here if you want to enable SW control for these LEDs.
-> > +
-> 
-> Add module statement
-> 
-> 
-> >   config LEDS_INTEL_SS4200
-> >   	tristate "LED driver for Intel NAS SS4200 series"
-> >   	depends on LEDS_CLASS
-> > diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-> > index 41fb073a39c1..2a8f6a8e4c7c 100644
-> > --- a/drivers/leds/Makefile
-> > +++ b/drivers/leds/Makefile
-> > @@ -15,6 +15,7 @@ obj-$(CONFIG_LEDS_AN30259A)		+= leds-an30259a.o
-> >   obj-$(CONFIG_LEDS_BCM6328)		+= leds-bcm6328.o
-> >   obj-$(CONFIG_LEDS_BCM6358)		+= leds-bcm6358.o
-> >   obj-$(CONFIG_LEDS_BD2802)		+= leds-bd2802.o
-> > +obj-$(CONFIG_LEDS_BD71828)		+= leds-bd71828.o
-> >   obj-$(CONFIG_LEDS_CPCAP)		+= leds-cpcap.o
-> >   obj-$(CONFIG_LEDS_LOCOMO)		+= leds-locomo.o
-> >   obj-$(CONFIG_LEDS_LM3530)		+= leds-lm3530.o
-> > diff --git a/drivers/leds/leds-bd71828.c b/drivers/leds/leds-bd71828.c
-> > new file mode 100644
-> > index 000000000000..2427619444f5
-> > --- /dev/null
-> > +++ b/drivers/leds/leds-bd71828.c
-> > @@ -0,0 +1,97 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +// Copyright (C) 2019 ROHM Semiconductors
-> > +
-> > +#include <linux/device.h>
-> > +#include <linux/err.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/leds.h>
-> > +#include <linux/mfd/rohm-bd71828.h>
-> > +#include <linux/module.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/slab.h>
-> > +
-> > +#define BD71828_LED_TO_DATA(l) ((l)->id == ID_GREEN_LED ? \
-> > +	container_of((l), struct bd71828_leds, green) : \
-> > +	container_of((l), struct bd71828_leds, amber))
-> 
-> I don't think we should be defining the color as the variable. The outputs
-> can drive any color LED.
-> 
-> 
-> > +
-> > +enum {
-> > +	ID_GREEN_LED,
-> > +	ID_AMBER_LED,
-> > +	ID_NMBR_OF,
-> > +};
-> > +
-> 
-> Please use the color_id in linux/include/dt-bindings/leds/common.h
-> 
-> 
-> > +struct bd71828_led {
-> > +	int id;
-> > +	struct led_classdev l;
-> > +	u8 force_mask;
-> > +};
-> > +
-> > +struct bd71828_leds {
-> > +	struct rohm_regmap_dev *bd71828;
-> > +	struct bd71828_led green;
-> > +	struct bd71828_led amber;
-> > +};
-> > +
-> > +static int bd71828_led_brightness_set(struct led_classdev *led_cdev,
-> > +				      enum led_brightness value)
-> > +{
-> > +	struct bd71828_led *l = container_of(led_cdev, struct bd71828_led, l);
-> > +	struct bd71828_leds *data;
-> > +	unsigned int val = BD71828_LED_OFF;
-> > +
-> > +	data = BD71828_LED_TO_DATA(l);
-> > +	if (value != LED_OFF)
-> > +		val = BD71828_LED_ON;
-> > +
-> > +	return regmap_update_bits(data->bd71828->regmap, BD71828_REG_LED_CTRL,
-> > +			    l->force_mask, val);
-> > +}
-> > +
-> > +static int bd71828_led_probe(struct platform_device *pdev)
-> > +{
-> > +	struct rohm_regmap_dev *bd71828;
-> > +	struct bd71828_leds *l;
-> > +	struct bd71828_led *g, *a;
-> > +	static const char *GNAME = "bd71828-green-led";
-> > +	static const char *ANAME = "bd71828-amber-led";
-> The LED class creates the name it can get it from the DT.
-> > +	int ret;
-> > +
-> > +	pr_info("bd71828 LED driver probed\n");
-> > +
-> > +	bd71828 = dev_get_drvdata(pdev->dev.parent);
-> > +	l = devm_kzalloc(&pdev->dev, sizeof(*l), GFP_KERNEL);
-> > +	if (!l)
-> > +		return -ENOMEM;
-> > +	l->bd71828 = bd71828;
-> > +	a = &l->amber;
-> > +	g = &l->green;
-> > +	a->id = ID_AMBER_LED;
-> > +	g->id = ID_GREEN_LED;
-> > +	a->force_mask = BD71828_MASK_LED_AMBER;
-> > +	g->force_mask = BD71828_MASK_LED_GREEN;
-> > +
-> > +	a->l.name = ANAME;
-> > +	g->l.name = GNAME;
-> > +	a->l.brightness_set_blocking = bd71828_led_brightness_set;
-> > +	g->l.brightness_set_blocking = bd71828_led_brightness_set;
-> > +
-> > +	ret = devm_led_classdev_register(&pdev->dev, &g->l);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return devm_led_classdev_register(&pdev->dev, &a->l);
-> > +}
-> > +
-> 
-> This looks different.  Not sure why you register both LEDs in this probe.
-> 
-> You can use the DT to define both LEDs and then each will be probed and
-> registered separately.
-> 
-> This is how it is commonly done.
-> 
-> You can reference the LM36274 led driver as this is a MFD device to the
-> ti-lmu.c in the MFD directory.
-> 
-> 
-> > +static struct platform_driver bd71828_led_driver = {
-> > +	.driver = {
-> > +		.name  = "bd71828-led",
-> > +	},
-> > +	.probe  = bd71828_led_probe,
-> > +};
-> > +
-> > +module_platform_driver(bd71828_led_driver);
-> > +
-> > +MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
-> > +MODULE_DESCRIPTION("ROHM BD71828 LED driver");
-> > +MODULE_LICENSE("GPL");
-> GPL v2
+On Thu, Oct 17, 2019 at 3:42 PM Ben Hutchings
+<ben.hutchings@codethink.co.uk> wrote:
+>
+> On Wed, 2019-10-09 at 21:10 +0200, Arnd Bergmann wrote:
+> > We no longer need the rtc compat handling to be in common code, now that
+> > all drivers are either moved to the rtc-class framework, or (rarely)
+> > exist in drivers/char for architectures without compat mode (m68k,
+> > alpha and ia64, respectively).
+> >
+> > I checked the list of ioctl commands in drivers, and the ones that are
+> > not already handled are all compatible, again with the one exception of
+> > m68k driver, which implements RTC_PLL_GET and RTC_PLL_SET, but has no
+> > compat mode.
+> >
+> > Since the ioctl commands are either compatible or differ in both structure
+> > and command code between 32-bit and 64-bit, we can merge the compat
+> > handler into the native one and just implement the two common compat
+> > commands (RTC_IRQP_READ, RTC_IRQP_SET) there.
+> [...]
+>
+> I don't think this can work properly on s390, because some of them take
+> integers and some take pointers.
 
-GPL is fine, see bf7fbeeae6db ("module: Cure the MODULE_LICENSE "GPL"
-vs. "GPL v2" bogosity")
+Thanks a lot for taking a look at the patch and pointing this out!
 
+I don't remember how I got to this, either I missed the problem or I
+decided that it was ok, since it will still do the right thing:
+On s390 only the highest bit is cleared in a pointer value, and we
+ensure that the RTC_IRQP_SET argument is between 1 and 8192.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Passing a value of (0x80000000 + n) where n is in the valid range
+would lead to the call succeeding unexpectedly on compat s390
+(if it had an RTC, which it does not) which is clearly not good but
+mostly harmless. I certainly had not considered this case.
+
+However, looking at this again after your comment I found a rather
+more serious bug in my new RTC_IRQP_SET handling: Any 64-bit
+machine can now bypass the permission check for RTC_IRQP_SET by
+calling RTC_IRQP_SET32 instead.
+
+I'll fix it both issues by adding a rtc_compat_dev_ioctl() to handle
+RTC_IRQP_SET32/RTC_IRQP_READ32:
+
+diff --git a/drivers/rtc/dev.c b/drivers/rtc/dev.c
+index 1dc5063f78c9..9e4fd5088ead 100644
+--- a/drivers/rtc/dev.c
++++ b/drivers/rtc/dev.c
+@@ -358,16 +358,6 @@ static long rtc_dev_ioctl(struct file *file,
+                mutex_unlock(&rtc->ops_lock);
+                return rtc_update_irq_enable(rtc, 0);
+
+-#ifdef CONFIG_64BIT
+-#define RTC_IRQP_SET32         _IOW('p', 0x0c, __u32)
+-#define RTC_IRQP_READ32                _IOR('p', 0x0b, __u32)
+-       case RTC_IRQP_SET32:
+-               err = rtc_irq_set_freq(rtc, arg);
+-               break;
+-       case RTC_IRQP_READ32:
+-               err = put_user(rtc->irq_freq, (unsigned int __user *)uarg);
+-               break;
+-#endif
+        case RTC_IRQP_SET:
+                err = rtc_irq_set_freq(rtc, arg);
+                break;
+@@ -409,6 +399,29 @@ static long rtc_dev_ioctl(struct file *file,
+        return err;
+ }
+
++#ifdef CONFIG_COMPAT
++#define RTC_IRQP_SET32         _IOW('p', 0x0c, __u32)
++#define RTC_IRQP_READ32                _IOR('p', 0x0b, __u32)
++
++static long rtc_dev_compat_ioctl(struct file *file,
++                                unsigned int cmd, unsigned long arg)
++{
++       struct rtc_device *rtc = file->private_data;
++       void __user *uarg = compat_ptr(arg);
++
++       switch (cmd) {
++       case RTC_IRQP_READ32:
++               return put_user(rtc->irq_freq, (__u32 __user *)uarg);
++
++       case RTC_IRQP_SET32:
++               /* arg is a plain integer, not pointer */
++               return rtc_dev_ioctl(file, RTC_IRQP_SET, arg);
++       }
++
++       return rtc_dev_ioctl(file, cmd, (unsigned long)uarg);
++}
++#endif
++
+ static int rtc_dev_fasync(int fd, struct file *file, int on)
+ {
+        struct rtc_device *rtc = file->private_data;
+@@ -444,7 +457,7 @@ static const struct file_operations rtc_dev_fops = {
+        .read           = rtc_dev_read,
+        .poll           = rtc_dev_poll,
+        .unlocked_ioctl = rtc_dev_ioctl,
+-       .compat_ioctl   = compat_ptr_ioctl,
++       .compat_ioctl   = rtc_dev_compat_ioctl,
+        .open           = rtc_dev_open,
+        .release        = rtc_dev_release,
+        .fasync         = rtc_dev_fasync,
+
+If you and Alexandre are both happy with this version, I'll fold it into
+my original patch.
+
+      Arnd
