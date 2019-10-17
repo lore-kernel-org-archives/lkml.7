@@ -2,92 +2,71 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5383CFA3735
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D10FA3735
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3595320854
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19ED721D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:46:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440342AbfJQOqm (ORCPT
+        id S2440354AbfJQOqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 10:46:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38618 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2403882AbfJQOqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:46:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 66C19B6AD;
-        Thu, 17 Oct 2019 14:46:38 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luis Henriques <lhenriques@suse.com>
-Subject: [PATCH] ceph: Fix use-after-free in __ceph_remove_cap
-Date:   Thu, 17 Oct 2019 15:46:36 +0100
-Message-Id: <20191017144636.28617-1-lhenriques@suse.com>
+        Thu, 17 Oct 2019 10:46:48 -0400
+Received: from mga11.intel.com ([192.55.52.93]:25615 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2440344AbfJQOqr (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 10:46:47 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 07:46:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,308,1566889200"; 
+   d="scan'208";a="208694484"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
+  by fmsmga001.fm.intel.com with ESMTP; 17 Oct 2019 07:46:44 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id A50403002D7; Thu, 17 Oct 2019 07:46:44 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 07:46:44 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, kan.liang@intel.com,
+        yao.jin@intel.com
+Subject: Re: [PATCH v2] perf list: Separate the deprecated events
+Message-ID: <20191017144644.GV9933@tassilo.jf.intel.com>
+References: <20191017135214.18620-1-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191017135214.18620-1-yao.jin@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KASAN reports a use-after-free when running xfstest generic/531, with the
-following trace:
+>  v2:
+>  ---
+>  In v1, the deprecated events are hidden by default but they can be
+>  displayed when option "--deprecated" is enabled. In v2, we don't use
+>  the new option "--deprecated". Instead, we just display the deprecated
+>  events under the title "--- Following are deprecated events ---".
 
-[  293.903362]  kasan_report+0xe/0x20
-[  293.903365]  rb_erase+0x1f/0x790
-[  293.903370]  __ceph_remove_cap+0x201/0x370
-[  293.903375]  __ceph_remove_caps+0x4b/0x70
-[  293.903380]  ceph_evict_inode+0x4e/0x360
-[  293.903386]  evict+0x169/0x290
-[  293.903390]  __dentry_kill+0x16f/0x250
-[  293.903394]  dput+0x1c6/0x440
-[  293.903398]  __fput+0x184/0x330
-[  293.903404]  task_work_run+0xb9/0xe0
-[  293.903410]  exit_to_usermode_loop+0xd3/0xe0
-[  293.903413]  do_syscall_64+0x1a0/0x1c0
-[  293.903417]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+It's redundant with what the event description already says.
+If we always want to show it we don't need to do anything.
 
-This happens because __ceph_remove_cap() may queue a cap release
-(__ceph_queue_cap_release) which can be scheduled before that cap is
-removed from the inode list with
+I really would much prefer to hide it. What's the point of showing
+something that people are not supposed to use?
 
-	rb_erase(&cap->ci_node, &ci->i_caps);
+The only reason for keeping the deprecated events is to not
+break old scripts, but those don't care about perf list output.
 
-And, when this finally happens, the use-after-free will occur.
+So I think the only sane option is to hide it by default.
 
-This can be fixed by protecting the rb_erase with the s_cap_lock spinlock,
-which is used by ceph_send_cap_releases(), before the cap is freed.
-
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
----
- fs/ceph/caps.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-index d3b9c9d5c1bd..21ee38cabe98 100644
---- a/fs/ceph/caps.c
-+++ b/fs/ceph/caps.c
-@@ -1089,13 +1089,13 @@ void __ceph_remove_cap(struct ceph_cap *cap, bool queue_release)
- 	}
- 	cap->cap_ino = ci->i_vino.ino;
- 
--	spin_unlock(&session->s_cap_lock);
--
- 	/* remove from inode list */
- 	rb_erase(&cap->ci_node, &ci->i_caps);
- 	if (ci->i_auth_cap == cap)
- 		ci->i_auth_cap = NULL;
- 
-+	spin_unlock(&session->s_cap_lock);
-+
- 	if (removed)
- 		ceph_put_cap(mdsc, cap);
- 
+-Andi
