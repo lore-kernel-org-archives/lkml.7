@@ -2,113 +2,127 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1D5ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C50ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7F542064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 416C421A49
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:52:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nnuCi8Mv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437458AbfJQUvM (ORCPT
+        id S2437695AbfJQUwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 16:51:12 -0400
-Received: from mga12.intel.com ([192.55.52.136]:28397 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728420AbfJQUvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 16:51:12 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 13:51:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,309,1566889200"; 
-   d="scan'208";a="200504692"
-Received: from ray.jf.intel.com (HELO [10.7.201.139]) ([10.7.201.139])
-  by orsmga006.jf.intel.com with ESMTP; 17 Oct 2019 13:51:10 -0700
-Subject: Re: [PATCH 0/4] [RFC] Migrate Pages in lieu of discard
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Adams <jwadams@google.com>,
-        "Chen, Tim C" <tim.c.chen@intel.com>
-References: <20191016221148.F9CCD155@viggo.jf.intel.com>
- <CALvZod5wdToX6bx4Bnwx9AgrzY3xkmE0OMH61f88hKxeGX+tvA@mail.gmail.com>
- <496566a6-2581-17f4-a4f2-e5def7f97582@intel.com>
- <CALvZod7kqjPJcdNQu3CO0+GU=0PyUE1YZgrDJcs8dBHpKbLkSg@mail.gmail.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <70731276-ca8c-afa9-aca2-1ef210d4ac01@intel.com>
-Date:   Thu, 17 Oct 2019 13:51:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 17 Oct 2019 16:52:31 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:44395 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728420AbfJQUwa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 16:52:30 -0400
+Received: by mail-qk1-f196.google.com with SMTP id u22so3202435qkk.11;
+        Thu, 17 Oct 2019 13:52:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=QMU67ashdr6NIXSp5sxb1ow30I7YwBEELAlQYgNywC8=;
+        b=nnuCi8MvIN5FvTlFJcLWAsFvANcNYqrJPttO3XVqBHrrL69Gu2F8yE7+WQRHAk8rod
+         PvQs3YROR8NvmAoVxhO+8idIM5Clyk/tHRc1nVqLP29U+yGPkY9zcKqZhzpdvQYaKUNs
+         xj5cDts6e1s5SfkrPZV+xtoV+inF3KSjhta23PmmVRJr8OfHHwbWH+O75h//rHKABOJC
+         +xC7K3z/W7FrK5arxzfX1AzC52uE1eG/9FEArV1SG0uNel5/w57wZV3f1czHKX4pONBX
+         rHGo2V+YRHQJRhaHqogzvdQcSHB/awWpP+2MgngHMA3q46emzr1yV8LZm2qaVkaU1kgS
+         /mpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=QMU67ashdr6NIXSp5sxb1ow30I7YwBEELAlQYgNywC8=;
+        b=aKVH1dpfU1n1IkXXQObEIgW4Ouzu5fmNQ8/RsCVbPDuaZD6RuQWUHpVKMxr5Tn5vr3
+         cQZWFlFlwr+4eIarwHBNMhUb/G0MvH/7X6u7Qe3kdV8+WitcAq4koKccYCOCpqdFw4ib
+         WSJMhhH3cuHkkjP0hMlnfUxTYppvsT3EgfgAXx3mWfJgQA3NzEtlRfDh9Mv5i+4grOkh
+         MA/t0zHX6PEW5Hnwai1ExGWZ8o0LrqQTAoXzYMF6o4sf5yTsopTE7JnK9lu5kil1/MnX
+         w9BCfIWBTuncVYn0mCZSCQgRlLLC6O5Bao0WjlzaFr/0725AnyPqCtNyxXpGE7Mn9uK9
+         4A4g==
+X-Gm-Message-State: APjAAAX3i2MOTVs4R7fQLTvfspNKw54BxKiLaWkdDxUCzyA/tktpAz27
+        7UtOBPFttusKVsmABG6AsIkXlQ4f
+X-Google-Smtp-Source: APXvYqzTVyquYc7fl8qSW3Vg5hnSpVIzpoyFXNkHrMBAWrxLDu6oiZgOHBKtEYq5r2MYx95Mfslhzg==
+X-Received: by 2002:a37:7b44:: with SMTP id w65mr5312578qkc.403.1571345547902;
+        Thu, 17 Oct 2019 13:52:27 -0700 (PDT)
+Received: from eaf ([181.47.179.0])
+        by smtp.gmail.com with ESMTPSA id e15sm24666qkm.130.2019.10.17.13.52.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 13:52:27 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 17:52:22 -0300
+From:   Ernesto =?utf-8?Q?A=2E_Fern=C3=A1ndez?= 
+        <ernesto.mnd.fernandez@gmail.com>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] hfsplus: add a check for hfs_bnode_find
+Message-ID: <20191017205222.GA2662@eaf>
+References: <20191016120621.304-1-hslester96@gmail.com>
+ <20191017000703.GA4271@eaf>
+ <CANhBUQ3vPBAstTMJ25Zt6sR4CcRKWkeR7VKhFXc9aiqQKmW=Ng@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CALvZod7kqjPJcdNQu3CO0+GU=0PyUE1YZgrDJcs8dBHpKbLkSg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANhBUQ3vPBAstTMJ25Zt6sR4CcRKWkeR7VKhFXc9aiqQKmW=Ng@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/17/19 9:58 AM, Shakeel Butt wrote:
->> My expectation (and I haven't confirmed this) is that the any memory use
->> is accounted to the owning cgroup, whether it is DRAM or PMEM.  memcg
->> limit reclaim and global reclaim both end up doing migrations and
->> neither should have a net effect on the counters.
->>
-> Hmm I didn't see the memcg charge migration in the code on demotion.
-> So, in the code [patch 3] the counters are being decremented as DRAM
-> is freed but not incremented for PMEM.
+On Thu, Oct 17, 2019 at 09:30:20AM +0800, Chuhong Yuan wrote:
+> On Thu, Oct 17, 2019 at 8:07 AM Ernesto A. Fernández
+> <ernesto.mnd.fernandez@gmail.com> wrote:
+> >
+> > Hi,
+> >
+> > On Wed, Oct 16, 2019 at 08:06:20PM +0800, Chuhong Yuan wrote:
+> > > hfs_brec_update_parent misses a check for hfs_bnode_find and may miss
+> > > the failure.
+> > > Add a check for it like what is done in again.
+> > >
+> > > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> > > ---
+> > >  fs/hfsplus/brec.c | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >
+> > > diff --git a/fs/hfsplus/brec.c b/fs/hfsplus/brec.c
+> > > index 1918544a7871..22bada8288c4 100644
+> > > --- a/fs/hfsplus/brec.c
+> > > +++ b/fs/hfsplus/brec.c
+> > > @@ -434,6 +434,8 @@ static int hfs_brec_update_parent(struct hfs_find_data *fd)
+> > >                       new_node->parent = tree->root;
+> > >               }
+> > >               fd->bnode = hfs_bnode_find(tree, new_node->parent);
+> > > +             if (IS_ERR(fd->bnode))
+> > > +                     return PTR_ERR(fd->bnode);
+> >
+> > You shouldn't just return here, you still hold a reference to new_node.
+> > The call to hfs_bnode_find() after the again label seems to be making a
+> > similar mistake.
+> >
+> > I don't think either one can actually fail though, because the parent
+> > nodes have all been read and hashed before, haven't they?
+> >
+> 
+> I find that after hfs_bnode_findhash in hfs_bnode_find, there is a test for
+> HFS_BNODE_ERROR and may return an error. I'm not sure whether it
+> can happen here.
 
-I had assumed that the migration code was doing this for me.  I'll go
-make sure either way.
+That would require a race between hfs_bnode_find() and hfs_bnode_create(),
+but the node has already been created.
 
+> 
+> > >               /* create index key and entry */
+> > >               hfs_bnode_read_key(new_node, fd->search_key, 14);
+> > >               cnid = cpu_to_be32(new_node->this);
+> > > --
+> > > 2.20.1
+> > >
