@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EED60FA3737
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C3FFA373B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C04132089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F16C62089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:28:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="egK4qvYj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CXTEhQJB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502369AbfJQM2B (ORCPT
+        id S2394049AbfJQM2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 08:28:01 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45478 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502359AbfJQM2A (ORCPT
+        Thu, 17 Oct 2019 08:28:09 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42141 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393750AbfJQM2H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:28:00 -0400
-Received: by mail-pg1-f196.google.com with SMTP id r1so1262942pgj.12
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 05:27:59 -0700 (PDT)
+        Thu, 17 Oct 2019 08:28:07 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f14so1267207pgi.9
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 05:28:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=Dxo5X+E9Ol1EaiMF1ZycTVksoTfNCn6yYqPoCwK1ut0=;
-        b=egK4qvYjE7EBixFsyZw/Kr078NfjAaHkhTpbfmT1U8TUKYQS3TWhZar7iJge8A07DK
-         sU5cpQuotBcsaO4hCkFmOhPY4FbwLuQQd5m0yXzMcvo+Z69ZOXqN3BdJr2IRKQYu7vCp
-         K9ScS/0a9YyM8Tbd2gkLDTPN/49QzDpGta13xl6ZRzPqnGn3vmMwJQHkR4SYu1b198ho
-         KdjwHZKZZwzew3KwyZ4tYS3rNUjoJBb7eAcf+PRl70qDYOzmOMpzxBKtUDNX4wnNYRNB
-         DmtCOTZLc81gvkP/WIFXEi6syWHVXvfPUG9JjfK3ScoMSMcs3xwFeFyeyUgAULQ653oh
-         693Q==
+        bh=smRwPgvncTjnAR1YtPvLb1bA4/kxUscSlcxDGMtB+pk=;
+        b=CXTEhQJBPSdCMw+IoywZVcKHtNxz/LdSoAfySQJBtoF3why8XyOtLveH0F98ftlzbg
+         lGN1tXAB5pOEi228FfTu3mTnbXXgzEL8jxCzcBQNqxu2Z8iqUYLRzTfa20NlNC2uWZ1A
+         csJXKyMDgWRqHhEHI3FWP4EE7cwtkQ6TyPV0ntYhcX+uT1/ULigN1FbKODf9k4HqW+nx
+         s1fLpu7h7BX13D552cMBe2TzriGx4y8IjiEFvEIpuM9W2e9wMrAOZlCFxB7Z3qrlIFgN
+         NsDhWCfxagZcFmKo4ORUuv9OA75QRv2XeYORTsFjVx57Kj0GcbMHNK+j7izjMyYer3UC
+         Hb2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=Dxo5X+E9Ol1EaiMF1ZycTVksoTfNCn6yYqPoCwK1ut0=;
-        b=ZBIIjsMYAbNdcRbME1aBwOeRfwr3mSxHBB2Z7gCa+iNZ7+tJIPPA1J3egqQtDDJ4NA
-         5fZpMltXcgxYv4dvklW3U28FC17K+9KsUwg2s2r8Bdr0EVcJN47irZl/3/ZPGt27+wx+
-         1r6oesK75hZ6QJzQzm0uFnpiFNZ7g+aaad/FGvi3FDAvbtevlP/aPXo5ejP55Qa7/hLM
-         R1kM4TmISyajUISKtkfRIIK59bvY2OT1VpAO0JL/2ToOTAISd6JTPf9v6ix3vMQBX9lV
-         VNeow9G64Nhi/BNTYUsNPiajXkgLRtTqyA/8zI4TzPBjBhPU8/NfQDQ8RFBchPbthmff
-         zC+Q==
-X-Gm-Message-State: APjAAAXaJy/pQskOaB+2NeRQDyY4Z4x0Cj2bYfNaVjSFiZcvJlJNl3db
-        FXCgy6s15RT9dWvMj/2nlF1yt42QqPYxRg==
-X-Google-Smtp-Source: APXvYqzGLzD52zmSKxtJBG7Fgaht2Hci65RkrcVoI3J604NgxX1LNv5xLN76oaaOe048MuUDrfH3EQ==
-X-Received: by 2002:a65:689a:: with SMTP id e26mr3852060pgt.346.1571315279010;
-        Thu, 17 Oct 2019 05:27:59 -0700 (PDT)
+        bh=smRwPgvncTjnAR1YtPvLb1bA4/kxUscSlcxDGMtB+pk=;
+        b=moqZ/r6+JpAnOYLlVBTUW5jBfOF7gxl1LEs5hNKzBDPTZ0yIFKbBOVKKqU507n1MII
+         IkslCRx6ltlxlSMl2ImzbkYPBFKQ+1uSRfThb4dFvRCGAiMVtgF43A0+HhIigmII0x7W
+         cSVsCU3z9fjCebzMs4xc2dQoV/gp09KLUdC4h18qEe1YU2zCQZfOL2Oy6JxDjY8N2U9A
+         RfzCgx9lz3DQqi6n2L5/EgMH9SvMqV50PZR1YllEbXnnstXZXoZQlQ/2x9tFSF03lHMs
+         Lvpgant56z1Hu6PQIf4kfxDfYrB0OqFehPEAigU5QrEINN8idF/as8EYNODP8glxiuqV
+         OogQ==
+X-Gm-Message-State: APjAAAVX0TjFwfGGaqwpRIUkB9GuzOnJAsDap+Bgao6lhOFAzvkkTR/5
+        AAC1MvnO1GnuMYOYxZFDy70XR7dt/ygkGg==
+X-Google-Smtp-Source: APXvYqwv1uq5A9qIqW0buX8pAXgbhIdbQCV4Xyis8lzdNFPlH5cGLHz39J+R4PxT0WHConQkAoKbvg==
+X-Received: by 2002:a62:7643:: with SMTP id r64mr3573835pfc.106.1571315286536;
+        Thu, 17 Oct 2019 05:28:06 -0700 (PDT)
 Received: from localhost ([49.248.54.231])
-        by smtp.gmail.com with ESMTPSA id 207sm2692918pfu.129.2019.10.17.05.27.57
+        by smtp.gmail.com with ESMTPSA id c128sm2897104pfc.166.2019.10.17.05.28.05
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 17 Oct 2019 05:27:58 -0700 (PDT)
+        Thu, 17 Oct 2019 05:28:05 -0700 (PDT)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         daniel.lezcano@linaro.org, viresh.kumar@linaro.org,
@@ -66,9 +66,9 @@ To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Amit Kucheria <amit.kucheria@verdurent.com>,
         Zhang Rui <rui.zhang@intel.com>
 Cc:     linux-pm@vger.kernel.org
-Subject: [PATCH v3 4/6] cpufreq: Initialize cpufreq-dt driver earlier
-Date:   Thu, 17 Oct 2019 17:57:36 +0530
-Message-Id: <9e2bce44ed6bf3aac2354650fc3bf5c43e2155b0.1571314830.git.amit.kucheria@linaro.org>
+Subject: [PATCH v3 6/6] cpufreq: qcom-hw: Move driver initialisation earlier
+Date:   Thu, 17 Oct 2019 17:57:38 +0530
+Message-Id: <3468b8cf9c764ea139296ee149d33cd7a9d79e3e.1571314830.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1571314830.git.amit.kucheria@linaro.org>
 References: <cover.1571314830.git.amit.kucheria@linaro.org>
@@ -79,24 +79,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows HW drivers that depend on cpufreq-dt to initialise earlier.
+Allow qcom-hw driver to initialise right after the cpufreq and thermal
+subsystems are initialised in core_initcall so we get earlier access to
+thermal mitigation.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- drivers/cpufreq/cpufreq-dt-platdev.c | 2 +-
+ drivers/cpufreq/qcom-cpufreq-hw.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-index bca8d1f47fd2..3282defe14d4 100644
---- a/drivers/cpufreq/cpufreq-dt-platdev.c
-+++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-@@ -180,4 +180,4 @@ static int __init cpufreq_dt_platdev_init(void)
- 			       -1, data,
- 			       sizeof(struct cpufreq_dt_platform_data)));
+diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
+index a9ae2f84a4ef..fc92a8842e25 100644
+--- a/drivers/cpufreq/qcom-cpufreq-hw.c
++++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+@@ -334,7 +334,7 @@ static int __init qcom_cpufreq_hw_init(void)
+ {
+ 	return platform_driver_register(&qcom_cpufreq_hw_driver);
  }
--device_initcall(cpufreq_dt_platdev_init);
-+core_initcall(cpufreq_dt_platdev_init);
+-device_initcall(qcom_cpufreq_hw_init);
++postcore_initcall(qcom_cpufreq_hw_init);
+ 
+ static void __exit qcom_cpufreq_hw_exit(void)
+ {
 -- 
 2.17.1
 
