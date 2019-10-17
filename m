@@ -2,174 +2,143 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD830FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 403D9ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B37C520854
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16F8E20854
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:52:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YcGz7/+2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pxijlpnJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390034AbfJQMwS (ORCPT
+        id S2390637AbfJQMwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 08:52:18 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38977 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfJQMwR (ORCPT
+        Thu, 17 Oct 2019 08:52:31 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35746 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732434AbfJQMwa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:52:17 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v17so2407744wml.4;
-        Thu, 17 Oct 2019 05:52:14 -0700 (PDT)
+        Thu, 17 Oct 2019 08:52:30 -0400
+Received: by mail-lj1-f194.google.com with SMTP id m7so2447136lji.2
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 05:52:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Fku2RnOxGv4zaKqVP5kIkNCGUU7a/SQjY418THGkTpE=;
-        b=YcGz7/+2KBfu00lJ4kIc6oJFv2Dj65kYVMSk0+yRUdNphnaSUytpTpnJUXveNrG4MF
-         bLqy5+bthQEvAX4SY2dRuWERSfyF1ocpW6WT0eYsSPSrLXbb+psT2X3hUMAtzFeofP9b
-         VGPoHeFGkW3bQ00824SjG9+p5Tmzcb4sUe7rvrbnXf4phaG0yIMWq/yXNVgkZ2mtTD9r
-         MC0PzA07DMWv5Bn68l/rK2EZtEvhYYkhw8X7BN5UQniDMlEXHf2MMwtnl8OyHA/mo99M
-         COfyvlo4j8NYC15muLR3o7qca4SakNMoYWUljbQQyvEhceoY6NfT63F+jc08Zytiad20
-         ya/Q==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QrLNGivHk+MX8xmqPNs4VJfLnymqhdD216JwoEaih2o=;
+        b=pxijlpnJvH+0Meiyj9IJb82BApkYa5Amf8UD++PDk2Vmv6edkmCzoFFXCRLntxyrC1
+         mLkWZCG6OSWH+5i+vHjTerMGjh9sWPTJes3VNAUhsCvYuQnTCdR4Tg7ba2ic4lRik6KE
+         JG2/FQ276AuTq9GpU+msGysKBTdy0rzz/xr4IuUdwM/l5r5qC8kKsIfyn2meaOzRInGT
+         o5ksIUdYOzr8rmUJLsCOb/VBis8RXjC35uW1/4glW/GT3AVSC4oswPriEz6NnvJNAVm/
+         zsW1cnRSp0R4crrk2JCd+r+mabjMCA2aBmK670MduETPO6SboZEEuq/rHegWThVf6NzS
+         nS6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Fku2RnOxGv4zaKqVP5kIkNCGUU7a/SQjY418THGkTpE=;
-        b=jz3DJLV9gk1Rg7uW0PDJmgSe/vgxuH3QDWETTxlmrpxQ4+XoEynThPi7ZP6B1UXcB5
-         kcFHU8bFYQigsjLu91dn0mJHpFl5jI9aw5O1tWq/qwlA77jhdFiGgcaNUvNC0S2gMM8r
-         w91W38XFDZ1+YLs9dPJuWqM5VycFSiV/DwCLDJmSwFawE4hRFaCc5eeJT5Av6tKcbx6D
-         mSE8z/Of1xj9wnpJvtlK5UShV3wZ5WHrmT3sMeVAt6GJhmhFUGLSxyHHW+SXpEWJRgpB
-         pOFwFeYp8I1TGWTxgG+RloJSBBd5MIy1xpKFxTXtjafeydFD/R6aM5N0cj0FHRIeBrob
-         4t4Q==
-X-Gm-Message-State: APjAAAWlkb/GN4JYQGr2kYE8s3VBSXoH+Djg9stQ6JTZqRZuLxYfN5XR
-        jk8yQLO15rV8W6Prrn8+Zkk=
-X-Google-Smtp-Source: APXvYqxXVdwZKFcae4UW9WkJTpM0WU2xLxCUyMYPr6Iqbbvkq1A3T7bAB+o7wt/5KP+X/chk/Eh6+w==
-X-Received: by 2002:a1c:720a:: with SMTP id n10mr2968261wmc.0.1571316733871;
-        Thu, 17 Oct 2019 05:52:13 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id 63sm2283799wri.25.2019.10.17.05.52.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 05:52:12 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 14:52:11 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     linus.walleij@linaro.org, manivannan.sadhasivam@linaro.org,
-        afaerber@suse.de, f.fainelli@gmail.com, rjui@broadcom.com,
-        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-        jesper.nilsson@axis.com, lars.persson@axis.com,
-        ludovic.desroches@microchip.com, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, baruch@tkos.co.il,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@axis.com,
-        linux-oxnas@groups.io, linux-renesas-soc@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        vz@mleia.com, narmstrong@baylibre.com, geert+renesas@glider.be,
-        daniel@zonque.org, haojian.zhuang@gmail.com, wens@csie.org,
-        jonathanh@nvidia.com, agross@kernel.org
-Subject: Re: [PATCH -next 10/30] pinctrl: tegra: use
- devm_platform_ioremap_resource() to simplify code
-Message-ID: <20191017125211.GA3768303@ulmo>
-References: <20191017122640.22976-1-yuehaibing@huawei.com>
- <20191017122640.22976-11-yuehaibing@huawei.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QrLNGivHk+MX8xmqPNs4VJfLnymqhdD216JwoEaih2o=;
+        b=F3KEeuJJJd+2CyW1GcXu86aglEanKmDrckjBErrlfZzvP563OCsmyy2xJoVyR+l13O
+         Pwu/mudiFtyh6hZ6vjxz59ZgMYXK3GHigJVvfebu8w8B3bpzwe7H4WtcxODRq5neMOz6
+         K2JLfJspDqztCX+WsRSUjmDqxBaeUbxC8dy4LcbIPI1jOL6U/Iu28pDdc9eO5XFyEzgX
+         CIfmeMvLz58BON7KUcFLqI/Z/atDqJlXuHy4zdOmmylcpRsOzjdxaMsFPHVsFzsxGRQ3
+         lxeBAUk6bD2nLXSz1YJox0VYk6ygrSW4MK6Sn9K0X6AqJyq3fLY/46e2zep5wQQcDkDH
+         nTVg==
+X-Gm-Message-State: APjAAAUwtVnUJbMmMfppCol1mg1XjuAE6KZscEJm3IdacOjSdeAwDpJY
+        NtYmQHnRwpluJFx1ZT+tVm1dm6MFpIPWjdg5EF5o+L+7shU=
+X-Google-Smtp-Source: APXvYqzkqvovU/sudHAtBIJQ9t1ZDyznyMb/4m7doUJ9DprBLfCEEqxIwDTEJvxsF+Qg9xk6jO7VE2ktilr7QFgkKZo=
+X-Received: by 2002:a2e:1214:: with SMTP id t20mr2401231lje.191.1571316748450;
+ Thu, 17 Oct 2019 05:52:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="OXfL5xGRrasGEqWY"
-Content-Disposition: inline
-In-Reply-To: <20191017122640.22976-11-yuehaibing@huawei.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
+ <20191007000520.GA17116@linux.intel.com> <59b88042-9c56-c891-f75e-7c0719eb5ff9@linux.ibm.com>
+ <20191008234935.GA13926@linux.intel.com> <20191008235339.GB13926@linux.intel.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2B995@ALPMBAPA12.e2k.ad.ge.com>
+ <20191014190033.GA15552@linux.intel.com> <1571081397.3728.9.camel@HansenPartnership.com>
+ <20191016110031.GE10184@linux.intel.com> <1571229252.3477.7.camel@HansenPartnership.com>
+ <20191016162543.GB6279@linux.intel.com> <1571253029.17520.5.camel@HansenPartnership.com>
+In-Reply-To: <1571253029.17520.5.camel@HansenPartnership.com>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Thu, 17 Oct 2019 18:22:17 +0530
+Message-ID: <CAFA6WYNNNTWXDrp_R3M60srGJYjJdRoaNpSnP54V_BinYYXTMA@mail.gmail.com>
+Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+To:     James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        "Safford, David (GE Global Research, US)" <david.safford@ge.com>,
+        Ken Goldman <kgold@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 17 Oct 2019 at 00:40, James Bottomley
+<James.Bottomley@hansenpartnership.com> wrote:
+>
+> On Wed, 2019-10-16 at 19:25 +0300, Jarkko Sakkinen wrote:
+> > On Wed, Oct 16, 2019 at 08:34:12AM -0400, James Bottomley wrote:
+> > > reversible ciphers are generally frowned upon in random number
+> > > generation, that's why the krng uses chacha20.  In general I think
+> > > we shouldn't try to code our own mixing and instead should get the
+> > > krng to do it for us using whatever the algorithm du jour that the
+> > > crypto guys have blessed is.  That's why I proposed adding the TPM
+> > > output to the krng as entropy input and then taking the output of
+> > > the krng.
+> >
+> > It is already registered as hwrng. What else?
+>
+> It only contributes entropy once at start of OS.
+>
 
---OXfL5xGRrasGEqWY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Why not just configure quality parameter of TPM hwrng as follows? It
+would automatically initiate a kthread during hwrng_init() to feed
+entropy from TPM to kernel random numbers pool (see:
+drivers/char/hw_random/core.c +142).
 
-On Thu, Oct 17, 2019 at 08:26:20PM +0800, YueHaibing wrote:
-> Use devm_platform_ioremap_resource() to simplify the code a bit.
-> This is detected by coccinelle.
->=20
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/pinctrl/tegra/pinctrl-tegra-xusb.c | 4 +---
->  drivers/pinctrl/tegra/pinctrl-tegra.c      | 3 +--
->  2 files changed, 2 insertions(+), 5 deletions(-)
+diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
+index 3d6d394..fcc3817 100644
+--- a/drivers/char/tpm/tpm-chip.c
++++ b/drivers/char/tpm/tpm-chip.c
+@@ -548,6 +548,7 @@ static int tpm_add_hwrng(struct tpm_chip *chip)
+                 "tpm-rng-%d", chip->dev_num);
+        chip->hwrng.name = chip->hwrng_name;
+        chip->hwrng.read = tpm_hwrng_read;
++       chip->hwrng.quality = 1024; /* Here we assume TPM provides
+full entropy */
+        return hwrng_register(&chip->hwrng);
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+ }
 
-> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra-xusb.c b/drivers/pinctrl=
-/tegra/pinctrl-tegra-xusb.c
-> index f2fa1f7..6f7b376 100644
-> --- a/drivers/pinctrl/tegra/pinctrl-tegra-xusb.c
-> +++ b/drivers/pinctrl/tegra/pinctrl-tegra-xusb.c
-> @@ -873,7 +873,6 @@ int tegra_xusb_padctl_legacy_probe(struct platform_de=
-vice *pdev)
->  {
->  	struct tegra_xusb_padctl *padctl;
->  	const struct of_device_id *match;
-> -	struct resource *res;
->  	struct phy *phy;
->  	int err;
-> =20
-> @@ -894,8 +893,7 @@ int tegra_xusb_padctl_legacy_probe(struct platform_de=
-vice *pdev)
->  	match =3D of_match_node(tegra_xusb_padctl_of_match, pdev->dev.of_node);
->  	padctl->soc =3D match->data;
-> =20
-> -	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	padctl->regs =3D devm_ioremap_resource(&pdev->dev, res);
-> +	padctl->regs =3D devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(padctl->regs))
->  		return PTR_ERR(padctl->regs);
-> =20
-> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegr=
-a/pinctrl-tegra.c
-> index e9a7cbb..692d8b3 100644
-> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
-> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
-> @@ -781,8 +781,7 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
->  		return -ENOMEM;
-> =20
->  	for (i =3D 0; i < pmx->nbanks; i++) {
-> -		res =3D platform_get_resource(pdev, IORESOURCE_MEM, i);
-> -		pmx->regs[i] =3D devm_ioremap_resource(&pdev->dev, res);
-> +		pmx->regs[i] =3D devm_platform_ioremap_resource(pdev, i);
->  		if (IS_ERR(pmx->regs[i]))
->  			return PTR_ERR(pmx->regs[i]);
->  	}
-> --=20
-> 2.7.4
->=20
->=20
+> >  Was the issue that it is only used as seed when the rng is init'd
+> > first? I haven't at this point gone to the internals of krng.
+>
+> Basically it was similar to your xor patch except I got the kernel rng
+> to do the mixing, so it would use the chacha20 cipher at the moment
+> until they decide that's unsafe and change it to something else:
+>
+> https://lore.kernel.org/linux-crypto/1570227068.17537.4.camel@HansenPartnership.com/
+>
+> It uses add_hwgenerator_randomness() to do the mixing.  It also has an
+> unmixed source so that read of the TPM hwrng device works as expected.
 
---OXfL5xGRrasGEqWY
-Content-Type: application/pgp-signature; name="signature.asc"
+Above suggestion is something similar to yours but utilizing the
+framework already provided via hwrng core.
 
------BEGIN PGP SIGNATURE-----
+-Sumit
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2oY/kACgkQ3SOs138+
-s6FgNw/+NID79dubYxesxorqI1f3Qx/IwcfoDiRN4AKvBhcJwBc3NKVGf/hLYpqL
-YuiRdhCR9PDTEAhuX5Hk86vPnUn4G9c7PXHjcCnXJS05Bf4HOuCvrEvKhn1aBSJg
-BKpQYyXht8ekGsWrhu6lHAs5TGDL+mqaw6OrDh0llnlnRSrWMeYIntmqhN9hWNUA
-r0dlzs3Kt4uxPwJ+LD/yLHdaMLHsL7FVzZOyODJgrS7iepKhPNFNxshPH75xVQo7
-FxzRu3voR+YjModyfO5X83hg8FnKh85Lvc5Ovhm7rjjWrQo73xCv2YfYjL6O5opg
-Ig2FBF2R3zyUzxNvg2xOuLD29Jf0Rbb48V8A3VkTzcSTSU4I6Pp91O+IJzSI3NPV
-Q+JtwCuflch6NG4JcvDJPCfqy6gUftF9c7/jcd8XFF/fFYdbwcpouUyOkifrbZh6
-uRyvEvKoR5Tdy+wolglL2srp9kHFUJbBgUKmvkuN9IP5297f1/SMeHhQTJ9NRWOd
-YcnQZsbNoJsUjNiE4v81BsXcWle7IANdhhY2vZShNcJxZATiektLeCO4FmN+pCIV
-nII5+ZV2MPnJk0xxu3w0/0AYbQbJAFaXHLvB/zhYcJcAyAC47qyv6K1s24zj/i1T
-FWPpngjetj8eTK50ENzsHDS46hyVpvQsVHsjuckItF1R3bmExPo=
-=hNUZ
------END PGP SIGNATURE-----
-
---OXfL5xGRrasGEqWY--
+>
+> James
+>
+>
+>
+>
+>
