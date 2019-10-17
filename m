@@ -2,90 +2,114 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E826BFA372B
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8436C4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C40A920820
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9957720820
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:34:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571297657;
+	bh=ECN2Afwa1MABIrOHCSFnxuMarPlwXQMcGfnYyTPtnmk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1lgz94CjY65FGxGatZkIxXaoTu+MXgHJes+vIPKyHWUxKDbqFfWd2o26PbgXijPCC
+	 tIe3xYAUC+Ub+XdcHkW87+X/23BOqSnRJ1xCgQo0EsranAFIvucc4Ym1vmEa7jTymL
+	 uC63F0kT+M/Im/fcBT4dmpc8MnY+n28lYDyAicgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438118AbfJQHcJ (ORCPT
+        id S2438209AbfJQHeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 03:32:09 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:35284 "EHLO huawei.com"
+        Thu, 17 Oct 2019 03:34:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42170 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727257AbfJQHcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 03:32:09 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 38170F1E5786B6648918;
-        Thu, 17 Oct 2019 15:32:07 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
- 15:32:03 +0800
-Subject: Re: [PATCH -next] ASoC: atmel: Fix build error
-To:     <codrin.ciubotariu@microchip.com>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <mirq-linux@rere.qmqm.pl>
-References: <20190928081641.44232-1-yuehaibing@huawei.com>
-CC:     <alsa-devel@alsa-project.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <c0a0ddc9-5ae4-8b5e-1d77-b322970651bd@huawei.com>
-Date:   Thu, 17 Oct 2019 15:32:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        id S1727257AbfJQHeQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 03:34:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 35403AD2C;
+        Thu, 17 Oct 2019 07:34:14 +0000 (UTC)
+Date:   Thu, 17 Oct 2019 09:34:13 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Rientjes <rientjes@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] mm/page_alloc: Add alloc_contig_pages()
+Message-ID: <20191017073413.GC24485@dhcp22.suse.cz>
+References: <40b8375c-5291-b477-1519-fd7fa799a67d@redhat.com>
+ <cdcf77a5-e5c9-71ff-811d-ecd1c1e80f00@arm.com>
+ <20191016115119.GA317@dhcp22.suse.cz>
+ <fe8cae46-6bd8-88eb-d3fe-2740bb79ee58@redhat.com>
+ <20191016124149.GB317@dhcp22.suse.cz>
+ <97cadd99-d05e-3174-6532-fe18f0301ba7@arm.com>
+ <e37c16f5-7068-5359-a539-bee58e705122@redhat.com>
+ <c60b9e95-5c6c-fcb2-c8bb-13e7646ba8ea@arm.com>
+ <20191017071129.GB24485@dhcp22.suse.cz>
+ <bfc3b281-79d1-1d8f-337d-c01acc29ab30@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190928081641.44232-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bfc3b281-79d1-1d8f-337d-c01acc29ab30@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping..., this issue still in linux-next 20191017
+On Thu 17-10-19 09:21:24, David Hildenbrand wrote:
+> On 17.10.19 09:11, Michal Hocko wrote:
+> > On Thu 17-10-19 10:44:41, Anshuman Khandual wrote:
+> > [...]
+> > > Does this add-on documentation look okay ? Should we also mention about the
+> > > possible reduction in chances of success during pfn block search for the
+> > > non-power-of-two cases as the implicit alignment will probably turn out to
+> > > be bigger than nr_pages itself ?
+> > > 
+> > >   * Requested nr_pages may or may not be power of two. The search for suitable
+> > >   * memory range in a zone happens in nr_pages aligned pfn blocks. But in case
+> > >   * when nr_pages is not power of two, an implicitly aligned pfn block search
+> > >   * will happen which in turn will impact allocated memory block's alignment.
+> > >   * In these cases, the size (i.e nr_pages) and the alignment of the allocated
+> > >   * memory will be different. This problem does not exist when nr_pages is power
+> > >   * of two where the size and the alignment of the allocated memory will always
+> > >   * be nr_pages.
+> > 
+> > I dunno, it sounds more complicated than really necessary IMHO. Callers
+> > shouldn't really be bothered by memory blocks and other really deep
+> > implementation details.. Wouldn't be the below sufficient?
+> > 
+> > The allocated memory is always aligned to a page boundary. If nr_pages
+> > is a power of two then the alignement is guaranteed to be to the given
+> 
+> s/alignement/alignment/
+> 
+> and "the PFN is guaranteed to be aligned to nr_pages" (the address is
+> aligned to nr_pages*PAGE_SIZE)
 
-On 2019/9/28 16:16, YueHaibing wrote:
-> when do randbuilding, I got this error:
-> 
-> sound/soc/atmel/atmel_ssc_dai.o: In function `atmel_ssc_set_audio':
-> (.text+0x12f6): undefined reference to `atmel_pcm_pdc_platform_register'
-> 
-> This is because SND_ATMEL_SOC_SSC_DMA=y, SND_ATMEL_SOC_SSC=y,
-> but SND_ATMEL_SOC_SSC_PDC=m. Fix it bt reintroducing the default Kconfig.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 18291410557f ("ASoC: atmel: enable SOC_SSC_PDC and SOC_SSC_DMA in Kconfig")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  sound/soc/atmel/Kconfig | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
-> index f118c22..79e45f2 100644
-> --- a/sound/soc/atmel/Kconfig
-> +++ b/sound/soc/atmel/Kconfig
-> @@ -12,10 +12,14 @@ if SND_ATMEL_SOC
->  config SND_ATMEL_SOC_PDC
->  	tristate
->  	depends on HAS_DMA
-> +	default m if SND_ATMEL_SOC_SSC_PDC=m && SND_ATMEL_SOC_SSC=m
-> +	default y if SND_ATMEL_SOC_SSC_PDC=y || (SND_ATMEL_SOC_SSC_PDC=m && SND_ATMEL_SOC_SSC=y)
->  
->  config SND_ATMEL_SOC_DMA
->  	tristate
->  	select SND_SOC_GENERIC_DMAENGINE_PCM
-> +	default m if SND_ATMEL_SOC_SSC_DMA=m && SND_ATMEL_SOC_SSC=m
-> +	default y if SND_ATMEL_SOC_SSC_DMA=y || (SND_ATMEL_SOC_SSC_DMA=m && SND_ATMEL_SOC_SSC=y)
->  
->  config SND_ATMEL_SOC_SSC
->  	tristate
-> 
+thx for the correction.
 
+> > nr_pages (e.g. 1GB request would be aligned to 1GB).
+> > 
+> 
+> I'd probably add "This function will miss allocation opportunities if
+> nr_pages is not a power of two (and the implicit alignment is bogus)."
+
+This is again an implementation detail and quite a confusing one to
+whoever not familiar with the MM internals. And to be fair even a proper
+alignment doesn't give you any stronger guarantee as long as the
+allocation operates on non movable zones anyway.
+-- 
+Michal Hocko
+SUSE Labs
