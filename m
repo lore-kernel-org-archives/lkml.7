@@ -2,136 +2,71 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E93D6FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE02ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBB2D20854
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDE1721925
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:22:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503238AbfJQSVv (ORCPT
+        id S2503304AbfJQSWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 14:21:51 -0400
-Received: from muru.com ([72.249.23.125]:37840 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2503219AbfJQSVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 14:21:49 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id E581C804F;
-        Thu, 17 Oct 2019 18:22:21 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     linux-omap@vger.kernel.org
-Cc:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] bus: ti-sysc: Fix watchdog quirk handling
-Date:   Thu, 17 Oct 2019 11:21:44 -0700
-Message-Id: <20191017182144.10175-1-tony@atomide.com>
-X-Mailer: git-send-email 2.23.0
+        Thu, 17 Oct 2019 14:22:33 -0400
+Received: from mail-pg1-f176.google.com ([209.85.215.176]:40616 "EHLO
+        mail-pg1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503284AbfJQSWb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 14:22:31 -0400
+Received: by mail-pg1-f176.google.com with SMTP id e13so1815424pga.7
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 11:22:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:date:message-id:mime-version
+         :content-transfer-encoding:cc:from:to;
+        bh=qJ6/zX4CJXyT8jN+BKjWcB5Fc+YC0TUGB76PLX5dDk8=;
+        b=IamCJkFhkOXIgyr4JwFYbNzQ/1bnYUb4+2zCKU4uDc57G5D451moKId5xE/I7KFBF+
+         y33EFihafHCfVn8SzWlMbKWveB6w3yi7a+294K8BmcYWGOAcAZ3+19mwfOkmN0WA/oo8
+         t3n0mLyw+WwzENnZfH4W+9vHhR4k2zfXHDKG4mEK+ZLwNzPLGQK2lQNkJXeCLjwZ+z8f
+         1CwXkoPBbLfwK09riRQHbgAJt0CPqZryAez2CxO3874GywPpBSjx+ednljO8+n7hAQqk
+         oYZ1YwDYvkyicMwFMEOOIoEkOxg6sNFWrYcfZeIwM1y/Lodte9Ql/L+SON861lx67F91
+         LPqQ==
+X-Gm-Message-State: APjAAAXVeS4WlrQs+5H0HpcUqeeKCPBMWPApd3av1ywbHuDsdvBybdFc
+        1IwRMRsE9gvgQ5U5ZHLNq1qX/A==
+X-Google-Smtp-Source: APXvYqyJNHvaSBqrZiRuB0+cioJyGR8wen484kCJG+fmxEESVRjqBPiqSzXAunoRqzPXJMJEDNhhdA==
+X-Received: by 2002:a62:b504:: with SMTP id y4mr1684760pfe.198.1571336549961;
+        Thu, 17 Oct 2019 11:22:29 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id p190sm3078797pfb.160.2019.10.17.11.22.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 11:22:29 -0700 (PDT)
+Subject: PCI/MSI: Remove the PCI_MSI_IRQ_DOMAIN architecture whitelist
+Date:   Thu, 17 Oct 2019 11:19:34 -0700
+Message-Id: <20191017181937.7004-1-palmer@sifive.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Cc:     tony.luck@intel.com, fenghua.yu@intel.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, bhelgaas@google.com, will@kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        kstewart@linuxfoundation.org, pbonzini@redhat.com,
+        firoz.khan@linaro.org, yamada.masahiro@socionext.com,
+        longman@redhat.com, mingo@kernel.org, peterz@infradead.org,
+        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-pci@vger.kernel.org
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     Christoph Hellwig <hch@infradead.org>, michal.simek@xilinx.com,
+        helgaas@kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I noticed that when probed with ti-sysc, watchdog can trigger on am3, am4
-and dra7 causing a device reset.
+This came up in the context of the microblaze port, where a patch was
+recently posted to extend the whitelist.
 
-Turns out I made several mistakes implementing the watchdog quirk handling:
 
-1. We must do both writes to spr register
-
-2. We must also call the reset quirk on disable
-
-3. On am3 and am4 we need to also set swsup quirk flag
-
-I probably only tested this earlier with watchdog service running when the
-watchdog never gets disabled.
-
-Fixes: 4e23be473e30 ("bus: ti-sysc: Add support for module specific reset quirks")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- drivers/bus/ti-sysc.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -74,6 +74,7 @@ static const char * const clock_names[SYSC_MAX_CLOCKS] = {
-  * @clk_disable_quirk: module specific clock disable quirk
-  * @reset_done_quirk: module specific reset done quirk
-  * @module_enable_quirk: module specific enable quirk
-+ * @module_disable_quirk: module specific disable quirk
-  */
- struct sysc {
- 	struct device *dev;
-@@ -100,6 +101,7 @@ struct sysc {
- 	void (*clk_disable_quirk)(struct sysc *sysc);
- 	void (*reset_done_quirk)(struct sysc *sysc);
- 	void (*module_enable_quirk)(struct sysc *sysc);
-+	void (*module_disable_quirk)(struct sysc *sysc);
- };
- 
- static void sysc_parse_dts_quirks(struct sysc *ddata, struct device_node *np,
-@@ -959,6 +961,9 @@ static int sysc_disable_module(struct device *dev)
- 	if (ddata->offsets[SYSC_SYSCONFIG] == -ENODEV)
- 		return 0;
- 
-+	if (ddata->module_disable_quirk)
-+		ddata->module_disable_quirk(ddata);
-+
- 	regbits = ddata->cap->regbits;
- 	reg = sysc_read(ddata, ddata->offsets[SYSC_SYSCONFIG]);
- 
-@@ -1248,6 +1253,9 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 		   SYSC_MODULE_QUIRK_SGX),
- 	SYSC_QUIRK("wdt", 0, 0, 0x10, 0x14, 0x502a0500, 0xfffff0f0,
- 		   SYSC_MODULE_QUIRK_WDT),
-+	/* Watchdog on am3 and am4 */
-+	SYSC_QUIRK("wdt", 0x44e35000, 0, 0x10, 0x14, 0x502a0500, 0xfffff0f0,
-+		   SYSC_MODULE_QUIRK_WDT | SYSC_QUIRK_SWSUP_SIDLE),
- 
- #ifdef DEBUG
- 	SYSC_QUIRK("adc", 0, 0, 0x10, -1, 0x47300001, 0xffffffff, 0),
-@@ -1440,14 +1448,14 @@ static void sysc_reset_done_quirk_wdt(struct sysc *ddata)
- 				   !(val & 0x10), 100,
- 				   MAX_MODULE_SOFTRESET_WAIT);
- 	if (error)
--		dev_warn(ddata->dev, "wdt disable spr failed\n");
-+		dev_warn(ddata->dev, "wdt disable step1 failed\n");
- 
--	sysc_write(ddata, wps, 0x5555);
-+	sysc_write(ddata, spr, 0x5555);
- 	error = readl_poll_timeout(ddata->module_va + wps, val,
- 				   !(val & 0x10), 100,
- 				   MAX_MODULE_SOFTRESET_WAIT);
- 	if (error)
--		dev_warn(ddata->dev, "wdt disable wps failed\n");
-+		dev_warn(ddata->dev, "wdt disable step2 failed\n");
- }
- 
- static void sysc_init_module_quirks(struct sysc *ddata)
-@@ -1471,8 +1479,10 @@ static void sysc_init_module_quirks(struct sysc *ddata)
- 	if (ddata->cfg.quirks & SYSC_MODULE_QUIRK_SGX)
- 		ddata->module_enable_quirk = sysc_module_enable_quirk_sgx;
- 
--	if (ddata->cfg.quirks & SYSC_MODULE_QUIRK_WDT)
-+	if (ddata->cfg.quirks & SYSC_MODULE_QUIRK_WDT) {
- 		ddata->reset_done_quirk = sysc_reset_done_quirk_wdt;
-+		ddata->module_disable_quirk = sysc_reset_done_quirk_wdt;
-+	}
- }
- 
- static int sysc_clockdomain_init(struct sysc *ddata)
--- 
-2.23.0
