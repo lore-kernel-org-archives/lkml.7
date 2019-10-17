@@ -2,107 +2,97 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B4EECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 15:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCD6FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 15:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A32820869
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 15:48:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eD+xx+nm"
+	by mail.kernel.org (Postfix) with ESMTP id D3B9221835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 15:48:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571327336;
+	bh=x7ytOe7ngBLCL0IqMlx2YLDHSN6K+mWYaq3Lc/ow294=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=Pnb021G3m4bIIAu8j+1t4U6fJGcQPCo233MXUbsWCABUJuIvfcyJekib9bKYik7iP
+	 E6XXY1Ulrny0oaQ7TcfPVJAj75tTaiZyCzo5kFKKD+DQC4JooaP1xyDlkb0QTYmL1v
+	 d0tyXl6uf8Cq6LSzIDTbQtCUvjfl+VB1sbg+Hx/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395067AbfJQPsH (ORCPT
+        id S2395208AbfJQPsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 11:48:07 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58480 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732271AbfJQPsG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 11:48:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=t/4nriyqxwybxWS8nhC3dQP2EfSOy3yClE/DGRe068o=; b=eD+xx+nm6Z1uXd+bLUaE2KfyD
-        NjBhQu8FqV0bJq7YLOItjTd6TP+fj/AZELYB4E80AgJs3JtLTz5ax2Iju7fDcboVGp6CK0ZNU/QVg
-        Pby/2/Sajej5gnMqdlvOkYpBrC+qElqgKRtBvcyuYtgE20Sgpv3IpqfXeiab2aGKzITomHyWXUOgc
-        gB0wdbJSk6/sKZFfef06+awBH3qh62penrG4+nBC+ZN3TD1lX2aaQI38iD/TNMNVyuqUFxc+YN7xG
-        oxeQjslGXvUfKXCAODn5NFOvjLa7YSfTg6gwD9I+B5FR50K4K4QoR8jrHav0dBusEsQ/e618CxWze
-        ceYFIlzcw==;
-Received: from [2601:1c0:6280:3f0::9ef4]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iL80T-0007tw-0o; Thu, 17 Oct 2019 15:48:05 +0000
-Subject: Re: [PATCH] scripts : mksysmap : NM variable missed the value,so
- fixed
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        yamada.masahiro@socionext.com, michal.lkml@markovi.net
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org
-References: <20191017102506.22192-1-unixbhaskar@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <265d9be5-217d-3f67-ba94-095efdcf5787@infradead.org>
-Date:   Thu, 17 Oct 2019 08:48:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 17 Oct 2019 11:48:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43218 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731907AbfJQPsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 11:48:55 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5285220869;
+        Thu, 17 Oct 2019 15:48:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571327334;
+        bh=x7ytOe7ngBLCL0IqMlx2YLDHSN6K+mWYaq3Lc/ow294=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=Nr4BhFNoD1XZmbL1oepItE12NliaqynEWLLXlpirP3jvRsafIo0i9jUmR7Bts5Y0G
+         XGFL/8h+EQmrZMy1ciFaf08sozYqP2rZisAfq82f1iJBCviEfaRAc8ZZnQ3Dvaj+AZ
+         r3q/Mc3oA3o7mGOIroONkF3Br3S+loJlElpMbVy0=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20191017102506.22192-1-unixbhaskar@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190927180559.18162-1-steve@sk2.org>
+References: <cec235b3e2e4e3b206fa9444b643fa56@sk2.org> <20190927180559.18162-1-steve@sk2.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Kitt <steve@sk2.org>, Tero Kristo <t-kristo@ti.com>,
+        Tony Lindgren <tony@atomide.com>, linux-clk@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
+Subject: Re: [PATCH v2] clk/ti/adpll: allocate room for terminating null
+User-Agent: alot/0.8.1
+Date:   Thu, 17 Oct 2019 08:48:53 -0700
+Message-Id: <20191017154854.5285220869@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/17/19 3:25 AM, Bhaskar Chowdhury wrote:
-> This patch will provide the missing value for NM variable.
-> 
-
-Hi,
-
-Does this patch fix some build error that you have encountered?
-If so, please describe it and how to cause it.
-
-
-> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Quoting Stephen Kitt (2019-09-27 11:05:59)
+> The buffer allocated in ti_adpll_clk_get_name doesn't account for the
+> terminating null. This patch switches to ka_sprintf to avoid
+> overflowing.
+>=20
+> Signed-off-by: Stephen Kitt <steve@sk2.org>
 > ---
-> TO all,
-> Adjusted the subject line, missed in previous one,sorry
-> 
->  scripts/mksysmap | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/scripts/mksysmap b/scripts/mksysmap
-> index a35acc0d0b82..4b2f45c45f14 100755
-> --- a/scripts/mksysmap
-> +++ b/scripts/mksysmap
-> @@ -40,5 +40,5 @@
->  # 'W' or 'w'. __crc_ are 'A' and placed in the middle
->  # so we just ignore them to let readprofile continue to work.
->  # (At least sparc64 has __crc_ in the middle).
+>  drivers/clk/ti/adpll.c | 10 ++--------
+>  1 file changed, 2 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/clk/ti/adpll.c b/drivers/clk/ti/adpll.c
+> index fdfb90058504..021cf9e2b4db 100644
+> --- a/drivers/clk/ti/adpll.c
+> +++ b/drivers/clk/ti/adpll.c
+> @@ -195,14 +195,8 @@ static const char *ti_adpll_clk_get_name(struct ti_a=
+dpll_data *d,
+>                         return NULL;
+>         } else {
+>                 const char *base_name =3D "adpll";
+
+This is used once.
+
+> -               char *buf;
 > -
-> +NM=$(which nm)
+> -               buf =3D devm_kzalloc(d->dev, 8 + 1 + strlen(base_name) + =
+1 +
+> -                                   strlen(postfix), GFP_KERNEL);
+> -               if (!buf)
+> -                       return NULL;
+> -               sprintf(buf, "%08lx.%s.%s", d->pa, base_name, postfix);
+> -               name =3D buf;
+> +               name =3D devm_kasprintf(d->dev, GFP_KERNEL, "%08lx.%s.%s",
 
-That's not the POSIX way to do that.  It should be
+So why not make this "%08lx.adpll.%s"?
 
-NM=$(command -v nm)
-
-But why is this needed at all?
-The top-level Makefile exports the NM variable (and many more) to scripts
-that it calls.
-
->  $NM -n $1 | grep -v '\( [aNUw] \)\|\(__crc_\)\|\( \$[adt]\)\|\( .L\)' > $2
-> --
-> 2.21.0
-> 
-
-
--- 
-~Randy
-
+> +                                     d->pa, base_name, postfix);
+>         }
