@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C66ECE597
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9589ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D401B21925
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C567320820
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:38:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="J7Oc2tPA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PYSrxZsg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503133AbfJQRiY (ORCPT
+        id S2503164AbfJQRid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 13:38:24 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37842 "EHLO
+        Thu, 17 Oct 2019 13:38:33 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38360 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503117AbfJQRiT (ORCPT
+        with ESMTP id S2503129AbfJQRiX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 13:38:19 -0400
+        Thu, 17 Oct 2019 13:38:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=beV2TrydHrYLZOLTznLZKJeyXBjPaXx2Er11cQ1xqkA=; b=J7Oc2tPAZn7jV+kT/yfMdDRbmc
-        tnkCInRWuy5HpFKdYrhvLMIIYvQXpX8nqkutcL3vnGIk3GZlGZ/mTD6J9t872R0LAlya+bMULb3te
-        nPIix4Jz2WZva7tgqfCxVhbZ6pc21tIgcuIxM5UOBpkBUDyr6d5muuDHLnEO+Pd3Om0jh7HBZWcD8
-        0J7mT4E5skGJD1y6Nk0SHtjs/nBI7ohOv0rpg/ai3eNp1/SrcwMAAts2TmQCg6y0jcxFyEpGDSAYC
-        iHsYwp//40OWx6wlD3n2q2i6QUxgmZNcdCqJfbcAkEdlXFL1zOVGVnYG0VHNsUKRZFhB5slTEPn0s
-        2zxo7HVw==;
+        bh=21a37jt2II3dx18r6KfoTWUT/y2eaPKVhcMYtWfTTv4=; b=PYSrxZsg8mE/e0WedJEf76y2ia
+        x9WyUu9SA52INx6R7iStxsnRJbqFoNT31XFg9n01oaTRJtvjfypH2n3eiLkU675GZrwoG6uN7INVy
+        UV/bnHMut6OW1sQ5NwTXolsieC0LVlsIz1COoiwVB1v962YDqOdhpplifiFAdrHWtRedbIwEwVOLv
+        eCzb9SdL+lOLrycd4UxvSa4chGdSzIomXSQOsqazjwhZjVWx4vCzGiMJqRYC8V+nH+gNVebphwOyc
+        s+pDC5ikmntZvPbDqfsXaDgBOT+RMQja/Pn8odpBHzU+oho6Izr5rIHGF40EUWwaK8CBmmsJAB3JO
+        eGBZNY1Q==;
 Received: from [2001:4bb8:18c:d7b:c70:4a89:bc61:3] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iL9j5-00081a-Qb; Thu, 17 Oct 2019 17:38:16 +0000
+        id 1iL9jB-00089A-3v; Thu, 17 Oct 2019 17:38:21 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Palmer Dabbelt <palmer@sifive.com>,
         Paul Walmsley <paul.walmsley@sifive.com>
 Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 12/15] riscv: clear the instruction cache and all registers when booting
-Date:   Thu, 17 Oct 2019 19:37:40 +0200
-Message-Id: <20191017173743.5430-13-hch@lst.de>
+Subject: [PATCH 14/15] riscv: provide a flat image loader
+Date:   Thu, 17 Oct 2019 19:37:42 +0200
+Message-Id: <20191017173743.5430-15-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191017173743.5430-1-hch@lst.de>
 References: <20191017173743.5430-1-hch@lst.de>
@@ -57,148 +57,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we get booted we want a clear slate without any leaks from previous
-supervisors or the firmware.  Flush the instruction cache and then clear
-all registers to known good values.  This is really important for the
-upcoming nommu support that runs on M-mode, but can't really harm when
-running in S-mode either.  Vaguely based on the concepts from opensbi.
+This allows just loading the kernel at a pre-set address without
+qemu going bonkers trying to map the ELF file.
+
+Contains a controbution from Aurabindo Jayamohanan to reuse the
+PAGE_OFFSET definition.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/riscv/include/asm/csr.h |  1 +
- arch/riscv/kernel/head.S     | 88 +++++++++++++++++++++++++++++++++++-
- 2 files changed, 88 insertions(+), 1 deletion(-)
+ arch/riscv/Makefile          | 13 +++++++++----
+ arch/riscv/boot/Makefile     |  7 ++++++-
+ arch/riscv/boot/loader.S     |  8 ++++++++
+ arch/riscv/boot/loader.lds.S | 16 ++++++++++++++++
+ 4 files changed, 39 insertions(+), 5 deletions(-)
+ create mode 100644 arch/riscv/boot/loader.S
+ create mode 100644 arch/riscv/boot/loader.lds.S
 
-diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
-index d0b5113e1a54..ee0101278608 100644
---- a/arch/riscv/include/asm/csr.h
-+++ b/arch/riscv/include/asm/csr.h
-@@ -83,6 +83,7 @@
- /* symbolic CSR names: */
- #define CSR_MHARTID		0xf14
- #define CSR_MSTATUS		0x300
-+#define CSR_MISA		0x301
- #define CSR_MIE			0x304
- #define CSR_MTVEC		0x305
- #define CSR_MSCRATCH		0x340
-diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-index 583784cb3a32..25867b99cc95 100644
---- a/arch/riscv/kernel/head.S
-+++ b/arch/riscv/kernel/head.S
-@@ -11,6 +11,7 @@
- #include <asm/thread_info.h>
- #include <asm/page.h>
- #include <asm/csr.h>
-+#include <asm/hwcap.h>
- #include <asm/image.h>
+diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+index f5e914210245..b9009a2fbaf5 100644
+--- a/arch/riscv/Makefile
++++ b/arch/riscv/Makefile
+@@ -83,13 +83,18 @@ PHONY += vdso_install
+ vdso_install:
+ 	$(Q)$(MAKE) $(build)=arch/riscv/kernel/vdso $@
  
- __INIT
-@@ -51,12 +52,18 @@ _start_kernel:
- 	csrw CSR_XIP, zero
+-all: Image.gz
++ifeq ($(CONFIG_RISCV_M_MODE),y)
++KBUILD_IMAGE := $(boot)/loader
++else
++KBUILD_IMAGE := $(boot)/Image.gz
++endif
++BOOT_TARGETS := Image Image.gz loader
  
- #ifdef CONFIG_RISCV_M_MODE
-+	/* flush the instruction cache */
-+	fence.i
-+
-+	/* Reset all registers except ra, a0, a1 */
-+	call reset_regs
-+
- 	/*
- 	 * The hartid in a0 is expected later on, and we have no firmware
- 	 * to hand it to us.
- 	 */
- 	csrr a0, CSR_MHARTID
--#endif
-+#endif /* CONFIG_RISCV_M_MODE */
+-Image: vmlinux
+-	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
++all:	$(notdir $(KBUILD_IMAGE))
  
- 	/* Load the global pointer */
- .option push
-@@ -203,6 +210,85 @@ relocate:
- 	j .Lsecondary_park
- END(_start)
+-Image.%: Image
++$(BOOT_TARGETS): vmlinux
+ 	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
++	@$(kecho) '  Kernel: $(boot)/$@ is ready'
  
-+#ifdef CONFIG_RISCV_M_MODE
-+ENTRY(reset_regs)
-+	li	sp, 0
-+	li	gp, 0
-+	li	tp, 0
-+	li	t0, 0
-+	li	t1, 0
-+	li	t2, 0
-+	li	s0, 0
-+	li	s1, 0
-+	li	a2, 0
-+	li	a3, 0
-+	li	a4, 0
-+	li	a5, 0
-+	li	a6, 0
-+	li	a7, 0
-+	li	s2, 0
-+	li	s3, 0
-+	li	s4, 0
-+	li	s5, 0
-+	li	s6, 0
-+	li	s7, 0
-+	li	s8, 0
-+	li	s9, 0
-+	li	s10, 0
-+	li	s11, 0
-+	li	t3, 0
-+	li	t4, 0
-+	li	t5, 0
-+	li	t6, 0
-+	csrw	sscratch, 0
+ zinstall install:
+ 	$(Q)$(MAKE) $(build)=$(boot) $@
+diff --git a/arch/riscv/boot/Makefile b/arch/riscv/boot/Makefile
+index 0990a9fdbe5d..8639e0dd2cdf 100644
+--- a/arch/riscv/boot/Makefile
++++ b/arch/riscv/boot/Makefile
+@@ -16,7 +16,7 @@
+ 
+ OBJCOPYFLAGS_Image :=-O binary -R .note -R .note.gnu.build-id -R .comment -S
+ 
+-targets := Image
++targets := Image loader
+ 
+ $(obj)/Image: vmlinux FORCE
+ 	$(call if_changed,objcopy)
+@@ -24,6 +24,11 @@ $(obj)/Image: vmlinux FORCE
+ $(obj)/Image.gz: $(obj)/Image FORCE
+ 	$(call if_changed,gzip)
+ 
++loader.o: $(src)/loader.S $(obj)/Image
 +
-+#ifdef CONFIG_FPU
-+	csrr	t0, CSR_MISA
-+	andi	t0, t0, (COMPAT_HWCAP_ISA_F | COMPAT_HWCAP_ISA_D)
-+	bnez	t0, .Lreset_regs_done
++$(obj)/loader: $(obj)/loader.o $(obj)/Image $(obj)/loader.lds FORCE
++	$(Q)$(LD) -T $(src)/loader.lds -o $@ $(obj)/loader.o
 +
-+	li	t1, SR_FS
-+	csrs	CSR_XSTATUS, t1
-+	fmv.s.x	f0, zero
-+	fmv.s.x	f1, zero
-+	fmv.s.x	f2, zero
-+	fmv.s.x	f3, zero
-+	fmv.s.x	f4, zero
-+	fmv.s.x	f5, zero
-+	fmv.s.x	f6, zero
-+	fmv.s.x	f7, zero
-+	fmv.s.x	f8, zero
-+	fmv.s.x	f9, zero
-+	fmv.s.x	f10, zero
-+	fmv.s.x	f11, zero
-+	fmv.s.x	f12, zero
-+	fmv.s.x	f13, zero
-+	fmv.s.x	f14, zero
-+	fmv.s.x	f15, zero
-+	fmv.s.x	f16, zero
-+	fmv.s.x	f17, zero
-+	fmv.s.x	f18, zero
-+	fmv.s.x	f19, zero
-+	fmv.s.x	f20, zero
-+	fmv.s.x	f21, zero
-+	fmv.s.x	f22, zero
-+	fmv.s.x	f23, zero
-+	fmv.s.x	f24, zero
-+	fmv.s.x	f25, zero
-+	fmv.s.x	f26, zero
-+	fmv.s.x	f27, zero
-+	fmv.s.x	f28, zero
-+	fmv.s.x	f29, zero
-+	fmv.s.x	f30, zero
-+	fmv.s.x	f31, zero
-+	csrw	fcsr, 0
-+	/* note that the caller must clear SR_FS */
-+#endif /* CONFIG_FPU */
-+.Lreset_regs_done:
-+	ret
-+END(reset_regs)
-+#endif /* CONFIG_RISCV_M_MODE */
+ install:
+ 	$(CONFIG_SHELL) $(srctree)/$(src)/install.sh $(KERNELRELEASE) \
+ 	$(obj)/Image System.map "$(INSTALL_PATH)"
+diff --git a/arch/riscv/boot/loader.S b/arch/riscv/boot/loader.S
+new file mode 100644
+index 000000000000..5586e2610dbb
+--- /dev/null
++++ b/arch/riscv/boot/loader.S
+@@ -0,0 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
 +
- __PAGE_ALIGNED_BSS
- 	/* Empty zero page */
- 	.balign PAGE_SIZE
++	.align 4
++	.section .payload, "ax", %progbits
++	.globl _start
++_start:
++	.incbin "arch/riscv/boot/Image"
++
+diff --git a/arch/riscv/boot/loader.lds.S b/arch/riscv/boot/loader.lds.S
+new file mode 100644
+index 000000000000..47a5003c2e28
+--- /dev/null
++++ b/arch/riscv/boot/loader.lds.S
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#include <asm/page.h>
++
++OUTPUT_ARCH(riscv)
++ENTRY(_start)
++
++SECTIONS
++{
++	. = PAGE_OFFSET;
++
++	.payload : {
++		*(.payload)
++		. = ALIGN(8);
++	}
++}
 -- 
 2.20.1
 
