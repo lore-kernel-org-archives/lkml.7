@@ -2,131 +2,139 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4B2FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F59ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97DFE20640
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6191C2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:37:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394401AbfJQThR (ORCPT
+        id S2394569AbfJQThh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 15:37:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:5549 "EHLO mx1.redhat.com"
+        Thu, 17 Oct 2019 15:37:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728856AbfJQThR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 15:37:17 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727148AbfJQThg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 15:37:36 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 73C45308FFB1;
-        Thu, 17 Oct 2019 19:37:16 +0000 (UTC)
-Received: from rt4.app.eng.rdu2.redhat.com (rt4.app.eng.rdu2.redhat.com [10.10.161.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4943C19C70;
-        Thu, 17 Oct 2019 19:37:16 +0000 (UTC)
-Received: from rt4.app.eng.rdu2.redhat.com (localhost [127.0.0.1])
-        by rt4.app.eng.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id x9HJbFjn017092;
-        Thu, 17 Oct 2019 15:37:15 -0400
-Received: (from apache@localhost)
-        by rt4.app.eng.rdu2.redhat.com (8.14.4/8.14.4/Submit) id x9HJbECL017089;
-        Thu, 17 Oct 2019 15:37:14 -0400
-From:   Red Hat Product Security <secalert@redhat.com>
-X-PGP-Public-Key: https://www.redhat.com/security/650d5882.txt
-Subject: [engineering.redhat.com #498403] Re: [PATCH v2] nbd_genl_status: null check for nla_nest_start
-Reply-To: secalert@redhat.com
-In-Reply-To: <CAEkB2ES8rc4kkPwA+okfMa9CpFoDqmt=tx8H8vHZKBCfw9L_tg@mail.gmail.com>
-References: <RT-Ticket-498403@engineering.redhat.com>
- <20190729130912.7imtg3hfnvb4lt2y@MacBook-Pro-91.local>
- <20190729164226.22632-1-navid.emamdoost@gmail.com>
- <20190910113521.GA9895@unicorn.suse.cz>
- <CAEkB2ES8rc4kkPwA+okfMa9CpFoDqmt=tx8H8vHZKBCfw9L_tg@mail.gmail.com>
-Message-ID: <rt-4.0.13-16866-1571341034-901.498403-5-0@engineering.redhat.com>
-X-RT-Loop-Prevention: engineering.redhat.com
-RT-Ticket: engineering.redhat.com #498403
-Managed-BY: RT 4.0.13 (http://www.bestpractical.com/rt/)
-RT-Originator: kbost@redhat.com
-To:     navid.emamdoost@gmail.com
-CC:     axboe@kernel.dk, emamd001@umn.edu, josef@toxicpanda.com,
-        kjlu@umn.edu, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mkubecek@suse.cz,
-        nbd@other.debian.org, smccaman@umn.edu
+        by mail.kernel.org (Postfix) with ESMTPSA id 8261320640;
+        Thu, 17 Oct 2019 19:37:35 +0000 (UTC)
+Date:   Thu, 17 Oct 2019 15:37:33 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [BUG] libtraceevent: perf script -g python segfaults
+Message-ID: <20191017153733.630cd5eb@gandalf.local.home>
+In-Reply-To: <20191017192832.GB3600@kernel.org>
+References: <20191017154205.GC8974@kernel.org>
+        <20191017143841.317b26b5@gandalf.local.home>
+        <20191017144114.48e25298@gandalf.local.home>
+        <20191017192832.GB3600@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="utf-8"
-X-RT-Original-Encoding: utf-8
-Date:   Thu, 17 Oct 2019 15:37:14 -0400
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 17 Oct 2019 19:37:16 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Navid,
+On Thu, 17 Oct 2019 16:28:32 -0300
+Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
 
-Not sure if you meant to cc secalert@redhat.com on this. If anything is needed
-from our side please let us know!
-
-On Wed Oct 16 22:17:42 2019, navid.emamdoost@gmail.com wrote:
-> Hi Michal, please check v3 at
-> https://lore.kernel.org/patchwork/patch/1126650/
->
->
-> Thanks,
-> Navid.
->
-> On Tue, Sep 10, 2019 at 6:35 AM Michal Kubecek <mkubecek@suse.cz>
-> wrote:
-> >
-> > (Just stumbled upon this patch when link to it came with a CVE bug
-> report.)
-> >
-> > On Mon, Jul 29, 2019 at 11:42:26AM -0500, Navid Emamdoost wrote:
-> > > nla_nest_start may fail and return NULL. The check is inserted,
-> and
-> > > errno is selected based on other call sites within the same source
-> code.
-> > > Update: removed extra new line.
-> > >
-> > > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> > > Reviewed-by: Bob Liu <bob.liu@oracle.com>
-> > > ---
-> > > drivers/block/nbd.c | 5 +++++
-> > > 1 file changed, 5 insertions(+)
-> > >
-> > > diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-> > > index 9bcde2325893..2410812d1e82 100644
-> > > --- a/drivers/block/nbd.c
-> > > +++ b/drivers/block/nbd.c
-> > > @@ -2149,6 +2149,11 @@ static int nbd_genl_status(struct sk_buff
-> *skb, struct genl_info *info)
-> > > }
-> > >
-> > > dev_list = nla_nest_start_noflag(reply,
-> NBD_ATTR_DEVICE_LIST);
-> > > + if (!dev_list) {
-> > > + ret = -EMSGSIZE;
-> > > + goto out;
-> > > + }
-> > > +
-> > > if (index == -1) {
-> > > ret = idr_for_each(&nbd_index_idr, &status_cb,
-> reply);
-> > > if (ret) {
-> >
-> > You should also call nlmsg_free(reply) when you bail out so that you
-> > don't introduce a memory leak.
-> >
-> > Michal Kubecek
->
->
+> Em Thu, Oct 17, 2019 at 02:41:14PM -0400, Steven Rostedt escreveu:
+> > On Thu, 17 Oct 2019 14:38:41 -0400
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> >   
+> > >  struct tep_event *trace_find_next_event(struct tep_handle *pevent,
+> > >  					struct tep_event *event)
+> > >  {
+> > > +	static struct tep_event **all_events;
+> > >  	static int idx;
+> > >  	int events_count;
+> > > -	struct tep_event *all_events;  
+> > 
+> > If we are going to use static variables, let's make them all static and
+> > optimize it a little more...  
+> 
+> I'll test it, but can't you have this somewhere else, i.e. at
+> tep_handle perhaps?
+> 
 >
 
+Or we can nuke the function entirely, it's a rather silly helper
+anyway. Just do this:
 
---
-Kat Bost
-Red Hat Product Security
+-- Steve
+
+
+diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
+index b93f36b887b5..f1d5f564aa46 100644
+--- a/tools/perf/util/scripting-engines/trace-event-perl.c
++++ b/tools/perf/util/scripting-engines/trace-event-perl.c
+@@ -537,10 +537,11 @@ static int perl_stop_script(void)
+ 
+ static int perl_generate_script(struct tep_handle *pevent, const char *outfile)
+ {
++	int i, not_first, count, nr_events;
++	struct tep_event **all_events;
+ 	struct tep_event *event = NULL;
+ 	struct tep_format_field *f;
+ 	char fname[PATH_MAX];
+-	int not_first, count;
+ 	FILE *ofp;
+ 
+ 	sprintf(fname, "%s.pl", outfile);
+@@ -601,8 +602,11 @@ sub print_backtrace\n\
+ }\n\n\
+ ");
+ 
++	nr_events = tep_get_events_count(pevent);
++	all_events = tep_list_events(pevent, TEP_EVENT_SORT_ID);
+ 
+-	while ((event = trace_find_next_event(pevent, event))) {
++	for (i = 0; all_events && i < nr_events; i++) {
++		event = all_events[i];
+ 		fprintf(ofp, "sub %s::%s\n{\n", event->system, event->name);
+ 		fprintf(ofp, "\tmy (");
+ 
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 87ef16a1b17e..2a148a10d0de 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -1590,10 +1590,11 @@ static int python_stop_script(void)
+ 
+ static int python_generate_script(struct tep_handle *pevent, const char *outfile)
+ {
++	int i, not_first, count, nr_events;
++	struct tep_event **all_events;
+ 	struct tep_event *event = NULL;
+ 	struct tep_format_field *f;
+ 	char fname[PATH_MAX];
+-	int not_first, count;
+ 	FILE *ofp;
+ 
+ 	sprintf(fname, "%s.py", outfile);
+@@ -1638,7 +1639,11 @@ static int python_generate_script(struct tep_handle *pevent, const char *outfile
+ 	fprintf(ofp, "def trace_end():\n");
+ 	fprintf(ofp, "\tprint(\"in trace_end\")\n\n");
+ 
+-	while ((event = trace_find_next_event(pevent, event))) {
++	nr_events = tep_get_events_count(pevent);
++	all_events = tep_list_events(pevent, TEP_EVENT_SORT_ID);
++
++	for (i = 0; all_events && i < nr_events; i++) {
++		event = all_events[i];
+ 		fprintf(ofp, "def %s__%s(", event->system, event->name);
+ 		fprintf(ofp, "event_name, ");
+ 		fprintf(ofp, "context, ");
+
 
