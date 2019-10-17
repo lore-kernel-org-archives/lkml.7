@@ -2,88 +2,111 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8E9FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6BAECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C23F321835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:20:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571340014;
-	bh=7BWE1KVItTeOF2g3R7b/ppytwtWMf5Yv1RJEMf2cdnw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=O81QtuHFISpenTAhFeOCKvFz7GbA4XtqnrWO08kXpN7lZ/kN5KCCI7FxztD0enrcZ
-	 7H06+eQaVbh7vZCz+Tn07ImEqYbnOU8iUlBkuSqqIBUXli0DEqGsanDBELLJ+nmTAH
-	 vWTyrvdKmgnE0A1oqiJ97iUdOUlxQQLwTDz5JBOU=
+	by mail.kernel.org (Postfix) with ESMTP id E27A820869
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:21:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393530AbfJQTUN (ORCPT
+        id S2407161AbfJQTVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 15:20:13 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46097 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727397AbfJQTUN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 15:20:13 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 89so2853108oth.13;
-        Thu, 17 Oct 2019 12:20:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H/qoyoMQ9W4I1/TYe0ldoyjtavCj7X+7Ce3KSIjFEFU=;
-        b=PelJKRk2DHJV3qBvE3sMdIIHJ6mZZq989mkneN8n3olSs4RWvIyYdpvEGJhy5RD1OI
-         HuxDZhvSdXmgGjaOzhZBHHGNTg6jiAg6Xm7OWoXKGt8EcM+3pkA9uTXcUmpOMPMKkTCW
-         aT4EVkcanTMTZ+O/0/JU65KmoDKH0H9Hdza1FLzoM2fkfCcxfYOZ1obL1+nCq+Jy57Ay
-         aQRR2MHYExlZB8Nk+l5kHQbvHgaZLTvDv9/xWLTSojpbWdluSLZapmDCLfIdqHBp40Jd
-         5S6+Nk7xNRKczlUvJ3ckMxQcar7bx9OzFLb3zBDu2Sl+zhtbV3pula6fch6OofXhCMr6
-         fjCA==
-X-Gm-Message-State: APjAAAUTodRptpWb4AhJj9RMFeoI7q3W1xzyCGUA2X8m/7i0eahoxj/t
-        b7x3FeJg1PWFV20NYiwF/RBsl6IKCPD1lXgmLLo=
-X-Google-Smtp-Source: APXvYqyAEnmPGU3ezJi7jTfyrQ8QxlGN+0MQ16rBMGX4W5MPPz1Cythbt53Gq7sGENDVVoRthO5D7hrXg2HjRkERjOY=
-X-Received: by 2002:a9d:459b:: with SMTP id x27mr4188702ote.167.1571340012633;
- Thu, 17 Oct 2019 12:20:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <1571272750-29798-1-git-send-email-zhenzhong.duan@oracle.com>
-In-Reply-To: <1571272750-29798-1-git-send-email-zhenzhong.duan@oracle.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 17 Oct 2019 21:20:01 +0200
-Message-ID: <CAJZ5v0h7+53bT4oF109b-ah3wjFNYxz+PNr7DOBQ7rpRKbtGWQ@mail.gmail.com>
-Subject: Re: [PATCH] cpuidle-haltpoll: make haltpoll aware of 'idle=' override
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Joao Martins <joao.m.martins@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 17 Oct 2019 15:21:07 -0400
+Received: from mga12.intel.com ([192.55.52.136]:22068 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727397AbfJQTVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 15:21:07 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 12:21:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,308,1566889200"; 
+   d="scan'208";a="397690533"
+Received: from marshy.an.intel.com ([10.122.105.159])
+  by fmsmga006.fm.intel.com with ESMTP; 17 Oct 2019 12:21:06 -0700
+From:   richard.gong@linux.intel.com
+To:     dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     richard.gong@linux.intel.com, Richard Gong <richard.gong@intel.com>
+Subject: [PATCHv1] arm64: dts: agilex: add service layer, fpga manager and fpga region
+Date:   Thu, 17 Oct 2019 14:34:40 -0500
+Message-Id: <1571340880-18421-1-git-send-email-richard.gong@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 2:41 AM Zhenzhong Duan
-<zhenzhong.duan@oracle.com> wrote:
->
-> Currenly haltpoll isn't aware of the 'idle=' override, the priority is
-> 'idle=poll' > haltpoll > 'idle=halt'. When 'idle=poll' is used, cpuidle
-> driver is bypassed but current_driver in sys still shows 'haltpoll'.
->
-> When 'idle=halt' is used, haltpoll take precedence and make 'idle=halt'
-> no effect.
->
-> Add a check to not load haltpoll driver if there is 'idle='
+From: Richard Gong <richard.gong@intel.com>
 
-OK
+Add service layer, fpga manager and fpga region to the device tree
+on Intel Agilex platform.
 
-> and haltpoll
-> is built in. If haltpoll is built as a module, still give a chance for
-> admin to use it despite 'idle='.
+Signed-off-by: Richard Gong <richard.gong@intel.com>
+---
+ arch/arm64/boot/dts/intel/socfpga_agilex.dtsi | 32 +++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-Why exactly?  Do you have any particular use case in mind?
+diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
+index 36abc25..94090c6 100644
+--- a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
++++ b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
+@@ -12,6 +12,19 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		service_reserved: svcbuffer@0 {
++			compatible = "shared-dma-pool";
++			reg = <0x0 0x0 0x0 0x1000000>;
++			alignment = <0x1000>;
++			no-map;
++		};
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -81,6 +94,13 @@
+ 		interrupt-parent = <&intc>;
+ 		ranges = <0 0 0 0xffffffff>;
+ 
++		base_fpga_region {
++			#address-cells = <0x1>;
++			#size-cells = <0x1>;
++			compatible = "fpga-region";
++			fpga-mgr = <&fpga_mgr>;
++		};
++
+ 		gmac0: ethernet@ff800000 {
+ 			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.74a", "snps,dwmac";
+ 			reg = <0xff800000 0x2000>;
+@@ -442,5 +462,17 @@
+ 
+ 			status = "disabled";
+ 		};
++
++		firmware {
++			svc {
++				compatible = "intel,stratix10-svc";
++				method = "smc";
++				memory-region = <&service_reserved>;
++
++				fpga_mgr: fpga-mgr {
++					compatible = "intel,stratix10-soc-fpga-mgr";
++				};
++			};
++		};
+ 	};
+ };
+-- 
+2.7.4
 
-Otherwise I'd prefer the behavior to be consistent regardless of
-whether or not it is a module..
