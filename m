@@ -2,360 +2,325 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B50FA3735
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 837F7ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59E682064B
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 482B12064B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:27:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M2+1Qx/D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502294AbfJQM0Q (ORCPT
+        id S2409387AbfJQM1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 08:26:16 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:60231 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728554AbfJQM0O (ORCPT
+        Thu, 17 Oct 2019 08:27:01 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38628 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406225AbfJQM1A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:26:14 -0400
-X-Originating-IP: 86.207.98.53
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: kamel.bouhara@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 5941E20007;
-        Thu, 17 Oct 2019 12:26:11 +0000 (UTC)
-From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kamel Bouhara <kamel.bouhara@bootlin.com>,
-        =?UTF-8?q?K=C3=A9vin=20RAYMOND?= <k.raymond@overkiz.com>,
-        Mickael GARDET <m.gardet@overkiz.com>
-Subject: [PATCH 2/2] ARM: dts: at91: add a common kizboxmini dtsi file
-Date:   Thu, 17 Oct 2019 14:26:08 +0200
-Message-Id: <20191017122608.18991-1-kamel.bouhara@bootlin.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191017094853.14669-1-kamel.bouhara@bootlin.com>
-References: <20191017094853.14669-1-kamel.bouhara@bootlin.com>
+        Thu, 17 Oct 2019 08:27:00 -0400
+Received: by mail-wr1-f67.google.com with SMTP id o15so1699843wru.5
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 05:26:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=e5PXvkJj6yLgLLpU0V58xaLs23PCozUwXaPXAmVU3f0=;
+        b=M2+1Qx/DuhYBuThmcJfx5JfLuZjkWpvQDesjuHxTZhU9PtIHUdL/6uku69PjxWiFS0
+         izL2XiCoH8HlOCBoynrQsmJWHBCw2SxY7rXrVVH3yHulOIoF5CTvk6jXRZDSkn1W0qoC
+         k4Z69DTZEC67KFn2mZmNGzRgt6tQw9k3d6LS5FXJN3jRbM6AGkE/OvAkDLMb74TMFKOj
+         gkoAVRzzD7B40WH5J7S+jxmQieTt7TFSP+3DVU4vkDWXslo+sopj8M1Oi3kXFP8zGgbl
+         81dAGokpcP2vQZw8NSMLOE2+TelgnrLf8l2oA/HZz4dsNrw+ExOotvKGCPKa4DSehi/B
+         izBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=e5PXvkJj6yLgLLpU0V58xaLs23PCozUwXaPXAmVU3f0=;
+        b=fp6doFJ/JahaK/EJpPv0O99VBqUBNGu4c9qoLVk38RaUk9GeqrueKqTJhM4ke7lLg1
+         Ji1RshCVau2lJmyN1rnhVCMsmwhXwE3tWYnr6T7CkyQvKIgaBGD+xUivUiG7FX2uy50S
+         ozA4Ug7jqZLrnuy68q6SSu+biOu8k5TxKw4pTMzzxQDdKeKbjUrd/vhg1l71ulbTN7vm
+         57jSVQaySOGip783rz0P5cDfqFv0wxbA8BR+bTsbBT/1vnDZjL1Il6iULyRYxdpFWwIR
+         RO6I72Fr3FJ3ky3yA6PSSo73p/I77uK+cP8XCk2pbhHWI6mMRtMKYCcIHm/hk4ULcVuo
+         2PQg==
+X-Gm-Message-State: APjAAAUtMXgyQy73BAB8MqEL9dU8Wue1j4CotuwZBJ4Jv6G2OiBuX9Xe
+        6xA7xDxqXuBDFntIK7wyMHM7IA==
+X-Google-Smtp-Source: APXvYqzyogR392IihF9V6Qtqx5jcBT3nSHcny6/n70UWDhG9oPfn0XgXCOSrbIDl4TXqD5bQtmy5Sw==
+X-Received: by 2002:adf:a157:: with SMTP id r23mr2691445wrr.51.1571315215846;
+        Thu, 17 Oct 2019 05:26:55 -0700 (PDT)
+Received: from dell ([95.149.164.47])
+        by smtp.gmail.com with ESMTPSA id o22sm2299542wra.96.2019.10.17.05.26.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 17 Oct 2019 05:26:55 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 13:26:53 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Kiran Gunda <kgunda@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
+        daniel.thompson@linaro.org, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH V7 6/6] backlight: qcom-wled: Add auto string detection
+ logic
+Message-ID: <20191017122653.GO4365@dell>
+References: <1571220826-7740-1-git-send-email-kgunda@codeaurora.org>
+ <1571220826-7740-7-git-send-email-kgunda@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1571220826-7740-7-git-send-email-kgunda@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Split the Kizbox Mini boards into two board configuration, the
-Kizboxmini Mother board and the Kizboxmini RailDIN board.
+On Wed, 16 Oct 2019, Kiran Gunda wrote:
 
-Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-Signed-off-by: Kévin RAYMOND <k.raymond@overkiz.com>
-Signed-off-by: Mickael GARDET <m.gardet@overkiz.com>
----
- arch/arm/boot/dts/Makefile                    |   2 +
- arch/arm/boot/dts/at91-kizboxmini-mb.dts      |  38 ++++
- arch/arm/boot/dts/at91-kizboxmini-rd.dts      |  54 ++++++
- arch/arm/boot/dts/at91-kizboxmini_common.dtsi | 166 ++++++++++++++++++
- 4 files changed, 260 insertions(+)
- create mode 100644 arch/arm/boot/dts/at91-kizboxmini-mb.dts
- create mode 100644 arch/arm/boot/dts/at91-kizboxmini-rd.dts
- create mode 100644 arch/arm/boot/dts/at91-kizboxmini_common.dtsi
+> The auto string detection algorithm checks if the current WLED
+> sink configuration is valid. It tries enabling every sink and
+> checks if the OVP fault is observed. Based on this information
+> it detects and enables the valid sink configuration.
+> Auto calibration will be triggered when the OVP fault interrupts
+> are seen frequently thereby it tries to fix the sink configuration.
+> 
+> The auto-detection also kicks in when the connected LED string
+> of the display-backlight malfunctions (because of damage) and
+> requires the damaged string to be turned off to prevent the
+> complete panel and/or board from being damaged.
+> 
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> ---
+>  drivers/video/backlight/qcom-wled.c | 410 +++++++++++++++++++++++++++++++++++-
+>  1 file changed, 404 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
+> index b5b125c..ff7c409 100644
+> --- a/drivers/video/backlight/qcom-wled.c
+> +++ b/drivers/video/backlight/qcom-wled.c
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index c976b72a4c94..6b3a65f3f6f8 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -38,6 +38,8 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
- 	at91-ariettag25.dtb \
- 	at91-cosino_mega2560.dtb \
- 	at91-kizboxmini.dtb \
-+	at91-kizboxmini-mb.dtb \
-+	at91-kizboxmini-rd.dtb \
- 	at91-wb45n.dtb \
- 	at91sam9g15ek.dtb \
- 	at91sam9g25ek.dtb \
-diff --git a/arch/arm/boot/dts/at91-kizboxmini-mb.dts b/arch/arm/boot/dts/at91-kizboxmini-mb.dts
-new file mode 100644
-index 000000000000..52921f547dd6
---- /dev/null
-+++ b/arch/arm/boot/dts/at91-kizboxmini-mb.dts
-@@ -0,0 +1,38 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2015-2018 Overkiz SAS
-+ *   Author: Mickael Gardet <m.gardet@overkiz.com>
-+ *           Kévin Raymond <k.raymond@overkiz.com>
-+ */
-+/dts-v1/;
-+#include "at91-kizboxmini_common.dtsi"
-+
-+/ {
-+	model = "Overkiz Kizbox Mini Mother Board";
-+	compatible = "overkiz,kizboxmini-mb", "atmel,at91sam9g25",
-+		     "atmel,at91sam9x5", "atmel,at91sam9";
-+
-+	clocks {
-+		slow_xtal {
-+			clock-frequency = <32768>;
-+		};
-+	};
-+
-+	pwm_leds {
-+		blue {
-+			label = "pwm:blue:user";
-+			pwms = <&pwm0 2 10000000 0>;
-+			max-brightness = <255>;
-+			linux,default-trigger = "none";
-+		};
-+	};
-+};
-+
-+&usb0 {
-+	num-ports = <2>;
-+};
-+
-+&rtc {
-+	status = "okay";
-+};
-+
-diff --git a/arch/arm/boot/dts/at91-kizboxmini-rd.dts b/arch/arm/boot/dts/at91-kizboxmini-rd.dts
-new file mode 100644
-index 000000000000..1d2db8e16271
---- /dev/null
-+++ b/arch/arm/boot/dts/at91-kizboxmini-rd.dts
-@@ -0,0 +1,54 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2015-2018 Overkiz SAS
-+ *   Author: Mickael Gardet <m.gardet@overkiz.com>
-+ *           Kévin Raymond <k.raymond@overkiz.com>
-+ */
-+/dts-v1/;
-+#include "at91-kizboxmini_common.dtsi"
-+
-+/ {
-+	model = "Overkiz Kizbox Mini RailDIN";
-+	compatible = "overkiz,kizboxmini-rd", "atmel,at91sam9g25",
-+		     "atmel,at91sam9x5", "atmel,at91sam9";
-+
-+	clocks {
-+		slow_xtal {
-+			clock-frequency = <32768>;
-+		};
-+		adc_op_clk {
-+			status = "okay";
-+		};
-+	};
-+};
-+
-+&pinctrl {
-+	adc0 {
-+		pinctrl_adc0_ad5: adc0_ad5-0 {
-+			/* pull-up disable */
-+			atmel,pins = <AT91_PIOB 16 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-+		};
-+	};
-+};
-+
-+&usart0 {
-+	status = "disabled";
-+};
-+
-+&rtc {
-+	status = "okay";
-+};
-+
-+&leds {
-+	blue {
-+		status = "okay";
-+	};
-+};
-+
-+&adc0 {
-+	atmel,adc-vref = <2500>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc0_ad5>;
-+	atmel,adc-channels-used = <0x0020>;
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/at91-kizboxmini_common.dtsi b/arch/arm/boot/dts/at91-kizboxmini_common.dtsi
-new file mode 100644
-index 000000000000..2598b776a278
---- /dev/null
-+++ b/arch/arm/boot/dts/at91-kizboxmini_common.dtsi
-@@ -0,0 +1,166 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * at91-kizboxmini.dts - Device Tree file for Overkiz Kizbox mini board
-+ *
-+ * Copyright (C) 2014-2018 Overkiz SAS
-+ *   Author: Antoine Aubert <a.aubert@overkiz.com>
-+ *           Gaël Portay <g.portay@overkiz.com>
-+ *           Kévin Raymond <k.raymond@overkiz.com>
-+ *           Dorian Rocipon <d.rocipon@overkiz.com>
-+ */
-+#include "at91sam9g25.dtsi"
-+
-+/ {
-+	chosen {
-+		bootargs = "ubi.mtd=ubi";
-+		stdout-path = &dbgu;
-+	};
-+
-+	memory {
-+		reg = <0x20000000 0x8000000>;
-+	};
-+
-+	clocks {
-+		main_xtal {
-+			clock-frequency = <12000000>;
-+		};
-+
-+		adc_op_clk {
-+			status = "disabled";
-+		};
-+	};
-+
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		prog {
-+			label = "PB_PROG";
-+			gpios = <&pioC 17 GPIO_ACTIVE_LOW>;
-+			linux,code = <0x102>;
-+			wakeup-source;
-+		};
-+
-+		reset {
-+			label = "PB_RST";
-+			gpios = <&pioC 16 GPIO_ACTIVE_LOW>;
-+			linux,code = <0x100>;
-+			wakeup-source;
-+		};
-+	};
-+
-+	leds: pwm_leds {
-+		compatible = "pwm-leds";
-+
-+		blue {
-+			label = "pwm:blue:user";
-+			pwms = <&pwm0 2 10000000 0>;
-+			max-brightness = <255>;
-+			linux,default-trigger = "none";
-+			status = "disabled";
-+		};
-+
-+		green {
-+			label = "pwm:green:user";
-+			pwms = <&pwm0 0 10000000 0>;
-+			max-brightness = <255>;
-+			linux,default-trigger = "default-on";
-+		};
-+
-+		red {
-+			label = "pwm:red:user";
-+			pwms = <&pwm0 1 10000000 0>;
-+			max-brightness = <255>;
-+			linux,default-trigger = "default-on";
-+		};
-+	};
-+};
-+
-+&usart0 {
-+	atmel,use-dma-rx;
-+	atmel,use-dma-tx;
-+	status = "okay";
-+};
-+
-+&macb0 {
-+	phy-mode = "rmii";
-+	status = "okay";
-+};
-+
-+&pwm0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm0_pwm0_1
-+		     &pinctrl_pwm0_pwm1_1
-+		     &pinctrl_pwm0_pwm2_1>;
-+	status = "okay";
-+};
-+
-+&dbgu {
-+	status = "okay";
-+};
-+
-+&watchdog {
-+	status = "okay";
-+};
-+
-+&adc0 {
-+	status = "disabled";
-+};
-+
-+&rtc {
-+	status = "disabled";
-+};
-+
-+&ebi {
-+	pinctrl-0 = <&pinctrl_ebi_addr_nand
-+			&pinctrl_ebi_data_0_7>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&nand_controller {
-+	status = "okay";
-+	pinctrl-0 = <&pinctrl_nand_oe_we
-+		     &pinctrl_nand_cs
-+		     &pinctrl_nand_rb>;
-+	pinctrl-names = "default";
-+
-+	nand@3 {
-+		reg = <0x3 0x0 0x800000>;
-+		rb-gpios = <&pioD 5 GPIO_ACTIVE_HIGH>;
-+		cs-gpios = <&pioD 4 GPIO_ACTIVE_HIGH>;
-+		nand-bus-width = <8>;
-+		nand-ecc-mode = "hw";
-+		nand-ecc-strength = <4>;
-+		nand-ecc-step-size = <512>;
-+		nand-on-flash-bbt;
-+		label = "atmel_nand";
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			bootstrap@0 {
-+				label = "bootstrap";
-+				reg = <0x0 0x20000>;
-+			};
-+
-+			ubi@20000 {
-+				label = "ubi";
-+				reg = <0x20000 0x7fe0000>;
-+			};
-+		};
-+	};
-+};
-+
-+&usb0 {
-+	num-ports = <1>;
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	status = "okay";
-+};
-+
+
+[...]
+
+> +	/* iterate through the strings one by one */
+
+Please use proper English in comments (less a full stop).
+
+In this case, just s/iterate/Iterate/.
+
+> +	for (i = 0; i < wled->cfg.num_strings; i++) {
+> +		sink_test = BIT((WLED4_SINK_REG_CURR_SINK_SHFT + i));
+> +
+> +		/* Enable feedback control */
+> +		rc = regmap_write(wled->regmap, wled->ctrl_addr +
+> +				  WLED3_CTRL_REG_FEEDBACK_CONTROL, i + 1);
+> +		if (rc < 0) {
+> +			dev_err(wled->dev, "Failed to enable feedback for SINK %d rc = %d\n",
+> +				i + 1, rc);
+> +			goto failed_detect;
+> +		}
+> +
+> +		/* enable the sink */
+
+Here too.  And everywhere else.
+
+> +		rc = regmap_write(wled->regmap, wled->sink_addr +
+> +				  WLED4_SINK_REG_CURR_SINK, sink_test);
+> +		if (rc < 0) {
+> +			dev_err(wled->dev, "Failed to configure SINK %d rc=%d\n",
+> +				i + 1, rc);
+> +			goto failed_detect;
+> +		}
+> +
+> +		/* Enable the module */
+> +		rc = regmap_update_bits(wled->regmap, wled->ctrl_addr +
+> +					WLED3_CTRL_REG_MOD_EN,
+> +					WLED3_CTRL_REG_MOD_EN_MASK,
+> +					WLED3_CTRL_REG_MOD_EN_MASK);
+> +		if (rc < 0) {
+> +			dev_err(wled->dev, "Failed to enable WLED module rc=%d\n",
+> +				rc);
+> +			goto failed_detect;
+> +		}
+> +
+> +		usleep_range(WLED_SOFT_START_DLY_US,
+> +			     WLED_SOFT_START_DLY_US + 1000);
+> +
+> +		rc = regmap_read(wled->regmap, wled->ctrl_addr +
+> +				 WLED3_CTRL_REG_INT_RT_STS, &int_sts);
+> +		if (rc < 0) {
+> +			dev_err(wled->dev, "Error in reading WLED3_CTRL_INT_RT_STS rc=%d\n",
+> +				rc);
+> +			goto failed_detect;
+> +		}
+> +
+> +		if (int_sts & WLED3_CTRL_REG_OVP_FAULT_STATUS)
+> +			dev_dbg(wled->dev, "WLED OVP fault detected with SINK %d\n",
+> +				i + 1);
+
+I haven't reviewed the whole patch, but this caught my eye.
+
+I think this should be upgraded to dev_warn().
+
+> +		else
+> +			sink_valid |= sink_test;
+> +
+> +		/* Disable the module */
+> +		rc = regmap_update_bits(wled->regmap,
+> +					wled->ctrl_addr + WLED3_CTRL_REG_MOD_EN,
+> +					WLED3_CTRL_REG_MOD_EN_MASK, 0);
+> +		if (rc < 0) {
+> +			dev_err(wled->dev, "Failed to disable WLED module rc=%d\n",
+> +				rc);
+> +			goto failed_detect;
+> +		}
+> +	}
+> +
+> +	if (!sink_valid) {
+> +		dev_err(wled->dev, "No valid WLED sinks found\n");
+> +		wled->disabled_by_short = true;
+> +		goto failed_detect;
+> +	}
+> +
+> +	if (sink_valid == sink_config) {
+> +		dev_dbg(wled->dev, "WLED auto-detection complete, sink-config=%x OK!\n",
+> +			sink_config);
+
+Does this really need to be placed in the kernel log?
+
+> +	} else {
+> +		dev_warn(wled->dev, "New WLED string configuration found %x\n",
+> +			 sink_valid);
+
+Why would the user care about this?  Is it not normal?
+
+> +		sink_config = sink_valid;
+> +	}
+
+[...]
+
+> +static irqreturn_t wled_ovp_irq_handler(int irq, void *_wled)
+> +{
+> +	struct wled *wled = _wled;
+> +	int rc;
+> +	u32 int_sts, fault_sts;
+> +
+> +	rc = regmap_read(wled->regmap,
+> +			 wled->ctrl_addr + WLED3_CTRL_REG_INT_RT_STS, &int_sts);
+> +	if (rc < 0) {
+> +		dev_err(wled->dev, "Error in reading WLED3_INT_RT_STS rc=%d\n",
+> +			rc);
+> +		return IRQ_HANDLED;
+> +	}
+> +
+> +	rc = regmap_read(wled->regmap, wled->ctrl_addr +
+> +			 WLED3_CTRL_REG_FAULT_STATUS, &fault_sts);
+> +	if (rc < 0) {
+> +		dev_err(wled->dev, "Error in reading WLED_FAULT_STATUS rc=%d\n",
+> +			rc);
+> +		return IRQ_HANDLED;
+> +	}
+> +
+> +	if (fault_sts &
+> +		(WLED3_CTRL_REG_OVP_FAULT_BIT | WLED3_CTRL_REG_ILIM_FAULT_BIT))
+
+Break the line at the '|'.
+
+> +		dev_dbg(wled->dev, "WLED OVP fault detected, int_sts=%x fault_sts= %x\n",
+> +			int_sts, fault_sts);
+
+dev_warn().
+
+> +	if (fault_sts & WLED3_CTRL_REG_OVP_FAULT_BIT) {
+> +		mutex_lock(&wled->lock);
+> +		disable_irq_nosync(wled->ovp_irq);
+> +
+> +		if (wled_auto_detection_required(wled))
+> +			wled_auto_string_detection(wled);
+> +
+> +		enable_irq(wled->ovp_irq);
+> +
+> +		mutex_unlock(&wled->lock);
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+>  static int wled3_setup(struct wled *wled)
+>  {
+>  	u16 addr;
+> @@ -435,8 +775,10 @@ static int wled4_setup(struct wled *wled)
+>  		sink_en |= 1 << temp;
+>  	}
+>  
+> -	if (sink_cfg == sink_en)
+> -		return 0;
+> +	if (sink_cfg == sink_en) {
+> +		rc = wled_auto_detection_at_init(wled);
+> +		return rc;
+> +	}
+>  
+>  	rc = regmap_update_bits(wled->regmap,
+>  				wled->sink_addr + WLED4_SINK_REG_CURR_SINK,
+> @@ -499,7 +841,9 @@ static int wled4_setup(struct wled *wled)
+>  		return rc;
+>  	}
+>  
+> -	return 0;
+> +	rc = wled_auto_detection_at_init(wled);
+> +
+> +	return rc;
+>  }
+>  
+>  static const struct wled_config wled4_config_defaults = {
+> @@ -510,6 +854,7 @@ static int wled4_setup(struct wled *wled)
+>  	.switch_freq = 11,
+>  	.cabc = false,
+>  	.external_pfet = false,
+> +	.auto_detection_enabled = false,
+>  };
+>  
+>  static const u32 wled3_boost_i_limit_values[] = {
+> @@ -676,6 +1021,7 @@ static int wled_configure(struct wled *wled, int version)
+>  		{ "qcom,ext-gen", &cfg->ext_gen, },
+>  		{ "qcom,cabc", &cfg->cabc, },
+>  		{ "qcom,external-pfet", &cfg->external_pfet, },
+> +		{ "qcom,auto-string-detection", &cfg->auto_detection_enabled, },
+>  	};
+>  
+>  	prop_addr = of_get_address(dev->of_node, 0, NULL, NULL);
+> @@ -796,6 +1142,40 @@ static int wled_configure_short_irq(struct wled *wled,
+>  	return rc;
+>  }
+>  
+> +static int wled_configure_ovp_irq(struct wled *wled,
+> +				  struct platform_device *pdev)
+> +{
+> +	int rc;
+> +	u32 val;
+> +
+> +	wled->ovp_irq = platform_get_irq_byname(pdev, "ovp");
+> +	if (wled->ovp_irq < 0) {
+> +		dev_dbg(&pdev->dev, "ovp irq is not used\n");
+
+I assume this is optional.  What happens if no IRQ is provided?
+
+If, for instance, polling mode is enabled, maybe something like this
+would be better?
+
+      dev_warn(&pdev->dev, "No IRQ found, falling back to polling mode\n");
+
 -- 
-2.23.0
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
