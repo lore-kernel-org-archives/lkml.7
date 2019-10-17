@@ -2,537 +2,173 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80042FA3730
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 569FEFA3730
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D1F22089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D1F22089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:50:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BHV2PXfs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405672AbfJQJuU (ORCPT
+        id S2501889AbfJQJu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 05:50:20 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44277 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389021AbfJQJuT (ORCPT
+        Thu, 17 Oct 2019 05:50:28 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50354 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389021AbfJQJu1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 05:50:19 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m13so1815888ljj.11;
-        Thu, 17 Oct 2019 02:50:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=B4nV+UMiZrRWL8NEUT7jJ6/dkCR9n2JxEkHQ4ehIxzM=;
-        b=b4+xMxBxIu2ZW2R/fqIFmS/H3npM3/A4AwX1wC8YnKGWhcy0OlfNzDpRoV89uPTTAH
-         xZ3DKxc5cGi7aFg1Ip/15fOiVRYz5fJzrbHorqOfTA09WekX8N4CSJYX4dGkCS08F9UD
-         mJ97OcQxNQfl43h4B7zq4G9EVDNtFRMt1fmC2dP9I3pW23Y/uKpGHekbsHVx7BZp39+/
-         0Gp2nWHEXkUyXU/msp+um4IZOPSUtj0G4WoFouAj3IWQFItF2H8EGKV6DjRudntY+NSu
-         ixz3MifPyLbKuZYK+t5IvlInosuWlQP5zN6o6Zohy6ssKjLivglc8+ys44mn34Jn76Ee
-         3GTg==
-X-Gm-Message-State: APjAAAW+3F8+T7qyBX1alRiskc6nPpIfw8zujjLZ4wuPyC4nLKLvwA40
-        F8R2TnhSAFP+Cz/o0iJ371I=
-X-Google-Smtp-Source: APXvYqzSwV1BhukVKHENWapfjw2isCLKtid/wZQjRFv92sxqnTof8z7xJBjsvHhvBnBoPBkAyj52uQ==
-X-Received: by 2002:a05:651c:1022:: with SMTP id w2mr1852748ljm.189.1571305814382;
-        Thu, 17 Oct 2019 02:50:14 -0700 (PDT)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id v6sm749994ljh.66.2019.10.17.02.50.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 02:50:13 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 12:50:01 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [RFC PATCH 07/13] regulator: bd71828: enhanced run-level support
-Message-ID: <5955d7d2a0e71c1a2d0b217bc2a764fa836bcec8.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+        Thu, 17 Oct 2019 05:50:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=uu3/FssGPvc9bsO3GOIGB+VT5qhdtx//Wfg/xU4VhNY=; b=BHV2PXfsUxEKf92uymtT6Ct55
+        rC5b6cEA70Y6OcY6aqKoAbvrUDTVWKgJlN8xWEudSTu/B7JNkhvnRLQNSU/Na5Cc7t/ePgAQFa1QN
+        q/shrW3+Q8uyF9Olm0ZH7Jvcik3HXjZoKdDAq99CO7e/pwuCkl/S0vYZyi46Tn1Gh6hVbnMSFQpxi
+        6Accm0fIpyKtHyOauq0m3CQzJGImmMz6eAhQhUz2cV3BhvVtSbIBf16+Nv/adt+C039ZfbRu/FnuS
+        IXqC8Le+TUYE3ZNoE9mewbpcr+GLCZps3FMxhW42HXEcOfP48+zFcfIKaRvhEABQ7Pf4TU9zJWg4K
+        3Nn2NqW3w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iL2QE-0008Ta-KR; Thu, 17 Oct 2019 09:50:18 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6525130018A;
+        Thu, 17 Oct 2019 11:49:20 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B0A4A200DE9E2; Thu, 17 Oct 2019 11:50:15 +0200 (CEST)
+Date:   Thu, 17 Oct 2019 11:50:15 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Douglas Raillard <douglas.raillard@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        mingo@redhat.com, rjw@rjwysocki.net, viresh.kumar@linaro.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, qperret@qperret.net,
+        patrick.bellasi@matbug.net, dh.han@samsung.com
+Subject: Re: [RFC PATCH v3 0/6] sched/cpufreq: Make schedutil energy aware
+Message-ID: <20191017095015.GI2311@hirez.programming.kicks-ass.net>
+References: <20191011134500.235736-1-douglas.raillard@arm.com>
+ <20191014145315.GZ2311@hirez.programming.kicks-ass.net>
+ <a1ce67d7-62c3-b78b-1d87-23ef4dbc2274@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <a1ce67d7-62c3-b78b-1d87-23ef4dbc2274@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support changing run-level via I2C and add in-kernel API for allowing
-run time changes of run-level voltages.
+On Mon, Oct 14, 2019 at 04:50:24PM +0100, Douglas Raillard wrote:
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- drivers/regulator/bd71828-regulator.c | 266 ++++++++++++++++++++++----
- include/linux/mfd/rohm-bd71828.h      |   3 +
- 2 files changed, 232 insertions(+), 37 deletions(-)
+> I posted some numbers based on a similar experiment on the v2 of that series that
+> are still applicable:
+> 
+> TL;DR the rt-app negative slack is divided by 1.75 by this series, with an
+> increase of 3% in total energy consumption. There is a burst every 0.6s, and
+> the average power consumption increase is proportional to the average number
+> of bursts.
+> 
+> 
+> The workload is an rt-app task ramping up from 5% to 75% util in one big step,
+> pinned on a big core. The whole cycle is 0.6s long (0.3s at 5% followed by 0.3s at 75%).
+> This cycle is repeated 20 times and the average of boosting is taken.
+> 
+> The test device is a Google Pixel 3 (Qcom Snapdragon 845) phone.
+> It has a lot more OPPs than a hikey 960, so gradations in boosting
+> are better reflected on frequency selection.
+> 
+> avg slack (higher=better):
+>     Average time between task sleep and its next periodic activation.
+>     See rt-app doc: https://github.com/scheduler-tools/rt-app/blob/9a50d76f726d7c325c82ac8c7ed9ed70e1c97937/doc/tutorial.txt#L631
+> 
+> avg negative slack (lower in absolute value=better):
+>     Same as avg slack, but only taking into account negative values.
+>     Negative slack means a task activation did not have enough time to complete before the next
+>     periodic activation fired, which is what we want to avoid.
+> 
+> boost energy overhead (lower=better):
+>     Extra power consumption induced by ramp boost, assuming continuous OPP space (infinite number of OPP)
+>     and single-CPU policies. In practice, fixed number of OPP decrease this value, and more CPU per policy increases it,
+>     since boost(policy) = max(boost(cpu) foreach cpu of policy)).
+> 
+> Without ramp boost:
+> +--------------------+--------------------+
+> |avg slack (us)      |avg negative slack  |
+> |                    |(us)                |
+> +--------------------+--------------------+
+> |6598.72             |-10217.13           |
+> |6595.49             |-10200.13           |
+> |6613.72             |-10401.06           |
+> |6600.29             |-9860.872           |
+> |6605.53             |-10057.64           |
+> |6612.05             |-10267.50           |
+> |6599.01             |-9939.60            |
+> |6593.79             |-9445.633           |
+> |6613.56             |-10276.75           |
+> |6595.44             |-9751.770           |
+> +--------------------+--------------------+
+> |average                                  |
+> +--------------------+--------------------+
+> |6602.76             |-10041.81           |
+> +--------------------+--------------------+
+> 
+> 
+> With ramp boost enabled:
+> +--------------------+--------------------+--------------------+
+> |boost energy        |avg slack (us)      |avg negative slack  |
+> |overhead (%)        |                    |(us)                |
+> +--------------------+--------------------+--------------------+
+> |3.05                |7148.93             |-5664.26            |
+> |3.04                |7144.69             |-5667.77            |
+> |3.05                |7149.05             |-5698.31            |
+> |2.97                |7126.71             |-6040.23            |
+> |3.02                |7140.28             |-5826.78            |
+> |3.03                |7135.11             |-5749.62            |
+> |3.05                |7140.24             |-5750.0             |
+> |3.05                |7144.84             |-5667.04            |
+> |3.07                |7157.30             |-5656.65            |
+> |3.06                |7154.65             |-5653.76            |
+> +--------------------+--------------------+--------------------+
+> |average                                                       |
+> +--------------------+--------------------+--------------------+
+> |3.039000            |7144.18             |-5737.44            |
+> +--------------------+--------------------+--------------------+
+> 
+> 
+> The negative slack is due to missed activations while the utilization signals
+> increase during the big utilization step. Ramp boost is designed to boost frequency during
+> that phase, which materializes in 1.75 less negative slack, for an extra power
+> consumption under 3%.
 
-diff --git a/drivers/regulator/bd71828-regulator.c b/drivers/regulator/bd71828-regulator.c
-index 36f5aef941e5..d5d0dcee90cf 100644
---- a/drivers/regulator/bd71828-regulator.c
-+++ b/drivers/regulator/bd71828-regulator.c
-@@ -19,6 +19,12 @@
- #include <linux/regulator/machine.h>
- #include <linux/regulator/of_regulator.h>
- 
-+/* Drivers should not do this. But we provide this custom kernel interface
-+ * for users to switch the run-level. Hence we need to get the rdev from
-+ * struct regulator
-+ */
-+#include "internal.h"
-+
- #define MAX_GPIO_DVS_BUCKS 4
- #define DVS_RUN_LEVELS 4
- 
-@@ -39,7 +45,10 @@ struct bd71828_regulator_data {
- 	const struct reg_init *reg_inits;
- 	int reg_init_amnt;
- 	struct run_lvl_ctrl run_lvl[DVS_RUN_LEVELS];
-+	struct mutex dvs_lock;
- 	struct gpio_descs *gps;
-+	struct regmap *regmap;
-+	bool allow_runlvl;
- };
- 
- static const struct reg_init buck1_inits[] = {
-@@ -225,7 +234,7 @@ static int set_runlevel_voltage(struct regmap *regmap,
- 	return ret;
- }
- 
--static int buck_set_gpio_hw_dvs_levels(struct device_node *np,
-+static int buck_set_runlvl_hw_dvs_levels(struct device_node *np,
- 				       const struct regulator_desc *desc,
- 				       struct regulator_config *cfg)
- {
-@@ -245,11 +254,12 @@ static int buck_set_gpio_hw_dvs_levels(struct device_node *np,
- 
- 	data = container_of(desc, struct bd71828_regulator_data, desc);
- 
-+	mutex_lock(&data->dvs_lock);
- 	for (i = 0; i < DVS_RUN_LEVELS; i++) {
- 		ret = of_property_read_u32(np, props[i], &uv);
- 		if (ret) {
- 			if (ret != -EINVAL)
--				return ret;
-+				goto unlock_out;
- 			uv = 0;
- 		}
- 		if (uv) {
-@@ -259,7 +269,7 @@ static int buck_set_gpio_hw_dvs_levels(struct device_node *np,
- 			ret = set_runlevel_voltage(cfg->regmap, desc, uv, i);
- 
- 			if (ret)
--				return ret;
-+				goto unlock_out;
- 
- 			ret = regmap_update_bits(cfg->regmap, en_reg,
- 						 en_masks[i], en_masks[i]);
-@@ -268,10 +278,15 @@ static int buck_set_gpio_hw_dvs_levels(struct device_node *np,
- 						 en_masks[i], 0);
- 		}
- 		if (ret)
--			return ret;
-+			goto unlock_out;
- 	}
- 
--	return rohm_regulator_set_dvs_levels(&data->dvs, np, desc, cfg->regmap);
-+	ret = rohm_regulator_set_dvs_levels(&data->dvs, np, desc, cfg->regmap);
-+
-+unlock_out:
-+	mutex_unlock(&data->dvs_lock);
-+
-+	return ret;
- }
- 
- static int ldo6_parse_dt(struct device_node *np,
-@@ -324,11 +339,40 @@ static int bd71828_dvs_gpio_set_run_level(struct bd71828_regulator_data *rd,
- 	return gpiod_set_array_value_cansleep(rd->gps->ndescs, rd->gps->desc,
- 				     rd->gps->info, values);
- }
-+
-+/* Get current run level when RUN levels are controlled using I2C */
-+static int bd71828_dvs_i2c_set_run_level(struct regmap *regmap,
-+					 int lvl)
-+{
-+	unsigned int reg;
-+
-+	reg = lvl << (ffs(BD71828_MASK_RUN_LVL_CTRL) - 1);
-+
-+	return regmap_update_bits(regmap, BD71828_REG_PS_CTRL_3,
-+				  BD71828_MASK_RUN_LVL_CTRL, reg);
-+}
-+/* Get current run level when RUN levels are controlled using I2C */
-+static int bd71828_dvs_i2c_get_run_level(struct regmap *regmap,
-+					 struct bd71828_regulator_data *rd)
-+{
-+	int ret;
-+	unsigned int val;
-+
-+	ret = regmap_read(regmap, BD71828_REG_PS_CTRL_3, &val);
-+	if (ret)
-+		return ret;
-+
-+	ret = (val & BD71828_MASK_RUN_LVL_CTRL);
-+	ret >>= ffs(BD71828_MASK_RUN_LVL_CTRL) - 1;
-+
-+	return ret;
-+}
-+
-+/* Get current RUN level when run levels are controlled by GPIO */
- static int bd71828_dvs_gpio_get_run_level(struct bd71828_regulator_data *rd)
- {
- 	int run_level;
- 	int ret;
--
- 	DECLARE_BITMAP(values, 2);
- 
- 	values[0] = 0;
-@@ -346,47 +390,131 @@ static int bd71828_dvs_gpio_get_run_level(struct bd71828_regulator_data *rd)
- 	return run_level;
- }
- 
-+/*
-+ * To be used when BD71828 regulator is controlled by RUN levels
-+ * via I2C instead of GPIO
-+ */
-+static int bd71828_dvs_i2c_is_enabled(struct regulator_dev *rdev)
-+{
-+	struct bd71828_regulator_data *data = rdev_get_drvdata(rdev);
-+	int ret;
-+
-+	mutex_lock(&data->dvs_lock);
-+	ret = bd71828_dvs_i2c_get_run_level(rdev->regmap, data);
-+	if (ret < 0)
-+		goto unlock_out;
-+
-+	ret = data->run_lvl[ret].enabled;
-+
-+unlock_out:
-+	mutex_unlock(&data->dvs_lock);
-+
-+	return ret;
-+}
-+
-+/*
-+ * To be used when BD71828 regulator is controlled by RUN levels
-+ * via GPIO
-+ */
- static int bd71828_dvs_gpio_is_enabled(struct regulator_dev *rdev)
- {
- 	struct bd71828_regulator_data *data = rdev_get_drvdata(rdev);
- 	int ret;
- 
--	// TODO: lock GPIO state (Is this needed)
-+	mutex_lock(&data->dvs_lock);
- 	ret = bd71828_dvs_gpio_get_run_level(data);
--	if (ret < 0)
-+	if (ret < 0 || ret >= DVS_RUN_LEVELS)
- 		goto unlock_out;
- 
- 	ret = data->run_lvl[ret].enabled;
- 
- unlock_out:
--	//TODO: unlock
-+	mutex_unlock(&data->dvs_lock);
- 
- 	return ret;
- }
- 
-+/*
-+ * To be used when BD71828 regulator is controlled by RUN levels
-+ * via I2C instead of GPIO
-+ */
-+static int bd71828_dvs_i2c_get_voltage(struct regulator_dev *rdev)
-+{
-+	int ret;
-+	struct bd71828_regulator_data *data = rdev_get_drvdata(rdev);
-+
-+	mutex_lock(&data->dvs_lock);
-+	ret = bd71828_dvs_i2c_get_run_level(rdev->regmap, data);
-+	if (ret < 0)
-+		goto unlock_out;
-+
-+	ret = data->run_lvl[ret].voltage;
-+
-+unlock_out:
-+	mutex_unlock(&data->dvs_lock);
-+
-+	return ret;
-+}
-+
-+/*
-+ * To be used when BD71828 regulator is controlled by RUN levels
-+ * via GPIO
-+ */
- static int bd71828_dvs_gpio_get_voltage(struct regulator_dev *rdev)
- {
- 	int ret;
- 	struct bd71828_regulator_data *data = rdev_get_drvdata(rdev);
- 
--	// TODO: lock GPIO state (Is this needed)
-+	mutex_lock(&data->dvs_lock);
- 	ret = bd71828_dvs_gpio_get_run_level(data);
--	if (ret < 0)
-+	if (ret < 0 || DVS_RUN_LEVELS <= ret)
- 		goto unlock_out;
- 
- 	ret = data->run_lvl[ret].voltage;
- 
- unlock_out:
--	//TODO: unlock
-+	mutex_unlock(&data->dvs_lock);
-+
-+	return ret;
-+}
-+
-+/**
-+ * bd71828_set_runlevel_voltage - change run-level voltage
-+ *
-+ * @regulator:  pointer to regulator for which the run-level voltage is changed
-+ * @uv:		New voltage for run-level in micro volts
-+ * @level:	run-level for which the voltage is to be changed
-+ *
-+ * Changes the run-level voltage for given regulator
-+ */
-+int bd71828_set_runlevel_voltage(struct regulator *regulator, unsigned int uv,
-+				 unsigned int level)
-+{
-+	struct regulator_dev *rdev = regulator->rdev;
-+	struct bd71828_regulator_data *data = rdev_get_drvdata(rdev);
-+	int ret;
-+
-+	if (!data || !data->allow_runlvl)
-+		return -EINVAL;
-+
-+	mutex_lock(&data->dvs_lock);
-+	ret = set_runlevel_voltage(rdev->regmap, rdev->desc, uv, level);
-+	mutex_unlock(&data->dvs_lock);
- 
- 	return ret;
- }
-+EXPORT_SYMBOL(bd71828_set_runlevel_voltage);
- 
- static const struct regulator_ops dvs_buck_gpio_ops = {
- 	.is_enabled = bd71828_dvs_gpio_is_enabled,
- 	.get_voltage = bd71828_dvs_gpio_get_voltage,
- };
- 
-+static const struct regulator_ops dvs_buck_i2c_ops = {
-+	.is_enabled = bd71828_dvs_i2c_is_enabled,
-+	.get_voltage = bd71828_dvs_i2c_get_voltage,
-+};
-+
- static const struct regulator_ops bd71828_buck_ops = {
- 	.enable = regulator_enable_regmap,
- 	.disable = regulator_disable_regmap,
-@@ -972,17 +1100,72 @@ static const struct bd71828_regulator_data bd71828_rdata[] = {
- };
- 
- struct bd71828_gpio_cfg {
--	unsigned int gpiobucks;
-+	bool use_gpio;
-+	unsigned int runlvl;
- 	struct gpio_descs *gps;
- };
- 
-+static void mark_regulator_runlvl_controlled(struct device *dev,
-+					     struct device_node *np,
-+					     struct bd71828_gpio_cfg *g)
-+{
-+	int i;
-+
-+	for (i = 1; i <= ARRAY_SIZE(bd71828_rdata); i++) {
-+		if (!of_node_name_eq(np, bd71828_rdata[i-1].desc.of_match))
-+			continue;
-+		switch (i) {
-+		case 1:
-+		case 2:
-+		case 6:
-+		case 7:
-+			g->runlvl |= 1 << (i - 1);
-+			dev_dbg(dev, "buck %d runlevel controlled\n", i);
-+			break;
-+		default:
-+			dev_err(dev,
-+				"Only bucks 1,2,6,7 support run-level dvs\n");
-+			break;
-+		}
-+	}
-+}
-+
-+static int get_runcontrolled_bucks_dt(struct device *dev,
-+				      struct bd71828_gpio_cfg *g)
-+{
-+	struct device_node *np;
-+	struct device_node *nproot = dev->of_node;
-+	const char *prop = "rohm,dvs-runlvl-ctrl";
-+
-+	g->runlvl = 0;
-+
-+	nproot = of_get_child_by_name(nproot, "regulators");
-+	if (!nproot) {
-+		dev_err(dev, "failed to find regulators node\n");
-+		return -ENODEV;
-+	}
-+	for_each_child_of_node(nproot, np)
-+		if (of_property_read_bool(np, prop))
-+			mark_regulator_runlvl_controlled(dev, np, g);
-+
-+	of_node_put(nproot);
-+	return 0;
-+}
-+
- static int check_dt_for_gpio_controls(struct device *d,
- 				      struct bd71828_gpio_cfg *g)
- {
--	int ret, i;
--	struct device_node *np = d->of_node;
--	const char *prop = "rohm,dvs_gpio_bucks";
--	uint32_t bucks[MAX_GPIO_DVS_BUCKS];
-+	int ret;
-+
-+	ret = get_runcontrolled_bucks_dt(d, g);
-+	if (ret)
-+		return ret;
-+
-+	g->use_gpio = false;
-+
-+	/* If the run level control is not requested by any bucks we're done */
-+	if (!g->runlvl)
-+		return 0;
- 
- 	g->gps = devm_gpiod_get_array(d, "rohm,dvs-vsel", GPIOD_OUT_LOW);
- 
-@@ -996,22 +1179,14 @@ static int check_dt_for_gpio_controls(struct device *d,
- 	if (g->gps->ndescs != 2)
- 		return -ENOENT;
- 
--	ret = of_property_read_variable_u32_array(np, prop, bucks, 0,
--						  ARRAY_SIZE(bucks));
--
--	if (ret < 0) {
--		if (ret == -EOVERFLOW)
--			return -EINVAL;
--	}
--	for (i = 0; i < ret; i++)
--		g->gpiobucks |= 1 << bucks[i];
-+	g->use_gpio = true;
- 
- 	return 0;
- }
- 
--static void set_buck_gpio_controlled(struct rohm_regmap_dev *bd71828,
--				     struct bd71828_regulator_data *rd,
--				     struct bd71828_gpio_cfg *g)
-+static void set_buck_runlvl_controlled(struct rohm_regmap_dev *bd71828,
-+				      struct bd71828_regulator_data *rd,
-+				      struct bd71828_gpio_cfg *g)
- {
- 	switch (rd->desc.id) {
- 	case BD71828_BUCK1:
-@@ -1033,9 +1208,16 @@ static void set_buck_gpio_controlled(struct rohm_regmap_dev *bd71828,
- 	 * Disallow setters. Get voltages/enable states based
- 	 * on current RUN level
- 	 */
--	rd->gps = g->gps;
--	rd->desc.ops = &dvs_buck_gpio_ops;
--	rd->desc.of_parse_cb = buck_set_gpio_hw_dvs_levels;
-+
-+	rd->allow_runlvl = true;
-+
-+	if (g->use_gpio) {
-+		rd->gps = g->gps;
-+		rd->desc.ops = &dvs_buck_gpio_ops;
-+	} else {
-+		rd->desc.ops = &dvs_buck_i2c_ops;
-+	}
-+	rd->desc.of_parse_cb = buck_set_runlvl_hw_dvs_levels;
- }
- 
- static ssize_t show_runlevel(struct device *dev,
-@@ -1044,10 +1226,14 @@ static ssize_t show_runlevel(struct device *dev,
- 	int runlevel;
- 	struct bd71828_regulator_data *rd = dev_get_drvdata(dev);
- 
--	if (!rd || !rd->gps)
-+	if (!rd)
- 		return -ENOENT;
- 
--	runlevel = bd71828_dvs_gpio_get_run_level(rd);
-+	if (!rd->gps)
-+		runlevel = bd71828_dvs_i2c_get_run_level(rd->regmap, rd);
-+	else
-+		runlevel = bd71828_dvs_gpio_get_run_level(rd);
-+
- 	if (runlevel < 0)
- 		return runlevel;
- 
-@@ -1063,7 +1249,10 @@ static ssize_t set_runlevel(struct device *dev, struct device_attribute *attr,
- 	if (kstrtol(buf, 0, &val) != 0)
- 		return -EINVAL;
- 
--	val = bd71828_dvs_gpio_set_run_level(rd, val);
-+	if (rd->gps)
-+		val = bd71828_dvs_gpio_set_run_level(rd, val);
-+	else
-+		val = bd71828_dvs_i2c_set_run_level(rd->regmap, val);
- 	if (val)
- 		return val;
- 
-@@ -1133,8 +1322,11 @@ static int bd71828_probe(struct platform_device *pdev)
- 		/* Use bd71828_rdata as template */
- 		rd[i] = bd71828_rdata[i];
- 
--		if (gcfg.gpiobucks & (1 << i))
--			set_buck_gpio_controlled(bd71828, &rd[i], &gcfg);
-+		mutex_init(&rd[i].dvs_lock);
-+		if (gcfg.runlvl & (1 << i))
-+			set_buck_runlvl_controlled(bd71828, &rd[i], &gcfg);
-+
-+		rd[i].regmap = bd71828->regmap;
- 	}
- 
- 	config.regmap = bd71828->regmap;
-diff --git a/include/linux/mfd/rohm-bd71828.h b/include/linux/mfd/rohm-bd71828.h
-index eb0557eb5314..5f15c6a309e6 100644
---- a/include/linux/mfd/rohm-bd71828.h
-+++ b/include/linux/mfd/rohm-bd71828.h
-@@ -422,4 +422,7 @@ enum {
- #define BD71828_OUT_TYPE_OPEN_DRAIN			0x0
- #define BD71828_OUT_TYPE_CMOS				0x2
- 
-+int bd71828_set_runlevel_voltage(struct regulator *regulator, unsigned int uv,
-+				 unsigned int level);
-+
- #endif /* __LINUX_MFD_BD71828_H__ */
--- 
-2.21.0
+OK, so I think I see what it is doing, and why.
 
+Normally we use (map_util_freq):
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+	freq = C * max_freq * util / max ; C=1.25
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+But here, when util is increasing, we effectively increase our C to
+allow picking a higher OPP. Because of that higher OPP we finish our
+work sooner (avg slack increases) and miss our activation less often
+(avg neg slack decreases).
+
+Now, the thing is, we use map_util_freq() in more places, and should we
+not reflect this increase in C for all of them? That is, why is this
+patch changing get_next_freq() and not map_util_freq().
+
+I don't think that question is answered in the Changelogs.
+
+Exactly because it does change the energy consumption (it must) should
+that not also be reflected in the EAS logic?
+
+I'm still thinking about the exact means you're using to raise C; that
+is, the 'util - util_est' as cost_margin. It hurts my brain still.
