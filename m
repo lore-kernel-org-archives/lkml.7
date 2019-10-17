@@ -2,91 +2,137 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F294FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B41FA3735
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33A0E21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:35:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="rLw/zBLG"
+	by mail.kernel.org (Postfix) with ESMTP id 6C65B21848
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:36:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571330199;
+	bh=Z/KBP2YLrD5Y/wfplASDyaw24GCH9LYbK0NX0ij4yFA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=L7SO1BJQTUoY2HvBHTZhVwNdWQJOtZphTMF4ttRxh4juIibBFp8OIViNwEapRNsaL
+	 6FUJqNd8rgtKdAOclQ+2kFI4yvxasAnt/wCMLugsdJWn4ab3oPG5TPJpBSEJrhczcv
+	 doEfOMC0/HZIJ/FnIC91guA3aftQsxVnPEJnUEk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408420AbfJQQfp (ORCPT
+        id S2408442AbfJQQgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:35:45 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37399 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732537AbfJQQfo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 12:35:44 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y5so1993561pfo.4
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 09:35:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=n6iC9aFIm7u0dU/zNM/QcsEIHkk1HFiJjgCYQoT2Mo4=;
-        b=rLw/zBLGb832jZnhC2XQDPu8GmL2TDqIyAqgKiHS1bkVHYZkpv31ojFkQe9yoiJosu
-         OATsID2jjJR5fxB+f27xypsvogvi6NjOdJuEY7WyxCWVO7QiPmERQP2+3LNeZNHKeyYy
-         U22+IPML7CXzC6MXwg06aYBKwbQvWV1aigUizyhhQR+EVGzHw+1AhnxJoW8lCCKcuziZ
-         eCRAX7bq4dZl7sJRffrCj8kB0V6/MnbvHkNqZ1ZUfVoC4MD5M4rHy2E4APOoapoH4CAg
-         2xNy2mueNekGx0CHPQDYJUVPgXpm0OnuDNHVMnK6kDtFcEwWHo03utLEe0wjkTK/Sp3/
-         oztg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=n6iC9aFIm7u0dU/zNM/QcsEIHkk1HFiJjgCYQoT2Mo4=;
-        b=qLEOryUskj311KccLw/rapNHetZR/s4O9pg7qZ4iDl8XpK8Jty2WekycmK7jOojubD
-         iAAgeTqOVx1WhoNlrmCsvayuhtMWmJDck47q1TEw5KbpsKIKB5it18pgx69sOresMUZy
-         6S5ux3LlOohqGS/vKE1yJdjmOm6QCQ62oQli2SCopcoBRO46hwEPbjBSg/c6YN9XInrX
-         lM698s3DSl7H6l1VivRwv/5bj0UUtBVH28dLiPfjMpiZ5pRqS+ub3FnBsCd0CnxCBFym
-         37M1nSt7Qwjiy5jou2fmehpndtivsRuXuHV7Po5GTkYNbI7yIZcw87plCG23wxSd/YoP
-         divw==
-X-Gm-Message-State: APjAAAWD4dMBPplITOf/bcuJre2B/HrgdQMBOMKWn6CPf1JEKcHWtsOM
-        a75zb/QOlULkrSN5SF5/Wx9vSg==
-X-Google-Smtp-Source: APXvYqx8QHZBP4DAVpyoFFyUNQRbXJjtCE3kG8SFGsa5w0UJekNJKz/9aCD9K0RXSuH2lXuA6W7rnQ==
-X-Received: by 2002:a63:82:: with SMTP id 124mr5391099pga.112.1571330142686;
-        Thu, 17 Oct 2019 09:35:42 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:d8f2:392e:5b44:157d])
-        by smtp.gmail.com with ESMTPSA id j10sm3548870pfn.128.2019.10.17.09.35.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 17 Oct 2019 09:35:41 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Guillaume La Roque <glaroque@baylibre.com>,
-        amit.kucheria@linaro.org, rui.zhang@intel.com, edubezval@gmail.com,
-        daniel.lezcano@linaro.org
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH v7 4/7] arm64: dts: meson: g12: Add minimal thermal zone
-In-Reply-To: <7hsgnsfxpx.fsf@baylibre.com>
-References: <20191004090114.30694-1-glaroque@baylibre.com> <20191004090114.30694-5-glaroque@baylibre.com> <7hsgnsfxpx.fsf@baylibre.com>
-Date:   Thu, 17 Oct 2019 09:35:41 -0700
-Message-ID: <7ho8yfba8y.fsf@baylibre.com>
+        Thu, 17 Oct 2019 12:36:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58030 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727508AbfJQQgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 12:36:38 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4047E21835;
+        Thu, 17 Oct 2019 16:36:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571330196;
+        bh=Z/KBP2YLrD5Y/wfplASDyaw24GCH9LYbK0NX0ij4yFA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qRWfl0CF/fNtfLzCK9xoNX50b7918dQxGKCBhXclmgNbfprtOyU5vAVCyEDdHCPPN
+         1M/pOZ3Pb0zSTXB62LjUD/NfKWLBTOo9tKtHcNjObqoLiokmJ5AJ1R0I0MaSTBiomd
+         PO7rHmnCrOP9TbWUHpUJKS+tzEKaW1cYXlqziFIo=
+Date:   Thu, 17 Oct 2019 09:36:34 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     "Richard W.M. Jones" <rjones@redhat.com>
+Cc:     Mike Christie <mchristi@redhat.com>,
+        syzbot <syzbot+24c12fa8d218ed26011a@syzkaller.appspotmail.com>,
+        axboe@kernel.dk, josef@toxicpanda.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nbd@other.debian.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: INFO: task hung in nbd_ioctl
+Message-ID: <20191017163634.GD726@sol.localdomain>
+Mail-Followup-To: "Richard W.M. Jones" <rjones@redhat.com>,
+        Mike Christie <mchristi@redhat.com>,
+        syzbot <syzbot+24c12fa8d218ed26011a@syzkaller.appspotmail.com>,
+        axboe@kernel.dk, josef@toxicpanda.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nbd@other.debian.org,
+        syzkaller-bugs@googlegroups.com
+References: <000000000000b1b1ee0593cce78f@google.com>
+ <5D93C2DD.10103@redhat.com>
+ <20191017140330.GB25667@redhat.com>
+ <5DA88D2F.7080907@redhat.com>
+ <20191017162829.GA3888@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191017162829.GA3888@redhat.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kevin Hilman <khilman@baylibre.com> writes:
+On Thu, Oct 17, 2019 at 05:28:29PM +0100, Richard W.M. Jones wrote:
+> On Thu, Oct 17, 2019 at 10:47:59AM -0500, Mike Christie wrote:
+> > On 10/17/2019 09:03 AM, Richard W.M. Jones wrote:
+> > > On Tue, Oct 01, 2019 at 04:19:25PM -0500, Mike Christie wrote:
+> > >> Hey Josef and nbd list,
+> > >>
+> > >> I had a question about if there are any socket family restrictions for nbd?
+> > > 
+> > > In normal circumstances, in userspace, the NBD protocol would only be
+> > > used over AF_UNIX or AF_INET/AF_INET6.
+> > > 
+> > > There's a bit of confusion because netlink is used by nbd-client to
+> > > configure the NBD device, setting things like block size and timeouts
+> > > (instead of ioctl which is deprecated).  I think you don't mean this
+> > > use of netlink?
+> > 
+> > I didn't. It looks like it is just a bad test.
+> > 
+> > For the automated test in this thread the test created a AF_NETLINK
+> > socket and passed it into the NBD_SET_SOCK ioctl. That is what got used
+> > for the NBD_DO_IT ioctl.
+> > 
+> > I was not sure if the test creator picked any old socket and it just
+> > happened to pick one nbd never supported, or it was trying to simulate
+> > sockets that did not support the shutdown method.
+> > 
+> > I attached the automated test that got run (test.c).
+> 
+> I'd say it sounds like a bad test, but I'm not familiar with syzkaller
+> nor how / from where it generates these tests.  Did someone report a
+> bug and then syzkaller wrote this test?
+> 
+> Rich.
+> 
+> > > 
+> > >> The bug here is that some socket familys do not support the
+> > >> sock->ops->shutdown callout, and when nbd calls kernel_sock_shutdown
+> > >> their callout returns -EOPNOTSUPP. That then leaves recv_work stuck in
+> > >> nbd_read_stat -> sock_xmit -> sock_recvmsg. My patch added a
+> > >> flush_workqueue call, so for socket familys like AF_NETLINK in this bug
+> > >> we hang like we see below.
+> > >>
+> > >> I can just remove the flush_workqueue call in that code path since it's
+> > >> not needed there, but it leaves the original bug my patch was hitting
+> > >> where we leave the recv_work running which can then result in leaked
+> > >> resources, or possible use after free crashes and you still get the hang
+> > >> if you remove the module.
+> > >>
+> > >> It looks like we have used kernel_sock_shutdown for a while so I thought
+> > >> we might never have supported sockets that did not support the callout.
+> > >> Is that correct? If so then I can just add a check for this in
+> > >> nbd_add_socket and fix that bug too.
+> > > 
+> > > Rich.
+> > > 
 
-> Guillaume La Roque <glaroque@baylibre.com> writes:
->
->> Add minimal thermal zone for two temperature sensor
->> One is located close to the DDR and the other one is
->> located close to the PLLs (between the CPU and GPU)
->
-> nit: subject should be "arm64: dts: amlogic" (not meson).
->
-> I fixed it up when applying,
+It's an automatically generated fuzz test.
 
-I got it backwards, this one was right, the other ones with "amlogic"
-should be "meson". I (re)fixed it in my 'v5.5/dt64' branch.
+There's rarely any such thing as a "bad" fuzz test.  If userspace can do
+something that causes the kernel to crash or hang, it's a kernel bug, with very
+few exceptions (e.g. like writing to /dev/mem).
 
-Kevin
+If there are cases that aren't supported, like sockets that don't support a
+certain function or whatever, then the code needs to check for those cases and
+return an error, not hang the kernel.
+
+- Eric
