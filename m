@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 596F6FA3737
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3A3ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FB3421925
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8EBA21A49
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:13:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="voVDOFtD"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AgCEZD8U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439924AbfJQONk (ORCPT
+        id S2439943AbfJQONo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 10:13:40 -0400
-Received: from mail-wm1-f74.google.com ([209.85.128.74]:59195 "EHLO
-        mail-wm1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439913AbfJQONj (ORCPT
+        Thu, 17 Oct 2019 10:13:44 -0400
+Received: from mail-qt1-f201.google.com ([209.85.160.201]:50928 "EHLO
+        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439927AbfJQONl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:13:39 -0400
-Received: by mail-wm1-f74.google.com with SMTP id m16so1117363wmg.8
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 07:13:36 -0700 (PDT)
+        Thu, 17 Oct 2019 10:13:41 -0400
+Received: by mail-qt1-f201.google.com with SMTP id o26so2399062qtj.17
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 07:13:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=Or9Dc22i/7f/YW0tvEwykVYSyBSv8lYxv1cGbeL+tYY=;
-        b=voVDOFtDURoWe70EuQZCthSF4tD+2HviE8KiUDoZJebZXoc3UgAdXxg7qaGc9AGVaZ
-         GtJZxsVBVW46GSQkOk4GAQ89qRShVQrpWynH6YdD2kSsbKwKycryapmSVHoxbTfPs04t
-         sw0sx+0IxkNcRxmAy4XmrMeLEHE7OTeiYHBUh3u2Cf3QQF/Zl/z//Y1aIbMULyUO30oB
-         wGY45VHtdoATYap0TVPEnCcqQY+fkmhnUP8ami7DPFm3ItBDKeV4RzcppiY4pjfNcuAD
-         f1pqBKONeL8Ae58OXvOuGnM5Jkbv/wbQTk47JtWSHJR9Aor94CrWNg3/kW1KHoEaiKfA
-         zE6Q==
+        bh=ip3P4i20fQEf4b5wirUedHF2574zJ+yd56tKHujm1bg=;
+        b=AgCEZD8UVe6mWYXJb+txOu8iRAlpncqlSJC3w4AIm7e5AqUthlTntb/9CDvD2rB0dW
+         a5FPKOjzCIVSVSZjUZMDO3Iad458Xn4cW7enROkYh/uBUhQdsH8m6IBNmVie1+ZoMIxm
+         nctxfK0RkfHydReBwe5q1RhO6Tkl9ZNcOqRjsZODJWd5RADfElv2yDMaftj0eecg//jd
+         oGXHVtKMwq+vS1cAJH58HLbXwzlMpZ3VpIFmGkphK3Z4W1pls2nsD9bqM8TtdMK0677B
+         4Tv6nEw0zI1BAjQLGfp6t0Hrhhb04f32p5H67aN0U+QsDvcmS3cySEvWhTnLlZN5+3lv
+         qr4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=Or9Dc22i/7f/YW0tvEwykVYSyBSv8lYxv1cGbeL+tYY=;
-        b=LvmumCcRj/WHeO9KWrkuVVRfygbvx99cfKm6+Yo2MArwB9nIZUCAYa+QsvelbmkwuR
-         1Fj35sNSM0yafUtx/CcUto9QXCzq2OvGDJXK/6TVNRpvJQ1LCoSl9h2jlizhOYQJcI/o
-         F3ArmT28vgUk1pssp9IScrnjlMJ8gBTn+J8BF63RYKftsYb37hgVM1VPRhRXQaaAJoqm
-         x30bN+TsRfFacSxX5rHtlw9y/7GLU3wvJ1YDa5tjH/1fCOzhvGrYmnFMtGHPmgCXNRAB
-         9wLvFF74kdUm9xw2f+Rr+H4uKfk5d4vYJ5hCglNXAOyiKztuTnjJTfbVz0bExkMjQ9b2
-         uYFA==
-X-Gm-Message-State: APjAAAWhGIMjv0apvkgHfnk4lcFq4X9Hd/tZxOWxEnANXHkpbQObkeeT
-        5F1sYqufY2TIcyDYcv/Xj3dEULnc7A==
-X-Google-Smtp-Source: APXvYqySWeHIYT3gM4LE6tLQKxjcIwMACvHv82ozZkl1Q2uA5IxL/HJvvNLVJ3NfQtyBkgQSVxyoRD6HNA==
-X-Received: by 2002:adf:db4c:: with SMTP id f12mr2777929wrj.379.1571321615653;
- Thu, 17 Oct 2019 07:13:35 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 16:13:00 +0200
+        bh=ip3P4i20fQEf4b5wirUedHF2574zJ+yd56tKHujm1bg=;
+        b=fvvYJj4DTe0KoiVa8UHraSV4D6JnT20hqo+j09LJ8tReoazZgLhqvZkPDuy6quEv9C
+         K3wpHnoFM3rvicEirgeMwM5XoNJGMpgZps3v4CGeAaDY5CS1PjogFEzFf3+zTRIfpwqI
+         jr7eeGZDbxtH+0NPHQ5ZnKFrJyBO8bCm+Bisb5eCoSzoUdWJ4ATDi9i3QuijLqKUcg6Z
+         ObokME5Ggy++6ldoMqDo0xtde+f7H/grRUQr8HOmTCTltZUa+O35v8ApDF6aWej4756c
+         Lv55yakJF16pGtYnetzR5sHSwiyoy57szq4T2UGSb6df2j+bU42vxSpKGKp8hvwfNicK
+         oE1Q==
+X-Gm-Message-State: APjAAAUkOXJ0R2tOpek8tfT+t5tFYg7mv6yCYSQ+DndJts5l9MnB755F
+        9FvzsVv+w5wsYJwmF3wMNmO+UhHNqQ==
+X-Google-Smtp-Source: APXvYqzrcnGW1lI+Gxy2rLvKkrrRrqs3J9SSrFvhiW4X6PylUpt1XSF1crDZlHI52IRZwqkUyyn7a2hahw==
+X-Received: by 2002:a0c:ef85:: with SMTP id w5mr4041664qvr.159.1571321618815;
+ Thu, 17 Oct 2019 07:13:38 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 16:13:01 +0200
 In-Reply-To: <20191017141305.146193-1-elver@google.com>
-Message-Id: <20191017141305.146193-4-elver@google.com>
+Message-Id: <20191017141305.146193-5-elver@google.com>
 Mime-Version: 1.0
 References: <20191017141305.146193-1-elver@google.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-Subject: [PATCH v2 3/8] build, kcsan: Add KCSAN build exceptions
+Subject: [PATCH v2 4/8] seqlock, kcsan: Add annotations for KCSAN
 From:   Marco Elver <elver@google.com>
 To:     elver@google.com
 Cc:     akiyks@gmail.com, stern@rowland.harvard.edu, glider@google.com,
@@ -80,82 +80,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This blacklists several compilation units from KCSAN. See the respective
-inline comments for the reasoning.
+Since seqlocks in the Linux kernel do not require the use of marked
+atomic accesses in critical sections, we teach KCSAN to assume such
+accesses are atomic. KCSAN currently also pretends that writes to
+`sequence` are atomic, although currently plain writes are used (their
+corresponding reads are READ_ONCE).
+
+Further, to avoid false positives in the absence of clear ending of a
+seqlock reader critical section (only when using the raw interface),
+KCSAN assumes a fixed number of accesses after start of a seqlock
+critical section are atomic.
 
 Signed-off-by: Marco Elver <elver@google.com>
 ---
- kernel/Makefile       | 5 +++++
- kernel/sched/Makefile | 6 ++++++
- mm/Makefile           | 8 ++++++++
- 3 files changed, 19 insertions(+)
+ include/linux/seqlock.h | 44 +++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 40 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/Makefile b/kernel/Makefile
-index 74ab46e2ebd1..4a597a68b8bc 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -23,6 +23,9 @@ endif
- # Prevents flicker of uninteresting __do_softirq()/__local_bh_disable_ip()
- # in coverage traces.
- KCOV_INSTRUMENT_softirq.o := n
-+# Avoid KCSAN instrumentation in softirq ("No shared variables, all the data
-+# are CPU local" => assume no data-races), to reduce overhead in interrupts.
-+KCSAN_SANITIZE_softirq.o = n
- # These are called from save_stack_trace() on slub debug path,
- # and produce insane amounts of uninteresting coverage.
- KCOV_INSTRUMENT_module.o := n
-@@ -30,6 +33,7 @@ KCOV_INSTRUMENT_extable.o := n
- # Don't self-instrument.
- KCOV_INSTRUMENT_kcov.o := n
- KASAN_SANITIZE_kcov.o := n
-+KCSAN_SANITIZE_kcov.o := n
- CFLAGS_kcov.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
+index bcf4cf26b8c8..1e425831a7ed 100644
+--- a/include/linux/seqlock.h
++++ b/include/linux/seqlock.h
+@@ -37,8 +37,24 @@
+ #include <linux/preempt.h>
+ #include <linux/lockdep.h>
+ #include <linux/compiler.h>
++#include <linux/kcsan.h>
+ #include <asm/processor.h>
  
- # cond_syscall is currently not LTO compatible
-@@ -118,6 +122,7 @@ obj-$(CONFIG_RSEQ) += rseq.o
- 
- obj-$(CONFIG_GCC_PLUGIN_STACKLEAK) += stackleak.o
- KASAN_SANITIZE_stackleak.o := n
-+KCSAN_SANITIZE_stackleak.o := n
- KCOV_INSTRUMENT_stackleak.o := n
- 
- $(obj)/configs.o: $(obj)/config_data.gz
-diff --git a/kernel/sched/Makefile b/kernel/sched/Makefile
-index 21fb5a5662b5..e9307a9c54e7 100644
---- a/kernel/sched/Makefile
-+++ b/kernel/sched/Makefile
-@@ -7,6 +7,12 @@ endif
- # that is not a function of syscall inputs. E.g. involuntary context switches.
- KCOV_INSTRUMENT := n
- 
-+# There are numerous races here, however, most of them due to plain accesses.
-+# This would make it even harder for syzbot to find reproducers, because these
-+# bugs trigger without specific input. Disable by default, but should re-enable
-+# eventually.
-+KCSAN_SANITIZE := n
++/*
++ * The seqlock interface does not prescribe a precise sequence of read
++ * begin/retry/end. For readers, typically there is a call to
++ * read_seqcount_begin() and read_seqcount_retry(), however, there are more
++ * esoteric cases which do not follow this pattern.
++ *
++ * As a consequence, we take the following best-effort approach for *raw* usage
++ * of seqlocks under KCSAN: upon beginning a seq-reader critical section,
++ * pessimistically mark then next KCSAN_SEQLOCK_REGION_MAX memory accesses as
++ * atomics; if there is a matching read_seqcount_retry() call, no following
++ * memory operations are considered atomic. Non-raw usage of seqlocks is not
++ * affected.
++ */
++#define KCSAN_SEQLOCK_REGION_MAX 1000
 +
- ifneq ($(CONFIG_SCHED_OMIT_FRAME_POINTER),y)
- # According to Alan Modra <alan@linuxcare.com.au>, the -fno-omit-frame-pointer is
- # needed for x86 only.  Why this used to be enabled for all architectures is beyond
-diff --git a/mm/Makefile b/mm/Makefile
-index d996846697ef..33ea0154dd2d 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -7,6 +7,14 @@ KASAN_SANITIZE_slab_common.o := n
- KASAN_SANITIZE_slab.o := n
- KASAN_SANITIZE_slub.o := n
+ /*
+  * Version using sequence counter only.
+  * This can be used when code has its own mutex protecting the
+@@ -115,6 +131,7 @@ static inline unsigned __read_seqcount_begin(const seqcount_t *s)
+ 		cpu_relax();
+ 		goto repeat;
+ 	}
++	kcsan_atomic_next(KCSAN_SEQLOCK_REGION_MAX);
+ 	return ret;
+ }
  
-+# These produce frequent data-race reports: most of them are due to races on
-+# the same word but accesses to different bits of that word. Re-enable KCSAN
-+# for these when we have more consensus on what to do about them.
-+KCSAN_SANITIZE_slab_common.o := n
-+KCSAN_SANITIZE_slab.o := n
-+KCSAN_SANITIZE_slub.o := n
-+KCSAN_SANITIZE_page_alloc.o := n
+@@ -131,6 +148,7 @@ static inline unsigned raw_read_seqcount(const seqcount_t *s)
+ {
+ 	unsigned ret = READ_ONCE(s->sequence);
+ 	smp_rmb();
++	kcsan_atomic_next(KCSAN_SEQLOCK_REGION_MAX);
+ 	return ret;
+ }
+ 
+@@ -183,6 +201,7 @@ static inline unsigned raw_seqcount_begin(const seqcount_t *s)
+ {
+ 	unsigned ret = READ_ONCE(s->sequence);
+ 	smp_rmb();
++	kcsan_atomic_next(KCSAN_SEQLOCK_REGION_MAX);
+ 	return ret & ~1;
+ }
+ 
+@@ -202,7 +221,8 @@ static inline unsigned raw_seqcount_begin(const seqcount_t *s)
+  */
+ static inline int __read_seqcount_retry(const seqcount_t *s, unsigned start)
+ {
+-	return unlikely(s->sequence != start);
++	kcsan_atomic_next(0);
++	return unlikely(READ_ONCE(s->sequence) != start);
+ }
+ 
+ /**
+@@ -225,6 +245,7 @@ static inline int read_seqcount_retry(const seqcount_t *s, unsigned start)
+ 
+ static inline void raw_write_seqcount_begin(seqcount_t *s)
+ {
++	kcsan_begin_atomic(true);
+ 	s->sequence++;
+ 	smp_wmb();
+ }
+@@ -233,6 +254,7 @@ static inline void raw_write_seqcount_end(seqcount_t *s)
+ {
+ 	smp_wmb();
+ 	s->sequence++;
++	kcsan_end_atomic(true);
+ }
+ 
+ /**
+@@ -262,18 +284,20 @@ static inline void raw_write_seqcount_end(seqcount_t *s)
+  *
+  *      void write(void)
+  *      {
+- *              Y = true;
++ *              WRITE_ONCE(Y, true);
+  *
+  *              raw_write_seqcount_barrier(seq);
+  *
+- *              X = false;
++ *              WRITE_ONCE(X, false);
+  *      }
+  */
+ static inline void raw_write_seqcount_barrier(seqcount_t *s)
+ {
++	kcsan_begin_atomic(true);
+ 	s->sequence++;
+ 	smp_wmb();
+ 	s->sequence++;
++	kcsan_end_atomic(true);
+ }
+ 
+ static inline int raw_read_seqcount_latch(seqcount_t *s)
+@@ -398,7 +422,9 @@ static inline void write_seqcount_end(seqcount_t *s)
+ static inline void write_seqcount_invalidate(seqcount_t *s)
+ {
+ 	smp_wmb();
++	kcsan_begin_atomic(true);
+ 	s->sequence+=2;
++	kcsan_end_atomic(true);
+ }
+ 
+ typedef struct {
+@@ -430,11 +456,21 @@ typedef struct {
+  */
+ static inline unsigned read_seqbegin(const seqlock_t *sl)
+ {
+-	return read_seqcount_begin(&sl->seqcount);
++	unsigned ret = read_seqcount_begin(&sl->seqcount);
 +
- # These files are disabled because they produce non-interesting and/or
- # flaky coverage that is not a function of syscall inputs. E.g. slab is out of
- # free pages, or a task is migrated between nodes.
++	kcsan_atomic_next(0);  /* non-raw usage, assume closing read_seqretry */
++	kcsan_begin_atomic(false);
++	return ret;
+ }
+ 
+ static inline unsigned read_seqretry(const seqlock_t *sl, unsigned start)
+ {
++	/*
++	 * Assume not nested: read_seqretry may be called multiple times when
++	 * completing read critical section.
++	 */
++	kcsan_end_atomic(false);
++
+ 	return read_seqcount_retry(&sl->seqcount, start);
+ }
+ 
 -- 
 2.23.0.866.gb869b98d4c-goog
 
