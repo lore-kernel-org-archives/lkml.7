@@ -6,104 +6,126 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E24FA372B
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D85C4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18BC720872
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F2C620820
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:38:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438261AbfJQHgh (ORCPT
+        id S2438312AbfJQHix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 03:36:37 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23748 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727257AbfJQHgh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 03:36:37 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9H7VqaT127026
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 03:36:36 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vpkp18uaj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 03:36:35 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Thu, 17 Oct 2019 08:36:34 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 17 Oct 2019 08:36:30 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9H7aTaS23003284
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 17 Oct 2019 07:36:29 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D2888A405C;
-        Thu, 17 Oct 2019 07:36:29 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 806C9A4054;
-        Thu, 17 Oct 2019 07:36:29 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 17 Oct 2019 07:36:29 +0000 (GMT)
-Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
+        Thu, 17 Oct 2019 03:38:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44618 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727257AbfJQHix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 03:38:53 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id A4EA2A024A;
-        Thu, 17 Oct 2019 18:36:25 +1100 (AEDT)
-Subject: Re: [PATCH v3 06/15] powerpc/32: prepare for CONFIG_VMAP_STACK
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
-        dja@axtens.net
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org
-References: <cover.1568106758.git.christophe.leroy@c-s.fr>
- <7e9771a56539c58dcd8a871c3dfbe7a932e427b0.1568106758.git.christophe.leroy@c-s.fr>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Date:   Thu, 17 Oct 2019 18:36:26 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        by mx1.redhat.com (Postfix) with ESMTPS id 3F507308624A;
+        Thu, 17 Oct 2019 07:38:52 +0000 (UTC)
+Received: from [10.36.117.42] (ovpn-117-42.ams2.redhat.com [10.36.117.42])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 76B9D600C4;
+        Thu, 17 Oct 2019 07:38:49 +0000 (UTC)
+Subject: Re: [PATCH V2] mm/page_alloc: Add alloc_contig_pages()
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Rientjes <rientjes@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-kernel@vger.kernel.org
+References: <40b8375c-5291-b477-1519-fd7fa799a67d@redhat.com>
+ <cdcf77a5-e5c9-71ff-811d-ecd1c1e80f00@arm.com>
+ <20191016115119.GA317@dhcp22.suse.cz>
+ <fe8cae46-6bd8-88eb-d3fe-2740bb79ee58@redhat.com>
+ <20191016124149.GB317@dhcp22.suse.cz>
+ <97cadd99-d05e-3174-6532-fe18f0301ba7@arm.com>
+ <e37c16f5-7068-5359-a539-bee58e705122@redhat.com>
+ <c60b9e95-5c6c-fcb2-c8bb-13e7646ba8ea@arm.com>
+ <20191017071129.GB24485@dhcp22.suse.cz>
+ <bfc3b281-79d1-1d8f-337d-c01acc29ab30@redhat.com>
+ <20191017073413.GC24485@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <31505b6d-1c09-4fcc-a079-3fbb3c96da48@redhat.com>
+Date:   Thu, 17 Oct 2019 09:38:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <7e9771a56539c58dcd8a871c3dfbe7a932e427b0.1568106758.git.christophe.leroy@c-s.fr>
+In-Reply-To: <20191017073413.GC24485@dhcp22.suse.cz>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19101707-0016-0000-0000-000002B8D339
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19101707-0017-0000-0000-00003319F9D9
-Message-Id: <d181b762-3e7b-7a0a-2505-54ead241456d@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-17_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=773 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910170065
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 17 Oct 2019 07:38:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/9/19 7:16 pm, Christophe Leroy wrote:
-> +#if defined(CONFIG_VMAP_STACK) && CONFIG_THREAD_SHIFT < PAGE_SHIFT
-> +#define THREAD_SHIFT		PAGE_SHIFT
-> +#else
->   #define THREAD_SHIFT		CONFIG_THREAD_SHIFT
-> +#endif
+On 17.10.19 09:34, Michal Hocko wrote:
+> On Thu 17-10-19 09:21:24, David Hildenbrand wrote:
+>> On 17.10.19 09:11, Michal Hocko wrote:
+>>> On Thu 17-10-19 10:44:41, Anshuman Khandual wrote:
+>>> [...]
+>>>> Does this add-on documentation look okay ? Should we also mention about the
+>>>> possible reduction in chances of success during pfn block search for the
+>>>> non-power-of-two cases as the implicit alignment will probably turn out to
+>>>> be bigger than nr_pages itself ?
+>>>>
+>>>>    * Requested nr_pages may or may not be power of two. The search for suitable
+>>>>    * memory range in a zone happens in nr_pages aligned pfn blocks. But in case
+>>>>    * when nr_pages is not power of two, an implicitly aligned pfn block search
+>>>>    * will happen which in turn will impact allocated memory block's alignment.
+>>>>    * In these cases, the size (i.e nr_pages) and the alignment of the allocated
+>>>>    * memory will be different. This problem does not exist when nr_pages is power
+>>>>    * of two where the size and the alignment of the allocated memory will always
+>>>>    * be nr_pages.
+>>>
+>>> I dunno, it sounds more complicated than really necessary IMHO. Callers
+>>> shouldn't really be bothered by memory blocks and other really deep
+>>> implementation details.. Wouldn't be the below sufficient?
+>>>
+>>> The allocated memory is always aligned to a page boundary. If nr_pages
+>>> is a power of two then the alignement is guaranteed to be to the given
+>>
+>> s/alignement/alignment/
+>>
+>> and "the PFN is guaranteed to be aligned to nr_pages" (the address is
+>> aligned to nr_pages*PAGE_SIZE)
 > 
->   #define THREAD_SIZE		(1 << THREAD_SHIFT)
+> thx for the correction.
+> 
+>>> nr_pages (e.g. 1GB request would be aligned to 1GB).
+>>>
+>>
+>> I'd probably add "This function will miss allocation opportunities if
+>> nr_pages is not a power of two (and the implicit alignment is bogus)."
+> 
+> This is again an implementation detail and quite a confusing one to
+> whoever not familiar with the MM internals. And to be fair even a proper
+> alignment doesn't give you any stronger guarantee as long as the
+> allocation operates on non movable zones anyway.
 > 
 
-Looking at 64-bit book3s: with 64K pages, this results in a THREAD_SIZE 
-that's too large for immediate mode arithmetic operations, which is 
-annoying. Hmm.
+To be honest, I'd not suggest to anyone to use this function with 
+nr_pages not being a power of two, and I already explained why. I prefer 
+to spill that out than having people complain afterwards. Yes it's an 
+implementation detail users should be aware of until reworked.
+
+But I think we talked about this here for way too long, so I am fine 
+with either.
 
 -- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
 
+Thanks,
+
+David / dhildenb
