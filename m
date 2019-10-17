@@ -2,137 +2,89 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C65ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3E1FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 171B021835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:37:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wsOtMSHp"
+	by mail.kernel.org (Postfix) with ESMTP id 7893320659
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:39:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571312384;
+	bh=kF8QRKmECkshTHtERF1GzIHNP8UUaplgvUra5aJVBVc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=R37Cg2qNIrLS8CilDifvz36xkVrhHl0PwGe+RlDDKB5Om14aDmzhVy9Echc3y2vno
+	 2X74reGBFJEmg59+Ef1JBSq9Ja5Zkg+1XQFAbgcXooVklPCVOWG3ued9PK6DebfAR5
+	 C4U1ZS7axjeJqFIeXrPFVZ0JaCO00AKiDI2W2iow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439737AbfJQLhM (ORCPT
+        id S2393009AbfJQLjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 07:37:12 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35351 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439727AbfJQLhM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 07:37:12 -0400
-Received: by mail-wm1-f66.google.com with SMTP id y21so2193388wmi.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 04:37:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kz81GWsdy+gT4h09Jxnw2SGeMu79bPfNDv5X5wml0Ow=;
-        b=wsOtMSHpdRb6Eyt0a4RIHj3ouio4xANV3N5raaZk1cU6ih1BY7YK6f325AhA1diobG
-         BoWDhKGQOnDjqitMuKFbONryFjMvYhZmmtl5rmPznmkTrsP/nAWrpY0aOqIlR1HAARM7
-         N/1QBXvBRGJE7dzNZi8tAMcuJ1bPouAvd/7WSc9b0ZQOoHsKqZBvcPsPddV4pI0Iho5Z
-         DgQO9eIECjl+wUtc+XLAFN3gZWbGdpPq3rWLFAoaw+88iW2ze6C5XjKTY0IQJsCRoKQ9
-         ZLY5Mi8HF9bcMw+3rZd+S2RC9xAefNibIiecULZ6nBDr1NAtYRifeOwAy2lom3/e9mrJ
-         ZcwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kz81GWsdy+gT4h09Jxnw2SGeMu79bPfNDv5X5wml0Ow=;
-        b=l5TdR+4SjhMgMz7ZbTcCtjprYezMxxMHkksE/OByGq5twTAi6u/5R6PTNpDlXz3ThY
-         zNk0+gtwLXOtmKXME21KguyHaOrkIabbl0z4SK/jJkXYTW9l+iwHymauUGNBk1o2eAWE
-         Sc3061I9u2P+FG8Jrir0fumrBlW+ZrN9UTVy+wWdSzuj/TKvoG8FBJ1y8qbhNtsIArDb
-         PpLNMSpaSxAXlfStP9MnK46YdUObLE2vBsrl13loAvX6YSMrKiXPmIFYLSCOWnbPME0j
-         jWO/Cyk7mQ/afwp4OT3rdtqfsb2iPNfLY/9UeYwUnnS+5Yw7qs1kCCAd8Fs3zdo6jGrO
-         IzFg==
-X-Gm-Message-State: APjAAAWsKh5lH7tCq0YycoWL99AiRcWux+54HduIHtsdZHXksUVpcZXQ
-        99OfQBeXXgeHB1uQM8Is+kWsjQ==
-X-Google-Smtp-Source: APXvYqwVcAbF9NKa2DBqA54nZM8E1xuownksYgsSe+rQmhJK4e6KkHf1SfpZesJWdHwSR9jrw3iaOw==
-X-Received: by 2002:a1c:1dc9:: with SMTP id d192mr2631862wmd.51.1571312229630;
-        Thu, 17 Oct 2019 04:37:09 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id u1sm2020090wrp.56.2019.10.17.04.37.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 04:37:08 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 12:37:07 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH 29/34] backlight/jornada720: Use CONFIG_PREEMPTION
-Message-ID: <20191017113707.lsjwlhi6b4ittcpe@holly.lan>
-References: <20191015191821.11479-1-bigeasy@linutronix.de>
- <20191015191821.11479-30-bigeasy@linutronix.de>
+        Thu, 17 Oct 2019 07:39:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59798 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727991AbfJQLjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 07:39:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3FE09B717;
+        Thu, 17 Oct 2019 11:39:41 +0000 (UTC)
+Date:   Thu, 17 Oct 2019 13:39:39 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 4.19 56/81] kernel/sysctl.c: do not override max_threads
+ provided by userspace
+Message-ID: <20191017113939.GH24485@dhcp22.suse.cz>
+References: <20191016214805.727399379@linuxfoundation.org>
+ <20191016214842.621065901@linuxfoundation.org>
+ <20191017105940.GA5966@amd>
+ <20191017110516.GG24485@dhcp22.suse.cz>
+ <b41558c732384c6280f0fe18823aa7e1@AcuMS.aculab.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191015191821.11479-30-bigeasy@linutronix.de>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <b41558c732384c6280f0fe18823aa7e1@AcuMS.aculab.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 09:18:16PM +0200, Sebastian Andrzej Siewior wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
+On Thu 17-10-19 11:25:47, David Laight wrote:
+> From: Michal Hocko
+> > Sent: 17 October 2019 12:05
+> ...
+> > > Plus, I don't see any locking here, should this be WRITE_ONCE() at
+> > > minimum?
+> > 
+> > Why would that matter? Do you expect several root processes race to set
+> > the value?
 > 
-> CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
-> Both PREEMPT and PREEMPT_RT require the same functionality which today
-> depends on CONFIG_PREEMPT.
-> 
-> Switch the Kconfig dependency to CONFIG_PREEMPTION.
-> 
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Daniel Thompson <daniel.thompson@linaro.org>
-> Cc: Jingoo Han <jingoohan1@gmail.com>
-> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-fbdev@vger.kernel.org
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> [bigeasy: +LCD_HP700]
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> One of them wins. No one is going to notice is the value is set an extra time.
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Right, this is quite obvious. The question is whether/how much it really
+matters.
 
-(I know... the review for this particular patch is trivial but an
-Acked-by from a maintainer means something specific and it is Lee
-Jones who coordinates landing cross sub-system patch sets for
-backlight).
+> WRITE_ONCE() is rarely required.
+> Probably only if other code is going to update the value after seeing the first write.
+> (eg if you are unlocking a mutex - although they have to be more complex)
+> 
+> READ_ONCE() is a different matter.
+> IMHO the compiler shouldn't be allowed to do more reads than the source requests.
 
 
-Daniel.
-
-> ---
->  drivers/video/backlight/Kconfig | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
-> index 40676be2e46aa..d09396393724b 100644
-> --- a/drivers/video/backlight/Kconfig
-> +++ b/drivers/video/backlight/Kconfig
-> @@ -99,7 +99,7 @@ config LCD_TOSA
->  
->  config LCD_HP700
->  	tristate "HP Jornada 700 series LCD Driver"
-> -	depends on SA1100_JORNADA720_SSP && !PREEMPT
-> +	depends on SA1100_JORNADA720_SSP && !PREEMPTION
->  	default y
->  	help
->  	  If you have an HP Jornada 700 series handheld (710/720/728)
-> @@ -228,7 +228,7 @@ config BACKLIGHT_HP680
->  
->  config BACKLIGHT_HP700
->  	tristate "HP Jornada 700 series Backlight Driver"
-> -	depends on SA1100_JORNADA720_SSP && !PREEMPT
-> +	depends on SA1100_JORNADA720_SSP && !PREEMPTION
->  	default y
->  	help
->  	  If you have an HP Jornada 700 series,
-> -- 
-> 2.23.0
-> 
+Right, we are talking about setting an int value. While nobody can rule
+out that the compiler splitting the single write into multiple ones I
+would be quite curious about seeing that...
+-- 
+Michal Hocko
+SUSE Labs
