@@ -2,192 +2,238 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB4DECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF9EFA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 509062089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:48:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WhAF5/9j"
+	by mail.kernel.org (Postfix) with ESMTP id B155E20854
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:51:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571338282;
+	bh=RBS3JntQK8qaWYqR7huUvgTEMLt3ehYmrSA+klIPfJc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PA6ur+Ikz1Pf6GKj10Ycrk9jASow1/6eO+icmXtXFBnEc+bfXJwAU4jStAPpGTGKK
+	 GnBJitE9sS738dtq953XraJP8ZpNq5zHJYgmposcJpQBfVkEH5L0WfY7JoEIxRq75+
+	 kDBXOtfqB8GjgrN7nz0rhHMMOIxh7l9MEwU1kAok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503330AbfJQSsd (ORCPT
+        id S2406853AbfJQSvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 14:48:33 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:60472 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503241AbfJQSsc (ORCPT
+        Thu, 17 Oct 2019 14:51:21 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33312 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388823AbfJQSvV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 14:48:32 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9HIiNfI180887;
-        Thu, 17 Oct 2019 18:48:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=GBUBeWjq6gpCZXmY5jRCsCJbNs6+hlvvoe/egHiy1Zw=;
- b=WhAF5/9j5CneTnTNd6HQ1M/m7C+qqDIzkPNDhjn0KkzYgaZMHg/PLzelJH/Vpk/bb77U
- 02XmEPdngTeqFuekVHfyAx8hIwFVis/IQgnSZKnjpbJRV0KNuP3XjG9jSPxcz30mnBtc
- IrOAMPT5yqXP+fu78ieiQUJWmffPUQszKliAy85jBTD4ad6JGbOWlYyCBwkUFs0CfXXQ
- ZRAjy1fl//VKe1vevtAZnmg9nQv3YwHE3VALO38vu6ix5Lu/CAV1Nd12MiY/z9+mxs8F
- OLECXbvv0OJJPPwkmIsmcbf/Uzq9aGbNI0tZp6eT/0lbyBm2rQgM6vm3AUERjU9VFcaG FQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2vk7frr5un-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 17 Oct 2019 18:48:27 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9HIm61m095407;
-        Thu, 17 Oct 2019 18:48:26 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2vpcm3dvth-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 17 Oct 2019 18:48:26 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9HImPNw026029;
-        Thu, 17 Oct 2019 18:48:25 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 17 Oct 2019 18:48:25 +0000
-Date:   Thu, 17 Oct 2019 11:48:24 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/14] iomap: lift the xfs writeback code to iomap
-Message-ID: <20191017184824.GA13090@magnolia>
-References: <20191017175624.30305-1-hch@lst.de>
- <20191017175624.30305-11-hch@lst.de>
+        Thu, 17 Oct 2019 14:51:21 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 60so2836784otu.0;
+        Thu, 17 Oct 2019 11:51:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uQYP/0Fr9W3z7AH2U3KxlY2QC+oTwq0Ok9HJ6oW23Oo=;
+        b=kqifvuy1xpTCrGsb6usx5RT1exc91YnpZaw9jsX5hPADI2pTFo15hc9jmfzKAdgB6f
+         xy172VOkSmUqp2jnWmsaY+PTxTM/tiM8m98bbCUBkhDJI+QKOPORAszA0XZOVY2dPz9V
+         bBK6u0HkXZyLJQ/Blx76hsBYGRTmob/Siy/sckcY5JeAVZy+dB8H3b0G2zy1p7XYr6Lr
+         iV3yeSFkGm74BOIORldvyYYeiZl2LbhV6QltFkBU56pBelg/+CuMVtBoAFozweOcM/bV
+         gIu3X8mjZIO0TW3KBxU5gfd5RWwh+00AlA+Zm+MzpmUzgxP/eW2UcuWham6hH3B+6xDc
+         yVOw==
+X-Gm-Message-State: APjAAAW+2I7B8BhrLmMppGp9/LI0FKdxqzIfHETF7rfdTYSxrQ9DsLFt
+        oCAMXTH9bkdIKoORP+d62UhosM0=
+X-Google-Smtp-Source: APXvYqxHWeIp566bMef8Qjtvxkh468x/vVId7yRzAFfnsxxaEdu+fAz577HEprAedk4SvNVjed19yA==
+X-Received: by 2002:a9d:6e92:: with SMTP id a18mr4130227otr.313.1571338279403;
+        Thu, 17 Oct 2019 11:51:19 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w25sm816876oth.39.2019.10.17.11.51.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 11:51:18 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 13:51:17 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v3 5/6] dt-bindings: leds: max77650: convert the binding
+ document to yaml
+Message-ID: <20191017185117.GA30431@bogus>
+References: <20191017071234.8719-1-brgl@bgdev.pl>
+ <20191017071234.8719-6-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191017175624.30305-11-hch@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910170168
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910170168
+In-Reply-To: <20191017071234.8719-6-brgl@bgdev.pl>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 07:56:20PM +0200, Christoph Hellwig wrote:
-> Take the xfs writeback code and move it to fs/iomap.  A new structure
-> with three methods is added as the abstraction from the generic writeback
-> code to the file system.  These methods are used to map blocks, submit an
-> ioend, and cancel a page that encountered an error before it was added to
-> an ioend.
+On Thu, Oct 17, 2019 at 09:12:33AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-
-<snip>
-
-> diff --git a/include/linux/iomap.h b/include/linux/iomap.h
-> index 24bd227d59f9..71fd12ee5616 100644
-> --- a/include/linux/iomap.h
-> +++ b/include/linux/iomap.h
-> @@ -4,6 +4,7 @@
->  
->  #include <linux/atomic.h>
->  #include <linux/bitmap.h>
-> +#include <linux/blk_types.h>
->  #include <linux/mm.h>
->  #include <linux/types.h>
->  #include <linux/mm_types.h>
-> @@ -12,6 +13,7 @@
->  struct address_space;
->  struct fiemap_extent_info;
->  struct inode;
-> +struct iomap_writepage_ctx;
->  struct iov_iter;
->  struct kiocb;
->  struct page;
-> @@ -185,6 +187,63 @@ loff_t iomap_seek_data(struct inode *inode, loff_t offset,
->  sector_t iomap_bmap(struct address_space *mapping, sector_t bno,
->  		const struct iomap_ops *ops);
->  
-> +/*
-> + * Structure for writeback I/O completions.
-> + */
-> +struct iomap_ioend {
-> +	struct list_head	io_list;	/* next ioend in chain */
-> +	u16			io_type;
-> +	u16			io_flags;	/* IOMAP_F_* */
-> +	struct inode		*io_inode;	/* file being written to */
-> +	size_t			io_size;	/* size of the extent */
-> +	loff_t			io_offset;	/* offset in the file */
-> +	void			*io_private;	/* file system private data */
-> +	struct bio		*io_bio;	/* bio being built */
-> +	struct bio		io_inline_bio;	/* MUST BE LAST! */
-> +};
+> Convert the binding document for MAX77650 LED module to YAML.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  .../bindings/leds/leds-max77650.txt           | 57 ------------------
+>  .../bindings/leds/leds-max77650.yaml          | 58 +++++++++++++++++++
+>  2 files changed, 58 insertions(+), 57 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/leds/leds-max77650.txt
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-max77650.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-max77650.txt b/Documentation/devicetree/bindings/leds/leds-max77650.txt
+> deleted file mode 100644
+> index 3a67115cc1da..000000000000
+> --- a/Documentation/devicetree/bindings/leds/leds-max77650.txt
+> +++ /dev/null
+> @@ -1,57 +0,0 @@
+> -LED driver for MAX77650 PMIC from Maxim Integrated.
+> -
+> -This module is part of the MAX77650 MFD device. For more details
+> -see Documentation/devicetree/bindings/mfd/max77650.txt.
+> -
+> -The LED controller is represented as a sub-node of the PMIC node on
+> -the device tree.
+> -
+> -This device has three current sinks.
+> -
+> -Required properties:
+> ---------------------
+> -- compatible:		Must be "maxim,max77650-led"
+> -- #address-cells:	Must be <1>.
+> -- #size-cells:		Must be <0>.
+> -
+> -Each LED is represented as a sub-node of the LED-controller node. Up to
+> -three sub-nodes can be defined.
+> -
+> -Required properties of the sub-node:
+> -------------------------------------
+> -
+> -- reg:			Must be <0>, <1> or <2>.
+> -
+> -Optional properties of the sub-node:
+> -------------------------------------
+> -
+> -- label:		See Documentation/devicetree/bindings/leds/common.txt
+> -- linux,default-trigger: See Documentation/devicetree/bindings/leds/common.txt
+> -
+> -For more details, please refer to the generic GPIO DT binding document
+> -<devicetree/bindings/gpio/gpio.txt>.
+> -
+> -Example:
+> ---------
+> -
+> -	leds {
+> -		compatible = "maxim,max77650-led";
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -
+> -		led@0 {
+> -			reg = <0>;
+> -			label = "blue:usr0";
+> -		};
+> -
+> -		led@1 {
+> -			reg = <1>;
+> -			label = "red:usr1";
+> -			linux,default-trigger = "heartbeat";
+> -		};
+> -
+> -		led@2 {
+> -			reg = <2>;
+> -			label = "green:usr2";
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/leds/leds-max77650.yaml b/Documentation/devicetree/bindings/leds/leds-max77650.yaml
+> new file mode 100644
+> index 000000000000..5a1e256185bd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-max77650.yaml
+> @@ -0,0 +1,58 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/leds-max77650.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +struct iomap_writeback_ops {
-> +	/*
-> +	 * Required, maps the blocks so that writeback can be performed on
-> +	 * the range starting at offset.
-> +	 */
-> +	int (*map_blocks)(struct iomap_writepage_ctx *wpc, struct inode *inode,
-> +				loff_t offset);
+> +title: LED driver for MAX77650 PMIC from Maxim Integrated.
 > +
-> +	/*
-> +	 * Optional, allows the file systems to perform actions just before
-> +	 * submitting the bio and/or override the bio end_io handler for complex
-> +	 * operations like copy on write extent manipulation or unwritten extent
-> +	 * conversions.
-> +	 */
-> +	int (*submit_ioend)(struct iomap_ioend *ioend, int status);
+> +maintainers:
+> +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > +
+> +description: |
+> +  This module is part of the MAX77650 MFD device. For more details
+> +  see Documentation/devicetree/bindings/mfd/max77650.txt.
+> +
+> +  The LED controller is represented as a sub-node of the PMIC node on
+> +  the device tree.
+> +
+> +  This device has three current sinks.
+> +
+> +properties:
+> +  compatible:
+> +    const: maxim,max77650-led
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +patternProperties:
+> +  "^led@[0-2]$":
+> +    type: object
+> +    description: |
+> +      Properties for a single LED.
+> +
+> +    properties:
+> +      reg:
+> +        description:
+> +          Index of the LED.
+> +        maxItems: 1
+> +        minimum: 0
+> +        maximum: 2
 
-Looks ok, but I reserve the right to rename this to ->prepare_ioend() or
-something. :)
+Mixing array and scalar constraints. Just need (dropping maxItems):
 
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+items:
+  - minimum: 0
+    maximum: 2
 
---D
+> +
+> +      label:
+> +        $ref: "/schemas/types.yaml#/definitions/string"
 
-> +	/*
-> +	 * Optional, allows the file system to discard state on a page where
-> +	 * we failed to submit any I/O.
-> +	 */
-> +	void (*discard_page)(struct page *page);
-> +};
+Globally defined as a string already.
+
+> +        description:
+> +          The label of this LED.
 > +
-> +struct iomap_writepage_ctx {
-> +	struct iomap		iomap;
-> +	struct iomap_ioend	*ioend;
-> +	const struct iomap_writeback_ops *ops;
-> +};
+> +      linux,default-trigger:
+> +        $ref: "/schemas/types.yaml#/definitions/string"
+
+Assume this gets a common binding.
+
+So just 'true' is sufficient for both of these.
+
+> +        description:
+> +          String defining the default trigger assigned to this LED.
 > +
-> +void iomap_finish_ioends(struct iomap_ioend *ioend, int error);
-> +void iomap_ioend_try_merge(struct iomap_ioend *ioend,
-> +		struct list_head *more_ioends,
-> +		void (*merge_private)(struct iomap_ioend *ioend,
-> +				struct iomap_ioend *next));
-> +void iomap_sort_ioends(struct list_head *ioend_list);
-> +int iomap_writepage(struct page *page, struct writeback_control *wbc,
-> +		struct iomap_writepage_ctx *wpc,
-> +		const struct iomap_writeback_ops *ops);
-> +int iomap_writepages(struct address_space *mapping,
-> +		struct writeback_control *wbc, struct iomap_writepage_ctx *wpc,
-> +		const struct iomap_writeback_ops *ops);
-> +
->  /*
->   * Flags for direct I/O ->end_io:
->   */
+> +required:
+> +  - compatible
+> +  - "#address-cells"
+> +  - "#size-cells"
 > -- 
-> 2.20.1
+> 2.23.0
 > 
