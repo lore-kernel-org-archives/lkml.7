@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D86FFA3736
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D67E7FA3738
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD7F21925
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD1E221848
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:49:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389196AbfJQMtH (ORCPT
+        id S2502860AbfJQMtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 08:49:07 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4210 "EHLO huawei.com"
+        Thu, 17 Oct 2019 08:49:23 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4245 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2502753AbfJQMtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:49:03 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id DCF64DF8FCD52FFBE71C;
-        Thu, 17 Oct 2019 20:48:55 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
- 20:48:49 +0800
+        id S2502816AbfJQMtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 08:49:18 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id B0EC86049EB89F9F20A1;
+        Thu, 17 Oct 2019 20:49:14 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
+ 20:49:06 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <linus.walleij@linaro.org>, <manivannan.sadhasivam@linaro.org>,
         <afaerber@suse.de>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
@@ -42,9 +42,9 @@ CC:     <linux-arm-kernel@lists.infradead.org>,
         <haojian.zhuang@gmail.com>, <wens@csie.org>,
         <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <agross@kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 19/30] pinctrl: tb10x: use devm_platform_ioremap_resource() to simplify code
-Date:   Thu, 17 Oct 2019 20:26:29 +0800
-Message-ID: <20191017122640.22976-20-yuehaibing@huawei.com>
+Subject: [PATCH -next 26/30] pinctrl: bm1880: use devm_platform_ioremap_resource() to simplify code
+Date:   Thu, 17 Oct 2019 20:26:36 +0800
+Message-ID: <20191017122640.22976-27-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20191017122640.22976-1-yuehaibing@huawei.com>
 References: <20191017122640.22976-1-yuehaibing@huawei.com>
@@ -62,31 +62,30 @@ This is detected by coccinelle.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/pinctrl/pinctrl-tb10x.c | 4 +---
+ drivers/pinctrl/pinctrl-bm1880.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-tb10x.c b/drivers/pinctrl/pinctrl-tb10x.c
-index 1f64e2e..ab49bd7 100644
---- a/drivers/pinctrl/pinctrl-tb10x.c
-+++ b/drivers/pinctrl/pinctrl-tb10x.c
-@@ -747,7 +747,6 @@ static struct pinctrl_desc tb10x_pindesc = {
- static int tb10x_pinctrl_probe(struct platform_device *pdev)
- {
- 	int ret = -EINVAL;
--	struct resource *mem;
- 	struct device *dev = &pdev->dev;
- 	struct device_node *of_node = dev->of_node;
- 	struct device_node *child;
-@@ -768,8 +767,7 @@ static int tb10x_pinctrl_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, state);
- 	mutex_init(&state->mutex);
+diff --git a/drivers/pinctrl/pinctrl-bm1880.c b/drivers/pinctrl/pinctrl-bm1880.c
+index 63b130c..f7dff4f 100644
+--- a/drivers/pinctrl/pinctrl-bm1880.c
++++ b/drivers/pinctrl/pinctrl-bm1880.c
+@@ -1308,15 +1308,13 @@ static struct pinctrl_desc bm1880_desc = {
+ static int bm1880_pinctrl_probe(struct platform_device *pdev)
  
--	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	state->base = devm_ioremap_resource(dev, mem);
-+	state->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(state->base)) {
- 		ret = PTR_ERR(state->base);
- 		goto fail;
+ {
+-	struct resource *res;
+ 	struct bm1880_pinctrl *pctrl;
+ 
+ 	pctrl = devm_kzalloc(&pdev->dev, sizeof(*pctrl), GFP_KERNEL);
+ 	if (!pctrl)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	pctrl->base = devm_ioremap_resource(&pdev->dev, res);
++	pctrl->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pctrl->base))
+ 		return PTR_ERR(pctrl->base);
+ 
 -- 
 2.7.4
 
