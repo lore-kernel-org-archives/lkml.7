@@ -2,145 +2,134 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA50FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 333E2ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B593A21848
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:00:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571328033;
-	bh=MJNtM0gGXpObzCT2JelP1fq2yMAZ27mOcUIIpChX9qY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rppj6YVOKyZDCTR/fv/xttmEhVCmwJ8V+XEMfEb4T6hW07KNt8gm84gtWGMof3qI5
-	 6hDIvXlmOycyzAAsbMu8sU9hWEwD9Rpc6UgW1ynl8pA7ZnYCaleiGAZfYX/1Zn9JZA
-	 AKrVeYQ59r/0kaHkZKJoKmuKoLQAERrxq1TLXrD0=
+	by mail.kernel.org (Postfix) with ESMTP id 008FF20872
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:00:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jpj35KVo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438990AbfJQQAc (ORCPT
+        id S2439423AbfJQQAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:00:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45618 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436715AbfJQQAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 12:00:31 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D29D521835;
-        Thu, 17 Oct 2019 16:00:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571328030;
-        bh=MJNtM0gGXpObzCT2JelP1fq2yMAZ27mOcUIIpChX9qY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bPI16PNPk8Rfcbn3KXIe6pk14cZKallPkfJI/6Wj+wbb1o1Dj5QouFruB4yslOdVd
-         JNLwbbPX4hkwgQYi0KCZNgI7jR+Tymds3yHFyHwKm1/a8Ux2CndwxhuEcDyL5Mj4K9
-         bRarDWPQIkzz7EIfrgXF76q9tVdEb4YT17uVSbgc=
-Date:   Thu, 17 Oct 2019 09:00:28 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     syzbot <syzbot+6455648abc28dbdd1e7f@syzkaller.appspotmail.com>,
-        aou@eecs.berkeley.edu, David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris James Morris <jmorris@namei.org>,
-        keyrings@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: WARNING: refcount bug in find_key_to_update
-Message-ID: <20191017160028.GA726@sol.localdomain>
-Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
-        syzbot <syzbot+6455648abc28dbdd1e7f@syzkaller.appspotmail.com>,
-        aou@eecs.berkeley.edu, David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris James Morris <jmorris@namei.org>,
-        keyrings@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-References: <000000000000830fe50595115344@google.com>
- <00000000000071e2fc05951229ad@google.com>
- <CAHk-=wjFozfjV34_qy3_Z155uz_Z7qFVfE8h=_9ceGU-SVk9hA@mail.gmail.com>
+        Thu, 17 Oct 2019 12:00:52 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43997 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436580AbfJQQAv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 12:00:51 -0400
+Received: by mail-pf1-f195.google.com with SMTP id a2so1927035pfo.10;
+        Thu, 17 Oct 2019 09:00:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bKHsm49AjH+9+kS10xeon3ScfYzXimBKCUXUhQczC7c=;
+        b=Jpj35KVo3sVfoKljx8sot28XsdRaIvkCMLBzWb6ssHzRgOFI+FN4uKedm44mjoDrGG
+         KsGYXZE5gJ3gxbO9dga++kYO/US86ElI0Jz/QWSN/N1H1pMOnBGsBvEV0IqRmPT7JyBI
+         6CKKU86QwjL6k3026BX6S/KoJrl0N03SFf6OvJgwFn0NpBwNIzbfVM+7jM6oieiq3Uyy
+         wcIWZkUbloVvbhh4rFzcWJtDVBcnFcb4u/0CaaShng1iWg2SbGMWd9ymJb88Ncv5Ncsl
+         egttf6ReYdLp2EWOAWaKmsZrdbgLlcq3+A3qLPd4mnidRb9svzpyDIP4zcQKS5iACMFY
+         LJ0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bKHsm49AjH+9+kS10xeon3ScfYzXimBKCUXUhQczC7c=;
+        b=Ri/D+WRmVfl9IfiZCeG9NnI8W3vjmz/jLq+5KUk/HNnrVqlSbkrbKb7bWR6l054xW0
+         AqhSINKazIy/sxSyo6P2Lntkrho8/ntLwuNcrQT9y0RlTlNaR6x74/3nZsptHjNozzgQ
+         h3uvjUEsTX9Dj5jjWxlonn7iiH/kXC3WNX/4X5A/8zZXud0rLP7SCR4NTdQ1spuA2fg7
+         +AXbtyiIiHH0oWO/urm3wo/TSocdBs83Lqt3K9noGF6TIGX53yZ09Db8cLXx9KdEbeu2
+         uyY3bmFJa4iPpTVC08jt+ioWqHnPsRXebMi/fsNiETB7aEpiVNVEM9K3s7Dyb9zkEQ9e
+         GUMQ==
+X-Gm-Message-State: APjAAAWawKHXhYd5p8P6SJ9/4mNqzzHbjHvhwJ/XJG5sbDhJvIoVsSkz
+        TFiZ8REgfzCJ4s3eXI7el9xKdWPW
+X-Google-Smtp-Source: APXvYqxdUs3K8kdiwaLrIGbUOjwLrBiCkBP9lXNhqoPWli5kV2DcKOLnS8b57cZ07KNDaTySvpea2Q==
+X-Received: by 2002:a17:90a:356a:: with SMTP id q97mr5232709pjb.50.1571328050138;
+        Thu, 17 Oct 2019 09:00:50 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id w134sm3502756pfd.4.2019.10.17.09.00.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 09:00:48 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 09:00:46 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v5 10/14] software node: rename is_array to is_inline
+Message-ID: <20191017160046.GF35946@dtor-ws>
+References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
+ <20191011230721.206646-11-dmitry.torokhov@gmail.com>
+ <20191014073720.GH32742@smile.fi.intel.com>
+ <20191015182206.GF105649@dtor-ws>
+ <20191016075940.GP32742@smile.fi.intel.com>
+ <20191016165430.GD35946@dtor-ws>
+ <20191017071628.GD32742@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wjFozfjV34_qy3_Z155uz_Z7qFVfE8h=_9ceGU-SVk9hA@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191017071628.GD32742@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 08:53:06AM -0700, Linus Torvalds wrote:
-> On Wed, Oct 16, 2019 at 7:42 PM syzbot
-> <syzbot+6455648abc28dbdd1e7f@syzkaller.appspotmail.com> wrote:
-> >
-> > syzbot has bisected this bug to 0570bc8b7c9b ("Merge tag
-> >  'riscv/for-v5.3-rc1' ...")
+On Thu, Oct 17, 2019 at 10:16:28AM +0300, Andy Shevchenko wrote:
+> On Wed, Oct 16, 2019 at 09:54:30AM -0700, Dmitry Torokhov wrote:
+> > On Wed, Oct 16, 2019 at 10:59:40AM +0300, Andy Shevchenko wrote:
+> > > On Tue, Oct 15, 2019 at 11:22:06AM -0700, Dmitry Torokhov wrote:
+> > > > On Mon, Oct 14, 2019 at 10:37:20AM +0300, Andy Shevchenko wrote:
+> > > > > On Fri, Oct 11, 2019 at 04:07:17PM -0700, Dmitry Torokhov wrote:
 > 
-> Yeah, that looks unlikely. The only non-riscv changes are from
-> documentation updates and moving a config variable around.
+> > > > > 'stored inline' -> 'embedded in the &struct...' ?
+> > > > 
+> > > > I was trying to have a link "stored inline" -> "is_inline".
+> > > > 
+> > > > Do we want to change the flag to be "is_embedded"?
+> > > 
+> > > In dictionaries I have
+> > > 
+> > > embedded <-> unilateral
+> > 
+> > Are you trying to show synonym or antonym here? But I am pretty sure
+> > "unilateral" is either.
 > 
-> Looks like the crash is quite unlikely, and only happens in one out of
-> ten runs for the ones it has happened to.
-> 
-> The backtrace looks simple enough, though:
-> 
->   RIP: 0010:refcount_inc_checked+0x2b/0x30 lib/refcount.c:156
->    __key_get include/linux/key.h:281 [inline]
->    find_key_to_update+0x67/0x80 security/keys/keyring.c:1127
->    key_create_or_update+0x4e5/0xb20 security/keys/key.c:905
->    __do_sys_add_key security/keys/keyctl.c:132 [inline]
->    __se_sys_add_key security/keys/keyctl.c:72 [inline]
->    __x64_sys_add_key+0x219/0x3f0 security/keys/keyctl.c:72
->    do_syscall_64+0xd0/0x540 arch/x86/entry/common.c:296
->    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> which to me implies that there's some locking bug, and somebody
-> released the key without holding a lock.
-> 
-> That code looks a bit confused to me. Releasing a key without holding
-> a lock looks permitted, but if that's the case then __key_get() is
-> complete garbage. It would need to use 'refcount_inc_not_zero()' and
-> failure would require failing the caller.
-> 
-> But I haven't followed the key locking rules, so who knows. That "put
-> without lock" scenario would explain the crash, though.
-> 
-> David?
-> 
+> Antonyms. The 'unilateral' is marked as so in the dictionary.
 
-Yes this is a bogus bisection.
+OK, that is not something that I would ever think of as an antonym, so
+even though I am not a native speaker I do not think we should be using
+it here as documentation and comments are supposed to be understood by
+all people from around the world and not by English majors only.
 
-The key is supposed to have refcount >= 1 since it's in a keyring.
-So some bug is causing it to have refcount 0.  Perhaps some place calling
-key_put() too many times.
+Out of curiosity, is this dictionary available online? I would really
+want to see to what particular meaning of "embedded" they assign
+"unilateral" as antonym so that I know better next time I see it used.
 
-Unfortunately I can't get the reproducer to work locally.
+> 
+> > Antonyms for our use of "embedded" are likely "detached" or
+> > "disconnected".
+> > 
+> > > inline <-> ???
+> > 
+> > "out of line" but I still believe "stored separately" explains precisely
+> > what we have here.
+> 
+> No, 'out of line' is idiom with a special meaning.
 
-Note that there are 2 other syzbot reports that look related.
-No reproducers for them, though:
+Yes, and it is also a well defined term in CS.
 
-Title:              KASAN: use-after-free Read in key_put
-Last occurred:      1 day ago
-Reported:           28 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=f13750b1124e01191250cf930086dcc40740fa30
-Original thread:    https://lore.kernel.org/lkml/0000000000008c3e590592cf4b7f@google.com/T/#u
+Thanks.
 
-Title:              KASAN: use-after-free Read in keyring_compare_object
-Last occurred:      49 days ago
-Reported:           84 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=529ab6a98286c2a97c445988a62760a58d4a1d4b
-Original thread:    https://lore.kernel.org/lkml/000000000000038ef6058e6f3592@google.com/T/#u
-
-- Eric
+-- 
+Dmitry
