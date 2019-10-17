@@ -2,94 +2,160 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB82ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF044FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4550F21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:35:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571344534;
-	bh=NwiZ/AX6sGMeBkyWgJppvW4FId3fDKSIv1el/x66+bY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zGP9UhtQjDfszLvhf25D+nEmje29fUSQyGGsMk+gLrNECjslKBZQSvZDK8HuycsJd
-	 O96uO9BIciwuB+kHlP/72P8UgictVRAC6IjJPB5e1TYD+IJ+ZWMx8qJ8IpWoSrneE4
-	 A6nWpKHHNRZjr19mFTWF7S1XKoAn3YOjAOtV2SzE=
+	by mail.kernel.org (Postfix) with ESMTP id 861562089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:42:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JY5V0+zs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438990AbfJQUfc (ORCPT
+        id S2437352AbfJQUmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 16:35:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56582 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391182AbfJQUfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 16:35:32 -0400
-Received: from localhost (unknown [104.132.0.109])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8587120872;
-        Thu, 17 Oct 2019 20:35:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571344531;
-        bh=NwiZ/AX6sGMeBkyWgJppvW4FId3fDKSIv1el/x66+bY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sWROEH/qmmfRnJJSunjulu7xyyJB0d2EMJj88WlM7jphBGEhUYrpGgwXm6NBtIrNF
-         IWFeMSyNBblzRqWLEIpOAO/rRvGgrj2o8PYRchrlCXo9oQXyQ3YWSlZiPsiFn2v4Wz
-         kWMNcY+mLmZ5OVUbrIPHol4FgRBzXP8pEx86xH7c=
-Date:   Thu, 17 Oct 2019 13:35:30 -0700
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 5.3 000/112] 5.3.7-stable review
-Message-ID: <20191017203530.GA1105066@kroah.com>
-References: <20191016214844.038848564@linuxfoundation.org>
- <CA+G9fYsV=wVPaF4Uwbtddb1753Bfqz5EDhTzV2A8CX576JNqYA@mail.gmail.com>
+        Thu, 17 Oct 2019 16:42:25 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37901 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727269AbfJQUmY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 16:42:24 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w8so1701678plq.5;
+        Thu, 17 Oct 2019 13:42:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nPDOMJGsHH0zWzPAXm/wI3oxwPr0hf8L0/bKy7cCfl0=;
+        b=JY5V0+zsgcHQRg+zIlfgYCnfvpm4+2xS++Wrh5CZKpfPmBH97fjeKguHx2KGQ7JcU4
+         B1RXuRi2+tSbaAqaGOzzASRHJj++kOC+LCAmQDJSPeyZb8DnL2mMRwlPiCwzdPiCWlUs
+         Xh6p7h9kKxZsBiq/NA6sEtIH65uq9Hafzf+lUVMfb8ijpYSuTXaNoiTNqv9sFEtuUwOt
+         TbRUWF7kiHt5lcy828hYBACk5tIrtJaTrhPuN5uMVq25g5F/5h3tPmTd5qmwS88pYnAg
+         2zZJVCktgXrf3VCPK9oywT03Y57xan/2a7SgrdB9dfI6+pIu3+CRznM3ZR/GkKdN2cf/
+         aCKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nPDOMJGsHH0zWzPAXm/wI3oxwPr0hf8L0/bKy7cCfl0=;
+        b=d99OnXNMe+/LGtum3nRgFdkixdmA+faJFHvCTZnusgQlrDtMU67myLjDiCa/HDadQ+
+         W8UCtEP68NVmwb4FAJ8OwETTMeCm5UE71B/eWmK2n0+shGYGGlO3Ra4oOCFVTHCoKaDF
+         UlVXPac0JgcV/B485ZJ3O7EGGytVKnrGVP+D1jdAu/vyoXDQ9+UjjbBQfhDcRQ9zczYM
+         xCeAu1XTRkZ6JpctbYNI6aUervrw2VqQibEsEBtF+1UJEZvkEeMEt80d8Y1EKToSIHmq
+         h66gFjUdEb8/0gdiUjimy6XfbafS+Auq4h0luCUGEFUKkIsb5NRfmzBr9x8v3GX+3/+F
+         XAZw==
+X-Gm-Message-State: APjAAAXq8HHBsXk071uCqMaPqPmyblmniWwFaWVVT+jWYpPTcycj2YDJ
+        KyN/9HFDDO21/0NLJP9PNS8bFo2t
+X-Google-Smtp-Source: APXvYqzB6sY5K36yP5ikWTXLkI1rfufnmBl38JrsxdSekitFu0TG7m6r9+16waKtOEprzS9jLoRCDw==
+X-Received: by 2002:a17:902:2e:: with SMTP id 43mr6159836pla.55.1571344941448;
+        Thu, 17 Oct 2019 13:42:21 -0700 (PDT)
+Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id b3sm4626365pfd.125.2019.10.17.13.42.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 13:42:20 -0700 (PDT)
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     linux-input@vger.kernel.org
+Cc:     Alexander Shiyan <shc_work@mail.ru>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Enrico Weigelt <info@metux.net>, Eric Anholt <eric@anholt.net>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Jacky Bai <ping.bai@nxp.com>, Jeff LaBundy <jeff@labundy.com>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Luca Weiss <luca@z3ntu.xyz>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Martin Kepplinger <martink@posteo.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Miloslav Trmac <mitr@volny.cz>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Pavel Machek <pavel@ucw.cz>,
+        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        =?UTF-8?q?Ronald=20Tschal=C3=A4r?= <ronald@innovation.ch>,
+        Stefan Agner <stefan@agner.ch>,
+        Steve Winslow <swinslow@gmail.com>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 00/22] Stop using input_polled_dev in polling drivers
+Date:   Thu, 17 Oct 2019 13:41:54 -0700
+Message-Id: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
+X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYsV=wVPaF4Uwbtddb1753Bfqz5EDhTzV2A8CX576JNqYA@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 10:51:15PM +0530, Naresh Kamboju wrote:
-> On Thu, 17 Oct 2019 at 03:29, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.3.7 release.
-> > There are 112 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Fri 18 Oct 2019 09:43:41 PM UTC.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.7-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+Input devices now support polling mode natively (via input_setup_polling
+API), and input_polled_dev implementation is going away. This series
+switches drivers found in drivers/input to the new scheme.
 
-Great, thanks for testing all of these and letting me know.
 
-greg k-h
+Dmitry Torokhov (21):
+  Input: raspberrypi-ts - switch to using polled mode of input devices
+  Input: sur40 - switch to using polled mode of input devices
+  Input: ts4800-ts - switch to using polled mode of input devices
+  Input: tsc6507x-ts - switch to using polled mode of input devices
+  Input: adc-keys - switch to using polled mode of input devices
+  Input: clps711x-keypad - switch to using polled mode of input devices
+  Input: jornada680_kbd - switch to using polled mode of input devices
+  Input: gpio_keys_polled - switch to using polled mode of input devices
+  Input: apanel - switch to using polled mode of input devices
+  Input: wistron_btns - switch to using polled mode of input devices
+  Input: cobalt_btns - convert to use managed resources
+  Input: cobalt_btns - switch to using polled mode of input devices
+  Input: sgi_btns - switch to using managed resources
+  Input: sgi_btns - switch to using polled mode of input devices
+  Input: rb532_button - switch to using managed resources
+  Input: rb532_button - switch to using polled mode of input devices
+  Input: gpio_decoder - switch to using polled mode of input devices
+  Input: mma8450 - switch to using polled mode of input devices
+  Input: bma150 - switch to using polled mode of input devices
+  Input: kxtj9 - switch to using managed resources
+  Input: kxtj9 - switch to using polled mode of input devices
+
+Jonathan Bakker (1):
+  Input: bma150 - use managed resources helpers
+
+ drivers/input/keyboard/Kconfig             |   4 -
+ drivers/input/keyboard/adc-keys.c          |  36 ++--
+ drivers/input/keyboard/clps711x-keypad.c   |  70 +++----
+ drivers/input/keyboard/gpio_keys_polled.c  |  65 +++---
+ drivers/input/keyboard/jornada680_kbd.c    |  37 ++--
+ drivers/input/misc/Kconfig                 |  15 --
+ drivers/input/misc/apanel.c                | 153 ++++++--------
+ drivers/input/misc/bma150.c                | 190 +++++------------
+ drivers/input/misc/cobalt_btns.c           |  73 +++----
+ drivers/input/misc/gpio_decoder.c          |  42 ++--
+ drivers/input/misc/kxtj9.c                 | 224 ++++++---------------
+ drivers/input/misc/mma8450.c               | 101 +++++-----
+ drivers/input/misc/rb532_button.c          |  48 ++---
+ drivers/input/misc/sgi_btns.c              |  54 ++---
+ drivers/input/misc/wistron_btns.c          |  51 ++---
+ drivers/input/touchscreen/Kconfig          |   4 -
+ drivers/input/touchscreen/raspberrypi-ts.c |  38 ++--
+ drivers/input/touchscreen/sur40.c          |  92 +++++----
+ drivers/input/touchscreen/tps6507x-ts.c    |  36 ++--
+ drivers/input/touchscreen/ts4800-ts.c      |  68 ++++---
+ 20 files changed, 557 insertions(+), 844 deletions(-)
+
+-- 
+2.23.0.866.gb869b98d4c-goog
+
