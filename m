@@ -2,142 +2,109 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C7EFA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB69FA3735
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B10322089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F0C82089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:35:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ixhQd+P4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PC7bB0Eu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389029AbfJQNdM (ORCPT
+        id S2394646AbfJQNfw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 09:33:12 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:52356 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729175AbfJQNdL (ORCPT
+        Thu, 17 Oct 2019 09:35:52 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:32787 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729175AbfJQNfw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 09:33:11 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9HDNtRw096635;
-        Thu, 17 Oct 2019 13:33:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=lJRbZTgg/EUbW624nJ8C/GRS6p8r210DOZWdtGIn12Q=;
- b=ixhQd+P4HH325gdVOLqTwNwpm/iyMGHswVh4cSD/6YN+fn5iBERv3YP0Qsca/2zOsyf1
- utxLQ8cRhuMaXw0VM67xhUzxOBBymZS4CBpm41jdJyF0Fz0vnwxfOiSIZ6yhoRW7CFoQ
- F0ChLBkkETkiP02mtnu2oTfAv+lZXSDWAV4je2I7C/4plxAnlXVDuSxghGW2r2YeoMDq
- jJCbqeHUv/lcLT/lHfU18tMN1za6iNgJQ/LKej+2F49ymPj6nWKsunedzHzEa9qREVXa
- 5wRSGzfEwIly5XcyWFxyAjNLrZvzETNTL0g6pjOy1MpcYqpGi/kHxZQyb/GUCtie/yEw Fw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2vk68uxcgv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 17 Oct 2019 13:33:04 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9HDMtei139849;
-        Thu, 17 Oct 2019 13:31:04 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2vp3bkrdyb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 17 Oct 2019 13:31:04 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9HDV1H1023731;
-        Thu, 17 Oct 2019 13:31:01 GMT
-Received: from [10.175.56.189] (/10.175.56.189)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 17 Oct 2019 13:31:01 +0000
-Subject: Re: email as a bona fide git transport
-To:     Junio C Hamano <gitster@pobox.com>
-Cc:     workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        Eric Wong <e@80x24.org>
-References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
- <xmqqeezc83i6.fsf@gitster-ct.c.googlers.com>
-From:   Vegard Nossum <vegard.nossum@oracle.com>
-Message-ID: <9ec63ec0-c322-610c-e1b8-b673b983dc74@oracle.com>
-Date:   Thu, 17 Oct 2019 15:30:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 17 Oct 2019 09:35:52 -0400
+Received: by mail-pl1-f193.google.com with SMTP id d22so1162841pls.0;
+        Thu, 17 Oct 2019 06:35:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HRZw0egH7e60E3YrLTW6KLeAvZRaV263GSPwsEpHnaQ=;
+        b=PC7bB0Eu73Z6Uvaxmb6KnYDuSNuM2AN8soCupCW1kBQRAoQuiQ3XMxS58psBUAuNcV
+         /3X00l4GDcqb/gR/pCOa0q9X/ZGHZAe/Q0S0tZR+TXiK3dDaRBKGdMUf5VnO5JuU1vwG
+         9rNQMpsGcI0qA1EA1ytT15vLmbxNi7atUOOXveqw7NP4tPT/LEVreKz/CM/hS8kLubul
+         hvBcWSjmDUCZhG0+lH+oyM7yrZYkbzUBI8/Vv08a+PBpamEuHCyqwE4ulz4V7P4Q9735
+         HVvzenPVYP6Ox+XOfQfDgtG9yBq/ZeJBecofyVlHcYf8FG+TXoP2NgZ+hTnlUd9tIVCK
+         P3Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HRZw0egH7e60E3YrLTW6KLeAvZRaV263GSPwsEpHnaQ=;
+        b=CqMZYDD8kxVnOslTgzIQbK9m5zmXZDTZ/ma5OmBTRKcTMOvjBCW9EB71o9UrVWmubN
+         XYG8U1Xy7wsmuGcYc+iiBRdxkWnS5uHp9iXUGhiT5R1pvXnzImnIQKpPsPHcrNQTEVaX
+         1n3cbsinCV/lNNlk49dtxUwzIWs5BHTxDhCMEYAeNMIeIqleCX/oJyJdpnCoDW0C7jn1
+         xT9/YFUEx4kY5snAiC7OjnowBKTspSe0HYda7WeFVHG/VDs8f50Mhob3JoV+w9VJp/bz
+         bjsc+4IP14p0P7+N+GCpGmK8zM5dQWaKFAD5xLU6s4VOxyMTbKFs9FzZrHMf7u0kRRYi
+         5CbA==
+X-Gm-Message-State: APjAAAUgEnrZn0VQnT+bIpgNsf/UPPJToZfUEChA7aUiESfokmURsx+6
+        DnS+GdJMfnn8JPa8lyt/en4=
+X-Google-Smtp-Source: APXvYqzKxMWca29yudpmBf6GNcF/KRjzO/VPH35/hY7SFgA8oom/+W+0wulxVNjq5ZegK536zz9QrQ==
+X-Received: by 2002:a17:902:44d:: with SMTP id 71mr4092886ple.195.1571319351587;
+        Thu, 17 Oct 2019 06:35:51 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p24sm5582476pgc.72.2019.10.17.06.35.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 17 Oct 2019 06:35:51 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 06:35:49 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, jdelvare@suse.com,
+        mark.rutland@arm.com, robh+dt@kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: hwmon: Document ibm,cffps compatible
+ string
+Message-ID: <20191017133549.GA23352@roeck-us.net>
+References: <1570648262-25383-1-git-send-email-eajames@linux.ibm.com>
+ <1570648262-25383-2-git-send-email-eajames@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <xmqqeezc83i6.fsf@gitster-ct.c.googlers.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9412 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910170122
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9412 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910170122
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1570648262-25383-2-git-send-email-eajames@linux.ibm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/17/19 5:17 AM, Junio C Hamano wrote:
-> Vegard Nossum <vegard.nossum@oracle.com> writes:
+On Wed, Oct 09, 2019 at 02:11:01PM -0500, Eddie James wrote:
+> Document this string that indicates that any version of the power supply
+> may be connected. In this case, the driver must detect the version
+> automatically.
 > 
->> Step 1:
->>
->> * git send-email needs to include parent SHA1s and generally all the
->>    information needed to perfectly recreate the commit when applied so
->>    that all the SHA1s remain the same
->>
->> * git am (or an alternative command) needs to recreate the commit
->>    perfectly when applied, including applying it to the correct parent
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+
+Applied.
+
+Thanks,
+Guenter
+
+> ---
+>  Documentation/devicetree/bindings/hwmon/ibm,cffps1.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> You can record and convey the commit object name a series is meant
-> to be applied on top already, and it in general is a good way to
-> give a wider context in order to explain and justify the series.
-> 
-> On the other hand, "all the information needed to recreate..." is
-> not very useful.  If you want the commit object to be exactly what
-> you want to see at the tip of the end result, you are better off
-> asking your upstream to pull.  Using e-mail for that makes you and
-> project participants give up a lot of benefits the workflow based on
-> e-mail gives you, the biggest of which is the ease of giving
-> suggestions for improvements.  Once you insist "perfectly recreate
-> the commit", you are not willing to take any input from the
-> sidelines---worse yet, you are even dictating when the upstream
-> runs "git am" to turn them into commits, and do so without reading
-> the patches (there is no point reviewing as the person who runs "git
-> am" is not even allowed to fix typo or make obvious fixes to the
-> code, which will fail to perfectly recreate the commit).
-> 
-> In short, one should resist temptation to bring up "perfect
-> reproduction" when one talks about e-mail workflow.
-
-Please see what I wrote to Pratyush Yadav here:
-
-https://public-inbox.org/git/a1c33600-14e6-be37-c026-8d8b8e4bad92@oracle.com/
-
-TL;DR: the goal is not necessarily for maintainers to be able to merge
-the patchset with the same SHA1 that the submitter had, but for the
-patchset to have a definite SHA1 that lives in git, and which can be
-used by all the participants -- submitter, reviewers, bots (including
-potentially testing/CI infrastructure), and maintainers.
-
-I am definitely not proposing to get rid of the email workflow -- on the
-contrary, this it the workflow I want to preserve! :-) The "workflows"
-mailing list was created for the purpose of discussing this topic (in
-the context of Linux kernel development) and right now there are many
-proposals that either completely cut out email or reduce it to something
-like pull requests. My proposal keeps almost everything the same, except
-for a few lines of extra metadata before the actual diff.
-
-(I will answer the rest of your email separately.)
-
-
-Vegard
+> diff --git a/Documentation/devicetree/bindings/hwmon/ibm,cffps1.txt b/Documentation/devicetree/bindings/hwmon/ibm,cffps1.txt
+> index 1036f65..d9a2719 100644
+> --- a/Documentation/devicetree/bindings/hwmon/ibm,cffps1.txt
+> +++ b/Documentation/devicetree/bindings/hwmon/ibm,cffps1.txt
+> @@ -5,6 +5,9 @@ Required properties:
+>   - compatible				: Must be one of the following:
+>  						"ibm,cffps1"
+>  						"ibm,cffps2"
+> +						or "ibm,cffps" if the system
+> +						must support any version of the
+> +						power supply
+>   - reg = < I2C bus address >;		: Address of the power supply on the
+>  					  I2C bus.
+>  
