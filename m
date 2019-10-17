@@ -2,204 +2,171 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4ADECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4647FFA3730
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 489B020663
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:43:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PBJfc4iK"
+	by mail.kernel.org (Postfix) with ESMTP id 2688820663
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:43:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393883AbfJQJnr (ORCPT
+        id S2394036AbfJQJny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 05:43:47 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36036 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbfJQJnq (ORCPT
+        Thu, 17 Oct 2019 05:43:54 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46248 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393888AbfJQJnx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 05:43:46 -0400
-Received: by mail-wm1-f66.google.com with SMTP id m18so1821973wmc.1;
-        Thu, 17 Oct 2019 02:43:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=j33Q+AxJlhfJ2zQyBdLBD2zOlPBTBa+TDiJdmF/d4B0=;
-        b=PBJfc4iKYLoGVwZHVtTO0lO3ez5BpGeXPZAlj4Qxx0c4NWNvQiQJdK1Zm22yFqjtaV
-         XO4FHG92jwHETc95eBaAqW8My3/55VjWzgdzO1Z7VFGBKZ6/SSKp6CTcrfC3PtlNKUqL
-         Gz5RKw3w65f80M9hxVCyoUP5nbQbEGYqA7zONJtbqiZZSQ4kJoIXDkriUorZx149Ov6V
-         hp2VI/XVNAKT6jIOvk6lx29b+UyYLiw1dTHMppE7KWb8k9vetl5lYmF5oE0pBsoCnQOR
-         RSu0PTM8fVta3TCkFFq1fEmhNZJQ4CHICquFivetIufuHrOzmlAiCgVnt5JDfNQxaSMU
-         /cUg==
+        Thu, 17 Oct 2019 05:43:53 -0400
+Received: by mail-lj1-f195.google.com with SMTP id d1so1780159ljl.13;
+        Thu, 17 Oct 2019 02:43:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=j33Q+AxJlhfJ2zQyBdLBD2zOlPBTBa+TDiJdmF/d4B0=;
-        b=Qo9E6J49rYFa2ZNpWd2ckIpFOhYaaqhgw1JA7U44usOR5nqZEIACEj5Sl++pp7iID8
-         iZk+oJra5DXIVsEpr4uZzIjA8eFQZ7/Tq1LIQF3Imsh4M3luaLAu9gYzHZF3HUMWUjjd
-         xWfmUmuMhZPNfE/3Y/YOHYC2amv2e1ZLuOVsCan9hZOZ0pY8kHodcOH/uI9/SokJ1Qr6
-         VtrfU35FXnZPlku0iHy6L9BMJNBC3xdSbsmbvfEuUFdkv3qgPfYkLjSP3IVOyKrAsVtU
-         Oa7p+2S1HOzpIuU3EM/SLshKTT3xhdwjYmS+aMzMQh2pDJ+uMSTuypR2fO2Xbgje8g3l
-         ACJg==
-X-Gm-Message-State: APjAAAU3UptI2OkoEaNJNLcjJ2TJlY71ZsJoFAJw9VwbkcLyQyelt4PF
-        mTgJxKa92fQjHhlSDOcUB1U=
-X-Google-Smtp-Source: APXvYqxHJt9ec/ig4bgPywnDn38DGreAT5nDreVbx5QqzUYuzF0nTYOT9L67QUVhr9q6+o+HntA0Mw==
-X-Received: by 2002:a05:600c:21d2:: with SMTP id x18mr2121283wmj.146.1571305423433;
-        Thu, 17 Oct 2019 02:43:43 -0700 (PDT)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id l6sm2029963wmg.2.2019.10.17.02.43.41
+        bh=jh4gf950oYClWnD4Coi3ctcStnuW8fLUjgIauH0yMgo=;
+        b=APLexERfkST1AGHTrcIRl/QYrmsbnR0dqG9bBTJy/3cOZYtU6FTJugXRTFYKSj7tig
+         zRm9ZVNa5yQAXJ7o1xhgqaLcAm61c4+JVr1dXeUrz56XWxTV6Ml1+ukOpV0q8TKd+PmI
+         EXWaLsWnICsjTp7WtiLst6M+L0pj7awstb0uZmQ2rJSfBqGDRlYvv+OdcQm2SeRmBYCK
+         GY/ke9wLm/ckDOCa7ti1Tb1gWd9dvSHUmisBH9gM+I+NVPVuglhQAcHhcK+Is5x2LjpQ
+         /YWopDEr8FOWXVhuBiMMwj0RF7Lj2TjrXv0SEHL5Q9xupoxB6da2LvJccpa6IHvBOxQQ
+         PUow==
+X-Gm-Message-State: APjAAAWV1aAdicsG4rcWdK3dgcgU2o1G0dNE5mp2ElaATGt8nWtHzzNy
+        ngX4eHAv8kFqgXixr8aeP70=
+X-Google-Smtp-Source: APXvYqwsqN/v09N3swS+yfo5KQfI30YTYAFNVCYxdNXOmv76b6xaf3XXKut9e+5Ile/SYxEnfoO5Yw==
+X-Received: by 2002:a2e:b049:: with SMTP id d9mr1822102ljl.121.1571305431036;
+        Thu, 17 Oct 2019 02:43:51 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id k68sm788783lje.86.2019.10.17.02.43.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 02:43:42 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 10:43:41 +0100
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
-Subject: Re: [PATCH V3 0/7] mdev based hardware virtio offloading support
-Message-ID: <20191017094341.GF23557@stefanha-x1.localdomain>
-References: <20191011081557.28302-1-jasowang@redhat.com>
- <20191014174946.GC5359@stefanha-x1.localdomain>
- <6d12ad8f-8137-e07d-d735-da59a326e8ed@redhat.com>
- <20191015143720.GA13108@stefanha-x1.localdomain>
- <ba81e603-cb7d-b152-8fae-97f070a7e460@redhat.com>
+        Thu, 17 Oct 2019 02:43:50 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 12:43:38 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [RFC PATCH 03/13] clk: bd718x7: Support ROHM BD71828 clk block
+Message-ID: <da2293930832eae746a5e26d07ef00c426635b5b.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Pql/uPZNXIm1JCle"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ba81e603-cb7d-b152-8fae-97f070a7e460@redhat.com>
+In-Reply-To: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+BD71828GW is a single-chip power management IC for battery-powered portable
+devices. Add support for controlling BD71828 clk using bd718x7 driver.
 
---Pql/uPZNXIm1JCle
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+ drivers/clk/Kconfig       |  6 +++---
+ drivers/clk/clk-bd718x7.c | 15 ++++++++++-----
+ 2 files changed, 13 insertions(+), 8 deletions(-)
 
-On Thu, Oct 17, 2019 at 09:42:53AM +0800, Jason Wang wrote:
->=20
-> On 2019/10/15 =E4=B8=8B=E5=8D=8810:37, Stefan Hajnoczi wrote:
-> > On Tue, Oct 15, 2019 at 11:37:17AM +0800, Jason Wang wrote:
-> > > On 2019/10/15 =E4=B8=8A=E5=8D=881:49, Stefan Hajnoczi wrote:
-> > > > On Fri, Oct 11, 2019 at 04:15:50PM +0800, Jason Wang wrote:
-> > > > > There are hardware that can do virtio datapath offloading while h=
-aving
-> > > > > its own control path. This path tries to implement a mdev based
-> > > > > unified API to support using kernel virtio driver to drive those
-> > > > > devices. This is done by introducing a new mdev transport for vir=
-tio
-> > > > > (virtio_mdev) and register itself as a new kind of mdev driver. T=
-hen
-> > > > > it provides a unified way for kernel virtio driver to talk with m=
-dev
-> > > > > device implementation.
-> > > > >=20
-> > > > > Though the series only contains kernel driver support, the goal i=
-s to
-> > > > > make the transport generic enough to support userspace drivers. T=
-his
-> > > > > means vhost-mdev[1] could be built on top as well by resuing the
-> > > > > transport.
-> > > > >=20
-> > > > > A sample driver is also implemented which simulate a virito-net
-> > > > > loopback ethernet device on top of vringh + workqueue. This could=
- be
-> > > > > used as a reference implementation for real hardware driver.
-> > > > >=20
-> > > > > Consider mdev framework only support VFIO device and driver right=
- now,
-> > > > > this series also extend it to support other types. This is done
-> > > > > through introducing class id to the device and pairing it with
-> > > > > id_talbe claimed by the driver. On top, this seris also decouple
-> > > > > device specific parents ops out of the common ones.
-> > > > I was curious so I took a quick look and posted comments.
-> > > >=20
-> > > > I guess this driver runs inside the guest since it registers virtio
-> > > > devices?
-> > >=20
-> > > It could run in either guest or host. But the main focus is to run in=
- the
-> > > host then we can use virtio drivers in containers.
-> > >=20
-> > >=20
-> > > > If this is used with physical PCI devices that support datapath
-> > > > offloading then how are physical devices presented to the guest wit=
-hout
-> > > > SR-IOV?
-> > >=20
-> > > We will do control path meditation through vhost-mdev[1] and vhost-vf=
-io[2].
-> > > Then we will present a full virtio compatible ethernet device for gue=
-st.
-> > >=20
-> > > SR-IOV is not a must, any mdev device that implements the API defined=
- in
-> > > patch 5 can be used by this framework.
-> > What I'm trying to understand is: if you want to present a virtio-pci
-> > device to the guest (e.g. using vhost-mdev or vhost-vfio), then how is
-> > that related to this patch series?
->=20
->=20
-> This series introduce some infrastructure that would be used by vhost-mde=
-v:
->=20
-> 1) allow new type of mdev devices/drivers other than vfio (through class_=
-id
-> and device ops)
->=20
-> 2) a set of virtio specific callbacks that will be used by both vhost-mdev
-> and virtio-mdev defined in patch 5
->=20
-> Then vhost-mdev can be implemented on top: a new mdev class id but reuse =
-the
-> callback defined in 2. Through this way the parent can provides a single =
-set
-> of callbacks (device ops) for both kernel virtio driver (through
-> virtio-mdev) or userspace virtio driver (through vhost-mdev).
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 801fa1cd0321..1d61d94cdb29 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -302,10 +302,10 @@ config COMMON_CLK_STM32H7
+ 	  Support for stm32h7 SoC family clocks
+ 
+ config COMMON_CLK_BD718XX
+-	tristate "Clock driver for ROHM BD718x7 PMIC"
+-	depends on MFD_ROHM_BD718XX || MFD_ROHM_BD70528
++	tristate "Clock driver for 32K clk gates on ROHM PMICs"
++	depends on MFD_ROHM_BD718XX || MFD_ROHM_BD70528 || MFD_ROHM_BD71828
+ 	help
+-	  This driver supports ROHM BD71837, ROHM BD71847 and
++	  This driver supports ROHM BD71837, ROHM BD71847, ROHM BD71828 and
+ 	  ROHM BD70528 PMICs clock gates.
+ 
+ config COMMON_CLK_FIXED_MMIO
+diff --git a/drivers/clk/clk-bd718x7.c b/drivers/clk/clk-bd718x7.c
+index ae6e5baee330..d17a19e04592 100644
+--- a/drivers/clk/clk-bd718x7.c
++++ b/drivers/clk/clk-bd718x7.c
+@@ -8,6 +8,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/mfd/rohm-bd718x7.h>
++#include <linux/mfd/rohm-bd71828.h>
+ #include <linux/mfd/rohm-bd70528.h>
+ #include <linux/clk-provider.h>
+ #include <linux/clkdev.h>
+@@ -21,10 +22,8 @@ struct bd718xx_clk {
+ 	struct rohm_regmap_dev *mfd;
+ };
+ 
+-static int bd71837_clk_set(struct clk_hw *hw, int status)
++static int bd71837_clk_set(struct bd718xx_clk *c, int status)
+ {
+-	struct bd718xx_clk *c = container_of(hw, struct bd718xx_clk, hw);
+-
+ 	return regmap_update_bits(c->mfd->regmap, c->reg, c->mask, status);
+ }
+ 
+@@ -33,14 +32,16 @@ static void bd71837_clk_disable(struct clk_hw *hw)
+ 	int rv;
+ 	struct bd718xx_clk *c = container_of(hw, struct bd718xx_clk, hw);
+ 
+-	rv = bd71837_clk_set(hw, 0);
++	rv = bd71837_clk_set(c, 0);
+ 	if (rv)
+ 		dev_dbg(&c->pdev->dev, "Failed to disable 32K clk (%d)\n", rv);
+ }
+ 
+ static int bd71837_clk_enable(struct clk_hw *hw)
+ {
+-	return bd71837_clk_set(hw, 1);
++	struct bd718xx_clk *c = container_of(hw, struct bd718xx_clk, hw);
++
++	return bd71837_clk_set(c, 0xffffffff);
+ }
+ 
+ static int bd71837_clk_is_enabled(struct clk_hw *hw)
+@@ -93,6 +94,10 @@ static int bd71837_clk_probe(struct platform_device *pdev)
+ 		c->reg = BD718XX_REG_OUT32K;
+ 		c->mask = BD718XX_OUT32K_EN;
+ 		break;
++	case ROHM_CHIP_TYPE_BD71828:
++		c->reg = BD71828_REG_OUT32K;
++		c->mask = BD71828_OUT32K_EN;
++		break;
+ 	case ROHM_CHIP_TYPE_BD70528:
+ 		c->reg = BD70528_REG_CLK_OUT;
+ 		c->mask = BD70528_CLK_OUT_EN_MASK;
+-- 
+2.21.0
 
-Okay, thanks for explaining!
 
-Stefan
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
---Pql/uPZNXIm1JCle
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2oN8wACgkQnKSrs4Gr
-c8gqswf/fQBq+qX21L3QGLUXUsf7OZ9kLP3ksR+9RYfGDJaFva/fV/aULknTmAiO
-OA0s+Eiw7K5Hy2ooKGPQXPYgAJhgnHqmhKgOEdsOGDWyCilYAiJzk/YXkpPvaCTp
-ovWC5Fz/shXyY3m2YGPXuwnWjbCam7cqMCRVPrmzJWoS6kdvsYsPxBVnhGFOm0Ms
-gbll/8mZQDQWsOZ8ZFeXLXCcHifXaiLa+yiGcZfxtV37oHsSapT+MOXEstGy4jEe
-uvos/V8tSLLMOJ+zgMYGOI0oOJIejMOrLU2zxPlktTbBVcM1RQtpJL69F30gi89K
-qCue5w57Z1UNfPVbXLiobIkPcZBGVw==
-=EXDt
------END PGP SIGNATURE-----
-
---Pql/uPZNXIm1JCle--
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
