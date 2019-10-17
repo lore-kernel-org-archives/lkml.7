@@ -2,89 +2,166 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33910ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF261ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 013D920659
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:19:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=didiksetiawan.com header.i=ds@didiksetiawan.com header.b="BKsGMwn/"
+	by mail.kernel.org (Postfix) with ESMTP id A239420659
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:19:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441260AbfJQSS6 (ORCPT
+        id S2441274AbfJQSTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 14:18:58 -0400
-Received: from sender4-of-o54.zoho.com ([136.143.188.54]:21412 "EHLO
-        sender4-of-o54.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438465AbfJQSS6 (ORCPT
+        Thu, 17 Oct 2019 14:19:32 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:38543 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438684AbfJQSTc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 14:18:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1571336301; cv=none; 
-        d=zoho.com; s=zohoarc; 
-        b=lagggj9ZXvDDIV7/derIiQExwv5MI/xc+UOh4ezgQDExS+e69htC0j1LdG0HVtmhv6ln2ZyYCQ+RqWcJzaJAsjr9Ty6qdOWWyOYBAVKfWRa70zq+N9VeB4r3ObtV3im93CfvTt1G4Mb+P9aBYWdJSe0s7Y4ZGprySexbizifByg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1571336301; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=e+DmBc0k0wkI4KLvSKQhrZ/7KcWo1MMr/deLd6MWJZw=; 
-        b=DEQm9onx0wvrGf0Sm1Orwas4WGPoFuhShAwcodKfRhhnKfQrJSNFSWVzO2p4x9dBHAIpQefkpuyV0wo18pYmNCtWZftC+sSe9ZCAraU/+gB8bVoY8ByPtYoMIQyXzng+Ozi9szULxQ5+u9eATzE98Vd1D4/zQvKFNfi7Hd8XpB8=
-ARC-Authentication-Results: i=1; mx.zoho.com;
-        dkim=pass  header.i=didiksetiawan.com;
-        spf=pass  smtp.mailfrom=ds@didiksetiawan.com;
-        dmarc=pass header.from=<ds@didiksetiawan.com> header.from=<ds@didiksetiawan.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1571336301;
-        s=zoho; d=didiksetiawan.com; i=ds@didiksetiawan.com;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
-        l=858; bh=e+DmBc0k0wkI4KLvSKQhrZ/7KcWo1MMr/deLd6MWJZw=;
-        b=BKsGMwn/vwAMgIMD/sdhSg9h7UfVgn9L1HdJMnoPBM55UzU9rRITVizYVXGzWtwA
-        tSv3c/gsToA0d1NGvSSEnmhKqTYTkSscye0W4Yn0iGosn6c9z0CEUr5ZdbvmbSCD/oJ
-        ncmTvHP6HmUINU5tN+/Ydsl+dOCH19ZRMZFC134M=
-Received: from thinkpad-e420s (120.188.94.47 [120.188.94.47]) by mx.zohomail.com
-        with SMTPS id 1571336299478949.125726423069; Thu, 17 Oct 2019 11:18:19 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 01:18:08 +0700
-From:   Didik Setiawan <ds@didiksetiawan.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.4 00/79] 4.4.197-stable review
-Message-ID: <20191017181808.GA8883@thinkpad-e420s>
-References: <20191016214729.758892904@linuxfoundation.org>
+        Thu, 17 Oct 2019 14:19:32 -0400
+Received: from [167.98.27.226] (helo=xylophone)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iLAMw-0006vd-SL; Thu, 17 Oct 2019 19:19:27 +0100
+Message-ID: <52d2fdbd514d93cdd901c18afbb83be13145de6f.camel@codethink.co.uk>
+Subject: Re: [Y2038] [PATCH v6 10/43] compat_ioctl: move rtc handling into
+ rtc-dev.c
+From:   Ben Hutchings <ben.hutchings@codethink.co.uk>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Thu, 17 Oct 2019 19:19:26 +0100
+In-Reply-To: <CAK8P3a0BYkPTSnQUmde2k+HVcg7XNihzWTEzrCD4d8G8ecO9-w@mail.gmail.com>
+References: <20191009190853.245077-1-arnd@arndb.de>
+         <20191009191044.308087-10-arnd@arndb.de>
+         <d1022cda6bd6ce73e9875644a5a2c65e4d554f37.camel@codethink.co.uk>
+         <CAK8P3a0BYkPTSnQUmde2k+HVcg7XNihzWTEzrCD4d8G8ecO9-w@mail.gmail.com>
+Organization: Codethink Ltd.
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 02:49:35PM -0700, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.197 release.
-> There are 79 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Thu, 2019-10-17 at 16:33 +0200, Arnd Bergmann wrote:
+> On Thu, Oct 17, 2019 at 3:42 PM Ben Hutchings
+> <ben.hutchings@codethink.co.uk> wrote:
+> > On Wed, 2019-10-09 at 21:10 +0200, Arnd Bergmann wrote:
+> > > We no longer need the rtc compat handling to be in common code, now that
+> > > all drivers are either moved to the rtc-class framework, or (rarely)
+> > > exist in drivers/char for architectures without compat mode (m68k,
+> > > alpha and ia64, respectively).
+> > > 
+> > > I checked the list of ioctl commands in drivers, and the ones that are
+> > > not already handled are all compatible, again with the one exception of
+> > > m68k driver, which implements RTC_PLL_GET and RTC_PLL_SET, but has no
+> > > compat mode.
+> > > 
+> > > Since the ioctl commands are either compatible or differ in both structure
+> > > and command code between 32-bit and 64-bit, we can merge the compat
+> > > handler into the native one and just implement the two common compat
+> > > commands (RTC_IRQP_READ, RTC_IRQP_SET) there.
+> > [...]
+> > 
+> > I don't think this can work properly on s390, because some of them take
+> > integers and some take pointers.
 > 
-> Responses should be made by Fri 18 Oct 2019 09:43:41 PM UTC.
-> Anything received after that time might be too late.
+> Thanks a lot for taking a look at the patch and pointing this out!
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.197-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
-> and the diffstat can be found below.
+> I don't remember how I got to this, either I missed the problem or I
+> decided that it was ok, since it will still do the right thing:
+> On s390 only the highest bit is cleared in a pointer value, and we
+> ensure that the RTC_IRQP_SET argument is between 1 and 8192.
 > 
-> thanks,
+> Passing a value of (0x80000000 + n) where n is in the valid range
+> would lead to the call succeeding unexpectedly on compat s390
+> (if it had an RTC, which it does not) which is clearly not good but
+> mostly harmless. I certainly had not considered this case.
 > 
-> greg k-h
- 
-Compiled, booted, and no regressions found on my x86_64 system.
+> However, looking at this again after your comment I found a rather
+> more serious bug in my new RTC_IRQP_SET handling: Any 64-bit
+> machine can now bypass the permission check for RTC_IRQP_SET by
+> calling RTC_IRQP_SET32 instead.
+> 
+> I'll fix it both issues by adding a rtc_compat_dev_ioctl() to handle
+> RTC_IRQP_SET32/RTC_IRQP_READ32:
 
-Thanks,
-Didik Setiawan 
+Reviewed-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+
+> diff --git a/drivers/rtc/dev.c b/drivers/rtc/dev.c
+> index 1dc5063f78c9..9e4fd5088ead 100644
+> --- a/drivers/rtc/dev.c
+> +++ b/drivers/rtc/dev.c
+> @@ -358,16 +358,6 @@ static long rtc_dev_ioctl(struct file *file,
+>                 mutex_unlock(&rtc->ops_lock);
+>                 return rtc_update_irq_enable(rtc, 0);
+> 
+> -#ifdef CONFIG_64BIT
+> -#define RTC_IRQP_SET32         _IOW('p', 0x0c, __u32)
+> -#define RTC_IRQP_READ32                _IOR('p', 0x0b, __u32)
+> -       case RTC_IRQP_SET32:
+> -               err = rtc_irq_set_freq(rtc, arg);
+> -               break;
+> -       case RTC_IRQP_READ32:
+> -               err = put_user(rtc->irq_freq, (unsigned int __user *)uarg);
+> -               break;
+> -#endif
+>         case RTC_IRQP_SET:
+>                 err = rtc_irq_set_freq(rtc, arg);
+>                 break;
+> @@ -409,6 +399,29 @@ static long rtc_dev_ioctl(struct file *file,
+>         return err;
+>  }
+> 
+> +#ifdef CONFIG_COMPAT
+> +#define RTC_IRQP_SET32         _IOW('p', 0x0c, __u32)
+> +#define RTC_IRQP_READ32                _IOR('p', 0x0b, __u32)
+> +
+> +static long rtc_dev_compat_ioctl(struct file *file,
+> +                                unsigned int cmd, unsigned long arg)
+> +{
+> +       struct rtc_device *rtc = file->private_data;
+> +       void __user *uarg = compat_ptr(arg);
+> +
+> +       switch (cmd) {
+> +       case RTC_IRQP_READ32:
+> +               return put_user(rtc->irq_freq, (__u32 __user *)uarg);
+> +
+> +       case RTC_IRQP_SET32:
+> +               /* arg is a plain integer, not pointer */
+> +               return rtc_dev_ioctl(file, RTC_IRQP_SET, arg);
+> +       }
+> +
+> +       return rtc_dev_ioctl(file, cmd, (unsigned long)uarg);
+> +}
+> +#endif
+> +
+>  static int rtc_dev_fasync(int fd, struct file *file, int on)
+>  {
+>         struct rtc_device *rtc = file->private_data;
+> @@ -444,7 +457,7 @@ static const struct file_operations rtc_dev_fops = {
+>         .read           = rtc_dev_read,
+>         .poll           = rtc_dev_poll,
+>         .unlocked_ioctl = rtc_dev_ioctl,
+> -       .compat_ioctl   = compat_ptr_ioctl,
+> +       .compat_ioctl   = rtc_dev_compat_ioctl,
+>         .open           = rtc_dev_open,
+>         .release        = rtc_dev_release,
+>         .fasync         = rtc_dev_fasync,
+> 
+> If you and Alexandre are both happy with this version, I'll fold it into
+> my original patch.
+> 
+>       Arnd
+> 
+-- 
+Ben Hutchings, Software Developer                         Codethink Ltd
+https://www.codethink.co.uk/                 Dale House, 35 Dale Street
+                                     Manchester, M1 2HF, United Kingdom
 
