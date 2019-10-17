@@ -2,132 +2,97 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E04ECE599
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC58ECE599
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77DBE2082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:03:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="n3W5e19M"
+	by mail.kernel.org (Postfix) with ESMTP id 91EE22082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:12:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395386AbfJQCDZ (ORCPT
+        id S2395072AbfJQCMc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 22:03:25 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:61428 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729268AbfJQCDY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 22:03:24 -0400
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x9H23H7l000536
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 11:03:18 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x9H23H7l000536
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1571277798;
-        bh=5W3OY67om9EG9vb/EYg6ImNL7BEojMB8tQN+Mmn7vbA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=n3W5e19MVEMy9zpWEjk6gEoYsVrPHBjkQmgEjEJdVzbv+yeYo6ImlbW4mmcyajGKK
-         qWkQB7V35OVxzuBejYBzRb3JlwGy2fVgzIDbGRDHnd6iZ+q2fR3ehpUho+N11f8MAs
-         kYox4BuTcw4uEejecY8Q0mPCNH7JgXSa9+NDdabMq77xtTnFioW6lrNvAUTt5WY4mE
-         1f+YRGt8pbKuQcbZjGnx7hPNeEEx3B2TDF6bBWcNwP2p29ENy3EXNe/qCNRlOCn5he
-         C8n/WtHu7BuRofXwGitL2wquDXqQ3C/Myd/cB5e2qvm9J+riWQ35wA9zDlIsSMqH3D
-         wgLXqLEkz6EDw==
-X-Nifty-SrcIP: [209.85.222.50]
-Received: by mail-ua1-f50.google.com with SMTP id 107so173398uau.5
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 19:03:18 -0700 (PDT)
-X-Gm-Message-State: APjAAAUoNML63EheeU+6j/22ukLHMqEQ/zyJl/cfFd7TWdKbwmyFi6Sn
-        2n1huUIHA23o6NEryyKIkBla6WcGXTTZ1ugnv90=
-X-Google-Smtp-Source: APXvYqwVi9fheo89aPS+Im48AXwrQ+Tr537NUnrtk8ITq15E6fveU7Boo8f24hAbeAVpt/n8y/Z2Bhq+qfFe2xkBKr8=
-X-Received: by 2002:ab0:59ed:: with SMTP id k42mr907181uad.25.1571277796854;
- Wed, 16 Oct 2019 19:03:16 -0700 (PDT)
+        Wed, 16 Oct 2019 22:12:32 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:35772 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729268AbfJQCMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 22:12:32 -0400
+Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 55D68A55E48D057E22C8;
+        Thu, 17 Oct 2019 10:12:30 +0800 (CST)
+Received: from dggeme713-chm.china.huawei.com (10.1.199.109) by
+ DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 17 Oct 2019 10:12:29 +0800
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ dggeme713-chm.china.huawei.com (10.1.199.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Thu, 17 Oct 2019 10:12:29 +0800
+Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
+ dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
+ Thu, 17 Oct 2019 10:12:29 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+CC:     "x86@kernel.org" <x86@kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mingfangsen <mingfangsen@huawei.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>
+Subject: Re: [PATCH] KVM: SVM: Fix potential wrong physical id in
+ avic_handle_ldr_update
+Thread-Topic: [PATCH] KVM: SVM: Fix potential wrong physical id in
+ avic_handle_ldr_update
+Thread-Index: AdWEjr+4z8yau3AyRuWN8bh3iu3VDg==
+Date:   Thu, 17 Oct 2019 02:12:29 +0000
+Message-ID: <7db9f15500ab486b897bf1a7fa7e7161@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.184.189.20]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <oZ31wh8h96sDGJ_uQWJbvFDzh4-ByMMeoyOhTLmfdf5B5T0KWgLhhNbC49J6EM_Nlgo_zH-bUScrWxYTgP9eNNMF1D5AbpcbIHbBuzbS_44=@protonmail.ch>
- <20191014134037.GA79684@google.com>
-In-Reply-To: <20191014134037.GA79684@google.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 17 Oct 2019 11:02:41 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQDBg6r8OnZWDQqwXrQmD7jEi3R9igTi6jQC32sU3rMBg@mail.gmail.com>
-Message-ID: <CAK7LNAQDBg6r8OnZWDQqwXrQmD7jEi3R9igTi6jQC32sU3rMBg@mail.gmail.com>
-Subject: Re: [PATCH] kheaders: substituting --sort in archive creation
-To:     Quentin Perret <qperret@google.com>
-Cc:     Dmitry Goldin <dgoldin@protonmail.ch>,
-        Andreas Schwab <schwab@linux-m68k.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "linux-kernel\\\\\\\\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "joel\\\\\\\\@joelfernandes.org" <joel@joelfernandes.org>,
-        Ben Hutchings <ben@decadent.org.uk>, adelva@google.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Matthias Maennich <maennich@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 10:40 PM Quentin Perret <qperret@google.com> wrote:
+
+Vitaly Kuznetsov <vkuznets@redhat.com> writes:
+
+>> Guest physical APIC ID may not equal to vcpu->vcpu_id in some case.
+>> We may set the wrong physical id in avic_handle_ldr_update as we 
+>> always use vcpu->vcpu_id.
+
+Hi, Vitaly, thanks for your reply.
+Do you think there may be a wrong physical id in avic_handle_ldr_update too ?
+
+>>
+>> @@ -4591,6 +4591,8 @@ static int avic_handle_ldr_update(struct kvm_vcpu *vcpu)
+>>  	int ret = 0;
+>>  	struct vcpu_svm *svm = to_svm(vcpu);
+>>  	u32 ldr = kvm_lapic_get_reg(vcpu->arch.apic, APIC_LDR);
+>> +	u32 apic_id_reg = kvm_lapic_get_reg(vcpu->arch.apic, APIC_ID);
+>> +	u32 id = (apic_id_reg >> 24) & 0xff;
 >
-> Hi Dmitry,
+>If we reach here than we're guaranteed to be in xAPIC mode, right? Could you maybe export and use kvm_xapic_id() here then (and in
+>avic_handle_apic_id_update() too)?
 >
-> On Wednesday 09 Oct 2019 at 13:42:14 (+0000), Dmitry Goldin wrote:
-> > From: Dmitry Goldin <dgoldin+lkml@protonmail.ch>
-> >
-> > The option --sort=ORDER was only introduced in tar 1.28 (2014), which
-> > is rather new and might not be available in some setups.
-> >
-> > This patch tries to replicate the previous behaviour as closely as possible
-> > to fix the kheaders build for older environments. It does not produce identical
-> > archives compared to the previous version due to minor sorting
-> > differences but produces reproducible results itself in my tests.
-> >
-> > Signed-off-by: Dmitry Goldin <dgoldin+lkml@protonmail.ch>
-> > ---
-> >  kernel/gen_kheaders.sh | 11 +++++++----
-> >  1 file changed, 7 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/kernel/gen_kheaders.sh b/kernel/gen_kheaders.sh
-> > index aff79e461fc9..5a0fc0b0403a 100755
-> > --- a/kernel/gen_kheaders.sh
-> > +++ b/kernel/gen_kheaders.sh
-> > @@ -71,10 +71,13 @@ done | cpio --quiet -pd $cpio_dir >/dev/null 2>&1
-> >  find $cpio_dir -type f -print0 |
-> >       xargs -0 -P8 -n1 perl -pi -e 'BEGIN {undef $/;}; s/\/\*((?!SPDX).)*?\*\///smg;'
-> >
-> > -# Create archive and try to normalize metadata for reproducibility
-> > -tar "${KBUILD_BUILD_TIMESTAMP:+--mtime=$KBUILD_BUILD_TIMESTAMP}" \
-> > -    --owner=0 --group=0 --sort=name --numeric-owner \
-> > -    -Jcf $tarfile -C $cpio_dir/ . > /dev/null
-> > +# Create archive and try to normalize metadata for reproducibility.
-> > +# For compatibility with older versions of tar, files are fed to tar
-> > +# pre-sorted, as --sort=name might not be available.
-> > +find $cpio_dir -printf "./%P\n" | LC_ALL=C sort | \
-> > +    tar "${KBUILD_BUILD_TIMESTAMP:+--mtime=$KBUILD_BUILD_TIMESTAMP}" \
-> > +    --owner=0 --group=0 --numeric-owner --no-recursion \
-> > +    -Jcf $tarfile -C $cpio_dir/ -T - > /dev/null
-> >
-> >  echo "$src_files_md5" >  kernel/kheaders.md5
-> >  echo "$obj_files_md5" >> kernel/kheaders.md5
-> > --
-> > 2.23.0
->
-> FWIW:
->
->   Tested-by: Quentin Perret <qperret@google.com>
->
-> It turns out this issue broke something in our CI, could this patch be
-> queued as a -rc4 fix ?
 
+I think we're guaranteed to be in xAPIC mode when we reach here. I would have a try to export
+and use use kvm_xapic_id here and in avic_handle_apic_id_update too.
+Thanks for your suggestion.
 
-Applied to linux-kbuild/fixes. Thanks.
-
-I will send a pull request for -rc4.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+Have a nice day.
+Best wishes.
