@@ -8,65 +8,70 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1898CFA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11123FA372B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC86F2089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C91D72089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:42:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hkbKRcr0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mwk9rJS3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502123AbfJQUmb (ORCPT
+        id S2502293AbfJQUmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 16:42:31 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42139 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440678AbfJQUm3 (ORCPT
+        Thu, 17 Oct 2019 16:42:33 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45057 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502089AbfJQUmb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 16:42:29 -0400
-Received: by mail-pg1-f194.google.com with SMTP id f14so2006751pgi.9;
-        Thu, 17 Oct 2019 13:42:28 -0700 (PDT)
+        Thu, 17 Oct 2019 16:42:31 -0400
+Received: by mail-pl1-f194.google.com with SMTP id u12so1685953pls.12;
+        Thu, 17 Oct 2019 13:42:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xREUl1NsyRw48QZ1koCr3VjBYFASQ7LMvhvI9Mxd8Eg=;
-        b=hkbKRcr0aDKQQEgH7N63R/GPV3ypco9E2U5GEYGBOHp4gT2lm3d4LglyQbO/fKT+D5
-         /Yf+zkhIMahQs8azEFXBur489HQqdJ5CEvJhqlhMHnljIOtTqavHAXORy8/py9TL4G09
-         soYNXlynNEVJQkOu6rS/5m0GYwI1fV6X/2oMRgLXe9m/xptJTe1u3HfUacG5T614DGTY
-         +dXvKok79BUUm0dNlX/9unpfmkXPPszLpC2Z8TK6vFmSetwg510IRA6pcZ3X8AOwbQv4
-         x2pg5YPPrEi+vQXEg0YhrtiPSCi6vA0vnYuiFNjTP5w803iCKtCcX1WEJlTXOxSA6Uua
-         U+vQ==
+        bh=Fxi+sR07mhlS6Muc3/xe4kp58yCZ85m02vfZzkl7bls=;
+        b=mwk9rJS3O/sLFucmG/7gve5kqkBWWhON+TpQ2aqmeO52ZWjOMiubuBN/q2JBV1it0P
+         gipHxm0TDWfYb3aim/NrtxsEfOYD0Dy52CoytANllNV1cklwfFGSPGhInjZUY7QSxHRz
+         IoA78nPgkq0AotgY/PvJ6Atmm57eJcqOQO+0hADz+acB3cQisyeWWIK1dxfY0NVhhHWE
+         vB3XDqBwLH9ml7qnOtYoZKHJNqcqKF5wQmWns+zuWXbtW21SbOjYew7az4K/ZZT3hZ56
+         ExKJJ63uofsHHR0yldF3qC5ROCNnhzLHVi6x3Ttx5/L68SDA4QadCeClguF7bxbp7BQd
+         T1xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xREUl1NsyRw48QZ1koCr3VjBYFASQ7LMvhvI9Mxd8Eg=;
-        b=Cmkt0+Qr9roFu7NZt/tpPHCEjSIYA2gUEf8SITU4M2nLi8S0AfKokoogTEwGOFx/3/
-         nguLmsFTQQaCPWng6TfKyEV/80uw7vwSUi1bA9Z7d1cDWP5ykfI0DNQk2Xby42A+RRzu
-         2V0FXbtj8OTE/O9hyfCot7PiP5+GIFacyCQeeFF1t+4HCjBAx/4T/JwhKVHUq3uCx9mZ
-         QBHJ0yyC1i5NKPWlrqvY/LUSB2UyL0ZAQ1ov4TfxvPppKxLK0/jOxJ/yPtwHZn49E9Kj
-         pi2ovr9Xzlb365N9uidQt3k1Jw31g5heZFY/ZHXP1tVPM5WPyvrVOjiUUcuVUNhszNvm
-         tRzg==
-X-Gm-Message-State: APjAAAWnRG6dwlPXKd/ibNc55V5YtYE2DjdwrE/9n96PuUr23KQQ2xco
-        xE+ihxYm7PwBexF+TjIOndPAMetn
-X-Google-Smtp-Source: APXvYqzS7MmleeeZ6TVFaT71zNM54PUh5o6nDqqhWIdh0jbEFDPo1mN/AzPsjK8jG+rxOjGgSBp7Fg==
-X-Received: by 2002:a63:5162:: with SMTP id r34mr6146979pgl.339.1571344947454;
-        Thu, 17 Oct 2019 13:42:27 -0700 (PDT)
+        bh=Fxi+sR07mhlS6Muc3/xe4kp58yCZ85m02vfZzkl7bls=;
+        b=Hm39Kr7T+ohsfBhi1tMAmedvlCbPZ55y3qX3NgRPERTTs3ofUFpSD/paLGZiMxjJj2
+         8cAlf5exlwJv9K9X8p40JbN8TM5dYYSrWPM7GaRJphJNotCgickapXcT9rkrvQgToPvj
+         /Ptotwbhqs036EZaXZsMJraCHprOSXSp+4rDKgTMwi2zQdbFc/gjeYphKPpFrDWKk/yg
+         aq1kYTFQSvjx/RTkoKjfK8zq3rBoY9bwwtWqzoPbthEK94sJLTPYEu8khSHpvaibBK0E
+         C+Rxid1xkM8JRUuLHCnnwX8PVQIKrCKUN0KoVINa+D4gH8WOh6i0mBz7ZMvEVw5eAFxD
+         Gmkw==
+X-Gm-Message-State: APjAAAVyfDZCh3oIdsO96AI0aPk6YCDxbesxLDk4SUEdYZoW+0yY6jQu
+        KXK5gAUP+mQ+JaJKcCOZIdKhzjOD
+X-Google-Smtp-Source: APXvYqzf4XSgnOksu9P2edG1NQ0lwGyYaajoSSkzKKmR70FFg228zppNN9TgOLau/ptB7g06KJEIXA==
+X-Received: by 2002:a17:902:b196:: with SMTP id s22mr6234860plr.10.1571344950048;
+        Thu, 17 Oct 2019 13:42:30 -0700 (PDT)
 Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id b3sm4626365pfd.125.2019.10.17.13.42.26
+        by smtp.gmail.com with ESMTPSA id b3sm4626365pfd.125.2019.10.17.13.42.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 13:42:26 -0700 (PDT)
+        Thu, 17 Oct 2019 13:42:29 -0700 (PDT)
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     linux-input@vger.kernel.org
-Cc:     Anders Roxell <anders.roxell@linaro.org>,
-        Jeff LaBundy <jeff@labundy.com>,
-        Martin Kepplinger <martink@posteo.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 04/22] Input: tsc6507x-ts - switch to using polled mode of input devices
-Date:   Thu, 17 Oct 2019 13:41:58 -0700
-Message-Id: <20191017204217.106453-5-dmitry.torokhov@gmail.com>
+Cc:     Alexander Shiyan <shc_work@mail.ru>,
+        Allison Randal <allison@lohutok.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        =?UTF-8?q?Ronald=20Tschal=C3=A4r?= <ronald@innovation.ch>,
+        Stefan Agner <stefan@agner.ch>,
+        YueHaibing <yuehaibing@huawei.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 06/22] Input: clps711x-keypad - switch to using polled mode of input devices
+Date:   Thu, 17 Oct 2019 13:42:00 -0700
+Message-Id: <20191017204217.106453-7-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
 In-Reply-To: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
 References: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
@@ -78,116 +83,176 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 We have added polled mode to the normal input devices with the intent of
-retiring input_polled_dev. This converts tsc6507x-ts driver to use the
+retiring input_polled_dev. This converts clps711x-keypad driver to use the
 polling mode of standard input devices and removes dependency on
 INPUT_POLLDEV.
+
+Also use managed API when allocating input device, this allows us to remove
+clps711x_keypad_remove() method.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
 
- drivers/input/touchscreen/Kconfig       |  1 -
- drivers/input/touchscreen/tps6507x-ts.c | 36 ++++++++++++-------------
- 2 files changed, 17 insertions(+), 20 deletions(-)
+ drivers/input/keyboard/Kconfig           |  1 -
+ drivers/input/keyboard/clps711x-keypad.c | 70 ++++++++++--------------
+ 2 files changed, 29 insertions(+), 42 deletions(-)
 
-diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
-index 2c00232b2506..40bfc551ce30 100644
---- a/drivers/input/touchscreen/Kconfig
-+++ b/drivers/input/touchscreen/Kconfig
-@@ -1243,7 +1243,6 @@ config TOUCHSCREEN_SX8654
- config TOUCHSCREEN_TPS6507X
- 	tristate "TPS6507x based touchscreens"
- 	depends on I2C
+diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+index c6bf99d23b1a..0e7368288dae 100644
+--- a/drivers/input/keyboard/Kconfig
++++ b/drivers/input/keyboard/Kconfig
+@@ -190,7 +190,6 @@ config KEYBOARD_CLPS711X
+ 	tristate "CLPS711X Keypad support"
+ 	depends on OF_GPIO && (ARCH_CLPS711X || COMPILE_TEST)
+ 	select INPUT_MATRIXKMAP
 -	select INPUT_POLLDEV
  	help
- 	  Say Y here if you have a TPS6507x based touchscreen
- 	  controller.
-diff --git a/drivers/input/touchscreen/tps6507x-ts.c b/drivers/input/touchscreen/tps6507x-ts.c
-index 75170a7439b1..357a3108f2e5 100644
---- a/drivers/input/touchscreen/tps6507x-ts.c
-+++ b/drivers/input/touchscreen/tps6507x-ts.c
-@@ -17,7 +17,6 @@
- #include <linux/workqueue.h>
- #include <linux/slab.h>
+ 	  Say Y here to enable the matrix keypad on the Cirrus Logic
+ 	  CLPS711X CPUs.
+diff --git a/drivers/input/keyboard/clps711x-keypad.c b/drivers/input/keyboard/clps711x-keypad.c
+index c4a5c07a4b98..019dd6ed2c29 100644
+--- a/drivers/input/keyboard/clps711x-keypad.c
++++ b/drivers/input/keyboard/clps711x-keypad.c
+@@ -6,7 +6,6 @@
+  */
+ 
  #include <linux/input.h>
 -#include <linux/input-polldev.h>
+ #include <linux/module.h>
+ #include <linux/of_gpio.h>
  #include <linux/platform_device.h>
- #include <linux/mfd/tps6507x.h>
- #include <linux/input/tps6507x-ts.h>
-@@ -40,7 +39,7 @@ struct ts_event {
+@@ -30,10 +29,10 @@ struct clps711x_keypad_data {
+ 	struct clps711x_gpio_data	*gpio_data;
+ };
  
- struct tps6507x_ts {
- 	struct device		*dev;
--	struct input_polled_dev	*poll_dev;
-+	struct input_dev	*input;
- 	struct tps6507x_dev	*mfd;
- 	char			phys[32];
- 	struct ts_event		tc;
-@@ -148,10 +147,9 @@ static s32 tps6507x_adc_standby(struct tps6507x_ts *tsc)
- 	return ret;
- }
- 
--static void tps6507x_ts_poll(struct input_polled_dev *poll_dev)
-+static void tps6507x_ts_poll(struct input_dev *input_dev)
+-static void clps711x_keypad_poll(struct input_polled_dev *dev)
++static void clps711x_keypad_poll(struct input_dev *input)
  {
--	struct tps6507x_ts *tsc = poll_dev->private;
--	struct input_dev *input_dev = poll_dev->input;
-+	struct tps6507x_ts *tsc = input_get_drvdata(input_dev);
- 	bool pendown;
- 	s32 ret;
+-	const unsigned short *keycodes = dev->input->keycode;
+-	struct clps711x_keypad_data *priv = dev->private;
++	const unsigned short *keycodes = input->keycode;
++	struct clps711x_keypad_data *priv = input_get_drvdata(input);
+ 	bool sync = false;
+ 	int col, row;
  
-@@ -205,7 +203,6 @@ static int tps6507x_ts_probe(struct platform_device *pdev)
- 	const struct tps6507x_board *tps_board;
- 	const struct touchscreen_init_data *init_data;
- 	struct tps6507x_ts *tsc;
--	struct input_polled_dev *poll_dev;
- 	struct input_dev *input_dev;
- 	int error;
+@@ -61,14 +60,14 @@ static void clps711x_keypad_poll(struct input_polled_dev *dev)
  
-@@ -240,23 +237,16 @@ static int tps6507x_ts_probe(struct platform_device *pdev)
- 	snprintf(tsc->phys, sizeof(tsc->phys),
- 		 "%s/input0", dev_name(tsc->dev));
+ 				if (state) {
+ 					set_bit(col, data->last_state);
+-					input_event(dev->input, EV_MSC,
+-						    MSC_SCAN, code);
++					input_event(input,
++						    EV_MSC, MSC_SCAN, code);
+ 				} else {
+ 					clear_bit(col, data->last_state);
+ 				}
  
--	poll_dev = devm_input_allocate_polled_device(&pdev->dev);
--	if (!poll_dev) {
-+	input_dev = devm_input_allocate_device(&pdev->dev);
-+	if (!input_dev) {
- 		dev_err(tsc->dev, "Failed to allocate polled input device.\n");
- 		return -ENOMEM;
+ 				if (keycodes[code])
+-					input_report_key(dev->input,
++					input_report_key(input,
+ 							 keycodes[code], state);
+ 				sync = true;
+ 			}
+@@ -80,7 +79,7 @@ static void clps711x_keypad_poll(struct input_polled_dev *dev)
  	}
  
--	tsc->poll_dev = poll_dev;
--
--	poll_dev->private = tsc;
--	poll_dev->poll = tps6507x_ts_poll;
--	poll_dev->poll_interval = init_data ?
--			init_data->poll_period : TSC_DEFAULT_POLL_PERIOD;
--
--	input_dev = poll_dev->input;
--	input_dev->evbit[0] = BIT_MASK(EV_KEY) | BIT_MASK(EV_ABS);
--	input_dev->keybit[BIT_WORD(BTN_TOUCH)] = BIT_MASK(BTN_TOUCH);
-+	tsc->input = input_dev;
-+	input_set_drvdata(input_dev, tsc);
+ 	if (sync)
+-		input_sync(dev->input);
++		input_sync(input);
+ }
  
-+	input_set_capability(input_dev, EV_KEY, BTN_TOUCH);
- 	input_set_abs_params(input_dev, ABS_X, 0, MAX_10BIT, 0, 0);
- 	input_set_abs_params(input_dev, ABS_Y, 0, MAX_10BIT, 0, 0);
- 	input_set_abs_params(input_dev, ABS_PRESSURE, 0, MAX_10BIT, 0, 0);
-@@ -275,7 +265,15 @@ static int tps6507x_ts_probe(struct platform_device *pdev)
- 	if (error)
- 		return error;
+ static int clps711x_keypad_probe(struct platform_device *pdev)
+@@ -88,7 +87,7 @@ static int clps711x_keypad_probe(struct platform_device *pdev)
+ 	struct clps711x_keypad_data *priv;
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = dev->of_node;
+-	struct input_polled_dev *poll_dev;
++	struct input_dev *input;
+ 	u32 poll_interval;
+ 	int i, err;
  
--	error = input_register_polled_device(poll_dev);
-+	error = input_setup_polling(input_dev, tps6507x_ts_poll);
-+	if (error)
-+		return error;
+@@ -125,53 +124,43 @@ static int clps711x_keypad_probe(struct platform_device *pdev)
+ 	if (err)
+ 		return err;
+ 
+-	poll_dev = input_allocate_polled_device();
+-	if (!poll_dev)
++	input = devm_input_allocate_device(dev);
++	if (!input)
+ 		return -ENOMEM;
+ 
+-	poll_dev->private		= priv;
+-	poll_dev->poll			= clps711x_keypad_poll;
+-	poll_dev->poll_interval		= poll_interval;
+-	poll_dev->input->name		= pdev->name;
+-	poll_dev->input->dev.parent	= dev;
+-	poll_dev->input->id.bustype	= BUS_HOST;
+-	poll_dev->input->id.vendor	= 0x0001;
+-	poll_dev->input->id.product	= 0x0001;
+-	poll_dev->input->id.version	= 0x0100;
++	input_set_drvdata(input, priv);
 +
-+	input_set_poll_interval(input_dev,
-+				init_data ? init_data->poll_period :
-+					    TSC_DEFAULT_POLL_PERIOD);
-+
-+	error = input_register_device(input_dev);
- 	if (error)
- 		return error;
++	input->name		= pdev->name;
++	input->dev.parent	= dev;
++	input->id.bustype	= BUS_HOST;
++	input->id.vendor	= 0x0001;
++	input->id.product	= 0x0001;
++	input->id.version	= 0x0100;
+ 
+ 	err = matrix_keypad_build_keymap(NULL, NULL, priv->row_count,
+ 					 CLPS711X_KEYPAD_COL_COUNT,
+-					 NULL, poll_dev->input);
++					 NULL, input);
+ 	if (err)
+-		goto out_err;
++		return err;
+ 
+-	input_set_capability(poll_dev->input, EV_MSC, MSC_SCAN);
++	input_set_capability(input, EV_MSC, MSC_SCAN);
+ 	if (of_property_read_bool(np, "autorepeat"))
+-		__set_bit(EV_REP, poll_dev->input->evbit);
+-
+-	platform_set_drvdata(pdev, poll_dev);
++		__set_bit(EV_REP, input->evbit);
+ 
+ 	/* Set all columns to low */
+ 	regmap_update_bits(priv->syscon, SYSCON_OFFSET, SYSCON1_KBDSCAN_MASK,
+ 			   SYSCON1_KBDSCAN(1));
+ 
+-	err = input_register_polled_device(poll_dev);
+-	if (err)
+-		goto out_err;
+-
+-	return 0;
+ 
+-out_err:
+-	input_free_polled_device(poll_dev);
+-	return err;
+-}
++	err = input_setup_polling(input, clps711x_keypad_poll);
++	if (err)
++		return err;
+ 
+-static int clps711x_keypad_remove(struct platform_device *pdev)
+-{
+-	struct input_polled_dev *poll_dev = platform_get_drvdata(pdev);
++	input_set_poll_interval(input, poll_interval);
+ 
+-	input_unregister_polled_device(poll_dev);
+-	input_free_polled_device(poll_dev);
++	err = input_register_device(input);
++	if (err)
++		return err;
+ 
+ 	return 0;
+ }
+@@ -188,7 +177,6 @@ static struct platform_driver clps711x_keypad_driver = {
+ 		.of_match_table	= clps711x_keypad_of_match,
+ 	},
+ 	.probe	= clps711x_keypad_probe,
+-	.remove	= clps711x_keypad_remove,
+ };
+ module_platform_driver(clps711x_keypad_driver);
  
 -- 
 2.23.0.866.gb869b98d4c-goog
