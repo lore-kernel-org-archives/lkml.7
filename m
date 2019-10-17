@@ -2,128 +2,97 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 190EAFA3736
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4363ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD5022089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:00:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K/QVAoxC"
+	by mail.kernel.org (Postfix) with ESMTP id 9C6F321848
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:02:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391211AbfJQNA5 (ORCPT
+        id S2389475AbfJQNCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 09:00:57 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42995 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732063AbfJQNA5 (ORCPT
+        Thu, 17 Oct 2019 09:02:40 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33914 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728923AbfJQNCk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 09:00:57 -0400
-Received: by mail-pl1-f196.google.com with SMTP id e5so1097393pls.9
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 06:00:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yfYp7qhZbl65vNKUTYsaxlWaCnBTNx7GglyjHYhUNIE=;
-        b=K/QVAoxCRRVNlHuppUhAVFzLPGRyb1qTL2zA24HcsSkfncwvmhMgdeJPnhVPP6qPVV
-         8N6DiV+y7xDvSi5kSxnKlW+Bn5wnpY4yxsHrRezVPj0NumwFiRHUzLp6CDBnwZDlpj6Z
-         p1g9Fo+8cepblVehZurYU4snoQ1hiF4EOZXxMqMYOQ1Whz35LcyXzmxTpxXPYjHBskZD
-         uOB1WyDaRulr4qWPaZxUnGSfdME/meS6RVkenfo4MARBhTfbMPLbHT5i4KEAkeqlZnbt
-         nu4dzLy11xSO7YlCBv7W6lJGLd/3QL2f2RpWHrDVyq5B1JGcZDM4kQ+p8r7VUlGRObqX
-         jniQ==
+        Thu, 17 Oct 2019 09:02:40 -0400
+Received: by mail-qk1-f196.google.com with SMTP id f18so1151407qkm.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 06:02:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yfYp7qhZbl65vNKUTYsaxlWaCnBTNx7GglyjHYhUNIE=;
-        b=ZSYzD4fO578Ya0XmDXDSZ4P5e/QOl+S0fs3EVRA3/AYNLIDuxv1fa2HF35/7PRLPn1
-         1xjTJUWGvSmi44cD8qcuOKigDDu7HOBuZopsEHsMer1OnILNG64LZ9BaSth6odpHPcsu
-         NaTNltwA8nrCi2oqU1Aa+GGpbGJSOxsFoCMUbcvy28va6E9MUdq8jw/+QO2hYxgskp52
-         lbAePwvL23xyYplBdLOtV7go/lCze9kX8FNAVK7Smmtx8t5CXVKWS6hRKNh+TxOs+xFY
-         8heOd+NgUeafVueynwa8zuMF05Kb/PYrsctwLZz6lOIcoo0AdmYQS3oZPzhDR5Xl7yx9
-         WobA==
-X-Gm-Message-State: APjAAAU4MC3YkYcwko0zFLJNu7r/qCwSFFmnXEPh4bwLfM0sTBQN1qn/
-        2AJZnZAa5svwyQz8lSf7uCn5
-X-Google-Smtp-Source: APXvYqwXeZAaSYCvV1FS/rjh8RsCufqorARnCkghqamNFA/Ehwy/l+zGZEoGNx2xjhw2EnTl69o8bg==
-X-Received: by 2002:a17:902:b611:: with SMTP id b17mr3852502pls.23.1571317256478;
-        Thu, 17 Oct 2019 06:00:56 -0700 (PDT)
-Received: from mani ([103.59.133.81])
-        by smtp.gmail.com with ESMTPSA id o64sm7246854pjb.24.2019.10.17.06.00.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 17 Oct 2019 06:00:55 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 18:30:44 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     linus.walleij@linaro.org, afaerber@suse.de, f.fainelli@gmail.com,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, jesper.nilsson@axis.com,
-        lars.persson@axis.com, ludovic.desroches@microchip.com,
-        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-        baruch@tkos.co.il, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@axis.com, linux-oxnas@groups.io,
-        linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, vz@mleia.com, narmstrong@baylibre.com,
-        geert+renesas@glider.be, daniel@zonque.org,
-        haojian.zhuang@gmail.com, wens@csie.org, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, agross@kernel.org
-Subject: Re: [PATCH -next 26/30] pinctrl: bm1880: use
- devm_platform_ioremap_resource() to simplify code
-Message-ID: <20191017130044.GB25046@mani>
-References: <20191017122640.22976-1-yuehaibing@huawei.com>
- <20191017122640.22976-27-yuehaibing@huawei.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Tc37Pb9q6dE/zT3Ycpn//EMDbegOyEk2q1pX9+DJhEk=;
+        b=SESw4Tfv8Mfu0s1PL5CqgougsyQEsacsXelf0dSE/DncaQFPJXBxY5YhRXSsNTBNJM
+         wL8SMcZSWDu0+bvtpmgKz+9dDu48sPTXaDVonTJxx8FeiUK3rNWBfNPG+UloVz+vJ0IA
+         ArnzrCoe+o3jwHP0TsLntYJJ6Ise6Rxph+rVBeuSk1yenyZPzHlGxc2zCIlhawQJvzDI
+         9yCMWmHn8fqGYC0Dw4cBKkgZBpOgS3IhuO1HNvdZ17V6ALhjZYw7Nvb7+dx33UgTIZbZ
+         1deumTYnriD8rV7uNt4a4U4LP18YUeVKD0xc3Z6ovOb489iHExbM7mMA9fAfa+pFkTly
+         vRtQ==
+X-Gm-Message-State: APjAAAWavVe+khO7j9sWZNG4xMEbbCb0Z+zR42nCjmq1sn90UOEPGaGT
+        G2z9qe+NPE6JvDNlIhN0aw55yCzZWC2HIvA19ygpzFn6
+X-Google-Smtp-Source: APXvYqxpviHKOBocuedDoRJVvpksKm61tNm1y7WWnjqU07w4dzxJBEu7vqLfmAn3UiT+CILsxUWbdd1MVQU89/WZ/HI=
+X-Received: by 2002:a37:9442:: with SMTP id w63mr3106804qkd.138.1571317358971;
+ Thu, 17 Oct 2019 06:02:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191017122640.22976-27-yuehaibing@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191014061617.10296-1-daniel@0x0f.com> <20191014061617.10296-2-daniel@0x0f.com>
+ <CAK8P3a2U7U31eF_POU2=eCU+E1DH-wnR2uHr-VZYWLy25hLjKg@mail.gmail.com> <20191016203219.GA5191@shiro>
+In-Reply-To: <20191016203219.GA5191@shiro>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 17 Oct 2019 15:02:22 +0200
+Message-ID: <CAK8P3a2Tqpwg6=3N2DhcDj9JMo6jt0sY+sYmnNmzZ5Rcao=iMA@mail.gmail.com>
+Subject: Re: [PATCH 2/4] ARM: mstar: Add machine for MStar infinity family SoCs
+To:     Daniel Palmer <daniel@0x0f.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 08:26:36PM +0800, YueHaibing wrote:
-> Use devm_platform_ioremap_resource() to simplify the code a bit.
-> This is detected by coccinelle.
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+On Wed, Oct 16, 2019 at 10:32 PM Daniel Palmer <daniel@0x0f.com> wrote:
+>
+> > > +
+> > > +static void __init infinity_map_io(void)
+> > > +{
+> > > +       iotable_init(infinity_io_desc, ARRAY_SIZE(infinity_io_desc));
+> > > +       miu_flush = (void __iomem *)(infinity_io_desc[0].virtual
+> > > +                       + INFINITY_L3BRIDGE_FLUSH);
+> > > +       miu_status = (void __iomem *)(infinity_io_desc[0].virtual
+> > > +                       + INFINITY_L3BRIDGE_STATUS);
+> > > +}
+> >
+> > If you do this a little later in .init_machine, you can use a simple ioremap()
+> > rather than picking a hardcoded physical address. It looks like nothing
+> > uses the mapping before you set soc_mb anyway.
+>
+> I've moved this into infinity_barriers_init() using ioremap() as suggested.
+> I'd like to keep the fixed remap address for now as there are some
+> drivers in the vendor code that might be useful until rewrites are done but
+> are littered with hard coded addresses.
 
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Maybe keep the infinity_io_desc as an out-of-tree patch then? You can
+simply do both, and ioremap() will return the hardcoded address.
 
-Thanks,
-Mani
+> >    Not sure if it matters in practice, as almost nothing uses fiq any more.
+> >    OTOH, maybe the lock is not needed at all? AFAICT if the sequence
+> >    gets interrupted by a handler that also calls mb(), you would still
+> >    continue in the original thread while observing a full l3 barrier. ;-)
+>
+> I've taken the lock out and tested that the ethernet isn't sending garbage
+> and everything looks good.
 
-> ---
->  drivers/pinctrl/pinctrl-bm1880.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-bm1880.c b/drivers/pinctrl/pinctrl-bm1880.c
-> index 63b130c..f7dff4f 100644
-> --- a/drivers/pinctrl/pinctrl-bm1880.c
-> +++ b/drivers/pinctrl/pinctrl-bm1880.c
-> @@ -1308,15 +1308,13 @@ static struct pinctrl_desc bm1880_desc = {
->  static int bm1880_pinctrl_probe(struct platform_device *pdev)
->  
->  {
-> -	struct resource *res;
->  	struct bm1880_pinctrl *pctrl;
->  
->  	pctrl = devm_kzalloc(&pdev->dev, sizeof(*pctrl), GFP_KERNEL);
->  	if (!pctrl)
->  		return -ENOMEM;
->  
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	pctrl->base = devm_ioremap_resource(&pdev->dev, res);
-> +	pctrl->base = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(pctrl->base))
->  		return PTR_ERR(pctrl->base);
->  
-> -- 
-> 2.7.4
-> 
-> 
+I would not expect a missing spinlock to have an observable effect, the
+question is more whether it's correct in all rare corner cases where
+the barrier is interrupted and the interrupt handler uses another barrier.
+
+I think it is, but I would recommend adding a comment to explain this if
+you drop the spinlock. (or a comment about why this works with fiq if you
+keep the lock).
+
+     Arnd
