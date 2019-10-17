@@ -2,127 +2,123 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C403ECE599
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7238FA3728
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57FA12082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEBDD2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:24:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395085AbfJQBYA (ORCPT
+        id S2395547AbfJQBYs convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 21:24:00 -0400
-Received: from mga07.intel.com ([134.134.136.100]:50725 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388782AbfJQBX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 21:23:59 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 18:23:58 -0700
-X-IronPort-AV: E=Sophos;i="5.67,305,1566889200"; 
-   d="scan'208";a="189863183"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.239.13.123]) ([10.239.13.123])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 16 Oct 2019 18:23:55 -0700
-Subject: Re: [PATCH v9 09/17] x86/split_lock: Handle #AC exception for split
- lock
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org
-References: <3ec328dc-2763-9da5-28d6-e28970262c58@redhat.com>
- <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de>
- <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com>
- <alpine.DEB.2.21.1910161244060.2046@nanos.tec.linutronix.de>
- <3a12810b-1196-b70a-aa2e-9fe17dc7341a@redhat.com>
- <b2c42a64-eb42-1f18-f609-42eec3faef18@intel.com>
- <d2fc3cbe-1506-94fc-73a4-8ed55dc9337d@redhat.com>
- <20191016154116.GA5866@linux.intel.com>
- <d235ed9a-314c-705c-691f-b31f2f8fa4e8@redhat.com>
- <20191016162337.GC5866@linux.intel.com>
- <20191016174200.GF5866@linux.intel.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <54cba514-23bb-5a96-f5f7-10520d1f0df2@intel.com>
-Date:   Thu, 17 Oct 2019 09:23:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 16 Oct 2019 21:24:48 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:48123 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389094AbfJQBYs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 21:24:48 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x9H1OSdP000991, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCAS12.realtek.com.tw[172.21.6.16])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x9H1OSdP000991
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 17 Oct 2019 09:24:28 +0800
+Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
+ RTITCAS12.realtek.com.tw ([::1]) with mapi id 14.03.0439.000; Thu, 17 Oct
+ 2019 09:24:27 +0800
+From:   Pkshih <pkshih@realtek.com>
+To:     Laura Abbott <labbott@redhat.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Nicolas Waisman <nico@semmle.com>
+Subject: RE: [PATCH] rtlwifi: Fix potential overflow on P2P code
+Thread-Topic: [PATCH] rtlwifi: Fix potential overflow on P2P code
+Thread-Index: AQHVhGRS0Eb+pvqKg0iKoQwx5Knt06deCEZw
+Date:   Thu, 17 Oct 2019 01:24:26 +0000
+Message-ID: <5B2DA6FDDF928F4E855344EE0A5C39D1D5C84368@RTITMBSVM04.realtek.com.tw>
+References: <20191016205716.2843-1-labbott@redhat.com>
+In-Reply-To: <20191016205716.2843-1-labbott@redhat.com>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.69.95]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <20191016174200.GF5866@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/17/2019 1:42 AM, Sean Christopherson wrote:
-> On Wed, Oct 16, 2019 at 09:23:37AM -0700, Sean Christopherson wrote:
->> On Wed, Oct 16, 2019 at 05:43:53PM +0200, Paolo Bonzini wrote:
->>> On 16/10/19 17:41, Sean Christopherson wrote:
->>>> On Wed, Oct 16, 2019 at 04:08:14PM +0200, Paolo Bonzini wrote:
->>>>> SIGBUS (actually a new KVM_EXIT_INTERNAL_ERROR result from KVM_RUN is
->>>>> better, but that's the idea) is for when you're debugging guests.
->>>>> Global disable (or alternatively, disable SMT) is for production use.
->>>>
->>>> Alternatively, for guests without split-lock #AC enabled, what if KVM were
->>>> to emulate the faulting instruction with split-lock detection temporarily
->>>> disabled?
->>>
->>> Yes we can get fancy, but remember that KVM is not yet supporting
->>> emulation of locked instructions.  Adding it is possible but shouldn't
->>> be in the critical path for the whole feature.
->>
->> Ah, didn't realize that.  I'm surprised emulating all locks with cmpxchg
->> doesn't cause problems (or am I misreading the code?).  Assuming I'm
->> reading the code correctly, the #AC path could kick all other vCPUS on
->> emulation failure and then retry emulation to "guarantee" success.  Though
->> that's starting to build quite the house of cards.
+
+
+> -----Original Message-----
+> From: linux-wireless-owner@vger.kernel.org [mailto:linux-wireless-owner@vger.kernel.org] On Behalf
+> Of Laura Abbott
+> Sent: Thursday, October 17, 2019 4:57 AM
+> To: Pkshih; Kalle Valo
+> Cc: Laura Abbott; David S. Miller; linux-wireless@vger.kernel.org; netdev@vger.kernel.org;
+> linux-kernel@vger.kernel.org; Nicolas Waisman
+> Subject: [PATCH] rtlwifi: Fix potential overflow on P2P code
 > 
-> Ugh, doesn't the existing emulation behavior create another KVM issue?
-> KVM uses a locked cmpxchg in emulator_cmpxchg_emulated() and the address
-> is guest controlled, e.g. a guest could coerce the host into disabling
-> split-lock detection via the host's #AC handler by triggering emulation
-> and inducing an #AC in the emulator.
->
+> Nicolas Waisman noticed that even though noa_len is checked for
+> a compatible length it's still possible to overrun the buffers
+> of p2pinfo since there's no check on the upper bound of noa_num.
+> Bounds check noa_num against P2P_MAX_NOA_NUM.
+> 
+> Reported-by: Nicolas Waisman <nico@semmle.com>
+> Signed-off-by: Laura Abbott <labbott@redhat.com>
+> ---
+> Compile tested only as this was reported to the security list.
+> ---
+>  drivers/net/wireless/realtek/rtlwifi/ps.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/drivers/net/wireless/realtek/rtlwifi/ps.c b/drivers/net/wireless/realtek/rtlwifi/ps.c
+> index 70f04c2f5b17..c5cff598383d 100644
+> --- a/drivers/net/wireless/realtek/rtlwifi/ps.c
+> +++ b/drivers/net/wireless/realtek/rtlwifi/ps.c
+> @@ -754,6 +754,13 @@ static void rtl_p2p_noa_ie(struct ieee80211_hw *hw, void *data,
+>  				return;
+>  			} else {
+>  				noa_num = (noa_len - 2) / 13;
+> +				if (noa_num > P2P_MAX_NOA_NUM) {
+> +					RT_TRACE(rtlpriv, COMP_INIT, DBG_LOUD,
+> +						 "P2P notice of absence: invalid noa_num.%d\n",
+> +						 noa_num);
+> +					return;
 
-Exactly right.
+As the discussion at <security@kernel.org>, I think it'd be better to use
+the min between noa_num and P2P_MAX_NOA_NUM, and fall through the code instead
+of return. Because ignore all NoA isn't better than apply two of them.
 
-I have tested with force_emulation_prefix. It did go into the #AC 
-handler and disable the split-lock detection in host.
 
-However, without force_emulation_prefix enabled, I'm not sure whether 
-malicious guest can create the case causing the emulation with a lock 
-prefix and going to the emulator_cmpxchg_emulated().
-I found it impossible without force_emulation_prefix enabled and I'm not 
-familiar with emulation at all. If I missed something, please let me know.
+> +				}
+> +
+>  			}
+>  			noa_index = ie[3];
+>  			if (rtlpriv->psc.p2p_ps_info.p2p_ps_mode ==
+> @@ -848,6 +855,13 @@ static void rtl_p2p_action_ie(struct ieee80211_hw *hw, void *data,
+>  				return;
+>  			} else {
+>  				noa_num = (noa_len - 2) / 13;
+> +				if (noa_num > P2P_MAX_NOA_NUM) {
+> +					RT_TRACE(rtlpriv, COMP_FW, DBG_LOUD,
+> +						 "P2P notice of absence: invalid noa_len.%d\n",
+> +						 noa_len);
+> +					return;
+> +
+> +				}
+>  			}
+>  			noa_index = ie[3];
+>  			if (rtlpriv->psc.p2p_ps_info.p2p_ps_mode ==
+> --
+> 2.21.0
 
->>> How would you disable split-lock detection temporarily?  Just tweak
->>> MSR_TEST_CTRL for the time of running the one instruction, and cross
->>> fingers that the sibling doesn't notice?
->>
->> Tweak MSR_TEST_CTRL, with logic to handle the scenario where split-lock
->> detection is globally disable during emulation (so KVM doesn't
->> inadvertantly re-enable it).
->>
->> There isn't much for the sibling to notice.  The kernel would temporarily
->> allow split-locks on the sibling, but that's a performance issue and isn't
->> directly fatal.  A missed #AC in the host kernel would only delay the
->> inevitable global disabling of split-lock.  A missed #AC in userspace would
->> again just delay the inevitable SIGBUS.
