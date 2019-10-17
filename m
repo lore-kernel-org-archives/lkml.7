@@ -5,70 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52312ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70245ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A7D721835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E3D21835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:43:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CbQAgdz0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PnZ4hYwE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503237AbfJQUnC (ORCPT
+        id S2503562AbfJQUnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 16:43:02 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42318 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502472AbfJQUmk (ORCPT
+        Thu, 17 Oct 2019 16:43:33 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41602 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503017AbfJQUmv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 16:42:40 -0400
-Received: by mail-pl1-f195.google.com with SMTP id g9so383799plj.9;
-        Thu, 17 Oct 2019 13:42:38 -0700 (PDT)
+        Thu, 17 Oct 2019 16:42:51 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q7so2368385pfh.8;
+        Thu, 17 Oct 2019 13:42:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+B6qJ2+sSOJxH3bWqT0dnUTKHAsVIIfgBFCuwwzUvjw=;
-        b=CbQAgdz0/oATooI3JAjctya7d07Tum22kSzH0rlFQExxNDjvC1yAx+owKU4ysP3SKD
-         9yb7s2uIEH/105h8+GSQVl60hNegEwtDz0vlIpGCiNerVAwyPJBhFzsip7BRAVbx5NGq
-         6Q4fkJEmZbjtMlcSuRFk/4AsziJR4GtD3brq1dS20KStyj8folSpT5flYwr1W1ocIiYC
-         WF1I3L6RWhgaYEzacOIm2hOviTTmZ1GcOraxZs2DZMJ0fhuRpaqmZ1Qls112sxOCzyZT
-         0l081m5qb7VDyMaBTq2YnVEVCX+654J2CfYaNjDBhFcGIBoKSx+iWrdznAFwS0UlIGJN
-         3N7g==
+        bh=nakS4ni/rzOzl8FCN3SL5jKJ0hRnlt/GoJAm0yqa078=;
+        b=PnZ4hYwEbStV5VEGMzJSEN6FdtifpkFlGbm5q0movRTugtW+PpjBrsmsuTncl1+rkn
+         HdbrHLceCbMiS8URsK6KETlr4YVmaRGhqky0DWLL3ZgyxyVwM1oKnkT/TypiILQgWmnB
+         CxbzFJySVcKjPf7f6qUyw6w0w0QKpDZUQjU0twGJUH4vKrg5Ns167e1U/fSJWJ4lZbSZ
+         //I4SCEofeFxvtVRmvTHOCcVuuAwTySDuAsrxjEQDLVyk+i0b9HZvFZ2j2p6Pr5ynQrq
+         6Wjkfp9w6jDXHqVId0rNZ+JcBIJuRDehdgkck42U5br2BwmSPbplczIzjcbKm+ZR8z/O
+         ZfpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+B6qJ2+sSOJxH3bWqT0dnUTKHAsVIIfgBFCuwwzUvjw=;
-        b=OI5DjDt70xeaWZ3UVs8Ox8XuHFgkNsmiOVNtGC9dY6ufWJwVuvsPzYp4pqLYaSkhE1
-         QEhOs1xXlxDGswBtMSNG8/2RXEuV26v+2L6JaGv3InefdvJGKeJZG8VBkZNE7bKHTyE5
-         EIa2Q6wg4Pa2A5eAzXV6brm5/DQ0RVdfEMhnKJYI2Si9T8/Zxv13X2sN7sKwP343iFpR
-         ETct7ehRcbbze0xLTWbgygufmdWUey4QNOi2hzC6/uZlsdiWSp27fRj0FbSnHU6d7/cO
-         nlaR+oVTp7RpQ/FqPVJLK6MUUFQtJO5Ma9nB0fGehUCL3wULvppr9K12YQ/Hvz51c/Mu
-         rF3w==
-X-Gm-Message-State: APjAAAU6xyUhow34h3e6Ov9YtiVD0vaRKS5VxFiLeXFey/JO6YW//jGt
-        oRBBZD0ALiOSt53L5fEMgH2DbfXR
-X-Google-Smtp-Source: APXvYqzI5gLW8a6HyzNcyCcjJkOmrrq46EKMuhYNuMDZbqFmTjdU0b+0s1BXJwbfkAOFURuuW1V+4A==
-X-Received: by 2002:a17:902:6acb:: with SMTP id i11mr5767468plt.273.1571344957746;
-        Thu, 17 Oct 2019 13:42:37 -0700 (PDT)
+        bh=nakS4ni/rzOzl8FCN3SL5jKJ0hRnlt/GoJAm0yqa078=;
+        b=AS+WgyuqOMzI+AUjo1PgMumvUiZl+0uiBC4AL6m5aSbl4nyhpFF5Y2lxqkd3f7vgzm
+         zNTxlgcP7q3lpJgyAmqE3Nuv7kwQptnSRcCoBvGA9Sy8BhmFMLrPJzaWYYzSHqWXcaAe
+         ivFIzq46XVgZxVOmoRvWucqY4Z0mq3d64/BWoTux74fb9pxtilrUgRrHKgvLWPzvpRsd
+         Id4ZzwHlM2VZHE8d1l0ITct6Ey1OkjER93YcxCZ+24EC3xOiQ73beXV0rri4JGpIz3Di
+         kgmDU4mWD0R+VzdJEowy0Ef54Brfop0snwH+GIjKDacl3XT8GeZQhugig2SHqLUH7T1r
+         840A==
+X-Gm-Message-State: APjAAAWamIPhWjYzA3rDhbu4725WLvcnTxrsCNcAW4Du/s493s58v36T
+        7iBw/qNBsLVdhJ1jDxGo5pGL44qC
+X-Google-Smtp-Source: APXvYqxkfJlhpt9lZeGxJkPWeJELDZT4tnBWyAeABdOUDsiw4ptS+IX1wWTVg3XEHm/FsGi9WjwEeA==
+X-Received: by 2002:a62:fc12:: with SMTP id e18mr2326918pfh.257.1571344969228;
+        Thu, 17 Oct 2019 13:42:49 -0700 (PDT)
 Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id b3sm4626365pfd.125.2019.10.17.13.42.36
+        by smtp.gmail.com with ESMTPSA id b3sm4626365pfd.125.2019.10.17.13.42.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 13:42:36 -0700 (PDT)
+        Thu, 17 Oct 2019 13:42:48 -0700 (PDT)
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     linux-input@vger.kernel.org
-Cc:     Allison Randal <allison@lohutok.net>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Luca Weiss <luca@z3ntu.xyz>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
+Cc:     Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 12/22] Input: cobalt_btns - switch to using polled mode of input devices
-Date:   Thu, 17 Oct 2019 13:42:06 -0700
-Message-Id: <20191017204217.106453-13-dmitry.torokhov@gmail.com>
+Subject: [PATCH 21/22] Input: kxtj9 - switch to using managed resources
+Date:   Thu, 17 Oct 2019 13:42:15 -0700
+Message-Id: <20191017204217.106453-22-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
 In-Reply-To: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
 References: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
@@ -79,98 +75,209 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have added polled mode to the normal input devices with the intent of
-retiring input_polled_dev. This converts cobalt_btns driver to use
-the polling mode of standard input devices and removes dependency on
-INPUT_POLLDEV.
+Using devm API allows to clean up error handling and drop the remove()
+method.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
 
- drivers/input/misc/Kconfig       |  1 -
- drivers/input/misc/cobalt_btns.c | 26 ++++++++++++++------------
- 2 files changed, 14 insertions(+), 13 deletions(-)
+ drivers/input/misc/kxtj9.c | 86 +++++++++++++-------------------------
+ 1 file changed, 28 insertions(+), 58 deletions(-)
 
-diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index 248e3b40bd24..05520bf4e31d 100644
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -326,7 +326,6 @@ config INPUT_IXP4XX_BEEPER
- config INPUT_COBALT_BTNS
- 	tristate "Cobalt button interface"
- 	depends on MIPS_COBALT
--	select INPUT_POLLDEV
- 	help
- 	  Say Y here if you want to support MIPS Cobalt button interface.
+diff --git a/drivers/input/misc/kxtj9.c b/drivers/input/misc/kxtj9.c
+index db01c4a33914..a86544d575f8 100644
+--- a/drivers/input/misc/kxtj9.c
++++ b/drivers/input/misc/kxtj9.c
+@@ -292,7 +292,6 @@ static void kxtj9_init_input_device(struct kxtj9_data *tj9,
  
-diff --git a/drivers/input/misc/cobalt_btns.c b/drivers/input/misc/cobalt_btns.c
-index f7c1693fc6bb..b1624f5414ee 100644
---- a/drivers/input/misc/cobalt_btns.c
-+++ b/drivers/input/misc/cobalt_btns.c
-@@ -4,7 +4,7 @@
-  *
-  *  Copyright (C) 2007-2008  Yoichi Yuasa <yuasa@linux-mips.org>
-  */
--#include <linux/input-polldev.h>
-+#include <linux/input.h>
- #include <linux/io.h>
- #include <linux/ioport.h>
- #include <linux/module.h>
-@@ -32,10 +32,9 @@ struct buttons_dev {
- 	void __iomem *reg;
- };
+ 	input_dev->name = "kxtj9_accel";
+ 	input_dev->id.bustype = BUS_I2C;
+-	input_dev->dev.parent = &tj9->client->dev;
+ }
  
--static void handle_buttons(struct input_polled_dev *dev)
-+static void handle_buttons(struct input_dev *input)
- {
--	struct buttons_dev *bdev = dev->private;
--	struct input_dev *input = dev->input;
-+	struct buttons_dev *bdev = input_get_drvdata(input);
- 	uint32_t status;
- 	int i;
+ static int kxtj9_setup_input_device(struct kxtj9_data *tj9)
+@@ -300,7 +299,7 @@ static int kxtj9_setup_input_device(struct kxtj9_data *tj9)
+ 	struct input_dev *input_dev;
+ 	int err;
  
-@@ -62,7 +61,6 @@ static void handle_buttons(struct input_polled_dev *dev)
- static int cobalt_buttons_probe(struct platform_device *pdev)
- {
- 	struct buttons_dev *bdev;
--	struct input_polled_dev *poll_dev;
- 	struct input_dev *input;
- 	struct resource *res;
- 	int error, i;
-@@ -81,15 +79,12 @@ static int cobalt_buttons_probe(struct platform_device *pdev)
- 
- 	memcpy(bdev->keymap, cobalt_map, sizeof(bdev->keymap));
- 
--	poll_dev = devm_input_allocate_polled_device(&pdev->dev);
--	if (!poll_dev)
-+	input = devm_input_allocate_device(&pdev->dev);
-+	if (!input)
+-	input_dev = input_allocate_device();
++	input_dev = devm_input_allocate_device(&tj9->client->dev);
+ 	if (!input_dev) {
+ 		dev_err(&tj9->client->dev, "input device allocate failed\n");
  		return -ENOMEM;
+@@ -319,7 +318,6 @@ static int kxtj9_setup_input_device(struct kxtj9_data *tj9)
+ 		dev_err(&tj9->client->dev,
+ 			"unable to register input polled device %s: %d\n",
+ 			tj9->input_dev->name, err);
+-		input_free_device(tj9->input_dev);
+ 		return err;
+ 	}
  
--	poll_dev->private = bdev;
--	poll_dev->poll = handle_buttons;
--	poll_dev->poll_interval = BUTTONS_POLL_INTERVAL;
-+	input_set_drvdata(input, bdev);
+@@ -424,8 +422,8 @@ static int kxtj9_setup_polled_device(struct kxtj9_data *tj9)
+ {
+ 	int err;
+ 	struct input_polled_dev *poll_dev;
+-	poll_dev = input_allocate_polled_device();
  
--	input = poll_dev->input;
- 	input->name = "Cobalt buttons";
- 	input->phys = "cobalt/input0";
- 	input->id.bustype = BUS_HOST;
-@@ -104,7 +99,14 @@ static int cobalt_buttons_probe(struct platform_device *pdev)
- 		__set_bit(bdev->keymap[i], input->keybit);
- 	__clear_bit(KEY_RESERVED, input->keybit);
++	poll_dev = devm_input_allocate_polled_device(&tj9->client->dev);
+ 	if (!poll_dev) {
+ 		dev_err(&tj9->client->dev,
+ 			"Failed to allocate polled device\n");
+@@ -446,19 +444,12 @@ static int kxtj9_setup_polled_device(struct kxtj9_data *tj9)
+ 	if (err) {
+ 		dev_err(&tj9->client->dev,
+ 			"Unable to register polled device, err=%d\n", err);
+-		input_free_polled_device(poll_dev);
+ 		return err;
+ 	}
  
--	error = input_register_polled_device(poll_dev);
+ 	return 0;
+ }
+ 
+-static void kxtj9_teardown_polled_device(struct kxtj9_data *tj9)
+-{
+-	input_unregister_polled_device(tj9->poll_dev);
+-	input_free_polled_device(tj9->poll_dev);
+-}
+-
+ #else
+ 
+ static inline int kxtj9_setup_polled_device(struct kxtj9_data *tj9)
+@@ -466,11 +457,15 @@ static inline int kxtj9_setup_polled_device(struct kxtj9_data *tj9)
+ 	return -ENOSYS;
+ }
+ 
+-static inline void kxtj9_teardown_polled_device(struct kxtj9_data *tj9)
++#endif
 +
-+	error = input_setup_polling(input, handle_buttons);
-+	if (error)
-+		return error;
++static void kxtj9_platform_exit(void *data)
+ {
+-}
++	struct kxtj9_data *tj9 = data;
+ 
+-#endif
++	if (tj9->pdata.exit)
++		tj9->pdata.exit();
++}
+ 
+ static int kxtj9_verify(struct kxtj9_data *tj9)
+ {
+@@ -494,7 +489,7 @@ static int kxtj9_verify(struct kxtj9_data *tj9)
+ }
+ 
+ static int kxtj9_probe(struct i2c_client *client,
+-				 const struct i2c_device_id *id)
++		       const struct i2c_device_id *id)
+ {
+ 	const struct kxtj9_platform_data *pdata =
+ 			dev_get_platdata(&client->dev);
+@@ -512,7 +507,7 @@ static int kxtj9_probe(struct i2c_client *client,
+ 		return -EINVAL;
+ 	}
+ 
+-	tj9 = kzalloc(sizeof(*tj9), GFP_KERNEL);
++	tj9 = devm_kzalloc(&client->dev, sizeof(*tj9), GFP_KERNEL);
+ 	if (!tj9) {
+ 		dev_err(&client->dev,
+ 			"failed to allocate memory for module data\n");
+@@ -525,13 +520,17 @@ static int kxtj9_probe(struct i2c_client *client,
+ 	if (pdata->init) {
+ 		err = pdata->init();
+ 		if (err < 0)
+-			goto err_free_mem;
++			return err;
+ 	}
+ 
++	err = devm_add_action_or_reset(&client->dev, kxtj9_platform_exit, tj9);
++	if (err)
++		return err;
 +
-+	input_set_poll_interval(input, BUTTONS_POLL_INTERVAL);
-+
-+	error = input_register_device(input);
- 	if (error)
- 		return error;
+ 	err = kxtj9_verify(tj9);
+ 	if (err < 0) {
+ 		dev_err(&client->dev, "device not recognized\n");
+-		goto err_pdata_exit;
++		return err;
+ 	}
+ 
+ 	i2c_set_clientdata(client, tj9);
+@@ -546,59 +545,31 @@ static int kxtj9_probe(struct i2c_client *client,
+ 
+ 		err = kxtj9_setup_input_device(tj9);
+ 		if (err)
+-			goto err_pdata_exit;
++			return err;
+ 
+-		err = request_threaded_irq(client->irq, NULL, kxtj9_isr,
+-					   IRQF_TRIGGER_RISING | IRQF_ONESHOT,
+-					   "kxtj9-irq", tj9);
++		err = devm_request_threaded_irq(&client->dev, client->irq,
++						NULL, kxtj9_isr,
++						IRQF_TRIGGER_RISING |
++							IRQF_ONESHOT,
++						"kxtj9-irq", tj9);
+ 		if (err) {
+ 			dev_err(&client->dev, "request irq failed: %d\n", err);
+-			goto err_destroy_input;
++			return err;
+ 		}
+ 
+-		err = sysfs_create_group(&client->dev.kobj, &kxtj9_attribute_group);
++		err = devm_device_add_group(&client->dev,
++					    &kxtj9_attribute_group);
+ 		if (err) {
+ 			dev_err(&client->dev, "sysfs create failed: %d\n", err);
+-			goto err_free_irq;
++			return err;
+ 		}
+ 
+ 	} else {
+ 		err = kxtj9_setup_polled_device(tj9);
+ 		if (err)
+-			goto err_pdata_exit;
+-	}
+-
+-	return 0;
+-
+-err_free_irq:
+-	free_irq(client->irq, tj9);
+-err_destroy_input:
+-	input_unregister_device(tj9->input_dev);
+-err_pdata_exit:
+-	if (tj9->pdata.exit)
+-		tj9->pdata.exit();
+-err_free_mem:
+-	kfree(tj9);
+-	return err;
+-}
+-
+-static int kxtj9_remove(struct i2c_client *client)
+-{
+-	struct kxtj9_data *tj9 = i2c_get_clientdata(client);
+-
+-	if (client->irq) {
+-		sysfs_remove_group(&client->dev.kobj, &kxtj9_attribute_group);
+-		free_irq(client->irq, tj9);
+-		input_unregister_device(tj9->input_dev);
+-	} else {
+-		kxtj9_teardown_polled_device(tj9);
++			return err;
+ 	}
+ 
+-	if (tj9->pdata.exit)
+-		tj9->pdata.exit();
+-
+-	kfree(tj9);
+-
+ 	return 0;
+ }
+ 
+@@ -647,7 +618,6 @@ static struct i2c_driver kxtj9_driver = {
+ 		.pm	= &kxtj9_pm_ops,
+ 	},
+ 	.probe		= kxtj9_probe,
+-	.remove		= kxtj9_remove,
+ 	.id_table	= kxtj9_id,
+ };
  
 -- 
 2.23.0.866.gb869b98d4c-goog
