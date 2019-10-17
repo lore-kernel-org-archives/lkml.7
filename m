@@ -2,108 +2,149 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D43F2ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35586ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A848621A49
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:34:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571330084;
-	bh=W1fi+yiqxSMbIlkGbbuMcV9cOsU/c1cjMnKa89DCUd8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kWrGJxHo6RYigCo+qQTBbL+kqRBQE/425M+MY8T+nqw8dyAvegOgQY1lzGXVMJmUL
-	 +zekwVEop008YZsUdx5rq1XwkqdalbbFevLB+D22LxuUGDR5CP7A1LetCHEmq3pB23
-	 tSQ3/rCFaLIxdPkUFHrrIZzzw5rI5k7jiHB5Wzss=
+	by mail.kernel.org (Postfix) with ESMTP id 0E8B621A49
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:34:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408359AbfJQQen (ORCPT
+        id S2408237AbfJQQel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:34:43 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34833 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393857AbfJQQel (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 17 Oct 2019 12:34:41 -0400
-Received: by mail-oi1-f194.google.com with SMTP id x3so2723353oig.2;
-        Thu, 17 Oct 2019 09:34:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PTweReGzWRV6Ob0sCHbhOekauupQAppLGL1gzS8TcKs=;
-        b=pe9wF3D7Kl6nB4c9mowgsk+ThJW8q9PSq+ivgjpZzgoQuAtK20bJviLymZe7UKCdw0
-         mJVlQzxDvL9DuDg6s9DB7vkG19y/oxgWV3w6YiGH8t+a7zXbp/TGkqL1pz3R5bfwJWys
-         +F9wJteJPyaoiXUswxnEAdFnpPj0yGYWFLgfzQ6qmtIjhNotK555sI2oDRIzxPDCzYAm
-         hmwhcI/9x1559oUC2HxrWG7O6T21BIGT0Xj5tF6TYcXY/seo+19Z6PxYbJfeV62/gHXA
-         rqJ1/b5wl7LBUqVpu7WSUQdksmQYUPmg8YV10wEHSCMprEpXSI+TqgI0D0rvLANqhbsQ
-         n4iA==
-X-Gm-Message-State: APjAAAUeawEOwNz7YVRhZ+kYtlvXEHr6skB4Nk+n3OoHw/LeFO7k/Fa6
-        uN4Re11HXK3Y4GZZ3HeTvpnYXS7AUoRUpbBnUxQ=
-X-Google-Smtp-Source: APXvYqxdtwn4csBmwqLiWGMGaWig215MMPVHzs3sAF65tbKccsRNu9C3I2YhQmoUAwnEvbh1AfpL5ERkR4gfKHL+voQ=
-X-Received: by 2002:aca:b6c5:: with SMTP id g188mr4177262oif.103.1571330080233;
- Thu, 17 Oct 2019 09:34:40 -0700 (PDT)
+Received: from muru.com ([72.249.23.125]:37814 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730640AbfJQQel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 12:34:41 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id C458C804F;
+        Thu, 17 Oct 2019 16:35:10 +0000 (UTC)
+Date:   Thu, 17 Oct 2019 09:34:33 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     min.guo@mediatek.com
+Cc:     Bin Liu <b-liu@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        chunfeng.yun@mediatek.com, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, hdegoede@redhat.com,
+        Yonglong Wu <yonglong.wu@mediatek.com>
+Subject: Re: [PATCH v8 6/6] usb: musb: Add support for MediaTek musb
+ controller
+Message-ID: <20191017163433.GN5610@atomide.com>
+References: <20191017094126.29045-1-min.guo@mediatek.com>
+ <20191017094126.29045-7-min.guo@mediatek.com>
 MIME-Version: 1.0
-References: <2811202.iOFZ6YHztY@kreacher> <20191016142343.GB5330@bogus>
- <20191017095725.izchzl7enfylvpf3@vireshk-i7> <20191017095942.GF8978@bogus>
-In-Reply-To: <20191017095942.GF8978@bogus>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 17 Oct 2019 18:34:28 +0200
-Message-ID: <CAJZ5v0ixS8ZS93Fgj8XGUMGcLdAy+Fgwp5z3QirccNSiiwLtDA@mail.gmail.com>
-Subject: Re: [RFT][PATCH 0/3] cpufreq / PM: QoS: Introduce frequency QoS and
- use it in cpufreq
-To:     Sudeep Holla <sudeep.holla@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Osipenko <digetx@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191017094126.29045-7-min.guo@mediatek.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 12:00 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> On Thu, Oct 17, 2019 at 03:27:25PM +0530, Viresh Kumar wrote:
-> > On 16-10-19, 15:23, Sudeep Holla wrote:
-> > > Thanks for the spinning these patches so quickly.
-> > >
-> > > I did give it a spin, but unfortunately it doesn't fix the bug I reported.
-> > > So I looked at my bug report in detail and looks like the cpufreq_driver
-> > > variable is set to NULL at that point and it fails to dereference it
-> > > while trying to execute:
-> > >     ret = cpufreq_driver->verify(new_policy);
-> > > (Hint verify is at offset 0x1c/28)
-> > >
-> > > So I suspect some race as this platform with bL switcher tries to
-> > > unregister and re-register the cpufreq driver during the boot.
-> > >
-> > > I need to spend more time on this as reverting the initial PM QoS patch
-> > > to cpufreq.c makes the issue disappear.
+Hi,
 
-I guess you mean commit 67d874c3b2c6 ("cpufreq: Register notifiers
-with the PM QoS framework")?
+Just few comments for future changes that might help below.
 
-That would make sense, because it added the cpufreq_notifier_min() and
-cpufreq_notifier_max() that trigger handle_update() via
-schedule_work().
+* min.guo@mediatek.com <min.guo@mediatek.com> [191017 09:42]:
+> --- /dev/null
+> +++ b/drivers/usb/musb/mediatek.c
+> +static int musb_usb_role_sx_set(struct device *dev, enum usb_role role)
+> +{
+> +	struct mtk_glue *glue = dev_get_drvdata(dev);
+> +	struct musb *musb = glue->musb;
+> +	u8 devctl = readb(musb->mregs + MUSB_DEVCTL);
+> +	enum usb_role new_role;
+> +
+> +	if (role == glue->role)
+> +		return 0;
+> +
+> +	switch (role) {
+> +	case USB_ROLE_HOST:
+> +		musb->xceiv->otg->state = OTG_STATE_A_WAIT_VRISE;
+> +		glue->phy_mode = PHY_MODE_USB_HOST;
+> +		new_role = USB_ROLE_HOST;
+> +		if (glue->role == USB_ROLE_NONE)
+> +			phy_power_on(glue->phy);
+> +
+> +		devctl |= MUSB_DEVCTL_SESSION;
+> +		musb_writeb(musb->mregs, MUSB_DEVCTL, devctl);
+> +		MUSB_HST_MODE(musb);
+> +		break;
+> +	case USB_ROLE_DEVICE:
+> +		musb->xceiv->otg->state = OTG_STATE_B_IDLE;
+> +		glue->phy_mode = PHY_MODE_USB_DEVICE;
+> +		new_role = USB_ROLE_DEVICE;
+> +		devctl &= ~MUSB_DEVCTL_SESSION;
+> +		musb_writeb(musb->mregs, MUSB_DEVCTL, devctl);
+> +		if (glue->role == USB_ROLE_NONE)
+> +			phy_power_on(glue->phy);
+> +
+> +		MUSB_DEV_MODE(musb);
+> +		break;
+> +	case USB_ROLE_NONE:
+> +		glue->phy_mode = PHY_MODE_USB_OTG;
+> +		new_role = USB_ROLE_NONE;
+> +		devctl &= ~MUSB_DEVCTL_SESSION;
+> +		musb_writeb(musb->mregs, MUSB_DEVCTL, devctl);
+> +		if (glue->role != USB_ROLE_NONE)
+> +			phy_power_off(glue->phy);
+> +
+> +		break;
+> +	default:
+> +		dev_err(glue->dev, "Invalid State\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	glue->role = new_role;
+> +	phy_set_mode(glue->phy, glue->phy_mode);
+> +
+> +	return 0;
+> +}
 
-[BTW, Viresh, it looks like cpufreq_set_policy() should still ensure
-that the new min is less than the new max, because the QoS doesn't do
-that.]
+For the role change, I recently posted a patch "[PATCH 4/7] usb: musb:
+Add musb_set_host and peripheral and use them for omap2430". That
+should work for you looking at the code above, so later on you might
+want to change to use that. Probably best done as a follow-up patch
+to avoid adding extra dependencies to your series.
 
-> > Is this easily reproducible ? cpufreq_driver == NULL shouldn't be the case, it
-> > get updated only once while registering/unregistering cpufreq drivers. That is
-> > the last thing which can go wrong from my point of view :)
-> >
->
-> Yes, if I boot my TC2 with bL switcher enabled, it always crashes on boot.
+Please also note that musb core attempts to do things automagically
+on it's own. So trying to force mode in general does not work reliably.
+This is because VBUS may not yet have risen for example.
 
-It does look like handle_update() races with
-cpufreq_unregister_driver() and cpufreq_remove_dev (called from there
-indirectly) does look racy.
+The role change is best done based on the USB PHY as then usually
+musb has already switched to the right mode automatically :)
+
+> +static const struct musb_platform_ops mtk_musb_ops = {
+> +	.quirks = MUSB_DMA_INVENTRA,
+> +	.init = mtk_musb_init,
+> +	.get_toggle = mtk_musb_get_toggle,
+> +	.set_toggle = mtk_musb_set_toggle,
+> +	.exit = mtk_musb_exit,
+> +#ifdef CONFIG_USB_INVENTRA_DMA
+> +	.dma_init = musbhs_dma_controller_create_noirq,
+> +	.dma_exit = musbhs_dma_controller_destroy,
+> +#endif
+> +	.clearb = mtk_musb_clearb,
+> +	.clearw = mtk_musb_clearw,
+> +	.busctl_offset = mtk_musb_busctl_offset,
+> +	.set_mode = mtk_musb_set_mode,
+> +};
+
+So you may want to consider getting rid of .set_mode completely
+and rely on USB PHY calls instead.
+
+In some cases you need to use struct phy_companion for set_vbus
+depending how things are wired.
+
+Regards,
+
+Tony
