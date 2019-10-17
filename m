@@ -2,193 +2,275 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC57ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E35EFA3736
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 869DC2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1732D2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:06:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="gU2b6T9h";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="iOewOakb"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LXaU/p/L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389254AbfJQOFf (ORCPT
+        id S2439824AbfJQOF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 10:05:35 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:61396 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727447AbfJQOFe (ORCPT
+        Thu, 17 Oct 2019 10:05:58 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:36750 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727447AbfJQOF6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:05:34 -0400
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9HE58PW011490;
-        Thu, 17 Oct 2019 07:05:23 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=YIdvY0DQwcSaESA1HkxfzVzNK2eSw4p1h1XN90pwJb0=;
- b=gU2b6T9hOgLz6sJeoLRA5KGBlrQPLuSVUDC9bEaAcexJTraOirVCs48Z4hCTN//Y7cE1
- xyD3+S3jqThEZI6Ptch5GB3sW/NQTWAONzjniQpIeT98WCIqjYQT4JkSzXU4pPBAWSt3
- nnz/x9vVxDteoQ1FqhSkoS+vg9h8CM9ylAU= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2vp5k0db0e-12
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 17 Oct 2019 07:05:23 -0700
-Received: from prn-hub03.TheFacebook.com (2620:10d:c081:35::127) by
- prn-hub02.TheFacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Thu, 17 Oct 2019 07:05:21 -0700
-Received: from NAM01-BY2-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Thu, 17 Oct 2019 07:05:21 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dgXCh/HZJYPSYaN0kEgrCFpu09RZ1w6YM1kqDAkJZOu1w8+he3avyvN9L3Rgs2pU4HvDE8tMSWn5FG/5sH4R4IZd/0QIlsagQWrxuwEEat5T8Vp5xQBJ5goPhfKBgCv2v9VuIfT8+QJ5n5stFuLWoawEM/SMYVKulFus2kNOLF/xivmQ0Y9eiRLouuHhN74EULvLMuDc0PmDtXavCg9s338R9yt8Eih+pJHV/2A2S6VxG03an1uVIlWfuDZHWMgGS0v2h7p2eySIkMt8FgNtUSURd5/KKJI+2YRkPjze4i4x2s/ruvXGFzFobZ2KETeVdSYcijKTCNDdLoK96MvLLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YIdvY0DQwcSaESA1HkxfzVzNK2eSw4p1h1XN90pwJb0=;
- b=cWHKc/hH7eEeha+s78GKS2P9nR5zbjK2N8oECz+pv+J5NaXk2UxyDy2ev+7z3bL+Yy/BePFZ1bWBayfpswI+wwhgqmhi/jWb99/MN7TOQD4RMyWpq9xYGXfPOO/EK3diLApHMR8C/JiOTZrTW1aMCyH1upcwokEIioAuzDZdshxj9bcds72HSk44XaHvfBijvb48a5uHOzpQUxecc1r19UsWrPeN+Vij1D8NIPz1KJQj5D+jXKfmXjnZRMXFvTxj/05mzwiBIDpTq+E5M/Kmi2q5SzMCdqrSIWIPuqBfQSXAj1IDKC543sq2hhRoFzPD8X65O9Y4wMnYs4Uxk6JeDQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YIdvY0DQwcSaESA1HkxfzVzNK2eSw4p1h1XN90pwJb0=;
- b=iOewOakbkHTy4APfreAYq8T6odfuZA0Z7hgpa+mdGjSUzu8dVXRPjsCfd9drNBN0lSgyivMbQyS0LLKUEUSMsgeHa5ysj8Y3AUJ4yHVUCONabQaOgGsrf+3Qd3KUNEWbMKRz0fv9KBKcjOVY0CXTTyAFGM488RqrW50DSXIJE2A=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
- MWHPR15MB1519.namprd15.prod.outlook.com (10.173.234.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.19; Thu, 17 Oct 2019 14:05:20 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::fdc8:5546:bace:15f5]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::fdc8:5546:bace:15f5%5]) with mapi id 15.20.2347.023; Thu, 17 Oct 2019
- 14:05:20 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-CC:     open list <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
-        Kernel Team <Kernel-team@fb.com>,
-        "william.kucharski@oracle.com" <william.kucharski@oracle.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Subject: Re: [PATCH 4/4] uprobe: only do FOLL_SPLIT_PMD for uprobe register
-Thread-Topic: [PATCH 4/4] uprobe: only do FOLL_SPLIT_PMD for uprobe register
-Thread-Index: AQHVg/TTl1jUwKEEhEe4JMFjXQBksqddLX+AgABDI4CAARZmAIAAWN+A
-Date:   Thu, 17 Oct 2019 14:05:19 +0000
-Message-ID: <A1DBC6EA-CBAB-45FE-919D-6D77D29DDE1D@fb.com>
-References: <20191016073731.4076725-1-songliubraving@fb.com>
- <20191016073731.4076725-5-songliubraving@fb.com>
- <20191016121031.GA31585@redhat.com>
- <CE3DD093-E5B4-4C98-A7B7-3B05D7732D3C@fb.com>
- <20191017084714.GB17513@redhat.com>
-In-Reply-To: <20191017084714.GB17513@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3594.4.19)
-x-originating-ip: [2620:10d:c090:180::4a6a]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 97739617-04e5-4c0f-a847-08d7530b0b96
-x-ms-traffictypediagnostic: MWHPR15MB1519:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR15MB15190F34FDF6FE371DE849E2B36D0@MWHPR15MB1519.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 01930B2BA8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(39860400002)(346002)(396003)(136003)(189003)(199004)(25786009)(71200400001)(53546011)(14444005)(478600001)(36756003)(76176011)(102836004)(186003)(86362001)(5660300002)(6512007)(6506007)(66476007)(76116006)(64756008)(66446008)(66556008)(4326008)(71190400001)(229853002)(66946007)(6116002)(6486002)(256004)(33656002)(14454004)(6246003)(2616005)(6916009)(50226002)(6436002)(99286004)(305945005)(7736002)(446003)(46003)(11346002)(54906003)(476003)(8936002)(486006)(81156014)(8676002)(81166006)(316002)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1519;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: O6Bi0CwMF3qHQBv3nJNgrqS0EJiyCCfTKwOejADN/h58Fj/l/TLHbo5+GoHk5P5XArtrC2J/lT5j9HThprUSEIFowxGwIuVDD+Da6c3X5lQA9ueXKrDSqyusoxcgFPYxb/BA1eX4GuK/U2637CrWaZg6yDEUcBQvcO0tvGYqZEBIHTFmqkBofyOZUogvOmPGpSdLvTya1pRdQ8UvDO3UEHM9XOgNBxvEsEVSB2ImMpu2bVib88yeCLojZQreAhfSIUlHaFEOAyj0v7ffGQ6Un+SBhdPP9K2KBiWIqznmBAp0saVOEzl+oYqxlJojRzOvoL8jujgIuM+uZjVCd9Jn9C14PZATe0kbs8mIMrpxIx1V3khenB/0jSV5mlROa3Khjsri7eaE14S07a0NMEGnKszfsPwAEf3uaFuXr71r4D8=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <C0DF626696652742BCE1A42DF55BCE9A@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 17 Oct 2019 10:05:58 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9HE5Mua113724;
+        Thu, 17 Oct 2019 09:05:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571321122;
+        bh=TuHZ8KRPwGU2Rkgim6hEq4jEniT3rPGRU2SQEObt8EU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=LXaU/p/LBB/F8s+3Ft48pMaiCD0yisqMy86i8y+kdXLwbe8tEVCI+U2L+aqdyyiLr
+         NTh1lkf9ZOQxpmc0w4fZlbuA6G6G3hvgdVbV6Uw2yN7mj/FFaSEpnBATHKJku7CN+w
+         SK7vCFdzz6dKwkW9iNtDUok5I4JpJDqda2xDJP6c=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9HE5MTK008076;
+        Thu, 17 Oct 2019 09:05:22 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 17
+ Oct 2019 09:05:13 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 17 Oct 2019 09:05:13 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9HE5KB1121691;
+        Thu, 17 Oct 2019 09:05:20 -0500
+Subject: Re: [RFC PATCH 11/13] led: bd71828: Support LED outputs on ROHM
+ BD71828 PMIC
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        <mazziesaccount@gmail.com>
+CC:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>, <linux-rtc@vger.kernel.org>
+References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+ <af1fb3e010d5f34502d354369b88fa28639f587d.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <c1e41315-42ad-fb9b-c9db-8b07d4293166@ti.com>
+Date:   Thu, 17 Oct 2019 09:04:48 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 97739617-04e5-4c0f-a847-08d7530b0b96
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Oct 2019 14:05:19.9063
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uTQcD3pIVTqPCof4YEhD0gf2mT5SVW4Azvlq9BOlrDZyghhn44iRjnjLj7gkWio0LRUk0h9n9RD0xjlOA18XCQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1519
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-17_05:2019-10-17,2019-10-17 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0
- suspectscore=0 bulkscore=0 clxscore=1015 mlxscore=0 mlxlogscore=999
- impostorscore=0 priorityscore=1501 phishscore=0 lowpriorityscore=0
- malwarescore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1908290000 definitions=main-1910170126
-X-FB-Internal: deliver
+In-Reply-To: <af1fb3e010d5f34502d354369b88fa28639f587d.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Matt
+
+On 10/17/19 4:53 AM, Matti Vaittinen wrote:
+> ROHM BD71828 power management IC has two LED outputs for charge status
+> and button pressing indications. The LED outputs can also be forced
+> bs SW so add driver allowing to use these LEDs for other indications
+s/bs/by
+> as well.
+>
+> Leds are controlled by SW using 'Force ON' bits. Please note the
+> constrains mentioned in data-sheet:
+> 1. If one LED is forced ON - then also the other LED is forced.
+> 	=> You can't use SW control to force ON one LED and allow HW
+> 	   to control the other.
+> 2. You can't force both LEDs OFF. If the FORCE bit for both LED's is
+>     zero, then LEDs are controlled by HW and indicate button/charger
+>     states as explained in data-sheet.
+>
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+>   drivers/leds/Kconfig        | 10 ++++
+>   drivers/leds/Makefile       |  1 +
+>   drivers/leds/leds-bd71828.c | 97 +++++++++++++++++++++++++++++++++++++
+>   3 files changed, 108 insertions(+)
+>   create mode 100644 drivers/leds/leds-bd71828.c
+>
+> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> index b0fdeef10bd9..ec59f28bcb39 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -529,6 +529,16 @@ config LEDS_BD2802
+>   	  This option enables support for BD2802GU RGB LED driver chips
+>   	  accessed via the I2C bus.
+>   
+> +config LEDS_BD71828
+> +	tristate "LED driver for LED pins on ROHM BD71828 PMIC"
+> +	depends on LEDS_CLASS
+doesn't this have a dependency on MFD_ROHM_BD71828
+> +	depends on I2C
+> +	help
+> +	  This option enables support for LED outputs located on ROHM
+> +	   BD71828 power management IC. ROHM BD71828 has two led output pins
+> +	   which can be left to indicate HW states or controlled by SW. Say
+> +	   yes here if you want to enable SW control for these LEDs.
+> +
+
+Add module statement
 
 
-> On Oct 17, 2019, at 1:47 AM, Oleg Nesterov <oleg@redhat.com> wrote:
->=20
-> On 10/16, Song Liu wrote:
->>=20
->>> On Oct 16, 2019, at 5:10 AM, Oleg Nesterov <oleg@redhat.com> wrote:
->>>=20
->>>> @@ -489,6 +492,9 @@ int uprobe_write_opcode(struct arch_uprobe *auprob=
-e, struct mm_struct *mm,
->>>> 	if (ret <=3D 0)
->>>> 		goto put_old;
->>>>=20
->>>> +	WARN(!is_register && PageCompound(old_page),
->>>> +	     "uprobe unregister should never work on compound page\n");
->>>=20
->>> But this can happen with the change above. You can't know if *vaddr was
->>> previously changed by install_breakpoint() or not.
->>=20
->>> If not, verify_opcode() should likely save us, but we can't rely on it.
->>> Say, someone can write "int3" into vm_file at uprobe->offset.
->>=20
->> I think this won't really happen. With is_register =3D=3D false, we alre=
-ady
->> know opcode is not "int3", so current call must be from set_orig_insn().
->> Therefore, old_page must be installed by uprobe, and cannot be compound.
->>=20
->> The other way is not guaranteed. With is_register =3D=3D true, it is sti=
-ll
->> possible current call is from set_orig_insn(). However, we do not rely
->> on this path.
->=20
-> Quite contrary.
->=20
-> When is_register =3D=3D true we know that a) the caller is install_breakp=
-oint()
-> and b) the original insn is NOT int3 unless this page was alreadt COW'ed =
-by
-> userspace, say, by gdb.
->=20
-> If is_register =3D=3D false we only know that the caller is remove_breakp=
-oint().
-> We can't know if this page was COW'ed by uprobes or userspace, we can not
-> know if the insn we are going to replace is int3 or not, thus we can not
-> assume that verify_opcode() will fail and save us.
+>   config LEDS_INTEL_SS4200
+>   	tristate "LED driver for Intel NAS SS4200 series"
+>   	depends on LEDS_CLASS
+> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> index 41fb073a39c1..2a8f6a8e4c7c 100644
+> --- a/drivers/leds/Makefile
+> +++ b/drivers/leds/Makefile
+> @@ -15,6 +15,7 @@ obj-$(CONFIG_LEDS_AN30259A)		+= leds-an30259a.o
+>   obj-$(CONFIG_LEDS_BCM6328)		+= leds-bcm6328.o
+>   obj-$(CONFIG_LEDS_BCM6358)		+= leds-bcm6358.o
+>   obj-$(CONFIG_LEDS_BD2802)		+= leds-bd2802.o
+> +obj-$(CONFIG_LEDS_BD71828)		+= leds-bd71828.o
+>   obj-$(CONFIG_LEDS_CPCAP)		+= leds-cpcap.o
+>   obj-$(CONFIG_LEDS_LOCOMO)		+= leds-locomo.o
+>   obj-$(CONFIG_LEDS_LM3530)		+= leds-lm3530.o
+> diff --git a/drivers/leds/leds-bd71828.c b/drivers/leds/leds-bd71828.c
+> new file mode 100644
+> index 000000000000..2427619444f5
+> --- /dev/null
+> +++ b/drivers/leds/leds-bd71828.c
+> @@ -0,0 +1,97 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (C) 2019 ROHM Semiconductors
+> +
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/kernel.h>
+> +#include <linux/leds.h>
+> +#include <linux/mfd/rohm-bd71828.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +
+> +#define BD71828_LED_TO_DATA(l) ((l)->id == ID_GREEN_LED ? \
+> +	container_of((l), struct bd71828_leds, green) : \
+> +	container_of((l), struct bd71828_leds, amber))
 
-So the case we worry about is:=20
-old_page is COW by user space, target insn is int3, and it is a huge page;=
-=20
-then uprobe calls remove_breakpoint();=20
+I don't think we should be defining the color as the variable. The 
+outputs can drive any color LED.
 
-Yeah, I guess this could happen.=20
 
-For the fix, I guess return -Esomething in such case should be sufficient?
+> +
+> +enum {
+> +	ID_GREEN_LED,
+> +	ID_AMBER_LED,
+> +	ID_NMBR_OF,
+> +};
+> +
 
-Thanks,
-Song=20
+Please use the color_id in linux/include/dt-bindings/leds/common.h
 
+
+> +struct bd71828_led {
+> +	int id;
+> +	struct led_classdev l;
+> +	u8 force_mask;
+> +};
+> +
+> +struct bd71828_leds {
+> +	struct rohm_regmap_dev *bd71828;
+> +	struct bd71828_led green;
+> +	struct bd71828_led amber;
+> +};
+> +
+> +static int bd71828_led_brightness_set(struct led_classdev *led_cdev,
+> +				      enum led_brightness value)
+> +{
+> +	struct bd71828_led *l = container_of(led_cdev, struct bd71828_led, l);
+> +	struct bd71828_leds *data;
+> +	unsigned int val = BD71828_LED_OFF;
+> +
+> +	data = BD71828_LED_TO_DATA(l);
+> +	if (value != LED_OFF)
+> +		val = BD71828_LED_ON;
+> +
+> +	return regmap_update_bits(data->bd71828->regmap, BD71828_REG_LED_CTRL,
+> +			    l->force_mask, val);
+> +}
+> +
+> +static int bd71828_led_probe(struct platform_device *pdev)
+> +{
+> +	struct rohm_regmap_dev *bd71828;
+> +	struct bd71828_leds *l;
+> +	struct bd71828_led *g, *a;
+> +	static const char *GNAME = "bd71828-green-led";
+> +	static const char *ANAME = "bd71828-amber-led";
+The LED class creates the name it can get it from the DT.
+> +	int ret;
+> +
+> +	pr_info("bd71828 LED driver probed\n");
+> +
+> +	bd71828 = dev_get_drvdata(pdev->dev.parent);
+> +	l = devm_kzalloc(&pdev->dev, sizeof(*l), GFP_KERNEL);
+> +	if (!l)
+> +		return -ENOMEM;
+> +	l->bd71828 = bd71828;
+> +	a = &l->amber;
+> +	g = &l->green;
+> +	a->id = ID_AMBER_LED;
+> +	g->id = ID_GREEN_LED;
+> +	a->force_mask = BD71828_MASK_LED_AMBER;
+> +	g->force_mask = BD71828_MASK_LED_GREEN;
+> +
+> +	a->l.name = ANAME;
+> +	g->l.name = GNAME;
+> +	a->l.brightness_set_blocking = bd71828_led_brightness_set;
+> +	g->l.brightness_set_blocking = bd71828_led_brightness_set;
+> +
+> +	ret = devm_led_classdev_register(&pdev->dev, &g->l);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return devm_led_classdev_register(&pdev->dev, &a->l);
+> +}
+> +
+
+This looks different.  Not sure why you register both LEDs in this probe.
+
+You can use the DT to define both LEDs and then each will be probed and 
+registered separately.
+
+This is how it is commonly done.
+
+You can reference the LM36274 led driver as this is a MFD device to the 
+ti-lmu.c in the MFD directory.
+
+
+> +static struct platform_driver bd71828_led_driver = {
+> +	.driver = {
+> +		.name  = "bd71828-led",
+> +	},
+> +	.probe  = bd71828_led_probe,
+> +};
+> +
+> +module_platform_driver(bd71828_led_driver);
+> +
+> +MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
+> +MODULE_DESCRIPTION("ROHM BD71828 LED driver");
+> +MODULE_LICENSE("GPL");
+GPL v2
