@@ -2,174 +2,104 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE16AECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 576E1ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A934620872
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EEFC20872
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:50:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MvI8fZNQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503039AbfJQQus convert rfc822-to-8bit (ORCPT
+        id S2503051AbfJQQu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:50:48 -0400
-Received: from mailoutvs8.siol.net ([185.57.226.199]:55111 "EHLO mail.siol.net"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2394336AbfJQQus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 12:50:48 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 30B93521752;
-        Thu, 17 Oct 2019 18:50:44 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id ctlfp8DRqJtw; Thu, 17 Oct 2019 18:50:43 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id AAB075217B6;
-        Thu, 17 Oct 2019 18:50:43 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net [86.58.59.25])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id D71F4521752;
-        Thu, 17 Oct 2019 18:50:42 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     mripard@kernel.org, wens@csie.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, mchehab@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v3 5/6] media: sun4i: Add H3 deinterlace driver
-Date:   Thu, 17 Oct 2019 18:50:42 +0200
-Message-ID: <1811024.Ag6lDGI2hk@jernej-laptop>
-In-Reply-To: <d768b2bc-a942-03a6-253d-4bcc31f1b11e@xs4all.nl>
-References: <20191016192807.1278987-1-jernej.skrabec@siol.net> <20191016192807.1278987-6-jernej.skrabec@siol.net> <d768b2bc-a942-03a6-253d-4bcc31f1b11e@xs4all.nl>
+        Thu, 17 Oct 2019 12:50:56 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:38019 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503041AbfJQQuz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 12:50:55 -0400
+Received: by mail-il1-f196.google.com with SMTP id y5so2715569ilb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 09:50:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tBLNQqGbXkMMNFqwqmoHYpYR0omjyH2DGrqLk8lOHRU=;
+        b=MvI8fZNQWqbbSWHSvnZ/YilFT8r4cXVjXFQLbWKFHwMU8rmnUzL7K0U7z5JH/0eobW
+         tbUj8KjJpd9z05VN5jN3ZzXxr8yawzv+YjV/j/bJdAAWZMxY4CF+Mn4J3g8EbucRK0HU
+         ocyC0XJjnK9HgOO3KDcSz/Q2uRNI1vIBMro+XbyDI5y7q72LPb93CBqPwRsp5244gISA
+         mCRHf/ofo4mbZL+TotrdbLWcutWnrPd3oEYetBwlcx97bIfKJdbH5dYcoimf1YyvuaJ2
+         j+a1Ymg/cLrIUhAfHFlH7TCAjLWLLrq+PSotmrhtIsIaitOcf84U8EHheu9nDsOTE2qw
+         MKBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tBLNQqGbXkMMNFqwqmoHYpYR0omjyH2DGrqLk8lOHRU=;
+        b=ln5wL/H/DKaDQRvnWdApnlZCUtEdp4La/laATk7+rXuhAxBOE0YG9guMeG+MW6zLnO
+         0U9xtcbuha4VsHTHdQzao/Si7ZF3oR6pHM5Q4z8VDKNwRJFRdE5N7Nr2n+l/lGoxVMQm
+         a1Z7dpLbGZ5b65iwZEXkON9fgPtzFz88nfY13HxrNw/MkbuZSp/Bd2jHhz2nAU3Imncd
+         AUsbHqwlmq3m2b81fNxxUQGmxXsqvSPMxF7nt/qxvATTSihwikC8Ae5I0vJ/qQYUNLcA
+         FFoFSg2m9S6C6ABVO3jfL2Td8RpSxbUA9gKgxoTfX0LabynO3TC4MF4MRWRbZ/lHcMl+
+         vvFQ==
+X-Gm-Message-State: APjAAAVGlMvVaXWaO2wJEzHHOmIz/Fvf295rW5I4vtGJBifddimm6ZMO
+        WOc4Ii/MWtzjl+buorMPgFsSdxlyxet4FHj/3gI0K+++
+X-Google-Smtp-Source: APXvYqzaJqnOh8u1ffkHjbOR8474PuKjMUFOrqsL8xsQWJAm4wh9nEWyJeiQKud1Q6f+SzNL5TC5NIZfvS6/nl1YvvE=
+X-Received: by 2002:a92:40c4:: with SMTP id d65mr4939938ill.50.1571331054413;
+ Thu, 17 Oct 2019 09:50:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
+References: <20191015065937.23169-1-mathieu.poirier@linaro.org> <20191016183121.GD801860@kroah.com>
+In-Reply-To: <20191016183121.GD801860@kroah.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Thu, 17 Oct 2019 10:50:43 -0600
+Message-ID: <CANLsYkzg2kwxTG=+RZr4CNqQxNSttcyp_bbmO2u=Vq=HJ5_xtA@mail.gmail.com>
+Subject: Re: [stable 4.19][PATCH 1/4] ARM: dts: am4372: Set memory bandwidth
+ limit for DISPC
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "# 4 . 7" <stable@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne četrtek, 17. oktober 2019 ob 09:51:28 CEST je Hans Verkuil napisal(a):
-> On 10/16/19 9:28 PM, Jernej Skrabec wrote:
-> > Allwinner H3 SoC contains deinterlace unit, which has several modes of
-> > operation - bypass, weave, bob and mixed (advanced) mode. I don't know
-> > how mixed mode works, but according to Allwinner it gives best results,
-> > so they use it exclusively. Currently this mode is also hardcoded here.
-> > 
-> > For each interleaved frame queued, this driver produces 2 deinterlaced
-> > frames. Deinterlaced frames are based on 2 consequtive output buffers,
-> > except for the first 2, where same output buffer is given to peripheral
-> > as current and previous.
-> > 
-> > There is no documentation for this core, so register layout and fixed
-> > values were taken from BSP driver.
-> > 
-> > I'm not sure if maximum size of the image unit is capable to process is
-> > governed by size of "flag" buffers, frequency or it really is some HW
-> > limitation. Currently driver can process full HD image in ~15ms (7.5ms
-> > for each capture buffer), which allows to process 1920x1080@60i video
-> > smoothly in real time.
-> > 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+On Wed, 16 Oct 2019 at 12:31, Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Oct 15, 2019 at 12:59:34AM -0600, Mathieu Poirier wrote:
+> > From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> >
+> > commit f90ec6cdf674248dcad85bf9af6e064bf472b841 upstream
+> >
+> > Set memory bandwidth limit to filter out resolutions above 720p@60Hz to
+> > avoid underflow errors due to the bandwidth needs of higher resolutions.
+> >
+> > am43xx can not provide enough bandwidth to DISPC to correctly handle
+> > 'high' resolutions.
+> >
+> > Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> > Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> > Signed-off-by: Tony Lindgren <tony@atomide.com>
+> > Cc: stable <stable@vger.kernel.org> # 4.19
+> > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 > > ---
-> > 
-> >  MAINTAINERS                                   |    7 +
-> >  drivers/media/platform/sunxi/Kconfig          |    1 +
-> >  drivers/media/platform/sunxi/Makefile         |    1 +
-> >  drivers/media/platform/sunxi/sun8i-di/Kconfig |   11 +
-> >  .../media/platform/sunxi/sun8i-di/Makefile    |    2 +
-> >  .../media/platform/sunxi/sun8i-di/sun8i-di.c  | 1020 +++++++++++++++++
-> >  .../media/platform/sunxi/sun8i-di/sun8i-di.h  |  237 ++++
-> >  7 files changed, 1279 insertions(+)
-> >  create mode 100644 drivers/media/platform/sunxi/sun8i-di/Kconfig
-> >  create mode 100644 drivers/media/platform/sunxi/sun8i-di/Makefile
-> >  create mode 100644 drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
-> >  create mode 100644 drivers/media/platform/sunxi/sun8i-di/sun8i-di.h
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index c7b48525822a..c375455125fb 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -4646,6 +4646,13 @@ M:	"Maciej W. Rozycki" <macro@linux-mips.org>
-> > 
-> >  S:	Maintained
-> >  F:	drivers/net/fddi/defxx.*
-> > 
-> > +DEINTERLACE DRIVERS FOR ALLWINNER H3
-> > +M:	Jernej Skrabec <jernej.skrabec@siol.net>
-> > +L:	linux-media@vger.kernel.org
-> > +T:	git git://linuxtv.org/media_tree.git
-> > +S:	Maintained
-> > +F:	drivers/media/platform/sunxi/sun8i-di/
-> > +
-> > 
-> >  DELL SMBIOS DRIVER
-> >  M:	Pali Rohár <pali.rohar@gmail.com>
-> >  M:	Mario Limonciello <mario.limonciello@dell.com>
-> > 
-> > diff --git a/drivers/media/platform/sunxi/Kconfig
-> > b/drivers/media/platform/sunxi/Kconfig index 71808e93ac2e..d7a5621bf327
-> > 100644
-> > --- a/drivers/media/platform/sunxi/Kconfig
-> > +++ b/drivers/media/platform/sunxi/Kconfig
-> > @@ -1,2 +1,3 @@
-> > 
-> >  source "drivers/media/platform/sunxi/sun4i-csi/Kconfig"
-> >  source "drivers/media/platform/sunxi/sun6i-csi/Kconfig"
-> > 
-> > +source "drivers/media/platform/sunxi/sun8i-di/Kconfig"
-> 
-> This is a m2m driver, so this belongs in drivers/media/platform/Kconfig in
-> the Memory-to-memory section.
-> 
-> > diff --git a/drivers/media/platform/sunxi/Makefile
-> > b/drivers/media/platform/sunxi/Makefile index a05127529006..3878cb4efdc2
-> > 100644
-> > --- a/drivers/media/platform/sunxi/Makefile
-> > +++ b/drivers/media/platform/sunxi/Makefile
-> > @@ -1,2 +1,3 @@
-> > 
-> >  obj-y		+= sun4i-csi/
-> >  obj-y		+= sun6i-csi/
-> > 
-> > +obj-y		+= sun8i-di/
-> > diff --git a/drivers/media/platform/sunxi/sun8i-di/Kconfig
-> > b/drivers/media/platform/sunxi/sun8i-di/Kconfig new file mode 100644
-> > index 000000000000..dbd77a61e3b3
-> > --- /dev/null
-> > +++ b/drivers/media/platform/sunxi/sun8i-di/Kconfig
-> > @@ -0,0 +1,11 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +config VIDEO_SUN8I_DEINTERLACE
-> > +	tristate "Allwinner Deinterlace driver"
-> > +	depends on VIDEO_DEV && VIDEO_V4L2
-> > +	depends on HAS_DMA
-> > +	depends on OF
-> > +	depends on PM
-> > +	select VIDEOBUF2_DMA_CONTIG
-> > +	select V4L2_MEM2MEM_DEV
-> > +	help
-> > +	   Support for the Allwinner Deinterlace unit found on some SoCs.
-> 
-> Shouldn't this depend on ARCH_SUNXI || COMPILE_TEST?
-> And also on COMMON_CLK?
+> >  arch/arm/boot/dts/am4372.dtsi | 2 ++
+> >  1 file changed, 2 insertions(+)
+>
+> What about 5.3?  Is this ok there?
+>
 
-Yes to both. Also I don't see a reason why it would depend on HAS_DMA, so I 
-will remove that.
+Yes - all the patches in this series are also applicable (and apply) to 5.3.y
 
-Best regards,
-Jernej
+Thanks,
+Mathieu
 
-> 
-> Regards,
-> 
-> 	Hans
-
-
-
-
+> thanks,
+>
+> greg k-h
