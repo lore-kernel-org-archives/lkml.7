@@ -2,64 +2,190 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BC0FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C27CECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 633F42067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF2A42067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:34:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406227AbfJQMcu (ORCPT
+        id S2406278AbfJQMeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 08:32:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50648 "EHLO mx1.redhat.com"
+        Thu, 17 Oct 2019 08:34:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727054AbfJQMct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:32:49 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727291AbfJQMeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 08:34:25 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9A2C13082A6C;
-        Thu, 17 Oct 2019 12:32:49 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-43.ams2.redhat.com [10.36.116.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2C756194B6;
-        Thu, 17 Oct 2019 12:32:49 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 6A58D16E2D; Thu, 17 Oct 2019 14:32:48 +0200 (CEST)
-Date:   Thu, 17 Oct 2019 14:32:48 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     airlied@redhat.com, airlied@linux.ie, daniel@ffwll.ch,
-        virtualization@lists.linux-foundation.org,
-        spice-devel@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] drm/qxl: Fix randbuild error
-Message-ID: <20191017123248.b4d4jd6wfu7np25n@sirius.home.kraxel.org>
-References: <20191008024054.32368-1-yuehaibing@huawei.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 911042082C;
+        Thu, 17 Oct 2019 12:34:23 +0000 (UTC)
+Date:   Thu, 17 Oct 2019 08:34:22 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Prateek Sood <prsood@codeaurora.org>
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
+        kaushalk@codeaurora.org, Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] trace: fix race in perf_trace_buf initialization
+Message-ID: <20191017083422.6ab65ce2@gandalf.local.home>
+In-Reply-To: <cba8fc4b-b048-b59b-d21a-050027f17f5c@codeaurora.org>
+References: <1571120245-4186-1-git-send-email-prsood@codeaurora.org>
+        <cba8fc4b-b048-b59b-d21a-050027f17f5c@codeaurora.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191008024054.32368-1-yuehaibing@huawei.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 17 Oct 2019 12:32:49 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 10:40:54AM +0800, YueHaibing wrote:
-> If DEM_QXL is y and DRM_TTM_HELPER is m, building fails:
-> 
-> drivers/gpu/drm/qxl/qxl_object.o: undefined reference to `drm_gem_ttm_print_info'
-> 
-> Select DRM_TTM_HELPER to fix this.
+On Thu, 17 Oct 2019 12:23:49 +0530
+Prateek Sood <prsood@codeaurora.org> wrote:
 
-Queued up for drm-misc-next.
+> On 10/15/19 11:47 AM, Prateek Sood wrote:
+> > [  943.034988] Unable to handle kernel paging request at virtual address 0000003106f2003c
+> > [  943.043653] Mem abort info:
+> > [  943.046679]   ESR = 0x96000045
+> > [  943.050428]   Exception class = DABT (current EL), IL = 32 bits
+> > [  943.056643]   SET = 0, FnV = 0
+> > [  943.060168]   EA = 0, S1PTW = 0
+> > [  943.063449] Data abort info:
+> > [  943.066474]   ISV = 0, ISS = 0x00000045
+> > [  943.070856]   CM = 0, WnR = 1
+> > [  943.074016] user pgtable: 4k pages, 39-bit VAs, pgdp = ffffffc034b9b000
+> > [  943.081446] [0000003106f2003c] pgd=0000000000000000, pud=0000000000000000
+> > [  943.088862] Internal error: Oops: 96000045 [#1] PREEMPT SMP
+> > [  943.141700] Process syz-executor (pid: 18393, stack limit = 0xffffffc093190000)
+> > [  943.164146] pstate: 80400005 (Nzcv daif +PAN -UAO)
+> > [  943.169119] pc : __memset+0x20/0x1ac
+> > [  943.172831] lr : memset+0x3c/0x50
+> > [  943.176269] sp : ffffffc09319fc50
+> > 
+> > [  943.557593]  __memset+0x20/0x1ac
+> > [  943.560953]  perf_trace_buf_alloc+0x140/0x1a0
+> > [  943.565472]  perf_trace_sys_enter+0x158/0x310
+> > [  943.569985]  syscall_trace_enter+0x348/0x7c0
+> > [  943.574413]  el0_svc_common+0x11c/0x368
+> > [  943.578394]  el0_svc_handler+0x12c/0x198
+> > [  943.582459]  el0_svc+0x8/0xc
+> > 
+> > In Ramdumps:
+> > total_ref_count = 3
+> > perf_trace_buf = (
+> >     0x0 -> NULL,
+> >     0x0 -> NULL,
+> >     0x0 -> NULL,
+> >     0x0 -> NULL)
+> > 
+> > event_call in perf_trace_sys_enter()
+> > event_call = 0xFFFFFF900CB511D8 -> (
+> >     list = (next = 0xFFFFFF900CB4E2E0, prev = 0xFFFFFF900CB512B0),
+> >     class = 0xFFFFFF900CDC8308,
+> >     name = 0xFFFFFF900CDDA1D8,
+> >     tp = 0xFFFFFF900CDDA1D8,
+> >     event = (
+> >       node = (next = 0x0, pprev = 0xFFFFFF900CB80210),
+> >       list = (next = 0xFFFFFF900CB512E0, prev = 0xFFFFFF900CB4E310),
+> >       type = 21,
+> >       funcs = 0xFFFFFF900CB51130),
+> >     print_fmt = 0xFFFFFF900CB51150,
+> >     filter = 0x0,
+> >     mod = 0x0,
+> >     data = 0x0,
+> >     flags = 18,
+> >     perf_refcount = 1,
+> >     perf_events = 0xFFFFFF8DB8E54158,
+> >     prog_array = 0x0,
+> >     perf_perm = 0x0)
+> > 
+> > perf_events added on CPU0
+> > (struct hlist_head *)(0xFFFFFF8DB8E54158+__per_cpu_offset[0]) -> (
+> >     first = 0xFFFFFFC0980FD0E0 -> (
+> >       next = 0x0,
+> >       pprev = 0xFFFFFFBEBFD74158))
+> > 
+> > Could you please confirm:
+> > 1) the race mentioned below exists or not.
+> > 2) if following patch fixes it.
+> > 
+> >   
+> >> 8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8  
+> > 
+> > A race condition exists while initialiazing perf_trace_buf from
+> > perf_trace_init() and perf_kprobe_init().
+> > 
+> >       CPU0                                        CPU1
+> > perf_trace_init()
+> >   mutex_lock(&event_mutex)
+> >     perf_trace_event_init()
+> >       perf_trace_event_reg()
+> >         total_ref_count == 0
+> > 	buf = alloc_percpu()
+> >         perf_trace_buf[i] = buf
+> >         tp_event->class->reg() //fails       perf_kprobe_init()
+> > 	goto fail                              perf_trace_event_init()
+> >                                                  perf_trace_event_reg()
+> >         fail:
+> > 	  total_ref_count == 0
+> > 
+> >                                                    total_ref_count == 0
+> >                                                    buf = alloc_percpu()
+> >                                                    perf_trace_buf[i] = buf
+> >                                                    tp_event->class->reg()
+> >                                                    total_ref_count++
+> > 
+> >           free_percpu(perf_trace_buf[i])
+> >           perf_trace_buf[i] = NULL
+> > 
+> > Any subsequent call to perf_trace_event_reg() will observe total_ref_count > 0,
+> > causing the perf_trace_buf to be NULL always. This can result in perf_trace_buf
+> > getting accessed from perf_trace_buf_alloc() without being initialized. Acquiring
+> > event_mutex in perf_kprobe_init() before calling perf_trace_event_init() should
+> > fix this race.
+> > 
+> > Signed-off-by: Prateek Sood <prsood@codeaurora.org>
+> > ---
+> >  kernel/trace/trace_event_perf.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
+> > index 4629a61..48ee92c 100644
+> > --- a/kernel/trace/trace_event_perf.c
+> > +++ b/kernel/trace/trace_event_perf.c
+> > @@ -272,9 +272,11 @@ int perf_kprobe_init(struct perf_event *p_event, bool is_retprobe)
+> >  		goto out;
+> >  	}
+> >  
+> > +	mutex_lock(&event_mutex);
+> >  	ret = perf_trace_event_init(tp_event, p_event);
+> >  	if (ret)
+> >  		destroy_local_trace_kprobe(tp_event);
+> > +	mutex_unlock(&event_mutex);
+> >  out:
+> >  	kfree(func);
+> >  	return ret;
+> > @@ -282,8 +284,10 @@ int perf_kprobe_init(struct perf_event *p_event, bool is_retprobe)
+> >  
+> >  void perf_kprobe_destroy(struct perf_event *p_event)
+> >  {
+> > +	mutex_lock(&event_mutex);
+> >  	perf_trace_event_close(p_event);
+> >  	perf_trace_event_unreg(p_event);
+> > +	mutex_unlock(&event_mutex);
+> >  
+> >  	destroy_local_trace_kprobe(p_event->tp_event);
+> >  }
+> >   
+> 
+> Folks, 
+> 
+> Could you please help with this query/patch?
 
-thanks,
-  Gerd
+Added Peter Zijlstra who maintains the kernel side of perf.
+
+-- Steve
 
