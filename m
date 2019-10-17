@@ -2,108 +2,92 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D667FA3738
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66419FA3736
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D0B214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B7812082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:19:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408818AbfJQKTJ (ORCPT
+        id S2501936AbfJQKTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 06:19:09 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:36474 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408801AbfJQKTI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 06:19:08 -0400
-Received: from [185.81.136.22] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iL2s6-0007tP-Q6; Thu, 17 Oct 2019 10:19:06 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     oleg@redhat.com, linux-kernel@vger.kernel.org
-Cc:     aarcange@redhat.com, akpm@linux-foundation.org,
-        christian@kellner.me, cyphar@cyphar.com, elena.reshetova@intel.com,
-        guro@fb.com, jannh@google.com, ldv@altlinux.org,
-        linux-api@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        mhocko@suse.com, mingo@kernel.org, peterz@infradead.org,
-        shuah@kernel.org, tglx@linutronix.de, viro@zeniv.linux.org.uk,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH v3 5/5] pid: use pid_has_task() in pidfd_open()
-Date:   Thu, 17 Oct 2019 12:18:32 +0200
-Message-Id: <20191017101832.5985-5-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191017101832.5985-1-christian.brauner@ubuntu.com>
-References: <20191016153606.2326-1-christian.brauner@ubuntu.com>
- <20191017101832.5985-1-christian.brauner@ubuntu.com>
+        Thu, 17 Oct 2019 06:19:20 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:38226 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2408801AbfJQKTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 06:19:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7D311BC0;
+        Thu, 17 Oct 2019 03:18:46 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F40F3F718;
+        Thu, 17 Oct 2019 03:18:45 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 11:18:43 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+Cc:     linux-kernel@lists.codethink.co.uk,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: mvebu: mvebu_pcie_map_registers __iomem fix
+Message-ID: <20191017101843.GC9589@e121166-lin.cambridge.arm.com>
+References: <20191015161148.4413-1-ben.dooks@codethink.co.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015161148.4413-1-ben.dooks@codethink.co.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new pid_has_task() helper in pidfd_open(). This simplifies the
-code and avoids taking rcu_read_{lock,unlock}() and leads to overall
-nicer code.
+On Tue, Oct 15, 2019 at 05:11:48PM +0100, Ben Dooks (Codethink) wrote:
+> Fix the return type of mvebu_pcie_map_registers in the
+> error path to have __iomem on it. Fixes the following
+> sparse warning:
+> 
+> drivers/pci/controller/pci-mvebu.c:716:31: warning: incorrect type in return expression (different address spaces)
+> drivers/pci/controller/pci-mvebu.c:716:31:    expected void [noderef] <asn:2> *
+> drivers/pci/controller/pci-mvebu.c:716:31:    got void *
+> 
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> ---
+> Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Andrew Murray <andrew.murray@arm.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/pci/controller/pci-mvebu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
----
-/* pidfd selftests */
-passed
+Applied to pci/misc, thanks.
 
-/* v1 */
-patch not present
+Lorenzo
 
-/* v2 */
-Link: https://lore.kernel.org/r/20191016153606.2326-5-christian.brauner@ubuntu.com
-patch introduced
-
-/* v3 */
-- Oleg Nesterov <oleg@redhat.com>:
-  - s/task_alive/pid_has_task/
----
- kernel/pid.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
-
-diff --git a/kernel/pid.c b/kernel/pid.c
-index 124d40b239b1..7b5f6c963d72 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -497,7 +497,7 @@ static int pidfd_create(struct pid *pid)
-  */
- SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
- {
--	int fd, ret;
-+	int fd;
- 	struct pid *p;
- 
- 	if (flags)
-@@ -510,13 +510,11 @@ SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
- 	if (!p)
- 		return -ESRCH;
- 
--	ret = 0;
--	rcu_read_lock();
--	if (!pid_task(p, PIDTYPE_TGID))
--		ret = -EINVAL;
--	rcu_read_unlock();
-+	if (pid_has_task(p, PIDTYPE_TGID))
-+		fd = pidfd_create(p);
-+	else
-+		fd = -EINVAL;
- 
--	fd = ret ?: pidfd_create(p);
- 	put_pid(p);
- 	return fd;
- }
--- 
-2.23.0
-
+> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+> index ed032e9a3156..153a64676bc9 100644
+> --- a/drivers/pci/controller/pci-mvebu.c
+> +++ b/drivers/pci/controller/pci-mvebu.c
+> @@ -713,7 +713,7 @@ static void __iomem *mvebu_pcie_map_registers(struct platform_device *pdev,
+>  
+>  	ret = of_address_to_resource(np, 0, &regs);
+>  	if (ret)
+> -		return ERR_PTR(ret);
+> +		return (void __iomem *)ERR_PTR(ret);
+>  
+>  	return devm_ioremap_resource(&pdev->dev, &regs);
+>  }
+> -- 
+> 2.23.0
+> 
