@@ -2,87 +2,182 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CB4ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BD1FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD3A121835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A72121A49
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:24:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="im138kZx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WQgZuqji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441514AbfJQVSe (ORCPT
+        id S2437736AbfJQVYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 17:18:34 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:38349 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2441370AbfJQVSe (ORCPT
+        Thu, 17 Oct 2019 17:24:38 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:46189 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729780AbfJQVYi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 17:18:34 -0400
-Received: by mail-ua1-f68.google.com with SMTP id 107so1129468uau.5
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 14:18:33 -0700 (PDT)
+        Thu, 17 Oct 2019 17:24:38 -0400
+Received: by mail-qt1-f194.google.com with SMTP id u22so5743981qtq.13;
+        Thu, 17 Oct 2019 14:24:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=etI31KzHT2q8i7/qza32Bl1FPZmxfAFlonbXD/SphcM=;
-        b=im138kZxjCWcm5LRBg1nd/p+5cuI6FdrJigK0zjXfy9KDEgaaZhi67eiLdrjJbXypS
-         7gvkSnajbf6ndXt9OHRb5yZ0G9OVL4y9pfIKTv3AzHbz+oTW0LMVG6lFnF2kVTwe6e0Q
-         boFAggfKATpIGhWORAVusyoy2qqeiH2kVa+xUPK+FRhPD782y3WzNr/iJ0WqtNR0+JsO
-         Co5uPFw1FBYbd5v58QiE0+6UVYuuVDUt5Nww3J138aASTVssPmeZgFf14loAPJ1F9Jna
-         TQ0FnGGTpXMZXu9Dku/KlCRqBGvWuRLI0fE+UW2gG4JpGuXF5axupJufMQABDJ/HJlNX
-         MSiQ==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=this0OD+MBdxIZ1Ej7SetLEMsHuprbufWI70WlqvPpA=;
+        b=WQgZuqjiI1LuUmrXWZ13eyzcHLR8NX8uApORspapLRKPohTGQl8txWDxtXhv7RPP2f
+         I+ebv+c7csDMLTS7gETiV05cj6tXXPF3ExTwkhMGNEphxVZLc4+5l4EiiQHrAVpNS++I
+         1oIg8nYLf2/DPP7LUijvorfG0NqWVxOwo4sib7qFcrONtz5tPsreY0Q3PG5/cXGpuFj8
+         KHZ6a97/y5kdPpoA/GwwOasqRFx41vrxFz4awC65Ohz+owUB4SJVgo/4IAshl6FNUEfF
+         SwNAAFNPfCJqNdXXXnkjDZJeUxfUuAopk3wjMLluwndLRibLXcd5eT62G1gRrTkzkcWd
+         rPqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=etI31KzHT2q8i7/qza32Bl1FPZmxfAFlonbXD/SphcM=;
-        b=J0DKWxvOu7SFi6RC2EVJF1N7Z/EWaPhREW17qYrYX82/0EuCAA7LEl1paok0SPOEK1
-         0AhmL2JphmyPhzNeMyBwZWwZx7mHjekra3r/75Jbk1thHo5ngnV/CWHWpFt86YG1TDyg
-         ZS2aLjboIcZVeMCa329kn5RZGUi3VgjGvtpdtM5Iaq4P1kUO8/GmpO9oRRagZmdLHimE
-         5H0MbyfU2lvUrKgjt0nh0vHhEnMUQcpubpdGV6xBHAzt9Xn89g7uR3p+f5EbXbar6lgW
-         MMdmOVb7xnth2WTOVTlx9wuKj6keidZMupKYp+QxdBXg1Z02FIshXS6hJhYp+S3GEDe1
-         k6bA==
-X-Gm-Message-State: APjAAAWowYe6GF28SQYdzUz6dI3woVDdFIXW+dxo6cwsJP9bMwSoj0+G
-        uJdffOGfWIcCCPZlHzAxPMi0Bv6Gxw6Vwzn0VorWV8l9TOXhxA==
-X-Google-Smtp-Source: APXvYqwVsPn60vVTYdGHORvzzOev1FUgxoOqrSATGeUeOkCW8C2qdWF5+y73TMv5AKwbhIpxdkF9hWro28pkmXf1U/g=
-X-Received: by 2002:ab0:6387:: with SMTP id y7mr3562286uao.110.1571347112431;
- Thu, 17 Oct 2019 14:18:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191007214740.188547-1-samitolvanen@google.com>
- <201910101411.98362BA0@keescook> <20191011142650.36404713@gandalf.local.home>
- <CABCJKueYhWL_YnkqRW9TtM4sTB50TNjTZ23_4xfpZNy0GwY5VA@mail.gmail.com> <20191015090055.789a0aed@gandalf.local.home>
-In-Reply-To: <20191015090055.789a0aed@gandalf.local.home>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Thu, 17 Oct 2019 14:18:20 -0700
-Message-ID: <CABCJKue6x0KfCR1xYUrJZnnzf_yp1CidmULwvGS5a-=yRbPzCQ@mail.gmail.com>
-Subject: Re: [PATCH] ftrace: fix function type mismatches
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=this0OD+MBdxIZ1Ej7SetLEMsHuprbufWI70WlqvPpA=;
+        b=FjrImEmDhN+JoWFtCrGmfVta4Rzjh0VHBnyjyuBf0+5m7w6sDb3ySwSI0+EQeeff03
+         cBzskomNh/srkSDPHxgLa/x0uudKgrKhu7mxt/3tyHNuT+EGyRuAcMy7oe5x+fVCsY7N
+         YiRChXIURC9VoYQ0ROL6cwAIe2iU2N4dChxgYrIo5JusbT1XUWT//fIJU08/7jK679rU
+         5XwX0Q0PKydNun23LTP6kl9nxL8Q6g+hMDzNE7XlS7uEjWvjYKNfmhPcB0QJ0eaTJOgJ
+         oAppQD3xv2ZcqdjKJpd0HFn2L+kLS3KAK8nT4mFiLd8IsQV+/qit4yIq0OAqL408fDVr
+         OMjw==
+X-Gm-Message-State: APjAAAWNNkQQxkB3hZ1shK6H6XXeFBFr84fXA09fskIXyi4KmZ9WejEH
+        PD40ARB7Dyv72AEWGjwgjZGhL8mW
+X-Google-Smtp-Source: APXvYqx3WjOTOf5GBDB6RDSF2v/BR495wcLyO+mu/a0CEzI7oL8r1SxBeo96s8BnV6tFBKuLOuIfqA==
+X-Received: by 2002:ac8:3476:: with SMTP id v51mr6121284qtb.285.1571347475591;
+        Thu, 17 Oct 2019 14:24:35 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([177.158.182.196])
+        by smtp.gmail.com with ESMTPSA id k2sm2486765qti.24.2019.10.17.14.24.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 14:24:34 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 5A1B04DD66; Thu, 17 Oct 2019 18:24:31 -0300 (-03)
+Date:   Thu, 17 Oct 2019 18:24:31 -0300
 To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH 1/2] perf: Iterate on tep event arrays directly
+Message-ID: <20191017212431.GF3600@kernel.org>
+References: <20191017210521.465613686@goodmis.org>
+ <20191017210636.061448713@goodmis.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191017210636.061448713@goodmis.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 6:01 AM Steven Rostedt <rostedt@goodmis.org> wrote:
-> Would this work for you?
+Em Thu, Oct 17, 2019 at 05:05:22PM -0400, Steven Rostedt escreveu:
+> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> 
+> Instead of calling a useless (and broken) helper function to get the next
+> event of a tep event array, just get the array directly and iterate over it.
+> 
+> Note, the broken part was from trace_find_next_event() which after this will
+> no longer be used, and can be removed.
+> 
+> Link: http://lkml.kernel.org/r/20191017153733.630cd5eb@gandalf.local.home
 
->  #define MCOUNT_REC()   . = ALIGN(8);                           \
->                         __start_mcount_loc = .;                 \
->                         KEEP(*(__patchable_function_entries))   \
-> -                       __stop_mcount_loc = .;
-> +                       __stop_mcount_loc = .;                  \
-> +                       ftrace_graph_stub = ftrace_stub;
+I'll add a:
 
-> +extern void ftrace_graph_stub(struct ftrace_graph_ret *);
+Fixes: bb3dd7e7c4d5 ("tools lib traceevent, perf tools: Move struct tep_handler definition in a local header file")
+Cc: stable@vger.kernel.org : v4.20+
 
-Yes, it looks like the compiler is actually happy with this approach.
-Thank you for the patch!
+As this is when this problem starts causing the segfault when generating
+python scripts from perf.data files with multiple tracepoint events, ok?
 
-Sami
+- Arnaldo
+ 
+> Reported-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+>  tools/perf/util/scripting-engines/trace-event-perl.c   | 8 ++++++--
+>  tools/perf/util/scripting-engines/trace-event-python.c | 9 +++++++--
+>  2 files changed, 13 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
+> index 15961854ba67..741f040648b5 100644
+> --- a/tools/perf/util/scripting-engines/trace-event-perl.c
+> +++ b/tools/perf/util/scripting-engines/trace-event-perl.c
+> @@ -539,10 +539,11 @@ static int perl_stop_script(void)
+>  
+>  static int perl_generate_script(struct tep_handle *pevent, const char *outfile)
+>  {
+> +	int i, not_first, count, nr_events;
+> +	struct tep_event **all_events;
+>  	struct tep_event *event = NULL;
+>  	struct tep_format_field *f;
+>  	char fname[PATH_MAX];
+> -	int not_first, count;
+>  	FILE *ofp;
+>  
+>  	sprintf(fname, "%s.pl", outfile);
+> @@ -603,8 +604,11 @@ sub print_backtrace\n\
+>  }\n\n\
+>  ");
+>  
+> +	nr_events = tep_get_events_count(pevent);
+> +	all_events = tep_list_events(pevent, TEP_EVENT_SORT_ID);
+>  
+> -	while ((event = trace_find_next_event(pevent, event))) {
+> +	for (i = 0; all_events && i < nr_events; i++) {
+> +		event = all_events[i];
+>  		fprintf(ofp, "sub %s::%s\n{\n", event->system, event->name);
+>  		fprintf(ofp, "\tmy (");
+>  
+> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+> index 5d341efc3237..93c03b39cd9c 100644
+> --- a/tools/perf/util/scripting-engines/trace-event-python.c
+> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
+> @@ -1687,10 +1687,11 @@ static int python_stop_script(void)
+>  
+>  static int python_generate_script(struct tep_handle *pevent, const char *outfile)
+>  {
+> +	int i, not_first, count, nr_events;
+> +	struct tep_event **all_events;
+>  	struct tep_event *event = NULL;
+>  	struct tep_format_field *f;
+>  	char fname[PATH_MAX];
+> -	int not_first, count;
+>  	FILE *ofp;
+>  
+>  	sprintf(fname, "%s.py", outfile);
+> @@ -1735,7 +1736,11 @@ static int python_generate_script(struct tep_handle *pevent, const char *outfile
+>  	fprintf(ofp, "def trace_end():\n");
+>  	fprintf(ofp, "\tprint(\"in trace_end\")\n\n");
+>  
+> -	while ((event = trace_find_next_event(pevent, event))) {
+> +	nr_events = tep_get_events_count(pevent);
+> +	all_events = tep_list_events(pevent, TEP_EVENT_SORT_ID);
+> +
+> +	for (i = 0; all_events && i < nr_events; i++) {
+> +		event = all_events[i];
+>  		fprintf(ofp, "def %s__%s(", event->system, event->name);
+>  		fprintf(ofp, "event_name, ");
+>  		fprintf(ofp, "context, ");
+> -- 
+> 2.23.0
+> 
+
+-- 
+
+- Arnaldo
