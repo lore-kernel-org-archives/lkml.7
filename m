@@ -2,241 +2,139 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE012FA3732
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98387FA3730
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4CFB20640
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57A5120663
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:31:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="dcccMuNb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408525AbfJQJa4 (ORCPT
+        id S2408536AbfJQJbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 05:30:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58238 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393479AbfJQJaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 05:30:55 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D4B2820F2;
-        Thu, 17 Oct 2019 09:30:54 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-12-118.pek2.redhat.com [10.72.12.118])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7F56760872;
-        Thu, 17 Oct 2019 09:30:48 +0000 (UTC)
-From:   Kairui Song <kasong@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
-        x86@kernel.org, linux-efi@vger.kernel.org,
-        Kairui Song <kasong@redhat.com>
-Subject: [PATCH v4] x86, efi: never relocate kernel below lowest acceptable address
-Date:   Thu, 17 Oct 2019 17:30:20 +0800
-Message-Id: <20191017093020.28658-1-kasong@redhat.com>
+        Thu, 17 Oct 2019 05:31:31 -0400
+Received: from mail-eopbgr780047.outbound.protection.outlook.com ([40.107.78.47]:11392
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2393479AbfJQJba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 05:31:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dahryvCP/fa5HiLi27dIJIP4+hSRejdXJuTA2cpRqbRbVpsEyQ7BPGQLMWgbcVrlFNX8QAYF3+GwXD0TPI2HBdrTbiSuEETwzAFyYWi5NoTHzZo8tD59RXVOFf+6srl3W/jMtfSBxzx10QyWErvFnVwbCmlMlNVfkvJuvaytF9VjLYIHHy0TqDqS9oXOiEDy7PQC4rMckCw6VDm1E04r26bqFlmZqJ2t1KYE6XN659k5ZrZcwChgFMS/X0YPh8MRwCcwE0jDJ6aow0l8IJcpspxTfwiYJafEVj6bEQ9lQXuouRCB15Q20cOovlg2hBPavOuXP4saBbydLZz2AqWnlg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uJiKzlV0mZCzK1+yNJIOzeXVBY8h8tN0j5HF3OyqZS4=;
+ b=lgtE544Q8FBLccZFXHJg+lVc/w+Kgs21NuV8/uU7XBoYDBi/lPdxfclY80wMlgtptogOjqwpy7OAhOk7vRmhfR0Nna5WoLJ2Y3fw2khXtoUShis9lwiOqWsFt2Mkf9MMjrLuSnQVMe9VH5Lebenm2BGQfQK5644I0XHmIDtoiqSgoQe8CTLgMlQS29C/v+tnok58l3slyB20A8Xzq0lvJfstRKxat1PzVmEuKr+ymDB3v8OxzT5QJleTkWyAJOOqTbEOiTAkn9tN12X6jnALcxv4JR0eTsSEFsbbLASjZBilc+Wmzubom+Gyu7PIjD30STozevDDCrZjztZsvS7q0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uJiKzlV0mZCzK1+yNJIOzeXVBY8h8tN0j5HF3OyqZS4=;
+ b=dcccMuNbL7nejyqDz/OctC5jlXZ857fXDxu0x3C1JWgsiiCstsWSVWsPPv031yl+cREmYOOGlsY7F+Tv82Dhgqn3NuvkumTez1/2VWzmqhm8Kqi8egcJZU3GZlHgOJq942ZdE2KiczHBS2JQYOXm7WnLDy44Gc9D4+7pQXIRcEA=
+Received: from DM6PR12MB3868.namprd12.prod.outlook.com (10.255.173.213) by
+ DM6PR12MB2889.namprd12.prod.outlook.com (20.179.71.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Thu, 17 Oct 2019 09:31:28 +0000
+Received: from DM6PR12MB3868.namprd12.prod.outlook.com
+ ([fe80::64dd:646d:6fa1:15a1]) by DM6PR12MB3868.namprd12.prod.outlook.com
+ ([fe80::64dd:646d:6fa1:15a1%4]) with mapi id 15.20.2347.023; Thu, 17 Oct 2019
+ 09:31:27 +0000
+From:   vishnu <vravulap@amd.com>
+To:     Mark Brown <broonie@kernel.org>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>
+CC:     "RAVULAPATI, VISHNU VARDHAN RAO" 
+        <Vishnuvardhanrao.Ravulapati@amd.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "Mukunda, Vijendar" <Vijendar.Mukunda@amd.com>,
+        Maruthi Srinivas Bayyavarapu <Maruthi.Bayyavarapu@amd.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/7] ASoC: amd: No need PCI-MSI interrupts
+Thread-Topic: [PATCH 1/7] ASoC: amd: No need PCI-MSI interrupts
+Thread-Index: AQHVd/NK02/86+8bwUqA0+UYmDRNb6dGCguAgAABq4CAGVYTgA==
+Date:   Thu, 17 Oct 2019 09:31:27 +0000
+Message-ID: <88852f59-477f-59ef-8f6e-559f987022a1@amd.com>
+References: <1569891524-18875-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+ <BN6PR12MB18093C8EDE60811B3D917DEAF79D0@BN6PR12MB1809.namprd12.prod.outlook.com>
+ <20191001172941.GC4786@sirena.co.uk>
+In-Reply-To: <20191001172941.GC4786@sirena.co.uk>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BM1PR01CA0075.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:1::15) To DM6PR12MB3868.namprd12.prod.outlook.com
+ (2603:10b6:5:1c8::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Vishnuvardhanrao.Ravulapati@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.159.251]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 11394baf-2bb5-45d5-7159-08d752e4c92e
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: DM6PR12MB2889:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR12MB28893D426A25F12EB31781EEE76D0@DM6PR12MB2889.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 01930B2BA8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(366004)(39860400002)(396003)(199004)(189003)(6506007)(76176011)(66066001)(8676002)(14454004)(66556008)(66476007)(31686004)(66946007)(66446008)(64756008)(102836004)(81156014)(81166006)(4744005)(25786009)(7736002)(386003)(53546011)(316002)(6636002)(305945005)(478600001)(99286004)(5660300002)(31696002)(36756003)(52116002)(71190400001)(71200400001)(186003)(2906002)(26005)(54906003)(110136005)(11346002)(486006)(446003)(6246003)(476003)(4326008)(2616005)(8936002)(229853002)(6486002)(6116002)(3846002)(6436002)(6512007)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2889;H:DM6PR12MB3868.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: r3DLhRaI67eUdMhjLzeQpTZZuhOrQobL3hlbv7/5/L668wI7/JTpUaX3VgKlM/zAqrLR1OB05J4XR76uA/VTUOTKUubc60hZFe9oB6qWy6oy1H1ALVAgTBzBGM09Ob/IyRGUcKl5RstKlHNZbzSNkGjojk8sT+hsbeq62FGDb4sl7R69IV9LwpwkDBRcQqJ1oLcm0ZEO90o0llQDntQitp+VWFB3muib8ym13OZvF0gG3ZAhUH0SEeOQH/Q/ETnrHub4s5C8dK3SdDiqCsBNrGXnx/af9Kn9xmiiBAgmZjElUTEd+/PmRwIM6G49y62qjIQ5uQXx3LfoZ1yKO2Z0fBPnlI8t+w9HQKAF3G3e/07NmMOoWvLH0LBhlaSGMqpeWJt4sQIR/y/vL7uOO5y84i9P2GnOFH0ygtaSHTvdLXc=
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <B2688D0F3331A44F8F513ACF4C12B497@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Thu, 17 Oct 2019 09:30:54 +0000 (UTC)
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11394baf-2bb5-45d5-7159-08d752e4c92e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Oct 2019 09:31:27.8818
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yblcpDkHn9iBnrbVooI0QywtbWY1KbqwlLcMUwPyM5I0VNoPZ1fIS9Oiej3F40sGd6nJkoZ3zgWJ+smZdGASzg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2889
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, kernel fails to boot on some HyperV VMs when using EFI.
-And it's a potential issue on all platforms.
 
-It's caused by broken kernel relocation on EFI systems, when below three
-conditions are met:
+On 01/10/19 10:59 PM, Mark Brown wrote:
+> On Tue, Oct 01, 2019 at 05:23:43PM +0000, Deucher, Alexander wrote:
+>=20
+>>> ACP-PCI controller driver does not depends msi interrupts.
+>>> So removed msi related pci functions which have no use and does not imp=
+act
+>>> on existing functionality.
+>=20
+>> In general, however, aren't MSIs preferred to legacy interrupts?
+>=20
+> As I understand it.  Or at the very least I'm not aware of any situation
+> where they're harmful.  It'd be good to have a clear explanation of why
+> we're removing the support.
+>=20
+>> Doesn't the driver have to opt into MSI support?  As such, won't
+>> removing this code effectively disable MSI support?
+>=20
+> Yes.
+>=20
+Hi Mark,
 
-1. Kernel image is not loaded to the default address (LOAD_PHYSICAL_ADDR)
-   by the loader.
-2. There isn't enough room to contain the kernel, starting from the
-   default load address (eg. something else occupied part the region).
-3. In the memmap provided by EFI firmware, there is a memory region
-   starts below LOAD_PHYSICAL_ADDR, and suitable for containing the
-   kernel.
+Any further updates on this patch.
 
-EFI stub will perform a kernel relocation when condition 1 is met. But
-due to condition 2, EFI stub can't relocate kernel to the preferred
-address, so it fallback to ask EFI firmware to alloc lowest usable memory
-region, got the low region mentioned in condition 3, and relocated
-kernel there.
-
-It's incorrect to relocate the kernel below LOAD_PHYSICAL_ADDR. This
-is the lowest acceptable kernel relocation address.
-
-The first thing goes wrong is in arch/x86/boot/compressed/head_64.S.
-Kernel decompression will force use LOAD_PHYSICAL_ADDR as the output
-address if kernel is located below it. Then the relocation before
-decompression, which move kernel to the end of the decompression buffer,
-will overwrite other memory region, as there is no enough memory there.
-
-To fix it, just don't let EFI stub relocate the kernel to any address
-lower than lowest acceptable address.
-
-Signed-off-by: Kairui Song <kasong@redhat.com>
-Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-
----
-Update from V3:
- - Update commit message.
-
-Update from V2:
- - Update part of the commit message.
-
-Update from V1:
- - Redo the commit message.
-
- arch/x86/boot/compressed/eboot.c               |  8 +++++---
- drivers/firmware/efi/libstub/arm32-stub.c      |  2 +-
- drivers/firmware/efi/libstub/arm64-stub.c      |  2 +-
- drivers/firmware/efi/libstub/efi-stub-helper.c | 12 ++++++++----
- include/linux/efi.h                            |  5 +++--
- 5 files changed, 18 insertions(+), 11 deletions(-)
-
-diff --git a/arch/x86/boot/compressed/eboot.c b/arch/x86/boot/compressed/eboot.c
-index d6662fdef300..e89e84b66527 100644
---- a/arch/x86/boot/compressed/eboot.c
-+++ b/arch/x86/boot/compressed/eboot.c
-@@ -13,6 +13,7 @@
- #include <asm/e820/types.h>
- #include <asm/setup.h>
- #include <asm/desc.h>
-+#include <asm/boot.h>
- 
- #include "../string.h"
- #include "eboot.h"
-@@ -413,7 +414,7 @@ struct boot_params *make_boot_params(struct efi_config *c)
- 	}
- 
- 	status = efi_low_alloc(sys_table, 0x4000, 1,
--			       (unsigned long *)&boot_params);
-+			       (unsigned long *)&boot_params, 0);
- 	if (status != EFI_SUCCESS) {
- 		efi_printk(sys_table, "Failed to allocate lowmem for boot params\n");
- 		return NULL;
-@@ -798,7 +799,7 @@ efi_main(struct efi_config *c, struct boot_params *boot_params)
- 
- 	gdt->size = 0x800;
- 	status = efi_low_alloc(sys_table, gdt->size, 8,
--			   (unsigned long *)&gdt->address);
-+			       (unsigned long *)&gdt->address, 0);
- 	if (status != EFI_SUCCESS) {
- 		efi_printk(sys_table, "Failed to allocate memory for 'gdt'\n");
- 		goto fail;
-@@ -813,7 +814,8 @@ efi_main(struct efi_config *c, struct boot_params *boot_params)
- 		status = efi_relocate_kernel(sys_table, &bzimage_addr,
- 					     hdr->init_size, hdr->init_size,
- 					     hdr->pref_address,
--					     hdr->kernel_alignment);
-+					     hdr->kernel_alignment,
-+					     LOAD_PHYSICAL_ADDR);
- 		if (status != EFI_SUCCESS) {
- 			efi_printk(sys_table, "efi_relocate_kernel() failed!\n");
- 			goto fail;
-diff --git a/drivers/firmware/efi/libstub/arm32-stub.c b/drivers/firmware/efi/libstub/arm32-stub.c
-index e8f7aefb6813..bf6f954d6afe 100644
---- a/drivers/firmware/efi/libstub/arm32-stub.c
-+++ b/drivers/firmware/efi/libstub/arm32-stub.c
-@@ -220,7 +220,7 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table,
- 	*image_size = image->image_size;
- 	status = efi_relocate_kernel(sys_table, image_addr, *image_size,
- 				     *image_size,
--				     dram_base + MAX_UNCOMP_KERNEL_SIZE, 0);
-+				     dram_base + MAX_UNCOMP_KERNEL_SIZE, 0, 0);
- 	if (status != EFI_SUCCESS) {
- 		pr_efi_err(sys_table, "Failed to relocate kernel.\n");
- 		efi_free(sys_table, *reserve_size, *reserve_addr);
-diff --git a/drivers/firmware/efi/libstub/arm64-stub.c b/drivers/firmware/efi/libstub/arm64-stub.c
-index 1550d244e996..3d2e517e10f4 100644
---- a/drivers/firmware/efi/libstub/arm64-stub.c
-+++ b/drivers/firmware/efi/libstub/arm64-stub.c
-@@ -140,7 +140,7 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table_arg,
- 	if (status != EFI_SUCCESS) {
- 		*reserve_size = kernel_memsize + TEXT_OFFSET;
- 		status = efi_low_alloc(sys_table_arg, *reserve_size,
--				       MIN_KIMG_ALIGN, reserve_addr);
-+				       MIN_KIMG_ALIGN, reserve_addr, 0);
- 
- 		if (status != EFI_SUCCESS) {
- 			pr_efi_err(sys_table_arg, "Failed to relocate kernel\n");
-diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
-index 3caae7f2cf56..00b00a2562aa 100644
---- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-+++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-@@ -260,11 +260,11 @@ efi_status_t efi_high_alloc(efi_system_table_t *sys_table_arg,
- }
- 
- /*
-- * Allocate at the lowest possible address.
-+ * Allocate at the lowest possible address that is not below 'min'.
-  */
- efi_status_t efi_low_alloc(efi_system_table_t *sys_table_arg,
- 			   unsigned long size, unsigned long align,
--			   unsigned long *addr)
-+			   unsigned long *addr, unsigned long min)
- {
- 	unsigned long map_size, desc_size, buff_size;
- 	efi_memory_desc_t *map;
-@@ -311,6 +311,9 @@ efi_status_t efi_low_alloc(efi_system_table_t *sys_table_arg,
- 		start = desc->phys_addr;
- 		end = start + desc->num_pages * EFI_PAGE_SIZE;
- 
-+		if (start < min)
-+			start = min;
-+
- 		/*
- 		 * Don't allocate at 0x0. It will confuse code that
- 		 * checks pointers against NULL. Skip the first 8
-@@ -698,7 +701,8 @@ efi_status_t efi_relocate_kernel(efi_system_table_t *sys_table_arg,
- 				 unsigned long image_size,
- 				 unsigned long alloc_size,
- 				 unsigned long preferred_addr,
--				 unsigned long alignment)
-+				 unsigned long alignment,
-+				 unsigned long min_addr)
- {
- 	unsigned long cur_image_addr;
- 	unsigned long new_addr = 0;
-@@ -732,7 +736,7 @@ efi_status_t efi_relocate_kernel(efi_system_table_t *sys_table_arg,
- 	 */
- 	if (status != EFI_SUCCESS) {
- 		status = efi_low_alloc(sys_table_arg, alloc_size, alignment,
--				       &new_addr);
-+				       &new_addr, min_addr);
- 	}
- 	if (status != EFI_SUCCESS) {
- 		pr_efi_err(sys_table_arg, "Failed to allocate usable memory for kernel.\n");
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index bd3837022307..a5144cc44e54 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -1581,7 +1581,7 @@ efi_status_t efi_get_memory_map(efi_system_table_t *sys_table_arg,
- 
- efi_status_t efi_low_alloc(efi_system_table_t *sys_table_arg,
- 			   unsigned long size, unsigned long align,
--			   unsigned long *addr);
-+			   unsigned long *addr, unsigned long min);
- 
- efi_status_t efi_high_alloc(efi_system_table_t *sys_table_arg,
- 			    unsigned long size, unsigned long align,
-@@ -1592,7 +1592,8 @@ efi_status_t efi_relocate_kernel(efi_system_table_t *sys_table_arg,
- 				 unsigned long image_size,
- 				 unsigned long alloc_size,
- 				 unsigned long preferred_addr,
--				 unsigned long alignment);
-+				 unsigned long alignment,
-+				 unsigned long min_addr);
- 
- efi_status_t handle_cmdline_files(efi_system_table_t *sys_table_arg,
- 				  efi_loaded_image_t *image,
--- 
-2.21.0
-
+Regards,
+Vishnu
