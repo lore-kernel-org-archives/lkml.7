@@ -2,126 +2,128 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 523D3C4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF3DC4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 309E8214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACF2F214E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:20:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408108AbfJQHUU (ORCPT
+        id S2408121AbfJQHUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 03:20:20 -0400
-Received: from mga12.intel.com ([192.55.52.136]:33969 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408044AbfJQHUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 03:20:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 00:20:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,306,1566889200"; 
-   d="scan'208";a="186404307"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga007.jf.intel.com with ESMTP; 17 Oct 2019 00:20:13 -0700
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     linux-mtd@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        dwmw2@infradead.org, computersforpeace@gmail.com, richard@nod.at,
-        jwboyer@gmail.com, boris.brezillon@free-electrons.com,
-        cyrille.pitchen@atmel.com, david.oberhollenzer@sigma-star.at,
-        miquel.raynal@bootlin.com, tudor.ambarus@gmail.com,
-        vigneshr@ti.com, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [PATCH v4 2/2] mtd: spi-nor: cadence-quadspi: Disable the auto-poll for Intel LGM SoC
-Date:   Thu, 17 Oct 2019 15:20:00 +0800
-Message-Id: <20191017072000.48860-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20191017072000.48860-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20191017072000.48860-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Thu, 17 Oct 2019 03:20:25 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52178 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408101AbfJQHUV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 03:20:21 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iL04n-0002eF-3c; Thu, 17 Oct 2019 09:20:01 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B529B1C009F;
+        Thu, 17 Oct 2019 09:20:00 +0200 (CEST)
+Date:   Thu, 17 Oct 2019 07:20:00 -0000
+From:   "tip-bot2 for Benjamin Berg" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: ras/core] x86/mce: Lower throttling MCE messages' priority to warning
+Cc:     Benjamin Berg <bberg@redhat.com>, Borislav Petkov <bp@suse.de>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        "linux-edac" <linux-edac@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>, "x86-ml" <x86@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191009155424.249277-1-bberg@redhat.com>
+References: <20191009155424.249277-1-bberg@redhat.com>
+MIME-Version: 1.0
+Message-ID: <157129680050.29376.455617240270032569.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+The following commit has been merged into the ras/core branch of tip:
 
-On Intel Lightning Mountain SoCs QSPI controller do not use auto-poll.
-This patch disables auto polling when direct access mode is disabled
+Commit-ID:     9c3bafaa1fd88e4dd2dba3735a1f1abb0f2c7bb7
+Gitweb:        https://git.kernel.org/tip/9c3bafaa1fd88e4dd2dba3735a1f1abb0f2c7bb7
+Author:        Benjamin Berg <bberg@redhat.com>
+AuthorDate:    Wed, 09 Oct 2019 17:54:24 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Thu, 17 Oct 2019 09:07:09 +02:00
 
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+x86/mce: Lower throttling MCE messages' priority to warning
+
+On modern CPUs it is quite normal that the temperature limits are
+reached and the CPU is throttled. In fact, often the thermal design is
+not sufficient to cool the CPU at full load and limits can quickly be
+reached when a burst in load happens. This will even happen with
+technologies like RAPL limitting the long term power consumption of
+the package.
+
+Also, these limits are "softer", as Srinivas explains:
+
+"CPU temperature doesn't have to hit max(TjMax) to get these warnings.
+OEMs ha[ve] an ability to program a threshold where a thermal interrupt
+can be generated. In some systems the offset is 20C+ (Read only value).
+
+In recent systems, there is another offset on top of it which can be
+programmed by OS, once some agent can adjust power limits dynamically.
+By default this is set to low by the firmware, which I guess the
+prime motivation of Benjamin to submit the patch."
+
+So these messages do not usually indicate a hardware issue (e.g.
+insufficient cooling). Log them as warnings to avoid confusion about
+their severity.
+
+ [ bp: Massage commit mesage. ]
+
+Signed-off-by: Benjamin Berg <bberg@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: Christian Kellner <ckellner@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20191009155424.249277-1-bberg@redhat.com
 ---
- drivers/mtd/spi-nor/cadence-quadspi.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ arch/x86/kernel/cpu/mce/therm_throt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
-index 0ad076eaa81b..c2333f0473e3 100644
---- a/drivers/mtd/spi-nor/cadence-quadspi.c
-+++ b/drivers/mtd/spi-nor/cadence-quadspi.c
-@@ -88,6 +88,7 @@ struct cqspi_st {
- 	bool			rclk_en;
- 	u32			trigger_address;
- 	u32			wr_delay;
-+	bool			auto_poll;
- 	struct cqspi_flash_pdata f_pdata[CQSPI_MAX_CHIPSELECT];
- };
- 
-@@ -136,6 +137,8 @@ struct cqspi_driver_platdata {
- #define CQSPI_REG_RD_INSTR_TYPE_DATA_MASK	0x3
- #define CQSPI_REG_RD_INSTR_DUMMY_MASK		0x1F
- 
-+#define CQSPI_REG_WR_COMPLETION_CTRL			0x38
-+#define CQSPI_REG_WR_COMPLETION_DISABLE_AUTO_POLL	BIT(14)
- #define CQSPI_REG_WR_INSTR			0x08
- #define CQSPI_REG_WR_INSTR_OPCODE_LSB		0
- #define CQSPI_REG_WR_INSTR_TYPE_ADDR_LSB	12
-@@ -1175,6 +1178,18 @@ static int cqspi_of_get_pdata(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int cqspi_disable_auto_poll(struct cqspi_st *cqspi)
-+{
-+	void __iomem *reg_base = cqspi->iobase;
-+	unsigned int reg;
-+
-+	reg = readl(reg_base + CQSPI_REG_WR_COMPLETION_CTRL);
-+	reg |= CQSPI_REG_WR_COMPLETION_DISABLE_AUTO_POLL;
-+	writel(reg, reg_base + CQSPI_REG_WR_COMPLETION_CTRL);
-+
-+	return 0;
-+}
-+
- static void cqspi_controller_init(struct cqspi_st *cqspi)
- {
- 	u32 reg;
-@@ -1206,6 +1221,10 @@ static void cqspi_controller_init(struct cqspi_st *cqspi)
- 	reg |= CQSPI_REG_CONFIG_ENB_DIR_ACC_CTRL;
- 	writel(reg, cqspi->iobase + CQSPI_REG_CONFIG);
- 
-+	/* Disable auto-polling */
-+	if (!cqspi->auto_poll)
-+		cqspi_disable_auto_poll(cqspi);
-+
- 	cqspi_controller_enable(cqspi, 1);
- }
- 
-@@ -1421,6 +1440,9 @@ static int cqspi_probe(struct platform_device *pdev)
- 		cqspi->wr_delay = 5 * DIV_ROUND_UP(NSEC_PER_SEC,
- 						   cqspi->master_ref_clk_hz);
- 
-+	if (ddata && (ddata->quirks & CQSPI_DISABLE_DAC_MODE))
-+		cqspi->auto_poll = false;
-+
- 	ret = devm_request_irq(dev, irq, cqspi_irq_handler, 0,
- 			       pdev->name, cqspi);
- 	if (ret) {
--- 
-2.11.0
-
+diff --git a/arch/x86/kernel/cpu/mce/therm_throt.c b/arch/x86/kernel/cpu/mce/therm_throt.c
+index 6e2becf..bc441d6 100644
+--- a/arch/x86/kernel/cpu/mce/therm_throt.c
++++ b/arch/x86/kernel/cpu/mce/therm_throt.c
+@@ -188,7 +188,7 @@ static void therm_throt_process(bool new_event, int event, int level)
+ 	/* if we just entered the thermal event */
+ 	if (new_event) {
+ 		if (event == THERMAL_THROTTLING_EVENT)
+-			pr_crit("CPU%d: %s temperature above threshold, cpu clock throttled (total events = %lu)\n",
++			pr_warn("CPU%d: %s temperature above threshold, cpu clock throttled (total events = %lu)\n",
+ 				this_cpu,
+ 				level == CORE_LEVEL ? "Core" : "Package",
+ 				state->count);
