@@ -2,296 +2,105 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CA2ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCEBECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3CDA2089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 597572089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:56:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VdDyutdV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437543AbfJQRxp (ORCPT
+        id S2437589AbfJQR4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 13:53:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57474 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732851AbfJQRxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 13:53:45 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4FF04307C658;
-        Thu, 17 Oct 2019 17:53:44 +0000 (UTC)
-Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C8D975D6C8;
-        Thu, 17 Oct 2019 17:53:29 +0000 (UTC)
-Date:   Thu, 17 Oct 2019 11:53:29 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-Subject: Re: [PATCH V4 4/6] mdev: introduce virtio device and its device ops
-Message-ID: <20191017115329.47d4a165@x1.home>
-In-Reply-To: <20191017104836.32464-5-jasowang@redhat.com>
-References: <20191017104836.32464-1-jasowang@redhat.com>
-        <20191017104836.32464-5-jasowang@redhat.com>
-Organization: Red Hat
+        Thu, 17 Oct 2019 13:56:31 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46590 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394803AbfJQR4a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 13:56:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=jw2QxeO03VZMlAkRGSUIbK+gG6Sw9+eOdiudXNUt6kw=; b=VdDyutdVx8kvP536fioAZJ7hD
+        eFnbnXRldFfeoeKRIcGRHAf6nVV4faIhh+dR4j0XGsyxhb+6L5K5rwau8VDijaIlOkefk3rjuV+Nk
+        njQ1548WtKpM+b4lK3iesZn7PNSSGTikuauFErIcJD8DlqpibNJZ/0qEFnYfiTp/IAuoQgFyjkuSL
+        1Af6TwRrp9F6kwK5itQQeWQghz5XyHF3dHCjSIKp/ND/R6N+AicnU4qIftycbMmrx779haolLRUhP
+        tP2H6x9zAtcYkVWHhL/+UJd2G3mtop4PGLh6pWd7I6LtHSPlDwRvpnQwEwelQ0umn5wM936EdXLrW
+        8Sb04VwZw==;
+Received: from [2001:4bb8:18c:d7b:c70:4a89:bc61:3] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iLA0g-0000eK-Uc; Thu, 17 Oct 2019 17:56:27 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "Darrick J . Wong" <darrick.wong@oracle.com>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: lift the xfs writepage code into iomap v8
+Date:   Thu, 17 Oct 2019 19:56:10 +0200
+Message-Id: <20191017175624.30305-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 17 Oct 2019 17:53:44 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019 18:48:34 +0800
-Jason Wang <jasowang@redhat.com> wrote:
+Hi Darrick,
 
-> This patch implements basic support for mdev driver that supports
-> virtio transport for kernel virtio driver.
-> 
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->  drivers/vfio/mdev/mdev_core.c |  12 +++
->  include/linux/mdev.h          |   4 +
->  include/linux/virtio_mdev.h   | 151 ++++++++++++++++++++++++++++++++++
->  3 files changed, 167 insertions(+)
->  create mode 100644 include/linux/virtio_mdev.h
-> 
-> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-> index d0f3113c8071..5834f6b7c7a5 100644
-> --- a/drivers/vfio/mdev/mdev_core.c
-> +++ b/drivers/vfio/mdev/mdev_core.c
-> @@ -57,6 +57,18 @@ void mdev_set_vfio_ops(struct mdev_device *mdev,
->  }
->  EXPORT_SYMBOL(mdev_set_vfio_ops);
->  
-> +/* Specify the virtio device ops for the mdev device, this
-> + * must be called during create() callback for virtio mdev device.
-> + */
-> +void mdev_set_virtio_ops(struct mdev_device *mdev,
-> +			 const struct virtio_mdev_device_ops *virtio_ops)
-> +{
-> +	BUG_ON(mdev->class_id);
+this series cleans up the xfs writepage code and then lifts it to
+fs/iomap/ so that it could be use by other file system.
 
-Nit, this one is a BUG_ON, but the vfio one is a WARN_ON.  Thanks,
+Note: the submit_ioend hook has not been renamed.  Feel free to
+rename it if you really dislike the name.
 
-Alex
 
-> +	mdev->class_id = MDEV_CLASS_ID_VIRTIO;
-> +	mdev->device_ops = virtio_ops;
-> +}
-> +EXPORT_SYMBOL(mdev_set_virtio_ops);
-> +
->  const void *mdev_get_dev_ops(struct mdev_device *mdev)
->  {
->  	return mdev->device_ops;
-> diff --git a/include/linux/mdev.h b/include/linux/mdev.h
-> index 3d29e09e20c9..13e045e09d3b 100644
-> --- a/include/linux/mdev.h
-> +++ b/include/linux/mdev.h
-> @@ -17,6 +17,7 @@
->  
->  struct mdev_device;
->  struct vfio_mdev_device_ops;
-> +struct virtio_mdev_device_ops;
->  
->  /*
->   * Called by the parent device driver to set the device which represents
-> @@ -111,6 +112,8 @@ void mdev_set_drvdata(struct mdev_device *mdev, void *data);
->  const guid_t *mdev_uuid(struct mdev_device *mdev);
->  void mdev_set_vfio_ops(struct mdev_device *mdev,
->  		       const struct vfio_mdev_device_ops *vfio_ops);
-> +void mdev_set_virtio_ops(struct mdev_device *mdev,
-> +                         const struct virtio_mdev_device_ops *virtio_ops);
->  const void *mdev_get_dev_ops(struct mdev_device *mdev);
->  
->  extern struct bus_type mdev_bus_type;
-> @@ -127,6 +130,7 @@ struct mdev_device *mdev_from_dev(struct device *dev);
->  
->  enum {
->  	MDEV_CLASS_ID_VFIO = 1,
-> +	MDEV_CLASS_ID_VIRTIO = 2,
->  	/* New entries must be added here */
->  };
->  
-> diff --git a/include/linux/virtio_mdev.h b/include/linux/virtio_mdev.h
-> new file mode 100644
-> index 000000000000..b965b50f9b24
-> --- /dev/null
-> +++ b/include/linux/virtio_mdev.h
-> @@ -0,0 +1,151 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Virtio mediated device driver
-> + *
-> + * Copyright 2019, Red Hat Corp.
-> + *     Author: Jason Wang <jasowang@redhat.com>
-> + */
-> +#ifndef _LINUX_VIRTIO_MDEV_H
-> +#define _LINUX_VIRTIO_MDEV_H
-> +
-> +#include <linux/interrupt.h>
-> +#include <linux/mdev.h>
-> +#include <uapi/linux/vhost.h>
-> +
-> +#define VIRTIO_MDEV_DEVICE_API_STRING		"virtio-mdev"
-> +#define VIRTIO_MDEV_F_VERSION_1 0x1
-> +
-> +struct virtio_mdev_callback {
-> +	irqreturn_t (*callback)(void *data);
-> +	void *private;
-> +};
-> +
-> +/**
-> + * struct vfio_mdev_device_ops - Structure to be registered for each
-> + * mdev device to register the device to virtio-mdev module.
-> + *
-> + * @set_vq_address:		Set the address of virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + *				@desc_area: address of desc area
-> + *				@driver_area: address of driver area
-> + *				@device_area: address of device area
-> + *				Returns integer: success (0) or error (< 0)
-> + * @set_vq_num:		Set the size of virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + *				@num: the size of virtqueue
-> + * @kick_vq:			Kick the virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + * @set_vq_cb:			Set the interrupt callback function for
-> + *				a virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + *				@cb: virtio-mdev interrupt callback structure
-> + * @set_vq_ready:		Set ready status for a virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + *				@ready: ready (true) not ready(false)
-> + * @get_vq_ready:		Get ready status for a virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + *				Returns boolean: ready (true) or not (false)
-> + * @set_vq_state:		Set the state for a virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + *				@state: virtqueue state (last_avail_idx)
-> + *				Returns integer: success (0) or error (< 0)
-> + * @get_vq_state:		Get the state for a virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + *				Returns virtqueue state (last_avail_idx)
-> + * @get_vq_align:		Get the virtqueue align requirement
-> + *				for the device
-> + *				@mdev: mediated device
-> + *				Returns virtqueue algin requirement
-> + * @get_features:		Get virtio features supported by the device
-> + *				@mdev: mediated device
-> + *				Returns the virtio features support by the
-> + *				device
-> + * @get_features:		Set virtio features supported by the driver
-> + *				@mdev: mediated device
-> + *				@features: feature support by the driver
-> + *				Returns integer: success (0) or error (< 0)
-> + * @set_config_cb:		Set the config interrupt callback
-> + *				@mdev: mediated device
-> + *				@cb: virtio-mdev interrupt callback structure
-> + * @get_vq_num_max:		Get the max size of virtqueue
-> + *				@mdev: mediated device
-> + *				Returns u16: max size of virtqueue
-> + * @get_device_id:		Get virtio device id
-> + *				@mdev: mediated device
-> + *				Returns u32: virtio device id
-> + * @get_vendor_id:		Get virtio vendor id
-> + *				@mdev: mediated device
-> + *				Returns u32: virtio vendor id
-> + * @get_status: 		Get the device status
-> + *				@mdev: mediated device
-> + *				Returns u8: virtio device status
-> + * @set_status: 		Set the device status
-> + *				@mdev: mediated device
-> + *				@status: virtio device status
-> + * @get_config: 		Read from device specific configuration space
-> + *				@mdev: mediated device
-> + *				@offset: offset from the beginning of
-> + *				configuration space
-> + *				@buf: buffer used to read to
-> + *				@len: the length to read from
-> + *				configration space
-> + * @set_config: 		Write to device specific configuration space
-> + *				@mdev: mediated device
-> + *				@offset: offset from the beginning of
-> + *				configuration space
-> + *				@buf: buffer used to write from
-> + *				@len: the length to write to
-> + *				configration space
-> + * @get_mdev_features:		Get the feature of virtio mdev device
-> + *				@mdev: mediated device
-> + *				Returns the mdev features (API) support by
-> + *				the device.
-> + * @get_generation:		Get device generaton
-> + *				@mdev: mediated device
-> + *				Returns u32: device generation
-> + */
-> +struct virtio_mdev_device_ops {
-> +	/* Virtqueue ops */
-> +	int (*set_vq_address)(struct mdev_device *mdev,
-> +			      u16 idx, u64 desc_area, u64 driver_area,
-> +			      u64 device_area);
-> +	void (*set_vq_num)(struct mdev_device *mdev, u16 idx, u32 num);
-> +	void (*kick_vq)(struct mdev_device *mdev, u16 idx);
-> +	void (*set_vq_cb)(struct mdev_device *mdev, u16 idx,
-> +			  struct virtio_mdev_callback *cb);
-> +	void (*set_vq_ready)(struct mdev_device *mdev, u16 idx, bool ready);
-> +	bool (*get_vq_ready)(struct mdev_device *mdev, u16 idx);
-> +	int (*set_vq_state)(struct mdev_device *mdev, u16 idx, u64 state);
-> +	u64 (*get_vq_state)(struct mdev_device *mdev, u16 idx);
-> +
-> +	/* Device ops */
-> +	u16 (*get_vq_align)(struct mdev_device *mdev);
-> +	u64 (*get_features)(struct mdev_device *mdev);
-> +	int (*set_features)(struct mdev_device *mdev, u64 features);
-> +	void (*set_config_cb)(struct mdev_device *mdev,
-> +			      struct virtio_mdev_callback *cb);
-> +	u16 (*get_vq_num_max)(struct mdev_device *mdev);
-> +	u32 (*get_device_id)(struct mdev_device *mdev);
-> +	u32 (*get_vendor_id)(struct mdev_device *mdev);
-> +	u8 (*get_status)(struct mdev_device *mdev);
-> +	void (*set_status)(struct mdev_device *mdev, u8 status);
-> +	void (*get_config)(struct mdev_device *mdev, unsigned int offset,
-> +			   void *buf, unsigned int len);
-> +	void (*set_config)(struct mdev_device *mdev, unsigned int offset,
-> +			   const void *buf, unsigned int len);
-> +	u64 (*get_mdev_features)(struct mdev_device *mdev);
-> +	u32 (*get_generation)(struct mdev_device *mdev);
-> +};
-> +
-> +void mdev_set_virtio_ops(struct mdev_device *mdev,
-> +			 const struct virtio_mdev_device_ops *virtio_ops);
-> +
-> +#endif
+Changes since v7:
+ - fix various commit log typos
+ - fix up various comments
+ - move some of the iomap tracepoint additions to an earlier patch
+ - rebased on top of "iomap: iomap that extends beyond EOF should be
+   marked dirty"
 
+Changes since v6:
+ - actually add trace.c to the patch
+ - move back to the old order that massages XFS into shape and then
+   lifts the code to iomap
+ - cleanup iomap_ioend_compare
+ - cleanup the add_to_ioend checks
+
+Changes since v5:
+ - move the tracing code to fs/iomap/trace.[ch]
+ - fix a bisection issue with the tracing code
+ - add an assert that xfs_end_io now only gets "complicated" completions
+ - better document the iomap_writeback_ops methods in iomap.h
+
+Changes since v4:
+ - rebased on top 5.4-rc1
+ - drop the addition of list_pop / list_pop_entry
+ - re-split a few patches to better fit Darricks scheme of keeping the
+   iomap additions separate from the XFS switchover
+
+Changes since v3:
+ - re-split the pages to add new code to iomap and then switch xfs to
+   it later (Darrick)
+
+Changes since v2:
+ - rebased to v5.3-rc1
+ - folded in a few changes from the gfs2 enablement series
+
+Changes since v1:
+ - rebased to the latest xfs for-next tree
+ - keep the preallocated transactions for size updates
+ - rename list_pop to list_pop_entry and related cleanups
+ - better document the nofs context handling
+ - document that the iomap tracepoints are not a stable API
