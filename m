@@ -2,149 +2,130 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90059ECE599
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF05BFA372B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D4132082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FB932082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:27:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394864AbfJQB0B (ORCPT
+        id S2391249AbfJQB1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 21:26:01 -0400
-Received: from mga17.intel.com ([192.55.52.151]:24463 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727430AbfJQB0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 21:26:00 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 18:26:00 -0700
-X-IronPort-AV: E=Sophos;i="5.67,305,1566889200"; 
-   d="scan'208";a="189863500"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.239.13.123]) ([10.239.13.123])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 16 Oct 2019 18:25:57 -0700
-Subject: Re: [PATCH 1/4] KVM: VMX: rename {vmx,nested_vmx}_vcpu_setup
- functions
-To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191015164033.87276-1-xiaoyao.li@intel.com>
- <20191015164033.87276-2-xiaoyao.li@intel.com>
- <82a41967-98ca-1bc8-fce3-77aaf18b0c1a@oracle.com>
- <7d4f2202-d200-f24c-d4cb-dcdfdda7f3b7@intel.com>
- <2cb1e187-c633-e11c-985c-24ad1e5434c2@oracle.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <b5e42cff-146d-d802-ce9b-e9b3299b9da9@intel.com>
-Date:   Thu, 17 Oct 2019 09:25:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 16 Oct 2019 21:27:24 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4194 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727916AbfJQB1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 21:27:24 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 735A76153B773426C5B9;
+        Thu, 17 Oct 2019 09:27:20 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
+ 09:27:17 +0800
+Subject: Re: [PATCH -next 00/13] hwrng: use devm_platform_ioremap_resource()
+ to simplify code
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        <herbert@gondor.apana.org.au>, <mpm@selenic.com>, <arnd@arndb.de>,
+        <gregkh@linuxfoundation.org>, <nicolas.ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
+        <rjui@broadcom.com>, <sbranden@broadcom.com>,
+        <bcm-kernel-feedback-list@broadcom.com>, <eric@anholt.net>,
+        <wahrenst@gmx.net>, <l.stelmach@samsung.com>, <kgene@kernel.org>,
+        <krzk@kernel.org>, <khilman@baylibre.com>, <dsaxena@plexity.net>,
+        <patrice.chotard@st.com>
+References: <20191016104621.26056-1-yuehaibing@huawei.com>
+ <2c60b926-1e98-cca0-ec17-6b45f9da404a@gmail.com>
+CC:     <linux-crypto@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-rpi-kernel@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>,
+        <linux-amlogic@lists.infradead.org>,
+        <linuxppc-dev@lists.ozlabs.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <7c0269b6-cab3-bded-7f9d-76430be89f9c@huawei.com>
+Date:   Thu, 17 Oct 2019 09:27:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-In-Reply-To: <2cb1e187-c633-e11c-985c-24ad1e5434c2@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <2c60b926-1e98-cca0-ec17-6b45f9da404a@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/17/2019 2:09 AM, Krish Sadhukhan wrote:
+
+
+On 2019/10/17 0:44, Florian Fainelli wrote:
+> On 10/16/19 3:46 AM, YueHaibing wrote:
+>> devm_platform_ioremap_resource() internally have platform_get_resource()
+>> and devm_ioremap_resource() in it. So instead of calling them separately
+>> use devm_platform_ioremap_resource() directly.
 > 
-> On 10/15/19 6:27 PM, Xiaoyao Li wrote:
->> On 10/16/2019 6:05 AM, Krish Sadhukhan wrote:
->>>
->>>
->>> On 10/15/2019 09:40 AM, Xiaoyao Li wrote:
->>>> Rename {vmx,nested_vmx}_vcpu_setup to {vmx,nested_vmx}_vmcs_setup,
->>>> to match what they really do.
->>>>
->>>> No functional change.
->>>>
->>>> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
->>>> ---
->>>>   arch/x86/kvm/vmx/nested.c | 2 +-
->>>>   arch/x86/kvm/vmx/nested.h | 2 +-
->>>>   arch/x86/kvm/vmx/vmx.c    | 9 +++------
->>>>   3 files changed, 5 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
->>>> index 5e231da00310..7935422d311f 100644
->>>> --- a/arch/x86/kvm/vmx/nested.c
->>>> +++ b/arch/x86/kvm/vmx/nested.c
->>>> @@ -5768,7 +5768,7 @@ static int vmx_set_nested_state(struct 
->>>> kvm_vcpu *vcpu,
->>>>       return ret;
->>>>   }
->>>> -void nested_vmx_vcpu_setup(void)
->>>> +void nested_vmx_vmcs_setup(void)
->>>>   {
->>>>       if (enable_shadow_vmcs) {
->>>>           vmcs_write64(VMREAD_BITMAP, __pa(vmx_vmread_bitmap));
->>>> diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
->>>> index 187d39bf0bf1..2be1ba7482c9 100644
->>>> --- a/arch/x86/kvm/vmx/nested.h
->>>> +++ b/arch/x86/kvm/vmx/nested.h
->>>> @@ -11,7 +11,7 @@ void nested_vmx_setup_ctls_msrs(struct 
->>>> nested_vmx_msrs *msrs, u32 ept_caps,
->>>>                   bool apicv);
->>>>   void nested_vmx_hardware_unsetup(void);
->>>>   __init int nested_vmx_hardware_setup(int (*exit_handlers[])(struct 
->>>> kvm_vcpu *));
->>>> -void nested_vmx_vcpu_setup(void);
->>>> +void nested_vmx_vmcs_setup(void);
->>>>   void nested_vmx_free_vcpu(struct kvm_vcpu *vcpu);
->>>>   int nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu, bool 
->>>> from_vmentry);
->>>>   bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 
->>>> exit_reason);
->>>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->>>> index e660e28e9ae0..58b77a882426 100644
->>>> --- a/arch/x86/kvm/vmx/vmx.c
->>>> +++ b/arch/x86/kvm/vmx/vmx.c
->>>> @@ -4161,15 +4161,12 @@ static void ept_set_mmio_spte_mask(void)
->>>>   #define VMX_XSS_EXIT_BITMAP 0
->>>> -/*
->>>> - * Sets up the vmcs for emulated real mode.
->>>> - */
->>>> -static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
->>>> +static void vmx_vmcs_setup(struct vcpu_vmx *vmx)
->>>>   {
->>>>       int i;
->>>>       if (nested)
->>>> -        nested_vmx_vcpu_setup();
->>>> +        nested_vmx_vmcs_setup();
->>>>       if (cpu_has_vmx_msr_bitmap())
->>>>           vmcs_write64(MSR_BITMAP, __pa(vmx->vmcs01.msr_bitmap));
->>>> @@ -6777,7 +6774,7 @@ static struct kvm_vcpu *vmx_create_vcpu(struct 
->>>> kvm *kvm, unsigned int id)
->>>>       cpu = get_cpu();
->>>>       vmx_vcpu_load(&vmx->vcpu, cpu);
->>>>       vmx->vcpu.cpu = cpu;
->>>> -    vmx_vcpu_setup(vmx);
->>>> +    vmx_vmcs_setup(vmx);
->>>>       vmx_vcpu_put(&vmx->vcpu);
->>>>       put_cpu();
->>>>       if (cpu_need_virtualize_apic_accesses(&vmx->vcpu)) {
->>>
->>> May be we should rename vmx_vcpu_reset() to vmx_vmcs_reset()  as well  ?
+> Did your coccinelle script not cover
+> drivers/char/hw_random/iproc-rng200.c somehow? Do you mind including it
+> as a separate patch?
+
+A patch from Markus Elfring has be queued:
+
+commit a68b931932c5574aa5bd459529c766ba577c72b3
+Author: Markus Elfring <elfring@users.sourceforge.net>
+Date:   Wed Sep 18 09:09:22 2019 +0200
+
+    hwrng: iproc-rng200 - Use devm_platform_ioremap_resource() in iproc_rng200_probe()
+
+    Simplify this function implementation by using a known wrapper function.
+
+    This issue was detected by using the Coccinelle software.
+
+    Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+    Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+    Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+    Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+
+
+
+
+> Thanks
+> 
 >>
->> Not really. vmx_vcpu_reset() not only resets vmcs but also the 
->> emulated field of vmx vcpu.
+>> YueHaibing (13):
+>>   hwrng: atmel - use devm_platform_ioremap_resource() to simplify code
+>>   hwrng: bcm2835 - use devm_platform_ioremap_resource() to simplify code
+>>   hwrng: exynos - use devm_platform_ioremap_resource() to simplify code
+>>   hwrng: hisi - use devm_platform_ioremap_resource() to simplify code
+>>   hwrng: ks-sa - use devm_platform_ioremap_resource() to simplify code
+>>   hwrng: meson - use devm_platform_ioremap_resource() to simplify code
+>>   hwrng: npcm - use devm_platform_ioremap_resource() to simplify code
+>>   hwrng: omap - use devm_platform_ioremap_resource() to simplify code
+>>   hwrng: pasemi - use devm_platform_ioremap_resource() to simplify code
+>>   hwrng: pic32 - use devm_platform_ioremap_resource() to simplify code
+>>   hwrng: st - use devm_platform_ioremap_resource() to simplify code
+>>   hwrng: tx4939 - use devm_platform_ioremap_resource() to simplify code
+>>   hwrng: xgene - use devm_platform_ioremap_resource() to simplify code
+>>
+>>  drivers/char/hw_random/atmel-rng.c   | 4 +---
+>>  drivers/char/hw_random/bcm2835-rng.c | 5 +----
+>>  drivers/char/hw_random/exynos-trng.c | 4 +---
+>>  drivers/char/hw_random/hisi-rng.c    | 4 +---
+>>  drivers/char/hw_random/ks-sa-rng.c   | 4 +---
+>>  drivers/char/hw_random/meson-rng.c   | 4 +---
+>>  drivers/char/hw_random/npcm-rng.c    | 4 +---
+>>  drivers/char/hw_random/omap-rng.c    | 4 +---
+>>  drivers/char/hw_random/pasemi-rng.c  | 4 +---
+>>  drivers/char/hw_random/pic32-rng.c   | 4 +---
+>>  drivers/char/hw_random/st-rng.c      | 4 +---
+>>  drivers/char/hw_random/tx4939-rng.c  | 4 +---
+>>  drivers/char/hw_random/xgene-rng.c   | 4 +---
+>>  13 files changed, 13 insertions(+), 40 deletions(-)
+>>
 > 
-> It would be a better organization of the code if the resetting of the 
-> VMCS fields were placed in a separate function.
 > 
 
-OK, will do it in next version.
-
-> Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
-> 
