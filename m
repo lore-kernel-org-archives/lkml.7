@@ -2,115 +2,821 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D47FA3738
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9719EFA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C649B20869
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5974620869
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:52:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409146AbfJQKv4 (ORCPT
+        id S2409167AbfJQKwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 06:51:56 -0400
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:42446 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730498AbfJQKvz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 06:51:55 -0400
-X-Greylist: delayed 902 seconds by postgrey-1.27 at vger.kernel.org; Thu, 17 Oct 2019 06:51:53 EDT
-X-AuditID: c0a8fbf4-199ff70000001fa6-ab-5da844423d90
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 3C.E8.08102.24448AD5; Thu, 17 Oct 2019 12:36:50 +0200 (CEST)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Thu, 17 Oct 2019 12:36:45 +0200
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
-CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>
-Subject: Re: [RFC PATCH 09/13] mfd: rtc: support RTC on ROHM BD71828 with
- BD70528 driver
-Thread-Topic: [RFC PATCH 09/13] mfd: rtc: support RTC on ROHM BD71828 with
- BD70528 driver
-Thread-Index: AQHVhNCZAuXq65juYU207wWeSYVtU6dee5aAgAAGywA=
-Date:   Thu, 17 Oct 2019 10:36:44 +0000
-Message-ID: <a1aa91f74b41033fed4a7106247f48f9b9f78bd9.camel@fi.rohmeurope.com>
-References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
-         <9ccc83f3dfd0fd0dc8178adf41b52115f960c45a.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
-         <20191017101225.GB3125@piout.net>
-In-Reply-To: <20191017101225.GB3125@piout.net>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D169F61A87AB4D42B380287D302510DF@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Thu, 17 Oct 2019 06:52:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58836 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2409089AbfJQKwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 06:52:14 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 067098A1C85;
+        Thu, 17 Oct 2019 10:52:13 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-185.pek2.redhat.com [10.72.12.185])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 047875D70D;
+        Thu, 17 Oct 2019 10:51:48 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com, Jason Wang <jasowang@redhat.com>
+Subject: [PATCH V4 6/6] docs: sample driver to demonstrate how to implement virtio-mdev framework
+Date:   Thu, 17 Oct 2019 18:48:36 +0800
+Message-Id: <20191017104836.32464-7-jasowang@redhat.com>
+In-Reply-To: <20191017104836.32464-1-jasowang@redhat.com>
+References: <20191017104836.32464-1-jasowang@redhat.com>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAJsWRmVeSWpSXmKPExsVyYMXvTbpOLitiDaZ+07JYcvEqu0X7u2Xs
-        Fl/mnmKxmPrwCZvF/CPnWC26T29htbi9dQOLxf2vRxktvl3pYLKY8mc5k8XHnnusFpvn/2G0
-        uLxrDpvF1jfrGC2Orb7CZrH0+kUmizlLT7BYXDzlanH31FE2i9a9R9gt/l3byOIg6rFm3hpG
-        j/c3Wtk95q2p9tg56y67x6ZVnWwed67tYfM4fmM7k8f0eT+ZPFas/s7u8XmTXABXFLdNUmJJ
-        WXBmep6+XQJ3xpd5K1kLXvFW9N5oZG5g3MPbxcjJISFgItG58SpbFyMXh5DANUaJ5c8fs4Ik
-        hAROMEocvq7fxcjBwSZgI9F1kx0kLCLgLDHvfBsLSD2zwCQOiSuzzjCDJIQFoiT6mp8wQxRF
-        S9ycMokVwraSOLLuFhuIzSKgKrH6Ux8TiM0r4CfRcmsyK8RioF2LZjYygyzjFNCTWL0gGaSG
-        UUBWorPhHVg9s4C4xKZn31khjhaQWLLnPDOELSrx8vE/qLiSxN6fD1lAxjALaEqs36UP0eog
-        0dt1jQXCVpSY0v2QHeIEQYmTM5+wTGAUm4VkwyyE7llIumch6Z6FpHsBI+sqRoncxMyc9MSS
-        VEO9otRSvaL8jFwglZyfu4kRkmK+7GD8f8jzECMTB+MhRkkOJiVR3s/rlscK8SXlp1RmJBZn
-        xBeV5qQWH2KU4GBWEuGd37IkVog3JbGyKrUoHyYlzcGiJM6r/nBirJAAyK7s1NSC1CKYrAwH
-        h5IE7yqHFbFCgkWp6akVaZk5JQhpJg5OkOFcUiLFqXkpqUWJpSUZ8aDkEV8MTB8gKR6gveLO
-        QO28xQWJuUBRiNZTjNocE17OXcTMcWTu0kXMQix5+XmpUuK8RxyBSgVASjNK8+AWvWIU52BU
-        EuZtBBnEA8w2cHNeAa1gAlrxXnk5yIqSRISUVANjW+PKQJcf8kf3mcZt3Ddj3V6GnXfPOHJ2
-        xXOVFB+W+fSgU2kG8/m4A7cml3W67m+pcFZ818jDsZbb2Kc4QsDY6fS+H8X1BdrB3kIGnrZn
-        WA/Ypuk8uNt48jvHuiuu/S4qF5bL3Bd+75e0NPplwpttES189+sMtd1qow9W70vOYiuLXnDv
-        5FQlluKMREMt5qLiRADrac888wMAAA==
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Thu, 17 Oct 2019 10:52:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gQWxleGFuZHJlLA0KDQpUaGFua3MgZm9yIHF1aWNrIGNoZWNrISBJJ2xsIGJlIG9mZiBm
-b3IgdGhlIHJlc3Qgb2YgdGhlIHdlZWsgYnV0IEkgd2lsbA0KcmUtd29yayB0aGlzIHBhdGNoIGF0
-IG5leHQgd2VlayA6KSBJIGFncmVlIHdpdGggeW91IHJlZ2FyZGluZyBtb3N0IG9mDQp0aGUgY29t
-bWVudHMuDQoNCj4gPiArDQo+ID4gKw0KPiA+ICsvKg0KPiA+ICsgKiBSVEMgZGVmaW5pdGlvbnMg
-c2hhcmVkIGJldHdlZW4NCj4gPiArICoNCj4gPiArICogQkQ3MDUyOA0KPiA+ICsgKiBhbmQgQkQ3
-MTgyOA0KPiA+ICsgKi8NCj4gPiArDQo+ID4gKyNkZWZpbmUgUk9ITV9CRDFfTUFTS19SVENfU0VD
-CQkweDdmDQo+ID4gKyNkZWZpbmUgUk9ITV9CRDFfTUFTS19SVENfTUlOVVRFCTB4N2YNCj4gPiAr
-I2RlZmluZSBST0hNX0JEMV9NQVNLX1JUQ19IT1VSXzI0SAkweDgwDQo+ID4gKyNkZWZpbmUgUk9I
-TV9CRDFfTUFTS19SVENfSE9VUl9QTQkweDIwDQo+ID4gKyNkZWZpbmUgUk9ITV9CRDFfTUFTS19S
-VENfSE9VUgkJMHgzZg0KPiA+ICsjZGVmaW5lIFJPSE1fQkQxX01BU0tfUlRDX0RBWQkJMHgzZg0K
-PiA+ICsjZGVmaW5lIFJPSE1fQkQxX01BU0tfUlRDX1dFRUsJCTB4MDcNCj4gPiArI2RlZmluZSBS
-T0hNX0JEMV9NQVNLX1JUQ19NT05USAkJMHgxZg0KPiA+ICsjZGVmaW5lIFJPSE1fQkQxX01BU0tf
-UlRDX1lFQVIJCTB4ZmYNCj4gPiArI2RlZmluZSBST0hNX0JEMV9NQVNLX0FMTV9FTgkJMHg3DQo+
-ID4gKw0KPiANCj4gQWxsIHRoYXQgcmVuYW1pbmcgaXMgZGlzdHJhY3RpbmcgYW5kIHVzZWxlc3Mu
-IFBsZWFzZSByZXN1Ym1pdCB3aXRob3V0DQo+IHJlbmFtaW5nIGRlZmluZXMsIHN0cnVjdHMgYW5k
-IGZ1bmN0aW9ucyB0byBtYWtlIGl0IGVhc2llciB0byByZXZpZXcuDQoNCkkgd291bGQgcHJlZmVy
-IHJlbmFtaW5nIGJlY2F1c2UgaXQgbWFrZXMgaXQgY2xlYXJseSB2aXNpYmxlIHdoaWNoDQpkZWZp
-bmVzL3N0cnVjdHMvZnVuY3Rpb25zIGFyZSBjb21tb24gZm9yIGJvdGggUE1JQ3MgYW5kIHdoaWNo
-IGFyZSBQTUlDDQpzcGVjaWZpYy4gQnV0IEkgcmVhbGx5IHVuZGVyc3RhbmQgdGhlIHByb2JsZW0g
-b2Ygc3BvdHRpbmcgcmVhbCBjaGFuZ2VzLg0KV291bGQgaXQgYmUgT2sgaWYgSSBkaWQgcmVuYW1p
-bmcgaW4gc2VwYXJhdGUgcGF0Y2ggd2hpY2ggZG9lcyBub3QgYnJpbmcNCmluIGFueSBvdGhlciBj
-aGFuZ2VzIC0gYW5kIHRoZW4gdGhlIGZ1bmN0aW9uYWwgY2hhbmdlcyBpbiBzZXBhcmF0ZQ0KcGF0
-Y2g/DQoNCkJlc3QgUmVnYXJkcw0KCU1hdHRpIFZhaXR0aW5lbg0K
+This sample driver creates mdev device that simulate virtio net device
+over virtio mdev transport. The device is implemented through vringh
+and workqueue. A device specific dma ops is to make sure HVA is used
+directly as the IOVA. This should be sufficient for kernel virtio
+driver to work.
+
+Only 'virtio' type is supported right now. I plan to add 'vhost' type
+on top which requires some virtual IOMMU implemented in this sample
+driver.
+
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+---
+ MAINTAINERS                |   1 +
+ samples/Kconfig            |   7 +
+ samples/vfio-mdev/Makefile |   1 +
+ samples/vfio-mdev/mvnet.c  | 691 +++++++++++++++++++++++++++++++++++++
+ 4 files changed, 700 insertions(+)
+ create mode 100644 samples/vfio-mdev/mvnet.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3d196a023b5e..cb51351cd5c9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17254,6 +17254,7 @@ F:	include/linux/virtio*.h
+ F:	include/uapi/linux/virtio_*.h
+ F:	drivers/crypto/virtio/
+ F:	mm/balloon_compaction.c
++F:	samples/vfio-mdev/mvnet.c
+ 
+ VIRTIO BLOCK AND SCSI DRIVERS
+ M:	"Michael S. Tsirkin" <mst@redhat.com>
+diff --git a/samples/Kconfig b/samples/Kconfig
+index c8dacb4dda80..a1a1ca2c00b7 100644
+--- a/samples/Kconfig
++++ b/samples/Kconfig
+@@ -131,6 +131,13 @@ config SAMPLE_VFIO_MDEV_MDPY
+ 	  mediated device.  It is a simple framebuffer and supports
+ 	  the region display interface (VFIO_GFX_PLANE_TYPE_REGION).
+ 
++config SAMPLE_VIRTIO_MDEV_NET
++        tristate "Build virtio mdev net example mediated device sample code -- loadable modules only"
++	depends on VIRTIO_MDEV_DEVICE && VHOST_RING && m
++	help
++	  Build a networking sample device for use as a virtio
++	  mediated device.
++
+ config SAMPLE_VFIO_MDEV_MDPY_FB
+ 	tristate "Build VFIO mdpy example guest fbdev driver -- loadable module only"
+ 	depends on FB && m
+diff --git a/samples/vfio-mdev/Makefile b/samples/vfio-mdev/Makefile
+index 10d179c4fdeb..f34af90ed0a0 100644
+--- a/samples/vfio-mdev/Makefile
++++ b/samples/vfio-mdev/Makefile
+@@ -3,3 +3,4 @@ obj-$(CONFIG_SAMPLE_VFIO_MDEV_MTTY) += mtty.o
+ obj-$(CONFIG_SAMPLE_VFIO_MDEV_MDPY) += mdpy.o
+ obj-$(CONFIG_SAMPLE_VFIO_MDEV_MDPY_FB) += mdpy-fb.o
+ obj-$(CONFIG_SAMPLE_VFIO_MDEV_MBOCHS) += mbochs.o
++obj-$(CONFIG_SAMPLE_VIRTIO_MDEV_NET) += mvnet.o
+diff --git a/samples/vfio-mdev/mvnet.c b/samples/vfio-mdev/mvnet.c
+new file mode 100644
+index 000000000000..19e823a449cd
+--- /dev/null
++++ b/samples/vfio-mdev/mvnet.c
+@@ -0,0 +1,691 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Mediated virtual virtio-net device driver.
++ *
++ * Copyright (c) 2019, Red Hat Inc. All rights reserved.
++ *     Author: Jason Wang <jasowang@redhat.com>
++ *
++ * Sample driver that creates mdev device that simulates ethernet loopback
++ * device.
++ *
++ * Usage:
++ *
++ * # modprobe virtio_mdev
++ * # modprobe mvnet
++ * # cd /sys/devices/virtual/mvnet/mvnet/mdev_supported_types/mvnet-virtio
++ * # echo "83b8f4f2-509f-382f-3c1e-e6bfe0fa1001" > ./create
++ * # cd devices/83b8f4f2-509f-382f-3c1e-e6bfe0fa1001
++ * # ls -d virtio0
++ * virtio0
++ */
++
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/device.h>
++#include <linux/kernel.h>
++#include <linux/fs.h>
++#include <linux/poll.h>
++#include <linux/slab.h>
++#include <linux/sched.h>
++#include <linux/wait.h>
++#include <linux/uuid.h>
++#include <linux/iommu.h>
++#include <linux/sysfs.h>
++#include <linux/file.h>
++#include <linux/etherdevice.h>
++#include <linux/mdev.h>
++#include <linux/vringh.h>
++#include <linux/virtio_mdev.h>
++#include <uapi/linux/virtio_config.h>
++#include <uapi/linux/virtio_net.h>
++
++#define VERSION_STRING  "0.1"
++#define DRIVER_AUTHOR   "Red Hat Corporation"
++
++#define MVNET_CLASS_NAME "mvnet"
++#define MVNET_NAME       "mvnet"
++
++/*
++ * Global Structures
++ */
++
++static struct mvnet_dev {
++	struct class	*vd_class;
++	struct idr	vd_idr;
++	struct device	dev;
++} mvnet_dev;
++
++struct mvnet_virtqueue {
++	struct vringh vring;
++	struct vringh_kiov iov;
++	unsigned short head;
++	bool ready;
++	u64 desc_addr;
++	u64 device_addr;
++	u64 driver_addr;
++	u32 num;
++	void *private;
++	irqreturn_t (*cb)(void *data);
++};
++
++#define MVNET_QUEUE_ALIGN PAGE_SIZE
++#define MVNET_QUEUE_MAX 256
++#define MVNET_DEVICE_ID 0x1
++#define MVNET_VENDOR_ID 0
++
++u64 mvnet_features = (1ULL << VIRTIO_F_ANY_LAYOUT) |
++		     (1ULL << VIRTIO_F_VERSION_1) |
++		     (1ULL << VIRTIO_F_IOMMU_PLATFORM);
++
++/* State of each mdev device */
++struct mvnet_state {
++	struct mvnet_virtqueue vqs[2];
++	struct work_struct work;
++	spinlock_t lock;
++	struct mdev_device *mdev;
++	struct virtio_net_config config;
++	void *buffer;
++	u32 status;
++	u32 generation;
++	u64 features;
++	struct list_head next;
++};
++
++static struct mutex mdev_list_lock;
++static struct list_head mdev_devices_list;
++
++static void mvnet_queue_ready(struct mvnet_state *mvnet, unsigned int idx)
++{
++	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
++	int ret;
++
++	ret = vringh_init_kern(&vq->vring, mvnet_features, MVNET_QUEUE_MAX,
++			       false, (struct vring_desc *)vq->desc_addr,
++			       (struct vring_avail *)vq->driver_addr,
++			       (struct vring_used *)vq->device_addr);
++}
++
++static void mvnet_vq_reset(struct mvnet_virtqueue *vq)
++{
++	vq->ready = 0;
++	vq->desc_addr = 0;
++	vq->driver_addr = 0;
++	vq->device_addr = 0;
++	vq->cb = NULL;
++	vq->private = NULL;
++	vringh_init_kern(&vq->vring, mvnet_features, MVNET_QUEUE_MAX,
++			false, 0, 0, 0);
++}
++
++static void mvnet_reset(struct mvnet_state *mvnet)
++{
++	int i;
++
++	for (i = 0; i < 2; i++)
++		mvnet_vq_reset(&mvnet->vqs[i]);
++
++	mvnet->features = 0;
++	mvnet->status = 0;
++	++mvnet->generation;
++}
++
++static void mvnet_work(struct work_struct *work)
++{
++	struct mvnet_state *mvnet = container_of(work, struct
++						 mvnet_state, work);
++	struct mvnet_virtqueue *txq = &mvnet->vqs[1];
++	struct mvnet_virtqueue *rxq = &mvnet->vqs[0];
++	size_t read, write, total_write;
++	int err;
++	int pkts = 0;
++
++	spin_lock(&mvnet->lock);
++
++	if (!txq->ready || !rxq->ready)
++		goto out;
++
++	while (true) {
++		total_write = 0;
++		err = vringh_getdesc_kern(&txq->vring, &txq->iov, NULL,
++					  &txq->head, GFP_ATOMIC);
++		if (err <= 0)
++			break;
++
++		err = vringh_getdesc_kern(&rxq->vring, NULL, &rxq->iov,
++					  &rxq->head, GFP_ATOMIC);
++		if (err <= 0) {
++			vringh_complete_kern(&txq->vring, txq->head, 0);
++			break;
++		}
++
++		while (true) {
++			read = vringh_iov_pull_kern(&txq->iov, mvnet->buffer,
++						    PAGE_SIZE);
++			if (read <= 0)
++				break;
++
++			write = vringh_iov_push_kern(&rxq->iov, mvnet->buffer,
++						     read);
++			if (write <= 0)
++				break;
++
++			total_write += write;
++		}
++
++		/* Make sure data is wrote before advancing index */
++		smp_wmb();
++
++		vringh_complete_kern(&txq->vring, txq->head, 0);
++		vringh_complete_kern(&rxq->vring, rxq->head, total_write);
++
++		/* Make sure used is visible before rasing the interrupt. */
++		smp_wmb();
++
++		local_bh_disable();
++		if (txq->cb)
++			txq->cb(txq->private);
++		if (rxq->cb)
++			rxq->cb(rxq->private);
++		local_bh_enable();
++
++		if (++pkts > 4) {
++			schedule_work(&mvnet->work);
++			goto out;
++		}
++	}
++
++out:
++	spin_unlock(&mvnet->lock);
++}
++
++static dma_addr_t mvnet_map_page(struct device *dev, struct page *page,
++				 unsigned long offset, size_t size,
++				 enum dma_data_direction dir,
++				 unsigned long attrs)
++{
++	/* Vringh can only use HVA */
++	return (dma_addr_t)(page_address(page) + offset);
++}
++
++static void mvnet_unmap_page(struct device *dev, dma_addr_t dma_addr,
++			     size_t size, enum dma_data_direction dir,
++			     unsigned long attrs)
++{
++}
++
++static void *mvnet_alloc_coherent(struct device *dev, size_t size,
++				  dma_addr_t *dma_addr, gfp_t flag,
++				  unsigned long attrs)
++{
++	void *addr = kmalloc(size, flag);
++
++	if (addr == NULL)
++		*dma_addr = DMA_MAPPING_ERROR;
++	else
++		*dma_addr = (dma_addr_t) addr;
++
++	return addr;
++}
++
++static void mvnet_free_coherent(struct device *dev, size_t size,
++				void *vaddr, dma_addr_t dma_addr,
++				unsigned long attrs)
++{
++	kfree((void *)dma_addr);
++}
++
++static const struct dma_map_ops mvnet_dma_ops = {
++	.map_page = mvnet_map_page,
++	.unmap_page = mvnet_unmap_page,
++	.alloc = mvnet_alloc_coherent,
++	.free = mvnet_free_coherent,
++};
++
++static const struct virtio_mdev_device_ops virtio_mdev_ops;
++
++static int mvnet_create(struct kobject *kobj, struct mdev_device *mdev)
++{
++	struct mvnet_state *mvnet;
++	struct virtio_net_config *config;
++	struct device *dev = mdev_dev(mdev);
++
++	if (!mdev)
++		return -EINVAL;
++
++	mvnet = kzalloc(sizeof(struct mvnet_state), GFP_KERNEL);
++	if (mvnet == NULL)
++		return -ENOMEM;
++
++	mvnet->buffer = kmalloc(PAGE_SIZE, GFP_KERNEL);
++	if (!mvnet->buffer) {
++		kfree(mvnet);
++		return -ENOMEM;
++	}
++
++	config = &mvnet->config;
++	config->mtu = 1500;
++	config->status = VIRTIO_NET_S_LINK_UP;
++	eth_random_addr(config->mac);
++
++	INIT_WORK(&mvnet->work, mvnet_work);
++
++	spin_lock_init(&mvnet->lock);
++	mvnet->mdev = mdev;
++	mdev_set_drvdata(mdev, mvnet);
++
++	mutex_lock(&mdev_list_lock);
++	list_add(&mvnet->next, &mdev_devices_list);
++	mutex_unlock(&mdev_list_lock);
++
++	dev->coherent_dma_mask = DMA_BIT_MASK(64);
++	set_dma_ops(dev, &mvnet_dma_ops);
++
++	mdev_set_virtio_ops(mdev, &virtio_mdev_ops);
++
++	return 0;
++}
++
++static int mvnet_remove(struct mdev_device *mdev)
++{
++	struct mvnet_state *mds, *tmp_mds;
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++	int ret = -EINVAL;
++
++	mutex_lock(&mdev_list_lock);
++	list_for_each_entry_safe(mds, tmp_mds, &mdev_devices_list, next) {
++		if (mvnet == mds) {
++			list_del(&mvnet->next);
++			mdev_set_drvdata(mdev, NULL);
++			kfree(mvnet->buffer);
++			kfree(mvnet);
++			ret = 0;
++			break;
++		}
++	}
++	mutex_unlock(&mdev_list_lock);
++
++	return ret;
++}
++
++static ssize_t
++sample_mvnet_dev_show(struct device *dev, struct device_attribute *attr,
++		     char *buf)
++{
++	if (mdev_from_dev(dev))
++		return sprintf(buf, "This is MDEV %s\n", dev_name(dev));
++
++	return sprintf(buf, "\n");
++}
++
++static DEVICE_ATTR_RO(sample_mvnet_dev);
++
++static struct attribute *mvnet_dev_attrs[] = {
++	&dev_attr_sample_mvnet_dev.attr,
++	NULL,
++};
++
++static const struct attribute_group mvnet_dev_group = {
++	.name  = "mvnet_dev",
++	.attrs = mvnet_dev_attrs,
++};
++
++static const struct attribute_group *mvnet_dev_groups[] = {
++	&mvnet_dev_group,
++	NULL,
++};
++
++static ssize_t
++sample_mdev_dev_show(struct device *dev, struct device_attribute *attr,
++		     char *buf)
++{
++	if (mdev_from_dev(dev))
++		return sprintf(buf, "This is MDEV %s\n", dev_name(dev));
++
++	return sprintf(buf, "\n");
++}
++
++static DEVICE_ATTR_RO(sample_mdev_dev);
++
++static struct attribute *mdev_dev_attrs[] = {
++	&dev_attr_sample_mdev_dev.attr,
++	NULL,
++};
++
++static const struct attribute_group mdev_dev_group = {
++	.name  = "vendor",
++	.attrs = mdev_dev_attrs,
++};
++
++static const struct attribute_group *mdev_dev_groups[] = {
++	&mdev_dev_group,
++	NULL,
++};
++
++#define MVNET_STRING_LEN 16
++
++static ssize_t
++name_show(struct kobject *kobj, struct device *dev, char *buf)
++{
++	char name[MVNET_STRING_LEN];
++	const char *name_str = "virtio-net";
++
++	snprintf(name, MVNET_STRING_LEN, "%s", dev_driver_string(dev));
++	if (!strcmp(kobj->name, name))
++		return sprintf(buf, "%s\n", name_str);
++
++	return -EINVAL;
++}
++
++static MDEV_TYPE_ATTR_RO(name);
++
++static ssize_t
++available_instances_show(struct kobject *kobj, struct device *dev, char *buf)
++{
++	return sprintf(buf, "%d\n", INT_MAX);
++}
++
++static MDEV_TYPE_ATTR_RO(available_instances);
++
++static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
++			       char *buf)
++{
++	return sprintf(buf, "%s\n", VIRTIO_MDEV_DEVICE_API_STRING);
++}
++
++static MDEV_TYPE_ATTR_RO(device_api);
++
++static struct attribute *mdev_types_attrs[] = {
++	&mdev_type_attr_name.attr,
++	&mdev_type_attr_device_api.attr,
++	&mdev_type_attr_available_instances.attr,
++	NULL,
++};
++
++static struct attribute_group mdev_type_group = {
++	.name  = "virtio",
++	.attrs = mdev_types_attrs,
++};
++
++/* TBD: "vhost" type */
++
++static struct attribute_group *mdev_type_groups[] = {
++	&mdev_type_group,
++	NULL,
++};
++
++static int mvnet_set_vq_address(struct mdev_device *mdev, u16 idx,
++				u64 desc_area, u64 driver_area, u64 device_area)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
++
++	vq->desc_addr = desc_area;
++	vq->driver_addr = driver_area;
++	vq->device_addr = device_area;
++
++	return 0;
++}
++
++static void mvnet_set_vq_num(struct mdev_device *mdev, u16 idx, u32 num)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
++
++	vq->num = num;
++}
++
++static void mvnet_kick_vq(struct mdev_device *mdev, u16 idx)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
++
++	if (vq->ready)
++		schedule_work(&mvnet->work);
++}
++
++static void mvnet_set_vq_cb(struct mdev_device *mdev, u16 idx,
++			    struct virtio_mdev_callback *cb)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
++
++	vq->cb = cb->callback;
++	vq->private = cb->private;
++}
++
++static void mvnet_set_vq_ready(struct mdev_device *mdev, u16 idx, bool ready)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
++
++	spin_lock(&mvnet->lock);
++	vq->ready = ready;
++	if (vq->ready)
++		mvnet_queue_ready(mvnet, idx);
++	spin_unlock(&mvnet->lock);
++}
++
++static bool mvnet_get_vq_ready(struct mdev_device *mdev, u16 idx)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
++
++	return vq->ready;
++}
++
++static int mvnet_set_vq_state(struct mdev_device *mdev, u16 idx, u64 state)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
++	struct vringh *vrh = &vq->vring;
++
++	spin_lock(&mvnet->lock);
++	vrh->last_avail_idx = state;
++	spin_unlock(&mvnet->lock);
++
++	return 0;
++}
++
++static u64 mvnet_get_vq_state(struct mdev_device *mdev, u16 idx)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
++	struct vringh *vrh = &vq->vring;
++
++	return vrh->last_avail_idx;
++}
++
++static u16 mvnet_get_vq_align(struct mdev_device *mdev)
++{
++	return MVNET_QUEUE_ALIGN;
++}
++
++static u64 mvnet_get_features(struct mdev_device *mdev)
++{
++	return mvnet_features;
++}
++
++static int mvnet_set_features(struct mdev_device *mdev, u64 features)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++
++	/* DMA mapping must be done by driver */
++	if (!(features & (1ULL << VIRTIO_F_IOMMU_PLATFORM)))
++		return -EINVAL;
++
++	mvnet->features = features & mvnet_features;
++
++	return 0;
++}
++
++static void mvnet_set_config_cb(struct mdev_device *mdev,
++				struct virtio_mdev_callback *cb)
++{
++	/* We don't support config interrupt */
++}
++
++static u16 mvnet_get_vq_num_max(struct mdev_device *mdev)
++{
++	return MVNET_QUEUE_MAX;
++}
++
++static u32 mvnet_get_device_id(struct mdev_device *mdev)
++{
++	return MVNET_DEVICE_ID;
++}
++
++static u32 mvnet_get_vendor_id(struct mdev_device *mdev)
++{
++	return MVNET_VENDOR_ID;
++}
++
++static u8 mvnet_get_status(struct mdev_device *mdev)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++
++	return mvnet->status;
++}
++
++static void mvnet_set_status(struct mdev_device *mdev, u8 status)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++
++	mvnet->status = status;
++
++	if (status == 0) {
++		spin_lock(&mvnet->lock);
++		mvnet_reset(mvnet);
++		spin_unlock(&mvnet->lock);
++	}
++}
++
++static void mvnet_get_config(struct mdev_device *mdev, unsigned int offset,
++			     void *buf, unsigned int len)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++
++	if (offset + len < sizeof(struct virtio_net_config))
++		memcpy(buf, &mvnet->config + offset, len);
++}
++
++static void mvnet_set_config(struct mdev_device *mdev, unsigned int offset,
++			     const void *buf, unsigned int len)
++{
++	/* No writable config supportted by mvnet */
++}
++
++static u64 mvnet_get_mdev_features(struct mdev_device *mdev)
++{
++	return VIRTIO_MDEV_F_VERSION_1;
++}
++
++static u32 mvnet_get_generation(struct mdev_device *mdev)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++
++	return mvnet->generation;
++}
++
++static const struct virtio_mdev_device_ops virtio_mdev_ops = {
++	.set_vq_address         = mvnet_set_vq_address,
++	.set_vq_num             = mvnet_set_vq_num,
++	.kick_vq                = mvnet_kick_vq,
++	.set_vq_cb              = mvnet_set_vq_cb,
++	.set_vq_ready           = mvnet_set_vq_ready,
++	.get_vq_ready           = mvnet_get_vq_ready,
++	.set_vq_state           = mvnet_set_vq_state,
++	.get_vq_state           = mvnet_get_vq_state,
++	.get_vq_align           = mvnet_get_vq_align,
++	.get_features           = mvnet_get_features,
++	.set_features           = mvnet_set_features,
++	.set_config_cb          = mvnet_set_config_cb,
++	.get_vq_num_max         = mvnet_get_vq_num_max,
++	.get_device_id          = mvnet_get_device_id,
++	.get_vendor_id          = mvnet_get_vendor_id,
++	.get_status             = mvnet_get_status,
++	.set_status             = mvnet_set_status,
++	.get_config             = mvnet_get_config,
++	.set_config             = mvnet_set_config,
++	.get_mdev_features      = mvnet_get_mdev_features,
++	.get_generation         = mvnet_get_generation,
++};
++
++static const struct mdev_parent_ops mdev_fops = {
++	.owner                  = THIS_MODULE,
++	.dev_attr_groups        = mvnet_dev_groups,
++	.mdev_attr_groups       = mdev_dev_groups,
++	.supported_type_groups  = mdev_type_groups,
++	.create                 = mvnet_create,
++	.remove			= mvnet_remove,
++};
++
++static void mvnet_device_release(struct device *dev)
++{
++	dev_dbg(dev, "mvnet: released\n");
++}
++
++static int __init mvnet_dev_init(void)
++{
++	int ret = 0;
++
++	pr_info("mvnet_dev: %s\n", __func__);
++
++	memset(&mvnet_dev, 0, sizeof(mvnet_dev));
++
++	idr_init(&mvnet_dev.vd_idr);
++
++	mvnet_dev.vd_class = class_create(THIS_MODULE, MVNET_CLASS_NAME);
++
++	if (IS_ERR(mvnet_dev.vd_class)) {
++		pr_err("Error: failed to register mvnet_dev class\n");
++		ret = PTR_ERR(mvnet_dev.vd_class);
++		goto failed1;
++	}
++
++	mvnet_dev.dev.class = mvnet_dev.vd_class;
++	mvnet_dev.dev.release = mvnet_device_release;
++	dev_set_name(&mvnet_dev.dev, "%s", MVNET_NAME);
++
++	ret = device_register(&mvnet_dev.dev);
++	if (ret)
++		goto failed2;
++
++	ret = mdev_register_device(&mvnet_dev.dev, &mdev_fops);
++	if (ret)
++		goto failed3;
++
++	mutex_init(&mdev_list_lock);
++	INIT_LIST_HEAD(&mdev_devices_list);
++
++	goto all_done;
++
++failed3:
++
++	device_unregister(&mvnet_dev.dev);
++failed2:
++	class_destroy(mvnet_dev.vd_class);
++
++failed1:
++all_done:
++	return ret;
++}
++
++static void __exit mvnet_dev_exit(void)
++{
++	mvnet_dev.dev.bus = NULL;
++	mdev_unregister_device(&mvnet_dev.dev);
++
++	device_unregister(&mvnet_dev.dev);
++	idr_destroy(&mvnet_dev.vd_idr);
++	class_destroy(mvnet_dev.vd_class);
++	mvnet_dev.vd_class = NULL;
++	pr_info("mvnet_dev: Unloaded!\n");
++}
++
++module_init(mvnet_dev_init)
++module_exit(mvnet_dev_exit)
++
++MODULE_LICENSE("GPL v2");
++MODULE_INFO(supported, "Simulate loopback ethernet device over mdev");
++MODULE_VERSION(VERSION_STRING);
++MODULE_AUTHOR(DRIVER_AUTHOR);
+-- 
+2.19.1
+
