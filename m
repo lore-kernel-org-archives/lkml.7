@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B3EFA3735
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6427FA373B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2755321835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B773420854
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:49:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502806AbfJQMtK (ORCPT
+        id S2502878AbfJQMt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 08:49:10 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4243 "EHLO huawei.com"
+        Thu, 17 Oct 2019 08:49:29 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4246 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2502502AbfJQMtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:49:06 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id ED721B2A794F31B0C039;
-        Thu, 17 Oct 2019 20:48:41 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
- 20:48:34 +0800
+        id S2502854AbfJQMtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 08:49:25 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 2908E7E955C150CCF85C;
+        Thu, 17 Oct 2019 20:49:22 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
+ 20:49:13 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <linus.walleij@linaro.org>, <manivannan.sadhasivam@linaro.org>,
         <afaerber@suse.de>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
@@ -43,9 +43,9 @@ CC:     <linux-arm-kernel@lists.infradead.org>,
         <haojian.zhuang@gmail.com>, <wens@csie.org>,
         <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <agross@kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 13/30] pinctrl: zte: use devm_platform_ioremap_resource() to simplify code
-Date:   Thu, 17 Oct 2019 20:26:23 +0800
-Message-ID: <20191017122640.22976-14-yuehaibing@huawei.com>
+Subject: [PATCH -next 29/30] pinctrl: at91-pio4: use devm_platform_ioremap_resource() to simplify code
+Date:   Thu, 17 Oct 2019 20:26:39 +0800
+Message-ID: <20191017122640.22976-30-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20191017122640.22976-1-yuehaibing@huawei.com>
 References: <20191017122640.22976-1-yuehaibing@huawei.com>
@@ -63,30 +63,22 @@ This is detected by coccinelle.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/pinctrl/zte/pinctrl-zx.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/pinctrl/pinctrl-at91-pio4.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/zte/pinctrl-zx.c b/drivers/pinctrl/zte/pinctrl-zx.c
-index 9512045..786bf89 100644
---- a/drivers/pinctrl/zte/pinctrl-zx.c
-+++ b/drivers/pinctrl/zte/pinctrl-zx.c
-@@ -387,7 +387,6 @@ int zx_pinctrl_init(struct platform_device *pdev,
- 	struct pinctrl_desc *pctldesc;
- 	struct zx_pinctrl *zpctl;
- 	struct device_node *np;
--	struct resource *res;
- 	int ret;
- 
- 	zpctl = devm_kzalloc(&pdev->dev, sizeof(*zpctl), GFP_KERNEL);
-@@ -396,8 +395,7 @@ int zx_pinctrl_init(struct platform_device *pdev,
- 
- 	spin_lock_init(&zpctl->lock);
+diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
+index e380202..6949124 100644
+--- a/drivers/pinctrl/pinctrl-at91-pio4.c
++++ b/drivers/pinctrl/pinctrl-at91-pio4.c
+@@ -1017,8 +1017,7 @@ static int atmel_pinctrl_probe(struct platform_device *pdev)
+ 	atmel_pioctrl->nbanks = atmel_pioctrl_data->nbanks;
+ 	atmel_pioctrl->npins = atmel_pioctrl->nbanks * ATMEL_PIO_NPINS_PER_BANK;
  
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	zpctl->base = devm_ioremap_resource(&pdev->dev, res);
-+	zpctl->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(zpctl->base))
- 		return PTR_ERR(zpctl->base);
+-	atmel_pioctrl->reg_base = devm_ioremap_resource(dev, res);
++	atmel_pioctrl->reg_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(atmel_pioctrl->reg_base))
+ 		return -EINVAL;
  
 -- 
 2.7.4
