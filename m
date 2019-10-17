@@ -2,182 +2,130 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CE3FA3738
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4482FA373A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B03062082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF3042064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:36:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502447AbfJQMfz (ORCPT
+        id S2502462AbfJQMgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 08:35:55 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:41520 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S2502412AbfJQMfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:35:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3996E1D31;
-        Thu, 17 Oct 2019 05:35:20 -0700 (PDT)
-Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 52D013F718;
-        Thu, 17 Oct 2019 05:35:19 -0700 (PDT)
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, nico@fluxnic.net
-Subject: [PATCH v2 5/5] cpufreq: vexpress-spc: fix some coding style issues
-Date:   Thu, 17 Oct 2019 13:35:08 +0100
-Message-Id: <20191017123508.26130-6-sudeep.holla@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191017123508.26130-1-sudeep.holla@arm.com>
-References: <20191017123508.26130-1-sudeep.holla@arm.com>
+        Thu, 17 Oct 2019 08:36:09 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:43172 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502451AbfJQMgJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 08:36:09 -0400
+Received: by mail-io1-f70.google.com with SMTP id i2so2997221ioo.10
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 05:36:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=5t4yqDt+mBIkGJEjjJGiGmX6FdFp97lRinnPxkeZsbg=;
+        b=fedkuiiFuS6gy8VyOM9grTgA/rkDVEr/45AfsvHcYNrtpOMAFQc/3qk6LNzpDSiQaH
+         dBwGbDJbr4zICwnXkf4SocN/CJoqzjt10XJGvW2SxsRVCuAKFd0ZsMARL0Jyz/6RQLFr
+         XCGJ4AVEQehoe4g7Zf4Js9YL957y3o2TvSuGpw2545CBSQDcLm8Q2h/LjIghYSj3rjyx
+         F2S3iPsovkfcvO6g04xYc4MapCnK0HeNOjtlG1D/1p4HHCChTPCSLhBT1GyuY25S/2JN
+         6Yctnf8yq5UnwK+ORrIOr2Ijh71k/8+qymavH6SJfCrX0YmlxFlG4b14uR02+jaG5DJz
+         t2aQ==
+X-Gm-Message-State: APjAAAXzGw4Dnz4WaR1PgpnXb7gWWKF2wTwYuwV/n1jEZITT3yy2xcOo
+        Z5sE3OcurCAgaM5AJSXJkiluyJH2MfXuES8eDRqbonDphuT1
+X-Google-Smtp-Source: APXvYqzB8gJtlUXLPgJonp1LfCe0tLXtXHbbpq4ADGFI8YMv/2ntWneIkikxCxslAZV/kWQ6JCcMn2qAGmAut/KPw4CjeFynQQ4/
+MIME-Version: 1.0
+X-Received: by 2002:a02:bb01:: with SMTP id y1mr3062982jan.117.1571315768264;
+ Thu, 17 Oct 2019 05:36:08 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 05:36:08 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000328b2905951a7667@google.com>
+Subject: KCSAN: data-race in task_dump_owner / task_dump_owner
+From:   syzbot <syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com>
+To:     adobriyan@gmail.com, akpm@linux-foundation.org,
+        casey@schaufler-ca.com, christian@brauner.io, elver@google.com,
+        keescook@chromium.org, kent.overstreet@gmail.com,
+        khlebnikov@yandex-team.ru, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mhocko@suse.com, shakeelb@google.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following checkpatch checks/warnings:
+Hello,
 
-CHECK: Unnecessary parentheses around the code
-CHECK: Alignment should match open parenthesis
-CHECK: Prefer kernel type 'u32' over 'uint32_t'
-WARNING: Missing a blank line after declarations
+syzbot found the following crash on:
 
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+HEAD commit:    d724f94f x86, kcsan: Enable KCSAN for x86
+git tree:       https://github.com/google/ktsan.git kcsan
+console output: https://syzkaller.appspot.com/x/log.txt?x=17884db3600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c0906aa620713d80
+dashboard link: https://syzkaller.appspot.com/bug?extid=e392f8008a294fdf8891
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KCSAN: data-race in task_dump_owner / task_dump_owner
+
+write to 0xffff8881255bb7fc of 4 bytes by task 7804 on cpu 0:
+  task_dump_owner+0xd8/0x260 fs/proc/base.c:1742
+  pid_update_inode+0x3c/0x70 fs/proc/base.c:1818
+  pid_revalidate+0x91/0xd0 fs/proc/base.c:1841
+  d_revalidate fs/namei.c:765 [inline]
+  d_revalidate fs/namei.c:762 [inline]
+  lookup_fast+0x7cb/0x7e0 fs/namei.c:1613
+  walk_component+0x6d/0xe80 fs/namei.c:1804
+  link_path_walk.part.0+0x5d3/0xa90 fs/namei.c:2139
+  link_path_walk fs/namei.c:2070 [inline]
+  path_openat+0x14f/0x3530 fs/namei.c:3532
+  do_filp_open+0x11e/0x1b0 fs/namei.c:3563
+  do_sys_open+0x3b3/0x4f0 fs/open.c:1089
+  __do_sys_open fs/open.c:1107 [inline]
+  __se_sys_open fs/open.c:1102 [inline]
+  __x64_sys_open+0x55/0x70 fs/open.c:1102
+  do_syscall_64+0xcf/0x2f0 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+write to 0xffff8881255bb7fc of 4 bytes by task 7813 on cpu 1:
+  task_dump_owner+0xd8/0x260 fs/proc/base.c:1742
+  pid_update_inode+0x3c/0x70 fs/proc/base.c:1818
+  pid_revalidate+0x91/0xd0 fs/proc/base.c:1841
+  d_revalidate fs/namei.c:765 [inline]
+  d_revalidate fs/namei.c:762 [inline]
+  lookup_fast+0x7cb/0x7e0 fs/namei.c:1613
+  walk_component+0x6d/0xe80 fs/namei.c:1804
+  lookup_last fs/namei.c:2271 [inline]
+  path_lookupat.isra.0+0x13a/0x5a0 fs/namei.c:2316
+  filename_lookup+0x145/0x2d0 fs/namei.c:2346
+  user_path_at_empty+0x4c/0x70 fs/namei.c:2606
+  user_path_at include/linux/namei.h:60 [inline]
+  vfs_statx+0xd9/0x190 fs/stat.c:187
+  vfs_stat include/linux/fs.h:3188 [inline]
+  __do_sys_newstat+0x51/0xb0 fs/stat.c:341
+  __se_sys_newstat fs/stat.c:337 [inline]
+  __x64_sys_newstat+0x3a/0x50 fs/stat.c:337
+  do_syscall_64+0xcf/0x2f0 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 PID: 7813 Comm: ps Not tainted 5.3.0+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+==================================================================
+
+
 ---
- drivers/cpufreq/vexpress-spc-cpufreq.c | 43 ++++++++++++--------------
- 1 file changed, 20 insertions(+), 23 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/cpufreq/vexpress-spc-cpufreq.c b/drivers/cpufreq/vexpress-spc-cpufreq.c
-index 81064430317f..8ecb2961be86 100644
---- a/drivers/cpufreq/vexpress-spc-cpufreq.c
-+++ b/drivers/cpufreq/vexpress-spc-cpufreq.c
-@@ -79,8 +79,8 @@ static unsigned int find_cluster_maxfreq(int cluster)
- 	for_each_online_cpu(j) {
- 		cpu_freq = per_cpu(cpu_last_req_freq, j);
- 
--		if ((cluster == per_cpu(physical_cluster, j)) &&
--				(max_freq < cpu_freq))
-+		if (cluster == per_cpu(physical_cluster, j) &&
-+		    max_freq < cpu_freq)
- 			max_freq = cpu_freq;
- 	}
- 
-@@ -188,22 +188,19 @@ static int ve_spc_cpufreq_set_target(struct cpufreq_policy *policy,
- 	freqs_new = freq_table[cur_cluster][index].frequency;
- 
- 	if (is_bL_switching_enabled()) {
--		if ((actual_cluster == A15_CLUSTER) &&
--				(freqs_new < clk_big_min)) {
-+		if (actual_cluster == A15_CLUSTER && freqs_new < clk_big_min)
- 			new_cluster = A7_CLUSTER;
--		} else if ((actual_cluster == A7_CLUSTER) &&
--				(freqs_new > clk_little_max)) {
-+		else if (actual_cluster == A7_CLUSTER &&
-+			 freqs_new > clk_little_max)
- 			new_cluster = A15_CLUSTER;
--		}
- 	}
- 
- 	ret = ve_spc_cpufreq_set_rate(cpu, actual_cluster, new_cluster,
- 				      freqs_new);
- 
--	if (!ret) {
-+	if (!ret)
- 		arch_set_freq_scale(policy->related_cpus, freqs_new,
- 				    policy->cpuinfo.max_freq);
--	}
- 
- 	return ret;
- }
-@@ -222,7 +219,8 @@ static inline u32 get_table_count(struct cpufreq_frequency_table *table)
- static inline u32 get_table_min(struct cpufreq_frequency_table *table)
- {
- 	struct cpufreq_frequency_table *pos;
--	uint32_t min_freq = ~0;
-+	u32 min_freq = ~0;
-+
- 	cpufreq_for_each_entry(pos, table)
- 		if (pos->frequency < min_freq)
- 			min_freq = pos->frequency;
-@@ -233,7 +231,8 @@ static inline u32 get_table_min(struct cpufreq_frequency_table *table)
- static inline u32 get_table_max(struct cpufreq_frequency_table *table)
- {
- 	struct cpufreq_frequency_table *pos;
--	uint32_t max_freq = 0;
-+	u32 max_freq = 0;
-+
- 	cpufreq_for_each_entry(pos, table)
- 		if (pos->frequency > max_freq)
- 			max_freq = pos->frequency;
-@@ -255,14 +254,11 @@ static int merge_cluster_tables(void)
- 	freq_table[MAX_CLUSTERS] = table;
- 
- 	/* Add in reverse order to get freqs in increasing order */
--	for (i = MAX_CLUSTERS - 1; i >= 0; i--) {
-+	for (i = MAX_CLUSTERS - 1; i >= 0; i--)
- 		for (j = 0; freq_table[i][j].frequency != CPUFREQ_TABLE_END;
--				j++) {
--			table[k].frequency = VIRT_FREQ(i,
--					freq_table[i][j].frequency);
--			k++;
--		}
--	}
-+		     j++, k++)
-+			table[k].frequency =
-+				VIRT_FREQ(i, freq_table[i][j].frequency);
- 
- 	table[k].driver_data = k;
- 	table[k].frequency = CPUFREQ_TABLE_END;
-@@ -332,13 +328,13 @@ static int _get_cluster_clk_and_freq_table(struct device *cpu_dev,
- 		return 0;
- 
- 	dev_err(cpu_dev, "%s: Failed to get clk for cpu: %d, cluster: %d\n",
--			__func__, cpu_dev->id, cluster);
-+		__func__, cpu_dev->id, cluster);
- 	ret = PTR_ERR(clk[cluster]);
- 	dev_pm_opp_free_cpufreq_table(cpu_dev, &freq_table[cluster]);
- 
- out:
- 	dev_err(cpu_dev, "%s: Failed to get data for cluster: %d\n", __func__,
--			cluster);
-+		cluster);
- 	return ret;
- }
- 
-@@ -406,7 +402,7 @@ static int ve_spc_cpufreq_init(struct cpufreq_policy *policy)
- 	cpu_dev = get_cpu_device(policy->cpu);
- 	if (!cpu_dev) {
- 		pr_err("%s: failed to get cpu%d device\n", __func__,
--				policy->cpu);
-+		       policy->cpu);
- 		return -ENODEV;
- 	}
- 
-@@ -432,7 +428,8 @@ static int ve_spc_cpufreq_init(struct cpufreq_policy *policy)
- 	dev_pm_opp_of_register_em(policy->cpus);
- 
- 	if (is_bL_switching_enabled())
--		per_cpu(cpu_last_req_freq, policy->cpu) = clk_get_cpu_rate(policy->cpu);
-+		per_cpu(cpu_last_req_freq, policy->cpu) =
-+						clk_get_cpu_rate(policy->cpu);
- 
- 	dev_info(cpu_dev, "%s: CPU %d initialized\n", __func__, policy->cpu);
- 	return 0;
-@@ -451,7 +448,7 @@ static int ve_spc_cpufreq_exit(struct cpufreq_policy *policy)
- 	cpu_dev = get_cpu_device(policy->cpu);
- 	if (!cpu_dev) {
- 		pr_err("%s: failed to get cpu%d device\n", __func__,
--				policy->cpu);
-+		       policy->cpu);
- 		return -ENODEV;
- 	}
- 
--- 
-2.17.1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
