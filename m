@@ -2,95 +2,87 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC06FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CB4ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45F3121D7A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:17:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571347062;
-	bh=TRUimJkb9BIH+tvtj38jcgugc7QpvMg4Upv9UIIbvQQ=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=w+elUQ6RrivWZhhJ5IWnwsef8C8e7xefOSUVGQ8Hi8BekVrlMAJOzd9uE3wzanLE6
-	 2YkFVVupfII8y95B5Pk4vDbxwyN1lO66RbXHwnQw3TO2BzOUwKsMUQKBAiYbRRxoES
-	 JcS6Uovqvs9v0d5dwiwSvj3n84mzHDWrzrPZXarw=
+	by mail.kernel.org (Postfix) with ESMTP id AD3A121835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:18:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="im138kZx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441477AbfJQVRk (ORCPT
+        id S2441514AbfJQVSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 17:17:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38634 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441370AbfJQVRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 17:17:40 -0400
-Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A456821835;
-        Thu, 17 Oct 2019 21:17:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571347059;
-        bh=TRUimJkb9BIH+tvtj38jcgugc7QpvMg4Upv9UIIbvQQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=TCHOCmAG6pfmMzIKN7YRoTc8oxZv0dWugvpCXH78CADUwSbWKWIof9hLnqsDO2JHh
-         WC59PcVgDUh+1dnGqo60W3BjgHX0ROjf4vUU/6MUOPmU/q+t9kid7uBQdOlx8Z8D9u
-         cDIpOLszUwqlqn7nG6VI/dx00R98OQNk3RhIv78g=
-Date:   Thu, 17 Oct 2019 14:17:39 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de
-Subject: [GIT PULL] xfs: fixes for 5.4-rc4
-Message-ID: <20191017211739.GQ13108@magnolia>
+        Thu, 17 Oct 2019 17:18:34 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:38349 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2441370AbfJQVSe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 17:18:34 -0400
+Received: by mail-ua1-f68.google.com with SMTP id 107so1129468uau.5
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 14:18:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=etI31KzHT2q8i7/qza32Bl1FPZmxfAFlonbXD/SphcM=;
+        b=im138kZxjCWcm5LRBg1nd/p+5cuI6FdrJigK0zjXfy9KDEgaaZhi67eiLdrjJbXypS
+         7gvkSnajbf6ndXt9OHRb5yZ0G9OVL4y9pfIKTv3AzHbz+oTW0LMVG6lFnF2kVTwe6e0Q
+         boFAggfKATpIGhWORAVusyoy2qqeiH2kVa+xUPK+FRhPD782y3WzNr/iJ0WqtNR0+JsO
+         Co5uPFw1FBYbd5v58QiE0+6UVYuuVDUt5Nww3J138aASTVssPmeZgFf14loAPJ1F9Jna
+         TQ0FnGGTpXMZXu9Dku/KlCRqBGvWuRLI0fE+UW2gG4JpGuXF5axupJufMQABDJ/HJlNX
+         MSiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=etI31KzHT2q8i7/qza32Bl1FPZmxfAFlonbXD/SphcM=;
+        b=J0DKWxvOu7SFi6RC2EVJF1N7Z/EWaPhREW17qYrYX82/0EuCAA7LEl1paok0SPOEK1
+         0AhmL2JphmyPhzNeMyBwZWwZx7mHjekra3r/75Jbk1thHo5ngnV/CWHWpFt86YG1TDyg
+         ZS2aLjboIcZVeMCa329kn5RZGUi3VgjGvtpdtM5Iaq4P1kUO8/GmpO9oRRagZmdLHimE
+         5H0MbyfU2lvUrKgjt0nh0vHhEnMUQcpubpdGV6xBHAzt9Xn89g7uR3p+f5EbXbar6lgW
+         MMdmOVb7xnth2WTOVTlx9wuKj6keidZMupKYp+QxdBXg1Z02FIshXS6hJhYp+S3GEDe1
+         k6bA==
+X-Gm-Message-State: APjAAAWowYe6GF28SQYdzUz6dI3woVDdFIXW+dxo6cwsJP9bMwSoj0+G
+        uJdffOGfWIcCCPZlHzAxPMi0Bv6Gxw6Vwzn0VorWV8l9TOXhxA==
+X-Google-Smtp-Source: APXvYqwVsPn60vVTYdGHORvzzOev1FUgxoOqrSATGeUeOkCW8C2qdWF5+y73TMv5AKwbhIpxdkF9hWro28pkmXf1U/g=
+X-Received: by 2002:ab0:6387:: with SMTP id y7mr3562286uao.110.1571347112431;
+ Thu, 17 Oct 2019 14:18:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191007214740.188547-1-samitolvanen@google.com>
+ <201910101411.98362BA0@keescook> <20191011142650.36404713@gandalf.local.home>
+ <CABCJKueYhWL_YnkqRW9TtM4sTB50TNjTZ23_4xfpZNy0GwY5VA@mail.gmail.com> <20191015090055.789a0aed@gandalf.local.home>
+In-Reply-To: <20191015090055.789a0aed@gandalf.local.home>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Thu, 17 Oct 2019 14:18:20 -0700
+Message-ID: <CABCJKue6x0KfCR1xYUrJZnnzf_yp1CidmULwvGS5a-=yRbPzCQ@mail.gmail.com>
+Subject: Re: [PATCH] ftrace: fix function type mismatches
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Tue, Oct 15, 2019 at 6:01 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+> Would this work for you?
 
-Please pull this set of changes for 5.4-rc4.  The only change converts
-the seconds field in the recently added XFS bulkstat structure to a
-signed 64-bit quantity.  The structure layout doesn't change and so far
-there are no users of the ioctl to break because we only publish xfs
-ioctl interfaces through the XFS userspace development libraries, and
-we're still working on a 5.3 release.
+>  #define MCOUNT_REC()   . = ALIGN(8);                           \
+>                         __start_mcount_loc = .;                 \
+>                         KEEP(*(__patchable_function_entries))   \
+> -                       __stop_mcount_loc = .;
+> +                       __stop_mcount_loc = .;                  \
+> +                       ftrace_graph_stub = ftrace_stub;
 
-The branch has survived a round of xfstests runs and merges cleanly with
-this afternoon's master.  Please let me know if anything strange
-happens.
+> +extern void ftrace_graph_stub(struct ftrace_graph_ret *);
 
---D
+Yes, it looks like the compiler is actually happy with this approach.
+Thank you for the patch!
 
-The following changes since commit aeea4b75f045294e1c026acc380466daa43afc65:
-
-  xfs: move local to extent inode logging into bmap helper (2019-10-09 08:54:30 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.4-fixes-4
-
-for you to fetch changes up to 5e0cd1ef64744e41e029dfca7d0ae285c486f386:
-
-  xfs: change the seconds fields in xfs_bulkstat to signed (2019-10-15 08:46:07 -0700)
-
-----------------------------------------------------------------
-Changes since last update:
-- Fix a timestamp signedness problem in the new bulkstat ioctl.
-
-----------------------------------------------------------------
-Darrick J. Wong (1):
-      xfs: change the seconds fields in xfs_bulkstat to signed
-
- fs/xfs/libxfs/xfs_fs.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Sami
