@@ -2,104 +2,129 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6185BECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBD6FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2720B20872
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:03:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571328229;
-	bh=QU23z2+/glw4sIQrTMn70ikhXvQufWpV7z96gHv7jP8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xt5deYxkcJYZ8hTVPZ8aB6wwJS4kVklPSd+KJDu1aKkihuQDJtizb9fH74WA7xU1x
-	 d9o8A8MiMPNuudZUeCD3MkTSO2mg7wvPf/kmQ7lw81tCV2sQdNrw9POYUV9/t/J5f+
-	 0dDOvXuY7hD+/uhdpfzeEk7rdGnRC20r/BbSeqpk=
+	by mail.kernel.org (Postfix) with ESMTP id D574921925
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:04:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Toz6mSen"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440423AbfJQQDs (ORCPT
+        id S2391290AbfJQQEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:03:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440401AbfJQQDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 12:03:45 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DBC021A4C;
-        Thu, 17 Oct 2019 16:03:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571328224;
-        bh=QU23z2+/glw4sIQrTMn70ikhXvQufWpV7z96gHv7jP8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wcCprG2h0xmo0rJae+msNwGXz3elTBRxssYpqvrlllphK7vo8nnuU0cuwc7g+nZck
-         J414rhJVVoC7iQ14qJ9Ptu0j2kPVZ8utqKV9malWqK6o3HIk+tAgTjrXDJ8CfwPL1Y
-         xnFqddSQA813zudfDQe9KYZxRkBe6zMYWgdooRjM=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Yunfeng Ye <yeyunfeng@huawei.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Feilong Lin <linfeilong@huawei.com>,
-        Hu Shiyuan <hushiyuan@huawei.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 11/11] perf kmem: Fix memory leak in compact_gfp_flags()
-Date:   Thu, 17 Oct 2019 13:03:01 -0300
-Message-Id: <20191017160301.20888-12-acme@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191017160301.20888-1-acme@kernel.org>
-References: <20191017160301.20888-1-acme@kernel.org>
+        Thu, 17 Oct 2019 12:04:41 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36190 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728391AbfJQQEk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 12:04:40 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 23so1619941pgk.3;
+        Thu, 17 Oct 2019 09:04:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MEWWAMBOeS/era9AcFti+L6FUy/miAh0BHzcw7O5fnw=;
+        b=Toz6mSendGQ8kRPgCgNqB7dBwisIvwTPYspQQQQkaUCt7djKRT9RUi0rVbwijTn77k
+         4dB5vPvX8zG/9MyP0jX21p9tdea6r0kHvYuuXlKhZZhEFaPM9j5ZSRQ4kzozIn0x5Di1
+         jC7UJVbx8RdH59KgYauVgbXbFa9L2gG0ZAuhaY0eSrFWquTrmHf6p6SwLOww3ZfIaYA4
+         /5eNzoUC4Amtrllk5AEO5Q5jxYB/PvKVwIbF3yrdklnHRb8z/y6P7iBM/kXcaWV3UmjZ
+         i+1+FoPIpdJzl1e+mA6Dupg06baZjV9J2luee8dpVse3O8iWYvX32ihgLNihMi7VnFvt
+         Kazw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MEWWAMBOeS/era9AcFti+L6FUy/miAh0BHzcw7O5fnw=;
+        b=lLMnFmFZyJgKUL1Z+GJhnwGbfZKfADflp/HvB3jhWozuK2py3GeaMXQI34ExyD5HF7
+         bheFH8wTHcDAGtbhn8Pq84GX25r9mRYCE64ijyPyfoJANAEQmJlcGFFzZtUFI4j33kPe
+         uY78aLyCCEVWvxPUW+PE8DXjXmjdc2FlMViXfxtjzrxbnt+TRvqDImyobWJ3H49gVIGt
+         LfCVBCekvNGxmCtjKRwhi3pxX5LKVnruexaiD5+Ma/E8D1XW75YTi+ms7B3B0Pj3fMGw
+         w/PNP8OIP97Y+S7on2V1IEf/WbFVmkRtVIoRJhIC6ssCwic8BjicXb98h8sWeWTbbU5E
+         H3qQ==
+X-Gm-Message-State: APjAAAX/9yyOdF+POG5arD8LIeHVfW3QXLLxpuzs2SBtycy8f/Kc4ODf
+        gZWS5QVOxGAspNuKxMUxRM0=
+X-Google-Smtp-Source: APXvYqzUDopEAJP5Iwc/f4Fn8fLjI9XM3OplF1Y7VC4MJkS0urPGJz1/1ZFGXQPxt8eputADJ+q2Jw==
+X-Received: by 2002:a17:90b:914:: with SMTP id bo20mr5074233pjb.6.1571328279276;
+        Thu, 17 Oct 2019 09:04:39 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id a11sm2996970pfo.165.2019.10.17.09.04.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 09:04:38 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 09:04:36 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v5 11/14] software node: move small properties inline
+ when copying
+Message-ID: <20191017160436.GH35946@dtor-ws>
+References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
+ <20191011230721.206646-12-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191011230721.206646-12-dmitry.torokhov@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+On Fri, Oct 11, 2019 at 04:07:18PM -0700, Dmitry Torokhov wrote:
+> When copying/duplicating set of properties, move smaller properties that
+> were stored separately directly inside property entry structures. We can
+> move:
+> 
+> - up to 8 bytes from U8 arrays
+> - up to 4 words
+> - up to 2 double words
+> - one U64 value
+> - one or 2 strings.
+> 
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+>  drivers/base/swnode.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+> index ae4b24ee2a54..546fc1b20095 100644
+> --- a/drivers/base/swnode.c
+> +++ b/drivers/base/swnode.c
+> @@ -277,6 +277,16 @@ static int property_entry_copy_data(struct property_entry *dst,
+>  		dst->value = src->value;
+>  	}
+>  
+> +	if (!dst->is_inline && dst->length <= sizeof(dst->value)) {
+> +		/* We have an opportunity to move the data inline */
+> +		const void *tmp = dst->pointer;
+> +
+> +		memcpy(&dst->value, tmp, dst->length);
+> +		dst->is_inline = true;
+> +
+> +		kfree(tmp);
+> +	}
 
-The memory @orig_flags is allocated by strdup(), it is freed on the
-normal path, but leak to free on the error path.
+This chunk needs to be moved to after dst->length is assigned.  I'll
+send updated version after I get more feedback.
 
-Fix this by adding free(orig_flags) on the error path.
+> +
+>  	dst->length = src->length;
+>  	dst->type = src->type;
+>  	dst->name = kstrdup(src->name, GFP_KERNEL);
 
-Fixes: 0e11115644b3 ("perf kmem: Print gfp flags in human readable string")
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Feilong Lin <linfeilong@huawei.com>
-Cc: Hu Shiyuan <hushiyuan@huawei.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/f9e9f458-96f3-4a97-a1d5-9feec2420e07@huawei.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-kmem.c | 1 +
- 1 file changed, 1 insertion(+)
+Thanks.
 
-diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
-index 1e61e353f579..9661671cc26e 100644
---- a/tools/perf/builtin-kmem.c
-+++ b/tools/perf/builtin-kmem.c
-@@ -691,6 +691,7 @@ static char *compact_gfp_flags(char *gfp_flags)
- 			new = realloc(new_flags, len + strlen(cpt) + 2);
- 			if (new == NULL) {
- 				free(new_flags);
-+				free(orig_flags);
- 				return NULL;
- 			}
- 
 -- 
-2.21.0
-
+Dmitry
