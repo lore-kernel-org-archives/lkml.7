@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1C6ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 852D4ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C26D621835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C58E21925
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:46:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RjRieJd8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ve5+VAUI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440788AbfJQRqH (ORCPT
+        id S2440776AbfJQRqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 13:46:07 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52566 "EHLO
+        Thu, 17 Oct 2019 13:46:06 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52496 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440688AbfJQRqF (ORCPT
+        with ESMTP id S2394636AbfJQRqE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 13:46:05 -0400
+        Thu, 17 Oct 2019 13:46:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=LVEPu9/s1693dWfYlkD3Fqnhr0FkMtGhuRv/aJrvhOg=; b=RjRieJd82TpPK9jRpIQFlwUQn8
-        rXPon9JuYUTZmAL1n9JR2nFjDASe7YxIYzEgRNyPtsyXMNApyap2c3pldQe89O0UfWLoJ4sAbFUYE
-        yZFJqWKO35Vs7y7rWCsospb60FEjg9xxZyW/mCPccwxfH7qilMgMbY/A3IQRzjr/Ba13SUirLL73V
-        JM+jcEr6RD+KtbH1A7hv86+6wW1A7zez/feRzYtKgaVDp8Hp8W+h2pUq62Cx0Q/DeJXyVj+ee6eQH
-        2FtyfR8VKesOj1hdWsKfZ5DX/5o1uzAMjExm0qBhF/Fce5kYtW4LLLmh36+5rSFLWUWNavpjBNHCa
-        sRP3HyLg==;
+        bh=kfe9DrjfiddN7oSCREyZqOEpkhAZTlXuSa60xXNtXBE=; b=Ve5+VAUIgAecvF2ZM8DroQWgSy
+        ahEibjOl453pXkwm8WomPNMTrzSwKROLBa8o56s4Ujy/utHwgTM8Z3SCnYI/3YdowYhqVXVT52ENJ
+        SCG+qHGQXnP8ZzRGxCMv0NU/bR3ZhcNmE0kKdLwwgRhgQTPPadxPpH15vMjz+dQ1WJ1mq72UAEJZh
+        4fKBHpBIn2T2TkPLtJpZGVlshJfejSiQw2GE6VScN9Jvrobt7Uclmw14VUyfP0c6lwSqavlNf4rY3
+        ZhRSt3qlqBnUWdf6QJ52dLz8y0xNljqDDSJSgbyZrDtmw6fNu8As6WR95YJqJXPMYmhNj0MczL8pz
+        TcS55w9Q==;
 Received: from [2001:4bb8:18c:d7b:c70:4a89:bc61:3] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iL9qb-0005Rn-DA; Thu, 17 Oct 2019 17:46:01 +0000
+        id 1iL9qY-0005RV-W6; Thu, 17 Oct 2019 17:45:59 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
         Michal Simek <monstr@monstr.eu>,
@@ -54,9 +54,9 @@ Cc:     linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
         sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
         linux-mtd@lists.infradead.org, linux-arch@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 02/21] unicore32: remove ioremap_cached
-Date:   Thu, 17 Oct 2019 19:45:35 +0200
-Message-Id: <20191017174554.29840-3-hch@lst.de>
+Subject: [PATCH 01/21] arm: remove ioremap_cached
+Date:   Thu, 17 Oct 2019 19:45:34 +0200
+Message-Id: <20191017174554.29840-2-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191017174554.29840-1-hch@lst.de>
 References: <20191017174554.29840-1-hch@lst.de>
@@ -72,53 +72,82 @@ No users of ioremap_cached are left, remove it.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/unicore32/include/asm/io.h | 4 +---
- arch/unicore32/mm/ioremap.c     | 8 --------
- 2 files changed, 1 insertion(+), 11 deletions(-)
+ arch/arm/include/asm/io.h | 6 ------
+ arch/arm/mm/ioremap.c     | 4 ----
+ arch/arm/mm/mmu.c         | 2 +-
+ arch/arm/mm/nommu.c       | 4 ----
+ 4 files changed, 1 insertion(+), 15 deletions(-)
 
-diff --git a/arch/unicore32/include/asm/io.h b/arch/unicore32/include/asm/io.h
-index c71aa4b95996..4b460e01acfa 100644
---- a/arch/unicore32/include/asm/io.h
-+++ b/arch/unicore32/include/asm/io.h
-@@ -18,10 +18,9 @@
- #include <asm-generic/io.h>
+diff --git a/arch/arm/include/asm/io.h b/arch/arm/include/asm/io.h
+index 7a0596fcb2e7..924f9dd502ed 100644
+--- a/arch/arm/include/asm/io.h
++++ b/arch/arm/include/asm/io.h
+@@ -400,12 +400,6 @@ void __iomem *ioremap(resource_size_t res_cookie, size_t size);
+ void __iomem *ioremap_cache(resource_size_t res_cookie, size_t size);
+ #define ioremap_cache ioremap_cache
  
- /*
-- * __uc32_ioremap and __uc32_ioremap_cached takes CPU physical address.
-+ * __uc32_ioremap takes CPU physical address.
-  */
- extern void __iomem *__uc32_ioremap(unsigned long, size_t);
--extern void __iomem *__uc32_ioremap_cached(unsigned long, size_t);
- extern void __uc32_iounmap(volatile void __iomem *addr);
- 
- /*
-@@ -32,7 +31,6 @@ extern void __uc32_iounmap(volatile void __iomem *addr);
-  *
-  */
- #define ioremap(cookie, size)		__uc32_ioremap(cookie, size)
--#define ioremap_cached(cookie, size)	__uc32_ioremap_cached(cookie, size)
- #define ioremap_nocache(cookie, size)	__uc32_ioremap(cookie, size)
- #define iounmap(cookie)			__uc32_iounmap(cookie)
- 
-diff --git a/arch/unicore32/mm/ioremap.c b/arch/unicore32/mm/ioremap.c
-index cf6d656f240c..46a64bd6156a 100644
---- a/arch/unicore32/mm/ioremap.c
-+++ b/arch/unicore32/mm/ioremap.c
-@@ -220,14 +220,6 @@ __uc32_ioremap(unsigned long phys_addr, size_t size)
- }
- EXPORT_SYMBOL(__uc32_ioremap);
- 
--void __iomem *
--__uc32_ioremap_cached(unsigned long phys_addr, size_t size)
--{
--	return __uc32_ioremap_caller(phys_addr, size, MT_DEVICE_CACHED,
--			__builtin_return_address(0));
--}
--EXPORT_SYMBOL(__uc32_ioremap_cached);
+-/*
+- * Do not use ioremap_cached in new code. Provided for the benefit of
+- * the pxa2xx-flash MTD driver only.
+- */
+-void __iomem *ioremap_cached(resource_size_t res_cookie, size_t size);
 -
- void __uc32_iounmap(volatile void __iomem *io_addr)
+ void __iomem *ioremap_wc(resource_size_t res_cookie, size_t size);
+ #define ioremap_wc ioremap_wc
+ #define ioremap_wt ioremap_wc
+diff --git a/arch/arm/mm/ioremap.c b/arch/arm/mm/ioremap.c
+index d42b93316183..72286f9a4d30 100644
+--- a/arch/arm/mm/ioremap.c
++++ b/arch/arm/mm/ioremap.c
+@@ -382,15 +382,11 @@ void __iomem *ioremap(resource_size_t res_cookie, size_t size)
+ EXPORT_SYMBOL(ioremap);
+ 
+ void __iomem *ioremap_cache(resource_size_t res_cookie, size_t size)
+-	__alias(ioremap_cached);
+-
+-void __iomem *ioremap_cached(resource_size_t res_cookie, size_t size)
  {
- 	void *addr = (void *)(PAGE_MASK & (unsigned long)io_addr);
+ 	return arch_ioremap_caller(res_cookie, size, MT_DEVICE_CACHED,
+ 				   __builtin_return_address(0));
+ }
+ EXPORT_SYMBOL(ioremap_cache);
+-EXPORT_SYMBOL(ioremap_cached);
+ 
+ void __iomem *ioremap_wc(resource_size_t res_cookie, size_t size)
+ {
+diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
+index 48c2888297dd..5d0d0f86e790 100644
+--- a/arch/arm/mm/mmu.c
++++ b/arch/arm/mm/mmu.c
+@@ -259,7 +259,7 @@ static struct mem_type mem_types[] __ro_after_init = {
+ 		.prot_sect	= PROT_SECT_DEVICE,
+ 		.domain		= DOMAIN_IO,
+ 	},
+-	[MT_DEVICE_CACHED] = {	  /* ioremap_cached */
++	[MT_DEVICE_CACHED] = {	  /* ioremap_cache */
+ 		.prot_pte	= PROT_PTE_DEVICE | L_PTE_MT_DEV_CACHED,
+ 		.prot_l1	= PMD_TYPE_TABLE,
+ 		.prot_sect	= PROT_SECT_DEVICE | PMD_SECT_WB,
+diff --git a/arch/arm/mm/nommu.c b/arch/arm/mm/nommu.c
+index 24ecf8d30a1e..8b3d7191e2b8 100644
+--- a/arch/arm/mm/nommu.c
++++ b/arch/arm/mm/nommu.c
+@@ -206,15 +206,11 @@ void __iomem *ioremap(resource_size_t res_cookie, size_t size)
+ EXPORT_SYMBOL(ioremap);
+ 
+ void __iomem *ioremap_cache(resource_size_t res_cookie, size_t size)
+-	__alias(ioremap_cached);
+-
+-void __iomem *ioremap_cached(resource_size_t res_cookie, size_t size)
+ {
+ 	return __arm_ioremap_caller(res_cookie, size, MT_DEVICE_CACHED,
+ 				    __builtin_return_address(0));
+ }
+ EXPORT_SYMBOL(ioremap_cache);
+-EXPORT_SYMBOL(ioremap_cached);
+ 
+ void __iomem *ioremap_wc(resource_size_t res_cookie, size_t size)
+ {
 -- 
 2.20.1
 
