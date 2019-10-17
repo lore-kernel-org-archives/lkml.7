@@ -2,90 +2,158 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21542FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F913FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F077A2082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D5B221D7F
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:19:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408766AbfJQKSd (ORCPT
+        id S2408781AbfJQKTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 06:18:33 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:38176 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1731515AbfJQKSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 06:18:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 867E91BB2;
-        Thu, 17 Oct 2019 03:18:10 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E4093F718;
-        Thu, 17 Oct 2019 03:18:09 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 11:18:07 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-Cc:     linux-kernel@lists.codethink.co.uk,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: mvebu: make mvebu_pci_bridge_emul_ops static
-Message-ID: <20191017101806.GB9589@e121166-lin.cambridge.arm.com>
-References: <20191015160930.22899-1-ben.dooks@codethink.co.uk>
+        Thu, 17 Oct 2019 06:19:05 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:36455 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408768AbfJQKTE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 06:19:04 -0400
+Received: from [185.81.136.22] (helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iL2ry-0007tP-TL; Thu, 17 Oct 2019 10:18:59 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     oleg@redhat.com, linux-kernel@vger.kernel.org
+Cc:     aarcange@redhat.com, akpm@linux-foundation.org,
+        christian@kellner.me, cyphar@cyphar.com, elena.reshetova@intel.com,
+        guro@fb.com, jannh@google.com, ldv@altlinux.org,
+        linux-api@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        mhocko@suse.com, mingo@kernel.org, peterz@infradead.org,
+        shuah@kernel.org, tglx@linutronix.de, viro@zeniv.linux.org.uk,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH v3 1/5] pidfd: check pid has attached task in fdinfo
+Date:   Thu, 17 Oct 2019 12:18:28 +0200
+Message-Id: <20191017101832.5985-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191016153606.2326-1-christian.brauner@ubuntu.com>
+References: <20191016153606.2326-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015160930.22899-1-ben.dooks@codethink.co.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 05:09:30PM +0100, Ben Dooks (Codethink) wrote:
-> The mvebu_pci_bridge_emul_ops is not exported outside
-> of the driver, so make it static to avoid the following
-> sparse warning:
-> 
-> drivers/pci/controller/pci-mvebu.c:557:28: warning: symbol 'mvebu_pci_bridge_emul_ops' was not declared. Should it be static?
-> 
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> ---
-> Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Andrew Murray <andrew.murray@arm.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/pci/controller/pci-mvebu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Currently, when a task is dead we still print the pid it used to use in
+the fdinfo files of its pidfds. This doesn't make much sense since the
+pid may have already been reused. So verify that the task is still alive
+by introducing the pid_has_task() helper which will be used by other
+callers in follow-up patches.
+If the task is not alive anymore, we will print -1. This allows us to
+differentiate between a task not being present in a given pid namespace
+- in which case we already print 0 - and a task having been reaped.
 
-Applied to pci/misc, thanks.
+Note that this uses PIDTYPE_PID for the check. Technically, we could've
+checked PIDTYPE_TGID since pidfds currently only refer to thread-group
+leaders but if they won't anymore in the future then this check becomes
+problematic without it being immediately obvious to non-experts imho. If
+a thread is created via clone(CLONE_THREAD) than struct pid has a single
+non-empty list pid->tasks[PIDTYPE_PID] and this pid can't be used as a
+PIDTYPE_TGID meaning pid->tasks[PIDTYPE_TGID] will return NULL even
+though the thread-group leader might still be very much alive. So
+checking PIDTYPE_PID is fine and is easier to maintain should we ever
+allow pidfds to refer to threads.
 
-Lorenzo
+Cc: Jann Horn <jannh@google.com>
+Cc: Christian Kellner <christian@kellner.me>
+Cc: linux-api@vger.kernel.org
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+---
+/* pidfd selftests */
+passed
 
-> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-> index d3a0419e42f2..ed032e9a3156 100644
-> --- a/drivers/pci/controller/pci-mvebu.c
-> +++ b/drivers/pci/controller/pci-mvebu.c
-> @@ -554,7 +554,7 @@ mvebu_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
->  	}
->  }
->  
-> -struct pci_bridge_emul_ops mvebu_pci_bridge_emul_ops = {
-> +static struct pci_bridge_emul_ops mvebu_pci_bridge_emul_ops = {
->  	.write_base = mvebu_pci_bridge_emul_base_conf_write,
->  	.read_pcie = mvebu_pci_bridge_emul_pcie_conf_read,
->  	.write_pcie = mvebu_pci_bridge_emul_pcie_conf_write,
-> -- 
-> 2.23.0
-> 
+/* v1 */
+Link: https://lore.kernel.org/r/20191015141332.4055-1-christian.brauner@ubuntu.com
+
+/* v2 */
+Link: https://lore.kernel.org/r/20191016153606.2326-1-christian.brauner@ubuntu.com
+- Oleg Nesterov <oleg@redhat.com>:
+  - simplify check whether task is still alive to hlist_empty()
+  - optionally introduce generic helper to replace open coded
+    hlist_emtpy() checks whether or not a task is alive
+- Christian Brauner <christian.brauner@ubuntu.com>:
+  - introduce task_alive() helper and use in pidfd_show_fdinfo()
+
+/* v3 */
+- Oleg Nesterov <oleg@redhat.com>:
+  - s/task_alive/pid_has_task/g
+- Christian Brauner <christian.brauner@ubuntu.com>:
+  - reword commit message to better reflect naming switch from
+    task_alive() to pid_has_task()
+---
+ include/linux/pid.h |  4 ++++
+ kernel/fork.c       | 17 +++++++++++------
+ 2 files changed, 15 insertions(+), 6 deletions(-)
+
+diff --git a/include/linux/pid.h b/include/linux/pid.h
+index 9645b1194c98..034e3cd60dc0 100644
+--- a/include/linux/pid.h
++++ b/include/linux/pid.h
+@@ -85,6 +85,10 @@ static inline struct pid *get_pid(struct pid *pid)
+ 
+ extern void put_pid(struct pid *pid);
+ extern struct task_struct *pid_task(struct pid *pid, enum pid_type);
++static inline bool pid_has_task(struct pid *pid, enum pid_type type)
++{
++	return !hlist_empty(&pid->tasks[type]);
++}
+ extern struct task_struct *get_pid_task(struct pid *pid, enum pid_type);
+ 
+ extern struct pid *get_task_pid(struct task_struct *task, enum pid_type type);
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 782986962d47..ffa314838b43 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1732,15 +1732,20 @@ static int pidfd_release(struct inode *inode, struct file *file)
+  */
+ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
+ {
+-	struct pid_namespace *ns = proc_pid_ns(file_inode(m->file));
+ 	struct pid *pid = f->private_data;
+-	pid_t nr = pid_nr_ns(pid, ns);
++	struct pid_namespace *ns;
++	pid_t nr = -1;
+ 
+-	seq_put_decimal_ull(m, "Pid:\t", nr);
++	if (likely(pid_has_task(pid, PIDTYPE_PID))) {
++		ns = proc_pid_ns(file_inode(m->file));
++		nr = pid_nr_ns(pid, ns);
++	}
++
++	seq_put_decimal_ll(m, "Pid:\t", nr);
+ 
+ #ifdef CONFIG_PID_NS
+-	seq_put_decimal_ull(m, "\nNSpid:\t", nr);
+-	if (nr) {
++	seq_put_decimal_ll(m, "\nNSpid:\t", nr);
++	if (nr > 0) {
+ 		int i;
+ 
+ 		/* If nr is non-zero it means that 'pid' is valid and that
+@@ -1749,7 +1754,7 @@ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
+ 		 * Start at one below the already printed level.
+ 		 */
+ 		for (i = ns->level + 1; i <= pid->level; i++)
+-			seq_put_decimal_ull(m, "\t", pid->numbers[i].nr);
++			seq_put_decimal_ll(m, "\t", pid->numbers[i].nr);
+ 	}
+ #endif
+ 	seq_putc(m, '\n');
+-- 
+2.23.0
+
