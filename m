@@ -8,63 +8,69 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70245ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AEDECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35E3D21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA87D21835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:43:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PnZ4hYwE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hhV1i9Kh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503562AbfJQUnd (ORCPT
+        id S2502709AbfJQUmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 16:43:33 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41602 "EHLO
+        Thu, 17 Oct 2019 16:42:45 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34056 "EHLO
         mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503017AbfJQUmv (ORCPT
+        with ESMTP id S2502279AbfJQUme (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 16:42:51 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q7so2368385pfh.8;
-        Thu, 17 Oct 2019 13:42:50 -0700 (PDT)
+        Thu, 17 Oct 2019 16:42:34 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b128so2392399pfa.1;
+        Thu, 17 Oct 2019 13:42:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nakS4ni/rzOzl8FCN3SL5jKJ0hRnlt/GoJAm0yqa078=;
-        b=PnZ4hYwEbStV5VEGMzJSEN6FdtifpkFlGbm5q0movRTugtW+PpjBrsmsuTncl1+rkn
-         HdbrHLceCbMiS8URsK6KETlr4YVmaRGhqky0DWLL3ZgyxyVwM1oKnkT/TypiILQgWmnB
-         CxbzFJySVcKjPf7f6qUyw6w0w0QKpDZUQjU0twGJUH4vKrg5Ns167e1U/fSJWJ4lZbSZ
-         //I4SCEofeFxvtVRmvTHOCcVuuAwTySDuAsrxjEQDLVyk+i0b9HZvFZ2j2p6Pr5ynQrq
-         6Wjkfp9w6jDXHqVId0rNZ+JcBIJuRDehdgkck42U5br2BwmSPbplczIzjcbKm+ZR8z/O
-         ZfpA==
+        bh=B0s3tKuBk+lp7xcyPBRGt1DsIYJknXV6umHFo5h/I8Y=;
+        b=hhV1i9KhFm+6Jd1qKeNUgzZv5U/kStM3dgMATNPV7INUHysvn1Vn/jhlU/Ybb7Ab6V
+         ae92VWqfu816kHM1nQtZjiuyV5IMgVbnLmItxXo5Sa6A2n4c/bQbTNgOjzJbvyxRwkKB
+         XKEiAPyRNecUBHUSqG4fuAraNDe4LIjr/chypOBI0qqQFdMaQGee/MLIGyDP6LIxIeN1
+         eCSGYPAWqQ4MJ1u8nNEC84edr09I8m7FJmgw2LbZ0nQdj9CezswR0eWw8eyeCk/nqsMC
+         tIRXN5JRjpRfRvkSe2IrtsE4KQhN7IP5HU8ndD4FH6+6B+wUh4yn+HTGIdEQT1O5WoG8
+         71mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nakS4ni/rzOzl8FCN3SL5jKJ0hRnlt/GoJAm0yqa078=;
-        b=AS+WgyuqOMzI+AUjo1PgMumvUiZl+0uiBC4AL6m5aSbl4nyhpFF5Y2lxqkd3f7vgzm
-         zNTxlgcP7q3lpJgyAmqE3Nuv7kwQptnSRcCoBvGA9Sy8BhmFMLrPJzaWYYzSHqWXcaAe
-         ivFIzq46XVgZxVOmoRvWucqY4Z0mq3d64/BWoTux74fb9pxtilrUgRrHKgvLWPzvpRsd
-         Id4ZzwHlM2VZHE8d1l0ITct6Ey1OkjER93YcxCZ+24EC3xOiQ73beXV0rri4JGpIz3Di
-         kgmDU4mWD0R+VzdJEowy0Ef54Brfop0snwH+GIjKDacl3XT8GeZQhugig2SHqLUH7T1r
-         840A==
-X-Gm-Message-State: APjAAAWamIPhWjYzA3rDhbu4725WLvcnTxrsCNcAW4Du/s493s58v36T
-        7iBw/qNBsLVdhJ1jDxGo5pGL44qC
-X-Google-Smtp-Source: APXvYqxkfJlhpt9lZeGxJkPWeJELDZT4tnBWyAeABdOUDsiw4ptS+IX1wWTVg3XEHm/FsGi9WjwEeA==
-X-Received: by 2002:a62:fc12:: with SMTP id e18mr2326918pfh.257.1571344969228;
-        Thu, 17 Oct 2019 13:42:49 -0700 (PDT)
+        bh=B0s3tKuBk+lp7xcyPBRGt1DsIYJknXV6umHFo5h/I8Y=;
+        b=n5SAjxZ5DtrpLRZ+8A2XuAms+Y8AU1Tcm6bV+Np10/o36WIWgtmzXqyDg/dtedlvat
+         Ow+K4OyDAnBcBlivfN/64FU28LxjoOiE1l0sKuA3h3wENUnH9Rmddv/CaZpXeCx5SVl+
+         ZJ79wfcSkVnobagl+hP5pTJ4at4niYkMYr0sK6uFZ+k5aA4Z6QOYr8T5kKRdDIH3o19E
+         4FTrp7xa/k/D8/EdQIicr17rM5XLo48ae2sabOD/FIFIOcbZq5Ru+Gc5eMgBPoIlPeWN
+         gUj7n87iX65izTsdV/Q0Paxza5TQ7/Ge7odQChoZTx//JfO8+gPKi9yIBzFna7B9GL4J
+         Bdzg==
+X-Gm-Message-State: APjAAAUfuKRqdNkbMQZ40WDQnSijFbwGSzrSAM78ra9wRliOhnp9I0eH
+        CuyaN+1XlRDGyGk7iaSY+CM0DTZl
+X-Google-Smtp-Source: APXvYqz8Qo2V1zykS+Ng5NTW0WOgCtwowevyvaZ7Y0HPzvzwb0JdfI5aakXai4hO12XtpT3FJgbxLw==
+X-Received: by 2002:a62:4ed6:: with SMTP id c205mr2272074pfb.208.1571344952567;
+        Thu, 17 Oct 2019 13:42:32 -0700 (PDT)
 Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id b3sm4626365pfd.125.2019.10.17.13.42.48
+        by smtp.gmail.com with ESMTPSA id b3sm4626365pfd.125.2019.10.17.13.42.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 13:42:48 -0700 (PDT)
+        Thu, 17 Oct 2019 13:42:31 -0700 (PDT)
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     linux-input@vger.kernel.org
-Cc:     Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 21/22] Input: kxtj9 - switch to using managed resources
-Date:   Thu, 17 Oct 2019 13:42:15 -0700
-Message-Id: <20191017204217.106453-22-dmitry.torokhov@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        =?UTF-8?q?Ronald=20Tschal=C3=A4r?= <ronald@innovation.ch>,
+        Stefan Agner <stefan@agner.ch>,
+        YueHaibing <yuehaibing@huawei.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH 08/22] Input: gpio_keys_polled - switch to using polled mode of input devices
+Date:   Thu, 17 Oct 2019 13:42:02 -0700
+Message-Id: <20191017204217.106453-9-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
 In-Reply-To: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
 References: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
@@ -75,210 +81,217 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using devm API allows to clean up error handling and drop the remove()
-method.
+We have added polled mode to the normal input devices with the intent of
+retiring input_polled_dev. This converts gpio_keys_polled driver to use
+the polling mode of standard input devices and removes dependency on
+INPUT_POLLDEV.
+
+Note that we still keep polled and non-polled gpio-keys drivers separate,
+as they are different enough and mixing them up would make the code pretty
+confusing.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
 
- drivers/input/misc/kxtj9.c | 86 +++++++++++++-------------------------
- 1 file changed, 28 insertions(+), 58 deletions(-)
+ drivers/input/keyboard/Kconfig            |  1 -
+ drivers/input/keyboard/gpio_keys_polled.c | 65 ++++++++++++-----------
+ 2 files changed, 34 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/input/misc/kxtj9.c b/drivers/input/misc/kxtj9.c
-index db01c4a33914..a86544d575f8 100644
---- a/drivers/input/misc/kxtj9.c
-+++ b/drivers/input/misc/kxtj9.c
-@@ -292,7 +292,6 @@ static void kxtj9_init_input_device(struct kxtj9_data *tj9,
- 
- 	input_dev->name = "kxtj9_accel";
- 	input_dev->id.bustype = BUS_I2C;
--	input_dev->dev.parent = &tj9->client->dev;
- }
- 
- static int kxtj9_setup_input_device(struct kxtj9_data *tj9)
-@@ -300,7 +299,7 @@ static int kxtj9_setup_input_device(struct kxtj9_data *tj9)
- 	struct input_dev *input_dev;
- 	int err;
- 
--	input_dev = input_allocate_device();
-+	input_dev = devm_input_allocate_device(&tj9->client->dev);
- 	if (!input_dev) {
- 		dev_err(&tj9->client->dev, "input device allocate failed\n");
- 		return -ENOMEM;
-@@ -319,7 +318,6 @@ static int kxtj9_setup_input_device(struct kxtj9_data *tj9)
- 		dev_err(&tj9->client->dev,
- 			"unable to register input polled device %s: %d\n",
- 			tj9->input_dev->name, err);
--		input_free_device(tj9->input_dev);
- 		return err;
- 	}
- 
-@@ -424,8 +422,8 @@ static int kxtj9_setup_polled_device(struct kxtj9_data *tj9)
- {
- 	int err;
- 	struct input_polled_dev *poll_dev;
--	poll_dev = input_allocate_polled_device();
- 
-+	poll_dev = devm_input_allocate_polled_device(&tj9->client->dev);
- 	if (!poll_dev) {
- 		dev_err(&tj9->client->dev,
- 			"Failed to allocate polled device\n");
-@@ -446,19 +444,12 @@ static int kxtj9_setup_polled_device(struct kxtj9_data *tj9)
- 	if (err) {
- 		dev_err(&tj9->client->dev,
- 			"Unable to register polled device, err=%d\n", err);
--		input_free_polled_device(poll_dev);
- 		return err;
- 	}
- 
- 	return 0;
- }
- 
--static void kxtj9_teardown_polled_device(struct kxtj9_data *tj9)
--{
--	input_unregister_polled_device(tj9->poll_dev);
--	input_free_polled_device(tj9->poll_dev);
--}
--
- #else
- 
- static inline int kxtj9_setup_polled_device(struct kxtj9_data *tj9)
-@@ -466,11 +457,15 @@ static inline int kxtj9_setup_polled_device(struct kxtj9_data *tj9)
- 	return -ENOSYS;
- }
- 
--static inline void kxtj9_teardown_polled_device(struct kxtj9_data *tj9)
-+#endif
-+
-+static void kxtj9_platform_exit(void *data)
- {
--}
-+	struct kxtj9_data *tj9 = data;
- 
--#endif
-+	if (tj9->pdata.exit)
-+		tj9->pdata.exit();
-+}
- 
- static int kxtj9_verify(struct kxtj9_data *tj9)
- {
-@@ -494,7 +489,7 @@ static int kxtj9_verify(struct kxtj9_data *tj9)
- }
- 
- static int kxtj9_probe(struct i2c_client *client,
--				 const struct i2c_device_id *id)
-+		       const struct i2c_device_id *id)
- {
- 	const struct kxtj9_platform_data *pdata =
- 			dev_get_platdata(&client->dev);
-@@ -512,7 +507,7 @@ static int kxtj9_probe(struct i2c_client *client,
- 		return -EINVAL;
- 	}
- 
--	tj9 = kzalloc(sizeof(*tj9), GFP_KERNEL);
-+	tj9 = devm_kzalloc(&client->dev, sizeof(*tj9), GFP_KERNEL);
- 	if (!tj9) {
- 		dev_err(&client->dev,
- 			"failed to allocate memory for module data\n");
-@@ -525,13 +520,17 @@ static int kxtj9_probe(struct i2c_client *client,
- 	if (pdata->init) {
- 		err = pdata->init();
- 		if (err < 0)
--			goto err_free_mem;
-+			return err;
- 	}
- 
-+	err = devm_add_action_or_reset(&client->dev, kxtj9_platform_exit, tj9);
-+	if (err)
-+		return err;
-+
- 	err = kxtj9_verify(tj9);
- 	if (err < 0) {
- 		dev_err(&client->dev, "device not recognized\n");
--		goto err_pdata_exit;
-+		return err;
- 	}
- 
- 	i2c_set_clientdata(client, tj9);
-@@ -546,59 +545,31 @@ static int kxtj9_probe(struct i2c_client *client,
- 
- 		err = kxtj9_setup_input_device(tj9);
- 		if (err)
--			goto err_pdata_exit;
-+			return err;
- 
--		err = request_threaded_irq(client->irq, NULL, kxtj9_isr,
--					   IRQF_TRIGGER_RISING | IRQF_ONESHOT,
--					   "kxtj9-irq", tj9);
-+		err = devm_request_threaded_irq(&client->dev, client->irq,
-+						NULL, kxtj9_isr,
-+						IRQF_TRIGGER_RISING |
-+							IRQF_ONESHOT,
-+						"kxtj9-irq", tj9);
- 		if (err) {
- 			dev_err(&client->dev, "request irq failed: %d\n", err);
--			goto err_destroy_input;
-+			return err;
- 		}
- 
--		err = sysfs_create_group(&client->dev.kobj, &kxtj9_attribute_group);
-+		err = devm_device_add_group(&client->dev,
-+					    &kxtj9_attribute_group);
- 		if (err) {
- 			dev_err(&client->dev, "sysfs create failed: %d\n", err);
--			goto err_free_irq;
-+			return err;
- 		}
- 
- 	} else {
- 		err = kxtj9_setup_polled_device(tj9);
- 		if (err)
--			goto err_pdata_exit;
--	}
--
--	return 0;
--
--err_free_irq:
--	free_irq(client->irq, tj9);
--err_destroy_input:
--	input_unregister_device(tj9->input_dev);
--err_pdata_exit:
--	if (tj9->pdata.exit)
--		tj9->pdata.exit();
--err_free_mem:
--	kfree(tj9);
--	return err;
--}
--
--static int kxtj9_remove(struct i2c_client *client)
--{
--	struct kxtj9_data *tj9 = i2c_get_clientdata(client);
--
--	if (client->irq) {
--		sysfs_remove_group(&client->dev.kobj, &kxtj9_attribute_group);
--		free_irq(client->irq, tj9);
--		input_unregister_device(tj9->input_dev);
--	} else {
--		kxtj9_teardown_polled_device(tj9);
-+			return err;
- 	}
- 
--	if (tj9->pdata.exit)
--		tj9->pdata.exit();
--
--	kfree(tj9);
--
- 	return 0;
- }
- 
-@@ -647,7 +618,6 @@ static struct i2c_driver kxtj9_driver = {
- 		.pm	= &kxtj9_pm_ops,
- 	},
- 	.probe		= kxtj9_probe,
--	.remove		= kxtj9_remove,
- 	.id_table	= kxtj9_id,
+diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+index 54b1905ebbfe..2856b4f72b12 100644
+--- a/drivers/input/keyboard/Kconfig
++++ b/drivers/input/keyboard/Kconfig
+@@ -248,7 +248,6 @@ config KEYBOARD_GPIO
+ config KEYBOARD_GPIO_POLLED
+ 	tristate "Polled GPIO buttons"
+ 	depends on GPIOLIB
+-	select INPUT_POLLDEV
+ 	help
+ 	  This driver implements support for buttons connected
+ 	  to GPIO pins that are not capable of generating interrupts.
+diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
+index 465eecfa6b3f..4c93b85773ad 100644
+--- a/drivers/input/keyboard/gpio_keys_polled.c
++++ b/drivers/input/keyboard/gpio_keys_polled.c
+@@ -16,7 +16,6 @@
+ #include <linux/module.h>
+ #include <linux/slab.h>
+ #include <linux/input.h>
+-#include <linux/input-polldev.h>
+ #include <linux/ioport.h>
+ #include <linux/platform_device.h>
+ #include <linux/gpio.h>
+@@ -34,7 +33,7 @@ struct gpio_keys_button_data {
  };
  
+ struct gpio_keys_polled_dev {
+-	struct input_polled_dev *poll_dev;
++	struct input_dev *input;
+ 	struct device *dev;
+ 	const struct gpio_keys_platform_data *pdata;
+ 	unsigned long rel_axis_seen[BITS_TO_LONGS(REL_CNT)];
+@@ -42,12 +41,11 @@ struct gpio_keys_polled_dev {
+ 	struct gpio_keys_button_data data[0];
+ };
+ 
+-static void gpio_keys_button_event(struct input_polled_dev *dev,
++static void gpio_keys_button_event(struct input_dev *input,
+ 				   const struct gpio_keys_button *button,
+ 				   int state)
+ {
+-	struct gpio_keys_polled_dev *bdev = dev->private;
+-	struct input_dev *input = dev->input;
++	struct gpio_keys_polled_dev *bdev = input_get_drvdata(input);
+ 	unsigned int type = button->type ?: EV_KEY;
+ 
+ 	if (type == EV_REL) {
+@@ -66,7 +64,7 @@ static void gpio_keys_button_event(struct input_polled_dev *dev,
+ 	}
+ }
+ 
+-static void gpio_keys_polled_check_state(struct input_polled_dev *dev,
++static void gpio_keys_polled_check_state(struct input_dev *input,
+ 					 const struct gpio_keys_button *button,
+ 					 struct gpio_keys_button_data *bdata)
+ {
+@@ -74,10 +72,10 @@ static void gpio_keys_polled_check_state(struct input_polled_dev *dev,
+ 
+ 	state = gpiod_get_value_cansleep(bdata->gpiod);
+ 	if (state < 0) {
+-		dev_err(dev->input->dev.parent,
++		dev_err(input->dev.parent,
+ 			"failed to get gpio state: %d\n", state);
+ 	} else {
+-		gpio_keys_button_event(dev, button, state);
++		gpio_keys_button_event(input, button, state);
+ 
+ 		if (state != bdata->last_state) {
+ 			bdata->count = 0;
+@@ -86,11 +84,10 @@ static void gpio_keys_polled_check_state(struct input_polled_dev *dev,
+ 	}
+ }
+ 
+-static void gpio_keys_polled_poll(struct input_polled_dev *dev)
++static void gpio_keys_polled_poll(struct input_dev *input)
+ {
+-	struct gpio_keys_polled_dev *bdev = dev->private;
++	struct gpio_keys_polled_dev *bdev = input_get_drvdata(input);
+ 	const struct gpio_keys_platform_data *pdata = bdev->pdata;
+-	struct input_dev *input = dev->input;
+ 	int i;
+ 
+ 	memset(bdev->rel_axis_seen, 0, sizeof(bdev->rel_axis_seen));
+@@ -101,10 +98,10 @@ static void gpio_keys_polled_poll(struct input_polled_dev *dev)
+ 
+ 		if (bdata->count < bdata->threshold) {
+ 			bdata->count++;
+-			gpio_keys_button_event(dev, &pdata->buttons[i],
++			gpio_keys_button_event(input, &pdata->buttons[i],
+ 					       bdata->last_state);
+ 		} else {
+-			gpio_keys_polled_check_state(dev, &pdata->buttons[i],
++			gpio_keys_polled_check_state(input, &pdata->buttons[i],
+ 						     bdata);
+ 		}
+ 	}
+@@ -122,18 +119,20 @@ static void gpio_keys_polled_poll(struct input_polled_dev *dev)
+ 	input_sync(input);
+ }
+ 
+-static void gpio_keys_polled_open(struct input_polled_dev *dev)
++static int gpio_keys_polled_open(struct input_dev *input)
+ {
+-	struct gpio_keys_polled_dev *bdev = dev->private;
++	struct gpio_keys_polled_dev *bdev = input_get_drvdata(input);
+ 	const struct gpio_keys_platform_data *pdata = bdev->pdata;
+ 
+ 	if (pdata->enable)
+ 		pdata->enable(bdev->dev);
++
++	return 0;
+ }
+ 
+-static void gpio_keys_polled_close(struct input_polled_dev *dev)
++static void gpio_keys_polled_close(struct input_dev *input)
+ {
+-	struct gpio_keys_polled_dev *bdev = dev->private;
++	struct gpio_keys_polled_dev *bdev = input_get_drvdata(input);
+ 	const struct gpio_keys_platform_data *pdata = bdev->pdata;
+ 
+ 	if (pdata->disable)
+@@ -232,7 +231,6 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
+ 	struct fwnode_handle *child = NULL;
+ 	const struct gpio_keys_platform_data *pdata = dev_get_platdata(dev);
+ 	struct gpio_keys_polled_dev *bdev;
+-	struct input_polled_dev *poll_dev;
+ 	struct input_dev *input;
+ 	int error;
+ 	int i;
+@@ -255,19 +253,13 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
+ 
+-	poll_dev = devm_input_allocate_polled_device(dev);
+-	if (!poll_dev) {
+-		dev_err(dev, "no memory for polled device\n");
++	input = devm_input_allocate_device(dev);
++	if (!input) {
++		dev_err(dev, "no memory for input device\n");
+ 		return -ENOMEM;
+ 	}
+ 
+-	poll_dev->private = bdev;
+-	poll_dev->poll = gpio_keys_polled_poll;
+-	poll_dev->poll_interval = pdata->poll_interval;
+-	poll_dev->open = gpio_keys_polled_open;
+-	poll_dev->close = gpio_keys_polled_close;
+-
+-	input = poll_dev->input;
++	input_set_drvdata(input, bdev);
+ 
+ 	input->name = pdata->name ?: pdev->name;
+ 	input->phys = DRV_NAME"/input0";
+@@ -277,6 +269,9 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
+ 	input->id.product = 0x0001;
+ 	input->id.version = 0x0100;
+ 
++	input->open = gpio_keys_polled_open;
++	input->close = gpio_keys_polled_close;
++
+ 	__set_bit(EV_KEY, input->evbit);
+ 	if (pdata->rep)
+ 		__set_bit(EV_REP, input->evbit);
+@@ -353,11 +348,19 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
+ 
+ 	fwnode_handle_put(child);
+ 
+-	bdev->poll_dev = poll_dev;
++	bdev->input = input;
+ 	bdev->dev = dev;
+ 	bdev->pdata = pdata;
+ 
+-	error = input_register_polled_device(poll_dev);
++	error = input_setup_polling(input, gpio_keys_polled_poll);
++	if (error) {
++		dev_err(dev, "unable to set up polling, err=%d\n", error);
++		return error;
++	}
++
++	input_set_poll_interval(input, pdata->poll_interval);
++
++	error = input_register_device(input);
+ 	if (error) {
+ 		dev_err(dev, "unable to register polled device, err=%d\n",
+ 			error);
+@@ -366,7 +369,7 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
+ 
+ 	/* report initial state of the buttons */
+ 	for (i = 0; i < pdata->nbuttons; i++)
+-		gpio_keys_polled_check_state(poll_dev, &pdata->buttons[i],
++		gpio_keys_polled_check_state(input, &pdata->buttons[i],
+ 					     &bdev->data[i]);
+ 
+ 	input_sync(input);
 -- 
 2.23.0.866.gb869b98d4c-goog
 
