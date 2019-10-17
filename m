@@ -2,131 +2,241 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CFEECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE012FA3732
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DBB920869
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:30:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ON5RjH0p"
+	by mail.kernel.org (Postfix) with ESMTP id C4CFB20640
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:30:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408513AbfJQJaa (ORCPT
+        id S2408525AbfJQJa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 05:30:30 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46050 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393479AbfJQJa3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 05:30:29 -0400
-Received: by mail-pg1-f195.google.com with SMTP id r1so988037pgj.12
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 02:30:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BhmzWijDe5yao7vgl7kT7tSRmrdD456yMAPTwvVZ6aE=;
-        b=ON5RjH0pSpZU2Cd7Fz0YbphH0L/Em2TGlv7YnZJBvpgopaCB/FKNcHBXq8HKwYUg7P
-         9zkm0CUSDi8v7DL/pyzSsR88zRdT+gXAfP2h3/W5kvOKlunjpsrKxnUOTDwT80UUeo50
-         4D6r0R0NHfCVid/eMA8W/jEIqrs+6PGfUdVEPeKkuRyFGFdx81pc41weawhWqG27vqEO
-         ueMpeFIhp2mICDuxVZfklOTuQxnr12o48mmafzWwEBS3QILVhVMTtY6n5DI3On4w/GId
-         e3zbFJ3f17wCZh5HFUOnvhEslPT7wGccw26PeqA8E36a8zrcusugKBnVc2c7y91AH2U3
-         ZCNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BhmzWijDe5yao7vgl7kT7tSRmrdD456yMAPTwvVZ6aE=;
-        b=V0qKQkjt5mQHhFLu03fkHv9QaK47ykILW7sBtLmC1QZ3B2CrENK1B+5jxHk+dZp67P
-         JKa2zVFQFARYKufehWxevivuDmbjD4ZPNTn0FipTGsjGUpPDiHkGdAu+K7Et2z3U7i5M
-         uMuXdneErd7H/i5z47Ll3QP49VSUzZDcIZjWS3nOaVwtYdOX2exceY54R/AIuDs4vZTO
-         5VKK0s0IghSasi2h9rpDyMj/oBdfYILcUhP9iAM7imImEdMM0BnRwf1T3g7E0Ic91Qo7
-         uxkrxC90fnrW+Kx/qoRt/UNDqwTX0yNvOB9yDYr84G5FGRVQeiQ2fCw9xzdQZ+E/16Ja
-         plmQ==
-X-Gm-Message-State: APjAAAVNGy/A6ft54vTgQj/qDvR2K5i7x7CgwhsuDFih4ygsW5SaTGgN
-        IwWRfISnbkdWS6fS7PtY3RTGZw==
-X-Google-Smtp-Source: APXvYqzE6ySNtpyo3AA5URWU3jKLTzHmlb++gJiGHbo4eEfHZNF4YHTd0p39zwIlMfLoeZpK1XK1eg==
-X-Received: by 2002:a63:1c47:: with SMTP id c7mr2994536pgm.265.1571304627200;
-        Thu, 17 Oct 2019 02:30:27 -0700 (PDT)
-Received: from localhost ([122.172.151.112])
-        by smtp.gmail.com with ESMTPSA id a17sm1897804pfi.178.2019.10.17.02.30.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Oct 2019 02:30:26 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 15:00:22 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] cpufreq: merge arm_big_little and vexpress-spc
-Message-ID: <20191017093022.du76n64kwzqibqhs@vireshk-i7>
-References: <20191016110344.15259-1-sudeep.holla@arm.com>
- <20191016110344.15259-3-sudeep.holla@arm.com>
- <20191017023936.vgkdfnyaz3r4k74z@vireshk-i7>
- <20191017092628.GD8978@bogus>
+        Thu, 17 Oct 2019 05:30:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58238 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393479AbfJQJaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 05:30:55 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D4B2820F2;
+        Thu, 17 Oct 2019 09:30:54 +0000 (UTC)
+Received: from localhost.localdomain.com (ovpn-12-118.pek2.redhat.com [10.72.12.118])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7F56760872;
+        Thu, 17 Oct 2019 09:30:48 +0000 (UTC)
+From:   Kairui Song <kasong@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
+        x86@kernel.org, linux-efi@vger.kernel.org,
+        Kairui Song <kasong@redhat.com>
+Subject: [PATCH v4] x86, efi: never relocate kernel below lowest acceptable address
+Date:   Thu, 17 Oct 2019 17:30:20 +0800
+Message-Id: <20191017093020.28658-1-kasong@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191017092628.GD8978@bogus>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Thu, 17 Oct 2019 09:30:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17-10-19, 10:26, Sudeep Holla wrote:
-> On Thu, Oct 17, 2019 at 08:09:36AM +0530, Viresh Kumar wrote:
-> > On 16-10-19, 12:03, Sudeep Holla wrote:
-> > > arm_big_little cpufreq driver was designed as a generic big little
-> > > driver that could be used by any platform and make use of bL switcher.
-> > > Over years alternate solutions have be designed and merged to deal with
-> > > bL/HMP systems like EAS.
-> > >
-> > > Also since no other driver made use of generic arm_big_little cpufreq
-> > > driver except Vexpress SPC, we can merge them together as vexpress-spc
-> > > driver used only on Vexpress TC2(CA15_CA7) platform.
-> > >
-> > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > > ---
-> > >  MAINTAINERS                            |   5 +-
-> > >  drivers/cpufreq/Kconfig.arm            |  12 +-
-> > >  drivers/cpufreq/Makefile               |   2 -
-> > >  drivers/cpufreq/arm_big_little.c       | 658 ------------------------
-> > >  drivers/cpufreq/arm_big_little.h       |  43 --
-> > >  drivers/cpufreq/vexpress-spc-cpufreq.c | 661 ++++++++++++++++++++++++-
-> > >  6 files changed, 652 insertions(+), 729 deletions(-)
-> > >  delete mode 100644 drivers/cpufreq/arm_big_little.c
-> > >  delete mode 100644 drivers/cpufreq/arm_big_little.h
-> >
-> > The delta produced here is enormous probably because you copy/pasted things. I
-> > am wondering if using git mv to rename arm_big_little.c and then move spc bits
-> > into it will make this delta smaller to review ?
-> >
-> 
-> Yes, I did a quick try but slightly different order. As I need the final
-> driver to be vexpress-spc-cpufreq.c, I am thinking of first merging
-> vexpress-spc-cpufreq.c into arm_big_little.c and then renaming it back
-> later. Does that sound good ?
+Currently, kernel fails to boot on some HyperV VMs when using EFI.
+And it's a potential issue on all platforms.
 
-Maybe git can produce short diff even if you do this in a single patch. But two
-would be fine if that makes me review lesss stuff :)
+It's caused by broken kernel relocation on EFI systems, when below three
+conditions are met:
 
-> 
-> drivers/cpufreq/arm_big_little.c       | 78 ++++++++++++++++++++------
-> drivers/cpufreq/arm_big_little.h       | 43 --------------
-> drivers/cpufreq/vexpress-spc-cpufreq.c | 71 -----------------------
-> 6 files changed, 68 insertions(+), 145 deletions(-)
-> delete mode 100644 drivers/cpufreq/arm_big_little.h
-> delete mode 100644 drivers/cpufreq/vexpress-spc-cpufreq.c
-> 
-> If we first rename arm_big_little.c, then we need change the final name
-> otherwise we end up with same delta as the new name file will be merged
-> into vexpress-spc-cpufreq.c
+1. Kernel image is not loaded to the default address (LOAD_PHYSICAL_ADDR)
+   by the loader.
+2. There isn't enough room to contain the kernel, starting from the
+   default load address (eg. something else occupied part the region).
+3. In the memmap provided by EFI firmware, there is a memory region
+   starts below LOAD_PHYSICAL_ADDR, and suitable for containing the
+   kernel.
 
+EFI stub will perform a kernel relocation when condition 1 is met. But
+due to condition 2, EFI stub can't relocate kernel to the preferred
+address, so it fallback to ask EFI firmware to alloc lowest usable memory
+region, got the low region mentioned in condition 3, and relocated
+kernel there.
 
+It's incorrect to relocate the kernel below LOAD_PHYSICAL_ADDR. This
+is the lowest acceptable kernel relocation address.
 
+The first thing goes wrong is in arch/x86/boot/compressed/head_64.S.
+Kernel decompression will force use LOAD_PHYSICAL_ADDR as the output
+address if kernel is located below it. Then the relocation before
+decompression, which move kernel to the end of the decompression buffer,
+will overwrite other memory region, as there is no enough memory there.
+
+To fix it, just don't let EFI stub relocate the kernel to any address
+lower than lowest acceptable address.
+
+Signed-off-by: Kairui Song <kasong@redhat.com>
+Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+
+---
+Update from V3:
+ - Update commit message.
+
+Update from V2:
+ - Update part of the commit message.
+
+Update from V1:
+ - Redo the commit message.
+
+ arch/x86/boot/compressed/eboot.c               |  8 +++++---
+ drivers/firmware/efi/libstub/arm32-stub.c      |  2 +-
+ drivers/firmware/efi/libstub/arm64-stub.c      |  2 +-
+ drivers/firmware/efi/libstub/efi-stub-helper.c | 12 ++++++++----
+ include/linux/efi.h                            |  5 +++--
+ 5 files changed, 18 insertions(+), 11 deletions(-)
+
+diff --git a/arch/x86/boot/compressed/eboot.c b/arch/x86/boot/compressed/eboot.c
+index d6662fdef300..e89e84b66527 100644
+--- a/arch/x86/boot/compressed/eboot.c
++++ b/arch/x86/boot/compressed/eboot.c
+@@ -13,6 +13,7 @@
+ #include <asm/e820/types.h>
+ #include <asm/setup.h>
+ #include <asm/desc.h>
++#include <asm/boot.h>
+ 
+ #include "../string.h"
+ #include "eboot.h"
+@@ -413,7 +414,7 @@ struct boot_params *make_boot_params(struct efi_config *c)
+ 	}
+ 
+ 	status = efi_low_alloc(sys_table, 0x4000, 1,
+-			       (unsigned long *)&boot_params);
++			       (unsigned long *)&boot_params, 0);
+ 	if (status != EFI_SUCCESS) {
+ 		efi_printk(sys_table, "Failed to allocate lowmem for boot params\n");
+ 		return NULL;
+@@ -798,7 +799,7 @@ efi_main(struct efi_config *c, struct boot_params *boot_params)
+ 
+ 	gdt->size = 0x800;
+ 	status = efi_low_alloc(sys_table, gdt->size, 8,
+-			   (unsigned long *)&gdt->address);
++			       (unsigned long *)&gdt->address, 0);
+ 	if (status != EFI_SUCCESS) {
+ 		efi_printk(sys_table, "Failed to allocate memory for 'gdt'\n");
+ 		goto fail;
+@@ -813,7 +814,8 @@ efi_main(struct efi_config *c, struct boot_params *boot_params)
+ 		status = efi_relocate_kernel(sys_table, &bzimage_addr,
+ 					     hdr->init_size, hdr->init_size,
+ 					     hdr->pref_address,
+-					     hdr->kernel_alignment);
++					     hdr->kernel_alignment,
++					     LOAD_PHYSICAL_ADDR);
+ 		if (status != EFI_SUCCESS) {
+ 			efi_printk(sys_table, "efi_relocate_kernel() failed!\n");
+ 			goto fail;
+diff --git a/drivers/firmware/efi/libstub/arm32-stub.c b/drivers/firmware/efi/libstub/arm32-stub.c
+index e8f7aefb6813..bf6f954d6afe 100644
+--- a/drivers/firmware/efi/libstub/arm32-stub.c
++++ b/drivers/firmware/efi/libstub/arm32-stub.c
+@@ -220,7 +220,7 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table,
+ 	*image_size = image->image_size;
+ 	status = efi_relocate_kernel(sys_table, image_addr, *image_size,
+ 				     *image_size,
+-				     dram_base + MAX_UNCOMP_KERNEL_SIZE, 0);
++				     dram_base + MAX_UNCOMP_KERNEL_SIZE, 0, 0);
+ 	if (status != EFI_SUCCESS) {
+ 		pr_efi_err(sys_table, "Failed to relocate kernel.\n");
+ 		efi_free(sys_table, *reserve_size, *reserve_addr);
+diff --git a/drivers/firmware/efi/libstub/arm64-stub.c b/drivers/firmware/efi/libstub/arm64-stub.c
+index 1550d244e996..3d2e517e10f4 100644
+--- a/drivers/firmware/efi/libstub/arm64-stub.c
++++ b/drivers/firmware/efi/libstub/arm64-stub.c
+@@ -140,7 +140,7 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table_arg,
+ 	if (status != EFI_SUCCESS) {
+ 		*reserve_size = kernel_memsize + TEXT_OFFSET;
+ 		status = efi_low_alloc(sys_table_arg, *reserve_size,
+-				       MIN_KIMG_ALIGN, reserve_addr);
++				       MIN_KIMG_ALIGN, reserve_addr, 0);
+ 
+ 		if (status != EFI_SUCCESS) {
+ 			pr_efi_err(sys_table_arg, "Failed to relocate kernel\n");
+diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
+index 3caae7f2cf56..00b00a2562aa 100644
+--- a/drivers/firmware/efi/libstub/efi-stub-helper.c
++++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
+@@ -260,11 +260,11 @@ efi_status_t efi_high_alloc(efi_system_table_t *sys_table_arg,
+ }
+ 
+ /*
+- * Allocate at the lowest possible address.
++ * Allocate at the lowest possible address that is not below 'min'.
+  */
+ efi_status_t efi_low_alloc(efi_system_table_t *sys_table_arg,
+ 			   unsigned long size, unsigned long align,
+-			   unsigned long *addr)
++			   unsigned long *addr, unsigned long min)
+ {
+ 	unsigned long map_size, desc_size, buff_size;
+ 	efi_memory_desc_t *map;
+@@ -311,6 +311,9 @@ efi_status_t efi_low_alloc(efi_system_table_t *sys_table_arg,
+ 		start = desc->phys_addr;
+ 		end = start + desc->num_pages * EFI_PAGE_SIZE;
+ 
++		if (start < min)
++			start = min;
++
+ 		/*
+ 		 * Don't allocate at 0x0. It will confuse code that
+ 		 * checks pointers against NULL. Skip the first 8
+@@ -698,7 +701,8 @@ efi_status_t efi_relocate_kernel(efi_system_table_t *sys_table_arg,
+ 				 unsigned long image_size,
+ 				 unsigned long alloc_size,
+ 				 unsigned long preferred_addr,
+-				 unsigned long alignment)
++				 unsigned long alignment,
++				 unsigned long min_addr)
+ {
+ 	unsigned long cur_image_addr;
+ 	unsigned long new_addr = 0;
+@@ -732,7 +736,7 @@ efi_status_t efi_relocate_kernel(efi_system_table_t *sys_table_arg,
+ 	 */
+ 	if (status != EFI_SUCCESS) {
+ 		status = efi_low_alloc(sys_table_arg, alloc_size, alignment,
+-				       &new_addr);
++				       &new_addr, min_addr);
+ 	}
+ 	if (status != EFI_SUCCESS) {
+ 		pr_efi_err(sys_table_arg, "Failed to allocate usable memory for kernel.\n");
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index bd3837022307..a5144cc44e54 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -1581,7 +1581,7 @@ efi_status_t efi_get_memory_map(efi_system_table_t *sys_table_arg,
+ 
+ efi_status_t efi_low_alloc(efi_system_table_t *sys_table_arg,
+ 			   unsigned long size, unsigned long align,
+-			   unsigned long *addr);
++			   unsigned long *addr, unsigned long min);
+ 
+ efi_status_t efi_high_alloc(efi_system_table_t *sys_table_arg,
+ 			    unsigned long size, unsigned long align,
+@@ -1592,7 +1592,8 @@ efi_status_t efi_relocate_kernel(efi_system_table_t *sys_table_arg,
+ 				 unsigned long image_size,
+ 				 unsigned long alloc_size,
+ 				 unsigned long preferred_addr,
+-				 unsigned long alignment);
++				 unsigned long alignment,
++				 unsigned long min_addr);
+ 
+ efi_status_t handle_cmdline_files(efi_system_table_t *sys_table_arg,
+ 				  efi_loaded_image_t *image,
 -- 
-viresh
+2.21.0
+
