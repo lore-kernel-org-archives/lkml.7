@@ -2,176 +2,166 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE98ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA22ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09A0A20872
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:21:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xGvDlfZJ"
+	by mail.kernel.org (Postfix) with ESMTP id B8ED320872
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:23:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440677AbfJQRV3 (ORCPT
+        id S2440689AbfJQRXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 13:21:29 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41191 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440655AbfJQRV2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 13:21:28 -0400
-Received: by mail-ot1-f66.google.com with SMTP id g13so2555762otp.8
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 10:21:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MQNN2yMLNBIm9RPEEL9cuuBeXjUf8pcc28LNjdy0QRw=;
-        b=xGvDlfZJ2ehTmMhNLXJXBi7VbCD6SJ3hZMbyVEReDaYlq8K3L/XX5+lQympaTk1UGA
-         e9mVQNeSjht5/S/zEKXc0Ru8RHP7O08D/5CdyezQW7RvucdfJRSIu4V3yKNIbqo7MfvZ
-         kXd7+AWWKQQYhjGMmMSbOgstc5Ovj/wkRbzWPiiTHNEUCD/J0rzHXhX+k7oDyupThX8w
-         q70O5DGuDds1PUekBkW1zr6bz10WNtfAwAjqj10C2J50hrb0YyhpX0wUbFYkvF13iZqk
-         UfVeoVPbI6RX0/JBLzL6HGLJVPA6lQmlnY4AFirOLI4CwDeB388OaEfdPsjPyRPqFab+
-         1Whg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MQNN2yMLNBIm9RPEEL9cuuBeXjUf8pcc28LNjdy0QRw=;
-        b=YMJSynBTJ5bO1zL+DZ7InUkjQupu6zQjO/6H0SK2t+cAxdT7TxVwyUPE1H6frkB0Fd
-         YlQ3QAebigf38y/k2fDnc5K9XAJTdwbYq0v3Ogf0VM8NflGlzCTaJ/RRbZUeJkSSRyFd
-         u9vAVlkVV5/T/UL/sKNcpn9XuL74kzH1P4P8v7u00Zyyaer8qLDvNIqPiRXr5eTxWOYo
-         dl1cmOA3R16GjHO/VO9mlJoF0fGHezG/hy4rxz1yf1iFSFP0HE/dy5fZgtnzpiD2LhS6
-         DCziC5DPdXUvaStN/NUds19VI0dUt6wbK9Zw8aNyD89U7JF2jXpwvWkVfhq+wly+cWjS
-         DCnQ==
-X-Gm-Message-State: APjAAAXdFbges2zSTGr1++KwSoFMnClyCxrzsVzbKz/7NazQ4JNPNnix
-        xjQufTtztsbZk0gWUwgWbGwQOhOqmYKUyyR48D/Nxg==
-X-Google-Smtp-Source: APXvYqyjmzXAdREaZpT2IoCB7l4Ga5bm0XN1bx6BFmFRxS4Gf9gk87Xc0ZYY8vwBTdxssA/qYhix2Ora0xTEaDFUO2g=
-X-Received: by 2002:a05:6830:457:: with SMTP id d23mr4121621otc.267.1571332887349;
- Thu, 17 Oct 2019 10:21:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191016214844.038848564@linuxfoundation.org>
-In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 17 Oct 2019 22:51:15 +0530
-Message-ID: <CA+G9fYsV=wVPaF4Uwbtddb1753Bfqz5EDhTzV2A8CX576JNqYA@mail.gmail.com>
-Subject: Re: [PATCH 5.3 000/112] 5.3.7-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thu, 17 Oct 2019 13:23:14 -0400
+Received: from mga09.intel.com ([134.134.136.24]:62788 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436760AbfJQRXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 13:23:14 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 10:23:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,308,1566889200"; 
+   d="scan'208";a="226245158"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga002.fm.intel.com with ESMTP; 17 Oct 2019 10:23:12 -0700
+Date:   Thu, 17 Oct 2019 10:23:12 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Dave Hansen <dave.hansen@intel.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org
+Subject: Re: [RFD] x86/split_lock: Request to Intel
+Message-ID: <20191017172312.GC20903@linux.intel.com>
+References: <20190925180931.GG31852@linux.intel.com>
+ <3ec328dc-2763-9da5-28d6-e28970262c58@redhat.com>
+ <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de>
+ <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com>
+ <c3ff2fb3-4380-fb07-1fa3-15896a09e748@intel.com>
+ <d30652bb-89fa-671a-5691-e2c76af231d0@redhat.com>
+ <8808c9ac-0906-5eec-a31f-27cbec778f9c@intel.com>
+ <alpine.DEB.2.21.1910161519260.2046@nanos.tec.linutronix.de>
+ <ba2c0aab-1d7c-5cfd-0054-ac2c266c1df3@redhat.com>
+ <alpine.DEB.2.21.1910171322530.1824@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1910171322530.1824@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019 at 03:29, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.3.7 release.
-> There are 112 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri 18 Oct 2019 09:43:41 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.3.7-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.3.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Thu, Oct 17, 2019 at 02:29:45PM +0200, Thomas Gleixner wrote:
+> The more I look at this trainwreck, the less interested I am in merging any
+> of this at all.
+> 
+> The fact that it took Intel more than a year to figure out that the MSR is
+> per core and not per thread is yet another proof that this industry just
+> works by pure chance.
+> 
+> There is a simple way out of this misery:
+> 
+>   Intel issues a microcode update which does:
+> 
+>     1) Convert the OR logic of the AC enable bit in the TEST_CTRL MSR to
+>        AND logic, i.e. when one thread disables AC it's automatically
+>        disabled on the core.
+> 
+>        Alternatively it supresses the #AC when the current thread has it
+>        disabled.
+> 
+>     2) Provide a separate bit which indicates that the AC enable logic is
+>        actually AND based or that #AC is supressed when the current thread
+>        has it disabled.
+> 
+>     Which way I don't really care as long as it makes sense.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+The #AC bit doesn't use OR-logic, it's straight up shared, i.e. writes on
+one CPU are immediately visible on its sibling CPU.  It doesn't magically
+solve the problem, but I don't think we need IPIs to coordinate between
+siblings, e.g. wouldn't something like this work?  The per-cpu things
+being pointers that are shared by siblings.
 
-Summary
-------------------------------------------------------------------------
+void split_lock_disable(void)
+{
+        spinlock_t *ac_lock = this_cpu_ptr(split_lock_ac_lock);
 
-kernel: 5.3.7-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.3.y
-git commit: cbb18cd3e47885e336b42ce05d553b44e1e3a7a0
-git describe: v5.3.6-112-gcbb18cd3e478
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.3-oe/bui=
-ld/v5.3.6-112-gcbb18cd3e478
+	spin_lock(ac_lock);
+        if (this_cpu_inc_return(*split_lock_ac_disabled) == 1)
+                WRMSR(RDMSR() & ~bit);
+        spin_unlock(ac_lock);
+}
 
-No regressions (compared to build v5.3.6)
+void split_lock_enable(void)
+{
+        spinlock_t *ac_lock = this_cpu_ptr(split_lock_ac_lock);
 
-No fixes (compared to build v5.3.6)
+	spin_lock(ac_lock);
+        if (this_cpu_dec_return(*split_lock_ac_disabled) == 0)
+                WRMSR(RDMSR() | bit);
+        spin_unlock(ac_lock);
+}
 
-Ran 24228 total tests in the following environments and test suites.
 
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
+To avoid the spin_lock and WRMSR latency on every VM-Enter and VM-Exit,
+actions (3a) and (4a) from your matrix (copied below) could be changed to
+only do split_lock_disable() if the guest actually generates an #AC, and
+then do split_lock_enable() on the next VM-Exit.  Assuming even legacy
+guests are somewhat sane and rarely do split-locks, lazily disabling the
+control would eliminate most of the overhead and would also reduce the
+time that the sibling CPU is running in the host without #AC protection.
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* libgpiod
-* libhugetlbfs
-* ltp-containers-tests
-* kselftest
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* network-basic-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
+N | #AC       | #AC enabled | SMT | Ctrl    | Guest | Action
+R | available | on host     |     | exposed | #AC   |
+--|-----------|-------------|-----|---------|-------|---------------------
+  |           |             |     |         |       |
+0 | N         |     x       |  x  |   N     |   x   | None
+  |           |             |     |         |       |
+1 | Y         |     N       |  x  |   N     |   x   | None
+  |           |             |     |         |       |
+2 | Y         |     Y       |  x  |   Y     |   Y   | Forward to guest
+  |           |             |     |         |       |
+3 | Y         |     Y       |  N  |   Y     |   N   | A) Store in vCPU and
+  |           |             |     |         |       |    toggle on VMENTER/EXIT
+  |           |             |     |         |       |
+  |           |             |     |         |       | B) SIGBUS or KVM exit code
+  |           |             |     |         |       |
+4 | Y         |     Y       |  Y  |   Y     |   N   | A) Disable globally on
+  |           |             |     |         |       |    host. Store in vCPU/guest
+  |           |             |     |         |       |    state and evtl. reenable
+  |           |             |     |         |       |    when guest goes away.
+  |           |             |     |         |       | 
+  |           |             |     |         |       | B) SIGBUS or KVM exit code
+
+
+> If that's not going to happen, then we just bury the whole thing and put it
+> on hold until a sane implementation of that functionality surfaces in
+> silicon some day in the not so foreseeable future.
+> 
+> Seriously, this makes only sense when it's by default enabled and not
+> rendered useless by VIRT. Otherwise we never get any reports and none of
+> the issues are going to be fixed.
+> 
+> Thanks,
+> 
+> 	tglx
