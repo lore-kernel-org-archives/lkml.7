@@ -2,96 +2,166 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68877FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCECECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4186A21A49
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:31:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C901521A49
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:31:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438015AbfJQVbd (ORCPT
+        id S2441545AbfJQVbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 17:31:33 -0400
-Received: from mga05.intel.com ([192.55.52.43]:63851 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732322AbfJQVbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 17:31:32 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 14:31:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,309,1566889200"; 
-   d="scan'208";a="186628235"
-Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
-  by orsmga007.jf.intel.com with ESMTP; 17 Oct 2019 14:31:31 -0700
-Received: from orsmsx114.amr.corp.intel.com (10.22.240.10) by
- ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 17 Oct 2019 14:31:31 -0700
-Received: from orsmsx115.amr.corp.intel.com ([169.254.4.146]) by
- ORSMSX114.amr.corp.intel.com ([169.254.8.228]) with mapi id 14.03.0439.000;
- Thu, 17 Oct 2019 14:31:31 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>
-CC:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "bberg@redhat.com" <bberg@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "ckellner@redhat.com" <ckellner@redhat.com>
-Subject: RE: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal
- throttle messages
-Thread-Topic: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal
- throttle messages
-Thread-Index: AQHVgtVLxuJrYmx6hUyzyzJQOp33Lqdb2lSAgABPIQCAATmTgIAAYKeAgAGZqlA=
-Date:   Thu, 17 Oct 2019 21:31:30 +0000
-Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F4A57D0@ORSMSX115.amr.corp.intel.com>
-References: <2c2b65c23be3064504566c5f621c1f37bf7e7326.camel@redhat.com>
- <20191014212101.25719-1-srinivas.pandruvada@linux.intel.com>
- <20191015084833.GD2311@hirez.programming.kicks-ass.net>
- <f481b4ab6dfebbc0637c843e5f1cd4ddfd4bd60b.camel@linux.intel.com>
- <20191016081405.GO2328@hirez.programming.kicks-ass.net>
- <20191016140001.GF1138@zn.tnic>
-In-Reply-To: <20191016140001.GF1138@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMmMwOGJhZGYtMjM2My00NGFiLTkwMmUtNDg4YzY3YzM1ZTNmIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiXC9Bc091SUtLUDBrWXp3RHdWRHkzMEw4TE1BWHFyRFNla0VXV3pQNytFY3BTaENmMmJzbWJiR2JGUnBJb3dUd0cifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 17 Oct 2019 17:31:43 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:54518 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2441534AbfJQVbm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 17:31:42 -0400
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iLDMn-0007MJ-68; Thu, 17 Oct 2019 23:31:29 +0200
+Date:   Thu, 17 Oct 2019 23:31:15 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org
+Subject: Re: [RFD] x86/split_lock: Request to Intel
+In-Reply-To: <20191017172312.GC20903@linux.intel.com>
+Message-ID: <alpine.DEB.2.21.1910172207010.1869@nanos.tec.linutronix.de>
+References: <20190925180931.GG31852@linux.intel.com> <3ec328dc-2763-9da5-28d6-e28970262c58@redhat.com> <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de> <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com> <c3ff2fb3-4380-fb07-1fa3-15896a09e748@intel.com>
+ <d30652bb-89fa-671a-5691-e2c76af231d0@redhat.com> <8808c9ac-0906-5eec-a31f-27cbec778f9c@intel.com> <alpine.DEB.2.21.1910161519260.2046@nanos.tec.linutronix.de> <ba2c0aab-1d7c-5cfd-0054-ac2c266c1df3@redhat.com> <alpine.DEB.2.21.1910171322530.1824@nanos.tec.linutronix.de>
+ <20191017172312.GC20903@linux.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pj4gVGhhdCBhbGwgc291bmRzIGxpa2UgdGhlIHByaW50ayBzaG91bGQgYmUgZG93bmdyYWRlZCB0
-b28sIGl0IGlzIG5vdCBhDQo+PiBLRVJOX0NSSVQgd2FybmluZy4gSXQgaXMgbW9yZSBhIG5vdGlm
-aWNhdGlvbiB0aGF0IHdlJ3JlIGdldHRpbmcgd2FybS4NCj4NCj4gUmlnaHQsIGFuZCBJIHRoaW5r
-IHdlIHNob3VsZCB0YWtlIEJlbmphbWluJ3MgcGF0Y2ggYWZ0ZXIgYWxsIC0gcGVyaGFwcw0KPiBl
-dmVuIHRhZyBpdCBmb3Igc3RhYmxlIGlmIHRoYXQgbWVzc2FnZSBpcyBhbm5veWluZyBwZW9wbGUg
-dG9vIG11Y2ggLSBhbmQNCj4gU3Jpbml2YXMgY2FuIGRvIHRoZSBkeW5hbWljIHRoaW5nIG9udG9w
-Lg0KDQpUaGF0IHNvdW5kcyBsaWtlIHRoZSByaWdodCBzaG9ydCB0ZXJtIGFjdGlvbi4NCg0KRGVw
-ZW5kaW5nIG9uIHdoYXQgd2UgZW5kIHVwIHdpdGggZnJvbSBTcmluaXZhcyAuLi4gd2UgbWF5IHdh
-bnQNCnRvIHJlY29uc2lkZXIgdGhlIHNldmVyaXR5LiAgVGhlIGJhc2ljIHByZW1pc2Ugb2YgU3Jp
-bml2YXMnIHBhdGNoDQppcyB0byBhdm9pZCBwcmludGluZyBhbnl0aGluZyBmb3Igc2hvcnQgZXhj
-dXJzaW9ucyBhYm92ZSB0ZW1wZXJhdHVyZQ0KdGhyZXNob2xkLiBCdXQgdGhlIGVmZmVjdCBvZiB0
-aGF0IGlzIHRoYXQgd2hlbiB3ZSBmaW5kIHRoZSBjb3JlL3BhY2thZ2UNCnN0YXlpbmcgYWJvdmUg
-dGVtcGVyYXR1cmUgZm9yIGFuIGV4dGVuZGVkIHBlcmlvZCBvZiB0aW1lLCB3ZSBhcmUNCmluIGEg
-c2VyaW91cyBzaXR1YXRpb24gd2hlcmUgc29tZSBhY3Rpb24gbWF5IGJlIG5lZWRlZC4gRS5nLg0K
-bW92ZSB0aGUgbGFwdG9wIG9mZiB0aGUgc29mdCBzdXJmYWNlIHRoYXQgaXMgYmxvY2tpbmcgdGhl
-IGFpciB2ZW50cy4NCg0KLVRvbnkNCg==
+On Thu, 17 Oct 2019, Sean Christopherson wrote:
+> On Thu, Oct 17, 2019 at 02:29:45PM +0200, Thomas Gleixner wrote:
+> > The more I look at this trainwreck, the less interested I am in merging any
+> > of this at all.
+> > 
+> > The fact that it took Intel more than a year to figure out that the MSR is
+> > per core and not per thread is yet another proof that this industry just
+> > works by pure chance.
+> > 
+> > There is a simple way out of this misery:
+> > 
+> >   Intel issues a microcode update which does:
+> > 
+> >     1) Convert the OR logic of the AC enable bit in the TEST_CTRL MSR to
+> >        AND logic, i.e. when one thread disables AC it's automatically
+> >        disabled on the core.
+> > 
+> >        Alternatively it supresses the #AC when the current thread has it
+> >        disabled.
+> > 
+> >     2) Provide a separate bit which indicates that the AC enable logic is
+> >        actually AND based or that #AC is supressed when the current thread
+> >        has it disabled.
+> > 
+> >     Which way I don't really care as long as it makes sense.
+> 
+> The #AC bit doesn't use OR-logic, it's straight up shared, i.e. writes on
+> one CPU are immediately visible on its sibling CPU.
+
+That's less horrible than I read out of your initial explanation.
+
+Thankfully all of this is meticulously documented in the SDM ...
+
+Though it changes the picture radically. The truly shared MSR allows
+regular software synchronization without IPIs and without an insane amount
+of corner case handling.
+
+So as you pointed out we need a per core state, which is influenced by:
+
+ 1) The global enablement switch
+
+ 2) Host induced #AC
+
+ 3) Guest induced #AC
+
+    A) Guest has #AC handling
+
+    B) Guest has no #AC handling
+
+#1:
+
+   - OFF: #AC is globally disabled
+
+   - ON:  #AC is globally enabled
+
+   - FORCE: same as ON but #AC is enforced on guests
+
+#2:
+
+   If the host triggers an #AC then the #AC has to be force disabled on the
+   affected core independent of the state of #1. Nothing we can do about
+   that and once the initial wave of #AC issues is fixed this should not
+   happen on production systems. That disables #3 even for the #3.A case
+   for simplicity sake.
+
+#3:
+
+   A) Guest has #AC handling
+    
+      #AC is forwarded to the guest. No further action required aside of
+      accounting
+
+   B) Guest has no #AC handling
+
+      If #AC triggers the resulting action depends on the state of #1:
+
+      	 - FORCE: Guest is killed with SIGBUS or whatever the virt crowd
+	   	  thinks is the appropriate solution
+
+         - ON: #AC triggered state is recorded per vCPU and the MSR is
+	   	toggled on VMENTER/VMEXIT in software from that point on.
+
+So the only interesting case is #3.B and #1.state == ON. There you need
+serialization of the state and the MSR write between the cores, but only
+when the vCPU triggered an #AC. Until then, nothing to do.
+
+vmenter()
+{
+	if (vcpu->ac_disable)
+		this_core_disable_ac();
+}
+
+vmexit()
+{
+	if (vcpu->ac_disable) {
+		this_core_enable_ac();
+}
+
+this_core_dis/enable_ac() takes the global state into account and has the
+necessary serialization in place.
+
+Thanks,
+
+	tglx
