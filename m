@@ -2,221 +2,228 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF160FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 15:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E306FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 15:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72C962089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 15:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 076AD2089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 15:42:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="JWB7Blxd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MQa8pUEY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406317AbfJQPkQ (ORCPT
+        id S2406422AbfJQPmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 11:40:16 -0400
-Received: from mail-eopbgr150109.outbound.protection.outlook.com ([40.107.15.109]:40802
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388925AbfJQPkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 11:40:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iwP9ye7Fslw9QBkS0FzkLAlGNwyd6UFP0qmTG1hRL547ZjhjlT5TOjptqZlcUUNWD5EXl2/gQDBy0kgH66Z4DFxrcutMd/VHsG9MmWYlGfzxj7ZDnKK2Y/OtR2rk/uNB2erDBNqWpkpCko+0ssG8k2JZtN+kCHCU45GkkI/hfGb9jSHhAYEPGmTvJ/rpObgJGhx/AXYw4a2UDlHTtU9WCTgoyff8F6hQod77BSOD4zoR6SN0X2ibPChi1a/7uSoI0wC0HrzbhEys/7cd84OB/qo+qeqyA6iVPzZ3DE0B2MNlO6yZDGnDZ9s5qsL2DeBFB5VbqDEUcIRN2yYkvVeX+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c5jxiLgn3ZC7LFT5BPGW6dtjWMslniqEwUltMvqxbSQ=;
- b=McjoZDe028XwtEIcCEUjPcvHDQhQsSiZ2OqE11VrueLmZb1QlLkkVLv6frzyDWr/pvoAzeCg03ZLOIqPpE0vXiCu4yAhaLIwCpJup+IX86nIZWZN046QfyO7jGThI4tak87ul70xO9PZtADkvPW2ZKpSZZ4Cwl5FM3Q9OYs1hwwP+NpSS3StmAnSZ4TIdgMxnm34vpDrBwneipagleWBszviSROdJzbURUc0DNQNIPZJEG5cN4Yf0oVA3I0fEh77XOmHaiWJheVs7X9juroIjSbcxppL+4k/Bon/3vmC86nMHXJ06JL82etnTuTUuk+P1b+s5NQPBUmRZMr4GSW6/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c5jxiLgn3ZC7LFT5BPGW6dtjWMslniqEwUltMvqxbSQ=;
- b=JWB7BlxdOBacFYVFK18ynN1UZHHpNYPdZT17yy1W27iQOrYZ0Pq5EZqKuR1ROODUQUJSUlTL5huaUQzYODAZk9RkrzXKS8oqo/VCqAMloKLXTnkk3hTUG3c6sX8Q82c+Uz9tXjTLR303KSzXNGrxrXvyDFLwnmz+RE9e1MsmEus=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3484.eurprd02.prod.outlook.com (52.134.65.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.21; Thu, 17 Oct 2019 15:40:08 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::c5b8:6014:87a4:1afe]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::c5b8:6014:87a4:1afe%7]) with mapi id 15.20.2347.023; Thu, 17 Oct 2019
- 15:40:08 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Biwen Li <biwen.li@nxp.com>,
-        "leoyang.li@nxp.com" <leoyang.li@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [v3,2/2] i2c: mux: pca954x: support property idle-state
-Thread-Topic: [v3,2/2] i2c: mux: pca954x: support property idle-state
-Thread-Index: AQHVg9kH6uFlq+R5DEebJ8YiUL6ka6de+pgA
-Date:   Thu, 17 Oct 2019 15:40:08 +0000
-Message-ID: <6e2fb6b9-4ffe-e6de-744f-a2bfe66a1b6c@axentia.se>
-References: <20191016040920.8511-1-biwen.li@nxp.com>
- <20191016040920.8511-2-biwen.li@nxp.com>
-In-Reply-To: <20191016040920.8511-2-biwen.li@nxp.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1PR0202CA0008.eurprd02.prod.outlook.com
- (2603:10a6:3:8c::18) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dec02fbe-081e-4b3a-f175-08d753184a02
-x-ms-traffictypediagnostic: DB3PR0202MB3484:
-x-microsoft-antispam-prvs: <DB3PR0202MB3484B6DAD59D02E5555D203CBC6D0@DB3PR0202MB3484.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 01930B2BA8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39830400003)(136003)(366004)(396003)(376002)(189003)(199004)(52116002)(2501003)(81156014)(6486002)(110136005)(6116002)(54906003)(8676002)(31696002)(66476007)(81166006)(14444005)(3846002)(66446008)(64756008)(14454004)(316002)(4326008)(256004)(5660300002)(36756003)(6246003)(58126008)(66556008)(66946007)(6436002)(6512007)(2906002)(4001150100001)(65806001)(229853002)(71190400001)(66066001)(476003)(186003)(11346002)(2616005)(25786009)(102836004)(26005)(65956001)(508600001)(86362001)(53546011)(76176011)(8936002)(6506007)(486006)(99286004)(386003)(7736002)(305945005)(71200400001)(446003)(31686004);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3484;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: drP0TeKHk9Yz3SOLmvFZ5TT7ZV2JpHj4Ff4Zs4XOtAaK37QBnYbRJxw0tkVa6d/a4yZw3eAzf75AIVdOvFxFz5cCcB8pOuqu9MCW9kTYAkdUfjQrXRTMwHc0hHOFygzyZvKhDUq5UHlZNM/YX/l1G24ocH90Lniw5fIUOhKxExJ96IpcK3G8jfXxX4cdZpSZRRnkZs9DsScQ5vk9Cv07g1JLIY6UeLNEAp9ncRiAnLIprKWZ455tkjuBEJ14WgDcDFWhFO/z0qWbU33ACd9zrhbP92cqxVE09BQ/ee5r8j+rDu2yiiw/IUG45SOAHVzQGBOmukoyh0jen/hutJbT6PFmztlJ8rbqK/++WTV+0mm3fi8ontaVgjibYw0335BqbypBiGAJJBW8NSi4UTMUphTbM3VRtnRqL+GaDleXJN0=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <41D30080DD7E814495EDEFF2DCC53F84@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 17 Oct 2019 11:42:10 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:44650 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403824AbfJQPmK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 11:42:10 -0400
+Received: by mail-qk1-f194.google.com with SMTP id u22so2258380qkk.11
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 08:42:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=7SgqcBu4H0dJ0a1XVrR4P5IqOAXfzEIFli1m7ofQZTU=;
+        b=MQa8pUEYm2AJaeJ+t58qwU6vPL4fhPd8LuyDsckVf0eZpIGSFiK0Kf3Gg/7rSW4pF4
+         bz+wHYD+fSJWVO4JEviNAc+p5yG1XYbVh6e0EoSdpTlrh7A4dHqdfnilw5Tk3QhRtHU0
+         G9rtcCIFHv3CPirjont2iaTU9p1PFdbg7hpAoZGd6HRe0JW7MLCYGiLBj/U3RF+VNfUi
+         ersOCaEQPAfrchdIhYulr6RhqsHLqGy21HSDenqXL7smQ7TTdJsejwpHht/PwpOfe588
+         al19BFU3DpYtotN+FMqCO/Gj2KPN8jlEX7TENq500mEIK/A/EAxMay+4KbgtNdYbUZKl
+         odFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=7SgqcBu4H0dJ0a1XVrR4P5IqOAXfzEIFli1m7ofQZTU=;
+        b=HYrhzBKwwxjj7dRJJIhDyYy31Kv34j2ulpbFZ8EYzQYRorQ8w2SqwrSmCz1tSnp/SP
+         hAed6J7Sl7a0+YurgpBIZdwx2D+YN9G31F/z9rtsvAfPIa7Y3lD2g9RdWI/27ORHr/rv
+         eg4Hg2InGDZfunjFOoVap8zrvvv6r95B71x8eScRs1WUPvYLO/QHVRuy9hsF+rKajHxN
+         LV23VH0XWYUTmpzOWoDtSetQ7oU54+Ei6B1YUkXaOD65ZXtKCtwxJuK8DgP9KzjMjJDd
+         P6trsApQJuG7HS1DBBpOpf8GURa92fWEQZdr0AYYuGRaqjM86yqoho1DgBHZRavytQeg
+         qi7A==
+X-Gm-Message-State: APjAAAUetQLl+ni5DOPmJLEGFeAZZdfAIsjnyB36PEsb2O0quA/fIlin
+        qrtk1hS9lEvHeKeQZxgh8m4oBt9I
+X-Google-Smtp-Source: APXvYqw8DulTBmpti3QAQ0tydsoM2uNCI+7kg/3ozZYoz77gLPeI1f3K9qBE7GmjGvbVlk+U1HXkQw==
+X-Received: by 2002:a05:620a:1fc:: with SMTP id x28mr3577034qkn.324.1571326928646;
+        Thu, 17 Oct 2019 08:42:08 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id q25sm1083370qtr.25.2019.10.17.08.42.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 08:42:07 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 177424DD66; Thu, 17 Oct 2019 12:42:05 -0300 (-03)
+Date:   Thu, 17 Oct 2019 12:42:05 -0300
+To:     Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [BUG] libtraceevent: perf script -g python segfaults
+Message-ID: <20191017154205.GC8974@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: dec02fbe-081e-4b3a-f175-08d753184a02
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Oct 2019 15:40:08.3821
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tUib6QT81t8uCp+UCqpOEuwM1E+7oWO8/PPW3lf3/Xm4BvQ9z/VVy6JQkVpEp6aw
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3484
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0xMC0xNiAwNjowOSwgQml3ZW4gTGkgd3JvdGU6DQo+IFRoaXMgc3VwcG9ydHMgcHJv
-cGVydHkgaWRsZS1zdGF0ZQ0KPiANCj4gU2lnbmVkLW9mZi1ieTogQml3ZW4gTGkgPGJpd2VuLmxp
-QG54cC5jb20+DQo+IC0tLQ0KPiBDaGFuZ2UgaW4gdjM6DQo+IAktIHVwZGF0ZSBzdWJqZWN0IGFu
-ZCBkZXNjcmlwdGlvbg0KPiAJLSBhZGQgYSBoZWxwZXIgZnVuY3Rpb24gcGNhOTU0eF9jYWxjdWxh
-dGVfY2hhbigpDQo+IA0KPiBDaGFuZ2UgaW4gdjI6DQo+IAktIHVwZGF0ZSBzdWJqZWN0IGFuZCBk
-ZXNjcmlwdGlvbg0KPiAJLSBhZGQgcHJvcGVydHkgaWRsZS1zdGF0ZQ0KPiANCj4gIGRyaXZlcnMv
-aTJjL211eGVzL2kyYy1tdXgtcGNhOTU0eC5jIHwgNjQgKysrKysrKysrKysrKysrKysrLS0tLS0t
-LS0tLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAzOSBpbnNlcnRpb25zKCspLCAyNSBkZWxldGlvbnMo
-LSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2kyYy9tdXhlcy9pMmMtbXV4LXBjYTk1NHgu
-YyBiL2RyaXZlcnMvaTJjL211eGVzL2kyYy1tdXgtcGNhOTU0eC5jDQo+IGluZGV4IDkyM2FhM2E1
-YTNkYy4uODc3N2Q0MjkyNjljIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2kyYy9tdXhlcy9pMmMt
-bXV4LXBjYTk1NHguYw0KPiArKysgYi9kcml2ZXJzL2kyYy9tdXhlcy9pMmMtbXV4LXBjYTk1NHgu
-Yw0KPiBAQCAtODYsNyArODYsNyBAQCBzdHJ1Y3QgcGNhOTU0eCB7DQo+ICANCj4gIAl1OCBsYXN0
-X2NoYW47CQkvKiBsYXN0IHJlZ2lzdGVyIHZhbHVlICovDQo+ICAJLyogTVVYX0lETEVfQVNfSVMs
-IE1VWF9JRExFX0RJU0NPTk5FQ1Qgb3IgPj0gMCBmb3IgY2hhbm5lbCAqLw0KPiAtCXM4IGlkbGVf
-c3RhdGU7DQo+ICsJczMyIGlkbGVfc3RhdGU7DQo+ICANCj4gIAlzdHJ1Y3QgaTJjX2NsaWVudCAq
-Y2xpZW50Ow0KPiAgDQo+IEBAIC0yMjksMjIgKzIyOSwyNSBAQCBzdGF0aWMgaW50IHBjYTk1NHhf
-cmVnX3dyaXRlKHN0cnVjdCBpMmNfYWRhcHRlciAqYWRhcCwNCj4gIAkJCQlJMkNfU01CVVNfQllU
-RSwgJmR1bW15KTsNCj4gIH0NCj4gIA0KPiArc3RhdGljIGludCBwY2E5NTR4X2NhbGN1bGF0ZV9j
-aGFuKHN0cnVjdCBwY2E5NTR4ICpkYXRhLCB1MzIgY2hhbikNCg0KU2hvdWxkIHJldHVybiB1OCwg
-YW5kICJjaGFuIiBpcyBub3Qgd2hhdCBpcyBjYWxjdWxhdGVkLiBQZXJoYXBzIG5hbWUNCnRoZSBm
-dW5jdGlvbiBwY2E5NTR4X3JlZ3ZhbD8NCg0KKFllcywgbGFzdF9jaGFuIGlzIGFsc28gY2xlYXJs
-eSBhIGJhZCBuYW1lLCBhbmQgSSBzdXNwZWN0IHlvdSBtYXkgaGF2ZQ0KIGJhc2VkIHRoaXMgbmFt
-ZSBvbiBpdCwgYnV0IGNoYW5naW5nIHRoYXQgaXMgYSBzZXBhcmF0ZSBwYXRjaC4pDQoNCj4gK3sN
-Cj4gKwkvKiB3ZSBtYWtlIHN3aXRjaGVzIGxvb2sgbGlrZSBtdXhlcywgbm90IHN1cmUgaG93IHRv
-IGJlIHNtYXJ0ZXIgKi8NCj4gKwlpZiAoZGF0YS0+Y2hpcC0+bXV4dHlwZSA9PSBwY2E5NTR4X2lz
-bXV4KQ0KPiArCQlyZXR1cm4gY2hhbiB8IGRhdGEtPmNoaXAtPmVuYWJsZTsNCj4gKwllbHNlDQo+
-ICsJCXJldHVybiAxIDw8IGNoYW47DQo+ICt9DQo+ICsNCj4gIHN0YXRpYyBpbnQgcGNhOTU0eF9z
-ZWxlY3RfY2hhbihzdHJ1Y3QgaTJjX211eF9jb3JlICptdXhjLCB1MzIgY2hhbikNCj4gIHsNCj4g
-IAlzdHJ1Y3QgcGNhOTU0eCAqZGF0YSA9IGkyY19tdXhfcHJpdihtdXhjKTsNCj4gIAlzdHJ1Y3Qg
-aTJjX2NsaWVudCAqY2xpZW50ID0gZGF0YS0+Y2xpZW50Ow0KPiAtCWNvbnN0IHN0cnVjdCBjaGlw
-X2Rlc2MgKmNoaXAgPSBkYXRhLT5jaGlwOw0KPiAgCXU4IHJlZ3ZhbDsNCj4gIAlpbnQgcmV0ID0g
-MDsNCj4gIA0KPiAtCS8qIHdlIG1ha2Ugc3dpdGNoZXMgbG9vayBsaWtlIG11eGVzLCBub3Qgc3Vy
-ZSBob3cgdG8gYmUgc21hcnRlciAqLw0KPiAtCWlmIChjaGlwLT5tdXh0eXBlID09IHBjYTk1NHhf
-aXNtdXgpDQo+IC0JCXJlZ3ZhbCA9IGNoYW4gfCBjaGlwLT5lbmFibGU7DQo+IC0JZWxzZQ0KPiAt
-CQlyZWd2YWwgPSAxIDw8IGNoYW47DQo+IC0NCj4gKwlyZWd2YWwgPSBwY2E5NTR4X2NhbGN1bGF0
-ZV9jaGFuKGRhdGEsIGNoYW4pOw0KDQpJIHRoaW5rIEkgd291bGQgaGF2ZSBrZXB0IHRoZSBlbXB0
-eSBsaW5lIGhlcmUuIE5vdCBpbXBvcnRhbnQuLi4NCg0KPiAgCS8qIE9ubHkgc2VsZWN0IHRoZSBj
-aGFubmVsIGlmIGl0cyBkaWZmZXJlbnQgZnJvbSB0aGUgbGFzdCBjaGFubmVsICovDQo+IC0JaWYg
-KGRhdGEtPmxhc3RfY2hhbiAhPSByZWd2YWwpIHsNCj4gKwlpZiAoKGRhdGEtPmxhc3RfY2hhbiAm
-IDB4ZmYpICE9IHJlZ3ZhbCkgew0KDQpUaGUgY2hhbmdlcyBvbiB0aGlzIGxpbmUgYXJlIG5vdCBu
-ZWVkZWQgKGxhc3RfY2hhbiBhbmQgcmVndmFsIGFyZQ0KYm90aCB1OCkgYW5kIGp1c3QgY2x1dHRl
-cnMgdXAgdGhlIGNvZGUuDQoNCj4gIAkJcmV0ID0gcGNhOTU0eF9yZWdfd3JpdGUobXV4Yy0+cGFy
-ZW50LCBjbGllbnQsIHJlZ3ZhbCk7DQo+ICAJCWRhdGEtPmxhc3RfY2hhbiA9IHJldCA8IDAgPyAw
-IDogcmVndmFsOw0KPiAgCX0NCj4gQEAgLTI1Niw3ICsyNTksNyBAQCBzdGF0aWMgaW50IHBjYTk1
-NHhfZGVzZWxlY3RfbXV4KHN0cnVjdCBpMmNfbXV4X2NvcmUgKm11eGMsIHUzMiBjaGFuKQ0KPiAg
-ew0KPiAgCXN0cnVjdCBwY2E5NTR4ICpkYXRhID0gaTJjX211eF9wcml2KG11eGMpOw0KPiAgCXN0
-cnVjdCBpMmNfY2xpZW50ICpjbGllbnQgPSBkYXRhLT5jbGllbnQ7DQo+IC0JczggaWRsZV9zdGF0
-ZTsNCj4gKwlzMzIgaWRsZV9zdGF0ZTsNCj4gIA0KPiAgCWlkbGVfc3RhdGUgPSBSRUFEX09OQ0Uo
-ZGF0YS0+aWRsZV9zdGF0ZSk7DQo+ICAJaWYgKGlkbGVfc3RhdGUgPj0gMCkNCj4gQEAgLTQwMiw2
-ICs0MDUsMjMgQEAgc3RhdGljIHZvaWQgcGNhOTU0eF9jbGVhbnVwKHN0cnVjdCBpMmNfbXV4X2Nv
-cmUgKm11eGMpDQo+ICAJaTJjX211eF9kZWxfYWRhcHRlcnMobXV4Yyk7DQo+ICB9DQo+ICANCj4g
-K3N0YXRpYyBpbnQgcGNhOTU0eF9pbml0KHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsIHN0cnVj
-dCBwY2E5NTR4ICpkYXRhKQ0KPiArew0KPiArCS8qDQo+ICsJICogV3JpdGUgdGhlIG11eCByZWdp
-c3RlciBhdCBhZGRyIHRvIHZlcmlmeQ0KPiArCSAqIHRoYXQgdGhlIG11eCBpcyBpbiBmYWN0IHBy
-ZXNlbnQuIFRoaXMgYWxzbw0KPiArCSAqIGluaXRpYWxpemVzIHRoZSBtdXggdG8gYSBjaGFubmVs
-DQo+ICsJICogb3IgZGlzY29ubmVjdGVkIHN0YXRlLg0KPiArCSAqLw0KDQpBZ2FpbiwgdGhpcyBj
-b21tZW50IGJlbG9uZ3MgaW4gcGNhOTU0eF9wcm9iZSBiZWZvcmUgdGhlIGNhbGwgdG8gdGhpcyBm
-dW5jdGlvbi4NCkl0IGRvZXMgbm90IGFwcGx5IChhdCBsZWFzdCBub3QgdGhlIGZpcnN0IHNlbnRl
-bmNlKSB3aGVuIHBjYTk1NHhfaW5pdCBpcyBjYWxsZWQNCmZyb20gcGNhOTU0eF9yZXN1bWUuDQoN
-CkhtbW0sIGl0IGNvdWxkIGJlIGFyZ3VlZCB0aGF0IHNwZWNpZnlpbmcgTVVYX0lETEVfQVNfSVMg
-c2hvdWxkIG5vdCB0cmlnZ2VyIGENCmRpc2Nvbm5lY3Qgb24gaW5pdCAoc2luY2UgdGhlIG11eCBp
-cyBhbHdheXMgaWRsZSBhdCBpbml0KSBhbmQgdGhhdCBzb21lIG90aGVyDQptZXRob2Qgc2hvdWxk
-IGJlIHVzZWQgdG8gZGV0ZXJtaW5lIGlmIHRoZSBjaGlwIGlzIHByZXNlbnQuIFRoZSBkaWZmZXJl
-bmNlIGlzDQp0aGF0IHdpdGggdGhlIGlkbGUtc3RhdGUgcHJvcGVydHkgeW91IGNhbiBleHBsaWNp
-dGx5IHJlcXVlc3QgTVVYX0lETEVfQVNfSVMsDQp3aGlsZSB0aGUgb2xkIGNvZGUgb25seSBoYWQg
-c29tZSBkZWZhdWx0IGJlaGF2aW9yIGlmIGkyYy1tdXgtaWRsZS1kaXNjb25uZWN0DQp3YXMgbm90
-IHByZXNlbnQuDQoNClRoZSBlYXN5IHdheSBvdXQgb2YgdGhpcyBpcyB0bywgaW4gdGhlIGJpbmRp
-bmcsIGRvY3VtZW50IHRoZSBzaXR1YXRpb24gYW5kDQpzYXkgdGhhdCAiaWRsZS1zdGF0ZSA9IDxN
-VVhfSURMRV9BU19JUz47IiBpcyBub3Qgc3VwcG9ydGVkIGJ1dCB0aGF0IHNpbWlsYXINCmZ1bmN0
-aW9uYWxpdHkgY2FuIGJlIG9idGFpbmVkIGJ5IGxlYXZpbmcgb3V0IGJvdGggdGhlIGkyYy1tdXgt
-aWRsZS1kaXNjb25uZWN0DQphbmQgaWRsZS1zdGF0ZSBwcm9wZXJ0aWVzLg0KDQo+ICsJaWYgKGRh
-dGEtPmlkbGVfc3RhdGUgPj0gMCkgew0KPiArCQlkYXRhLT5sYXN0X2NoYW4gPSBwY2E5NTR4X2Nh
-bGN1bGF0ZV9jaGFuKGRhdGEsIGRhdGEtPmlkbGVfc3RhdGUpOw0KPiArCX0gZWxzZSB7DQo+ICsJ
-CS8qIERpc2Nvbm5lY3QgbXVsdGlwbGV4ZXIgKi8NCj4gKwkJZGF0YS0+bGFzdF9jaGFuID0gMDsN
-Cj4gKwl9DQo+ICsJcmV0dXJuIGkyY19zbWJ1c193cml0ZV9ieXRlKGNsaWVudCwgZGF0YS0+bGFz
-dF9jaGFuKTsNCj4gK30NCj4gKw0KPiAgLyoNCj4gICAqIEkyQyBpbml0L3Byb2JpbmcvZXhpdCBm
-dW5jdGlvbnMNCj4gICAqLw0KPiBAQCAtNDExLDcgKzQzMSw2IEBAIHN0YXRpYyBpbnQgcGNhOTU0
-eF9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LA0KPiAgCXN0cnVjdCBpMmNfYWRhcHRl
-ciAqYWRhcCA9IGNsaWVudC0+YWRhcHRlcjsNCj4gIAlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmY2xp
-ZW50LT5kZXY7DQo+ICAJc3RydWN0IGRldmljZV9ub2RlICpucCA9IGRldi0+b2Zfbm9kZTsNCj4g
-LQlib29sIGlkbGVfZGlzY29ubmVjdF9kdDsNCj4gIAlzdHJ1Y3QgZ3Bpb19kZXNjICpncGlvOw0K
-PiAgCXN0cnVjdCBpMmNfbXV4X2NvcmUgKm11eGM7DQo+ICAJc3RydWN0IHBjYTk1NHggKmRhdGE7
-DQo+IEBAIC00NjIsMjIgKzQ4MSwxOCBAQCBzdGF0aWMgaW50IHBjYTk1NHhfcHJvYmUoc3RydWN0
-IGkyY19jbGllbnQgKmNsaWVudCwNCj4gIAkJfQ0KPiAgCX0NCj4gIA0KPiAtCS8qIFdyaXRlIHRo
-ZSBtdXggcmVnaXN0ZXIgYXQgYWRkciB0byB2ZXJpZnkNCj4gLQkgKiB0aGF0IHRoZSBtdXggaXMg
-aW4gZmFjdCBwcmVzZW50LiBUaGlzIGFsc28NCj4gLQkgKiBpbml0aWFsaXplcyB0aGUgbXV4IHRv
-IGRpc2Nvbm5lY3RlZCBzdGF0ZS4NCj4gLQkgKi8NCj4gLQlpZiAoaTJjX3NtYnVzX3dyaXRlX2J5
-dGUoY2xpZW50LCAwKSA8IDApIHsNCj4gKwlkYXRhLT5pZGxlX3N0YXRlID0gTVVYX0lETEVfQVNf
-SVM7DQo+ICsJaWYgKG5wICYmIG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5wLCAiaWRsZS1zdGF0ZSIs
-ICZkYXRhLT5pZGxlX3N0YXRlKSkgew0KPiArCQlpZiAobnAgJiYgb2ZfcHJvcGVydHlfcmVhZF9i
-b29sKG5wLCAiaTJjLW11eC1pZGxlLWRpc2Nvbm5lY3QiKSkNCg0KWW91IGRvIG5vdCBuZWVkIHRv
-IGRvIHRoZSAibnAgJiYiIHBhcnQgZm9yIGJvdGggaWZzLCBzaW5jZSBpdCdzIGFscmVhZHkga25v
-dw0KdGhhdCBucCBpcyBub24tTlVMTCB3aGVuIHlvdSBoaXQgdGhlIHNlY29uZCBpZi4gQnV0LCBp
-dCdzIGEgTk9QIGluIHRoZQ0KZmlyc3QgaWYsIHNpbmNlIG9mX3Byb3BlcnR5X3JlYWRfdTMyIHJl
-dHVybnMgLUVJTlZBTCBpZiBpdCBpcy4gU28sIEkgc3VnZ2VzdA0KDQoJaWYgKG9mX3Byb3BlcnR5
-X3JlYWRfdTMyKG5wLCAiaWRsZS1zdGF0ZSIsICZkYXRhLT5pZGxlX3N0YXRlKSkgew0KCQlpZiAo
-bnAgJiYgb2ZfcHJvcGVydHlfcmVhZF9ib29sKG5wLCAiaTJjLW11eC1pZGxlLWRpc2Nvbm5lY3Qi
-KSkNCg0KQ2hlZXJzLA0KUGV0ZXINCg0KPiArCQkJZGF0YS0+aWRsZV9zdGF0ZSA9IE1VWF9JRExF
-X0RJU0NPTk5FQ1Q7DQo+ICsJfQ0KPiArDQo+ICsJcmV0ID0gcGNhOTU0eF9pbml0KGNsaWVudCwg
-ZGF0YSk7DQo+ICsJaWYgKHJldCA8IDApIHsNCj4gIAkJZGV2X3dhcm4oZGV2LCAicHJvYmUgZmFp
-bGVkXG4iKTsNCj4gIAkJcmV0dXJuIC1FTk9ERVY7DQo+ICAJfQ0KPiAgDQo+IC0JZGF0YS0+bGFz
-dF9jaGFuID0gMDsJCSAgIC8qIGZvcmNlIHRoZSBmaXJzdCBzZWxlY3Rpb24gKi8NCj4gLQlkYXRh
-LT5pZGxlX3N0YXRlID0gTVVYX0lETEVfQVNfSVM7DQo+IC0NCj4gLQlpZGxlX2Rpc2Nvbm5lY3Rf
-ZHQgPSBucCAmJg0KPiAtCQlvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wobnAsICJpMmMtbXV4LWlkbGUt
-ZGlzY29ubmVjdCIpOw0KPiAtCWlmIChpZGxlX2Rpc2Nvbm5lY3RfZHQpDQo+IC0JCWRhdGEtPmlk
-bGVfc3RhdGUgPSBNVVhfSURMRV9ESVNDT05ORUNUOw0KPiAgDQo+ICAJcmV0ID0gcGNhOTU0eF9p
-cnFfc2V0dXAobXV4Yyk7DQo+ICAJaWYgKHJldCkNCj4gQEAgLTUzMSw4ICs1NDYsNyBAQCBzdGF0
-aWMgaW50IHBjYTk1NHhfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gIAlzdHJ1Y3QgaTJj
-X211eF9jb3JlICptdXhjID0gaTJjX2dldF9jbGllbnRkYXRhKGNsaWVudCk7DQo+ICAJc3RydWN0
-IHBjYTk1NHggKmRhdGEgPSBpMmNfbXV4X3ByaXYobXV4Yyk7DQo+ICANCj4gLQlkYXRhLT5sYXN0
-X2NoYW4gPSAwOw0KPiAtCXJldHVybiBpMmNfc21idXNfd3JpdGVfYnl0ZShjbGllbnQsIDApOw0K
-PiArCXJldHVybiBwY2E5NTR4X2luaXQoY2xpZW50LCBkYXRhKTsNCj4gIH0NCj4gICNlbmRpZg0K
-PiAgDQo+IA0KDQo=
+I'll try and continue later, but if you guys can take a look...
+
+The first call in that loop:
+
+  while ((event = trace_find_next_event(pevent, event)))
+
+works and the event is valid, one of the sched: tracepoints, but then
+the next call returns this:
+
+struct tep_event *trace_find_next_event(struct tep_handle *pevent,
+                                        struct tep_event *event)
+{
+        static int idx;
+        int events_count;
+        struct tep_event *all_events;
+
+        all_events = tep_get_first_event(pevent);
+        events_count = tep_get_events_count(pevent);
+        if (!pevent || !all_events || events_count < 1)
+                return NULL;
+
+        if (!event) {
+                idx = 0;
+                return all_events;
+        }
+
+        if (idx < events_count && event == (all_events + idx)) {
+                idx++;
+                if (idx == events_count)
+                        return NULL;
+                return (all_events + idx);
+        }
+
+        for (idx = 1; idx < events_count; idx++) {
+                if (event == (all_events + (idx - 1)))
+                        return (all_events + idx);
+        }
+        return NULL;
+}
+
+Oh, static int idx, oops, anyway, the all_events + idx returned for the
+second call to trace_find_next_event() fails, in a hurry now, will get
+back to this later.
+
+- Arnaldo
+
+
+[root@quaco ~]# perf record -e sched:* sleep 1
+[ perf record: Woken up 33 times to write data ]
+[ perf record: Captured and wrote 0.030 MB perf.data (8 samples) ]
+[root@quaco ~]# perf script -g python
+Segmentation fault (core dumped)
+[root@quaco ~]#
+
+Bisected to:
+
+[acme@quaco perf]$ git bisect bad
+bb3dd7e7c4d5e024d607c0ec06c2a2fb9408cc99 is the first bad commit
+commit bb3dd7e7c4d5e024d607c0ec06c2a2fb9408cc99
+Author: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Date:   Fri Oct 5 12:22:25 2018 -0400
+
+    tools lib traceevent, perf tools: Move struct tep_handler definition in a local header file
+    
+    As traceevent is going to be transferred into a proper library,
+    its local data should be protected from the library users.
+    This patch encapsulates struct tep_handler into a local header,
+    not visible outside of the library. It implements also a bunch
+    of new APIs, which library users can use to access tep_handler members.
+    
+    Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+    Cc: Jiri Olsa <jolsa@redhat.com>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Cc: linux trace devel <linux-trace-devel@vger.kernel.org>
+    Cc: tzvetomir stoyanov <tstoyanov@vmware.com>
+    Link: http://lkml.kernel.org/r/20181005122225.522155df@gandalf.local.home
+    Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+:040000 040000 7a23aa486fd8ed255b681e6c959d6ab64d16f2f6 d95f601bb03b81bc04070b69635df40b62c70a1a M	tools
+[acme@quaco perf]$
+
+[root@quaco ~]# gdb perf
+GNU gdb (GDB) Fedora 8.3-6.fc30
+Reading symbols from perf...
+(gdb) run script -g python
+Starting program: /root/bin/perf script -g python
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib64/libthread_db.so.1".
+[Detaching after fork from child process 10352]
+
+Program received signal SIGSEGV, Segmentation fault.
+0x00007ffff76f55e5 in __strlen_avx2 () from /lib64/libc.so.6
+Missing separate debuginfos, use: dnf debuginfo-install bzip2-libs-1.0.6-29.fc30.x86_64 elfutils-libelf-0.177-1.fc30.x86_64 elfutils-libs-0.177-1.fc30.x86_64 glib2-2.60.7-1.fc30.x86_64 libbabeltrace-1.5.6-2.fc30.x86_64 libcap-2.26-5.fc30.x86_64 libgcc-9.2.1-1.fc30.x86_64 libunwind-1.3.1-2.fc30.x86_64 libuuid-2.33.2-2.fc30.x86_64 libxcrypt-4.4.10-1.fc30.x86_64 libzstd-1.4.2-1.fc30.x86_64 numactl-libs-2.0.12-2.fc30.x86_64 pcre-8.43-2.fc30.x86_64 perl-libs-5.28.2-440.fc30.x86_64 popt-1.16-17.fc30.x86_64 slang-2.3.2-5.fc30.x86_64 xz-libs-5.2.4-5.fc30.x86_64 zlib-1.2.11-18.fc30.x86_64
+(gdb) bt
+#0  0x00007ffff76f55e5 in __strlen_avx2 () from /lib64/libc.so.6
+#1  0x00007ffff7601a1e in __vfprintf_internal () from /lib64/libc.so.6
+#2  0x00007ffff75ec2ba in fprintf () from /lib64/libc.so.6
+#3  0x00000000005ec8db in python_generate_script (pevent=0xbedb10, outfile=0x71f761 "perf-script") at util/scripting-engines/trace-event-python.c:1739
+#4  0x000000000046e94a in cmd_script (argc=0, argv=0x7fffffffd680) at builtin-script.c:3848
+#5  0x00000000004e0d86 in run_builtin (p=0xa3d238 <commands+408>, argc=3, argv=0x7fffffffd680) at perf.c:312
+#6  0x00000000004e0ff3 in handle_internal_command (argc=3, argv=0x7fffffffd680) at perf.c:364
+#7  0x00000000004e113a in run_argv (argcp=0x7fffffffd4dc, argv=0x7fffffffd4d0) at perf.c:408
+#8  0x00000000004e1506 in main (argc=3, argv=0x7fffffffd680) at perf.c:538
+(gdb) fr 3
+#3  0x00000000005ec8db in python_generate_script (pevent=0xbedb10, outfile=0x71f761 "perf-script") at util/scripting-engines/trace-event-python.c:1739
+1739			fprintf(ofp, "def %s__%s(", event->system, event->name);
+(gdb) p event
+$1 = (struct tep_event *) 0xbfa298
+(gdb) p *event
+$2 = {tep = 0x31, name = 0x61775f6465686373 <error: Cannot access memory at address 0x61775f6465686373>, id = 1767859563, flags = 1600482404, format = {nr_common = 1752459639, nr_fields = 1601467759, common_fields = 0x6e6f6d6d00697069,
+    fields = 0x93b7367616c665f}, print_fmt = {format = 0x21 <error: Cannot access memory at address 0x21>, args = 0x64656e6769736e75}, system = 0x74726f687320 <error: Cannot access memory at address 0x74726f687320>,
+  handler = 0x656966090a3b303a, context = 0x51}
+(gdb) list -20
+1714		fprintf(ofp, "# in the format files.  Those fields not available as "
+1715			"handler params can\n");
+1716
+1717		fprintf(ofp, "# be retrieved using Python functions of the form "
+1718			"common_*(context).\n");
+1719
+1720		fprintf(ofp, "# See the perf-script-python Documentation for the list "
+1721			"of available functions.\n\n");
+1722
+1723		fprintf(ofp, "from __future__ import print_function\n\n");
+(gdb)
+1724		fprintf(ofp, "import os\n");
+1725		fprintf(ofp, "import sys\n\n");
+1726
+1727		fprintf(ofp, "sys.path.append(os.environ['PERF_EXEC_PATH'] + \\\n");
+1728		fprintf(ofp, "\t'/scripts/python/Perf-Trace-Util/lib/Perf/Trace')\n");
+1729		fprintf(ofp, "\nfrom perf_trace_context import *\n");
+1730		fprintf(ofp, "from Core import *\n\n\n");
+1731
+1732		fprintf(ofp, "def trace_begin():\n");
+1733		fprintf(ofp, "\tprint(\"in trace_begin\")\n\n");
+(gdb)
+1734
+1735		fprintf(ofp, "def trace_end():\n");
+1736		fprintf(ofp, "\tprint(\"in trace_end\")\n\n");
+1737
+1738		while ((event = trace_find_next_event(pevent, event))) {
+1739			fprintf(ofp, "def %s__%s(", event->system, event->name);
+1740			fprintf(ofp, "event_name, ");
+1741			fprintf(ofp, "context, ");
+1742			fprintf(ofp, "common_cpu,\n");
+1743			fprintf(ofp, "\tcommon_secs, ");
+
+
+- Arnaldo
