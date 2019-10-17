@@ -2,97 +2,92 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4363ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB57FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C6F321848
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DF0620640
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:05:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389475AbfJQNCk (ORCPT
+        id S2394102AbfJQNFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 09:02:40 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33914 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728923AbfJQNCk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 09:02:40 -0400
-Received: by mail-qk1-f196.google.com with SMTP id f18so1151407qkm.1
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 06:02:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Tc37Pb9q6dE/zT3Ycpn//EMDbegOyEk2q1pX9+DJhEk=;
-        b=SESw4Tfv8Mfu0s1PL5CqgougsyQEsacsXelf0dSE/DncaQFPJXBxY5YhRXSsNTBNJM
-         wL8SMcZSWDu0+bvtpmgKz+9dDu48sPTXaDVonTJxx8FeiUK3rNWBfNPG+UloVz+vJ0IA
-         ArnzrCoe+o3jwHP0TsLntYJJ6Ise6Rxph+rVBeuSk1yenyZPzHlGxc2zCIlhawQJvzDI
-         9yCMWmHn8fqGYC0Dw4cBKkgZBpOgS3IhuO1HNvdZ17V6ALhjZYw7Nvb7+dx33UgTIZbZ
-         1deumTYnriD8rV7uNt4a4U4LP18YUeVKD0xc3Z6ovOb489iHExbM7mMA9fAfa+pFkTly
-         vRtQ==
-X-Gm-Message-State: APjAAAWavVe+khO7j9sWZNG4xMEbbCb0Z+zR42nCjmq1sn90UOEPGaGT
-        G2z9qe+NPE6JvDNlIhN0aw55yCzZWC2HIvA19ygpzFn6
-X-Google-Smtp-Source: APXvYqxpviHKOBocuedDoRJVvpksKm61tNm1y7WWnjqU07w4dzxJBEu7vqLfmAn3UiT+CILsxUWbdd1MVQU89/WZ/HI=
-X-Received: by 2002:a37:9442:: with SMTP id w63mr3106804qkd.138.1571317358971;
- Thu, 17 Oct 2019 06:02:38 -0700 (PDT)
+        Thu, 17 Oct 2019 09:05:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50738 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726898AbfJQNFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 09:05:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CD714AFC1;
+        Thu, 17 Oct 2019 13:05:51 +0000 (UTC)
+Date:   Thu, 17 Oct 2019 15:05:50 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Whitcroft <apw@canonical.com>,
+        "DavidS. Miller" <davem@davemloft.net>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        AlexeiStarovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        GregKroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        ArnaldoCarvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/32] Kill pr_warning in the whole linux code
+Message-ID: <20191017130550.nwswlnwdroyjwwun@pathway.suse.cz>
+References: <20190920062544.180997-1-wangkefeng.wang@huawei.com>
+ <20191002085554.ddvx6yx6nx7tdeey@pathway.suse.cz>
+ <f613df39-6903-123b-a0f1-d1b783a755ce@huawei.com>
 MIME-Version: 1.0
-References: <20191014061617.10296-1-daniel@0x0f.com> <20191014061617.10296-2-daniel@0x0f.com>
- <CAK8P3a2U7U31eF_POU2=eCU+E1DH-wnR2uHr-VZYWLy25hLjKg@mail.gmail.com> <20191016203219.GA5191@shiro>
-In-Reply-To: <20191016203219.GA5191@shiro>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 17 Oct 2019 15:02:22 +0200
-Message-ID: <CAK8P3a2Tqpwg6=3N2DhcDj9JMo6jt0sY+sYmnNmzZ5Rcao=iMA@mail.gmail.com>
-Subject: Re: [PATCH 2/4] ARM: mstar: Add machine for MStar infinity family SoCs
-To:     Daniel Palmer <daniel@0x0f.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f613df39-6903-123b-a0f1-d1b783a755ce@huawei.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 10:32 PM Daniel Palmer <daniel@0x0f.com> wrote:
->
-> > > +
-> > > +static void __init infinity_map_io(void)
-> > > +{
-> > > +       iotable_init(infinity_io_desc, ARRAY_SIZE(infinity_io_desc));
-> > > +       miu_flush = (void __iomem *)(infinity_io_desc[0].virtual
-> > > +                       + INFINITY_L3BRIDGE_FLUSH);
-> > > +       miu_status = (void __iomem *)(infinity_io_desc[0].virtual
-> > > +                       + INFINITY_L3BRIDGE_STATUS);
-> > > +}
-> >
-> > If you do this a little later in .init_machine, you can use a simple ioremap()
-> > rather than picking a hardcoded physical address. It looks like nothing
-> > uses the mapping before you set soc_mb anyway.
->
-> I've moved this into infinity_barriers_init() using ioremap() as suggested.
-> I'd like to keep the fixed remap address for now as there are some
-> drivers in the vendor code that might be useful until rewrites are done but
-> are littered with hard coded addresses.
+On Tue 2019-10-08 14:39:32, Kefeng Wang wrote:
+> Hi all,
+> 
+> On 2019/10/2 16:55, Petr Mladek wrote:
+> > Linus,
+> > 
+> > On Fri 2019-09-20 14:25:12, Kefeng Wang wrote:
+> >> There are pr_warning and pr_warng to show WARNING level message,
+> >> most of the code using pr_warn, number based on next-20190919,
+> >>
+> >> pr_warn: 5189   pr_warning: 546 (tools: 398, others: 148)
+> > 
+> > The ratio is 10:1 in favor of pr_warn(). It would make sense
+> > to remove the pr_warning().
+> > 
+> > Would you accept pull request with these 32 simple patches
+> > for rc2, please?
+> > 
+> > Alternative is to run a simple sed. But it is not trivial
+> > to fix indentation of the related lines.
+> 
+> Kindly ping, should I respin patches with comments fixed?
+> Is the patchset acceptable, hope to be clear that what to do next :)
 
-Maybe keep the infinity_io_desc as an out-of-tree patch then? You can
-simply do both, and ioremap() will return the hardcoded address.
+I am going to check how many conflicts appeared in linux-next.
 
-> >    Not sure if it matters in practice, as almost nothing uses fiq any more.
-> >    OTOH, maybe the lock is not needed at all? AFAICT if the sequence
-> >    gets interrupted by a handler that also calls mb(), you would still
-> >    continue in the original thread while observing a full l3 barrier. ;-)
->
-> I've taken the lock out and tested that the ethernet isn't sending garbage
-> and everything looks good.
+If there are only few then I'll take it via printk.git. This way
+we get proper indentation and other changes.
 
-I would not expect a missing spinlock to have an observable effect, the
-question is more whether it's correct in all rare corner cases where
-the barrier is interrupted and the interrupt handler uses another barrier.
+If there are too many conflicts then I'll ask Linus to do a mass
+change using a script.
 
-I think it is, but I would recommend adding a comment to explain this if
-you drop the spinlock. (or a comment about why this works with fiq if you
-keep the lock).
+I am sorry for late reply. I have never pushed such a mass change.
+I hoped that anyone more experienced will provide some opinion ;-)
 
-     Arnd
+Best Regards,
+Petr
