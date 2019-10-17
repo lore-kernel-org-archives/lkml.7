@@ -7,263 +7,208 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E8CFA3733
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB29FA3731
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 846DE20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1906C20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:48:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VC+bz3qt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fwvF2pCK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408363AbfJQIrt (ORCPT
+        id S2408370AbfJQIs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 04:47:49 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:39640 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408296AbfJQIrs (ORCPT
+        Thu, 17 Oct 2019 04:48:27 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:43703 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2393312AbfJQIs1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 04:47:48 -0400
-Received: by mail-ua1-f67.google.com with SMTP id b14so414304uap.6
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 01:47:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=paqFDTtdY3M8Ln3kvS2sgcbv9f/ilylyzRvaduM2VsY=;
-        b=VC+bz3qt6il9V5qrADuSCMdBWfzwaxRUScgGnlDsNHERQWfLKSR2Bxszm+EkQ6jXXD
-         3nx7yN/G8ujuN794/Ej/j2SFHBU5W9H32gRcN3NFh2y5zsrNw1nPIZJf55cVcFnRu0BP
-         TeeukIDKYJF1RYwC+cZmKLhQN+OJz0gzV5MlKgGUtQFDSVX+m5vYHKL3d0NLTmm+uee3
-         gdKDqwBVu9qln9Rx8gaIbwB/tyB01lAaaELk7bklckQW0qidsuZpLO1MQg7uv4DqrYxg
-         AewZ/U+sNxK/GmtPC9Sl4hp77at+xOiCv++zS2LhMdbJJz1FTZ5uhZiJwEzxK7SXdxjC
-         Ci9Q==
+        Thu, 17 Oct 2019 04:48:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571302105;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=P23yKEodgmnfGUw9sfhLwiVnwWH7sPsG4YJ+YL5V5tM=;
+        b=fwvF2pCKOpcVrn3xpwuRJX/NCFTTtSOmzmEOozk+/rsBhZK2Yb2TV9T+36inbKeSkRLyMp
+        hUbC8ycLT7Jb4if8UrOhRR7CAIejb+SnL+jXlKgD4ARA2tJVMhgvFmlpqu4aicSuqwrWXb
+        7zLwABIX18+oR3nKIOMDbcuMqHS7Amc=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-327-YFoeU68VNCuugA5ycGplQQ-1; Thu, 17 Oct 2019 04:48:23 -0400
+Received: by mail-qt1-f199.google.com with SMTP id o34so1580732qtf.22
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 01:48:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=paqFDTtdY3M8Ln3kvS2sgcbv9f/ilylyzRvaduM2VsY=;
-        b=WacCWIyR41EDn3Qout4vI8UuwgH9Yab5hMPY3BkB2NCk8AUnD0mCUfZRA5CDrnB8et
-         2TUoyO2G1ToJf0MSs39yBcpURPLRBhDxycZQ3v8FQheDFK6sI+CPqE89wikvleEgjiIA
-         sRGMM+wqPXZ2LpPHFYYreDWHPZZRVPKFf47gHMusuMt4DPff480d1jrxgDya/ZU7UE3H
-         aQNdBBQyQSnzETd4dgJP9DJueZwUBU2jVozV+MSwVp9SQtGZruMVXZG1P9c8inReY5Ji
-         zFAmnMK56/o+JOIpKs9iVQ49QBteOw/BH3RPv227WRmUHenndcHa5HJxSezOi8bKKd9S
-         uCPQ==
-X-Gm-Message-State: APjAAAWVeBR7DN3b7hrvu23dbDNtRmWAZr3T353jThr/Tq1I9i9Qm3PJ
-        8H4VlBcNTBehq14ht6cCCZ6R6xt0vq3lCvv2UWsK1A==
-X-Google-Smtp-Source: APXvYqxd6dQcGbSpCKxJAN7cuzTjKDPHr8BOJ/ritWtbU7r/7bPdSmety13gO9Mj4sTiUij+G5xrdaUjYdN0Z/Ytw8o=
-X-Received: by 2002:ab0:5a97:: with SMTP id w23mr1633617uae.129.1571302067047;
- Thu, 17 Oct 2019 01:47:47 -0700 (PDT)
+        bh=ITrwUcZNhHdbR5/yJdBac5vGGHSYPWf4FBJkw33BU+U=;
+        b=CZ+a47qm3CxgRF7oPMJjiddjMBGPwUTu/gM97CxxfdfCmCIAfZN9evZiDzdpsOdBuO
+         fgXNR6CFj7QM11b2sNuoGSsoaXuYTtiF+zz+lIaK0jSHecTXAUdmSNeTQ/GSZcqhD4eH
+         i5zYqyOc4yr9Z3YX9oW0OBdLFvKbCguZOfGx9vcncBWJvEmOPJj9By9DSCKkViZhiQjS
+         2vrLSqQ1a4w6RltHy7iBSvkf93I504KZf0B3K+ysNtRcfzS/BBcPcmwPUjG0P7kmmE8n
+         yxdphXIGKwrBipRXENvNUmJne3It7jUoBngzB0hvv5//TRGsRmd+w0Fi6vYpDEToGwEf
+         MLGg==
+X-Gm-Message-State: APjAAAWjBKlnnORcOxvoT2TaYnw6zs+XjZQZ1bcMU5oUotNGfTvLUDJ6
+        OoU2mmV+2+KjAy6bwDPQD/xuTqy3LAqEKfGG4GjnLGu7lEh5xzJR5qZ9VnrYXP4LREZiWYcF9LW
+        kAPhxq/8Yyy0gES8R1pfqkpO50veE+HnwgN8fA9yi
+X-Received: by 2002:ac8:38bb:: with SMTP id f56mr2664260qtc.154.1571302101140;
+        Thu, 17 Oct 2019 01:48:21 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqw6KHex7FZUFA1EICrnIh9zS+/BKcB7zS+GZg/tObmOEO5bLx2+4/yRRVT89C+jjp59lTtx3kazw3v1B4kfIfg=
+X-Received: by 2002:ac8:38bb:: with SMTP id f56mr2664246qtc.154.1571302100911;
+ Thu, 17 Oct 2019 01:48:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <1571254641-13626-1-git-send-email-thara.gopinath@linaro.org> <1571254641-13626-5-git-send-email-thara.gopinath@linaro.org>
-In-Reply-To: <1571254641-13626-5-git-send-email-thara.gopinath@linaro.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 17 Oct 2019 10:47:11 +0200
-Message-ID: <CAPDyKFoOpxWWhbr0ZSmuKEoqx=qoZ2ksLO9QodyhWU35tPVX6w@mail.gmail.com>
-Subject: Re: [PATCH v3 4/7] thermal: Add generic power domain warming device driver.
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     Eduardo Valentin <edubezval@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, amit.kucheria@verdurent.com,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <20191016182935.5616-1-andrew.smirnov@gmail.com>
+ <20191016182935.5616-3-andrew.smirnov@gmail.com> <CAO-hwJ++YWtX29YefGzaEfCLDA=npZwUxDCkDzxALAmLLqv7FQ@mail.gmail.com>
+ <CAHQ1cqHcm2z4dTJ-3kx-_e3_1mpz9x_AQ+GP_j-nqL=3Gm-AtQ@mail.gmail.com>
+In-Reply-To: <CAHQ1cqHcm2z4dTJ-3kx-_e3_1mpz9x_AQ+GP_j-nqL=3Gm-AtQ@mail.gmail.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Thu, 17 Oct 2019 10:48:09 +0200
+Message-ID: <CAO-hwJJ8EJOtYYrsvh=bZKmMisRUADO-w6G7QRSGXe_-cdobUw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] HID: logitech-hidpp: rework device validation
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Sam Bazely <sambazley@fastmail.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+        Austin Palmer <austinp@valvesoftware.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "3.8+" <stable@vger.kernel.org>
+X-MC-Unique: YFoeU68VNCuugA5ycGplQQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 16 Oct 2019 at 21:37, Thara Gopinath <thara.gopinath@linaro.org> wrote:
+On Wed, Oct 16, 2019 at 9:38 PM Andrey Smirnov <andrew.smirnov@gmail.com> w=
+rote:
 >
-> Resources modeled as power domains in linux kenrel
-> can  be used to warm the SoC(eg. mx power domain on sdm845).
-> To support this feature, introduce a generic power domain
-> warming device driver that can be plugged into the thermal framework
-> (The thermal framework itself requires further modifiction to
-> support a warming device in place of a cooling device.
-> Those extensions are not introduced in this patch series).
+> On Wed, Oct 16, 2019 at 12:24 PM Benjamin Tissoires
+> <benjamin.tissoires@redhat.com> wrote:
+> >
+> > Hi Andrey,
+> >
+> > On Wed, Oct 16, 2019 at 8:30 PM Andrey Smirnov <andrew.smirnov@gmail.co=
+m> wrote:
+> > >
+> > > G920 device only advertises REPORT_ID_HIDPP_LONG and
+> > > REPORT_ID_HIDPP_VERY_LONG in its HID report descriptor, so querying
+> > > for REPORT_ID_HIDPP_SHORT with optional=3Dfalse will always fail and
+> > > prevent G920 to be recognized as a valid HID++ device.
+> > >
+> > > To fix this and improve some other aspects, modify
+> > > hidpp_validate_device() as follows:
+> > >
+> > >   - Inline the code of hidpp_validate_report() to simplify
+> > >     distingushing between non-present and invalid report descriptors
+> > >
+> > >   - Drop the check for id >=3D HID_MAX_IDS || id < 0 since all of our
+> > >     IDs are static and known to satisfy that at compile time
+> > >
+> > >   - Change the algorithms to check all possible report
+> > >     types (including very long report) and deem the device as a valid
+> > >     HID++ device if it supports at least one
+> > >
+> > >   - Treat invalid report length as a hard stop for the validation
+> > >     algorithm, meaning that if any of the supported reports has
+> > >     invalid length we assume the worst and treat the device as a
+> > >     generic HID device.
+> > >
+> > >   - Fold initialization of hidpp->very_long_report_length into
+> > >     hidpp_validate_device() since it already fetches very long report
+> > >     length and validates its value
+> > >
+> > > Fixes: fe3ee1ec007b ("HID: logitech-hidpp: allow non HID++ devices to=
+ be handled by this module")
+> > > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D204191
+> > > Reported-by: Sam Bazely <sambazley@fastmail.com>
+> > > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > > Cc: Jiri Kosina <jikos@kernel.org>
+> > > Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> > > Cc: Henrik Rydberg <rydberg@bitmath.org>
+> > > Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
+> > > Cc: Austin Palmer <austinp@valvesoftware.com>
+> > > Cc: linux-input@vger.kernel.org
+> > > Cc: linux-kernel@vger.kernel.org
+> > > Cc: stable@vger.kernel.org # 5.2+
+> > > ---
+> > >  drivers/hid/hid-logitech-hidpp.c | 54 ++++++++++++++++++------------=
+--
+> > >  1 file changed, 30 insertions(+), 24 deletions(-)
+> > >
+> > > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logit=
+ech-hidpp.c
+> > > index 85911586b3b6..8c4be991f387 100644
+> > > --- a/drivers/hid/hid-logitech-hidpp.c
+> > > +++ b/drivers/hid/hid-logitech-hidpp.c
+> > > @@ -3498,34 +3498,45 @@ static int hidpp_get_report_length(struct hid=
+_device *hdev, int id)
+> > >         return report->field[0]->report_count + 1;
+> > >  }
+> > >
+> > > -static bool hidpp_validate_report(struct hid_device *hdev, int id,
+> > > -                                 int expected_length, bool optional)
+> > > +static bool hidpp_validate_device(struct hid_device *hdev)
+> > >  {
+> > > -       int report_length;
+> > > +       struct hidpp_device *hidpp =3D hid_get_drvdata(hdev);
+> > > +       int id, report_length, supported_reports =3D 0;
+> > > +
+> > > +       id =3D REPORT_ID_HIDPP_SHORT;
+> > > +       report_length =3D hidpp_get_report_length(hdev, id);
+> > > +       if (report_length) {
+> > > +               if (report_length < HIDPP_REPORT_SHORT_LENGTH)
+> > > +                       goto bad_device;
+> > >
+> > > -       if (id >=3D HID_MAX_IDS || id < 0) {
+> > > -               hid_err(hdev, "invalid HID report id %u\n", id);
+> > > -               return false;
+> > > +               supported_reports++;
+> > >         }
+> > >
+> > > +       id =3D REPORT_ID_HIDPP_LONG;
+> > >         report_length =3D hidpp_get_report_length(hdev, id);
+> > > -       if (!report_length)
+> > > -               return optional;
+> > > +       if (report_length) {
+> > > +               if (report_length < HIDPP_REPORT_LONG_LENGTH)
+> > > +                       goto bad_device;
+> > >
+> > > -       if (report_length < expected_length) {
+> > > -               hid_warn(hdev, "not enough values in hidpp report %d\=
+n", id);
+> > > -               return false;
+> > > +               supported_reports++;
+> > >         }
+> > >
+> > > -       return true;
+> > > -}
+> > > +       id =3D REPORT_ID_HIDPP_VERY_LONG;
+> > > +       report_length =3D hidpp_get_report_length(hdev, id);
+> > > +       if (report_length) {
+> > > +               if (report_length > HIDPP_REPORT_LONG_LENGTH &&
+> > > +                   report_length < HIDPP_REPORT_VERY_LONG_MAX_LENGTH=
+)
+> >
+> > Can you double check the conditions here?
+> > It's late, but I think you inverted the tests as we expect the report
+> > length to be between HIDPP_REPORT_LONG_LENGTH and
+> > HIDPP_REPORT_VERY_LONG_MAX_LENGTH inclusive, while here this creates a
+> > bad_device.
 >
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> ---
->  drivers/thermal/Kconfig              |  10 +++
->  drivers/thermal/Makefile             |   2 +
->  drivers/thermal/pwr_domain_warming.c | 136 +++++++++++++++++++++++++++++++++++
->  include/linux/pwr_domain_warming.h   |  31 ++++++++
->  4 files changed, 179 insertions(+)
->  create mode 100644 drivers/thermal/pwr_domain_warming.c
->  create mode 100644 include/linux/pwr_domain_warming.h
+> Hmm, I think you are right. Not sure why I didn't catch it on G920
+> since it support very long reports AFAIR. Will re-spin and double
+> check in v3. Sorry about that.
 >
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 001a21a..0c5c93e 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -187,6 +187,16 @@ config DEVFREQ_THERMAL
->
->           If you want this support, you should say Y here.
->
-> +config PWR_DOMAIN_WARMING_THERMAL
-> +       bool "Power Domain based warming device"
-> +       depends on PM_GENERIC_DOMAINS_OF
-> +       help
-> +         This implements the generic power domain based warming
-> +         mechanism through increasing the performance state of
-> +         a power domain.
-> +
-> +         If you want this support, you should say Y here.
-> +
->  config THERMAL_EMULATION
->         bool "Thermal emulation mode support"
->         help
-> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> index 74a37c7..382c64a 100644
-> --- a/drivers/thermal/Makefile
-> +++ b/drivers/thermal/Makefile
-> @@ -27,6 +27,8 @@ thermal_sys-$(CONFIG_CLOCK_THERMAL)   += clock_cooling.o
->  # devfreq cooling
->  thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
->
-> +thermal_sys-$(CONFIG_PWR_DOMAIN_WARMING_THERMAL)       += pwr_domain_warming.o
-> +
->  # platform thermal drivers
->  obj-y                          += broadcom/
->  obj-$(CONFIG_THERMAL_MMIO)             += thermal_mmio.o
-> diff --git a/drivers/thermal/pwr_domain_warming.c b/drivers/thermal/pwr_domain_warming.c
-> new file mode 100644
-> index 0000000..60fae3e
-> --- /dev/null
-> +++ b/drivers/thermal/pwr_domain_warming.c
-> @@ -0,0 +1,136 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019, Linaro Ltd
-> + */
-> +#include <linux/err.h>
-> +#include <linux/kernel.h>
-> +#include <linux/init.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/module.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/slab.h>
-> +#include <linux/pwr_domain_warming.h>
-> +
-> +struct pd_warming_device {
-> +       struct thermal_cooling_device *cdev;
-> +       struct generic_pm_domain *gpd;
 
-No, this isn't a genpd provider and thus we should not need to carry
-the above pointer in the struct pd_warming_device.
+Oh, the issue is that the very long HID++ reports on the G920 are
+HIDPP_REPORT_VERY_LONG_MAX_LENGTH long, which means the test will fail
+for those.
 
-> +       struct device *dev;
-> +       int max_state;
-> +       int cur_state;
-> +       bool runtime_resumed;
-> +};
-> +
-> +static int pd_wdev_get_max_state(struct thermal_cooling_device *cdev,
-> +                                unsigned long *state)
-> +{
-> +       struct pd_warming_device *pd_wdev = cdev->devdata;
-> +
-> +       *state = pd_wdev->max_state;
-> +       return 0;
-> +}
-> +
-> +static int pd_wdev_get_cur_state(struct thermal_cooling_device *cdev,
-> +                                unsigned long *state)
-> +{
-> +       struct pd_warming_device *pd_wdev = cdev->devdata;
-> +
-> +       *state = dev_pm_genpd_get_performance_state(pd_wdev->dev);
-> +
-> +       return 0;
-> +}
-> +
-> +static int pd_wdev_set_cur_state(struct thermal_cooling_device *cdev,
-> +                                unsigned long state)
-> +{
-> +       struct pd_warming_device *pd_wdev = cdev->devdata;
-> +       struct device *dev = pd_wdev->dev;
-> +       int ret;
-> +
-> +       ret = dev_pm_genpd_set_performance_state(dev, state);
-> +
-> +       if (ret)
-> +               return ret;
-> +
-> +       if (state && !pd_wdev->runtime_resumed) {
-> +               ret = pm_runtime_get_sync(dev);
-> +               pd_wdev->runtime_resumed = true;
-> +       } else if (!state && pd_wdev->runtime_resumed) {
-> +               ret = pm_runtime_put(dev);
-> +               pd_wdev->runtime_resumed = false;
-> +       }
-> +
-> +       return ret;
-> +}
-> +
-> +static int pd_wdev_late_init(struct thermal_cooling_device *cdev)
-> +{
-> +       struct pd_warming_device *pd_wdev = cdev->devdata;
-> +       struct device *dev = &cdev->device;
-> +       int state_count, ret;
-> +
-> +       ret = pm_genpd_add_device(pd_wdev->gpd, dev);
+Cheers,
+Benjamin
 
-The pm_genpd_add_device() is a legacy interface and we are striving to
-remove it. I think there are two better options for you to use to deal
-with the attach thingy.
-
-1. The easiest one is probably just to convert into using
-of_genpd_add_device() instead. I think you already have the
-information that you need in the ->cdev pointer to do that. However,
-that also means you need to add the ->late_init() callback to the
-struct thermal_cooling_device_ops, like what you do here.
-
-2. Maybe the most correct solution is, rather than attaching
-&cdev->device to the PM domain, to register a separate new device
-(device_register()) and assign it the corresponding OF node as the
-genpd provider's subnode and then attach this one instead. If
-"power-domains" can be specified in the subnode, you can even use
-dev_pm_domain_attach() to attach the device to the PM domain, else
-of_genpd_add_device() should work. In the second step, when
-registering the cooling device, the new device above should be
-assigned as parent to the device that is about to be registered via
-thermal_of_cooling_device_register(). In other words, the
-thermal_of_cooling_device_register() needs to be extended to cope with
-receiving a parent device as an in-parameter, but that should be
-doable I think. In this way, you don't need to add the ->late_init()
-callback at all, but you can instead just use the parent device when
-operating on the PM domain.
-
-> +
-> +       if (ret)
-> +               return ret;
-> +
-> +       state_count = dev_pm_genpd_performance_state_count(dev);
-> +       if (state_count < 0)
-> +               return state_count;
-> +
-> +       pm_runtime_enable(dev);
-> +
-> +       pd_wdev->dev = dev;
-> +       pd_wdev->max_state = state_count - 1;
-> +
-> +       return 0;
-> +}
-> +
-> +static struct thermal_cooling_device_ops pd_warming_device_ops = {
-> +       .late_init      = pd_wdev_late_init,
-> +       .get_max_state  = pd_wdev_get_max_state,
-> +       .get_cur_state  = pd_wdev_get_cur_state,
-> +       .set_cur_state  = pd_wdev_set_cur_state,
-> +};
-
-[...]
-
-Kind regards
-Uffe
