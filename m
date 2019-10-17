@@ -2,166 +2,143 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF261ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DA7ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A239420659
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2957021848
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:19:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571336386;
+	bh=d2CkK/TjWefe+aETPDcliT8tW3ji3ywfXQM4uR0Zey8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qxWsqlMNIE/mJzgo5k/+vA/3y7EvJw6zZtpsmb/ejQd7RDKzQjMKeZEhjaw256q8r
+	 DpyZGbNFbrWXfIqAAKDGEmBYtgS+OF7qj8hm18Xepr51H7VsoXaWH56GuCu35Vn5lh
+	 Fejcn5xPjZOcAjChCYZT5jHMxhMkUlEmBaSAot14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441274AbfJQSTc (ORCPT
+        id S2441296AbfJQSTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 14:19:32 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:38543 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438684AbfJQSTc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 14:19:32 -0400
-Received: from [167.98.27.226] (helo=xylophone)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iLAMw-0006vd-SL; Thu, 17 Oct 2019 19:19:27 +0100
-Message-ID: <52d2fdbd514d93cdd901c18afbb83be13145de6f.camel@codethink.co.uk>
-Subject: Re: [Y2038] [PATCH v6 10/43] compat_ioctl: move rtc handling into
- rtc-dev.c
-From:   Ben Hutchings <ben.hutchings@codethink.co.uk>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Thu, 17 Oct 2019 19:19:26 +0100
-In-Reply-To: <CAK8P3a0BYkPTSnQUmde2k+HVcg7XNihzWTEzrCD4d8G8ecO9-w@mail.gmail.com>
-References: <20191009190853.245077-1-arnd@arndb.de>
-         <20191009191044.308087-10-arnd@arndb.de>
-         <d1022cda6bd6ce73e9875644a5a2c65e4d554f37.camel@codethink.co.uk>
-         <CAK8P3a0BYkPTSnQUmde2k+HVcg7XNihzWTEzrCD4d8G8ecO9-w@mail.gmail.com>
-Organization: Codethink Ltd.
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Thu, 17 Oct 2019 14:19:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58280 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2438684AbfJQSTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 14:19:44 -0400
+Received: from localhost (unknown [192.55.54.60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7436B20659;
+        Thu, 17 Oct 2019 18:19:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571336383;
+        bh=d2CkK/TjWefe+aETPDcliT8tW3ji3ywfXQM4uR0Zey8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JdgltpGxueQH9B2zsQdKdVywPuJRGbeBqRqgfZUvqHWQ6Cmkpe9L+xCcSRtaFdtiY
+         bccFMNwTuPX3nTL4O/U2gYFyU/WLlgZymFynhRPQVfJ0DKc82IcWePUP/yV1qdJma9
+         wXtDiK3hzot8f4JkLeLC+5eB35zIaB9Nt/5A75Ks=
+Date:   Thu, 17 Oct 2019 11:19:43 -0700
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     linux-usb@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Windsor <dwindsor@gmail.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: [PATCH RFC 2/3] usb, kcov: collect coverage from hub_event
+Message-ID: <20191017181943.GC1094415@kroah.com>
+References: <cover.1571333592.git.andreyknvl@google.com>
+ <1b30d1c9e7f86c25425c5ee53d7facede289608e.1571333592.git.andreyknvl@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1b30d1c9e7f86c25425c5ee53d7facede289608e.1571333592.git.andreyknvl@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-10-17 at 16:33 +0200, Arnd Bergmann wrote:
-> On Thu, Oct 17, 2019 at 3:42 PM Ben Hutchings
-> <ben.hutchings@codethink.co.uk> wrote:
-> > On Wed, 2019-10-09 at 21:10 +0200, Arnd Bergmann wrote:
-> > > We no longer need the rtc compat handling to be in common code, now that
-> > > all drivers are either moved to the rtc-class framework, or (rarely)
-> > > exist in drivers/char for architectures without compat mode (m68k,
-> > > alpha and ia64, respectively).
-> > > 
-> > > I checked the list of ioctl commands in drivers, and the ones that are
-> > > not already handled are all compatible, again with the one exception of
-> > > m68k driver, which implements RTC_PLL_GET and RTC_PLL_SET, but has no
-> > > compat mode.
-> > > 
-> > > Since the ioctl commands are either compatible or differ in both structure
-> > > and command code between 32-bit and 64-bit, we can merge the compat
-> > > handler into the native one and just implement the two common compat
-> > > commands (RTC_IRQP_READ, RTC_IRQP_SET) there.
-> > [...]
-> > 
-> > I don't think this can work properly on s390, because some of them take
-> > integers and some take pointers.
+On Thu, Oct 17, 2019 at 07:44:14PM +0200, Andrey Konovalov wrote:
+> This patch adds kcov_remote_start/kcov_remote_stop annotations to the
+> hub_event function, which is responsible for processing events on USB
+> buses, in particular events that happen during USB device enumeration.
+> Each USB bus gets a unique id, which can be used to attach a kcov device
+> to a particular USB bus for coverage collection.
 > 
-> Thanks a lot for taking a look at the patch and pointing this out!
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> ---
+>  drivers/usb/core/hub.c    | 4 ++++
+>  include/linux/kcov.h      | 1 +
+>  include/uapi/linux/kcov.h | 7 +++++++
+>  3 files changed, 12 insertions(+)
 > 
-> I don't remember how I got to this, either I missed the problem or I
-> decided that it was ok, since it will still do the right thing:
-> On s390 only the highest bit is cleared in a pointer value, and we
-> ensure that the RTC_IRQP_SET argument is between 1 and 8192.
-> 
-> Passing a value of (0x80000000 + n) where n is in the valid range
-> would lead to the call succeeding unexpectedly on compat s390
-> (if it had an RTC, which it does not) which is clearly not good but
-> mostly harmless. I certainly had not considered this case.
-> 
-> However, looking at this again after your comment I found a rather
-> more serious bug in my new RTC_IRQP_SET handling: Any 64-bit
-> machine can now bypass the permission check for RTC_IRQP_SET by
-> calling RTC_IRQP_SET32 instead.
-> 
-> I'll fix it both issues by adding a rtc_compat_dev_ioctl() to handle
-> RTC_IRQP_SET32/RTC_IRQP_READ32:
-
-Reviewed-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-
-> diff --git a/drivers/rtc/dev.c b/drivers/rtc/dev.c
-> index 1dc5063f78c9..9e4fd5088ead 100644
-> --- a/drivers/rtc/dev.c
-> +++ b/drivers/rtc/dev.c
-> @@ -358,16 +358,6 @@ static long rtc_dev_ioctl(struct file *file,
->                 mutex_unlock(&rtc->ops_lock);
->                 return rtc_update_irq_enable(rtc, 0);
-> 
-> -#ifdef CONFIG_64BIT
-> -#define RTC_IRQP_SET32         _IOW('p', 0x0c, __u32)
-> -#define RTC_IRQP_READ32                _IOR('p', 0x0b, __u32)
-> -       case RTC_IRQP_SET32:
-> -               err = rtc_irq_set_freq(rtc, arg);
-> -               break;
-> -       case RTC_IRQP_READ32:
-> -               err = put_user(rtc->irq_freq, (unsigned int __user *)uarg);
-> -               break;
-> -#endif
->         case RTC_IRQP_SET:
->                 err = rtc_irq_set_freq(rtc, arg);
->                 break;
-> @@ -409,6 +399,29 @@ static long rtc_dev_ioctl(struct file *file,
->         return err;
+> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+> index 236313f41f4a..03a40e41b099 100644
+> --- a/drivers/usb/core/hub.c
+> +++ b/drivers/usb/core/hub.c
+> @@ -5374,6 +5374,8 @@ static void hub_event(struct work_struct *work)
+>  	hub_dev = hub->intfdev;
+>  	intf = to_usb_interface(hub_dev);
+>  
+> +	kcov_remote_start(kcov_remote_handle_usb(hdev->bus->busnum));
+> +
+>  	dev_dbg(hub_dev, "state %d ports %d chg %04x evt %04x\n",
+>  			hdev->state, hdev->maxchild,
+>  			/* NOTE: expects max 15 ports... */
+> @@ -5480,6 +5482,8 @@ static void hub_event(struct work_struct *work)
+>  	/* Balance the stuff in kick_hub_wq() and allow autosuspend */
+>  	usb_autopm_put_interface(intf);
+>  	kref_put(&hub->kref, hub_release);
+> +
+> +	kcov_remote_stop();
 >  }
-> 
-> +#ifdef CONFIG_COMPAT
-> +#define RTC_IRQP_SET32         _IOW('p', 0x0c, __u32)
-> +#define RTC_IRQP_READ32                _IOR('p', 0x0b, __u32)
-> +
-> +static long rtc_dev_compat_ioctl(struct file *file,
-> +                                unsigned int cmd, unsigned long arg)
-> +{
-> +       struct rtc_device *rtc = file->private_data;
-> +       void __user *uarg = compat_ptr(arg);
-> +
-> +       switch (cmd) {
-> +       case RTC_IRQP_READ32:
-> +               return put_user(rtc->irq_freq, (__u32 __user *)uarg);
-> +
-> +       case RTC_IRQP_SET32:
-> +               /* arg is a plain integer, not pointer */
-> +               return rtc_dev_ioctl(file, RTC_IRQP_SET, arg);
-> +       }
-> +
-> +       return rtc_dev_ioctl(file, cmd, (unsigned long)uarg);
-> +}
-> +#endif
-> +
->  static int rtc_dev_fasync(int fd, struct file *file, int on)
->  {
->         struct rtc_device *rtc = file->private_data;
-> @@ -444,7 +457,7 @@ static const struct file_operations rtc_dev_fops = {
->         .read           = rtc_dev_read,
->         .poll           = rtc_dev_poll,
->         .unlocked_ioctl = rtc_dev_ioctl,
-> -       .compat_ioctl   = compat_ptr_ioctl,
-> +       .compat_ioctl   = rtc_dev_compat_ioctl,
->         .open           = rtc_dev_open,
->         .release        = rtc_dev_release,
->         .fasync         = rtc_dev_fasync,
-> 
-> If you and Alexandre are both happy with this version, I'll fold it into
-> my original patch.
-> 
->       Arnd
-> 
--- 
-Ben Hutchings, Software Developer                         Codethink Ltd
-https://www.codethink.co.uk/                 Dale House, 35 Dale Street
-                                     Manchester, M1 2HF, United Kingdom
+>  
+>  static const struct usb_device_id hub_id_table[] = {
+> diff --git a/include/linux/kcov.h b/include/linux/kcov.h
+> index 702672d98d35..38a47e0b67c2 100644
+> --- a/include/linux/kcov.h
+> +++ b/include/linux/kcov.h
+> @@ -30,6 +30,7 @@ void kcov_task_exit(struct task_struct *t);
+>  /*
+>   * Reserved handle ranges:
+>   * 0000000000000000 - 0000ffffffffffff : common handles
+> + * 0001000000000000 - 0001ffffffffffff : USB subsystem handles
 
+So how many bits are you going to have for any in-kernel tasks?  Aren't
+you going to run out quickly?
+
+
+>   */
+>  void kcov_remote_start(u64 handle);
+>  void kcov_remote_stop(void);
+> diff --git a/include/uapi/linux/kcov.h b/include/uapi/linux/kcov.h
+> index 46f78f716ca9..45c9ae59cebc 100644
+> --- a/include/uapi/linux/kcov.h
+> +++ b/include/uapi/linux/kcov.h
+> @@ -43,4 +43,11 @@ enum {
+>  #define KCOV_CMP_SIZE(n)        ((n) << 1)
+>  #define KCOV_CMP_MASK           KCOV_CMP_SIZE(3)
+>  
+> +#define KCOV_REMOTE_HANDLE_USB  0x0001000000000000ull
+> +
+> +static inline __u64 kcov_remote_handle_usb(unsigned int bus)
+> +{
+> +	return KCOV_REMOTE_HANDLE_USB + (__u64)bus;
+> +}
+
+Why is this function in a uapi .h file?  What userspace code would call
+this?
+
+thanks,
+
+greg k-h
