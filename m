@@ -2,87 +2,79 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE19ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB8DECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7504021848
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 862C62089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:21:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571336396;
-	bh=9IeQx8knH1tFMmB9rxGcz4mGfurbSPnHhX8jXh08iWQ=;
+	s=default; t=1571336496;
+	bh=6VXGQ2Hba2UkWGqz9XmJOchSLmrxQVxSPAfCJ4c9SR8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2WT70ln6BwIziYTcVr7VqV6jwVVMZmNZKgmwdTKsxnXTNwvH1cddK4tna5YQA8oLJ
-	 M+aOkG3c7H32RGLpZqIc0TFwy7NjFlgqK0GShLD9HO3gcvRA6YCd3/xzj3vugBdFrc
-	 9oEQv3r2gNKpaBexMZ5o7dKj7EJxUWFdyL1TMoUM=
+	b=pgJvFm+44acWB/g0dMQ43Xf4ysxYHxzKeqrsD5qan4tpn5Kmr8hu+2Ys4I8sFqVl/
+	 yX1M/xtIq9IG7YKdot4m1I4KkybU9lk0U6lnBXD1BLW9sYjJVEgRaKwe7gzC+R8rdj
+	 Ifjnl7kOP3ONveDeS3cT01zh2m5ZlE0lF3t1ZmXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503144AbfJQSTy (ORCPT
+        id S2503184AbfJQSVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 14:19:54 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44397 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2441309AbfJQSTx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 14:19:53 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w6so2964890oie.11;
-        Thu, 17 Oct 2019 11:19:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zNcXSWPABIjDXrH4hrGPpnuCzAwqGYL95ldA2v+tK9k=;
-        b=ZgF2GXLk6FD8HXb9UOIJLZl3MguzoN3lNaCeONVIgYd0jfZCidHgDOiHhRrfXbKR+O
-         4Ko78NDISmHMIw0JM1sQulbVbArK7uocWAY4VadPma11zneiurzum/Ambe9I0iylYohE
-         LxwgsmZD/GbWdk0uulQN8CukCcNKhKeYtM5R44g15LDeaLhT77h+9Q7aD5COBVCmT4Gy
-         Cr7Q+SbXV2d0NKiFOBKPQbLrBLgqs6dWwclDunL9XjwSW4lBT2aAbrOHBjjTTbusqWwV
-         0rDKRs3sQYQo2e+92u9HGnyhWh34nymfNQo4lZmP0ygZaNMSdWYkpcGDhOHcM7ZAN3aH
-         O3gA==
-X-Gm-Message-State: APjAAAWEwkXnX3HOEwmUiMzeUL66o8uHgjbmUHdcgKi4c0rmekQuq1mW
-        u6ppssmB1eh7vNKrk1dpiQ==
-X-Google-Smtp-Source: APXvYqydJLeSRq37GvjaH17XR/hx71gYtkOaY+q7KmhiTJg1o1MDriVXA4tVPzT17sIi/ahclXwxeg==
-X-Received: by 2002:aca:dcd6:: with SMTP id t205mr4447363oig.128.1571336392417;
-        Thu, 17 Oct 2019 11:19:52 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e18sm694901oib.57.2019.10.17.11.19.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 11:19:51 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 13:19:51 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Manish Narani <manish.narani@xilinx.com>
-Cc:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        adrian.hunter@intel.com, michal.simek@xilinx.com,
-        jolly.shah@xilinx.com, rajan.vaja@xilinx.com,
-        nava.manne@xilinx.com, mdf@kernel.org, manish.narani@xilinx.com,
-        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        git@xilinx.com
-Subject: Re: [PATCH v3 2/8] dt-bindings: mmc: arasan: Update Documentation
- for the input clock
-Message-ID: <20191017181951.GA6853@bogus>
-References: <1571293310-92563-1-git-send-email-manish.narani@xilinx.com>
- <1571293310-92563-3-git-send-email-manish.narani@xilinx.com>
+        Thu, 17 Oct 2019 14:21:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58698 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406489AbfJQSVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 14:21:34 -0400
+Received: from localhost (unknown [192.55.54.60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C25920854;
+        Thu, 17 Oct 2019 18:21:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571336493;
+        bh=6VXGQ2Hba2UkWGqz9XmJOchSLmrxQVxSPAfCJ4c9SR8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vBzfXQngTE7c5pH4Ctz3+daPMLHmgd5K2PHrGqtjRsMgesUc3PI7AgBgcPaLJVrNu
+         JTXrDhJwUAp3chRxDsTujr3v8aVgbIvei322ZgtgxVAYTsQM1G8XnsC7b1VBAUiK+a
+         z1GRbfxKc+cg/wt678tQOPm6H7r4KLrCCRMJr2zg=
+Date:   Thu, 17 Oct 2019 11:21:32 -0700
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.3 000/112] 5.3.7-stable review
+Message-ID: <20191017182132.GA1095858@kroah.com>
+References: <20191016214844.038848564@linuxfoundation.org>
+ <20191017180432.GE29239@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1571293310-92563-3-git-send-email-manish.narani@xilinx.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191017180432.GE29239@roeck-us.net>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019 11:51:44 +0530, Manish Narani wrote:
-> Add documentation for an optional input clock which is essentially used
-> in sampling the input data coming from the card.
+On Thu, Oct 17, 2019 at 11:04:32AM -0700, Guenter Roeck wrote:
+> On Wed, Oct 16, 2019 at 02:49:52PM -0700, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.3.7 release.
+> > There are 112 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Fri 18 Oct 2019 09:43:41 PM UTC.
+> > Anything received after that time might be too late.
+> > 
 > 
-> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> ---
->  Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
+> Build results:
+> 	total: 158 pass: 158 fail: 0
+> Qemu test results:
+> 	total: 391 pass: 391 fail: 0
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Thanks for testing all of these and letting me know.
+
+greg k-h
