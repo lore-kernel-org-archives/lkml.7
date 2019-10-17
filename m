@@ -2,108 +2,176 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCDAFA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF57ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD8AE21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:13:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571336011;
-	bh=p2EBmCeo1NzW2Lv198p0TuirtIGkkY0dXw/8bi0gofc=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=Uh5HpGNaRGkfQbFITJt6R5csBj1sJOjqoTvVllaPgtb82qAypUQPXc7hjHnvw1wTx
-	 PeMW1/8G1jq/8EFgMyPCp7f8w2onWdb7y5Z1ccqiV0Y/OOzwODxWvYlKH8JIkAFIQy
-	 XoL5FJ/q0J4trjRK11PFa12P8lef68NWrOmxNxCM=
+	by mail.kernel.org (Postfix) with ESMTP id ED0D620659
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:17:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1Hmfd7j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441217AbfJQSNa (ORCPT
+        id S2441226AbfJQSRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 14:13:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57068 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395229AbfJQSNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 14:13:30 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D593C21835;
-        Thu, 17 Oct 2019 18:13:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571336010;
-        bh=p2EBmCeo1NzW2Lv198p0TuirtIGkkY0dXw/8bi0gofc=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=VmeeR2T3ro61u469I46UQl59iqcTLonF9jT0CcQrnpqp/tM8eEmYYv95c8iyr+DhZ
-         sJcdMmtKBqLbAXpQxC3q+m6wPQxgE0150tgGg5X+BKTN8cQYyC/fPYmVQBXTXhdiOH
-         1R38pxM2WKIS2DG4czOpHh6+huxMzr3PuYmZ2SZI=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 17 Oct 2019 14:17:16 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36896 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438601AbfJQSRQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 14:17:16 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f22so3537102wmc.2;
+        Thu, 17 Oct 2019 11:17:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XgooItt3yunwxCJxadoUen7+696jxS3yzALjSNjUwlM=;
+        b=l1Hmfd7j/16bXUDYrMQfrgAM9KgZFGcfCEv2TrygM2pGHs/mVjXbKuN6kKcLeFCDvU
+         grU+Qze05EbFLX0Xt5bzgt4aDLP07IayYVowHfDo9j+7dbhGZhO309axcijHpFQ0yd05
+         Cb4wvYQds43buFxN55MXtIXFBoVqgwtFZLmOC7ab9R18dfAuTcqgg/kCzyV/4NXlVNu/
+         igWR16tVws9TbjyyiVro1JCAdnsg2Cl7mUJYQdoZ2QLy3wOZv7YLWRDNyvQQsj5cvQOF
+         0DP2sjOpN9fwIpaho7A3tppiGgX7NxOCLNc47fCTr7rk8P4gKS+lU6Z8s1azzNUIDiuQ
+         f2Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XgooItt3yunwxCJxadoUen7+696jxS3yzALjSNjUwlM=;
+        b=BjGokvomXxUJ3ZVMour77hYk4NolWVMojkSi7EAG8TMGCc39WNYbzJJZgRC4oXaipY
+         bzKdT3+hVxRk+usEfAJ0eSYYzBfTt3zm4/WOSkYxiViXPbf724ij4ftMgxR9q89MfrNm
+         mZcStf3Zw1utx9eMZCMrp81fO1H3JLsvjSt/rAEYTOLbZl03rartURoT2TYpcCCNLQsd
+         UQwUeVS2e6UOGHL3DnjLH9aiwpwKKdD1nszbl5pB5zv0PN2QYEWgb16WsCvVb4z+AUUl
+         9ZX2/LC2qJ6PMGsl2u2nlz6Xr7vE3c0ffnvzxQryB/H7hpulem7xuEc1GHTsxkT+tUw8
+         B6RQ==
+X-Gm-Message-State: APjAAAWL8GJ4HvJz92khCRxZLPDK9MZv0v1seLB1qbOomPTtNV6FD4vm
+        wc0jkk1hQWAghMR6JHA9BA==
+X-Google-Smtp-Source: APXvYqzh/xO8OFskYgrKCuP+R6Vt2W+4+5BbANuANKbP4dDWLu3Fjs2M4FolW21d9sW4iFNBbJ7Y8A==
+X-Received: by 2002:a7b:c1d2:: with SMTP id a18mr4064484wmj.7.1571336233230;
+        Thu, 17 Oct 2019 11:17:13 -0700 (PDT)
+Received: from avx2 ([46.53.250.235])
+        by smtp.gmail.com with ESMTPSA id a14sm2504313wmm.44.2019.10.17.11.17.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 17 Oct 2019 11:17:12 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 21:17:09 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Marco Elver <elver@google.com>
+Cc:     syzbot <syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        casey@schaufler-ca.com, christian@brauner.io,
+        Kees Cook <keescook@chromium.org>, kent.overstreet@gmail.com,
+        khlebnikov@yandex-team.ru, linux-fsdevel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, mhocko@suse.com,
+        shakeelb@google.com, syzkaller-bugs@googlegroups.com,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: KCSAN: data-race in task_dump_owner / task_dump_owner
+Message-ID: <20191017181709.GA5312@avx2>
+References: <000000000000328b2905951a7667@google.com>
+ <CANpmjNPoBBJgMKLEAXs+bPhitF+WygseHgTkSJsuiK8WcsB==g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191006010100.32053-1-masneyb@onstation.org>
-References: <20191006010100.32053-1-masneyb@onstation.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Brian Masney <masneyb@onstation.org>, mturquette@baylibre.com
-Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jonathan@marek.ca
-Subject: Re: [PATCH] clk: qcom: mmcc8974: add frequency table for gfx3d
-User-Agent: alot/0.8.1
-Date:   Thu, 17 Oct 2019 11:13:29 -0700
-Message-Id: <20191017181329.D593C21835@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CANpmjNPoBBJgMKLEAXs+bPhitF+WygseHgTkSJsuiK8WcsB==g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Brian Masney (2019-10-05 18:01:00)
-> From: Jonathan Marek <jonathan@marek.ca>
->=20
-> Add frequency table for the gfx3d clock that's needed in order to
-> support the GPU upstream on msm8974-based systems.
->=20
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
->  drivers/clk/qcom/mmcc-msm8974.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->=20
-> diff --git a/drivers/clk/qcom/mmcc-msm8974.c b/drivers/clk/qcom/mmcc-msm8=
-974.c
-> index bcb0a397ef91..e70abfe2a792 100644
-> --- a/drivers/clk/qcom/mmcc-msm8974.c
-> +++ b/drivers/clk/qcom/mmcc-msm8974.c
-> @@ -452,10 +452,17 @@ static struct clk_rcg2 mdp_clk_src =3D {
->         },
->  };
-> =20
-> +static struct freq_tbl ftbl_gfx3d_clk_src[] =3D {
-> +       F(37500000, P_GPLL0, 16, 0, 0),
-> +       F(533000000, P_MMPLL0, 1.5, 0, 0),
-> +       { }
-> +};
+On Thu, Oct 17, 2019 at 02:56:47PM +0200, Marco Elver wrote:
+> Hi,
+> 
+> On Thu, 17 Oct 2019 at 14:36, syzbot
+> <syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com> wrote:
+> >
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    d724f94f x86, kcsan: Enable KCSAN for x86
+> > git tree:       https://github.com/google/ktsan.git kcsan
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=17884db3600000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=c0906aa620713d80
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=e392f8008a294fdf8891
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> >
+> > Unfortunately, I don't have any reproducer for this crash yet.
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com
+> >
+> > ==================================================================
+> > BUG: KCSAN: data-race in task_dump_owner / task_dump_owner
+> >
+> > write to 0xffff8881255bb7fc of 4 bytes by task 7804 on cpu 0:
+> >   task_dump_owner+0xd8/0x260 fs/proc/base.c:1742
+> >   pid_update_inode+0x3c/0x70 fs/proc/base.c:1818
+> >   pid_revalidate+0x91/0xd0 fs/proc/base.c:1841
+> >   d_revalidate fs/namei.c:765 [inline]
+> >   d_revalidate fs/namei.c:762 [inline]
+> >   lookup_fast+0x7cb/0x7e0 fs/namei.c:1613
+> >   walk_component+0x6d/0xe80 fs/namei.c:1804
+> >   link_path_walk.part.0+0x5d3/0xa90 fs/namei.c:2139
+> >   link_path_walk fs/namei.c:2070 [inline]
+> >   path_openat+0x14f/0x3530 fs/namei.c:3532
+> >   do_filp_open+0x11e/0x1b0 fs/namei.c:3563
+> >   do_sys_open+0x3b3/0x4f0 fs/open.c:1089
+> >   __do_sys_open fs/open.c:1107 [inline]
+> >   __se_sys_open fs/open.c:1102 [inline]
+> >   __x64_sys_open+0x55/0x70 fs/open.c:1102
+> >   do_syscall_64+0xcf/0x2f0 arch/x86/entry/common.c:296
+> >   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >
+> > write to 0xffff8881255bb7fc of 4 bytes by task 7813 on cpu 1:
+> >   task_dump_owner+0xd8/0x260 fs/proc/base.c:1742
+> >   pid_update_inode+0x3c/0x70 fs/proc/base.c:1818
+> >   pid_revalidate+0x91/0xd0 fs/proc/base.c:1841
+> >   d_revalidate fs/namei.c:765 [inline]
+> >   d_revalidate fs/namei.c:762 [inline]
+> >   lookup_fast+0x7cb/0x7e0 fs/namei.c:1613
+> >   walk_component+0x6d/0xe80 fs/namei.c:1804
+> >   lookup_last fs/namei.c:2271 [inline]
+> >   path_lookupat.isra.0+0x13a/0x5a0 fs/namei.c:2316
+> >   filename_lookup+0x145/0x2d0 fs/namei.c:2346
+> >   user_path_at_empty+0x4c/0x70 fs/namei.c:2606
+> >   user_path_at include/linux/namei.h:60 [inline]
+> >   vfs_statx+0xd9/0x190 fs/stat.c:187
+> >   vfs_stat include/linux/fs.h:3188 [inline]
+> >   __do_sys_newstat+0x51/0xb0 fs/stat.c:341
+> >   __se_sys_newstat fs/stat.c:337 [inline]
+> >   __x64_sys_newstat+0x3a/0x50 fs/stat.c:337
+> >   do_syscall_64+0xcf/0x2f0 arch/x86/entry/common.c:296
+> >   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >
+> > Reported by Kernel Concurrency Sanitizer on:
+> > CPU: 1 PID: 7813 Comm: ps Not tainted 5.3.0+ #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > ==================================================================
+> 
+> My understanding is, that for every access to /proc/<pid>,
+> d_revalidate is called, and /proc-fs implementation simply says that
+> pid_revalidate always revalidates by rewriting uid/gid because "owning
+> task may have performed a setuid(), etc." presumably so every access
+> to a /proc/<pid> entry always has the right uid/gid (in effect
+> updating /proc/<pid> lazily via d_revalidate).
+> 
+> Is it possible that one of the tasks above could be preempted after
+> doing its writes to *ruid/*rgid, another thread writing some other
+> values (after setuid / seteuid), and then the preempted thread seeing
+> the other values? Assertion here should never fail:
+> === TASK 1 ===
+> | seteuid(1000);
+> | seteuid(0);
+> | stat("/proc/<pid-of-task-1>", &fstat);
+> | assert(fstat.st_uid == 0);
+> === TASK 2 ===
+> | stat("/proc/<pid-of-task-1>", ...);
 
-On msm-3.10 kernel the gpu clk seems to be controlled by the RPM[1].
-What is going on here? This code just looks wrong, but I think it was
-added as an rcg so that the branch wasn't orphaned and would have some
-sane frequency. Eventually we planned to parent it to a clk exposed in
-the RPM clk driver. It's been a while so I'm having a hard time
-remembering, but I think GPU clk on this device needed to be controlled
-by RPM so that DDR self refresh wouldn't interact badly with ocmem? Or
-maybe ocmem needed GPU to be enabled to work? Maybe there is some
-information in the 3.10 downstream kernel.
-
-> +
->  static struct clk_rcg2 gfx3d_clk_src =3D {
->         .cmd_rcgr =3D 0x4000,
->         .hid_width =3D 5,
->         .parent_map =3D mmcc_xo_mmpll0_1_2_gpll0_map,
-> +       .freq_tbl =3D ftbl_gfx3d_clk_src,
->         .clkr.hw.init =3D &(struct clk_init_data){
->                 .name =3D "gfx3d_clk_src",
->                 .parent_names =3D mmcc_xo_mmpll0_1_2_gpll0,
-
-[1] https://source.codeaurora.org/quic/la/kernel/msm-3.10/tree/arch/arm/mac=
-h-msm/clock-rpm-8974.c?h=3Dmsm-3.10#n82
+Is it the same as
+pid_revalidate() snapshots (uid,gid) correctly
+but writeback is done in any order?
