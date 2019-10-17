@@ -2,185 +2,186 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7BCFA372B
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CE0FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C44922054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28DDA222BD
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571348462;
-	bh=cdHs3K9IhH3kJmRw4izeemb39GyI9TvjeslpksqUnS4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=P5uDIfTNQht7HMxbDdY56e8VPpBkW8WhOHlXgyKMw0gyzdebARRewiXidR4rH7/iR
-	 BDaCZ/+bW4D2o9U5QNcGYUzQEsUw1jBVJ8JOquZFU60OyR+AkX7BFyRVRxIoDCWS3N
-	 agSPSuO1OrlaM0YY7nVc4f6rDRyifh4T9LqzXXTI=
+	s=default; t=1571348518;
+	bh=nL5RyYEfnCQ/xMkhILlMFuPBby2mRFtC95ZvlIcD5DM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=qFNUE/2/3pOLRHUqbsKfVNDxidnQ8qCNMAcmycmLkukYzg+DqV/prccnYzJz7Dd5/
+	 nD3LUi4j6374zdzS9fTRdEaNt3RtP50yVivZfPSggsKMWZ2GacBQ418/bFL+TuRvPI
+	 WE9FMFZacZI2n3R2Eykqm+t7uD6vqxSUVSgZTY5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441560AbfJQVlB (ORCPT
+        id S2503552AbfJQVl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 17:41:01 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36564 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbfJQVlB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 17:41:01 -0400
-Received: by mail-oi1-f196.google.com with SMTP id k20so3488226oih.3;
-        Thu, 17 Oct 2019 14:40:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0KCb4sSq2ZiDb51yyWDMbDo/PfcZXYvv0/zJpYdY+Fs=;
-        b=K9XUU4M8WteH9Z9Ug7r1eZyKUeLZaaCqQM/us5NmShVzhdY+avuO0HlfrWijemnCUA
-         fQrJEg0lGlkSjIXqxBG2OeZvfNRw18v4E3Q8fQE+BLR3dQI1bTeJhQA9xOaxpyfgC1ZA
-         QJS2h8+pXlSXM7tZRUhMdeWN3XCfo3NogvxEZ6PagDaqjw5TyszSM12TZVBqvJCVXP0I
-         NeezNnBI+atJilBeuQbU9HtyzN2nO2bNN4kVx9rht3oMXGi1bQcrbFM0RyQF5sN0BiUi
-         rAVRaGTCwFwLTPe8ly2sSjaCgPhXfi2aymlWtFI9zBJnsBd6NxxT9mKHGCOSsIJ/E0XM
-         ZLXw==
-X-Gm-Message-State: APjAAAUq/kqWfhBvh65LfZtsLtZyMl4kaFaAeOLIgCflF2ldGEyIGj6/
-        yWy4+InH1qv8AE2HJrlXPWb5MvL20KcmeEy8jC4=
-X-Google-Smtp-Source: APXvYqzl5PRi6EDdnnl2pbq8pO38JPWHBp9tAJVNzjiWLId1Q8uu+lFoxRdl8i+DVVwkOVUjwpd3mU+f8o/+1FQBKnI=
-X-Received: by 2002:aca:b6c5:: with SMTP id g188mr5302098oif.103.1571348458694;
- Thu, 17 Oct 2019 14:40:58 -0700 (PDT)
+        Thu, 17 Oct 2019 17:41:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2441334AbfJQVl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 17:41:56 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6431C2067B;
+        Thu, 17 Oct 2019 21:41:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571348515;
+        bh=nL5RyYEfnCQ/xMkhILlMFuPBby2mRFtC95ZvlIcD5DM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=L9h5G71ITKBOg+OObh19mJhCP2z0YPE5UKzQe1SOZIAWGWrU+4TMMmjQfoVben1Ji
+         g06sKHmFk6jCgAXJ8GZpMVge6OEz+4J2FuxElTVe3b9Cqq/jW+qHX3M7n1BcOCQHRU
+         CBbACUUL/kIJWOsSl/GrZglY/tLRGceGOXrqPXRs=
+Date:   Thu, 17 Oct 2019 22:41:48 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, benjamin.gaignard@linaro.org,
+        david@lechnology.com
+Subject: Re: [PATCH v5 0/3] Simplify count_read/count_write/signal_read
+Message-ID: <20191017224148.5f7edae2@archlinux>
+In-Reply-To: <20191012145101.GA3463@icarus>
+References: <cover.1570391994.git.vilhelm.gray@gmail.com>
+        <20191012150012.5e3399f1@archlinux>
+        <20191012145101.GA3463@icarus>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <1571148451-91114-1-git-send-email-john.garry@huawei.com>
-In-Reply-To: <1571148451-91114-1-git-send-email-john.garry@huawei.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 17 Oct 2019 23:40:47 +0200
-Message-ID: <CAJZ5v0ieDG6oNVtZ52zP592dYvPQBYOKMxtujiSbs19KT0MJag@mail.gmail.com>
-Subject: Re: [PATCH] ACPI / CPPC: Set pcc_data[pcc_ss_id] to NULL in acpi_cppc_processor_exit()
-To:     John Garry <john.garry@huawei.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 4:10 PM John Garry <john.garry@huawei.com> wrote:
->
-> When enabling KASAN and DEBUG_TEST_DRIVER_REMOVE, I find this KASAN
-> warning:
->
-> [   20.872057] BUG: KASAN: use-after-free in pcc_data_alloc+0x40/0xb8
-> [   20.878226] Read of size 4 at addr ffff00236cdeb684 by task swapper/0/1
-> [   20.884826]
-> [   20.886309] CPU: 19 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc1-00009-ge7f7df3db5bf-dirty #289
-> [   20.894994] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0 - V1.16.01 03/15/2019
-> [   20.903505] Call trace:
-> [   20.905942]  dump_backtrace+0x0/0x200
-> [   20.909593]  show_stack+0x14/0x20
-> [   20.912899]  dump_stack+0xd4/0x130
-> [   20.916291]  print_address_description.isra.9+0x6c/0x3b8
-> [   20.921592]  __kasan_report+0x12c/0x23c
-> [   20.925417]  kasan_report+0xc/0x18
-> [   20.928808]  __asan_load4+0x94/0xb8
-> [   20.932286]  pcc_data_alloc+0x40/0xb8
-> [   20.935938]  acpi_cppc_processor_probe+0x4e8/0xb08
-> [   20.940717]  __acpi_processor_start+0x48/0xb0
-> [   20.945062]  acpi_processor_start+0x40/0x60
-> [   20.949235]  really_probe+0x118/0x548
-> [   20.952887]  driver_probe_device+0x7c/0x148
-> [   20.957059]  device_driver_attach+0x94/0xa0
-> [   20.961231]  __driver_attach+0xa4/0x110
-> [   20.965055]  bus_for_each_dev+0xe8/0x158
-> [   20.968966]  driver_attach+0x30/0x40
-> [   20.972531]  bus_add_driver+0x234/0x2f0
-> [   20.976356]  driver_register+0xbc/0x1d0
-> [   20.980182]  acpi_processor_driver_init+0x40/0xe4
-> [   20.984875]  do_one_initcall+0xb4/0x254
-> [   20.988700]  kernel_init_freeable+0x24c/0x2f8
-> [   20.993047]  kernel_init+0x10/0x118
-> [   20.996524]  ret_from_fork+0x10/0x18
-> [   21.000087]
-> [   21.001567] Allocated by task 1:
-> [   21.004785]  save_stack+0x28/0xc8
-> [   21.008089]  __kasan_kmalloc.isra.9+0xbc/0xd8
-> [   21.012435]  kasan_kmalloc+0xc/0x18
-> [   21.015913]  pcc_data_alloc+0x94/0xb8
-> [   21.019564]  acpi_cppc_processor_probe+0x4e8/0xb08
-> [   21.024343]  __acpi_processor_start+0x48/0xb0
-> [   21.028689]  acpi_processor_start+0x40/0x60
-> [   21.032860]  really_probe+0x118/0x548
-> [   21.036512]  driver_probe_device+0x7c/0x148
-> [   21.040684]  device_driver_attach+0x94/0xa0
-> [   21.044855]  __driver_attach+0xa4/0x110
-> [   21.048680]  bus_for_each_dev+0xe8/0x158
-> [   21.052591]  driver_attach+0x30/0x40
-> [   21.056155]  bus_add_driver+0x234/0x2f0
-> [   21.059980]  driver_register+0xbc/0x1d0
-> [   21.063805]  acpi_processor_driver_init+0x40/0xe4
-> [   21.068497]  do_one_initcall+0xb4/0x254
-> [   21.072322]  kernel_init_freeable+0x24c/0x2f8
-> [   21.076667]  kernel_init+0x10/0x118
-> [   21.080144]  ret_from_fork+0x10/0x18
-> [   21.083707]
-> [   21.085186] Freed by task 1:
-> [   21.088056]  save_stack+0x28/0xc8
-> [   21.091360]  __kasan_slab_free+0x118/0x180
-> [   21.095445]  kasan_slab_free+0x10/0x18
-> [   21.099183]  kfree+0x80/0x268
-> [   21.102139]  acpi_cppc_processor_exit+0x1a8/0x1b8
-> [   21.106832]  acpi_processor_stop+0x70/0x80
-> [   21.110917]  really_probe+0x174/0x548
-> [   21.114568]  driver_probe_device+0x7c/0x148
-> [   21.118740]  device_driver_attach+0x94/0xa0
-> [   21.122912]  __driver_attach+0xa4/0x110
-> [   21.126736]  bus_for_each_dev+0xe8/0x158
-> [   21.130648]  driver_attach+0x30/0x40
-> [   21.134212]  bus_add_driver+0x234/0x2f0
-> [   21.0x10/0x18
-> [   21.161764]
-> [   21.163244] The buggy address belongs to the object at ffff00236cdeb600
-> [   21.163244]  which belongs to the cache kmalloc-256 of size 256
-> [   21.175750] The buggy address is located 132 bytes inside of
-> [   21.175750]  256-byte region [ffff00236cdeb600, ffff00236cdeb700)
-> [   21.187473] The buggy address belongs to the page:
-> [   21.192254] page:fffffe008d937a00 refcount:1 mapcount:0 mapping:ffff002370c0fa00 index:0x0 compound_mapcount: 0
-> [   21.202331] flags: 0x1ffff00000010200(slab|head)
-> [   21.206940] raw: 1ffff00000010200 dead000000000100 dead000000000122 ffff002370c0fa00
-> [   21.214671] raw: 0000000000000000 00000000802a002a 00000001ffffffff 0000000000000000
-> [   21.222400] page dumped because: kasan: bad access detected
-> [   21.227959]
-> [   21.229438] Memory state around the buggy address:
-> [   21.234218]  ffff00236cdeb580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> [   21.241427]  ffff00236cdeb600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> [   21.248637] >ffff00236cdeb680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> [   21.255845]                    ^
-> [   21.259062]  ffff00236cdeb700: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> [   21.266272]  ffff00236cdeb780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> [   21.273480] ==================================================================
->
-> It seems that global pcc_data[pcc_ss_id] can be freed in
-> acpi_cppc_processor_exit(), but we may later reference this value, so
-> NULLify it when freed.
->
-> Also remove the useless setting of data "pcc_channel_acquired", which
-> we're about to free.
->
-> Signed-off-by: John Garry <john.garry@huawei.com>
->
-> diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
-> index 3b2525908dd8..a1a858ad4d18 100644
-> --- a/drivers/acpi/cppc_acpi.c
-> +++ b/drivers/acpi/cppc_acpi.c
-> @@ -905,8 +905,8 @@ void acpi_cppc_processor_exit(struct acpi_processor *pr)
->                         pcc_data[pcc_ss_id]->refcount--;
->                         if (!pcc_data[pcc_ss_id]->refcount) {
->                                 pcc_mbox_free_channel(pcc_data[pcc_ss_id]->pcc_channel);
-> -                               pcc_data[pcc_ss_id]->pcc_channel_acquired = 0;
->                                 kfree(pcc_data[pcc_ss_id]);
-> +                               pcc_data[pcc_ss_id] = NULL;
->                         }
->                 }
->         }
-> --
+On Sat, 12 Oct 2019 10:51:19 -0400
+William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
 
-Applied as a fix for 5.4, thanks!
+> On Sat, Oct 12, 2019 at 03:00:12PM +0100, Jonathan Cameron wrote:
+> > Hi William
+> > 
+> > What's the status on these? If you are happy that reviews and
+> > testing is complete enough, do you want me to take them after
+> > I pick up the eqep driver (hopefully shortly dependent on
+> > the pull request Greg has from me being fine).
+> > 
+> > Thanks,
+> > 
+> > Jonathan  
+> 
+> Yes, this is ready for you to take. So after the eqep driver is picked
+> up you can apply this patchset.
+
+Series applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
+
+Thanks,
+
+Jonathan
+
+> 
+> Thanks,
+> 
+> William Breathitt Gray
+> 
+> > 
+> > On Sun,  6 Oct 2019 16:03:08 -0400
+> > William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
+> >   
+> > > Changes in v5:
+> > >  - Add changes and additions to generic-counter.rst to clarify theory
+> > >    and use of the Generic Counter interface
+> > >  - Fix typo in counter.h action_get description comment
+> > > 
+> > > The changes in this patchset will not affect the userspace interface.
+> > > Rather, these changes are intended to simplify the kernelspace Counter
+> > > callbacks for counter device driver authors.
+> > > 
+> > > The following main changes are proposed:
+> > > 
+> > > * Retire the opaque counter_count_read_value/counter_count_write_value
+> > >   structures and simply represent count data as an unsigned integer.
+> > > 
+> > > * Retire the opaque counter_signal_read_value structure and represent
+> > >   Signal data as a counter_signal_value enum.
+> > > 
+> > > These changes should reduce some complexity and code in the use and
+> > > implementation of the count_read, count_write, and signal_read
+> > > callbacks.
+> > > 
+> > > The opaque structures for Count data and Signal data were introduced
+> > > originally in anticipation of supporting various representations of
+> > > counter data (e.g. arbitrary-precision tallies, floating-point spherical
+> > > coordinate positions, etc). However, with the counter device drivers
+> > > that have appeared, it's become apparent that utilizing opaque
+> > > structures in kernelspace is not the best approach to take.
+> > > 
+> > > I believe it is best to let userspace applications decide how to
+> > > interpret the count data they receive. There are a couple of reasons why
+> > > it would be good to do so:
+> > > 
+> > > * Users use their devices in unexpected ways.
+> > > 
+> > >   For example, a quadrature encoder counter device is typically used to
+> > >   keep track of the position of a motor, but a user could set the device
+> > >   in a pulse-direction mode and instead use it to count sporadic rising
+> > >   edges from an arbitrary signal line unrelated to positioning. Users
+> > >   should have the freedom to decide what their data represents.
+> > > 
+> > > * Most counter devices represent data as unsigned integers anyway.
+> > > 
+> > >   For example, whether the device is a tally counter or position
+> > >   counter, the count data is represented to the user as an unsigned
+> > >   integer value. So specifying that one device is representing tallies
+> > >   while the other specifies positions does not provide much utility from
+> > >   an interface perspective.
+> > > 
+> > > For these reasons, the count_read and count_write callbacks have been
+> > > redefined to pass count data directly as unsigned long instead of passed
+> > > via opaque structures:
+> > > 
+> > >         count_read(struct counter_device *counter,
+> > >                    struct counter_count *count, unsigned long *val);
+> > >         count_write(struct counter_device *counter,
+> > >                     struct counter_count *count, unsigned long val);
+> > > 
+> > > Similarly, the signal_read is redefined to pass Signal data directly as
+> > > a counter_signal_value enum instead of via an opaque structure:
+> > > 
+> > >         signal_read(struct counter_device *counter,
+> > >                     struct counter_signal *signal,
+> > >                     enum counter_signal_value *val);
+> > > 
+> > > The counter_signal_value enum is simply the counter_signal_level enum
+> > > redefined to remove the references to the Signal data "level" data type.
+> > > 
+> > > William Breathitt Gray (3):
+> > >   counter: Simplify the count_read and count_write callbacks
+> > >   docs: driver-api: generic-counter: Update Count and Signal data types
+> > >   counter: Fix typo in action_get description
+> > > 
+> > >  Documentation/driver-api/generic-counter.rst | 162 +++++++++++--------
+> > >  drivers/counter/104-quad-8.c                 |  33 ++--
+> > >  drivers/counter/counter.c                    | 101 ++----------
+> > >  drivers/counter/ftm-quaddec.c                |  14 +-
+> > >  drivers/counter/stm32-lptimer-cnt.c          |   5 +-
+> > >  drivers/counter/stm32-timer-cnt.c            |  17 +-
+> > >  drivers/counter/ti-eqep.c                    |  19 +--
+> > >  include/linux/counter.h                      |  76 ++-------
+> > >  8 files changed, 144 insertions(+), 283 deletions(-)
+> > > 
+> > > 
+> > > base-commit: 0c3aa63a842d84990bd02622f2fa50d2bd33c652
+> > > prerequisite-patch-id: ebe284609b3db8d4130ea2915f7f7b185c743a70
+> > > prerequisite-patch-id: cbe857759f10d875690df125d18bc04f585ac7c9
+> > > prerequisite-patch-id: 21f2660dc88627387ee4666d08044c63dd961dae  
+> >   
+
