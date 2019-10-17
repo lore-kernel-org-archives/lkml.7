@@ -2,69 +2,71 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D00ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A0FFA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 22:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9038821D7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:59:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Emw5kctj"
+	by mail.kernel.org (Postfix) with ESMTP id 6D7FF21D7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 22:01:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438047AbfJQV7T (ORCPT
+        id S2441585AbfJQWBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 17:59:19 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:51600 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733238AbfJQV7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 17:59:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=114cGOXdIYdNiPZFR4ELOkx6rjRTcSQU7fbuI7oiAt8=; b=Emw5kctjJuU/UajdJsL7jcuz08
-        gRofogWUyIKrLG7gS4mgYbEpqsH26PTpL3E6XG69g2W5f13/2zEdVofGWHfhr2IAQGpZb6YCA5bjz
-        T3wm5xSMbaF9FSmbY015OFsNl8j1xv07LrTkPrHC5yM9COeywkZaxLCY0I//I/MlfRqM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iLDne-0006mf-K3; Thu, 17 Oct 2019 23:59:14 +0200
-Date:   Thu, 17 Oct 2019 23:59:14 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>, hkallweit1@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, olteanv@gmail.com,
-        rmk+kernel@armlinux.org.uk, cphealy@gmail.com,
-        Jose Abreu <joabreu@synopsys.com>
-Subject: Re: [PATCH net-next v2 1/2] net: phy: Use genphy_loopback() by
- default
-Message-ID: <20191017215914.GA24810@lunn.ch>
-References: <20191017214453.18934-1-f.fainelli@gmail.com>
- <20191017214453.18934-2-f.fainelli@gmail.com>
+        Thu, 17 Oct 2019 18:01:55 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:49594 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733238AbfJQWBy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 18:01:54 -0400
+Received: from dread.disaster.area (pa49-181-198-88.pa.nsw.optusnet.com.au [49.181.198.88])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id D8FC4363A4B;
+        Fri, 18 Oct 2019 09:01:51 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.2)
+        (envelope-from <david@fromorbit.com>)
+        id 1iLDqA-0002Fo-L7; Fri, 18 Oct 2019 09:01:50 +1100
+Date:   Fri, 18 Oct 2019 09:01:50 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 10/14] iomap: lift the xfs writeback code to iomap
+Message-ID: <20191017220150.GO16973@dread.disaster.area>
+References: <20191017175624.30305-1-hch@lst.de>
+ <20191017175624.30305-11-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191017214453.18934-2-f.fainelli@gmail.com>
+In-Reply-To: <20191017175624.30305-11-hch@lst.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
+        a=ocld+OpnWJCUTqzFQA3oTA==:117 a=ocld+OpnWJCUTqzFQA3oTA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
+        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=L1HaWwOU_qgxwmtv32wA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 02:44:52PM -0700, Florian Fainelli wrote:
-> The standard way of putting a PHY device into loopback is most often
-> suitable for testing. This is going to be necessary in a subsequent
-> patch that adds RGII debugging capability using the loopback feature.
+On Thu, Oct 17, 2019 at 07:56:20PM +0200, Christoph Hellwig wrote:
+> Take the xfs writeback code and move it to fs/iomap.  A new structure
+> with three methods is added as the abstraction from the generic writeback
+> code to the file system.  These methods are used to map blocks, submit an
+> ioend, and cancel a page that encountered an error before it was added to
+> an ioend.
 > 
-> Clause 45 PHYs are not supported through a generic method yet.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+With Darrick's renaming of the .submit_ioend method, this looks
+fine.
 
-    Andrew
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+-- 
+Dave Chinner
+david@fromorbit.com
