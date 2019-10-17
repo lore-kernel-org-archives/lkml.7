@@ -8,87 +8,66 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2783FA372B
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 00:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B98ECE599
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86BE720659
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 00:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63A812082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:19:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ox1kz4/u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FJ7Cx4ok"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395182AbfJQA5p (ORCPT
+        id S2393107AbfJQBTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 20:57:45 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:41030 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbfJQA5p (ORCPT
+        Wed, 16 Oct 2019 21:19:20 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46441 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390047AbfJQBTT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 20:57:45 -0400
-Received: by mail-qk1-f193.google.com with SMTP id p10so324327qkg.8;
-        Wed, 16 Oct 2019 17:57:43 -0700 (PDT)
+        Wed, 16 Oct 2019 21:19:19 -0400
+Received: by mail-qt1-f196.google.com with SMTP id u22so1063844qtq.13;
+        Wed, 16 Oct 2019 18:19:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=aTGJwtX3gaFJhfVoluMU8ZGAYiXGalHVfNd4SW8h3wE=;
-        b=Ox1kz4/ubMjY0NqMhSvT3o7i8b1ksljfLJIysx6uJPIP2yRWgaBpyjuJip6NCAsxXW
-         eI6pUQX1p0dzLjXIRU65G0ymCZmCJTb6sxNJVh83rgjxHF0V1RkyiDwzIObcotrTQcUL
-         xN4ONDLFOtBvp/pmrwIFbmNIqvP/HmMLg80WW2NeJs06uZd63KAjYIT+GdGY0FLrbvC+
-         RZ7nmMLb8gYfC9BgSaao3j9+UYa0VTVgTOL4HKZBoj8el2GQIi158v16B3BUNnue4hho
-         Vf/gzHQTIOXqaPn4LIueompNv0lcl7ipGHJuftywmGONHrlUahNlP3VkRt8gQuXWBGP5
-         xtaQ==
+        bh=Z/aa8wHXCxV3tmXbr+VMzZQ5IcQ3POWlrtZSRfFXe4U=;
+        b=FJ7Cx4okQv21cjqq5YL4ofsxJpaiekvZBcfdJ7bUCEG/x5mqYU4yhbJPlGZ5EMoqCV
+         Rr4J7NHIymCg9kxlE/b7KwyW85qj5XEKEZ2zxaZrI9QoNJqea0fZy7JQ69yJwlA/5lVD
+         +wpgld+msBPX1ogIOVnPCwIypZBk2P38h9324ayHnCT4ruoAsYX2nRKVdvC6hAMAE/MM
+         c6MrgrhT2J8V6lbQgoyngUkfTanQ6Hs259l1lvhTsoQDVhJav2Innl9gS6c9Cb6yw7UR
+         8FDqaISP4JzjUrKJgUFw0qIlX49KI/Cq9h1EgbyO61GyVeaVpSYml2GIRXpGVsjrFWfx
+         EqTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=aTGJwtX3gaFJhfVoluMU8ZGAYiXGalHVfNd4SW8h3wE=;
-        b=kR+02EOAaxNGiBZATR9ys47LmbxHp1bX2q56EJ2z59rHh9mdfK+2tsQY3ZBog8hjdT
-         LHMvjqPvmh6Wn0FATcQpfvCJprDWnInR0LO+vLcaZWINQITtbGdM2iEP73YiIX6mxSCD
-         TJC8N3SbL/P1K5NjAl3+MbkqZMJJEdjIOJklcZ0G3k2fo9HtU904oTqfdN57mJmwEygv
-         ylPzO8KR/qJdm6Khefw50UqDw81WCq0t6OCMqmV07nmnEX9vVVqJqBq82URFeJMs781V
-         z4RLDFwi0G5VAmtDCbQcEDjsT34DbvRPArHsZY7rDCwnl/t6Nlv5rtkSKHIVfN2OH7an
-         fWvQ==
-X-Gm-Message-State: APjAAAXA9mRjl17sm015nB8a0c+6VeadQdJYDOUcgBWmWOIazqav0jM3
-        2O7/k6CW1OTlxiYee1q6V/0=
-X-Google-Smtp-Source: APXvYqw+Is0zFWxxVXLgNAjD5ji4cCtuKQRAnjkgkQc5G9iAjtGzrF4ecvJ23ZYSA/DEUWls6TVR5g==
-X-Received: by 2002:a05:620a:98c:: with SMTP id x12mr820763qkx.323.1571273862463;
-        Wed, 16 Oct 2019 17:57:42 -0700 (PDT)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id x12sm619050qtb.32.2019.10.16.17.57.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 16 Oct 2019 17:57:41 -0700 (PDT)
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailauth.nyi.internal (Postfix) with ESMTP id E2DB022025;
-        Wed, 16 Oct 2019 20:57:40 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Wed, 16 Oct 2019 20:57:40 -0400
-X-ME-Sender: <xms:hLynXcZXTDVQW7tG4chaOnZhLkN2c_L2wmdkfpI7j_ISf5ekFmdMDw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrjeeigdefjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepuehoqhhunhcuhfgv
-    nhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucfkphepuddtuddrke
-    eirdeguddrvdduvdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhm
-    thhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvd
-    dqsghoqhhunheppehfihigmhgvrdhnrghmvgesfhhigihmvgdrnhgrmhgvnecuvehluhhs
-    thgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:hLynXfLGr8-_sWO0fjTZIsG1Fw8PfzGIZ5TFLXYIH83mAw6a-JJdmw>
-    <xmx:hLynXaCcDgi12eMZ0Bx8PCeWvTGfGvx-5qJ9Pofcwm9UDca4-HdncA>
-    <xmx:hLynXUrxAb3L1i1zdg-K4vtQ-HuVjafjUS_HbDquhQ4zggNxagluvA>
-    <xmx:hLynXZD2Da2FGrkW1PNxbT17aIUbukOR2z_EkwOhnp5AZMPPhJZm_A>
-Received: from localhost (unknown [101.86.41.212])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B150ED6005B;
-        Wed, 16 Oct 2019 20:57:39 -0400 (EDT)
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Cc:     Boqun Feng <boqun.feng@gmail.com>,
-        Lan Tianyu <Tianyu.Lan@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        linux-hyperv@vger.kernel.org, Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH] drivers: iommu: hyperv: Make HYPERV_IOMMU only available on x86
-Date:   Thu, 17 Oct 2019 08:57:03 +0800
-Message-Id: <20191017005711.2013647-1-boqun.feng@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        bh=Z/aa8wHXCxV3tmXbr+VMzZQ5IcQ3POWlrtZSRfFXe4U=;
+        b=TgjC7MMbdRk3Dw9XBMmKPph8TjomJghQdGclKptiW7a50CtFwp5VMmu5RjvBuQpRV6
+         eBL6FbpPnfTUe9yBuHx8lokwtu8Jdcndq8Kcr3fzLGaUQkC/ApeQxqylvmrUPK4aucLt
+         4ub0oKEJsda+/RFkb9aNUBiBKKcs15eb3q5RlEUHMuPrDY03kRjKsE1L7kuPeYh74/S4
+         Y55SyFUZRhr3xReIG4Nj736KKiCasgRMsFQv/Ic4FMv2t0bgKNtmViadFi8zdPmXkeDD
+         WPbDKzsKi/VyUib1Jk9yzwC5yCvFEjgTSf43xyaZFKYR3y99gA5u00kQClIw3qxYEedi
+         Qeug==
+X-Gm-Message-State: APjAAAUp4QKqt46dwUXMaBpz73hL3Xd1LkezO8rpXaLIlQQvWXJmCtug
+        lpPWtJDwfvYsb2L7NmlMAoA=
+X-Google-Smtp-Source: APXvYqxoIdiNy2IByAPfJ9y7fcryTSpguig8XZ62D2TJBAdSQUI8qaExu06MD7B60mVtCn7kdQgQaQ==
+X-Received: by 2002:a0c:8867:: with SMTP id 36mr1175545qvm.177.1571275158353;
+        Wed, 16 Oct 2019 18:19:18 -0700 (PDT)
+Received: from localhost.localdomain ([201.53.210.37])
+        by smtp.gmail.com with ESMTPSA id v68sm375528qkd.109.2019.10.16.18.19.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 18:19:17 -0700 (PDT)
+From:   Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+To:     outreachy-kernel@googlegroups.com, sudipm.mukherjee@gmail.com,
+        teddy.wang@siliconmotion.com, gregkh@linuxfoundation.org,
+        linux-fbdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
+        trivial@kernel.org
+Cc:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+Subject: [PATCH] staging: sm750fb: format description of parameters the to kernel doc format
+Date:   Wed, 16 Oct 2019 22:18:49 -0300
+Message-Id: <20191017011849.6081-1-gabrielabittencourt00@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -96,41 +75,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently hyperv-iommu is implemented in a x86 specific way, for
-example, apic is used. So make the HYPERV_IOMMU Kconfig depend on X86
-as a preparation for enabling HyperV on architecture other than x86.
+Cluster comments that describes parameters of functions and create one
+single comment before the function in kernel doc format.
 
-Cc: Lan Tianyu <Tianyu.Lan@microsoft.com>
-Cc: Michael Kelley <mikelley@microsoft.com>
-Cc: linux-hyperv@vger.kernel.org
-Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
+Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
 ---
+ drivers/staging/sm750fb/sm750_accel.c | 65 +++++++++++++++------------
+ 1 file changed, 37 insertions(+), 28 deletions(-)
 
-Without this patch, I could observe compile error:
-
-| drivers/iommu/hyperv-iommu.c:17:10: fatal error: asm/apic.h: No such
-| file or directory
-|   17 | #include <asm/apic.h>
-|      |          ^~~~~~~~~~~~
-
-, after apply Michael's ARM64 on HyperV enablement patchset.
-
- drivers/iommu/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index e3842eabcfdd..f1086eaed41c 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -467,7 +467,7 @@ config QCOM_IOMMU
+diff --git a/drivers/staging/sm750fb/sm750_accel.c b/drivers/staging/sm750fb/sm750_accel.c
+index dbcbbd1055da..d5564cd60f3b 100644
+--- a/drivers/staging/sm750fb/sm750_accel.c
++++ b/drivers/staging/sm750fb/sm750_accel.c
+@@ -130,20 +130,24 @@ int sm750_hw_fillrect(struct lynx_accel *accel,
+ 	return 0;
+ }
  
- config HYPERV_IOMMU
- 	bool "Hyper-V x2APIC IRQ Handling"
--	depends on HYPERV
-+	depends on HYPERV && X86
- 	select IOMMU_API
- 	default HYPERV
- 	help
+-int sm750_hw_copyarea(
+-struct lynx_accel *accel,
+-unsigned int sBase,  /* Address of source: offset in frame buffer */
+-unsigned int sPitch, /* Pitch value of source surface in BYTE */
+-unsigned int sx,
+-unsigned int sy,     /* Starting coordinate of source surface */
+-unsigned int dBase,  /* Address of destination: offset in frame buffer */
+-unsigned int dPitch, /* Pitch value of destination surface in BYTE */
+-unsigned int Bpp,    /* Color depth of destination surface */
+-unsigned int dx,
+-unsigned int dy,     /* Starting coordinate of destination surface */
+-unsigned int width,
+-unsigned int height, /* width and height of rectangle in pixel value */
+-unsigned int rop2)   /* ROP value */
++/**
++ * @sBase: Address of source: offset in frame buffer
++ * @sPitch: Pitch value of source surface in BYTE
++ * @sx, @sy: Starting coordinate of source surface
++ * @dBase: Address of destination: offset in frame buffer
++ * @dPitch: Pitch value of destination surface in BYTE
++ * @Bpp: Color depth of destination surface
++ * @dx, @dy: Starting coordinate of destination surface
++ * @width, @height: width and height of rectangle in pixel value
++ * @rop2: ROP value
++ */
++int sm750_hw_copyarea(struct lynx_accel *accel,
++		      unsigned int sBase, unsigned int sPitch,
++		      unsigned int sx, unsigned int sy,
++		      unsigned int dBase, unsigned int dPitch,
++		      unsigned int Bpp, unsigned int dx, unsigned int dy,
++		      unsigned int width, unsigned int height,
++		      unsigned int rop2)
+ {
+ 	unsigned int nDirection, de_ctrl;
+ 
+@@ -288,20 +292,25 @@ static unsigned int deGetTransparency(struct lynx_accel *accel)
+ 	return de_ctrl;
+ }
+ 
+-int sm750_hw_imageblit(struct lynx_accel *accel,
+-		 const char *pSrcbuf, /* pointer to start of source buffer in system memory */
+-		 u32 srcDelta,          /* Pitch value (in bytes) of the source buffer, +ive means top down and -ive mean button up */
+-		 u32 startBit, /* Mono data can start at any bit in a byte, this value should be 0 to 7 */
+-		 u32 dBase,    /* Address of destination: offset in frame buffer */
+-		 u32 dPitch,   /* Pitch value of destination surface in BYTE */
+-		 u32 bytePerPixel,      /* Color depth of destination surface */
+-		 u32 dx,
+-		 u32 dy,       /* Starting coordinate of destination surface */
+-		 u32 width,
+-		 u32 height,   /* width and height of rectangle in pixel value */
+-		 u32 fColor,   /* Foreground color (corresponding to a 1 in the monochrome data */
+-		 u32 bColor,   /* Background color (corresponding to a 0 in the monochrome data */
+-		 u32 rop2)     /* ROP value */
++/**
++ * @pSrcbuf: pointer to start of source buffer in system memory
++ * @srcDelta: Pitch value (in bytes) of the source buffer, +ive means top down
++ * and -ive mean button up
++ * @startBit: Mono data can start at any bit in a byte, this value should be
++ * 0 to 7
++ * @dBase: Address of destination: offset in frame buffer
++ * @dPitch: Pitch value of destination surface in BYTE
++ * @bytePerPixel: Color depth of destination surface
++ * @dx, @dy: Starting coordinate of destination surface
++ * @width, @height: width and height of rectangle in pixel value
++ * @fColor: Foreground color (corresponding to a 1 in the monochrome data
++ * @bColor: Background color (corresponding to a 0 in the monochrome data
++ * @rop2: ROP value
++ */
++int sm750_hw_imageblit(struct lynx_accel *accel, const char *pSrcbuf,
++		       u32 srcDelta, u32 startBit, u32 dBase, u32 dPitch,
++		       u32 bytePerPixel, u32 dx, u32 dy, u32 width,
++		       u32 height, u32 fColor, u32 bColor, u32 rop2)
+ {
+ 	unsigned int ulBytesPerScan;
+ 	unsigned int ul4BytesPerScan;
 -- 
-2.23.0
+2.20.1
 
