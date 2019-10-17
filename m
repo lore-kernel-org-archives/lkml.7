@@ -2,220 +2,296 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C27ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CA2ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C69B2089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3CDA2089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:53:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437446AbfJQRx2 (ORCPT
+        id S2437543AbfJQRxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 13:53:28 -0400
-Received: from vsmx011.vodafonemail.xion.oxcs.net ([153.92.174.89]:17955 "EHLO
-        vsmx011.vodafonemail.xion.oxcs.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2437206AbfJQRx0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 13:53:26 -0400
-Received: from vsmx003.vodafonemail.xion.oxcs.net (unknown [192.168.75.197])
-        by mta-5-out.mta.xion.oxcs.net (Postfix) with ESMTP id 27ADA59DAE0;
-        Thu, 17 Oct 2019 17:53:23 +0000 (UTC)
-Received: from lazy.lzy (unknown [93.212.126.195])
-        by mta-7-out.mta.xion.oxcs.net (Postfix) with ESMTPA id 7C51A5399ED;
-        Thu, 17 Oct 2019 17:53:08 +0000 (UTC)
-Received: from lazy.lzy (localhost [127.0.0.1])
-        by lazy.lzy (8.15.2/8.14.5) with ESMTPS id x9HHr7x3003086
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 17 Oct 2019 19:53:07 +0200
-Received: (from red@localhost)
-        by lazy.lzy (8.15.2/8.15.2/Submit) id x9HHr6gB003085;
-        Thu, 17 Oct 2019 19:53:06 +0200
-Date:   Thu, 17 Oct 2019 19:53:06 +0200
-From:   Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        USB list <linux-usb@vger.kernel.org>,
-        linux-block@vger.kernel.org,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: reeze while write on external usb 3.0 hard disk [Bug 204095]
-Message-ID: <20191017175306.GA3014@lazy.lzy>
-References: <20191013181116.GA3858@lazy.lzy>
- <Pine.LNX.4.44L0.1910161258081.1304-100000@iolanthe.rowland.org>
+        Thu, 17 Oct 2019 13:53:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57474 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732851AbfJQRxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 13:53:45 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4FF04307C658;
+        Thu, 17 Oct 2019 17:53:44 +0000 (UTC)
+Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C8D975D6C8;
+        Thu, 17 Oct 2019 17:53:29 +0000 (UTC)
+Date:   Thu, 17 Oct 2019 11:53:29 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+Subject: Re: [PATCH V4 4/6] mdev: introduce virtio device and its device ops
+Message-ID: <20191017115329.47d4a165@x1.home>
+In-Reply-To: <20191017104836.32464-5-jasowang@redhat.com>
+References: <20191017104836.32464-1-jasowang@redhat.com>
+        <20191017104836.32464-5-jasowang@redhat.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1910161258081.1304-100000@iolanthe.rowland.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-VADE-STATUS: LEGIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 17 Oct 2019 17:53:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 01:01:20PM -0400, Alan Stern wrote:
-> On Sun, 13 Oct 2019, Piergiorgio Sartor wrote:
+On Thu, 17 Oct 2019 18:48:34 +0800
+Jason Wang <jasowang@redhat.com> wrote:
+
+> This patch implements basic support for mdev driver that supports
+> virtio transport for kernel virtio driver.
 > 
-> > On Mon, Sep 30, 2019 at 08:25:01PM +0200, Piergiorgio Sartor wrote:
-> > > On Sun, Sep 29, 2019 at 09:01:48PM -0400, Alan Stern wrote:
-> > > > On Sun, 29 Sep 2019, Piergiorgio Sartor wrote:
-> > > > 
-> > > > > On Wed, Sep 25, 2019 at 02:31:58PM -0400, Alan Stern wrote:
-> > > > > > On Wed, 25 Sep 2019, Piergiorgio Sartor wrote:
-> > > > > > 
-> > > > > > > On Mon, Aug 26, 2019 at 07:38:33PM +0200, Piergiorgio Sartor wrote:
-> > > > > > > > On Tue, Aug 20, 2019 at 06:37:22PM +0200, Piergiorgio Sartor wrote:
-> > > > > > > > > On Tue, Aug 20, 2019 at 09:23:26AM +0200, Christoph Hellwig wrote:
-> > > > > > > > > > On Mon, Aug 19, 2019 at 10:14:25AM -0400, Alan Stern wrote:
-> > > > > > > > > > > Let's bring this to the attention of some more people.
-> > > > > > > > > > > 
-> > > > > > > > > > > It looks like the bug that was supposed to be fixed by commit
-> > > > > > > > > > > d74ffae8b8dd ("usb-storage: Add a limitation for
-> > > > > > > > > > > blk_queue_max_hw_sectors()"), which is part of 5.2.5, but apparently
-> > > > > > > > > > > the bug still occurs.
-> > > > > > > > > > 
-> > > > > > > > > > Piergiorgio,
-> > > > > > > > > > 
-> > > > > > > > > > can you dump the content of max_hw_sectors_kb file for your USB storage
-> > > > > > > > > > device and send that to this thread?
-> > > > > > > > > 
-> > > > > > > > > Hi all,
-> > > > > > > > > 
-> > > > > > > > > for both kernels, 5.1.20 (working) and 5.2.8 (not working),
-> > > > > > > > > the content of /sys/dev/x:y/queue/max_hw_sectors_kb is 512
-> > > > > > > > > for USB storage devices (2.0 and 3.0).
-> > > > > > > > > 
-> > > > > > > > > This is for the PC showing the issue.
-> > > > > > > > > 
-> > > > > > > > > In an other PC, which does not show the issus at the moment,
-> > > > > > > > > the values are 120, for USB2.0, and 256, for USB3.0.
-> > > > 
-> > > > > > One thing you can try is git bisect from 5.1.20 (or maybe just 5.1.0)  
-> > > > > > to 5.2.8.  If you can identify a particular commit which caused the
-> > > > > > problem to start, that would help.
-> > > > > 
-> > > > > OK, I tried a bisect (2 days compilations...).
-> > > > > Assuming I've done everything correctly (how to
-> > > > > test this? How to remove the guilty patch?), this
-> > > > > was the result:
-> > > > > 
-> > > > > 09324d32d2a0843e66652a087da6f77924358e62 is the first bad commit
-> > > > > commit 09324d32d2a0843e66652a087da6f77924358e62
-> > > > > Author: Christoph Hellwig <hch@lst.de>
-> > > > > Date:   Tue May 21 09:01:41 2019 +0200
-> > > > > 
-> > > > >     block: force an unlimited segment size on queues with a virt boundary
-> > > > > 
-> > > > >     We currently fail to update the front/back segment size in the bio when
-> > > > >     deciding to allow an otherwise gappy segement to a device with a
-> > > > >     virt boundary.  The reason why this did not cause problems is that
-> > > > >     devices with a virt boundary fundamentally don't use segments as we
-> > > > >     know it and thus don't care.  Make that assumption formal by forcing
-> > > > >     an unlimited segement size in this case.
-> > > > > 
-> > > > >     Fixes: f6970f83ef79 ("block: don't check if adjacent bvecs in one bio can be mergeable")
-> > > > >     Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > > >     Reviewed-by: Ming Lei <ming.lei@redhat.com>
-> > > > >     Reviewed-by: Hannes Reinecke <hare@suse.com>
-> > > > >     Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> > > > > 
-> > > > > :040000 040000 57ba04a02f948022c0f6ba24bfa36f3b565b2440 8c925f71ce75042529c001bf244b30565d19ebf3 M      block
-> > > > > 
-> > > > > What to do now?
-> > > > 
-> > > > Here's how to verify that the bisection got a correct result.  First, 
-> > > > do a git checkout of commit 09324d32d2a0, build the kernel, and make 
-> > > > sure that it exhibits the problem.
-> > > > 
-> > > > Next, have git write out the contents of that commit in the form of a
-> > > > patch (git show commit-id >patchfile), and revert it (git apply -R
-> > > > patchfile).  Build the kernel from that tree, and make sure that it
-> > > > does not exhibit the problem.  If it doesn't, you have definitely shown
-> > > > that this commit is the cause (or at least, is _one_ of the causes).
-> > > 
-> > > I tried as suggested, i.e. jumping to commit
-> > > 09324d32d2a0843e66652a087da6f77924358e62, testing,
-> > > removing the patch, testing.
-> > > The result was as expected.
-> > > I was able to reproduce the issue with the commit,
-> > > I was not able to reproduce it without.
-> > > It seems this patch / commit is causing the problem.
-> > > Directly or indirectly.
-> > > 
-> > > What are the next steps?
-> > 
-> > Hi all,
-> > 
-> > I tested kernel 5.3.5 (Fedora kernel-5.3.5-200.fc30.x86_64),
-> > with same problematic results.
-> > 
-> > Again, what should be done now?
-> > Could you please revert the patch?
-> > 
-> > Or is there something else to check?
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+>  drivers/vfio/mdev/mdev_core.c |  12 +++
+>  include/linux/mdev.h          |   4 +
+>  include/linux/virtio_mdev.h   | 151 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 167 insertions(+)
+>  create mode 100644 include/linux/virtio_mdev.h
 > 
-> Here is one more thing you can try.  I have no idea whether it will 
-> make any difference, but the Changelog entry for the patch you 
-> identified suggests that it might help.
-> 
-> Alan Stern
-> 
-> 
-> 
-> Index: usb-devel/drivers/usb/storage/scsiglue.c
-> ===================================================================
-> --- usb-devel.orig/drivers/usb/storage/scsiglue.c
-> +++ usb-devel/drivers/usb/storage/scsiglue.c
-> @@ -68,7 +68,6 @@ static const char* host_info(struct Scsi
->  static int slave_alloc (struct scsi_device *sdev)
+> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+> index d0f3113c8071..5834f6b7c7a5 100644
+> --- a/drivers/vfio/mdev/mdev_core.c
+> +++ b/drivers/vfio/mdev/mdev_core.c
+> @@ -57,6 +57,18 @@ void mdev_set_vfio_ops(struct mdev_device *mdev,
+>  }
+>  EXPORT_SYMBOL(mdev_set_vfio_ops);
+>  
+> +/* Specify the virtio device ops for the mdev device, this
+> + * must be called during create() callback for virtio mdev device.
+> + */
+> +void mdev_set_virtio_ops(struct mdev_device *mdev,
+> +			 const struct virtio_mdev_device_ops *virtio_ops)
+> +{
+> +	BUG_ON(mdev->class_id);
+
+Nit, this one is a BUG_ON, but the vfio one is a WARN_ON.  Thanks,
+
+Alex
+
+> +	mdev->class_id = MDEV_CLASS_ID_VIRTIO;
+> +	mdev->device_ops = virtio_ops;
+> +}
+> +EXPORT_SYMBOL(mdev_set_virtio_ops);
+> +
+>  const void *mdev_get_dev_ops(struct mdev_device *mdev)
 >  {
->  	struct us_data *us = host_to_us(sdev->host);
-> -	int maxp;
+>  	return mdev->device_ops;
+> diff --git a/include/linux/mdev.h b/include/linux/mdev.h
+> index 3d29e09e20c9..13e045e09d3b 100644
+> --- a/include/linux/mdev.h
+> +++ b/include/linux/mdev.h
+> @@ -17,6 +17,7 @@
 >  
->  	/*
->  	 * Set the INQUIRY transfer length to 36.  We don't use any of
-> @@ -78,15 +77,6 @@ static int slave_alloc (struct scsi_devi
->  	sdev->inquiry_len = 36;
+>  struct mdev_device;
+>  struct vfio_mdev_device_ops;
+> +struct virtio_mdev_device_ops;
 >  
->  	/*
-> -	 * USB has unusual scatter-gather requirements: the length of each
-> -	 * scatterlist element except the last must be divisible by the
-> -	 * Bulk maxpacket value.  Fortunately this value is always a
-> -	 * power of 2.  Inform the block layer about this requirement.
-> -	 */
-> -	maxp = usb_maxpacket(us->pusb_dev, us->recv_bulk_pipe, 0);
-> -	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
-> -
-> -	/*
->  	 * Some host controllers may have alignment requirements.
->  	 * We'll play it safe by requiring 512-byte alignment always.
->  	 */
+>  /*
+>   * Called by the parent device driver to set the device which represents
+> @@ -111,6 +112,8 @@ void mdev_set_drvdata(struct mdev_device *mdev, void *data);
+>  const guid_t *mdev_uuid(struct mdev_device *mdev);
+>  void mdev_set_vfio_ops(struct mdev_device *mdev,
+>  		       const struct vfio_mdev_device_ops *vfio_ops);
+> +void mdev_set_virtio_ops(struct mdev_device *mdev,
+> +                         const struct virtio_mdev_device_ops *virtio_ops);
+>  const void *mdev_get_dev_ops(struct mdev_device *mdev);
+>  
+>  extern struct bus_type mdev_bus_type;
+> @@ -127,6 +130,7 @@ struct mdev_device *mdev_from_dev(struct device *dev);
+>  
+>  enum {
+>  	MDEV_CLASS_ID_VFIO = 1,
+> +	MDEV_CLASS_ID_VIRTIO = 2,
+>  	/* New entries must be added here */
+>  };
+>  
+> diff --git a/include/linux/virtio_mdev.h b/include/linux/virtio_mdev.h
+> new file mode 100644
+> index 000000000000..b965b50f9b24
+> --- /dev/null
+> +++ b/include/linux/virtio_mdev.h
+> @@ -0,0 +1,151 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Virtio mediated device driver
+> + *
+> + * Copyright 2019, Red Hat Corp.
+> + *     Author: Jason Wang <jasowang@redhat.com>
+> + */
+> +#ifndef _LINUX_VIRTIO_MDEV_H
+> +#define _LINUX_VIRTIO_MDEV_H
+> +
+> +#include <linux/interrupt.h>
+> +#include <linux/mdev.h>
+> +#include <uapi/linux/vhost.h>
+> +
+> +#define VIRTIO_MDEV_DEVICE_API_STRING		"virtio-mdev"
+> +#define VIRTIO_MDEV_F_VERSION_1 0x1
+> +
+> +struct virtio_mdev_callback {
+> +	irqreturn_t (*callback)(void *data);
+> +	void *private;
+> +};
+> +
+> +/**
+> + * struct vfio_mdev_device_ops - Structure to be registered for each
+> + * mdev device to register the device to virtio-mdev module.
+> + *
+> + * @set_vq_address:		Set the address of virtqueue
+> + *				@mdev: mediated device
+> + *				@idx: virtqueue index
+> + *				@desc_area: address of desc area
+> + *				@driver_area: address of driver area
+> + *				@device_area: address of device area
+> + *				Returns integer: success (0) or error (< 0)
+> + * @set_vq_num:		Set the size of virtqueue
+> + *				@mdev: mediated device
+> + *				@idx: virtqueue index
+> + *				@num: the size of virtqueue
+> + * @kick_vq:			Kick the virtqueue
+> + *				@mdev: mediated device
+> + *				@idx: virtqueue index
+> + * @set_vq_cb:			Set the interrupt callback function for
+> + *				a virtqueue
+> + *				@mdev: mediated device
+> + *				@idx: virtqueue index
+> + *				@cb: virtio-mdev interrupt callback structure
+> + * @set_vq_ready:		Set ready status for a virtqueue
+> + *				@mdev: mediated device
+> + *				@idx: virtqueue index
+> + *				@ready: ready (true) not ready(false)
+> + * @get_vq_ready:		Get ready status for a virtqueue
+> + *				@mdev: mediated device
+> + *				@idx: virtqueue index
+> + *				Returns boolean: ready (true) or not (false)
+> + * @set_vq_state:		Set the state for a virtqueue
+> + *				@mdev: mediated device
+> + *				@idx: virtqueue index
+> + *				@state: virtqueue state (last_avail_idx)
+> + *				Returns integer: success (0) or error (< 0)
+> + * @get_vq_state:		Get the state for a virtqueue
+> + *				@mdev: mediated device
+> + *				@idx: virtqueue index
+> + *				Returns virtqueue state (last_avail_idx)
+> + * @get_vq_align:		Get the virtqueue align requirement
+> + *				for the device
+> + *				@mdev: mediated device
+> + *				Returns virtqueue algin requirement
+> + * @get_features:		Get virtio features supported by the device
+> + *				@mdev: mediated device
+> + *				Returns the virtio features support by the
+> + *				device
+> + * @get_features:		Set virtio features supported by the driver
+> + *				@mdev: mediated device
+> + *				@features: feature support by the driver
+> + *				Returns integer: success (0) or error (< 0)
+> + * @set_config_cb:		Set the config interrupt callback
+> + *				@mdev: mediated device
+> + *				@cb: virtio-mdev interrupt callback structure
+> + * @get_vq_num_max:		Get the max size of virtqueue
+> + *				@mdev: mediated device
+> + *				Returns u16: max size of virtqueue
+> + * @get_device_id:		Get virtio device id
+> + *				@mdev: mediated device
+> + *				Returns u32: virtio device id
+> + * @get_vendor_id:		Get virtio vendor id
+> + *				@mdev: mediated device
+> + *				Returns u32: virtio vendor id
+> + * @get_status: 		Get the device status
+> + *				@mdev: mediated device
+> + *				Returns u8: virtio device status
+> + * @set_status: 		Set the device status
+> + *				@mdev: mediated device
+> + *				@status: virtio device status
+> + * @get_config: 		Read from device specific configuration space
+> + *				@mdev: mediated device
+> + *				@offset: offset from the beginning of
+> + *				configuration space
+> + *				@buf: buffer used to read to
+> + *				@len: the length to read from
+> + *				configration space
+> + * @set_config: 		Write to device specific configuration space
+> + *				@mdev: mediated device
+> + *				@offset: offset from the beginning of
+> + *				configuration space
+> + *				@buf: buffer used to write from
+> + *				@len: the length to write to
+> + *				configration space
+> + * @get_mdev_features:		Get the feature of virtio mdev device
+> + *				@mdev: mediated device
+> + *				Returns the mdev features (API) support by
+> + *				the device.
+> + * @get_generation:		Get device generaton
+> + *				@mdev: mediated device
+> + *				Returns u32: device generation
+> + */
+> +struct virtio_mdev_device_ops {
+> +	/* Virtqueue ops */
+> +	int (*set_vq_address)(struct mdev_device *mdev,
+> +			      u16 idx, u64 desc_area, u64 driver_area,
+> +			      u64 device_area);
+> +	void (*set_vq_num)(struct mdev_device *mdev, u16 idx, u32 num);
+> +	void (*kick_vq)(struct mdev_device *mdev, u16 idx);
+> +	void (*set_vq_cb)(struct mdev_device *mdev, u16 idx,
+> +			  struct virtio_mdev_callback *cb);
+> +	void (*set_vq_ready)(struct mdev_device *mdev, u16 idx, bool ready);
+> +	bool (*get_vq_ready)(struct mdev_device *mdev, u16 idx);
+> +	int (*set_vq_state)(struct mdev_device *mdev, u16 idx, u64 state);
+> +	u64 (*get_vq_state)(struct mdev_device *mdev, u16 idx);
+> +
+> +	/* Device ops */
+> +	u16 (*get_vq_align)(struct mdev_device *mdev);
+> +	u64 (*get_features)(struct mdev_device *mdev);
+> +	int (*set_features)(struct mdev_device *mdev, u64 features);
+> +	void (*set_config_cb)(struct mdev_device *mdev,
+> +			      struct virtio_mdev_callback *cb);
+> +	u16 (*get_vq_num_max)(struct mdev_device *mdev);
+> +	u32 (*get_device_id)(struct mdev_device *mdev);
+> +	u32 (*get_vendor_id)(struct mdev_device *mdev);
+> +	u8 (*get_status)(struct mdev_device *mdev);
+> +	void (*set_status)(struct mdev_device *mdev, u8 status);
+> +	void (*get_config)(struct mdev_device *mdev, unsigned int offset,
+> +			   void *buf, unsigned int len);
+> +	void (*set_config)(struct mdev_device *mdev, unsigned int offset,
+> +			   const void *buf, unsigned int len);
+> +	u64 (*get_mdev_features)(struct mdev_device *mdev);
+> +	u32 (*get_generation)(struct mdev_device *mdev);
+> +};
+> +
+> +void mdev_set_virtio_ops(struct mdev_device *mdev,
+> +			 const struct virtio_mdev_device_ops *virtio_ops);
+> +
+> +#endif
 
-Hi,
-
-I tested the patch.
-
-Assumming I did everything properly, add patch,
-test, issue not showing up, remove patch, re-test,
-issue present.
-
-It seems this patch you provide solves the issue.
-
-Thanks a lot for the support and the solution.
-
-I guess now this patch will be integrated into
-mainline sometimes.
-Please let me know, in this thread or directly, in
-which kernel it will be available.
-
-Thanks again, it would be for me impossible to
-solve without your support,
-
-bye,
-
--- 
-
-piergiorgio
