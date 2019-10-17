@@ -2,187 +2,86 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8BBECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBA8FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9111E2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 998262054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:09:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571321358;
+	bh=/h9dbzkvdA1m6MQMs1W/fY8AIQ80ER55q72Dv3Xdfxk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eILVNTII1jGanuDnmScNP75YOa92M7zCeCbPWjj/H226EjmapsZV2/rgt6H/vA24i
+	 dorj5aWc1lV+aKjNu1c8Nt00pvrGUFBqfg8jVS1PUTYKDmsgPwRBXEuDk5qhOjuDSQ
+	 S8P2AL/KqM7m3+G6AJW25ziob83MLQZYyeyCHfho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394780AbfJQOIv (ORCPT
+        id S2439834AbfJQOJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 10:08:51 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:47664 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727429AbfJQOIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:08:51 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 30357D36CEBE6D75367F;
-        Thu, 17 Oct 2019 22:08:46 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
- 22:08:40 +0800
-Subject: Re: [PATCH V2] arm64: psci: Reduce waiting time of
- cpu_psci_cpu_kill()
-To:     Sudeep Holla <sudeep.holla@arm.com>
-CC:     Will Deacon <will@kernel.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "wuyun.wu@huawei.com" <wuyun.wu@huawei.com>,
-        <hushiyuan@huawei.com>, <linfeilong@huawei.com>
-References: <18068756-0f39-6388-3290-cf03746e767d@huawei.com>
- <20191015162358.bt5rffidkv2j4xqb@willie-the-truck>
- <ab42357e-f4f9-9019-e8d9-7e9bfe106e9e@huawei.com>
- <20191016102545.GA11386@bogus>
- <13d82e24-90bd-0c17-ef7f-aa7fec272f59@huawei.com>
- <20191016150545.GA6750@bogus>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Message-ID: <f1f281a4-4114-7193-369a-0062ecbd8cab@huawei.com>
-Date:   Thu, 17 Oct 2019 22:08:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 17 Oct 2019 10:09:17 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46602 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727429AbfJQOJR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 10:09:17 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 89so1957179oth.13;
+        Thu, 17 Oct 2019 07:09:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kXGnqFYJa8gxk84zjaw258zWcPW1sB63qQ3t9jdm74M=;
+        b=LJK1wmj31xyIwxT0iBvFmuJiBcM46Sy8zCtl3RhUDD6q79Ji9kTbmUJJKiBGoNbGyT
+         5Xj+jzsMktKO/SBhSyxF24i9On/xDvRGl0mVJDi01iqKZEMxr4k01H0It3dJjwP/LKHv
+         Db9SKymLeiOvFXGr91c3gkw9e1ig+gKIIp8xGU6dA8golIsWoptAGR/VBTj2da3hAc1W
+         oIa1khIfZ1GPDXKp7TSKM+H3inNgz/gLpkRlcIuNnBIpQXeQNaFXSVODvQfrkcO8PZeM
+         eAOLDf7aG+Bvv7fjMmM1Pe2rRCrihxVWa6p3/QLunGsH3H0DVhCLvamQDDxMauRMZh5k
+         L8gA==
+X-Gm-Message-State: APjAAAWvnwUTcSGVHdjhmmRR76+M18uUyEbWZpxrjNFDYVofjny7D2O4
+        4b+qGEKNO7w+r1Dh6ONXGw==
+X-Google-Smtp-Source: APXvYqzLM9ovRh2qGOqpLD8UeBmHywdySl5GPPNx0DqB4KZyst3Sp7rp33P5TB0666e1K2JiAr8IvA==
+X-Received: by 2002:a05:6830:1f09:: with SMTP id u9mr3421418otg.310.1571321356236;
+        Thu, 17 Oct 2019 07:09:16 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 60sm644410oto.27.2019.10.17.07.09.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 07:09:15 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 09:09:14 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Hanna Hawa <hhhawa@amazon.com>
+Cc:     bp@alien8.de, mchehab@kernel.org, mark.rutland@arm.com,
+        james.morse@arm.com, robh+dt@kernel.org, frowand.list@gmail.com,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        linus.walleij@linaro.org, daniel@iogearbox.net,
+        paulmck@linux.ibm.com, Sudeep.Holla@arm.com,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        devicetree@vger.kernel.org, dwmw@amazon.co.uk, benh@amazon.com,
+        ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com,
+        hanochu@amazon.com, hhhawa@amazon.com
+Subject: Re: [PATCH v7 2/3] of: EXPORT_SYMBOL_GPL of_find_next_cache_node
+Message-ID: <20191017140914.GA21404@bogus>
+References: <20191015120927.10470-1-hhhawa@amazon.com>
+ <20191015120927.10470-3-hhhawa@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <20191016150545.GA6750@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015120927.10470-3-hhhawa@amazon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/10/16 23:05, Sudeep Holla wrote:
-> On Wed, Oct 16, 2019 at 07:29:59PM +0800, Yunfeng Ye wrote:
->>
->>
->> On 2019/10/16 18:25, Sudeep Holla wrote:
->>> On Wed, Oct 16, 2019 at 11:22:23AM +0800, Yunfeng Ye wrote:
->>>>
->>>>
->>>> On 2019/10/16 0:23, Will Deacon wrote:
->>>>> Hi,
->>>>>
->>>>> On Sat, Sep 21, 2019 at 07:21:17PM +0800, Yunfeng Ye wrote:
->>>>>> If psci_ops.affinity_info() fails, it will sleep 10ms, which will not
->>>>>> take so long in the right case. Use usleep_range() instead of msleep(),
->>>>>> reduce the waiting time, and give a chance to busy wait before sleep.
->>>>>
->>>>> Can you elaborate on "the right case" please? It's not clear to me
->>>>> exactly what problem you're solving here.
->>>>>
->>>> The situation is that when the power is off, we have a battery to save some
->>>> information, but the battery power is limited, so we reduce the power consumption
->>>> by turning off the cores, and need fastly to complete the core shutdown. However, the
->>>> time of cpu_psci_cpu_kill() will take 10ms. We have tested the time that it does not
->>>> need 10ms, and most case is about 50us-500us. if we reduce the time of cpu_psci_cpu_kill(),
->>>> we can reduce 10% - 30% of the total time.
->>>>
->>>
->>> Have you checked why PSCI AFFINITY_INFO not returning LEVEL_OFF quickly
->>> then ? We wait for upto 5s in cpu_wait_death(worst case) before cpu_kill
->>> is called from __cpu_die.
->>>
->> When cpu_wait_death() is done, it means that the cpu core's hardware prepare to
->> die. I think not returning LEVEL_OFF quickly is that hardware need time to handle.
->> I don't know how much time it need is reasonable, but I test that it need about
->> 50us - 500us.
->>
+On Tue, 15 Oct 2019 13:09:26 +0100, Hanna Hawa wrote:
+> Make of_find_next_cache_node() available for modules.
 > 
-> Fair enough.
-> 
->> In addition I have not meat the worst case that cpu_wait_death() need upto
->> 5s, and we only take normal case into account.
->>
-> 
-> Good
-> 
->>
->>> Moreover I don't understand the argument here. The cpu being killed
->>> will be OFF, as soon as it can and firmware controls that and this
->>> change is not related to CPU_OFF. And this CPU calling cpu_kill can
->>> sleep and 10ms is good to enter idle states if it's idle saving power,
->>> so I fail to map the power saving you mention above.
->>>
->> We have hundreds of CPU cores that need to be shut down. For example,
->> a CPU has 200 cores, and the thread to shut down the core is in CPU 0.
->> and the thread need to shut down from core 1 to core 200. However, the
->> implementation of the kernel can only shut down cpu cores one by one, so we
->> need to wait for cpu_kill() to finish before shutting down the next
->> CPU core. If it wait for 10ms each time in cpu_kill, it will takes up
->> about 2 seconds in cpu_kill() total.
->>
-> 
-> OK, thanks for the illustrative example. This make sense to me now. But
-> you comparing with battery powered devices confused me and I assumed
-> it as some hack to optimise mobile workload.
-> 
-It is not mobile workload, but a arm64 server with hundreds of cpu cores.
-Battery powered is a backup battery for reliability and to prevent
-accidental power failure.
-
->>>> So change msleep (10) to usleep_range() to reduce the waiting time. In addition,
->>>> we don't want to be scheduled during the sleeping time, some threads may take a
->>>> long time and don't give up the CPU, which affects the time of core shutdown,
->>>> Therefore, we add a chance to busy-wait max 1ms.
->>>>
->>>
->>> On the other hand, usleep_range reduces the timer interval and hence
->>> increases the chance of the callee CPU not to enter deeper idle states.
->>>
->>> What am I missing here ? What's the use case or power off situation
->>> you are talking about above ?
->>>
->> As mentioned above, we are not to save power through msleep to idle state,
->> but to quickly turn off other CPU core's hardware to reduce power consumption.
-> 
-> You still don't provide your use-case in which this is required. I know
-> this will be useful for suspend-to-ram. Do you have any other use-case
-> that you need to power-off large number of CPUs like this ? Also you
-> mentioned battery powered, and I don't think any battery powered device
-> has 200 thread like in your example :)
-> 
-The use-case is like suspend-to-disk, but a little different:
-In the abnormal power failure of server equipment, in order to increase
-reliability, there is a backup battery for power supply. Before the battery runs out,
-we need to save the key datas to the disk. In order to maintain the battery power
-supply, a series of power reduction processing is needed, include which all the cores
-need to be shut down quickly, we have max near 200 cores need to shutdown.
-
-Also this modify will be useful for suspend-to-ram too.
-thanks.
-
-> You need to mention few things clearly in the commit log:
-> 1. How the CPU hotplug operation is serialised in some use-case like
->    suspend-to-ram
-> 2. How that may impact systems with large number of CPUs
-> 3. How your change helps to improve that
-> 
-> It may it easy for anyone to understand the motivation for this change.
-> The commit message you have doesn't give any clue on all the above and
-> hence we have lot of questions.
-> 
-ok, thanks.
-
-> I will respond to the original patch separately.
-> 
-> --
-> Regards,
-> Sudeep
-> 
-> .
+> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+> ---
+>  drivers/of/base.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
+Acked-by: Rob Herring <robh@kernel.org>
