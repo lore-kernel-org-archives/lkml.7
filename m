@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC49DFA3733
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D667FA3738
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93E89222BD
+	by mail.kernel.org (Postfix) with ESMTP id E8D0B214E0
 	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:19:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408807AbfJQKTI (ORCPT
+        id S2408818AbfJQKTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 06:19:08 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:36465 "EHLO
+        Thu, 17 Oct 2019 06:19:09 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:36474 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408768AbfJQKTG (ORCPT
+        with ESMTP id S2408801AbfJQKTI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 06:19:06 -0400
+        Thu, 17 Oct 2019 06:19:08 -0400
 Received: from [185.81.136.22] (helo=localhost.localdomain)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iL2s4-0007tP-Qk; Thu, 17 Oct 2019 10:19:05 +0000
+        id 1iL2s6-0007tP-Q6; Thu, 17 Oct 2019 10:19:06 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     oleg@redhat.com, linux-kernel@vger.kernel.org
 Cc:     aarcange@redhat.com, akpm@linux-foundation.org,
@@ -35,9 +35,9 @@ Cc:     aarcange@redhat.com, akpm@linux-foundation.org,
         mhocko@suse.com, mingo@kernel.org, peterz@infradead.org,
         shuah@kernel.org, tglx@linutronix.de, viro@zeniv.linux.org.uk,
         Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH v3 4/5] exit: use pid_has_task() in do_wait()
-Date:   Thu, 17 Oct 2019 12:18:31 +0200
-Message-Id: <20191017101832.5985-4-christian.brauner@ubuntu.com>
+Subject: [PATCH v3 5/5] pid: use pid_has_task() in pidfd_open()
+Date:   Thu, 17 Oct 2019 12:18:32 +0200
+Message-Id: <20191017101832.5985-5-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191017101832.5985-1-christian.brauner@ubuntu.com>
 References: <20191016153606.2326-1-christian.brauner@ubuntu.com>
@@ -49,8 +49,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace hlist_empty() with the new pid_has_task() helper which is more
-idiomatic, easier to grep for, and unifies how callers perform this check.
+Use the new pid_has_task() helper in pidfd_open(). This simplifies the
+code and avoids taking rcu_read_{lock,unlock}() and leads to overall
+nicer code.
 
 Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 Reviewed-by: Oleg Nesterov <oleg@redhat.com>
@@ -62,29 +63,47 @@ passed
 patch not present
 
 /* v2 */
-Link: https://lore.kernel.org/r/20191016153606.2326-4-christian.brauner@ubuntu.com
+Link: https://lore.kernel.org/r/20191016153606.2326-5-christian.brauner@ubuntu.com
 patch introduced
 
 /* v3 */
 - Oleg Nesterov <oleg@redhat.com>:
   - s/task_alive/pid_has_task/
 ---
- kernel/exit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/pid.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index a46a50d67002..f2d20ab74422 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -1457,7 +1457,7 @@ static long do_wait(struct wait_opts *wo)
- 	 */
- 	wo->notask_error = -ECHILD;
- 	if ((wo->wo_type < PIDTYPE_MAX) &&
--	   (!wo->wo_pid || hlist_empty(&wo->wo_pid->tasks[wo->wo_type])))
-+	   (!wo->wo_pid || !pid_has_task(wo->wo_pid, wo->wo_type)))
- 		goto notask;
+diff --git a/kernel/pid.c b/kernel/pid.c
+index 124d40b239b1..7b5f6c963d72 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -497,7 +497,7 @@ static int pidfd_create(struct pid *pid)
+  */
+ SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
+ {
+-	int fd, ret;
++	int fd;
+ 	struct pid *p;
  
- 	set_current_state(TASK_INTERRUPTIBLE);
+ 	if (flags)
+@@ -510,13 +510,11 @@ SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
+ 	if (!p)
+ 		return -ESRCH;
+ 
+-	ret = 0;
+-	rcu_read_lock();
+-	if (!pid_task(p, PIDTYPE_TGID))
+-		ret = -EINVAL;
+-	rcu_read_unlock();
++	if (pid_has_task(p, PIDTYPE_TGID))
++		fd = pidfd_create(p);
++	else
++		fd = -EINVAL;
+ 
+-	fd = ret ?: pidfd_create(p);
+ 	put_pid(p);
+ 	return fd;
+ }
 -- 
 2.23.0
 
