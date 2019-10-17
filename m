@@ -2,127 +2,222 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C50ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC64ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 416C421A49
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B01920869
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:54:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nnuCi8Mv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q6340OvY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437695AbfJQUwb (ORCPT
+        id S2437736AbfJQUyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 16:52:31 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:44395 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728420AbfJQUwa (ORCPT
+        Thu, 17 Oct 2019 16:54:12 -0400
+Received: from mail-lj1-f169.google.com ([209.85.208.169]:43323 "EHLO
+        mail-lj1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728420AbfJQUyL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 16:52:30 -0400
-Received: by mail-qk1-f196.google.com with SMTP id u22so3202435qkk.11;
-        Thu, 17 Oct 2019 13:52:28 -0700 (PDT)
+        Thu, 17 Oct 2019 16:54:11 -0400
+Received: by mail-lj1-f169.google.com with SMTP id n14so3969363ljj.10
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 13:54:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=QMU67ashdr6NIXSp5sxb1ow30I7YwBEELAlQYgNywC8=;
-        b=nnuCi8MvIN5FvTlFJcLWAsFvANcNYqrJPttO3XVqBHrrL69Gu2F8yE7+WQRHAk8rod
-         PvQs3YROR8NvmAoVxhO+8idIM5Clyk/tHRc1nVqLP29U+yGPkY9zcKqZhzpdvQYaKUNs
-         xj5cDts6e1s5SfkrPZV+xtoV+inF3KSjhta23PmmVRJr8OfHHwbWH+O75h//rHKABOJC
-         +xC7K3z/W7FrK5arxzfX1AzC52uE1eG/9FEArV1SG0uNel5/w57wZV3f1czHKX4pONBX
-         rHGo2V+YRHQJRhaHqogzvdQcSHB/awWpP+2MgngHMA3q46emzr1yV8LZm2qaVkaU1kgS
-         /mpA==
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=6K4BDIRyXWQCZ6QNn62bC23ox9ewRSy9YoKRVJVBJXk=;
+        b=q6340OvYv2PuKrWkVRq4qY8YRH9gHbgT9uhknfP5swVZWoq2m1ojHP08YJjVR67utQ
+         CxGRYADGXA/2wrQmBo5i1WJgKhFlLQczUhGrq0bewEDvtmpHLMvn2jEBDuIMpY984VkB
+         xlW+qA1uT7nW6cTmqzif0PMXikezlGxwdEnXbVEPq47DxBFHJGv3dHXk+evJT/DHMndc
+         0qHkRGVZK4iLXHiBr6GTYvnFEit9ZT26TWN2nDbmi/T6E941ufFvEX7FmTsdGjoY1isw
+         865Iu+/53UhEtJ+RnH+YRq32OA+DOXts4iYMf3RZmUMZOZHSOXOsKHRrxw88N7Rkn2xJ
+         IlNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=QMU67ashdr6NIXSp5sxb1ow30I7YwBEELAlQYgNywC8=;
-        b=aKVH1dpfU1n1IkXXQObEIgW4Ouzu5fmNQ8/RsCVbPDuaZD6RuQWUHpVKMxr5Tn5vr3
-         cQZWFlFlwr+4eIarwHBNMhUb/G0MvH/7X6u7Qe3kdV8+WitcAq4koKccYCOCpqdFw4ib
-         WSJMhhH3cuHkkjP0hMlnfUxTYppvsT3EgfgAXx3mWfJgQA3NzEtlRfDh9Mv5i+4grOkh
-         MA/t0zHX6PEW5Hnwai1ExGWZ8o0LrqQTAoXzYMF6o4sf5yTsopTE7JnK9lu5kil1/MnX
-         w9BCfIWBTuncVYn0mCZSCQgRlLLC6O5Bao0WjlzaFr/0725AnyPqCtNyxXpGE7Mn9uK9
-         4A4g==
-X-Gm-Message-State: APjAAAX3i2MOTVs4R7fQLTvfspNKw54BxKiLaWkdDxUCzyA/tktpAz27
-        7UtOBPFttusKVsmABG6AsIkXlQ4f
-X-Google-Smtp-Source: APXvYqzTVyquYc7fl8qSW3Vg5hnSpVIzpoyFXNkHrMBAWrxLDu6oiZgOHBKtEYq5r2MYx95Mfslhzg==
-X-Received: by 2002:a37:7b44:: with SMTP id w65mr5312578qkc.403.1571345547902;
-        Thu, 17 Oct 2019 13:52:27 -0700 (PDT)
-Received: from eaf ([181.47.179.0])
-        by smtp.gmail.com with ESMTPSA id e15sm24666qkm.130.2019.10.17.13.52.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 13:52:27 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 17:52:22 -0300
-From:   Ernesto =?utf-8?Q?A=2E_Fern=C3=A1ndez?= 
-        <ernesto.mnd.fernandez@gmail.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] hfsplus: add a check for hfs_bnode_find
-Message-ID: <20191017205222.GA2662@eaf>
-References: <20191016120621.304-1-hslester96@gmail.com>
- <20191017000703.GA4271@eaf>
- <CANhBUQ3vPBAstTMJ25Zt6sR4CcRKWkeR7VKhFXc9aiqQKmW=Ng@mail.gmail.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=6K4BDIRyXWQCZ6QNn62bC23ox9ewRSy9YoKRVJVBJXk=;
+        b=NLO9WcBrhiOwx+luz7TiV6AmYg/lW22kgks6dNSivhm2fver6uzg9gwvcHvXoyPpBX
+         LKpzl4RNoJi4xsBMdUYiFd7XGUeG6HLD/Wl4/Z99VKPtKAXcz7LxDsWcIqppvlLrM09t
+         n81uIDFPkj4Mcxe5LA4UH+88NS07cO8MTeOPzsCKQgWVYzrtyJZSx7I4zg6JNvqeoK6y
+         rsm+aMYSeNNJKzbAFyfrtO++H3/Z1cZVKYND/96zEnIGbiPmE47eeVwE27BRnleA+Tvo
+         WfHHkMwyKMi/OXZxAnwtyQRc7JsmnrcIA72/S7kxFfEijrbbCeFNmcxlP9c1BC5ScfWQ
+         25kw==
+X-Gm-Message-State: APjAAAUlRo5nFUcRkWMVSjx62lpDONkxEjQ9XD0LEo7yQyo+wbf914rK
+        c1cK1v0vTAbwiCVf/fEzQMxvwAKlB500RKwC+4tDynY9
+X-Google-Smtp-Source: APXvYqwxTr/o5DtlDH6p1jteQJfrAqeYdO361PVDS76c/f4+FwCXkbXqWoY4B47+CG7beRbZfMTgoQS2gTruQwhXZKc=
+X-Received: by 2002:a05:651c:1068:: with SMTP id y8mr59798ljm.223.1571345647032;
+ Thu, 17 Oct 2019 13:54:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANhBUQ3vPBAstTMJ25Zt6sR4CcRKWkeR7VKhFXc9aiqQKmW=Ng@mail.gmail.com>
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Fri, 18 Oct 2019 06:53:55 +1000
+Message-ID: <CAPM=9twCjJ3XuEk4UDZYa_c8BR4K6D0DEVktay-Soaxrwkek6A@mail.gmail.com>
+Subject: [git pull] drm fixes for 5.4-rc4
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 09:30:20AM +0800, Chuhong Yuan wrote:
-> On Thu, Oct 17, 2019 at 8:07 AM Ernesto A. Fernández
-> <ernesto.mnd.fernandez@gmail.com> wrote:
-> >
-> > Hi,
-> >
-> > On Wed, Oct 16, 2019 at 08:06:20PM +0800, Chuhong Yuan wrote:
-> > > hfs_brec_update_parent misses a check for hfs_bnode_find and may miss
-> > > the failure.
-> > > Add a check for it like what is done in again.
-> > >
-> > > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > > ---
-> > >  fs/hfsplus/brec.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/fs/hfsplus/brec.c b/fs/hfsplus/brec.c
-> > > index 1918544a7871..22bada8288c4 100644
-> > > --- a/fs/hfsplus/brec.c
-> > > +++ b/fs/hfsplus/brec.c
-> > > @@ -434,6 +434,8 @@ static int hfs_brec_update_parent(struct hfs_find_data *fd)
-> > >                       new_node->parent = tree->root;
-> > >               }
-> > >               fd->bnode = hfs_bnode_find(tree, new_node->parent);
-> > > +             if (IS_ERR(fd->bnode))
-> > > +                     return PTR_ERR(fd->bnode);
-> >
-> > You shouldn't just return here, you still hold a reference to new_node.
-> > The call to hfs_bnode_find() after the again label seems to be making a
-> > similar mistake.
-> >
-> > I don't think either one can actually fail though, because the parent
-> > nodes have all been read and hashed before, haven't they?
-> >
-> 
-> I find that after hfs_bnode_findhash in hfs_bnode_find, there is a test for
-> HFS_BNODE_ERROR and may return an error. I'm not sure whether it
-> can happen here.
+Hey Linus,
 
-That would require a race between hfs_bnode_find() and hfs_bnode_create(),
-but the node has already been created.
+This is this weeks fixes for drm, the dma-resv one is probably the
+more important one a fair few people have reported it, besides that
+it's a couple of panfrost, a few i915 and a few amdgpu fixes. One
+radeon patch to fix some ppc64 related issues caused an x86 regression
+so is getting reverted for now.
 
-> 
-> > >               /* create index key and entry */
-> > >               hfs_bnode_read_key(new_node, fd->search_key, 14);
-> > >               cnid = cpu_to_be32(new_node->this);
-> > > --
-> > > 2.20.1
-> > >
+Thanks,
+Dave.
+
+drm-fixes-2019-10-18:
+drm fixes for 5.4-rc4
+
+dma-resv:
+- shared fences for lima/panfrost
+
+ttm:
+- prefault regression fix
+- lifetime fix
+
+panfrost:
+- stopped job timeout fix
+- missing register values
+
+amdgpu:
+- smu7 powerplay fix
+- bail earlier for cik/si detection
+- navi SDMA fix
+
+radeon:
+- revert a ppc64 shutdown fix that broke x86
+
+i915:
+- VBT information handling fix
+- Circular locking fix
+- preemption vs resubmission virtual requests fix
+The following changes since commit 4f5cafb5cb8471e54afdc9054d973535614f7675=
+:
+
+  Linux 5.4-rc3 (2019-10-13 16:37:36 -0700)
+
+are available in the Git repository at:
+
+  git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2019-10-18
+
+for you to fetch changes up to 5c1e34b5159ec65bf33e2c1a62fa7158132c10cf:
+
+  Merge tag 'drm-misc-fixes-2019-10-17' of
+git://anongit.freedesktop.org/drm/drm-misc into drm-fixes (2019-10-18
+06:40:28 +1000)
+
+----------------------------------------------------------------
+drm fixes for 5.4-rc4
+
+dma-resv:
+- shared fences for lima/panfrost
+
+ttm:
+- prefault regression fix
+- lifetime fix
+
+panfrost:
+- stopped job timeout fix
+- missing register values
+
+amdgpu:
+- smu7 powerplay fix
+- bail earlier for cik/si detection
+- navi SDMA fix
+
+radeon:
+- revert a ppc64 shutdown fix that broke x86
+
+i915:
+- VBT information handling fix
+- Circular locking fix
+- preemption vs resubmission virtual requests fix
+
+----------------------------------------------------------------
+Alex Deucher (2):
+      drm/amdgpu/powerplay: fix typo in mvdd table setup
+      Revert "drm/radeon: Fix EEH during kexec"
+
+Chris Wilson (3):
+      drm/i915/execlists: Refactor -EIO markup of hung requests
+      drm/i915/userptr: Never allow userptr into the mappable GGTT
+      drm/i915: Fixup preempt-to-busy vs resubmission of a virtual request
+
+Christian K=C3=B6nig (2):
+      drm/ttm: fix busy reference in ttm_mem_evict_first
+      drm/ttm: fix handling in ttm_bo_add_mem_to_lru
+
+Dave Airlie (3):
+      Merge tag 'drm-intel-fixes-2019-10-17' of
+git://anongit.freedesktop.org/drm/drm-intel into drm-fixes
+      Merge tag 'drm-fixes-5.4-2019-10-16' of
+git://people.freedesktop.org/~agd5f/linux into drm-fixes
+      Merge tag 'drm-misc-fixes-2019-10-17' of
+git://anongit.freedesktop.org/drm/drm-misc into drm-fixes
+
+Hans de Goede (1):
+      drm/amdgpu: Bail earlier when amdgpu.cik_/si_support is not set to 1
+
+Jeffrey Hugo (1):
+      drm/msm/dsi: Implement reset correctly
+
+Kai-Heng Feng (1):
+      drm/edid: Add 6 bpc quirk for SDC panel in Lenovo G50
+
+Qiang Yu (1):
+      dma-buf/resv: fix exclusive fence get
+
+Steven Price (2):
+      drm/panfrost: Add missing GPU feature registers
+      drm/panfrost: Handle resetting on timeout better
+
+Thomas Hellstrom (1):
+      drm/ttm: Restore ttm prefaulting
+
+Ulf Magnusson (1):
+      drm/tiny: Kconfig: Remove always-y THERMAL dep. from TINYDRM_REPAPER
+
+Ville Syrj=C3=A4l=C3=A4 (1):
+      drm/i915: Favor last VBT child device with conflicting AUX ch/DDC pin
+
+Xiaojie Yuan (1):
+      drm/amdgpu/sdma5: fix mask value of POLL_REGMEM packet for pipe sync
+
+ drivers/dma-buf/dma-resv.c                         |  2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c            | 35 ++++++++++++
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c            | 35 ------------
+ drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c             |  2 +-
+ .../drm/amd/powerplay/smumgr/polaris10_smumgr.c    |  2 +-
+ .../gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c    |  2 +-
+ drivers/gpu/drm/drm_edid.c                         |  3 ++
+ drivers/gpu/drm/i915/display/intel_bios.c          | 22 +++++---
+ drivers/gpu/drm/i915/gem/i915_gem_mman.c           |  7 +++
+ drivers/gpu/drm/i915/gem/i915_gem_object.h         |  6 +++
+ drivers/gpu/drm/i915/gem/i915_gem_object_types.h   |  3 +-
+ drivers/gpu/drm/i915/gem/i915_gem_userptr.c        |  1 +
+ drivers/gpu/drm/i915/gt/intel_lrc.c                | 63 +++++++++++++++---=
+----
+ drivers/gpu/drm/i915/i915_gem.c                    |  3 ++
+ drivers/gpu/drm/msm/dsi/dsi_host.c                 |  6 ++-
+ drivers/gpu/drm/panfrost/panfrost_gpu.c            |  3 ++
+ drivers/gpu/drm/panfrost/panfrost_job.c            | 16 ++++--
+ drivers/gpu/drm/radeon/radeon_drv.c                |  8 ---
+ drivers/gpu/drm/tiny/Kconfig                       |  1 -
+ drivers/gpu/drm/ttm/ttm_bo.c                       |  9 ++--
+ drivers/gpu/drm/ttm/ttm_bo_vm.c                    | 16 +++---
+ 21 files changed, 150 insertions(+), 95 deletions(-)
