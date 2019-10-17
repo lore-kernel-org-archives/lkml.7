@@ -2,186 +2,198 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7994EFA3733
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB4CECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4C320869
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C634220869
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:59:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571309964;
+	bh=HbMGPW7xsV/pi2roEWkQiW2gP4ML0BRXz+ct99k68zs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=2KBZlkqJx8WtoTUF2qSNh+wsvolG81JafxRDXwMZExQgqQ/kTRMX1UXVg11fKp09X
+	 +fl7pm6qjIoX9WOpns7iXFsvKiY9rHggszigFxkx+t9APZzcSG16DU9CBtMNLeDMfa
+	 tXzchBWh6YTWlHDW4Gi0fEhSMwnFSsASJJ5Nd7xw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409174AbfJQKxZ convert rfc822-to-8bit (ORCPT
+        id S2409176AbfJQK7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 06:53:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44520 "EHLO mx1.redhat.com"
+        Thu, 17 Oct 2019 06:59:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60748 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391322AbfJQKxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 06:53:24 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        id S1729441AbfJQK7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 06:59:23 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DFFC78553F;
-        Thu, 17 Oct 2019 10:53:23 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-84.rdu2.redhat.com [10.10.121.84])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 70158600C4;
-        Thu, 17 Oct 2019 10:53:20 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <b8799179-d389-8005-4f6d-845febc3bb23@rasmusvillemoes.dk>
-References: <b8799179-d389-8005-4f6d-845febc3bb23@rasmusvillemoes.dk> <157117606853.15019.15459271147790470307.stgit@warthog.procyon.org.uk> <157117609543.15019.17103851546424902507.stgit@warthog.procyon.org.uk>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     dhowells@redhat.com, torvalds@linux-foundation.org,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 03/21] pipe: Use head and tail pointers for the ring, not cursor and length
+        by mx1.redhat.com (Postfix) with ESMTPS id 135C6881363;
+        Thu, 17 Oct 2019 10:59:22 +0000 (UTC)
+Received: from krava.brq.redhat.com (unknown [10.43.17.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CEC4A5D70D;
+        Thu, 17 Oct 2019 10:59:18 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Kan Liang <kan.liang@linux.intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Stephane Eranian <eranian@google.com>,
+        Song Liu <songliubraving@fb.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCHv3 00/10] libperf: Add sampling interface (leftover)
+Date:   Thu, 17 Oct 2019 12:59:08 +0200
+Message-Id: <20191017105918.20873-1-jolsa@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <8693.1571309599.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Thu, 17 Oct 2019 11:53:19 +0100
-Message-ID: <8694.1571309599@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 17 Oct 2019 10:53:24 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Thu, 17 Oct 2019 10:59:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rasmus Villemoes <linux@rasmusvillemoes.dk> wrote:
+hi,
+sending changes for exporting basic sampling interface
+in libperf. It's now possible to use following code in
+applications via libperf:
 
-> >  (6) The number of free slots in the ring is "(tail + pipe->ring_size) -
-> >      head".
-> 
-> Seems an odd way of writing pipe->ring_size - (head - tail) ; i.e.
-> obviously #free slots is #size minus #occupancy.
+--- (example is without error checks for simplicity)
 
-Perhaps so.  The way I was looking at it is the window into which things can
-be written is tail...tail+ring_size; the number of free slots is the distance
-from head to the end of the window.
+  struct perf_event_attr attr = {
+          .type             = PERF_TYPE_TRACEPOINT,
+          .sample_period    = 1,
+          .wakeup_watermark = 1,
+          .disabled         = 1,
+  };
+  /* ... setup attr */
 
-Anyway, I now have a helper that does it your way.
+  cpus = perf_cpu_map__new(NULL);
 
-> >  (7) The ring is full if "head >= (tail + pipe->ring_size)", which can also
-> >      be written as "head - tail >= pipe->ring_size".
-> >
-> 
-> No it cannot, it _must_ be written in the latter form.
+  evlist = perf_evlist__new();
+  evsel  = perf_evsel__new(&attr);
+  perf_evlist__add(evlist, evsel);
 
-Ah, you're right.  I have a helper now for that too.
+  perf_evlist__set_maps(evlist, cpus, NULL);
 
-> head-tail == pipe_size or head-tail >= pipe_size
+  err = perf_evlist__open(evlist);
+  err = perf_evlist__mmap(evlist, 4);
 
-In general, I'd prefer ">=" just in case tail gets in front of head.
+  err = perf_evlist__enable(evlist);
 
-Rasmus Villemoes <linux@rasmusvillemoes.dk> wrote:
+  /* ... monitored area, plus all the other cpus */
 
-> > Also split pipe->buffers into pipe->ring_size (which indicates the size of
-> > the ring) and pipe->max_usage (which restricts the amount of ring that
-> > write() is allowed to fill).  This allows for a pipe that is both writable
-> > by the kernel notification facility and by userspace, allowing plenty of
-> > ring space for notifications to be added whilst preventing userspace from
-> > being able to use up too much buffer space.
-> 
-> That seems like something that should be added in a separate patch -
-> adding ->max_usage and switching appropriate users of ->ring_size over,
-> so it's more clear where you're using one or the other.
+  err = perf_evlist__disable(evlist);
 
-Okay.
+  perf_evlist__for_each_mmap(evlist, map) {
+          if (perf_mmap__read_init(map) < 0)
+                  continue;
 
-> > +		ibuf = &pipe->bufs[tail];
-> 
-> I don't see where tail gets masked between tail = pipe->tail;
+          while ((event = perf_mmap__read_event(map)) != NULL) {
+                  perf_mmap__consume(map);
+          }
 
-Yeah - I missed that one.
+          perf_mmap__read_done(map);
+  }
 
-> In any case, how about seeding head and tail with something like 1<<20 when
-> creating the pipe so bugs like that are hit more quickly.
+  perf_evlist__delete(evlist);
+  perf_cpu_map__put(cpus);
 
-That's sounds like a good idea.
+--- (end)
 
-> > +			while (tail < head) {
-> > +				count += pipe->bufs[tail & mask].len;
-> > +				tail++;
-> >  			}
-> 
-> This is broken if head has wrapped but tail has not. It has to be "while
-> (head - tail)" or perhaps just "while (tail != head)" or something along
-> those lines.
+Nothing is carved in stone so far, the interface is exported
+as is available in perf now and we can change it as we want.
 
-Yeah...  It's just too easy to overlook this and use ordinary comparisons.
-I've switched to "while (tail != head)".
+New tests are added in test-evlist.c to do thread and cpu based
+sampling.
 
-> > +	mask = pipe->ring_size - 1;
-> > +	head = pipe->head & mask;
-> > +	tail = pipe->tail & mask;
-> > +	n = pipe->head - pipe->tail;
-> 
-> I think it's confusing to "premask" head and tail here. Can you either
-> drop that (pipe_set_size should hardly be a hot path?), or perhaps call
-> them something else to avoid a future reader seeing an unmasked
-> bufs[head] and thinking that's a bug?
+All the functionality should not change, however there's considerable
+mmap code rewrite.
 
-I've made it now do the masking right before doing the memcpy calls and used
-different variable names for it:
+Now we have perf_evlist__mmap_ops called by both perf and libperf
+mmaps functions with specific 'struct perf_evlist_mmap_ops'
+callbacks:
 
-	if (n > 0) {
-		unsigned int h = head & mask;
-		unsigned int t = tail & mask;
-		if (h > t) {
-			memcpy(bufs, &pipe->bufs + t,
-			       n * sizeof(struct pipe_buffer));
-		} else {
-			unsigned int tsize = pipe->ring_size - t;
-			if (h > 0)
-				memcpy(bufs + tsize, pipe->bufs,
-				       h * sizeof(struct pipe_buffer));
-			memcpy(bufs, pipe->bufs + t,
-			       tsize * sizeof(struct pipe_buffer));
-		}
+  - get  - to get mmap object, both libperf and perf use different
+           objects, because perf needs to carry more data for aio,
+           compression and auxtrace
+  - mmap - to actually mmap the object, it's simple mmap for libperf,
+           but more work for perf wrt aio, compression and auxtrace
+  - idx  - callback to get current IDs, used only in perf for auxtrace
+           setup
 
-> > -	data_start(i, &idx, start);
-> > -	/* some of this one + all after this one */
-> > -	npages = ((i->pipe->curbuf - idx - 1) & (i->pipe->buffers - 1)) + 1;
-> > -	capacity = min(npages,maxpages) * PAGE_SIZE - *start;
-> > +	data_start(i, &i_head, start);
-> > +	p_tail = i->pipe->tail;
-> > +	/* Amount of free space: some of this one + all after this one */
-> > +	npages = (p_tail + i->pipe->ring_size) - i_head;
-> 
-> Hm, it's not clear that this is equivalent to the old computation. Since
-> it seems repeated in a few places, could it be factored to a little
-> helper (before this patch) and the "some of this one + all after this
-> one" comment perhaps expanded to explain what is going on?
 
-Yeah...  It's a bit weird, even before my changes.
+It would be great if guys could run your usual workloads to see if all
+is fine.. so far so good in my tests ;-)
 
-However, looking at it again, it seems data_start() does the appropriate
-calculations.  If there's space in the current head buffer, it returns the
-offset to that and the head of that buffer, otherwise it advances the head
-pointer and sets the offset to 0.
 
-So I think the comment may actually be retrospective - referring to the state
-that data_start() has given us, rather than talking about the next bit of
-code.
+It's also available in here:
+  git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+  perf/lib
 
-I also wonder if pipe_get_pages_alloc() is broken.  It doesn't check to see
-whether the buffer is full at the point it calls data_start().  However,
-data_start() doesn't check either and, without this patch, will simply advance
-and mask off the ring index - which may wrap.
+v3 changes:
+  - changed mmap0 and mmap_ovw0 to mmap_first and mmap_ovw_first
+  - rebased to latest perf/core
+  - portion of patches already taken
 
-The maths in the unpatched version is pretty icky and I'm not convinced it's
-correct.
+v2 changes:
+  - rebased to latest perf/core
+  - portion of patches already taken
+  - explained mmap refcnt management in following patch changelog:
+    libperf: Centralize map refcnt setting
 
-David
+thanks,
+jirka
+
+
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+---
+Jiri Olsa (10):
+      libperf: Add perf_evlist__for_each_mmap function
+      libperf: Move mmap allocation to perf_evlist__mmap_ops::get
+      libperf: Move mask setup to perf_evlist__mmap_ops function
+      libperf: Link static tests with libapi.a
+      libperf: Add _GNU_SOURCE define to compilation
+      libperf: Add tests_mmap_thread test
+      libperf: Add tests_mmap_cpus test
+      libperf: Keep count of failed tests
+      libperf: Do not export perf_evsel__init/perf_evlist__init
+      libperf: Add pr_err macro
+
+ tools/perf/lib/Makefile                  |   2 ++
+ tools/perf/lib/evlist.c                  |  71 ++++++++++++++++++++++++++++++++++++++---------------
+ tools/perf/lib/include/internal/evlist.h |   3 +++
+ tools/perf/lib/include/internal/evsel.h  |   1 +
+ tools/perf/lib/include/internal/mmap.h   |   5 ++--
+ tools/perf/lib/include/internal/tests.h  |  20 ++++++++++++---
+ tools/perf/lib/include/perf/core.h       |   1 +
+ tools/perf/lib/include/perf/evlist.h     |  10 +++++++-
+ tools/perf/lib/include/perf/evsel.h      |   2 --
+ tools/perf/lib/internal.h                |   3 +++
+ tools/perf/lib/libperf.map               |   3 +--
+ tools/perf/lib/mmap.c                    |   6 +++--
+ tools/perf/lib/tests/Makefile            |   8 +++---
+ tools/perf/lib/tests/test-cpumap.c       |   2 +-
+ tools/perf/lib/tests/test-evlist.c       | 218 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ tools/perf/lib/tests/test-evsel.c        |   2 +-
+ tools/perf/lib/tests/test-threadmap.c    |   2 +-
+ tools/perf/util/evlist.c                 |  29 +++++++++-------------
+ 18 files changed, 333 insertions(+), 55 deletions(-)
