@@ -2,141 +2,86 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E188BECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 723A8ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B052E20640
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:36:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571341004;
-	bh=mLFPaL7SVPlSGUXJe5iOT50KrcNl7eWW/g5KpdywolA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Xo2o4+wQVEjwWmXoLrbTm4D4gSeotgx0N1sjbFPCbGDcbsei8ap02uwlP1C8g7jKt
-	 Yv2BdkSVHaCYRnIt8rfya4R/MOts99MRQO5H+bSfyeXpM21h8MqFURlXaZnLILnwcz
-	 psMTQ1YIaM9AuYGaT+7ZiSG8s9mIh52UD99bX9bE=
+	by mail.kernel.org (Postfix) with ESMTP id 3C17520640
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:37:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391211AbfJQTgn (ORCPT
+        id S2394102AbfJQThB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 15:36:43 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46914 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732550AbfJQTgm (ORCPT
+        Thu, 17 Oct 2019 15:37:01 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:44990 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728856AbfJQThA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 15:36:42 -0400
-Received: by mail-oi1-f193.google.com with SMTP id k25so3150616oiw.13;
-        Thu, 17 Oct 2019 12:36:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wMBmQgXgQoWb0P4lgM78gRiFJNtt+8vmUMx+YfAsBSQ=;
-        b=prmWJ0k7Tv0gBRQpycn1Y/7jY9xXD4P9rlB1yB6dkIYKFfCrLOdXfLYJChkHlovmMM
-         Urik0f1L4ybbbK77LFwqArGUVVOgCtWhdOw8x4aiLefyUpIeKxt8CB678HoMC8tZ8m7E
-         BVckjZicf40N9D7KG958056gnN5I/9Z+K/ak8HVn0j9LdTb1KWqEQanXynLGXWvzCEOQ
-         zAMrRgJIpQTq0AbTSsAt5UvQpyNWOV7YWMgv2OYLFEb3VDxIHMkBIpPJOL6wDKvFC7YT
-         0o+ws1WkLa7XkEdBjCRLPSmJ6BvQA+hRl0gY7hhBhLDhhAIPRbn1ydpoWPFfi+n+dAf7
-         u9kA==
-X-Gm-Message-State: APjAAAV88Q0Mp2UtX3O/89EZxcODVMJ6BudjzK3THwf3ffw3O/2Kw0hb
-        OxseOehXe+KwT3HlsYkxZjKivPYs3lkghGzfCfk=
-X-Google-Smtp-Source: APXvYqxPA6/JVI+JYwHJZbOxjnhNoLGs95dDEiw9iUvKoJGOEg7tze49M+p8Pq72f5dILLOH/ZveQyzjbBgeRKP0YRY=
-X-Received: by 2002:aca:d706:: with SMTP id o6mr4796175oig.57.1571341001884;
- Thu, 17 Oct 2019 12:36:41 -0700 (PDT)
+        Thu, 17 Oct 2019 15:37:00 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iLBZz-0006VG-Aq; Thu, 17 Oct 2019 19:36:59 +0000
+Date:   Thu, 17 Oct 2019 20:36:59 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC][PATCHES] drivers/scsi/sg.c uaccess cleanups/fixes
+Message-ID: <20191017193659.GA18702@ZenIV.linux.org.uk>
+References: <CAHk-=wgOWxqwqCFuP_Bw=Hxxf9njeHJs0OLNGNc63peNd=kRqw@mail.gmail.com>
+ <20191010195504.GI26530@ZenIV.linux.org.uk>
+ <CAHk-=wgWRQo0m7TUCK4T_J-3Vqte+p-FWzvT3CB1jJHgX-KctA@mail.gmail.com>
+ <20191011001104.GJ26530@ZenIV.linux.org.uk>
+ <CAHk-=wgg3jzkk-jObm1FLVYGS8JCTiKppEnA00_QX7Wsm5ieLQ@mail.gmail.com>
+ <20191013181333.GK26530@ZenIV.linux.org.uk>
+ <CAHk-=wgrWGyACBM8N8KP7Pu_2VopuzM4A12yQz6Eo=X2Jpwzcw@mail.gmail.com>
+ <20191013191050.GL26530@ZenIV.linux.org.uk>
+ <CAHk-=wjJNE9hOKuatqh6SFf4nd65LG4ZR3gQSgg+rjSpVxe89w@mail.gmail.com>
+ <20191016202540.GQ26530@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-References: <20191017163503.30791-1-sudeep.holla@arm.com>
-In-Reply-To: <20191017163503.30791-1-sudeep.holla@arm.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 17 Oct 2019 21:36:30 +0200
-Message-ID: <CAJZ5v0gTpK0cJhsWGVvs-=Sbgcia0jz2j5QNYRL+1wOz=2xkJQ@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: flush any pending policy update work scheduled
- before freeing
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016202540.GQ26530@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 6:35 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> dev_pm_qos_remove_request ends calling {max,min}_freq_req QoS notifiers
-> which schedule policy update work. It may end up racing with the freeing
-> the policy and unregistering the driver.
->
-> One possible race is as below where the cpufreq_driver is unregistered
-> but the scheduled work gets executed at later stage when cpufreq_driver
-> is NULL(i.e. after freeing the policy and driver)
->
-> Unable to handle kernel NULL pointer dereference at virtual address 0000001c
-> pgd = (ptrval)
-> [0000001c] *pgd=80000080204003, *pmd=00000000
-> Internal error: Oops: 206 [#1] SMP THUMB2
-> Modules linked in:
-> CPU: 0 PID: 34 Comm: kworker/0:1 Not tainted 5.4.0-rc3-00006-g67f5a8081a4b #86
-> Hardware name: ARM-Versatile Express
-> Workqueue: events handle_update
-> PC is at cpufreq_set_policy+0x58/0x228
-> LR is at dev_pm_qos_read_value+0x77/0xac
-> Control: 70c5387d  Table: 80203000  DAC: fffffffd
-> Process kworker/0:1 (pid: 34, stack limit = 0x(ptrval))
->         (cpufreq_set_policy) from (refresh_frequency_limits.part.24+0x37/0x48)
->         (refresh_frequency_limits.part.24) from (handle_update+0x2f/0x38)
->         (handle_update) from (process_one_work+0x16d/0x3cc)
->         (process_one_work) from (worker_thread+0xff/0x414)
->         (worker_thread) from (kthread+0xff/0x100)
->         (kthread) from (ret_from_fork+0x11/0x28)
->
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  drivers/cpufreq/cpufreq.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> Hi Rafael, Viresh,
->
-> This fixed the boot issue I reported[1] on TC2 with bL switcher enabled.
-> I have based this patch on -rc3 and not on top of your patches. This
-> only fixes the boot issue but I hit the other crashes while continuously
-> switching on and off the bL switcher that register/unregister the driver
-> Your patch series fixes them. I can based this on top of those if you
-> prefer.
->
-> Regards,
-> Sudeep
->
-> [1] https://lore.kernel.org/linux-pm/20191015155735.GA29105@bogus/
->
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index c52d6fa32aac..b703c29a84be 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -1278,6 +1278,9 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
->         }
->
->         dev_pm_qos_remove_request(policy->min_freq_req);
-> +       /* flush the pending policy->update work before freeing the policy */
-> +       if (work_pending(&policy->update))
+On Wed, Oct 16, 2019 at 09:25:40PM +0100, Al Viro wrote:
 
-Isn't this racy?
+> FWIW, callers of __copy_from_user() remaining in the generic code:
 
-It still may be running if the pending bit is clear and we still need
-to wait for it then, don't we?
+> 6) drivers/scsi/sg.c nest: sg_read() ones are memdup_user() in disguise
+> (i.e. fold with immediately preceding kmalloc()s).  sg_new_write() -
+> fold with access_ok() into copy_from_user() (for both call sites).
+> sg_write() - lose access_ok(), use copy_from_user() (both call sites)
+> and get_user() (instead of the solitary __get_user() there).
 
-Why don't you do an unconditional flush_work() here?
+Turns out that there'd been outright redundant access_ok() calls (not
+even warranted by __copy_...) *and* several __put_user()/__get_user()
+with no checking of return value (access_ok() was there, handling of
+unmapped addresses wasn't).  The latter go back at least to 2.1.early...
 
-> +               flush_work(&policy->update);
->         kfree(policy->min_freq_req);
->
->         cpufreq_policy_put_kobj(policy);
-> --
-> 2.17.1
->
+I've got a series that presumably fixes and cleans the things up
+in that area; it didn't get any serious testing (the kernel builds
+and boots, smartctl works as well as it used to, but that's not
+worth much - all it says is that SG_IO doesn't fail terribly;
+I don't have any test setup for really working with /dev/sg*).
+
+IOW, it needs more review and testing - this is _not_ a pull request.
+It's in vfs.git#work.sg; individual patches are in followups.
+Shortlog/diffstat:
+Al Viro (8):
+      sg_ioctl(): fix copyout handling
+      sg_new_write(): replace access_ok() + __copy_from_user() with copy_from_user()
+      sg_write(): __get_user() can fail...
+      sg_read(): simplify reading ->pack_id of userland sg_io_hdr_t
+      sg_new_write(): don't bother with access_ok
+      sg_read(): get rid of access_ok()/__copy_..._user()
+      sg_write(): get rid of access_ok()/__copy_from_user()/__get_user()
+      SG_IO: get rid of access_ok()
+
+ drivers/scsi/sg.c | 98 ++++++++++++++++++++++++++++++++----------------------------------------------------------------
+ 1 file changed, 32 insertions(+), 66 deletions(-)
+
