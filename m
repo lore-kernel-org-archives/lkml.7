@@ -2,144 +2,166 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AC4FA3736
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7BFFA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B200920854
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2594A20854
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:57:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XQ84Ozwt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732550AbfJQM4M (ORCPT
+        id S2389462AbfJQM5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 08:56:12 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34814 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729124AbfJQM4L (ORCPT
+        Thu, 17 Oct 2019 08:57:00 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42736 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729124AbfJQM5A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:56:11 -0400
-Received: by mail-oi1-f194.google.com with SMTP id 83so2065618oii.1;
-        Thu, 17 Oct 2019 05:56:11 -0700 (PDT)
+        Thu, 17 Oct 2019 08:57:00 -0400
+Received: by mail-ot1-f68.google.com with SMTP id c10so1765361otd.9
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 05:57:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FzwnaF5E0NhR1cM5i+huNW3oCidI8gC26kz9mt79iqs=;
+        b=XQ84OzwtgvCjV6ernd063jJjH6HQVu0l2UXHnIngxd21LQuDClgTAI9KizdYGwRlFu
+         1DIJH2ZnR902Bdo3nrESpCk/Fi3cGFTE7Ryv5HhnTkf4yv5uVUssa9gXx2LXGJiQVDp7
+         3k6f6PGysAbM33l+VVr/h48rNmG2HnNXRTQ19ehkpEeWs/+XuMvXk4FO5vaDQXi1YOhS
+         PA9w7XCDaNMYZYTSyowuBb34D0INawMpRAqnoareBKtcwXRnU1VdqErGESIa65sDES3O
+         FPo5KxCubyWFMmpTbz0MREzAG/AtHUDpmRjEaS2e8gHFV36MydIeQ9SUtPiJeHrz+hFc
+         Zh/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jCmtCgtBiiFJU5hn3NT2kzh4dnuPiZZINwubQDKuTj8=;
-        b=mzCNJtiF0wM7R/HS7yfby24LFO8AfqmXB166VUbWYuqW1gbKUB2L5gXYO2ka76MxPa
-         3V8PBywtIfRmMVYN9no9UcdwAFKZn5e2XkPOKufaoRkB9MFJ8+dUsk8WGz+OptUQaY1i
-         aXRECxrAJv0Tun77j/0D0iAevFAYF2o6Y+cLrcIMJIRxu7gwzLOoGbbBYOYJZdH10EBx
-         y0q05ZlQ+MjdGeBa2BX0dkR8OKGTmZJiNKZVMFzlOTdZjmBuuMHPEA+I2E9LvDSA5CC4
-         Kp9zEFKF3NBMWTN8zdq5J7xWI8DaUIuzgenZNRa/slD7USPXyG2/sCFrUD+ryczNDefr
-         dEfg==
-X-Gm-Message-State: APjAAAUcoI07zU2TaTRB1FZSumS7BfZqfK0B5RlmVZ4ZISS2uC3f+C9M
-        ii/NTBfK54m3RpQ/p8VwBEV0JiWRyxT9kZAXCy6yOjbj
-X-Google-Smtp-Source: APXvYqy5RDhqMEfVOwJ6hvWU5q92MMw+x2vGvUbDRvxE2qxwk2Nmdc/1GS9R+iCxoIJcSopADXhaQZ5hycAFP/rqBpo=
-X-Received: by 2002:aca:230c:: with SMTP id e12mr2893076oie.153.1571316970585;
- Thu, 17 Oct 2019 05:56:10 -0700 (PDT)
+        bh=FzwnaF5E0NhR1cM5i+huNW3oCidI8gC26kz9mt79iqs=;
+        b=Dwu0ne0zYQ+h9XjV40zNZUKIUsCR/lZmUISky36USQemM/arrZPNd25/sTBsEDxS0U
+         4D4Yow2PxVm/jE3CTwgTU8kxsUOe59k235fB0lMuZ0Pt0TYQzLXiyznG3xzjfaqhCC5c
+         I2w2vLVzAo1mZwEGevaiAL4bTcH1z38Ft4Wf6fpA7VwhZOxectlWkLvuxBTL/3ApPcKJ
+         TmuvpoZA4XQjR2IjMPZ5IfUwDpDA1G20ItMmx8Uw6Dd+mlnTAeC3nVe0/USSNrbTtEhf
+         R0K84TiszViEh3LyEh0N8ZnOf+Z1PJwPCvfTMAtT2OGJOtoy0YnwojJ+1+fKvZAWC5hZ
+         LMEg==
+X-Gm-Message-State: APjAAAUnxVptkLvHoUo25bF/2ukK5kxZAaZrpTkbrv55DJ/93BgYzjru
+        TUTh58pGUSUVqZbW1LaHiDyH+76rX9rmjFWY4yXCcQ==
+X-Google-Smtp-Source: APXvYqy+y9M3GDWZi6YJ5Hw8mnZtdigVitXfIq4Ig/3i+If7C1GzF5himW6c6YMs0i+K+qEJppO+poTuCiSXCcISXZI=
+X-Received: by 2002:a9d:6d89:: with SMTP id x9mr3019562otp.17.1571317019220;
+ Thu, 17 Oct 2019 05:56:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191016102520.124370-1-jacopo+renesas@jmondi.org>
-In-Reply-To: <20191016102520.124370-1-jacopo+renesas@jmondi.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 17 Oct 2019 14:55:58 +0200
-Message-ID: <CAMuHMdUH0LrZ6iEuN1aWCTt_-jpgp=EjxubMAVdp11HLL=ayyQ@mail.gmail.com>
-Subject: Re: [PATCH] iio: adc: max9611: Defer probe on POR read
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     linux-iio@vger.kernel.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Linux I2C <linux-i2c@vger.kernel.org>
+References: <000000000000328b2905951a7667@google.com>
+In-Reply-To: <000000000000328b2905951a7667@google.com>
+From:   Marco Elver <elver@google.com>
+Date:   Thu, 17 Oct 2019 14:56:47 +0200
+Message-ID: <CANpmjNPoBBJgMKLEAXs+bPhitF+WygseHgTkSJsuiK8WcsB==g@mail.gmail.com>
+Subject: Re: KCSAN: data-race in task_dump_owner / task_dump_owner
+To:     syzbot <syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com>
+Cc:     adobriyan@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
+        casey@schaufler-ca.com, christian@brauner.io,
+        Kees Cook <keescook@chromium.org>, kent.overstreet@gmail.com,
+        khlebnikov@yandex-team.ru, linux-fsdevel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, mhocko@suse.com,
+        shakeelb@google.com, syzkaller-bugs@googlegroups.com,
+        Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
+Hi,
 
-CC i2c
-
-On Wed, Oct 16, 2019 at 12:23 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> The max9611 driver tests communications with the chip by reading the die
-> temperature during the probe function. If the temperature register
-> POR (power-on reset) value is returned from the test read, defer probe to
-> give the chip a bit more time to properly exit from reset.
+On Thu, 17 Oct 2019 at 14:36, syzbot
+<syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com> wrote:
 >
-> Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-
-Thanks for your patch!
-
-> Geert,
->   I've not been able to reproduce the issue on my boards (M3-N
-> Salvator-XS and M3-W Salvator-X). As you reported the issue you might be
-> able to reproduce it, could you please test this?
-
-I can reproduce it on Salvator-XS with R-Car H3 ES2.0.
-According to my logs, I've seen the issue on all Salvator-X(S) boards,
-but not with the same frequency.  Probability is highest on H3 ES2.0
-(ca. 5% of the boots since I first saw the issue), followed by H3 ES1.0,
-M3-W, and M3-N.
-
-After more investigation, my findings are:
-  1. I cannot reproduce the issue if the max9611 driver is modular.
-     Is it related to using max9611 "too soon" after i2c bus init?
-     How can "i2c bus init" impact a slave device?
-     Perhaps due to pin configuration, e.g. changing from another pin
-     function or GPIO to function i2c4?
-  2. Adding a delay at the top of max9611_init() fixes the issue.
-     This would explain why the issue is less likely to happy on slower
-     SoCs like M3-N.
-  3. Disabling all other i2c slaves on i2c4 in DTS fixes the issue.
-     Before, max9611 was initialized last, so this moves init earlier,
-     contradicting theory #1.
-  4. Just disabling the adv7482 (which registers 11 dummies i2c slaves)
-     in DTS does not fix the issue.
-
-Unfortunately i2c4 is exposed on a 60-pin Samtec QSH connector only,
-for which I have no breakout adapter.
-
-Wolfram: do you have any clues?
-
-> Also, I opted for deferring probe instead of arbitrary repeat the
-> temperature read. What's your opinion?
-
-While this is probably OK if the max9611 driver is built-in, I'm afraid
-this may lead to unbounded delays for a reprobe in case the driver
-is modular.
-
-> --- a/drivers/iio/adc/max9611.c
-> +++ b/drivers/iio/adc/max9611.c
-> @@ -80,6 +80,7 @@
->   * The complete formula to calculate temperature is:
->   *     ((adc_read >> 7) * 1000) / (1 / 480 * 1000)
->   */
-> +#define MAX9611_TEMP_POR               0x8000
->  #define MAX9611_TEMP_MAX_POS           0x7f80
->  #define MAX9611_TEMP_MAX_NEG           0xff80
->  #define MAX9611_TEMP_MIN_NEG           0xd980
-> @@ -480,8 +481,10 @@ static int max9611_init(struct max9611_dev *max9611)
->         if (ret)
->                 return ret;
+> Hello,
 >
-> -       regval &= MAX9611_TEMP_MASK;
-> +       if (regval == MAX9611_TEMP_POR)
-> +               return -EPROBE_DEFER;
+> syzbot found the following crash on:
 >
-> +       regval &= MAX9611_TEMP_MASK;
->         if ((regval > MAX9611_TEMP_MAX_POS &&
->              regval < MAX9611_TEMP_MIN_NEG) ||
->              regval > MAX9611_TEMP_MAX_NEG) {
+> HEAD commit:    d724f94f x86, kcsan: Enable KCSAN for x86
+> git tree:       https://github.com/google/ktsan.git kcsan
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17884db3600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=c0906aa620713d80
+> dashboard link: https://syzkaller.appspot.com/bug?extid=e392f8008a294fdf8891
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>
+> Unfortunately, I don't have any reproducer for this crash yet.
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com
+>
+> ==================================================================
+> BUG: KCSAN: data-race in task_dump_owner / task_dump_owner
+>
+> write to 0xffff8881255bb7fc of 4 bytes by task 7804 on cpu 0:
+>   task_dump_owner+0xd8/0x260 fs/proc/base.c:1742
+>   pid_update_inode+0x3c/0x70 fs/proc/base.c:1818
+>   pid_revalidate+0x91/0xd0 fs/proc/base.c:1841
+>   d_revalidate fs/namei.c:765 [inline]
+>   d_revalidate fs/namei.c:762 [inline]
+>   lookup_fast+0x7cb/0x7e0 fs/namei.c:1613
+>   walk_component+0x6d/0xe80 fs/namei.c:1804
+>   link_path_walk.part.0+0x5d3/0xa90 fs/namei.c:2139
+>   link_path_walk fs/namei.c:2070 [inline]
+>   path_openat+0x14f/0x3530 fs/namei.c:3532
+>   do_filp_open+0x11e/0x1b0 fs/namei.c:3563
+>   do_sys_open+0x3b3/0x4f0 fs/open.c:1089
+>   __do_sys_open fs/open.c:1107 [inline]
+>   __se_sys_open fs/open.c:1102 [inline]
+>   __x64_sys_open+0x55/0x70 fs/open.c:1102
+>   do_syscall_64+0xcf/0x2f0 arch/x86/entry/common.c:296
+>   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>
+> write to 0xffff8881255bb7fc of 4 bytes by task 7813 on cpu 1:
+>   task_dump_owner+0xd8/0x260 fs/proc/base.c:1742
+>   pid_update_inode+0x3c/0x70 fs/proc/base.c:1818
+>   pid_revalidate+0x91/0xd0 fs/proc/base.c:1841
+>   d_revalidate fs/namei.c:765 [inline]
+>   d_revalidate fs/namei.c:762 [inline]
+>   lookup_fast+0x7cb/0x7e0 fs/namei.c:1613
+>   walk_component+0x6d/0xe80 fs/namei.c:1804
+>   lookup_last fs/namei.c:2271 [inline]
+>   path_lookupat.isra.0+0x13a/0x5a0 fs/namei.c:2316
+>   filename_lookup+0x145/0x2d0 fs/namei.c:2346
+>   user_path_at_empty+0x4c/0x70 fs/namei.c:2606
+>   user_path_at include/linux/namei.h:60 [inline]
+>   vfs_statx+0xd9/0x190 fs/stat.c:187
+>   vfs_stat include/linux/fs.h:3188 [inline]
+>   __do_sys_newstat+0x51/0xb0 fs/stat.c:341
+>   __se_sys_newstat fs/stat.c:337 [inline]
+>   __x64_sys_newstat+0x3a/0x50 fs/stat.c:337
+>   do_syscall_64+0xcf/0x2f0 arch/x86/entry/common.c:296
+>   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>
+> Reported by Kernel Concurrency Sanitizer on:
+> CPU: 1 PID: 7813 Comm: ps Not tainted 5.3.0+ #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> ==================================================================
 
-Gr{oetje,eeting}s,
+My understanding is, that for every access to /proc/<pid>,
+d_revalidate is called, and /proc-fs implementation simply says that
+pid_revalidate always revalidates by rewriting uid/gid because "owning
+task may have performed a setuid(), etc." presumably so every access
+to a /proc/<pid> entry always has the right uid/gid (in effect
+updating /proc/<pid> lazily via d_revalidate).
 
-                        Geert
+Is it possible that one of the tasks above could be preempted after
+doing its writes to *ruid/*rgid, another thread writing some other
+values (after setuid / seteuid), and then the preempted thread seeing
+the other values? Assertion here should never fail:
+=== TASK 1 ===
+| seteuid(1000);
+| seteuid(0);
+| stat("/proc/<pid-of-task-1>", &fstat);
+| assert(fstat.st_uid == 0);
+=== TASK 2 ===
+| stat("/proc/<pid-of-task-1>", ...);
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best Wishes,
+-- Marco
