@@ -2,132 +2,93 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F61ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6376ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 360E320663
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B60F62089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 09:04:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408442AbfJQI7a (ORCPT
+        id S2439326AbfJQJEb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 04:59:30 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7992 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404051AbfJQI73 (ORCPT
+        Thu, 17 Oct 2019 05:04:31 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:49693 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439193AbfJQJEb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 04:59:29 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9H8vAIS049285
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 04:59:26 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vpjavx1g9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 04:59:26 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <iii@linux.ibm.com>;
-        Thu, 17 Oct 2019 09:59:24 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 17 Oct 2019 09:59:21 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9H8xKoD40697858
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 17 Oct 2019 08:59:20 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 28E61A4054;
-        Thu, 17 Oct 2019 08:59:20 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C6A40A405C;
-        Thu, 17 Oct 2019 08:59:19 +0000 (GMT)
-Received: from white.boeblingen.de.ibm.com (unknown [9.152.99.142])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 17 Oct 2019 08:59:19 +0000 (GMT)
-From:   Ilya Leoshkevich <iii@linux.ibm.com>
-To:     Jan Kiszka <jan.kiszka@siemens.com>,
-        Kieran Bingham <kbingham@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: [PATCH v2] scripts/gdb: fix debugging modules on s390
-Date:   Thu, 17 Oct 2019 10:59:17 +0200
-X-Mailer: git-send-email 2.23.0
+        Thu, 17 Oct 2019 05:04:31 -0400
+Received: from windsurf (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: thomas.petazzoni@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 68FB3100007;
+        Thu, 17 Oct 2019 09:04:28 +0000 (UTC)
+Date:   Thu, 17 Oct 2019 11:04:27 +0200
+From:   Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?B?S8Op?= =?UTF-8?B?dmlu?= RAYMOND 
+        <k.raymond@overkiz.com>, Mickael GARDET <m.gardet@overkiz.com>
+Subject: Re: [PATCH 2/2] ARM: dts: at91: add a common kizbox2 dtsi file
+Message-ID: <20191017110427.66bccdfb@windsurf>
+In-Reply-To: <20191017085405.12599-3-kamel.bouhara@bootlin.com>
+References: <20191017085405.12599-1-kamel.bouhara@bootlin.com>
+        <20191017085405.12599-3-kamel.bouhara@bootlin.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4git49 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19101708-4275-0000-0000-00000372E37A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19101708-4276-0000-0000-00003885FB4D
-Message-Id: <20191017085917.81791-1-iii@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-17_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=910 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910170081
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently lx-symbols assumes that module text is always located at
-module->core_layout->base, but s390 uses the following layout:
+Hello Kamel,
 
-+------+  <- module->core_layout->base
-| GOT  |
-+------+  <- module->core_layout->base + module->arch->plt_offset
-| PLT  |
-+------+  <- module->core_layout->base + module->arch->plt_offset +
-| TEXT |     module->arch->plt_size
-+------+
+On Thu, 17 Oct 2019 10:54:05 +0200
+Kamel Bouhara <kamel.bouhara@bootlin.com> wrote:
 
-Therefore, when trying to debug modules on s390, all the symbol
-addresses are skewed by plt_offset + plt_size.
+> There are three different boards available depending on the PCB
+> (3 antennas support and several revison). Add a dtsi file to share
+> common binding between all kizbox2 boards.
+> 
+> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> Signed-off-by: Kévin RAYMOND <k.raymond@overkiz.com>
+> Signed-off-by: Mickael GARDET <m.gardet@overkiz.com>
+> ---
+>  arch/arm/boot/dts/Makefile                 |   6 +-
+>  arch/arm/boot/dts/at91-kizbox.dts          | 173 +++++++-------
 
-Fix by adding plt_offset + plt_size to module_addr in
-load_module_symbols().
+The changes to this file (change to use phandles) seem unrelated to the
+current patch, unless I'm missing something.
 
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
----
+>  arch/arm/boot/dts/at91-kizbox2-0.dts       |  17 ++
+>  arch/arm/boot/dts/at91-kizbox2-1.dts       |  22 ++
+>  arch/arm/boot/dts/at91-kizbox2-2.dts       |  26 +++
+>  arch/arm/boot/dts/at91-kizbox2-3.dts       |  30 +++
+>  arch/arm/boot/dts/at91-kizbox2-rev2.dts    |  34 +++
+>  arch/arm/boot/dts/at91-kizbox2.dts         | 244 -------------------
+>  arch/arm/boot/dts/at91-kizbox2_common.dtsi | 258 +++++++++++++++++++++
 
-v1 -> v2: print the adjusted address.
+"-" seems to be a much more common separator for DT names, including in
+this file, so what about at91-kizbox2-common.dtsi ?
 
- scripts/gdb/linux/symbols.py | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+> +// WMBUS (inverted with IO in the latest schematic)
 
-diff --git a/scripts/gdb/linux/symbols.py b/scripts/gdb/linux/symbols.py
-index f0d8f2ecfde7..df4c810de663 100644
---- a/scripts/gdb/linux/symbols.py
-+++ b/scripts/gdb/linux/symbols.py
-@@ -15,7 +15,7 @@ import gdb
- import os
- import re
- 
--from linux import modules
-+from linux import modules, utils
- 
- 
- if hasattr(gdb, 'Breakpoint'):
-@@ -111,6 +111,12 @@ lx-symbols command."""
-             module_file = self._get_module_file(module_name)
- 
-         if module_file:
-+            if utils.is_target_arch('s390'):
-+                # Module text is preceded by PLT stubs on s390.
-+                module_arch = module['arch']
-+                plt_offset = int(module_arch['plt_offset'])
-+                plt_size = int(module_arch['plt_size'])
-+                module_addr = hex(int(module_addr, 0) + plt_offset + plt_size)
-             gdb.write("loading @{addr}: {filename}\n".format(
-                 addr=module_addr, filename=module_file))
-             cmdline = "add-symbol-file {filename} {addr}{sections}".format(
+I am not sure C++ comments are common in Device Tree files.
+
+Best regards,
+
+Thomas
 -- 
-2.23.0
-
+Thomas Petazzoni, CTO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
