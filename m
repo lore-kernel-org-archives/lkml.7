@@ -2,97 +2,220 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B9AECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8363ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73A4721835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:53:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571334782;
-	bh=LCVxvydkAL0erKf8wbZjT7cWO6Exfx+iCpuz+gWiuNA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EC5kC6lND9CROi/hP1t8aenlGFhDOl4JhorIpRg9JDTgnN84EBkkYejFdS9cpP8SU
-	 AIv0UiOUv/Xw2HxtkBcIiGOOSBxx29fq/iw3AVKGQZMqWliVmMaf0vyMmNIgaSaZXs
-	 pSpe4MNduYtQpYt6bl49kkys9C66+0wYTakx3wr8=
+	by mail.kernel.org (Postfix) with ESMTP id 9DCAF2089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437203AbfJQRxB (ORCPT
+        id S2437384AbfJQRxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 13:53:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50118 "EHLO mail.kernel.org"
+        Thu, 17 Oct 2019 13:53:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:8340 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436896AbfJQRxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 13:53:00 -0400
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2437206AbfJQRxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 13:53:23 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 898D921925;
-        Thu, 17 Oct 2019 17:52:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571334779;
-        bh=LCVxvydkAL0erKf8wbZjT7cWO6Exfx+iCpuz+gWiuNA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JdkWoRS5zqqKWgMSt0vhEglBorlpT3guThhG436+of7EfeSVXeopU7hsBkjYzXWzr
-         UyaA6vZekSS5mBdnCz/qUJ1FIOT/JXQFeSDEXhtIu+K+q9rNBAW6zfD9f0LC8fBrQ+
-         24a4GmshL3QpW7GJ+Zr0fCDy4rjYmC7isFyhyUT0=
-Received: by mail-qt1-f178.google.com with SMTP id c21so4800894qtj.12;
-        Thu, 17 Oct 2019 10:52:59 -0700 (PDT)
-X-Gm-Message-State: APjAAAX+Rnlm58wF8z5vmbFgb8ya44gEkv08zjtRm2oW9vb26aZUA9WQ
-        LfF7uKjY68JV+UEFfh2z8Wla2g/JB3ZBBtKvvw==
-X-Google-Smtp-Source: APXvYqy+Xar5KMJ9Wa1ba9rnZphxqVaZoPg7dO2QGR4l7VYDFcuO+0jEB2ZTRPIChY3GMwt8KCnU1jCrA6sSz7PWPdE=
-X-Received: by 2002:a0c:f792:: with SMTP id s18mr5145884qvn.20.1571334778692;
- Thu, 17 Oct 2019 10:52:58 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 20DFA8AC6FB;
+        Thu, 17 Oct 2019 17:53:22 +0000 (UTC)
+Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A39035C1D6;
+        Thu, 17 Oct 2019 17:53:10 +0000 (UTC)
+Date:   Thu, 17 Oct 2019 11:53:10 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+Subject: Re: [PATCH V4 3/6] mdev: introduce device specific ops
+Message-ID: <20191017115310.0481cc52@x1.home>
+In-Reply-To: <20191017170755.15506ada.cohuck@redhat.com>
+References: <20191017104836.32464-1-jasowang@redhat.com>
+        <20191017104836.32464-4-jasowang@redhat.com>
+        <20191017170755.15506ada.cohuck@redhat.com>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <20190617162123.24920-1-yamada.masahiro@socionext.com>
- <CAK7LNATtqhxPcDneW0QOkw-5NyPNP06Qv0bYTe7A_gCiHMiU7A@mail.gmail.com>
- <CAK7LNASMwqy0ZUZ=kTJ7MJ6OJNa=+vbj5444xzmubJ8+6vO=sg@mail.gmail.com>
- <CAK7LNAS=9yGqMQ9eoM4L0hhvuFRYhg6S4i6J3Ou9vcB1Npj4BQ@mail.gmail.com>
- <20191017163414.GA4205@bogus> <5b5ece90-0b9f-38e4-8c23-3c9ea4105c79@gmail.com>
-In-Reply-To: <5b5ece90-0b9f-38e4-8c23-3c9ea4105c79@gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 17 Oct 2019 12:52:46 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJHGcbf-p7D=MvSRiX_7CVY0Kj9bRKybhbWG=4MxaxGiw@mail.gmail.com>
-Message-ID: <CAL_JsqJHGcbf-p7D=MvSRiX_7CVY0Kj9bRKybhbWG=4MxaxGiw@mail.gmail.com>
-Subject: Re: [PATCH] libfdt: reduce the number of headers included from libfdt_env.h
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Thu, 17 Oct 2019 17:53:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 12:25 PM Frank Rowand <frowand.list@gmail.com> wrote:
->
-> On 10/17/2019 11:34, Rob Herring wrote:
-> > On Wed, Oct 16, 2019 at 08:01:46PM +0900, Masahiro Yamada wrote:
-> >> Hi Andrew,
-> >>
-> >> Could you pick up this to akpm tree?
-> >> https://lore.kernel.org/patchwork/patch/1089856/
-> >>
-> >> I believe this is correct, and a good clean-up.
-> >>
-> >> I pinged the DT maintainers, but they did not respond.
-> >
-> > Sorry I missed this. Things outside my normal paths fall thru the
-> > cracks.
-> >
-> > I'll apply it now.
-> >
-> > Rob
-> >
->
-> Looks like my reply crossed with Rob's.  Rob, shouldn't
-> scripts/dtc/update-dtc-source.sh make this change?
+On Thu, 17 Oct 2019 17:07:55 +0200
+Cornelia Huck <cohuck@redhat.com> wrote:
 
-No, the includes in include/linux are kernel files which wrap/replace
-the upstream ones.
+> On Thu, 17 Oct 2019 18:48:33 +0800
+> Jason Wang <jasowang@redhat.com> wrote:
+> 
+> > Currently, except for the create and remove, the rest of
+> > mdev_parent_ops is designed for vfio-mdev driver only and may not help
+> > for kernel mdev driver. With the help of class id, this patch
+> > introduces device specific callbacks inside mdev_device
+> > structure. This allows different set of callback to be used by
+> > vfio-mdev and virtio-mdev.
+> > 
+> > Signed-off-by: Jason Wang <jasowang@redhat.com>
+> > ---
+> >  .../driver-api/vfio-mediated-device.rst       | 25 +++++----
+> >  MAINTAINERS                                   |  1 +
+> >  drivers/gpu/drm/i915/gvt/kvmgt.c              | 18 ++++---
+> >  drivers/s390/cio/vfio_ccw_ops.c               | 18 ++++---
+> >  drivers/s390/crypto/vfio_ap_ops.c             | 14 +++--
+> >  drivers/vfio/mdev/mdev_core.c                 | 18 +++++--
+> >  drivers/vfio/mdev/mdev_private.h              |  1 +
+> >  drivers/vfio/mdev/vfio_mdev.c                 | 37 ++++++-------
+> >  include/linux/mdev.h                          | 45 ++++------------
+> >  include/linux/vfio_mdev.h                     | 52 +++++++++++++++++++
+> >  samples/vfio-mdev/mbochs.c                    | 20 ++++---
+> >  samples/vfio-mdev/mdpy.c                      | 20 ++++---
+> >  samples/vfio-mdev/mtty.c                      | 18 ++++---
+> >  13 files changed, 184 insertions(+), 103 deletions(-)
+> >  create mode 100644 include/linux/vfio_mdev.h
+> > 
+> > diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Documentation/driver-api/vfio-mediated-device.rst
+> > index f9a78d75a67a..0cca84d19603 100644
+> > --- a/Documentation/driver-api/vfio-mediated-device.rst
+> > +++ b/Documentation/driver-api/vfio-mediated-device.rst
+> > @@ -152,11 +152,22 @@ callbacks per mdev parent device, per mdev type, or any other categorization.
+> >  Vendor drivers are expected to be fully asynchronous in this respect or
+> >  provide their own internal resource protection.)
+> >  
+> > -The callbacks in the mdev_parent_ops structure are as follows:
+> > -
+> > -* open: open callback of mediated device
+> > -* close: close callback of mediated device
+> > -* ioctl: ioctl callback of mediated device
+> > +As multiple types of mediated devices may be supported, the device
+> > +must set up the class id and the device specific callbacks in create()  
+> 
+> s/in create()/in the create()/
+> 
+> > +callback. E.g for vfio-mdev device it needs to be done through:  
+> 
+> "Each class provides a helper function to do so; e.g. for vfio-mdev
+> devices, the function to be called is:"
+> 
+> ?
+> 
+> > +
+> > +    int mdev_set_vfio_ops(struct mdev_device *mdev,
+> > +                          const struct vfio_mdev_ops *vfio_ops);
+> > +
+> > +The class id (set to MDEV_CLASS_ID_VFIO) is used to match a device  
+> 
+> "(set by this helper function to MDEV_CLASS_ID_VFIO)" ?
+> 
+> > +with an mdev driver via its id table. The device specific callbacks
+> > +(specified in *ops) are obtainable via mdev_get_dev_ops() (for use by  
+> 
+> "(specified in *vfio_ops by the caller)" ?
+> 
+> > +the mdev bus driver). A vfio-mdev device (class id MDEV_CLASS_ID_VFIO)
+> > +uses the following device-specific ops:
+> > +
+> > +* open: open callback of vfio mediated device
+> > +* close: close callback of vfio mediated device
+> > +* ioctl: ioctl callback of vfio mediated device
+> >  * read : read emulation callback
+> >  * write: write emulation callback
+> >  * mmap: mmap emulation callback
+> > @@ -167,10 +178,6 @@ register itself with the mdev core driver::
+> >  	extern int  mdev_register_device(struct device *dev,
+> >  	                                 const struct mdev_parent_ops *ops);
+> >  
+> > -It is also required to specify the class_id in create() callback through::
+> > -
+> > -	int mdev_set_class(struct mdev_device *mdev, u16 id);
+> > -  
+> 
+> I'm wondering if this patch set should start out with introducing
+> helper functions already (i.e. don't introduce mdev_set_class(), but
+> start out with mdev_set_class_vfio() which will gain the *vfio_ops
+> argument in this patch.)
 
-Rob
+Yes, it would be cleaner, but is it really worth the churn?  Correct me
+if I'm wrong, but I think we get to the same point after this patch and
+aside from the function name itself, the difference is really just that
+the class_id is briefly exposed to the parent driver, right?  Thanks,
+
+Alex
+ 
+> >  However, the mdev_parent_ops structure is not required in the function call
+> >  that a driver should use to unregister itself with the mdev core driver::
+> >    
+> 
+> (...)
+> 
+> > diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+> > index 3a9c52d71b4e..d0f3113c8071 100644
+> > --- a/drivers/vfio/mdev/mdev_core.c
+> > +++ b/drivers/vfio/mdev/mdev_core.c
+> > @@ -45,15 +45,23 @@ void mdev_set_drvdata(struct mdev_device *mdev, void *data)
+> >  }
+> >  EXPORT_SYMBOL(mdev_set_drvdata);
+> >  
+> > -/* Specify the class for the mdev device, this must be called during
+> > - * create() callback.
+> > +/* Specify the VFIO device ops for the mdev device, this
+> > + * must be called during create() callback for VFIO mdev device.
+> >   */  
+> 
+> /*
+>  * Specify the mdev device to be a VFIO mdev device, and set the
+>  * VFIO devices ops for it. This must be called from the create()
+>  * callback for VFIO mdev devices.
+>  */
+> 
+> ?
+> 
+> > -void mdev_set_class(struct mdev_device *mdev, u16 id)
+> > +void mdev_set_vfio_ops(struct mdev_device *mdev,
+> > +		       const struct vfio_mdev_device_ops *vfio_ops)
+> >  {
+> >  	WARN_ON(mdev->class_id);
+> > -	mdev->class_id = id;
+> > +	mdev->class_id = MDEV_CLASS_ID_VFIO;
+> > +	mdev->device_ops = vfio_ops;
+> >  }
+> > -EXPORT_SYMBOL(mdev_set_class);
+> > +EXPORT_SYMBOL(mdev_set_vfio_ops);
+> > +
+> > +const void *mdev_get_dev_ops(struct mdev_device *mdev)
+> > +{
+> > +	return mdev->device_ops;
+> > +}
+> > +EXPORT_SYMBOL(mdev_get_dev_ops);
+> >  
+> >  struct device *mdev_dev(struct mdev_device *mdev)
+> >  {  
+> 
+> (...)
+> 
+> The code change looks good to me; I'm just wondering if we should
+> introduce mdev_set_class() at all (see above).
+
