@@ -2,126 +2,239 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EFE8ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21753ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF94E21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7E3A21835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:44:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="rNF00he2";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="I2xp2OR4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q+8X1Hp3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503610AbfJQUnw (ORCPT
+        id S2502029AbfJQUma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 16:43:52 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:52495 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2503586AbfJQUns (ORCPT
+        Thu, 17 Oct 2019 16:42:30 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35929 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727269AbfJQUm3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 16:43:48 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 0224B22033;
-        Thu, 17 Oct 2019 16:43:47 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Thu, 17 Oct 2019 16:43:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=0GWZplg1lHj9uska7zCj9PE8q3N
-        F/PMsDFYPaL401Qs=; b=rNF00he2SUsCh26tUeQy2gzEYyib1bJyJINKSZM02dE
-        W0iC0qlykIeGOqtWwAeCeAD6rIzVP6LWaSKf0i0AcCR5xfB22+/4Q/7sQaMpGlJp
-        sYEtkPrV4fdLvh2ZTMwHIhtK/3Tl7Q9Ht///bh0H0d2qCEH8oA+GP/znSEHfkOMM
-        mxhQMV/W5vjisFQEPk6LbUZ8P5BhtM1qtS5p4yKT2viGCJFt5PtfbY2mqBcc376q
-        lzm+0qXPLetEWlFagHHDVUa1kyw6yDENUBTZCOK3+mxb1nK0oah5SoR1FbgRPaHR
-        xE2UfwxQ85EjlCtDtBkp4oyLjPmrTzqy2lup2/wa6nA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=0GWZpl
-        g1lHj9uska7zCj9PE8q3NF/PMsDFYPaL401Qs=; b=I2xp2OR4sbJsehpKZJAwQZ
-        2CMukoTmNhTzf3znYd0E/pMGufuxo40LAGAdFxplEHDZvYPLYjXBiJ4HMwqeFf5C
-        fKKEfWtSKSRHn9cS8iOb1mBsEMPrv5JjGb+HYQRUskHo7QOJZrVTxwC1OZq9JHUm
-        fDXvefJx8uURpTW1AyWrQIg3YrYZyDxbAyfqt618XRlqvPpXMU9b9TljlpkWE2fK
-        bLgrbuRNoTvswsN74B7LTUatG/1houDI1IfNjI7GNWO4Oz0TJRf+lamGn0+pp1wb
-        GEJbP2PP8WKavlQrx91KdimAsU+wmQMHdrLa8zuhvIjjku37sFf4NUU+iL60hJZg
-        ==
-X-ME-Sender: <xms:gtKoXTT_j9K8VQTyXDxHHy2ELsrlRorBTUJpwSH7qDcwVOfm_RquKA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrjeejgdduhedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppedutdegrddufedvrddtrd
-    dutdelnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhen
-    ucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:gtKoXavq2nQsosFvGuBVQgaSCnuy95IzVM7dAKf2TZbLOK8smkNvpA>
-    <xmx:gtKoXSiY9BZbGfhiC66nCxS1oRSZybiKGpIdhVuvfpu8Bx8-y_l_1w>
-    <xmx:gtKoXT3d1G6W_wEp0m0dAQ5DSp0rYS7yK80Cn1OS5lBs5Q81xsjxrA>
-    <xmx:gtKoXY7nHENjnQjBjyVpU3Uh2U17D7rDRytdHb3mwPg0nvjCbV3KHw>
-Received: from localhost (unknown [104.132.0.109])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0530C80063;
-        Thu, 17 Oct 2019 16:43:45 -0400 (EDT)
-Date:   Thu, 17 Oct 2019 13:43:43 -0700
-From:   Greg KH <greg@kroah.com>
-To:     Santiago Torres Arias <santiago@nyu.edu>
-Cc:     Willy Tarreau <w@1wt.eu>, Vegard Nossum <vegard.nossum@oracle.com>,
-        workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        Eric Wong <e@80x24.org>
-Subject: Re: email as a bona fide git transport
-Message-ID: <20191017204343.GA1132188@kroah.com>
-References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
- <20191016111009.GE13154@1wt.eu>
- <20191016144517.giwip4yuaxtcd64g@LykOS.localdomain>
+        Thu, 17 Oct 2019 16:42:29 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 23so2026689pgk.3;
+        Thu, 17 Oct 2019 13:42:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=/mXh8WjJ84Xe5TPBXdxoghR6RYUn9xReRFHQXe2AzjQ=;
+        b=Q+8X1Hp37Rq29G/LGyQDyZJT89lEC455WByv5xthezcA/h+TnnZzPFY2NqtFN6/azh
+         TMCMLepNRMYh4Jl9p36ArOoHxdyqt/ZbKK9Dew/TJ8B4vp28LnjZfvkCki6FTouQSWw0
+         tI4FTA621mPhHvOP9Psoi5HwMD0xrqM1iASIboCGkgWlOP7/CqssYb6SxBeFr1g4nQS8
+         ODXGqpT2adJw5kl2Vp5m/ag1MNEPhtqwSSmod1azk7y3Y6WyQBt85WISkTQLOnN9OXVG
+         xL0s1sQjNZHncroI2MrnXlGsmw2KEo5sQGigjnZnWnq19OSpo7q9Xpz1Kbe3xrjE83il
+         DhSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=/mXh8WjJ84Xe5TPBXdxoghR6RYUn9xReRFHQXe2AzjQ=;
+        b=hj3wY/xeOHEPZlgwWDgNehbHF1FbE66061pf6gScb/92hRHdoLrZtEwZIosEXF1WAl
+         bjL/GRiJAihoF/NUTtyAeelYOuISRhGyETyKKHbmU+KipDfB+UMwtAZdcRodXMqx6Uln
+         2/t+CjQEiVkDuSzViQOijxwIYaO9D1v1btJMnvuXHIe9zDhpQRtlWCdV9/ep+YU8Na4p
+         XCxgmcu+4heOFnyeC9kQvCx8frvB8vE7AN+hBNC/fcZrqoX3nGzmqTOWz4abbkSLnv5v
+         l2tEJ1LWvoWlfpDdWX6U27BO195rq939pTZxfXAwyhbiGaHrbKVuXBcDG2TPgIS3LgDX
+         tMjg==
+X-Gm-Message-State: APjAAAXdfWzZd6FKWc/l+oOtX6pvoYQBWGWy0MVVRO7i8WsA86cykpu7
+        BGX1JIuyOObOwyK98yJMOGasppCr
+X-Google-Smtp-Source: APXvYqxRpEh6skic+1OjBIzOhOXjdDuMCG/hGlSb2M9JafhBr1a+59XrUWGHA3l+ptZkT0f/Bv4xLw==
+X-Received: by 2002:a63:b551:: with SMTP id u17mr6092921pgo.88.1571344946094;
+        Thu, 17 Oct 2019 13:42:26 -0700 (PDT)
+Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id b3sm4626365pfd.125.2019.10.17.13.42.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 13:42:25 -0700 (PDT)
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     linux-input@vger.kernel.org
+Cc:     Anders Roxell <anders.roxell@linaro.org>,
+        Jeff LaBundy <jeff@labundy.com>,
+        Martin Kepplinger <martink@posteo.de>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 03/22] Input: ts4800-ts - switch to using polled mode of input devices
+Date:   Thu, 17 Oct 2019 13:41:57 -0700
+Message-Id: <20191017204217.106453-4-dmitry.torokhov@gmail.com>
+X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
+In-Reply-To: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
+References: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191016144517.giwip4yuaxtcd64g@LykOS.localdomain>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 10:45:19AM -0400, Santiago Torres Arias wrote:
-> Hi Willy, Vegard.
-> 
-> On Wed, Oct 16, 2019 at 01:10:09PM +0200, Willy Tarreau wrote:
-> > Hi Vegard,
-> > 
-> > On Wed, Oct 16, 2019 at 12:22:54PM +0200, Vegard Nossum wrote:
-> > > (cross-posted to git, LKML, and the kernel workflows mailing lists.)
-> > > 
-> > > Hi all,
-> > > 
-> > > I've been following Konstantin Ryabitsev's quest for better development
-> > > and communication tools for the kernel [1][2][3], and I would like to
-> > > propose a relatively straightforward idea which I think could bring a
-> > > lot to the table.
-> > > 
-> > > Step 1:
-> > > 
-> > > * git send-email needs to include parent SHA1s and generally all the
-> > >   information needed to perfectly recreate the commit when applied so
-> > >   that all the SHA1s remain the same
-> > > 
-> > > * git am (or an alternative command) needs to recreate the commit
-> > >   perfectly when applied, including applying it to the correct parent
-> > > 
-> > > Having these two will allow a perfect mapping between email and git;
-> > > essentially email just becomes a transport for git. There are a lot of
-> > > advantages to this, particularly that you have a stable way to refer to
-> > > a patch or commit (despite it appearing on a mailing list), and there
-> > > is no need for "changeset IDs" or whatever, since you can just use the
-> > > git SHA1 which is unique, unambiguous, and stable.
-> 
-> I wonder if it'd be also possible to then embed gpg signatures over
-> send-mail payloads so as they can be transparently transferred to the
-> commit.
+We have added polled mode to the normal input devices with the intent of
+retiring input_polled_dev. This converts ts4800-ts driver to use the
+polling mode of standard input devices and removes dependency on
+INPUT_POLLDEV.
 
-That's a crazy idea.  It would be nice if we could do that, I like it :)
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
 
-greg k-h
+ drivers/input/touchscreen/Kconfig     |  1 -
+ drivers/input/touchscreen/ts4800-ts.c | 68 +++++++++++++++------------
+ 2 files changed, 38 insertions(+), 31 deletions(-)
+
+diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
+index df9cb92166c3..2c00232b2506 100644
+--- a/drivers/input/touchscreen/Kconfig
++++ b/drivers/input/touchscreen/Kconfig
+@@ -1037,7 +1037,6 @@ config TOUCHSCREEN_TS4800
+ 	depends on HAS_IOMEM && OF
+ 	depends on SOC_IMX51 || COMPILE_TEST
+ 	select MFD_SYSCON
+-	select INPUT_POLLDEV
+ 	help
+ 	  Say Y here if you have a touchscreen on a TS-4800 board.
+ 
+diff --git a/drivers/input/touchscreen/ts4800-ts.c b/drivers/input/touchscreen/ts4800-ts.c
+index 5b4f5362c67b..6cf66aadc10e 100644
+--- a/drivers/input/touchscreen/ts4800-ts.c
++++ b/drivers/input/touchscreen/ts4800-ts.c
+@@ -10,7 +10,6 @@
+ 
+ #include <linux/bitops.h>
+ #include <linux/input.h>
+-#include <linux/input-polldev.h>
+ #include <linux/io.h>
+ #include <linux/kernel.h>
+ #include <linux/mfd/syscon.h>
+@@ -33,7 +32,7 @@
+ #define Y_OFFSET		0x2
+ 
+ struct ts4800_ts {
+-	struct input_polled_dev *poll_dev;
++	struct input_dev        *input;
+ 	struct device           *dev;
+ 	char                    phys[32];
+ 
+@@ -46,22 +45,26 @@ struct ts4800_ts {
+ 	int                     debounce;
+ };
+ 
+-static void ts4800_ts_open(struct input_polled_dev *dev)
++static int ts4800_ts_open(struct input_dev *input_dev)
+ {
+-	struct ts4800_ts *ts = dev->private;
+-	int ret;
++	struct ts4800_ts *ts = input_get_drvdata(input_dev);
++	int error;
+ 
+ 	ts->pendown = false;
+ 	ts->debounce = DEBOUNCE_COUNT;
+ 
+-	ret = regmap_update_bits(ts->regmap, ts->reg, ts->bit, ts->bit);
+-	if (ret)
+-		dev_warn(ts->dev, "Failed to enable touchscreen\n");
++	error = regmap_update_bits(ts->regmap, ts->reg, ts->bit, ts->bit);
++	if (error) {
++		dev_warn(ts->dev, "Failed to enable touchscreen: %d\n", error);
++		return error;
++	}
++
++	return 0;
+ }
+ 
+-static void ts4800_ts_close(struct input_polled_dev *dev)
++static void ts4800_ts_close(struct input_dev *input_dev)
+ {
+-	struct ts4800_ts *ts = dev->private;
++	struct ts4800_ts *ts = input_get_drvdata(input_dev);
+ 	int ret;
+ 
+ 	ret = regmap_update_bits(ts->regmap, ts->reg, ts->bit, 0);
+@@ -70,10 +73,9 @@ static void ts4800_ts_close(struct input_polled_dev *dev)
+ 
+ }
+ 
+-static void ts4800_ts_poll(struct input_polled_dev *dev)
++static void ts4800_ts_poll(struct input_dev *input_dev)
+ {
+-	struct input_dev *input_dev = dev->input;
+-	struct ts4800_ts *ts = dev->private;
++	struct ts4800_ts *ts = input_get_drvdata(input_dev);
+ 	u16 last_x = readw(ts->base + X_OFFSET);
+ 	u16 last_y = readw(ts->base + Y_OFFSET);
+ 	bool pendown = last_x & PENDOWN_MASK;
+@@ -146,7 +148,7 @@ static int ts4800_parse_dt(struct platform_device *pdev,
+ 
+ static int ts4800_ts_probe(struct platform_device *pdev)
+ {
+-	struct input_polled_dev *poll_dev;
++	struct input_dev *input_dev;
+ 	struct ts4800_ts *ts;
+ 	int error;
+ 
+@@ -162,32 +164,38 @@ static int ts4800_ts_probe(struct platform_device *pdev)
+ 	if (IS_ERR(ts->base))
+ 		return PTR_ERR(ts->base);
+ 
+-	poll_dev = devm_input_allocate_polled_device(&pdev->dev);
+-	if (!poll_dev)
++	input_dev = devm_input_allocate_device(&pdev->dev);
++	if (!input_dev)
+ 		return -ENOMEM;
+ 
+ 	snprintf(ts->phys, sizeof(ts->phys), "%s/input0", dev_name(&pdev->dev));
+-	ts->poll_dev = poll_dev;
++	ts->input = input_dev;
+ 	ts->dev = &pdev->dev;
+ 
+-	poll_dev->private = ts;
+-	poll_dev->poll_interval = POLL_INTERVAL;
+-	poll_dev->open = ts4800_ts_open;
+-	poll_dev->close = ts4800_ts_close;
+-	poll_dev->poll = ts4800_ts_poll;
++	input_set_drvdata(input_dev, ts);
++
++	input_dev->name = "TS-4800 Touchscreen";
++	input_dev->phys = ts->phys;
++
++	input_dev->open = ts4800_ts_open;
++	input_dev->close = ts4800_ts_close;
++
++	input_set_capability(input_dev, EV_KEY, BTN_TOUCH);
++	input_set_abs_params(input_dev, ABS_X, 0, MAX_12BIT, 0, 0);
++	input_set_abs_params(input_dev, ABS_Y, 0, MAX_12BIT, 0, 0);
+ 
+-	poll_dev->input->name = "TS-4800 Touchscreen";
+-	poll_dev->input->phys = ts->phys;
++	error = input_setup_polling(input_dev, ts4800_ts_poll);
++	if (error) {
++		dev_err(&pdev->dev, "Unable to set up polling: %d\n", error);
++		return error;
++	}
+ 
+-	input_set_capability(poll_dev->input, EV_KEY, BTN_TOUCH);
+-	input_set_abs_params(poll_dev->input, ABS_X, 0, MAX_12BIT, 0, 0);
+-	input_set_abs_params(poll_dev->input, ABS_Y, 0, MAX_12BIT, 0, 0);
++	input_set_poll_interval(input_dev, POLL_INTERVAL);
+ 
+-	error = input_register_polled_device(poll_dev);
++	error = input_register_device(input_dev);
+ 	if (error) {
+ 		dev_err(&pdev->dev,
+-			"Unabled to register polled input device (%d)\n",
+-			error);
++			"Unable to register input device: %d\n", error);
+ 		return error;
+ 	}
+ 
+-- 
+2.23.0.866.gb869b98d4c-goog
+
