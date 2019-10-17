@@ -2,129 +2,68 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBD6FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44864FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D574921925
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:04:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Toz6mSen"
+	by mail.kernel.org (Postfix) with ESMTP id 2157820872
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:05:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391290AbfJQQEl (ORCPT
+        id S2393981AbfJQQFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:04:41 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36190 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728391AbfJQQEk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 12:04:40 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 23so1619941pgk.3;
-        Thu, 17 Oct 2019 09:04:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MEWWAMBOeS/era9AcFti+L6FUy/miAh0BHzcw7O5fnw=;
-        b=Toz6mSendGQ8kRPgCgNqB7dBwisIvwTPYspQQQQkaUCt7djKRT9RUi0rVbwijTn77k
-         4dB5vPvX8zG/9MyP0jX21p9tdea6r0kHvYuuXlKhZZhEFaPM9j5ZSRQ4kzozIn0x5Di1
-         jC7UJVbx8RdH59KgYauVgbXbFa9L2gG0ZAuhaY0eSrFWquTrmHf6p6SwLOww3ZfIaYA4
-         /5eNzoUC4Amtrllk5AEO5Q5jxYB/PvKVwIbF3yrdklnHRb8z/y6P7iBM/kXcaWV3UmjZ
-         i+1+FoPIpdJzl1e+mA6Dupg06baZjV9J2luee8dpVse3O8iWYvX32ihgLNihMi7VnFvt
-         Kazw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MEWWAMBOeS/era9AcFti+L6FUy/miAh0BHzcw7O5fnw=;
-        b=lLMnFmFZyJgKUL1Z+GJhnwGbfZKfADflp/HvB3jhWozuK2py3GeaMXQI34ExyD5HF7
-         bheFH8wTHcDAGtbhn8Pq84GX25r9mRYCE64ijyPyfoJANAEQmJlcGFFzZtUFI4j33kPe
-         uY78aLyCCEVWvxPUW+PE8DXjXmjdc2FlMViXfxtjzrxbnt+TRvqDImyobWJ3H49gVIGt
-         LfCVBCekvNGxmCtjKRwhi3pxX5LKVnruexaiD5+Ma/E8D1XW75YTi+ms7B3B0Pj3fMGw
-         w/PNP8OIP97Y+S7on2V1IEf/WbFVmkRtVIoRJhIC6ssCwic8BjicXb98h8sWeWTbbU5E
-         H3qQ==
-X-Gm-Message-State: APjAAAX/9yyOdF+POG5arD8LIeHVfW3QXLLxpuzs2SBtycy8f/Kc4ODf
-        gZWS5QVOxGAspNuKxMUxRM0=
-X-Google-Smtp-Source: APXvYqzUDopEAJP5Iwc/f4Fn8fLjI9XM3OplF1Y7VC4MJkS0urPGJz1/1ZFGXQPxt8eputADJ+q2Jw==
-X-Received: by 2002:a17:90b:914:: with SMTP id bo20mr5074233pjb.6.1571328279276;
-        Thu, 17 Oct 2019 09:04:39 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id a11sm2996970pfo.165.2019.10.17.09.04.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 09:04:38 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 09:04:36 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v5 11/14] software node: move small properties inline
- when copying
-Message-ID: <20191017160436.GH35946@dtor-ws>
-References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
- <20191011230721.206646-12-dmitry.torokhov@gmail.com>
+        Thu, 17 Oct 2019 12:05:09 -0400
+Received: from mga07.intel.com ([134.134.136.100]:48344 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728391AbfJQQFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 12:05:09 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 09:05:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,308,1566889200"; 
+   d="scan'208";a="186531520"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga007.jf.intel.com with ESMTP; 17 Oct 2019 09:05:08 -0700
+Date:   Thu, 17 Oct 2019 09:05:08 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH] KVM: X86: Make fpu allocation a common function
+Message-ID: <20191017160508.GA20903@linux.intel.com>
+References: <20191014162247.61461-1-xiaoyao.li@intel.com>
+ <87y2xn462e.fsf@vitty.brq.redhat.com>
+ <d14d22e2-d74c-ed73-b5bb-3ed5eb087deb@redhat.com>
+ <6cc430c1-5729-c2d3-df11-3bf1ec1272f8@intel.com>
+ <245dcfe2-d167-fdec-a371-506352d3c684@redhat.com>
+ <11318bab-a377-bb8c-b881-76331c92f11e@intel.com>
+ <10300339-e4cb-57b0-ac2f-474604551df0@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191011230721.206646-12-dmitry.torokhov@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <10300339-e4cb-57b0-ac2f-474604551df0@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 04:07:18PM -0700, Dmitry Torokhov wrote:
-> When copying/duplicating set of properties, move smaller properties that
-> were stored separately directly inside property entry structures. We can
-> move:
+On Wed, Oct 16, 2019 at 11:41:05AM +0200, Paolo Bonzini wrote:
+> On 16/10/19 09:48, Xiaoyao Li wrote:
+> > BTW, could you have a look at the series I sent yesterday to refactor
+> > the vcpu creation flow, which is inspired partly by this issue. Any
+> > comment and suggestion is welcomed since I don't want to waste time on
+> > wrong direction.
 > 
-> - up to 8 bytes from U8 arrays
-> - up to 4 words
-> - up to 2 double words
-> - one U64 value
-> - one or 2 strings.
-> 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->  drivers/base/swnode.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-> index ae4b24ee2a54..546fc1b20095 100644
-> --- a/drivers/base/swnode.c
-> +++ b/drivers/base/swnode.c
-> @@ -277,6 +277,16 @@ static int property_entry_copy_data(struct property_entry *dst,
->  		dst->value = src->value;
->  	}
->  
-> +	if (!dst->is_inline && dst->length <= sizeof(dst->value)) {
-> +		/* We have an opportunity to move the data inline */
-> +		const void *tmp = dst->pointer;
-> +
-> +		memcpy(&dst->value, tmp, dst->length);
-> +		dst->is_inline = true;
-> +
-> +		kfree(tmp);
-> +	}
+> Yes, that's the series from which I'll take your patch.
 
-This chunk needs to be moved to after dst->length is assigned.  I'll
-send updated version after I get more feedback.
-
-> +
->  	dst->length = src->length;
->  	dst->type = src->type;
->  	dst->name = kstrdup(src->name, GFP_KERNEL);
-
-Thanks.
-
--- 
-Dmitry
+Can you hold off on taking that patch?  I'm pretty sure we can do more
+cleanup in that area, with less code.
