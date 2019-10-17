@@ -2,86 +2,130 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07094ECE599
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34014FA3728
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA1752053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B0C421925
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:35:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571279719;
+	bh=WEQi3xqYKsiBa7+9EaRvYX5iGkUaUogniECZB1KQPA8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T5qGmDeVauVCUshN5ivyyD/p/ZsVfbXLpT6p6aJformtZ3vMtJcmj5YNNTRfeTrLG
+	 Ho4f3xxoatkA74aSyo54w8Yw1gFs5nhvn9QkNJXabD7YIV+efMgbctOul+1IXUDgPY
+	 WoPkhD55sLoXA7kPGqHjvMgrWiwUHTK1ST62OxE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407159AbfJQCeJ (ORCPT
+        id S2407195AbfJQCfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 22:34:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34792 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392062AbfJQCeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 22:34:09 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ED16410DCC97;
-        Thu, 17 Oct 2019 02:34:07 +0000 (UTC)
-Received: from [10.72.12.185] (ovpn-12-185.pek2.redhat.com [10.72.12.185])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 138295D9DC;
-        Thu, 17 Oct 2019 02:34:00 +0000 (UTC)
-Subject: Re: [PATCH 2/2] virtio_ring: Use DMA API if memory is encrypted
-To:     Christoph Hellwig <hch@lst.de>, Ram Pai <linuxram@us.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linuxppc-dev@lists.ozlabs.org,
-        virtualization@lists.linux-foundation.org,
-        benh@kernel.crashing.org, david@gibson.dropbear.id.au,
-        mpe@ellerman.id.au, paulus@ozlabs.org, mdroth@linux.vnet.ibm.com,
-        aik@linux.ibm.com, paul.burton@mips.com, robin.murphy@arm.com,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
-        andmike@us.ibm.com, sukadev@linux.vnet.ibm.com
-References: <1570843519-8696-1-git-send-email-linuxram@us.ibm.com>
- <1570843519-8696-2-git-send-email-linuxram@us.ibm.com>
- <1570843519-8696-3-git-send-email-linuxram@us.ibm.com>
- <20191015073501.GA32345@lst.de>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <398dce4b-9290-0b14-28b1-e521331ec309@redhat.com>
-Date:   Thu, 17 Oct 2019 10:33:59 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 16 Oct 2019 22:35:17 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33656 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730039AbfJQCfR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 22:35:17 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d22so374739pls.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 19:35:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=43Gf/yYAFtrG7sahRKNPNsaeIiTcM4HYV2zVSsTuMgM=;
+        b=uC7Vc/WysZhZwIufEcQ9BSUBExUtbHBjD0SyBw3hjnip9P+qfHf9eZMmyDAu3QIYGF
+         py2ou30e8LIIBkOdRyOU2EN1WR5/mF9hNC+Rej1JeO3pk8lQo3YHXj8jg8zaPH7H0uPh
+         lFUbtK0DHQybV60bXDqC4qFDmSJIMUrZwcQQd+tbrCaHFwm03KsrudjaiU0+92OzR+Jw
+         OHM79n1msDQVHyaEZfZvbTd+buCbInlrEOg5sAAkOySveijdZQ2XyLl7ESILyr/Z23nS
+         bpoxJSMPcJC0QicDERtfnVBkyI0c6CaxaRoGiTi0/uyeQwV74VkcL9mdE54MHjwsQSLi
+         Rgkw==
+X-Gm-Message-State: APjAAAVDzlqWcCX0rH7pjU6TKD/gS4nT6dmHOJ4/M+/KzfY0E+rufbot
+        /1VpcS/6zaXqBYDAXoTbwBpUEA==
+X-Google-Smtp-Source: APXvYqxCTrUaZ2Kzs6nPSDuu9xgpUljXDq1m15jGwEzGZUZcbW3oIL9sEqdR7CTQCU6NCtDaZLsMIg==
+X-Received: by 2002:a17:902:b20a:: with SMTP id t10mr1437108plr.277.1571279716458;
+        Wed, 16 Oct 2019 19:35:16 -0700 (PDT)
+Received: from localhost ([2601:647:5b00:424:6361:2bd9:c43a:bc72])
+        by smtp.gmail.com with ESMTPSA id f62sm442225pfg.74.2019.10.16.19.35.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 19:35:15 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 19:35:14 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     Wu Hao <hao.wu@intel.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux@roeck-us.net, jdelvare@suse.com,
+        gregkh@linuxfoundation.org
+Subject: Re: [PATCH v7 0/3] add thermal/power management features for FPGA
+ DFL drivers
+Message-ID: <20191017023514.GA31676@archbox>
+References: <1571031723-12101-1-git-send-email-hao.wu@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191015073501.GA32345@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Thu, 17 Oct 2019 02:34:08 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571031723-12101-1-git-send-email-hao.wu@intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Oct 14, 2019 at 01:42:00PM +0800, Wu Hao wrote:
+> Hi Moritz and all,
+> 
+> This patchset adds thermal and power management features for FPGA DFL
+> drivers. Both patches are using hwmon as userspace interfaces.
+> 
+> This patchset is created on top of 5.4-rc3, please help with review to see
+> if any comments, thank you very much!
+> 
+> Main changes from v6:
+>  - update kernel version and date in sysfs doc.
+> 
+> Main changes from v5:
+>  - rebase and clean up (remove empty uinit function) per changes in recent
+>    merged dfl patches.
+>  - update date in sysfs doc.
+> 
+> Main changes from v4:
+>  - rebase due to Documentation format change (dfl.txt -> rst).
+>  - clamp threshold inputs for sysfs interfaces. (patch#3)
+>  - update sysfs doc to add more description for ltr sysfs interfaces.
+>    (patch#3)
+> 
+> Main changes from v3:
+>  - use HWMON_CHANNEL_INFO.
+> 
+> Main changes from v2:
+>  - switch to standard hwmon APIs for thermal hwmon:
+>      temp1_alarm        --> temp1_max
+>      temp1_alarm_status --> temp1_max_alarm
+>      temp1_crit_status  --> temp1_crit_alarm
+>      temp1_alarm_policy --> temp1_max_policy
+>  - switch to standard hwmon APIs for power hwmon:
+>      power1_cap         --> power1_max
+>      power1_cap_status  --> power1_max_alarm
+>      power1_crit_status --> power1_crit_alarm
+> 
+> Wu Hao (2):
+>   fpga: dfl: fme: add thermal management support
+>   fpga: dfl: fme: add power management support
+> 
+> Xu Yilun (1):
+>   Documentation: fpga: dfl: add descriptions for thermal/power
+>     management interfaces
+> 
+>  Documentation/ABI/testing/sysfs-platform-dfl-fme | 132 ++++++++
+>  Documentation/fpga/dfl.rst                       |  10 +
+>  drivers/fpga/Kconfig                             |   2 +-
+>  drivers/fpga/dfl-fme-main.c                      | 385 +++++++++++++++++++++++
+>  4 files changed, 528 insertions(+), 1 deletion(-)
+> 
+> -- 
+> 1.8.3.1
+> 
 
-On 2019/10/15 下午3:35, Christoph Hellwig wrote:
-> On Fri, Oct 11, 2019 at 06:25:19PM -0700, Ram Pai wrote:
->> From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
->>
->> Normally, virtio enables DMA API with VIRTIO_F_IOMMU_PLATFORM, which must
->> be set by both device and guest driver. However, as a hack, when DMA API
->> returns physical addresses, guest driver can use the DMA API; even though
->> device does not set VIRTIO_F_IOMMU_PLATFORM and just uses physical
->> addresses.
-> Sorry, but this is a complete bullshit hack.  Driver must always use
-> the DMA API if they do DMA, and if virtio devices use physical addresses
-> that needs to be returned through the platform firmware interfaces for
-> the dma setup.  If you don't do that yet (which based on previous
-> informations you don't), you need to fix it, and we can then quirk
-> old implementations that already are out in the field.
->
-> In other words: we finally need to fix that virtio mess and not pile
-> hacks on top of hacks.
+Series applied.
 
-
-I agree, the only reason for IOMMU_PLATFORM is to make sure guest works 
-for some old and buggy qemu when vIOMMU is enabled which seems useless 
-(note we don't even support vIOMMU migration in that case).
-
-Thanks
-
+Thanks,
+Moritz
