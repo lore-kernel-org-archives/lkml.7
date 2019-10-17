@@ -2,159 +2,197 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E64ECA9EC8
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F60DCA9EB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E089321D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3327521D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 23:17:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aTR86OCw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441732AbfJQXPb (ORCPT
+        id S2441750AbfJQXRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 19:15:31 -0400
-Received: from gate.crashing.org ([63.228.1.57]:43186 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438437AbfJQXPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 19:15:30 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x9HNEmef019088;
-        Thu, 17 Oct 2019 18:14:49 -0500
-Message-ID: <071cf1eeefcbfc14633a13bc2d15ad7392987a88.camel@kernel.crashing.org>
-Subject: Re: [PATCH v2] ftgmac100: Disable HW checksum generation on AST2500
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Vijay Khemka <vijaykhemka@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        Sai Dasari <sdasari@fb.com>
-Date:   Fri, 18 Oct 2019 10:14:47 +1100
-In-Reply-To: <0C0BC813-5A84-403F-9C48-9447AAABD867@fb.com>
-References: <20191011213027.2110008-1-vijaykhemka@fb.com>
-         <3a1176067b745fddfc625bbd142a41913ee3e3a1.camel@kernel.crashing.org>
-         <0C0BC813-5A84-403F-9C48-9447AAABD867@fb.com>
+        Thu, 17 Oct 2019 19:17:02 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:33759 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438437AbfJQXRA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 19:17:00 -0400
+Received: by mail-il1-f193.google.com with SMTP id v2so3806485ilm.0;
+        Thu, 17 Oct 2019 16:16:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o5eiJ+Rr8lrcCywXBY41R7qO2TUsmlP34HZv/WGlGI8=;
+        b=aTR86OCwa7fQ4jf/ECe+TcV8dbTTUD+Nmb9upANhKQ1xQdFOV6aysx8K4i+BFqdZgl
+         6naN5yrV4WNhPGRFeE6uylFvIwApaaD06n+7BWaSsw3AGjyji/z5D8Z7yr+7vKXtCapt
+         vkJt2NH+Facqutf1WMl3ZY3ua2hNN65IJevNPMKTSnJTAHQeTKWX/vW73qpl8CnsRP6J
+         WWlKbkaz5/kQHSeZZuqxVG6si+54GoWB04LXqev7s4i8L6k+PG/SAjOFuCBojSRFFLFo
+         brS9afkspy/vMAjkJ0X+GPiF9oKlQ419Y+39ZkqTo6VrYROxGVlM9U0jpj02uuOeE2xR
+         LnpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o5eiJ+Rr8lrcCywXBY41R7qO2TUsmlP34HZv/WGlGI8=;
+        b=XbZBwxuOLC3T6IaT2KjW5DK8fWh3IF0hjcf0qbHdqMPuRB34M+jyL/HQK+gZl+Ecnb
+         oEX5G2NvST+K6GhUn8i1v645aEPaDow6VaKTKsFbg3R4LN1GfCqg612ISMAeiak4aEp3
+         au6OIeCyxMsqL7UaZoqy8AYSphRMzrJ8VKrTgjEmzwgS6QHSdcdI/sckdbbr58DFTsab
+         8gJeEkw/tBVKZ+mwBKUiLk93oF8123m+LhpEywOaPtPMxWoMIth2beORNK7GwKuPXA2P
+         ac4RIEzL/uziOEfBdWgkGqSCt87QgNzrpWuC/3+jliucpQZ1xP3So53O6ru+f3K8Qqoh
+         cHtA==
+X-Gm-Message-State: APjAAAUKOpNr/hKio8wPFY4hQDsEsU5pNWe+6d6714KjHhanxBmCoSRF
+        hVrAGqbefRS0Vg5KGSDCdfnupyPZ4bz65SZ92Oo=
+X-Google-Smtp-Source: APXvYqz2VKklqccrCLE38xT07Yj3Dju5GcLXQelKSQkeQlo7gkReRkybRpkVAPFsBBwdPbIb+5ElDDBVtY3NeZ6W2xM=
+X-Received: by 2002:a92:1dd6:: with SMTP id g83mr6764418ile.178.1571354219313;
+ Thu, 17 Oct 2019 16:16:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191002011555.36571-1-jeffrey.l.hugo@gmail.com>
+ <20191002011640.36624-1-jeffrey.l.hugo@gmail.com> <20191017215023.2BFEC20872@mail.kernel.org>
+In-Reply-To: <20191017215023.2BFEC20872@mail.kernel.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Thu, 17 Oct 2019 17:16:48 -0600
+Message-ID: <CAOCk7NqgWkt6BwY75eGS2dbJ7GGk3DqH5NC0VLHUq4fc6WuYog@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] clk: qcom: Add MSM8998 GPU Clock Controller
+ (GPUCC) driver
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        MSM <linux-arm-msm@vger.kernel.org>, linux-clk@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-10-17 at 22:01 +0000, Vijay Khemka wrote:
-> 
-> ﻿On 10/16/19, 6:29 PM, "Benjamin Herrenschmidt" <benh@kernel.crashing.org> wrote:
-> 
->     On Fri, 2019-10-11 at 14:30 -0700, Vijay Khemka wrote:
->     > HW checksum generation is not working for AST2500, specially with
->     > IPV6
->     > over NCSI. All TCP packets with IPv6 get dropped. By disabling this
->     > it works perfectly fine with IPV6. As it works for IPV4 so enabled
->     > hw checksum back for IPV4.
->     > 
->     > Verified with IPV6 enabled and can do ssh.
->     
->     So while this probably works, I don't think this is the right
->     approach, at least according to the comments in skbuff.h
-> 
-> This is not a matter of unsupported csum, it is broken hw csum. 
-> That's why we disable hw checksum. My guess is once we disable
-> Hw checksum, it will use sw checksum. So I am just disabling hw 
-> Checksum.
+On Thu, Oct 17, 2019 at 3:50 PM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Jeffrey Hugo (2019-10-01 18:16:40)
+> > diff --git a/drivers/clk/qcom/gpucc-msm8998.c b/drivers/clk/qcom/gpucc-msm8998.c
+> > new file mode 100644
+> > index 000000000000..f0ccb4963885
+> > --- /dev/null
+> > +++ b/drivers/clk/qcom/gpucc-msm8998.c
+> > @@ -0,0 +1,346 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (c) 2019, Jeffrey Hugo
+> > + */
+> > +
+> > +#include <linux/kernel.h>
+> > +#include <linux/bitops.h>
+> > +#include <linux/err.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/clk-provider.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/reset-controller.h>
+> > +#include <linux/clk.h>
+>
+> Drop this include please.
 
-I don't understand what you are saying. You reported a problem with
-IPV6 checksums generation. The HW doesn't support it. What's "not a
-matter of unsupported csum" ?
+Will do.
 
-Your patch uses a *deprecated* bit to tell the network stack to only do
-HW checksum generation on IPV4.
+>
+> > +
+> > +
+> > +static struct clk_rcg2 rbcpr_clk_src = {
+> > +       .cmd_rcgr = 0x1030,
+> > +       .hid_width = 5,
+> > +       .parent_map = gpu_xo_gpll0_map,
+> > +       .freq_tbl = ftbl_rbcpr_clk_src,
+> > +       .clkr.hw.init = &(struct clk_init_data){
+> > +               .name = "rbcpr_clk_src",
+> > +               .parent_data = gpu_xo_gpll0,
+> > +               .num_parents = 2,
+> > +               .ops = &clk_rcg2_ops,
+> > +       },
+> > +};
+> > +
+> > +static const struct freq_tbl ftbl_gfx3d_clk_src[] = {
+> > +       F(180000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
+> > +       F(257000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
+> > +       F(342000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
+> > +       F(414000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
+> > +       F(515000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
+> > +       F(596000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
+> > +       F(670000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
+> > +       F(710000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
+> > +       { }
+>
+> I guess this one doesn't do PLL ping pong? Instead we just reprogram the
+> PLL all the time? Can we have rcg2 clk ops that set the rate on the
+> parent to be exactly twice as much as the incoming frequency? I thought
+> we already had this support in the code. Indeed, it is part of
+> _freq_tbl_determine_rate() in clk-rcg.c, but not yet implemented in the
+> same function name in clk-rcg2.c! Can you implement it? That way we
+> don't need this long frequency table, just this weird one where it looks
+> like:
+>
+>         { .src = P_GPUPLL0_OUT_EVEN, .pre_div = 3 }
+>         { }
+>
+> And then some more logic in the rcg2 ops to allow this possibility for a
+> frequency table when CLK_SET_RATE_PARENT is set.
 
-This bit is deprecated for a reason, again, see skbuff.h. The right
-approach, *which the driver already does*, is to tell the stack that we
-support HW checksuming using NETIF_F_HW_CSUM, and then, in the transmit
-handler, to call skb_checksum_help() to have the SW calculate the
-checksum if it's not a supported type.
+Does not do PLL ping pong.  I'll look at extending the rcg2 ops like
+you describe.
 
-This is exactly what ftgmac100_prep_tx_csum() does. It only enables HW
-checksum generation on supported types and uses skb_checksum_help()
-otherwise, supported types being protocol ETH_P_IP and IP protocol
-being raw IP, TCP and UDP.
+>
+> > +};
+> > +
+> > +static struct clk_rcg2 gfx3d_clk_src = {
+> > +       .cmd_rcgr = 0x1070,
+> > +       .hid_width = 5,
+> > +       .parent_map = gpu_xo_gpupll0_map,
+> > +       .freq_tbl = ftbl_gfx3d_clk_src,
+> > +       .clkr.hw.init = &(struct clk_init_data){
+> > +               .name = "gfx3d_clk_src",
+> > +               .parent_data = gpu_xo_gpupll0,
+> > +               .num_parents = 2,
+> > +               .ops = &clk_rcg2_ops,
+> > +               .flags = CLK_OPS_PARENT_ENABLE,
+>
+> Needs CLK_SET_RATE_PARENT presumably?
 
-So this *should* have fallen back to SW for IPV6. So either something
-in my code there is making an incorrect assumption, or something is
-broken in skb_checksum_help() for IPV6 (which I somewhat doubt) or
-something else I can't think of, but setting a *deprecated* flag is
-definitely not the right answer, neither is completely disabling HW
-checksumming.
+Ah yeah.  Thanks for catching.
 
-So can you investigate what's going on a bit more closely please ? I
-can try myself, though I have very little experience with IPV6 and
-probably won't have time before next week.
+>
+> > +       },
+> > +};
+> > +
+> > +static const struct freq_tbl ftbl_rbbmtimer_clk_src[] = {
+> > +       F(19200000, P_XO, 1, 0, 0),
+> > +       { }
+> > +};
+> > +
+> [...]
+> > +
+> > +static const struct qcom_cc_desc gpucc_msm8998_desc = {
+> > +       .config = &gpucc_msm8998_regmap_config,
+> > +       .clks = gpucc_msm8998_clocks,
+> > +       .num_clks = ARRAY_SIZE(gpucc_msm8998_clocks),
+> > +       .resets = gpucc_msm8998_resets,
+> > +       .num_resets = ARRAY_SIZE(gpucc_msm8998_resets),
+> > +       .gdscs = gpucc_msm8998_gdscs,
+> > +       .num_gdscs = ARRAY_SIZE(gpucc_msm8998_gdscs),
+> > +};
+> > +
+> > +static const struct of_device_id gpucc_msm8998_match_table[] = {
+> > +       { .compatible = "qcom,gpucc-msm8998" },
+>
+> The compatible is different. In the merged binding it is
+> qcom,msm8998-gpucc. Either fix this or fix the binding please.
 
-Cheers,
-Ben.
-
->     The driver should have handled unsupported csum via SW fallback
->     already in ftgmac100_prep_tx_csum()
->     
->     Can you check why this didn't work for you ?
->     
->     Cheers,
->     Ben.
->     
->     > Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
->     > ---
->     > Changes since v1:
->     >  Enabled IPV4 hw checksum generation as it works for IPV4.
->     > 
->     >  drivers/net/ethernet/faraday/ftgmac100.c | 13 ++++++++++++-
->     >  1 file changed, 12 insertions(+), 1 deletion(-)
->     > 
->     > diff --git a/drivers/net/ethernet/faraday/ftgmac100.c
->     > b/drivers/net/ethernet/faraday/ftgmac100.c
->     > index 030fed65393e..0255a28d2958 100644
->     > --- a/drivers/net/ethernet/faraday/ftgmac100.c
->     > +++ b/drivers/net/ethernet/faraday/ftgmac100.c
->     > @@ -1842,8 +1842,19 @@ static int ftgmac100_probe(struct
->     > platform_device *pdev)
->     >  	/* AST2400  doesn't have working HW checksum generation */
->     >  	if (np && (of_device_is_compatible(np, "aspeed,ast2400-mac")))
->     >  		netdev->hw_features &= ~NETIF_F_HW_CSUM;
->     > +
->     > +	/* AST2500 doesn't have working HW checksum generation for IPV6
->     > +	 * but it works for IPV4, so disabling hw checksum and enabling
->     > +	 * it for only IPV4.
->     > +	 */
->     > +	if (np && (of_device_is_compatible(np, "aspeed,ast2500-mac")))
->     > {
->     > +		netdev->hw_features &= ~NETIF_F_HW_CSUM;
->     > +		netdev->hw_features |= NETIF_F_IP_CSUM;
->     > +	}
->     > +
->     >  	if (np && of_get_property(np, "no-hw-checksum", NULL))
->     > -		netdev->hw_features &= ~(NETIF_F_HW_CSUM |
->     > NETIF_F_RXCSUM);
->     > +		netdev->hw_features &= ~(NETIF_F_HW_CSUM |
->     > NETIF_F_RXCSUM
->     > +					 | NETIF_F_IP_CSUM);
->     >  	netdev->features |= netdev->hw_features;
->     >  
->     >  	/* register network device */
->     
->     
-> 
-
+This is wrong.  Will fix.
