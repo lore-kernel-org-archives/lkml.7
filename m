@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 819BAFA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 913EDFA3735
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E8E0214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 685AF21A49
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:48:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728591AbfJQMsf (ORCPT
+        id S2502670AbfJQMsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 08:48:35 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4242 "EHLO huawei.com"
+        Thu, 17 Oct 2019 08:48:36 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4206 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2502555AbfJQMs0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:48:26 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 8AC5BB2FB796D21AB281;
-        Thu, 17 Oct 2019 20:48:21 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
- 20:48:13 +0800
+        id S2502640AbfJQMse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 08:48:34 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id CBF3761E3E7450A6C30C;
+        Thu, 17 Oct 2019 20:48:31 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
+ 20:48:21 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <linus.walleij@linaro.org>, <manivannan.sadhasivam@linaro.org>,
         <afaerber@suse.de>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
@@ -42,9 +42,9 @@ CC:     <linux-arm-kernel@lists.infradead.org>,
         <haojian.zhuang@gmail.com>, <wens@csie.org>,
         <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <agross@kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 05/30] pinctrl: nsp-gpio: use devm_platform_ioremap_resource() to simplify code
-Date:   Thu, 17 Oct 2019 20:26:15 +0800
-Message-ID: <20191017122640.22976-6-yuehaibing@huawei.com>
+Subject: [PATCH -next 08/30] pinctrl: bcm281xx: use devm_platform_ioremap_resource() to simplify code
+Date:   Thu, 17 Oct 2019 20:26:18 +0800
+Message-ID: <20191017122640.22976-9-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20191017122640.22976-1-yuehaibing@huawei.com>
 References: <20191017122640.22976-1-yuehaibing@huawei.com>
@@ -62,39 +62,27 @@ This is detected by coccinelle.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/pinctrl/bcm/pinctrl-nsp-gpio.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/pinctrl/bcm/pinctrl-bcm281xx.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c b/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
-index e67ae52..8db87e5 100644
---- a/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
-+++ b/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
-@@ -613,7 +613,6 @@ static const struct of_device_id nsp_gpio_of_match[] = {
- static int nsp_gpio_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/bcm/pinctrl-bcm281xx.c b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
+index bc3b232..f690fc5 100644
+--- a/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
++++ b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
+@@ -1400,12 +1400,10 @@ static struct pinctrl_desc bcm281xx_pinctrl_desc = {
+ static int __init bcm281xx_pinctrl_probe(struct platform_device *pdev)
  {
- 	struct device *dev = &pdev->dev;
+ 	struct bcm281xx_pinctrl_data *pdata = &bcm281xx_pinctrl;
 -	struct resource *res;
- 	struct nsp_gpio *chip;
- 	struct gpio_chip *gc;
- 	u32 val, count;
-@@ -631,15 +630,13 @@ static int nsp_gpio_probe(struct platform_device *pdev)
- 	chip->dev = dev;
- 	platform_set_drvdata(pdev, chip);
+ 	struct pinctrl_dev *pctl;
  
+ 	/* So far We can assume there is only 1 bank of registers */
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	chip->base = devm_ioremap_resource(dev, res);
-+	chip->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(chip->base)) {
- 		dev_err(dev, "unable to map I/O memory\n");
- 		return PTR_ERR(chip->base);
- 	}
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--	chip->io_ctrl = devm_ioremap_resource(dev, res);
-+	chip->io_ctrl = devm_platform_ioremap_resource(pdev, 1);
- 	if (IS_ERR(chip->io_ctrl)) {
- 		dev_err(dev, "unable to map I/O memory\n");
- 		return PTR_ERR(chip->io_ctrl);
+-	pdata->reg_base = devm_ioremap_resource(&pdev->dev, res);
++	pdata->reg_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pdata->reg_base)) {
+ 		dev_err(&pdev->dev, "Failed to ioremap MEM resource\n");
+ 		return -ENODEV;
 -- 
 2.7.4
 
