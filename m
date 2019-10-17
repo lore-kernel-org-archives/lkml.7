@@ -2,106 +2,91 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A1A6FA3735
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F294FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6703521835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33A0E21835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:35:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="rLw/zBLG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404674AbfJQQf1 (ORCPT
+        id S2408420AbfJQQfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:35:27 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:41094 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1732537AbfJQQf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 12:35:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2BB20328;
-        Thu, 17 Oct 2019 09:35:09 -0700 (PDT)
-Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5E9EC3F6C4;
-        Thu, 17 Oct 2019 09:35:08 -0700 (PDT)
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] cpufreq: flush any pending policy update work scheduled before freeing
-Date:   Thu, 17 Oct 2019 17:35:03 +0100
-Message-Id: <20191017163503.30791-1-sudeep.holla@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 17 Oct 2019 12:35:45 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37399 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732537AbfJQQfo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 12:35:44 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y5so1993561pfo.4
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 09:35:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=n6iC9aFIm7u0dU/zNM/QcsEIHkk1HFiJjgCYQoT2Mo4=;
+        b=rLw/zBLGb832jZnhC2XQDPu8GmL2TDqIyAqgKiHS1bkVHYZkpv31ojFkQe9yoiJosu
+         OATsID2jjJR5fxB+f27xypsvogvi6NjOdJuEY7WyxCWVO7QiPmERQP2+3LNeZNHKeyYy
+         U22+IPML7CXzC6MXwg06aYBKwbQvWV1aigUizyhhQR+EVGzHw+1AhnxJoW8lCCKcuziZ
+         eCRAX7bq4dZl7sJRffrCj8kB0V6/MnbvHkNqZ1ZUfVoC4MD5M4rHy2E4APOoapoH4CAg
+         2xNy2mueNekGx0CHPQDYJUVPgXpm0OnuDNHVMnK6kDtFcEwWHo03utLEe0wjkTK/Sp3/
+         oztg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=n6iC9aFIm7u0dU/zNM/QcsEIHkk1HFiJjgCYQoT2Mo4=;
+        b=qLEOryUskj311KccLw/rapNHetZR/s4O9pg7qZ4iDl8XpK8Jty2WekycmK7jOojubD
+         iAAgeTqOVx1WhoNlrmCsvayuhtMWmJDck47q1TEw5KbpsKIKB5it18pgx69sOresMUZy
+         6S5ux3LlOohqGS/vKE1yJdjmOm6QCQ62oQli2SCopcoBRO46hwEPbjBSg/c6YN9XInrX
+         lM698s3DSl7H6l1VivRwv/5bj0UUtBVH28dLiPfjMpiZ5pRqS+ub3FnBsCd0CnxCBFym
+         37M1nSt7Qwjiy5jou2fmehpndtivsRuXuHV7Po5GTkYNbI7yIZcw87plCG23wxSd/YoP
+         divw==
+X-Gm-Message-State: APjAAAWD4dMBPplITOf/bcuJre2B/HrgdQMBOMKWn6CPf1JEKcHWtsOM
+        a75zb/QOlULkrSN5SF5/Wx9vSg==
+X-Google-Smtp-Source: APXvYqx8QHZBP4DAVpyoFFyUNQRbXJjtCE3kG8SFGsa5w0UJekNJKz/9aCD9K0RXSuH2lXuA6W7rnQ==
+X-Received: by 2002:a63:82:: with SMTP id 124mr5391099pga.112.1571330142686;
+        Thu, 17 Oct 2019 09:35:42 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:d8f2:392e:5b44:157d])
+        by smtp.gmail.com with ESMTPSA id j10sm3548870pfn.128.2019.10.17.09.35.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 17 Oct 2019 09:35:41 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Guillaume La Roque <glaroque@baylibre.com>,
+        amit.kucheria@linaro.org, rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH v7 4/7] arm64: dts: meson: g12: Add minimal thermal zone
+In-Reply-To: <7hsgnsfxpx.fsf@baylibre.com>
+References: <20191004090114.30694-1-glaroque@baylibre.com> <20191004090114.30694-5-glaroque@baylibre.com> <7hsgnsfxpx.fsf@baylibre.com>
+Date:   Thu, 17 Oct 2019 09:35:41 -0700
+Message-ID: <7ho8yfba8y.fsf@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dev_pm_qos_remove_request ends calling {max,min}_freq_req QoS notifiers
-which schedule policy update work. It may end up racing with the freeing
-the policy and unregistering the driver.
+Kevin Hilman <khilman@baylibre.com> writes:
 
-One possible race is as below where the cpufreq_driver is unregistered
-but the scheduled work gets executed at later stage when cpufreq_driver
-is NULL(i.e. after freeing the policy and driver)
+> Guillaume La Roque <glaroque@baylibre.com> writes:
+>
+>> Add minimal thermal zone for two temperature sensor
+>> One is located close to the DDR and the other one is
+>> located close to the PLLs (between the CPU and GPU)
+>
+> nit: subject should be "arm64: dts: amlogic" (not meson).
+>
+> I fixed it up when applying,
 
-Unable to handle kernel NULL pointer dereference at virtual address 0000001c
-pgd = (ptrval)
-[0000001c] *pgd=80000080204003, *pmd=00000000
-Internal error: Oops: 206 [#1] SMP THUMB2
-Modules linked in:
-CPU: 0 PID: 34 Comm: kworker/0:1 Not tainted 5.4.0-rc3-00006-g67f5a8081a4b #86
-Hardware name: ARM-Versatile Express
-Workqueue: events handle_update
-PC is at cpufreq_set_policy+0x58/0x228
-LR is at dev_pm_qos_read_value+0x77/0xac
-Control: 70c5387d  Table: 80203000  DAC: fffffffd
-Process kworker/0:1 (pid: 34, stack limit = 0x(ptrval))
-	(cpufreq_set_policy) from (refresh_frequency_limits.part.24+0x37/0x48)
-	(refresh_frequency_limits.part.24) from (handle_update+0x2f/0x38)
-	(handle_update) from (process_one_work+0x16d/0x3cc)
-	(process_one_work) from (worker_thread+0xff/0x414)
-	(worker_thread) from (kthread+0xff/0x100)
-	(kthread) from (ret_from_fork+0x11/0x28)
+I got it backwards, this one was right, the other ones with "amlogic"
+should be "meson". I (re)fixed it in my 'v5.5/dt64' branch.
 
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- drivers/cpufreq/cpufreq.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-Hi Rafael, Viresh,
-
-This fixed the boot issue I reported[1] on TC2 with bL switcher enabled.
-I have based this patch on -rc3 and not on top of your patches. This
-only fixes the boot issue but I hit the other crashes while continuously
-switching on and off the bL switcher that register/unregister the driver
-Your patch series fixes them. I can based this on top of those if you
-prefer.
-
-Regards,
-Sudeep
-
-[1] https://lore.kernel.org/linux-pm/20191015155735.GA29105@bogus/
-
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index c52d6fa32aac..b703c29a84be 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -1278,6 +1278,9 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
- 	}
- 
- 	dev_pm_qos_remove_request(policy->min_freq_req);
-+	/* flush the pending policy->update work before freeing the policy */
-+	if (work_pending(&policy->update))
-+		flush_work(&policy->update);
- 	kfree(policy->min_freq_req);
- 
- 	cpufreq_policy_put_kobj(policy);
--- 
-2.17.1
-
+Kevin
