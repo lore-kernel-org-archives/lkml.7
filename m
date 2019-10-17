@@ -2,142 +2,147 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7949FA372B
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 05:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7B8C4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 05:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90912214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 05:27:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571290069;
-	bh=cvii7IoLU8oou9av1ctfLhhGghmK/B6OwKzMBcYtoAM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EOjWBN2gUHI77zSPZLXECrU46aM2Xjex9dOoJtRPkrFHS6/gtm+GTw2drfvp3d6ij
-	 gtdRhGN79UIt5A5QF7kP7Ed9u3HJfP7YmTBXp86T1gdNR+XbBxfglE3vANNJOoeNch
-	 e+xw4CUKPPyN4drcA/iLIy1O7h26PfWjCCEx+IPY=
+	by mail.kernel.org (Postfix) with ESMTP id 5D0912089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 05:40:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392492AbfJQF1q (ORCPT
+        id S2393621AbfJQFk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 01:27:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46840 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726018AbfJQF1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 01:27:45 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E40CF2082C;
-        Thu, 17 Oct 2019 05:27:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571290064;
-        bh=cvii7IoLU8oou9av1ctfLhhGghmK/B6OwKzMBcYtoAM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GfQ9TFNNkpfkvNX1IN9qLrYD7DR6wKfVMhfQq0mTE9WBzviP4UR5pkUW+O0pmyrE0
-         gkGa5fwVa/V4KshdDYn9Y2wB7XWLOuXrc1R2BGAxIuWiiQDOQYR1bycmpTQPk4iGI2
-         uaV+yC+ZNCcW0mlxXLie3p5kDky24wfGTd6+bARc=
-Date:   Wed, 16 Oct 2019 22:27:42 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     syzbot <syzbot+f9545ab3e9f85cd43a3a@syzkaller.appspotmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Subject: Re: WARNING: bad unlock balance in rcu_lock_release
-Message-ID: <20191017052742.GI1552@sol.localdomain>
-Mail-Followup-To: Jan Kara <jack@suse.cz>,
-        syzbot <syzbot+f9545ab3e9f85cd43a3a@syzkaller.appspotmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-References: <000000000000fdd3f3058bfcf369@google.com>
- <0000000000004ecdb90594d16d77@google.com>
- <20191015075631.GB21550@quack2.suse.cz>
+        Thu, 17 Oct 2019 01:40:26 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:56565 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731603AbfJQFkZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 01:40:25 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TfHZc.W_1571290820;
+Received: from IT-C02W23QPG8WN.local(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0TfHZc.W_1571290820)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 17 Oct 2019 13:40:21 +0800
+From:   Wen Yang <wenyang@linux.alibaba.com>
+Subject: Re: [PATCH] net: mscc: ocelot: add missing of_node_put after calling
+ of_get_child_by_name
+To:     David Miller <davem@davemloft.net>
+Cc:     alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
+        xlpang@linux.alibaba.com, zhiche.yy@alibaba-inc.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190929065424.2437-1-wenyang@linux.alibaba.com>
+ <20191001.100233.2002881947003652758.davem@davemloft.net>
+Message-ID: <0582802f-2f2e-34d4-8261-78d92646259f@linux.alibaba.com>
+Date:   Thu, 17 Oct 2019 13:40:20 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015075631.GB21550@quack2.suse.cz>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191001.100233.2002881947003652758.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 09:56:31AM +0200, Jan Kara wrote:
-> On Sun 13-10-19 14:28:06, syzbot wrote:
-> > syzbot has found a reproducer for the following crash on:
-> > 
-> > HEAD commit:    da940012 Merge tag 'char-misc-5.4-rc3' of git://git.kernel..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=12cfdf4f600000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=2d2fd92a28d3e50
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=f9545ab3e9f85cd43a3a
-> > compiler:       clang version 9.0.0 (/home/glider/llvm/clang
-> > 80fee25776c2fb61e74c1ecb1a523375c2500b69)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=148c9fc7600000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=100d3f8b600000
-> > 
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+f9545ab3e9f85cd43a3a@syzkaller.appspotmail.com
-> > 
-> > =====================================
-> > WARNING: bad unlock balance detected!
-> > 5.4.0-rc2+ #0 Not tainted
-> > -------------------------------------
-> > syz-executor111/7877 is trying to release lock (rcu_callback) at:
-> > [<ffffffff81612bd4>] rcu_lock_release+0x4/0x20 include/linux/rcupdate.h:212
-> > but there are no more locks to release!
+
+
+On 2019/10/2 1:02 上午, David Miller wrote:
+> From: Wen Yang <wenyang@linux.alibaba.com>
+> Date: Sun, 29 Sep 2019 14:54:24 +0800
 > 
-> Hum, this is really weird. Look:
+>> of_node_put needs to be called when the device node which is got
+>> from of_get_child_by_name finished using.
+>> In both cases of success and failure, we need to release 'ports',
+>> so clean up the code using goto.
+>>
+>> fixes: a556c76adc05 ("net: mscc: Add initial Ocelot switch support")
+>> Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
 > 
-> > other info that might help us debug this:
-> > 1 lock held by syz-executor111/7877:
-> >  #0: ffff8880a3c600d8 (&type->s_umount_key#42/1){+.+.}, at:
-> > alloc_super+0x15f/0x790 fs/super.c:229
-> > 
-> > stack backtrace:
-> > CPU: 1 PID: 7877 Comm: syz-executor111 Not tainted 5.4.0-rc2+ #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Call Trace:
-> >  <IRQ>
-> >  __dump_stack lib/dump_stack.c:77 [inline]
-> >  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
-> >  print_unlock_imbalance_bug+0x20b/0x240 kernel/locking/lockdep.c:4008
-> >  __lock_release kernel/locking/lockdep.c:4244 [inline]
-> >  lock_release+0x473/0x780 kernel/locking/lockdep.c:4506
-> >  rcu_lock_release+0x1c/0x20 include/linux/rcupdate.h:214
-> >  __rcu_reclaim kernel/rcu/rcu.h:223 [inline]
-> 
-> __rcu_reclaim_kernel() has:
-> 
->         rcu_lock_acquire(&rcu_callback_map);
->         if (__is_kfree_rcu_offset(offset)) {
->                 trace_rcu_invoke_kfree_callback(rn, head, offset);
->                 kfree((void *)head - offset);
->                 rcu_lock_release(&rcu_callback_map);
->                 return true;
->         } else {
->                 trace_rcu_invoke_callback(rn, head);
->                 f = head->func;
->                 WRITE_ONCE(head->func, (rcu_callback_t)0L);
->                 f(head);
->                 rcu_lock_release(&rcu_callback_map);
->                 return false;
->         }
-> 
-> So RCU locking is clearly balanced there. The only possibility I can see
-> how this can happen is that RCU callback we have called actually released
-> rcu_callback_map but grepping the kernel doesn't show any other place where
-> that would get released? Confused.
-> 
-> But apparently there is even a reproducer for this so we could dig
-> further...
+> Applied.
 > 
 
-It's probably the same cause as "WARNING: bad unlock balance in rcu_core", see
-the thread: https://lkml.kernel.org/linux-fsdevel/000000000000c0bffa0586795098@google.com/T/#u
-Looks related to the lockdep_off() in ntfs_fill_super().
+Thank you for your comments.
 
-- Eric
+We checked the code repository and found that both ‘Fixes’ and ‘fixes’ 
+are being used, such as:
+
+commit a53651ec93a8d7ab5b26c5390e0c389048b4b4b6
+…
+     net: ena: don't wake up tx queue when down
+…
+     fixes: 1738cd3ed342 (net: ena: Add a driver for Amazon Elastic 
+Network Adapters (ENA))
+…
+
+And,
+
+commit 1df379924304b687263942452836db1d725155df
+…
+     clk: consoldiate the __clk_get_hw() declarations
+…
+
+     Fixes: 59fcdce425b7 ("clk: Remove ifdef for COMMON_CLK in 
+clk-provider.h")
+     fixes: 73e0e496afda ("clkdev: Always allocate a struct clk and call 
+__clk_get() w/ CCF")
+…
+
+
+It is also found that the sha1 following ‘Fixes:’ requires at least 12 
+digits.
+
+So we plan to modify the checkpatch.pl script to check for these issues.
+
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index a85d719..ddcd2d0 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -2925,7 +2925,7 @@ sub process {
+  		}
+
+  # check for invalid commit id
+-		if ($in_commit_log && $line =~ 
+/(^fixes:|\bcommit)\s+([0-9a-f]{6,40})\b/i) {
++		if ($in_commit_log && $line =~ /(\bcommit)\s+([0-9a-f]{6,40})\b/i) {
+  			my $id;
+  			my $description;
+  			($id, $description) = git_commit_info($2, undef, undef);
+@@ -2935,6 +2935,25 @@ sub process {
+  			}
+  		}
+
++# check for fixes tag
++		if ($in_commit_log && $line =~ /(^fixes:)\s+([0-9a-f]{6,40})\b/i) {
++			my $id;
++			my $description;
++			($id, $description) = git_commit_info($2, undef, undef);
++			if (!defined($id)) {
++				WARN("UNKNOWN_COMMIT_ID",
++				     "Unknown commit id '$2', maybe rebased or not pulled?\n" . 
+$herecurr);
++			}
++			if ($1 ne "Fixes") {
++				WARN("FIXES_TAG_STYLE",
++				     "The fixes tag should be capitalized (Fixes:).\n" . $hereprev);
++			}
++			if (length($2) < 12) {
++				WARN("FIXES_TAG_STYLE",
++				     "SHA1 should be at least 12 digits long.\n" . $hereprev);
++			}
++		}
++
+  # ignore non-hunk lines and lines being removed
+  		next if (!$hunk_line || $line =~ /^-/);
+
+
+--
+Best wishes,
+Wen Yang
+
+
+
