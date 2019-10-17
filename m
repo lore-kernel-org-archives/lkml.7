@@ -2,123 +2,116 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FF7FA372B
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 04:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5EDDC4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 05:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A313214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 04:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 861752067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 05:06:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="emTDyMBc"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="zh64szI5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407797AbfJQEmO (ORCPT
+        id S2390160AbfJQFGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 00:42:14 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34035 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407777AbfJQEmO (ORCPT
+        Thu, 17 Oct 2019 01:06:45 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36413 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726394AbfJQFGo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 00:42:14 -0400
-Received: by mail-wr1-f66.google.com with SMTP id j11so678135wrp.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 21:42:12 -0700 (PDT)
+        Thu, 17 Oct 2019 01:06:44 -0400
+Received: by mail-wm1-f65.google.com with SMTP id m18so1011014wmc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 22:06:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=IJlnbnyY5cuX1Hnkfu7X6odyaf/nXbeywPLfKyjn1qM=;
-        b=emTDyMBcY7lv/zsUQKHKUYVj2Upyj+63oi6HeQ0WcAcRxiN0/wQjiPY1jkwKbz/Nt9
-         edTl9RpSDVglsXx+JMWFuES1xsHslfc+fbTacFhHGIK19yFEM5KNf3PNJh80cyjI7eCB
-         zVWzcMfEMzj8vWVwnAktt+138ytzp+1lUtX0d7RXv8hFBJcDP0fdPwymqBsARAouTES8
-         v/rfLxGQUdeXQw/azT56SNlT0pZiZEHFBqcyh79eozC09TPV8qSUc1C9tqeG2m3Rej86
-         3gupOOFDNFI/9PAUH4qokzAVrNjTQgQkv4g/PCU4Bh8dlhHa8VFnbA2li0UGIj7Tr6fF
-         AqSA==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=vc5hMa73OPr/x/aEf805fVYp+2tYvgPjEPvMghKb2Zw=;
+        b=zh64szI5/P7kHr7xGyuurhRKHjg1Pn1Q28ubOkmOzG3Stwaf4WlQppsxqn+dNutVpv
+         Yp9ECpelYfZLjI25E2yFrf5j4gxK5YunYg3Br2IVSqkK/4jF77prXesnCIAaRvYrU06q
+         516AdjPwzMZ+S7nTMrdAZq6HlkPzGFMYWUmQhouxL0xUsRS+9Ct91pLNxgnjDTpcvU0+
+         Z60oaEnCXX2Aa9eKW0lvTSpWGEuZLmL31s+hPdJUAe0wFgCg+CbW3KqndIWiAaOKVKjD
+         3oFcBNzJVMivg8nPMQ95fwkpuydWpLCKG/B9xbbinhjU3YbV/0M3rzGTb3iA8yggNAYl
+         ZAmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=IJlnbnyY5cuX1Hnkfu7X6odyaf/nXbeywPLfKyjn1qM=;
-        b=njal5fpqPHqYJ9eKhzaKUEoY1zeR7WtcOah5lSH7UdIiCTdZNlYYmorCGJRMXxf04T
-         A1LhLXDgREgXCuk1Tz09ypMxkEUPoVT0NDyUOgp6buPHVjn+63twmczEoaDCt5RHxiIR
-         cusURO2ilrc92G57EcX5LtEUwk5Vxd5bWHnvmmInmJxWsdVZKmo7d0awIpCWf/BDLEBw
-         7UMfIyutydKATAbQnOLkHTxxtHBZJUH/j11Z4/1N9RzNUDM8SG6EvXMS1YU5TsX/mPX6
-         HeEGOThq+3vVoUX+yABEDrUKYwDiUq9LuyYUG5ulW8SCZbvZaC5xMzNK100xZMzH1Vws
-         f2PQ==
-X-Gm-Message-State: APjAAAW66ZXcB3/vLJDGs5n5c4h4f42DZkX7AF2cBVVDexIzsRKt9fjZ
-        TqZXZr7eg4CdwLEH4u1BbspTfw==
-X-Google-Smtp-Source: APXvYqzzyGjZ2T00KOXjU9A57EDR7cl3i+BjV3HxdjzZLZcsUmmF2MCVUPRNYxYWd64UFMbO936gSA==
-X-Received: by 2002:adf:92e7:: with SMTP id 94mr1157436wrn.199.1571287331742;
-        Wed, 16 Oct 2019 21:42:11 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id t83sm1570936wmt.18.2019.10.16.21.42.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 16 Oct 2019 21:42:10 -0700 (PDT)
-Message-ID: <5da7f122.1c69fb81.430a9.6b76@mx.google.com>
-Date:   Wed, 16 Oct 2019 21:42:10 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: linux-4.19.y
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: v4.19.79-82-g99661e9ccf92
-In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
-References: <20191016214805.727399379@linuxfoundation.org>
-Subject: Re: [PATCH 4.19 00/81] 4.19.80-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=vc5hMa73OPr/x/aEf805fVYp+2tYvgPjEPvMghKb2Zw=;
+        b=O8w+ICwaY047kQnZivaATVh0VAkWnKhbqqPe6UQenetS+9PxOdG/tePVFQZbFRW1Wt
+         CuvKb4tPJ+A8vKWovcV3H63976TXBSrE9NNOoGIXb1T1aUL63jkk9MyiDu4sK7AxhkkV
+         kflfVnbwAqd8GxIAVnampaT0TVvsi4ARmqFNEqDCunLpyXRNHH7d4ppECCiDywu46YtY
+         2OYcOKblxuM/6RTF6Xq8b+Mj6iKakYAkONi0gbJXj/XNctI6BqqgeJVrAK7K/pbvVbDH
+         PggIESTlpWfgGpRmCmDSW6VNSdBOybx6o/xTL2P5nJmBO6ZG+Y4amaTm5WQZaG/WGKpO
+         hGMQ==
+X-Gm-Message-State: APjAAAX9u+NeH01TaFoDwWZ+LGf3jGE+UpPUV3AUK3Fz62efccKL2xys
+        x16RIqWtpZ9jsO4Wi1RBRH5sUg==
+X-Google-Smtp-Source: APXvYqw07wwT75FOoNWJyD/an/XIle9yHvlb7113NxzJZiEpvXnUsfMUBXr2Xe/6iQ8HyyjCXNyUPQ==
+X-Received: by 2002:a05:600c:143:: with SMTP id w3mr1048902wmm.17.1571288802451;
+        Wed, 16 Oct 2019 22:06:42 -0700 (PDT)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id b5sm1010762wmj.18.2019.10.16.22.06.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 16 Oct 2019 22:06:41 -0700 (PDT)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        khilman@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH v3 0/4] crypto: add amlogic crypto offloader driver
+Date:   Thu, 17 Oct 2019 05:06:22 +0000
+Message-Id: <1571288786-34601-1-git-send-email-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.19.y boot: 106 boots: 0 failed, 99 passed with 7 offline =
-(v4.19.79-82-g99661e9ccf92)
+Hello
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.19.y/kernel/v4.19.79-82-g99661e9ccf92/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.19.=
-y/kernel/v4.19.79-82-g99661e9ccf92/
+This serie adds support for the crypto offloader present on amlogic GXL
+SoCs.
 
-Tree: stable-rc
-Branch: linux-4.19.y
-Git Describe: v4.19.79-82-g99661e9ccf92
-Git Commit: 99661e9ccf9206876ca8f509555b7b0d3e45cc13
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 69 unique boards, 23 SoC families, 15 builds out of 206
+Tested on meson-gxl-s905x-khadas-vim and meson-gxl-s905x-libretech-cc
 
-Offline Platforms:
+Regards
 
-arm:
+Changes since v2:
+- fixed some spelling in kconfig
+- Use devm_platform_ioremap_resource
 
-    sunxi_defconfig:
-        gcc-8
-            sun5i-r8-chip: 1 offline lab
-            sun7i-a20-bananapi: 1 offline lab
+Changes since v1:
+- renamed files and algo with gxl
+- removed unused reset handlings
+- splited the probe functions
+- splited meson_cipher fallback in need_fallback() and do_fallback()
 
-    multi_v7_defconfig:
-        gcc-8
-            qcom-apq8064-cm-qs600: 1 offline lab
-            sun5i-r8-chip: 1 offline lab
-            sun7i-a20-bananapi: 1 offline lab
 
-    davinci_all_defconfig:
-        gcc-8
-            dm365evm,legacy: 1 offline lab
+Corentin Labbe (4):
+  dt-bindings: crypto: Add DT bindings documentation for amlogic-crypto
+  MAINTAINERS: Add myself as maintainer of amlogic crypto
+  crypto: amlogic: Add crypto accelerator for amlogic GXL
+  ARM64: dts: amlogic: adds crypto hardware node
 
-    qcom_defconfig:
-        gcc-8
-            qcom-apq8064-cm-qs600: 1 offline lab
+ .../bindings/crypto/amlogic,gxl-crypto.yaml   |  52 +++
+ MAINTAINERS                                   |   7 +
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi    |  10 +
+ drivers/crypto/Kconfig                        |   2 +
+ drivers/crypto/Makefile                       |   1 +
+ drivers/crypto/amlogic/Kconfig                |  24 ++
+ drivers/crypto/amlogic/Makefile               |   2 +
+ drivers/crypto/amlogic/amlogic-gxl-cipher.c   | 381 ++++++++++++++++++
+ drivers/crypto/amlogic/amlogic-gxl-core.c     | 331 +++++++++++++++
+ drivers/crypto/amlogic/amlogic-gxl.h          | 170 ++++++++
+ 10 files changed, 980 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
+ create mode 100644 drivers/crypto/amlogic/Kconfig
+ create mode 100644 drivers/crypto/amlogic/Makefile
+ create mode 100644 drivers/crypto/amlogic/amlogic-gxl-cipher.c
+ create mode 100644 drivers/crypto/amlogic/amlogic-gxl-core.c
+ create mode 100644 drivers/crypto/amlogic/amlogic-gxl.h
 
----
-For more info write to <info@kernelci.org>
+-- 
+2.21.0
+
