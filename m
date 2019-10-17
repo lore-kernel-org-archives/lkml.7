@@ -2,56 +2,56 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E49ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BC0ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C799E21925
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02EE521848
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:09:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="q1nmY7kg"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KdagHJpy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438232AbfJQSJ0 (ORCPT
+        id S2438372AbfJQSJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 14:09:26 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:58382 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2395417AbfJQSJZ (ORCPT
+        Thu, 17 Oct 2019 14:09:35 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:46502 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395292AbfJQSJf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 14:09:25 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9HI4A6o143655;
-        Thu, 17 Oct 2019 18:08:03 GMT
+        Thu, 17 Oct 2019 14:09:35 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9HI4AdW147084;
+        Thu, 17 Oct 2019 18:08:25 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=R7ga5CIYQVpUkfRKUAEufFb82t96tNzBlSD59pwtVOo=;
- b=q1nmY7kgncqSrJdGS/gSa00vifHZBQhk0fZ8oUVWKM+kfp8EvWeKVNqFNQ9lu+i0RJpu
- QxcmB7rieEhAC0kpMBuDvRnJjRvKF0BxcamuIrwluSP+/Xdh0uCjqtP2xYHg0uwGh3iy
- 450envKAK+HrXueDLwtkoY1FzjnDXYkzw0k4JLOsyY86DAP0ewjPGB+GkolMMq903DEZ
- 2I2NHisWyV/wlbHvn9HNv3iGZWW80Kmb3KWPX2N5AZAZ/OYRrPQgw3liteNGx7+MjfWE
- lWUMaQ3JejjYhfJpZtNkKF/xmhNB/D4dyFarfIH+cfPpsn3BC9VFmvQOkY46ixBzZxiQ kQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2vk6sr051p-1
+ bh=/8CLOJ2pMliNyB2yJzLsx8/lcr53M3C2bB3rrY57eoo=;
+ b=KdagHJpyvyhx599KlPuq2xRqro59GE4MfcxdBTnht334R9kXUT5zxMYRgmOL0qesnvKD
+ dhXJNY/CANLBPVmiQ7YDIVNbHc6/UZLVE9Px0aAOjeATT9F5tvJP1k7L0zmFWy3/Azkt
+ AvMzwmny8NSsOo1OjfjbXzAD5gO63R8HQnKgGXlI4c7ApugHPoUtgh4lEktq2sqxo9bX
+ COsXB1dNk2gCDjpv4wX+IXz4dAxehnUBQ2hCnCO1TWKTrp0IV9kSxZBudYkhBRXWoXq9
+ sd6WsVPGmlOVZs0KpcpqBcWKjbqGJRAigDqSfIBYIkgFFvFpdWIBIW8m111dJHV6oyyI aA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2vk7frqxxy-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 17 Oct 2019 18:08:03 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9HI80kh178282;
-        Thu, 17 Oct 2019 18:08:02 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2vpcm3bvpx-1
+        Thu, 17 Oct 2019 18:08:25 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9HI8KKA176273;
+        Thu, 17 Oct 2019 18:08:25 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2vpvtm1nwb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 17 Oct 2019 18:08:02 +0000
+        Thu, 17 Oct 2019 18:08:24 +0000
 Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9HI7mWV021886;
-        Thu, 17 Oct 2019 18:07:48 GMT
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9HI83Nq020236;
+        Thu, 17 Oct 2019 18:08:03 GMT
 Received: from dhcp-10-175-161-223.vpn.oracle.com (/10.175.161.223)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 17 Oct 2019 18:07:44 +0000
+        with ESMTP ; Thu, 17 Oct 2019 18:08:02 +0000
 From:   Alan Maguire <alan.maguire@oracle.com>
 To:     brendanhiggins@google.com, linux-kselftest@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
@@ -61,21 +61,22 @@ Cc:     linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
         penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
         urezki@gmail.com, andriy.shevchenko@linux.intel.com,
         corbet@lwn.net, linux-doc@vger.kernel.org,
-        Alan Maguire <alan.maguire@oracle.com>
-Subject: [PATCH v3 linux-kselftest-test 2/6] kunit: hide unexported try-catch interface in try-catch-impl.h
-Date:   Thu, 17 Oct 2019 19:07:15 +0100
-Message-Id: <1571335639-21675-3-git-send-email-alan.maguire@oracle.com>
+        Alan Maguire <alan.maguire@oracle.com>,
+        Knut Omang <knut.omang@oracle.com>
+Subject: [PATCH v3 linux-kselftest-test 5/6] kunit: allow kunit to be loaded as a module
+Date:   Thu, 17 Oct 2019 19:07:18 +0100
+Message-Id: <1571335639-21675-6-git-send-email-alan.maguire@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1571335639-21675-1-git-send-email-alan.maguire@oracle.com>
 References: <1571335639-21675-1-git-send-email-alan.maguire@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1908290000 definitions=main-1910170164
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
  definitions=main-1910170163
@@ -84,109 +85,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-also remove unused kunit_generic_try_catch
+Making kunit itself buildable as a module allows for "always-on"
+kunit configuration; specifying CONFIG_KUNIT=m means the module
+is built but only used when loaded.  Kunit test modules will load
+kunit.ko as an implicit dependency, so simply running
+"modprobe my-kunit-tests" will load the tests along with the kunit
+module and run them.
 
 Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+Signed-off-by: Knut Omang <knut.omang@oracle.com>
 ---
- include/kunit/try-catch.h  | 10 ----------
- lib/kunit/test-test.c      |  1 +
- lib/kunit/test.c           |  1 +
- lib/kunit/try-catch-impl.h | 23 +++++++++++++++++++++++
- lib/kunit/try-catch.c      |  1 +
- 5 files changed, 26 insertions(+), 10 deletions(-)
- create mode 100644 lib/kunit/try-catch-impl.h
+ lib/kunit/Kconfig     | 2 +-
+ lib/kunit/Makefile    | 4 +++-
+ lib/kunit/test.c      | 2 ++
+ lib/kunit/try-catch.c | 3 +++
+ 4 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/include/kunit/try-catch.h b/include/kunit/try-catch.h
-index 404f336..c507dd4 100644
---- a/include/kunit/try-catch.h
-+++ b/include/kunit/try-catch.h
-@@ -53,11 +53,6 @@ struct kunit_try_catch {
- 	void *context;
- };
+diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
+index 9ebd5e6..065aa16 100644
+--- a/lib/kunit/Kconfig
++++ b/lib/kunit/Kconfig
+@@ -3,7 +3,7 @@
+ #
  
--void kunit_try_catch_init(struct kunit_try_catch *try_catch,
--			  struct kunit *test,
--			  kunit_try_catch_func_t try,
--			  kunit_try_catch_func_t catch);
--
- void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context);
- 
- void __noreturn kunit_try_catch_throw(struct kunit_try_catch *try_catch);
-@@ -67,9 +62,4 @@ static inline int kunit_try_catch_get_result(struct kunit_try_catch *try_catch)
- 	return try_catch->try_result;
- }
- 
--/*
-- * Exposed for testing only.
-- */
--void kunit_generic_try_catch_init(struct kunit_try_catch *try_catch);
--
- #endif /* _KUNIT_TRY_CATCH_H */
-diff --git a/lib/kunit/test-test.c b/lib/kunit/test-test.c
-index 5ebe059..c4162a9 100644
---- a/lib/kunit/test-test.c
-+++ b/lib/kunit/test-test.c
-@@ -6,6 +6,7 @@
-  * Author: Brendan Higgins <brendanhiggins@google.com>
-  */
- #include <kunit/test.h>
-+#include "try-catch-impl.h"
- 
- struct kunit_try_catch_test_context {
- 	struct kunit_try_catch *try_catch;
+ menuconfig KUNIT
+-	bool "KUnit - Enable support for unit tests"
++	tristate "KUnit - Enable support for unit tests"
+ 	help
+ 	  Enables support for kernel unit tests (KUnit), a lightweight unit
+ 	  testing and mocking framework for the Linux kernel. These tests are
+diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
+index 769d940..8e2635a 100644
+--- a/lib/kunit/Makefile
++++ b/lib/kunit/Makefile
+@@ -1,4 +1,6 @@
+-obj-$(CONFIG_KUNIT) +=			test.o \
++obj-$(CONFIG_KUNIT) +=			kunit.o
++
++kunit-objs +=				test.o \
+ 					string-stream.o \
+ 					assert.o \
+ 					try-catch.o
 diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-index 017d4fb..49ac5fe 100644
+index e8b2443..c0ace36 100644
 --- a/lib/kunit/test.c
 +++ b/lib/kunit/test.c
-@@ -11,6 +11,7 @@
- #include <linux/kernel.h>
- #include <linux/sched/debug.h>
- #include "string-stream-impl.h"
-+#include "try-catch-impl.h"
- 
- static void kunit_set_failure(struct kunit *test)
- {
-diff --git a/lib/kunit/try-catch-impl.h b/lib/kunit/try-catch-impl.h
-new file mode 100644
-index 0000000..aa11e46
---- /dev/null
-+++ b/lib/kunit/try-catch-impl.h
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * An API to allow a function, that may fail, to be executed, and recover in a
-+ * controlled manner.
-+ *
-+ * Copyright (C) 2019, Google LLC.
-+ * Author: Brendan Higgins <brendanhiggins@google.com>
-+ */
+@@ -523,3 +523,5 @@ void *kunit_find_symbol(const char *sym)
+ 	return ERR_PTR(-ENOENT);
+ }
+ EXPORT_SYMBOL(kunit_find_symbol);
 +
-+#ifndef _KUNIT_TRY_CATCH_IMPL_H
-+#define _KUNIT_TRY_CATCH_IMPL_H
-+
-+#include <kunit/try-catch.h>
-+#include <linux/types.h>
-+
-+struct kunit;
-+
-+void kunit_try_catch_init(struct kunit_try_catch *try_catch,
-+			  struct kunit *test,
-+			  kunit_try_catch_func_t try,
-+			  kunit_try_catch_func_t catch);
-+
-+#endif /* _KUNIT_TRY_CATCH_IMPL_H */
++MODULE_LICENSE("GPL");
 diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-index 55686839..0c4c90c 100644
+index 1c1e9af..72fc8ed 100644
 --- a/lib/kunit/try-catch.c
 +++ b/lib/kunit/try-catch.c
-@@ -13,6 +13,7 @@
- #include <linux/kernel.h>
- #include <linux/kthread.h>
- #include <linux/sched/sysctl.h>
-+#include "try-catch-impl.h"
+@@ -31,6 +31,8 @@ static int kunit_generic_run_threadfn_adapter(void *data)
+ 	complete_and_exit(try_catch->try_completion, 0);
+ }
  
- void __noreturn kunit_try_catch_throw(struct kunit_try_catch *try_catch)
++KUNIT_VAR_SYMBOL(sysctl_hung_task_timeout_secs, unsigned long);
++
+ static unsigned long kunit_test_timeout(void)
  {
+ 	unsigned long timeout_msecs;
+@@ -52,6 +54,7 @@ static unsigned long kunit_test_timeout(void)
+ 	 * For more background on this topic, see:
+ 	 * https://mike-bland.com/2011/11/01/small-medium-large.html
+ 	 */
++	KUNIT_INIT_VAR_SYMBOL(NULL, sysctl_hung_task_timeout_secs);
+ 	if (sysctl_hung_task_timeout_secs) {
+ 		/*
+ 		 * If sysctl_hung_task is active, just set the timeout to some
 -- 
 1.8.3.1
 
