@@ -2,54 +2,161 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9467AFA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DD2ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F02A20872
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77D9A2067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:11:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406381AbfJQQKn (ORCPT
+        id S2440427AbfJQQLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:10:43 -0400
-Received: from verein.lst.de ([213.95.11.211]:42517 "EHLO verein.lst.de"
+        Thu, 17 Oct 2019 12:11:02 -0400
+Received: from muru.com ([72.249.23.125]:37786 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728557AbfJQQKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 12:10:43 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 23D1C68BE1; Thu, 17 Oct 2019 18:10:39 +0200 (CEST)
-Date:   Thu, 17 Oct 2019 18:10:38 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Christoph Hellwig <hch@lst.de>, Andreas Schwab <schwab@suse.de>
-Subject: Re: [PATCH] Documentation: admin-guide: add earlycon documentation
- for RISC-V
-Message-ID: <20191017161038.GA9953@lst.de>
-References: <alpine.DEB.2.21.9999.1910091252160.11044@viisi.sifive.com>
+        id S1728557AbfJQQLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 12:11:02 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 5388D804F;
+        Thu, 17 Oct 2019 16:11:34 +0000 (UTC)
+Date:   Thu, 17 Oct 2019 09:10:57 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>
+Subject: Re: [PATCH v13 09/18] ARM: dts: n900: Add reg property to the LP5523
+ channel node
+Message-ID: <20191017161057.GM5610@atomide.com>
+References: <20191016155954.29044-1-dmurphy@ti.com>
+ <20191016155954.29044-10-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.9999.1910091252160.11044@viisi.sifive.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191016155954.29044-10-dmurphy@ti.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 12:53:50PM -0700, Paul Walmsley wrote:
+* Dan Murphy <dmurphy@ti.com> [191016 16:01]:
+> Add the reg property to each channel node.  This update is
+> to accomodate the multicolor framework.  In addition to the
+> accomodation this allows the LEDs to be placed on any channel
+> and allow designs to skip channels as opposed to requiring
+> sequential order.
 > 
-> Kernels booting on RISC-V can specify "earlycon" with no options on
-> the Linux command line, and the generic DT earlycon support will query
-> the "chosen/stdout-path" property (if present) to determine which
-> early console device to use.  Document this appropriately in the
-> admin-guide.
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> CC: Tony Lindgren <tony@atomide.com>
+> CC: "Benoît Cousson" <bcousson@baylibre.com>
+> 
+> k# interactive rebase in progress; onto ae89cc6d4a8c
 
-Jon already applied a patch from me removing the bogus arch restrictions
-on the earlycon without arguments documentation, so this should not
-be required.
+Maybe check what's up with the line above :)
+
+Othwerwise looks good to me, best to merge this together
+with the rest of the series when ready:
+
+Acked-by: Tony Lindgren <tony@atomide.com>
+
+> ---
+>  arch/arm/boot/dts/omap3-n900.dts | 29 ++++++++++++++++++++---------
+>  1 file changed, 20 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
+> index 84a5ade1e865..643f35619246 100644
+> --- a/arch/arm/boot/dts/omap3-n900.dts
+> +++ b/arch/arm/boot/dts/omap3-n900.dts
+> @@ -607,63 +607,74 @@
+>  	};
+>  
+>  	lp5523: lp5523@32 {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+>  		compatible = "national,lp5523";
+>  		reg = <0x32>;
+>  		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
+>  		enable-gpio = <&gpio2 9 GPIO_ACTIVE_HIGH>; /* 41 */
+>  
+> -		chan0 {
+> +		chan@0 {
+>  			chan-name = "lp5523:kb1";
+>  			led-cur = /bits/ 8 <50>;
+>  			max-cur = /bits/ 8 <100>;
+> +			reg = <0>;
+>  		};
+>  
+> -		chan1 {
+> +		chan@1 {
+>  			chan-name = "lp5523:kb2";
+>  			led-cur = /bits/ 8 <50>;
+>  			max-cur = /bits/ 8 <100>;
+> +			reg = <1>;
+>  		};
+>  
+> -		chan2 {
+> +		chan@2 {
+>  			chan-name = "lp5523:kb3";
+>  			led-cur = /bits/ 8 <50>;
+>  			max-cur = /bits/ 8 <100>;
+> +			reg = <2>;
+>  		};
+>  
+> -		chan3 {
+> +		chan@3 {
+>  			chan-name = "lp5523:kb4";
+>  			led-cur = /bits/ 8 <50>;
+>  			max-cur = /bits/ 8 <100>;
+> +			reg = <3>;
+>  		};
+>  
+> -		chan4 {
+> +		chan@4 {
+>  			chan-name = "lp5523:b";
+>  			led-cur = /bits/ 8 <50>;
+>  			max-cur = /bits/ 8 <100>;
+> +			reg = <4>;
+>  		};
+>  
+> -		chan5 {
+> +		chan@5 {
+>  			chan-name = "lp5523:g";
+>  			led-cur = /bits/ 8 <50>;
+>  			max-cur = /bits/ 8 <100>;
+> +			reg = <5>;
+>  		};
+>  
+> -		chan6 {
+> +		chan@6 {
+>  			chan-name = "lp5523:r";
+>  			led-cur = /bits/ 8 <50>;
+>  			max-cur = /bits/ 8 <100>;
+> +			reg = <6>;
+>  		};
+>  
+> -		chan7 {
+> +		chan@7 {
+>  			chan-name = "lp5523:kb5";
+>  			led-cur = /bits/ 8 <50>;
+>  			max-cur = /bits/ 8 <100>;
+> +			reg = <7>;
+>  		};
+>  
+> -		chan8 {
+> +		chan@8 {
+>  			chan-name = "lp5523:kb6";
+>  			led-cur = /bits/ 8 <50>;
+>  			max-cur = /bits/ 8 <100>;
+> +			reg = <8>;
+>  		};
+>  	};
+>  
+> -- 
+> 2.22.0.214.g8dca754b1e
+> 
