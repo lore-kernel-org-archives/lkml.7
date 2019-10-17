@@ -2,107 +2,86 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A18BEECE599
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07094ECE599
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 790152053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:33:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nSZ2sD+r"
+	by mail.kernel.org (Postfix) with ESMTP id DA1752053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 02:34:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407114AbfJQCd4 (ORCPT
+        id S2407159AbfJQCeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 22:33:56 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35106 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389894AbfJQCdz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 22:33:55 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 205so615484pfw.2
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 19:33:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UJq/CVYJX0RnlIw74E+XHFRNzzyQAISbDxaoIMcdf0U=;
-        b=nSZ2sD+r5thqiPHHfEK4zoSvn2SUHL3rmOfAda5L1xs6rsVyFp7G/PpAqq2TkCjxLN
-         tcY8KFTw0MstjE2/na7h/RwYWi4aP0bYBJDlXwolUxKQS0SCF9rAf5YqUhyZVl0r8nQe
-         tkFV0BY2md8wLeyJRHo9/VtZugu95XOKkGUTu8OlpIr0lrxmXgJPyI9/HGdWV29kUUiH
-         F7upjYJYWTik7zA1c1xui2TWU+KUlub3MPd0bAmAYyeccFIP0sxuy7OxfsV4p3EQHWGd
-         FiY+dg/AcKTRJ3OrrvyGXC2hIrXcwA4B2h+esHVbZlOQWnebnk6U0Q0SEFm9v9/r98bN
-         upZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UJq/CVYJX0RnlIw74E+XHFRNzzyQAISbDxaoIMcdf0U=;
-        b=LZkLWXeLOT1FySYKRcFkJSiZUzTjjilgoI5LwNwgzzjzbpmiSVf5Mc0w5AuQm8dqkP
-         +Z7Iwic4xTMD7rQ3k7oO6cqlzZKFCSmRBOdNQXd3dPX6sX5DqvfW+gUXKQDkDWqN7Nel
-         4JFg83Hw87y/sTN/QZ6g2YhkvCzmWQTRz3jvATNqqqcvrh9p/fx/XJlVZFv1mqSsPn54
-         9ZXrmooGmRZawuGNfQDTaCOIkyQ6awUNPt+uLn/vf5cqC4ywnQx+szfa/wf67yaD+umw
-         SlzwKjR+bMA8XR0Tn1XIX8xZAVoqXvc5H3UhV0rSMVZSVcxSxHp4R0EiQ2uYcXJqJgXm
-         Hf6w==
-X-Gm-Message-State: APjAAAV6vJzCkux+TsUU35F7tsrfsZBnHuiv2FAyFrCb2g4S7mjqpRJN
-        9ilRQvVHvZ/MZHKbn5WKkuKmIQ==
-X-Google-Smtp-Source: APXvYqzCPZ/OrFSFpK9QWsauqiMWWRX3uUKle/8f4WUwPdjGLQF/szLF/2a3hyZDEr1+PbwXY3aNhA==
-X-Received: by 2002:a17:90a:33a7:: with SMTP id n36mr1275383pjb.53.1571279634944;
-        Wed, 16 Oct 2019 19:33:54 -0700 (PDT)
-Received: from localhost ([122.172.151.112])
-        by smtp.gmail.com with ESMTPSA id j10sm467532pfn.128.2019.10.16.19.33.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 16 Oct 2019 19:33:54 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 08:03:52 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 07/17] cpufreq: tegra20: Use generic cpufreq-dt driver
- (Tegra30 supported now)
-Message-ID: <20191017023352.dm5xj5ikh4lj6f56@vireshk-i7>
-References: <20191015211618.20758-1-digetx@gmail.com>
- <20191015211618.20758-8-digetx@gmail.com>
+        Wed, 16 Oct 2019 22:34:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34792 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392062AbfJQCeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 22:34:09 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id ED16410DCC97;
+        Thu, 17 Oct 2019 02:34:07 +0000 (UTC)
+Received: from [10.72.12.185] (ovpn-12-185.pek2.redhat.com [10.72.12.185])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 138295D9DC;
+        Thu, 17 Oct 2019 02:34:00 +0000 (UTC)
+Subject: Re: [PATCH 2/2] virtio_ring: Use DMA API if memory is encrypted
+To:     Christoph Hellwig <hch@lst.de>, Ram Pai <linuxram@us.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org,
+        virtualization@lists.linux-foundation.org,
+        benh@kernel.crashing.org, david@gibson.dropbear.id.au,
+        mpe@ellerman.id.au, paulus@ozlabs.org, mdroth@linux.vnet.ibm.com,
+        aik@linux.ibm.com, paul.burton@mips.com, robin.murphy@arm.com,
+        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
+        andmike@us.ibm.com, sukadev@linux.vnet.ibm.com
+References: <1570843519-8696-1-git-send-email-linuxram@us.ibm.com>
+ <1570843519-8696-2-git-send-email-linuxram@us.ibm.com>
+ <1570843519-8696-3-git-send-email-linuxram@us.ibm.com>
+ <20191015073501.GA32345@lst.de>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <398dce4b-9290-0b14-28b1-e521331ec309@redhat.com>
+Date:   Thu, 17 Oct 2019 10:33:59 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015211618.20758-8-digetx@gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20191015073501.GA32345@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Thu, 17 Oct 2019 02:34:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16-10-19, 00:16, Dmitry Osipenko wrote:
-> Re-parenting to intermediate clock is supported now by the clock driver
-> and thus there is no need in a customized CPUFreq driver, all that code
-> is common for both Tegra20 and Tegra30. The available CPU freqs are now
-> specified in device-tree in a form of OPPs, all users should update their
-> device-trees.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/cpufreq/Kconfig.arm          |   4 +-
->  drivers/cpufreq/cpufreq-dt-platdev.c |   2 +
->  drivers/cpufreq/tegra20-cpufreq.c    | 236 ++++++---------------------
->  3 files changed, 55 insertions(+), 187 deletions(-)
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+On 2019/10/15 下午3:35, Christoph Hellwig wrote:
+> On Fri, Oct 11, 2019 at 06:25:19PM -0700, Ram Pai wrote:
+>> From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+>>
+>> Normally, virtio enables DMA API with VIRTIO_F_IOMMU_PLATFORM, which must
+>> be set by both device and guest driver. However, as a hack, when DMA API
+>> returns physical addresses, guest driver can use the DMA API; even though
+>> device does not set VIRTIO_F_IOMMU_PLATFORM and just uses physical
+>> addresses.
+> Sorry, but this is a complete bullshit hack.  Driver must always use
+> the DMA API if they do DMA, and if virtio devices use physical addresses
+> that needs to be returned through the platform firmware interfaces for
+> the dma setup.  If you don't do that yet (which based on previous
+> informations you don't), you need to fix it, and we can then quirk
+> old implementations that already are out in the field.
+>
+> In other words: we finally need to fix that virtio mess and not pile
+> hacks on top of hacks.
 
--- 
-viresh
+
+I agree, the only reason for IOMMU_PLATFORM is to make sure guest works 
+for some old and buggy qemu when vIOMMU is enabled which seems useless 
+(note we don't even support vIOMMU migration in that case).
+
+Thanks
+
