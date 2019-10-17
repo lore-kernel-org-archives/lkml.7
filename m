@@ -2,184 +2,176 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A71CFA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0321FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48638214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAC222082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:28:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="DOVB/Q4A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408753AbfJQK0C (ORCPT
+        id S2408847AbfJQK2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 06:26:02 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:39294 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404947AbfJQK0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 06:26:01 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E77D4691DBEF2CE84F46;
-        Thu, 17 Oct 2019 18:25:58 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.132) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 17 Oct 2019 18:25:52 +0800
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     yuqi jin <jinyuqi@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>
-Subject: [RFC] lib: optimize cpumask_local_spread()
-Date:   Thu, 17 Oct 2019 18:23:08 +0800
-Message-ID: <1571307788-43169-1-git-send-email-zhangshaokun@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.132]
-X-CFilter-Loop: Reflected
+        Thu, 17 Oct 2019 06:28:47 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:48860 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405814AbfJQK2r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 06:28:47 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191017102844euoutp02d9ed1758611bffd472eb064c15ed2c99~OaGoTrIKJ1684416844euoutp02c
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 10:28:44 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191017102844euoutp02d9ed1758611bffd472eb064c15ed2c99~OaGoTrIKJ1684416844euoutp02c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1571308124;
+        bh=iRCzuB8y77uwfElmExl0r6Se4rQgS/Q62RZNDHvwRto=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=DOVB/Q4AWQpZ7d3dCv9C3snrSob/qJBoRidXkL5Zsx27c5bSs3bgcbQK7SwZaWoZt
+         slc0pPlfW1siD0pS/HELYwrwhoj+U6oe7X1Pp4fAoCoOytHstVl1DoV7AzOfmDPzLR
+         HF0RrVmaeeoJ23xK1KjNGuvPFi3vwLaq5ylQhX8E=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191017102844eucas1p2bee1c8122997d8a01a80d763b0bef90e~OaGn19DRh1118711187eucas1p2b;
+        Thu, 17 Oct 2019 10:28:44 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 5A.00.04374.C5248AD5; Thu, 17
+        Oct 2019 11:28:44 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191017102843eucas1p164993b3644d006481fb041e36175eebe~OaGnYvAvr2840828408eucas1p1b;
+        Thu, 17 Oct 2019 10:28:43 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191017102843eusmtrp2d58a7d10f4a48b53240821211d2f0e9c~OaGnXm8t71361913619eusmtrp2K;
+        Thu, 17 Oct 2019 10:28:43 +0000 (GMT)
+X-AuditID: cbfec7f5-4f7ff70000001116-1a-5da8425c3687
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 75.49.04117.B5248AD5; Thu, 17
+        Oct 2019 11:28:43 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191017102843eusmtip2154fff2e728f839a3ab68c2c7c7c59b3~OaGm3D8PH0361203612eusmtip2R;
+        Thu, 17 Oct 2019 10:28:43 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Kamil Konieczny <k.konieczny@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] opp: core: Revert "add regulators enable and disable"
+Date:   Thu, 17 Oct 2019 12:27:58 +0200
+Message-Id: <20191017102758.8104-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA0VSa0hTYRj229k5Ow6nx03yw8RyUZDiTLI4pISG5X4E9UOEyqEzDzp0Uzav
+        XcDNTDetlmQtExWTpvM+RVPcKBNnic1LlgijaV4gEtJpmIq1ebT+Pe9zeZ+PjxdHuCWoHy6R
+        ZVNymTiDj7GZPcO/rSEJFxpFp3498iI7de0oWTm3gJHNq98AWbemQ0mrtYNFTvVXY6TjwRAg
+        dVYzg2wdsrHIH5tjDHL3cyeT7LIPY1Eewr4qG0toNKgx4cNuAxBaZnoZQocx4Cp6nR2ZQmVI
+        cil56Pkkdprukx1kqb3ze1fWkEJQ7akB7jgkwqHVNoBpABvnEo0AjlRtM10Cl1gHcHnOnxYc
+        ADqGOpgHidmBSSYt6AFcrKxH6MGZUJumMJcLI8KgZkXjxDjuQyTC9o1zLg9CLDHgY1M36uJ5
+        xCVo3LzisjOJ43Bh0bQX5RCRsMX2E6PLjsDmjjd7+yGxjcGlmi5ACzGwqKwcpTEPfrd0s2js
+        D//01TLoQBGAcx9bWfRQDuCUSrefjoDvLBN7r0CIk7C9P5Smo2GbdgRx0ZDwhDMr3i4accKK
+        nmf7NAeW3ufS7hOwytL2r/bt+CRCYyEcXdsC9C+KoNrWhGlBQNX/rjoADMCXylFIUynFaRmV
+        J1CIpYocWargZqbUCJznMbpr2XgNzDvJg4DAAd+Do53Xi7ioOFdRIB0EEEf4Ppzaew0iLidF
+        XHCLkmcmynMyKMUgOIwz+b6c2272G1wiVZxNpVNUFiU/UBm4u18h4NUnFZPrxWZlgl3y1WaI
+        VCl3DNrn6i2UnfWl5kleCVBNBIOLZXERAgwTSA/FKk3zsbKj0dMt+mQsyEsPYu7a03VRi5dV
+        XXNPz7o5QvIb3nOaX77aKh2/VtFUHl8pQYLHbOYXy3f6JwJXZ3c+KNHpitJAnk9ZY3j8mbhj
+        BXymIk0cFoTIFeK/ti3q0hoDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLLMWRmVeSWpSXmKPExsVy+t/xe7rRTitiDZ4u0LfYOGM9q8XUh0/Y
+        LFZ/fMxoseDTDFaL8+c3sFtc3jWHzeJz7xFGixnn9zFZrD1yl93izY+zTBb/rm1ksdj84Bib
+        A4/Hzll32T02repk8+jbsorR4/iN7UwenzfJBbBG6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZ
+        mVjqGRqbx1oZmSrp29mkpOZklqUW6dsl6GXMuPKAsaBTsGL720/MDYxz+LoYOTkkBEwkbu25
+        xNLFyMUhJLCUUWLOm+lsEAkZiZPTGlghbGGJP9e6wOJCAp8YJV72BoLYbAKGEl1vIeIiAokS
+        D3qes4MMYhZ4wyRx6NEjoAQHh7CAm8SmH/4gNSwCqhJPnu4Fq+cVsJFYc/cD1C55idUbDjBP
+        YORZwMiwilEktbQ4Nz232EivODG3uDQvXS85P3cTIzBotx37uWUHY9e74EOMAhyMSjy8L5iX
+        xwqxJpYVV+YeYpTgYFYS4Z3fsiRWiDclsbIqtSg/vqg0J7X4EKMp0PKJzFKiyfnAiMoriTc0
+        NTS3sDQ0NzY3NrNQEuftEDgYIySQnliSmp2aWpBaBNPHxMEp1cC439in8vI6hZDl5/45P9kv
+        /utM8qUFUrcaahzvGd0rfHjFweLVxDCDxu+vpLcb7Nv6vT9AYO3HN8dfn37dY3+a1TXz2GaH
+        A5wTI/ZFJ87pLvxtLtkts3XdWc3IHdkb23+w/f385uL0XEc9q1W3noT8EF2YJbhi48NbBWvz
+        VKN2X2GQrxWYkjClRomlOCPRUIu5qDgRAFRkTDxwAgAA
+X-CMS-MailID: 20191017102843eucas1p164993b3644d006481fb041e36175eebe
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191017102843eucas1p164993b3644d006481fb041e36175eebe
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191017102843eucas1p164993b3644d006481fb041e36175eebe
+References: <CGME20191017102843eucas1p164993b3644d006481fb041e36175eebe@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yuqi jin <jinyuqi@huawei.com>
+All the drivers, which use the OPP framework control regulators, which
+are already enabled. Typically those regulators are also system critical,
+due to providing power to CPU core or system buses. It turned out that
+there are cases, where calling regulator_enable() on such boot-enabled
+regulator has side-effects and might change its initial voltage due to
+performing initial voltage balancing without all restrictions from the
+consumers. Until this issue becomes finally solved in regulator core,
+avoid calling regulator_enable()/disable() from the OPP framework.
 
-In the multi-processor and NUMA system, A device may have many numa
-nodes belonging to multiple cpus. When we get a local numa, it is better
-to find the node closest to the local numa node to return instead of
-going to the online cpu immediately.
+This reverts commit 7f93ff73f7c8c8bfa6be33bcc16470b0b44682aa.
 
-For example, In Huawei Kunpeng 920 system, there are 4 NUMA node(0 -3)
-in the 2-socket system(0 - 1). If the I/O device is in socket1
-and the local NUMA node is 2, we shall choose the non-local node3 in
-the same socket when cpu core in NUMA node2 is less that I/O requirements.
-If we directly pick one cpu core from all online ones, it may be in
-the another socket and it is not friendly for performance.
-
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Paul Burton <paul.burton@mips.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-Signed-off-by: yuqi jin <jinyuqi@huawei.com>
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 ---
- lib/cpumask.c | 78 ++++++++++++++++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 67 insertions(+), 11 deletions(-)
+This is a follow-up from the following discussion:
+https://lkml.org/lkml/2019/10/9/541
+---
+ drivers/opp/core.c | 16 +++-------------
+ 1 file changed, 3 insertions(+), 13 deletions(-)
 
-diff --git a/lib/cpumask.c b/lib/cpumask.c
-index 0cb672eb107c..8f89c7cebfb0 100644
---- a/lib/cpumask.c
-+++ b/lib/cpumask.c
-@@ -192,6 +192,33 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
- }
- #endif
- 
-+static void calc_node_distance(int *node_dist, int node)
-+{
-+	int i;
-+
-+	for (i = 0; i < nr_node_ids; i++)
-+		node_dist[i] = node_distance(node, i);
-+}
-+
-+static int find_nearest_node(int *node_dist, bool *used_flag)
-+{
-+	int i, min_dist = node_dist[0], node_id = -1;
-+
-+	for (i = 0; i < nr_node_ids; i++)
-+		if (used_flag[i] == 0) {
-+			min_dist = node_dist[i];
-+			node_id = i;
-+			break;
-+		}
-+	for (i = 0; i < nr_node_ids; i++)
-+		if (node_dist[i] < min_dist && used_flag[i] == 0) {
-+			min_dist = node_dist[i];
-+			node_id = i;
-+		}
-+
-+	return node_id;
-+}
-+
- /**
-  * cpumask_local_spread - select the i'th cpu with local numa cpu's first
-  * @i: index number
-@@ -205,7 +232,8 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
-  */
- unsigned int cpumask_local_spread(unsigned int i, int node)
- {
--	int cpu;
-+	int cpu, j, id, *node_dist;
-+	bool *used_flag;
- 
- 	/* Wrap: we always want a cpu. */
- 	i %= num_online_cpus();
-@@ -215,19 +243,47 @@ unsigned int cpumask_local_spread(unsigned int i, int node)
- 			if (i-- == 0)
- 				return cpu;
- 	} else {
--		/* NUMA first. */
--		for_each_cpu_and(cpu, cpumask_of_node(node), cpu_online_mask)
--			if (i-- == 0)
--				return cpu;
-+		node_dist = kmalloc_array(nr_node_ids,
-+			sizeof(int), GFP_KERNEL);
-+		if (!node_dist)
-+			for_each_cpu(cpu, cpu_online_mask)
-+				if (i-- == 0)
-+					return cpu;
- 
--		for_each_cpu(cpu, cpu_online_mask) {
--			/* Skip NUMA nodes, done above. */
--			if (cpumask_test_cpu(cpu, cpumask_of_node(node)))
--				continue;
-+		used_flag = kmalloc_array(nr_node_ids,
-+			sizeof(bool), GFP_KERNEL);
-+		if (!used_flag)
-+			for_each_cpu(cpu, cpu_online_mask)
-+				if (i-- == 0) {
-+					kfree(node_dist);
-+					return cpu;
-+				}
-+		memset(used_flag, 0, nr_node_ids * sizeof(bool));
- 
--			if (i-- == 0)
--				return cpu;
-+		calc_node_distance(node_dist, node);
-+		for (j = 0; j < nr_node_ids; j++) {
-+			id = find_nearest_node(node_dist, used_flag);
-+			if (id < 0)
-+				break;
-+			for_each_cpu_and(cpu,
-+				cpumask_of_node(id), cpu_online_mask)
-+				if (i-- == 0) {
-+					kfree(node_dist);
-+					kfree(used_flag);
-+					return cpu;
-+				}
-+			used_flag[id] = 1;
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index 3b7ffd0234e9..9ff0538ee83a 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -1626,12 +1626,6 @@ struct opp_table *dev_pm_opp_set_regulators(struct device *dev,
+ 			goto free_regulators;
  		}
-+
-+		for_each_cpu(cpu, cpu_online_mask)
-+			if (i-- == 0) {
-+				kfree(node_dist);
-+				kfree(used_flag);
-+				return cpu;
-+			}
-+
-+		kfree(node_dist);
-+		kfree(used_flag);
+ 
+-		ret = regulator_enable(reg);
+-		if (ret < 0) {
+-			regulator_put(reg);
+-			goto free_regulators;
+-		}
+-
+ 		opp_table->regulators[i] = reg;
  	}
- 	BUG();
- }
+ 
+@@ -1645,10 +1639,8 @@ struct opp_table *dev_pm_opp_set_regulators(struct device *dev,
+ 	return opp_table;
+ 
+ free_regulators:
+-	while (i--) {
+-		regulator_disable(opp_table->regulators[i]);
+-		regulator_put(opp_table->regulators[i]);
+-	}
++	while (i != 0)
++		regulator_put(opp_table->regulators[--i]);
+ 
+ 	kfree(opp_table->regulators);
+ 	opp_table->regulators = NULL;
+@@ -1674,10 +1666,8 @@ void dev_pm_opp_put_regulators(struct opp_table *opp_table)
+ 	/* Make sure there are no concurrent readers while updating opp_table */
+ 	WARN_ON(!list_empty(&opp_table->opp_list));
+ 
+-	for (i = opp_table->regulator_count - 1; i >= 0; i--) {
+-		regulator_disable(opp_table->regulators[i]);
++	for (i = opp_table->regulator_count - 1; i >= 0; i--)
+ 		regulator_put(opp_table->regulators[i]);
+-	}
+ 
+ 	_free_set_opp_data(opp_table);
+ 
 -- 
-2.7.4
+2.17.1
 
