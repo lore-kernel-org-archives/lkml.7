@@ -2,125 +2,123 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD40AECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97688FA372B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9907521D7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:58:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IVTXzhWt"
+	by mail.kernel.org (Postfix) with ESMTP id 6377121D80
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:58:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571345890;
+	bh=ywi2EpqPucJm9ZZBw+AB50L0TzlMJToc3qwSE+LhbPY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ZMXYKIzBqjgxf8wcym7LKROA+TPdHzytmlIh5ePAQNBNAHO5cUU8134mdzoE9PXIM
+	 26MsGCxaXgE1BTY5HSFTOk+mqLo1N6cuDddI8LElU8lRgbLB1iVYG8IvBrHal+mcLq
+	 mHcfHtajc7FpRjSRp0ZEhZhzUIycmIsBYg3HKnf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440994AbfJQU6B (ORCPT
+        id S2503548AbfJQU6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 16:58:01 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42367 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437004AbfJQU6A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 16:58:00 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n14so3862493wrw.9
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 13:57:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bwyoXQ4jJ4Q5almIdl345BmuxoSl8eF1qmSvscrD0n0=;
-        b=IVTXzhWtbuaLfp8YXz+L8gLII5lGU1ebkqAd/xq4aWHP7GLdwF3jh8hD75ka45BcYR
-         rMlTQmTIYEORbZKcfGUU0zRRfOhV/1Ych2oGyZQYB3wTcIuNaCMcK7gtLCw51zOewVDi
-         ZNbpv0SXBn6FlgHTtfDp1kqeGPlilmqew5qKv1KWSyknezR9kbPQX0hj+knIhu66dcAF
-         IoMGc0cU07u/AZ9fl5fX3dlKUhOZw1tdXjRu/KbPXEzvoy/4gviKn1aWohsq84E0Idhg
-         op6109z7y4WdcTVtIZbbk70O8gufTDYPo04gLFpqRnpRkt3uteetCciSl6heWBVHrDca
-         Coyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bwyoXQ4jJ4Q5almIdl345BmuxoSl8eF1qmSvscrD0n0=;
-        b=M4uRhxOC7Bb2l/QFZTIbjtfkpIp43fxysNNDLhzxcrQkiYKo8Y0FdOepHeRzCUGoGs
-         4XLt1ep5aS0CKGeQALRYD4VcJK9SVu2XYhpdH/1IAKPsmE70ZNjoxl4HwyyBIOV3BJkt
-         NEW5EEudQ4YT4aU9IypTi9FnyiGjKqMa2qIQd9XbZcFWb2UUZIu9VWQr1af0LkIS5STq
-         KXGmh3CzbXGkVZ1h5AsOpd6DdXPiNBL/RYRawAwOkM4iMT53pewROM+mAyhuTyC4nmsQ
-         0AK/T8lluC9Of2ME1yvg/i0rZc72CCccyv/7iqI5ApTdMZeVp1HPX9yDv77yTrJ6anas
-         GRMw==
-X-Gm-Message-State: APjAAAX4ZFrqjNZ8M5FCF0K9gL4bf4VFmamlThqf2Log+/QWrmRUK633
-        z+N2hB///GDpH1d1hApwppnPQA0a+e1a08Itb8xskg==
-X-Google-Smtp-Source: APXvYqxk1Vk38cij+hG08v9miH0CcUvMZrabHnfYeHSE3g3zvLP1lq8tbCLWWPfKrCnK3BUl+XaMDXrmNdKLu8CH8S8=
-X-Received: by 2002:a5d:50c9:: with SMTP id f9mr4527964wrt.36.1571345877272;
- Thu, 17 Oct 2019 13:57:57 -0700 (PDT)
+        Thu, 17 Oct 2019 16:58:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60774 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2502112AbfJQU6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 16:58:08 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20FC021D7C;
+        Thu, 17 Oct 2019 20:58:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571345887;
+        bh=ywi2EpqPucJm9ZZBw+AB50L0TzlMJToc3qwSE+LhbPY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NSbA2lObggeWzo7orpBJZuEDbJoBePoyCuk7fdcpdksuvCAdILLv7G9ToI5VFarmN
+         5CPING3o/snHI5gZUPhkzXx5ZsYwRvZ0IJSot0ZSUjUf73H+rRmhfCzV/j6U+5nnQd
+         aVx4DeST9p4L4pIna3E6KyBbmdvse8tApQFUoSLE=
+Date:   Thu, 17 Oct 2019 21:58:01 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Lechner <david@lechnology.com>,
+        linux-iio@vger.kernel.org, linux-omap@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?B?QmVub8OudA==?= Cousson <bcousson@baylibre.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v3 1/6] bus/ti-pwmss: move TI PWMSS driver from PWM to
+ bus subsystem
+Message-ID: <20191017215751.7d05170c@archlinux>
+In-Reply-To: <20190908194447.GM52127@atomide.com>
+References: <20190901225827.12301-1-david@lechnology.com>
+        <20190901225827.12301-2-david@lechnology.com>
+        <20190902150245.GE1445@ulmo>
+        <20190908121524.49b4874d@archlinux>
+        <20190908194447.GM52127@atomide.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190906184712.91980-1-john.stultz@linaro.org>
- <CAO_48GFHx4uK6cWwJ4oGdJ8HNZNZYDzdD=yR3VK0EXQ86ya9-g@mail.gmail.com>
- <20190924162217.GA12974@arm.com> <20191009173742.GA2682@arm.com>
- <f4fb09a5-999b-e676-0403-cc0de41be440@ti.com> <20191014090729.lwusl5zxa32a7uua@DESKTOP-E1NTVVP.localdomain>
- <a213760f-1f41-c4a3-7e38-8619898adecd@ti.com> <CALAqxLV6EBHKPEaEkyfhEYyw0TXayTeY_4AWXfuASLLyxZh5+Q@mail.gmail.com>
- <a3c66479-7433-ec29-fbec-81aef60cb063@ti.com>
-In-Reply-To: <a3c66479-7433-ec29-fbec-81aef60cb063@ti.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Thu, 17 Oct 2019 13:57:45 -0700
-Message-ID: <CALAqxLWrsXG0XysL7RmhApbuZukDdG5VhdHOTS5odkG9f1ezwA@mail.gmail.com>
-Subject: Re: [RESEND][PATCH v8 0/5] DMA-BUF Heaps (destaging ION)
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     Brian Starkey <Brian.Starkey@arm.com>, nd <nd@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Liam Mark <lmark@codeaurora.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        Pratik Patel <pratikp@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 12:29 PM Andrew F. Davis <afd@ti.com> wrote:
-> On 10/17/19 3:14 PM, John Stultz wrote:
-> > But if the objection stands, do you have a proposal for an alternative
-> > way to enumerate a subset of CMA heaps?
-> >
-> When in staging ION had to reach into the CMA framework as the other
-> direction would not be allowed, so cma_for_each_area() was added. If
-> DMA-BUF heaps is not in staging then we can do the opposite, and have
-> the CMA framework register heaps itself using our framework. That way
-> the CMA system could decide what areas to export or not (maybe based on
-> a DT property or similar).
+On Sun, 8 Sep 2019 12:44:48 -0700
+Tony Lindgren <tony@atomide.com> wrote:
 
-Ok. Though the CMA core doesn't have much sense of DT details either,
-so it would probably have to be done in the reserved_mem logic, which
-doesn't feel right to me.
+> * Jonathan Cameron <jic23@jic23.retrosnub.co.uk> [190908 11:16]:
+> > On Mon, 2 Sep 2019 17:02:45 +0200
+> > Thierry Reding <thierry.reding@gmail.com> wrote:
+> >   
+> > > On Sun, Sep 01, 2019 at 05:58:22PM -0500, David Lechner wrote:  
+> > > > The TI PWMSS driver is a simple bus driver for providing power
+> > > > power management for the PWM peripherals on TI AM33xx SoCs, namely
+> > > > eCAP, eHRPWM and eQEP. The eQEP is a counter rather than a PWM, so
+> > > > it does not make sense to have the bus driver in the PWM subsystem
+> > > > since the PWMSS is not exclusive to PWM devices.
+> > > > 
+> > > > Signed-off-by: David Lechner <david@lechnology.com>
+> > > > ---
+> > > > 
+> > > > v3 changes:
+> > > > - none
+> > > > v2 changes:
+> > > > - new patch
+> > > > 
+> > > >  drivers/bus/Kconfig                           | 9 +++++++++
+> > > >  drivers/bus/Makefile                          | 1 +
+> > > >  drivers/{pwm/pwm-tipwmss.c => bus/ti-pwmss.c} | 0
+> > > >  drivers/pwm/Kconfig                           | 9 ---------
+> > > >  drivers/pwm/Makefile                          | 1 -
+> > > >  5 files changed, 10 insertions(+), 10 deletions(-)
+> > > >  rename drivers/{pwm/pwm-tipwmss.c => bus/ti-pwmss.c} (100%)    
+> > > 
+> > > Acked-by: Thierry Reding <thierry.reding@gmail.com>  
+> > 
+> > Do we need an immutable branch for these precursor patches to the
+> > driver addition? It's not going to make 5.4 via my tree as cutting it
+> > too fine so we'll be in the position of holding these in a non obvious
+> > tree for a whole cycle.   
+> 
+> Sure an immutable branch would be nice in case of unlikely
+> dts file conflicts. And yeah no need to try to rush to v5.4.
+> 
+> Regards,
+> 
+> Tony
+immutable branch created based on 5.4-rc1 at:
+https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/log/?h=ib-ti-eqep-5.4-rc1
 
-I'd probably guess we should have some sort of dt binding to describe
-a dmabuf cma heap and from that node link to a CMA node via a
-memory-region phandle. Along with maybe the default heap as well? Not
-eager to get into another binding review cycle, and I'm not sure what
-non-DT systems will do yet, but I'll take a shot at it and iterate.
+I'll pull it into IIO in a few minutes as have one more of these
+to do at the same time.  Includes patches 1-4 of this series.
 
-> The end result is the same so we can make this change later (it has to
-> come after DMA-BUF heaps is in anyway).
+Thanks,
 
-Well, I'm hesitant to merge code that exposes all the CMA heaps and
-then add patches that becomes more selective, should anyone depend on
-the initial behavior. :/
+Jonathan
 
-So, <sigh>, I'll start on the rework for the CMA bits.
-
-That said, I'm definitely wanting to make some progress on this patch
-series, so maybe we can still merge the core/helpers/system heap and
-just hold the cma heap for a rework on the enumeration bits. That way
-we can at least get other folks working on switching their vendor
-heaps from ION.
-
-Sumit: Does that sound ok? Assuming no other objections, can you take
-the v11 set minus the CMA heap patch?
-
-thanks
--john
