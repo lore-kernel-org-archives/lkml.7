@@ -2,75 +2,91 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD702ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 22:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4772FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 22:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FBFA21D7A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 22:14:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79D0421D7A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 22:18:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="BM/8z0kc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PRYDbzXt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503742AbfJQWOx (ORCPT
+        id S2438247AbfJQWS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 18:14:53 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:51630 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438047AbfJQWOw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 18:14:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=O32NFV5tBKYp86Cbah2xdrWQDoKTQV/dczaLU0XSPeQ=; b=BM/8z0kco4xKU14sNfH6so6wyB
-        ffIUC/2Add86PIU0J0DUgUFkuMREHGWll8g3BukppU7P24cj/1iPSY+Cg2l0FyGG6aGTPQQu+y+OX
-        QfUyyTcXPcL6idnD6SeCF1vvMeVPKDz/0ojL/hqmJjpMu4V8dYtjo2r8X3j6/KlVpheY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iLE2j-0006rG-Dg; Fri, 18 Oct 2019 00:14:49 +0200
-Date:   Fri, 18 Oct 2019 00:14:49 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>, hkallweit1@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, olteanv@gmail.com,
-        rmk+kernel@armlinux.org.uk, cphealy@gmail.com,
-        Jose Abreu <joabreu@synopsys.com>
-Subject: Re: [PATCH net-next v2 2/2] net: phy: Add ability to debug RGMII
- connections
-Message-ID: <20191017221449.GC24810@lunn.ch>
-References: <20191017214453.18934-1-f.fainelli@gmail.com>
- <20191017214453.18934-3-f.fainelli@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191017214453.18934-3-f.fainelli@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 17 Oct 2019 18:18:56 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34746 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388926AbfJQWS4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 18:18:56 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b128so2534560pfa.1;
+        Thu, 17 Oct 2019 15:18:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=C169RwbVuJRbGp34GilCowuduOX6yRZWq0x40Zztun8=;
+        b=PRYDbzXtZ/SI+Iz1Fdv8VRKfhYh4ZHVpkTLQPJas85E17XDmyjw05WJM5WqTVF3OV7
+         xb0AYHe3JCgUXM6LIJs5p6dio/JbX5mFLXahRZRbLq8VybPWftUt78kXrMDXuThD38w4
+         UczpItN4bYOd3Q4Pm/Vj8NR8zaTyIqyPV+0eHDz9W/Pv9YdBC4N1GdSM6rKjwBDax/+M
+         UvFr89PmEhmqQAbT8CmkzcbH05MEKOqBuy5DrHPNz588kU5+3LSDApsk/CU5l9FvPsuj
+         0buXhrOLyU01YJa+8TiTmImdaP8rvUqlU+JEI8rQY8/EUVziv00mnzq24vQM0e/ZUPjO
+         hC/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=C169RwbVuJRbGp34GilCowuduOX6yRZWq0x40Zztun8=;
+        b=Urx4aNv/+/XoQqqH+egkLCA0O9qqIewzaBmWvla65kcd2jEg9+jk5qxcb1gK4GkymS
+         p26diKl3FzcS71c+b9vnQWWhhgVdYff9+6za1wQOkMrXQtbn2kNreFA82xKAKKoVXdcF
+         00eTKVkqT42G66WOR1Gx9j2O6SLuN5aXSDDhG7BnMzqa1QJe6uZdCItqYQnlEtZbHnTy
+         4FX5mHHYWMXcAj0WSB+hDb0TNYHv5lXgPXuNU7KjoIL1jRXziw3MXrxqVV2DQ9XjDLJY
+         nnVtQg/Ga/z9hZc7ivb1fLh1OTO3mO4yv3/k9wTQzOPOl+z7gFyOvn532DGjFk+LU3p5
+         qTeQ==
+X-Gm-Message-State: APjAAAXc6YIUWjfcDNEYojCmY2Gam6qRFIEEsKM0gtc6lYeuMDFd+Sy7
+        KRtz6ZBOZ7JqqAiKCjj60Lc=
+X-Google-Smtp-Source: APXvYqxoawBsnwxFpbUrvD8qh7zE5Su3nWTf9ECIFvUO/tdKYDdF9ZiLNySJn6V+TeRpO0csw44STQ==
+X-Received: by 2002:a63:b61:: with SMTP id a33mr6765327pgl.247.1571350735122;
+        Thu, 17 Oct 2019 15:18:55 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id a8sm3441912pff.5.2019.10.17.15.18.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 15:18:54 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [RFC PATCH 0/4] Enable msm8998 bluetooth
+Date:   Thu, 17 Oct 2019 15:18:39 -0700
+Message-Id: <20191017221843.8130-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +#ifdef CONFIG_PHY_RGMII_DEBUG
-> +int phy_rgmii_debug_probe(struct phy_device *phydev);
-> +#else
-> +static inline int phy_rgmii_debug_probe(struct phy_device *phydev)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +#endif
+This series enables bluetooth on the msm8998 platforms.  However,
+without fixes under discussion [1] and [2], the init process will fail,
+leaving bluetooth non-functional.  Perhaps it is best to wait until the
+dependencies meet acceptance before taking this series.
 
-Hi Florian
+[1] - https://lkml.org/lkml/2019/10/17/599
+[2] - https://lkml.org/lkml/2019/10/17/975 
 
-Jose wanted to make use of this in his self test code for stmmac.  I
-think to make this more user friendly in that setup, it would be good
-to return the phy_mode which works, if only one works. The MAC driver
-can then compare the what it thinks the mode should be to what
-actually works, and report a test failure if they differ.
+Jeffrey Hugo (4):
+  arm64: dts: qcom: msm8998: Add blsp1 BAM
+  arm64: dts: qcom: msm8998: Add blsp1_uart3
+  arm64: dts: qcom: msm8998-mtp: Enable bluetooth
+  arm64: dts: qcom: msm8998-clamshell: Enable bluetooth
 
-    Andrew
+ .../boot/dts/qcom/msm8998-clamshell.dtsi      | 17 ++++++++++++
+ arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi     | 14 ++++++++++
+ arch/arm64/boot/dts/qcom/msm8998-pins.dtsi    | 13 +++++++++
+ arch/arm64/boot/dts/qcom/msm8998.dtsi         | 27 +++++++++++++++++++
+ 4 files changed, 71 insertions(+)
+
+-- 
+2.17.1
+
