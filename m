@@ -2,94 +2,88 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09815FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2FBFA3733
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D06B22089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:39:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mykernel.net header.i=cgxu519@mykernel.net header.b="SGqri2vB"
+	by mail.kernel.org (Postfix) with ESMTP id BD47321835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:39:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408896AbfJQKjZ (ORCPT
+        id S2408908AbfJQKjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 06:39:25 -0400
-Received: from sender2-of-o52.zoho.com.cn ([163.53.93.247]:21573 "EHLO
-        sender2-of-o52.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2408885AbfJQKjZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 06:39:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1571308735; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=KMGjVJ9n2Jf3BbfCyzwyDcHqgZbNBBr3zMWlN2dD77p1OiKHc4qf2KNljoBw35dNGOICciLs/SE1kE5ZYL1TntwfjZ9FyVJPTcuGQ50y+17jhG1MacmQeSesE2qXxocHywpUIQ6QxbWbnxs8DHzyTx1IPLXEllXriol3gkT0+ZI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1571308735; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To:ARC-Authentication-Results; 
-        bh=4Ck44gH3F5vkNVlOz4QQfajHuL8YMWxdkY+aDrIBl1I=; 
-        b=kKy/nUtZYwd5faTMgC9fttMXn7xhq/Tz/PGaZqVfqmOMdST02/kuSnMkZ2UD2p1QRURpLDhuHku6xkRMp7KuUt5BjoMVB0hIvJXiE0Smg0hzufbxNwFAqVRUWpjv2UkaBAMF/pv09Ux8QUuHnPHG82QSygotpSC4RCkjH4np37Y=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=mykernel.net;
-        spf=pass  smtp.mailfrom=cgxu519@mykernel.net;
-        dmarc=pass header.from=<cgxu519@mykernel.net> header.from=<cgxu519@mykernel.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1571308735;
-        s=zohomail; d=mykernel.net; i=cgxu519@mykernel.net;
-        h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        l=893; bh=4Ck44gH3F5vkNVlOz4QQfajHuL8YMWxdkY+aDrIBl1I=;
-        b=SGqri2vBkpqGdHo6O2bH/Ylu7wMNXC+ATNmKcUR+U/NVl5MjbloUb/xT74zp+AyY
-        aafVe6Cxcl5CiDWG9pvpxcjZj/V6MU8Cffhd5xSRoZHdWibotYSdJsXYyYM0RVWbeCg
-        8QevtI4Fq6feQ8QwJc6xC1RdWLp9WwU491EZ910g=
-Received: from localhost.localdomain (218.18.229.179 [218.18.229.179]) by mx.zoho.com.cn
-        with SMTPS id 1571308734172527.2831788423041; Thu, 17 Oct 2019 18:38:54 +0800 (CST)
-From:   Chengguang Xu <cgxu519@mykernel.net>
-To:     mike.kravetz@oracle.com
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Chengguang Xu <cgxu519@mykernel.net>
-Message-ID: <20191017103822.8610-1-cgxu519@mykernel.net>
-Subject: [PATCH] hugetlbfs: fix error handling in init_hugetlbfs_fs()
-Date:   Thu, 17 Oct 2019 18:38:22 +0800
-X-Mailer: git-send-email 2.20.1
+        Thu, 17 Oct 2019 06:39:33 -0400
+Received: from relay.sw.ru ([185.231.240.75]:43456 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2408885AbfJQKjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 06:39:33 -0400
+Received: from [172.16.25.5]
+        by relay.sw.ru with esmtp (Exim 4.92.2)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1iL3Bf-0005sq-P7; Thu, 17 Oct 2019 13:39:19 +0300
+Subject: Re: [PATCH v3 1/3] kasan: Archs don't check memmove if not support
+ it.
+To:     Nick Hu <nickhu@andestech.com>, alankao@andestech.com,
+        paul.walmsley@sifive.com, palmer@sifive.com, aou@eecs.berkeley.edu,
+        glider@google.com, dvyukov@google.com, corbet@lwn.net,
+        alexios.zavras@intel.com, allison@lohutok.net, Anup.Patel@wdc.com,
+        tglx@linutronix.de, gregkh@linuxfoundation.org,
+        atish.patra@wdc.com, kstewart@linuxfoundation.org,
+        linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        linux-mm@kvack.org
+References: <cover.1570514544.git.nickhu@andestech.com>
+ <c9fa9eb25a5c0b1f733494dfd439f056c6e938fd.1570514544.git.nickhu@andestech.com>
+From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
+Message-ID: <ba456776-a77f-5306-60ef-c19a4a8b3119@virtuozzo.com>
+Date:   Thu, 17 Oct 2019 13:39:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
-Content-Type: text/plain; charset=utf8
+In-Reply-To: <c9fa9eb25a5c0b1f733494dfd439f056c6e938fd.1570514544.git.nickhu@andestech.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to avoid using incorrect mnt, we should set
-mnt to NULL when we get error from mount_one_hugetlbfs().
-
-Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
----
- fs/hugetlbfs/inode.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index a478df035651..427d845e7706 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -1470,9 +1470,12 @@ static int __init init_hugetlbfs_fs(void)
- =09i =3D 0;
- =09for_each_hstate(h) {
- =09=09mnt =3D mount_one_hugetlbfs(h);
--=09=09if (IS_ERR(mnt) && i =3D=3D 0) {
--=09=09=09error =3D PTR_ERR(mnt);
--=09=09=09goto out;
-+=09=09if (IS_ERR(mnt)) {
-+=09=09=09if (i =3D=3D 0) {
-+=09=09=09=09error =3D PTR_ERR(mnt);
-+=09=09=09=09goto out;
-+=09=09=09}
-+=09=09=09mnt =3D NULL;
- =09=09}
- =09=09hugetlbfs_vfsmount[i] =3D mnt;
- =09=09i++;
---=20
-2.20.1
 
 
+On 10/8/19 9:11 AM, Nick Hu wrote:
+> Skip the memmove checking for those archs who don't support it.
+ 
+The patch is fine but the changelog sounds misleading. We don't skip memmove checking.
+If arch don't have memmove than the C implementation from lib/string.c used.
+It's instrumented by compiler so it's checked and we simply don't need that KASAN's memmove with
+manual checks.
 
+> Signed-off-by: Nick Hu <nickhu@andestech.com>
+> ---
+>  mm/kasan/common.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+> index 6814d6d6a023..897f9520bab3 100644
+> --- a/mm/kasan/common.c
+> +++ b/mm/kasan/common.c
+> @@ -107,6 +107,7 @@ void *memset(void *addr, int c, size_t len)
+>  	return __memset(addr, c, len);
+>  }
+>  
+> +#ifdef __HAVE_ARCH_MEMMOVE
+>  #undef memmove
+>  void *memmove(void *dest, const void *src, size_t len)
+>  {
+> @@ -115,6 +116,7 @@ void *memmove(void *dest, const void *src, size_t len)
+>  
+>  	return __memmove(dest, src, len);
+>  }
+> +#endif
+>  
+>  #undef memcpy
+>  void *memcpy(void *dest, const void *src, size_t len)
+> 
