@@ -2,135 +2,141 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B78ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E188BECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 757C920869
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:33:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pAQ5G7XD"
+	by mail.kernel.org (Postfix) with ESMTP id B052E20640
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:36:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571341004;
+	bh=mLFPaL7SVPlSGUXJe5iOT50KrcNl7eWW/g5KpdywolA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Xo2o4+wQVEjwWmXoLrbTm4D4gSeotgx0N1sjbFPCbGDcbsei8ap02uwlP1C8g7jKt
+	 Yv2BdkSVHaCYRnIt8rfya4R/MOts99MRQO5H+bSfyeXpM21h8MqFURlXaZnLILnwcz
+	 psMTQ1YIaM9AuYGaT+7ZiSG8s9mIh52UD99bX9bE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436801AbfJQTdQ (ORCPT
+        id S2391211AbfJQTgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 15:33:16 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:40433 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436526AbfJQTdK (ORCPT
+        Thu, 17 Oct 2019 15:36:43 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46914 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732550AbfJQTgm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 15:33:10 -0400
-Received: by mail-oi1-f196.google.com with SMTP id k9so3173687oib.7;
-        Thu, 17 Oct 2019 12:33:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/kc+SMypV+pC805s4yI+AQvbHp3a7EeT/I+X+XRBtGo=;
-        b=pAQ5G7XDzcnZ/mp1uMSL9Sa/CRRBV+JqURcKMNDrTCP1l6yAAaab6lNJ7P+3WNWwBT
-         s9UT4QrGTI/fsMkySKe6ieUXUkMxMpL+88GxZEjvEUkuDYl6fSaM1bC+4UfSweWaCTRt
-         /EEHjn7rmsSufZDEbjktWqnrHB4ERKbixYGH81upSwt7beq/kZVBRNE6KvzWWvYqkoeA
-         ESUJOhDFBaJ4tnmUuabA6HVXFN2jgQv8BTBCKqimyXhF+k65avR0yL7UT9dFdKIiHdjF
-         wa7VRxvcTEwHZUe1jVQxcj7NEn8dlAQEj2/WRCLSlaMkKiqSVEqSRzOaAqEGBbaZpHqB
-         R0kA==
+        Thu, 17 Oct 2019 15:36:42 -0400
+Received: by mail-oi1-f193.google.com with SMTP id k25so3150616oiw.13;
+        Thu, 17 Oct 2019 12:36:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=/kc+SMypV+pC805s4yI+AQvbHp3a7EeT/I+X+XRBtGo=;
-        b=EEiHusxyjkxXQPIQm5AJV1/WX0/+jukSQ+MmAjQ4MHgvJVg3VuP7pV0ocF6nX7lSGO
-         daCoDeXHmyIpy9DvCWoCMLPyapgYFv/GMhyk2d6YRir8/HE6C8/VDrSIGXCmNQsmyVFG
-         Sj9BrA52pee/YV5fqKgUELIaDP7hsXBSIWVTp3ik/CQkM/RU520lEVHyYIG4tx4wRrJ0
-         zh58qxPwxFxdWCUsjnSfDEy1KElD6eJ+lj7j7jkc9hihTFS8oNQFBDF2jrSgeMJmO7oN
-         XpSlHhFI4s3MWCKFlKIkV29qxmmoJtXmEPVRh3yZ3Xd1IYrkoniFXC9EjKrPrVD/FvNp
-         DJFw==
-X-Gm-Message-State: APjAAAU7fuxZX+MK6LlIwxvPE01hc+axdui2bvBzhlijXeAuqW0xuVvl
-        Zr40byohiGSH4RiIk00rpFo=
-X-Google-Smtp-Source: APXvYqwbOKXhiSCFjbCVSy4my7vj1z6Kp2WpTQm5E37lRrRSClRHZVDMrfIRAuiKQUch8OM8bM+T6A==
-X-Received: by 2002:aca:5d8a:: with SMTP id r132mr4480225oib.119.1571340788316;
-        Thu, 17 Oct 2019 12:33:08 -0700 (PDT)
-Received: from localhost.localdomain ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id z12sm823273oth.71.2019.10.17.12.33.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 12:33:07 -0700 (PDT)
-From:   Stuart Hayes <stuart.w.hayes@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lukas@wunner.de,
-        Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: [PATCH v3 3/3] PCI: pciehp: Add dmi table for in-band presence disabled
-Date:   Thu, 17 Oct 2019 15:32:56 -0400
-Message-Id: <20191017193256.3636-4-stuart.w.hayes@gmail.com>
-X-Mailer: git-send-email 2.18.1
-In-Reply-To: <20191017193256.3636-1-stuart.w.hayes@gmail.com>
-References: <20191017193256.3636-1-stuart.w.hayes@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wMBmQgXgQoWb0P4lgM78gRiFJNtt+8vmUMx+YfAsBSQ=;
+        b=prmWJ0k7Tv0gBRQpycn1Y/7jY9xXD4P9rlB1yB6dkIYKFfCrLOdXfLYJChkHlovmMM
+         Urik0f1L4ybbbK77LFwqArGUVVOgCtWhdOw8x4aiLefyUpIeKxt8CB678HoMC8tZ8m7E
+         BVckjZicf40N9D7KG958056gnN5I/9Z+K/ak8HVn0j9LdTb1KWqEQanXynLGXWvzCEOQ
+         zAMrRgJIpQTq0AbTSsAt5UvQpyNWOV7YWMgv2OYLFEb3VDxIHMkBIpPJOL6wDKvFC7YT
+         0o+ws1WkLa7XkEdBjCRLPSmJ6BvQA+hRl0gY7hhBhLDhhAIPRbn1ydpoWPFfi+n+dAf7
+         u9kA==
+X-Gm-Message-State: APjAAAV88Q0Mp2UtX3O/89EZxcODVMJ6BudjzK3THwf3ffw3O/2Kw0hb
+        OxseOehXe+KwT3HlsYkxZjKivPYs3lkghGzfCfk=
+X-Google-Smtp-Source: APXvYqxPA6/JVI+JYwHJZbOxjnhNoLGs95dDEiw9iUvKoJGOEg7tze49M+p8Pq72f5dILLOH/ZveQyzjbBgeRKP0YRY=
+X-Received: by 2002:aca:d706:: with SMTP id o6mr4796175oig.57.1571341001884;
+ Thu, 17 Oct 2019 12:36:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191017163503.30791-1-sudeep.holla@arm.com>
+In-Reply-To: <20191017163503.30791-1-sudeep.holla@arm.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 17 Oct 2019 21:36:30 +0200
+Message-ID: <CAJZ5v0gTpK0cJhsWGVvs-=Sbgcia0jz2j5QNYRL+1wOz=2xkJQ@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: flush any pending policy update work scheduled
+ before freeing
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some systems have in-band presence detection disabled for hot-plug PCI
-slots, but do not report this in the slot capabilities 2 (SLTCAP2) register.
-On these systems, presence detect can become active well after the link is
-reported to be active, which can cause the slots to be disabled after a
-device is connected.
+On Thu, Oct 17, 2019 at 6:35 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+> dev_pm_qos_remove_request ends calling {max,min}_freq_req QoS notifiers
+> which schedule policy update work. It may end up racing with the freeing
+> the policy and unregistering the driver.
+>
+> One possible race is as below where the cpufreq_driver is unregistered
+> but the scheduled work gets executed at later stage when cpufreq_driver
+> is NULL(i.e. after freeing the policy and driver)
+>
+> Unable to handle kernel NULL pointer dereference at virtual address 0000001c
+> pgd = (ptrval)
+> [0000001c] *pgd=80000080204003, *pmd=00000000
+> Internal error: Oops: 206 [#1] SMP THUMB2
+> Modules linked in:
+> CPU: 0 PID: 34 Comm: kworker/0:1 Not tainted 5.4.0-rc3-00006-g67f5a8081a4b #86
+> Hardware name: ARM-Versatile Express
+> Workqueue: events handle_update
+> PC is at cpufreq_set_policy+0x58/0x228
+> LR is at dev_pm_qos_read_value+0x77/0xac
+> Control: 70c5387d  Table: 80203000  DAC: fffffffd
+> Process kworker/0:1 (pid: 34, stack limit = 0x(ptrval))
+>         (cpufreq_set_policy) from (refresh_frequency_limits.part.24+0x37/0x48)
+>         (refresh_frequency_limits.part.24) from (handle_update+0x2f/0x38)
+>         (handle_update) from (process_one_work+0x16d/0x3cc)
+>         (process_one_work) from (worker_thread+0xff/0x414)
+>         (worker_thread) from (kthread+0xff/0x100)
+>         (kthread) from (ret_from_fork+0x11/0x28)
+>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  drivers/cpufreq/cpufreq.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> Hi Rafael, Viresh,
+>
+> This fixed the boot issue I reported[1] on TC2 with bL switcher enabled.
+> I have based this patch on -rc3 and not on top of your patches. This
+> only fixes the boot issue but I hit the other crashes while continuously
+> switching on and off the bL switcher that register/unregister the driver
+> Your patch series fixes them. I can based this on top of those if you
+> prefer.
+>
+> Regards,
+> Sudeep
+>
+> [1] https://lore.kernel.org/linux-pm/20191015155735.GA29105@bogus/
+>
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index c52d6fa32aac..b703c29a84be 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -1278,6 +1278,9 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
+>         }
+>
+>         dev_pm_qos_remove_request(policy->min_freq_req);
+> +       /* flush the pending policy->update work before freeing the policy */
+> +       if (work_pending(&policy->update))
 
-Add a dmi table to flag these systems as having in-band presence disabled.
+Isn't this racy?
 
-Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
----
- drivers/pci/hotplug/pciehp_hpc.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+It still may be running if the pending bit is clear and we still need
+to wait for it then, don't we?
 
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index 02eb811a014f..4d377a2a62ce 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -14,6 +14,7 @@
- 
- #define dev_fmt(fmt) "pciehp: " fmt
- 
-+#include <linux/dmi.h>
- #include <linux/kernel.h>
- #include <linux/types.h>
- #include <linux/jiffies.h>
-@@ -26,6 +27,16 @@
- #include "../pci.h"
- #include "pciehp.h"
- 
-+static const struct dmi_system_id inband_presence_disabled_dmi_table[] = {
-+	{
-+		.ident = "Dell System",
-+		.matches = {
-+			DMI_MATCH(DMI_OEM_STRING, "Dell System"),
-+		},
-+	},
-+	{}
-+};
-+
- static inline struct pci_dev *ctrl_dev(struct controller *ctrl)
- {
- 	return ctrl->pcie->port;
-@@ -895,6 +906,9 @@ struct controller *pcie_init(struct pcie_device *dev)
- 		ctrl->inband_presence_disabled = 1;
- 	}
- 
-+	if (dmi_first_match(inband_presence_disabled_dmi_table))
-+		ctrl->inband_presence_disabled = 1;
-+
- 	/*
- 	 * If empty slot's power status is on, turn power off.  The IRQ isn't
- 	 * requested yet, so avoid triggering a notification with this command.
--- 
-2.18.1
+Why don't you do an unconditional flush_work() here?
 
+> +               flush_work(&policy->update);
+>         kfree(policy->min_freq_req);
+>
+>         cpufreq_policy_put_kobj(policy);
+> --
+> 2.17.1
+>
