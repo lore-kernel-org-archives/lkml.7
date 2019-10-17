@@ -2,105 +2,106 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DABC8ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C40FA3736
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8C242064B
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:11:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ojv0y5NO"
+	by mail.kernel.org (Postfix) with ESMTP id 9D86D2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:11:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571310688;
+	bh=JFprVoPpkgaAGAB4gXvv60NaxuxrEcKD8hZaujbII1s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w2Dz9E+1s6y/62ItsCCWxkOV+9wC/9bAvn+egDSHzX/ykAxGsUdLSFyNF26vZjq8D
+	 oF2AradXxEmUSuW+yhpycb2+0hZHMIFTsPVzp+qkBz0DjvtAi6+4uU45nFLk6rlDpI
+	 idoYvR4x/KISwqMwzqtF/K26s/uLmEbFHfKqmYNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502038AbfJQLLX (ORCPT
+        id S2502051AbfJQLL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 07:11:23 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:32864 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392327AbfJQLLX (ORCPT
+        Thu, 17 Oct 2019 07:11:27 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:60324 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406102AbfJQLL0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 07:11:23 -0400
-Received: by mail-wr1-f68.google.com with SMTP id b9so1885744wrs.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 04:11:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+zYZA+RgbruuoZvP4gkp7U+7iA9beMBCPXED1O6rxro=;
-        b=Ojv0y5NOzDLkEhMe+JvYEQ5b68BsGM46pvx0kl7Scs0gXDS6BmgeIZuqZb6REC5csc
-         0LcdLYiFote/zJL4TQLOI4dlimKEvU2jxYwSf94j9n3z5kai++Y8KXpmEonGdnTGL13B
-         gbro3mPG58ZggyTYyTfR6lH9gJrtmZCgdfAS/xATycYBeY1i383OgUhjqRu9wOip/ukr
-         pqhy4pFxZ3b8ekWCqV7UKacLskxCValbHEeCU9VDeD6Zps3jfQLxHL+VRFclSQJdEOAD
-         BUz/q2ec1vg60IAstc9b7rz5USv1l+a5CkH3RrnuhzoJy5n9oLFghrylBWxxDtQD3mPp
-         axTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+zYZA+RgbruuoZvP4gkp7U+7iA9beMBCPXED1O6rxro=;
-        b=nK7uIoaa5TAtG+tQvLf4VZTfVDQYWFAnU8wqsofh+Ta4CAjOAtQ+YoEGqmf3pTIl1o
-         3UCbAgzzbbsCR2XT4u9mS4xkTIbjKR35+FMPJ9Wt0fLa+lOMjMfYktstY6Fbwg6r933q
-         gfXbKCd1VPpXmH/kvAYhOB5y0fK+yk8CqXNudSguswTpYdHAe/ktqWubuIJCnocKBGAn
-         j+ZWsKSbwnzagCGxufWvyFxDcn+T5bX+MLnFvFL8WyCjHFPzNXgnt4jDk9jHGf8Kh050
-         LDDyOgVQL2wSUEeBW9P4B8Am90/uV+9B2MXObkV7KvS3hJChieV+KceECaZqVCi4h0E+
-         jOJQ==
-X-Gm-Message-State: APjAAAUpfKaWc56b5XSBEEFWJUdohZszt/MLgs/Stb0sPAmt3VBk+geB
-        hENY8mXKUm+UxEFB9Oq68wic734xcZU=
-X-Google-Smtp-Source: APXvYqzL2rz8o/7HAh35iFK8WOl7olxFOTAEgWWsnB008UBi/LWdcLZvpXnwlj6NQC5/VD0TIl7kBQ==
-X-Received: by 2002:adf:df05:: with SMTP id y5mr2740030wrl.84.1571310680779;
-        Thu, 17 Oct 2019 04:11:20 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:210:7687:11a4:4657:121d])
-        by smtp.gmail.com with ESMTPSA id a204sm2447892wmh.21.2019.10.17.04.11.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 04:11:20 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 12:11:16 +0100
-From:   Quentin Perret <qperret@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Douglas Raillard <douglas.raillard@arm.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        mingo@redhat.com, rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, qperret@qperret.net,
-        patrick.bellasi@matbug.net, dh.han@samsung.com
-Subject: Re: [RFC PATCH v3 0/6] sched/cpufreq: Make schedutil energy aware
-Message-ID: <20191017111116.GA27006@google.com>
-References: <20191011134500.235736-1-douglas.raillard@arm.com>
- <20191014145315.GZ2311@hirez.programming.kicks-ass.net>
- <a1ce67d7-62c3-b78b-1d87-23ef4dbc2274@arm.com>
- <20191017095015.GI2311@hirez.programming.kicks-ass.net>
+        Thu, 17 Oct 2019 07:11:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=JFprVoPpkgaAGAB4gXvv60NaxuxrEcKD8hZaujbII1s=; b=MATSBVnLJJmcSrBYqPKWMobPb
+        lXJMRcsMzsJNZ1Zuc20JI2ExUws2agfcGMGIpPmsw3BjpqPxn6dWf4NN04T14QoashvEuwFliSWuY
+        wgMjRRwR4jk0TXRl13p49vNH8d0GXCPvHtCS3FppHkdOMHaw0n+Veu75Doa/eNpkzj2d4=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iL3gi-0000mL-DX; Thu, 17 Oct 2019 11:11:24 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 16A7C2742BAC; Thu, 17 Oct 2019 12:11:23 +0100 (BST)
+Date:   Thu, 17 Oct 2019 12:11:22 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>
+Subject: Re: Fw: [PATCH 5.3 112/112] ASoC: sgtl5000: add ADC mute control
+Message-ID: <20191017111122.GA4976@sirena.co.uk>
+References: <20191016214844.038848564@linuxfoundation.org>
+ <20191016214907.599726506@linuxfoundation.org>
+ <20191016220044.GB11473@sirena.co.uk>
+ <20191016221025.GA990599@kroah.com>
+ <20191016223518.GC11473@sirena.co.uk>
+ <20191016232358.GA994597@kroah.com>
+ <de9630e5-341f-b48d-029a-ef1a516bf820@skidata.com>
+ <AM6PR05MB653568E379699EE907E146BDF96D0@AM6PR05MB6535.eurprd05.prod.outlook.com>
+ <CAGgjyvFQQ4E5VfZ3nwFu+7UiGOmkyXK-n9PHjo1p=iYNX5JrPw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6c2NcOVqGQ03X4Wi"
 Content-Disposition: inline
-In-Reply-To: <20191017095015.GI2311@hirez.programming.kicks-ass.net>
+In-Reply-To: <CAGgjyvFQQ4E5VfZ3nwFu+7UiGOmkyXK-n9PHjo1p=iYNX5JrPw@mail.gmail.com>
+X-Cookie: Shut off engine before fueling.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 17 Oct 2019 at 11:50:15 (+0200), Peter Zijlstra wrote:
-> Now, the thing is, we use map_util_freq() in more places, and should we
-> not reflect this increase in C for all of them? That is, why is this
-> patch changing get_next_freq() and not map_util_freq().
-> 
-> I don't think that question is answered in the Changelogs.
-> 
-> Exactly because it does change the energy consumption (it must) should
-> that not also be reflected in the EAS logic?
 
-Right that shouldn't hurt and keep things consistent. That probably
-won't have a huge impact in practice (the boost should be != 0 only when
-the util signals haven't converged IIUC, which is a case where the EAS
-calculation is already 'wrong' anyway), but that still feels like the
-right thing to do.
+--6c2NcOVqGQ03X4Wi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> I'm still thinking about the exact means you're using to raise C; that
-> is, the 'util - util_est' as cost_margin. It hurts my brain still.
+On Thu, Oct 17, 2019 at 09:49:27AM +0000, Oleksandr Suvorov wrote:
 
-+1 ...
+> Mark, obviously this is not a NEW feature. This patch adds LOST
+> standard control.
 
-Thanks,
-Quentin
+It's a new feature for this CODEC to have control over the capture mute,
+other devices have of course had control over it for a long time but for
+this device it's a new feature.
+
+--6c2NcOVqGQ03X4Wi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2oTFcACgkQJNaLcl1U
+h9AlWQgAg2tRoS6Bb16HDOK01wJuFCOKAb9IHvRx0zrxfmWbgHBPOH+A7Svac15b
+X1NyAs+V8KIIJaWu/dNw7rC6XrI87gYqaEsc+3NeUl/+yTyozr7zgUTI1c15Gt00
+WcxZd63e7vcBHazS7Bssu98qV8+SpVJ4JEr6/Bmw5DCu61Kn2IJbsBKaMzsAbSVm
+rqnsZyk/ecd02u+AF9J1vIBAHholE77LPwx28/EGkG8UC86FH1S9Wzrg7ouY6gO4
+O4nVeX0hAwAaeqc6/7W5OoemvzwyK3CQL3eUDRWxBCyMK4C8jeIIQiAkcvjmM0qp
+BiVqjpgVsYQV79iflBBrH+aPhZf1ew==
+=v3UL
+-----END PGP SIGNATURE-----
+
+--6c2NcOVqGQ03X4Wi--
