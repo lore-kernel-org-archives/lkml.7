@@ -2,139 +2,141 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6778EECE599
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 018D5ECE599
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4263F21A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8F0A218DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 01:52:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z0pjrXJu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391945AbfJQBv1 (ORCPT
+        id S2395053AbfJQBwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 21:51:27 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57152 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391717AbfJQBv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 21:51:26 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0170162AEC5F4E90B742;
-        Thu, 17 Oct 2019 09:51:25 +0800 (CST)
-Received: from [127.0.0.1] (10.133.215.182) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
- 09:51:14 +0800
-Subject: Re: [RFC PATCH 2/3] perf tools: Add support for "report" for some spe
- events
-To:     James Clark <James.Clark@arm.com>,
-        Jeremy Linton <Jeremy.Linton@arm.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-        "yao.jin@linux.intel.com" <yao.jin@linux.intel.com>,
-        "tmricht@linux.ibm.com" <tmricht@linux.ibm.com>,
-        "brueckner@linux.ibm.com" <brueckner@linux.ibm.com>,
-        "songliubraving@fb.com" <songliubraving@fb.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Kim Phillips <Kim.Phillips@amd.com>
-CC:     "gengdongjiu@huawei.com" <gengdongjiu@huawei.com>,
-        "wxf.wang@hisilicon.com" <wxf.wang@hisilicon.com>,
-        "liwei391@huawei.com" <liwei391@huawei.com>,
-        "huawei.libin@huawei.com" <huawei.libin@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "Al Grant" <Al.Grant@arm.com>, nd <nd@arm.com>
-References: <1564738813-10944-1-git-send-email-tanxiaojun@huawei.com>
- <1564738813-10944-3-git-send-email-tanxiaojun@huawei.com>
- <0ac06995-273c-034d-52a3-921ea0337be2@arm.com>
- <016c1ce8-7220-75a2-43fa-0efe150f897c@huawei.com>
- <805660ca-1cf3-4c7f-3aa2-61fed59afa8b@arm.com>
- <637836d6-c884-1a55-7730-eeb45b590d39@huawei.com>
- <b7e5ca2d-8c6c-8ab8-637e-a9aaebaf62a5@arm.com>
- <2b1fc8c7-c0b9-f4b9-a24f-444bc22129af@huawei.com>
- <335fedb8-128c-7d34-c5e8-15cd660fe12e@huawei.com>
- <58bed363-41ee-e425-a36e-e3c69d1a4e90@arm.com>
-From:   Tan Xiaojun <tanxiaojun@huawei.com>
-Message-ID: <647c65eb-669c-e118-e2e7-bbc2a3143884@huawei.com>
-Date:   Thu, 17 Oct 2019 09:51:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Wed, 16 Oct 2019 21:52:36 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58152 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391717AbfJQBwg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 21:52:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:In-Reply-To:MIME-Version
+        :Date:Message-ID:From:References:To:Subject:Sender:Reply-To:Cc:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=nvQ3rKLYcBuvjRA9mbVxHj0zFGjRN8NFx1d63gPtKlI=; b=Z0pjrXJuplMgIWNYVGm0gsStj
+        96vReurUOFmW75uXZh8pz+Mg7oprx62UtnewxZIrn5TVr9eEQYgOI0JSXfpqPjkgl9Z9mkT/ArORr
+        BsyRdC89eZ7KGUzgOKg0Gu5q4o6VLcmI6oMcPwiQTo6lttynxeL7L6+j9AgCwgIEI3GV58HT7+QF9
+        SEO3Z0/8R10Ufej7U7hVyTKlxWbpjbf4Z4mt3KG8F1YXdzaRkdSZK8tR7jUFl2rOhrsEkjVMPB3CE
+        uKFR3VJ6XmnDN584aT0fbbnQVmVdyU/F/CA9pJ2Nv1eriaqk0699/LBupEjqSCga5Qrsta/v0Z3e+
+        R+xL0V0mg==;
+Received: from [2601:1c0:6280:3f0::9ef4]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iKuxv-0006Sf-1f; Thu, 17 Oct 2019 01:52:35 +0000
+Subject: Re: [PATCH] staging: sm750fb: format description of parameters the to
+ kernel doc format
+To:     gbittencourt <gabrielabittencourt00@gmail.com>,
+        outreachy-kernel@googlegroups.com, sudipm.mukherjee@gmail.com,
+        teddy.wang@siliconmotion.com, gregkh@linuxfoundation.org,
+        linux-fbdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
+        trivial@kernel.org
+References: <20191017011849.6081-1-gabrielabittencourt00@gmail.com>
+ <799632e2-a328-d72b-397d-3ee6b5e87e06@infradead.org>
+ <d55516db-28c5-aa53-8d07-20201dc4ffca@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <c8fc60be-5bae-6b3c-d270-c0ca55be1c51@infradead.org>
+Date:   Wed, 16 Oct 2019 18:52:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <58bed363-41ee-e425-a36e-e3c69d1a4e90@arm.com>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <d55516db-28c5-aa53-8d07-20201dc4ffca@gmail.com>
+Content-Type: multipart/mixed;
+ boundary="------------B227F5DA5237A52E62CCD8AE"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.215.182]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/16 18:12, James Clark wrote:
-> Hi Xiaojun,
+This is a multi-part message in MIME format.
+--------------B227F5DA5237A52E62CCD8AE
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+On 10/16/19 6:29 PM, gbittencourt wrote:
+> Hi Randy,
 > 
->>>
->>> What do you mean when the user specifies "event:pp", if the SPE is available, configure and record the spe data directly via the perf event open syscall?
->>> (perf.data itself is the same as using -e arm_spe_0//xxx?)
+> On 10/16/19 10:25 PM, Randy Dunlap wrote:
+>> Hi,
 >>
->> I mean, for the perf record, if the user does not add ":pp" to these events, the original process is taken, and if ":pp" is added, the spe process is taken.
+>> On 10/16/19 6:18 PM, Gabriela Bittencourt wrote:
+>>> Cluster comments that describes parameters of functions and create one
+>>> single comment before the function in kernel doc format.
+>> Good plan.
 >>
-> 
-> Yes we think this is the best way to do it considering that SPE has been implemented as a separate PMU and it will be very difficult to do it in the Kernel when the precise_ip attribute is set.
-> 
-> I think doing everything in userspace is easiest. This will at least mean that users of Perf don't have to be aware of the details of SPE to get precise sample data.
-> 
-> So if the user specifies "event:p" when SPE is available, the SPE PMU is automatically configured data is recorded. If the user also specifies -e arm_spe_0//xxx and wants to do some manual configuration, then that could override the automatic configuration.
-> 
-> 
-> James
-> 
-> 
-> 
+>> How did you test this patch?
+> I haven't test it. How can I do it?
 
-OK. I got it.
+Hm. There used to be a comment in a (now deleted) document named
+Documentation/kernel-doc-nano-HOWTO.txt about how to test kernel-doc.
 
-I found a bug in the test. If I specify cpu_list(use -a or -C) when logging spe data, some events with "pid:0 tid:0" is logged. This is obviously wrong.
+I took that comment and made a script from it.
+I'll attach the script.  It's easy to use, but it is made to test only
+one function or struct or union or enum at a time.
 
-I want to solve this problem, but I haven't found out what went wrong.
+You need to have a script named 'kernel-doc' in your PATH or you can
+specify where the script is located by using
+$ KERNDOC=path/to/scripts/kernel-doc kdoc_function _parameters_
 
---------------------------------------------------------------
-[root@server121 perf]# perf record -e arm_spe_0/branch_filter=1,ts_enable=1,pa_enable=1,load_filter=1,jitter=0,store_filter=1,min_latency=0/ -a
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 7.925 MB perf.data ]
-[root@server121 perf]# perf report -D > spe_dump.out
-[root@server121 perf]# vim spe_dump.out
+Its usage is:
+  kdoc_function filename funcname [text|man|html|docbook|xml]
 
---------------------------------------------------------------
-...
-0xd0330 [0x30]: event: 12
-.
-. ... raw event: size 48 bytes
-.  0000:  0c 00 00 00 00 00 30 00 00 00 00 00 00 00 00 00  ......0.........
-.  0010:  00 00 00 00 00 00 00 00 f8 d9 fe bd f7 08 02 00  ................
-.  0020:  00 00 00 00 00 00 00 00 4c bc 14 00 00 00 00 00  ........L.......
+where funcname can be a function, struct, union, or enum name.
+The output format can be any of those listed, but the default is "text".
 
-0 572810090961400 0xd0330 [0x30]: PERF_RECORD_ITRACE_START pid: 0 tid: 0
+Let me know if you have any questions or problems.
 
-0xd0438 [0x30]: event: 12
-.
-. ... raw event: size 48 bytes
-.  0000:  0c 00 00 00 00 00 30 00 00 00 00 00 00 00 00 00  ......0.........
-.  0010:  00 00 00 00 00 00 00 00 d8 ef fe bd f7 08 02 00  ................
-.  0020:  01 00 00 00 00 00 00 00 4d bc 14 00 00 00 00 00  ........M.......
+>>> Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+>>> ---
+>>>   drivers/staging/sm750fb/sm750_accel.c | 65 +++++++++++++++------------
+>>>   1 file changed, 37 insertions(+), 28 deletions(-)
 
-1 572810090967000 0xd0438 [0x30]: PERF_RECORD_ITRACE_START pid: 0 tid: 0
-...
---------------------------------------------------------------
 
-Thanks.
-Xiaojun.
+-- 
+~Randy
 
+--------------B227F5DA5237A52E62CCD8AE
+Content-Type: text/plain; charset=UTF-8;
+ name="kdoc_function"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="kdoc_function"
+
+IyEgL2Jpbi9zaAojIGZyb20gbGludXgvRG9jdW1lbnRhdGlvbi9rZXJuZWwtZG9jLW5hbm8t
+SE9XVE8udHh0CiMgdXNlcyBsaW51eC9zY3JpcHRzL2tlcm5lbC1kb2Mgb3IgYSBjb3B5IG9m
+IGl0IChpbiAkUEFUSCkuCiMgdXNpbmcgIkxBTkc9QyBvciBMQ19BTEw9QyBrZG9jX2Z1bmN0
+aW9uIDxwcm1zPiIgY2FuIGJlIHVzZWZ1bC4KIyBDYW4gdXNlICJLRVJORE9DPTxzY3JpcHRf
+ZmlsZW5hbWU+IGtkb2NfZnVuY3Rpb24gPHBybXM+IiB0byB2YXJ5CiMgd2hpY2gga2VybmVs
+LWRvYyBzY3JpcHQgaXMgdXNlZC4KCnZlcmJvc2U9CmRlYnVnPQppZiBbICIkS0VSTkRPQyIg
+PSAiIiBdOyB0aGVuCglLRVJORE9DPWtlcm5lbC1kb2MKZmkKCiMgY2FyZWZ1bDogbXVzdCBl
+bnRlciAtdiBiZWZvcmUgLXg6CmlmIFsgIiQxIiA9ICItdiIgXTsgdGhlbgoJdmVyYm9zZT0i
+LXYiCglzaGlmdApmaQppZiBbICIkMSIgPSAiLXgiIF07IHRoZW4KCWRlYnVnPSIteCIKCXNo
+aWZ0CmZpCgpmaWxlPSIkMSIKZm49IiQyIgojIGZtdCBjYW4gYmUgInRleHR8bWFufGh0bWx8
+ZG9jYm9va3x4bWwiIChkZWZhdWx0IGlzICJ0ZXh0IikKIyBkb2Nib29rIHByb2R1Y2VzIHht
+bApmbXQ9IiQzIgppZiBbIHgkMyA9IHggXTsgdGhlbgoJZm10PSJ0ZXh0IgpmaQoKaWYgWyAi
+JDIiID0gIiIgXTsgdGhlbgoJZWNobyAidXNhZ2U6IGtkb2NfZnVuY3Rpb24gZmlsZW5hbWUg
+ZnVuY25hbWUgW3RleHR8bWFufGh0bWx8ZG9jYm9va3x4bWxdIgoJZXhpdCAxCmZpCgpjYXNl
+ICRmbXQgaW4KICAgIG1hbikKCSRLRVJORE9DICR2ZXJib3NlICRkZWJ1ZyAtbWFuIC1mdW5j
+dGlvbiAkZm4gJGZpbGUgfCBucm9mZiAtbWFuIHwgbGVzcwoJOzsKICAgIGh0bWwpCgkkS0VS
+TkRPQyAkdmVyYm9zZSAkZGVidWcgLWh0bWwgLWZ1bmN0aW9uICRmbiAkZmlsZSA+a2VybmVs
+ZG9jLmh0bWwKCWVjaG8gInNlZSBrZXJuZWxkb2MuaHRtbCIKCTs7CiAgICBkb2Nib29rfHht
+bCkKCSRLRVJORE9DICR2ZXJib3NlICRkZWJ1ZyAtZG9jYm9vayAtZnVuY3Rpb24gJGZuICRm
+aWxlID5rZXJuZWxkb2MueG1sCgllY2hvICJzZWUga2VybmVsZG9jLnhtbCIKCTs7CiAgICAq
+KQoJJEtFUk5ET0MgJHZlcmJvc2UgJGRlYnVnIC10ZXh0IC1mdW5jdGlvbiAkZm4gJGZpbGUg
+fCBsZXNzCgk7Owplc2FjCg==
+--------------B227F5DA5237A52E62CCD8AE--
