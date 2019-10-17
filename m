@@ -2,68 +2,58 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94756ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FDBFA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6315B2089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:18:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="jLc1yy5R"
+	by mail.kernel.org (Postfix) with ESMTP id 71E5F2089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502203AbfJQQSp (ORCPT
+        id S2440422AbfJQQUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:18:45 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:50830 "EHLO vps0.lunn.ch"
+        Thu, 17 Oct 2019 12:20:55 -0400
+Received: from verein.lst.de ([213.95.11.211]:42557 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390480AbfJQQSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 12:18:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=UFZRirGPWkDC9ZYLNhlWhULtCcik28qwS7AoLgcl8tk=; b=jLc1yy5RVx/RiW2gzbJKNYbDVC
-        Y3jnToIdcsDuJuh86ly+rIojyRf4gSHqcCu4Qsrr35FEdO2ncXwxQ9LVJGK4gy83n3FBaLwWHoSrE
-        JKdjyiZbjiWwrQJ61RXc2DAMO8myU3ET+malAiRjckDLip1DDIWc8PrzR6ysM/yxq1C0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iL8U2-0005Cm-U7; Thu, 17 Oct 2019 18:18:38 +0200
-Date:   Thu, 17 Oct 2019 18:18:38 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: net: lpc-eth: document optional
- properties
-Message-ID: <20191017161838.GR17013@lunn.ch>
-References: <20191017094757.26885-1-alexandre.belloni@bootlin.com>
+        id S1729913AbfJQQUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 12:20:54 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 34EB768BE1; Thu, 17 Oct 2019 18:20:52 +0200 (CEST)
+Date:   Thu, 17 Oct 2019 18:20:52 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Palmer Dabbelt <palmer@sifive.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Atish Patra <atish.patra@wdc.com>
+Subject: Re: [PATCH 08/20] riscv: abstract out CSR names for supervisor vs
+ machine mode
+Message-ID: <20191017162052.GA10221@lst.de>
+References: <20190903093239.21278-1-hch@lst.de> <20190903093239.21278-9-hch@lst.de> <alpine.DEB.2.21.9999.1910151902060.12675@viisi.sifive.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191017094757.26885-1-alexandre.belloni@bootlin.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <alpine.DEB.2.21.9999.1910151902060.12675@viisi.sifive.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 11:47:56AM +0200, Alexandre Belloni wrote:
-> The Ethernet controller is also an mdio controller, to be able to parse
-> children (phys for example), #address-cells and #size-cells must be
-> present.
+On Tue, Oct 15, 2019 at 07:07:17PM -0700, Paul Walmsley wrote:
+> >  void start_thread(struct pt_regs *regs, unsigned long pc,
+> >  	unsigned long sp)
+> >  {
+> > -	regs->sstatus = SR_SPIE;
+> > +	regs->xstatus = SR_SPIE;
 > 
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Looks like this should be "regs->xstatus = SR_PIE;"
+> 
+> Will update it here.  Let me know if you don't agree -
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
-
+there is no SR_PIE, do you mean SR_XPІE?  Good catch in that case,
+but please let me resend the whole thing.  I have some minor updates,
+and I'd also like to do the rebase myself.
