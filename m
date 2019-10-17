@@ -2,166 +2,129 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCECECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F0AFA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C901521A49
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9505B21D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:37:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441545AbfJQVbn (ORCPT
+        id S2441525AbfJQVhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 17:31:43 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:54518 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2441534AbfJQVbm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 17:31:42 -0400
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iLDMn-0007MJ-68; Thu, 17 Oct 2019 23:31:29 +0200
-Date:   Thu, 17 Oct 2019 23:31:15 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org
-Subject: Re: [RFD] x86/split_lock: Request to Intel
-In-Reply-To: <20191017172312.GC20903@linux.intel.com>
-Message-ID: <alpine.DEB.2.21.1910172207010.1869@nanos.tec.linutronix.de>
-References: <20190925180931.GG31852@linux.intel.com> <3ec328dc-2763-9da5-28d6-e28970262c58@redhat.com> <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de> <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com> <c3ff2fb3-4380-fb07-1fa3-15896a09e748@intel.com>
- <d30652bb-89fa-671a-5691-e2c76af231d0@redhat.com> <8808c9ac-0906-5eec-a31f-27cbec778f9c@intel.com> <alpine.DEB.2.21.1910161519260.2046@nanos.tec.linutronix.de> <ba2c0aab-1d7c-5cfd-0054-ac2c266c1df3@redhat.com> <alpine.DEB.2.21.1910171322530.1824@nanos.tec.linutronix.de>
- <20191017172312.GC20903@linux.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 17 Oct 2019 17:37:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42322 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437769AbfJQVhT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 17:37:19 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E7D121D7A;
+        Thu, 17 Oct 2019 21:37:18 +0000 (UTC)
+Date:   Thu, 17 Oct 2019 17:37:17 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] fgraph: Fix function type mismatches of ftrace_graph_return
+ using ftrace_stub
+Message-ID: <20191017173717.2dec0538@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019, Sean Christopherson wrote:
-> On Thu, Oct 17, 2019 at 02:29:45PM +0200, Thomas Gleixner wrote:
-> > The more I look at this trainwreck, the less interested I am in merging any
-> > of this at all.
-> > 
-> > The fact that it took Intel more than a year to figure out that the MSR is
-> > per core and not per thread is yet another proof that this industry just
-> > works by pure chance.
-> > 
-> > There is a simple way out of this misery:
-> > 
-> >   Intel issues a microcode update which does:
-> > 
-> >     1) Convert the OR logic of the AC enable bit in the TEST_CTRL MSR to
-> >        AND logic, i.e. when one thread disables AC it's automatically
-> >        disabled on the core.
-> > 
-> >        Alternatively it supresses the #AC when the current thread has it
-> >        disabled.
-> > 
-> >     2) Provide a separate bit which indicates that the AC enable logic is
-> >        actually AND based or that #AC is supressed when the current thread
-> >        has it disabled.
-> > 
-> >     Which way I don't really care as long as it makes sense.
-> 
-> The #AC bit doesn't use OR-logic, it's straight up shared, i.e. writes on
-> one CPU are immediately visible on its sibling CPU.
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-That's less horrible than I read out of your initial explanation.
+The C compiler is allowing more checks to make sure that function pointers
+are assigned to the correct prototype function. Unfortunately, the function
+graph tracer uses a special name with its assigned ftrace_graph_return
+function pointer that maps to a stub function used by the function tracer
+(ftrace_stub). The ftrace_graph_return variable is compared to the
+ftrace_stub in some archs to know if the function graph tracer is enabled or
+not. This means we can not just simply create a new function stub that
+compares it without modifying all the archs.
 
-Thankfully all of this is meticulously documented in the SDM ...
+Instead, have the linker script create a function_graph_stub that maps to
+ftrace_stub, and this way we can define the prototype for it to match the
+prototype of ftrace_graph_return, and make the compiler checks all happy!
 
-Though it changes the picture radically. The truly shared MSR allows
-regular software synchronization without IPIs and without an insane amount
-of corner case handling.
+Link: http://lkml.kernel.org/r/20191015090055.789a0aed@gandalf.local.home
 
-So as you pointed out we need a per core state, which is influenced by:
+Reported-by: Sami Tolvanen <samitolvanen@google.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ include/asm-generic/vmlinux.lds.h | 11 +++++++++--
+ kernel/trace/fgraph.c             | 11 ++++++++---
+ 2 files changed, 17 insertions(+), 5 deletions(-)
 
- 1) The global enablement switch
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index dae64600ccbf..33b36b34721b 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -111,15 +111,22 @@
+ 
+ #ifdef CONFIG_FTRACE_MCOUNT_RECORD
+ #ifdef CC_USING_PATCHABLE_FUNCTION_ENTRY
++/*
++ * Need to also make ftrace_graph_stub point to ftrace_stub
++ * so that the same stub location may have different protocols
++ * and not mess up with C verifiers.
++ */
+ #define MCOUNT_REC()	. = ALIGN(8);				\
+ 			__start_mcount_loc = .;			\
+ 			KEEP(*(__patchable_function_entries))	\
+-			__stop_mcount_loc = .;
++			__stop_mcount_loc = .;			\
++			ftrace_graph_stub = ftrace_stub;
+ #else
+ #define MCOUNT_REC()	. = ALIGN(8);				\
+ 			__start_mcount_loc = .;			\
+ 			KEEP(*(__mcount_loc))			\
+-			__stop_mcount_loc = .;
++			__stop_mcount_loc = .;			\
++			ftrace_graph_stub = ftrace_stub;
+ #endif
+ #else
+ #define MCOUNT_REC()
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index 7950a0356042..fa3ce10d0405 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -332,9 +332,14 @@ int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace)
+ 	return 0;
+ }
+ 
++/*
++ * Simply points to ftrace_stub, but with the proper protocol.
++ * Defined by the linker script in linux/vmlinux.lds.h
++ */
++extern void ftrace_graph_stub(struct ftrace_graph_ret *);
++
+ /* The callbacks that hook a function */
+-trace_func_graph_ret_t ftrace_graph_return =
+-			(trace_func_graph_ret_t)ftrace_stub;
++trace_func_graph_ret_t ftrace_graph_return = ftrace_graph_stub;
+ trace_func_graph_ent_t ftrace_graph_entry = ftrace_graph_entry_stub;
+ static trace_func_graph_ent_t __ftrace_graph_entry = ftrace_graph_entry_stub;
+ 
+@@ -614,7 +619,7 @@ void unregister_ftrace_graph(struct fgraph_ops *gops)
+ 		goto out;
+ 
+ 	ftrace_graph_active--;
+-	ftrace_graph_return = (trace_func_graph_ret_t)ftrace_stub;
++	ftrace_graph_return = ftrace_graph_stub;
+ 	ftrace_graph_entry = ftrace_graph_entry_stub;
+ 	__ftrace_graph_entry = ftrace_graph_entry_stub;
+ 	ftrace_shutdown(&graph_ops, FTRACE_STOP_FUNC_RET);
+-- 
+2.20.1
 
- 2) Host induced #AC
-
- 3) Guest induced #AC
-
-    A) Guest has #AC handling
-
-    B) Guest has no #AC handling
-
-#1:
-
-   - OFF: #AC is globally disabled
-
-   - ON:  #AC is globally enabled
-
-   - FORCE: same as ON but #AC is enforced on guests
-
-#2:
-
-   If the host triggers an #AC then the #AC has to be force disabled on the
-   affected core independent of the state of #1. Nothing we can do about
-   that and once the initial wave of #AC issues is fixed this should not
-   happen on production systems. That disables #3 even for the #3.A case
-   for simplicity sake.
-
-#3:
-
-   A) Guest has #AC handling
-    
-      #AC is forwarded to the guest. No further action required aside of
-      accounting
-
-   B) Guest has no #AC handling
-
-      If #AC triggers the resulting action depends on the state of #1:
-
-      	 - FORCE: Guest is killed with SIGBUS or whatever the virt crowd
-	   	  thinks is the appropriate solution
-
-         - ON: #AC triggered state is recorded per vCPU and the MSR is
-	   	toggled on VMENTER/VMEXIT in software from that point on.
-
-So the only interesting case is #3.B and #1.state == ON. There you need
-serialization of the state and the MSR write between the cores, but only
-when the vCPU triggered an #AC. Until then, nothing to do.
-
-vmenter()
-{
-	if (vcpu->ac_disable)
-		this_core_disable_ac();
-}
-
-vmexit()
-{
-	if (vcpu->ac_disable) {
-		this_core_enable_ac();
-}
-
-this_core_dis/enable_ac() takes the global state into account and has the
-necessary serialization in place.
-
-Thanks,
-
-	tglx
