@@ -2,210 +2,74 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E53DECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C293AECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E083820869
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:24:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571340282;
-	bh=zsMHgu4M1tOPiXjSyDTR5fvOwIh25A2mviInkdnBswQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qEkEDXrG1+Wsd+y2qW6AiAV3Drz8o/OOthMXSWe6XB0hXAYQn2esGx2WCLcFBt8eO
-	 2PuGAgz7CXXudPr1VG4YamRmC0XjZHLixkcMOuM3xHcnF8mLRKzCLeamnhAYONvYts
-	 y+xa2hxCa/IHskf5iY4uKBlzxss5WENuM3vPV40w=
+	by mail.kernel.org (Postfix) with ESMTP id 9A1AC20869
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:24:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503502AbfJQTYl (ORCPT
+        id S2503518AbfJQTYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 15:24:41 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:38462 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393438AbfJQTYl (ORCPT
+        Thu, 17 Oct 2019 15:24:45 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:40876 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393438AbfJQTYn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 15:24:41 -0400
-Received: by mail-oi1-f193.google.com with SMTP id k10so856376oij.5;
-        Thu, 17 Oct 2019 12:24:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JbxUD4/Ch48OCt7IQSmlYFRVjr2GA3XCWfDDRfU4VJU=;
-        b=Lc6AY1pt3sW7zF2T8T636zz4Gsy44kCslv9x9jlzb8QS4BrnlkTt5EC5oUPVOLxVz8
-         57IupVDdiJUTinWI9huz3SY3ZNfMC46IXY/aFQ+u5pPXL5sG/P1JFG57YxXL+oxV51p9
-         rsmc2ZM+vtlauHKmEsoFAa25t5YkbzNoYM2JXQLnHQZcKnpufY8iCkE9GrWJ8g61KF9V
-         DNxcEADzyU9XfneHCeyPWzjWcQL6+BxFNJ3Hj8CEdHQnlu23i+vnrXcO3QOWrIMrFb47
-         WcfLsqYEnwVmi4VaHp5ZSkAuZlZvMoTiPOuZsb8MGTvv/CBRutZrWEnq6m0MF7W7WVIU
-         5tQw==
-X-Gm-Message-State: APjAAAVx0fXPePlmIEqxpSntOr5Gva6fTDFBkehEkBCP/oVX+M9fDfIj
-        thEd3J+K9wcHEPc8CbR61Q==
-X-Google-Smtp-Source: APXvYqz00kRIlvZzcsK3LPl7hBlSHEH3J1/iOr9YAPvYkaFiiR1Q8p/7vSBVdqGPIDLLZFBz4i9Gjg==
-X-Received: by 2002:aca:ef85:: with SMTP id n127mr4771640oih.42.1571340279227;
-        Thu, 17 Oct 2019 12:24:39 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s6sm818858otr.5.2019.10.17.12.24.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 12:24:38 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 14:24:37 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        mark.rutland@arm.com, rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: brcm: Add bindings for
- xgs-iproc
-Message-ID: <20191017192437.GA24080@bogus>
-References: <20191017031051.20366-1-chris.packham@alliedtelesis.co.nz>
- <20191017031051.20366-2-chris.packham@alliedtelesis.co.nz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191017031051.20366-2-chris.packham@alliedtelesis.co.nz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 17 Oct 2019 15:24:43 -0400
+Received: from localhost (unknown [IPv6:2603:3023:50c:85e1:5314:1b70:2a53:887e])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id E33AF14047D0C;
+        Thu, 17 Oct 2019 12:24:42 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 15:24:42 -0400 (EDT)
+Message-Id: <20191017.152442.339047834113245608.davem@davemloft.net>
+To:     f.fainelli@gmail.com
+Cc:     netdev@vger.kernel.org, andrew@lunn.ch,
+        linux-kernel@vger.kernel.org, hkallweit1@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, olteanv@gmail.com,
+        rmk+kernel@armlinux.org.uk, cphealy@gmail.com, joabreu@synopsys.com
+Subject: Re: [PATCH net-next 0/2] net: phy: Add ability to debug RGMII
+ connections
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191015224953.24199-1-f.fainelli@gmail.com>
+References: <20191015224953.24199-1-f.fainelli@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.2
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 17 Oct 2019 12:24:43 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 04:10:50PM +1300, Chris Packham wrote:
-> This GPIO controller is present on a number of Broadcom switch ASICs
-> with integrated SoCs. It is similar to the nsp-gpio and iproc-gpio
-> blocks but different enough to require a separate driver.
+From: Florian Fainelli <f.fainelli@gmail.com>
+Date: Tue, 15 Oct 2019 15:49:51 -0700
+
+> This patch series is primarily intended to reduce the amount of support
+> involved with bringing up RGMII connections with the PHY library (or
+> PHYLINK) for that matter. The idea consists in looping back a packet we
+> just crafted and check whether it did came back correctly, if that is
+> the case, we are good, else we must try configuring the PHY for
+> different delays until it either works or we bail out.
 > 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
+> As indicated in the commit message, future improvements could probably
+> be done in order to converge faster on the appropriate configuration.
+> This is intended to be PHY centric, and we are not playing with delays
+> on the MAC side other than through the parsing of the phydev->interface.
 > 
-> Notes:
->     Changes in v2:
->     - Document as DT schema
->     - Include ngpios, #gpio-cells and gpio-controller properties
+> The typical output would look like this:
 > 
->  .../bindings/gpio/brcm,xgs-iproc.yaml         | 83 +++++++++++++++++++
->  1 file changed, 83 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
+> [   62.668701] bcmgenet 8f00000.ethernet eth0: Trying "rgmii-txid" PHY interface
+> [   62.676094] bcmgenet 8f00000.ethernet eth0: Determined "rgmii-txid" to be correct
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
-> new file mode 100644
-> index 000000000000..71998551209e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
-> @@ -0,0 +1,83 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/brcm,xgs-iproc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Broadcom XGS iProc GPIO controller
-> +
-> +maintainers:
-> +  - Chris Packham <chris.packham@alliedtelesis.co.nz>
-> +
-> +description: |
-> +  This controller is the Chip Common A GPIO present on a number of Broadcom
-> +  switch ASICs with integrated SoCs.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - brcm,iproc-gpio-cca
+> Feedback highly welcome on this!
 
-enum vs. const usage depends on whether you think you'll add more 
-compatibles.
+Looks like there was some feedback, please address.
 
-> +
-> +  reg:
-> +    minItems: 2
-> +    maxItems: 2
-> +    description:
-> +      The first region defines the base I/O address containing
-> +      the GPIO controller registers. The second region defines
-> +      the I/O address containing the Chip Common A interrupt
-> +      registers.
-
-items:
-  - description: the I/O address containing the GPIO controller 
-      registers
-  - description: the I/O address containing the Chip Common A interrupt 
-      registers
-
-And minItems/maxItems can be implicit.
-
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +      const: 2
-> +
-> +  ngpios:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-Common property, doesn't need a type definition. Also, it would have to 
-be under an 'allOf' to actually work.
-
-> +    minimum: 0
-> +    maximum: 32
-> +
-> +  interrupt-controller:
-> +    type: boolean
-
-Just 'interrupt-controller: true'
-
-> +
-> +  '#interrupt-cells':
-> +    const: 2
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#gpio-cells"
-> +  - gpio-controller
-> +
-> +allOf:
-> + - if:
-> +     properties:
-> +       interrupt-controller:
-> +         contains:
-> +           const: true
-> +   then:
-> +     required:
-> +       - interrupts
-> +       - '#interrupt-cells'
-
-This is mostly handled in the core schema already and 'dependencies' 
-works better for this anyways. All you need here is:
-
-dependencies:
-  interrupt-controller: [ interrupts ]
-
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    gpio@18000060 {
-> +        compatible = "brcm,iproc-gpio-cca";
-> +        #gpio-cells = <2>;
-> +        reg = <0x18000060 0x50>,
-> +              <0x18000000 0x50>;
-> +        ngpios = <12>;
-> +        gpio-controller;
-> +        interrupt-controller;
-> +        #interrupt-cells = <2>;
-> +        interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
-> +    };
-> +
-> +
-> +...
-> -- 
-> 2.23.0
-> 
+Thank you.
