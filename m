@@ -2,100 +2,80 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5EB1FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC02ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78BDC20872
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:11:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="vLPVBc0j"
+	by mail.kernel.org (Postfix) with ESMTP id 7E60620872
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 16:12:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440443AbfJQQLu (ORCPT
+        id S2440456AbfJQQMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 12:11:50 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41726 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406402AbfJQQLu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 12:11:50 -0400
-Received: by mail-pl1-f196.google.com with SMTP id t10so1341608plr.8
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 09:11:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=wqUCKXUJo8X5AAnTpFmKsNohxpW+m6dhYvogWfd9F4U=;
-        b=vLPVBc0jLKrHi5fVflv9YxU/hVeu/thLp/A8Y8zkskX6Ye5Dy5BmCgU3KC62KpH5UH
-         51cd+d34DJAoNncm6/3zAa9GnGflQHLPvRvBm3tMsYg5p7bBWqWsyg+oDbz8kfaC1uJ0
-         JYm8MiUvFwitfQfmeZmHcysj4jHd7g9nj9kDP66XDTCZybnLhlVKdSPQuuS6xmLmevIz
-         dcphuhkju0GyADHd3MBg0wPM1M3B89A1FF+glmpcimwLNMBCm1CWAqk6+5IcSY63yzN2
-         M7+f8NEN+zuoAvlR/dJRptbELXTr3PAx+hA2K9iHhVtMouQnQGdPTynkkPJ2r1DqKw5c
-         vMgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=wqUCKXUJo8X5AAnTpFmKsNohxpW+m6dhYvogWfd9F4U=;
-        b=K/fuZ47z3qMVD+zHWiUfMfRcm4NLoKL55f48Eb6M2xvpWQ8+6D5oncYYthOcE/kwjq
-         JfH4PepYsQWOIGYic+08YnKeZCUxPFa2ll7tUPuTz2xB9kXUyFyVvHc5yYLce2swc499
-         TsKPbAB4cFA6L8XSejkcpHjOffVnpIzjlzjE9HaURGl3x8RSaDG57MzCtt8B9sWW4yom
-         fesTABMsl8FKc8HEXPCuF5DGSmNohERlTiPN5ocU/bL/4eDpNCjLUHjdwdzZkI5y8UYh
-         Fzw9syNAGhS8CNlhXlVhE9E/Q9cymH7q6qSZEjd6k0zLp5s9o5uEqYkiPZIFWn5FVtMd
-         umvg==
-X-Gm-Message-State: APjAAAWRjCnI9mW0xjvEuAxHpOyPTXYQ7BQ/x0llLRfQaooDq7VwcTW5
-        OTeN6AyqOrJco/mjTd3tUtWdjWEXj30=
-X-Google-Smtp-Source: APXvYqw6QWneFJB+QPd5Fr8J5Si4FPeSBOTzKJY8p7VwP6wPLB9npxHWIpL+GLPUVWu+FaDir8cNQg==
-X-Received: by 2002:a17:902:9a84:: with SMTP id w4mr4790832plp.186.1571328709262;
-        Thu, 17 Oct 2019 09:11:49 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:d8f2:392e:5b44:157d])
-        by smtp.gmail.com with ESMTPSA id e3sm2578093pjs.15.2019.10.17.09.11.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 17 Oct 2019 09:11:48 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        Thu, 17 Oct 2019 12:12:22 -0400
+Received: from mga07.intel.com ([134.134.136.100]:49018 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390535AbfJQQMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 12:12:22 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 09:12:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,308,1566889200"; 
+   d="scan'208";a="347806672"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga004.jf.intel.com with ESMTP; 17 Oct 2019 09:12:21 -0700
+Date:   Thu, 17 Oct 2019 09:12:21 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] arm64: dts: meson: sm1: add audio support
-In-Reply-To: <7ho8ygfxo7.fsf@baylibre.com>
-References: <20191009082708.6337-1-jbrunet@baylibre.com> <7h7e54hdif.fsf@baylibre.com> <7ho8ygfxo7.fsf@baylibre.com>
-Date:   Thu, 17 Oct 2019 09:11:48 -0700
-Message-ID: <7hsgnrbbcr.fsf@baylibre.com>
+Subject: Re: [PATCH 3/4] KVM: X86: Refactor kvm_arch_vcpu_create
+Message-ID: <20191017161221.GB20903@linux.intel.com>
+References: <20191015164033.87276-1-xiaoyao.li@intel.com>
+ <20191015164033.87276-4-xiaoyao.li@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015164033.87276-4-xiaoyao.li@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kevin Hilman <khilman@baylibre.com> writes:
+On Wed, Oct 16, 2019 at 12:40:32AM +0800, Xiaoyao Li wrote:
+> Current x86 arch vcpu creation flow is a little bit messed.
+> Specifically, vcpu's data structure allocation and vcpu initialization
+> are mixed up, which is unfriendly to read.
+> 
+> Seperating the vcpu_create and vcpu_init just like what ARM does, that
+> it first calls vcpu_create related functions for vcpu's data structure
+> allocation and then calls vcpu_init related functions to initialize the
+> vcpu.
 
-> Kevin Hilman <khilman@baylibre.com> writes:
->
->> Jerome Brunet <jbrunet@baylibre.com> writes:
->>
->>> This patchset adds audio support on the sm1 SoC family and the
->>> sei610 platform
->>
->> Queued for v5.5.
->>
->>> Kevin, The patchset depends on:
->>>  - The ARB binding merged by Philipp [0]
->>>  - The audio clock controller bindings I just applied. A tag is
->>>    available for you here [1]
->>
->> I've pulled both of those into v5.5/dt64 so that branch is buildable
->> standlone.
->>
->> Thanks for details on the dependencies.
->
-> Just noticed that all of these had "meson" in the subject instead of
-> "amlogic".  Fixed up when applying.
+My vote is to take advantage of the requirement that @vcpu must reside at
+offset 0 in vmx_vcpu and svm_vcpu, and allocate the vcpu in x86 code.
+That would allow kvm_arch_vcpu_create() to invoke kvm_vcpu_init() directly
+instead of bouncing through the vendor code.
 
-Ignore me, "meson" in the original is correct.
+And if we're extra lucky and the other architectures can use a similar
+pattern, kvm_vm_ioctl_create_vcpu() could be refactored to something like:
 
-Kevin
+	vcpu = kvm_arch_vcpu_alloc(kvm, id);
+	if (IS_ERR(vcpu)) {
+		r = PTR_ERR(vcpu);
+		goto vcpu_decrement;
+	}
+
+	r = kvm_arch_vcpu_init(vcpu);
+	if (r)
+		goto vcpu_destroy;
