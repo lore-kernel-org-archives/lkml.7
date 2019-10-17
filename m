@@ -2,88 +2,137 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 895C1FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C65ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59EF721835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 171B021835
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:37:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="inLSz4cP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wsOtMSHp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439724AbfJQLgy (ORCPT
+        id S2439737AbfJQLhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 07:36:54 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:43783 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409177AbfJQLgx (ORCPT
+        Thu, 17 Oct 2019 07:37:12 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35351 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439727AbfJQLhM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 07:36:53 -0400
-Received: by mail-qk1-f194.google.com with SMTP id h126so1489379qke.10
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 04:36:53 -0700 (PDT)
+        Thu, 17 Oct 2019 07:37:12 -0400
+Received: by mail-wm1-f66.google.com with SMTP id y21so2193388wmi.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 04:37:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=8/Lz6l8sQ6PNj+KFicIECgEvYNy1usZIJng2CZIsbQg=;
-        b=inLSz4cPMI+GJ9z0YEfQf9RIV4d9DhKHvhpv9tRsAhG8lBPHCahDt7L4dZdCUDpNT3
-         V0qQsIIWtsi1zCvqA2zEvouImw2pz4PKQq7hNViCPYJJovM/WhPMwRFyY2ASg8xwBJ9e
-         3W7+KJNGsqtkQD7da4idydHyGxNm4S89TLBE1EO5Nsrb7rxQFLv7OHaNsX/MyjrqvoQf
-         sm4KR/GZnvc1LUVfYS7OZDzwz3t4PvX1fBGcOPD7sxVYWgEMvd2t+Q5JPWvhC3dGKSBs
-         ZmiLjM0dWcfgsG936+m01CkzNYi/KsWTeJ9XauEjKWmMjpkupFQQrtOUJwu1GXjwYO4O
-         E4Bg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kz81GWsdy+gT4h09Jxnw2SGeMu79bPfNDv5X5wml0Ow=;
+        b=wsOtMSHpdRb6Eyt0a4RIHj3ouio4xANV3N5raaZk1cU6ih1BY7YK6f325AhA1diobG
+         BoWDhKGQOnDjqitMuKFbONryFjMvYhZmmtl5rmPznmkTrsP/nAWrpY0aOqIlR1HAARM7
+         N/1QBXvBRGJE7dzNZi8tAMcuJ1bPouAvd/7WSc9b0ZQOoHsKqZBvcPsPddV4pI0Iho5Z
+         DgQO9eIECjl+wUtc+XLAFN3gZWbGdpPq3rWLFAoaw+88iW2ze6C5XjKTY0IQJsCRoKQ9
+         ZLY5Mi8HF9bcMw+3rZd+S2RC9xAefNibIiecULZ6nBDr1NAtYRifeOwAy2lom3/e9mrJ
+         ZcwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=8/Lz6l8sQ6PNj+KFicIECgEvYNy1usZIJng2CZIsbQg=;
-        b=NLtbaeBXrw7FUQeIrtRbZ+RtqBshBGUQtBK+ceywd/2gsGbaGBxZ6WEOXh7HzJdB0f
-         2iwannljFntXfVO/RY0It98A4k2fCgsVoJZHy4goAnAtid0CYaRwE88MH3vxOv9x99UU
-         nURloRp9cT/vyqtBhoZAkXlT+YBhw5nCVOJn4PpXyzUet8B+gehXRrR1KqQakRBW5Ndr
-         dt0PECCNe00RL58dXFmVi9hWnvKLwO5SdOExDStiwnRsj7EiJcPqcSBikPIEsVozY67O
-         htcrLUCG0xE6xgImVnTelq7ypAfYK7LUYSV6WtjixYdHG8c4N0erX53YLL4FKcbs6dru
-         GCjw==
-X-Gm-Message-State: APjAAAVrPWrJBxbnTPedqvZcorm71FdF2HL5Yp1ilUJLH2BllCazLXJp
-        ssS0dynxWZb3x8tsSOW9MUO96g==
-X-Google-Smtp-Source: APXvYqxdX0AeuN/dq2A2s87VdUR+xtxVcyeC34SKMarZg2FnGvyBY3fPdW9PrLgHFt8PN82r/JKQvw==
-X-Received: by 2002:a37:68a:: with SMTP id 132mr2773971qkg.359.1571312212534;
-        Thu, 17 Oct 2019 04:36:52 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id c6sm1631979qtc.83.2019.10.17.04.36.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Oct 2019 04:36:51 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kz81GWsdy+gT4h09Jxnw2SGeMu79bPfNDv5X5wml0Ow=;
+        b=l5TdR+4SjhMgMz7ZbTcCtjprYezMxxMHkksE/OByGq5twTAi6u/5R6PTNpDlXz3ThY
+         zNk0+gtwLXOtmKXME21KguyHaOrkIabbl0z4SK/jJkXYTW9l+iwHymauUGNBk1o2eAWE
+         Sc3061I9u2P+FG8Jrir0fumrBlW+ZrN9UTVy+wWdSzuj/TKvoG8FBJ1y8qbhNtsIArDb
+         PpLNMSpaSxAXlfStP9MnK46YdUObLE2vBsrl13loAvX6YSMrKiXPmIFYLSCOWnbPME0j
+         jWO/Cyk7mQ/afwp4OT3rdtqfsb2iPNfLY/9UeYwUnnS+5Yw7qs1kCCAd8Fs3zdo6jGrO
+         IzFg==
+X-Gm-Message-State: APjAAAWsKh5lH7tCq0YycoWL99AiRcWux+54HduIHtsdZHXksUVpcZXQ
+        99OfQBeXXgeHB1uQM8Is+kWsjQ==
+X-Google-Smtp-Source: APXvYqwVcAbF9NKa2DBqA54nZM8E1xuownksYgsSe+rQmhJK4e6KkHf1SfpZesJWdHwSR9jrw3iaOw==
+X-Received: by 2002:a1c:1dc9:: with SMTP id d192mr2631862wmd.51.1571312229630;
+        Thu, 17 Oct 2019 04:37:09 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id u1sm2020090wrp.56.2019.10.17.04.37.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 04:37:08 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 12:37:07 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH 29/34] backlight/jornada720: Use CONFIG_PREEMPTION
+Message-ID: <20191017113707.lsjwlhi6b4ittcpe@holly.lan>
+References: <20191015191821.11479-1-bigeasy@linutronix.de>
+ <20191015191821.11479-30-bigeasy@linutronix.de>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH -next] iommu/amd: fix a warning in increase_address_space
-Date:   Thu, 17 Oct 2019 07:36:51 -0400
-Message-Id: <577A2A6B-3012-4CDE-BE57-3E0D628572CB@lca.pw>
-References: <20191016225859.j3jq6pt73mn56chn@cantor>
-Cc:     jroedel@suse.de, don.brace@microsemi.com,
-        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        jejb@linux.ibm.com, esc.storagedev@microsemi.com,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-In-Reply-To: <20191016225859.j3jq6pt73mn56chn@cantor>
-To:     Jerry Snitselaar <jsnitsel@redhat.com>
-X-Mailer: iPhone Mail (17A878)
+Content-Disposition: inline
+In-Reply-To: <20191015191821.11479-30-bigeasy@linutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Oct 15, 2019 at 09:18:16PM +0200, Sebastian Andrzej Siewior wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
+> Both PREEMPT and PREEMPT_RT require the same functionality which today
+> depends on CONFIG_PREEMPT.
+> 
+> Switch the Kconfig dependency to CONFIG_PREEMPTION.
+> 
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Daniel Thompson <daniel.thompson@linaro.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-fbdev@vger.kernel.org
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> [bigeasy: +LCD_HP700]
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+
+(I know... the review for this particular patch is trivial but an
+Acked-by from a maintainer means something specific and it is Lee
+Jones who coordinates landing cross sub-system patch sets for
+backlight).
 
 
-> On Oct 16, 2019, at 6:59 PM, Jerry Snitselaar <jsnitsel@redhat.com> wrote:=
+Daniel.
 
->=20
-> I guess the mode level 6 check is really for other potential callers
-> increase_address_space, none exist at the moment, and the condition
-> of the while loop in alloc_pte should fail if the mode level is 6.
-
-Because there is no locking around iommu_map_page(), if there are several co=
-ncurrent callers of it for the same domain, could it be that it silently cor=
-rupt data due to invalid access?=
+> ---
+>  drivers/video/backlight/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
+> index 40676be2e46aa..d09396393724b 100644
+> --- a/drivers/video/backlight/Kconfig
+> +++ b/drivers/video/backlight/Kconfig
+> @@ -99,7 +99,7 @@ config LCD_TOSA
+>  
+>  config LCD_HP700
+>  	tristate "HP Jornada 700 series LCD Driver"
+> -	depends on SA1100_JORNADA720_SSP && !PREEMPT
+> +	depends on SA1100_JORNADA720_SSP && !PREEMPTION
+>  	default y
+>  	help
+>  	  If you have an HP Jornada 700 series handheld (710/720/728)
+> @@ -228,7 +228,7 @@ config BACKLIGHT_HP680
+>  
+>  config BACKLIGHT_HP700
+>  	tristate "HP Jornada 700 series Backlight Driver"
+> -	depends on SA1100_JORNADA720_SSP && !PREEMPT
+> +	depends on SA1100_JORNADA720_SSP && !PREEMPTION
+>  	default y
+>  	help
+>  	  If you have an HP Jornada 700 series,
+> -- 
+> 2.23.0
+> 
