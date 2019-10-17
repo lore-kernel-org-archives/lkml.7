@@ -2,107 +2,80 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC389FA3728
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 00:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FCAECE599
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 00:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF4A218DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 00:50:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571273404;
-	bh=IYJzNb9unWNMZK55GWXexB0DpsKeOwmGxuFGk3dxhMA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jhWewkUwY4TqHkd2o5za0EM8vYcSJ9glOvUuNx6MRq8eCvD8lx3g2Ch1SlLCE1n1d
-	 P49i2hTWG51hy1CVBRpWlPwprXJGhF5PmmBL/enriDJuZQNecAhAM+r/HI/Eg65oxE
-	 ZisYKL7muiIKMSXuKp502RPLn6UXvxc3nqw+fYyw=
+	by mail.kernel.org (Postfix) with ESMTP id 847B120872
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 00:50:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405384AbfJQAt5 (ORCPT
+        id S2437587AbfJQAuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 20:49:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37304 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403893AbfJQAt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 20:49:56 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC56420872;
-        Thu, 17 Oct 2019 00:49:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571273396;
-        bh=IYJzNb9unWNMZK55GWXexB0DpsKeOwmGxuFGk3dxhMA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ZF1baU1o3y5gSgLWTM6fEbQK9smKG/HjbhMqyqekJ0qvU5Nm6MbJeLUHCSeNh5w3J
-         tg3gDIAsXqpfhuNrM0faCk4eASmCQYMgKcHSZJkC4YFi7z7U1XUCR6tXGkZFgICAao
-         UECGGb/C/2pSDVkEp9eeIi9yxgwjVWUtPiI79YTw=
-Date:   Wed, 16 Oct 2019 17:49:55 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        Vlastimil Babka <vbabka@suse.cz>, <mhocko@kernel.org>,
-        <anshuman.khandual@arm.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, Ira Weiny <ira.weiny@intel.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>
-Subject: Re: [PATCH] mm: Unsigned 'nr_pages' always larger than zero
-Message-Id: <20191016174955.300d5fd4968537151d3ad43f@linux-foundation.org>
-In-Reply-To: <5DA6DDE0.6000804@huawei.com>
-References: <1567592763-25282-1-git-send-email-zhongjiang@huawei.com>
-        <5505fa16-117e-8890-0f48-38555a61a036@suse.cz>
-        <20190904114820.42d9c4daf445ded3d0da52ab@linux-foundation.org>
-        <73c49a1b-4f42-c21d-ccd8-2b063cdf1293@nvidia.com>
-        <5DA6DDE0.6000804@huawei.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 16 Oct 2019 20:50:25 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:39210 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2403879AbfJQAuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 20:50:24 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D072254A568EF04DA520;
+        Thu, 17 Oct 2019 08:50:22 +0800 (CST)
+Received: from [127.0.0.1] (10.74.149.191) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Thu, 17 Oct 2019
+ 08:50:15 +0800
+Subject: Re: [PATCH net-next 08/12] net: hns3: introduce ring_to_netdev() in
+ enet module
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+CC:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <salil.mehta@huawei.com>,
+        <yisen.zhuang@huawei.com>, <linuxarm@huawei.com>,
+        Yunsheng Lin <linyunsheng@huawei.com>
+References: <1571210231-29154-1-git-send-email-tanhuazhong@huawei.com>
+ <1571210231-29154-9-git-send-email-tanhuazhong@huawei.com>
+ <20191016101023.21915feb@cakuba.netronome.com>
+From:   tanhuazhong <tanhuazhong@huawei.com>
+Message-ID: <3cf1c031-4809-11ec-c715-de3a839b9a03@huawei.com>
+Date:   Thu, 17 Oct 2019 08:50:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.2
+MIME-Version: 1.0
+In-Reply-To: <20191016101023.21915feb@cakuba.netronome.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.149.191]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 16 Oct 2019 17:07:44 +0800 zhong jiang <zhongjiang@huawei.com> wrote:
 
-> >> --- a/mm/gup.c~a
-> >> +++ a/mm/gup.c
-> >> @@ -1450,6 +1450,7 @@ static long check_and_migrate_cma_pages(
-> >>       bool drain_allow = true;
-> >>       bool migrate_allow = true;
-> >>       LIST_HEAD(cma_page_list);
-> >> +    long ret;
-> >>     check_again:
-> >>       for (i = 0; i < nr_pages;) {
-> >> @@ -1511,17 +1512,18 @@ check_again:
-> >>            * again migrating any new CMA pages which we failed to isolate
-> >>            * earlier.
-> >>            */
-> >> -        nr_pages = __get_user_pages_locked(tsk, mm, start, nr_pages,
-> >> +        ret = __get_user_pages_locked(tsk, mm, start, nr_pages,
-> >>                              pages, vmas, NULL,
-> >>                              gup_flags);
-> >>   -        if ((nr_pages > 0) && migrate_allow) {
-> >> +        nr_pages = ret;
-> >> +        if (ret > 0 && migrate_allow) {
-> >>               drain_allow = true;
-> >>               goto check_again;
-> >>           }
-> >>       }
-> >>   -    return nr_pages;
-> >> +    return ret;
-> >>   }
-> >>   #else
-> >>   static long check_and_migrate_cma_pages(struct task_struct *tsk,
-> >>
-> >
-> > +1 for this approach, please.
-> >
-> >
-> > thanks,
-> Hi,  Andrew
+
+On 2019/10/17 1:10, Jakub Kicinski wrote:
+> On Wed, 16 Oct 2019 15:17:07 +0800, Huazhong Tan wrote:
+>> From: Yunsheng Lin <linyunsheng@huawei.com>
+>>
+>> There are a few places that need to access the netdev of a ring
+>> through ring->tqp->handle->kinfo.netdev, and ring->tqp is a struct
+>> which both in enet and hclge modules, it is better to use the
+>> struct that is only used in enet module.
+>>
+>> This patch adds the ring_to_netdev() to access the netdev of ring
+>> through ring->tqp_vector->napi.dev.
+>>
+>> Also, struct hns3_enet_ring is a frequently used in critical data
+>> path, so make it cacheline aligned as struct hns3_enet_tqp_vector.
 > 
-> I didn't see the fix for the issue in the upstream. Your proposal should be
-> appiled to upstream. Could you appiled the patch or  repost by me ?
+> That part seems logically separate, should it be a separate patch?
+> 
 
-Forgotten about it ;)  Please send a patch sometime?
+ok, thanks.
+
+>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+>> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+> 
+> 
+
