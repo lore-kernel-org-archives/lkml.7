@@ -2,198 +2,208 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93570ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1F1FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 650CC2064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:37:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571315859;
-	bh=kq/CovI3qRbftuP2mHDfdP3+GMNRtvi2LkhTQaV42PY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ulMU9EgeGgtNfAEFVh6sGh/Yf5zOWk5WQhGsoUwnuqGKmS79rssYUl1QR5QkPYSYy
-	 BhJsRreGv01tfRM2+cqI9RY7PMpL0IOOIZox66XBley/ohMVaEWJlbIUKoGoGx6frM
-	 a7eHyBmyNRsc969AhZa5zC76W7yEmTV97DV7sEmo=
+	by mail.kernel.org (Postfix) with ESMTP id BC9212082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 12:41:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502472AbfJQMhi (ORCPT
+        id S2406312AbfJQMlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 08:37:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52768 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726263AbfJQMhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 08:37:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7164FB584;
-        Thu, 17 Oct 2019 12:37:35 +0000 (UTC)
-Date:   Thu, 17 Oct 2019 14:37:34 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc:     linux-kernel@vger.kernel.org, yuqi jin <jinyuqi@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [RFC] lib: optimize cpumask_local_spread()
-Message-ID: <20191017123734.GJ24485@dhcp22.suse.cz>
-References: <1571307788-43169-1-git-send-email-zhangshaokun@hisilicon.com>
+        Thu, 17 Oct 2019 08:41:17 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:52671 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726214AbfJQMlR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 08:41:17 -0400
+X-Originating-IP: 86.207.98.53
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: kamel.bouhara@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 04BEA6000D;
+        Thu, 17 Oct 2019 12:41:14 +0000 (UTC)
+From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
+To:     Sebastian Reichel <sre@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Kamel Bouhara <kamel.bouhara@bootlin.com>
+Subject: [PATCH] power: reset: at91-reset: add sysfs interface to the power on reason
+Date:   Thu, 17 Oct 2019 14:40:58 +0200
+Message-Id: <20191017124058.19300-1-kamel.bouhara@bootlin.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571307788-43169-1-git-send-email-zhangshaokun@hisilicon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 17-10-19 18:23:08, Shaokun Zhang wrote:
-> From: yuqi jin <jinyuqi@huawei.com>
-> 
-> In the multi-processor and NUMA system, A device may have many numa
-> nodes belonging to multiple cpus. When we get a local numa, it is better
-> to find the node closest to the local numa node to return instead of
-> going to the online cpu immediately.
-> 
-> For example, In Huawei Kunpeng 920 system, there are 4 NUMA node(0 -3)
-> in the 2-socket system(0 - 1). If the I/O device is in socket1
-> and the local NUMA node is 2, we shall choose the non-local node3 in
-> the same socket when cpu core in NUMA node2 is less that I/O requirements.
-> If we directly pick one cpu core from all online ones, it may be in
-> the another socket and it is not friendly for performance.
+This patch export the power on reason through the sysfs interface and
+introduce some generic reset sources.
+Update the ABI documentation to list current power on sources.
 
-Could you be more specific on the effect of this patch please? Do you
-have any performance numbers?
-Also is it safe and reasonable to perform GFP_KERNEL (aka sleepable)
-allocations from this function?
+Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+---
+ .../sysfs-devices-platform-power-on-reason    | 14 ++++++
+ drivers/power/reset/at91-reset.c              | 44 +++++++++++++------
+ include/linux/power/power_on_reason.h         | 19 ++++++++
+ 3 files changed, 64 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-devices-platform-power-on-reason
+ create mode 100644 include/linux/power/power_on_reason.h
 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Cc: Paul Burton <paul.burton@mips.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-> Signed-off-by: yuqi jin <jinyuqi@huawei.com>
-> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-> ---
->  lib/cpumask.c | 78 ++++++++++++++++++++++++++++++++++++++++++++++++++---------
->  1 file changed, 67 insertions(+), 11 deletions(-)
-> 
-> diff --git a/lib/cpumask.c b/lib/cpumask.c
-> index 0cb672eb107c..8f89c7cebfb0 100644
-> --- a/lib/cpumask.c
-> +++ b/lib/cpumask.c
-> @@ -192,6 +192,33 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
->  }
->  #endif
->  
-> +static void calc_node_distance(int *node_dist, int node)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < nr_node_ids; i++)
-> +		node_dist[i] = node_distance(node, i);
-> +}
-> +
-> +static int find_nearest_node(int *node_dist, bool *used_flag)
-> +{
-> +	int i, min_dist = node_dist[0], node_id = -1;
-> +
-> +	for (i = 0; i < nr_node_ids; i++)
-> +		if (used_flag[i] == 0) {
-> +			min_dist = node_dist[i];
-> +			node_id = i;
-> +			break;
-> +		}
-> +	for (i = 0; i < nr_node_ids; i++)
-> +		if (node_dist[i] < min_dist && used_flag[i] == 0) {
-> +			min_dist = node_dist[i];
-> +			node_id = i;
-> +		}
-> +
-> +	return node_id;
-> +}
-> +
->  /**
->   * cpumask_local_spread - select the i'th cpu with local numa cpu's first
->   * @i: index number
-> @@ -205,7 +232,8 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
->   */
->  unsigned int cpumask_local_spread(unsigned int i, int node)
->  {
-> -	int cpu;
-> +	int cpu, j, id, *node_dist;
-> +	bool *used_flag;
->  
->  	/* Wrap: we always want a cpu. */
->  	i %= num_online_cpus();
-> @@ -215,19 +243,47 @@ unsigned int cpumask_local_spread(unsigned int i, int node)
->  			if (i-- == 0)
->  				return cpu;
->  	} else {
-> -		/* NUMA first. */
-> -		for_each_cpu_and(cpu, cpumask_of_node(node), cpu_online_mask)
-> -			if (i-- == 0)
-> -				return cpu;
-> +		node_dist = kmalloc_array(nr_node_ids,
-> +			sizeof(int), GFP_KERNEL);
-> +		if (!node_dist)
-> +			for_each_cpu(cpu, cpu_online_mask)
-> +				if (i-- == 0)
-> +					return cpu;
->  
-> -		for_each_cpu(cpu, cpu_online_mask) {
-> -			/* Skip NUMA nodes, done above. */
-> -			if (cpumask_test_cpu(cpu, cpumask_of_node(node)))
-> -				continue;
-> +		used_flag = kmalloc_array(nr_node_ids,
-> +			sizeof(bool), GFP_KERNEL);
-> +		if (!used_flag)
-> +			for_each_cpu(cpu, cpu_online_mask)
-> +				if (i-- == 0) {
-> +					kfree(node_dist);
-> +					return cpu;
-> +				}
-> +		memset(used_flag, 0, nr_node_ids * sizeof(bool));
->  
-> -			if (i-- == 0)
-> -				return cpu;
-> +		calc_node_distance(node_dist, node);
-> +		for (j = 0; j < nr_node_ids; j++) {
-> +			id = find_nearest_node(node_dist, used_flag);
-> +			if (id < 0)
-> +				break;
-> +			for_each_cpu_and(cpu,
-> +				cpumask_of_node(id), cpu_online_mask)
-> +				if (i-- == 0) {
-> +					kfree(node_dist);
-> +					kfree(used_flag);
-> +					return cpu;
-> +				}
-> +			used_flag[id] = 1;
->  		}
-> +
-> +		for_each_cpu(cpu, cpu_online_mask)
-> +			if (i-- == 0) {
-> +				kfree(node_dist);
-> +				kfree(used_flag);
-> +				return cpu;
-> +			}
-> +
-> +		kfree(node_dist);
-> +		kfree(used_flag);
->  	}
->  	BUG();
->  }
-> -- 
-> 2.7.4
+diff --git a/Documentation/ABI/testing/sysfs-devices-platform-power-on-reason b/Documentation/ABI/testing/sysfs-devices-platform-power-on-reason
+new file mode 100644
+index 000000000000..83daeb9b1aa2
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-devices-platform-power-on-reason
+@@ -0,0 +1,14 @@
++What:		/sys/devices/platform/.../power_on_reason
++
++Date:		October 2019
++KernelVersion:	5.4
++Contact:	Kamel Bouhara <kamel.bouhara@bootlin.com>
++Description:	This file shows system power on reason.
++		The possible sources are:
++		General System Power-ON, RTC wakeup, Watchdog timeout,
++		Software Reset, User pressed reset button,
++		CPU Clock failure, 32.768kHz Oscillator Failure,
++		Low power mode exit, Unknown.
++
++		The file is read only.
++
+diff --git a/drivers/power/reset/at91-reset.c b/drivers/power/reset/at91-reset.c
+index 44ca983a49a1..3cb2df40af37 100644
+--- a/drivers/power/reset/at91-reset.c
++++ b/drivers/power/reset/at91-reset.c
+@@ -17,7 +17,7 @@
+ #include <linux/of_address.h>
+ #include <linux/platform_device.h>
+ #include <linux/reboot.h>
+-
++#include <linux/power/power_on_reason.h>
+ #include <soc/at91/at91sam9_ddrsdr.h>
+ #include <soc/at91/at91sam9_sdramc.h>
 
--- 
-Michal Hocko
-SUSE Labs
+@@ -146,42 +146,42 @@ static int samx7_restart(struct notifier_block *this, unsigned long mode,
+ 	return NOTIFY_DONE;
+ }
+
+-static void __init at91_reset_status(struct platform_device *pdev)
++static const char *at91_reset_reason(struct platform_device *pdev)
+ {
+ 	const char *reason;
+ 	u32 reg = readl(at91_rstc_base + AT91_RSTC_SR);
+
+ 	switch ((reg & AT91_RSTC_RSTTYP) >> 8) {
+ 	case RESET_TYPE_GENERAL:
+-		reason = "general reset";
++		reason = POWER_ON_REASON_GENERAL;
+ 		break;
+ 	case RESET_TYPE_WAKEUP:
+-		reason = "wakeup";
++		reason = POWER_ON_REASON_RTC;
+ 		break;
+ 	case RESET_TYPE_WATCHDOG:
+-		reason = "watchdog reset";
++		reason = POWER_ON_REASON_WATCHDOG;
+ 		break;
+ 	case RESET_TYPE_SOFTWARE:
+-		reason = "software reset";
++		reason = POWER_ON_REASON_SOFTWARE;
+ 		break;
+ 	case RESET_TYPE_USER:
+-		reason = "user reset";
++		reason = POWER_ON_REASON_USER;
+ 		break;
+ 	case RESET_TYPE_CPU_FAIL:
+-		reason = "CPU clock failure detection";
++		reason = POWER_ON_REASON_CPU_FAIL;
+ 		break;
+ 	case RESET_TYPE_XTAL_FAIL:
+-		reason = "32.768 kHz crystal failure detection";
++		reason = POWER_ON_REASON_XTAL_FAIL;
+ 		break;
+ 	case RESET_TYPE_ULP2:
+-		reason = "ULP2 reset";
++		reason = POWER_ON_REASON_LOW_POWER;
+ 		break;
+ 	default:
+-		reason = "unknown reset";
++		reason = POWER_ON_REASON_UNKNOWN;
+ 		break;
+ 	}
+
+-	dev_info(&pdev->dev, "Starting after %s\n", reason);
++	return reason;
+ }
+
+ static const struct of_device_id at91_ramc_of_match[] = {
+@@ -204,6 +204,17 @@ static struct notifier_block at91_restart_nb = {
+ 	.priority = 192,
+ };
+
++static ssize_t power_on_reason_show(struct device *dev,
++				    struct device_attribute *attr,
++				    char *buf)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++
++	return sprintf(buf, "%s\n", at91_reset_reason(pdev));
++}
++
++static DEVICE_ATTR_RO(power_on_reason);
++
+ static int __init at91_reset_probe(struct platform_device *pdev)
+ {
+ 	const struct of_device_id *match;
+@@ -248,7 +259,14 @@ static int __init at91_reset_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+
+-	at91_reset_status(pdev);
++	ret = device_create_file(&pdev->dev, &dev_attr_power_on_reason);
++	if (ret) {
++		dev_err(&pdev->dev, "Could not create sysfs entry\n");
++		return ret;
++	}
++
++	dev_info(&pdev->dev, "Starting after %s reset\n",
++		 at91_reset_reason(pdev));
+
+ 	return 0;
+ }
+diff --git a/include/linux/power/power_on_reason.h b/include/linux/power/power_on_reason.h
+new file mode 100644
+index 000000000000..9978cc757427
+--- /dev/null
++++ b/include/linux/power/power_on_reason.h
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Author: Kamel Bouhra <kamel.bouhara@bootlin.com>
++ */
++
++#ifndef POWER_ON_REASON_H
++#define POWER_ON_REASON_H
++
++#define POWER_ON_REASON_GENERAL "General"
++#define POWER_ON_REASON_RTC "RTC wakeup"
++#define POWER_ON_REASON_WATCHDOG "Watchdog timeout"
++#define POWER_ON_REASON_SOFTWARE "Software"
++#define POWER_ON_REASON_USER "User"
++#define POWER_ON_REASON_CPU_FAIL "CPU Clock Failure"
++#define POWER_ON_REASON_XTAL_FAIL "32.768k Crystal oscillator Failure"
++#define POWER_ON_REASON_LOW_POWER "Low power exit"
++#define POWER_ON_REASON_UNKNOWN "Unknown"
++
++#endif /* POWER_ON_REASON_H */
+--
+2.23.0
+
