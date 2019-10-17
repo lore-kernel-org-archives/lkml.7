@@ -2,98 +2,231 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 329E7ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0546ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F6C921835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 638282089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:40:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fXtMtlwK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406703AbfJQSip (ORCPT
+        id S2439070AbfJQSkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 14:38:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727766AbfJQSio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 14:38:44 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB06C2089C;
-        Thu, 17 Oct 2019 18:38:43 +0000 (UTC)
-Date:   Thu, 17 Oct 2019 14:38:41 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [BUG] libtraceevent: perf script -g python segfaults
-Message-ID: <20191017143841.317b26b5@gandalf.local.home>
-In-Reply-To: <20191017154205.GC8974@kernel.org>
-References: <20191017154205.GC8974@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 17 Oct 2019 14:40:53 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:41092 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390183AbfJQSkw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 14:40:52 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9HIeEhn173767;
+        Thu, 17 Oct 2019 18:40:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=r+FKO+kmS3nnfDRXobbClVjTN6e+SJeyN+DxsyZ7aR0=;
+ b=fXtMtlwKm/4z2698vAb0C8uiAC1DoWqGslvXFZSfYJ+KXCbN8L2rFd+0OVHNzBbrhKbu
+ 3cZJ4u5mfE876ykEVu50YAXlT80I2PQEZNJfJ8Grc0ulX2Nwtf2z2CE3Ic7Gi5Q4xoo4
+ 2FDhdeP4FWAHV9KMVYf1gvGvy16mwmQluUczxg1Qr2FoOVT1hm9It9AE/e3zKrYILiXe
+ ozUYq5MjcdFnpbTBXvKyPN7SudTdYQrtVIv4yNVsN1NXZQ4uoHbtjYK8Xv2TJkMoQoFb
+ Su+I8ifjXlhfLBzFtFs/4ckWlhPGJAhhyFjJ+MnFjOD2Zt9aOr9w7OfEzMKlhSY+sOAI TA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2vk6sr0ahe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 17 Oct 2019 18:40:34 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9HIWqFL113129;
+        Thu, 17 Oct 2019 18:40:33 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2vpf14fk7j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 17 Oct 2019 18:40:33 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9HIeW6v008388;
+        Thu, 17 Oct 2019 18:40:32 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 17 Oct 2019 18:40:31 +0000
+Date:   Thu, 17 Oct 2019 11:40:30 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Dave Chinner <dchinner@redhat.com>
+Subject: Re: [PATCH 05/14] xfs: refactor the ioend merging code
+Message-ID: <20191017184030.GM13108@magnolia>
+References: <20191017175624.30305-1-hch@lst.de>
+ <20191017175624.30305-6-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191017175624.30305-6-hch@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910170166
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910170167
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019 12:42:05 -0300
-Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
+On Thu, Oct 17, 2019 at 07:56:15PM +0200, Christoph Hellwig wrote:
+> Introduce two nicely abstracted helper, which can be moved to the iomap
+> code later.  Also use list_first_entry_or_null to simplify the code a
+> bit.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Dave Chinner <dchinner@redhat.com>
 
-> I'll try and continue later, but if you guys can take a look...
+Looks ok,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-Does this fix it for you?
+--D
 
--- Steve
-
-diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
-index ad74be1f0e42..227629796e32 100644
---- a/tools/perf/util/trace-event-parse.c
-+++ b/tools/perf/util/trace-event-parse.c
-@@ -193,30 +193,32 @@ int parse_event_file(struct tep_handle *pevent,
- struct tep_event *trace_find_next_event(struct tep_handle *pevent,
- 					struct tep_event *event)
- {
-+	static struct tep_event **all_events;
- 	static int idx;
- 	int events_count;
--	struct tep_event *all_events;
- 
--	all_events = tep_get_first_event(pevent);
- 	events_count = tep_get_events_count(pevent);
- 	if (!pevent || !all_events || events_count < 1)
- 		return NULL;
- 
- 	if (!event) {
- 		idx = 0;
--		return all_events;
-+		all_events = tep_list_events(pevent, TEP_EVENT_SORT_ID);
-+		if (all_events)
-+			return all_events[0];
-+		return NULL;
- 	}
- 
--	if (idx < events_count && event == (all_events + idx)) {
-+	if (idx < events_count && event == all_events[idx]) {
- 		idx++;
- 		if (idx == events_count)
- 			return NULL;
--		return (all_events + idx);
-+		return all_events[idx];
- 	}
- 
- 	for (idx = 1; idx < events_count; idx++) {
--		if (event == (all_events + (idx - 1)))
--			return (all_events + idx);
-+		if (event == all_events[idx - 1])
-+			return all_events[idx];
- 	}
- 	return NULL;
- }
+> ---
+>  fs/xfs/xfs_aops.c | 73 +++++++++++++++++++++++++++--------------------
+>  1 file changed, 42 insertions(+), 31 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
+> index 91899de2be09..c29ef69d1e51 100644
+> --- a/fs/xfs/xfs_aops.c
+> +++ b/fs/xfs/xfs_aops.c
+> @@ -116,6 +116,22 @@ xfs_destroy_ioend(
+>  	}
+>  }
+>  
+> +static void
+> +xfs_destroy_ioends(
+> +	struct xfs_ioend	*ioend,
+> +	int			error)
+> +{
+> +	struct list_head	tmp;
+> +
+> +	list_replace_init(&ioend->io_list, &tmp);
+> +	xfs_destroy_ioend(ioend, error);
+> +	while ((ioend = list_first_entry_or_null(&tmp, struct xfs_ioend,
+> +			io_list))) {
+> +		list_del_init(&ioend->io_list);
+> +		xfs_destroy_ioend(ioend, error);
+> +	}
+> +}
+> +
+>  /*
+>   * Fast and loose check if this write could update the on-disk inode size.
+>   */
+> @@ -230,7 +246,6 @@ STATIC void
+>  xfs_end_ioend(
+>  	struct xfs_ioend	*ioend)
+>  {
+> -	struct list_head	ioend_list;
+>  	struct xfs_inode	*ip = XFS_I(ioend->io_inode);
+>  	xfs_off_t		offset = ioend->io_offset;
+>  	size_t			size = ioend->io_size;
+> @@ -275,16 +290,7 @@ xfs_end_ioend(
+>  done:
+>  	if (ioend->io_append_trans)
+>  		error = xfs_setfilesize_ioend(ioend, error);
+> -	list_replace_init(&ioend->io_list, &ioend_list);
+> -	xfs_destroy_ioend(ioend, error);
+> -
+> -	while (!list_empty(&ioend_list)) {
+> -		ioend = list_first_entry(&ioend_list, struct xfs_ioend,
+> -				io_list);
+> -		list_del_init(&ioend->io_list);
+> -		xfs_destroy_ioend(ioend, error);
+> -	}
+> -
+> +	xfs_destroy_ioends(ioend, error);
+>  	memalloc_nofs_restore(nofs_flag);
+>  }
+>  
+> @@ -333,17 +339,18 @@ xfs_ioend_try_merge(
+>  	struct xfs_ioend	*ioend,
+>  	struct list_head	*more_ioends)
+>  {
+> -	struct xfs_ioend	*next_ioend;
+> +	struct xfs_ioend	*next;
+> +
+> +	INIT_LIST_HEAD(&ioend->io_list);
+>  
+> -	while (!list_empty(more_ioends)) {
+> -		next_ioend = list_first_entry(more_ioends, struct xfs_ioend,
+> -				io_list);
+> -		if (!xfs_ioend_can_merge(ioend, next_ioend))
+> +	while ((next = list_first_entry_or_null(more_ioends, struct xfs_ioend,
+> +			io_list))) {
+> +		if (!xfs_ioend_can_merge(ioend, next))
+>  			break;
+> -		list_move_tail(&next_ioend->io_list, &ioend->io_list);
+> -		ioend->io_size += next_ioend->io_size;
+> -		if (next_ioend->io_append_trans)
+> -			xfs_ioend_merge_append_transactions(ioend, next_ioend);
+> +		list_move_tail(&next->io_list, &ioend->io_list);
+> +		ioend->io_size += next->io_size;
+> +		if (next->io_append_trans)
+> +			xfs_ioend_merge_append_transactions(ioend, next);
+>  	}
+>  }
+>  
+> @@ -366,29 +373,33 @@ xfs_ioend_compare(
+>  	return 0;
+>  }
+>  
+> +static void
+> +xfs_sort_ioends(
+> +	struct list_head	*ioend_list)
+> +{
+> +	list_sort(NULL, ioend_list, xfs_ioend_compare);
+> +}
+> +
+>  /* Finish all pending io completions. */
+>  void
+>  xfs_end_io(
+>  	struct work_struct	*work)
+>  {
+> -	struct xfs_inode	*ip;
+> +	struct xfs_inode	*ip =
+> +		container_of(work, struct xfs_inode, i_ioend_work);
+>  	struct xfs_ioend	*ioend;
+> -	struct list_head	completion_list;
+> +	struct list_head	tmp;
+>  	unsigned long		flags;
+>  
+> -	ip = container_of(work, struct xfs_inode, i_ioend_work);
+> -
+>  	spin_lock_irqsave(&ip->i_ioend_lock, flags);
+> -	list_replace_init(&ip->i_ioend_list, &completion_list);
+> +	list_replace_init(&ip->i_ioend_list, &tmp);
+>  	spin_unlock_irqrestore(&ip->i_ioend_lock, flags);
+>  
+> -	list_sort(NULL, &completion_list, xfs_ioend_compare);
+> -
+> -	while (!list_empty(&completion_list)) {
+> -		ioend = list_first_entry(&completion_list, struct xfs_ioend,
+> -				io_list);
+> +	xfs_sort_ioends(&tmp);
+> +	while ((ioend = list_first_entry_or_null(&tmp, struct xfs_ioend,
+> +			io_list))) {
+>  		list_del_init(&ioend->io_list);
+> -		xfs_ioend_try_merge(ioend, &completion_list);
+> +		xfs_ioend_try_merge(ioend, &tmp);
+>  		xfs_end_ioend(ioend);
+>  	}
+>  }
+> -- 
+> 2.20.1
+> 
