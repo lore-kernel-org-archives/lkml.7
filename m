@@ -5,66 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E09CFA372B
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A0FFA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F1EC2089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4B8321A49
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:42:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tPdmfa5G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Etg86CwG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503103AbfJQUmx (ORCPT
+        id S2503182AbfJQUm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 16:42:53 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35941 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502438AbfJQUmi (ORCPT
+        Thu, 17 Oct 2019 16:42:57 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35670 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502467AbfJQUmk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 16:42:38 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 23so2026884pgk.3;
-        Thu, 17 Oct 2019 13:42:37 -0700 (PDT)
+        Thu, 17 Oct 2019 16:42:40 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p30so2035378pgl.2;
+        Thu, 17 Oct 2019 13:42:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Ee91/xG94vrK174Ap37BZY7hPtCqG3wuDv6y0inOwfc=;
-        b=tPdmfa5GhJgDexdot7dFaorP9ntzYJ8XkuMaPkGiQYZXsUiaEaq13F9ak56x6kExDM
-         t/6JYqXr8/TTdnf2vwoAAGnWG9poQ501bHa9wp3jfXSu0/KNqc7wPpsTbrJGpyv2RGs9
-         MgRG+LAaHdh4AxyHBxKvV85UPYJJUlPvMvktXV8VzF79jwjHa7dTKu8NWRJ3IIIrFAry
-         cfvXqfNnmaf720tOcGV4avokQN//I6NYgyniyx7Qyi77bf6DswKdFk4V74A+I8Tu+f61
-         iibwv2BFy1mi9SNR/Tb1d3f96H2fzUjqfQHR8BaFooaeVG1J8gx61Rfda3ZYkaSLqbzu
-         iIEg==
+        bh=HlyTv1vxc6ePybQkoO4f5oM/4dcEruouJB05duaVKOg=;
+        b=Etg86CwGZ+v3CIcN3+OB9F2ezo3lxulhWGvKvFJ/Khi2bemD+HihqF4RzcPR/QO/XU
+         cEpINIkKoz4HldLf/AQwdqTskzwveI1ITM3xLiSULviKiFauPsIKhg3xgatCy00zN+41
+         zwxYlUvUoJauPL6GJ2GyIgJ5OSJ7TMEVIdPIYBWLW+upLso81zbsRuX0//zV4lT0piAU
+         FIP6XqLXzcXXX53tSCPMDnjByp0Ys0yaufH3JDRpCGNoMeRYLahuD9sYCDD/yugvJk1C
+         Fm7GxgKzRfDPSbvUMxkVg6MVTIW8UpT87L6I8X7dn4f6mnbGSFicZ29tmmXpAfZ9+OLT
+         WPNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Ee91/xG94vrK174Ap37BZY7hPtCqG3wuDv6y0inOwfc=;
-        b=A50rwOSLaOw6Gi+y4kLzwAQyBNGC3LAOnnybpt9lxomR2abJbpbk6m1kViy6gvkhGq
-         83ZDEQ/BRTGyEaCIP97DEQH4CPWLsaP2Wmj02CrWroea4pUDGjKJ+K6rVfoWLR2Hya6x
-         dz68P26meq8rO4ZRXc4vUnAMQvJNQ5OgNrIGWJLLNrp8oYva22w2tyFfSbytBm7pWGub
-         l/PSM1nRnS/kfuP+rqe+9ff9Ks02ze6EP5WQ5+F9alwysAcTnqkMZyxoZWska78OdcUG
-         2fu2nyvyu0wnK6U5Z01Qc3ctUgYWhfYjkgjfL3N8XnRA0sSh8nf8FFIsfqGD7lHhHxrg
-         fo4Q==
-X-Gm-Message-State: APjAAAXasom7sFxnQWaHgdTuAZL8qmkE9XcDUfvC5+DmAPMaYhesY3R+
-        neR8OF5wsOJo5WnyG1CwBqBQ+ELM
-X-Google-Smtp-Source: APXvYqxoeUXnaHbIqvzA0E+PMO+WkVecyxIlVsndoY6dz9fRUAkrKiYqUKP/1oSTGpP4Z52H6aWgKw==
-X-Received: by 2002:a17:90a:aa97:: with SMTP id l23mr6574076pjq.7.1571344956347;
-        Thu, 17 Oct 2019 13:42:36 -0700 (PDT)
+        bh=HlyTv1vxc6ePybQkoO4f5oM/4dcEruouJB05duaVKOg=;
+        b=mh/JoiBY02hrgyunRDWhArL1q1DyBGU0WgqL8XmYEpTcreK2jqJZtcRo54IH8TvarA
+         FthzLXmGpKP3vyPkppofmW/tQIQJCxY6eTef7KyEJouDV0IH3W/vDmgUezw3eryIgp+i
+         WqLcr+qOYSqE0wLLNEQVzeVgbFDivrAxAt0t/CDVsYB58GF34UqXpP3W130zoxRbAIwQ
+         M8cte37ofZ6wSGZ/TM8d69UFY6kIvlCZtEU9QQbEBcapCQNcOSXjkWSZ/lK4Og5YKI8+
+         MKzWJJchE5tYC6Pj6UYZbuRUvluF7TcnfQ82ITlo7wnYJv/egHSxLssqbQiV5hcs/DVl
+         XSzg==
+X-Gm-Message-State: APjAAAXJRyeunsycgSC9Nw8PIbHUZqpgyz/RwR/23s/jMzt8bLYr35b3
+        BXVefyXEMp1AoChpkiCR78rsLJfA
+X-Google-Smtp-Source: APXvYqx2rCUUL0uB7Oa8fpKv2VmOqEtr/L5iYRfOD3zpjZFO02ZAaJyVscUDv45qdl9E5OpiRTf61g==
+X-Received: by 2002:a17:90a:858a:: with SMTP id m10mr6937186pjn.128.1571344958930;
+        Thu, 17 Oct 2019 13:42:38 -0700 (PDT)
 Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id b3sm4626365pfd.125.2019.10.17.13.42.35
+        by smtp.gmail.com with ESMTPSA id b3sm4626365pfd.125.2019.10.17.13.42.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 13:42:35 -0700 (PDT)
+        Thu, 17 Oct 2019 13:42:38 -0700 (PDT)
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     linux-input@vger.kernel.org
-Cc:     Jilayne Lovejoy <opensource@jilayne.com>,
+Cc:     Allison Randal <allison@lohutok.net>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
         Steve Winslow <swinslow@gmail.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 11/22] Input: cobalt_btns - convert to use managed resources
-Date:   Thu, 17 Oct 2019 13:42:05 -0700
-Message-Id: <20191017204217.106453-12-dmitry.torokhov@gmail.com>
+Subject: [PATCH 13/22] Input: sgi_btns - switch to using managed resources
+Date:   Thu, 17 Oct 2019 13:42:07 -0700
+Message-Id: <20191017204217.106453-14-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
 In-Reply-To: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
 References: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
@@ -75,37 +76,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This simplifies error handling and allows to remove cobalt_buttons_remove()
-method.
+Switching to devm API allows to clean up error handling paths and drop
+the remove() method.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
 
- drivers/input/misc/cobalt_btns.c | 57 ++++++++++----------------------
- 1 file changed, 17 insertions(+), 40 deletions(-)
+ drivers/input/misc/sgi_btns.c | 37 ++++++++---------------------------
+ 1 file changed, 8 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/input/misc/cobalt_btns.c b/drivers/input/misc/cobalt_btns.c
-index bcf6174bbd5d..f7c1693fc6bb 100644
---- a/drivers/input/misc/cobalt_btns.c
-+++ b/drivers/input/misc/cobalt_btns.c
-@@ -5,6 +5,7 @@
-  *  Copyright (C) 2007-2008  Yoichi Yuasa <yuasa@linux-mips.org>
-  */
- #include <linux/input-polldev.h>
-+#include <linux/io.h>
- #include <linux/ioport.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-@@ -26,7 +27,6 @@ static const unsigned short cobalt_map[] = {
+diff --git a/drivers/input/misc/sgi_btns.c b/drivers/input/misc/sgi_btns.c
+index 0fee6ddf3602..829277b4271f 100644
+--- a/drivers/input/misc/sgi_btns.c
++++ b/drivers/input/misc/sgi_btns.c
+@@ -45,7 +45,6 @@ static const unsigned short sgi_map[] = {
  };
  
  struct buttons_dev {
 -	struct input_polled_dev *poll_dev;
- 	unsigned short keymap[ARRAY_SIZE(cobalt_map)];
- 	int count[ARRAY_SIZE(cobalt_map)];
- 	void __iomem *reg;
-@@ -67,15 +67,24 @@ static int cobalt_buttons_probe(struct platform_device *pdev)
- 	struct resource *res;
+ 	unsigned short keymap[ARRAY_SIZE(sgi_map)];
+ 	int count[ARRAY_SIZE(sgi_map)];
+ };
+@@ -84,12 +83,13 @@ static int sgi_buttons_probe(struct platform_device *pdev)
+ 	struct input_dev *input;
  	int error, i;
  
 -	bdev = kzalloc(sizeof(struct buttons_dev), GFP_KERNEL);
@@ -118,79 +111,56 @@ index bcf6174bbd5d..f7c1693fc6bb 100644
 +	if (!bdev)
 +		return -ENOMEM;
 +
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res)
-+		return -EBUSY;
-+
-+	bdev->reg = devm_ioremap(&pdev->dev, res->start, resource_size(res));
-+	if (!bdev->reg)
-+		return -ENOMEM;
- 
- 	memcpy(bdev->keymap, cobalt_map, sizeof(bdev->keymap));
- 
 +	poll_dev = devm_input_allocate_polled_device(&pdev->dev);
 +	if (!poll_dev)
 +		return -ENOMEM;
-+
- 	poll_dev->private = bdev;
- 	poll_dev->poll = handle_buttons;
- 	poll_dev->poll_interval = BUTTONS_POLL_INTERVAL;
-@@ -84,7 +93,6 @@ static int cobalt_buttons_probe(struct platform_device *pdev)
- 	input->name = "Cobalt buttons";
- 	input->phys = "cobalt/input0";
+ 
+ 	memcpy(bdev->keymap, sgi_map, sizeof(bdev->keymap));
+ 
+@@ -101,7 +101,6 @@ static int sgi_buttons_probe(struct platform_device *pdev)
+ 	input->name = "SGI buttons";
+ 	input->phys = "sgi/input0";
  	input->id.bustype = BUS_HOST;
 -	input->dev.parent = &pdev->dev;
  
  	input->keycode = bdev->keymap;
  	input->keycodemax = ARRAY_SIZE(bdev->keymap);
-@@ -96,39 +104,9 @@ static int cobalt_buttons_probe(struct platform_device *pdev)
+@@ -113,35 +112,15 @@ static int sgi_buttons_probe(struct platform_device *pdev)
  		__set_bit(bdev->keymap[i], input->keybit);
  	__clear_bit(KEY_RESERVED, input->keybit);
  
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!res) {
--		error = -EBUSY;
--		goto err_free_mem;
--	}
--
 -	bdev->poll_dev = poll_dev;
--	bdev->reg = ioremap(res->start, resource_size(res));
--	dev_set_drvdata(&pdev->dev, bdev);
+-	platform_set_drvdata(pdev, bdev);
 -
  	error = input_register_polled_device(poll_dev);
  	if (error)
--		goto err_iounmap;
+-		goto err_free_mem;
 -
 -	return 0;
 -
-- err_iounmap:
--	iounmap(bdev->reg);
 - err_free_mem:
 -	input_free_polled_device(poll_dev);
 -	kfree(bdev);
 -	return error;
 -}
 -
--static int cobalt_buttons_remove(struct platform_device *pdev)
+-static int sgi_buttons_remove(struct platform_device *pdev)
 -{
--	struct device *dev = &pdev->dev;
--	struct buttons_dev *bdev = dev_get_drvdata(dev);
+-	struct buttons_dev *bdev = platform_get_drvdata(pdev);
 -
 -	input_unregister_polled_device(bdev->poll_dev);
 -	input_free_polled_device(bdev->poll_dev);
--	iounmap(bdev->reg);
 -	kfree(bdev);
 +		return error;
  
  	return 0;
  }
-@@ -141,7 +119,6 @@ MODULE_ALIAS("platform:Cobalt buttons");
  
- static struct platform_driver cobalt_buttons_driver = {
- 	.probe	= cobalt_buttons_probe,
--	.remove	= cobalt_buttons_remove,
+ static struct platform_driver sgi_buttons_driver = {
+ 	.probe	= sgi_buttons_probe,
+-	.remove	= sgi_buttons_remove,
  	.driver	= {
- 		.name	= "Cobalt buttons",
+ 		.name	= "sgibtns",
  	},
 -- 
 2.23.0.866.gb869b98d4c-goog
