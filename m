@@ -2,120 +2,111 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B2CC4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 999F6C4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1376620820
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7198920820
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 07:21:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437193AbfJQHUa (ORCPT
+        id S2405068AbfJQHV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 03:20:30 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:36822 "EHLO inva020.nxp.com"
+        Thu, 17 Oct 2019 03:21:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:25095 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408044AbfJQHUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 03:20:22 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0C58F1A0935;
-        Thu, 17 Oct 2019 09:20:21 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2EB661A060C;
-        Thu, 17 Oct 2019 09:20:17 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 80967402AE;
-        Thu, 17 Oct 2019 15:20:12 +0800 (SGT)
-From:   Peng Ma <peng.ma@nxp.com>
-To:     vkoul@kernel.org
-Cc:     dan.j.williams@intel.com, leoyang.li@nxp.com,
-        k.kozlowski.k@gmail.com, fabio.estevam@nxp.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peng Ma <peng.ma@nxp.com>
-Subject: [PATCH] dmaengine: fsl-edma: Add eDMA support for QorIQ LS1028A platform
-Date:   Thu, 17 Oct 2019 15:09:23 +0800
-Message-Id: <20191017070923.6705-1-peng.ma@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1727132AbfJQHV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 03:21:28 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 635F33090FD6;
+        Thu, 17 Oct 2019 07:21:28 +0000 (UTC)
+Received: from [10.36.117.42] (ovpn-117-42.ams2.redhat.com [10.36.117.42])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7F990600C8;
+        Thu, 17 Oct 2019 07:21:25 +0000 (UTC)
+Subject: Re: [PATCH V2] mm/page_alloc: Add alloc_contig_pages()
+To:     Michal Hocko <mhocko@kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Rientjes <rientjes@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-kernel@vger.kernel.org
+References: <1571223765-10662-1-git-send-email-anshuman.khandual@arm.com>
+ <40b8375c-5291-b477-1519-fd7fa799a67d@redhat.com>
+ <cdcf77a5-e5c9-71ff-811d-ecd1c1e80f00@arm.com>
+ <20191016115119.GA317@dhcp22.suse.cz>
+ <fe8cae46-6bd8-88eb-d3fe-2740bb79ee58@redhat.com>
+ <20191016124149.GB317@dhcp22.suse.cz>
+ <97cadd99-d05e-3174-6532-fe18f0301ba7@arm.com>
+ <e37c16f5-7068-5359-a539-bee58e705122@redhat.com>
+ <c60b9e95-5c6c-fcb2-c8bb-13e7646ba8ea@arm.com>
+ <20191017071129.GB24485@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <bfc3b281-79d1-1d8f-337d-c01acc29ab30@redhat.com>
+Date:   Thu, 17 Oct 2019 09:21:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <20191017071129.GB24485@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 17 Oct 2019 07:21:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Our platforms with below registers(CHCFG0 - CHCFG15) of eDMA as follows:
-*-----------------------------------------------------------*
-|     Offset   |	OTHERS      |		LS1028A	    |
-|--------------|--------------------|-----------------------|
-|     0x0      |        CHCFG0      |           CHCFG3      |
-|--------------|--------------------|-----------------------|
-|     0x1      |        CHCFG1      |           CHCFG2      |
-|--------------|--------------------|-----------------------|
-|     0x2      |        CHCFG2      |           CHCFG1      |
-|--------------|--------------------|-----------------------|
-|     0x3      |        CHCFG3      |           CHCFG0      |
-|--------------|--------------------|-----------------------|
-|     ...      |        ......      |           ......      |
-|--------------|--------------------|-----------------------|
-|     0xC      |        CHCFG12     |           CHCFG15     |
-|--------------|--------------------|-----------------------|
-|     0xD      |        CHCFG13     |           CHCFG14     |
-|--------------|--------------------|-----------------------|
-|     0xE      |        CHCFG14     |           CHCFG13     |
-|--------------|--------------------|-----------------------|
-|     0xF      |        CHCFG15     |           CHCFG12     |
-*-----------------------------------------------------------*
+On 17.10.19 09:11, Michal Hocko wrote:
+> On Thu 17-10-19 10:44:41, Anshuman Khandual wrote:
+> [...]
+>> Does this add-on documentation look okay ? Should we also mention about the
+>> possible reduction in chances of success during pfn block search for the
+>> non-power-of-two cases as the implicit alignment will probably turn out to
+>> be bigger than nr_pages itself ?
+>>
+>>   * Requested nr_pages may or may not be power of two. The search for suitable
+>>   * memory range in a zone happens in nr_pages aligned pfn blocks. But in case
+>>   * when nr_pages is not power of two, an implicitly aligned pfn block search
+>>   * will happen which in turn will impact allocated memory block's alignment.
+>>   * In these cases, the size (i.e nr_pages) and the alignment of the allocated
+>>   * memory will be different. This problem does not exist when nr_pages is power
+>>   * of two where the size and the alignment of the allocated memory will always
+>>   * be nr_pages.
+> 
+> I dunno, it sounds more complicated than really necessary IMHO. Callers
+> shouldn't really be bothered by memory blocks and other really deep
+> implementation details.. Wouldn't be the below sufficient?
+> 
+> The allocated memory is always aligned to a page boundary. If nr_pages
+> is a power of two then the alignement is guaranteed to be to the given
 
-This patch is to improve edma driver to fit LS1028A platform.
+s/alignement/alignment/
 
-Signed-off-by: Peng Ma <peng.ma@nxp.com>
----
- drivers/dma/fsl-edma-common.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+and "the PFN is guaranteed to be aligned to nr_pages" (the address is 
+aligned to nr_pages*PAGE_SIZE)
 
-diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-index b1a7ca9..611186b 100644
---- a/drivers/dma/fsl-edma-common.c
-+++ b/drivers/dma/fsl-edma-common.c
-@@ -7,6 +7,7 @@
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/dma-mapping.h>
-+#include <linux/sys_soc.h>
- 
- #include "fsl-edma-common.h"
- 
-@@ -42,6 +43,11 @@
- 
- #define EDMA_TCD		0x1000
- 
-+static struct soc_device_attribute soc_fixup_tuning[] = {
-+	{ .family = "QorIQ LS1028A"},
-+	{ },
-+};
-+
- static void fsl_edma_enable_request(struct fsl_edma_chan *fsl_chan)
- {
- 	struct edma_regs *regs = &fsl_chan->edma->regs;
-@@ -109,10 +115,16 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
- 	u32 ch = fsl_chan->vchan.chan.chan_id;
- 	void __iomem *muxaddr;
- 	unsigned int chans_per_mux, ch_off;
-+	int endian_diff[4] = {3, 1, -1, -3};
- 	u32 dmamux_nr = fsl_chan->edma->drvdata->dmamuxs;
- 
- 	chans_per_mux = fsl_chan->edma->n_chans / dmamux_nr;
- 	ch_off = fsl_chan->vchan.chan.chan_id % chans_per_mux;
-+
-+	if (!fsl_chan->edma->big_endian &&
-+	    soc_device_match(soc_fixup_tuning))
-+		ch_off += endian_diff[ch_off % 4];
-+
- 	muxaddr = fsl_chan->edma->muxbase[ch / chans_per_mux];
- 	slot = EDMAMUX_CHCFG_SOURCE(slot);
- 
+> nr_pages (e.g. 1GB request would be aligned to 1GB).
+> 
+
+I'd probably add "This function will miss allocation opportunities if 
+nr_pages is not a power of two (and the implicit alignment is bogus)."
+
 -- 
-2.9.5
 
+Thanks,
+
+David / dhildenb
