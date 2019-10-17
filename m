@@ -2,86 +2,131 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 723A8ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4B2FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C17520640
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97DFE20640
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 19:37:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394102AbfJQThB (ORCPT
+        id S2394401AbfJQThR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 15:37:01 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:44990 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728856AbfJQThA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 15:37:00 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iLBZz-0006VG-Aq; Thu, 17 Oct 2019 19:36:59 +0000
-Date:   Thu, 17 Oct 2019 20:36:59 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC][PATCHES] drivers/scsi/sg.c uaccess cleanups/fixes
-Message-ID: <20191017193659.GA18702@ZenIV.linux.org.uk>
-References: <CAHk-=wgOWxqwqCFuP_Bw=Hxxf9njeHJs0OLNGNc63peNd=kRqw@mail.gmail.com>
- <20191010195504.GI26530@ZenIV.linux.org.uk>
- <CAHk-=wgWRQo0m7TUCK4T_J-3Vqte+p-FWzvT3CB1jJHgX-KctA@mail.gmail.com>
- <20191011001104.GJ26530@ZenIV.linux.org.uk>
- <CAHk-=wgg3jzkk-jObm1FLVYGS8JCTiKppEnA00_QX7Wsm5ieLQ@mail.gmail.com>
- <20191013181333.GK26530@ZenIV.linux.org.uk>
- <CAHk-=wgrWGyACBM8N8KP7Pu_2VopuzM4A12yQz6Eo=X2Jpwzcw@mail.gmail.com>
- <20191013191050.GL26530@ZenIV.linux.org.uk>
- <CAHk-=wjJNE9hOKuatqh6SFf4nd65LG4ZR3gQSgg+rjSpVxe89w@mail.gmail.com>
- <20191016202540.GQ26530@ZenIV.linux.org.uk>
+        Thu, 17 Oct 2019 15:37:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:5549 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728856AbfJQThR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 15:37:17 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 73C45308FFB1;
+        Thu, 17 Oct 2019 19:37:16 +0000 (UTC)
+Received: from rt4.app.eng.rdu2.redhat.com (rt4.app.eng.rdu2.redhat.com [10.10.161.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4943C19C70;
+        Thu, 17 Oct 2019 19:37:16 +0000 (UTC)
+Received: from rt4.app.eng.rdu2.redhat.com (localhost [127.0.0.1])
+        by rt4.app.eng.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id x9HJbFjn017092;
+        Thu, 17 Oct 2019 15:37:15 -0400
+Received: (from apache@localhost)
+        by rt4.app.eng.rdu2.redhat.com (8.14.4/8.14.4/Submit) id x9HJbECL017089;
+        Thu, 17 Oct 2019 15:37:14 -0400
+From:   Red Hat Product Security <secalert@redhat.com>
+X-PGP-Public-Key: https://www.redhat.com/security/650d5882.txt
+Subject: [engineering.redhat.com #498403] Re: [PATCH v2] nbd_genl_status: null check for nla_nest_start
+Reply-To: secalert@redhat.com
+In-Reply-To: <CAEkB2ES8rc4kkPwA+okfMa9CpFoDqmt=tx8H8vHZKBCfw9L_tg@mail.gmail.com>
+References: <RT-Ticket-498403@engineering.redhat.com>
+ <20190729130912.7imtg3hfnvb4lt2y@MacBook-Pro-91.local>
+ <20190729164226.22632-1-navid.emamdoost@gmail.com>
+ <20190910113521.GA9895@unicorn.suse.cz>
+ <CAEkB2ES8rc4kkPwA+okfMa9CpFoDqmt=tx8H8vHZKBCfw9L_tg@mail.gmail.com>
+Message-ID: <rt-4.0.13-16866-1571341034-901.498403-5-0@engineering.redhat.com>
+X-RT-Loop-Prevention: engineering.redhat.com
+RT-Ticket: engineering.redhat.com #498403
+Managed-BY: RT 4.0.13 (http://www.bestpractical.com/rt/)
+RT-Originator: kbost@redhat.com
+To:     navid.emamdoost@gmail.com
+CC:     axboe@kernel.dk, emamd001@umn.edu, josef@toxicpanda.com,
+        kjlu@umn.edu, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mkubecek@suse.cz,
+        nbd@other.debian.org, smccaman@umn.edu
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191016202540.GQ26530@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+X-RT-Original-Encoding: utf-8
+Date:   Thu, 17 Oct 2019 15:37:14 -0400
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 17 Oct 2019 19:37:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 09:25:40PM +0100, Al Viro wrote:
+Hi Navid,
 
-> FWIW, callers of __copy_from_user() remaining in the generic code:
+Not sure if you meant to cc secalert@redhat.com on this. If anything is needed
+from our side please let us know!
 
-> 6) drivers/scsi/sg.c nest: sg_read() ones are memdup_user() in disguise
-> (i.e. fold with immediately preceding kmalloc()s).  sg_new_write() -
-> fold with access_ok() into copy_from_user() (for both call sites).
-> sg_write() - lose access_ok(), use copy_from_user() (both call sites)
-> and get_user() (instead of the solitary __get_user() there).
+On Wed Oct 16 22:17:42 2019, navid.emamdoost@gmail.com wrote:
+> Hi Michal, please check v3 at
+> https://lore.kernel.org/patchwork/patch/1126650/
+>
+>
+> Thanks,
+> Navid.
+>
+> On Tue, Sep 10, 2019 at 6:35 AM Michal Kubecek <mkubecek@suse.cz>
+> wrote:
+> >
+> > (Just stumbled upon this patch when link to it came with a CVE bug
+> report.)
+> >
+> > On Mon, Jul 29, 2019 at 11:42:26AM -0500, Navid Emamdoost wrote:
+> > > nla_nest_start may fail and return NULL. The check is inserted,
+> and
+> > > errno is selected based on other call sites within the same source
+> code.
+> > > Update: removed extra new line.
+> > >
+> > > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> > > Reviewed-by: Bob Liu <bob.liu@oracle.com>
+> > > ---
+> > > drivers/block/nbd.c | 5 +++++
+> > > 1 file changed, 5 insertions(+)
+> > >
+> > > diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+> > > index 9bcde2325893..2410812d1e82 100644
+> > > --- a/drivers/block/nbd.c
+> > > +++ b/drivers/block/nbd.c
+> > > @@ -2149,6 +2149,11 @@ static int nbd_genl_status(struct sk_buff
+> *skb, struct genl_info *info)
+> > > }
+> > >
+> > > dev_list = nla_nest_start_noflag(reply,
+> NBD_ATTR_DEVICE_LIST);
+> > > + if (!dev_list) {
+> > > + ret = -EMSGSIZE;
+> > > + goto out;
+> > > + }
+> > > +
+> > > if (index == -1) {
+> > > ret = idr_for_each(&nbd_index_idr, &status_cb,
+> reply);
+> > > if (ret) {
+> >
+> > You should also call nlmsg_free(reply) when you bail out so that you
+> > don't introduce a memory leak.
+> >
+> > Michal Kubecek
+>
+>
+>
 
-Turns out that there'd been outright redundant access_ok() calls (not
-even warranted by __copy_...) *and* several __put_user()/__get_user()
-with no checking of return value (access_ok() was there, handling of
-unmapped addresses wasn't).  The latter go back at least to 2.1.early...
 
-I've got a series that presumably fixes and cleans the things up
-in that area; it didn't get any serious testing (the kernel builds
-and boots, smartctl works as well as it used to, but that's not
-worth much - all it says is that SG_IO doesn't fail terribly;
-I don't have any test setup for really working with /dev/sg*).
-
-IOW, it needs more review and testing - this is _not_ a pull request.
-It's in vfs.git#work.sg; individual patches are in followups.
-Shortlog/diffstat:
-Al Viro (8):
-      sg_ioctl(): fix copyout handling
-      sg_new_write(): replace access_ok() + __copy_from_user() with copy_from_user()
-      sg_write(): __get_user() can fail...
-      sg_read(): simplify reading ->pack_id of userland sg_io_hdr_t
-      sg_new_write(): don't bother with access_ok
-      sg_read(): get rid of access_ok()/__copy_..._user()
-      sg_write(): get rid of access_ok()/__copy_from_user()/__get_user()
-      SG_IO: get rid of access_ok()
-
- drivers/scsi/sg.c | 98 ++++++++++++++++++++++++++++++++----------------------------------------------------------------
- 1 file changed, 32 insertions(+), 66 deletions(-)
+--
+Kat Bost
+Red Hat Product Security
 
