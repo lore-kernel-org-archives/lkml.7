@@ -2,107 +2,84 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 282CDECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4A8FA3735
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03E7020640
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DBF320640
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:14:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394357AbfJQNNb (ORCPT
+        id S2394389AbfJQNOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 09:13:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60994 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726898AbfJQNNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 09:13:31 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ECED13082E72;
-        Thu, 17 Oct 2019 13:13:30 +0000 (UTC)
-Received: from sandy.ghostprotocols.net (ovpn-112-30.phx2.redhat.com [10.3.112.30])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 339C95D6C8;
-        Thu, 17 Oct 2019 13:13:28 +0000 (UTC)
-Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
-        id 8697D11E4; Thu, 17 Oct 2019 10:13:25 -0300 (BRT)
-Date:   Thu, 17 Oct 2019 10:13:25 -0300
-From:   Arnaldo Carvalho de Melo <acme@redhat.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-tip-commits@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Luis =?iso-8859-1?Q?Cl=E1udio_Gon=E7alves?= <lclaudio@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [tip: perf/core] perf trace: Introduce --filter for tracepoint
- events
-Message-ID: <20191017131325.GB3437@redhat.com>
-References: <tip-95bfe5d4tzy5f66bx49d05rj@git.kernel.org>
- <157111750352.12254.17113253973879925388.tip-bot2@tip-bot2>
- <20191017071205.GA14441@zn.tnic>
+        Thu, 17 Oct 2019 09:14:54 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:42824 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2394358AbfJQNOx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 09:14:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0FB691AED;
+        Thu, 17 Oct 2019 06:14:31 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF35C3F6C4;
+        Thu, 17 Oct 2019 06:14:29 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 14:14:27 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Simon Horman <horms@verge.net.au>
+Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: Add Marek and Shimoda-san as R-Car PCIE
+ co-maintainers
+Message-ID: <20191017131427.GF9589@e121166-lin.cambridge.arm.com>
+References: <20191016120249.16776-1-horms@verge.net.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191017071205.GA14441@zn.tnic>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.5.20 (2009-12-10)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 17 Oct 2019 13:13:31 +0000 (UTC)
+In-Reply-To: <20191016120249.16776-1-horms@verge.net.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Oct 17, 2019 at 09:12:05AM +0200, Borislav Petkov escreveu:
-> On Tue, Oct 15, 2019 at 05:31:43AM -0000, tip-bot2 for Arnaldo Carvalho de Melo wrote:
-> > The following commit has been merged into the perf/core branch of tip:
+On Wed, Oct 16, 2019 at 02:02:49PM +0200, Simon Horman wrote:
+> At the end of the v5.3 upstream development cycle I stepped down
+> from my role at Renesas.
+> 
+> Pass maintainership of the R-Car PCIE to Marek and Shimoda-san.
+> 
+> Signed-off-by: Simon Horman <horms@verge.net.au>
+> ---
+>  MAINTAINERS | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-> > Commit-ID:     d4097f1937f2242d0aa0a7c654d2159a6895e5c8
-> > Gitweb:        https://git.kernel.org/tip/d4097f1937f2242d0aa0a7c654d2159a6895e5c8
-> > Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-> > AuthorDate:    Tue, 08 Oct 2019 07:33:08 -03:00
-> > Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-> > CommitterDate: Wed, 09 Oct 2019 11:23:52 -03:00
+Applied to pci/misc, thanks.
 
-> > perf trace: Introduce --filter for tracepoint events
+Lorenzo
 
-> > Similar to what is in 'perf record', works just like there:
-
-> >   # perf trace -e msr:*
-> >    328.297 :0/0 msr:write_msr(msr: FS_BASE, val: 140240388381888)
-> >    328.302 :0/0 msr:write_msr(msr: FS_BASE, val: 140240388381888)
-> >    328.306 :0/0 msr:write_msr(msr: FS_BASE, val: 140240388381888)
-> >    328.317 :0/0 msr:write_msr(msr: FS_BASE, val: 140240388381888)
-> >    328.322 :0/0 msr:write_msr(msr: FS_BASE, val: 140240388381888)
-> >    328.327 :0/0 msr:write_msr(msr: FS_BASE, val: 140240388381888)
-> >    328.331 :0/0 msr:write_msr(msr: FS_BASE, val: 140240388381888)
-> >    328.336 :0/0 msr:write_msr(msr: FS_BASE, val: 140240388381888)
-> >    328.340 :0/0 ^Cmsr:write_msr(msr: FS_BASE, val: 140240388381888)
- 
-> I wonder if you guys can force this val:'s format to be always hex?
-> Because MSR values are a lot more "natural" in hex...
-
-Sure, I'll get there, for now its just setting scnprintf/strtoul helpers
-based on tracepoint argument name and/or type.
-
-But just like for syscalls, we'll get to have a way to specify that
-'val', specifically for msr:write_msr, or sometimes, for the tracepoint
-system part ('msr' in this case) should be formatted in some way.
-
-For syscalls there is even provision for some args to be formmated based
-on the value present in another arg, think ioctls, all this is being
-refitted to support tracepoints other than the syscall ones.
-
-The 'msr' one was the super low hanging fruit, we look just at its name,
-no checks on what tracepoint it is, and we were investigating some stuff
-at Red Hat and Marcelo said it was a PITA to be doing the lookups in
-msr-index.h everytime he needed for look for those in traces, so came
-first. :-)
-
-- Arnaldo
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 783569e3c4b4..b61ade7afd64 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12337,7 +12337,8 @@ F:	Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+>  F:	drivers/pci/controller/pci-tegra.c
+>  
+>  PCI DRIVER FOR RENESAS R-CAR
+> -M:	Simon Horman <horms@verge.net.au>
+> +M:	Marek Vasut <marek.vasut+renesas@gmail.com>
+> +M:	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+>  L:	linux-pci@vger.kernel.org
+>  L:	linux-renesas-soc@vger.kernel.org
+>  S:	Maintained
+> -- 
+> 2.11.0
+> 
