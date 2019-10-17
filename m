@@ -2,102 +2,326 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA06FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D47C4FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32C9120820
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:23:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571300632;
-	bh=Z5yjauImfj0e76CyWFKn/Cdoc3wH1qjxtlUVZvM7T/A=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=mfPS/S5oQXr3kg3HX1+gitFSzVmXE3MD7Y8SOJRilmj0hP8iww0Xxn4JGZByp5XLD
-	 B9jK7QvE1iRaTzQdERgwP/YP98S8/BR0/kwdwBDEM94Yi/OKZMZekxn+/q11OSbYjE
-	 09TwppKyeyzlw9+YfIRnMqnWyq37Fn7nqJZ6qy94=
+	by mail.kernel.org (Postfix) with ESMTP id 9CF2D2089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:24:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408208AbfJQIXv (ORCPT
+        id S2408213AbfJQIYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 04:23:51 -0400
-Received: from inca-roads.misterjones.org ([213.251.177.50]:39140 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389953AbfJQIXu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 04:23:50 -0400
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iL14J-0002NX-Lg; Thu, 17 Oct 2019 10:23:35 +0200
-To:     Daode Huang <huangdaode@hisilicon.com>
-Subject: Re: [PATCH] use =?UTF-8?Q?devm=5Fplatform=5Fioremap=5Fresource=28?=  =?UTF-8?Q?=29=20for=20irqchip=20drivers?=
-X-PHP-Originating-Script: 0:main.inc
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 17 Oct 2019 09:23:34 +0100
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <jason@lakedaemon.net>, <andrew@lunn.ch>,
-        <gregory.clement@bootlin.com>, <sebastian.hesselbarth@gmail.com>,
-        <tglx@linutronix.de>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <nm@ti.com>, <t-kristo@ti.com>,
-        <ssantosh@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-In-Reply-To: <1571296423-208359-1-git-send-email-huangdaode@hisilicon.com>
-References: <1571296423-208359-1-git-send-email-huangdaode@hisilicon.com>
-Message-ID: <9bbcce19c777583815c92ce3c2ff2586@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: huangdaode@hisilicon.com, jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, tglx@linutronix.de, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, nm@ti.com, t-kristo@ti.com, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+        Thu, 17 Oct 2019 04:24:35 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:35128 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2387581AbfJQIYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 04:24:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D67728;
+        Thu, 17 Oct 2019 01:24:05 -0700 (PDT)
+Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.40.130])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 583123F6C4;
+        Thu, 17 Oct 2019 01:24:00 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@suse.com>,
+        David Rientjes <rientjes@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Hildenbrand <david@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V3] mm/page_alloc: Add alloc_contig_pages()
+Date:   Thu, 17 Oct 2019 13:54:06 +0530
+Message-Id: <1571300646-32240-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-17 08:13, Daode Huang wrote:
-> From: Daode Huang <huangdaode@hislicon.com>
->
-> Use the new helper that wraps the calls to platform_get_resource()
-> and devm_ioremap_resource() together
->
-> Signed-off-by: Daode Huang <huangdaode@hislicon.com>
-> ---
->  drivers/irqchip/irq-mvebu-icu.c   | 3 +--
->  drivers/irqchip/irq-mvebu-pic.c   | 3 +--
->  drivers/irqchip/irq-stm32-exti.c  | 3 +--
->  drivers/irqchip/irq-ti-sci-inta.c | 3 +--
->  drivers/irqchip/irq-ts4800.c      | 3 +--
->  5 files changed, 5 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/irqchip/irq-mvebu-icu.c
-> b/drivers/irqchip/irq-mvebu-icu.c
-> index 547045d..ddf9b0d 100644
-> --- a/drivers/irqchip/irq-mvebu-icu.c
-> +++ b/drivers/irqchip/irq-mvebu-icu.c
-> @@ -357,8 +357,7 @@ static int mvebu_icu_probe(struct platform_device 
-> *pdev)
->
->  	icu->dev = &pdev->dev;
->
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	icu->base = devm_ioremap_resource(&pdev->dev, res);
-> +	icu->base = devm_platform_ioremap_resource(pdev, res);
+HugeTLB helper alloc_gigantic_page() implements fairly generic allocation
+method where it scans over various zones looking for a large contiguous pfn
+range before trying to allocate it with alloc_contig_range(). Other than
+deriving the requested order from 'struct hstate', there is nothing HugeTLB
+specific in there. This can be made available for general use to allocate
+contiguous memory which could not have been allocated through the buddy
+allocator.
 
-void __iomem *devm_platform_ioremap_resource(struct platform_device 
-*pdev,
-                                              unsigned int index)
+alloc_gigantic_page() has been split carving out actual allocation method
+which is then made available via new alloc_contig_pages() helper wrapped
+under CONFIG_CONTIG_ALLOC. All references to 'gigantic' have been replaced
+with more generic term 'contig'. Allocated pages here should be freed with
+free_contig_range() or by calling __free_page() on each allocated page.
 
-What could possibly go wrong? I'd suggest you start compiling (and 
-possibly
-testing) the code you change before sending patches...
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org
+Acked-by: David Hildenbrand <david@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+This is based on https://patchwork.kernel.org/patch/11190213/
 
-         M.
+Changes in V3:
+
+- Added an in-code comment per Michal and David
+
+Changes in V2:
+
+- Rephrased patch subject per David
+- Fixed all typos per David
+- s/order/contiguous
+
+Changes from [V5,1/2] mm/hugetlb: Make alloc_gigantic_page()...
+
+- alloc_contig_page() takes nr_pages instead of order per Michal
+- s/gigantic/contig on all related functions
+
+ include/linux/gfp.h |   2 +
+ mm/hugetlb.c        |  77 +--------------------------------
+ mm/page_alloc.c     | 101 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 105 insertions(+), 75 deletions(-)
+
+diff --git a/include/linux/gfp.h b/include/linux/gfp.h
+index fb07b503dc45..1a11d4857027 100644
+--- a/include/linux/gfp.h
++++ b/include/linux/gfp.h
+@@ -589,6 +589,8 @@ static inline bool pm_suspended_storage(void)
+ /* The below functions must be run on a range from a single zone. */
+ extern int alloc_contig_range(unsigned long start, unsigned long end,
+ 			      unsigned migratetype, gfp_t gfp_mask);
++extern struct page *alloc_contig_pages(unsigned long nr_pages, gfp_t gfp_mask,
++				       int nid, nodemask_t *nodemask);
+ #endif
+ void free_contig_range(unsigned long pfn, unsigned int nr_pages);
+ 
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 985ee15eb04b..a5c2c880af27 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -1023,85 +1023,12 @@ static void free_gigantic_page(struct page *page, unsigned int order)
+ }
+ 
+ #ifdef CONFIG_CONTIG_ALLOC
+-static int __alloc_gigantic_page(unsigned long start_pfn,
+-				unsigned long nr_pages, gfp_t gfp_mask)
+-{
+-	unsigned long end_pfn = start_pfn + nr_pages;
+-	return alloc_contig_range(start_pfn, end_pfn, MIGRATE_MOVABLE,
+-				  gfp_mask);
+-}
+-
+-static bool pfn_range_valid_gigantic(struct zone *z,
+-			unsigned long start_pfn, unsigned long nr_pages)
+-{
+-	unsigned long i, end_pfn = start_pfn + nr_pages;
+-	struct page *page;
+-
+-	for (i = start_pfn; i < end_pfn; i++) {
+-		page = pfn_to_online_page(i);
+-		if (!page)
+-			return false;
+-
+-		if (page_zone(page) != z)
+-			return false;
+-
+-		if (PageReserved(page))
+-			return false;
+-
+-		if (page_count(page) > 0)
+-			return false;
+-
+-		if (PageHuge(page))
+-			return false;
+-	}
+-
+-	return true;
+-}
+-
+-static bool zone_spans_last_pfn(const struct zone *zone,
+-			unsigned long start_pfn, unsigned long nr_pages)
+-{
+-	unsigned long last_pfn = start_pfn + nr_pages - 1;
+-	return zone_spans_pfn(zone, last_pfn);
+-}
+-
+ static struct page *alloc_gigantic_page(struct hstate *h, gfp_t gfp_mask,
+ 		int nid, nodemask_t *nodemask)
+ {
+-	unsigned int order = huge_page_order(h);
+-	unsigned long nr_pages = 1 << order;
+-	unsigned long ret, pfn, flags;
+-	struct zonelist *zonelist;
+-	struct zone *zone;
+-	struct zoneref *z;
+-
+-	zonelist = node_zonelist(nid, gfp_mask);
+-	for_each_zone_zonelist_nodemask(zone, z, zonelist, gfp_zone(gfp_mask), nodemask) {
+-		spin_lock_irqsave(&zone->lock, flags);
++	unsigned long nr_pages = 1UL << huge_page_order(h);
+ 
+-		pfn = ALIGN(zone->zone_start_pfn, nr_pages);
+-		while (zone_spans_last_pfn(zone, pfn, nr_pages)) {
+-			if (pfn_range_valid_gigantic(zone, pfn, nr_pages)) {
+-				/*
+-				 * We release the zone lock here because
+-				 * alloc_contig_range() will also lock the zone
+-				 * at some point. If there's an allocation
+-				 * spinning on this lock, it may win the race
+-				 * and cause alloc_contig_range() to fail...
+-				 */
+-				spin_unlock_irqrestore(&zone->lock, flags);
+-				ret = __alloc_gigantic_page(pfn, nr_pages, gfp_mask);
+-				if (!ret)
+-					return pfn_to_page(pfn);
+-				spin_lock_irqsave(&zone->lock, flags);
+-			}
+-			pfn += nr_pages;
+-		}
+-
+-		spin_unlock_irqrestore(&zone->lock, flags);
+-	}
+-
+-	return NULL;
++	return alloc_contig_pages(nr_pages, gfp_mask, nid, nodemask);
+ }
+ 
+ static void prep_new_huge_page(struct hstate *h, struct page *page, int nid);
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index cd1dd0712624..fe76be55c9d5 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -8499,6 +8499,107 @@ int alloc_contig_range(unsigned long start, unsigned long end,
+ 				pfn_max_align_up(end), migratetype);
+ 	return ret;
+ }
++
++static int __alloc_contig_pages(unsigned long start_pfn,
++				unsigned long nr_pages, gfp_t gfp_mask)
++{
++	unsigned long end_pfn = start_pfn + nr_pages;
++
++	return alloc_contig_range(start_pfn, end_pfn, MIGRATE_MOVABLE,
++				  gfp_mask);
++}
++
++static bool pfn_range_valid_contig(struct zone *z, unsigned long start_pfn,
++				   unsigned long nr_pages)
++{
++	unsigned long i, end_pfn = start_pfn + nr_pages;
++	struct page *page;
++
++	for (i = start_pfn; i < end_pfn; i++) {
++		page = pfn_to_online_page(i);
++		if (!page)
++			return false;
++
++		if (page_zone(page) != z)
++			return false;
++
++		if (PageReserved(page))
++			return false;
++
++		if (page_count(page) > 0)
++			return false;
++
++		if (PageHuge(page))
++			return false;
++	}
++	return true;
++}
++
++static bool zone_spans_last_pfn(const struct zone *zone,
++				unsigned long start_pfn, unsigned long nr_pages)
++{
++	unsigned long last_pfn = start_pfn + nr_pages - 1;
++
++	return zone_spans_pfn(zone, last_pfn);
++}
++
++/**
++ * alloc_contig_pages() -- tries to find and allocate contiguous range of pages
++ * @nr_pages:	Number of contiguous pages to allocate
++ * @gfp_mask:	GFP mask to limit search and used during compaction
++ * @nid:	Target node
++ * @nodemask:	Mask for other possible nodes
++ *
++ * This routine is a wrapper around alloc_contig_range(). It scans over zones
++ * on an applicable zonelist to find a contiguous pfn range which can then be
++ * tried for allocation with alloc_contig_range(). This routine is intended
++ * for allocation requests which can not be fulfilled with the buddy allocator.
++ *
++ * The allocated memory is always aligned to a page boundary. If nr_pages is a
++ * power of two then the alignment is guaranteed to be to the given nr_pages
++ * (e.g. 1GB request would be aligned to 1GB).
++ *
++ * Allocated pages can be freed with free_contig_range() or by manually calling
++ * __free_page() on each allocated page.
++ *
++ * Return: pointer to contiguous pages on success, or NULL if not successful.
++ */
++struct page *alloc_contig_pages(unsigned long nr_pages, gfp_t gfp_mask,
++				int nid, nodemask_t *nodemask)
++{
++	unsigned long ret, pfn, flags;
++	struct zonelist *zonelist;
++	struct zone *zone;
++	struct zoneref *z;
++
++	zonelist = node_zonelist(nid, gfp_mask);
++	for_each_zone_zonelist_nodemask(zone, z, zonelist,
++					gfp_zone(gfp_mask), nodemask) {
++		spin_lock_irqsave(&zone->lock, flags);
++
++		pfn = ALIGN(zone->zone_start_pfn, nr_pages);
++		while (zone_spans_last_pfn(zone, pfn, nr_pages)) {
++			if (pfn_range_valid_contig(zone, pfn, nr_pages)) {
++				/*
++				 * We release the zone lock here because
++				 * alloc_contig_range() will also lock the zone
++				 * at some point. If there's an allocation
++				 * spinning on this lock, it may win the race
++				 * and cause alloc_contig_range() to fail...
++				 */
++				spin_unlock_irqrestore(&zone->lock, flags);
++				ret = __alloc_contig_pages(pfn, nr_pages,
++							gfp_mask);
++				if (!ret)
++					return pfn_to_page(pfn);
++				spin_lock_irqsave(&zone->lock, flags);
++			}
++			pfn += nr_pages;
++		}
++		spin_unlock_irqrestore(&zone->lock, flags);
++	}
++	return NULL;
++}
+ #endif /* CONFIG_CONTIG_ALLOC */
+ 
+ void free_contig_range(unsigned long pfn, unsigned int nr_pages)
 -- 
-Jazz is not dead. It just smells funny...
+2.20.1
+
