@@ -2,103 +2,132 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B01CFA3733
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F61ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 223DE20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 360E320663
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:59:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408431AbfJQI7P (ORCPT
+        id S2408442AbfJQI7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 04:59:15 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:39075 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404051AbfJQI7O (ORCPT
+        Thu, 17 Oct 2019 04:59:30 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7992 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404051AbfJQI73 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 04:59:14 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id F3C74801AB; Thu, 17 Oct 2019 10:58:56 +0200 (CEST)
-Date:   Thu, 17 Oct 2019 10:59:12 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        Bob Moore <robert.moore@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 68/81] ACPICA: ACPI 6.3: PPTT add additional fields
- in Processor Structure Flags
-Message-ID: <20191017085912.GA8594@amd>
-References: <20191016214805.727399379@linuxfoundation.org>
- <20191016214846.058277835@linuxfoundation.org>
+        Thu, 17 Oct 2019 04:59:29 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9H8vAIS049285
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 04:59:26 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vpjavx1g9-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 04:59:26 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <iii@linux.ibm.com>;
+        Thu, 17 Oct 2019 09:59:24 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 17 Oct 2019 09:59:21 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9H8xKoD40697858
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 17 Oct 2019 08:59:20 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 28E61A4054;
+        Thu, 17 Oct 2019 08:59:20 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C6A40A405C;
+        Thu, 17 Oct 2019 08:59:19 +0000 (GMT)
+Received: from white.boeblingen.de.ibm.com (unknown [9.152.99.142])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 17 Oct 2019 08:59:19 +0000 (GMT)
+From:   Ilya Leoshkevich <iii@linux.ibm.com>
+To:     Jan Kiszka <jan.kiszka@siemens.com>,
+        Kieran Bingham <kbingham@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>
+Subject: [PATCH v2] scripts/gdb: fix debugging modules on s390
+Date:   Thu, 17 Oct 2019 10:59:17 +0200
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Qxx1br4bt0+wmkIi"
-Content-Disposition: inline
-In-Reply-To: <20191016214846.058277835@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19101708-4275-0000-0000-00000372E37A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101708-4276-0000-0000-00003885FB4D
+Message-Id: <20191017085917.81791-1-iii@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-17_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=910 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910170081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Currently lx-symbols assumes that module text is always located at
+module->core_layout->base, but s390 uses the following layout:
 
---Qxx1br4bt0+wmkIi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
++------+  <- module->core_layout->base
+| GOT  |
++------+  <- module->core_layout->base + module->arch->plt_offset
+| PLT  |
++------+  <- module->core_layout->base + module->arch->plt_offset +
+| TEXT |     module->arch->plt_size
++------+
 
-Hi!
+Therefore, when trying to debug modules on s390, all the symbol
+addresses are skewed by plt_offset + plt_size.
 
-> From: Erik Schmauss <erik.schmauss@intel.com>
->=20
-> Commit b5eab512e7cffb2bb37c4b342b5594e9e75fd486 upstream.
+Fix by adding plt_offset + plt_size to module_addr in
+load_module_symbols().
 
-So this introduces another format of "upstream" information. So far I
-had this:
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+---
 
-		ma =3D re.match(".*Upstream commit ([0-9a-f]*) .*", l)
-		...
-                ma =3D re.match("commit ([0-9a-f]*) upstream[.]*", l)
+v1 -> v2: print the adjusted address.
 
-I believe this information belongs to the signoff area; it is
-important to know who pushed patch to the upstream and who is pusing
-it to the stable.
+ scripts/gdb/linux/symbols.py | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-Could we just introduce "Upstream: <sha1>" tag and use it? It would
-improve consistency...
+diff --git a/scripts/gdb/linux/symbols.py b/scripts/gdb/linux/symbols.py
+index f0d8f2ecfde7..df4c810de663 100644
+--- a/scripts/gdb/linux/symbols.py
++++ b/scripts/gdb/linux/symbols.py
+@@ -15,7 +15,7 @@ import gdb
+ import os
+ import re
+ 
+-from linux import modules
++from linux import modules, utils
+ 
+ 
+ if hasattr(gdb, 'Breakpoint'):
+@@ -111,6 +111,12 @@ lx-symbols command."""
+             module_file = self._get_module_file(module_name)
+ 
+         if module_file:
++            if utils.is_target_arch('s390'):
++                # Module text is preceded by PLT stubs on s390.
++                module_arch = module['arch']
++                plt_offset = int(module_arch['plt_offset'])
++                plt_size = int(module_arch['plt_size'])
++                module_addr = hex(int(module_addr, 0) + plt_offset + plt_size)
+             gdb.write("loading @{addr}: {filename}\n".format(
+                 addr=module_addr, filename=module_file))
+             cmdline = "add-symbol-file {filename} {addr}{sections}".format(
+-- 
+2.23.0
 
-Thanks,
-								Pavel
-
-> ACPICA commit c736ea34add19a3a07e0e398711847cd6b95affd
->=20
-> Link: https://github.com/acpica/acpica/commit/c736ea34
-> Signed-off-by: Erik Schmauss <erik.schmauss@intel.com>
-> Signed-off-by: Bob Moore <robert.moore@intel.com>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Signed-off-by: John Garry <john.garry@huawei.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---Qxx1br4bt0+wmkIi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXagtYAAKCRAw5/Bqldv6
-8iapAJ9+si17KDqJWrhQuFxEQ3CZZwcKGACgtPXzOyI93EkwZTPM2IPYFHLu8uQ=
-=+NSr
------END PGP SIGNATURE-----
-
---Qxx1br4bt0+wmkIi--
