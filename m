@@ -2,225 +2,155 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8CAFA3735
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B3DECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41462214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:00:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571310006;
-	bh=zpBpXGFC+94jDnDc1mLLHgM6VvWiRDsJEQCTOcIpWB4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ca36e4UWYVez7zASBeCSC9PNGp5i5ajP+5D1I+IEBFKilqxMAJmu1AKfCpVxf/Q6L
-	 iH1VL1vIKM8S8gZ+aU2E6+PbNxsnfTRMhPlcEWAHTkqck6NIrGLSbrHuVRUHvwbv2J
-	 6eFO4f6Or8hoarhi2PpDLiULgxYaVUSk+66Mn3cY=
+	by mail.kernel.org (Postfix) with ESMTP id 00CDD2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 11:01:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409299AbfJQLAE (ORCPT
+        id S2391741AbfJQLB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 07:00:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60506 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409221AbfJQK7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 06:59:38 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B43EB305B41D;
-        Thu, 17 Oct 2019 10:59:37 +0000 (UTC)
-Received: from krava.brq.redhat.com (unknown [10.43.17.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 71EFD5D713;
-        Thu, 17 Oct 2019 10:59:35 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH 06/10] libperf: Add tests_mmap_thread test
-Date:   Thu, 17 Oct 2019 12:59:14 +0200
-Message-Id: <20191017105918.20873-7-jolsa@kernel.org>
-In-Reply-To: <20191017105918.20873-1-jolsa@kernel.org>
-References: <20191017105918.20873-1-jolsa@kernel.org>
+        Thu, 17 Oct 2019 07:01:29 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52656 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728464AbfJQLB2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 07:01:28 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iL3X1-0006fC-Ma; Thu, 17 Oct 2019 13:01:23 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 379671C009F;
+        Thu, 17 Oct 2019 13:01:23 +0200 (CEST)
+Date:   Thu, 17 Oct 2019 11:01:23 -0000
+From:   "tip-bot2 for Zhenzhong Duan" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/boot/acpi: Move get_cmdline_acpi_rsdp() under
+ #ifdef guard
+Cc:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <1569719633-32164-1-git-send-email-zhenzhong.duan@oracle.com>
+References: <1569719633-32164-1-git-send-email-zhenzhong.duan@oracle.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 17 Oct 2019 10:59:37 +0000 (UTC)
+Message-ID: <157131008302.29376.13454551774742695304.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding mmaping tests that generates 100 prctl calls
-in monitored child process and validates it gets
-100 events in ring buffer.
+The following commit has been merged into the x86/urgent branch of tip:
 
-Link: http://lkml.kernel.org/n/tip-5qzuxnmde9x6uojkysp3rldn@git.kernel.org
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Commit-ID:     c83672e12b98de42bc4549d806588fc3955f8935
+Gitweb:        https://git.kernel.org/tip/c83672e12b98de42bc4549d806588fc3955f8935
+Author:        Zhenzhong Duan <zhenzhong.duan@oracle.com>
+AuthorDate:    Sun, 29 Sep 2019 09:13:52 +08:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 17 Oct 2019 12:55:49 +02:00
+
+x86/boot/acpi: Move get_cmdline_acpi_rsdp() under #ifdef guard
+
+When building with "EXTRA_CFLAGS=-Wall" gcc warns:
+
+arch/x86/boot/compressed/acpi.c:29:30: warning: get_cmdline_acpi_rsdp defined but not used [-Wunused-function]
+
+get_cmdline_acpi_rsdp() is only used when CONFIG_RANDOMIZE_BASE and
+CONFIG_MEMORY_HOTREMOVE are both enabled, so any build where one of these
+config options is disabled has this issue.
+
+Move the function under the same ifdef guard as the call site.
+
+[ tglx: Add context to the changelog so it becomes useful ]
+
+Fixes: 41fa1ee9c6d6 ("acpi: Ignore acpi_rsdp kernel param when the kernel has been locked down")
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1569719633-32164-1-git-send-email-zhenzhong.duan@oracle.com
+
 ---
- tools/perf/lib/tests/test-evlist.c | 119 +++++++++++++++++++++++++++++
- 1 file changed, 119 insertions(+)
+ arch/x86/boot/compressed/acpi.c | 48 ++++++++++++++++----------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
 
-diff --git a/tools/perf/lib/tests/test-evlist.c b/tools/perf/lib/tests/test-evlist.c
-index e6b2ab2e2bde..90a1869ba4b1 100644
---- a/tools/perf/lib/tests/test-evlist.c
-+++ b/tools/perf/lib/tests/test-evlist.c
-@@ -1,12 +1,21 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <stdio.h>
- #include <stdarg.h>
-+#include <unistd.h>
-+#include <stdlib.h>
- #include <linux/perf_event.h>
-+#include <linux/limits.h>
-+#include <sys/types.h>
-+#include <sys/wait.h>
-+#include <sys/prctl.h>
- #include <perf/cpumap.h>
- #include <perf/threadmap.h>
- #include <perf/evlist.h>
- #include <perf/evsel.h>
-+#include <perf/mmap.h>
-+#include <perf/event.h>
- #include <internal/tests.h>
-+#include <api/fs/fs.h>
+diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+index 149795c..25019d4 100644
+--- a/arch/x86/boot/compressed/acpi.c
++++ b/arch/x86/boot/compressed/acpi.c
+@@ -21,30 +21,6 @@
+ struct mem_vector immovable_mem[MAX_NUMNODES*2];
  
- static int libperf_print(enum libperf_print_level level,
- 			 const char *fmt, va_list ap)
-@@ -181,6 +190,115 @@ static int test_stat_thread_enable(void)
- 	return 0;
+ /*
+- * Max length of 64-bit hex address string is 19, prefix "0x" + 16 hex
+- * digits, and '\0' for termination.
+- */
+-#define MAX_ADDR_LEN 19
+-
+-static acpi_physical_address get_cmdline_acpi_rsdp(void)
+-{
+-	acpi_physical_address addr = 0;
+-
+-#ifdef CONFIG_KEXEC
+-	char val[MAX_ADDR_LEN] = { };
+-	int ret;
+-
+-	ret = cmdline_find_option("acpi_rsdp", val, MAX_ADDR_LEN);
+-	if (ret < 0)
+-		return 0;
+-
+-	if (kstrtoull(val, 16, &addr))
+-		return 0;
+-#endif
+-	return addr;
+-}
+-
+-/*
+  * Search EFI system tables for RSDP.  If both ACPI_20_TABLE_GUID and
+  * ACPI_TABLE_GUID are found, take the former, which has more features.
+  */
+@@ -298,6 +274,30 @@ acpi_physical_address get_rsdp_addr(void)
  }
  
-+static int test_mmap_thread(void)
+ #if defined(CONFIG_RANDOMIZE_BASE) && defined(CONFIG_MEMORY_HOTREMOVE)
++/*
++ * Max length of 64-bit hex address string is 19, prefix "0x" + 16 hex
++ * digits, and '\0' for termination.
++ */
++#define MAX_ADDR_LEN 19
++
++static acpi_physical_address get_cmdline_acpi_rsdp(void)
 +{
-+	struct perf_evlist *evlist;
-+	struct perf_evsel *evsel;
-+	struct perf_mmap *map;
-+	struct perf_cpu_map *cpus;
-+	struct perf_thread_map *threads;
-+	struct perf_event_attr attr = {
-+		.type             = PERF_TYPE_TRACEPOINT,
-+		.sample_period    = 1,
-+		.wakeup_watermark = 1,
-+		.disabled         = 1,
-+	};
-+	char path[PATH_MAX];
-+	int id, err, pid, go_pipe[2];
-+	union perf_event *event;
-+	char bf;
-+	int count = 0;
++	acpi_physical_address addr = 0;
 +
-+	snprintf(path, PATH_MAX, "%s/kernel/debug/tracing/events/syscalls/sys_enter_prctl/id",
-+		 sysfs__mountpoint());
++#ifdef CONFIG_KEXEC
++	char val[MAX_ADDR_LEN] = { };
++	int ret;
 +
-+	if (filename__read_int(path, &id)) {
-+		fprintf(stderr, "error: failed to get tracepoint id: %s\n", path);
-+		return -1;
-+	}
++	ret = cmdline_find_option("acpi_rsdp", val, MAX_ADDR_LEN);
++	if (ret < 0)
++		return 0;
 +
-+	attr.config = id;
-+
-+	err = pipe(go_pipe);
-+	__T("failed to create pipe", err == 0);
-+
-+	fflush(NULL);
-+
-+	pid = fork();
-+	if (!pid) {
-+		int i;
-+
-+		read(go_pipe[0], &bf, 1);
-+
-+		/* Generate 100 prctl calls. */
-+		for (i = 0; i < 100; i++)
-+			prctl(0, 0, 0, 0, 0);
-+
-+		exit(0);
-+	}
-+
-+	threads = perf_thread_map__new_dummy();
-+	__T("failed to create threads", threads);
-+
-+	cpus = perf_cpu_map__dummy_new();
-+	__T("failed to create cpus", cpus);
-+
-+	perf_thread_map__set_pid(threads, 0, pid);
-+
-+	evlist = perf_evlist__new();
-+	__T("failed to create evlist", evlist);
-+
-+	evsel = perf_evsel__new(&attr);
-+	__T("failed to create evsel1", evsel);
-+
-+	perf_evlist__add(evlist, evsel);
-+
-+	perf_evlist__set_maps(evlist, cpus, threads);
-+
-+	err = perf_evlist__open(evlist);
-+	__T("failed to open evlist", err == 0);
-+
-+	err = perf_evlist__mmap(evlist, 4);
-+	__T("failed to mmap evlist", err == 0);
-+
-+	perf_evlist__enable(evlist);
-+
-+	/* kick the child and wait for it to finish */
-+	write(go_pipe[1], &bf, 1);
-+	waitpid(pid, NULL, 0);
-+
-+	/*
-+	 * There's no need to call perf_evlist__disable,
-+	 * monitored process is dead now.
-+	 */
-+
-+	perf_evlist__for_each_mmap(evlist, map, false) {
-+		if (perf_mmap__read_init(map) < 0)
-+			continue;
-+
-+		while ((event = perf_mmap__read_event(map)) != NULL) {
-+			count++;
-+			perf_mmap__consume(map);
-+		}
-+
-+		perf_mmap__read_done(map);
-+	}
-+
-+	/* calls perf_evlist__munmap/perf_evlist__close */
-+	perf_evlist__delete(evlist);
-+
-+	perf_thread_map__put(threads);
-+	perf_cpu_map__put(cpus);
-+
-+	/*
-+	 * The generated prctl calls should match the
-+	 * number of events in the buffer.
-+	 */
-+	__T("failed count", count == 100);
-+
-+	return 0;
++	if (kstrtoull(val, 16, &addr))
++		return 0;
++#endif
++	return addr;
 +}
 +
- int main(int argc, char **argv)
+ /* Compute SRAT address from RSDP. */
+ static unsigned long get_acpi_srat_table(void)
  {
- 	__T_START;
-@@ -190,6 +308,7 @@ int main(int argc, char **argv)
- 	test_stat_cpu();
- 	test_stat_thread();
- 	test_stat_thread_enable();
-+	test_mmap_thread();
- 
- 	__T_OK;
- 	return 0;
--- 
-2.21.0
-
