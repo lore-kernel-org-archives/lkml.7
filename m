@@ -2,197 +2,101 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB25ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 582E7FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F48621835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:44:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="goASVb+k"
+	by mail.kernel.org (Postfix) with ESMTP id 2340A2089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 20:45:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571345138;
+	bh=PBMQzlJhfwdjzlJul3iNyt+OcLxbUAw68Myl91LPzt8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NOy/P5IlOgmp0h45IecOqbicEEe3OrqGkQZnpCgem6mX7WrLYR2fLB/3GDMb0wdUo
+	 B4eWI6qZGFqtnuByhTFJDWwf43tzCfgUM1CuvNoqSV3ypUaBN0vYUjKQu0AUq602hC
+	 ysRSv4XjcOVAE6eguoALkSd9tMpyN1ixXPvZ1ucI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440678AbfJQUoG (ORCPT
+        id S2394773AbfJQUpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 16:44:06 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42736 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440795AbfJQUm3 (ORCPT
+        Thu, 17 Oct 2019 16:45:36 -0400
+Received: from mail-qk1-f172.google.com ([209.85.222.172]:38522 "EHLO
+        mail-qk1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729725AbfJQUpg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 16:42:29 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q12so2366456pff.9;
-        Thu, 17 Oct 2019 13:42:29 -0700 (PDT)
+        Thu, 17 Oct 2019 16:45:36 -0400
+Received: by mail-qk1-f172.google.com with SMTP id p4so3223236qkf.5
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 13:45:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=sSHq9wsAzsKM4AZ9LGW0ongN+PTn6qrVrduasflfRcM=;
-        b=goASVb+k6liB5swYO63ZxWWekRVhGn3GuMsbPw2TeHuX0v/VFzTJCpHLCRpFv0Ngnb
-         LDGiCtYWcJ5zxIOqmhrr8IRDjleOtxitzOhSew4NHmeu8aeP9liDUrHqYjVvAnqwV4zH
-         N5L7jKq6ZDhb3VLiEOTOI33zZuv1Lkfz+qSzqCaS9uscoIxmpqq+I5004S23Amu2lZtA
-         0LNv4aB5iMDEzF5XBMiWsmGiolIBLswcBn0H8sP70z0tcnbaiNP1bEtvVB5Ax6yN/NoC
-         Vcrf+XdBoZiwnuh+rw/j2N5m6MBuI1x0wXLofqExCv8gVjBRLj+wdnnJqcuOK43KkonH
-         Sg2g==
+        d=linuxfoundation.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Nm0y8itQwNxycU+KkCNl4rRv/KEizP64S0h3JjcmM1I=;
+        b=CSQkOFqGa4+s7tlWZ+YT+n2bPhZ97z4bHV0wAW/4JArlvdW9LCrTnANTSBE9hoh+r3
+         aLCCN31qCG5v4O5opbrSGTmYoK8vjfAnzSNQSkTHVmK2TqvWiRqCAptFypjby7HlsV/1
+         JV9EAp/r3IE3NFEsoDFZLsoUvjPn3Kq0IrbSE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=sSHq9wsAzsKM4AZ9LGW0ongN+PTn6qrVrduasflfRcM=;
-        b=rOoO7vJdwabAco+NHVuuiWz1sAWZ9hEmaRz9qHVkZhg1cBSA2gUq582FtL7brLvy3q
-         e6S0x3DrI2KZZjGlscccTn1W10dUrmEwIA0HmFhPYF5q1e0V1+USZLtwlRBF3aVJW7ph
-         KbXfYyrGy7+N1tdZ3OpwbZ1Q1tWLuaAlBTJb2guTMQ9eLi3O735dKupSvxSP7b3lSosh
-         iBL2T0b4l91VKtFiN94nWMt25hmI8deRbcFngjWEmfwM5XvZiMot4zPlYj1/w5X3eCj7
-         R/gn8aXjBsZgQqysX8LKYsB39OrK24AHHA7syk8Rs1F2YYbuEhPF83JVrb7uXJ14TphF
-         JKlg==
-X-Gm-Message-State: APjAAAU+qOoEdo3CzK+9QebMtIyGCzofVR7Rs69Tj1RA2MaImJCdhvYg
-        xkba92K1NQzCc9cFPNbMn0jpO6o7
-X-Google-Smtp-Source: APXvYqyktynoW+tHdAI7M/o/NlB+6UWZag6mmwJUE/SBDpFkO+Z8MwjOuwMRnXuQj9tturz5DYTVgw==
-X-Received: by 2002:a63:fe44:: with SMTP id x4mr6257421pgj.118.1571344948576;
-        Thu, 17 Oct 2019 13:42:28 -0700 (PDT)
-Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id b3sm4626365pfd.125.2019.10.17.13.42.27
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=Nm0y8itQwNxycU+KkCNl4rRv/KEizP64S0h3JjcmM1I=;
+        b=ELjc/R+Y9udLP2q2FGp5ZnSu4/Xli/Z87SSc/on/wAYtg5c4dP04QUYybN3i+M/Dqi
+         2aISaTwsDHIUIRR6JCu1Ik4AiXVuSkPyYi0ip0+odR6Mmkaou7j5ZWKpdvVtAfROBQXY
+         P/yR6T+Z3kQrkHENjLmVJ/w5D+pqGyWMrcac3LwsUTTwazUWBrPWkbJE7fSuRarBwmMX
+         ZqPSSzzf9cSJ+V9u6jjbqhFP+1XQxC3im49AmZuwCFJnzX9t2BaxD/9NyXblojEeATvt
+         pJIHRYA1UNcHDRcNBwgYgRTRR6XAVshfzeJpIlwF0I962/KeiUQgswEt62M+nw8N1dD0
+         Wtcw==
+X-Gm-Message-State: APjAAAWAk1GmlHtWWhRKbpQv1OsSUf+ttTpQq/y5cf0QNV7pVpGNCO0Y
+        Xpa83K2H6bYeVh7GFcNlzzrNag==
+X-Google-Smtp-Source: APXvYqx67ShxHPsHmU4ie8AOdmAv0dC9DADOXV5AgHyiljWTFyBCcpGVIsssPGNMCbxjXk9vRGW2Aw==
+X-Received: by 2002:a37:507:: with SMTP id 7mr5422980qkf.107.1571345135302;
+        Thu, 17 Oct 2019 13:45:35 -0700 (PDT)
+Received: from chatter.i7.local (192-0-228-88.cpe.teksavvy.com. [192.0.228.88])
+        by smtp.gmail.com with ESMTPSA id j137sm1974051qke.64.2019.10.17.13.45.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 13:42:28 -0700 (PDT)
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     linux-input@vger.kernel.org
-Cc:     Allison Randal <allison@lohutok.net>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        =?UTF-8?q?Ronald=20Tschal=C3=A4r?= <ronald@innovation.ch>,
-        Stefan Agner <stefan@agner.ch>, linux-kernel@vger.kernel.org
-Subject: [PATCH 05/22] Input: adc-keys - switch to using polled mode of input devices
-Date:   Thu, 17 Oct 2019 13:41:59 -0700
-Message-Id: <20191017204217.106453-6-dmitry.torokhov@gmail.com>
-X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-In-Reply-To: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
-References: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
+        Thu, 17 Oct 2019 13:45:34 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 16:45:32 -0400
+From:   Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+To:     Greg KH <greg@kroah.com>
+Cc:     Santiago Torres Arias <santiago@nyu.edu>, Willy Tarreau <w@1wt.eu>,
+        Vegard Nossum <vegard.nossum@oracle.com>,
+        workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, Eric Wong <e@80x24.org>
+Subject: Re: email as a bona fide git transport
+Message-ID: <20191017204532.GA6446@chatter.i7.local>
+Mail-Followup-To: Greg KH <greg@kroah.com>,
+        Santiago Torres Arias <santiago@nyu.edu>, Willy Tarreau <w@1wt.eu>,
+        Vegard Nossum <vegard.nossum@oracle.com>, workflows@vger.kernel.org,
+        Git Mailing List <git@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, Eric Wong <e@80x24.org>
+References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
+ <20191016111009.GE13154@1wt.eu>
+ <20191016144517.giwip4yuaxtcd64g@LykOS.localdomain>
+ <20191017204343.GA1132188@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191017204343.GA1132188@kroah.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have added polled mode to the normal input devices with the intent of
-retiring input_polled_dev. This converts adc-keys driver to use the
-polling mode of standard input devices and removes dependency on
-INPUT_POLLDEV.
+On Thu, Oct 17, 2019 at 01:43:43PM -0700, Greg KH wrote:
+>> I wonder if it'd be also possible to then embed gpg signatures over
+>> send-mail payloads so as they can be transparently transferred to the
+>> commit.
+>
+>That's a crazy idea.  It would be nice if we could do that, I like it 
+>:)
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
+It could only possibly work if nobody ever adds their own 
+"Signed-Off-By" or any other bylines. I expect this is a deal-breaker 
+for most maintainers.
 
- drivers/input/keyboard/Kconfig    |  1 -
- drivers/input/keyboard/adc-keys.c | 36 ++++++++++++++++---------------
- 2 files changed, 19 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-index a716a90de683..c6bf99d23b1a 100644
---- a/drivers/input/keyboard/Kconfig
-+++ b/drivers/input/keyboard/Kconfig
-@@ -16,7 +16,6 @@ if INPUT_KEYBOARD
- config KEYBOARD_ADC
- 	tristate "ADC Ladder Buttons"
- 	depends on IIO
--	select INPUT_POLLDEV
- 	help
- 	  This driver implements support for buttons connected
- 	  to an ADC using a resistor ladder.
-diff --git a/drivers/input/keyboard/adc-keys.c b/drivers/input/keyboard/adc-keys.c
-index 9885fd56f5f9..6d5be48d1b3d 100644
---- a/drivers/input/keyboard/adc-keys.c
-+++ b/drivers/input/keyboard/adc-keys.c
-@@ -9,7 +9,6 @@
- #include <linux/iio/consumer.h>
- #include <linux/iio/types.h>
- #include <linux/input.h>
--#include <linux/input-polldev.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/of.h>
-@@ -30,9 +29,9 @@ struct adc_keys_state {
- 	const struct adc_keys_button *map;
- };
- 
--static void adc_keys_poll(struct input_polled_dev *dev)
-+static void adc_keys_poll(struct input_dev *input)
- {
--	struct adc_keys_state *st = dev->private;
-+	struct adc_keys_state *st = input_get_drvdata(input);
- 	int i, value, ret;
- 	u32 diff, closest = 0xffffffff;
- 	int keycode = 0;
-@@ -55,12 +54,12 @@ static void adc_keys_poll(struct input_polled_dev *dev)
- 		keycode = 0;
- 
- 	if (st->last_key && st->last_key != keycode)
--		input_report_key(dev->input, st->last_key, 0);
-+		input_report_key(input, st->last_key, 0);
- 
- 	if (keycode)
--		input_report_key(dev->input, keycode, 1);
-+		input_report_key(input, keycode, 1);
- 
--	input_sync(dev->input);
-+	input_sync(input);
- 	st->last_key = keycode;
- }
- 
-@@ -108,7 +107,6 @@ static int adc_keys_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct adc_keys_state *st;
--	struct input_polled_dev *poll_dev;
- 	struct input_dev *input;
- 	enum iio_chan_type type;
- 	int i, value;
-@@ -145,19 +143,13 @@ static int adc_keys_probe(struct platform_device *pdev)
- 	if (error)
- 		return error;
- 
--	poll_dev = devm_input_allocate_polled_device(dev);
--	if (!poll_dev) {
-+	input = devm_input_allocate_device(dev);
-+	if (!input) {
- 		dev_err(dev, "failed to allocate input device\n");
- 		return -ENOMEM;
- 	}
- 
--	if (!device_property_read_u32(dev, "poll-interval", &value))
--		poll_dev->poll_interval = value;
--
--	poll_dev->poll = adc_keys_poll;
--	poll_dev->private = st;
--
--	input = poll_dev->input;
-+	input_set_drvdata(input, st);
- 
- 	input->name = pdev->name;
- 	input->phys = "adc-keys/input0";
-@@ -174,7 +166,17 @@ static int adc_keys_probe(struct platform_device *pdev)
- 	if (device_property_read_bool(dev, "autorepeat"))
- 		__set_bit(EV_REP, input->evbit);
- 
--	error = input_register_polled_device(poll_dev);
-+
-+	error = input_setup_polling(input, adc_keys_poll);
-+	if (error) {
-+		dev_err(dev, "Unable to set up polling: %d\n", error);
-+		return error;
-+	}
-+
-+	if (!device_property_read_u32(dev, "poll-interval", &value))
-+		input_set_poll_interval(input, value);
-+
-+	error = input_register_device(input);
- 	if (error) {
- 		dev_err(dev, "Unable to register input device: %d\n", error);
- 		return error;
--- 
-2.23.0.866.gb869b98d4c-goog
-
+-K
