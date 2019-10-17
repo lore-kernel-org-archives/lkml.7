@@ -2,144 +2,155 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 285ECECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AED3ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEAAA2089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE04D2089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 17:05:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GMtbEdxZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440550AbfJQRCK (ORCPT
+        id S2440556AbfJQRFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 13:02:10 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:46881 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732079AbfJQRCK (ORCPT
+        Thu, 17 Oct 2019 13:05:39 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:33225 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732079AbfJQRFj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 13:02:10 -0400
-Received: by mail-io1-f70.google.com with SMTP id t15so162475ios.13
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 10:02:08 -0700 (PDT)
+        Thu, 17 Oct 2019 13:05:39 -0400
+Received: by mail-pf1-f202.google.com with SMTP id z4so2251862pfn.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 10:05:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=KdTZDDDRzkpxS5FsYtTfQfiur0+t7NAcZsbef9E4EjA=;
+        b=GMtbEdxZdTkK2AxED3byzE2O2Rq42mvmnyocbUsyNA7Rmvnu7U6I+qp3niaAka1SLj
+         MdmqYmG8YWbtkIo7GJzqXnWYEpXyZXO3p+LmLZj6gOQF4h17Grn+oFHM99p8UhQzeI2H
+         f2fK4MgTIZsC7kDujFj/W+iQM/BtzWI9dFHwtxCophWW3FFoXuPipVwaE7JL8HfP9A3z
+         vDIdNjr3AqgC6Tzbg1KVC6a+A1IGCS+1mKFsxo0vIDcv7yKDYSPna1oGkYmLBlhQskwH
+         5EQIZtLQQwOolFHUXWgrKHpvR1xlslFlZ0I6sQdGe15KakS8u2KbOHodbFbbB0IkVat6
+         Bzag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to
-         :content-transfer-encoding;
-        bh=EnYsU47HL2XSkkVZREiAvQYTdM81+PHfRCGT/VEHxcI=;
-        b=MzBHrE0ku+CcXQEYOo4EOBEFOEn2kyqd229vsSeWRt6re+fc/2U0FF1rUTg/PH7LbS
-         bDVHfEo0rhQ86ZBbXEFp6LJWVON3R0cUtmme4hDXCBs7regL7XNXLspYyzhJBVxjTLzp
-         VbpMQ6lgnmu72rrMhpmXeqXpEX+4e21aZoUE0wXyqlGDFooPSCoqIPiUFpenjpRqQGbO
-         J70IDu0fA7SV0+QmXtjpmAyGoaoiFWli/QV/VthHd8N23aAf/ZLoo6DbEoHUC110UUPY
-         T3LpB6QH0aSgRzaf2B77r3L1SmbqGqcjHRlfln+1dGNeIlRbafW9OGdlcLDj5vkbg1fB
-         /Uqw==
-X-Gm-Message-State: APjAAAUyYf93l+erWD9Tld9BydAHQo2ldDUvWAywI/Z8LGieNzrijYo6
-        W5SI+X4r7+EsjLdzTkzKo35w5LcsjQ+X/LFgXcBoeUWseuVe
-X-Google-Smtp-Source: APXvYqxen8Of1iSDjpw3u7bRKKCDhaZk8HxXleczjhHf6mM3uT90OG6ex9Ks5pxcps8gIp67wNIVq58SkyVZB3BZG/oAX0RMPhuA
-MIME-Version: 1.0
-X-Received: by 2002:a02:3081:: with SMTP id q123mr4311612jaq.24.1571331727632;
- Thu, 17 Oct 2019 10:02:07 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 10:02:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000073309e05951e2dc1@google.com>
-Subject: WARNING in bdev_read
-From:   syzbot <syzbot+787bcbef9b5fec61944b@syzkaller.appspotmail.com>
-To:     alexander.levin@microsoft.com, davem@davemloft.net,
-        devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
-        paulmck@linux.ibm.com, syzkaller-bugs@googlegroups.com,
-        valdis.kletnieks@vt.edu
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
-Content-Transfer-Encoding: base64
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=KdTZDDDRzkpxS5FsYtTfQfiur0+t7NAcZsbef9E4EjA=;
+        b=bCETGJWhUwtqTjHC/xeRpG6Y3wykGQXAZZvjaUOkuvEEOFEP+VFGaa5A7d05gtn8xJ
+         HM4uflD+JL12dWauh6XGBckTTKIHB7U05VzVx2irIIV5CNIJ/9iU0/jx4x+7bqXfVC4R
+         WvX+sTmgI+ofkWNgzLwCsntjf9gsZtgwOIOlG83uQ3jwBfEbQ89rzzmP0I+WM6w6loDA
+         TYEB9gMMayx4dOx0H1Bzu6kBOm4LtHXdvEi1ZHmhEG398d4DGnqakwO80XgDTOdHEZLG
+         E8kyLW9wy6hTdB0sZkZ3sXHfDcD5eJjrhMjKtgAoQe+Ld4o0tzPKRDeO0LpURoF1Mzkg
+         0kqQ==
+X-Gm-Message-State: APjAAAVB9CuIbAvQZ8zT0oOhsi8yvsQJfSKo1DKU4T2ZH8bfx/hfmEsT
+        sG6DZI9KiOpcgiQPfbU7N0ymrgr3b6Q9
+X-Google-Smtp-Source: APXvYqxAJGh4yl1goKClnAPjJuMPtWKQkYnbNVeHMZ0BhMmMqpxIQXpp5Yh2StnUjYLvJPXfRrtGdDMqj+wC
+X-Received: by 2002:a65:6903:: with SMTP id s3mr5086248pgq.195.1571331938396;
+ Thu, 17 Oct 2019 10:05:38 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 10:05:31 -0700
+Message-Id: <20191017170531.171244-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.700.g56cf767bdb-goog
+Subject: [PATCH] perf tools: avoid reading out of scope array
+From:   Ian Rogers <irogers@google.com>
+To:     He Kuang <hekuang@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8sDQoNCnN5emJvdCBmb3VuZCB0aGUgZm9sbG93aW5nIGNyYXNoIG9uOg0KDQpIRUFEIGNv
-bW1pdDogICAgYmM4OGY4NWMga3RocmVhZDogbWFrZSBfX2t0aHJlYWRfcXVldWVfZGVsYXllZF93
-b3JrIHN0YXRpYw0KZ2l0IHRyZWU6ICAgICAgIHVwc3RyZWFtDQpjb25zb2xlIG91dHB1dDogaHR0
-cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20veC9sb2cudHh0P3g9MTRlMjU2MDhlMDAwMDANCmtl
-cm5lbCBjb25maWc6ICBodHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94Ly5jb25maWc/eD1l
-MGFjNGQ5YjM1MDQ2MzQzDQpkYXNoYm9hcmQgbGluazogaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3Bv
-dC5jb20vYnVnP2V4dGlkPTc4N2JjYmVmOWI1ZmVjNjE5NDRiDQpjb21waWxlcjogICAgICAgZ2Nj
-IChHQ0MpIDkuMC4wIDIwMTgxMjMxIChleHBlcmltZW50YWwpDQpzeXogcmVwcm86ICAgICAgaHR0
-cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20veC9yZXByby5zeXo/eD0xNTlmZDM1MzYwMDAwMA0K
-QyByZXByb2R1Y2VyOiAgIGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvcmVwcm8uYz94
-PTE3ZTgyMTczNjAwMDAwDQoNClRoZSBidWcgd2FzIGJpc2VjdGVkIHRvOg0KDQpjb21taXQgYzQ4
-YzlmN2ZmMzJiOGIzOTY1YTA4ZTQwZWI2NzYzNjgyZDkwNWI1ZA0KQXV0aG9yOiBWYWxkaXMgS2zE
-k3RuaWVrcyA8dmFsZGlzLmtsZXRuaWVrc0B2dC5lZHU+DQpEYXRlOiAgIFdlZCBBdWcgMjggMTY6
-MDg6MTcgMjAxOSArMDAwMA0KDQogICAgIHN0YWdpbmc6IGV4ZmF0OiBhZGQgZXhmYXQgZmlsZXN5
-c3RlbSBjb2RlIHRvIHN0YWdpbmcNCg0KYmlzZWN0aW9uIGxvZzogIGh0dHBzOi8vc3l6a2FsbGVy
-LmFwcHNwb3QuY29tL3gvYmlzZWN0LnR4dD94PTE1NGEzMjI3NjAwMDAwDQpmaW5hbCBjcmFzaDog
-ICAgaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20veC9yZXBvcnQudHh0P3g9MTc0YTMyMjc2
-MDAwMDANCmNvbnNvbGUgb3V0cHV0OiBodHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94L2xv
-Zy50eHQ/eD0xMzRhMzIyNzYwMDAwMA0KDQpJTVBPUlRBTlQ6IGlmIHlvdSBmaXggdGhlIGJ1Zywg
-cGxlYXNlIGFkZCB0aGUgZm9sbG93aW5nIHRhZyB0byB0aGUgY29tbWl0Og0KUmVwb3J0ZWQtYnk6
-IHN5emJvdCs3ODdiY2JlZjliNWZlYzYxOTQ0YkBzeXprYWxsZXIuYXBwc3BvdG1haWwuY29tDQpG
-aXhlczogYzQ4YzlmN2ZmMzJiICgic3RhZ2luZzogZXhmYXQ6IGFkZCBleGZhdCBmaWxlc3lzdGVt
-IGNvZGUgdG8gc3RhZ2luZyIpDQoNCltFWEZBVF0gdHJ5aW5nIHRvIG1vdW50Li4uDQotLS0tLS0t
-LS0tLS1bIGN1dCBoZXJlIF0tLS0tLS0tLS0tLS0NCltFWEZBVF0gTm8gYmgsIGRldmljZSBzZWVt
-cyB3cm9uZyBvciB0byBiZSBlamVjdGVkLg0KV0FSTklORzogQ1BVOiAwIFBJRDogOTQyNSBhdCBk
-cml2ZXJzL3N0YWdpbmcvZXhmYXQvZXhmYXRfYmxrZGV2LmM6NjIgIA0KYmRldl9yZWFkKzB4MjU4
-LzB4MmIwIGRyaXZlcnMvc3RhZ2luZy9leGZhdC9leGZhdF9ibGtkZXYuYzo2Mg0KS2VybmVsIHBh
-bmljIC0gbm90IHN5bmNpbmc6IHBhbmljX29uX3dhcm4gc2V0IC4uLg0KQ1BVOiAwIFBJRDogOTQy
-NSBDb21tOiBzeXotZXhlY3V0b3IwNDAgTm90IHRhaW50ZWQgNS40LjAtcmMzKyAjMA0KSGFyZHdh
-cmUgbmFtZTogR29vZ2xlIEdvb2dsZSBDb21wdXRlIEVuZ2luZS9Hb29nbGUgQ29tcHV0ZSBFbmdp
-bmUsIEJJT1MgIA0KR29vZ2xlIDAxLzAxLzIwMTENCkNhbGwgVHJhY2U6DQogIF9fZHVtcF9zdGFj
-ayBsaWIvZHVtcF9zdGFjay5jOjc3IFtpbmxpbmVdDQogIGR1bXBfc3RhY2srMHgxNzIvMHgxZjAg
-bGliL2R1bXBfc3RhY2suYzoxMTMNCiAgcGFuaWMrMHgyZTMvMHg3NWMga2VybmVsL3BhbmljLmM6
-MjIxDQogIF9fd2Fybi5jb2xkKzB4MmYvMHgzNSBrZXJuZWwvcGFuaWMuYzo1ODINCiAgcmVwb3J0
-X2J1ZysweDI4OS8weDMwMCBsaWIvYnVnLmM6MTk1DQogIGZpeHVwX2J1ZyBhcmNoL3g4Ni9rZXJu
-ZWwvdHJhcHMuYzoxNzkgW2lubGluZV0NCiAgZml4dXBfYnVnIGFyY2gveDg2L2tlcm5lbC90cmFw
-cy5jOjE3NCBbaW5saW5lXQ0KICBkb19lcnJvcl90cmFwKzB4MTFiLzB4MjAwIGFyY2gveDg2L2tl
-cm5lbC90cmFwcy5jOjI3Mg0KICBkb19pbnZhbGlkX29wKzB4MzcvMHg1MCBhcmNoL3g4Ni9rZXJu
-ZWwvdHJhcHMuYzoyOTENCiAgaW52YWxpZF9vcCsweDIzLzB4MzAgYXJjaC94ODYvZW50cnkvZW50
-cnlfNjQuUzoxMDI4DQpSSVA6IDAwMTA6YmRldl9yZWFkKzB4MjU4LzB4MmIwIGRyaXZlcnMvc3Rh
-Z2luZy9leGZhdC9leGZhdF9ibGtkZXYuYzo2Mg0KQ29kZTogZmYgZGYgODAgM2MgMDIgMDAgMGYg
-ODQgNTEgZmYgZmYgZmYgNGMgODkgZTcgZTggOWUgMDUgM2EgZmMgZTkgNDQgZmYgIA0KZmYgZmYg
-ZTggMTQgYTggZmUgZmIgNDggYzcgYzcgMjAgMGIgM2QgODggZTggYzAgZWEgY2YgZmIgPDBmPiAw
-YiBlYiA4YSBlOCAgDQo3ZiAwNCAzYSBmYyBlOSAxNyBmZSBmZiBmZiBlOCBiNSAwNCAzYSBmYyBl
-OSA5OSBmZQ0KUlNQOiAwMDE4OmZmZmY4ODgwYTRkNzdhZDAgRUZMQUdTOiAwMDAxMDI4Mg0KUkFY
-OiAwMDAwMDAwMDAwMDAwMDAwIFJCWDogMDAwMDAwMDAwMDAwMDAwMCBSQ1g6IDAwMDAwMDAwMDAw
-MDAwMDANClJEWDogMDAwMDAwMDAwMDAwMDAwMCBSU0k6IGZmZmZmZmZmODE1Y2I2NDYgUkRJOiBm
-ZmZmZWQxMDE0OWFlZjRjDQpSQlA6IGZmZmY4ODgwYTRkNzdiMTAgUjA4OiBmZmZmODg4MDk5YmE0
-NDAwIFIwOTogZmZmZmVkMTAxNWQwNDEwMQ0KUjEwOiBmZmZmZWQxMDE1ZDA0MTAwIFIxMTogZmZm
-Zjg4ODBhZTgyMDgwNyBSMTI6IDAwMDAwMDAwMDAwMDAwMDANClIxMzogZmZmZjg4ODA4N2Q0MDAw
-MCBSMTQ6IDAwMDAwMDAwMDAwMDAwMDEgUjE1OiAwMDAwMDAwMDAwMDAwMjAwDQogIHNlY3Rvcl9y
-ZWFkKzB4MTU2LzB4MWUwIGRyaXZlcnMvc3RhZ2luZy9leGZhdC9leGZhdF9jb3JlLmM6MzYxNQ0K
-ICBmZnNNb3VudFZvbCBkcml2ZXJzL3N0YWdpbmcvZXhmYXQvZXhmYXRfc3VwZXIuYzozNzQgW2lu
-bGluZV0NCiAgZXhmYXRfZmlsbF9zdXBlci5jb2xkKzB4NGQ2LzB4ZGJhIGRyaXZlcnMvc3RhZ2lu
-Zy9leGZhdC9leGZhdF9zdXBlci5jOjM4NjkNCiAgbW91bnRfYmRldisweDMwNC8weDNjMCBmcy9z
-dXBlci5jOjE0MTUNCiAgZXhmYXRfZnNfbW91bnQrMHgzNS8weDQwIGRyaXZlcnMvc3RhZ2luZy9l
-eGZhdC9leGZhdF9zdXBlci5jOjM5MzYNCiAgbGVnYWN5X2dldF90cmVlKzB4MTA4LzB4MjIwIGZz
-L2ZzX2NvbnRleHQuYzo2NDcNCiAgdmZzX2dldF90cmVlKzB4OGUvMHgzMDAgZnMvc3VwZXIuYzox
-NTQ1DQogIGRvX25ld19tb3VudCBmcy9uYW1lc3BhY2UuYzoyODIzIFtpbmxpbmVdDQogIGRvX21v
-dW50KzB4MTQzZC8weDFkMTAgZnMvbmFtZXNwYWNlLmM6MzE0Mw0KICBrc3lzX21vdW50KzB4ZGIv
-MHgxNTAgZnMvbmFtZXNwYWNlLmM6MzM1Mg0KICBfX2RvX3N5c19tb3VudCBmcy9uYW1lc3BhY2Uu
-YzozMzY2IFtpbmxpbmVdDQogIF9fc2Vfc3lzX21vdW50IGZzL25hbWVzcGFjZS5jOjMzNjMgW2lu
-bGluZV0NCiAgX194NjRfc3lzX21vdW50KzB4YmUvMHgxNTAgZnMvbmFtZXNwYWNlLmM6MzM2Mw0K
-ICBkb19zeXNjYWxsXzY0KzB4ZmEvMHg3NjAgYXJjaC94ODYvZW50cnkvY29tbW9uLmM6MjkwDQog
-IGVudHJ5X1NZU0NBTExfNjRfYWZ0ZXJfaHdmcmFtZSsweDQ5LzB4YmUNClJJUDogMDAzMzoweDQ0
-MDE3OQ0KQ29kZTogMTggODkgZDAgYzMgNjYgMmUgMGYgMWYgODQgMDAgMDAgMDAgMDAgMDAgMGYg
-MWYgMDAgNDggODkgZjggNDggODkgZjcgIA0KNDggODkgZDYgNDggODkgY2EgNGQgODkgYzIgNGQg
-ODkgYzggNGMgOGIgNGMgMjQgMDggMGYgMDUgPDQ4PiAzZCAwMSBmMCBmZiAgDQpmZiAwZiA4MyBm
-YiAxMyBmYyBmZiBjMyA2NiAyZSAwZiAxZiA4NCAwMCAwMCAwMCAwMA0KUlNQOiAwMDJiOjAwMDA3
-ZmZmMGY5MDI5OTggRUZMQUdTOiAwMDAwMDI0NiBPUklHX1JBWDogMDAwMDAwMDAwMDAwMDBhNQ0K
-UkFYOiBmZmZmZmZmZmZmZmZmZmRhIFJCWDogMDAzMDY1NmM2OTY2MmYyZSBSQ1g6IDAwMDAwMDAw
-MDA0NDAxNzkNClJEWDogMDAwMDAwMDAyMDAwMDIwMCBSU0k6IDAwMDAwMDAwMjAwMDAxYzAgUkRJ
-OiAwMDAwMDAwMDIwMDAwNDAwDQpSQlA6IDAwMDAwMDAwMDA2Y2EwMTggUjA4OiAwMDAwMDAwMDAw
-MDAwMDAwIFIwOTogMDAwMDAwMDAwMDAwMDAwMA0KUjEwOiAwMDAwMDAwMDAyODAwMDAxIFIxMTog
-MDAwMDAwMDAwMDAwMDI0NiBSMTI6IDAwMDAwMDAwMDA0MDFhMDANClIxMzogMDAwMDAwMDAwMDQw
-MWE5MCBSMTQ6IDAwMDAwMDAwMDAwMDAwMDAgUjE1OiAwMDAwMDAwMDAwMDAwMDAwDQpLZXJuZWwg
-T2Zmc2V0OiBkaXNhYmxlZA0KUmVib290aW5nIGluIDg2NDAwIHNlY29uZHMuLg0KDQoNCi0tLQ0K
-VGhpcyBidWcgaXMgZ2VuZXJhdGVkIGJ5IGEgYm90LiBJdCBtYXkgY29udGFpbiBlcnJvcnMuDQpT
-ZWUgaHR0cHM6Ly9nb28uZ2wvdHBzbUVKIGZvciBtb3JlIGluZm9ybWF0aW9uIGFib3V0IHN5emJv
-dC4NCnN5emJvdCBlbmdpbmVlcnMgY2FuIGJlIHJlYWNoZWQgYXQgc3l6a2FsbGVyQGdvb2dsZWdy
-b3Vwcy5jb20uDQoNCnN5emJvdCB3aWxsIGtlZXAgdHJhY2sgb2YgdGhpcyBidWcgcmVwb3J0LiBT
-ZWU6DQpodHRwczovL2dvby5nbC90cHNtRUojc3RhdHVzIGZvciBob3cgdG8gY29tbXVuaWNhdGUg
-d2l0aCBzeXpib3QuDQpGb3IgaW5mb3JtYXRpb24gYWJvdXQgYmlzZWN0aW9uIHByb2Nlc3Mgc2Vl
-OiBodHRwczovL2dvby5nbC90cHNtRUojYmlzZWN0aW9uDQpzeXpib3QgY2FuIHRlc3QgcGF0Y2hl
-cyBmb3IgdGhpcyBidWcsIGZvciBkZXRhaWxzIHNlZToNCmh0dHBzOi8vZ29vLmdsL3Rwc21FSiN0
-ZXN0aW5nLXBhdGNoZXMNCg==
+Modify tracepoint name into 2 sys components and assemble at use. This
+avoids the sys_name array being out of scope at the point of use.
+Bug caught with LLVM's address sanitizer with fuzz generated input of
+":cs\1" to parse_events.
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/parse-events.y | 36 +++++++++++++++++++++++-----------
+ 1 file changed, 25 insertions(+), 11 deletions(-)
+
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index 48126ae4cd13..28be39a703c9 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -104,7 +104,8 @@ static void inc_group_count(struct list_head *list,
+ 	struct list_head *head;
+ 	struct parse_events_term *term;
+ 	struct tracepoint_name {
+-		char *sys;
++		char *sys1;
++		char *sys2;
+ 		char *event;
+ 	} tracepoint_name;
+ 	struct parse_events_array array;
+@@ -425,9 +426,19 @@ tracepoint_name opt_event_config
+ 	if (error)
+ 		error->idx = @1.first_column;
+ 
+-	if (parse_events_add_tracepoint(list, &parse_state->idx, $1.sys, $1.event,
+-					error, $2))
+-		return -1;
++        if ($1.sys2) {
++		char sys_name[128];
++		snprintf(&sys_name, sizeof(sys_name), "%s-%s",
++			$1.sys1, $1.sys2);
++		if (parse_events_add_tracepoint(list, &parse_state->idx,
++						sys_name, $1.event,
++						error, $2))
++			return -1;
++        } else
++		if (parse_events_add_tracepoint(list, &parse_state->idx,
++						$1.sys1, $1.event,
++						error, $2))
++			return -1;
+ 
+ 	$$ = list;
+ }
+@@ -435,19 +446,22 @@ tracepoint_name opt_event_config
+ tracepoint_name:
+ PE_NAME '-' PE_NAME ':' PE_NAME
+ {
+-	char sys_name[128];
+-	struct tracepoint_name tracepoint;
+-
+-	snprintf(&sys_name, 128, "%s-%s", $1, $3);
+-	tracepoint.sys = &sys_name;
+-	tracepoint.event = $5;
++	struct tracepoint_name tracepoint = {
++		.sys1 = $1,
++		.sys2 = $3,
++		.event = $5,
++	};
+ 
+ 	$$ = tracepoint;
+ }
+ |
+ PE_NAME ':' PE_NAME
+ {
+-	struct tracepoint_name tracepoint = {$1, $3};
++	struct tracepoint_name tracepoint = {
++		.sys1 = $1,
++		.sys2 = NULL,
++		.event = $3,
++	};
+ 
+ 	$$ = tracepoint;
+ }
+-- 
+2.23.0.700.g56cf767bdb-goog
+
