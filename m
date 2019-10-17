@@ -2,227 +2,203 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B43AFECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75ECEFA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8058020872
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 408CA21925
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:15:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="cbKV/UEV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kv2dqE7D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440034AbfJQOOy (ORCPT
+        id S2440037AbfJQOPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 10:14:54 -0400
-Received: from mail-eopbgr130137.outbound.protection.outlook.com ([40.107.13.137]:54430
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2394836AbfJQOOw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:14:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lp/EJO4coV4Icb4C5HvHmAaK8wYwpslwoy5fnOCSkt2mQHr+jWZKNq6+rOb79jv5RFnzvQE/KmQw8pPXhG5768vs6rgtBl7iy4pwQe7bzAEx80Q4NWIWKPX/vkNISMNtJx5hb3AWps1UA65gsJpFw2Fravizmsl8VWE3bxuiLo1ycDGcmAPVISqXGXuIJxyJZ8Vk3yc4DaL6TxFmAnkZpAWXRh8wrNMMmH+yq+W9G2kjxUSwR2vqMnJ2uWyifE76Z6gWvwwvmm4dDJEiGKk4da4sd0GOPTmPQf/vp4/95QXHQ3lTzJ4gUwcmOWVZghdH3LV4Z81JKxToqst2wSJAJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5OdldipMRMrqhYBiFQdOe8qK14MI1q/VSOB8j2L94VY=;
- b=EelSmKVJ2JXlZ3rM3QoKf2my9Xt/aFG792ZWObpm9OHs1ccFSr4x3b+Pp6GGWNvMPq4KGxda9pJL/fGHkXkFOfda3j8lHM3S+FtRaE5zi2Bj8PBpRjWYOm67hH3mimy1i+y41Sfke5yBJbEnRUsE/DNdtIHzUeWrfhVGoa+jPA37vMHqX8E8Z3kNRakT6DxSu8svW2OaXgzJjO0qj0zV+AE9W3VENXTpBii9k3VgSDNXHCddcFm8EwaOqDfIrtIqOs7O/I4+WDqH1W8BnaXwS6RQuwtd7yEDaq8D5R3my6NlJvp3DD0iJ4bTXlvRgeENLerTuduFsT2RFdAS+pcFmQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5OdldipMRMrqhYBiFQdOe8qK14MI1q/VSOB8j2L94VY=;
- b=cbKV/UEVZC2Jg8/mtOFPTHz7fpR7/eZJt/nMR9IuXCHo8bDp9uUyJSRjktEHcIay0InLPTU56fLJueuVfsb8daHj/wSf1CNwXvq78FNPhWiDXagyDdJMfEUWnBLDQa/FJ9MNYf0rW6veOucVBPqy+5jkLbr4uL1/LqZtYaQkA2w=
-Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com (52.134.19.20) by
- VI1PR0502MB2990.eurprd05.prod.outlook.com (10.172.255.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.19; Thu, 17 Oct 2019 14:14:42 +0000
-Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com
- ([fe80::f427:26bb:85cf:abad]) by VI1PR0502MB3965.eurprd05.prod.outlook.com
- ([fe80::f427:26bb:85cf:abad%7]) with mapi id 15.20.2347.023; Thu, 17 Oct 2019
- 14:14:42 +0000
-From:   Philippe Schenker <philippe.schenker@toradex.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
-CC:     Max Krummenacher <max.krummenacher@toradex.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        Stefan Agner <stefan@agner.ch>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v2 3/3] tty: serial: lpuart: Add RS485 support for 32-bit uart
- flavour
-Thread-Topic: [PATCH v2 3/3] tty: serial: lpuart: Add RS485 support for 32-bit
- uart flavour
-Thread-Index: AQHVhPU4TpV1krZ1f0SVVpur/+kqIA==
-Date:   Thu, 17 Oct 2019 14:14:42 +0000
-Message-ID: <20191017141428.10330-3-philippe.schenker@toradex.com>
-References: <20191017141428.10330-1-philippe.schenker@toradex.com>
-In-Reply-To: <20191017141428.10330-1-philippe.schenker@toradex.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR0202CA0036.eurprd02.prod.outlook.com
- (2603:10a6:208:1::49) To VI1PR0502MB3965.eurprd05.prod.outlook.com
- (2603:10a6:803:26::20)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=philippe.schenker@toradex.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.23.0
-x-originating-ip: [46.140.72.82]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c0d1aaa6-9451-42d7-8d1c-08d7530c5a8e
-x-ms-traffictypediagnostic: VI1PR0502MB2990:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0502MB29907C2F4988D1A71B116FD0F46D0@VI1PR0502MB2990.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-forefront-prvs: 01930B2BA8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(39850400004)(346002)(136003)(376002)(396003)(189003)(199004)(1076003)(81166006)(3846002)(102836004)(64756008)(186003)(386003)(52116002)(76176011)(26005)(66446008)(44832011)(8676002)(486006)(476003)(7736002)(4326008)(66476007)(6506007)(6116002)(478600001)(86362001)(25786009)(66946007)(66556008)(305945005)(5660300002)(36756003)(81156014)(14454004)(71200400001)(50226002)(14444005)(110136005)(71190400001)(316002)(99286004)(2616005)(6486002)(2906002)(256004)(54906003)(107886003)(11346002)(8936002)(2501003)(6436002)(6512007)(446003)(66066001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0502MB2990;H:VI1PR0502MB3965.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +3vjLTKuEjrBQhz1VUvB5SSzEKY2fhFyjHZCXGNhid5SIDWZhTiz8wNGbx7Qd90Z0ue1AKTgqtqppRGcoJfjrz8hjvdCN5qmF/gdG5DrVkYHmK1IsAzwPq/kJN2NjhZq4Aw3pwREYPXco1ZwKFN5ucPHII5JbiatNTr64Vf9S/wiSmAkcKm0BOpiaQKkQtKVa6ujUMJxjbUs4S0eSO8pNJ9ZBSvwkNBkW9Ney8ZOTpOjuG71PjPa1TWxnULqV4P7owv33coACfrshKhKgLcFd5Ko8gj9kAJMeqhXEbzaIaYi2MZylwFKo1KPt+08Xwi+mIjYZdPk7XsS2CoDcxS83eFdto5QsYa6FRLFSCNxJmiuBjJnlwQ2H2ySwVrAP8T4UIh6aXiAg9seoxdG2D6+cplib6WWQk+Px/ft6pzKwh4=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 17 Oct 2019 10:15:36 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41940 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394833AbfJQOPf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 10:15:35 -0400
+Received: by mail-oi1-f195.google.com with SMTP id g81so2262393oib.8
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 07:15:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gNom0VFlbRYX78r4OKfXRzBJyj1ZzMem6+U6GRAPZGs=;
+        b=Kv2dqE7DBOjguEO+g1W15SDaL2UD4S+vcY1QNPVx8SnJ2E5T2gdGww8rE+GRAhGYAF
+         ILBKEBvVHXtMZ3BmzKphs7G2RPP27C2X9+3swp8cGF2i/u/m66J9i9veo+ceI3Bj3osq
+         MWlFe3gqzbgrf9H5LWLUoOvE3Mg2Hr3oEmfWcYTbw5kZC11hxu6xajsIp6aP88N8Ct22
+         ZTltpyBZZS0029i8Cfhdn6iROub4bj69y7h+zPK6we8swLKJcmbnUZt3w2D0PXT19Z7X
+         n98Y+SLmGCkEjEMCpEuotp9DxZ2U01vOh+RKvP1EMnD5m2ntbhD2ntvxfPt1+/6e0XPl
+         W8yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gNom0VFlbRYX78r4OKfXRzBJyj1ZzMem6+U6GRAPZGs=;
+        b=h8/mdAZe3lFTewbtYib+zlJRwv4ad8thkVNdqXuAZb49j35sNkr5m1DmezZ1U7xGWE
+         hcro7nhhMe/YCfeMfOPxqiqNf0hqHXvM/RJtROssqFlG5GZkPHlYim4WZ61NsPBzCiFm
+         HeCbjKd8fytFYgaP/8TN50b/r88i1+V/8EeXDZK+n3vmCPiAi/b5oR96mTDaXbq3Vh8T
+         8TCuXLFSWY5HIC3qjm+g317KxFiTH7JwdCW+LBpyOh2H6qmJe8Re7QdCgA/wPch2OHvk
+         Vdy3ImHbGXovzz28HqFDtpyU7AfW9JWWOgIXT7KQVIXztkm3+6h5mVCs8I82aAjFJZ2I
+         Q4VA==
+X-Gm-Message-State: APjAAAU0t1WBM/m9w7xMZuEccOZyXqJSzBc8KcryOVhsoxp0RoRPBRRW
+        9dgWdKH/slBasQj6jTW43ADYQxRd9hqHYafQSbwFeQ==
+X-Google-Smtp-Source: APXvYqyuauWsvEE+jliJ5S7S3Gh0NvhZGewq3BAb0qQ2dVeR8Gj7daShagq5yO57tbCuu+twdnA3Uh6Z3wF+KW7VHrc=
+X-Received: by 2002:aca:5015:: with SMTP id e21mr3502104oib.121.1571321732803;
+ Thu, 17 Oct 2019 07:15:32 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0d1aaa6-9451-42d7-8d1c-08d7530c5a8e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Oct 2019 14:14:42.2258
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YBuGAXYHD+9ZUuv4kD6PToAsVG3HJ2Bxj6p5YnCV6efU07TG+vA72KtC/r6zpUD1sB/qB80sbAkOxHHkvsSZakeXz/mzKGvC+ODsJQQeHvc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB2990
+References: <20191016083959.186860-1-elver@google.com>
+In-Reply-To: <20191016083959.186860-1-elver@google.com>
+From:   Marco Elver <elver@google.com>
+Date:   Thu, 17 Oct 2019 16:15:20 +0200
+Message-ID: <CANpmjNPB8mFso7=WpUQ8Nbxon3kKTEGRUFMCVhjLNkfzey+TJg@mail.gmail.com>
+Subject: Re: [PATCH 0/8] Add Kernel Concurrency Sanitizer (KCSAN)
+To:     Marco Elver <elver@google.com>
+Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Alexander Potapenko <glider@google.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        dave.hansen@linux.intel.com, David Howells <dhowells@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-efi@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commits adds RS485 support for LPUART hardware that uses 32-bit
-registers. These are typically found in i.MX8 processors.
+On Wed, 16 Oct 2019 at 10:41, Marco Elver <elver@google.com> wrote:
+>
+> This is the patch-series for the Kernel Concurrency Sanitizer (KCSAN).
+> KCSAN is a sampling watchpoint-based data-race detector. More details
+> are included in Documentation/dev-tools/kcsan.rst. This patch-series
+> only enables KCSAN for x86, but we expect adding support for other
+> architectures is relatively straightforward (we are aware of
+> experimental ARM64 and POWER support).
+>
+> To gather early feedback, we announced KCSAN back in September, and
+> have integrated the feedback where possible:
+> http://lkml.kernel.org/r/CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com
+>
+> We want to point out and acknowledge the work surrounding the LKMM,
+> including several articles that motivate why data-races are dangerous
+> [1, 2], justifying a data-race detector such as KCSAN.
+> [1] https://lwn.net/Articles/793253/
+> [2] https://lwn.net/Articles/799218/
+>
+> The current list of known upstream fixes for data-races found by KCSAN
+> can be found here:
+> https://github.com/google/ktsan/wiki/KCSAN#upstream-fixes-of-data-races-found-by-kcsan
 
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-Reviewed-by: Fugang Duan <fugang.duan@nxp.com>
+Sent v2: http://lkml.kernel.org/r/20191017141305.146193-1-elver@google.com
 
----
+Many thanks,
+-- Marco
 
-Changes in v2:
-- Added Fugang's reviewed tag
-
- drivers/tty/serial/fsl_lpuart.c | 65 ++++++++++++++++++++++++++++++++-
- 1 file changed, 63 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuar=
-t.c
-index 346b4a070ce9..22df5f8f48b6 100644
---- a/drivers/tty/serial/fsl_lpuart.c
-+++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -1280,6 +1280,57 @@ static int lpuart_config_rs485(struct uart_port *por=
-t,
- 	return 0;
- }
-=20
-+static int lpuart32_config_rs485(struct uart_port *port,
-+			struct serial_rs485 *rs485)
-+{
-+	struct lpuart_port *sport =3D container_of(port,
-+			struct lpuart_port, port);
-+
-+	unsigned long modem =3D lpuart32_read(&sport->port, UARTMODIR)
-+				& ~(UARTMODEM_TXRTSPOL | UARTMODEM_TXRTSE);
-+	lpuart32_write(&sport->port, modem, UARTMODIR);
-+
-+	/* clear unsupported configurations */
-+	rs485->delay_rts_before_send =3D 0;
-+	rs485->delay_rts_after_send =3D 0;
-+	rs485->flags &=3D ~SER_RS485_RX_DURING_TX;
-+
-+	if (rs485->flags & SER_RS485_ENABLED) {
-+		/* Enable auto RS-485 RTS mode */
-+		modem |=3D UARTMODEM_TXRTSE;
-+
-+		/*
-+		 * RTS needs to be logic HIGH either during transer _or_ after
-+		 * transfer, other variants are not supported by the hardware.
-+		 */
-+
-+		if (!(rs485->flags & (SER_RS485_RTS_ON_SEND |
-+				SER_RS485_RTS_AFTER_SEND)))
-+			rs485->flags |=3D SER_RS485_RTS_ON_SEND;
-+
-+		if (rs485->flags & SER_RS485_RTS_ON_SEND &&
-+				rs485->flags & SER_RS485_RTS_AFTER_SEND)
-+			rs485->flags &=3D ~SER_RS485_RTS_AFTER_SEND;
-+
-+		/*
-+		 * The hardware defaults to RTS logic HIGH while transfer.
-+		 * Switch polarity in case RTS shall be logic HIGH
-+		 * after transfer.
-+		 * Note: UART is assumed to be active high.
-+		 */
-+		if (rs485->flags & SER_RS485_RTS_ON_SEND)
-+			modem &=3D ~UARTMODEM_TXRTSPOL;
-+		else if (rs485->flags & SER_RS485_RTS_AFTER_SEND)
-+			modem |=3D UARTMODEM_TXRTSPOL;
-+	}
-+
-+	/* Store the new configuration */
-+	sport->port.rs485 =3D *rs485;
-+
-+	lpuart32_write(&sport->port, modem, UARTMODIR);
-+	return 0;
-+}
-+
- static unsigned int lpuart_get_mctrl(struct uart_port *port)
- {
- 	unsigned int temp =3D 0;
-@@ -1878,6 +1929,13 @@ lpuart32_set_termios(struct uart_port *port, struct =
-ktermios *termios,
- 		ctrl |=3D UARTCTRL_M;
- 	}
-=20
-+	/*
-+	 * When auto RS-485 RTS mode is enabled,
-+	 * hardware flow control need to be disabled.
-+	 */
-+	if (sport->port.rs485.flags & SER_RS485_ENABLED)
-+		termios->c_cflag &=3D ~CRTSCTS;
-+
- 	if (termios->c_cflag & CRTSCTS) {
- 		modem |=3D (UARTMODIR_RXRTSE | UARTMODIR_TXCTSE);
- 	} else {
-@@ -2405,7 +2463,10 @@ static int lpuart_probe(struct platform_device *pdev=
-)
- 		sport->port.ops =3D &lpuart_pops;
- 	sport->port.flags =3D UPF_BOOT_AUTOCONF;
-=20
--	sport->port.rs485_config =3D lpuart_config_rs485;
-+	if (lpuart_is_32(sport))
-+		sport->port.rs485_config =3D lpuart32_config_rs485;
-+	else
-+		sport->port.rs485_config =3D lpuart_config_rs485;
-=20
- 	sport->ipg_clk =3D devm_clk_get(&pdev->dev, "ipg");
- 	if (IS_ERR(sport->ipg_clk)) {
-@@ -2459,7 +2520,7 @@ static int lpuart_probe(struct platform_device *pdev)
- 	    sport->port.rs485.delay_rts_after_send)
- 		dev_err(&pdev->dev, "driver doesn't support RTS delays\n");
-=20
--	lpuart_config_rs485(&sport->port, &sport->port.rs485);
-+	sport->port.rs485_config(&sport->port, &sport->port.rs485);
-=20
- 	sport->dma_tx_chan =3D dma_request_slave_channel(sport->port.dev, "tx");
- 	if (!sport->dma_tx_chan)
---=20
-2.23.0
-
+> Marco Elver (8):
+>   kcsan: Add Kernel Concurrency Sanitizer infrastructure
+>   objtool, kcsan: Add KCSAN runtime functions to whitelist
+>   build, kcsan: Add KCSAN build exceptions
+>   seqlock, kcsan: Add annotations for KCSAN
+>   seqlock: Require WRITE_ONCE surrounding raw_seqcount_barrier
+>   asm-generic, kcsan: Add KCSAN instrumentation for bitops
+>   locking/atomics, kcsan: Add KCSAN instrumentation
+>   x86, kcsan: Enable KCSAN for x86
+>
+>  Documentation/dev-tools/kcsan.rst         | 202 ++++++++++
+>  MAINTAINERS                               |  11 +
+>  Makefile                                  |   3 +-
+>  arch/x86/Kconfig                          |   1 +
+>  arch/x86/boot/Makefile                    |   1 +
+>  arch/x86/boot/compressed/Makefile         |   1 +
+>  arch/x86/entry/vdso/Makefile              |   1 +
+>  arch/x86/include/asm/bitops.h             |   2 +-
+>  arch/x86/kernel/Makefile                  |   6 +
+>  arch/x86/kernel/cpu/Makefile              |   3 +
+>  arch/x86/lib/Makefile                     |   2 +
+>  arch/x86/mm/Makefile                      |   3 +
+>  arch/x86/purgatory/Makefile               |   1 +
+>  arch/x86/realmode/Makefile                |   1 +
+>  arch/x86/realmode/rm/Makefile             |   1 +
+>  drivers/firmware/efi/libstub/Makefile     |   1 +
+>  include/asm-generic/atomic-instrumented.h | 192 ++++++++-
+>  include/asm-generic/bitops-instrumented.h |  18 +
+>  include/linux/compiler-clang.h            |   9 +
+>  include/linux/compiler-gcc.h              |   7 +
+>  include/linux/compiler.h                  |  35 +-
+>  include/linux/kcsan-checks.h              | 116 ++++++
+>  include/linux/kcsan.h                     |  85 ++++
+>  include/linux/sched.h                     |   7 +
+>  include/linux/seqlock.h                   |  51 ++-
+>  init/init_task.c                          |   6 +
+>  init/main.c                               |   2 +
+>  kernel/Makefile                           |   6 +
+>  kernel/kcsan/Makefile                     |  14 +
+>  kernel/kcsan/atomic.c                     |  21 +
+>  kernel/kcsan/core.c                       | 458 ++++++++++++++++++++++
+>  kernel/kcsan/debugfs.c                    | 225 +++++++++++
+>  kernel/kcsan/encoding.h                   |  94 +++++
+>  kernel/kcsan/kcsan.c                      |  81 ++++
+>  kernel/kcsan/kcsan.h                      | 140 +++++++
+>  kernel/kcsan/report.c                     | 307 +++++++++++++++
+>  kernel/kcsan/test.c                       | 117 ++++++
+>  kernel/sched/Makefile                     |   6 +
+>  lib/Kconfig.debug                         |   2 +
+>  lib/Kconfig.kcsan                         |  88 +++++
+>  lib/Makefile                              |   3 +
+>  mm/Makefile                               |   8 +
+>  scripts/Makefile.kcsan                    |   6 +
+>  scripts/Makefile.lib                      |  10 +
+>  scripts/atomic/gen-atomic-instrumented.sh |   9 +-
+>  tools/objtool/check.c                     |  17 +
+>  46 files changed, 2364 insertions(+), 16 deletions(-)
+>  create mode 100644 Documentation/dev-tools/kcsan.rst
+>  create mode 100644 include/linux/kcsan-checks.h
+>  create mode 100644 include/linux/kcsan.h
+>  create mode 100644 kernel/kcsan/Makefile
+>  create mode 100644 kernel/kcsan/atomic.c
+>  create mode 100644 kernel/kcsan/core.c
+>  create mode 100644 kernel/kcsan/debugfs.c
+>  create mode 100644 kernel/kcsan/encoding.h
+>  create mode 100644 kernel/kcsan/kcsan.c
+>  create mode 100644 kernel/kcsan/kcsan.h
+>  create mode 100644 kernel/kcsan/report.c
+>  create mode 100644 kernel/kcsan/test.c
+>  create mode 100644 lib/Kconfig.kcsan
+>  create mode 100644 scripts/Makefile.kcsan
+>
+> --
+> 2.23.0.700.g56cf767bdb-goog
+>
