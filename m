@@ -2,306 +2,167 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E927FECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66681ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1D4620854
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23DDB20854
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:14:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mYDkEQ8s"
+	dkim=pass (1024-bit key) header.d=verimatrix.com header.i=@verimatrix.com header.b="RBdva+2R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439996AbfJQON5 (ORCPT
+        id S2440008AbfJQOOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 10:13:57 -0400
-Received: from mail-wr1-f73.google.com ([209.85.221.73]:57044 "EHLO
-        mail-wr1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439967AbfJQONz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:13:55 -0400
-Received: by mail-wr1-f73.google.com with SMTP id s9so1015011wrw.23
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 07:13:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=C4dnsunAWNHT00RdRPhWuKYLNPc5AUOyg3b62948kqU=;
-        b=mYDkEQ8s9nyfgNFH6dyVQNAgzsXlrRV1iBjO1G2mlkdxxfUL1b9pBU2fZj01uKk3xK
-         bJSL/XJ78IWTPHDtuuQJZfDwVLdV/DZDh8OWLAyTAJqcQ6RR9mKMlceynqWJyAKRHDrV
-         pAdv2SlemLu8wAmizHk2OrRk0ZBfUmbZdNKRJuhMj0pSkKNSK9FPvAviZfBJ4A2Plcvo
-         FbxT4oj+W+EZPkYk2lR4RUcqF4CHyosk4dqGUgC6w2jivQkV/1tMZo/6w0U9pJhbYmUZ
-         dzBKwmSaWGSfKMH2NDnxD39B+WXuxqgQGRV8K4tjlWUjiGBpzOPoHZnl3nb8UHORf61N
-         gvjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=C4dnsunAWNHT00RdRPhWuKYLNPc5AUOyg3b62948kqU=;
-        b=Tr14bF/Z4i0pGpkFjGzy2thL4kWY11oy0/DHXYi+g6l36vi/mrQ/ko3QxMZMusDp6y
-         EYuv7LB6BCkDPhSuwP9owYaArXfNnSgN9K4PVTzzqleaG0I9GyUWphV1s78NTtCzVOb/
-         s0py1yBGJXfNYc7DtqZBAYFY4ocRp5rJhgSGr3VoAr/s5IClfvjZzR6jWsokI4E1q5sF
-         A7ga1mF3x9tdbZmSlDvUsZXm27RjduocYSBjpqS4bYsGVV4M2nxuZz1ix1oTmK4sfKSu
-         /prOZAbCb4zbH2i2gEl0ZNUf/QZrzGhqjvHuoy1lkKlBKg43OzYNg/JH1kMnfDNgYQO0
-         U6oA==
-X-Gm-Message-State: APjAAAU0GwBMklO4+AEK5FRJAy19VH8FPMVAlWd1fOoaInSzJZGpBUBI
-        SkBUXcNO61XmAINoAAbMDVV2zIE3TA==
-X-Google-Smtp-Source: APXvYqwRrm7mSLgK02eK8Gmh7tMc4aMZPJHDzATL1Tbd4StzBgi/Gl/z1DGR6sft7R44frqI0MAEbmcDTw==
-X-Received: by 2002:a5d:674e:: with SMTP id l14mr3127939wrw.45.1571321631237;
- Thu, 17 Oct 2019 07:13:51 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 16:13:05 +0200
-In-Reply-To: <20191017141305.146193-1-elver@google.com>
-Message-Id: <20191017141305.146193-9-elver@google.com>
-Mime-Version: 1.0
-References: <20191017141305.146193-1-elver@google.com>
-X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-Subject: [PATCH v2 8/8] x86, kcsan: Enable KCSAN for x86
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     akiyks@gmail.com, stern@rowland.harvard.edu, glider@google.com,
-        parri.andrea@gmail.com, andreyknvl@google.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, arnd@arndb.de, boqun.feng@gmail.com,
-        bp@alien8.de, dja@axtens.net, dlustig@nvidia.com,
-        dave.hansen@linux.intel.com, dhowells@redhat.com,
-        dvyukov@google.com, hpa@zytor.com, mingo@redhat.com,
-        j.alglave@ucl.ac.uk, joel@joelfernandes.org, corbet@lwn.net,
-        jpoimboe@redhat.com, luc.maranget@inria.fr, mark.rutland@arm.com,
-        npiggin@gmail.com, paulmck@linux.ibm.com, peterz@infradead.org,
-        tglx@linutronix.de, will@kernel.org, kasan-dev@googlegroups.com,
-        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 17 Oct 2019 10:14:08 -0400
+Received: from mail-eopbgr690081.outbound.protection.outlook.com ([40.107.69.81]:34237
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2439928AbfJQOOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 10:14:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G2fB4K9deKzhlv0bmsZt55f2UNPFjMZ2gR54tu9KGLXHxVLZhDoyaKFpZ20b4r/fXKvXhJOSlWEqFbLfHIRCXL7wZDYIAkplWVqiyimnjHw63ykbIig0k4THvqZwZ0PkTDVPSKhQg5W+7h0OoBZLi9bYxHjph/1Esxey+1PLHMtqYT89hTzbXHl6mEPckpd1CXYLNgndtbybGYJC7dqDcIXFw/9M4OMmMVcBsaGyOiUE59JqQJPDDw13ucw4TISiPrV65ifdN2QocxVOutlewuay2I7HxQdg44s8Hqp+aYY8kdoQGcB6iFnYrIc327/sG6/yhPZJmLkrAjBo0gqO8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5ZsZl4v2qo31RfY3p3HBHf6q5kqa02bswGzWbZMIlGA=;
+ b=TsYfR8WhPgnuQ6FkeFx9SlSSw1W7UO/0d+Ccy6wAMDG5Yw0pYrAKKlBGBmkD0VDA4qEOupFcQ0IpJidQb2YdtJbrD1jQK4TtLUSFg9ueai0mhMzuwS0cxKJfNva7RwwUtbQR/IsGClR2kbnL0UPsmR7bNxFEo+sFu/cpy7kWqdyL2qQ4lVMfnU8K4HASOuT3e3XIs3pqiuLxJ/hr4UPO24b35lDz9E56zWo7aGZBgMzCln7SDs8O5K+ujmC9pEZilyNwyUoAv1LVDhK13sRjzMR6p7K3xrFUmoHYca74N8bIb3rpgkHHugAqodDn4JgIdgjL7WQY6Fb6etUNFxHZwA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=verimatrix.com; dmarc=pass action=none
+ header.from=verimatrix.com; dkim=pass header.d=verimatrix.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=verimatrix.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5ZsZl4v2qo31RfY3p3HBHf6q5kqa02bswGzWbZMIlGA=;
+ b=RBdva+2RXCgoQqmR8aOuhwhj8V9rlsZ7d+aSmU0QSgk7TCGs8BCr6BDQui8qk3vivPchEh3qrd4ygYY/tDF3vRPjfAE8ZiWsvX92p1fOZsBSQVrLR22YA/ZzAM939DDGsuaOel6tD9NlVj6AwJLtkycn5KR0ID+nL+LIjwKQzMU=
+Received: from MN2PR20MB2973.namprd20.prod.outlook.com (52.132.172.86) by
+ MN2PR20MB2574.namprd20.prod.outlook.com (20.179.145.81) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.19; Thu, 17 Oct 2019 14:14:04 +0000
+Received: from MN2PR20MB2973.namprd20.prod.outlook.com
+ ([fe80::b986:4f02:3206:31e4]) by MN2PR20MB2973.namprd20.prod.outlook.com
+ ([fe80::b986:4f02:3206:31e4%7]) with mapi id 15.20.2347.023; Thu, 17 Oct 2019
+ 14:14:03 +0000
+From:   Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Pascal van Leeuwen <pascalvanl@gmail.com>,
+        Kelsey Skunberg <skunberg.kelsey@gmail.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: RE: [PATCH 3/3] crypto: inside-secure - Remove #ifdef checks
+Thread-Topic: [PATCH 3/3] crypto: inside-secure - Remove #ifdef checks
+Thread-Index: AQHVd4jdTWYvsvdMgECIJvWMP+Nud6de2q1ggAAZLICAAAWwsA==
+Date:   Thu, 17 Oct 2019 14:14:03 +0000
+Message-ID: <MN2PR20MB29736FBE530B603C71F99AD6CA6D0@MN2PR20MB2973.namprd20.prod.outlook.com>
+References: <20190930121520.1388317-1-arnd@arndb.de>
+ <20190930121520.1388317-3-arnd@arndb.de>
+ <MN2PR20MB2973D14C38B7BC7E081A73A9CA6D0@MN2PR20MB2973.namprd20.prod.outlook.com>
+ <CAK8P3a3+UrqS0nQxcG7UuMt4s5FDnowFq-C5-K5XU-CKpciM8g@mail.gmail.com>
+In-Reply-To: <CAK8P3a3+UrqS0nQxcG7UuMt4s5FDnowFq-C5-K5XU-CKpciM8g@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pvanleeuwen@verimatrix.com; 
+x-originating-ip: [188.204.2.113]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e577de48-239f-424c-254d-08d7530c43e2
+x-ms-traffictypediagnostic: MN2PR20MB2574:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <MN2PR20MB2574D0CA3B31C2520D652FB1CA6D0@MN2PR20MB2574.namprd20.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 01930B2BA8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(376002)(136003)(396003)(39850400004)(199004)(189003)(13464003)(5660300002)(74316002)(66556008)(7416002)(64756008)(66946007)(66476007)(55016002)(14454004)(446003)(11346002)(486006)(99286004)(476003)(66066001)(6246003)(15974865002)(4326008)(33656002)(76116006)(71200400001)(14444005)(86362001)(66446008)(71190400001)(478600001)(6436002)(256004)(9686003)(316002)(25786009)(7696005)(8936002)(76176011)(54906003)(6916009)(186003)(229853002)(6506007)(53546011)(102836004)(52536014)(2906002)(26005)(7736002)(8676002)(3846002)(6116002)(81156014)(305945005)(81166006)(18886075002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR20MB2574;H:MN2PR20MB2973.namprd20.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: verimatrix.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: MEss91tDtm7Wnn39exOpJh7VgM0N9n3t7uySH+zSTPyS6QVA9NNabOTyixBLKJQPQF/7IlJ8Gyz2rGNMp5EOlITMZ57IPQ4Bb5A9VaK3UF5koHsJOm5brLe3eFFB4WvTxBce/8mewlcrV6ndN2GB3G0xZAHy1agniLjnfwcJsLN45sux5sCKQR7Y92D4Aj05pKIIErpfWcCXyYx/K9Q9cqt0uFzu/0PNGmmV0wT7YACYPsXovuq9jPD9Q6/kr8+PMuhpsl6ZMs9KYFH8mWY8/4vYQLNOqNmImlZiG6+bDbu/ybdfwQVqQAkoQX8iwgM77/OHBI296BxLhowMt+vVa9fUtyL8zz4F0dh3nrFaz2ZD6hU9aUdE/Lvl27c8PpuAPHJpFqCN7ChSoUotl1IHVTgcm3SqYO8uA/XLyjv6r7M=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: verimatrix.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e577de48-239f-424c-254d-08d7530c43e2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Oct 2019 14:14:03.8242
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: dcb260f9-022d-4495-8602-eae51035a0d0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AIRG6B+Gp79Pw/znyLtpfDOjesVV47CWwD4yx1odZJxwI0oC1fCOkDCQWk5oxI4uNcuGuZupHMYn1jLNSaj+dPqjYiND2KDCnMLW9LNe36I=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR20MB2574
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch enables KCSAN for x86, with updates to build rules to not use
-KCSAN for several incompatible compilation units.
-
-Signed-off-by: Marco Elver <elver@google.com>
----
-v2:
-* Document build exceptions where no previous above comment explained
-  why we cannot instrument.
----
- arch/x86/Kconfig                      | 1 +
- arch/x86/boot/Makefile                | 2 ++
- arch/x86/boot/compressed/Makefile     | 2 ++
- arch/x86/entry/vdso/Makefile          | 3 +++
- arch/x86/include/asm/bitops.h         | 6 +++++-
- arch/x86/kernel/Makefile              | 7 +++++++
- arch/x86/kernel/cpu/Makefile          | 3 +++
- arch/x86/lib/Makefile                 | 4 ++++
- arch/x86/mm/Makefile                  | 3 +++
- arch/x86/purgatory/Makefile           | 2 ++
- arch/x86/realmode/Makefile            | 3 +++
- arch/x86/realmode/rm/Makefile         | 3 +++
- drivers/firmware/efi/libstub/Makefile | 2 ++
- 13 files changed, 40 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index d6e1faa28c58..81859be4a005 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -226,6 +226,7 @@ config X86
- 	select VIRT_TO_BUS
- 	select X86_FEATURE_NAMES		if PROC_FS
- 	select PROC_PID_ARCH_STATUS		if PROC_FS
-+	select HAVE_ARCH_KCSAN if X86_64
- 
- config INSTRUCTION_DECODER
- 	def_bool y
-diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-index e2839b5c246c..9c7942794164 100644
---- a/arch/x86/boot/Makefile
-+++ b/arch/x86/boot/Makefile
-@@ -9,7 +9,9 @@
- # Changed by many, many contributors over the years.
- #
- 
-+# Sanitizer runtimes are unavailable and cannot be linked for early boot code.
- KASAN_SANITIZE			:= n
-+KCSAN_SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
- 
- # Kernel does not boot with kcov instrumentation here.
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 6b84afdd7538..a1c248b8439f 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -17,7 +17,9 @@
- #	(see scripts/Makefile.lib size_append)
- #	compressed vmlinux.bin.all + u32 size of vmlinux.bin.all
- 
-+# Sanitizer runtimes are unavailable and cannot be linked for early boot code.
- KASAN_SANITIZE			:= n
-+KCSAN_SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
- 
- # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-index 0f2154106d01..a23debaad5b9 100644
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -10,8 +10,11 @@ ARCH_REL_TYPE_ABS += R_386_GLOB_DAT|R_386_JMP_SLOT|R_386_RELATIVE
- include $(srctree)/lib/vdso/Makefile
- 
- KBUILD_CFLAGS += $(DISABLE_LTO)
-+
-+# Sanitizer runtimes are unavailable and cannot be linked here.
- KASAN_SANITIZE			:= n
- UBSAN_SANITIZE			:= n
-+KCSAN_SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
- 
- # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
-diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-index 7d1f6a49bfae..ee08917d3d92 100644
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -201,8 +201,12 @@ arch_test_and_change_bit(long nr, volatile unsigned long *addr)
- 	return GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(btc), *addr, c, "Ir", nr);
- }
- 
--static __always_inline bool constant_test_bit(long nr, const volatile unsigned long *addr)
-+static __no_kcsan_or_inline bool constant_test_bit(long nr, const volatile unsigned long *addr)
- {
-+	/*
-+	 * Because this is a plain access, we need to disable KCSAN here to
-+	 * avoid double instrumentation via bitops-instrumented.h.
-+	 */
- 	return ((1UL << (nr & (BITS_PER_LONG-1))) &
- 		(addr[nr >> _BITOPS_LONG_SHIFT])) != 0;
- }
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index 3578ad248bc9..2aa122d94956 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -28,6 +28,13 @@ KASAN_SANITIZE_dumpstack_$(BITS).o			:= n
- KASAN_SANITIZE_stacktrace.o				:= n
- KASAN_SANITIZE_paravirt.o				:= n
- 
-+# Do not instrument early boot code.
-+KCSAN_SANITIZE_head$(BITS).o				:= n
-+# Do not instrument debug code to avoid corrupting bug reporting.
-+KCSAN_SANITIZE_dumpstack.o				:= n
-+KCSAN_SANITIZE_dumpstack_$(BITS).o			:= n
-+KCSAN_SANITIZE_stacktrace.o				:= n
-+
- OBJECT_FILES_NON_STANDARD_relocate_kernel_$(BITS).o	:= y
- OBJECT_FILES_NON_STANDARD_test_nx.o			:= y
- OBJECT_FILES_NON_STANDARD_paravirt_patch.o		:= y
-diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
-index d7a1e5a9331c..1f1b0edc0187 100644
---- a/arch/x86/kernel/cpu/Makefile
-+++ b/arch/x86/kernel/cpu/Makefile
-@@ -13,6 +13,9 @@ endif
- KCOV_INSTRUMENT_common.o := n
- KCOV_INSTRUMENT_perf_event.o := n
- 
-+# As above, instrumenting secondary CPU boot code causes boot hangs.
-+KCSAN_SANITIZE_common.o := n
-+
- # Make sure load_percpu_segment has no stackprotector
- nostackp := $(call cc-option, -fno-stack-protector)
- CFLAGS_common.o		:= $(nostackp)
-diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
-index 5246db42de45..432a07705677 100644
---- a/arch/x86/lib/Makefile
-+++ b/arch/x86/lib/Makefile
-@@ -6,10 +6,14 @@
- # Produces uninteresting flaky coverage.
- KCOV_INSTRUMENT_delay.o	:= n
- 
-+# KCSAN uses udelay for introducing watchpoint delay; avoid recursion.
-+KCSAN_SANITIZE_delay.o := n
-+
- # Early boot use of cmdline; don't instrument it
- ifdef CONFIG_AMD_MEM_ENCRYPT
- KCOV_INSTRUMENT_cmdline.o := n
- KASAN_SANITIZE_cmdline.o  := n
-+KCSAN_SANITIZE_cmdline.o  := n
- 
- ifdef CONFIG_FUNCTION_TRACER
- CFLAGS_REMOVE_cmdline.o = -pg
-diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
-index 84373dc9b341..ee871602f96a 100644
---- a/arch/x86/mm/Makefile
-+++ b/arch/x86/mm/Makefile
-@@ -7,6 +7,9 @@ KCOV_INSTRUMENT_mem_encrypt_identity.o	:= n
- KASAN_SANITIZE_mem_encrypt.o		:= n
- KASAN_SANITIZE_mem_encrypt_identity.o	:= n
- 
-+KCSAN_SANITIZE_mem_encrypt.o		:= n
-+KCSAN_SANITIZE_mem_encrypt_identity.o	:= n
-+
- ifdef CONFIG_FUNCTION_TRACER
- CFLAGS_REMOVE_mem_encrypt.o		= -pg
- CFLAGS_REMOVE_mem_encrypt_identity.o	= -pg
-diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-index fb4ee5444379..69379bce9574 100644
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -17,7 +17,9 @@ CFLAGS_sha256.o := -D__DISABLE_EXPORTS
- LDFLAGS_purgatory.ro := -e purgatory_start -r --no-undefined -nostdlib -z nodefaultlib
- targets += purgatory.ro
- 
-+# Sanitizer runtimes are unavailable and cannot be linked here.
- KASAN_SANITIZE	:= n
-+KCSAN_SANITIZE	:= n
- KCOV_INSTRUMENT := n
- 
- # These are adjustments to the compiler flags used for objects that
-diff --git a/arch/x86/realmode/Makefile b/arch/x86/realmode/Makefile
-index 682c895753d9..6b1f3a4eeb44 100644
---- a/arch/x86/realmode/Makefile
-+++ b/arch/x86/realmode/Makefile
-@@ -6,7 +6,10 @@
- # for more details.
- #
- #
-+
-+# Sanitizer runtimes are unavailable and cannot be linked here.
- KASAN_SANITIZE			:= n
-+KCSAN_SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
- 
- subdir- := rm
-diff --git a/arch/x86/realmode/rm/Makefile b/arch/x86/realmode/rm/Makefile
-index f60501a384f9..fdbbb945c216 100644
---- a/arch/x86/realmode/rm/Makefile
-+++ b/arch/x86/realmode/rm/Makefile
-@@ -6,7 +6,10 @@
- # for more details.
- #
- #
-+
-+# Sanitizer runtimes are unavailable and cannot be linked here.
- KASAN_SANITIZE			:= n
-+KCSAN_SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
- 
- # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index 0460c7581220..693d0a94b118 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -31,7 +31,9 @@ KBUILD_CFLAGS			:= $(cflags-y) -DDISABLE_BRANCH_PROFILING \
- 				   -D__DISABLE_EXPORTS
- 
- GCOV_PROFILE			:= n
-+# Sanitizer runtimes are unavailable and cannot be linked here.
- KASAN_SANITIZE			:= n
-+KCSAN_SANITIZE			:= n
- UBSAN_SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
- 
--- 
-2.23.0.866.gb869b98d4c-goog
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBcm5kIEJlcmdtYW5uIDxhcm5k
+QGFybmRiLmRlPg0KPiBTZW50OiBUaHVyc2RheSwgT2N0b2JlciAxNywgMjAxOSAzOjQ4IFBNDQo+
+IFRvOiBQYXNjYWwgVmFuIExlZXV3ZW4gPHB2YW5sZWV1d2VuQHZlcmltYXRyaXguY29tPg0KPiBD
+YzogQW50b2luZSBUZW5hcnQgPGFudG9pbmUudGVuYXJ0QGJvb3RsaW4uY29tPjsgSGVyYmVydCBY
+dSA8aGVyYmVydEBnb25kb3IuYXBhbmEub3JnLmF1PjsNCj4gRGF2aWQgUy4gTWlsbGVyIDxkYXZl
+bUBkYXZlbWxvZnQubmV0PjsgQmpvcm4gSGVsZ2FhcyA8YmhlbGdhYXNAZ29vZ2xlLmNvbT47IFBh
+c2NhbCB2YW4gTGVldXdlbg0KPiA8cGFzY2FsdmFubEBnbWFpbC5jb20+OyBLZWxzZXkgU2t1bmJl
+cmcgPHNrdW5iZXJnLmtlbHNleUBnbWFpbC5jb20+OyBsaW51eC0NCj4gY3J5cHRvQHZnZXIua2Vy
+bmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtcGNpQHZnZXIua2Vy
+bmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDMvM10gY3J5cHRvOiBpbnNpZGUtc2VjdXJl
+IC0gUmVtb3ZlICNpZmRlZiBjaGVja3MNCj4gDQo+IE9uIFRodSwgT2N0IDE3LCAyMDE5IGF0IDM6
+MjYgUE0gUGFzY2FsIFZhbiBMZWV1d2VuDQo+IDxwdmFubGVldXdlbkB2ZXJpbWF0cml4LmNvbT4g
+d3JvdGU6DQo+IA0KPiA+ID4gICAgICAgLyogUmVnaXN0ZXIgUENJIGRyaXZlciAqLw0KPiA+ID4g
+LSAgICAgcGNpcmVnX3JjID0gcGNpX3JlZ2lzdGVyX2RyaXZlcigmc2FmZXhjZWxfcGNpX2RyaXZl
+cik7DQo+ID4gPiAtI2VuZGlmDQo+ID4gPiArICAgICByZXQgPSBwY2lfcmVnaXN0ZXJfZHJpdmVy
+KCZzYWZleGNlbF9wY2lfZHJpdmVyKTsNCj4gPiA+DQo+ID4gPiAtI2lmIElTX0VOQUJMRUQoQ09O
+RklHX09GKQ0KPiA+ID4gICAgICAgLyogUmVnaXN0ZXIgcGxhdGZvcm0gZHJpdmVyICovDQo+ID4g
+PiAtICAgICBvZnJlZ19yYyA9IHBsYXRmb3JtX2RyaXZlcl9yZWdpc3RlcigmY3J5cHRvX3NhZmV4
+Y2VsKTsNCj4gPiA+IC0gI2lmIElTX0VOQUJMRUQoQ09ORklHX1BDSSkNCj4gPiA+IC0gICAgIC8q
+IFJldHVybiBzdWNjZXNzIGlmIGVpdGhlciBQQ0kgb3IgT0YgcmVnaXN0ZXJlZCBPSyAqLw0KPiA+
+ID4gLSAgICAgcmV0dXJuIHBjaXJlZ19yYyA/IG9mcmVnX3JjIDogMDsNCj4gPiA+IC0gI2Vsc2UN
+Cj4gPiA+IC0gICAgIHJldHVybiBvZnJlZ19yYzsNCj4gPiA+IC0gI2VuZGlmDQo+ID4gPiAtI2Vs
+c2UNCj4gPiA+IC0gI2lmIElTX0VOQUJMRUQoQ09ORklHX1BDSSkNCj4gPiA+IC0gICAgIHJldHVy
+biBwY2lyZWdfcmM7DQo+ID4gPiAtICNlbHNlDQo+ID4gPiAtICAgICByZXR1cm4gLUVJTlZBTDsN
+Cj4gPiA+IC0gI2VuZGlmDQo+ID4gPiAtI2VuZGlmDQo+ID4gPiArICAgICBpZiAoSVNfRU5BQkxF
+RChDT05GSUdfT0YpICYmICFyZXQpIHsNCj4gPiA+DQo+ID4gSG1tIC4uLiB0aGlzIHdvdWxkIG1h
+a2UgaXQgc2tpcCB0aGUgT0YgcmVnaXN0cmF0aW9uIGlmIHRoZSBQQ0lFDQo+ID4gcmVnaXN0cmF0
+aW9uIGZhaWxlZC4gTm90ZSB0aGF0IHRoZSB0eXBpY2FsIGVtYmVkZGVkICBzeXN0ZW0gd2lsbA0K
+PiA+IGhhdmUgYSBQQ0lFIHN1YnN5c3RlbSAoZS5nLiBNYXJ2ZWxsIEE3Sy9BOEsgZG9lcykgYnV0
+IHdpbGwgaGF2ZQ0KPiA+IHRoZSBFSVAgZW1iZWRkZWQgb24gdGhlIFNvQyBhcyBhbiBPRiBkZXZp
+Y2UuDQo+ID4NCj4gPiBTbyB0aGUgcXVlc3Rpb24gaXM6IGlzIGl0IHBvc3NpYmxlIHNvbWVob3cg
+dGhhdCBQQ0lFIHJlZ2lzdHJhdGlvbg0KPiA+IGZhaWxzIHdoaWxlIE9GIHJlZ2lzdHJhdGlvbiBk
+b2VzIHBhc3M/IEJlY2F1c2UgaW4gdGhhdCBjYXNlLCB0aGlzDQo+ID4gY29kZSB3b3VsZCBiZSB3
+cm9uZyAuLi4NCj4gDQo+IEkgZG9uJ3Qgc2VlIGhvdyBpdCB3b3VsZCBmYWlsLiBXaGVuIENPTkZJ
+R19QQ0kgaXMgZGlzYWJsZWQsDQo+IHBjaV9yZWdpc3Rlcl9kcml2ZXIoKSBkb2VzIG5vdGhpbmcs
+IGFuZCB0aGUgcGNpX2RyaXZlciBhcyB3ZWxsDQo+IGFzIGV2ZXJ5dGhpbmcgcmVmZXJlbmNlZCBm
+cm9tIGl0IHdpbGwgYmUgc2lsZW50bHkgZHJvcHBlZCBmcm9tDQo+IHRoZSBvYmplY3QgZmlsZS4N
+Cj4gSWYgQ09ORklHX1BDSSBpcyBlbmFibGVkLCB0aGVuIHRoZSBkcml2ZXIgd2lsbCBiZSByZWdp
+c3RlcmVkDQo+IHRvIHRoZSBQQ0kgc3Vic3lzdGVtLCB3YWl0aW5nIGZvciBhIGRldmljZSB0byBz
+aG93IHVwLCBidXQNCj4gdGhlIGRyaXZlciByZWdpc3RyYXRpb24gZG9lcyBub3QgY2FyZSBhYm91
+dCB3aGV0aGVyIHRoZXJlIGlzDQo+IHN1Y2ggYSBkZXZpY2UuDQo+IA0KSSBrbm93IGl0IGRvZXMg
+bm90IGNhcmUgYWJvdXQgdGhlIGRldmljZSBiZWluZyBwcmVzZW50IG9yIG5vdC4NCkkgd2FzIGp1
+c3Qgd29ycmllZCBzb21lIGlzc3VlIHdpdGggdGhlIFBDSUUgc3Vic3lzdGVtIHdvdWxkIHByb3Bh
+Z2F0ZQ0KdG8gKHVucmVsYXRlZCkgT0YgZGV2aWNlIHVzZSB0aGlzIHdheS4gQnV0IEkgaGF2ZSBu
+byBpZGVhIG9uIHRoZSBleGFjdA0Kd2F5cyBQQ0lFIHJlZ2lzdHJhdGlvbiBtYXkgZmFpbC4gSWYg
+aXQgaXMgYmVjYXVzZSBvZiBsYWNrIG9mIG1lbW9yeSwNCkkgYXNzdW1lIHRoYXQgc3Vic2VxdWVu
+dCBPRiBkZXZpY2UgcmVnaXN0cmF0aW9uIHdvdWxkIGZhaWwgYXMgd2VsbC4NClNvIG1heWJlIEkn
+bSB3b3JyaWVkIGFib3V0IGFuIGlzc3VlIHRoYXQgZG9lc24ndCByZWFsbHkgZXhpc3QuDQoNCj4g
+PiBPdGhlciB0aGFuIHRoYXQsIEkgZG9uJ3QgY2FyZSBtdWNoIGhvdyB0aGlzIGNvZGUgaXMgaW1w
+bGVtZW50ZWQNCj4gPiBhcyBsb25nIGFzIGl0IHdvcmtzIGZvciBib3RoIG15IHVzZSBjYXNlcywg
+YmVpbmcgYW4gT0YgZW1iZWRkZWQNCj4gPiBkZXZpY2UgKG9uIGEgU29DIF93aXRoXyBvciBfd2l0
+aG91dF8gUENJRSBzdXBwb3J0KSBhbmQgYSBkZXZpY2UNCj4gPiBvbiBhIFBDSUUgYm9hcmQgaW4g
+YSBQQ0kgKHdoaWNoIGhhcyBib3RoIFBDSUUgYW5kIE9GIHN1cHBvcnQpLg0KPiANCj4gWWVzLCB0
+aGF0IHNob3VsZCBiZSBmaW5lLiBUaGVyZSBhcmUgYSBsb3Qgb2YgZHJpdmVycyB0aGF0IHN1cHBv
+cnQNCj4gbXVsdGlwbGUgYnVzIGludGVyZmFjZXMsIGFuZCB0aGlzIGlzIHRoZSBub3JtYWwgd2F5
+IHRvIGhhbmRsZSB0aGVtLg0KPiANCk9rLCBpZiB0aGlzIGlzIHRoZSAibm9ybWFsIHdheSB0byBo
+YW5kbGUgdGhpcyIgYW5kIGEgbG90IG9mIG90aGVyDQpkcml2ZXJzIGRvIGl0IHRoZSBzYW1lIHdh
+eSwgdGhlbiBJJ20gT0sgd2l0aCB0aGF0IC4uLg0KSSBhbHJlYWR5IHZlcmlmaWVkIGl0IHdvcmtz
+IGNvcnJlY3RseSBmb3IgbXkgc3BlY2lmaWMgdXNlIGNhc2VzLg0KDQpUaGFua3MuDQoNCj4gICAg
+IEFybmQNCg0KUmVnYXJkcywNClBhc2NhbCB2YW4gTGVldXdlbg0KU2lsaWNvbiBJUCBBcmNoaXRl
+Y3QsIE11bHRpLVByb3RvY29sIEVuZ2luZXMgQCBWZXJpbWF0cml4DQp3d3cuaW5zaWRlc2VjdXJl
+LmNvbQ0KDQo=
