@@ -2,185 +2,134 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BADFA3735
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 620F2ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BC012089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:36:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FYZdLxZX"
+	by mail.kernel.org (Postfix) with ESMTP id 34DAB2089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:37:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394689AbfJQNgM (ORCPT
+        id S2436547AbfJQNhz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 09:36:12 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45358 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729175AbfJQNgL (ORCPT
+        Thu, 17 Oct 2019 09:37:55 -0400
+Received: from mx2.uni-regensburg.de ([194.94.157.147]:50678 "EHLO
+        mx2.uni-regensburg.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729175AbfJQNhz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 09:36:11 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y72so1666577pfb.12;
-        Thu, 17 Oct 2019 06:36:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Zg6xsxX43NwJNaUijMAvvFCSXNnBfu7Z7VVGMLNPK+4=;
-        b=FYZdLxZXYJToNk6FPREOKcfO5mvfjsK8AXtspR9yeoa8l7yBfhCBK5BxHyLJOdt/aq
-         Kik2XjOaZNGTwzgRNqrwscHTyKJdJg4MxYdatM/dbsa4iausUW5KjlbspimyYWgKXR9c
-         n+YNQ0Q4QG4fvqex+oLWJl8ggw6uB3NaebgoFmc0D27oJ2+VcycayyW8hiuquO1Ptp/N
-         8w+EO6NhycuFEaZML34utdhRdq4HbuoAta1bBerjjV8ZWdGKMxPDAttH8nqNZDuk02yR
-         WUXUhGr+VZy/nFExr+XAAt4eZUOQh16M9zatEDHzAp4tQJsSMejL0t+mqXagwrwN412B
-         j8xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Zg6xsxX43NwJNaUijMAvvFCSXNnBfu7Z7VVGMLNPK+4=;
-        b=PuCuthM4jlp99cAYUXYenl3ivrR2LDAmheKJ+Wc8CCM42Qi4OVv56qERb4SxfF1kls
-         Buwdq5JMhq703BGcq8cuB39l2s6Xh7i1XLIjUAYmw4IjEHeWoPTX7N2tKn6tvaKHXPnj
-         zQ66iIZreK1OSmg53PyvCgaBgL0O/UHOcrVdHsNx2k80bJmvdFmpHzOYhbxIu9dcxBQy
-         vC70LElBG6Y96dqUcOTgHz11u2NPfQ+op3I2VuGNxXtobi2sypNnvlITSpDOKZQqo+Sl
-         UG5KwAGK9i7qBTQ03d+Pln2mWVnUktJjXtHekVcodqNAjCQ9BQiSarWeM09D3PzsBbUm
-         V1nQ==
-X-Gm-Message-State: APjAAAXmPB+iG80Pqbd3mH/CVK92nY5t37eq31vw8UZWGXLiHjKbpuja
-        us8U/6RAhSrdCNoWsPp2aT0=
-X-Google-Smtp-Source: APXvYqza6q/866iFO8Bg+FPbnr8o3johImxxI0Kt4re1cXDCvUQe7PZ49pscgX+90tZ5h2oqo1RYeg==
-X-Received: by 2002:a63:fb15:: with SMTP id o21mr4135935pgh.193.1571319370870;
-        Thu, 17 Oct 2019 06:36:10 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id ce16sm2894133pjb.29.2019.10.17.06.36.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 17 Oct 2019 06:36:10 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 06:36:09 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, jdelvare@suse.com,
-        mark.rutland@arm.com, robh+dt@kernel.org
-Subject: Re: [PATCH 2/2] hwmon: (pmbus/ibm-cffps) Add version detection
- capability
-Message-ID: <20191017133609.GA23473@roeck-us.net>
-References: <1570648262-25383-1-git-send-email-eajames@linux.ibm.com>
- <1570648262-25383-3-git-send-email-eajames@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Thu, 17 Oct 2019 09:37:55 -0400
+X-Greylist: delayed 369 seconds by postgrey-1.27 at vger.kernel.org; Thu, 17 Oct 2019 09:37:54 EDT
+Received: from mx2.uni-regensburg.de (localhost [127.0.0.1])
+        by localhost (Postfix) with SMTP id DB8BD6000055
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 15:31:42 +0200 (CEST)
+Received: from gwsmtp.uni-regensburg.de (gwsmtp1.uni-regensburg.de [132.199.5.51])
+        by mx2.uni-regensburg.de (Postfix) with ESMTP id B01026000053
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 15:31:42 +0200 (CEST)
+Received: from uni-regensburg-smtp1-MTA by gwsmtp.uni-regensburg.de
+        with Novell_GroupWise; Thu, 17 Oct 2019 15:31:42 +0200
+Message-Id: <5DA86D3D020000A10003462F@gwsmtp.uni-regensburg.de>
+X-Mailer: Novell GroupWise Internet Agent 18.1.1 
+Date:   Thu, 17 Oct 2019 15:31:41 +0200
+From:   "Ulrich Windl" <Ulrich.Windl@rz.uni-regensburg.de>
+To:     <linux-kernel@vger.kernel.org>
+Subject: Issue with reading sysfs files
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8BIT
 Content-Disposition: inline
-In-Reply-To: <1570648262-25383-3-git-send-email-eajames@linux.ibm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 02:11:02PM -0500, Eddie James wrote:
-> Some systems may plug in either version 1 or version 2 of the IBM common
-> form factor power supply. Add a version-less compatibility string that
-> tells the driver to try and detect which version of the power supply is
-> connected.
-> 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Hi!
 
-Applied.
+I wrote a simple tool to browse sysfs.
 
-Thanks,
-Guenter
+However I noticed that there are some files having "r" (read) permission, but when you actually try to read from those, I get an I/O error.
+So I wonder whether the actual read was forgotten to implement, or the read permission should be gone actually.
 
-> ---
->  drivers/hwmon/pmbus/ibm-cffps.c | 37 +++++++++++++++++++++++++++++++++----
->  1 file changed, 33 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/hwmon/pmbus/ibm-cffps.c b/drivers/hwmon/pmbus/ibm-cffps.c
-> index d44745e..d61547e 100644
-> --- a/drivers/hwmon/pmbus/ibm-cffps.c
-> +++ b/drivers/hwmon/pmbus/ibm-cffps.c
-> @@ -3,6 +3,7 @@
->   * Copyright 2017 IBM Corp.
->   */
->  
-> +#include <linux/bitfield.h>
->  #include <linux/bitops.h>
->  #include <linux/debugfs.h>
->  #include <linux/device.h>
-> @@ -29,6 +30,10 @@
->  #define CFFPS_INPUT_HISTORY_CMD			0xD6
->  #define CFFPS_INPUT_HISTORY_SIZE		100
->  
-> +#define CFFPS_CCIN_VERSION			GENMASK(15, 8)
-> +#define CFFPS_CCIN_VERSION_1			 0x2b
-> +#define CFFPS_CCIN_VERSION_2			 0x2e
-> +
->  /* STATUS_MFR_SPECIFIC bits */
->  #define CFFPS_MFR_FAN_FAULT			BIT(0)
->  #define CFFPS_MFR_THERMAL_FAULT			BIT(1)
-> @@ -54,7 +59,7 @@ enum {
->  	CFFPS_DEBUGFS_NUM_ENTRIES
->  };
->  
-> -enum versions { cffps1, cffps2 };
-> +enum versions { cffps1, cffps2, cffps_unknown };
->  
->  struct ibm_cffps_input_history {
->  	struct mutex update_lock;
-> @@ -395,7 +400,7 @@ static int ibm_cffps_probe(struct i2c_client *client,
->  			   const struct i2c_device_id *id)
->  {
->  	int i, rc;
-> -	enum versions vs;
-> +	enum versions vs = cffps_unknown;
->  	struct dentry *debugfs;
->  	struct dentry *ibm_cffps_dir;
->  	struct ibm_cffps *psu;
-> @@ -405,8 +410,27 @@ static int ibm_cffps_probe(struct i2c_client *client,
->  		vs = (enum versions)md;
->  	else if (id)
->  		vs = (enum versions)id->driver_data;
-> -	else
-> -		vs = cffps1;
-> +
-> +	if (vs == cffps_unknown) {
-> +		u16 ccin_version = CFFPS_CCIN_VERSION_1;
-> +		int ccin = i2c_smbus_read_word_swapped(client, CFFPS_CCIN_CMD);
-> +
-> +		if (ccin > 0)
-> +			ccin_version = FIELD_GET(CFFPS_CCIN_VERSION, ccin);
-> +
-> +		switch (ccin_version) {
-> +		default:
-> +		case CFFPS_CCIN_VERSION_1:
-> +			vs = cffps1;
-> +			break;
-> +		case CFFPS_CCIN_VERSION_2:
-> +			vs = cffps2;
-> +			break;
-> +		}
-> +
-> +		/* Set the client name to include the version number. */
-> +		snprintf(client->name, I2C_NAME_SIZE, "cffps%d", vs + 1);
-> +	}
->  
->  	client->dev.platform_data = &ibm_cffps_pdata;
->  	rc = pmbus_do_probe(client, id, &ibm_cffps_info[vs]);
-> @@ -465,6 +489,7 @@ static int ibm_cffps_probe(struct i2c_client *client,
->  static const struct i2c_device_id ibm_cffps_id[] = {
->  	{ "ibm_cffps1", cffps1 },
->  	{ "ibm_cffps2", cffps2 },
-> +	{ "ibm_cffps", cffps_unknown },
->  	{}
->  };
->  MODULE_DEVICE_TABLE(i2c, ibm_cffps_id);
-> @@ -478,6 +503,10 @@ static int ibm_cffps_probe(struct i2c_client *client,
->  		.compatible = "ibm,cffps2",
->  		.data = (void *)cffps2
->  	},
-> +	{
-> +		.compatible = "ibm,cffps",
-> +		.data = (void *)cffps_unknown
-> +	},
->  	{}
->  };
->  MODULE_DEVICE_TABLE(of, ibm_cffps_of_match);
+It seems to be implemented correctly in uevent, like
+# ll /sys/module/drm/uevent
+--w------- 1 root root 4096 Sep 24 12:24 /sys/module/drm/uevent
+
+but it is not (e.g.) for
+# ll /sys/devices/LNXSYSTM:00/LNXPWRBN:00/input/input1/event1/power/autosuspend_delay_ms
+-rw-r--r-- 1 root root 4096 Sep 26 14:03 /sys/devices/LNXSYSTM:00/LNXPWRBN:00/input/input1/event1/power/autosuspend_delay_ms
+# cat /sys/devices/LNXSYSTM:00/LNXPWRBN:00/input/input1/event1/power/autosuspend_delay_ms
+cat: '/sys/devices/LNXSYSTM:00/LNXPWRBN:00/input/input1/event1/power/autosuspend_delay_ms': Input/output error
+
+Here's a summary of such candidates:
+.../power/autosuspend_delay_ms
+# ll /sys/devices/pci0000:00/0000:00:03.1/0000:01:00.0/host2/rport-2:0-0/target2:0:0/2:0:0:1/block/sdb/queue/wbt_lat_usec
+-rw-r--r-- 1 root root 4096 Sep 26 14:03 /sys/devices/pci0000:00/0000:00:03.1/0000:01:00.0/host2/rport-2:0-0/target2:0:0/2:0:0:1/block/sdb/queue/wbt_lat_usec
+# cat /sys/devices/pci0000:00/0000:00:03.1/0000:01:00.0/host2/rport-2:0-0/target2:0:0/2:0:0:1/block/sdb/queue/wbt_lat_usec
+cat: '/sys/devices/pci0000:00/0000:00:03.1/0000:01:00.0/host2/rport-2:0-0/target2:0:0/2:0:0:1/block/sdb/queue/wbt_lat_usec': Invalid argument
+
+# ll /sys/devices/pci0000:00/0000:00:03.1/0000:01:00.0/resource0
+-rw------- 1 root root 4096 Sep 26 14:03 /sys/devices/pci0000:00/0000:00:03.1/0000:01:00.0/resource0
+# cat /sys/devices/pci0000:00/0000:00:03.1/0000:01:00.0/resource0
+cat: '/sys/devices/pci0000:00/0000:00:03.1/0000:01:00.0/resource0': Input/output error
+
+/sys/devices/pci0000:00/0000:00:03.1/0000:01:00.0/resource2_wc
+
+# ll /sys/devices/pci0000:00/0000:00:03.1/0000:01:00.0/rom
+-rw------- 1 root root 262144 Sep 26 14:03 /sys/devices/pci0000:00/0000:00:03.1/0000:01:00.0/rom
+# cat /sys/devices/pci0000:00/0000:00:03.1/0000:01:00.0/rom
+cat: '/sys/devices/pci0000:00/0000:00:03.1/0000:01:00.0/rom': Invalid argument
+
+# ll /sys/devices/pci0000:80/0000:80:01.1/0000:81:00.0/net/em1/phys_port_id
+-r--r--r-- 1 root root 4096 Sep 26 14:03 /sys/devices/pci0000:80/0000:80:01.1/0000:81:00.0/net/em1/phys_port_id
+# cat /sys/devices/pci0000:80/0000:80:01.1/0000:81:00.0/net/em1/phys_port_id
+cat: '/sys/devices/pci0000:80/0000:80:01.1/0000:81:00.0/net/em1/phys_port_id': Operation not supported
+
+.../net/em1/phys_port_name
+.../net/em1/phys_switch_id
+
+# ll /sys/devices/pci0000:80/0000:80:01.2/0000:82:00.0/0000:83:00.0/graphics/fb0/bl_curve
+-rw-r--r-- 1 root root 4096 Sep 26 14:03 /sys/devices/pci0000:80/0000:80:01.2/0000:82:00.0/0000:83:00.0/graphics/fb0/bl_curve
+# cat /sys/devices/pci0000:80/0000:80:01.2/0000:82:00.0/0000:83:00.0/graphics/fb0/bl_curve
+cat: '/sys/devices/pci0000:80/0000:80:01.2/0000:82:00.0/0000:83:00.0/graphics/fb0/bl_curve': No such device
+
+# ll /sys/devices/pci0000:80/0000:80:08.1/0000:86:00.2/ata1/host1/scsi_host/host1/em_buffer
+-rw-r--r-- 1 root root 4096 Oct 17 15:25 /sys/devices/pci0000:80/0000:80:08.1/0000:86:00.2/ata1/host1/scsi_host/host1/em_buffer
+# cat /sys/devices/pci0000:80/0000:80:08.1/0000:86:00.2/ata1/host1/scsi_host/host1/em_buffer
+cat: '/sys/devices/pci0000:80/0000:80:08.1/0000:86:00.2/ata1/host1/scsi_host/host1/em_buffer': Invalid argument
+
+.../em_message
+
+# ll /sys/devices/pci0000:c0/0000:c0:01.1/0000:c1:00.0/host0/scsi_host/host0/fw_crash_buffer
+-rw-r--r-- 1 root root 4096 Sep 26 14:03 /sys/devices/pci0000:c0/0000:c0:01.1/0000:c1:00.0/host0/scsi_host/host0/fw_crash_buffer
+# cat /sys/devices/pci0000:c0/0000:c0:01.1/0000:c1:00.0/host0/scsi_host/host0/fw_crash_buffer
+cat: '/sys/devices/pci0000:c0/0000:c0:01.1/0000:c1:00.0/host0/scsi_host/host0/fw_crash_buffer': Invalid argument
+
+# ll /sys/devices/pci0000:c0/0000:c0:01.1/0000:c1:00.0/host0/target0:2:0/0:2:0:0/block/sda/sda1/trace/act_mask
+-rw-r--r-- 1 root root 4096 Sep 26 14:03 /sys/devices/pci0000:c0/0000:c0:01.1/0000:c1:00.0/host0/target0:2:0/0:2:0:0/block/sda/sda1/trace/act_mask
+# cat /sys/devices/pci0000:c0/0000:c0:01.1/0000:c1:00.0/host0/target0:2:0/0:2:0:0/block/sda/sda1/trace/act_mask
+cat: '/sys/devices/pci0000:c0/0000:c0:01.1/0000:c1:00.0/host0/target0:2:0/0:2:0:0/block/sda/sda1/trace/act_mask': No such device or address
+
+.../block/sda/sda1/trace/enable
+.../block/sda/sda1/trace/end_lba
+.../block/sda/sda1/trace/pid
+.../block/sda/sda1/trace/start_lba
+
+# ll /sys/devices/virtual/net/lo/duplex
+-r--r--r-- 1 root root 4096 Sep 24 12:30 /sys/devices/virtual/net/lo/duplex
+# cat /sys/devices/virtual/net/lo/duplex
+cat: /sys/devices/virtual/net/lo/duplex: Invalid argument
+
+# ll /sys/devices/virtual/net/lo/name_assign_type
+-r--r--r-- 1 root root 4096 Sep 24 12:24 /sys/devices/virtual/net/lo/name_assign_type
+# cat /sys/devices/virtual/net/lo/name_assign_type
+cat: /sys/devices/virtual/net/lo/name_assign_type: Invalid argument
+
+/sys/devices/virtual/net/lo/speed
+
+Found in 4.12.14-95.6-default of SLES SP4 (x86_64)
+
+Regards,
+Ulrich
+
+
