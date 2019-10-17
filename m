@@ -2,82 +2,103 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C25C4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E31C4CECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33C6020872
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C3C620872
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 08:07:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438434AbfJQIEF (ORCPT
+        id S2408129AbfJQIHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 04:04:05 -0400
-Received: from mga12.intel.com ([192.55.52.136]:36919 "EHLO mga12.intel.com"
+        Thu, 17 Oct 2019 04:07:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55426 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389100AbfJQIEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 04:04:04 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 01:04:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,307,1566889200"; 
-   d="scan'208";a="186416135"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 17 Oct 2019 01:04:01 -0700
-Received: from andy by smile with local (Exim 4.92.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iL0lN-0000lB-0A; Thu, 17 Oct 2019 11:04:01 +0300
-Date:   Thu, 17 Oct 2019 11:04:00 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Tuowen Zhao <ztuowen@gmail.com>, linux-kernel@vger.kernel.org,
-        mika.westerberg@linux.intel.com, acelan.kao@canonical.com,
-        mcgrof@kernel.org, davem@davemloft.net
-Subject: Re: [PATCH v5 0/4] Fix MTRR bug for intel-lpss-pci
-Message-ID: <20191017080400.GE32742@smile.fi.intel.com>
-References: <20191016210629.1005086-1-ztuowen@gmail.com>
- <20191017071409.GC32742@smile.fi.intel.com>
- <20191017073116.GM4365@dell>
+        id S1727791AbfJQIHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 04:07:09 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 80E9B6907A;
+        Thu, 17 Oct 2019 08:07:09 +0000 (UTC)
+Received: from [10.36.117.42] (ovpn-117-42.ams2.redhat.com [10.36.117.42])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2699D5D70D;
+        Thu, 17 Oct 2019 08:07:07 +0000 (UTC)
+Subject: Re: [RFC] Memory Tiering
+To:     Dave Hansen <dave.hansen@intel.com>, Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Verma, Vishal L" <vishal.l.verma@intel.com>,
+        Wu Fengguang <fengguang.wu@intel.com>,
+        Huang Ying <ying.huang@intel.com>
+References: <c3d6de4d-f7c3-b505-2e64-8ee5f70b2118@intel.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <0679872d-3d03-2fa3-5bd2-80f694357203@redhat.com>
+Date:   Thu, 17 Oct 2019 10:07:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191017073116.GM4365@dell>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <c3d6de4d-f7c3-b505-2e64-8ee5f70b2118@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 17 Oct 2019 08:07:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 08:31:16AM +0100, Lee Jones wrote:
-> On Thu, 17 Oct 2019, Andy Shevchenko wrote:
-> > On Wed, Oct 16, 2019 at 03:06:25PM -0600, Tuowen Zhao wrote:
-> > > Some BIOS erroneously specifies write-combining BAR for intel-lpss-pci
-> > > in MTRR. This will cause the system to hang during boot. If possible,
-> > > this bug could be corrected with a firmware update.
-> > > 
-> > > Previous version: https://lkml.org/lkml/2019/10/14/575
-> > > 
-> > > Changes from previous version:
-> > > 
-> > >  * implement ioremap_uc for sparc64
-> > >  * split docs changes to not CC stable (doc location moved since 5.3)
-> > > 
-> > 
-> > It forgot to explicitly mention through which tree is supposed to go.
-> > I think it's MFD one, correct?
+On 16.10.19 22:05, Dave Hansen wrote:
+> The memory hierarchy is getting more complicated and the kernel is
+> playing an increasing role in managing the different tiers.  A few
+> different groups of folks described "migration" optimizations they were
+> doing in this area at LSF/MM earlier this year.  One of the questions
+> folks asked was why autonuma wasn't being used.
 > 
-> To be fair, that's not really up to the submitter to decide.
+> At Intel, the primary new tier that we're looking at is persistent
+> memory (PMEM).  We'd like to be able to use "persistent memory"
+> *without* using its persistence properties, treating it as slightly
+> slower DRAM.  Keith Busch has some patches to use NUMA migration to
+> automatically migrate DRAM->PMEM instead of discarding it near the end
+> of the reclaim process.  Huang Ying has some patches which use a
+> modified autonuma to migrate frequently-used data *back* from PMEM->DRAM.
 
-Submitter still can share their view, no?
+Very interesting topic. I heard similar demand from HPC folks 
+(especially involving other memory types ("tiers")). There, I think you 
+often want to let the application manage that. But of course, for many 
+applications an automatic management might already be beneficial.
+
+Am I correct that you are using PMEM in this area along with ZONE_DEVICE 
+and not by giving PMEM to the buddy (add_memory())?
+
+> 
+> We've tried to do this all generically so that it is not tied to
+> persistent memory and can be applied to any memory types in lots of
+> topologies.
+> 
+> We've been running this code in various forms for the past few months,
+> comparing it to pure DRAM and hardware-based caching.  The initial
+> results are encouraging and we thought others might want to take a look
+> at the code or run their own experiments.  We're expecting to post the
+> individual patches soon.  But, until then, the code is available here:
+> 
+>   	https://git.kernel.org/pub/scm/linux/kernel/git/vishal/tiering.git
+> 
+> and is tagged with "tiering-0.2", aka. d8e31e81b1dca9.
+> 
+> Note that internally folks have been calling this "hmem" which is
+> terribly easy to confuse with the existing hmm.  There are still some
+> "hmem"'s in the tree, but I don't expect them to live much longer.
+> 
+
 
 -- 
-With Best Regards,
-Andy Shevchenko
 
+Thanks,
 
+David / dhildenb
