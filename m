@@ -2,231 +2,142 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B37FA3735
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C7EFA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FBE82089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B10322089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 13:33:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WYYEirct"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ixhQd+P4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387844AbfJQNbt (ORCPT
+        id S2389029AbfJQNdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 09:31:49 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44926 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730600AbfJQNbs (ORCPT
+        Thu, 17 Oct 2019 09:33:12 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52356 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729175AbfJQNdL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 09:31:48 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q21so1660678pfn.11;
-        Thu, 17 Oct 2019 06:31:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=71uoj2yc29GeY1Xak3gbiDlj4sBCXAEhrB5t6JTQI38=;
-        b=WYYEirct5vmYQhA3KbSc0XnVAk90uWlVOlRrknkYBh9IfN3mWq6s9p81I4fgMPf1/a
-         N5U1UGBczLAnKbk05TO4JIqrrpEp88YnqFbKHJsHAj7I4v55SHK+1XV9y6bhlMUmPVKH
-         noy70mkcKcAhSPEO+NKAF/eRLyW2v1lH1jVtK4SP1CVBCRdsGuxcl03sYINDQZwmUR7P
-         E2Pdg8P8qFHC4636xQL74OWPUJtX3891CkPtWyHH1uJXCBXpYdGy9XSh2uPSh/WcjDJx
-         MCRCmzG/3F4EwRdag/OCrs5i5Ju+axTNEJQZdVPj8SaAZnld0+agJcevwCTb1dbQwoLa
-         ATbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=71uoj2yc29GeY1Xak3gbiDlj4sBCXAEhrB5t6JTQI38=;
-        b=gfbe/CJfGJDam1b+uaQa55cNZ7Mj2vuocivT4jMCRze8RBeRGSgIHtj2QMiXznWuED
-         N/Q0/lXMuNVMeD7bQVjrBe1LcgHP9V+hFhH7OCZqV+rgDsP8eZdiWk5k7MwUiZ1q+78v
-         HTqy9X7wnX8POtjeBiu73T7AdnMc7TwAso0Cc3QXDidjfGqXrV9MqPPBPeIaNHTqLBFj
-         Q7s4qDR2mwEZVsn4VYwvACElIYQit25nIrkBYRHuSbSTmefaBrAfzQv5fn3llzkp2mHF
-         Yer1My3O20NxDoMFR8pH9reGfX2sk+y/QuMcJexVoUhYwV0kyruaAhXGtVBNu8H1xvoR
-         faNA==
-X-Gm-Message-State: APjAAAVMgFHo+v9mW68oTkamRxqEvyU6OBa42qA9NF9T7WE5K/mfciV1
-        EPCWnyxlVVvSmDaT14sGitRLSR5b
-X-Google-Smtp-Source: APXvYqwkCzg39D6E3HXdCGSejfd6HNsWplmWxSFhlmyOLuTWztuKgI2cctSMGidm0wpV+1lYpWpnWg==
-X-Received: by 2002:a17:90a:da04:: with SMTP id e4mr4417537pjv.33.1571319107104;
-        Thu, 17 Oct 2019 06:31:47 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id o9sm4077093pfp.67.2019.10.17.06.31.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Oct 2019 06:31:46 -0700 (PDT)
-Subject: Re: [PATCH] dt-bindings: watchdog: Convert stm32 watchdog bindings to
- json-schema
-To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc:     "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20191017124159.13869-1-benjamin.gaignard@st.com>
- <63f96a2f-78c0-21ae-781b-e52068f57103@st.com>
- <6597f899-f049-02dc-de59-07a0f23a88b8@st.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <d0c1af15-a647-8d80-81c9-fc07b926856c@roeck-us.net>
-Date:   Thu, 17 Oct 2019 06:31:43 -0700
+        Thu, 17 Oct 2019 09:33:11 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9HDNtRw096635;
+        Thu, 17 Oct 2019 13:33:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=lJRbZTgg/EUbW624nJ8C/GRS6p8r210DOZWdtGIn12Q=;
+ b=ixhQd+P4HH325gdVOLqTwNwpm/iyMGHswVh4cSD/6YN+fn5iBERv3YP0Qsca/2zOsyf1
+ utxLQ8cRhuMaXw0VM67xhUzxOBBymZS4CBpm41jdJyF0Fz0vnwxfOiSIZ6yhoRW7CFoQ
+ F0ChLBkkETkiP02mtnu2oTfAv+lZXSDWAV4je2I7C/4plxAnlXVDuSxghGW2r2YeoMDq
+ jJCbqeHUv/lcLT/lHfU18tMN1za6iNgJQ/LKej+2F49ymPj6nWKsunedzHzEa9qREVXa
+ 5wRSGzfEwIly5XcyWFxyAjNLrZvzETNTL0g6pjOy1MpcYqpGi/kHxZQyb/GUCtie/yEw Fw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2vk68uxcgv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 17 Oct 2019 13:33:04 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9HDMtei139849;
+        Thu, 17 Oct 2019 13:31:04 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2vp3bkrdyb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 17 Oct 2019 13:31:04 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9HDV1H1023731;
+        Thu, 17 Oct 2019 13:31:01 GMT
+Received: from [10.175.56.189] (/10.175.56.189)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 17 Oct 2019 13:31:01 +0000
+Subject: Re: email as a bona fide git transport
+To:     Junio C Hamano <gitster@pobox.com>
+Cc:     workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        Eric Wong <e@80x24.org>
+References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
+ <xmqqeezc83i6.fsf@gitster-ct.c.googlers.com>
+From:   Vegard Nossum <vegard.nossum@oracle.com>
+Message-ID: <9ec63ec0-c322-610c-e1b8-b673b983dc74@oracle.com>
+Date:   Thu, 17 Oct 2019 15:30:54 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <6597f899-f049-02dc-de59-07a0f23a88b8@st.com>
+In-Reply-To: <xmqqeezc83i6.fsf@gitster-ct.c.googlers.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9412 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910170122
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9412 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910170122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/17/19 6:17 AM, Benjamin GAIGNARD wrote:
+On 10/17/19 5:17 AM, Junio C Hamano wrote:
+> Vegard Nossum <vegard.nossum@oracle.com> writes:
 > 
-> On 10/17/19 3:06 PM, Alexandre Torgue wrote:
->> Hi Benjamin
+>> Step 1:
 >>
->> On 10/17/19 2:41 PM, Benjamin Gaignard wrote:
->>> Convert the STM32 watchdog binding to DT schema format using json-schema
->>>
->>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
->>> ---
->>>    .../devicetree/bindings/watchdog/st,stm32-iwdg.txt | 26 -----------
->>>    .../bindings/watchdog/st,stm32-iwdg.yaml           | 54
->>> ++++++++++++++++++++++
->>>    2 files changed, 54 insertions(+), 26 deletions(-)
->>>    delete mode 100644
->>> Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
->>>    create mode 100644
->>> Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.yaml
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
->>> b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
->>> deleted file mode 100644
->>> index d8f4430b0a13..000000000000
->>> --- a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
->>> +++ /dev/null
->>> @@ -1,26 +0,0 @@
->>> -STM32 Independent WatchDoG (IWDG)
->>> ----------------------------------
->>> -
->>> -Required properties:
->>> -- compatible: Should be either:
->>> -  - "st,stm32-iwdg"
->>> -  - "st,stm32mp1-iwdg"
->>> -- reg: Physical base address and length of the registers set for the
->>> device
->>> -- clocks: Reference to the clock entry lsi. Additional pclk clock entry
->>> -  is required only for st,stm32mp1-iwdg.
->>> -- clock-names: Name of the clocks used.
->>> -  "lsi" for st,stm32-iwdg
->>> -  "lsi", "pclk" for st,stm32mp1-iwdg
->>> -
->>> -Optional Properties:
->>> -- timeout-sec: Watchdog timeout value in seconds.
->>> -
->>> -Example:
->>> -
->>> -iwdg: watchdog@40003000 {
->>> -    compatible = "st,stm32-iwdg";
->>> -    reg = <0x40003000 0x400>;
->>> -    clocks = <&clk_lsi>;
->>> -    clock-names = "lsi";
->>> -    timeout-sec = <32>;
->>> -};
->>> diff --git
->>> a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.yaml
->>> b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.yaml
->>> new file mode 100644
->>> index 000000000000..edec96d53e6b
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.yaml
->>> @@ -0,0 +1,54 @@
->>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/watchdog/st,stm32-iwdg.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: STMicroelectronics STM32 Independent WatchDoG (IWDG) bindings
->>> +
->>> +maintainers:
->>> +  - Yannick Fertre <yannick.fertre@st.com>
+>> * git send-email needs to include parent SHA1s and generally all the
+>>    information needed to perfectly recreate the commit when applied so
+>>    that all the SHA1s remain the same
 >>
->> Yannick is still working on this driver ?
+>> * git am (or an alternative command) needs to recreate the commit
+>>    perfectly when applied, including applying it to the correct parent
 > 
-> That is a good question.
+> You can record and convey the commit object name a series is meant
+> to be applied on top already, and it in general is a good way to
+> give a wider context in order to explain and justify the series.
 > 
-> Rob, can we use the STM32 dedicated mailing list address for this
-> mainteners field ?
+> On the other hand, "all the information needed to recreate..." is
+> not very useful.  If you want the commit object to be exactly what
+> you want to see at the tip of the end result, you are better off
+> asking your upstream to pull.  Using e-mail for that makes you and
+> project participants give up a lot of benefits the workflow based on
+> e-mail gives you, the biggest of which is the ease of giving
+> suggestions for improvements.  Once you insist "perfectly recreate
+> the commit", you are not willing to take any input from the
+> sidelines---worse yet, you are even dictating when the upstream
+> runs "git am" to turn them into commits, and do so without reading
+> the patches (there is no point reviewing as the person who runs "git
+> am" is not even allowed to fix typo or make obvious fixes to the
+> code, which will fail to perfectly recreate the commit).
 > 
-> maintainers:
-> 
-> - linux STM32 <linux-stm32@st-md-mailman.stormreply.com>
-> 
+> In short, one should resist temptation to bring up "perfect
+> reproduction" when one talks about e-mail workflow.
+
+Please see what I wrote to Pratyush Yadav here:
+
+https://public-inbox.org/git/a1c33600-14e6-be37-c026-8d8b8e4bad92@oracle.com/
+
+TL;DR: the goal is not necessarily for maintainers to be able to merge
+the patchset with the same SHA1 that the submitter had, but for the
+patchset to have a definite SHA1 that lives in git, and which can be
+used by all the participants -- submitter, reviewers, bots (including
+potentially testing/CI infrastructure), and maintainers.
+
+I am definitely not proposing to get rid of the email workflow -- on the
+contrary, this it the workflow I want to preserve! :-) The "workflows"
+mailing list was created for the purpose of discussing this topic (in
+the context of Linux kernel development) and right now there are many
+proposals that either completely cut out email or reduce it to something
+like pull requests. My proposal keeps almost everything the same, except
+for a few lines of extra metadata before the actual diff.
+
+(I will answer the rest of your email separately.)
 
 
-I'd rather wonder who is going to maintain this secondary distributed
-maintainers list, but I guess that is a different question.
-
-Guenter
-
-> Regards,
-> 
-> Benjamin
-> 
->>
->>> +
->>> +allOf:
->>> +  - $ref: "watchdog.yaml#"
->>> +
->>> +properties:
->>> +  compatible:
->>> +    enum:
->>> +      - st,stm32-iwdg
->>> +      - st,stm32mp1-iwdg
->>> +
->>> +  reg:
->>> +    maxItems: 1
->>> +
->>> +  clocks:
->>> +    items:
->>> +      - description: Low speed clock
->>> +      - description: Optional peripheral clock
->>> +    minItems: 1
->>> +    maxItems: 2
->>> +
->>> +  clock-names:
->>> +    items:
->>> +      enums: [ lsi, pclk ]
->>> +    minItems: 1
->>> +    maxItems: 2
->>> +
->>> +required:
->>> +  - compatible
->>> +  - reg
->>> +  - clocks
->>> +  - clock-names
->>> +
->>> +examples:
->>> +  - |
->>> +    #include <dt-bindings/clock/stm32mp1-clks.h>
->>> +    watchdog@5a002000 {
->>> +      compatible = "st,stm32mp1-iwdg";
->>> +      reg = <0x5a002000 0x400>;
->>> +      clocks = <&rcc IWDG2>, <&rcc CK_LSI>;
->>> +      clock-names = "pclk", "lsi";
->>> +      timeout-sec = <32>;
->>> +    };
->>> +
->>> +...
->> >
-
+Vegard
