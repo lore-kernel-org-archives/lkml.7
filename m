@@ -2,366 +2,180 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2823CFA3736
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A79FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5A4D20869
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7719B20869
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 10:50:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409042AbfJQKuB (ORCPT
+        id S2405639AbfJQKuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 17 Oct 2019 06:50:05 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52640 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2409023AbfJQKuB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 17 Oct 2019 06:50:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38578 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405514AbfJQKt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 06:49:59 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 734DE302C09E;
-        Thu, 17 Oct 2019 10:49:58 +0000 (UTC)
-Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-185.pek2.redhat.com [10.72.12.185])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E3A1E5D70D;
-        Thu, 17 Oct 2019 10:49:04 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
-Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com, Jason Wang <jasowang@redhat.com>
-Subject: [PATCH V4 1/6] mdev: class id support
-Date:   Thu, 17 Oct 2019 18:48:31 +0800
-Message-Id: <20191017104836.32464-2-jasowang@redhat.com>
-In-Reply-To: <20191017104836.32464-1-jasowang@redhat.com>
-References: <20191017104836.32464-1-jasowang@redhat.com>
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iL3Ls-0006Qf-0U; Thu, 17 Oct 2019 12:49:52 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 855321C009F;
+        Thu, 17 Oct 2019 12:49:51 +0200 (CEST)
+Date:   Thu, 17 Oct 2019 10:49:51 -0000
+From:   "tip-bot2 for Mark Rutland" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/urgent] stop_machine: Avoid potential race behaviour
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marco Elver <elver@google.com>, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191007104536.27276-1-mark.rutland@arm.com>
+References: <20191007104536.27276-1-mark.rutland@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 17 Oct 2019 10:49:58 +0000 (UTC)
+Message-ID: <157130939131.29376.13614810360711743863.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mdev bus only supports vfio driver right now, so it doesn't implement
-match method. But in the future, we may add drivers other than vfio,
-the first driver could be virtio-mdev. This means we need to add
-device class id support in bus match method to pair the mdev device
-and mdev driver correctly.
+The following commit has been merged into the core/urgent branch of tip:
 
-So this patch adds id_table to mdev_driver and class_id for mdev
-device with the match method for mdev bus.
+Commit-ID:     b1fc5833357524d5d342737913dbe32ff3557bc5
+Gitweb:        https://git.kernel.org/tip/b1fc5833357524d5d342737913dbe32ff3557bc5
+Author:        Mark Rutland <mark.rutland@arm.com>
+AuthorDate:    Mon, 07 Oct 2019 11:45:36 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 17 Oct 2019 12:47:12 +02:00
 
-Signed-off-by: Jason Wang <jasowang@redhat.com>
+stop_machine: Avoid potential race behaviour
+
+Both multi_cpu_stop() and set_state() access multi_stop_data::state
+racily using plain accesses. These are subject to compiler
+transformations which could break the intended behaviour of the code,
+and this situation is detected by KCSAN on both arm64 and x86 (splats
+below).
+
+Improve matters by using READ_ONCE() and WRITE_ONCE() to ensure that the
+compiler cannot elide, replay, or tear loads and stores.
+
+In multi_cpu_stop() the two loads of multi_stop_data::state are expected to
+be a consistent value, so snapshot the value into a temporary variable to
+ensure this.
+
+The state transitions are serialized by atomic manipulation of
+multi_stop_data::num_threads, and other fields in multi_stop_data are not
+modified while subject to concurrent reads.
+
+KCSAN splat on arm64:
+
+| BUG: KCSAN: data-race in multi_cpu_stop+0xa8/0x198 and set_state+0x80/0xb0
+|
+| write to 0xffff00001003bd00 of 4 bytes by task 24 on cpu 3:
+|  set_state+0x80/0xb0
+|  multi_cpu_stop+0x16c/0x198
+|  cpu_stopper_thread+0x170/0x298
+|  smpboot_thread_fn+0x40c/0x560
+|  kthread+0x1a8/0x1b0
+|  ret_from_fork+0x10/0x18
+|
+| read to 0xffff00001003bd00 of 4 bytes by task 14 on cpu 1:
+|  multi_cpu_stop+0xa8/0x198
+|  cpu_stopper_thread+0x170/0x298
+|  smpboot_thread_fn+0x40c/0x560
+|  kthread+0x1a8/0x1b0
+|  ret_from_fork+0x10/0x18
+|
+| Reported by Kernel Concurrency Sanitizer on:
+| CPU: 1 PID: 14 Comm: migration/1 Not tainted 5.3.0-00007-g67ab35a199f4-dirty #3
+| Hardware name: linux,dummy-virt (DT)
+
+KCSAN splat on x86:
+
+| write to 0xffffb0bac0013e18 of 4 bytes by task 19 on cpu 2:
+|  set_state kernel/stop_machine.c:170 [inline]
+|  ack_state kernel/stop_machine.c:177 [inline]
+|  multi_cpu_stop+0x1a4/0x220 kernel/stop_machine.c:227
+|  cpu_stopper_thread+0x19e/0x280 kernel/stop_machine.c:516
+|  smpboot_thread_fn+0x1a8/0x300 kernel/smpboot.c:165
+|  kthread+0x1b5/0x200 kernel/kthread.c:255
+|  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:352
+|
+| read to 0xffffb0bac0013e18 of 4 bytes by task 44 on cpu 7:
+|  multi_cpu_stop+0xb4/0x220 kernel/stop_machine.c:213
+|  cpu_stopper_thread+0x19e/0x280 kernel/stop_machine.c:516
+|  smpboot_thread_fn+0x1a8/0x300 kernel/smpboot.c:165
+|  kthread+0x1b5/0x200 kernel/kthread.c:255
+|  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:352
+|
+| Reported by Kernel Concurrency Sanitizer on:
+| CPU: 7 PID: 44 Comm: migration/7 Not tainted 5.3.0+ #1
+| Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Marco Elver <elver@google.com>
+Link: https://lkml.kernel.org/r/20191007104536.27276-1-mark.rutland@arm.com
+
 ---
- .../driver-api/vfio-mediated-device.rst       |  7 +++++-
- drivers/gpu/drm/i915/gvt/kvmgt.c              |  1 +
- drivers/s390/cio/vfio_ccw_ops.c               |  1 +
- drivers/s390/crypto/vfio_ap_ops.c             |  1 +
- drivers/vfio/mdev/mdev_core.c                 | 18 +++++++++++++++
- drivers/vfio/mdev/mdev_driver.c               | 22 +++++++++++++++++++
- drivers/vfio/mdev/mdev_private.h              |  1 +
- drivers/vfio/mdev/vfio_mdev.c                 |  6 +++++
- include/linux/mdev.h                          |  8 +++++++
- include/linux/mod_devicetable.h               |  8 +++++++
- samples/vfio-mdev/mbochs.c                    |  1 +
- samples/vfio-mdev/mdpy.c                      |  1 +
- samples/vfio-mdev/mtty.c                      |  1 +
- 13 files changed, 75 insertions(+), 1 deletion(-)
+ kernel/stop_machine.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Documentation/driver-api/vfio-mediated-device.rst
-index 25eb7d5b834b..f9a78d75a67a 100644
---- a/Documentation/driver-api/vfio-mediated-device.rst
-+++ b/Documentation/driver-api/vfio-mediated-device.rst
-@@ -102,12 +102,14 @@ structure to represent a mediated device's driver::
-       * @probe: called when new device created
-       * @remove: called when device removed
-       * @driver: device driver structure
-+      * @id_table: the ids serviced by this driver
-       */
-      struct mdev_driver {
- 	     const char *name;
- 	     int  (*probe)  (struct device *dev);
- 	     void (*remove) (struct device *dev);
- 	     struct device_driver    driver;
-+	     const struct mdev_class_id *id_table;
-      };
- 
- A mediated bus driver for mdev should use this structure in the function calls
-@@ -165,12 +167,15 @@ register itself with the mdev core driver::
- 	extern int  mdev_register_device(struct device *dev,
- 	                                 const struct mdev_parent_ops *ops);
- 
-+It is also required to specify the class_id in create() callback through::
-+
-+	int mdev_set_class(struct mdev_device *mdev, u16 id);
-+
- However, the mdev_parent_ops structure is not required in the function call
- that a driver should use to unregister itself with the mdev core driver::
- 
- 	extern void mdev_unregister_device(struct device *dev);
- 
--
- Mediated Device Management Interface Through sysfs
- ==================================================
- 
-diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kvmgt.c
-index 343d79c1cb7e..6420f0dbd31b 100644
---- a/drivers/gpu/drm/i915/gvt/kvmgt.c
-+++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
-@@ -678,6 +678,7 @@ static int intel_vgpu_create(struct kobject *kobj, struct mdev_device *mdev)
- 		     dev_name(mdev_dev(mdev)));
- 	ret = 0;
- 
-+	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
- out:
- 	return ret;
- }
-diff --git a/drivers/s390/cio/vfio_ccw_ops.c b/drivers/s390/cio/vfio_ccw_ops.c
-index f0d71ab77c50..cf2c013ae32f 100644
---- a/drivers/s390/cio/vfio_ccw_ops.c
-+++ b/drivers/s390/cio/vfio_ccw_ops.c
-@@ -129,6 +129,7 @@ static int vfio_ccw_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
- 			   private->sch->schid.ssid,
- 			   private->sch->schid.sch_no);
- 
-+	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
- 	return 0;
+diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
+index c7031a2..998d50e 100644
+--- a/kernel/stop_machine.c
++++ b/kernel/stop_machine.c
+@@ -7,6 +7,7 @@
+  * Copyright (C) 2010		SUSE Linux Products GmbH
+  * Copyright (C) 2010		Tejun Heo <tj@kernel.org>
+  */
++#include <linux/compiler.h>
+ #include <linux/completion.h>
+ #include <linux/cpu.h>
+ #include <linux/init.h>
+@@ -167,7 +168,7 @@ static void set_state(struct multi_stop_data *msdata,
+ 	/* Reset ack counter. */
+ 	atomic_set(&msdata->thread_ack, msdata->num_threads);
+ 	smp_wmb();
+-	msdata->state = newstate;
++	WRITE_ONCE(msdata->state, newstate);
  }
  
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 5c0f53c6dde7..07c31070afeb 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -343,6 +343,7 @@ static int vfio_ap_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
- 	list_add(&matrix_mdev->node, &matrix_dev->mdev_list);
- 	mutex_unlock(&matrix_dev->lock);
- 
-+	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
- 	return 0;
- }
- 
-diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-index b558d4cfd082..3a9c52d71b4e 100644
---- a/drivers/vfio/mdev/mdev_core.c
-+++ b/drivers/vfio/mdev/mdev_core.c
-@@ -45,6 +45,16 @@ void mdev_set_drvdata(struct mdev_device *mdev, void *data)
- }
- EXPORT_SYMBOL(mdev_set_drvdata);
- 
-+/* Specify the class for the mdev device, this must be called during
-+ * create() callback.
-+ */
-+void mdev_set_class(struct mdev_device *mdev, u16 id)
-+{
-+	WARN_ON(mdev->class_id);
-+	mdev->class_id = id;
-+}
-+EXPORT_SYMBOL(mdev_set_class);
-+
- struct device *mdev_dev(struct mdev_device *mdev)
+ /* Last one to ack a state moves to the next state. */
+@@ -186,7 +187,7 @@ void __weak stop_machine_yield(const struct cpumask *cpumask)
+ static int multi_cpu_stop(void *data)
  {
- 	return &mdev->dev;
-@@ -135,6 +145,7 @@ static int mdev_device_remove_cb(struct device *dev, void *data)
-  * mdev_register_device : Register a device
-  * @dev: device structure representing parent device.
-  * @ops: Parent device operation structure to be registered.
-+ * @id: class id.
-  *
-  * Add device to list of registered parent devices.
-  * Returns a negative value on error, otherwise 0.
-@@ -324,6 +335,13 @@ int mdev_device_create(struct kobject *kobj,
- 	if (ret)
- 		goto ops_create_fail;
- 
-+	if (!mdev->class_id) {
-+		ret = -EINVAL;
-+		WARN(1, "class id must be specified for device %s\n",
-+		     dev_name(dev));
-+		goto add_fail;
-+	}
-+
- 	ret = device_add(&mdev->dev);
- 	if (ret)
- 		goto add_fail;
-diff --git a/drivers/vfio/mdev/mdev_driver.c b/drivers/vfio/mdev/mdev_driver.c
-index 0d3223aee20b..319d886ffaf7 100644
---- a/drivers/vfio/mdev/mdev_driver.c
-+++ b/drivers/vfio/mdev/mdev_driver.c
-@@ -69,8 +69,30 @@ static int mdev_remove(struct device *dev)
- 	return 0;
- }
- 
-+static int mdev_match(struct device *dev, struct device_driver *drv)
-+{
-+	unsigned int i;
-+	struct mdev_device *mdev = to_mdev_device(dev);
-+	struct mdev_driver *mdrv = to_mdev_driver(drv);
-+	const struct mdev_class_id *ids = mdrv->id_table;
-+
-+	for (i = 0; ids[i].id; i++)
-+		if (ids[i].id == mdev->class_id)
-+			return 1;
-+	return 0;
-+}
-+
-+static int mdev_uevent(struct device *dev, struct kobj_uevent_env *env)
-+{
-+	struct mdev_device *mdev = to_mdev_device(dev);
-+
-+	return add_uevent_var(env, "MODALIAS=mdev:c%02X", mdev->class_id);
-+}
-+
- struct bus_type mdev_bus_type = {
- 	.name		= "mdev",
-+	.match		= mdev_match,
-+	.uevent		= mdev_uevent,
- 	.probe		= mdev_probe,
- 	.remove		= mdev_remove,
- };
-diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
-index 7d922950caaf..c65f436c1869 100644
---- a/drivers/vfio/mdev/mdev_private.h
-+++ b/drivers/vfio/mdev/mdev_private.h
-@@ -33,6 +33,7 @@ struct mdev_device {
- 	struct kobject *type_kobj;
- 	struct device *iommu_device;
- 	bool active;
-+	u16 class_id;
- };
- 
- #define to_mdev_device(dev)	container_of(dev, struct mdev_device, dev)
-diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
-index 30964a4e0a28..7b24ee9cb8dd 100644
---- a/drivers/vfio/mdev/vfio_mdev.c
-+++ b/drivers/vfio/mdev/vfio_mdev.c
-@@ -120,10 +120,16 @@ static void vfio_mdev_remove(struct device *dev)
- 	vfio_del_group_dev(dev);
- }
- 
-+static const struct mdev_class_id id_table[] = {
-+	{ MDEV_CLASS_ID_VFIO },
-+	{ 0 },
-+};
-+
- static struct mdev_driver vfio_mdev_driver = {
- 	.name	= "vfio_mdev",
- 	.probe	= vfio_mdev_probe,
- 	.remove	= vfio_mdev_remove,
-+	.id_table = id_table,
- };
- 
- static int __init vfio_mdev_init(void)
-diff --git a/include/linux/mdev.h b/include/linux/mdev.h
-index 0ce30ca78db0..78b69d09eb54 100644
---- a/include/linux/mdev.h
-+++ b/include/linux/mdev.h
-@@ -118,6 +118,7 @@ struct mdev_type_attribute mdev_type_attr_##_name =		\
-  * @probe: called when new device created
-  * @remove: called when device removed
-  * @driver: device driver structure
-+ * @id_table: the ids serviced by this driver
-  *
-  **/
- struct mdev_driver {
-@@ -125,6 +126,7 @@ struct mdev_driver {
- 	int  (*probe)(struct device *dev);
- 	void (*remove)(struct device *dev);
- 	struct device_driver driver;
-+	const struct mdev_class_id *id_table;
- };
- 
- #define to_mdev_driver(drv)	container_of(drv, struct mdev_driver, driver)
-@@ -132,6 +134,7 @@ struct mdev_driver {
- void *mdev_get_drvdata(struct mdev_device *mdev);
- void mdev_set_drvdata(struct mdev_device *mdev, void *data);
- const guid_t *mdev_uuid(struct mdev_device *mdev);
-+void mdev_set_class(struct mdev_device *mdev, u16 id);
- 
- extern struct bus_type mdev_bus_type;
- 
-@@ -145,4 +148,9 @@ struct device *mdev_parent_dev(struct mdev_device *mdev);
- struct device *mdev_dev(struct mdev_device *mdev);
- struct mdev_device *mdev_from_dev(struct device *dev);
- 
-+enum {
-+	MDEV_CLASS_ID_VFIO = 1,
-+	/* New entries must be added here */
-+};
-+
- #endif /* MDEV_H */
-diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-index 5714fd35a83c..f32c6e44fb1a 100644
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -821,4 +821,12 @@ struct wmi_device_id {
- 	const void *context;
- };
- 
-+/**
-+ * struct mdev_class_id - MDEV device class identifier
-+ * @id: Used to identify a specific class of device, e.g vfio-mdev device.
-+ */
-+struct mdev_class_id {
-+	__u16 id;
-+};
-+
- #endif /* LINUX_MOD_DEVICETABLE_H */
-diff --git a/samples/vfio-mdev/mbochs.c b/samples/vfio-mdev/mbochs.c
-index ac5c8c17b1ff..115bc5074656 100644
---- a/samples/vfio-mdev/mbochs.c
-+++ b/samples/vfio-mdev/mbochs.c
-@@ -561,6 +561,7 @@ static int mbochs_create(struct kobject *kobj, struct mdev_device *mdev)
- 	mbochs_reset(mdev);
- 
- 	mbochs_used_mbytes += type->mbytes;
-+	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
- 	return 0;
- 
- err_mem:
-diff --git a/samples/vfio-mdev/mdpy.c b/samples/vfio-mdev/mdpy.c
-index cc86bf6566e4..665614574d50 100644
---- a/samples/vfio-mdev/mdpy.c
-+++ b/samples/vfio-mdev/mdpy.c
-@@ -269,6 +269,7 @@ static int mdpy_create(struct kobject *kobj, struct mdev_device *mdev)
- 	mdpy_reset(mdev);
- 
- 	mdpy_count++;
-+	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
- 	return 0;
- }
- 
-diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c
-index ce84a300a4da..90da12ff7fd9 100644
---- a/samples/vfio-mdev/mtty.c
-+++ b/samples/vfio-mdev/mtty.c
-@@ -755,6 +755,7 @@ static int mtty_create(struct kobject *kobj, struct mdev_device *mdev)
- 	list_add(&mdev_state->next, &mdev_devices_list);
- 	mutex_unlock(&mdev_list_lock);
- 
-+	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
- 	return 0;
- }
- 
--- 
-2.19.1
-
+ 	struct multi_stop_data *msdata = data;
+-	enum multi_stop_state curstate = MULTI_STOP_NONE;
++	enum multi_stop_state newstate, curstate = MULTI_STOP_NONE;
+ 	int cpu = smp_processor_id(), err = 0;
+ 	const struct cpumask *cpumask;
+ 	unsigned long flags;
+@@ -210,8 +211,9 @@ static int multi_cpu_stop(void *data)
+ 	do {
+ 		/* Chill out and ensure we re-read multi_stop_state. */
+ 		stop_machine_yield(cpumask);
+-		if (msdata->state != curstate) {
+-			curstate = msdata->state;
++		newstate = READ_ONCE(msdata->state);
++		if (newstate != curstate) {
++			curstate = newstate;
+ 			switch (curstate) {
+ 			case MULTI_STOP_DISABLE_IRQ:
+ 				local_irq_disable();
