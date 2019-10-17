@@ -2,123 +2,89 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA40DECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 363A9FA372A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 986BD2089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3B452089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 18:48:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nt6Lz1vJ"
+	dkim=pass (1024-bit key) header.d=didiksetiawan.com header.i=ds@didiksetiawan.com header.b="s2139HCY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406801AbfJQSqQ (ORCPT
+        id S2441454AbfJQSsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 14:46:16 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:34875 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388823AbfJQSqP (ORCPT
+        Thu, 17 Oct 2019 14:48:23 -0400
+Received: from sender4-of-o54.zoho.com ([136.143.188.54]:21428 "EHLO
+        sender4-of-o54.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439013AbfJQSsX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 14:46:15 -0400
-Received: by mail-yb1-f193.google.com with SMTP id i6so1035601ybe.2;
-        Thu, 17 Oct 2019 11:46:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OM/S3lsFh+azFkd7x8LBwq6ZVZrV5M0QSAG7uJDmnRk=;
-        b=Nt6Lz1vJUocf3260cbfS+m4Ma8HkJwjhVujx1dzWZRaeHi2gaDr5WJJEl+D8Sy/7kA
-         3+C1eyDt9stz/AqFoXOwX6ws+UzvvkmV2GrEPvxaHThc8O3wWD2AHgjTg34u6VpCXSUx
-         wkdZQ+tXKLMKZ4x72KHKzTWbj/ChMnjaNLGg2K0jKKIbyu6ESc51cte0qWIBs1TtgRj+
-         ZjzL6vn8JfJ6Oxgvx4nki8ndGF4Ycn9wkQ7vIWsooSGRog0zExm/gUgB7YXhRme+5HQQ
-         DGwCNySlNBrkStUIDfnLr4JJSGQr6Lghzl0PAJvNbifUqA6Y7KWvXf3SkB0Q3kTdnyEZ
-         IwFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OM/S3lsFh+azFkd7x8LBwq6ZVZrV5M0QSAG7uJDmnRk=;
-        b=q01cIqinVOCsy88DZ9qszpDd2BCNTvbLjrZixslt3ONdavhP8Pdw1rXVRWacEU8QxY
-         2wOBNCJDYP8lxBll9tIBzo7BAiLhcHSTw9OrttH0VGRxzCwZrf+71m/3CWRihWkJj+Ch
-         lsnvKdQQt9UMpLT6jo0jBg10nuHeoLe5qvBPVkq61OkdjTosGRpHXWL6+/IKHPwCu+67
-         XT6pyNUJlJWNpcHIMkQkgsnk0J1avQ+aJ7NQkPU5yEukSbipzMEmDMzvDDZjh/dIKD1g
-         BL6FKx3TKpTk7kSShYVcOvjEZ6nu+TkjglkxQ7xafa4nGoqO3tph1zKl9sS1dlPFo7xC
-         dePw==
-X-Gm-Message-State: APjAAAW7sGpxsy2QziyVNPk0WcE7IY1/srbKj+sRz/21MRG909reeU3O
-        vT/gKqTj4iVyenANVeB1DII=
-X-Google-Smtp-Source: APXvYqwudHjq2c/EpVr+nuwySedX+dRgV0lUf5486GSBdOemPI2HmAgVLe0pRZjtkUb1YrrJPawlew==
-X-Received: by 2002:a25:248a:: with SMTP id k132mr3464263ybk.243.1571337974592;
-        Thu, 17 Oct 2019 11:46:14 -0700 (PDT)
-Received: from [192.168.1.62] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id y63sm698731ywg.5.2019.10.17.11.46.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Oct 2019 11:46:14 -0700 (PDT)
-Subject: Re: [PATCH] libfdt: reduce the number of headers included from
- libfdt_env.h
-To:     Rob Herring <robh@kernel.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-References: <20190617162123.24920-1-yamada.masahiro@socionext.com>
- <CAK7LNATtqhxPcDneW0QOkw-5NyPNP06Qv0bYTe7A_gCiHMiU7A@mail.gmail.com>
- <CAK7LNASMwqy0ZUZ=kTJ7MJ6OJNa=+vbj5444xzmubJ8+6vO=sg@mail.gmail.com>
- <CAK7LNAS=9yGqMQ9eoM4L0hhvuFRYhg6S4i6J3Ou9vcB1Npj4BQ@mail.gmail.com>
- <20191017163414.GA4205@bogus>
- <5b5ece90-0b9f-38e4-8c23-3c9ea4105c79@gmail.com>
- <CAL_JsqJHGcbf-p7D=MvSRiX_7CVY0Kj9bRKybhbWG=4MxaxGiw@mail.gmail.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <fcba8d22-008a-58b7-57ae-ef5fbc6234bc@gmail.com>
-Date:   Thu, 17 Oct 2019 13:46:07 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Thu, 17 Oct 2019 14:48:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1571338069; cv=none; 
+        d=zoho.com; s=zohoarc; 
+        b=Www9cc6as7sGSUWo22eft9eSTRijnWhppZ5/cL4pELPU6pdY3l5AfA/4Ie63J4i5HNgsfZ2f/h2n+X6AeF9P+FzEyKSaxA9KNFa7FhxnA76WE+BYENY4kdrLFIubLv0KSjhU3tw1dCxisZvKLKr45AEBglHEf59Yg3OAzXW0oI0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
+        t=1571338069; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=ZRjH4bAY0ZgjjEFktByZAYcIARBeWLfYjLwHzV7K2bU=; 
+        b=YMmKF8ND2VBwUsVsyhPGjdPG8qAyiSRPc5kz0zzg0KwDKmynQXL+VI6fls4wLToYhkCHOsuMXxOcyxbgnyO3wp9JXS5wQu95l9kEfJaBFHB98LQvA/aWRN2IM4Ym8c2uECwBdnCHt76ag+9KafCrGJAPX5wirn1N5Z1UpDGAuGE=
+ARC-Authentication-Results: i=1; mx.zoho.com;
+        dkim=pass  header.i=didiksetiawan.com;
+        spf=pass  smtp.mailfrom=ds@didiksetiawan.com;
+        dmarc=pass header.from=<ds@didiksetiawan.com> header.from=<ds@didiksetiawan.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1571338069;
+        s=zoho; d=didiksetiawan.com; i=ds@didiksetiawan.com;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
+        l=858; bh=ZRjH4bAY0ZgjjEFktByZAYcIARBeWLfYjLwHzV7K2bU=;
+        b=s2139HCYORdRx/td1j9ZAcVvIvoXatlzQE9UM+rmePexPIV6jy5YlF4BgWRntCsB
+        OLQRPzgCc7hjjL9uzw2L6Rw1S8uU5HNQHxDjX6Oc0KVAT7xCBi+IL3SAblgRA3+sTKT
+        9pDoDDePoR8pP63MS6lW18Mnl6nOiP/yt1dE8wrE=
+Received: from thinkpad-e420s (120.188.94.47 [120.188.94.47]) by mx.zohomail.com
+        with SMTPS id 1571338068643635.640689053295; Thu, 17 Oct 2019 11:47:48 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 01:47:38 +0700
+From:   Didik Setiawan <ds@didiksetiawan.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.9 00/92] 4.9.197-stable review
+Message-ID: <20191017184738.GA10314@thinkpad-e420s>
+References: <20191016214759.600329427@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJHGcbf-p7D=MvSRiX_7CVY0Kj9bRKybhbWG=4MxaxGiw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/17/2019 12:52, Rob Herring wrote:
-> On Thu, Oct 17, 2019 at 12:25 PM Frank Rowand <frowand.list@gmail.com> wrote:
->>
->> On 10/17/2019 11:34, Rob Herring wrote:
->>> On Wed, Oct 16, 2019 at 08:01:46PM +0900, Masahiro Yamada wrote:
->>>> Hi Andrew,
->>>>
->>>> Could you pick up this to akpm tree?
->>>> https://lore.kernel.org/patchwork/patch/1089856/
->>>>
->>>> I believe this is correct, and a good clean-up.
->>>>
->>>> I pinged the DT maintainers, but they did not respond.
->>>
->>> Sorry I missed this. Things outside my normal paths fall thru the
->>> cracks.
->>>
->>> I'll apply it now.
->>>
->>> Rob
->>>
->>
->> Looks like my reply crossed with Rob's.  Rob, shouldn't
->> scripts/dtc/update-dtc-source.sh make this change?
+On Wed, Oct 16, 2019 at 02:49:33PM -0700, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.197 release.
+> There are 92 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> No, the includes in include/linux are kernel files which wrap/replace
-> the upstream ones.
+> Responses should be made by Fri 18 Oct 2019 09:43:41 PM UTC.
+> Anything received after that time might be too late.
 > 
-> Rob
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.197-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+> and the diffstat can be found below.
 > 
+> thanks,
+> 
+> greg k-h
+ 
+Compiled, booted, and no regressions found on my x86_64 system.
 
-Right you are, I overlooked the "include/linux" in the file name
-instead of "scripts/dtc/libfdt/".
+Thanks,
+Didik Setiawan
 
--Frank
