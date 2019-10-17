@@ -2,59 +2,63 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D5AFA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D179FA3737
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6251B21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F38721A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 14:13:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E3NOAAWo"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Txn+PJN2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439875AbfJQON1 (ORCPT
+        id S2439907AbfJQONg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 10:13:27 -0400
-Received: from mail-qk1-f201.google.com ([209.85.222.201]:48727 "EHLO
-        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727429AbfJQON1 (ORCPT
+        Thu, 17 Oct 2019 10:13:36 -0400
+Received: from mail-wr1-f73.google.com ([209.85.221.73]:51192 "EHLO
+        mail-wr1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439887AbfJQONf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 10:13:27 -0400
-Received: by mail-qk1-f201.google.com with SMTP id 11so2213290qkh.15
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 07:13:26 -0700 (PDT)
+        Thu, 17 Oct 2019 10:13:35 -0400
+Received: by mail-wr1-f73.google.com with SMTP id m14so1022241wru.17
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 07:13:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=ahMy3naCKZUNeyQrUsfvkWdO2IwHI3ehg2cI/CL0H68=;
-        b=E3NOAAWoSp5dTlcTqruPb+cH4PFuBjXLsewnlVjecfeBooxgaCsyFAL8vBl4YeNT20
-         YoLFJaTQQjJxVpax9nNayHjSAHQWsOgddwQzwVv9JYC2Au2zuxFrCmfiSl9eCwPUjiB/
-         pk3jnb5D0FkO31sy7aMLhRtuJadpGsEwRytCDgR6jcXDBDOxJjFs0dwm0FdaDrDknV8x
-         iZ4CEs9UkGQdbcr+x9W6pe8+HRjM1yuiBP8veMvjpf/zMPwj8nV1oMSQ5FPQT9RSoE+Q
-         ZKOXMtWQzET90Ll9U8y/HRyW7pSXTSbMg792SlUvduaz7O4I5Ec1BPXkNa7CJ+bB12Z9
-         42Sw==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=WM5MzufDPT1JiTPvFRdmsbnktj5wkQpb+gi5I/mGgvo=;
+        b=Txn+PJN2OuvP5ODZX7wPzChSa5a1obt62mrXLc0YHWjB2oV6xKvqC8+zPxzs8jjXau
+         /OCPqfIFc6DG8H0/6s6NElBEwprF0vhAOUlM6UjTGMG+pDIbQjoai7x5DF2xSbLX3mvc
+         GKTWTSNO4/CDlmpsoFdW8eT048brIo2Dnk3CnsfmyU8cIJkA/suytB5wPJYWsBxX7UsB
+         wtxxupwaAS9LQ86lMI3t4s8ydtEo+0uRHJtV3WfjmR9MMGh6WSsX3CKe0+fEjweh870x
+         1TeGyJpFW+IP8bN67x626QfuP3ObE0JJ9sNDwlZeqVJeybj7NebAuDykEAZRGYT8IY/d
+         I1bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=ahMy3naCKZUNeyQrUsfvkWdO2IwHI3ehg2cI/CL0H68=;
-        b=Fz9cifYJczOnTTBI80tM/0KndnJmwZtdH8QFaqj6NqqlQilWHkkgYQHl03e68byX0q
-         5xXqK1prxiYR3UvvD+CvkJuLtSYI+wwzsyduEwfZEF/f72g5SsEl0RWGpg3OZezIjKUL
-         A6CTHA3Diz2J+VfiVHWtlVZSQpt8KOpL8v3ilmktuKZYQtWTZg/um6+XR/bd7mMxAWcJ
-         v0FQIIywmAzfcojcms3b3JZB6/3gY/2VZcxPBFliqBxiLpXrKzqJepWgWJfijBtFsjx8
-         XUs+vzNGDjD4j+2gYxHMFCpogy62bs24BGlZ1pLiaF3ztwNa8g9HtYWOlwYHZw4ohK2Q
-         1LLA==
-X-Gm-Message-State: APjAAAV1SjZRtdbPphU+Zty+8beNDuh6JYcw9Exi95AhQNsZP4sPzm1g
-        SxF3f8ryna5pczp/28eisRAkqXOJaw==
-X-Google-Smtp-Source: APXvYqxtX9ypXjB03uUDF7iJQHTkx8t43nT/o1OPlwEgu5Pcb4Oyr25eGL9asgyz9sNtX0vCtLKQRCysMg==
-X-Received: by 2002:ac8:1903:: with SMTP id t3mr4137772qtj.344.1571321605784;
- Thu, 17 Oct 2019 07:13:25 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 16:12:57 +0200
-Message-Id: <20191017141305.146193-1-elver@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=WM5MzufDPT1JiTPvFRdmsbnktj5wkQpb+gi5I/mGgvo=;
+        b=iOC2Le92Kfz/ltiDwrodbQ/XdYpn3tzjhkwrajF+KfXWvYBp29GON27R0NQa8XmNnZ
+         X6mNE0rHEc9RvrJgjfMwv8OJYVC2l6Le/rZdwjoFkUpnlhtHFt5Af9ISpMkvEC5tg9da
+         e17lpkgpH5VRmxSFYWEnGDVR0pdww2Au3hE7lDXGV8xZqak0emnZkFL/MemwjWIqFTBk
+         jSP6DXFvX5izjYLHH0+SeBPHY69nHKLYRVL23ecHH0dRFxLdY+Wi9qnjH5z9DFGeIlKi
+         V0LSaLTnmC1Fe4duSmvjxq77TMeWMiC0BWzti+eNkI6iMes1IBXvLSmPwWFNacVbaTsK
+         N2tA==
+X-Gm-Message-State: APjAAAWijox7ie5RhRXCRgPLedCLL9hcgN+NqsJjyCey5NUwr7hNYz/3
+        XwVbE3ORVii3wbYx5MVjzzT1G7zRkA==
+X-Google-Smtp-Source: APXvYqxeT9QjYrVDR28/tNZYBCzz3DbM0H0OJ7m9CjtFaANScqLFwMWSQDekQoUt1a4G0oIkx8foGjJcWA==
+X-Received: by 2002:adf:d850:: with SMTP id k16mr3398476wrl.204.1571321612447;
+ Thu, 17 Oct 2019 07:13:32 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 16:12:59 +0200
+In-Reply-To: <20191017141305.146193-1-elver@google.com>
+Message-Id: <20191017141305.146193-3-elver@google.com>
 Mime-Version: 1.0
+References: <20191017141305.146193-1-elver@google.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-Subject: [PATCH v2 0/8] Add Kernel Concurrency Sanitizer (KCSAN)
+Subject: [PATCH v2 2/8] objtool, kcsan: Add KCSAN runtime functions to whitelist
 From:   Marco Elver <elver@google.com>
 To:     elver@google.com
 Cc:     akiyks@gmail.com, stern@rowland.harvard.edu, glider@google.com,
@@ -76,120 +80,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the patch-series for the Kernel Concurrency Sanitizer (KCSAN).
-KCSAN is a sampling watchpoint-based data-race detector. More details
-are included in Documentation/dev-tools/kcsan.rst. This patch-series
-only enables KCSAN for x86, but we expect adding support for other
-architectures is relatively straightforward (we are aware of
-experimental ARM64 and POWER support).
+This patch adds KCSAN runtime functions to the objtool whitelist.
 
-To gather early feedback, we announced KCSAN back in September, and
-have integrated the feedback where possible:
-http://lkml.kernel.org/r/CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com
+Signed-off-by: Marco Elver <elver@google.com>
+---
+ tools/objtool/check.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-We want to point out and acknowledge the work surrounding the LKMM,
-including several articles that motivate why data-races are dangerous
-[1, 2], justifying a data-race detector such as KCSAN.
-[1] https://lwn.net/Articles/793253/
-[2] https://lwn.net/Articles/799218/
-
-The current list of known upstream fixes for data-races found by KCSAN
-can be found here:
-https://github.com/google/ktsan/wiki/KCSAN#upstream-fixes-of-data-races-found-by-kcsan
-
-Changelog
----------
-v2:
-* Elaborate comment about instrumentation calls emitted by compilers.
-* Replace kcsan_check_access(.., {true, false}) with
-  kcsan_check_{read,write} for improved readability.
-* Introduce __atomic_check_{read,write} in atomic-instrumented.h [Suggested by
-  Mark Rutland].
-* Change bug title of race of unknown origin to just say "data-race in".
-* Refine "Key Properties" in kcsan.rst, and mention observed slow-down.
-* Add comment about safety of find_watchpoint without user_access_save.
-* Remove unnecessary preempt_disable/enable and elaborate on comment why
-  we want to disable interrupts and preemptions.
-* Use common struct kcsan_ctx in task_struct and for per-CPU interrupt
-  contexts [Suggested by Mark Rutland].
-* Document x86 build exceptions where no previous above comment
-  explained why we cannot instrument.
-
-v1: http://lkml.kernel.org/r/20191016083959.186860-1-elver@google.com
-
-
-Marco Elver (8):
-  kcsan: Add Kernel Concurrency Sanitizer infrastructure
-  objtool, kcsan: Add KCSAN runtime functions to whitelist
-  build, kcsan: Add KCSAN build exceptions
-  seqlock, kcsan: Add annotations for KCSAN
-  seqlock: Require WRITE_ONCE surrounding raw_seqcount_barrier
-  asm-generic, kcsan: Add KCSAN instrumentation for bitops
-  locking/atomics, kcsan: Add KCSAN instrumentation
-  x86, kcsan: Enable KCSAN for x86
-
- Documentation/dev-tools/kcsan.rst         | 203 ++++++++++
- MAINTAINERS                               |  11 +
- Makefile                                  |   3 +-
- arch/x86/Kconfig                          |   1 +
- arch/x86/boot/Makefile                    |   2 +
- arch/x86/boot/compressed/Makefile         |   2 +
- arch/x86/entry/vdso/Makefile              |   3 +
- arch/x86/include/asm/bitops.h             |   6 +-
- arch/x86/kernel/Makefile                  |   7 +
- arch/x86/kernel/cpu/Makefile              |   3 +
- arch/x86/lib/Makefile                     |   4 +
- arch/x86/mm/Makefile                      |   3 +
- arch/x86/purgatory/Makefile               |   2 +
- arch/x86/realmode/Makefile                |   3 +
- arch/x86/realmode/rm/Makefile             |   3 +
- drivers/firmware/efi/libstub/Makefile     |   2 +
- include/asm-generic/atomic-instrumented.h | 393 ++++++++++----------
- include/asm-generic/bitops-instrumented.h |  18 +
- include/linux/compiler-clang.h            |   9 +
- include/linux/compiler-gcc.h              |   7 +
- include/linux/compiler.h                  |  35 +-
- include/linux/kcsan-checks.h              | 147 ++++++++
- include/linux/kcsan.h                     | 108 ++++++
- include/linux/sched.h                     |   4 +
- include/linux/seqlock.h                   |  51 ++-
- init/init_task.c                          |   8 +
- init/main.c                               |   2 +
- kernel/Makefile                           |   6 +
- kernel/kcsan/Makefile                     |  14 +
- kernel/kcsan/atomic.c                     |  21 ++
- kernel/kcsan/core.c                       | 428 ++++++++++++++++++++++
- kernel/kcsan/debugfs.c                    | 225 ++++++++++++
- kernel/kcsan/encoding.h                   |  94 +++++
- kernel/kcsan/kcsan.c                      |  86 +++++
- kernel/kcsan/kcsan.h                      | 140 +++++++
- kernel/kcsan/report.c                     | 306 ++++++++++++++++
- kernel/kcsan/test.c                       | 117 ++++++
- kernel/sched/Makefile                     |   6 +
- lib/Kconfig.debug                         |   2 +
- lib/Kconfig.kcsan                         |  88 +++++
- lib/Makefile                              |   3 +
- mm/Makefile                               |   8 +
- scripts/Makefile.kcsan                    |   6 +
- scripts/Makefile.lib                      |  10 +
- scripts/atomic/gen-atomic-instrumented.sh |  17 +-
- tools/objtool/check.c                     |  17 +
- 46 files changed, 2428 insertions(+), 206 deletions(-)
- create mode 100644 Documentation/dev-tools/kcsan.rst
- create mode 100644 include/linux/kcsan-checks.h
- create mode 100644 include/linux/kcsan.h
- create mode 100644 kernel/kcsan/Makefile
- create mode 100644 kernel/kcsan/atomic.c
- create mode 100644 kernel/kcsan/core.c
- create mode 100644 kernel/kcsan/debugfs.c
- create mode 100644 kernel/kcsan/encoding.h
- create mode 100644 kernel/kcsan/kcsan.c
- create mode 100644 kernel/kcsan/kcsan.h
- create mode 100644 kernel/kcsan/report.c
- create mode 100644 kernel/kcsan/test.c
- create mode 100644 lib/Kconfig.kcsan
- create mode 100644 scripts/Makefile.kcsan
-
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 044c9a3cb247..d1acc867b43c 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -466,6 +466,23 @@ static const char *uaccess_safe_builtin[] = {
+ 	"__asan_report_store4_noabort",
+ 	"__asan_report_store8_noabort",
+ 	"__asan_report_store16_noabort",
++	/* KCSAN */
++	"__kcsan_check_watchpoint",
++	"__kcsan_setup_watchpoint",
++	/* KCSAN/TSAN out-of-line */
++	"__tsan_func_entry",
++	"__tsan_func_exit",
++	"__tsan_read_range",
++	"__tsan_read1",
++	"__tsan_read2",
++	"__tsan_read4",
++	"__tsan_read8",
++	"__tsan_read16",
++	"__tsan_write1",
++	"__tsan_write2",
++	"__tsan_write4",
++	"__tsan_write8",
++	"__tsan_write16",
+ 	/* KCOV */
+ 	"write_comp_data",
+ 	"__sanitizer_cov_trace_pc",
 -- 
 2.23.0.866.gb869b98d4c-goog
 
