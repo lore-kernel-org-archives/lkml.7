@@ -2,139 +2,64 @@ Return-Path: <SRS0=WVJ0=YK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6417FA372A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E92BEFA372B
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87A4F21D7A
-	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:27:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571347630;
-	bh=uO7lfXr/rl6eZUOe82Q81ajN7IxdQy5vB1hfWhi/uBI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gY4rY6//GGti6HHCMM4T3BFBwGJI9lG4ifQczPTF+jbxQEWt2x8tIPdtTH+cU1aC3
-	 REeYiBX+Wg1hzdHR8afCcUoAD14Pb6aA4kodafBg8OX6jKqX+MYuypu2KKNeS6PTXh
-	 SYM9NqBZYSiknFBGv3T9jf3f/ZwtQKjJhj5Bc7ws=
+	by mail.kernel.org (Postfix) with ESMTP id C5E3C21D7A
+	for <linux-kernel@archiver.kernel.org>; Thu, 17 Oct 2019 21:28:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503548AbfJQV1J (ORCPT
+        id S2503562AbfJQV20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 17:27:09 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37753 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729795AbfJQV1J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 17:27:09 -0400
-Received: by mail-oi1-f196.google.com with SMTP id i16so3458056oie.4;
-        Thu, 17 Oct 2019 14:27:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tt8o0Ne8aaqDvVJ5RUPidVwsF2P8v2Pw6seGk6hlMOE=;
-        b=bZLJj0p6J5W8+AIPBXwQkjBWxJFyRQ6oF1iD1UM2Fgb6wGuxwNoN3Srw+IzKbeQf+7
-         izPnoWOebrybo4CN9qqwuwQlaPLEzG84+zYHPINj749rPgk2HzVknc4pa56q6mujLLgD
-         bCExWE7ajC2xBkz3Sf9JY+5lyauGJs9EYe6U3qKRb7OYHMtmvfL4TGAV5uOlaWFA4PLi
-         hz1L6CiUioTwZMr/bZUMNzv/IFjrOiHfZwHI+XYPbepyD5A25AVRnEdMzlff0/u+dJJ7
-         rk/C58jjGLbHKpmQ8xFE2HxvysnkQqdkBaRND3kxQo8/jpczdYPxcyeG0dVV3gEWX0gI
-         D2gQ==
-X-Gm-Message-State: APjAAAVas/gqEewu3gTNPsZvRgQg31PeyK0OCSlXcUGQuaGBUKTjssH+
-        iUtjTXBhKNEZbFj68uSQ+i2cnuddmQfz8jxSXmQ=
-X-Google-Smtp-Source: APXvYqzwdN96QJVgKURhoHeVquJ3ywEuah91cfJjUxvGsKQ/8UVlCdXsLtLlo1tyfr4ObNpzjDfS6bWz9i5WnSJsHCc=
-X-Received: by 2002:aca:d706:: with SMTP id o6mr5172362oig.57.1571347626493;
- Thu, 17 Oct 2019 14:27:06 -0700 (PDT)
+        Thu, 17 Oct 2019 17:28:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40740 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390402AbfJQV20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 17:28:26 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFC7621A49;
+        Thu, 17 Oct 2019 21:28:24 +0000 (UTC)
+Date:   Thu, 17 Oct 2019 17:28:23 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH 1/2] perf: Iterate on tep event arrays directly
+Message-ID: <20191017172823.15f242eb@gandalf.local.home>
+In-Reply-To: <20191017212431.GF3600@kernel.org>
+References: <20191017210521.465613686@goodmis.org>
+        <20191017210636.061448713@goodmis.org>
+        <20191017212431.GF3600@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20191017163503.30791-1-sudeep.holla@arm.com> <CAJZ5v0gTpK0cJhsWGVvs-=Sbgcia0jz2j5QNYRL+1wOz=2xkJQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0gTpK0cJhsWGVvs-=Sbgcia0jz2j5QNYRL+1wOz=2xkJQ@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 17 Oct 2019 23:26:54 +0200
-Message-ID: <CAJZ5v0h0ioEZqLuaW1jz_8jRuGYZLQS3fbpv9ctyV9ucXb1WiA@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: flush any pending policy update work scheduled
- before freeing
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 9:36 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Thu, Oct 17, 2019 at 6:35 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> >
-> > dev_pm_qos_remove_request ends calling {max,min}_freq_req QoS notifiers
-> > which schedule policy update work. It may end up racing with the freeing
-> > the policy and unregistering the driver.
-> >
-> > One possible race is as below where the cpufreq_driver is unregistered
-> > but the scheduled work gets executed at later stage when cpufreq_driver
-> > is NULL(i.e. after freeing the policy and driver)
-> >
-> > Unable to handle kernel NULL pointer dereference at virtual address 0000001c
-> > pgd = (ptrval)
-> > [0000001c] *pgd=80000080204003, *pmd=00000000
-> > Internal error: Oops: 206 [#1] SMP THUMB2
-> > Modules linked in:
-> > CPU: 0 PID: 34 Comm: kworker/0:1 Not tainted 5.4.0-rc3-00006-g67f5a8081a4b #86
-> > Hardware name: ARM-Versatile Express
-> > Workqueue: events handle_update
-> > PC is at cpufreq_set_policy+0x58/0x228
-> > LR is at dev_pm_qos_read_value+0x77/0xac
-> > Control: 70c5387d  Table: 80203000  DAC: fffffffd
-> > Process kworker/0:1 (pid: 34, stack limit = 0x(ptrval))
-> >         (cpufreq_set_policy) from (refresh_frequency_limits.part.24+0x37/0x48)
-> >         (refresh_frequency_limits.part.24) from (handle_update+0x2f/0x38)
-> >         (handle_update) from (process_one_work+0x16d/0x3cc)
-> >         (process_one_work) from (worker_thread+0xff/0x414)
-> >         (worker_thread) from (kthread+0xff/0x100)
-> >         (kthread) from (ret_from_fork+0x11/0x28)
-> >
-> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > ---
-> >  drivers/cpufreq/cpufreq.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > Hi Rafael, Viresh,
-> >
-> > This fixed the boot issue I reported[1] on TC2 with bL switcher enabled.
-> > I have based this patch on -rc3 and not on top of your patches. This
-> > only fixes the boot issue but I hit the other crashes while continuously
-> > switching on and off the bL switcher that register/unregister the driver
-> > Your patch series fixes them. I can based this on top of those if you
-> > prefer.
-> >
-> > Regards,
-> > Sudeep
-> >
-> > [1] https://lore.kernel.org/linux-pm/20191015155735.GA29105@bogus/
-> >
-> > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > index c52d6fa32aac..b703c29a84be 100644
-> > --- a/drivers/cpufreq/cpufreq.c
-> > +++ b/drivers/cpufreq/cpufreq.c
-> > @@ -1278,6 +1278,9 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
-> >         }
-> >
-> >         dev_pm_qos_remove_request(policy->min_freq_req);
-> > +       /* flush the pending policy->update work before freeing the policy */
-> > +       if (work_pending(&policy->update))
->
-> Isn't this racy?
->
-> It still may be running if the pending bit is clear and we still need
-> to wait for it then, don't we?
->
-> Why don't you do an unconditional flush_work() here?
+On Thu, 17 Oct 2019 18:24:31 -0300
+Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
 
-You may as well do a cancel_work_sync() here, because whether or not
-the last update of the policy happens before it goes away is a matter
-of timing in any case
+> I'll add a:
+> 
+> Fixes: bb3dd7e7c4d5 ("tools lib traceevent, perf tools: Move struct tep_handler definition in a local header file")
+> Cc: stable@vger.kernel.org : v4.20+
+> 
+> As this is when this problem starts causing the segfault when generating
+> python scripts from perf.data files with multiple tracepoint events, ok?
+
+Sure, go ahead. I realized I forgot to add a Fixes tag when sending it.
+
+-- Steve
