@@ -2,98 +2,173 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E3ECA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD5FCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED89F21925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CD6B21925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:26:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406327AbfJRRZX (ORCPT
+        id S2410601AbfJRR0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 13:25:23 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:46834 "EHLO foss.arm.com"
+        Fri, 18 Oct 2019 13:26:20 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:46894 "EHLO foss.arm.com"
         rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1729210AbfJRRZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 13:25:23 -0400
+        id S1729210AbfJRR0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 13:26:19 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 724031063;
-        Fri, 18 Oct 2019 10:25:00 -0700 (PDT)
-Received: from [10.1.195.43] (e107049-lin.cambridge.arm.com [10.1.195.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF2CA3F718;
-        Fri, 18 Oct 2019 10:24:58 -0700 (PDT)
-Subject: Re: [RFC PATCH v3 0/6] sched/cpufreq: Make schedutil energy aware
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Quentin Perret <qperret@google.com>, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, mingo@redhat.com, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, Quentin Perret <qperret@google.com>,
-        patrick.bellasi@matbug.net, dh.han@samsung.com
-References: <20191011134500.235736-1-douglas.raillard@arm.com>
- <20191014145315.GZ2311@hirez.programming.kicks-ass.net>
- <a1ce67d7-62c3-b78b-1d87-23ef4dbc2274@arm.com>
- <20191017095015.GI2311@hirez.programming.kicks-ass.net>
- <20191017111116.GA27006@google.com>
- <20191017141107.GJ2311@hirez.programming.kicks-ass.net>
- <2cbde0fe-c10c-0ebb-32ef-2d522986bc89@arm.com>
- <20191018075957.GD2328@hirez.programming.kicks-ass.net>
-From:   Douglas Raillard <douglas.raillard@arm.com>
-Organization: ARM
-Message-ID: <65894424-3fdc-2b82-c84d-dac61aded5ea@arm.com>
-Date:   Fri, 18 Oct 2019 18:24:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
-MIME-Version: 1.0
-In-Reply-To: <20191018075957.GD2328@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB-large
-Content-Transfer-Encoding: 7bit
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B161E1063;
+        Fri, 18 Oct 2019 10:25:54 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E56E63F718;
+        Fri, 18 Oct 2019 10:25:51 -0700 (PDT)
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andrew Jones <drjones@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        =?UTF-8?q?Kristina=20Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Sudakshina Das <sudi.das@arm.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3 00/12] arm64: ARMv8.5-A: Branch Target Identification support
+Date:   Fri, 18 Oct 2019 18:25:33 +0100
+Message-Id: <1571419545-20401-1-git-send-email-Dave.Martin@arm.com>
+X-Mailer: git-send-email 2.1.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch implements support for ARMv8.5-A Branch Target Identification
+(BTI), which is a control flow integrity protection feature introduced
+as part of the ARMv8.5-A extensions.
+
+The series is based on v5.4-rc2.
+
+A branch for this series is available in Git [3].
+
+This series supersedes the previous v2 posting [1], and also
+incorporates my proposed ELF GNU property parsing implementation.  (See
+[2] for the ABI spec describing NT_GNU_PROPERTY_TYPE_0).
+
+Changes:
+
+ * Minor cleanups / nitpick fixes only.
+
+   Since this is an interim update so that Mark Brown can take over
+   development of the series, I haven't fully retested.  The series
+   builds with defconfig.
+
+   There are some outstanding discussion points: see notes in the
+   invidual patches, particularly on patch 5.
 
 
-On 10/18/19 8:59 AM, Peter Zijlstra wrote:
-> On Fri, Oct 18, 2019 at 09:44:44AM +0200, Dietmar Eggemann wrote:
->> On 17/10/2019 16:11, Peter Zijlstra wrote:
->>> On Thu, Oct 17, 2019 at 12:11:16PM +0100, Quentin Perret wrote:
->>
->> [...]
->>
->>> It only boosts when 'rq->cfs.avg.util' increases while
->>> 'rq->cfs.avg.util_est.enqueued' remains unchanged (and util > util_est
->>> obv).
->>>
->>> This condition can be true for select_task_rq_fair(), because that is
->>> ran before we do enqueue_task_fair() (for obvious raisins).
->>>
->>>>> I'm still thinking about the exact means you're using to raise C; that
->>>>> is, the 'util - util_est' as cost_margin. It hurts my brain still.
->>>>
->>>> +1 ...
->>>
->>> cost_i = capacity_i / power_i ; for the i-th OPP
->>
->> I get confused by this definition. efficiency=capacity/power but the
->> cs->cost value used in em_pd_get_higher_freq() is defined as
->>
->> cs_cost = cs->power * cpu_max_freq / cs->freq [energy_model.h]
-> 
-> Well, chalk that up to confusion inspired by the Changelog of patch 1.
+Notes:
 
-I've updated the commit message to include that ordering OPPs by
-increasing efficiency=capa/power on one CPU leads to the same ordering
-as ordering by decreasing cost=power*f_max/f.
+ * No documentation yet.  We could do with some being written before
+   this series gets merged.
 
-efficiency=(cpu_max_capa/1024) * (f/f_max) / power
-efficiency=(cpu_max_capa/1024) / cost
+ * GCC 9 can compile backwards-compatible BTI-enabled code with
+   -mbranch-protection=bti or -mbranch-protection=standard.
+
+ * Binutils trunk supports the new ELF note, but this wasn't in a release
+   the last time I posted this series.  (The situation _might_ have changed
+   in the meantime...)
+
+   Creation of a BTI-enabled binary requires _everything_ linked in to
+   be BTI-enabled.  For now ld --force-bti can be used to override this,
+   but some things may break until the required C library support is in
+   place.
+
+   There is no straightforward way to mark a .s file as BTI-enabled:
+   scraping the output from gcc -S works as a quick hack for now.
+
+   readelf -n can be used to examing the program properties in an ELF
+   file.
+
+ * Runtime mmap() and mprotect() can be used to enable BTI on a
+   page-by-page basis using the new PROT_BTI, but the code in the
+   affected pages still needs to be written or compiled to contain the
+   appopriate BTI landing pads.
 
 
-> Let me redo it with that formula then.
-> 
+[1] [PATCH v2 00/12] arm64: ARMv8.5-A: Branch Target Identification support
+https://lore.kernel.org/lkml/1570733080-21015-1-git-send-email-Dave.Martin@arm.com/
+
+[2] Linux Extensions to gABI
+https://github.com/hjl-tools/linux-abi/wiki/Linux-Extensions-to-gABI
+
+[3] Git branch:
+git://linux-arm.org/linux-dm.git arm64/bti/v3/head
+http://linux-arm.org/git?p=linux-dm.git;a=shortlog;h=refs/heads/arm64/bti/v3/head
+
+
+Dave Martin (12):
+  ELF: UAPI and Kconfig additions for ELF program properties
+  ELF: Add ELF program property parsing support
+  mm: Reserve asm-generic prot flag 0x10 for arch use
+  arm64: docs: cpu-feature-registers: Document ID_AA64PFR1_EL1
+  arm64: Basic Branch Target Identification support
+  elf: Allow arch to tweak initial mmap prot flags
+  arm64: elf: Enable BTI at exec based on ELF program properties
+  arm64: BTI: Decode BYTPE bits when printing PSTATE
+  arm64: traps: Fix inconsistent faulting instruction skipping
+  arm64: traps: Shuffle code to eliminate forward declarations
+  arm64: BTI: Reset BTYPE when skipping emulated instructions
+  KVM: arm64: BTI: Reset BTYPE when skipping emulated instructions
+
+ Documentation/arm64/cpu-feature-registers.rst |  17 ++-
+ Documentation/arm64/elf_hwcaps.rst            |   4 +
+ arch/arm64/Kconfig                            |  31 ++++++
+ arch/arm64/include/asm/cpucaps.h              |   3 +-
+ arch/arm64/include/asm/cpufeature.h           |   6 ++
+ arch/arm64/include/asm/elf.h                  |  50 +++++++++
+ arch/arm64/include/asm/esr.h                  |   2 +-
+ arch/arm64/include/asm/hwcap.h                |   1 +
+ arch/arm64/include/asm/kvm_emulate.h          |   6 +-
+ arch/arm64/include/asm/mman.h                 |  37 +++++++
+ arch/arm64/include/asm/pgtable-hwdef.h        |   1 +
+ arch/arm64/include/asm/pgtable.h              |   2 +-
+ arch/arm64/include/asm/ptrace.h               |   8 ++
+ arch/arm64/include/asm/sysreg.h               |   4 +
+ arch/arm64/include/uapi/asm/hwcap.h           |   1 +
+ arch/arm64/include/uapi/asm/mman.h            |   9 ++
+ arch/arm64/include/uapi/asm/ptrace.h          |   1 +
+ arch/arm64/kernel/cpufeature.c                |  33 ++++++
+ arch/arm64/kernel/cpuinfo.c                   |   1 +
+ arch/arm64/kernel/entry.S                     |  11 ++
+ arch/arm64/kernel/process.c                   |  36 ++++++-
+ arch/arm64/kernel/ptrace.c                    |   2 +-
+ arch/arm64/kernel/signal.c                    |  16 +++
+ arch/arm64/kernel/syscall.c                   |  18 ++++
+ arch/arm64/kernel/traps.c                     | 126 +++++++++++-----------
+ fs/Kconfig.binfmt                             |   6 ++
+ fs/binfmt_elf.c                               | 145 ++++++++++++++++++++++++--
+ fs/compat_binfmt_elf.c                        |   4 +
+ include/linux/elf.h                           |  43 ++++++++
+ include/linux/mm.h                            |   3 +
+ include/uapi/asm-generic/mman-common.h        |   1 +
+ include/uapi/linux/elf.h                      |  11 ++
+ 32 files changed, 560 insertions(+), 79 deletions(-)
+ create mode 100644 arch/arm64/include/asm/mman.h
+ create mode 100644 arch/arm64/include/uapi/asm/mman.h
+
+-- 
+2.1.4
+
