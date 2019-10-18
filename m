@@ -2,135 +2,132 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A11CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C8CCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F8CC2064B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:51:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="MgdHg/sA";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="YnEBUk0H"
+	by mail.kernel.org (Postfix) with ESMTP id D0ED52064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:54:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406367AbfJRPvr (ORCPT
+        id S2408855AbfJRPyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:51:47 -0400
-Received: from pb-smtp21.pobox.com ([173.228.157.53]:59693 "EHLO
-        pb-smtp21.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389072AbfJRPvq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:51:46 -0400
-Received: from pb-smtp21.pobox.com (unknown [127.0.0.1])
-        by pb-smtp21.pobox.com (Postfix) with ESMTP id 066D59AE61;
-        Fri, 18 Oct 2019 11:51:42 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=SVptdQAfzrpdqaplm7DrQ1F74hE=; b=MgdHg/
-        sAhMWyrnCJ8qmhPjmlwSTs0wPatNyIi4eCqUdzNdsMTUBtjg8IYEk8jVNKvGCApU
-        Ha3+te3OKjBy1PL42BFW7ewMgpRVaG30RzBRba4O990XwlFLRcRzORyc1nZxvyk2
-        fWB8RxvODkhGa3pDZTm5Itq3G4Lx847JfbBb8=
-Received: from pb-smtp21.sea.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp21.pobox.com (Postfix) with ESMTP id F1D979AE60;
-        Fri, 18 Oct 2019 11:51:41 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=Gr5XnOBIp4yLgJQ+v2m19BlmLPGN4f/f+xphdBLskqQ=; b=YnEBUk0HVY7DEWUFjLhJ+O4U9CXvOoHtqykFbxQONMjfo+ZzIFeCxpEfI8PfeTU5ugFYd2RKPNpE9FabYcAbfG6d7/oNAoIvyrM9ygQkTq45hlOOHRZJIk7BjiR4sFZgsJaDE+HK9wXqwb6Ci4CI1nZO/Bfiz4iaefDm6e459Ec=
-Received: from yoda.home (unknown [24.203.50.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp21.pobox.com (Postfix) with ESMTPSA id E07DD9AE5E;
-        Fri, 18 Oct 2019 11:51:38 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id 0BCAD2DA017D;
-        Fri, 18 Oct 2019 11:51:37 -0400 (EDT)
-Date:   Fri, 18 Oct 2019 11:51:36 -0400 (EDT)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] cpufreq: vexpress-spc: fix some coding style
- issues
-In-Reply-To: <20191018055915.GD31836@e107533-lin.cambridge.arm.com>
-Message-ID: <nycvar.YSQ.7.76.1910181150390.1546@knanqh.ubzr>
-References: <20191017123508.26130-1-sudeep.holla@arm.com> <20191017123508.26130-6-sudeep.holla@arm.com> <20191018055517.dxyx4ara7hdmzw5j@vireshk-i7> <20191018055915.GD31836@e107533-lin.cambridge.arm.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Fri, 18 Oct 2019 11:54:11 -0400
+Received: from 8bytes.org ([81.169.241.247]:48058 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727668AbfJRPyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 11:54:11 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 5576C367; Fri, 18 Oct 2019 17:54:10 +0200 (CEST)
+Date:   Fri, 18 Oct 2019 17:54:08 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: [git pull] IOMMU Fixes for Linux v5.4-rc3
+Message-ID: <20191018155403.GA9621@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: 2BEA692A-F1BF-11E9-A463-8D86F504CC47-78420484!pb-smtp21.pobox.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="n8g4imXOkfNTN/H1"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 18 Oct 2019, Sudeep Holla wrote:
 
-> On Fri, Oct 18, 2019 at 11:25:17AM +0530, Viresh Kumar wrote:
-> > On 17-10-19, 13:35, Sudeep Holla wrote:
-> > > Fix the following checkpatch checks/warnings:
-> > > 
-> > > CHECK: Unnecessary parentheses around the code
-> > > CHECK: Alignment should match open parenthesis
-> > > CHECK: Prefer kernel type 'u32' over 'uint32_t'
-> > > WARNING: Missing a blank line after declarations
-> > > 
-> > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > > ---
-> > >  drivers/cpufreq/vexpress-spc-cpufreq.c | 43 ++++++++++++--------------
-> > >  1 file changed, 20 insertions(+), 23 deletions(-)
-> > > 
-> > > diff --git a/drivers/cpufreq/vexpress-spc-cpufreq.c b/drivers/cpufreq/vexpress-spc-cpufreq.c
-> > > index 81064430317f..8ecb2961be86 100644
-> > > --- a/drivers/cpufreq/vexpress-spc-cpufreq.c
-> > > +++ b/drivers/cpufreq/vexpress-spc-cpufreq.c
-> > > @@ -79,8 +79,8 @@ static unsigned int find_cluster_maxfreq(int cluster)
-> > >  	for_each_online_cpu(j) {
-> > >  		cpu_freq = per_cpu(cpu_last_req_freq, j);
-> > >  
-> > > -		if ((cluster == per_cpu(physical_cluster, j)) &&
-> > > -				(max_freq < cpu_freq))
-> > > +		if (cluster == per_cpu(physical_cluster, j) &&
-> > > +		    max_freq < cpu_freq)
-> > >  			max_freq = cpu_freq;
-> > >  	}
-> > >  
-> > > @@ -188,22 +188,19 @@ static int ve_spc_cpufreq_set_target(struct cpufreq_policy *policy,
-> > >  	freqs_new = freq_table[cur_cluster][index].frequency;
-> > >  
-> > >  	if (is_bL_switching_enabled()) {
-> > > -		if ((actual_cluster == A15_CLUSTER) &&
-> > > -				(freqs_new < clk_big_min)) {
-> > > +		if (actual_cluster == A15_CLUSTER && freqs_new < clk_big_min)
-> > >  			new_cluster = A7_CLUSTER;
-> > > -		} else if ((actual_cluster == A7_CLUSTER) &&
-> > > -				(freqs_new > clk_little_max)) {
-> > > +		else if (actual_cluster == A7_CLUSTER &&
-> > > +			 freqs_new > clk_little_max)
-> > >  			new_cluster = A15_CLUSTER;
-> > > -		}
-> > >  	}
-> > >  
-> > >  	ret = ve_spc_cpufreq_set_rate(cpu, actual_cluster, new_cluster,
-> > >  				      freqs_new);
-> > >  
-> > > -	if (!ret) {
-> > > +	if (!ret)
-> > 
-> > That's not the standard way in Linux I believe. We do use {} even when
-> > the body is single line but broken into two, like below.
-> >
-> 
-> OK, wasn't aware of that. I will update. Generally I ignore checkpatch
-> warnings, but the list was big and fixed a bunch of them :)
+--n8g4imXOkfNTN/H1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-In cases like this one, the best is to go with whatever makes checkpatch 
-happy.
+Hi Linus,
 
+The following changes since commit da0c9ea146cbe92b832f1b0f694840ea8eb33cce:
 
-Nicolas
+  Linux 5.4-rc2 (2019-10-06 14:27:30 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-fixes-v5.4-rc3
+
+for you to fetch changes up to 46ac18c347b00be29b265c28209b0f3c38a1f142:
+
+  iommu/amd: Check PM_LEVEL_SIZE() condition in locked section (2019-10-18 16:52:37 +0200)
+
+----------------------------------------------------------------
+IOMMU Fixes for Linux v5.4-rc3:
+
+Including:
+
+	- Fixes for page-table issues on Mali GPUs
+
+	- Missing free in an error path for ARM-SMMU
+
+	- PASID decoding in the AMD IOMMU Event log code
+
+	- Another update for the locking fixes in the AMD IOMMU driver
+
+	- Reduce the calls to platform_get_irq() in the IPMMU-VMSA and
+	  Rockchip IOMMUs to get rid of the warning message added to this
+	  function recently
+
+----------------------------------------------------------------
+Geert Uytterhoeven (1):
+      iommu/ipmmu-vmsa: Only call platform_get_irq() when interrupt is mandatory
+
+Heiko Stuebner (1):
+      iommu/rockchip: Don't use platform_get_irq to implicitly count irqs
+
+Joerg Roedel (2):
+      Merge branch 'for-joerg/arm-smmu/fixes' of git://git.kernel.org/.../will/linux into iommu/fixes
+      iommu/amd: Check PM_LEVEL_SIZE() condition in locked section
+
+Liu Xiang (1):
+      iommu/arm-smmu: Free context bitmap in the err path of arm_smmu_init_domain_context
+
+Robin Murphy (2):
+      iommu/io-pgtable-arm: Correct Mali attributes
+      iommu/io-pgtable-arm: Support all Mali configurations
+
+Suthikulpanit, Suravee (1):
+      iommu/amd: Fix incorrect PASID decoding from event log
+
+ drivers/iommu/amd_iommu.c       | 12 +++++----
+ drivers/iommu/amd_iommu_types.h |  4 +--
+ drivers/iommu/arm-smmu.c        |  1 +
+ drivers/iommu/io-pgtable-arm.c  | 58 ++++++++++++++++++++++++++++++++---------
+ drivers/iommu/ipmmu-vmsa.c      |  3 +--
+ drivers/iommu/rockchip-iommu.c  | 19 ++++++++++----
+ 6 files changed, 70 insertions(+), 27 deletions(-)
+
+Please pull.
+
+Thanks,
+
+	Joerg
+
+--n8g4imXOkfNTN/H1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEr9jSbILcajRFYWYyK/BELZcBGuMFAl2p4BgACgkQK/BELZcB
+GuO8sA/9HtDW6b8w/r2XJOcxP01hP59c9AveS1VNwR2KyBjZepprg9geSmLz921G
+063ozZ02UJ4gIZ3R/7nJ9oisQ3C2UGZz8/apPVm+hLu3/ywYLLDucuXLGmzc4Yyj
+62Ya2Mvu4InK6TunBxxARgWHBXEIJN915usyy9oAMTSZtlshvkwZU36SrArVAbCY
+SXdF3lT8aHqRN2FTNQo4B1/kiW9lPWKnXmBqs/zt6kvOzxHQtiusdpYZK8nubm7B
+J3a2vyWpflwsf9yxMI/3B1Nlb/+GQlodg1KEuK20hZc3V9Ov4MDEI6P2ZcTTUywR
+qprVn7MERqtNHT9Pna2O4bj7ugPdp44p2dI4lXJBxdBIavYx0F+nCbvLh8qpoC2v
+Lkz1kDqf1Cz5FrlYroOsFCZfTpLo3cgFomm/KyRZCD0rSJxxLd/irV8TsmLZe2GQ
+6fKxoCMpkq4HaXdT0+nA5NclY9z/UWNS8KvhmsF9djhVmgiE/viZkFAnyBUncN0z
+vpd0jfy5M6DHT1aqBEfciVo/plcNpyaR8OqgdkInILOMAAWL3BTpGDpUmvHEu6x0
+rkOWSAcLXRTvb6EKxqOvSx3bwW2DnthPhqxa0nnuK/yrDSK/lrT0YOpL3Pl2hwsR
+0p0iqqIeHYPaiW+anmnRlA7Jd50Su/CweuXGG6QBn4IdMhUUOfQ=
+=2SpP
+-----END PGP SIGNATURE-----
+
+--n8g4imXOkfNTN/H1--
