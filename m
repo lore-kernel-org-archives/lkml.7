@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC3ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38EE0CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4865520640
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A1C220640
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:27:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437638;
-	bh=a7lsjfD5XOqATd/HHMEqnA12kAyKJex2d6w/wuLsBQY=;
+	s=default; t=1571437645;
+	bh=KDouM1x/ZhUC/AxhtbM10VlvxvdYU4eTIV21usld9RQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gdjHzn9XH+FV2e2hcvuVpzvev6GcIxhCYTyqgsCbK3I6RhY5xIrgjD7NL28a6g/oJ
-	 vGT96UtVwDyLv00R8yeZjVfi1n7pKWnyQ6x+XRIV5uS3/hacs9Ik01rPu9QTrsS9hb
-	 s+5TUnoSgQD1iwIP+bSuj7DKIT9NZeusbC6bYSbQ=
+	b=1VD3Sa0Ea6al2//MQIJY23mzkFM82h5pbN4hNn5FNe7twkaFc0SKUlUDW2MUoe7BW
+	 gu8MZC6MY9Sf8PnN43p3rFipuy6w6cFV+iMnre88mWiJkS1BLL4aPqJDK0uukWawpv
+	 dPC95Ytox6/s7PY+7uTHvdCuwMGOZS4t9IZqReBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406387AbfJRW1R (ORCPT
+        id S2406428AbfJRW1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:27:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35704 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:27:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727671AbfJRWEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:04:04 -0400
+        id S1727637AbfJRWED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:04:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D9752246A;
-        Fri, 18 Oct 2019 22:04:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BBE2222C3;
+        Fri, 18 Oct 2019 22:04:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436243;
-        bh=a7lsjfD5XOqATd/HHMEqnA12kAyKJex2d6w/wuLsBQY=;
+        s=default; t=1571436242;
+        bh=KDouM1x/ZhUC/AxhtbM10VlvxvdYU4eTIV21usld9RQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MOvscl0bkm45WNJOAu1nCLtf1L5BpeMYQW4Pl4vx9hMc+Fakmgq4lAHaTklfTNP+r
-         U95+8NxdJTq2M/zqaV+A0yf8HLTQuA8xlkXVZovR3V7KEF21SNQpJ7tFHfJlngg8zp
-         tyFO/53ILPoSiImSTxnGcaTM1CSKrsbmbw1Sa7xs=
+        b=R+hdJW+6Jj42Zqq+ixfLel6Tmz14SkrkcE4pB1aIXo0ichxaqna/H8na6MwDK1Qqm
+         h5isWJlzJ4hWjKRiWjpZQyvxV2GlK58akJ8r5KVtkOOgr+C+2QuvIsT+LJHVs2xUSQ
+         D56gtFK05Ev6KS9D13e7RV/WR23QfIqbJXWnskpo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 28/89] tty: serial: owl: Fix the link time qualifier of 'owl_uart_exit()'
-Date:   Fri, 18 Oct 2019 18:02:23 -0400
-Message-Id: <20191018220324.8165-28-sashal@kernel.org>
+Cc:     James Morse <james.morse@arm.com>, Will Deacon <will@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 27/89] arm64: ftrace: Ensure synchronisation in PLT setup for Neoverse-N1 #1542419
+Date:   Fri, 18 Oct 2019 18:02:22 -0400
+Message-Id: <20191018220324.8165-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -59,34 +58,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: James Morse <james.morse@arm.com>
 
-[ Upstream commit 6264dab6efd6069f0387efb078a9960b5642377b ]
+[ Upstream commit dd8a1f13488438c6c220b7cafa500baaf21a6e53 ]
 
-'exit' functions should be marked as __exit, not __init.
+CPUs affected by Neoverse-N1 #1542419 may execute a stale instruction if
+it was recently modified. The affected sequence requires freshly written
+instructions to be executable before a branch to them is updated.
 
-Fixes: fc60a8b675bd ("tty: serial: owl: Implement console driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Link: https://lore.kernel.org/r/20190910041129.6978-1-christophe.jaillet@wanadoo.fr
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+There are very few places in the kernel that modify executable text,
+all but one come with sufficient synchronisation:
+ * The module loader's flush_module_icache() calls flush_icache_range(),
+   which does a kick_all_cpus_sync()
+ * bpf_int_jit_compile() calls flush_icache_range().
+ * Kprobes calls aarch64_insn_patch_text(), which does its work in
+   stop_machine().
+ * static keys and ftrace both patch between nops and branches to
+   existing kernel code (not generated code).
+
+The affected sequence is the interaction between ftrace and modules.
+The module PLT is cleaned using __flush_icache_range() as the trampoline
+shouldn't be executable until we update the branch to it.
+
+Drop the double-underscore so that this path runs kick_all_cpus_sync()
+too.
+
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/owl-uart.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/ftrace.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/tty/serial/owl-uart.c b/drivers/tty/serial/owl-uart.c
-index 29a6dc6a8d23c..73fcc6bdb0312 100644
---- a/drivers/tty/serial/owl-uart.c
-+++ b/drivers/tty/serial/owl-uart.c
-@@ -742,7 +742,7 @@ static int __init owl_uart_init(void)
- 	return ret;
- }
+diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
+index 1717732579742..06e56b4703153 100644
+--- a/arch/arm64/kernel/ftrace.c
++++ b/arch/arm64/kernel/ftrace.c
+@@ -121,10 +121,16 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
  
--static void __init owl_uart_exit(void)
-+static void __exit owl_uart_exit(void)
- {
- 	platform_driver_unregister(&owl_uart_platform_driver);
- 	uart_unregister_driver(&owl_uart_driver);
+ 			/*
+ 			 * Ensure updated trampoline is visible to instruction
+-			 * fetch before we patch in the branch.
++			 * fetch before we patch in the branch. Although the
++			 * architecture doesn't require an IPI in this case,
++			 * Neoverse-N1 erratum #1542419 does require one
++			 * if the TLB maintenance in module_enable_ro() is
++			 * skipped due to rodata_enabled. It doesn't seem worth
++			 * it to make it conditional given that this is
++			 * certainly not a fast-path.
+ 			 */
+-			__flush_icache_range((unsigned long)&dst[0],
+-					     (unsigned long)&dst[1]);
++			flush_icache_range((unsigned long)&dst[0],
++					   (unsigned long)&dst[1]);
+ 		}
+ 		addr = (unsigned long)dst;
+ #else /* CONFIG_ARM64_MODULE_PLTS */
 -- 
 2.20.1
 
