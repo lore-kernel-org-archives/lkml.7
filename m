@@ -2,133 +2,110 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD1FCA9EA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CEE4CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A767721D7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33A9920820
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:40:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Tb9KsRI4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SFV9uWz5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633124AbfJRJk0 (ORCPT
+        id S2407720AbfJRJk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 05:40:26 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:13378 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2442378AbfJRJjo (ORCPT
+        Fri, 18 Oct 2019 05:40:56 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33800 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389165AbfJRJky (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 05:39:44 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5da988620000>; Fri, 18 Oct 2019 02:39:46 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 18 Oct 2019 02:39:43 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 18 Oct 2019 02:39:43 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 18 Oct
- 2019 09:39:42 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 18 Oct 2019 09:39:43 +0000
-Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.66.147]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5da9885c0000>; Fri, 18 Oct 2019 02:39:42 -0700
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <kishon@ti.com>
-CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V11 09/11] arm64: tegra: Enable xudc on Jetson TX2
-Date:   Fri, 18 Oct 2019 15:08:14 +0530
-Message-ID: <1571391496-20834-10-git-send-email-nkristam@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1571391496-20834-1-git-send-email-nkristam@nvidia.com>
-References: <1571391496-20834-1-git-send-email-nkristam@nvidia.com>
-X-NVConfidentiality: public
+        Fri, 18 Oct 2019 05:40:54 -0400
+Received: by mail-lj1-f196.google.com with SMTP id j19so5548495lja.1
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 02:40:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bOJNlT4L8Idf/nqVi29AwDYXYOoGHJN4nbyrREFiJ6U=;
+        b=SFV9uWz5WebpMzn33pswNWj6JSRk6BEr1PEK0IlJcC7ygoWmlQSQYhnxzAB3IctjHL
+         XcaWKdYSPSPoOoq5IyfoV4mBHCQQxnhdF35/DnjEudWa0yzVIFMIR4GMFDIVob/8Qzdo
+         zlISixM7a4MMJEySdeso6HOSNQSIGHSsM+qr3gwnF1TRh15SygSrDW1brP3wUXRnWur7
+         7zKxfN6tAoZ6NhLZ1TndNsvtDr6NEarQ3bwnNTjpiGr5fafJB63CrqByyHpuBvJ3L/4m
+         RRrVFMKH/sSM3/I/jt2z9SKwLSiRhXDP+m+30BTnI18jC1QLya8YmYPVm6fD1fX7Aazg
+         nRPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bOJNlT4L8Idf/nqVi29AwDYXYOoGHJN4nbyrREFiJ6U=;
+        b=EA2IRrLd69ZfyvT4eTXIcqaz1mPH5FjlYFMSPBLV/gaOjvbk91RvxN3ABKzuiLkxoU
+         We3J6TCqeED/ysN9MFz5xDtCWoeviYrqK0i8kksqXKD2GOUc/M20snjwV27rrS3SWV5G
+         yKvW/Y14gL69msTjRq2CX04D7JiKzweZ/cW3/IZ4wCYznNhXMtSeNpWJfzzkfC580FCh
+         1HD2F4jli1PLbpAtW+cNTTA5k6OBjh+wnuk5dVKdpcte8bppYQvpnhPZ14BYmc5lBxHe
+         WSxxawNeY23k0/FFbsp9ORwBx6FbjvIBT8kToUISHFgdlWoQYbbc9p//xBQoi/m788MF
+         GPNQ==
+X-Gm-Message-State: APjAAAW1fQ44jG0ilL289P4V4xlX5U+yUVPVGw3JjdZpiQnfHRtHD1S4
+        s4vIPB0Fh8SvwRosnMmVSLs=
+X-Google-Smtp-Source: APXvYqywCB2VCpIQP/0RrUdWYoZ85jhgAxhGeaxxBV3j7fl5o3jrM7p6x5FjRDAVLLSPreDBiJCH/A==
+X-Received: by 2002:a2e:9ec2:: with SMTP id h2mr4840327ljk.85.1571391652638;
+        Fri, 18 Oct 2019 02:40:52 -0700 (PDT)
+Received: from pc636 ([37.139.158.167])
+        by smtp.gmail.com with ESMTPSA id p18sm2699719lfh.24.2019.10.18.02.40.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 02:40:51 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Fri, 18 Oct 2019 11:40:49 +0200
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Wagner <dwagner@suse.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Hillf Danton <hdanton@sina.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v3 2/3] mm/vmalloc: respect passed gfp_mask when do
+ preloading
+Message-ID: <20191018094049.GB8744@pc636>
+References: <20191016095438.12391-1-urezki@gmail.com>
+ <20191016095438.12391-2-urezki@gmail.com>
+ <20191016110604.GT317@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1571391586; bh=E76RFg4hKivDlAPkzUSnSS0t3ggcoA3D3Vws4hzLjjg=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=Tb9KsRI4F6GdJb673V/8fUaaFpvEk2LLTUTumsQHvCxGoF1EHHmbd/fQCcKW4/ywW
-         Gx4u8hReGcFkdxV1rUajMJO87TPKHK2nde48xTRJD950n1A85C1BMWwxkhS4G4TMT8
-         Ubwaps6+i9WYBVnCHwwtkpQ21K1diVXwEMrvtqoDz1YOpgU8WPyNaeplO3mxKY1/sV
-         tJBpxsOV6A5uC+Zii5J0lbqXQYueYnhPKPIkfn7VYKIJSup0b26S6SDXzUKeFqI7/b
-         jNwGCvfsgTzLUwV9i2sfx07R2V4ZtExkKn63/brJXAkHlRtm3JwA/ezrqi6MWygZ0X
-         Fao9l02MvRYLw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016110604.GT317@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable XUSB device mode driver for USB0 slot on Jetson TX2.
+> > alloc_vmap_area() is given a gfp_mask for the page allocator.
+> > Let's respect that mask and consider it even in the case when
+> > doing regular CPU preloading, i.e. where a context can sleep.
+> 
+> This is explaining what but it doesn't say why. I would go with
+> "
+> Allocation functions should comply with the given gfp_mask as much as
+> possible. The preallocation code in alloc_vmap_area doesn't follow that
+> pattern and it is using a hardcoded GFP_KERNEL. Although this doesn't
+> really make much difference because vmalloc is not GFP_NOWAIT compliant
+> in general (e.g. page table allocations are GFP_KERNEL) there is no
+> reason to spread that bad habit and it is good to fix the antipattern.
+> "
+I can go with that, agree. I am not sure if i need to update the patch
+and send v4. Or maybe Andrew can directly update it in his tree.
 
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts | 29 +++++++++++++++++++++-
- 1 file changed, 28 insertions(+), 1 deletion(-)
+Andrew, should i send or can update?
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts b/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts
-index 2e61957..b55de35 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts
-@@ -131,7 +131,7 @@
- 				status = "okay";
- 
- 				lanes {
--					usb2-0 {
-+					micro_b: usb2-0 {
- 						nvidia,function = "xusb";
- 						status = "okay";
- 					};
-@@ -201,6 +201,20 @@
- 		phy-names = "usb2-0", "usb2-1", "usb3-0";
- 	};
- 
-+	usb@3550000 {
-+		status = "okay";
-+
-+		phys = <&micro_b>;
-+		phy-names = "usb2";
-+		usb-role-switch;
-+
-+		port {
-+			usb_role_switch: endpoint {
-+				remote-endpoint = <&usb_b_conn_ep>;
-+			};
-+		};
-+	};
-+
- 	i2c@c250000 {
- 		/* carrier board ID EEPROM */
- 		eeprom@57 {
-@@ -367,4 +381,17 @@
- 			vin-supply = <&vdd_5v0_sys>;
- 		};
- 	};
-+
-+	usb_type_b: connector {
-+		compatible = "usb-b-connector", "gpio-usb-b-connector";
-+		label = "micro-USB";
-+		type = "micro";
-+		vbus-gpio = <&gpio TEGRA186_MAIN_GPIO(X, 7) GPIO_ACTIVE_LOW>;
-+
-+		port {
-+			usb_b_conn_ep: endpoint {
-+				remote-endpoint = <&usb_role_switch>;
-+			};
-+		};
-+	};
- };
--- 
-2.7.4
+Thank you in advance!
 
+--
+Vlad Rezki
