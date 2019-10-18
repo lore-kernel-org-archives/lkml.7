@@ -2,121 +2,113 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DCFCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F740CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5189B2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2557B2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:47:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mHdqzfGm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GT5coTqM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442072AbfJRFrH (ORCPT
+        id S2442083AbfJRFro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:47:07 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37213 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727823AbfJRFrG (ORCPT
+        Fri, 18 Oct 2019 01:47:44 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43676 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727823AbfJRFrn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:47:06 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f22so4776031wmc.2
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:47:05 -0700 (PDT)
+        Fri, 18 Oct 2019 01:47:43 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i32so2708137pgl.10
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:47:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=uNM5D576B8sHjDG8vnn5qQZ6lZD1oQyLwfmGZHpyHPs=;
-        b=mHdqzfGmHn9g4etrFlilXztklbz9uHDHVpn+164bm1WLeyNevDemg0bZ8UtczJnv+A
-         s8er2ZT93AwmxS1DhyLPD3TAvl7mQi+i+Wzw1JjSx/BVxnxbOnnqGh6Ot1mOJziIlgbS
-         Py6YbVVB0AYOnik+vbDql3Q99kPboJcz6iYZakULtV+iTvdWu+fsd2FNQBBmLbz7S3N+
-         F4wHbPP0vT7+OfXYXLQ0mcd/ZhWoif/bv67w6RJpu1JxIQWXH4amxZUoJ1wP3yj5TmuN
-         WCBPMt49ZRqX/xqxPC3hKmE2JC1OZoLeKbi7rNMHeUaxJE9FESgPwqOJqCBgX6fxMZ5U
-         ooyA==
+        bh=TiE6mrXNG7EqkcZ/U+Q35uelbhpLaDsgu+uQOO85Zos=;
+        b=GT5coTqMgC0RpqXd7gG3yW2ilpPm5cZzvkTxi6FzIbbY4la707DrP5/nepX/YIM/bv
+         GNro45KaBJKsI5YcmWVrWhP6svfuswi+XwUiuyZ7OEekpNi7yQjuK+6jsfJrnmOlkDGS
+         9Dgd2fc4GS5TWS2CSTSqyZCJMhPQrEMqtmMpeWTk3qmIrrIevK9laoksrPssfgcYfFNa
+         TekjbitHqxjwfjC2KyUWsW2pTDXKdvxxZOY29ROPr6m0oQsZSYd96kDGL9GQoj3WGIuR
+         TRITWtWwpnRTHiXrarQOP9xfJFptIyyOQvxXnifzplyJ8r9hDJPMu56oQq6bv/3OVRax
+         oPWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uNM5D576B8sHjDG8vnn5qQZ6lZD1oQyLwfmGZHpyHPs=;
-        b=Idxydod3aaeAoEZg3gXKBFAVbrCNrDdyPJdCLVRrVqLEJm5x5vOGy8rd9tu7DGANor
-         IMEZSIK72ChNSCm82NDGoFIkfjnaiwH5/KRoq/wN7bbbVkwMWkj7X85PI/XsPpzyUyvL
-         XvKMvefGsFaL1iKI1P0qbCeZcO8EIEi6zrW/6qzp/vtX48/77rGhip9TS7JUcpXUMZ9H
-         Z48qOIIRy/4Pp96BoFeeZEa1R4Smuecsg1onsEUAv0Rl/r08zV4k7lnI/WEfNB9WQxgn
-         5+LhVMUJhqa4ShxiF+lsaGw7nvFqGyLZGIhNaN+opMQIHeO8/qTAjB7mYPgPn1kZY+y/
-         M1dA==
-X-Gm-Message-State: APjAAAXUP293rFCOh1zeqbAOqeRNN/4GGZ0g/BXbQEnaj1XoXigab8cf
-        S8J9uoaFKiTeWalpB12zs0k=
-X-Google-Smtp-Source: APXvYqwR8H2jkoCVw9n7Q0P3ui61wTiaipA0OOuDWW7lRQbHDtfXWDt6M7VgRRngOICnsY4tGBmQww==
-X-Received: by 2002:a1c:a784:: with SMTP id q126mr5676273wme.59.1571377624365;
-        Thu, 17 Oct 2019 22:47:04 -0700 (PDT)
-Received: from ltop.local ([2a02:a03f:40ac:ce00:f882:d2a3:f943:89a4])
-        by smtp.gmail.com with ESMTPSA id r7sm4244973wrt.28.2019.10.17.22.47.03
+        bh=TiE6mrXNG7EqkcZ/U+Q35uelbhpLaDsgu+uQOO85Zos=;
+        b=Pugpruge80fpB96uqeMECzU1Ek6RtauFsa+xIx4HBwhgoBB14jKmQX9pxmxLGZfz2W
+         kPhUjIoiaQrfVh9WTY4A2Hn7W+sR/8W8fhPT/6ITmXQ9rPRmkd7K2gUJV8N8GbZERJ6q
+         QPYtqTpGWtmb9jUPS10LPuKKSyFzVcA3CmpT7r4se5jTtZ96aUUlBxJKrGvowcFIg4Xq
+         IXQCkrLNKgJcbQY8vPmDTPtLEwJclTpYjfHTtga+96td8Jz+x4Z41r3EQjLY4BiqA5tv
+         Z0GyYXcPHWxJZH8iabzqWt/2+N2S2R2TXCe7fPAcYsZFVWuqdS5EgZIRo6VfT2Sty9l/
+         U/AQ==
+X-Gm-Message-State: APjAAAUtD9CIis3rrMs2mqG2/Wao7dKcdEGq//UO2anzFUT08by3Mc0A
+        QZRZ79jaQ0qPCZoFOJxOfFWQG60DUKg=
+X-Google-Smtp-Source: APXvYqw0u5pU/YJB1pLyMOrYy32vfv7QWsaj3jE6gcSYufUNISW7CLe9bQeAT3MtxfOTk99PbjIt1g==
+X-Received: by 2002:aa7:96ba:: with SMTP id g26mr4667261pfk.132.1571377662879;
+        Thu, 17 Oct 2019 22:47:42 -0700 (PDT)
+Received: from localhost ([122.172.151.112])
+        by smtp.gmail.com with ESMTPSA id c11sm5741274pfj.114.2019.10.17.22.47.41
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Oct 2019 22:47:03 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 07:47:02 +0200
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/8] riscv: init: merge split string literals in
- preprocessor directive
-Message-ID: <20191018054701.sjueyb3agoaopnla@ltop.local>
-References: <20191018004929.3445-1-paul.walmsley@sifive.com>
- <20191018004929.3445-4-paul.walmsley@sifive.com>
- <20191018040237.3eyrfrty72r63pkz@ltop.local>
- <alpine.DEB.2.21.9999.1910172127220.3026@viisi.sifive.com>
+        Thu, 17 Oct 2019 22:47:42 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 11:17:40 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nico@fluxnic.net
+Subject: Re: [PATCH v2 2/5] cpufreq: merge arm_big_little and vexpress-spc
+Message-ID: <20191018054740.maqbzbk7secgpc2r@vireshk-i7>
+References: <20191017123508.26130-1-sudeep.holla@arm.com>
+ <20191017123508.26130-3-sudeep.holla@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.9999.1910172127220.3026@viisi.sifive.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191017123508.26130-3-sudeep.holla@arm.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 09:38:18PM -0700, Paul Walmsley wrote:
-> On Fri, 18 Oct 2019, Luc Van Oostenryck wrote:
-> 
-> > On Thu, Oct 17, 2019 at 05:49:24PM -0700, Paul Walmsley wrote:
-> > > sparse complains loudly when string literals associated with
-> > > preprocessor directives are split into multiple, separately quoted
-> > > strings across different lines:
-> > 
-> > ...
-> >  
-> > >  #ifndef __riscv_cmodel_medany
-> > > -#error "setup_vm() is called from head.S before relocate so it should "
-> > > -	"not use absolute addressing."
-> > > +#error "setup_vm() is called from head.S before relocate so it should not use absolute addressing."
-> > >  #endif
+On 17-10-19, 13:35, Sudeep Holla wrote:
+> diff --git a/drivers/cpufreq/arm_big_little.c b/drivers/cpufreq/vexpress-spc-cpufreq.c
+> similarity index 90%
+> rename from drivers/cpufreq/arm_big_little.c
+> rename to drivers/cpufreq/vexpress-spc-cpufreq.c
+> index 7fe52fcddcf1..b7e1aa000c80 100644
+> --- a/drivers/cpufreq/arm_big_little.c
+> +++ b/drivers/cpufreq/vexpress-spc-cpufreq.c
+> @@ -1,20 +1,12 @@
+> +// SPDX-License-Identifier: GPL-2.0
+>  /*
+> - * ARM big.LITTLE Platforms CPUFreq support
+> + * Versatile Express SPC CPUFreq Interface driver
+>   *
+> - * Copyright (C) 2013 ARM Ltd.
+> - * Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+> + * Copyright (C) 2019 ARM Ltd.
 
-...
- 
-> On the other hand, gcc seems to support the non-backslashed syntax.  So if 
-> the intention is for sparse to follow the gcc practice, and to be used 
-> beyond the kernel, maybe it's worth aligning sparse to gcc?  Only if 
-> you're bored, I suppose...
+Should this be 2013-2019 instead ?
 
-I quickly checked and gcc also complain about the second line:
-	$ cat y.c 
-#ifndef __riscv_cmodel_medany
-#error "setup_vm() is called from head.S before relocate so it should "
-       "not use absolute addressing."
-#endif
+> + * Sudeep Holla <sudeep.holla@arm.com>
+>   *
+>   * Copyright (C) 2013 Linaro.
+>   * Viresh Kumar <viresh.kumar@linaro.org>
+> - *
+> - * This program is free software; you can redistribute it and/or modify
+> - * it under the terms of the GNU General Public License version 2 as
+> - * published by the Free Software Foundation.
+> - *
+> - * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+> - * kind, whether express or implied; without even the implied warranty
+> - * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> - * GNU General Public License for more details.
+>   */
 
-	$ gcc -c y.c
-y.c:2:2: error: #error "setup_vm() is called from head.S before relocate so it should "
- #error "setup_vm() is called from head.S before relocate so it should "
-  ^~~~~
-y.c:3:8: error: expected identifier or '(' before string constant
-        "not use absolute addressing."
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-So it seems that gcc doesn't join these lines.
-Fell free to add my:
-Reviewed-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-
--- Luc
+-- 
+viresh
