@@ -2,60 +2,60 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33345CA9EB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F61CA9EB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E78C921897
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1F0D21897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:20:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BDBi5QGi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mXrPH9Wd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503909AbfJRAUO (ORCPT
+        id S2392117AbfJRAUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 20:20:14 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50595 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503880AbfJRAUJ (ORCPT
+        Thu, 17 Oct 2019 20:20:16 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34414 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406747AbfJRAUL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 20:20:09 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 5so4316082wmg.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 17:20:06 -0700 (PDT)
+        Thu, 17 Oct 2019 20:20:11 -0400
+Received: by mail-wr1-f67.google.com with SMTP id j11so4297055wrp.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 17:20:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Q3XelA+rxjSfWuLLFnPP6VvckrKuzFhLOOoMyrJzQP0=;
-        b=BDBi5QGiZIqaSWuiVKoGziCslDOHbZO8Yzg1g/hi7Y5xD2PdecbFqNVI3dlxkQUNyi
-         dpj5yFGd/wC1VLgUMu0I0vAWg2TolNYzvnmAC31AvTrxnQjX+Py4KJgmLXVfU/UgUKGl
-         Fw2nLiA+pCwMDQqsDUOQHxBNCSJMjuoLBAW2Y/xaI1S5NPJTCEsLB8WdOt2gaq+o5KXB
-         ESGzGCKtkykp+zBqZC/bvhhn1bbow6BJ3jJizGklbqR3utQ5WGjLYJJiYucu+gTgtsy6
-         uKlM5rAspeeSOfJU+k/2OlX997JMthiHxlefbwa8Lo7HTcE+tHUTj/u5fABKfDImT4Ds
-         S+LA==
+        bh=NFhJ0Ish0UcipllWIdsD8WX5howJ70tuJMN0799CtbQ=;
+        b=mXrPH9WdiLYexh2aFZIBmMo+VBUpmnvFu67nbIYZkiXxpkKXrfP9CDVmUsFWkPlD90
+         ENTkcNStSwhqA/cr8cSRgJUt3B2S/xAi/KeOcyLLf3eCJTTnn4u2DrCN8u6f/9dd40oW
+         98e8YBYB6jSglGiZliD6t+pY49NMvErUXfDd6+opJiGw7Lu86qNAA38cveFMGjgoJwnX
+         iTjtIGclsPdRnVK2wyY8w9gTDoRiBWo1owNTCw+0Td4Fk5L3BAw/KZvXNPGPla/qECtg
+         mxsF1vzNyxcL7wSMfHc1L82DnGcV1yrLeltQtKoRTwtcwcPniXF27vrMQMA/+wJMZLL/
+         Fcqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Q3XelA+rxjSfWuLLFnPP6VvckrKuzFhLOOoMyrJzQP0=;
-        b=M3id7LyTjKwHlLa9CvYK9v1Qh/DnDKpEknSpCs38klyX4izfiIF/ukJi1a+f1g+kX8
-         YANmHBT9jXRZAAZhkP2y1L+b7DK0n7GPxMTaEThH8DydkY64c+7UMBihm8yf6VgmyG9U
-         NxyxZzEXpf7wQff+ICmaU/QSN8ebxDyHI5ndvbeFI8pd8mr9VjEJVx+Rbpkz53J4/p0L
-         osWLFAzzEg5bG4ku1bD1d0phLy5JAFUXVzOFuwEgWZlcGVq0Epcj3Zh+w0DXBaDtpHP9
-         7iVlU56DmP1xW9FUkWN02KfNnmwrsRk2xtJUzV7kIU6gvuCEamUNPzWOljMkEYf+Dijo
-         170A==
-X-Gm-Message-State: APjAAAUsrrzOxX181jRTqAdLWI7A8ElAu23tXfFDZwlhzBWkYI26rbsx
-        da8FkgsFwxy4hb1YiVN3fVuavA==
-X-Google-Smtp-Source: APXvYqyV5PrBFfJAf5D1Ar8z/mW83zQsrr+vS6iiJrwYkVgiWSsgHIcG40g9GT4R9HBnDcjs3/7lqQ==
-X-Received: by 2002:a1c:2cc4:: with SMTP id s187mr4891414wms.168.1571358005653;
-        Thu, 17 Oct 2019 17:20:05 -0700 (PDT)
+        bh=NFhJ0Ish0UcipllWIdsD8WX5howJ70tuJMN0799CtbQ=;
+        b=tIK13E+RuUP6iQBgccT1n4gVTkFZtQkqJUMjnem2JoatG1nW1fJdmh/e00zvOM6tNJ
+         0jOZjzA92xyQDf4IbOyKshkJkLUJAdqNPru3aiFIa1FIrDVo/K0onF2ltuVfA5+nF/AB
+         4tddsOH+awLyY2HxrsxQ9BnF3oBKQVL96wM04iG60GeSchKMpP0WvbUE+wpUhKXfpKwc
+         PI3Htnuz0gEkuZOLE6c7XnOwWC2skMhHQiJtsvSZ683RA5kDCqWrNUhm516eu/c1/sAx
+         5KQl3oTamSBjXrfZQMG/cv6Eopr1hLMZ+36EFb1Ft3tAjSyj+hnyLbzRiPiAvVUQ6OsE
+         1+oQ==
+X-Gm-Message-State: APjAAAXHjQT5jsBpoEQTwKm1tX7zc0fBhtQNoaiSa5YJNToZAjIK4bGD
+        JQd4YyhGLNv9uaWq/Qls6oKQPA==
+X-Google-Smtp-Source: APXvYqwij7hrP3gERpA/4mEFvTiOe8rsmfjT4dHYBYN+EGZcfJ8LmqMDRu/QG0y/jD8r0ETvVYUobQ==
+X-Received: by 2002:adf:f343:: with SMTP id e3mr5153138wrp.315.1571358008368;
+        Thu, 17 Oct 2019 17:20:08 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id z189sm4851248wmc.25.2019.10.17.17.20.04
+        by smtp.gmail.com with ESMTPSA id z189sm4851248wmc.25.2019.10.17.17.20.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 17:20:04 -0700 (PDT)
+        Thu, 17 Oct 2019 17:20:07 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     robh@kernel.org, broonie@kernel.org, linus.walleij@linaro.org,
         lee.jones@linaro.org
@@ -63,10 +63,11 @@ Cc:     vinod.koul@linaro.org, alsa-devel@alsa-project.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         spapothi@codeaurora.org, bgoswami@codeaurora.org,
         linux-gpio@vger.kernel.org,
+        Yeleswarapu Nagaradhesh <nagaradh@codeaurora.org>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 07/11] ASoC: wcd934x: add audio routings
-Date:   Fri, 18 Oct 2019 01:18:45 +0100
-Message-Id: <20191018001849.27205-8-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 09/11] pinctrl: qcom-wcd934x: Add support to wcd934x pinctrl driver.
+Date:   Fri, 18 Oct 2019 01:18:47 +0100
+Message-Id: <20191018001849.27205-10-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
 References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
@@ -77,328 +78,417 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds audio routing for both playback and capture.
+From: Yeleswarapu Nagaradhesh <nagaradh@codeaurora.org>
 
+This patch adds support to wcd934x pinctrl block found in
+WCD9340/WC9341 Audio codecs.
+
+[Srini: multiple cleanups to the code]
+Signed-off-by: Yeleswarapu Nagaradhesh <nagaradh@codeaurora.org>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- sound/soc/codecs/wcd934x.c | 290 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 290 insertions(+)
+ drivers/pinctrl/qcom/Kconfig                |   7 +
+ drivers/pinctrl/qcom/Makefile               |   1 +
+ drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c | 365 ++++++++++++++++++++
+ 3 files changed, 373 insertions(+)
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c
 
-diff --git a/sound/soc/codecs/wcd934x.c b/sound/soc/codecs/wcd934x.c
-index 9eb45820d670..93b838ec1363 100644
---- a/sound/soc/codecs/wcd934x.c
-+++ b/sound/soc/codecs/wcd934x.c
-@@ -136,6 +136,162 @@
- 	} \
- }
+diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
+index 32fc2458b8eb..7406df5fb89a 100644
+--- a/drivers/pinctrl/qcom/Kconfig
++++ b/drivers/pinctrl/qcom/Kconfig
+@@ -195,4 +195,11 @@ config PINCTRL_SM8150
+          Qualcomm Technologies Inc TLMM block found on the Qualcomm
+          Technologies Inc SM8150 platform.
  
-+#define WCD934X_INTERPOLATOR_PATH(id)			\
-+	{"RX INT" #id "_1 MIX1 INP0", "RX0", "SLIM RX0"},	\
-+	{"RX INT" #id "_1 MIX1 INP0", "RX1", "SLIM RX1"},	\
-+	{"RX INT" #id "_1 MIX1 INP0", "RX2", "SLIM RX2"},	\
-+	{"RX INT" #id "_1 MIX1 INP0", "RX3", "SLIM RX3"},	\
-+	{"RX INT" #id "_1 MIX1 INP0", "RX4", "SLIM RX4"},	\
-+	{"RX INT" #id "_1 MIX1 INP0", "RX5", "SLIM RX5"},	\
-+	{"RX INT" #id "_1 MIX1 INP0", "RX6", "SLIM RX6"},	\
-+	{"RX INT" #id "_1 MIX1 INP0", "RX7", "SLIM RX7"},	\
-+	{"RX INT" #id "_1 MIX1 INP0", "IIR0", "IIR0"},	\
-+	{"RX INT" #id "_1 MIX1 INP0", "IIR1", "IIR1"},	\
-+	{"RX INT" #id "_1 MIX1 INP1", "RX0", "SLIM RX0"},	\
-+	{"RX INT" #id "_1 MIX1 INP1", "RX1", "SLIM RX1"},	\
-+	{"RX INT" #id "_1 MIX1 INP1", "RX2", "SLIM RX2"},	\
-+	{"RX INT" #id "_1 MIX1 INP1", "RX3", "SLIM RX3"},	\
-+	{"RX INT" #id "_1 MIX1 INP1", "RX4", "SLIM RX4"},	\
-+	{"RX INT" #id "_1 MIX1 INP1", "RX5", "SLIM RX5"},	\
-+	{"RX INT" #id "_1 MIX1 INP1", "RX6", "SLIM RX6"},	\
-+	{"RX INT" #id "_1 MIX1 INP1", "RX7", "SLIM RX7"},	\
-+	{"RX INT" #id "_1 MIX1 INP1", "IIR0", "IIR0"},	\
-+	{"RX INT" #id "_1 MIX1 INP1", "IIR1", "IIR1"},	\
-+	{"RX INT" #id "_1 MIX1 INP2", "RX0", "SLIM RX0"},	\
-+	{"RX INT" #id "_1 MIX1 INP2", "RX1", "SLIM RX1"},	\
-+	{"RX INT" #id "_1 MIX1 INP2", "RX2", "SLIM RX2"},	\
-+	{"RX INT" #id "_1 MIX1 INP2", "RX3", "SLIM RX3"},	\
-+	{"RX INT" #id "_1 MIX1 INP2", "RX4", "SLIM RX4"},	\
-+	{"RX INT" #id "_1 MIX1 INP2", "RX5", "SLIM RX5"},	\
-+	{"RX INT" #id "_1 MIX1 INP2", "RX6", "SLIM RX6"},	\
-+	{"RX INT" #id "_1 MIX1 INP2", "RX7", "SLIM RX7"},	\
-+	{"RX INT" #id "_1 MIX1 INP2", "IIR0", "IIR0"},		\
-+	{"RX INT" #id "_1 MIX1 INP2", "IIR1", "IIR1"},		\
-+	{"RX INT" #id "_1 MIX1", NULL, "RX INT" #id "_1 MIX1 INP0"}, \
-+	{"RX INT" #id "_1 MIX1", NULL, "RX INT" #id "_1 MIX1 INP1"}, \
-+	{"RX INT" #id "_1 MIX1", NULL, "RX INT" #id "_1 MIX1 INP2"}, \
-+	{"RX INT" #id "_2 MUX", "RX0", "SLIM RX0"},	\
-+	{"RX INT" #id "_2 MUX", "RX1", "SLIM RX1"},	\
-+	{"RX INT" #id "_2 MUX", "RX2", "SLIM RX2"},	\
-+	{"RX INT" #id "_2 MUX", "RX3", "SLIM RX3"},	\
-+	{"RX INT" #id "_2 MUX", "RX4", "SLIM RX4"},	\
-+	{"RX INT" #id "_2 MUX", "RX5", "SLIM RX5"},	\
-+	{"RX INT" #id "_2 MUX", "RX6", "SLIM RX6"},	\
-+	{"RX INT" #id "_2 MUX", "RX7", "SLIM RX7"},	\
-+	{"RX INT" #id "_2 MUX", NULL, "INT" #id "_CLK"}, \
-+	{"RX INT" #id "_2 MUX", NULL, "DSMDEM" #id "_CLK"}, \
-+	{"RX INT" #id "_2 INTERP", NULL, "RX INT" #id "_2 MUX"},	\
-+	{"RX INT" #id " SEC MIX", NULL, "RX INT" #id "_2 INTERP"},	\
-+	{"RX INT" #id "_1 INTERP", NULL, "RX INT" #id "_1 MIX1"},	\
-+	{"RX INT" #id "_1 INTERP", NULL, "INT" #id "_CLK"},	\
-+	{"RX INT" #id "_1 INTERP", NULL, "DSMDEM" #id "_CLK"},	\
-+	{"RX INT" #id " SEC MIX", NULL, "RX INT" #id "_1 INTERP"}
++config PINCTRL_WCD934X
++	tristate "Qualcomm Technologies Inc WCD9340/WCD9341 pin controller driver"
++	depends on GPIOLIB && OF
++	help
++         This is the pinctrl, pinmux, pinconf and gpiolib driver for the
++         Qualcomm Technologies Inc Pinctrl block found on the Qualcomm
++         Technologies Inc WCD9340/WCD9341 Audio Codec.
+ endif
+diff --git a/drivers/pinctrl/qcom/Makefile b/drivers/pinctrl/qcom/Makefile
+index f8bb0c265381..8c42ba1bdd69 100644
+--- a/drivers/pinctrl/qcom/Makefile
++++ b/drivers/pinctrl/qcom/Makefile
+@@ -24,3 +24,4 @@ obj-$(CONFIG_PINCTRL_SC7180)	+= pinctrl-sc7180.o
+ obj-$(CONFIG_PINCTRL_SDM660)   += pinctrl-sdm660.o
+ obj-$(CONFIG_PINCTRL_SDM845) += pinctrl-sdm845.o
+ obj-$(CONFIG_PINCTRL_SM8150) += pinctrl-sm8150.o
++obj-$(CONFIG_PINCTRL_WCD934X) += pinctrl-wcd934x-gpio.o
+diff --git a/drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c b/drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c
+new file mode 100644
+index 000000000000..1aff88d0bcb3
+--- /dev/null
++++ b/drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c
+@@ -0,0 +1,365 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2016-2017, The Linux Foundation. All rights reserved.
++// Copyright (c) 2019, Linaro Limited
 +
-+#define WCD934X_INTERPOLATOR_MIX2(id)			\
-+	{"RX INT" #id " MIX2", NULL, "RX INT" #id " SEC MIX"}, \
-+	{"RX INT" #id " MIX2", NULL, "RX INT" #id " MIX2 INP"}
++#include <linux/module.h>
++#include <linux/gpio.h>
++#include <linux/interrupt.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/of_gpio.h>
 +
-+#define WCD934X_SLIM_RX_AIF_PATH(id)	\
-+	{"SLIM RX"#id" MUX", "AIF1_PB", "AIF1 PB"},	\
-+	{"SLIM RX"#id" MUX", "AIF2_PB", "AIF2 PB"},	\
-+	{"SLIM RX"#id" MUX", "AIF3_PB", "AIF3 PB"},	\
-+	{"SLIM RX"#id" MUX", "AIF4_PB", "AIF4 PB"},   \
-+	{"SLIM RX"#id, NULL, "SLIM RX"#id" MUX"}
++#include "../core.h"
++#include "../pinctrl-utils.h"
 +
-+#define WCD934X_ADC_MUX(id) \
-+	{"ADC MUX" #id, "DMIC", "DMIC MUX" #id },	\
-+	{"ADC MUX" #id, "AMIC", "AMIC MUX" #id },	\
-+	{"DMIC MUX" #id, "DMIC0", "DMIC0"},		\
-+	{"DMIC MUX" #id, "DMIC1", "DMIC1"},		\
-+	{"DMIC MUX" #id, "DMIC2", "DMIC2"},		\
-+	{"DMIC MUX" #id, "DMIC3", "DMIC3"},		\
-+	{"DMIC MUX" #id, "DMIC4", "DMIC4"},		\
-+	{"DMIC MUX" #id, "DMIC5", "DMIC5"},		\
-+	{"AMIC MUX" #id, "ADC1", "ADC1"},		\
-+	{"AMIC MUX" #id, "ADC2", "ADC2"},		\
-+	{"AMIC MUX" #id, "ADC3", "ADC3"},		\
-+	{"AMIC MUX" #id, "ADC4", "ADC4"}
++#define WCD_REG_DIR_CTL_OFFSET 0x42
++#define WCD_REG_VAL_CTL_OFFSET 0x43
++#define WCD_GPIO_PULL_UP       1
++#define WCD_GPIO_PULL_DOWN     2
++#define WCD_GPIO_BIAS_DISABLE  3
++#define WCD_GPIO_STRING_LEN    20
++#define WCD934X_NPINS		5
 +
-+#define WCD934X_IIR_INP_MUX(id) \
-+	{"IIR" #id, NULL, "IIR" #id " INP0 MUX"},	\
-+	{"IIR" #id " INP0 MUX", "DEC0", "ADC MUX0"},	\
-+	{"IIR" #id " INP0 MUX", "DEC1", "ADC MUX1"},	\
-+	{"IIR" #id " INP0 MUX", "DEC2", "ADC MUX2"},	\
-+	{"IIR" #id " INP0 MUX", "DEC3", "ADC MUX3"},	\
-+	{"IIR" #id " INP0 MUX", "DEC4", "ADC MUX4"},	\
-+	{"IIR" #id " INP0 MUX", "DEC5", "ADC MUX5"},	\
-+	{"IIR" #id " INP0 MUX", "DEC6", "ADC MUX6"},	\
-+	{"IIR" #id " INP0 MUX", "DEC7", "ADC MUX7"},	\
-+	{"IIR" #id " INP0 MUX", "DEC8", "ADC MUX8"},	\
-+	{"IIR" #id " INP0 MUX", "RX0", "SLIM RX0"},	\
-+	{"IIR" #id " INP0 MUX", "RX1", "SLIM RX1"},	\
-+	{"IIR" #id " INP0 MUX", "RX2", "SLIM RX2"},	\
-+	{"IIR" #id " INP0 MUX", "RX3", "SLIM RX3"},	\
-+	{"IIR" #id " INP0 MUX", "RX4", "SLIM RX4"},	\
-+	{"IIR" #id " INP0 MUX", "RX5", "SLIM RX5"},	\
-+	{"IIR" #id " INP0 MUX", "RX6", "SLIM RX6"},	\
-+	{"IIR" #id " INP0 MUX", "RX7", "SLIM RX7"},	\
-+	{"IIR" #id, NULL, "IIR" #id " INP1 MUX"},	\
-+	{"IIR" #id " INP1 MUX", "DEC0", "ADC MUX0"},	\
-+	{"IIR" #id " INP1 MUX", "DEC1", "ADC MUX1"},	\
-+	{"IIR" #id " INP1 MUX", "DEC2", "ADC MUX2"},	\
-+	{"IIR" #id " INP1 MUX", "DEC3", "ADC MUX3"},	\
-+	{"IIR" #id " INP1 MUX", "DEC4", "ADC MUX4"},	\
-+	{"IIR" #id " INP1 MUX", "DEC5", "ADC MUX5"},	\
-+	{"IIR" #id " INP1 MUX", "DEC6", "ADC MUX6"},	\
-+	{"IIR" #id " INP1 MUX", "DEC7", "ADC MUX7"},	\
-+	{"IIR" #id " INP1 MUX", "DEC8", "ADC MUX8"},	\
-+	{"IIR" #id " INP1 MUX", "RX0", "SLIM RX0"},	\
-+	{"IIR" #id " INP1 MUX", "RX1", "SLIM RX1"},	\
-+	{"IIR" #id " INP1 MUX", "RX2", "SLIM RX2"},	\
-+	{"IIR" #id " INP1 MUX", "RX3", "SLIM RX3"},	\
-+	{"IIR" #id " INP1 MUX", "RX4", "SLIM RX4"},	\
-+	{"IIR" #id " INP1 MUX", "RX5", "SLIM RX5"},	\
-+	{"IIR" #id " INP1 MUX", "RX6", "SLIM RX6"},	\
-+	{"IIR" #id " INP1 MUX", "RX7", "SLIM RX7"},	\
-+	{"IIR" #id, NULL, "IIR" #id " INP2 MUX"},	\
-+	{"IIR" #id " INP2 MUX", "DEC0", "ADC MUX0"},	\
-+	{"IIR" #id " INP2 MUX", "DEC1", "ADC MUX1"},	\
-+	{"IIR" #id " INP2 MUX", "DEC2", "ADC MUX2"},	\
-+	{"IIR" #id " INP2 MUX", "DEC3", "ADC MUX3"},	\
-+	{"IIR" #id " INP2 MUX", "DEC4", "ADC MUX4"},	\
-+	{"IIR" #id " INP2 MUX", "DEC5", "ADC MUX5"},	\
-+	{"IIR" #id " INP2 MUX", "DEC6", "ADC MUX6"},	\
-+	{"IIR" #id " INP2 MUX", "DEC7", "ADC MUX7"},	\
-+	{"IIR" #id " INP2 MUX", "DEC8", "ADC MUX8"},	\
-+	{"IIR" #id " INP2 MUX", "RX0", "SLIM RX0"},	\
-+	{"IIR" #id " INP2 MUX", "RX1", "SLIM RX1"},	\
-+	{"IIR" #id " INP2 MUX", "RX2", "SLIM RX2"},	\
-+	{"IIR" #id " INP2 MUX", "RX3", "SLIM RX3"},	\
-+	{"IIR" #id " INP2 MUX", "RX4", "SLIM RX4"},	\
-+	{"IIR" #id " INP2 MUX", "RX5", "SLIM RX5"},	\
-+	{"IIR" #id " INP2 MUX", "RX6", "SLIM RX6"},	\
-+	{"IIR" #id " INP2 MUX", "RX7", "SLIM RX7"},	\
-+	{"IIR" #id, NULL, "IIR" #id " INP3 MUX"},	\
-+	{"IIR" #id " INP3 MUX", "DEC0", "ADC MUX0"},	\
-+	{"IIR" #id " INP3 MUX", "DEC1", "ADC MUX1"},	\
-+	{"IIR" #id " INP3 MUX", "DEC2", "ADC MUX2"},	\
-+	{"IIR" #id " INP3 MUX", "DEC3", "ADC MUX3"},	\
-+	{"IIR" #id " INP3 MUX", "DEC4", "ADC MUX4"},	\
-+	{"IIR" #id " INP3 MUX", "DEC5", "ADC MUX5"},	\
-+	{"IIR" #id " INP3 MUX", "DEC6", "ADC MUX6"},	\
-+	{"IIR" #id " INP3 MUX", "DEC7", "ADC MUX7"},	\
-+	{"IIR" #id " INP3 MUX", "DEC8", "ADC MUX8"},	\
-+	{"IIR" #id " INP3 MUX", "RX0", "SLIM RX0"},	\
-+	{"IIR" #id " INP3 MUX", "RX1", "SLIM RX1"},	\
-+	{"IIR" #id " INP3 MUX", "RX2", "SLIM RX2"},	\
-+	{"IIR" #id " INP3 MUX", "RX3", "SLIM RX3"},	\
-+	{"IIR" #id " INP3 MUX", "RX4", "SLIM RX4"},	\
-+	{"IIR" #id " INP3 MUX", "RX5", "SLIM RX5"},	\
-+	{"IIR" #id " INP3 MUX", "RX6", "SLIM RX6"},	\
-+	{"IIR" #id " INP3 MUX", "RX7", "SLIM RX7"}
-+
-+#define WCD934X_SLIM_TX_AIF_PATH(id)	\
-+	{"AIF1_CAP Mixer", "SLIM TX" #id, "SLIM TX" #id },	\
-+	{"AIF2_CAP Mixer", "SLIM TX" #id, "SLIM TX" #id },	\
-+	{"AIF3_CAP Mixer", "SLIM TX" #id, "SLIM TX" #id },	\
-+	{"SLIM TX" #id, NULL, "CDC_IF TX" #id " MUX"}
-+
- enum {
- 	MIC_BIAS_1 = 1,
- 	MIC_BIAS_2,
-@@ -4813,6 +4969,138 @@ static const struct snd_soc_dapm_widget wcd934x_dapm_widgets[] = {
- 			   ARRAY_SIZE(aif3_slim_cap_mixer)),
- };
- 
-+static const struct snd_soc_dapm_route wcd934x_audio_map[] = {
-+	/* RX0-RX7 */
-+	WCD934X_SLIM_RX_AIF_PATH(0),
-+	WCD934X_SLIM_RX_AIF_PATH(1),
-+	WCD934X_SLIM_RX_AIF_PATH(2),
-+	WCD934X_SLIM_RX_AIF_PATH(3),
-+	WCD934X_SLIM_RX_AIF_PATH(4),
-+	WCD934X_SLIM_RX_AIF_PATH(5),
-+	WCD934X_SLIM_RX_AIF_PATH(6),
-+	WCD934X_SLIM_RX_AIF_PATH(7),
-+
-+	/* RX0 Ear out */
-+	WCD934X_INTERPOLATOR_PATH(0),
-+	WCD934X_INTERPOLATOR_MIX2(0),
-+	{"RX INT0 DEM MUX", "CLSH_DSM_OUT", "RX INT0 MIX2"},
-+	{"RX INT0 DAC", NULL, "RX INT0 DEM MUX"},
-+	{"RX INT0 DAC", NULL, "RX_BIAS"},
-+	{"EAR PA", NULL, "RX INT0 DAC"},
-+	{"EAR", NULL, "EAR PA"},
-+
-+	/* RX1 Headphone left */
-+	WCD934X_INTERPOLATOR_PATH(1),
-+	WCD934X_INTERPOLATOR_MIX2(1),
-+	{"RX INT1 MIX3", NULL, "RX INT1 MIX2"},
-+	{"RX INT1 DEM MUX", "CLSH_DSM_OUT", "RX INT1 MIX3"},
-+	{"RX INT1 DAC", NULL, "RX INT1 DEM MUX"},
-+	{"RX INT1 DAC", NULL, "RX_BIAS"},
-+	{"HPHL PA", NULL, "RX INT1 DAC"},
-+	{"HPHL", NULL, "HPHL PA"},
-+
-+	/* RX2 Headphone right */
-+	WCD934X_INTERPOLATOR_PATH(2),
-+	WCD934X_INTERPOLATOR_MIX2(2),
-+	{"RX INT2 MIX3", NULL, "RX INT2 MIX2"},
-+	{"RX INT2 DEM MUX", "CLSH_DSM_OUT", "RX INT2 MIX3"},
-+	{"RX INT2 DAC", NULL, "RX INT2 DEM MUX"},
-+	{"RX INT2 DAC", NULL, "RX_BIAS"},
-+	{"HPHR PA", NULL, "RX INT2 DAC"},
-+	{"HPHR", NULL, "HPHR PA"},
-+
-+	/* RX3 HIFi LineOut1 */
-+	WCD934X_INTERPOLATOR_PATH(3),
-+	WCD934X_INTERPOLATOR_MIX2(3),
-+	{"RX INT3 MIX3", NULL, "RX INT3 MIX2"},
-+	{"RX INT3 DAC", NULL, "RX INT3 MIX3"},
-+	{"RX INT3 DAC", NULL, "RX_BIAS"},
-+	{"LINEOUT1 PA", NULL, "RX INT3 DAC"},
-+	{"LINEOUT1", NULL, "LINEOUT1 PA"},
-+
-+	/* RX4 HIFi LineOut2 */
-+	WCD934X_INTERPOLATOR_PATH(4),
-+	WCD934X_INTERPOLATOR_MIX2(4),
-+	{"RX INT4 MIX3", NULL, "RX INT4 MIX2"},
-+	{"RX INT4 DAC", NULL, "RX INT4 MIX3"},
-+	{"RX INT4 DAC", NULL, "RX_BIAS"},
-+	{"LINEOUT2 PA", NULL, "RX INT4 DAC"},
-+	{"LINEOUT2", NULL, "LINEOUT2 PA"},
-+
-+	/* RX7 Speaker Left Out PA */
-+	WCD934X_INTERPOLATOR_PATH(7),
-+	WCD934X_INTERPOLATOR_MIX2(7),
-+	{"RX INT7 CHAIN", NULL, "RX INT7 MIX2"},
-+	{"RX INT7 CHAIN", NULL, "RX_BIAS"},
-+	{"RX INT7 CHAIN", NULL, "SBOOST0"},
-+	{"RX INT7 CHAIN", NULL, "SBOOST0_CLK"},
-+	{"SPK1 OUT", NULL, "RX INT7 CHAIN"},
-+
-+	/* RX8 Speaker Right Out PA */
-+	WCD934X_INTERPOLATOR_PATH(8),
-+	{"RX INT8 CHAIN", NULL, "RX INT8 SEC MIX"},
-+	{"RX INT8 CHAIN", NULL, "RX_BIAS"},
-+	{"RX INT8 CHAIN", NULL, "SBOOST1"},
-+	{"RX INT8 CHAIN", NULL, "SBOOST1_CLK"},
-+	{"SPK2 OUT", NULL, "RX INT8 CHAIN"},
-+
-+	/* Tx */
-+	{"AIF1 CAP", NULL, "AIF1_CAP Mixer"},
-+	{"AIF2 CAP", NULL, "AIF2_CAP Mixer"},
-+	{"AIF3 CAP", NULL, "AIF3_CAP Mixer"},
-+
-+	WCD934X_SLIM_TX_AIF_PATH(0),
-+	WCD934X_SLIM_TX_AIF_PATH(1),
-+	WCD934X_SLIM_TX_AIF_PATH(2),
-+	WCD934X_SLIM_TX_AIF_PATH(3),
-+	WCD934X_SLIM_TX_AIF_PATH(4),
-+	WCD934X_SLIM_TX_AIF_PATH(5),
-+	WCD934X_SLIM_TX_AIF_PATH(6),
-+	WCD934X_SLIM_TX_AIF_PATH(7),
-+	WCD934X_SLIM_TX_AIF_PATH(8),
-+
-+	WCD934X_ADC_MUX(0),
-+	WCD934X_ADC_MUX(1),
-+	WCD934X_ADC_MUX(2),
-+	WCD934X_ADC_MUX(3),
-+	WCD934X_ADC_MUX(4),
-+	WCD934X_ADC_MUX(5),
-+	WCD934X_ADC_MUX(6),
-+	WCD934X_ADC_MUX(7),
-+	WCD934X_ADC_MUX(8),
-+
-+	{"CDC_IF TX0 MUX", "DEC0", "ADC MUX0"},
-+	{"CDC_IF TX1 MUX", "DEC1", "ADC MUX1"},
-+	{"CDC_IF TX2 MUX", "DEC2", "ADC MUX2"},
-+	{"CDC_IF TX3 MUX", "DEC3", "ADC MUX3"},
-+	{"CDC_IF TX4 MUX", "DEC4", "ADC MUX4"},
-+	{"CDC_IF TX5 MUX", "DEC5", "ADC MUX5"},
-+	{"CDC_IF TX6 MUX", "DEC6", "ADC MUX6"},
-+	{"CDC_IF TX7 MUX", "DEC7", "ADC MUX7"},
-+	{"CDC_IF TX8 MUX", "DEC8", "ADC MUX8"},
-+
-+	{"AMIC4_5 SEL", "AMIC4", "AMIC4"},
-+	{"AMIC4_5 SEL", "AMIC5", "AMIC5"},
-+
-+	{ "DMIC0", NULL, "DMIC0 Pin" },
-+	{ "DMIC1", NULL, "DMIC1 Pin" },
-+	{ "DMIC2", NULL, "DMIC2 Pin" },
-+	{ "DMIC3", NULL, "DMIC3 Pin" },
-+	{ "DMIC4", NULL, "DMIC4 Pin" },
-+	{ "DMIC5", NULL, "DMIC5 Pin" },
-+
-+	{"ADC1", NULL, "AMIC1"},
-+	{"ADC2", NULL, "AMIC2"},
-+	{"ADC3", NULL, "AMIC3"},
-+	{"ADC4", NULL, "AMIC4_5 SEL"},
-+
-+	WCD934X_IIR_INP_MUX(0),
-+	WCD934X_IIR_INP_MUX(1),
-+
-+	{"SRC0", NULL, "IIR0"},
-+	{"SRC1", NULL, "IIR1"},
++/**
++ * struct wcd_gpio_pad - keep current GPIO settings
++ * @offset: offset of gpio.
++ * @is_valid: Set to false, when GPIO in high Z state.
++ * @value: value of a pin
++ * @output_enabled: Set to true if GPIO is output and false if it is input
++ * @pullup: Constant current which flow through GPIO output buffer.
++ * @strength: Drive strength of a pin
++ */
++struct wcd_gpio_pad {
++	u16  offset;
++	bool is_valid;
++	bool value;
++	bool output_enabled;
++	unsigned int pullup;
++	unsigned int strength;
 +};
 +
- static const struct snd_soc_component_driver wcd934x_component_drv = {
- 	.probe = wcd934x_comp_probe,
- 	.remove = wcd934x_comp_remove,
-@@ -4821,6 +5109,8 @@ static const struct snd_soc_component_driver wcd934x_component_drv = {
- 	.num_controls = ARRAY_SIZE(wcd934x_snd_controls),
- 	.dapm_widgets = wcd934x_dapm_widgets,
- 	.num_dapm_widgets = ARRAY_SIZE(wcd934x_dapm_widgets),
-+	.dapm_routes = wcd934x_audio_map,
-+	.num_dapm_routes = ARRAY_SIZE(wcd934x_audio_map),
- };
- 
- static int wcd934x_codec_parse_data(struct wcd934x_codec *wcd)
++struct wcd_gpio_priv {
++	struct device *dev;
++	struct regmap *map;
++	struct pinctrl_dev *ctrl;
++	struct gpio_chip chip;
++};
++
++static int wcd_gpio_read(struct wcd_gpio_priv *priv_data,
++			 struct wcd_gpio_pad *pad, unsigned int addr)
++{
++	unsigned int val;
++	int ret;
++
++	ret = regmap_read(priv_data->map, addr, &val);
++	if (ret < 0)
++		dev_err(priv_data->dev, "%s: read 0x%x failed\n",
++			__func__, addr);
++	else
++		ret = (val >> pad->offset);
++
++	return ret;
++}
++
++static int wcd_gpio_write(struct wcd_gpio_priv *priv_data,
++			  struct wcd_gpio_pad *pad, unsigned int addr,
++			  unsigned int val)
++{
++	int ret;
++
++	ret = regmap_update_bits(priv_data->map, addr, (1 << pad->offset),
++				 val << pad->offset);
++	if (ret < 0)
++		dev_err(priv_data->dev, "write 0x%x failed\n", addr);
++
++	return ret;
++}
++
++static int wcd_get_groups_count(struct pinctrl_dev *pctldev)
++{
++	return pctldev->desc->npins;
++}
++
++static const char *wcd_get_group_name(struct pinctrl_dev *pctldev,
++				      unsigned int pin)
++{
++	return pctldev->desc->pins[pin].name;
++}
++
++static int wcd_get_group_pins(struct pinctrl_dev *pctldev, unsigned int pin,
++			      const unsigned int **pins, unsigned int *num_pins)
++{
++	*pins = &pctldev->desc->pins[pin].number;
++	*num_pins = 1;
++
++	return 0;
++}
++
++static const struct pinctrl_ops wcd_pinctrl_ops = {
++	.get_groups_count       = wcd_get_groups_count,
++	.get_group_name         = wcd_get_group_name,
++	.get_group_pins         = wcd_get_group_pins,
++	.dt_node_to_map         = pinconf_generic_dt_node_to_map_group,
++	.dt_free_map            = pinctrl_utils_free_map,
++};
++
++static int wcd_config_get(struct pinctrl_dev *pctldev,
++			  unsigned int pin, unsigned long *config)
++{
++	unsigned int param = pinconf_to_config_param(*config);
++	struct wcd_gpio_pad *pad;
++	unsigned int arg;
++
++	pad = pctldev->desc->pins[pin].drv_data;
++
++	switch (param) {
++	case PIN_CONFIG_BIAS_PULL_DOWN:
++		arg = pad->pullup == WCD_GPIO_PULL_DOWN;
++		break;
++	case PIN_CONFIG_BIAS_DISABLE:
++		arg = pad->pullup = WCD_GPIO_BIAS_DISABLE;
++		break;
++	case PIN_CONFIG_BIAS_PULL_UP:
++		arg = pad->pullup == WCD_GPIO_PULL_UP;
++		break;
++	case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
++		arg = !pad->is_valid;
++		break;
++	case PIN_CONFIG_INPUT_ENABLE:
++		arg = pad->output_enabled;
++		break;
++	case PIN_CONFIG_OUTPUT:
++		arg = pad->value;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	*config = pinconf_to_config_packed(param, arg);
++	return 0;
++}
++
++static int wcd_config_set(struct pinctrl_dev *pctldev, unsigned int pin,
++			  unsigned long *configs, unsigned int nconfs)
++{
++	struct wcd_gpio_priv *priv_data = pinctrl_dev_get_drvdata(pctldev);
++	struct wcd_gpio_pad *pad;
++	unsigned int param, arg;
++	int i, ret;
++
++	pad = pctldev->desc->pins[pin].drv_data;
++
++	for (i = 0; i < nconfs; i++) {
++		param = pinconf_to_config_param(configs[i]);
++		arg = pinconf_to_config_argument(configs[i]);
++
++		switch (param) {
++		case PIN_CONFIG_BIAS_DISABLE:
++			pad->pullup = WCD_GPIO_BIAS_DISABLE;
++			break;
++		case PIN_CONFIG_BIAS_PULL_UP:
++			pad->pullup = WCD_GPIO_PULL_UP;
++			break;
++		case PIN_CONFIG_BIAS_PULL_DOWN:
++			pad->pullup = WCD_GPIO_PULL_DOWN;
++			break;
++		case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
++			pad->is_valid = false;
++			break;
++		case PIN_CONFIG_INPUT_ENABLE:
++			pad->output_enabled = false;
++			break;
++		case PIN_CONFIG_OUTPUT:
++			pad->output_enabled = true;
++			pad->value = arg;
++			break;
++		case PIN_CONFIG_DRIVE_STRENGTH:
++			pad->strength = arg;
++			break;
++		default:
++			return -EINVAL;
++		}
++	}
++
++	ret = wcd_gpio_write(priv_data, pad, WCD_REG_DIR_CTL_OFFSET,
++			     pad->output_enabled);
++	if (ret < 0)
++		return ret;
++
++	if (pad->output_enabled)
++		ret = wcd_gpio_write(priv_data, pad, WCD_REG_VAL_CTL_OFFSET,
++				     pad->value);
++
++	return ret;
++}
++
++static const struct pinconf_ops wcd_pinconf_ops = {
++	.is_generic  = true,
++	.pin_config_group_get = wcd_config_get,
++	.pin_config_group_set = wcd_config_set,
++};
++
++static int wcd_gpio_direction_input(struct gpio_chip *chip, unsigned int pin)
++{
++	struct wcd_gpio_priv *priv_data = gpiochip_get_data(chip);
++	unsigned long config;
++
++	config = pinconf_to_config_packed(PIN_CONFIG_INPUT_ENABLE, 1);
++
++	return wcd_config_set(priv_data->ctrl, pin, &config, 1);
++}
++
++static int wcd_gpio_direction_output(struct gpio_chip *chip,
++				      unsigned int pin, int val)
++{
++	struct wcd_gpio_priv *priv_data = gpiochip_get_data(chip);
++	unsigned long config;
++
++	config = pinconf_to_config_packed(PIN_CONFIG_OUTPUT, val);
++
++	return wcd_config_set(priv_data->ctrl, pin, &config, 1);
++}
++
++static int wcd_gpio_get(struct gpio_chip *chip, unsigned int pin)
++{
++	struct wcd_gpio_priv *priv_data = gpiochip_get_data(chip);
++	struct wcd_gpio_pad *pad;
++	int value;
++
++	pad = priv_data->ctrl->desc->pins[pin].drv_data;
++
++	if (!pad->is_valid)
++		return -EINVAL;
++
++	value = wcd_gpio_read(priv_data, pad, WCD_REG_VAL_CTL_OFFSET);
++
++	return value;
++}
++
++static void wcd_gpio_set(struct gpio_chip *chip, unsigned int pin, int value)
++{
++	struct wcd_gpio_priv *priv_data = gpiochip_get_data(chip);
++	unsigned long config;
++
++	config = pinconf_to_config_packed(PIN_CONFIG_OUTPUT, value);
++
++	wcd_config_set(priv_data->ctrl, pin, &config, 1);
++}
++
++static const struct gpio_chip wcd_gpio_chip = {
++	.direction_input  = wcd_gpio_direction_input,
++	.direction_output = wcd_gpio_direction_output,
++	.get = wcd_gpio_get,
++	.set = wcd_gpio_set,
++};
++
++static int wcd_pinctrl_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct pinctrl_pin_desc *pindesc;
++	struct pinctrl_desc *pctrldesc;
++	struct wcd_gpio_pad *pad, *pads;
++	struct wcd_gpio_priv *priv_data;
++	u32 npins = WCD934X_NPINS;
++	char **name;
++	int i;
++
++	priv_data = devm_kzalloc(dev, sizeof(*priv_data), GFP_KERNEL);
++	if (!priv_data)
++		return -ENOMEM;
++
++	priv_data->dev = dev;
++	priv_data->map = dev_get_regmap(dev->parent, NULL);
++	if (!priv_data->map) {
++		dev_err(dev, "%s: failed to get regmap\n", __func__);
++		return  -EINVAL;
++	}
++
++	pindesc = devm_kcalloc(dev, npins, sizeof(*pindesc), GFP_KERNEL);
++	if (!pindesc)
++		return -ENOMEM;
++
++	pads = devm_kcalloc(dev, npins, sizeof(*pads), GFP_KERNEL);
++	if (!pads)
++		return -ENOMEM;
++
++	pctrldesc = devm_kzalloc(dev, sizeof(*pctrldesc), GFP_KERNEL);
++	if (!pctrldesc)
++		return -ENOMEM;
++
++	pctrldesc->pctlops = &wcd_pinctrl_ops;
++	pctrldesc->confops = &wcd_pinconf_ops;
++	pctrldesc->owner = THIS_MODULE;
++	pctrldesc->name = dev_name(dev);
++	pctrldesc->pins = pindesc;
++	pctrldesc->npins = npins;
++
++	name = devm_kcalloc(dev, npins, sizeof(char *), GFP_KERNEL);
++	if (!name)
++		return -ENOMEM;
++
++	for (i = 0; i < npins; i++, pindesc++) {
++		name[i] = devm_kzalloc(dev, sizeof(char) * WCD_GPIO_STRING_LEN,
++				       GFP_KERNEL);
++		if (!name[i])
++			return -ENOMEM;
++
++		pad = &pads[i];
++		pindesc->drv_data = pad;
++		pindesc->number = i;
++		snprintf(name[i], (WCD_GPIO_STRING_LEN - 1), "gpio%d", (i+1));
++		pindesc->name = name[i];
++		pad->offset = i;
++		pad->is_valid  = true;
++	}
++
++	priv_data->chip = wcd_gpio_chip;
++	priv_data->chip.parent = dev;
++	priv_data->chip.base = -1;
++	priv_data->chip.ngpio = npins;
++	priv_data->chip.label = dev_name(dev);
++	priv_data->chip.of_gpio_n_cells = 2;
++	priv_data->chip.can_sleep = false;
++	platform_set_drvdata(pdev, priv_data);
++
++	priv_data->ctrl = devm_pinctrl_register(dev, pctrldesc, priv_data);
++	if (IS_ERR(priv_data->ctrl)) {
++		dev_err(dev, "%s: failed to register to pinctrl\n", __func__);
++		return PTR_ERR(priv_data->ctrl);
++	}
++
++	return gpiochip_add_data(&priv_data->chip, priv_data);
++}
++
++static int wcd_pinctrl_remove(struct platform_device *pdev)
++{
++	struct wcd_gpio_priv *priv_data = platform_get_drvdata(pdev);
++
++	gpiochip_remove(&priv_data->chip);
++
++	return 0;
++}
++
++static const struct of_device_id wcd_pinctrl_of_match[] = {
++	{ .compatible = "qcom,wcd9340-pinctrl" },
++	{ .compatible = "qcom,wcd9341-pinctrl" },
++	{ },
++};
++
++MODULE_DEVICE_TABLE(of, wcd_pinctrl_of_match);
++
++static struct platform_driver wcd_pinctrl_driver = {
++	.driver = {
++		   .name = "wcd934x-pinctrl",
++		   .of_match_table = wcd_pinctrl_of_match,
++	},
++	.probe = wcd_pinctrl_probe,
++	.remove = wcd_pinctrl_remove,
++};
++
++module_platform_driver(wcd_pinctrl_driver);
++
++MODULE_DESCRIPTION("Qualcomm Technologies, Inc WCD GPIO pin control driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.21.0
 
