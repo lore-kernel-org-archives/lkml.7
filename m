@@ -2,129 +2,90 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B656ACA9EA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 177B4CA9EA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 992052064B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA38E222C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:01:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442266AbfJRJBf (ORCPT
+        id S2632961AbfJRJBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 05:01:35 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:58958 "EHLO foss.arm.com"
+        Fri, 18 Oct 2019 05:01:54 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:58982 "EHLO foss.arm.com"
         rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S2442255AbfJRJBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 05:01:35 -0400
+        id S2442255AbfJRJBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 05:01:53 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B6653E8;
-        Fri, 18 Oct 2019 02:01:07 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D87763F718;
-        Fri, 18 Oct 2019 02:01:05 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 10:01:03 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Jeremy Linton <jeremy.linton@arm.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        rnayak@codeaurora.org, suzuki.poulose@arm.com,
-        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, andrew.murray@arm.com,
-        will@kernel.org, Dave.Martin@arm.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: Relax CPU features sanity checking on heterogeneous architectures
-Message-ID: <20191018090103.GC19734@arrakis.emea.arm.com>
-References: <b3606e76af42f7ecf65b1bfc2a5ed30a@codeaurora.org>
- <20191011105010.GA29364@lakrids.cambridge.arm.com>
- <20191011143343.541da66c@why>
- <20191011135431.GB33537@lakrids.cambridge.arm.com>
- <aee2d915-3801-cc35-2a37-0c7d0ad7488e@arm.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B1096492;
+        Fri, 18 Oct 2019 02:01:33 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E39F53F718;
+        Fri, 18 Oct 2019 02:01:31 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 10:01:27 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, andrew.murray@arm.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH 1/2] PCI: tegra: Fix CLKREQ dependency programming
+Message-ID: <20191018090127.GA25918@e121166-lin.cambridge.arm.com>
+References: <20191005164212.3646-1-vidyas@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aee2d915-3801-cc35-2a37-0c7d0ad7488e@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191005164212.3646-1-vidyas@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 04:39:23PM -0500, Jeremy Linton wrote:
-> On 10/11/19 8:54 AM, Mark Rutland wrote:
-> > On Fri, Oct 11, 2019 at 02:33:43PM +0100, Marc Zyngier wrote:
-> > > On Fri, 11 Oct 2019 11:50:11 +0100
-> > > Mark Rutland <mark.rutland@arm.com> wrote:
-> > > > On Fri, Oct 11, 2019 at 11:19:00AM +0530, Sai Prakash Ranjan wrote:
-> > > > > On latest QCOM SoCs like SM8150 and SC7180 with big.LITTLE arch, below
-> > > > > warnings are observed during bootup of big cpu cores.
-> > > > 
-> > > > For reference, which CPUs are in those SoCs?
-> > > > 
-> > > > > SM8150:
-> > > > > 
-> > > > > [    0.271177] CPU features: SANITY CHECK: Unexpected variation in
-> > > > > SYS_ID_AA64PFR0_EL1. Boot CPU: 0x00000011112222, CPU4: 0x00000011111112
-> > > > 
-> > > > The differing fields are EL3, EL2, and EL1: the boot CPU supports
-> > > > AArch64 and AArch32 at those exception levels, while the secondary only
-> > > > supports AArch64.
-> > > > 
-> > > > Do we handle this variation in KVM?
-> > > 
-> > > We do, at least at vcpu creation time (see kvm_reset_vcpu). But if one
-> > > of the !AArch32 CPU comes in late in the game (after we've started a
-> > > guest), all bets are off (we'll schedule the 32bit guest on that CPU,
-> > > enter the guest, immediately take an Illegal Exception Return, and
-> > > return to userspace with KVM_EXIT_FAIL_ENTRY).
-> > 
-> > Ouch. We certainly can't remove the warning untill we deal with that
-> > somehow, then.
-
-Luckily, qemu refuses to start a guest on two different CPU types.
-
-> > > Not sure we could do better, given the HW. My preference would be to
-> > > fail these CPUs if they aren't present at boot time.
-
-That's my preference as well.
-
-> > I agree; I think we need logic to check the ID register fields against
-> > their EXACT, {LOWER,HIGHER}_SAFE, etc rules regardless of whether we
-> > have an associated cap. That can then abort a late onlining of a CPU
-> > which violates those rules w.r.t. the finalised system value.
+On Sat, Oct 05, 2019 at 10:12:11PM +0530, Vidya Sagar wrote:
+> Corrects the programming to provide REFCLK to the downstream device
+> when there is no CLKREQ sideband signal routing present from root port
+> to the endpont.
 > 
-> Except one of the cases is the user who doesn't care about aarch32 @ el2/1
-> and just wants to add another core to their 64-bit "clean" OS.
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+
+Applied to pci/tegra, thanks.
+
+Lorenzo
+
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index f89f5acee72d..cbe95f0ea0ca 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -40,8 +40,6 @@
+>  #define APPL_PINMUX_CLKREQ_OVERRIDE		BIT(3)
+>  #define APPL_PINMUX_CLK_OUTPUT_IN_OVERRIDE_EN	BIT(4)
+>  #define APPL_PINMUX_CLK_OUTPUT_IN_OVERRIDE	BIT(5)
+> -#define APPL_PINMUX_CLKREQ_OUT_OVRD_EN		BIT(9)
+> -#define APPL_PINMUX_CLKREQ_OUT_OVRD		BIT(10)
+>  
+>  #define APPL_CTRL				0x4
+>  #define APPL_CTRL_SYS_PRE_DET_STATE		BIT(6)
+> @@ -1193,8 +1191,8 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+>  
+>  	if (!pcie->supports_clkreq) {
+>  		val = appl_readl(pcie, APPL_PINMUX);
+> -		val |= APPL_PINMUX_CLKREQ_OUT_OVRD_EN;
+> -		val |= APPL_PINMUX_CLKREQ_OUT_OVRD;
+> +		val |= APPL_PINMUX_CLKREQ_OVERRIDE_EN;
+> +		val &= ~APPL_PINMUX_CLKREQ_OVERRIDE;
+>  		appl_writel(pcie, val, APPL_PINMUX);
+>  	}
+>  
+> -- 
+> 2.17.1
 > 
-> So my $.02 is the online should only fail if someone has actually started a
-> 32-bit guest on the machine.
-
-I don't really think it's worth the hassle. This could even be racy
-(32-bit guest starting at the same time with a CPU being onlined), so it
-needs extra care.
-
-If you have such platform, just make sure that you don't have
-incompatible CPUs coming up late (during boot it should be fine).
-
-> > I suspect that we may want to split the notion of
-> > safe-for-{user,kernel-guest} in the feature tables, as if nothing else
-> > it will force us to consider those cases separately when adding new
-> > stuff.
-> 
-> As i'm sure everyone knows, this is all going to happen again with el0
-> support. I wonder if some of this more "advanced" functionality should be
-> buried behind EXPERT. At least on ACPI its possible to tell at early boot if
-> the machine is heterogeneous (not necessarily in which ways) and just
-> automatically sanitize away 32-bit support and some of the stickier things
-> when a heterogeneous machine is detected.
-
-We should improve (remove) the warnings for things we know the kernel
-can handled during boot. For example, 32-bit not available on all CPUs
-during boot should be fine as we just disable the feature. However, late
-onlining of a CPU that does not support the already advertised features
-should be blocked.
-
--- 
-Catalin
