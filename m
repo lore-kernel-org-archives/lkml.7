@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7185CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C37CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC073222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C97D7205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436360;
-	bh=b/VTm9YJ1NJyWJzB9JlmSk2ByMW0IN3eqaHT/MLyop0=;
+	s=default; t=1571436362;
+	bh=pSHZH/4w3nOlLE17v+y+HwO+fJvTz+CXttg0x1Q+dhE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RHN8KEh/9LZzxC9qOlJZIKG+m+OzN9ENiL/PXHrcx9WOhr1YeO4W+hUYsY/THvyiF
-	 CaVYZC7Rbi6vtktScbDv1cd7m9Fu4eVyAw/HfGLyGzTC0QuvhfFuoiUiNBuKzldIch
-	 THwS+3u6r6KlipqicKrEplNDGZwq89dT+fKRi16E=
+	b=YfXOZkNR3ufq3dIfBk80lBr6PEwgLiodt2BS+r0DvqbV4bOTfAuZt9uT7Rg435twR
+	 IqbIJ3pdznxYzc1Ch6LWsehAl3lzoCJgKQCmMVqW/Vfq7tnH/+lF0ZBK6jNyBmIbPK
+	 g2ZoaSZ9Tn1S3+BsbmVkqQqjwOIN7/OPfQMEkloc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730590AbfJRWF7 (ORCPT
+        id S1730656AbfJRWGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:05:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37850 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:06:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730287AbfJRWFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:05:52 -0400
+        id S1730287AbfJRWGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:06:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03F98222C6;
-        Fri, 18 Oct 2019 22:05:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A11E205F4;
+        Fri, 18 Oct 2019 22:05:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436351;
-        bh=b/VTm9YJ1NJyWJzB9JlmSk2ByMW0IN3eqaHT/MLyop0=;
+        s=default; t=1571436359;
+        bh=pSHZH/4w3nOlLE17v+y+HwO+fJvTz+CXttg0x1Q+dhE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bf/2qEGtvoEcwAf4RRZZYCaYdgKRj1UFxLH5qby1z7AhEg1Y53ERk3vLAX5ftD/au
-         vb3s/QLUqRckuocTjrPlE/GHBk13w2d5XRpKpqxezOoz8norSLFEPJnPI7BPxntDuX
-         e36qa/KUP9suiQNfpzfoCoaaiaBK0ROQ3y2SnN00=
+        b=WapOEtKA0+7gNdiaX3yJgvv0QOcOJlV8C3k4dM+rvmDmy8BQOksOLVnWxSE4Cn57e
+         SotgrAVlp47dbZ8sEBnlLQbaTNxIxtPRaeUQ4uNt9Tuja9ZV7Ch0SJEwqZX5ijoP5c
+         eJ6vue+vM+a963soJ1Dx60kDtH23nR9rmMsSXa90=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefano Brivio <sbrivio@redhat.com>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 016/100] netfilter: ipset: Make invalid MAC address checks consistent
-Date:   Fri, 18 Oct 2019 18:04:01 -0400
-Message-Id: <20191018220525.9042-16-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 018/100] HID: i2c-hid: Ignore input report if there's no data present on Elan touchpanels
+Date:   Fri, 18 Oct 2019 18:04:03 -0400
+Message-Id: <20191018220525.9042-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -61,93 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Brivio <sbrivio@redhat.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 29edbc3ebdb0faa934114f14bf12fc0b784d4f1b ]
+[ Upstream commit 1475af255e18f35dc46f8a7acc18354c73d45149 ]
 
-Set types bitmap:ipmac and hash:ipmac check that MAC addresses
-are not all zeroes.
+While using Elan touchpads, the message floods:
+[  136.138487] i2c_hid i2c-DELL08D6:00: i2c_hid_get_input: incomplete report (14/65535)
 
-Introduce one missing check, and make the remaining ones
-consistent, using is_zero_ether_addr() instead of comparing
-against an array containing zeroes.
+Though the message flood is annoying, the device it self works without
+any issue. I suspect that the device in question takes too much time to
+pull the IRQ back to high after I2C host has done reading its data.
 
-This was already done for hash:mac sets in commit 26c97c5d8dac
-("netfilter: ipset: Use is_zero_ether_addr instead of static and
-memcmp").
+Since the host receives all useful data, let's ignore the input report
+when there's no data.
 
-Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
-Signed-off-by: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/ipset/ip_set_bitmap_ipmac.c |  3 +++
- net/netfilter/ipset/ip_set_hash_ipmac.c   | 11 ++++-------
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/hid/i2c-hid/i2c-hid-core.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/net/netfilter/ipset/ip_set_bitmap_ipmac.c b/net/netfilter/ipset/ip_set_bitmap_ipmac.c
-index 4f01321e793ce..794e0335a8648 100644
---- a/net/netfilter/ipset/ip_set_bitmap_ipmac.c
-+++ b/net/netfilter/ipset/ip_set_bitmap_ipmac.c
-@@ -235,6 +235,9 @@ bitmap_ipmac_kadt(struct ip_set *set, const struct sk_buff *skb,
- 	else
- 		ether_addr_copy(e.ether, eth_hdr(skb)->h_dest);
+diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
+index 8555ce7e737b3..2f940c1de6169 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-core.c
++++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+@@ -50,6 +50,7 @@
+ #define I2C_HID_QUIRK_NO_IRQ_AFTER_RESET	BIT(1)
+ #define I2C_HID_QUIRK_NO_RUNTIME_PM		BIT(2)
+ #define I2C_HID_QUIRK_DELAY_AFTER_SLEEP		BIT(3)
++#define I2C_HID_QUIRK_BOGUS_IRQ			BIT(4)
  
-+	if (is_zero_ether_addr(e.ether))
-+		return -EINVAL;
+ /* flags */
+ #define I2C_HID_STARTED		0
+@@ -179,6 +180,8 @@ static const struct i2c_hid_quirks {
+ 		I2C_HID_QUIRK_DELAY_AFTER_SLEEP },
+ 	{ USB_VENDOR_ID_LG, I2C_DEVICE_ID_LG_8001,
+ 		I2C_HID_QUIRK_NO_RUNTIME_PM },
++	{ USB_VENDOR_ID_ELAN, HID_ANY_ID,
++		 I2C_HID_QUIRK_BOGUS_IRQ },
+ 	{ 0, 0 }
+ };
+ 
+@@ -503,6 +506,12 @@ static void i2c_hid_get_input(struct i2c_hid *ihid)
+ 		return;
+ 	}
+ 
++	if (ihid->quirks & I2C_HID_QUIRK_BOGUS_IRQ && ret_size == 0xffff) {
++		dev_warn_once(&ihid->client->dev, "%s: IRQ triggered but "
++			      "there's no data\n", __func__);
++		return;
++	}
 +
- 	return adtfn(set, &e, &ext, &opt->ext, opt->cmdflags);
- }
- 
-diff --git a/net/netfilter/ipset/ip_set_hash_ipmac.c b/net/netfilter/ipset/ip_set_hash_ipmac.c
-index 16ec822e40447..25560ea742d66 100644
---- a/net/netfilter/ipset/ip_set_hash_ipmac.c
-+++ b/net/netfilter/ipset/ip_set_hash_ipmac.c
-@@ -36,9 +36,6 @@ MODULE_ALIAS("ip_set_hash:ip,mac");
- /* Type specific function prefix */
- #define HTYPE		hash_ipmac
- 
--/* Zero valued element is not supported */
--static const unsigned char invalid_ether[ETH_ALEN] = { 0 };
--
- /* IPv4 variant */
- 
- /* Member elements */
-@@ -104,7 +101,7 @@ hash_ipmac4_kadt(struct ip_set *set, const struct sk_buff *skb,
- 	else
- 		ether_addr_copy(e.ether, eth_hdr(skb)->h_dest);
- 
--	if (ether_addr_equal(e.ether, invalid_ether))
-+	if (is_zero_ether_addr(e.ether))
- 		return -EINVAL;
- 
- 	ip4addrptr(skb, opt->flags & IPSET_DIM_ONE_SRC, &e.ip);
-@@ -140,7 +137,7 @@ hash_ipmac4_uadt(struct ip_set *set, struct nlattr *tb[],
- 	if (ret)
- 		return ret;
- 	memcpy(e.ether, nla_data(tb[IPSET_ATTR_ETHER]), ETH_ALEN);
--	if (ether_addr_equal(e.ether, invalid_ether))
-+	if (is_zero_ether_addr(e.ether))
- 		return -IPSET_ERR_HASH_ELEM;
- 
- 	return adtfn(set, &e, &ext, &ext, flags);
-@@ -220,7 +217,7 @@ hash_ipmac6_kadt(struct ip_set *set, const struct sk_buff *skb,
- 	else
- 		ether_addr_copy(e.ether, eth_hdr(skb)->h_dest);
- 
--	if (ether_addr_equal(e.ether, invalid_ether))
-+	if (is_zero_ether_addr(e.ether))
- 		return -EINVAL;
- 
- 	ip6addrptr(skb, opt->flags & IPSET_DIM_ONE_SRC, &e.ip.in6);
-@@ -260,7 +257,7 @@ hash_ipmac6_uadt(struct ip_set *set, struct nlattr *tb[],
- 		return ret;
- 
- 	memcpy(e.ether, nla_data(tb[IPSET_ATTR_ETHER]), ETH_ALEN);
--	if (ether_addr_equal(e.ether, invalid_ether))
-+	if (is_zero_ether_addr(e.ether))
- 		return -IPSET_ERR_HASH_ELEM;
- 
- 	return adtfn(set, &e, &ext, &ext, flags);
+ 	if ((ret_size > size) || (ret_size < 2)) {
+ 		dev_err(&ihid->client->dev, "%s: incomplete report (%d/%d)\n",
+ 			__func__, size, ret_size);
 -- 
 2.20.1
 
