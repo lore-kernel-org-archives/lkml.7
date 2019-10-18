@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3F9CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40AA1CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACA37205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 134D2205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:23:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437387;
-	bh=AJVWB7TLbX40U29Q4POdrtB+H1Pg+a1SVyDpypxpocM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q/Ky9szurpahFO+Bls3/MMyHxk60a7ImCo++s0NriQGndZagxHsX83VVcF7Q86brb
-	 gFbC2FLuLiGrXreexM/+OMKLG4Y4UJVHabzDU/0JH0TG+pONilZ8+ZeQOPZzjeMi/w
-	 R1X0nfmtwVEDZG1eqQWcVRIN4IR8Lau2GJbu5OFE=
+	s=default; t=1571437394;
+	bh=atw4UZaQccT3eKFCQyThccWL3IxyuknKXsMHVAawv3s=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=L0iScSN6DF3/sE9OXolF3o9sf2X2l7p6wIuNGgOF27prPtchCgA1hdaV601UqCnZ/
+	 RTAnf7Gz96KQvUyUKmg1ttYeiVNt+2U+CAb46rmmy3dE9otmMmwrp05mmsx6Dg8oIk
+	 vPnA55ufwD/xbD1fZnHVX1kuFPFN0Jmlw6qIFcw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbfJRWXF (ORCPT
+        id S2405152AbfJRWXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:23:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37348 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:23:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729695AbfJRWF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729482AbfJRWF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 18 Oct 2019 18:05:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75099222D1;
-        Fri, 18 Oct 2019 22:05:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E98A222C2;
+        Fri, 18 Oct 2019 22:05:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436328;
-        bh=AJVWB7TLbX40U29Q4POdrtB+H1Pg+a1SVyDpypxpocM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DhLagNsWHIMX1ilIwr/bQyX0uur6IuYHg8oLiqE9qXS4cPmbPfKaLKphKYooKCR+E
-         dIQgQbn9GDgqPh97cYlcQUYUxU3fRankx02iza1Dv5ZWpv25LjzKwqjQTjYaAuE3N4
-         278RhS3/1waJcqV7wibhiOKA/2MOTSR/XZQQkaaU=
+        s=default; t=1571436327;
+        bh=atw4UZaQccT3eKFCQyThccWL3IxyuknKXsMHVAawv3s=;
+        h=From:To:Cc:Subject:Date:From;
+        b=lTMh4D0/HdLF9jI+3lfVdMWmbzThp3AiXxBxqp/ZJ3Uj7lCAhqDdJR4s//oIyXkY6
+         vPSnwpqVBnrV/4KzwG1ZXF787SsJcy0h2C+d7PPYcqE+gY5xD23Ht7S4zU/WO4IZWd
+         pjEGUQyjGRoHPLfUi7SlWOyUr9jsF9MJYAapcoY8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+Cc:     Ahmad Masri <amasri@codeaurora.org>,
+        Maya Erez <merez@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 002/100] f2fs: flush quota blocks after turnning it off
-Date:   Fri, 18 Oct 2019 18:03:47 -0400
-Message-Id: <20191018220525.9042-2-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, wil6210@qca.qualcomm.com,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 001/100] wil6210: fix freeing of rx buffers in EDMA mode
+Date:   Fri, 18 Oct 2019 18:03:46 -0400
+Message-Id: <20191018220525.9042-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
-References: <20191018220525.9042-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,38 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaegeuk Kim <jaegeuk@kernel.org>
+From: Ahmad Masri <amasri@codeaurora.org>
 
-[ Upstream commit 0e0667b625cf64243df83171bff61f9d350b9ca5 ]
+[ Upstream commit 6470f31927b46846d957628b719dcfda05446664 ]
 
-After quota_off, we'll get some dirty blocks. If put_super don't have a chance
-to flush them by checkpoint, it causes NULL pointer exception in end_io after
-iput(node_inode). (e.g., by checkpoint=disable)
+After being associated with some EDMA rx traffic, upon "down" driver
+doesn't free all skbs in the rx ring.
+Modify wil_move_all_rx_buff_to_free_list to loop on active list of rx
+buffers, unmap the physical memory and free the skb.
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Ahmad Masri <amasri@codeaurora.org>
+Signed-off-by: Maya Erez <merez@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/super.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/wireless/ath/wil6210/txrx_edma.c | 44 +++++++-------------
+ 1 file changed, 14 insertions(+), 30 deletions(-)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index fdafcfd8b20e2..4ec57d538c15c 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1886,6 +1886,12 @@ void f2fs_quota_off_umount(struct super_block *sb)
- 			set_sbi_flag(F2FS_SB(sb), SBI_NEED_FSCK);
+diff --git a/drivers/net/wireless/ath/wil6210/txrx_edma.c b/drivers/net/wireless/ath/wil6210/txrx_edma.c
+index 3e7fc2983cbb3..409a6fa8b6c8f 100644
+--- a/drivers/net/wireless/ath/wil6210/txrx_edma.c
++++ b/drivers/net/wireless/ath/wil6210/txrx_edma.c
+@@ -234,9 +234,10 @@ static int wil_rx_refill_edma(struct wil6210_priv *wil)
+ 	struct wil_ring *ring = &wil->ring_rx;
+ 	u32 next_head;
+ 	int rc = 0;
+-	u32 swtail = *ring->edma_rx_swtail.va;
++	ring->swtail = *ring->edma_rx_swtail.va;
+ 
+-	for (; next_head = wil_ring_next_head(ring), (next_head != swtail);
++	for (; next_head = wil_ring_next_head(ring),
++	     (next_head != ring->swtail);
+ 	     ring->swhead = next_head) {
+ 		rc = wil_ring_alloc_skb_edma(wil, ring, ring->swhead);
+ 		if (unlikely(rc)) {
+@@ -264,43 +265,26 @@ static void wil_move_all_rx_buff_to_free_list(struct wil6210_priv *wil,
+ 					      struct wil_ring *ring)
+ {
+ 	struct device *dev = wil_to_dev(wil);
+-	u32 next_tail;
+-	u32 swhead = (ring->swhead + 1) % ring->size;
++	struct list_head *active = &wil->rx_buff_mgmt.active;
+ 	dma_addr_t pa;
+-	u16 dmalen;
+ 
+-	for (; next_tail = wil_ring_next_tail(ring), (next_tail != swhead);
+-	     ring->swtail = next_tail) {
+-		struct wil_rx_enhanced_desc dd, *d = &dd;
+-		struct wil_rx_enhanced_desc *_d =
+-			(struct wil_rx_enhanced_desc *)
+-			&ring->va[ring->swtail].rx.enhanced;
+-		struct sk_buff *skb;
+-		u16 buff_id;
++	while (!list_empty(active)) {
++		struct wil_rx_buff *rx_buff =
++			list_first_entry(active, struct wil_rx_buff, list);
++		struct sk_buff *skb = rx_buff->skb;
+ 
+-		*d = *_d;
+-
+-		/* Extract the SKB from the rx_buff management array */
+-		buff_id = __le16_to_cpu(d->mac.buff_id);
+-		if (buff_id >= wil->rx_buff_mgmt.size) {
+-			wil_err(wil, "invalid buff_id %d\n", buff_id);
+-			continue;
+-		}
+-		skb = wil->rx_buff_mgmt.buff_arr[buff_id].skb;
+-		wil->rx_buff_mgmt.buff_arr[buff_id].skb = NULL;
+ 		if (unlikely(!skb)) {
+-			wil_err(wil, "No Rx skb at buff_id %d\n", buff_id);
++			wil_err(wil, "No Rx skb at buff_id %d\n", rx_buff->id);
+ 		} else {
+-			pa = wil_rx_desc_get_addr_edma(&d->dma);
+-			dmalen = le16_to_cpu(d->dma.length);
+-			dma_unmap_single(dev, pa, dmalen, DMA_FROM_DEVICE);
+-
++			rx_buff->skb = NULL;
++			memcpy(&pa, skb->cb, sizeof(pa));
++			dma_unmap_single(dev, pa, wil->rx_buf_len,
++					 DMA_FROM_DEVICE);
+ 			kfree_skb(skb);
  		}
+ 
+ 		/* Move the buffer from the active to the free list */
+-		list_move(&wil->rx_buff_mgmt.buff_arr[buff_id].list,
+-			  &wil->rx_buff_mgmt.free);
++		list_move(&rx_buff->list, &wil->rx_buff_mgmt.free);
  	}
-+	/*
-+	 * In case of checkpoint=disable, we must flush quota blocks.
-+	 * This can cause NULL exception for node_inode in end_io, since
-+	 * put_super already dropped it.
-+	 */
-+	sync_filesystem(sb);
  }
  
- static void f2fs_truncate_quota_inode_pages(struct super_block *sb)
 -- 
 2.20.1
 
