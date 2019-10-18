@@ -2,67 +2,54 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 113DACA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A9BCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DABE020854
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D07520854
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436762;
-	bh=7SOk7tiTVGhBb6vH7JX2MPjaoKS77atUxG4Pvnesje8=;
+	s=default; t=1571436767;
+	bh=NbW4pyrujrDlr8pQUBXCEo4GhfvTIkKR090Vqwr3XBc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z3VTfLVw/4+iclS1TD3HBuOxGjcKuBA+OH3kbgN8l6F5THRb/ei/q//dlqyP76E6S
-	 nskIoU8ClUzdDW05NF8EytQL2/hd1FxGolHW8z7S9WwtBP32qf8x+2AWIlg2Br3n+J
-	 rKUU/OdK6WLYhceuWFIgAgXhDoXsF1o+XNoLLAuw=
+	b=ZwnN4QVP2z8R9z445WRqur65ToW275MW2LfybPHHo/nn45gybRkG10gYoqNJXdHx9
+	 XoxLfBuNMuK6xOH8mf8QrZvy3tAAzP89m/ux5PrhwIcceRb4u/H5o+gkzLoMOLv952
+	 3A2elAn/Uirwzs4EWs/WWc371RNhfdBc2iKzwDQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389861AbfJRWKP (ORCPT
+        id S2391716AbfJRWMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:10:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42506 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:12:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389317AbfJRWJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:09:51 -0400
+        id S2389897AbfJRWKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:10:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B2C522478;
-        Fri, 18 Oct 2019 22:09:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 513712245C;
+        Fri, 18 Oct 2019 22:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436589;
-        bh=7SOk7tiTVGhBb6vH7JX2MPjaoKS77atUxG4Pvnesje8=;
+        s=default; t=1571436617;
+        bh=NbW4pyrujrDlr8pQUBXCEo4GhfvTIkKR090Vqwr3XBc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qiuniB1JomZTru8yoP6UAPYkzLPBmLKTdscXKGc80hIrK34zqY0qNYD2ey2JwnJr4
-         PiQLF5m2Q7V0u2u6F+s2XYLEDoK51uvUjy5ghyYFOMBccfRYRVaBCtItDsW9XducHe
-         1l2CIyREShGmmF5vG3RH7zv/iKB1FawjIpNZJutk=
+        b=pv2k2u2N0cyqAjVKPOVcjCXHeB3ELBzCrJI6MIGfwHlF53aH4yf6nmX0bfys9u5m+
+         vriRWxjEyre/oOFmcbjEirDRKkv18OrMcpGgw0bCQ0dlzkZEoXLulrBtco2xG/bFtv
+         +JPD44+EKXY/EyWxwP1+IimfTHRedsSWHzsCuJYY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lukas Wunner <lukas@wunner.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Dave Young <dyoung@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Octavian Purdila <octavian.purdila@intel.com>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Scott Talbert <swt@techie.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 17/29] efi/cper: Fix endianness of PCIe class code
-Date:   Fri, 18 Oct 2019 18:09:08 -0400
-Message-Id: <20191018220920.10545-17-sashal@kernel.org>
+Cc:     Pascal Bouwmann <bouwmann@tau-tec.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 06/21] iio: fix center temperature of bmc150-accel-core
+Date:   Fri, 18 Oct 2019 18:09:52 -0400
+Message-Id: <20191018221007.10851-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191018220920.10545-1-sashal@kernel.org>
-References: <20191018220920.10545-1-sashal@kernel.org>
+In-Reply-To: <20191018221007.10851-1-sashal@kernel.org>
+References: <20191018221007.10851-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -72,59 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Pascal Bouwmann <bouwmann@tau-tec.de>
 
-[ Upstream commit 6fb9367a15d1a126d222d738b2702c7958594a5f ]
+[ Upstream commit 6c59a962e081df6d8fe43325bbfabec57e0d4751 ]
 
-The CPER parser assumes that the class code is big endian, but at least
-on this edk2-derived Intel Purley platform it's little endian:
+The center temperature of the supported devices stored in the constant
+BMC150_ACCEL_TEMP_CENTER_VAL is not 24 degrees but 23 degrees.
 
-    efi: EFI v2.50 by EDK II BIOS ID:PLYDCRB1.86B.0119.R05.1701181843
-    DMI: Intel Corporation PURLEY/PURLEY, BIOS PLYDCRB1.86B.0119.R05.1701181843 01/18/2017
+It seems that some datasheets were inconsistent on this value leading
+to the error.  For most usecases will only make minor difference so
+not queued for stable.
 
-    {1}[Hardware Error]:   device_id: 0000:5d:00.0
-    {1}[Hardware Error]:   slot: 0
-    {1}[Hardware Error]:   secondary_bus: 0x5e
-    {1}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x2030
-    {1}[Hardware Error]:   class_code: 000406
-                                       ^^^^^^ (should be 060400)
-
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Matthew Garrett <mjg59@google.com>
-Cc: Octavian Purdila <octavian.purdila@intel.com>
-Cc: Peter Jones <pjones@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Scott Talbert <swt@techie.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Cc: linux-integrity@vger.kernel.org
-Link: https://lkml.kernel.org/r/20191002165904.8819-2-ard.biesheuvel@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Pascal Bouwmann <bouwmann@tau-tec.de>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/cper.c | 2 +-
+ drivers/iio/accel/bmc150-accel-core.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-index f40f7df4b7344..c0e54396f2502 100644
---- a/drivers/firmware/efi/cper.c
-+++ b/drivers/firmware/efi/cper.c
-@@ -375,7 +375,7 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
- 		printk("%s""vendor_id: 0x%04x, device_id: 0x%04x\n", pfx,
- 		       pcie->device_id.vendor_id, pcie->device_id.device_id);
- 		p = pcie->device_id.class_code;
--		printk("%s""class_code: %02x%02x%02x\n", pfx, p[0], p[1], p[2]);
-+		printk("%s""class_code: %02x%02x%02x\n", pfx, p[2], p[1], p[0]);
- 	}
- 	if (pcie->validation_bits & CPER_PCIE_VALID_SERIAL_NUMBER)
- 		printk("%s""serial number: 0x%04x, 0x%04x\n", pfx,
+diff --git a/drivers/iio/accel/bmc150-accel-core.c b/drivers/iio/accel/bmc150-accel-core.c
+index c7122919a8c0e..ec7ddf8673497 100644
+--- a/drivers/iio/accel/bmc150-accel-core.c
++++ b/drivers/iio/accel/bmc150-accel-core.c
+@@ -126,7 +126,7 @@
+ #define BMC150_ACCEL_SLEEP_1_SEC		0x0F
+ 
+ #define BMC150_ACCEL_REG_TEMP			0x08
+-#define BMC150_ACCEL_TEMP_CENTER_VAL		24
++#define BMC150_ACCEL_TEMP_CENTER_VAL		23
+ 
+ #define BMC150_ACCEL_AXIS_TO_REG(axis)	(BMC150_ACCEL_REG_XOUT_L + (axis * 2))
+ #define BMC150_AUTO_SUSPEND_DELAY_MS		2000
 -- 
 2.20.1
 
