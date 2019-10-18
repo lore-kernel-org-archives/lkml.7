@@ -2,115 +2,144 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9591CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB982CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B126321925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 894E321925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:42:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jpxaFdev"
+	dkim=pass (1024-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="dZOxx5ht"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443481AbfJRUjj (ORCPT
+        id S2395283AbfJRUm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 16:39:39 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38245 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727793AbfJRUjj (ORCPT
+        Fri, 18 Oct 2019 16:42:29 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34942 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727793AbfJRUm2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 16:39:39 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w8so3397500plq.5;
-        Fri, 18 Oct 2019 13:39:38 -0700 (PDT)
+        Fri, 18 Oct 2019 16:42:28 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p30so3998150pgl.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 13:42:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=purestorage.com; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yF7MutHrwkvSGB6U3XIdCr2BIBwvqm916Bsky0mGSyw=;
-        b=jpxaFdev7vpkQkBEd6ufvN8+8Syuaax8emVkCAdb5pwQ08+Kx9HfaUAmG/dNO0LruH
-         Ru0kVaNEtVe9TtUPNBK2HDfoNRda5QO7P3o/5lHaePEV6vpjkyLRnGWMWfpfNkOLwic4
-         dD99vIdupsM6P3loEyJhDAG6j4eJzxkjjn3GzbzghzvuQGp9pzx4ygzylPs+RjDUDHiZ
-         7S1C/WpfwV1W36dmHXS0Rl0SrBDOkRGXe+A3yaivtT3PLAWohYyWenjZBURub3C84fD4
-         Y2JMkDGtadl07MZ+5Ewc/wwtOmdgYKepH691VkKehLXyc8PrvAZ5aF3mDaPp3Rh6DsJs
-         qvZg==
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=VhVtaFR4lC9WpDLZGJuvhTXL3MmkTO55Z2XEXjz4Fqg=;
+        b=dZOxx5httOrKFoPQTyS276YZ2LuctMWAGeVKZClbnb3AEMHvWZufFPrh7SjZ9EzM17
+         YqTX/myX5BqFptcS1BISyWeGxpOUaEM2CfLC+4SLIKAHoqOYgCgcbT5B71Zxno8HsPyT
+         9eWovCFL0gi5RhJJlUQVcu94GiXfZp3XqclcY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yF7MutHrwkvSGB6U3XIdCr2BIBwvqm916Bsky0mGSyw=;
-        b=rH8WuIBiRV+8HU8nBg0sVYW2dbilrIlYKksccN8XgH0QQAHXsIJC7xMbDiXgfvRCBO
-         Z4xB6CLcLiCDU/xx7u1dy/YMY7HvSxaiYDyE54hqeAH6Yv2+lBVpy4SgOAvk09/363S6
-         UXqB/NgVzV+WwkjXtHh4XQCBhQIX7K17fCP/+GwwX56VM2YA1//n2rYNqx1rc3mwKn2Q
-         QK4S8aJoBtK+WmoNVMEkj+4NDfiP9MkQwlqvZC25Zcwz9v/xMjTcCxIeg6I42nE+sUY+
-         X8nJseGabKjETsEUAOBpwPy9nQcQEeHgDOnhogGC2rMKdasakhTx4xX53RnwcIeBtlXw
-         E2jw==
-X-Gm-Message-State: APjAAAXqC52uFzSgVl1m0wX3JfH0S6sLy4hXtxjskOcFgfsdXI8KaXuF
-        Jim1ZB41O3hJiRfABnnAGpI=
-X-Google-Smtp-Source: APXvYqwMMoMg/Sj3XuNx6NavhISCBWY4vd22WowubXqMjUc6xYCpcf344nB/pSVMbxAZVJeeJlF6GA==
-X-Received: by 2002:a17:902:6acb:: with SMTP id i11mr12268939plt.16.1571431178249;
-        Fri, 18 Oct 2019 13:39:38 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id v3sm7071068pfn.18.2019.10.18.13.39.37
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=VhVtaFR4lC9WpDLZGJuvhTXL3MmkTO55Z2XEXjz4Fqg=;
+        b=WQdrkJr2ic/0S2LET1gFEnTjGDa8YF3RX8N0Ll436u94bKn1UOwfBaTiPx3H2MAzCE
+         VYt7cfXTxiQYqs5TCBZkbb94hBAeTDxUhat7cHGWHLg6574y/y7T9rZrMGYm9p6YosnB
+         mF7nLRFERWNe+IgOA+HLdDJcXqoYovFCp6eVgIJ8afo+JM7ZAUE1+j3xRpOaVS2kLcuu
+         TCKfYLBE/mZsaiQYOHosrz0dXazj/dGBmEd9LU/mdxmsPRhj7R9MfWo9/fxDK9spZfK0
+         YN+19TIEi4WmbQz5NuNWoNg1p2ZOV+zCPMoF3PiicOP4EmD8j7k0EGOdEW0juBuMcs7o
+         OjYQ==
+X-Gm-Message-State: APjAAAVR3dSEzfZMYuqpfDv65tlcT5s9vNj7IA/s481zF9K3h1ZChHCw
+        d5ngpQgU0Moc1c68EiOxEwEt7Q==
+X-Google-Smtp-Source: APXvYqzXJ/D3AABQOCh7mjUXCd8Dze6oOUF1vUVLaB1bqQzMDY3OgjNlRrK9x8ayHxXqFnyMqsICXg==
+X-Received: by 2002:a63:778f:: with SMTP id s137mr12009512pgc.147.1571431347415;
+        Fri, 18 Oct 2019 13:42:27 -0700 (PDT)
+Received: from cork (c-67-180-85-52.hsd1.ca.comcast.net. [67.180.85.52])
+        by smtp.gmail.com with ESMTPSA id u11sm4645761pgc.61.2019.10.18.13.42.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 13:39:37 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 13:39:35 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>
-Subject: Re: [PATCH 25/46] ARM: pxa: mainstone-wm97xx: use gpio lookup table
-Message-ID: <20191018203935.GR35946@dtor-ws>
-References: <20191018154052.1276506-1-arnd@arndb.de>
- <20191018154201.1276638-25-arnd@arndb.de>
- <20191018183940.GM35946@dtor-ws>
- <CAK8P3a1Fc=ogknDRGJ3Sn8bZ8tsR_ebE8_bDtF_kZ4AZ5YG_+g@mail.gmail.com>
- <CAK8P3a00s4=6YHS_2K1r6=i+artkjgxjHJGVHBLuCj1ft5sqFQ@mail.gmail.com>
+        Fri, 18 Oct 2019 13:42:26 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 13:42:20 -0700
+From:   =?iso-8859-1?Q?J=F6rn?= Engel <joern@purestorage.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] random: make try_to_generate_entropy() more robust
+Message-ID: <20191018204220.GD31027@cork>
+References: <20191018203704.GC31027@cork>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a00s4=6YHS_2K1r6=i+artkjgxjHJGVHBLuCj1ft5sqFQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191018203704.GC31027@cork>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 09:37:28PM +0200, Arnd Bergmann wrote:
-> On Fri, Oct 18, 2019 at 8:39 PM Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
-> >
-> > On Fri, Oct 18, 2019 at 05:41:40PM +0200, Arnd Bergmann wrote:
-> > > This driver hardcodes gpio numbers without a header file.
-> > > Use lookup tables instead.
-> > >
-> > > Cc: Marek Vasut <marek.vasut@gmail.com>
-> > > Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > > Cc: linux-input@vger.kernel.org
-> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> >
-> >
-> > Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> >
-> > Arnd, do you have these devices by chance? I had stached patches
-> > converting wm97xx core to use threaded ISR and it would be great if
-> > someone could test them...
-> 
-> Unfortunately I don't, but I'm hoping that someone can test my series
-> on any hardware they might have.
-> 
-> If you like, send me your patches and I'll add them to this series.
+On Fri, Oct 18, 2019 at 01:37:04PM -0700, Jörn Engel wrote:
+> Sorry for coming late to the discussion.  I generally like the approach
+> in try_to_generate_entropy(), but I think we can do a little better
+> still.  Would something like this work?
 
-OK, I'll do that, thanks.
+Fixed lkml address.
 
--- 
-Dmitry
+> From 90078333edb6e720f13f6668376a69c0f9c570f5 Mon Sep 17 00:00:00 2001
+> From: Joern Engel <joern@purestorage.com>
+> Date: Fri, 18 Oct 2019 13:25:52 -0700
+> Subject: [PATCH] random: make try_to_generate_entropy() more robust
+> 
+> We can generate entropy on almost any CPU, even if it doesn't provide a
+> high-resolution timer for random_get_entropy().  As long as the CPU is
+> not idle, it changed the register file every few cycles.  As long as the
+> ALU isn't fully synchronized with the timer, the drift between the
+> register file and the timer is enough to generate entropy from.
+> 
+> Also print a warning on systems where entropy collection might be a
+> problem.  I have good confidence in two unsynchronized timers generating
+> entropy.  But I cannot tell whether timer and ALU are synchronized and
+> we ought to warn users if all their crypto is likely to be broken.
+> 
+> Signed-off-by: Joern Engel <joern@purestorage.com>
+> ---
+>  drivers/char/random.c | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/char/random.c b/drivers/char/random.c
+> index de434feb873a..00a04efd0686 100644
+> --- a/drivers/char/random.c
+> +++ b/drivers/char/random.c
+> @@ -1748,6 +1748,16 @@ EXPORT_SYMBOL(get_random_bytes);
+>   */
+>  static void entropy_timer(struct timer_list *t)
+>  {
+> +	struct pt_regs *regs = get_irq_regs();
+> +
+> +	/*
+> +	 * Even if we don't have a high-resolution timer in our system,
+> +	 * the register file itself is a high-resolution timer.  It
+> +	 * isn't monotonic or particularly useful to read the current
+> +	 * time.  But it changes with every retired instruction, which
+> +	 * is enough to generate entropy from.
+> +	 */
+> +	mix_pool_bytes(&input_pool, regs, sizeof(*regs));
+>  	credit_entropy_bits(&input_pool, 1);
+>  }
+>  
+> @@ -1764,9 +1774,8 @@ static void try_to_generate_entropy(void)
+>  
+>  	stack.now = random_get_entropy();
+>  
+> -	/* Slow counter - or none. Don't even bother */
+> -	if (stack.now == random_get_entropy())
+> -		return;
+> +	/* Slow counter - or none.  Warn user */
+> +	WARN_ON(stack.now == random_get_entropy());
+>  
+>  	timer_setup_on_stack(&stack.timer, entropy_timer, 0);
+>  	while (!crng_ready()) {
+> -- 
+> 2.20.1
+> 
+
+Jörn
+
+--
+...one more straw can't possibly matter...
+-- Kirby Bakken
