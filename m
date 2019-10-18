@@ -7,64 +7,58 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DFFCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D32CA9EAB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B28A420869
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1750C20869
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571422062;
-	bh=9c6VdGtaB1yKtKhcvfzPm9WWJK2yJtZD8fOc7L5QBU0=;
+	s=default; t=1571422065;
+	bh=KiqHWG7fShxMiVmkh6OrcIF1s5qGTTMs+j9abuFtSJ8=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=VV5qi6jkqz6dcUyVy9B5nwHVAjdp9nEH8rXaIiKDiDdgGuGrXjQ0wFcf5DimJ3oR+
-	 ndy7540zOz4pwZ92k4u+I1OoihR+Dw60LFTDu+6xB16eHT2cfockvarP9/oNJna+qD
-	 JKpmBqvAk59j73nZ51lKOF3NFASfju58hrMjuF7o=
+	b=n62MMG0dx3hPf27wAhr5VK7S2mZsFLC3n5oi3bRoZ7Fr6RhqsA7aXiW6ID123LxjI
+	 jBrjfE0urbF13vcUeNHWMRDMLM18HDy8fnjKVQgMOOTz3Xp26Yjx6shUV+IA9DN+4b
+	 m9EKmuXGVI9BQOpm7mfWHkR+VAPVor+fQBVzmcIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634541AbfJRSHl (ORCPT
+        id S2634480AbfJRSHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:07:41 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45488 "EHLO
+        Fri, 18 Oct 2019 14:07:21 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45324 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2634478AbfJRSHW (ORCPT
+        with ESMTP id S2505760AbfJRSHR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:07:22 -0400
+        Fri, 18 Oct 2019 14:07:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=dHAwUaRTj6WzF3k5/983amBt+WSwLh0j0L7nOIxWmDw=; b=dyuu+/tMviLx
-        TOcnOCm5pCzaLOxSuAVGQpml4EQrF+FxOrYBy56ouq5fq2JdCDiLh/vtMyQeMAVw997JNd6e6+Kws
-        XKigfZ4ajuB+jjwbCoUiZcfzLhmOyxzCnWrt1Ssjwh+Em14kpVGlJVAdUJ07dpsd96lo/kQ+2KcVp
-        hSfyw=;
+        List-Archive; bh=GVxUp0/KUCi90XoeEPGKQInOGTJewG5QS+RykxGcVFI=; b=KOTpvf6yYH+u
+        NmqVnVuCl8jsSJZ2jkdcrM0tVR/aVvf561LVnAujM9ykg0oqH0a5SUajYDYU+Cz8Kqe0lenHiuazZ
+        8f/+pHokg4eUKvk3zzAfRw0oun6m2NjbkzeIFpPrvjg9mYtMsfcB9D8plsu77PQdaSGPYx9iJGNyE
+        oBLAY=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iLWeT-0004Fm-3M; Fri, 18 Oct 2019 18:07:01 +0000
+        id 1iLWea-0004Gx-FL; Fri, 18 Oct 2019 18:07:08 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 819E72743276; Fri, 18 Oct 2019 19:07:00 +0100 (BST)
+        id E63F92743273; Fri, 18 Oct 2019 19:07:07 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Junya Monden <jmonden@jp.adit-jv.com>
-Cc:     alsa-devel@alsa-project.org,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jiada Wang <jiada_wang@mentor.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>, stable@vger.kernel.org,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
-        Timo Wischer <twischer@de.adit-jv.com>
-Subject: Applied "ASoC: rsnd: Reinitialize bit clock inversion flag for every format setting" to the asoc tree
-In-Reply-To: <20191016124255.7442-1-erosca@de.adit-jv.com>
+To:     Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Applied "spi: atmel: Improve and fix GPIO CS usage" to the spi tree
+In-Reply-To: <20191017141846.7523-7-gregory.clement@bootlin.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191018180700.819E72743276@ypsilon.sirena.org.uk>
-Date:   Fri, 18 Oct 2019 19:07:00 +0100 (BST)
+Message-Id: <20191018180707.E63F92743273@ypsilon.sirena.org.uk>
+Date:   Fri, 18 Oct 2019 19:07:07 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -72,11 +66,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: rsnd: Reinitialize bit clock inversion flag for every format setting
+   spi: atmel: Improve and fix GPIO CS usage
 
-has been applied to the asoc tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -97,45 +91,196 @@ to this mail.
 Thanks,
 Mark
 
-From 22e58665a01006d05f0239621f7d41cacca96cc4 Mon Sep 17 00:00:00 2001
-From: Junya Monden <jmonden@jp.adit-jv.com>
-Date: Wed, 16 Oct 2019 14:42:55 +0200
-Subject: [PATCH] ASoC: rsnd: Reinitialize bit clock inversion flag for every
- format setting
+From 57e3137710443a3227a54c425b9c606425678c8f Mon Sep 17 00:00:00 2001
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Date: Thu, 17 Oct 2019 16:18:45 +0200
+Subject: [PATCH] spi: atmel: Improve and fix GPIO CS usage
 
-Unlike other format-related DAI parameters, rdai->bit_clk_inv flag
-is not properly re-initialized when setting format for new stream
-processing. The inversion, if requested, is then applied not to default,
-but to a previous value, which leads to SCKP bit in SSICR register being
-set incorrectly.
-Fix this by re-setting the flag to its initial value, determined by format.
+In the previous implementation of this driver, the index of the GPIO
+used as CS was linked to the offset of the CS register used to
+configure the transfer.
 
-Fixes: 1a7889ca8aba3 ("ASoC: rsnd: fixup SND_SOC_DAIFMT_xB_xF behavior")
-Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
-Cc: Jiada Wang <jiada_wang@mentor.com>
-Cc: Timo Wischer <twischer@de.adit-jv.com>
-Cc: stable@vger.kernel.org # v3.17+
-Signed-off-by: Junya Monden <jmonden@jp.adit-jv.com>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Link: https://lore.kernel.org/r/20191016124255.7442-1-erosca@de.adit-jv.com
+With this new implementation the first CS register not used by
+internal CS is associated to all the GPIO CS. It allows to not be
+anymore limited to have only 4 CS managed, now it is possible to have
+in the same time until 3 internal CS and no more limit for the CS
+GPIO.
+
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Link: https://lore.kernel.org/r/20191017141846.7523-7-gregory.clement@bootlin.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/sh/rcar/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/spi/spi-atmel.c | 74 ++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 66 insertions(+), 8 deletions(-)
 
-diff --git a/sound/soc/sh/rcar/core.c b/sound/soc/sh/rcar/core.c
-index bda5b958d0dc..e9596c2096cd 100644
---- a/sound/soc/sh/rcar/core.c
-+++ b/sound/soc/sh/rcar/core.c
-@@ -761,6 +761,7 @@ static int rsnd_soc_dai_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
+index 1ff5b20eabf7..ac5e2ddf9e1b 100644
+--- a/drivers/spi/spi-atmel.c
++++ b/drivers/spi/spi-atmel.c
+@@ -280,6 +280,8 @@ struct atmel_spi {
+ 	bool			cs_active;
+ 
+ 	u32			fifo_size;
++	u8			native_cs_free;
++	u8			native_cs_for_gpio;
+ };
+ 
+ /* Controller-specific per-slave state */
+@@ -324,23 +326,29 @@ static bool atmel_spi_is_v2(struct atmel_spi *as)
+ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
+ {
+ 	struct atmel_spi_device *asd = spi->controller_state;
++	int chip_select;
+ 	u32 mr;
+ 
++	if (spi->cs_gpiod)
++		chip_select = as->native_cs_for_gpio;
++	else
++		chip_select = spi->chip_select;
++
+ 	if (atmel_spi_is_v2(as)) {
+-		spi_writel(as, CSR0 + 4 * spi->chip_select, asd->csr);
++		spi_writel(as, CSR0 + 4 * chip_select, asd->csr);
+ 		/* For the low SPI version, there is a issue that PDC transfer
+ 		 * on CS1,2,3 needs SPI_CSR0.BITS config as SPI_CSR1,2,3.BITS
+ 		 */
+ 		spi_writel(as, CSR0, asd->csr);
+ 		if (as->caps.has_wdrbt) {
+ 			spi_writel(as, MR,
+-					SPI_BF(PCS, ~(0x01 << spi->chip_select))
++					SPI_BF(PCS, ~(0x01 << chip_select))
+ 					| SPI_BIT(WDRBT)
+ 					| SPI_BIT(MODFDIS)
+ 					| SPI_BIT(MSTR));
+ 		} else {
+ 			spi_writel(as, MR,
+-					SPI_BF(PCS, ~(0x01 << spi->chip_select))
++					SPI_BF(PCS, ~(0x01 << chip_select))
+ 					| SPI_BIT(MODFDIS)
+ 					| SPI_BIT(MSTR));
+ 		}
+@@ -362,7 +370,7 @@ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
+ 		}
+ 
+ 		mr = spi_readl(as, MR);
+-		mr = SPI_BFINS(PCS, ~(1 << spi->chip_select), mr);
++		mr = SPI_BFINS(PCS, ~(1 << chip_select), mr);
+ 		if (spi->cs_gpiod && spi->chip_select != 0)
+ 			gpiod_set_value(spi->cs_gpiod, 1);
+ 		spi_writel(as, MR, mr);
+@@ -373,13 +381,19 @@ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
+ 
+ static void cs_deactivate(struct atmel_spi *as, struct spi_device *spi)
+ {
++	int chip_select;
+ 	u32 mr;
+ 
++	if (spi->cs_gpiod)
++		chip_select = as->native_cs_for_gpio;
++	else
++		chip_select = spi->chip_select;
++
+ 	/* only deactivate *this* device; sometimes transfers to
+ 	 * another device may be active when this routine is called.
+ 	 */
+ 	mr = spi_readl(as, MR);
+-	if (~SPI_BFEXT(PCS, mr) & (1 << spi->chip_select)) {
++	if (~SPI_BFEXT(PCS, mr) & (1 << chip_select)) {
+ 		mr = SPI_BFINS(PCS, 0xf, mr);
+ 		spi_writel(as, MR, mr);
+ 	}
+@@ -815,6 +829,12 @@ static int atmel_spi_set_xfer_speed(struct atmel_spi *as,
+ {
+ 	u32			scbr, csr;
+ 	unsigned long		bus_hz;
++	int chip_select;
++
++	if (spi->cs_gpiod)
++		chip_select = as->native_cs_for_gpio;
++	else
++		chip_select = spi->chip_select;
+ 
+ 	/* v1 chips start out at half the peripheral bus speed. */
+ 	bus_hz = as->spi_clk;
+@@ -843,9 +863,9 @@ static int atmel_spi_set_xfer_speed(struct atmel_spi *as,
+ 			xfer->speed_hz, scbr, bus_hz);
+ 		return -EINVAL;
+ 	}
+-	csr = spi_readl(as, CSR0 + 4 * spi->chip_select);
++	csr = spi_readl(as, CSR0 + 4 * chip_select);
+ 	csr = SPI_BFINS(SCBR, scbr, csr);
+-	spi_writel(as, CSR0 + 4 * spi->chip_select, csr);
++	spi_writel(as, CSR0 + 4 * chip_select, csr);
+ 
+ 	return 0;
+ }
+@@ -1162,12 +1182,32 @@ static int atmel_word_delay_csr(struct spi_device *spi, struct atmel_spi *as)
+ 	return (as->spi_clk / 1000000 * value) >> 5;
+ }
+ 
++static void initialize_native_cs_for_gpio(struct atmel_spi *as)
++{
++	int i;
++	struct spi_master *master = platform_get_drvdata(as->pdev);
++
++	if (!as->native_cs_free)
++		return; /* already initialized */
++
++	if (!master->cs_gpiods)
++		return; /* No CS GPIO */
++
++	for (i = 0; i < 4; i++)
++		if (master->cs_gpiods[i])
++			as->native_cs_free |= BIT(i);
++
++	if (as->native_cs_free)
++		as->native_cs_for_gpio = ffs(as->native_cs_free);
++}
++
+ static int atmel_spi_setup(struct spi_device *spi)
+ {
+ 	struct atmel_spi	*as;
+ 	struct atmel_spi_device	*asd;
+ 	u32			csr;
+ 	unsigned int		bits = spi->bits_per_word;
++	int chip_select;
+ 	int			word_delay_csr;
+ 
+ 	as = spi_master_get_devdata(spi->master);
+@@ -1178,6 +1218,24 @@ static int atmel_spi_setup(struct spi_device *spi)
+ 		return -EINVAL;
  	}
  
- 	/* set format */
-+	rdai->bit_clk_inv = 0;
- 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
- 	case SND_SOC_DAIFMT_I2S:
- 		rdai->sys_delay = 0;
++	/* Setup() is called during spi_register_controller(aka
++	 * spi_register_master) but after all membmers of the cs_gpiod
++	 * array have been filled, so we can looked for which native
++	 * CS will be free for using with GPIO
++	 */
++	initialize_native_cs_for_gpio(as);
++
++	if (spi->cs_gpiod && as->native_cs_free) {
++		dev_err(&spi->dev,
++			"No native CS available to support this GPIO CS\n");
++		return -EBUSY;
++	}
++
++	if (spi->cs_gpiod)
++		chip_select = as->native_cs_for_gpio;
++	else
++		chip_select = spi->chip_select;
++
+ 	csr = SPI_BF(BITS, bits - 8);
+ 	if (spi->mode & SPI_CPOL)
+ 		csr |= SPI_BIT(CPOL);
+@@ -1213,7 +1271,7 @@ static int atmel_spi_setup(struct spi_device *spi)
+ 		bits, spi->mode, spi->chip_select, csr);
+ 
+ 	if (!atmel_spi_is_v2(as))
+-		spi_writel(as, CSR0 + 4 * spi->chip_select, csr);
++		spi_writel(as, CSR0 + 4 * chip_select, csr);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
