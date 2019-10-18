@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E17F3CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D734CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6123205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6084B20872
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437403;
-	bh=PGgvF0Tn5s562vb1roAcOj438Hf3h2TjpqPFiYclW2k=;
+	s=default; t=1571437409;
+	bh=vk8+b7SiuqvG0ZON2WuQ93hgwJbDz+Km6Ck2/nY0Gbk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1NsnbMhFpIgbQnnfjG1MpcUoMBWpoGRf2sqEXlNMwz7at+SHjyIeWvEbBfStyED7K
-	 JeB9WbiZEV0ulOXc2gFYoU9xaYAqOmHJUlAbtoRpBF/BmqfThNn15eAr7svpFG2a2C
-	 2J2hmh92F50LuuKaM99CIWvOU78qxmpoY1Dkhka8=
+	b=ySEIZwqeXsdLXVJhtqz7AOaTUiWpg7sLHbYaKeXNbzw/s9QPDm3aFHXKSHBAFBjrE
+	 sMUskGFq14G2HRPHvKerXYFI6ahSLqJ+p/NuyBJ0ANxXYyEZTpaurPyE+goxYyP1GS
+	 N8oH9ipNicqboWprXeLufKri1P0OVkpXI/CbSUeE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405216AbfJRWXW (ORCPT
+        id S2405284AbfJRWX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:23:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37166 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:23:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729539AbfJRWFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:05:21 -0400
+        id S1729538AbfJRWFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:05:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E720D222CC;
-        Fri, 18 Oct 2019 22:05:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE0C2222C2;
+        Fri, 18 Oct 2019 22:05:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436320;
-        bh=PGgvF0Tn5s562vb1roAcOj438Hf3h2TjpqPFiYclW2k=;
+        s=default; t=1571436319;
+        bh=vk8+b7SiuqvG0ZON2WuQ93hgwJbDz+Km6Ck2/nY0Gbk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u1Y0cJ6JSPMs2AsMmAbzvO8cQOlWwMsZwD387DVQnIqkcudJL6UgUBvKcBvWkgK8S
-         aENGcfYkhMP6hwZ1QbraKajdszlC8LzhxYtv1/KAdifpaXG6Ke7GNmz+z5friKT4sf
-         43ZnhxRTzlzGl36Ww149RL1n+ONk3QQq9v75Eqeg=
+        b=CNtOLVi0qpFF0oxMhwmPfNDBlFnjOpq8IbVp4GA/H/4ZWw5r4LXNjhGqbkx5Q4GON
+         SXICx90omnYQQ0DzVrhfRbhzzjW/K0lmA/Fvx3zyY1lt7SqxY1SFHLe65Q4cQK78Tx
+         1Rv4/vPtzgFgjOI6CUlQOg/tNrUDo4IEHm7r4uVg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 88/89] s390/uaccess: avoid (false positive) compiler warnings
-Date:   Fri, 18 Oct 2019 18:03:23 -0400
-Message-Id: <20191018220324.8165-88-sashal@kernel.org>
+Cc:     Benjamin Coddington <bcodding@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 87/89] SUNRPC: fix race to sk_err after xs_error_report
+Date:   Fri, 18 Oct 2019 18:03:22 -0400
+Message-Id: <20191018220324.8165-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,55 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Borntraeger <borntraeger@de.ibm.com>
+From: Benjamin Coddington <bcodding@redhat.com>
 
-[ Upstream commit 062795fcdcb2d22822fb42644b1d76a8ad8439b3 ]
+[ Upstream commit af84537dbd1b39505d1f3d8023029b4a59666513 ]
 
-Depending on inlining decisions by the compiler, __get/put_user_fn
-might become out of line. Then the compiler is no longer able to tell
-that size can only be 1,2,4 or 8 due to the check in __get/put_user
-resulting in false positives like
+Since commit 4f8943f80883 ("SUNRPC: Replace direct task wakeups from
+softirq context") there has been a race to the value of the sk_err if both
+XPRT_SOCK_WAKE_ERROR and XPRT_SOCK_WAKE_DISCONNECT are set.  In that case,
+we may end up losing the sk_err value that existed when xs_error_report was
+called.
 
-./arch/s390/include/asm/uaccess.h: In function ‘__put_user_fn’:
-./arch/s390/include/asm/uaccess.h:113:9: warning: ‘rc’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-  113 |  return rc;
-      |         ^~
-./arch/s390/include/asm/uaccess.h: In function ‘__get_user_fn’:
-./arch/s390/include/asm/uaccess.h:143:9: warning: ‘rc’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-  143 |  return rc;
-      |         ^~
+Fix this by reverting to the previous behavior: instead of using SO_ERROR
+to retrieve the value at a later time (which might also return sk_err_soft),
+copy the sk_err value onto struct sock_xprt, and use that value to wake
+pending tasks.
 
-These functions are supposed to be always inlined. Mark it as such.
-
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+Fixes: 4f8943f80883 ("SUNRPC: Replace direct task wakeups from softirq context")
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/uaccess.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/sunrpc/xprtsock.h |  1 +
+ net/sunrpc/xprtsock.c           | 17 ++++++++---------
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uaccess.h
-index bd2fd9a7821da..a470f1fa9f2af 100644
---- a/arch/s390/include/asm/uaccess.h
-+++ b/arch/s390/include/asm/uaccess.h
-@@ -83,7 +83,7 @@ raw_copy_to_user(void __user *to, const void *from, unsigned long n);
- 	__rc;							\
- })
+diff --git a/include/linux/sunrpc/xprtsock.h b/include/linux/sunrpc/xprtsock.h
+index 7638dbe7bc500..a940de03808dd 100644
+--- a/include/linux/sunrpc/xprtsock.h
++++ b/include/linux/sunrpc/xprtsock.h
+@@ -61,6 +61,7 @@ struct sock_xprt {
+ 	struct mutex		recv_mutex;
+ 	struct sockaddr_storage	srcaddr;
+ 	unsigned short		srcport;
++	int			xprt_err;
  
--static inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
-+static __always_inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
+ 	/*
+ 	 * UDP socket buffer size parameters
+diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+index e2176c167a579..4e0b5bed6c737 100644
+--- a/net/sunrpc/xprtsock.c
++++ b/net/sunrpc/xprtsock.c
+@@ -1243,19 +1243,21 @@ static void xs_error_report(struct sock *sk)
  {
- 	unsigned long spec = 0x010000UL;
- 	int rc;
-@@ -113,7 +113,7 @@ static inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
- 	return rc;
- }
+ 	struct sock_xprt *transport;
+ 	struct rpc_xprt *xprt;
+-	int err;
  
--static inline int __get_user_fn(void *x, const void __user *ptr, unsigned long size)
-+static __always_inline int __get_user_fn(void *x, const void __user *ptr, unsigned long size)
+ 	read_lock_bh(&sk->sk_callback_lock);
+ 	if (!(xprt = xprt_from_sock(sk)))
+ 		goto out;
+ 
+ 	transport = container_of(xprt, struct sock_xprt, xprt);
+-	err = -sk->sk_err;
+-	if (err == 0)
++	transport->xprt_err = -sk->sk_err;
++	if (transport->xprt_err == 0)
+ 		goto out;
+ 	dprintk("RPC:       xs_error_report client %p, error=%d...\n",
+-			xprt, -err);
+-	trace_rpc_socket_error(xprt, sk->sk_socket, err);
++			xprt, -transport->xprt_err);
++	trace_rpc_socket_error(xprt, sk->sk_socket, transport->xprt_err);
++
++	/* barrier ensures xprt_err is set before XPRT_SOCK_WAKE_ERROR */
++	smp_mb__before_atomic();
+ 	xs_run_error_worker(transport, XPRT_SOCK_WAKE_ERROR);
+  out:
+ 	read_unlock_bh(&sk->sk_callback_lock);
+@@ -2470,7 +2472,6 @@ static void xs_wake_write(struct sock_xprt *transport)
+ static void xs_wake_error(struct sock_xprt *transport)
  {
- 	unsigned long spec = 0x01UL;
- 	int rc;
+ 	int sockerr;
+-	int sockerr_len = sizeof(sockerr);
+ 
+ 	if (!test_bit(XPRT_SOCK_WAKE_ERROR, &transport->sock_state))
+ 		return;
+@@ -2479,9 +2480,7 @@ static void xs_wake_error(struct sock_xprt *transport)
+ 		goto out;
+ 	if (!test_and_clear_bit(XPRT_SOCK_WAKE_ERROR, &transport->sock_state))
+ 		goto out;
+-	if (kernel_getsockopt(transport->sock, SOL_SOCKET, SO_ERROR,
+-				(char *)&sockerr, &sockerr_len) != 0)
+-		goto out;
++	sockerr = xchg(&transport->xprt_err, 0);
+ 	if (sockerr < 0)
+ 		xprt_wake_pending_tasks(&transport->xprt, sockerr);
+ out:
 -- 
 2.20.1
 
