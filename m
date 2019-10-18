@@ -2,123 +2,105 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6722CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B582CCA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB81B222C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B545222C5
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:13:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eKJ2L/AZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fGDqicuc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410226AbfJRNJn (ORCPT
+        id S2410237AbfJRNNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 09:09:43 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40730 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408337AbfJRNJn (ORCPT
+        Fri, 18 Oct 2019 09:13:49 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46309 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729109AbfJRNNt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 09:09:43 -0400
-Received: by mail-ed1-f67.google.com with SMTP id v38so4513918edm.7;
-        Fri, 18 Oct 2019 06:09:42 -0700 (PDT)
+        Fri, 18 Oct 2019 09:13:49 -0400
+Received: by mail-pg1-f196.google.com with SMTP id e15so3349443pgu.13;
+        Fri, 18 Oct 2019 06:13:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x4jU8RnkUmGfnuabopPe+N7RjYpoqQdgATxq7oLTD4U=;
-        b=eKJ2L/AZnmLXMAiBDmrPUEq94LYtwCx17rvPAwbyAAWCcmVvQWh5R6wLajw/4Y71wB
-         rd29g1vh+5tY15xF9Glsoq1+Oe/d5Vb6m8LAD8gaq6wa1vUk+Euoxu5DHTsEiyGrlYr8
-         PxWbMguCHUiF9rQPSNVM5cWfgbAvPGFp7s9IqUZM8Y9mTgbZvFFDuqjK304lrO4KHinC
-         Lh+SmDpTf+bWDYH8TVIlZB1k723J3FnIIj4d+3D0YUEY2yPULqYRkJVsughiDbAu8GMJ
-         wQDurut7FbSLRDc9rLs5GyRk2CPsWlgbamH9hHaGTrFkFSMKW8pvmmexrtAantTcr2rz
-         xFSQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hULzerLYG/gcRIJMPWxpg7FxjyhoxEiB2hYB8bieHL8=;
+        b=fGDqicuc+QPDMddr7IShi196Ot2soVvfxejuv4rrVhvzoHa3CwXmQkD9XtnyRmqavi
+         OuRrKjXc14dWuv/D4tn1EJZj2uJHqC4AoyYZJIi55Rh+9Tkedr0qJbAZXxF6nTl3DYe6
+         N8/Is6ep9/0jxJrXYxbJyC+p2tajR51viaJAa4ej2yYBC/1OjShpTEyC0/3OG/+HxVHN
+         tehT4bwNs8FBrl4T8ZUQI2epb5rgyM4b/nhR1NQPnvbJhUmMUtyNBSpn0bNWBFCBCln/
+         RH33LMePj+DRGNbexZCyCjHR8PWsPGQu1kwSV/pAdicex7/seIMCnWF8KcA9C5fdbYod
+         Sj/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x4jU8RnkUmGfnuabopPe+N7RjYpoqQdgATxq7oLTD4U=;
-        b=VsjtNPBbhCHvv4LxzTvfZyZEj1yxiF5cwtbwzPWi9EEnIA1ZyNS751v0RiIS1wluER
-         Nd1IdXZ8wT97QLOcxhbFwWje4pkJJ3k4K5OLPMjikogiEJEe5cu/YPlB/tSlN1li24/f
-         BOMtlq0vRad6l34/diqPMA3jvgapxOhiDCiImNRMOl9PQqE/rY0Rm1oKO9nyrirviqO1
-         WjwfgCEkxMX/kCQSfna+AMKZ3gTH/fL84EzCs88KZMSkUGUecy6KBo9bStzIXVOyrkUi
-         EVeVXMkqbpbASELxEKnyKb0hrghYG1Yqu1Uea7wpctz0JquJdW2FyEDD61lBXyrOAMKs
-         maMQ==
-X-Gm-Message-State: APjAAAUmxyuaXvsoTLI9CQAuSfTTSieSYKPBlGFvdfT/xT7y82glF9Cp
-        cRx1U3W/LGbjae/8zzkieQb1Nln8xjOkRHL7A9M=
-X-Google-Smtp-Source: APXvYqzqijmc/yk5VLLpRHZRa2Sol8ZtigBsmh5CBn1yzI03fvb0fcyKAHVy9IaxhrBYDCVflPmsE0FdccVNFWdgmLI=
-X-Received: by 2002:aa7:c259:: with SMTP id y25mr9335025edo.117.1571404181364;
- Fri, 18 Oct 2019 06:09:41 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hULzerLYG/gcRIJMPWxpg7FxjyhoxEiB2hYB8bieHL8=;
+        b=MHuCkApHBo1CnJQDim/nr7fdfsM7qMBZxDU+RAKZUthw23vTXG50F3h78zqjX2z4Te
+         0ys/6JML2WshgwWi0m65Z6HqhrTzEXN7qaToqDV6BRXkoKKmD4utOfY19E6sldSqOU15
+         QUiyh1F+Oe+nrwhLaTQ7Tp6Jse6zu0U7BdWFq2vVO8uZyq26iLTSWaZFm7ad5iUxfaWu
+         Z90Ff52cKmKiB1ivrisQT+1k+GoXjrtq3MjEBipilNwBPhLP0Jp0oSqtre8LcbX3/x8T
+         vziyXpbS9i7USIBPD73t21kTMDihWHFam1/TlXkY4MXFrZHBNZfCkYeh82x2CVwPjWUR
+         0d1A==
+X-Gm-Message-State: APjAAAUYZM+xdpAYRZK4K2NxCwjeZKJ8EsVZtt/uaA4+LZzphrSVkpEt
+        3EJz3J+ZeJpArpRNi11SMsk=
+X-Google-Smtp-Source: APXvYqxJQreCnPuShoe0YBOWfKU6B6vaxEAoSMVug4Mfi8Rjc3+0lpKksGSi9yh28irqzpgFjNkhog==
+X-Received: by 2002:a63:1c03:: with SMTP id c3mr9866955pgc.198.1571404428261;
+        Fri, 18 Oct 2019 06:13:48 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id ce16sm6307205pjb.29.2019.10.18.06.13.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 06:13:47 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] mmc: renesas_sdhi: add checks for pinctrl_lookup_state
+Date:   Fri, 18 Oct 2019 21:13:38 +0800
+Message-Id: <20191018131338.11713-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191015224953.24199-1-f.fainelli@gmail.com> <20191015224953.24199-3-f.fainelli@gmail.com>
- <4feb3979-1d59-4ad3-b2f1-90d82cfbdf54@gmail.com> <c4244c9a-28cb-7e37-684d-64e6cdc89b67@gmail.com>
- <CA+h21hrLHe2n0OxJyCKTU0r7mSB1zK9ggP1-1TCednFN_0rXfg@mail.gmail.com> <20191018130121.GK4780@lunn.ch>
-In-Reply-To: <20191018130121.GK4780@lunn.ch>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Fri, 18 Oct 2019 16:09:30 +0300
-Message-ID: <CA+h21hoPrwcgz-q=UROAu0PC=6JbKtbdPhJtZg5ge32_2xJ3TQ@mail.gmail.com>
-Subject: Re: [PATCH net-next 2/2] net: phy: Add ability to debug RGMII connections
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Russell King <rmk+kernel@armlinux.org.uk>, cphealy@gmail.com,
-        Jose Abreu <joabreu@synopsys.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+renesas_sdhi_probe misses checks for pinctrl_lookup_state and may miss
+failures.
+Add checks for them to fix the problem.
 
-On Fri, 18 Oct 2019 at 16:01, Andrew Lunn <andrew@lunn.ch> wrote:
->
-> > Well, that's the tricky part. You're sending a frame out, with no
-> > guarantee you'll get the same frame back in. So I'm not sure that any
-> > identifiers put inside the frame will survive.
-> > How do the tests pan out for you? Do you actually get to trigger this
-> > check? As I mentioned, my NIC drops the frames with bad FCS.
->
-> My experience is, the NIC drops the frame and increments some the
-> counter about bad FCS. I do very occasionally see a frame delivered,
-> but i guess that is 1/65536 where the FCS just happens to be good by
-> accident. So i think some other algorithm should be used which is
-> unlikely to be good when the FCS is accidentally good, or just check
-> the contents of the packet, you know what is should contain.
->
-> Are there any NICs which don't do hardware FCS? Is that something we
-> realistically need to consider?
->
-> > Yes, but remember, nobody guarantees that a frame with DMAC
-> > ff:ff:ff:ff:ff:ff on egress will still have it on its way back. Again,
-> > this all depends on how you plan to manage the rx-all ethtool feature.
->
-> Humm. Never heard that before. Are you saying some NICs rewrite the
-> DMAN?
->
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/mmc/host/renesas_sdhi_core.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-I'm just trying to understand the circumstances under which this
-kernel thread makes sense.
-Checking for FCS validity means that the intention was to enable the
-reception of frames with bad FCS.
-Bad FCS after bad RGMII setup/hold times doesn't mean there's a small
-guy in there who rewrites the checksum. It means that frame octets get
-garbled. All octets are just as likely to get garbled, including the
-SFD, preamble, DMAC, etc.
-All I'm saying is that, if the intention of the patch is to actually
-process the FCS of frames before and after, then it should actually
-put the interface in promiscuous mode, so that frames with a
-non-garbled SFD and preamble can still be received, even though their
-DMAC was the one that got garbled.
+diff --git a/drivers/mmc/host/renesas_sdhi_core.c b/drivers/mmc/host/renesas_sdhi_core.c
+index d4ada5cca2d1..dc5ad6632df3 100644
+--- a/drivers/mmc/host/renesas_sdhi_core.c
++++ b/drivers/mmc/host/renesas_sdhi_core.c
+@@ -694,8 +694,13 @@ int renesas_sdhi_probe(struct platform_device *pdev,
+ 	if (!IS_ERR(priv->pinctrl)) {
+ 		priv->pins_default = pinctrl_lookup_state(priv->pinctrl,
+ 						PINCTRL_STATE_DEFAULT);
++		if (IS_ERR(priv->pins_default))
++			return PTR_ERR(priv->pins_default);
++
+ 		priv->pins_uhs = pinctrl_lookup_state(priv->pinctrl,
+ 						"state_uhs");
++		if (IS_ERR(priv->pins_uhs))
++			return PTR_ERR(priv->pins_uhs);
+ 	}
+ 
+ 	host = tmio_mmc_host_alloc(pdev, mmc_data);
+-- 
+2.20.1
 
->         Andrew
-
-Thanks,
--Vladimir
