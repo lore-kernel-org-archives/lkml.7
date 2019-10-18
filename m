@@ -2,117 +2,128 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=0.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 998D6CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F9ACA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B4DC222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0F212245C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:20:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="cm6uu8Lp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LB2/6gRP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407569AbfJRFUU (ORCPT
+        id S2407629AbfJRFUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:20:20 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36992 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbfJRFUT (ORCPT
+        Fri, 18 Oct 2019 01:20:44 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:34905 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbfJRFUo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:20:19 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p14so4737600wro.4
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:20:18 -0700 (PDT)
+        Fri, 18 Oct 2019 01:20:44 -0400
+Received: by mail-yw1-f66.google.com with SMTP id r134so1754021ywg.2;
+        Thu, 17 Oct 2019 22:20:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4IN8nkOuZaw4qMQqgoM+lr6oMWm+8vooDBY/2Fj6u8A=;
-        b=cm6uu8LpVpbMuL7DTMw6/Q94OH+JJ/d/EbywAS5toHgB/ZqGU2lf3f/Y7MvvSD8lq0
-         zNa9dTRgHlPFKlPi86zmTIIkzEww9tHfPahEgiexjHmiad5TCjHzyaOZqtatTvUT+Hpd
-         3gK91DBP38CMpuk5/U6gqYK7VIe9sq2MO2Iu5sNIR1MhEQOVzhbghc+gB1RZPw8AFrqx
-         imhGyqmHueePDv38KOcLpANTNfPnCBMsQY3LwE8BQktBZ9vBz/ffbZuew4YQAZ5/+IG3
-         trx2cV7+nnnj9WZC90wmQxPUY+Xz3PEerkymbiEcJxxiop6/tPvpOhwfFgKfL54zUZzk
-         ig2w==
+        bh=xsX/qftxhkazt9hFT8dF57W5m8I435Z6GlII9cy+ECY=;
+        b=LB2/6gRPtiwyOpmLwPi7yLfXzO/o74TSfvJfCt2GXYIAZXk8+Pf8VSZlmSRym9BhXU
+         U5be31A1gQfNPmpGHHuUtf9B7X3L9QIQN6VdP1M/ufmL7MCuXFikuhLTDWjzGAhBq3V8
+         mXga5/iHEYkl2fY5yH5MoccwlTwfjuJP2JeTKpSPLCsJWiY1E0UuEl7vL8htolCtAIVi
+         yXEq15oEn0F6yyhSH+A8h2la3ySKUlKrFxDil1lNU2ahbL8u0jqtpXCEh0tEDer8H7nd
+         6Y+CxLkBrQxqbAUGA7BoVFLcXfWMW90K61E+pYHK+otV2dkI5Yr3+lyuIc5InASL/zeV
+         eXNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4IN8nkOuZaw4qMQqgoM+lr6oMWm+8vooDBY/2Fj6u8A=;
-        b=ubJClb8NuJHd5C7r0kVLBuN4HwmTqYBecSsCOve8Fd0oiT74A6ovwJKpoAvmi5/nqv
-         kMtKowlLN2aWlOdgbpdYwEvhiJGrSHHXmUCRDFi/1RJjjTLnW9SBnA3A+IW4H1vCZ+Le
-         5RJp0h4kDFd2yHReAlp8gxUO0jhz8In5qsT0ybzRahg6qR3bfOBZ0O08iuoXekJjNQRe
-         shvWtMlxkCJhEimWNAZInfVfQ3nvxvzAT81cx575UrPBHbWj7kpF6jdwjqPmjwQuJdP4
-         NCR2O3VKJqxrTjkJzSDo93Mx5dJOJjHxFyQPepQLJwqe2cxuDOl23S6lb20YIF/Ter9a
-         SQnQ==
-X-Gm-Message-State: APjAAAUCaInQfdRKYMU+N1xvkG2Q4jMrdjyQR69NMCi1r4nE2c1ju2Nq
-        HyXz6bH9p+fx8/u1P6o+1ZhjMEf0WNcABc0cUQdjUxvSTUg=
-X-Google-Smtp-Source: APXvYqxZtU4Zdishzaj1EdrbSwuCs4hJmh3Nm9boGXA21TSzBjIiq3CCeMGIKdggwniwp7AwhXHQUGRPWxdMMSIGcIQ=
-X-Received: by 2002:adf:f145:: with SMTP id y5mr5400621wro.330.1571367191529;
- Thu, 17 Oct 2019 19:53:11 -0700 (PDT)
+        bh=xsX/qftxhkazt9hFT8dF57W5m8I435Z6GlII9cy+ECY=;
+        b=Pc7sZ+eKVMeKVtKXPQ6MLqpWQ7ObGArYB2GM3WGC6+HDkiHFxj7fUrATgEMC7xK9am
+         xNPiPfApJQIzgAcW/jyVW5qI3mRvJtHeoOaROMvmYrMSpVjsJXf5wi0gaW8rNpSLxNY5
+         eNYty7GzceupC+zNUwFZOIhrH6i8V+RZ7Mn16/8msnoYC4fQQ+dA202tArCq1mswoWW0
+         YuE5KTJC69rWi9Dc7k5eHtO50MQeakH223gUGomUxxPShgWyVtxwgDaHiHe5ujbVyZ64
+         M/8SuYUv1VkYVd13RAwEf0MdGlgPpMTRmCpfVPpGdBZ17nrGwsI9l87QnmAh3T1TZe+7
+         VwUQ==
+X-Gm-Message-State: APjAAAUwavxPiGzLeI1FOMGgWuxgZW/I7wM0lzcwemiwyEqGM69OJdZ+
+        YOrNxB38F6JICXoABI5Ab+9G8fvA+Ajn8M7bAco=
+X-Google-Smtp-Source: APXvYqxwvxHZjKJg/YnuStSLc4n0H5LSqtfMOTfh+SFjPsB+sGtqQKsOlHWmrzk0Hkx+oX8i4/YwLHRT6gmxcwX16E8=
+X-Received: by 2002:a0d:d605:: with SMTP id y5mr5180535ywd.13.1571372506022;
+ Thu, 17 Oct 2019 21:21:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191017173743.5430-1-hch@lst.de> <20191017173743.5430-6-hch@lst.de>
-In-Reply-To: <20191017173743.5430-6-hch@lst.de>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Fri, 18 Oct 2019 08:23:00 +0530
-Message-ID: <CAAhSdy3MjGvPuAtsfdtbxe9N8LG3FYjQh=6rLpUqx7r73nNiWw@mail.gmail.com>
-Subject: Re: [PATCH 05/15] riscv: poison SBI calls for M-mode
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+References: <1571218608-15933-1-git-send-email-gkulkarni@marvell.com>
+ <1571218608-15933-3-git-send-email-gkulkarni@marvell.com> <b8e1a637-faf4-4567-7d3e-a4f13dfa1cf0@huawei.com>
+ <CAKTKpr4QoTDjbSxO4CvSH2sNvmrTJKjxi+RZH4mYfyDaaN96Sw@mail.gmail.com> <20191017154750.jgn6e3465qrsu53e@willie-the-truck>
+In-Reply-To: <20191017154750.jgn6e3465qrsu53e@willie-the-truck>
+From:   Ganapatrao Kulkarni <gklkml16@gmail.com>
+Date:   Fri, 18 Oct 2019 09:51:34 +0530
+Message-ID: <CAKTKpr5ntp5X6Lvp=rKT_F1E1ftdqtjSWTgpEOqEwaDMH2kc1w@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] drivers/perf: Add CCPI2 PMU support in ThunderX2
+ UNCORE driver.
+To:     Will Deacon <will@kernel.org>
+Cc:     John Garry <john.garry@huawei.com>,
+        Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        Jan Glauber <jglauber@marvell.com>,
+        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Zhangshaokun <zhangshaokun@hisilicon.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 11:08 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> There is no SBI when we run in M-mode, so fail the compile for any code
-> trying to use SBI calls.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/riscv/include/asm/sbi.h | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-> index 21134b3ef404..b167af3e7470 100644
-> --- a/arch/riscv/include/asm/sbi.h
-> +++ b/arch/riscv/include/asm/sbi.h
-> @@ -8,6 +8,7 @@
->
->  #include <linux/types.h>
->
-> +#ifdef CONFIG_RISCV_SBI
->  #define SBI_SET_TIMER 0
->  #define SBI_CONSOLE_PUTCHAR 1
->  #define SBI_CONSOLE_GETCHAR 2
-> @@ -93,5 +94,5 @@ static inline void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
->  {
->         SBI_CALL_4(SBI_REMOTE_SFENCE_VMA_ASID, hart_mask, start, size, asid);
->  }
-> -
-> -#endif
-> +#endif /* CONFIG_RISCV_SBI */
-> +#endif /* _ASM_RISCV_SBI_H */
-> --
-> 2.20.1
->
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+Hi Will,
 
-LGTM.
+On Thu, Oct 17, 2019 at 9:17 PM Will Deacon <will@kernel.org> wrote:
+>
+> On Thu, Oct 17, 2019 at 12:38:51PM +0530, Ganapatrao Kulkarni wrote:
+> > On Wed, Oct 16, 2019 at 7:01 PM John Garry <john.garry@huawei.com> wrote:
+> > > > +TX2_EVENT_ATTR(req_pktsent, CCPI2_EVENT_REQ_PKT_SENT);
+> > > > +TX2_EVENT_ATTR(snoop_pktsent, CCPI2_EVENT_SNOOP_PKT_SENT);
+> > > > +TX2_EVENT_ATTR(data_pktsent, CCPI2_EVENT_DATA_PKT_SENT);
+> > > > +TX2_EVENT_ATTR(gic_pktsent, CCPI2_EVENT_GIC_PKT_SENT);
+> > > > +
+> > > > +static struct attribute *ccpi2_pmu_events_attrs[] = {
+> > > > +     &tx2_pmu_event_attr_req_pktsent.attr.attr,
+> > > > +     &tx2_pmu_event_attr_snoop_pktsent.attr.attr,
+> > > > +     &tx2_pmu_event_attr_data_pktsent.attr.attr,
+> > > > +     &tx2_pmu_event_attr_gic_pktsent.attr.attr,
+> > > > +     NULL,
+> > > > +};
+> > >
+> > > Hi Ganapatrao,
+> > >
+> > > Have you considered adding these as uncore pmu-events in the perf tool?
+> > >
+> > At the moment no, since the number of events exposed/listed are very few.
+>
+> Then sounds like a perfect time to nip it in the bud before the list grows
+> ;)
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
+I had internal discussion with architecture team, they have confirmed
+that, these are the only published events and no plan to add new.
+However, If any such request comes from HW team in future, i will add
+them to JSON files.
 
-Regards,
-Anup
+I have incorporate all your previous comments, Can you please Ack and
+queue it to 5.5?
+
+>
+> If you can manage with these things in userspace, then I agree with John
+> that it would be preferential to do it that way. It also offers more
+> flexibility if we get the metricgroup stuff working properly (I think it's
+> buggered for big/little atm).
+>
+> Will
+
+Thanks,
+Ganapat
