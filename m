@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4FECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE01CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31C06222C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 978D0222CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:11:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cCT9hs91"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NSG0XzUq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502562AbfJRQLR (ORCPT
+        id S2389333AbfJRQLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:11:17 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:36825 "EHLO
+        Fri, 18 Oct 2019 12:11:22 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:45760 "EHLO
         mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729912AbfJRQLN (ORCPT
+        with ESMTP id S2502568AbfJRQLU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:11:13 -0400
-Received: by mail-pg1-f202.google.com with SMTP id q1so4602782pgj.3
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:11:13 -0700 (PDT)
+        Fri, 18 Oct 2019 12:11:20 -0400
+Received: by mail-pg1-f202.google.com with SMTP id v10so4587377pge.12
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:11:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=xX5gUTsoboVAmCrU5x0kxTyEAN1I1znyOrkoj+71V3E=;
-        b=cCT9hs91spgek13wGsP9y0ttC9ve4IQ6YalGlMpwduvwu42Woqshf/GsDukku4Rd7z
-         LzngBaQqis4pXbheJCLuLc/BuznaLuuhhZ0eQYxuqnnHcZIUFUvXDs57h723E1aVsqCN
-         hDJ9NJVmzOzxHezv4iMvDqkeOoKw8JtHeSXKma4kAFNaEABY3mU6axzTP9w4Lq+UPCd3
-         3Ot78e0aaFfEd1x8s4TQXDNAkM6/+cID/LMqGDex4NuLmCmij2J8d1teYJAiH7hir7mz
-         bJcHXcpZNWl2UPJrt20n+Cj5d8KKW3//pqk3cC5O9Pz9D8EOb1EO2oSOjKTQQUWNt+am
-         FQTA==
+        bh=fICIDxFYsM9a9Ff5jMCA2HNdKL4X15DyG8HPfHVUdX4=;
+        b=NSG0XzUqxk2+63gPHHlONBw5Q4nS2y744Eo1rGIDmimGan5ZvchrFconEmIXiVv79S
+         0SiQYCOcKQncsgO+OjD18O6E+2SSMSAk43T8F4SPII5CwYW5Z2DpjcXEvu90lABe0T7d
+         54pDxZVczkH9+W6UKw5BGz/1SAtjmaCTeJP9IigFW7/8iSrzVXwx+vaItOIgEL2NFpn8
+         PCwsy3taMFVH2Is9tZDbWuOIcT/YBmZIupi5pgO/dSJwAnrHQ+9LRhx/mZ3aQl1rS+Hn
+         PYSAfr/54k98LWSAkxuS0/kkDyQ70rjvHFcfVRO0CwmtYXN/ED4JgjMIrSHGnZhfeFY/
+         nwUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=xX5gUTsoboVAmCrU5x0kxTyEAN1I1znyOrkoj+71V3E=;
-        b=RYAHHsfwFUrqU4Lwik5gVm3j/J5aFumFsN8GzqEyzVhuSnl+a4s3y2d7s3W3saudRp
-         E2Ja26KWleP2R0Om9AHs+64WYiVFx2J3Z6VKCUB3UO57HAzFcp9w4+YhGkFJW7Hk4kbm
-         h784wH7ZwDtkGkKh1Q0BoNUiFhVcfiqKqMgopGk0m1u3zvwJHVM15W0jU5A+fHJZsaxF
-         /6hdCsZVDY5HCAYkOfKZOAlHhDyvh3rIxGhDgrq+lp31xStIcKFKCzHluONG/GU4Wpxb
-         DS3js/cbi9HVk7v8G1tkSI6XedjCSwI64utiV8/n3moa6+zJejQHfbv2aAuS9pkq2TLx
-         4ehg==
-X-Gm-Message-State: APjAAAU2FRI7rUj2n1qZ8xs/HG2NM95v6bFRZOmxm1C0bioyoWtZy+JG
-        /BEEqLqwWKw639zMQn6OOrquwEH1IRtOi8GGfiM=
-X-Google-Smtp-Source: APXvYqxwiguloHdhaLpo4FBp0WjObBKG43Zxu/Qf9Jmum2rfBGkEmvxrlieIAShHEtrTW/4mJFtXISqp4bSzlzbpPKY=
-X-Received: by 2002:a63:e148:: with SMTP id h8mr10684150pgk.297.1571415072880;
- Fri, 18 Oct 2019 09:11:12 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 09:10:24 -0700
+        bh=fICIDxFYsM9a9Ff5jMCA2HNdKL4X15DyG8HPfHVUdX4=;
+        b=H5LCf2d2tljOcvrheMPApmwb9z5+XGKfhBo3Jh3Q6vyaqJwxgtAgt0gosf7idjjDm7
+         YYqcA2wJ1UXjUS7zlNtlNYs2tQmlCHSQ/RKZKBAJZoMnprP+MO98rh1Gf5QlgBgUsurD
+         CTD4ErHSJsdSKrSSixBHmJZI04XAYHtlMO7WgW71Yy3RPCF5wI+7mnSnQhzbjEhCBxSN
+         tspeoB8ErdjLQJnldxn+WUV39/toYDid309qD3tUizE3RIz+zKDLrbhcKKJqHJC++6de
+         oB5x1ccnts3jRwbfUZceaFgFYWCdhKiODwmPYdSIt5QDngKd98YsG0eedxQ1bbeDzhVF
+         z/hg==
+X-Gm-Message-State: APjAAAVq2lsazAPmtW4xP24Ep10cIiv2s6EBe9l58NFg2AOEA9CqyA/B
+        7zaTJg+bj8RF2cmIHxo4d7vjbvBnYmv8o44BxUU=
+X-Google-Smtp-Source: APXvYqy2IPmHgVzSQFLWH/l27Qtv31FYTpjwXUbB8shECHuqpnU1nIwwQdz+u4oVI6rxTnp6d2Le2ZcdmFuior/slJo=
+X-Received: by 2002:a65:6092:: with SMTP id t18mr11012516pgu.418.1571415077997;
+ Fri, 18 Oct 2019 09:11:17 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 09:10:26 -0700
 In-Reply-To: <20191018161033.261971-1-samitolvanen@google.com>
-Message-Id: <20191018161033.261971-10-samitolvanen@google.com>
+Message-Id: <20191018161033.261971-12-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-Subject: [PATCH 09/18] trace: disable function graph tracing with SCS
+Subject: [PATCH 11/18] kprobes: disable kretprobes with SCS
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -79,28 +79,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With CONFIG_FUNCTION_GRAPH_TRACER, function return addresses are
-modified in ftrace_graph_caller and prepare_ftrace_return to redirect
-control flow to ftrace_return_to_handler. This is incompatible with
+With CONFIG_KRETPROBES, function return addresses are modified to
+redirect control flow to kretprobe_trampoline. This is incompatible with
 return address protection.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- kernel/trace/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index e08527f50d2a..b7e5e3bfa0f4 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -161,6 +161,7 @@ config FUNCTION_GRAPH_TRACER
- 	depends on HAVE_FUNCTION_GRAPH_TRACER
- 	depends on FUNCTION_TRACER
- 	depends on !X86_32 || !CC_OPTIMIZE_FOR_SIZE
-+	depends on ROP_PROTECTION_NONE
- 	default y
- 	help
- 	  Enable the kernel to trace a function at both its return
+diff --git a/arch/Kconfig b/arch/Kconfig
+index a222adda8130..4646e3b34925 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -171,7 +171,7 @@ config ARCH_USE_BUILTIN_BSWAP
+ 
+ config KRETPROBES
+ 	def_bool y
+-	depends on KPROBES && HAVE_KRETPROBES
++	depends on KPROBES && HAVE_KRETPROBES && ROP_PROTECTION_NONE
+ 
+ config USER_RETURN_NOTIFIER
+ 	bool
 -- 
 2.23.0.866.gb869b98d4c-goog
 
