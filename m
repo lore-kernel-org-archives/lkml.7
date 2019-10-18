@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7472ACA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF660CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41D3420872
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF2C020872
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:26:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437609;
-	bh=Kb8JQLQR3nCqBAecn6Mu9+UCIoHVl9rSUVXcizj1rvQ=;
+	s=default; t=1571437617;
+	bh=NjxgLiEaplHS39J1mvZTecb/FKS7xh3ECqXe5Meeb1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xAFqkWoNVxUhtscWjCH8q38Lp5YFyjVtOSj4ZOYM5B3k/ueYWFKw4o7Ql+CvS7W/a
-	 y5fVBh+rJKvfDyf+hJXGTEsPXwqSqKQdFCuhURkCq5s+TRaELLmzcYJMkVIBQPy+p6
-	 n0WfC6Fb/DIHGiT1A8nhbuQ5iq/DhMnw+6IMLgeI=
+	b=tsK+cUtlduA2iuKDU7I3gNE8si1CHT1d6dGxcdXgJe41MJWRvyZDkVSug8+fapg3y
+	 7hp6fif4IxcG/KRPxP0Zbg5VSCHPp2wTNPzxLe6765lNzZ9zP62qPc4zMdZycHjNQN
+	 Z8P8yfYdNYXeItnHcrBbArvBWdeMyBt5w+FxtWVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406210AbfJRW0o (ORCPT
+        id S2406318AbfJRW04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:26:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35830 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:26:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727730AbfJRWEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:04:13 -0400
+        id S1727821AbfJRWEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:04:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F339520679;
-        Fri, 18 Oct 2019 22:04:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1872222C5;
+        Fri, 18 Oct 2019 22:04:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436251;
-        bh=Kb8JQLQR3nCqBAecn6Mu9+UCIoHVl9rSUVXcizj1rvQ=;
+        s=default; t=1571436249;
+        bh=NjxgLiEaplHS39J1mvZTecb/FKS7xh3ECqXe5Meeb1E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XlZsqaL6fnBab9PoDa7VdwDDgI5tehxEiVPOrUEQNgGKyfBU3aoRELtQdGUHKOBvs
-         jFiBUeEFGxMFEbusEFIX6JjD7zxIHxWScShyR168a06vocYP65R8hYXsnGIySD0/tc
-         /Aa9gFKoS4Foy/S3ASKGrgN2HMvGlcyhNLiZ61Rk=
+        b=T7tdWfg4UlopICbWd2CYzSZlmga3l/r8e1AfGqqu+PNuQ9fQNi0rQ1AlaYDbhzxds
+         mHeYluE886vIeb6gBrgHM8QTWWo0SEFDqhM96WWhTiMh1k/glUUOGDSKE37swfzVns
+         K3vbeq+M6q5FVU9neyRM7ynhe8vmELxkM980g11E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Nicolas Waisman <nico@semmle.com>,
-        Potnuri Bharat Teja <bharat@chelsio.com>,
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 35/89] RDMA/cxgb4: Do not dma memory off of the stack
-Date:   Fri, 18 Oct 2019 18:02:30 -0400
-Message-Id: <20191018220324.8165-35-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 33/89] RDMA/core: Fix an error handling path in 'res_get_common_doit()'
+Date:   Fri, 18 Oct 2019 18:02:28 -0400
+Message-Id: <20191018220324.8165-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -61,107 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg KH <gregkh@linuxfoundation.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 3840c5b78803b2b6cc1ff820100a74a092c40cbb ]
+[ Upstream commit ab59ca3eb4e7059727df85eee68bda169d26c8f8 ]
 
-Nicolas pointed out that the cxgb4 driver is doing dma off of the stack,
-which is generally considered a very bad thing.  On some architectures it
-could be a security problem, but odds are none of them actually run this
-driver, so it's just a "normal" bug.
+According to surrounding error paths, it is likely that 'goto err_get;' is
+expected here. Otherwise, a call to 'rdma_restrack_put(res);' would be
+missing.
 
-Resolve this by allocating the memory for a message off of the heap
-instead of the stack.  kmalloc() always will give us a proper memory
-location that DMA will work correctly from.
-
-Link: https://lore.kernel.org/r/20191001165611.GA3542072@kroah.com
-Reported-by: Nicolas Waisman <nico@semmle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Tested-by: Potnuri Bharat Teja <bharat@chelsio.com>
+Fixes: c5dfe0ea6ffa ("RDMA/nldev: Add resource tracker doit callback")
+Link: https://lore.kernel.org/r/20190818091044.8845-1-christophe.jaillet@wanadoo.fr
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/cxgb4/mem.c | 28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ drivers/infiniband/core/nldev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/cxgb4/mem.c b/drivers/infiniband/hw/cxgb4/mem.c
-index aa772ee0706f9..35c284af574da 100644
---- a/drivers/infiniband/hw/cxgb4/mem.c
-+++ b/drivers/infiniband/hw/cxgb4/mem.c
-@@ -275,13 +275,17 @@ static int write_tpt_entry(struct c4iw_rdev *rdev, u32 reset_tpt_entry,
- 			   struct sk_buff *skb, struct c4iw_wr_wait *wr_waitp)
- {
- 	int err;
--	struct fw_ri_tpte tpt;
-+	struct fw_ri_tpte *tpt;
- 	u32 stag_idx;
- 	static atomic_t key;
- 
- 	if (c4iw_fatal_error(rdev))
- 		return -EIO;
- 
-+	tpt = kmalloc(sizeof(*tpt), GFP_KERNEL);
-+	if (!tpt)
-+		return -ENOMEM;
-+
- 	stag_state = stag_state > 0;
- 	stag_idx = (*stag) >> 8;
- 
-@@ -291,6 +295,7 @@ static int write_tpt_entry(struct c4iw_rdev *rdev, u32 reset_tpt_entry,
- 			mutex_lock(&rdev->stats.lock);
- 			rdev->stats.stag.fail++;
- 			mutex_unlock(&rdev->stats.lock);
-+			kfree(tpt);
- 			return -ENOMEM;
- 		}
- 		mutex_lock(&rdev->stats.lock);
-@@ -305,28 +310,28 @@ static int write_tpt_entry(struct c4iw_rdev *rdev, u32 reset_tpt_entry,
- 
- 	/* write TPT entry */
- 	if (reset_tpt_entry)
--		memset(&tpt, 0, sizeof(tpt));
-+		memset(tpt, 0, sizeof(*tpt));
- 	else {
--		tpt.valid_to_pdid = cpu_to_be32(FW_RI_TPTE_VALID_F |
-+		tpt->valid_to_pdid = cpu_to_be32(FW_RI_TPTE_VALID_F |
- 			FW_RI_TPTE_STAGKEY_V((*stag & FW_RI_TPTE_STAGKEY_M)) |
- 			FW_RI_TPTE_STAGSTATE_V(stag_state) |
- 			FW_RI_TPTE_STAGTYPE_V(type) | FW_RI_TPTE_PDID_V(pdid));
--		tpt.locread_to_qpid = cpu_to_be32(FW_RI_TPTE_PERM_V(perm) |
-+		tpt->locread_to_qpid = cpu_to_be32(FW_RI_TPTE_PERM_V(perm) |
- 			(bind_enabled ? FW_RI_TPTE_MWBINDEN_F : 0) |
- 			FW_RI_TPTE_ADDRTYPE_V((zbva ? FW_RI_ZERO_BASED_TO :
- 						      FW_RI_VA_BASED_TO))|
- 			FW_RI_TPTE_PS_V(page_size));
--		tpt.nosnoop_pbladdr = !pbl_size ? 0 : cpu_to_be32(
-+		tpt->nosnoop_pbladdr = !pbl_size ? 0 : cpu_to_be32(
- 			FW_RI_TPTE_PBLADDR_V(PBL_OFF(rdev, pbl_addr)>>3));
--		tpt.len_lo = cpu_to_be32((u32)(len & 0xffffffffUL));
--		tpt.va_hi = cpu_to_be32((u32)(to >> 32));
--		tpt.va_lo_fbo = cpu_to_be32((u32)(to & 0xffffffffUL));
--		tpt.dca_mwbcnt_pstag = cpu_to_be32(0);
--		tpt.len_hi = cpu_to_be32((u32)(len >> 32));
-+		tpt->len_lo = cpu_to_be32((u32)(len & 0xffffffffUL));
-+		tpt->va_hi = cpu_to_be32((u32)(to >> 32));
-+		tpt->va_lo_fbo = cpu_to_be32((u32)(to & 0xffffffffUL));
-+		tpt->dca_mwbcnt_pstag = cpu_to_be32(0);
-+		tpt->len_hi = cpu_to_be32((u32)(len >> 32));
+diff --git a/drivers/infiniband/core/nldev.c b/drivers/infiniband/core/nldev.c
+index 020c269765584..91e2cc9ddb9f8 100644
+--- a/drivers/infiniband/core/nldev.c
++++ b/drivers/infiniband/core/nldev.c
+@@ -1230,7 +1230,7 @@ static int res_get_common_doit(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
+ 	if (!msg) {
+ 		ret = -ENOMEM;
+-		goto err;
++		goto err_get;
  	}
- 	err = write_adapter_mem(rdev, stag_idx +
- 				(rdev->lldi.vr->stag.start >> 5),
--				sizeof(tpt), &tpt, skb, wr_waitp);
-+				sizeof(*tpt), tpt, skb, wr_waitp);
  
- 	if (reset_tpt_entry) {
- 		c4iw_put_resource(&rdev->resource.tpt_table, stag_idx);
-@@ -334,6 +339,7 @@ static int write_tpt_entry(struct c4iw_rdev *rdev, u32 reset_tpt_entry,
- 		rdev->stats.stag.cur -= 32;
- 		mutex_unlock(&rdev->stats.lock);
- 	}
-+	kfree(tpt);
- 	return err;
- }
- 
+ 	nlh = nlmsg_put(msg, NETLINK_CB(skb).portid, nlh->nlmsg_seq,
 -- 
 2.20.1
 
