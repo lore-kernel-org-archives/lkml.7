@@ -2,108 +2,131 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED966CA9EB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E508CCA9EB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEB3A2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B270E2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:02:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AYIORJ8G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441888AbfJRBBB convert rfc822-to-8bit (ORCPT
+        id S2441907AbfJRBCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 21:01:01 -0400
-Received: from mga18.intel.com ([134.134.136.126]:22373 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439184AbfJRBBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 21:01:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 18:00:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,309,1566889200"; 
-   d="scan'208";a="221579874"
-Received: from unknown (HELO ubuntu) ([10.226.248.102])
-  by fmsmga004.fm.intel.com with SMTP; 17 Oct 2019 18:00:02 -0700
-Received: by ubuntu (sSMTP sendmail emulation); Fri, 18 Oct 2019 09:00:01 +0800
-Message-ID: <1571360401.2504.3.camel@intel.com>
-Subject: Re: [PATCHv2] arm64: dts: agilex: add QSPI support for Intel Agilex
-From:   Ley Foon Tan <ley.foon.tan@intel.com>
-To:     "Ooi, Joyce" <joyce.ooi@intel.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ong Hean Loong <hean.loong.ong@intel.com>,
-        See Chin Liang <chin.liang.see@intel.com>
-Date:   Fri, 18 Oct 2019 09:00:01 +0800
-In-Reply-To: <1571218846-12306-1-git-send-email-joyce.ooi@intel.com>
-References: <1571218846-12306-1-git-send-email-joyce.ooi@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.1 
-Mime-Version: 1.0
+        Thu, 17 Oct 2019 21:02:40 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:56840 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438932AbfJRBCk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 21:02:40 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9I0xAZ8061631;
+        Fri, 18 Oct 2019 01:02:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=KIdZhhQ2Vqp+kaZOoHPRxHGK+Q3KpMgoj0WvJXugb7k=;
+ b=AYIORJ8GdoR18Y4ft0wcHXHCL80szwV8y6pzady+EXQsc7nLsV3bCSsFr5VWmoaOkkcT
+ VRjlP6lcTTn1RST7AuNAhJwi9oD6CzRhk/49c6AgesUsiLbWe2deK3yyYDzX38PywQ61
+ EPyJw4k/PSFPBNS890RxzCz15Y0LmPhx6RpXHTapc+XaZpwP85iYFeBmPc53o1aYYY/j
+ KaCGxlwzm3Nc8roHGijbAPV1TkI3c+jfvaQU/LhQOivlKfof1imzTeKjpjcikmtqxy3+
+ EWC4/grWYXdocz0j9oV3ix9bGmGVw5vCeAxRaBR2Lkaq8/dTrde4fBR4s2ZVQfbejV2k mA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2vq0q40hsc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 18 Oct 2019 01:02:24 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9I0wCP7053445;
+        Fri, 18 Oct 2019 01:02:24 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2vq0ed0fvv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 18 Oct 2019 01:02:24 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9I12Mac003521;
+        Fri, 18 Oct 2019 01:02:22 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 18 Oct 2019 01:02:21 +0000
+Date:   Thu, 17 Oct 2019 18:02:20 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Matthew Bobrowski <mbobrowski@mbobrowski.org>
+Cc:     Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@lst.de>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Dave Chinner <dchinner@redhat.com>
+Subject: Re: [PATCH 01/14] iomap: iomap that extends beyond EOF should be
+ marked dirty
+Message-ID: <20191018010220.GR13108@magnolia>
+References: <20191017175624.30305-1-hch@lst.de>
+ <20191017175624.30305-2-hch@lst.de>
+ <20191017183917.GL13108@magnolia>
+ <20191017215613.GN16973@dread.disaster.area>
+ <20191017230814.GB31874@bobrowski>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191017230814.GB31874@bobrowski>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910180006
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910180007
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-10-16 at 02:40 -0700, Ooi, Joyce wrote:
-> This patch adds QSPI flash interface in device tree for Intel Agilex
+On Fri, Oct 18, 2019 at 10:08:14AM +1100, Matthew Bobrowski wrote:
+> On Fri, Oct 18, 2019 at 08:56:13AM +1100, Dave Chinner wrote:
+> > On Thu, Oct 17, 2019 at 11:39:17AM -0700, Darrick J. Wong wrote:
+> > > On Thu, Oct 17, 2019 at 07:56:11PM +0200, Christoph Hellwig wrote:
+> > > > From: Dave Chinner <dchinner@redhat.com>
+> > > > 
+> > > > When doing a direct IO that spans the current EOF, and there are
+> > > > written blocks beyond EOF that extend beyond the current write, the
+> > > > only metadata update that needs to be done is a file size extension.
+> > > > 
+> > > > However, we don't mark such iomaps as IOMAP_F_DIRTY to indicate that
+> > > > there is IO completion metadata updates required, and hence we may
+> > > > fail to correctly sync file size extensions made in IO completion
+> > > > when O_DSYNC writes are being used and the hardware supports FUA.
+> > > > 
+> > > > Hence when setting IOMAP_F_DIRTY, we need to also take into account
+> > > > whether the iomap spans the current EOF. If it does, then we need to
+> > > > mark it dirty so that IO completion will call generic_write_sync()
+> > > > to flush the inode size update to stable storage correctly.
+> > > > 
+> > > > Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> > > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > 
+> > > Looks ok, but need fixes tag.  Also, might it be wise to split off the
+> > > ext4 section into a separate patch so that it can be backported
+> > > separately?
+> > 
+> > I 've done a bit more digging on this, and the ext4 part is not
+> > needed for DAX as IOMAP_F_DIRTY is only used in the page fault path
+> > and hence can't change the file size. As such, this only affects
+> > direct IO. Hence the ext4 hunk can be added to the ext4 iomap-dio
+> > patchset that is being developed rather than being in this patch.
 > 
-> Signed-off-by: Ooi, Joyce <joyce.ooi@intel.com>
-> ---
-> v2: update the qspi_rootfs partition size
-> ---
->  arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts | 35
-> ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
-> b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
-> index 7814a9e..8de8118 100644
-> --- a/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
-> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
-> @@ -73,3 +73,38 @@
->  &watchdog0 {
->  	status = "okay";
->  };
-> +
-> +&qspi {
-> +	flash@0 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "mt25qu02g";
-> +		reg = <0>;
-> +		spi-max-frequency = <50000000>;
-QSPI can support up to 100MHz.
-> +
-> +		m25p,fast-read;
-> +		cdns,page-size = <256>;
-> +		cdns,block-size = <16>;
-> +		cdns,read-delay = <1>;
-> +		cdns,tshsl-ns = <50>;
-> +		cdns,tsd2d-ns = <50>;
-> +		cdns,tchsh-ns = <4>;
-> +		cdns,tslch-ns = <4>;
-> +
-> +		partitions {
-> +			compatible = "fixed-partitions";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +
-> +			qspi_boot: partition@0 {
-> +				label = "Boot and fpga data";
-> +				reg = <0x0 0x034B0000>;
-> +			};
-> +
-> +			qspi_rootfs: partition@34B0000 {
-> +				label = "Root Filesystem - JFFS2";
-> +				reg = <0x034B0000 0x0CB50000>;
-> +			};
-> +		};
-> +	};
-> +};
+> Noted, thanks Dave. I've incorporated the ext4 related change into my patch
+> series.
+
+Ok, I've dropped the ext4 hunk from my branch.
+
+--D
+
+> --<M>--
