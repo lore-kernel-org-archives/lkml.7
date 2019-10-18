@@ -2,96 +2,143 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D7ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC84CCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F13E21D7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B059520700
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:56:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HWwssPuP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408487AbfJRK4n (ORCPT
+        id S2409668AbfJRK4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 06:56:43 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:55042 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390222AbfJRK4n (ORCPT
+        Fri, 18 Oct 2019 06:56:53 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:44758 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404484AbfJRK4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 06:56:43 -0400
-Received: from [167.98.27.226] (helo=[10.35.5.173])
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iLPw1-0008Fq-1S; Fri, 18 Oct 2019 11:56:41 +0100
-Subject: Re: [PATCH] ptp_pch: include ethernet driver for external functions
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191018105128.4382-1-ben.dooks@codethink.co.uk>
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-Organization: Codethink Limited.
-Message-ID: <27a1e096-5bb6-a616-eee8-855e4fe424f7@codethink.co.uk>
-Date:   Fri, 18 Oct 2019 11:56:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 18 Oct 2019 06:56:52 -0400
+Received: by mail-ua1-f68.google.com with SMTP id n2so1577641ual.11
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 03:56:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QY7lFyrHaU8+oA6DvMJgP3Iv+qTUAFJEzk1GXAvtrx4=;
+        b=HWwssPuPT5PifwSCD5NhcePRn2f+ZzbP6zPPhLLPIw3Ba+ZwsY64t93AV6ZDoVRf+P
+         GtEcP6AxKbDhZb4aeAXhFJ7LKwzQy18X9mLZzFjg3l69TZM656yqgPbVJe1ph0apblOH
+         zpiHBA9MxyOptlT/ckRWBqs5RnQS0ZwMk32fBgNNHtl1egCvgygXRKzP6q9FYY7GgH4j
+         IX3HP7sAZxr/FF+mPkYQ0A12D/gQTFKYnOU0ckK1PLfd2gCx2OBeFOMah5fjPMGgeYQX
+         s0CdcKW3PYDu6Y1SJvqyv1FCph7SFawKTy3IaAPV+spKaEG5gmDGe/DWTffb4AK+u2zd
+         4lyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QY7lFyrHaU8+oA6DvMJgP3Iv+qTUAFJEzk1GXAvtrx4=;
+        b=sNWNT5bfhQO4daSEmlaizc00YsJNwhXvD8zGHWqwECYsh0UgwyRoYM9MztZWdST2oc
+         ZdXJciAt38CHWeAdnGVzN81tGJCb8at01pvDJqkro4RB9+qkKBPQ4Kq91yp4CxmekqPM
+         yIvIcpAqpNqR+WEsdRTvbqu0gzRnCpZBNWMyUQyoSu0wkIa4PsMrcyFzppoXmK/VHhh/
+         qaNQYUPm5eckQFZk0pa6HnmAV71KaMngKQ9TqChy4FWujurrltVIlDjh5K48bXle+8fP
+         TPqJUm8Jlz2sSYfftJHuo8liAWv28Ef+jj99MYlKB1F0Qsw5vHQtB1obmtVOKNeadr5d
+         NLOQ==
+X-Gm-Message-State: APjAAAXCBCP9X9+5BMDiqfKsRKbMb19mramOxeAnPvTczJ++Fgaz5jV7
+        ohKm3dvjQF5p75T5PGcrpQO4mauspObf4tjKhU3iEQ==
+X-Google-Smtp-Source: APXvYqz/SShoa3XTS8voTIAQNQnZDjh0ea7364t7jbf47xMWfss+qljtsOER3sxNNKKBAIJ9tpVLe1gvmh+l/LbdV7A=
+X-Received: by 2002:ab0:310f:: with SMTP id e15mr5136065ual.19.1571396211823;
+ Fri, 18 Oct 2019 03:56:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191018105128.4382-1-ben.dooks@codethink.co.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20191011103340.26749-1-ludovic.desroches@microchip.com>
+In-Reply-To: <20191011103340.26749-1-ludovic.desroches@microchip.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 18 Oct 2019 12:56:14 +0200
+Message-ID: <CAPDyKFqxfBG-CDd_O9d8X89GZmNFXh=CoFE2QqptgtLtOU5=_Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: sdhci-of-at91: new compatible string
+ and update properties
+To:     Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        claudiu.beznea@microchip.com, Eugen.Hristev@microchip.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/10/2019 11:51, Ben Dooks (Codethink) wrote:
-> The driver uses a number of functions from the ethernet driver
-> so include the header to remove the following warnings from
-> sparse about undeclared functions:
-> 
-> drivers/ptp/ptp_pch.c:182:5: warning: symbol 'pch_ch_control_read' was not declared. Should it be static?
-> drivers/ptp/ptp_pch.c:193:6: warning: symbol 'pch_ch_control_write' was not declared. Should it be static?
-> drivers/ptp/ptp_pch.c:201:5: warning: symbol 'pch_ch_event_read' was not declared. Should it be static?
-> drivers/ptp/ptp_pch.c:212:6: warning: symbol 'pch_ch_event_write' was not declared. Should it be static?
-> drivers/ptp/ptp_pch.c:220:5: warning: symbol 'pch_src_uuid_lo_read' was not declared. Should it be static?
-> drivers/ptp/ptp_pch.c:231:5: warning: symbol 'pch_src_uuid_hi_read' was not declared. Should it be static?
-> drivers/ptp/ptp_pch.c:242:5: warning: symbol 'pch_rx_snap_read' was not declared. Should it be static?
-> drivers/ptp/ptp_pch.c:259:5: warning: symbol 'pch_tx_snap_read' was not declared. Should it be static?
-> drivers/ptp/ptp_pch.c:300:5: warning: symbol 'pch_set_station_address' was not declared. Should it be static?
-> 
-> Should we include the header file from the ethernet driver directly
-> or if not, where should the declarations go?
-> 
-> Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
-> ---
-> Cc: Richard Cochran <richardcochran@gmail.com>
-> Cc: netdev@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->   drivers/ptp/ptp_pch.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/ptp/ptp_pch.c b/drivers/ptp/ptp_pch.c
-> index dcd6e00c8046..2bb1184b6359 100644
-> --- a/drivers/ptp/ptp_pch.c
-> +++ b/drivers/ptp/ptp_pch.c
-> @@ -20,6 +20,8 @@
->   #include <linux/ptp_clock_kernel.h>
->   #include <linux/slab.h>
->   
-> +#include <../net/ethernet/oki-semi/pch_gbe/pch_gbe.h>
+On Fri, 11 Oct 2019 at 12:33, Ludovic Desroches
+<ludovic.desroches@microchip.com> wrote:
+>
+> There is a new compatible string for the SAM9X60 sdhci device. It involves
+> an update of the properties about the clocks stuff.
+>
+> Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 
-oops, missed saving the version with ../../drivers/net
+This doesn't apply any more, can you please re-spin it?
 
+Kind regards
+Uffe
+
+
+> ---
+>
+> Changes:
+> - v2: remove the extra example and fix node label
+>
+> This patch conflicts with Nicolas' one: "dt-bindings: sdhci-of-at91: add
+> the microchip,sdcal-inverted property". Let me know which one has to be
+> rebased or you can handle it.
+>
+> Ludovic
+>
+>
+>  .../devicetree/bindings/mmc/sdhci-atmel.txt       | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt b/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
+> index 1b662d7171a0..5d541ad4d4eb 100644
+> --- a/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
+> @@ -5,17 +5,26 @@ Documentation/devicetree/bindings/mmc/mmc.txt and the properties used by the
+>  sdhci-of-at91 driver.
+>
+>  Required properties:
+> -- compatible:          Must be "atmel,sama5d2-sdhci".
+> +- compatible:          Must be "atmel,sama5d2-sdhci" or "microchip,sam9x60-sdhci".
+>  - clocks:              Phandlers to the clocks.
+> -- clock-names:         Must be "hclock", "multclk", "baseclk";
+> +- clock-names:         Must be "hclock", "multclk", "baseclk" for
+> +                       "atmel,sama5d2-sdhci".
+> +                       Must be "hclock", "multclk" for "microchip,sam9x60-sdhci".
 > +
->   #define STATION_ADDR_LEN	20
->   #define PCI_DEVICE_ID_PCH_1588	0x8819
->   #define IO_MEM_BAR 1
-> 
-
-
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
-
-https://www.codethink.co.uk/privacy.html
+> +Optional properties:
+> +- assigned-clocks:     The same with "multclk".
+> +- assigned-clock-rates The rate of "multclk" in order to not rely on the
+> +                       gck configuration set by previous components.
+>
+>
+>  Example:
+>
+> -sdmmc0: sdio-host@a0000000 {
+> +mmc0: sdio-host@a0000000 {
+>         compatible = "atmel,sama5d2-sdhci";
+>         reg = <0xa0000000 0x300>;
+>         interrupts = <31 IRQ_TYPE_LEVEL_HIGH 0>;
+>         clocks = <&sdmmc0_hclk>, <&sdmmc0_gclk>, <&main>;
+>         clock-names = "hclock", "multclk", "baseclk";
+> +       assigned-clocks = <&sdmmc0_gclk>;
+> +       assigned-clock-rates = <480000000>;
+>  };
+> --
+> 2.23.0
+>
