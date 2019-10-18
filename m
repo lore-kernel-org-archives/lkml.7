@@ -2,174 +2,321 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91387CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB78CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63D032067B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE8C72067B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:32:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XEk+TXgF"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="WnxLA/4q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437704AbfJRFa4 (ORCPT
+        id S2437986AbfJRFcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:30:56 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43003 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727932AbfJRFaz (ORCPT
+        Fri, 18 Oct 2019 01:32:08 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54253 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727399AbfJRFcI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:30:55 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q12so3115585pff.9
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:30:55 -0700 (PDT)
+        Fri, 18 Oct 2019 01:32:08 -0400
+Received: by mail-wm1-f67.google.com with SMTP id i16so4744718wmd.3
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:32:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FUYBDax7NE3CDwWsYLZOhPAtyneP9Q/Jy0zNmRGZwqk=;
-        b=XEk+TXgFbeAE3e37n2OZJ2gc7DQz2UgSVuKwMUCPB2WRmo4ZEUyFBRhanr7tQGVC9X
-         qcOGvaw04wTYnk45J4bCBIcwnn6fx7r/2v6wIVQQrsNQ1iIw+v8h94s9XUgVWug4aA6O
-         qD8xN/3mgtupJyvN1mFLQzjJ8+J9zeamLEoam6KnRYkgKSMDMvt18aS7XAvqvZuy2o4E
-         9EVmvS3JmM21cgRhd4/8ObOSiFvEpeBIJqLHBMJb6kBIilkuoxPvkA7UpE4Kpld/aPl2
-         HV1zUNsO6vCMZ2rE8TS0bEtnoi9IMLjHZ/hW61XLGt5k6q22OPcDcp9ewwTgTLi3sz/z
-         HUNw==
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WpUdtRZLCMWCE2pmgbqMCnO+ca2VrAa6THp+EdS32g0=;
+        b=WnxLA/4qFYmYNv+uh8zSB+n98MDKY4/X+1hsTlDKM6RySJ1Uu6y3xAksZ6QWCGMNuC
+         rVIHurjG66Ir2cp37i2ZVQGuY2U5sd3aBt9dr8Vu95rOkRqGnLYG6d3CvhKkiS0cvF1n
+         9duE+0KqbkjsxnKCZHMMKoXyiyiaVlcXe0jvrnul7wIRSnsZqQSV71NpfYO66++PWPMY
+         p1t3824K6uFYswQXepQ5H7PmsaOjTQW8MSL5L6JZpgQdUGemG6h5a1xVmau+J3VVqKqM
+         v2sas0q8Ws64hksvWfbacUnNkfetqIBgcinGxwGvsDWgCPH5TcbEExKomIPYvoBH+/Hu
+         TSHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FUYBDax7NE3CDwWsYLZOhPAtyneP9Q/Jy0zNmRGZwqk=;
-        b=V9YdDY9IvMESv7AggeIi/YU6oEKLjwpx9yz8k5ZzDoiS9V8fBMpb6IEG6iAQf/JgaN
-         IHf3B6i8ge51ChV7ALw4Irlrv8BEAdIyfyD6nRuYWZK4TF3uxhmXZ9VNh6jNQNmIxtuL
-         vWsZAqdtSrMwp6d9DT3VITwTjG2CcMpDvoMFd8iwgfLTyozM0TeUPr6BMSLhxQJXOWKQ
-         4MDdWaGXMS+sYMKuEw9uVaqDc//EbEIBlCJpe00hvIBryH8gPc/pIdXCl6NNpQypyecP
-         G7tZdbTEqnxQj4v5Sbr38l5WqoFvnCdOc3AjDzO1YoepjLnQIhtO+ngM2xlcBWph1e/3
-         mK7A==
-X-Gm-Message-State: APjAAAU4ORBjfgRLqO5W2IxY/kzhNEb3asHjA4VwhvSa3dsqNJ3+0W9b
-        71bBZQqXrQbISiDqAYeasxpTTQ==
-X-Google-Smtp-Source: APXvYqwu8XgdnF2JM+MIZ5+YJ18wqOQAMwBOQsDC97X7zyp+1ufZ3YNe9XktzUrdJo31658oXdc7GA==
-X-Received: by 2002:a17:90a:17c4:: with SMTP id q62mr8306937pja.83.1571372840048;
-        Thu, 17 Oct 2019 21:27:20 -0700 (PDT)
-Received: from localhost ([122.172.151.112])
-        by smtp.gmail.com with ESMTPSA id q6sm6160453pgn.44.2019.10.17.21.27.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Oct 2019 21:27:18 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 09:57:15 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Preeti U Murthy <preeti@linux.vnet.ibm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] cpufreq: powernv: fix stack bloat and NR_CPUS limitation
-Message-ID: <20191018042715.f76bawmoyk66isap@vireshk-i7>
-References: <20191018000431.1675281-1-jhubbard@nvidia.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WpUdtRZLCMWCE2pmgbqMCnO+ca2VrAa6THp+EdS32g0=;
+        b=n3c+OVhd3sIjGAMUYGD08EL3yCT8AnW6NxwwcYIqaEWkZQpyt9fhLA5meEMvUNQokk
+         Mibyn+9+dlKM7AU6FCUA/mSAuVzIfnIwWMhR7abJkuS58B+4ERKZjDWYpGNhlfY9VhrX
+         eVzZeoDXlLtWUz1bQ5l6NgS0wqu2h/kAGIUa5CZ7M1G//UkPkB8MTLY7zXP0/YatoS7U
+         t6noz+WMznshxeq+jJ50QFq+/nXFmOnfopYvgTrYwpZq+YO0vrl17hjM9u56RT+E5nNC
+         ALivwvtU8jgwXupyHq6e2hhX5Yh5I/EcYyIU5lai23f1ER1iXoITApanV2qFCpFGVkaQ
+         P9aA==
+X-Gm-Message-State: APjAAAX4oiQ4GDUoDqKl0su3mNa6eMkj5v0MY+Wc+5NoQCJA1mmnoafg
+        k69Bq1NHafGXlDqIXa8GzBQs0I+AeQOw9tpRmiWzotapmOM=
+X-Google-Smtp-Source: APXvYqwwwBuUBCt7oqEwdI8TI1PlPWwkwe5zKEfrYA6s60h8NummaGNVZdFHXmYdZXHuWxAqMUcCKTRj1ImrgTkeu60=
+X-Received: by 2002:a1c:a697:: with SMTP id p145mr5028401wme.24.1571367619176;
+ Thu, 17 Oct 2019 20:00:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018000431.1675281-1-jhubbard@nvidia.com>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <20191017173743.5430-1-hch@lst.de> <20191017173743.5430-10-hch@lst.de>
+In-Reply-To: <20191017173743.5430-10-hch@lst.de>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Fri, 18 Oct 2019 08:30:08 +0530
+Message-ID: <CAAhSdy288Mue2YE-MWNW9KcYvF_5qswpqjeMycxiN0GGNMHNOg@mail.gmail.com>
+Subject: Re: [PATCH 09/15] riscv: provide native clint access for M-mode
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17-10-19, 17:04, John Hubbard wrote:
-> The following build warning occurred on powerpc 64-bit builds:
-> 
-> drivers/cpufreq/powernv-cpufreq.c: In function 'init_chip_info':
-> drivers/cpufreq/powernv-cpufreq.c:1070:1: warning: the frame size of 1040 bytes is larger than 1024 bytes [-Wframe-larger-than=]
-
-How come we are catching this warning after 4 years ?
-
-> 
-> This is due to putting 1024 bytes on the stack:
-> 
->     unsigned int chip[256];
-> 
-> ...and while looking at this, it also has a bug: it fails with a stack
-> overrun, if CONFIG_NR_CPUS > 256.
-> 
-> Fix both problems by dynamically allocating based on CONFIG_NR_CPUS.
-> 
-> Fixes: 053819e0bf840 ("cpufreq: powernv: Handle throttling due to Pmax capping at chip level")
-> Cc: Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
-> Cc: Preeti U Murthy <preeti@linux.vnet.ibm.com>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Cc: linux-pm@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+On Thu, Oct 17, 2019 at 11:08 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> RISC-V has the concept of a cpu level interrupt controller.  The
+> interface for it is split between a standardized part that is exposed
+> as bits in the mstatus/sstatus register and the mie/mip/sie/sip
+> CRS.  But the bit to actually trigger IPIs is not standardized and
+> just mentioned as implementable using MMIO.
+>
+> Add support for IPIs using MMIO using the SiFive clint layout (which is
+> also shared by Ariane, Kendrye and the Qemu virt platform).  Additional
+> the MMIO block also support the time value and timer compare registers,
+> so they are also set up using the same OF node.  Support for other
+> layouts should also be relatively easy to add in the future.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
-> 
-> Hi,
-> 
-> I have only compile-tested this, so I would appreciate if anyone
-> could do a basic runtime test on it. But (famous last words) it
-> seems simple enough that I'm confident it's correct. oh boy. :)
-> 
-> thanks,
-> John Hubbard
-> NVIDIA
-> 
->  drivers/cpufreq/powernv-cpufreq.c | 17 +++++++++++++----
->  1 file changed, 13 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/powernv-cpufreq.c b/drivers/cpufreq/powernv-cpufreq.c
-> index 6061850e59c9..78e04402125f 100644
-> --- a/drivers/cpufreq/powernv-cpufreq.c
-> +++ b/drivers/cpufreq/powernv-cpufreq.c
-> @@ -1041,9 +1041,14 @@ static struct cpufreq_driver powernv_cpufreq_driver = {
->  
->  static int init_chip_info(void)
->  {
-> -	unsigned int chip[256];
-> +	unsigned int *chip;
->  	unsigned int cpu, i;
->  	unsigned int prev_chip_id = UINT_MAX;
-> +	int ret = 0;
+>  arch/riscv/include/asm/clint.h | 39 ++++++++++++++++++++++++++++++
+>  arch/riscv/include/asm/sbi.h   |  2 ++
+>  arch/riscv/kernel/Makefile     |  1 +
+>  arch/riscv/kernel/clint.c      | 44 ++++++++++++++++++++++++++++++++++
+>  arch/riscv/kernel/setup.c      |  2 ++
+>  arch/riscv/kernel/smp.c        | 16 ++++++++++---
+>  arch/riscv/kernel/smpboot.c    |  4 ++++
+>  7 files changed, 105 insertions(+), 3 deletions(-)
+>  create mode 100644 arch/riscv/include/asm/clint.h
+>  create mode 100644 arch/riscv/kernel/clint.c
+>
+> diff --git a/arch/riscv/include/asm/clint.h b/arch/riscv/include/asm/clint.h
+> new file mode 100644
+> index 000000000000..02a26b68f21d
+> --- /dev/null
+> +++ b/arch/riscv/include/asm/clint.h
+> @@ -0,0 +1,39 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#ifndef _ASM_CLINT_H
+> +#define _ASM_CLINT_H 1
 > +
-> +	chip = kcalloc(CONFIG_NR_CPUS, sizeof(int), GFP_KERNEL);
-
-                                       sizeof(*chip)
-
-> +	if (!chips)
-
-           (!chip)
-
-> +		return -ENOMEM;
->  
->  	for_each_possible_cpu(cpu) {
->  		unsigned int id = cpu_to_chip_id(cpu);
-> @@ -1055,8 +1060,10 @@ static int init_chip_info(void)
->  	}
->  
->  	chips = kcalloc(nr_chips, sizeof(struct chip), GFP_KERNEL);
-> -	if (!chips)
-> -		return -ENOMEM;
-> +	if (!chips) {
-> +		ret = -ENOMEM;
-> +		goto free_and_return;
-> +	}
->  
->  	for (i = 0; i < nr_chips; i++) {
->  		chips[i].id = chip[i];
-> @@ -1066,7 +1073,9 @@ static int init_chip_info(void)
->  			per_cpu(chip_info, cpu) =  &chips[i];
->  	}
->  
-> -	return 0;
-> +free_and_return:
-> +	kfree(chip);
-> +	return ret;
+> +#include <linux/io.h>
+> +#include <linux/smp.h>
+> +
+> +#ifdef CONFIG_RISCV_M_MODE
+> +extern u32 __iomem *clint_ipi_base;
+> +
+> +void clint_init_boot_cpu(void);
+> +
+> +static inline void clint_send_ipi_single(unsigned long hartid)
+> +{
+> +       writel(1, clint_ipi_base + hartid);
+> +}
+> +
+> +static inline void clint_send_ipi_mask(const struct cpumask *hartid_mask)
+> +{
+> +       int hartid;
+> +
+> +       for_each_cpu(hartid, hartid_mask)
+> +               clint_send_ipi_single(hartid);
+> +}
+> +
+> +static inline void clint_clear_ipi(unsigned long hartid)
+> +{
+> +       writel(0, clint_ipi_base + hartid);
+> +}
+> +#else /* CONFIG_RISCV_M_MODE */
+> +#define clint_init_boot_cpu()  do { } while (0)
+> +
+> +/* stubs to for code is only reachable under IS_ENABLED(CONFIG_RISCV_M_MODE): */
+> +void clint_send_ipi_single(unsigned long hartid);
+> +void clint_send_ipi_mask(const struct cpumask *hartid_mask);
+> +void clint_clear_ipi(unsigned long hartid);
+> +#endif /* CONFIG_RISCV_M_MODE */
+> +
+> +#endif /* _ASM_CLINT_H */
+> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
+> index a4774bafe033..407d1024f9eb 100644
+> --- a/arch/riscv/include/asm/sbi.h
+> +++ b/arch/riscv/include/asm/sbi.h
+> @@ -97,6 +97,8 @@ static inline void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
+>  #else /* CONFIG_RISCV_SBI */
+>  /* stubs to for code is only reachable under IS_ENABLED(CONFIG_RISCV_SBI): */
+>  void sbi_set_timer(uint64_t stime_value);
+> +void sbi_clear_ipi(void);
+> +void sbi_send_ipi(const unsigned long *hart_mask);
+>  void sbi_remote_fence_i(const unsigned long *hart_mask);
+>  #endif /* CONFIG_RISCV_SBI */
+>  #endif /* _ASM_RISCV_SBI_H */
+> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+> index d8c35fa93cc6..2dca51046899 100644
+> --- a/arch/riscv/kernel/Makefile
+> +++ b/arch/riscv/kernel/Makefile
+> @@ -29,6 +29,7 @@ obj-y += vdso.o
+>  obj-y  += cacheinfo.o
+>  obj-y  += vdso/
+>
+> +obj-$(CONFIG_RISCV_M_MODE)     += clint.o
+>  obj-$(CONFIG_FPU)              += fpu.o
+>  obj-$(CONFIG_SMP)              += smpboot.o
+>  obj-$(CONFIG_SMP)              += smp.o
+> diff --git a/arch/riscv/kernel/clint.c b/arch/riscv/kernel/clint.c
+> new file mode 100644
+> index 000000000000..3647980d14c3
+> --- /dev/null
+> +++ b/arch/riscv/kernel/clint.c
+> @@ -0,0 +1,44 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019 Christoph Hellwig.
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/of_address.h>
+> +#include <linux/types.h>
+> +#include <asm/clint.h>
+> +#include <asm/csr.h>
+> +#include <asm/timex.h>
+> +#include <asm/smp.h>
+> +
+> +/*
+> + * This is the layout used by the SiFive clint, which is also shared by the qemu
+> + * virt platform, and the Kendryte KD210 at least.
+> + */
+> +#define CLINT_IPI_OFF          0
+> +#define CLINT_TIME_CMP_OFF     0x4000
+> +#define CLINT_TIME_VAL_OFF     0xbff8
+> +
+> +u32 __iomem *clint_ipi_base;
+> +
+> +void clint_init_boot_cpu(void)
+> +{
+> +       struct device_node *np;
+> +       void __iomem *base;
+> +
+> +       np = of_find_compatible_node(NULL, NULL, "riscv,clint0");
+> +       if (!np) {
+> +               panic("clint not found");
+> +               return;
+> +       }
+> +
+> +       base = of_iomap(np, 0);
+> +       if (!base)
+> +               panic("could not map CLINT");
+> +
+> +       clint_ipi_base = base + CLINT_IPI_OFF;
+> +       riscv_time_cmp = base + CLINT_TIME_CMP_OFF;
+> +       riscv_time_val = base + CLINT_TIME_VAL_OFF;
+> +
+> +       clint_clear_ipi(boot_cpu_hartid);
+> +}
+> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+> index a990a6cb184f..f4ba71b66c73 100644
+> --- a/arch/riscv/kernel/setup.c
+> +++ b/arch/riscv/kernel/setup.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/sched/task.h>
+>  #include <linux/swiotlb.h>
+>
+> +#include <asm/clint.h>
+>  #include <asm/setup.h>
+>  #include <asm/sections.h>
+>  #include <asm/pgtable.h>
+> @@ -65,6 +66,7 @@ void __init setup_arch(char **cmdline_p)
+>         setup_bootmem();
+>         paging_init();
+>         unflatten_device_tree();
+> +       clint_init_boot_cpu();
+>
+>  #ifdef CONFIG_SWIOTLB
+>         swiotlb_init(1);
+> diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
+> index b18cd6c8e8fb..c46df9c2e927 100644
+> --- a/arch/riscv/kernel/smp.c
+> +++ b/arch/riscv/kernel/smp.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/seq_file.h>
+>  #include <linux/delay.h>
+>
+> +#include <asm/clint.h>
+>  #include <asm/sbi.h>
+>  #include <asm/tlbflush.h>
+>  #include <asm/cacheflush.h>
+> @@ -90,7 +91,10 @@ static void send_ipi_mask(const struct cpumask *mask, enum ipi_message_type op)
+>         smp_mb__after_atomic();
+>
+>         riscv_cpuid_to_hartid_mask(mask, &hartid_mask);
+> -       sbi_send_ipi(cpumask_bits(&hartid_mask));
+> +       if (IS_ENABLED(CONFIG_RISCV_SBI))
+> +               sbi_send_ipi(cpumask_bits(&hartid_mask));
+> +       else
+> +               clint_send_ipi_mask(&hartid_mask);
 >  }
->  
->  static inline void clean_chip_info(void)
-> -- 
-> 2.23.0
+>
+>  static void send_ipi_single(int cpu, enum ipi_message_type op)
+> @@ -101,12 +105,18 @@ static void send_ipi_single(int cpu, enum ipi_message_type op)
+>         set_bit(op, &ipi_data[cpu].bits);
+>         smp_mb__after_atomic();
+>
+> -       sbi_send_ipi(cpumask_bits(cpumask_of(hartid)));
+> +       if (IS_ENABLED(CONFIG_RISCV_SBI))
+> +               sbi_send_ipi(cpumask_bits(cpumask_of(hartid)));
+> +       else
+> +               clint_send_ipi_single(hartid);
+>  }
+>
+>  static inline void clear_ipi(void)
+>  {
+> -       csr_clear(CSR_SIP, SIE_SSIE);
+> +       if (IS_ENABLED(CONFIG_RISCV_SBI))
+> +               csr_clear(CSR_SIP, SIE_SSIE);
+> +       else
+> +               clint_clear_ipi(cpuid_to_hartid_map(smp_processor_id()));
+>  }
+>
+>  void riscv_software_interrupt(void)
+> diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+> index 18ae6da5115e..6300b09f1d1d 100644
+> --- a/arch/riscv/kernel/smpboot.c
+> +++ b/arch/riscv/kernel/smpboot.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/of.h>
+>  #include <linux/sched/task_stack.h>
+>  #include <linux/sched/mm.h>
+> +#include <asm/clint.h>
+>  #include <asm/irq.h>
+>  #include <asm/mmu_context.h>
+>  #include <asm/tlbflush.h>
+> @@ -134,6 +135,9 @@ asmlinkage void __init smp_callin(void)
+>  {
+>         struct mm_struct *mm = &init_mm;
+>
+> +       if (!IS_ENABLED(CONFIG_RISCV_SBI))
+> +               clint_clear_ipi(cpuid_to_hartid_map(smp_processor_id()));
+> +
+>         /* All kernel threads share the same mm context.  */
+>         mmgrab(mm);
+>         current->active_mm = mm;
+> --
+> 2.20.1
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
 
--- 
-viresh
+LGTM.
+
+Reviewed-by: Anup Patel <anup@brainfault.org>
+
+Regards,
+Anup
