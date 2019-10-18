@@ -2,119 +2,98 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E8BCA9EC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F0BCA9EC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57EC520820
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA28121D80
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:15:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="awDrOrTN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409223AbfJRBLS (ORCPT
+        id S2409233AbfJRBPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 21:11:18 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4247 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2392283AbfJRBLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 21:11:17 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0BA28C49BC07D5EF93FC;
-        Fri, 18 Oct 2019 09:11:15 +0800 (CST)
-Received: from [127.0.0.1] (10.133.217.137) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Fri, 18 Oct 2019
- 09:11:10 +0800
-Subject: Re: [PATCH 00/32] Kill pr_warning in the whole linux code
-To:     Joe Perches <joe@perches.com>, Petr Mladek <pmladek@suse.com>
-CC:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Whitcroft <apw@canonical.com>,
-        "DavidS. Miller" <davem@davemloft.net>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        AlexeiStarovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        GregKroah-Hartman <gregkh@linuxfoundation.org>,
-        ArnaldoCarvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, <linux-kernel@vger.kernel.org>
-References: <20190920062544.180997-1-wangkefeng.wang@huawei.com>
- <20191002085554.ddvx6yx6nx7tdeey@pathway.suse.cz>
- <f613df39-6903-123b-a0f1-d1b783a755ce@huawei.com>
- <20191017130550.nwswlnwdroyjwwun@pathway.suse.cz>
- <21f6322c-1c2b-f857-2e6e-e1c6aa45dd2d@huawei.com>
- <c2a4d95bee896df95d277fe84295e91014835030.camel@perches.com>
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-Message-ID: <4698b6c1-a112-b327-29e7-706a4e46a430@huawei.com>
-Date:   Fri, 18 Oct 2019 09:11:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 17 Oct 2019 21:15:34 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:38881 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391934AbfJRBPe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 21:15:34 -0400
+Received: by mail-il1-f195.google.com with SMTP id y5so3986236ilb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 18:15:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=xMVFVGLiYSSLdYjE6VASkhDClgpi5ByjWpde3EPzDTo=;
+        b=awDrOrTNZsTliFwdBDUIyxs4uX5joR2/y276X1UXTxr76eI9fflr4Pp//BNKhw4LDP
+         udF5JY/ajGrCY8RdxmG2kJGXyipHWyNWPld3aZCqGILhwuTzivqGa1IDcV2DNRnj84q3
+         jlhnWl/WK/LTKjgg1pinyZrNLcMWVxx9FOwlZFX2iHQXHVfBZCuyWYvdWDFdVSM66+B4
+         SHBwMkz/wzQWkQVbZR+r2lNRYuiUTKLqYPo0e3CA1LavnCJGdkOF8sRgaNGe05WYeZC+
+         xG/cSojbKWDQHv1N8NC8pVWLjReHS2jTlxCJFM1wMFgozUD9nbcTIJIUroCyYj2/DMdi
+         Udlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=xMVFVGLiYSSLdYjE6VASkhDClgpi5ByjWpde3EPzDTo=;
+        b=jqTow5UiKaM8eD4i9yUyNH2X1pig+Uw/A/vAS32krEaeXRvKGmoksddXUqY4gXyVmM
+         /3nhuGwyVG0yQsur7Si6N7TlA+ZCOwc2fWa13ra/KcnCqz6i1QQW6sP6TrpKtXjuIsZx
+         gMzvQDvcoronOQRWcGuoo1VIiCa49tpUuzAvQl6r+Z5sf4/SARyOH8zgROV2LywDTL82
+         0ggzQEuXFhCw4GZNd54P2ltkgj3GrJsQRjhMgZQnka8tdikX/4zEelgGm0TKHSiIx53j
+         8cmFO7nFgukOLwBE+Gb+rQJYmJxb1RCkx87sJenFiOD/XyZVQim/cimPxsZ+rwiwOgXr
+         O10A==
+X-Gm-Message-State: APjAAAUKHSsEH7xH/LYcVkkI2V2U4jW/FqSC2GGwiMO0KoIn2lqEDDMi
+        /PDuUkGRshGKA/lBbVIAZSM2iQ4ERRY=
+X-Google-Smtp-Source: APXvYqzDVQiMyZIgvTZC/Q7ZcqBa0pFaN3EJ5m9p1+F6LuzHOYBWFwOn3qLkn0mFMNJ187/UdFrNTw==
+X-Received: by 2002:a92:83c5:: with SMTP id p66mr7527394ilk.204.1571361331720;
+        Thu, 17 Oct 2019 18:15:31 -0700 (PDT)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id t86sm1829722ila.21.2019.10.17.18.15.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 18:15:31 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 18:15:29 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     linux-riscv@lists.infradead.org
+cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/8] riscv: add prototypes for assembly language functions
+ from head.S
+In-Reply-To: <20191018004929.3445-3-paul.walmsley@sifive.com>
+Message-ID: <alpine.DEB.2.21.9999.1910171814310.12651@viisi.sifive.com>
+References: <20191018004929.3445-1-paul.walmsley@sifive.com> <20191018004929.3445-3-paul.walmsley@sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-In-Reply-To: <c2a4d95bee896df95d277fe84295e91014835030.camel@perches.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.217.137]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 17 Oct 2019, Paul Walmsley wrote:
+
+> Add prototypes for assembly language functions defined in head.S,
+> and include these prototypes into C source files that call those
+> functions.
+
+[ ... ]
+
+> diff --git a/arch/riscv/mm/fault.c b/arch/riscv/mm/fault.c
+> index 96add1427a75..ec15a9b15448 100644
+> --- a/arch/riscv/mm/fault.c
+> +++ b/arch/riscv/mm/fault.c
+> @@ -18,6 +18,8 @@
+>  #include <asm/ptrace.h>
+>  #include <asm/tlbflush.h>
+>  
+> +#include "../head.h"
+> +
+
+"../kernel/head.h", rather.
 
 
-On 2019/10/18 0:38, Joe Perches wrote:
-> On Thu, 2019-10-17 at 21:29 +0800, Kefeng Wang wrote:
->> On 2019/10/17 21:05, Petr Mladek wrote:
->>> On Tue 2019-10-08 14:39:32, Kefeng Wang wrote:
->>>> On 2019/10/2 16:55, Petr Mladek wrote:
->>>>> On Fri 2019-09-20 14:25:12, Kefeng Wang wrote:
->>>>>> There are pr_warning and pr_warng to show WARNING level message,
->>>>>> most of the code using pr_warn, number based on next-20190919,
->>>>>>
->>>>>> pr_warn: 5189   pr_warning: 546 (tools: 398, others: 148)
->>>>>
->>>>> The ratio is 10:1 in favor of pr_warn(). It would make sense
->>>>> to remove the pr_warning().
->>>>>
->>>>> Would you accept pull request with these 32 simple patches
->>>>> for rc2, please?
->>>>>
->>>>> Alternative is to run a simple sed. But it is not trivial
->>>>> to fix indentation of the related lines.
->>>>
->>>> Kindly ping, should I respin patches with comments fixed?
->>>> Is the patchset acceptable, hope to be clear that what to do next :)
->>>
->>> I am going to check how many conflicts appeared in linux-next.
->>>
->>> If there are only few then I'll take it via printk.git. This way
->>> we get proper indentation and other changes.
-> []
->> For tools parts(api/bpf/perf, patch [29-31]), it renames pr_warning
->> to pr_warn, and make manually changes in some place, simply 'sed'
->> maybe not enough.
-> 
-> Perhaps tools/ should not be changed.
-> 
-> Last time I did this, I did not convert tools/ as there are
-> possible external dependencies and code like pr_warning_wrapper
-> exists and that adds some complexity to the change.
-
-The pr_warning dependencies and wrappers in tools may not seem
-to be much in following head files, and build test all passed.
-
-tools/lib/api/debug-internal.h
-tools/lib/bpf/libbpf_internal.h
-tools/perf/lib/internal.h
-tools/perf/util/debug.h
-
-Let's remove all pr_warning if there is no objection.>
-> https://lore.kernel.org/patchwork/cover/761816/
-> 
-> 
-> 
-> .
-> 
-
+- Paul
