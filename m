@@ -2,158 +2,225 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 108C5CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66962CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE04B21852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FF6F21852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:38:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="v470AP/W"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i2IFwS6G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393145AbfJRPh6 (ORCPT
+        id S2404352AbfJRPid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:37:58 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:60928 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730468AbfJRPh6 (ORCPT
+        Fri, 18 Oct 2019 11:38:33 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46097 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730498AbfJRPic (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:37:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1571413074; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
+        Fri, 18 Oct 2019 11:38:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571413110;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=yvFr+nNghkKZwR4mawCKvHUmrMBJduw6erMI6YTlcHM=;
-        b=v470AP/WoXYbHAA0MikRhd2C2Q47Jva7B2tAsqSQJh2nMYK2q/AuxV6ILjajalIe9ifrUq
-        QQ5AMEkFZxjYo9B3QckbJkKJ22INg6mA+cpEFKl/QqzArCcPa/pKii/EQODfOjJpBl38Oc
-        nlS76mnfHy2OQjR4ZofesDfcpS7rIQ0=
-Date:   Fri, 18 Oct 2019 17:37:47 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 6/6 v2] MMC: JZ4740: Add support for LPM.
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Zhou Yanjie <zhouyanjie@zoho.com>, linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mmc@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Mark Rutland <mark.rutland@arm.com>, syq@debian.org,
-        Linus Walleij <linus.walleij@linaro.org>, armijn@tjaldur.nl,
-        Thomas Gleixner <tglx@linutronix.de>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Mathieu Malaterre <malat@debian.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Message-Id: <1571413067.3.0@crapouillou.net>
-In-Reply-To: <CAPDyKFo9juNmf6hrcBjzOprS6GwzAPBq8y3ReGu=ry+MdxT9Bg@mail.gmail.com>
-References: <1567669089-88693-1-git-send-email-zhouyanjie@zoho.com>
-        <1570857203-49192-1-git-send-email-zhouyanjie@zoho.com>
-        <1570857203-49192-7-git-send-email-zhouyanjie@zoho.com>
-        <CAPDyKFo9juNmf6hrcBjzOprS6GwzAPBq8y3ReGu=ry+MdxT9Bg@mail.gmail.com>
+        bh=JTdnWheKvkUYrVaMeY3lYJ2nHqs52mFAjqgDCc0VsJM=;
+        b=i2IFwS6GQimiSNUJE4nROXJ53VZsFLQtow/FpkQ3M57LGLeBIwd2q9ENgM5OkC3DWsHYNC
+        r77biHbnwnnNuJMUplpA0gcrE9b3PDw4atAcDImX4oS84JNT2Ek9FhhG6c/xbsE8ftdY4k
+        rfOemFuXYVhDbGObLup9E6eXrEB7Dng=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-331-vaDY0JFKNJ6m9w_SqeYRMg-1; Fri, 18 Oct 2019 11:38:26 -0400
+Received: by mail-qt1-f197.google.com with SMTP id z12so6281920qtn.3
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 08:38:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AHpooU0lck0YMXNkAeb+yjAvWSzG5nXB8oRVtwMgBWg=;
+        b=KiZ/plC8JdyWxxtm4oNvvnPAJaiGnyl+2CInrPs1A+FcFnTXh9pqVPMg5Igd4Ea6Xx
+         Yvz1VgptsH9wsBpGqTuo+NfdIcHbIzbgAtN7XB7bJD1jBOy6e3sYl7/kVtPafMVhTSXt
+         mv1XffAQPeK+rPy6oSkb+Z932F/tIVMOD80OTxcDAaoHM2QBm+ylN0i9VxqlChR9v2Pe
+         LHwhXH6rv1SKsphkzGIj4gjY31Q4J1KZ8fGzoPmnL82WLeOLFEtKyLpgRj9In5andZeR
+         8iEHhRSkLnNImkzWyTD9CaYU+tmYKKVzpB18sYxxJUKMTZw6XSqMYjBW9kYGf2p1i/oc
+         3jYw==
+X-Gm-Message-State: APjAAAWbGVrnot7DGV96ZAyDXs/3IMH4a7DfvyZh1iYqcOlcv1cLiqIn
+        n8V/g0Dd2OeVDLxWCeWw3TvVkh74gThTCJgBGq4LQaksnsKWLENz+Zr+t4kqQ5WcTfG4ruW2qwu
+        lmKx50teM2MdmHwHDxeL/yQLwm5Axq9VRQOlgbDyZ
+X-Received: by 2002:ac8:1e83:: with SMTP id c3mr10653473qtm.294.1571413106412;
+        Fri, 18 Oct 2019 08:38:26 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxK/5QurjRG7eDYqrF+2bk1Vi3nAVRG9WhS28hkPLqaIdu1lKgJvcG0oIkVSCiDU6yOT0bpc8h31isrSSj1uvI=
+X-Received: by 2002:ac8:1e83:: with SMTP id c3mr10653425qtm.294.1571413106084;
+ Fri, 18 Oct 2019 08:38:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
+References: <_1Ewv9AvBhbWTNcFOkmvCyjVph73eQIz23Plyv5ffgaWWHnmPBTbSIJhs47AnYatJsmDWu4JlMjcsKE8Cf31lvmwQipYEu47YglNfroyJtM=@protonmail.com>
+In-Reply-To: <_1Ewv9AvBhbWTNcFOkmvCyjVph73eQIz23Plyv5ffgaWWHnmPBTbSIJhs47AnYatJsmDWu4JlMjcsKE8Cf31lvmwQipYEu47YglNfroyJtM=@protonmail.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Fri, 18 Oct 2019 17:38:14 +0200
+Message-ID: <CAO-hwJK3Q1Bu+6JVbXmbZ2-JqaPzX=dEVPfue=v2LRJsU7FmGA@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] HID: logitech: Support WirelessDeviceStatus
+ connect events
+To:     Mazin Rezk <mnrzk@protonmail.com>
+Cc:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "jikos@kernel.org" <jikos@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>
+X-MC-Unique: vaDY0JFKNJ6m9w_SqeYRMg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uffe,
+On Mon, Oct 14, 2019 at 8:36 PM Mazin Rezk <mnrzk@protonmail.com> wrote:
+>
+> This patch allows WirelessDeviceStatus (0x1d4b) events to be detected as
+> connection events in the hid-logitech-hidpp module.
+>
+> Devices with HIDPP_QUIRK_WIRELESS_DEVICE_STATUS use WirelessDeviceStatus
+> instead of traditional connect events. Since all Bluetooth LE devices see=
+m
+> to act this way, HIDPP_QUIRK_CLASS_BLUETOOTH_LE aliases this quirk.
+>
+> Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
+> ---
+>  drivers/hid/hid-logitech-hidpp.c | 42 ++++++++++++++++++++++++++++----
+>  1 file changed, 37 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-=
+hidpp.c
+> index 997b1056850a..9b3df57ca857 100644
+> --- a/drivers/hid/hid-logitech-hidpp.c
+> +++ b/drivers/hid/hid-logitech-hidpp.c
+> @@ -60,6 +60,7 @@ MODULE_PARM_DESC(disable_tap_to_click,
+>  #define HIDPP_QUIRK_CLASS_K750                 BIT(4)
+>
+>  /* bits 2..15 are reserved for classes */
+> +#define HIDPP_QUIRK_WIRELESS_DEVICE_STATUS     BIT(19)
+>  #define HIDPP_QUIRK_MISSING_SHORT_REPORTS      BIT(20)
+>  /* #define HIDPP_QUIRK_CONNECT_EVENTS          BIT(21) disabled */
+>  #define HIDPP_QUIRK_WTP_PHYSICAL_BUTTONS       BIT(22)
+> @@ -82,7 +83,8 @@ MODULE_PARM_DESC(disable_tap_to_click,
+>                                          HIDPP_QUIRK_HI_RES_SCROLL_X2120 =
+| \
+>                                          HIDPP_QUIRK_HI_RES_SCROLL_X2121)
+>
+> -#define HIDPP_QUIRK_CLASS_BLUETOOTH_LE HIDPP_QUIRK_MISSING_SHORT_REPORTS
+> +#define HIDPP_QUIRK_CLASS_BLUETOOTH_LE (HIDPP_QUIRK_MISSING_SHORT_REPORT=
+S | \
+> +                                        HIDPP_QUIRK_WIRELESS_DEVICE_STAT=
+US)
+>
+>  #define HIDPP_QUIRK_DELAYED_INIT               HIDPP_QUIRK_NO_HIDINPUT
+>
+> @@ -189,6 +191,8 @@ struct hidpp_device {
+>
+>         struct hidpp_battery battery;
+>         struct hidpp_scroll_counter vertical_wheel_counter;
+> +
+> +       u8 wireless_feature_index;
+>  };
+>
+>  /* HID++ 1.0 error codes */
+> @@ -402,10 +406,14 @@ static inline bool hidpp_match_error(struct hidpp_r=
+eport *question,
+>             (answer->fap.params[0] =3D=3D question->fap.funcindex_clienti=
+d);
+>  }
+>
+> -static inline bool hidpp_report_is_connect_event(struct hidpp_report *re=
+port)
+> +static inline bool hidpp_report_is_connect_event(struct hidpp_device *hi=
+dpp,
+> +                                                struct hidpp_report *rep=
+ort)
+>  {
+> -       return (report->report_id =3D=3D REPORT_ID_HIDPP_SHORT) &&
+> -               (report->rap.sub_id =3D=3D 0x41);
+> +       return ((hidpp->quirks & HIDPP_QUIRK_WIRELESS_DEVICE_STATUS) &&
+> +               (report->fap.feature_index =3D=3D hidpp->wireless_feature=
+_index)) ||
+> +             (((report->report_id =3D=3D REPORT_ID_HIDPP_SHORT) ||
+> +               (hidpp->quirks & HIDPP_QUIRK_MISSING_SHORT_REPORTS)) &&
+> +               (report->rap.sub_id =3D=3D 0x41));
 
-
-Le ven., oct. 18, 2019 at 10:52, Ulf Hansson <ulf.hansson@linaro.org> a=20
-=E9crit :
-> On Sat, 12 Oct 2019 at 07:19, Zhou Yanjie <zhouyanjie@zoho.com> wrote:
->>=20
->>  add support for low power mode of Ingenic's MMC/SD Controller.
->>=20
->>  Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
->=20
-> I couldn't find a proper coverletter for the series, please provide
-> that next time as it really helps review. Additionally, it seems like
-> you forgot to change the prefix of the patches to "mmc: jz4740" (or at
-> least you chosed upper case letters), but I will take care of that
-> this time. So, I have applied the series for next, thanks!
->=20
-> I also have a general question. Should we perhaps rename the driver
-> from jz4740_mmc.c to ingenic.c (and the file for the DT bindings, the
-> Kconfig, etc), as that seems like a more appropriate name? No?
-
-Is there a kernel policy regarding renaming drivers? Since it trashes=20
-the git history. Anyway you're the subsystem maintainer so I guess=20
-that's up to you. I can send a patch to rename it if you want.
+I wonder if we need a quirk after all: if
+hidpp->wireless_feature_index is non null, that means that we have the
+quirk.
+Unless the feature is present for non BLE devices, in which case, we
+might want to enable them one by one, for now.
 
 Cheers,
--Paul
+Benjamin
 
-
->=20
-> Kind regards
-> Uffe
->=20
->=20
->>  ---
->>   drivers/mmc/host/jz4740_mmc.c | 23 +++++++++++++++++++++++
->>   1 file changed, 23 insertions(+)
->>=20
->>  diff --git a/drivers/mmc/host/jz4740_mmc.c=20
->> b/drivers/mmc/host/jz4740_mmc.c
->>  index 44a04fe..4cbe7fb 100644
->>  --- a/drivers/mmc/host/jz4740_mmc.c
->>  +++ b/drivers/mmc/host/jz4740_mmc.c
->>  @@ -43,6 +43,7 @@
->>   #define JZ_REG_MMC_RESP_FIFO   0x34
->>   #define JZ_REG_MMC_RXFIFO      0x38
->>   #define JZ_REG_MMC_TXFIFO      0x3C
->>  +#define JZ_REG_MMC_LPM         0x40
->>   #define JZ_REG_MMC_DMAC                0x44
->>=20
->>   #define JZ_MMC_STRPCL_EXIT_MULTIPLE BIT(7)
->>  @@ -102,6 +103,12 @@
->>   #define JZ_MMC_DMAC_DMA_SEL BIT(1)
->>   #define JZ_MMC_DMAC_DMA_EN BIT(0)
->>=20
->>  +#define        JZ_MMC_LPM_DRV_RISING BIT(31)
->>  +#define        JZ_MMC_LPM_DRV_RISING_QTR_PHASE_DLY BIT(31)
->>  +#define        JZ_MMC_LPM_DRV_RISING_1NS_DLY BIT(30)
->>  +#define        JZ_MMC_LPM_SMP_RISING_QTR_OR_HALF_PHASE_DLY BIT(29)
->>  +#define        JZ_MMC_LPM_LOW_POWER_MODE_EN BIT(0)
->>  +
->>   #define JZ_MMC_CLK_RATE 24000000
->>=20
->>   enum jz4740_mmc_version {
->>  @@ -860,6 +867,22 @@ static int jz4740_mmc_set_clock_rate(struct=20
->> jz4740_mmc_host *host, int rate)
->>          }
->>=20
->>          writew(div, host->base + JZ_REG_MMC_CLKRT);
->>  +
->>  +       if (real_rate > 25000000) {
->>  +               if (host->version >=3D JZ_MMC_X1000) {
->>  +                       writel(JZ_MMC_LPM_DRV_RISING_QTR_PHASE_DLY |
->>  +                                 =20
->> JZ_MMC_LPM_SMP_RISING_QTR_OR_HALF_PHASE_DLY |
->>  +                                  JZ_MMC_LPM_LOW_POWER_MODE_EN,
->>  +                                  host->base + JZ_REG_MMC_LPM);
->>  +               } else if (host->version >=3D JZ_MMC_JZ4760) {
->>  +                       writel(JZ_MMC_LPM_DRV_RISING |
->>  +                                  JZ_MMC_LPM_LOW_POWER_MODE_EN,
->>  +                                  host->base + JZ_REG_MMC_LPM);
->>  +               } else if (host->version >=3D JZ_MMC_JZ4725B)
->>  +                       writel(JZ_MMC_LPM_LOW_POWER_MODE_EN,
->>  +                                  host->base + JZ_REG_MMC_LPM);
->>  +       }
->>  +
->>          return real_rate;
->>   }
->>=20
->>  --
->>  2.7.4
->>=20
->>=20
-
-=
+>  }
+>
+>  /**
+> @@ -1282,6 +1290,24 @@ static int hidpp_battery_get_property(struct power=
+_supply *psy,
+>         return ret;
+>  }
+>
+> +/* ---------------------------------------------------------------------=
+----- */
+> +/* 0x1d4b: Wireless device status                                       =
+      */
+> +/* ---------------------------------------------------------------------=
+----- */
+> +#define HIDPP_PAGE_WIRELESS_DEVICE_STATUS                      0x1d4b
+> +
+> +static int hidpp_set_wireless_feature_index(struct hidpp_device *hidpp)
+> +{
+> +       u8 feature_type;
+> +       int ret;
+> +
+> +       ret =3D hidpp_root_get_feature(hidpp,
+> +                                    HIDPP_PAGE_WIRELESS_DEVICE_STATUS,
+> +                                    &hidpp->wireless_feature_index,
+> +                                    &feature_type);
+> +
+> +       return ret;
+> +}
+> +
+>  /* ---------------------------------------------------------------------=
+----- */
+>  /* 0x2120: Hi-resolution scrolling                                      =
+      */
+>  /* ---------------------------------------------------------------------=
+----- */
+> @@ -3077,7 +3103,7 @@ static int hidpp_raw_hidpp_event(struct hidpp_devic=
+e *hidpp, u8 *data,
+>                 }
+>         }
+>
+> -       if (unlikely(hidpp_report_is_connect_event(report))) {
+> +       if (unlikely(hidpp_report_is_connect_event(hidpp, report))) {
+>                 atomic_set(&hidpp->connected,
+>                                 !(report->rap.params[0] & (1 << 6)));
+>                 if (schedule_work(&hidpp->work) =3D=3D 0)
+> @@ -3624,6 +3650,12 @@ static int hidpp_probe(struct hid_device *hdev, co=
+nst struct hid_device_id *id)
+>                 hidpp_overwrite_name(hdev);
+>         }
+>
+> +       if (connected && (hidpp->quirks & HIDPP_QUIRK_WIRELESS_DEVICE_STA=
+TUS)) {
+> +               ret =3D hidpp_set_wireless_feature_index(hidpp);
+> +               if (ret)
+> +                       goto hid_hw_init_fail;
+> +       }
+> +
+>         if (connected && (hidpp->quirks & HIDPP_QUIRK_CLASS_WTP)) {
+>                 ret =3D wtp_get_config(hidpp);
+>                 if (ret)
+> --
+> 2.23.0
+>
 
