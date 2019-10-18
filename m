@@ -2,92 +2,79 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1485CA9EA5
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2E3CA9EA3
 	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA79021897
+	by mail.kernel.org (Postfix) with ESMTP id 4E18D222C3
 	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:30:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571387450;
-	bh=sR8LGNWn5ye4HV5wuqrSqbgPTz3HHIYZY265Ose77AA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Hovmp0WJizgLB3egi9CIaaaaaopJW0V6Dy/Xx0H8GkydYIor26jI9/o19oo/hcPs7
-	 rEEu1zUotWRLo2+1tdHGN+GvYHUX7/s+umKpd825iMCfQzueD5Q/NbyAjX/foK+dMg
-	 99W8u9AvC7JAnb94aMrPF5a+VTTaxWAfCh/G+AiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632854AbfJRIat (ORCPT
+        id S2632842AbfJRIar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:30:49 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43954 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387458AbfJRIas (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 04:30:48 -0400
-Received: by mail-ot1-f68.google.com with SMTP id o44so4270955ota.10;
-        Fri, 18 Oct 2019 01:30:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sR8LGNWn5ye4HV5wuqrSqbgPTz3HHIYZY265Ose77AA=;
-        b=mjS11S6Tka6V8RX+s4ziVaIcr1kvyGUumQTrbZma3fn2wPGgE0pBNtKt9xFDQlnKpP
-         CGKH6LkBKgzVfDwxOgNSoXJKE3q1UBef5bNQCcAqWPF03lF+dzaNeSUFsTfBb2uugxI0
-         +QXn2hL2jFfPKHnBvSd9qAdVElXOaoz1Wzr7AectiKTR7toHmSoiiaoGYwIbPnVdzAda
-         yG68ySWkckPnF5rDA6RnLJJ6LukuPVuasifKDiR3kvEYXoEMZTw2PasEVsqUYsfFOzBP
-         l3EcQWqiA+kOjz9Szenvy4PGX5Tp/omrEwnSVh7CIMobXLf+bwXF+dokHj7kLnIVyxRp
-         xeRA==
-X-Gm-Message-State: APjAAAU5KqUyI55hMbX6iulgDgNtCz6z7pENPCSYaD/ONut8PlwR9z5z
-        7vUkIgonV5fBo/Zgj+NmlXAZdyldWi0K3X59O2Y=
-X-Google-Smtp-Source: APXvYqyOVj/WbgqsqGcPJx6u9Wa3Z53YLRML1XSQVYeYuPS2CTuwb8VYSp7/X11REuVAr8mknXzeAgjbgzlK6m++50Q=
-X-Received: by 2002:a9d:5a0f:: with SMTP id v15mr6816536oth.266.1571387447135;
- Fri, 18 Oct 2019 01:30:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <2811202.iOFZ6YHztY@kreacher> <20191016142343.GB5330@bogus>
- <20191017095725.izchzl7enfylvpf3@vireshk-i7> <20191017095942.GF8978@bogus>
- <CAJZ5v0ixS8ZS93Fgj8XGUMGcLdAy+Fgwp5z3QirccNSiiwLtDA@mail.gmail.com>
- <20191018054433.tq2euue675xk4o63@vireshk-i7> <CAJZ5v0hpfvy5iELVRWFA3HS8NoAH0=py0cE+fLaUq2hDReCrnQ@mail.gmail.com>
- <20191018082745.3zr6tc3yqmbydkrw@vireshk-i7>
-In-Reply-To: <20191018082745.3zr6tc3yqmbydkrw@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 18 Oct 2019 10:30:36 +0200
-Message-ID: <CAJZ5v0gR45YNwqrc8JQ_2qQBnYrxPeCHTnvQtEELD8VpXJrxLA@mail.gmail.com>
-Subject: Re: [RFT][PATCH 0/3] cpufreq / PM: QoS: Introduce frequency QoS and
- use it in cpufreq
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Fri, 18 Oct 2019 04:30:47 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:58292 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1727573AbfJRIar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 04:30:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F9EF32B;
+        Fri, 18 Oct 2019 01:30:16 -0700 (PDT)
+Received: from [192.168.1.103] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C62413F718;
+        Fri, 18 Oct 2019 01:30:13 -0700 (PDT)
+Subject: Re: [PATCH] lib/vdso: Use __arch_use_vsyscall() to indicate fallback
+To:     Andy Lutomirski <luto@kernel.org>, Huacai Chen <chenhc@lemote.com>,
+        Maxime Bizon <mbizon@freebox.fr>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, chenhuacai@gmail.com,
         LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Osipenko <digetx@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        stable <stable@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <1571367619-13573-1-git-send-email-chenhc@lemote.com>
+ <CALCETrWXRgkQOJGRqa_sOLAG2zhjsEX6b86T2VTsNYN9ECRrtA@mail.gmail.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <6581a6e8-45c9-a80c-d2a4-33466f5712fd@arm.com>
+Date:   Fri, 18 Oct 2019 09:32:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <CALCETrWXRgkQOJGRqa_sOLAG2zhjsEX6b86T2VTsNYN9ECRrtA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 10:27 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 18-10-19, 10:24, Rafael J. Wysocki wrote:
-> > On Fri, Oct 18, 2019 at 7:44 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > >
-> > > On 17-10-19, 18:34, Rafael J. Wysocki wrote:
-> > > > [BTW, Viresh, it looks like cpufreq_set_policy() should still ensure
-> > > > that the new min is less than the new max, because the QoS doesn't do
-> > > > that.]
-> > >
-> > > The ->verify() callback does that for us I believe.
-> >
-> > It does in practice AFAICS, but in theory it may assume the right
-> > ordering between the min and the max and just test the boundaries, may
-> > it not?
->
-> I think cpufreq_verify_within_limits() gets called for sure from
-> within ->verify() for all platforms
+Hi Andy and Hucan,
 
-That's why I mean by "in practice". :-)
+On 10/18/19 4:15 AM, Andy Lutomirski wrote:
+> On Thu, Oct 17, 2019 at 7:57 PM Huacai Chen <chenhc@lemote.com> wrote:
+>>
+>> In do_hres(), we currently use whether the return value of __arch_get_
+>> hw_counter() is negtive to indicate fallback, but this is not a good
+>> idea. Because:
+>>
+>> 1, ARM64 returns ULL_MAX but MIPS returns 0 when clock_mode is invalid;
+>> 2, For a 64bit counter, a "negtive" value of counter is actually valid.
+> 
+> s/negtive/negative
+> 
+> What's the actual bug?  Is it that MIPS is returning 0 but the check
+> is < 0?  Sounds like MIPS should get fixed.
+> 
+
+I submitted a patch for this yesterday to the MIPS maintainers [1]. The MIPS32
+r1 implementation had a bug when VDSO_CLOCK_NONE was set.
+
+The issue has been reported by Maxime Bizon who tested the fix as well.
+
+[1] https://patchwork.kernel.org/patch/11193391/
+
+-- 
+Regards,
+Vincenzo
