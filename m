@@ -2,130 +2,98 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E651CCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9ECCA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9DA0222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B27B222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:17:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t5Dq1zRK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HCkne4s8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405326AbfJRFPx (ORCPT
+        id S2405932AbfJRFR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:15:53 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:42407 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393761AbfJRFPx (ORCPT
+        Fri, 18 Oct 2019 01:17:27 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40223 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728020AbfJRFR1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:15:53 -0400
-Received: by mail-qt1-f194.google.com with SMTP id w14so7342012qto.9;
-        Thu, 17 Oct 2019 22:15:52 -0700 (PDT)
+        Fri, 18 Oct 2019 01:17:27 -0400
+Received: by mail-wm1-f65.google.com with SMTP id b24so4717986wmj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:17:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sV/yp4uqHU1crLu9pC0wLbsbQ7Aq/erC7q2I15YJ9GM=;
-        b=t5Dq1zRK0HLlkQxAprLociv5KSGzvgFz+5sPaKre1VcMY33wWTuuneFzSnYSUoCu2G
-         sXPNrKasrO90Ig5aBHRbAj5LQcWe6qrI+EVW2k+04kkKYwxWEbi+vD4n0XLmucqYRfut
-         Rlv5UsbxiKkf6hDD2sgShaR1AJJzUM7YVS6vxLlKVXmjzXDLOCZRDGhoeO7fwLoSnSHo
-         i58k0ACK1WM5uVXTQYuKBkaL2doDCWknHAbRJfdL+wNSlOQl3TDy6hSWOCNfoGi0NlV9
-         PM8XaP6N2aWa20iczB0fWWD15XT5YFgxBHLdPN2LiXm6uBTJ/pf0YWWQ60ssjMI38erb
-         Tdxg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GXpwiWbrAU/653GmrWZ4CKDfopVqbQJlCnoRGMU0IXo=;
+        b=HCkne4s8lruvHSjpE5jf0OgLyMhPwrvNwZ3XZUMDJxIAmbTJ7U0e0j5lACmvchXOqb
+         2wIXjnp6mVboS7gpgge2/f0WIp8FzhCfT1YzwjZn2XMChTk+3gX4w/G3wm1ASj5evE2v
+         9KiN6Bd+zRI7o53M1ioDgisIswMb4TuhvO4CAV+HMlcpRWwIq6DGiBu+HsFpiLvXgdyx
+         yyAuvxqH9F6W51uc00HyFnNZGHyf5BfLq8tgaAZ5qX1mMOJQD3r3KIrfjNUUGuKn5IDz
+         wwRkRZtW4RWjuR6lMcdS7SsHtCR7KkOHVEIl/XHnXpbtnpPonSGPxfNxqxg7BH4lcH/l
+         Ympw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sV/yp4uqHU1crLu9pC0wLbsbQ7Aq/erC7q2I15YJ9GM=;
-        b=YjqRsgvlkfIDn70uYvRzKRyLzmMd8EsgKeQIh9yBVfQBoQpwdEYXog5kOlFkIDMSGI
-         qExO6P/JST2JeIhlBfbh+il9a1VyQUusbo/PPjXOplArZlfMWpvmKaI7jAeaoC1yh+rv
-         B93YIuWqirUD/WHPXBTk8zqpLF8DQL4rdZePxLgpSq61Q0AwRm3okfaDceXycxEWEtaP
-         SiodGEXtnTIRCp+73WsR53g71zeCEutKPKkHkd4c4YGx2qqd7dK/emCOucOXZtBOidwi
-         iPCtadsQSsj8Vv4T2VC3fN4JA5cKYzkycU6J19JJwYg2p5aOVcb0IQbwIy6fwrbMnGYi
-         Zu6g==
-X-Gm-Message-State: APjAAAXTwj/N2X14pbhHtNyiAup3Kk+p13MHxNbMveaAteZUtN9eL8jy
-        /KxGxvUWb2KT0yKs88eyh+OBmFLboDE=
-X-Google-Smtp-Source: APXvYqxwS4OmMdWzpIhS4OUmUBQs2MuOcVZMwEf0txmixcAcQSmOHd0XKjQ7cnDjYeLGBLad/wtInA==
-X-Received: by 2002:a65:5603:: with SMTP id l3mr8009046pgs.56.1571373940009;
-        Thu, 17 Oct 2019 21:45:40 -0700 (PDT)
-Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id b3sm3696445pjp.13.2019.10.17.21.45.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 21:45:38 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-input@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        Sam Bazely <sambazley@fastmail.com>,
-        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-        Austin Palmer <austinp@valvesoftware.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/3] Logitech G920 fixes
-Date:   Thu, 17 Oct 2019 21:45:14 -0700
-Message-Id: <20191018044517.6430-1-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GXpwiWbrAU/653GmrWZ4CKDfopVqbQJlCnoRGMU0IXo=;
+        b=G0/jnQmEb05EHvsLil5J+W6LvmN/D4zMM4ySd91IGO6mT/732tQQXP53TO7qupNI6z
+         3tmtjgF9ZLSlvjYT5f85p++6StTg0Udd4EL7Tjk6+v2jHtC7+kjwD+DezDLPKpWne8I4
+         +A0hX/p0Ua8raMte4EMQYbFJ6V5jztdBLlp9AQiYdN48e306aURaAx3Sx6kgD/6qMDGx
+         9UsoJSzJLrPhw8lYQW85qaE3+2wcz1NRLql29dPGEbbx3G/IF4ytTKg0zZBxIR3Xn4F6
+         MFZ+c2Xkcp4N6Az4xmgHCNMY42A6kksOB3Dpi9SSp62sBO/YgWuGzKBVEcLzx6uQrQmY
+         6SFg==
+X-Gm-Message-State: APjAAAWEjEEs3L4jHqE21EcbaO+YBfO6fCSSuaYp6nJzinr4D5u3Aumo
+        l+hm856TkBzolpYQFIex04FKdbtx
+X-Google-Smtp-Source: APXvYqz+4Pinskrf2UCosw5rgRX7f2A0VhKcLk6IxtbU+1p4dOJAsqVStmjoGBzaMqSnB+Zff8cyzQ==
+X-Received: by 2002:a1c:9e07:: with SMTP id h7mr5807160wme.96.1571372104081;
+        Thu, 17 Oct 2019 21:15:04 -0700 (PDT)
+Received: from ltop.local ([2a02:a03f:40ac:ce00:18e1:7d90:ccf5:4489])
+        by smtp.gmail.com with ESMTPSA id x9sm4453820wrq.63.2019.10.17.21.15.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 17 Oct 2019 21:15:03 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 06:15:02 +0200
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/8] riscv: add missing prototypes
+Message-ID: <20191018041501.cuyyhcm23dsihcif@ltop.local>
+References: <20191018004929.3445-1-paul.walmsley@sifive.com>
+ <20191018004929.3445-6-paul.walmsley@sifive.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018004929.3445-6-paul.walmsley@sifive.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Everyone:
+On Thu, Oct 17, 2019 at 05:49:26PM -0700, Paul Walmsley wrote:
+> sparse identifies these missing prototypes when building arch/riscv:
+> 
+> arch/riscv/kernel/cpu.c:149:29: warning: symbol 'cpuinfo_op' was not declared. Should it be static?
+> arch/riscv/kernel/irq.c:27:29: warning: symbol 'do_IRQ' was not declared. Should it be static?
+> arch/riscv/kernel/irq.c:57:13: warning: symbol 'init_IRQ' was not declared. Should it be static?
+> arch/riscv/kernel/syscall_table.c:15:6: warning: symbol 'sys_call_table' was not declared. Should it be static?
+> arch/riscv/kernel/time.c:15:13: warning: symbol 'time_init' was not declared. Should it be static?
+> arch/riscv/kernel/smpboot.c:135:24: warning: symbol 'smp_callin' was not declared. Should it be static?
+> arch/riscv/kernel/smp.c:72:5: warning: symbol 'setup_profiling_timer' was not declared. Should it be static?
+> arch/riscv/mm/init.c:151:7: warning: symbol 'trampoline_pg_dir' was not declared. Should it be static?
+> arch/riscv/mm/init.c:157:7: warning: symbol 'early_pg_dir' was not declared. Should it be static?
+> arch/riscv/kernel/process.c:32:6: warning: symbol 'show_regs' was not declared. Should it be static?
+> arch/riscv/kernel/ptrace.c:151:6: warning: symbol 'do_syscall_trace_enter' was not declared. Should it be static?
+> arch/riscv/kernel/ptrace.c:165:6: warning: symbol 'do_syscall_trace_exit' was not declared. Should it be static?
+> 
+> Fix by adding the missing prototypes to the appropriate header files.
 
-This series contains patches to fix a couple of regressions in G920
-wheel support by hid-logitech-hidpp driver. Without the patches the
-wheel remains stuck in autocentering mode ("resisting" any attempt to
-trun) as well as missing support for any FF action.
-
-Thanks,
-Andrey Smirnov
-
-Changes since [v2]:
-
-     - Fixes a buggy validity check "HID: logitech-hidpp: rework
-       device validation" as pointed out by Benjamin Tissoires
-
-     - Marked "HID: logitech-hidpp: do all FF cleanup in
-       hidpp_ff_destroy()" as 5.2+ for stable
-
-Changes since [v1]:
-
-     - "HID: logitech-hidpp: split g920_get_config()" is changed to
-       not rely on devres and be a self contained patch
-
-     - Quirk driven behaviour of "HID: logitech-hidpp: add G920 device
-       validation quirk" is replaced with generic validation algorithm
-       of "HID: logitech-hidpp: rework device validation"
-
-     - Fix for a poteintial race condition is added in
-       "HID: logitech-hidpp: do all FF cleanup in hidpp_ff_destroy()"
-       as per suggestion by Benjamin Tissoires
-
-     - Collected Tested-by from Sam Bazely for "HID: logitech-hidpp:
-       split g920_get_config()" since that patch didn't change
-       significantly since [v1]
-
-     - Specified stable kernel versions I think the patches should
-       apply to (hopefully I got that right)
-
-[v2] lore.kernel.org/lkml/20191016182935.5616-1-andrew.smirnov@gmail.com
-[v1] lore.kernel.org/lkml/20191007051240.4410-1-andrew.smirnov@gmail.com
-
-Andrey Smirnov (3):
-  HID: logitech-hidpp: split g920_get_config()
-  HID: logitech-hidpp: rework device validation
-  HID: logitech-hidpp: do all FF cleanup in hidpp_ff_destroy()
-
- drivers/hid/hid-logitech-hidpp.c | 237 +++++++++++++++++--------------
- 1 file changed, 131 insertions(+), 106 deletions(-)
-
--- 
-2.21.0
-
+For functions defined in C but used ony in assembly, you can also simply mark
+them as '__visible'  (aka __attribute__((exrernally_visible)) ).
+ 
+Best regards,
+-- Luc
