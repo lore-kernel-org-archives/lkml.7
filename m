@@ -2,112 +2,89 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EB1CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B683ECA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C38B222C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82311222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:15:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VNYmFpR+"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ffgdHLQr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393130AbfJRFPR (ORCPT
+        id S2393563AbfJRFPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:15:17 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33026 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727606AbfJRFPR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:15:17 -0400
-Received: by mail-pl1-f194.google.com with SMTP id d22so2281934pls.0;
-        Thu, 17 Oct 2019 22:15:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eKCQEHJp+Bmk1+KxL2VW8ZVDs0l76/RRTSEB8GtoKzU=;
-        b=VNYmFpR+1svH3RklJ/ni4HOgMNYHl7MHEGV9c2RKjwcUsmhFCVwHCd8Lx6MtsoWVte
-         Git34f+i7ciXxxGu+izTqbWE5AxM6LMpwlAhUfDPh5Ki/fqj5/ZAurq5nX/8wqfZhuFx
-         GBzv2FpY+5gkaZoq5UJ8rNnF0b/TofDQ5Xp+lVHw+QBbI4lHwpdkGPzJRzkYMlkplsMf
-         Y5avb3hUqFh/XcCy5y/7Od4OeVLbiQf0WVuUB99THxpC4P/ofAiEkA2ITlSHT/5P5m5f
-         PI3HN+DbW9qrtCpPtPv5uvbqXLG3l3RaWsKUTdL6qDdCg2lddyuwlw/FuZ7C1SP5rVLF
-         TcLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eKCQEHJp+Bmk1+KxL2VW8ZVDs0l76/RRTSEB8GtoKzU=;
-        b=EensbI4iBJApQ4yw/zv+51REzkZBDCIJK58ob+gndfNt9nNldO/g2RI45wefzbksa7
-         cAHdMxA/egvYhxe9knHfZOj3rPUdAvzv398GIk2jbS6vxILtGWBQPGNtirmXqq9IHdtk
-         aZnvA0I2C/8duBwXWtBd32GBOWKwzn8AaPCoIyrwCSn9evWsdFiiiyEMTe2LyOXz/kAE
-         w1ZZpDrfrFoCHMzW0F7P64KqqQ4KgIbDkJHiqyBBZSoWY0q50q6sRhRklLKmW2LfMV+1
-         r738Lgcf3sG8ADgJKWluBIbz1o5+8QGRXF+k13xAH67jy5oWgMgwPObQvapS1SF7FlMb
-         ZnVA==
-X-Gm-Message-State: APjAAAVJSQtleqkG2TqaZNQXvJW6xhIXh6KytDa6DUmjtD3CVs1aENNt
-        uEqL2Df2qsKcx0HG0W/wraMuKN9w
-X-Google-Smtp-Source: APXvYqzBaCznyjQSXNVi7TS0i1yrqWYhhCfDRmQilWmU7AcgFxRttRhzngCZrFJD7BNJlUiiRY2BpA==
-X-Received: by 2002:a17:902:a50a:: with SMTP id s10mr2720061plq.59.1571372661919;
-        Thu, 17 Oct 2019 21:24:21 -0700 (PDT)
-Received: from ast-mbp ([2620:10d:c090:180::cfd0])
-        by smtp.gmail.com with ESMTPSA id v35sm4253093pgn.89.2019.10.17.21.24.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Oct 2019 21:24:21 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 21:24:19 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        bpf@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [PATCH v2 31/33] tools lib bpf: Renaming pr_warning to pr_warn
-Message-ID: <20191018042416.r4fffxzbxb3u4csg@ast-mbp>
-References: <20191018031710.41052-1-wangkefeng.wang@huawei.com>
- <20191018031850.48498-1-wangkefeng.wang@huawei.com>
- <20191018031850.48498-31-wangkefeng.wang@huawei.com>
+        Fri, 18 Oct 2019 01:15:45 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:49695 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728302AbfJRFPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 01:15:45 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46vXMg4j4xz9sPW;
+        Fri, 18 Oct 2019 14:58:54 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1571371135;
+        bh=wO2rnQEfFabWDx7yJbQXx/8U/u93yDA+NcdDOwCKOfk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ffgdHLQryZywbPqY1f+qL0vItMTcIWfH9inoGS/Cgrwv2hVMcUYQuAZkGMxibGV7n
+         LVeSKBAK1U5+XYx7KyM9fQjHHhgAIN+qjZcCAputivkKjZ+7kZVuLgOh0PSZJh7iDW
+         rpTuGNfZPzsFDY6msb7gUdqXrZFqmKeL+34b91pcJvd/LQpz1IaGvw/76Xh9xJi/Tq
+         S1zj7zZPYaRK9IfABuc1hZGSQhpCSGSLF80TSm0jdGKuyyclwGYbqa7t4LOrCKXVJJ
+         I4dLZkS9QWz9VfO0TKPKNgpsUVHBpYoLkkgEHS92l5fQLw6u/tqoSalUovNSDud4sa
+         uedJhjQawh7Vw==
+Date:   Fri, 18 Oct 2019 14:58:54 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the block tree
+Message-ID: <20191018145854.26b2c645@canb.auug.org.au>
+In-Reply-To: <5a9bf632-2466-bc73-45d3-104c4bb0245a@kernel.dk>
+References: <20191018115126.6263a3e3@canb.auug.org.au>
+        <5a9bf632-2466-bc73-45d3-104c4bb0245a@kernel.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018031850.48498-31-wangkefeng.wang@huawei.com>
-User-Agent: NeoMutt/20180223
+Content-Type: multipart/signed; boundary="Sig_/1xzrzn7NBgTfyXx4jJy1aoi";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 11:18:48AM +0800, Kefeng Wang wrote:
-> For kernel logging macro, pr_warning is completely removed and
-> replaced by pr_warn, using pr_warn in tools lib bpf for symmetry
-> to kernel logging macro, then we could drop pr_warning in the
-> whole linux code.
-> 
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: Daniel Borkmann <daniel@iogearbox.net>
-> Cc: Martin KaFai Lau <kafai@fb.com>
-> Cc: Song Liu <songliubraving@fb.com>
-> Cc: Yonghong Song <yhs@fb.com>
-> Cc: bpf@vger.kernel.org
-> Acked-by: Andrii Nakryiko <andriin@fb.com>
-> Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> ---
->  tools/lib/bpf/btf.c             |  56 +--
->  tools/lib/bpf/btf_dump.c        |  18 +-
->  tools/lib/bpf/libbpf.c          | 679 ++++++++++++++++----------------
->  tools/lib/bpf/libbpf_internal.h |   8 +-
->  tools/lib/bpf/xsk.c             |   4 +-
->  5 files changed, 379 insertions(+), 386 deletions(-)
+--Sig_/1xzrzn7NBgTfyXx4jJy1aoi
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Nack.
-I prefer this type of renaming to go via bpf tree.
-It's not a kernel patch. It's touching user space library
-which is under heavy development.
-Doing any other way will cause a ton of conflicts.
+Hi Jens,
 
+On Thu, 17 Oct 2019 18:56:39 -0600 Jens Axboe <axboe@kernel.dk> wrote:
+>
+> I'll fix these warnings up, guessing it's 32-bit?
+
+Thanks.  Yeah 32 bit.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/1xzrzn7NBgTfyXx4jJy1aoi
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2pOH4ACgkQAVBC80lX
+0GzIPgf9EUVKAAVP/p8nrsw99OavZUJcxgUjuNG5LddAjYFMmtB3S01qu6KT5tL9
+jQBLGr6zlmHUoe6Xz6VUgP5ZS/fKnfXy12HMEeTPXJyYtq3FGiLplaQTn12Ja31i
+OiXeVOS2UAO40rtXB925Sp+WL+drWoJv2dFi27RPNxM8pY6WaqYJgEPTjx3ZZYlS
+WabaTqT56fm6UyMnp6XOrDyDqDAf6iX3pS6rjauL9lyGTcQA8cLP/7o55l7c0JCp
+LqXcGW8w4bWm4XZA3mk3B2ukNvtmcEqppU7LH0ok8IvAwgv+pFWcOo6v7yEZaVJn
+xCcCMX2CRahCF4U79E3R3pCFQsjfmA==
+=169m
+-----END PGP SIGNATURE-----
+
+--Sig_/1xzrzn7NBgTfyXx4jJy1aoi--
