@@ -2,168 +2,232 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5F0CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 111D3CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6E12082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD702222C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:45:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="wp/0Fljr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442054AbfJRFpL (ORCPT
+        id S2442062AbfJRFpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:45:11 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:40537 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390035AbfJRFpK (ORCPT
+        Fri, 18 Oct 2019 01:45:23 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46785 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395467AbfJRFpX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:45:10 -0400
-Received: by mail-io1-f70.google.com with SMTP id r20so7197317ioh.7
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:45:09 -0700 (PDT)
+        Fri, 18 Oct 2019 01:45:23 -0400
+Received: by mail-wr1-f66.google.com with SMTP id o18so4746384wrv.13
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:45:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2q04YyZCM/Y6pG2YfTJ87FPtLWST+udBScdMOgSCybA=;
+        b=wp/0Fljr7FKzaAAjHiELGcBO2MBzYFb3WAHCKN2gWiKfdN3vbVJj0CJBtTNt1Ip3Um
+         XJ+0HPYP6nSkopngeeKUUHaSeHNqUD4n0JQ42me/qDadwWJ29ZIMF7Y05nPpl0QBRqAw
+         EJ1CYwJ1bj0QAfRDk6cRraD6k7YnUYdxwjO2kwecL0HSRAx2TzRTpil2DNvC/swOVq/4
+         YaKq50Sjn4Kq+BIZrzssPJYFWmgR5fKZwqrOUEmrD2YEqCI3RIdZ83DSeprd3VK7iDE6
+         ip5Tu4VUb3OvyGrDIUM5RtgHdYhhVUz9DQ8tXeIARNBVBL9Vl1KbJWOW+40UGm6QCqH/
+         6KSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=vCOypHBh3OECg2Eq/MSq4Gogvi0GJhz25khFxxlbxeM=;
-        b=bfv7oBhWzYsUrlpA9OHuyq01hbxsF3oJkOv1+3b1V8CijQPv+Co4b7VrvQNMTs/qPb
-         slPwrvq6FCHsiFPPzyxbbF21U9JYjt7n27R9t/0sB5P4TrAyQXiDpPVXKpafugbebusF
-         brcYCkrWnsxr5haj9rsLlYdQ3k7mUnWdMsYhJ3sB280TFgA9fGhgIcQDiy99gd9e4NaZ
-         DAxdgUoYiR2QrTjP9YI4Qr1ISOkyOxOYcanDBGbnK+ak2nMRzFEoC8TNDw/SRQLq+2bj
-         HwCgfibLa1w73P4uom0vEwXJBMZHpiU4UgwcZdZxj1L4vVjge29Es8z8lEdgUR0UuRA1
-         wdug==
-X-Gm-Message-State: APjAAAUW3fHIVa4KyeQnSsICBz9ZYnqFcdbEPpG8aP6w1bhWORfPvUH+
-        /50QWkArGvbPh6EdYPEFqknEoj4bvrSWfapENSSTeCY2mv7U
-X-Google-Smtp-Source: APXvYqyU7ec5NOQhQcBvzoX8VA2HSA6C/TBnohh8EXdUdOyEEpcGW3LriSforDgxomfKpOf62LRNhxOtq3gF3yVfbY5D0x5zW/jx
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2q04YyZCM/Y6pG2YfTJ87FPtLWST+udBScdMOgSCybA=;
+        b=krhzP+WwAAJIUBTEsQWemRZheryWlTgOiWli/nzSawfdL0fZ8ozF4XBG6eTcaFDgCE
+         GLEG+t6+66UWe+BDvC4Cwe9/Xf6Aj/E7cRcfCgvJJ39FKRS7V7OL2MIXfHXpu1qOwGM0
+         boqhrZMEZzDHcXkAhbJkw10o4Gl4xyW9Tz4ViCmElCzMoUOUQhKlRqmUk9dIG9ZhcnkE
+         7zzdQfHPC444XGu1FgvLgSneO7FL/7ovGUelfykUswQxs48ywv2ksHpzkSajrV9elDmh
+         rlkZ0YePtsD/O9DlprRnUKwzd79t//L/RNEArLJ1f4opG+r2Ls6oQxyINZlV0DygEZEy
+         2E6A==
+X-Gm-Message-State: APjAAAXFnX1/cMbEOdjE73jkn2oq7xQrXwt6ed+jYynFamjUWWKwzrvF
+        nyiIknvxvQBM+CtSGpsC9vprj2Uyycl9l1bQTjyKj79Kn+I=
+X-Google-Smtp-Source: APXvYqw+kT7L4okfWQnJGTlaxVb3SG2O2Mm0cc0zb+BRP+yT5R0kSZXnWzsi8ELl1o1vA/xXtDWk1ljCWhsCHVJ8+C0=
+X-Received: by 2002:adf:8567:: with SMTP id 94mr2627476wrh.65.1571367925553;
+ Thu, 17 Oct 2019 20:05:25 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:d104:: with SMTP id l4mr6984812iob.50.1571377509368;
- Thu, 17 Oct 2019 22:45:09 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 22:45:09 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000410cbb059528d6f7@google.com>
-Subject: BUG: unable to handle kernel paging request in is_bpf_text_address
-From:   syzbot <syzbot+710043c5d1d5b5013bc7@syzkaller.appspotmail.com>
-To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, hawk@kernel.org, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20191017173743.5430-1-hch@lst.de> <20191017173743.5430-13-hch@lst.de>
+In-Reply-To: <20191017173743.5430-13-hch@lst.de>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Fri, 18 Oct 2019 08:35:14 +0530
+Message-ID: <CAAhSdy2mjtH68Ce+h4u3pa79pB-Vs_iu1zfRRcGoaYr=r6xnQw@mail.gmail.com>
+Subject: Re: [PATCH 12/15] riscv: clear the instruction cache and all
+ registers when booting
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Oct 17, 2019 at 11:08 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> When we get booted we want a clear slate without any leaks from previous
+> supervisors or the firmware.  Flush the instruction cache and then clear
+> all registers to known good values.  This is really important for the
+> upcoming nommu support that runs on M-mode, but can't really harm when
+> running in S-mode either.  Vaguely based on the concepts from opensbi.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/riscv/include/asm/csr.h |  1 +
+>  arch/riscv/kernel/head.S     | 88 +++++++++++++++++++++++++++++++++++-
+>  2 files changed, 88 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
+> index d0b5113e1a54..ee0101278608 100644
+> --- a/arch/riscv/include/asm/csr.h
+> +++ b/arch/riscv/include/asm/csr.h
+> @@ -83,6 +83,7 @@
+>  /* symbolic CSR names: */
+>  #define CSR_MHARTID            0xf14
+>  #define CSR_MSTATUS            0x300
+> +#define CSR_MISA               0x301
+>  #define CSR_MIE                        0x304
+>  #define CSR_MTVEC              0x305
+>  #define CSR_MSCRATCH           0x340
+> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+> index 583784cb3a32..25867b99cc95 100644
+> --- a/arch/riscv/kernel/head.S
+> +++ b/arch/riscv/kernel/head.S
+> @@ -11,6 +11,7 @@
+>  #include <asm/thread_info.h>
+>  #include <asm/page.h>
+>  #include <asm/csr.h>
+> +#include <asm/hwcap.h>
+>  #include <asm/image.h>
+>
+>  __INIT
+> @@ -51,12 +52,18 @@ _start_kernel:
+>         csrw CSR_XIP, zero
+>
+>  #ifdef CONFIG_RISCV_M_MODE
+> +       /* flush the instruction cache */
+> +       fence.i
+> +
+> +       /* Reset all registers except ra, a0, a1 */
+> +       call reset_regs
+> +
+>         /*
+>          * The hartid in a0 is expected later on, and we have no firmware
+>          * to hand it to us.
+>          */
+>         csrr a0, CSR_MHARTID
+> -#endif
+> +#endif /* CONFIG_RISCV_M_MODE */
+>
+>         /* Load the global pointer */
+>  .option push
+> @@ -203,6 +210,85 @@ relocate:
+>         j .Lsecondary_park
+>  END(_start)
+>
+> +#ifdef CONFIG_RISCV_M_MODE
+> +ENTRY(reset_regs)
+> +       li      sp, 0
+> +       li      gp, 0
+> +       li      tp, 0
+> +       li      t0, 0
+> +       li      t1, 0
+> +       li      t2, 0
+> +       li      s0, 0
+> +       li      s1, 0
+> +       li      a2, 0
+> +       li      a3, 0
+> +       li      a4, 0
+> +       li      a5, 0
+> +       li      a6, 0
+> +       li      a7, 0
+> +       li      s2, 0
+> +       li      s3, 0
+> +       li      s4, 0
+> +       li      s5, 0
+> +       li      s6, 0
+> +       li      s7, 0
+> +       li      s8, 0
+> +       li      s9, 0
+> +       li      s10, 0
+> +       li      s11, 0
+> +       li      t3, 0
+> +       li      t4, 0
+> +       li      t5, 0
+> +       li      t6, 0
+> +       csrw    sscratch, 0
+> +
+> +#ifdef CONFIG_FPU
+> +       csrr    t0, CSR_MISA
+> +       andi    t0, t0, (COMPAT_HWCAP_ISA_F | COMPAT_HWCAP_ISA_D)
+> +       bnez    t0, .Lreset_regs_done
+> +
+> +       li      t1, SR_FS
+> +       csrs    CSR_XSTATUS, t1
+> +       fmv.s.x f0, zero
+> +       fmv.s.x f1, zero
+> +       fmv.s.x f2, zero
+> +       fmv.s.x f3, zero
+> +       fmv.s.x f4, zero
+> +       fmv.s.x f5, zero
+> +       fmv.s.x f6, zero
+> +       fmv.s.x f7, zero
+> +       fmv.s.x f8, zero
+> +       fmv.s.x f9, zero
+> +       fmv.s.x f10, zero
+> +       fmv.s.x f11, zero
+> +       fmv.s.x f12, zero
+> +       fmv.s.x f13, zero
+> +       fmv.s.x f14, zero
+> +       fmv.s.x f15, zero
+> +       fmv.s.x f16, zero
+> +       fmv.s.x f17, zero
+> +       fmv.s.x f18, zero
+> +       fmv.s.x f19, zero
+> +       fmv.s.x f20, zero
+> +       fmv.s.x f21, zero
+> +       fmv.s.x f22, zero
+> +       fmv.s.x f23, zero
+> +       fmv.s.x f24, zero
+> +       fmv.s.x f25, zero
+> +       fmv.s.x f26, zero
+> +       fmv.s.x f27, zero
+> +       fmv.s.x f28, zero
+> +       fmv.s.x f29, zero
+> +       fmv.s.x f30, zero
+> +       fmv.s.x f31, zero
+> +       csrw    fcsr, 0
+> +       /* note that the caller must clear SR_FS */
+> +#endif /* CONFIG_FPU */
+> +.Lreset_regs_done:
+> +       ret
+> +END(reset_regs)
+> +#endif /* CONFIG_RISCV_M_MODE */
+> +
+>  __PAGE_ALIGNED_BSS
+>         /* Empty zero page */
+>         .balign PAGE_SIZE
+> --
+> 2.20.1
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
 
-syzbot found the following crash on:
+LGTM.
 
-HEAD commit:    283ea345 coccinelle: api/devm_platform_ioremap_resource: r..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=122f199b600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f0a8b0a0736a2ac1
-dashboard link: https://syzkaller.appspot.com/bug?extid=710043c5d1d5b5013bc7
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=142676bb600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11a2cebb600000
+Reviewed-by: Anup Patel <anup@brainfault.org>
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+710043c5d1d5b5013bc7@syzkaller.appspotmail.com
-
-BUG: unable to handle page fault for address: ffffc90001923030
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD aa551067 P4D aa551067 PUD aa552067 PMD a572b067 PTE 80000000a1173163
-Oops: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 7982 Comm: syz-executor912 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:bpf_jit_binary_hdr include/linux/filter.h:787 [inline]
-RIP: 0010:bpf_get_prog_addr_region kernel/bpf/core.c:531 [inline]
-RIP: 0010:bpf_tree_comp kernel/bpf/core.c:600 [inline]
-RIP: 0010:__lt_find include/linux/rbtree_latch.h:115 [inline]
-RIP: 0010:latch_tree_find include/linux/rbtree_latch.h:208 [inline]
-RIP: 0010:bpf_prog_kallsyms_find kernel/bpf/core.c:674 [inline]
-RIP: 0010:is_bpf_text_address+0x184/0x3b0 kernel/bpf/core.c:709
-Code: 89 df e8 ff dd 2e 00 48 8b 1b 48 8d 7b 30 48 89 f8 48 c1 e8 03 48 b9  
-00 00 00 00 00 fc ff df 80 3c 08 00 74 05 e8 dc dd 2e 00 <4c> 8b 63 30 48  
-c7 c0 00 f0 ff ff 49 21 c4 48 83 c3 02 48 89 d8 48
-RSP: 0018:ffff88809569f9c8 EFLAGS: 00010246
-RAX: 1ffff92000324606 RBX: ffffc90001923000 RCX: dffffc0000000000
-RDX: ffff88809d900500 RSI: ffff8880a8227838 RDI: ffffc90001923030
-RBP: ffff88809569fa00 R08: ffffffff817d9d5a R09: ffffed1015d46b05
-R10: ffffed1015d46b05 R11: 0000000000000000 R12: ffff88809d900500
-R13: 0000000000000000 R14: 0000000000000000 R15: ffff8880a8227838
-FS:  0000000000728880(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffc90001923030 CR3: 0000000096dc4000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  kernel_text_address kernel/extable.c:147 [inline]
-  __kernel_text_address+0x9a/0x110 kernel/extable.c:102
-  unwind_get_return_address+0x4c/0x90 arch/x86/kernel/unwind_frame.c:19
-  arch_stack_walk+0x98/0xe0 arch/x86/kernel/stacktrace.c:26
-  stack_trace_save+0xb6/0x150 kernel/stacktrace.c:123
-  save_stack mm/kasan/common.c:69 [inline]
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc+0x11c/0x1b0 mm/kasan/common.c:510
-  kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:518
-  slab_post_alloc_hook mm/slab.h:584 [inline]
-  slab_alloc mm/slab.c:3319 [inline]
-  kmem_cache_alloc+0x1f5/0x2e0 mm/slab.c:3483
-  getname_flags+0xba/0x640 fs/namei.c:138
-  getname+0x19/0x20 fs/namei.c:209
-  do_sys_open+0x261/0x560 fs/open.c:1091
-  __do_sys_open fs/open.c:1115 [inline]
-  __se_sys_open fs/open.c:1110 [inline]
-  __x64_sys_open+0x87/0x90 fs/open.c:1110
-  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4011a0
-Code: 01 f0 ff ff 0f 83 c0 0b 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f  
-44 00 00 83 3d 2d 15 2d 00 00 75 14 b8 02 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 94 0b 00 00 c3 48 83 ec 08 e8 fa 00 00 00
-RSP: 002b:00007ffd6d953f58 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 00007ffd6d953f84 RCX: 00000000004011a0
-RDX: 00007ffd6d953f8a RSI: 0000000000080001 RDI: 00000000004a2422
-RBP: 00007ffd6d953f80 R08: 0000000000000000 R09: 0000000000000004
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004021c0
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
-CR2: ffffc90001923030
----[ end trace a62c6ddd9792af6a ]---
-RIP: 0010:bpf_jit_binary_hdr include/linux/filter.h:787 [inline]
-RIP: 0010:bpf_get_prog_addr_region kernel/bpf/core.c:531 [inline]
-RIP: 0010:bpf_tree_comp kernel/bpf/core.c:600 [inline]
-RIP: 0010:__lt_find include/linux/rbtree_latch.h:115 [inline]
-RIP: 0010:latch_tree_find include/linux/rbtree_latch.h:208 [inline]
-RIP: 0010:bpf_prog_kallsyms_find kernel/bpf/core.c:674 [inline]
-RIP: 0010:is_bpf_text_address+0x184/0x3b0 kernel/bpf/core.c:709
-Code: 89 df e8 ff dd 2e 00 48 8b 1b 48 8d 7b 30 48 89 f8 48 c1 e8 03 48 b9  
-00 00 00 00 00 fc ff df 80 3c 08 00 74 05 e8 dc dd 2e 00 <4c> 8b 63 30 48  
-c7 c0 00 f0 ff ff 49 21 c4 48 83 c3 02 48 89 d8 48
-RSP: 0018:ffff88809569f9c8 EFLAGS: 00010246
-RAX: 1ffff92000324606 RBX: ffffc90001923000 RCX: dffffc0000000000
-RDX: ffff88809d900500 RSI: ffff8880a8227838 RDI: ffffc90001923030
-RBP: ffff88809569fa00 R08: ffffffff817d9d5a R09: ffffed1015d46b05
-R10: ffffed1015d46b05 R11: 0000000000000000 R12: ffff88809d900500
-R13: 0000000000000000 R14: 0000000000000000 R15: ffff8880a8227838
-FS:  0000000000728880(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffc90001923030 CR3: 0000000096dc4000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Regards,
+Anup
