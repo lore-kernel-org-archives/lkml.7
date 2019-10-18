@@ -2,109 +2,145 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EDBCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BABDCCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2655621D7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:48:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeblueprint-co-uk.20150623.gappssmtp.com header.i=@codeblueprint-co-uk.20150623.gappssmtp.com header.b="hdKBeJOF"
+	by mail.kernel.org (Postfix) with ESMTP id 98F0621D7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:49:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410445AbfJROs2 (ORCPT
+        id S2439535AbfJROth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 10:48:28 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43981 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389365AbfJROs2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 10:48:28 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c2so1333294wrr.10
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 07:48:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=codeblueprint-co-uk.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZPMR7fELUyaaR1SCfz3L2Xbka0mvOZ72DEuGj3/RI2w=;
-        b=hdKBeJOFMgcZ2K3egqHxgsOX6HKzfDlcjGvdJAhytJp1VBC6RoraWwRXKKQIzGiH74
-         0469dFYMx9wgfqpnrBHhqJ3PGfNiphU54VWFyt0bTGC0EasKSyizTmm9FSfRMhS4HROr
-         ELT8aqD4BfZe63JrbY7t799h3pblhTacGWL55hk0B+7/mPn4VBR2I+547AaCPmCLdWkZ
-         eTeUAwY7AD3nIkO4UGTyX0ShFBakEkYdBG+YzdTOmxNapd9ByXhlsRzrNNz8SplDpNUO
-         DoDPBi1jlBdb5SXcQze4sA/GWJ9R5t/9sx2wI9NJJqCwajbapUKbdRWbGqVgI8Lcds4s
-         5owQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZPMR7fELUyaaR1SCfz3L2Xbka0mvOZ72DEuGj3/RI2w=;
-        b=d9GzzPlfRd9xNA0Q2CXuWIJIRrWZyrrowgSaTVObAstjdIEN0pL9KYw5ybsoX+S5aQ
-         oZfGbWvHlngcfDlf6sMGH/4BF2PZSqTdyRKZsDT7vh5FnHT6sr2GJyyoGZBpepZIHjjf
-         CaGzBVieexcOPY1phu9/wSZexnbu4CyYsG+gF7yI4TAJJoW5TX/GS0gSr3fnIYVFjdTd
-         irz096OLbpw3+7W2aCskLExHL+Lhg5UZAF08AgPO/iIHkIDVqlNrtt40k0cuWM4mG11w
-         jO+JFhsOmxWITOQP2jBqDbgI9bNdldZEtSCbTgfLUigTgWzOxQDlPrVWfiHJ3K8CSE98
-         I3Wg==
-X-Gm-Message-State: APjAAAWuC6zJaX3SL++xqFIvoYOJntosqNigGBOQXhttsyUc8xyUgjII
-        40+/OxhvObrpnX/IAdcC6JusnQ==
-X-Google-Smtp-Source: APXvYqzJc29WWep05M5xxc3UBmfFQINrDjz6Iczi9uObDd9pvggV0EMQsE0errdfRHR1WVqfUgep7w==
-X-Received: by 2002:adf:e747:: with SMTP id c7mr8183157wrn.384.1571410106491;
-        Fri, 18 Oct 2019 07:48:26 -0700 (PDT)
-Received: from localhost (97e34ace.skybroadband.com. [151.227.74.206])
-        by smtp.gmail.com with ESMTPSA id u26sm5916793wrd.87.2019.10.18.07.48.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 18 Oct 2019 07:48:25 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 15:48:24 +0100
-From:   Matt Fleming <matt@codeblueprint.co.uk>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
+        Fri, 18 Oct 2019 10:49:37 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:41518 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1729257AbfJROth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 10:49:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14ED1B57;
+        Fri, 18 Oct 2019 07:49:16 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E1803F718;
+        Fri, 18 Oct 2019 07:49:13 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 15:49:11 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arch@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Mark Brown <broonie@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/3] Recalculate per-cpu page allocator batch and high
- limits after deferred meminit
-Message-ID: <20191018144824.GI4065@codeblueprint.co.uk>
-References: <20191018105606.3249-1-mgorman@techsingularity.net>
- <20191018115849.GH4065@codeblueprint.co.uk>
- <20191018125449.GJ3321@techsingularity.net>
+        linux-arm-kernel@lists.infradead.org,
+        Florian Weimer <fweimer@redhat.com>,
+        linux-kernel@vger.kernel.org, Sudakshina Das <sudi.das@arm.com>
+Subject: Re: [PATCH v2 11/12] arm64: BTI: Reset BTYPE when skipping emulated
+ instructions
+Message-ID: <20191018144910.GF27757@arm.com>
+References: <1570733080-21015-1-git-send-email-Dave.Martin@arm.com>
+ <1570733080-21015-12-git-send-email-Dave.Martin@arm.com>
+ <20191011142157.GC33537@lakrids.cambridge.arm.com>
+ <20191011144743.GJ27757@arm.com>
+ <20191018110428.GA27759@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191018125449.GJ3321@techsingularity.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191018110428.GA27759@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 18 Oct, at 01:54:49PM, Mel Gorman wrote:
-> On Fri, Oct 18, 2019 at 12:58:49PM +0100, Matt Fleming wrote:
-> > On Fri, 18 Oct, at 11:56:03AM, Mel Gorman wrote:
-> > > A private report stated that system CPU usage was excessive on an AMD
-> > > EPYC 2 machine while building kernels with much longer build times than
-> > > expected. The issue is partially explained by high zone lock contention
-> > > due to the per-cpu page allocator batch and high limits being calculated
-> > > incorrectly. This series addresses a large chunk of the problem. Patch 1
-> > > is mostly cosmetic but prepares for patch 2 which is the real fix. Patch
-> > > 3 is definiely cosmetic but was noticed while implementing the fix. Proper
-> > > details are in the changelog for patch 2.
+On Fri, Oct 18, 2019 at 12:04:29PM +0100, Mark Rutland wrote:
+> On Fri, Oct 11, 2019 at 03:47:43PM +0100, Dave Martin wrote:
+> > On Fri, Oct 11, 2019 at 03:21:58PM +0100, Mark Rutland wrote:
+> > > On Thu, Oct 10, 2019 at 07:44:39PM +0100, Dave Martin wrote:
+> > > > Since normal execution of any non-branch instruction resets the
+> > > > PSTATE BTYPE field to 0, so do the same thing when emulating a
+> > > > trapped instruction.
+> > > > 
+> > > > Branches don't trap directly, so we should never need to assign a
+> > > > non-zero value to BTYPE here.
+> > > > 
+> > > > Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+> > > > ---
+> > > >  arch/arm64/kernel/traps.c | 2 ++
+> > > >  1 file changed, 2 insertions(+)
+> > > > 
+> > > > diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+> > > > index 3af2768..4d8ce50 100644
+> > > > --- a/arch/arm64/kernel/traps.c
+> > > > +++ b/arch/arm64/kernel/traps.c
+> > > > @@ -331,6 +331,8 @@ void arm64_skip_faulting_instruction(struct pt_regs *regs, unsigned long size)
+> > > >  
+> > > >  	if (regs->pstate & PSR_MODE32_BIT)
+> > > >  		advance_itstate(regs);
+> > > > +	else
+> > > > +		regs->pstate &= ~(u64)PSR_BTYPE_MASK;
 > > > 
-> > >  include/linux/mm.h |  3 ---
-> > >  mm/internal.h      |  3 +++
-> > >  mm/page_alloc.c    | 33 ++++++++++++++++++++-------------
-> > >  3 files changed, 23 insertions(+), 16 deletions(-)
+> > > This looks good to me, with one nit below.
+> > > 
+> > > We don't (currently) need the u64 cast here, and it's inconsistent with
+> > > what we do elsewhere. If the upper 32-bit of pstate get allocated, we'll
+> > > need to fix up all the other masking we do:
 > > 
-> > Just to confirm, these patches don't fix the issue we're seeing on the
-> > EPYC 2 machines, but they do return the batch sizes to sensible values.
+> > Huh, looks like I missed that.  Dang.  Will fix.
+> > 
+> > > [mark@lakrids:~/src/linux]% git grep 'pstate &= ~'
+> > > arch/arm64/kernel/armv8_deprecated.c:           regs->pstate &= ~PSR_AA32_E_BIT;
+> > > arch/arm64/kernel/cpufeature.c:         regs->pstate &= ~PSR_SSBS_BIT;
+> > > arch/arm64/kernel/debug-monitors.c:     regs->pstate &= ~DBG_SPSR_SS;
+> > > arch/arm64/kernel/insn.c:       pstate &= ~(pstate >> 1);       /* PSR_C_BIT &= ~PSR_Z_BIT */
+> > > arch/arm64/kernel/insn.c:       pstate &= ~(pstate >> 1);       /* PSR_C_BIT &= ~PSR_Z_BIT */
+> > > arch/arm64/kernel/probes/kprobes.c:     regs->pstate &= ~PSR_D_BIT;
+> > > arch/arm64/kernel/probes/kprobes.c:     regs->pstate &= ~DAIF_MASK;
+> > > arch/arm64/kernel/ptrace.c:     regs->pstate &= ~SPSR_EL1_AARCH32_RES0_BITS;
+> > > arch/arm64/kernel/ptrace.c:                     regs->pstate &= ~PSR_AA32_E_BIT;
+> > > arch/arm64/kernel/ptrace.c:     regs->pstate &= ~SPSR_EL1_AARCH64_RES0_BITS;
+> > > arch/arm64/kernel/ptrace.c:             regs->pstate &= ~DBG_SPSR_SS;
+> > > arch/arm64/kernel/ssbd.c:       task_pt_regs(task)->pstate &= ~val;
+> > > arch/arm64/kernel/traps.c:      regs->pstate &= ~PSR_AA32_IT_MASK;
+> > > 
+> > > ... and at that point I'd suggest we should just ensure the bit
+> > > definitions are all defined as unsigned long in the first place since
+> > > adding casts to each use is error-prone.
+> > 
+> > Are we concerned about changing the types of UAPI #defines?  That can
+> > cause subtle and unexpected breakage, especially when the signedness
+> > of a #define changes.
+> > 
+> > Ideally, we'd just change all these to 1UL << n.
 > 
-> To be clear, does the patch a) fix *some* of the issue and there is
-> something else also going on that needs to be chased down or b) has no
-> impact on build time or system CPU usage on your machine?
+> I agree that's the ideal -- I don't know how concerned we are w.r.t. the
+> UAPI headers, I'm afraid.
 
-Sorry, I realise my email was pretty unclear.
+OK, I'll following the existing convention for now, keep the #define as
+(implicitly) signed, and drop the u64 casts.
 
-These patches *do* fix some of the issue because I no longer see as
-much contention on the zone locks with the patches applied.
+At some point in the future we may want to refactor the headers so that
+the kernel uses shadow register bit definitions that are always u64.
+The new HWCAP definitions provide a reasonable template for doing that
+kind of thing.
+
+It's probably best not to do anything to alter the types of the UAPI
+definitions.
+
+I will shamelessly duck this for now :|
+
+Cheers
+---Dave
