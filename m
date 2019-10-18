@@ -2,103 +2,109 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9523BCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07ABFCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E02E2089C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:21:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571401307;
-	bh=aZ4sD3NhDln0b6sHN9JC+hjFDBwzr5tX2IXHtBrWAnk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RM2ADp1JRP/YlJbiKiRiH2mXPbZFSpXeXsmOfbctih5K1+vJmMBvoSiroXEo/KMsb
-	 8DNUPsS5zJfIE5psU/F30df6Q/Lri1CC7tQ33kMxsx0Tmn8pVOEzyBMwnSvZizmPOM
-	 knlUBUvwERQWy9VQb8SJmoAbq8TW6I6hfkxVA3CM=
+	by mail.kernel.org (Postfix) with ESMTP id C78692089C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:22:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Evvf5DHG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442701AbfJRMVq (ORCPT
+        id S2442728AbfJRMWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 08:21:46 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37076 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387570AbfJRMVp (ORCPT
+        Fri, 18 Oct 2019 08:22:13 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:36970 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2442699AbfJRMWM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 08:21:45 -0400
-Received: by mail-pg1-f193.google.com with SMTP id p1so3301533pgi.4;
-        Fri, 18 Oct 2019 05:21:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VcukdS+h2wwJ3/U/N/4m0S2AoPCXUWoZLLc3DYniW2I=;
-        b=Q1msBJ3e099t2nSvYex7Z+jTlpopRllh6mguFZOeeE/m7DMYYYL/lcy4zZY7iravmh
-         8j9vf+/tlXDsLORK298oltaRNxfF6CBcQjtLOArMJyzbhA1ZpLrJj+BWFWS0IaN728eQ
-         xsZTBwLn41uMv4KqA9pw3hGXllxMNnqTCEfew/8Ly4k0XbdwWGAsB0ok7BAxw4iljEiI
-         5EfWa71cpcSoM2uC4hAwdkGO+KeoRuRoxAprpIkCUPs+fJsU67Zbd8bT1GGV6QHGEgFe
-         3cHE1udYLTIJQU0ttyl5AdAJ1iPS/qYkGW4cGlDVS7GwZ2hewbDQkTTVImp9LzkWg0TI
-         /4Kw==
-X-Gm-Message-State: APjAAAUsMEl/Ik/gBhxQlSpCpK7vgio3BMcbFr7GADiKQz94GQjNiD+J
-        TJvpz7wziqUL4cdVqnxVlc4=
-X-Google-Smtp-Source: APXvYqx1rmDV8Tbar4XUzXvi4MjLnC0zwf0LcXubUrDJ70/UhX+bBzy1YlAwSw1OAw5siYTwcytnzg==
-X-Received: by 2002:a62:ae06:: with SMTP id q6mr6445843pff.96.1571401304946;
-        Fri, 18 Oct 2019 05:21:44 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id r24sm6749355pfh.69.2019.10.18.05.21.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 05:21:43 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 843DE4042C; Fri, 18 Oct 2019 12:21:42 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 12:21:42 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Alan Maguire <alan.maguire@oracle.com>,
-        Matthias Maennich <maennich@google.com>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        catalin.marinas@arm.com, joe.lawrence@redhat.com,
-        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
-        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
-        changbin.du@intel.com, kunit-dev@googlegroups.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Knut Omang <knut.omang@oracle.com>
-Subject: Re: [PATCH v2 linux-kselftest-test 1/3] kunit: allow kunit tests to
- be loaded as a module
-Message-ID: <20191018122142.GC11244@42.do-not-panic.com>
-References: <1570546546-549-1-git-send-email-alan.maguire@oracle.com>
- <1570546546-549-2-git-send-email-alan.maguire@oracle.com>
- <20191008213535.GB186342@google.com>
- <alpine.LRH.2.20.1910091726010.2517@dhcp-10-175-191-127.vpn.oracle.com>
- <CAFd5g46_6McK06XSrX=EZ9AaYYitQzd2CTvPMX+rPymisDq5uQ@mail.gmail.com>
- <alpine.LRH.2.20.1910111105350.21459@dhcp-10-175-191-48.vpn.oracle.com>
- <20191016230116.GA82401@google.com>
- <alpine.LRH.2.20.1910171930410.21739@dhcp-10-175-161-223.vpn.oracle.com>
+        Fri, 18 Oct 2019 08:22:12 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 5975EC04D7;
+        Fri, 18 Oct 2019 12:15:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1571400951; bh=oQQShnjm5R0MR/xjv312sQ6gQ7J+z4O6hvMy/a53QQ0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Evvf5DHGG7VfVLWRKmvc8rRiZVi3Qxi7atXeNgJ54Nl/mqE4NqWeq8GWpaKNh2tsy
+         BmolhZsh4uSf1pTIQFm1TkXsBY79ZAaeeAvlWY2hU2W11GkF9EdS12yot+l+NNfOUN
+         A7ZmrLEKK9A3BAJxy2FWcA+FQqNU29zCRaNpRClzANrBwJSUd8Cv/BBLKQz17L5VAY
+         HA4w2K/DtimhvZt1LB5fJIDzlLeTbcMqCpt6eYkyznpISkCDrNut+uuFoanr+I0+cf
+         uJ4tKECNqKNpGeEM1uDUQNMMLpLTv8fxkopmSkISUD/fceknO7B1pjNcCOWm+FK5Zw
+         oZroCuxRoVOvQ==
+Received: from paltsev-e7480.internal.synopsys.com (paltsev-e7480.internal.synopsys.com [10.121.3.73])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 542A1A006D;
+        Fri, 18 Oct 2019 12:15:49 +0000 (UTC)
+From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+To:     linux-snps-arc@lists.infradead.org,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [RFC 4/6] ARC: HAPS: add HIGHMEM memory zone to DTS
+Date:   Fri, 18 Oct 2019 15:15:43 +0300
+Message-Id: <20191018121545.8907-5-Eugeniy.Paltsev@synopsys.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191018121545.8907-1-Eugeniy.Paltsev@synopsys.com>
+References: <20191018121545.8907-1-Eugeniy.Paltsev@synopsys.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.20.1910171930410.21739@dhcp-10-175-161-223.vpn.oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 07:32:18PM +0100, Alan Maguire wrote:
-> kunit needs a non-exported global kernel symbol 
-> (sysctl_hung_task_timeout_secs).
+This is required as a preparation of merging nSIM and HASP
+defonfig and device tree.
 
-Sounds like a perfect use case for the new symbol namespaces [0]. We
-wouldn't want random drivers importing this namespace, but for kunit it
-would seem reasonable.
+As we have HIGHMEM disabled in both HAPS and nSIM defconfigs
+this doesn't lead to any functional change.
 
-[0] https://lwn.net/Articles/798254/
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+---
+ arch/arc/boot/dts/haps_hs.dts | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-  Luis
+diff --git a/arch/arc/boot/dts/haps_hs.dts b/arch/arc/boot/dts/haps_hs.dts
+index 11fad2f79056..60d578e2781f 100644
+--- a/arch/arc/boot/dts/haps_hs.dts
++++ b/arch/arc/boot/dts/haps_hs.dts
+@@ -9,13 +9,15 @@
+ / {
+ 	model = "snps,zebu_hs";
+ 	compatible = "snps,zebu_hs";
+-	#address-cells = <1>;
+-	#size-cells = <1>;
++	#address-cells = <2>;
++	#size-cells = <2>;
+ 	interrupt-parent = <&core_intc>;
+ 
+ 	memory {
+ 		device_type = "memory";
+-		reg = <0x80000000 0x20000000>;	/* 512 */
++		/* CONFIG_LINUX_RAM_BASE needs to match low mem start */
++		reg = <0x0 0x80000000 0x0 0x20000000	/* 512 MB low mem */
++		       0x1 0x00000000 0x0 0x40000000>;	/* 1 GB highmem */
+ 	};
+ 
+ 	chosen {
+@@ -31,8 +33,9 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 
+-		/* child and parent address space 1:1 mapped */
+-		ranges;
++		/* only perip space at end of low mem accessible
++			  bus addr,  parent bus addr, size    */
++		ranges = <0x80000000 0x0 0x80000000 0x80000000>;
+ 
+ 		core_clk: core_clk {
+ 			#clock-cells = <0>;
+-- 
+2.21.0
+
