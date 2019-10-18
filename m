@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13552CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E37CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8FFD20872
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDBCB20872
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:19:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437185;
-	bh=zR7PEpWo1SHxfPoogzU2Cy0kOuipPdgvp9JuFhSZZqo=;
+	s=default; t=1571437190;
+	bh=uTy1kjyuPAGz2wZWF8FBRTZHEkVSNj5vNXv4AoaQbpI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=egHbFBQoPC4MC3cpwK1k39WkvYEWM0Owmeo6e9gzPbLXwS9w1dQCVv9szAXVFVQfy
-	 jjH+kEpuW5HTr+/ha5PITA849jjoi36SbW+HBMeQwyBbPVsblm8NYF2exBuhlX5HFn
-	 MEs2YUw31XOd5TvJLb2x8xo2kWi6K0uklD8j/3A4=
+	b=NwcwAGX9/Ar1vtPAHNiCXK6kvULYdAbAdgn9KMGpUrPV4n5J3AZjdhMbNfdqXpXTe
+	 sSeAomt5c17VOVKgFikmVNNKPu0qmRCRPmvSlQ+EoR84XqLmg5ebRar4iq8ijwEwOr
+	 Mdnn8O0rj4oAHqk8Au6MUcsxSdyzmeGww4xBSnzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732179AbfJRWG5 (ORCPT
+        id S2393292AbfJRWTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:06:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38722 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:19:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731935AbfJRWGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:06:44 -0400
+        id S1732163AbfJRWG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:06:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C67A1222C2;
-        Fri, 18 Oct 2019 22:06:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBFC222459;
+        Fri, 18 Oct 2019 22:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436404;
-        bh=zR7PEpWo1SHxfPoogzU2Cy0kOuipPdgvp9JuFhSZZqo=;
+        s=default; t=1571436416;
+        bh=uTy1kjyuPAGz2wZWF8FBRTZHEkVSNj5vNXv4AoaQbpI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XkJ+N6qv1OUTZ7A3VnJcZhgXTbDAxXDKiTLUPrv9vmgiBUdb9d4XWyE0qYfgYNzPM
-         RLNWAn9ovrcsAONns4AgeqzXo0+BislKncbS9LGhRTX8O//bNAsxOrNyZuxbcHEKTM
-         eUqSIUXbYPfyds4XCnRvfK91pNo4n+NNYTcqK8UA=
+        b=QH6A0pEl+r0J6XMEAyYwZdzGRfvx9egO6yXZUv17N2UUo//3gSd3HU5Tl4hpZik/K
+         mmJt12ufGhn2LOALP4CtQ4GggTaX40Gx7zo/voNueYazrlHswJm0J0kc0qTMhlTakq
+         MnyN+NR6KTScSL8AQpG8uO95RVczklvVrKv9agWo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ian Rogers <irogers@google.com>,
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 052/100] libsubcmd: Make _FORTIFY_SOURCE defines dependent on the feature
-Date:   Fri, 18 Oct 2019 18:04:37 -0400
-Message-Id: <20191018220525.9042-52-sashal@kernel.org>
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 060/100] perf annotate: Propagate the symbol__annotate() error return
+Date:   Fri, 18 Oct 2019 18:04:45 -0400
+Message-Id: <20191018220525.9042-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -65,50 +64,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit 4b0b2b096da9d296e0e5668cdfba8613bd6f5bc8 ]
+[ Upstream commit 211f493b611eef012841f795166c38ec7528738d ]
 
-Unconditionally defining _FORTIFY_SOURCE can break tools that don't work
-with it, such as memory sanitizers:
+We were just returning -1 in symbol__annotate() when symbol__annotate()
+failed, propagate its error as it is used later to pass to
+symbol__strerror_disassemble() to present a error message to the user,
+that in some cases were getting:
 
-  https://github.com/google/sanitizers/wiki/AddressSanitizer#faq
+  "Invalid -1 error code"
 
-Fixes: 4b6ab94eabe4 ("perf subcmd: Create subcmd library")
-Signed-off-by: Ian Rogers <irogers@google.com>
+Fix it to propagate the error.
+
+Reported-by: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lore.kernel.org/lkml/20190925195924.152834-1-irogers@google.com
+Cc: Peter Zijlstra <peterz@infradead.org>,
+Cc: Will Deacon <will@kernel.org>
+Link: https://lkml.kernel.org/n/tip-0tj89rs9g7nbcyd5skadlvuu@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/subcmd/Makefile | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/perf/util/annotate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
-index ed61fb3a46c08..5b2cd5e58df09 100644
---- a/tools/lib/subcmd/Makefile
-+++ b/tools/lib/subcmd/Makefile
-@@ -20,7 +20,13 @@ MAKEFLAGS += --no-print-directory
- LIBFILE = $(OUTPUT)libsubcmd.a
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index b4946ef48b621..83a3ad4256c5b 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -2757,7 +2757,7 @@ int symbol__annotate2(struct symbol *sym, struct map *map, struct perf_evsel *ev
  
- CFLAGS := $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
--CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -fPIC
-+CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -fPIC
-+
-+ifeq ($(DEBUG),0)
-+  ifeq ($(feature-fortify-source), 1)
-+    CFLAGS += -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2
-+  endif
-+endif
+ out_free_offsets:
+ 	zfree(&notes->offsets);
+-	return -1;
++	return err;
+ }
  
- ifeq ($(CC_NO_CLANG), 0)
-   CFLAGS += -O3
+ #define ANNOTATION__CFG(n) \
 -- 
 2.20.1
 
