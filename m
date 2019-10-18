@@ -2,287 +2,100 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45027CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1E3CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BEE7222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27B71222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:48:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404736AbfJRJqg (ORCPT
+        id S2406497AbfJRJs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 05:46:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43636 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389411AbfJRJqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 05:46:35 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 14030C057F31;
-        Fri, 18 Oct 2019 09:46:34 +0000 (UTC)
-Received: from gondolin (dhcp-192-202.str.redhat.com [10.33.192.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AD75B600C1;
-        Fri, 18 Oct 2019 09:46:16 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 11:46:14 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-Subject: Re: [PATCH V4 4/6] mdev: introduce virtio device and its device ops
-Message-ID: <20191018114614.6f1e79dc.cohuck@redhat.com>
-In-Reply-To: <20191017104836.32464-5-jasowang@redhat.com>
-References: <20191017104836.32464-1-jasowang@redhat.com>
-        <20191017104836.32464-5-jasowang@redhat.com>
-Organization: Red Hat GmbH
+        Fri, 18 Oct 2019 05:48:57 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:60118 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2404264AbfJRJs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 05:48:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 93D4A3E8;
+        Fri, 18 Oct 2019 02:48:30 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD0C23F6C4;
+        Fri, 18 Oct 2019 02:48:27 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 10:48:25 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
+        will@kernel.org, mark.rutland@arm.com, david@redhat.com,
+        cai@lca.pw, logang@deltatee.com, cpandya@codeaurora.org,
+        arunks@codeaurora.org, dan.j.williams@intel.com,
+        mgorman@techsingularity.net, osalvador@suse.de,
+        ard.biesheuvel@arm.com, steve.capper@arm.com, broonie@kernel.org,
+        valentin.schneider@arm.com, Robin.Murphy@arm.com,
+        steven.price@arm.com, suzuki.poulose@arm.com, ira.weiny@intel.com,
+        James Morse <james.morse@arm.com>
+Subject: Re: [PATCH V9 2/2] arm64/mm: Enable memory hot remove
+Message-ID: <20191018094825.GD19734@arrakis.emea.arm.com>
+References: <1570609308-15697-1-git-send-email-anshuman.khandual@arm.com>
+ <1570609308-15697-3-git-send-email-anshuman.khandual@arm.com>
+ <20191010113433.GI28269@mbp>
+ <f51cdb20-ddc4-4fb7-6c45-791d2e1e690c@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 18 Oct 2019 09:46:34 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f51cdb20-ddc4-4fb7-6c45-791d2e1e690c@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019 18:48:34 +0800
-Jason Wang <jasowang@redhat.com> wrote:
-
-> This patch implements basic support for mdev driver that supports
-> virtio transport for kernel virtio driver.
+On Fri, Oct 11, 2019 at 08:26:32AM +0530, Anshuman Khandual wrote:
+> On 10/10/2019 05:04 PM, Catalin Marinas wrote:
+> > Mark Rutland mentioned at some point that, as a preparatory patch to
+> > this series, we'd need to make sure we don't hot-remove memory already
+> > given to the kernel at boot. Any plans here?
 > 
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->  drivers/vfio/mdev/mdev_core.c |  12 +++
->  include/linux/mdev.h          |   4 +
->  include/linux/virtio_mdev.h   | 151 ++++++++++++++++++++++++++++++++++
->  3 files changed, 167 insertions(+)
->  create mode 100644 include/linux/virtio_mdev.h
+> Hmm, this series just enables platform memory hot remove as required from
+> generic memory hotplug framework. The path here is triggered either from
+> remove_memory() or __remove_memory() which takes physical memory range
+> arguments like (nid, start, size) and do the needful. arch_remove_memory()
+> should never be required to test given memory range for anything including
+> being part of the boot memory.
+
+Assuming arch_remove_memory() doesn't (cannot) check, is there a risk on
+arm64 that, for example, one removes memory available at boot and then
+kexecs a new kernel? Does the kexec tool present the new kernel with the
+original memory map?
+
+I can see x86 has CONFIG_FIRMWARE_MEMMAP suggesting that it is used by
+kexec. try_remove_memory() calls firmware_map_remove() so maybe they
+solve this problem differently.
+
+Correspondingly, after an arch_add_memory(), do we want a kexec kernel
+to access it? x86 seems to use the firmware_map_add_hotplug() mechanism.
+
+Adding James as well for additional comments on kexec scenarios.
+
+> IIUC boot memory added to system with memblock_add() lose all it's identity
+> after the system is up and running. In order to reject any attempt to hot
+> remove boot memory, platform needs to remember all those memory that came
+> early in the boot and then scan through it during arch_remove_memory().
 > 
-> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-> index d0f3113c8071..5834f6b7c7a5 100644
-> --- a/drivers/vfio/mdev/mdev_core.c
-> +++ b/drivers/vfio/mdev/mdev_core.c
-> @@ -57,6 +57,18 @@ void mdev_set_vfio_ops(struct mdev_device *mdev,
->  }
->  EXPORT_SYMBOL(mdev_set_vfio_ops);
->  
-> +/* Specify the virtio device ops for the mdev device, this
-> + * must be called during create() callback for virtio mdev device.
-> + */
+> Ideally, it is the responsibility of [_]remove_memory() callers like ACPI
+> driver, DAX etc to make sure they never attempt to hot remove a memory
+> range, which never got hot added by them in the first place. Also, unlike
+> /sys/devices/system/memory/probe there is no 'unprobe' interface where the
+> user can just trigger boot memory removal. Hence, unless there is a bug in
+> ACPI, DAX or other callers, there should never be any attempt to hot remove
+> boot memory in the first place.
 
-Change this as for the vfio comment (last patch?)
+That's fine if these callers give such guarantees. I just want to make
+sure someone checked all the possible scenarios for memory hot-remove.
 
-> +void mdev_set_virtio_ops(struct mdev_device *mdev,
-> +			 const struct virtio_mdev_device_ops *virtio_ops)
-> +{
-> +	BUG_ON(mdev->class_id);
-
-s/BUG_ON/WARN_ON/
-
-> +	mdev->class_id = MDEV_CLASS_ID_VIRTIO;
-> +	mdev->device_ops = virtio_ops;
-> +}
-> +EXPORT_SYMBOL(mdev_set_virtio_ops);
-> +
->  const void *mdev_get_dev_ops(struct mdev_device *mdev)
->  {
->  	return mdev->device_ops;
-
-(...)
-
-> diff --git a/include/linux/virtio_mdev.h b/include/linux/virtio_mdev.h
-> new file mode 100644
-> index 000000000000..b965b50f9b24
-> --- /dev/null
-> +++ b/include/linux/virtio_mdev.h
-> @@ -0,0 +1,151 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Virtio mediated device driver
-> + *
-> + * Copyright 2019, Red Hat Corp.
-> + *     Author: Jason Wang <jasowang@redhat.com>
-> + */
-> +#ifndef _LINUX_VIRTIO_MDEV_H
-> +#define _LINUX_VIRTIO_MDEV_H
-> +
-> +#include <linux/interrupt.h>
-> +#include <linux/mdev.h>
-> +#include <uapi/linux/vhost.h>
-> +
-> +#define VIRTIO_MDEV_DEVICE_API_STRING		"virtio-mdev"
-> +#define VIRTIO_MDEV_F_VERSION_1 0x1
-> +
-> +struct virtio_mdev_callback {
-> +	irqreturn_t (*callback)(void *data);
-> +	void *private;
-> +};
-> +
-> +/**
-> + * struct vfio_mdev_device_ops - Structure to be registered for each
-> + * mdev device to register the device to virtio-mdev module.
-> + *
-> + * @set_vq_address:		Set the address of virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + *				@desc_area: address of desc area
-> + *				@driver_area: address of driver area
-> + *				@device_area: address of device area
-> + *				Returns integer: success (0) or error (< 0)
-
-Probably dumb question (have not read the next patches yet): Is this
-agnostic regarding split or packed queues?
-
-> + * @set_vq_num:		Set the size of virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + *				@num: the size of virtqueue
-> + * @kick_vq:			Kick the virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + * @set_vq_cb:			Set the interrupt callback function for
-> + *				a virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + *				@cb: virtio-mdev interrupt callback structure
-> + * @set_vq_ready:		Set ready status for a virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + *				@ready: ready (true) not ready(false)
-> + * @get_vq_ready:		Get ready status for a virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + *				Returns boolean: ready (true) or not (false)
-> + * @set_vq_state:		Set the state for a virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + *				@state: virtqueue state (last_avail_idx)
-> + *				Returns integer: success (0) or error (< 0)
-> + * @get_vq_state:		Get the state for a virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + *				Returns virtqueue state (last_avail_idx)
-> + * @get_vq_align:		Get the virtqueue align requirement
-> + *				for the device
-> + *				@mdev: mediated device
-> + *				Returns virtqueue algin requirement
-> + * @get_features:		Get virtio features supported by the device
-> + *				@mdev: mediated device
-> + *				Returns the virtio features support by the
-> + *				device
-> + * @get_features:		Set virtio features supported by the driver
-
-s/get_features/set_features/
-
-> + *				@mdev: mediated device
-> + *				@features: feature support by the driver
-> + *				Returns integer: success (0) or error (< 0)
-> + * @set_config_cb:		Set the config interrupt callback
-> + *				@mdev: mediated device
-> + *				@cb: virtio-mdev interrupt callback structure
-> + * @get_vq_num_max:		Get the max size of virtqueue
-> + *				@mdev: mediated device
-> + *				Returns u16: max size of virtqueue
-> + * @get_device_id:		Get virtio device id
-> + *				@mdev: mediated device
-> + *				Returns u32: virtio device id
-> + * @get_vendor_id:		Get virtio vendor id
-> + *				@mdev: mediated device
-> + *				Returns u32: virtio vendor id
-
-How is the vendor id defined? As for normal virtio-pci devices?
-
-> + * @get_status: 		Get the device status
-> + *				@mdev: mediated device
-> + *				Returns u8: virtio device status
-> + * @set_status: 		Set the device status
-> + *				@mdev: mediated device
-> + *				@status: virtio device status
-> + * @get_config: 		Read from device specific configuration space
-> + *				@mdev: mediated device
-> + *				@offset: offset from the beginning of
-> + *				configuration space
-> + *				@buf: buffer used to read to
-> + *				@len: the length to read from
-> + *				configration space
-> + * @set_config: 		Write to device specific configuration space
-> + *				@mdev: mediated device
-> + *				@offset: offset from the beginning of
-> + *				configuration space
-> + *				@buf: buffer used to write from
-> + *				@len: the length to write to
-> + *				configration space
-> + * @get_mdev_features:		Get the feature of virtio mdev device
-> + *				@mdev: mediated device
-> + *				Returns the mdev features (API) support by
-> + *				the device.
-
-What kind of 'features' are supposed to go in there? Are these bits,
-like you defined for VIRTIO_MDEV_F_VERSION_1 above?
-
-> + * @get_generation:		Get device generaton
-> + *				@mdev: mediated device
-> + *				Returns u32: device generation
-
-Is that callback mandatory?
-
-> + */
-> +struct virtio_mdev_device_ops {
-> +	/* Virtqueue ops */
-> +	int (*set_vq_address)(struct mdev_device *mdev,
-> +			      u16 idx, u64 desc_area, u64 driver_area,
-> +			      u64 device_area);
-> +	void (*set_vq_num)(struct mdev_device *mdev, u16 idx, u32 num);
-> +	void (*kick_vq)(struct mdev_device *mdev, u16 idx);
-> +	void (*set_vq_cb)(struct mdev_device *mdev, u16 idx,
-> +			  struct virtio_mdev_callback *cb);
-> +	void (*set_vq_ready)(struct mdev_device *mdev, u16 idx, bool ready);
-> +	bool (*get_vq_ready)(struct mdev_device *mdev, u16 idx);
-> +	int (*set_vq_state)(struct mdev_device *mdev, u16 idx, u64 state);
-> +	u64 (*get_vq_state)(struct mdev_device *mdev, u16 idx);
-> +
-> +	/* Device ops */
-> +	u16 (*get_vq_align)(struct mdev_device *mdev);
-> +	u64 (*get_features)(struct mdev_device *mdev);
-> +	int (*set_features)(struct mdev_device *mdev, u64 features);
-> +	void (*set_config_cb)(struct mdev_device *mdev,
-> +			      struct virtio_mdev_callback *cb);
-> +	u16 (*get_vq_num_max)(struct mdev_device *mdev);
-> +	u32 (*get_device_id)(struct mdev_device *mdev);
-> +	u32 (*get_vendor_id)(struct mdev_device *mdev);
-> +	u8 (*get_status)(struct mdev_device *mdev);
-> +	void (*set_status)(struct mdev_device *mdev, u8 status);
-> +	void (*get_config)(struct mdev_device *mdev, unsigned int offset,
-> +			   void *buf, unsigned int len);
-> +	void (*set_config)(struct mdev_device *mdev, unsigned int offset,
-> +			   const void *buf, unsigned int len);
-> +	u64 (*get_mdev_features)(struct mdev_device *mdev);
-> +	u32 (*get_generation)(struct mdev_device *mdev);
-> +};
-> +
-> +void mdev_set_virtio_ops(struct mdev_device *mdev,
-> +			 const struct virtio_mdev_device_ops *virtio_ops);
-> +
-> +#endif
-
+-- 
+Catalin
