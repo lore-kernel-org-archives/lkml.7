@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5B7CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A54CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D88020854
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 664A520854
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436698;
-	bh=j618Wmo2drO6mHZs15gcDRRbusB+YZ9fI1xy0/AzzSQ=;
+	s=default; t=1571436700;
+	bh=bEc6Pcgb7U72JjG3S76enk5VJayqngYFsyIKtKCpKjw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bSBd/wRo9KeWAC4/J1Jz12Z2FwITer3gw18Kobo+stWCt0xwL+2teEiUSnNveBkVb
-	 g5gbXLuU1IfDxQeFKpVQovK2R8xeyR7NSNvQmcb8XArX2cN0RPJcS7c/2Zy6ttmVJm
-	 93PMZzTy2P2ZdxZdTPefSUsnaX/ANiqS5YtqSgWk=
+	b=Qdqxtg0hVbBOy9TUiDnddnnTtyi+I0aQE5/Xzj8Vx6BwahrAR9o+Apet4Vv75rCsK
+	 N9rEHiZ6/X7f0j8bgiLTrfBDgF5XbvWLKoM21OQ5StjOUohuSEgR5VBW8PcUwkiagi
+	 QiPo7xtPOqYliOUWK4fk+cs2hrIBmys5thpwsXZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390317AbfJRWKc (ORCPT
+        id S2391185AbfJRWLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:10:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42958 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:11:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389687AbfJRWKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:10:07 -0400
+        id S2390321AbfJRWKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:10:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24346222D4;
-        Fri, 18 Oct 2019 22:10:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D1D22246F;
+        Fri, 18 Oct 2019 22:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436606;
-        bh=j618Wmo2drO6mHZs15gcDRRbusB+YZ9fI1xy0/AzzSQ=;
+        s=default; t=1571436632;
+        bh=bEc6Pcgb7U72JjG3S76enk5VJayqngYFsyIKtKCpKjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OkGJ53jOev3t91+mRFFmE/nrF79AyqaLYZmXRKH79OoCZif3oFBirzBtzVXTU1GAR
-         57TCVCA07AbJp6A23Oip+AziemY7tWCzIsWuAAuNtdPUFzMjZP4ZJoYTNv05IfZasj
-         DLpwHyWcX6mZgNTf4gQNfW2dODwWB13wIqhpcRlQ=
+        b=YElW3W5OUIy+/s112szwhrtp5qIK7g3iNDeb1t5tpzrl3c2AekVWkDy7RwNz5jHPg
+         Eobu+3iqQ7XTRcNlthZfTAhRcawh3NXmPE1vEer+kxnWug4i9n0yNWjwFgzJH4YMDp
+         tL2FD2rFql6wFcVTf5tF12BSX25VIrcacQJ/ii2g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 29/29] tracing: Initialize iter->seq after zeroing in tracing_read_pipe()
-Date:   Fri, 18 Oct 2019 18:09:20 -0400
-Message-Id: <20191018220920.10545-29-sashal@kernel.org>
+Cc:     Marco Felsch <m.felsch@pengutronix.de>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 16/21] iio: adc: ad799x: fix probe error handling
+Date:   Fri, 18 Oct 2019 18:10:02 -0400
+Message-Id: <20191018221007.10851-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191018220920.10545-1-sashal@kernel.org>
-References: <20191018220920.10545-1-sashal@kernel.org>
+In-Reply-To: <20191018221007.10851-1-sashal@kernel.org>
+References: <20191018221007.10851-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,80 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Mladek <pmladek@suse.com>
+From: Marco Felsch <m.felsch@pengutronix.de>
 
-[ Upstream commit d303de1fcf344ff7c15ed64c3f48a991c9958775 ]
+[ Upstream commit c62dd44901cfff12acc5792bf3d2dec20bcaf392 ]
 
-A customer reported the following softlockup:
+Since commit 0f7ddcc1bff1 ("iio:adc:ad799x: Write default config on probe
+and reset alert status on probe") the error path is wrong since it
+leaves the vref regulator on. Fix this by disabling both regulators.
 
-[899688.160002] NMI watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [test.sh:16464]
-[899688.160002] CPU: 0 PID: 16464 Comm: test.sh Not tainted 4.12.14-6.23-azure #1 SLE12-SP4
-[899688.160002] RIP: 0010:up_write+0x1a/0x30
-[899688.160002] Kernel panic - not syncing: softlockup: hung tasks
-[899688.160002] RIP: 0010:up_write+0x1a/0x30
-[899688.160002] RSP: 0018:ffffa86784d4fde8 EFLAGS: 00000257 ORIG_RAX: ffffffffffffff12
-[899688.160002] RAX: ffffffff970fea00 RBX: 0000000000000001 RCX: 0000000000000000
-[899688.160002] RDX: ffffffff00000001 RSI: 0000000000000080 RDI: ffffffff970fea00
-[899688.160002] RBP: ffffffffffffffff R08: ffffffffffffffff R09: 0000000000000000
-[899688.160002] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8b59014720d8
-[899688.160002] R13: ffff8b59014720c0 R14: ffff8b5901471090 R15: ffff8b5901470000
-[899688.160002]  tracing_read_pipe+0x336/0x3c0
-[899688.160002]  __vfs_read+0x26/0x140
-[899688.160002]  vfs_read+0x87/0x130
-[899688.160002]  SyS_read+0x42/0x90
-[899688.160002]  do_syscall_64+0x74/0x160
-
-It caught the process in the middle of trace_access_unlock(). There is
-no loop. So, it must be looping in the caller tracing_read_pipe()
-via the "waitagain" label.
-
-Crashdump analyze uncovered that iter->seq was completely zeroed
-at this point, including iter->seq.seq.size. It means that
-print_trace_line() was never able to print anything and
-there was no forward progress.
-
-The culprit seems to be in the code:
-
-	/* reset all but tr, trace, and overruns */
-	memset(&iter->seq, 0,
-	       sizeof(struct trace_iterator) -
-	       offsetof(struct trace_iterator, seq));
-
-It was added by the commit 53d0aa773053ab182877 ("ftrace:
-add logic to record overruns"). It was v2.6.27-rc1.
-It was the time when iter->seq looked like:
-
-     struct trace_seq {
-	unsigned char		buffer[PAGE_SIZE];
-	unsigned int		len;
-     };
-
-There was no "size" variable and zeroing was perfectly fine.
-
-The solution is to reinitialize the structure after or without
-zeroing.
-
-Link: http://lkml.kernel.org/r/20191011142134.11997-1-pmladek@suse.com
-
-Signed-off-by: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 0f7ddcc1bff1 ("iio:adc:ad799x: Write default config on probe and reset alert status on probe")
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iio/adc/ad799x.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 70b82f4fd417c..853cb63a5806c 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5204,6 +5204,7 @@ tracing_read_pipe(struct file *filp, char __user *ubuf,
- 	       sizeof(struct trace_iterator) -
- 	       offsetof(struct trace_iterator, seq));
- 	cpumask_clear(iter->started);
-+	trace_seq_init(&iter->seq);
- 	iter->pos = -1;
+diff --git a/drivers/iio/adc/ad799x.c b/drivers/iio/adc/ad799x.c
+index ba82de25a7972..46681e399e226 100644
+--- a/drivers/iio/adc/ad799x.c
++++ b/drivers/iio/adc/ad799x.c
+@@ -822,10 +822,10 @@ static int ad799x_probe(struct i2c_client *client,
  
- 	trace_event_read_lock();
+ 	ret = ad799x_write_config(st, st->chip_config->default_config);
+ 	if (ret < 0)
+-		goto error_disable_reg;
++		goto error_disable_vref;
+ 	ret = ad799x_read_config(st);
+ 	if (ret < 0)
+-		goto error_disable_reg;
++		goto error_disable_vref;
+ 	st->config = ret;
+ 
+ 	ret = iio_triggered_buffer_setup(indio_dev, NULL,
 -- 
 2.20.1
 
