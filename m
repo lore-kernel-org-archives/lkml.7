@@ -4,50 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38EF0CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D871CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CA4821852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D26921852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:16:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436996;
-	bh=H12XsaAVdOeeHzLMIlQdJrBU963KqbPjLFf+EN77ZTo=;
+	s=default; t=1571437004;
+	bh=fnbbc7uR40pu9gEMufBDqXBhxqlq0xybhEADZGmXZlk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qRFiZBFJr9+LXs//mlX1gB/97L0Tkc8lHKFnLtcNYKHp6qKaMlP/vom9kaLMV31XK
-	 I6YVPzAtlK55Xpv3bjOjbVYM8gHwrapm5OtPmJSKckh81VdmdT2yZCF6IwHC6eHhvS
-	 SlnYXUp+17k+pzxISpQ62p8swwnZKYEODDhzh5R8=
+	b=l/KCivrvBGh6LLk782O0RZv6JmEngA41NgQSxD27jJhOQhQS/KxODuov5rVSTLiaW
+	 PFvvS/31joI7lbCut2SINneAqVt0n6sVv2UxqR5CE/XCOWS1o8OAhVxIAtvIBKaUsh
+	 OGqmt0huQQ63osGlqFz+e1igmTONk6xbBAB/ht7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392954AbfJRWQ3 (ORCPT
+        id S2387601AbfJRWIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:16:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40706 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:08:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387662AbfJRWIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:08:18 -0400
+        id S2387487AbfJRWID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:08:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E3A7222D4;
-        Fri, 18 Oct 2019 22:08:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 092D22245A;
+        Fri, 18 Oct 2019 22:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436497;
-        bh=H12XsaAVdOeeHzLMIlQdJrBU963KqbPjLFf+EN77ZTo=;
+        s=default; t=1571436481;
+        bh=fnbbc7uR40pu9gEMufBDqXBhxqlq0xybhEADZGmXZlk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mQwi+LXRG/wOHZTyi4GXvezuQoXlgqhmwQqapGKgo21II7SxmDx5cZTu9DoKW3iQ8
-         1hJzM+2EzGWvDq6pqq2KTn6LhGp5Eaz0ePD8k79YdH+HGuBEVsCuTVTpB7ZezX2GWI
-         bzeQLjti8mA15jbLGTeLKkzJzE36RM/+4K/mRsLY=
+        b=y0UVVFYXaCYLwrEowZrFLzcgEsTHSUZSXpv2eltbzUJ/RxLn2hyrIiO+T9Mrn+hC4
+         yTGeza5C9iTdhcp4PB3UAgpxkfW9ckxmdHrYImc4mbyf8vrlMCPEkqPU8bJAqCbfAT
+         IC4yDflXpKBjZL4f5LrRE48hRXbT/wMCrvYLOClw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jan-Marek Glogowski <glogow@fbihome.de>,
-        Alan Stern <stern@rowland.harvard.edu>,
+Cc:     David Hildenbrand <david@redhat.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Rashmica Gupta <rashmica.g@gmail.com>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Neuling <mikey@neuling.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 11/56] usb: handle warm-reset port requests on hub resume
-Date:   Fri, 18 Oct 2019 18:07:08 -0400
-Message-Id: <20191018220753.10002-11-sashal@kernel.org>
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        John Allen <jallen@linux.vnet.ibm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Len Brown <lenb@kernel.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        YASUAKI ISHIMATSU <yasu.isimatu@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 04/56] powerpc/powernv: hold device_hotplug_lock when calling memtrace_offline_pages()
+Date:   Fri, 18 Oct 2019 18:07:01 -0400
+Message-Id: <20191018220753.10002-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
 References: <20191018220753.10002-1-sashal@kernel.org>
@@ -60,53 +91,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan-Marek Glogowski <glogow@fbihome.de>
+From: David Hildenbrand <david@redhat.com>
 
-[ Upstream commit 4fdc1790e6a9ef22399c6bc6e63b80f4609f3b7e ]
+[ Upstream commit 5666848774ef43d3db5151ec518f1deb63515c20 ]
 
-On plug-in of my USB-C device, its USB_SS_PORT_LS_SS_INACTIVE
-link state bit is set. Greping all the kernel for this bit shows
-that the port status requests a warm-reset this way.
+Let's perform all checking + offlining + removing under
+device_hotplug_lock, so nobody can mess with these devices via sysfs
+concurrently.
 
-This just happens, if its the only device on the root hub, the hub
-therefore resumes and the HCDs status_urb isn't yet available.
-If a warm-reset request is detected, this sets the hubs event_bits,
-which will prevent any auto-suspend and allows the hubs workqueue
-to warm-reset the port later in port_event.
-
-Signed-off-by: Jan-Marek Glogowski <glogow@fbihome.de>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[david@redhat.com: take device_hotplug_lock outside of loop]
+  Link: http://lkml.kernel.org/r/20180927092554.13567-6-david@redhat.com
+Link: http://lkml.kernel.org/r/20180925091457.28651-6-david@redhat.com
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Pavel Tatashin <pavel.tatashin@microsoft.com>
+Reviewed-by: Rashmica Gupta <rashmica.g@gmail.com>
+Acked-by: Balbir Singh <bsingharora@gmail.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Rashmica Gupta <rashmica.g@gmail.com>
+Cc: Michael Neuling <mikey@neuling.org>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: John Allen <jallen@linux.vnet.ibm.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Kate Stewart <kstewart@linuxfoundation.org>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Len Brown <lenb@kernel.org>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: Mathieu Malaterre <malat@debian.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Philippe Ombredanne <pombredanne@nexb.com>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: YASUAKI ISHIMATSU <yasu.isimatu@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/core/hub.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/powerpc/platforms/powernv/memtrace.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index b543a4730ef24..bb20aa433e984 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -104,6 +104,8 @@ EXPORT_SYMBOL_GPL(ehci_cf_port_reset_rwsem);
- static void hub_release(struct kref *kref);
- static int usb_reset_and_verify_device(struct usb_device *udev);
- static int hub_port_disable(struct usb_hub *hub, int port1, int set_state);
-+static bool hub_port_warm_reset_required(struct usb_hub *hub, int port1,
-+		u16 portstatus);
+diff --git a/arch/powerpc/platforms/powernv/memtrace.c b/arch/powerpc/platforms/powernv/memtrace.c
+index c9a6d4f3403ce..cfbd242c3e011 100644
+--- a/arch/powerpc/platforms/powernv/memtrace.c
++++ b/arch/powerpc/platforms/powernv/memtrace.c
+@@ -99,6 +99,7 @@ static int change_memblock_state(struct memory_block *mem, void *arg)
+ 	return 0;
+ }
  
- static inline char *portspeed(struct usb_hub *hub, int portstatus)
++/* called with device_hotplug_lock held */
+ static bool memtrace_offline_pages(u32 nid, u64 start_pfn, u64 nr_pages)
  {
-@@ -1110,6 +1112,11 @@ static void hub_activate(struct usb_hub *hub, enum hub_activation_type type)
- 						   USB_PORT_FEAT_ENABLE);
- 		}
+ 	u64 end_pfn = start_pfn + nr_pages - 1;
+@@ -139,6 +140,7 @@ static u64 memtrace_alloc_node(u32 nid, u64 size)
+ 	/* Trace memory needs to be aligned to the size */
+ 	end_pfn = round_down(end_pfn - nr_pages, nr_pages);
  
-+		/* Make sure a warm-reset request is handled by port_event */
-+		if (type == HUB_RESUME &&
-+		    hub_port_warm_reset_required(hub, port1, portstatus))
-+			set_bit(port1, hub->event_bits);
-+
- 		/*
- 		 * Add debounce if USB3 link is in polling/link training state.
- 		 * Link will automatically transition to Enabled state after
++	lock_device_hotplug();
+ 	for (base_pfn = end_pfn; base_pfn > start_pfn; base_pfn -= nr_pages) {
+ 		if (memtrace_offline_pages(nid, base_pfn, nr_pages) == true) {
+ 			/*
+@@ -147,7 +149,6 @@ static u64 memtrace_alloc_node(u32 nid, u64 size)
+ 			 * we never try to remove memory that spans two iomem
+ 			 * resources.
+ 			 */
+-			lock_device_hotplug();
+ 			end_pfn = base_pfn + nr_pages;
+ 			for (pfn = base_pfn; pfn < end_pfn; pfn += bytes>> PAGE_SHIFT) {
+ 				remove_memory(nid, pfn << PAGE_SHIFT, bytes);
+@@ -156,6 +157,7 @@ static u64 memtrace_alloc_node(u32 nid, u64 size)
+ 			return base_pfn << PAGE_SHIFT;
+ 		}
+ 	}
++	unlock_device_hotplug();
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
