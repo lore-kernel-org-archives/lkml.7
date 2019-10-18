@@ -2,311 +2,145 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37327CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA3CDCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 105A120659
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9947B20659
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:31:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443076AbfJRQbe (ORCPT
+        id S2394076AbfJRQbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:31:34 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57821 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2442947AbfJRQbK (ORCPT
+        Fri, 18 Oct 2019 12:31:40 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:39785 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2443020AbfJRQbO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:31:10 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iLV90-0002j8-Qm; Fri, 18 Oct 2019 18:30:27 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 54A741C048C;
-        Fri, 18 Oct 2019 18:30:26 +0200 (CEST)
-Date:   Fri, 18 Oct 2019 16:30:26 -0000
-From:   "tip-bot2 for Jiri Slaby" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/asm] x86/asm/32: Add ENDs to some functions and relabel
- with SYM_CODE_*
-Cc:     Jiri Slaby <jslaby@suse.cz>, Borislav Petkov <bp@suse.de>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Len Brown <len.brown@intel.com>, linux-arch@vger.kernel.org,
-        linux-pm@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Pingfan Liu <kernelfans@gmail.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86-ml" <x86@kernel.org>, xen-devel@lists.xenproject.org,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191011115108.12392-26-jslaby@suse.cz>
-References: <20191011115108.12392-26-jslaby@suse.cz>
+        Fri, 18 Oct 2019 12:31:14 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MK3mS-1icTm63Lji-00LXiw; Fri, 18 Oct 2019 18:31:00 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Hartley Sweeten <hsweeten@visionengravers.com>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Subject: [PATCH 3/6] ARM: ep93xx: make mach/ep93xx-regs.h local
+Date:   Fri, 18 Oct 2019 18:29:16 +0200
+Message-Id: <20191018163047.1284736-3-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191018163047.1284736-1-arnd@arndb.de>
+References: <20191018163047.1284736-1-arnd@arndb.de>
 MIME-Version: 1.0
-Message-ID: <157141622620.29376.2511020268312198257.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:Tlr/kGU2mrcS/i0RZ/FxB2SYCWQT8PnsZqB5BcF7KAjcRmXLUoF
+ F9tlGC+3wNa5O5ykqO5dAN2TDQM0ig59FE1SOufdFwBDz5f7Eln7CUeDvq9Y5oe8gDIq3g6
+ 0fDwY3z/aNnIGAGFB9uIwbx/4hf4Sc2khW/mncHRod8MA9YGAGM5IP+7H767jo4JR3PB0F4
+ 8sIvE5utwNvgPaEv9jxSw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+IHzhn3/5XI=:3+rOIP+88JYxotOIBrvwLn
+ epLEJlm/bm1m6smJnYwY6LsWyjAWKtgnQ9SOQ1u1kLeWB4lVdkM1zyfETbpfqKTI3gtUQGb31
+ 7qvGQHo1ULmo3Kcwtgr/UMu/gNteiLmFh/FAjMCsWYbuv2y/FHnMPcmxDE6i4Wcg8hG6AHe5D
+ auu0neWcvGuz5x6a4Pm6qHdFAELbHITngSBERzCYCkXBslEu1GcriGPbjubkt1nSMubPeOotQ
+ /wUVDcOCmjJW8SlkBXiyaq7FBonl9BJUiwHHae6BrNzbwIJ0Z0WBywyTwqa7KzCAAZ9uZAGeY
+ Rwn8hCH/JxbigA6n0Mu3WItmFLp4q9G6BXZFOggU1gFZg8kQB2B9e040Vk1B9axLzdu4NCGas
+ NwPyzWqBGQd/SKn+S5jj4N5o41KkOk6HIJHLo/8uowM6eNHLCoX9iCZtfV+JbcCGLUPB0gva+
+ etKp0YR9PCqjM3XjNiEwG9GysIP3HwQhZsQXRevLaqxtKPPh4QMkiw8tSoBMcPmFg6LYA5TTP
+ dUWZOa/RvaL0rWzwdkgHOKi1sQmPotgs/y1WT5TI6uFHbFcFa3gNH9xhbDn1Wh/6uGx30cnbJ
+ BgSlkjCou75M88kQbYGA1AOFWlIjW61hwm3jgPyWDon5z9bSGabmFB3DpHvFyOk+/oVw0dmrT
+ NiD4hjy1o/Qsl5x7GWyNtJielZuoTj0gA3hSqaSdbQ0bpTbj9WMm6VpfNIE0qO5Rxvpx/ORgk
+ jiM+56LMmAnxwY+UHxwG2so4GiG7WoNonQZSjUZj4BolzLlCXquFNDA/GgN/HVDSEpGMNU5Xx
+ dtZtdH5FQp92SsdBIp11mJF5v0aPISl62FxZ6rx1yWCCNbdxZHOGiBHJ4XhoW5OgL0wlUtbx8
+ gHaq77S5t+W3wz9jnl3w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/asm branch of tip:
+Nothing relies on it outside of arch/arm/mach-ep93xx/, so just move
+it there.
 
-Commit-ID:     78762b0e79bc1dd01347be061abdf505202152c9
-Gitweb:        https://git.kernel.org/tip/78762b0e79bc1dd01347be061abdf505202152c9
-Author:        Jiri Slaby <jslaby@suse.cz>
-AuthorDate:    Fri, 11 Oct 2019 13:51:05 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Fri, 18 Oct 2019 11:58:33 +02:00
-
-x86/asm/32: Add ENDs to some functions and relabel with SYM_CODE_*
-
-All these are functions which are invoked from elsewhere but they are
-not typical C functions. So annotate them using the new SYM_CODE_START.
-All these were not balanced with any END, so mark their ends by
-SYM_CODE_END, appropriately.
-
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com> [xen bits]
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com> [hibernate]
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Len Brown <len.brown@intel.com>
-Cc: linux-arch@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Pingfan Liu <kernelfans@gmail.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-Cc: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Cc: xen-devel@lists.xenproject.org
-Link: https://lkml.kernel.org/r/20191011115108.12392-26-jslaby@suse.cz
+Cc: Hartley Sweeten <hsweeten@visionengravers.com>
+Cc: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/x86/entry/entry_32.S            | 3 ++-
- arch/x86/kernel/acpi/wakeup_32.S     | 7 ++++---
- arch/x86/kernel/ftrace_32.S          | 3 ++-
- arch/x86/kernel/head_32.S            | 3 ++-
- arch/x86/power/hibernate_asm_32.S    | 6 ++++--
- arch/x86/realmode/rm/trampoline_32.S | 6 ++++--
- arch/x86/xen/xen-asm_32.S            | 7 ++++---
- 7 files changed, 22 insertions(+), 13 deletions(-)
+ arch/arm/mach-ep93xx/crunch-bits.S                    | 2 +-
+ arch/arm/mach-ep93xx/{include/mach => }/ep93xx-regs.h | 4 ----
+ arch/arm/mach-ep93xx/gpio-ep93xx.h                    | 2 +-
+ arch/arm/mach-ep93xx/include/mach/uncompress.h        | 1 -
+ arch/arm/mach-ep93xx/soc.h                            | 2 +-
+ 5 files changed, 3 insertions(+), 8 deletions(-)
+ rename arch/arm/mach-ep93xx/{include/mach => }/ep93xx-regs.h (94%)
 
-diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
-index 4900a6a..64fe7aa 100644
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -847,9 +847,10 @@ SYM_ENTRY(__begin_SYSENTER_singlestep_region, SYM_L_GLOBAL, SYM_A_NONE)
-  * Xen doesn't set %esp to be precisely what the normal SYSENTER
-  * entry point expects, so fix it up before using the normal path.
-  */
--ENTRY(xen_sysenter_target)
-+SYM_CODE_START(xen_sysenter_target)
- 	addl	$5*4, %esp			/* remove xen-provided frame */
- 	jmp	.Lsysenter_past_esp
-+SYM_CODE_END(xen_sysenter_target)
- #endif
+diff --git a/arch/arm/mach-ep93xx/crunch-bits.S b/arch/arm/mach-ep93xx/crunch-bits.S
+index fb2dbf76f09e..e6dd08538bb9 100644
+--- a/arch/arm/mach-ep93xx/crunch-bits.S
++++ b/arch/arm/mach-ep93xx/crunch-bits.S
+@@ -14,7 +14,7 @@
+ #include <asm/thread_info.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/assembler.h>
+-#include <mach/ep93xx-regs.h>
++#include "ep93xx-regs.h"
  
  /*
-diff --git a/arch/x86/kernel/acpi/wakeup_32.S b/arch/x86/kernel/acpi/wakeup_32.S
-index 4272492..daf88f8 100644
---- a/arch/x86/kernel/acpi/wakeup_32.S
-+++ b/arch/x86/kernel/acpi/wakeup_32.S
-@@ -9,8 +9,7 @@
- 	.code32
- 	ALIGN
- 
--ENTRY(wakeup_pmode_return)
--wakeup_pmode_return:
-+SYM_CODE_START(wakeup_pmode_return)
- 	movw	$__KERNEL_DS, %ax
- 	movw	%ax, %ss
- 	movw	%ax, %fs
-@@ -39,6 +38,7 @@ wakeup_pmode_return:
- 	# jump to place where we left off
- 	movl	saved_eip, %eax
- 	jmp	*%eax
-+SYM_CODE_END(wakeup_pmode_return)
- 
- bogus_magic:
- 	jmp	bogus_magic
-@@ -72,7 +72,7 @@ restore_registers:
- 	popfl
- 	ret
- 
--ENTRY(do_suspend_lowlevel)
-+SYM_CODE_START(do_suspend_lowlevel)
- 	call	save_processor_state
- 	call	save_registers
- 	pushl	$3
-@@ -87,6 +87,7 @@ ret_point:
- 	call	restore_registers
- 	call	restore_processor_state
- 	ret
-+SYM_CODE_END(do_suspend_lowlevel)
- 
- .data
- ALIGN
-diff --git a/arch/x86/kernel/ftrace_32.S b/arch/x86/kernel/ftrace_32.S
-index 219be13..a43ed4c 100644
---- a/arch/x86/kernel/ftrace_32.S
-+++ b/arch/x86/kernel/ftrace_32.S
-@@ -89,7 +89,7 @@ WEAK(ftrace_stub)
- 	ret
- END(ftrace_caller)
- 
--ENTRY(ftrace_regs_caller)
-+SYM_CODE_START(ftrace_regs_caller)
- 	/*
- 	 * We're here from an mcount/fentry CALL, and the stack frame looks like:
- 	 *
-@@ -163,6 +163,7 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
- 	popl	%eax
- 
- 	jmp	.Lftrace_ret
-+SYM_CODE_END(ftrace_regs_caller)
- 
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
- ENTRY(ftrace_graph_caller)
-diff --git a/arch/x86/kernel/head_32.S b/arch/x86/kernel/head_32.S
-index e2b3e6c..7029bba 100644
---- a/arch/x86/kernel/head_32.S
-+++ b/arch/x86/kernel/head_32.S
-@@ -64,7 +64,7 @@ RESERVE_BRK(pagetables, INIT_MAP_SIZE)
-  * can.
-  */
- __HEAD
--ENTRY(startup_32)
-+SYM_CODE_START(startup_32)
- 	movl pa(initial_stack),%ecx
- 	
- 	/* test KEEP_SEGMENTS flag to see if the bootloader is asking
-@@ -172,6 +172,7 @@ num_subarch_entries = (. - subarch_entries) / 4
- #else
- 	jmp .Ldefault_entry
- #endif /* CONFIG_PARAVIRT */
-+SYM_CODE_END(startup_32)
- 
- #ifdef CONFIG_HOTPLUG_CPU
- /*
-diff --git a/arch/x86/power/hibernate_asm_32.S b/arch/x86/power/hibernate_asm_32.S
-index 6fe3830..a19ed3d 100644
---- a/arch/x86/power/hibernate_asm_32.S
-+++ b/arch/x86/power/hibernate_asm_32.S
-@@ -35,7 +35,7 @@ ENTRY(swsusp_arch_suspend)
- 	ret
- ENDPROC(swsusp_arch_suspend)
- 
--ENTRY(restore_image)
-+SYM_CODE_START(restore_image)
- 	/* prepare to jump to the image kernel */
- 	movl	restore_jump_address, %ebx
- 	movl	restore_cr3, %ebp
-@@ -45,9 +45,10 @@ ENTRY(restore_image)
- 	/* jump to relocated restore code */
- 	movl	relocated_restore_code, %eax
- 	jmpl	*%eax
-+SYM_CODE_END(restore_image)
- 
- /* code below has been relocated to a safe page */
--ENTRY(core_restore_code)
-+SYM_CODE_START(core_restore_code)
- 	movl	temp_pgt, %eax
- 	movl	%eax, %cr3
- 
-@@ -77,6 +78,7 @@ copy_loop:
- 
- done:
- 	jmpl	*%ebx
-+SYM_CODE_END(core_restore_code)
- 
- 	/* code below belongs to the image kernel */
- 	.align PAGE_SIZE
-diff --git a/arch/x86/realmode/rm/trampoline_32.S b/arch/x86/realmode/rm/trampoline_32.S
-index ff00594..3fad907 100644
---- a/arch/x86/realmode/rm/trampoline_32.S
-+++ b/arch/x86/realmode/rm/trampoline_32.S
-@@ -29,7 +29,7 @@
- 	.code16
- 
- 	.balign	PAGE_SIZE
--ENTRY(trampoline_start)
-+SYM_CODE_START(trampoline_start)
- 	wbinvd			# Needed for NUMA-Q should be harmless for others
- 
- 	LJMPW_RM(1f)
-@@ -54,11 +54,13 @@ ENTRY(trampoline_start)
- 	lmsw	%dx			# into protected mode
- 
- 	ljmpl	$__BOOT_CS, $pa_startup_32
-+SYM_CODE_END(trampoline_start)
- 
- 	.section ".text32","ax"
- 	.code32
--ENTRY(startup_32)			# note: also used from wakeup_asm.S
-+SYM_CODE_START(startup_32)			# note: also used from wakeup_asm.S
- 	jmp	*%eax
-+SYM_CODE_END(startup_32)
- 
- 	.bss
- 	.balign 8
-diff --git a/arch/x86/xen/xen-asm_32.S b/arch/x86/xen/xen-asm_32.S
-index c15db06..8b8f835 100644
---- a/arch/x86/xen/xen-asm_32.S
-+++ b/arch/x86/xen/xen-asm_32.S
-@@ -56,7 +56,7 @@
- 	_ASM_EXTABLE(1b,2b)
- .endm
- 
--ENTRY(xen_iret)
-+SYM_CODE_START(xen_iret)
- 	/* test eflags for special cases */
- 	testl $(X86_EFLAGS_VM | XEN_EFLAGS_NMI), 8(%esp)
- 	jnz hyper_iret
-@@ -122,6 +122,7 @@ xen_iret_end_crit:
- hyper_iret:
- 	/* put this out of line since its very rarely used */
- 	jmp hypercall_page + __HYPERVISOR_iret * 32
-+SYM_CODE_END(xen_iret)
- 
- 	.globl xen_iret_start_crit, xen_iret_end_crit
- 
-@@ -165,7 +166,7 @@ hyper_iret:
-  * SAVE_ALL state before going on, since it's usermode state which we
-  * eventually need to restore.
-  */
--ENTRY(xen_iret_crit_fixup)
-+SYM_CODE_START(xen_iret_crit_fixup)
- 	/*
- 	 * Paranoia: Make sure we're really coming from kernel space.
- 	 * One could imagine a case where userspace jumps into the
-@@ -204,4 +205,4 @@ ENTRY(xen_iret_crit_fixup)
- 
- 	lea 4(%edi), %esp		/* point esp to new frame */
- 2:	jmp xen_do_upcall
+  * We can't use hex constants here due to a bug in gas.
+diff --git a/arch/arm/mach-ep93xx/include/mach/ep93xx-regs.h b/arch/arm/mach-ep93xx/ep93xx-regs.h
+similarity index 94%
+rename from arch/arm/mach-ep93xx/include/mach/ep93xx-regs.h
+rename to arch/arm/mach-ep93xx/ep93xx-regs.h
+index 6839ea032e58..8fa3646de0a4 100644
+--- a/arch/arm/mach-ep93xx/include/mach/ep93xx-regs.h
++++ b/arch/arm/mach-ep93xx/ep93xx-regs.h
+@@ -1,8 +1,4 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * arch/arm/mach-ep93xx/include/mach/ep93xx-regs.h
+- */
 -
-+SYM_CODE_END(xen_iret_crit_fixup)
+ #ifndef __ASM_ARCH_EP93XX_REGS_H
+ #define __ASM_ARCH_EP93XX_REGS_H
+ 
+diff --git a/arch/arm/mach-ep93xx/gpio-ep93xx.h b/arch/arm/mach-ep93xx/gpio-ep93xx.h
+index 242af4a401ea..7b46eb7e5507 100644
+--- a/arch/arm/mach-ep93xx/gpio-ep93xx.h
++++ b/arch/arm/mach-ep93xx/gpio-ep93xx.h
+@@ -4,7 +4,7 @@
+ #ifndef __GPIO_EP93XX_H
+ #define __GPIO_EP93XX_H
+ 
+-#include <mach/ep93xx-regs.h>
++#include "ep93xx-regs.h"
+ 
+ #define EP93XX_GPIO_PHYS_BASE		EP93XX_APB_PHYS(0x00040000)
+ #define EP93XX_GPIO_BASE		EP93XX_APB_IOMEM(0x00040000)
+diff --git a/arch/arm/mach-ep93xx/include/mach/uncompress.h b/arch/arm/mach-ep93xx/include/mach/uncompress.h
+index b3ec1db988db..e20bcab702b2 100644
+--- a/arch/arm/mach-ep93xx/include/mach/uncompress.h
++++ b/arch/arm/mach-ep93xx/include/mach/uncompress.h
+@@ -5,7 +5,6 @@
+  * Copyright (C) 2006 Lennert Buytenhek <buytenh@wantstofly.org>
+  */
+ 
+-#include <mach/ep93xx-regs.h>
+ #include <asm/mach-types.h>
+ 
+ static unsigned char __raw_readb(unsigned int ptr)
+diff --git a/arch/arm/mach-ep93xx/soc.h b/arch/arm/mach-ep93xx/soc.h
+index 770743bbaf80..670884ba754e 100644
+--- a/arch/arm/mach-ep93xx/soc.h
++++ b/arch/arm/mach-ep93xx/soc.h
+@@ -9,7 +9,7 @@
+ #ifndef _EP93XX_SOC_H
+ #define _EP93XX_SOC_H
+ 
+-#include <mach/ep93xx-regs.h>
++#include "ep93xx-regs.h"
+ #include "irqs.h"
+ 
+ /*
+-- 
+2.20.0
+
