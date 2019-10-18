@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7107CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 372F7CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBCA622475
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00DCF2247C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436587;
-	bh=NLWDYhQ7BlPtONutR4aCq9O3/nd9q7B7s6ExkFNCdB8=;
+	s=default; t=1571436594;
+	bh=NwcaHzqZ1lU4FzfoWU8IZZNT9FuebeODGEm+5dugqd8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cs3JebLJvS4PQ9WjMrP/jvdVLFhvDp/AUn2Oiqx2j5X+ESoTLpM/BHHT9c5l316zv
-	 dIvB6rbWxpRFVsdtBjLl5Ac5FwDIBmIRm+Djv4N8Oa9ACPbYTcYfNjT3Yrn3vf4e+m
-	 YQ1Cn5Pb3b88uKW8RDiu80BQ7V4unVooWG67WNxk=
+	b=MMPtYYKKx40Ch5TxjNRr86jSBpl14Rqt/KptSw11I63LmDV6G1/hT3lCzHEwIvm20
+	 K6r9vBgN3NqGW9RgJ1M+IOL225qx1eOax8WIAmcbaZgwRBoS2VCqJnGCqHvnE9lKjZ
+	 h31TqNgyGq10wZdByaYAiGSgBmu+VOsV+F2z/a0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389244AbfJRWJq (ORCPT
+        id S2389399AbfJRWJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:09:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41976 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:09:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388745AbfJRWJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:09:17 -0400
+        id S2388387AbfJRWJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:09:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53ED9205F4;
-        Fri, 18 Oct 2019 22:09:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15351222C2;
+        Fri, 18 Oct 2019 22:09:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436557;
-        bh=NLWDYhQ7BlPtONutR4aCq9O3/nd9q7B7s6ExkFNCdB8=;
+        s=default; t=1571436565;
+        bh=NwcaHzqZ1lU4FzfoWU8IZZNT9FuebeODGEm+5dugqd8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hsJZSeOdK5gHNNCAlDQYGm5/5yWZsNPcOzqR+3929wbrR+bC//hwZA5IeJHnuDErm
-         F73ftStbUhDsheZVQRhTwMYNzsWsIzZu8agmdmiIQZ98OTXChBNJ5V0eGC2dr2y9BP
-         YOWmG7INU8IRzS5oXq7ef9laWLR5gVccasoZTCFE=
+        b=2YtmuNUw7CPFwaVw35NX3L+/b4+hccYYIHGLQTOAhKpR+Cty0szW8oqMxj/x2KfLd
+         pMb75BIm9EeKHe2W3iVkhTig8kAAATVps1ljisRsvJStte+m35aboKQaMIsmwjYgkq
+         VOmDGTlhySZpydOGdxsHruuJ7g7E4IixNsdPnVZU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 54/56] NFSv4: Fix leak of clp->cl_acceptor string
-Date:   Fri, 18 Oct 2019 18:07:51 -0400
-Message-Id: <20191018220753.10002-54-sashal@kernel.org>
+Cc:     Julian Sax <jsbc@gmx.de>, Tim Aldridge <taldridge@mac.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 02/29] HID: i2c-hid: add Direkt-Tek DTLAPY133-1 to descriptor override
+Date:   Fri, 18 Oct 2019 18:08:53 -0400
+Message-Id: <20191018220920.10545-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
-References: <20191018220753.10002-1-sashal@kernel.org>
+In-Reply-To: <20191018220920.10545-1-sashal@kernel.org>
+References: <20191018220920.10545-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,58 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Julian Sax <jsbc@gmx.de>
 
-[ Upstream commit 1047ec868332034d1fbcb2fae19fe6d4cb869ff2 ]
+[ Upstream commit 399474e4c1100bca264ed14fa3ad0d68fab484d8 ]
 
-Our client can issue multiple SETCLIENTID operations to the same
-server in some circumstances. Ensure that calls to
-nfs4_proc_setclientid() after the first one do not overwrite the
-previously allocated cl_acceptor string.
+This device uses the SIPODEV SP1064 touchpad, which does not
+supply descriptors, so it has to be added to the override list.
 
-unreferenced object 0xffff888461031800 (size 32):
-  comm "mount.nfs", pid 2227, jiffies 4294822467 (age 1407.749s)
-  hex dump (first 32 bytes):
-    6e 66 73 40 6b 6c 69 6d 74 2e 69 62 2e 31 30 31  nfs@klimt.ib.101
-    35 67 72 61 6e 67 65 72 2e 6e 65 74 00 00 00 00  5granger.net....
-  backtrace:
-    [<00000000ab820188>] __kmalloc+0x128/0x176
-    [<00000000eeaf4ec8>] gss_stringify_acceptor+0xbd/0x1a7 [auth_rpcgss]
-    [<00000000e85e3382>] nfs4_proc_setclientid+0x34e/0x46c [nfsv4]
-    [<000000003d9cf1fa>] nfs40_discover_server_trunking+0x7a/0xed [nfsv4]
-    [<00000000b81c3787>] nfs4_discover_server_trunking+0x81/0x244 [nfsv4]
-    [<000000000801b55f>] nfs4_init_client+0x1b0/0x238 [nfsv4]
-    [<00000000977daf7f>] nfs4_set_client+0xfe/0x14d [nfsv4]
-    [<0000000053a68a2a>] nfs4_create_server+0x107/0x1db [nfsv4]
-    [<0000000088262019>] nfs4_remote_mount+0x2c/0x59 [nfsv4]
-    [<00000000e84a2fd0>] legacy_get_tree+0x2d/0x4c
-    [<00000000797e947c>] vfs_get_tree+0x20/0xc7
-    [<00000000ecabaaa8>] fc_mount+0xe/0x36
-    [<00000000f15fafc2>] vfs_kern_mount+0x74/0x8d
-    [<00000000a3ff4e26>] nfs_do_root_mount+0x8a/0xa3 [nfsv4]
-    [<00000000d1c2b337>] nfs4_try_mount+0x58/0xad [nfsv4]
-    [<000000004c9bddee>] nfs_fs_mount+0x820/0x869 [nfs]
-
-Fixes: f11b2a1cfbf5 ("nfs4: copy acceptor name from context ... ")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Reported-by: Tim Aldridge <taldridge@mac.com>
+Signed-off-by: Julian Sax <jsbc@gmx.de>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 6409ff4876cb5..af062e9f45803 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -5655,6 +5655,7 @@ int nfs4_proc_setclientid(struct nfs_client *clp, u32 program,
- 	}
- 	status = task->tk_status;
- 	if (setclientid.sc_cred) {
-+		kfree(clp->cl_acceptor);
- 		clp->cl_acceptor = rpcauth_stringify_acceptor(setclientid.sc_cred);
- 		put_rpccred(setclientid.sc_cred);
- 	}
+diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+index cac262a912c12..89f2976f9c534 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
++++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+@@ -330,6 +330,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
+ 		},
+ 		.driver_data = (void *)&sipodev_desc
+ 	},
++	{
++		.ident = "Direkt-Tek DTLAPY133-1",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Direkt-Tek"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "DTLAPY133-1"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
+ 	{
+ 		.ident = "Mediacom Flexbook Edge 11",
+ 		.matches = {
 -- 
 2.20.1
 
