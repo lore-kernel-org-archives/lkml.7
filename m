@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF280CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5AECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A116E21D7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B4F721D7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633447AbfJRKOB (ORCPT
+        id S2633496AbfJRKOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 06:14:01 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:32888 "EHLO foss.arm.com"
+        Fri, 18 Oct 2019 06:14:18 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:33014 "EHLO foss.arm.com"
         rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S2633420AbfJRKN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 06:13:57 -0400
+        id S2633469AbfJRKOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 06:14:16 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E88657AD;
-        Fri, 18 Oct 2019 03:13:36 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 18B6D8E6;
+        Fri, 18 Oct 2019 03:13:51 -0700 (PDT)
 Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E9B83F6C4;
-        Fri, 18 Oct 2019 03:13:34 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 81BEF3F6C4;
+        Fri, 18 Oct 2019 03:13:48 -0700 (PDT)
 From:   Steven Price <steven.price@arm.com>
 To:     linux-mm@kvack.org
 Cc:     Steven Price <steven.price@arm.com>,
@@ -44,9 +44,9 @@ Cc:     Steven Price <steven.price@arm.com>,
         Mark Rutland <Mark.Rutland@arm.com>,
         "Liang, Kan" <kan.liang@linux.intel.com>,
         Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v12 12/22] mm: pagewalk: Allow walking without vma
-Date:   Fri, 18 Oct 2019 11:12:38 +0100
-Message-Id: <20191018101248.33727-13-steven.price@arm.com>
+Subject: [PATCH v12 17/22] x86: mm: Convert ptdump_walk_pgd_level_debugfs() to take an mm_struct
+Date:   Fri, 18 Oct 2019 11:12:43 +0100
+Message-Id: <20191018101248.33727-18-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018101248.33727-1-steven.price@arm.com>
 References: <20191018101248.33727-1-steven.price@arm.com>
@@ -57,78 +57,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since 48684a65b4e3: "mm: pagewalk: fix misbehavior of walk_page_range
-for vma(VM_PFNMAP)", page_table_walk() will report any kernel area as
-a hole, because it lacks a vma.
+To enable x86 to use the generic walk_page_range() function, the
+callers of ptdump_walk_pgd_level_debugfs() need to pass in the mm_struct.
 
-This means each arch has re-implemented page table walking when needed,
-for example in the per-arch ptdump walker.
-
-Remove the requirement to have a vma except when trying to split huge
-pages.
+This means that ptdump_walk_pgd_level_core() is now always passed a
+valid pgd, so drop the support for pgd==NULL.
 
 Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- mm/pagewalk.c | 25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+ arch/x86/include/asm/pgtable.h |  3 ++-
+ arch/x86/mm/debug_pagetables.c |  8 ++++----
+ arch/x86/mm/dump_pagetables.c  | 14 ++++++--------
+ 3 files changed, 12 insertions(+), 13 deletions(-)
 
-diff --git a/mm/pagewalk.c b/mm/pagewalk.c
-index fc4d98a3a5a0..4139e9163aee 100644
---- a/mm/pagewalk.c
-+++ b/mm/pagewalk.c
-@@ -38,7 +38,7 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
- 	do {
- again:
- 		next = pmd_addr_end(addr, end);
--		if (pmd_none(*pmd) || !walk->vma) {
-+		if (pmd_none(*pmd)) {
- 			if (ops->pte_hole)
- 				err = ops->pte_hole(addr, next, walk);
- 			if (err)
-@@ -61,9 +61,14 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
- 		if (!ops->pte_entry)
- 			continue;
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index 1a2b469f6e75..1b255987712e 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -30,7 +30,8 @@ extern pgd_t early_top_pgt[PTRS_PER_PGD];
+ int __init __early_make_pgtable(unsigned long address, pmdval_t pmd);
  
--		split_huge_pmd(walk->vma, pmd, addr);
--		if (pmd_trans_unstable(pmd))
--			goto again;
-+		if (walk->vma) {
-+			split_huge_pmd(walk->vma, pmd, addr);
-+			if (pmd_trans_unstable(pmd))
-+				goto again;
-+		} else if (pmd_leaf(*pmd)) {
-+			continue;
-+		}
-+
- 		err = walk_pte_range(pmd, addr, next, walk);
- 		if (err)
- 			break;
-@@ -84,7 +89,7 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
- 	do {
-  again:
- 		next = pud_addr_end(addr, end);
--		if (pud_none(*pud) || !walk->vma) {
-+		if (pud_none(*pud)) {
- 			if (ops->pte_hole)
- 				err = ops->pte_hole(addr, next, walk);
- 			if (err)
-@@ -98,9 +103,13 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
- 				break;
- 		}
+ void ptdump_walk_pgd_level(struct seq_file *m, struct mm_struct *mm);
+-void ptdump_walk_pgd_level_debugfs(struct seq_file *m, pgd_t *pgd, bool user);
++void ptdump_walk_pgd_level_debugfs(struct seq_file *m, struct mm_struct *mm,
++				   bool user);
+ void ptdump_walk_pgd_level_checkwx(void);
+ void ptdump_walk_user_pgd_level_checkwx(void);
  
--		split_huge_pud(walk->vma, pud, addr);
--		if (pud_none(*pud))
--			goto again;
-+		if (walk->vma) {
-+			split_huge_pud(walk->vma, pud, addr);
-+			if (pud_none(*pud))
-+				goto again;
-+		} else if (pud_leaf(*pud)) {
-+			continue;
-+		}
+diff --git a/arch/x86/mm/debug_pagetables.c b/arch/x86/mm/debug_pagetables.c
+index 39001a401eff..d0efec713c6c 100644
+--- a/arch/x86/mm/debug_pagetables.c
++++ b/arch/x86/mm/debug_pagetables.c
+@@ -7,7 +7,7 @@
  
- 		if (ops->pmd_entry || ops->pte_entry)
- 			err = walk_pmd_range(pud, addr, next, walk);
+ static int ptdump_show(struct seq_file *m, void *v)
+ {
+-	ptdump_walk_pgd_level_debugfs(m, NULL, false);
++	ptdump_walk_pgd_level_debugfs(m, &init_mm, false);
+ 	return 0;
+ }
+ 
+@@ -17,7 +17,7 @@ static int ptdump_curknl_show(struct seq_file *m, void *v)
+ {
+ 	if (current->mm->pgd) {
+ 		down_read(&current->mm->mmap_sem);
+-		ptdump_walk_pgd_level_debugfs(m, current->mm->pgd, false);
++		ptdump_walk_pgd_level_debugfs(m, current->mm, false);
+ 		up_read(&current->mm->mmap_sem);
+ 	}
+ 	return 0;
+@@ -30,7 +30,7 @@ static int ptdump_curusr_show(struct seq_file *m, void *v)
+ {
+ 	if (current->mm->pgd) {
+ 		down_read(&current->mm->mmap_sem);
+-		ptdump_walk_pgd_level_debugfs(m, current->mm->pgd, true);
++		ptdump_walk_pgd_level_debugfs(m, current->mm, true);
+ 		up_read(&current->mm->mmap_sem);
+ 	}
+ 	return 0;
+@@ -43,7 +43,7 @@ DEFINE_SHOW_ATTRIBUTE(ptdump_curusr);
+ static int ptdump_efi_show(struct seq_file *m, void *v)
+ {
+ 	if (efi_mm.pgd)
+-		ptdump_walk_pgd_level_debugfs(m, efi_mm.pgd, false);
++		ptdump_walk_pgd_level_debugfs(m, &efi_mm, false);
+ 	return 0;
+ }
+ 
+diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
+index 24fe76325b31..2f5f32f21f81 100644
+--- a/arch/x86/mm/dump_pagetables.c
++++ b/arch/x86/mm/dump_pagetables.c
+@@ -518,16 +518,12 @@ static inline bool is_hypervisor_range(int idx)
+ static void ptdump_walk_pgd_level_core(struct seq_file *m, pgd_t *pgd,
+ 				       bool checkwx, bool dmesg)
+ {
+-	pgd_t *start = INIT_PGD;
++	pgd_t *start = pgd;
+ 	pgprotval_t prot, eff;
+ 	int i;
+ 	struct pg_state st = {};
+ 
+-	if (pgd) {
+-		start = pgd;
+-		st.to_dmesg = dmesg;
+-	}
+-
++	st.to_dmesg = dmesg;
+ 	st.check_wx = checkwx;
+ 	st.seq = m;
+ 	if (checkwx)
+@@ -572,8 +568,10 @@ void ptdump_walk_pgd_level(struct seq_file *m, struct mm_struct *mm)
+ 	ptdump_walk_pgd_level_core(m, mm->pgd, false, true);
+ }
+ 
+-void ptdump_walk_pgd_level_debugfs(struct seq_file *m, pgd_t *pgd, bool user)
++void ptdump_walk_pgd_level_debugfs(struct seq_file *m, struct mm_struct *mm,
++				   bool user)
+ {
++	pgd_t *pgd = mm->pgd;
+ #ifdef CONFIG_PAGE_TABLE_ISOLATION
+ 	if (user && boot_cpu_has(X86_FEATURE_PTI))
+ 		pgd = kernel_to_user_pgdp(pgd);
+@@ -599,7 +597,7 @@ void ptdump_walk_user_pgd_level_checkwx(void)
+ 
+ void ptdump_walk_pgd_level_checkwx(void)
+ {
+-	ptdump_walk_pgd_level_core(NULL, NULL, true, false);
++	ptdump_walk_pgd_level_core(NULL, INIT_PGD, true, false);
+ }
+ 
+ static int __init pt_dump_init(void)
 -- 
 2.20.1
 
