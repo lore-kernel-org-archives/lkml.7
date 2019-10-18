@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FAA4CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB60CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 216B6222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AD3C222CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:42:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501970AbfJRPme (ORCPT
+        id S2502097AbfJRPmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:42:34 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:39527 "EHLO
+        Fri, 18 Oct 2019 11:42:38 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:51295 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405757AbfJRPmc (ORCPT
+        with ESMTP id S2501966AbfJRPme (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:42:32 -0400
+        Fri, 18 Oct 2019 11:42:34 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MLR9p-1idIMQ30kt-00IYEY; Fri, 18 Oct 2019 17:42:21 +0200
+ 1MNKqC-1ifkHC3J4k-00Orkl; Fri, 18 Oct 2019 17:42:24 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Daniel Mack <daniel@zonque.org>,
         Haojian Zhuang <haojian.zhuang@gmail.com>,
@@ -31,137 +31,139 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH 08/46] ARM: pxa: move regs-lcd.h into driver
-Date:   Fri, 18 Oct 2019 17:41:23 +0200
-Message-Id: <20191018154201.1276638-8-arnd@arndb.de>
+        Jens Axboe <axboe@kernel.dk>, linux-ide@vger.kernel.org
+Subject: [PATCH 14/46] ARM: pxa: use pdev resource for palmld mmio
+Date:   Fri, 18 Oct 2019 17:41:29 +0200
+Message-Id: <20191018154201.1276638-14-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191018154052.1276506-1-arnd@arndb.de>
 References: <20191018154052.1276506-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:5LAnEr6iwK59JevwtHrYZroQN0McBCT7qyhw48WP7uThIH9moug
- DFbvYgETyVbB08XUvk/zUJ/9z1oe9LvNnc2kbVl+FKRiYDVArMPrcONKrV/8VAlPlQOcbrK
- 1VjYR2TCvM5GjapZzXH33Oa7HA+ZdVo7VtqkozzDGGiJ931w9rlOBRhqlL+lgwmC+ZJyUZ7
- S7kjWYmaVoMwEA+Y4OF0g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vHxA+ZpjrdY=:XNCy9TULDG9fJPLTSxJWH9
- RzrjppOcb3r1l6j92A6STsqoCsmwOnL/W8eWKBqCbgTGwEXQPhIwj3WHlDUmNSeLMgNWQ8LO/
- yGSXtK9RIIhblaQhJ8WwUkKIwh2quYl52HNmdKFMdXVXsZrp4skV4BS4CBN80WNRt+JL2PtNJ
- JNB1Vk6RMXsLJWIzvHbxfQ0/bEFjIjH+xrst3yv7cA4d2AV9hsydUDw1mO27RX6Fz/Ic2CifQ
- ixlCP9W3blwBWzF4xIYW4kPaIZuhZwz32D6sLwsJ3N/tbRsi/isqTBk7fsAa0rJBSQgscpf+j
- 2c0f+eQFxy3kea8sdTSskHXuBdGuU2R7DEkqDJkmm0Pd51dsiEe1Dbo0LUEH3H9bY/V311xYl
- Ve24rNLJhOWk4bOpbk5Ok9QLPTRnR2pl59v9oHQfyvICrdmR4it2dnv87jDdYgoqUIR3lndjF
- MbiZSDCepHhYWhUXab5eqIZTsynSLEpfuXDFCLyv5bZFPM3D9VEbTCvgqL4MNTUswVfQgESAj
- 9veFgI3CpZkztrXyX2x6T0EgGAvOAMPaSchSyX/Y5hAQVG5Awc9H6FuoUEMqy9dN9lkZZzS2L
- hkC/ToH3fuv8bDPmPwGdrpaGPUo02QISaTfJxW8mJJJ51CyS7psslutJqgXDxN872C6mvKl9E
- w3oXbWi5LSyYkqbc3hYRZv4RtwENikgUnq4YxkqGCt3XxAWVilcQo93g7XYcbX47OndD3q+Km
- gvjD81yBDg5OGm7UgZC2ghsIVyu+YayYRjN16jXk1VzXS/Eiuawe3ON77og0MHmHdwvu5JxEg
- 4zHCADbvpnH2aMDhvMzuTICkExfS8JO52Aq7YYcL5CNYZojvmlba3ZS9RJ6FPFdZXcjK+HICO
- tV684DZtaYjUf1cF8AHA==
+X-Provags-ID: V03:K1:9s9xjur6L83/idKD1YLwArjJyhyl8Cp7qlwCvaEgeO21rFy+Txo
+ lkGteYOQn0MBqAMwkJi0uRdkZLsfImWHPdYLE7PLW21Sd3U+j5xmJVqizean3Yo6tGIyt4j
+ b1FTAdx0jX4nBBwGdwJ6o8pC+wzWxEhYJyN0mswYrz7qjItCmmaKqVNf3OcjWcOw+Au25rz
+ dMaGUYwa0lBQt8U9W94dw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:CGnzZHc3OD0=:1UpnXV4WJndTPk7c3U4mVT
+ 58XASwopJp2Pwtju3qRPQf7vELH43tB/mnU3w9S1XGNK2fKElPNqbLdX9BoaoFCn2E43lKsGF
+ 1k7jJBif/36MpjBUMzqOuHQkJSUwfurbA0nLOTsKz+dvxxR+s/E9dJrb2FN3K7J1oRAl0kEQQ
+ UMjGv9xBTAxrHHVMoHxIGTqBx6VqHLXKW4ntZPFJl8OMnxHeJp5J7qXk0xS4UhrE1mOeoxUtR
+ xmWF+qAp/KSrMZvQOYHiuRjNN7QgR6GVaCBLcVEN2wvHLml4jsRtWWJdcgvrwzioOGFjiwlh6
+ s+gEbfWpIHBId2plMIweDQmCWORT+CRxcWsEYEzcrXFDdyA092E6OqKzicnGMuw+gL2I6qrLI
+ osG4LuHgVUkphSW7aOg4kBviIGnWDjQjzzU7njddgQ6SgzEJiDSt14MsT0q8bGY/RcMrPm8/+
+ HVDQwKwSmGR09sO96wMI5oKvzXwZeW1HFYATOlw9bbgTKpnYiQ2f79SbVO2YHcKjFulZsXCiI
+ pFUxCUAJ1J40OGkqr01masMQecvHN+gbyt0L4r5M2KVdZ5Hcw52J9lFNGrKIkvImIaNIQL4ZJ
+ lZCQBtZ1r3RcCRgxeJNWEOFkZbEfHV7beKkonkUlPpMbgur3MAu1PSMPDciZw8+4CCZoRU4Ll
+ 4NZ/jDpVOVwFdDHEsY21mQW07Qhxy942y0cUYlEWYZnmVoYwKF/WtXdeX99tqzk2meV657IHA
+ n6/zsOBjfI2E3hIN08dSwgB8KAS8R4OOti2DQcxhPCzraPjhD+zU6E6L4rpqqFZ0xfT+QBuUk
+ XeACZjHjrhwQ+lau79HXI35qmO1otzkjAuHOFjjfMIHDYmjuBTkWdV+2NJEf5cR8G1OOTg1JR
+ FDDTyCTRoc9JoCXNmHbw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only the pxafb driver uses this header, so move it into the
-same directory. The SMART_* macros are required by some
-platform data definitions and can go into the
-linux/platform_data/video-pxafb.h header.
+The palmld header is almost unused in drivers, the only
+remaining thing now is the PATA device address, which should
+really be passed as a resource.
 
 Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-fbdev@vger.kernel.org
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: linux-ide@vger.kernel.org
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- .../video/fbdev/pxa3xx-regs.h                 | 19 ----------------
- drivers/video/fbdev/pxafb.c                   |  1 +
- include/linux/platform_data/video-pxafb.h     | 22 ++++++++++++++++++-
- 3 files changed, 22 insertions(+), 20 deletions(-)
- rename arch/arm/mach-pxa/include/mach/regs-lcd.h => drivers/video/fbdev/pxa3xx-regs.h (90%)
+ arch/arm/mach-pxa/palmld-pcmcia.c             |  3 ++-
+ arch/arm/mach-pxa/palmld.c                    | 12 +++++++++---
+ arch/arm/mach-pxa/{include/mach => }/palmld.h |  2 +-
+ drivers/ata/pata_palmld.c                     |  3 +--
+ 4 files changed, 13 insertions(+), 7 deletions(-)
+ rename arch/arm/mach-pxa/{include/mach => }/palmld.h (98%)
 
-diff --git a/arch/arm/mach-pxa/include/mach/regs-lcd.h b/drivers/video/fbdev/pxa3xx-regs.h
-similarity index 90%
-rename from arch/arm/mach-pxa/include/mach/regs-lcd.h
-rename to drivers/video/fbdev/pxa3xx-regs.h
-index 6a434675f84a..6a96610ef9b5 100644
---- a/arch/arm/mach-pxa/include/mach/regs-lcd.h
-+++ b/drivers/video/fbdev/pxa3xx-regs.h
-@@ -177,23 +177,4 @@
- #define PRSR_ST_OK	(1 << 9)	/* Status OK */
- #define PRSR_CON_NT	(1 << 10)	/* Continue to Next Command */
+diff --git a/arch/arm/mach-pxa/palmld-pcmcia.c b/arch/arm/mach-pxa/palmld-pcmcia.c
+index 07e0f7438db1..720294a50864 100644
+--- a/arch/arm/mach-pxa/palmld-pcmcia.c
++++ b/arch/arm/mach-pxa/palmld-pcmcia.c
+@@ -13,9 +13,10 @@
+ #include <linux/gpio.h>
  
--#define SMART_CMD_A0			 (0x1 << 8)
--#define SMART_CMD_READ_STATUS_REG	 (0x0 << 9)
--#define SMART_CMD_READ_FRAME_BUFFER	((0x0 << 9) | SMART_CMD_A0)
--#define SMART_CMD_WRITE_COMMAND		 (0x1 << 9)
--#define SMART_CMD_WRITE_DATA		((0x1 << 9) | SMART_CMD_A0)
--#define SMART_CMD_WRITE_FRAME		((0x2 << 9) | SMART_CMD_A0)
--#define SMART_CMD_WAIT_FOR_VSYNC	 (0x3 << 9)
--#define SMART_CMD_NOOP			 (0x4 << 9)
--#define SMART_CMD_INTERRUPT		 (0x5 << 9)
--
--#define SMART_CMD(x)	(SMART_CMD_WRITE_COMMAND | ((x) & 0xff))
--#define SMART_DAT(x)	(SMART_CMD_WRITE_DATA | ((x) & 0xff))
--
--/* SMART_DELAY() is introduced for software controlled delay primitive which
-- * can be inserted between command sequences, unused command 0x6 is used here
-- * and delay ranges from 0ms ~ 255ms
-- */
--#define SMART_CMD_DELAY		(0x6 << 9)
--#define SMART_DELAY(ms)		(SMART_CMD_DELAY | ((ms) & 0xff))
- #endif /* __ASM_ARCH_REGS_LCD_H */
-diff --git a/drivers/video/fbdev/pxafb.c b/drivers/video/fbdev/pxafb.c
-index e68b8a69db92..a65453c6c390 100644
---- a/drivers/video/fbdev/pxafb.c
-+++ b/drivers/video/fbdev/pxafb.c
-@@ -72,6 +72,7 @@
- #define DEBUG_VAR 1
+ #include <asm/mach-types.h>
+-#include <mach/palmld.h>
+ #include <pcmcia/soc_common.h>
  
- #include "pxafb.h"
-+#include "pxa3xx-regs.h"
- 
- /* Bits which should not be set in machine configuration structures */
- #define LCCR0_INVALID_CONFIG_MASK	(LCCR0_OUM | LCCR0_BM | LCCR0_QDM |\
-diff --git a/include/linux/platform_data/video-pxafb.h b/include/linux/platform_data/video-pxafb.h
-index b3d574778326..6333bac166a5 100644
---- a/include/linux/platform_data/video-pxafb.h
-+++ b/include/linux/platform_data/video-pxafb.h
-@@ -8,7 +8,6 @@
-  */
- 
- #include <linux/fb.h>
--#include <mach/regs-lcd.h>
- 
- /*
-  * Supported LCD connections
-@@ -153,6 +152,27 @@ struct pxafb_mach_info {
- void pxa_set_fb_info(struct device *, struct pxafb_mach_info *);
- unsigned long pxafb_get_hsync_time(struct device *dev);
- 
-+/* smartpanel related */
-+#define SMART_CMD_A0			 (0x1 << 8)
-+#define SMART_CMD_READ_STATUS_REG	 (0x0 << 9)
-+#define SMART_CMD_READ_FRAME_BUFFER	((0x0 << 9) | SMART_CMD_A0)
-+#define SMART_CMD_WRITE_COMMAND		 (0x1 << 9)
-+#define SMART_CMD_WRITE_DATA		((0x1 << 9) | SMART_CMD_A0)
-+#define SMART_CMD_WRITE_FRAME		((0x2 << 9) | SMART_CMD_A0)
-+#define SMART_CMD_WAIT_FOR_VSYNC	 (0x3 << 9)
-+#define SMART_CMD_NOOP			 (0x4 << 9)
-+#define SMART_CMD_INTERRUPT		 (0x5 << 9)
++#include "palmld.h"
 +
-+#define SMART_CMD(x)	(SMART_CMD_WRITE_COMMAND | ((x) & 0xff))
-+#define SMART_DAT(x)	(SMART_CMD_WRITE_DATA | ((x) & 0xff))
+ static struct gpio palmld_pcmcia_gpios[] = {
+ 	{ GPIO_NR_PALMLD_PCMCIA_POWER,	GPIOF_INIT_LOW,	"PCMCIA Power" },
+ 	{ GPIO_NR_PALMLD_PCMCIA_RESET,	GPIOF_INIT_HIGH,"PCMCIA Reset" },
+diff --git a/arch/arm/mach-pxa/palmld.c b/arch/arm/mach-pxa/palmld.c
+index d85146957004..d821606ce0b5 100644
+--- a/arch/arm/mach-pxa/palmld.c
++++ b/arch/arm/mach-pxa/palmld.c
+@@ -29,8 +29,8 @@
+ #include <asm/mach/map.h>
+ 
+ #include "pxa27x.h"
++#include "palmld.h"
+ #include <linux/platform_data/asoc-pxa.h>
+-#include <mach/palmld.h>
+ #include <linux/platform_data/mmc-pxamci.h>
+ #include <linux/platform_data/video-pxafb.h>
+ #include <linux/platform_data/irda-pxaficp.h>
+@@ -279,9 +279,15 @@ static inline void palmld_leds_init(void) {}
+  * HDD
+  ******************************************************************************/
+ #if defined(CONFIG_PATA_PALMLD) || defined(CONFIG_PATA_PALMLD_MODULE)
++static struct resource palmld_ide_resources[] = {
++	DEFINE_RES_MEM(PALMLD_IDE_PHYS, 0x1000),
++};
 +
-+/* SMART_DELAY() is introduced for software controlled delay primitive which
-+ * can be inserted between command sequences, unused command 0x6 is used here
-+ * and delay ranges from 0ms ~ 255ms
-+ */
-+#define SMART_CMD_DELAY		(0x6 << 9)
-+#define SMART_DELAY(ms)		(SMART_CMD_DELAY | ((ms) & 0xff))
-+
- #ifdef CONFIG_FB_PXA_SMARTPANEL
- extern int pxafb_smart_queue(struct fb_info *info, uint16_t *cmds, int);
- extern int pxafb_smart_flush(struct fb_info *info);
+ static struct platform_device palmld_ide_device = {
+-	.name	= "pata_palmld",
+-	.id	= -1,
++	.name		= "pata_palmld",
++	.id		= -1,
++	.resource	= palmld_ide_resources,
++	.num_resources	= ARRAY_SIZE(palmld_ide_resources),
+ };
+ 
+ static struct gpiod_lookup_table palmld_ide_gpio_table = {
+diff --git a/arch/arm/mach-pxa/include/mach/palmld.h b/arch/arm/mach-pxa/palmld.h
+similarity index 98%
+rename from arch/arm/mach-pxa/include/mach/palmld.h
+rename to arch/arm/mach-pxa/palmld.h
+index 99a6d8b3a1e3..ee3bc15b71a2 100644
+--- a/arch/arm/mach-pxa/include/mach/palmld.h
++++ b/arch/arm/mach-pxa/palmld.h
+@@ -9,7 +9,7 @@
+ #ifndef _INCLUDE_PALMLD_H_
+ #define _INCLUDE_PALMLD_H_
+ 
+-#include "irqs.h" /* PXA_GPIO_TO_IRQ */
++#include <mach/irqs.h> /* PXA_GPIO_TO_IRQ */
+ 
+ /** HERE ARE GPIOs **/
+ 
+diff --git a/drivers/ata/pata_palmld.c b/drivers/ata/pata_palmld.c
+index 2448441571ed..400e65190904 100644
+--- a/drivers/ata/pata_palmld.c
++++ b/drivers/ata/pata_palmld.c
+@@ -25,7 +25,6 @@
+ #include <linux/gpio/consumer.h>
+ 
+ #include <scsi/scsi_host.h>
+-#include <mach/palmld.h>
+ 
+ #define DRV_NAME "pata_palmld"
+ 
+@@ -63,7 +62,7 @@ static int palmld_pata_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	/* remap drive's physical memory address */
+-	mem = devm_ioremap(dev, PALMLD_IDE_PHYS, 0x1000);
++	mem = devm_platform_ioremap_resource(pdev, 0);
+ 	if (!mem)
+ 		return -ENOMEM;
+ 
 -- 
 2.20.0
 
