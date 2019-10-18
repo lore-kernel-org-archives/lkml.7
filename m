@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF679CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9B6CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5D7620640
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92EF120640
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437577;
-	bh=/TiINZmJsoedbiu+tJ48La03mc4J9pQ/MseuO/2nh5w=;
+	s=default; t=1571437585;
+	bh=pvimibEjAyXqsfHKR7k5YuuvTWdfplcgN9pW/WPSVwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hMsBH8ERKN5hV9myuDtQjZPpeYG+7SOFcHo0SAfSGrz7g4Ffz/8xYHn/Al2Q84+kW
-	 Om29qdd+QM9kAmE/H72dys+SpYABzRlqvZCuyEGiJH23rI912zvCkGlZSyFgFogJCU
-	 5DAcA2ySdq4vdlUnXs7VcGYufbitCKQCcS8jJ7WU=
+	b=U7RRoIcsuG17rR0tHE7PU/pwkv0Frzz+cfw9TPKJHuhCeMGQPy/BP4kO1zm5wKwNV
+	 A9Ast1l2HwPJRGZoTMhjTJzWvyOzuS7W48mxWpGjn8VCdFHnZvEqnJleP5CtrNAl6G
+	 U77BZ0fBGaz0y1YLww4eeXQRzY4qyqGpO85aZUbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbfJRWEU (ORCPT
+        id S2394735AbfJRW0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:04:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35916 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:26:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727868AbfJRWER (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:04:17 -0400
+        id S1727967AbfJRWES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:04:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5D97222C9;
-        Fri, 18 Oct 2019 22:04:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7208222C5;
+        Fri, 18 Oct 2019 22:04:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436257;
-        bh=/TiINZmJsoedbiu+tJ48La03mc4J9pQ/MseuO/2nh5w=;
+        s=default; t=1571436258;
+        bh=pvimibEjAyXqsfHKR7k5YuuvTWdfplcgN9pW/WPSVwM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pSMEdOLSqBDzj53vkaNzhLdV8AJnoqwJswIdkaxQVt1TdwPdtF9rJkdESBuaUfDyM
-         JIu73blPGNgwaQdZ74meNukhYD0M+QYZuU3jdv/+NHkZdaA0yQEqEBH047XbELmyNF
-         l3rCAWEjn/4W/0IfNAqvTFNO8VPyfbnxMPkLA+Ec=
+        b=veNGxJ3ON8zF6PobeBkqV38GQXhYTZ+JyMeZzFJCbqQBz5h/HifjIOwu791f3B8TU
+         rT9Y/ln+uZ9EWdV2XuIzU3dMJ8DMQBaOmQRh6sLm5qGAxkDa3D4oJIIIYBcC3dAVx8
+         KmX8ywpqOkVJ6WQ4un5dEDdmbVmQdBok2msca1pU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thierry Reding <treding@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 40/89] gpio: max77620: Use correct unit for debounce times
-Date:   Fri, 18 Oct 2019 18:02:35 -0400
-Message-Id: <20191018220324.8165-40-sashal@kernel.org>
+Cc:     Austin Kim <austindh.kim@gmail.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 41/89] fs: cifs: mute -Wunused-const-variable message
+Date:   Fri, 18 Oct 2019 18:02:36 -0400
+Message-Id: <20191018220324.8165-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -59,43 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Austin Kim <austindh.kim@gmail.com>
 
-[ Upstream commit fffa6af94894126994a7600c6f6f09b892e89fa9 ]
+[ Upstream commit dd19c106a36690b47bb1acc68372f2b472b495b8 ]
 
-The gpiod_set_debounce() function takes the debounce time in
-microseconds. Adjust the switch/case values in the MAX77620 GPIO to use
-the correct unit.
+After 'Initial git repository build' commit,
+'mapping_table_ERRHRD' variable has not been used.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://lore.kernel.org/r/20191002122825.3948322-1-thierry.reding@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+So 'mapping_table_ERRHRD' const variable could be removed
+to mute below warning message:
+
+   fs/cifs/netmisc.c:120:40: warning: unused variable 'mapping_table_ERRHRD' [-Wunused-const-variable]
+   static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
+                                           ^
+Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-max77620.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/cifs/netmisc.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
-index b7d89e30131e2..06e8caaafa811 100644
---- a/drivers/gpio/gpio-max77620.c
-+++ b/drivers/gpio/gpio-max77620.c
-@@ -192,13 +192,13 @@ static int max77620_gpio_set_debounce(struct max77620_gpio *mgpio,
- 	case 0:
- 		val = MAX77620_CNFG_GPIO_DBNC_None;
- 		break;
--	case 1 ... 8:
-+	case 1000 ... 8000:
- 		val = MAX77620_CNFG_GPIO_DBNC_8ms;
- 		break;
--	case 9 ... 16:
-+	case 9000 ... 16000:
- 		val = MAX77620_CNFG_GPIO_DBNC_16ms;
- 		break;
--	case 17 ... 32:
-+	case 17000 ... 32000:
- 		val = MAX77620_CNFG_GPIO_DBNC_32ms;
- 		break;
- 	default:
+diff --git a/fs/cifs/netmisc.c b/fs/cifs/netmisc.c
+index ed92958e842d3..657f409d4de06 100644
+--- a/fs/cifs/netmisc.c
++++ b/fs/cifs/netmisc.c
+@@ -117,10 +117,6 @@ static const struct smb_to_posix_error mapping_table_ERRSRV[] = {
+ 	{0, 0}
+ };
+ 
+-static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
+-	{0, 0}
+-};
+-
+ /*
+  * Convert a string containing text IPv4 or IPv6 address to binary form.
+  *
 -- 
 2.20.1
 
