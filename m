@@ -2,158 +2,104 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51860CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1700CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ADA9222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9849222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:57:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ylikPevI"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="M64u0/vx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410158AbfJRM4Z (ORCPT
+        id S2410164AbfJRM50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 08:56:25 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38866 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408410AbfJRM4R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 08:56:17 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 3so6009197wmi.3
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 05:56:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=H4mTo2HGqwmy0EIuop2B1GXHxjKBlt/sTDf6EAka3Lg=;
-        b=ylikPevI+WeeuVyJHM9diR5Ll0ND42DwvS62otpbOR7NpeVRkv/QxIllgr1dp+sUV4
-         YugopkImYD6Wj4mho/7VDBT/WB5E1hGmeKZr+6C6pkRCjmgxpBlZFOkbN1nLCw1cPBKN
-         051SK/eiFMelfug6/IP+D7VAHuvPuB93d6m8GPe4hQuWMLxaoGCzMfuNyuqC+WmMZ1Xa
-         AMCQpURQHcxKPIDPBwE1rud0PcXzgk2aApAx5Do2GJRNKhaNLb5tjDzaIHglatPa+rQD
-         BEdF5iSLd0em235wEA+/oVIphuMvjRnI52cipOAmb/qVkUy8KDxrYqAd5btpAwxJYn7D
-         4Ulw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=H4mTo2HGqwmy0EIuop2B1GXHxjKBlt/sTDf6EAka3Lg=;
-        b=ro3TwsfJ19ZTrJI8EtHZgfosC4wAZBc0yGgEYeoLzpA8v4NTEKkXyxPEia+rclYTG9
-         ulZPSL6NHp7dMwkQbiaoMS/raIaZba7rkZhVnUP5K1o+sVjKUt6dw0zAf4BXvR9GAZba
-         aVQv7k9fbkRAOx5wonbYluTEYR5tq7tf3sotQXZTS4XLKq+rYVsyx3TiDNxSl8/wjVCL
-         Lf5T8b9+oTD3H6JTuFjGjulpXQCXdLisHH2J24dMMv+fUJu13fdZHYjgC47oE3pz5kMD
-         CKysyDZYQ1JIuiOTiFvjBF9qxBHGM+VIkMojDTrbMyZIWiet408gkgk8m+3n2uZH6cby
-         mV6Q==
-X-Gm-Message-State: APjAAAXv3tkniif/Dk9ugP8pFtpDqW7Ks8cs1fbvktlZgbhZUJlAQ/k4
-        JjH2207wfeJ+6ukQsiWAxbJtcA==
-X-Google-Smtp-Source: APXvYqwjuqXxWbaJcNR4hvNrAAl8FCGcVA33t80VEPmWfUUZjWl5jkUWYdIodtBWFtS4oAlBC71k/Q==
-X-Received: by 2002:a1c:4805:: with SMTP id v5mr7961246wma.130.1571403374485;
-        Fri, 18 Oct 2019 05:56:14 -0700 (PDT)
-Received: from localhost.localdomain ([95.149.164.47])
-        by smtp.gmail.com with ESMTPSA id q14sm6058491wre.27.2019.10.18.05.56.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 05:56:14 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     broonie@kernel.org, linus.walleij@linaro.org,
-        daniel.thompson@linaro.org, arnd@arndb.de
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dilinger@queued.net, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4/4] mfd: mfd-core: Remove mfd_clone_cell()
-Date:   Fri, 18 Oct 2019 13:56:08 +0100
-Message-Id: <20191018125608.5362-5-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191018125608.5362-1-lee.jones@linaro.org>
-References: <20191018125608.5362-1-lee.jones@linaro.org>
+        Fri, 18 Oct 2019 08:57:26 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:31567 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733180AbfJRM50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 08:57:26 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46vmJz4VtKzB09b0;
+        Fri, 18 Oct 2019 14:57:23 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=M64u0/vx; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id MA8gt4jfKrnu; Fri, 18 Oct 2019 14:57:23 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46vmJz3NhFzB09Zw;
+        Fri, 18 Oct 2019 14:57:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1571403443; bh=P+VjSeFKR0YVZlm5oe6xprbP52ac0pv0a6AOQUrclV0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=M64u0/vx1KJeUMfPLBz2jFxYbbMSbfmpl2+OuzWSbkbGwFaNqegzEC67qIu3LFiPX
+         6P4YxoIVPsXKPTqIgr1qlPuSVJny52O2xFRTtfoZW90pa8kk0AyHXaZfrhqunqGvWK
+         hwU92378jbMtIN5poP5BwtAJX5Att83hc9NSfPj0=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6F8038B802;
+        Fri, 18 Oct 2019 14:57:23 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id JnffNplE4Ump; Fri, 18 Oct 2019 14:57:23 +0200 (CEST)
+Received: from [192.168.204.43] (unknown [192.168.204.43])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 661508B800;
+        Fri, 18 Oct 2019 14:57:22 +0200 (CEST)
+Subject: Re: [PATCH 1/7] soc: fsl: qe: remove space-before-tab
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
+ <20191018125234.21825-2-linux@rasmusvillemoes.dk>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <89dc8d74-b1fc-19f5-d8a5-cd43eda27b4d@c-s.fr>
+Date:   Fri, 18 Oct 2019 14:57:21 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191018125234.21825-2-linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Providing an subsystem-level API helper seems over-kill just to save a
-few lines of C-code.  Previous commits saw us convert mfd_clone_cell()'s
-only user over to use a more traditional style of MFD child-device
-registration.  Now we can remove the superfluous helper from the MFD API.
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/mfd/mfd-core.c   | 33 ---------------------------------
- include/linux/mfd/core.h | 18 ------------------
- 2 files changed, 51 deletions(-)
 
-diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-index 23276a80e3b4..8126665bb2d8 100644
---- a/drivers/mfd/mfd-core.c
-+++ b/drivers/mfd/mfd-core.c
-@@ -382,38 +382,5 @@ int devm_mfd_add_devices(struct device *dev, int id,
- }
- EXPORT_SYMBOL(devm_mfd_add_devices);
- 
--int mfd_clone_cell(const char *cell, const char **clones, size_t n_clones)
--{
--	struct mfd_cell cell_entry;
--	struct device *dev;
--	struct platform_device *pdev;
--	int i;
--
--	/* fetch the parent cell's device (should already be registered!) */
--	dev = bus_find_device_by_name(&platform_bus_type, NULL, cell);
--	if (!dev) {
--		printk(KERN_ERR "failed to find device for cell %s\n", cell);
--		return -ENODEV;
--	}
--	pdev = to_platform_device(dev);
--	memcpy(&cell_entry, mfd_get_cell(pdev), sizeof(cell_entry));
--
--	WARN_ON(!cell_entry.enable);
--
--	for (i = 0; i < n_clones; i++) {
--		cell_entry.name = clones[i];
--		/* don't give up if a single call fails; just report error */
--		if (mfd_add_device(pdev->dev.parent, -1, &cell_entry,
--				   cell_entry.usage_count, NULL, 0, NULL))
--			dev_err(dev, "failed to create platform device '%s'\n",
--					clones[i]);
--	}
--
--	put_device(dev);
--
--	return 0;
--}
--EXPORT_SYMBOL(mfd_clone_cell);
--
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Ian Molton, Dmitry Baryshkov");
-diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-index b43fc5773ad7..bd8c0e089164 100644
---- a/include/linux/mfd/core.h
-+++ b/include/linux/mfd/core.h
-@@ -86,24 +86,6 @@ struct mfd_cell {
- extern int mfd_cell_enable(struct platform_device *pdev);
- extern int mfd_cell_disable(struct platform_device *pdev);
- 
--/*
-- * "Clone" multiple platform devices for a single cell. This is to be used
-- * for devices that have multiple users of a cell.  For example, if an mfd
-- * driver wants the cell "foo" to be used by a GPIO driver, an MTD driver,
-- * and a platform driver, the following bit of code would be use after first
-- * calling mfd_add_devices():
-- *
-- * const char *fclones[] = { "foo-gpio", "foo-mtd" };
-- * err = mfd_clone_cells("foo", fclones, ARRAY_SIZE(fclones));
-- *
-- * Each driver (MTD, GPIO, and platform driver) would then register
-- * platform_drivers for "foo-mtd", "foo-gpio", and "foo", respectively.
-- * The cell's .enable/.disable hooks should be used to deal with hardware
-- * resource contention.
-- */
--extern int mfd_clone_cell(const char *cell, const char **clones,
--		size_t n_clones);
--
- /*
-  * Given a platform device that's been created by mfd_add_devices(), fetch
-  * the mfd_cell that created it.
--- 
-2.17.1
+Le 18/10/2019 à 14:52, Rasmus Villemoes a écrit :
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> ---
+>   drivers/soc/fsl/qe/qe.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/soc/fsl/qe/qe.c b/drivers/soc/fsl/qe/qe.c
+> index 417df7e19281..6fcbfad408de 100644
+> --- a/drivers/soc/fsl/qe/qe.c
+> +++ b/drivers/soc/fsl/qe/qe.c
+> @@ -378,8 +378,8 @@ static int qe_sdma_init(void)
+>   	}
+>   
+>   	out_be32(&sdma->sdebcr, (u32) sdma_buf_offset & QE_SDEBCR_BA_MASK);
+> - 	out_be32(&sdma->sdmr, (QE_SDMR_GLB_1_MSK |
+> - 					(0x1 << QE_SDMR_CEN_SHIFT)));
+> +	out_be32(&sdma->sdmr, (QE_SDMR_GLB_1_MSK |
+> +					(0x1 << QE_SDMR_CEN_SHIFT)));
 
+Could you also align the second line properly ?
+
+Christophe
+
+>   
+>   	return 0;
+>   }
+> 
