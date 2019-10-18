@@ -2,189 +2,181 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A12ACCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A606CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78CB2222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CC9F222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:48:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XwpQPnbE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439454AbfJROpI (ORCPT
+        id S2410361AbfJROsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 10:45:08 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:41430 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S2405365AbfJROpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 10:45:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8439B57;
-        Fri, 18 Oct 2019 07:44:44 -0700 (PDT)
-Received: from [10.1.195.43] (e107049-lin.cambridge.arm.com [10.1.195.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F5B13F718;
-        Fri, 18 Oct 2019 07:44:43 -0700 (PDT)
-Subject: Re: [RFC PATCH v3 0/6] sched/cpufreq: Make schedutil energy aware
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        mingo@redhat.com, rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, qperret@google.com,
-        patrick.bellasi@matbug.net, dh.han@samsung.com
-References: <20191011134500.235736-1-douglas.raillard@arm.com>
- <20191014145315.GZ2311@hirez.programming.kicks-ass.net>
- <a1ce67d7-62c3-b78b-1d87-23ef4dbc2274@arm.com>
- <20191017095015.GI2311@hirez.programming.kicks-ass.net>
- <7edb1b73-54e7-5729-db5d-6b3b1b616064@arm.com>
- <20191017190708.GF22902@worktop.programming.kicks-ass.net>
- <0b807cb3-6a88-1138-dc66-9a32d9bba7ea@arm.com>
- <20191018120719.GH2328@hirez.programming.kicks-ass.net>
-From:   Douglas Raillard <douglas.raillard@arm.com>
-Organization: ARM
-Message-ID: <32d07c51-847d-9d51-480c-c8836f1aedc7@arm.com>
-Date:   Fri, 18 Oct 2019 15:44:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Fri, 18 Oct 2019 10:48:12 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40059 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729257AbfJROsL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 10:48:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571410090;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+xUWPDHliBoxc0ihU+NKk1qsJN/0TLVezwKKP1i/PSI=;
+        b=XwpQPnbEtf3ilv0j2DNlwQK8EFvVQtAmfdUbFyWITxKJzAlt6WDJJ5DK3Mh+GJhHnqeNl8
+        ctHBNLbTlue3YmQsVkCbjKJoxejEipUHQgvdqmnDn+ehNYEsVjIVmkESoyzf9B/tPvP8Zo
+        pJlY5gNZJEZSOKrieCBg6IYfjUOWKTs=
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
+ [209.85.166.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-234-pZzxmlt4NnSyyMPj27bJ8Q-1; Fri, 18 Oct 2019 10:48:08 -0400
+Received: by mail-il1-f198.google.com with SMTP id o12so1952643ilf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 07:48:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=0SSL2373lC6DgsMmmsDZmA6zvnlA8UickiHBAjdntOQ=;
+        b=ey3eyzN49kIlI7JR7WANDY++5cjnuTPx9baaz1wpUMoJD4nYoL+eXBnooM6XA+m08I
+         Fha2tTmUGBj07GSYGxMRi6xUWRAXm9CLq5+Bc418bAU1dq8/ysRJBgkc3c7t+57GSxu+
+         RHtvtLkAXQg88SfP2sVN2cCPGMjFI8TZw4llxCZs48wTqMfvWUlfVrN4hgtqjkizrW66
+         +6xNv1P/W7b4FmnwtyiQbQOVRluxuoAp881vjS1hXtN7PjFOscdRmQgcoFj6ZBTYYtoI
+         iwX59yW3wyVMUtADUKNx3CDJYuDTnJyVaD9eq0aZt6hYaZe+0FTb2JpD+ZRpihJeRmiu
+         bwiA==
+X-Gm-Message-State: APjAAAU8Lpwd4vbsawhagK09j4WOsJgX5MEdolhpBp9uof+JK2y44Zmd
+        1UU7izBE7gMi8WNkgp+7UMAhcphTNBeXwyIqzUn8OJJXh5VooTf4fQTI10gwFY7QtfqKGVITx3A
+        DqVVr3V6A+Sg7T+NhNeKOMsbv
+X-Received: by 2002:a92:c2:: with SMTP id 185mr10527385ila.92.1571410088307;
+        Fri, 18 Oct 2019 07:48:08 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwWbRwj/fjTBeTuKTGQTT7Fu5ra8qoDURv6eP3usXETnKzvD8vxqCt0UkKoNoyNlAsUsHb8gQ==
+X-Received: by 2002:a92:c2:: with SMTP id 185mr10527353ila.92.1571410088007;
+        Fri, 18 Oct 2019 07:48:08 -0700 (PDT)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id l3sm1778016ioj.7.2019.10.18.07.48.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 07:48:07 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 07:48:05 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Joerg Roedel <jroedel@suse.de>
+Cc:     Qian Cai <cai@lca.pw>, don.brace@microsemi.com,
+        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        jejb@linux.ibm.com, esc.storagedev@microsemi.com,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: Re: [PATCH] iommu/amd: Check PM_LEVEL_SIZE() condition in locked
+ section
+Message-ID: <20191018144805.ici3ewsvonlgketl@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Joerg Roedel <jroedel@suse.de>, Qian Cai <cai@lca.pw>,
+        don.brace@microsemi.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, jejb@linux.ibm.com,
+        esc.storagedev@microsemi.com, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+References: <20191016225859.j3jq6pt73mn56chn@cantor>
+ <577A2A6B-3012-4CDE-BE57-3E0D628572CB@lca.pw>
+ <20191018093830.GA26328@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <20191018120719.GH2328@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB-large
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191018093830.GA26328@suse.de>
+User-Agent: NeoMutt/20180716
+X-MC-Unique: pZzxmlt4NnSyyMPj27bJ8Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/18/19 1:07 PM, Peter Zijlstra wrote:
-> On Fri, Oct 18, 2019 at 12:46:25PM +0100, Douglas Raillard wrote:
-> 
->>> What I don't see is how that that difference makes sense as input to:
->>>
->>>     cost(x) : (1 + x) * cost_j
+On Fri Oct 18 19, Joerg Roedel wrote:
+>On Thu, Oct 17, 2019 at 07:36:51AM -0400, Qian Cai wrote:
 >>
->> The actual input is:
->> x = (EM_COST_MARGIN_SCALE/SCHED_CAPACITY_SCALE) * (util - util_est)
 >>
->> Since EM_COST_MARGIN_SCALE == SCHED_CAPACITY_SCALE == 1024, this factor of 1
->> is not directly reflected in the code but is important for units
->> consistency.
-> 
-> But completely irrelevant for the actual math and conceptual
-> understanding.
+>> > On Oct 16, 2019, at 6:59 PM, Jerry Snitselaar <jsnitsel@redhat.com> wr=
+ote:
+>> >
+>> > I guess the mode level 6 check is really for other potential callers
+>> > increase_address_space, none exist at the moment, and the condition
+>> > of the while loop in alloc_pte should fail if the mode level is 6.
+>>
+>> Because there is no locking around iommu_map_page(), if there are
+>> several concurrent callers of it for the same domain, could it be that
+>> it silently corrupt data due to invalid access?
+>
+>No, that can't happen because increase_address_space locks the domain
+>before actually doing anything. So the address space can't grow above
+>domain->mode =3D=3D 6. But what can happen is that the WARN_ON_ONCE trigge=
+rs
+>in there and that the address space is increased multiple times when
+>only one increase would be sufficient.
+>
+>To fix this we just need to check the PM_LEVEL_SIZE() condition again
+>when we hold the lock:
+>
+>From e930e792a998e89dfd4feef15fbbf289c45124dc Mon Sep 17 00:00:00 2001
+>From: Joerg Roedel <jroedel@suse.de>
+>Date: Fri, 18 Oct 2019 11:34:22 +0200
+>Subject: [PATCH] iommu/amd: Check PM_LEVEL_SIZE() condition in locked sect=
+ion
+>
+>The increase_address_space() function has to check the PM_LEVEL_SIZE()
+>condition again under the domain->lock to avoid a false trigger of the
+>WARN_ON_ONCE() and to avoid that the address space is increase more
+>often than necessary.
+>
+>Reported-by: Qian Cai <cai@lca.pw>
+>Fixes: 754265bcab78 ("iommu/amd: Fix race in increase_address_space()")
+>Signed-off-by: Joerg Roedel <jroedel@suse.de>
+>---
+> drivers/iommu/amd_iommu.c | 7 ++++---
+> 1 file changed, 4 insertions(+), 3 deletions(-)
+>
+>diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+>index 2369b8af81f3..a0639e511ffe 100644
+>--- a/drivers/iommu/amd_iommu.c
+>+++ b/drivers/iommu/amd_iommu.c
+>@@ -1463,6 +1463,7 @@ static void free_pagetable(struct protection_domain =
+*domain)
+>  * to 64 bits.
+>  */
+> static bool increase_address_space(struct protection_domain *domain,
+>+=09=09=09=09   unsigned long address,
+> =09=09=09=09   gfp_t gfp)
+> {
+> =09unsigned long flags;
+>@@ -1471,8 +1472,8 @@ static bool increase_address_space(struct protection=
+_domain *domain,
+>
+> =09spin_lock_irqsave(&domain->lock, flags);
+>
+>-=09if (WARN_ON_ONCE(domain->mode =3D=3D PAGE_MODE_6_LEVEL))
+>-=09=09/* address space already 64 bit large */
+>+=09if (address <=3D PM_LEVEL_SIZE(domain->mode) ||
+>+=09    WARN_ON_ONCE(domain->mode =3D=3D PAGE_MODE_6_LEVEL))
+> =09=09goto out;
+>
+> =09pte =3D (void *)get_zeroed_page(gfp);
+>@@ -1505,7 +1506,7 @@ static u64 *alloc_pte(struct protection_domain *doma=
+in,
+> =09BUG_ON(!is_power_of_2(page_size));
+>
+> =09while (address > PM_LEVEL_SIZE(domain->mode))
+>-=09=09*updated =3D increase_address_space(domain, gfp) || *updated;
+>+=09=09*updated =3D increase_address_space(domain, address, gfp) || *updat=
+ed;
+>
+> =09level   =3D domain->mode - 1;
+> =09pte     =3D &domain->pt_root[PM_LEVEL_INDEX(level, address)];
+>--=20
+>2.16.4
+>
 
- > how that that difference makes sense as input to
-I was unsure if you referred to the units being inconsistent or the 
-actual way of computing values being strange, so I provided some 
-justification for both.
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
 
-> Just because computers suck at real numbers, and floats
-> are expensive, doesn't mean we have to burden ourselves with fixed point
-> when writing equations.
-> 
-> Also, as a physicist I'm prone to normalizing everything to 1, because
-> that's lazy.
-> 
->>> I suppose that limits the additional OPP to twice the previously
->>> selected cost / efficiency (see the confusion from that other email).
->>> But given that efficency drops (or costs rise) for higher OPPs that
->>> still doesn't really make sense..
-> 
->> Yes, this current limit to +100% freq boosting is somehow arbitrary and
->> could probably benefit from being tunable in some way (Kconfig option
->> maybe). When (margin > 0), we end up selecting an OPP that has a higher cost
->> than the one strictly required, which is expected. The goal is to speed
->> things up at the expense of more power consumed to achieve the same work,
->> hence at a lower efficiency (== higher cost).
-> 
-> No, no Kconfig knobs.
-> 
->> That's the main reason why this boosting apply a margin on the cost of the
->> selected OPP rather than just inflating the util. This allows controlling
->> directly how much more power (battery life) we are going to spend to achieve
->> some work that we know could be achieved with less power.
-> 
-> But you're not; the margin is relative to the OPP, it is not absolute.
-
-Considering a CPU with 1024 max capacity (since we are not talking about 
-migrations here, we can ignore CPU invariance):
-
-work = normalized number of iterations of a given busy loop
-# Thanks to freq invariance
-work = util (between 0 and 1)
-util = f/f_max
-
-# f(work) is the min freq that is admissible for "work", which we will
-# abbreviate as "f"
-f(work) = work * f_max
-
-# from struct em_cap_state doc in energy_model.h
-cost(f) = power(f) * f_max / f
-cost(f) = power(f) / util
-cost(f) = power(f) / work
-power(f) = cost(f) * work
-
-boosted_cost(f) = cost(f) + x
-boosted_power(f) = boosted_cost(f) * work
-boosted_power(f) = (cost(f) + x) * work
-
-# Let's normalize cost() so we can forget about f and deal only with work.
-cost'(work) = cost(f)/cost(f_max)
-x' = x/cost(f_max)
-boosted_power'(work) = (cost'(work) + x') * work
-boosted_power'(work) = cost'(work) * work + x' * work
-boosted_power'(work) = power'(work) + x' * work
-boosted_power'(work) = power'(work) + A(work)
-
-# Over a duration T, spend an extra B unit of energy
-B(work) = A(work) * T
-lost_battery_percent(work) = 100 * B(work)/total_battery_energy
-lost_battery_percent(work) = 100 * T * x' * work /total_battery_energy
-lost_battery_percent(work) =
-  (100 * T / cost(f_max) / total_battery_energy) * x * work
-
-This means that the effect of boosting on battery life is proportional 
-to "x" unless I made a mistake somewhere.
-
-> 
-> Or rather, the only actual limit is in relation to the max OPP. So you
-> have very little actual control over how much more energy you're
-> spending.
-> 
->>> So while I agree that 2) is a reasonable signal to work from, everything
->>> that comes after is still much confusing me.
-> 
->> "When applying these boosting rules on the runqueue util signals ...":
->> Assuming the set of enqueued tasks stays the same between 2 observations
->> from schedutil, if we see the rq util_avg increase above its
->> util_est.enqueued, that means that at least one task had its util_avg go
->> above util_est.enqueued. We might miss some boosting opportunities if some
->> (util - util_est) compensates:
->> TASK_1(util - util_est) = - TASK_2(util - util_est)
->> but working on the aggregated value is much easier in schedutil, to avoid
->> crawling the list of entities.
-> 
-> That still does not explain why 'util - util_est', when >0, makes for a
-> sensible input into an OPP relative function > I agree that 'util - util_est', when >0, indicates utilization is
-> increasing (for the aperiodic blah blah blah). But after that I'm still
-> confused.
-
-For the same reason PELT makes a sensible input for OPP selection.
-Currently, OPP selection is based on max(util_avg, util_est.enqueued) 
-(from cpu_util_cfs in sched.h), so as soon as we have
-(util - util_est > 0), the OPP will be selected according to util_avg. 
-In a way, using util_avg there is already some kind of boosting.
-
-Since the boosting is essentially (util - constant), it grows the same 
-way as util. If we think of (util - util_est) as being some estimation 
-of how wrong we were in the estimation of the task "true" utilization of 
-the CPU, then it makes sense to feed that to the boost. The wronger we 
-were, the more we want to boost, because the more time passes, the more 
-the scheduler realizes it actually does not know what the task needs. In 
-doubt, provide a higher freq than usual until we get to know this task 
-better. When that happens (at the next period), boosting is disabled and 
-we revert to the usual behavior (aka margin=0).
-
-Hope we are converging to some wording that makes sense.
