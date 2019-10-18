@@ -2,227 +2,149 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5949DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F34CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28DBF222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:43:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="TcVOUj8o"
+	by mail.kernel.org (Postfix) with ESMTP id DDB89222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:44:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632927AbfJRIne (ORCPT
+        id S2442215AbfJRIoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:43:34 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:40065 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727903AbfJRIne (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 04:43:34 -0400
-Received: by mail-il1-f193.google.com with SMTP id o16so4814302ilq.7
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 01:43:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=CIt+hFG6ZbxuG3Tl39oW4lR5XbeTOmjy7F8raJZ4AuA=;
-        b=TcVOUj8ozZ8UtKg6Fi9IPAmiBMEiSRVn/XOBg2tqztcxP4SCuFhH5TrW289kUD/62Q
-         UTTuZE92s/AttcaVm7apLIPBmX4iLzzvk16OhhRNS6iq/vVjSpqT8vnPqvYiZ6PW756c
-         VDiY0OZXgJaMQ+FkOEoBIj1uJGUIKSGgvUqQr2bO9bUfVvqZYvTOHwcEG4dSqFRZPVAN
-         HYpFuOJ1YXvdi9GeFw+4Jxm6QSMbBz74ZAgGoPhWWJbwr65L44P/rwCbAAqmRzdW8kVY
-         UoHFZ4V1cpZ63L+oBPfosxY20z2CzTtRj2YdPwMq3uvpVuH+oB8qpdFLj4eIKI4XrW3U
-         khkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=CIt+hFG6ZbxuG3Tl39oW4lR5XbeTOmjy7F8raJZ4AuA=;
-        b=Z36fmgCeGrlS2NqIdz+o8/EyuVM1af/s4SqthbaE8n0zoEdt4GqDWULCyovc5doZHF
-         O39Yy6zEvc+UYasUFYgjgscwZyTgpfxXSHBG+YhET3Dez4Y5D4sMwYxIbGB2hLlbfIwy
-         kkRLFktEN46YHXeEZ0dneCqUf2+33h9S8k7mXSwyW5XzDxPzSL+/d3+qqGzMVKSIPQ57
-         rwC/pyBiIYKGut1cczcg7TCgGKmRLRHLCxWWUlebxh4nAf2epl/ROnyr/2dZwCKmOSaq
-         c0WyK/8PWcKktFtEvjoYlTXf8pNqv7Tl1wm5BjhRLq/0AfUiUr2unK72SJ/MzJAT1v/V
-         LL1Q==
-X-Gm-Message-State: APjAAAULs5XZYtAlkIoZz4YHAhj8bAxh2V3oO9pOp9EkMAN3qIwrIxSo
-        k8DxEeimkylQmEKCz8iupaciiQ==
-X-Google-Smtp-Source: APXvYqzT4vQGzbOYM+VPVYFS9y0mWpLBiCrhqHfvp4Ojsbmf7gbi2hjgAre2Oc19p5/gbaLnYt9Zqg==
-X-Received: by 2002:a92:4a05:: with SMTP id m5mr3698564ilf.91.1571388212846;
-        Fri, 18 Oct 2019 01:43:32 -0700 (PDT)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id o14sm1521681iob.49.2019.10.18.01.43.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 01:43:32 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 01:43:29 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Atish Patra <atish.patra@wdc.com>
-cc:     linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
+        Fri, 18 Oct 2019 04:44:14 -0400
+Received: from mga06.intel.com ([134.134.136.31]:47120 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727903AbfJRIoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 04:44:14 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 01:44:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,311,1566889200"; 
+   d="scan'208";a="397870720"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 18 Oct 2019 01:44:05 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iLNrf-0008LD-3B; Fri, 18 Oct 2019 11:44:03 +0300
+Date:   Fri, 18 Oct 2019 11:44:03 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-input@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>,
+        Alexios Zavras <alexios.zavras@intel.com>,
         Allison Randal <allison@lohutok.net>,
-        Anup Patel <anup@brainfault.org>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>,
-        linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@sifive.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Enrico Weigelt <info@metux.net>, Eric Anholt <eric@anholt.net>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Jacky Bai <ping.bai@nxp.com>, Jeff LaBundy <jeff@labundy.com>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Luca Weiss <luca@z3ntu.xyz>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Martin Kepplinger <martink@posteo.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Miloslav Trmac <mitr@volny.cz>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Pavel Machek <pavel@ucw.cz>,
+        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
         Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2  2/2] RISC-V: Consolidate isa correctness check
-In-Reply-To: <20191009220058.24964-3-atish.patra@wdc.com>
-Message-ID: <alpine.DEB.2.21.9999.1910180142460.21875@viisi.sifive.com>
-References: <20191009220058.24964-1-atish.patra@wdc.com> <20191009220058.24964-3-atish.patra@wdc.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Ronald =?iso-8859-1?Q?Tschal=E4r?= <ronald@innovation.ch>,
+        Stefan Agner <stefan@agner.ch>,
+        Steve Winslow <swinslow@gmail.com>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/22] Stop using input_polled_dev in polling drivers
+Message-ID: <20191018084403.GR32742@smile.fi.intel.com>
+References: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 9 Oct 2019, Atish Patra wrote:
-
-> Currently, isa string is read and checked for correctness at multiple
-> places.
+On Thu, Oct 17, 2019 at 01:41:54PM -0700, Dmitry Torokhov wrote:
+> Input devices now support polling mode natively (via input_setup_polling
+> API), and input_polled_dev implementation is going away. This series
+> switches drivers found in drivers/input to the new scheme.
 > 
-> Consolidate them into one function and use it only during early bootup.
-> In case of a incorrect isa string, the cpu shouldn't boot at all.
+
+For all I have been Cc'ed
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
 > 
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-
-Looks like riscv_read_check_isa() is called twice for each hart.  Is there 
-any way to call it only once per hart?
-
-
-- Paul
-
-> ---
->  arch/riscv/include/asm/processor.h |  1 +
->  arch/riscv/kernel/cpu.c            | 41 ++++++++++++++++++++++--------
->  arch/riscv/kernel/cpufeature.c     |  4 +--
->  arch/riscv/kernel/smpboot.c        |  4 +++
->  4 files changed, 37 insertions(+), 13 deletions(-)
+> Dmitry Torokhov (21):
+>   Input: raspberrypi-ts - switch to using polled mode of input devices
+>   Input: sur40 - switch to using polled mode of input devices
+>   Input: ts4800-ts - switch to using polled mode of input devices
+>   Input: tsc6507x-ts - switch to using polled mode of input devices
+>   Input: adc-keys - switch to using polled mode of input devices
+>   Input: clps711x-keypad - switch to using polled mode of input devices
+>   Input: jornada680_kbd - switch to using polled mode of input devices
+>   Input: gpio_keys_polled - switch to using polled mode of input devices
+>   Input: apanel - switch to using polled mode of input devices
+>   Input: wistron_btns - switch to using polled mode of input devices
+>   Input: cobalt_btns - convert to use managed resources
+>   Input: cobalt_btns - switch to using polled mode of input devices
+>   Input: sgi_btns - switch to using managed resources
+>   Input: sgi_btns - switch to using polled mode of input devices
+>   Input: rb532_button - switch to using managed resources
+>   Input: rb532_button - switch to using polled mode of input devices
+>   Input: gpio_decoder - switch to using polled mode of input devices
+>   Input: mma8450 - switch to using polled mode of input devices
+>   Input: bma150 - switch to using polled mode of input devices
+>   Input: kxtj9 - switch to using managed resources
+>   Input: kxtj9 - switch to using polled mode of input devices
 > 
-> diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
-> index f539149d04c2..189bf98f9a3f 100644
-> --- a/arch/riscv/include/asm/processor.h
-> +++ b/arch/riscv/include/asm/processor.h
-> @@ -74,6 +74,7 @@ static inline void wait_for_interrupt(void)
->  }
->  
->  struct device_node;
-> +int riscv_read_check_isa(struct device_node *node, const char **isa);
->  int riscv_of_processor_hartid(struct device_node *node);
->  
->  extern void riscv_fill_hwcap(void);
-> diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
-> index 40a3c442ac5f..6bd4c7176bf6 100644
-> --- a/arch/riscv/kernel/cpu.c
-> +++ b/arch/riscv/kernel/cpu.c
-> @@ -8,13 +8,43 @@
->  #include <linux/of.h>
->  #include <asm/smp.h>
->  
-> +int riscv_read_check_isa(struct device_node *node, const char **isa)
-> +{
-> +	u32 hart;
-> +
-> +	if (of_property_read_u32(node, "reg", &hart)) {
-> +		pr_warn("Found CPU without hart ID\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (of_property_read_string(node, "riscv,isa", isa)) {
-> +		pr_warn("CPU with hartid=%d has no \"riscv,isa\" property\n",
-> +			hart);
-> +		return -ENODEV;
-> +	}
-> +	/*
-> +	 * Linux doesn't support rv32e or rv128i, and we only support booting
-> +	 * kernels on harts with the same ISA that the kernel is compiled for.
-> +	 */
-> +	if (IS_ENABLED(CONFIG_32BIT) && (strncmp(*isa, "rv32i", 5) != 0)) {
-> +		pr_warn("hartid=%d has an invalid ISA \"%s\" for 32bit config\n",
-> +			hart, *isa);
-> +		return -ENODEV;
-> +	} else if (IS_ENABLED(CONFIG_64BIT) &&
-> +		  (strncmp(*isa, "rv64i", 5) != 0)) {
-> +		pr_warn("hartid=%d has an invalid ISA \"%s\" for 64bit config\n",
-> +			hart, *isa);
-> +		return -ENODEV;
-> +	}
-> +	return 0;
-> +}
-> +
->  /*
->   * Returns the hart ID of the given device tree node, or -ENODEV if the node
->   * isn't an enabled and valid RISC-V hart node.
->   */
->  int riscv_of_processor_hartid(struct device_node *node)
->  {
-> -	const char *isa;
->  	u32 hart;
->  
->  	if (!of_device_is_compatible(node, "riscv")) {
-> @@ -32,15 +62,6 @@ int riscv_of_processor_hartid(struct device_node *node)
->  		return -ENODEV;
->  	}
->  
-> -	if (of_property_read_string(node, "riscv,isa", &isa)) {
-> -		pr_warn("CPU with hartid=%d has no \"riscv,isa\" property\n", hart);
-> -		return -ENODEV;
-> -	}
-> -	if (isa[0] != 'r' || isa[1] != 'v') {
-> -		pr_warn("CPU with hartid=%d has an invalid ISA of \"%s\"\n", hart, isa);
-> -		return -ENODEV;
-> -	}
-> -
->  	return hart;
->  }
->  
-> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-> index b1ade9a49347..eaad5aa07403 100644
-> --- a/arch/riscv/kernel/cpufeature.c
-> +++ b/arch/riscv/kernel/cpufeature.c
-> @@ -38,10 +38,8 @@ void riscv_fill_hwcap(void)
->  		if (riscv_of_processor_hartid(node) < 0)
->  			continue;
->  
-> -		if (of_property_read_string(node, "riscv,isa", &isa)) {
-> -			pr_warn("Unable to find \"riscv,isa\" devicetree entry\n");
-> +		if (riscv_read_check_isa(node, &isa) < 0)
->  			continue;
-> -		}
->  
->  		for (i = 0; i < strlen(isa); ++i)
->  			this_hwcap |= isa2hwcap[(unsigned char)(isa[i])];
-> diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
-> index 18ae6da5115e..15ee71297abf 100644
-> --- a/arch/riscv/kernel/smpboot.c
-> +++ b/arch/riscv/kernel/smpboot.c
-> @@ -60,12 +60,16 @@ void __init setup_smp(void)
->  	int hart;
->  	bool found_boot_cpu = false;
->  	int cpuid = 1;
-> +	const char *isa;
->  
->  	for_each_of_cpu_node(dn) {
->  		hart = riscv_of_processor_hartid(dn);
->  		if (hart < 0)
->  			continue;
->  
-> +		if (riscv_read_check_isa(dn, &isa) < 0)
-> +			continue;
-> +
->  		if (hart == cpuid_to_hartid_map(0)) {
->  			BUG_ON(found_boot_cpu);
->  			found_boot_cpu = 1;
+> Jonathan Bakker (1):
+>   Input: bma150 - use managed resources helpers
+> 
+>  drivers/input/keyboard/Kconfig             |   4 -
+>  drivers/input/keyboard/adc-keys.c          |  36 ++--
+>  drivers/input/keyboard/clps711x-keypad.c   |  70 +++----
+>  drivers/input/keyboard/gpio_keys_polled.c  |  65 +++---
+>  drivers/input/keyboard/jornada680_kbd.c    |  37 ++--
+>  drivers/input/misc/Kconfig                 |  15 --
+>  drivers/input/misc/apanel.c                | 153 ++++++--------
+>  drivers/input/misc/bma150.c                | 190 +++++------------
+>  drivers/input/misc/cobalt_btns.c           |  73 +++----
+>  drivers/input/misc/gpio_decoder.c          |  42 ++--
+>  drivers/input/misc/kxtj9.c                 | 224 ++++++---------------
+>  drivers/input/misc/mma8450.c               | 101 +++++-----
+>  drivers/input/misc/rb532_button.c          |  48 ++---
+>  drivers/input/misc/sgi_btns.c              |  54 ++---
+>  drivers/input/misc/wistron_btns.c          |  51 ++---
+>  drivers/input/touchscreen/Kconfig          |   4 -
+>  drivers/input/touchscreen/raspberrypi-ts.c |  38 ++--
+>  drivers/input/touchscreen/sur40.c          |  92 +++++----
+>  drivers/input/touchscreen/tps6507x-ts.c    |  36 ++--
+>  drivers/input/touchscreen/ts4800-ts.c      |  68 ++++---
+>  20 files changed, 557 insertions(+), 844 deletions(-)
+> 
 > -- 
-> 2.21.0
-> 
+> 2.23.0.866.gb869b98d4c-goog
 > 
 
+-- 
+With Best Regards,
+Andy Shevchenko
 
-- Paul
+
