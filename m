@@ -2,232 +2,225 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 111D3CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A894CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD702222C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:45:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="wp/0Fljr"
+	by mail.kernel.org (Postfix) with ESMTP id 25A4C205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:46:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571377560;
+	bh=K46fsWJT9D1+AWm1pFeodlhdrS+ZbXUEAbNO4PFZkos=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DjNJws7Xtk+sGt13VMRKK8Ui/XaEhSiyhHXhreQillX9AOR2RsRriSstDfHuakOgH
+	 nQrVTEiAbYcsFq3hWlBn3yaqpgQ2kPBqJdmm8LzXcvvC7Fgov06CKnjXUkUblP9tBz
+	 O+N1Lp7VMChDERZmiIT06jk5Ozzp2Xqg8KBvSA8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442062AbfJRFpX (ORCPT
+        id S2442067AbfJRFp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:45:23 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46785 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2395467AbfJRFpX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:45:23 -0400
-Received: by mail-wr1-f66.google.com with SMTP id o18so4746384wrv.13
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:45:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2q04YyZCM/Y6pG2YfTJ87FPtLWST+udBScdMOgSCybA=;
-        b=wp/0Fljr7FKzaAAjHiELGcBO2MBzYFb3WAHCKN2gWiKfdN3vbVJj0CJBtTNt1Ip3Um
-         XJ+0HPYP6nSkopngeeKUUHaSeHNqUD4n0JQ42me/qDadwWJ29ZIMF7Y05nPpl0QBRqAw
-         EJ1CYwJ1bj0QAfRDk6cRraD6k7YnUYdxwjO2kwecL0HSRAx2TzRTpil2DNvC/swOVq/4
-         YaKq50Sjn4Kq+BIZrzssPJYFWmgR5fKZwqrOUEmrD2YEqCI3RIdZ83DSeprd3VK7iDE6
-         ip5Tu4VUb3OvyGrDIUM5RtgHdYhhVUz9DQ8tXeIARNBVBL9Vl1KbJWOW+40UGm6QCqH/
-         6KSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2q04YyZCM/Y6pG2YfTJ87FPtLWST+udBScdMOgSCybA=;
-        b=krhzP+WwAAJIUBTEsQWemRZheryWlTgOiWli/nzSawfdL0fZ8ozF4XBG6eTcaFDgCE
-         GLEG+t6+66UWe+BDvC4Cwe9/Xf6Aj/E7cRcfCgvJJ39FKRS7V7OL2MIXfHXpu1qOwGM0
-         boqhrZMEZzDHcXkAhbJkw10o4Gl4xyW9Tz4ViCmElCzMoUOUQhKlRqmUk9dIG9ZhcnkE
-         7zzdQfHPC444XGu1FgvLgSneO7FL/7ovGUelfykUswQxs48ywv2ksHpzkSajrV9elDmh
-         rlkZ0YePtsD/O9DlprRnUKwzd79t//L/RNEArLJ1f4opG+r2Ls6oQxyINZlV0DygEZEy
-         2E6A==
-X-Gm-Message-State: APjAAAXFnX1/cMbEOdjE73jkn2oq7xQrXwt6ed+jYynFamjUWWKwzrvF
-        nyiIknvxvQBM+CtSGpsC9vprj2Uyycl9l1bQTjyKj79Kn+I=
-X-Google-Smtp-Source: APXvYqw+kT7L4okfWQnJGTlaxVb3SG2O2Mm0cc0zb+BRP+yT5R0kSZXnWzsi8ELl1o1vA/xXtDWk1ljCWhsCHVJ8+C0=
-X-Received: by 2002:adf:8567:: with SMTP id 94mr2627476wrh.65.1571367925553;
- Thu, 17 Oct 2019 20:05:25 -0700 (PDT)
+        Fri, 18 Oct 2019 01:45:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36114 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2395438AbfJRFp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 01:45:58 -0400
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 230FF222C4
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 03:15:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571368557;
+        bh=K46fsWJT9D1+AWm1pFeodlhdrS+ZbXUEAbNO4PFZkos=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=oTk5HgZmwR/m3wWFVjN0KjiPWR/TopaLT9qTgWXL9wW6f4HyU2Ru7fOkIaS+WP83p
+         qAG1jdt3JcCPAzCQ0eKiUsGT2bV0SL7IyHy3GhvBhIppZcT7J7JJJNHdlGmaoSb5G5
+         qqdTpYOtr548j/39GmCspcO0VcOsTbEWt/M5AY4E=
+Received: by mail-wr1-f52.google.com with SMTP id o18so4509277wrv.13
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 20:15:57 -0700 (PDT)
+X-Gm-Message-State: APjAAAXNSkXs8VFjbWFRi4QYRaDu+9FNkateg3YZcFSvIqIF3lKJiLrO
+        l5/LmAIWePNiRPgIlzlOArVRIZKVnMi8rrAcZbj48w==
+X-Google-Smtp-Source: APXvYqxPYR0Xs4HvDX2a+NswkyKwNd/iYC0Fr2w0Px08DQM8gg5+S0IoMNHgotc3I2NumCMSrh9L0RMVQajKYML6/MY=
+X-Received: by 2002:a5d:56c4:: with SMTP id m4mr5409453wrw.195.1571368555553;
+ Thu, 17 Oct 2019 20:15:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191017173743.5430-1-hch@lst.de> <20191017173743.5430-13-hch@lst.de>
-In-Reply-To: <20191017173743.5430-13-hch@lst.de>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Fri, 18 Oct 2019 08:35:14 +0530
-Message-ID: <CAAhSdy2mjtH68Ce+h4u3pa79pB-Vs_iu1zfRRcGoaYr=r6xnQw@mail.gmail.com>
-Subject: Re: [PATCH 12/15] riscv: clear the instruction cache and all
- registers when booting
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+References: <1571367619-13573-1-git-send-email-chenhc@lemote.com>
+In-Reply-To: <1571367619-13573-1-git-send-email-chenhc@lemote.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 17 Oct 2019 20:15:44 -0700
+X-Gmail-Original-Message-ID: <CALCETrWXRgkQOJGRqa_sOLAG2zhjsEX6b86T2VTsNYN9ECRrtA@mail.gmail.com>
+Message-ID: <CALCETrWXRgkQOJGRqa_sOLAG2zhjsEX6b86T2VTsNYN9ECRrtA@mail.gmail.com>
+Subject: Re: [PATCH] lib/vdso: Use __arch_use_vsyscall() to indicate fallback
+To:     Huacai Chen <chenhc@lemote.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        chenhuacai@gmail.com, LKML <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 11:08 PM Christoph Hellwig <hch@lst.de> wrote:
+On Thu, Oct 17, 2019 at 7:57 PM Huacai Chen <chenhc@lemote.com> wrote:
 >
-> When we get booted we want a clear slate without any leaks from previous
-> supervisors or the firmware.  Flush the instruction cache and then clear
-> all registers to known good values.  This is really important for the
-> upcoming nommu support that runs on M-mode, but can't really harm when
-> running in S-mode either.  Vaguely based on the concepts from opensbi.
+> In do_hres(), we currently use whether the return value of __arch_get_
+> hw_counter() is negtive to indicate fallback, but this is not a good
+> idea. Because:
 >
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> 1, ARM64 returns ULL_MAX but MIPS returns 0 when clock_mode is invalid;
+> 2, For a 64bit counter, a "negtive" value of counter is actually valid.
+
+s/negtive/negative
+
+What's the actual bug?  Is it that MIPS is returning 0 but the check
+is < 0?  Sounds like MIPS should get fixed.
+
+>
+> To solve this problem, we use U64_MAX as the only "invalid" return
+> value -- this is still not fully correct, but has no problem in most
+> cases.
+
+I'm sort of okay with that, but...
+
+> Moreover, all vdso time-related functions should rely on the
+> return value of __arch_use_vsyscall(), because update_vdso_data() and
+> update_vsyscall_tz() also rely on it. So, in the core functions of
+> __cvdso_gettimeofday(), __cvdso_clock_gettime() and __cvdso_clock_
+> getres(), if __arch_use_vsyscall() returns false, we use the fallback
+> functions directly.
+
+__arch_use_vsyscall() is not currently intended for use in the vDSO at all.
+
+>
+> Fixes: 00b26474c2f1613d7ab894c5 ("lib/vdso: Provide generic VDSO implementation")
+> Cc: stable@vger.kernel.org
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Paul Burton <paul.burton@mips.com>
+> Cc: linux-mips@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Signed-off-by: Huacai Chen <chenhc@lemote.com>
 > ---
->  arch/riscv/include/asm/csr.h |  1 +
->  arch/riscv/kernel/head.S     | 88 +++++++++++++++++++++++++++++++++++-
->  2 files changed, 88 insertions(+), 1 deletion(-)
+>  arch/arm64/include/asm/vdso/vsyscall.h |  2 +-
+>  arch/mips/include/asm/vdso/vsyscall.h  |  2 +-
+>  include/asm-generic/vdso/vsyscall.h    |  2 +-
+>  lib/vdso/gettimeofday.c                | 12 +++++++++++-
+>  4 files changed, 14 insertions(+), 4 deletions(-)
 >
-> diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
-> index d0b5113e1a54..ee0101278608 100644
-> --- a/arch/riscv/include/asm/csr.h
-> +++ b/arch/riscv/include/asm/csr.h
-> @@ -83,6 +83,7 @@
->  /* symbolic CSR names: */
->  #define CSR_MHARTID            0xf14
->  #define CSR_MSTATUS            0x300
-> +#define CSR_MISA               0x301
->  #define CSR_MIE                        0x304
->  #define CSR_MTVEC              0x305
->  #define CSR_MSCRATCH           0x340
-> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-> index 583784cb3a32..25867b99cc95 100644
-> --- a/arch/riscv/kernel/head.S
-> +++ b/arch/riscv/kernel/head.S
-> @@ -11,6 +11,7 @@
->  #include <asm/thread_info.h>
->  #include <asm/page.h>
->  #include <asm/csr.h>
-> +#include <asm/hwcap.h>
->  #include <asm/image.h>
+> diff --git a/arch/arm64/include/asm/vdso/vsyscall.h b/arch/arm64/include/asm/vdso/vsyscall.h
+> index 0c731bf..406e6de 100644
+> --- a/arch/arm64/include/asm/vdso/vsyscall.h
+> +++ b/arch/arm64/include/asm/vdso/vsyscall.h
+> @@ -31,7 +31,7 @@ int __arm64_get_clock_mode(struct timekeeper *tk)
+>  #define __arch_get_clock_mode __arm64_get_clock_mode
 >
->  __INIT
-> @@ -51,12 +52,18 @@ _start_kernel:
->         csrw CSR_XIP, zero
+>  static __always_inline
+> -int __arm64_use_vsyscall(struct vdso_data *vdata)
+> +int __arm64_use_vsyscall(const struct vdso_data *vdata)
+>  {
+>         return !vdata[CS_HRES_COARSE].clock_mode;
+>  }
+> diff --git a/arch/mips/include/asm/vdso/vsyscall.h b/arch/mips/include/asm/vdso/vsyscall.h
+> index 1953147..8b10dd7 100644
+> --- a/arch/mips/include/asm/vdso/vsyscall.h
+> +++ b/arch/mips/include/asm/vdso/vsyscall.h
+> @@ -29,7 +29,7 @@ int __mips_get_clock_mode(struct timekeeper *tk)
+>  #define __arch_get_clock_mode __mips_get_clock_mode
 >
->  #ifdef CONFIG_RISCV_M_MODE
-> +       /* flush the instruction cache */
-> +       fence.i
+>  static __always_inline
+> -int __mips_use_vsyscall(struct vdso_data *vdata)
+> +int __mips_use_vsyscall(const struct vdso_data *vdata)
+>  {
+>         return (vdata[CS_HRES_COARSE].clock_mode != VDSO_CLOCK_NONE);
+>  }
+> diff --git a/include/asm-generic/vdso/vsyscall.h b/include/asm-generic/vdso/vsyscall.h
+> index e94b1978..ac05a625 100644
+> --- a/include/asm-generic/vdso/vsyscall.h
+> +++ b/include/asm-generic/vdso/vsyscall.h
+> @@ -26,7 +26,7 @@ static __always_inline int __arch_get_clock_mode(struct timekeeper *tk)
+>  #endif /* __arch_get_clock_mode */
+>
+>  #ifndef __arch_use_vsyscall
+> -static __always_inline int __arch_use_vsyscall(struct vdso_data *vdata)
+> +static __always_inline int __arch_use_vsyscall(const struct vdso_data *vdata)
+>  {
+>         return 1;
+>  }
+> diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
+> index e630e7f..4ad062e 100644
+> --- a/lib/vdso/gettimeofday.c
+> +++ b/lib/vdso/gettimeofday.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/hrtimer_defs.h>
+>  #include <vdso/datapage.h>
+>  #include <vdso/helpers.h>
+> +#include <vdso/vsyscall.h>
+>
+>  /*
+>   * The generic vDSO implementation requires that gettimeofday.h
+> @@ -50,7 +51,7 @@ static int do_hres(const struct vdso_data *vd, clockid_t clk,
+>                 cycles = __arch_get_hw_counter(vd->clock_mode);
+>                 ns = vdso_ts->nsec;
+>                 last = vd->cycle_last;
+> -               if (unlikely((s64)cycles < 0))
+> +               if (unlikely(cycles == U64_MAX))
+>                         return -1;
+
+I would actually prefer:
+
+if (unlikely(cycles < last))
+
+or perhaps:
+
+if (unlikely((s64)(cycles-last) < 0))
+
+which would have the nice side effect of getting rid of the annoying
+x86 special case in vdso_calc_delta().  The former version is
+compatible with U64_MAX, whereas the latter version would need the
+error case to return last-1 or similar.  The benefit of the latter
+version is that it can survive wrap-around.
+
+>
+>                 ns += vdso_calc_delta(cycles, last, vd->mask, vd->mult);
+> @@ -91,6 +92,9 @@ __cvdso_clock_gettime_common(clockid_t clock, struct __kernel_timespec *ts)
+>         if (unlikely((u32) clock >= MAX_CLOCKS))
+>                 return -1;
+>
+> +       if (!__arch_use_vsyscall(vd))
+> +               return -1;
 > +
-> +       /* Reset all registers except ra, a0, a1 */
-> +       call reset_regs
-> +
+
+NAK.  I don't think this is helpful or correct.  It doesn't appear to
+do anything valid, and it's racy.
+
 >         /*
->          * The hartid in a0 is expected later on, and we have no firmware
->          * to hand it to us.
->          */
->         csrr a0, CSR_MHARTID
-> -#endif
-> +#endif /* CONFIG_RISCV_M_MODE */
+>          * Convert the clockid to a bitmask and use it to check which
+>          * clocks are handled in the VDSO directly.
+> @@ -145,6 +149,9 @@ __cvdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz)
+>  {
+>         const struct vdso_data *vd = __arch_get_vdso_data();
 >
->         /* Load the global pointer */
->  .option push
-> @@ -203,6 +210,85 @@ relocate:
->         j .Lsecondary_park
->  END(_start)
->
-> +#ifdef CONFIG_RISCV_M_MODE
-> +ENTRY(reset_regs)
-> +       li      sp, 0
-> +       li      gp, 0
-> +       li      tp, 0
-> +       li      t0, 0
-> +       li      t1, 0
-> +       li      t2, 0
-> +       li      s0, 0
-> +       li      s1, 0
-> +       li      a2, 0
-> +       li      a3, 0
-> +       li      a4, 0
-> +       li      a5, 0
-> +       li      a6, 0
-> +       li      a7, 0
-> +       li      s2, 0
-> +       li      s3, 0
-> +       li      s4, 0
-> +       li      s5, 0
-> +       li      s6, 0
-> +       li      s7, 0
-> +       li      s8, 0
-> +       li      s9, 0
-> +       li      s10, 0
-> +       li      s11, 0
-> +       li      t3, 0
-> +       li      t4, 0
-> +       li      t5, 0
-> +       li      t6, 0
-> +       csrw    sscratch, 0
+> +       if (!__arch_use_vsyscall(vd))
+> +               return gettimeofday_fallback(tv, tz);
 > +
-> +#ifdef CONFIG_FPU
-> +       csrr    t0, CSR_MISA
-> +       andi    t0, t0, (COMPAT_HWCAP_ISA_F | COMPAT_HWCAP_ISA_D)
-> +       bnez    t0, .Lreset_regs_done
-> +
-> +       li      t1, SR_FS
-> +       csrs    CSR_XSTATUS, t1
-> +       fmv.s.x f0, zero
-> +       fmv.s.x f1, zero
-> +       fmv.s.x f2, zero
-> +       fmv.s.x f3, zero
-> +       fmv.s.x f4, zero
-> +       fmv.s.x f5, zero
-> +       fmv.s.x f6, zero
-> +       fmv.s.x f7, zero
-> +       fmv.s.x f8, zero
-> +       fmv.s.x f9, zero
-> +       fmv.s.x f10, zero
-> +       fmv.s.x f11, zero
-> +       fmv.s.x f12, zero
-> +       fmv.s.x f13, zero
-> +       fmv.s.x f14, zero
-> +       fmv.s.x f15, zero
-> +       fmv.s.x f16, zero
-> +       fmv.s.x f17, zero
-> +       fmv.s.x f18, zero
-> +       fmv.s.x f19, zero
-> +       fmv.s.x f20, zero
-> +       fmv.s.x f21, zero
-> +       fmv.s.x f22, zero
-> +       fmv.s.x f23, zero
-> +       fmv.s.x f24, zero
-> +       fmv.s.x f25, zero
-> +       fmv.s.x f26, zero
-> +       fmv.s.x f27, zero
-> +       fmv.s.x f28, zero
-> +       fmv.s.x f29, zero
-> +       fmv.s.x f30, zero
-> +       fmv.s.x f31, zero
-> +       csrw    fcsr, 0
-> +       /* note that the caller must clear SR_FS */
-> +#endif /* CONFIG_FPU */
-> +.Lreset_regs_done:
-> +       ret
-> +END(reset_regs)
-> +#endif /* CONFIG_RISCV_M_MODE */
-> +
->  __PAGE_ALIGNED_BSS
->         /* Empty zero page */
->         .balign PAGE_SIZE
-> --
-> 2.20.1
+
+Ditto.
+
+>         if (likely(tv != NULL)) {
+>                 struct __kernel_timespec ts;
 >
+> @@ -189,6 +196,9 @@ int __cvdso_clock_getres_common(clockid_t clock, struct __kernel_timespec *res)
+>         if (unlikely((u32) clock >= MAX_CLOCKS))
+>                 return -1;
 >
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> +       if (!__arch_use_vsyscall(vd))
+> +               return -1;
+> +
 
-LGTM.
-
-Reviewed-by: Anup Patel <anup@brainfault.org>
-
-Regards,
-Anup
+Ditto.
