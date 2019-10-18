@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D50CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A49CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92B662245A
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C1F42245C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436475;
-	bh=MZuGYQScevivPMbmdAXU2hcwXP6wafbv8lQFbJkSQsc=;
+	s=default; t=1571436486;
+	bh=xXS8p/EblncHJQHEhAPsiIeE9RiB5ZxpflNfzXPTfaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QiT2+xeEXslUK0gTJa1W7BSvYDoaxW0AHKsw+w9fsp0sp/h4/rzGlFWT0O7Jw9oXM
-	 a0lRZ/n7AYEDq/9dZMvIAFsWCzXWf1X75/ypCdu1w3qhQ2kkM0l0oydGyympQJQscG
-	 zO9tYLfZhq59dDp84G9Le7tzscjgk6GWckgglIlE=
+	b=2vfbixXsxZhKPZ0Uxkm2a/b7TGu3nNnOb8rBebd5zfFWGfCfUquPc1bKraGMXSn7F
+	 mDjmmRkpCMrvTq9NdGMCRdq646aO2z0xloi6VH0IjfdZDsNOBnkDgv5+CHI7UPI0fj
+	 UcOxQgtaKLL8RMzySh5WRyK3uDsgsnk6us4e8loM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387413AbfJRWHx (ORCPT
+        id S2387484AbfJRWIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:07:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40222 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:08:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733196AbfJRWHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:07:49 -0400
+        id S1733281AbfJRWHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:07:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B1FA205F4;
-        Fri, 18 Oct 2019 22:07:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7859C222D4;
+        Fri, 18 Oct 2019 22:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436468;
-        bh=MZuGYQScevivPMbmdAXU2hcwXP6wafbv8lQFbJkSQsc=;
+        s=default; t=1571436470;
+        bh=xXS8p/EblncHJQHEhAPsiIeE9RiB5ZxpflNfzXPTfaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EBSMjf0osPUBOQEHaFxU29s8BJKP3CEYyPDzLvXinIB94VA8CX1GRfHOcscJoKQum
-         Cgot5WNRCvjLBkdQ+E9ExpF9VA3p29lAlws9WWGlF5FJKnTccHWJGdCN5E49WRMchn
-         HK1mlw6U6i6SfW2wpx9IwiWmGluqHxuqQz/XMlr8=
+        b=krHBCYfAoKl/7I6w37QsAmUlEvsQ4tFsLkZpX78updqCRPT25w6jG/p3Vl/BkuW89
+         w6rFKpoV9+A2KI2xrUS2k+2WrXHCutrrPJNxNKjyVCMENQz+at+UlmtNpP/eEuQ7Wy
+         Sf/taBhtmsKZoEQLavGGYLS3m+ABPxpldCWIBWII=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 098/100] NFSv4: Fix leak of clp->cl_acceptor string
-Date:   Fri, 18 Oct 2019 18:05:23 -0400
-Message-Id: <20191018220525.9042-98-sashal@kernel.org>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 099/100] s390/uaccess: avoid (false positive) compiler warnings
+Date:   Fri, 18 Oct 2019 18:05:24 -0400
+Message-Id: <20191018220525.9042-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,58 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Christian Borntraeger <borntraeger@de.ibm.com>
 
-[ Upstream commit 1047ec868332034d1fbcb2fae19fe6d4cb869ff2 ]
+[ Upstream commit 062795fcdcb2d22822fb42644b1d76a8ad8439b3 ]
 
-Our client can issue multiple SETCLIENTID operations to the same
-server in some circumstances. Ensure that calls to
-nfs4_proc_setclientid() after the first one do not overwrite the
-previously allocated cl_acceptor string.
+Depending on inlining decisions by the compiler, __get/put_user_fn
+might become out of line. Then the compiler is no longer able to tell
+that size can only be 1,2,4 or 8 due to the check in __get/put_user
+resulting in false positives like
 
-unreferenced object 0xffff888461031800 (size 32):
-  comm "mount.nfs", pid 2227, jiffies 4294822467 (age 1407.749s)
-  hex dump (first 32 bytes):
-    6e 66 73 40 6b 6c 69 6d 74 2e 69 62 2e 31 30 31  nfs@klimt.ib.101
-    35 67 72 61 6e 67 65 72 2e 6e 65 74 00 00 00 00  5granger.net....
-  backtrace:
-    [<00000000ab820188>] __kmalloc+0x128/0x176
-    [<00000000eeaf4ec8>] gss_stringify_acceptor+0xbd/0x1a7 [auth_rpcgss]
-    [<00000000e85e3382>] nfs4_proc_setclientid+0x34e/0x46c [nfsv4]
-    [<000000003d9cf1fa>] nfs40_discover_server_trunking+0x7a/0xed [nfsv4]
-    [<00000000b81c3787>] nfs4_discover_server_trunking+0x81/0x244 [nfsv4]
-    [<000000000801b55f>] nfs4_init_client+0x1b0/0x238 [nfsv4]
-    [<00000000977daf7f>] nfs4_set_client+0xfe/0x14d [nfsv4]
-    [<0000000053a68a2a>] nfs4_create_server+0x107/0x1db [nfsv4]
-    [<0000000088262019>] nfs4_remote_mount+0x2c/0x59 [nfsv4]
-    [<00000000e84a2fd0>] legacy_get_tree+0x2d/0x4c
-    [<00000000797e947c>] vfs_get_tree+0x20/0xc7
-    [<00000000ecabaaa8>] fc_mount+0xe/0x36
-    [<00000000f15fafc2>] vfs_kern_mount+0x74/0x8d
-    [<00000000a3ff4e26>] nfs_do_root_mount+0x8a/0xa3 [nfsv4]
-    [<00000000d1c2b337>] nfs4_try_mount+0x58/0xad [nfsv4]
-    [<000000004c9bddee>] nfs_fs_mount+0x820/0x869 [nfs]
+./arch/s390/include/asm/uaccess.h: In function ‘__put_user_fn’:
+./arch/s390/include/asm/uaccess.h:113:9: warning: ‘rc’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  113 |  return rc;
+      |         ^~
+./arch/s390/include/asm/uaccess.h: In function ‘__get_user_fn’:
+./arch/s390/include/asm/uaccess.h:143:9: warning: ‘rc’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  143 |  return rc;
+      |         ^~
 
-Fixes: f11b2a1cfbf5 ("nfs4: copy acceptor name from context ... ")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+These functions are supposed to be always inlined. Mark it as such.
+
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/s390/include/asm/uaccess.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 621e3cf90f4eb..75faef7af22d3 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -5943,6 +5943,7 @@ int nfs4_proc_setclientid(struct nfs_client *clp, u32 program,
- 	}
- 	status = task->tk_status;
- 	if (setclientid.sc_cred) {
-+		kfree(clp->cl_acceptor);
- 		clp->cl_acceptor = rpcauth_stringify_acceptor(setclientid.sc_cred);
- 		put_rpccred(setclientid.sc_cred);
- 	}
+diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uaccess.h
+index 5332f628c1edc..40194f8c772a0 100644
+--- a/arch/s390/include/asm/uaccess.h
++++ b/arch/s390/include/asm/uaccess.h
+@@ -84,7 +84,7 @@ raw_copy_to_user(void __user *to, const void *from, unsigned long n);
+ 	__rc;							\
+ })
+ 
+-static inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
++static __always_inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
+ {
+ 	unsigned long spec = 0x010000UL;
+ 	int rc;
+@@ -114,7 +114,7 @@ static inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
+ 	return rc;
+ }
+ 
+-static inline int __get_user_fn(void *x, const void __user *ptr, unsigned long size)
++static __always_inline int __get_user_fn(void *x, const void __user *ptr, unsigned long size)
+ {
+ 	unsigned long spec = 0x01UL;
+ 	int rc;
 -- 
 2.20.1
 
