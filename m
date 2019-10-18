@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0DCCA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 893A7CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E66CF21897
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62423222C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:52:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tOzu1xpQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q8OAMr9n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504871AbfJRHwM (ORCPT
+        id S2504929AbfJRHwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 03:52:12 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37867 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2504842AbfJRHwG (ORCPT
+        Fri, 18 Oct 2019 03:52:33 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38410 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504820AbfJRHwb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 03:52:06 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y5so3353621pfo.4
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 00:52:06 -0700 (PDT)
+        Fri, 18 Oct 2019 03:52:31 -0400
+Received: by mail-pf1-f196.google.com with SMTP id h195so3355368pfe.5
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 00:52:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jw+08rzVC/fHmnAThtEG2Qn+9HpheDHbFDslHO0mM5s=;
-        b=tOzu1xpQvcr+wlJB6e8SwG8mmKso4P72iSeuBgY++OZXvMAmZFa89z6Hf+aPNZM8Ap
-         umcy7LAvWc2FgwikUUx/st0ZcciaeTL81mofdlXMZlO+UAOZJ/rF1Hm5hI6BElMWLFcr
-         GU2SoY3EW/u5pJRZkH797fvH0imvhbdzLM4wJutliRygOMZrM1ebLtM/aH+0pxj2oQRV
-         CI329+fNPf8THkoqFIGOB45uqZhvFSsfhUTiMecuuKzP5DTB80tZj2bYhRvVWqj6dEKP
-         rdoj1JvRwfpWaYMuBh2RQy8GdVlagHJ1t9+jJXuaQtWqTrkePGEmOFO+TAW/Y1EFr852
-         qNDA==
+        bh=0pJmJ81GxYw9u8IJm7SVtdF3GPmYHg5dQZCWkgXLGIU=;
+        b=Q8OAMr9nHevdo+0lJFuF2HiKvfAJZVyax2lvF7NnqCvyVkjY04OtE6FlMWTxNcuFLZ
+         wXFbUyzsXn27m08iQG1ffRg5P3+maP3h4obxTtV0KhYvEUSvZdQ/q6OxNM6hq2xia6Bb
+         R2iG2WEu5PgxfTj/30FnaoQsi5i1nQI6hBKMimBkGwg5J0CRxtKfEHmFZxU2wHU5LLtN
+         585ci5FLUSTq9ZZEckAjKw1bFLqI2iUlI6DnuFFp5UfRX0J4QamJTYZtFdDl1EWPHxb0
+         xF5Cdqogg9gth5WjfqUsm37pwyeBz37o4z6SU7to4eh+hp4NK5C7PrfaE2+bVvoIxuuH
+         PxUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jw+08rzVC/fHmnAThtEG2Qn+9HpheDHbFDslHO0mM5s=;
-        b=iOadZLthxWrtZh/1HsloPXSBJZtXfER0V9R3UgO/b94nyQQq33yv9ANnXyfX6gosM7
-         jwaZDk2suCdyrb4hDgC4wY5WTHCZBTZcferi9+EcUvfYghWrXDejNCrxVHi3f+VWDYYN
-         Pku72Ich9nKhbCZw78dLAy4YT3g40cAQ/5SkEqiFM3K1Ruwfur3uG3W2DgtRRyb/EbSj
-         4icoqEE+Q9pEQ7pkcrRb4qx8ItDmERrzBYnjQikNlICHt2S9WqPY2l95xGqFnFs0sn7X
-         xbCkcGwtATvecRi7pc11kbyz0624eGXxdBLKaOR8dnerZR/p4TbR+3lZa9/qoYqjf/mz
-         mcTw==
-X-Gm-Message-State: APjAAAWA483gWqfrxuJ7PESWwD3iCcRlIGnOwFVWwkFsrWjMEzSXgNYj
-        NfWypsQgq/j5FZHW3mAYNdavsENcw50ggMWtG+8=
-X-Google-Smtp-Source: APXvYqzc+ObLIA1pu/S/QFwSmNmEUQqDxP7yFfotnuqM8I5bDa5Qha8Z6q6EuI6vmxn8O4As86q341tXKQpk3FvwyRw=
-X-Received: by 2002:a17:90a:b391:: with SMTP id e17mr9761480pjr.132.1571385125585;
- Fri, 18 Oct 2019 00:52:05 -0700 (PDT)
+        bh=0pJmJ81GxYw9u8IJm7SVtdF3GPmYHg5dQZCWkgXLGIU=;
+        b=k8U2pyYzpAG4XQ7Nd5YqwVWmS2q5bWPFWBgidd/b3SQdWBWa3+uo7Nn28lvFi4cD7H
+         bVvPkj9YswjHyUlsVGRXIgcjD+DN5EbCfhsW7tTfwKPPlSwKw04aD4uUeAT5MuzkfAX8
+         QkypPrPbGUGKmQteJG6MX+5XlSaKlbrA7DBRznPbjS0TjoGZV1h4S/zLbsXDPrLlxQ0j
+         ecTYkDcyAdkAL34iXiPysHE11b+O4SEUHOD3RYW2JojGp0ZedQuJWIBQD7h9vkqqaMXf
+         0ISkqfQQaNsMKUqkZei+4TG+9/5WrQL+M1ug/HhUXqerjxLDB1Us62c6imbTIz1sS3jG
+         htag==
+X-Gm-Message-State: APjAAAX5Vedxh3j8cAmJiSCZ6vTNEuu/jrcYsopygZtVxv4K+WTJbe6L
+        LRj7400aMU6eJ2apQb5fK+xR8EA/Z+vssTOFRE8=
+X-Google-Smtp-Source: APXvYqx/jvH8yxn34bDc/vIukWC/QMLPnsascOkXaCYKgaMMWM+qJLzkwl4J/dOag4my3exXSRVo0yyXMbmi5N2Vdso=
+X-Received: by 2002:a62:e206:: with SMTP id a6mr5108202pfi.64.1571385150303;
+ Fri, 18 Oct 2019 00:52:30 -0700 (PDT)
 MIME-Version: 1.0
 References: <20191018031710.41052-1-wangkefeng.wang@huawei.com>
- <20191018031850.48498-1-wangkefeng.wang@huawei.com> <20191018031850.48498-19-wangkefeng.wang@huawei.com>
-In-Reply-To: <20191018031850.48498-19-wangkefeng.wang@huawei.com>
+ <20191018031850.48498-1-wangkefeng.wang@huawei.com> <20191018031850.48498-20-wangkefeng.wang@huawei.com>
+In-Reply-To: <20191018031850.48498-20-wangkefeng.wang@huawei.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 18 Oct 2019 10:51:55 +0300
-Message-ID: <CAHp75VesP5qfk3r2o-R+OuBE1DA0-24ZGNgmAaSkfPiUjFAQDQ@mail.gmail.com>
-Subject: Re: [PATCH v2 19/33] platform/x86: asus-laptop: Use pr_warn instead
- of pr_warning
+Date:   Fri, 18 Oct 2019 10:52:19 +0300
+Message-ID: <CAHp75VdL8+_nd1-H=q92qxscSYc8ovMRxrC0w19=Fw320y+oSw@mail.gmail.com>
+Subject: Re: [PATCH v2 20/33] platform/x86: intel_oaktrail: Use pr_warn
+ instead of pr_warning
 To:     Kefeng Wang <wangkefeng.wang@huawei.com>
 Cc:     Petr Mladek <pmladek@suse.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
@@ -90,22 +90,55 @@ Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 > Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 > Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 > ---
->  drivers/platform/x86/asus-laptop.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/platform/x86/intel_oaktrail.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 >
-> diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-> index fc6446209854..a666fbc2e73b 100644
-> --- a/drivers/platform/x86/asus-laptop.c
-> +++ b/drivers/platform/x86/asus-laptop.c
-> @@ -1148,7 +1148,7 @@ static void asus_als_switch(struct asus_laptop *asus, int value)
->                 ret = write_acpi_int(asus->handle, METHOD_ALS_CONTROL, value);
+> diff --git a/drivers/platform/x86/intel_oaktrail.c b/drivers/platform/x86/intel_oaktrail.c
+> index 3c0438ba385e..1a09a75bd16d 100644
+> --- a/drivers/platform/x86/intel_oaktrail.c
+> +++ b/drivers/platform/x86/intel_oaktrail.c
+> @@ -243,7 +243,7 @@ static int oaktrail_backlight_init(void)
+>
+>         if (IS_ERR(bd)) {
+>                 oaktrail_bl_device = NULL;
+> -               pr_warning("Unable to register backlight device\n");
+> +               pr_warn("Unable to register backlight device\n");
+>                 return PTR_ERR(bd);
 >         }
->         if (ret)
-> -               pr_warning("Error setting light sensor switch\n");
-> +               pr_warn("Error setting light sensor switch\n");
 >
->         asus->light_switch = value;
->  }
+> @@ -313,20 +313,20 @@ static int __init oaktrail_init(void)
+>
+>         ret = platform_driver_register(&oaktrail_driver);
+>         if (ret) {
+> -               pr_warning("Unable to register platform driver\n");
+> +               pr_warn("Unable to register platform driver\n");
+>                 goto err_driver_reg;
+>         }
+>
+>         oaktrail_device = platform_device_alloc(DRIVER_NAME, -1);
+>         if (!oaktrail_device) {
+> -               pr_warning("Unable to allocate platform device\n");
+> +               pr_warn("Unable to allocate platform device\n");
+>                 ret = -ENOMEM;
+>                 goto err_device_alloc;
+>         }
+>
+>         ret = platform_device_add(oaktrail_device);
+>         if (ret) {
+> -               pr_warning("Unable to add platform device\n");
+> +               pr_warn("Unable to add platform device\n");
+>                 goto err_device_add;
+>         }
+>
+> @@ -338,7 +338,7 @@ static int __init oaktrail_init(void)
+>
+>         ret = oaktrail_rfkill_init();
+>         if (ret) {
+> -               pr_warning("Setup rfkill failed\n");
+> +               pr_warn("Setup rfkill failed\n");
+>                 goto err_rfkill;
+>         }
+>
 > --
 > 2.20.1
 >
