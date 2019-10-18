@@ -2,117 +2,116 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B76CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D5FCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D412D21897
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9E0921897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:29:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="R4BJVlTp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yg7fL+tE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634170AbfJRO2p (ORCPT
+        id S2410446AbfJRO3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 10:28:45 -0400
-Received: from mail-eopbgr00068.outbound.protection.outlook.com ([40.107.0.68]:19840
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2408333AbfJRO2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 10:28:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Icfug4Ml5o0lnqu9Rhfho1Rc8fstUQ0ixfjILil2JF3+8eHFPj6OIAruS9G1BqXOGfHK2Mhy9CzkJD2KcH9VsAoTqEPp6pN51PmRyIS8nStLTQioLwWo2J1gk6I/xSDsxvM4im0AgY+CxP40l7e+E0qnmJUT2dSQW9ctuOs6X4P0y4+Ctx7SnkGMQ9+mbSgZlpaj7SRsctsIp8eez5AEtK0CF9WcuyjmJrQhedlFpWnuP50CGIGEmZVL0Kd5MdjqloNaDHxOXkDYOnjpz7AJSQ1By/DBl81QGD6N7CX15TvEsqZBXqsgEURyDe19LL1+NbdJfQ11eAQvOdznjiGk5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7i4k4kBZU/qbjk6aj//PNB/pIGVzHW8cnbeNvUP2wuo=;
- b=IH8u/siBVsw2ksNI/iFg7SjmODlHLFPKdKsijrvq820XAFt24LINHY5m08fX+MVhHSv13WS7zSU2E0FI3WV6YDPOnAP4fT5jtB4BtGTgqMDiz03GArwXD42CbFg6EN0ci+z3OvCZt+wNOxbDQmfEeeP1wDKaBG0Z0ALU/t3U3vxTfJN8de3II8zKklnsvwUzFBVQlM/QT3KxRSZK1lyPhItYMF9E9IJBJGT9GcidyxAbJFdNokm0ipGbgnXGxrXhwIOngEBf9OhowooPcBRAECsTDgD4qTU//nJy+mrElXpXFZ3mWHruE2JofzNDEEE+N2B/gJwIA74KWEzATWlkvA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7i4k4kBZU/qbjk6aj//PNB/pIGVzHW8cnbeNvUP2wuo=;
- b=R4BJVlTp5efu82mqLs68qlk9ybVAIMyxEh0uhR/3A8tQaz3dekutvLt0NHT/8vToFZ8hEbUeWI0hC3ZpLN1rctdz9Q3FgN2Hm3E7N+Y649NbGIX9n6+b8x+LHg1KMyqwLqeDcQL79s7DAPlf7IiHlizXbSyfUETw+M9QCqz+XM8=
-Received: from DB7PR04MB4425.eurprd04.prod.outlook.com (52.135.140.156) by
- DB7PR04MB4266.eurprd04.prod.outlook.com (52.135.130.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.21; Fri, 18 Oct 2019 14:28:41 +0000
-Received: from DB7PR04MB4425.eurprd04.prod.outlook.com
- ([fe80::c068:28ec:7f2f:4a5e]) by DB7PR04MB4425.eurprd04.prod.outlook.com
- ([fe80::c068:28ec:7f2f:4a5e%6]) with mapi id 15.20.2347.024; Fri, 18 Oct 2019
- 14:28:41 +0000
-From:   Peng Ma <peng.ma@nxp.com>
-To:     Fabio Estevam <festevam@gmail.com>
-CC:     Vinod <vkoul@kernel.org>, Dan Williams <dan.j.williams@intel.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        =?utf-8?B?S3J6eXN6dG9mIEtvesWCb3dza2k=?= <k.kozlowski.k@gmail.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCH] dmaengine: fsl-edma: Add eDMA support for QorIQ
- LS1028A platform
-Thread-Topic: [EXT] Re: [PATCH] dmaengine: fsl-edma: Add eDMA support for
- QorIQ LS1028A platform
-Thread-Index: AQHVhLtWQPtc6yR4Rkmk/ITG0gU0sqdgdkiAgAAAQmA=
-Date:   Fri, 18 Oct 2019 14:28:41 +0000
-Message-ID: <DB7PR04MB4425E937B423C39F0F45FCEDED6C0@DB7PR04MB4425.eurprd04.prod.outlook.com>
-References: <20191017070923.6705-1-peng.ma@nxp.com>
- <CAOMZO5AK+wv0vAfqv7PC-gYF32MSD9nMqFCuRmLxMN6dYZdvGA@mail.gmail.com>
-In-Reply-To: <CAOMZO5AK+wv0vAfqv7PC-gYF32MSD9nMqFCuRmLxMN6dYZdvGA@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.ma@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b4a6d791-7d9c-4ed2-a349-08d753d77990
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: DB7PR04MB4266:|DB7PR04MB4266:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB42662B1A234E041B0C70D8A4ED6C0@DB7PR04MB4266.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 01949FE337
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(39860400002)(346002)(366004)(376002)(13464003)(189003)(199004)(478600001)(74316002)(486006)(305945005)(256004)(81166006)(7696005)(14454004)(76176011)(44832011)(102836004)(2906002)(11346002)(6916009)(99286004)(81156014)(8936002)(33656002)(7736002)(3846002)(6506007)(8676002)(71200400001)(476003)(71190400001)(186003)(6116002)(26005)(446003)(25786009)(76116006)(4326008)(5660300002)(66066001)(4744005)(66946007)(66446008)(64756008)(66556008)(1411001)(54906003)(86362001)(229853002)(6436002)(6246003)(52536014)(55016002)(316002)(9686003)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4266;H:DB7PR04MB4425.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: iyhZ1nW9jWZ/KZfIzA3WpWWn04nVuEjBLQMkVVhkj1zGSBFyOviSaCkoH4PPNJph0JmjobpsAa9elBihuKB9gYu78TY2NhqA5//zhMBWF/fJJDeHyoG887z1md1tki4C0ZnxaQlcpa503YgAqQ5vBBMwgJgI/AWBLwP9XxyXbsyFTPdbf0HPaISfxEhA4uK41Oulh1Wo0QZ0lLYtDiwR4EslEFqi7R8yd/3xrHIbfxijP6EvByl617NE4Mf5vKYg+Q8urKUY35mG/WuJSdZWU4Ndrg89ppxSX3OWlROKiRTmYlueAVE+16pzZIGhRw5NeOtH3VBnAZhTO1S9PriOyPSA+7LGsAwgPT+GOrVQMmLkZ7pZVYinK+eaXo2aADYjj/BF64lN40Tkpr+bCZAK/G04IM5gb06G6Cdg3KAGYcY=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 18 Oct 2019 10:29:23 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35222 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729584AbfJRO3X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 10:29:23 -0400
+Received: by mail-wm1-f66.google.com with SMTP id n124so2628215wmf.0;
+        Fri, 18 Oct 2019 07:29:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5ptchJ9UA22jxDJh3Bd/EUwZqE/aEbLVu7JuDoUNaVo=;
+        b=Yg7fL+tE/kvtd8TqGdv5DyItEgy/SQ6F5leKmV64MKRBGuxFXM91r752kNg19q1/6H
+         U8HZR8HW03LFU1LVJUD3qGeu4NDOKSGdC0DmvR84qWQbYHhGHcltRYt74op6dOPN+Jtl
+         tm3A1levUg0YRkb8ZXcZRDYBMBB82OyU66xxUiNWz2qDtyyhEBGFCR5dglDj8r8Sd+Dr
+         A1oa6NtHjvgDmkVwlkGBZbbhSUO3odjCbp0DES+hNUdDMFjLOZ166/B0Y2mFD40K2PZG
+         Tep3KgOfiUpN9R5jXoQSUxCTaRTgrfikKqeJ80iPnFfKyVPgPmq1t1QT8s05EaedDoEp
+         2sSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5ptchJ9UA22jxDJh3Bd/EUwZqE/aEbLVu7JuDoUNaVo=;
+        b=QBWoLOjO+JEbPFIeUVy3VDF2SGzhZYrPzgS2yDtApEh7jS1C9YSsIJOlNuKfoaBDxQ
+         w6wc5qnQu0ytXLCTBLJd1hrv51pC71Grb3hYvrpjeyDspJfUMGITLqwhDmhj0uYbZxZu
+         cQ9pTGrUjZYNR2Z/fxgdWX1G5hd1nhS3PX3DZSPrM8hgYRaEUn25fIMpJQ4h5yddDFty
+         ljpnD+D0TaWlJ/gV6BmGyfVeNwD/8Prf4Pdm09788MpDkzaM0A8ZEwIAk29fez/V/rEE
+         UiskWB8ceJEvlIuRrbLJCPhriOgBUP1IxgcO2CXi8Wl6x8pU4YywOJhBKWoq3RjvcRy/
+         ifeA==
+X-Gm-Message-State: APjAAAVA9h/fDWrm/5DDqUnVCyj+I5W+URYSlDSbQwLNuqLPkUzcf9Rg
+        0DbS1hsV3/mExM3j/C7N+6g=
+X-Google-Smtp-Source: APXvYqy2l6Z4/hxK2/QCsvDc78zWIYq2fO4nyiQ6TsMaLbtrWVUvnVhhlqCC8bd4O5M+y1JjnG11/Q==
+X-Received: by 2002:a1c:5946:: with SMTP id n67mr8222592wmb.93.1571408959942;
+        Fri, 18 Oct 2019 07:29:19 -0700 (PDT)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id 36sm6791136wrp.30.2019.10.18.07.29.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 07:29:19 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 16:29:17 +0200
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Mans Rullgard <mans@mansr.com>
+Cc:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chen-Yu Tsai <wens@csie.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] net: ethernet: dwmac-sun8i: show message only when
+ switching to promisc
+Message-ID: <20191018142917.GA26078@Red>
+References: <20191018140514.21454-1-mans@mansr.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b4a6d791-7d9c-4ed2-a349-08d753d77990
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Oct 2019 14:28:41.8101
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: n0VQxzZp3iGuiwbP07PO+53Fb7U71OV3MlpS28ZqotFrNcSoHOSuCXpwcf4FiQpg
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4266
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018140514.21454-1-mans@mansr.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRmFiaW8sDQoNClRoYW5rcyBmb3IgeW91ciBjb21tZW50cy4NCkRvIHlvdSBtZWFuIEkgZXhw
-bGFpbiAiT3VyIHBsYXRmb3JtcyIgaGVyZSBvciBpbiBwYXRjaD8NCg0KQmVzdCBSZWdhcmRzLA0K
-UGVuZw0KDQo+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj5Gcm9tOiBGYWJpbyBFc3RldmFt
-IDxmZXN0ZXZhbUBnbWFpbC5jb20+DQo+U2VudDogMjAxOeW5tDEw5pyIMTjml6UgMjI6MjUNCj5U
-bzogUGVuZyBNYSA8cGVuZy5tYUBueHAuY29tPg0KPkNjOiBWaW5vZCA8dmtvdWxAa2VybmVsLm9y
-Zz47IERhbiBXaWxsaWFtcyA8ZGFuLmoud2lsbGlhbXNAaW50ZWwuY29tPjsgTGVvDQo+TGkgPGxl
-b3lhbmcubGlAbnhwLmNvbT47IEtyenlzenRvZiBLb3rFgm93c2tpIDxrLmtvemxvd3NraS5rQGdt
-YWlsLmNvbT47DQo+RmFiaW8gRXN0ZXZhbSA8ZmFiaW8uZXN0ZXZhbUBueHAuY29tPjsgZG1hZW5n
-aW5lQHZnZXIua2VybmVsLm9yZzsNCj5saW51eC1rZXJuZWwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmc+DQo+U3ViamVjdDogW0VYVF0gUmU6IFtQQVRDSF0gZG1hZW5naW5lOiBmc2wtZWRt
-YTogQWRkIGVETUEgc3VwcG9ydCBmb3IgUW9ySVENCj5MUzEwMjhBIHBsYXRmb3JtDQo+DQo+Q2F1
-dGlvbjogRVhUIEVtYWlsDQo+DQo+SGkgUGVuZywNCj4NCj5PbiBGcmksIE9jdCAxOCwgMjAxOSBh
-dCA3OjA4IEFNIFBlbmcgTWEgPHBlbmcubWFAbnhwLmNvbT4gd3JvdGU6DQo+Pg0KPj4gT3VyIHBs
-YXRmb3JtcyB3aXRoIGJlbG93IHJlZ2lzdGVycyhDSENGRzAgLSBDSENGRzE1KSBvZiBlRE1BIGFz
-IGZvbGxvd3M6DQo+DQo+UGxlYXNlIGJlIG1vcmUgc3BlY2lmaWM6IHdoYXQgZG9lcyAiT3VyIHBs
-YXRmb3JtcyIgbWVhbj8NCg==
+On Fri, Oct 18, 2019 at 03:05:14PM +0100, Mans Rullgard wrote:
+> Printing the info message every time more than the max number of mac
+> addresses are requested generates unnecessary log spam.  Showing it only
+> when the hw is not already in promiscous mode is equally informative
+> without being annoying.
+> 
+> Signed-off-by: Mans Rullgard <mans@mansr.com>
+> ---
+>  drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+> index 79c91526f3ec..5be2de1f1179 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+> @@ -646,7 +646,8 @@ static void sun8i_dwmac_set_filter(struct mac_device_info *hw,
+>  			}
+>  		}
+>  	} else {
+> -		netdev_info(dev, "Too many address, switching to promiscuous\n");
+> +		if (readl(ioaddr + EMAC_RX_FRM_FLT) != EMAC_FRM_FLT_RXALL)
+> +			netdev_info(dev, "Too many address, switching to promiscuous\n");
+>  		v = EMAC_FRM_FLT_RXALL;
+>  	}
+>  
+
+You need to mask the result, if EMAC_FRM_FLT_MULTICAST | EMAC_FRM_FLT_RXALL is set, you will still print the message.
+Or shorter than masking, !(readl(ioaddr + EMAC_RX_FRM_FLT) & EMAC_FRM_FLT_RXALL)
+
+I just realize that perhaps we need to set also IFF_PROMISC in dev->flags.
+
+Thanks
+Regards
