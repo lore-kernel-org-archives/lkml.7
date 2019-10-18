@@ -2,120 +2,127 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC48CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD43DCA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B527821D7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:12:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CIsGHCGt";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CIsGHCGt"
+	by mail.kernel.org (Postfix) with ESMTP id AE5A5222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:12:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633295AbfJRKMr (ORCPT
+        id S2633305AbfJRKM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 06:12:47 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:43986 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2633218AbfJRKMq (ORCPT
+        Fri, 18 Oct 2019 06:12:58 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:41123 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387545AbfJRKM6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 06:12:46 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B9D6C61136; Fri, 18 Oct 2019 10:12:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571393565;
-        bh=qQyWt4N0PfQUuGUcmF8g2Od8g0wOfG0DWFA70BBTCvo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CIsGHCGtt4S1ecanP4P6hDIBg+YH8NvjI30y/CUS8vOnTnkcQAZBglme1aes6Xsv3
-         Am4W4oMUe61fHqvjDyGrZ1WmRBcQXNVHOUleW78iuzm/ZHhlUHTgTB6M+TmvXLZnao
-         2JZKrM1zgn4qn2GDMcbmbOLLSYet61oCltoqzYuM=
-Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2521361019;
-        Fri, 18 Oct 2019 10:12:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571393565;
-        bh=qQyWt4N0PfQUuGUcmF8g2Od8g0wOfG0DWFA70BBTCvo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CIsGHCGtt4S1ecanP4P6hDIBg+YH8NvjI30y/CUS8vOnTnkcQAZBglme1aes6Xsv3
-         Am4W4oMUe61fHqvjDyGrZ1WmRBcQXNVHOUleW78iuzm/ZHhlUHTgTB6M+TmvXLZnao
-         2JZKrM1zgn4qn2GDMcbmbOLLSYet61oCltoqzYuM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2521361019
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-From:   Taniya Das <tdas@codeaurora.org>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v1 3/3] clk: qcom: clk-rpmh: Add support for RPMHCC for SC7180
-Date:   Fri, 18 Oct 2019 15:39:24 +0530
-Message-Id: <1571393364-32697-4-git-send-email-tdas@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1571393364-32697-1-git-send-email-tdas@codeaurora.org>
-References: <1571393364-32697-1-git-send-email-tdas@codeaurora.org>
+        Fri, 18 Oct 2019 06:12:58 -0400
+Received: from 79.184.255.51.ipv4.supernova.orange.pl (79.184.255.51) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 49e72b95e28af242; Fri, 18 Oct 2019 12:12:54 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     "Yin, Fengwei" <fengwei.yin@intel.com>
+Cc:     David Laight <David.Laight@aculab.com>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] ACPI / processor_idle: use ndelay instead of io port access for wait
+Date:   Fri, 18 Oct 2019 12:12:54 +0200
+Message-ID: <2566427.rT6C98KLSe@kreacher>
+In-Reply-To: <2b3ce9e9-e805-1b8d-86c3-c8f498a4d3dd@intel.com>
+References: <20191015080404.6013-1-fengwei.yin@intel.com> <c9f3f4f93bb946f790fce4709253b359@AcuMS.aculab.com> <2b3ce9e9-e805-1b8d-86c3-c8f498a4d3dd@intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for clock RPMh driver to vote for ARC and VRM managed
-clock resources.
+On Wednesday, October 16, 2019 7:56:17 AM CEST Yin, Fengwei wrote:
+> Hi David,
+> 
+> On 10/15/2019 7:48 PM, David Laight wrote:
+> > From: Yin Fengwei
+> >> Sent: 15 October 2019 09:04
+> >> In function acpi_idle_do_entry(), an ioport access is used for dummy
+> >> wait to guarantee hardware behavior. But it could trigger unnecessary
+> >> vmexit in virtualization environment.
+> >>
+> >> If we run linux as guest and export all available native C state to
+> >> guest, we did see many PM timer access triggered VMexit when guest
+> >> enter deeper C state in our environment (We used ACRN hypervisor
+> >> instead of kvm or xen which has PM timer emulated and exports all
+> >> native C state to guest).
+> >>
+> >> According to the original comments of this part of code, io port
+> >> access is only for dummy wait. We could use busy wait instead of io
+> >> port access to guarantee hardware behavior and avoid unnecessary
+> >> VMexit.
+> > 
+> > You need some hard synchronisation instruction(s) after the inb()
+> > and before any kind of delay to ensure your delay code is executed
+> > after the inb() completes.
+> > 
+> > I'm pretty sure that inb() is only synchronised with memory reads.
+> Thanks a lot for the comments.
+> 
+> I didn't find the common serializing instructions API in kernel (only
+> memory  barrier which is used to make sure of memory access). For Intel
+> x86, cpuid could be used as serializing instruction. But it's not
+> suitable for common code here. Do you have any suggestion?
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
----
- drivers/clk/qcom/clk-rpmh.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+In the virt guest case you don't need to worry at all AFAICS, because the inb()
+itself will trap to the HV.
 
-diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
-index 96a36f6..7301c77 100644
---- a/drivers/clk/qcom/clk-rpmh.c
-+++ b/drivers/clk/qcom/clk-rpmh.c
-@@ -391,6 +391,24 @@ static const struct clk_rpmh_desc clk_rpmh_sm8150 = {
- 	.num_clks = ARRAY_SIZE(sm8150_rpmh_clocks),
- };
+> > 
+> > ...
+> >> +	/* profiling the time used for dummy wait op */
+> >> +	ktime_get_real_ts64(&ts0);
+> >> +	inl(acpi_gbl_FADT.xpm_timer_block.address);
+> >> +	ktime_get_real_ts64(&ts1);
 
-+static struct clk_hw *sc7180_rpmh_clocks[] = {
-+	[RPMH_CXO_CLK]		= &sdm845_bi_tcxo.hw,
-+	[RPMH_CXO_CLK_A]	= &sdm845_bi_tcxo_ao.hw,
-+	[RPMH_LN_BB_CLK2]	= &sdm845_ln_bb_clk2.hw,
-+	[RPMH_LN_BB_CLK2_A]	= &sdm845_ln_bb_clk2_ao.hw,
-+	[RPMH_LN_BB_CLK3]	= &sdm845_ln_bb_clk3.hw,
-+	[RPMH_LN_BB_CLK3_A]	= &sdm845_ln_bb_clk3_ao.hw,
-+	[RPMH_RF_CLK1]		= &sdm845_rf_clk1.hw,
-+	[RPMH_RF_CLK1_A]	= &sdm845_rf_clk1_ao.hw,
-+	[RPMH_RF_CLK2]		= &sdm845_rf_clk2.hw,
-+	[RPMH_RF_CLK2_A]	= &sdm845_rf_clk2_ao.hw,
-+};
-+
-+static const struct clk_rpmh_desc clk_rpmh_sc7180 = {
-+	.clks = sc7180_rpmh_clocks,
-+	.num_clks = ARRAY_SIZE(sc7180_rpmh_clocks),
-+};
-+
- static struct clk_hw *of_clk_rpmh_hw_get(struct of_phandle_args *clkspec,
- 					 void *data)
- {
-@@ -471,6 +489,7 @@ static int clk_rpmh_probe(struct platform_device *pdev)
- static const struct of_device_id clk_rpmh_match_table[] = {
- 	{ .compatible = "qcom,sdm845-rpmh-clk", .data = &clk_rpmh_sdm845},
- 	{ .compatible = "qcom,sm8150-rpmh-clk", .data = &clk_rpmh_sm8150},
-+	{ .compatible = "qcom,sc7180-rpmh-clk", .data = &clk_rpmh_sc7180},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, clk_rpmh_match_table);
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
+You may as well use ktime_get() for this, as it's almost the same code as
+ktime_get_real_ts64() AFAICS, only simpler.
+
+Plus, static vars need not be initialized to 0.
+
+> > 
+> > That could be dominated by the cost of ktime_get_real_ts64().
+> > It also need synchronising instructions.
+> I did some testing. ktime_get_real_ts64() takes much less time than io
+> port access.
+> 
+> The test code is like:
+> 1.
+> 	local_irq_save(flag);
+> 	ktime_get_real_ts64(&ts0);
+> 	inl(acpi_gbl_FADT.xpm_timer_block.address);
+> 	ktime_get_real_ts64(&ts1);
+> 	local_irq_restore(flag);
+> 
+> 2.
+> 	local_irq_save(flag);
+> 	ktime_get_real_ts64(&ts0);
+> 	ktime_get_real_ts64(&ts1);
+> 	local_irq_restore(flag);
+> 
+> The delta in 1 is about 500000ns. And delta in 2 is about
+> 2000ns. The date is gotten on Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz.
+> So I suppose the impact of ktime_get_real_ts64 is small.
+
+You may not be hitting the worst case for ktime_get_real_ts64(), though.
+
+I wonder if special casing the virt guest would be a better approach.
+
+Then, you could leave the code as is for non-virt and I'm not sure if the
+delay is needed in the virt guest case at all.
+
+So maybe do something like "if not in a virt guest, do the dummy inl()"
+and that would be it?
+
+
 
