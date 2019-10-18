@@ -2,214 +2,125 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 303F6CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4706CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 049762082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B5202082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:44:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a4KqHH64"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MaoAVrEW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408895AbfJRQne (ORCPT
+        id S2409036AbfJRQoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:43:34 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44461 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728368AbfJRQne (ORCPT
+        Fri, 18 Oct 2019 12:44:09 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46708 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728368AbfJRQoJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:43:34 -0400
-Received: by mail-pl1-f193.google.com with SMTP id q15so3100269pll.11
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:43:32 -0700 (PDT)
+        Fri, 18 Oct 2019 12:44:09 -0400
+Received: by mail-pg1-f194.google.com with SMTP id e15so3652209pgu.13
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:44:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=itPDN3uOMullCrqvdWp4VHOtEiVy99lUJjyxqObTixM=;
-        b=a4KqHH64Syi3Jkb+d0eVgCpN+31SnDYFhDKhObeeBYgIxsVpB28MK9tNghzsFxuX+N
-         VbAKU58UasFmej23pHOk0QrDLH7oKDm4M3dk3bgCtTUWOgQmltwfMriaPvVLpxp3C0pC
-         kYoPXPqJx0ajXSrYjPEgK8592+nVdo/5DSLpSz/Itc5Br1qMc82P+2UjLLk4LyZ199qw
-         YdBPa6JePJa0Fd7+ocz3Fs2qom1i2u3DIw3HjxianaEOsPf5x+/L3CFK6vBNgDV9SqT3
-         pgNBOC5FZlvErDViSZm4W/P+hr6vWNgjySr+vmQ1yyL5jifp07AxbcGC3bkxHitLbGMK
-         lX4A==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZwMcOsbGZZ8f6uWMLDj+pQEnHD4UiXo77mMaA+m9Cec=;
+        b=MaoAVrEWrYmStM42VmjkhM+yBqW5nmFdZUdMgNJxJxHlLHKaZFNCxq6OBgTpGLhKGc
+         OWdO81hilPq/aXDzQ9k9l5FMpOwQTtX9aSf/gh8k9HJLlpNNhyBbwzQztVt7Ln578bg2
+         TxoaQzzeexqQEm2Me70b+h7c69cdFw+yNHFPR4P/kCRWUaXTKxvLuxWPHHcZhBKMXmRa
+         haUzz/7Z5U1iMglzLf+T+vfBOWLIzKGazC+M4utXX8Q/+VWjHY0wZMILMMrJmlC5rYMY
+         hO4NiYtRo41y6gSO5oLkynBW3PZH36X124Jp7D/tax93FnMXCzAKfFehw6NNhZxlFywY
+         tqVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=itPDN3uOMullCrqvdWp4VHOtEiVy99lUJjyxqObTixM=;
-        b=a0gMqMytW5nOPOcaOwkJCKhNJcxJr6c+AKqe/XFlbuNit8mvTi+C1+7OZHljfPuCYs
-         Phl7Z1D30CPdfeVbGLSZIFV0FvlguaHmrKh8jsqIA2u5rd+30fHvSHF9neiAiGhACL8+
-         +9PlyjuJfrm54nfb7twC0w2GeeStBZ26Y/f97ZWbO0rJodxjqYPA5oQuBDFQlTtsns0H
-         nUhZdsZ88qDlKtsm7C1J4XYTOYDDDwtjdvDJMTURAq7ACafNzeojJJh6/qSEg6+DRRLk
-         b7wlI1xox1Nz4ltVhwIkHW/gOOPrwWmdC79PPxWKm4W36Y9QyTwryb+3AFVgFADIo2Ik
-         DqCA==
-X-Gm-Message-State: APjAAAVhB9KFP2ZZi5ZZ5zgsrt4egerajbYE6ASWCTf+B2+FkqXrLLww
-        CI/UiTr4Ea5KVXSYi0K7IqUfyY6VYZ959XUUHqnN9g==
-X-Google-Smtp-Source: APXvYqxjABHlLirt3mzHAGsgLEpxUZMPZex/FsD7C0vJFW62s876ojGzoWlX6A4J5FwacSy764TFAtK8KXx4Wiz+QQw=
-X-Received: by 2002:a17:902:9b83:: with SMTP id y3mr10710877plp.179.1571417011191;
- Fri, 18 Oct 2019 09:43:31 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZwMcOsbGZZ8f6uWMLDj+pQEnHD4UiXo77mMaA+m9Cec=;
+        b=AXIYE1BBFpBphZ62NwaZI1pkzNFtb6UDyxIJbVdcfZNU0NyvwFLAaW/J7KfBFxovb9
+         qmKJQIuaOZmjPgQMqsiDZwFNribvlp/u8O6HzLgMYb7MHDNi06hCiwOYIew7RsHEt0cb
+         C1FJKqmCk4WbylcFtHjBseE/TwS7IhGFRUyoBnE94mYrtxk7MnVibTKiNWfY8Ar++I9g
+         awwEThixXMpDIzySa5PH0Dp9/aDo6QORYzLL7F3cJCzSKeomgluoGrTs5y/j9VAFYPxu
+         fJG+V/0KY5Yoy4mQvqJam7edO++fFZMppPthQS00Wn0t+veQMyE7N8jrF9bMkGOwCnND
+         6Yxw==
+X-Gm-Message-State: APjAAAVYXRT7+y3K+vUdj1bBWwZS6kZivZ5M23hsO8B1MNQZ9MjNpmVx
+        Hfj0kQvL0eWCEiJnNpvkKX+73A==
+X-Google-Smtp-Source: APXvYqzbk5aRYFgKZCpTVv7zh/wqaJImwgGdmlEdKxg+rLkTLwys+lHKrS40lv4h4mITrIuv7V5cHg==
+X-Received: by 2002:a63:f908:: with SMTP id h8mr10900767pgi.244.1571417046622;
+        Fri, 18 Oct 2019 09:44:06 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id v19sm7230962pff.46.2019.10.18.09.44.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 09:44:05 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 09:44:03 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     linux-pm@vger.kernel.org, rostedt@goodmis.org, mingo@redhat.com,
+        vincent.guittot@linaro.org, daidavid1@codeaurora.org,
+        okukatla@codeaurora.org, evgreen@chromium.org, mka@chromium.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] interconnect: Add basic tracepoints
+Message-ID: <20191018164403.GB1669@tuxbook-pro>
+References: <20191018140224.15087-1-georgi.djakov@linaro.org>
 MIME-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com> <20191018161033.261971-2-samitolvanen@google.com>
-In-Reply-To: <20191018161033.261971-2-samitolvanen@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 18 Oct 2019 09:43:20 -0700
-Message-ID: <CAKwvOd=rspmzW+v=nG=07H5XZ2OPWVbhDusYEe3k5+mZ79JvwA@mail.gmail.com>
-Subject: Re: [PATCH 01/18] arm64: mm: don't use x18 in idmap_kpti_install_ng_mappings
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        kernel-hardening@lists.openwall.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018140224.15087-1-georgi.djakov@linaro.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 9:10 AM Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> idmap_kpti_install_ng_mappings uses x18 as a temporary register, which
-> will result in a conflict when x18 is reserved. Use x16 and x17 instead
-> where needed.
->
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+On Fri 18 Oct 07:02 PDT 2019, Georgi Djakov wrote:
 
-TIL about .req/.unreq.  Seems like a nice way of marking "variable"
-lifetime.  Technically, only `pte` needed to be moved to reuse
-{w|x}16, but moving most the unreqs together is nicer than splitting
-them apart. The usage all looks correct to me.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> The tracepoints can help with understanding the system behavior of a
+> given interconnect path when the consumer drivers change their bandwidth
+> demands. This might be interesting when we want to monitor the requested
+> interconnect bandwidth for each client driver. The paths may share the
+> same nodes and this will help to understand "who and when is requesting
+> what". All this is useful for subsystem drivers developers and may also
+> provide hints when optimizing the power and performance profile of the
+> system.
+> 
 
-> ---
->  arch/arm64/mm/proc.S | 63 ++++++++++++++++++++++----------------------
->  1 file changed, 32 insertions(+), 31 deletions(-)
->
-> diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-> index a1e0592d1fbc..fdabf40a83c8 100644
-> --- a/arch/arm64/mm/proc.S
-> +++ b/arch/arm64/mm/proc.S
-> @@ -250,15 +250,15 @@ ENTRY(idmap_kpti_install_ng_mappings)
->         /* We're the boot CPU. Wait for the others to catch up */
->         sevl
->  1:     wfe
-> -       ldaxr   w18, [flag_ptr]
-> -       eor     w18, w18, num_cpus
-> -       cbnz    w18, 1b
-> +       ldaxr   w17, [flag_ptr]
-> +       eor     w17, w17, num_cpus
-> +       cbnz    w17, 1b
->
->         /* We need to walk swapper, so turn off the MMU. */
->         pre_disable_mmu_workaround
-> -       mrs     x18, sctlr_el1
-> -       bic     x18, x18, #SCTLR_ELx_M
-> -       msr     sctlr_el1, x18
-> +       mrs     x17, sctlr_el1
-> +       bic     x17, x17, #SCTLR_ELx_M
-> +       msr     sctlr_el1, x17
->         isb
->
->         /* Everybody is enjoying the idmap, so we can rewrite swapper. */
-> @@ -281,9 +281,9 @@ skip_pgd:
->         isb
->
->         /* We're done: fire up the MMU again */
-> -       mrs     x18, sctlr_el1
-> -       orr     x18, x18, #SCTLR_ELx_M
-> -       msr     sctlr_el1, x18
-> +       mrs     x17, sctlr_el1
-> +       orr     x17, x17, #SCTLR_ELx_M
-> +       msr     sctlr_el1, x17
->         isb
->
->         /*
-> @@ -353,46 +353,47 @@ skip_pte:
->         b.ne    do_pte
->         b       next_pmd
->
-> +       .unreq  cpu
-> +       .unreq  num_cpus
-> +       .unreq  swapper_pa
-> +       .unreq  cur_pgdp
-> +       .unreq  end_pgdp
-> +       .unreq  pgd
-> +       .unreq  cur_pudp
-> +       .unreq  end_pudp
-> +       .unreq  pud
-> +       .unreq  cur_pmdp
-> +       .unreq  end_pmdp
-> +       .unreq  pmd
-> +       .unreq  cur_ptep
-> +       .unreq  end_ptep
-> +       .unreq  pte
+This is very useful, thanks for writing it up.
+
+> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+[..]
+> @@ -449,6 +452,9 @@ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
+>  
+>  		/* aggregate requests for this node */
+>  		aggregate_requests(node);
 > +
->         /* Secondary CPUs end up here */
->  __idmap_kpti_secondary:
->         /* Uninstall swapper before surgery begins */
-> -       __idmap_cpu_set_reserved_ttbr1 x18, x17
-> +       __idmap_cpu_set_reserved_ttbr1 x16, x17
->
->         /* Increment the flag to let the boot CPU we're ready */
-> -1:     ldxr    w18, [flag_ptr]
-> -       add     w18, w18, #1
-> -       stxr    w17, w18, [flag_ptr]
-> +1:     ldxr    w16, [flag_ptr]
-> +       add     w16, w16, #1
-> +       stxr    w17, w16, [flag_ptr]
->         cbnz    w17, 1b
->
->         /* Wait for the boot CPU to finish messing around with swapper */
->         sevl
->  1:     wfe
-> -       ldxr    w18, [flag_ptr]
-> -       cbnz    w18, 1b
-> +       ldxr    w16, [flag_ptr]
-> +       cbnz    w16, 1b
->
->         /* All done, act like nothing happened */
-> -       offset_ttbr1 swapper_ttb, x18
-> +       offset_ttbr1 swapper_ttb, x16
->         msr     ttbr1_el1, swapper_ttb
->         isb
->         ret
->
-> -       .unreq  cpu
-> -       .unreq  num_cpus
-> -       .unreq  swapper_pa
->         .unreq  swapper_ttb
->         .unreq  flag_ptr
-> -       .unreq  cur_pgdp
-> -       .unreq  end_pgdp
-> -       .unreq  pgd
-> -       .unreq  cur_pudp
-> -       .unreq  end_pudp
-> -       .unreq  pud
-> -       .unreq  cur_pmdp
-> -       .unreq  end_pmdp
-> -       .unreq  pmd
-> -       .unreq  cur_ptep
-> -       .unreq  end_ptep
-> -       .unreq  pte
->  ENDPROC(idmap_kpti_install_ng_mappings)
->         .popsection
->  #endif
-> --
-> 2.23.0.866.gb869b98d4c-goog
->
+> +		trace_icc_set_bw(node, dev_name(path->reqs[i].dev),
+> +				 avg_bw, peak_bw);
 
+When I've been debugging interconnect things I've added a
+kstrdup_const() of "name" in of_icc_get() and then included that here.
 
--- 
-Thanks,
-~Nick Desaulniers
+I find including the path name quite useful for devices with multiple
+paths.
+
+>  	}
+>  
+>  	ret = apply_constraints(path);
+> @@ -461,6 +467,9 @@ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
+>  			path->reqs[i].avg_bw = old_avg;
+>  			path->reqs[i].peak_bw = old_peak;
+>  			aggregate_requests(node);
+> +
+> +			trace_icc_set_bw(node, dev_name(path->reqs[i].dev),
+> +					 old_avg, old_peak);
+>  		}
+>  		apply_constraints(path);
+
+And analog to e.g. the clock traces I would suggest that you trace
+device, path and "ret" here.
+
+Regards,
+Bjorn
