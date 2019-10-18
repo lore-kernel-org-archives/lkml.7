@@ -2,103 +2,111 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0282FCA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7638CA9EA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA94121D80
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:10:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IK3Ai6M2"
+	by mail.kernel.org (Postfix) with ESMTP id C967F21D80
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:10:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442062AbfJRHKB (ORCPT
+        id S2504512AbfJRHKl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 03:10:01 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33766 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727306AbfJRHKB (ORCPT
+        Fri, 18 Oct 2019 03:10:41 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37422 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730051AbfJRHKl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 03:10:01 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i76so2857180pgc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 00:10:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aUKSB/eobGAaYzA+zetYK7qwC81TH5UGLLG8mpvrqjM=;
-        b=IK3Ai6M2vww5v5zDqMVx2Y5Ux3F2JnNbcrzWeRo30ZlpTw/YxKGRFm5dPAXISnId2K
-         LUWF/zq8wvhnBjW1sgSnfDfDCqSvxFALW1h/kZFJG+U6kfujlc5CLhE2+gvUrYIYFLyF
-         eYQbv0KgtyRC03j5YNpvQHy4YWzrw9/v5m4U4iurnbFirv8SLE43Ls6jgVGAdTeTNZeQ
-         TJP6IPJpuWU4YtkwYL3o0qYlasjzi57kp9+cmR9IpAQvIjoBtnnC3DPmEQeaqAusnGcb
-         ZRae5QAaF5VL/IjzD4UHIeSDiqqqaPtfwmoriJTp7xN5z/F29hwErInQVeEHmxtTc7mJ
-         QwBw==
+        Fri, 18 Oct 2019 03:10:41 -0400
+Received: from mail-pl1-f198.google.com ([209.85.214.198])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1iLMPG-0003cJ-7d
+        for linux-kernel@vger.kernel.org; Fri, 18 Oct 2019 07:10:38 +0000
+Received: by mail-pl1-f198.google.com with SMTP id x8so3152222plr.23
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 00:10:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aUKSB/eobGAaYzA+zetYK7qwC81TH5UGLLG8mpvrqjM=;
-        b=G4eMAmEof8kTjYcOt7uVdMNLx8lsBCwp9+7x1krmvKk2hCwzbbS/vc4fww2uNGWsLb
-         Cv1dLje9QmxvkEWaseKMjKK0jU2QOpAGrJGF6SWd/qLkHOoUczBPCnFdILYRaGS5ukYw
-         3ALBsTouipbZn5YU0cVaDnvPhD5CU78vQt8nEwPERHVN8X3SUy2YQsAmhIUCHv/tVXIR
-         8MBpyiz6DO4TPYVlNIIEajrcmdV5mR3IbWKLSUCP4oipHj7+2ZzxC15DUbA6Pt3LmR7q
-         YIp69/R6fICy8a7rAhoSIaPyw6sV0PnCjbm09VId9dmKRSyyzKY/SgTslUkXB+n4f17e
-         N8Mg==
-X-Gm-Message-State: APjAAAVXEaCJKDoOGM6qhKZfimgdIYGuLg2uikTSAeOWvjuHcLpXadNs
-        JvJ2fi0NRQK8RY9xcAzXgL4=
-X-Google-Smtp-Source: APXvYqwG6pgWoLTskuPSqA1ZK0IIJIG9b5lF34gkizyFXbN0bJnAbqjQXy5U4vUskXlAmbg0A2NDFA==
-X-Received: by 2002:aa7:9907:: with SMTP id z7mr4977952pff.133.1571382600635;
-        Fri, 18 Oct 2019 00:10:00 -0700 (PDT)
-Received: from localhost.localdomain ([45.52.215.209])
-        by smtp.gmail.com with ESMTPSA id s97sm6974508pjc.4.2019.10.18.00.09.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 00:09:59 -0700 (PDT)
-From:   Chandra Annamaneni <chandra627@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     gneukum1@gmail.com, dan.carpenter@oracle.com,
-        michael.scheiderer@fau.de, fabian.krueger@fau.de,
-        chandra627@gmail.com, simon@nikanor.nu, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/4] staging: KPC2000: kpc2000_spi.c: Fix style issues (misaligned brace)
-Date:   Fri, 18 Oct 2019 00:09:48 -0700
-Message-Id: <20191018070948.22279-1-chandra627@gmail.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=W2dlHKbXpBlBRqZecHK0TxY8GIHXGyTK/jVPgPNEMCI=;
+        b=qgfEoy6cYLfkkher1RQig87mTAW8ELFKRWLJfprw6tT88CWSyqjZn57tadtGQnTBkC
+         ak7FWqeZ6EVLrPVtQBleN9rJkW2P48JG0LZIc8RGm+sPDdIkQpSNpZklYyrdWYo8B+Tn
+         LAFJYJ3BtxgPSUtrssATeNA2asLQFn0zbpYzt08sGlZfLkihgb7Li71hwULf9Qorah2S
+         vqSK9zHew6Ml9QBRpoUgsaMMmDReGN3LWDl7ca4oOQV/z4ijS54+sTIeSMzi6oer9pro
+         3n0nxnyYW/EOR8xMMAikrfE6ERqxVbYjx2FdL7WXbPiA27nRupiLP/QKwSH8qVuL6CPo
+         Z/yQ==
+X-Gm-Message-State: APjAAAV8A8HGgnwnQCk1zf2DIfdDBwH9tHNBaPUBWLk67rEDT4DDFw3d
+        3kcSgbGHCOasCEwFud1003reIRVpOQtC8sTbpAHkOSWqah/eJnqI2tJW2Quq59QANuNWh43BWyy
+        wBPjbwUu4lGPWUprxw6oq+ydga+ivVR+IkI9thsSooA==
+X-Received: by 2002:a17:90a:5898:: with SMTP id j24mr9259403pji.7.1571382636942;
+        Fri, 18 Oct 2019 00:10:36 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwQk27AhMnBJT7RwfOxoLxZmR24oykzSX4mxQMivJsH20K+PYh86uZWlHMHfJVDJfYn8uPnCA==
+X-Received: by 2002:a17:90a:5898:: with SMTP id j24mr9259375pji.7.1571382636614;
+        Fri, 18 Oct 2019 00:10:36 -0700 (PDT)
+Received: from 2001-b011-380f-3c42-80b6-0157-ba58-fc96.dynamic-ip6.hinet.net (2001-b011-380f-3c42-80b6-0157-ba58-fc96.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:80b6:157:ba58:fc96])
+        by smtp.gmail.com with ESMTPSA id y17sm8331705pfo.171.2019.10.18.00.10.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 18 Oct 2019 00:10:35 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601\))
+Subject: Re: [PATCH v2 2/2] PCI: pciehp: Prevent deadlock on disconnect
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20190923082832.GD2773@lahna.fi.intel.com>
+Date:   Fri, 18 Oct 2019 15:10:32 +0800
+Cc:     AceLan Kao <acelan.kao@canonical.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Keith Busch <keith.busch@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <0DDD8724-5331-495C-BB20-3754B1E667D3@canonical.com>
+References: <20190812143133.75319-1-mika.westerberg@linux.intel.com>
+ <20190812143133.75319-2-mika.westerberg@linux.intel.com>
+ <20190923053403.jdjw6ed3sub6iuou@wunner.de>
+ <20190923081237.GB2773@lahna.fi.intel.com>
+ <20190923082832.GD2773@lahna.fi.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+X-Mailer: Apple Mail (2.3601)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Resolved: ERROR: else should follow close brace '}'
+Hi Mika,
 
-Signed-off-by: Chandra Annamaneni <chandra627@gmail.com>
----
-Previous versions of these patches were not split into different 
-patches, did not have different patch numbers and did not have the
-keyword staging. The previous version of this patch had the wrong 
-description and subject.
- drivers/staging/kpc2000/kpc2000_spi.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> On Sep 23, 2019, at 16:28, Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
+> 
+> On Mon, Sep 23, 2019 at 11:12:42AM +0300, Mika Westerberg wrote:
+>> Regarding suggestion of unbinding PCI drivers without
+>> pci_lock_rescan_remove() hold, I haven't looked it too closely but I
+>> think we need to take that lock anyway because when we are unbinding a
+>> hotplug driver it is supposed to remove the hierarchy below touching the
+>> shared structures, possibly concurrently. Unfortunately there is no
+>> documentation what data pci_lock_rescan_remove() actually protects so
+>> first one needs to understand that. I think one way to clean up this is
+>> to use finer grained locking (with documented lock ordering) for PCI bus
+>> structures that can be accessed simultaneusly by different threads. But
+>> that is not a simple task.
+> 
+> Now that I looked more closely, I realized it actually is not supposed
+> to remove the hierarchy below so indeed it might be possible to do that
+> without taking pci_lock_rescan_remove().
 
-diff --git a/drivers/staging/kpc2000/kpc2000_spi.c b/drivers/staging/kpc2000/kpc2000_spi.c
-index 5712a88c8788..929136cdc3e1 100644
---- a/drivers/staging/kpc2000/kpc2000_spi.c
-+++ b/drivers/staging/kpc2000/kpc2000_spi.c
-@@ -226,8 +226,7 @@ kp_spi_txrx_pio(struct spi_device *spidev, struct spi_transfer *transfer)
- 			kp_spi_write_reg(cs, KP_SPI_REG_TXDATA, val);
- 			processed++;
- 		}
--	}
--	else if (rx) {
-+	} else if (rx) {
- 		for (i = 0 ; i < c ; i++) {
- 			char test = 0;
- 
--- 
-2.20.1
+This series fixes S3 resume hang when native PCIe TBT is connected to TBT dock.
+Is there going to be a v3 of this series?
 
+Anyway, please collect my tested-by tag,
+Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+
+Kai-Heng
