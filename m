@@ -2,139 +2,152 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 882FBCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE85CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D9B420640
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA9720640
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:30:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l3FmNZpv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W34HiTmz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437424AbfJRQ3L (ORCPT
+        id S2439500AbfJRQaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:29:11 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46796 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732948AbfJRQ3L (ORCPT
+        Fri, 18 Oct 2019 12:30:09 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37941 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732948AbfJRQaJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:29:11 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q5so4187904pfg.13
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:29:10 -0700 (PDT)
+        Fri, 18 Oct 2019 12:30:09 -0400
+Received: by mail-wr1-f65.google.com with SMTP id o15so6497661wru.5;
+        Fri, 18 Oct 2019 09:30:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2wpqKYgqS1BkiorV4FohVUrj12ksHYUyybev2uqGPeY=;
-        b=l3FmNZpvX+8KI2ixC4ixdLwdJ0RidwxgffrvTy7zM8oU1fT+BjavgsmLp5SpYYOdpJ
-         H2sbPxZkmFoQp7QnnL1ot/lNxCls7i9E24SDA8SvByvn7v2viZTVaDMIDJaliFKQMJqd
-         narsjaPjtXVEgtKdQuKQ2AWBqEppY2l2epuDSL319JLa/8kiSxk1Y1+lQBPBPTi/iwkr
-         +D9FDgVuA6rwS1u0lXr6JA6rCwTKuvRaiLEEZ5fGpn0fSXIMDKo1ubEfC4mjx1Ao4y32
-         SQHAy55r9Yo6HV9hmW8do0nGEwt8exF5zWN0X0wufAgnsElTEtP/jTUysqk5ShR268Iz
-         RVTA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=lJc0hj7tQVxDAaGjfCOv7vwr1QfJ/5Ay/O35J4hdg0E=;
+        b=W34HiTmzG0Wkh8A4mK+ZBdO7Aae+UoxMX9i9O7wdsm3reQ/ZEtdu3N4gw0ACWa8nbe
+         bpAzAeXA+eqX577RWAm+tQVEQNxRs/1GBLc1TlbBsfMvvme0U/x7Eb1DuRhjJLNIPkhe
+         ooAQtfe2s6JHbVqwyj6nDJiDFV57IXFscjR0vUXmroN10dCjWUV2pMbbyeds/UYgy5sY
+         zNVyoJbEmrWGwDSPlUh4BpS9OyhC0mgDHuWjGZ+CUu0rKVG7nxzrEKjihpX8SvUvsnlV
+         URGpEeu27I3kqsfnJUqoSHj+bzMoZHrhTcGOsbC/rwnDWn6TUGXE6Y4ZY9P0ltJZgFjJ
+         UdZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2wpqKYgqS1BkiorV4FohVUrj12ksHYUyybev2uqGPeY=;
-        b=XE3wn+k+DL6/zw0NF7Vlkiq9JzDmbq8Pjki0i2S7G6lzgYoQivJwNLbkgN+/9id2hP
-         HL/qdPvfoYdj0m9oN09fFInIrRmr1lDvW3r7eIUbgh9kArxRoh4EURYWVKHukxRNccQJ
-         oua9a3DwMVt6cIK2+I8dNIDw1GnZ4mejXXZVmVx+QDTrfZfrfcaDXk8wlanDrBVlnGMp
-         FwyBgDRDQwcEz+zotr6J98m6ZX/d7ONlzAXkZeleXLkCzjE3CrXaYlDpwLqweHzCHxNS
-         9HRva7rpmILtI3yS3NwFbVh2BckJE2YsioKN+oaPzhsAotZ0dMWHdvJ+sUmvOIHG6mtr
-         wfuQ==
-X-Gm-Message-State: APjAAAUhZWK0k2y9XawKXrNA52k0yDhjT5x1kE6ke5EJ8lVAKI8aJqLO
-        fV0JKIv3Qi+qKLjo3L/XOy/P/nGTFkV/snP+Ihm0Aw==
-X-Google-Smtp-Source: APXvYqycy8C6FgkneRJuwyCOlTuUjZ/6EPb8v+vfWERGg/dW0EQ8jrZJYINcw33VYYsOuItcFjmi3LkWtPLxyac+kAs=
-X-Received: by 2002:a65:464b:: with SMTP id k11mr11317125pgr.263.1571416149678;
- Fri, 18 Oct 2019 09:29:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191018134052.3023-1-thomas_os@shipmail.org> <20191018134052.3023-2-thomas_os@shipmail.org>
-In-Reply-To: <20191018134052.3023-2-thomas_os@shipmail.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 18 Oct 2019 09:28:58 -0700
-Message-ID: <CAKwvOd==mdqaEQZU3YYn2CjzZcW6Nfjjva_RijMMOywA8a-Lqw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] x86/cpu/vmware: Use the full form of INL in VMWARE_HYPERCALL
-To:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Borislav Petkov <bp@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=lJc0hj7tQVxDAaGjfCOv7vwr1QfJ/5Ay/O35J4hdg0E=;
+        b=Vp1Ycb7Vt1noBRj3fBkas+grtSsIyuCJlb68XVhJXQStmSRmnvvvj2V8a3kLvkJuox
+         rYSjZLZ0sCO1dBsTd6H8WaiifTxkLDyJufS8CY8v9W06GSDeoRJsS5ypbrcafoLUuYAO
+         uHNU1sQ3wLz7QZA5zXkj/haeT5pnBpNJOQhqz1k7Aa+YI6R7TxRd5FgyaJUBgIaf3vGK
+         vH21RA8fGvN2r549IVBKWtsubvt5vl+RIHdlZFGf6P47vcf20UzH1Zz67fmoeUWzXyTn
+         UYHw1ma5SaapZGO0nNr0731Fxx8IiiH8JhO3z95nUhY89w2hde6wlheSB9Vzrdi1npxn
+         wSfw==
+X-Gm-Message-State: APjAAAV5K+sL8mQKAX9BLW7jtK4zW+IBDie/GXeiLJxijCpAGfCrdiE6
+        KVobB3zG/9pKhQrjCy0nbgw=
+X-Google-Smtp-Source: APXvYqyYIv1KczmfhzvFNVLt5B5gajKUiA+enUgcWK2XtyuUq3g+DU3XrKJg4cwXJvIMYHUnnEdVSA==
+X-Received: by 2002:a5d:484e:: with SMTP id n14mr8206328wrs.110.1571416206126;
+        Fri, 18 Oct 2019 09:30:06 -0700 (PDT)
+Received: from debian.office.codethink.co.uk. ([78.40.148.180])
+        by smtp.gmail.com with ESMTPSA id m16sm5010123wml.11.2019.10.18.09.30.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 18 Oct 2019 09:30:05 -0700 (PDT)
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: [PATCH] omapfb: reduce stack usage
+Date:   Fri, 18 Oct 2019 17:30:04 +0100
+Message-Id: <20191018163004.23498-1-sudipm.mukherjee@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 6:41 AM Thomas Hellstr=C3=B6m (VMware)
-<thomas_os@shipmail.org> wrote:
->
-> From: Thomas Hellstrom <thellstrom@vmware.com>
->
-> LLVM's assembler doesn't accept the short form INL instruction:
->
->   inl (%%dx)
->
-> but instead insists on the output register to be explicitly specified.
->
-> This was previously fixed for the VMWARE_PORT macro. Fix it also for
-> the VMWARE_HYPERCALL macro.
->
-> Fixes: b4dd4f6e3648 ("Add a header file for hypercall definitions")
-> Suggested-by: Sami Tolvanen <samitolvanen@google.com>
-> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+The build of xtensa allmodconfig is giving a warning of:
+In function 'dsi_dump_dsidev_irqs':
+warning: the frame size of 1120 bytes is larger than 1024 bytes
 
-Thank you for the patch.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Allocate the memory for 'struct dsi_irq_stats' dynamically instead
+of assigning it in stack.
 
-> Cc: clang-built-linux@googlegroups.com
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: x86-ml <x86@kernel.org>
-> Cc: Borislav Petkov <bp@suse.de>
-> ---
->  arch/x86/include/asm/vmware.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/include/asm/vmware.h b/arch/x86/include/asm/vmware.=
-h
-> index e00c9e875933..f5fbe3778aef 100644
-> --- a/arch/x86/include/asm/vmware.h
-> +++ b/arch/x86/include/asm/vmware.h
-> @@ -29,7 +29,8 @@
->
->  /* The low bandwidth call. The low word of edx is presumed clear. */
->  #define VMWARE_HYPERCALL                                               \
-> -       ALTERNATIVE_2("movw $" VMWARE_HYPERVISOR_PORT ", %%dx; inl (%%dx)=
-", \
-> +       ALTERNATIVE_2("movw $" VMWARE_HYPERVISOR_PORT                   \
-> +                     ", %%dx; inl (%%dx), %%eax",                      \
->                       "vmcall", X86_FEATURE_VMCALL,                     \
->                       "vmmcall", X86_FEATURE_VMW_VMMCALL)
->
-> --
-> 2.21.0
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgi=
-d/clang-built-linux/20191018134052.3023-2-thomas_os%40shipmail.org.
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+---
+ drivers/video/fbdev/omap2/omapfb/dss/dsi.c | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
 
+diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dsi.c b/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
+index d620376216e1..43402467bf40 100644
+--- a/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
++++ b/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
+@@ -1536,22 +1536,25 @@ static void dsi_dump_dsidev_irqs(struct platform_device *dsidev,
+ {
+ 	struct dsi_data *dsi = dsi_get_dsidrv_data(dsidev);
+ 	unsigned long flags;
+-	struct dsi_irq_stats stats;
++	struct dsi_irq_stats *stats;
+ 
++	stats = kmalloc(sizeof(*stats), GFP_KERNEL);
++	if (!stats)
++		return;
+ 	spin_lock_irqsave(&dsi->irq_stats_lock, flags);
+ 
+-	stats = dsi->irq_stats;
++	memcpy(stats, &dsi->irq_stats, sizeof(*stats));
+ 	memset(&dsi->irq_stats, 0, sizeof(dsi->irq_stats));
+ 	dsi->irq_stats.last_reset = jiffies;
+ 
+ 	spin_unlock_irqrestore(&dsi->irq_stats_lock, flags);
+ 
+ 	seq_printf(s, "period %u ms\n",
+-			jiffies_to_msecs(jiffies - stats.last_reset));
++			jiffies_to_msecs(jiffies - stats->last_reset));
+ 
+-	seq_printf(s, "irqs %d\n", stats.irq_count);
++	seq_printf(s, "irqs %d\n", stats->irq_count);
+ #define PIS(x) \
+-	seq_printf(s, "%-20s %10d\n", #x, stats.dsi_irqs[ffs(DSI_IRQ_##x)-1]);
++	seq_printf(s, "%-20s %10d\n", #x, stats->dsi_irqs[ffs(DSI_IRQ_##x)-1]);
+ 
+ 	seq_printf(s, "-- DSI%d interrupts --\n", dsi->module_id + 1);
+ 	PIS(VC0);
+@@ -1575,10 +1578,10 @@ static void dsi_dump_dsidev_irqs(struct platform_device *dsidev,
+ 
+ #define PIS(x) \
+ 	seq_printf(s, "%-20s %10d %10d %10d %10d\n", #x, \
+-			stats.vc_irqs[0][ffs(DSI_VC_IRQ_##x)-1], \
+-			stats.vc_irqs[1][ffs(DSI_VC_IRQ_##x)-1], \
+-			stats.vc_irqs[2][ffs(DSI_VC_IRQ_##x)-1], \
+-			stats.vc_irqs[3][ffs(DSI_VC_IRQ_##x)-1]);
++			stats->vc_irqs[0][ffs(DSI_VC_IRQ_##x)-1], \
++			stats->vc_irqs[1][ffs(DSI_VC_IRQ_##x)-1], \
++			stats->vc_irqs[2][ffs(DSI_VC_IRQ_##x)-1], \
++			stats->vc_irqs[3][ffs(DSI_VC_IRQ_##x)-1]);
+ 
+ 	seq_printf(s, "-- VC interrupts --\n");
+ 	PIS(CS);
+@@ -1594,7 +1597,7 @@ static void dsi_dump_dsidev_irqs(struct platform_device *dsidev,
+ 
+ #define PIS(x) \
+ 	seq_printf(s, "%-20s %10d\n", #x, \
+-			stats.cio_irqs[ffs(DSI_CIO_IRQ_##x)-1]);
++			stats->cio_irqs[ffs(DSI_CIO_IRQ_##x)-1]);
+ 
+ 	seq_printf(s, "-- CIO interrupts --\n");
+ 	PIS(ERRSYNCESC1);
+@@ -1618,6 +1621,7 @@ static void dsi_dump_dsidev_irqs(struct platform_device *dsidev,
+ 	PIS(ULPSACTIVENOT_ALL0);
+ 	PIS(ULPSACTIVENOT_ALL1);
+ #undef PIS
++	kfree(stats);
+ }
+ 
+ static void dsi1_dump_irqs(struct seq_file *s)
+-- 
+2.11.0
 
-
---=20
-Thanks,
-~Nick Desaulniers
