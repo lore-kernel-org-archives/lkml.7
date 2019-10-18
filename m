@@ -2,511 +2,280 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB38CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48469CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C11D920854
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:06:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mNh7nw0Y"
+	by mail.kernel.org (Postfix) with ESMTP id 1674520869
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571422028;
+	bh=VFohjEbsDgF0XhSD/YzUQ67VDsWQaQkZyd25wh4dgq0=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=rxTA1yplkNnL5DtjkIoPQ8Xlz2enUUBVXJSQzkkGcUpeG1ZWMF8XRKWmUoxDotRRq
+	 OhsujcWhIQVFihtqhBpdycX36xPZq7FDDb9WYnY/y1HeXFS2pBKsugDE6v5IgDBNzh
+	 cf8z/LowgEB3X6WY0sNRfkV7gsNS3bqxcVT6RDuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505679AbfJRSGF (ORCPT
+        id S2505718AbfJRSHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:06:05 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36885 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbfJRSGF (ORCPT
+        Fri, 18 Oct 2019 14:07:06 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44756 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505686AbfJRSHF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:06:05 -0400
-Received: by mail-io1-f68.google.com with SMTP id b19so8518917iob.4
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 11:06:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=al0NV3Itk6f11EeMKZ0Lb9E546CMOJUJ4Cn0D3VAy9c=;
-        b=mNh7nw0Y0Pcd57bFBJeCWkrSPGGpbKtI1RMc1dFhXhr1tctdou17qDju2uJcvZWbxg
-         ealie8Hp6xIiV7g0dSzBDvpvESNhz2xiI7pK03m1NuRFZtFRi7tbRcvuPVTncOtlvj4o
-         2FKBh6Ql/pXQIvSf6XMHjpK4zIHJFahm3KFhI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=al0NV3Itk6f11EeMKZ0Lb9E546CMOJUJ4Cn0D3VAy9c=;
-        b=m/fSP2EsUfT5WIijo/n++ZUNPkFCFsCV50vk0BCAqiduXSO5OT9rT4JcxiQpx5+MeV
-         24Kxlgx9XVwtMhqvvKRMmMl1zg+my21Nc5j2jXpPVuKa9QY6BcrjCxU41x1tGWoTDasj
-         HlBV+H8WkgcDECw4c9JcMwCUEkG1/DgoC/2F3FkfknAfqDZPxpX3Gi+cI/oWIX8rWLX7
-         R5ULfqK42dhKnIidwVmpG6NXM6iCiZW6++j+hzAE5pf/wjyfHhrqUn4HtqGSgW4JGwHA
-         iy8IpltxAFchpbcVt/BW0prl8TRTV4Xkz9yjXBwRk/F8l6fu3+AWGdBJh84H61GmjVIA
-         z1Uw==
-X-Gm-Message-State: APjAAAXNtLREtaPUzx0w9ZI4g8VY61uFmptX7LeVFzK2fyQiKmD6W4il
-        ypUdfmHu+l1zbTM9InsfN/QswcABPsU=
-X-Google-Smtp-Source: APXvYqzj99KffdBrJHo0dZUjFYEdThX8pfpq4Q07RP63bMg3OfK6kwgiHZyxoeuuY26g2CTpFmMA/A==
-X-Received: by 2002:a6b:6519:: with SMTP id z25mr3007225iob.117.1571421961898;
-        Fri, 18 Oct 2019 11:06:01 -0700 (PDT)
-Received: from localhost ([2620:15c:183:200:5d69:b29f:8fd8:6f45])
-        by smtp.gmail.com with ESMTPSA id u25sm2687187ill.4.2019.10.18.11.06.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Oct 2019 11:06:00 -0700 (PDT)
-From:   Daniel Campello <campello@chromium.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Daniel Campello <campello@chromium.org>,
-        Nick Crews <ncrews@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Benson Leung <bleung@chromium.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>
-Subject: [PATCH] platform/chrome: wilco_ec: Add Wilco EC keyboard backlight LEDs support
-Date:   Fri, 18 Oct 2019 12:05:56 -0600
-Message-Id: <20191018120509.1.Id856c69b1fda0a9b2248218ea0cfb6919aa1cb0d@changeid>
-X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 18 Oct 2019 14:07:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=lCHGkcA5JrwM2qbr9v3SAkjr/Lxp8j5zYwsCVgBYT6Y=; b=J4DQxjy7heGY
+        BgCw33vUcNx/3/WUq51kk4/4QB2Didk6Q++bszeQRumcgExAlBIfprmhUTqXoROaLgyF7KT9GG9Ql
+        UwopbTO5fPe9hB6Dqh1L/GKHCZ6oKTr3VhQdQbQYD2YUA0Ulzn7IJ8/7N1o1gpIe9ou6r6oh1pYOW
+        5JwnY=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iLWeQ-0004En-Oo; Fri, 18 Oct 2019 18:06:58 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 3C2B12743277; Fri, 18 Oct 2019 19:06:58 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Maciej Falkowski <m.falkowski@samsung.com>
+Cc:     alsa-devel@alsa-project.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Applied "dt-bindings: sound: Convert Samsung Exynos Odroid XU3/XU4 audio complex to dt-schema" to the asoc tree
+In-Reply-To: <20191017100529.4183-1-m.szyprowski@samsung.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20191018180658.3C2B12743277@ypsilon.sirena.org.uk>
+Date:   Fri, 18 Oct 2019 19:06:58 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The EC is in charge of controlling the keyboard backlight on
-the Wilco platform. We expose a standard LED class device at
-/sys/class/leds/platform::kbd_backlight. This driver is modeled
-after the standard Chrome OS keyboard backlight driver at
-drivers/platform/chrome/cros_kbd_led_backlight.c
+The patch
 
-Some Wilco devices do not support a keyboard backlight. This
-is checked via wilco_ec_keyboard_leds_exist() in the core driver,
-and a platform_device will only be registered by the core if
-a backlight is supported.
+   dt-bindings: sound: Convert Samsung Exynos Odroid XU3/XU4 audio complex to dt-schema
 
-After an EC reset the backlight could be in a non-PWM mode.
-Earlier in the boot sequence the BIOS should send a command to
-the EC to set the brightness, so things **should** be set up,
-but we double check in probe() as we query the initial brightness.
-If not set up, then set the brightness to 0.
+has been applied to the asoc tree at
 
-Since the EC will never change the backlight level of its own accord,
-we don't need to implement a brightness_get() method.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
 
-Signed-off-by: Daniel Campello <campello@chromium.org>
-Signed-off-by: Nick Crews <ncrews@chromium.org>
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 9ac47908f35ba885eb3b4736c83185f63eef2ed2 Mon Sep 17 00:00:00 2001
+From: Maciej Falkowski <m.falkowski@samsung.com>
+Date: Thu, 17 Oct 2019 12:05:29 +0200
+Subject: [PATCH] dt-bindings: sound: Convert Samsung Exynos Odroid XU3/XU4
+ audio complex to dt-schema
+
+Convert Samsung Exynos Odroid XU3/XU4 audio complex with MAX98090 codec
+to newer dt-schema format.
+
+'clocks' property is unneeded in the bindings and is left undefined in 'properties'.
+
+'samsung,audio-widgets' and 'samsung,audio-routing' are optional from driver
+perspective and they are set as unrequired.
+
+Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+[mszyprow: reordered non-standard properties]
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/20191017100529.4183-1-m.szyprowski@samsung.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
-v6 changes:
- -Rebased patch
- -Fixed bug related to request/response buffer pointers on
- send_kbbl_mesg()
- -Now sends WILCO_KBBL_SUBCMD_SET_STATE instead of
- WILCO_KBBL_SUBCMD_GET_STATE command for  keyboard_led_set_brightness()
+ .../bindings/sound/samsung,odroid.txt         | 54 -----------
+ .../bindings/sound/samsung,odroid.yaml        | 91 +++++++++++++++++++
+ 2 files changed, 91 insertions(+), 54 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/samsung,odroid.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/samsung,odroid.yaml
 
-v5 changes:
- -Rename the LED device to "platform::kbd_backlight", to
- denote that this is the built-in system keyboard.
-
-v4 changes:
- -Call keyboard_led_set_brightness() directly within
-  initialize_brightness(), instead of calling the library function.
-
-v3 changes:
- -Since this behaves the same as the standard Chrome OS keyboard
-  backlight, rename the led device to "chromeos::kbd_backlight"
- -Move wilco_ec_keyboard_backlight_exists() into core module, so
-  that the core does not depend upon the keyboard backlight driver.
- -This required moving some code into wilco-ec.h
- -Refactor out some common code in set_brightness() and
-  initialize_brightness()
-
-v2 changes:
- -Remove and fix uses of led vs LED in kconfig
- -Assume BIOS initializes brightness, but double check in probe()
- -Remove get_brightness() callback, as EC never changes brightness
-  by itself.
- -Use a __packed struct as message instead of opaque array
- -Add exported wilco_ec_keyboard_leds_exist() so the core driver
-  now only creates a platform _device if relevant
- -Fix use of keyboard_led_set_brightness() since it can sleep
-
- drivers/platform/chrome/wilco_ec/Kconfig      |   9 +
- drivers/platform/chrome/wilco_ec/Makefile     |   2 +
- drivers/platform/chrome/wilco_ec/core.c       |  60 ++++++-
- .../chrome/wilco_ec/kbd_led_backlight.c       | 166 ++++++++++++++++++
- include/linux/platform_data/wilco-ec.h        |  38 ++++
- 5 files changed, 274 insertions(+), 1 deletion(-)
- create mode 100644 drivers/platform/chrome/wilco_ec/kbd_led_backlight.c
-
-diff --git a/drivers/platform/chrome/wilco_ec/Kconfig b/drivers/platform/chrome/wilco_ec/Kconfig
-index 89007b0bc743..d4305bdc1890 100644
---- a/drivers/platform/chrome/wilco_ec/Kconfig
-+++ b/drivers/platform/chrome/wilco_ec/Kconfig
-@@ -29,6 +29,15 @@ config WILCO_EC_EVENTS
- 	  over ACPI, and a driver queues up the events to be read by a
- 	  userspace daemon from /dev/wilco_event using read() and poll().
-
-+config WILCO_EC_KBD_BACKLIGHT
-+	tristate "Enable keyboard backlight control"
-+	depends on WILCO_EC
-+	help
-+	  If you say Y here, you get support to set the keyboard backlight
-+	  brightness. This happens via a standard LED driver that uses the
-+	  Wilco EC mailbox interface. A standard LED class device will
-+	  appear under /sys/class/leds/platform::kbd_backlight
-+
- config WILCO_EC_TELEMETRY
- 	tristate "Enable querying telemetry data from EC"
- 	depends on WILCO_EC
-diff --git a/drivers/platform/chrome/wilco_ec/Makefile b/drivers/platform/chrome/wilco_ec/Makefile
-index bc817164596e..8f06bb3aa949 100644
---- a/drivers/platform/chrome/wilco_ec/Makefile
-+++ b/drivers/platform/chrome/wilco_ec/Makefile
-@@ -6,5 +6,7 @@ wilco_ec_debugfs-objs			:= debugfs.o
- obj-$(CONFIG_WILCO_EC_DEBUGFS)		+= wilco_ec_debugfs.o
- wilco_ec_events-objs			:= event.o
- obj-$(CONFIG_WILCO_EC_EVENTS)		+= wilco_ec_events.o
-+wilco_kbd_backlight-objs		:= kbd_led_backlight.o
-+obj-$(CONFIG_WILCO_EC_KBD_BACKLIGHT)	+= wilco_kbd_backlight.o
- wilco_ec_telem-objs			:= telemetry.o
- obj-$(CONFIG_WILCO_EC_TELEMETRY)	+= wilco_ec_telem.o
-diff --git a/drivers/platform/chrome/wilco_ec/core.c b/drivers/platform/chrome/wilco_ec/core.c
-index 3724bf4b77c6..484c79b2d645 100644
---- a/drivers/platform/chrome/wilco_ec/core.c
-+++ b/drivers/platform/chrome/wilco_ec/core.c
-@@ -38,11 +38,47 @@ static struct resource *wilco_get_resource(struct platform_device *pdev,
- 				   dev_name(dev));
- }
-
-+/**
-+ * wilco_ec_keyboard_backlight_exists() - Is the keyboad backlight supported?
-+ * @ec: EC device to query.
-+ * @exists: Return value to fill in.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+static int wilco_ec_keyboard_backlight_exists(struct wilco_ec_device *ec,
-+					      bool *exists)
-+{
-+	struct wilco_ec_kbbl_msg request;
-+	struct wilco_ec_kbbl_msg response;
-+	struct wilco_ec_message msg;
-+	int ret;
-+
-+	memset(&request, 0, sizeof(request));
-+	request.command = WILCO_EC_COMMAND_KBBL;
-+	request.subcmd = WILCO_KBBL_SUBCMD_GET_FEATURES;
-+
-+	memset(&msg, 0, sizeof(msg));
-+	msg.type = WILCO_EC_MSG_LEGACY;
-+	msg.request_data = &request;
-+	msg.request_size = sizeof(request);
-+	msg.response_data = &response;
-+	msg.response_size = sizeof(response);
-+
-+	ret = wilco_ec_mailbox(ec, &msg);
-+	if (ret < 0)
-+		return ret;
-+
-+	*exists = response.status != 0xFF;
-+
-+	return 0;
-+}
-+
- static int wilco_ec_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct wilco_ec_device *ec;
- 	int ret;
-+	bool kbbl_exists;
-
- 	ec = devm_kzalloc(dev, sizeof(*ec), GFP_KERNEL);
- 	if (!ec)
-@@ -87,10 +123,29 @@ static int wilco_ec_probe(struct platform_device *pdev)
- 		goto unregister_debugfs;
- 	}
-
-+	/* Register child dev to be found by the keyboard backlight driver. */
-+	ret = wilco_ec_keyboard_backlight_exists(ec, &kbbl_exists);
-+	if (ret) {
-+		dev_err(ec->dev,
-+			"Failed checking keyboard backlight support: %d", ret);
-+		goto unregister_rtc;
-+	}
-+	if (kbbl_exists) {
-+		ec->kbbl_pdev = platform_device_register_data(dev,
-+						"wilco-kbd-backlight",
-+						PLATFORM_DEVID_AUTO, NULL, 0);
-+		if (IS_ERR(ec->kbbl_pdev)) {
-+			dev_err(dev,
-+				"Failed to create keyboard backlight pdev\n");
-+			ret = PTR_ERR(ec->kbbl_pdev);
-+			goto unregister_rtc;
-+		}
-+	}
-+
- 	ret = wilco_ec_add_sysfs(ec);
- 	if (ret < 0) {
- 		dev_err(dev, "Failed to create sysfs entries: %d", ret);
--		goto unregister_rtc;
-+		goto unregister_kbbl;
- 	}
-
- 	/* Register child device that will be found by the telemetry driver. */
-@@ -107,6 +162,8 @@ static int wilco_ec_probe(struct platform_device *pdev)
-
- remove_sysfs:
- 	wilco_ec_remove_sysfs(ec);
-+unregister_kbbl:
-+	platform_device_unregister(ec->kbbl_pdev);
- unregister_rtc:
- 	platform_device_unregister(ec->rtc_pdev);
- unregister_debugfs:
-@@ -121,6 +178,7 @@ static int wilco_ec_remove(struct platform_device *pdev)
- 	struct wilco_ec_device *ec = platform_get_drvdata(pdev);
-
- 	wilco_ec_remove_sysfs(ec);
-+	platform_device_unregister(ec->kbbl_pdev);
- 	platform_device_unregister(ec->telem_pdev);
- 	platform_device_unregister(ec->rtc_pdev);
- 	if (ec->debugfs_pdev)
-diff --git a/drivers/platform/chrome/wilco_ec/kbd_led_backlight.c b/drivers/platform/chrome/wilco_ec/kbd_led_backlight.c
+diff --git a/Documentation/devicetree/bindings/sound/samsung,odroid.txt b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
+deleted file mode 100644
+index e9da2200e173..000000000000
+--- a/Documentation/devicetree/bindings/sound/samsung,odroid.txt
++++ /dev/null
+@@ -1,54 +0,0 @@
+-Samsung Exynos Odroid XU3/XU4 audio complex with MAX98090 codec
+-
+-Required properties:
+-
+- - compatible - "hardkernel,odroid-xu3-audio" - for Odroid XU3 board,
+-		"hardkernel,odroid-xu4-audio" - for Odroid XU4 board (deprecated),
+-		"samsung,odroid-xu3-audio" - for Odroid XU3 board (deprecated),
+-		"samsung,odroid-xu4-audio" - for Odroid XU4 board (deprecated)
+- - model - the user-visible name of this sound complex
+- - clocks - should contain entries matching clock names in the clock-names
+-    property
+- - samsung,audio-widgets - this property specifies off-codec audio elements
+-   like headphones or speakers, for details see widgets.txt
+- - samsung,audio-routing - a list of the connections between audio
+-   components;  each entry is a pair of strings, the first being the
+-   connection's sink, the second being the connection's source;
+-   valid names for sources and sinks are the MAX98090's pins (as
+-   documented in its binding), and the jacks on the board
+-
+-   For Odroid X2:
+-     "Headphone Jack", "Mic Jack", "DMIC"
+-
+-   For Odroid U3, XU3:
+-     "Headphone Jack", "Speakers"
+-
+-   For Odroid XU4:
+-     no entries
+-
+-Required sub-nodes:
+-
+- - 'cpu' subnode with a 'sound-dai' property containing the phandle of the I2S
+-    controller
+- - 'codec' subnode with a 'sound-dai' property containing list of phandles
+-    to the CODEC nodes, first entry must be corresponding to the MAX98090
+-    CODEC and the second entry must be the phandle of the HDMI IP block node
+-
+-Example:
+-
+-sound {
+-	compatible = "hardkernel,odroid-xu3-audio";
+-	model = "Odroid-XU3";
+-	samsung,audio-routing =
+-		"Headphone Jack", "HPL",
+-		"Headphone Jack", "HPR",
+-		"IN1", "Mic Jack",
+-		"Mic Jack", "MICBIAS";
+-
+-	cpu {
+-		sound-dai = <&i2s0 0>;
+-	};
+-	codec {
+-		sound-dai = <&hdmi>, <&max98090>;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/sound/samsung,odroid.yaml b/Documentation/devicetree/bindings/sound/samsung,odroid.yaml
 new file mode 100644
-index 000000000000..bfd261cf3eb4
+index 000000000000..c6b244352d05
 --- /dev/null
-+++ b/drivers/platform/chrome/wilco_ec/kbd_led_backlight.c
-@@ -0,0 +1,166 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Keyboard backlight LED driver for the Wilco Embedded Controller
-+ *
-+ * Copyright 2019 Google LLC
-+ *
-+ * The EC is in charge of controlling the keyboard backlight on
-+ * the Wilco platform. We expose a standard LED class device at
-+ * /sys/class/leds/platform::kbd_backlight. Power Manager normally
-+ * controls the backlight by writing a percentage in range [0, 100]
-+ * to the brightness property. This driver is modeled after the
-+ * standard Chrome OS keyboard backlight driver at
-+ * drivers/platform/chrome/cros_kbd_led_backlight.c
-+ *
-+ * Some Wilco devices do not support a keyboard backlight. This
-+ * is checked via wilco_ec_keyboard_backlight_exists() in the core driver,
-+ * and a platform_device will only be registered by the core if
-+ * a backlight is supported.
-+ *
-+ * After an EC reset the backlight could be in a non-PWM mode.
-+ * Earlier in the boot sequence the BIOS should send a command to
-+ * the EC to set the brightness, so things **should** be set up,
-+ * but we double check in probe() as we query the initial brightness.
-+ * If not set up, then we set the brightness to KBBL_DEFAULT_BRIGHTNESS.
-+ *
-+ * Since the EC will never change the backlight level of its own accord,
-+ * we don't need to implement a brightness_get() method.
-+ */
++++ b/Documentation/devicetree/bindings/sound/samsung,odroid.yaml
+@@ -0,0 +1,91 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/samsung,odroid.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/platform_data/wilco-ec.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
++title: Samsung Exynos Odroid XU3/XU4 audio complex with MAX98090 codec
 +
-+#define DRV_NAME		"wilco-kbd-backlight"
++maintainers:
++  - Krzysztof Kozlowski <krzk@kernel.org>
++  - Sylwester Nawrocki <s.nawrocki@samsung.com>
 +
-+#define KBBL_DEFAULT_BRIGHTNESS	0
++properties:
++  compatible:
++    oneOf:
++      - const: hardkernel,odroid-xu3-audio
 +
-+struct wilco_keyboard_led_data {
-+	struct wilco_ec_device *ec;
-+	struct led_classdev keyboard;
-+};
++      - const: hardkernel,odroid-xu4-audio
++        deprecated: true
 +
-+/* Send a request, get a response, and check that the response is good. */
-+static int send_kbbl_msg(struct wilco_ec_device *ec,
-+			 struct wilco_ec_kbbl_msg *request,
-+			 struct wilco_ec_kbbl_msg *response)
-+{
-+	struct wilco_ec_message msg;
-+	int ret;
++      - const: samsung,odroid-xu3-audio
++        deprecated: true
 +
-+	memset(&msg, 0, sizeof(msg));
-+	msg.type = WILCO_EC_MSG_LEGACY;
-+	msg.request_data = request;
-+	msg.request_size = sizeof(*request);
-+	msg.response_data = response;
-+	msg.response_size = sizeof(*response);
++      - const: samsung,odroid-xu4-audio
++        deprecated: true
 +
-+	ret = wilco_ec_mailbox(ec, &msg);
-+	if (ret < 0) {
-+		dev_err(ec->dev, "Failed sending brightness command: %d", ret);
-+		return ret;
-+	}
++  model:
++    $ref: /schemas/types.yaml#/definitions/string
++    description: The user-visible name of this sound complex.
 +
-+	if (response->status) {
-+		dev_err(ec->dev,
-+			"EC reported failure sending brightness command: %d",
-+			response->status);
-+		return -EIO;
-+	}
++  cpu:
++    type: object
++    properties:
++      sound-dai:
++        $ref: /schemas/types.yaml#/definitions/phandle-array
++        description: phandles to the I2S controllers
 +
-+	return 0;
-+}
++  codec:
++    type: object
++    properties:
++      sound-dai:
++        $ref: /schemas/types.yaml#/definitions/phandle-array
++        description: |
++          List of phandles to the CODEC nodes,
++          first entry must be corresponding to the MAX98090 CODEC and
++          the second entry must be the phandle of the HDMI IP block node.
 +
-+/* This may sleep because it uses wilco_ec_mailbox() */
-+static int keyboard_led_set_brightness(struct led_classdev *cdev,
-+				       enum led_brightness brightness)
-+{
-+	struct wilco_ec_kbbl_msg request;
-+	struct wilco_ec_kbbl_msg response;
-+	struct wilco_keyboard_led_data *data;
++  samsung,audio-routing:
++    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
++    description: |
++      List of the connections between audio
++      components;  each entry is a pair of strings, the first being the
++      connection's sink, the second being the connection's source;
++      valid names for sources and sinks are the MAX98090's pins (as
++      documented in its binding), and the jacks on the board.
++      For Odroid X2: "Headphone Jack", "Mic Jack", "DMIC"
++      For Odroid U3, XU3: "Headphone Jack", "Speakers"
++      For Odroid XU4: no entries
 +
-+	memset(&request, 0, sizeof(request));
-+	request.command = WILCO_EC_COMMAND_KBBL;
-+	request.subcmd = WILCO_KBBL_SUBCMD_SET_STATE;
-+	request.mode = WILCO_KBBL_MODE_FLAG_PWM;
-+	request.percent = brightness;
++  samsung,audio-widgets:
++    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
++    description: |
++      This property specifies off-codec audio elements
++      like headphones or speakers, for details see widgets.txt
 +
-+	data = container_of(cdev, struct wilco_keyboard_led_data, keyboard);
-+	return send_kbbl_msg(data->ec, &request, &response);
-+}
++required:
++  - compatible
++  - model
++  - cpu
++  - codec
 +
-+/*
-+ * Get the current brightness, ensuring that we are in PWM mode. If not
-+ * in PWM mode, then the current brightness is meaningless, so set the
-+ * brightness to KBBL_DEFAULT_BRIGHTNESS.
-+ *
-+ * Return: Final brightness of the keyboard, or negative error code on failure.
-+ */
-+static int initialize_brightness(struct wilco_keyboard_led_data *data)
-+{
-+	struct wilco_ec_kbbl_msg request;
-+	struct wilco_ec_kbbl_msg response;
-+	int ret;
++examples:
++  - |
++    sound {
++        compatible = "hardkernel,odroid-xu3-audio";
++        model = "Odroid-XU3";
++        samsung,audio-routing =
++                "Headphone Jack", "HPL",
++                "Headphone Jack", "HPR",
++                "IN1", "Mic Jack",
++                "Mic Jack", "MICBIAS";
 +
-+	memset(&request, 0, sizeof(request));
-+	request.command = WILCO_EC_COMMAND_KBBL;
-+	request.subcmd = WILCO_KBBL_SUBCMD_GET_STATE;
++        cpu {
++            sound-dai = <&i2s0 0>;
++        };
 +
-+	ret = send_kbbl_msg(data->ec, &request, &response);
-+	if (ret < 0)
-+		return ret;
++        codec {
++            sound-dai = <&hdmi>, <&max98090>;
++        };
++    };
 +
-+	if (response.mode & WILCO_KBBL_MODE_FLAG_PWM)
-+		return response.percent;
-+
-+	dev_warn(data->ec->dev, "Keyboard brightness not initialized by BIOS");
-+	ret = keyboard_led_set_brightness(&data->keyboard,
-+					  KBBL_DEFAULT_BRIGHTNESS);
-+	if (ret < 0)
-+		return ret;
-+
-+	return KBBL_DEFAULT_BRIGHTNESS;
-+}
-+
-+static int keyboard_led_probe(struct platform_device *pdev)
-+{
-+	struct wilco_ec_device *ec = dev_get_drvdata(pdev->dev.parent);
-+	struct wilco_keyboard_led_data *data;
-+	int ret;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->ec = ec;
-+	/* This acts the same as the CrOS backlight, so use the same name */
-+	data->keyboard.name = "platform::kbd_backlight";
-+	data->keyboard.max_brightness = 100;
-+	data->keyboard.flags = LED_CORE_SUSPENDRESUME;
-+	data->keyboard.brightness_set_blocking = keyboard_led_set_brightness;
-+	ret = initialize_brightness(data);
-+	if (ret < 0)
-+		return ret;
-+	data->keyboard.brightness = ret;
-+
-+	return devm_led_classdev_register(&pdev->dev, &data->keyboard);
-+}
-+
-+static struct platform_driver keyboard_led_driver = {
-+	.driver = {
-+		.name = DRV_NAME,
-+	},
-+	.probe = keyboard_led_probe,
-+};
-+module_platform_driver(keyboard_led_driver);
-+
-+MODULE_AUTHOR("Nick Crews <ncrews@chromium.org>");
-+MODULE_DESCRIPTION("Wilco keyboard backlight LED driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:" DRV_NAME);
-diff --git a/include/linux/platform_data/wilco-ec.h b/include/linux/platform_data/wilco-ec.h
-index ad03b586a095..54665afb1efd 100644
---- a/include/linux/platform_data/wilco-ec.h
-+++ b/include/linux/platform_data/wilco-ec.h
-@@ -29,6 +29,7 @@
-  * @data_size: Size of the data buffer used for EC communication.
-  * @debugfs_pdev: The child platform_device used by the debugfs sub-driver.
-  * @rtc_pdev: The child platform_device used by the RTC sub-driver.
-+ * @kbbl_pdev: The child pdev used by the keyboard backlight sub-driver.
-  * @telem_pdev: The child platform_device used by the telemetry sub-driver.
-  */
- struct wilco_ec_device {
-@@ -41,6 +42,7 @@ struct wilco_ec_device {
- 	size_t data_size;
- 	struct platform_device *debugfs_pdev;
- 	struct platform_device *rtc_pdev;
-+	struct platform_device *kbbl_pdev;
- 	struct platform_device *telem_pdev;
- };
-
-@@ -111,6 +113,42 @@ struct wilco_ec_message {
- 	void *response_data;
- };
-
-+/* Constants and structs useful for keyboard backlight (KBBL) control */
-+
-+#define WILCO_EC_COMMAND_KBBL		0x75
-+#define WILCO_KBBL_MODE_FLAG_PWM	BIT(1)	/* Set brightness by percent. */
-+
-+/**
-+ * enum kbbl_subcommand - What action does the EC perform?
-+ * @WILCO_KBBL_SUBCMD_GET_FEATURES: Request available functionality from EC.
-+ * @WILCO_KBBL_SUBCMD_GET_STATE: Request current mode and brightness from EC.
-+ * @WILCO_KBBL_SUBCMD_SET_STATE: Write mode and brightness to EC.
-+ */
-+enum kbbl_subcommand {
-+	WILCO_KBBL_SUBCMD_GET_FEATURES = 0x00,
-+	WILCO_KBBL_SUBCMD_GET_STATE = 0x01,
-+	WILCO_KBBL_SUBCMD_SET_STATE = 0x02,
-+};
-+
-+/**
-+ * struct wilco_ec_kbbl_msg - Message to/from EC for keyboard backlight control.
-+ * @command: Always WILCO_EC_COMMAND_KBBL.
-+ * @status: Set by EC to 0 on success, 0xFF on failure.
-+ * @subcmd: One of enum kbbl_subcommand.
-+ * @mode: Bit flags for used mode, we want to use WILCO_KBBL_MODE_FLAG_PWM.
-+ * @percent: Brightness in 0-100. Only meaningful in PWM mode.
-+ */
-+struct wilco_ec_kbbl_msg {
-+	u8 command;
-+	u8 status;
-+	u8 subcmd;
-+	u8 reserved3;
-+	u8 mode;
-+	u8 reserved5to8[4];
-+	u8 percent;
-+	u8 reserved10to15[6];
-+} __packed;
-+
- /**
-  * wilco_ec_mailbox() - Send request to the EC and receive the response.
-  * @ec: Wilco EC device.
---
-2.23.0.866.gb869b98d4c-goog
+-- 
+2.20.1
 
