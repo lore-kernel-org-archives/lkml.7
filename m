@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98387CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BFFCA9EAB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6026B20869
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C6B620869
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:08:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571422100;
-	bh=yHiE8mIDmoy6lamdRhLFn4qkMT9oQGFNKs7RPfwq7qY=;
+	s=default; t=1571422106;
+	bh=LiEth98ZC43Q3g0lmyv5lkdcuCdRf+ayw/iE4zi8IC0=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=CNw8RIEnHXf8TJjWaND4z+QqwG0tLZBBDmpGgj45VcSdxIt73cDsHp6MoJCzNIaFp
-	 gCOzWytSqa0LiW6RZF2rVSzNoSGqqmG0j9k7iBSL6FMRMYmpKaKABJuSbN/BAJzFuU
-	 /FIXzcaxdXNis4loGYRFJrLPjhWmfUIw7aUhD4UI=
+	b=mX+cCp9OtzF9Tjmnn/kAsuYHa1V1v6kxKU9+eT38FervsCZrHM0kGyvm3A91PjvoT
+	 xUL/7CoJRD177LTm6K2UgQrNHUXZHVJO9Grr1NR66Niu3bAgsqvTgj2MpZQXeHUSQq
+	 FLCB8qbwziaZhYAIXuBtrcvN3qwf8eieyNWCvR2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505818AbfJRSIT (ORCPT
+        id S2505832AbfJRSIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:08:19 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45252 "EHLO
+        Fri, 18 Oct 2019 14:08:24 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45250 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505748AbfJRSHP (ORCPT
+        with ESMTP id S2505749AbfJRSHP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 18 Oct 2019 14:07:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,17 +34,17 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=IjM9rnCciu37JcXYzH1B1qjM5RpdtJn2Wft3KUK1jtg=; b=EFjwdPRvTLSf
-        Py+AirepyhxYi4o3ssxIZZCC/VGIIaIAmq1xuoUV2AkxWt9YKgVnUEg15pd8YnvyBZsuzU5edw7Zu
-        +KOvhJTIuCKV//WvqDGK26GbAjLEUkDAhLLpr8jgJfMa/h1EgAS8+qG5kOry/BjtEWDvVVP/pgl4A
-        fkeIw=;
+        List-Archive; bh=KLzPw8Xsa4mTj7W5XGM0fv889qZfAC//m7Lpyu4FikE=; b=dndlkP61ea9f
+        ZlOWbCDTs6GOupq8DvM97k1zxXnTYb0YNyn0gvk/FVY4yq+LBMtGmIn1S58/J0crbGaH0lxt/Hy6J
+        wg23RM1E2DAfpnwG+snGzmF07sV0iblSD3r10YILz2HFyJjAdlYlPUniARWAZWNYbYCxOzpL/NPCr
+        2FkV0=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iLWea-0004Gw-7M; Fri, 18 Oct 2019 18:07:08 +0000
+        id 1iLWeb-0004HC-D6; Fri, 18 Oct 2019 18:07:09 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id BB5532743259; Fri, 18 Oct 2019 19:07:07 +0100 (BST)
+        id D914D2741DEA; Fri, 18 Oct 2019 19:07:08 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Gregory CLEMENT <gregory.clement@bootlin.com>
 Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
@@ -53,12 +53,13 @@ Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Ludovic Desroches <ludovic.desroches@microchip.com>,
         Mark Brown <broonie@kernel.org>,
         Nicolas Ferre <nicolas.ferre@microchip.com>,
+        <stable@vger.kernel.org>, stable@vger.kernel.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Applied "spi: atmel: Improve CS0 case support on AT91RM9200" to the spi tree
-In-Reply-To: <20191017141846.7523-8-gregory.clement@bootlin.com>
+Subject: Applied "spi: atmel: Fix CS high support" to the spi tree
+In-Reply-To: <20191017141846.7523-3-gregory.clement@bootlin.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191018180707.BB5532743259@ypsilon.sirena.org.uk>
-Date:   Fri, 18 Oct 2019 19:07:07 +0100 (BST)
+Message-Id: <20191018180708.D914D2741DEA@ypsilon.sirena.org.uk>
+Date:   Fri, 18 Oct 2019 19:07:08 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,7 +67,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: atmel: Improve CS0 case support on AT91RM9200
+   spi: atmel: Fix CS high support
 
 has been applied to the spi tree at
 
@@ -91,62 +92,51 @@ to this mail.
 Thanks,
 Mark
 
-From 9c86f12a36479dec06df3e4a4f31cecf8eba0222 Mon Sep 17 00:00:00 2001
+From 7cbb16b2122c09f2ae393a1542fed628505b9da6 Mon Sep 17 00:00:00 2001
 From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Date: Thu, 17 Oct 2019 16:18:46 +0200
-Subject: [PATCH] spi: atmel: Improve CS0 case support on AT91RM9200
+Date: Thu, 17 Oct 2019 16:18:41 +0200
+Subject: [PATCH] spi: atmel: Fix CS high support
 
-Thanks to the recent change in this driver, it is now possible to
-prevent using the CS0 with GPIO during setup. It then allows to remove
-the special handling of this case in the cs_activate() and
-cs_deactivate() functions.
+Until a few years ago, this driver was only used with CS GPIO. The
+only exception is CS0 on AT91RM9200 which has to use internal CS. A
+limitation of the internal CS is that they don't support CS High.
 
+So by using the CS GPIO the CS high configuration was available except
+for the particular case CS0 on RM9200.
+
+When the support for the internal chip-select was added, the check of
+the CS high support was not updated. Due to this the driver accepts
+this configuration for all the SPI controller v2 (used by all SoCs
+excepting the AT91RM9200) whereas the hardware doesn't support it for
+infernal CS.
+
+This patch fixes the test to match the hardware capabilities.
+
+Fixes: 4820303480a1 ("spi: atmel: add support for the internal chip-select of the spi controller")
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20191017141846.7523-8-gregory.clement@bootlin.com
+Link: https://lore.kernel.org/r/20191017141846.7523-3-gregory.clement@bootlin.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-atmel.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/spi/spi-atmel.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
-index ac5e2ddf9e1b..d88e2aa64839 100644
+index 7a17c3e2a8ee..6e08ae539bc0 100644
 --- a/drivers/spi/spi-atmel.c
 +++ b/drivers/spi/spi-atmel.c
-@@ -371,7 +371,7 @@ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
+@@ -1176,10 +1176,8 @@ static int atmel_spi_setup(struct spi_device *spi)
+ 	as = spi_master_get_devdata(spi->master);
  
- 		mr = spi_readl(as, MR);
- 		mr = SPI_BFINS(PCS, ~(1 << chip_select), mr);
--		if (spi->cs_gpiod && spi->chip_select != 0)
-+		if (spi->cs_gpiod)
- 			gpiod_set_value(spi->cs_gpiod, 1);
- 		spi_writel(as, MR, mr);
+ 	/* see notes above re chipselect */
+-	if (!atmel_spi_is_v2(as)
+-			&& spi->chip_select == 0
+-			&& (spi->mode & SPI_CS_HIGH)) {
+-		dev_dbg(&spi->dev, "setup: can't be active-high\n");
++	if (!as->use_cs_gpios && (spi->mode & SPI_CS_HIGH)) {
++		dev_warn(&spi->dev, "setup: non GPIO CS can't be active-high\n");
+ 		return -EINVAL;
  	}
-@@ -402,7 +402,7 @@ static void cs_deactivate(struct atmel_spi *as, struct spi_device *spi)
- 
- 	if (!spi->cs_gpiod)
- 		spi_writel(as, CR, SPI_BIT(LASTXFER));
--	else if (atmel_spi_is_v2(as) || spi->chip_select != 0)
-+	else
- 		gpiod_set_value(spi->cs_gpiod, 0);
- }
- 
-@@ -1193,7 +1193,16 @@ static void initialize_native_cs_for_gpio(struct atmel_spi *as)
- 	if (!master->cs_gpiods)
- 		return; /* No CS GPIO */
- 
--	for (i = 0; i < 4; i++)
-+	/*
-+	 * On the first version of the controller (AT91RM9200), CS0
-+	 * can't be used associated with GPIO
-+	 */
-+	if (atmel_spi_is_v2(as))
-+		i = 0;
-+	else
-+		i = 1;
-+
-+	for (; i < 4; i++)
- 		if (master->cs_gpiods[i])
- 			as->native_cs_free |= BIT(i);
  
 -- 
 2.20.1
