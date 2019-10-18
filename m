@@ -2,159 +2,106 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9B1CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2CECA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F6020700
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCB2221897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:00:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZI5aiYWM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fGjlwqaP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443202AbfJRTA1 (ORCPT
+        id S2443214AbfJRTAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 15:00:27 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:34207 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2443193AbfJRTAZ (ORCPT
+        Fri, 18 Oct 2019 15:00:44 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:35025 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2443193AbfJRTAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 15:00:25 -0400
-Received: by mail-oi1-f196.google.com with SMTP id 83so6129042oii.1
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 12:00:25 -0700 (PDT)
+        Fri, 18 Oct 2019 15:00:43 -0400
+Received: by mail-ua1-f68.google.com with SMTP id n41so2052582uae.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 12:00:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=t99ObJB56KhBS/WNpgsgAnYcJ+G543s7eRggbvF+GSc=;
-        b=ZI5aiYWM+xn39N9ZL4bzOc/HegZiWV9I8vBroRd4GUo4BX8a7uWfmvRi1rOlQ0yOrm
-         F2179cWsuL18gEZhsafeFRl2Kd1ODlkoge3lflx7dcGTLhP5mUamYddeu5/X3VGr74F9
-         VWi93Dqdvc2LrlYCPsfEqE5NP58rgHfjloniDzkqOnOP4qFHLzxyCRYDZeJhxSQ0dQNg
-         XzdQ6ua1WZ61PFAu9IJbUwo1iVS70dOWIMPFL7LvxLeUbsw1NOGnUy3xQ+qNVitnWQbW
-         tfJfJJ/on8S90wHJ0FlTGGVjqegtf10GO1HyEhdxyJShol9qzaWIQXbdtRMuLFIdRj+G
-         bttQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dHnooVFY2SD/hhEM3K3r0PH8N73JFv2NbOv8bRM4m2E=;
+        b=fGjlwqaPn26KxRb9o+F4zrhfo5SkElhAWo4zrZYkQX9pYzl+Gat5G9cEzwzzgLT0yN
+         01vXJtveJQV2qNvuL3dsYa3uHnA44CbQiyZWnm0OfAnXngfbQBE6/GoC7xkKTjBJoQ1W
+         I3TlO2mOikI6Kr/w+ct+2TTOTmiNs0XrL0v8Qsjwm5i6295ZB9suC9+VQPpZngTAqbXp
+         lbTN8AhrIsPleMkGbxdHNZqq0UgR8TbuoHXfoDLAHfBp5Dt4CXqh/ghNRZE/atlkwC4C
+         f/z8a9w78sIenvmPm6uGln+51flj9Z7ABSXfofYGZvMWcJmJ0vLmRcx9Etw4H3lXK2ux
+         qiHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=t99ObJB56KhBS/WNpgsgAnYcJ+G543s7eRggbvF+GSc=;
-        b=oe2Ztf7urwbtUuwGgl8v95e3fiwA5fVYPqZJQcKHPE1O+IT2ZMaMShTd/oTmrffhCJ
-         w5qdwVqad9nsJO1wISJkPRCDwPaywjT8XkKnFPVYiLi1EvyTW8/62f40CzIc0mHpguvc
-         YAk3JfhzopiL3oPUQ71kNyWXJezzJOyfmsF9JuomBH66bjCv1T8xC5dUkXX7W/uBqJEZ
-         Z5jBTIpSWl9ohw/3jvM3Yr+CTn2iQ5G5h1U15pgWzPdI7VfY+dNISQ9DnRP64KidV/mO
-         IL0s9rVYJ914XGNVVOd8B29e6CbalVE9xysQWtmQWQTx4CGtKjc89iEDjOWBO0jsTmQN
-         fwyg==
-X-Gm-Message-State: APjAAAXg4cVYCujszlX28NOcT+VWdVlUCoK6zE7ZZY0CO/Vsk7b3MsyF
-        OW8p7yN1Rx095+z961qBXwM=
-X-Google-Smtp-Source: APXvYqzCUlmptopKF+iqEPn/QEAG2McNNSZzczXsm6/Z8KP5BPeeLepxWUZOBD8o9+Z2WvXmnnIjSw==
-X-Received: by 2002:aca:1b04:: with SMTP id b4mr2309849oib.81.1571425224537;
-        Fri, 18 Oct 2019 12:00:24 -0700 (PDT)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id u14sm1745760otj.61.2019.10.18.12.00.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 18 Oct 2019 12:00:23 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 12:00:22 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 3/3] powerpc/prom_init: Use -ffreestanding to avoid a
- reference to bcmp
-Message-ID: <20191018190022.GA1292@ubuntu-m2-xlarge-x86>
-References: <20190911182049.77853-1-natechancellor@gmail.com>
- <20191014025101.18567-1-natechancellor@gmail.com>
- <20191014025101.18567-4-natechancellor@gmail.com>
- <20191014093501.GE28442@gate.crashing.org>
- <CAKwvOdmcUT2A9FG0JD9jd0s=gAavRc_h+RLG6O3mBz4P1FfF8w@mail.gmail.com>
- <20191014191141.GK28442@gate.crashing.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dHnooVFY2SD/hhEM3K3r0PH8N73JFv2NbOv8bRM4m2E=;
+        b=F+Z1K9ZqJQ8jelnJh4CVmdY8ELCH1ko/RkJhz47SqmI0Gd5JXefqpZ64+yG+MSq9bU
+         HUDSoi9GwnsZLtsuEjFffoLDj7PoS8ru7rasp5E/dJ53UwVUvXtqRwcL5L179ZGsFIoH
+         GgEn4u8PyZbdLDhALSSgJtYSNbAkEOLp8vBmdOh4FTkofMvTmilbd1cN15gy2EvcNe6D
+         wgZIFq+7PPb3yBlwen5A181oiivcxKfz3R2V0TFsZGX7Bty3BFxHA90iILdGoB0w+8zh
+         JC/WF+TFLJh/ja1tg32oHlUsAcyOLuCcXaYk0cBKqTpSXQ4CV37Zt5roCL4snavikVUa
+         hrRQ==
+X-Gm-Message-State: APjAAAUC3rV669fdES40vIrOleVZijGsQ9xfvQxhBFZKNomBRlbh80Qq
+        bD/7CkHeLJZnjRHLm7UsH7N+mg7W6IlKmiWkBX6oNw==
+X-Google-Smtp-Source: APXvYqy+QiLkN9pfvjcYpnB+QYepyp79m5l6k8r6HsNNtj0nqOOoe5lpxNRIDuav5cK0cYo+BuFsIE1uUC/SJFG20xg=
+X-Received: by 2002:a1f:b202:: with SMTP id b2mr6191356vkf.59.1571425241664;
+ Fri, 18 Oct 2019 12:00:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191014191141.GK28442@gate.crashing.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191018161033.261971-6-samitolvanen@google.com> <CAKwvOd=SZ+f6hiLb3_-jytcKMPDZ77otFzNDvbwpOSsNMnifSg@mail.gmail.com>
+In-Reply-To: <CAKwvOd=SZ+f6hiLb3_-jytcKMPDZ77otFzNDvbwpOSsNMnifSg@mail.gmail.com>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Fri, 18 Oct 2019 12:00:30 -0700
+Message-ID: <CABCJKuf1cTHqvAC2hyCWjQbNEdGjx8dtfHGWwEvrEWzv+f7vZg@mail.gmail.com>
+Subject: Re: [PATCH 05/18] arm64: kbuild: reserve reg x18 from general
+ allocation by the compiler
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 02:11:41PM -0500, Segher Boessenkool wrote:
-> On Mon, Oct 14, 2019 at 08:56:12AM -0700, Nick Desaulniers wrote:
-> > On Mon, Oct 14, 2019 at 2:35 AM Segher Boessenkool
-> > <segher@kernel.crashing.org> wrote:
-> > >
-> > > On Sun, Oct 13, 2019 at 07:51:01PM -0700, Nathan Chancellor wrote:
-> > > > r374662 gives LLVM the ability to convert certain loops into a reference
-> > > > to bcmp as an optimization; this breaks prom_init_check.sh:
-> > >
-> > > When/why does LLVM think this is okay?  This function has been removed
-> > > from POSIX over a decade ago (and before that it always was marked as
-> > > legacy).
-> > 
-> > Segher, do you have links for any of the above? If so, that would be
-> > helpful to me.
-> 
-> Sure!
-> 
-> https://pubs.opengroup.org/onlinepubs/9699919799/xrat/V4_xsh_chap03.html
-> 
-> Older versions are harder to find online, unfortunately.  But there is
-> 
-> https://kernel.org/pub/linux/docs/man-pages/man-pages-posix/
-> 
-> in which man3p/bcmp.3p says:
-> 
-> FUTURE DIRECTIONS
->        This function may be withdrawn in a future version.
-> 
-> Finally, the Linux man pages say (man bcmp):
-> 
-> CONFORMING TO
->        4.3BSD.   This  function   is   deprecated   (marked   as   LEGACY   in
->        POSIX.1-2001): use memcmp(3) in new programs.  POSIX.1-2008 removes the
->        specification of bcmp().
-> 
-> 
-> > I'm arguing against certain transforms that assume that
-> > one library function is faster than another, when such claims are
-> > based on measurements from one stdlib implementation.
-> 
-> Wow.  The difference between memcmp and bcmp is trivial (just the return
-> value is different, and that costs hardly anything to add).  And memcmp
-> is guaranteed to exist since C89/C90 at least.
-> 
-> > The rationale for why it was added was that memcmp takes a measurable
-> > amount of time in Google's fleet, and most calls to memcmp don't care
-> > about the position of the mismatch; bcmp is lower overhead (or at
-> > least for our libc implementation, not sure about others).
-> 
-> You just have to do the read of the last words you compare as big-endian,
-> and then you can just subtract the two words, convert that to "int" (which
-> is very inconvenient to do, but hardly expensive), and there you go.
-> 
-> Or on x86 use the bswap insn, or something like it.
-> 
-> Or, if you use GCC, it has __builtin_memcmp but also __builtin_memcmp_eq,
-> and those are automatically used, too.
-> 
-> 
-> Segher
+On Fri, Oct 18, 2019 at 10:32 AM 'Nick Desaulniers' via Clang Built
+Linux <clang-built-linux@googlegroups.com> wrote:
+> > and remove the mention from
+> > the LL/SC compiler flag override.
+>
+> was that cut/dropped from this patch?
+>
+> >
+> > Link: https://patchwork.kernel.org/patch/9836881/
+>
+> ^ Looks like it. Maybe it doesn't matter, but if sending a V2, maybe
+> the commit message to be updated?
 
-Just as an FYI, there was some more discussion around the availablity
-and use of bcmp in this LLVM bug which spawned
-commit 5f074f3e192f ("lib/string.c: implement a basic bcmp").
+True. The original patch is from 2017 and the relevant part of
+arm64/lib/Makefile no longer exists. I'll update this accordingly.
 
-https://bugs.llvm.org/show_bug.cgi?id=41035#c13
+> I like how this does not conditionally reserve it based on the CONFIG
+> for SCS.  Hopefully later patches don't wrap it, but I haven't looked
+> through all of them yet.
 
-I believe this is the proper solution but I am fine with whatever works,
-I just want our CI to be green without any out of tree patches again...
+In a later patch x18 is only reserved with SCS. I'm fine with dropping
+that patch and reserving it always, but wouldn't mind hearing thoughts
+from the maintainers about this first.
 
-Cheers,
-Nathan
+Sami
