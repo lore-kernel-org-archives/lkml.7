@@ -7,58 +7,54 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53FFCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74ADFCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEE71222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51E8120869
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571422035;
-	bh=CCecFMQ7nN1ZABLZGiHWj+DnSRlDnEr3XQ611bY9WKs=;
+	s=default; t=1571422038;
+	bh=REUdtb9kirONRbJO3nSCXTeK5qoiynPgML4wyaQDm1U=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=qHxTgla309v8SKTA0+RvG39jn82wbeuGxVtcsoSSEXJlgFQ0Jj/OskpPBeg814zSv
-	 8erlcxy8jS6GRtexdqSJzFi++cVEuhNAz1rkOd4YwWDo4TBS6w+augnxVSue2bTJPe
-	 +m2bTO5IMMy2cBUvvYKmZB07ljWhtIJoJc9EkxPA=
+	b=gU+g6dv1570CuIXZ7JvIIapVKIsvNdNE8mtQNMVYTz76U0fMWUcDnKkU26Fz4xkua
+	 zhV5t7W2P4sQqVgnCv9VVljLLTLopKJVnVxDE600SWUpqZNbgWGiFzmWzR7nsaMeC3
+	 mFoJYjy8u6+ouMBjqBPIrGazEakRy6BK+6u/Spk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505746AbfJRSHO (ORCPT
+        id S2505765AbfJRSHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:07:14 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45002 "EHLO
+        Fri, 18 Oct 2019 14:07:17 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45072 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505694AbfJRSHL (ORCPT
+        with ESMTP id S2505723AbfJRSHM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:07:11 -0400
+        Fri, 18 Oct 2019 14:07:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=kIdn4VulEh9KHSu4X43j6W5Pl8dnzX5CpSEuHNMmqZg=; b=WjwNhdAgMXyf
-        f/FpHLUkv9G0+RYaluq+UfZ74TKDku8p3GcVgmeDSuHf+HaJTuXfnFgJHPx9fLV5vwYYdOA0mDbXC
-        An0OrN8jGzCDLrpDYYQiHfZgoMOeRPov+MKLyAN4SwFfRe2vbPKQOhxCXCIzXgyv8NSADueQtIhib
-        PbwmU=;
+        List-Archive; bh=M0UtU+P76tl6I2am1+6jBwzAm5xDDtoU2k1GZJCX7To=; b=azqjrrAseLwD
+        FH25w6rk3SvM79q5WQcFnMd54zSIBaoSVYVMaeUyfY4UcvJlOUDfeU0kaPN/BAnpBoG24n1p6/5qy
+        iASsW4d3nzMCdtSGFgeIa3oZbWlIqKj6B70XJp6eqs5vUZjC325KhOkxT//hJfmlmalTSjEHtm83n
+        ZXzl4=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iLWeS-0004FY-Lf; Fri, 18 Oct 2019 18:07:00 +0000
+        id 1iLWeb-0004H6-1h; Fri, 18 Oct 2019 18:07:09 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 1F8F92743259; Fri, 18 Oct 2019 19:07:00 +0100 (BST)
+        id 7D0022743276; Fri, 18 Oct 2019 19:07:08 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     alexandre.torgue@st.com, alsa-devel@alsa-project.org,
-        arnaud.pouliquen@st.com, benjamin.gaignard@st.com,
-        broonie@kernel.org, lgirdwood@gmail.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Mark Brown <broonie@kernel.org>, mcoquelin.stm32@gmail.com,
-        olivier.moysan@st.com, perex@perex.cz, tiwai@suse.com
-Subject: Applied "ASoC: stm32: sai: fix sysclk management on shutdown" to the asoc tree
-In-Reply-To: <20191018082040.31022-1-olivier.moysan@st.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Subject: Applied "spi: rspi: Use platform_get_irq_byname_optional() for optional irqs" to the spi tree
+In-Reply-To: <20191016143101.28738-1-geert+renesas@glider.be>
 X-Patchwork-Hint: ignore
-Message-Id: <20191018180700.1F8F92743259@ypsilon.sirena.org.uk>
-Date:   Fri, 18 Oct 2019 19:07:00 +0100 (BST)
+Message-Id: <20191018180708.7D0022743276@ypsilon.sirena.org.uk>
+Date:   Fri, 18 Oct 2019 19:07:08 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,11 +62,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: stm32: sai: fix sysclk management on shutdown
+   spi: rspi: Use platform_get_irq_byname_optional() for optional irqs
 
-has been applied to the asoc tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -91,68 +87,59 @@ to this mail.
 Thanks,
 Mark
 
-From 9b7a7f921689d6c254e5acd670be631ebd82d54d Mon Sep 17 00:00:00 2001
-From: Olivier Moysan <olivier.moysan@st.com>
-Date: Fri, 18 Oct 2019 10:20:40 +0200
-Subject: [PATCH] ASoC: stm32: sai: fix sysclk management on shutdown
+From 2de860b4a7a0bd5a4b5bd3bff0e6a615495df4ba Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Wed, 16 Oct 2019 16:31:01 +0200
+Subject: [PATCH] spi: rspi: Use platform_get_irq_byname_optional() for
+ optional irqs
 
-The commit below, adds a call to sysclk callback on shutdown.
-This introduces a regression in stm32 SAI driver, as some clock
-services are called twice, leading to unbalanced calls.
-Move processing related to mclk from shutdown to sysclk callback.
-When requested frequency is 0, assume shutdown and release mclk.
+As platform_get_irq_byname() now prints an error when the interrupt
+does not exist, scary warnings may be printed for optional interrupts:
 
-Fixes: 2458adb8f92a ("SoC: simple-card-utils: set 0Hz to sysclk when shutdown")
+    renesas_spi e6b10000.spi: IRQ rx not found
+    renesas_spi e6b10000.spi: IRQ mux not found
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Link: https://lore.kernel.org/r/20191018082040.31022-1-olivier.moysan@st.com
+Fix this by calling platform_get_irq_byname_optional() instead.
+Remove the no longer needed printing of platform_get_irq errors, as the
+remaining calls to platform_get_irq() and platform_get_irq_byname() take
+care of that.
+
+Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to platform_get_irq*()")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Link: https://lore.kernel.org/r/20191016143101.28738-1-geert+renesas@glider.be
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/stm/stm32_sai_sub.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ drivers/spi/spi-rspi.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
-index d7501f88aaa6..a4060813bc74 100644
---- a/sound/soc/stm/stm32_sai_sub.c
-+++ b/sound/soc/stm/stm32_sai_sub.c
-@@ -505,10 +505,20 @@ static int stm32_sai_set_sysclk(struct snd_soc_dai *cpu_dai,
- 	if (dir == SND_SOC_CLOCK_OUT && sai->sai_mclk) {
- 		ret = regmap_update_bits(sai->regmap, STM_SAI_CR1_REGX,
- 					 SAI_XCR1_NODIV,
--					 (unsigned int)~SAI_XCR1_NODIV);
-+					 freq ? 0 : SAI_XCR1_NODIV);
+diff --git a/drivers/spi/spi-rspi.c b/drivers/spi/spi-rspi.c
+index 15f5723d9f95..7222c7689c3c 100644
+--- a/drivers/spi/spi-rspi.c
++++ b/drivers/spi/spi-rspi.c
+@@ -1257,9 +1257,9 @@ static int rspi_probe(struct platform_device *pdev)
+ 	ctlr->flags = ops->flags;
+ 	ctlr->dev.of_node = pdev->dev.of_node;
+ 
+-	ret = platform_get_irq_byname(pdev, "rx");
++	ret = platform_get_irq_byname_optional(pdev, "rx");
+ 	if (ret < 0) {
+-		ret = platform_get_irq_byname(pdev, "mux");
++		ret = platform_get_irq_byname_optional(pdev, "mux");
  		if (ret < 0)
- 			return ret;
- 
-+		/* Assume shutdown if requested frequency is 0Hz */
-+		if (!freq) {
-+			/* Release mclk rate only if rate was actually set */
-+			if (sai->mclk_rate) {
-+				clk_rate_exclusive_put(sai->sai_mclk);
-+				sai->mclk_rate = 0;
-+			}
-+			return 0;
-+		}
-+
- 		/* If master clock is used, set parent clock now */
- 		ret = stm32_sai_set_parent_clock(sai, freq);
- 		if (ret)
-@@ -1093,15 +1103,6 @@ static void stm32_sai_shutdown(struct snd_pcm_substream *substream,
- 
- 	regmap_update_bits(sai->regmap, STM_SAI_IMR_REGX, SAI_XIMR_MASK, 0);
- 
--	regmap_update_bits(sai->regmap, STM_SAI_CR1_REGX, SAI_XCR1_NODIV,
--			   SAI_XCR1_NODIV);
--
--	/* Release mclk rate only if rate was actually set */
--	if (sai->mclk_rate) {
--		clk_rate_exclusive_put(sai->sai_mclk);
--		sai->mclk_rate = 0;
+ 			ret = platform_get_irq(pdev, 0);
+ 		if (ret >= 0)
+@@ -1270,10 +1270,6 @@ static int rspi_probe(struct platform_device *pdev)
+ 		if (ret >= 0)
+ 			rspi->tx_irq = ret;
+ 	}
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "platform_get_irq error\n");
+-		goto error2;
 -	}
--
- 	clk_disable_unprepare(sai->sai_ck);
  
- 	spin_lock_irqsave(&sai->irq_lock, flags);
+ 	if (rspi->rx_irq == rspi->tx_irq) {
+ 		/* Single multiplexed interrupt */
 -- 
 2.20.1
 
