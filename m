@@ -2,305 +2,214 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6B4CA9EA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AA3CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC31F20663
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:19:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="KP3o5+kj"
+	by mail.kernel.org (Postfix) with ESMTP id C6648222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:20:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571397623;
+	bh=4u3d4lFZYAeX95EMqivqgBGsz5+4zPFGONJ3XSFr7c0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ny/wwgqJOoe8ZtUzpZVZ/ufExpttx2BFXkVcWoyLVygaPgoXp/F6LJpzVRnZo9/mf
+	 AfV/PPk74qV/xpH6cKwsPRVEaleE7l5dixL2rC4wcBSgPWph66j84A5qy63l6aNAjc
+	 FE/Jv0MhlKJGc9RvmTeKfHOi3u2DcOPu3k06hbvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442623AbfJRLT4 (ORCPT
+        id S2395072AbfJRLUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 07:19:56 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:34151 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732050AbfJRLT4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 07:19:56 -0400
-Received: by mail-il1-f195.google.com with SMTP id c12so5211906ilm.1
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 04:19:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ieee.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xRnwFaeBISwCOBtGneHhEDkXuGB9hR6LCfM4cAgGpb8=;
-        b=KP3o5+kjXiH6idIVoxUECH4C9jODkFMgoVxloHFyQRJnkdhGjLvhzH+xG0LkZv+x2I
-         CH2bFl5MisZQp3jP7zWY8qK42vaV+jIjrn2Htvjk8ofXuH8rLHPfTmKgznEdaWOlz0Pv
-         7+V1f92BXBtbBQsVhS5uYpLD8iWQCvmEvsius=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xRnwFaeBISwCOBtGneHhEDkXuGB9hR6LCfM4cAgGpb8=;
-        b=daMtIoZLnDw4WzcCKL6xJAFuRzzI4I1atzMgYS2KwJh8P7pLn5hesJ96vLrmuEPdAR
-         0t3fi15mfZ5Zcremzoha1hPgateI1bZDxu7I/oggoTZdXVxLCipgGYPA/ikrqH3vDwom
-         V/Ktl6WRX3yhpbvxpAiKwaTESnLqSnMqcoBddi0Xd6m6rBNUX42Cfoe95eSIGATL6OGh
-         5MatGryIRyJG+HqbJeZ5KKKMuxV3fXGmrAOcP2hj7TI5XIo8Wq2mxfxqQ4MPIMtt074L
-         mCwtet/pKcrsFuB+LKRWzZA0VbMY+7EhHmZCrFxqsrn+Y0XO3tLFpNnzuX9AWs6+DWM1
-         QWzA==
-X-Gm-Message-State: APjAAAXHCPnu2uOLVOdCMasdiM7nIw7N/OaG0IIK5OALp6QS5h/NLP5t
-        hULQ4UdKGOutPfA5Lz22a4DPuBUJUq1eP7ZdrFE=
-X-Google-Smtp-Source: APXvYqxIft51tgSGAMUPe7vgyxfNkwZ1ompTrZP710NZxqHkVHnjX9HwnvJsXI5tQBZd0tr0VoRk4/YLRs4YBR4HLIU=
-X-Received: by 2002:a92:1083:: with SMTP id 3mr9975411ilq.259.1571397594755;
- Fri, 18 Oct 2019 04:19:54 -0700 (PDT)
+        Fri, 18 Oct 2019 07:20:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42144 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728497AbfJRLUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 07:20:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 26F29B33A;
+        Fri, 18 Oct 2019 11:20:19 +0000 (UTC)
+Date:   Fri, 18 Oct 2019 13:20:16 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtualization@lists.linux-foundation.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Juergen Gross <jgross@suse.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Yu Zhao <yuzhao@google.com>, Minchan Kim <minchan@kernel.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+Subject: Re: [PATCH RFC v3 6/9] mm: Allow to offline PageOffline() pages with
+ a reference count of 0
+Message-ID: <20191018111843.GH5017@dhcp22.suse.cz>
+References: <20190919142228.5483-1-david@redhat.com>
+ <20190919142228.5483-7-david@redhat.com>
+ <20191016114321.GX317@dhcp22.suse.cz>
+ <36fef317-78e3-0500-43ba-f537f9a6fea4@redhat.com>
+ <20191016140350.GD317@dhcp22.suse.cz>
+ <7c7bef01-f904-904a-b0a7-f7b514b8bda8@redhat.com>
+ <20191018081524.GD5017@dhcp22.suse.cz>
+ <83d0a961-952d-21e4-74df-267912b7b6fa@redhat.com>
 MIME-Version: 1.0
-References: <20191011234038.198995-1-mail@maciej.szmigiero.name>
-In-Reply-To: <20191011234038.198995-1-mail@maciej.szmigiero.name>
-From:   Dan Streetman <ddstreet@ieee.org>
-Date:   Fri, 18 Oct 2019 07:19:18 -0400
-Message-ID: <CALZtONCx4L5K7+h3TuS1Ms_q_Mt_5JcZ+XTgACqdDyVsaCS76g@mail.gmail.com>
-Subject: Re: [PATCH] zswap: allow setting default status, compressor and
- allocator in Kconfig
-To:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-Cc:     Seth Jennings <sjenning@redhat.com>,
-        Vitaly Wool <vitalywool@gmail.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <83d0a961-952d-21e4-74df-267912b7b6fa@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 7:40 PM Maciej S. Szmigiero
-<mail@maciej.szmigiero.name> wrote:
->
-> The compressed cache for swap pages (zswap) currently needs from 1 to 3
-> extra kernel command line parameters in order to make it work: it has to be
-> enabled by adding a "zswap.enabled=1" command line parameter and if one
-> wants a different compressor or pool allocator than the default lzo / zbud
-> combination then these choices also need to be specified on the kernel
-> command line in additional parameters.
->
-> Using a different compressor and allocator for zswap is actually pretty
-> common as guides often recommend using the lz4 / z3fold pair instead of
-> the default one.
-> In such case it is also necessary to remember to enable the appropriate
-> compression algorithm and pool allocator in the kernel config manually.
->
-> Let's avoid the need for adding these kernel command line parameters and
-> automatically pull in the dependencies for the selected compressor
-> algorithm and pool allocator by adding an appropriate default switches to
-> Kconfig.
+On Fri 18-10-19 10:50:24, David Hildenbrand wrote:
+> On 18.10.19 10:15, Michal Hocko wrote:
+> > On Wed 16-10-19 16:14:52, David Hildenbrand wrote:
+> > > On 16.10.19 16:03, Michal Hocko wrote:
+> > [...]
+> > > > But why cannot you keep the reference count at 1 (do get_page when
+> > > > offlining the page)? In other words as long as the driver knows the page
+> > > > has been returned to the host then it has ref count at 1. Once the page
+> > > > is returned to the guest for whatever reason it can free it to the
+> > > > system by clearing the offline state and put_page.
+> > > 
+> > > I think I explained how the reference count of 1 is problematic when wanting
+> > > to offline the memory. After all that's the problem I try to solve: Keep
+> > > PG_offline set until the memory is offline and make sure nobody will touch
+> > > the page.
+> > 
+> > Please bear with me but I still believe that elevated reference count
+> > has some merits. I do understand that you maintain your metadata to
+> > recognize that the memory handed over to the hypervisor will not
+> > magically appear after onlining. But I believe that you can achieve
+> > the same with an elevated reference count and have a more robust design
+> > as well.
+> 
+> Thanks for thinking about this. I still believe it is problematic. And I
+> don't like releasing "pages that should not be used" to the buddy. It comes
+> with some problems if offlining fails (see below).
 
-Who is the target for using these kernel build-time defaults?  I don't
-think any distribution would be defaulting zswap to enabled, and if
-the config defaults are intended for personal kernel builds, it is
-really so much harder to just configure it on the boot cmdline?
+Sure I will not be pushing if that turns out to be unfeasible. But I
+would like to explore that path before giving up on it.
+ 
+[...]
+> > An elevated reference count would prevent offlining to finish. And I
+> > believe this is a good thing because the owner of the offline page might
+> > still need to do something to "untrack" that page. We have an interface
+> 
+> And here is the thing: The owner of the page does not have to do anything to
+> untrack the page. I mean that's what a reference count of zero actually
+> means - no direct reference.
 
->
-> The default values for these options match what the code was using
-> previously as its defaults.
->
-> Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
-> ---
->  mm/Kconfig | 103 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
->  mm/zswap.c |  26 ++++++++------
->  2 files changed, 117 insertions(+), 12 deletions(-)
->
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index a5dae9a7eb51..4309bcaaa29d 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -525,7 +525,6 @@ config MEM_SOFT_DIRTY
->  config ZSWAP
->         bool "Compressed cache for swap pages (EXPERIMENTAL)"
->         depends on FRONTSWAP && CRYPTO=y
-> -       select CRYPTO_LZO
->         select ZPOOL
->         help
->           A lightweight compressed cache for swap pages.  It takes
-> @@ -541,6 +540,108 @@ config ZSWAP
->           they have not be fully explored on the large set of potential
->           configurations and workloads that exist.
->
-> +choice
+Will this be the case for other potential users of the similar/same
+mechanism? I thought that this would become a more spread mechanism.
+ 
+[...]
 
-Using choice becomes a bit of a maintenence issue...if we add this,
-wouldn't it be better to use string input so new compression algs can
-be added without having to update this Kconfig?
+> > for that - MEM_GOING_OFFLINE notification. This sounds like a good place
+> > for the driver to decide whether it is safe to let the page go or not.
+> 
+> As I explained, this is too late and fragile. I post again what I posted
+> before with some further explanations
+> 
+> __offline_pages() works like this:
+> 
+> 1) start_isolate_page_range()
+> -> offline pages with a reference count of one will be detected as
+> unmovable -> offlining aborted. (see below on the memory isolation notifier)
 
-> +       prompt "Compressed cache for swap pages default compressor"
-> +       depends on ZSWAP
-> +       default ZSWAP_DEFAULT_COMP_LZO
-> +       help
-> +         Selects the default compression algorithm for the compressed cache
-> +         for swap pages.
-> +         If in doubt, select 'LZO'.
-> +
-> +         The selection made here can be overridden by using the kernel
-> +         command line 'zswap.compressor=' option.
-> +
-> +config ZSWAP_DEFAULT_COMP_DEFLATE
-> +       bool "Deflate"
-> +       select CRYPTO_DEFLATE
-> +       help
-> +         Use the Deflate algorithm as the default compression algorithm.
-> +
-> +config ZSWAP_DEFAULT_COMP_LZO
-> +       bool "LZO"
-> +       select CRYPTO_LZO
-> +       help
-> +         Use the LZO algorithm as the default compression algorithm.
-> +
-> +config ZSWAP_DEFAULT_COMP_842
-> +       bool "842"
-> +       select CRYPTO_842
-> +       help
-> +         Use the 842 algorithm as the default compression algorithm.
-> +
-> +config ZSWAP_DEFAULT_COMP_LZ4
-> +       bool "LZ4"
-> +       select CRYPTO_LZ4
-> +       help
-> +         Use the LZ4 algorithm as the default compression algorithm.
-> +
-> +config ZSWAP_DEFAULT_COMP_LZ4HC
-> +       bool "LZ4HC"
-> +       select CRYPTO_LZ4HC
-> +       help
-> +         Use the LZ4HC algorithm as the default compression algorithm.
-> +
-> +config ZSWAP_DEFAULT_COMP_ZSTD
-> +       bool "zstd"
-> +       select CRYPTO_ZSTD
-> +       help
-> +         Use the zstd algorithm as the default compression algorithm.
-> +endchoice
-> +
-> +config ZSWAP_DEFAULT_COMP_NAME
-> +       string
-> +       default "deflate" if ZSWAP_DEFAULT_COMP_DEFLATE
-> +       default "lzo" if ZSWAP_DEFAULT_COMP_LZO
-> +       default "842" if ZSWAP_DEFAULT_COMP_842
-> +       default "lz4" if ZSWAP_DEFAULT_COMP_LZ4
-> +       default "lz4hc" if ZSWAP_DEFAULT_COMP_LZ4HC
-> +       default "zstd" if ZSWAP_DEFAULT_COMP_ZSTD
-> +       default ""
-> +
-> +choice
-> +       prompt "Compressed cache for swap pages default allocator"
-> +       depends on ZSWAP
-> +       default ZSWAP_DEFAULT_ZPOOL_ZBUD
-> +       help
-> +         Selects the default allocator for the compressed cache for
-> +         swap pages.
-> +         The default is 'zbud' for compatibility, however please do
-> +         read the description of each of the allocators below before
-> +         making a right choice.
-> +
-> +         The selection made here can be overridden by using the kernel
-> +         command line 'zswap.zpool=' option.
-> +
-> +config ZSWAP_DEFAULT_ZPOOL_ZBUD
-> +       bool "zbud"
-> +       select ZBUD
-> +       help
-> +         Use the zbud allocator as the default allocator.
-> +
-> +config ZSWAP_DEFAULT_ZPOOL_Z3FOLD
-> +       bool "z3fold"
-> +       select Z3FOLD
-> +       help
-> +         Use the z3fold allocator as the default allocator.
-> +endchoice
-> +
-> +config ZSWAP_DEFAULT_ZPOOL_NAME
-> +       string
-> +       default "zbud" if ZSWAP_DEFAULT_ZPOOL_ZBUD
-> +       default "z3fold" if ZSWAP_DEFAULT_ZPOOL_Z3FOLD
-> +       default ""
-> +
-> +config ZSWAP_DEFAULT_ON
-> +       bool "Enable the compressed cache for swap pages by default"
-> +       depends on ZSWAP
-> +       help
-> +         If selected, the compressed cache for swap pages will be enabled
-> +         at boot, otherwise it will be disabled.
-> +
-> +         The selection made here can be overridden by using the kernel
-> +         command line 'zswap.enabled=' option.
-> +
->  config ZPOOL
->         tristate "Common API for compressed memory storage"
->         help
-> diff --git a/mm/zswap.c b/mm/zswap.c
-> index 46a322316e52..59231f6fb2ca 100644
-> --- a/mm/zswap.c
-> +++ b/mm/zswap.c
-> @@ -71,8 +71,12 @@ static u64 zswap_duplicate_entry;
->
->  #define ZSWAP_PARAM_UNSET ""
->
-> -/* Enable/disable zswap (disabled by default) */
-> +/* Enable/disable zswap */
-> +#ifdef CONFIG_ZSWAP_DEFAULT_ON
-> +static bool zswap_enabled = true;
-> +#else
->  static bool zswap_enabled;
-> +#endif
->  static int zswap_enabled_param_set(const char *,
->                                    const struct kernel_param *);
->  static struct kernel_param_ops zswap_enabled_param_ops = {
-> @@ -82,8 +86,7 @@ static struct kernel_param_ops zswap_enabled_param_ops = {
->  module_param_cb(enabled, &zswap_enabled_param_ops, &zswap_enabled, 0644);
->
->  /* Crypto compressor to use */
-> -#define ZSWAP_COMPRESSOR_DEFAULT "lzo"
-> -static char *zswap_compressor = ZSWAP_COMPRESSOR_DEFAULT;
-> +static char *zswap_compressor = CONFIG_ZSWAP_DEFAULT_COMP_NAME;
->  static int zswap_compressor_param_set(const char *,
->                                       const struct kernel_param *);
->  static struct kernel_param_ops zswap_compressor_param_ops = {
-> @@ -95,8 +98,7 @@ module_param_cb(compressor, &zswap_compressor_param_ops,
->                 &zswap_compressor, 0644);
->
->  /* Compressed storage zpool to use */
-> -#define ZSWAP_ZPOOL_DEFAULT "zbud"
-> -static char *zswap_zpool_type = ZSWAP_ZPOOL_DEFAULT;
-> +static char *zswap_zpool_type = CONFIG_ZSWAP_DEFAULT_ZPOOL_NAME;
->  static int zswap_zpool_param_set(const char *, const struct kernel_param *);
->  static struct kernel_param_ops zswap_zpool_param_ops = {
->         .set =          zswap_zpool_param_set,
-> @@ -569,11 +571,12 @@ static __init struct zswap_pool *__zswap_pool_create_fallback(void)
->         bool has_comp, has_zpool;
->
->         has_comp = crypto_has_comp(zswap_compressor, 0, 0);
-> -       if (!has_comp && strcmp(zswap_compressor, ZSWAP_COMPRESSOR_DEFAULT)) {
-> +       if (!has_comp && strcmp(zswap_compressor,
-> +                               CONFIG_ZSWAP_DEFAULT_COMP_NAME)) {
+I am assuming that has_unmovable_pages would skip over those pages. Your
+patch already does that, no?
 
-bit of bikeshedding, wouldn't CONFIG_ZSWAP_COMPRESSOR_DEFAULT be
-clearer than CONFIG_ZSWAP_DEFAULT_COMP_NAME?
+> 2) memory_notify(MEM_GOING_OFFLINE, &arg);
+> -> Here, we could release all pages to the buddy, clearing PG_offline
+> -> PF_offline must not be cleared so dumping tools will not touch
+>    these pages. There is a time where pages are !PageBuddy() and
+>    !PageOffline().
 
->                 pr_err("compressor %s not available, using default %s\n",
-> -                      zswap_compressor, ZSWAP_COMPRESSOR_DEFAULT);
-> +                      zswap_compressor, CONFIG_ZSWAP_DEFAULT_COMP_NAME);
->                 param_free_charp(&zswap_compressor);
-> -               zswap_compressor = ZSWAP_COMPRESSOR_DEFAULT;
-> +               zswap_compressor = CONFIG_ZSWAP_DEFAULT_COMP_NAME;
->                 has_comp = crypto_has_comp(zswap_compressor, 0, 0);
->         }
->         if (!has_comp) {
-> @@ -584,11 +587,12 @@ static __init struct zswap_pool *__zswap_pool_create_fallback(void)
->         }
->
->         has_zpool = zpool_has_pool(zswap_zpool_type);
-> -       if (!has_zpool && strcmp(zswap_zpool_type, ZSWAP_ZPOOL_DEFAULT)) {
-> +       if (!has_zpool && strcmp(zswap_zpool_type,
-> +                                CONFIG_ZSWAP_DEFAULT_ZPOOL_NAME)) {
->                 pr_err("zpool %s not available, using default %s\n",
-> -                      zswap_zpool_type, ZSWAP_ZPOOL_DEFAULT);
-> +                      zswap_zpool_type, CONFIG_ZSWAP_DEFAULT_ZPOOL_NAME);
->                 param_free_charp(&zswap_zpool_type);
-> -               zswap_zpool_type = ZSWAP_ZPOOL_DEFAULT;
-> +               zswap_zpool_type = CONFIG_ZSWAP_DEFAULT_ZPOOL_NAME;
->                 has_zpool = zpool_has_pool(zswap_zpool_type);
->         }
->         if (!has_zpool) {
+Well, this is fully under control of the driver, no? Reference count
+shouldn't play any role here AFAIU.
+ 
+> 3) scan_movable_pages() ...
+> 
+> 4a) Memory offlining succeeded: memory_notify(MEM_OFFLINE, &arg);
+> 
+> Perfect, it worked. Sections are offline.
+> 
+> 4b) Memory offlining failed
+> 
+>     undo_isolate_page_range(start_pfn, end_pfn, MIGRATE_MOVABLE);
+>     memory_notify(MEM_CANCEL_OFFLINE, &arg);
+
+Doesn't this return pages back to buddy only when they were marked Buddy
+already?
+
+MEM_CANCEL_OFFLINE could gain the reference back to balance the
+MEM_GOING_OFFLINE step.
+
+One think that I would like to clarify because my previous email could
+be misleading a bit. You do not really have to drop the reference by
+releasing the page to the allocator (via put_page). You can also set
+the reference count to 0 explicitly. The driver is in control of the
+page, right?  And that is the whole point I wanted to make. There is an
+explicit control via the reference count which is the standard way to
+control the struct page life cycle.
+
+Anyway hooking into __put_page (which tends to be a hot path with
+something that is barely used on most systems) doesn't sound nice to me.
+This is the whole point which made me think about the whole reference
+count approach in the first place.
+
+I do realize that the reference count doesn't solve the problem with
+onlining. Drivers still have to special case the onlining and that is
+something I really dislike but I do not have a good answer for.
+
+> > If you can let the page go then just drop the reference count. The page
+> > is isolated already by that time. If you cannot let it go for whatever
+> > reason you can fail the offlining.
+> 
+> We do have one hack in current MM code, which is the memory isolation
+> notifier only used by CMM on PPC. It allows to "cheat" has_unmovable_pages()
+> to skip over unmovable pages. But quite frankly, I rather want to get rid of
+> that crap (something I am working on right now) than introduce new users.
+> This stuff is racy as hell and for CMM, if memory offlining fails, the
+> ballooned pages are suddenly part of the buddy. Fragile.
+
+Could you be more specific please?
+
+> > An advantage is that the driver has the full control over offlining and
+> > also you do not really have to track a new online request to do the
+> > right thing.
+> 
+> The driver still has to synchronize against onlining/offlining requests and
+> track the state of the memory blocks.
+> 
+> Simple example: virtio-mem wants to try yo unplug a 4MB chunk. If the memory
+> block is online, it has to use alloc contig_range(). If the memory block is
+> offline (e.g., user space has not onlined it yet), it is sufficient to
+> update metadata. It has to be aware of the state of the memory blocks and
+> synchronize against onlining/offlining.
+
+Hmm, so the driver might offline a part of the memory which never got
+onlined? Is there really a sensible usecases for that?
+-- 
+Michal Hocko
+SUSE Labs
