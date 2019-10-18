@@ -2,219 +2,158 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DEDECA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C7FCA9EA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56C57222C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:53:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JrBPJFxz"
+	by mail.kernel.org (Postfix) with ESMTP id 8CA71222C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:53:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571385216;
+	bh=zeLyRPW6ZGhjb4o28kj6dktEdZ2lt6aLY/MBZ0nABSM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=UYg53O9T8rBEsDHGFKxp6PCLShSqNT/Wng111zvSa/5fnGJmVksdOVP3t3tvVn2P2
+	 T1LysoSfIG6gZFbtvIJfveqhxsQ972nYH8HrXOnnW4Cf50oAUj2oOXm1hDRRB6l8wS
+	 V9Sob2kLC1+jzZKQKoB2tRa6pguJ5kTtCdETBwPc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390245AbfJRHxO (ORCPT
+        id S2393105AbfJRHxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 03:53:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42900 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2504714AbfJRHv2 (ORCPT
+        Fri, 18 Oct 2019 03:53:35 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:33988 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389483AbfJRHxe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 03:51:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=p7FjJgNnn5OHwOtLaq4hzXDgz/DsvNHQdr7hvgpnAVk=; b=JrBPJFxz/GRdfapDAZHOtGnHIH
-        2KBgCpBK5YqoZpintuUyEAA04fVjbtVGirOlwY7n78JY6pGf86mcQFVLUMJRKjLwCtZRenxDOpkh1
-        J+5FPuA2/SLZta0ciP2kOUJJO0ChVYUXGfUZe40kqcm2PuDnSfBqF0acAdZP1PXG2Z8MRskJGBAu0
-        /wsX79BShWAI5JKx6TUxriWA3DG0ADOSdK8rA7TG/y5DGr6hVmmE/llYvrAEDKq5jsppLMUu1u5bU
-        k+Q2b6eUMtmGnPI1D7Vlfg4SXGv+DpnFZfmPWMiRWdZYJnNm1cSKsbCJ9Y9B5OxVRN6/DDI7EWEN+
-        APQaVwNA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iLN2d-0001PA-0r; Fri, 18 Oct 2019 07:51:19 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 93C67305FC2;
-        Fri, 18 Oct 2019 09:50:19 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 3F2B52B17810E; Fri, 18 Oct 2019 09:51:15 +0200 (CEST)
-Message-Id: <20191018074634.170477322@infradead.org>
-User-Agent: quilt/0.65
-Date:   Fri, 18 Oct 2019 09:35:29 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     x86@kernel.org
-Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
-        rostedt@goodmis.org, mhiramat@kernel.org, bristot@redhat.com,
-        jbaron@akamai.com, torvalds@linux-foundation.org,
-        tglx@linutronix.de, mingo@kernel.org, namit@vmware.com,
-        hpa@zytor.com, luto@kernel.org, ard.biesheuvel@linaro.org,
-        jpoimboe@redhat.com, jeyu@kernel.org
-Subject: [PATCH v4 04/16] x86/alternatives: Add and use text_gen_insn() helper
-References: <20191018073525.768931536@infradead.org>
+        Fri, 18 Oct 2019 03:53:34 -0400
+Received: by mail-oi1-f196.google.com with SMTP id 83so4487826oii.1;
+        Fri, 18 Oct 2019 00:53:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FGwGKswYlm8qaeis0iFsbVhgq2LVEVHU2LaBuG3PciM=;
+        b=JsZNJh6vTCjw3zMeEHoU+HmixoCOencWP1LRftDwpjltuTTfB2Cj/+B0Vte/WdnaYy
+         V513eEm7+/QJX2DWGu0wK+Zzjxzwb5nJULtRc0LBtxN//Ve23u8wxqCsXLQaZXT/5SL6
+         +jqyesZB7Ye8UjlACZbpcrJ48ax6aDAswlSCtaqzJP875MPvNbRH6CwdiJe8atc9QQLS
+         SM1YPtZU/iSZANfUB7fDoFmXdv0uU2UIRjKzftfmVdPOJkCu31ER4Y+VxedjgpLsc8AR
+         MDShdlURhupscRvastRrgBY7wRgilhMk7iXKwTGVQY19rHEUZL18TJ8Kck6lmZBn2hGp
+         vkMg==
+X-Gm-Message-State: APjAAAVsYzXUfIoeY2LxFBgPyg5gHNma6EI8NeAVceObAd2CAutuFGAH
+        IyEuzGkTX0c0od21SUOMIvAkP9WiELnTK4eVpVQ=
+X-Google-Smtp-Source: APXvYqxUo39R22IVM2V43Dq/N/66E03d1vqWWeDpxTi6q71S7C/QviIVZAi9rhlCbAdM1SF/aj03YJgVhwxln/mK+R8=
+X-Received: by 2002:a05:6808:917:: with SMTP id w23mr6558466oih.68.1571385213609;
+ Fri, 18 Oct 2019 00:53:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20191017163503.30791-1-sudeep.holla@arm.com> <20191018053844.s2fbk2le6uz3chk6@vireshk-i7>
+In-Reply-To: <20191018053844.s2fbk2le6uz3chk6@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 18 Oct 2019 09:53:22 +0200
+Message-ID: <CAJZ5v0hhFtKddeoSQwM6XGeeztgfcatG_cry5-bKEO=8EzGR1g@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: flush any pending policy update work scheduled
+ before freeing
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide a simple helper function to create common instruction
-encodings.
+On Fri, Oct 18, 2019 at 7:38 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 17-10-19, 17:35, Sudeep Holla wrote:
+> > dev_pm_qos_remove_request ends calling {max,min}_freq_req QoS notifiers
+> > which schedule policy update work.
+>
+> I don't think that's correct. We remove the notifiers first and then
+> only remove the requests. Though it is possible due to the other bug
+> we are discussing where the notifier doesn't really get removed from
+> the right CPU, but even that patch didn't fix your issue.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
----
- arch/x86/include/asm/text-patching.h |    2 +
- arch/x86/kernel/alternative.c        |   36 +++++++++++++++++++++++++++++++++++
- arch/x86/kernel/jump_label.c         |   31 ++++++++++--------------------
- arch/x86/kernel/kprobes/opt.c        |    7 ------
- 4 files changed, 50 insertions(+), 26 deletions(-)
+Right, that async update comes from somewhere else.
 
---- a/arch/x86/include/asm/text-patching.h
-+++ b/arch/x86/include/asm/text-patching.h
-@@ -49,6 +49,8 @@ extern void text_poke_bp(void *addr, con
- extern void text_poke_queue(void *addr, const void *opcode, size_t len, const void *emulate);
- extern void text_poke_finish(void);
- 
-+extern void *text_gen_insn(u8 opcode, const void *addr, const void *dest);
-+
- extern int after_bootmem;
- extern __ro_after_init struct mm_struct *poking_mm;
- extern __ro_after_init unsigned long poking_addr;
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -1237,3 +1237,39 @@ void text_poke_bp(void *addr, const void
- 	text_poke_loc_init(&tp, addr, opcode, len, emulate);
- 	text_poke_bp_batch(&tp, 1);
- }
-+
-+union text_poke_insn {
-+	u8 text[POKE_MAX_OPCODE_SIZE];
-+	struct {
-+		u8 opcode;
-+		s32 disp;
-+	} __attribute__((packed));
-+};
-+
-+void *text_gen_insn(u8 opcode, const void *addr, const void *dest)
-+{
-+	static union text_poke_insn insn; /* text_mutex */
-+	int size = 0;
-+
-+	lockdep_assert_held(&text_mutex);
-+
-+	insn.opcode = opcode;
-+
-+#define __CASE(insn)	\
-+	case insn##_INSN_OPCODE: size = insn##_INSN_SIZE; break
-+
-+	switch(opcode) {
-+	__CASE(INT3);
-+	__CASE(CALL);
-+	__CASE(JMP32);
-+	__CASE(JMP8);
-+	}
-+
-+	if (size > 1) {
-+		insn.disp = (long)dest - (long)(addr + size);
-+		if (size == 2)
-+			BUG_ON((insn.disp >> 31) != (insn.disp >> 7));
-+	}
-+
-+	return &insn.text;
-+}
---- a/arch/x86/kernel/jump_label.c
-+++ b/arch/x86/kernel/jump_label.c
-@@ -16,15 +16,7 @@
- #include <asm/alternative.h>
- #include <asm/text-patching.h>
- 
--union jump_code_union {
--	char code[JUMP_LABEL_NOP_SIZE];
--	struct {
--		char jump;
--		int offset;
--	} __attribute__((packed));
--};
--
--static void bug_at(unsigned char *ip, int line)
-+static void bug_at(const void *ip, int line)
- {
- 	/*
- 	 * The location is not an op that we were expecting.
-@@ -38,33 +30,32 @@ static void bug_at(unsigned char *ip, in
- static const void *
- __jump_label_set_jump_code(struct jump_entry *entry, enum jump_label_type type, int init)
- {
--	static union jump_code_union code; /* relies on text_mutex */
- 	const unsigned char default_nop[] = { STATIC_KEY_INIT_NOP };
- 	const unsigned char *ideal_nop = ideal_nops[NOP_ATOMIC5];
--	const void *expect;
-+	const void *expect, *code;
-+	const void *addr, *dest;
- 	int line;
- 
--	lockdep_assert_held(&text_mutex);
-+	addr = (void *)jump_entry_code(entry);
-+	dest = (void *)jump_entry_target(entry);
- 
--	code.jump = JMP32_INSN_OPCODE;
--	code.offset = jump_entry_target(entry) -
--		       (jump_entry_code(entry) + JUMP_LABEL_NOP_SIZE);
-+	code = text_gen_insn(JMP32_INSN_OPCODE, addr, dest);
- 
- 	if (init) {
- 		expect = default_nop; line = __LINE__;
- 	} else if (type == JUMP_LABEL_JMP) {
- 		expect = ideal_nop; line = __LINE__;
- 	} else {
--		expect = code.code; line = __LINE__;
-+		expect = code; line = __LINE__;
- 	}
- 
--	if (memcmp((void *)jump_entry_code(entry), expect, JUMP_LABEL_NOP_SIZE))
--		bug_at((void *)jump_entry_code(entry), line);
-+	if (memcmp(addr, expect, JUMP_LABEL_NOP_SIZE))
-+		bug_at(addr, line);
- 
- 	if (type == JUMP_LABEL_NOP)
--		memcpy(&code, ideal_nop, JUMP_LABEL_NOP_SIZE);
-+		code = ideal_nop;
- 
--	return &code;
-+	return code;
- }
- 
- static void inline __jump_label_transform(struct jump_entry *entry,
---- a/arch/x86/kernel/kprobes/opt.c
-+++ b/arch/x86/kernel/kprobes/opt.c
-@@ -447,18 +447,13 @@ void arch_optimize_kprobes(struct list_h
- void arch_unoptimize_kprobe(struct optimized_kprobe *op)
- {
- 	u8 insn_buff[RELATIVEJUMP_SIZE];
--	u8 emulate_buff[RELATIVEJUMP_SIZE];
- 
- 	/* Set int3 to first byte for kprobes */
- 	insn_buff[0] = BREAKPOINT_INSTRUCTION;
- 	memcpy(insn_buff + 1, op->optinsn.copied_insn, RELATIVE_ADDR_SIZE);
- 
--	emulate_buff[0] = RELATIVEJUMP_OPCODE;
--	*(s32 *)(&emulate_buff[1]) = (s32)((long)op->optinsn.insn -
--			((long)op->kp.addr + RELATIVEJUMP_SIZE));
--
- 	text_poke_bp(op->kp.addr, insn_buff, RELATIVEJUMP_SIZE,
--		     emulate_buff);
-+		     text_gen_insn(JMP32_INSN_OPCODE, op->kp.addr, op->optinsn.insn));
- }
- 
- /*
+> Looks like we are still missing something ?
+>
+> > It may end up racing with the freeing
+> > the policy and unregistering the driver.
+> >
+> > One possible race is as below where the cpufreq_driver is unregistered
+> > but the scheduled work gets executed at later stage when cpufreq_driver
+> > is NULL(i.e. after freeing the policy and driver)
+> >
+> > Unable to handle kernel NULL pointer dereference at virtual address 0000001c
+> > pgd = (ptrval)
+> > [0000001c] *pgd=80000080204003, *pmd=00000000
+> > Internal error: Oops: 206 [#1] SMP THUMB2
+> > Modules linked in:
+> > CPU: 0 PID: 34 Comm: kworker/0:1 Not tainted 5.4.0-rc3-00006-g67f5a8081a4b #86
+> > Hardware name: ARM-Versatile Express
+> > Workqueue: events handle_update
+> > PC is at cpufreq_set_policy+0x58/0x228
+> > LR is at dev_pm_qos_read_value+0x77/0xac
+> > Control: 70c5387d  Table: 80203000  DAC: fffffffd
+> > Process kworker/0:1 (pid: 34, stack limit = 0x(ptrval))
+> >       (cpufreq_set_policy) from (refresh_frequency_limits.part.24+0x37/0x48)
+> >       (refresh_frequency_limits.part.24) from (handle_update+0x2f/0x38)
+> >       (handle_update) from (process_one_work+0x16d/0x3cc)
+> >       (process_one_work) from (worker_thread+0xff/0x414)
+> >       (worker_thread) from (kthread+0xff/0x100)
+> >       (kthread) from (ret_from_fork+0x11/0x28)
+> >
+> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> > ---
+> >  drivers/cpufreq/cpufreq.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > Hi Rafael, Viresh,
+> >
+> > This fixed the boot issue I reported[1] on TC2 with bL switcher enabled.
+> > I have based this patch on -rc3 and not on top of your patches. This
+> > only fixes the boot issue but I hit the other crashes while continuously
+> > switching on and off the bL switcher that register/unregister the driver
+> > Your patch series fixes them. I can based this on top of those if you
+> > prefer.
+> >
+> > Regards,
+> > Sudeep
+> >
+> > [1] https://lore.kernel.org/linux-pm/20191015155735.GA29105@bogus/
+> >
+> > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > index c52d6fa32aac..b703c29a84be 100644
+> > --- a/drivers/cpufreq/cpufreq.c
+> > +++ b/drivers/cpufreq/cpufreq.c
+> > @@ -1278,6 +1278,9 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
+> >       }
+> >
+> >       dev_pm_qos_remove_request(policy->min_freq_req);
+> > +     /* flush the pending policy->update work before freeing the policy */
+> > +     if (work_pending(&policy->update))
+> > +             flush_work(&policy->update);
+>
+> This diff surely makes sense even without the QoS stuff, this race can
+> still happen, very unlikely though.
+>
+> And yes, you must use the other variant that Rafael suggested, we are
+> already doing similar thing in a bunch of cpufreq governors :)
+>
+> And I will probably add this after calling
+> dev_pm_qos_remove_notifier() for the MAX policy as this doesn't and
+> shouldn't depend on removing the qos request.
 
+Good point.
 
+This is after taking the last CPU in the policy offline, so
+policy->update cannot be scheduled from anywhere at this point.
+
+> >       kfree(policy->min_freq_req);
+> >
+> >       cpufreq_policy_put_kobj(policy);
+> > --
