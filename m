@@ -2,157 +2,134 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FAFFCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E20D4CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 221F521897
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA44B21897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:52:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i0VuWL93"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438827AbfJRIwF (ORCPT
+        id S2442230AbfJRIwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:52:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37206 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390341AbfJRIwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 04:52:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EE43CB58A;
-        Fri, 18 Oct 2019 08:52:02 +0000 (UTC)
-Message-ID: <c0fe3d2189130449a2de64b5a0ed4b3325a7602e.camel@suse.de>
-Subject: Re: [PATCH] x86/PCI: sta2x11: use default DMA address translation
- ops
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     rubini@gnudd.com, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Date:   Fri, 18 Oct 2019 10:51:58 +0200
-In-Reply-To: <20191017224120.GA68948@google.com>
-References: <20191017224120.GA68948@google.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-D/Da0HTt+jTkSHPetqZA"
-User-Agent: Evolution 3.32.4 
-MIME-Version: 1.0
+        Fri, 18 Oct 2019 04:52:11 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35887 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2442220AbfJRIwL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 04:52:11 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y22so3456876pfr.3
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 01:52:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=8Twp36GSbpZi8uCaMU+5CBUJfogrOLDIK7KeRjSvPeo=;
+        b=i0VuWL93/QAsy39njpz8hRgcLisEdpr+3KDPnSKzQ/awFW4pHcUg0UjlGu+xlAklGX
+         //w7RDxTTEbHiCZlDWhV8fb2xW0/nKfpvZFQEz4XoqB3WFvF2FB6oUjasGQAbwH6uuC7
+         wfiPJkAgPr3nTCPj0QhLnvy1e5YyA5e5r8alBv0c8CFRU3tb4JYL9W1sSMGL3gKa5tto
+         M+9LCFG2NwFaMw4SZt7mfiJZbqHXDmvybREgVDtVUsQMo1py7X4RVn9D4AgVNnfCuo42
+         KCPQ7glVcGEcJRD3uZfsOtnkXZR+Z8o3tP9Y2D6jmwnX9QJMpc28t0Pi8FdyhfamqMzl
+         zNFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8Twp36GSbpZi8uCaMU+5CBUJfogrOLDIK7KeRjSvPeo=;
+        b=Vc5ecpbkRF+8BPEOWsFAb333+nUNREfMyakqhBeEbD9gXe2stk0os7q5AUL6B4Dh8l
+         3hAsCoFyjHrjzu621IIx8awyPSe7k5lISDRV3iUneJsqHqB8OkUGz/xmVhrblMSDc2OY
+         o4RSF2ToiQFOvGu5WL7a8whPrMvqaeNh2zMiv5Xx35SXbIFp7fIDqy5Ucq9WdvJAiBWz
+         Rb8wu1E8yesWU6woc+zEC15e2HGr9Zrr1IdY3mPw8AUFgJhspAeixXpFb36AFnqMbOS8
+         QLPq/oKLNHGOrwsi7A2g1ixTC8LKgxaapHRJrWHJI2tPQxuydPc2VVzbxtRoSQZzFf8d
+         nHPw==
+X-Gm-Message-State: APjAAAXlzmIfrWKMixdWCIPP8v84GjyOhag9JZcwHiP6b8kAFYmumX3M
+        N6VUQsOrtYarL6TtlGglU5XkbOENwIhj8Q==
+X-Google-Smtp-Source: APXvYqwdiN3EAKBoUU6BThGO5LVz4hi1jwIiB7pRL30zoDY6vs7gW8L2LmbVKtj6UUm9OUN0OCFjsg==
+X-Received: by 2002:aa7:86c2:: with SMTP id h2mr5445157pfo.0.1571388730332;
+        Fri, 18 Oct 2019 01:52:10 -0700 (PDT)
+Received: from localhost ([49.248.178.134])
+        by smtp.gmail.com with ESMTPSA id y7sm5886971pfn.142.2019.10.18.01.52.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 18 Oct 2019 01:52:09 -0700 (PDT)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        daniel.lezcano@linaro.org, viresh.kumar@linaro.org,
+        sudeep.holla@arm.com, bjorn.andersson@linaro.org,
+        edubezval@gmail.com, agross@kernel.org, tdas@codeaurora.org,
+        swboyd@chromium.org, ilina@codeaurora.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Ben Segall <bsegall@google.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     linux-clk@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: [PATCH v4 0/6] Initialise thermal framework and cpufreq earlier during boot
+Date:   Fri, 18 Oct 2019 14:21:57 +0530
+Message-Id: <cover.1571387352.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Changes since v3:
+- Init schedutil governor earlier too
+- Simplified changes to thermal_init() error path
+- Collects Acks
 
---=-D/Da0HTt+jTkSHPetqZA
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Changes since v2:
+- Missed one patch when posting v2. Respinning.
 
-Hi Bjorn,
-thanks for having a look at it.
+Changes since v1:
+- Completely get rid of netlink support in the thermal framework.
+- This changes the early init patch to a single line - change to
+  core_initcall. Changed authorship of patch since it is nothing like the
+  original. Lina, let me know if you feel otherwise.
+- I've tested to make sure that the qcom-cpufreq-hw driver continues to
+  work correctly as a module so this won't impact Android's GKI plans.
+- Collected Acks
 
-On Thu, 2019-10-17 at 17:41 -0500, Bjorn Helgaas wrote:
-> Hi Nicolas,
->=20
-> I'm hoping Christoph will chime in and one of the x86 guys will merge
-> this, since I'm not a DMA expert.  Trivial comments/questions below.
->=20
-> On Wed, Oct 16, 2019 at 06:51:37PM +0200, Nicolas Saenz Julienne wrote:
-> > The devices found behind this PCIe chip have unusual DMA mapping
-> > constraints as there is an AMBA interconnect placed in between them and
-> > the different PCI endpoints. The offset between physical memory
-> > addresses and AMBA's view is provided by reading a PCI config register,
-> > which is saved and used whenever DMA mapping is needed.
-> >=20
-> > It turns out that this DMA setup can be represented by properly setting
-> > 'dma_pfn_offset', 'dma_bus_mask' and 'dma_mask' during the PCI device
-> > enable fixup. And ultimately allows us to get rid of this device's
-> > custom DMA functions.
-> >=20
-> > Aside from the code deletion and DMA setup, sta2x11_pdev_to_mapping() i=
-s
-> > moved to avoid warnings whenever CONFIG_PM is not enabled.
-> >=20
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > -	pci_read_config_dword(pdev, AHB_BASE(0), &map->amba_base);
-> > +
-> > +	pci_read_config_dword(pdev, AHB_BASE(0), &amba_base);
-> > +	dev->dma_pfn_offset =3D PFN_DOWN(-amba_base);
-> > +	dev->bus_dma_mask =3D amba_base + STA2X11_AMBA_SIZE - 1;
->=20
-> I think of a mask as typically being one less than a power of two, but
-> that's not the case here, e.g., STA2X11_AMBA_SIZE - 1 =3D=3D 0x1fffffff
-> (512MB-1), so if amba_size is 1G, the mask will be 0x5fffffff.
->=20
-> Just double-checking to be sure that's what you intend.
+Device boot needs to be as fast as possible while keeping under the thermal
+envelope. Now that thermal framework is built-in to the kernel, we can
+initialize it earlier to enable thermal mitigation during boot.
 
-Yes I'm aware of it.
+We also need the cpufreq HW drivers to be initialised earlier to act as the
+cooling devices. This series only converts over the qcom-hw driver to
+initialize earlier but can be extended to other platforms as well.
 
-I know it's counter-intuitive name wise but dma-direct uses it more like a =
-top
-address than a mask (see for example 'dma_capable()' in dma-direct.h). Ther=
-e is
-at least another driver using 'dev->bus_dma_mask' as such (see
-arch/powerpc/sysdev/fsl_pci.c).
+Amit Kucheria (6):
+  thermal: Remove netlink support
+  thermal: Initialize thermal subsystem earlier
+  cpufreq: Initialise the governors in core_initcall
+  cpufreq: Initialize cpufreq-dt driver earlier
+  clk: qcom: Initialise clock drivers earlier
+  cpufreq: qcom-hw: Move driver initialisation earlier
 
-That said, I agree it something Christoph should ratify for this to get mer=
-ged.
+ .../driver-api/thermal/sysfs-api.rst          |  26 +----
+ drivers/clk/qcom/clk-rpmh.c                   |   2 +-
+ drivers/clk/qcom/gcc-qcs404.c                 |   2 +-
+ drivers/clk/qcom/gcc-sdm845.c                 |   2 +-
+ drivers/cpufreq/cpufreq-dt-platdev.c          |   2 +-
+ drivers/cpufreq/cpufreq_conservative.c        |   2 +-
+ drivers/cpufreq/cpufreq_ondemand.c            |   2 +-
+ drivers/cpufreq/cpufreq_performance.c         |   2 +-
+ drivers/cpufreq/cpufreq_powersave.c           |   2 +-
+ drivers/cpufreq/cpufreq_userspace.c           |   2 +-
+ drivers/cpufreq/qcom-cpufreq-hw.c             |   2 +-
+ drivers/thermal/thermal_core.c                | 103 +-----------------
+ include/linux/thermal.h                       |  11 --
+ kernel/sched/cpufreq_schedutil.c              |   2 +-
+ 14 files changed, 19 insertions(+), 143 deletions(-)
 
-> > +	pci_set_consistent_dma_mask(pdev, amba_base + STA2X11_AMBA_SIZE - 1);
-> > +	pci_set_dma_mask(pdev, amba_base + STA2X11_AMBA_SIZE - 1);
->=20
-> Maybe add a local variable instead of repeating the "amba_base + ..."
-> expression three times?
-
-Noted.
-
-> >  	/* Configure AHB mapping */
-> >  	pci_write_config_dword(pdev, AHB_PEXLBASE(0), 0);
-> > @@ -252,14 +156,25 @@ static void sta2x11_map_ep(struct pci_dev *pdev)
-> >  		pci_write_config_dword(pdev, AHB_CRW(i), 0);
-> > =20
-> >  	dev_info(&pdev->dev,
-> > -		 "sta2x11: Map EP %i: AMBA address %#8x-%#8x\n",
-> > -		 sta2x11_pdev_to_ep(pdev),  map->amba_base,
-> > -		 map->amba_base + STA2X11_AMBA_SIZE - 1);
-> > +		 "sta2x11: Map EP %i: AMBA address %#8x-%#8llx\n",
-> > +		 sta2x11_pdev_to_ep(pdev), amba_base, dev->bus_dma_mask);
->=20
-> This would read better as
->=20
->   amba_base, amba_base + STA2X11_AMBA_SIZE - 1
->=20
-> I know that's the same dev->bus_dma_mask, but a "mask" is not the
-> obvious name for the end of a range.
-
-Ok.
-
-I just got a notification from my mail server that it failed to deliver the
-mail to Christoph, it seems I misspelled it.
-
-I'll fix all this and send a v2.
-
-Regards,
-Nicolas
-
-
---=-D/Da0HTt+jTkSHPetqZA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2pfS8ACgkQlfZmHno8
-x/4BlggAjXVad2D9BpeA/AXkKKdJTH3wSyCFD3j0jU4OWOxaxDTJo1RUC/cs+lZI
-mTpxt6/DvoMX/c771nFhDITH1Pld8C9gQxZ9gi6rs0JfhdiX94tql1pCbAxs1OXL
-4nMhsotG6DR0nodVoT3xU5A86NfQoR3MqrNeIG849yskFjpSDvjoQdf1uVM2qc5l
-9wWuniwT1NQ0FaddVpPJdxPI+pe4J0VFVnJpTYw5T2OKk84dEVKdRyIby+ydVUwQ
-quaTw3ko1X1cAH1fXyaUpaC4zzB7MBZ9AqQJFQbjHlM3JjGmRfoZnKBBAftm2+JX
-WJ5EhUljkQ6UFy9hDrcY8IqS4Oe1dg==
-=vTJy
------END PGP SIGNATURE-----
-
---=-D/Da0HTt+jTkSHPetqZA--
+-- 
+2.17.1
 
