@@ -2,917 +2,260 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F53DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 468D0CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26BF120872
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0705120700
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:56:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WFh6S0Ro"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fHxVZBpH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbfJRV42 (ORCPT
+        id S1726374AbfJRV4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 17:56:28 -0400
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:41844 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbfJRV42 (ORCPT
+        Fri, 18 Oct 2019 17:56:45 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34509 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbfJRV4o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 17:56:28 -0400
-Received: by mail-pf1-f201.google.com with SMTP id 22so5647012pfx.8
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 14:56:26 -0700 (PDT)
+        Fri, 18 Oct 2019 17:56:44 -0400
+Received: by mail-wr1-f68.google.com with SMTP id t16so2576035wrr.1;
+        Fri, 18 Oct 2019 14:56:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=wJUN7+qZHaxFhNd2oDJ9WCtETmxmQYcnriG+AKbtQhY=;
-        b=WFh6S0RocfkfCQyFiEPAnlwx5igiNZ1GsJb4fL4c4iMbURIk7MhD92IJ9xC2uP3T11
-         7RV4H/B6Hixonxr+cJPg8SdYxrinjJvXwYlzUt8Fkee+mZYInaBBa1i5+C7vi7KhY8oG
-         wl3l/JRvAKhcep2JCMSZL6kzWTnLw5iiiy3h5HeZW0thhR3GYEJM1+rKB+rkQaHXJvxg
-         6XwnPKCWdp1gkY3UyQB3wzB7rDbBloKeMlZvy3aadreaiu6iU136WPUvdmycekEQMhQk
-         ZQLeHHf15Luy+OT7RJfhHXcN0iSSbwyRRxDqKwYKCpw3HzLqeIYiT0zgi6wCGtBSGID9
-         QY/Q==
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NNT4s+96n0HtKra+JkkijNCDNZR67HLwPEp4ZkBnTZc=;
+        b=fHxVZBpH5RPdwhSk6TZqDGXwcSweopwEOfg5u8oQZ73QhsXzDcUu/rYeyMD29geE54
+         RiY4PeYq8OoZ1t//Plcj8uNVrS8lxcxejrnFeYW2P6yvHIK4DRQMBiUCj/Id7+3qr+Wc
+         4OkJLqzURD7uzl5l+BVdHJB74hVCULzH0wqNVrXAfhiImmdgS0Q5VGRenySPabnsKhST
+         m8y8GSc6iLcRC2hR1gqGXXdq72zYBHjjbtb5mrJZP7OWTZFpq8P7KZLMXGHv0fx0GFRq
+         w2adN0mrkpimsLgt0GvAHwFXBed93rUB1Fzr49yVZ0oW1SDYxuzonbfV0SFt/vAKFvUQ
+         ok/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=wJUN7+qZHaxFhNd2oDJ9WCtETmxmQYcnriG+AKbtQhY=;
-        b=rZRGlGD2FjFCsRnloGkmnzpfeO5xCcE5uyDVPgfVu+Lkzd5S7pIWqUPDMgGltojP3u
-         WMr64O0W3+P+dCwcqfljLrM24LbnE/aLd0DEtFuNITLiYinFfDHd6Az+/a18IMYmy4Xo
-         q1hqBXrxCNdU3hYA64oYxOlZQBmamRHiZgghys8E+o+5q+hqTwOVGK6asMdNd/Nm4JfG
-         9MDcOFU7mvyrtyXR9wKFaRL6sNs4qc+qxKWA3WBwxotR0yAXVWxFlVDhDmRPXje6NB/H
-         2u2LCnuMwVIw7PGnmBnlCcUT0xs8Rl+fb0Acg2wUnQK0LGsfAmInu7MJsFgr6O/eMQ8b
-         bBBA==
-X-Gm-Message-State: APjAAAXJQboQQroOUFF2K/n4E3NDuAt5tRO5HeXxUtDKl1oogXWq6U/K
-        tbvj/b0ogBqfkqs/fpJtXmkEz+3jYz3/9A==
-X-Google-Smtp-Source: APXvYqy4lFDvd8cW7WwstzUNaTBx7+UjC6yHPjUmzkfe4AlYrqZqjaDAWdVTzRmy8vZmlm9aItxxp8FU7eEwTQ==
-X-Received: by 2002:a63:e249:: with SMTP id y9mr12305882pgj.383.1571435785464;
- Fri, 18 Oct 2019 14:56:25 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 14:55:49 -0700
-Message-Id: <20191018215549.65000-1-davidgow@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-Subject: [PATCH linux-kselftest/test v4] lib/list-test: add a test for the
- 'list' doubly linked list
-From:   David Gow <davidgow@google.com>
-To:     shuah@kernel.org, brendanhiggins@google.com,
-        akpm@linux-foundation.org, keescook@chromium.org
-Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, dan.carpenter@oracle.com,
-        David Gow <davidgow@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:subject:from:to:cc:references:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=NNT4s+96n0HtKra+JkkijNCDNZR67HLwPEp4ZkBnTZc=;
+        b=kuWa21GtE9Zg15GEo/cuB+GpsJgnugHzm+VzjPDatTVJ6gfR7cZ9cf5NvkRTuMGzA5
+         N5V9IIxNr2d8bv73kDHgOX5fIr2axaPz2MDbZ+ames0d9JyQ9Lt6cbu75DmqqFHn+1pr
+         QVVsWpYfv/kZ6BvUTNnOwQT6ICYFp3hbSR2NFzFjVcAO6sYbHjdEwa99qREyY1xF+h9/
+         jyBudk/sXf8rr05zPPA+d1NscMQ+OA6iaQX6xlBa1ngWYPESiMLHauA287HXJO9xVRC0
+         tlCnlZPWwnNPsrVrPUK9DMAtrsm7+16es4rJlahtbXOK5CXoE9vRbLtW90LMQLyA94xR
+         VIoQ==
+X-Gm-Message-State: APjAAAXnAj1yRX6M3Gkc1fvFkC7fkcSibV4au6zzXX2EOlKgfd7X+lkO
+        0x4JXEThFfPf7gZr1+QmMOlRq3UI
+X-Google-Smtp-Source: APXvYqxZxRYEmZsPWUE1AxKD1UmLmy/7X8JnSw1PQGYkZP3PIeeIO+tBjnGjG3HS+eSrjDkIEt5CVg==
+X-Received: by 2002:adf:e441:: with SMTP id t1mr3929173wrm.395.1571435800113;
+        Fri, 18 Oct 2019 14:56:40 -0700 (PDT)
+Received: from [192.168.1.19] (chp168.neoplus.adsl.tpnet.pl. [83.31.13.168])
+        by smtp.gmail.com with ESMTPSA id a17sm2665775wmb.8.2019.10.18.14.56.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 18 Oct 2019 14:56:39 -0700 (PDT)
+Subject: Re: [PATCH v14 13/19] leds: lp55xx: Add multicolor framework support
+ to lp55xx
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191018122521.6757-1-dmurphy@ti.com>
+ <20191018122521.6757-14-dmurphy@ti.com>
+ <a24832d9-1c3d-b3ea-4326-2ef4937d5a59@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <c9a704d4-b411-59f1-02bf-3ea7b219c4b4@gmail.com>
+Date:   Fri, 18 Oct 2019 23:56:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <a24832d9-1c3d-b3ea-4326-2ef4937d5a59@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a KUnit test for the kernel doubly linked list implementation in
-include/linux/list.h
 
-Each test case (list_test_x) is focused on testing the behaviour of the
-list function/macro 'x'. None of the tests pass invalid lists to these
-macros, and so should behave identically with DEBUG_LIST enabled and
-disabled.
+On 10/18/19 11:48 PM, Jacek Anaszewski wrote:
+> Dan,
++		ret = lp5xx_parse_channel_child(child, cfg, i);
+> 
+> I went into details of this parsing and finally came up with
+> the code which is a bit greater in size, but IMHO cleaner.
+> Note changes in variable naming. It is not even compile-tested.
+> 
+> static int lp55xx_parse_common_child(struct device_node *np,
+>                                     struct lp55xx_led_config *cfg,
+>                                     int led_number, int *chan_nr)
+> {
+>         int ret;
+> 
+>         of_property_read_string(np, "chan-name",
+>                                 &cfg[led_number].name);
+>         of_property_read_u8(np, "led-cur",
+>                             &cfg[led_number].led_current);
+>         of_property_read_u8(np, "max-cur",
+>                             &cfg[led_number].max_current);
+> 
+>         ret = of_property_read_u32(np, "reg", chan_nr);
+>         if (ret)
+>                 return ret;
+> 
+>         if (chan_nr < 0 || chan_nr > cfg->max_chan_nr) /* side note: new
+> max_chan_nr property needed in cfg */
+>                 return -EINVAL;
+> 
+>         return 0;
+> }
+> 
+> static int lp55xx_parse_mutli_led_child(struct device_node *np,
+>                                         struct lp55xx_led_config *cfg,
+>                                         int child_number,
+>                                         int color_number)
+> {
+>         int chan_nr, color_id;
+> 
+>         ret = lp55xx_parse_common_child(child, cfg, child_number,
+> color_number,
+>                                         &chan_nr);
+>         if (ret)
+>                 return ret;
+> 
+>         ret = of_property_read_u32(child, "color", &color_id);
+>         if (ret)
+>                return ret;
+> 
+>         cfg[child_number].color_components[color_number].color_id =
+> color_id;
+>         cfg[child_number].color_components[color_number].output_num =
+> chan_nr;
+>         set_bit(color_id, &cfg[child_number].available_colors);
+> 
+>         return 0;
+> }
+> 
+> staitc int lp55xx_parse_mutli_led(struct device_node *np,
+>                                   struct lp55xx_led_config *cfg,
+>                                   int child_number)
+> {
+>         struct device_node *child;
+>         int num_colors = 0, i = 0;
 
-Note that, at present, it only tests the list_ types (not the
-singly-linked hlist_), and does not yet test all of the
-list_for_each_entry* macros (and some related things like
-list_prepare_entry).
+s/, i = 0//
 
-Signed-off-by: David Gow <davidgow@google.com>
----
+> 
+>         for_each_child_of_node(np, child) {
+>                 ret = lp55xx_parse_mutli_led_child(child, cfg, num_colors,
+>                                                    child_number, i))
 
-The changes from v3 are mostly to do with naming:
-- The Kconfig entry has been renamed from LIST_TEST to LIST_KUNIT_TEST,
-  which matches the SYSCTL_KUNIT_TEST entry,
-- The Kconfig description was updated to better match other KUnit tests,
-  specifying that the test is not intended for use in a production
-  kernel. A now-redundant mention of the test running a boot was
-  removed.
-- The MAINTAINERS entry refers to a "KUNIT TEST" rather than a "UNIT
-  TEST"
-- The module name has changed from "list-test" to "list-kunit-test".
+Replace above call with below:
 
-Earlier versions of the test can be found:
-v3:
-https://lore.kernel.org/linux-kselftest/20191016215707.95317-1-davidgow@google.com/
-v2:
-https://lore.kernel.org/linux-kselftest/20191010185631.26541-1-davidgow@google.com/
-v1:
-https://lore.kernel.org/linux-kselftest/20191007213633.92565-1-davidgow@google.com/
+ret = lp55xx_parse_mutli_led_child(child, cfg, child_number, num_colors);
 
- MAINTAINERS       |   5 +
- lib/Kconfig.debug |  18 ++
- lib/Makefile      |   3 +
- lib/list-test.c   | 740 ++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 766 insertions(+)
- create mode 100644 lib/list-test.c
+>                 if (ret)
+>                         return ret;
+>                 num_colors++;
+>         }
+> }
+> 
+> static int lp5xx_parse_logical_led(struct device_node *np,
+>                                    struct lp55xx_led_config *cfg,
+>                                    int child_number)
+> {
+>         int led_color, ret;
+> 
+>         cfg[child_number].default_trigger =
+>                 of_get_property(np, "linux,default-trigger", NULL);
+> 
+>         ret = of_property_read_u32(np, "color", &led_color);
+> 
+>         if (ret) {
+>                 int chan_nr;
+>                 ret =  lp55xx_parse_common_child(np, cfg, child_number,
+>                                                  &chan_nr);
+>                 if (ret < 0)
+>                        return ret;
+>                 cfg[child_number].chan_nr = chan_nr;
+>         } else if (led_color == LED_COLOR_ID_MULTI) {
+>                 return lp55xx_parse_mutli_led(np, cfg, child_number);
+>         } else
+>                 return ret;
+> 
+>         return 0;
+> }
+> 
+> 
+> for_each_child_of_node(np, child) {
+>         ret = lp55xx_parse_logical_led(child, cfg, i);
+>         if (ret)
+>                 return ERR_PTR(-EINVAL);
+>         i++;
+> }
+> 
+> 
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7ef985e01457..7ced1b69a3d3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9504,6 +9504,11 @@ F:	Documentation/misc-devices/lis3lv02d.rst
- F:	drivers/misc/lis3lv02d/
- F:	drivers/platform/x86/hp_accel.c
- 
-+LIST KUNIT TEST
-+M:	David Gow <davidgow@google.com>
-+S:	Maintained
-+F:	lib/list-test.c
-+
- LIVE PATCHING
- M:	Josh Poimboeuf <jpoimboe@redhat.com>
- M:	Jiri Kosina <jikos@kernel.org>
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index a3017a5dadcd..7991b78eb1f3 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1961,6 +1961,24 @@ config SYSCTL_KUNIT_TEST
- 
- 	  If unsure, say N.
- 
-+config LIST_KUNIT_TEST
-+	bool "KUnit Test for Kernel Linked-list structures"
-+	depends on KUNIT
-+	help
-+	  This builds the linked list KUnit test suite.
-+	  It tests that the API and basic functionality of the list_head type
-+	  and associated macros.
-+	
-+	  KUnit tests run during boot and output the results to the debug log
-+	  in TAP format (http://testanything.org/). Only useful for kernel devs
-+	  running the KUnit test harness, and not intended for inclusion into a
-+	  production build.
-+
-+	  For more information on KUnit and unit tests in general please refer
-+	  to the KUnit documentation in Documentation/dev-tools/kunit/.
-+
-+	  If unsure, say N.
-+
- config TEST_UDELAY
- 	tristate "udelay test driver"
- 	help
-diff --git a/lib/Makefile b/lib/Makefile
-index bba1fd5485f7..890e581d00c4 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -292,3 +292,6 @@ obj-$(CONFIG_GENERIC_LIB_MULDI3) += muldi3.o
- obj-$(CONFIG_GENERIC_LIB_CMPDI2) += cmpdi2.o
- obj-$(CONFIG_GENERIC_LIB_UCMPDI2) += ucmpdi2.o
- obj-$(CONFIG_OBJAGG) += objagg.o
-+
-+# KUnit tests
-+obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
-diff --git a/lib/list-test.c b/lib/list-test.c
-new file mode 100644
-index 000000000000..75ba3ddac959
---- /dev/null
-+++ b/lib/list-test.c
-@@ -0,0 +1,740 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * KUnit test for the Kernel Linked-list structures.
-+ *
-+ * Copyright (C) 2019, Google LLC.
-+ * Author: David Gow <davidgow@google.com>
-+ */
-+#include <kunit/test.h>
-+
-+#include <linux/list.h>
-+
-+struct list_test_struct {
-+	int data;
-+	struct list_head list;
-+};
-+
-+static void list_test_list_init(struct kunit *test)
-+{
-+	/* Test the different ways of initialising a list. */
-+	struct list_head list1 = LIST_HEAD_INIT(list1);
-+	struct list_head list2;
-+	LIST_HEAD(list3);
-+	struct list_head *list4;
-+	struct list_head *list5;
-+
-+	INIT_LIST_HEAD(&list2);
-+
-+	list4 = kzalloc(sizeof(*list4), GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, list4);
-+	INIT_LIST_HEAD(list4);
-+
-+	list5 = kmalloc(sizeof(*list5), GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, list5);
-+	memset(list5, 0xFF, sizeof(*list5));
-+	INIT_LIST_HEAD(list5);
-+
-+	/* list_empty_careful() checks both next and prev. */
-+	KUNIT_EXPECT_TRUE(test, list_empty_careful(&list1));
-+	KUNIT_EXPECT_TRUE(test, list_empty_careful(&list2));
-+	KUNIT_EXPECT_TRUE(test, list_empty_careful(&list3));
-+	KUNIT_EXPECT_TRUE(test, list_empty_careful(list4));
-+	KUNIT_EXPECT_TRUE(test, list_empty_careful(list5));
-+
-+	kfree(list4);
-+	kfree(list5);
-+}
-+
-+static void list_test_list_add(struct kunit *test)
-+{
-+	struct list_head a, b;
-+	LIST_HEAD(list);
-+
-+	list_add(&a, &list);
-+	list_add(&b, &list);
-+
-+	/* should be [list] -> b -> a */
-+	KUNIT_EXPECT_PTR_EQ(test, list.next, &b);
-+	KUNIT_EXPECT_PTR_EQ(test, b.prev, &list);
-+	KUNIT_EXPECT_PTR_EQ(test, b.next, &a);
-+}
-+
-+static void list_test_list_add_tail(struct kunit *test)
-+{
-+	struct list_head a, b;
-+	LIST_HEAD(list);
-+
-+	list_add_tail(&a, &list);
-+	list_add_tail(&b, &list);
-+
-+	/* should be [list] -> a -> b */
-+	KUNIT_EXPECT_PTR_EQ(test, list.next, &a);
-+	KUNIT_EXPECT_PTR_EQ(test, a.prev, &list);
-+	KUNIT_EXPECT_PTR_EQ(test, a.next, &b);
-+}
-+
-+static void list_test_list_del(struct kunit *test)
-+{
-+	struct list_head a, b;
-+	LIST_HEAD(list);
-+
-+	list_add_tail(&a, &list);
-+	list_add_tail(&b, &list);
-+
-+	/* before: [list] -> a -> b */
-+	list_del(&a);
-+
-+	/* now: [list] -> b */
-+	KUNIT_EXPECT_PTR_EQ(test, list.next, &b);
-+	KUNIT_EXPECT_PTR_EQ(test, b.prev, &list);
-+}
-+
-+static void list_test_list_replace(struct kunit *test)
-+{
-+	struct list_head a_old, a_new, b;
-+	LIST_HEAD(list);
-+
-+	list_add_tail(&a_old, &list);
-+	list_add_tail(&b, &list);
-+
-+	/* before: [list] -> a_old -> b */
-+	list_replace(&a_old, &a_new);
-+
-+	/* now: [list] -> a_new -> b */
-+	KUNIT_EXPECT_PTR_EQ(test, list.next, &a_new);
-+	KUNIT_EXPECT_PTR_EQ(test, b.prev, &a_new);
-+}
-+
-+static void list_test_list_replace_init(struct kunit *test)
-+{
-+	struct list_head a_old, a_new, b;
-+	LIST_HEAD(list);
-+
-+	list_add_tail(&a_old, &list);
-+	list_add_tail(&b, &list);
-+
-+	/* before: [list] -> a_old -> b */
-+	list_replace_init(&a_old, &a_new);
-+
-+	/* now: [list] -> a_new -> b */
-+	KUNIT_EXPECT_PTR_EQ(test, list.next, &a_new);
-+	KUNIT_EXPECT_PTR_EQ(test, b.prev, &a_new);
-+
-+	/* check a_old is empty (initialized) */
-+	KUNIT_EXPECT_TRUE(test, list_empty_careful(&a_old));
-+}
-+
-+static void list_test_list_swap(struct kunit *test)
-+{
-+	struct list_head a, b;
-+	LIST_HEAD(list);
-+
-+	list_add_tail(&a, &list);
-+	list_add_tail(&b, &list);
-+
-+	/* before: [list] -> a -> b */
-+	list_swap(&a, &b);
-+
-+	/* after: [list] -> b -> a */
-+	KUNIT_EXPECT_PTR_EQ(test, &b, list.next);
-+	KUNIT_EXPECT_PTR_EQ(test, &a, list.prev);
-+
-+	KUNIT_EXPECT_PTR_EQ(test, &a, b.next);
-+	KUNIT_EXPECT_PTR_EQ(test, &list, b.prev);
-+
-+	KUNIT_EXPECT_PTR_EQ(test, &list, a.next);
-+	KUNIT_EXPECT_PTR_EQ(test, &b, a.prev);
-+}
-+
-+static void list_test_list_del_init(struct kunit *test)
-+{
-+	struct list_head a, b;
-+	LIST_HEAD(list);
-+
-+	list_add_tail(&a, &list);
-+	list_add_tail(&b, &list);
-+
-+	/* before: [list] -> a -> b */
-+	list_del_init(&a);
-+	/* after: [list] -> b, a initialised */
-+
-+	KUNIT_EXPECT_PTR_EQ(test, list.next, &b);
-+	KUNIT_EXPECT_PTR_EQ(test, b.prev, &list);
-+	KUNIT_EXPECT_TRUE(test, list_empty_careful(&a));
-+}
-+
-+static void list_test_list_move(struct kunit *test)
-+{
-+	struct list_head a, b;
-+	LIST_HEAD(list1);
-+	LIST_HEAD(list2);
-+
-+	list_add_tail(&a, &list1);
-+	list_add_tail(&b, &list2);
-+
-+	/* before: [list1] -> a, [list2] -> b */
-+	list_move(&a, &list2);
-+	/* after: [list1] empty, [list2] -> a -> b */
-+
-+	KUNIT_EXPECT_TRUE(test, list_empty(&list1));
-+
-+	KUNIT_EXPECT_PTR_EQ(test, &a, list2.next);
-+	KUNIT_EXPECT_PTR_EQ(test, &b, a.next);
-+}
-+
-+static void list_test_list_move_tail(struct kunit *test)
-+{
-+	struct list_head a, b;
-+	LIST_HEAD(list1);
-+	LIST_HEAD(list2);
-+
-+	list_add_tail(&a, &list1);
-+	list_add_tail(&b, &list2);
-+
-+	/* before: [list1] -> a, [list2] -> b */
-+	list_move_tail(&a, &list2);
-+	/* after: [list1] empty, [list2] -> b -> a */
-+
-+	KUNIT_EXPECT_TRUE(test, list_empty(&list1));
-+
-+	KUNIT_EXPECT_PTR_EQ(test, &b, list2.next);
-+	KUNIT_EXPECT_PTR_EQ(test, &a, b.next);
-+}
-+
-+static void list_test_list_bulk_move_tail(struct kunit *test)
-+{
-+	struct list_head a, b, c, d, x, y;
-+	struct list_head *list1_values[] = { &x, &b, &c, &y };
-+	struct list_head *list2_values[] = { &a, &d };
-+	struct list_head *ptr;
-+	LIST_HEAD(list1);
-+	LIST_HEAD(list2);
-+	int i = 0;
-+
-+	list_add_tail(&x, &list1);
-+	list_add_tail(&y, &list1);
-+
-+	list_add_tail(&a, &list2);
-+	list_add_tail(&b, &list2);
-+	list_add_tail(&c, &list2);
-+	list_add_tail(&d, &list2);
-+
-+	/* before: [list1] -> x -> y, [list2] -> a -> b -> c -> d */
-+	list_bulk_move_tail(&y, &b, &c);
-+	/* after: [list1] -> x -> b -> c -> y, [list2] -> a -> d */
-+
-+	list_for_each(ptr, &list1) {
-+		KUNIT_EXPECT_PTR_EQ(test, ptr, list1_values[i]);
-+		i++;
-+	}
-+	KUNIT_EXPECT_EQ(test, i, 4);
-+	i = 0;
-+	list_for_each(ptr, &list2) {
-+		KUNIT_EXPECT_PTR_EQ(test, ptr, list2_values[i]);
-+		i++;
-+	}
-+	KUNIT_EXPECT_EQ(test, i, 2);
-+}
-+
-+static void list_test_list_is_first(struct kunit *test)
-+{
-+	struct list_head a, b;
-+	LIST_HEAD(list);
-+
-+	list_add_tail(&a, &list);
-+	list_add_tail(&b, &list);
-+
-+	KUNIT_EXPECT_TRUE(test, list_is_first(&a, &list));
-+	KUNIT_EXPECT_FALSE(test, list_is_first(&b, &list));
-+}
-+
-+static void list_test_list_is_last(struct kunit *test)
-+{
-+	struct list_head a, b;
-+	LIST_HEAD(list);
-+
-+	list_add_tail(&a, &list);
-+	list_add_tail(&b, &list);
-+
-+	KUNIT_EXPECT_FALSE(test, list_is_last(&a, &list));
-+	KUNIT_EXPECT_TRUE(test, list_is_last(&b, &list));
-+}
-+
-+static void list_test_list_empty(struct kunit *test)
-+{
-+	struct list_head a;
-+	LIST_HEAD(list1);
-+	LIST_HEAD(list2);
-+
-+	list_add_tail(&a, &list1);
-+
-+	KUNIT_EXPECT_FALSE(test, list_empty(&list1));
-+	KUNIT_EXPECT_TRUE(test, list_empty(&list2));
-+}
-+
-+static void list_test_list_empty_careful(struct kunit *test)
-+{
-+	/* This test doesn't check correctness under concurrent access */
-+	struct list_head a;
-+	LIST_HEAD(list1);
-+	LIST_HEAD(list2);
-+
-+	list_add_tail(&a, &list1);
-+
-+	KUNIT_EXPECT_FALSE(test, list_empty_careful(&list1));
-+	KUNIT_EXPECT_TRUE(test, list_empty_careful(&list2));
-+}
-+
-+static void list_test_list_rotate_left(struct kunit *test)
-+{
-+	struct list_head a, b;
-+	LIST_HEAD(list);
-+
-+	list_add_tail(&a, &list);
-+	list_add_tail(&b, &list);
-+
-+	/* before: [list] -> a -> b */
-+	list_rotate_left(&list);
-+	/* after: [list] -> b -> a */
-+
-+	KUNIT_EXPECT_PTR_EQ(test, list.next, &b);
-+	KUNIT_EXPECT_PTR_EQ(test, b.prev, &list);
-+	KUNIT_EXPECT_PTR_EQ(test, b.next, &a);
-+}
-+
-+static void list_test_list_rotate_to_front(struct kunit *test)
-+{
-+	struct list_head a, b, c, d;
-+	struct list_head *list_values[] = { &c, &d, &a, &b };
-+	struct list_head *ptr;
-+	LIST_HEAD(list);
-+	int i = 0;
-+
-+	list_add_tail(&a, &list);
-+	list_add_tail(&b, &list);
-+	list_add_tail(&c, &list);
-+	list_add_tail(&d, &list);
-+
-+	/* before: [list] -> a -> b -> c -> d */
-+	list_rotate_to_front(&c, &list);
-+	/* after: [list] -> c -> d -> a -> b */
-+
-+	list_for_each(ptr, &list) {
-+		KUNIT_EXPECT_PTR_EQ(test, ptr, list_values[i]);
-+		i++;
-+	}
-+	KUNIT_EXPECT_EQ(test, i, 4);
-+}
-+
-+static void list_test_list_is_singular(struct kunit *test)
-+{
-+	struct list_head a, b;
-+	LIST_HEAD(list);
-+
-+	/* [list] empty */
-+	KUNIT_EXPECT_FALSE(test, list_is_singular(&list));
-+
-+	list_add_tail(&a, &list);
-+
-+	/* [list] -> a */
-+	KUNIT_EXPECT_TRUE(test, list_is_singular(&list));
-+
-+	list_add_tail(&b, &list);
-+
-+	/* [list] -> a -> b */
-+	KUNIT_EXPECT_FALSE(test, list_is_singular(&list));
-+}
-+
-+static void list_test_list_cut_position(struct kunit *test)
-+{
-+	struct list_head entries[3], *cur;
-+	LIST_HEAD(list1);
-+	LIST_HEAD(list2);
-+	int i = 0;
-+
-+	list_add_tail(&entries[0], &list1);
-+	list_add_tail(&entries[1], &list1);
-+	list_add_tail(&entries[2], &list1);
-+
-+	/* before: [list1] -> entries[0] -> entries[1] -> entries[2] */
-+	list_cut_position(&list2, &list1, &entries[1]);
-+	/* after: [list2] -> entries[0] -> entries[1], [list1] -> entries[2] */
-+
-+	list_for_each(cur, &list2) {
-+		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
-+		i++;
-+	}
-+
-+	KUNIT_EXPECT_EQ(test, i, 2);
-+
-+	list_for_each(cur, &list1) {
-+		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
-+		i++;
-+	}
-+}
-+
-+static void list_test_list_cut_before(struct kunit *test)
-+{
-+	struct list_head entries[3], *cur;
-+	LIST_HEAD(list1);
-+	LIST_HEAD(list2);
-+	int i = 0;
-+
-+	list_add_tail(&entries[0], &list1);
-+	list_add_tail(&entries[1], &list1);
-+	list_add_tail(&entries[2], &list1);
-+
-+	/* before: [list1] -> entries[0] -> entries[1] -> entries[2] */
-+	list_cut_before(&list2, &list1, &entries[1]);
-+	/* after: [list2] -> entries[0], [list1] -> entries[1] -> entries[2] */
-+
-+	list_for_each(cur, &list2) {
-+		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
-+		i++;
-+	}
-+
-+	KUNIT_EXPECT_EQ(test, i, 1);
-+
-+	list_for_each(cur, &list1) {
-+		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
-+		i++;
-+	}
-+}
-+
-+static void list_test_list_splice(struct kunit *test)
-+{
-+	struct list_head entries[5], *cur;
-+	LIST_HEAD(list1);
-+	LIST_HEAD(list2);
-+	int i = 0;
-+
-+	list_add_tail(&entries[0], &list1);
-+	list_add_tail(&entries[1], &list1);
-+	list_add_tail(&entries[2], &list2);
-+	list_add_tail(&entries[3], &list2);
-+	list_add_tail(&entries[4], &list1);
-+
-+	/* before: [list1]->e[0]->e[1]->e[4], [list2]->e[2]->e[3] */
-+	list_splice(&list2, &entries[1]);
-+	/* after: [list1]->e[0]->e[1]->e[2]->e[3]->e[4], [list2] uninit */
-+
-+	list_for_each(cur, &list1) {
-+		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
-+		i++;
-+	}
-+
-+	KUNIT_EXPECT_EQ(test, i, 5);
-+}
-+
-+static void list_test_list_splice_tail(struct kunit *test)
-+{
-+	struct list_head entries[5], *cur;
-+	LIST_HEAD(list1);
-+	LIST_HEAD(list2);
-+	int i = 0;
-+
-+	list_add_tail(&entries[0], &list1);
-+	list_add_tail(&entries[1], &list1);
-+	list_add_tail(&entries[2], &list2);
-+	list_add_tail(&entries[3], &list2);
-+	list_add_tail(&entries[4], &list1);
-+
-+	/* before: [list1]->e[0]->e[1]->e[4], [list2]->e[2]->e[3] */
-+	list_splice_tail(&list2, &entries[4]);
-+	/* after: [list1]->e[0]->e[1]->e[2]->e[3]->e[4], [list2] uninit */
-+
-+	list_for_each(cur, &list1) {
-+		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
-+		i++;
-+	}
-+
-+	KUNIT_EXPECT_EQ(test, i, 5);
-+}
-+
-+static void list_test_list_splice_init(struct kunit *test)
-+{
-+	struct list_head entries[5], *cur;
-+	LIST_HEAD(list1);
-+	LIST_HEAD(list2);
-+	int i = 0;
-+
-+	list_add_tail(&entries[0], &list1);
-+	list_add_tail(&entries[1], &list1);
-+	list_add_tail(&entries[2], &list2);
-+	list_add_tail(&entries[3], &list2);
-+	list_add_tail(&entries[4], &list1);
-+
-+	/* before: [list1]->e[0]->e[1]->e[4], [list2]->e[2]->e[3] */
-+	list_splice_init(&list2, &entries[1]);
-+	/* after: [list1]->e[0]->e[1]->e[2]->e[3]->e[4], [list2] empty */
-+
-+	list_for_each(cur, &list1) {
-+		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
-+		i++;
-+	}
-+
-+	KUNIT_EXPECT_EQ(test, i, 5);
-+
-+	KUNIT_EXPECT_TRUE(test, list_empty_careful(&list2));
-+}
-+
-+static void list_test_list_splice_tail_init(struct kunit *test)
-+{
-+	struct list_head entries[5], *cur;
-+	LIST_HEAD(list1);
-+	LIST_HEAD(list2);
-+	int i = 0;
-+
-+	list_add_tail(&entries[0], &list1);
-+	list_add_tail(&entries[1], &list1);
-+	list_add_tail(&entries[2], &list2);
-+	list_add_tail(&entries[3], &list2);
-+	list_add_tail(&entries[4], &list1);
-+
-+	/* before: [list1]->e[0]->e[1]->e[4], [list2]->e[2]->e[3] */
-+	list_splice_tail_init(&list2, &entries[4]);
-+	/* after: [list1]->e[0]->e[1]->e[2]->e[3]->e[4], [list2] empty */
-+
-+	list_for_each(cur, &list1) {
-+		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
-+		i++;
-+	}
-+
-+	KUNIT_EXPECT_EQ(test, i, 5);
-+
-+	KUNIT_EXPECT_TRUE(test, list_empty_careful(&list2));
-+}
-+
-+static void list_test_list_entry(struct kunit *test)
-+{
-+	struct list_test_struct test_struct;
-+
-+	KUNIT_EXPECT_PTR_EQ(test, &test_struct, list_entry(&(test_struct.list), struct list_test_struct, list));
-+}
-+
-+static void list_test_list_first_entry(struct kunit *test)
-+{
-+	struct list_test_struct test_struct1, test_struct2;
-+	LIST_HEAD(list);
-+
-+	list_add_tail(&test_struct1.list, &list);
-+	list_add_tail(&test_struct2.list, &list);
-+
-+
-+	KUNIT_EXPECT_PTR_EQ(test, &test_struct1, list_first_entry(&list, struct list_test_struct, list));
-+}
-+
-+static void list_test_list_last_entry(struct kunit *test)
-+{
-+	struct list_test_struct test_struct1, test_struct2;
-+	LIST_HEAD(list);
-+
-+	list_add_tail(&test_struct1.list, &list);
-+	list_add_tail(&test_struct2.list, &list);
-+
-+
-+	KUNIT_EXPECT_PTR_EQ(test, &test_struct2, list_last_entry(&list, struct list_test_struct, list));
-+}
-+
-+static void list_test_list_first_entry_or_null(struct kunit *test)
-+{
-+	struct list_test_struct test_struct1, test_struct2;
-+	LIST_HEAD(list);
-+
-+	KUNIT_EXPECT_FALSE(test, list_first_entry_or_null(&list, struct list_test_struct, list));
-+
-+	list_add_tail(&test_struct1.list, &list);
-+	list_add_tail(&test_struct2.list, &list);
-+
-+	KUNIT_EXPECT_PTR_EQ(test, &test_struct1, list_first_entry_or_null(&list, struct list_test_struct, list));
-+}
-+
-+static void list_test_list_next_entry(struct kunit *test)
-+{
-+	struct list_test_struct test_struct1, test_struct2;
-+	LIST_HEAD(list);
-+
-+	list_add_tail(&test_struct1.list, &list);
-+	list_add_tail(&test_struct2.list, &list);
-+
-+
-+	KUNIT_EXPECT_PTR_EQ(test, &test_struct2, list_next_entry(&test_struct1, list));
-+}
-+
-+static void list_test_list_prev_entry(struct kunit *test)
-+{
-+	struct list_test_struct test_struct1, test_struct2;
-+	LIST_HEAD(list);
-+
-+	list_add_tail(&test_struct1.list, &list);
-+	list_add_tail(&test_struct2.list, &list);
-+
-+
-+	KUNIT_EXPECT_PTR_EQ(test, &test_struct1, list_prev_entry(&test_struct2, list));
-+}
-+
-+static void list_test_list_for_each(struct kunit *test)
-+{
-+	struct list_head entries[3], *cur;
-+	LIST_HEAD(list);
-+	int i = 0;
-+
-+	list_add_tail(&entries[0], &list);
-+	list_add_tail(&entries[1], &list);
-+	list_add_tail(&entries[2], &list);
-+
-+	list_for_each(cur, &list) {
-+		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
-+		i++;
-+	}
-+
-+	KUNIT_EXPECT_EQ(test, i, 3);
-+}
-+
-+static void list_test_list_for_each_prev(struct kunit *test)
-+{
-+	struct list_head entries[3], *cur;
-+	LIST_HEAD(list);
-+	int i = 2;
-+
-+	list_add_tail(&entries[0], &list);
-+	list_add_tail(&entries[1], &list);
-+	list_add_tail(&entries[2], &list);
-+
-+	list_for_each_prev(cur, &list) {
-+		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
-+		i--;
-+	}
-+
-+	KUNIT_EXPECT_EQ(test, i, -1);
-+}
-+
-+static void list_test_list_for_each_safe(struct kunit *test)
-+{
-+	struct list_head entries[3], *cur, *n;
-+	LIST_HEAD(list);
-+	int i = 0;
-+
-+
-+	list_add_tail(&entries[0], &list);
-+	list_add_tail(&entries[1], &list);
-+	list_add_tail(&entries[2], &list);
-+
-+	list_for_each_safe(cur, n, &list) {
-+		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
-+		list_del(&entries[i]);
-+		i++;
-+	}
-+
-+	KUNIT_EXPECT_EQ(test, i, 3);
-+	KUNIT_EXPECT_TRUE(test, list_empty(&list));
-+}
-+
-+static void list_test_list_for_each_prev_safe(struct kunit *test)
-+{
-+	struct list_head entries[3], *cur, *n;
-+	LIST_HEAD(list);
-+	int i = 2;
-+
-+	list_add_tail(&entries[0], &list);
-+	list_add_tail(&entries[1], &list);
-+	list_add_tail(&entries[2], &list);
-+
-+	list_for_each_prev_safe(cur, n, &list) {
-+		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
-+		list_del(&entries[i]);
-+		i--;
-+	}
-+
-+	KUNIT_EXPECT_EQ(test, i, -1);
-+	KUNIT_EXPECT_TRUE(test, list_empty(&list));
-+}
-+
-+static void list_test_list_for_each_entry(struct kunit *test)
-+{
-+	struct list_test_struct entries[5], *cur;
-+	static LIST_HEAD(list);
-+	int i = 0;
-+
-+	for (i = 0; i < 5; ++i) {
-+		entries[i].data = i;
-+		list_add_tail(&entries[i].list, &list);
-+	}
-+
-+	i = 0;
-+
-+	list_for_each_entry(cur, &list, list) {
-+		KUNIT_EXPECT_EQ(test, cur->data, i);
-+		i++;
-+	}
-+	
-+	KUNIT_EXPECT_EQ(test, i, 5);
-+}
-+
-+static void list_test_list_for_each_entry_reverse(struct kunit *test)
-+{
-+	struct list_test_struct entries[5], *cur;
-+	static LIST_HEAD(list);
-+	int i = 0;
-+
-+	for (i = 0; i < 5; ++i) {
-+		entries[i].data = i;
-+		list_add_tail(&entries[i].list, &list);
-+	}
-+
-+	i = 4;
-+
-+	list_for_each_entry_reverse(cur, &list, list) {
-+		KUNIT_EXPECT_EQ(test, cur->data, i);
-+		i--;
-+	}
-+	
-+	KUNIT_EXPECT_EQ(test, i, -1);
-+}
-+
-+static struct kunit_case list_test_cases[] = {
-+	KUNIT_CASE(list_test_list_init),
-+	KUNIT_CASE(list_test_list_add),
-+	KUNIT_CASE(list_test_list_add_tail),
-+	KUNIT_CASE(list_test_list_del),
-+	KUNIT_CASE(list_test_list_replace),
-+	KUNIT_CASE(list_test_list_replace_init),
-+	KUNIT_CASE(list_test_list_swap),
-+	KUNIT_CASE(list_test_list_del_init),
-+	KUNIT_CASE(list_test_list_move),
-+	KUNIT_CASE(list_test_list_move_tail),
-+	KUNIT_CASE(list_test_list_bulk_move_tail),
-+	KUNIT_CASE(list_test_list_is_first),
-+	KUNIT_CASE(list_test_list_is_last),
-+	KUNIT_CASE(list_test_list_empty),
-+	KUNIT_CASE(list_test_list_empty_careful),
-+	KUNIT_CASE(list_test_list_rotate_left),
-+	KUNIT_CASE(list_test_list_rotate_to_front),
-+	KUNIT_CASE(list_test_list_is_singular),
-+	KUNIT_CASE(list_test_list_cut_position),
-+	KUNIT_CASE(list_test_list_cut_before),
-+	KUNIT_CASE(list_test_list_splice),
-+	KUNIT_CASE(list_test_list_splice_tail),
-+	KUNIT_CASE(list_test_list_splice_init),
-+	KUNIT_CASE(list_test_list_splice_tail_init),
-+	KUNIT_CASE(list_test_list_entry),
-+	KUNIT_CASE(list_test_list_first_entry),
-+	KUNIT_CASE(list_test_list_last_entry),
-+	KUNIT_CASE(list_test_list_first_entry_or_null),
-+	KUNIT_CASE(list_test_list_next_entry),
-+	KUNIT_CASE(list_test_list_prev_entry),
-+	KUNIT_CASE(list_test_list_for_each),
-+	KUNIT_CASE(list_test_list_for_each_prev),
-+	KUNIT_CASE(list_test_list_for_each_safe),
-+	KUNIT_CASE(list_test_list_for_each_prev_safe),
-+	KUNIT_CASE(list_test_list_for_each_entry),
-+	KUNIT_CASE(list_test_list_for_each_entry_reverse),
-+	{},
-+};
-+
-+static struct kunit_suite list_test_module = {
-+	.name = "list-kunit-test",
-+	.test_cases = list_test_cases,
-+};
-+
-+kunit_test_suite(list_test_module);
 -- 
-2.23.0.866.gb869b98d4c-goog
-
+Best regards,
+Jacek Anaszewski
