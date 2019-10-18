@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6790CCA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFD3CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D33221D7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FD9E222C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:10:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i/jDfxdk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZvzQdFSz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442925AbfJRQKx (ORCPT
+        id S2442935AbfJRQK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:10:53 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:43829 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2442647AbfJRQKv (ORCPT
+        Fri, 18 Oct 2019 12:10:58 -0400
+Received: from mail-yw1-f73.google.com ([209.85.161.73]:42610 "EHLO
+        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2442650AbfJRQK4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:10:51 -0400
-Received: by mail-pf1-f202.google.com with SMTP id i187so4977090pfc.10
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:10:51 -0700 (PDT)
+        Fri, 18 Oct 2019 12:10:56 -0400
+Received: by mail-yw1-f73.google.com with SMTP id o14so4756872ywa.9
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:10:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=jUS0dhIzgmFNCiOAuEUXvcuYNkuGL56ryAS+MUv7C/I=;
-        b=i/jDfxdkcHMKcb5mbJursCxkiE0tLbcAT50ryu4atkNnzE9tZW2TQb4DunSXt4JOkt
-         hyqhR6jkusYNpX0FQ9xmE9MPM+OkoO9XULEt54Q1eChfRkMXo6zH0LLx5BfDV9XxTViq
-         ZY4f/W9+YSMQLmVbr5Hvv7U5xrLsx6ePGTXBQJ2GfNYSLJa/kqRf7pp4MN5xmr1Pm9vV
-         U0cyLViFkAWt3zk7EDLd8J6L/oTDFeTktzFlIC0dgmBDCYk0vOIQhRFpRS9l6HZ8lGvH
-         d40Qs4Z3TDODrADDi1vpWtmXBnOPWrst+YFdZPhbhVcTVQ3PCuWW86qVwWdHqVcy9DgV
-         E2Sw==
+        bh=72rGRuWFiviz942NA6zVkn9gcWlAdBMK2y71uV80e5M=;
+        b=ZvzQdFSzTLbEjP4zxdusVf3ReL3ljnpZzJfPdrbpnE9rMeefuhQHID/ee1FAoqvYLH
+         O+/PdDLy+eoWqhA9UIEIUFRCMC5xqhNowPZWx2ww/HoS+63BhQ5I1HOf+y5t9GV4AlzB
+         4wvvMPqaOkuUSsDFHTVS6xJHhNUp3s1c9Y1ghonvzQD2ZPiXv5LmNp53Biqgoh9GKiCJ
+         afEukw6/WMLv2boh6kNWUds4TgOnVVcCplvVwI02NOYpPnoOVZxpUv2JWmCC5FcJjdP9
+         qyuCgJgGG2jATFBKXIAZK/fXaf2KYXXK+X2rgvP6lspQZZSv0gH/6LOEhAEKe42LtQC+
+         cKeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=jUS0dhIzgmFNCiOAuEUXvcuYNkuGL56ryAS+MUv7C/I=;
-        b=JXuBKFif+pWIf0lK0lMRWwIg+1gvrbYTy75XnOrs4D+mYaQ2kbGNNKlzAzlUTQIYn4
-         t3piV5I4baXMHNBMeVGhgDVeY/R1RCdfx5LgVAX73LGZnjSRZHjWr8iE4h/PLkS0LzU1
-         xyoDbssfCUmKvC4BPMywP1pzh8nA376Go5fNv/taryG9Va1TkyAUQdhpBsIkRIZmjgGF
-         ygcUoB/rbFBz7wbjlCnfU8COQB//ve1wbnuYmUfNcerslNv4KWEcy5S5hQ8Qpowoaijp
-         uaWzvDAIt4mYc/EV3BOD9mVtNACdKWE9NjqhjRn9y5yUJ2xjUNrOm+lgvCgTrtgKdOl+
-         5I8A==
-X-Gm-Message-State: APjAAAV8y12pmPNKuMRBgUiD1t0wngVABdjbkEDVcQeRgF68bQw3NiE9
-        qBUwXoZFHoXSjGAQrPQs2WFsK+bXC8I1sSgCLsA=
-X-Google-Smtp-Source: APXvYqz/HNu+DPymnhir5Vk43GMqjgbnDJ4wWnLMl8QOvY1mBOlys6EjB+4bJm7Ch3Zb+wSpV6DGjPmmablFROD07lw=
-X-Received: by 2002:a63:3201:: with SMTP id y1mr10741272pgy.174.1571415050913;
- Fri, 18 Oct 2019 09:10:50 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 09:10:17 -0700
+        bh=72rGRuWFiviz942NA6zVkn9gcWlAdBMK2y71uV80e5M=;
+        b=KM9cLDQVbkXw8R8pQK3de3EhZz+xtiCoX4JVxt8+DtmDiPqQqYjHn+dCOgOEV90ld4
+         +3q34txxsMtLjaweWEF4UkcmsRWxBpjGh5C1YFBt3qXyQRJd4As70+Ltbv3GQeMm1hAY
+         d5BIZd/6YVCoKg0tLiQSvKoCKWyadw9fpjjVbRNvKWiG30AlNaZYHSz2tscqWviyxZCE
+         VXInN0C1viGICmXxbj0xzrvIae7CsofC4AVJcX6QhqCpPuhDrPLV4j9FKWSvRMUIpKSZ
+         B54KBby6v3SMApRmZVf8njFRSkfblBXIme0Wtx5xEjlc2hUYvcUwdGT5xIJu1XzB9j0I
+         SS9A==
+X-Gm-Message-State: APjAAAXQQh1diR16xUFviAghnSLROnVPL5CCiyeCXdAM3tllnSP2ZFBx
+        fxsCLfjf/MOfxRp56aMmwOdCE4GAgXEt1RED3d8=
+X-Google-Smtp-Source: APXvYqxINkQeafZ9JYtVaWg+qUXlNkxSB5ctm2wREg/j/aMT/J4ez6ebkhDJlYmKEc3YyNUDF8Zxh7j2jKVxFaFkVRU=
+X-Received: by 2002:a0d:d804:: with SMTP id a4mr7899178ywe.454.1571415054615;
+ Fri, 18 Oct 2019 09:10:54 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 09:10:18 -0700
 In-Reply-To: <20191018161033.261971-1-samitolvanen@google.com>
-Message-Id: <20191018161033.261971-3-samitolvanen@google.com>
+Message-Id: <20191018161033.261971-4-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-Subject: [PATCH 02/18] arm64/lib: copy_page: avoid x18 register in assembler code
+Subject: [PATCH 03/18] arm64: kvm: stop treating register x18 as caller save
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -82,85 +82,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-Register x18 will no longer be used as a caller save register in the
-future, so stop using it in the copy_page() code.
+In preparation of using x18 as a task struct pointer register when
+running in the kernel, stop treating it as caller save in the KVM
+guest entry/exit code. Currently, the code assumes there is no need
+to preserve it for the host, given that it would have been assumed
+clobbered anyway by the function call to __guest_enter(). Instead,
+preserve its value and restore it upon return.
 
-Link: https://patchwork.kernel.org/patch/9836869/
+Link: https://patchwork.kernel.org/patch/9836891/
 Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/arm64/lib/copy_page.S | 38 +++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+ arch/arm64/kvm/hyp/entry.S | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/lib/copy_page.S b/arch/arm64/lib/copy_page.S
-index bbb8562396af..8b562264c165 100644
---- a/arch/arm64/lib/copy_page.S
-+++ b/arch/arm64/lib/copy_page.S
-@@ -34,45 +34,45 @@ alternative_else_nop_endif
- 	ldp	x14, x15, [x1, #96]
- 	ldp	x16, x17, [x1, #112]
+diff --git a/arch/arm64/kvm/hyp/entry.S b/arch/arm64/kvm/hyp/entry.S
+index e5cc8d66bf53..20bd9a20ea27 100644
+--- a/arch/arm64/kvm/hyp/entry.S
++++ b/arch/arm64/kvm/hyp/entry.S
+@@ -23,6 +23,7 @@
+ 	.pushsection	.hyp.text, "ax"
  
--	mov	x18, #(PAGE_SIZE - 128)
-+	add	x0, x0, #256
- 	add	x1, x1, #128
- 1:
--	subs	x18, x18, #128
-+	tst	x0, #(PAGE_SIZE - 1)
+ .macro save_callee_saved_regs ctxt
++	str	x18,      [\ctxt, #CPU_XREG_OFFSET(18)]
+ 	stp	x19, x20, [\ctxt, #CPU_XREG_OFFSET(19)]
+ 	stp	x21, x22, [\ctxt, #CPU_XREG_OFFSET(21)]
+ 	stp	x23, x24, [\ctxt, #CPU_XREG_OFFSET(23)]
+@@ -38,6 +39,7 @@
+ 	ldp	x25, x26, [\ctxt, #CPU_XREG_OFFSET(25)]
+ 	ldp	x27, x28, [\ctxt, #CPU_XREG_OFFSET(27)]
+ 	ldp	x29, lr,  [\ctxt, #CPU_XREG_OFFSET(29)]
++	ldr	x18,      [\ctxt, #CPU_XREG_OFFSET(18)]
+ .endm
  
- alternative_if ARM64_HAS_NO_HW_PREFETCH
- 	prfm	pldl1strm, [x1, #384]
- alternative_else_nop_endif
+ /*
+@@ -87,12 +89,9 @@ alternative_else_nop_endif
+ 	ldp	x14, x15, [x18, #CPU_XREG_OFFSET(14)]
+ 	ldp	x16, x17, [x18, #CPU_XREG_OFFSET(16)]
  
--	stnp	x2, x3, [x0]
-+	stnp	x2, x3, [x0, #-256]
- 	ldp	x2, x3, [x1]
--	stnp	x4, x5, [x0, #16]
-+	stnp	x4, x5, [x0, #-240]
- 	ldp	x4, x5, [x1, #16]
--	stnp	x6, x7, [x0, #32]
-+	stnp	x6, x7, [x0, #-224]
- 	ldp	x6, x7, [x1, #32]
--	stnp	x8, x9, [x0, #48]
-+	stnp	x8, x9, [x0, #-208]
- 	ldp	x8, x9, [x1, #48]
--	stnp	x10, x11, [x0, #64]
-+	stnp	x10, x11, [x0, #-192]
- 	ldp	x10, x11, [x1, #64]
--	stnp	x12, x13, [x0, #80]
-+	stnp	x12, x13, [x0, #-176]
- 	ldp	x12, x13, [x1, #80]
--	stnp	x14, x15, [x0, #96]
-+	stnp	x14, x15, [x0, #-160]
- 	ldp	x14, x15, [x1, #96]
--	stnp	x16, x17, [x0, #112]
-+	stnp	x16, x17, [x0, #-144]
- 	ldp	x16, x17, [x1, #112]
+-	// Restore guest regs x19-x29, lr
++	// Restore guest regs x18-x29, lr
+ 	restore_callee_saved_regs x18
  
- 	add	x0, x0, #128
- 	add	x1, x1, #128
+-	// Restore guest reg x18
+-	ldr	x18,      [x18, #CPU_XREG_OFFSET(18)]
+-
+ 	// Do not touch any register after this!
+ 	eret
+ 	sb
+@@ -114,7 +113,7 @@ ENTRY(__guest_exit)
+ 	// Retrieve the guest regs x0-x1 from the stack
+ 	ldp	x2, x3, [sp], #16	// x0, x1
  
--	b.gt	1b
-+	b.ne	1b
+-	// Store the guest regs x0-x1 and x4-x18
++	// Store the guest regs x0-x1 and x4-x17
+ 	stp	x2, x3,   [x1, #CPU_XREG_OFFSET(0)]
+ 	stp	x4, x5,   [x1, #CPU_XREG_OFFSET(4)]
+ 	stp	x6, x7,   [x1, #CPU_XREG_OFFSET(6)]
+@@ -123,9 +122,8 @@ ENTRY(__guest_exit)
+ 	stp	x12, x13, [x1, #CPU_XREG_OFFSET(12)]
+ 	stp	x14, x15, [x1, #CPU_XREG_OFFSET(14)]
+ 	stp	x16, x17, [x1, #CPU_XREG_OFFSET(16)]
+-	str	x18,      [x1, #CPU_XREG_OFFSET(18)]
  
--	stnp	x2, x3, [x0]
--	stnp	x4, x5, [x0, #16]
--	stnp	x6, x7, [x0, #32]
--	stnp	x8, x9, [x0, #48]
--	stnp	x10, x11, [x0, #64]
--	stnp	x12, x13, [x0, #80]
--	stnp	x14, x15, [x0, #96]
--	stnp	x16, x17, [x0, #112]
-+	stnp	x2, x3, [x0, #-256]
-+	stnp	x4, x5, [x0, #-240]
-+	stnp	x6, x7, [x0, #-224]
-+	stnp	x8, x9, [x0, #-208]
-+	stnp	x10, x11, [x0, #-192]
-+	stnp	x12, x13, [x0, #-176]
-+	stnp	x14, x15, [x0, #-160]
-+	stnp	x16, x17, [x0, #-144]
+-	// Store the guest regs x19-x29, lr
++	// Store the guest regs x18-x29, lr
+ 	save_callee_saved_regs x1
  
- 	ret
- ENDPROC(copy_page)
+ 	get_host_ctxt	x2, x3
 -- 
 2.23.0.866.gb869b98d4c-goog
 
