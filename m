@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6964CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA030CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 770E620640
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99B5320640
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:27:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437650;
-	bh=g/1jJJEFKW5X1R+aFTvTd5Tfcgjad6O4MnPohfqGe8c=;
+	s=default; t=1571437656;
+	bh=j4NMKFZCEhXHqiCHNdvO7vjenNr3RiF8my1Dx+JIa0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AjxWEWcKWpFEefcfCRojI6qWjYf9IdG7gZOYfC0tQoAa8YaMaqUk8lxrRA2eZtRHs
-	 4ibnj02nBnSC8bM8/fs9ONwEA65KN9ET0r3Cn2EINRowQEkTjeLdHsJsElhI1G5LLK
-	 RjhYiFrZicJTayaMi+Qo7XuxYBqZfSZqYQGQcGPg=
+	b=qDxV6j6QpxeVvtCnk9EewPJP8G3zY5J3WFDcdOtUE5afup8lvZmoZIHR8VooPZTnr
+	 +TXq3EH75/UroVSdodxmzTX4irJLgKYt/Jj4J0T7f9PdHiDtzsIGTt5oQ80coXeNr9
+	 oSz3IUL69EB3KTXB+22ZfFeVGcaFHgFPQMO8+oxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406522AbfJRW12 (ORCPT
+        id S2406572AbfJRW1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:27:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35608 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:27:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727569AbfJRWEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:04:00 -0400
+        id S1727521AbfJRWD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:03:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DABB122459;
-        Fri, 18 Oct 2019 22:03:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73ACD22467;
+        Fri, 18 Oct 2019 22:03:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436239;
-        bh=g/1jJJEFKW5X1R+aFTvTd5Tfcgjad6O4MnPohfqGe8c=;
+        s=default; t=1571436237;
+        bh=j4NMKFZCEhXHqiCHNdvO7vjenNr3RiF8my1Dx+JIa0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vf4PalOdWMkc0C5DcfyqDwlrCLPhVgd6yISvUrO8BWibbGKFObIgApSnHgUb/q+Qs
-         PXh3fexKLrfvk3CKJCcDIIdO6lAJ5itgeFT25NA2TnsbXqi9TKjsT0aRj/HFVQaFAz
-         WNbKZhOpW6CRzjtOlwukiozEeOHx4JrZ0zukiYAg=
+        b=GF21DK0CgQFtCx+W56It068F5uPeCmYzz6UyjsA/XHWrq/jSzo8VXjGPlu/IgR3O8
+         sUpMJjo4ertgNz2UrZv+LcPtMd5WhHXcd+EE/EMcEkuLmDDwvhZ70K1Xn7gQVPHZYe
+         s4gCeTKiJU04/RQMX/HN8DXETbLtVao0+wDQG2QQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 24/89] nfs: Fix nfsi->nrequests count error on nfs_inode_remove_request
-Date:   Fri, 18 Oct 2019 18:02:19 -0400
-Message-Id: <20191018220324.8165-24-sashal@kernel.org>
+Cc:     Cristian Marussi <cristian.marussi@arm.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 22/89] kselftest: exclude failed TARGETS from runlist
+Date:   Fri, 18 Oct 2019 18:02:17 -0400
+Message-Id: <20191018220324.8165-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -60,89 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+From: Cristian Marussi <cristian.marussi@arm.com>
 
-[ Upstream commit 33ea5aaa87cdae0f9af4d6b7ee4f650a1a36fd1d ]
+[ Upstream commit 131b30c94fbc0adb15f911609884dd39dada8f00 ]
 
-When xfstests testing, there are some WARNING as below:
+A TARGET which failed to be built/installed should not be included in the
+runlist generated inside the run_kselftest.sh script.
 
-WARNING: CPU: 0 PID: 6235 at fs/nfs/inode.c:122 nfs_clear_inode+0x9c/0xd8
-Modules linked in:
-CPU: 0 PID: 6235 Comm: umount.nfs
-Hardware name: linux,dummy-virt (DT)
-pstate: 60000005 (nZCv daif -PAN -UAO)
-pc : nfs_clear_inode+0x9c/0xd8
-lr : nfs_evict_inode+0x60/0x78
-sp : fffffc000f68fc00
-x29: fffffc000f68fc00 x28: fffffe00c53155c0
-x27: fffffe00c5315000 x26: fffffc0009a63748
-x25: fffffc000f68fd18 x24: fffffc000bfaaf40
-x23: fffffc000936d3c0 x22: fffffe00c4ff5e20
-x21: fffffc000bfaaf40 x20: fffffe00c4ff5d10
-x19: fffffc000c056000 x18: 000000000000003c
-x17: 0000000000000000 x16: 0000000000000000
-x15: 0000000000000040 x14: 0000000000000228
-x13: fffffc000c3a2000 x12: 0000000000000045
-x11: 0000000000000000 x10: 0000000000000000
-x9 : 0000000000000000 x8 : 0000000000000000
-x7 : 0000000000000000 x6 : fffffc00084b027c
-x5 : fffffc0009a64000 x4 : fffffe00c0e77400
-x3 : fffffc000c0563a8 x2 : fffffffffffffffb
-x1 : 000000000000764e x0 : 0000000000000001
-Call trace:
- nfs_clear_inode+0x9c/0xd8
- nfs_evict_inode+0x60/0x78
- evict+0x108/0x380
- dispose_list+0x70/0xa0
- evict_inodes+0x194/0x210
- generic_shutdown_super+0xb0/0x220
- nfs_kill_super+0x40/0x88
- deactivate_locked_super+0xb4/0x120
- deactivate_super+0x144/0x160
- cleanup_mnt+0x98/0x148
- __cleanup_mnt+0x38/0x50
- task_work_run+0x114/0x160
- do_notify_resume+0x2f8/0x308
- work_pending+0x8/0x14
-
-The nrequest should be increased/decreased only if PG_INODE_REF flag
-was setted.
-
-But in the nfs_inode_remove_request function, it maybe decrease when
-no PG_INODE_REF flag, this maybe lead nrequests count error.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/write.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/testing/selftests/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 85ca49549b39b..52cab65f91cf0 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -786,7 +786,6 @@ static void nfs_inode_remove_request(struct nfs_page *req)
- 	struct nfs_inode *nfsi = NFS_I(inode);
- 	struct nfs_page *head;
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index 25b43a8c2b159..1779923d7a7b8 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -198,8 +198,12 @@ ifdef INSTALL_PATH
+ 	echo "  cat /dev/null > \$$logfile" >> $(ALL_SCRIPT)
+ 	echo "fi" >> $(ALL_SCRIPT)
  
--	atomic_long_dec(&nfsi->nrequests);
- 	if (nfs_page_group_sync_on_bit(req, PG_REMOVE)) {
- 		head = req->wb_head;
- 
-@@ -799,8 +798,10 @@ static void nfs_inode_remove_request(struct nfs_page *req)
- 		spin_unlock(&mapping->private_lock);
- 	}
- 
--	if (test_and_clear_bit(PG_INODE_REF, &req->wb_flags))
-+	if (test_and_clear_bit(PG_INODE_REF, &req->wb_flags)) {
- 		nfs_release_request(req);
-+		atomic_long_dec(&nfsi->nrequests);
-+	}
- }
- 
- static void
++	@# While building run_kselftest.sh skip also non-existent TARGET dirs:
++	@# they could be the result of a build failure and should NOT be
++	@# included in the generated runlist.
+ 	for TARGET in $(TARGETS); do \
+ 		BUILD_TARGET=$$BUILD/$$TARGET;	\
++		[ ! -d $$INSTALL_PATH/$$TARGET ] && echo "Skipping non-existent dir: $$TARGET" && continue; \
+ 		echo "[ -w /dev/kmsg ] && echo \"kselftest: Running tests in $$TARGET\" >> /dev/kmsg" >> $(ALL_SCRIPT); \
+ 		echo "cd $$TARGET" >> $(ALL_SCRIPT); \
+ 		echo -n "run_many" >> $(ALL_SCRIPT); \
 -- 
 2.20.1
 
