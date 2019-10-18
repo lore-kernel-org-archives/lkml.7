@@ -7,53 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4274CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EA9CA9EAB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9541820872
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B128521852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:17:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437074;
-	bh=Dr07u1IWmJ4xY9s/UFzSO3UPZDv9wy6lz4GnA0jH21c=;
+	s=default; t=1571437076;
+	bh=2wCmBqoCUtQczstuSu+E79NktzrLM54hbOybIdGj5sM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DJijhaMMMwxZvvG+Fx8esqLOhMSmB6nb9xOQlCCXjVpuGSRfnbn0bvzyncVTNM+VD
-	 lMaeYaoYjlNaYefQb60xR3e+HOOuNEjNJHwz4lenT/+OVyIMgohiOuAnmLPHaed23k
-	 LMV0+NtxtTc167KKMmN698ZVSjZd3F/AJnJJM9m0=
+	b=fvRu6wWEdrXjcoxQjNIf1/mNmynhUPQ5UkjlRy2sPmvJXHeEV1uhiYsYQZr3GYlNY
+	 efBG0u/Azb/mjwpqu/iX8J3ZO+V1m/jb0cVHnoz1e43teke+XXP1Qab3KdTYPpXr0w
+	 fPH1NDPpXMdeirKvmBmK35zB1klmjrf5yIDedGiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393572AbfJRWRx (ORCPT
+        id S1733023AbfJRWHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:17:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39902 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:07:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733030AbfJRWHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:07:36 -0400
+        id S1732905AbfJRWHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:07:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DC442245C;
-        Fri, 18 Oct 2019 22:07:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 288C422468;
+        Fri, 18 Oct 2019 22:07:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436456;
-        bh=Dr07u1IWmJ4xY9s/UFzSO3UPZDv9wy6lz4GnA0jH21c=;
+        s=default; t=1571436449;
+        bh=2wCmBqoCUtQczstuSu+E79NktzrLM54hbOybIdGj5sM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CPsydKzTrc5LiDxwsvoOGFXDa0IXRmdDoW+XVp6hW3MVTPFhl7oyKsAbVAn82oppJ
-         ENCDtTRmlnZ32IbH+UBQiI95N8DRYnCp4qj6nehuiuE5azkl178+WRPh9PEHILBi6B
-         PLUfevcVyV+zwPanyKtFQX+5i+fdQyGn3PSJh1uc=
+        b=E5S0hM185r9EjWnnSCmP5pAUsrDXR0TMVmFvxSwsmgq85j0AXVuS6dplUqr64VZA1
+         LMMBZ1gPQhy2UWzHJDhBPCkk25MEB/QE89MD8AH0NSqA56wycUurQr1HS385T7s6Lo
+         479GwDi2MXJkz5QggBKBDChMIVUn2lU/5edlSB+E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nirmoy Das <nirmoy.das@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 088/100] drm/amdgpu: fix memory leak
-Date:   Fri, 18 Oct 2019 18:05:13 -0400
-Message-Id: <20191018220525.9042-88-sashal@kernel.org>
+Cc:     Yunfeng Ye <yeyunfeng@huawei.com>, Will Deacon <will@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 084/100] arm64: armv8_deprecated: Checking return value for memory allocation
+Date:   Fri, 18 Oct 2019 18:05:09 -0400
+Message-Id: <20191018220525.9042-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,69 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nirmoy Das <nirmoy.das@amd.com>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-[ Upstream commit 083164dbdb17c5ea4ad92c1782b59c9d75567790 ]
+[ Upstream commit 3e7c93bd04edfb0cae7dad1215544c9350254b8f ]
 
-cleanup error handling code and make sure temporary info array
-with the handles are freed by amdgpu_bo_list_put() on
-idr_replace()'s failure.
+There are no return value checking when using kzalloc() and kcalloc() for
+memory allocation. so add it.
 
-Signed-off-by: Nirmoy Das <nirmoy.das@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ arch/arm64/kernel/armv8_deprecated.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-index b80243d3972e4..ce7f18c5ccb26 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-@@ -264,7 +264,7 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
+diff --git a/arch/arm64/kernel/armv8_deprecated.c b/arch/arm64/kernel/armv8_deprecated.c
+index 92be1d12d5908..39dc98dd78ebf 100644
+--- a/arch/arm64/kernel/armv8_deprecated.c
++++ b/arch/arm64/kernel/armv8_deprecated.c
+@@ -177,6 +177,9 @@ static void __init register_insn_emulation(struct insn_emulation_ops *ops)
+ 	struct insn_emulation *insn;
  
- 	r = amdgpu_bo_create_list_entry_array(&args->in, &info);
- 	if (r)
--		goto error_free;
-+		return r;
- 
- 	switch (args->in.operation) {
- 	case AMDGPU_BO_LIST_OP_CREATE:
-@@ -277,8 +277,7 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
- 		r = idr_alloc(&fpriv->bo_list_handles, list, 1, 0, GFP_KERNEL);
- 		mutex_unlock(&fpriv->bo_list_lock);
- 		if (r < 0) {
--			amdgpu_bo_list_put(list);
--			return r;
-+			goto error_put_list;
- 		}
- 
- 		handle = r;
-@@ -300,9 +299,8 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
- 		mutex_unlock(&fpriv->bo_list_lock);
- 
- 		if (IS_ERR(old)) {
--			amdgpu_bo_list_put(list);
- 			r = PTR_ERR(old);
--			goto error_free;
-+			goto error_put_list;
- 		}
- 
- 		amdgpu_bo_list_put(old);
-@@ -319,8 +317,10 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
- 
- 	return 0;
- 
-+error_put_list:
-+	amdgpu_bo_list_put(list);
+ 	insn = kzalloc(sizeof(*insn), GFP_KERNEL);
++	if (!insn)
++		return;
 +
- error_free:
--	if (info)
--		kvfree(info);
-+	kvfree(info);
- 	return r;
- }
+ 	insn->ops = ops;
+ 	insn->min = INSN_UNDEF;
+ 
+@@ -236,6 +239,8 @@ static void __init register_insn_emulation_sysctl(void)
+ 
+ 	insns_sysctl = kcalloc(nr_insn_emulated + 1, sizeof(*sysctl),
+ 			       GFP_KERNEL);
++	if (!insns_sysctl)
++		return;
+ 
+ 	raw_spin_lock_irqsave(&insn_emulation_lock, flags);
+ 	list_for_each_entry(insn, &insn_emulation, node) {
 -- 
 2.20.1
 
