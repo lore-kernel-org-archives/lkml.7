@@ -2,122 +2,95 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C312CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F35CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 420F521D7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:03:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1062F21D7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:03:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="daWXD1ny"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505577AbfJRSC7 (ORCPT
+        id S2505659AbfJRSDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:02:59 -0400
-Received: from mga01.intel.com ([192.55.52.88]:44876 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727054AbfJRSC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:02:58 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 11:02:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,312,1566889200"; 
-   d="scan'208";a="190439301"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by orsmga008.jf.intel.com with ESMTP; 18 Oct 2019 11:02:57 -0700
-Date:   Fri, 18 Oct 2019 11:02:57 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "bberg@redhat.com" <bberg@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "ckellner@redhat.com" <ckellner@redhat.com>
-Subject: Re: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal
- throttle messages
-Message-ID: <20191018180257.GA23835@agluck-desk2.amr.corp.intel.com>
-References: <2c2b65c23be3064504566c5f621c1f37bf7e7326.camel@redhat.com>
- <20191014212101.25719-1-srinivas.pandruvada@linux.intel.com>
- <20191015084833.GD2311@hirez.programming.kicks-ass.net>
- <f481b4ab6dfebbc0637c843e5f1cd4ddfd4bd60b.camel@linux.intel.com>
- <20191016081405.GO2328@hirez.programming.kicks-ass.net>
- <20191016140001.GF1138@zn.tnic>
- <3908561D78D1C84285E8C5FCA982C28F7F4A57D0@ORSMSX115.amr.corp.intel.com>
- <20191017214445.GG14441@zn.tnic>
- <c2ce4ef128aad84616b2dc21f6230ad4db12194b.camel@linux.intel.com>
- <20191018132309.GD17053@zn.tnic>
+        Fri, 18 Oct 2019 14:03:43 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40721 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbfJRSDn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 14:03:43 -0400
+Received: by mail-pf1-f194.google.com with SMTP id x127so4343951pfb.7
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 11:03:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8/ZS+906/9FcfZAV3qaij45dj3UK3E6lm1Y4pz31ip8=;
+        b=daWXD1nygLkP7A5y9K7cowvo3WWYzDRQR4UTxSWALIoMmSexkvrCrGbeludebonnvR
+         lSrvphIFIfHSlvohBF/QW0GdN/0BsjuoIvIcxsQuANTT4o9vsQRiUUtH812PSNUysuQE
+         qTp+cenvmSFjrNCkI12Nt/5rIi7qyfyNrhRto=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8/ZS+906/9FcfZAV3qaij45dj3UK3E6lm1Y4pz31ip8=;
+        b=m+NPcOu5R903IQeihBxZiUtP0gckvnTMi/hK3G5VaQyWAYBSgqqnIYskp7pUNrR6bU
+         HXfY2ZFkLFq1eFt0Z2YdBuzhBMaLwDjT3xnnacO+nvxGmTbfdo0Ku9buAaHgwODeUv4T
+         st6U5Yfu6F21b0TALrHqWdse+dJDHRIk3kcafWE1XbZ8vRGttX66gcGwC4Dl/lkKYe99
+         stAiK8qHgdyGLr/aSKys2eICMKnSYxdjPeFAmJUGAbCp7gOnxi0IFGk0bvLZsyxTNRHV
+         T5ggdcrVyJbvF2YZpL2sBqKxptbJsPJym0kB6p1Or9Ld4zCLMVaoKcobwr84//CEU5A1
+         9Vwg==
+X-Gm-Message-State: APjAAAUv6wtCEU1u5pW7i/WEY4goTl5qiSSJTcdClKrRIqaoZz1PuM/p
+        n3R7k6A4TPh2K25W/Cc/L7+qBw==
+X-Google-Smtp-Source: APXvYqzPFGfktG3Py1x/vmEI6cC7z8QO39KHafDjtPfHiiUUnrPmfUmcK6PTAQJBIhon1QiV/qEFuA==
+X-Received: by 2002:a63:c901:: with SMTP id o1mr11394460pgg.66.1571421821320;
+        Fri, 18 Oct 2019 11:03:41 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id y66sm7424489pgy.23.2019.10.18.11.03.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Oct 2019 11:03:40 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 11:03:39 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        c-hbandi@codeaurora.org, bgodavar@codeaurora.org,
+        linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Bluetooth: hci_qca: Add delay for wcn3990 stability
+Message-ID: <20191018180339.GQ87296@google.com>
+References: <20191017212955.6266-1-jeffrey.l.hugo@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191018132309.GD17053@zn.tnic>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191017212955.6266-1-jeffrey.l.hugo@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 03:23:09PM +0200, Borislav Petkov wrote:
-> On Fri, Oct 18, 2019 at 05:26:36AM -0700, Srinivas Pandruvada wrote:
-> > Server/desktops generally rely on the embedded controller for FAN
-> > control, which  kernel have no control. For them this warning helps to
-> > either bring in additional cooling or fix existing cooling.
+On Thu, Oct 17, 2019 at 02:29:55PM -0700, Jeffrey Hugo wrote:
+> On the msm8998 mtp, the response to the baudrate change command is never
+> received.  On the Lenovo Miix 630, the response to the baudrate change
+> command is corrupted - "Frame reassembly failed (-84)".
 > 
-> How exactly does this warning help? A detailed example please.
-> 
-> > If something needs to force throttle from kernel, then we should use
-> > some offset from the max temperature (aka TJMax), instead of this
-> > warning threshold. Then we can use idle injection or change duty cycle
-> > of CPU clocks.
-> 
-> Yes, as I said, all this needs to be properly defined first. That is,
-> *if* there's even need for reacting to thermal interrupts in the kernel.
+> Adding a 50ms delay before re-enabling flow to receive the baudrate change
+> command response from the wcn3990 addesses both issues, and allows
+> bluetooth to become functional.
 
-Recap:
+From my earlier debugging on sdm845 I don't think this is what happens.
+The problem is that the wcn3990 sends the response to the baudrate change
+command using the new baudrate, while the UART on the SoC still operates
+with the prior speed (for details see 2faa3f15fa2f ("Bluetooth: hci_qca:
+wcn3990: Drop baudrate change vendor event"))
 
-We are starting from a place where the kernel prints a message.
-
-Patch already in flight to reduce the severity of the message
-(since users are seeing it, and find it annoying/unhelpful that
-it has such a high severity).
-
-Srinivas has asserted that in many cases we can eliminate the
-message. But wants to keep the message if it seems that there
-is something really wrong.
-
----
-
-So what should we do next?  I don't think there is much by way
-of actions that the kernel should take.  While we could stop
-scheduling processes, the h/w and f/w have better tools to
-reduce frequency, inject idle cycles, speed up fans, etc.
-If you do have ideas ... then please share.
-
-So this thread is now about doing the proper definition of
-what we actions Linux should take.
-
-Proposal on the table is the algoritm embodied in Srinivas'
-patch (which originated from Alan Cox).
-
-I.e.
-1) ignore short excursions above this threshold.
-2) Print a message for persistent problems.
-3) Keep a record of total time spent above threshold.
-
-If that's a reasonable approach, the we just need to come
-up with a way to define "short excursion" (which might be
-platform dependent). If someone has a brilliant idea on
-how to do that, we can use it. If not we #define a number.
-
-If it isn't reasonable ... then propose something better.
-
--Tony
+IIRC the 50ms delay causes the HCI core to discard the received data,
+which is why the "Frame reassembly failed" message disappears, not
+because the response was received. In theory commit 78e8fa2972e5
+("Bluetooth: hci_qca: Deassert RTS while baudrate change command")
+should have fixed those messages, do you know if CTS/RTS are connected
+on the Bluetooth UART of the Lenovo Miix 630?
