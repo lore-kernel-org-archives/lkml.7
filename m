@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2032CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7DDCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C33FC222CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74EE92054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:27:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="OfmdxeXT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="ptKipoEs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443447AbfJRU06 (ORCPT
+        id S2506026AbfJRU1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 16:26:58 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.168]:19918 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2506015AbfJRU06 (ORCPT
+        Fri, 18 Oct 2019 16:27:02 -0400
+Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.120]:22974 "EHLO
+        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2443433AbfJRU07 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 16:26:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571430346;
+        Fri, 18 Oct 2019 16:26:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571430353;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=zcdfWj+2+6EC1O3T7iHzLiOQtZr9s+nZaO5ZI9hQu2A=;
-        b=OfmdxeXTcDrN4hxe1L52IM1+XRPu2hq3vREfUrhQ8azpIYI/rAGJegOJemey+g/yn3
-        57toC18yNapsfLF8wotYBKq7wdsBEiB1PlFcZTnW719YlyUu6OUULqQMDndfBUrwLSNH
-        SfsbsLD4dq5i3RgmO5IL5UUJbjb5hnD4Fs7eLQGRm/+9wtukL//9iitM5RenimJLBdjv
-        EnCgRweGAkHSuxyy1giqtEOuYl1F+HsA6jEG6oARCDORjN8cnSwKg1Me/IYDvmaPEdhB
-        wYoytokW04y0wxu1BnW2q4sEd6110Cn2bJNgDiQ+T1AYH6LPJFOPP15fUni0MGphX2Bx
-        CjUQ==
+        bh=pAxH9f29zcPugwqQv3xhHDmS2G58xh9b8drWdUkj6h0=;
+        b=ptKipoEsJQVnJYfAkSLfH+eD9ZOHlJk+AaMZuQR8CCb+K8NFGSWzzCj3uru67M2ItZ
+        cko7RPa8LdJ7V7yb+d6ftGglmTcOiAh+y2yfhvmznNGF6E/bFLsTmdaXDfNOFPmle/+a
+        wgkrtEGXZyQvG10s1OUfbtIwa9mzVl+UrU716Ce/+K5FKy5w3zPfG0NI++7PZ3q4PLbn
+        g2nJK1k1x6vkGaSPb+rdalKLGnup+s2huyAR3zZVojjAFz7nWMu/7eZAn9XhsuUucSVq
+        zX+vI4Dpvc22ORSq2SBVyzdfuMJl+OxrgV2GoHU23XNAvCqqWns/XNpni9aaomvbhP3x
+        Jb9g==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6F3CFF60="
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
-        with ESMTPSA id R0b2a8v9IKPXDUn
+        with ESMTPSA id R0b2a8v9IKPdDUv
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
         (Client did not present a certificate);
-        Fri, 18 Oct 2019 22:25:33 +0200 (CEST)
+        Fri, 18 Oct 2019 22:25:39 +0200 (CEST)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
         Tony Lindgren <tony@atomide.com>,
@@ -68,10 +68,10 @@ Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mmc@vger.kernel.org, linux-wireless@vger.kernel.org,
         netdev@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: [PATCH 1/9] Documentation: dt: wireless: update wl1251 for sdio
-Date:   Fri, 18 Oct 2019 22:25:22 +0200
-Message-Id: <55f79e39c13586ebd579b37e8b0055003611a2b2.1571430329.git.hns@goldelico.com>
+        kernel@pyra-handheld.com, stable@vger.kernel.org
+Subject: [PATCH 9/9] net: wireless: ti: remove local VENDOR_ID and DEVICE_ID definitions
+Date:   Fri, 18 Oct 2019 22:25:30 +0200
+Message-Id: <f6d3ef06531cbbb366df7b5a4771084de59cd54b.1571430329.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <cover.1571430329.git.hns@goldelico.com>
 References: <cover.1571430329.git.hns@goldelico.com>
@@ -82,49 +82,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The standard method for sdio devices connected to
-an sdio interface is to define them as a child node
-like we can see with wlcore.
+They are already included from mmc/sdio_ids.h and do not need
+a local definition.
+
+Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks file")
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: <stable@vger.kernel.org> # 4.11.0
 ---
- .../bindings/net/wireless/ti,wl1251.txt       | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/net/wireless/ti/wl1251/sdio.c | 8 --------
+ drivers/net/wireless/ti/wlcore/sdio.c | 8 --------
+ 2 files changed, 16 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
-index bb2fcde6f7ff..88612ff29f2d 100644
---- a/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
-@@ -35,3 +35,29 @@ Examples:
- 		ti,power-gpio = <&gpio3 23 GPIO_ACTIVE_HIGH>; /* 87 */
- 	};
- };
-+
-+&mmc3 {
-+	vmmc-supply = <&wlan_en>;
-+
-+	bus-width = <4>;
-+	non-removable;
-+	ti,non-removable;
-+	cap-power-off-card;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc3_pins>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	wlan: wl1251@1 {
-+		compatible = "ti,wl1251";
-+
-+		reg = <1>;
-+
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;	/* GPIO_21 */
-+
-+		ti,wl1251-has-eeprom;
-+	};
-+};
+diff --git a/drivers/net/wireless/ti/wl1251/sdio.c b/drivers/net/wireless/ti/wl1251/sdio.c
+index 42b55f3a50df..3c4d5e38c66c 100644
+--- a/drivers/net/wireless/ti/wl1251/sdio.c
++++ b/drivers/net/wireless/ti/wl1251/sdio.c
+@@ -22,14 +22,6 @@
+ 
+ #include "wl1251.h"
+ 
+-#ifndef SDIO_VENDOR_ID_TI
+-#define SDIO_VENDOR_ID_TI		0x104c
+-#endif
+-
+-#ifndef SDIO_DEVICE_ID_TI_WL1251
+-#define SDIO_DEVICE_ID_TI_WL1251	0x9066
+-#endif
+-
+ struct wl1251_sdio {
+ 	struct sdio_func *func;
+ 	u32 elp_val;
+diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
+index 7afaf35f2453..9fd8cf2d270c 100644
+--- a/drivers/net/wireless/ti/wlcore/sdio.c
++++ b/drivers/net/wireless/ti/wlcore/sdio.c
+@@ -26,14 +26,6 @@
+ #include "wl12xx_80211.h"
+ #include "io.h"
+ 
+-#ifndef SDIO_VENDOR_ID_TI
+-#define SDIO_VENDOR_ID_TI		0x0097
+-#endif
+-
+-#ifndef SDIO_DEVICE_ID_TI_WL1271
+-#define SDIO_DEVICE_ID_TI_WL1271	0x4076
+-#endif
+-
+ static bool dump = false;
+ 
+ struct wl12xx_sdio_glue {
 -- 
 2.19.1
 
