@@ -2,68 +2,148 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC61CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB5DCA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B07A2222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBE19222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:54:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="nP0UyKnv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408628AbfJRNvs (ORCPT
+        id S2442851AbfJRNyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 09:51:48 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:40036 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1728022AbfJRNvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 09:51:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92E89FC2;
-        Fri, 18 Oct 2019 06:51:27 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A52A03F6C4;
-        Fri, 18 Oct 2019 06:51:26 -0700 (PDT)
-Subject: Re: [PATCH] iommu/dma: Relax locking in iommu_dma_prepare_msi()
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     joro@8bytes.org, iommu@lists.linux-foundation.org, maz@kernel.org,
-        julien.grall@arm.com, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-References: <5af5e77102ca52576cb96816f0abcf6398820055.1571245656.git.robin.murphy@arm.com>
- <20191017162453.GA6012@infradead.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <2309c311-7378-385d-bf97-57965d36c18b@arm.com>
-Date:   Fri, 18 Oct 2019 14:51:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 18 Oct 2019 09:54:22 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:35436 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727349AbfJRNyW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 09:54:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=xySmRcW7GgvpKnVFRCDEwywcn86eeUCzX2OE1gITPPg=; b=nP0UyKnvD1/DO0qM+gQcdJk7e
+        l4/HQALh9wS10nBJBOSCYRx4052BvALPTbJGYfoUKbRv+a34eY5Hg9+9g77ETW40T9Or8GbDINcyY
+        dviCw9RKcNEi2bRG3Jb4m4KuuPTm4sebEnQNcn0VjDkhzEcmyeDp652EHNWzGg+otF421dQzXDfHE
+        1gSgCtfkazHykOCC+YWH3pxXqKrHF+rWKZopHiupIobBXL7i8Aibd26jXt/P8W08aq5Owua9G5+qR
+        RwTIZJYA62iO7O3jd+Y8MeI3s/SsxEE1i+qMYCF8IHWZrdMKQNRDlFvFQwx+o3bmMUosKt6i00KqJ
+        FYEiVTK4Q==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:44318)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iLShr-0007vV-3p; Fri, 18 Oct 2019 14:54:15 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iLShn-0000m9-HF; Fri, 18 Oct 2019 14:54:11 +0100
+Date:   Fri, 18 Oct 2019 14:54:11 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        open list <linux-kernel@vger.kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, cphealy@gmail.com,
+        Jose Abreu <joabreu@synopsys.com>
+Subject: Re: [PATCH net-next 2/2] net: phy: Add ability to debug RGMII
+ connections
+Message-ID: <20191018135411.GJ25745@shell.armlinux.org.uk>
+References: <20191015224953.24199-1-f.fainelli@gmail.com>
+ <20191015224953.24199-3-f.fainelli@gmail.com>
+ <4feb3979-1d59-4ad3-b2f1-90d82cfbdf54@gmail.com>
+ <c4244c9a-28cb-7e37-684d-64e6cdc89b67@gmail.com>
+ <CA+h21hrLHe2n0OxJyCKTU0r7mSB1zK9ggP1-1TCednFN_0rXfg@mail.gmail.com>
+ <20191018130121.GK4780@lunn.ch>
+ <CA+h21hoPrwcgz-q=UROAu0PC=6JbKtbdPhJtZg5ge32_2xJ3TQ@mail.gmail.com>
+ <20191018132316.GI25745@shell.armlinux.org.uk>
+ <CA+h21hqVZ=LF3bQGtqFh4uMu6AhNFcrwQuUcEH-Fc1VrWku-eg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191017162453.GA6012@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+h21hqVZ=LF3bQGtqFh4uMu6AhNFcrwQuUcEH-Fc1VrWku-eg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/10/2019 17:24, Christoph Hellwig wrote:
-> On Wed, Oct 16, 2019 at 06:07:36PM +0100, Robin Murphy wrote:
->> @@ -1180,7 +1179,7 @@ int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr)
->>   	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
->>   	struct iommu_dma_cookie *cookie;
->>   	struct iommu_dma_msi_page *msi_page;
->> -	unsigned long flags;
->> +	static DEFINE_MUTEX(msi_prepare_lock);
+On Fri, Oct 18, 2019 at 04:37:55PM +0300, Vladimir Oltean wrote:
+> On Fri, 18 Oct 2019 at 16:23, Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> >
+> > On Fri, Oct 18, 2019 at 04:09:30PM +0300, Vladimir Oltean wrote:
+> > > Hi Andrew,
+> > >
+> > > On Fri, 18 Oct 2019 at 16:01, Andrew Lunn <andrew@lunn.ch> wrote:
+> > > >
+> > > > > Well, that's the tricky part. You're sending a frame out, with no
+> > > > > guarantee you'll get the same frame back in. So I'm not sure that any
+> > > > > identifiers put inside the frame will survive.
+> > > > > How do the tests pan out for you? Do you actually get to trigger this
+> > > > > check? As I mentioned, my NIC drops the frames with bad FCS.
+> > > >
+> > > > My experience is, the NIC drops the frame and increments some the
+> > > > counter about bad FCS. I do very occasionally see a frame delivered,
+> > > > but i guess that is 1/65536 where the FCS just happens to be good by
+> > > > accident. So i think some other algorithm should be used which is
+> > > > unlikely to be good when the FCS is accidentally good, or just check
+> > > > the contents of the packet, you know what is should contain.
+> > > >
+> > > > Are there any NICs which don't do hardware FCS? Is that something we
+> > > > realistically need to consider?
+> > > >
+> > > > > Yes, but remember, nobody guarantees that a frame with DMAC
+> > > > > ff:ff:ff:ff:ff:ff on egress will still have it on its way back. Again,
+> > > > > this all depends on how you plan to manage the rx-all ethtool feature.
+> > > >
+> > > > Humm. Never heard that before. Are you saying some NICs rewrite the
+> > > > DMAN?
+> > > >
+> > >
+> > > I'm just trying to understand the circumstances under which this
+> > > kernel thread makes sense.
+> > > Checking for FCS validity means that the intention was to enable the
+> > > reception of frames with bad FCS.
+> > > Bad FCS after bad RGMII setup/hold times doesn't mean there's a small
+> > > guy in there who rewrites the checksum. It means that frame octets get
+> > > garbled. All octets are just as likely to get garbled, including the
+> > > SFD, preamble, DMAC, etc.
+> > > All I'm saying is that, if the intention of the patch is to actually
+> > > process the FCS of frames before and after, then it should actually
+> > > put the interface in promiscuous mode, so that frames with a
+> > > non-garbled SFD and preamble can still be received, even though their
+> > > DMAC was the one that got garbled.
+> >
+> > Isn't the point of this to see which RGMII setting results in a working
+> > setup?
+> >
+> > So, is it not true that what we're after is receiving a _correct_ frame
+> > that corresponds to the frame that was sent out?
+> >
 > 
-> Just a style nitpick, but I find locks declared inside functions
-> really weird.  In addition to that locks not embedded into a structure
-> and not directly next to variables or data structures they protect
-> really need a comment explaining what they are trying to serialize.
+> Only true if the MAC does not drop bad frames by itself. Then the FCS
+> check in the kernel thread is superfluous.
 
-Hmm, the lock itself is merely a glorified comment, it's named for the 
-operation it protects, its entire existence spans 15 consecutive lines, 
-and 27% of those lines are dedicated to explaining that it's technically 
-redundant. Is there *really* anything that isn't clear from the context?
+If a MAC driver doesn't drop bad frames, then surely it's buggy, since
+there isn't (afaik) a way of marking a received skb with a FCS error.
+Therefore, forwarding frames with bad FCS into the Linux networking
+stack will allow the reception of bad frames as if they were good.
 
-Robin.
+All the network drivers I've looked at (and written), when encountering
+a packet with an error, update the statistic counters and drop the
+errored packet.
+
+Do you know of any that don't?
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
