@@ -2,129 +2,165 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DC3CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EDACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 875352089C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B1D2089C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:26:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Zpk4Pdwt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633820AbfJRM0j (ORCPT
+        id S2633828AbfJRM0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 08:26:39 -0400
-Received: from mga06.intel.com ([134.134.136.31]:61121 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2633694AbfJRM0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 08:26:37 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 05:26:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,311,1566889200"; 
-   d="scan'208";a="186812318"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.31])
-  by orsmga007.jf.intel.com with ESMTP; 18 Oct 2019 05:26:36 -0700
-Message-ID: <c2ce4ef128aad84616b2dc21f6230ad4db12194b.camel@linux.intel.com>
-Subject: Re: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal
- throttle messages
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Borislav Petkov <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "bberg@redhat.com" <bberg@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "ckellner@redhat.com" <ckellner@redhat.com>
-Date:   Fri, 18 Oct 2019 05:26:36 -0700
-In-Reply-To: <20191017214445.GG14441@zn.tnic>
-References: <2c2b65c23be3064504566c5f621c1f37bf7e7326.camel@redhat.com>
-         <20191014212101.25719-1-srinivas.pandruvada@linux.intel.com>
-         <20191015084833.GD2311@hirez.programming.kicks-ass.net>
-         <f481b4ab6dfebbc0637c843e5f1cd4ddfd4bd60b.camel@linux.intel.com>
-         <20191016081405.GO2328@hirez.programming.kicks-ass.net>
-         <20191016140001.GF1138@zn.tnic>
-         <3908561D78D1C84285E8C5FCA982C28F7F4A57D0@ORSMSX115.amr.corp.intel.com>
-         <20191017214445.GG14441@zn.tnic>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 18 Oct 2019 08:26:45 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:48412 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2633688AbfJRM0A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 08:26:00 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9ICPwdS066254;
+        Fri, 18 Oct 2019 07:25:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571401558;
+        bh=m9T1bYu9aHERflS70Hj68HTeQDTIQvtJczqXchiB3h4=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=Zpk4PdwtlthktoVMTFe+ppPtY6wROFEyh6ZnTi7zurbq/2PPzHV8B1Z6St86A5nZq
+         4jugyD0dnNsz8ZYoZLOMTqGwaOvGxOHoe+DgnuUgIadUJ3A7VoBCu6uOQp4VP4tDLq
+         2+5zrNtMZhv7cVEA1ytOZhpVEGBnl8zoq2GvDKzA=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9ICPwaK053648
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 18 Oct 2019 07:25:58 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 18
+ Oct 2019 07:25:57 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 18 Oct 2019 07:25:57 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9ICPvtZ099348;
+        Fri, 18 Oct 2019 07:25:57 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v14 16/19] leds: lp55xx: Fix checkpatch file permissions issues
+Date:   Fri, 18 Oct 2019 07:25:18 -0500
+Message-ID: <20191018122521.6757-17-dmurphy@ti.com>
+X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
+In-Reply-To: <20191018122521.6757-1-dmurphy@ti.com>
+References: <20191018122521.6757-1-dmurphy@ti.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-10-17 at 23:44 +0200, Borislav Petkov wrote:
-> On Thu, Oct 17, 2019 at 09:31:30PM +0000, Luck, Tony wrote:
-> > That sounds like the right short term action.
-> > 
-> > Depending on what we end up with from Srinivas ... we may want
-> > to reconsider the severity.  The basic premise of Srinivas' patch
-> > is to avoid printing anything for short excursions above
-> > temperature
-> > threshold. But the effect of that is that when we find the
-> > core/package
-> > staying above temperature for an extended period of time, we are
-> > in a serious situation where some action may be needed. E.g.
-> > move the laptop off the soft surface that is blocking the air
-> > vents.
-> 
-> I don't think having a critical severity message is nearly enough.
-> There are cases where the users simply won't see that message, no
-> shell
-> opened, nothing scanning dmesg, nothing pops up on the desktop to
-> show
-> KERN_CRIT messages, etc.
-> 
-> If we really wanna handle this case then we must be much more
-> reliable:
-> 
-> * we throttle the machine from within the kernel - whatever that may
-> mean
-There are actions associated with the high temperature using acpi
-thermal subsystems. The problem with associating with this warning
-directly is that,  this threhold temperature is set to too low in some
-recent laptops at power up.
+Fix the checkpatch warnings for the use of the file permission macros.
+In converting the file permissions to the DEVICE_ATTR_XX macros the
+call back function names needed to be updated within the code.
 
-Server/desktops generally rely on the embedded controller for FAN
-control, which  kernel have no control. For them this warning helps to
-either bring in additional cooling or fix existing cooling.
+This means that the lp55xx_ needed to be dropped in the name to keep in
+harmony with the ABI documentation.
 
-If something needs to force throttle from kernel, then we should use
-some offset from the max temperature (aka TJMax), instead of this
-warning threshold. Then we can use idle injection or change duty cycle
-of CPU clocks.
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/leds/leds-lp55xx-common.c | 22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
-Thanks,
-Srinivas
-
-> * if that doesn't help, we stop scheduling !root tasks
-> * if that doesn't help, we halt
-> * ...
-> 
-> These are purely hypothetical things to do but I'm pointing them out
-> as
-> an example that in a high temperature situation we should be actively
-> doing something and not wait for the user to do that.
-> 
-> Come to think of it, one can apply the same type of logic here and
-> split
-> the temp severity into action-required events and action-optional
-> events
-> and then depending on the type, we do things.
-> 
-> Now what those things are, should be determined by the severity of
-> the
-> events. Which would mean, we'd need to know how severe those events
-> are.
-> And since this is left in the hands of the OEMs, good luck to us. ;-\
-> 
+diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
+index 197b87ca5ca2..0764520bc4a8 100644
+--- a/drivers/leds/leds-lp55xx-common.c
++++ b/drivers/leds/leds-lp55xx-common.c
+@@ -78,7 +78,7 @@ static int lp55xx_post_init_device(struct lp55xx_chip *chip)
+ 	return cfg->post_init_device(chip);
+ }
+ 
+-static ssize_t lp55xx_show_current(struct device *dev,
++static ssize_t led_current_show(struct device *dev,
+ 			    struct device_attribute *attr,
+ 			    char *buf)
+ {
+@@ -87,7 +87,7 @@ static ssize_t lp55xx_show_current(struct device *dev,
+ 	return scnprintf(buf, PAGE_SIZE, "%d\n", led->led_current);
+ }
+ 
+-static ssize_t lp55xx_store_current(struct device *dev,
++static ssize_t led_current_store(struct device *dev,
+ 			     struct device_attribute *attr,
+ 			     const char *buf, size_t len)
+ {
+@@ -111,7 +111,7 @@ static ssize_t lp55xx_store_current(struct device *dev,
+ 	return len;
+ }
+ 
+-static ssize_t lp55xx_show_max_current(struct device *dev,
++static ssize_t max_current_show(struct device *dev,
+ 			    struct device_attribute *attr,
+ 			    char *buf)
+ {
+@@ -120,9 +120,8 @@ static ssize_t lp55xx_show_max_current(struct device *dev,
+ 	return scnprintf(buf, PAGE_SIZE, "%d\n", led->max_current);
+ }
+ 
+-static DEVICE_ATTR(led_current, S_IRUGO | S_IWUSR, lp55xx_show_current,
+-		lp55xx_store_current);
+-static DEVICE_ATTR(max_current, S_IRUGO , lp55xx_show_max_current, NULL);
++static DEVICE_ATTR_RW(led_current);
++static DEVICE_ATTR_RO(max_current);
+ 
+ static struct attribute *lp55xx_led_attrs[] = {
+ 	&dev_attr_led_current.attr,
+@@ -292,7 +291,7 @@ static int lp55xx_request_firmware(struct lp55xx_chip *chip)
+ 				GFP_KERNEL, chip, lp55xx_firmware_loaded);
+ }
+ 
+-static ssize_t lp55xx_show_engine_select(struct device *dev,
++static ssize_t select_engine_show(struct device *dev,
+ 			    struct device_attribute *attr,
+ 			    char *buf)
+ {
+@@ -302,7 +301,7 @@ static ssize_t lp55xx_show_engine_select(struct device *dev,
+ 	return sprintf(buf, "%d\n", chip->engine_idx);
+ }
+ 
+-static ssize_t lp55xx_store_engine_select(struct device *dev,
++static ssize_t select_engine_store(struct device *dev,
+ 			     struct device_attribute *attr,
+ 			     const char *buf, size_t len)
+ {
+@@ -344,7 +343,7 @@ static inline void lp55xx_run_engine(struct lp55xx_chip *chip, bool start)
+ 		chip->cfg->run_engine(chip, start);
+ }
+ 
+-static ssize_t lp55xx_store_engine_run(struct device *dev,
++static ssize_t run_engine_store(struct device *dev,
+ 			     struct device_attribute *attr,
+ 			     const char *buf, size_t len)
+ {
+@@ -369,9 +368,8 @@ static ssize_t lp55xx_store_engine_run(struct device *dev,
+ 	return len;
+ }
+ 
+-static DEVICE_ATTR(select_engine, S_IRUGO | S_IWUSR,
+-		   lp55xx_show_engine_select, lp55xx_store_engine_select);
+-static DEVICE_ATTR(run_engine, S_IWUSR, NULL, lp55xx_store_engine_run);
++static DEVICE_ATTR_RW(select_engine);
++static DEVICE_ATTR_WO(run_engine);
+ 
+ static struct attribute *lp55xx_engine_attributes[] = {
+ 	&dev_attr_select_engine.attr,
+-- 
+2.22.0.214.g8dca754b1e
 
