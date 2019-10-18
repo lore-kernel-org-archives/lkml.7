@@ -2,149 +2,151 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F34CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3A4CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB89222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F80A2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:45:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442215AbfJRIoO (ORCPT
+        id S2632905AbfJRIpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:44:14 -0400
-Received: from mga06.intel.com ([134.134.136.31]:47120 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727903AbfJRIoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 04:44:14 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 01:44:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,311,1566889200"; 
-   d="scan'208";a="397870720"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 18 Oct 2019 01:44:05 -0700
-Received: from andy by smile with local (Exim 4.92.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iLNrf-0008LD-3B; Fri, 18 Oct 2019 11:44:03 +0300
-Date:   Fri, 18 Oct 2019 11:44:03 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Enrico Weigelt <info@metux.net>, Eric Anholt <eric@anholt.net>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Jacky Bai <ping.bai@nxp.com>, Jeff LaBundy <jeff@labundy.com>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Luca Weiss <luca@z3ntu.xyz>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Martin Kepplinger <martink@posteo.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Miloslav Trmac <mitr@volny.cz>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Pavel Machek <pavel@ucw.cz>,
-        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Ronald =?iso-8859-1?Q?Tschal=E4r?= <ronald@innovation.ch>,
-        Stefan Agner <stefan@agner.ch>,
-        Steve Winslow <swinslow@gmail.com>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/22] Stop using input_polled_dev in polling drivers
-Message-ID: <20191018084403.GR32742@smile.fi.intel.com>
-References: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191017204217.106453-1-dmitry.torokhov@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 18 Oct 2019 04:45:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34338 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730669AbfJRIpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 04:45:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2FDDEB4D0;
+        Fri, 18 Oct 2019 08:45:44 +0000 (UTC)
+Date:   Fri, 18 Oct 2019 10:45:43 +0200
+Message-ID: <s5hlftih26g.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/2] PCI: Add a helper to check Power Resource Requirements _PR3 existence
+In-Reply-To: <4C18DF4A-FAE8-4762-AF65-F892A4845297@canonical.com>
+References: <20191018073848.14590-1-kai.heng.feng@canonical.com>
+        <s5hr23ah3g9.wl-tiwai@suse.de>
+        <4C18DF4A-FAE8-4762-AF65-F892A4845297@canonical.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 01:41:54PM -0700, Dmitry Torokhov wrote:
-> Input devices now support polling mode natively (via input_setup_polling
-> API), and input_polled_dev implementation is going away. This series
-> switches drivers found in drivers/input to the new scheme.
+On Fri, 18 Oct 2019 10:30:11 +0200,
+Kai-Heng Feng wrote:
 > 
+> 
+> 
+> > On Oct 18, 2019, at 16:18, Takashi Iwai <tiwai@suse.de> wrote:
+> > 
+> > On Fri, 18 Oct 2019 09:38:47 +0200,
+> > Kai-Heng Feng wrote:
+> >> 
+> >> A driver may want to know the existence of _PR3, to choose different
+> >> runtime suspend behavior. A user will be add in next patch.
+> >> 
+> >> This is mostly the same as nouveau_pr3_present().
+> >> 
+> >> Reported-by: kbuild test robot <lkp@intel.com>
+> > 
+> > It's confusing -- this particular change isn't reported by the test
+> > bot, but only about the lack of the CONFIG_ACPI ifdef.
+> 
+> Hmm, because the test bot asked to add the tag.
 
-For all I have been Cc'ed
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Yes, but it's only if you add a new fix patch on top of it.
+You can write some their credit, too, but basically it'd be enough to
+point to the Link tag to the thread.
 
-> 
-> Dmitry Torokhov (21):
->   Input: raspberrypi-ts - switch to using polled mode of input devices
->   Input: sur40 - switch to using polled mode of input devices
->   Input: ts4800-ts - switch to using polled mode of input devices
->   Input: tsc6507x-ts - switch to using polled mode of input devices
->   Input: adc-keys - switch to using polled mode of input devices
->   Input: clps711x-keypad - switch to using polled mode of input devices
->   Input: jornada680_kbd - switch to using polled mode of input devices
->   Input: gpio_keys_polled - switch to using polled mode of input devices
->   Input: apanel - switch to using polled mode of input devices
->   Input: wistron_btns - switch to using polled mode of input devices
->   Input: cobalt_btns - convert to use managed resources
->   Input: cobalt_btns - switch to using polled mode of input devices
->   Input: sgi_btns - switch to using managed resources
->   Input: sgi_btns - switch to using polled mode of input devices
->   Input: rb532_button - switch to using managed resources
->   Input: rb532_button - switch to using polled mode of input devices
->   Input: gpio_decoder - switch to using polled mode of input devices
->   Input: mma8450 - switch to using polled mode of input devices
->   Input: bma150 - switch to using polled mode of input devices
->   Input: kxtj9 - switch to using managed resources
->   Input: kxtj9 - switch to using polled mode of input devices
-> 
-> Jonathan Bakker (1):
->   Input: bma150 - use managed resources helpers
-> 
->  drivers/input/keyboard/Kconfig             |   4 -
->  drivers/input/keyboard/adc-keys.c          |  36 ++--
->  drivers/input/keyboard/clps711x-keypad.c   |  70 +++----
->  drivers/input/keyboard/gpio_keys_polled.c  |  65 +++---
->  drivers/input/keyboard/jornada680_kbd.c    |  37 ++--
->  drivers/input/misc/Kconfig                 |  15 --
->  drivers/input/misc/apanel.c                | 153 ++++++--------
->  drivers/input/misc/bma150.c                | 190 +++++------------
->  drivers/input/misc/cobalt_btns.c           |  73 +++----
->  drivers/input/misc/gpio_decoder.c          |  42 ++--
->  drivers/input/misc/kxtj9.c                 | 224 ++++++---------------
->  drivers/input/misc/mma8450.c               | 101 +++++-----
->  drivers/input/misc/rb532_button.c          |  48 ++---
->  drivers/input/misc/sgi_btns.c              |  54 ++---
->  drivers/input/misc/wistron_btns.c          |  51 ++---
->  drivers/input/touchscreen/Kconfig          |   4 -
->  drivers/input/touchscreen/raspberrypi-ts.c |  38 ++--
->  drivers/input/touchscreen/sur40.c          |  92 +++++----
->  drivers/input/touchscreen/tps6507x-ts.c    |  36 ++--
->  drivers/input/touchscreen/ts4800-ts.c      |  68 ++++---
->  20 files changed, 557 insertions(+), 844 deletions(-)
-> 
-> -- 
-> 2.23.0.866.gb869b98d4c-goog
-> 
+> If it's not appropriate will you drop it? I can also send a v7.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I can modify in my side.
 
 
+thanks,
+
+Takashi
+
+> 
+> Kai-Heng
+> 
+> > 
+> > 
+> > thanks,
+> > 
+> > Takashi
+> > 
+> >> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> >> ---
+> >> v6:
+> >> - Only define the function when CONFIG_ACPI is set.
+> >> v5:
+> >> - Add wording suggestion from Bjorn.
+> >> v4:
+> >> - Let caller to find its upstream port device.
+> >> 
+> >> drivers/pci/pci.c   | 18 ++++++++++++++++++
+> >> include/linux/pci.h |  2 ++
+> >> 2 files changed, 20 insertions(+)
+> >> 
+> >> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> >> index e7982af9a5d8..1df99d9e350e 100644
+> >> --- a/drivers/pci/pci.c
+> >> +++ b/drivers/pci/pci.c
+> >> @@ -5856,6 +5856,24 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
+> >> 	return 0;
+> >> }
+> >> 
+> >> +#ifdef CONFIG_ACPI
+> >> +bool pci_pr3_present(struct pci_dev *pdev)
+> >> +{
+> >> +	struct acpi_device *adev;
+> >> +
+> >> +	if (acpi_disabled)
+> >> +		return false;
+> >> +
+> >> +	adev = ACPI_COMPANION(&pdev->dev);
+> >> +	if (!adev)
+> >> +		return false;
+> >> +
+> >> +	return adev->power.flags.power_resources &&
+> >> +		acpi_has_method(adev->handle, "_PR3");
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(pci_pr3_present);
+> >> +#endif
+> >> +
+> >> /**
+> >>  * pci_add_dma_alias - Add a DMA devfn alias for a device
+> >>  * @dev: the PCI device for which alias is added
+> >> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> >> index f9088c89a534..1d15c5d49cdd 100644
+> >> --- a/include/linux/pci.h
+> >> +++ b/include/linux/pci.h
+> >> @@ -2310,9 +2310,11 @@ struct irq_domain *pci_host_bridge_acpi_msi_domain(struct pci_bus *bus);
+> >> 
+> >> void
+> >> pci_msi_register_fwnode_provider(struct fwnode_handle *(*fn)(struct device *));
+> >> +bool pci_pr3_present(struct pci_dev *pdev);
+> >> #else
+> >> static inline struct irq_domain *
+> >> pci_host_bridge_acpi_msi_domain(struct pci_bus *bus) { return NULL; }
+> >> +static bool pci_pr3_present(struct pci_dev *pdev) { return false; }
+> >> #endif
+> >> 
+> >> #ifdef CONFIG_EEH
+> >> -- 
+> >> 2.17.1
+> >> 
+> 
