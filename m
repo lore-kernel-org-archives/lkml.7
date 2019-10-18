@@ -2,171 +2,187 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 549DCCA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 623FCCA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 219FB222C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3150A21897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:01:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MS6cWvzg"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="19h/jLrd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409212AbfJRFAr (ORCPT
+        id S2409545AbfJRFBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:00:47 -0400
-Received: from ozlabs.org ([203.11.71.1]:59595 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727627AbfJRFAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:00:46 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46vVR047dMz9sP3;
-        Fri, 18 Oct 2019 13:31:40 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1571365907;
-        bh=STqXBQt1of/WFIT0GVfq42YrvZ3JDvNR2LFQ87IDERM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=MS6cWvzglWlyRB1w1pnINex7OcQ3VsrD6+OCHaOiorDM2hqOFT+bs6SohJ5s1g4HP
-         vW6Szz6i+lJL6exfdTptnjlKSFlCZDhRWs5mfxoRZY65p2NWSBbasLKAu6Dmgitx60
-         oVtxsMEcCCZjlGZjq/+3wJ8gvP58kESCloqqyNATJlCdu76ilIkdgck8K2et+Evcld
-         tEib04l9lohK/Vm4W3NKebRKq+zC2UgdjWZG0UeFJlCONTCPGpiBayAp0iCJyXbxtw
-         VF361NIm2M4bTZFuxmC58w7cphh5VhbYm9ji9ITsLigVsrESCFuvlMeTzJ41WqaeMS
-         vCpvnt4KZ+rUA==
-Date:   Fri, 18 Oct 2019 13:31:39 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBl?= =?UTF-8?B?bA==?= 
-        <bjorn.topel@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: linux-next: manual merge of the tip tree with the net-next tree
-Message-ID: <20191018133139.30c88807@canb.auug.org.au>
+        Fri, 18 Oct 2019 01:01:07 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40361 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407184AbfJRFBG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 01:01:06 -0400
+Received: by mail-wr1-f68.google.com with SMTP id o28so4690518wro.7
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:01:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9yj5eEKEUBkc8EGiDNUkG6uoCF1b8NJEVMhQxadJQgw=;
+        b=19h/jLrdlN0B0n8LD8ZZQQHpidcoIaOwMafQQWuaDBcFghw3DpbmISFkIZf6JbOeJY
+         HflrdbPbT0Y81K+zDisvGr/7nGSCcI9+c9LxtNdnjeIkrttEwlV1gof5CXb5NKRTszqE
+         Gyimc1zuhUD2XrxIxEEdFgjEOAytYe1Uwlp5zfRwNYYj/1mggw4xcTogycK4uDNiDS9C
+         3W9IIft16YhFIpE8CT0RvgU241dSnGZXG8JbhxF/st0rCeuLPktc9JG9eztKFdQG0GHb
+         ONC4dNvNaHRIjqrAFPo6W5osvgrgdl5IM29T796hQ5L6voXRWbbApWvz8iMsuN1R8Vmz
+         xPYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9yj5eEKEUBkc8EGiDNUkG6uoCF1b8NJEVMhQxadJQgw=;
+        b=Mkum6Xs20hT95fDB9wMc9/j1vMJaR13kQWVvXFY6fdRuzNyg8rJwFyzyMI+JbbxH+q
+         0iSefpYYGgKg64yHW3tIKYnAqErDQZNApI6agm0DNkrsk1Kg4hsg0uMR0xfETzE0xiVn
+         NPKGaYfRfN0WMMlQp5Sjxa7uV00pWjcFaH8mo0XMcjG/GOvAzbZMhGbj+DUBTzTysxYK
+         YOyV4cb4NUdg8d19aeVGFBtzANNeaV8/K37/38pOpyIeTY3SK+eccSp8UP1fpXqrhPoA
+         07DoRonSnts1I4JtVZG8gwGIX4Aq/kr6q1fotCCgh7UsUP/fEbkLLa8BL0dId6bQg7nb
+         cJ1Q==
+X-Gm-Message-State: APjAAAU9ojBLOqCYlo9ClPSGtkzfrWGovrDQ5svAn4uY0l42yNxIDO/t
+        ezkRVyMvD+B2HKd6O00jbWbnueX1CcEJZ3sZizyPnv2ALqk=
+X-Google-Smtp-Source: APXvYqxzFrI5UMyMA5aJQHly/DUWh4eyoWG75O+lClRwzR/dl8s+0ZTRewFo4nozKJArAmHorKplmEuTajXS2YvtoMg=
+X-Received: by 2002:a5d:42c2:: with SMTP id t2mr5364797wrr.251.1571368004794;
+ Thu, 17 Oct 2019 20:06:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Z+ofq0xCGo0+RR6uVsB2NLd";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20191017173743.5430-1-hch@lst.de> <20191017173743.5430-15-hch@lst.de>
+In-Reply-To: <20191017173743.5430-15-hch@lst.de>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Fri, 18 Oct 2019 08:36:33 +0530
+Message-ID: <CAAhSdy01FReApQOPY5B8jcZ34pyWaLpYok_+7G+hEvFKwhC4bQ@mail.gmail.com>
+Subject: Re: [PATCH 14/15] riscv: provide a flat image loader
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Z+ofq0xCGo0+RR6uVsB2NLd
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Oct 17, 2019 at 11:08 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> This allows just loading the kernel at a pre-set address without
+> qemu going bonkers trying to map the ELF file.
+>
+> Contains a controbution from Aurabindo Jayamohanan to reuse the
+> PAGE_OFFSET definition.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/riscv/Makefile          | 13 +++++++++----
+>  arch/riscv/boot/Makefile     |  7 ++++++-
+>  arch/riscv/boot/loader.S     |  8 ++++++++
+>  arch/riscv/boot/loader.lds.S | 16 ++++++++++++++++
+>  4 files changed, 39 insertions(+), 5 deletions(-)
+>  create mode 100644 arch/riscv/boot/loader.S
+>  create mode 100644 arch/riscv/boot/loader.lds.S
+>
+> diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+> index f5e914210245..b9009a2fbaf5 100644
+> --- a/arch/riscv/Makefile
+> +++ b/arch/riscv/Makefile
+> @@ -83,13 +83,18 @@ PHONY += vdso_install
+>  vdso_install:
+>         $(Q)$(MAKE) $(build)=arch/riscv/kernel/vdso $@
+>
+> -all: Image.gz
+> +ifeq ($(CONFIG_RISCV_M_MODE),y)
+> +KBUILD_IMAGE := $(boot)/loader
+> +else
+> +KBUILD_IMAGE := $(boot)/Image.gz
+> +endif
+> +BOOT_TARGETS := Image Image.gz loader
+>
+> -Image: vmlinux
+> -       $(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
+> +all:   $(notdir $(KBUILD_IMAGE))
+>
+> -Image.%: Image
+> +$(BOOT_TARGETS): vmlinux
+>         $(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
+> +       @$(kecho) '  Kernel: $(boot)/$@ is ready'
+>
+>  zinstall install:
+>         $(Q)$(MAKE) $(build)=$(boot) $@
+> diff --git a/arch/riscv/boot/Makefile b/arch/riscv/boot/Makefile
+> index 0990a9fdbe5d..8639e0dd2cdf 100644
+> --- a/arch/riscv/boot/Makefile
+> +++ b/arch/riscv/boot/Makefile
+> @@ -16,7 +16,7 @@
+>
+>  OBJCOPYFLAGS_Image :=-O binary -R .note -R .note.gnu.build-id -R .comment -S
+>
+> -targets := Image
+> +targets := Image loader
+>
+>  $(obj)/Image: vmlinux FORCE
+>         $(call if_changed,objcopy)
+> @@ -24,6 +24,11 @@ $(obj)/Image: vmlinux FORCE
+>  $(obj)/Image.gz: $(obj)/Image FORCE
+>         $(call if_changed,gzip)
+>
+> +loader.o: $(src)/loader.S $(obj)/Image
+> +
+> +$(obj)/loader: $(obj)/loader.o $(obj)/Image $(obj)/loader.lds FORCE
+> +       $(Q)$(LD) -T $(src)/loader.lds -o $@ $(obj)/loader.o
+> +
+>  install:
+>         $(CONFIG_SHELL) $(srctree)/$(src)/install.sh $(KERNELRELEASE) \
+>         $(obj)/Image System.map "$(INSTALL_PATH)"
+> diff --git a/arch/riscv/boot/loader.S b/arch/riscv/boot/loader.S
+> new file mode 100644
+> index 000000000000..5586e2610dbb
+> --- /dev/null
+> +++ b/arch/riscv/boot/loader.S
+> @@ -0,0 +1,8 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +       .align 4
+> +       .section .payload, "ax", %progbits
+> +       .globl _start
+> +_start:
+> +       .incbin "arch/riscv/boot/Image"
+> +
+> diff --git a/arch/riscv/boot/loader.lds.S b/arch/riscv/boot/loader.lds.S
+> new file mode 100644
+> index 000000000000..47a5003c2e28
+> --- /dev/null
+> +++ b/arch/riscv/boot/loader.lds.S
+> @@ -0,0 +1,16 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +#include <asm/page.h>
+> +
+> +OUTPUT_ARCH(riscv)
+> +ENTRY(_start)
+> +
+> +SECTIONS
+> +{
+> +       . = PAGE_OFFSET;
+> +
+> +       .payload : {
+> +               *(.payload)
+> +               . = ALIGN(8);
+> +       }
+> +}
+> --
+> 2.20.1
+>
 
-Hi all,
+LGTM.
 
-Today's linux-next merge of the tip tree got a conflict in:
+Reviewed-by: Anup Patel <anup@brainfault.org>
 
-  samples/bpf/Makefile
-
-between commit:
-
-  1d97c6c2511f ("samples/bpf: Base target programs rules on Makefile.target=
-")
-
-from the net-next tree and commit:
-
-  fce9501aec6b ("samples/bpf: fix build by setting HAVE_ATTR_TEST to zero")
-
-from the tip tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc samples/bpf/Makefile
-index 4df11ddb9c75,42b571cde177..000000000000
---- a/samples/bpf/Makefile
-+++ b/samples/bpf/Makefile
-@@@ -168,38 -171,21 +168,39 @@@ always +=3D ibumad_kern.
-  always +=3D hbm_out_kern.o
-  always +=3D hbm_edt_kern.o
- =20
- -KBUILD_HOSTCFLAGS +=3D -I$(objtree)/usr/include
- -KBUILD_HOSTCFLAGS +=3D -I$(srctree)/tools/lib/bpf/
- -KBUILD_HOSTCFLAGS +=3D -I$(srctree)/tools/testing/selftests/bpf/
- -KBUILD_HOSTCFLAGS +=3D -I$(srctree)/tools/lib/ -I$(srctree)/tools/include
- -KBUILD_HOSTCFLAGS +=3D -I$(srctree)/tools/perf
- -KBUILD_HOSTCFLAGS +=3D -DHAVE_ATTR_TEST=3D0
- +ifeq ($(ARCH), arm)
- +# Strip all except -D__LINUX_ARM_ARCH__ option needed to handle linux
- +# headers when arm instruction set identification is requested.
- +ARM_ARCH_SELECTOR :=3D $(filter -D__LINUX_ARM_ARCH__%, $(KBUILD_CFLAGS))
- +BPF_EXTRA_CFLAGS :=3D $(ARM_ARCH_SELECTOR)
- +TPROGS_CFLAGS +=3D $(ARM_ARCH_SELECTOR)
- +endif
- +
- +TPROGS_CFLAGS +=3D -Wall -O2
- +TPROGS_CFLAGS +=3D -Wmissing-prototypes
- +TPROGS_CFLAGS +=3D -Wstrict-prototypes
- +
- +TPROGS_CFLAGS +=3D -I$(objtree)/usr/include
- +TPROGS_CFLAGS +=3D -I$(srctree)/tools/lib/bpf/
- +TPROGS_CFLAGS +=3D -I$(srctree)/tools/testing/selftests/bpf/
- +TPROGS_CFLAGS +=3D -I$(srctree)/tools/lib/
- +TPROGS_CFLAGS +=3D -I$(srctree)/tools/include
- +TPROGS_CFLAGS +=3D -I$(srctree)/tools/perf
-++TPROGS_CFLAGS +=3D -DHAVE_ATTR_TEST=3D0
- =20
- -HOSTCFLAGS_bpf_load.o +=3D -I$(objtree)/usr/include -Wno-unused-variable
- +ifdef SYSROOT
- +TPROGS_CFLAGS +=3D --sysroot=3D$(SYSROOT)
- +TPROGS_LDFLAGS :=3D -L$(SYSROOT)/usr/lib
- +endif
- +
- +TPROGCFLAGS_bpf_load.o +=3D -Wno-unused-variable
- =20
- -KBUILD_HOSTLDLIBS		+=3D $(LIBBPF) -lelf
- -HOSTLDLIBS_tracex4		+=3D -lrt
- -HOSTLDLIBS_trace_output	+=3D -lrt
- -HOSTLDLIBS_map_perf_test	+=3D -lrt
- -HOSTLDLIBS_test_overhead	+=3D -lrt
- -HOSTLDLIBS_xdpsock		+=3D -pthread
- +TPROGS_LDLIBS			+=3D $(LIBBPF) -lelf
- +TPROGLDLIBS_tracex4		+=3D -lrt
- +TPROGLDLIBS_trace_output	+=3D -lrt
- +TPROGLDLIBS_map_perf_test	+=3D -lrt
- +TPROGLDLIBS_test_overhead	+=3D -lrt
- +TPROGLDLIBS_xdpsock		+=3D -pthread
- =20
-  # Allows pointing LLC/CLANG to a LLVM backend with bpf support, redefine =
-on cmdline:
-  #  make samples/bpf/ LLC=3D~/git/llvm/build/bin/llc CLANG=3D~/git/llvm/bu=
-ild/bin/clang
-
---Sig_/Z+ofq0xCGo0+RR6uVsB2NLd
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2pJAsACgkQAVBC80lX
-0GyqEwf/UuMAsHsveGo2AA1IPKiMbsDeaMyqQOSlVmR60dCwQFt/0FIiGRYvDOj1
-Bj8APje30mHsjkB8soqEQ6wZAdDmzzrSIlI55bubZp2ogCBhoP4r+eDfYZJyLiCL
-O3tzu/owv5qrURc6e1qHQch6LhT5So77T3UPpL8xEPoGMPOpMVHeaHwq4H+B9ldA
-JpiMbPI+gRpaDghkt8ZwnPeetv6hChoeZVUKATArwuk5jJM4n+fIpnWratvgI+eZ
-AVPrdPGXNfFqttwLvq/dgjSxwplSn+onU6XtmO7reAPN6NHjPC1F6KNQYOg6nEQQ
-KJer+ciicgEiQ5jNLlr1fRuq0f8f4Q==
-=1V2Z
------END PGP SIGNATURE-----
-
---Sig_/Z+ofq0xCGo0+RR6uVsB2NLd--
+Regards,
+Anup
