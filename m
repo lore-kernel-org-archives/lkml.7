@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A84C8CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D65CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72F40222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBA1920679
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437134;
-	bh=aCSTbAXnQHzJmonbmjRU/TNSmpSmUo2JY9jr4+RSpH0=;
+	s=default; t=1571437137;
+	bh=a7lsjfD5XOqATd/HHMEqnA12kAyKJex2d6w/wuLsBQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QYGLVjNuGBZB1LTyB40CCoEl9ZNruT+DwsGa5d4VqqsKDei6qIfKVQNEFQUD8Tg27
-	 MZO3zLXD/6vLt4XTU9lM+ItoqrZgO7RUSQHcGz7lkxUZO9CCiu0ZYebriVjSKy/9dr
-	 HUAOiU97Kqxmnw92KBkGzsr0kWVdN7fT2wRWP784=
+	b=j6euxc5NdZLl89zjsG+88e8N8uK969e3nsAWBbS+gl9+27any8kXnTTYQvyZqKjDt
+	 jk+pcJ+18yYrLHCAzfzIZJkb7TR6q/DqzqHelYKyR6q96GME/GRh0t2kqBvGR4wL2T
+	 q/PY3L2rEUz+Bu2r9ApKeWm1HuY/LkijeIGiUUmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732463AbfJRWHH (ORCPT
+        id S2404333AbfJRWSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:07:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39124 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:18:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732275AbfJRWHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:07:01 -0400
+        id S1732466AbfJRWHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:07:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38DDF22468;
-        Fri, 18 Oct 2019 22:07:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D595B222D1;
+        Fri, 18 Oct 2019 22:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436420;
-        bh=aCSTbAXnQHzJmonbmjRU/TNSmpSmUo2JY9jr4+RSpH0=;
+        s=default; t=1571436427;
+        bh=a7lsjfD5XOqATd/HHMEqnA12kAyKJex2d6w/wuLsBQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UGGcueTAINxrjRjROzRRfHKy289JVCfrgJpcEvGesZ6FnpQk2/hXLZy+QyEvRF9W8
-         8WLh1bEp0SgDTamqvIrjB7wM1K3CFEyeBa70uvjlTdQ7dFXhxZrP4KvwqMD0Q6T0GO
-         JmurC0sFVW/Zp8Cy/lzY7tRSvhQUPwglzyWmhBPs=
+        b=l8K8kXkV5X6ITlNBvmDS/Yc57O6AcvtHUCDIzhi+vl2O9KlNS5vtP2ixgJn/Sv+8W
+         32b8UJ37BAn5V6xJxKhKn7QuikiWlX6l2lFSRjv4i0zLvit+QYrMSvW9oasMR5ZOC7
+         AQhH1ZRaGVIpqbXwhtWoJt7cIM7EKUD1TSh36+jE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 063/100] crypto: arm/aes-ce - add dependency on AES library
-Date:   Fri, 18 Oct 2019 18:04:48 -0400
-Message-Id: <20191018220525.9042-63-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 069/100] tty: serial: owl: Fix the link time qualifier of 'owl_uart_exit()'
+Date:   Fri, 18 Oct 2019 18:04:54 -0400
+Message-Id: <20191018220525.9042-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -59,32 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit f703964fc66804e6049f2670fc11045aa8359b1a ]
+[ Upstream commit 6264dab6efd6069f0387efb078a9960b5642377b ]
 
-The ARM accelerated AES driver depends on the new AES library for
-its non-SIMD fallback so express this in its Kconfig declaration.
+'exit' functions should be marked as __exit, not __init.
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: fc60a8b675bd ("tty: serial: owl: Implement console driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Link: https://lore.kernel.org/r/20190910041129.6978-1-christophe.jaillet@wanadoo.fr
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/crypto/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/tty/serial/owl-uart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/crypto/Kconfig b/arch/arm/crypto/Kconfig
-index b8e69fe282b8d..44278f375ae23 100644
---- a/arch/arm/crypto/Kconfig
-+++ b/arch/arm/crypto/Kconfig
-@@ -89,6 +89,7 @@ config CRYPTO_AES_ARM_CE
- 	tristate "Accelerated AES using ARMv8 Crypto Extensions"
- 	depends on KERNEL_MODE_NEON
- 	select CRYPTO_BLKCIPHER
-+	select CRYPTO_LIB_AES
- 	select CRYPTO_SIMD
- 	help
- 	  Use an implementation of AES in CBC, CTR and XTS modes that uses
+diff --git a/drivers/tty/serial/owl-uart.c b/drivers/tty/serial/owl-uart.c
+index 29a6dc6a8d23c..73fcc6bdb0312 100644
+--- a/drivers/tty/serial/owl-uart.c
++++ b/drivers/tty/serial/owl-uart.c
+@@ -742,7 +742,7 @@ static int __init owl_uart_init(void)
+ 	return ret;
+ }
+ 
+-static void __init owl_uart_exit(void)
++static void __exit owl_uart_exit(void)
+ {
+ 	platform_driver_unregister(&owl_uart_platform_driver);
+ 	uart_unregister_driver(&owl_uart_driver);
 -- 
 2.20.1
 
