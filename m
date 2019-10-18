@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9B6CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBE3CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92EF120640
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACB7920872
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437585;
-	bh=pvimibEjAyXqsfHKR7k5YuuvTWdfplcgN9pW/WPSVwM=;
+	s=default; t=1571437594;
+	bh=ZN/G0DCHvmoMD9ezTpP+BUSAzatO5A2Gky/EnJq3BiM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U7RRoIcsuG17rR0tHE7PU/pwkv0Frzz+cfw9TPKJHuhCeMGQPy/BP4kO1zm5wKwNV
-	 A9Ast1l2HwPJRGZoTMhjTJzWvyOzuS7W48mxWpGjn8VCdFHnZvEqnJleP5CtrNAl6G
-	 U77BZ0fBGaz0y1YLww4eeXQRzY4qyqGpO85aZUbg=
+	b=uW4vFFDIpWbPlGy/+gb4T/kLGN+3b+xHMiUDhegNEer9m+gI1JtiBuUGr+eMIbJP7
+	 bMjwXdigr3iuGna9Qkxbbrrt12OsOGpTtT5fG1VzEE7N0d9MlCuheooktXYyeWBMu3
+	 eKxQRyG6xsm0NhNnInTUeoYkI7hFwx1GM4w3eCWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394735AbfJRW0X (ORCPT
+        id S2406126AbfJRW0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:26:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35950 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:26:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727967AbfJRWES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:04:18 -0400
+        id S1727924AbfJRWEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:04:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7208222C5;
-        Fri, 18 Oct 2019 22:04:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7033120679;
+        Fri, 18 Oct 2019 22:04:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436258;
-        bh=pvimibEjAyXqsfHKR7k5YuuvTWdfplcgN9pW/WPSVwM=;
+        s=default; t=1571436255;
+        bh=ZN/G0DCHvmoMD9ezTpP+BUSAzatO5A2Gky/EnJq3BiM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=veNGxJ3ON8zF6PobeBkqV38GQXhYTZ+JyMeZzFJCbqQBz5h/HifjIOwu791f3B8TU
-         rT9Y/ln+uZ9EWdV2XuIzU3dMJ8DMQBaOmQRh6sLm5qGAxkDa3D4oJIIIYBcC3dAVx8
-         KmX8ywpqOkVJ6WQ4un5dEDdmbVmQdBok2msca1pU=
+        b=hsWxSdDwK+PvFfE1qh/kwbekwpXPI1ClrhtTEgiBzB/3MTFMm5FA/d/jSR5pdPTCz
+         VGyNQQTsOh3hJKQalifA3Qd3HzxLeH+eoBLvlO/2Q/36+RIZtiG4gmfjvgWXoP+lXD
+         Z8UCLEpaufK3MabXh2vaa67h4vn5kwfo6eHRquJU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Austin Kim <austindh.kim@gmail.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 41/89] fs: cifs: mute -Wunused-const-variable message
-Date:   Fri, 18 Oct 2019 18:02:36 -0400
-Message-Id: <20191018220324.8165-41-sashal@kernel.org>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 38/89] RDMA/mlx5: Order num_pending_prefetch properly with synchronize_srcu
+Date:   Fri, 18 Oct 2019 18:02:33 -0400
+Message-Id: <20191018220324.8165-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -59,41 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Austin Kim <austindh.kim@gmail.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit dd19c106a36690b47bb1acc68372f2b472b495b8 ]
+[ Upstream commit aa116b810ac9077a263ed8679fb4d595f180e0eb ]
 
-After 'Initial git repository build' commit,
-'mapping_table_ERRHRD' variable has not been used.
+During destroy setting live = 0 and then synchronize_srcu() prevents
+num_pending_prefetch from incrementing, and also, ensures that all work
+holding that count is queued on the WQ. Testing before causes races of the
+form:
 
-So 'mapping_table_ERRHRD' const variable could be removed
-to mute below warning message:
+    CPU0                                         CPU1
+  dereg_mr()
+                                          mlx5_ib_advise_mr_prefetch()
+            				   srcu_read_lock()
+                                            num_pending_prefetch_inc()
+					      if (!live)
+   live = 0
+   atomic_read() == 0
+     // skip flush_workqueue()
+                                              atomic_inc()
+ 					      queue_work();
+            				   srcu_read_unlock()
+   WARN_ON(atomic_read())  // Fails
 
-   fs/cifs/netmisc.c:120:40: warning: unused variable 'mapping_table_ERRHRD' [-Wunused-const-variable]
-   static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
-                                           ^
-Signed-off-by: Austin Kim <austindh.kim@gmail.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Swap the order so that the synchronize_srcu() prevents this.
+
+Fixes: a6bc3875f176 ("IB/mlx5: Protect against prefetch of invalid MR")
+Link: https://lore.kernel.org/r/20191001153821.23621-5-jgg@ziepe.ca
+Reviewed-by: Artemy Kovalyov <artemyko@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/netmisc.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/infiniband/hw/mlx5/mr.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/cifs/netmisc.c b/fs/cifs/netmisc.c
-index ed92958e842d3..657f409d4de06 100644
---- a/fs/cifs/netmisc.c
-+++ b/fs/cifs/netmisc.c
-@@ -117,10 +117,6 @@ static const struct smb_to_posix_error mapping_table_ERRSRV[] = {
- 	{0, 0}
- };
+diff --git a/drivers/infiniband/hw/mlx5/mr.c b/drivers/infiniband/hw/mlx5/mr.c
+index c4ba8838d2c46..96c8a6835592d 100644
+--- a/drivers/infiniband/hw/mlx5/mr.c
++++ b/drivers/infiniband/hw/mlx5/mr.c
+@@ -1591,13 +1591,14 @@ static void dereg_mr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr)
+ 		 */
+ 		mr->live = 0;
  
--static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
--	{0, 0}
--};
--
- /*
-  * Convert a string containing text IPv4 or IPv6 address to binary form.
-  *
++		/* Wait for all running page-fault handlers to finish. */
++		synchronize_srcu(&dev->mr_srcu);
++
+ 		/* dequeue pending prefetch requests for the mr */
+ 		if (atomic_read(&mr->num_pending_prefetch))
+ 			flush_workqueue(system_unbound_wq);
+ 		WARN_ON(atomic_read(&mr->num_pending_prefetch));
+ 
+-		/* Wait for all running page-fault handlers to finish. */
+-		synchronize_srcu(&dev->mr_srcu);
+ 		/* Destroy all page mappings */
+ 		if (umem_odp->page_list)
+ 			mlx5_ib_invalidate_range(umem_odp,
 -- 
 2.20.1
 
