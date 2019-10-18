@@ -4,50 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE9BCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A46CBCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4BDD222C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76CDD2245D
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:04:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436272;
-	bh=/g46P0TulW0h/dwsxG3+s4Jb4S23l9pXlIPSTXCiciA=;
+	s=default; t=1571436288;
+	bh=jQsDchaHHk7q+hECoo6OxNL9DQD/CglCbpxAufwSRk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PFT00G1UsCCKoHXw1eBENrw4aXjU3U0yJ0Zp4QliQ2yhnJFaxRmV2O+tAEpkRp5nS
-	 0M5UA7wYQDbpl9p7MO6jFJT9CMp2sVjzUKB6kmpPvSQQ+HCXiSrXCSrkkOLOkvwjCn
-	 fGOikOgL0X24qLRZ7nZCDu8qHVLzhHvu1jBw6LrI=
+	b=zpEIjPEe4fr3pTzzcEMv3rqrzQ3b8q+F+H6cqv6tR5GSHPIuP2SYSgGb9UJ/GcI+/
+	 IwhbOPK0QUlF2UFMRM1xpj4qrLzvglQa2ODCfVMcs4m+xgzsHdAdnsx/wGSBY4VGuq
+	 Wi9tUyyAOwBBf1kpOeBfAWQFklbx0Xp7IjRHM630=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbfJRWEa (ORCPT
+        id S1728746AbfJRWEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:04:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35984 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:04:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728061AbfJRWEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:04:21 -0400
+        id S1728483AbfJRWEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:04:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2695020679;
-        Fri, 18 Oct 2019 22:04:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A90632245A;
+        Fri, 18 Oct 2019 22:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436260;
-        bh=/g46P0TulW0h/dwsxG3+s4Jb4S23l9pXlIPSTXCiciA=;
+        s=default; t=1571436280;
+        bh=jQsDchaHHk7q+hECoo6OxNL9DQD/CglCbpxAufwSRk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1+n0aJJ8bzXrN3f9RngK2QO5cgXTt2zjUNfqpqvbXDnQc++LCB+ClYO52PxpLJFJ8
-         hc7yKRr04DOGd02QIoN8GaRTLwnRFaD4l2e6O3kQuR+doAl6U3GhXrzJq4e1rLrNpi
-         hW15f8bwJ6i2or++v7kApxW3QeLimeqWAhG+XPug=
+        b=jRT6WacrpkgoFOKKJ1H1FRQtnNqVlrTzQ/sBgCNeajQbAvdpDFn0jwSqFaJVwbrxW
+         cSfEMWjPmj/R3TVjC4MUr9MFyFNg7reXll6nXN7IAOuYazTWDvoybekzywDIqj86rQ
+         z8coy/ZrVibA7Wfu/eY9ZQZsjwJtx7T4MJcnsyKc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 43/89] arm64: vdso32: Detect binutils support for dmb ishld
-Date:   Fri, 18 Oct 2019 18:02:38 -0400
-Message-Id: <20191018220324.8165-43-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 57/89] fs: ocfs2: fix possible null-pointer dereferences in ocfs2_xa_prepare_entry()
+Date:   Fri, 18 Oct 2019 18:02:52 -0400
+Message-Id: <20191018220324.8165-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -60,77 +67,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 0df2c90eba60791148cee1823c0bf5fc66e3465c ]
+[ Upstream commit 56e94ea132bb5c2c1d0b60a6aeb34dcb7d71a53d ]
 
-Older versions of binutils (prior to 2.24) do not support the "ISHLD"
-option for memory barrier instructions, which leads to a build failure
-when assembling the vdso32 library.
+In ocfs2_xa_prepare_entry(), there is an if statement on line 2136 to
+check whether loc->xl_entry is NULL:
 
-Add a compilation time mechanism that detects if binutils supports those
-instructions and configure the kernel accordingly.
+    if (loc->xl_entry)
 
-Cc: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Reported-by: Will Deacon <will@kernel.org>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Tested-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+When loc->xl_entry is NULL, it is used on line 2158:
+
+    ocfs2_xa_add_entry(loc, name_hash);
+        loc->xl_entry->xe_name_hash = cpu_to_le32(name_hash);
+        loc->xl_entry->xe_name_offset = cpu_to_le16(loc->xl_size);
+
+and line 2164:
+
+    ocfs2_xa_add_namevalue(loc, xi);
+        loc->xl_entry->xe_value_size = cpu_to_le64(xi->xi_value_len);
+        loc->xl_entry->xe_name_len = xi->xi_name_len;
+
+Thus, possible null-pointer dereferences may occur.
+
+To fix these bugs, if loc-xl_entry is NULL, ocfs2_xa_prepare_entry()
+abnormally returns with -EINVAL.
+
+These bugs are found by a static analysis tool STCheck written by us.
+
+[akpm@linux-foundation.org: remove now-unused ocfs2_xa_add_entry()]
+Link: http://lkml.kernel.org/r/20190726101447.9153-1-baijiaju1990@gmail.com
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/vdso/compat_barrier.h | 2 +-
- arch/arm64/kernel/vdso32/Makefile            | 9 +++++++++
- 2 files changed, 10 insertions(+), 1 deletion(-)
+ fs/ocfs2/xattr.c | 56 ++++++++++++++++++++----------------------------
+ 1 file changed, 23 insertions(+), 33 deletions(-)
 
-diff --git a/arch/arm64/include/asm/vdso/compat_barrier.h b/arch/arm64/include/asm/vdso/compat_barrier.h
-index fb60a88b5ed41..3fd8fd6d8fc25 100644
---- a/arch/arm64/include/asm/vdso/compat_barrier.h
-+++ b/arch/arm64/include/asm/vdso/compat_barrier.h
-@@ -20,7 +20,7 @@
+diff --git a/fs/ocfs2/xattr.c b/fs/ocfs2/xattr.c
+index 90c830e3758e2..d8507972ee135 100644
+--- a/fs/ocfs2/xattr.c
++++ b/fs/ocfs2/xattr.c
+@@ -1490,18 +1490,6 @@ static int ocfs2_xa_check_space(struct ocfs2_xa_loc *loc,
+ 	return loc->xl_ops->xlo_check_space(loc, xi);
+ }
  
- #define dmb(option) __asm__ __volatile__ ("dmb " #option : : : "memory")
+-static void ocfs2_xa_add_entry(struct ocfs2_xa_loc *loc, u32 name_hash)
+-{
+-	loc->xl_ops->xlo_add_entry(loc, name_hash);
+-	loc->xl_entry->xe_name_hash = cpu_to_le32(name_hash);
+-	/*
+-	 * We can't leave the new entry's xe_name_offset at zero or
+-	 * add_namevalue() will go nuts.  We set it to the size of our
+-	 * storage so that it can never be less than any other entry.
+-	 */
+-	loc->xl_entry->xe_name_offset = cpu_to_le16(loc->xl_size);
+-}
+-
+ static void ocfs2_xa_add_namevalue(struct ocfs2_xa_loc *loc,
+ 				   struct ocfs2_xattr_info *xi)
+ {
+@@ -2133,29 +2121,31 @@ static int ocfs2_xa_prepare_entry(struct ocfs2_xa_loc *loc,
+ 	if (rc)
+ 		goto out;
  
--#if __LINUX_ARM_ARCH__ >= 8
-+#if __LINUX_ARM_ARCH__ >= 8 && defined(CONFIG_AS_DMB_ISHLD)
- #define aarch32_smp_mb()	dmb(ish)
- #define aarch32_smp_rmb()	dmb(ishld)
- #define aarch32_smp_wmb()	dmb(ishst)
-diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
-index 19e0d3115ffe0..77aa613403747 100644
---- a/arch/arm64/kernel/vdso32/Makefile
-+++ b/arch/arm64/kernel/vdso32/Makefile
-@@ -15,6 +15,8 @@ cc32-disable-warning = $(call try-run,\
- 	$(COMPATCC) -W$(strip $(1)) -c -x c /dev/null -o "$$TMP",-Wno-$(strip $(1)))
- cc32-ldoption = $(call try-run,\
-         $(COMPATCC) $(1) -nostdlib -x c /dev/null -o "$$TMP",$(1),$(2))
-+cc32-as-instr = $(call try-run,\
-+	printf "%b\n" "$(1)" | $(COMPATCC) $(VDSO_AFLAGS) -c -x assembler -o "$$TMP" -,$(2),$(3))
+-	if (loc->xl_entry) {
+-		if (ocfs2_xa_can_reuse_entry(loc, xi)) {
+-			orig_value_size = loc->xl_entry->xe_value_size;
+-			rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
+-			if (rc)
+-				goto out;
+-			goto alloc_value;
+-		}
++	if (!loc->xl_entry) {
++		rc = -EINVAL;
++		goto out;
++	}
  
- # We cannot use the global flags to compile the vDSO files, the main reason
- # being that the 32-bit compiler may be older than the main (64-bit) compiler
-@@ -53,6 +55,7 @@ endif
- VDSO_CAFLAGS += -fPIC -fno-builtin -fno-stack-protector
- VDSO_CAFLAGS += -DDISABLE_BRANCH_PROFILING
- 
+-		if (!ocfs2_xattr_is_local(loc->xl_entry)) {
+-			orig_clusters = ocfs2_xa_value_clusters(loc);
+-			rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
+-			if (rc) {
+-				mlog_errno(rc);
+-				ocfs2_xa_cleanup_value_truncate(loc,
+-								"overwriting",
+-								orig_clusters);
+-				goto out;
+-			}
++	if (ocfs2_xa_can_reuse_entry(loc, xi)) {
++		orig_value_size = loc->xl_entry->xe_value_size;
++		rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
++		if (rc)
++			goto out;
++		goto alloc_value;
++	}
 +
- # Try to compile for ARMv8. If the compiler is too old and doesn't support it,
- # fall back to v7. There is no easy way to check for what architecture the code
- # is being compiled, so define a macro specifying that (see arch/arm/Makefile).
-@@ -89,6 +92,12 @@ VDSO_CFLAGS += -Wno-int-to-pointer-cast
- VDSO_AFLAGS := $(VDSO_CAFLAGS)
- VDSO_AFLAGS += -D__ASSEMBLY__
++	if (!ocfs2_xattr_is_local(loc->xl_entry)) {
++		orig_clusters = ocfs2_xa_value_clusters(loc);
++		rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
++		if (rc) {
++			mlog_errno(rc);
++			ocfs2_xa_cleanup_value_truncate(loc,
++							"overwriting",
++							orig_clusters);
++			goto out;
+ 		}
+-		ocfs2_xa_wipe_namevalue(loc);
+-	} else
+-		ocfs2_xa_add_entry(loc, name_hash);
++	}
++	ocfs2_xa_wipe_namevalue(loc);
  
-+# Check for binutils support for dmb ishld
-+dmbinstr := $(call cc32-as-instr,dmb ishld,-DCONFIG_AS_DMB_ISHLD=1)
-+
-+VDSO_CFLAGS += $(dmbinstr)
-+VDSO_AFLAGS += $(dmbinstr)
-+
- VDSO_LDFLAGS := $(VDSO_CPPFLAGS)
- # From arm vDSO Makefile
- VDSO_LDFLAGS += -Wl,-Bsymbolic -Wl,--no-undefined -Wl,-soname=linux-vdso.so.1
+ 	/*
+ 	 * If we get here, we have a blank entry.  Fill it.  We grow our
 -- 
 2.20.1
 
