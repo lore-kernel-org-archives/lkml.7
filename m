@@ -2,119 +2,165 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC31CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFAECA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C883220700
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:59:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iHwCtDtv"
+	by mail.kernel.org (Postfix) with ESMTP id BF89F222C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:59:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633207AbfJRK7J (ORCPT
+        id S2633398AbfJRK7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 06:59:09 -0400
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:32935 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2442509AbfJRK7I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 06:59:08 -0400
-Received: by mail-vk1-f194.google.com with SMTP id s21so1253762vkm.0
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 03:59:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WtA3V2IALA0Xv78U/72cjyEnqj42CR5j6kkzonbGR5Y=;
-        b=iHwCtDtvN+KTXn/RwtvNwQGCGKUyAd9aSM5/gYvWV7+3et8OyYvGeQSXmjhj+GR2sd
-         DW5uJ+OFJKkG0er6TA1lKGXqY1nTjTi0KRvfqzTCvKcmvj5skk1j+unOkMnnfsYP7GqE
-         pC73iToVAVQTkOafuvqHysNZ9qi27d3sPQFeLo5TZpOQSAbAKLVv1vBArHqQOom4Eyim
-         8D5nZeKcjdDvNjm83dU/jbLg0sRXvoDzCDSk4tJbmu+nGMLBaiSZdnKxnSwwcyaeR69U
-         U5NGxqzclWg2VBwa6cqBYN+5eBmJQ02OiNWkHshFEX5BgoR+gelMXdE+oilY1XvjmTl9
-         66EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WtA3V2IALA0Xv78U/72cjyEnqj42CR5j6kkzonbGR5Y=;
-        b=T5itGIhfq/RgzW/nr/Rx4dJQoMLExH8Tds9wThdAT+aKnpamqYOtmRBl2Fu+0mmwt0
-         ryQlRA4CzjNVJEWRJc0B+iH660WUXwGWgLDa/xFc0XxjYUxC3famdL9a5IxVIk0L70hk
-         G2vcLWElkGs0QbqvY8Fd9XUNEdDwKu/gmK7RoO9qOi707qf6O0+J0YS4KsRR63NN0eby
-         C6sts35khOzIWLK7t3SJb4fsFW0ZWP9Diq084INoeQms6BS1i1eMIWAG3BbB60RHMDKK
-         AWAbT4Hz7wS3JcUIWTZOykCiMuNQCb7zr4a/5vP0e55C7qYXo5hDQUXheh3A/uxSY0zF
-         fiuw==
-X-Gm-Message-State: APjAAAXBfJdFNCM6BLEZ9jAq8WNhGYHEjz73OPSyvqxBMM15nHFRIYYH
-        47tbekC4V2bhnpsbch/1ZlkTMYkXnv/pdx5M8Z3mPQ==
-X-Google-Smtp-Source: APXvYqw84njAK+3ljeXxfcyBQy775MIu35Bex1hH0yoREoalNLM4JFsVxJK4C23Ifc2BtdFfQ1Qf7RJmFlC3FEimVwU=
-X-Received: by 2002:a1f:a293:: with SMTP id l141mr4939018vke.43.1571396347472;
- Fri, 18 Oct 2019 03:59:07 -0700 (PDT)
+        Fri, 18 Oct 2019 06:59:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55788 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392257AbfJRK7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 06:59:21 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3DBB3CA377;
+        Fri, 18 Oct 2019 10:59:20 +0000 (UTC)
+Received: from [10.72.12.59] (ovpn-12-59.pek2.redhat.com [10.72.12.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 87CDC60852;
+        Fri, 18 Oct 2019 10:57:30 +0000 (UTC)
+Subject: Re: [PATCH V4 4/6] mdev: introduce virtio device and its device ops
+To:     Tiwei Bie <tiwei.bie@intel.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+References: <20191017104836.32464-1-jasowang@redhat.com>
+ <20191017104836.32464-5-jasowang@redhat.com> <20191018094655.GA4200@___>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <a2a8e447-c778-59db-071a-ffa348a69bb8@redhat.com>
+Date:   Fri, 18 Oct 2019 18:57:22 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191014183849.14864-1-faiz_abbas@ti.com>
-In-Reply-To: <20191014183849.14864-1-faiz_abbas@ti.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 18 Oct 2019 12:58:30 +0200
-Message-ID: <CAPDyKFqbRNXaNVEACFQkKEymaY=Jm8L65-Ne_LbAmqFUkY1zcw@mail.gmail.com>
-Subject: Re: [RFC] mmc: cqhci: commit descriptors before setting the doorbell
-To:     Faiz Abbas <faiz_abbas@ti.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Harjani Ritesh <riteshh@codeaurora.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191018094655.GA4200@___>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 18 Oct 2019 10:59:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 14 Oct 2019 at 20:37, Faiz Abbas <faiz_abbas@ti.com> wrote:
->
-> Add a write memory barrier to make sure that descriptors are actually
-> written to memory before ringing the doorbell.
->
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
 
-Applied for fixes and by adding a stable tag, thanks!
+On 2019/10/18 下午5:46, Tiwei Bie wrote:
+> On Thu, Oct 17, 2019 at 06:48:34PM +0800, Jason Wang wrote:
+>> + * @get_vq_state:		Get the state for a virtqueue
+>> + *				@mdev: mediated device
+>> + *				@idx: virtqueue index
+>> + *				Returns virtqueue state (last_avail_idx)
+>> + * @get_vq_align:		Get the virtqueue align requirement
+>> + *				for the device
+>> + *				@mdev: mediated device
+>> + *				Returns virtqueue algin requirement
+>> + * @get_features:		Get virtio features supported by the device
+>> + *				@mdev: mediated device
+>> + *				Returns the virtio features support by the
+>> + *				device
+>> + * @get_features:		Set virtio features supported by the driver
+> s/get_features/set_features/
 
-BTW, do you have a valid commit that it fixes?
 
-Kind regards
-Uffe
+Will fix.
 
 
-> ---
 >
-> This patch fixes a very infrequent ADMA error (1 out of 100 times) that
-> I have been seeing after enabling command queuing for J721e.
-> Also looking at memory-barriers.txt and this commit[1],
-> it looks like we should be doing this before any descriptor write
-> followed by a doorbell ring operation. It'll be nice if someone with more
-> expertise in memory barriers can comment.
+>> + *				configration space
+>> + * @get_mdev_features:		Get the feature of virtio mdev device
+>> + *				@mdev: mediated device
+>> + *				Returns the mdev features (API) support by
+>> + *				the device.
+>> + * @get_generation:		Get device generaton
+>> + *				@mdev: mediated device
+>> + *				Returns u32: device generation
+>> + */
+>> +struct virtio_mdev_device_ops {
+>> +	/* Virtqueue ops */
+>> +	int (*set_vq_address)(struct mdev_device *mdev,
+>> +			      u16 idx, u64 desc_area, u64 driver_area,
+>> +			      u64 device_area);
+>> +	void (*set_vq_num)(struct mdev_device *mdev, u16 idx, u32 num);
+>> +	void (*kick_vq)(struct mdev_device *mdev, u16 idx);
+>> +	void (*set_vq_cb)(struct mdev_device *mdev, u16 idx,
+>> +			  struct virtio_mdev_callback *cb);
+>> +	void (*set_vq_ready)(struct mdev_device *mdev, u16 idx, bool ready);
+>> +	bool (*get_vq_ready)(struct mdev_device *mdev, u16 idx);
+>> +	int (*set_vq_state)(struct mdev_device *mdev, u16 idx, u64 state);
+>> +	u64 (*get_vq_state)(struct mdev_device *mdev, u16 idx);
+>> +
+>> +	/* Device ops */
+>> +	u16 (*get_vq_align)(struct mdev_device *mdev);
+>> +	u64 (*get_features)(struct mdev_device *mdev);
+>> +	int (*set_features)(struct mdev_device *mdev, u64 features);
+>> +	void (*set_config_cb)(struct mdev_device *mdev,
+>> +			      struct virtio_mdev_callback *cb);
+>> +	u16 (*get_vq_num_max)(struct mdev_device *mdev);
+>> +	u32 (*get_device_id)(struct mdev_device *mdev);
+>> +	u32 (*get_vendor_id)(struct mdev_device *mdev);
+>> +	u8 (*get_status)(struct mdev_device *mdev);
+>> +	void (*set_status)(struct mdev_device *mdev, u8 status);
+>> +	void (*get_config)(struct mdev_device *mdev, unsigned int offset,
+>> +			   void *buf, unsigned int len);
+>> +	void (*set_config)(struct mdev_device *mdev, unsigned int offset,
+>> +			   const void *buf, unsigned int len);
+>> +	u64 (*get_mdev_features)(struct mdev_device *mdev);
+> Do we need a .set_mdev_features method as well?
+
+
+Good question. To me I think we may document that the API provides 
+backward compatibility, so there's no need for set_mdev_features. Or is 
+there any other chance that we need that?
+
+
 >
-> [1] ad1a1b9cd67a ("scsi: ufs: commit descriptors before setting the
->     doorbell")
+> It's not very clear what does mdev_features mean.
+> Does it mean the vhost backend features?
 >
->  drivers/mmc/host/cqhci.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> https://github.com/torvalds/linux/blob/0e2adab6cf285c41e825b6c74a3aa61324d1132c/include/uapi/linux/vhost.h#L93-L94
+
+
+Something like this, it's kind of the version of the API, except for the 
+_F_VERSION_1, the first user should be _F_LOG_ALL. I will add more docs 
+for this API.
+
+Thanks
+
+
 >
-> diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
-> index f7bdae5354c3..5047f7343ffc 100644
-> --- a/drivers/mmc/host/cqhci.c
-> +++ b/drivers/mmc/host/cqhci.c
-> @@ -611,7 +611,8 @@ static int cqhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
->         cq_host->slot[tag].flags = 0;
 >
->         cq_host->qcnt += 1;
-> -
-> +       /* Make sure descriptors are ready before ringing the doorbell */
-> +       wmb();
->         cqhci_writel(cq_host, 1 << tag, CQHCI_TDBR);
->         if (!(cqhci_readl(cq_host, CQHCI_TDBR) & (1 << tag)))
->                 pr_debug("%s: cqhci: doorbell not set for tag %d\n",
-> --
-> 2.19.2
->
+>> +	u32 (*get_generation)(struct mdev_device *mdev);
+>> +};
+>> +
+>> +void mdev_set_virtio_ops(struct mdev_device *mdev,
+>> +			 const struct virtio_mdev_device_ops *virtio_ops);
+>> +
+>> +#endif
+>> -- 
+>> 2.19.1
+>>
