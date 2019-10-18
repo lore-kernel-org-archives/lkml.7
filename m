@@ -7,54 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34449CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DF2CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 092922082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60FEF2064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:46:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VflyZUvX"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lczfUGmA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505413AbfJRPqW (ORCPT
+        id S2633415AbfJRPqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:46:22 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:49658 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409069AbfJRPqU (ORCPT
+        Fri, 18 Oct 2019 11:46:25 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:42178 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505411AbfJRPqW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:46:20 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9IFkHkJ016648;
-        Fri, 18 Oct 2019 10:46:17 -0500
+        Fri, 18 Oct 2019 11:46:22 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9IFkJsH005918;
+        Fri, 18 Oct 2019 10:46:19 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571413577;
-        bh=p5em5IRObfpcqp3l0KWyJiTGrR9ie7pRTYi/0m+Xung=;
+        s=ti-com-17Q1; t=1571413579;
+        bh=BvksqVz6iTv8ZZ9PlGARstqOhVwtAPwo8nPnKMMEZfA=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=VflyZUvXhATlJZ6PQCSsRB2H7xJyQGp5f4d6CobnvxxxS12HbzjMe22SGv5fpAWy6
-         5fcabMFNCd8iH2DYssXQnSC1Dsr1ZrQxs3xZ0RVTQbhWEQBHv6JcFbMn1lNUlOHXmc
-         Uswrzwx4PLoiKrwVjyfklZ6G7FPY+qCevF7cs43s=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFkHjL128755;
-        Fri, 18 Oct 2019 10:46:17 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+        b=lczfUGmAen94j49AIBcT5QEgi9Q4uYtF8AQmt0+pbsLLnkZ+9Jq7YyZaw3mVIkmSY
+         qANXPUTZC0Ez6R4akw+ZqmNLnlETWVvrGSPtZ9BMGZdWLlLhbE6ppWxBCsmph0Gzli
+         DN5wuyTWSX/WOlKgllMfizlCVO6eBciQKx/yJFcM=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9IFkJqF005477
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 18 Oct 2019 10:46:19 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 18
- Oct 2019 10:46:16 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 10:46:19 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 18 Oct 2019 10:46:17 -0500
+ Frontend Transport; Fri, 18 Oct 2019 10:46:11 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFkDAP045642;
-        Fri, 18 Oct 2019 10:46:17 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFkDAR045642;
+        Fri, 18 Oct 2019 10:46:19 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
 CC:     Rob Herring <robh+dt@kernel.org>, <linux-omap@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 3/9] ARM: dts: dra7-l4: Add ti-sysc node for CAM
-Date:   Fri, 18 Oct 2019 10:48:43 -0500
-Message-ID: <20191018154849.3127-4-bparrot@ti.com>
+Subject: [Patch 5/9] arm: dts: dra72-evm-common: Add entries for the CSI2 cameras
+Date:   Fri, 18 Oct 2019 10:48:45 -0500
+Message-ID: <20191018154849.3127-6-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191018154849.3127-1-bparrot@ti.com>
 References: <20191018154849.3127-1-bparrot@ti.com>
@@ -66,83 +67,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add CAM nodes as a child of l4 interconnect in order for it to probe
-using ti-sysc.
+Add device nodes for CSI2 camera board OV5640.
+Add the CAL port nodes with the necessary linkage to the ov5640 nodes.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- arch/arm/boot/dts/dra7-l4.dtsi | 43 +++++++++++++++++++++++++++++-----
- 1 file changed, 37 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/dra72-evm-common.dtsi | 35 +++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
-index 0917231a20e2..8f5c26a4f7c8 100644
---- a/arch/arm/boot/dts/dra7-l4.dtsi
-+++ b/arch/arm/boot/dts/dra7-l4.dtsi
-@@ -4135,27 +4135,58 @@
- 		};
+diff --git a/arch/arm/boot/dts/dra72-evm-common.dtsi b/arch/arm/boot/dts/dra72-evm-common.dtsi
+index 8641a3d7d8ad..e4c01a67f6de 100644
+--- a/arch/arm/boot/dts/dra72-evm-common.dtsi
++++ b/arch/arm/boot/dts/dra72-evm-common.dtsi
+@@ -187,6 +187,12 @@
+ 		gpio = <&gpio5 8 GPIO_ACTIVE_HIGH>;
+ 		enable-active-high;
+ 	};
++
++	clk_ov5640_fixed: clk_ov5640_fixed {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <24000000>;
++	};
+ };
  
- 		target-module@170000 {			/* 0x48970000, ap 21 0a.0 */
--			compatible = "ti,sysc";
--			status = "disabled";
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			reg = <0x170010 0x4>;
-+			reg-names = "sysc";
-+			ti,sysc-midle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			clocks = <&cam_clkctrl DRA7_CAM_VIP1_CLKCTRL 0>;
-+			clock-names = "fck";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x0 0x170000 0x10000>;
-+			status = "disabled";
+ &dra7_pmx_core {
+@@ -269,6 +275,23 @@
+ 			line-name = "vin6_sel_s0";
  		};
+ 	};
++
++	ov5640@3c {
++		compatible = "ovti,ov5640";
++		reg = <0x3c>;
++
++		clocks = <&clk_ov5640_fixed>;
++		clock-names = "xclk";
++
++		port {
++			csi2_cam0: endpoint {
++				remote-endpoint = <&csi2_phy0>;
++				clock-lanes = <0>;
++				data-lanes = <1 2>;
++			};
++		};
++	};
++
+ };
  
- 		target-module@190000 {			/* 0x48990000, ap 23 2e.0 */
--			compatible = "ti,sysc";
--			status = "disabled";
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			reg = <0x190010 0x4>;
-+			reg-names = "sysc";
-+			ti,sysc-midle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			clocks = <&cam_clkctrl DRA7_CAM_VIP2_CLKCTRL 0>;
-+			clock-names = "fck";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x0 0x190000 0x10000>;
-+			status = "disabled";
- 		};
- 
- 		target-module@1b0000 {			/* 0x489b0000, ap 25 34.0 */
--			compatible = "ti,sysc";
--			status = "disabled";
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			reg = <0x1b0000 0x4>,
-+			      <0x1b0010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-midle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			clocks = <&cam_clkctrl DRA7_CAM_VIP3_CLKCTRL 0>;
-+			clock-names = "fck";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x0 0x1b0000 0x10000>;
-+			status = "disabled";
- 		};
- 
- 		target-module@1d0010 {			/* 0x489d0000, ap 27 30.0 */
+ &uart1 {
+@@ -580,3 +603,15 @@
+ &pcie1_rc {
+ 	status = "okay";
+ };
++
++&cal {
++	status = "okay";
++};
++
++&csi2_0 {
++	csi2_phy0: endpoint@0 {
++		remote-endpoint = <&csi2_cam0>;
++		clock-lanes = <0>;
++		data-lanes = <1 2>;
++	};
++};
 -- 
 2.17.1
 
