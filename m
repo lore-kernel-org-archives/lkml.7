@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D32FCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD5ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 156D521852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C511D21852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437498;
-	bh=l4ufX9DFTWVEsodenjVNjo/1QN5IcvrZe4Qls64Ta0g=;
+	s=default; t=1571437502;
+	bh=1Bp5QXY3r3Fb+fDqXdQe66OxpU2X041hGzALEvclh84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pATafuChDUbEEEiNLdVgvgqdtCXM8M+b7pnVPYQOunGn2DAZBPwUCA34wH1k7O3t9
-	 3I2ZxpXUsKhCp1AFRbrjuaUPXaDhN0l1appBdGxSgWUKI95x062p/TcOM/+NPNzkuU
-	 k9EYXmq0ZBSJjCxakuWuJbq3xbfEFea1A9RZxHtM=
+	b=wmGSRuGIY9MuUDUEE7cA4PesP8zuhrZrOx77NOBvVNDWE1xAG8Z/PQfKxjdCCcZcb
+	 vHI8bNsuCq1iMFyrA1nUfe0EfUFrPmRP6NoGz5vinETFOlSkgx+sKgriQpeCBvh/iY
+	 bIuIeYxvoFqcQ2rdUN3DGGStdllP75wnyVN/NxNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728813AbfJRWEt (ORCPT
+        id S2392314AbfJRWZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:04:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36438 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:25:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728517AbfJRWEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:04:43 -0400
+        id S1728740AbfJRWEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:04:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09C7A22466;
-        Fri, 18 Oct 2019 22:04:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD16522467;
+        Fri, 18 Oct 2019 22:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436283;
-        bh=l4ufX9DFTWVEsodenjVNjo/1QN5IcvrZe4Qls64Ta0g=;
+        s=default; t=1571436287;
+        bh=1Bp5QXY3r3Fb+fDqXdQe66OxpU2X041hGzALEvclh84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k0U2PauwcPVCggutvxsR4lR8JsVl6tgwOEdx0gLL0aIMiUDuTF9d97g9p0eOdspX0
-         y750xzQoAHswCKtcmbmJBi7bqIq+Zp4rD+k1UJRusRh/zy2C2vx0YTmS1QWxYlF0IL
-         wLeVuMdex1jbL2OaDsE0UPHWFcas+KliL0gVy/bk=
+        b=MipYs+6vmCA+l06k6iIqkYHE5dTSBbr45LVJHNBPxaNnyaoEKnLdmJ26wMlSYCLEf
+         AwqWYWLgoGCYEFad5ZGYuW4Ne8HmEJTU7VJW8/KTjaHhbduMKPso4tClJxVSHetfik
+         Tq8DdT6Efp7Lcc1D+8k5+z8psnYxGBQVrcW3shCE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Cc:     Kan Liang <kan.liang@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
+        ak@linux.intel.com, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 59/89] fs: ocfs2: fix a possible null-pointer dereference in ocfs2_info_scan_inode_alloc()
-Date:   Fri, 18 Oct 2019 18:02:54 -0400
-Message-Id: <20191018220324.8165-59-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 62/89] x86/cpu: Add Comet Lake to the Intel CPU models header
+Date:   Fri, 18 Oct 2019 18:02:57 -0400
+Message-Id: <20191018220324.8165-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -66,56 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-[ Upstream commit 2abb7d3b12d007c30193f48bebed781009bebdd2 ]
+[ Upstream commit 8d7c6ac3b2371eb1cbc9925a88f4d10efff374de ]
 
-In ocfs2_info_scan_inode_alloc(), there is an if statement on line 283
-to check whether inode_alloc is NULL:
+Comet Lake is the new 10th Gen Intel processor. Add two new CPU model
+numbers to the Intel family list.
 
-    if (inode_alloc)
+The CPU model numbers are not published in the SDM yet but they come
+from an authoritative internal source.
 
-When inode_alloc is NULL, it is used on line 287:
+ [ bp: Touch up commit message. ]
 
-    ocfs2_inode_lock(inode_alloc, &bh, 0);
-        ocfs2_inode_lock_full_nested(inode, ...)
-            struct ocfs2_super *osb = OCFS2_SB(inode->i_sb);
-
-Thus, a possible null-pointer dereference may occur.
-
-To fix this bug, inode_alloc is checked on line 286.
-
-This bug is found by a static analysis tool STCheck written by us.
-
-Link: http://lkml.kernel.org/r/20190726033717.32359-1-baijiaju1990@gmail.com
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Cc: ak@linux.intel.com
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/1570549810-25049-2-git-send-email-kan.liang@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/ioctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/intel-family.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/ocfs2/ioctl.c b/fs/ocfs2/ioctl.c
-index d6f7b299eb236..efeea208fdebd 100644
---- a/fs/ocfs2/ioctl.c
-+++ b/fs/ocfs2/ioctl.c
-@@ -283,7 +283,7 @@ static int ocfs2_info_scan_inode_alloc(struct ocfs2_super *osb,
- 	if (inode_alloc)
- 		inode_lock(inode_alloc);
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 9ae1c0f05fd2d..3525014c71da9 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -76,6 +76,9 @@
+ #define INTEL_FAM6_TIGERLAKE_L		0x8C
+ #define INTEL_FAM6_TIGERLAKE		0x8D
  
--	if (o2info_coherent(&fi->ifi_req)) {
-+	if (inode_alloc && o2info_coherent(&fi->ifi_req)) {
- 		status = ocfs2_inode_lock(inode_alloc, &bh, 0);
- 		if (status < 0) {
- 			mlog_errno(status);
++#define INTEL_FAM6_COMETLAKE		0xA5
++#define INTEL_FAM6_COMETLAKE_L		0xA6
++
+ /* "Small Core" Processors (Atom) */
+ 
+ #define INTEL_FAM6_ATOM_BONNELL		0x1C /* Diamondville, Pineview */
 -- 
 2.20.1
 
