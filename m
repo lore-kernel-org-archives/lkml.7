@@ -2,197 +2,238 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BBCCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8AF7CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EF9621852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:48:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iFql2BBI"
+	by mail.kernel.org (Postfix) with ESMTP id A872D21897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:50:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632949AbfJRIsG (ORCPT
+        id S2395304AbfJRIul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:48:06 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:45858 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2632940AbfJRIsF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 04:48:05 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9I8i9BP028994;
-        Fri, 18 Oct 2019 08:47:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=XykSB0gBQiTVbG4KBFgo1d2RuALABYecpLgSMG6zHrw=;
- b=iFql2BBIM8CpDm7UmmJuk9L3BBkuCq28HuJKP+91dn+Ln6VMIKeq1vx20gmMCz88eO3h
- 6LfQmusNCEIvzU8+Fvik5FjIi/pcdy/58K5jL3+AOFj9OTMFK15GqSW2oA5OVm8eyh6z
- dSt8L71v448jrwxkxNs/o8s2WHTbVErLESEAkLnjUfuOiNTsF9LdNA1XPemEWQFhVS9Q
- 4rPycX5dq7ZnHcI1vgAAK5XpQ95dnaBE0qErpBOAWZw59OcGc7NCOdOXSp+uCUh+EdB2
- ogdAweSU7aOqvZNDJvb08sNXpRuxDpU7gWHyxKv6gEUNJqLpb3H+ocqE5UpOnrASGgFQ mQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2vq0q42e7j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 18 Oct 2019 08:47:32 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9I8hXMK173381;
-        Fri, 18 Oct 2019 08:47:31 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2vq0dxdmt6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 18 Oct 2019 08:47:31 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9I8lOnR002288;
-        Fri, 18 Oct 2019 08:47:28 GMT
-Received: from [10.191.11.92] (/10.191.11.92)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 18 Oct 2019 08:47:24 +0000
-Subject: Re: [PATCH] x86: Don't use MWAIT if explicitly requested
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        tim.c.chen@linux.intel.com, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-References: <1571370354-17736-1-git-send-email-zhenzhong.duan@oracle.com>
- <20191018071206.GZ2328@hirez.programming.kicks-ass.net>
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <56b074ab-8718-180c-b3dd-72687025c5a8@oracle.com>
-Date:   Fri, 18 Oct 2019 16:47:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 18 Oct 2019 04:50:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35530 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391232AbfJRIul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 04:50:41 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C3CE38A1C95;
+        Fri, 18 Oct 2019 08:50:39 +0000 (UTC)
+Received: from [10.36.118.57] (unknown [10.36.118.57])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B2F1819C77;
+        Fri, 18 Oct 2019 08:50:25 +0000 (UTC)
+Subject: Re: [PATCH RFC v3 6/9] mm: Allow to offline PageOffline() pages with
+ a reference count of 0
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtualization@lists.linux-foundation.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Juergen Gross <jgross@suse.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Yu Zhao <yuzhao@google.com>, Minchan Kim <minchan@kernel.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+References: <20190919142228.5483-1-david@redhat.com>
+ <20190919142228.5483-7-david@redhat.com>
+ <20191016114321.GX317@dhcp22.suse.cz>
+ <36fef317-78e3-0500-43ba-f537f9a6fea4@redhat.com>
+ <20191016140350.GD317@dhcp22.suse.cz>
+ <7c7bef01-f904-904a-b0a7-f7b514b8bda8@redhat.com>
+ <20191018081524.GD5017@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <83d0a961-952d-21e4-74df-267912b7b6fa@redhat.com>
+Date:   Fri, 18 Oct 2019 10:50:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191018071206.GZ2328@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191018081524.GD5017@dhcp22.suse.cz>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910180086
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910180086
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Fri, 18 Oct 2019 08:50:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019/10/18 15:12, Peter Zijlstra wrote:
-> On Fri, Oct 18, 2019 at 11:45:54AM +0800, Zhenzhong Duan wrote:
->> If 'idle=nomwait' is specified or process matching what's in
->> processor_idle_dmi_table, we should't use MWAIT at bootup stage before
->> cpuidle driver loaded, even if it's preferred by default on Intel.
+On 18.10.19 10:15, Michal Hocko wrote:
+> On Wed 16-10-19 16:14:52, David Hildenbrand wrote:
+>> On 16.10.19 16:03, Michal Hocko wrote:
+> [...]
+>>> But why cannot you keep the reference count at 1 (do get_page when
+>>> offlining the page)? In other words as long as the driver knows the page
+>>> has been returned to the host then it has ref count at 1. Once the page
+>>> is returned to the guest for whatever reason it can free it to the
+>>> system by clearing the offline state and put_page.
 >>
->> Add a check so that HALT instruction is used in those cases.
-> The comment in idle_setup():
->
-> 	/*
-> 	 * If the boot option of "idle=nomwait" is added,
-> 	 * it means that mwait will be disabled for CPU C2/C3
-> 	 * states. In such case it won't touch the variable
-> 	 * of boot_option_idle_override.
-> 	 */
-> 	boot_option_idle_override = IDLE_NOMWAIT;
->
-> explicitly states this option is for C2+
+>> I think I explained how the reference count of 1 is problematic when wanting
+>> to offline the memory. After all that's the problem I try to solve: Keep
+>> PG_offline set until the memory is offline and make sure nobody will touch
+>> the page.
+> 
+> Please bear with me but I still believe that elevated reference count
+> has some merits. I do understand that you maintain your metadata to
+> recognize that the memory handed over to the hypervisor will not
+> magically appear after onlining. But I believe that you can achieve
+> the same with an elevated reference count and have a more robust design
+> as well.
 
-Yea, this is confusing. Other place referencing 
-boot_option_idle_override tell me
+Thanks for thinking about this. I still believe it is problematic. And I 
+don't like releasing "pages that should not be used" to the buddy. It 
+comes with some problems if offlining fails (see below).
 
-"idle=nomwait" means not using mwait for all cstates. Maybe 'C2/C3' could be
+> 
+> Let's say that you still keep a reference to your offlined pages and
+> mark them offlined. That should make sure that no consumer of the
+> pfn_to_online_page will touch the page's content nor the state. Now
 
-removed from above comment?
+pfn_to_online_page() does not check against PG_offline. (which is 
+correct IMHO. As documented, PG_offline means "logically offline".
 
-See drivers/acpi/processor_idle.c:
+The memmap is valid, however the page content should not be accessed. 
+(PG_logically_offline would have been ugly ;) ).
 
-                         if (cx.type == ACPI_STATE_C1 &&
-                             (boot_option_idle_override == IDLE_NOMWAIT)) {
-                                 /*
-                                  * In most cases the C1 space_id 
-obtained from
-                                  * _CST object is FIXED_HARDWARE access 
-mode.
-                                  * But when the option of idle=halt is 
-added,
-                                  * the entry_method type should be 
-changed from
-                                  * CSTATE_FFH to CSTATE_HALT.
-                                  * When the option of idle=nomwait is 
-added,
-                                  * the C1 entry_method type should be
-                                  * CSTATE_HALT.
-                                  */
-                                 cx.entry_method = ACPI_CSTATE_HALT;
-                                 snprintf(cx.desc, ACPI_CX_DESC_LEN, 
-"ACPI HLT");
-                         }
+But that shouldn't be an issue right now.
 
-and drivers/acpi/processor_pdc.c:
+> admin might want to offline/hotremove the whole memory block via sysfs.
 
-         if (boot_option_idle_override == IDLE_NOMWAIT) {
-                 /*
-                  * If mwait is disabled for CPU C-states, the C2C3_FFH 
-access
-                  * mode will be disabled in the parameter of _PDC object.
-                  * Of course C1_FFH access mode will also be disabled.
-                  */
-                 union acpi_object *obj;
-                 u32 *buffer = NULL;
+The admin can only trigger offlining via sysfs. Hotremove is under 
+control of the driver. (removing the whole memory block)
 
-                 obj = pdc_in->pointer;
-                 buffer = (u32 *)(obj->buffer.pointer);
-                 buffer[2] &= ~(ACPI_PDC_C_C2C3_FFH | ACPI_PDC_C_C1_FFH);
+And with the current virtio-mem prototype, this works like a charm.
 
-         }
+> An elevated reference count would prevent offlining to finish. And I
+> believe this is a good thing because the owner of the offline page might
+> still need to do something to "untrack" that page. We have an interface
 
->
->> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Borislav Petkov <bp@alien8.de>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: "H. Peter Anvin" <hpa@zytor.com>
->> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
->> ---
->>   arch/x86/kernel/process.c | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
->> index 5e94c43..37fc577 100644
->> --- a/arch/x86/kernel/process.c
->> +++ b/arch/x86/kernel/process.c
->> @@ -667,6 +667,10 @@ static void amd_e400_idle(void)
->>    */
->>   static int prefer_mwait_c1_over_halt(const struct cpuinfo_x86 *c)
->>   {
->> +	/* Don't use MWAIT-C1 if explicitly requested */
->> +	if (boot_option_idle_override == IDLE_NOMWAIT)
->> +		return 0;
-> And this is very much about C1...
->
-> OTOH, "idle=halt" should be forcing HLT over MWAIT, so did you want to
-> write:
->
-> 	if (boot_option_idle_override == IDLE_HALT)
-> 		return 0;
->
-> instead?
+And here is the thing: The owner of the page does not have to do 
+anything to untrack the page. I mean that's what a reference count of 
+zero actually means - no direct reference.
 
-I think it's not necessory, if 'idle=halt' specified, 
-select_idle_routine() returns early,
+I could emphasize how this is to be used in the documentation:
 
-prefer_mwait_c1_over_halt() is never called.
+PageOffline() pages that have a reference count of 0 will be treated
+like free pages when offlining pages, allowing the containing memory
+block to get offlined. In case a driver wants to revive such a page, it 
+has to synchronize against memory onlining/offlining (e.g., using memory 
+notifiers) while incrementing the reference count. Also, a driver that 
+relies in this feature is aware that re-onlining the memory will require 
+to re-set the pages PageOffline() - e.g., via the online_page_callback_t.
 
-Zhenzhong
 
+> for that - MEM_GOING_OFFLINE notification. This sounds like a good place
+> for the driver to decide whether it is safe to let the page go or not.
+
+As I explained, this is too late and fragile. I post again what I posted 
+before with some further explanations
+
+__offline_pages() works like this:
+
+1) start_isolate_page_range()
+-> offline pages with a reference count of one will be detected as
+unmovable -> offlining aborted. (see below on the memory isolation notifier)
+
+2) memory_notify(MEM_GOING_OFFLINE, &arg);
+-> Here, we could release all pages to the buddy, clearing PG_offline
+-> PF_offline must not be cleared so dumping tools will not touch
+    these pages. There is a time where pages are !PageBuddy() and
+    !PageOffline().
+
+3) scan_movable_pages() ...
+
+4a) Memory offlining succeeded: memory_notify(MEM_OFFLINE, &arg);
+
+Perfect, it worked. Sections are offline.
+
+4b) Memory offlining failed
+
+     undo_isolate_page_range(start_pfn, end_pfn, MIGRATE_MOVABLE);
+     memory_notify(MEM_CANCEL_OFFLINE, &arg);
+
+-> Offlining failed for whatever reason. Once we reach the notifier, the
+    pages are already back in use by the buddy.
+-> Pages are in the buddy, they are no longer under control of the
+    driver.
+
+
+To summarize the important parts
+
+1. PG_offline has to remain set until the section is offline.
+
+2. When we reach MEM_GOING_OFFLINE, it is too late. The pages were 
+already detected as unmovable.
+
+3. When we release pages that are supposed to be PG_offline to the buddy 
+and offlining fails, we are in big trouble.
+
+
+> If you can let the page go then just drop the reference count. The page
+> is isolated already by that time. If you cannot let it go for whatever
+> reason you can fail the offlining.
+
+We do have one hack in current MM code, which is the memory isolation 
+notifier only used by CMM on PPC. It allows to "cheat" 
+has_unmovable_pages() to skip over unmovable pages. But quite frankly, I 
+rather want to get rid of that crap (something I am working on right 
+now) than introduce new users. This stuff is racy as hell and for CMM, 
+if memory offlining fails, the ballooned pages are suddenly part of the 
+buddy. Fragile.
+
+> 
+> An advantage is that the driver has the full control over offlining and
+> also you do not really have to track a new online request to do the
+> right thing.
+
+The driver still has to synchronize against onlining/offlining requests 
+and track the state of the memory blocks.
+
+Simple example: virtio-mem wants to try yo unplug a 4MB chunk. If the 
+memory block is online, it has to use alloc contig_range(). If the 
+memory block is offline (e.g., user space has not onlined it yet), it is 
+sufficient to update metadata. It has to be aware of the state of the 
+memory blocks and synchronize against onlining/offlining.
+
+> 
+> Or do I still see it too simplistically and the notifier is not a good
+> place to handle the reference count?
+
+Yes :) I could hack something via the memory isolation notifier (which 
+is ugly) and MEM_GOING_OFFLINE. But if offlining fails, the pages are in 
+the buddy and the driver lost control (which is one issue with PPC CMA 
+implementation right now).
+
+Again, I think routing pages via the buddy is the problematic part. (if 
+offlining fails, but also the period where the pages are neither 
+PageBuddy() nor PageOffline()))
+
+
+-- 
+
+Thanks,
+
+David / dhildenb
