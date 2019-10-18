@@ -7,45 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26602CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEEE1CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6830222D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93730222D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:07:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436430;
-	bh=g01Pj0tf7hlnryPghFku7R8JDx+a9JzwcwCkVwtqZnY=;
+	s=default; t=1571436433;
+	bh=b/ZixkpuVhOueuW0CeDByS/LFt+SqUvWTGbS8dfFALk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DHWdtnfLazyfjkfQ/xZZzyVvd3u6cL7Bpql6+vpP+raCRuR05me1TEgzpFKbkIKZ6
-	 b2NJ5ifOuAeXTQ8ScgvqMVRPPAlTPOsagAW9yXyVwsMrQvf5nJ3LeARQKPxppvfXqa
-	 ygJasExgTbQFaqvkL1/1lkmYlRj6xZEB+mPCev5k=
+	b=gXlrWEgDdtaSJK6ZTJG+LtmeRnb9yEPlqKFSLajfpfauxGruBI/fg3ARmqg746Q1F
+	 L7fX8o5XxvbQ+NXQ7nwFJ6JZySVAkecSF2a8zik76pJyQJ/sSloiFcmVXxW+02ah6D
+	 65o9M978nP0S3IQdE1FJilRyoNvv8C1MftOGGDVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732502AbfJRWHI (ORCPT
+        id S1732567AbfJRWHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:07:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39214 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:07:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732432AbfJRWHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:07:07 -0400
+        id S1732432AbfJRWHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:07:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD4BF22466;
-        Fri, 18 Oct 2019 22:07:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5F79205F4;
+        Fri, 18 Oct 2019 22:07:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436426;
-        bh=g01Pj0tf7hlnryPghFku7R8JDx+a9JzwcwCkVwtqZnY=;
+        s=default; t=1571436428;
+        bh=b/ZixkpuVhOueuW0CeDByS/LFt+SqUvWTGbS8dfFALk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ts4nMQxnDiJP0pt3aMG5qaXn8lwKRMvCJ32OP36BagXGy/O5Ujprr8VSDsCUwTP8B
-         dvsPzNdzjRhScfXzfNfiKi2+FAOSytPXYJTycG0HoI/6dooQkgrpOMeUx2EDCoQi5E
-         M1QjWCrebj+8z4rOR/Taqkhc0L4+WOoXtyAXYbpg=
+        b=rdm3bFhJUk3B3m79+EQIPJjdpsSrwqfaM+gHnEaGCc3W+ISSihysy320jBAjeks4V
+         1U4aRh7UP5mVwaCVl8c0uH+Q38icVCBvi0vDtUEx88+dE5rIGIupeMHf0Vgg6hOgpg
+         NrH2BNRGbjYmn2Mg46Ao5CdxL/xldQF/04l4mppA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Morse <james.morse@arm.com>, Will Deacon <will@kernel.org>,
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        kbuild test robot <lkp@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 068/100] arm64: ftrace: Ensure synchronisation in PLT setup for Neoverse-N1 #1542419
-Date:   Fri, 18 Oct 2019 18:04:53 -0400
-Message-Id: <20191018220525.9042-68-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 070/100] tty: n_hdlc: fix build on SPARC
+Date:   Fri, 18 Oct 2019 18:04:55 -0400
+Message-Id: <20191018220525.9042-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -58,62 +63,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit dd8a1f13488438c6c220b7cafa500baaf21a6e53 ]
+[ Upstream commit 47a7e5e97d4edd7b14974d34f0e5a5560fad2915 ]
 
-CPUs affected by Neoverse-N1 #1542419 may execute a stale instruction if
-it was recently modified. The affected sequence requires freshly written
-instructions to be executable before a branch to them is updated.
+Fix tty driver build on SPARC by not using __exitdata.
+It appears that SPARC does not support section .exit.data.
 
-There are very few places in the kernel that modify executable text,
-all but one come with sufficient synchronisation:
- * The module loader's flush_module_icache() calls flush_icache_range(),
-   which does a kick_all_cpus_sync()
- * bpf_int_jit_compile() calls flush_icache_range().
- * Kprobes calls aarch64_insn_patch_text(), which does its work in
-   stop_machine().
- * static keys and ftrace both patch between nops and branches to
-   existing kernel code (not generated code).
+Fixes these build errors:
 
-The affected sequence is the interaction between ftrace and modules.
-The module PLT is cleaned using __flush_icache_range() as the trampoline
-shouldn't be executable until we update the branch to it.
+`.exit.data' referenced in section `.exit.text' of drivers/tty/n_hdlc.o: defined in discarded section `.exit.data' of drivers/tty/n_hdlc.o
+`.exit.data' referenced in section `.exit.text' of drivers/tty/n_hdlc.o: defined in discarded section `.exit.data' of drivers/tty/n_hdlc.o
+`.exit.data' referenced in section `.exit.text' of drivers/tty/n_hdlc.o: defined in discarded section `.exit.data' of drivers/tty/n_hdlc.o
+`.exit.data' referenced in section `.exit.text' of drivers/tty/n_hdlc.o: defined in discarded section `.exit.data' of drivers/tty/n_hdlc.o
 
-Drop the double-underscore so that this path runs kick_all_cpus_sync()
-too.
-
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Fixes: 063246641d4a ("format-security: move static strings to const")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Link: https://lore.kernel.org/r/675e7bd9-955b-3ff3-1101-a973b58b5b75@infradead.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/ftrace.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/tty/n_hdlc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
-index 7eff8afa035fd..b6618391be8c6 100644
---- a/arch/arm64/kernel/ftrace.c
-+++ b/arch/arm64/kernel/ftrace.c
-@@ -119,10 +119,16 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+diff --git a/drivers/tty/n_hdlc.c b/drivers/tty/n_hdlc.c
+index bb63519db7ae4..c943716c019e4 100644
+--- a/drivers/tty/n_hdlc.c
++++ b/drivers/tty/n_hdlc.c
+@@ -968,6 +968,11 @@ static int __init n_hdlc_init(void)
+ 	
+ }	/* end of init_module() */
  
- 			/*
- 			 * Ensure updated trampoline is visible to instruction
--			 * fetch before we patch in the branch.
-+			 * fetch before we patch in the branch. Although the
-+			 * architecture doesn't require an IPI in this case,
-+			 * Neoverse-N1 erratum #1542419 does require one
-+			 * if the TLB maintenance in module_enable_ro() is
-+			 * skipped due to rodata_enabled. It doesn't seem worth
-+			 * it to make it conditional given that this is
-+			 * certainly not a fast-path.
- 			 */
--			__flush_icache_range((unsigned long)&dst[0],
--					     (unsigned long)&dst[1]);
-+			flush_icache_range((unsigned long)&dst[0],
-+					   (unsigned long)&dst[1]);
- 		}
- 		addr = (unsigned long)dst;
- #else /* CONFIG_ARM64_MODULE_PLTS */
++#ifdef CONFIG_SPARC
++#undef __exitdata
++#define __exitdata
++#endif
++
+ static const char hdlc_unregister_ok[] __exitdata =
+ 	KERN_INFO "N_HDLC: line discipline unregistered\n";
+ static const char hdlc_unregister_fail[] __exitdata =
 -- 
 2.20.1
 
