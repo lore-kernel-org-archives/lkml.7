@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93926CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC3ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DFD020640
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4865520640
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:27:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437635;
-	bh=7mNEQb4odMCK8DC3X0ofHK/HaZhcSp9aEhBH5SILLYY=;
+	s=default; t=1571437638;
+	bh=a7lsjfD5XOqATd/HHMEqnA12kAyKJex2d6w/wuLsBQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bxercKqGeKi+sHLlcNQgVxu4j0+vSUWHmfDM9UDJkF0H6kseB5gq2kirsvDjfqneP
-	 +1mBkSZvKUHwgM563VA7x1YS5zIgGEH+acVvXkziyrHrNINc0YuUIEqKRg8vmjoJ1o
-	 q3ltha29lFJVjm84WWhprC83La7vLcAmhgePSH7g=
+	b=gdjHzn9XH+FV2e2hcvuVpzvev6GcIxhCYTyqgsCbK3I6RhY5xIrgjD7NL28a6g/oJ
+	 vGT96UtVwDyLv00R8yeZjVfi1n7pKWnyQ6x+XRIV5uS3/hacs9Ik01rPu9QTrsS9hb
+	 s+5TUnoSgQD1iwIP+bSuj7DKIT9NZeusbC6bYSbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbfJRWEE (ORCPT
+        id S2406387AbfJRW1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:04:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35642 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:27:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727598AbfJRWEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:04:01 -0400
+        id S1727671AbfJRWEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:04:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20EC220679;
-        Fri, 18 Oct 2019 22:04:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D9752246A;
+        Fri, 18 Oct 2019 22:04:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436240;
-        bh=7mNEQb4odMCK8DC3X0ofHK/HaZhcSp9aEhBH5SILLYY=;
+        s=default; t=1571436243;
+        bh=a7lsjfD5XOqATd/HHMEqnA12kAyKJex2d6w/wuLsBQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oUypFvpj2UuEgxOvBSw+zPUfH0QagKrnMu0Z7dBGhrG4PcVKjczv2I9sQsPZKUkJi
-         5NdnAaBnLSAFRVeddFFZqAtaWlFlN/3vzJekwvRd9df+T2ov9y38tsDLR/I6p23KAB
-         yhLO/O67K5ijnbQe/lVdtkTsff4BjxxyfJiYO3AU=
+        b=MOvscl0bkm45WNJOAu1nCLtf1L5BpeMYQW4Pl4vx9hMc+Fakmgq4lAHaTklfTNP+r
+         U95+8NxdJTq2M/zqaV+A0yf8HLTQuA8xlkXVZovR3V7KEF21SNQpJ7tFHfJlngg8zp
+         tyFO/53ILPoSiImSTxnGcaTM1CSKrsbmbw1Sa7xs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julien Grall <julien.grall@arm.com>, mark.brown@arm.com,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 25/89] arm64: cpufeature: Effectively expose FRINT capability to userspace
-Date:   Fri, 18 Oct 2019 18:02:20 -0400
-Message-Id: <20191018220324.8165-25-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 28/89] tty: serial: owl: Fix the link time qualifier of 'owl_uart_exit()'
+Date:   Fri, 18 Oct 2019 18:02:23 -0400
+Message-Id: <20191018220324.8165-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -58,44 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julien Grall <julien.grall@arm.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 7230f7e99fecc684180322b056fad3853d1029d3 ]
+[ Upstream commit 6264dab6efd6069f0387efb078a9960b5642377b ]
 
-The HWCAP framework will detect a new capability based on the sanitized
-version of the ID registers.
+'exit' functions should be marked as __exit, not __init.
 
-Sanitization is based on a whitelist, so any field not described will end
-up to be zeroed.
-
-At the moment, ID_AA64ISAR1_EL1.FRINTTS is not described in
-ftr_id_aa64isar1. This means the field will be zeroed and therefore the
-userspace will not be able to see the HWCAP even if the hardware
-supports the feature.
-
-This can be fixed by describing the field in ftr_id_aa64isar1.
-
-Fixes: ca9503fc9e98 ("arm64: Expose FRINT capabilities to userspace")
-Signed-off-by: Julien Grall <julien.grall@arm.com>
-Cc: mark.brown@arm.com
-Signed-off-by: Will Deacon <will@kernel.org>
+Fixes: fc60a8b675bd ("tty: serial: owl: Implement console driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Link: https://lore.kernel.org/r/20190910041129.6978-1-christophe.jaillet@wanadoo.fr
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/cpufeature.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/tty/serial/owl-uart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 9323bcc40a58a..cabebf1a79768 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -136,6 +136,7 @@ static const struct arm64_ftr_bits ftr_id_aa64isar0[] = {
+diff --git a/drivers/tty/serial/owl-uart.c b/drivers/tty/serial/owl-uart.c
+index 29a6dc6a8d23c..73fcc6bdb0312 100644
+--- a/drivers/tty/serial/owl-uart.c
++++ b/drivers/tty/serial/owl-uart.c
+@@ -742,7 +742,7 @@ static int __init owl_uart_init(void)
+ 	return ret;
+ }
  
- static const struct arm64_ftr_bits ftr_id_aa64isar1[] = {
- 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR1_SB_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR1_FRINTTS_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_VISIBLE_IF_IS_ENABLED(CONFIG_ARM64_PTR_AUTH),
- 		       FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR1_GPI_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_VISIBLE_IF_IS_ENABLED(CONFIG_ARM64_PTR_AUTH),
+-static void __init owl_uart_exit(void)
++static void __exit owl_uart_exit(void)
+ {
+ 	platform_driver_unregister(&owl_uart_platform_driver);
+ 	uart_unregister_driver(&owl_uart_driver);
 -- 
 2.20.1
 
