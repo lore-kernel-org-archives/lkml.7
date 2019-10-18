@@ -2,152 +2,160 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE85CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF7CCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA9720640
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:30:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W34HiTmz"
+	by mail.kernel.org (Postfix) with ESMTP id 7A2C320869
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:30:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439500AbfJRQaJ (ORCPT
+        id S2439761AbfJRQam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:30:09 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37941 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732948AbfJRQaJ (ORCPT
+        Fri, 18 Oct 2019 12:30:42 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57593 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389858AbfJRQal (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:30:09 -0400
-Received: by mail-wr1-f65.google.com with SMTP id o15so6497661wru.5;
-        Fri, 18 Oct 2019 09:30:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=lJc0hj7tQVxDAaGjfCOv7vwr1QfJ/5Ay/O35J4hdg0E=;
-        b=W34HiTmzG0Wkh8A4mK+ZBdO7Aae+UoxMX9i9O7wdsm3reQ/ZEtdu3N4gw0ACWa8nbe
-         bpAzAeXA+eqX577RWAm+tQVEQNxRs/1GBLc1TlbBsfMvvme0U/x7Eb1DuRhjJLNIPkhe
-         ooAQtfe2s6JHbVqwyj6nDJiDFV57IXFscjR0vUXmroN10dCjWUV2pMbbyeds/UYgy5sY
-         zNVyoJbEmrWGwDSPlUh4BpS9OyhC0mgDHuWjGZ+CUu0rKVG7nxzrEKjihpX8SvUvsnlV
-         URGpEeu27I3kqsfnJUqoSHj+bzMoZHrhTcGOsbC/rwnDWn6TUGXE6Y4ZY9P0ltJZgFjJ
-         UdZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=lJc0hj7tQVxDAaGjfCOv7vwr1QfJ/5Ay/O35J4hdg0E=;
-        b=Vp1Ycb7Vt1noBRj3fBkas+grtSsIyuCJlb68XVhJXQStmSRmnvvvj2V8a3kLvkJuox
-         rYSjZLZ0sCO1dBsTd6H8WaiifTxkLDyJufS8CY8v9W06GSDeoRJsS5ypbrcafoLUuYAO
-         uHNU1sQ3wLz7QZA5zXkj/haeT5pnBpNJOQhqz1k7Aa+YI6R7TxRd5FgyaJUBgIaf3vGK
-         vH21RA8fGvN2r549IVBKWtsubvt5vl+RIHdlZFGf6P47vcf20UzH1Zz67fmoeUWzXyTn
-         UYHw1ma5SaapZGO0nNr0731Fxx8IiiH8JhO3z95nUhY89w2hde6wlheSB9Vzrdi1npxn
-         wSfw==
-X-Gm-Message-State: APjAAAV5K+sL8mQKAX9BLW7jtK4zW+IBDie/GXeiLJxijCpAGfCrdiE6
-        KVobB3zG/9pKhQrjCy0nbgw=
-X-Google-Smtp-Source: APXvYqyYIv1KczmfhzvFNVLt5B5gajKUiA+enUgcWK2XtyuUq3g+DU3XrKJg4cwXJvIMYHUnnEdVSA==
-X-Received: by 2002:a5d:484e:: with SMTP id n14mr8206328wrs.110.1571416206126;
-        Fri, 18 Oct 2019 09:30:06 -0700 (PDT)
-Received: from debian.office.codethink.co.uk. ([78.40.148.180])
-        by smtp.gmail.com with ESMTPSA id m16sm5010123wml.11.2019.10.18.09.30.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 18 Oct 2019 09:30:05 -0700 (PDT)
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Subject: [PATCH] omapfb: reduce stack usage
-Date:   Fri, 18 Oct 2019 17:30:04 +0100
-Message-Id: <20191018163004.23498-1-sudipm.mukherjee@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Fri, 18 Oct 2019 12:30:41 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iLV93-0002jb-72; Fri, 18 Oct 2019 18:30:29 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CC0BE1C0450;
+        Fri, 18 Oct 2019 18:30:28 +0200 (CEST)
+Date:   Fri, 18 Oct 2019 16:30:28 -0000
+From:   "tip-bot2 for Jiri Slaby" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/asm] x86/asm: Remove the last GLOBAL user and remove the macro
+Cc:     Jiri Slaby <jslaby@suse.cz>, Borislav Petkov <bp@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        linux-arch@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, "x86-ml" <x86@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191011115108.12392-20-jslaby@suse.cz>
+References: <20191011115108.12392-20-jslaby@suse.cz>
+MIME-Version: 1.0
+Message-ID: <157141622856.29376.8848286493548483799.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The build of xtensa allmodconfig is giving a warning of:
-In function 'dsi_dump_dsidev_irqs':
-warning: the frame size of 1120 bytes is larger than 1024 bytes
+The following commit has been merged into the x86/asm branch of tip:
 
-Allocate the memory for 'struct dsi_irq_stats' dynamically instead
-of assigning it in stack.
+Commit-ID:     b4edca150106a68d05eaf823d665a355ff19e28b
+Gitweb:        https://git.kernel.org/tip/b4edca150106a68d05eaf823d665a355ff19e28b
+Author:        Jiri Slaby <jslaby@suse.cz>
+AuthorDate:    Fri, 11 Oct 2019 13:50:59 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Fri, 18 Oct 2019 11:29:50 +02:00
 
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+x86/asm: Remove the last GLOBAL user and remove the macro
+
+Convert the remaining 32bit users and remove the GLOBAL macro finally.
+In particular, this means to use SYM_ENTRY for the singlestepping hack
+region.
+
+Exclude the global definition of GLOBAL from x86 too.
+
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: linux-arch@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will@kernel.org>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20191011115108.12392-20-jslaby@suse.cz
 ---
- drivers/video/fbdev/omap2/omapfb/dss/dsi.c | 24 ++++++++++++++----------
- 1 file changed, 14 insertions(+), 10 deletions(-)
+ arch/x86/entry/entry_32.S      | 4 ++--
+ arch/x86/include/asm/linkage.h | 8 --------
+ include/linux/linkage.h        | 2 ++
+ 3 files changed, 4 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dsi.c b/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
-index d620376216e1..43402467bf40 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
-@@ -1536,22 +1536,25 @@ static void dsi_dump_dsidev_irqs(struct platform_device *dsidev,
- {
- 	struct dsi_data *dsi = dsi_get_dsidrv_data(dsidev);
- 	unsigned long flags;
--	struct dsi_irq_stats stats;
-+	struct dsi_irq_stats *stats;
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index f37ff58..4900a6a 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -832,7 +832,7 @@ SYM_INNER_LABEL_ALIGN(resume_userspace, SYM_L_LOCAL)
+ 	jmp	restore_all
+ SYM_CODE_END(ret_from_exception)
  
-+	stats = kmalloc(sizeof(*stats), GFP_KERNEL);
-+	if (!stats)
-+		return;
- 	spin_lock_irqsave(&dsi->irq_stats_lock, flags);
+-GLOBAL(__begin_SYSENTER_singlestep_region)
++SYM_ENTRY(__begin_SYSENTER_singlestep_region, SYM_L_GLOBAL, SYM_A_NONE)
+ /*
+  * All code from here through __end_SYSENTER_singlestep_region is subject
+  * to being single-stepped if a user program sets TF and executes SYSENTER.
+@@ -1011,7 +1011,7 @@ ENTRY(entry_SYSENTER_32)
+ 	pushl	$X86_EFLAGS_FIXED
+ 	popfl
+ 	jmp	.Lsysenter_flags_fixed
+-GLOBAL(__end_SYSENTER_singlestep_region)
++SYM_ENTRY(__end_SYSENTER_singlestep_region, SYM_L_GLOBAL, SYM_A_NONE)
+ ENDPROC(entry_SYSENTER_32)
  
--	stats = dsi->irq_stats;
-+	memcpy(stats, &dsi->irq_stats, sizeof(*stats));
- 	memset(&dsi->irq_stats, 0, sizeof(dsi->irq_stats));
- 	dsi->irq_stats.last_reset = jiffies;
+ /*
+diff --git a/arch/x86/include/asm/linkage.h b/arch/x86/include/asm/linkage.h
+index e07188e..3651117 100644
+--- a/arch/x86/include/asm/linkage.h
++++ b/arch/x86/include/asm/linkage.h
+@@ -13,14 +13,6 @@
  
- 	spin_unlock_irqrestore(&dsi->irq_stats_lock, flags);
+ #ifdef __ASSEMBLY__
  
- 	seq_printf(s, "period %u ms\n",
--			jiffies_to_msecs(jiffies - stats.last_reset));
-+			jiffies_to_msecs(jiffies - stats->last_reset));
+-/*
+- * GLOBAL is DEPRECATED
+- *
+- * use SYM_DATA_START, SYM_FUNC_START, SYM_INNER_LABEL, SYM_CODE_START, or
+- * similar
+- */
+-#define GLOBAL(name)	SYM_ENTRY(name, SYM_L_GLOBAL, SYM_A_NONE)
+-
+ #if defined(CONFIG_X86_64) || defined(CONFIG_X86_ALIGNMENT_16)
+ #define __ALIGN		.p2align 4, 0x90
+ #define __ALIGN_STR	__stringify(__ALIGN)
+diff --git a/include/linux/linkage.h b/include/linux/linkage.h
+index f3ae8f3..cb1108d 100644
+--- a/include/linux/linkage.h
++++ b/include/linux/linkage.h
+@@ -105,12 +105,14 @@
  
--	seq_printf(s, "irqs %d\n", stats.irq_count);
-+	seq_printf(s, "irqs %d\n", stats->irq_count);
- #define PIS(x) \
--	seq_printf(s, "%-20s %10d\n", #x, stats.dsi_irqs[ffs(DSI_IRQ_##x)-1]);
-+	seq_printf(s, "%-20s %10d\n", #x, stats->dsi_irqs[ffs(DSI_IRQ_##x)-1]);
+ /* === DEPRECATED annotations === */
  
- 	seq_printf(s, "-- DSI%d interrupts --\n", dsi->module_id + 1);
- 	PIS(VC0);
-@@ -1575,10 +1578,10 @@ static void dsi_dump_dsidev_irqs(struct platform_device *dsidev,
++#ifndef CONFIG_X86
+ #ifndef GLOBAL
+ /* deprecated, use SYM_DATA*, SYM_ENTRY, or similar */
+ #define GLOBAL(name) \
+ 	.globl name ASM_NL \
+ 	name:
+ #endif
++#endif
  
- #define PIS(x) \
- 	seq_printf(s, "%-20s %10d %10d %10d %10d\n", #x, \
--			stats.vc_irqs[0][ffs(DSI_VC_IRQ_##x)-1], \
--			stats.vc_irqs[1][ffs(DSI_VC_IRQ_##x)-1], \
--			stats.vc_irqs[2][ffs(DSI_VC_IRQ_##x)-1], \
--			stats.vc_irqs[3][ffs(DSI_VC_IRQ_##x)-1]);
-+			stats->vc_irqs[0][ffs(DSI_VC_IRQ_##x)-1], \
-+			stats->vc_irqs[1][ffs(DSI_VC_IRQ_##x)-1], \
-+			stats->vc_irqs[2][ffs(DSI_VC_IRQ_##x)-1], \
-+			stats->vc_irqs[3][ffs(DSI_VC_IRQ_##x)-1]);
- 
- 	seq_printf(s, "-- VC interrupts --\n");
- 	PIS(CS);
-@@ -1594,7 +1597,7 @@ static void dsi_dump_dsidev_irqs(struct platform_device *dsidev,
- 
- #define PIS(x) \
- 	seq_printf(s, "%-20s %10d\n", #x, \
--			stats.cio_irqs[ffs(DSI_CIO_IRQ_##x)-1]);
-+			stats->cio_irqs[ffs(DSI_CIO_IRQ_##x)-1]);
- 
- 	seq_printf(s, "-- CIO interrupts --\n");
- 	PIS(ERRSYNCESC1);
-@@ -1618,6 +1621,7 @@ static void dsi_dump_dsidev_irqs(struct platform_device *dsidev,
- 	PIS(ULPSACTIVENOT_ALL0);
- 	PIS(ULPSACTIVENOT_ALL1);
- #undef PIS
-+	kfree(stats);
- }
- 
- static void dsi1_dump_irqs(struct seq_file *s)
--- 
-2.11.0
-
+ #ifndef ENTRY
+ /* deprecated, use SYM_FUNC_START */
