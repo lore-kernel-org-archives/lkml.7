@@ -2,255 +2,122 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 453E9CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 052B2CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1440320640
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:14:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZJme9gtM"
+	by mail.kernel.org (Postfix) with ESMTP id DD16020640
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:15:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439678AbfJRSOh (ORCPT
+        id S2439722AbfJRSPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:14:37 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:41369 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728529AbfJRSOh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:14:37 -0400
-Received: by mail-qk1-f193.google.com with SMTP id p10so6133242qkg.8
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 11:14:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=hJL3W28tsNJSycsf4FFWxvi2b25HysnBbI9G2GYJqtM=;
-        b=ZJme9gtMXLi63+oalJklVHrSJpffanpC5g/2Sh9fTuAyGInfpt6F1Q2qQbCsLjsRxZ
-         t5WVOYzJTQaY31eCG1syRSg9nhLI4fTOdpnB8WlzCqwPa22pKWWe3fsz4tUWvM0z0h1Y
-         wnQNgT4Nm/cznjCNip/u6r1yblEFyj95YyToJtu5DDv9sGOsAzpTIXpBfj0KSm5z5uJr
-         nmA0PVhWoMFJxWsEu7VHDeU3gxkZsQfA6zCMqJ3fQMdCchYEmOCVTXpCamce56HMO1Xd
-         CUTAIJ6Il0DRIMD0jm4Ya25bzD4ssboWISTdN2YcsHcgdkHFq+YW9reAvzi7ISoaG7T+
-         f1Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=hJL3W28tsNJSycsf4FFWxvi2b25HysnBbI9G2GYJqtM=;
-        b=O0u63yk4MaJz5GNo1Szs2ULuzew9Wo+z91EygthpcReg4m74ybNSktrEc+in/3H0g2
-         bwePOMUa9ULhBuX87nrTalkYlJ3FwZfcw3k3M1M49Y+MznFq1fsV7PNujatieCTmlQIX
-         15BGha0wEQgLIWM3XROvSqqmbR2/sOyx6FJSFCFkj5GRdSkwSvXH40MfnKrIYgOzAaal
-         IOuBgLn5sN/BRXh/Z/RucjWbHzf3xOSAMtD3SDXW2Gnvin7BF+RSfawxvFGksRpAyjK0
-         QCku3tCzUmWoVR03uO2PEdzIWHdRazbM73zExyKe6QNkVGrEkMIv2fap0VrYMoTCMRMM
-         J35A==
-X-Gm-Message-State: APjAAAUU33QVhKwCo382QFW2pi6cLexLQWehMR+5i+PmexzmRfwm6QI9
-        ObNl4RoLMBES57ZLE3QoeOhiI79H
-X-Google-Smtp-Source: APXvYqxqKDmbchFAi1pcx5Co5J0cd4sJuZAO++pWANLJ2Mo8ggm/Pg33UAGpMyFFWsVYAq3YpM1r0Q==
-X-Received: by 2002:a37:93c4:: with SMTP id v187mr10228122qkd.490.1571422475663;
-        Fri, 18 Oct 2019 11:14:35 -0700 (PDT)
-Received: from quaco.ghostprotocols.net (179-240-170-47.3g.claro.net.br. [179.240.170.47])
-        by smtp.gmail.com with ESMTPSA id a190sm3609897qkf.118.2019.10.18.11.14.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 11:14:34 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 42A224DD66; Fri, 18 Oct 2019 15:14:29 -0300 (-03)
-Date:   Fri, 18 Oct 2019 15:14:29 -0300
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: Re: [PATCH 07/10] libperf: Add tests_mmap_cpus test
-Message-ID: <20191018181429.GE1797@kernel.org>
-References: <20191017105918.20873-1-jolsa@kernel.org>
- <20191017105918.20873-8-jolsa@kernel.org>
+        Fri, 18 Oct 2019 14:15:08 -0400
+Received: from mga02.intel.com ([134.134.136.20]:63175 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726534AbfJRSPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 14:15:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 11:15:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,312,1566889200"; 
+   d="scan'208";a="200783008"
+Received: from ray.jf.intel.com (HELO [10.24.8.164]) ([10.24.8.164])
+  by orsmga006.jf.intel.com with ESMTP; 18 Oct 2019 11:15:07 -0700
+Subject: Re: [PATCH 3/4] mm/vmscan: Attempt to migrate page in lieu of discard
+To:     Yang Shi <shy828301@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Keith Busch <keith.busch@intel.com>
+References: <20191016221148.F9CCD155@viggo.jf.intel.com>
+ <20191016221152.BF2171A3@viggo.jf.intel.com>
+ <CAHbLzkp_2UD50Vt8f_atxKcz4x8J3GB3YzTqMOd6Src_y2Yg2g@mail.gmail.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <6ab6ca82-71d4-bdea-ae95-e0bebb5e71df@intel.com>
+Date:   Fri, 18 Oct 2019 11:15:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <CAHbLzkp_2UD50Vt8f_atxKcz4x8J3GB3YzTqMOd6Src_y2Yg2g@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191017105918.20873-8-jolsa@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Oct 17, 2019 at 12:59:15PM +0200, Jiri Olsa escreveu:
-> Adding mmaping tests that generates prctl call on
-> every cpu validates it gets all the related events
-> in ring buffer.
+On 10/17/19 10:30 AM, Yang Shi wrote:
+>> +               if (!PageHuge(page)) {
+>> +                       int rc = migrate_demote_mapping(page);
+>> +
+>> +                       /*
+>> +                        * -ENOMEM on a THP may indicate either migration is
+>> +                        * unsupported or there was not enough contiguous
+>> +                        * space. Split the THP into base pages and retry the
+>> +                        * head immediately. The tail pages will be considered
+>> +                        * individually within the current loop's page list.
+>> +                        */
+>> +                       if (rc == -ENOMEM && PageTransHuge(page) &&
+>> +                           !split_huge_page_to_list(page, page_list))
+>> +                               rc = migrate_demote_mapping(page);
+> I recalled when Keith posted the patch at the first time, I raised
+> question about why not just migrating THP in a whole? The
+> migrate_pages() could handle this. If it fails, it just fallbacks to
+> base page.
 
-So _here_ we need _GNU_SOURCE, for this specific test:
+There's a pair of migrate_demote_mapping()s in there.  I expected that
+the first will migrate the whole THP and the second plus the split is
+only used if fails the whole migration.
 
-  LINK     test-evlist-a
-test-evlist.c: In function ‘test_mmap_cpus’:
-test-evlist.c:352:8: warning: implicit declaration of function ‘sched_getaffinity’ [-Wimplicit-function-declaration]
-  352 |  err = sched_getaffinity(0, sizeof(saved_mask), &saved_mask);
-      |        ^~~~~~~~~~~~~~~~~
-test-evlist.c:358:3: warning: implicit declaration of function ‘CPU_ZERO’ [-Wimplicit-function-declaration]
-  358 |   CPU_ZERO(&mask);
-      |   ^~~~~~~~
-test-evlist.c:359:3: warning: implicit declaration of function ‘CPU_SET’ [-Wimplicit-function-declaration]
-  359 |   CPU_SET(cpu, &mask);
-      |   ^~~~~~~
-test-evlist.c:361:9: warning: implicit declaration of function ‘sched_setaffinity’ [-Wimplicit-function-declaration]
-  361 |   err = sched_setaffinity(0, sizeof(mask), &mask);
-      |         ^~~~~~~~~~~~~~~~~
-/usr/bin/ld: /tmp/ccOhNrLC.o: in function `test_mmap_cpus':
-/home/acme/git/perf/tools/perf/lib/tests/test-evlist.c:358: undefined reference to `CPU_ZERO'
-/usr/bin/ld: /home/acme/git/perf/tools/perf/lib/tests/test-evlist.c:359: undefined reference to `CPU_SET'
-collect2: error: ld returned 1 exit status
-make[1]: *** [Makefile:22: test-evlist-a] Error 1
-make: *** [Makefile:143: tests] Error 2
-make: Leaving directory '/home/acme/git/perf/tools/perf/lib'
-[root@quaco perf]#
- 
-> Link: http://lkml.kernel.org/n/tip-9qdckblmgjm42ofd7haflso0@git.kernel.org
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/lib/tests/test-evlist.c | 97 ++++++++++++++++++++++++++++++
->  1 file changed, 97 insertions(+)
-> 
-> diff --git a/tools/perf/lib/tests/test-evlist.c b/tools/perf/lib/tests/test-evlist.c
-> index 90a1869ba4b1..d8c52ebfa53a 100644
-> --- a/tools/perf/lib/tests/test-evlist.c
-> +++ b/tools/perf/lib/tests/test-evlist.c
-> @@ -1,5 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <stdio.h>
-> +#include <sched.h>
->  #include <stdarg.h>
->  #include <unistd.h>
->  #include <stdlib.h>
-> @@ -299,6 +300,101 @@ static int test_mmap_thread(void)
->  	return 0;
->  }
->  
-> +static int test_mmap_cpus(void)
-> +{
-> +	struct perf_evlist *evlist;
-> +	struct perf_evsel *evsel;
-> +	struct perf_mmap *map;
-> +	struct perf_cpu_map *cpus;
-> +	struct perf_event_attr attr = {
-> +		.type             = PERF_TYPE_TRACEPOINT,
-> +		.sample_period    = 1,
-> +		.wakeup_watermark = 1,
-> +		.disabled         = 1,
-> +	};
-> +	cpu_set_t saved_mask;
-> +	char path[PATH_MAX];
-> +	int id, err, cpu, tmp;
-> +	union perf_event *event;
-> +	int count = 0;
-> +
-> +	snprintf(path, PATH_MAX, "%s/kernel/debug/tracing/events/syscalls/sys_enter_prctl/id",
-> +		 sysfs__mountpoint());
-> +
-> +	if (filename__read_int(path, &id)) {
-> +		fprintf(stderr, "error: failed to get tracepoint id: %s\n", path);
-> +		return -1;
-> +	}
-> +
-> +	attr.config = id;
-> +
-> +	cpus = perf_cpu_map__new(NULL);
-> +	__T("failed to create cpus", cpus);
-> +
-> +	evlist = perf_evlist__new();
-> +	__T("failed to create evlist", evlist);
-> +
-> +	evsel = perf_evsel__new(&attr);
-> +	__T("failed to create evsel1", evsel);
-> +
-> +	perf_evlist__add(evlist, evsel);
-> +
-> +	perf_evlist__set_maps(evlist, cpus, NULL);
-> +
-> +	err = perf_evlist__open(evlist);
-> +	__T("failed to open evlist", err == 0);
-> +
-> +	err = perf_evlist__mmap(evlist, 4);
-> +	__T("failed to mmap evlist", err == 0);
-> +
-> +	perf_evlist__enable(evlist);
-> +
-> +	err = sched_getaffinity(0, sizeof(saved_mask), &saved_mask);
-> +	__T("sched_getaffinity failed", err == 0);
-> +
-> +	perf_cpu_map__for_each_cpu(cpu, tmp, cpus) {
-> +		cpu_set_t mask;
-> +
-> +		CPU_ZERO(&mask);
-> +		CPU_SET(cpu, &mask);
-> +
-> +		err = sched_setaffinity(0, sizeof(mask), &mask);
-> +		__T("sched_setaffinity failed", err == 0);
-> +
-> +		prctl(0, 0, 0, 0, 0);
-> +	}
-> +
-> +	err = sched_setaffinity(0, sizeof(saved_mask), &saved_mask);
-> +	__T("sched_setaffinity failed", err == 0);
-> +
-> +	perf_evlist__disable(evlist);
-> +
-> +	perf_evlist__for_each_mmap(evlist, map, false) {
-> +		if (perf_mmap__read_init(map) < 0)
-> +			continue;
-> +
-> +		while ((event = perf_mmap__read_event(map)) != NULL) {
-> +			count++;
-> +			perf_mmap__consume(map);
-> +		}
-> +
-> +		perf_mmap__read_done(map);
-> +	}
-> +
-> +	/* calls perf_evlist__munmap/perf_evlist__close */
-> +	perf_evlist__delete(evlist);
-> +
-> +	/*
-> +	 * The generated prctl events should match the
-> +	 * number of cpus or be bigger (we are system-wide).
-> +	 */
-> +	__T("failed count", count >= perf_cpu_map__nr(cpus));
-> +
-> +	perf_cpu_map__put(cpus);
-> +
-> +	return 0;
-> +}
-> +
->  int main(int argc, char **argv)
->  {
->  	__T_START;
-> @@ -309,6 +405,7 @@ int main(int argc, char **argv)
->  	test_stat_thread();
->  	test_stat_thread_enable();
->  	test_mmap_thread();
-> +	test_mmap_cpus();
->  
->  	__T_OK;
->  	return 0;
-> -- 
-> 2.21.0
-
--- 
-
-- Arnaldo
+Am I reading it wrong?
