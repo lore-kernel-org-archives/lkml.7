@@ -2,133 +2,244 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AA5CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BA4CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AB5321897
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3968821897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:38:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407597AbfJRIi1 (ORCPT
+        id S2504951AbfJRIi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:38:27 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4730 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727903AbfJRIiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 04:38:25 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 8334FBB43E802C608D56;
-        Fri, 18 Oct 2019 16:38:22 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.179) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Fri, 18 Oct 2019
- 16:38:13 +0800
-Subject: Re: [PATCH v6 2/2] drivers/perf: Add CCPI2 PMU support in ThunderX2
- UNCORE driver.
-To:     Ganapatrao Kulkarni <gklkml16@gmail.com>,
-        Will Deacon <will@kernel.org>
-References: <1571218608-15933-1-git-send-email-gkulkarni@marvell.com>
- <1571218608-15933-3-git-send-email-gkulkarni@marvell.com>
- <b8e1a637-faf4-4567-7d3e-a4f13dfa1cf0@huawei.com>
- <CAKTKpr4QoTDjbSxO4CvSH2sNvmrTJKjxi+RZH4mYfyDaaN96Sw@mail.gmail.com>
- <20191017154750.jgn6e3465qrsu53e@willie-the-truck>
- <CAKTKpr5ntp5X6Lvp=rKT_F1E1ftdqtjSWTgpEOqEwaDMH2kc1w@mail.gmail.com>
-CC:     Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        Jan Glauber <jglauber@marvell.com>,
-        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Zhangshaokun <zhangshaokun@hisilicon.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <f7c91a7d-1f0e-24be-1491-fd0dae7f1daf@huawei.com>
-Date:   Fri, 18 Oct 2019 09:38:06 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
-MIME-Version: 1.0
-In-Reply-To: <CAKTKpr5ntp5X6Lvp=rKT_F1E1ftdqtjSWTgpEOqEwaDMH2kc1w@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.179]
-X-CFilter-Loop: Reflected
+        Fri, 18 Oct 2019 04:38:57 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:11276 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727903AbfJRIi4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 04:38:56 -0400
+X-IronPort-AV: E=Sophos;i="5.67,311,1566831600"; 
+   d="scan'208";a="29424813"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 18 Oct 2019 17:38:53 +0900
+Received: from localhost.localdomain (unknown [10.166.17.210])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 62E564004BD5;
+        Fri, 18 Oct 2019 17:38:53 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH] dt-bindings: phy: renesas: usb2-phy: convert bindings to json-schema
+Date:   Fri, 18 Oct 2019 17:38:53 +0900
+Message-Id: <1571387933-23397-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/10/2019 05:21, Ganapatrao Kulkarni wrote:
-> Hi Will,
->
-> On Thu, Oct 17, 2019 at 9:17 PM Will Deacon <will@kernel.org> wrote:
->>
->> On Thu, Oct 17, 2019 at 12:38:51PM +0530, Ganapatrao Kulkarni wrote:
->>> On Wed, Oct 16, 2019 at 7:01 PM John Garry <john.garry@huawei.com> wrote:
->>>>> +TX2_EVENT_ATTR(req_pktsent, CCPI2_EVENT_REQ_PKT_SENT);
->>>>> +TX2_EVENT_ATTR(snoop_pktsent, CCPI2_EVENT_SNOOP_PKT_SENT);
->>>>> +TX2_EVENT_ATTR(data_pktsent, CCPI2_EVENT_DATA_PKT_SENT);
->>>>> +TX2_EVENT_ATTR(gic_pktsent, CCPI2_EVENT_GIC_PKT_SENT);
->>>>> +
->>>>> +static struct attribute *ccpi2_pmu_events_attrs[] = {
->>>>> +     &tx2_pmu_event_attr_req_pktsent.attr.attr,
->>>>> +     &tx2_pmu_event_attr_snoop_pktsent.attr.attr,
->>>>> +     &tx2_pmu_event_attr_data_pktsent.attr.attr,
->>>>> +     &tx2_pmu_event_attr_gic_pktsent.attr.attr,
->>>>> +     NULL,
->>>>> +};
->>>>
->>>> Hi Ganapatrao,
->>>>
->>>> Have you considered adding these as uncore pmu-events in the perf tool?
->>>>
->>> At the moment no, since the number of events exposed/listed are very few.
->>
->> Then sounds like a perfect time to nip it in the bud before the list grows
->> ;)
->
-> I had internal discussion with architecture team, they have confirmed
-> that, these are the only published events and no plan to add new.
-> However, If any such request comes from HW team in future, i will add
-> them to JSON files.
+Convert Renesas R-Car generation 3 USB 2.0 PHY bindings documentation
+to json-schema.
 
-Don't you find perf list is swamped with all the uncore events?
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  70 --------------
+ .../devicetree/bindings/phy/renesas,usb2-phy.yaml  | 106 +++++++++++++++++++++
+ 2 files changed, 106 insertions(+), 70 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
 
-For Huawei platform, I find this:
-./perf list pmu | grep "Kernel PMU event" | grep hisi | wc -l
-648
-
-That's because we have so many instances of the same PMUs, not because 
-there are many events per PMU.
-
-TBH, I would like to delete all the events from the hisi uncore kernel 
-drivers, now that they're supported in the perf tool, but I think that 
-would constitute an ABI breakage.
-
-Maybe there is a way to hide them, but I couldn't find it.
-
-John
-
->
-> I have incorporate all your previous comments, Can you please Ack and
-> queue it to 5.5?
->
->>
->> If you can manage with these things in userspace, then I agree with John
->> that it would be preferential to do it that way. It also offers more
->> flexibility if we get the metricgroup stuff working properly (I think it's
->> buggered for big/little atm).
->>
->> Will
->
-> Thanks,
-> Ganapat
->
-> .
->
-
+diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+deleted file mode 100644
+index 7734b21..00000000
+--- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
++++ /dev/null
+@@ -1,70 +0,0 @@
+-* Renesas R-Car generation 3 USB 2.0 PHY
+-
+-This file provides information on what the device node for the R-Car generation
+-3, RZ/G1C, RZ/G2 and RZ/A2 USB 2.0 PHY contain.
+-
+-Required properties:
+-- compatible: "renesas,usb2-phy-r7s9210" if the device is a part of an R7S9210
+-	      SoC.
+-	      "renesas,usb2-phy-r8a77470" if the device is a part of an R8A77470
+-	      SoC.
+-	      "renesas,usb2-phy-r8a774a1" if the device is a part of an R8A774A1
+-	      SoC.
+-	      "renesas,usb2-phy-r8a774b1" if the device is a part of an R8A774B1
+-	      SoC.
+-	      "renesas,usb2-phy-r8a774c0" if the device is a part of an R8A774C0
+-	      SoC.
+-	      "renesas,usb2-phy-r8a7795" if the device is a part of an R8A7795
+-	      SoC.
+-	      "renesas,usb2-phy-r8a7796" if the device is a part of an R8A7796
+-	      SoC.
+-	      "renesas,usb2-phy-r8a77965" if the device is a part of an
+-	      R8A77965 SoC.
+-	      "renesas,usb2-phy-r8a77990" if the device is a part of an
+-	      R8A77990 SoC.
+-	      "renesas,usb2-phy-r8a77995" if the device is a part of an
+-	      R8A77995 SoC.
+-	      "renesas,rcar-gen3-usb2-phy" for a generic R-Car Gen3, RZ/G2 or
+-	      RZ/A2 compatible device.
+-
+-	      When compatible with the generic version, nodes must list the
+-	      SoC-specific version corresponding to the platform first
+-	      followed by the generic version.
+-
+-- reg: offset and length of the partial USB 2.0 Host register block.
+-- clocks: clock phandle and specifier pair(s).
+-- #phy-cells: see phy-bindings.txt in the same directory, must be <1> (and
+-	      using <0> is deprecated).
+-
+-The phandle's argument in the PHY specifier is the INT_STATUS bit of controller:
+-- 1 = USBH_INTA (OHCI)
+-- 2 = USBH_INTB (EHCI)
+-- 3 = UCOM_INT (OTG and BC)
+-
+-Optional properties:
+-To use a USB channel where USB 2.0 Host and HSUSB (USB 2.0 Peripheral) are
+-combined, the device tree node should set interrupt properties to use the
+-channel as USB OTG:
+-- interrupts: interrupt specifier for the PHY.
+-- vbus-supply: Phandle to a regulator that provides power to the VBUS. This
+-	       regulator will be managed during the PHY power on/off sequence.
+-- renesas,no-otg-pins: boolean, specify when a board does not provide proper
+-		       otg pins.
+-- dr_mode: string, indicates the working mode for the PHY. Can be "host",
+-           "peripheral", or "otg". Should be set if otg controller is not used.
+-
+-
+-Example (R-Car H3):
+-
+-	usb-phy@ee080200 {
+-		compatible = "renesas,usb2-phy-r8a7795", "renesas,rcar-gen3-usb2-phy";
+-		reg = <0 0xee080200 0 0x700>;
+-		interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&cpg CPG_MOD 703>;
+-	};
+-
+-	usb-phy@ee0a0200 {
+-		compatible = "renesas,usb2-phy-r8a7795", "renesas,rcar-gen3-usb2-phy";
+-		reg = <0 0xee0a0200 0 0x700>;
+-		clocks = <&cpg CPG_MOD 702>;
+-	};
+diff --git a/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+new file mode 100644
+index 00000000..0f109c2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+@@ -0,0 +1,106 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/renesas,usb2-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas R-Car generation 3 USB 2.0 PHY
++
++maintainers:
++  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - renesas,usb2-phy-r8a77470 # RZ/G1C
++      - items:
++          - enum:
++              - renesas,usb2-phy-r7s9210  # RZ/A2
++              - renesas,usb2-phy-r8a774a1 # RZ/G2M
++              - renesas,usb2-phy-r8a774b1 # RZ/G2N
++              - renesas,usb2-phy-r8a774c0 # RZ/G2E
++              - renesas,usb2-phy-r8a7795  # R-Car H3
++              - renesas,usb2-phy-r8a7796  # R-Car M3-W
++              - renesas,usb2-phy-r8a77965 # R-Car M3-N
++              - renesas,usb2-phy-r8a77990 # R-Car E3
++              - renesas,usb2-phy-r8a77995 # R-Car D3
++          - const: renesas,rcar-gen3-usb2-phy
++
++  reg:
++    # base address and length of the registers block for the PHY.
++    maxItems: 1
++
++  clocks:
++    # clock phandle and specifier pair(s).
++    minItems: 1
++    maxItems: 2
++
++  clock-names:
++    # for RZ/A2
++    minItems: 1
++    maxItems: 2
++    items:
++      - const: fck
++      - const: usb_x1
++
++  '#phy-cells':
++    # see phy-bindings.txt in the same directory
++    enum: [0, 1]  # and 0 is deprecated.
++
++  interrupts:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++
++  resets:
++    minItems: 1
++    maxItems: 2
++
++  vbus-supply:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: |
++      Phandle to a regulator that provides power to the VBUS. This regulator
++      will be managed during the PHY power on/off sequence.
++
++  renesas,no-otg-pins:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      specify when a board does not provide proper otg pins.
++
++  dr_mode:
++    $ref: /schemas/types.yaml#/definitions/string
++    description: |
++      indicates the working mode for the PHY. Can be "host", "peripheral", or
++      "otg". Should be set if otg controller is not used.
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - '#phy-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/r8a7795-cpg-mssr.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/power/r8a7795-sysc.h>
++
++    usb-phy@ee080200 {
++        compatible = "renesas,usb2-phy-r8a7795", "renesas,rcar-gen3-usb2-phy";
++        reg = <0 0xee080200 0 0x700>;
++        interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&cpg CPG_MOD 703>;
++        #phy-cells = <1>;
++    };
++
++    usb-phy@ee0a0200 {
++        compatible = "renesas,usb2-phy-r8a7795", "renesas,rcar-gen3-usb2-phy";
++        reg = <0 0xee0a0200 0 0x700>;
++        clocks = <&cpg CPG_MOD 702>;
++        #phy-cells = <1>;
++    };
+-- 
+2.7.4
 
