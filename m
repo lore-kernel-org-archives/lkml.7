@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB04CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C55BCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71F07222CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 005C522468
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:04:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436239;
-	bh=1xRSt9tzsNlcbb8tmgkgfUxNyMUer98VWV4fSpMoq4o=;
+	s=default; t=1571436243;
+	bh=fDteLza2W1wJUfSTg/wf7TafiBkuex3xqUTpb6zVZQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UaM0Y7P6bxK5SMYlNLSUSxt0ATM4a+P+TbEaFkkWkskBy1u2C51U6reNZGhWJv2Vq
-	 tVZH4rN52vHuL4WSjk+00mRmINZAtTctR2A7qUNjxTPpI7YkNKxWNmALDa9um1WyXJ
-	 /6AFG6SJCd3nHMZ4FEj/BzQ1fudV/0Ie+Mpfy9Hk=
+	b=mi/fXhbCy0oKt/PUQACNYkKDvb8PGWBUkr6QsXYLOZVzzSX0nAtD/FhWAaK3CG94+
+	 jnYWJt980vrzWOISCKoyaLLj8WqPklfmg+n7kCpoi7CdRkarjqFZ5IuGA7cbpX8RvW
+	 FS4Dam73SCFllw5VZ+oP3yKlVzNOnICQOUZ3jQGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbfJRWD6 (ORCPT
+        id S1727615AbfJRWEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:03:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35462 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:04:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727437AbfJRWDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:03:53 -0400
+        id S1727460AbfJRWDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:03:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0DC2222CD;
-        Fri, 18 Oct 2019 22:03:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CBBF222D3;
+        Fri, 18 Oct 2019 22:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436232;
-        bh=1xRSt9tzsNlcbb8tmgkgfUxNyMUer98VWV4fSpMoq4o=;
+        s=default; t=1571436233;
+        bh=fDteLza2W1wJUfSTg/wf7TafiBkuex3xqUTpb6zVZQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sy6UJfn/VCyLk5upMuD1Sah7eJp8/+P6PrrrKeLUC26mYFGrXCwg/cHPRcIvlPSWv
-         kQBcQxR8R6EwuMfwnI5ESiPhjflg09ps9A21ZZjebjG73GD4iD6bDqaFWCxsRwkBtK
-         B8SfRlNKLmwfGNgBgvc8nbtZIMbIpQaJ7YoG0wY4=
+        b=XO9LiVOcRnV+PwvlVBaFRzIAZptSebYrbl4XPH4uMa1sPB/ouESXF1TshMop+SZhz
+         9goy0YuL3qnSqu1kQ8pcbopSj68Ic77zCQVMMjmsB8p/AKMRh/wUsZ1f8sNBM4DHpD
+         kMWe9gZBuqB+pWhK2cKIV9vpF3nIXZEVjsAZX8wY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+Cc:     Potnuri Bharat Teja <bharat@chelsio.com>,
+        Rahul Kundu <rahul.kundu@chelsio.com>,
         Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 18/89] RDMA/hfi1: Prevent memory leak in sdma_init
-Date:   Fri, 18 Oct 2019 18:02:13 -0400
-Message-Id: <20191018220324.8165-18-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 19/89] RDMA/iw_cxgb4: fix SRQ access from dump_qp()
+Date:   Fri, 18 Oct 2019 18:02:14 -0400
+Message-Id: <20191018220324.8165-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -60,40 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Potnuri Bharat Teja <bharat@chelsio.com>
 
-[ Upstream commit 34b3be18a04ecdc610aae4c48e5d1b799d8689f6 ]
+[ Upstream commit 91724c1e5afe45b64970036170659726e7dc5cff ]
 
-In sdma_init if rhashtable_init fails the allocated memory for
-tmp_sdma_rht should be released.
+dump_qp() is wrongly trying to dump SRQ structures as QP when SRQ is used
+by the application. This patch matches the QPID before dumping them.  Also
+removes unwanted SRQ id addition to QP id xarray.
 
-Fixes: 5a52a7acf7e2 ("IB/hfi1: NULL pointer dereference when freeing rhashtable")
-Link: https://lore.kernel.org/r/20190925144543.10141-1-navid.emamdoost@gmail.com
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Acked-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Fixes: 2f43129127e6 ("cxgb4: Convert qpidr to XArray")
+Link: https://lore.kernel.org/r/20190930074119.20046-1-bharat@chelsio.com
+Signed-off-by: Rahul Kundu <rahul.kundu@chelsio.com>
+Signed-off-by: Potnuri Bharat Teja <bharat@chelsio.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/sdma.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/cxgb4/device.c |  7 +++++--
+ drivers/infiniband/hw/cxgb4/qp.c     | 10 +---------
+ 2 files changed, 6 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/sdma.c b/drivers/infiniband/hw/hfi1/sdma.c
-index 2395fd4233a7e..2ed7bfd5feea6 100644
---- a/drivers/infiniband/hw/hfi1/sdma.c
-+++ b/drivers/infiniband/hw/hfi1/sdma.c
-@@ -1526,8 +1526,11 @@ int sdma_init(struct hfi1_devdata *dd, u8 port)
+diff --git a/drivers/infiniband/hw/cxgb4/device.c b/drivers/infiniband/hw/cxgb4/device.c
+index a8b9548bd1a26..599340c1f0b82 100644
+--- a/drivers/infiniband/hw/cxgb4/device.c
++++ b/drivers/infiniband/hw/cxgb4/device.c
+@@ -242,10 +242,13 @@ static void set_ep_sin6_addrs(struct c4iw_ep *ep,
  	}
+ }
  
- 	ret = rhashtable_init(tmp_sdma_rht, &sdma_rht_params);
--	if (ret < 0)
-+	if (ret < 0) {
-+		kfree(tmp_sdma_rht);
- 		goto bail;
-+	}
-+
- 	dd->sdma_rht = tmp_sdma_rht;
+-static int dump_qp(struct c4iw_qp *qp, struct c4iw_debugfs_data *qpd)
++static int dump_qp(unsigned long id, struct c4iw_qp *qp,
++		   struct c4iw_debugfs_data *qpd)
+ {
+ 	int space;
+ 	int cc;
++	if (id != qp->wq.sq.qid)
++		return 0;
  
- 	dd_dev_info(dd, "SDMA num_sdma: %u\n", dd->num_sdma);
+ 	space = qpd->bufsize - qpd->pos - 1;
+ 	if (space == 0)
+@@ -350,7 +353,7 @@ static int qp_open(struct inode *inode, struct file *file)
+ 
+ 	xa_lock_irq(&qpd->devp->qps);
+ 	xa_for_each(&qpd->devp->qps, index, qp)
+-		dump_qp(qp, qpd);
++		dump_qp(index, qp, qpd);
+ 	xa_unlock_irq(&qpd->devp->qps);
+ 
+ 	qpd->buf[qpd->pos++] = 0;
+diff --git a/drivers/infiniband/hw/cxgb4/qp.c b/drivers/infiniband/hw/cxgb4/qp.c
+index eb9368be28c1d..bbcac539777a2 100644
+--- a/drivers/infiniband/hw/cxgb4/qp.c
++++ b/drivers/infiniband/hw/cxgb4/qp.c
+@@ -2737,15 +2737,11 @@ int c4iw_create_srq(struct ib_srq *ib_srq, struct ib_srq_init_attr *attrs,
+ 	if (CHELSIO_CHIP_VERSION(rhp->rdev.lldi.adapter_type) > CHELSIO_T6)
+ 		srq->flags = T4_SRQ_LIMIT_SUPPORT;
+ 
+-	ret = xa_insert_irq(&rhp->qps, srq->wq.qid, srq, GFP_KERNEL);
+-	if (ret)
+-		goto err_free_queue;
+-
+ 	if (udata) {
+ 		srq_key_mm = kmalloc(sizeof(*srq_key_mm), GFP_KERNEL);
+ 		if (!srq_key_mm) {
+ 			ret = -ENOMEM;
+-			goto err_remove_handle;
++			goto err_free_queue;
+ 		}
+ 		srq_db_key_mm = kmalloc(sizeof(*srq_db_key_mm), GFP_KERNEL);
+ 		if (!srq_db_key_mm) {
+@@ -2789,8 +2785,6 @@ int c4iw_create_srq(struct ib_srq *ib_srq, struct ib_srq_init_attr *attrs,
+ 	kfree(srq_db_key_mm);
+ err_free_srq_key_mm:
+ 	kfree(srq_key_mm);
+-err_remove_handle:
+-	xa_erase_irq(&rhp->qps, srq->wq.qid);
+ err_free_queue:
+ 	free_srq_queue(srq, ucontext ? &ucontext->uctx : &rhp->rdev.uctx,
+ 		       srq->wr_waitp);
+@@ -2813,8 +2807,6 @@ void c4iw_destroy_srq(struct ib_srq *ibsrq, struct ib_udata *udata)
+ 	rhp = srq->rhp;
+ 
+ 	pr_debug("%s id %d\n", __func__, srq->wq.qid);
+-
+-	xa_erase_irq(&rhp->qps, srq->wq.qid);
+ 	ucontext = rdma_udata_to_drv_context(udata, struct c4iw_ucontext,
+ 					     ibucontext);
+ 	free_srq_queue(srq, ucontext ? &ucontext->uctx : &rhp->rdev.uctx,
 -- 
 2.20.1
 
