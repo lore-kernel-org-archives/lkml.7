@@ -2,129 +2,213 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B478CA9EA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFE6CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13DB121897
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:17:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571390267;
-	bh=hihmubLvsTiV3zKVzVWkRoOPv96hSDn+X/M+8Gtj460=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=fcYW9Surt4iH+3a2pmCz4/91WHskpfYeUhtymWLS2owLbReV0+Qqfe3q977A7vMPe
-	 Y0LeH+NC83xDPMPhCjhfVwiyWU8DE1rQJ3qbR+1jsihy7POq45vzW3s5xDb8isq8ej
-	 Ua/pkf0dTbvq6uV2AdPPRNXi7Vx3Wx38P3O2Nwds=
+	by mail.kernel.org (Postfix) with ESMTP id 1884E21897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:17:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394139AbfJRJRp (ORCPT
+        id S2405530AbfJRJRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 05:17:45 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35817 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389986AbfJRJRp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 05:17:45 -0400
-Received: by mail-oi1-f194.google.com with SMTP id x3so4651453oig.2;
-        Fri, 18 Oct 2019 02:17:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=j8z1SM48UZuUXU8cTwzQych7cq4zT468OcaLYrLAHoc=;
-        b=g1TTJELLzSCQ96x5h+HOZFbeCaPUQuUYugOqk5Qw0IVZSrFDaHLv9EddoK4FbJdtdp
-         spSg6Jr3AdDpen20RUice/YTGmUwkUs6n+I3OheMK9KX4mVr+ndYzwk05rPmM3+y9j4U
-         GD+UPiyPIClzcK5LYt3KqB7sSTfyKbycKPvi7lGvcbkFomJYGg6OHOwlVtdVWB07ZB2G
-         yawkf+Z9w41QdLvGCRQUCx7Y3HBmQbjRhJZ3nTWuzrlTJxjnnJqPmqrvyfI9/x+heEQh
-         JTdoL1zAVPwCS8MaB6/LDfSbv1qTWA3AVhCbfzdY+uLRzZG7nXIY9WKQ0ufTopA8rYxx
-         jCZw==
-X-Gm-Message-State: APjAAAVcjaFIwyXV7Pueuqq8zhnoVKl25FOnpd6mpcP3nfrLv2E/J7TG
-        GY5lFgIfYwrY4he6F4k8Z1UYvjH7DyW0FvmyJPaI/xSW
-X-Google-Smtp-Source: APXvYqzyYAXhAoQkimCi9kQHw3PEfQL51Fk/qbhnBd3+8Oku0qmZ/h0tjCh8EffnfNqaU2khxg3i+VXVJXmBVeYYec8=
-X-Received: by 2002:aca:d706:: with SMTP id o6mr7309802oig.57.1571390264244;
- Fri, 18 Oct 2019 02:17:44 -0700 (PDT)
+        Fri, 18 Oct 2019 05:17:48 -0400
+Received: from mga02.intel.com ([134.134.136.20]:24961 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389986AbfJRJRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 05:17:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 02:17:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,311,1566889200"; 
+   d="scan'208";a="190311631"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 18 Oct 2019 02:17:46 -0700
+Received: from [10.125.252.194] (abudanko-mobl.ccr.corp.intel.com [10.125.252.194])
+        by linux.intel.com (Postfix) with ESMTP id B2109580379;
+        Fri, 18 Oct 2019 02:17:43 -0700 (PDT)
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>,
+        Song Liu <songliubraving@fb.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: [PATCH v3 0/4]: perf/core: fix restoring of Intel LBR call stack on a
+ context switch
+Organization: Intel Corp.
+Message-ID: <0b20a07f-d074-d3da-7551-c9a4a94fe8e3@linux.intel.com>
+Date:   Fri, 18 Oct 2019 12:17:42 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 18 Oct 2019 11:17:32 +0200
-Message-ID: <CAJZ5v0iMdUWVv8G1D075eSEBOMoqUfoWC_ik6qy5CxNapUo1xg@mail.gmail.com>
-Subject: [GIT PULL] Power management fixes for v5.4-rc4
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
 
-Please pull from the tag
+Restore Intel LBR call stack from cloned inactive task perf context on
+a context switch. This change inherently addresses inconsistency in LBR 
+call stack data provided on a sample in record profiling mode:
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-5.4-rc4
+  $ perf record -N -B -T -R --call-graph lbr \
+         -e cpu/period=0xcdfe60,event=0x3c,name=\'CPU_CLK_UNHALTED.THREAD\'/Duk \
+         --clockid=monotonic_raw -- ./miniFE.x nx 25 ny 25 nz 25
 
-with top-most commit b23eb5c74e6eb6a0b3fb9cf3eb64481a17ce1cd1
+Let's assume threads A, B, C belonging to the same process. 
+B and C are siblings of A and their perf contexts are treated as equivalent.
+At some point B blocks on a futex (non preempt context switch).
+B's LBRs are preserved at B's perf context task_ctx_data and B's events 
+are removed from PMU and disabled. B's perf context becomes inactive.
 
- Merge branches 'pm-cpufreq' and 'pm-sleep'
+Later C gets on a cpu, runs, gets profiled and eventually switches to 
+the awaken but not yet running B. The optimized context switch path is 
+executed swapping B's and C's task_ctx_data pointers at perf event contexts.
+So C's task_ctx_data will refer preserved B's LBRs on the following 
+switch-in event.
 
-on top of commit 4f5cafb5cb8471e54afdc9054d973535614f7675
+However, as far B's perf context is inactive there is no enabled events
+in there and B's task_ctx_data->lbr_callstack_users is equal to 0.
+When B gets on the cpu B's events reviving is skipped following
+the optimized context switch path and B's task_ctx_data->lbr_callstack_users
+remains 0. Thus B's LBR's are not restored by pmu sched_task() code called 
+in the end of perf context switch-in callback for B.
 
- Linux 5.4-rc3
+In the report that manifests as having short fragments of B's
+call stack, still tracked by LBR's HW between adjacent samples,
+but the whole thread call tree doesn't aggregate.
 
-to receive power management fixes for 5.4-rc4.
+The fix has been evaluated when profiling miniFE [1] (C++, OpenMP)
+workload running 64 threads on Intel Skylake EP(64 core, 2 sockets):
 
-These include a fix for a recent regression in the ACPI CPU
-performance scaling code, a PCI device power management fix,
-a system shutdown fix related to cpufreq, a removal of an ACPI
-suspend-to-idle blacklist entry and a build warning fix.
+  $ perf report --call-graph callee,flat
 
-Specifics:
+5.3.0-rc6+ (tip perf/core) - fixed
 
- - Fix possible NULL pointer dereference in the ACPI processor
-   scaling initialization code introduced by a recent cpufreq
-   update (Rafael Wysocki).
+-   92.66%    82.64%  miniFE.x  libiomp5.so         [.] _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+   - 69.14% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+        __kmp_fork_barrier
+        __kmp_launch_thread
+        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
+        start_thread
+        __clone
+   - 21.89% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+        __kmp_barrier
+        __kmpc_reduce_nowait
+        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
+        __kmp_invoke_microtask
+        __kmp_invoke_task_func
+        __kmp_launch_thread
+        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
+        start_thread
+        __clone
+   - 1.63% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+        __kmp_barrier
+        __kmpc_reduce_nowait
+        main
+        __kmp_invoke_microtask
+        __kmp_invoke_task_func
+        __kmp_launch_thread
+        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
+        start_thread
+        __clone
 
- - Fix possible deadlock due to suspending cpufreq too late during
-   system shutdown (Rafael Wysocki).
+5.0.13-300.fc30.x86_64 - no fix
 
- - Make the PCI device system resume code path be more consistent
-   with its PM-runtime counterpart to fix an issue with missing
-   delay on transitions from D3cold to D0 during system resume from
-   suspend-to-idle on some systems (Rafael Wysocki).
+-   90.29%    81.01%  miniFE.x  libiomp5.so         [.] _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+   - 33.45% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+        __kmp_fork_barrier
+        __kmp_launch_thread
+        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
+        start_thread
+        __clone
+     87.63% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+   - 54.79% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+        __kmp_fork_barrier
+        __kmp_launch_thread
+   - 9.18% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+        __kmp_barrier
+        __kmpc_reduce_nowait
+        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
+        __kmp_invoke_microtask
+        __kmp_invoke_task_func
+        __kmp_launch_thread
+        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
+        start_thread
+        __clone
+   - 41.28% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+        __kmp_fork_barrier
+        __kmp_launch_thread
+        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
+   - 15.77% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+        __kmp_barrier
+        __kmpc_reduce_nowait
+        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
+        __kmp_invoke_microtask
+        __kmp_invoke_task_func
+        __kmp_launch_thread
+   - 11.56% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+        __kmp_barrier
+        __kmpc_reduce_nowait
+        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
+        __kmp_invoke_microtask
+        __kmp_invoke_task_func
+        __kmp_launch_thread
+        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
+   - 2.33% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
+        __kmp_barrier
+        __kmpc_reduce_nowait
+        main
+        __kmp_invoke_microtask
+        __kmp_invoke_task_func
+        __kmp_launch_thread
+        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
+        start_thread
+        __clone
+     0.67% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_gather
+     0.57% __kmp_hardware_timestamp
 
- - Drop Dell XPS13 9360 from the LPS0 Idle _DSM blacklist to make it
-   use suspend-to-idle by default (Mario Limonciello).
+[1] https://www.hpcadvisorycouncil.com/pdf/miniFE_Analysis_and_Profiling.pdf
 
- - Fix build warning in the core system suspend support code (Ben
-   Dooks).
+---
+Alexey Budankov (4):
+  perf/core,x86: introduce sync_task_ctx() method at struct pmu
+  perf/x86: install platform specific sync_task_ctx adapter
+  perf/x86/intel: implement LBR callstacks context synchronization
+  perf/core,x86: synchronize PMU task contexts on optimized context
+    switches
 
-Thanks!
+ arch/x86/events/core.c       |  7 +++++++
+ arch/x86/events/intel/core.c |  7 +++++++
+ arch/x86/events/intel/lbr.c  |  9 +++++++++
+ arch/x86/events/perf_event.h | 11 +++++++++++
+ include/linux/perf_event.h   |  7 +++++++
+ kernel/events/core.c         |  9 +++++++++
+ 6 files changed, 50 insertions(+)
 
+---
+Changes in v3:
+- replaced assignment with swap at intel_pmu_lbr_sync_task_ctx()
 
----------------
+Changes in v2:
+- implemented sync_task_ctx() method at perf,x86,intel pmu types;
+- employed the method on the optimized context switch path between 
+  equivalent perf event contexts;
 
-Ben Dooks (1):
-      PM: sleep: include <linux/pm_runtime.h> for pm_wq
+-- 
+2.20.1
 
-Mario Limonciello (1):
-      ACPI: PM: Drop Dell XPS13 9360 from LPS0 Idle _DSM blacklist
-
-Rafael J. Wysocki (3):
-      cpufreq: Avoid cpufreq_suspend() deadlock on system shutdown
-      PCI: PM: Fix pci_power_up()
-      ACPI: processor: Avoid NULL pointer dereferences at init time
-
----------------
-
- drivers/acpi/processor_perflib.c | 10 ++++++----
- drivers/acpi/processor_thermal.c | 10 ++++++----
- drivers/acpi/sleep.c             | 13 -------------
- drivers/base/core.c              |  3 +++
- drivers/cpufreq/cpufreq.c        | 10 ----------
- drivers/pci/pci.c                | 24 +++++++++++-------------
- kernel/power/main.c              |  1 +
- 7 files changed, 27 insertions(+), 44 deletions(-)
