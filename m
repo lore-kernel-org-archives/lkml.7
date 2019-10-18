@@ -2,132 +2,143 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C8CCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DE3CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0ED52064B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 994D22064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:54:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nyu.edu header.i=@nyu.edu header.b="IRMASeta";
+	dkim=pass (2048-bit key) header.d=nyu-edu.20150623.gappssmtp.com header.i=@nyu-edu.20150623.gappssmtp.com header.b="B5P0CS8C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408855AbfJRPyL (ORCPT
+        id S2409336AbfJRPyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:54:11 -0400
-Received: from 8bytes.org ([81.169.241.247]:48058 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727668AbfJRPyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:54:11 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 5576C367; Fri, 18 Oct 2019 17:54:10 +0200 (CEST)
-Date:   Fri, 18 Oct 2019 17:54:08 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: [git pull] IOMMU Fixes for Linux v5.4-rc3
-Message-ID: <20191018155403.GA9621@8bytes.org>
+        Fri, 18 Oct 2019 11:54:14 -0400
+Received: from mx0a-00256a01.pphosted.com ([148.163.150.240]:29022 "EHLO
+        mx0b-00256a01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727668AbfJRPyM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 11:54:12 -0400
+Received: from pps.filterd (m0142701.ppops.net [127.0.0.1])
+        by mx0b-00256a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9IFpg7N051781
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 11:54:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nyu.edu; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=20180315; bh=8WzOh4VxFi+gRpyaJOrI+xwl81ARGu8H2iil3vR4U0Y=;
+ b=IRMASetabSmu/GjHAE/fqblY8RHyvO8SlwgXEROQILMaVDtpXbuH5Kzozeh584vjMArJ
+ MpKKd/JnGCCiN2xccEOWXIVAzffifzSL/LY6tbWhUTWyYoIKZpJWtbhq09bQubgwQA4W
+ k9T/F+3BaDVG/EyBjHG2KqnApIhFAZ39byDtZW5NDVJgCdxNgA/YZABCtgkjK5W+j7Wx
+ RdpSOKuXIg3LJjZPOluCH0HTNrGj8Xv96f6+NDkq9BFQpGIpsx+JNaQPFpYbUIWU2J2I
+ W6Bd8OWbX6oNm7CcAWuivFPHQavVAr6J+e4QxhHdd0SdiBSfjqldKfHIby+uAvTP9qJf WA== 
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+        by mx0b-00256a01.pphosted.com with ESMTP id 2vq7yvfsm3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 11:54:12 -0400
+Received: by mail-qk1-f198.google.com with SMTP id m28so5526089qkm.10
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 08:54:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=nyu-edu.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8WzOh4VxFi+gRpyaJOrI+xwl81ARGu8H2iil3vR4U0Y=;
+        b=B5P0CS8CKsNBgGRhAuzrX9PTFPMUAoCfIZtNkU05d3+xh5hNaJ248LtYbxm9Lj/ycZ
+         LcXOVFxKAhUoazCiYckSPjNEmQAcOOsy0F6qRp3/J5H3exiv7wtIBWrwc3soNSrX9vVz
+         tAOY+7KGv8XJbg+N/vwbwoEvBASsS+ap9Ym0Wh+z7ww5ExjWOi0n1z68bGu8zuGmop+o
+         TS8grnnF/Auk/MXsDxSLG1whzDjqXOcbk0d2xHxkKCzZcs2QjNApfNg92bqjtHdvNc3R
+         IXaZdamejE04wheJDFDk8SMEfQMAJJTLJ48QypQPuqN3LHyHJmKRhZSrw2klkWRIr1WD
+         /G+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8WzOh4VxFi+gRpyaJOrI+xwl81ARGu8H2iil3vR4U0Y=;
+        b=a/TuC18VXs/yoNFTB4Hm7rJlx3/kWnFc4xCHZVV8ICwETEhKXByMejLIB/brFmPoZd
+         v6SgEiIN5eJ/IYtb7EeBamIxI0bqPL2SocS7Y51amTP/EcyAiDWWtRmwHzwHTLCFaxoj
+         lvznnO8saZJ+mYSJ7U1kFzSSseAf/vyJMUafqy0hRtLwDvL+RGCGjHpmy1QaejTFojzJ
+         dkUZCu2TLGT1Pp8Rz38yvAnNEgbmhTQ2mGwzvaX1TNCBMnZYpQk7oVlif0e3zNPXKAAY
+         O/ybkAvCXu0pEPUZ+byDlWPkbMfUEBRBRr3ggtKR+FfetTrK67T4oQfslscOPZHVrIeU
+         zXQg==
+X-Gm-Message-State: APjAAAWmceAyzg/ZfHICyWSrALKqBGj5H+fiUiztcS+I1glWAT1gYyiW
+        1MmhmgEBdi841OFGdi1Ge7KSLk1hp+mw7y7ptVHFIXTP/+82MiM0L5ASww7Z4LbfmaAbLi/QD9p
+        4/xob7RNnaqXzrIZQ9dGRsJo=
+X-Received: by 2002:a0c:fa91:: with SMTP id o17mr10671194qvn.142.1571414051278;
+        Fri, 18 Oct 2019 08:54:11 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzpdpx+YqP9G6AgSLbPFZYcnbAE0igK0+Neer7IkNmX+LQFwmzaKk2LqAsNvkoquqj/CkxRZw==
+X-Received: by 2002:a0c:fa91:: with SMTP id o17mr10671172qvn.142.1571414051101;
+        Fri, 18 Oct 2019 08:54:11 -0700 (PDT)
+Received: from LykOS.localdomain (216-165-95-130.natpool.nyu.edu. [216.165.95.130])
+        by smtp.gmail.com with ESMTPSA id k13sm681936qkg.57.2019.10.18.08.54.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 08:54:10 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 11:54:09 -0400
+From:   Santiago Torres Arias <santiago@nyu.edu>
+To:     Vegard Nossum <vegard.nossum@oracle.com>
+Cc:     Willy Tarreau <w@1wt.eu>, workflows@vger.kernel.org,
+        Git Mailing List <git@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        Eric Wong <e@80x24.org>
+Subject: Re: email as a bona fide git transport
+Message-ID: <20191018155408.dk4tsjrne42ufpvv@LykOS.localdomain>
+References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
+ <20191016111009.GE13154@1wt.eu>
+ <20191016144517.giwip4yuaxtcd64g@LykOS.localdomain>
+ <56664222-6c29-09dc-ef78-7b380b113c4a@oracle.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="n8g4imXOkfNTN/H1"
+        protocol="application/pgp-signature"; boundary="5sfrrmuyqloyaxm7"
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <56664222-6c29-09dc-ef78-7b380b113c4a@oracle.com>
+X-Orig-IP: 209.85.222.198
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=762 impostorscore=0 adultscore=0 phishscore=0 clxscore=1015
+ bulkscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0 priorityscore=1501
+ suspectscore=7 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910180143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---n8g4imXOkfNTN/H1
+--5sfrrmuyqloyaxm7
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus,
+> Seeing how large this signature is, I have to admit that I am partial to
+> Konstantin's suggestion of using minisign. This seems like something
+> that could be added to git as an alternative to gpg without too much
+> trouble, I think.
+>=20
+>=20
 
-The following changes since commit da0c9ea146cbe92b832f1b0f694840ea8eb33cce:
+I wonder how big the pgp payload would be with ed25519 as the underlying
+algorithm. AFAICT, the payload of a minisign signature vs a signature
+packet have almost the same fields...
 
-  Linux 5.4-rc2 (2019-10-06 14:27:30 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-fixes-v5.4-rc3
-
-for you to fetch changes up to 46ac18c347b00be29b265c28209b0f3c38a1f142:
-
-  iommu/amd: Check PM_LEVEL_SIZE() condition in locked section (2019-10-18 16:52:37 +0200)
-
-----------------------------------------------------------------
-IOMMU Fixes for Linux v5.4-rc3:
-
-Including:
-
-	- Fixes for page-table issues on Mali GPUs
-
-	- Missing free in an error path for ARM-SMMU
-
-	- PASID decoding in the AMD IOMMU Event log code
-
-	- Another update for the locking fixes in the AMD IOMMU driver
-
-	- Reduce the calls to platform_get_irq() in the IPMMU-VMSA and
-	  Rockchip IOMMUs to get rid of the warning message added to this
-	  function recently
-
-----------------------------------------------------------------
-Geert Uytterhoeven (1):
-      iommu/ipmmu-vmsa: Only call platform_get_irq() when interrupt is mandatory
-
-Heiko Stuebner (1):
-      iommu/rockchip: Don't use platform_get_irq to implicitly count irqs
-
-Joerg Roedel (2):
-      Merge branch 'for-joerg/arm-smmu/fixes' of git://git.kernel.org/.../will/linux into iommu/fixes
-      iommu/amd: Check PM_LEVEL_SIZE() condition in locked section
-
-Liu Xiang (1):
-      iommu/arm-smmu: Free context bitmap in the err path of arm_smmu_init_domain_context
-
-Robin Murphy (2):
-      iommu/io-pgtable-arm: Correct Mali attributes
-      iommu/io-pgtable-arm: Support all Mali configurations
-
-Suthikulpanit, Suravee (1):
-      iommu/amd: Fix incorrect PASID decoding from event log
-
- drivers/iommu/amd_iommu.c       | 12 +++++----
- drivers/iommu/amd_iommu_types.h |  4 +--
- drivers/iommu/arm-smmu.c        |  1 +
- drivers/iommu/io-pgtable-arm.c  | 58 ++++++++++++++++++++++++++++++++---------
- drivers/iommu/ipmmu-vmsa.c      |  3 +--
- drivers/iommu/rockchip-iommu.c  | 19 ++++++++++----
- 6 files changed, 70 insertions(+), 27 deletions(-)
-
-Please pull.
-
-Thanks,
-
-	Joerg
-
---n8g4imXOkfNTN/H1
+--5sfrrmuyqloyaxm7
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEr9jSbILcajRFYWYyK/BELZcBGuMFAl2p4BgACgkQK/BELZcB
-GuO8sA/9HtDW6b8w/r2XJOcxP01hP59c9AveS1VNwR2KyBjZepprg9geSmLz921G
-063ozZ02UJ4gIZ3R/7nJ9oisQ3C2UGZz8/apPVm+hLu3/ywYLLDucuXLGmzc4Yyj
-62Ya2Mvu4InK6TunBxxARgWHBXEIJN915usyy9oAMTSZtlshvkwZU36SrArVAbCY
-SXdF3lT8aHqRN2FTNQo4B1/kiW9lPWKnXmBqs/zt6kvOzxHQtiusdpYZK8nubm7B
-J3a2vyWpflwsf9yxMI/3B1Nlb/+GQlodg1KEuK20hZc3V9Ov4MDEI6P2ZcTTUywR
-qprVn7MERqtNHT9Pna2O4bj7ugPdp44p2dI4lXJBxdBIavYx0F+nCbvLh8qpoC2v
-Lkz1kDqf1Cz5FrlYroOsFCZfTpLo3cgFomm/KyRZCD0rSJxxLd/irV8TsmLZe2GQ
-6fKxoCMpkq4HaXdT0+nA5NclY9z/UWNS8KvhmsF9djhVmgiE/viZkFAnyBUncN0z
-vpd0jfy5M6DHT1aqBEfciVo/plcNpyaR8OqgdkInILOMAAWL3BTpGDpUmvHEu6x0
-rkOWSAcLXRTvb6EKxqOvSx3bwW2DnthPhqxa0nnuK/yrDSK/lrT0YOpL3Pl2hwsR
-0p0iqqIeHYPaiW+anmnRlA7Jd50Su/CweuXGG6QBn4IdMhUUOfQ=
-=2SpP
+iQIzBAEBCAAdFiEEkDurc2QOttZVM+/zRo8SLOgWIpUFAl2p4CAACgkQRo8SLOgW
+IpWCjBAA0Vj5QGil9RloqJJ3wtJwtCnJCmTogWUL1Aoh4fjllBRsl5Zo/MM+ttl8
+mLMGtLEpTsLwyVbgtrDNUlttd8RQRfmO5N+/QdowDchWLPt9bdbnZZ3S/PSCFfZs
+3jbWxJ/XTg9n5fpu111Vyl9O4A/0ZODqRJHDjvhg6dX04vlIj+s/UYsF/9mBvCEy
+kBqzdNgGqZ4nQMrvYQTT6kVA39jeF4PDMzg7hLpSzvXI6jTlEyEEyd9er7y22gdL
+a0qTjXVGzc5TvAUjBZ/RMbBa9o+Jkg3WwZwmvGKosScHqPIEpCp2i+iL/NiQnid2
+OxwzidTRstzc5gwjHTSaFtEw9i8YqunOZhUpoTS4/AG4RaaepsetDTpUE6Ckax/J
+MG6/ZbnfXVwGXmH5aMiuPK/o098r/dcB/3HL5KkMGuo5eF+3H0uFd3ylpBBfuv++
+DD+h9bO02I0ktNIj9p99W8Ze/66XSe/9GzOvG9jldDTBBSW92S1M5M+ul3ko4IEt
+TL0wEMYPq/81kM3hfpZYbzmL4NcY6jUIc+UvnpwczfhU3DSTA3pS+UpBXO3njuOu
+8OtWJm3rcAaJaQ+U3Pzfms4jR0uSNmgdiF/LRgMxnmBu5mQSIKiAFJ7iqIzMJXuA
+djhM8UQCu0rQwgFr7SB2ZJRsU+Ec3yTfKGWa1q0gBoz4zdaYfmU=
+=zbEw
 -----END PGP SIGNATURE-----
 
---n8g4imXOkfNTN/H1--
+--5sfrrmuyqloyaxm7--
