@@ -7,54 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87966CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA0FCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C9FC21852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:13:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5356821852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436812;
-	bh=6bX3JZ0mNSoPeAZpx5MEgdqiywAKLyT661TKt6eO82w=;
+	s=default; t=1571436817;
+	bh=/SmDa1GiWZJ/WBG/5ipgS+68v/PafN5F5tqY/+4b/ac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uodGrRxuny2a+Ww1MvoRpnsp2SenREfsqNoqvB0mXjtfgMv8Qz8yb/zFrovhejeZy
-	 sRF2A9/8E2pTb3kXbvflggCvYsuCDTIn4TCNI4kNJ7xn0iVDlQ4mkMsutoVhxXx97C
-	 0RwHKBLBjonviq0F4bh1TlWsiGRs2Vw2vXIGKnYE=
+	b=YRB8AmdrftKLjo2gUudYGsaKjI0rK86b803d8b3pmPPXBqiCwzqpduk4LJ9OJD/xn
+	 /7gO+EoYOFofB96DFENhiX8bJsThTZixqoai9aJqqdqTBbboGE8u1uGMFbcwnCvbxX
+	 JjtKX8PIt2ZGXDftKT9qdofMaQsjk1vRbsZiqXcg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403801AbfJRWNb (ORCPT
+        id S2389319AbfJRWJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:13:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42608 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:09:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388387AbfJRWJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:09:54 -0400
+        id S2388783AbfJRWJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:09:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79FF922474;
-        Fri, 18 Oct 2019 22:09:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B84E2245D;
+        Fri, 18 Oct 2019 22:09:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436593;
-        bh=6bX3JZ0mNSoPeAZpx5MEgdqiywAKLyT661TKt6eO82w=;
+        s=default; t=1571436559;
+        bh=/SmDa1GiWZJ/WBG/5ipgS+68v/PafN5F5tqY/+4b/ac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mZcxb/7b8q2RgwfB/llhgPq/w70gQhUKfmqId7wlpW0hVLUgw20Ke9ca5aVa/OcaL
-         xmPzkVcc3Gpbn6mzV2c0Ls9v8zXo2QZ+xGpBL725o8ETL27eTCyPljBzUwABC59M/e
-         Gx9WIE2sjOa2XQiWbtYlt2PI2+O2tS2yAF+nhWSo=
+        b=S9/p7w8OMC3Ti78+RcL+bxsB9EXGZyhtXwPoXxw6P3CQaA1SeGT3f6WqFpdy4zjO3
+         rZC6QpJA7WN+anuQkE5WBwFH3MO+VRdxwnbv5mmGYLmChfVcVgBMLKUr8RV45PKmJe
+         LKcjNly9h5vLiYg6xcVb36SSLQemjzRjvYU5Lpmo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia Guo <guojia12@huawei.com>, Yiwen Jiang <jiangyiwen@huawei.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Joseph Qi <joseph.qi@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 19/29] ocfs2: clear zero in unaligned direct IO
-Date:   Fri, 18 Oct 2019 18:09:10 -0400
-Message-Id: <20191018220920.10545-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 56/56] tracing: Initialize iter->seq after zeroing in tracing_read_pipe()
+Date:   Fri, 18 Oct 2019 18:07:53 -0400
+Message-Id: <20191018220753.10002-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191018220920.10545-1-sashal@kernel.org>
-References: <20191018220920.10545-1-sashal@kernel.org>
+In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
+References: <20191018220753.10002-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -64,91 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia Guo <guojia12@huawei.com>
+From: Petr Mladek <pmladek@suse.com>
 
-[ Upstream commit 7a243c82ea527cd1da47381ad9cd646844f3b693 ]
+[ Upstream commit d303de1fcf344ff7c15ed64c3f48a991c9958775 ]
 
-Unused portion of a part-written fs-block-sized block is not set to zero
-in unaligned append direct write.This can lead to serious data
-inconsistencies.
+A customer reported the following softlockup:
 
-Ocfs2 manage disk with cluster size(for example, 1M), part-written in
-one cluster will change the cluster state from UN-WRITTEN to WRITTEN,
-VFS(function dio_zero_block) doesn't do the cleaning because bh's state
-is not set to NEW in function ocfs2_dio_wr_get_block when we write a
-WRITTEN cluster.  For example, the cluster size is 1M, file size is 8k
-and we direct write from 14k to 15k, then 12k~14k and 15k~16k will
-contain dirty data.
+[899688.160002] NMI watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [test.sh:16464]
+[899688.160002] CPU: 0 PID: 16464 Comm: test.sh Not tainted 4.12.14-6.23-azure #1 SLE12-SP4
+[899688.160002] RIP: 0010:up_write+0x1a/0x30
+[899688.160002] Kernel panic - not syncing: softlockup: hung tasks
+[899688.160002] RIP: 0010:up_write+0x1a/0x30
+[899688.160002] RSP: 0018:ffffa86784d4fde8 EFLAGS: 00000257 ORIG_RAX: ffffffffffffff12
+[899688.160002] RAX: ffffffff970fea00 RBX: 0000000000000001 RCX: 0000000000000000
+[899688.160002] RDX: ffffffff00000001 RSI: 0000000000000080 RDI: ffffffff970fea00
+[899688.160002] RBP: ffffffffffffffff R08: ffffffffffffffff R09: 0000000000000000
+[899688.160002] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8b59014720d8
+[899688.160002] R13: ffff8b59014720c0 R14: ffff8b5901471090 R15: ffff8b5901470000
+[899688.160002]  tracing_read_pipe+0x336/0x3c0
+[899688.160002]  __vfs_read+0x26/0x140
+[899688.160002]  vfs_read+0x87/0x130
+[899688.160002]  SyS_read+0x42/0x90
+[899688.160002]  do_syscall_64+0x74/0x160
 
-We have to deal with two cases:
- 1.The starting position of direct write is outside the file.
- 2.The starting position of direct write is located in the file.
+It caught the process in the middle of trace_access_unlock(). There is
+no loop. So, it must be looping in the caller tracing_read_pipe()
+via the "waitagain" label.
 
-We need set bh's state to NEW in the first case.  In the second case, we
-need mapped twice because bh's state of area out file should be set to
-NEW while area in file not.
+Crashdump analyze uncovered that iter->seq was completely zeroed
+at this point, including iter->seq.seq.size. It means that
+print_trace_line() was never able to print anything and
+there was no forward progress.
 
-[akpm@linux-foundation.org: coding style fixes]
-Link: http://lkml.kernel.org/r/5292e287-8f1a-fd4a-1a14-661e555e0bed@huawei.com
-Signed-off-by: Jia Guo <guojia12@huawei.com>
-Reviewed-by: Yiwen Jiang <jiangyiwen@huawei.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Joseph Qi <joseph.qi@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+The culprit seems to be in the code:
+
+	/* reset all but tr, trace, and overruns */
+	memset(&iter->seq, 0,
+	       sizeof(struct trace_iterator) -
+	       offsetof(struct trace_iterator, seq));
+
+It was added by the commit 53d0aa773053ab182877 ("ftrace:
+add logic to record overruns"). It was v2.6.27-rc1.
+It was the time when iter->seq looked like:
+
+     struct trace_seq {
+	unsigned char		buffer[PAGE_SIZE];
+	unsigned int		len;
+     };
+
+There was no "size" variable and zeroing was perfectly fine.
+
+The solution is to reinitialize the structure after or without
+zeroing.
+
+Link: http://lkml.kernel.org/r/20191011142134.11997-1-pmladek@suse.com
+
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/aops.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ kernel/trace/trace.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/ocfs2/aops.c b/fs/ocfs2/aops.c
-index c26d046adaaac..7c20a23c0ed7d 100644
---- a/fs/ocfs2/aops.c
-+++ b/fs/ocfs2/aops.c
-@@ -2143,13 +2143,30 @@ static int ocfs2_dio_wr_get_block(struct inode *inode, sector_t iblock,
- 	struct ocfs2_dio_write_ctxt *dwc = NULL;
- 	struct buffer_head *di_bh = NULL;
- 	u64 p_blkno;
--	loff_t pos = iblock << inode->i_sb->s_blocksize_bits;
-+	unsigned int i_blkbits = inode->i_sb->s_blocksize_bits;
-+	loff_t pos = iblock << i_blkbits;
-+	sector_t endblk = (i_size_read(inode) - 1) >> i_blkbits;
- 	unsigned len, total_len = bh_result->b_size;
- 	int ret = 0, first_get_block = 0;
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 91227e339ef60..5e2f0fb9994d1 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -5751,6 +5751,7 @@ tracing_read_pipe(struct file *filp, char __user *ubuf,
+ 	       sizeof(struct trace_iterator) -
+ 	       offsetof(struct trace_iterator, seq));
+ 	cpumask_clear(iter->started);
++	trace_seq_init(&iter->seq);
+ 	iter->pos = -1;
  
- 	len = osb->s_clustersize - (pos & (osb->s_clustersize - 1));
- 	len = min(total_len, len);
- 
-+	/*
-+	 * bh_result->b_size is count in get_more_blocks according to write
-+	 * "pos" and "end", we need map twice to return different buffer state:
-+	 * 1. area in file size, not set NEW;
-+	 * 2. area out file size, set  NEW.
-+	 *
-+	 *		   iblock    endblk
-+	 * |--------|---------|---------|---------
-+	 * |<-------area in file------->|
-+	 */
-+
-+	if ((iblock <= endblk) &&
-+	    ((iblock + ((len - 1) >> i_blkbits)) > endblk))
-+		len = (endblk - iblock + 1) << i_blkbits;
-+
- 	mlog(0, "get block of %lu at %llu:%u req %u\n",
- 			inode->i_ino, pos, len, total_len);
- 
-@@ -2233,6 +2250,9 @@ static int ocfs2_dio_wr_get_block(struct inode *inode, sector_t iblock,
- 	if (desc->c_needs_zero)
- 		set_buffer_new(bh_result);
- 
-+	if (iblock > endblk)
-+		set_buffer_new(bh_result);
-+
- 	/* May sleep in end_io. It should not happen in a irq context. So defer
- 	 * it to dio work queue. */
- 	set_buffer_defer_completion(bh_result);
+ 	trace_event_read_lock();
 -- 
 2.20.1
 
