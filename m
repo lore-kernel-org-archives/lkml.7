@@ -2,168 +2,119 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE47CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D9B2CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28240222C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:37:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d2YK7nxn"
+	by mail.kernel.org (Postfix) with ESMTP id 5D68B222CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:38:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404286AbfJRJhx (ORCPT
+        id S2406076AbfJRJig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 05:37:53 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45843 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727917AbfJRJhw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 05:37:52 -0400
-Received: by mail-lj1-f196.google.com with SMTP id q64so5486039ljb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 02:37:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XgKygpmqdxOai3YVrfrSn5tFWpbBq87jsIt+y3JevpI=;
-        b=d2YK7nxnPnGzleOVegU5uASqFkj1Q6gDqyDHoSzwQxDkvAt/H+d3c4uHLTXsKb2Pkw
-         I4TM6AxL8JJj70znbIhoqYNhkMfZ/rt0keQbpxy+XQQ4O62EbZYIApbmNANYrw0BIjrg
-         hM3+lnVqMWReQAsqGN47SCjbSufQm5xgJIKUOOXT8G/CrNzstLnw61/D5q51VJZKxUp5
-         QAnkV+4OLNHH5/f8+9huR7gpNmkXNCeA1YkXpH/z9SiRuAxEkAmA3LAToiHAxefz0cQn
-         6k6pk/VhobFDSLzZ3qcdJCodVdxdLRyTsoJBQlZ2kiTUwUg4qdED/wSebMuoBYS+i95R
-         WsiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XgKygpmqdxOai3YVrfrSn5tFWpbBq87jsIt+y3JevpI=;
-        b=MgiuCNgqCHbKnVycjobC12aDKWxPeSfW0rMNLHnrpxL2cyQkNWa7CrDApnuo0iQW6v
-         TNmPpaFBYiqi0eSRJy8G5aDK126ibdOP1YXADjN7VDJaUVCnOESdOkeXJP3UgL7l0lcT
-         hg/iQTGzf15RQnHPbaGP7S+FCWh0sbygTrpX+6yLJsnZk5SMnPEDxX5iR53JtW0y+GG8
-         lAKg6QlqW9DYuLSjFntUhwTG+JK3gjkDVwsVxJS60rRh44Y2vhkHdJn2M1R3c+PQh423
-         M6Tu1ctYAp7bg1/qYpSKBiGdyin9AGkIiIcEzehvgIni7B7NvU5Dx/UV49pb14FCzKzu
-         cd8w==
-X-Gm-Message-State: APjAAAWAsarT2KCrlWTrFThZ9Nm+TF84j/y37seWzrSp/RmumNpGkjsK
-        jPXF7j1lpKyvcO8sMuf34JE=
-X-Google-Smtp-Source: APXvYqzRCf0C+MAldjnpnN1uCmIYuwJA4nk5XkcFPvv/jbXljZbNr7sMXTeDm5Ltw995gG3+//mHRg==
-X-Received: by 2002:a2e:9d06:: with SMTP id t6mr5592328lji.253.1571391470011;
-        Fri, 18 Oct 2019 02:37:50 -0700 (PDT)
-Received: from pc636 ([37.139.158.167])
-        by smtp.gmail.com with ESMTPSA id f22sm2074597lfk.56.2019.10.18.02.37.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 02:37:49 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Fri, 18 Oct 2019 11:37:41 +0200
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Daniel Wagner <dwagner@suse.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Hillf Danton <hdanton@sina.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v3 1/3] mm/vmalloc: remove preempt_disable/enable when do
- preloading
-Message-ID: <20191018093741.GA8744@pc636>
-References: <20191016095438.12391-1-urezki@gmail.com>
- <20191016105928.GS317@dhcp22.suse.cz>
+        Fri, 18 Oct 2019 05:38:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51944 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727917AbfJRJig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 05:38:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 693F2B1D5;
+        Fri, 18 Oct 2019 09:38:34 +0000 (UTC)
+Date:   Fri, 18 Oct 2019 11:38:30 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Jerry Snitselaar <jsnitsel@redhat.com>, don.brace@microsemi.com,
+        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        jejb@linux.ibm.com, esc.storagedev@microsemi.com,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: [PATCH] iommu/amd: Check PM_LEVEL_SIZE() condition in locked section
+Message-ID: <20191018093830.GA26328@suse.de>
+References: <20191016225859.j3jq6pt73mn56chn@cantor>
+ <577A2A6B-3012-4CDE-BE57-3E0D628572CB@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191016105928.GS317@dhcp22.suse.cz>
+In-Reply-To: <577A2A6B-3012-4CDE-BE57-3E0D628572CB@lca.pw>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Michal.
-
-Sorry for late reply. See my comments enclosed below:
-
-> On Wed 16-10-19 11:54:36, Uladzislau Rezki (Sony) wrote:
-> > Some background. The preemption was disabled before to guarantee
-> > that a preloaded object is available for a CPU, it was stored for.
+On Thu, Oct 17, 2019 at 07:36:51AM -0400, Qian Cai wrote:
 > 
-> Probably good to be explicit that this has been achieved by combining
-> the disabling the preemption and taking the spin lock while the
-> ne_fit_preload_node is checked resp. repopulated, right?
 > 
-Right, agree with your comment!
-
-
-> > The aim was to not allocate in atomic context when spinlock
-> > is taken later, for regular vmap allocations. But that approach
-> > conflicts with CONFIG_PREEMPT_RT philosophy. It means that
-> > calling spin_lock() with disabled preemption is forbidden
-> > in the CONFIG_PREEMPT_RT kernel.
+> > On Oct 16, 2019, at 6:59 PM, Jerry Snitselaar <jsnitsel@redhat.com> wrote:
 > > 
-> > Therefore, get rid of preempt_disable() and preempt_enable() when
-> > the preload is done for splitting purpose. As a result we do not
-> > guarantee now that a CPU is preloaded, instead we minimize the
-> > case when it is not, with this change.
+> > I guess the mode level 6 check is really for other potential callers
+> > increase_address_space, none exist at the moment, and the condition
+> > of the while loop in alloc_pte should fail if the mode level is 6.
 > 
-> by populating the per cpu preload pointer under the vmap_area_lock.
-> This implies that at least each caller which has done the preallocation
-> will not fallback to an atomic allocation later. It is possible that the
-> preallocation would be pointless or that no preallocation is done
-> because of the race but your data shows that this is really rare.
-> 
-That makes sense to add. Please find below updated comment:
+> Because there is no locking around iommu_map_page(), if there are
+> several concurrent callers of it for the same domain, could it be that
+> it silently corrupt data due to invalid access?
 
-<snip>
-mm/vmalloc: remove preempt_disable/enable when do preloading
+No, that can't happen because increase_address_space locks the domain
+before actually doing anything. So the address space can't grow above
+domain->mode == 6. But what can happen is that the WARN_ON_ONCE triggers
+in there and that the address space is increased multiple times when
+only one increase would be sufficient.
 
-Some background. The preemption was disabled before to guarantee
-that a preloaded object is available for a CPU, it was stored for.
-That was achieved by combining the disabling the preemption and
-taking the spin lock while the ne_fit_preload_node is checked.
+To fix this we just need to check the PM_LEVEL_SIZE() condition again
+when we hold the lock:
 
-The aim was to not allocate in atomic context when spinlock
-is taken later, for regular vmap allocations. But that approach
-conflicts with CONFIG_PREEMPT_RT philosophy. It means that
-calling spin_lock() with disabled preemption is forbidden
-in the CONFIG_PREEMPT_RT kernel.
+From e930e792a998e89dfd4feef15fbbf289c45124dc Mon Sep 17 00:00:00 2001
+From: Joerg Roedel <jroedel@suse.de>
+Date: Fri, 18 Oct 2019 11:34:22 +0200
+Subject: [PATCH] iommu/amd: Check PM_LEVEL_SIZE() condition in locked section
 
-Therefore, get rid of preempt_disable() and preempt_enable() when
-the preload is done for splitting purpose. As a result we do not
-guarantee now that a CPU is preloaded, instead we minimize the
-case when it is not, with this change, by populating the per
-cpu preload pointer under the vmap_area_lock.
+The increase_address_space() function has to check the PM_LEVEL_SIZE()
+condition again under the domain->lock to avoid a false trigger of the
+WARN_ON_ONCE() and to avoid that the address space is increase more
+often than necessary.
 
-This implies that at least each caller that has done the preallocation
-will not fallback to an atomic allocation later. It is possible
-that the preallocation would be pointless or that no preallocation
-is done because of the race but the data shows that this is really
-rare.
+Reported-by: Qian Cai <cai@lca.pw>
+Fixes: 754265bcab78 ("iommu/amd: Fix race in increase_address_space()")
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ drivers/iommu/amd_iommu.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-For example i run the special test case that follows the preload
-pattern and path. 20 "unbind" threads run it and each does
-1000000 allocations. Only 3.5 times among 1000000 a CPU was
-not preloaded. So it can happen but the number is negligible.
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 2369b8af81f3..a0639e511ffe 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -1463,6 +1463,7 @@ static void free_pagetable(struct protection_domain *domain)
+  * to 64 bits.
+  */
+ static bool increase_address_space(struct protection_domain *domain,
++				   unsigned long address,
+ 				   gfp_t gfp)
+ {
+ 	unsigned long flags;
+@@ -1471,8 +1472,8 @@ static bool increase_address_space(struct protection_domain *domain,
+ 
+ 	spin_lock_irqsave(&domain->lock, flags);
+ 
+-	if (WARN_ON_ONCE(domain->mode == PAGE_MODE_6_LEVEL))
+-		/* address space already 64 bit large */
++	if (address <= PM_LEVEL_SIZE(domain->mode) ||
++	    WARN_ON_ONCE(domain->mode == PAGE_MODE_6_LEVEL))
+ 		goto out;
+ 
+ 	pte = (void *)get_zeroed_page(gfp);
+@@ -1505,7 +1506,7 @@ static u64 *alloc_pte(struct protection_domain *domain,
+ 	BUG_ON(!is_power_of_2(page_size));
+ 
+ 	while (address > PM_LEVEL_SIZE(domain->mode))
+-		*updated = increase_address_space(domain, gfp) || *updated;
++		*updated = increase_address_space(domain, address, gfp) || *updated;
+ 
+ 	level   = domain->mode - 1;
+ 	pte     = &domain->pt_root[PM_LEVEL_INDEX(level, address)];
+-- 
+2.16.4
 
-V2 - > V3:
-    - update the commit message
-
-V1 -> V2:
-  - move __this_cpu_cmpxchg check when spin_lock is taken,
-    as proposed by Andrew Morton
-  - add more explanation in regard of preloading
-  - adjust and move some comments
-<snip>
-
-Do you agree on that?
-
-Thank you!
-
---
-Vlad Rezki
