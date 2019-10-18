@@ -2,249 +2,205 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71784CA9EB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1B8CA9EC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34A7721D7D
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A199C21D7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:29:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wWvUFiMD"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Vu2NAFxP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503839AbfJRA3W (ORCPT
+        id S2503997AbfJRA31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 20:29:22 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:39698 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406927AbfJRA2l (ORCPT
+        Thu, 17 Oct 2019 20:29:27 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:43058 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2406870AbfJRA2l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 17 Oct 2019 20:28:41 -0400
-Received: by mail-pg1-f202.google.com with SMTP id m20so3021626pgv.6
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 17:28:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=j+5h8tQfMwxRzPWa0YsZn6CHewLhXavyhIU1GNL2cCg=;
-        b=wWvUFiMDL+FpAEBvOeSh92Ok6NrnP0bMly0DvcbnIEwAXgGMsFpdxjlNZIkHJTYYBa
-         RRx649P7sqiPze6DlRwJOUwwuFezLRxr6AueTJGVgGsRuHZqUR62pVBaDH5dw3oVDwJF
-         cqz06TfsdUQqKYWYzqCu1qGrSGJTcxPYv4FciDQIqqO3PIW4m2UzT+g4IwApY3LkDK0H
-         UzSRCzIapr1rLvg4twVJwpwLGQFu0MzEemzo/jZzvekhF3dWx3g2K2T5lXemO6XXF183
-         DSve4IVI9m4PDbMg8OfAlO424FgA0MXzf8aoQb3/3dDlHQPqUPbovQfJUZyE+fNef8pE
-         aqeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=j+5h8tQfMwxRzPWa0YsZn6CHewLhXavyhIU1GNL2cCg=;
-        b=S3e+uEg95ajtwW76FKX+2LqAPGDrEBxh3YkwKr2gpOirVzvD0FZa7LECl1i/XEnR+3
-         GirzjtfiWjEoW9yUu8fVFZT3u4XYXfnikrmveSdATOtpJam83LqzFCetEVyA9+TcoLqU
-         8RvKQKBf8OeIgcoQHr3MHucLadm2DTdpy50+1MldQ3FIPvBpB+PsbYEFjFrQvKjaSs8f
-         26RMtYtxSs99WlPL5EhkIELW2Eyb9YtHJMbrXCMKKH/ASSRgbPLVZg8oNeIY+3cBvqa5
-         YzyqWalEu6vjH7u6iw3C8Gu+Fayqyt1WQyNXxhBnvc3WrJasc87b4kp1miACKuu4SZyn
-         O5BA==
-X-Gm-Message-State: APjAAAWBPWiSmSUI4T+Mx3GBR/w8a+XAO72kObBHHdo0NXD5Gy0IH8y+
-        1mg9UmYn+IGVIvA8RIDGPQ7eBevZW/FOUPhC8lysEJt2e3l88330Z5YvF7BaKJ0rqXheLfwnWgL
-        EfJZsPg2eIFhK3eMWGQeuUa+ujAx9+t+UPHAlu4toXjfWi49EmG9lE/bULVGyZtZiXQqh5Ika
-X-Google-Smtp-Source: APXvYqwu1mc92nD1BJySLwigscmIoAcEQnImRqxXgGASAaAf5eB9ASrZf51xyyOQBtOzwJXz7u15Vnj3MRI+
-X-Received: by 2002:a63:131b:: with SMTP id i27mr6927200pgl.209.1571358518957;
- Thu, 17 Oct 2019 17:28:38 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 17:27:46 -0700
-Message-Id: <20191018002746.149200-1-eranian@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-Subject: [PATCH] perf/core: fix multiplexing event scheduling issue
-From:   Stephane Eranian <eranian@google.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@elte.hu, acme@redhat.com,
-        jolsa@redhat.com, kan.liang@intel.com, songliubraving@fb.com,
-        irogers@google.com
-Content-Type: text/plain; charset="UTF-8"
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9I0OMlU002611
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 17:28:39 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=6szowz6ychF/Fx/Qii6u2VKsIWGHdQvAp2da21KVkNA=;
+ b=Vu2NAFxPIbj7oF0+HnIkt2a0j8unjSH3WnCIr36L7hflUhcuAHPKxk7YvaDNERFHvolM
+ jJKP6zq9H0BP2tATGSvasiSeHh5bi2CQFXlOuqkyhZ1ovslCkexIWZJBLrBRSzw189X3
+ V8nz4XWQbcx/ox0vNwKg4SutROxUuZpKvYk= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2vq2nkr1pg-15
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 17:28:39 -0700
+Received: from 2401:db00:30:600c:face:0:39:0 (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 17 Oct 2019 17:28:35 -0700
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id 109B318CE8489; Thu, 17 Oct 2019 17:28:34 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     <linux-mm@kvack.org>
+CC:     Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Waiman Long <longman@redhat.com>,
+        Christoph Lameter <cl@linux.com>, Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH 11/16] mm: memcg/slab: replace memcg_from_slab_page() with memcg_from_slab_obj()
+Date:   Thu, 17 Oct 2019 17:28:15 -0700
+Message-ID: <20191018002820.307763-12-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191018002820.307763-1-guro@fb.com>
+References: <20191018002820.307763-1-guro@fb.com>
+X-FB-Internal: Safe
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-17_07:2019-10-17,2019-10-17 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=834
+ spamscore=0 clxscore=1015 suspectscore=1 bulkscore=0 impostorscore=0
+ mlxscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910180001
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch complements the following commit:
-7fa343b7fdc4 ("perf/core: Fix corner case in perf_rotate_context()")
+On our way to share slab pages between multiple memory cgroups
+let's make sure we don't use kmem_cache.memcg_params.memcg
+pointer to determine memcg ownership of a slab object/page.
 
-The fix from Song addresses the consequences of the problem but
-not the cause. This patch fixes the causes and can sit on top of
-Song's patch.
+Let's transform memcg_from_slab_page() into memcg_from_slab_obj(),
+which relies on memcg ownership data stored in page->mem_cgroup_vec.
 
-This patch fixes a scheduling problem in the core functions of
-perf_events. Under certain conditions, some events would not be
-scheduled even though many counters would be available. This
-is related to multiplexing and is architecture agnostic and
-PMU agnostic (i.e., core or uncore).
+Delete mem_cgroup_from_kmem() and use memcg_from_slab_obj()
+instead.
 
-This problem can easily be reproduced when you have two perf
-stat sessions. The first session does not cause multiplexing,
-let's say it is measuring 1 event, E1. While it is measuring,
-a second session starts and causes multiplexing. Let's say it
-adds 6 events, B1-B6. Now, 7 events compete and are multiplexed.
-When the second session terminates, all 6 (B1-B6) events are
-removed. Normally, you'd expect the E1 event to continue to run
-with no multiplexing. However, the problem is that depending on
-the state Of E1 when B1-B6 are removed, it may never be scheduled
-again. If E1 was inactive at the time of removal, despite the
-multiplexing hrtimer still firing, it will not find any active
-events and will not try to reschedule. This is what Song's patch
-fixes. It forces the multiplexing code to consider non-active events.
-However, the cause is not addressed. The kernel should not rely on
-the multiplexing hrtimer to unblock inactive events. That timer
-can have abitrary duration in the milliseconds. Until the timer
-fires, counters are available, but no measurable events are using
-them. We do not want to introduce blind spots of arbitrary durations.
+Note: memcg_from_slab_obj() returns NULL if slab obj belongs
+to the root cgroup, so remove the redundant check in
+__mod_lruvec_slab_state().
 
-This patch addresses the cause of the problem, by checking that,
-when an event is disabled or removed and the context was multiplexing
-events, inactive events gets immediately a chance to be scheduled by
-calling ctx_resched(). The rescheduling is done on  event of equal
-or lower priority types.  With that in place, as soon as a counter
-is freed, schedulable inactive events may run, thereby eliminating
-a blind spot.
-
-This can be illustrated as follows using Skylake uncore CHA here:
-
-$ perf stat --no-merge -a -I 1000 -C 28 -e uncore_cha_0/event=0x0/
-    42.007856531      2,000,291,322      uncore_cha_0/event=0x0/
-    43.008062166      2,000,399,526      uncore_cha_0/event=0x0/
-    44.008293244      2,000,473,720      uncore_cha_0/event=0x0/
-    45.008501847      2,000,423,420      uncore_cha_0/event=0x0/
-    46.008706558      2,000,411,132      uncore_cha_0/event=0x0/
-    47.008928543      2,000,441,660      uncore_cha_0/event=0x0/
-
-Adding second sessiont with 4 events for 4s
-
-$ perf stat -a -I 1000 -C 28 --no-merge -e uncore_cha_0/event=0x0/,uncore_cha_0/event=0x0/,uncore_cha_0/event=0x0/,uncore_cha_0/event=0x0/ sleep 4
-    48.009114643      1,983,129,830      uncore_cha_0/event=0x0/                                       (99.71%)
-    49.009279616      1,976,067,751      uncore_cha_0/event=0x0/                                       (99.30%)
-    50.009428660      1,974,448,006      uncore_cha_0/event=0x0/                                       (98.92%)
-    51.009524309      1,973,083,237      uncore_cha_0/event=0x0/                                       (98.55%)
-    52.009673467      1,972,097,678      uncore_cha_0/event=0x0/                                       (97.11%)
-
-End of 4s, second session is removed. But the first event does not schedule and never will
-unless new events force multiplexing again.
-
-    53.009815999      <not counted>      uncore_cha_0/event=0x0/                                       (95.28%)
-    54.009961809      <not counted>      uncore_cha_0/event=0x0/                                       (93.52%)
-    55.010110972      <not counted>      uncore_cha_0/event=0x0/                                       (91.82%)
-    56.010217579      <not counted>      uncore_cha_0/event=0x0/                                       (90.18%)
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
+Signed-off-by: Roman Gushchin <guro@fb.com>
 ---
- kernel/events/core.c | 67 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+ mm/list_lru.c   | 12 +-----------
+ mm/memcontrol.c |  9 ++++-----
+ mm/slab.h       | 21 +++++++++++++--------
+ 3 files changed, 18 insertions(+), 24 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 9ec0b0bfddbd..578587246ffb 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2140,6 +2140,10 @@ group_sched_out(struct perf_event *group_event,
- 
- #define DETACH_GROUP	0x01UL
- 
-+static void ctx_resched(struct perf_cpu_context *cpuctx,
-+			struct perf_event_context *task_ctx,
-+			enum event_type_t event_type);
-+
- /*
-  * Cross CPU call to remove a performance event
-  *
-@@ -2153,6 +2157,7 @@ __perf_remove_from_context(struct perf_event *event,
- 			   void *info)
- {
- 	unsigned long flags = (unsigned long)info;
-+	int was_necessary = ctx->rotate_necessary;
- 
- 	if (ctx->is_active & EVENT_TIME) {
- 		update_context_time(ctx);
-@@ -2171,6 +2176,37 @@ __perf_remove_from_context(struct perf_event *event,
- 			cpuctx->task_ctx = NULL;
- 		}
- 	}
-+
-+	/*
-+	 * sanity check that event_sched_out() does not and will not
-+	 * change the state of ctx->rotate_necessary
-+	 */
-+	WARN_ON(was_necessary != event->ctx->rotate_necessary);
-+	/*
-+	 * if we remove an event AND we were multiplexing then, that means
-+	 * we had more events than we have counters for, and thus, at least,
-+	 * one event was in INACTIVE state. Now, that we removed an event,
-+	 * we need to resched to give a chance to all events to get scheduled,
-+	 * otherwise some may get stuck.
-+	 *
-+	 * By the time this function is called the event is usually in the OFF
-+	 * state.
-+	 * Note that this is not a duplicate of the same code in _perf_event_disable()
-+	 * because the call path are different. Some events may be simply disabled
-+	 * others removed. There is a way to get removed and not be disabled first.
-+	 */
-+	if (ctx->rotate_necessary && ctx->nr_events) {
-+		int type = get_event_type(event);
-+		/*
-+		 * In case we removed a pinned event, then we need to
-+		 * resched for both pinned and flexible events. The
-+		 * opposite is not true. A pinned event can never be
-+		 * inactive due to multiplexing.
-+		 */
-+		if (type & EVENT_PINNED)
-+			type |= EVENT_FLEXIBLE;
-+		ctx_resched(cpuctx, cpuctx->task_ctx, type);
-+	}
+diff --git a/mm/list_lru.c b/mm/list_lru.c
+index 0f1f6b06b7f3..4f9d791b802c 100644
+--- a/mm/list_lru.c
++++ b/mm/list_lru.c
+@@ -57,16 +57,6 @@ list_lru_from_memcg_idx(struct list_lru_node *nlru, int idx)
+ 	return &nlru->lru;
  }
  
- /*
-@@ -2218,6 +2254,8 @@ static void __perf_event_disable(struct perf_event *event,
- 				 struct perf_event_context *ctx,
- 				 void *info)
+-static __always_inline struct mem_cgroup *mem_cgroup_from_kmem(void *ptr)
+-{
+-	struct page *page;
+-
+-	if (!memcg_kmem_enabled())
+-		return NULL;
+-	page = virt_to_head_page(ptr);
+-	return memcg_from_slab_page(page);
+-}
+-
+ static inline struct list_lru_one *
+ list_lru_from_kmem(struct list_lru_node *nlru, void *ptr,
+ 		   struct mem_cgroup **memcg_ptr)
+@@ -77,7 +67,7 @@ list_lru_from_kmem(struct list_lru_node *nlru, void *ptr,
+ 	if (!nlru->memcg_lrus)
+ 		goto out;
+ 
+-	memcg = mem_cgroup_from_kmem(ptr);
++	memcg = memcg_from_slab_obj(ptr);
+ 	if (!memcg)
+ 		goto out;
+ 
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 8a753a336efd..1982b14d6e6f 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -548,7 +548,7 @@ ino_t page_cgroup_ino(struct page *page)
+ 
+ 	rcu_read_lock();
+ 	if (PageHead(page) && PageSlab(page))
+-		memcg = memcg_from_slab_page(page);
++		memcg = root_mem_cgroup;
+ 	else
+ 		memcg = READ_ONCE(page->mem_cgroup);
+ 	while (memcg && !(memcg->css.flags & CSS_ONLINE))
+@@ -852,16 +852,15 @@ void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
+ 
+ void __mod_lruvec_slab_state(void *p, enum node_stat_item idx, int val)
  {
-+	int was_necessary = ctx->rotate_necessary;
-+
- 	if (event->state < PERF_EVENT_STATE_INACTIVE)
- 		return;
+-	struct page *page = virt_to_head_page(p);
+-	pg_data_t *pgdat = page_pgdat(page);
++	pg_data_t *pgdat = page_pgdat(virt_to_page(p));
+ 	struct mem_cgroup *memcg;
+ 	struct lruvec *lruvec;
  
-@@ -2232,6 +2270,35 @@ static void __perf_event_disable(struct perf_event *event,
- 		event_sched_out(event, cpuctx, ctx);
+ 	rcu_read_lock();
+-	memcg = memcg_from_slab_page(page);
++	memcg = memcg_from_slab_obj(p);
  
- 	perf_event_set_state(event, PERF_EVENT_STATE_OFF);
-+	/*
-+	 * sanity check that event_sched_out() does not and will not
-+	 * change the state of ctx->rotate_necessary
-+	 */
-+	WARN_ON_ONCE(was_necessary != event->ctx->rotate_necessary);
-+
-+	/*
-+	 * if we disable an event AND we were multiplexing then, that means
-+	 * we had more events than we have counters for, and thus, at least,
-+	 * one event was in INACTIVE state. Now, that we disabled an event,
-+	 * we need to resched to give a chance to all events to be scheduled,
-+	 * otherwise some may get stuck.
-+	 *
-+	 * Note that this is not a duplicate of the same code in
-+	 * __perf_remove_from_context()
-+	 * because events can be disabled without being removed.
-+	 */
-+	if (ctx->rotate_necessary && ctx->nr_events) {
-+		int type = get_event_type(event);
-+		/*
-+		 * In case we removed a pinned event, then we need to
-+		 * resched for both pinned and flexible events. The
-+		 * opposite is not true. A pinned event can never be
-+		 * inactive due to multiplexing.
-+		 */
-+		if (type & EVENT_PINNED)
-+			type |= EVENT_FLEXIBLE;
-+		ctx_resched(cpuctx, cpuctx->task_ctx, type);
-+	}
+ 	/* Untracked pages have no memcg, no lruvec. Update only the node */
+-	if (!memcg || memcg == root_mem_cgroup) {
++	if (!memcg) {
+ 		__mod_node_page_state(pgdat, idx, val);
+ 	} else {
+ 		lruvec = mem_cgroup_lruvec(pgdat, memcg);
+diff --git a/mm/slab.h b/mm/slab.h
+index 0f2f712de77a..a6330065d434 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -329,15 +329,20 @@ static inline struct kmem_cache *memcg_root_cache(struct kmem_cache *s)
+  * The kmem_cache can be reparented asynchronously. The caller must ensure
+  * the memcg lifetime, e.g. by taking rcu_read_lock() or cgroup_mutex.
+  */
+-static inline struct mem_cgroup *memcg_from_slab_page(struct page *page)
++static inline struct mem_cgroup *memcg_from_slab_obj(void *ptr)
+ {
+-	struct kmem_cache *s;
+-
+-	s = READ_ONCE(page->slab_cache);
+-	if (s && !is_root_cache(s))
+-		return READ_ONCE(s->memcg_params.memcg);
++	struct mem_cgroup_ptr *memcg_ptr;
++	struct page *page;
++	unsigned int off;
+ 
+-	return NULL;
++	if (!memcg_kmem_enabled())
++		return NULL;
++	page = virt_to_head_page(ptr);
++	if (is_root_cache(page->slab_cache))
++		return NULL;
++	off = obj_to_index(page->slab_cache, page, ptr);
++	memcg_ptr = page->mem_cgroup_vec[off];
++	return memcg_ptr->memcg;
  }
  
- /*
+ static inline int memcg_alloc_page_memcg_vec(struct page *page, gfp_t gfp,
+@@ -464,7 +469,7 @@ static inline struct kmem_cache *memcg_root_cache(struct kmem_cache *s)
+ 	return s;
+ }
+ 
+-static inline struct mem_cgroup *memcg_from_slab_page(struct page *page)
++static inline struct mem_cgroup *memcg_from_slab_obj(void *ptr)
+ {
+ 	return NULL;
+ }
 -- 
-2.23.0.866.gb869b98d4c-goog
+2.21.0
 
