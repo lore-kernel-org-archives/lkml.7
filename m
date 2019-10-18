@@ -2,333 +2,187 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 718AACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA59ACA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D52F222C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:33:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Noahe+cw"
+	by mail.kernel.org (Postfix) with ESMTP id CCA8420659
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:33:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439945AbfJRQay (ORCPT
+        id S2634367AbfJRQdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:30:54 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33168 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439782AbfJRQao (ORCPT
+        Fri, 18 Oct 2019 12:33:10 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57747 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439916AbfJRQax (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:30:44 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d22so3110748pls.0;
-        Fri, 18 Oct 2019 09:30:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ioUxflPJk241Sd8uCqW+4LLu7go7mYYjazg2y5D+euI=;
-        b=Noahe+cw+oe1BNvUPmv9cmXuYAKMcdh3TkhmHpUDgLyEFiBRsD2jru5PXvGJv6MqXD
-         /XE4wG0iZksfhB3BVRXjItDttPFMoTynMQEr4YV3TzLLTmoj2anNAaQxKvmiwQtaGAYW
-         ebL2vANtuNHEEWUB7RMeOcu/IHGCk56GOas1WYXY1J1qi9OmkvE1W1CQ2hLaOSqbZ7wC
-         jfGIXBjPUYCaCteWsopRhzZPIPrQjFGm7/5E1yJI1WYUzlxKDM7ItznQIpyo3BYb58Tu
-         HuaAgYGftDjRcrkxwaBmPCVYz/uxrugxf8eOXf9Ex0kEZJRbcZNZT4JMpBNXeqqjElUq
-         jc3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ioUxflPJk241Sd8uCqW+4LLu7go7mYYjazg2y5D+euI=;
-        b=oTri8ugRFfZtAXpTDYUBFarwfklJqHb3yEH8lM1VBhkeoNp476+naOrf+2H68QcpB/
-         lqArz4xVfsmN0bS8HEhk301pdqkR9KALbfjkHEwhlzLhPKib47BjJvovvyIY7K1+Y902
-         RaM1ni64zks/SWaJZ0MC2GybBg8VhJRiGRYxUwm1VRV0RvYJHzGOV07zRqiwwHJbkegm
-         0SSjUHE076etyChn2IUnm1RwfsOSD0PUS2qf+5OYPzDiVGSToLImAa8QHb8yCJbbq1in
-         yzqcj18ukkPmhqunEonphZ4V/79gZSJu21/eDD1V7jU5XbLWizxn5wIkIlV8CQJyjNZH
-         URkQ==
-X-Gm-Message-State: APjAAAVOF9cDbA0QTkRdBUBF1UY1AEb/ICH7p+ps6DkNLEliEwu39knI
-        aktZ8t64/LKTlwVKdByG2BM=
-X-Google-Smtp-Source: APXvYqz9AgnO5wJDvm1Pg6p/ZgeOIqLXWnWPY63JzbbCx7GJI5f+EhGIc58hMebd7OYELWuIV0XCUg==
-X-Received: by 2002:a17:902:9682:: with SMTP id n2mr10572124plp.52.1571416243179;
-        Fri, 18 Oct 2019 09:30:43 -0700 (PDT)
-Received: from localhost.localdomain ([94.204.252.234])
-        by smtp.gmail.com with ESMTPSA id u3sm6401575pfn.134.2019.10.18.09.30.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 18 Oct 2019 09:30:42 -0700 (PDT)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH] arm64: dts: meson: khadas-vim3: move audio nodes to common dtsi
-Date:   Fri, 18 Oct 2019 20:29:45 +0400
-Message-Id: <1571416185-6449-1-git-send-email-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 18 Oct 2019 12:30:53 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iLV9B-0002xp-8M; Fri, 18 Oct 2019 18:30:37 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D0D101C04D0;
+        Fri, 18 Oct 2019 18:30:32 +0200 (CEST)
+Date:   Fri, 18 Oct 2019 16:30:32 -0000
+From:   "tip-bot2 for Jiri Slaby" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/asm] x86/boot: Annotate local functions
+Cc:     Jiri Slaby <jslaby@suse.cz>, Borislav Petkov <bp@suse.de>,
+        Cao jin <caoj.fnst@cn.fujitsu.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Wei Huang <wei@redhat.com>, "x86-ml" <x86@kernel.org>,
+        Xiaoyao Li <xiaoyao.li@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191011115108.12392-8-jslaby@suse.cz>
+References: <20191011115108.12392-8-jslaby@suse.cz>
+MIME-Version: 1.0
+Message-ID: <157141623264.29376.1288394809866461027.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move VIM3 audio nodes to meson-khadas-vim3.dtsi to enable audio for all
-boards in the VIM3 family including VIM3L.
+The following commit has been merged into the x86/asm branch of tip:
 
-This change depends on [1] being merged/applied first.
+Commit-ID:     deff8a24e1021fb39dddf5f6bc5832e0e3a632ea
+Gitweb:        https://git.kernel.org/tip/deff8a24e1021fb39dddf5f6bc5832e0e3a632ea
+Author:        Jiri Slaby <jslaby@suse.cz>
+AuthorDate:    Fri, 11 Oct 2019 13:50:47 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Fri, 18 Oct 2019 10:29:34 +02:00
 
-[1] https://patchwork.kernel.org/patch/11198535/
+x86/boot: Annotate local functions
 
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+.Lrelocated, .Lpaging_enabled, .Lno_longmode, and .Lin_pm32 are
+self-standing local functions, annotate them as such and preserve "no
+alignment".
+
+The annotations do not generate anything yet.
+
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Cao jin <caoj.fnst@cn.fujitsu.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Kate Stewart <kstewart@linuxfoundation.org>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: linux-arch@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Wei Huang <wei@redhat.com>
+Cc: x86-ml <x86@kernel.org>
+Cc: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+Link: https://lkml.kernel.org/r/20191011115108.12392-8-jslaby@suse.cz
 ---
- .../boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi   | 89 ----------------------
- arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi | 88 +++++++++++++++++++++
- 2 files changed, 88 insertions(+), 89 deletions(-)
+ arch/x86/boot/compressed/head_32.S |  3 ++-
+ arch/x86/boot/compressed/head_64.S |  9 ++++++---
+ arch/x86/boot/pmjump.S             |  4 ++--
+ 3 files changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-index 69019d0..190e934 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-@@ -5,8 +5,6 @@
-  * Copyright (c) 2019 Christian Hewitt <christianshewitt@gmail.com>
+diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
+index 5e30eaa..f9e2a80 100644
+--- a/arch/x86/boot/compressed/head_32.S
++++ b/arch/x86/boot/compressed/head_32.S
+@@ -209,7 +209,7 @@ ENDPROC(efi32_stub_entry)
+ #endif
+ 
+ 	.text
+-.Lrelocated:
++SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
+ 
+ /*
+  * Clear BSS (stack is currently empty)
+@@ -260,6 +260,7 @@ ENDPROC(efi32_stub_entry)
   */
+ 	xorl	%ebx, %ebx
+ 	jmp	*%eax
++SYM_FUNC_END(.Lrelocated)
  
--#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
--
- / {
- 	vddcpu_a: regulator-vddcpu-a {
- 		/*
-@@ -45,69 +43,6 @@
- 		regulator-boot-on;
- 		regulator-always-on;
- 	};
--
--	sound {
--		compatible = "amlogic,axg-sound-card";
--		model = "G12A-KHADAS-VIM3";
--		audio-aux-devs = <&tdmout_b>;
--		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
--				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
--				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
--				"TDM_B Playback", "TDMOUT_B OUT";
--
--		assigned-clocks = <&clkc CLKID_MPLL2>,
--				  <&clkc CLKID_MPLL0>,
--				  <&clkc CLKID_MPLL1>;
--		assigned-clock-parents = <0>, <0>, <0>;
--		assigned-clock-rates = <294912000>,
--				       <270950400>,
--				       <393216000>;
--		status = "okay";
--
--		dai-link-0 {
--			sound-dai = <&frddr_a>;
--		};
--
--		dai-link-1 {
--			sound-dai = <&frddr_b>;
--		};
--
--		dai-link-2 {
--			sound-dai = <&frddr_c>;
--		};
--
--		/* 8ch hdmi interface */
--		dai-link-3 {
--			sound-dai = <&tdmif_b>;
--			dai-format = "i2s";
--			dai-tdm-slot-tx-mask-0 = <1 1>;
--			dai-tdm-slot-tx-mask-1 = <1 1>;
--			dai-tdm-slot-tx-mask-2 = <1 1>;
--			dai-tdm-slot-tx-mask-3 = <1 1>;
--			mclk-fs = <256>;
--
--			codec {
--				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
--			};
--		};
--
--		/* hdmi glue */
--		dai-link-4 {
--			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
--
--			codec {
--				sound-dai = <&hdmi_tx>;
--			};
--		};
--	};
--};
--
--&arb {
--	status = "okay";
--};
--
--&clkc_audio {
--	status = "okay";
- };
+ #ifdef CONFIG_EFI_STUB
+ 	.data
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index d98cd48..7afe6e0 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -511,7 +511,7 @@ ENDPROC(efi64_stub_entry)
+ #endif
  
- &cpu0 {
-@@ -152,18 +87,6 @@
- 	clock-latency = <50000>;
- };
+ 	.text
+-.Lrelocated:
++SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
  
--&frddr_a {
--        status = "okay";
--};
--
--&frddr_b {
--	status = "okay";
--};
--
--&frddr_c {
--	status = "okay";
--};
--
- &pwm_ab {
- 	pinctrl-0 = <&pwm_a_e_pins>;
- 	pinctrl-names = "default";
-@@ -179,15 +102,3 @@
- 	clock-names = "clkin1";
- 	status = "okay";
- };
--
--&tdmif_b {
--	status = "okay";
--};
--
--&tdmout_b {
--	status = "okay";
--};
--
--&tohdmitx {
--	status = "okay";
--};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-index 90815fa..3f5c373 100644
---- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-@@ -7,6 +7,7 @@
+ /*
+  * Clear BSS (stack is currently empty)
+@@ -540,6 +540,7 @@ ENDPROC(efi64_stub_entry)
+  * Jump to the decompressed kernel.
+  */
+ 	jmp	*%rax
++SYM_FUNC_END(.Lrelocated)
  
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/gpio/meson-g12a-gpio.h>
-+#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
+ /*
+  * Adjust the global offset table
+@@ -635,9 +636,10 @@ ENTRY(trampoline_32bit_src)
+ 	lret
  
- / {
- 	model = "Khadas VIM3";
-@@ -76,6 +77,61 @@
- 		clock-names = "ext_clock";
- 	};
+ 	.code64
+-.Lpaging_enabled:
++SYM_FUNC_START_LOCAL_NOALIGN(.Lpaging_enabled)
+ 	/* Return from the trampoline */
+ 	jmp	*%rdi
++SYM_FUNC_END(.Lpaging_enabled)
  
-+	sound {
-+		compatible = "amlogic,axg-sound-card";
-+		model = "G12A-KHADAS-VIM3";
-+		audio-aux-devs = <&tdmout_b>;
-+		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
-+				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
-+				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
-+				"TDM_B Playback", "TDMOUT_B OUT";
-+
-+		assigned-clocks = <&clkc CLKID_MPLL2>,
-+				  <&clkc CLKID_MPLL0>,
-+				  <&clkc CLKID_MPLL1>;
-+		assigned-clock-parents = <0>, <0>, <0>;
-+		assigned-clock-rates = <294912000>,
-+				       <270950400>,
-+				       <393216000>;
-+		status = "okay";
-+
-+		dai-link-0 {
-+			sound-dai = <&frddr_a>;
-+		};
-+
-+		dai-link-1 {
-+			sound-dai = <&frddr_b>;
-+		};
-+
-+		dai-link-2 {
-+			sound-dai = <&frddr_c>;
-+		};
-+
-+		/* 8ch hdmi interface */
-+		dai-link-3 {
-+			sound-dai = <&tdmif_b>;
-+			dai-format = "i2s";
-+			dai-tdm-slot-tx-mask-0 = <1 1>;
-+			dai-tdm-slot-tx-mask-1 = <1 1>;
-+			dai-tdm-slot-tx-mask-2 = <1 1>;
-+			dai-tdm-slot-tx-mask-3 = <1 1>;
-+			mclk-fs = <256>;
-+
-+			codec {
-+				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
-+			};
-+		};
-+
-+		/* hdmi glue */
-+		dai-link-4 {
-+			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
-+
-+			codec {
-+				sound-dai = <&hdmi_tx>;
-+			};
-+		};
-+	};
-+
- 	dc_in: regulator-dc_in {
- 		compatible = "regulator-fixed";
- 		regulator-name = "DC_IN";
-@@ -171,6 +227,14 @@
- 	};
- };
+ 	/*
+          * The trampoline code has a size limit.
+@@ -647,11 +649,12 @@ ENTRY(trampoline_32bit_src)
+ 	.org	trampoline_32bit_src + TRAMPOLINE_32BIT_CODE_SIZE
  
-+&arb {
-+	status = "okay";
-+};
-+
-+&clkc_audio {
-+	status = "okay";
-+};
-+
- &cec_AO {
- 	pinctrl-0 = <&cec_ao_a_h_pins>;
- 	pinctrl-names = "default";
-@@ -206,6 +270,18 @@
-         amlogic,tx-delay-ns = <2>;
- };
+ 	.code32
+-.Lno_longmode:
++SYM_FUNC_START_LOCAL_NOALIGN(.Lno_longmode)
+ 	/* This isn't an x86-64 CPU, so hang intentionally, we cannot continue */
+ 1:
+ 	hlt
+ 	jmp     1b
++SYM_FUNC_END(.Lno_longmode)
  
-+&frddr_a {
-+	status = "okay";
-+};
-+
-+&frddr_b {
-+	status = "okay";
-+};
-+
-+&frddr_c {
-+	status = "okay";
-+};
-+
- &hdmi_tx {
- 	status = "okay";
- 	pinctrl-0 = <&hdmitx_hpd_pins>, <&hdmitx_ddc_pins>;
-@@ -328,6 +404,18 @@
- 	vqmmc-supply = <&emmc_1v8>;
- };
+ #include "../../kernel/verify_cpu.S"
  
-+&tdmif_b {
-+	status = "okay";
-+};
-+
-+&tdmout_b {
-+	status = "okay";
-+};
-+
-+&tohdmitx {
-+	status = "okay";
-+};
-+
- &uart_A {
- 	status = "okay";
- 	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
--- 
-2.7.4
-
+diff --git a/arch/x86/boot/pmjump.S b/arch/x86/boot/pmjump.S
+index ea88d52..81658fe 100644
+--- a/arch/x86/boot/pmjump.S
++++ b/arch/x86/boot/pmjump.S
+@@ -46,7 +46,7 @@ ENDPROC(protected_mode_jump)
+ 
+ 	.code32
+ 	.section ".text32","ax"
+-.Lin_pm32:
++SYM_FUNC_START_LOCAL_NOALIGN(.Lin_pm32)
+ 	# Set up data segments for flat 32-bit mode
+ 	movl	%ecx, %ds
+ 	movl	%ecx, %es
+@@ -72,4 +72,4 @@ ENDPROC(protected_mode_jump)
+ 	lldt	%cx
+ 
+ 	jmpl	*%eax			# Jump to the 32-bit entrypoint
+-ENDPROC(.Lin_pm32)
++SYM_FUNC_END(.Lin_pm32)
