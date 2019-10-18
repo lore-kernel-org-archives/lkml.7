@@ -2,69 +2,82 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 641CACA9EA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D28ECA9EA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ED09222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB5EC21925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:25:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571387103;
-	bh=t4ercv6VMuf3urBk9brJY4kkyt65EnLdWSm5ebIe98k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lqW7EhMe6vJH8fDtn2bKqqhBSC9g2UCEqc69iXT62ag4YtGFbMbiGutGQum7FP5Yp
-	 +9sUx9vxCQNziSZ5UO6dXotmkxQiAmtCaUb/CyQaYJfKnpOU/nEewK7HC/2gryLcvp
-	 gMAd1ToJNIUYX9FqNrBq5qNR1lIH3Pdrn7A4Sl4c=
+	s=default; t=1571387110;
+	bh=jEbq9QSiMUBdFgNaRu0lx2kBkFKJqECZlDVnFyvhGgk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ew1mSfW7k3cU99lJU2OsYCHqbVEzaPZSLfC7sgpU9y5gknAE7dEDGp5PCAsoyEoV1
+	 P3/UlcxUbCftozaQk+KkPzvHkQ2v8f89yfwFVb21EeaFncIaVdw5YmSkwGIxGbiQIu
+	 sIsQXtZu5cQUr9raW/ipxiiWyWzKAKc16ptX7Clw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632761AbfJRIZC (ORCPT
+        id S2632775AbfJRIZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:25:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47770 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391890AbfJRIZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 04:25:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 04E8DAD87;
-        Fri, 18 Oct 2019 08:24:59 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 10:24:59 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, Qian Cai <cai@lca.pw>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: Re: memory offline infinite loop after soft offline
-Message-ID: <20191018082459.GE5017@dhcp22.suse.cz>
-References: <1570829564.5937.36.camel@lca.pw>
- <20191014083914.GA317@dhcp22.suse.cz>
- <20191017093410.GA19973@hori.linux.bs1.fc.nec.co.jp>
- <20191017100106.GF24485@dhcp22.suse.cz>
- <1571335633.5937.69.camel@lca.pw>
- <20191017182759.GN24485@dhcp22.suse.cz>
- <20191018021906.GA24978@hori.linux.bs1.fc.nec.co.jp>
- <33946728-bdeb-494a-5db8-e279acebca47@redhat.com>
+        Fri, 18 Oct 2019 04:25:10 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38194 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2632763AbfJRIZJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 04:25:09 -0400
+Received: by mail-ot1-f67.google.com with SMTP id e11so4276000otl.5;
+        Fri, 18 Oct 2019 01:25:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jEbq9QSiMUBdFgNaRu0lx2kBkFKJqECZlDVnFyvhGgk=;
+        b=NbD4/PUJZ51jDp5jGciPt8joG9eLxje610+QjVmfxHPB0FTJUnisNfOk/OQ3TjOb4w
+         8uN4326iHS0BiTwZEYDR8FzwhtwRbgsW1o2QbEDUiCYwJHLPv2uDx7hkL9ekxSfj7LNj
+         cqDp3BN+4vJnZO3nCVRwMhHGSfy/CMmkgSDHsOnKjEZ40JBM5efxIzX0NXbyMhfk8yPQ
+         SkHbTR8gdxn82X20Ar8oqdKSmhfssZZOVElqaJjXAZqaweTpZrBnzeUShygH7F7L9Lub
+         +bMB98UYdij2p+wvmx06CQw7rMs7ZAik4Y112KCTX8Eotrfg0iP5gX5qfALA4/TIRbyh
+         ttNA==
+X-Gm-Message-State: APjAAAUadT8183LwEl6LFQf1mLa/8GVdndUoiK1578qZaKnsfeuthlpR
+        L8nk6bxd+mSErznOmWyOeJJu9fRSxC3GpIV3cAw=
+X-Google-Smtp-Source: APXvYqwAdi4SbUncivySZf05920ohM9EzPpGF+cvDvfiO65zVjUe5FVnHgfQ1TQKvFSPNuyKSVyUItOZjrcK7vUTCVU=
+X-Received: by 2002:a9d:664:: with SMTP id 91mr235402otn.189.1571387107123;
+ Fri, 18 Oct 2019 01:25:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <33946728-bdeb-494a-5db8-e279acebca47@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <2811202.iOFZ6YHztY@kreacher> <20191016142343.GB5330@bogus>
+ <20191017095725.izchzl7enfylvpf3@vireshk-i7> <20191017095942.GF8978@bogus>
+ <CAJZ5v0ixS8ZS93Fgj8XGUMGcLdAy+Fgwp5z3QirccNSiiwLtDA@mail.gmail.com> <20191018054433.tq2euue675xk4o63@vireshk-i7>
+In-Reply-To: <20191018054433.tq2euue675xk4o63@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 18 Oct 2019 10:24:56 +0200
+Message-ID: <CAJZ5v0hpfvy5iELVRWFA3HS8NoAH0=py0cE+fLaUq2hDReCrnQ@mail.gmail.com>
+Subject: Re: [RFT][PATCH 0/3] cpufreq / PM: QoS: Introduce frequency QoS and
+ use it in cpufreq
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Osipenko <digetx@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 18-10-19 10:13:36, David Hildenbrand wrote:
-[...]
-> However, if the compound page spans multiple pageblocks
+On Fri, Oct 18, 2019 at 7:44 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 17-10-19, 18:34, Rafael J. Wysocki wrote:
+> > [BTW, Viresh, it looks like cpufreq_set_policy() should still ensure
+> > that the new min is less than the new max, because the QoS doesn't do
+> > that.]
+>
+> The ->verify() callback does that for us I believe.
 
-Although hugetlb pages spanning pageblocks are possible this shouldn't
-matter in__test_page_isolated_in_pageblock because this function doesn't
-really operate on pageblocks as the name suggests.  It is simply
-traversing all valid RAM ranges (see walk_system_ram_range).
--- 
-Michal Hocko
-SUSE Labs
+It does in practice AFAICS, but in theory it may assume the right
+ordering between the min and the max and just test the boundaries, may
+it not?
