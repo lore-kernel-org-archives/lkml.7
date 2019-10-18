@@ -2,173 +2,116 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32140CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F8DCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F028620869
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B08ED20854
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:53:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G7/uFZnt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l/5bNc1U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409191AbfJRQwp (ORCPT
+        id S2409267AbfJRQxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:52:45 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:45527 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409040AbfJRQwp (ORCPT
+        Fri, 18 Oct 2019 12:53:12 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34794 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2409040AbfJRQxM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:52:45 -0400
-Received: by mail-pl1-f202.google.com with SMTP id 62so326285plb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:52:44 -0700 (PDT)
+        Fri, 18 Oct 2019 12:53:12 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b128so4260814pfa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:53:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=yWD+8FP6D8DfujJ7rsI4O3txgqrFc1FsN7SOOiTmyZA=;
-        b=G7/uFZntGWL1Sd6i0OmT6HrejeSuZX5Fn71TrVkVfcXP2GghJpud+Fh0KwkgY9qgTd
-         d0mKZKqQojWelgXU2KA2wVtTPxOFvjtmWOYCDj8DW/lbI8CvU1Nd57uYJCACqLCOCJTY
-         28SD7bydR3Y8tPRCxNbR6pwed6lJE3zHpbF3670cjQGksrEgy/eFbvEzR+xnHQ9K4lX3
-         49Do0H5e7dcv8dthphBvsndxB7kIuILeUX3ksKUf/RkjTpHi7cIUlf0B7pc89HvhYcK+
-         bzcMgLZyJLWlWpjXtVpv78Zl3je0NfajuhkgdDPfzqWUQBd1jaYiFeOiDi7IabP60P/H
-         43sQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NlVpUWWb77Jgx8c6AKiFTKsV64mXcIM59rzR3NbF5X0=;
+        b=l/5bNc1UOgviL8cXU+xAaLQOtmOhi56H7mopre3Lu97/kYO2lo5DMOwuqzo16GPpU7
+         en2sBDgJn/rwquPVBU6NOvsJuW2lX6njpbipp3wFM2DBhFIibFMM7Ji7fEC+5JJ3IyVd
+         xmgPjfeDjfUjmiuPFwMOJKKQPuPQXWocZgmkWMoeUMAGd+Y1IMhD+QsOMDWHzASPJjmn
+         lB5yUIilNr+WEfcrkyxzN7+9VZZe/t2KW0WOBj8DSGeKn0smaVryK+M4jM3Lud2alJ9k
+         WAQharx87X1yFjofhhWaCKeNztbH7vyUakUyu1a+f2UZ/C/+XEK3z2xhCu3JouqnP4le
+         Y57w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=yWD+8FP6D8DfujJ7rsI4O3txgqrFc1FsN7SOOiTmyZA=;
-        b=qdGQyJ2qDdnbrVU+Tw2RDJybTyLjeRlHE2N5FQKqS+QCYpKgMicsl4DsAn3Db+J3hM
-         vq8vz3ydcjA8gI1asKWJQuhueWTUzyyd+6gG4bLFgcj41swmbGypWLOv7L0ZrT/Pd3zp
-         KFuM+Bs3+/qkNUiJfqLL4n5DclrY1yELiuRlByMkqGlXS3NN/CT69dmfKspiXTiRIUgl
-         T8v6EXr2JIg7I7Ek3eOjYa4SCXUDDadlUht7cF8K6DPdjzVUUhN8bMp9KL74GDOHILh6
-         lnX8YT1FPt9+7fVvlRKZNHWTSh3ZUmDq/oBfmbG1E2s5MsVf6aVai22P5zTv2nEOzLSL
-         oU+Q==
-X-Gm-Message-State: APjAAAVs3qGqq/SGY9YctJBIEmx/TKJZr66k83xmAQQ0KX7BNwHw5OQh
-        awWtN2vFDn44qfFGQ3LwIzFInk+mhOracQ==
-X-Google-Smtp-Source: APXvYqw0AZIql94+DUFhLMqbDzyVhCnNkmLnU+LuFyUVmZOlZOlX79dC8N+AjV/sSoiuHomiIBHw5PgsWreDGA==
-X-Received: by 2002:a65:6408:: with SMTP id a8mr11107468pgv.357.1571417564005;
- Fri, 18 Oct 2019 09:52:44 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 09:52:31 -0700
-Message-Id: <20191018165231.249872-1-shakeelb@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-Subject: [PATCH] mm: memcontrol: fix NULL-ptr deref in percpu stats flush
-From:   Shakeel Butt <shakeelb@google.com>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
-        syzbot+515d5bcfe179cdf049b2@syzkaller.appspotmail.com,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NlVpUWWb77Jgx8c6AKiFTKsV64mXcIM59rzR3NbF5X0=;
+        b=Jk77AA8hzom4iwxksVrPDvohre6rABNbovpyiCDskuwVLX9g4DHSplldYNabz5tjDb
+         nhrJNquiMsD4iHfl1iGvX6su//OvqjK8ViybHxyodK9RcY3xEoELKez2RcGa/rJo5mnH
+         bfG9kau5/d0NPDhRE2oEIrcvl9ADMdvn/oB72IrLtkGVIKxEh43O0QMaoX3VHjlbr60m
+         keRjnlqFm2wUpmti88mhu09SJPlSxPqfD7zF7vVH8R6BNa7QxAmB/Ptn834K9HPVZ+79
+         xZgTKSd9uausIiNycRzhRnbkMRxIp0wWcdcRAdZ7NuBEZNIukX3xkcZrRvF7GNdz90VJ
+         m0mg==
+X-Gm-Message-State: APjAAAX7ZJOARWZHRQ5g56BxOVnryATMqibPwK9qD2elWpXgsTlAxzcj
+        bAQcV4QTrWGyprHQE/9o7f/wPQ==
+X-Google-Smtp-Source: APXvYqy4EO909F7HnCUZ2Fmo7UCAUkdG66jUJnEgoxHT/sDHoXa2mMyp6Et3xVZh7h0kG3B3iUDOAg==
+X-Received: by 2002:a17:90a:a00c:: with SMTP id q12mr12481013pjp.102.1571417590960;
+        Fri, 18 Oct 2019 09:53:10 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id k66sm6624950pjb.11.2019.10.18.09.53.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 09:53:10 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 09:53:07 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Maxime Ripard <mripard@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Alex Elder <elder@linaro.org>,
+        linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH] arm64: defconfig: Enable Qualcomm remoteproc dependencies
+Message-ID: <20191018165307.GD1669@tuxbook-pro>
+References: <20191009001442.15719-1-bjorn.andersson@linaro.org>
+ <95a80ff0e89a568d223fab6eb1f9362a@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <95a80ff0e89a568d223fab6eb1f9362a@codeaurora.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__mem_cgroup_free() can be called on the failure path in
-mem_cgroup_alloc(). However memcg_flush_percpu_vmstats() and
-memcg_flush_percpu_vmevents() which are called from __mem_cgroup_free()
-access the fields of memcg which can potentially be null if called from
-failure path from mem_cgroup_alloc(). Indeed syzbot has reported the
-following crash:
+On Fri 18 Oct 03:38 PDT 2019, Sibi Sankar wrote:
 
-	R13: 00000000004bf27d R14: 00000000004db028 R15: 0000000000000003
-	kasan: CONFIG_KASAN_INLINE enabled
-	kasan: GPF could be caused by NULL-ptr deref or user memory access
-	general protection fault: 0000 [#1] PREEMPT SMP KASAN
-	CPU: 0 PID: 30393 Comm: syz-executor.1 Not tainted 5.4.0-rc2+ #0
-	Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-	RIP: 0010:memcg_flush_percpu_vmstats+0x4ae/0x930 mm/memcontrol.c:3436
-	Code: 05 41 89 c0 41 0f b6 04 24 41 38 c7 7c 08 84 c0 0f 85 5d 03 00 00 44 3b 05 33 d5 12 08 0f 83 e2 00 00 00 4c 89 f0 48 c1 e8 03 <42> 80 3c 28 00 0f 85 91 03 00 00 48 8b 85 10 fe ff ff 48 8b b0 90
-	RSP: 0018:ffff888095c27980 EFLAGS: 00010206
-	RAX: 0000000000000012 RBX: ffff888095c27b28 RCX: ffffc90008192000
-	RDX: 0000000000040000 RSI: ffffffff8340fae7 RDI: 0000000000000007
-	RBP: ffff888095c27be0 R08: 0000000000000000 R09: ffffed1013f0da33
-	R10: ffffed1013f0da32 R11: ffff88809f86d197 R12: fffffbfff138b760
-	R13: dffffc0000000000 R14: 0000000000000090 R15: 0000000000000007
-	FS:  00007f5027170700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-	CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-	CR2: 0000000000710158 CR3: 00000000a7b18000 CR4: 00000000001406f0
-	DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-	DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-	Call Trace:
-	__mem_cgroup_free+0x1a/0x190 mm/memcontrol.c:5021
-	mem_cgroup_free mm/memcontrol.c:5033 [inline]
-	mem_cgroup_css_alloc+0x3a1/0x1ae0 mm/memcontrol.c:5160
-	css_create kernel/cgroup/cgroup.c:5156 [inline]
-	cgroup_apply_control_enable+0x44d/0xc40 kernel/cgroup/cgroup.c:3119
-	cgroup_mkdir+0x899/0x11b0 kernel/cgroup/cgroup.c:5401
-	kernfs_iop_mkdir+0x14d/0x1d0 fs/kernfs/dir.c:1124
-	vfs_mkdir+0x42e/0x670 fs/namei.c:3807
-	do_mkdirat+0x234/0x2a0 fs/namei.c:3830
-	__do_sys_mkdir fs/namei.c:3846 [inline]
-	__se_sys_mkdir fs/namei.c:3844 [inline]
-	__x64_sys_mkdir+0x5c/0x80 fs/namei.c:3844
-	do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-	entry_SYSCALL_64_after_hwframe+0x49/0xbe
-	RIP: 0033:0x459a59
-	Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-	RSP: 002b:00007f502716fc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
-	RAX: ffffffffffffffda RBX: 00007f502716fc90 RCX: 0000000000459a59
-	RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000180
-	RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-	R10: 0000000000000000 R11: 0000000000000246 R12: 00007f50271706d4
-	R13: 00000000004bf27d R14: 00000000004db028 R15: 0000000000000003
+> On 2019-10-09 05:44, Bjorn Andersson wrote:
+[..]
+> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+[..]
+> > @@ -780,6 +783,8 @@ CONFIG_PWM_ROCKCHIP=y
+> >  CONFIG_PWM_SAMSUNG=y
+> >  CONFIG_PWM_SUN4I=m
+> >  CONFIG_PWM_TEGRA=m
+> > +CONFIG_RESET_QCOM_AOSS=y
+> 
+> I should probably fix this ^^
+> 
 
-Fixing this by moving the flush to mem_cgroup_free as there is no need
-to flush anything if we see failure in mem_cgroup_alloc().
+Please do, afaict this driver should be tristate.
 
-Reported-by: syzbot+515d5bcfe179cdf049b2@syzkaller.appspotmail.com
-Fixes: bb65f89b7d3d ("mm: memcontrol: flush percpu vmevents before releasing memcg")
-Fixes: c350a99ea2b1 ("mm: memcontrol: flush percpu vmstats before releasing memcg")
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: <stable@vger.kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
+Regards,
+Bjorn
 
----
- mm/memcontrol.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index bdac56009a38..13cb4c1e9f2a 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -5014,12 +5014,6 @@ static void __mem_cgroup_free(struct mem_cgroup *memcg)
- {
- 	int node;
- 
--	/*
--	 * Flush percpu vmstats and vmevents to guarantee the value correctness
--	 * on parent's and all ancestor levels.
--	 */
--	memcg_flush_percpu_vmstats(memcg, false);
--	memcg_flush_percpu_vmevents(memcg);
- 	for_each_node(node)
- 		free_mem_cgroup_per_node_info(memcg, node);
- 	free_percpu(memcg->vmstats_percpu);
-@@ -5030,6 +5024,12 @@ static void __mem_cgroup_free(struct mem_cgroup *memcg)
- static void mem_cgroup_free(struct mem_cgroup *memcg)
- {
- 	memcg_wb_domain_exit(memcg);
-+	/*
-+	 * Flush percpu vmstats and vmevents to guarantee the value correctness
-+	 * on parent's and all ancestor levels.
-+	 */
-+	memcg_flush_percpu_vmstats(memcg, false);
-+	memcg_flush_percpu_vmevents(memcg);
- 	__mem_cgroup_free(memcg);
- }
- 
--- 
-2.23.0.866.gb869b98d4c-goog
-
+> > +CONFIG_RESET_QCOM_PDC=m
+> >  CONFIG_RESET_TI_SCI=y
+> >  CONFIG_PHY_XGENE=y
+> >  CONFIG_PHY_SUN4I_USB=y
+> 
+> -- 
+> -- Sibi Sankar --
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project.
