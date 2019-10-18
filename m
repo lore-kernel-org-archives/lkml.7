@@ -7,53 +7,54 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E251CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B56CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4473421852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79BB421852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:33:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I24zH4pm"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YfN3c+9r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633556AbfJRPcv (ORCPT
+        id S2410718AbfJRPc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:32:51 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:47712 "EHLO
+        Fri, 18 Oct 2019 11:32:58 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:47696 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392694AbfJRPcW (ORCPT
+        with ESMTP id S2410656AbfJRPcU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:32:22 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9IFWLBD013415;
-        Fri, 18 Oct 2019 10:32:21 -0500
+        Fri, 18 Oct 2019 11:32:20 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9IFWIjn013401;
+        Fri, 18 Oct 2019 10:32:18 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571412741;
-        bh=fKnbl4rI7lxj8OVyJOMnIhdivu5BzUFIAmoern9RyCY=;
+        s=ti-com-17Q1; t=1571412738;
+        bh=ocDig6m7hMxk+9WkuMz+XpgOO+fIPZp9QBn6JbkNoi4=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=I24zH4pmc+ZVwZkX6fe0RVNdjB4YZ4BL+L3DxYnmYz+Ng+2EvQ6YDDlkVmH/5/I9L
-         u5ebqs/T8rFjBZU1ar6d/aXnkddj1WoS7zGeYLPDYZ5OprOw8AMMDiSL9zCMI2ooM4
-         Shdlk2nhOMSA157FFduME3WOBeiPrBx/Q4/t205A=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFWLYV106161;
-        Fri, 18 Oct 2019 10:32:21 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+        b=YfN3c+9rI0baegP+xudYb332XR5vyrO3mx/gaFpsSz8T05Jaqr4TkRkmK4OmgGBv3
+         bC0bDJtXc7baRJINnUdmssnOAuf95kxu1UqR8znZeoPrCtGjJw2X+GQRBJqAXll1i6
+         YSGx//VAqx6ZTe3ZXggo2tyT1QkUE4WMFbNI1srU=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9IFWIxH080798
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 18 Oct 2019 10:32:18 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 18
- Oct 2019 10:32:12 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 10:32:10 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 18 Oct 2019 10:32:20 -0500
+ Frontend Transport; Fri, 18 Oct 2019 10:32:10 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFW15T080266;
-        Fri, 18 Oct 2019 10:32:20 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFW15R080266;
+        Fri, 18 Oct 2019 10:32:18 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>
 CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 15/19] media: ti-vpe: cal: Add subdev s_power hooks
-Date:   Fri, 18 Oct 2019 10:34:33 -0500
-Message-ID: <20191018153437.20614-16-bparrot@ti.com>
+Subject: [Patch 13/19] dt-bindings: media: cal: update binding to add AM654 support
+Date:   Fri, 18 Oct 2019 10:34:31 -0500
+Message-ID: <20191018153437.20614-14-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191018153437.20614-1-bparrot@ti.com>
 References: <20191018153437.20614-1-bparrot@ti.com>
@@ -65,58 +66,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Based on V4L2 documentations bridge driver must power on and off sub
-device explicitly if media-controller mode is not used.
+Update Device Tree bindings for the CAL driver to add AM654 support.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/platform/ti-vpe/cal.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ Documentation/devicetree/bindings/media/ti-cal.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-index 42b0063b610e..e61d2f3fd1da 100644
---- a/drivers/media/platform/ti-vpe/cal.c
-+++ b/drivers/media/platform/ti-vpe/cal.c
-@@ -1661,6 +1661,12 @@ static int cal_start_streaming(struct vb2_queue *vq, unsigned int count)
- 	if (ret < 0)
- 		goto err;
- 
-+	ret = v4l2_subdev_call(ctx->sensor, core, s_power, 1);
-+	if (ret < 0 && ret != -ENOIOCTLCMD && ret != -ENODEV) {
-+		ctx_err(ctx, "power on failed in subdev\n");
-+		goto err;
-+	}
-+
- 	cal_runtime_get(ctx->dev);
- 
- 	csi2_ctx_config(ctx);
-@@ -1674,6 +1680,7 @@ static int cal_start_streaming(struct vb2_queue *vq, unsigned int count)
- 
- 	ret = v4l2_subdev_call(ctx->sensor, video, s_stream, 1);
- 	if (ret) {
-+		v4l2_subdev_call(ctx->sensor, core, s_power, 0);
- 		ctx_err(ctx, "stream on failed in subdev\n");
- 		cal_runtime_put(ctx->dev);
- 		goto err;
-@@ -1702,6 +1709,7 @@ static void cal_stop_streaming(struct vb2_queue *vq)
- 	struct cal_dmaqueue *dma_q = &ctx->vidq;
- 	struct cal_buffer *buf, *tmp;
- 	unsigned long flags;
-+	int ret;
- 
- 	csi2_ppi_disable(ctx);
- 	disable_irqs(ctx);
-@@ -1710,6 +1718,10 @@ static void cal_stop_streaming(struct vb2_queue *vq)
- 	if (v4l2_subdev_call(ctx->sensor, video, s_stream, 0))
- 		ctx_err(ctx, "stream off failed in subdev\n");
- 
-+	ret = v4l2_subdev_call(ctx->sensor, core, s_power, 0);
-+	if (ret < 0 && ret != -ENOIOCTLCMD && ret != -ENODEV)
-+		ctx_err(ctx, "power off failed in subdev\n");
-+
- 	/* Release all active buffers */
- 	spin_lock_irqsave(&ctx->slock, flags);
- 	list_for_each_entry_safe(buf, tmp, &dma_q->active, list) {
+diff --git a/Documentation/devicetree/bindings/media/ti-cal.txt b/Documentation/devicetree/bindings/media/ti-cal.txt
+index 29fbbfb8be0d..b7bf8492dc2a 100644
+--- a/Documentation/devicetree/bindings/media/ti-cal.txt
++++ b/Documentation/devicetree/bindings/media/ti-cal.txt
+@@ -11,6 +11,7 @@ Required properties:
+  Should be "ti,dra72-cal", for DRA72 controllers
+  Should be "ti,dra72-pre-es2-cal", for DRA72 controllers pre ES2.0
+  Should be "ti,dra76-cal", for DRA76 controllers
++ Should be "ti,am654-cal", for AM654 controllers
+ - reg:	CAL Top level, Receiver Core #0, Receiver Core #1 and Camera RX
+ 	control address space
+ - reg-names: cal_top, cal_rx_core0, cal_rx_core1 and camerrx_control
 -- 
 2.17.1
 
