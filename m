@@ -2,360 +2,494 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B0FCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D29DCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A070F21852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21D0421852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:42:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505237AbfJRPmt (ORCPT
+        id S2505283AbfJRPmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:42:49 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:35251 "EHLO
+        Fri, 18 Oct 2019 11:42:55 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:43493 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505151AbfJRPmk (ORCPT
+        with ESMTP id S2505206AbfJRPmr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:42:40 -0400
+        Fri, 18 Oct 2019 11:42:47 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MTiLj-1iSrhB0H8v-00U4HI; Fri, 18 Oct 2019 17:42:28 +0200
+ 1MG9Xu-1iFzg916oG-00GVSz; Fri, 18 Oct 2019 17:42:37 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Daniel Mack <daniel@zonque.org>,
         Haojian Zhuang <haojian.zhuang@gmail.com>,
         Robert Jarzmik <robert.jarzmik@free.fr>
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH 24/46] ARM: pxa: magician: use platform driver for audio
-Date:   Fri, 18 Oct 2019 17:41:39 +0200
-Message-Id: <20191018154201.1276638-24-arnd@arndb.de>
+        Arnd Bergmann <arnd@arndb.de>, Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH 45/46] ARM: mmp: rename pxa_register_device
+Date:   Fri, 18 Oct 2019 17:42:00 +0200
+Message-Id: <20191018154201.1276638-45-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191018154052.1276506-1-arnd@arndb.de>
 References: <20191018154052.1276506-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:u2katV/LmSiKXDQedAs4tlsJvSfrK7Os+EoGt44jJ5GjNIXKxH5
- dJUynWvmbAn6d/zef06Cx+zYsJOC49+vB4lAIM5K/d7K6Hyh2dOIiNbc+1x62bARp8ooYCH
- P/hwxkNIGKpDLGY85X+lxlMWwr7HjwtfzG5FKdIWSX01YO8zQAwrW4fz9K+PJ9aKEmAvs/c
- KsAYYfTm27xvYvYti0Mxg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:S48uBYMxdbg=:7Py8YLfrE8bsznnbmS1yrt
- 3hOtGX4e5m5nJw3oAKy5kzM1z39HPSfz/195l3WuRV1k51jUkqCnOmXJrD1uS9Y1qOvuPRkZc
- z65zBAI+okvs1jgv5U8aQK5HkoQJv/UjCOO5D1ScM/QoSW0+OHUahQgwdlswSP4niAh6J7jC0
- k0xlHHtRYwasIzveyVrJhUE7V8ol6NtY/874RIRvWbyVBZ+p2gJLwgu46qvB47Eq2Ap5V/xjU
- Zb5XQq7O+L90UOtiwuAc0txACvMlNA5DHAsUPKGuQi8cOsMNshjzJYCRqM2TPBkyoE3/PaVNC
- iZ5OzsLsp0+M4AU8Hfz0dTdWvZffb9AczcuvnZLdeWb1bEYCwAauJBYAurqtIrCQKn4NCvQ+P
- YyctDeXhbIpza9jAxeyiPcvbxJQXI4oQilT5WRQMuJ/zXSq32kdgiMCWURO54sGWl9S5fP67z
- XbyKVlZCgIUyo1UI+xRo413xLxmBL/8UZFBzQjjbrbur1sZglc/8t/ZheOHWm6lABt1Zt2D30
- lpSSEJobQx2z50wj2egB+XeSgoHtIpp7xG10hg4ZtvJwbRfPZwcoPa1nEC+soIDhFHbvGUYpV
- 4rDMl1dMwTx3HNCyToXqCbcLtrG0XQSES8/7NRs60nQCtMmwqy4EjCX0a9WSnRE/ZrstUgApe
- nyRxKA1CPzCPIZmi4YYuBX8f0/3/UgwliZj0XeDKVS7mxVIHSuj27Pmf6MIa3x3WXzyzFkQvT
- yzOZUnF70C65y4lTQedZ1kU/FeJ9K4sfcRn6KVeseOkN9KQeo9mSaj1WgJezObDMcmF5iz4BJ
- PzwoYPaJkGwLjjC1Dz6iQXNJptLRoW5QHBsaEV2uXAPKFAOAesxD+UCB33pkWhtVOQS80/S78
- izqEKPJ5TUneMCtVlylg==
+X-Provags-ID: V03:K1:1MdzDA9G4pdCO6aafQrVQzUXLRMu2MrkIvw1HqWUc0hHeFGp5Wt
+ Q+ii75wOSdD0W+UocFW3fL7kS8nha8wHDK5rby9fV28FRRZ48tKUHFQcDkCJdE5NE4uBocZ
+ nXhAR8qFxdyUftT5Tj8w4Wr7pHNq5frw8tdlAZaMYTuFlutypq5ikqhjiNii7Ot1N6DojIw
+ 8XIlgDo7V21Gs5V6vJm6g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:jbY3gw+N3Sw=:6JF8OKi205HHhYxB9S4xRI
+ E1sg/yBFeMLiVSnVGAg4fJ0Tp7s5dg5QhB+eoksXe5CEsuOhdJniTQPDxkUnLs4fZiXDA7tgs
+ QPGPfE1huZzz4cdRC/3VPCd5xOv71bV8rnIMUX/2NS2iQPFv3APfWfTgKBepoFejFvjAICWJt
+ ZwTTkZWqr4lOJjSnhBWqrn+cBIcEztYfS5+zJ84ZRVXQO5gpaDCL+eZ4yFan/A3IBG7hu6Q4j
+ MOsUFw98Fq/c/NBwCCPS/gfC9gA+iZxR23EObhRWXuqpgjEMLxH3fDaBSQkDTDueqVy37jU96
+ VJLxrpWHV+rZMdRSirBHri4mcJPv0AAO7lgyHwI1mo4zHfd6nDnlpX/2FDaeIQOq4UPK/TWFY
+ pjeqUt/tDSEK+ADJwawO+0wo1BIrQLYL0J32/hyaCqZ4hCVLvO5lISdEDqjzeAn2+zFd4jOVE
+ e79pHgIpnasra20wkntaF0n4m/9COw9/bUseyJmGrQZOPeU1DdPtmfRvAmHNFifp7TwbKYirr
+ P3SrIOhEEgB07G5cvRs5WAn85F2dUq6NpBUs1SvWstvRPakzPX2JnrJF+Hit7Z/xJ7MKYQk1V
+ qqh0zBKIVmLnqpRWMczliMc4ECJjXEl3VoaznJ+BcXiNRravgqOp6vECwx/jcIHrWUCy0ZqwU
+ zHu2NnoJ5guisS4i83B9q0FAmu1Spa3D7r8LAEiBZZSGqvOSUD/IppE37XCedjnbbauIi9tFY
+ qjpwe4iGZqljFOi36iWEBzARx8Cp6eEd4UKBCeAxoq9VTJhNLk4T8gQsbfkJeHItZ/LA7/1+d
+ sW+8mNsG6W0SfU3cG9sXDu+RhQj/4EMXipDwkzkuHTGupL5wCbjwgqMwAmscHSwJNOTpOkVr+
+ EHgWV9iB8/HqgnuPws+Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The magician audio driver creates a codec device and gets
-data from a board specific header file, both of which is
-a bit suspicious. Move these into the board file itself,
-using a gpio lookup table.
+In a multiplatform kernel that includes both pxa and mmp, we get a link
+failure from the clash of two pxa_register_device functions.
 
-Cc: Mark Brown <broonie@kernel.org>
-Cc: alsa-devel@alsa-project.org
+Rename the one in mach-mmp to mmp_register_device, along with with the
+rename of pxa_device_desc.
+
+Cc: Lubomir Rintel <lkundrak@v3.sk>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/arm/mach-pxa/magician.c |  50 +++++++++++++
- sound/soc/pxa/magician.c     | 141 +++++++++--------------------------
- 2 files changed, 87 insertions(+), 104 deletions(-)
+ arch/arm/mach-mmp/devices.c |  2 +-
+ arch/arm/mach-mmp/devices.h | 10 +++----
+ arch/arm/mach-mmp/mmp2.h    | 48 ++++++++++++++---------------
+ arch/arm/mach-mmp/pxa168.h  | 60 ++++++++++++++++++-------------------
+ arch/arm/mach-mmp/pxa910.h  | 38 +++++++++++------------
+ arch/arm/mach-mmp/ttc_dkb.c |  6 ++--
+ 6 files changed, 82 insertions(+), 82 deletions(-)
 
-diff --git a/arch/arm/mach-pxa/magician.c b/arch/arm/mach-pxa/magician.c
-index 31037679bf24..48ac4b96e5ce 100644
---- a/arch/arm/mach-pxa/magician.c
-+++ b/arch/arm/mach-pxa/magician.c
-@@ -54,6 +54,7 @@
- #include <linux/spi/spi.h>
- #include <linux/spi/pxa2xx_spi.h>
- #include <linux/spi/ads7846.h>
-+#include <sound/uda1380.h>
+diff --git a/arch/arm/mach-mmp/devices.c b/arch/arm/mach-mmp/devices.c
+index 130c1a603ba2..a9e6fd8d390d 100644
+--- a/arch/arm/mach-mmp/devices.c
++++ b/arch/arm/mach-mmp/devices.c
+@@ -14,7 +14,7 @@
+ #include "cputype.h"
+ #include "regs-usb.h"
  
- static unsigned long magician_pin_config[] __initdata = {
+-int __init pxa_register_device(struct pxa_device_desc *desc,
++int __init mmp_register_device(struct mmp_device_desc *desc,
+ 				void *data, size_t size)
+ {
+ 	struct platform_device *pdev;
+diff --git a/arch/arm/mach-mmp/devices.h b/arch/arm/mach-mmp/devices.h
+index 4df596c5c201..d4920ebfebc5 100644
+--- a/arch/arm/mach-mmp/devices.h
++++ b/arch/arm/mach-mmp/devices.h
+@@ -7,7 +7,7 @@
+ #define MAX_RESOURCE_DMA	2
  
-@@ -892,6 +893,53 @@ static struct platform_device strataflash = {
- 	},
+ /* structure for describing the on-chip devices */
+-struct pxa_device_desc {
++struct mmp_device_desc {
+ 	const char	*dev_name;
+ 	const char	*drv_name;
+ 	int		id;
+@@ -18,7 +18,7 @@ struct pxa_device_desc {
  };
  
-+/*
-+ * audio support
-+ */
-+static struct uda1380_platform_data uda1380_info = {
-+	.gpio_power = EGPIO_MAGICIAN_CODEC_POWER,
-+	.gpio_reset = EGPIO_MAGICIAN_CODEC_RESET,
-+	.dac_clk    = UDA1380_DAC_CLK_WSPLL,
-+};
-+
-+static struct i2c_board_info magician_audio_i2c_board_info[] = {
-+	{
-+		I2C_BOARD_INFO("uda1380", 0x18),
-+		.platform_data = &uda1380_info,
-+	},
-+};
-+
-+static struct gpiod_lookup_table magician_audio_gpio_table = {
-+	.dev_id = "magician-audio",
-+	.table = {
-+		GPIO_LOOKUP("htc-egpio-0",
-+			    EGPIO_MAGICIAN_SPK_POWER - MAGICIAN_EGPIO_BASE,
-+			    "SPK_POWER", GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP("htc-egpio-0",
-+			    EGPIO_MAGICIAN_EP_POWER - MAGICIAN_EGPIO_BASE,
-+			    "EP_POWER", GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP("htc-egpio-0",
-+			    EGPIO_MAGICIAN_MIC_POWER - MAGICIAN_EGPIO_BASE,
-+			    "MIC_POWER", GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP("htc-egpio-0",
-+			    EGPIO_MAGICIAN_IN_SEL0 - MAGICIAN_EGPIO_BASE,
-+			    "IN_SEL0", GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP("htc-egpio-0",
-+			    EGPIO_MAGICIAN_IN_SEL1 - MAGICIAN_EGPIO_BASE,
-+			    "IN_SEL1", GPIO_ACTIVE_HIGH),
-+		{ },
-+	},
-+};
-+
-+static void magician_audio_init(void)
-+{
-+	i2c_register_board_info(0,
-+		ARRAY_AND_SIZE(magician_audio_i2c_board_info));
-+
-+	gpiod_add_lookup_table(&magician_audio_gpio_table);
-+	platform_device_register_simple("magician-audio", -1, NULL, 0);
-+}
-+
- /*
-  * PXA I2C main controller
-  */
-@@ -1033,6 +1081,8 @@ static void __init magician_init(void)
+ #define PXA168_DEVICE(_name, _drv, _id, _irq, _start, _size, _dma...)	\
+-struct pxa_device_desc pxa168_device_##_name __initdata = {		\
++struct mmp_device_desc pxa168_device_##_name __initdata = {		\
+ 	.dev_name	= "pxa168-" #_name,				\
+ 	.drv_name	= _drv,						\
+ 	.id		= _id,						\
+@@ -29,7 +29,7 @@ struct pxa_device_desc pxa168_device_##_name __initdata = {		\
+ };
  
- 	gpiod_add_lookup_table(&bq24022_gpiod_table);
- 	platform_add_devices(ARRAY_AND_SIZE(devices));
-+
-+	magician_audio_init();
+ #define PXA910_DEVICE(_name, _drv, _id, _irq, _start, _size, _dma...)	\
+-struct pxa_device_desc pxa910_device_##_name __initdata = {		\
++struct mmp_device_desc pxa910_device_##_name __initdata = {		\
+ 	.dev_name	= "pxa910-" #_name,				\
+ 	.drv_name	= _drv,						\
+ 	.id		= _id,						\
+@@ -40,7 +40,7 @@ struct pxa_device_desc pxa910_device_##_name __initdata = {		\
+ };
+ 
+ #define MMP2_DEVICE(_name, _drv, _id, _irq, _start, _size, _dma...)	\
+-struct pxa_device_desc mmp2_device_##_name __initdata = {		\
++struct mmp_device_desc mmp2_device_##_name __initdata = {		\
+ 	.dev_name	= "mmp2-" #_name,				\
+ 	.drv_name	= _drv,						\
+ 	.id		= _id,						\
+@@ -50,7 +50,7 @@ struct pxa_device_desc mmp2_device_##_name __initdata = {		\
+ 	.dma		= { _dma },					\
  }
  
- MACHINE_START(MAGICIAN, "HTC Magician")
-diff --git a/sound/soc/pxa/magician.c b/sound/soc/pxa/magician.c
-index 6483cff5b73d..c5993a532cf0 100644
---- a/sound/soc/pxa/magician.c
-+++ b/sound/soc/pxa/magician.c
-@@ -14,16 +14,14 @@
- #include <linux/interrupt.h>
- #include <linux/platform_device.h>
- #include <linux/delay.h>
--#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/i2c.h>
+-extern int pxa_register_device(struct pxa_device_desc *, void *, size_t);
++extern int mmp_register_device(struct mmp_device_desc *, void *, size_t);
+ extern int pxa_usb_phy_init(void __iomem *phy_reg);
+ extern void pxa_usb_phy_deinit(void __iomem *phy_reg);
  
- #include <sound/core.h>
- #include <sound/pcm.h>
- #include <sound/pcm_params.h>
- #include <sound/soc.h>
--#include <sound/uda1380.h>
+diff --git a/arch/arm/mach-mmp/mmp2.h b/arch/arm/mach-mmp/mmp2.h
+index adafc4fba8f4..3ebc1bb13f71 100644
+--- a/arch/arm/mach-mmp/mmp2.h
++++ b/arch/arm/mach-mmp/mmp2.h
+@@ -15,28 +15,28 @@ extern void mmp2_clear_pmic_int(void);
  
--#include <mach/magician.h>
- #include <asm/mach-types.h>
- #include "../codecs/uda1380.h"
- #include "pxa2xx-i2s.h"
-@@ -36,6 +34,9 @@ static int magician_hp_switch;
- static int magician_spk_switch = 1;
- static int magician_in_sel = MAGICIAN_MIC;
+ #include "devices.h"
  
-+static struct gpio_desc *gpiod_spk_power, *gpiod_ep_power, *gpiod_mic_power;
-+static struct gpio_desc *gpiod_in_sel0, *gpiod_in_sel1;
-+
- static void magician_ext_control(struct snd_soc_dapm_context *dapm)
+-extern struct pxa_device_desc mmp2_device_uart1;
+-extern struct pxa_device_desc mmp2_device_uart2;
+-extern struct pxa_device_desc mmp2_device_uart3;
+-extern struct pxa_device_desc mmp2_device_uart4;
+-extern struct pxa_device_desc mmp2_device_twsi1;
+-extern struct pxa_device_desc mmp2_device_twsi2;
+-extern struct pxa_device_desc mmp2_device_twsi3;
+-extern struct pxa_device_desc mmp2_device_twsi4;
+-extern struct pxa_device_desc mmp2_device_twsi5;
+-extern struct pxa_device_desc mmp2_device_twsi6;
+-extern struct pxa_device_desc mmp2_device_sdh0;
+-extern struct pxa_device_desc mmp2_device_sdh1;
+-extern struct pxa_device_desc mmp2_device_sdh2;
+-extern struct pxa_device_desc mmp2_device_sdh3;
+-extern struct pxa_device_desc mmp2_device_asram;
+-extern struct pxa_device_desc mmp2_device_isram;
++extern struct mmp_device_desc mmp2_device_uart1;
++extern struct mmp_device_desc mmp2_device_uart2;
++extern struct mmp_device_desc mmp2_device_uart3;
++extern struct mmp_device_desc mmp2_device_uart4;
++extern struct mmp_device_desc mmp2_device_twsi1;
++extern struct mmp_device_desc mmp2_device_twsi2;
++extern struct mmp_device_desc mmp2_device_twsi3;
++extern struct mmp_device_desc mmp2_device_twsi4;
++extern struct mmp_device_desc mmp2_device_twsi5;
++extern struct mmp_device_desc mmp2_device_twsi6;
++extern struct mmp_device_desc mmp2_device_sdh0;
++extern struct mmp_device_desc mmp2_device_sdh1;
++extern struct mmp_device_desc mmp2_device_sdh2;
++extern struct mmp_device_desc mmp2_device_sdh3;
++extern struct mmp_device_desc mmp2_device_asram;
++extern struct mmp_device_desc mmp2_device_isram;
+ 
+ extern struct platform_device mmp2_device_gpio;
+ 
+ static inline int mmp2_add_uart(int id)
  {
+-	struct pxa_device_desc *d = NULL;
++	struct mmp_device_desc *d = NULL;
  
-@@ -215,10 +216,10 @@ static int magician_set_input(struct snd_kcontrol *kcontrol,
- 
- 	switch (magician_in_sel) {
- 	case MAGICIAN_MIC:
--		gpio_set_value(EGPIO_MAGICIAN_IN_SEL1, 1);
-+		gpiod_set_value(gpiod_in_sel1, 1);
- 		break;
- 	case MAGICIAN_MIC_EXT:
--		gpio_set_value(EGPIO_MAGICIAN_IN_SEL1, 0);
-+		gpiod_set_value(gpiod_in_sel1, 0);
+ 	switch (id) {
+ 	case 1: d = &mmp2_device_uart1; break;
+@@ -47,13 +47,13 @@ static inline int mmp2_add_uart(int id)
+ 		return -EINVAL;
  	}
  
- 	return 1;
-@@ -227,21 +228,21 @@ static int magician_set_input(struct snd_kcontrol *kcontrol,
- static int magician_spk_power(struct snd_soc_dapm_widget *w,
- 				struct snd_kcontrol *k, int event)
- {
--	gpio_set_value(EGPIO_MAGICIAN_SPK_POWER, SND_SOC_DAPM_EVENT_ON(event));
-+	gpiod_set_value(gpiod_spk_power, SND_SOC_DAPM_EVENT_ON(event));
- 	return 0;
+-	return pxa_register_device(d, NULL, 0);
++	return mmp_register_device(d, NULL, 0);
  }
  
- static int magician_hp_power(struct snd_soc_dapm_widget *w,
- 				struct snd_kcontrol *k, int event)
+ static inline int mmp2_add_twsi(int id, struct i2c_pxa_platform_data *data,
+ 				  struct i2c_board_info *info, unsigned size)
  {
--	gpio_set_value(EGPIO_MAGICIAN_EP_POWER, SND_SOC_DAPM_EVENT_ON(event));
-+	gpiod_set_value(gpiod_ep_power, SND_SOC_DAPM_EVENT_ON(event));
- 	return 0;
+-	struct pxa_device_desc *d = NULL;
++	struct mmp_device_desc *d = NULL;
+ 	int ret;
+ 
+ 	switch (id) {
+@@ -71,12 +71,12 @@ static inline int mmp2_add_twsi(int id, struct i2c_pxa_platform_data *data,
+ 	if (ret)
+ 		return ret;
+ 
+-	return pxa_register_device(d, data, sizeof(*data));
++	return mmp_register_device(d, data, sizeof(*data));
  }
  
- static int magician_mic_bias(struct snd_soc_dapm_widget *w,
- 				struct snd_kcontrol *k, int event)
+ static inline int mmp2_add_sdhost(int id, struct sdhci_pxa_platdata *data)
  {
--	gpio_set_value(EGPIO_MAGICIAN_MIC_POWER, SND_SOC_DAPM_EVENT_ON(event));
-+	gpiod_set_value(gpiod_mic_power, SND_SOC_DAPM_EVENT_ON(event));
- 	return 0;
+-	struct pxa_device_desc *d = NULL;
++	struct mmp_device_desc *d = NULL;
+ 
+ 	switch (id) {
+ 	case 0: d = &mmp2_device_sdh0; break;
+@@ -87,17 +87,17 @@ static inline int mmp2_add_sdhost(int id, struct sdhci_pxa_platdata *data)
+ 		return -EINVAL;
+ 	}
+ 
+-	return pxa_register_device(d, data, sizeof(*data));
++	return mmp_register_device(d, data, sizeof(*data));
  }
  
-@@ -328,106 +329,38 @@ static struct snd_soc_card snd_soc_card_magician = {
- 	.fully_routed = true,
- };
- 
--static struct platform_device *magician_snd_device;
--
--/*
-- * FIXME: move into magician board file once merged into the pxa tree
-- */
--static struct uda1380_platform_data uda1380_info = {
--	.gpio_power = EGPIO_MAGICIAN_CODEC_POWER,
--	.gpio_reset = EGPIO_MAGICIAN_CODEC_RESET,
--	.dac_clk    = UDA1380_DAC_CLK_WSPLL,
--};
--
--static struct i2c_board_info i2c_board_info[] = {
--	{
--		I2C_BOARD_INFO("uda1380", 0x18),
--		.platform_data = &uda1380_info,
--	},
--};
--
--static int __init magician_init(void)
--{
--	int ret;
--	struct i2c_adapter *adapter;
--	struct i2c_client *client;
--
--	if (!machine_is_magician())
--		return -ENODEV;
--
--	adapter = i2c_get_adapter(0);
--	if (!adapter)
--		return -ENODEV;
--	client = i2c_new_device(adapter, i2c_board_info);
--	i2c_put_adapter(adapter);
--	if (!client)
--		return -ENODEV;
--
--	ret = gpio_request(EGPIO_MAGICIAN_SPK_POWER, "SPK_POWER");
--	if (ret)
--		goto err_request_spk;
--	ret = gpio_request(EGPIO_MAGICIAN_EP_POWER, "EP_POWER");
--	if (ret)
--		goto err_request_ep;
--	ret = gpio_request(EGPIO_MAGICIAN_MIC_POWER, "MIC_POWER");
--	if (ret)
--		goto err_request_mic;
--	ret = gpio_request(EGPIO_MAGICIAN_IN_SEL0, "IN_SEL0");
--	if (ret)
--		goto err_request_in_sel0;
--	ret = gpio_request(EGPIO_MAGICIAN_IN_SEL1, "IN_SEL1");
--	if (ret)
--		goto err_request_in_sel1;
--
--	gpio_set_value(EGPIO_MAGICIAN_IN_SEL0, 0);
--
--	magician_snd_device = platform_device_alloc("soc-audio", -1);
--	if (!magician_snd_device) {
--		ret = -ENOMEM;
--		goto err_pdev;
--	}
--
--	platform_set_drvdata(magician_snd_device, &snd_soc_card_magician);
--	ret = platform_device_add(magician_snd_device);
--	if (ret) {
--		platform_device_put(magician_snd_device);
--		goto err_pdev;
--	}
--
--	return 0;
--
--err_pdev:
--	gpio_free(EGPIO_MAGICIAN_IN_SEL1);
--err_request_in_sel1:
--	gpio_free(EGPIO_MAGICIAN_IN_SEL0);
--err_request_in_sel0:
--	gpio_free(EGPIO_MAGICIAN_MIC_POWER);
--err_request_mic:
--	gpio_free(EGPIO_MAGICIAN_EP_POWER);
--err_request_ep:
--	gpio_free(EGPIO_MAGICIAN_SPK_POWER);
--err_request_spk:
--	return ret;
--}
--
--static void __exit magician_exit(void)
-+static int magician_audio_probe(struct platform_device *pdev)
+ static inline int mmp2_add_asram(struct sram_platdata *data)
  {
--	platform_device_unregister(magician_snd_device);
--
--	gpio_set_value(EGPIO_MAGICIAN_SPK_POWER, 0);
--	gpio_set_value(EGPIO_MAGICIAN_EP_POWER, 0);
--	gpio_set_value(EGPIO_MAGICIAN_MIC_POWER, 0);
--
--	gpio_free(EGPIO_MAGICIAN_IN_SEL1);
--	gpio_free(EGPIO_MAGICIAN_IN_SEL0);
--	gpio_free(EGPIO_MAGICIAN_MIC_POWER);
--	gpio_free(EGPIO_MAGICIAN_EP_POWER);
--	gpio_free(EGPIO_MAGICIAN_SPK_POWER);
-+	struct device *dev = &pdev->dev;
-+
-+	gpiod_spk_power = devm_gpiod_get(dev, "SPK_POWER", GPIOD_OUT_LOW);
-+	if (IS_ERR(gpiod_spk_power))
-+		return PTR_ERR(gpiod_spk_power);
-+	gpiod_ep_power = devm_gpiod_get(dev, "EP_POWER", GPIOD_OUT_LOW);
-+	if (IS_ERR(gpiod_ep_power))
-+		return PTR_ERR(gpiod_ep_power);
-+	gpiod_mic_power = devm_gpiod_get(dev, "MIC_POWER", GPIOD_OUT_LOW);
-+	if (IS_ERR(gpiod_mic_power))
-+		return PTR_ERR(gpiod_mic_power);
-+	gpiod_in_sel0 = devm_gpiod_get(dev, "IN_SEL0", GPIOD_OUT_HIGH);
-+	if (IS_ERR(gpiod_in_sel0))
-+		return PTR_ERR(gpiod_in_sel0);
-+	gpiod_in_sel1 = devm_gpiod_get(dev, "IN_SEL1", GPIOD_OUT_LOW);
-+	if (IS_ERR(gpiod_in_sel1))
-+		return PTR_ERR(gpiod_in_sel1);
-+
-+	snd_soc_card_magician.dev = &pdev->dev;
-+	return devm_snd_soc_register_card(&pdev->dev, &snd_soc_card_magician);
+-	return pxa_register_device(&mmp2_device_asram, data, sizeof(*data));
++	return mmp_register_device(&mmp2_device_asram, data, sizeof(*data));
  }
  
--module_init(magician_init);
--module_exit(magician_exit);
-+static struct platform_driver magician_audio_driver = {
-+	.driver.name = "magician-audio",
-+	.driver.pm = &snd_soc_pm_ops,
-+	.probe = magician_audio_probe,
-+};
-+module_platform_driver(magician_audio_driver);
+ static inline int mmp2_add_isram(struct sram_platdata *data)
+ {
+-	return pxa_register_device(&mmp2_device_isram, data, sizeof(*data));
++	return mmp_register_device(&mmp2_device_isram, data, sizeof(*data));
+ }
  
- MODULE_AUTHOR("Philipp Zabel");
- MODULE_DESCRIPTION("ALSA SoC Magician");
- MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:magician-audio");
+ #endif /* __ASM_MACH_MMP2_H */
+diff --git a/arch/arm/mach-mmp/pxa168.h b/arch/arm/mach-mmp/pxa168.h
+index 0331c58b07a2..6dd17986e360 100644
+--- a/arch/arm/mach-mmp/pxa168.h
++++ b/arch/arm/mach-mmp/pxa168.h
+@@ -21,24 +21,24 @@ extern void pxa168_clear_keypad_wakeup(void);
+ #include "devices.h"
+ #include "cputype.h"
+ 
+-extern struct pxa_device_desc pxa168_device_uart1;
+-extern struct pxa_device_desc pxa168_device_uart2;
+-extern struct pxa_device_desc pxa168_device_uart3;
+-extern struct pxa_device_desc pxa168_device_twsi0;
+-extern struct pxa_device_desc pxa168_device_twsi1;
+-extern struct pxa_device_desc pxa168_device_pwm1;
+-extern struct pxa_device_desc pxa168_device_pwm2;
+-extern struct pxa_device_desc pxa168_device_pwm3;
+-extern struct pxa_device_desc pxa168_device_pwm4;
+-extern struct pxa_device_desc pxa168_device_ssp1;
+-extern struct pxa_device_desc pxa168_device_ssp2;
+-extern struct pxa_device_desc pxa168_device_ssp3;
+-extern struct pxa_device_desc pxa168_device_ssp4;
+-extern struct pxa_device_desc pxa168_device_ssp5;
+-extern struct pxa_device_desc pxa168_device_nand;
+-extern struct pxa_device_desc pxa168_device_fb;
+-extern struct pxa_device_desc pxa168_device_keypad;
+-extern struct pxa_device_desc pxa168_device_eth;
++extern struct mmp_device_desc pxa168_device_uart1;
++extern struct mmp_device_desc pxa168_device_uart2;
++extern struct mmp_device_desc pxa168_device_uart3;
++extern struct mmp_device_desc pxa168_device_twsi0;
++extern struct mmp_device_desc pxa168_device_twsi1;
++extern struct mmp_device_desc pxa168_device_pwm1;
++extern struct mmp_device_desc pxa168_device_pwm2;
++extern struct mmp_device_desc pxa168_device_pwm3;
++extern struct mmp_device_desc pxa168_device_pwm4;
++extern struct mmp_device_desc pxa168_device_ssp1;
++extern struct mmp_device_desc pxa168_device_ssp2;
++extern struct mmp_device_desc pxa168_device_ssp3;
++extern struct mmp_device_desc pxa168_device_ssp4;
++extern struct mmp_device_desc pxa168_device_ssp5;
++extern struct mmp_device_desc pxa168_device_nand;
++extern struct mmp_device_desc pxa168_device_fb;
++extern struct mmp_device_desc pxa168_device_keypad;
++extern struct mmp_device_desc pxa168_device_eth;
+ 
+ /* pdata can be NULL */
+ extern int __init pxa168_add_usb_host(struct mv_usb_platform_data *pdata);
+@@ -48,7 +48,7 @@ extern struct platform_device pxa168_device_gpio;
+ 
+ static inline int pxa168_add_uart(int id)
+ {
+-	struct pxa_device_desc *d = NULL;
++	struct mmp_device_desc *d = NULL;
+ 
+ 	switch (id) {
+ 	case 1: d = &pxa168_device_uart1; break;
+@@ -59,13 +59,13 @@ static inline int pxa168_add_uart(int id)
+ 	if (d == NULL)
+ 		return -EINVAL;
+ 
+-	return pxa_register_device(d, NULL, 0);
++	return mmp_register_device(d, NULL, 0);
+ }
+ 
+ static inline int pxa168_add_twsi(int id, struct i2c_pxa_platform_data *data,
+ 				  struct i2c_board_info *info, unsigned size)
+ {
+-	struct pxa_device_desc *d = NULL;
++	struct mmp_device_desc *d = NULL;
+ 	int ret;
+ 
+ 	switch (id) {
+@@ -79,12 +79,12 @@ static inline int pxa168_add_twsi(int id, struct i2c_pxa_platform_data *data,
+ 	if (ret)
+ 		return ret;
+ 
+-	return pxa_register_device(d, data, sizeof(*data));
++	return mmp_register_device(d, data, sizeof(*data));
+ }
+ 
+ static inline int pxa168_add_pwm(int id)
+ {
+-	struct pxa_device_desc *d = NULL;
++	struct mmp_device_desc *d = NULL;
+ 
+ 	switch (id) {
+ 	case 1: d = &pxa168_device_pwm1; break;
+@@ -95,12 +95,12 @@ static inline int pxa168_add_pwm(int id)
+ 		return -EINVAL;
+ 	}
+ 
+-	return pxa_register_device(d, NULL, 0);
++	return mmp_register_device(d, NULL, 0);
+ }
+ 
+ static inline int pxa168_add_ssp(int id)
+ {
+-	struct pxa_device_desc *d = NULL;
++	struct mmp_device_desc *d = NULL;
+ 
+ 	switch (id) {
+ 	case 1: d = &pxa168_device_ssp1; break;
+@@ -111,17 +111,17 @@ static inline int pxa168_add_ssp(int id)
+ 	default:
+ 		return -EINVAL;
+ 	}
+-	return pxa_register_device(d, NULL, 0);
++	return mmp_register_device(d, NULL, 0);
+ }
+ 
+ static inline int pxa168_add_nand(struct pxa3xx_nand_platform_data *info)
+ {
+-	return pxa_register_device(&pxa168_device_nand, info, sizeof(*info));
++	return mmp_register_device(&pxa168_device_nand, info, sizeof(*info));
+ }
+ 
+ static inline int pxa168_add_fb(struct pxa168fb_mach_info *mi)
+ {
+-	return pxa_register_device(&pxa168_device_fb, mi, sizeof(*mi));
++	return mmp_register_device(&pxa168_device_fb, mi, sizeof(*mi));
+ }
+ 
+ static inline int pxa168_add_keypad(struct pxa27x_keypad_platform_data *data)
+@@ -129,11 +129,11 @@ static inline int pxa168_add_keypad(struct pxa27x_keypad_platform_data *data)
+ 	if (cpu_is_pxa168())
+ 		data->clear_wakeup_event = pxa168_clear_keypad_wakeup;
+ 
+-	return pxa_register_device(&pxa168_device_keypad, data, sizeof(*data));
++	return mmp_register_device(&pxa168_device_keypad, data, sizeof(*data));
+ }
+ 
+ static inline int pxa168_add_eth(struct pxa168_eth_platform_data *data)
+ {
+-	return pxa_register_device(&pxa168_device_eth, data, sizeof(*data));
++	return mmp_register_device(&pxa168_device_eth, data, sizeof(*data));
+ }
+ #endif /* __ASM_MACH_PXA168_H */
+diff --git a/arch/arm/mach-mmp/pxa910.h b/arch/arm/mach-mmp/pxa910.h
+index 2dfe38e4acc1..6ace5a8aa15b 100644
+--- a/arch/arm/mach-mmp/pxa910.h
++++ b/arch/arm/mach-mmp/pxa910.h
+@@ -13,28 +13,28 @@ extern void __init pxa910_init_irq(void);
+ 
+ #include "devices.h"
+ 
+-extern struct pxa_device_desc pxa910_device_uart1;
+-extern struct pxa_device_desc pxa910_device_uart2;
+-extern struct pxa_device_desc pxa910_device_twsi0;
+-extern struct pxa_device_desc pxa910_device_twsi1;
+-extern struct pxa_device_desc pxa910_device_pwm1;
+-extern struct pxa_device_desc pxa910_device_pwm2;
+-extern struct pxa_device_desc pxa910_device_pwm3;
+-extern struct pxa_device_desc pxa910_device_pwm4;
+-extern struct pxa_device_desc pxa910_device_nand;
++extern struct mmp_device_desc pxa910_device_uart1;
++extern struct mmp_device_desc pxa910_device_uart2;
++extern struct mmp_device_desc pxa910_device_twsi0;
++extern struct mmp_device_desc pxa910_device_twsi1;
++extern struct mmp_device_desc pxa910_device_pwm1;
++extern struct mmp_device_desc pxa910_device_pwm2;
++extern struct mmp_device_desc pxa910_device_pwm3;
++extern struct mmp_device_desc pxa910_device_pwm4;
++extern struct mmp_device_desc pxa910_device_nand;
+ extern struct platform_device pxa168_device_usb_phy;
+ extern struct platform_device pxa168_device_u2o;
+ extern struct platform_device pxa168_device_u2ootg;
+ extern struct platform_device pxa168_device_u2oehci;
+-extern struct pxa_device_desc pxa910_device_disp;
+-extern struct pxa_device_desc pxa910_device_fb;
+-extern struct pxa_device_desc pxa910_device_panel;
++extern struct mmp_device_desc pxa910_device_disp;
++extern struct mmp_device_desc pxa910_device_fb;
++extern struct mmp_device_desc pxa910_device_panel;
+ extern struct platform_device pxa910_device_gpio;
+ extern struct platform_device pxa910_device_rtc;
+ 
+ static inline int pxa910_add_uart(int id)
+ {
+-	struct pxa_device_desc *d = NULL;
++	struct mmp_device_desc *d = NULL;
+ 
+ 	switch (id) {
+ 	case 1: d = &pxa910_device_uart1; break;
+@@ -44,13 +44,13 @@ static inline int pxa910_add_uart(int id)
+ 	if (d == NULL)
+ 		return -EINVAL;
+ 
+-	return pxa_register_device(d, NULL, 0);
++	return mmp_register_device(d, NULL, 0);
+ }
+ 
+ static inline int pxa910_add_twsi(int id, struct i2c_pxa_platform_data *data,
+ 				  struct i2c_board_info *info, unsigned size)
+ {
+-	struct pxa_device_desc *d = NULL;
++	struct mmp_device_desc *d = NULL;
+ 	int ret;
+ 
+ 	switch (id) {
+@@ -64,12 +64,12 @@ static inline int pxa910_add_twsi(int id, struct i2c_pxa_platform_data *data,
+ 	if (ret)
+ 		return ret;
+ 
+-	return pxa_register_device(d, data, sizeof(*data));
++	return mmp_register_device(d, data, sizeof(*data));
+ }
+ 
+ static inline int pxa910_add_pwm(int id)
+ {
+-	struct pxa_device_desc *d = NULL;
++	struct mmp_device_desc *d = NULL;
+ 
+ 	switch (id) {
+ 	case 1: d = &pxa910_device_pwm1; break;
+@@ -80,11 +80,11 @@ static inline int pxa910_add_pwm(int id)
+ 		return -EINVAL;
+ 	}
+ 
+-	return pxa_register_device(d, NULL, 0);
++	return mmp_register_device(d, NULL, 0);
+ }
+ 
+ static inline int pxa910_add_nand(struct pxa3xx_nand_platform_data *info)
+ {
+-	return pxa_register_device(&pxa910_device_nand, info, sizeof(*info));
++	return mmp_register_device(&pxa910_device_nand, info, sizeof(*info));
+ }
+ #endif /* __ASM_MACH_PXA910_H */
+diff --git a/arch/arm/mach-mmp/ttc_dkb.c b/arch/arm/mach-mmp/ttc_dkb.c
+index 4f240760d4aa..345b2e6d5c7e 100644
+--- a/arch/arm/mach-mmp/ttc_dkb.c
++++ b/arch/arm/mach-mmp/ttc_dkb.c
+@@ -253,12 +253,12 @@ static struct spi_board_info spi_board_info[] __initdata = {
+ 
+ static void __init add_disp(void)
+ {
+-	pxa_register_device(&pxa910_device_disp,
++	mmp_register_device(&pxa910_device_disp,
+ 		&dkb_disp_info, sizeof(dkb_disp_info));
+ 	spi_register_board_info(spi_board_info, ARRAY_SIZE(spi_board_info));
+-	pxa_register_device(&pxa910_device_fb,
++	mmp_register_device(&pxa910_device_fb,
+ 		&dkb_fb_info, sizeof(dkb_fb_info));
+-	pxa_register_device(&pxa910_device_panel,
++	mmp_register_device(&pxa910_device_panel,
+ 		&dkb_tpo_panel_info, sizeof(dkb_tpo_panel_info));
+ }
+ #endif
 -- 
 2.20.0
 
