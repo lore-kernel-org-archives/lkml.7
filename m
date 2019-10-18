@@ -2,89 +2,120 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 664B7CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2F9CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30D3B20854
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:13:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41A7F21852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436789;
-	bh=xLNLOakxuN/6SeXAX89UG3To6jG745h16/32aaxrM6w=;
-	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
-	 From;
-	b=HVB8UjU8/RooNW1U57PvcPQf9kNLVu2BCC/uyWCUBJVi2uYLxlkSbOncAVd4Xu7lp
-	 /mhj5E3xz7tZR4zHei9Ddejseae60gFJIL6UPvEcXkNjLzNMmpLXFlICw20/kgEwoG
-	 GovTRyfSYWAySqF+ZXlBPvuMs+pbS46MAv4UTLRc=
+	s=default; t=1571436799;
+	bh=LtgV19MgtfFX69rc+LOivsTvlCGFkpIRKuEDQjfkHRQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OOyMtHhA+qmnbalbX7xyPA+SB6ekfke0+IK579gwbYatYSodODh5ZBt/1VYPJF4mU
+	 1mYfwrsEvVVJhqqlXMQ0yP0RreRPDQUxdsY6ZlF5hV93LMoDwIiOl1ONK0afUgx26V
+	 vZ/B9ktrabhvdMhpLkDQ9/Ut5e+Zba0Bz5ewsKxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391895AbfJRWNH (ORCPT
+        id S2391922AbfJRWNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:13:07 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46123 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389659AbfJRWNE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:13:04 -0400
-Received: by mail-pl1-f193.google.com with SMTP id q24so3479100plr.13;
-        Fri, 18 Oct 2019 15:13:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
-         :references:in-reply-to;
-        bh=LJ5OwWm1TmDzcWAMMg8LWHy3PtCXgtD6rnGsJm0sXXw=;
-        b=CpLeFHyEjaE7ES6d4HT8r7+ESJEWPOvf5ZGXDULpxG4TgaUAzaY6rnQxkYLOiPDDxZ
-         YVT7jG/f/wC33/CBUOroj/L8MWc2fIBtYj5Yif6v98AfLZ54sU17+wMrIBmBZ2qYzxbn
-         ImCPrRlr+Cue5n3m0KfnPJILwWJ6a819/YJUtcEfzqHDRhqN4BNo0ZOY8+hT+vvG+Fir
-         x5olysVbIRCbHNOAiCDbv8BvB5cSY6CB4TQN+ssrDFDiRHy4hF7aCC4aHgpBgW5PE7/u
-         sSE9LBdT/jZ+Rb8bCSrLj8UdZZT1HesIPvyKuE5vQiYNoGhWZfc9piLJL1E254GNNjlD
-         0nug==
-X-Gm-Message-State: APjAAAUAu1VrXljeROTF1dkuY5I8r7MOUcn6JHMtd/hNjM23F5BmvfAU
-        RatIBKvKdPscGShDat76wb8=
-X-Google-Smtp-Source: APXvYqyMYL+IS5XLskh7EtVaMTmbT57MDPd/VtnWQN1epa433p94XWh2FET+yxSTCX55G8Vkn6FPTQ==
-X-Received: by 2002:a17:902:aa41:: with SMTP id c1mr6795640plr.153.1571436783122;
-        Fri, 18 Oct 2019 15:13:03 -0700 (PDT)
-Received: from localhost ([172.58.38.188])
-        by smtp.gmail.com with ESMTPSA id e16sm6876437pgt.68.2019.10.18.15.13.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 15:13:02 -0700 (PDT)
-Message-ID: <5daa38ee.1c69fb81.fa39b.1bb9@mx.google.com>
-Date:   Fri, 18 Oct 2019 15:13:00 -0700
-From:   Paul Burton <paulburton@kernel.org>
-To:     Paul Burton <paulburton@kernel.org>
-CC:     linux-mips@vger.kernel.org
-CC:     linux-kernel@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        Paul Burton <paulburton@kernel.org>
-CC:     linux-mips@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: Use @kernel.org address for Paul Burton
-References:  <20191016182316.535398-1-paulburton@kernel.org>
-In-Reply-To:  <20191016182316.535398-1-paulburton@kernel.org>
+        Fri, 18 Oct 2019 18:13:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42748 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389538AbfJRWJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:09:59 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49C7C2247F;
+        Fri, 18 Oct 2019 22:09:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571436598;
+        bh=LtgV19MgtfFX69rc+LOivsTvlCGFkpIRKuEDQjfkHRQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=U9vrcw2iufThw41x0SXf6DLPt/YrH47MNF8lCCuLH2itRJQJw7196GrLxJ3EKPfBM
+         jXJzIyyVyWe1XJ2XkU+KHn9vPkadMyp9nhY6UigK5qaZnrjEFiDI27BHa9ABYnfF3R
+         l0c566RoSijYfVIyew2J5hZzZ3D0VoLyaGM+wa+M=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 22/29] fs: ocfs2: fix a possible null-pointer dereference in ocfs2_info_scan_inode_alloc()
+Date:   Fri, 18 Oct 2019 18:09:13 -0400
+Message-Id: <20191018220920.10545-22-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191018220920.10545-1-sashal@kernel.org>
+References: <20191018220920.10545-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-Paul Burton wrote:
-> From: Paul Burton <paul.burton@mips.com>
-> 
-> Switch to using my paulburton@kernel.org email address in order to avoid
-> subject mangling that's being imposed on my previous address.
+[ Upstream commit 2abb7d3b12d007c30193f48bebed781009bebdd2 ]
 
-Applied to mips-fixes.
+In ocfs2_info_scan_inode_alloc(), there is an if statement on line 283
+to check whether inode_alloc is NULL:
 
-> commit 0ad8f7aa9f7e
-> https://git.kernel.org/mips/c/0ad8f7aa9f7e
-> 
-> Signed-off-by: Paul Burton <paul.burton@mips.com>
-> Signed-off-by: Paul Burton <paulburton@kernel.org>
+    if (inode_alloc)
 
-Thanks,
-    Paul
+When inode_alloc is NULL, it is used on line 287:
 
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paulburton@kernel.org to report it. ]
+    ocfs2_inode_lock(inode_alloc, &bh, 0);
+        ocfs2_inode_lock_full_nested(inode, ...)
+            struct ocfs2_super *osb = OCFS2_SB(inode->i_sb);
+
+Thus, a possible null-pointer dereference may occur.
+
+To fix this bug, inode_alloc is checked on line 286.
+
+This bug is found by a static analysis tool STCheck written by us.
+
+Link: http://lkml.kernel.org/r/20190726033717.32359-1-baijiaju1990@gmail.com
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/ocfs2/ioctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/ocfs2/ioctl.c b/fs/ocfs2/ioctl.c
+index 4506ec5ec2ea6..bfc44644301ca 100644
+--- a/fs/ocfs2/ioctl.c
++++ b/fs/ocfs2/ioctl.c
+@@ -289,7 +289,7 @@ static int ocfs2_info_scan_inode_alloc(struct ocfs2_super *osb,
+ 	if (inode_alloc)
+ 		inode_lock(inode_alloc);
+ 
+-	if (o2info_coherent(&fi->ifi_req)) {
++	if (inode_alloc && o2info_coherent(&fi->ifi_req)) {
+ 		status = ocfs2_inode_lock(inode_alloc, &bh, 0);
+ 		if (status < 0) {
+ 			mlog_errno(status);
+-- 
+2.20.1
+
