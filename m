@@ -2,154 +2,107 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3A1CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E402CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F1C222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D744C222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:32:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="I7PnxZNl"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FqWqAl18"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410469AbfJROcE (ORCPT
+        id S2410481AbfJROcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 10:32:04 -0400
-Received: from dvalin.narfation.org ([213.160.73.56]:52880 "EHLO
-        dvalin.narfation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408046AbfJROcD (ORCPT
+        Fri, 18 Oct 2019 10:32:09 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41756 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2410471AbfJROcI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 10:32:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
-        s=20121; t=1571409120;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=DySkX1/HW4huis6e998NWRv5hnIE5IRYVcrxXXxSoUo=;
-        b=I7PnxZNledLze6nde4UewSf2NY82nhHqPVn/zp4bS7Uiu3W5JJGxmjtuAheTzDzoTxDya0
-        QMiGaBx+o3aZwE/j7Hxvxnq/bE6EaIwQD6KxDMM78A0AeT98z4yClAQuw3ZAVjvXgbG3zR
-        MEK6whnkoKvie+nKaWUItnBCKTmKgT0=
-From:   Sven Eckelmann <sven@narfation.org>
-To:     syzbot <syzbot+0183453ce4de8bdf9214@syzkaller.appspotmail.com>
-Cc:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        davem@davemloft.net, glider@google.com,
-        linux-kernel@vger.kernel.org, mareklindner@neomailbox.ch,
-        netdev@vger.kernel.org, sw@simonwunderlich.de,
-        syzkaller-bugs@googlegroups.com,
-        Petko Manolov <petkan@nucleusys.com>, linux-usb@vger.kernel.org
-Subject: Re: KMSAN: uninit-value in batadv_hard_if_event
-Date:   Fri, 18 Oct 2019 16:31:22 +0200
-Message-ID: <5289022.tfFiBPLraV@bentobox>
-In-Reply-To: <0000000000006120c905952febbd@google.com>
-References: <0000000000006120c905952febbd@google.com>
+        Fri, 18 Oct 2019 10:32:08 -0400
+Received: by mail-pl1-f194.google.com with SMTP id t10so2932563plr.8
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 07:32:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:to:cc:subject:user-agent:date;
+        bh=S0AYDcjrJsy+oBnQC4y0TZHY+QVM0zdCxFU4HdWdpYs=;
+        b=FqWqAl185EdhvFZoMXJBoeliiGjHn6Nm+ykS8unq4pSsETB92rPiVQ4GrFPVdBctdP
+         kszpm7fCmksTRC6OkMz0kHnCQWQwgGU0r5fcMWDifNovNClV28cDIAvcsZG4KJ+sQFrf
+         05e7NSlM/fK43ijItKnSk2GJCNf4iLmnVVHno=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
+         :user-agent:date;
+        bh=S0AYDcjrJsy+oBnQC4y0TZHY+QVM0zdCxFU4HdWdpYs=;
+        b=bFKuLKbf43TPzmCYxNW3lfe72uhwg1njrUB4J6buK6cIkoh8U2scK/3+5gCnPb+WVZ
+         CP+w8lE1v1keTq5p6tBfUKZ5QTdq6OEz7c82Ce3ptlqiMBku/iFB+IFpQHGDcW1ktxft
+         bLxiQaiaEQg1CoIMAwIzMqMa8NXD0KNS9IanbLYFmrhnNporhN/yfst0QRuBBZlA7lVx
+         IfBMWZobY1W/by9oI1H+DILeG14jlblb1U8+zLCmm7f/uaxz5ppK9+PIj3lp0+guBdl5
+         32g98VHg/OyxRAz6uSQ7d66uV1Il3bW84ZZkuXPnXgE3kAYKo2TMHJaqhVSAXd5cAUjZ
+         6p7w==
+X-Gm-Message-State: APjAAAXFKxGEF2ErxqW8E1Q3HN/LgivLhPRvIqBY6IzGEfLvvBEDMXYU
+        M3s617utSHR+WWiguwhW7aC2vw==
+X-Google-Smtp-Source: APXvYqyBsAB4co/sMqBO/Ihqv1CyC8RUWMY5tCwyuef3uxHYeNsv4k67Aa5a7acEuX1sBePI0ltN4g==
+X-Received: by 2002:a17:902:7885:: with SMTP id q5mr9883498pll.317.1571409127260;
+        Fri, 18 Oct 2019 07:32:07 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id q30sm6755037pja.18.2019.10.18.07.32.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 07:32:06 -0700 (PDT)
+Message-ID: <5da9cce6.1c69fb81.d3cb2.07d1@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2007484.toOGgChZoC"; micalg="pgp-sha512"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <30f419d1612a3912e323287a96daa2b4fbe3dacd.1571406041.git.saiprakash.ranjan@codeaurora.org>
+References: <cover.1571406041.git.saiprakash.ranjan@codeaurora.org> <30f419d1612a3912e323287a96daa2b4fbe3dacd.1571406041.git.saiprakash.ranjan@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        devicetree@vger.kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCH 2/2] dt-bindings: msm: Add LLCC for SC7180
+User-Agent: alot/0.8.1
+Date:   Fri, 18 Oct 2019 07:32:05 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---nextPart2007484.toOGgChZoC
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Quoting Sai Prakash Ranjan (2019-10-18 06:57:09)
+> Add LLCC compatible for SC7180 SoC.
+>=20
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-Hi,
+Can you convert this binding to YAML? Would be useful to make sure it's
+used properly.
 
-not sure whether this is now a bug in batman-adv or in the rtl8150 driver. See 
-my comments inline.
-
-On Friday, 18 October 2019 16:12:08 CEST syzbot wrote:
-[...]
-> usb 1-1: config 0 has no interface number 0
-> usb 1-1: New USB device found, idVendor=0411, idProduct=0012,  
-> bcdDevice=56.5f
-> usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-> usb 1-1: config 0 descriptor??
-> =====================================================
-> BUG: KMSAN: uninit-value in batadv_check_known_mac_addr  
-> net/batman-adv/hard-interface.c:511 [inline]
-> BUG: KMSAN: uninit-value in batadv_hardif_add_interface  
-> net/batman-adv/hard-interface.c:942 [inline]
-> BUG: KMSAN: uninit-value in batadv_hard_if_event+0x23c0/0x3260  
-> net/batman-adv/hard-interface.c:1032
-> CPU: 0 PID: 13223 Comm: kworker/0:3 Not tainted 5.4.0-rc3+ #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0x191/0x1f0 lib/dump_stack.c:113
->   kmsan_report+0x14a/0x2f0 mm/kmsan/kmsan_report.c:109
->   __msan_warning+0x73/0xf0 mm/kmsan/kmsan_instr.c:245
->   batadv_check_known_mac_addr net/batman-adv/hard-interface.c:511 [inline]
->   batadv_hardif_add_interface net/batman-adv/hard-interface.c:942 [inline]
->   batadv_hard_if_event+0x23c0/0x3260 net/batman-adv/hard-interface.c:1032
->   notifier_call_chain kernel/notifier.c:95 [inline]
-[...]
-
-The line in batman-adv is (batadv_check_known_mac_addr):
-
-		if (!batadv_compare_eth(hard_iface->net_dev->dev_addr,
-					net_dev->dev_addr))
-
-So it goes through the list of ethernet interfaces (which are currently 
-attached to a batadv interface) and compares it with the new device's MAC 
-address. And it seems like the new device doesn't have the mac address part 
-initialized yet.
-
-Is this allowed in NETDEV_REGISTER/NETDEV_POST_TYPE_CHANGE?
-
-> Uninit was stored to memory at:
->   kmsan_save_stack_with_flags mm/kmsan/kmsan.c:150 [inline]
->   kmsan_internal_chain_origin+0xbd/0x170 mm/kmsan/kmsan.c:317
->   kmsan_memcpy_memmove_metadata+0x25c/0x2e0 mm/kmsan/kmsan.c:253
->   kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:273
->   __msan_memcpy+0x56/0x70 mm/kmsan/kmsan_instr.c:129
->   set_ethernet_addr drivers/net/usb/rtl8150.c:282 [inline]
->   rtl8150_probe+0x1143/0x14a0 drivers/net/usb/rtl8150.c:912
-
-This looks like it should store the mac address at this point.
-
-    static inline void set_ethernet_addr(rtl8150_t * dev)
-    {
-    	u8 node_id[6];
-    
-    	get_registers(dev, IDR, sizeof(node_id), node_id);
-    	memcpy(dev->netdev->dev_addr, node_id, sizeof(node_id));
-    }
-
-But it seems more like get_registers failed and the uninitialized was still 
-copied to the mac address. Thus causing the KMSAN error in batman-adv.
-
-Is this interpretation of the KMSAN output correct or do I miss something?
-
-Kind regards,
-	Sven
---nextPart2007484.toOGgChZoC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAl2pzLoACgkQXYcKB8Em
-e0YlDBAArGIj5OfEJ9SEXvItxPo2GeYYlnDPblRArpABHQ4SHFNhNKnkrd078q/S
-KZ47suZByfyXAfONnzVdUIw/Y4VkBT3cMEXIzhPNihNRd2S3NushhzmDgY2MQs5K
-QcGBXGMo3SvpbyQXSp+E4RNwQxHr/ITLu0ccbkwtsQlADfaZcoBc2E5gKpDzE0Ny
-nUqIhT1urnTTQ7AdIVmKN0goU5BoaZTEq5zmmzLHYsTo/XzSlm+sbWrWW+I8FLE3
-F7G3K/qgVk8fepylkLOhnEwS9aZ2HG9Z99zLyzvOEmggWw2xlMb+ywdXe1BN2zaY
-Zi+FZvn7uEnmBNVVDH5BAvuiYxMhDmqFSDyeBOJOXn2PqPKfX05VW6Ub3wlNzveI
-3t/l9KvfzN6QKLlJnjM36d1+7P1Hd5UzshnJMKZ7yXGgwYl7c7cPCFMnozTeMbDF
-hHbW2DgRH7ulQpxV9u4TiN6Z0xLYBr9dOkMe9CnIIW582qyfmiTNRjyiZfw/qL9g
-B26MGkeobiVriBDXrP51ZoTN/3OfK3cHXCIBMdaSkgW2UkVO8+O9S5pzZSiQip8b
-99As3Yys7Y+oq6QHBcRDNttA8mjJYsI/g1jW3NvEJhGijDAsKPPLrUl8+BkLBFkp
-E3poDpKL5JGmk3B239CNUR7GTZqGvcI1mOgS2fJ/t0Ap4JMw5RU=
-=R9zW
------END PGP SIGNATURE-----
-
---nextPart2007484.toOGgChZoC--
-
-
-
+>=20
+> diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt b/Do=
+cumentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+> index eaee06b2d8f2..f263aa539d47 100644
+> --- a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+> @@ -11,7 +11,9 @@ Properties:
+>  - compatible:
+>         Usage: required
+>         Value type: <string>
+> -       Definition: must be "qcom,sdm845-llcc"
+> +       Definition: must be one of:
+> +                   "qcom,sc7180-llcc",
+> +                   "qcom,sdm845-llcc"
+> =20
