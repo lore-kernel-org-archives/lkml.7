@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 097E6CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF179CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C663A21925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8627D21925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436928;
-	bh=Kov+8kMB59hOV7LwB2j8HIHtBltTnISJ1UT9ZfpCrrg=;
+	s=default; t=1571436931;
+	bh=9bqpOQ/HTpFfl9Zq2N2vZhaiabTgyqLrkdRiLClf/oc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=odEBdMnggU4/n0krsWAVpJm+l7U2Z5W4lbeawaP73crJFjPg5Bs3s4Pz8ONyZQKm5
-	 aOpPUmuHvcSVo5aM4tZ1nZuoJye3qTFFiFNzzQycE6F3J1mcUID+SL9P/WSHl3iDAN
-	 wlCJyThmrhMH68r+7rW0k9TruI0/z47UmAIRGFcQ=
+	b=BnFma6PpYlS7k1gOTid7r0y9ImXPz+DZq/hivI8qtIVJ08XxHpWf+nke4vUNkwTLa
+	 MOX+zDr16TKwNbJDEYuJdRE745taD+jL8Rds9p5e3toSSQkc/FZmY+OPFUVBvADP2+
+	 AKXReoZM0oLOgzJFucxDVsssqoN8Cigt1XmknKyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388333AbfJRWI7 (ORCPT
+        id S2392598AbfJRWPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:08:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41132 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:15:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387966AbfJRWIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:08:37 -0400
+        id S2388347AbfJRWI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:08:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B43E22459;
-        Fri, 18 Oct 2019 22:08:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E70B22468;
+        Fri, 18 Oct 2019 22:08:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436517;
-        bh=Kov+8kMB59hOV7LwB2j8HIHtBltTnISJ1UT9ZfpCrrg=;
+        s=default; t=1571436537;
+        bh=9bqpOQ/HTpFfl9Zq2N2vZhaiabTgyqLrkdRiLClf/oc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bsq6WNJ7HHiN2e2QA8vfZzFeATkuFDtpB3x5WGQYnZxUgIV0/WDqLFH9IMLO/tnc/
-         X4GbJbQ1Cyw6QbW4gz9kaNlCgGXqcHFvwdOk3zL57PenPgn0X61a4RpB+uo5E6LAQ2
-         847GIlHIxpgZ2pV23j7mIw9BZqMSEGWphBDMgU4c=
+        b=Kj2C7mI1dWS1H+VI+rSu921AWU/4LrWza/EKTrBNwx8JLQFi8S8Eq4lm4f0gjJcDi
+         aAKjNIvHPqSip5avh8mnmUNmgXmp2ziFoPJ8X8327SzAMRoXYhtOgv/Uo2UUhlF3y8
+         sXDQ3QHDZEUhXZ3kxneyTu4lK5KqFj3YYb8OMx0w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 24/56] perf jevents: Fix period for Intel fixed counters
-Date:   Fri, 18 Oct 2019 18:07:21 -0400
-Message-Id: <20191018220753.10002-24-sashal@kernel.org>
+Cc:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>, linux-mips@linux-mips.org
+Subject: [PATCH AUTOSEL 4.14 40/56] MIPS: include: Mark __cmpxchg as __always_inline
+Date:   Fri, 18 Oct 2019 18:07:37 -0400
+Message-Id: <20191018220753.10002-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
 References: <20191018220753.10002-1-sashal@kernel.org>
@@ -59,51 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 
-[ Upstream commit 6bdfd9f118bd59cf0f85d3bf4b72b586adea17c1 ]
+[ Upstream commit 88356d09904bc606182c625575237269aeece22e ]
 
-The Intel fixed counters use a special table to override the JSON
-information.
+Commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
+forcibly") allows compiler to uninline functions marked as 'inline'.
+In cace of cmpxchg this would cause to reference function
+__cmpxchg_called_with_bad_pointer, which is a error case
+for catching bugs and will not happen for correct code, if
+__cmpxchg is inlined.
 
-During this override the period information from the JSON file got
-dropped, which results in inst_retired.any and similar running with
-frequency mode instead of a period.
-
-Just specify the expected period in the table.
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lore.kernel.org/lkml/20190927233546.11533-2-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+[paul.burton@mips.com: s/__cmpxchd/__cmpxchg in subject]
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/pmu-events/jevents.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/mips/include/asm/cmpxchg.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index 94a7cabe9b824..6f9f247b45162 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -342,12 +342,12 @@ static struct fixed {
- 	const char *name;
- 	const char *event;
- } fixed[] = {
--	{ "inst_retired.any", "event=0xc0" },
--	{ "inst_retired.any_p", "event=0xc0" },
--	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03" },
--	{ "cpu_clk_unhalted.thread", "event=0x3c" },
--	{ "cpu_clk_unhalted.core", "event=0x3c" },
--	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1" },
-+	{ "inst_retired.any", "event=0xc0,period=2000003" },
-+	{ "inst_retired.any_p", "event=0xc0,period=2000003" },
-+	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03,period=2000003" },
-+	{ "cpu_clk_unhalted.thread", "event=0x3c,period=2000003" },
-+	{ "cpu_clk_unhalted.core", "event=0x3c,period=2000003" },
-+	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1,period=2000003" },
- 	{ NULL, NULL},
- };
+diff --git a/arch/mips/include/asm/cmpxchg.h b/arch/mips/include/asm/cmpxchg.h
+index 89e9fb7976fe6..895f91b9e89c3 100644
+--- a/arch/mips/include/asm/cmpxchg.h
++++ b/arch/mips/include/asm/cmpxchg.h
+@@ -146,8 +146,9 @@ static inline unsigned long __xchg(volatile void *ptr, unsigned long x,
+ extern unsigned long __cmpxchg_small(volatile void *ptr, unsigned long old,
+ 				     unsigned long new, unsigned int size);
  
+-static inline unsigned long __cmpxchg(volatile void *ptr, unsigned long old,
+-				      unsigned long new, unsigned int size)
++static __always_inline
++unsigned long __cmpxchg(volatile void *ptr, unsigned long old,
++			unsigned long new, unsigned int size)
+ {
+ 	switch (size) {
+ 	case 1:
 -- 
 2.20.1
 
