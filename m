@@ -2,112 +2,131 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2273CA9EA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 964D1CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA0921897
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4100D21897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:55:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="M++K6rEj"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="NFnOnCss"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391356AbfJRHzH (ORCPT
+        id S2393067AbfJRHzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 03:55:07 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:11062 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728064AbfJRHzG (ORCPT
+        Fri, 18 Oct 2019 03:55:22 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53912 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728064AbfJRHzV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 03:55:06 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5da96fde0000>; Fri, 18 Oct 2019 00:55:10 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 18 Oct 2019 00:55:06 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 18 Oct 2019 00:55:06 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 18 Oct
- 2019 07:55:06 +0000
-Received: from [10.21.133.51] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 18 Oct
- 2019 07:55:03 +0000
-Subject: Re: [PATCH 4.4 00/79] 4.4.197-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20191016214729.758892904@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <11fd4e3d-7487-b7a2-9f23-2f536f1459f7@nvidia.com>
-Date:   Fri, 18 Oct 2019 08:55:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 18 Oct 2019 03:55:21 -0400
+Received: by mail-wm1-f65.google.com with SMTP id i16so5101014wmd.3
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 00:55:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=I77rKJPCs2BmaC+W7WkYB32uyg139YK/7J+1ocFiBeU=;
+        b=NFnOnCssVKrpdruLY99Y0HTP27Dh9nZMRBEIoc260EAdSUJlkdQhrvqLWiHoOWGCfn
+         EDW11cne4VSAWJ5ZZfmkRjbgP06miX6HEc78GScSxvJMqievcMPr914ShvgqhqA/S4i5
+         iMEHTjBtEdQ/PHdl5VDvw3xRX72nSgGgeLz2w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=I77rKJPCs2BmaC+W7WkYB32uyg139YK/7J+1ocFiBeU=;
+        b=r/q0JJvreV3AdynSNculP/oFhFdyi7Vn7jfq+J7gG1k/EGpzOenVyjUh76QMP04/hh
+         btQZJylkZxqk3HI7ovBavevNdLT7XZtDLSqyBgUTuE8Vzo28p4Mh5lfzix2yODjZ1IXH
+         STFHPdzhtioYdbrrf/Z8yAiT7BSnXpLCq7zYiNlGaYoJHrNanXq9/5LtrlQ/t82XLN+Z
+         h7rqWJamv5v4wshyXOWbDjfZGi3NZ8diNksFuRVll0kfx/TNl1VsyBEv3To2xLCj9ILF
+         8yjKT4XbxjfcILUB5ulajCDC0JBD3y+udfgw/qVsTlDm57TlF/ibdEWGRWNR7Of+8ERx
+         +XEw==
+X-Gm-Message-State: APjAAAUXjzt20R7X73pGH0vY72Eoub7EQCiJAbB64GJaBcZOqeVgcfiI
+        pYJ8V1NrKSmV+AV1UfGhtI582w==
+X-Google-Smtp-Source: APXvYqwEWXjktiX8T2DmtOUPiAjrE/qKQMg3I338FWYfk7AwYVhFcx+yWJvHi1+BMygr1Bzrgk0VWg==
+X-Received: by 2002:a7b:c449:: with SMTP id l9mr2646634wmi.43.1571385319385;
+        Fri, 18 Oct 2019 00:55:19 -0700 (PDT)
+Received: from miu.piliscsaba.redhat.com (178-164-242-26.pool.digikabel.hu. [178.164.242.26])
+        by smtp.gmail.com with ESMTPSA id f83sm4704537wmf.43.2019.10.18.00.55.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 00:55:18 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 09:55:12 +0200
+From:   Miklos Szeredi <miklos@szeredi.hu>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] f*xattr: allow O_PATH descriptors
+Message-ID: <20191018075512.GA2075@miu.piliscsaba.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1571385311; bh=XBd7l6J4ICA6DeU5pmurU+x1NeQvbgPFG6ah7rWtzQc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=M++K6rEj0tWrnrHkcP0GtXNEgAfWfcPu7WEg0FvsPq16D0fRtfpnY2L1w/UMRYXsR
-         lP4ztKnMuLfCE+Lq47cnNneu+vgKwhp7/aQxtJsSoiCNVe4jzErfWNXFivwVveQ1xj
-         uETqkPRTcFkBNY04ZwCfiDdUhTAIqMYXuuuu9DEAkRpLunH2NUVDwXeUDreL2TVlio
-         XjCYv7efXW0424JBeMBjyz5BW7yVm8bFmdhfMhyMDb2p8JQzi5MK6sciJAElcIkfL9
-         n1mmx0kH7sjuX2vVlRcm7mRLNPtxRAMx+7Q1Zyt/9nhO8Nc1S/ESkTockDpxTNngjD
-         aAJ9k3whUkzQA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-On 16/10/2019 22:49, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.197 release.
-> There are 79 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri 18 Oct 2019 09:43:41 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.197-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+This allows xattr ops on symlink/special files referenced by an O_PATH
+descriptor without having to play games with /proc/self/fd/NN (which
+doesn't work for symlinks anyway).
 
+This capability is the same as would be given by introducing ...at()
+variants with an AT_EMPTY_PATH argument.  Looking at getattr/setattr type
+syscalls, this is allowed for fstatat() and fchownat(), but not for
+fchmodat() and utimensat().  What's the logic?
 
-All tests passing for Tegra ...
+While this carries a minute risk of someone relying on the property of
+xattr syscalls rejecting O_PATH descriptors, it saves the trouble of
+introducing another set of syscalls.
 
-Test results for stable-v4.4:
-    6 builds:	6 pass, 0 fail
-    12 boots:	12 pass, 0 fail
-    19 tests:	19 pass, 0 fail
+Only file->f_path and file->f_inode are accessed in these functions.
 
-Linux version:	4.4.197-rc1-gcb63cd392f38
-Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
-                tegra30-cardhu-a04
+Current versions return EBADF, hence easy to detect the presense of this
+feature and fall back in case it's missing.
 
-Cheers
-Jon
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+---
+ fs/xattr.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
--- 
-nvpublic
+--- a/fs/xattr.c
++++ b/fs/xattr.c
+@@ -495,7 +495,7 @@ SYSCALL_DEFINE5(lsetxattr, const char __
+ SYSCALL_DEFINE5(fsetxattr, int, fd, const char __user *, name,
+ 		const void __user *,value, size_t, size, int, flags)
+ {
+-	struct fd f = fdget(fd);
++	struct fd f = fdget_raw(fd);
+ 	int error = -EBADF;
+ 
+ 	if (!f.file)
+@@ -587,7 +587,7 @@ SYSCALL_DEFINE4(lgetxattr, const char __
+ SYSCALL_DEFINE4(fgetxattr, int, fd, const char __user *, name,
+ 		void __user *, value, size_t, size)
+ {
+-	struct fd f = fdget(fd);
++	struct fd f = fdget_raw(fd);
+ 	ssize_t error = -EBADF;
+ 
+ 	if (!f.file)
+@@ -662,7 +662,7 @@ SYSCALL_DEFINE3(llistxattr, const char _
+ 
+ SYSCALL_DEFINE3(flistxattr, int, fd, char __user *, list, size_t, size)
+ {
+-	struct fd f = fdget(fd);
++	struct fd f = fdget_raw(fd);
+ 	ssize_t error = -EBADF;
+ 
+ 	if (!f.file)
+@@ -727,7 +727,7 @@ SYSCALL_DEFINE2(lremovexattr, const char
+ 
+ SYSCALL_DEFINE2(fremovexattr, int, fd, const char __user *, name)
+ {
+-	struct fd f = fdget(fd);
++	struct fd f = fdget_raw(fd);
+ 	int error = -EBADF;
+ 
+ 	if (!f.file)
