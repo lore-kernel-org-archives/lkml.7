@@ -2,119 +2,130 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C26BFCA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9D0CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 956F7222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F175C2064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404865AbfJRLFM (ORCPT
+        id S2409900AbfJRLFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 07:05:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48962 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390762AbfJRLFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 07:05:12 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 51730307B194;
-        Fri, 18 Oct 2019 11:05:12 +0000 (UTC)
-Received: from [10.36.118.23] (unknown [10.36.118.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F367A19C77;
-        Fri, 18 Oct 2019 11:05:10 +0000 (UTC)
-Subject: Re: memory offline infinite loop after soft offline
-From:   David Hildenbrand <david@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, Qian Cai <cai@lca.pw>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-References: <1570829564.5937.36.camel@lca.pw>
- <20191014083914.GA317@dhcp22.suse.cz>
- <20191017093410.GA19973@hori.linux.bs1.fc.nec.co.jp>
- <20191017100106.GF24485@dhcp22.suse.cz> <1571335633.5937.69.camel@lca.pw>
- <20191017182759.GN24485@dhcp22.suse.cz>
- <20191018021906.GA24978@hori.linux.bs1.fc.nec.co.jp>
- <33946728-bdeb-494a-5db8-e279acebca47@redhat.com>
- <20191018082459.GE5017@dhcp22.suse.cz>
- <f065d998-7fa3-ef9a-c2f4-5b9116f5596b@redhat.com>
- <20191018085528.GG5017@dhcp22.suse.cz>
- <3ac0ad7a-7dd2-c851-858d-2986fa8d44b6@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <85f944c7-62b8-0784-2f1f-e762b974d317@redhat.com>
-Date:   Fri, 18 Oct 2019 13:05:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 18 Oct 2019 07:05:23 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:35192 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2406290AbfJRLFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 07:05:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 119BEAB6;
+        Fri, 18 Oct 2019 04:04:57 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2AB4E3F6C4;
+        Fri, 18 Oct 2019 04:04:54 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 12:04:29 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arch@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Florian Weimer <fweimer@redhat.com>,
+        linux-kernel@vger.kernel.org, Sudakshina Das <sudi.das@arm.com>
+Subject: Re: [PATCH v2 11/12] arm64: BTI: Reset BTYPE when skipping emulated
+ instructions
+Message-ID: <20191018110428.GA27759@lakrids.cambridge.arm.com>
+References: <1570733080-21015-1-git-send-email-Dave.Martin@arm.com>
+ <1570733080-21015-12-git-send-email-Dave.Martin@arm.com>
+ <20191011142157.GC33537@lakrids.cambridge.arm.com>
+ <20191011144743.GJ27757@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <3ac0ad7a-7dd2-c851-858d-2986fa8d44b6@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 18 Oct 2019 11:05:12 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191011144743.GJ27757@arm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.10.19 13:00, David Hildenbrand wrote:
-> On 18.10.19 10:55, Michal Hocko wrote:
->> On Fri 18-10-19 10:38:21, David Hildenbrand wrote:
->>> On 18.10.19 10:24, Michal Hocko wrote:
->>>> On Fri 18-10-19 10:13:36, David Hildenbrand wrote:
->>>> [...]
->>>>> However, if the compound page spans multiple pageblocks
->>>>
->>>> Although hugetlb pages spanning pageblocks are possible this shouldn't
->>>> matter in__test_page_isolated_in_pageblock because this function doesn't
->>>> really operate on pageblocks as the name suggests.  It is simply
->>>> traversing all valid RAM ranges (see walk_system_ram_range).
->>>
->>> As long as the hugepages don't span memory blocks/sections, you are right. I
->>> have no experience with gigantic pages in this regard.
->>
->> They can clearly span sections (1GB is larger than 128MB). Why do you
->> think it matters actually? walk_system_ram_range walks RAM ranges and no
->> allocation should span holes in RAM right?
->>
+On Fri, Oct 11, 2019 at 03:47:43PM +0100, Dave Martin wrote:
+> On Fri, Oct 11, 2019 at 03:21:58PM +0100, Mark Rutland wrote:
+> > On Thu, Oct 10, 2019 at 07:44:39PM +0100, Dave Martin wrote:
+> > > Since normal execution of any non-branch instruction resets the
+> > > PSTATE BTYPE field to 0, so do the same thing when emulating a
+> > > trapped instruction.
+> > > 
+> > > Branches don't trap directly, so we should never need to assign a
+> > > non-zero value to BTYPE here.
+> > > 
+> > > Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+> > > ---
+> > >  arch/arm64/kernel/traps.c | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+> > > index 3af2768..4d8ce50 100644
+> > > --- a/arch/arm64/kernel/traps.c
+> > > +++ b/arch/arm64/kernel/traps.c
+> > > @@ -331,6 +331,8 @@ void arm64_skip_faulting_instruction(struct pt_regs *regs, unsigned long size)
+> > >  
+> > >  	if (regs->pstate & PSR_MODE32_BIT)
+> > >  		advance_itstate(regs);
+> > > +	else
+> > > +		regs->pstate &= ~(u64)PSR_BTYPE_MASK;
+> > 
+> > This looks good to me, with one nit below.
+> > 
+> > We don't (currently) need the u64 cast here, and it's inconsistent with
+> > what we do elsewhere. If the upper 32-bit of pstate get allocated, we'll
+> > need to fix up all the other masking we do:
 > 
-> Let's explore what I was thinking. If we can agree that any compound
-> page is always aligned to its size , then what I tell here is not
-> applicable. I know it is true for gigantic pages.
+> Huh, looks like I missed that.  Dang.  Will fix.
 > 
-> Some extreme example to clarify
+> > [mark@lakrids:~/src/linux]% git grep 'pstate &= ~'
+> > arch/arm64/kernel/armv8_deprecated.c:           regs->pstate &= ~PSR_AA32_E_BIT;
+> > arch/arm64/kernel/cpufeature.c:         regs->pstate &= ~PSR_SSBS_BIT;
+> > arch/arm64/kernel/debug-monitors.c:     regs->pstate &= ~DBG_SPSR_SS;
+> > arch/arm64/kernel/insn.c:       pstate &= ~(pstate >> 1);       /* PSR_C_BIT &= ~PSR_Z_BIT */
+> > arch/arm64/kernel/insn.c:       pstate &= ~(pstate >> 1);       /* PSR_C_BIT &= ~PSR_Z_BIT */
+> > arch/arm64/kernel/probes/kprobes.c:     regs->pstate &= ~PSR_D_BIT;
+> > arch/arm64/kernel/probes/kprobes.c:     regs->pstate &= ~DAIF_MASK;
+> > arch/arm64/kernel/ptrace.c:     regs->pstate &= ~SPSR_EL1_AARCH32_RES0_BITS;
+> > arch/arm64/kernel/ptrace.c:                     regs->pstate &= ~PSR_AA32_E_BIT;
+> > arch/arm64/kernel/ptrace.c:     regs->pstate &= ~SPSR_EL1_AARCH64_RES0_BITS;
+> > arch/arm64/kernel/ptrace.c:             regs->pstate &= ~DBG_SPSR_SS;
+> > arch/arm64/kernel/ssbd.c:       task_pt_regs(task)->pstate &= ~val;
+> > arch/arm64/kernel/traps.c:      regs->pstate &= ~PSR_AA32_IT_MASK;
+> > 
+> > ... and at that point I'd suggest we should just ensure the bit
+> > definitions are all defined as unsigned long in the first place since
+> > adding casts to each use is error-prone.
 > 
-> [ memory block 0 (128MB) ][ memory block 1 (128MB) ]
->                 [ compound page (128MB)  ]
+> Are we concerned about changing the types of UAPI #defines?  That can
+> cause subtle and unexpected breakage, especially when the signedness
+> of a #define changes.
 > 
-> If you would offline memory block 1, and you detect PG_offline on the
+> Ideally, we'd just change all these to 1UL << n.
 
-s/PG_offline/PG_hwpoison/ :)
-
-> first page of that memory block (PageHWPoison(compound_head(page))), you
-> would jump over the whole memory block (pfn += 1 <<
-> compound_order(page)), leaving 64MB of the memory block unchecked.
-> 
-> Again, if any compound page has the alignment restrictions (PFN of head
-> aligned to 1 << compound_order(page)), this is not possible.
-> 
-> 
-> If it is, however, possible, the "clean" thing would be to only jump
-> over the remaining part of the compound page, e.g., something like
-> 
-> pfn += (1 << compound_order(page)) - (page - compound_head(page)));
-> 
-> 
-> 
-
-
--- 
+I agree that's the ideal -- I don't know how concerned we are w.r.t. the
+UAPI headers, I'm afraid.
 
 Thanks,
-
-David / dhildenb
+Mark.
