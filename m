@@ -2,95 +2,330 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D73CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 23:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A1CCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 23:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7552A21852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 23:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36AFB21852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 23:15:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="iRgnRoiy"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HVcPABja"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730146AbfJRXMQ (ORCPT
+        id S1731042AbfJRXPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 19:12:16 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34743 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbfJRXMP (ORCPT
+        Fri, 18 Oct 2019 19:15:11 -0400
+Received: from mail-pl1-f173.google.com ([209.85.214.173]:39376 "EHLO
+        mail-pl1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726988AbfJRXPL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 19:12:15 -0400
-Received: by mail-oi1-f194.google.com with SMTP id 83so6624095oii.1
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 16:12:15 -0700 (PDT)
+        Fri, 18 Oct 2019 19:15:11 -0400
+Received: by mail-pl1-f173.google.com with SMTP id s17so3546209plp.6
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 16:15:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LG5mtPGY98QkEsSFwWtnXL/ah69Lb+RuUfP4f3yut5c=;
-        b=iRgnRoiyWhuVYKScQU1EUUBj9SAQggmJSx1lqnfH79UM+KhZWiBFpRGkZPT+FoI24s
-         rNiGuOA4828mM5RiW5KQDGn3B4wIKJk5jigQO8F5uPQlG0DZao8n2WwwlwIIhQ91+kE0
-         yfPK0De6IcJ369t6CxCZI+VLyBrFaxdJl921WLd+mXlj0z2MWnXSPnGbAR8ep/FkW6S/
-         p4eAmO7of8K/7I+JTt+Cd5E3SOdwG5NWsYJdjnmm4pkSkeWva6AQfaSSKrTuGfFSsU3+
-         TIa+g9AlDgKhpeIRpVNgnpWnkGszAVWI3xqtmDHKqlKZPc2FJwNLuKjyy4mRo/vF8a0I
-         NS2g==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=r49ZllXThzSFV5aFOXd/geGJKWLclCtH2FZkf0rM5lI=;
+        b=HVcPABjalAXjLkiWVeC5PYXmukZkMMWLpJpkZ8MzpnS4oUjS7GcXBSXBQJUxEkOz3V
+         4nKJSWWQx+TX98XwzCLEOwB9mYbCGnG8IoxEnpYgWGdhfzPtaTvMzsOY1W+JiNdKTaJc
+         x2XAw7SNazD3fedslXKHybpjVtB3R9PD72zT0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LG5mtPGY98QkEsSFwWtnXL/ah69Lb+RuUfP4f3yut5c=;
-        b=lnfE5NhoDlU4ulU3U+rtCX69oN5jhPuK2iQyXA5ffy1CsiUDkgJyUFYBdTgFzSFgBk
-         Voplez0d+3zm6AJtnEuC/aTCFJE7fN+VLsN1BeVmz16HFWklcljg6ki8+7mOHaJdL+DE
-         D4q/7fBznwwATuHBW8LhjlqsJuKN5LXdDxCd2STh36hnTa/DUcdEueKJXlKZNACjz0s9
-         sMmXSBLqH5/Qo6Of1PCx5o49JI4TPXlpxICj+0oJfH6Vdt7/DdfXvB5y4u6Y4HmXwkES
-         4ydsJGmivchG+WUbBHOxF7NKQ5C9CQhbv0Z1EOqms3cRDFd10Orn/OXwJauvqyx0pr0W
-         Tipg==
-X-Gm-Message-State: APjAAAW5NicF6Bilg9nczcfRm//GXWc4jgOTCb1KSusI+cg37dByOY/E
-        Hjgdu/6xLUkI1+RrjoODzUBaLEjdPJXVd8Nl4d1+W24W
-X-Google-Smtp-Source: APXvYqx+l3J9Z5dyG0kp74OJpHiYKU8uW2txO74LFYJXiLc5NyULMYmNckFHj4n1GLftMrpa3VrQHLpBauE8W8Stuzs=
-X-Received: by 2002:a05:6808:7cd:: with SMTP id f13mr9418587oij.70.1571440334999;
- Fri, 18 Oct 2019 16:12:14 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=r49ZllXThzSFV5aFOXd/geGJKWLclCtH2FZkf0rM5lI=;
+        b=iCIecYp7P0C1jOJJzAlderpQJK5EOMfd3ZxPn1p9vgRthdMhQu+Cu1usZbCAlqE7jL
+         +lutJMW1DKWanrz4B2EeXcb4my4ugLMzKFGvLaRvH4EfI4MEi3Y718g3ueF1AKytyFsL
+         XSumwFL/XpHoXsQJOrWy9Tl8GQflKQYcJuskhEDC4ZZTHLb+IVDexEBMdnGk25PpasWF
+         hbB7Wy4vl0bpc+LaUQdLX923oDDDojrl/9L7bwPcPgs9hxLIqKT9C66CATALP3KbLtvu
+         jrKuRt4CCvS4TDuocSdtjWK5g4IIq96U+cyikYL/FHijrU0uFR53tYFbv6LQVKFsSOam
+         qpZw==
+X-Gm-Message-State: APjAAAX/GR9/D0h/MCEkp9dlr17Y3kud3dw7dCGubR6r4jpHsZtweYoH
+        kW7ZbmmEZ2PC/YDaF/FpctlW+Q==
+X-Google-Smtp-Source: APXvYqxGNM2lHYVYNqwIqgDGZkjX4upNRgMsWPVwEywHIa+mnak55iPZcmII7uIq0q3+YLXlLn8T6A==
+X-Received: by 2002:a17:902:8346:: with SMTP id z6mr113696pln.280.1571440510130;
+        Fri, 18 Oct 2019 16:15:10 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id q143sm7759338pfq.103.2019.10.18.16.15.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Oct 2019 16:15:09 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 16:15:08 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        c-hbandi@codeaurora.org, bgodavar@codeaurora.org,
+        linux-bluetooth@vger.kernel.org,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Bluetooth: hci_qca: Add delay for wcn3990 stability
+Message-ID: <20191018231508.GD20212@google.com>
+References: <20191017212955.6266-1-jeffrey.l.hugo@gmail.com>
+ <20191018180339.GQ87296@google.com>
+ <CAOCk7NrN0sjLk3onvZn7+bhs_v3A4H6CHh=XPo_NU2XzUWeEGw@mail.gmail.com>
+ <20191018194039.GB20212@google.com>
+ <CAOCk7NqacfVLzKueTRTFQ6aWbLXFyMQaQNXeXENzLTyMNLSp9w@mail.gmail.com>
+ <20191018213354.GC20212@google.com>
+ <CAOCk7NqtYjJ5S5XWsLTrQN0qKU8-R83E_b=+cjebpAJ0+UGdxw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191018082354.GA9296@shao2-debian> <20191018094810.GB18593@quack2.suse.cz>
-In-Reply-To: <20191018094810.GB18593@quack2.suse.cz>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 18 Oct 2019 16:12:03 -0700
-Message-ID: <CAPcyv4jjfT4xOQTrckEmX0Z_o6MbsmHz-qvCLAGSOPEe3-X0QA@mail.gmail.com>
-Subject: Re: [dax] 23c84eb783: fio.write_bw_MBps -61.6% regression
-To:     Jan Kara <jack@suse.cz>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Robert Barror <robert.barror@intel.com>,
-        Seema Pandit <seema.pandit@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        lkp@lists.01.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAOCk7NqtYjJ5S5XWsLTrQN0qKU8-R83E_b=+cjebpAJ0+UGdxw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 2:48 AM Jan Kara <jack@suse.cz> wrote:
->
-> Hello!
->
-> On Fri 18-10-19 16:23:54, kernel test robot wrote:
-> > FYI, we noticed a -61.6% regression of fio.write_bw_MBps due to commit:
+On Fri, Oct 18, 2019 at 04:36:23PM -0600, Jeffrey Hugo wrote:
+> On Fri, Oct 18, 2019 at 3:33 PM Matthias Kaehlcke <mka@chromium.org> wrote:
 > >
-> >
-> > commit: 23c84eb7837514e16d79ed6d849b13745e0ce688 ("dax: Fix missed wakeup with PMD faults")
-> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
->
-> Thanks for report! Please check whether commit 61c30c98ef17 "dax: Fix
-> missed wakeup in put_unlocked_entry()" influences the throughput. Because
-> without that fix, the identified commit may result in processes sleeping
-> unnecessarily long on entry locks.
+> > On Fri, Oct 18, 2019 at 01:51:39PM -0600, Jeffrey Hugo wrote:
+> > > On Fri, Oct 18, 2019 at 1:40 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+> > > >
+> > > > On Fri, Oct 18, 2019 at 12:30:09PM -0600, Jeffrey Hugo wrote:
+> > > > > On Fri, Oct 18, 2019 at 12:03 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+> > > > > >
+> > > > > > On Thu, Oct 17, 2019 at 02:29:55PM -0700, Jeffrey Hugo wrote:
+> > > > > > > On the msm8998 mtp, the response to the baudrate change command is never
+> > > > > > > received.  On the Lenovo Miix 630, the response to the baudrate change
+> > > > > > > command is corrupted - "Frame reassembly failed (-84)".
+> > > > > > >
+> > > > > > > Adding a 50ms delay before re-enabling flow to receive the baudrate change
+> > > > > > > command response from the wcn3990 addesses both issues, and allows
+> > > > > > > bluetooth to become functional.
+> > > > > >
+> > > > > > From my earlier debugging on sdm845 I don't think this is what happens.
+> > > > > > The problem is that the wcn3990 sends the response to the baudrate change
+> > > > > > command using the new baudrate, while the UART on the SoC still operates
+> > > > > > with the prior speed (for details see 2faa3f15fa2f ("Bluetooth: hci_qca:
+> > > > > > wcn3990: Drop baudrate change vendor event"))
+> > > > > >
+> > > > > > IIRC the 50ms delay causes the HCI core to discard the received data,
+> > > > > > which is why the "Frame reassembly failed" message disappears, not
+> > > > > > because the response was received. In theory commit 78e8fa2972e5
+> > > > > > ("Bluetooth: hci_qca: Deassert RTS while baudrate change command")
+> > > > > > should have fixed those messages, do you know if CTS/RTS are connected
+> > > > > > on the Bluetooth UART of the Lenovo Miix 630?
+> > > > >
+> > > > > I was testing with 5.4-rc1 which contains the indicated RTS fix.
+> > > > >
+> > > > > Yes, CTS/RTS are connected on the Lenovo Miix 630.
+> > > > >
+> > > > > I added debug statements which indicated that data was received,
+> > > > > however it was corrupt, and the packet type did not match what was
+> > > > > expected, hence the frame reassembly errors.
+> > > >
+> > > > Do you know if any data is received during the delay? In theory that
+> > > > shouldn't be the case since RTS is deasserted, just double-checking.
+> > >
+> > > I don't think so, but I've run so many tests, I'm not 100% positive.
+> > > Let me go double check and get back to you.
+> 
+> Apparently I'd be wrong.  I instrumented the uart driver so that it
+> would indicate when it got data from the bam.  Apparently its getting
+> the data during the 50ms sleep, approximately right after the host
+> baud rate is set.
 
-I've got several reports of v5.3 performance regressions tracking back
-to this change. I instrumented the ndctl "dax.sh" unit test to
-validate that it is getting huge page faults and it always falls back
-to 4K starting with these commits. It looks like the xa_is_internal()
-returns true for any DAX_LOCKED entry.
+Good finding!
+
+> > >
+> > > >
+> > > > What happens if you add a longer delay (e.g. 1s) before/after setting
+> > > > the host baudrate?
+> > >
+> > > Hmm, not exactly sure.  I will test.
+> 
+> Adding a 1 second delay before setting the host baud rate did not
+> change the observed results - still received the data during the 50ms
+> sleep after the host baud rate set operation.
+> Adding a 1 second delay after setting the host baud rate did not
+> change when the data was received.
+
+Thanks for testing!
+
+> > >
+> > > >
+> > > > > In response to this patch, Balakrishna pointed me to a bug report
+> > > > > which indicated that some of the UART GPIO lines need to have a bias
+> > > > > applied to prevent errant data from floating lines -
+> > > > >
+> > > > > https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1391888
+> > > >
+> > > > Yeah, that was another source of frame reassembly errors that we were
+> > > > seeing on SDM845.
+> > > >
+> > > > Balakrishna, please post these kind of replies on-list, so that
+> > > > everybody can benefit from possible solutions or contribute to the
+> > > > discussion.
+> > > >
+> > > > > It turns out this fix was never applied to msm8998.  Applying the fix
+> > > > > does cause the the frame reassembly errors to go away, however then
+> > > > > the host SoC never receives the baud rate change response (I increased
+> > > > > the timeout from 2faa3f15fa2f ("Bluetooth: hci_qca: wcn3990: Drop
+> > > > > baudrate change vendor event") to 5 seconds).  As of now, this patch
+> > > > > is still required.
+> > > >
+> > > > Interesting.
+> > > >
+> > > > FTR, this is the full UART pin configuration for cheza (SDM845):
+> > > >
+> > > > &qup_uart6_default {
+> > > >         /* Change pinmux to all 4 pins since CTS and RTS are connected */
+> > > >         pinmux {
+> > > >                 pins = "gpio45", "gpio46",
+> > > >                        "gpio47", "gpio48";
+> > > >         };
+> > > >
+> > > >         pinconf-cts {
+> > > >                 /*
+> > > >                  * Configure a pull-down on 45 (CTS) to match the pull of
+> > > >                  * the Bluetooth module.
+> > > >                  */
+> > > >                 pins = "gpio45";
+> > > >                 bias-pull-down;
+> > > >         };
+> > > >
+> > > >         pinconf-rts-tx {
+> > > >                 /* We'll drive 46 (RTS) and 47 (TX), so no pull */
+> > > >                 pins = "gpio46", "gpio47";
+> > > >                 drive-strength = <2>;
+> > > >                 bias-disable;
+> > > >         };
+> > > >
+> > > >         pinconf-rx {
+> > > >                 /*
+> > > >                  * Configure a pull-up on 48 (RX). This is needed to avoid
+> > > >                  * garbage data when the TX pin of the Bluetooth module is
+> > > >                  * in tri-state (module powered off or not driving the
+> > > >                  * signal yet).
+> > > >                  */
+> > > >                 pins = "gpio48";
+> > > >                 bias-pull-up;
+> > > >         };
+> > > > };
+> > > >
+> > > > Does this correspond to what you tried on the Lenovo Miix 630?
+> > >
+> > > Which GPIO maps to which pin is different -
+> > > 45 - TX
+> > > 46 - RX
+> > > 47 - CTS
+> > > 48 - RFR (RTS)
+> > >
+> > > However, accounting for that, yes that corresponds to what I used.
+> >
+> > Thanks for re-confirming.
+> >
+> > > > > I have no idea why the delay is required, and was hoping that posting
+> > > > > this patch would result in someone else providing some missing pieces
+> > > > > to determine the real root cause.  I suspect that asserting RTS at the
+> > > > > wrong time may cause an issue for the wcn3990, but I have no data nor
+> > > > > documentation to support this guess.  I welcome any further insights
+> > > > > you may have.
+> > > >
+> > > > Unfortunately I don't have a clear suggestion at this point, debugging
+> > > > the original problem which lead to 2faa3f15fa2f ("Bluetooth: hci_qca:
+> > > > wcn3990: Drop baudrate change vendor event") involved quite some time
+> > > > and hooking up a scope/logic analyzer ...
+> > > >
+> > > > I also suspect RTS is involved, and potentially the configuration of
+> > > > the pulls. It might be interesting to analyze the data that leads to
+> > > > the frame assembly error and determine if it is just noise (wrong
+> > > > pulls/drive strength?) or received with a non-matching baud-rate.
+> > >
+> > > I don't have a scope/logic analyzer, but since I hooked up the
+> > > blsp_bam I'm able to see the raw data from the uart before it gets to
+> > > the HCI stack or anything.  As a side note, having the bam or not
+> > > seemed to have no effect on the issue.
+> >
+> > It's not exactly the same though. I suppose with the blsp_bam you only
+> > see the actual data when the UART runs at the same speed as it's
+> > counterpart. With a logic analyzer you can change the speed after
+> > data capture, which might convert apparent garbage into reasonable
+> > data.
+> >
+> > > Most of the time the data was one byte (zero), some times it was a
+> > > string of zero bytes.  Rarely it would be random data.
+> >
+> > In terms of data ss there difference between a string of zero bytes
+> > and a single zero byte?
+> 
+> Per my notes, the bam would indicate that it processed one byte, which
+> was a 0, or 6 bytes, all of which were zero.
+
+ok
+
+> > From my notes the response (vendor event) to a baudrate change
+> > command on the WCN3990 is:
+> >
+> > 04 0e 04 01 00 00 00
+> >
+> > The tail *might* be the zero(s) you are seeing, and the first part gets
+> > lost for some reason?
+> 
+> So, if that were the case, then the number of processed bytes would
+> probably 1, 2, or 3 which doesn't seem to line up fully with 1 or 6.
+
+ack
+
+> > A simplified version of the code in question:
+> >
+> >   set_RTS(false)
+> >
+> >   hci_set_baudrate(br)
+> >   host_set_baudrate(br)
+> >
+> >   msleep(50); // why is this needed???
+> >   set_RTS(true)
+> >
+> >   // supposedly wcn3990 now sends vendor event using the new baudrate
+> >
+> >   wait_for_vendor_event()
+> >     // ok with msleep, otherwise frame reassembly error
+> 
+> Yep, I'm with you here.
+> 
+> >
+> > Maybe the MSM8998 UART (driver) currently needs the delay to fully switch to
+> > the new baudrate? Perhaps the pinconfig still needs tweaking of some kind?
+> 
+> So, I kinda wonder if its something else.  The uart driver on msm8998
+> is not the same as on sdm845.  The msm8998 one behaves strangely in my
+> opinion.  Any configuration (set the baud, change the flow control,
+> etc) results in a complete reinit of the entire uart.  I wonder if
+> there is a glitch, and the driver ends up inadvertently enabling flow
+> during the host baud rate switch.  If I look at the timing between
+> 50ms delay and no 50ms delay, it looks like the set_RTS(true)
+> operation occurs at the approximate same time the data would be
+> received had the 50ms delay been in place.  I wonder if since the uart
+> driver completely reconfigures everything as a result of the
+> set_RTS(true) operation, that is causing the data to be dropped -
+> either in hardware or software.  More investigation would be required
+> to find data to validate or disprove my guesses about these two
+> possible issues.
+
+A RTS glitch and data being dropped during the port reconfiguration is a
+possiblity. However, with the delay the data that otherwise would cause
+the frame reassembly error is received during the delay and discarded
+(I don't recall what exactly leads to discarding), but we still receive
+the vendor event we are waiting for (to drop it). This strongly suggests
+that the data received during the delay is not the vendor event, but
+something else. My first guess would be garbage as artifact of the
+baudrate switch and/or pin config. My second guess would be an additional
+HCI event, but I don't recall having seen that when I investigated the
+problem with changing the baudrate on cheza.
+
+> > You said when you apply the full configuration used on cheza you don't
+> > receive the response to the baudrate change command. Does it work when you
+> > only configure the pull-up on the RX (host) pin?
+> 
+> It works roughly 50% of the time, although in one of the runs init
+> later failed because of a frame reassembly error during the tlv
+> transfer.
+
+Thanks for trying, I'm still wondering if some tweaking is needed, but
+apparently just matching cheza/sdm845 doesn't work.
