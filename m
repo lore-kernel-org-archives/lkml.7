@@ -2,168 +2,139 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 646CECA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C295FCA9EA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30F822089C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B9392089C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:08:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="V9Lby2Rl"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="H+ZDs2XY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504943AbfJRIIF (ORCPT
+        id S2504963AbfJRIIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:08:05 -0400
-Received: from mail-eopbgr730083.outbound.protection.outlook.com ([40.107.73.83]:27820
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391374AbfJRIIE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 04:08:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XdeeqVcEF2HmZB6padbz9/Lbu+13RLmrwg4irEjnVt0pnwH3hJOpVVZeT9tX/gQBl+RZRC9mbufEoEVqBcQX4g8bi6QQ/qypM3dly7Mrf53q3ro3e4UFVLJEPpCpJZMzqQSjl7JW2jicg3JfabqSKzrAYTVPU573UB0xVlcSxrIawlrPksXcOTYXIzmWnt+mCBHqLW7Ke3KqBpW87YPTBtyIiBXcc54kXpcr1Yw89ZnT8qbPcKwpIvadSCJcZps9HQRXQBmc52kY9+6eRyI+46GDit+q74kCAokLWe1aq/hVXcpHGeAhadJIhtfqywNnyn1+59lhInhpnnLjnCV1Kg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SPZbVR1+0g24dXFjPgttoII5bqlwh3+NG8UyiP13LUM=;
- b=Gh4BDv3lWhvml5YXCCodyups+ajsS/4+Mol36X/hz7W3cXe1xL5BeW0to6KKfeV9bZcJ3mUJrdUMob3QSCelFIyWSpe1M1voeH/GCy45E2aIFQ0dBmmNJlQfobGogF2SZe5IXkidSZhFR1oNhlU5JaDABDx5rJ3qN1meVA5lBocREIPgSzk02wkWt+AVfJLc0gAw8w7pPH8kamZyUvvpKRZfyqSkSP+VDacSBsHvS/cbcLhdBvniI3PQT3gIUom1FPKYTKcs8fQuoSA5I4OKmk0vZKUxQHMHotH8jRPQdawfl0zJFkInRr5/tD9aMXfamtBrIuu7ey8mFweFCcIvug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=davemloft.net smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Fri, 18 Oct 2019 04:08:51 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:32859 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728146AbfJRIIu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 04:08:50 -0400
+Received: by mail-io1-f67.google.com with SMTP id z19so6430941ior.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 01:08:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SPZbVR1+0g24dXFjPgttoII5bqlwh3+NG8UyiP13LUM=;
- b=V9Lby2RlhnxwfwSCk2m1+X3yrLXm6F2wK45y6uiScUbxxlR5T3NTYIJcSrllsKEgLcObTuK1z3E2V7X1s8M+95+Tk/MbDgBXFKrgPWzrz3Y2KXaoJgug4Hp0oGY2MSRXiAJ67Gjk3ahpsnSTHyM+XhnnBI4nNQ40HKPrdCTTfLc=
-Received: from CY4PR02CA0023.namprd02.prod.outlook.com (2603:10b6:903:18::33)
- by SN6PR02MB3967.namprd02.prod.outlook.com (2603:10b6:805:2b::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.19; Fri, 18 Oct
- 2019 08:08:01 +0000
-Received: from SN1NAM02FT038.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::202) by CY4PR02CA0023.outlook.office365.com
- (2603:10b6:903:18::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.16 via Frontend
- Transport; Fri, 18 Oct 2019 08:08:01 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; davemloft.net; dkim=none (message not signed)
- header.d=none;davemloft.net; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT038.mail.protection.outlook.com (10.152.72.69) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2367.14
- via Frontend Transport; Fri, 18 Oct 2019 08:08:00 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1iLNIm-0000mD-5W; Fri, 18 Oct 2019 01:08:00 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1iLNIh-0007n6-1Z; Fri, 18 Oct 2019 01:07:55 -0700
-Received: from xsj-pvapsmtp01 (xsj-pvapsmtp01.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x9I87jHK015921;
-        Fri, 18 Oct 2019 01:07:45 -0700
-Received: from [172.30.17.123]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1iLNIX-0007lR-1F; Fri, 18 Oct 2019 01:07:45 -0700
-Subject: Re: [PATCH net-next] net: axienet: In kconfig add ARM64 as supported
- platform
-To:     Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        davem@davemloft.net, netdev@vger.kernel.org
-Cc:     michal.simek@xilinx.com, anirudha.sarangi@xilinx.com,
-        john.linn@xilinx.com, mchehab+samsung@kernel.org,
-        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1571381686-13045-1-git-send-email-radhey.shyam.pandey@xilinx.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <eb41070c-8393-ec4e-f9c9-f16d082fbe1c@xilinx.com>
-Date:   Fri, 18 Oct 2019 10:07:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OsOgYMSsyTjbkroAj3oOC8H18OvB8iGYAKFSlXx+BSY=;
+        b=H+ZDs2XYdH0O56HX3VDXwCQVFh++q5NGu+haqRDwCYKEITTaHB8d4gMRkeoXIC7eJR
+         hPkFtA7PA/lYUOO+uW/cm6Yhd+JCwdI4k8zip2AkFKOZCJbupK2V2DlIlzPsx93h3Vlp
+         9srOuJ/tZx9Kr/K/k2aNXTxcy8oxiyKZD94TkzftcCLzffOo4CD4kehQPRBpknijaiKY
+         rWDp0/O/p2N/5GiCXhxiKja78a3EMuypOdTwt2Dr3at0jZU+hjJ8sZ+NoF8HAnhujla5
+         H55cVpgB2Di9NHoHPKj2rbGh37oBagcQZSglTzl3W+Exw7kBuTVqupoCCGkjhb82EpIf
+         j8PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OsOgYMSsyTjbkroAj3oOC8H18OvB8iGYAKFSlXx+BSY=;
+        b=RWOLleGRMvlE9yfrelHf3SL091iZBIo70K2VAPS2cemQOx1JIQEMQrR062Q3McUgFA
+         woCSn/a9zl0WHoY8gH+UJmhGky0md4PhOWvXCEP8LrzTCTK133EU7MUiYZgs1NOWfX6E
+         P7UKQYDz5M5zfhm+N5dYzwQYxj+COk6QDu/NNMIpP8mdohWN98MgFoK1SlSonLX7kXHq
+         +bDV0a89nUKHZ02VchtAVjAljLfMYjrSSjaeF4dtA/ESR1mHlR9V4sm53oZaOOPbeJKR
+         lKyVCnB3bjRgHtWk1WneMzJHr766PpvOwhtbBneFPccuRFGYQEc7WqoeBl/AE7724xzZ
+         i3rw==
+X-Gm-Message-State: APjAAAX4Wy+14UOZcKxnWuTP5n5KPaXYJwPzrXx4ylN45YTMWJsCXe/e
+        ++6i1cf4WpF6QIdpVGK8HY/M0aBXqYE=
+X-Google-Smtp-Source: APXvYqyjWXiLACNA3jdhTpVfFb8nQ3bXXxtGvxNttTT/x6HmX+quBkUlt6blvv678FE4MDtZIT7NOA==
+X-Received: by 2002:a6b:5404:: with SMTP id i4mr7524183iob.204.1571386129901;
+        Fri, 18 Oct 2019 01:08:49 -0700 (PDT)
+Received: from viisi.Home ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id z86sm2121026ilf.73.2019.10.18.01.08.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 01:08:49 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+To:     linux-riscv@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/8] riscv: resolve most warnings from sparse
+Date:   Fri, 18 Oct 2019 01:08:33 -0700
+Message-Id: <20191018080841.26712-1-paul.walmsley@sifive.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <1571381686-13045-1-git-send-email-radhey.shyam.pandey@xilinx.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(396003)(136003)(376002)(199004)(189003)(70586007)(4326008)(50466002)(47776003)(8676002)(31696002)(70206006)(65806001)(81166006)(65956001)(5660300002)(36756003)(9786002)(81156014)(8936002)(478600001)(316002)(2616005)(44832011)(336012)(6666004)(126002)(31686004)(36386004)(6246003)(106002)(476003)(305945005)(356004)(11346002)(186003)(2906002)(230700001)(26005)(229853002)(58126008)(23676004)(426003)(446003)(2486003)(486006)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB3967;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8695f6cb-5ce8-4317-992d-08d753a24b24
-X-MS-TrafficTypeDiagnostic: SN6PR02MB3967:
-X-Microsoft-Antispam-PRVS: <SN6PR02MB3967687650A478FA792C61DDC66C0@SN6PR02MB3967.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-Forefront-PRVS: 01949FE337
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yrmu1g9Ryw0QdQdi9axOai5Qc01deVTtjRdGhUnkF/7ThbC+Rqhdi0fIvZbzBq20c+TGLObf8tHBaeh0ApokRt4ZbBUxjMOaO4xtbXr8MQK0z683pZWhDHbaQknaAPtfGKARG3EVx1p4nr8xEwasA6tYFejslzafBxMpSLHcXwOsjgzZ6mSth8Sw9QAEdO7g5yjjxlw7VP0hfK3Pqxo/A1OQJH+p2YrQRVYHoCbL8cZ3lVyk41zIbyQbcZESxB7QVvfOc4ICR1TJrV7fviLAAqXwbQ7FAkKNQ1AeDJVULcAv2LeWJV1mqzPAfJNx9vrKKkavZJa+aLPuPpuHks2vNo97UEEhiT6kuvhNLFxQUm8nW98KJAMq5GOQvBzM3PNtcsiRRucgOXQN5ZOdT/mOY0hlerjJ3JkSzw9Rr/I43tU=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2019 08:08:00.5580
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8695f6cb-5ce8-4317-992d-08d753a24b24
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB3967
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18. 10. 19 8:54, Radhey Shyam Pandey wrote:
-> xilinx axi_emac driver is supported on ZynqMP UltraScale platform(ARM64).
-> So enable it in kconfig. Basic sanity testing is done on zu+ mpsoc zcu102
-> evaluation board.
-> 
-> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-> ---
->  drivers/net/ethernet/xilinx/Kconfig | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/xilinx/Kconfig b/drivers/net/ethernet/xilinx/Kconfig
-> index 8d994ce..a616bdc 100644
-> --- a/drivers/net/ethernet/xilinx/Kconfig
-> +++ b/drivers/net/ethernet/xilinx/Kconfig
-> @@ -6,7 +6,7 @@
->  config NET_VENDOR_XILINX
->  	bool "Xilinx devices"
->  	default y
-> -	depends on PPC || PPC32 || MICROBLAZE || ARCH_ZYNQ || MIPS || X86 || ARM || COMPILE_TEST
-> +	depends on PPC || PPC32 || MICROBLAZE || ARCH_ZYNQ || MIPS || X86 || ARM || ARM64 || COMPILE_TEST
+Resolve most warnings from the 'sparse' static analysis tool for the
+arch/riscv codebase.  This makes life easier for us as maintainers,
+and makes it easier for developers to use static analysis tools on
+their own changes.
 
-You can remove ARCH_ZYNQ from this line because ARM is there already.
+This third version drops the patch that adds one of the
+__riscv_cmodel* preprocessor definitions, and uses __visible for C
+functions called only by assembly code - both based on some guidance
+from Luc Van Oostenryck.
+
+This patch series incorporates some changes based on feedback from
+Christoph Hellwig <hch@lst.de> and Luc Van Oostenryck
+<luc.vanoostenryck@gmail.com>.
+
+Applies on the current riscv fixes branch that is based on v5.4-rc3.
+
+- Paul
 
 
->  	---help---
->  	  If you have a network (Ethernet) card belonging to this class, say Y.
->  
-> @@ -26,11 +26,11 @@ config XILINX_EMACLITE
->  
->  config XILINX_AXI_EMAC
->  	tristate "Xilinx 10/100/1000 AXI Ethernet support"
-> -	depends on MICROBLAZE || X86 || ARM || COMPILE_TEST
-> +	depends on MICROBLAZE || X86 || ARM || ARM64 || COMPILE_TEST
->  	select PHYLINK
->  	---help---
->  	  This driver supports the 10/100/1000 Ethernet from Xilinx for the
-> -	  AXI bus interface used in Xilinx Virtex FPGAs.
-> +	  AXI bus interface used in Xilinx Virtex FPGAs and Soc's.
->  
->  config XILINX_LL_TEMAC
->  	tristate "Xilinx LL TEMAC (LocalLink Tri-mode Ethernet MAC) driver"
-> 
+Paul Walmsley (8):
+  riscv: add prototypes for assembly language functions from entry.S
+  riscv: add prototypes for assembly language functions from head.S
+  riscv: init: merge split string literals in preprocessor directive
+  riscv: add missing prototypes
+  riscv: mark some code and data as file-static
+  riscv: add missing header file includes
+  riscv: fp: add missing __user pointer annotations
+  riscv: for C functions called only from assembly, mark with __visible
 
-M
+Kernel object size difference:
+  text	   data	    bss	    dec	    hex	filename
+6664246	2136664	 312608	9113518	 8b0fae	vmlinux.rv64.orig
+6664178	2136632	 312608	9113418	 8b0f4a	vmlinux.rv64.patched
+6444536	1797560	 255184	8497280	 81a880	vmlinux.rv32.orig
+6444492	1797536	 255184	8497212	 81a83c	vmlinux.rv32.patched
+
+ arch/riscv/include/asm/irq.h        |  6 ++++++
+ arch/riscv/include/asm/pgtable.h    |  2 ++
+ arch/riscv/include/asm/processor.h  |  4 ++++
+ arch/riscv/include/asm/ptrace.h     |  2 ++
+ arch/riscv/include/asm/smp.h        |  2 ++
+ arch/riscv/include/asm/switch_to.h  |  1 +
+ arch/riscv/kernel/cpufeature.c      |  1 +
+ arch/riscv/kernel/entry.h           | 29 +++++++++++++++++++++++++++++
+ arch/riscv/kernel/head.h            | 21 +++++++++++++++++++++
+ arch/riscv/kernel/module-sections.c |  1 +
+ arch/riscv/kernel/process.c         |  2 ++
+ arch/riscv/kernel/ptrace.c          |  4 ++--
+ arch/riscv/kernel/reset.c           |  1 +
+ arch/riscv/kernel/setup.c           |  2 ++
+ arch/riscv/kernel/signal.c          |  6 ++++--
+ arch/riscv/kernel/smp.c             |  2 ++
+ arch/riscv/kernel/smpboot.c         |  3 +++
+ arch/riscv/kernel/stacktrace.c      |  6 ++++--
+ arch/riscv/kernel/syscall_table.c   |  1 +
+ arch/riscv/kernel/time.c            |  1 +
+ arch/riscv/kernel/traps.c           |  2 ++
+ arch/riscv/kernel/vdso.c            |  3 ++-
+ arch/riscv/mm/context.c             |  1 +
+ arch/riscv/mm/fault.c               |  2 ++
+ arch/riscv/mm/init.c                | 17 ++++++++++-------
+ arch/riscv/mm/sifive_l2_cache.c     |  2 +-
+ 26 files changed, 109 insertions(+), 15 deletions(-)
+ create mode 100644 arch/riscv/kernel/entry.h
+ create mode 100644 arch/riscv/kernel/head.h
+
+-- 
+2.23.0
+
