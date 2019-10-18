@@ -2,125 +2,96 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26574CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A18CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F05FB222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20824222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:00:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="iNxk/lYC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JljwbGRT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439278AbfJRE6q (ORCPT
+        id S2440826AbfJRFAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 00:58:46 -0400
-Received: from condef-10.nifty.com ([202.248.20.75]:37434 "EHLO
-        condef-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436473AbfJRE6p (ORCPT
+        Fri, 18 Oct 2019 01:00:01 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34455 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbfJRFAA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 00:58:45 -0400
-Received: from conuserg-12.nifty.com ([10.126.8.75])by condef-10.nifty.com with ESMTP id x9I4pfCF007484;
-        Fri, 18 Oct 2019 13:51:41 +0900
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x9I4otrw003608;
-        Fri, 18 Oct 2019 13:50:55 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x9I4otrw003608
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1571374256;
-        bh=g3k4SKCLKg1HVJs8XOHlrlk6IW7BWaci6zok4NIZI/U=;
-        h=From:To:Cc:Subject:Date:From;
-        b=iNxk/lYCnVuVic2I0bv+2ctP+0/Cm+8G76ozpRQGCQO5g3XRzPr9TkHwF8BSKrkYm
-         g8P3uXWpjYBkOP6HvzlkeiDwU86Q3B19HJxlDXpFWjYdzInL18bqPT7t5IeX+R6pEJ
-         1O49UlTxg+iTTDj0uP2oZ9xjxGwdYo9ADAiYE56NHaXfHAeXZnbIT6IuJE9lnM/gT7
-         bOYH8fvd8jtQGvq4ho4m2MwNw4fKFOpZhk/PVXSuheZUkR+apM7kHj0+rOISyLGSa1
-         AgKsq5asjwO/Jt7P1df5y2gGOisFbv8ZmvhtXTh1jVsZ5Im53Xdzpfc4rFR2lNLk6x
-         kU6JqV2Ohvjig==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-spdx@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH] export,module: add SPDX GPL-2.0 license identifier to headers with no license
-Date:   Fri, 18 Oct 2019 13:50:53 +0900
-Message-Id: <20191018045053.8424-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 18 Oct 2019 01:00:00 -0400
+Received: by mail-wm1-f66.google.com with SMTP id y135so8447831wmc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 21:59:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TGIeMHWXK53sHye5G1LgnfCP8Ga7F8A0ZVwuDPcGRt4=;
+        b=JljwbGRTq1E6mquIfDwk+xIsr8rGHug6c2MDq2EbaJSII1XUYxA/xrd2MX5v/Wb+yy
+         yMqgKBOTpFzBB7hjADLAg/CkmrD946ZY+ATcnXTBsYxMeYzmRmgbQDdKyPqdiDj2qMha
+         XgbjW27wieRO9ktfmfDUGR4J3YTSIMf9hV4A62eqGAtTX3Vc7m3MeNR9ie7VWLXQ8c55
+         uSO/mVVKpXDWD1lTVkfjKuaiZVNECxJxPjk+lt7j0OxeJeR1qdiqSC8ziCRuE5pZvlzs
+         JDBLG+vv+qjCPme7i7SjW4VSHZYY0M3+dhj/TUgQ2r/TyudulEdFpv0UWuK7UF0RH01h
+         8dmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TGIeMHWXK53sHye5G1LgnfCP8Ga7F8A0ZVwuDPcGRt4=;
+        b=qQGe/GSLWazhg7jOZmLPubBBlgonvrtigVNLZ/JRDN++tk9BV9IzC4da/znl/QGckb
+         V0hMb0cjquwJlmJ4Y0UkWiKMdRGLEDVifw6o7DjJLrCALtyQabrUE4CSID3PtPdmi79m
+         lM/L5M7+0dXUUqE3UyXnZQWZ9WJx+WGgWkTfAj2iCQTqWeUNKSJf8SZ4o8VsbaCzzz10
+         OGGD6N4iMtBT22obcL3up76MYWBygyAAQolHja5M4fMGX+vxNU64uWI3UcKb02/q1iwn
+         R+ZCb59YcLxd03exLC6qsEzQD4aHaL+UlUOTt5uOvOEZPJoIJ13rXoWZDY23R6reKrYJ
+         ufUg==
+X-Gm-Message-State: APjAAAVkI28h+jy62QZpgQyq6owTOgpmznrKAsIAdbq1SKuqaUcXN3qd
+        bZs5wBS/+GfutNtxEnmzXMyY2+ft
+X-Google-Smtp-Source: APXvYqw2h7j0z61HR1StZiLhVSnluIve/ZvioYgT9l/NCWXf13qZK2iZSZmrNPZxvp9A/BW7wSEurQ==
+X-Received: by 2002:a05:600c:143:: with SMTP id w3mr5566109wmm.17.1571371361356;
+        Thu, 17 Oct 2019 21:02:41 -0700 (PDT)
+Received: from ltop.local ([2a02:a03f:40ac:ce00:18e1:7d90:ccf5:4489])
+        by smtp.gmail.com with ESMTPSA id u25sm3951686wml.4.2019.10.17.21.02.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 17 Oct 2019 21:02:40 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 06:02:38 +0200
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/8] riscv: init: merge split string literals in
+ preprocessor directive
+Message-ID: <20191018040237.3eyrfrty72r63pkz@ltop.local>
+References: <20191018004929.3445-1-paul.walmsley@sifive.com>
+ <20191018004929.3445-4-paul.walmsley@sifive.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018004929.3445-4-paul.walmsley@sifive.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit b24413180f56 ("License cleanup: add SPDX GPL-2.0 license
-identifier to files with no license") took care of a lot of files
-without any license information.
+On Thu, Oct 17, 2019 at 05:49:24PM -0700, Paul Walmsley wrote:
+> sparse complains loudly when string literals associated with
+> preprocessor directives are split into multiple, separately quoted
+> strings across different lines:
 
-These headers were not processed by the tool perhaps because they
-contain "GPL" in the code.
-
-I do not see any license boilerplate in them, so they fall back to
-GPL version 2 only, which is the project default.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- include/asm-generic/export.h | 1 +
- include/linux/export.h       | 1 +
- include/linux/license.h      | 1 +
- include/linux/module.h       | 7 +++++--
- 4 files changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/include/asm-generic/export.h b/include/asm-generic/export.h
-index a3983e2ce0fd..afddc5442e92 100644
---- a/include/asm-generic/export.h
-+++ b/include/asm-generic/export.h
-@@ -1,3 +1,4 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
- #ifndef __ASM_GENERIC_EXPORT_H
- #define __ASM_GENERIC_EXPORT_H
+...
  
-diff --git a/include/linux/export.h b/include/linux/export.h
-index 621158ecd2e2..f86ba7b11c1f 100644
---- a/include/linux/export.h
-+++ b/include/linux/export.h
-@@ -1,3 +1,4 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
- #ifndef _LINUX_EXPORT_H
- #define _LINUX_EXPORT_H
- 
-diff --git a/include/linux/license.h b/include/linux/license.h
-index decdbf43cb5c..7cce390f120b 100644
---- a/include/linux/license.h
-+++ b/include/linux/license.h
-@@ -1,3 +1,4 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
- #ifndef __LICENSE_H
- #define __LICENSE_H
- 
-diff --git a/include/linux/module.h b/include/linux/module.h
-index 6d20895e7739..bd165ba68617 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -1,11 +1,14 @@
--#ifndef _LINUX_MODULE_H
--#define _LINUX_MODULE_H
-+/* SPDX-License-Identifier: GPL-2.0-only */
- /*
-  * Dynamic loading of modules into the kernel.
-  *
-  * Rewritten by Richard Henderson <rth@tamu.edu> Dec 1996
-  * Rewritten again by Rusty Russell, 2002
-  */
-+
-+#ifndef _LINUX_MODULE_H
-+#define _LINUX_MODULE_H
-+
- #include <linux/list.h>
- #include <linux/stat.h>
- #include <linux/compiler.h>
--- 
-2.17.1
+>  #ifndef __riscv_cmodel_medany
+> -#error "setup_vm() is called from head.S before relocate so it should "
+> -	"not use absolute addressing."
+> +#error "setup_vm() is called from head.S before relocate so it should not use absolute addressing."
+>  #endif
 
+Using a blacslash should do the trick :
+	#error "blablablablablablablablablablablabla" \
+			"and blablabla again"
+Or if need I cn fix Sparse if needed and desiable.
+ 
+Best regards
+-- Luc Van Oostenryck
