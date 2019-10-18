@@ -2,107 +2,92 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E402CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF88ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D744C222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5312222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:33:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FqWqAl18"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mgZQm0sR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410481AbfJROcJ (ORCPT
+        id S2634117AbfJROdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 10:32:09 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41756 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2410471AbfJROcI (ORCPT
+        Fri, 18 Oct 2019 10:33:33 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44345 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729584AbfJROdd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 10:32:08 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t10so2932563plr.8
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 07:32:07 -0700 (PDT)
+        Fri, 18 Oct 2019 10:33:33 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q21so4002197pfn.11
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 07:33:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=message-id:mime-version:content-transfer-encoding:in-reply-to
          :references:from:to:cc:subject:user-agent:date;
-        bh=S0AYDcjrJsy+oBnQC4y0TZHY+QVM0zdCxFU4HdWdpYs=;
-        b=FqWqAl185EdhvFZoMXJBoeliiGjHn6Nm+ykS8unq4pSsETB92rPiVQ4GrFPVdBctdP
-         kszpm7fCmksTRC6OkMz0kHnCQWQwgGU0r5fcMWDifNovNClV28cDIAvcsZG4KJ+sQFrf
-         05e7NSlM/fK43ijItKnSk2GJCNf4iLmnVVHno=
+        bh=9FdeX//RORLUFpjlpqzmkWcuma9KNw3Y4e/bxxikMGs=;
+        b=mgZQm0sR8WKQrmUO/Ec704rT1C8wtIciVL2b+nWpl29cgS7J33UQ+t7jNOVMR6jF+U
+         HWGLTBl6M8wNDuU43rK33SZdn5y+IWVauGkxXFYBzcNcsiN5dQzXV/G31uWt17CosPZZ
+         0eGrFDR6iOrxg05bdnB8FmUzVEDvTXB2AZ19c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:mime-version
          :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
          :user-agent:date;
-        bh=S0AYDcjrJsy+oBnQC4y0TZHY+QVM0zdCxFU4HdWdpYs=;
-        b=bFKuLKbf43TPzmCYxNW3lfe72uhwg1njrUB4J6buK6cIkoh8U2scK/3+5gCnPb+WVZ
-         CP+w8lE1v1keTq5p6tBfUKZ5QTdq6OEz7c82Ce3ptlqiMBku/iFB+IFpQHGDcW1ktxft
-         bLxiQaiaEQg1CoIMAwIzMqMa8NXD0KNS9IanbLYFmrhnNporhN/yfst0QRuBBZlA7lVx
-         IfBMWZobY1W/by9oI1H+DILeG14jlblb1U8+zLCmm7f/uaxz5ppK9+PIj3lp0+guBdl5
-         32g98VHg/OyxRAz6uSQ7d66uV1Il3bW84ZZkuXPnXgE3kAYKo2TMHJaqhVSAXd5cAUjZ
-         6p7w==
-X-Gm-Message-State: APjAAAXFKxGEF2ErxqW8E1Q3HN/LgivLhPRvIqBY6IzGEfLvvBEDMXYU
-        M3s617utSHR+WWiguwhW7aC2vw==
-X-Google-Smtp-Source: APXvYqyBsAB4co/sMqBO/Ihqv1CyC8RUWMY5tCwyuef3uxHYeNsv4k67Aa5a7acEuX1sBePI0ltN4g==
-X-Received: by 2002:a17:902:7885:: with SMTP id q5mr9883498pll.317.1571409127260;
-        Fri, 18 Oct 2019 07:32:07 -0700 (PDT)
+        bh=9FdeX//RORLUFpjlpqzmkWcuma9KNw3Y4e/bxxikMGs=;
+        b=OowDFJVcQuumpUlDooWDjIDjw5SCyra9HGJ38G1m9uQjEpz9OoD1LJAcY5c1UaV4Gw
+         YuZaIi9IAzUXUxF4WS/195AQKHPLhRIkSrDgQCqSdwH0g2ws/pEka6+F15Rc4NW67HiM
+         l+85/IxYkrWnd8Pc4TyGMh2zvUFtrJZVau9WBaDsLhTlySpNr9XyftLil/8BwuMaSkMZ
+         dQs8oe2qR0ns3Y3PEnVN8q1oJXK2gDQDlI3keyQhbWck9Y5ESbDLA8ut0WZOkjBB17Rt
+         h6T+/RP0x8J/PwxMebVgiJNAdyrAzyico2q27JRaHFi9XlAEbSPCnP1qeeEVieXaomSC
+         HYFg==
+X-Gm-Message-State: APjAAAWlMTW7x2eHrqV5tUAfiz1dEpFiVKXMaF4d+hyojaofrFSSnF8J
+        Z9IpwxBlvm045h1E4MFsxZK7mQ==
+X-Google-Smtp-Source: APXvYqxSlXq4d41beIN21IYEkdivZabzNQu+TLotvUAaXFaTv2YNZH6ZxASkgzaeHk7uRZoKe62kbQ==
+X-Received: by 2002:a62:685:: with SMTP id 127mr7241020pfg.227.1571409211238;
+        Fri, 18 Oct 2019 07:33:31 -0700 (PDT)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id q30sm6755037pja.18.2019.10.18.07.32.06
+        by smtp.gmail.com with ESMTPSA id y22sm5468041pjn.12.2019.10.18.07.33.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 07:32:06 -0700 (PDT)
-Message-ID: <5da9cce6.1c69fb81.d3cb2.07d1@mx.google.com>
+        Fri, 18 Oct 2019 07:33:30 -0700 (PDT)
+Message-ID: <5da9cd3a.1c69fb81.95e9.e5e2@mx.google.com>
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <30f419d1612a3912e323287a96daa2b4fbe3dacd.1571406041.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1571406041.git.saiprakash.ranjan@codeaurora.org> <30f419d1612a3912e323287a96daa2b4fbe3dacd.1571406041.git.saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <c9285391dbbe936d3f242bdd0d226b93@www.loen.fr>
+References: <b3606e76af42f7ecf65b1bfc2a5ed30a@codeaurora.org> <20191011105010.GA29364@lakrids.cambridge.arm.com> <7910f428bd96834c15fb56262f3c10f8@codeaurora.org> <20191011143442.515659f4@why> <ac7599b30461d6a814e4f36d68bba6c2@codeaurora.org> <5da8c868.1c69fb81.ae709.97ff@mx.google.com> <c9285391dbbe936d3f242bdd0d226b93@www.loen.fr>
 From:   Stephen Boyd <swboyd@chromium.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        devicetree@vger.kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: Re: [PATCH 2/2] dt-bindings: msm: Add LLCC for SC7180
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Mark Rutland <mark.rutland@arm.com>, rnayak@codeaurora.org,
+        suzuki.poulose@arm.com, catalin.marinas@arm.com,
+        linux-arm-kernel <linux-arm-kernel-bounces@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, jeremy.linton@arm.com,
+        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        andrew.murray@arm.com, will@kernel.org, dave.martin@arm.com,
+        linux-arm-kernel@lists.infradead.org, marc.w.gonzalez@free.fr
+Subject: Re: Relax CPU features sanity checking on heterogeneous architectures
 User-Agent: alot/0.8.1
-Date:   Fri, 18 Oct 2019 07:32:05 -0700
+Date:   Fri, 18 Oct 2019 07:33:29 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sai Prakash Ranjan (2019-10-18 06:57:09)
-> Add LLCC compatible for SC7180 SoC.
+Quoting Marc Zyngier (2019-10-18 00:20:56)
 >=20
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-
-Can you convert this binding to YAML? Would be useful to make sure it's
-used properly.
-
+> If this SoC is anythinig like SM8150, 32bit guests will be hit and=20
+> miss,
+> depending on the CPU your guest runs on, or is migrated to. We need to
+> either drop capabilities from the 32bit-capable CPU, or prevent the
+> non-32bit capable CPU from booting if a 32bit guest has been started.
 >=20
-> diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt b/Do=
-cumentation/devicetree/bindings/arm/msm/qcom,llcc.txt
-> index eaee06b2d8f2..f263aa539d47 100644
-> --- a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
-> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
-> @@ -11,7 +11,9 @@ Properties:
->  - compatible:
->         Usage: required
->         Value type: <string>
-> -       Definition: must be "qcom,sdm845-llcc"
-> +       Definition: must be one of:
-> +                   "qcom,sc7180-llcc",
-> +                   "qcom,sdm845-llcc"
-> =20
+> You just have to hope that the kernel is entered at EL2, and that QC's
+> "value add" has been moved somewhere else...
+>=20
+
+Ok that's good.
+
