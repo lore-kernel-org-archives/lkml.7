@@ -2,66 +2,66 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CE1CA9EA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6162CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05BB222469
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9069B222C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:53:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="TidEzT1g"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="O+2twWxd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410079AbfJRMwz (ORCPT
+        id S2410114AbfJRMxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 08:52:55 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38026 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2410072AbfJRMww (ORCPT
+        Fri, 18 Oct 2019 08:53:04 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40562 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2410083AbfJRMwz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 08:52:52 -0400
-Received: by mail-lj1-f194.google.com with SMTP id b20so6110654ljj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 05:52:50 -0700 (PDT)
+        Fri, 18 Oct 2019 08:52:55 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 7so6107221ljw.7
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 05:52:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pFyIkShUP070T1MCe1PZHDrW/Mw93dXatTsiD8H58Vo=;
-        b=TidEzT1giC2Jh121pQGun9aW1g6lMhBfTyTOD0z3AV8CZfc/kN8w6/T5TIOp6CwnyL
-         Lp+Ce/mQ73ZwV/P4bEPMVvAqsTBSu+GsCShsUoPBJF0/etODAuZGq8d9uag7/34zzBrt
-         MMymPFrUp1zyB/TcGssfWaGbpiAqQyFzb35P4=
+        bh=lfRyiPOJ+tpAygOEKq/virXF46WU8l1j3zrd6+53ses=;
+        b=O+2twWxd5ixrCSJsM3mqFuz2a0vonUX7o4geTRlccuwfBNBIkK0S/WNPoTXAT/ExaF
+         dkMsazXfL3MDmLS9//NfORvVoX4k5KWgn3R2GUa5kvsosQWeE4yx/GCfDaOYnuEKShPx
+         NZ8VzHB+aadfG9OCrBQ/8mnicW9eKOfG/sQjI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pFyIkShUP070T1MCe1PZHDrW/Mw93dXatTsiD8H58Vo=;
-        b=NWwqmvdmCH4N4bYfEofOS9AQqzxkYt5hjTPAqU7tm0nNzxggWgj35sG9v5bhfDkQvZ
-         hYhMFqSyUk7A2vf1Q4dFFuPUJHZcJXEKu/0nt967Qwnh1dZ8PkRI90fVuYrTOrhp4e+I
-         JfH6sl3pGHPHd50WZO9AGzzDUKe0aUV+x4kEFmVAxMt1fid9zyB/Q/pMjGeoL6yD+g3u
-         iowg3F9CU7OxQSuq+pFgNm0Z0nkxzLVgyIyj4Ebm/krUShV5M1a4SAZL1J5NjLSx71Vh
-         /w4cTfZQrSmOsv3IpIoe1JELr1n1BEwBCps+exItSgr7k0ZEn0UeOagLdk1dja7I5J9w
-         bn8A==
-X-Gm-Message-State: APjAAAX1Q6Zgh0cHliOGk4A1Mnt25dKrx5G9LdjASdBL5OzEnyVXrYQO
-        xf2P5RXILa7B6nTSdKdeVd0c0Q==
-X-Google-Smtp-Source: APXvYqx3Q7vbfdx4DL4qphQSptphuCSVjI5Ms226wcgo4SYrpulmH7OUNwVi/mF3j1JenZroGCEqZg==
-X-Received: by 2002:a2e:b010:: with SMTP id y16mr6295556ljk.147.1571403170007;
-        Fri, 18 Oct 2019 05:52:50 -0700 (PDT)
+        bh=lfRyiPOJ+tpAygOEKq/virXF46WU8l1j3zrd6+53ses=;
+        b=CM7E/Nxagm4qr1tej1xqAr8F6XX9t67pUkNrtH+XsDOV0l3+TtAtA81jFQIHUOqmhF
+         nV0PWd/+A9fXqDhJ5dsG897INInZRYmqaMwpC8FsSBcf6e4xHZsS8bC8oXAJfJdgen3m
+         Af2fM/M7i8EHsTy6ENGJSrU/dOx+rA+Q5N1fVZZdx1edxxRAqC70oQhmh20Ig+oBWWVe
+         llcl6G+zSCK9po9kt9CWIpk0WLfsqx6ufpzcpZS4KgEN2Q7PFNHfu4TWLYIdGx8b14O/
+         EoRLa6YYvouIPvzVqodKyLTpcxMoM0mGgB+q3jKztn+xsFORD9F/ojqAVYA04fXYsrHL
+         +kNw==
+X-Gm-Message-State: APjAAAXGBeKgVh/+XFKOW0Sv3MnROpj67NNHNI88fI7KUvCrsEZA9AcW
+        1ZC2N9Ytr8gGxZdbhRw16Q/zMA==
+X-Google-Smtp-Source: APXvYqxgLZsNIbhizhuYW69HOITY4WDfzxrxJeyVBTBM/JEr7MEt70x5TT22MnwDFNbFNwCyBKK2cw==
+X-Received: by 2002:a2e:b00c:: with SMTP id y12mr6149308ljk.113.1571403173688;
+        Fri, 18 Oct 2019 05:52:53 -0700 (PDT)
 Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id m17sm7454792lje.0.2019.10.18.05.52.48
+        by smtp.gmail.com with ESMTPSA id m17sm7454792lje.0.2019.10.18.05.52.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 05:52:49 -0700 (PDT)
+        Fri, 18 Oct 2019 05:52:53 -0700 (PDT)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/7] serial: make SERIAL_QE depend on PPC32
-Date:   Fri, 18 Oct 2019 14:52:32 +0200
-Message-Id: <20191018125234.21825-6-linux@rasmusvillemoes.dk>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 7/7] soc/fsl/qe/qe.h: remove include of asm/cpm.h
+Date:   Fri, 18 Oct 2019 14:52:34 +0200
+Message-Id: <20191018125234.21825-8-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
 References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
@@ -72,31 +72,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently SERIAL_QE depends on QUICC_ENGINE, which in turn depends on
-PPC32, so this doesn't add any extra dependency. However, the QUICC
-Engine IP block also exists on some arm boards, so this serves as
-preparation for removing the PPC32 dependency from QUICC_ENGINE and
-build the QE support in drivers/soc/fsl/qe, while preventing
-allmodconfig/randconfig failures due to SERIAL_QE not being supported
-yet.
+asm/cpm.h only exists on PPC, so this prevents use of this header on
+other platforms. Drivers that need asm/cpm.h (and are thus inherently
+PPC-specific) must include that explicitly.
 
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- drivers/tty/serial/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ include/soc/fsl/qe/qe.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index 67a9eb3f94ce..78246f535809 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1056,6 +1056,7 @@ config SERIAL_LANTIQ
- config SERIAL_QE
- 	tristate "Freescale QUICC Engine serial port support"
- 	depends on QUICC_ENGINE
-+	depends on PPC32
- 	select SERIAL_CORE
- 	select FW_LOADER
- 	help
+diff --git a/include/soc/fsl/qe/qe.h b/include/soc/fsl/qe/qe.h
+index c1036d16ed03..3768c226490e 100644
+--- a/include/soc/fsl/qe/qe.h
++++ b/include/soc/fsl/qe/qe.h
+@@ -17,7 +17,6 @@
+ #include <linux/spinlock.h>
+ #include <linux/errno.h>
+ #include <linux/err.h>
+-#include <asm/cpm.h>
+ #include <soc/fsl/qe/immap_qe.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
 -- 
 2.20.1
 
