@@ -2,220 +2,130 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09581CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05521CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDA1D222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:21:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ENDlG38c"
+	by mail.kernel.org (Postfix) with ESMTP id DB4FD222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:21:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408593AbfJRPVL (ORCPT
+        id S2633014AbfJRPVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:21:11 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45437 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389421AbfJRPVL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:21:11 -0400
-Received: by mail-lj1-f194.google.com with SMTP id q64so6592190ljb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 08:21:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yLLmFOSm8HttUwzcA55yirZl/vYaKzUHayfsFn/aSKw=;
-        b=ENDlG38cJuub/7j/v0Rk3VPnVnnPDhPE1t/OdMIQBWilYVRbNguMx/WSjX1uY2RfI8
-         vD4ES6JgbzxSTPk8KQNPRgDo7LFw4Yg4W2plBYQJrQAM3Ju76KUvpBfLJlScuqhoHJ9U
-         cvsEpqnDWXakoF+30bCaS/6BzwGKGe0HNDJmA1/refOgDMxevJ6uFmLW+QK8dTiyLaCz
-         M64lky6fzJho9x5cV4tKntKJ2qXppel0FgLaSS7WioUq42gYFQrC+TnoUc1Xw9uzRV3A
-         EjbR3+ts5ypcUuBFxFd91FxTj72yHcY5TzVxE14dw5tuGgYTyyZnm2mDScbUsxL5VR/A
-         vrmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yLLmFOSm8HttUwzcA55yirZl/vYaKzUHayfsFn/aSKw=;
-        b=daUIpSor2EhgqFuhuvsqnGT5xt/xV5g30mze93gX/JRqXZF/a28GySkG3UOufzsBa4
-         T/R95txxk68GsSe9RNSPWqrwTS03tYG4x5GCU/pmvTBBP+V1njaUGrQYVdg8lmLKlRHo
-         /slsw+zynkoZ+1FrnRqYPWiYBYJzTUGDqnuEjprsde0yu6vGdf2LHvW1y/oA3IAbAhTf
-         GHaNM+01ed/j9/yLhaPYNnrsPuIplpe4p56/wNKWKsfJJTqKxjNsFq09nWxQKFXj2uvc
-         +1kSPZMLwIcE002AEogTjBdI/UoaN6omv9HH9NNozQ60Pgmmlw01+Fga7q6X0I2gjTpH
-         TeXw==
-X-Gm-Message-State: APjAAAUxefffECeH//1W+8o/2B2ZNDbeY92abqZnfWIpC+HaJxQ7FFCx
-        N69sRL/MRUVNCIoQKBUFX2leqsNZZQpcGuRebRorig==
-X-Google-Smtp-Source: APXvYqz4Wv3AkrCfOh8oziWK3sALJRx+kVJ83dMavDz796ZdwqqTDdu/P/JvbNY53ztyQ6M3c1B+qT9VQinwMDCoWt0=
-X-Received: by 2002:a2e:978e:: with SMTP id y14mr6233454lji.206.1571412067347;
- Fri, 18 Oct 2019 08:21:07 -0700 (PDT)
+        Fri, 18 Oct 2019 11:21:20 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:42406 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2389421AbfJRPVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 11:21:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CDC3AC8F;
+        Fri, 18 Oct 2019 08:20:59 -0700 (PDT)
+Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B4DA3F718;
+        Fri, 18 Oct 2019 08:20:57 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 16:20:52 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org,
+        kstewart@linuxfoundation.org, gregkh@linuxfoundation.org,
+        lorenzo.pieralisi@arm.com, tglx@linutronix.de,
+        David.Laight@ACULAB.COM, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        hushiyuan@huawei.com, wuyun.wu@huawei.com, linfeilong@huawei.com
+Subject: Re: [PATCH v4] arm64: psci: Reduce the waiting time for
+ cpu_psci_cpu_kill()
+Message-ID: <20191018152052.GA10312@bogus>
+References: <04ab51e4-bc08-8250-4e70-4c87c58c8ad0@huawei.com>
 MIME-Version: 1.0
-References: <20191011134500.235736-1-douglas.raillard@arm.com>
- <20191014145315.GZ2311@hirez.programming.kicks-ass.net> <a1ce67d7-62c3-b78b-1d87-23ef4dbc2274@arm.com>
- <20191017095015.GI2311@hirez.programming.kicks-ass.net> <7edb1b73-54e7-5729-db5d-6b3b1b616064@arm.com>
- <20191017190708.GF22902@worktop.programming.kicks-ass.net>
- <0b807cb3-6a88-1138-dc66-9a32d9bba7ea@arm.com> <20191018120719.GH2328@hirez.programming.kicks-ass.net>
- <32d07c51-847d-9d51-480c-c8836f1aedc7@arm.com>
-In-Reply-To: <32d07c51-847d-9d51-480c-c8836f1aedc7@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Fri, 18 Oct 2019 17:20:55 +0200
-Message-ID: <CAKfTPtCECmWy9rTE1rgKd6uXcQCixZ3G7OLAM=Q=T5EM2414ZQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 0/6] sched/cpufreq: Make schedutil energy aware
-To:     Douglas Raillard <douglas.raillard@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        viresh kumar <viresh.kumar@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Quentin Perret <qperret@google.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        dh.han@samsung.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <04ab51e4-bc08-8250-4e70-4c87c58c8ad0@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 18 Oct 2019 at 16:44, Douglas Raillard <douglas.raillard@arm.com> wrote:
->
->
->
-> On 10/18/19 1:07 PM, Peter Zijlstra wrote:
-> > On Fri, Oct 18, 2019 at 12:46:25PM +0100, Douglas Raillard wrote:
-> >
-> >>> What I don't see is how that that difference makes sense as input to:
-> >>>
-> >>>     cost(x) : (1 + x) * cost_j
-> >>
-> >> The actual input is:
-> >> x = (EM_COST_MARGIN_SCALE/SCHED_CAPACITY_SCALE) * (util - util_est)
-> >>
-> >> Since EM_COST_MARGIN_SCALE == SCHED_CAPACITY_SCALE == 1024, this factor of 1
-> >> is not directly reflected in the code but is important for units
-> >> consistency.
-> >
-> > But completely irrelevant for the actual math and conceptual
-> > understanding.
->
->  > how that that difference makes sense as input to
-> I was unsure if you referred to the units being inconsistent or the
-> actual way of computing values being strange, so I provided some
-> justification for both.
->
-> > Just because computers suck at real numbers, and floats
-> > are expensive, doesn't mean we have to burden ourselves with fixed point
-> > when writing equations.
-> >
-> > Also, as a physicist I'm prone to normalizing everything to 1, because
-> > that's lazy.
-> >
-> >>> I suppose that limits the additional OPP to twice the previously
-> >>> selected cost / efficiency (see the confusion from that other email).
-> >>> But given that efficency drops (or costs rise) for higher OPPs that
-> >>> still doesn't really make sense..
-> >
-> >> Yes, this current limit to +100% freq boosting is somehow arbitrary and
-> >> could probably benefit from being tunable in some way (Kconfig option
-> >> maybe). When (margin > 0), we end up selecting an OPP that has a higher cost
-> >> than the one strictly required, which is expected. The goal is to speed
-> >> things up at the expense of more power consumed to achieve the same work,
-> >> hence at a lower efficiency (== higher cost).
-> >
-> > No, no Kconfig knobs.
-> >
-> >> That's the main reason why this boosting apply a margin on the cost of the
-> >> selected OPP rather than just inflating the util. This allows controlling
-> >> directly how much more power (battery life) we are going to spend to achieve
-> >> some work that we know could be achieved with less power.
-> >
-> > But you're not; the margin is relative to the OPP, it is not absolute.
->
-> Considering a CPU with 1024 max capacity (since we are not talking about
-> migrations here, we can ignore CPU invariance):
->
-> work = normalized number of iterations of a given busy loop
-> # Thanks to freq invariance
-> work = util (between 0 and 1)
-> util = f/f_max
->
-> # f(work) is the min freq that is admissible for "work", which we will
-> # abbreviate as "f"
-> f(work) = work * f_max
->
-> # from struct em_cap_state doc in energy_model.h
-> cost(f) = power(f) * f_max / f
-> cost(f) = power(f) / util
-> cost(f) = power(f) / work
-> power(f) = cost(f) * work
->
-> boosted_cost(f) = cost(f) + x
-> boosted_power(f) = boosted_cost(f) * work
-> boosted_power(f) = (cost(f) + x) * work
->
-> # Let's normalize cost() so we can forget about f and deal only with work.
-> cost'(work) = cost(f)/cost(f_max)
-> x' = x/cost(f_max)
-> boosted_power'(work) = (cost'(work) + x') * work
-> boosted_power'(work) = cost'(work) * work + x' * work
-> boosted_power'(work) = power'(work) + x' * work
-> boosted_power'(work) = power'(work) + A(work)
->
-> # Over a duration T, spend an extra B unit of energy
-> B(work) = A(work) * T
-> lost_battery_percent(work) = 100 * B(work)/total_battery_energy
-> lost_battery_percent(work) = 100 * T * x' * work /total_battery_energy
-> lost_battery_percent(work) =
->   (100 * T / cost(f_max) / total_battery_energy) * x * work
->
-> This means that the effect of boosting on battery life is proportional
-> to "x" unless I made a mistake somewhere.
+On Fri, Oct 18, 2019 at 08:46:37PM +0800, Yunfeng Ye wrote:
+> In case like suspend-to-disk and uspend-to-ram, a large number of CPU
 
-Because the boost is relative to cost(f) and cost is not linear to the
-frequency, I don't think that it's is a linear relation.
+s/case/cases/
+s/uspend-to-ram/suspend-to-ram/
 
->
-> >
-> > Or rather, the only actual limit is in relation to the max OPP. So you
-> > have very little actual control over how much more energy you're
-> > spending.
-> >
-> >>> So while I agree that 2) is a reasonable signal to work from, everything
-> >>> that comes after is still much confusing me.
-> >
-> >> "When applying these boosting rules on the runqueue util signals ...":
-> >> Assuming the set of enqueued tasks stays the same between 2 observations
-> >> from schedutil, if we see the rq util_avg increase above its
-> >> util_est.enqueued, that means that at least one task had its util_avg go
-> >> above util_est.enqueued. We might miss some boosting opportunities if some
-> >> (util - util_est) compensates:
-> >> TASK_1(util - util_est) = - TASK_2(util - util_est)
-> >> but working on the aggregated value is much easier in schedutil, to avoid
-> >> crawling the list of entities.
-> >
-> > That still does not explain why 'util - util_est', when >0, makes for a
-> > sensible input into an OPP relative function > I agree that 'util - util_est', when >0, indicates utilization is
-> > increasing (for the aperiodic blah blah blah). But after that I'm still
-> > confused.
->
-> For the same reason PELT makes a sensible input for OPP selection.
-> Currently, OPP selection is based on max(util_avg, util_est.enqueued)
-> (from cpu_util_cfs in sched.h), so as soon as we have
-> (util - util_est > 0), the OPP will be selected according to util_avg.
-> In a way, using util_avg there is already some kind of boosting.
->
-> Since the boosting is essentially (util - constant), it grows the same
-> way as util. If we think of (util - util_est) as being some estimation
-> of how wrong we were in the estimation of the task "true" utilization of
-> the CPU, then it makes sense to feed that to the boost. The wronger we
-> were, the more we want to boost, because the more time passes, the more
-> the scheduler realizes it actually does not know what the task needs. In
-> doubt, provide a higher freq than usual until we get to know this task
-> better. When that happens (at the next period), boosting is disabled and
-> we revert to the usual behavior (aka margin=0).
->
-> Hope we are converging to some wording that makes sense.
+> cores need to be shut down. At present, the CPU hotplug operation is
+> serialised, and the CPU cores can only be shut down one by one. In this
+> process, if PSCI affinity_info() does not return LEVEL_OFF quickly,
+> cpu_psci_cpu_kill() needs to wait for 10ms. If hundreds of CPU cores
+> need to be shut down, it will take a long time.
+> 
+> Normally, there is no need to wait 10ms in cpu_psci_cpu_kill(). So
+> change the wait interval from 10 ms to max 1 ms and use usleep_range()
+> instead of msleep() for more accurate timer.
+> 
+> In addition, reducing the time interval will increase the messages
+> output, so remove the "Retry ..." message, instead, put the number of
+> waiting times to the sucessful message.
+> 
+> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+> ---
+> v3 -> v4:
+>  - using time_before(jiffies, timeout) to check
+>  - update the comment as review suggest
+> 
+> v2 -> v3:
+>  - update the comment
+>  - remove the busy-wait logic, modify the loop logic and output message
+> 
+> v1 -> v2:
+>  - use usleep_range() instead of udelay() after waiting for a while
+>  arch/arm64/kernel/psci.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+> index c9f72b2665f1..77965c3ba477 100644
+> --- a/arch/arm64/kernel/psci.c
+> +++ b/arch/arm64/kernel/psci.c
+> @@ -81,7 +81,8 @@ static void cpu_psci_cpu_die(unsigned int cpu)
+> 
+>  static int cpu_psci_cpu_kill(unsigned int cpu)
+>  {
+> -	int err, i;
+> +	int err, i = 0;
+> +	unsigned long timeout;
+> 
+>  	if (!psci_ops.affinity_info)
+>  		return 0;
+> @@ -91,16 +92,17 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
+>  	 * while it is dying. So, try again a few times.
+>  	 */
+> 
+> -	for (i = 0; i < 10; i++) {
+> +	timeout = jiffies + msecs_to_jiffies(100);
+> +	do {
+> +		i++;
+>  		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
+>  		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
+> -			pr_info("CPU%d killed.\n", cpu);
+> +			pr_info("CPU%d killed (polled %d times)\n", cpu, i);
+
+We can even drop loop counter completely, track time and log that
+instead of loop counter that doesn't give any indication without looking
+into the code.
+
+	start = jiffies, end = start + msecs_to_jiffies(100);
+	do {
+			....
+			pr_info("CPU%d killed (polled %u ms)\n", cpu,
+				jiffies_to_msecs(jiffies - start));
+			....
+	} while (time_before(jiffies, end));
+
+Just my preference. Looks good otherwise.
+
+--
+Regards,
+Sudeep
+
