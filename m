@@ -2,83 +2,72 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D54DCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EACDCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C59A20820
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7758021835
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:20:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502625AbfJRSSp (ORCPT
+        id S2410755AbfJRSU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:18:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58862 "EHLO mx1.redhat.com"
+        Fri, 18 Oct 2019 14:20:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394221AbfJRSSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:18:44 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2394221AbfJRSU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 14:20:28 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 914AF756;
-        Fri, 18 Oct 2019 18:18:44 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D65E21001B00;
-        Fri, 18 Oct 2019 18:18:43 +0000 (UTC)
-Subject: Re: [PATCH RT] kernel/sched: Don't recompute cpumask weight in
- migrate_enable_update_cpus_allowed()
-To:     Scott Wood <swood@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-rt-users@vger.kernel.org
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <jlelli@redhat.com>
-References: <20191011140908.5161-1-longman@redhat.com>
- <0979a9a345e47be69783a2183dd31911e9fc755e.camel@redhat.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <fc777b62-63e2-8391-ce02-3fa7b88db27a@redhat.com>
-Date:   Fri, 18 Oct 2019 14:18:43 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        by mail.kernel.org (Postfix) with ESMTPSA id D946E20820;
+        Fri, 18 Oct 2019 18:20:26 +0000 (UTC)
+Date:   Fri, 18 Oct 2019 14:20:25 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Yonghong Song <yhs@fb.com>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH bpf-next] bpf: Fix build error without CONFIG_NET
+Message-ID: <20191018142025.244156f8@gandalf.local.home>
+In-Reply-To: <ee9a06ec-33a0-3b39-92d8-21bd86261cc2@fb.com>
+References: <20191018090344.26936-1-yuehaibing@huawei.com>
+        <ee9a06ec-33a0-3b39-92d8-21bd86261cc2@fb.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <0979a9a345e47be69783a2183dd31911e9fc755e.camel@redhat.com>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 18 Oct 2019 18:18:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/12/19 3:06 AM, Scott Wood wrote:
-> On Fri, 2019-10-11 at 10:09 -0400, Waiman Long wrote:
->> At each invocation of rt_spin_unlock(), cpumask_weight() is called
->> via migrate_enable_update_cpus_allowed() to recompute the weight of
->> cpus_mask which doesn't change that often.
->>
->> The following is a sample output of perf-record running the testpmd
->> microbenchmark on an RT kernel:
->>
->>   34.77%   1.65%  testpmd  [kernel.kallsyms]  [k] rt_spin_unlock
->>   34.32%   2.52%  testpmd  [kernel.kallsyms]  [k] migrate_enable
->>   21.76%  21.76%  testpmd  [kernel.kallsyms]  [k] __bitmap_weight
->>
->> By adding an extra variable to keep track of the weight of cpus_mask,
->> we could eliminate the frequent call to cpumask_weight() and replace
->> it with simple assignment.
-> Can you try this with my migrate disable patchset (which makes
-> amigrate_enable_update_cpus_allowed() be called much less often) and see if
-> caching nr_cpus_allowed still makes a difference?
->
-> -Scott
+On Fri, 18 Oct 2019 18:11:07 +0000
+Yonghong Song <yhs@fb.com> wrote:
 
-With lazy migrate_disable, I do think my patch will no longer be necessary.
+> On 10/18/19 2:03 AM, YueHaibing wrote:
+> > If CONFIG_NET is n, building fails:
+> > 
+> > kernel/trace/bpf_trace.o: In function `raw_tp_prog_func_proto':
+> > bpf_trace.c:(.text+0x1a34): undefined reference to `bpf_skb_output_proto'
+> > 
+> > Wrap it into a #ifdef to fix this.
+> > 
+> > Reported-by: Hulk Robot <hulkci@huawei.com>
+> > Fixes: a7658e1a4164 ("bpf: Check types of arguments passed into helpers")
+> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>  
+> 
+> Acked-by: Yonghong Song <yhs@fb.com>
 
-Thanks,
-Longman
+I'm getting ready for another push to Linus. Want me to pull this into
+my tree?
 
+-- Steve
