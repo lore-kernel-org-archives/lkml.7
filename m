@@ -2,184 +2,97 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BC6CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4026CCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C78A2089C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A31D2089C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:58:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409393AbfJRQ5N (ORCPT
+        id S2502168AbfJRQ6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:57:13 -0400
-Received: from mga11.intel.com ([192.55.52.93]:42333 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405642AbfJRQ5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:57:12 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 09:57:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,312,1566889200"; 
-   d="scan'208";a="221800591"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga004.fm.intel.com with ESMTP; 18 Oct 2019 09:57:11 -0700
-Date:   Fri, 18 Oct 2019 09:57:11 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] KVM: VMX: Move vmcs related resetting out of
- vmx_vcpu_reset()
-Message-ID: <20191018165711.GD26319@linux.intel.com>
-References: <20191018093723.102471-1-xiaoyao.li@intel.com>
- <20191018093723.102471-2-xiaoyao.li@intel.com>
+        Fri, 18 Oct 2019 12:58:19 -0400
+Received: from smtprelay0160.hostedemail.com ([216.40.44.160]:42320 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2405642AbfJRQ6T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 12:58:19 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 9DF0745B3;
+        Fri, 18 Oct 2019 16:58:17 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: fruit53_8252359efdc20
+X-Filterd-Recvd-Size: 2322
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf13.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 18 Oct 2019 16:58:15 +0000 (UTC)
+Message-ID: <8268ba22cccae0dccf5a8d1902bc1409877fbd4e.camel@perches.com>
+Subject: Re: [PATCH 06/18] add support for Clang's Shadow Call Stack (SCS)
+From:   Joe Perches <joe@perches.com>
+To:     Sami Tolvanen <samitolvanen@google.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Fri, 18 Oct 2019 09:58:14 -0700
+In-Reply-To: <20191018161033.261971-7-samitolvanen@google.com>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+         <20191018161033.261971-7-samitolvanen@google.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018093723.102471-2-xiaoyao.li@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 05:37:21PM +0800, Xiaoyao Li wrote:
-> Move vmcs related codes into a new function vmx_vmcs_reset() from
-> vmx_vcpu_reset(). So that it's more clearer which data is related with
-> vmcs and can be held in vmcs.
-> 
-> Suggested-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
-> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> ---
->  arch/x86/kvm/vmx/vmx.c | 65 ++++++++++++++++++++++++------------------
->  1 file changed, 37 insertions(+), 28 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index e660e28e9ae0..ef567df344bf 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -4271,33 +4271,11 @@ static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
->  	}
->  }
->  
-> -static void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
-> +static void vmx_vmcs_reset(struct kvm_vcpu *vcpu, bool init_event)
+On Fri, 2019-10-18 at 09:10 -0700, Sami Tolvanen wrote:
+> This change adds generic support for Clang's Shadow Call Stack, which
+> uses a shadow stack to protect return addresses from being overwritten
+> by an attacker
+[]
+> .diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-clang.h
+[]
+> @@ -42,3 +42,5 @@
+>   * compilers, like ICC.
+>   */
+>  #define barrier() __asm__ __volatile__("" : : : "memory")
+> +
+> +#define __noscs		__attribute__((no_sanitize("shadow-call-stack")))
 
-I'd strongly prefer to keep the existing code.  For me, "vmcs_reset" means
-zeroing out the VMCS, i.e. reset the VMCS to a virgin state.  "vcpu_reset"
-means exactly that, stuff vCPU state to emulate RESET/INIT.
+trivia:
 
-And the split is arbitrary and funky, e.g. EFER is integrated into the
-VMCS on all recent CPUs, but here it's handled in vcpu_reset.  
+This should likely use the __ prefix and suffix form:
 
->  {
->  	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> -	struct msr_data apic_base_msr;
->  	u64 cr0;
->  
-> -	vmx->rmode.vm86_active = 0;
-> -	vmx->spec_ctrl = 0;
-> -
-> -	vmx->msr_ia32_umwait_control = 0;
-> -
-> -	vcpu->arch.microcode_version = 0x100000000ULL;
-> -	vmx->vcpu.arch.regs[VCPU_REGS_RDX] = get_rdx_init_val();
-> -	vmx->hv_deadline_tsc = -1;
-> -	kvm_set_cr8(vcpu, 0);
-> -
-> -	if (!init_event) {
-> -		apic_base_msr.data = APIC_DEFAULT_PHYS_BASE |
-> -				     MSR_IA32_APICBASE_ENABLE;
-> -		if (kvm_vcpu_is_reset_bsp(vcpu))
-> -			apic_base_msr.data |= MSR_IA32_APICBASE_BSP;
-> -		apic_base_msr.host_initiated = true;
-> -		kvm_set_apic_base(vcpu, &apic_base_msr);
-> -	}
-> -
-> -	vmx_segment_cache_clear(vmx);
-> -
->  	seg_setup(VCPU_SREG_CS);
->  	vmcs_write16(GUEST_CS_SELECTOR, 0xf000);
->  	vmcs_writel(GUEST_CS_BASE, 0xffff0000ul);
-> @@ -4340,8 +4318,6 @@ static void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
->  	if (kvm_mpx_supported())
->  		vmcs_write64(GUEST_BNDCFGS, 0);
->  
-> -	setup_msrs(vmx);
-> -
->  	vmcs_write32(VM_ENTRY_INTR_INFO_FIELD, 0);  /* 22.2.1 */
->  
->  	if (cpu_has_vmx_tpr_shadow() && !init_event) {
-> @@ -4357,19 +4333,52 @@ static void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
->  	if (vmx->vpid != 0)
->  		vmcs_write16(VIRTUAL_PROCESSOR_ID, vmx->vpid);
->  
-> +	vpid_sync_context(vmx->vpid);
-> +
->  	cr0 = X86_CR0_NW | X86_CR0_CD | X86_CR0_ET;
-> -	vmx->vcpu.arch.cr0 = cr0;
-> +	vcpu->arch.cr0 = cr0;
->  	vmx_set_cr0(vcpu, cr0); /* enter rmode */
->  	vmx_set_cr4(vcpu, 0);
-> -	vmx_set_efer(vcpu, 0);
->  
->  	update_exception_bitmap(vcpu);
->  
-> -	vpid_sync_context(vmx->vpid);
->  	if (init_event)
->  		vmx_clear_hlt(vcpu);
->  }
->  
-> +static void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
-> +{
-> +	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> +	struct msr_data apic_base_msr;
-> +
-> +	vmx->rmode.vm86_active = 0;
-> +	vmx->spec_ctrl = 0;
-> +
-> +	vmx->msr_ia32_umwait_control = 0;
-> +
-> +	vcpu->arch.microcode_version = 0x100000000ULL;
-> +	kvm_rdx_write(vcpu, get_rdx_init_val());
-> +	vmx->hv_deadline_tsc = -1;
-> +	kvm_set_cr8(vcpu, 0);
-> +
-> +	if (!init_event) {
-> +		apic_base_msr.data = APIC_DEFAULT_PHYS_BASE |
-> +				     MSR_IA32_APICBASE_ENABLE;
-> +		if (kvm_vcpu_is_reset_bsp(vcpu))
-> +			apic_base_msr.data |= MSR_IA32_APICBASE_BSP;
-> +		apic_base_msr.host_initiated = true;
-> +		kvm_set_apic_base(vcpu, &apic_base_msr);
-> +	}
-> +
-> +	vmx_segment_cache_clear(vmx);
-> +
-> +	setup_msrs(vmx);
-> +
-> +	vmx_set_efer(vcpu, 0);
+#define __noscs		__attribute__((__no_sanitize__("shadow-call-stack")))
 
-Setting EFER before CR0/CR4 is a functional change, and likely wrong, e.g.
-vmx_set_cr0() queries EFER_LME to trigger exit_lmode() if INIT/RESET is
-received while the vCPU is in long mode.
+as should the __no_sanitize_address above this
 
-> +	vmx_vmcs_reset(vcpu, init_event);
-> +}
+> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+[]
+> @@ -202,6 +202,10 @@ struct ftrace_likely_data {
+>  # define randomized_struct_fields_end
+>  #endif
+>  
+> +#ifndef __noscs
+> +# define __noscs
+> +#endif
 > +
->  static void enable_irq_window(struct kvm_vcpu *vcpu)
->  {
->  	exec_controls_setbit(to_vmx(vcpu), CPU_BASED_VIRTUAL_INTR_PENDING);
-> -- 
-> 2.19.1
-> 
+>  #ifndef asm_volatile_goto
+>  #define asm_volatile_goto(x...) asm goto(x)
+>  #endif
+
+
