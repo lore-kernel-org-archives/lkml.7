@@ -2,118 +2,102 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA7DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF028CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8884222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0634222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:41:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410687AbfJRRhj (ORCPT
+        id S2502504AbfJRRlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 13:37:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33058 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405459AbfJRRhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 13:37:39 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22E01222BD;
-        Fri, 18 Oct 2019 17:37:37 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 13:37:35 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Borislav Petkov <bp@suse.de>
-Cc:     tip-bot2 for Jiri Slaby <tip-bot2@linutronix.de>,
-        linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-        Jiri Slaby <jslaby@suse.cz>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
+        Fri, 18 Oct 2019 13:41:31 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:47744 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2405459AbfJRRlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 13:41:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 195971534;
+        Fri, 18 Oct 2019 10:41:06 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 15C613F718;
+        Fri, 18 Oct 2019 10:41:03 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 18:41:02 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>, Torsten Duwe <duwe@lst.de>,
+        Ruslan Bilovol <ruslan.bilovol@gmail.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
-        linux-arch@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>
-Subject: Re: [tip: x86/asm] x86/asm/ftrace: Mark function_hook as function
-Message-ID: <20191018133735.77e90e36@gandalf.local.home>
-In-Reply-To: <20191018171354.GB20368@zn.tnic>
-References: <20191011115108.12392-22-jslaby@suse.cz>
-        <157141622788.29376.4016565749507481510.tip-bot2@tip-bot2>
-        <20191018124800.0a7006bb@gandalf.local.home>
-        <20191018124956.764ac42e@gandalf.local.home>
-        <20191018171354.GB20368@zn.tnic>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        live-patching@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v8 0/5] arm64: ftrace with regs
+Message-ID: <20191018174100.GC18838@lakrids.cambridge.arm.com>
+References: <20190208150826.44EBC68DD2@newverein.lst.de>
+ <0f8d2e77-7e51-fba8-b179-102318d9ff84@arm.com>
+ <20190311114945.GA5625@lst.de>
+ <20190408153628.GL6139@lakrids.cambridge.arm.com>
+ <20190409175238.GE9255@fuggles.cambridge.arm.com>
+ <CAB=otbRXuDHSmh9NrGYoep=hxOKkXVsy6R84ACZ9xELwNr=4AA@mail.gmail.com>
+ <20190724161500.GG2624@lakrids.cambridge.arm.com>
+ <nycvar.YFH.7.76.1910161341520.13160@cbobk.fhfr.pm>
+ <20191016175841.GF46264@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016175841.GF46264@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 18 Oct 2019 19:13:54 +0200
-Borislav Petkov <bp@suse.de> wrote:
+On Wed, Oct 16, 2019 at 06:58:42PM +0100, Mark Rutland wrote:
+> I've just done the core (non-arm64) bits today, and pushed that out:
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=arm64/ftrace-with-regs
+> 
+> ... I'll fold the remainging bits of patches 4 and 5 together tomorrow
+> atop of that.
 
-> On Fri, Oct 18, 2019 at 12:49:56PM -0400, Steven Rostedt wrote:
-> > On Fri, 18 Oct 2019 12:48:00 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> >   
-> > > > Relabel function_hook to be marked really as a function. It is called
-> > > > from C and has the same expectations towards the stack etc.    
-> > >   
-> > 
-> > And to go even further, it *does not* have the same expectations
-> > towards the stack.
-> > 
-> > I think this patch should not be applied.  
-> 
-> There are a couple more markings like that now:
-> 
-> $ git grep function_hook
-> Documentation/asm-annotations.rst:120:    SYM_FUNC_START(function_hook)
-> Documentation/asm-annotations.rst:122:    SYM_FUNC_END(function_hook)
-> arch/x86/kernel/ftrace_32.S:15:# define function_hook   __fentry__
-> arch/x86/kernel/ftrace_32.S:24:SYM_FUNC_START(function_hook)
-> arch/x86/kernel/ftrace_32.S:26:SYM_FUNC_END(function_hook)
-> arch/x86/kernel/ftrace_64.S:17:# define function_hook   __fentry__
-> arch/x86/kernel/ftrace_64.S:135:SYM_FUNC_START(function_hook)
-> arch/x86/kernel/ftrace_64.S:137:SYM_FUNC_END(function_hook)
-> arch/x86/kernel/ftrace_64.S:251:SYM_FUNC_START(function_hook)
-> arch/x86/kernel/ftrace_64.S:282:SYM_FUNC_END(function_hook)
-> 
-> Frankly, I wouldn't mark this function at all as it is special and I see
-> a little sense to have it in stack traces but maybe Jiri has another
-> angle here. I'll let him comment.
+I've just force-pushed an updated version with the actual arm64
+FTRACE_WITH_REGS bits. There are a couple of bits I still need to
+verify, but I'm hoping that I can send this out for real next week.
 
-It just needs to be visible by modules and what not, otherwise linking
-will fail.
+In the process of reworking this I spotted some issues that will get in
+the way of livepatching. Notably:
 
-> 
-> I guess with the new nomenclature that can be SYM_CODE_* now...
-> 
-> Then, this magic "function" or a global symbol with an address or
-> whatever that is (oh, there's #define trickery too) definitely deserves
-> a comment above it to explain what it is. I even have to build the .s
-> file to see what it turns into:
+* When modules can be loaded far away from the kernel, we'll potentially
+  need a PLT for each function within a module, if each can be patched
+  to a unique function. Currently we have a fixed number, which is only
+  sufficient for the two ftrace entry trampolines.
 
-The #define was because we use to support mcount or __fentry__, now we
-just support __fentry__, and function_hook describes it better ;-)
+  IIUC, the new code being patched in is itself a module, in which case
+  we'd need a PLT for each function in the main kernel image.
 
-> 
-> .globl __fentry__ ; .p2align 4, 0x90 ; __fentry__:
->  retq
-> .type __fentry__, @function ; .size __fentry__, .-__fentry__
-> 
-> Yeah, it is called on every function entry:
-> 
-> callq  ffffffff81a01760 <__fentry__>
-> 
-> but can we please explain with a comment above it what it is?
+  We have a few options here, e.g. changing which memory size model we
+  use, or reserving space for a PLT before each function using
+  -f patchable-function-entry=N,M.
 
-Heh, I guess we could, which would probably be quite a long comment as
-it's the key behind ftrace itself.
+* There are windows where backtracing will miss the callsite's caller,
+  as its address is not live in the LR or existing chain of frame
+  records. Thus we cannot claim to have a reliable stacktrace.
 
--- Steve
+  I suspect we'll have to teach the stacktrace code to handle this as a
+  special-case.
 
+  I'll try to write these up, as similar probably applies to other
+  architectures with a link register.
+
+Thanks,
+Mark.
