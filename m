@@ -2,415 +2,267 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90534CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54511CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 566E021852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D4A321852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:43:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505309AbfJRPnE (ORCPT
+        id S2505272AbfJRPmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:43:04 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:50365 "EHLO
+        Fri, 18 Oct 2019 11:42:54 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:35025 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505260AbfJRPm4 (ORCPT
+        with ESMTP id S2505201AbfJRPmp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:42:56 -0400
+        Fri, 18 Oct 2019 11:42:45 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1M8yoa-1iRWGW0hh0-0065Ln; Fri, 18 Oct 2019 17:42:22 +0200
+ 1MEFrX-1iDXlf06Gj-00ABwm; Fri, 18 Oct 2019 17:42:26 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Daniel Mack <daniel@zonque.org>,
         Haojian Zhuang <haojian.zhuang@gmail.com>,
         Robert Jarzmik <robert.jarzmik@free.fr>
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-watchdog@vger.kernel.org
-Subject: [PATCH 09/46] watchdog: sa1100: use platform device registration
-Date:   Fri, 18 Oct 2019 17:41:24 +0200
-Message-Id: <20191018154201.1276638-9-arnd@arndb.de>
+        Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH 18/46] ARM: pxa: corgi: use gpio descriptors for audio
+Date:   Fri, 18 Oct 2019 17:41:33 +0200
+Message-Id: <20191018154201.1276638-18-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191018154052.1276506-1-arnd@arndb.de>
 References: <20191018154052.1276506-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:qDo493GPFAz++Q7671EcxnlzzinllHVjM/CFjptshgQp1jXIaEq
- axRtNVML8vy7Kbp4of0v0hu4ghjNw3aE8jK7SdTSmW+EEAVTMbaNX5TiikTP/CGsWeRTW1a
- jDtkCfc4qo0wfK2OBYj/vppBfusq6xJ+kSPFzdhz1u0sL3jbFBHkIgoxgG0tK+PbtRGr8sT
- AV/MHCZnZagCepUOJ0ByA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:cooY8u8FubQ=:9naSPVnB74pxkfr2WfdM6B
- YeNT+wFevlI1NKfx/E8MzpHOLE7F9qQrw6vMjOaF28mWqlAcc/715U5K6QA0z8VGSpQY2UKpp
- YRJfAzVpPErVlcoW8rezcbrRs6Y/oRGS081gAfbDjSihiaFOd6BTlHZk3RYZzCCclQfTOua/v
- f/+p9w6/AeNv2CcaI1rq+CdLcDQSHwhlbOv32ecniqLuSjkeHbR3OZWkyKo7dlsjDkNuFlHY6
- IvVwszL7uLayFDTaCkxWxzEfdBwhz/hnLUURj55vfuhW0LHIPQvpoqtsAcwDAC1HfInAAG1Iy
- zg4OZqfJF22IxPkZizInuXtX/gAYQF1/0H85zoBjjzpQQ1Hj28xlHkeSKRCF5OAD7Ajljv9FN
- 0CdCPBrTGqhKDRUyonjHAFWHtBOsuQ5ntruFLlICo6iSZhUoExIo0RzBz1biSYLiLLh068G3i
- FFJNxHyvqnNrvg6XuCiVaZQRTQtLgkD4D77+3hxp8wr7Y264tirpK2ieKOnTKtHOSz+vOxtdY
- 2geU/cIbwJ2iytTCJtuMu/q9SXLRODfsYP9WBUdhFLFpnSt7LmwrmB3/OJrl65NWIQEoA69Jt
- +RtcvhBO46u1kYQTz/ffEFTxH3+jtYppHIvC5S4gBrcuxF/ZIW4OuzUOhwpv3fmIUW7DUhMpA
- Rvbvw6MhfZqrMZCImZmNn9d4BX7nNYHPDeAAi+i18y8nJ80E7XYhPD3/MIbMcmK5p40Ya+7ke
- +TntP/Rd2kC/McQvn6h2rX2Y4a0s54SHOL0RcjoLOyQGP2U6Qj8aVeWYNP/t6O/7o8jAvUAZU
- LqdQGt3ApvkOjmY2WOGY0z49tczcmehFWwz4cRduPqNyjLLKmzMeAhGYDNLj7Z0sTvIlHQVYB
- 62ivIlIIoydxX5bXwuuw==
+X-Provags-ID: V03:K1:TqURoHHVJJmB+BNcKhSOQIg0v6FOc3XqbZHPLBmLP4R4qV3sYnw
+ Wj8jrIMhPIgJIiCbUcoB6dtFG7A6LCSnqqQyt8ataw+kTic0BPNHvJ+47PKruXnXFDSu85e
+ +wOLnjABrp7TC9aqYKM1HcEW4uw9eFPgLPQr6fFAFymJdN2/X0iFDQk9+eSKJMk0BNbWhg5
+ gneq88ZVmC0Ae440lGuSQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yDgI6IIkP4I=:Dwre/9Q/lAAK7XEGRGDeHA
+ 5wQ6CrppVUlAv7ty6RB6U4TBJnmLvFvR8V84o1QCpxtBwBLLng+q13n+ZNnjV4WCmFLHnrhz2
+ aIVBdeoyRsygP0zDhjf/0ayvL08OsLQX18RtCKfPl9YjhrleOo+DWFSa4bMjhvsTwnzszgSIy
+ QbbTnOTlZvYpclGokzepVa3WJyEt4I+hQzA6EI6fvFbwgyw1AYYoQI2g6bqsNMNvtJFRL6VLF
+ x41JRYATNYsDilIRtAfCALbYPL9p66j2XjKWfqMlkOTIvq4bhHx1o8AqWJ3fmlbmf2SiAyqE9
+ gi/tgII5JKupWpyww8JQcXQcgdBz4juLPcLIgOd2bwaP6sx71tycLcYzzXxS3FazV76GNkLBc
+ 8V+DfrFmAraFdB1459OpAKlw26XS1Nj5PTdZ4tUds0AYctoNL7aCS5UNj8tFOSdJsj3+lmYnr
+ kAkpwMbVPbSrTn6M2XMutCbjjMqqyI9cZa/7PKWKUmhwUrmQedOE/SYeNnA5t8Yy/EN2Gtaz7
+ 3/DLM1TUOoeCMxKepkGBkBUFX8MhDzq3KWZympkfVyz8TMkYCs/Dix/m/sWJ5DN8YFNnvtc+K
+ 3AtZpCPdNx81OCQSF/Ru8V3f8gtL+Eo0qT2jHN1gyrJpFWABbAAluBrC+g+2s6etL9K9JJn4t
+ UmG7zLDViZpWsc9RXv/ahVsfVvF7QGTpEGBowj6ZLtlWC2HaVEbxzCP/7/kXz5qtU978M9POI
+ K4kcxA1iPGYq4NV/V90WmPpCWMSBF5BaO5zh3e5g/kc7dAmJytHL0xFbQOhsPIZkHYJTSZ/5y
+ gofshTfkjZrwPiMBm9pptriZ7EWNbW6WHEy/semSfAUGW4GQqXsupl6K4v9x3c9b64c+2wyLr
+ g9Ax+n5CcCDM0fOLODuA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rather than relying on machine specific headers to
-pass down the reboot status and the register locations,
-use resources and platform_data.
+The audio driver should not use a hardwired gpio number
+from the header. Change it to use a lookup table.
 
-Aside from this, keep the changes to a minimum.
-
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-watchdog@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/arm/mach-pxa/devices.c               | 11 +++
- arch/arm/mach-pxa/include/mach/regs-ost.h |  2 +
- arch/arm/mach-pxa/include/mach/reset.h    |  2 +-
- arch/arm/mach-pxa/pxa25x.c                |  2 +-
- arch/arm/mach-pxa/pxa27x.c                |  2 +-
- arch/arm/mach-pxa/pxa3xx.c                |  2 +-
- arch/arm/mach-pxa/reset.c                 |  3 -
- arch/arm/mach-sa1100/generic.c            |  6 +-
- arch/arm/mach-sa1100/include/mach/reset.h |  1 -
- drivers/watchdog/sa1100_wdt.c             | 87 ++++++++++++++++-------
- 10 files changed, 83 insertions(+), 35 deletions(-)
+ arch/arm/mach-pxa/corgi.c                    | 22 ++++++++++-
+ arch/arm/mach-pxa/{include/mach => }/corgi.h |  2 +-
+ arch/arm/mach-pxa/corgi_pm.c                 |  2 +-
+ sound/soc/pxa/corgi.c                        | 40 +++++++++++++-------
+ 4 files changed, 50 insertions(+), 16 deletions(-)
+ rename arch/arm/mach-pxa/{include/mach => }/corgi.h (98%)
 
-diff --git a/arch/arm/mach-pxa/devices.c b/arch/arm/mach-pxa/devices.c
-index 233035e6a2ff..fb9b4f6d32de 100644
---- a/arch/arm/mach-pxa/devices.c
-+++ b/arch/arm/mach-pxa/devices.c
-@@ -23,6 +23,8 @@
- #include <linux/platform_data/mmp_dma.h>
- #include <linux/platform_data/mtd-nand-pxa3xx.h>
+diff --git a/arch/arm/mach-pxa/corgi.c b/arch/arm/mach-pxa/corgi.c
+index e9743ebbee86..0ff8e8140513 100644
+--- a/arch/arm/mach-pxa/corgi.c
++++ b/arch/arm/mach-pxa/corgi.c
+@@ -49,7 +49,7 @@
+ #include <linux/platform_data/irda-pxaficp.h>
+ #include <linux/platform_data/mmc-pxamci.h>
+ #include "udc.h"
+-#include <mach/corgi.h>
++#include "corgi.h"
+ #include "sharpsl_pm.h"
  
-+#include <mach/regs-ost.h>
-+#include <mach/reset.h>
- #include "devices.h"
- #include "generic.h"
- 
-@@ -1110,3 +1112,12 @@ void __init pxa2xx_set_dmac_info(struct mmp_dma_platdata *dma_pdata)
- {
- 	pxa_register_device(&pxa2xx_pxa_dma, dma_pdata);
- }
-+
-+void __init pxa_register_wdt(unsigned int reset_status)
-+{
-+	struct resource res = DEFINE_RES_MEM(OST_PHYS, OST_LEN);
-+
-+	reset_status &= RESET_STATUS_WATCHDOG;
-+	platform_device_register_resndata(NULL, "sa1100_wdt", -1, &res, 1,
-+					  &reset_status, sizeof(reset_status));
-+}
-diff --git a/arch/arm/mach-pxa/include/mach/regs-ost.h b/arch/arm/mach-pxa/include/mach/regs-ost.h
-index 109d0ed264df..c8001cfc8d6b 100644
---- a/arch/arm/mach-pxa/include/mach/regs-ost.h
-+++ b/arch/arm/mach-pxa/include/mach/regs-ost.h
-@@ -7,6 +7,8 @@
- /*
-  * OS Timer & Match Registers
-  */
-+#define OST_PHYS	0x40A00000
-+#define OST_LEN		0x00000020
- 
- #define OSMR0		io_p2v(0x40A00000)  /* */
- #define OSMR1		io_p2v(0x40A00004)  /* */
-diff --git a/arch/arm/mach-pxa/include/mach/reset.h b/arch/arm/mach-pxa/include/mach/reset.h
-index e1c4d100fd45..963dd190bc13 100644
---- a/arch/arm/mach-pxa/include/mach/reset.h
-+++ b/arch/arm/mach-pxa/include/mach/reset.h
-@@ -8,8 +8,8 @@
- #define RESET_STATUS_GPIO	(1 << 3)	/* GPIO Reset */
- #define RESET_STATUS_ALL	(0xf)
- 
--extern unsigned int reset_status;
- extern void clear_reset_status(unsigned int mask);
-+extern void pxa_register_wdt(unsigned int reset_status);
- 
- /**
-  * init_gpio_reset() - register GPIO as reset generator
-diff --git a/arch/arm/mach-pxa/pxa25x.c b/arch/arm/mach-pxa/pxa25x.c
-index 305047ebd2f1..dfc90b41fba3 100644
---- a/arch/arm/mach-pxa/pxa25x.c
-+++ b/arch/arm/mach-pxa/pxa25x.c
-@@ -240,7 +240,7 @@ static int __init pxa25x_init(void)
- 
- 	if (cpu_is_pxa25x()) {
- 
--		reset_status = RCSR;
-+		pxa_register_wdt(RCSR);
- 
- 		pxa25x_init_pm();
- 
-diff --git a/arch/arm/mach-pxa/pxa27x.c b/arch/arm/mach-pxa/pxa27x.c
-index a81ac88ecbfd..38fdd22c4dc5 100644
---- a/arch/arm/mach-pxa/pxa27x.c
-+++ b/arch/arm/mach-pxa/pxa27x.c
-@@ -337,7 +337,7 @@ static int __init pxa27x_init(void)
- 
- 	if (cpu_is_pxa27x()) {
- 
--		reset_status = RCSR;
-+		pxa_register_wdt(RCSR);
- 
- 		pxa27x_init_pm();
- 
-diff --git a/arch/arm/mach-pxa/pxa3xx.c b/arch/arm/mach-pxa/pxa3xx.c
-index fc84aed99481..7c569fa2a6da 100644
---- a/arch/arm/mach-pxa/pxa3xx.c
-+++ b/arch/arm/mach-pxa/pxa3xx.c
-@@ -463,7 +463,7 @@ static int __init pxa3xx_init(void)
- 
- 	if (cpu_is_pxa3xx()) {
- 
--		reset_status = ARSR;
-+		pxa_register_wdt(ARSR);
- 
- 		/*
- 		 * clear RDH bit every time after reset
-diff --git a/arch/arm/mach-pxa/reset.c b/arch/arm/mach-pxa/reset.c
-index af78405aa4e9..fcb791c5ae3e 100644
---- a/arch/arm/mach-pxa/reset.c
-+++ b/arch/arm/mach-pxa/reset.c
-@@ -11,9 +11,6 @@
- #include <mach/reset.h>
- #include <mach/smemc.h>
- 
--unsigned int reset_status;
--EXPORT_SYMBOL(reset_status);
--
- static void do_hw_reset(void);
- 
- static int reset_gpio = -1;
-diff --git a/arch/arm/mach-sa1100/generic.c b/arch/arm/mach-sa1100/generic.c
-index 4dfb7554649d..6c21f214cd60 100644
---- a/arch/arm/mach-sa1100/generic.c
-+++ b/arch/arm/mach-sa1100/generic.c
-@@ -39,9 +39,6 @@
- #include "generic.h"
- #include <clocksource/pxa.h>
- 
--unsigned int reset_status;
--EXPORT_SYMBOL(reset_status);
--
- #define NR_FREQS	16
- 
- /*
-@@ -319,10 +316,13 @@ static struct platform_device *sa11x0_devices[] __initdata = {
- 
- static int __init sa1100_init(void)
- {
-+	struct resource wdt_res = DEFINE_RES_MEM(0x90000000, 0x20);
- 	pm_power_off = sa1100_power_off;
- 
- 	regulator_has_full_constraints();
- 
-+	platform_device_register_simple("sa1100_wdt", -1, &wdt_res, 1);
-+
- 	return platform_add_devices(sa11x0_devices, ARRAY_SIZE(sa11x0_devices));
- }
- 
-diff --git a/arch/arm/mach-sa1100/include/mach/reset.h b/arch/arm/mach-sa1100/include/mach/reset.h
-index 27695650a567..a6723d45ae2a 100644
---- a/arch/arm/mach-sa1100/include/mach/reset.h
-+++ b/arch/arm/mach-sa1100/include/mach/reset.h
-@@ -10,7 +10,6 @@
- #define RESET_STATUS_GPIO	(1 << 3)	/* GPIO Reset */
- #define RESET_STATUS_ALL	(0xf)
- 
--extern unsigned int reset_status;
- static inline void clear_reset_status(unsigned int mask)
- {
- 	RCSR = mask;
-diff --git a/drivers/watchdog/sa1100_wdt.c b/drivers/watchdog/sa1100_wdt.c
-index 0f6ffc1e7f4e..a24d6a07c7a7 100644
---- a/drivers/watchdog/sa1100_wdt.c
-+++ b/drivers/watchdog/sa1100_wdt.c
-@@ -22,6 +22,7 @@
- #include <linux/types.h>
- #include <linux/kernel.h>
- #include <linux/fs.h>
-+#include <linux/platform_device.h>
- #include <linux/miscdevice.h>
- #include <linux/watchdog.h>
- #include <linux/init.h>
-@@ -30,16 +31,42 @@
- #include <linux/uaccess.h>
- #include <linux/timex.h>
- 
--#ifdef CONFIG_ARCH_PXA
--#include <mach/regs-ost.h>
--#endif
-+#define REG_OSMR0  	0x0000  /* OS timer Match Reg. 0 */
-+#define REG_OSMR1  	0x0004  /* OS timer Match Reg. 1 */
-+#define REG_OSMR2  	0x0008  /* OS timer Match Reg. 2 */
-+#define REG_OSMR3  	0x000c  /* OS timer Match Reg. 3 */
-+#define REG_OSCR   	0x0010  /* OS timer Counter Reg. */
-+#define REG_OSSR   	0x0014  /* OS timer Status Reg. */
-+#define REG_OWER   	0x0018  /* OS timer Watch-dog Enable Reg. */
-+#define REG_OIER  	0x001C  /* OS timer Interrupt Enable Reg. */
- 
--#include <mach/reset.h>
-+#define OSSR_M3		(1 << 3)	/* Match status channel 3 */
-+#define OSSR_M2		(1 << 2)	/* Match status channel 2 */
-+#define OSSR_M1		(1 << 1)	/* Match status channel 1 */
-+#define OSSR_M0		(1 << 0)	/* Match status channel 0 */
-+
-+#define OWER_WME	(1 << 0)	/* Watchdog Match Enable */
-+
-+#define OIER_E3		(1 << 3)	/* Interrupt enable channel 3 */
-+#define OIER_E2		(1 << 2)	/* Interrupt enable channel 2 */
-+#define OIER_E1		(1 << 1)	/* Interrupt enable channel 1 */
-+#define OIER_E0		(1 << 0)	/* Interrupt enable channel 0 */
- 
- static unsigned long oscr_freq;
- static unsigned long sa1100wdt_users;
- static unsigned int pre_margin;
- static int boot_status;
-+static void __iomem *reg_base;
-+
-+static inline void sa1100_wr(u32 val, u32 offset)
-+{
-+	writel_relaxed(val, reg_base + offset);
-+}
-+
-+static inline u32 sa1100_rd(u32 offset)
-+{
-+	return readl_relaxed(reg_base + offset);
-+}
- 
- /*
-  *	Allow only one person to hold it open
-@@ -50,10 +77,10 @@ static int sa1100dog_open(struct inode *inode, struct file *file)
- 		return -EBUSY;
- 
- 	/* Activate SA1100 Watchdog timer */
--	writel_relaxed(readl_relaxed(OSCR) + pre_margin, OSMR3);
--	writel_relaxed(OSSR_M3, OSSR);
--	writel_relaxed(OWER_WME, OWER);
--	writel_relaxed(readl_relaxed(OIER) | OIER_E3, OIER);
-+	sa1100_wr(sa1100_rd(REG_OSCR) + pre_margin, REG_OSMR3);
-+	sa1100_wr(OSSR_M3, REG_OSSR);
-+	sa1100_wr(OWER_WME, REG_OWER);
-+	sa1100_wr(sa1100_rd(REG_OIER) | OIER_E3, REG_OIER);
- 	return stream_open(inode, file);
- }
- 
-@@ -61,7 +88,7 @@ static int sa1100dog_open(struct inode *inode, struct file *file)
-  * The watchdog cannot be disabled.
-  *
-  * Previous comments suggested that turning off the interrupt by
-- * clearing OIER[E3] would prevent the watchdog timing out but this
-+ * clearing REG_OIER[E3] would prevent the watchdog timing out but this
-  * does not appear to be true (at least on the PXA255).
-  */
- static int sa1100dog_release(struct inode *inode, struct file *file)
-@@ -76,7 +103,7 @@ static ssize_t sa1100dog_write(struct file *file, const char __user *data,
- {
- 	if (len)
- 		/* Refresh OSMR3 timer. */
--		writel_relaxed(readl_relaxed(OSCR) + pre_margin, OSMR3);
-+		sa1100_wr(sa1100_rd(REG_OSCR) + pre_margin, REG_OSMR3);
- 	return len;
- }
- 
-@@ -110,7 +137,7 @@ static long sa1100dog_ioctl(struct file *file, unsigned int cmd,
- 		break;
- 
- 	case WDIOC_KEEPALIVE:
--		writel_relaxed(readl_relaxed(OSCR) + pre_margin, OSMR3);
-+		sa1100_wr(sa1100_rd(REG_OSCR) + pre_margin, REG_OSMR3);
- 		ret = 0;
- 		break;
- 
-@@ -125,7 +152,7 @@ static long sa1100dog_ioctl(struct file *file, unsigned int cmd,
- 		}
- 
- 		pre_margin = oscr_freq * time;
--		writel_relaxed(readl_relaxed(OSCR) + pre_margin, OSMR3);
-+		sa1100_wr(sa1100_rd(REG_OSCR) + pre_margin, REG_OSMR3);
- 		/*fall through*/
- 
- 	case WDIOC_GETTIMEOUT:
-@@ -150,12 +177,22 @@ static struct miscdevice sa1100dog_miscdev = {
- 	.fops		= &sa1100dog_fops,
+ #include <asm/mach/sharpsl_param.h>
+@@ -472,6 +472,25 @@ static struct platform_device corgiled_device = {
+ 	},
  };
  
--static int margin __initdata = 60;		/* (secs) Default is 1 minute */
-+static int margin = 60;		/* (secs) Default is 1 minute */
- static struct clk *clk;
- 
--static int __init sa1100dog_init(void)
-+static int sa1100dog_probe(struct platform_device *pdev)
- {
- 	int ret;
-+	int *platform_data;
-+	struct resource *res;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res)
-+		return -ENXIO;
-+	reg_base = devm_ioremap(&pdev->dev, res->start, resource_size(res));
-+	ret = PTR_ERR_OR_ZERO(reg_base);
-+	if (ret)
-+		return ret;
- 
- 	clk = clk_get(NULL, "OSTIMER0");
- 	if (IS_ERR(clk)) {
-@@ -173,13 +210,9 @@ static int __init sa1100dog_init(void)
- 
- 	oscr_freq = clk_get_rate(clk);
- 
--	/*
--	 * Read the reset status, and save it for later.  If
--	 * we suspend, RCSR will be cleared, and the watchdog
--	 * reset reason will be lost.
--	 */
--	boot_status = (reset_status & RESET_STATUS_WATCHDOG) ?
--				WDIOF_CARDRESET : 0;
-+	platform_data = pdev->dev.platform_data;
-+	if (platform_data && *platform_data)
-+		boot_status = WDIOF_CARDRESET;
- 	pre_margin = oscr_freq * margin;
- 
- 	ret = misc_register(&sa1100dog_miscdev);
-@@ -195,15 +228,21 @@ static int __init sa1100dog_init(void)
- 	return ret;
- }
- 
--static void __exit sa1100dog_exit(void)
-+static int sa1100dog_remove(struct platform_device *pdev)
- {
- 	misc_deregister(&sa1100dog_miscdev);
- 	clk_disable_unprepare(clk);
- 	clk_put(clk);
-+
-+	return 0;
- }
- 
--module_init(sa1100dog_init);
--module_exit(sa1100dog_exit);
-+struct platform_driver sa1100dog_driver = {
-+	.driver.name = "sa1100_wdt",
-+	.probe	  = sa1100dog_probe,
-+	.remove	  = sa1100dog_remove,
++static struct gpiod_lookup_table corgi_audio_gpio_table = {
++	.dev_id = "corgi-audio",
++	.table = {
++		GPIO_LOOKUP("sharp-scoop",
++			    CORGI_GPIO_MUTE_L - CORGI_SCOOP_GPIO_BASE,
++			    "mute-l", GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP("sharp-scoop",
++			    CORGI_GPIO_MUTE_R - CORGI_SCOOP_GPIO_BASE,
++			    "mute-r", GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP("sharp-scoop",
++			    CORGI_GPIO_APM_ON - CORGI_SCOOP_GPIO_BASE,
++			    "apm-on", GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP("sharp-scoop",
++			    CORGI_GPIO_MIC_BIAS - CORGI_SCOOP_GPIO_BASE,
++			    "mic-bias", GPIO_ACTIVE_HIGH),
++		{ },
++	},
 +};
-+module_platform_driver(sa1100dog_driver);
++
+ /*
+  * Corgi Audio
+  */
+@@ -740,6 +759,7 @@ static void __init corgi_init(void)
  
- MODULE_AUTHOR("Oleg Drokin <green@crimea.edu>");
- MODULE_DESCRIPTION("SA1100/PXA2xx Watchdog");
+  	pxa_set_udc_info(&udc_info);
+ 	gpiod_add_lookup_table(&corgi_mci_gpio_table);
++	gpiod_add_lookup_table(&corgi_audio_gpio_table);
+ 	pxa_set_mci_info(&corgi_mci_platform_data);
+ 	pxa_set_ficp_info(&corgi_ficp_platform_data);
+ 	pxa_set_i2c_info(NULL);
+diff --git a/arch/arm/mach-pxa/include/mach/corgi.h b/arch/arm/mach-pxa/corgi.h
+similarity index 98%
+rename from arch/arm/mach-pxa/include/mach/corgi.h
+rename to arch/arm/mach-pxa/corgi.h
+index b565ca7b8cda..fe2fcf6532b9 100644
+--- a/arch/arm/mach-pxa/include/mach/corgi.h
++++ b/arch/arm/mach-pxa/corgi.h
+@@ -9,7 +9,7 @@
+ #ifndef __ASM_ARCH_CORGI_H
+ #define __ASM_ARCH_CORGI_H  1
+ 
+-#include "irqs.h" /* PXA_NR_BUILTIN_GPIO */
++#include <mach/irqs.h> /* PXA_NR_BUILTIN_GPIO */
+ 
+ /*
+  * Corgi (Non Standard) GPIO Definitions
+diff --git a/arch/arm/mach-pxa/corgi_pm.c b/arch/arm/mach-pxa/corgi_pm.c
+index ff1ac9bf37cb..c6ddfc737644 100644
+--- a/arch/arm/mach-pxa/corgi_pm.c
++++ b/arch/arm/mach-pxa/corgi_pm.c
+@@ -20,7 +20,7 @@
+ #include <asm/irq.h>
+ #include <asm/mach-types.h>
+ 
+-#include <mach/corgi.h>
++#include "corgi.h"
+ #include <mach/pxa2xx-regs.h>
+ #include "sharpsl_pm.h"
+ 
+diff --git a/sound/soc/pxa/corgi.c b/sound/soc/pxa/corgi.c
+index 47647a1c3124..9db5a3d3606e 100644
+--- a/sound/soc/pxa/corgi.c
++++ b/sound/soc/pxa/corgi.c
+@@ -21,7 +21,6 @@
+ #include <sound/soc.h>
+ 
+ #include <asm/mach-types.h>
+-#include <mach/corgi.h>
+ #include <linux/platform_data/asoc-pxa.h>
+ 
+ #include "../codecs/wm8731.h"
+@@ -41,6 +40,8 @@
+ static int corgi_jack_func;
+ static int corgi_spk_func;
+ 
++struct gpio_desc *gpiod_mute_l, *gpiod_mute_r, *gpiod_apm_on, *gpiod_mic_bias;
++
+ static void corgi_ext_control(struct snd_soc_dapm_context *dapm)
+ {
+ 	snd_soc_dapm_mutex_lock(dapm);
+@@ -49,8 +50,8 @@ static void corgi_ext_control(struct snd_soc_dapm_context *dapm)
+ 	switch (corgi_jack_func) {
+ 	case CORGI_HP:
+ 		/* set = unmute headphone */
+-		gpio_set_value(CORGI_GPIO_MUTE_L, 1);
+-		gpio_set_value(CORGI_GPIO_MUTE_R, 1);
++		gpiod_set_value(gpiod_mute_l, 1);
++		gpiod_set_value(gpiod_mute_r, 1);
+ 		snd_soc_dapm_disable_pin_unlocked(dapm, "Mic Jack");
+ 		snd_soc_dapm_disable_pin_unlocked(dapm, "Line Jack");
+ 		snd_soc_dapm_enable_pin_unlocked(dapm, "Headphone Jack");
+@@ -58,24 +59,24 @@ static void corgi_ext_control(struct snd_soc_dapm_context *dapm)
+ 		break;
+ 	case CORGI_MIC:
+ 		/* reset = mute headphone */
+-		gpio_set_value(CORGI_GPIO_MUTE_L, 0);
+-		gpio_set_value(CORGI_GPIO_MUTE_R, 0);
++		gpiod_set_value(gpiod_mute_l, 0);
++		gpiod_set_value(gpiod_mute_r, 0);
+ 		snd_soc_dapm_enable_pin_unlocked(dapm, "Mic Jack");
+ 		snd_soc_dapm_disable_pin_unlocked(dapm, "Line Jack");
+ 		snd_soc_dapm_disable_pin_unlocked(dapm, "Headphone Jack");
+ 		snd_soc_dapm_disable_pin_unlocked(dapm, "Headset Jack");
+ 		break;
+ 	case CORGI_LINE:
+-		gpio_set_value(CORGI_GPIO_MUTE_L, 0);
+-		gpio_set_value(CORGI_GPIO_MUTE_R, 0);
++		gpiod_set_value(gpiod_mute_l, 0);
++		gpiod_set_value(gpiod_mute_r, 0);
+ 		snd_soc_dapm_disable_pin_unlocked(dapm, "Mic Jack");
+ 		snd_soc_dapm_enable_pin_unlocked(dapm, "Line Jack");
+ 		snd_soc_dapm_disable_pin_unlocked(dapm, "Headphone Jack");
+ 		snd_soc_dapm_disable_pin_unlocked(dapm, "Headset Jack");
+ 		break;
+ 	case CORGI_HEADSET:
+-		gpio_set_value(CORGI_GPIO_MUTE_L, 0);
+-		gpio_set_value(CORGI_GPIO_MUTE_R, 1);
++		gpiod_set_value(gpiod_mute_l, 0);
++		gpiod_set_value(gpiod_mute_r, 1);
+ 		snd_soc_dapm_enable_pin_unlocked(dapm, "Mic Jack");
+ 		snd_soc_dapm_disable_pin_unlocked(dapm, "Line Jack");
+ 		snd_soc_dapm_disable_pin_unlocked(dapm, "Headphone Jack");
+@@ -108,8 +109,8 @@ static int corgi_startup(struct snd_pcm_substream *substream)
+ static void corgi_shutdown(struct snd_pcm_substream *substream)
+ {
+ 	/* set = unmute headphone */
+-	gpio_set_value(CORGI_GPIO_MUTE_L, 1);
+-	gpio_set_value(CORGI_GPIO_MUTE_R, 1);
++	gpiod_set_value(gpiod_mute_l, 1);
++	gpiod_set_value(gpiod_mute_r, 1);
+ }
+ 
+ static int corgi_hw_params(struct snd_pcm_substream *substream,
+@@ -199,14 +200,14 @@ static int corgi_set_spk(struct snd_kcontrol *kcontrol,
+ static int corgi_amp_event(struct snd_soc_dapm_widget *w,
+ 	struct snd_kcontrol *k, int event)
+ {
+-	gpio_set_value(CORGI_GPIO_APM_ON, SND_SOC_DAPM_EVENT_ON(event));
++	gpiod_set_value(gpiod_apm_on, SND_SOC_DAPM_EVENT_ON(event));
+ 	return 0;
+ }
+ 
+ static int corgi_mic_event(struct snd_soc_dapm_widget *w,
+ 	struct snd_kcontrol *k, int event)
+ {
+-	gpio_set_value(CORGI_GPIO_MIC_BIAS, SND_SOC_DAPM_EVENT_ON(event));
++	gpiod_set_value(gpiod_mic_bias, SND_SOC_DAPM_EVENT_ON(event));
+ 	return 0;
+ }
+ 
+@@ -293,6 +294,19 @@ static int corgi_probe(struct platform_device *pdev)
+ 
+ 	card->dev = &pdev->dev;
+ 
++	gpiod_mute_l = devm_gpiod_get(&pdev->dev, "mute-l", GPIOD_OUT_HIGH);
++	if (IS_ERR(gpiod_mute_l))
++		return PTR_ERR(gpiod_mute_l);
++	gpiod_mute_r = devm_gpiod_get(&pdev->dev, "mute-r", GPIOD_OUT_HIGH);
++	if (IS_ERR(gpiod_mute_r))
++		return PTR_ERR(gpiod_mute_r);
++	gpiod_apm_on = devm_gpiod_get(&pdev->dev, "apm-on", GPIOD_OUT_LOW);
++	if (IS_ERR(gpiod_apm_on))
++		return PTR_ERR(gpiod_apm_on);
++	gpiod_mic_bias = devm_gpiod_get(&pdev->dev, "mic-bias", GPIOD_OUT_LOW);
++	if (IS_ERR(gpiod_mic_bias))
++		return PTR_ERR(gpiod_mic_bias);
++
+ 	ret = devm_snd_soc_register_card(&pdev->dev, card);
+ 	if (ret)
+ 		dev_err(&pdev->dev, "snd_soc_register_card() failed: %d\n",
 -- 
 2.20.0
 
