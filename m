@@ -2,162 +2,117 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F376DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA5BCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2CB720820
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2557420820
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:25:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HGaCctYW"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ISt0Da+O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502639AbfJRSWN (ORCPT
+        id S2502940AbfJRSZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:22:13 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40609 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394258AbfJRSWM (ORCPT
+        Fri, 18 Oct 2019 14:25:23 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33571 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502886AbfJRSZW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:22:12 -0400
-Received: by mail-pl1-f196.google.com with SMTP id d22so3236010pll.7
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 11:22:11 -0700 (PDT)
+        Fri, 18 Oct 2019 14:25:22 -0400
+Received: by mail-io1-f67.google.com with SMTP id z19so8616491ior.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 11:25:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OnK5lWkiyqDZC+wf98tKaPFQMaH5nw66vTCTgBsETB0=;
-        b=HGaCctYWGOAh8+SVwpWSXyL2fpNLAwxTirQ1Uzay239tz4ROoP9VrzqTTnhFs2Mq13
-         KhPAlO/FmLn5DbqD++IyGQmSTqATiHX/lmyl/iRTca0KXbS1JGEWuHcOipEk0T9xU3JI
-         VxVEGWqPwlXfB33KGZfhfqfSTe62DbnIO0IVE=
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=DDu/IAHCCoDYbrGWQJqHqgeQldPkoq1jl8KIeufJyiA=;
+        b=ISt0Da+OAsAtGt6QgzzKN5nThCoXEDZS6clnnScRtibWElaDsD/W4RTTNQ6acbpK/j
+         l95KMPu72vxXKr5UWzk4mDrPZKzMAmOFcRw3lJHfjIPeuHfXoLL5QdHQT2tusEOllbyI
+         d6ktFHxCNpFnl9myg4QWttqBICnHFvxFXLeVBMrbb7orBISgGFce/9Fxwto1lnNtCWYD
+         M5hBUSGFFn/Ntm1HMvUj0LdPYBi6FYVBUTigi0z3tnpxbBRl9gdb4MtOIf+KUEc9eEci
+         VxKJZqtwDRshEl/N2path8RwlSv2JqdGaPkkPjw7PeaXXOsE4Eqg7odxoJKsQyWd6+DO
+         RQtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OnK5lWkiyqDZC+wf98tKaPFQMaH5nw66vTCTgBsETB0=;
-        b=TUisMf5NEGpDnXK6URQD/LYcUbjZBQX0eOro/I8mImpYCPPA1Tb5b4qGw7Pvy6oBAi
-         SYBQu8FzgDPWjFpzSqLFvgzruCAJ6HHbJ2oWnGgO9Lo5NGe2hN/9sWlAhICrfA3Qo99F
-         gYnbJD6K4JM9yYjctarY3J6vOF6rvaNlB7IKWCqe8ND8+926448bY0pwfmMNquA9FEeG
-         idv2JcGiTOUSv7wRSnXc5/SY/wefqDVi7mqVbNeUCn0jwnKkdugH6yr/EVhxNwM9J4am
-         Vkztya9x1SjXlQakKWzmDPclq7fvAVfzYEc1h0U/HD/ADuIAzUWdDClZrPuDDgMs/f5K
-         vnqg==
-X-Gm-Message-State: APjAAAWXgABzdyUtYHuGg7bw/81dgsGoZ2VhsWgcpWQTH71BZh//Rs/q
-        IeByGKPrWnnu2H+AKZzRmUqrbw==
-X-Google-Smtp-Source: APXvYqxPSP1qykyeISMV2cQbBkFbqceh5sdYOZivsz+bTllz3hlP4kD6ayq3dwx3gk8fjjO3VijRmQ==
-X-Received: by 2002:a17:902:76c4:: with SMTP id j4mr11514118plt.9.1571422931266;
-        Fri, 18 Oct 2019 11:22:11 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id s1sm5995397pgi.52.2019.10.18.11.22.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Oct 2019 11:22:06 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 11:22:05 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 2/4] Bluetooth: hci_qca: Don't vote for specific voltage
-Message-ID: <20191018182205.GA20212@google.com>
-References: <20191018052405.3693555-1-bjorn.andersson@linaro.org>
- <20191018052405.3693555-3-bjorn.andersson@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=DDu/IAHCCoDYbrGWQJqHqgeQldPkoq1jl8KIeufJyiA=;
+        b=sOKNS0YS0vx3BdIKSxn5IV+cNQo7Crr6Nx+POSRQyIszlogr2lRyc+EAK2EHNCD0Py
+         nO8oW20R4p9BBAwN7hsKc/1HYTs8sCzQH3MH/MHY6zBiHp0xNeUCF1l9O4qmFaCzjW0T
+         +0lBS+bwn4j6YelG4/9gveCIcYRAaidBTeGc+OUzsT1jBRRtEj8fq0hKGsdlRHVlphFT
+         vSGLlT9ahQCSOaoyGCcXaQI/gJvZXLYkSYUo2b3XpRVlpW3Oft15M8EzXMFb4rNDOAkQ
+         w5lVdEuI8JadUl1fMZyyzqgeJPG5VBcXX8t8yA3QYjIcUlLCTxvObckA07cmA8ziDrF0
+         8Pkw==
+X-Gm-Message-State: APjAAAUrEQ/62CdNGqNqY/fPFQ32l2FiUws0asVHspGoymBGC4D3L80R
+        BBHWz/WbeWdwNXrH1lWketSRZw==
+X-Google-Smtp-Source: APXvYqwFm8QnDjxMk1Ii/z0SeFVjpCdpbt8QkXM1VvTvVcOykUolmscleqfMpc4W6WEofHqEK2BJ8Q==
+X-Received: by 2002:a5d:9057:: with SMTP id v23mr3972088ioq.119.1571423121834;
+        Fri, 18 Oct 2019 11:25:21 -0700 (PDT)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id c8sm2044407iol.57.2019.10.18.11.25.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 11:25:21 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 11:25:19 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Atish Patra <Atish.Patra@wdc.com>
+cc:     "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "info@metux.net" <info@metux.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rfontana@redhat.com" <rfontana@redhat.com>,
+        "johan@kernel.org" <johan@kernel.org>,
+        "anup@brainfault.org" <anup@brainfault.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "allison@lohutok.net" <allison@lohutok.net>
+Subject: Re: [PATCH v2  2/2] RISC-V: Consolidate isa correctness check
+In-Reply-To: <a45f0c0e3db2e852770485bc581d489b6ee7545e.camel@wdc.com>
+Message-ID: <alpine.DEB.2.21.9999.1910181121270.21875@viisi.sifive.com>
+References: <20191009220058.24964-1-atish.patra@wdc.com>  <20191009220058.24964-3-atish.patra@wdc.com>  <alpine.DEB.2.21.9999.1910180142460.21875@viisi.sifive.com> <a45f0c0e3db2e852770485bc581d489b6ee7545e.camel@wdc.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191018052405.3693555-3-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 10:24:02PM -0700, Bjorn Andersson wrote:
-> Devices with specific voltage requirements should not request voltage
-> from the driver, but instead rely on the system configuration to define
-> appropriate voltages for each rail.
+On Fri, 18 Oct 2019, Atish Patra wrote:
+
+> On Fri, 2019-10-18 at 01:43 -0700, Paul Walmsley wrote:
+> > On Wed, 9 Oct 2019, Atish Patra wrote:
+> > 
+> > > Currently, isa string is read and checked for correctness at 
+> > > multiple places.
+> > > 
+> > > Consolidate them into one function and use it only during early 
+> > > bootup. In case of a incorrect isa string, the cpu shouldn't boot at 
+> > > all.
+> > > 
+> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > 
+> > Looks like riscv_read_check_isa() is called twice for each hart.  Is 
+> > there any way to call it only once per hart?
+> > 
 > 
-> This ensures that PMIC and board variations are accounted for, something
-> that the 0.1V range in the hci_qca driver currently tries to address.
-> But on the Lenovo Yoga C630 (with wcn3990) vddch0 is 3.1V, which means
-> the driver will fail to set the voltage.
+> I had to add the check in riscv_fill_hwcap() because that function is
+> iterating over all cpu nodes to set the hwcap. Thus, some of the harts
+> that are not available due to incorrect isa string can affect hwcap.
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  drivers/bluetooth/hci_qca.c | 26 ++++++++------------------
->  1 file changed, 8 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index c07c529b0d81..54aafcc69d06 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -130,8 +130,6 @@ enum qca_speed_type {
->   */
->  struct qca_vreg {
->  	const char *name;
-> -	unsigned int min_uV;
-> -	unsigned int max_uV;
->  	unsigned int load_uA;
->  };
->  
-> @@ -1332,10 +1330,10 @@ static const struct hci_uart_proto qca_proto = {
->  static const struct qca_vreg_data qca_soc_data_wcn3990 = {
->  	.soc_type = QCA_WCN3990,
->  	.vregs = (struct qca_vreg []) {
-> -		{ "vddio",   1800000, 1900000,  15000  },
-> -		{ "vddxo",   1800000, 1900000,  80000  },
-> -		{ "vddrf",   1300000, 1350000,  300000 },
-> -		{ "vddch0",  3300000, 3400000,  450000 },
-> +		{ "vddio", 15000  },
-> +		{ "vddxo", 80000  },
-> +		{ "vddrf", 300000 },
-> +		{ "vddch0", 450000 },
->  	},
->  	.num_vregs = 4,
->  };
-> @@ -1343,10 +1341,10 @@ static const struct qca_vreg_data qca_soc_data_wcn3990 = {
->  static const struct qca_vreg_data qca_soc_data_wcn3998 = {
->  	.soc_type = QCA_WCN3998,
->  	.vregs = (struct qca_vreg []) {
-> -		{ "vddio",   1800000, 1900000,  10000  },
-> -		{ "vddxo",   1800000, 1900000,  80000  },
-> -		{ "vddrf",   1300000, 1352000,  300000 },
-> -		{ "vddch0",  3300000, 3300000,  450000 },
-> +		{ "vddio", 10000  },
-> +		{ "vddxo", 80000  },
-> +		{ "vddrf", 300000 },
-> +		{ "vddch0", 450000 },
->  	},
->  	.num_vregs = 4,
->  };
-> @@ -1386,13 +1384,6 @@ static int qca_power_off(struct hci_dev *hdev)
->  static int qca_enable_regulator(struct qca_vreg vregs,
->  				struct regulator *regulator)
->  {
-> -	int ret;
-> -
-> -	ret = regulator_set_voltage(regulator, vregs.min_uV,
-> -				    vregs.max_uV);
-> -	if (ret)
-> -		return ret;
-> -
->  	return regulator_enable(regulator);
->  
->  }
-> @@ -1401,7 +1392,6 @@ static void qca_disable_regulator(struct qca_vreg vregs,
->  				  struct regulator *regulator)
->  {
->  	regulator_disable(regulator);
-> -	regulator_set_voltage(regulator, 0, vregs.max_uV);
->  
->  }
+> We can check cpu_possible_mask to figure out the harts with invalid isa
+> strings but that will perform poorly as RISC-V have more harts in
+> future.
 
-This was brought up multiple times during the initial review, but
-wasn't addressed.
-
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+How about just calling riscv_read_check_isa() once for all harts and 
+leaving riscv_fill_hwcap() the way it was?  You'll probably need to hoist 
+the earlier call out of setup_smp(), so it still is called when 
+!CONFIG_SMP.
 
 
+- Paul
