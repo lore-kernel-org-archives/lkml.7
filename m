@@ -2,108 +2,131 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D382ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1830CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC27F222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:34:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571398481;
-	bh=vIUo2Tn4Of2EyGa5CUiHbSN+bVQHwxjBx5sZD5Wyi64=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ryW6/O3P/Nmh5+0FZaCRjIHAta9QgoNIIFAtAiN3NdH5mkS5x6diuYWhGnB8hMz4A
-	 bTr0te+oKStCtIJhe8IY35OSU839u3fQUN2MT/5fF33LQ6N0Z9bAIRXEfiRlhHoVo8
-	 2jB45uwSawUJAODOp6BCeNVbu4A9n15PO1j+KnmQ=
+	by mail.kernel.org (Postfix) with ESMTP id 824B421D7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:37:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TvUQBq/N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404865AbfJRLek (ORCPT
+        id S2407322AbfJRLhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 07:34:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53282 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391782AbfJRLek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 07:34:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 789E7AFC3;
-        Fri, 18 Oct 2019 11:34:38 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 13:34:37 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, Qian Cai <cai@lca.pw>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: Re: memory offline infinite loop after soft offline
-Message-ID: <20191018113437.GJ5017@dhcp22.suse.cz>
-References: <20191017093410.GA19973@hori.linux.bs1.fc.nec.co.jp>
- <20191017100106.GF24485@dhcp22.suse.cz>
- <1571335633.5937.69.camel@lca.pw>
- <20191017182759.GN24485@dhcp22.suse.cz>
- <20191018021906.GA24978@hori.linux.bs1.fc.nec.co.jp>
- <33946728-bdeb-494a-5db8-e279acebca47@redhat.com>
- <20191018082459.GE5017@dhcp22.suse.cz>
- <f065d998-7fa3-ef9a-c2f4-5b9116f5596b@redhat.com>
- <20191018085528.GG5017@dhcp22.suse.cz>
- <3ac0ad7a-7dd2-c851-858d-2986fa8d44b6@redhat.com>
+        Fri, 18 Oct 2019 07:37:15 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:36652 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389955AbfJRLhO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 07:37:14 -0400
+Received: by mail-ed1-f67.google.com with SMTP id h2so4317737edn.3;
+        Fri, 18 Oct 2019 04:37:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vfacdRIZROtgaYKyvVVlViTaU4E6jqDJejGD7tuz/+s=;
+        b=TvUQBq/NsvkK0uCyK5aaB1cOiOq38Cq7pGNXyhyOMe3ai76NPGio2T0PBOiFlsDSLZ
+         R1sshtOTbas68n6dMsqEFSXVaqG4IevQuXPdjVu1uEIG6biMwYUGzfYiYtAI82R/BHDQ
+         93FUxB1OwxHTphdgReKffJfPJ+UwhufDFKK7AoYI7qJrCzkXl1ewHruSYOkaAv7oZQPf
+         qROubUq5dNJqlQt3Jn6QT3+p36Ij8wTlbM+kF7U05qeTtXpOV+L19PUsMIm32ErniBaY
+         Ed2mj1G6gOS6Tuj2Nzck3c4Gx2RKyCehPdoOBwpR1QSXzbSyeJ3MjUCkprA0q8skNpxR
+         C/UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vfacdRIZROtgaYKyvVVlViTaU4E6jqDJejGD7tuz/+s=;
+        b=ilfIHWBw7gukntxxwviQUyknN7wT3K9ax9eAUnZjBqg10HcXzD0MiZctaOJezGNkoe
+         pnmQz4HkUh5h45Z4pOh+7Jugn8Dzlg9VuugYEc03p64gEYP/y/f7mAIJsXXOQ++zjyzY
+         dzkIEnEVbnaeXR4Ll6xNNyQ/ETgfTHB5LzbhI5Mw/q2CjS2K1v91KokG4XDuj0Mu+yHv
+         h/tGZBqVRC/GxfRDUtZyTnDeqfaiOqfpO9+vanA6CUYghZCioIjIzHWdhYHjEi3tQ17e
+         EJuWpul7CRyC2y2frKHMClv/DpgfOSdudC9hghNrCgP2XTv337VJyS7gvx0hX8F10IZR
+         Fw8Q==
+X-Gm-Message-State: APjAAAWDlfSnAVz2eMVESANfePY3BC1w5B0A2iX9HGh/mRBE7lxD0a6b
+        2c7Z763uCfk9Fj11B+0NX2cvwlGJTktso9y9MuY=
+X-Google-Smtp-Source: APXvYqxUlMOimXUQfuCPwVTgyEMSYOoYavmpO7+8E+tfkwKA7hFgTUZ0o1J9m28yzcNWZg5OMp9rzMEP5i8JNur5xEo=
+X-Received: by 2002:a17:907:4182:: with SMTP id mz2mr8019392ejb.326.1571398632465;
+ Fri, 18 Oct 2019 04:37:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3ac0ad7a-7dd2-c851-858d-2986fa8d44b6@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191017025058.31528-1-hslester96@gmail.com> <CAHp75Vd2SMERjtvNumxAF1HSp8GSThmcyx96zkFzUXKwnD5d2Q@mail.gmail.com>
+ <CANhBUQ2yxGbjk_DgXbip=TPT=evzA5naoJSY9t1_Ep47e9oupw@mail.gmail.com> <CAHp75VeLyTi=gqfNr-=Tg36yQs_fYG__iQAxAEKdks0mqsTbug@mail.gmail.com>
+In-Reply-To: <CAHp75VeLyTi=gqfNr-=Tg36yQs_fYG__iQAxAEKdks0mqsTbug@mail.gmail.com>
+From:   Chuhong Yuan <hslester96@gmail.com>
+Date:   Fri, 18 Oct 2019 19:37:00 +0800
+Message-ID: <CANhBUQ1CnCHiY8tkCMcXZ3DAPcfnQZgfA_Fj4qf3yYBKGg10Wg@mail.gmail.com>
+Subject: Re: [PATCH] spi: pxa2xx: Add missed security checks
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 18-10-19 13:00:45, David Hildenbrand wrote:
-> On 18.10.19 10:55, Michal Hocko wrote:
-> > On Fri 18-10-19 10:38:21, David Hildenbrand wrote:
-> > > On 18.10.19 10:24, Michal Hocko wrote:
-> > > > On Fri 18-10-19 10:13:36, David Hildenbrand wrote:
-> > > > [...]
-> > > > > However, if the compound page spans multiple pageblocks
-> > > > 
-> > > > Although hugetlb pages spanning pageblocks are possible this shouldn't
-> > > > matter in__test_page_isolated_in_pageblock because this function doesn't
-> > > > really operate on pageblocks as the name suggests.  It is simply
-> > > > traversing all valid RAM ranges (see walk_system_ram_range).
-> > > 
-> > > As long as the hugepages don't span memory blocks/sections, you are right. I
-> > > have no experience with gigantic pages in this regard.
-> > 
-> > They can clearly span sections (1GB is larger than 128MB). Why do you
-> > think it matters actually? walk_system_ram_range walks RAM ranges and no
-> > allocation should span holes in RAM right?
-> > 
-> 
-> Let's explore what I was thinking. If we can agree that any compound page is
-> always aligned to its size , then what I tell here is not applicable. I know
-> it is true for gigantic pages.
-> 
-> Some extreme example to clarify
-> 
-> [ memory block 0 (128MB) ][ memory block 1 (128MB) ]
->               [ compound page (128MB)  ]
-> 
-> If you would offline memory block 1, and you detect PG_offline on the first
-> page of that memory block (PageHWPoison(compound_head(page))), you would
-> jump over the whole memory block (pfn += 1 << compound_order(page)), leaving
-> 64MB of the memory block unchecked.
-> 
-> Again, if any compound page has the alignment restrictions (PFN of head
-> aligned to 1 << compound_order(page)), this is not possible.
-> 
-> 
-> If it is, however, possible, the "clean" thing would be to only jump over
-> the remaining part of the compound page, e.g., something like
-> 
-> pfn += (1 << compound_order(page)) - (page - compound_head(page)));
+On Fri, Oct 18, 2019 at 7:14 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Fri, Oct 18, 2019 at 1:39 PM Chuhong Yuan <hslester96@gmail.com> wrote:
+> >
+> > On Fri, Oct 18, 2019 at 5:35 PM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > >
+> > > On Fri, Oct 18, 2019 at 8:59 AM Chuhong Yuan <hslester96@gmail.com> wrote:
+> > > >
+> > > > pxa2xx_spi_init_pdata misses checks for devm_clk_get and
+> > > > platform_get_irq.
+> > > > Add checks for them to fix the bugs.
+> > > >
+> > > > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> > > > ---
+> > > >  drivers/spi/spi-pxa2xx.c | 6 ++++++
+> > > >  1 file changed, 6 insertions(+)
+> > > >
+> > > > diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+> > > > index bb6a14d1ab0f..2e73d75a6ac5 100644
+> > > > --- a/drivers/spi/spi-pxa2xx.c
+> > > > +++ b/drivers/spi/spi-pxa2xx.c
+> > > > @@ -1565,7 +1565,13 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
+> > > >  #endif
+> > > >
+> > > >         ssp->clk = devm_clk_get(&pdev->dev, NULL);
+> > > > +       if (IS_ERR(ssp->clk))
+> > > > +               return NULL;
+> > > > +
+> > > >         ssp->irq = platform_get_irq(pdev, 0);
+> > > > +       if (ssp->irq < 0)
+> > > > +               return NULL;
+> > >
+> > > I'm not sure they are mandatory for all platforms.
+> > > To be on the safe side, you simple need to add _optional() to the both
+> > > call along with above change.
+> > >
+> >
+> > As I know, this is the only one in spi which does not have a check for
+> > devm_clk_get.
+>
+> For some it still may be optional. That's why better to check it and
+> mention in the commit message.
+>
+> > Even if add _optional(), they still may return errors and need security checks.
+>
+> Of course, see "along with" in my previous comment.
+>
 
-OK, I see what you mean now. In other words similar to eeb0efd071d82.
--- 
-Michal Hocko
-SUSE Labs
+Got it. I will send version 2 in which both _optional() and security
+checks will be added.
+
+> --
+> With Best Regards,
+> Andy Shevchenko
