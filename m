@@ -2,113 +2,117 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA4CCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F291CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 666EF20872
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:28:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437711;
-	bh=zR7PEpWo1SHxfPoogzU2Cy0kOuipPdgvp9JuFhSZZqo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UqR682vyWNSvqiu7EYqQwmGJ6k/nWMGaM3suSK0yXnfrS14Meg/9Vy+Cq5b+JhOsY
-	 GlpY0Ue/Rx/z1j96Q13sJWWmONv6hfxZ3vHepYBaquAPsVOMpGR3N9ML9cFGcCH8H1
-	 6xMIaDEjgjSgO5C9JOp5MYj4fbbDaPmufMf2u3A0=
+	by mail.kernel.org (Postfix) with ESMTP id 00A6220872
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:29:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CG+DDVPE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfJRWDf (ORCPT
+        id S2392972AbfJRW3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:03:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34870 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726792AbfJRWDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:03:30 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56E5F21925;
-        Fri, 18 Oct 2019 22:03:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436209;
-        bh=zR7PEpWo1SHxfPoogzU2Cy0kOuipPdgvp9JuFhSZZqo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WmWdMalV/Qqp50wDkZddA0ksf9e+Pcjpbu4kWOxRwxbZP2xWcfbihlqrJ+Da17Vjr
-         58/yyZt+FbLdJSNAhElGcpU5sgJz0+puCUomerb+FCrUlS3dm956djaWIzGIQQzOZF
-         ZKE2NtbuzGNzv6E9O9TDv3E8+9tOEXpXJ6oFJIwc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ian Rogers <irogers@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 03/89] libsubcmd: Make _FORTIFY_SOURCE defines dependent on the feature
-Date:   Fri, 18 Oct 2019 18:01:58 -0400
-Message-Id: <20191018220324.8165-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
-References: <20191018220324.8165-1-sashal@kernel.org>
+        Fri, 18 Oct 2019 18:29:50 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38826 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfJRW3u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:29:50 -0400
+Received: by mail-ot1-f67.google.com with SMTP id e11so6279144otl.5;
+        Fri, 18 Oct 2019 15:29:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=gYjp0Wpg6EG197+ZFDkyqIAQeoiHNqMZ3URZHgzwFVk=;
+        b=CG+DDVPEaOnFGfnX2ISfmL4mZqbzmEAIbGWfbjxRDSLmPn6aIYcFS4gTZVXm9Bj8ej
+         YLVGNj0lRCT1EXe7sRHLW5UA2jIi7j7FNKz1y6joV8CnrEp4V9jrmIIMbqFuMXviV4K8
+         bowTCm/uuDEqVWieqWY/M0KNygZXEIOevq3qLdPILARttNQekgxdMyTC6KjipZpad35Y
+         8Qcg0DPWbum/kFeLmko9f/uSHaHrDDfp2fZWnB34r/fz7Q2c1rKZ9s1VYf0Bt/guFKp8
+         9ObVAM20hKcDZG+FlOcDCz3FbMoJc9NFyuUGaCushW6golxrlPVqduTiTZdLtUwnqpwJ
+         KQ+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=gYjp0Wpg6EG197+ZFDkyqIAQeoiHNqMZ3URZHgzwFVk=;
+        b=aiZdu5k8cCzxHvJqWs3vN5Cb5xBhFxJOl4sQBdHyLSJR3Y8hB+R/dEm+j8zDZ5g/yq
+         gxfCtBHIUdd5d2X7razi2zhLFMxW4bGcfxmwp+rmu/ul0FCTBQIIpeACXRHE5M4hoxjU
+         cYecwNBKfRFkxEtn8I1RO5oyZA3hukhGIXZnvJrR75ucXHVLgH7r4Wghb1ltbmEyjpP+
+         VGSfXfNjOWEO+NObSq3DmgKVAwd6Mjj5BqHNfXedjuD5oY9vQq1H+9sE2iUG720es7wM
+         awgcMS5ZiUhHqbzBdUIFsvIeOgzBP+yXq0T0NdhDg/xdGVEOZoPBbKbTPCa/2somg08O
+         LICg==
+X-Gm-Message-State: APjAAAUlLuNb6E3+9+tly3ELnSUzv53dZfpG7p35io2ENX0Au7W2J5nx
+        EFkRcQ0H6JKu/qCIilisjhk=
+X-Google-Smtp-Source: APXvYqwqQOprKFp6KyDaZ0PVvUETxuW3CphHo+XWTDhUp53PiifgIminlDOngOXLSRhP6Xt3LFcmYw==
+X-Received: by 2002:a9d:ba6:: with SMTP id 35mr1229290oth.143.1571437789127;
+        Fri, 18 Oct 2019 15:29:49 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id q18sm1871422otk.57.2019.10.18.15.29.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 15:29:48 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>
+Cc:     Amit K Bag <amit.k.bag@intel.com>,
+        Chethan T N <chethan.tumkur.narayan@intel.com>,
+        Raghuram Hegde <raghuram.hegde@intel.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH -next] Bluetooth: btusb: Remove return statement in btintel_reset_to_bootloader
+Date:   Fri, 18 Oct 2019 15:29:24 -0700
+Message-Id: <20191018222924.49256-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191018111343.5a34ee33@canb.auug.org.au>
+References: <20191018111343.5a34ee33@canb.auug.org.au>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+When building with Clang and CONFIG_BT_INTEL unset, the following error
+occurs:
 
-[ Upstream commit 4b0b2b096da9d296e0e5668cdfba8613bd6f5bc8 ]
+In file included from drivers/bluetooth/hci_ldisc.c:34:
+drivers/bluetooth/btintel.h:188:2: error: void function
+'btintel_reset_to_bootloader' should not return a value [-Wreturn-type]
+        return -EOPNOTSUPP;
+        ^      ~~~~~~~~~~~
+1 error generated.
 
-Unconditionally defining _FORTIFY_SOURCE can break tools that don't work
-with it, such as memory sanitizers:
+Remove the unneeded return statement to fix this.
 
-  https://github.com/google/sanitizers/wiki/AddressSanitizer#faq
-
-Fixes: 4b6ab94eabe4 ("perf subcmd: Create subcmd library")
-Signed-off-by: Ian Rogers <irogers@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lore.kernel.org/lkml/20190925195924.152834-1-irogers@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: b9a2562f4918 ("Bluetooth: btusb: Trigger Intel FW download error recovery")
+Link: https://github.com/ClangBuiltLinux/linux/issues/743
+Reported-by: <ci_notify@linaro.org>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
- tools/lib/subcmd/Makefile | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/bluetooth/btintel.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
-index ed61fb3a46c08..5b2cd5e58df09 100644
---- a/tools/lib/subcmd/Makefile
-+++ b/tools/lib/subcmd/Makefile
-@@ -20,7 +20,13 @@ MAKEFLAGS += --no-print-directory
- LIBFILE = $(OUTPUT)libsubcmd.a
+diff --git a/drivers/bluetooth/btintel.h b/drivers/bluetooth/btintel.h
+index d2311156f778..a69ea8a87b9b 100644
+--- a/drivers/bluetooth/btintel.h
++++ b/drivers/bluetooth/btintel.h
+@@ -185,6 +185,5 @@ static inline int btintel_download_firmware(struct hci_dev *dev,
  
- CFLAGS := $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
--CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -fPIC
-+CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -fPIC
-+
-+ifeq ($(DEBUG),0)
-+  ifeq ($(feature-fortify-source), 1)
-+    CFLAGS += -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2
-+  endif
-+endif
- 
- ifeq ($(CC_NO_CLANG), 0)
-   CFLAGS += -O3
+ static inline void btintel_reset_to_bootloader(struct hci_dev *hdev)
+ {
+-	return -EOPNOTSUPP;
+ }
+ #endif
 -- 
-2.20.1
+2.23.0
 
