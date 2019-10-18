@@ -2,119 +2,100 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DACCCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CECCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14DA92064B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA2462064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:08:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yKhqYHL2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GEpdi/vg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634345AbfJRRHC (ORCPT
+        id S2634399AbfJRRI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 13:07:02 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43647 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389580AbfJRRHC (ORCPT
+        Fri, 18 Oct 2019 13:08:29 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:46587 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393426AbfJRRI3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 13:07:02 -0400
-Received: by mail-pf1-f195.google.com with SMTP id a2so4253849pfo.10
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 10:07:01 -0700 (PDT)
+        Fri, 18 Oct 2019 13:08:29 -0400
+Received: by mail-vs1-f66.google.com with SMTP id z14so4476842vsz.13
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 10:08:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=s4mBZS+ljuU08rW884SHkz0i5bxQ4SJXmq8jp6tRUPg=;
-        b=yKhqYHL2pFUl4x0vzuSYcslNeVF/bHclgLn/jbiR4D31jUrWdwXJOkaY4oPnzZDaZX
-         klcUgEiOu86wgFyATnDdOleKOmdqzEPxQNCjfbE8VyOenkKZGNlP9Z90fZLOWTmKCGok
-         yl3Rz2uIwif2Uvh6c9EgeKbCUtKbF5dtcsB/oXeUEiLMe4KrpsGUbU6QQBjowWXagJ1D
-         ARrvds73ksxjjg01m9PTHZ0NCMtz3Rw+CoT7iZeLrJwHGjeYSPWBdfNqGFpb4j1TnRLJ
-         UzAfIkbLArZpKqcv0G8IeTQEGtfEYmRUviwIPPMCXFX0iqk0RpDIaDa9Z0GjVCRI8sIS
-         k+gA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=icZdr5RXUlfIVPQUZ5ag+GwSMhqiqaO3j83adcgUQWY=;
+        b=GEpdi/vgYB3Dbp/h96wQEbZdgTLwWntVY74quNjgbeeg+hzsMk/zZrigXjhZJrnpFb
+         1sCxD/BkPu3n7ILO/vPRn92A4D4Pr6zGfOnoOhHoLbcienF2os3HqnY38YjnZQJ6CPhG
+         2cEVlEkOD94zB1mmdsNc/rgKAweeHHSgQwOR9VQJUeRc6eDJnhZALabYW62do/0UnUKN
+         RPD8sUmEbIHcS6c0uuy1U053bUE0xElIjmjrspvbBm1j/HBDqlS+YM/Eb3VkslwJ1EmK
+         DxiIUIGOP9sE/R5mKuzwIB5v1VMKO+wkGaN/oK/qSJiYn43BeozwBBvtWYrtPX2GM7z4
+         dH4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=s4mBZS+ljuU08rW884SHkz0i5bxQ4SJXmq8jp6tRUPg=;
-        b=UKfuaSmyiaSh2BE6ayHeKH3b8o0WphyuCX47OVHGuI147xIXiyu+4bmeB1PwgPFJ4n
-         Qd2oZ6OWrFllnPzvofkCoFbYfsf/3Hgz77sr733c0hQ6mUmRn19U6U8haYCGbK+NWK23
-         uN6rbdzldZahsux2DkPGRznSr0tpaqPAbgHVlmvrLtKjc5gKZkYFGQmzeUvAma+zm0eb
-         UdeygUOt+/nJZ7QRtBz450gkZjUOxoyY0NmyxRNp6lptaSxRwaSEP2UgJEZzL/vTA0NJ
-         eZRMdqjTt0k6Of5yRTmOIyPMG73Fabe3ZYsadtGjc3Rb7EHd5pgnQ6INH0WrRPQfgVBs
-         YJ0g==
-X-Gm-Message-State: APjAAAXe65qZTydjVCKjXvzcjXpOGP3XU/64IhFAXJanOqWMZkTXPgCG
-        mFoxGJDmuHRDpqTcpptPrqynZQ==
-X-Google-Smtp-Source: APXvYqzCsL68VirLSBGvWUCdpFt/+Zq1BrRbdAcnSRDaLPTmDpRsFdPQLecri/RwQRFAROsaxnc6qA==
-X-Received: by 2002:a62:6842:: with SMTP id d63mr7792318pfc.16.1571418421377;
-        Fri, 18 Oct 2019 10:07:01 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id f13sm6753490pgr.6.2019.10.18.10.06.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 10:07:00 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 10:06:57 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     linus.walleij@linaro.org, manivannan.sadhasivam@linaro.org,
-        afaerber@suse.de, f.fainelli@gmail.com, rjui@broadcom.com,
-        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-        jesper.nilsson@axis.com, lars.persson@axis.com,
-        ludovic.desroches@microchip.com, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, baruch@tkos.co.il,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@axis.com,
-        linux-oxnas@groups.io, linux-renesas-soc@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        vz@mleia.com, narmstrong@baylibre.com, geert+renesas@glider.be,
-        daniel@zonque.org, haojian.zhuang@gmail.com, wens@csie.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, agross@kernel.org
-Subject: Re: [PATCH -next 11/30] pinctrl: msm: use
- devm_platform_ioremap_resource() to simplify code
-Message-ID: <20191018170657.GD4500@tuxbook-pro>
-References: <20191017122640.22976-1-yuehaibing@huawei.com>
- <20191017122640.22976-12-yuehaibing@huawei.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=icZdr5RXUlfIVPQUZ5ag+GwSMhqiqaO3j83adcgUQWY=;
+        b=FOj7Rb1cNWKXqxjw519wZRRwzm8TWVobJl7cr0lBM6Ds7ZqJmZRluhd4Wue9MsGcJ2
+         QkMh8uCo1irPw785E+EQ1ExlALmsrBzrTBzz6CUc1JnQIxfR0zHqLHNOfk8W1FlO0VbE
+         5JjS/tGR1s+opTqsbDdImn8Z93pvDSvnupzmmUPxIHowd+uJ+nLfJNO5vEVcDzxY9atP
+         FdBDbss0zIwcQb947WtYHBIHgnUdeUZGi23cFjs/LJPr6UI+N92o3LsIPVtcgheXaOel
+         e7CsB2yMKDepqJuvpY2lLQMc2L1oxJLIcjP0Xs5cjoIH0+3YD+lMtedVB/GC4c69OStP
+         IemQ==
+X-Gm-Message-State: APjAAAVSm1tTNdCL/n/zfty8imPf200xmMupmbQn7cxB0nmT4d5u8ITw
+        E1753NBn4OICfB2H1yyCzl/EHMU2JGwy1L9Ldd/mJg==
+X-Google-Smtp-Source: APXvYqyzzIiNyDr2Id6Kr8DVoqWVgixdTZAxPTLo1g0mx6+HWc+w18Nu6n4FjKGbHpDO9wjpt2GMM+GyVFTzkMX0z78=
+X-Received: by 2002:a67:ed8b:: with SMTP id d11mr6015143vsp.104.1571418507964;
+ Fri, 18 Oct 2019 10:08:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191017122640.22976-12-yuehaibing@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191018161033.261971-10-samitolvanen@google.com> <20191018130127.23746ff2@gandalf.local.home>
+In-Reply-To: <20191018130127.23746ff2@gandalf.local.home>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Fri, 18 Oct 2019 10:08:16 -0700
+Message-ID: <CABCJKufdDxJ_q-8Sj3+4rPuhAB3bdo_EN=DybZF5eenwZB4v3g@mail.gmail.com>
+Subject: Re: [PATCH 09/18] trace: disable function graph tracing with SCS
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 17 Oct 05:26 PDT 2019, YueHaibing wrote:
+On Fri, Oct 18, 2019 at 10:01 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+> NAK, Put this in the arch code.
 
-> Use devm_platform_ioremap_resource() to simplify the code a bit.
-> This is detected by coccinelle.
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 41a9b4257b72..d68339987604 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -149,7 +149,7 @@ config ARM64
+>         select HAVE_FTRACE_MCOUNT_RECORD
+>         select HAVE_FUNCTION_TRACER
+>         select HAVE_FUNCTION_ERROR_INJECTION
+> -       select HAVE_FUNCTION_GRAPH_TRACER
+> +       select HAVE_FUNCTION_GRAPH_TRACER if ROP_PROTECTION_NONE
+>         select HAVE_GCC_PLUGINS
+>         select HAVE_HW_BREAKPOINT if PERF_EVENTS
+>         select HAVE_IRQ_TIME_ACCOUNTING
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Thanks, Steven. I'll fix this and kretprobes in v2.
 
-> ---
->  drivers/pinctrl/qcom/pinctrl-msm.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> index 763da0b..62fcae9 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -1150,8 +1150,7 @@ int msm_pinctrl_probe(struct platform_device *pdev,
->  				return PTR_ERR(pctrl->regs[i]);
->  		}
->  	} else {
-> -		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -		pctrl->regs[0] = devm_ioremap_resource(&pdev->dev, res);
-> +		pctrl->regs[0] = devm_platform_ioremap_resource(pdev, 0);
->  		if (IS_ERR(pctrl->regs[0]))
->  			return PTR_ERR(pctrl->regs[0]);
->  	}
-> -- 
-> 2.7.4
-> 
-> 
+Sami
