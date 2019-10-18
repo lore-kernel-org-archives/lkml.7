@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEE1CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2CACA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3304E222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0C41222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436264;
-	bh=5RupvgqrhiR7b2bC5jkQu0HYTD4pAZcvifxzJliiyUo=;
+	s=default; t=1571436269;
+	bh=B3WWtwLfQ000BqWRJiE7NmwbCqlmIAKHMfSljLuwNIE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dVWCyxDQ0GXDpxbIyVF5Vgi9Zj6t4SYNIrK1Aj2iGgDZOhhfTmLTUnvgfGfDUGUp8
-	 wjgMJgGs9Ti8mW3e8irNYcCw+2Ena/HH9knC4opgaU19pShE6i2D7jRk/GOx1vjjbe
-	 jcJhCnapxo0Z5ORY6pHVpwiZQ6jkOcHtdUZOimhc=
+	b=N2RHuO0kCUe68h8UraZNywxKS9ICBJAeMNOdEYDz2xsoAZGuAz34trFFdwS1rcaKn
+	 JyjUMBDL9vZzwY/M1HL5bflW+mThul0Y3vQoLtA6gYyc1ejbjGcqkkYHnGMAScvye1
+	 jE5T3/pefHkgF7dfC6qzvL9WfYOBxbwoRWWYeBOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbfJRWEW (ORCPT
+        id S1728195AbfJRWE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:04:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35908 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:04:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727944AbfJRWER (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:04:17 -0400
+        id S1728035AbfJRWEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:04:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D1C4222C2;
-        Fri, 18 Oct 2019 22:04:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2E25222C2;
+        Fri, 18 Oct 2019 22:04:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436256;
-        bh=5RupvgqrhiR7b2bC5jkQu0HYTD4pAZcvifxzJliiyUo=;
+        s=default; t=1571436259;
+        bh=B3WWtwLfQ000BqWRJiE7NmwbCqlmIAKHMfSljLuwNIE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CxlCkBibqANFYIeGFv6JM05wHq1KASzgiqtSTxHma4i08h4RBPxeQHYRhBVUnlPVq
-         xnr53x86xvGgq3eLlDRL8+XtJZ52RWZye1DsC8UxGzDFYCSCX1VjdPSonmPafRAWNN
-         xK64cZS5tqoQNRFXo1bBpfDKwSrn2mejYJ6wD+no=
+        b=Vpx5f9VHS7OGUrhuLZSgxhnPFMsh/KzBJEwcQ0fUZPNSpwz4YxWHBvXCdjXXLM8P1
+         t2kT7OPeDAArCnTRpoz+At8z0ig4ZPlsckp0xPPsNzunIllB7wd95VSwiaoSwrEJwk
+         NRAjszbXQ6SFLz+LJqzO0HjDVlbv7I7FVTvceWXs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 39/89] RDMA/mlx5: Add missing synchronize_srcu() for MW cases
-Date:   Fri, 18 Oct 2019 18:02:34 -0400
-Message-Id: <20191018220324.8165-39-sashal@kernel.org>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 42/89] arm64: vdso32: Fix broken compat vDSO build warnings
+Date:   Fri, 18 Oct 2019 18:02:37 -0400
+Message-Id: <20191018220324.8165-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -60,205 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-[ Upstream commit 0417791536ae1e28d7f0418f1d20048ec4d3c6cf ]
+[ Upstream commit e0de01aafc3dd7b73308106b056ead2d48391905 ]
 
-While MR uses live as the SRCU 'update', the MW case uses the xarray
-directly, xa_erase() causes the MW to become inaccessible to the pagefault
-thread.
+The .config file and the generated include/config/auto.conf can
+end up out of sync after a set of commands since
+CONFIG_CROSS_COMPILE_COMPAT_VDSO is not updated correctly.
 
-Thus whenever a MW is removed from the xarray we must synchronize_srcu()
-before freeing it.
+The sequence can be reproduced as follows:
 
-This must be done before freeing the mkey as re-use of the mkey while the
-pagefault thread is using the stale mkey is undesirable.
+$ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- defconfig
+[...]
+$ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- menuconfig
+[set CONFIG_CROSS_COMPILE_COMPAT_VDSO="arm-linux-gnueabihf-"]
+$ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
 
-Add the missing synchronizes to MW and DEVX indirect mkey and delete the
-bogus protection against double destroy in mlx5_core_destroy_mkey()
+Which results in:
 
-Fixes: 534fd7aac56a ("IB/mlx5: Manage indirection mkey upon DEVX flow for ODP")
-Fixes: 6aec21f6a832 ("IB/mlx5: Page faults handling infrastructure")
-Link: https://lore.kernel.org/r/20191001153821.23621-7-jgg@ziepe.ca
-Reviewed-by: Artemy Kovalyov <artemyko@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+arch/arm64/Makefile:62: CROSS_COMPILE_COMPAT not defined or empty,
+the compat vDSO will not be built
+
+even though the compat vDSO has been built:
+
+$ file arch/arm64/kernel/vdso32/vdso.so
+arch/arm64/kernel/vdso32/vdso.so: ELF 32-bit LSB pie executable, ARM,
+EABI5 version 1 (SYSV), dynamically linked,
+BuildID[sha1]=c67f6c786f2d2d6f86c71f708595594aa25247f6, stripped
+
+A similar case that involves changing the configuration parameter
+multiple times can be reconducted to the same family of problems.
+
+Remove the use of CONFIG_CROSS_COMPILE_COMPAT_VDSO altogether and
+instead rely on the cross-compiler prefix coming from the environment
+via CROSS_COMPILE_COMPAT, much like we do for the rest of the kernel.
+
+Cc: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Reported-by: Will Deacon <will@kernel.org>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/devx.c            | 58 ++++++--------------
- drivers/infiniband/hw/mlx5/mlx5_ib.h         |  1 -
- drivers/infiniband/hw/mlx5/mr.c              | 21 +++++--
- drivers/net/ethernet/mellanox/mlx5/core/mr.c |  8 +--
- 4 files changed, 33 insertions(+), 55 deletions(-)
+ arch/arm64/Kconfig                |  2 +-
+ arch/arm64/Makefile               | 18 +++++-------------
+ arch/arm64/kernel/vdso32/Makefile |  2 --
+ 3 files changed, 6 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/devx.c b/drivers/infiniband/hw/mlx5/devx.c
-index af5bbb35c0589..ef7ba0133d28a 100644
---- a/drivers/infiniband/hw/mlx5/devx.c
-+++ b/drivers/infiniband/hw/mlx5/devx.c
-@@ -1275,29 +1275,6 @@ static int devx_handle_mkey_create(struct mlx5_ib_dev *dev,
- 	return 0;
- }
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 3adcec05b1f67..ba9a4d079440d 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -111,7 +111,7 @@ config ARM64
+ 	select GENERIC_STRNLEN_USER
+ 	select GENERIC_TIME_VSYSCALL
+ 	select GENERIC_GETTIMEOFDAY
+-	select GENERIC_COMPAT_VDSO if (!CPU_BIG_ENDIAN && COMPAT)
++	select GENERIC_COMPAT_VDSO if (!CPU_BIG_ENDIAN && COMPAT && "$(CROSS_COMPILE_COMPAT)" != "")
+ 	select HANDLE_DOMAIN_IRQ
+ 	select HARDIRQS_SW_RESEND
+ 	select HAVE_PCI
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index 61de992bbea3f..9743b50bdee7d 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -47,20 +47,12 @@ $(warning Detected assembler with broken .inst; disassembly will be unreliable)
+   endif
+ endif
  
--static void devx_free_indirect_mkey(struct rcu_head *rcu)
--{
--	kfree(container_of(rcu, struct devx_obj, devx_mr.rcu));
--}
--
--/* This function to delete from the radix tree needs to be called before
-- * destroying the underlying mkey. Otherwise a race might occur in case that
-- * other thread will get the same mkey before this one will be deleted,
-- * in that case it will fail via inserting to the tree its own data.
-- *
-- * Note:
-- * An error in the destroy is not expected unless there is some other indirect
-- * mkey which points to this one. In a kernel cleanup flow it will be just
-- * destroyed in the iterative destruction call. In a user flow, in case
-- * the application didn't close in the expected order it's its own problem,
-- * the mkey won't be part of the tree, in both cases the kernel is safe.
-- */
--static void devx_cleanup_mkey(struct devx_obj *obj)
--{
--	xa_erase(&obj->ib_dev->mdev->priv.mkey_table,
--		 mlx5_base_mkey(obj->devx_mr.mmkey.key));
--}
--
- static void devx_cleanup_subscription(struct mlx5_ib_dev *dev,
- 				      struct devx_event_subscription *sub)
- {
-@@ -1339,8 +1316,16 @@ static int devx_obj_cleanup(struct ib_uobject *uobject,
- 	int ret;
- 
- 	dev = mlx5_udata_to_mdev(&attrs->driver_udata);
--	if (obj->flags & DEVX_OBJ_FLAGS_INDIRECT_MKEY)
--		devx_cleanup_mkey(obj);
-+	if (obj->flags & DEVX_OBJ_FLAGS_INDIRECT_MKEY) {
-+		/*
-+		 * The pagefault_single_data_segment() does commands against
-+		 * the mmkey, we must wait for that to stop before freeing the
-+		 * mkey, as another allocation could get the same mkey #.
-+		 */
-+		xa_erase(&obj->ib_dev->mdev->priv.mkey_table,
-+			 mlx5_base_mkey(obj->devx_mr.mmkey.key));
-+		synchronize_srcu(&dev->mr_srcu);
-+	}
- 
- 	if (obj->flags & DEVX_OBJ_FLAGS_DCT)
- 		ret = mlx5_core_destroy_dct(obj->ib_dev->mdev, &obj->core_dct);
-@@ -1359,12 +1344,6 @@ static int devx_obj_cleanup(struct ib_uobject *uobject,
- 		devx_cleanup_subscription(dev, sub_entry);
- 	mutex_unlock(&devx_event_table->event_xa_lock);
- 
--	if (obj->flags & DEVX_OBJ_FLAGS_INDIRECT_MKEY) {
--		call_srcu(&dev->mr_srcu, &obj->devx_mr.rcu,
--			  devx_free_indirect_mkey);
--		return ret;
--	}
--
- 	kfree(obj);
- 	return ret;
- }
-@@ -1468,26 +1447,21 @@ static int UVERBS_HANDLER(MLX5_IB_METHOD_DEVX_OBJ_CREATE)(
- 				   &obj_id);
- 	WARN_ON(obj->dinlen > MLX5_MAX_DESTROY_INBOX_SIZE_DW * sizeof(u32));
- 
--	if (obj->flags & DEVX_OBJ_FLAGS_INDIRECT_MKEY) {
--		err = devx_handle_mkey_indirect(obj, dev, cmd_in, cmd_out);
--		if (err)
--			goto obj_destroy;
--	}
--
- 	err = uverbs_copy_to(attrs, MLX5_IB_ATTR_DEVX_OBJ_CREATE_CMD_OUT, cmd_out, cmd_out_len);
- 	if (err)
--		goto err_copy;
-+		goto obj_destroy;
- 
- 	if (opcode == MLX5_CMD_OP_CREATE_GENERAL_OBJECT)
- 		obj_type = MLX5_GET(general_obj_in_cmd_hdr, cmd_in, obj_type);
--
- 	obj->obj_id = get_enc_obj_id(opcode | obj_type << 16, obj_id);
- 
-+	if (obj->flags & DEVX_OBJ_FLAGS_INDIRECT_MKEY) {
-+		err = devx_handle_mkey_indirect(obj, dev, cmd_in, cmd_out);
-+		if (err)
-+			goto obj_destroy;
-+	}
- 	return 0;
- 
--err_copy:
--	if (obj->flags & DEVX_OBJ_FLAGS_INDIRECT_MKEY)
--		devx_cleanup_mkey(obj);
- obj_destroy:
- 	if (obj->flags & DEVX_OBJ_FLAGS_DCT)
- 		mlx5_core_destroy_dct(obj->ib_dev->mdev, &obj->core_dct);
-diff --git a/drivers/infiniband/hw/mlx5/mlx5_ib.h b/drivers/infiniband/hw/mlx5/mlx5_ib.h
-index 9ae587b74b121..43c7353b98123 100644
---- a/drivers/infiniband/hw/mlx5/mlx5_ib.h
-+++ b/drivers/infiniband/hw/mlx5/mlx5_ib.h
-@@ -638,7 +638,6 @@ struct mlx5_ib_mw {
- struct mlx5_ib_devx_mr {
- 	struct mlx5_core_mkey	mmkey;
- 	int			ndescs;
--	struct rcu_head		rcu;
- };
- 
- struct mlx5_ib_umr_context {
-diff --git a/drivers/infiniband/hw/mlx5/mr.c b/drivers/infiniband/hw/mlx5/mr.c
-index 96c8a6835592d..c15d05f61cc7b 100644
---- a/drivers/infiniband/hw/mlx5/mr.c
-+++ b/drivers/infiniband/hw/mlx5/mr.c
-@@ -1970,14 +1970,25 @@ struct ib_mw *mlx5_ib_alloc_mw(struct ib_pd *pd, enum ib_mw_type type,
- 
- int mlx5_ib_dealloc_mw(struct ib_mw *mw)
- {
-+	struct mlx5_ib_dev *dev = to_mdev(mw->device);
- 	struct mlx5_ib_mw *mmw = to_mmw(mw);
- 	int err;
- 
--	err =  mlx5_core_destroy_mkey((to_mdev(mw->device))->mdev,
--				      &mmw->mmkey);
--	if (!err)
--		kfree(mmw);
--	return err;
-+	if (IS_ENABLED(CONFIG_INFINIBAND_ON_DEMAND_PAGING)) {
-+		xa_erase(&dev->mdev->priv.mkey_table,
-+			 mlx5_base_mkey(mmw->mmkey.key));
-+		/*
-+		 * pagefault_single_data_segment() may be accessing mmw under
-+		 * SRCU if the user bound an ODP MR to this MW.
-+		 */
-+		synchronize_srcu(&dev->mr_srcu);
-+	}
++COMPATCC ?= $(CROSS_COMPILE_COMPAT)gcc
++export COMPATCC
 +
-+	err = mlx5_core_destroy_mkey(dev->mdev, &mmw->mmkey);
-+	if (err)
-+		return err;
-+	kfree(mmw);
-+	return 0;
- }
+ ifeq ($(CONFIG_GENERIC_COMPAT_VDSO), y)
+-  CROSS_COMPILE_COMPAT ?= $(CONFIG_CROSS_COMPILE_COMPAT_VDSO:"%"=%)
+-
+-  ifeq ($(CONFIG_CC_IS_CLANG), y)
+-    $(warning CROSS_COMPILE_COMPAT is clang, the compat vDSO will not be built)
+-  else ifeq ($(strip $(CROSS_COMPILE_COMPAT)),)
+-    $(warning CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will not be built)
+-  else ifeq ($(shell which $(CROSS_COMPILE_COMPAT)gcc 2> /dev/null),)
+-    $(error $(CROSS_COMPILE_COMPAT)gcc not found, check CROSS_COMPILE_COMPAT)
+-  else
+-    export CROSS_COMPILE_COMPAT
+-    export CONFIG_COMPAT_VDSO := y
+-    compat_vdso := -DCONFIG_COMPAT_VDSO=1
+-  endif
++  export CONFIG_COMPAT_VDSO := y
++  compat_vdso := -DCONFIG_COMPAT_VDSO=1
+ endif
  
- int mlx5_ib_check_mr_status(struct ib_mr *ibmr, u32 check_mask,
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/mr.c b/drivers/net/ethernet/mellanox/mlx5/core/mr.c
-index 9231b39d18b21..c501bf2a02521 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/mr.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/mr.c
-@@ -112,17 +112,11 @@ int mlx5_core_destroy_mkey(struct mlx5_core_dev *dev,
- 	u32 out[MLX5_ST_SZ_DW(destroy_mkey_out)] = {0};
- 	u32 in[MLX5_ST_SZ_DW(destroy_mkey_in)]   = {0};
- 	struct xarray *mkeys = &dev->priv.mkey_table;
--	struct mlx5_core_mkey *deleted_mkey;
- 	unsigned long flags;
+ KBUILD_CFLAGS	+= -mgeneral-regs-only $(lseinstr) $(brokengasinst) $(compat_vdso)
+diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
+index 1fba0776ed40e..19e0d3115ffe0 100644
+--- a/arch/arm64/kernel/vdso32/Makefile
++++ b/arch/arm64/kernel/vdso32/Makefile
+@@ -8,8 +8,6 @@
+ ARCH_REL_TYPE_ABS := R_ARM_JUMP_SLOT|R_ARM_GLOB_DAT|R_ARM_ABS32
+ include $(srctree)/lib/vdso/Makefile
  
- 	xa_lock_irqsave(mkeys, flags);
--	deleted_mkey = __xa_erase(mkeys, mlx5_base_mkey(mkey->key));
-+	__xa_erase(mkeys, mlx5_base_mkey(mkey->key));
- 	xa_unlock_irqrestore(mkeys, flags);
--	if (!deleted_mkey) {
--		mlx5_core_dbg(dev, "failed xarray delete of mkey 0x%x\n",
--			      mlx5_base_mkey(mkey->key));
--		return -ENOENT;
--	}
- 
- 	MLX5_SET(destroy_mkey_in, in, opcode, MLX5_CMD_OP_DESTROY_MKEY);
- 	MLX5_SET(destroy_mkey_in, in, mkey_index, mlx5_mkey_to_idx(mkey->key));
+-COMPATCC := $(CROSS_COMPILE_COMPAT)gcc
+-
+ # Same as cc-*option, but using COMPATCC instead of CC
+ cc32-option = $(call try-run,\
+         $(COMPATCC) $(1) -c -x c /dev/null -o "$$TMP",$(1),$(2))
 -- 
 2.20.1
 
