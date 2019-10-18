@@ -2,96 +2,201 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD6BCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C85F0CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38D9F2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:40:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="dU09HL7Y"
+	by mail.kernel.org (Postfix) with ESMTP id A9AAF222C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:41:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437712AbfJRFkz (ORCPT
+        id S2442005AbfJRFlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:40:55 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33678 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390139AbfJRFky (ORCPT
+        Fri, 18 Oct 2019 01:41:20 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:31112 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389961AbfJRFlU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:40:54 -0400
-Received: by mail-io1-f65.google.com with SMTP id z19so6040213ior.0
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:40:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=6vl776tt39Djj97+yEKzgcDA8S7SdrfVeVZOrfDrtPA=;
-        b=dU09HL7YiUwk/maqwxoin70k8Ds5wcr8FCr03pp80PJHAKOp3OReif4boc/KD+b2DM
-         J85QCudqpCs1TCoMc9wVPTRMRU0STpgD/1QlgpUBNod7Cl0dHQT0+cS+GqwwKn1pTQoh
-         qDbr/RW6USHBn1Lwi3PUSRcsIdwJasq0mwWOSN/6upWfMh7UN21nQLP+JZJjujE1EJbf
-         sUB+YacJewIY1v4hglgcqfHidAp7zxIlzY5AWW/L7aOkuYBKghGCKY1Qjy7HoZc4IpvO
-         ig+ikN0mJIZGCo3VIdRDOweYsfcUzSaai36eoZbFKR8i5RlAmAWDLaVCq5E1yt0FO8qa
-         Fflg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=6vl776tt39Djj97+yEKzgcDA8S7SdrfVeVZOrfDrtPA=;
-        b=dnubxiheSzONLV82UUHHMj6D7miSETaQ6himjn8oIqIFw6//qbeEKDfCeK3IiIBowe
-         hV2APeG4UTeytf9YJ8qvjYKXf71OkvFBtbKNyEyF7yzqGKqQ2Fl/A2PDDjOATewREwqG
-         JwWwpEiWnXDAlqXHt7hr6m8hisXUVdVUftECUf4ZYAwVaRypPDThucEgyfUh+uaxKEfr
-         5tmq/2Y8eV0ep0eeJ9lRnnlVhSCpJkpV1Szd7yGJrMaY8QOE/vE2UiUv16Jp9omIuKET
-         jEVPcgWrYot2W9FexxZdhaCjc+tDgNPT4uC7bL3lgPYy/dlUSfeILBQ3kWKFMszl/P5a
-         80WQ==
-X-Gm-Message-State: APjAAAXGlgzZFD61zAD+oov84r+Xk6bZtcingPRfJqduAIpMyldzqML4
-        kxQxRftx5jfPRRrevpi4XRsem8HvNCw=
-X-Google-Smtp-Source: APXvYqzmzVECICRUhTk0jHEyAsknDFm8SCMbAaOwaHumsoit6u726yoCOL3R0yOSUQ676wBRE6GLoQ==
-X-Received: by 2002:a05:6602:1c4:: with SMTP id w4mr6000255iot.153.1571367487601;
-        Thu, 17 Oct 2019 19:58:07 -0700 (PDT)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id o66sm2100434ili.45.2019.10.17.19.58.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 19:58:06 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 19:58:04 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Nick Hu <nickhu@andestech.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-cc:     alankao@andestech.com, palmer@sifive.com, aou@eecs.berkeley.edu,
-        glider@google.com, dvyukov@google.com, corbet@lwn.net,
-        alexios.zavras@intel.com, allison@lohutok.net, Anup.Patel@wdc.com,
-        tglx@linutronix.de, gregkh@linuxfoundation.org,
-        atish.patra@wdc.com, kstewart@linuxfoundation.org,
-        linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        linux-mm@kvack.org
-Subject: Re: [PATCH v3 1/3] kasan: Archs don't check memmove if not support
- it.
-In-Reply-To: <ba456776-a77f-5306-60ef-c19a4a8b3119@virtuozzo.com>
-Message-ID: <alpine.DEB.2.21.9999.1910171957310.3156@viisi.sifive.com>
-References: <cover.1570514544.git.nickhu@andestech.com> <c9fa9eb25a5c0b1f733494dfd439f056c6e938fd.1570514544.git.nickhu@andestech.com> <ba456776-a77f-5306-60ef-c19a4a8b3119@virtuozzo.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Fri, 18 Oct 2019 01:41:20 -0400
+X-UUID: 2be832a9497145dbb013a68753705429-20191018
+X-UUID: 2be832a9497145dbb013a68753705429-20191018
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1470944434; Fri, 18 Oct 2019 13:41:14 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 18 Oct 2019 13:41:11 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 18 Oct 2019 13:41:11 +0800
+Message-ID: <1571377272.11955.6.camel@mtkswgap22>
+Subject: Re: [PATCH v4 2/3] dt-bindings: rng: add bindings for MediaTek
+ ARMv8 SoCs
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Crystal Guo =?UTF-8?Q?=28=E9=83=AD=E6=99=B6=29?= 
+        <Crystal.Guo@mediatek.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Matt Mackall <mpm@selenic.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Neal Liu <neal.liu@mediatek.com>
+Date:   Fri, 18 Oct 2019 13:41:12 +0800
+In-Reply-To: <1570024070.4002.1.camel@mtkswgap22>
+References: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
+         <1561361052-13072-3-git-send-email-neal.liu@mediatek.com>
+         <20190722171320.GA9806@bogus> <1563848465.31451.4.camel@mtkswgap22>
+         <CAL_Jsq+SRhd=-5O2G_CMfJX9Z188kvA05MQOXaU1J8iExwUixQ@mail.gmail.com>
+         <1568771054.21700.7.camel@mtkswgap22> <1570024070.4002.1.camel@mtkswgap22>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019, Andrey Ryabinin wrote:
+On Wed, 2019-10-02 at 21:47 +0800, Neal Liu wrote:
+> Dear Rob,
+> 
+> Just a gentle ping.
+> 
+> Neal
+> 
+> On Wed, 2019-09-18 at 09:44 +0800, Neal Liu wrote:
+> > On Tue, 2019-07-23 at 22:35 +0800, Rob Herring wrote:
+> > > On Mon, Jul 22, 2019 at 8:21 PM Neal Liu <neal.liu@mediatek.com> wrote:
+> > > >
+> > > 
+> > > Please don't top post to lists.
+> > > 
+> > > > Dear Rob,
+> > > >         You can check my driver for detail:
+> > > >         http://patchwork.kernel.org/patch/11012475/ or patchset 3/3
+> > > 
+> > > I could, or you could just answer my question.
+> > > 
+> > > >
+> > > >         This driver is registered as hardware random number generator, and
+> > > > combines with rng-core.
+> > > >         We want to add one rng hw based on the dts. Is this proper or do you
+> > > > have other suggestion to meet this requirement?
+> > > 
+> > > It depends. There doesn't appear to be any resource configuration, so
+> > > why does it need to be in DT. DT is not the only way instantiate
+> > > drivers.
+> > > 
+> > > Rob
+> > > 
+> > 
+> > We would like to consult more about this patch.
+> > We cannot figure out what method should be used instead of DT.
+> > The interface to access firmware is "smc" and firmware function only
+> > exists on certain platforms.
+> > Some DT has similar way, like:
+> > http://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts#L470
+> > 
+> > 	firmware {
+> > 		optee {
+> > 			compatible = "linaro,optee-tz";
+> > 			method = "smc";
+> > 		};
+> > 	};
+> > 
+> > Is there any way to instantiate driver on certain platforms without DT?
+> > Could you give us some examples?
+> > Thanks
+> > 
+> > > >
+> > > >         Thanks
+> > > >
+> > > >
+> > > > On Tue, 2019-07-23 at 01:13 +0800, Rob Herring wrote:
+> > > > > On Mon, Jun 24, 2019 at 03:24:11PM +0800, Neal Liu wrote:
+> > > > > > Document the binding used by the MediaTek ARMv8 SoCs random
+> > > > > > number generator with TrustZone enabled.
+> > > > > >
+> > > > > > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> > > > > > ---
+> > > > > >  .../devicetree/bindings/rng/mtk-sec-rng.txt        |   10 ++++++++++
+> > > > > >  1 file changed, 10 insertions(+)
+> > > > > >  create mode 100644 Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
+> > > > > >
+> > > > > > diff --git a/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
+> > > > > > new file mode 100644
+> > > > > > index 0000000..c04ce15
+> > > > > > --- /dev/null
+> > > > > > +++ b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
+> > > > > > @@ -0,0 +1,10 @@
+> > > > > > +MediaTek random number generator with TrustZone enabled
+> > > > > > +
+> > > > > > +Required properties:
+> > > > > > +- compatible : Should be "mediatek,mtk-sec-rng"
+> > > > >
+> > > > > What's the interface to access this?
+> > > > >
+> > > > > A node with a 'compatible' and nothing else is a sign of something that
+> > > > > a parent device should instantiate and doesn't need to be in DT. IOW,
+> > > > > what do complete bindings for firmware functions look like?
+> > > > >
 
-> On 10/8/19 9:11 AM, Nick Hu wrote:
-> > Skip the memmove checking for those archs who don't support it.
->  
-> The patch is fine but the changelog sounds misleading. We don't skip memmove checking.
-> If arch don't have memmove than the C implementation from lib/string.c used.
-> It's instrumented by compiler so it's checked and we simply don't need that KASAN's memmove with
-> manual checks.
+We would like to revise our DT node as below:
 
-Thanks Andrey.  Nick, could you please update the patch description?
+firmware {
+	hwrng {
+		compatible = "mediatek,mtk-sec-rng";
+		method = "smc";
+	};
+};
 
-- Paul
+And dt-bindings path would be changed because it's base on ARM TrustZone
+Firmware.
+From "Documentation/devicetree/bindings/rng/mtk-sec-rng.txt"
+To
+"Documentation/devicetree/bindings/arm/firmware/mediatek,mtk-sec-rng.txt"
+
+We found some similar examples which also provide an interface to trap
+to Secure State through SMC instruction.
+Example 1: Documentation/devicetree/bindings/arm/firmware/xxx.txt
+Example 2: Documentation/devicetree/bindings/arm/psci.txt
+
+Is that okay for you?
+
+Neal
+
+> > > > > > +
+> > > > > > +Example:
+> > > > > > +
+> > > > > > +hwrng: hwrng {
+> > > > > > +   compatible = "mediatek,mtk-sec-rng";
+> > > > > > +}
+> > > > > > --
+> > > > > > 1.7.9.5
+> > > > > >
+> > > > >
+> > > > > _______________________________________________
+> > > > > Linux-mediatek mailing list
+> > > > > Linux-mediatek@lists.infradead.org
+> > > > > http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> > > >
+> > > >
+> > 
+> 
+
 
