@@ -7,54 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D65B8CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00915CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAC9B2070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C82262070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:56:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZxRofBTL"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U4NpAEXN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502079AbfJRU4r (ORCPT
+        id S2506050AbfJRU4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 16:56:47 -0400
-Received: from mail-ua1-f74.google.com ([209.85.222.74]:47445 "EHLO
-        mail-ua1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388245AbfJRU4q (ORCPT
+        Fri, 18 Oct 2019 16:56:51 -0400
+Received: from mail-wr1-f73.google.com ([209.85.221.73]:54171 "EHLO
+        mail-wr1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388245AbfJRU4t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 16:56:46 -0400
-Received: by mail-ua1-f74.google.com with SMTP id 4so1013011uay.14
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 13:56:44 -0700 (PDT)
+        Fri, 18 Oct 2019 16:56:49 -0400
+Received: by mail-wr1-f73.google.com with SMTP id i10so3246368wrb.20
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 13:56:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=pFSHWfsa4OYLf86WgPeUBVlVGsm2bxueW/eIsJSwKiQ=;
-        b=ZxRofBTLLxqPyCT9Ejy040W4kNnnOcsZi+MYGlj8YmtDrP9euwn9536tbUMP5I5E9E
-         F0qx7pSkCzwWzszOhh0BzfZEdDFhioSEIQsOAfXYzm67ai6YT5MHVUIh3otszhFmuwXm
-         g3AqXIn7dagWoecDRZTNGWVxcocTUDUSU3HbY4V/ColcRzFd3jctb+BIV4Gt/lHRqXVg
-         Ru7ba3cotGuss8tpCcF2Gt34tcszr8ssTjjdaM3cj+weEdMzb/JIGkO2ToQDLHGjH4iL
-         qE9H6KIJiORtyryH1SHjaK45+zN7i1fJGvekzSHyy3Gdl62cIuKAlqcUdWw0l7TCTYVj
-         YKmA==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=rSf3nIyWZKMYSfUuilEe+uzzHebaBT4JOp0k6bHBoK4=;
+        b=U4NpAEXN5/lXUpumdw+t+ry2JvKAgZeKwdGqMbAo6/rXn4uR382MxTVjKHE0cLCRV+
+         ziWtm7ZLVF8hfqGcaNpAxuklijBqedBaJcqOliX/xZfPJ4AFojVNO5lRmCdGP4HWFCj3
+         Pdvb6C6YL58kLovWjY2w0bmcIWjRiUsWvMps7w9g4o6JGPH+/F0LEFdCCnl8pe6NsttV
+         yAi5SMuNYc31z1Y+ZSEDZmzIuzQahY2kkHG0vDG/Pllz2u3etqP52KytyCIUZYdhSr4A
+         EWT2UKHjWyh5UVgLhlHHVHIfXQAFRonY0uSifEdh2REYnWiqaQxVgiPJ3YOQoWQDYfEf
+         iPNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=pFSHWfsa4OYLf86WgPeUBVlVGsm2bxueW/eIsJSwKiQ=;
-        b=PPIslm/QGimVHVJT74TOhrW8IdFeIWyKdiQZz45dXzxzyo71e5Yb/zLvpfIOEPQPBG
-         ETB4UOnUTPPsfBQ8e0TA2z14KRpLQ+pdMUwtvuHO4SY1fzSDH2glFSJToagNvm0Kft8v
-         FyLEXLD4t4L45hnEtFuvIGN5F0ywri2hwSWYwO7BboV8bRuFiwNWrJHdORbj4njnxoo9
-         cliEN4y81tAbCK9mJ6PxRyg8qcevxfd9amwEFfVWH3FJ3yXg1jeji024jrx/fP+FmxX+
-         nYFSJJL9xnc8SNrWSadhOXVksxINNn1DXK4/sEWsBvZAJdjYV9uVrnUlFPS8rO6qku8I
-         ZuWQ==
-X-Gm-Message-State: APjAAAXKbqKv+XdSf3PQYubQRZ/05l2BhqSCKvKuPGZo/AbA9qAUqGCH
-        nma2rO1wFG/W5ZYNMHJsRRKkbEsMYA==
-X-Google-Smtp-Source: APXvYqw3YHqNer9uDRETXpkMeSewm1GG1VHr/SMOl/zfhsvRorqD8QIY7Bi+m+OskYEEZDdwy6ZMEtTZhw==
-X-Received: by 2002:ac5:cb62:: with SMTP id l2mr6580899vkn.32.1571432203606;
- Fri, 18 Oct 2019 13:56:43 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 22:56:29 +0200
-Message-Id: <20191018205631.248274-1-jannh@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=rSf3nIyWZKMYSfUuilEe+uzzHebaBT4JOp0k6bHBoK4=;
+        b=DehnDWXBkJohVVjXT3MXCdQ55mN1W95a4/Tp9GyHcDJrFCfFyHBT4oLQKw5AWzLL8b
+         MMwGHJARBq/fIkgInry+2ovmJGTd4PwN1FvdVFNmhU9p6ZqSZuIRccDyAiu5DravpDHJ
+         78rTy4Pnw/ad90xO91riXfKvaO5SFhThGIuLiiIJOWCHrw1gEQTePH8HAXL8qfc+xyjG
+         DDQlIL3u8XpuVIMltyOfdE1GAZllr5blzI/BaNmbpMSweG8QhryBJt552MgONaCdFN7Q
+         NEtx3lfd8eRBhbcZQ+EzFKJ8/y/pTayn4DB/L+qqz3GiAgTZi1HgY0KOahw/xf60m2zz
+         +rcQ==
+X-Gm-Message-State: APjAAAW1rlkXnNNYLdwVtBYBz86urn8gUE59XMvIE4x6WQpcwdGQTw5n
+        GQDVx8P62BUNtQF2ImTpdTBEQXqjLQ==
+X-Google-Smtp-Source: APXvYqzlSay8l7D7nwGmRtoHF5tVY73mNeqS/VnG/mqmfszIKt2jJP8+W/12gpolZeK4d18GXwIjV/BR7g==
+X-Received: by 2002:adf:e28f:: with SMTP id v15mr9028179wri.130.1571432206880;
+ Fri, 18 Oct 2019 13:56:46 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 22:56:30 +0200
+In-Reply-To: <20191018205631.248274-1-jannh@google.com>
+Message-Id: <20191018205631.248274-2-jannh@google.com>
 Mime-Version: 1.0
+References: <20191018205631.248274-1-jannh@google.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-Subject: [PATCH 1/3] binder: Fix race between mmap() and binder_alloc_print_pages()
+Subject: [PATCH 2/3] binder: Prevent repeated use of ->mmap() via NULL mapping
 From:   Jann Horn <jannh@google.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>,
@@ -69,58 +73,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-binder_alloc_print_pages() iterates over
-alloc->pages[0..alloc->buffer_size-1] under alloc->mutex.
-binder_alloc_mmap_handler() writes alloc->pages and alloc->buffer_size
-without holding that lock, and even writes them before the last bailout
-point.
+binder_alloc_mmap_handler() attempts to detect the use of ->mmap() on a
+binder_proc whose binder_alloc has already been initialized by checking
+whether alloc->buffer is non-zero.
 
-Unfortunately we can't take the alloc->mutex in the ->mmap() handler
-because mmap_sem can be taken while alloc->mutex is held.
-So instead, we have to locklessly check whether the binder_alloc has been
-fully initialized with binder_alloc_get_vma(), like in
-binder_alloc_new_buf_locked().
+Before commit 880211667b20 ("binder: remove kernel vm_area for buffer
+space"), alloc->buffer was a kernel mapping address, which is always
+non-zero, but since that commit, it is a userspace mapping address.
 
-Fixes: 8ef4665aa129 ("android: binder: Add page usage in binder stats")
+A sufficiently privileged user can map /dev/binder at NULL, tricking
+binder_alloc_mmap_handler() into assuming that the binder_proc has not been
+mapped yet. This leads to memory unsafety.
+Luckily, no context on Android has such privileges, and on a typical Linux
+desktop system, you need to be root to do that.
+
+Fix it by using the mapping size instead of the mapping address to
+distinguish the mapped case. A valid VMA can't have size zero.
+
+Fixes: 880211667b20 ("binder: remove kernel vm_area for buffer space")
 Cc: stable@vger.kernel.org
 Signed-off-by: Jann Horn <jannh@google.com>
 ---
- drivers/android/binder_alloc.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+ drivers/android/binder_alloc.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/android/binder_alloc.c b/drivers/android/binder_alloc.c
-index eb76a823fbb2..21952dfa147d 100644
+index 21952dfa147d..539385634151 100644
 --- a/drivers/android/binder_alloc.c
 +++ b/drivers/android/binder_alloc.c
-@@ -841,14 +841,20 @@ void binder_alloc_print_pages(struct seq_file *m,
- 	int free = 0;
+@@ -681,17 +681,17 @@ int binder_alloc_mmap_handler(struct binder_alloc *alloc,
+ 	struct binder_buffer *buffer;
  
- 	mutex_lock(&alloc->mutex);
--	for (i = 0; i < alloc->buffer_size / PAGE_SIZE; i++) {
--		page = &alloc->pages[i];
--		if (!page->page_ptr)
--			free++;
--		else if (list_empty(&page->lru))
--			active++;
--		else
--			lru++;
-+	/*
-+	 * Make sure the binder_alloc is fully initialized, otherwise we might
-+	 * read inconsistent state.
-+	 */
-+	if (binder_alloc_get_vma(alloc) != NULL) {
-+		for (i = 0; i < alloc->buffer_size / PAGE_SIZE; i++) {
-+			page = &alloc->pages[i];
-+			if (!page->page_ptr)
-+				free++;
-+			else if (list_empty(&page->lru))
-+				active++;
-+			else
-+				lru++;
-+		}
+ 	mutex_lock(&binder_alloc_mmap_lock);
+-	if (alloc->buffer) {
++	if (alloc->buffer_size) {
+ 		ret = -EBUSY;
+ 		failure_string = "already mapped";
+ 		goto err_already_mapped;
  	}
- 	mutex_unlock(&alloc->mutex);
- 	seq_printf(m, "  pages: %d:%d:%d\n", active, lru, free);
++	alloc->buffer_size = min_t(unsigned long, vma->vm_end - vma->vm_start,
++				   SZ_4M);
++	mutex_unlock(&binder_alloc_mmap_lock);
+ 
+ 	alloc->buffer = (void __user *)vma->vm_start;
+-	mutex_unlock(&binder_alloc_mmap_lock);
+ 
+-	alloc->buffer_size = min_t(unsigned long, vma->vm_end - vma->vm_start,
+-				   SZ_4M);
+ 	alloc->pages = kcalloc(alloc->buffer_size / PAGE_SIZE,
+ 			       sizeof(alloc->pages[0]),
+ 			       GFP_KERNEL);
+@@ -722,8 +722,9 @@ int binder_alloc_mmap_handler(struct binder_alloc *alloc,
+ 	kfree(alloc->pages);
+ 	alloc->pages = NULL;
+ err_alloc_pages_failed:
+-	mutex_lock(&binder_alloc_mmap_lock);
+ 	alloc->buffer = NULL;
++	mutex_lock(&binder_alloc_mmap_lock);
++	alloc->buffer_size = 0;
+ err_already_mapped:
+ 	mutex_unlock(&binder_alloc_mmap_lock);
+ 	binder_alloc_debug(BINDER_DEBUG_USER_ERROR,
 -- 
 2.23.0.866.gb869b98d4c-goog
 
