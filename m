@@ -2,138 +2,135 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A1FCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8F3CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27C7622459
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:07:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436459;
-	bh=vftKeGfZD1oTHtGExan21UU6YoxR31kKt1v/Sey+J10=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ds0YUXben0h+Qfzmv2FHGvxthHf4JVRYi9MLZ1sgiBFabqjUk0KHQJamMfaXyG2C9
-	 sevUbAZ7TPtV9b3R9Ki1W7NCm6UWwXZQBY5lVdZ4ZgRixgUVlMu9XHEZ1ELnGkInQE
-	 OFcPogeHzsmZ7eQlHdO3S+F9infYkw59XNZRsmVE=
+	by mail.kernel.org (Postfix) with ESMTP id EDFC722466
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:07:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733071AbfJRWHi (ORCPT
+        id S1733102AbfJRWHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:07:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39818 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732971AbfJRWHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:07:39 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:56118 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732957AbfJRWHe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 18 Oct 2019 18:07:34 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF776222C2;
-        Fri, 18 Oct 2019 22:07:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436452;
-        bh=vftKeGfZD1oTHtGExan21UU6YoxR31kKt1v/Sey+J10=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jUhsZ21mXtsAZfJzOTVYpBdgtPAJpAL25Z49SHe3cYByLkQB6YogMPB/Dyb9SPQFk
-         o/2F0IKGHcL5bQ8Nk6UeGwjz11ZSC0kz4vpoM9+croT5H8dV/FGXYqoCzhHr+T1NOs
-         /9TsOO8dRo86a2/QHlj4vG5udrnOZdMzqmF8bjYg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Frederic Weisbecker <frederic@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rik van Riel <riel@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 086/100] sched/vtime: Fix guest/system mis-accounting on task switch
-Date:   Fri, 18 Oct 2019 18:05:11 -0400
-Message-Id: <20191018220525.9042-86-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
-References: <20191018220525.9042-1-sashal@kernel.org>
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 103D1634C8A;
+        Sat, 19 Oct 2019 01:06:57 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1iLaOf-0001ge-N7; Sat, 19 Oct 2019 01:06:57 +0300
+Date:   Sat, 19 Oct 2019 01:06:57 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Rob Herring <robh@kernel.org>, mchehab@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com
+Subject: Re: [PATCH 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
+ binding
+Message-ID: <20191018220657.GI4735@valkosipuli.retiisi.org.uk>
+References: <20191011035613.13598-1-manivannan.sadhasivam@linaro.org>
+ <20191011035613.13598-2-manivannan.sadhasivam@linaro.org>
+ <20191015224554.GA5634@bogus>
+ <20191016083748.GA2288@Mani-XPS-13-9360>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016083748.GA2288@Mani-XPS-13-9360>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frederic Weisbecker <frederic@kernel.org>
+Hi Manivannan, Rob,
 
-[ Upstream commit 68e7a4d66b0ce04bf18ff2ffded5596ab3618585 ]
+On Wed, Oct 16, 2019 at 02:07:48PM +0530, Manivannan Sadhasivam wrote:
+> Hi Rob,
+> 
+> On Tue, Oct 15, 2019 at 05:45:54PM -0500, Rob Herring wrote:
+> > On Fri, Oct 11, 2019 at 09:26:12AM +0530, Manivannan Sadhasivam wrote:
+> > > Add devicetree binding for IMX296 CMOS image sensor.
+> > > 
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > ---
+> > >  .../devicetree/bindings/media/i2c/imx296.txt  | 55 +++++++++++++++++++
+> > >  1 file changed, 55 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.txt
+> > 
+> > You should know by now, use DT schema format please.
+> > 
+> 
+> I know for other subsystems but by having a vague look at the existing bindings
+> I thought media subsystem is still using .txt. But I now see few yaml bindings
+> in linux-next and will switch over this.
+> 
+> Btw, is it mandatory now to use YAML bindings for all subsystems? I don't
+> see any issue (instead I prefer) but I remember that you defer to the preference
+> of the subsystem maintainers before!
+> 
+> > > diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.txt b/Documentation/devicetree/bindings/media/i2c/imx296.txt
+> > > new file mode 100644
+> > > index 000000000000..25d3b15162c1
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/i2c/imx296.txt
+> > > @@ -0,0 +1,55 @@
+> > > +* Sony IMX296 1/2.8-Inch CMOS Image Sensor
+> > > +
+> > > +The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
+> > > +sensor with square pixel array and 1.58 M effective pixels. This chip features
+> > > +a global shutter with variable charge-integration time. It is programmable
+> > > +through I2C and 4-wire interfaces. The sensor output is available via CSI-2
+> > > +serial data output (1 Lane).
+> > > +
+> > > +Required Properties:
+> > > +- compatible: Should be "sony,imx296"
+> > > +- reg: I2C bus address of the device
+> > > +- clocks: Reference to the mclk clock.
+> > > +- clock-names: Should be "mclk".
+> > > +- clock-frequency: Frequency of the mclk clock in Hz.
+> > > +- vddo-supply: Interface power supply.
+> > > +- vdda-supply: Analog power supply.
+> > > +- vddd-supply: Digital power supply.
+> > > +
+> > > +Optional Properties:
+> > > +- reset-gpios: Sensor reset GPIO
+> > > +
+> > > +The imx296 device node should contain one 'port' child node with
+> > > +an 'endpoint' subnode. For further reading on port node refer to
+> > > +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > > +
+> > > +Required Properties on endpoint:
+> > > +- data-lanes: check ../video-interfaces.txt
+> > 
+> > This should only be required when not using all the lanes on the device.
+> > 
+> 
+> This is a bit weird! How will someone know how many lanes the device is using
+> by looking at the binding? He can anyway refer the datasheet but still...
 
-vtime_account_system() assumes that the target task to account cputime
-to is always the current task. This is most often true indeed except on
-task switch where we call:
+Many current bindings document data-lanes as mandatory. Nothing prevents
+making all lanes are connected the default though, thus making data-lanes
+optional.
 
-	vtime_common_task_switch(prev)
-		vtime_account_system(prev)
+The V4L2 fwnode framework supports easy parsing of that, too, by driver
+providing that default value before letting V4L2 fwnode framework to parse
+the endpoint properties.
 
-Here prev is the scheduling-out task where we account the cputime to. It
-doesn't match current that is already the scheduling-in task at this
-stage of the context switch.
+Looking at this particular sensor --- doesn't it only have a single lane,
+and thus nothing to configure here?
 
-So we end up checking the wrong task flags to determine if we are
-accounting guest or system time to the previous task.
-
-As a result the wrong task is used to check if the target is running in
-guest mode. We may then spuriously account or leak either system or
-guest time on task switch.
-
-Fix this assumption and also turn vtime_guest_enter/exit() to use the
-task passed in parameter as well to avoid future similar issues.
-
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Fixes: 2a42eb9594a1 ("sched/cputime: Accumulate vtime on top of nsec clocksource")
-Link: https://lkml.kernel.org/r/20190925214242.21873-1-frederic@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/sched/cputime.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-index 0796f938c4f0d..54eb9457b21d3 100644
---- a/kernel/sched/cputime.c
-+++ b/kernel/sched/cputime.c
-@@ -739,7 +739,7 @@ void vtime_account_system(struct task_struct *tsk)
- 
- 	write_seqcount_begin(&vtime->seqcount);
- 	/* We might have scheduled out from guest path */
--	if (current->flags & PF_VCPU)
-+	if (tsk->flags & PF_VCPU)
- 		vtime_account_guest(tsk, vtime);
- 	else
- 		__vtime_account_system(tsk, vtime);
-@@ -782,7 +782,7 @@ void vtime_guest_enter(struct task_struct *tsk)
- 	 */
- 	write_seqcount_begin(&vtime->seqcount);
- 	__vtime_account_system(tsk, vtime);
--	current->flags |= PF_VCPU;
-+	tsk->flags |= PF_VCPU;
- 	write_seqcount_end(&vtime->seqcount);
- }
- EXPORT_SYMBOL_GPL(vtime_guest_enter);
-@@ -793,7 +793,7 @@ void vtime_guest_exit(struct task_struct *tsk)
- 
- 	write_seqcount_begin(&vtime->seqcount);
- 	vtime_account_guest(tsk, vtime);
--	current->flags &= ~PF_VCPU;
-+	tsk->flags &= ~PF_VCPU;
- 	write_seqcount_end(&vtime->seqcount);
- }
- EXPORT_SYMBOL_GPL(vtime_guest_exit);
 -- 
-2.20.1
+Regards,
 
+Sakari Ailus
