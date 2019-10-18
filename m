@@ -2,108 +2,84 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 259C2CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B90ECA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA0BF2053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 446692070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:56:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rn0xH2r9"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Mvf2/0me"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409529AbfJREz4 (ORCPT
+        id S2407286AbfJRE4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 00:55:56 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:33282 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392808AbfJREzz (ORCPT
+        Fri, 18 Oct 2019 00:56:41 -0400
+Received: from condef-04.nifty.com ([202.248.20.69]:50603 "EHLO
+        condef-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389158AbfJRE4k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 00:55:55 -0400
-Received: by mail-io1-f68.google.com with SMTP id z19so5947178ior.0;
-        Thu, 17 Oct 2019 21:55:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3ehKOW/N+FTLF+YoAGhVTdIuexN5qbQUY1mLWAZQXhU=;
-        b=Rn0xH2r9CfVldbfAXR7dSTkpYMinTskC7GYU6kajDgPXiOplHYv2cNAhOEVnSzJXDA
-         F3tzNodRaDbkqwWcXSYR2sBad8nlbqIlHcGBnB+uCNHls3MTX3mA0oU/RXvbUx1L8Xmk
-         kSQ0C21flTDCxiO8tBAPxNTZA5f+DMilVkHmkvdvZREOnlxyec446GobkM2/Xtoc0gTK
-         L4dK+WyJLJ8f8o1TvjoqJI/DS3CtErgMAPfo8SFJtWOzlCHUhnHjK+ZBut9abgqMVCaC
-         HJalSa+BV8SiaTeRYOLhIms9VBsLmkRN1h+4aGwm5Xw85RU6GjRi+L+aC3CWcPmWlTJC
-         viAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3ehKOW/N+FTLF+YoAGhVTdIuexN5qbQUY1mLWAZQXhU=;
-        b=l43R3y3d8YA++QGShbVbLt5YJ3NLpltk0UDWF7MbiKuMlN/4MkwSB0F4tnyKKNICMM
-         YF1ollKBKNtvbIUMJ5SEJUFUbj6pHLPYJ6Wi86bLBR7/e+M3TKx/D0GIOLboILfCsB3S
-         h9v+skFZ7GHw/pil7BEsIqtfSfKtJGY82aGWbAwKM78vgCvewIE5l4lb6f9xq8D2u8V1
-         zBi4TEIXotRtrAEkeYiQeSvU6Da6qBO6SsoI08Eb16zAlqGiU9i1VdbfNahf4oNJaPlm
-         Yp/d7GavStWllhZmQ+KBE6RfKXgbjBi/a5rLsGQz1FuRMJCXBBjxc5IRepxcR4lrvKlF
-         cmHg==
-X-Gm-Message-State: APjAAAXVKNk0BTtr+ncuDIdtdwrTS2gmV7oFiyUEQJU4+UCzTNwyHDG/
-        JWqPAi5n4Fgxp59lqvYUA0BP60jm/AcCUKGHvCQ9Iagx
-X-Google-Smtp-Source: APXvYqxgS5ct0v8h7EZnQaxNd7n2Gy9Yn06F3wrKDNTFF1bjL6NRVgvhUFG8RaKqVn3zR8oyEpdCL+wHTr4gIP47/3Y=
-X-Received: by 2002:a5e:db46:: with SMTP id r6mr4668633iop.287.1571372761181;
- Thu, 17 Oct 2019 21:26:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191016182935.5616-4-andrew.smirnov@gmail.com> <20191017143149.449AA21D7C@mail.kernel.org>
-In-Reply-To: <20191017143149.449AA21D7C@mail.kernel.org>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Thu, 17 Oct 2019 21:25:49 -0700
-Message-ID: <CAHQ1cqHF+3S1xYCVs19U7Hr+SjMp+z3QhW-KsKDSa00VMGN8FA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] HID: logitech-hidpp: do all FF cleanup in hidpp_ff_destroy()
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        "Pierre-Loup A. Griffais" <pgriffais@valvesoftware.com>,
-        Austin Palmer <austinp@valvesoftware.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 18 Oct 2019 00:56:40 -0400
+Received: from conuserg-10.nifty.com ([10.126.8.73])by condef-04.nifty.com with ESMTP id x9I4WAKv004997;
+        Fri, 18 Oct 2019 13:32:11 +0900
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-10.nifty.com with ESMTP id x9I4Vnxp019790;
+        Fri, 18 Oct 2019 13:31:50 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x9I4Vnxp019790
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1571373111;
+        bh=Yyl1cS1eYVt+sVWWGmNXm8/lysOK1IQALljWjASqSwg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Mvf2/0meUo3qXcLS0yRxbLFLzQ+erxo70YfKJZmlA25fJDuP2VseTcvr9gJKHMupY
+         QqSYjcZb2Fyu8qj6leuy+QIphDCaA5hnLxTZzZJ3/DshvKu2ahgdDY/Zkl123ZgE/K
+         5AUFrRD51GbkMkU+poOBcA4Qm4BfzNctOY0AbDj6H8syd2hF2zP0Ah/Q7wKS0CyXrW
+         NVsez3NL1L8tWcK5/FgfHqgEMsMVS9/LuI8lg0vtgKQAHW0WGswp7H5+gza4Xy0w6v
+         DOMl4b1Og+CeoxULFShX2rsVw1pAoTBYLrZXYawP9qrhMYwLI+kqMeNd5jFVoL+wd9
+         wMd1OJtAp+xww==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kernel@vger.kernel.org, Jessica Yu <jeyu@kernel.org>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org
+Subject: [PATCH 2/2] asm-generic/export.h: remove unneeded __kcrctab_* symbols
+Date:   Fri, 18 Oct 2019 13:31:48 +0900
+Message-Id: <20191018043148.6285-2-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191018043148.6285-1-yamada.masahiro@socionext.com>
+References: <20191018043148.6285-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 7:31 AM Sasha Levin <sashal@kernel.org> wrote:
->
-> Hi,
->
-> [This is an automated email]
->
-> This commit has been processed because it contains a "Fixes:" tag,
-> fixing commit: ff21a635dd1a9 HID: logitech-hidpp: Force feedback support for the Logitech G920.
->
-> The bot has tested the following trees: v5.3.6, v4.19.79, v4.14.149, v4.9.196.
->
-> v5.3.6: Build OK!
-> v4.19.79: Failed to apply! Possible dependencies:
->     91cf9a98ae412 ("HID: logitech-hidpp: make .probe usbhid capable")
->
-> v4.14.149: Failed to apply! Possible dependencies:
->     91cf9a98ae412 ("HID: logitech-hidpp: make .probe usbhid capable")
->
-> v4.9.196: Failed to apply! Possible dependencies:
->     6bd4e65d521f9 ("HID: logitech-hidpp: remove HIDPP_QUIRK_CONNECT_EVENTS")
->     91cf9a98ae412 ("HID: logitech-hidpp: make .probe usbhid capable")
->     a4bf6153b3177 ("HID: logitech-hidpp: add a sysfs file to tell we support power_supply")
->
->
-> NOTE: The patch will not be queued to stable trees until it is upstream.
->
-> How should we proceed with this patch?
+EXPORT_SYMBOL from assembly code produces an unused symbol __kcrctab_*.
 
-Looks like I'd have to mark this one as 5.2+ as well. Please disregard
-this series in favor of v3 that will be sent out shortly.
+kcrctab is used as a section name (prefixed with three underscores),
+but never used as a symbol.
 
-Thanks,
-Andrey Smirnov
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ include/asm-generic/export.h | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/include/asm-generic/export.h b/include/asm-generic/export.h
+index 80ef2dc0c8be..a3983e2ce0fd 100644
+--- a/include/asm-generic/export.h
++++ b/include/asm-generic/export.h
+@@ -43,7 +43,6 @@ __kstrtab_\name:
+ #ifdef CONFIG_MODVERSIONS
+ 	.section ___kcrctab\sec+\name,"a"
+ 	.balign KCRC_ALIGN
+-__kcrctab_\name:
+ #if defined(CONFIG_MODULE_REL_CRCS)
+ 	.long __crc_\name - .
+ #else
+-- 
+2.17.1
+
