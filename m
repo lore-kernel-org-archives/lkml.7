@@ -2,121 +2,141 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5789FCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A7CCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31389222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE8EA222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:35:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="NYqIWanv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GISxMSmd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408554AbfJRNes (ORCPT
+        id S2410361AbfJRNfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 09:34:48 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45328 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728150AbfJRNes (ORCPT
+        Fri, 18 Oct 2019 09:35:23 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43071 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728150AbfJRNfX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 09:34:48 -0400
-Received: by mail-lj1-f193.google.com with SMTP id q64so6220002ljb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 06:34:47 -0700 (PDT)
+        Fri, 18 Oct 2019 09:35:23 -0400
+Received: by mail-pl1-f194.google.com with SMTP id f21so2862217plj.10;
+        Fri, 18 Oct 2019 06:35:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mtqhz+l9p2z/Y9+QoW0NlKs8Ee0G0Fl5wkgOZoNBTfE=;
-        b=NYqIWanvwetnPi+kg0R4ons+B6C3dxTU+AOGj1o5Kk/Vq/GQyHF9dv9ps909bAKi+s
-         vFycJkOyIf0sCHGeTv9Ff0qIA1BlrO7m/ocbIR16k36CUTZokMLg4ZDwTIUB3bOZPjrG
-         wseNHPVwYgeAsCIh3Vjneff6CfnILz13ncnRjZnU7TOu1eA9eyq38uXidT66DMqaKVV9
-         3OszxSncg4kLct6v+vzWj12nQpkg0BFodb7azVuTxiiQvM+eLZv953AzrpvvyFVeZaXk
-         NLbbpTokCrZpJrMxAboemdMoW4/RC0it3mcDMk1M7e//fuCJ2HWvgTxWxY9VXPimEtGO
-         uQVg==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=SsJsXFic4Ds6Lk73dimunU2ietWwXXmu0ej5RwXC+UA=;
+        b=GISxMSmdHRoQ6ishW/ilP5//aMCHUDDAFH5E/LaO4lJAnU3lQ+UjGv86+RCZt4Bud/
+         XGtM8zFFSIfgylwzLsT/lTUeVau2ZDrnvdfZ99U7iRL3KEDI2J0Eiranv9SYdiD/tZ5r
+         jNbVgAoBgA7NvN74bvp3RsnuOUdOlzgRAZ2jHINcxPdqpDlNfQ8pBaR9yd2yZ190P6Cv
+         +KpMMHwryvuA5tWM5uQNjTjHQlhyI7nQO0NcW0cFJNLuOaW+dkt3f/LTAwzPi3VxhRXl
+         jrdXlFLNy+NQkwlb1u2Sv0KwwAWBecE6T1jUYOvSfCtrp2ECfoKgrv3oecszHw1MnX5a
+         bDxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mtqhz+l9p2z/Y9+QoW0NlKs8Ee0G0Fl5wkgOZoNBTfE=;
-        b=tPTkV63fKaj7+Nl2QqDa/d1wZBfsQ3iODrJOcTiMLgjSSjuTiIYRF6ABdKLfU2rsnQ
-         9amyKWjo3glqkeIPk0oF2he+CcmEVcBqLovw8NZY8goQ6ztoblMLCDnXaxVCFqwxcVBc
-         PIbLj/cYLdOC3zixPvLvpW9+ThDEvCCrKO409rJVZt1U+1NRvCkvsS6YIABBSFGp8VVt
-         u8ChTHo1GDyV2XnphzFQBjmc4iNCuhLBEDSgIqWKHJvhv6JwKTAg3vKRdnSrTffvCFYQ
-         NQaG1mddQecX7cNsc1gFHY8CN7Dlma+uU59tsUPeEQhnofY1hWINiKS0JPG7pMuyJJrn
-         QibA==
-X-Gm-Message-State: APjAAAX+3FsiYPuh4Ssctby0zM1rMJ5sOZiOm70sRcEg2QmmT4RfJCkN
-        yjYxrweZbsQs6eBjfWNmq+V4Iw==
-X-Google-Smtp-Source: APXvYqxSHEyX4P2wiV9AbvuLFAyNsDBlqMKrAO9VbJ1TOkviaIxn6GVTIAEjPhaOwIP43pqNDiHlpw==
-X-Received: by 2002:a2e:88d0:: with SMTP id a16mr6296209ljk.39.1571405686573;
-        Fri, 18 Oct 2019 06:34:46 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id x76sm5908099ljb.81.2019.10.18.06.34.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 06:34:45 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id B6F7D100D76; Fri, 18 Oct 2019 16:34:44 +0300 (+03)
-Date:   Fri, 18 Oct 2019 16:34:44 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, matthew.wilcox@oracle.com,
-        kernel-team@fb.com, william.kucharski@oracle.com,
-        kirill.shutemov@linux.intel.com,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH] mm,thp: recheck each page before collapsing file THP
-Message-ID: <20191018133444.iif7b33muxmus6lb@box>
-References: <20191018050832.1251306-1-songliubraving@fb.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018050832.1251306-1-songliubraving@fb.com>
-User-Agent: NeoMutt/20180716
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=SsJsXFic4Ds6Lk73dimunU2ietWwXXmu0ej5RwXC+UA=;
+        b=jVgDl+Q64bzLzB0H+2YEoSsl4qxFsPIsOD1ophQ+skyyfvc26PGOA1HdyXXlSQCJTP
+         bqoJUDlM2B8xJ9PWa+aiCX36ANBQxdUoOj5rfHMdq60xfsSge6P2FEC9j51EUD1Mh1ef
+         01TwkHmi29KkQOjsNxazNqaMPesWnGGEcA+Q3+aclBOC27m3vGuSPa00P5U7/6yjPiHD
+         FQdoRINTyCioN+4VPWqKyA/dONU2CCDBo6p5UGHAx3/zrNPGAx+Gj117V0Ps0Ei2wOTs
+         9rsJfjLzsiedpn63nBRo5GYM+L2zEkESb4FTJMJSITS+PQF3gzM55jPr5zoXHR1zSrdL
+         vh7Q==
+X-Gm-Message-State: APjAAAVHMgJb/EMZCLaZiFixb70Q7d5gdxBJPMSu8zRbpdYaLyu5wezA
+        NV62wNcIvR4qvZz+xLPMzHY=
+X-Google-Smtp-Source: APXvYqwhWW+3kGLhJnDO7JbFfbTPaSBWfQxSxgmG2d8fwyCNuvqp0qF2VBxOO19wBJfV3FxDLDt6iA==
+X-Received: by 2002:a17:902:2e:: with SMTP id 43mr10283792pla.55.1571405721031;
+        Fri, 18 Oct 2019 06:35:21 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k66sm6163232pjb.11.2019.10.18.06.35.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 18 Oct 2019 06:35:19 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hui Peng <benquike@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH v2] ath10k: Fix a NULL-ptr-deref bug in ath10k_usb_alloc_urb_from_pipe
+Date:   Fri, 18 Oct 2019 06:35:16 -0700
+Message-Id: <20191018133516.12606-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 10:08:32PM -0700, Song Liu wrote:
-> In collapse_file(), after locking the page, it is necessary to recheck
-> that the page is up-to-date, clean, and pointing to the proper mapping.
-> If any check fails, abort the collapse.
-> 
-> Fixes: 99cb0dbd47a1 ("mm,thp: add read-only THP support for (non-shmem) FS")
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: William Kucharski <william.kucharski@oracle.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Signed-off-by: Song Liu <songliubraving@fb.com>
-> ---
->  mm/khugepaged.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 0a1b4b484ac5..7da49b643c4d 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -1619,6 +1619,14 @@ static void collapse_file(struct mm_struct *mm,
->  				result = SCAN_PAGE_LOCK;
->  				goto xa_locked;
->  			}
-> +
-> +			/* double check the page is correct and clean */
-> +			if (unlikely(!PageUptodate(page)) ||
-> +			    unlikely(PageDirty(page)) ||
-> +			    unlikely(page->mapping != mapping)) {
-> +				result = SCAN_FAIL;
-> +				goto out_unlock;
-> +			}
->  		}
->  
->  		/*
+From: Hui Peng <benquike@gmail.com>
 
-Hm. But why only for !is_shmem? Or I read it wrong?
+The `ar_usb` field of `ath10k_usb_pipe_usb_pipe` objects
+are initialized to point to the containing `ath10k_usb` object
+according to endpoint descriptors read from the device side, as shown
+below in `ath10k_usb_setup_pipe_resources`:
 
+for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
+        endpoint = &iface_desc->endpoint[i].desc;
+
+        // get the address from endpoint descriptor
+        pipe_num = ath10k_usb_get_logical_pipe_num(ar_usb,
+                                                endpoint->bEndpointAddress,
+                                                &urbcount);
+        ......
+        // select the pipe object
+        pipe = &ar_usb->pipes[pipe_num];
+
+        // initialize the ar_usb field
+        pipe->ar_usb = ar_usb;
+}
+
+The driver assumes that the addresses reported in endpoint
+descriptors from device side  to be complete. If a device is
+malicious and does not report complete addresses, it may trigger
+NULL-ptr-deref `ath10k_usb_alloc_urb_from_pipe` and
+`ath10k_usb_free_urb_to_pipe`.
+
+This patch fixes the bug by preventing potential NULL-ptr-deref.
+
+Signed-off-by: Hui Peng <benquike@gmail.com>
+Reported-by: Hui Peng <benquike@gmail.com>
+Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[groeck: Add driver tag to subject, fix build warning]
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+v2: Fix build warning, add "ath10k:" to subject
+
+ drivers/net/wireless/ath/ath10k/usb.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/net/wireless/ath/ath10k/usb.c b/drivers/net/wireless/ath/ath10k/usb.c
+index e1420f67f776..9ebe74ee4aef 100644
+--- a/drivers/net/wireless/ath/ath10k/usb.c
++++ b/drivers/net/wireless/ath/ath10k/usb.c
+@@ -38,6 +38,10 @@ ath10k_usb_alloc_urb_from_pipe(struct ath10k_usb_pipe *pipe)
+ 	struct ath10k_urb_context *urb_context = NULL;
+ 	unsigned long flags;
+ 
++	/* bail if this pipe is not initialized */
++	if (!pipe->ar_usb)
++		return NULL;
++
+ 	spin_lock_irqsave(&pipe->ar_usb->cs_lock, flags);
+ 	if (!list_empty(&pipe->urb_list_head)) {
+ 		urb_context = list_first_entry(&pipe->urb_list_head,
+@@ -55,6 +59,10 @@ static void ath10k_usb_free_urb_to_pipe(struct ath10k_usb_pipe *pipe,
+ {
+ 	unsigned long flags;
+ 
++	/* bail if this pipe is not initialized */
++	if (!pipe->ar_usb)
++		return;
++
+ 	spin_lock_irqsave(&pipe->ar_usb->cs_lock, flags);
+ 
+ 	pipe->urb_cnt++;
 -- 
- Kirill A. Shutemov
+2.17.1
+
