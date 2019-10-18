@@ -2,73 +2,108 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD0DCA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF86FCA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68D952089C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC4A222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:58:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409473AbfJRE51 (ORCPT
+        id S2409557AbfJRE6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 00:57:27 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:63641 "EHLO 1wt.eu"
+        Fri, 18 Oct 2019 00:58:02 -0400
+Received: from mga04.intel.com ([192.55.52.120]:47341 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731903AbfJRE50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 00:57:26 -0400
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id x9I2qGaS015781;
-        Fri, 18 Oct 2019 04:52:16 +0200
-Date:   Fri, 18 Oct 2019 04:52:16 +0200
-From:   Willy Tarreau <w@1wt.eu>
-To:     Greg KH <greg@kroah.com>, Santiago Torres Arias <santiago@nyu.edu>,
-        Vegard Nossum <vegard.nossum@oracle.com>,
-        workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, Eric Wong <e@80x24.org>
-Subject: Re: email as a bona fide git transport
-Message-ID: <20191018025215.GA15777@1wt.eu>
-References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
- <20191016111009.GE13154@1wt.eu>
- <20191016144517.giwip4yuaxtcd64g@LykOS.localdomain>
- <20191017204343.GA1132188@kroah.com>
- <20191017204532.GA6446@chatter.i7.local>
- <20191018013029.GA1167832@kroah.com>
- <20191018015447.GB6446@chatter.i7.local>
+        id S1730688AbfJRE6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 00:58:02 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 19:36:47 -0700
+X-IronPort-AV: E=Sophos;i="5.67,310,1566889200"; 
+   d="scan'208";a="371328089"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.239.13.123]) ([10.239.13.123])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 17 Oct 2019 19:36:43 -0700
+Subject: Re: [RFD] x86/split_lock: Request to Intel
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org
+References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
+ <1560897679-228028-10-git-send-email-fenghua.yu@intel.com>
+ <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de>
+ <20190626203637.GC245468@romley-ivt3.sc.intel.com>
+ <alpine.DEB.2.21.1906262338220.32342@nanos.tec.linutronix.de>
+ <20190925180931.GG31852@linux.intel.com>
+ <3ec328dc-2763-9da5-28d6-e28970262c58@redhat.com>
+ <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de>
+ <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com>
+ <c3ff2fb3-4380-fb07-1fa3-15896a09e748@intel.com>
+ <d30652bb-89fa-671a-5691-e2c76af231d0@redhat.com>
+ <8808c9ac-0906-5eec-a31f-27cbec778f9c@intel.com>
+ <alpine.DEB.2.21.1910161519260.2046@nanos.tec.linutronix.de>
+ <ba2c0aab-1d7c-5cfd-0054-ac2c266c1df3@redhat.com>
+ <alpine.DEB.2.21.1910171322530.1824@nanos.tec.linutronix.de>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <5da90713-9a0d-6466-64f7-db435ba07dbe@intel.com>
+Date:   Fri, 18 Oct 2019 10:36:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018015447.GB6446@chatter.i7.local>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+In-Reply-To: <alpine.DEB.2.21.1910171322530.1824@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 09:54:47PM -0400, Konstantin Ryabitsev wrote:
-> On Thu, Oct 17, 2019 at 06:30:29PM -0700, Greg KH wrote:
-> > > It could only possibly work if nobody ever adds their own
-> > > "Signed-Off-By" or
-> > > any other bylines. I expect this is a deal-breaker for most maintainers.
-> > 
-> > Yeah it is :(
-> > 
-> > But, if we could just have the signature on the code change, not the
-> > changelog text, that would help with that issue.
+On 10/17/2019 8:29 PM, Thomas Gleixner wrote:
+> The more I look at this trainwreck, the less interested I am in merging any
+> of this at all.
 > 
-> We totally should, and I even mused on how we would do that here:
-> https://public-inbox.org/git/20190910121324.GA6867@pure.paranoia.local/
+> The fact that it took Intel more than a year to figure out that the MSR is
+> per core and not per thread is yet another proof that this industry just
+> works by pure chance.
 > 
-> However, since git's PGP signatures are made for the content in the actual
-> commit record (tree hash, parent, author, commit message, etc), the only way
-> we could preserve them between the email and the git tree is if we never
-> modify any of that data. The SOB and other trailers would have to only be
-> applied to the merge commit, or migrate into commit notes.
 
-There's also the possibility to handle this a bit like we do when adding
-comments before the SOB: a PGP signature would apply to the text *before*
-it only. We could then have long chains of SOB, PGP, SOB, PGP etc.
+Whether it's per-core or per-thread doesn't affect much how we implement 
+for host/native.
 
-Willy
+And also, no matter it's per-core or per-thread, we always can do 
+something in VIRT.
+
+Maybe what matters is below.
+
+> Seriously, this makes only sense when it's by default enabled and not
+> rendered useless by VIRT. Otherwise we never get any reports and none of
+> the issues are going to be fixed.
+>
+
+For VIRT, it doesn't want old guest to be killed due to #AC. But for 
+native, it doesn't want VIRT to disable the #AC detection
+
+I think it's just about the default behavior that whether to disable the 
+host's #AC detection or kill the guest (SIGBUS or something else) once 
+there is an split-lock #AC in guest.
+
+So we can provide CONFIG option to set the default behavior and module 
+parameter to let KVM set/change the default behavior.
+
