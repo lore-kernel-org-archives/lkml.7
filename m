@@ -2,37 +2,37 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9C2CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B16D8CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C2A9222C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BF36222CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:29:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391723AbfJRF2y convert rfc822-to-8bit (ORCPT
+        id S2394894AbfJRF3H convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:28:54 -0400
-Received: from sender4-op-o19.zoho.com ([136.143.188.19]:17942 "EHLO
+        Fri, 18 Oct 2019 01:29:07 -0400
+Received: from sender4-op-o19.zoho.com ([136.143.188.19]:17908 "EHLO
         sender4-op-o19.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731644AbfJRF2x (ORCPT
+        with ESMTP id S1731644AbfJRF3G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:28:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1571370204; cv=none; 
+        Fri, 18 Oct 2019 01:29:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1571370212; cv=none; 
         d=zoho.com; s=zohoarc; 
-        b=oDQi8/xhQkWTTInmD3AzONR1BVYPjR9bNxSR6TsXAjPdO3UEdjGm/MucLUFLOcLvwXlJC0cX87KXGHXXwD5a34zmJtwEYVX16xHUTd2Xz8GLyUaZwkWlkOD1vU/1ZtU5TSuag6sq40b2ftkoxmZLc6O4xKKfqFIwOYiOV++YlIw=
+        b=kbAtEvTx8j677Jh3CDpgwDgzcmgvqS0LPM28Mv1oyoCNcv4QI587ONMf2RGEn4tb6tKGwlXnGUGIMsOF4Mhto2GnYYFzD7W1WEJQHAdoQQhmqr1xjZsgKPS7G+udQW7oRBiwXeMSEWesetIZdgaAdUSgy+vba1uxrI0aFzwVsJY=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1571370204; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
-        bh=hMiiW4t4j8256RwQSELEvYtzVLJKHMwLX3bMX/7RPkU=; 
-        b=XdhItdsKdSODfGiX++roAsiJbn2N9LHPpL+33IHwn7hXL4h/GaIxtTyfHupWMqXmFsX+z95MzPkKqsW7OYV5nQaKhCJ0MJC6KcdIZuMEaOdYzfLamBFTbi7PrhS+dGNYT7Wk0owBDgBF7nIfbF9QMnPEmeWAvfQdX7THtqBAfKQ=
+        t=1571370212; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=0M608GbAEJ9tM/ZcceqJxrV2lLBxBGooik+pYAv+CVU=; 
+        b=UXve6fXAJA6R0D03WQobADYB1lMiPgVuwUvKMiFrth6H1b7xHRU3iOXZKsQCuJGBrC15OuIVgMUQyU8BRZTL5thfeL4xV4fWIMHK/qrETAHnItgHidQTd8Vhr8yyvj8PDNCAV4xZ4i2G+zlJp4gBJ6qkbmtJq+yG4Xjzabm9t24=
 ARC-Authentication-Results: i=1; mx.zoho.com;
         dkim=pass  header.i=dlrobertson.com;
         spf=pass  smtp.mailfrom=dan@dlrobertson.com;
         dmarc=pass header.from=<dan@dlrobertson.com> header.from=<dan@dlrobertson.com>
 Received: from nessie.verizon.net (pool-100-15-144-194.washdc.fios.verizon.net [100.15.144.194]) by mx.zohomail.com
-        with SMTPS id 1571370203411431.43176717063875; Thu, 17 Oct 2019 20:43:23 -0700 (PDT)
+        with SMTPS id 1571370211739228.7610384308789; Thu, 17 Oct 2019 20:43:31 -0700 (PDT)
 From:   Dan Robertson <dan@dlrobertson.com>
 To:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>
@@ -42,10 +42,12 @@ Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
         Dan Robertson <dan@dlrobertson.com>
-Message-ID: <20191018031848.18538-1-dan@dlrobertson.com>
-Subject: [PATCH v3 0/2] iio: add driver for Bosch BMA400 accelerometer
-Date:   Fri, 18 Oct 2019 03:18:46 +0000
+Message-ID: <20191018031848.18538-2-dan@dlrobertson.com>
+Subject: [PATCH v4 1/2] dt-bindings: iio: accel: bma400: add bindings
+Date:   Fri, 18 Oct 2019 03:18:47 +0000
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191018031848.18538-1-dan@dlrobertson.com>
+References: <20191018031848.18538-1-dan@dlrobertson.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8BIT
 X-ZohoMailClient: External
@@ -55,59 +57,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset adds a IIO driver for the Bosch BMA400 3-axes ultra low-power
-accelerometer. The initial implementation of the driver adds read support for
-the acceleration and temperature data registers. The driver also has support
-for reading and writing to the output data rate, oversampling ratio, and scale
-configuration registers.
+Add devicetree binding for the Bosch BMA400 3-axes ultra-low power
+accelerometer sensor.
 
-I've ran some basic tests with libiio and I've run the device tree checks. Are
-there other tests that are recommended to be run for a new device?
-
-Thanks again for the reviews!
-
-Cheers,
-
- - Dan
-
-
-Changes in v4:
-
- * Fix error in DT bindings
- * Fix typo when setting the OSR
- * Simplified the cached sample frequency
- * Fix the MODULE_LICENSE
-
-Changes in v3:
-
- * Use yaml format for DT bindings
- * Remove strict dependency on OF
- * Tidy Kconfig dependencies
- * Stylistic changes
- * Do not soft-reset device on remove
-
-Changes in v2:
-
- * Implemented iio_info -> read_avail
- * Stylistic changes
- * Implemented devicetree bindings
-
-
-Dan Robertson (2):
-  dt-bindings: iio: accel: bma400: add bindings
-  iio: (bma400) add driver for the BMA400
-
- .../devicetree/bindings/iio/accel/bma400.yaml |  39 +
- drivers/iio/accel/Kconfig                     |  18 +
- drivers/iio/accel/Makefile                    |   2 +
- drivers/iio/accel/bma400.h                    |  85 ++
- drivers/iio/accel/bma400_core.c               | 796 ++++++++++++++++++
- drivers/iio/accel/bma400_i2c.c                |  60 ++
- 6 files changed, 1000 insertions(+)
+Signed-off-by: Dan Robertson <dan@dlrobertson.com>
+---
+ .../devicetree/bindings/iio/accel/bma400.yaml | 39 +++++++++++++++++++
+ 1 file changed, 39 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/iio/accel/bma400.yaml
- create mode 100644 drivers/iio/accel/bma400.h
- create mode 100644 drivers/iio/accel/bma400_core.c
- create mode 100644 drivers/iio/accel/bma400_i2c.c
 
+diff --git a/Documentation/devicetree/bindings/iio/accel/bma400.yaml b/Documentation/devicetree/bindings/iio/accel/bma400.yaml
+new file mode 100644
+index 000000000000..e0a85dc7bf34
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/accel/bma400.yaml
+@@ -0,0 +1,39 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/accel/bma400.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Bosch BMA400 triaxial acceleration sensor
++
++maintainers:
++  - Dan Robertson <dan@dlrobertson.com>
++
++description: |
++  Acceleration and temerature iio sensors with an i2c interface
++
++  Specifications about the sensor can be found at:
++    https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST-BMA400-DS000.pdf
++
++properties:
++  compatible:
++    enum:
++      - bosch,bma400
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    i2c0 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      bma400@14 {
++        compatible = "bosch,bma400";
++        reg = <0x14>;
++      };
++    };
 
 
