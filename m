@@ -2,141 +2,119 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6984CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1207CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A619321925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 821C721925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:10:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410003AbfJRMII (ORCPT
+        id S2410010AbfJRMKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 08:08:08 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4732 "EHLO huawei.com"
+        Fri, 18 Oct 2019 08:10:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43260 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404900AbfJRMII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 08:08:08 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 47292C30828965867981;
-        Fri, 18 Oct 2019 20:08:06 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Fri, 18 Oct 2019
- 20:08:00 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <khilman@kernel.org>, <tony@atomide.com>, <linux@armlinux.org.uk>
-CC:     <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] ARM: OMAP2+: Make some functions static
-Date:   Fri, 18 Oct 2019 20:07:01 +0800
-Message-ID: <20191018120701.29364-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        id S2403940AbfJRMKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 08:10:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 139B5B4D1;
+        Fri, 18 Oct 2019 12:10:00 +0000 (UTC)
+Subject: Re: [PATCH -next] btrfs: Make init_tree_roots static
+To:     YueHaibing <yuehaibing@huawei.com>, clm@fb.com,
+        josef@toxicpanda.com, dsterba@suse.com
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191018120604.29508-1-yuehaibing@huawei.com>
+From:   Nikolay Borisov <nborisov@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <bab47b8e-d35f-a769-a703-4dcfe1a17980@suse.com>
+Date:   Fri, 18 Oct 2019 15:09:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20191018120604.29508-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warnings:
-
-arch/arm/mach-omap2/pmic-cpcap.c:29:15: warning: symbol 'omap_cpcap_vsel_to_uv' was not declared. Should it be static?
-arch/arm/mach-omap2/pmic-cpcap.c:43:15: warning: symbol 'omap_cpcap_uv_to_vsel' was not declared. Should it be static?
-arch/arm/mach-omap2/pmic-cpcap.c:93:15: warning: symbol 'omap_max8952_vsel_to_uv' was not declared. Should it be static?
-arch/arm/mach-omap2/pmic-cpcap.c:107:15: warning: symbol 'omap_max8952_uv_to_vsel' was not declared. Should it be static?
-arch/arm/mach-omap2/pmic-cpcap.c:140:15: warning: symbol 'omap_fan535503_vsel_to_uv' was not declared. Should it be static?
-arch/arm/mach-omap2/pmic-cpcap.c:155:15: warning: symbol 'omap_fan535508_vsel_to_uv' was not declared. Should it be static?
-arch/arm/mach-omap2/pmic-cpcap.c:173:15: warning: symbol 'omap_fan535503_uv_to_vsel' was not declared. Should it be static?
-arch/arm/mach-omap2/pmic-cpcap.c:192:15: warning: symbol 'omap_fan535508_uv_to_vsel' was not declared. Should it be static?
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- arch/arm/mach-omap2/pmic-cpcap.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arm/mach-omap2/pmic-cpcap.c b/arch/arm/mach-omap2/pmic-cpcap.c
-index 2c2a178..3cdf40e 100644
---- a/arch/arm/mach-omap2/pmic-cpcap.c
-+++ b/arch/arm/mach-omap2/pmic-cpcap.c
-@@ -26,7 +26,7 @@
-  * Returns the microvolts DC that the CPCAP PMIC should generate when
-  * programmed with @vsel.
-  */
--unsigned long omap_cpcap_vsel_to_uv(unsigned char vsel)
-+static unsigned long omap_cpcap_vsel_to_uv(unsigned char vsel)
- {
- 	if (vsel > 0x44)
- 		vsel = 0x44;
-@@ -40,7 +40,7 @@ unsigned long omap_cpcap_vsel_to_uv(unsigned char vsel)
-  * Returns the VSEL value necessary for the CPCAP PMIC to
-  * generate an output voltage equal to or greater than @uv microvolts DC.
-  */
--unsigned char omap_cpcap_uv_to_vsel(unsigned long uv)
-+static unsigned char omap_cpcap_uv_to_vsel(unsigned long uv)
- {
- 	if (uv < 600000)
- 		uv = 600000;
-@@ -90,7 +90,7 @@ static struct omap_voltdm_pmic omap_cpcap_iva = {
-  * Returns the microvolts DC that the MAX8952 Regulator should generate when
-  * programmed with @vsel.
-  */
--unsigned long omap_max8952_vsel_to_uv(unsigned char vsel)
-+static unsigned long omap_max8952_vsel_to_uv(unsigned char vsel)
- {
- 	if (vsel > 0x3F)
- 		vsel = 0x3F;
-@@ -104,7 +104,7 @@ unsigned long omap_max8952_vsel_to_uv(unsigned char vsel)
-  * Returns the VSEL value necessary for the MAX8952 Regulator to
-  * generate an output voltage equal to or greater than @uv microvolts DC.
-  */
--unsigned char omap_max8952_uv_to_vsel(unsigned long uv)
-+static unsigned char omap_max8952_uv_to_vsel(unsigned long uv)
- {
- 	if (uv < 770000)
- 		uv = 770000;
-@@ -137,7 +137,7 @@ static struct omap_voltdm_pmic omap443x_max8952_mpu = {
-  * Returns the microvolts DC that the FAN535503 Regulator should generate when
-  * programmed with @vsel.
-  */
--unsigned long omap_fan535503_vsel_to_uv(unsigned char vsel)
-+static unsigned long omap_fan535503_vsel_to_uv(unsigned char vsel)
- {
- 	/* Extract bits[5:0] */
- 	vsel &= 0x3F;
-@@ -152,7 +152,7 @@ unsigned long omap_fan535503_vsel_to_uv(unsigned char vsel)
-  * Returns the microvolts DC that the FAN535508 Regulator should generate when
-  * programmed with @vsel.
-  */
--unsigned long omap_fan535508_vsel_to_uv(unsigned char vsel)
-+static unsigned long omap_fan535508_vsel_to_uv(unsigned char vsel)
- {
- 	/* Extract bits[5:0] */
- 	vsel &= 0x3F;
-@@ -170,7 +170,7 @@ unsigned long omap_fan535508_vsel_to_uv(unsigned char vsel)
-  * Returns the VSEL value necessary for the MAX8952 Regulator to
-  * generate an output voltage equal to or greater than @uv microvolts DC.
-  */
--unsigned char omap_fan535503_uv_to_vsel(unsigned long uv)
-+static unsigned char omap_fan535503_uv_to_vsel(unsigned long uv)
- {
- 	unsigned char vsel;
- 	if (uv < 750000)
-@@ -189,7 +189,7 @@ unsigned char omap_fan535503_uv_to_vsel(unsigned long uv)
-  * Returns the VSEL value necessary for the MAX8952 Regulator to
-  * generate an output voltage equal to or greater than @uv microvolts DC.
-  */
--unsigned char omap_fan535508_uv_to_vsel(unsigned long uv)
-+static unsigned char omap_fan535508_uv_to_vsel(unsigned long uv)
- {
- 	unsigned char vsel;
- 	if (uv < 750000)
--- 
-2.7.4
 
 
+On 18.10.19 г. 15:06 ч., YueHaibing wrote:
+> Fix sparse warning:
+> 
+> fs/btrfs/disk-io.c:2534:12: warning:
+>  symbol 'init_tree_roots' was not declared. Should it be static?
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+
+Huhz, I thought I had added static... Anyway this could be folded in the
+original patch. Thanks for the report.
+
+> ---
+>  fs/btrfs/disk-io.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+> index d078276..cb187f5 100644
+> --- a/fs/btrfs/disk-io.c
+> +++ b/fs/btrfs/disk-io.c
+> @@ -2531,7 +2531,7 @@ static int btrfs_validate_write_super(struct btrfs_fs_info *fs_info,
+>  	return ret;
+>  }
+>  
+> -int __cold init_tree_roots(struct btrfs_fs_info *fs_info)
+> +static int __cold init_tree_roots(struct btrfs_fs_info *fs_info)
+>  {
+>  	int backup_index = find_newest_super_backup(fs_info);
+>  	struct btrfs_super_block *sb = fs_info->super_copy;
+> 
