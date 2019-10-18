@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE71CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB04CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2906D20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71F07222CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:03:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436237;
-	bh=D+XWnP6P7RE1EroeO5z0WNCnBr45lOJWqiXuBzTjnXA=;
+	s=default; t=1571436239;
+	bh=1xRSt9tzsNlcbb8tmgkgfUxNyMUer98VWV4fSpMoq4o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1RSKziGGmzUJYFCJaEaSauBNHSAyULR8SyeJn3kuHxIhSZYh+SsPqO993VFo9smWO
-	 ypuBEi5aa3bhAgRzJgaE5EgkvShqZYnW+qJYNpxlgHtS8KE3pOEP/Aw89px6S1aenr
-	 Ms2TB+dDAbgoPDLy4WVekt4ywMHedb/OOH5Yw3ZU=
+	b=UaM0Y7P6bxK5SMYlNLSUSxt0ATM4a+P+TbEaFkkWkskBy1u2C51U6reNZGhWJv2Vq
+	 tVZH4rN52vHuL4WSjk+00mRmINZAtTctR2A7qUNjxTPpI7YkNKxWNmALDa9um1WyXJ
+	 /6AFG6SJCd3nHMZ4FEj/BzQ1fudV/0Ie+Mpfy9Hk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbfJRWD4 (ORCPT
+        id S1727543AbfJRWD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:03:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35406 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:03:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727398AbfJRWDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:03:50 -0400
+        id S1727437AbfJRWDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:03:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF58F20679;
-        Fri, 18 Oct 2019 22:03:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0DC2222CD;
+        Fri, 18 Oct 2019 22:03:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436230;
-        bh=D+XWnP6P7RE1EroeO5z0WNCnBr45lOJWqiXuBzTjnXA=;
+        s=default; t=1571436232;
+        bh=1xRSt9tzsNlcbb8tmgkgfUxNyMUer98VWV4fSpMoq4o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GPwRADkTly51PRmkrkab1thq41H2Mhybfv951nP3+OkPB8AnOBSiv3+gm0lBETp6X
-         gskrD2/aUXZ+IJQFVOpuAnFaJwc+XNPHTnUQRlxlb22YABvc+rFZKbyW4YYGkjYBMO
-         g8nJWLP/6RaqJ6gaxGKdR628Fvsi1rS4O7YUEjEo=
+        b=Sy6UJfn/VCyLk5upMuD1Sah7eJp8/+P6PrrrKeLUC26mYFGrXCwg/cHPRcIvlPSWv
+         kQBcQxR8R6EwuMfwnI5ESiPhjflg09ps9A21ZZjebjG73GD4iD6bDqaFWCxsRwkBtK
+         B8SfRlNKLmwfGNgBgvc8nbtZIMbIpQaJ7YoG0wY4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 16/89] crypto: arm/aes-ce - add dependency on AES library
-Date:   Fri, 18 Oct 2019 18:02:11 -0400
-Message-Id: <20191018220324.8165-16-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 18/89] RDMA/hfi1: Prevent memory leak in sdma_init
+Date:   Fri, 18 Oct 2019 18:02:13 -0400
+Message-Id: <20191018220324.8165-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -59,32 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit f703964fc66804e6049f2670fc11045aa8359b1a ]
+[ Upstream commit 34b3be18a04ecdc610aae4c48e5d1b799d8689f6 ]
 
-The ARM accelerated AES driver depends on the new AES library for
-its non-SIMD fallback so express this in its Kconfig declaration.
+In sdma_init if rhashtable_init fails the allocated memory for
+tmp_sdma_rht should be released.
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 5a52a7acf7e2 ("IB/hfi1: NULL pointer dereference when freeing rhashtable")
+Link: https://lore.kernel.org/r/20190925144543.10141-1-navid.emamdoost@gmail.com
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Acked-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/crypto/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/hw/hfi1/sdma.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/crypto/Kconfig b/arch/arm/crypto/Kconfig
-index a95322b59799f..8ecbca3e0c787 100644
---- a/arch/arm/crypto/Kconfig
-+++ b/arch/arm/crypto/Kconfig
-@@ -98,6 +98,7 @@ config CRYPTO_AES_ARM_CE
- 	tristate "Accelerated AES using ARMv8 Crypto Extensions"
- 	depends on KERNEL_MODE_NEON
- 	select CRYPTO_BLKCIPHER
-+	select CRYPTO_LIB_AES
- 	select CRYPTO_SIMD
- 	help
- 	  Use an implementation of AES in CBC, CTR and XTS modes that uses
+diff --git a/drivers/infiniband/hw/hfi1/sdma.c b/drivers/infiniband/hw/hfi1/sdma.c
+index 2395fd4233a7e..2ed7bfd5feea6 100644
+--- a/drivers/infiniband/hw/hfi1/sdma.c
++++ b/drivers/infiniband/hw/hfi1/sdma.c
+@@ -1526,8 +1526,11 @@ int sdma_init(struct hfi1_devdata *dd, u8 port)
+ 	}
+ 
+ 	ret = rhashtable_init(tmp_sdma_rht, &sdma_rht_params);
+-	if (ret < 0)
++	if (ret < 0) {
++		kfree(tmp_sdma_rht);
+ 		goto bail;
++	}
++
+ 	dd->sdma_rht = tmp_sdma_rht;
+ 
+ 	dd_dev_info(dd, "SDMA num_sdma: %u\n", dd->num_sdma);
 -- 
 2.20.1
 
