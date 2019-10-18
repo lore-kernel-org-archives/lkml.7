@@ -2,92 +2,130 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C50CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54949CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B40321925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0782D21925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:23:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="gK5ZY45v"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="rOpFFVhh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410259AbfJRNXQ (ORCPT
+        id S2410274AbfJRNX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 09:23:16 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:40986 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729109AbfJRNXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 09:23:16 -0400
-Received: from zn.tnic (p200300EC2F0DFC0011F9759EEC3CB6D6.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:fc00:11f9:759e:ec3c:b6d6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 059F51EC0CDC;
-        Fri, 18 Oct 2019 15:23:14 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1571404995;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=hGJH9IKQI0kAp38EPHa1zW1Ve0qBcIXzrKBpue0iOxU=;
-        b=gK5ZY45vSzgvsu4HJ3sEYU4iV0N9mX64qn1bEb/sfeCSjUbo7nobIj85ceJ0bPqC6aP9M9
-        fBbKoAGHZoajzMefLChs3I+XXPnJa14q8nCjeoDx4UirVardzd4t+bx7Ki2wXpBYMfF4lr
-        NCKj/dHavKR/u2YAmTcXC0fSNX5y6dg=
-Date:   Fri, 18 Oct 2019 15:23:09 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     "Luck, Tony" <tony.luck@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "bberg@redhat.com" <bberg@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "ckellner@redhat.com" <ckellner@redhat.com>
-Subject: Re: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal
- throttle messages
-Message-ID: <20191018132309.GD17053@zn.tnic>
-References: <2c2b65c23be3064504566c5f621c1f37bf7e7326.camel@redhat.com>
- <20191014212101.25719-1-srinivas.pandruvada@linux.intel.com>
- <20191015084833.GD2311@hirez.programming.kicks-ass.net>
- <f481b4ab6dfebbc0637c843e5f1cd4ddfd4bd60b.camel@linux.intel.com>
- <20191016081405.GO2328@hirez.programming.kicks-ass.net>
- <20191016140001.GF1138@zn.tnic>
- <3908561D78D1C84285E8C5FCA982C28F7F4A57D0@ORSMSX115.amr.corp.intel.com>
- <20191017214445.GG14441@zn.tnic>
- <c2ce4ef128aad84616b2dc21f6230ad4db12194b.camel@linux.intel.com>
+        Fri, 18 Oct 2019 09:23:29 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:35062 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729109AbfJRNX3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 09:23:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2I14EvOX2/1YnVDZjctaYDorbM75GscvFA5/hP5DpAA=; b=rOpFFVhhA5dU5sq2tPyWkoU4r
+        ONWyHlxMyffZC9FmlbwjGtx6ZekPv/BDv5nJJXffZlrF4W0xxkGCeWmEIDgDsCgBospckf3zJx6Mb
+        s7Qy+1SqbAFkwVww6Noxr2tn8zp7rJFTIAADL/mZK2sltIF6YKp12GqNjbVCgReaOYfKcgelJwGyT
+        9KLn/p32DeNsBrssgk6OTAmuVPsN93Tr1C5LVBLBmUNRitktMyiVPb0K+DYOiOfjAuKMnJ3tI2PkC
+        rYrGxq08+zwpcqt2+bhQHxZfUp54Istdb4CEYyY5EF/uUvywTzG5Fr7HR4d84VfFPSQuFDMUmQpG2
+        ecXptpUyA==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:44306)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iLSDx-0007mG-4C; Fri, 18 Oct 2019 14:23:21 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iLSDs-0000kn-NL; Fri, 18 Oct 2019 14:23:16 +0100
+Date:   Fri, 18 Oct 2019 14:23:16 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        open list <linux-kernel@vger.kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, cphealy@gmail.com,
+        Jose Abreu <joabreu@synopsys.com>
+Subject: Re: [PATCH net-next 2/2] net: phy: Add ability to debug RGMII
+ connections
+Message-ID: <20191018132316.GI25745@shell.armlinux.org.uk>
+References: <20191015224953.24199-1-f.fainelli@gmail.com>
+ <20191015224953.24199-3-f.fainelli@gmail.com>
+ <4feb3979-1d59-4ad3-b2f1-90d82cfbdf54@gmail.com>
+ <c4244c9a-28cb-7e37-684d-64e6cdc89b67@gmail.com>
+ <CA+h21hrLHe2n0OxJyCKTU0r7mSB1zK9ggP1-1TCednFN_0rXfg@mail.gmail.com>
+ <20191018130121.GK4780@lunn.ch>
+ <CA+h21hoPrwcgz-q=UROAu0PC=6JbKtbdPhJtZg5ge32_2xJ3TQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c2ce4ef128aad84616b2dc21f6230ad4db12194b.camel@linux.intel.com>
+In-Reply-To: <CA+h21hoPrwcgz-q=UROAu0PC=6JbKtbdPhJtZg5ge32_2xJ3TQ@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 05:26:36AM -0700, Srinivas Pandruvada wrote:
-> Server/desktops generally rely on the embedded controller for FAN
-> control, which  kernel have no control. For them this warning helps to
-> either bring in additional cooling or fix existing cooling.
+On Fri, Oct 18, 2019 at 04:09:30PM +0300, Vladimir Oltean wrote:
+> Hi Andrew,
+> 
+> On Fri, 18 Oct 2019 at 16:01, Andrew Lunn <andrew@lunn.ch> wrote:
+> >
+> > > Well, that's the tricky part. You're sending a frame out, with no
+> > > guarantee you'll get the same frame back in. So I'm not sure that any
+> > > identifiers put inside the frame will survive.
+> > > How do the tests pan out for you? Do you actually get to trigger this
+> > > check? As I mentioned, my NIC drops the frames with bad FCS.
+> >
+> > My experience is, the NIC drops the frame and increments some the
+> > counter about bad FCS. I do very occasionally see a frame delivered,
+> > but i guess that is 1/65536 where the FCS just happens to be good by
+> > accident. So i think some other algorithm should be used which is
+> > unlikely to be good when the FCS is accidentally good, or just check
+> > the contents of the packet, you know what is should contain.
+> >
+> > Are there any NICs which don't do hardware FCS? Is that something we
+> > realistically need to consider?
+> >
+> > > Yes, but remember, nobody guarantees that a frame with DMAC
+> > > ff:ff:ff:ff:ff:ff on egress will still have it on its way back. Again,
+> > > this all depends on how you plan to manage the rx-all ethtool feature.
+> >
+> > Humm. Never heard that before. Are you saying some NICs rewrite the
+> > DMAN?
+> >
+> 
+> I'm just trying to understand the circumstances under which this
+> kernel thread makes sense.
+> Checking for FCS validity means that the intention was to enable the
+> reception of frames with bad FCS.
+> Bad FCS after bad RGMII setup/hold times doesn't mean there's a small
+> guy in there who rewrites the checksum. It means that frame octets get
+> garbled. All octets are just as likely to get garbled, including the
+> SFD, preamble, DMAC, etc.
+> All I'm saying is that, if the intention of the patch is to actually
+> process the FCS of frames before and after, then it should actually
+> put the interface in promiscuous mode, so that frames with a
+> non-garbled SFD and preamble can still be received, even though their
+> DMAC was the one that got garbled.
 
-How exactly does this warning help? A detailed example please.
+Isn't the point of this to see which RGMII setting results in a working
+setup?
 
-> If something needs to force throttle from kernel, then we should use
-> some offset from the max temperature (aka TJMax), instead of this
-> warning threshold. Then we can use idle injection or change duty cycle
-> of CPU clocks.
+So, is it not true that what we're after is receiving a _correct_ frame
+that corresponds to the frame that was sent out?
 
-Yes, as I said, all this needs to be properly defined first. That is,
-*if* there's even need for reacting to thermal interrupts in the kernel.
+Hence, if the DMAC got changed, it's irrelevent whether we received the
+packet or not - since "no packet" || "changed packet" = fail.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
