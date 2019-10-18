@@ -2,213 +2,97 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFE6CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD792CA9EA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1884E21897
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A37FF21897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:18:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571390337;
+	bh=DWCcvdsDv/+GGKwVkbz1d6AT/SkV8KqJOYRe9QyV0fE=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=k6xfRzrSXHVV2RJ/ACFx40hG5IeRQ9+RmsJy4IMUzgXj2mKsHAw08SpuAZKOkdoKr
+	 idjU8TNVejSA7geCuI0mR/nizv5+5Z7zwBxN4Bwj54o0FBm70BgzZIoI0kB+7QMyee
+	 pPxXuI19z3TSKa7aJfy6t/WhXy2YmQynKKHvokNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405530AbfJRJRs (ORCPT
+        id S2409647AbfJRJS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 05:17:48 -0400
-Received: from mga02.intel.com ([134.134.136.20]:24961 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389986AbfJRJRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 05:17:47 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 02:17:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,311,1566889200"; 
-   d="scan'208";a="190311631"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 18 Oct 2019 02:17:46 -0700
-Received: from [10.125.252.194] (abudanko-mobl.ccr.corp.intel.com [10.125.252.194])
-        by linux.intel.com (Postfix) with ESMTP id B2109580379;
-        Fri, 18 Oct 2019 02:17:43 -0700 (PDT)
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>,
-        Song Liu <songliubraving@fb.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v3 0/4]: perf/core: fix restoring of Intel LBR call stack on a
- context switch
-Organization: Intel Corp.
-Message-ID: <0b20a07f-d074-d3da-7551-c9a4a94fe8e3@linux.intel.com>
-Date:   Fri, 18 Oct 2019 12:17:42 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 18 Oct 2019 05:18:56 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45355 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390499AbfJRJSz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 05:18:55 -0400
+Received: by mail-oi1-f194.google.com with SMTP id o205so4605329oib.12;
+        Fri, 18 Oct 2019 02:18:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=yTS+cmXgJUMIzlgHO4090rAX20R9LMZN47qkA+zl3mQ=;
+        b=qLfffHjEEO54LWsMuqsUOFoUb/j9gabQdM+xDtPpLMRMhUqEvOL+pqEcCUSzIXbDp/
+         iexOIZv0NjVJqK4K473eMHeSTUCbLpU9bZd1lrsGySEsKT6ThEuwVjEBBcIOp12agfLD
+         jvZrHd/fbbooXek+Ym3f+fOIy2BYM20T4RfVeWNI2RGc+nScqfsWSURzr+neptOX4ud3
+         911dg2U8O9fdDKo2wqgkmyMeyPjjiAYk/WCdyK8bX6dr2JBYz5NSPbAfpJ+DjCYV+b/z
+         VGBbkG8MGC0HR7mIRcgtCcq9J92FUbVrfpxwzmt1InyOJ3X+9/At3S4SrXnwdToMrOCR
+         DlVw==
+X-Gm-Message-State: APjAAAUNopiFJhYj0QrcmgH4fqWYnRJWPpeR+mi3h3uFNQjca9lx+Xqt
+        1uIzENBRjogzY1MBfMS+LTRyUoKrqbw2sDOlis0=
+X-Google-Smtp-Source: APXvYqwB+NtokmhbLo9+mcq8n2p32alBAWd/fffeN1NJeNpDxjiPZ4q0ZHxNUQG4vVrDocgNw5CJTRby4bfxkFDew2w=
+X-Received: by 2002:a05:6808:917:: with SMTP id w23mr6816796oih.68.1571390335017;
+ Fri, 18 Oct 2019 02:18:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 18 Oct 2019 11:18:44 +0200
+Message-ID: <CAJZ5v0gG82GLvm45hvwuZGVVhD4cSLpOREaK6Y-QwYs-ymstqA@mail.gmail.com>
+Subject: [GIT PULL] ACPI fixes for v5.4-rc4
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
-Restore Intel LBR call stack from cloned inactive task perf context on
-a context switch. This change inherently addresses inconsistency in LBR 
-call stack data provided on a sample in record profiling mode:
+Please pull from the tag
 
-  $ perf record -N -B -T -R --call-graph lbr \
-         -e cpu/period=0xcdfe60,event=0x3c,name=\'CPU_CLK_UNHALTED.THREAD\'/Duk \
-         --clockid=monotonic_raw -- ./miniFE.x nx 25 ny 25 nz 25
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ acpi-5.4-rc4
 
-Let's assume threads A, B, C belonging to the same process. 
-B and C are siblings of A and their perf contexts are treated as equivalent.
-At some point B blocks on a futex (non preempt context switch).
-B's LBRs are preserved at B's perf context task_ctx_data and B's events 
-are removed from PMU and disabled. B's perf context becomes inactive.
+with top-most commit ffba17bb335d6598de613791f8997a5774455068
 
-Later C gets on a cpu, runs, gets profiled and eventually switches to 
-the awaken but not yet running B. The optimized context switch path is 
-executed swapping B's and C's task_ctx_data pointers at perf event contexts.
-So C's task_ctx_data will refer preserved B's LBRs on the following 
-switch-in event.
+ Merge branch 'acpi-tables'
 
-However, as far B's perf context is inactive there is no enabled events
-in there and B's task_ctx_data->lbr_callstack_users is equal to 0.
-When B gets on the cpu B's events reviving is skipped following
-the optimized context switch path and B's task_ctx_data->lbr_callstack_users
-remains 0. Thus B's LBR's are not restored by pmu sched_task() code called 
-in the end of perf context switch-in callback for B.
+on top of commit 4f5cafb5cb8471e54afdc9054d973535614f7675
 
-In the report that manifests as having short fragments of B's
-call stack, still tracked by LBR's HW between adjacent samples,
-but the whole thread call tree doesn't aggregate.
+ Linux 5.4-rc3
 
-The fix has been evaluated when profiling miniFE [1] (C++, OpenMP)
-workload running 64 threads on Intel Skylake EP(64 core, 2 sockets):
+to receive ACPI fixes for 5.4-rc4.
 
-  $ perf report --call-graph callee,flat
+These fix possible use-after-free in the ACPI CPPC support code (John
+Garry) and prevent the ACPI HMAT parsing code from using possibly
+incorrect data coming from the platform firmware (Daniel Black).
 
-5.3.0-rc6+ (tip perf/core) - fixed
+Thanks!
 
--   92.66%    82.64%  miniFE.x  libiomp5.so         [.] _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-   - 69.14% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_fork_barrier
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
-   - 21.89% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
-   - 1.63% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        main
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
 
-5.0.13-300.fc30.x86_64 - no fix
+---------------
 
--   90.29%    81.01%  miniFE.x  libiomp5.so         [.] _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-   - 33.45% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_fork_barrier
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
-     87.63% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-   - 54.79% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_fork_barrier
-        __kmp_launch_thread
-   - 9.18% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
-   - 41.28% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_fork_barrier
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-   - 15.77% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-   - 11.56% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-   - 2.33% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        main
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
-     0.67% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_gather
-     0.57% __kmp_hardware_timestamp
+Daniel Black (1):
+      ACPI: HMAT: ACPI_HMAT_MEMORY_PD_VALID is deprecated since ACPI-6.3
 
-[1] https://www.hpcadvisorycouncil.com/pdf/miniFE_Analysis_and_Profiling.pdf
+John Garry (1):
+      ACPI: CPPC: Set pcc_data[pcc_ss_id] to NULL in acpi_cppc_processor_exit()
 
----
-Alexey Budankov (4):
-  perf/core,x86: introduce sync_task_ctx() method at struct pmu
-  perf/x86: install platform specific sync_task_ctx adapter
-  perf/x86/intel: implement LBR callstacks context synchronization
-  perf/core,x86: synchronize PMU task contexts on optimized context
-    switches
+---------------
 
- arch/x86/events/core.c       |  7 +++++++
- arch/x86/events/intel/core.c |  7 +++++++
- arch/x86/events/intel/lbr.c  |  9 +++++++++
- arch/x86/events/perf_event.h | 11 +++++++++++
- include/linux/perf_event.h   |  7 +++++++
- kernel/events/core.c         |  9 +++++++++
- 6 files changed, 50 insertions(+)
-
----
-Changes in v3:
-- replaced assignment with swap at intel_pmu_lbr_sync_task_ctx()
-
-Changes in v2:
-- implemented sync_task_ctx() method at perf,x86,intel pmu types;
-- employed the method on the optimized context switch path between 
-  equivalent perf event contexts;
-
--- 
-2.20.1
-
+ drivers/acpi/cppc_acpi.c | 2 +-
+ drivers/acpi/hmat/hmat.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
