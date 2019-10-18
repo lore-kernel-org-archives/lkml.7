@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0039CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFC7CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0CB721852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D4CE20872
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:20:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437207;
-	bh=PYVlkSe364IsMEE5iJc7n0T9JVHw1//hqeU7d9B3O7w=;
+	s=default; t=1571437214;
+	bh=C3roP5wrC549HDqOhjYaF7T3usfv8aIrH4mKkQ3NbXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wzyRwhmhVshjwHOdVFymqT7kSzVltfbqMS0UmkSpFJMlbD5WPpg9qa9fj01DZA2jc
-	 CMF3Oosl+Zly/6zaEdbbbTUMr8PX6yUUEeijKvcFkr9pd3UfiqOJld04LSqUuF6RSY
-	 T9qTy9tOz3Lh6KlBcEI1eJrFaNzGnlVUe8KOImPo=
+	b=NSrzvbeomcgM8bhu4EHQ6RqshJgTDXsbXnX0RJAFym9j0l82ZakO3w30ybb/vJaEf
+	 YPJUrbOm3ZgXWNzKx4Tzu3IlyijVCdneDkmMqZf1aek1AuX7jXD0tQRF1qyphUC5be
+	 Tz5FvmzC+UobUTXKJBqyTkdKXE0pLgd+HsZitfYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393866AbfJRWUG (ORCPT
+        id S1731930AbfJRWGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:20:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38898 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:06:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732044AbfJRWGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:06:50 -0400
+        id S1731548AbfJRWG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:06:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF7A2222D2;
-        Fri, 18 Oct 2019 22:06:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAD06222D2;
+        Fri, 18 Oct 2019 22:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436410;
-        bh=PYVlkSe364IsMEE5iJc7n0T9JVHw1//hqeU7d9B3O7w=;
+        s=default; t=1571436388;
+        bh=C3roP5wrC549HDqOhjYaF7T3usfv8aIrH4mKkQ3NbXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vdavSRDmwwwlUcN7tRP/KbONuVnJHUbuseQ+2TF76ECeOFI7ggsyngNdjr5vNAz/5
-         zE1S5gzcU2Yby/8AxCPTHoB3CzQox9xXRqdMRLx3v62wKoUZq7ogeMKC3k4j1lNUSx
-         EBGVb/iv2Fnoyyy9qfYF52fsru7/elmX+j3RazqE=
+        b=dt4oe8M27gd/iB/LmiGSw8hvgQU5GFJjXC687JezYcc3gmwEF2kWWRs3iYjEvsVoc
+         7UVdlNdkfOoBMYRUtMvD0+UshTuLMXRLRHjqcCbA7AAK9yakL7tlyGi7FLd7vf/RCk
+         YaRG5OtKzO4AI6vVQGZWHHgiyDIppOmbfo04hXyE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 056/100] perf jevents: Fix period for Intel fixed counters
-Date:   Fri, 18 Oct 2019 18:04:41 -0400
-Message-Id: <20191018220525.9042-56-sashal@kernel.org>
+Cc:     Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 040/100] CIFS: Respect SMB2 hdr preamble size in read responses
+Date:   Fri, 18 Oct 2019 18:04:25 -0400
+Message-Id: <20191018220525.9042-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -59,51 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Pavel Shilovsky <pshilov@microsoft.com>
 
-[ Upstream commit 6bdfd9f118bd59cf0f85d3bf4b72b586adea17c1 ]
+[ Upstream commit bb1bccb60c2ebd9a6f895507d1d48d5ed773814e ]
 
-The Intel fixed counters use a special table to override the JSON
-information.
+There are a couple places where we still account for 4 bytes
+in the beginning of SMB2 packet which is not true in the current
+code. Fix this to use a header preamble size where possible.
 
-During this override the period information from the JSON file got
-dropped, which results in inst_retired.any and similar running with
-frequency mode instead of a period.
-
-Just specify the expected period in the table.
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lore.kernel.org/lkml/20190927233546.11533-2-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/pmu-events/jevents.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fs/cifs/cifssmb.c | 7 ++++---
+ fs/cifs/smb2ops.c | 6 +++---
+ 2 files changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index 6b36b71106695..6cd9623ebc93b 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -446,12 +446,12 @@ static struct fixed {
- 	const char *name;
- 	const char *event;
- } fixed[] = {
--	{ "inst_retired.any", "event=0xc0" },
--	{ "inst_retired.any_p", "event=0xc0" },
--	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03" },
--	{ "cpu_clk_unhalted.thread", "event=0x3c" },
--	{ "cpu_clk_unhalted.core", "event=0x3c" },
--	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1" },
-+	{ "inst_retired.any", "event=0xc0,period=2000003" },
-+	{ "inst_retired.any_p", "event=0xc0,period=2000003" },
-+	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03,period=2000003" },
-+	{ "cpu_clk_unhalted.thread", "event=0x3c,period=2000003" },
-+	{ "cpu_clk_unhalted.core", "event=0x3c,period=2000003" },
-+	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1,period=2000003" },
- 	{ NULL, NULL},
- };
+diff --git a/fs/cifs/cifssmb.c b/fs/cifs/cifssmb.c
+index 86a54b809c484..8b9471904f67e 100644
+--- a/fs/cifs/cifssmb.c
++++ b/fs/cifs/cifssmb.c
+@@ -1521,9 +1521,10 @@ cifs_readv_receive(struct TCP_Server_Info *server, struct mid_q_entry *mid)
  
+ 	/* set up first two iov for signature check and to get credits */
+ 	rdata->iov[0].iov_base = buf;
+-	rdata->iov[0].iov_len = 4;
+-	rdata->iov[1].iov_base = buf + 4;
+-	rdata->iov[1].iov_len = server->total_read - 4;
++	rdata->iov[0].iov_len = server->vals->header_preamble_size;
++	rdata->iov[1].iov_base = buf + server->vals->header_preamble_size;
++	rdata->iov[1].iov_len =
++		server->total_read - server->vals->header_preamble_size;
+ 	cifs_dbg(FYI, "0: iov_base=%p iov_len=%zu\n",
+ 		 rdata->iov[0].iov_base, rdata->iov[0].iov_len);
+ 	cifs_dbg(FYI, "1: iov_base=%p iov_len=%zu\n",
+diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
+index f0d966da7f378..6fc16329ceb45 100644
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -3000,10 +3000,10 @@ handle_read_data(struct TCP_Server_Info *server, struct mid_q_entry *mid,
+ 
+ 	/* set up first two iov to get credits */
+ 	rdata->iov[0].iov_base = buf;
+-	rdata->iov[0].iov_len = 4;
+-	rdata->iov[1].iov_base = buf + 4;
++	rdata->iov[0].iov_len = 0;
++	rdata->iov[1].iov_base = buf;
+ 	rdata->iov[1].iov_len =
+-		min_t(unsigned int, buf_len, server->vals->read_rsp_size) - 4;
++		min_t(unsigned int, buf_len, server->vals->read_rsp_size);
+ 	cifs_dbg(FYI, "0: iov_base=%p iov_len=%zu\n",
+ 		 rdata->iov[0].iov_base, rdata->iov[0].iov_len);
+ 	cifs_dbg(FYI, "1: iov_base=%p iov_len=%zu\n",
 -- 
 2.20.1
 
