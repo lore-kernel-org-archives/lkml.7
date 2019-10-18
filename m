@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D734CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC69CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6084B20872
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C4FE20872
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437409;
-	bh=vk8+b7SiuqvG0ZON2WuQ93hgwJbDz+Km6Ck2/nY0Gbk=;
+	s=default; t=1571437419;
+	bh=c1WbYc7+1DaUk7tz5oVMf3z3M5NgNPMbvxSbncKOJaI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ySEIZwqeXsdLXVJhtqz7AOaTUiWpg7sLHbYaKeXNbzw/s9QPDm3aFHXKSHBAFBjrE
-	 sMUskGFq14G2HRPHvKerXYFI6ahSLqJ+p/NuyBJ0ANxXYyEZTpaurPyE+goxYyP1GS
-	 N8oH9ipNicqboWprXeLufKri1P0OVkpXI/CbSUeE=
+	b=UjHGw4Vbwuk2yJO1N1W/a40F96r8SWlGGF7r4E7peAm4RuHlggRyx/6kUjAOma0jR
+	 h9RhOF/LyAI+NPguxmHR69tWCkoNRPtGnzIfdpGQIHXfgJM6TXWuhlc+liiYvOadKJ
+	 QkcGoYCNpE1hunQ7TXBmB4qcfCp6por7fhOgW+rg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405284AbfJRWX1 (ORCPT
+        id S2405360AbfJRWXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:23:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37158 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:23:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729538AbfJRWFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:05:20 -0400
+        id S1729419AbfJRWFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:05:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE0C2222C2;
-        Fri, 18 Oct 2019 22:05:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A58D22459;
+        Fri, 18 Oct 2019 22:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436319;
-        bh=vk8+b7SiuqvG0ZON2WuQ93hgwJbDz+Km6Ck2/nY0Gbk=;
+        s=default; t=1571436316;
+        bh=c1WbYc7+1DaUk7tz5oVMf3z3M5NgNPMbvxSbncKOJaI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CNtOLVi0qpFF0oxMhwmPfNDBlFnjOpq8IbVp4GA/H/4ZWw5r4LXNjhGqbkx5Q4GON
-         SXICx90omnYQQ0DzVrhfRbhzzjW/K0lmA/Fvx3zyY1lt7SqxY1SFHLe65Q4cQK78Tx
-         1Rv4/vPtzgFgjOI6CUlQOg/tNrUDo4IEHm7r4uVg=
+        b=dtGZ0CLCeos4fmToUieEPTIyfdvoSUyORncso4DpbgK5O/BciV0F2NzIK7HkBcaeP
+         Tsst6eRCKz9Ug3Al5BvoXqxVn8w3jQhynn4FuNNpSo6lb5eAP1jRHy4OxbrwAFn29M
+         1jCt7m09ProMAx3G8+wAIfha+CCE6flkyRpIPoi4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benjamin Coddington <bcodding@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 87/89] SUNRPC: fix race to sk_err after xs_error_report
-Date:   Fri, 18 Oct 2019 18:03:22 -0400
-Message-Id: <20191018220324.8165-87-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 84/89] virt: vbox: fix memory leak in hgcm_call_preprocess_linaddr
+Date:   Fri, 18 Oct 2019 18:03:19 -0400
+Message-Id: <20191018220324.8165-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -60,92 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Coddington <bcodding@redhat.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit af84537dbd1b39505d1f3d8023029b4a59666513 ]
+[ Upstream commit e0b0cb9388642c104838fac100a4af32745621e2 ]
 
-Since commit 4f8943f80883 ("SUNRPC: Replace direct task wakeups from
-softirq context") there has been a race to the value of the sk_err if both
-XPRT_SOCK_WAKE_ERROR and XPRT_SOCK_WAKE_DISCONNECT are set.  In that case,
-we may end up losing the sk_err value that existed when xs_error_report was
-called.
+In hgcm_call_preprocess_linaddr memory is allocated for bounce_buf but
+is not released if copy_form_user fails. In order to prevent memory leak
+in case of failure, the assignment to bounce_buf_ret is moved before the
+error check. This way the allocated bounce_buf will be released by the
+caller.
 
-Fix this by reverting to the previous behavior: instead of using SO_ERROR
-to retrieve the value at a later time (which might also return sk_err_soft),
-copy the sk_err value onto struct sock_xprt, and use that value to wake
-pending tasks.
-
-Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
-Fixes: 4f8943f80883 ("SUNRPC: Replace direct task wakeups from softirq context")
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: 579db9d45cb4 ("virt: Add vboxguest VMMDEV communication code")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20190930204223.3660-1-navid.emamdoost@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/sunrpc/xprtsock.h |  1 +
- net/sunrpc/xprtsock.c           | 17 ++++++++---------
- 2 files changed, 9 insertions(+), 9 deletions(-)
+ drivers/virt/vboxguest/vboxguest_utils.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/sunrpc/xprtsock.h b/include/linux/sunrpc/xprtsock.h
-index 7638dbe7bc500..a940de03808dd 100644
---- a/include/linux/sunrpc/xprtsock.h
-+++ b/include/linux/sunrpc/xprtsock.h
-@@ -61,6 +61,7 @@ struct sock_xprt {
- 	struct mutex		recv_mutex;
- 	struct sockaddr_storage	srcaddr;
- 	unsigned short		srcport;
-+	int			xprt_err;
+diff --git a/drivers/virt/vboxguest/vboxguest_utils.c b/drivers/virt/vboxguest/vboxguest_utils.c
+index 75fd140b02ff8..43c391626a000 100644
+--- a/drivers/virt/vboxguest/vboxguest_utils.c
++++ b/drivers/virt/vboxguest/vboxguest_utils.c
+@@ -220,6 +220,8 @@ static int hgcm_call_preprocess_linaddr(
+ 	if (!bounce_buf)
+ 		return -ENOMEM;
  
- 	/*
- 	 * UDP socket buffer size parameters
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index e2176c167a579..4e0b5bed6c737 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -1243,19 +1243,21 @@ static void xs_error_report(struct sock *sk)
- {
- 	struct sock_xprt *transport;
- 	struct rpc_xprt *xprt;
--	int err;
- 
- 	read_lock_bh(&sk->sk_callback_lock);
- 	if (!(xprt = xprt_from_sock(sk)))
- 		goto out;
- 
- 	transport = container_of(xprt, struct sock_xprt, xprt);
--	err = -sk->sk_err;
--	if (err == 0)
-+	transport->xprt_err = -sk->sk_err;
-+	if (transport->xprt_err == 0)
- 		goto out;
- 	dprintk("RPC:       xs_error_report client %p, error=%d...\n",
--			xprt, -err);
--	trace_rpc_socket_error(xprt, sk->sk_socket, err);
-+			xprt, -transport->xprt_err);
-+	trace_rpc_socket_error(xprt, sk->sk_socket, transport->xprt_err);
++	*bounce_buf_ret = bounce_buf;
 +
-+	/* barrier ensures xprt_err is set before XPRT_SOCK_WAKE_ERROR */
-+	smp_mb__before_atomic();
- 	xs_run_error_worker(transport, XPRT_SOCK_WAKE_ERROR);
-  out:
- 	read_unlock_bh(&sk->sk_callback_lock);
-@@ -2470,7 +2472,6 @@ static void xs_wake_write(struct sock_xprt *transport)
- static void xs_wake_error(struct sock_xprt *transport)
- {
- 	int sockerr;
--	int sockerr_len = sizeof(sockerr);
+ 	if (copy_in) {
+ 		ret = copy_from_user(bounce_buf, (void __user *)buf, len);
+ 		if (ret)
+@@ -228,7 +230,6 @@ static int hgcm_call_preprocess_linaddr(
+ 		memset(bounce_buf, 0, len);
+ 	}
  
- 	if (!test_bit(XPRT_SOCK_WAKE_ERROR, &transport->sock_state))
- 		return;
-@@ -2479,9 +2480,7 @@ static void xs_wake_error(struct sock_xprt *transport)
- 		goto out;
- 	if (!test_and_clear_bit(XPRT_SOCK_WAKE_ERROR, &transport->sock_state))
- 		goto out;
--	if (kernel_getsockopt(transport->sock, SOL_SOCKET, SO_ERROR,
--				(char *)&sockerr, &sockerr_len) != 0)
--		goto out;
-+	sockerr = xchg(&transport->xprt_err, 0);
- 	if (sockerr < 0)
- 		xprt_wake_pending_tasks(&transport->xprt, sockerr);
- out:
+-	*bounce_buf_ret = bounce_buf;
+ 	hgcm_call_add_pagelist_size(bounce_buf, len, extra);
+ 	return 0;
+ }
 -- 
 2.20.1
 
