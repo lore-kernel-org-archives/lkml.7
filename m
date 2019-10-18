@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 560CBCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B24ACA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA6E21852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:19:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C3B722467
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:19:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437157;
-	bh=VxPe53bJmI0+m8+ilMm7PTOAeAZoj1mvrbS4fD+q3hc=;
+	s=default; t=1571437161;
+	bh=X3v+SOQIpdYf6iNAzKXGy4IuE0/gqSJw5bT5h8guRU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LYFLn1eNNI9dKW3uNzCt2vZKQe365KyQwAhTc7Kqjrl1xecdBYKME8/nUG5VohEF4
-	 EkHO/SfxBQFeU1FW56ImvEKBuuf5969bx3U6c8nfaj4C0w9jwv5MV2i7L433+haVC9
-	 EpNrx6YIFudcwDQTuQI4IKmTipyOpzGIIwW+7ekM=
+	b=bbvkGr3r1JiKRSoxUExKa8o4k3unmC5vwFKAcf33KXnbfwC8j8OVAVIfAZnTtOblF
+	 eeDLSQ5hRfwamYmECul8VigC/O3Gpta0SllpreUHKZb4EuOmHDrKdM2o/CGl6GM2kF
+	 dUu5tPBH0WGaAgthgwOqaKiqA/60OOLIV14yqGJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732355AbfJRWHE (ORCPT
+        id S2404463AbfJRWTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:07:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38856 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:19:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732038AbfJRWGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:06:49 -0400
+        id S1732341AbfJRWHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:07:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8187F222C2;
-        Fri, 18 Oct 2019 22:06:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DC17222D2;
+        Fri, 18 Oct 2019 22:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436409;
-        bh=VxPe53bJmI0+m8+ilMm7PTOAeAZoj1mvrbS4fD+q3hc=;
+        s=default; t=1571436423;
+        bh=X3v+SOQIpdYf6iNAzKXGy4IuE0/gqSJw5bT5h8guRU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ag/Yex79jgize5LTBc9wnXyLt/Dd68OpfTOw+T9Srtu23E8maAswZHVDM3Ezlh8Gq
-         pYCNp6J5JZ85HDDIr0/MfLld3hl5PQ0vdXk+rB6+kw2ROuG0X6M4UQ9rSEV8vKn2qh
-         Mg6pqOwqacvryImbA5prYT3qabNmFctLMavgFCMk=
+        b=ubDEJ3l8iXA5tUV8nq3oRhRRvdUYbn/u60TW16f9aIxV6TdcQCDjvjm05+noXY3YD
+         plgQvNiR1gsqaW/lxc6PiCfkgqyHLGp9i/zx046X50lMgj5gRdhNVGqflFCIiTV9qc
+         1u0xkhy+oPkjkZ9Hzf5VtocWRnristUzzOssr6go=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 055/100] perf script brstackinsn: Fix recovery from LBR/binary mismatch
-Date:   Fri, 18 Oct 2019 18:04:40 -0400
-Message-Id: <20191018220525.9042-55-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 065/100] RDMA/iwcm: Fix a lock inversion issue
+Date:   Fri, 18 Oct 2019 18:04:50 -0400
+Message-Id: <20191018220525.9042-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -59,75 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit e98df280bc2a499fd41d7f9e2d6733884de69902 ]
+[ Upstream commit b66f31efbdad95ec274345721d99d1d835e6de01 ]
 
-When the LBR data and the instructions in a binary do not match the loop
-printing instructions could get confused and print a long stream of
-bogus <bad> instructions.
+This patch fixes the lock inversion complaint:
 
-The problem was that if the instruction decoder cannot decode an
-instruction it ilen wasn't initialized, so the loop going through the
-basic block would continue with the previous value.
+============================================
+WARNING: possible recursive locking detected
+5.3.0-rc7-dbg+ #1 Not tainted
+--------------------------------------------
+kworker/u16:6/171 is trying to acquire lock:
+00000000035c6e6c (&id_priv->handler_mutex){+.+.}, at: rdma_destroy_id+0x78/0x4a0 [rdma_cm]
 
-Harden the code to avoid such problems:
+but task is already holding lock:
+00000000bc7c307d (&id_priv->handler_mutex){+.+.}, at: iw_conn_req_handler+0x151/0x680 [rdma_cm]
 
-- Make sure ilen is always freshly initialized and is 0 for bad
-  instructions.
+other info that might help us debug this:
+ Possible unsafe locking scenario:
 
-- Do not overrun the code buffer while printing instructions
+       CPU0
+       ----
+  lock(&id_priv->handler_mutex);
+  lock(&id_priv->handler_mutex);
 
-- Print a warning message if the final jump is not on an instruction
-  boundary.
+ *** DEADLOCK ***
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lore.kernel.org/lkml/20190927233546.11533-1-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+ May be due to missing lock nesting notation
+
+3 locks held by kworker/u16:6/171:
+ #0: 00000000e2eaa773 ((wq_completion)iw_cm_wq){+.+.}, at: process_one_work+0x472/0xac0
+ #1: 000000001efd357b ((work_completion)(&work->work)#3){+.+.}, at: process_one_work+0x476/0xac0
+ #2: 00000000bc7c307d (&id_priv->handler_mutex){+.+.}, at: iw_conn_req_handler+0x151/0x680 [rdma_cm]
+
+stack backtrace:
+CPU: 3 PID: 171 Comm: kworker/u16:6 Not tainted 5.3.0-rc7-dbg+ #1
+Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
+Workqueue: iw_cm_wq cm_work_handler [iw_cm]
+Call Trace:
+ dump_stack+0x8a/0xd6
+ __lock_acquire.cold+0xe1/0x24d
+ lock_acquire+0x106/0x240
+ __mutex_lock+0x12e/0xcb0
+ mutex_lock_nested+0x1f/0x30
+ rdma_destroy_id+0x78/0x4a0 [rdma_cm]
+ iw_conn_req_handler+0x5c9/0x680 [rdma_cm]
+ cm_work_handler+0xe62/0x1100 [iw_cm]
+ process_one_work+0x56d/0xac0
+ worker_thread+0x7a/0x5d0
+ kthread+0x1bc/0x210
+ ret_from_fork+0x24/0x30
+
+This is not a bug as there are actually two lock classes here.
+
+Link: https://lore.kernel.org/r/20190930231707.48259-3-bvanassche@acm.org
+Fixes: de910bd92137 ("RDMA/cma: Simplify locking needed for serialization of callbacks")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-script.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/infiniband/core/cma.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 53c11fc0855ee..d20f851796c52 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1021,7 +1021,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 			continue;
- 
- 		insn = 0;
--		for (off = 0;; off += ilen) {
-+		for (off = 0; off < (unsigned)len; off += ilen) {
- 			uint64_t ip = start + off;
- 
- 			printed += ip__fprintf_sym(ip, thread, x.cpumode, x.cpu, &lastsym, attr, fp);
-@@ -1029,6 +1029,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 				printed += ip__fprintf_jump(ip, &br->entries[i], &x, buffer + off, len - off, insn, fp);
- 				break;
- 			} else {
-+				ilen = 0;
- 				printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", ip,
- 						   dump_insn(&x, ip, buffer + off, len - off, &ilen));
- 				if (ilen == 0)
-@@ -1036,6 +1037,8 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 				insn++;
- 			}
- 		}
-+		if (off != (unsigned)len)
-+			printed += fprintf(fp, "\tmismatch of LBR data and executable\n");
+diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
+index 6257be21cbedd..1f373ba573b6d 100644
+--- a/drivers/infiniband/core/cma.c
++++ b/drivers/infiniband/core/cma.c
+@@ -2270,9 +2270,10 @@ static int iw_conn_req_handler(struct iw_cm_id *cm_id,
+ 		conn_id->cm_id.iw = NULL;
+ 		cma_exch(conn_id, RDMA_CM_DESTROYING);
+ 		mutex_unlock(&conn_id->handler_mutex);
++		mutex_unlock(&listen_id->handler_mutex);
+ 		cma_deref_id(conn_id);
+ 		rdma_destroy_id(&conn_id->id);
+-		goto out;
++		return ret;
  	}
  
- 	/*
-@@ -1066,6 +1069,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 		goto out;
- 	}
- 	for (off = 0; off <= end - start; off += ilen) {
-+		ilen = 0;
- 		printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", start + off,
- 				   dump_insn(&x, start + off, buffer + off, len - off, &ilen));
- 		if (ilen == 0)
+ 	mutex_unlock(&conn_id->handler_mutex);
 -- 
 2.20.1
 
