@@ -2,106 +2,108 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A33CA9EB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED966CA9EB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F347C2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:59:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="NyID+tj/"
+	by mail.kernel.org (Postfix) with ESMTP id CEB3A2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:01:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439279AbfJRA7j (ORCPT
+        id S2441888AbfJRBBB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 20:59:39 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34418 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439238AbfJRA7j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 20:59:39 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b128so2754436pfa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 17:59:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jyoE4KVkMv5Wgl4RjrS4sWj56ltH5kNIoDRtIAtTAIQ=;
-        b=NyID+tj/Aq4Ln2vNbwK6HI4ebzmtdQlfIjHFHZ1ct/uwHsOtHWBsYetkMuJJE+FyL5
-         iRcCB2TaBBLeRiuG+PabIeXZI/+y8H7GkfaSiUCwLGwTcF3snG2JH7qQ85r94YVYzADF
-         D/Ijj/oa7APSC/bKl6VkTi4TaZYtI9HGhz2BdPPJi0ezOnQPWmtRtfoRH8TpT1h3b8aB
-         qlfDjrTuucGQOcYq3E4WBm+26OPSc0ikw9zf0Sxg+D+7eQgxFCb1vQxYcdaVmQkyxxqB
-         vDuRlti2io7S1cz+z7fE3S/D0S9Vdb/wIdPlggxhpHN5ZXP4DSYc8Q0Fr6bbNREkuhTS
-         FI3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jyoE4KVkMv5Wgl4RjrS4sWj56ltH5kNIoDRtIAtTAIQ=;
-        b=RjrgFS3H2v/eeSCzRRpqp5ZDuJFWcfV6/pa36GzfLb/JqvZR+qNT1RxSDA8V/3bcBE
-         AdmaJVi+bFGiTeAdGNyXJD4ElAkje8ktOGL2Y3K08PdTRt/ZUupRRLK3Yz29n8XWX45i
-         eHoEievlcprx5bbsQ5VqJ2JMvxWI3i6zFQaS7exb0sWcHgroLyBoM/XHRqn7QNVRAVF8
-         /uywzBfoC1CvLWwkExpAcI1gmBwNqdx1gkdP/BVPDiNgiTvYOZCyvN5PsLUYd8m3GdnJ
-         EGSrN0jfXQu/v2oWvqnIbVWCVeQnPy7S+huOGUe3EkFEKxJ5dKlDvL79VqbvLfmuW/Td
-         3RCQ==
-X-Gm-Message-State: APjAAAWlKqnQgugwpEy1eZyLBJT1rllq3Io4Scp5LCtBmwniocszJcQ8
-        oXm+VTLVDnmYQL53mOaiwK2SPCsJbHtJjw==
-X-Google-Smtp-Source: APXvYqzgkj4XfSgBfXBRzo5q3sDWxYZIHC5aZ8pyT6z46BQiLRcrNu3Td6IirlRlUf/aFY4DfidGLA==
-X-Received: by 2002:a62:b616:: with SMTP id j22mr3257841pff.201.1571360378152;
-        Thu, 17 Oct 2019 17:59:38 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.79])
-        by smtp.gmail.com with ESMTPSA id z13sm4719956pfq.121.2019.10.17.17.59.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Oct 2019 17:59:37 -0700 (PDT)
-Subject: Re: linux-next: build warning after merge of the block tree
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191018115126.6263a3e3@canb.auug.org.au>
- <5a9bf632-2466-bc73-45d3-104c4bb0245a@kernel.dk>
-Message-ID: <4b23ff4f-9692-6bfb-c904-772b3c5e0907@kernel.dk>
-Date:   Thu, 17 Oct 2019 18:59:34 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <5a9bf632-2466-bc73-45d3-104c4bb0245a@kernel.dk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 17 Oct 2019 21:01:01 -0400
+Received: from mga18.intel.com ([134.134.136.126]:22373 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2439184AbfJRBBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 21:01:01 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 18:00:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,309,1566889200"; 
+   d="scan'208";a="221579874"
+Received: from unknown (HELO ubuntu) ([10.226.248.102])
+  by fmsmga004.fm.intel.com with SMTP; 17 Oct 2019 18:00:02 -0700
+Received: by ubuntu (sSMTP sendmail emulation); Fri, 18 Oct 2019 09:00:01 +0800
+Message-ID: <1571360401.2504.3.camel@intel.com>
+Subject: Re: [PATCHv2] arm64: dts: agilex: add QSPI support for Intel Agilex
+From:   Ley Foon Tan <ley.foon.tan@intel.com>
+To:     "Ooi, Joyce" <joyce.ooi@intel.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ong Hean Loong <hean.loong.ong@intel.com>,
+        See Chin Liang <chin.liang.see@intel.com>
+Date:   Fri, 18 Oct 2019 09:00:01 +0800
+In-Reply-To: <1571218846-12306-1-git-send-email-joyce.ooi@intel.com>
+References: <1571218846-12306-1-git-send-email-joyce.ooi@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Mailer: Evolution 3.18.5.2-0ubuntu3.1 
+Mime-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/17/19 6:56 PM, Jens Axboe wrote:
-> On 10/17/19 6:51 PM, Stephen Rothwell wrote:
->> Hi all,
->>
->> After merging the block tree, today's linux-next build (arm
->> multi_v7_defconfig) produced this warning:
->>
->> fs/io_uring.c: In function 'io_accept':
->> fs/io_uring.c:1729:9: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->>    1729 |  addr = (struct sockaddr __user *) READ_ONCE(sqe->addr);
->>         |         ^
->> fs/io_uring.c:1730:13: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->>    1730 |  addr_len = (int __user *) READ_ONCE(sqe->addr2);
->>         |             ^
->>
->> Introduced by commit
->>
->>     d674c2b9335f ("io_uring: add support for IORING_OP_ACCEPT")
->>
->> addr and addr2 are __u64 ...
+On Wed, 2019-10-16 at 02:40 -0700, Ooi, Joyce wrote:
+> This patch adds QSPI flash interface in device tree for Intel Agilex
 > 
-> I'll fix these warnings up, guessing it's 32-bit?
-
-Should be fixed up and pushed out now.
-
--- 
-Jens Axboe
-
+> Signed-off-by: Ooi, Joyce <joyce.ooi@intel.com>
+> ---
+> v2: update the qspi_rootfs partition size
+> ---
+>  arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts | 35
+> ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
+> b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
+> index 7814a9e..8de8118 100644
+> --- a/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
+> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
+> @@ -73,3 +73,38 @@
+>  &watchdog0 {
+>  	status = "okay";
+>  };
+> +
+> +&qspi {
+> +	flash@0 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "mt25qu02g";
+> +		reg = <0>;
+> +		spi-max-frequency = <50000000>;
+QSPI can support up to 100MHz.
+> +
+> +		m25p,fast-read;
+> +		cdns,page-size = <256>;
+> +		cdns,block-size = <16>;
+> +		cdns,read-delay = <1>;
+> +		cdns,tshsl-ns = <50>;
+> +		cdns,tsd2d-ns = <50>;
+> +		cdns,tchsh-ns = <4>;
+> +		cdns,tslch-ns = <4>;
+> +
+> +		partitions {
+> +			compatible = "fixed-partitions";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +
+> +			qspi_boot: partition@0 {
+> +				label = "Boot and fpga data";
+> +				reg = <0x0 0x034B0000>;
+> +			};
+> +
+> +			qspi_rootfs: partition@34B0000 {
+> +				label = "Root Filesystem - JFFS2";
+> +				reg = <0x034B0000 0x0CB50000>;
+> +			};
+> +		};
+> +	};
+> +};
