@@ -2,84 +2,79 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15119CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 676FFCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED4FE2070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D2592070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:15:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443298AbfJRTMQ (ORCPT
+        id S2505945AbfJRTPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 15:12:16 -0400
-Received: from mga11.intel.com ([192.55.52.93]:51475 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439895AbfJRTMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 15:12:16 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 12:12:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,312,1566889200"; 
-   d="scan'208";a="200798058"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga006.jf.intel.com with ESMTP; 18 Oct 2019 12:12:15 -0700
-Date:   Fri, 18 Oct 2019 12:12:14 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-nvdimm@lists.01.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] acpi/nfit: unlock on error in scrub_show()
-Message-ID: <20191018191214.GB10455@iweiny-DESK2.sc.intel.com>
-References: <20191018123534.GA6549@mwanda>
+        Fri, 18 Oct 2019 15:15:33 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:57928 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2394833AbfJRTPd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 15:15:33 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-98.corp.google.com [104.133.0.98] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x9IJEu32003509
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 18 Oct 2019 15:14:57 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 1F67B420458; Fri, 18 Oct 2019 15:14:56 -0400 (EDT)
+Date:   Fri, 18 Oct 2019 15:14:56 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Vegard Nossum <vegard.nossum@oracle.com>
+Cc:     Santiago Torres Arias <santiago@nyu.edu>, Willy Tarreau <w@1wt.eu>,
+        workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        Eric Wong <e@80x24.org>
+Subject: Re: email as a bona fide git transport
+Message-ID: <20191018191456.GI21137@mit.edu>
+References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
+ <20191016111009.GE13154@1wt.eu>
+ <20191016144517.giwip4yuaxtcd64g@LykOS.localdomain>
+ <56664222-6c29-09dc-ef78-7b380b113c4a@oracle.com>
+ <20191018161547.GG21137@mit.edu>
+ <de49fe5e-85cb-9fb0-f9f4-c294d72e356c@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191018123534.GA6549@mwanda>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <de49fe5e-85cb-9fb0-f9f4-c294d72e356c@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 03:35:34PM +0300, Dan Carpenter wrote:
-> We change the locking in this function and forgot to update this error
-> path so we are accidentally still holding the "dev->lockdep_mutex".
+On Fri, Oct 18, 2019 at 06:50:51PM +0200, Vegard Nossum wrote:
+> I started out using this approach, but I changed it because the
+> implementation was a bit annoying: 'git am' runs 'git mailsplit',
+> which just splits the email into two parts:
 > 
-> Fixes: 87a30e1f05d7 ("driver-core, libnvdimm: Let device subsystems add local lockdep coverage")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> 1) headers, changelog, and diffstat;
+> 2) diff and signature.
+> 
+> One of my PoC patches changes mailsplit to split the extra metadata into
+> a third file.
+> 
+> The problem I ran into with putting the metadata at the end was
+> detecting where the diff ends. A comment in 'git apply' suggested that
+> detecting the difference between "--" as a diff/signature separator and
+> as part of the diff is nontrivial in the sense that you need to actually
+> do some parsing and keep track of hunk sizes.
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Could we cheat by having "git format-patch" add a "Diff-size" in the
+header which gives the number of lines in the diff so git am can just
+count lines to find the Trailer section?
 
-> ---
->  drivers/acpi/nfit/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
-> index 1413324982f0..14e68f202f81 100644
-> --- a/drivers/acpi/nfit/core.c
-> +++ b/drivers/acpi/nfit/core.c
-> @@ -1322,7 +1322,7 @@ static ssize_t scrub_show(struct device *dev,
->  	nfit_device_lock(dev);
->  	nd_desc = dev_get_drvdata(dev);
->  	if (!nd_desc) {
-> -		device_unlock(dev);
-> +		nfit_device_unlock(dev);
->  		return rc;
->  	}
->  	acpi_desc = to_acpi_desc(nd_desc);
-> -- 
-> 2.20.1
-> 
+Thanks,
+
+					- Ted
