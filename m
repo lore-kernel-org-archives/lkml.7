@@ -2,183 +2,87 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 501E5CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC867CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 247472089C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DBE1222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:29:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TiHkuEgv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nJzaiiNU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442783AbfJRM1M (ORCPT
+        id S2407905AbfJRM3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 08:27:12 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:48394 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404910AbfJRMZ7 (ORCPT
+        Fri, 18 Oct 2019 08:29:00 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40239 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389585AbfJRM3A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 08:25:59 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9ICPtkd066216;
-        Fri, 18 Oct 2019 07:25:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571401555;
-        bh=Qullg3/iDdm3fXb2oDGatHkWR3NFfKVfLUoihQpmjOI=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=TiHkuEgviSYg8GzUYtyFpElh1OZB6qe4kxZ606duavVQa2a4vtyMM1nyYsPud9ph9
-         hlmPJ+8vfz1fOmirDjxMKi1Feu7uXvNJUWrCrXf/8F9HRaDbuDff7cInPaXlRQze4V
-         ABtOp/fn5m8Z/hsS9D8BZ5UQHtwGTWbpRQ10z/DY=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9ICPtQx092076
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 18 Oct 2019 07:25:55 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 18
- Oct 2019 07:25:55 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 18 Oct 2019 07:25:46 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9ICPsEn091993;
-        Fri, 18 Oct 2019 07:25:54 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v14 01/19] dt: bindings: Add multicolor class dt bindings documention
-Date:   Fri, 18 Oct 2019 07:25:03 -0500
-Message-ID: <20191018122521.6757-2-dmurphy@ti.com>
-X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
-In-Reply-To: <20191018122521.6757-1-dmurphy@ti.com>
-References: <20191018122521.6757-1-dmurphy@ti.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 18 Oct 2019 08:29:00 -0400
+Received: by mail-wr1-f67.google.com with SMTP id o28so6064538wro.7
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 05:28:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=yVZsL1k6xiwxuV3Dn1WgaEOAdbpoPkfatJaTm2/Mp3w=;
+        b=nJzaiiNURnwmCDzi+HEDjAoCrZm2BiaHVd4DbjtibweAWdBba7y8Cm5Cul1GhvS884
+         b9Z3DWTZI36Wslys6q1QlPw4r9V+tUfrUVdoszjEWrajnwwOWFegyFTKWXDROe7lRL2l
+         zUMF+Dv6XlZvr1G6c8vnGIgtSQ8QSXY94A6vAdt5kBNKUlAq+PFSWVrzeMQFazNuw4V+
+         mAob2CIzkAm8Orq/2RYhFQ8y0hMXHRHrWS1q24L5UpsH+Uwvx5FjchpwkYNt1AdffcRU
+         QH2/nuCdP5UU8SxmV2LtpfD2NJSpo22IPRoMKpoywjR3Iw9mOlE8wmeh/rzvokYeRvpK
+         Mwcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=yVZsL1k6xiwxuV3Dn1WgaEOAdbpoPkfatJaTm2/Mp3w=;
+        b=XbUeNoMzz1hT0vo0RVp5AydjiHOf1TMlVmEwxSP6zmgoKoqopmHBfwe8Vn6RlQoKTz
+         a7HWGxoX2bIofLUbX9myV009s1FrUw6b2haAr7bbwlYR/Re7E4oKvEnwuV9oLKBIgWTQ
+         FuburokgVHOLAjrDVO7tnjl9W/WscF70Om1vRN9W9LFFZPzJf14pLTiHgAddOeyZQ88A
+         TKiAHDYOJd0RwPuwmPGgGecNmLOgZ/ciKodH3MhViSCMGvXruf3YxCNExOkU33292UMi
+         y9I6hiHqVXuCRL/gLvsovneTYYaZfVwURcKcaqdW+sUVV78ZvIjslxUfDhXdB04BvROK
+         BWlQ==
+X-Gm-Message-State: APjAAAWfBa3wl2H2m4kKaQ3i/Ax2I8FtQRiGOUEYgu3lCCUTwPedH8I7
+        nUprBKFsEPd17U5nCnslHmaHZA==
+X-Google-Smtp-Source: APXvYqyGTv4W7YZ+dBPzILPhJC0MpqlESvgAkV0FwdTo8BGAUnbZ+ATDcZpR+y3qVcTvWL0yH7hg9A==
+X-Received: by 2002:a5d:6992:: with SMTP id g18mr8044446wru.237.1571401737135;
+        Fri, 18 Oct 2019 05:28:57 -0700 (PDT)
+Received: from localhost.localdomain ([95.149.164.47])
+        by smtp.gmail.com with ESMTPSA id e3sm5033820wme.39.2019.10.18.05.28.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 05:28:56 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     broonie@kernel.org, linus.walleij@linaro.org,
+        daniel.thompson@linaro.org, arnd@arndb.de
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        baohua@kernel.org, stephan@gerhold.net,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 0/2] mfd: mfd-core: Honour disabled devices 
+Date:   Fri, 18 Oct 2019 13:26:45 +0100
+Message-Id: <20191018122647.3849-1-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT bindings for the LEDs multicolor class framework.
+This set ensures that devices set to 'disabled' in DT are not registered.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- .../bindings/leds/leds-class-multicolor.txt   | 98 +++++++++++++++++++
- 1 file changed, 98 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+It comes about after 2 seperate reports.
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
-new file mode 100644
-index 000000000000..4b1bd82f2a42
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
-@@ -0,0 +1,98 @@
-+* Multicolor LED properties
-+
-+Bindings for multi color LEDs show how to describe current outputs of
-+either integrated multi-color LED elements (like RGB, RGBW, RGBWA-UV
-+etc.) or standalone LEDs, to achieve logically grouped multi-color LED
-+modules. This is achieved by adding multi-led nodes layer to the
-+monochrome LED bindings.
-+
-+The nodes and properties defined in this document are unique to the multicolor
-+LED class.  Common LED nodes and properties are inherited from the common.txt
-+within this documentation directory.
-+
-+Required LED child properties:
-+	- color : For multicolor LED support this property should be defined as
-+		  LED_COLOR_ID_MULTI and further definition can be found in
-+		  include/linux/leds/common.h.
-+
-+led-controller@30 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	compatible = "ti,lp5024";
-+	reg = <0x29>;
-+
-+	multi-led@1 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <1>;
-+		color = <LED_COLOR_ID_MULTI>;
-+		function = LED_FUNCTION_CHARGING;
-+
-+
-+		led@3 {
-+			reg = <3>;
-+			color = <LED_COLOR_ID_RED>;
-+		};
-+
-+		led@4 {
-+			reg = <4>;
-+			color = <LED_COLOR_ID_GREEN>;
-+		};
-+
-+		led@5 {
-+			reg = <5>;
-+			color = <LED_COLOR_ID_BLUE>;
-+		};
-+	};
-+
-+	multi-led@2 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		color = <LED_COLOR_ID_MULTI>;
-+		function = LED_FUNCTION_ACTIVITY;
-+		reg = <2>;
-+		ti,led-bank = <2 3 5>;
-+
-+		led@6 {
-+			reg = <0x6>;
-+			color = <LED_COLOR_ID_RED>;
-+			led-sources = <6 9 15>;
-+		};
-+
-+		led@7 {
-+			reg = <0x7>;
-+			color = <LED_COLOR_ID_GREEN>;
-+			led-sources = <7 10 16>;
-+		};
-+
-+		led@8 {
-+			reg = <0x8>;
-+			color = <LED_COLOR_ID_BLUE>;
-+			led-sources = <8 11 17>;
-+		};
-+	};
-+
-+	multi-led@4 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <4>;
-+		color = <LED_COLOR_ID_MULTI>;
-+		function = LED_FUNCTION_ACTIVITY;
-+
-+		led@12 {
-+			reg = <12>;
-+			color = <LED_COLOR_ID_RED>;
-+		};
-+
-+		led@13 {
-+			reg = <13>;
-+			color = <LED_COLOR_ID_GREEN>;
-+		};
-+
-+		led@14 {
-+			reg = <14>;
-+			color = <LED_COLOR_ID_BLUE>;
-+		};
-+	};
-+
-+};
+ https://www.spinics.net/lists/arm-kernel/msg366309.html
+ https://lkml.org/lkml/2019/8/22/1350
+
+Lee Jones (2):
+  mfd: mfd-core: Allocate reference counting memory directly to the
+    platform device
+  mfd: mfd-core: Honour Device Tree's request to disable a child-device
+
+ drivers/mfd/mfd-core.c | 47 +++++++++++++++++++++---------------------
+ 1 file changed, 23 insertions(+), 24 deletions(-)
+
 -- 
-2.22.0.214.g8dca754b1e
+2.17.1
 
