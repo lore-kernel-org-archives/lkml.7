@@ -2,61 +2,159 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B632CA9EC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C699CA9EC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE9A121D7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:01:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 217CA21D7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:04:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jG+wp7iH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503771AbfJRABv (ORCPT
+        id S2503781AbfJRAEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 20:01:51 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:44012 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2441828AbfJRABu (ORCPT
+        Thu, 17 Oct 2019 20:04:44 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:3840 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2441811AbfJRAEn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 20:01:50 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4026E1433FC59;
-        Thu, 17 Oct 2019 17:01:50 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 17:01:49 -0700 (PDT)
-Message-Id: <20191017.170149.2131317490793787816.davem@davemloft.net>
-To:     sean.wang@mediatek.com
-Cc:     john@phrozen.org, nbd@openwrt.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Mark-MC.Lee@mediatek.com
-Subject: Re: [PATCH net-next] net: Update address for MediaTek ethernet
- driver in MAINTAINERS
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <fc0692002216a32b045a69f910e95c83c1ff559c.1571260085.git.sean.wang@mediatek.com>
-References: <fc0692002216a32b045a69f910e95c83c1ff559c.1571260085.git.sean.wang@mediatek.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 17 Oct 2019 17:01:50 -0700 (PDT)
+        Thu, 17 Oct 2019 20:04:43 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5da901a60000>; Thu, 17 Oct 2019 17:04:54 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 17 Oct 2019 17:04:42 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 17 Oct 2019 17:04:42 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 18 Oct
+ 2019 00:04:42 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 18 Oct 2019 00:04:42 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5da9019a0000>; Thu, 17 Oct 2019 17:04:42 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Preeti U Murthy <preeti@linux.vnet.ibm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        <linux-pm@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>
+Subject: [PATCH] cpufreq: powernv: fix stack bloat and NR_CPUS limitation
+Date:   Thu, 17 Oct 2019 17:04:31 -0700
+Message-ID: <20191018000431.1675281-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1571357094; bh=jMIVMS2k3nt+KBSFjXMj5e0P3S6l8dH7Zx0lZXXcpko=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=jG+wp7iHF0RN5Tn/nZDD4xJriVKb5DiI5acvhritKAZypir3iuZnXHppODrfo1kdX
+         hABXN5bOYSgzMQ6qiuADHLmVo/eJsdldhda46dDKKqWNBXa6BSSWBeggxjkJ+hoJmQ
+         XKlYnzLP+dXh7+EiIVlO17gtQZM6dpCs53U0WwySjpngtZzhB8k85+sq45N7HQKc3k
+         kk0yIkUz9j4PWXLn9+66jbovHjoQIy3aJjW7UmkfZ63aHn7dGwfnFfI4fGqiTMvoUI
+         wV+sd9odwKKDD1xlDIA8JrL3mAWof1mnmZsHHyChaQQyBCrIgi54fg61Vxywik3Scc
+         UTCqawVY+jwCw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: <sean.wang@mediatek.com>
-Date: Thu, 17 Oct 2019 05:14:08 +0800
+The following build warning occurred on powerpc 64-bit builds:
 
-> From: Sean Wang <sean.wang@mediatek.com>
-> 
-> Update maintainers for MediaTek ethernet driver with Mark Lee.
-> He is familiar with MediaTek mt762x series ethernet devices and
-> will keep following maintenance from the vendor side.
-> 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> Signed-off-by: Mark Lee <Mark-MC.Lee@mediatek.com>
+drivers/cpufreq/powernv-cpufreq.c: In function 'init_chip_info':
+drivers/cpufreq/powernv-cpufreq.c:1070:1: warning: the frame size of 1040 b=
+ytes is larger than 1024 bytes [-Wframe-larger-than=3D]
 
-Applied to 'net', thank you.
+This is due to putting 1024 bytes on the stack:
+
+    unsigned int chip[256];
+
+...and while looking at this, it also has a bug: it fails with a stack
+overrun, if CONFIG_NR_CPUS > 256.
+
+Fix both problems by dynamically allocating based on CONFIG_NR_CPUS.
+
+Fixes: 053819e0bf840 ("cpufreq: powernv: Handle throttling due to Pmax capp=
+ing at chip level")
+Cc: Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
+Cc: Preeti U Murthy <preeti@linux.vnet.ibm.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+Cc: linux-pm@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
+
+Hi,
+
+I have only compile-tested this, so I would appreciate if anyone
+could do a basic runtime test on it. But (famous last words) it
+seems simple enough that I'm confident it's correct. oh boy. :)
+
+thanks,
+John Hubbard
+NVIDIA
+
+ drivers/cpufreq/powernv-cpufreq.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/cpufreq/powernv-cpufreq.c b/drivers/cpufreq/powernv-cp=
+ufreq.c
+index 6061850e59c9..78e04402125f 100644
+--- a/drivers/cpufreq/powernv-cpufreq.c
++++ b/drivers/cpufreq/powernv-cpufreq.c
+@@ -1041,9 +1041,14 @@ static struct cpufreq_driver powernv_cpufreq_driver =
+=3D {
+=20
+ static int init_chip_info(void)
+ {
+-	unsigned int chip[256];
++	unsigned int *chip;
+ 	unsigned int cpu, i;
+ 	unsigned int prev_chip_id =3D UINT_MAX;
++	int ret =3D 0;
++
++	chip =3D kcalloc(CONFIG_NR_CPUS, sizeof(int), GFP_KERNEL);
++	if (!chips)
++		return -ENOMEM;
+=20
+ 	for_each_possible_cpu(cpu) {
+ 		unsigned int id =3D cpu_to_chip_id(cpu);
+@@ -1055,8 +1060,10 @@ static int init_chip_info(void)
+ 	}
+=20
+ 	chips =3D kcalloc(nr_chips, sizeof(struct chip), GFP_KERNEL);
+-	if (!chips)
+-		return -ENOMEM;
++	if (!chips) {
++		ret =3D -ENOMEM;
++		goto free_and_return;
++	}
+=20
+ 	for (i =3D 0; i < nr_chips; i++) {
+ 		chips[i].id =3D chip[i];
+@@ -1066,7 +1073,9 @@ static int init_chip_info(void)
+ 			per_cpu(chip_info, cpu) =3D  &chips[i];
+ 	}
+=20
+-	return 0;
++free_and_return:
++	kfree(chip);
++	return ret;
+ }
+=20
+ static inline void clean_chip_info(void)
+--=20
+2.23.0
+
