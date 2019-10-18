@@ -4,81 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D871CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0106DCA9EAB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D26921852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C980121852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437004;
-	bh=fnbbc7uR40pu9gEMufBDqXBhxqlq0xybhEADZGmXZlk=;
+	s=default; t=1571437005;
+	bh=E1aoj9R79rabJbJBVwCZX4iH1w2YJ9tDbCCLe60+T58=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l/KCivrvBGh6LLk782O0RZv6JmEngA41NgQSxD27jJhOQhQS/KxODuov5rVSTLiaW
-	 PFvvS/31joI7lbCut2SINneAqVt0n6sVv2UxqR5CE/XCOWS1o8OAhVxIAtvIBKaUsh
-	 OGqmt0huQQ63osGlqFz+e1igmTONk6xbBAB/ht7U=
+	b=km9H++7dVnqyCohCDfP81+KB7AknxVnKHvbvFlZbn/sJr/J/QnKmLzpCA/4T5Dnie
+	 PwaofMpWIMQhEmUiSGU0YtG6f5mKfFwIMfwuGBFvS9Eb6sZxVthDw7PRBATdGYTKan
+	 MY3CsTW67beVY2FIxanASQiliB+zbTKbRTfmubic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387601AbfJRWIP (ORCPT
+        id S2393063AbfJRWQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:08:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40406 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:16:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387487AbfJRWID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:08:03 -0400
+        id S2387592AbfJRWIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:08:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 092D22245A;
-        Fri, 18 Oct 2019 22:07:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38DF0222D1;
+        Fri, 18 Oct 2019 22:08:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436481;
-        bh=fnbbc7uR40pu9gEMufBDqXBhxqlq0xybhEADZGmXZlk=;
+        s=default; t=1571436494;
+        bh=E1aoj9R79rabJbJBVwCZX4iH1w2YJ9tDbCCLe60+T58=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y0UVVFYXaCYLwrEowZrFLzcgEsTHSUZSXpv2eltbzUJ/RxLn2hyrIiO+T9Mrn+hC4
-         yTGeza5C9iTdhcp4PB3UAgpxkfW9ckxmdHrYImc4mbyf8vrlMCPEkqPU8bJAqCbfAT
-         IC4yDflXpKBjZL4f5LrRE48hRXbT/wMCrvYLOClw=
+        b=ozPna+JcsbwIzMvK7y74cXWwV5Qt+eIZaPIxCUhELsu1t1p0XB8qAY74TY59CI/0U
+         mCdel5272G0mCNq+m6ZNonBkEgRPv0LLKuJUSJFwPuuBjsUOFUzVeEAJQ5tM4yKI2G
+         P/Hs0gHWALAO51Cx4S74h6GTQgj0Q2XFNsTTjyUE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Rashmica Gupta <rashmica.g@gmail.com>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Neuling <mikey@neuling.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        John Allen <jallen@linux.vnet.ibm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Len Brown <lenb@kernel.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Mathieu Malaterre <malat@debian.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        YASUAKI ISHIMATSU <yasu.isimatu@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 04/56] powerpc/powernv: hold device_hotplug_lock when calling memtrace_offline_pages()
-Date:   Fri, 18 Oct 2019 18:07:01 -0400
-Message-Id: <20191018220753.10002-4-sashal@kernel.org>
+Cc:     Yi Wang <wang.yi59@zte.com.cn>, Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mips@linux-mips.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 08/56] clk: boston: unregister clks on failure in clk_boston_setup()
+Date:   Fri, 18 Oct 2019 18:07:05 -0400
+Message-Id: <20191018220753.10002-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
 References: <20191018220753.10002-1-sashal@kernel.org>
@@ -91,93 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Yi Wang <wang.yi59@zte.com.cn>
 
-[ Upstream commit 5666848774ef43d3db5151ec518f1deb63515c20 ]
+[ Upstream commit 8b627f616ed63dcaf922369fc14a5daf8ad03038 ]
 
-Let's perform all checking + offlining + removing under
-device_hotplug_lock, so nobody can mess with these devices via sysfs
-concurrently.
+The registered clks should unregister when something wrong happens
+before going out in function clk_boston_setup().
 
-[david@redhat.com: take device_hotplug_lock outside of loop]
-  Link: http://lkml.kernel.org/r/20180927092554.13567-6-david@redhat.com
-Link: http://lkml.kernel.org/r/20180925091457.28651-6-david@redhat.com
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Pavel Tatashin <pavel.tatashin@microsoft.com>
-Reviewed-by: Rashmica Gupta <rashmica.g@gmail.com>
-Acked-by: Balbir Singh <bsingharora@gmail.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Rashmica Gupta <rashmica.g@gmail.com>
-Cc: Michael Neuling <mikey@neuling.org>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: John Allen <jallen@linux.vnet.ibm.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Len Brown <lenb@kernel.org>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Mathieu Malaterre <malat@debian.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Nathan Fontenot <nfont@linux.vnet.ibm.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Philippe Ombredanne <pombredanne@nexb.com>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: YASUAKI ISHIMATSU <yasu.isimatu@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/powernv/memtrace.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/clk/imgtec/clk-boston.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/memtrace.c b/arch/powerpc/platforms/powernv/memtrace.c
-index c9a6d4f3403ce..cfbd242c3e011 100644
---- a/arch/powerpc/platforms/powernv/memtrace.c
-+++ b/arch/powerpc/platforms/powernv/memtrace.c
-@@ -99,6 +99,7 @@ static int change_memblock_state(struct memory_block *mem, void *arg)
- 	return 0;
- }
- 
-+/* called with device_hotplug_lock held */
- static bool memtrace_offline_pages(u32 nid, u64 start_pfn, u64 nr_pages)
- {
- 	u64 end_pfn = start_pfn + nr_pages - 1;
-@@ -139,6 +140,7 @@ static u64 memtrace_alloc_node(u32 nid, u64 size)
- 	/* Trace memory needs to be aligned to the size */
- 	end_pfn = round_down(end_pfn - nr_pages, nr_pages);
- 
-+	lock_device_hotplug();
- 	for (base_pfn = end_pfn; base_pfn > start_pfn; base_pfn -= nr_pages) {
- 		if (memtrace_offline_pages(nid, base_pfn, nr_pages) == true) {
- 			/*
-@@ -147,7 +149,6 @@ static u64 memtrace_alloc_node(u32 nid, u64 size)
- 			 * we never try to remove memory that spans two iomem
- 			 * resources.
- 			 */
--			lock_device_hotplug();
- 			end_pfn = base_pfn + nr_pages;
- 			for (pfn = base_pfn; pfn < end_pfn; pfn += bytes>> PAGE_SHIFT) {
- 				remove_memory(nid, pfn << PAGE_SHIFT, bytes);
-@@ -156,6 +157,7 @@ static u64 memtrace_alloc_node(u32 nid, u64 size)
- 			return base_pfn << PAGE_SHIFT;
- 		}
+diff --git a/drivers/clk/imgtec/clk-boston.c b/drivers/clk/imgtec/clk-boston.c
+index f5d54a64d33c5..dddda45127a80 100644
+--- a/drivers/clk/imgtec/clk-boston.c
++++ b/drivers/clk/imgtec/clk-boston.c
+@@ -73,31 +73,39 @@ static void __init clk_boston_setup(struct device_node *np)
+ 	hw = clk_hw_register_fixed_rate(NULL, "input", NULL, 0, in_freq);
+ 	if (IS_ERR(hw)) {
+ 		pr_err("failed to register input clock: %ld\n", PTR_ERR(hw));
+-		goto error;
++		goto fail_input;
  	}
-+	unlock_device_hotplug();
+ 	onecell->hws[BOSTON_CLK_INPUT] = hw;
  
- 	return 0;
+ 	hw = clk_hw_register_fixed_rate(NULL, "sys", "input", 0, sys_freq);
+ 	if (IS_ERR(hw)) {
+ 		pr_err("failed to register sys clock: %ld\n", PTR_ERR(hw));
+-		goto error;
++		goto fail_sys;
+ 	}
+ 	onecell->hws[BOSTON_CLK_SYS] = hw;
+ 
+ 	hw = clk_hw_register_fixed_rate(NULL, "cpu", "input", 0, cpu_freq);
+ 	if (IS_ERR(hw)) {
+ 		pr_err("failed to register cpu clock: %ld\n", PTR_ERR(hw));
+-		goto error;
++		goto fail_cpu;
+ 	}
+ 	onecell->hws[BOSTON_CLK_CPU] = hw;
+ 
+ 	err = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, onecell);
+-	if (err)
++	if (err) {
+ 		pr_err("failed to add DT provider: %d\n", err);
++		goto fail_clk_add;
++	}
+ 
+ 	return;
+ 
+-error:
++fail_clk_add:
++	clk_hw_unregister_fixed_rate(onecell->hws[BOSTON_CLK_CPU]);
++fail_cpu:
++	clk_hw_unregister_fixed_rate(onecell->hws[BOSTON_CLK_SYS]);
++fail_sys:
++	clk_hw_unregister_fixed_rate(onecell->hws[BOSTON_CLK_INPUT]);
++fail_input:
+ 	kfree(onecell);
  }
+ 
 -- 
 2.20.1
 
