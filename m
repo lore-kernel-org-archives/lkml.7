@@ -2,113 +2,161 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB966CA9ED0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3581CA9ED1
 	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BBC9222C3
+	by mail.kernel.org (Postfix) with ESMTP id A889F222C5
 	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:54:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="N5x8bC5o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IYTVyaw4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439087AbfJREyI (ORCPT
+        id S1729297AbfJREyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 00:54:08 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:35569 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726952AbfJREyF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 18 Oct 2019 00:54:05 -0400
-Received: by mail-il1-f196.google.com with SMTP id j9so4358682ilr.2
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 21:54:04 -0700 (PDT)
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35217 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbfJRExy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 00:53:54 -0400
+Received: by mail-pl1-f193.google.com with SMTP id c3so2249180plo.2;
+        Thu, 17 Oct 2019 21:53:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=ofLqnhuaTacSfKe2YQoATYL+HC8rQjiCUNcY3XPivmE=;
-        b=N5x8bC5o7w6rADZFh4KHeDpeb6o3Jgm+KphbQhVkPqZz1Fd8E9M3PaWuoBNyLGjNby
-         FcCFIu+ox9T9DjhSC9heNZjMQrgm4xMjJ8TFBQCdlE86wvAdlBsUPOrsnGVYu9lKKeHQ
-         D7w1xDFzmUYo0NdnoKDfVHfBV9rDMkKr3XHd+n6zCsh3R453pBKlec2RqfraXt+7FOJg
-         3/bKBkC2vF8FVFJOQ2O0M59pBjRLRRSRz4XeMXB7o18TKzN8hqr5whm5Tas+OI+iIky7
-         4MLLxBvYd+AUGMn4Rl6c+9BDiHaJCgsFf4PgCwD87izM7iHj9N5OArKOuTr8d8G+a9R5
-         mQMQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=JNvDqC31WTWdI2vpSAPtpYynuJNNNTYl8P0mHvHLMNk=;
+        b=IYTVyaw4C9oBzL+7mOyH7VFzP20az+ts6hbtvsVnXIWzQjm+ppeVosbblAdJYMzyXO
+         I5ySkabTrYIu71JT/oLm10CmVQNxy7JUvfKgQSe1CTTyUMwGiEhe7m5oZ+YgH9cWydBE
+         IDDEWvFEdnBZQXi+KYd3vpAJCpuHsDcidlquMM+hsgk5bE2IJ2njN4YnKDQRmpQlnC3r
+         p20wP8peXRSf9V7dRjbC8bdn/8elPZfGp+DKjm2kjB+VHqD57lk8i05ZFQ9lBS0rwY7M
+         m9Dpu4vonPmTHFlk7B8u40nwAA83fJOGKow5EFfqP0QxulRmfwfuPkqdbE4FWxonW4z3
+         f8Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=ofLqnhuaTacSfKe2YQoATYL+HC8rQjiCUNcY3XPivmE=;
-        b=jUPa9Zxv2XF2Ll3dw05ocJCsEk7KYuPeDZ1FD6yJoJzmqnpulgNBQQT7765dblC1FT
-         pkusquBY6XPyljk84XBlfkNiU9BzuuO9AzmluANATj0iCoDx79n5uStLMQ5E4Urubaii
-         S3yfA9giTsVgFK+hNoouGEkmgva8H4FOzXydPJOTOp/xLcyFwp/V6tBT+u40farcI0JB
-         bRypGjtJutrWWHb4eDe8pu7Tlg2O+WEnusFQxzGWMlURTRIClUITHP6XBOGCNrkUwmCw
-         a8ClDgAmwBYdHzODKwci9KiAI1MZjJRRlQsr+j36MbpEm70N/WGLa7DV+r11v/N0r/SK
-         ovxQ==
-X-Gm-Message-State: APjAAAUgPdEZ0BnAUOZc96ycLR0ue6oe685mbTKwHA+33aPWWYPTtNXv
-        AbHhBKfPEVb0F5OkizpFuJZfKA==
-X-Google-Smtp-Source: APXvYqykkUrK0vrBdmDDbwAwwr+5ZePp14K9XbkSbU4CaVjxo7HzjYRIh3HQWncCN26aSDHosD7Fnw==
-X-Received: by 2002:a92:9a54:: with SMTP id t81mr8275762ili.197.1571370138242;
-        Thu, 17 Oct 2019 20:42:18 -0700 (PDT)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id d6sm1356657iop.34.2019.10.17.20.42.15
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=JNvDqC31WTWdI2vpSAPtpYynuJNNNTYl8P0mHvHLMNk=;
+        b=IXhYvdJ8fUcK5L4tRmEjfYU+++B7E5mOMyvMm/bPsOkkcBH1Au6pbH69H37i9MbLaK
+         35qmrjGNhQ3pzi5b5Js0NYKSiEPj/vABOZVUp9ltU8FrxMAfNvGjyDdzq38R25reU6j+
+         6N8mbeQjA5gggJ5Hb0/kLpFrldxWbr9EIMjSEYMi4Rzrufx64vqsVgqdlPpWrgWTyoGJ
+         /1IRfy/wQHvcghG1XmAVPq3vSa7Kkl4wzg3nLjP1S9/VHo1lpCOdesr2sNGVwyO1WxUJ
+         i93DZtXLKTqM1ZEYD1vYfcOjUba4GWSJr1QFz23lqHv7YS60aXFYXYuERDDCKBq52p/5
+         2+LA==
+X-Gm-Message-State: APjAAAW0kmZ3NZ8aRMbrLcQ0lP/rdtkgcdc0MAeoE76CZA7jqhnRPPcp
+        zR45BNBZg6q1jucgxN6dyOFPtcBN+e8=
+X-Google-Smtp-Source: APXvYqyK1y01wydsFJcLUX52fuVNf1rbAwNe2Kgq8tlf4HAFeD9RwxPa0/AfHGZuhADnxHmeOWjyHw==
+X-Received: by 2002:a17:902:101:: with SMTP id 1mr7757492plb.170.1571373944591;
+        Thu, 17 Oct 2019 21:45:44 -0700 (PDT)
+Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
+        by smtp.gmail.com with ESMTPSA id b3sm3696445pjp.13.2019.10.17.21.45.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 20:42:16 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 20:42:14 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Christoph Hellwig <hch@lst.de>
-cc:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org,
-        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-hexagon@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        openrisc@lists.librecores.org, linux-mtd@lists.infradead.org,
-        linux-alpha@vger.kernel.org, sparclinux@vger.kernel.org,
-        nios2-dev@lists.rocketboards.org, linux-riscv@lists.infradead.org,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 18/21] riscv: use the generic ioremap code
-In-Reply-To: <20191017174554.29840-19-hch@lst.de>
-Message-ID: <alpine.DEB.2.21.9999.1910172038040.3156@viisi.sifive.com>
-References: <20191017174554.29840-1-hch@lst.de> <20191017174554.29840-19-hch@lst.de>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Thu, 17 Oct 2019 21:45:43 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-input@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+        Austin Palmer <austinp@valvesoftware.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH v3 3/3] HID: logitech-hidpp: do all FF cleanup in hidpp_ff_destroy()
+Date:   Thu, 17 Oct 2019 21:45:17 -0700
+Message-Id: <20191018044517.6430-4-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191018044517.6430-1-andrew.smirnov@gmail.com>
+References: <20191018044517.6430-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019, Christoph Hellwig wrote:
+All of the FF-related resources belong to corresponding FF device, so
+they should be freed as a part of hidpp_ff_destroy() to avoid
+potential race condidions.
 
-> Use the generic ioremap code instead of providing a local version.
-> Note that this relies on the asm-generic no-op definition of
-> pgprot_noncached.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fixes: ff21a635dd1a ("HID: logitech-hidpp: Force feedback support for the Logitech G920")
+Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Jiri Kosina <jikos@kernel.org>
+Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Henrik Rydberg <rydberg@bitmath.org>
+Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
+Cc: Austin Palmer <austinp@valvesoftware.com>
+Cc: linux-input@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org # 5.2+
+---
+ drivers/hid/hid-logitech-hidpp.c | 33 +++++---------------------------
+ 1 file changed, 5 insertions(+), 28 deletions(-)
 
-According to the series introduction E-mail:
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+index 6e669eb7dc69..8e91e2f06cb4 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -2078,7 +2078,12 @@ static DEVICE_ATTR(range, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH, hidpp
+ static void hidpp_ff_destroy(struct ff_device *ff)
+ {
+ 	struct hidpp_ff_private_data *data = ff->private;
++	struct hid_device *hid = data->hidpp->hid_dev;
+ 
++	hid_info(hid, "Unloading HID++ force feedback.\n");
++
++	device_remove_file(&hid->dev, &dev_attr_range);
++	destroy_workqueue(data->wq);
+ 	kfree(data->effect_ids);
+ }
+ 
+@@ -2170,31 +2175,6 @@ static int hidpp_ff_init(struct hidpp_device *hidpp,
+ 	return 0;
+ }
+ 
+-static int hidpp_ff_deinit(struct hid_device *hid)
+-{
+-	struct hid_input *hidinput = list_entry(hid->inputs.next, struct hid_input, list);
+-	struct input_dev *dev = hidinput->input;
+-	struct hidpp_ff_private_data *data;
+-
+-	if (!dev) {
+-		hid_err(hid, "Struct input_dev not found!\n");
+-		return -EINVAL;
+-	}
+-
+-	hid_info(hid, "Unloading HID++ force feedback.\n");
+-	data = dev->ff->private;
+-	if (!data) {
+-		hid_err(hid, "Private data not found!\n");
+-		return -EINVAL;
+-	}
+-
+-	destroy_workqueue(data->wq);
+-	device_remove_file(&hid->dev, &dev_attr_range);
+-
+-	return 0;
+-}
+-
+-
+ /* ************************************************************************** */
+ /*                                                                            */
+ /* Device Support                                                             */
+@@ -3713,9 +3693,6 @@ static void hidpp_remove(struct hid_device *hdev)
+ 
+ 	sysfs_remove_group(&hdev->dev.kobj, &ps_attribute_group);
+ 
+-	if (hidpp->quirks & HIDPP_QUIRK_CLASS_G920)
+-		hidpp_ff_deinit(hdev);
+-
+ 	hid_hw_stop(hdev);
+ 	cancel_work_sync(&hidpp->work);
+ 	mutex_destroy(&hidpp->send_mutex);
+-- 
+2.21.0
 
-https://lore.kernel.org/linux-riscv/20191017174554.29840-1-hch@lst.de/T/#m9ac4010fd725c8c84179fa99aa391a6f701a32de
-
-nothing substantive related to RISC-V or the common code has changed since 
-the first version of this series, and this RISC-V-specific patch appears 
-to be quite close (if not identical) to the first version of the patch:
-
-https://lore.kernel.org/linux-riscv/alpine.DEB.2.21.9999.1908171421560.4130@viisi.sifive.com/
-
-Thus the Tested-by, Reviewed-by, and Acked-by for RISC-V should all still 
-apply:
-
-https://lore.kernel.org/linux-riscv/alpine.DEB.2.21.9999.1908171421560.4130@viisi.sifive.com/
-
-
-- Paul
