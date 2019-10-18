@@ -4,117 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15792CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C623CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D70AD222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C812222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:00:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="LNjzhGzW"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="SSAw+mF6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441973AbfJRFAY (ORCPT
+        id S2441961AbfJRFA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:00:24 -0400
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:57008 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2441963AbfJRFAW (ORCPT
+        Fri, 18 Oct 2019 01:00:27 -0400
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:49588 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2441967AbfJRFAY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:00:22 -0400
-X-Greylist: delayed 300 seconds by postgrey-1.27 at vger.kernel.org; Fri, 18 Oct 2019 01:00:21 EDT
+        Fri, 18 Oct 2019 01:00:24 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 6C39CB5E
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 04:41:57 +0000 (UTC)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 3F21DCA7
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 04:53:12 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 4RnzG78ndPZU for <linux-kernel@vger.kernel.org>;
-        Thu, 17 Oct 2019 23:41:57 -0500 (CDT)
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id jTgX8G42rgdX for <linux-kernel@vger.kernel.org>;
+        Thu, 17 Oct 2019 23:53:12 -0500 (CDT)
 Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
         (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 436B6B53
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 23:41:57 -0500 (CDT)
-Received: by mail-io1-f69.google.com with SMTP id w8so6931782iol.20
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 21:41:57 -0700 (PDT)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 1780BC9D
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 23:53:12 -0500 (CDT)
+Received: by mail-io1-f69.google.com with SMTP id t15so3082735ios.13
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 21:53:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umn.edu; s=google;
         h=from:to:cc:subject:date:message-id;
-        bh=KZJ0qgGHHAivbnxIOZfhWtlIHuWG04Vj3FxHQ3w/GEE=;
-        b=LNjzhGzWitDO6Aa3bHfiAIwrG2rfKBT+UuuKAqLWwQm9ZoUQBg/dJQlS+sbtMORRxa
-         QLu+0EGyNHvfahcj4E5lZBPcYiQeACpKJETL3bb1hsWZjgcDjONw8wofFojapCsbneaC
-         ULB9gI3Il9/kfr5+o8P39xuoixmebvksqeWje76HFyiQ0g0Br6H8VZykRZcOqRaTNOIG
-         h7qRv1ptesw4P5E4PaW+nlmq9splbvENohVJpFPRat3KB2/gZxXc4o+BG3oGInvbnQJ0
-         lmcGmT4wOWpSiJoR8UlRP3zZYkYoGllHW7vJor/uZZRincMS4LUiDd2Pb6ljf1C34SM8
-         H1dw==
+        bh=PiAvGPBAd5r/3XyVj4aUHP7AUeXoHl9s9vGj/rL2vBE=;
+        b=SSAw+mF6f+5B+nirGSGu/AIgxkBVez4C2mLwuOn2tdvSW6D2qgygO+CJhg/4C5A4UY
+         xWLJlB3gN5EseI5nGlOxXzBh17l243fYEsLjpBwMlbcyftv/av5pE+ARJqX4V6h3fEVb
+         apUsF/OH+V+/oXLedtF3gnfl3I+r5VDk4FJpUI4VC2joMHaMKxpbl+T4BOTeZ1qvYq3J
+         9sgaWLiyFSDyQPKt8y46jMtH/uo8saK+v/LqHHNuPDs3YPlY8kVkUpk3MQfwTOR5HcIa
+         Tx4igdKciSEATWOcEVUnHHCFtyOgsKlDcT64tagQdJdLbSr4LvX88ddY8tEER3peRXg/
+         7pGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KZJ0qgGHHAivbnxIOZfhWtlIHuWG04Vj3FxHQ3w/GEE=;
-        b=ZzBelZRRhLDfzrl/EwI+9skcikFzaxCOtXy89Kjrjnq/1XmemmeAq3lDMmWiWSaq8x
-         JcTuN4zDzlXwtgCCpJM2piSQD0RDTyBQxpxegYpDXnMwn0BBX8Owv4Y2GQ2h3x/LeXNN
-         IIr5TZhs8T0/Ew/trbBHq5opGYLyEGwjXkyGsaW5g63j5ek3QICE0AuaCPF9GOjw744a
-         fCHDEeet7L2QmR8U0jzr3d9aLCDf3eWyLnJYidFAnWUWhCMxh23qzoZEsyM3/EbZjFO/
-         u25vNvG08Lc3q5swooa6gR/kMOVZNVq74BBIAzWJtbPTTDom4S7gYjMXgaXEmmTQcC9a
-         kCQg==
-X-Gm-Message-State: APjAAAVkTEaBI43ciI0h8MqjoIo2O4j3CC46gTHItSJyW5hGC1MEUs+n
-        DvIOe4Wjz4fTjf4Nrfb/o316twkBnmcwlVWSK+rv3es7gjPbNBIxll8gA1QuYcGeWx7klPD9G4m
-        NjythhEGHmY8U8FPTXUp/qdx21sKB
-X-Received: by 2002:a92:8941:: with SMTP id n62mr7842855ild.20.1571373716852;
-        Thu, 17 Oct 2019 21:41:56 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyoJ/tH4b5jxVJp8nBGw2QY5zm9BMxuCAeD6/be5zL/8OGhFhhi/R6r6p196AViBR8ZnBWC9Q==
-X-Received: by 2002:a92:8941:: with SMTP id n62mr7842836ild.20.1571373716551;
-        Thu, 17 Oct 2019 21:41:56 -0700 (PDT)
+        bh=PiAvGPBAd5r/3XyVj4aUHP7AUeXoHl9s9vGj/rL2vBE=;
+        b=XVu6bd+BzwYlzmnlYnYjptQlS+QLMFa5AgT93c/WFChkluGBlr4Gu8q/FyTGUdjUrR
+         PfRHEM5QMkqZIdwgprQXZm2WG1hlZuM7u9uBA78Kjszunxd3ECZIpG/twElwuQKkZmmT
+         FAj3mn3bjL1Wl8oQxie7W5RrnTxvtmLoCzlnEtnfHzT4OfEgtmqAFo3TcPV6rn0Cvphw
+         2OPLeHdseEmChSNsuv+jvCSx+vJWGIzbal+qjOSXKW8Yyh74W2pISNN714nTU52Rw9MF
+         4l6aA1Eselz6yBVCR3fWC5VZfqWsmdkgSVwfHk5RZuKh91l3/1bOyeNDMtREUvRU/uJ7
+         9vYA==
+X-Gm-Message-State: APjAAAVKgwqC2KBT0Qqg0KdXdpWiyNT0UTPKq6fh2qXLnbOc/Qv4snRl
+        R0fx2GFgWHOCiHO1FzU+l0IrlRekpyGadFO18U73Le7/RnrSbAXI/A/jYUdF3xx2T+9g3Dal7uq
+        46dogT/TKb/0LNkZv2bKoq1kq0TaJ
+X-Received: by 2002:a92:48cf:: with SMTP id j76mr7837586ilg.246.1571374391564;
+        Thu, 17 Oct 2019 21:53:11 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyC/JNn6/bb1kk/U+cLwblGbXmpbY/tAAsujMTaZdpNNs4/lNdEfWgzh72OP1sSvTEK7SUrdw==
+X-Received: by 2002:a92:48cf:: with SMTP id j76mr7837569ilg.246.1571374391314;
+        Thu, 17 Oct 2019 21:53:11 -0700 (PDT)
 Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id w68sm2042093ili.59.2019.10.17.21.41.55
+        by smtp.gmail.com with ESMTPSA id 197sm1639719ioc.78.2019.10.17.21.53.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 21:41:55 -0700 (PDT)
+        Thu, 17 Oct 2019 21:53:10 -0700 (PDT)
 From:   Kangjie Lu <kjlu@umn.edu>
 To:     kjlu@umn.edu
-Cc:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/gma500: fix memory disclosures due to uninitialized bytes
-Date:   Thu, 17 Oct 2019 23:41:50 -0500
-Message-Id: <20191018044150.1899-1-kjlu@umn.edu>
+Cc:     Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net/lib80211: scrubbing the buffer for key
+Date:   Thu, 17 Oct 2019 23:53:05 -0500
+Message-Id: <20191018045305.8108-1-kjlu@umn.edu>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"clock" may be copied to "best_clock". Initializing best_clock
-is not sufficient. The fix initializes clock as well to avoid
-memory disclosures and informaiton leaks.
+The "key" is not scrubbed. As what peer modules do, the fixes zeros
+out the key buffer.
 
 Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 ---
- drivers/gpu/drm/gma500/oaktrail_crtc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/wireless/lib80211_crypt_wep.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/gma500/oaktrail_crtc.c b/drivers/gpu/drm/gma500/oaktrail_crtc.c
-index 167c10767dd4..900e5499249d 100644
---- a/drivers/gpu/drm/gma500/oaktrail_crtc.c
-+++ b/drivers/gpu/drm/gma500/oaktrail_crtc.c
-@@ -129,6 +129,7 @@ static bool mrst_sdvo_find_best_pll(const struct gma_limit_t *limit,
- 	s32 freq_error, min_error = 100000;
+diff --git a/net/wireless/lib80211_crypt_wep.c b/net/wireless/lib80211_crypt_wep.c
+index dafc6f3571db..08e511aaa1ff 100644
+--- a/net/wireless/lib80211_crypt_wep.c
++++ b/net/wireless/lib80211_crypt_wep.c
+@@ -202,6 +202,7 @@ static int lib80211_wep_set_key(void *key, int len, u8 * seq, void *priv)
+ 	if (len < 0 || len > WEP_KEY_LEN)
+ 		return -1;
  
- 	memset(best_clock, 0, sizeof(*best_clock));
-+	memset(&clock, 0, sizeof(clock));
++	memset(wep, 0, sizeof(*wep));
+ 	memcpy(wep->key, key, len);
+ 	wep->key_len = len;
  
- 	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
- 		for (clock.n = limit->n.min; clock.n <= limit->n.max;
-@@ -185,6 +186,7 @@ static bool mrst_lvds_find_best_pll(const struct gma_limit_t *limit,
- 	int err = target;
- 
- 	memset(best_clock, 0, sizeof(*best_clock));
-+	memset(&clock, 0, sizeof(clock));
- 
- 	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
- 		for (clock.p1 = limit->p1.min; clock.p1 <= limit->p1.max;
 -- 
 2.17.1
 
