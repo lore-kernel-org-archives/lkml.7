@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7F4CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1735CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7249E20854
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9325820854
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:13:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436800;
-	bh=oHLDuTqhmbIyiPId9IHh+J6glKoYTbZKPH9cV1JEMcI=;
+	s=default; t=1571436805;
+	bh=dJCFZfdjuoZfITQS5k280XeKvlJT908QEaa8PE/Dwy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZXQqRlb19tDW+I9Wd/4zUBxjM4kubsIrgsHESHN1VcOWUSrwNBQT7IDABvMEqiA9z
-	 prJwed9WOZue/86BhRWmiL2K75Gwg0TqVyiVk/LL6w2MnGQydpR3+oXst0wvmhDxzs
-	 btnP3QGwa65t14PlZuFDhumOt41IbuYKG2jVjrt0=
+	b=QzyNyNQKKSuqTIcXLi9goXWWu1lhu8zz6m50GNDyY6Utu7yaEVPNKYCp9VK/Uo4aR
+	 z1Rpx+58Uxmw9+hS3gYaiNfm2o9jZCA/TA8u6TQojScPjbYTEGv2k7uOB8FDLvGK80
+	 f/iJiuDHtph+or8Yry98FFeXUqZjcyO7iTELy/K4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391957AbfJRWNP (ORCPT
+        id S2392046AbfJRWNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:13:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42806 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:13:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389556AbfJRWKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:10:00 -0400
+        id S2389518AbfJRWJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:09:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7DE622488;
-        Fri, 18 Oct 2019 22:09:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A623C22477;
+        Fri, 18 Oct 2019 22:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436599;
-        bh=oHLDuTqhmbIyiPId9IHh+J6glKoYTbZKPH9cV1JEMcI=;
+        s=default; t=1571436596;
+        bh=dJCFZfdjuoZfITQS5k280XeKvlJT908QEaa8PE/Dwy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HEFP8SsFf/wLOEbfmbdEHfq5FUg7qsbdwO6QX4NqIRmvOesRLy7fAOzGOFMUH+hBp
-         gS6EZ+jRkGuGBrLPMO0mzjOOPGxKvx/ix+s+j7u5ugfwP2CX1+ipTpAJLVa8tTjAzT
-         z9kgeZMwVdSEQIBs7Vbb2pPe864z2z2fwydZo0Oo=
+        b=BQ7P5qEeABsbrq+3P6Wg88NTdxafScgTqMZJHFQRUzCra/V55M12mtay4NL0C6mvq
+         /A10IXGScmqXKWeg8pah0W0PstMVwaOQlI83HGO35D+Za7c4tkxZO6N/zn7kNWMEIr
+         agxojRk5RxaMoG2dHSflFR5eHwOvb9o7Op36RvTw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marco Felsch <m.felsch@pengutronix.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 23/29] iio: adc: ad799x: fix probe error handling
-Date:   Fri, 18 Oct 2019 18:09:14 -0400
-Message-Id: <20191018220920.10545-23-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 21/29] fs: ocfs2: fix a possible null-pointer dereference in ocfs2_write_end_nolock()
+Date:   Fri, 18 Oct 2019 18:09:12 -0400
+Message-Id: <20191018220920.10545-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220920.10545-1-sashal@kernel.org>
 References: <20191018220920.10545-1-sashal@kernel.org>
@@ -61,41 +66,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit c62dd44901cfff12acc5792bf3d2dec20bcaf392 ]
+[ Upstream commit 583fee3e12df0e6f1f66f063b989d8e7fed0e65a ]
 
-Since commit 0f7ddcc1bff1 ("iio:adc:ad799x: Write default config on probe
-and reset alert status on probe") the error path is wrong since it
-leaves the vref regulator on. Fix this by disabling both regulators.
+In ocfs2_write_end_nolock(), there are an if statement on lines 1976,
+2047 and 2058, to check whether handle is NULL:
 
-Fixes: 0f7ddcc1bff1 ("iio:adc:ad799x: Write default config on probe and reset alert status on probe")
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+    if (handle)
+
+When handle is NULL, it is used on line 2045:
+
+	ocfs2_update_inode_fsync_trans(handle, inode, 1);
+        oi->i_sync_tid = handle->h_transaction->t_tid;
+
+Thus, a possible null-pointer dereference may occur.
+
+To fix this bug, handle is checked before calling
+ocfs2_update_inode_fsync_trans().
+
+This bug is found by a static analysis tool STCheck written by us.
+
+Link: http://lkml.kernel.org/r/20190726033705.32307-1-baijiaju1990@gmail.com
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/ad799x.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/ocfs2/aops.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/adc/ad799x.c b/drivers/iio/adc/ad799x.c
-index 9704090b79084..cd6dbe95125b3 100644
---- a/drivers/iio/adc/ad799x.c
-+++ b/drivers/iio/adc/ad799x.c
-@@ -817,10 +817,10 @@ static int ad799x_probe(struct i2c_client *client,
- 
- 	ret = ad799x_write_config(st, st->chip_config->default_config);
- 	if (ret < 0)
--		goto error_disable_reg;
-+		goto error_disable_vref;
- 	ret = ad799x_read_config(st);
- 	if (ret < 0)
--		goto error_disable_reg;
-+		goto error_disable_vref;
- 	st->config = ret;
- 
- 	ret = iio_triggered_buffer_setup(indio_dev, NULL,
+diff --git a/fs/ocfs2/aops.c b/fs/ocfs2/aops.c
+index 7c20a23c0ed7d..6ad76397b31de 100644
+--- a/fs/ocfs2/aops.c
++++ b/fs/ocfs2/aops.c
+@@ -2046,7 +2046,8 @@ int ocfs2_write_end_nolock(struct address_space *mapping,
+ 		inode->i_mtime = inode->i_ctime = current_time(inode);
+ 		di->i_mtime = di->i_ctime = cpu_to_le64(inode->i_mtime.tv_sec);
+ 		di->i_mtime_nsec = di->i_ctime_nsec = cpu_to_le32(inode->i_mtime.tv_nsec);
+-		ocfs2_update_inode_fsync_trans(handle, inode, 1);
++		if (handle)
++			ocfs2_update_inode_fsync_trans(handle, inode, 1);
+ 	}
+ 	if (handle)
+ 		ocfs2_journal_dirty(handle, wc->w_di_bh);
 -- 
 2.20.1
 
