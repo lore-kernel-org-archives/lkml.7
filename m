@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE01CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6490BCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 978D0222CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38C3E222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:11:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NSG0XzUq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sClupJ7s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389333AbfJRQLW (ORCPT
+        id S2502615AbfJRQLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:11:22 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:45760 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502568AbfJRQLU (ORCPT
+        Fri, 18 Oct 2019 12:11:24 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:39685 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502587AbfJRQLV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:11:20 -0400
-Received: by mail-pg1-f202.google.com with SMTP id v10so4587377pge.12
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:11:18 -0700 (PDT)
+        Fri, 18 Oct 2019 12:11:21 -0400
+Received: by mail-pg1-f201.google.com with SMTP id m20so4589743pgv.6
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:11:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=fICIDxFYsM9a9Ff5jMCA2HNdKL4X15DyG8HPfHVUdX4=;
-        b=NSG0XzUqxk2+63gPHHlONBw5Q4nS2y744Eo1rGIDmimGan5ZvchrFconEmIXiVv79S
-         0SiQYCOcKQncsgO+OjD18O6E+2SSMSAk43T8F4SPII5CwYW5Z2DpjcXEvu90lABe0T7d
-         54pDxZVczkH9+W6UKw5BGz/1SAtjmaCTeJP9IigFW7/8iSrzVXwx+vaItOIgEL2NFpn8
-         PCwsy3taMFVH2Is9tZDbWuOIcT/YBmZIupi5pgO/dSJwAnrHQ+9LRhx/mZ3aQl1rS+Hn
-         PYSAfr/54k98LWSAkxuS0/kkDyQ70rjvHFcfVRO0CwmtYXN/ED4JgjMIrSHGnZhfeFY/
-         nwUQ==
+        bh=K1ZhNofnBR/XSzepuNm2GXj6CjTITzvlb/GIVw7T7D4=;
+        b=sClupJ7s2vyir/7TQw4u1wskJ40f2afok9L62g3bdETWOSrvPIoJbt2TUVhCDZl2Ll
+         jSD1Pe1pU7jtmC4+A/khfQCqIGy7o+x3Glnf1WXjzHqx9iAelj7PV0FH9T6XgXbpgXPr
+         QmyFwYa7yB+qCqYypJwWf511MkYFKNAU+aHSUjTgdgKc/LGoN7I1EdcPjslTcJn6Nsnh
+         zpS9sYd2YqSiWR32qZg1jO6XyvMv14Qmysa4U0MKWEQOtGZOZsv14zS5QNAzrCYTZwhv
+         xDZy49ncrITpJUlYkIIuqsGVZMQ4LMcDek2uuDnjzpOLCvDTsilhXvrJN1MvHxPElje/
+         wDsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=fICIDxFYsM9a9Ff5jMCA2HNdKL4X15DyG8HPfHVUdX4=;
-        b=H5LCf2d2tljOcvrheMPApmwb9z5+XGKfhBo3Jh3Q6vyaqJwxgtAgt0gosf7idjjDm7
-         YYqcA2wJ1UXjUS7zlNtlNYs2tQmlCHSQ/RKZKBAJZoMnprP+MO98rh1Gf5QlgBgUsurD
-         CTD4ErHSJsdSKrSSixBHmJZI04XAYHtlMO7WgW71Yy3RPCF5wI+7mnSnQhzbjEhCBxSN
-         tspeoB8ErdjLQJnldxn+WUV39/toYDid309qD3tUizE3RIz+zKDLrbhcKKJqHJC++6de
-         oB5x1ccnts3jRwbfUZceaFgFYWCdhKiODwmPYdSIt5QDngKd98YsG0eedxQ1bbeDzhVF
-         z/hg==
-X-Gm-Message-State: APjAAAVq2lsazAPmtW4xP24Ep10cIiv2s6EBe9l58NFg2AOEA9CqyA/B
-        7zaTJg+bj8RF2cmIHxo4d7vjbvBnYmv8o44BxUU=
-X-Google-Smtp-Source: APXvYqy2IPmHgVzSQFLWH/l27Qtv31FYTpjwXUbB8shECHuqpnU1nIwwQdz+u4oVI6rxTnp6d2Le2ZcdmFuior/slJo=
-X-Received: by 2002:a65:6092:: with SMTP id t18mr11012516pgu.418.1571415077997;
- Fri, 18 Oct 2019 09:11:17 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 09:10:26 -0700
+        bh=K1ZhNofnBR/XSzepuNm2GXj6CjTITzvlb/GIVw7T7D4=;
+        b=Ejrl83SqObZiKnxhJmhY8QnbCD61uAFHFJxnUPkCvEFBV/q0efm41Y+7BrK+PsGrqE
+         ipx5F2pzh76dT8S8/2Srm38IO4K75cjTiW1yDK6EtM4aUWdpVZWgBKmxQkiEB8DCcqh7
+         z3QMiWIgNImGtj+7/tQ7vL4Ej6WGxwwZMEt1QeGa1UiyT795uQE7UUP5hyi33tfqMD+1
+         e0C59DbtM+AcEVEtr6Ngis0bTd9kKAU/2Dq1ioRrHyGUr82DNPhAnFr4cfRmnnF8cG4v
+         jndQH8nr8mn61ATvTutBe16wx9m+O82EI7ta6RAT5DVXo17c9rjLqOH+JKdQcd+NlIOn
+         wG2A==
+X-Gm-Message-State: APjAAAUMY2Wv8zjfpHVzv49tvPOmA2Pn6URnQWkXD02ryhRl95j2c7TB
+        iY3IczMZZwObCKrs7HlCWzbEpfHW9fIJSheIMZE=
+X-Google-Smtp-Source: APXvYqxQZgJ8+dUeSHjL/X4r9AY12JB0O/dDMacaQgZEGqyCDds26CgWDH7ZPg+xHY8lSTXkA3/VdzbOvvEqn3IOjDM=
+X-Received: by 2002:a63:eb52:: with SMTP id b18mr10634742pgk.205.1571415080458;
+ Fri, 18 Oct 2019 09:11:20 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 09:10:27 -0700
 In-Reply-To: <20191018161033.261971-1-samitolvanen@google.com>
-Message-Id: <20191018161033.261971-12-samitolvanen@google.com>
+Message-Id: <20191018161033.261971-13-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-Subject: [PATCH 11/18] kprobes: disable kretprobes with SCS
+Subject: [PATCH 12/18] arm64: reserve x18 only with Shadow Call Stack
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -79,28 +79,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With CONFIG_KRETPROBES, function return addresses are modified to
-redirect control flow to kretprobe_trampoline. This is incompatible with
-return address protection.
+Only reserve x18 with CONFIG_SHADOW_CALL_STACK. Note that all external
+kernel modules must also have x18 reserved if the kernel uses SCS.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/Makefile | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index a222adda8130..4646e3b34925 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -171,7 +171,7 @@ config ARCH_USE_BUILTIN_BSWAP
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index 1c7b276bc7c5..ef76101201b2 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -55,7 +55,7 @@ endif
  
- config KRETPROBES
- 	def_bool y
--	depends on KPROBES && HAVE_KRETPROBES
-+	depends on KPROBES && HAVE_KRETPROBES && ROP_PROTECTION_NONE
+ KBUILD_CFLAGS	+= -mgeneral-regs-only $(lseinstr) $(brokengasinst)	\
+ 		   $(compat_vdso) $(cc_has_k_constraint)
+-KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables -ffixed-x18
++KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
+ KBUILD_CFLAGS	+= $(call cc-disable-warning, psabi)
+ KBUILD_AFLAGS	+= $(lseinstr) $(brokengasinst) $(compat_vdso)
  
- config USER_RETURN_NOTIFIER
- 	bool
+@@ -72,6 +72,10 @@ stack_protector_prepare: prepare0
+ 					include/generated/asm-offsets.h))
+ endif
+ 
++ifeq ($(CONFIG_SHADOW_CALL_STACK), y)
++KBUILD_CFLAGS	+= -ffixed-x18
++endif
++
+ ifeq ($(CONFIG_CPU_BIG_ENDIAN), y)
+ KBUILD_CPPFLAGS	+= -mbig-endian
+ CHECKFLAGS	+= -D__AARCH64EB__
 -- 
 2.23.0.866.gb869b98d4c-goog
 
