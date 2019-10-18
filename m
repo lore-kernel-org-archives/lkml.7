@@ -2,145 +2,144 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EEC0CA9EA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71342CA9EA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB62621D80
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4422521D80
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:22:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="pleO0mhH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TQ3ny8Ae"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504354AbfJRGUc (ORCPT
+        id S2504370AbfJRGWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 02:20:32 -0400
-Received: from mail-eopbgr810072.outbound.protection.outlook.com ([40.107.81.72]:23639
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2504133AbfJRGUc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 02:20:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZVu4PIVrUMvpsmjPdQUhGbHdQlAxuGC5tzTB0Wrp6vsjHQg8iw2/c419reIvuhefBuvZphOg33NdbT9KQX0/tErLeE+F+8624Llo1vdo1AJScMm7bqfIfmU+k5rh74QhZCAq45M+kjJdb0PiR+4d/WfOKdL/K0PuyuWJrhUCvDMtDdyyiyJxQFwXoEF1f7z12FBCEzWDHjfxVL3nDD0qeB++idvt+dDT5PNgCz1mM6Q70F1uLNkSc4aqwKzA5o66CgQF8ERNRi4h/Y23R69jmsry8/s+n2Qwzm+HeTtqiibIwLk9Wo1LG0Oaw8vt3pYxpxDUjOPDj9RDCbR5cRxVow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rJMnugmn9lY1GyY1L9mzZ+Gx9W/C+bvit5AS/LW60NM=;
- b=IbupMxOzvFKOx5lO8KQOcep2vNZqGtqwjhDLtiiz9EYW1GXanlu2iiFjYzEW7fPoZjtpQlOvgFnSsdAgzrrude1NDjVoVAncBIPfwS1y8o4jI2jjBJ06Mu/DeGhmrzEA+oF/6nmbh6iHehJdNgZ4+XXc01zCcWpUByl9j3xJnatcsfUIQHnLpOUrO0hJ7GDyq0D0j4Azwwho7Exz/5XYyk8IZET9/bmrVjRkX67nYvZ3eEULiJMAjg8ld2b0R6Wxcw1R8UM+MtS69w1KenZcspbuxXILu9laEXqLeZFA0mIappM5XvdC2Gzrj4NA2MHDsOf3txjicKGtRRwkX9NFVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=sifive.com smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Fri, 18 Oct 2019 02:22:05 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43835 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392981AbfJRGWE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 02:22:04 -0400
+Received: by mail-ot1-f66.google.com with SMTP id o44so4023247ota.10
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 23:22:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rJMnugmn9lY1GyY1L9mzZ+Gx9W/C+bvit5AS/LW60NM=;
- b=pleO0mhHcKFl9Th7N3TCUz0ptwepnbvvtkZswBPzStbrgofXXtdEpKB2u7u3ldPaprhUmTiLWOrOikG4/9yCzjE1vDMMQQZiLAGCO399vDrRAacTf0gouB1yi0oIxO/Xa9jTxXUBOO7V6IDiWjt+Jt5R8FBsSxZvjs2tEeOnsGw=
-Received: from SN4PR0201CA0002.namprd02.prod.outlook.com
- (2603:10b6:803:2b::12) by BL0PR02MB3700.namprd02.prod.outlook.com
- (2603:10b6:207:4a::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.16; Fri, 18 Oct
- 2019 06:20:28 +0000
-Received: from SN1NAM02FT034.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::200) by SN4PR0201CA0002.outlook.office365.com
- (2603:10b6:803:2b::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.18 via Frontend
- Transport; Fri, 18 Oct 2019 06:20:28 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; sifive.com; dkim=none (message not signed)
- header.d=none;sifive.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT034.mail.protection.outlook.com (10.152.72.141) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2367.14
- via Frontend Transport; Fri, 18 Oct 2019 06:20:28 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1iLLch-0004D7-NI; Thu, 17 Oct 2019 23:20:27 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1iLLcc-0002dq-JT; Thu, 17 Oct 2019 23:20:22 -0700
-Received: from xsj-pvapsmtp01 (smtp.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x9I6KG4u017760;
-        Thu, 17 Oct 2019 23:20:17 -0700
-Received: from [172.30.17.123]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1iLLcW-0002HF-Ed; Thu, 17 Oct 2019 23:20:16 -0700
-Subject: Re: PCI/MSI: Remove the PCI_MSI_IRQ_DOMAIN architecture whitelist
-To:     Palmer Dabbelt <palmer@sifive.com>,
-        Christoph Hellwig <hch@infradead.org>, michal.simek@xilinx.com,
-        helgaas@kernel.org
-Cc:     tony.luck@intel.com, fenghua.yu@intel.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, bhelgaas@google.com, will@kernel.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        kstewart@linuxfoundation.org, pbonzini@redhat.com,
-        firoz.khan@linaro.org, yamada.masahiro@socionext.com,
-        longman@redhat.com, mingo@kernel.org, peterz@infradead.org,
-        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20191017181937.7004-1-palmer@sifive.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <995f625b-1f56-6d97-ba99-9a4298e9dd37@xilinx.com>
-Date:   Fri, 18 Oct 2019 08:20:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UkjADtH3OoY5PrcZf8XHmujRh7ZLWGmK8dpbgj0S1eU=;
+        b=TQ3ny8Ae1igp5m/vKmUDvMb4mX4I6kYGW4WLCXlpHo5hjFym6sUlALfnk9H0K0xuZw
+         vxntYIkvzjqSKTwAXiTzTZnIEyP4s30APVsVmNv2qbF+6NVR4v+/w3djWQdk1IjXooOj
+         byLtBC067wmsJzz2JSOUEIYd73PRAERcbELduLBIHJXs0RVC1OJSejk8tIMkmtMeeY3J
+         flFsZmb0hzwMKhSqc1Y2S1qkpyohRMMFbrKyeBMeyfdeegC5eLwi+qffuYiEuZaWE/iY
+         nxYCxGqa/zScFUKxexHNhjf0pr4Whqqwj1CL70BNoBVs7T+B0FyIigYwib10DOPIWdpu
+         6p4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UkjADtH3OoY5PrcZf8XHmujRh7ZLWGmK8dpbgj0S1eU=;
+        b=kpIWgqM1V9IrwvytIQWzSmEvLrV/EZKvOpX7Xn9nz3F9mtNtPMZ+3dMmDf6ao6zui0
+         x9DgZktXa4CcrbA0iWynZJVxovXk0OPv3unYPH4dvG1dPE31W3OqPvlCjPuBdyDu7j5j
+         vHxloclYLkY+1VLHYflUMYtsqRzWJyakTH7Grn8WCxXtqLUoKGDr1vrU1JJEHhPyVhjs
+         OVSk1UB+NSLhTN9b5rwhPVFeuAg3cPzlhTLJb97n6gLk/U1M6QjW+R2J8lc6lEuHcLgl
+         2p0+Q2HOCAgfbDBB9NlZb7IookaVMWrxNrIz0VG4MRqwD2i+uk3903/dkWm+7YwuX28h
+         wezw==
+X-Gm-Message-State: APjAAAU/I4+2MtLDfz63DeRt9qQaNFdZujpt5IqpuPv+dOolhF7EU0EC
+        Jv7gD7P/TtL5e0JwpBdeicsQS6yoWUy8ZIZY3jFT3Q==
+X-Google-Smtp-Source: APXvYqwR7wbX4kwVFy183PKeDVFgPtoHxkXUCA+0LYtY5cckYxlTVfALoIDf9uoz66/ikzHu7GzRuAckqDtoyy0C35M=
+X-Received: by 2002:a9d:3e17:: with SMTP id a23mr6485132otd.105.1571379723521;
+ Thu, 17 Oct 2019 23:22:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191017181937.7004-1-palmer@sifive.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(346002)(39860400002)(189003)(199004)(6246003)(11346002)(2616005)(126002)(5660300002)(65806001)(186003)(65956001)(8936002)(229853002)(23676004)(31696002)(446003)(26005)(76176011)(426003)(336012)(2486003)(9786002)(476003)(966005)(478600001)(486006)(44832011)(31686004)(230700001)(7416002)(4326008)(2906002)(106002)(47776003)(305945005)(50466002)(356004)(6666004)(58126008)(4744005)(110136005)(36386004)(70206006)(316002)(70586007)(8676002)(81166006)(81156014)(6306002)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR02MB3700;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a93dbf3d-8800-4096-75d7-08d753934536
-X-MS-TrafficTypeDiagnostic: BL0PR02MB3700:
-X-MS-Exchange-PUrlCount: 1
-X-Microsoft-Antispam-PRVS: <BL0PR02MB37005E1A6C767D4C8C55E0E0C66C0@BL0PR02MB3700.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 01949FE337
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: dcMFSbqHT+mqW0iGLxROaHPNSIofx+sEzp7jYBtiR919pjUprvMVY7n3oQYpmAXV11YAXKthQdL9T6ZJVk+RxFy4c2nal8Zzr9S+Plh0pBzqnnpZ/TdniJM4VagLL8nLNGsSM+IB7x92Q/GK7y3XI578GXsC2y2N417uqkKkUMRbY++wL3gGMxGGhLw0u1u3DumQxZ7s1I5MAxiy+MrUXXsLk7g/TnFMjPsACUUuuwmhq0yxvV5+vAuKPB/UJLi35tj9FfNhlKPVnEvO54C1cOYW8bgfZCp//W6zI2hUIklDWBHrcKFmT/sDg4x6rXld35WbMLf5MCsQFRlU4VJGDRvRMW9ugplG7R3i6RlWD3qLYmHgtuscNebHqJzrNrCVcNBSExPyoNeV8NKUsWS6zodZvIH07oNxo4OWL9xsSWHXHink7DnzSLA7skZPcfjL8yVk9HS+245/QxVkkQycpA==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2019 06:20:28.1578
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a93dbf3d-8800-4096-75d7-08d753934536
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR02MB3700
+References: <20191018052323.21659-1-john.stultz@linaro.org>
+In-Reply-To: <20191018052323.21659-1-john.stultz@linaro.org>
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+Date:   Fri, 18 Oct 2019 11:51:51 +0530
+Message-ID: <CAO_48GGCgtA4U1CU6KV7N2m=RrwAiKgAPYghmYwirM9RJU4YTA@mail.gmail.com>
+Subject: Re: [PATCH v12 0/5] DMA-BUF Heaps (destaging ION)
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Hillf Danton <hdanton@sina.com>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi John, Andrews,
 
-On 17. 10. 19 20:19, Palmer Dabbelt wrote:
-> This came up in the context of the microblaze port, where a patch was
-> recently posted to extend the whitelist.
+On Fri, 18 Oct 2019 at 10:53, John Stultz <john.stultz@linaro.org> wrote:
+>
+> Andrew brought up a reasonable concern with the CMA heap
+> enumeration in the previous patch set, and I had a few other
+> minor cleanups to add, so here is yet another pass at the
+> dma-buf heaps patchset Andrew and I have been working on which
+> tries to destage a fair chunk of ION functionality.
 
-I hoped you were aware about this discussion we have with Christoph.
-https://lkml.org/lkml/2019/10/8/682
+Thanks much for all your hardwork in getting these patches ready. It
+looks like a sane approach to me to first just add the default cma
+heap and work out the selection of other heaps later on.
 
-It means 1/3 and 2/3 should be replaced by mandatory-y and I expect
-msi.h can be removed from architecture Kbuild too.
+I will wait out this weekend for any objections from others, and if I
+hear none, will merge this series on Monday.
+Hope that sounds reasonable?
 
-Thanks,
-Michal
+>
+> The patchset implements per-heap devices which can be opened
+> directly and then an ioctl is used to allocate a dmabuf from the
+> heap.
+>
+> The interface is similar, but much simpler then IONs, only
+> providing an ALLOC ioctl.
+>
+> Also, I've provided relatively simple system and cma heaps.
+>
+> I've booted and tested these patches with AOSP on the HiKey960
+> using the kernel tree here:
+>   https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=dev/dma-buf-heap
+>
+> And the userspace changes here:
+>   https://android-review.googlesource.com/c/device/linaro/hikey/+/909436
+>
+> Compared to ION, this patchset is missing the system-contig,
+> carveout and chunk heaps, as I don't have a device that uses
+> those, so I'm unable to do much useful validation there.
+> Additionally we have no upstream users of chunk or carveout,
+> and the system-contig has been deprecated in the common/andoid-*
+> kernels, so this should be ok.
+>
+> I've also removed the stats accounting, since any such
+> accounting should be implemented by dma-buf core or the heaps
+> themselves.
+>
+> New in v12:
+> * To address Andrew's concern about adding all CMA areas, the
+>   CMA heap only adds the default CMA region for now.
+> * Minor cleanups and prep for loading heaps from modules
+> * I have patches to add other specified CMA regions, as well as
+>   loading heaps from modules in my WIP tree, which I will submit
+>   once this set is queued, here:
+>     https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=dev/dma-buf-heap-WIP
+>
+> thanks
+> -john
 
+<snip>
 
+Best,
+Sumit.
