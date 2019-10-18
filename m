@@ -2,157 +2,378 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFF6CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C99FCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5361E20640
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42F7B20640
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:14:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="EkRnUCZg";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="RAoCaZc5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JWxYvpob"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502430AbfJRSMn (ORCPT
+        id S2502464AbfJRSOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:12:43 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:25576 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726534AbfJRSMm (ORCPT
+        Fri, 18 Oct 2019 14:14:10 -0400
+Received: from mail-yw1-f74.google.com ([209.85.161.74]:37194 "EHLO
+        mail-yw1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbfJRSOK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:12:42 -0400
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9II5Yfn029873;
-        Fri, 18 Oct 2019 11:11:10 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=OuJEf/Kdrpy+drj0OASDzsUBikIKeeeLgsqYVUboVvE=;
- b=EkRnUCZg//COOzPJmHMUs4Yx1znEhkLfFGN1y7ayUMQnB2Z6Mj3G5HeM4bDWOPHDfuiV
- Y7/KzdjDsDwDVrnODzNtIkppPw33eWLq7UYGd1Ar2BTcSVFdEBYOXGQB7cmR+A+EP0Z/
- tkdMjXZO4L+FN0SJ+3iWwFr7ZYo9GARZVmE= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2vqgss8h3y-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 18 Oct 2019 11:11:09 -0700
-Received: from ash-exhub201.TheFacebook.com (2620:10d:c0a8:83::7) by
- ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 18 Oct 2019 11:11:09 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Fri, 18 Oct 2019 11:11:09 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V897sQHdTovn20wr1xMKt21fKowQOr1+JLS8J2Mp5tivafQntV+obhJGAor4hHJuWjrSsHg12EaGds34Tn8K9GrCZPPBsybZdoxMm1caYYx9F2XbkWRb6FXAZVDj+USUhAK4D66C5o2G23oW1p6mUB+NKbJUdRyG8ap51eSjwnUYhaKbHxss1xqC8kiJ/QdfNJrBZNUueaL49231zM2FhkOCpwZnq/Ets3gbIHDsRd4mbkt1Bf/JMtk2/Kvf61EH9aXWq16fNO21n2MAqO0lZwK4Dd9k3f0tpRlxP8AtHBd5JyEkVDY9jzhORKyOJT0TszypjsXApBH11l28X9ZThw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OuJEf/Kdrpy+drj0OASDzsUBikIKeeeLgsqYVUboVvE=;
- b=TZlo2QP31Fxepf2onsqLF80uZhpuRtUaiWSPUrAIIuLHzzhjO64SvYNxaNBS+e94N5YZrAfj+cZ9pNpemUpCvBS+sCkp1HXf1/xb09IOG11WqFhPv8niCo+oZ9dSzzx0dsgF8A4DpESXjdCICN4/huRRWAQc+iTvyroKEoXl+g9X4FRVxj9FiKHj9cuaNREW1YsyX//VF6JHOuk1RmVzdlwQ/cV1N74PGWcOec2Z8Mk5C40MRkUyxfVUYoI2p24DZd0ymLc2dYdUF6BbDx9NDaG4Ya2OGHuDGDqclYlBmkJLU/nj/1Aiz4wzzH12zTOu4do62T1coW+4WopxW0/0Eg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OuJEf/Kdrpy+drj0OASDzsUBikIKeeeLgsqYVUboVvE=;
- b=RAoCaZc5YJNLKZTMHwqS17OjJUmCoSMWmvHrNUZlAzlcYnHsUxlzNcS9p13cfBWjGv/CBc2WBwS9oSRuoQL2LC4hbenBi/tBqizsegj+RjTHQHQPvzC89od7Gp1Taaqfy0QCJ6UOGj9vBXnrCdtliLHv9gGJ5MmKbptJnEwq1+Y=
-Received: from BYAPR15MB3384.namprd15.prod.outlook.com (20.179.60.27) by
- BYAPR15MB2358.namprd15.prod.outlook.com (52.135.198.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.20; Fri, 18 Oct 2019 18:11:08 +0000
-Received: from BYAPR15MB3384.namprd15.prod.outlook.com
- ([fe80::b92c:ebd2:58dc:6b8d]) by BYAPR15MB3384.namprd15.prod.outlook.com
- ([fe80::b92c:ebd2:58dc:6b8d%5]) with mapi id 15.20.2347.024; Fri, 18 Oct 2019
- 18:11:07 +0000
-From:   Yonghong Song <yhs@fb.com>
-To:     YueHaibing <yuehaibing@huawei.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH bpf-next] bpf: Fix build error without CONFIG_NET
-Thread-Topic: [PATCH bpf-next] bpf: Fix build error without CONFIG_NET
-Thread-Index: AQHVhZNJsykV/X9sw02Jid8GrOHS3adgs6eA
-Date:   Fri, 18 Oct 2019 18:11:07 +0000
-Message-ID: <ee9a06ec-33a0-3b39-92d8-21bd86261cc2@fb.com>
-References: <20191018090344.26936-1-yuehaibing@huawei.com>
-In-Reply-To: <20191018090344.26936-1-yuehaibing@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MW2PR2101CA0007.namprd21.prod.outlook.com
- (2603:10b6:302:1::20) To BYAPR15MB3384.namprd15.prod.outlook.com
- (2603:10b6:a03:112::27)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::3:3455]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ab123800-1ee3-47d6-8cb4-08d753f68c24
-x-ms-traffictypediagnostic: BYAPR15MB2358:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR15MB235899FE6290E0A8E2BC547FD36C0@BYAPR15MB2358.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:321;
-x-forefront-prvs: 01949FE337
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(346002)(376002)(39860400002)(366004)(189003)(199004)(66476007)(66446008)(66556008)(6512007)(6636002)(66946007)(64756008)(6246003)(4326008)(31696002)(86362001)(2906002)(2501003)(6116002)(6486002)(6436002)(305945005)(2201001)(7736002)(102836004)(53546011)(6506007)(386003)(229853002)(256004)(36756003)(186003)(54906003)(478600001)(110136005)(52116002)(14454004)(76176011)(99286004)(71190400001)(316002)(71200400001)(46003)(11346002)(31686004)(486006)(476003)(446003)(2616005)(8936002)(81166006)(81156014)(5660300002)(25786009)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2358;H:BYAPR15MB3384.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 74dTmG0aAS/tSWEcLv9g1jCLztzHUSkWAwWFgO1OScCuNMBhWZeQBZ8KGORs9z27wrVbkqOQlxVAQpgS2NXiUQ7+ZHYWjGzb6j2RAVYhN5n6p11zMNHVyffMlVhbHazjGxDieQ6MmvdfV3QJUm7cSFmxoO9ZDInNNnaZo012w8eGwA//uI9sjjkIic0z+dhDh8nHk1w5t3bGR1gOCjiqNulK2qSxAa3plh1axwlu/qfLb2LzhnZdBAjUGQAgazec47L4qHVl3pWg91TFEMwQDVJrnibzO3WjE5Ml/Dq6xxx8t9yhoYKYjYHchdlK3DE6/B61ljIVWSdxQOA416te+Zf84/IWF+oC1otlZfa6RuCFNOiyve4BFlP65bsH7Hu5Lweb0qmnfP20HxTXekcwBGgDWbQ0C0pVhUcf03K1w8t/RhV4jCJbGF1vDp+c1JR+
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E3DA4722A3443A48A37EC823670766CE@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: ab123800-1ee3-47d6-8cb4-08d753f68c24
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Oct 2019 18:11:07.8138
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: x1IJon7//U0P6o+j2uZwfKU6i641In1mgxtSjgqG7Z4WObdURiabkUGQbp9Z40fW
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2358
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-18_04:2019-10-18,2019-10-18 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 clxscore=1011 spamscore=0
- lowpriorityscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0
- suspectscore=0 impostorscore=0 adultscore=0 phishscore=0 bulkscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910180164
-X-FB-Internal: deliver
+        Fri, 18 Oct 2019 14:14:10 -0400
+Received: by mail-yw1-f74.google.com with SMTP id w205so1233470ywc.4
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 11:14:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=IaFQRFoIKxbV+3Wiy1V75DzJYOA/bGVuQra7qnEhMcY=;
+        b=JWxYvpobrwgL0pkXSKTJ4CsepjAxBY+VeNnXG55aHZfRGx104crk0mITbxGlM5JKod
+         FpPCvBTLFCBpJRb8dlKQ476CEpHlWvG/hEEHr2rxvisA8bvOg2MXXeJsAV/6gH6AnE15
+         fhs4smEtZ43z89Q2XqQEdKZJcMKhGSqpk9fTZfkMclqdp7+HoqHzYbeS1pCE1zDzqPD9
+         c02JtxSqBRJAnrZetqxoQBKDFZSS+zpbf3pvL00TiG+8EorcEWx8UOFv2pE42Ev+goQv
+         cuQEDSnZ15UGJKp3PCojLGtscYMsdBpaEj2ao8mlpkL+k1GsYlG+O2hlRUs0255ZTMpC
+         kFTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=IaFQRFoIKxbV+3Wiy1V75DzJYOA/bGVuQra7qnEhMcY=;
+        b=XgqdzveKuTHsodF0zz1aeQDRMEbaKavowaMirDywvvCYiI+Lm5Yd7Rfd5yu9NnXwEp
+         4cpjNfcDm4yigT4p9Z7c4bup/j1Qt6ehGcTQAgigeCHTQ6321yS7/4QmqBAYOlVkT24y
+         +ToGWRk3jTyJVtPrCx8lus0UG51J4jtZYWh4m1AqVIoa4C6KGBiDpkXwuTbGRpxUHUa7
+         rbgfC6bj59xOEhHD3QEyLVfYUSdvbd7z9fE2emwAd4QeZdHaBfUwEIP/aXXVS0t57Z1h
+         UZqms8+2w/Uu5zcmfd795nh12pqNquSdNw74SOhlVRGLWKAuZAI/75fG3TOgqxgkR00K
+         jQcw==
+X-Gm-Message-State: APjAAAWZuj5+yL22iDxjubKC55k41TuoKcFESNUk6qylpx9W9isMqdKj
+        f5OlMeIZqw3e41dOamQfwmTHbW86vQ==
+X-Google-Smtp-Source: APXvYqzt8DNJJd9Eu6sisLImGf22fQmuBo9KAFOjGRAf+2nFwozhnFGV0lfwRGc1JpssCfpBwbwLVj5Ny0w=
+X-Received: by 2002:a25:50c8:: with SMTP id e191mr7436750ybb.152.1571422448526;
+ Fri, 18 Oct 2019 11:14:08 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 11:14:03 -0700
+Message-Id: <20191018181403.106836-1-yabinc@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
+Subject: [PATCH v4] coresight: Serialize enabling/disabling a link device.
+From:   Yabin Cui <yabinc@google.com>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Yabin Cui <yabinc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDEwLzE4LzE5IDI6MDMgQU0sIFl1ZUhhaWJpbmcgd3JvdGU6DQo+IElmIENPTkZJR19O
-RVQgaXMgbiwgYnVpbGRpbmcgZmFpbHM6DQo+IA0KPiBrZXJuZWwvdHJhY2UvYnBmX3RyYWNlLm86
-IEluIGZ1bmN0aW9uIGByYXdfdHBfcHJvZ19mdW5jX3Byb3RvJzoNCj4gYnBmX3RyYWNlLmM6KC50
-ZXh0KzB4MWEzNCk6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8gYGJwZl9za2Jfb3V0cHV0X3Byb3Rv
-Jw0KPiANCj4gV3JhcCBpdCBpbnRvIGEgI2lmZGVmIHRvIGZpeCB0aGlzLg0KPiANCj4gUmVwb3J0
-ZWQtYnk6IEh1bGsgUm9ib3QgPGh1bGtjaUBodWF3ZWkuY29tPg0KPiBGaXhlczogYTc2NThlMWE0
-MTY0ICgiYnBmOiBDaGVjayB0eXBlcyBvZiBhcmd1bWVudHMgcGFzc2VkIGludG8gaGVscGVycyIp
-DQo+IFNpZ25lZC1vZmYtYnk6IFl1ZUhhaWJpbmcgPHl1ZWhhaWJpbmdAaHVhd2VpLmNvbT4NCg0K
-QWNrZWQtYnk6IFlvbmdob25nIFNvbmcgPHloc0BmYi5jb20+DQoNCj4gLS0tDQo+ICAga2VybmVs
-L3RyYWNlL2JwZl90cmFjZS5jIHwgMiArKw0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlv
-bnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9rZXJuZWwvdHJhY2UvYnBmX3RyYWNlLmMgYi9rZXJu
-ZWwvdHJhY2UvYnBmX3RyYWNlLmMNCj4gaW5kZXggNTJmN2U5ZC4uYzMyNDA4OSAxMDA2NDQNCj4g
-LS0tIGEva2VybmVsL3RyYWNlL2JwZl90cmFjZS5jDQo+ICsrKyBiL2tlcm5lbC90cmFjZS9icGZf
-dHJhY2UuYw0KPiBAQCAtMTA1NSw4ICsxMDU1LDEwIEBAIHJhd190cF9wcm9nX2Z1bmNfcHJvdG8o
-ZW51bSBicGZfZnVuY19pZCBmdW5jX2lkLCBjb25zdCBzdHJ1Y3QgYnBmX3Byb2cgKnByb2cpDQo+
-ICAgCXN3aXRjaCAoZnVuY19pZCkgew0KPiAgIAljYXNlIEJQRl9GVU5DX3BlcmZfZXZlbnRfb3V0
-cHV0Og0KPiAgIAkJcmV0dXJuICZicGZfcGVyZl9ldmVudF9vdXRwdXRfcHJvdG9fcmF3X3RwOw0K
-PiArI2lmZGVmIENPTkZJR19ORVQNCj4gICAJY2FzZSBCUEZfRlVOQ19za2Jfb3V0cHV0Og0KPiAg
-IAkJcmV0dXJuICZicGZfc2tiX291dHB1dF9wcm90bzsNCj4gKyNlbmRpZg0KPiAgIAljYXNlIEJQ
-Rl9GVU5DX2dldF9zdGFja2lkOg0KPiAgIAkJcmV0dXJuICZicGZfZ2V0X3N0YWNraWRfcHJvdG9f
-cmF3X3RwOw0KPiAgIAljYXNlIEJQRl9GVU5DX2dldF9zdGFjazoNCj4gDQo=
+When tracing etm data of multiple threads on multiple cpus through perf
+interface, some link devices are shared between paths of different cpus.
+It creates race conditions when different cpus wants to enable/disable
+the same link device at the same time.
+
+Example 1:
+Two cpus want to enable different ports of a coresight funnel, thus
+calling the funnel enable operation at the same time. But the funnel
+enable operation isn't reentrantable.
+
+Example 2:
+For an enabled coresight dynamic replicator with refcnt=1, one cpu wants
+to disable it, while another cpu wants to enable it. Ideally we still have
+an enabled replicator with refcnt=1 at the end. But in reality the result
+is uncertain.
+
+Since coresight devices claim themselves when enabled for self-hosted
+usage, the race conditions above usually make the link devices not usable
+after many cycles.
+
+To fix the race conditions, this patch uses spinlocks to serialize
+enabling/disabling link devices.
+
+Fixes: a06ae8609b3d ("coresight: add CoreSight core layer framework")
+Signed-off-by: Yabin Cui <yabinc@google.com>
+---
+
+v3 -> v4: moved lock from coresight_enable/disable_link() to
+enable/disable functions of each link device.
+
+I also removed lock protection of csdev->enable in v3. Because that
+needs to move csdev->enable inside the enable/disable functions of
+each link device. That's much effort with almost no benefits.
+csdev->enable seems only used for source devices in sysfs interface.
+
+---
+ .../hwtracing/coresight/coresight-funnel.c    | 29 ++++++++----
+ .../coresight/coresight-replicator.c          | 31 +++++++++----
+ .../hwtracing/coresight/coresight-tmc-etf.c   | 39 ++++++++--------
+ drivers/hwtracing/coresight/coresight.c       | 45 ++++++-------------
+ 4 files changed, 77 insertions(+), 67 deletions(-)
+
+diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
+index 05f7896c3a01..8326d03a0d03 100644
+--- a/drivers/hwtracing/coresight/coresight-funnel.c
++++ b/drivers/hwtracing/coresight/coresight-funnel.c
+@@ -44,6 +44,7 @@ struct funnel_drvdata {
+ 	struct clk		*atclk;
+ 	struct coresight_device	*csdev;
+ 	unsigned long		priority;
++	spinlock_t		spinlock;
+ };
+ 
+ static int dynamic_funnel_enable_hw(struct funnel_drvdata *drvdata, int port)
+@@ -76,12 +77,20 @@ static int funnel_enable(struct coresight_device *csdev, int inport,
+ {
+ 	int rc = 0;
+ 	struct funnel_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
++	unsigned long flags;
+ 
+-	if (drvdata->base)
+-		rc = dynamic_funnel_enable_hw(drvdata, inport);
++	spin_lock_irqsave(&drvdata->spinlock, flags);
++	if (atomic_inc_return(&csdev->refcnt[inport]) == 1) {
++		if (drvdata->base)
++			rc = dynamic_funnel_enable_hw(drvdata, inport);
+ 
+-	if (!rc)
+-		dev_dbg(&csdev->dev, "FUNNEL inport %d enabled\n", inport);
++		if (rc)
++			atomic_dec(&csdev->refcnt[inport]);
++		else
++			dev_dbg(&csdev->dev, "FUNNEL inport %d enabled\n",
++				inport);
++	}
++	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ 	return rc;
+ }
+ 
+@@ -107,11 +116,15 @@ static void funnel_disable(struct coresight_device *csdev, int inport,
+ 			   int outport)
+ {
+ 	struct funnel_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
++	unsigned long flags;
+ 
+-	if (drvdata->base)
+-		dynamic_funnel_disable_hw(drvdata, inport);
+-
+-	dev_dbg(&csdev->dev, "FUNNEL inport %d disabled\n", inport);
++	spin_lock_irqsave(&drvdata->spinlock, flags);
++	if (atomic_dec_return(&csdev->refcnt[inport]) == 0) {
++		if (drvdata->base)
++			dynamic_funnel_disable_hw(drvdata, inport);
++		dev_dbg(&csdev->dev, "FUNNEL inport %d disabled\n", inport);
++	}
++	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ }
+ 
+ static const struct coresight_ops_link funnel_link_ops = {
+diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
+index b29ba640eb25..427d8b8d0917 100644
+--- a/drivers/hwtracing/coresight/coresight-replicator.c
++++ b/drivers/hwtracing/coresight/coresight-replicator.c
+@@ -36,6 +36,7 @@ struct replicator_drvdata {
+ 	void __iomem		*base;
+ 	struct clk		*atclk;
+ 	struct coresight_device	*csdev;
++	spinlock_t		spinlock;
+ };
+ 
+ static void dynamic_replicator_reset(struct replicator_drvdata *drvdata)
+@@ -97,11 +98,20 @@ static int replicator_enable(struct coresight_device *csdev, int inport,
+ {
+ 	int rc = 0;
+ 	struct replicator_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+-
+-	if (drvdata->base)
+-		rc = dynamic_replicator_enable(drvdata, inport, outport);
+-	if (!rc)
+-		dev_dbg(&csdev->dev, "REPLICATOR enabled\n");
++	unsigned long flags;
++
++	spin_lock_irqsave(&drvdata->spinlock, flags);
++	if (atomic_inc_return(&csdev->refcnt[outport]) == 1) {
++		if (drvdata->base)
++			rc = dynamic_replicator_enable(drvdata, inport,
++						       outport);
++
++		if (rc)
++			atomic_dec(&csdev->refcnt[outport]);
++		else
++			dev_dbg(&csdev->dev, "REPLICATOR enabled\n");
++	}
++	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ 	return rc;
+ }
+ 
+@@ -137,10 +147,15 @@ static void replicator_disable(struct coresight_device *csdev, int inport,
+ 			       int outport)
+ {
+ 	struct replicator_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
++	unsigned long flags;
+ 
+-	if (drvdata->base)
+-		dynamic_replicator_disable(drvdata, inport, outport);
+-	dev_dbg(&csdev->dev, "REPLICATOR disabled\n");
++	spin_lock_irqsave(&drvdata->spinlock, flags);
++	if (atomic_dec_return(&csdev->refcnt[outport]) == 0) {
++		if (drvdata->base)
++			dynamic_replicator_disable(drvdata, inport, outport);
++		dev_dbg(&csdev->dev, "REPLICATOR disabled\n");
++	}
++	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ }
+ 
+ static const struct coresight_ops_link replicator_link_ops = {
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+index 807416b75ecc..cb4a38541bf8 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+@@ -334,23 +334,25 @@ static int tmc_disable_etf_sink(struct coresight_device *csdev)
+ static int tmc_enable_etf_link(struct coresight_device *csdev,
+ 			       int inport, int outport)
+ {
+-	int ret;
++	int ret = 0;
+ 	unsigned long flags;
+ 	struct tmc_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+ 
+ 	spin_lock_irqsave(&drvdata->spinlock, flags);
+-	if (drvdata->reading) {
+-		spin_unlock_irqrestore(&drvdata->spinlock, flags);
+-		return -EBUSY;
++	if (atomic_inc_return(&csdev->refcnt[0]) == 1) {
++		if (drvdata->reading)
++			ret = -EBUSY;
++		else
++			ret = tmc_etf_enable_hw(drvdata);
++
++		if (ret) {
++			atomic_dec(&csdev->refcnt[0]);
++		} else {
++			drvdata->mode = CS_MODE_SYSFS;
++			dev_dbg(&csdev->dev, "TMC-ETF enabled\n");
++		}
+ 	}
+-
+-	ret = tmc_etf_enable_hw(drvdata);
+-	if (!ret)
+-		drvdata->mode = CS_MODE_SYSFS;
+ 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+-
+-	if (!ret)
+-		dev_dbg(&csdev->dev, "TMC-ETF enabled\n");
+ 	return ret;
+ }
+ 
+@@ -361,16 +363,13 @@ static void tmc_disable_etf_link(struct coresight_device *csdev,
+ 	struct tmc_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+ 
+ 	spin_lock_irqsave(&drvdata->spinlock, flags);
+-	if (drvdata->reading) {
+-		spin_unlock_irqrestore(&drvdata->spinlock, flags);
+-		return;
+-	}
+-
+-	tmc_etf_disable_hw(drvdata);
+-	drvdata->mode = CS_MODE_DISABLED;
++	if (atomic_dec_return(&csdev->refcnt[0]) == 0)
++		if (!drvdata->reading) {
++			tmc_etf_disable_hw(drvdata);
++			drvdata->mode = CS_MODE_DISABLED;
++			dev_dbg(&csdev->dev, "TMC-ETF disabled\n");
++		}
+ 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+-
+-	dev_dbg(&csdev->dev, "TMC-ETF disabled\n");
+ }
+ 
+ static void *tmc_alloc_etf_buffer(struct coresight_device *csdev,
+diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
+index 6453c67a4d01..0bbce0d29158 100644
+--- a/drivers/hwtracing/coresight/coresight.c
++++ b/drivers/hwtracing/coresight/coresight.c
+@@ -253,9 +253,9 @@ static int coresight_enable_link(struct coresight_device *csdev,
+ 				 struct coresight_device *parent,
+ 				 struct coresight_device *child)
+ {
+-	int ret;
++	int ret = 0;
+ 	int link_subtype;
+-	int refport, inport, outport;
++	int inport, outport;
+ 
+ 	if (!parent || !child)
+ 		return -EINVAL;
+@@ -264,29 +264,17 @@ static int coresight_enable_link(struct coresight_device *csdev,
+ 	outport = coresight_find_link_outport(csdev, child);
+ 	link_subtype = csdev->subtype.link_subtype;
+ 
+-	if (link_subtype == CORESIGHT_DEV_SUBTYPE_LINK_MERG)
+-		refport = inport;
+-	else if (link_subtype == CORESIGHT_DEV_SUBTYPE_LINK_SPLIT)
+-		refport = outport;
+-	else
+-		refport = 0;
+-
+-	if (refport < 0)
+-		return refport;
++	if (link_subtype == CORESIGHT_DEV_SUBTYPE_LINK_MERG && inport < 0)
++		return inport;
++	if (link_subtype == CORESIGHT_DEV_SUBTYPE_LINK_SPLIT && outport < 0)
++		return outport;
+ 
+-	if (atomic_inc_return(&csdev->refcnt[refport]) == 1) {
+-		if (link_ops(csdev)->enable) {
+-			ret = link_ops(csdev)->enable(csdev, inport, outport);
+-			if (ret) {
+-				atomic_dec(&csdev->refcnt[refport]);
+-				return ret;
+-			}
+-		}
+-	}
+-
+-	csdev->enable = true;
++	if (link_ops(csdev)->enable)
++		ret = link_ops(csdev)->enable(csdev, inport, outport);
++	if (!ret)
++		csdev->enable = true;
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static void coresight_disable_link(struct coresight_device *csdev,
+@@ -295,7 +283,7 @@ static void coresight_disable_link(struct coresight_device *csdev,
+ {
+ 	int i, nr_conns;
+ 	int link_subtype;
+-	int refport, inport, outport;
++	int inport, outport;
+ 
+ 	if (!parent || !child)
+ 		return;
+@@ -305,20 +293,15 @@ static void coresight_disable_link(struct coresight_device *csdev,
+ 	link_subtype = csdev->subtype.link_subtype;
+ 
+ 	if (link_subtype == CORESIGHT_DEV_SUBTYPE_LINK_MERG) {
+-		refport = inport;
+ 		nr_conns = csdev->pdata->nr_inport;
+ 	} else if (link_subtype == CORESIGHT_DEV_SUBTYPE_LINK_SPLIT) {
+-		refport = outport;
+ 		nr_conns = csdev->pdata->nr_outport;
+ 	} else {
+-		refport = 0;
+ 		nr_conns = 1;
+ 	}
+ 
+-	if (atomic_dec_return(&csdev->refcnt[refport]) == 0) {
+-		if (link_ops(csdev)->disable)
+-			link_ops(csdev)->disable(csdev, inport, outport);
+-	}
++	if (link_ops(csdev)->disable)
++		link_ops(csdev)->disable(csdev, inport, outport);
+ 
+ 	for (i = 0; i < nr_conns; i++)
+ 		if (atomic_read(&csdev->refcnt[i]) != 0)
+-- 
+2.23.0.866.gb869b98d4c-goog
+
