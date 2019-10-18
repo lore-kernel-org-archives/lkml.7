@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B975CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79876CA9EAB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 109AD222D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 435C92245C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:07:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436435;
-	bh=HY2dTaaSDHEp+P4iea/XnCJQu8WkixiXr/krmgVV+2I=;
+	s=default; t=1571436437;
+	bh=PJ5hXRwrgYrYHaEEGmsGB+1AUSpUsi2UyKzb8WBrn5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r7DLL70cowHxb5Vxf4MO6JXAAWBZxdnro2kD55G+CM9FSmyfqdYOf8VBdPR4POJG1
-	 NjMojTjg+4g6HC5iMn0e+mMQi7NXWbdSKXQRG38tgqCfOPuvMm1Pm50Hwe/ZNcyLNa
-	 1+OL0Q5dTDwGeJGGRIcmk1MRbNlXD/c5dZDBB3qc=
+	b=Fd5LALpJ3Vbw9XpK8fs+hc9TCTjVbUS4XC7k+9XGbTBwTCC56sNZ2SAsungNZJGWQ
+	 t6vrWz5iR5fNdkrGUbyY2rEZB2sM9mL9Tz05BuwSMqd7tjZttMAAZv8l0mmRbc9cbr
+	 so7xKWTXhV2pLv167+KbnBJkykerj1hpdOA8noX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732597AbfJRWHN (ORCPT
+        id S1732629AbfJRWHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:07:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39254 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:07:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732528AbfJRWHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:07:11 -0400
+        id S1732589AbfJRWHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:07:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45701222D4;
-        Fri, 18 Oct 2019 22:07:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F31A205F4;
+        Fri, 18 Oct 2019 22:07:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436430;
-        bh=HY2dTaaSDHEp+P4iea/XnCJQu8WkixiXr/krmgVV+2I=;
+        s=default; t=1571436433;
+        bh=PJ5hXRwrgYrYHaEEGmsGB+1AUSpUsi2UyKzb8WBrn5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JmfGQ0njL3UPxhTtd4iT6ZsW773s3TY2yOWKVUhE6uqaN+SCKX0kfe81fnujQhebN
-         OCpBiZszroMMZpzMy9f05iQJl1B61bgV5pfVqe+MQF3afXNOweIBE5CoyvE9EruvAj
-         WEbmm/mOrN4LCZnPwfLKBRnUZzZjhsOYY71q1Rg8=
+        b=sVszIXGYYmjMznDQoJ9VLPmn9eFre5F4gOfTK2tk8eKCZMey66JH5tHz97OP0AizR
+         ZRG9CNY8iR4KxUqhw2DMr06v+glm1ETZFZkh0zBMkUm9+2CCmn9Mdd+u8NpcmanxSC
+         V3ttu8oGoTwRjC9bwZnuFg41Tovtnc8YUQBj/Ycs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Nicolas Waisman <nico@semmle.com>,
-        Potnuri Bharat Teja <bharat@chelsio.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 071/100] RDMA/cxgb4: Do not dma memory off of the stack
-Date:   Fri, 18 Oct 2019 18:04:56 -0400
-Message-Id: <20191018220525.9042-71-sashal@kernel.org>
+Cc:     Adam Ford <aford173@gmail.com>,
+        Yegor Yefremov <yegorslists@googlemail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 074/100] serial: mctrl_gpio: Check for NULL pointer
+Date:   Fri, 18 Oct 2019 18:04:59 -0400
+Message-Id: <20191018220525.9042-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -61,107 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg KH <gregkh@linuxfoundation.org>
+From: Adam Ford <aford173@gmail.com>
 
-[ Upstream commit 3840c5b78803b2b6cc1ff820100a74a092c40cbb ]
+[ Upstream commit 37e3ab00e4734acc15d96b2926aab55c894f4d9c ]
 
-Nicolas pointed out that the cxgb4 driver is doing dma off of the stack,
-which is generally considered a very bad thing.  On some architectures it
-could be a security problem, but odds are none of them actually run this
-driver, so it's just a "normal" bug.
+When using mctrl_gpio_to_gpiod, it dereferences gpios into a single
+requested GPIO.  This dereferencing can break if gpios is NULL,
+so this patch adds a NULL check before dereferencing it.  If
+gpios is NULL, this function will also return NULL.
 
-Resolve this by allocating the memory for a message off of the heap
-instead of the stack.  kmalloc() always will give us a proper memory
-location that DMA will work correctly from.
-
-Link: https://lore.kernel.org/r/20191001165611.GA3542072@kroah.com
-Reported-by: Nicolas Waisman <nico@semmle.com>
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Reviewed-by: Yegor Yefremov <yegorslists@googlemail.com>
+Link: https://lore.kernel.org/r/20191006163314.23191-1-aford173@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Tested-by: Potnuri Bharat Teja <bharat@chelsio.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/cxgb4/mem.c | 28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ drivers/tty/serial/serial_mctrl_gpio.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/infiniband/hw/cxgb4/mem.c b/drivers/infiniband/hw/cxgb4/mem.c
-index 7b76e6f81aeb4..f2fb7318abc10 100644
---- a/drivers/infiniband/hw/cxgb4/mem.c
-+++ b/drivers/infiniband/hw/cxgb4/mem.c
-@@ -274,13 +274,17 @@ static int write_tpt_entry(struct c4iw_rdev *rdev, u32 reset_tpt_entry,
- 			   struct sk_buff *skb, struct c4iw_wr_wait *wr_waitp)
+diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
+index 07f318603e740..af0412a784d27 100644
+--- a/drivers/tty/serial/serial_mctrl_gpio.c
++++ b/drivers/tty/serial/serial_mctrl_gpio.c
+@@ -60,6 +60,9 @@ EXPORT_SYMBOL_GPL(mctrl_gpio_set);
+ struct gpio_desc *mctrl_gpio_to_gpiod(struct mctrl_gpios *gpios,
+ 				      enum mctrl_gpio_idx gidx)
  {
- 	int err;
--	struct fw_ri_tpte tpt;
-+	struct fw_ri_tpte *tpt;
- 	u32 stag_idx;
- 	static atomic_t key;
- 
- 	if (c4iw_fatal_error(rdev))
- 		return -EIO;
- 
-+	tpt = kmalloc(sizeof(*tpt), GFP_KERNEL);
-+	if (!tpt)
-+		return -ENOMEM;
++	if (gpios == NULL)
++		return NULL;
 +
- 	stag_state = stag_state > 0;
- 	stag_idx = (*stag) >> 8;
- 
-@@ -290,6 +294,7 @@ static int write_tpt_entry(struct c4iw_rdev *rdev, u32 reset_tpt_entry,
- 			mutex_lock(&rdev->stats.lock);
- 			rdev->stats.stag.fail++;
- 			mutex_unlock(&rdev->stats.lock);
-+			kfree(tpt);
- 			return -ENOMEM;
- 		}
- 		mutex_lock(&rdev->stats.lock);
-@@ -304,28 +309,28 @@ static int write_tpt_entry(struct c4iw_rdev *rdev, u32 reset_tpt_entry,
- 
- 	/* write TPT entry */
- 	if (reset_tpt_entry)
--		memset(&tpt, 0, sizeof(tpt));
-+		memset(tpt, 0, sizeof(*tpt));
- 	else {
--		tpt.valid_to_pdid = cpu_to_be32(FW_RI_TPTE_VALID_F |
-+		tpt->valid_to_pdid = cpu_to_be32(FW_RI_TPTE_VALID_F |
- 			FW_RI_TPTE_STAGKEY_V((*stag & FW_RI_TPTE_STAGKEY_M)) |
- 			FW_RI_TPTE_STAGSTATE_V(stag_state) |
- 			FW_RI_TPTE_STAGTYPE_V(type) | FW_RI_TPTE_PDID_V(pdid));
--		tpt.locread_to_qpid = cpu_to_be32(FW_RI_TPTE_PERM_V(perm) |
-+		tpt->locread_to_qpid = cpu_to_be32(FW_RI_TPTE_PERM_V(perm) |
- 			(bind_enabled ? FW_RI_TPTE_MWBINDEN_F : 0) |
- 			FW_RI_TPTE_ADDRTYPE_V((zbva ? FW_RI_ZERO_BASED_TO :
- 						      FW_RI_VA_BASED_TO))|
- 			FW_RI_TPTE_PS_V(page_size));
--		tpt.nosnoop_pbladdr = !pbl_size ? 0 : cpu_to_be32(
-+		tpt->nosnoop_pbladdr = !pbl_size ? 0 : cpu_to_be32(
- 			FW_RI_TPTE_PBLADDR_V(PBL_OFF(rdev, pbl_addr)>>3));
--		tpt.len_lo = cpu_to_be32((u32)(len & 0xffffffffUL));
--		tpt.va_hi = cpu_to_be32((u32)(to >> 32));
--		tpt.va_lo_fbo = cpu_to_be32((u32)(to & 0xffffffffUL));
--		tpt.dca_mwbcnt_pstag = cpu_to_be32(0);
--		tpt.len_hi = cpu_to_be32((u32)(len >> 32));
-+		tpt->len_lo = cpu_to_be32((u32)(len & 0xffffffffUL));
-+		tpt->va_hi = cpu_to_be32((u32)(to >> 32));
-+		tpt->va_lo_fbo = cpu_to_be32((u32)(to & 0xffffffffUL));
-+		tpt->dca_mwbcnt_pstag = cpu_to_be32(0);
-+		tpt->len_hi = cpu_to_be32((u32)(len >> 32));
- 	}
- 	err = write_adapter_mem(rdev, stag_idx +
- 				(rdev->lldi.vr->stag.start >> 5),
--				sizeof(tpt), &tpt, skb, wr_waitp);
-+				sizeof(*tpt), tpt, skb, wr_waitp);
- 
- 	if (reset_tpt_entry) {
- 		c4iw_put_resource(&rdev->resource.tpt_table, stag_idx);
-@@ -333,6 +338,7 @@ static int write_tpt_entry(struct c4iw_rdev *rdev, u32 reset_tpt_entry,
- 		rdev->stats.stag.cur -= 32;
- 		mutex_unlock(&rdev->stats.lock);
- 	}
-+	kfree(tpt);
- 	return err;
+ 	return gpios->gpio[gidx];
  }
- 
+ EXPORT_SYMBOL_GPL(mctrl_gpio_to_gpiod);
 -- 
 2.20.1
 
