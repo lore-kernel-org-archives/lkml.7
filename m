@@ -5,61 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BFFCA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A2BCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C6B620869
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F76220869
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:08:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571422106;
-	bh=LiEth98ZC43Q3g0lmyv5lkdcuCdRf+ayw/iE4zi8IC0=;
+	s=default; t=1571422111;
+	bh=C82unrMS9yRfdSW57TCZSr6B66P2pmlbe8oeNW+w1LM=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=mX+cCp9OtzF9Tjmnn/kAsuYHa1V1v6kxKU9+eT38FervsCZrHM0kGyvm3A91PjvoT
-	 xUL/7CoJRD177LTm6K2UgQrNHUXZHVJO9Grr1NR66Niu3bAgsqvTgj2MpZQXeHUSQq
-	 FLCB8qbwziaZhYAIXuBtrcvN3qwf8eieyNWCvR2o=
+	b=cPNHMh2xypjsK/V6CE5IrDToQ1s82lKHBe36dT+3b+f3n8HzeAN8dLRTELVcOiukN
+	 40zEyrk9eKirc7UoElGN9MIPKOprFRBxavELIeyxHmYdI+Lmf0867wsP9LvrKgDgnW
+	 TiIqT0BUyO+UUDo0BUDnuav1l12y41DSQKdTsz0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505832AbfJRSIY (ORCPT
+        id S2505841AbfJRSIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:08:24 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45250 "EHLO
+        Fri, 18 Oct 2019 14:08:30 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45122 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505749AbfJRSHP (ORCPT
+        with ESMTP id S2505729AbfJRSHM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:07:15 -0400
+        Fri, 18 Oct 2019 14:07:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=KLzPw8Xsa4mTj7W5XGM0fv889qZfAC//m7Lpyu4FikE=; b=dndlkP61ea9f
-        ZlOWbCDTs6GOupq8DvM97k1zxXnTYb0YNyn0gvk/FVY4yq+LBMtGmIn1S58/J0crbGaH0lxt/Hy6J
-        wg23RM1E2DAfpnwG+snGzmF07sV0iblSD3r10YILz2HFyJjAdlYlPUniARWAZWNYbYCxOzpL/NPCr
-        2FkV0=;
+        List-Archive; bh=yZ5ihh+JlZp10ClOg05PmwAuVkRD1OdpzVwW9zBqAmM=; b=s3bnqBwhK7O0
+        HJcbkXuG0VHf4/PUJPylcJro5WEwFskA95EHWzdgREHmbnbcccuH2+0TeKhzEScFhOMzXxVEyKzLV
+        LqkIJJ2oADEB/jK2mdsjj1Wv0w9AdSvecR+/UGKdC9kKcP3lV8n0g3I0vDfq4qkBzwGSd0Lu/qYko
+        KSrjY=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iLWeb-0004HC-D6; Fri, 18 Oct 2019 18:07:09 +0000
+        id 1iLWeR-0004Ev-5Z; Fri, 18 Oct 2019 18:06:59 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id D914D2741DEA; Fri, 18 Oct 2019 19:07:08 +0100 (BST)
+        id A66102743259; Fri, 18 Oct 2019 19:06:58 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        <stable@vger.kernel.org>, stable@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Applied "spi: atmel: Fix CS high support" to the spi tree
-In-Reply-To: <20191017141846.7523-3-gregory.clement@bootlin.com>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     alsa-devel@alsa-project.org, Bard Liao <bardliao@realtek.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        kernel-janitors@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: rt1011: fix spelling mistake "temperture" -> "temperature"" to the asoc tree
+In-Reply-To: <20191018082317.11971-1-colin.king@canonical.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191018180708.D914D2741DEA@ypsilon.sirena.org.uk>
-Date:   Fri, 18 Oct 2019 19:07:08 +0100 (BST)
+Message-Id: <20191018180658.A66102743259@ypsilon.sirena.org.uk>
+Date:   Fri, 18 Oct 2019 19:06:58 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -67,11 +66,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: atmel: Fix CS high support
+   ASoC: rt1011: fix spelling mistake "temperture" -> "temperature"
 
-has been applied to the spi tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -92,52 +91,34 @@ to this mail.
 Thanks,
 Mark
 
-From 7cbb16b2122c09f2ae393a1542fed628505b9da6 Mon Sep 17 00:00:00 2001
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Date: Thu, 17 Oct 2019 16:18:41 +0200
-Subject: [PATCH] spi: atmel: Fix CS high support
+From 349959a9c767cee04b7362fda230cc2433246fd9 Mon Sep 17 00:00:00 2001
+From: Colin Ian King <colin.king@canonical.com>
+Date: Fri, 18 Oct 2019 09:23:17 +0100
+Subject: [PATCH] ASoC: rt1011: fix spelling mistake "temperture" ->
+ "temperature"
 
-Until a few years ago, this driver was only used with CS GPIO. The
-only exception is CS0 on AT91RM9200 which has to use internal CS. A
-limitation of the internal CS is that they don't support CS High.
+There is a spelling mistake in a dev_dbg message. Fix it.
 
-So by using the CS GPIO the CS high configuration was available except
-for the particular case CS0 on RM9200.
-
-When the support for the internal chip-select was added, the check of
-the CS high support was not updated. Due to this the driver accepts
-this configuration for all the SPI controller v2 (used by all SoCs
-excepting the AT91RM9200) whereas the hardware doesn't support it for
-infernal CS.
-
-This patch fixes the test to match the hardware capabilities.
-
-Fixes: 4820303480a1 ("spi: atmel: add support for the internal chip-select of the spi controller")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20191017141846.7523-3-gregory.clement@bootlin.com
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20191018082317.11971-1-colin.king@canonical.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-atmel.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ sound/soc/codecs/rt1011.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
-index 7a17c3e2a8ee..6e08ae539bc0 100644
---- a/drivers/spi/spi-atmel.c
-+++ b/drivers/spi/spi-atmel.c
-@@ -1176,10 +1176,8 @@ static int atmel_spi_setup(struct spi_device *spi)
- 	as = spi_master_get_devdata(spi->master);
+diff --git a/sound/soc/codecs/rt1011.c b/sound/soc/codecs/rt1011.c
+index ad049cfddcb0..dcd397a83cb4 100644
+--- a/sound/soc/codecs/rt1011.c
++++ b/sound/soc/codecs/rt1011.c
+@@ -2373,7 +2373,7 @@ static int rt1011_parse_dp(struct rt1011_priv *rt1011, struct device *dev)
+ 	device_property_read_u32(dev, "realtek,r0_calib",
+ 		&rt1011->r0_calib);
  
- 	/* see notes above re chipselect */
--	if (!atmel_spi_is_v2(as)
--			&& spi->chip_select == 0
--			&& (spi->mode & SPI_CS_HIGH)) {
--		dev_dbg(&spi->dev, "setup: can't be active-high\n");
-+	if (!as->use_cs_gpios && (spi->mode & SPI_CS_HIGH)) {
-+		dev_warn(&spi->dev, "setup: non GPIO CS can't be active-high\n");
- 		return -EINVAL;
- 	}
+-	dev_dbg(dev, "%s: r0_calib: 0x%x, temperture_calib: 0x%x",
++	dev_dbg(dev, "%s: r0_calib: 0x%x, temperature_calib: 0x%x",
+ 		__func__, rt1011->r0_calib, rt1011->temperature_calib);
  
+ 	return 0;
 -- 
 2.20.1
 
