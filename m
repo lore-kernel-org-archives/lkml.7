@@ -6,93 +6,94 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C417BCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E3ECA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A37D221897
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED89F21925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:25:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410595AbfJRRXn (ORCPT
+        id S2406327AbfJRRZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 13:23:43 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:46774 "EHLO foss.arm.com"
+        Fri, 18 Oct 2019 13:25:23 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:46834 "EHLO foss.arm.com"
         rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1729210AbfJRRXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 13:23:43 -0400
+        id S1729210AbfJRRZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 13:25:23 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C971D1042;
-        Fri, 18 Oct 2019 10:23:13 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 084393F718;
-        Fri, 18 Oct 2019 10:23:11 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 18:23:09 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arm-kernel@lists.infradead.org,
-        kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 18/18] arm64: implement Shadow Call Stack
-Message-ID: <20191018172309.GB18838@lakrids.cambridge.arm.com>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191018161033.261971-19-samitolvanen@google.com>
- <CAG48ez2Z8=0__eoQ+Ekp=EApawZXR4ec_xd2TVPQExLoyMwtRQ@mail.gmail.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 724031063;
+        Fri, 18 Oct 2019 10:25:00 -0700 (PDT)
+Received: from [10.1.195.43] (e107049-lin.cambridge.arm.com [10.1.195.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF2CA3F718;
+        Fri, 18 Oct 2019 10:24:58 -0700 (PDT)
+Subject: Re: [RFC PATCH v3 0/6] sched/cpufreq: Make schedutil energy aware
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Quentin Perret <qperret@google.com>, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, mingo@redhat.com, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, Quentin Perret <qperret@google.com>,
+        patrick.bellasi@matbug.net, dh.han@samsung.com
+References: <20191011134500.235736-1-douglas.raillard@arm.com>
+ <20191014145315.GZ2311@hirez.programming.kicks-ass.net>
+ <a1ce67d7-62c3-b78b-1d87-23ef4dbc2274@arm.com>
+ <20191017095015.GI2311@hirez.programming.kicks-ass.net>
+ <20191017111116.GA27006@google.com>
+ <20191017141107.GJ2311@hirez.programming.kicks-ass.net>
+ <2cbde0fe-c10c-0ebb-32ef-2d522986bc89@arm.com>
+ <20191018075957.GD2328@hirez.programming.kicks-ass.net>
+From:   Douglas Raillard <douglas.raillard@arm.com>
+Organization: ARM
+Message-ID: <65894424-3fdc-2b82-c84d-dac61aded5ea@arm.com>
+Date:   Fri, 18 Oct 2019 18:24:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez2Z8=0__eoQ+Ekp=EApawZXR4ec_xd2TVPQExLoyMwtRQ@mail.gmail.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20191018075957.GD2328@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB-large
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 07:12:52PM +0200, Jann Horn wrote:
-> On Fri, Oct 18, 2019 at 6:16 PM Sami Tolvanen <samitolvanen@google.com> wrote:
-> > This change implements shadow stack switching, initial SCS set-up,
-> > and interrupt shadow stacks for arm64.
-> [...]
-> > +static inline void scs_save(struct task_struct *tsk)
-> > +{
-> > +       void *s;
-> > +
-> > +       asm volatile("mov %0, x18" : "=r" (s));
-> > +       task_set_scs(tsk, s);
-> > +}
-> > +
-> > +static inline void scs_load(struct task_struct *tsk)
-> > +{
-> > +       asm volatile("mov x18, %0" : : "r" (task_scs(tsk)));
-> > +       task_set_scs(tsk, NULL);
-> > +}
+
+
+On 10/18/19 8:59 AM, Peter Zijlstra wrote:
+> On Fri, Oct 18, 2019 at 09:44:44AM +0200, Dietmar Eggemann wrote:
+>> On 17/10/2019 16:11, Peter Zijlstra wrote:
+>>> On Thu, Oct 17, 2019 at 12:11:16PM +0100, Quentin Perret wrote:
+>>
+>> [...]
+>>
+>>> It only boosts when 'rq->cfs.avg.util' increases while
+>>> 'rq->cfs.avg.util_est.enqueued' remains unchanged (and util > util_est
+>>> obv).
+>>>
+>>> This condition can be true for select_task_rq_fair(), because that is
+>>> ran before we do enqueue_task_fair() (for obvious raisins).
+>>>
+>>>>> I'm still thinking about the exact means you're using to raise C; that
+>>>>> is, the 'util - util_est' as cost_margin. It hurts my brain still.
+>>>>
+>>>> +1 ...
+>>>
+>>> cost_i = capacity_i / power_i ; for the i-th OPP
+>>
+>> I get confused by this definition. efficiency=capacity/power but the
+>> cs->cost value used in em_pd_get_higher_freq() is defined as
+>>
+>> cs_cost = cs->power * cpu_max_freq / cs->freq [energy_model.h]
 > 
-> These things should probably be __always_inline or something like
-> that? If the compiler decides not to inline them (e.g. when called
-> from scs_thread_switch()), stuff will blow up, right?
+> Well, chalk that up to confusion inspired by the Changelog of patch 1.
 
-I think scs_save() would better live in assembly in cpu_switch_to(),
-where we switch the stack and current. It shouldn't matter whether
-scs_load() is inlined or not, since the x18 value _should_ be invariant
-from the PoV of the task.
+I've updated the commit message to include that ordering OPPs by
+increasing efficiency=capa/power on one CPU leads to the same ordering
+as ordering by decreasing cost=power*f_max/f.
 
-We just need to add a TSK_TI_SCS to asm-offsets.c, and then insert a
-single LDR at the end:
+efficiency=(cpu_max_capa/1024) * (f/f_max) / power
+efficiency=(cpu_max_capa/1024) / cost
 
-	mov	sp, x9
-	msr	sp_el0, x1
-#ifdef CONFIG_SHADOW_CALL_STACK
-	ldr	x18, [x1, TSK_TI_SCS]
-#endif
-	ret
 
-Thanks,
-Mark.
+> Let me redo it with that formula then.
+> 
