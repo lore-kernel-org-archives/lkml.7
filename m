@@ -5,56 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D332ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E251CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC24D222C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4473421852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H9ZkOQpl"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I24zH4pm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633427AbfJRPco (ORCPT
+        id S2633556AbfJRPcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:32:44 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44842 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2410688AbfJRPcY (ORCPT
+        Fri, 18 Oct 2019 11:32:51 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:47712 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392694AbfJRPcW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:32:24 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9IFWNju117124;
-        Fri, 18 Oct 2019 10:32:23 -0500
+        Fri, 18 Oct 2019 11:32:22 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9IFWLBD013415;
+        Fri, 18 Oct 2019 10:32:21 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571412743;
-        bh=Gnev1/nUK6kia0qBTPA020FCXW4FagJcU0jgSzyPRRI=;
+        s=ti-com-17Q1; t=1571412741;
+        bh=fKnbl4rI7lxj8OVyJOMnIhdivu5BzUFIAmoern9RyCY=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=H9ZkOQplb/ylnwjF8I86pA6AYkS/NmZQpgmt7+spwTP+RyjAm1LvThH+/pe64oAP2
-         JVAYrqMqvtt89zrGiZJ2Cxp9mHidrx0BkRvdi5rSSOsA9gGu1yhlhAcV0sN6QPrtSH
-         8so6iQls54noCLmh+jELH+igSZpUg+i1krk/2KHM=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9IFWNJ2113243
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 18 Oct 2019 10:32:23 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+        b=I24zH4pmc+ZVwZkX6fe0RVNdjB4YZ4BL+L3DxYnmYz+Ng+2EvQ6YDDlkVmH/5/I9L
+         u5ebqs/T8rFjBZU1ar6d/aXnkddj1WoS7zGeYLPDYZ5OprOw8AMMDiSL9zCMI2ooM4
+         Shdlk2nhOMSA157FFduME3WOBeiPrBx/Q4/t205A=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFWLYV106161;
+        Fri, 18 Oct 2019 10:32:21 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 18
- Oct 2019 10:32:14 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 10:32:12 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 18 Oct 2019 10:32:14 -0500
+ Frontend Transport; Fri, 18 Oct 2019 10:32:20 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFW15U080266;
-        Fri, 18 Oct 2019 10:32:22 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFW15T080266;
+        Fri, 18 Oct 2019 10:32:20 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>
 CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 16/19] media: ti-vpe: cal: Properly calculate max resolution boundary
-Date:   Fri, 18 Oct 2019 10:34:34 -0500
-Message-ID: <20191018153437.20614-17-bparrot@ti.com>
+Subject: [Patch 15/19] media: ti-vpe: cal: Add subdev s_power hooks
+Date:   Fri, 18 Oct 2019 10:34:33 -0500
+Message-ID: <20191018153437.20614-16-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191018153437.20614-1-bparrot@ti.com>
 References: <20191018153437.20614-1-bparrot@ti.com>
@@ -66,60 +65,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently we were using an arbitrarily small maximum resolution mostly
-based on available sensor capabilities. However the hardware DMA limits
-are much higher than the statically define maximum resolution we were
-using.
-
-There we rework the boundary check code to handle the maximum width and
-height based on the maximum line width in bytes and re-calculating the
-pixel width based on the given pixel format.
+Based on V4L2 documentations bridge driver must power on and off sub
+device explicitly if media-controller mode is not used.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/platform/ti-vpe/cal.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ drivers/media/platform/ti-vpe/cal.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-index e61d2f3fd1da..a0ff67412410 100644
+index 42b0063b610e..e61d2f3fd1da 100644
 --- a/drivers/media/platform/ti-vpe/cal.c
 +++ b/drivers/media/platform/ti-vpe/cal.c
-@@ -34,8 +34,8 @@
+@@ -1661,6 +1661,12 @@ static int cal_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 	if (ret < 0)
+ 		goto err;
  
- #define CAL_MODULE_NAME "cal"
++	ret = v4l2_subdev_call(ctx->sensor, core, s_power, 1);
++	if (ret < 0 && ret != -ENOIOCTLCMD && ret != -ENODEV) {
++		ctx_err(ctx, "power on failed in subdev\n");
++		goto err;
++	}
++
+ 	cal_runtime_get(ctx->dev);
  
--#define MAX_WIDTH 1920
--#define MAX_HEIGHT 1200
-+#define MAX_WIDTH_BYTES (8192 * 8)
-+#define MAX_HEIGHT_LINES 16383
+ 	csi2_ctx_config(ctx);
+@@ -1674,6 +1680,7 @@ static int cal_start_streaming(struct vb2_queue *vq, unsigned int count)
  
- #define CAL_VERSION "0.1.0"
+ 	ret = v4l2_subdev_call(ctx->sensor, video, s_stream, 1);
+ 	if (ret) {
++		v4l2_subdev_call(ctx->sensor, core, s_power, 0);
+ 		ctx_err(ctx, "stream on failed in subdev\n");
+ 		cal_runtime_put(ctx->dev);
+ 		goto err;
+@@ -1702,6 +1709,7 @@ static void cal_stop_streaming(struct vb2_queue *vq)
+ 	struct cal_dmaqueue *dma_q = &ctx->vidq;
+ 	struct cal_buffer *buf, *tmp;
+ 	unsigned long flags;
++	int ret;
  
-@@ -1337,15 +1337,21 @@ static int cal_calc_format_size(struct cal_ctx *ctx,
- 				const struct cal_fmt *fmt,
- 				struct v4l2_format *f)
- {
--	u32 bpl;
-+	u32 bpl, max_width;
+ 	csi2_ppi_disable(ctx);
+ 	disable_irqs(ctx);
+@@ -1710,6 +1718,10 @@ static void cal_stop_streaming(struct vb2_queue *vq)
+ 	if (v4l2_subdev_call(ctx->sensor, video, s_stream, 0))
+ 		ctx_err(ctx, "stream off failed in subdev\n");
  
- 	if (!fmt) {
- 		ctx_dbg(3, ctx, "No cal_fmt provided!\n");
- 		return -EINVAL;
- 	}
- 
--	v4l_bound_align_image(&f->fmt.pix.width, 48, MAX_WIDTH, 2,
--			      &f->fmt.pix.height, 32, MAX_HEIGHT, 0, 0);
-+	/*
-+	 * Maximum width is bound by the DMA max width in bytes.
-+	 * We need to recalculate the actual maxi width depending on the
-+	 * number of bytes per pixels required.
-+	 */
-+	max_width = MAX_WIDTH_BYTES / (ALIGN(fmt->bpp, 8) >> 3);
-+	v4l_bound_align_image(&f->fmt.pix.width, 48, max_width, 2,
-+			      &f->fmt.pix.height, 32, MAX_HEIGHT_LINES, 0, 0);
- 
- 	bpl = (f->fmt.pix.width * ALIGN(fmt->bpp, 8)) >> 3;
- 	f->fmt.pix.bytesperline = ALIGN(bpl, 16);
++	ret = v4l2_subdev_call(ctx->sensor, core, s_power, 0);
++	if (ret < 0 && ret != -ENOIOCTLCMD && ret != -ENODEV)
++		ctx_err(ctx, "power off failed in subdev\n");
++
+ 	/* Release all active buffers */
+ 	spin_lock_irqsave(&ctx->slock, flags);
+ 	list_for_each_entry_safe(buf, tmp, &dma_q->active, list) {
 -- 
 2.17.1
 
