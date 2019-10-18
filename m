@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBCFCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2056CA9EAC
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C96021852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B538E2245C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:21:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437285;
-	bh=w72zSyvqC/ZsLccUu1t1p4GzejqibTaKWFcIEuyG+0I=;
+	s=default; t=1571437292;
+	bh=fxdugRaZcLgOseleGocQUAJOQjGs8F4EZ2YaQ26avFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OnfiH6MLlR5vZSPDlUcqh54VVDozBIDlqm4/Mxddb4C7ZHVeMGrSHzOH62K+efJpL
-	 LyRxhu3oDjel4dn2eC05sP+wVk1U1j4vCvSTrzSt7dafimNuRKyX4ZyNZe/4Tpmo5G
-	 xADsz7srdIchgtuE9Cwq9CRdxs6z29bGay7MPRzM=
+	b=RdERP5J3+h7+fyhuxryig2m9EmenGfbpMNueiOVY6KTU3vxBV3l4w6Q3vnAmUZqjz
+	 dla/dwFNowPfNFuqDxsrrfgYWy+utict8rjjikEKzv/twq4rt9vwvWAzjfNwH4w0M7
+	 yDKq9ZoOCtDXXOt1cN4a45Do8uqwzKdJ5OVFgy7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404718AbfJRWVX (ORCPT
+        id S1731248AbfJRWGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:21:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38306 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:06:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729186AbfJRWGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:06:23 -0400
+        id S1730760AbfJRWGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:06:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC6FC222D2;
-        Fri, 18 Oct 2019 22:06:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFC25205F4;
+        Fri, 18 Oct 2019 22:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436382;
-        bh=w72zSyvqC/ZsLccUu1t1p4GzejqibTaKWFcIEuyG+0I=;
+        s=default; t=1571436371;
+        bh=fxdugRaZcLgOseleGocQUAJOQjGs8F4EZ2YaQ26avFk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HqxA9Z8dohohd5+vYXtnkfgi7z7DEIP+U1n9Vqs0vJxYjKeGBiqSi/yg3Yh/ARGJd
-         ae1boHI9R40yxWJGZ/5khSUbmfhmpktDoQ2wp7W3e/Q4CmncRNmyg/aTfIUleDIlsx
-         8rWzcfgReLUi5bOqePygx6B2xDsPioCtwpkUtpOY=
+        b=U3ovjam4QJJxytX2QsIOE36t3xXFrXnlVFBgmBrY4DFqamslVqvKvrZc+WK05uN8H
+         bfBOrPhsz40PWklx49aAGntolZ195Bq1+3xgmz2OKUrm+JDA+3rU/N0T6qVruAQEWA
+         RifszM9oKepDQhgF5OpSORur8FpZYfR4i7OgqHmw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jan-Marek Glogowski <glogow@fbihome.de>,
-        Alan Stern <stern@rowland.harvard.edu>,
+Cc:     Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        NeilBrown <neil@brown.name>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 035/100] usb: handle warm-reset port requests on hub resume
-Date:   Fri, 18 Oct 2019 18:04:20 -0400
-Message-Id: <20191018220525.9042-35-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.19 025/100] staging: mt7621-pinctrl: use pinconf-generic for 'dt_node_to_map' and 'dt_free_map'
+Date:   Fri, 18 Oct 2019 18:04:10 -0400
+Message-Id: <20191018220525.9042-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -60,53 +60,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan-Marek Glogowski <glogow@fbihome.de>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 
-[ Upstream commit 4fdc1790e6a9ef22399c6bc6e63b80f4609f3b7e ]
+[ Upstream commit 0ca1f90861b6d64386261096b42bfc81ce11948a ]
 
-On plug-in of my USB-C device, its USB_SS_PORT_LS_SS_INACTIVE
-link state bit is set. Greping all the kernel for this bit shows
-that the port status requests a warm-reset this way.
+Instead of reimplement afunction to do 'dt_node_to_map' task like
+'rt2880_pinctrl_dt_node_to_map' make use of 'pinconf_generic_dt_node_to_map_all'
+generic function for this task. Also use its equivalent function for free which
+is 'pinconf_generic_dt_free_map'. Remove 'rt2880_pinctrl_dt_node_to_map' function
+which is not needed anymore. This decrease a bit driver LOC and make it more
+generic. To properly compile this changes 'GENERIC_PINCONF' option is selected
+with the driver in its Kconfig file.
 
-This just happens, if its the only device on the root hub, the hub
-therefore resumes and the HCDs status_urb isn't yet available.
-If a warm-reset request is detected, this sets the hubs event_bits,
-which will prevent any auto-suspend and allows the hubs workqueue
-to warm-reset the port later in port_event.
+This also fix a problem with function 'rt2880_pinctrl_dt_node_to_map' which was
+calling internally 'pinctrl_utils_reserve_map' which expects 'num_maps' to be initialized.
+It does a memory allocation based on the value, and triggers the following
+warning if is not properly set:
 
-Signed-off-by: Jan-Marek Glogowski <glogow@fbihome.de>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+if (unlikely(order >= MAX_ORDER)) {
+        WARN_ON_ONCE(!(gfp_mask & __GFP_NOWARN));
+        return NULL;
+}
+
+Generic function 'pinconf_generic_dt_node_to_map_all' initializes properly
+'num_maps' to zero fixing the problem.
+
+Fixes: e12a1a6e087b ("staging: mt7621-pinctrl: refactor rt2880_pinctrl_dt_node_to_map function")
+Reported-by: NeilBrown <neil@brown.name>
+Tested-by: NeilBrown <neil@brown.name>
+Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/core/hub.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/staging/mt7621-pinctrl/Kconfig        |  1 +
+ .../staging/mt7621-pinctrl/pinctrl-rt2880.c   | 41 ++-----------------
+ 2 files changed, 4 insertions(+), 38 deletions(-)
 
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index 8018f813972e0..d5fbd36cf4624 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -107,6 +107,8 @@ EXPORT_SYMBOL_GPL(ehci_cf_port_reset_rwsem);
- static void hub_release(struct kref *kref);
- static int usb_reset_and_verify_device(struct usb_device *udev);
- static int hub_port_disable(struct usb_hub *hub, int port1, int set_state);
-+static bool hub_port_warm_reset_required(struct usb_hub *hub, int port1,
-+		u16 portstatus);
+diff --git a/drivers/staging/mt7621-pinctrl/Kconfig b/drivers/staging/mt7621-pinctrl/Kconfig
+index 37cf9c3273beb..fc36127113072 100644
+--- a/drivers/staging/mt7621-pinctrl/Kconfig
++++ b/drivers/staging/mt7621-pinctrl/Kconfig
+@@ -2,3 +2,4 @@ config PINCTRL_RT2880
+ 	bool "RT2800 pinctrl driver for RALINK/Mediatek SOCs"
+ 	depends on RALINK
+ 	select PINMUX
++	select GENERIC_PINCONF
+diff --git a/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c b/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c
+index aa98fbb170139..80e7067cfb797 100644
+--- a/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c
++++ b/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c
+@@ -11,6 +11,7 @@
+ #include <linux/of.h>
+ #include <linux/pinctrl/pinctrl.h>
+ #include <linux/pinctrl/pinconf.h>
++#include <linux/pinctrl/pinconf-generic.h>
+ #include <linux/pinctrl/pinmux.h>
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/pinctrl/machine.h>
+@@ -73,48 +74,12 @@ static int rt2880_get_group_pins(struct pinctrl_dev *pctrldev,
+ 	return 0;
+ }
  
- static inline char *portspeed(struct usb_hub *hub, int portstatus)
- {
-@@ -1111,6 +1113,11 @@ static void hub_activate(struct usb_hub *hub, enum hub_activation_type type)
- 						   USB_PORT_FEAT_ENABLE);
- 		}
+-static int rt2880_pinctrl_dt_node_to_map(struct pinctrl_dev *pctrldev,
+-					 struct device_node *np_config,
+-					 struct pinctrl_map **map,
+-					 unsigned int *num_maps)
+-{
+-	struct rt2880_priv *p = pinctrl_dev_get_drvdata(pctrldev);
+-	struct property *prop;
+-	const char *function_name, *group_name;
+-	int ret;
+-	int ngroups = 0;
+-	unsigned int reserved_maps = 0;
+-
+-	for_each_node_with_property(np_config, "group")
+-		ngroups++;
+-
+-	*map = NULL;
+-	ret = pinctrl_utils_reserve_map(pctrldev, map, &reserved_maps,
+-					num_maps, ngroups);
+-	if (ret) {
+-		dev_err(p->dev, "can't reserve map: %d\n", ret);
+-		return ret;
+-	}
+-
+-	of_property_for_each_string(np_config, "group", prop, group_name) {
+-		ret = pinctrl_utils_add_map_mux(pctrldev, map, &reserved_maps,
+-						num_maps, group_name,
+-						function_name);
+-		if (ret) {
+-			dev_err(p->dev, "can't add map: %d\n", ret);
+-			return ret;
+-		}
+-	}
+-
+-	return 0;
+-}
+-
+ static const struct pinctrl_ops rt2880_pctrl_ops = {
+ 	.get_groups_count	= rt2880_get_group_count,
+ 	.get_group_name		= rt2880_get_group_name,
+ 	.get_group_pins		= rt2880_get_group_pins,
+-	.dt_node_to_map		= rt2880_pinctrl_dt_node_to_map,
+-	.dt_free_map		= pinctrl_utils_free_map,
++	.dt_node_to_map		= pinconf_generic_dt_node_to_map_all,
++	.dt_free_map		= pinconf_generic_dt_free_map,
+ };
  
-+		/* Make sure a warm-reset request is handled by port_event */
-+		if (type == HUB_RESUME &&
-+		    hub_port_warm_reset_required(hub, port1, portstatus))
-+			set_bit(port1, hub->event_bits);
-+
- 		/*
- 		 * Add debounce if USB3 link is in polling/link training state.
- 		 * Link will automatically transition to Enabled state after
+ static int rt2880_pmx_func_count(struct pinctrl_dev *pctrldev)
 -- 
 2.20.1
 
