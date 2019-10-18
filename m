@@ -2,115 +2,124 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E6FCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C998CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 237BF222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73DFC222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:40:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mEHKyOoT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OYNjgMNp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442480AbfJRKje (ORCPT
+        id S2408393AbfJRKkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 06:39:34 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:38284 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439353AbfJRKjU (ORCPT
+        Fri, 18 Oct 2019 06:40:03 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55148 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404276AbfJRKkC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 06:39:20 -0400
-Received: by mail-ed1-f66.google.com with SMTP id l21so4186437edr.5;
-        Fri, 18 Oct 2019 03:39:19 -0700 (PDT)
+        Fri, 18 Oct 2019 06:40:02 -0400
+Received: by mail-wm1-f66.google.com with SMTP id p7so5652660wmp.4;
+        Fri, 18 Oct 2019 03:40:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TdGZ/O1UBefa0/Aw3vNnx5zYKetp+so1lp2xpas4umw=;
-        b=mEHKyOoTqwmR0aTE5OFLDghsTCB1Biaiy9UW26U9qCuaq2iKlynp+5R60NwG2zQoA+
-         eQ1yHJYUuhWt6BYmxywdlbb3UKjpI6eNc2EskkhrTvpzSzq8QgmVafMzyay88Cuzewkt
-         xWg6HLQqtUDtm1UD+ZxdHdTEJbrL8HuAbvCaT+9u4eiWMq7DDyYHt/CQzpUF6JeHDhru
-         oNFOoPhIKHkPPOokpuk8cTKvKlEvCzb7PvbFFKcgK0qZUpBWyB8LIoK2fKEzI5z2ptoN
-         8xRZ0AvKeQKyNA86QSGbipvZjS/4BwpaqwF0fZEUYo8/eVoaC5Uk6aomkkaquXT44XS7
-         wU/g==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8cE9YDTfQtBVk2+sSkxkP+PZ5kDH44m1/DG3//iG44o=;
+        b=OYNjgMNpsPRROwdjGNNiBj0Bqep2u1crh/BSRjgix0UHWSgr2fJ1L8bKKGc3d7jpnj
+         Z+dKBQ14uBKmx18drOTZjlpaB33QatRZaujs5ngCsJ9kkGOryUYi2MRCr27Zmr6NrOKf
+         QS30UtWmvwHeWpeEIFTzYSu5rtcjJmKh1SoqMhO/t9mcb1kXPtRulK3kLs8j34R6YOuc
+         PgiaPkKdNiWbnHnGJfvO/hhDOdd4Jj9S50muTOo3oVJG+Y964TAFXW3TDtGqX9lZjxgI
+         l3mk4+JiWZwKROo6Kp+cOIP7WznJETPuABiCsJNCaUCjJ7//Zb/9qrBxxgUNb/tDnLZq
+         z5Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TdGZ/O1UBefa0/Aw3vNnx5zYKetp+so1lp2xpas4umw=;
-        b=E5XtPnS5E1JSFNfHmT1QdFgsHiz708/8WcPprOYDUTFi0XvJn0mh7BITQXqkKw/VEH
-         JCk8eabTo7jktWdg8sOo+yjxuhV57YQzOlXX6wDlMoCdDzp/YjLowr7VXd59Sad+vfZp
-         UCLfHr4liBMcjPnrEX6pC9cZQjzZcRLfaAINNu60n+LkSwrYP+4x33WWhfILgNiuhYvt
-         fJPqExbLfM46vLdbW4+QP+BYQ6KvRGC70w3h2krpo9IcGay5WdX1STSp074G/H3x2GZW
-         J/elBVAsqCKC8ccQwnBYsE7/zlocNxe7vFBSB/odFTLZHVEd3RM0xm4OkZw3DG5/JadK
-         o0rg==
-X-Gm-Message-State: APjAAAWOojnQJWofqPaXOxGeplNW+QAzD1EOTymCqnroIHYvLyID8AzV
-        XNLP5a3SEKlViP0i0GghIv4O2657E3uqjaua7x4=
-X-Google-Smtp-Source: APXvYqxnhNJ1p2Qw24cDRg7N1pWEV2tiucdyj8NEuD+nENTq7YS/DvNr7sw2b18boMqr51gNammWqfUI3G6dIFr7HYc=
-X-Received: by 2002:a17:906:8313:: with SMTP id j19mr8131952ejx.196.1571395159085;
- Fri, 18 Oct 2019 03:39:19 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8cE9YDTfQtBVk2+sSkxkP+PZ5kDH44m1/DG3//iG44o=;
+        b=qMmnIHABpoqiEDo34m17U0QbaYJ387f8ZY18GEiRrmWMEgRMfVPFeF0KIvgJ6zJlQb
+         BL0gaI6KlAsMLeESKbXDI7kiCVZq3+dLYJYNJEeYS8mK/CdSJ9zp7z1Gvmnfpi8qBTyw
+         adxnae2zYVUo3I8NsnSS1H0XEJHIYWFalyulla7yC1Sl7/sdCLN6chFeGsgkPGwcLlYT
+         hnntxGduC1ffD8QQzdffanrYrhY9lb0l0zzu7c9QCTvGJxJJMjYTGeP6F4GqScq1voUf
+         v7w78pwuJhoGvcLRiErbS4e1AOzqv1h2zAngoHHoDIolEs9T6wH/62+j0ORrrBqGBSuw
+         pZHA==
+X-Gm-Message-State: APjAAAVIgIBlg1IljbKEPN8BqwdzBGEC0wj4Y+bxgWbBgkZIiphGV1I3
+        /XcooBprHKJ+LmQnqDn32Tg=
+X-Google-Smtp-Source: APXvYqyDnHioWi04o934RHn2Z8GlYtnNljWkCs5aIV6oDWEoR7Yn8cnG3grrkQrQEqWxnGMD91wneA==
+X-Received: by 2002:a05:600c:40f:: with SMTP id q15mr6944692wmb.30.1571395199943;
+        Fri, 18 Oct 2019 03:39:59 -0700 (PDT)
+Received: from andrea.guest.corp.microsoft.com ([2a01:110:8012:1012:2d5e:8dac:e57c:2507])
+        by smtp.gmail.com with ESMTPSA id p12sm5651757wrm.62.2019.10.18.03.39.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 03:39:59 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 12:39:52 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        mikelley@microsoft.com, wei.liu@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] x86/hyperv: Fix build error while CONFIG_PARAVIRT=n
+Message-ID: <20191018103952.GA29828@andrea.guest.corp.microsoft.com>
+References: <20191018082921.28164-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-References: <20191017025058.31528-1-hslester96@gmail.com> <CAHp75Vd2SMERjtvNumxAF1HSp8GSThmcyx96zkFzUXKwnD5d2Q@mail.gmail.com>
-In-Reply-To: <CAHp75Vd2SMERjtvNumxAF1HSp8GSThmcyx96zkFzUXKwnD5d2Q@mail.gmail.com>
-From:   Chuhong Yuan <hslester96@gmail.com>
-Date:   Fri, 18 Oct 2019 18:39:08 +0800
-Message-ID: <CANhBUQ2yxGbjk_DgXbip=TPT=evzA5naoJSY9t1_Ep47e9oupw@mail.gmail.com>
-Subject: Re: [PATCH] spi: pxa2xx: Add missed security checks
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018082921.28164-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 5:35 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Fri, Oct 18, 2019 at 8:59 AM Chuhong Yuan <hslester96@gmail.com> wrote:
-> >
-> > pxa2xx_spi_init_pdata misses checks for devm_clk_get and
-> > platform_get_irq.
-> > Add checks for them to fix the bugs.
-> >
-> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > ---
-> >  drivers/spi/spi-pxa2xx.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-> > index bb6a14d1ab0f..2e73d75a6ac5 100644
-> > --- a/drivers/spi/spi-pxa2xx.c
-> > +++ b/drivers/spi/spi-pxa2xx.c
-> > @@ -1565,7 +1565,13 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
-> >  #endif
-> >
-> >         ssp->clk = devm_clk_get(&pdev->dev, NULL);
-> > +       if (IS_ERR(ssp->clk))
-> > +               return NULL;
-> > +
-> >         ssp->irq = platform_get_irq(pdev, 0);
-> > +       if (ssp->irq < 0)
-> > +               return NULL;
->
-> I'm not sure they are mandatory for all platforms.
-> To be on the safe side, you simple need to add _optional() to the both
-> call along with above change.
->
+On Fri, Oct 18, 2019 at 04:29:21PM +0800, YueHaibing wrote:
+> while CONFIG_PARAVIRT=n, building fails:
+> 
+> arch/x86/kernel/cpu/mshyperv.c: In function ms_hyperv_init_platform:
+> arch/x86/kernel/cpu/mshyperv.c:219:2: error: pv_info undeclared (first use in this function); did you mean pr_info?
+>   pv_info.name = "Hyper-V";
+>   ^~~~~~~
 
-As I know, this is the only one in spi which does not have a check for
-devm_clk_get.
-Even if add _optional(), they still may return errors and need security checks.
+Ouch, sorry for this...
 
-> --
-> With Best Regards,
-> Andy Shevchenko
+
+> 
+> Wrap it into a #ifdef to fix this.
+> 
+> Fixes: 628270ef628a ("x86/hyperv: Set pv_info.name to "Hyper-V"")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+
+Reviewed-by: Andrea Parri <parri.andrea@gmail.com>
+
+Thanks,
+  Andrea
+
+
+> ---
+>  arch/x86/kernel/cpu/mshyperv.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+> index e7f0776..c656d92 100644
+> --- a/arch/x86/kernel/cpu/mshyperv.c
+> +++ b/arch/x86/kernel/cpu/mshyperv.c
+> @@ -216,7 +216,9 @@ static void __init ms_hyperv_init_platform(void)
+>  	int hv_host_info_ecx;
+>  	int hv_host_info_edx;
+>  
+> +#ifdef CONFIG_PARAVIRT
+>  	pv_info.name = "Hyper-V";
+> +#endif
+>  
+>  	/*
+>  	 * Extract the features and hints
+> -- 
+> 2.7.4
+> 
+> 
