@@ -2,111 +2,208 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1B7CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BBFCCA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF5421835
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48D4B21835
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:10:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="jOgX/6IA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b3Iq1OPq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393941AbfJRFJh (ORCPT
+        id S2394828AbfJRFKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:09:37 -0400
-Received: from mta-p7.oit.umn.edu ([134.84.196.207]:45892 "EHLO
-        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388497AbfJRFJg (ORCPT
+        Fri, 18 Oct 2019 01:10:23 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45356 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727606AbfJRFKX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:09:36 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 949A9272
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 04:30:01 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p7.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id mhnCGDYrv2_U for <linux-kernel@vger.kernel.org>;
-        Thu, 17 Oct 2019 23:30:01 -0500 (CDT)
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 70F1F269
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 23:30:01 -0500 (CDT)
-Received: by mail-io1-f69.google.com with SMTP id a22so6814644ioq.23
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 21:30:01 -0700 (PDT)
+        Fri, 18 Oct 2019 01:10:23 -0400
+Received: by mail-pg1-f196.google.com with SMTP id r1so2654888pgj.12;
+        Thu, 17 Oct 2019 22:10:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=S+ExY7RtG2HqIxYagBLe/T94lp0xElb1mK1Anml9C8I=;
-        b=jOgX/6IAAce6fxtFdSpduVfsmh5bsIHnA+8VVZ0mbnCPUCT+tzRAGa3T5u7u6FNRXs
-         pTJMp7STs6Wf/JPbaLXY8YXbz5sf/WtjaBPRLva6TWdHgmtZxwQ/5HXd2OPWsXVFm7au
-         OA2DAJJJ67vhacDjOwXzwHbZxSTjr7XHqrav28tCL6Tov8x/wkXSUIenG91dU3laGTuw
-         CDqGtzgXShdroBwoiixulNlnaiH329FsYYLzbA2GgMEZ4nm+uXNUc4ZYlhS2UR/3nR5x
-         MR4Gr5pQyqmv7MeK5wZkVyEprVQeCh54BeulCAYlSOWTitR72M8+eEMycBQqIRS3oqMA
-         D1Jw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=+EWYqOMJEOrwAelQrVSj5HwzBo+TWf7YqxT+vg7zDWE=;
+        b=b3Iq1OPqK5HQfae2P8Xv3XVKssSkqfpfeT3/1YGT3uEIQvhNcGr2l98icZIPr0/lSJ
+         a+t+QiS36I1nWnOkOrwj8SdfSd6sVCN3fz+metWDc3MBvB8OLaNjo7SUzodZUus4MUzM
+         4In5+nYEEtfd8pKNrVpwpdvgUfoRxnJd5ALQobye+0vNGu2TJz5S5sT/rpzmo3knCr9u
+         Fy9lTaJT+1X5QQ11h/Wcu6m6PYgRzfjr6iDwysJpWEgyAtYmdoRaUIeZKGpHxn3ilsUd
+         P71awp+HaIeZQq1/hgktqNapCjB3B5Lp20sY0jnfmwJNffh7x95lfSAoW6Nc+vkeZMM6
+         zjjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=S+ExY7RtG2HqIxYagBLe/T94lp0xElb1mK1Anml9C8I=;
-        b=c/J6m91ZGk2d7l7me3eXlijqQVCT/Pz4HjsFXah/SMbx0wAObsrwoYWiJMP3wM9L7J
-         Q05eQBREonrAvdfjnHQgFtyCRnZ1r+gV3TLi4PSrcnup65rT9sqe98IKzPWSa64qfb26
-         gRjTuJ58r9xkSHQPmCi6hJBk3/4l6l9CqmVNdhaZeASBahmziSiX6QBJm+UleWLaXSUk
-         31rjYkNFR0xtJAeU48d4F29oSY4JuFDk9MqdVZDbTHgsNu54Se3Iv4k94rWxT5S+VQjx
-         wqopPbbII6QmBy2ISlV93Wi78+tyBAzmV8lLOoMLytw85M1cE1wR8/qN/TX9IM+2i7n0
-         CVMg==
-X-Gm-Message-State: APjAAAV2qpn6kg3YwS9pzyDQ8bFAF7P75tacKNZdt7f8fgmndL5XEBXt
-        udqoeqo4xA7BgYOquyzdNpR+WEAr01MRFvgkUp0LXffgfXau3Mz+Pc6hKoOnEkOeD1QJhHdcT5B
-        qcJapgVabSs0us6OxBwGGYqbOBKrw
-X-Received: by 2002:a92:8bca:: with SMTP id i193mr8102479ild.136.1571373000721;
-        Thu, 17 Oct 2019 21:30:00 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxVhwgtJqw281TwokvjEpYKzpFxY3mjcnKghYUQJtb90u5SQgULX83RETrMAXvH1tZvYPo8ZA==
-X-Received: by 2002:a92:8bca:: with SMTP id i193mr8102457ild.136.1571373000345;
-        Thu, 17 Oct 2019 21:30:00 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id d14sm1698308ilm.15.2019.10.17.21.29.58
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+EWYqOMJEOrwAelQrVSj5HwzBo+TWf7YqxT+vg7zDWE=;
+        b=Dp7oD3bFX73sF0Gv2TErfkYDPi+3BP/GWDfKbSsVzPlH4a23dcvLAQrFCHAjXx01Gc
+         f0FL/yCq4LgyIrEJp6y2Kg27pfyCifwh0VV4mApN3ur6kHB8nHh4b5tN+2Rd11AIczIk
+         FvSJP8feseoousmc0m3OZ4FlUxjWhmUtY0jj1hium4RfWBrjar7UNk6zwfl97ViMO/Po
+         T+goCeh9joVsFeecXn6SlUf90SQs1RUF22xIIplmC86cbUKsqofaRUoPHMrtBpjq+pSi
+         WSVnQq/HM6EAs40wDfX04QHus7xdVPr3PyKh5Glqu5gjrgiR5CxSmlIQ+P4miGOj/sk/
+         IuTQ==
+X-Gm-Message-State: APjAAAUwpheooC56ptfaK4puwTfl29Ul8XNMcg4nDseH5Oi+xrmEyfm4
+        4cbz8SaWkrTxLhhSMm1ZK3Z+Pz/2dk4=
+X-Google-Smtp-Source: APXvYqxa8qrbWzhgY1avVUHnvL095QM2q4yqCnOM+3ueOITrdVvKeq2Qp+8FVXqPqBMYi2/1Fornyg==
+X-Received: by 2002:a17:90a:fd83:: with SMTP id cx3mr8614025pjb.64.1571373943189;
+        Thu, 17 Oct 2019 21:45:43 -0700 (PDT)
+Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
+        by smtp.gmail.com with ESMTPSA id b3sm3696445pjp.13.2019.10.17.21.45.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 21:29:59 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] gma/gma500: fix a memory disclosure bug due to uninitialized bytes
-Date:   Thu, 17 Oct 2019 23:29:53 -0500
-Message-Id: <20191018042953.31099-1-kjlu@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Thu, 17 Oct 2019 21:45:42 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-input@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Sam Bazely <sambazley@fastmail.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+        Austin Palmer <austinp@valvesoftware.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH v3 2/3] HID: logitech-hidpp: rework device validation
+Date:   Thu, 17 Oct 2019 21:45:16 -0700
+Message-Id: <20191018044517.6430-3-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191018044517.6430-1-andrew.smirnov@gmail.com>
+References: <20191018044517.6430-1-andrew.smirnov@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-`best_clock` is an object that may be sent out. Object `clock`
-contains uninitialized bytes that are copied to `best_clock`,
-which leads to memory disclosure and information leak.
+G920 device only advertises REPORT_ID_HIDPP_LONG and
+REPORT_ID_HIDPP_VERY_LONG in its HID report descriptor, so querying
+for REPORT_ID_HIDPP_SHORT with optional=false will always fail and
+prevent G920 to be recognized as a valid HID++ device.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+To fix this and improve some other aspects, modify
+hidpp_validate_device() as follows:
+
+  - Inline the code of hidpp_validate_report() to simplify
+    distingushing between non-present and invalid report descriptors
+
+  - Drop the check for id >= HID_MAX_IDS || id < 0 since all of our
+    IDs are static and known to satisfy that at compile time
+
+  - Change the algorithms to check all possible report
+    types (including very long report) and deem the device as a valid
+    HID++ device if it supports at least one
+
+  - Treat invalid report length as a hard stop for the validation
+    algorithm, meaning that if any of the supported reports has
+    invalid length we assume the worst and treat the device as a
+    generic HID device.
+
+  - Fold initialization of hidpp->very_long_report_length into
+    hidpp_validate_device() since it already fetches very long report
+    length and validates its value
+
+Fixes: fe3ee1ec007b ("HID: logitech-hidpp: allow non HID++ devices to be handled by this module")
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204191
+Reported-by: Sam Bazely <sambazley@fastmail.com>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Jiri Kosina <jikos@kernel.org>
+Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Henrik Rydberg <rydberg@bitmath.org>
+Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
+Cc: Austin Palmer <austinp@valvesoftware.com>
+Cc: linux-input@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org # 5.2+
 ---
- drivers/gpu/drm/gma500/cdv_intel_display.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/hid/hid-logitech-hidpp.c | 54 ++++++++++++++++++--------------
+ 1 file changed, 30 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/gpu/drm/gma500/cdv_intel_display.c b/drivers/gpu/drm/gma500/cdv_intel_display.c
-index f56852a503e8..8b784947ed3b 100644
---- a/drivers/gpu/drm/gma500/cdv_intel_display.c
-+++ b/drivers/gpu/drm/gma500/cdv_intel_display.c
-@@ -405,6 +405,8 @@ static bool cdv_intel_find_dp_pll(const struct gma_limit_t *limit,
- 	struct gma_crtc *gma_crtc = to_gma_crtc(crtc);
- 	struct gma_clock_t clock;
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+index 85911586b3b6..6e669eb7dc69 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -3498,34 +3498,45 @@ static int hidpp_get_report_length(struct hid_device *hdev, int id)
+ 	return report->field[0]->report_count + 1;
+ }
  
-+	memset(&clock, 0, sizeof(clock));
+-static bool hidpp_validate_report(struct hid_device *hdev, int id,
+-				  int expected_length, bool optional)
++static bool hidpp_validate_device(struct hid_device *hdev)
+ {
+-	int report_length;
++	struct hidpp_device *hidpp = hid_get_drvdata(hdev);
++	int id, report_length, supported_reports = 0;
 +
- 	switch (refclk) {
- 	case 27000:
- 		if (target < 200000) {
++	id = REPORT_ID_HIDPP_SHORT;
++	report_length = hidpp_get_report_length(hdev, id);
++	if (report_length) {
++		if (report_length < HIDPP_REPORT_SHORT_LENGTH)
++			goto bad_device;
+ 
+-	if (id >= HID_MAX_IDS || id < 0) {
+-		hid_err(hdev, "invalid HID report id %u\n", id);
+-		return false;
++		supported_reports++;
+ 	}
+ 
++	id = REPORT_ID_HIDPP_LONG;
+ 	report_length = hidpp_get_report_length(hdev, id);
+-	if (!report_length)
+-		return optional;
++	if (report_length) {
++		if (report_length < HIDPP_REPORT_LONG_LENGTH)
++			goto bad_device;
+ 
+-	if (report_length < expected_length) {
+-		hid_warn(hdev, "not enough values in hidpp report %d\n", id);
+-		return false;
++		supported_reports++;
+ 	}
+ 
+-	return true;
+-}
++	id = REPORT_ID_HIDPP_VERY_LONG;
++	report_length = hidpp_get_report_length(hdev, id);
++	if (report_length) {
++		if (report_length < HIDPP_REPORT_LONG_LENGTH ||
++		    report_length > HIDPP_REPORT_VERY_LONG_MAX_LENGTH)
++			goto bad_device;
+ 
+-static bool hidpp_validate_device(struct hid_device *hdev)
+-{
+-	return hidpp_validate_report(hdev, REPORT_ID_HIDPP_SHORT,
+-				     HIDPP_REPORT_SHORT_LENGTH, false) &&
+-	       hidpp_validate_report(hdev, REPORT_ID_HIDPP_LONG,
+-				     HIDPP_REPORT_LONG_LENGTH, true);
++		supported_reports++;
++		hidpp->very_long_report_length = report_length;
++	}
++
++	return supported_reports;
++
++bad_device:
++	hid_warn(hdev, "not enough values in hidpp report %d\n", id);
++	return false;
+ }
+ 
+ static bool hidpp_application_equals(struct hid_device *hdev,
+@@ -3572,11 +3583,6 @@ static int hidpp_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ 		return hid_hw_start(hdev, HID_CONNECT_DEFAULT);
+ 	}
+ 
+-	hidpp->very_long_report_length =
+-		hidpp_get_report_length(hdev, REPORT_ID_HIDPP_VERY_LONG);
+-	if (hidpp->very_long_report_length > HIDPP_REPORT_VERY_LONG_MAX_LENGTH)
+-		hidpp->very_long_report_length = HIDPP_REPORT_VERY_LONG_MAX_LENGTH;
+-
+ 	if (id->group == HID_GROUP_LOGITECH_DJ_DEVICE)
+ 		hidpp->quirks |= HIDPP_QUIRK_UNIFYING;
+ 
 -- 
-2.17.1
+2.21.0
 
