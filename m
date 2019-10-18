@@ -2,114 +2,214 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9B8CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E1ECA9ECB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD5192067B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:32:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="bP0txo6K"
+	by mail.kernel.org (Postfix) with ESMTP id F25812067B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:34:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504112AbfJRFc2 (ORCPT
+        id S2395224AbfJRFeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:32:28 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:56100 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727399AbfJRFc2 (ORCPT
+        Fri, 18 Oct 2019 01:34:17 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45996 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727399AbfJRFeR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:32:28 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a6so4722677wma.5
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:32:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vu77sOEgLk4hgL40syTM0FGRnGNgVOWc5ZddD0STylA=;
-        b=bP0txo6KUPJhsbrp1evgxikGXpmxRRBsxwvXOfWxyVwVHrFi0N9AwXrkV6GrFpjuSt
-         eHZUlVJCzEA8AsKXn3x83pefq7YQbAxz0wSDuYpwSHC+jdEqQ/y0ed9swRJ9apvco+tq
-         Rzm7V8XTWzw76Z8tw928+Z9IX7g4kgXf+TZwssgC/DWmDAyAqLmF1K+2MD1mRT3QQL/1
-         FtS1rxZdEZ2XzLXpVG7TKzavLCTpRteUY9RIAS/0aiA/Ye8s0Nh1LyrTbuWbqD8yxRTy
-         YQD8EozMsKueRf+2SiUX0iDzl8BybGbCB9nQUG4/xNdxXMIOHWrW2Bsqsi3HHeMhVt1P
-         0nyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vu77sOEgLk4hgL40syTM0FGRnGNgVOWc5ZddD0STylA=;
-        b=G75Y8FtKmmtKUyDA4joCupGUlT9mA0GEyhsKfOyvbEy1HjIrRtQIWVSaUuhTYHkp7R
-         EcmP6TUKMS1V5zAVDoBpt3tlpccH4xTqLUSir5gOEKd824J98I+7ytNOLh9uyv2XFShM
-         KpS78uNoP0wmSfMIwmULdYZt6GITr5zzr2TeO5IMNEK9syrMo5x6ZXuXWD9XfqFz6sS0
-         bpUll4R+niz0uW6poP+Cbq9EPl1NXrjekWLAodrDT1WW1JVneESfvrfQ9eq1UAUIZql1
-         XsDgt62L5vRwPuk+vyuwClf6mdsur8dL+4ZDQaG/Vksy+rC/dFqjxXcbBkyO9HwEGSMt
-         3iCQ==
-X-Gm-Message-State: APjAAAW4vj+72XBLYIY/ho7iFjDPXALz9BQrZ1e6fOY1FVokXRV4d5Ic
-        O+D/2aHeC/1AvJms3j7h04gv6CRT7ZbxJCxJBHc8niJkzHU=
-X-Google-Smtp-Source: APXvYqxwpSMBKy0XeXO7zYB3T/WGjdM1/WkV95Bytp+CJYFA/TJLm9WLD6aXl22dULfFoj56AIwQkhQ22smUpGrLZvA=
-X-Received: by 2002:a05:600c:2291:: with SMTP id 17mr5045041wmf.171.1571367692099;
- Thu, 17 Oct 2019 20:01:32 -0700 (PDT)
+        Fri, 18 Oct 2019 01:34:17 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9I5WWhK042797
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 01:34:16 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vq5n8jvma-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 01:34:16 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
+        Fri, 18 Oct 2019 06:34:13 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 18 Oct 2019 06:34:09 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9I5Y8Q451183716
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 18 Oct 2019 05:34:08 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8E36A42041;
+        Fri, 18 Oct 2019 05:34:08 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CA68742042;
+        Fri, 18 Oct 2019 05:34:06 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.124.35.142])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 18 Oct 2019 05:34:06 +0000 (GMT)
+Subject: Re: [PATCH v3 04/10] sched/fair: rework load_balance
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>
+References: <1568878421-12301-1-git-send-email-vincent.guittot@linaro.org>
+ <1568878421-12301-5-git-send-email-vincent.guittot@linaro.org>
+ <17c4e175-d580-a43d-1278-b7a54c697544@linux.ibm.com>
+ <CAKfTPtB-12oAe5ssxrp4aO35qC9H_EWK=UcuqEDXSucKEWngzA@mail.gmail.com>
+From:   Parth Shah <parth@linux.ibm.com>
+Date:   Fri, 18 Oct 2019 11:04:06 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20191017173743.5430-1-hch@lst.de> <20191017173743.5430-12-hch@lst.de>
-In-Reply-To: <20191017173743.5430-12-hch@lst.de>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Fri, 18 Oct 2019 08:31:21 +0530
-Message-ID: <CAAhSdy2R4iJ6XYytTcvt005HS4bv1Sy-3VfHZaC5QxA6S=fzsQ@mail.gmail.com>
-Subject: Re: [PATCH 11/15] riscv: use the correct interrupt levels for M-mode
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAKfTPtB-12oAe5ssxrp4aO35qC9H_EWK=UcuqEDXSucKEWngzA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19101805-4275-0000-0000-000003732F30
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101805-4276-0000-0000-0000388649FE
+Message-Id: <ea65955f-8b90-f739-1ede-db2b0e56ce8d@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-18_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910180052
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 11:08 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> The numerical levels for External/Timer/Software interrupts differ
-> between S-mode and M-mode.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/riscv/kernel/irq.c | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/riscv/kernel/irq.c b/arch/riscv/kernel/irq.c
-> index 804ff70bb853..dbd1fd7c22e4 100644
-> --- a/arch/riscv/kernel/irq.c
-> +++ b/arch/riscv/kernel/irq.c
-> @@ -14,9 +14,15 @@
->  /*
->   * Possible interrupt causes:
->   */
-> -#define INTERRUPT_CAUSE_SOFTWARE       IRQ_S_SOFT
-> -#define INTERRUPT_CAUSE_TIMER          IRQ_S_TIMER
-> -#define INTERRUPT_CAUSE_EXTERNAL       IRQ_S_EXT
-> +#ifdef CONFIG_RISCV_M_MODE
-> +# define INTERRUPT_CAUSE_SOFTWARE      IRQ_M_SOFT
-> +# define INTERRUPT_CAUSE_TIMER         IRQ_M_TIMER
-> +# define INTERRUPT_CAUSE_EXTERNAL      IRQ_M_EXT
-> +#else
-> +# define INTERRUPT_CAUSE_SOFTWARE      IRQ_S_SOFT
-> +# define INTERRUPT_CAUSE_TIMER         IRQ_S_TIMER
-> +# define INTERRUPT_CAUSE_EXTERNAL      IRQ_S_EXT
-> +#endif /* CONFIG_RISCV_M_MODE */
->
->  int arch_show_interrupts(struct seq_file *p, int prec)
->  {
-> --
-> 2.20.1
->
 
-LGTM.
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
+On 10/16/19 5:26 PM, Vincent Guittot wrote:
+> On Wed, 16 Oct 2019 at 09:21, Parth Shah <parth@linux.ibm.com> wrote:
+>>
+>>
+>>
+>> On 9/19/19 1:03 PM, Vincent Guittot wrote:
+>>
+>> [...]
+>>
+>>> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+>>> ---
+>>>  kernel/sched/fair.c | 585 ++++++++++++++++++++++++++++++++++------------------
+>>>  1 file changed, 380 insertions(+), 205 deletions(-)
+>>>
+>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>>> index 017aad0..d33379c 100644
+>>> --- a/kernel/sched/fair.c
+>>> +++ b/kernel/sched/fair.c
+>>> @@ -7078,11 +7078,26 @@ static unsigned long __read_mostly max_load_balance_interval = HZ/10;
+>>>
+>>>  enum fbq_type { regular, remote, all };
+>>>
+>>> +/*
+>>> + * group_type describes the group of CPUs at the moment of the load balance.
+>>> + * The enum is ordered by pulling priority, with the group with lowest priority
+>>> + * first so the groupe_type can be simply compared when selecting the busiest
+>>> + * group. see update_sd_pick_busiest().
+>>> + */
+>>>  enum group_type {
+>>> -     group_other = 0,
+>>> +     group_has_spare = 0,
+>>> +     group_fully_busy,
+>>>       group_misfit_task,
+>>> +     group_asym_packing,
+>>>       group_imbalanced,
+>>> -     group_overloaded,
+>>> +     group_overloaded
+>>> +};
+>>> +
+>>> +enum migration_type {
+>>> +     migrate_load = 0,
+>>> +     migrate_util,
+>>> +     migrate_task,
+>>> +     migrate_misfit
+>>>  };
+>>>
+>>>  #define LBF_ALL_PINNED       0x01
+>>> @@ -7115,7 +7130,7 @@ struct lb_env {
+>>>       unsigned int            loop_max;
+>>>
+>>>       enum fbq_type           fbq_type;
+>>> -     enum group_type         src_grp_type;
+>>> +     enum migration_type     balance_type;
+>>>       struct list_head        tasks;
+>>>  };
+>>>
+>>> @@ -7347,7 +7362,7 @@ static int detach_tasks(struct lb_env *env)
+>>>  {
+>>>       struct list_head *tasks = &env->src_rq->cfs_tasks;
+>>>       struct task_struct *p;
+>>> -     unsigned long load;
+>>> +     unsigned long util, load;
+>>>       int detached = 0;
+>>>
+>>>       lockdep_assert_held(&env->src_rq->lock);
+>>> @@ -7380,19 +7395,53 @@ static int detach_tasks(struct lb_env *env)
+>>>               if (!can_migrate_task(p, env))
+>>>                       goto next;
+>>>
+>>> -             load = task_h_load(p);
+>>> +             switch (env->balance_type) {
+>>> +             case migrate_load:
+>>> +                     load = task_h_load(p);
+>>>
+>>> -             if (sched_feat(LB_MIN) && load < 16 && !env->sd->nr_balance_failed)
+>>> -                     goto next;
+>>> +                     if (sched_feat(LB_MIN) &&
+>>> +                         load < 16 && !env->sd->nr_balance_failed)
+>>> +                             goto next;
+>>>
+>>> -             if ((load / 2) > env->imbalance)
+>>> -                     goto next;
+>>> +                     if ((load / 2) > env->imbalance)
+>>> +                             goto next;
+>>> +
+>>> +                     env->imbalance -= load;
+>>> +                     break;
+>>> +
+>>> +             case migrate_util:
+>>> +                     util = task_util_est(p);
+>>> +
+>>> +                     if (util > env->imbalance)
+>>
+>> Can you please explain what would happen for
+>> `if (util/2 > env->imbalance)` ?
+>> just like when migrating load, even util shouldn't be migrated if
+>> env->imbalance is just near the utilization of the task being moved, isn't it?
+> 
+> I have chosen uti and not util/2 to be conservative because
+> migrate_util is used to fill spare capacity.
+> With `if (util/2 > env->imbalance)`, we can more easily overload the
+> local group or pick too much utilization from the overloaded group.
+> 
 
-Regards,
-Anup
+fair enough. I missed the point that unlike migrate_load, with
+migrate_util, env->imbalance is just spare capacity of the local group.
+
+Thanks,
+Parth
+
+>>
+>>> +                             goto next;
+>>> +
+>>> +                     env->imbalance -= util;
+>>> +                     break;
+>>> +[ ... ]
+>>
+>> Thanks,
+>> Parth
+>>
+
