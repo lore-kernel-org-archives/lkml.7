@@ -2,133 +2,94 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B502CCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64195CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91A0F2089C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 333662089C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:26:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JnziTdBN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442773AbfJRMX5 (ORCPT
+        id S2633701AbfJRM0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 08:23:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40208 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408123AbfJRMX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 08:23:56 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 47EAA307C656;
-        Fri, 18 Oct 2019 12:23:56 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-43.ams2.redhat.com [10.36.116.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6200060BF1;
-        Fri, 18 Oct 2019 12:23:53 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 5739616E08; Fri, 18 Oct 2019 14:23:52 +0200 (CEST)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/virtio: move byteorder handling into virtio_gpu_cmd_transfer_to_host_2d function
-Date:   Fri, 18 Oct 2019 14:23:52 +0200
-Message-Id: <20191018122352.17019-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 18 Oct 2019 12:23:56 +0000 (UTC)
+        Fri, 18 Oct 2019 08:26:01 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40346 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbfJRMZ7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 08:25:59 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9ICPtRi078638;
+        Fri, 18 Oct 2019 07:25:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571401555;
+        bh=zV3cVdmjhCBXzQdA/5xCOaiT1n6XKbwdMaP1jdy4goo=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=JnziTdBNxe0R5C7d4tduMXE2WzV7JvlqjhzSG+QPNlRcNVRqLphjx/SyM0/9Koxkm
+         GmSlFQUo5EaoNwAP43aNwfeQn7SGNUnS6H6u0sCtOAf9gUD8XRdwR/CySryZor3msS
+         iFH5ZsmdxqVE2ExxQDtEwPgWqHt1LL23WsM94fUU=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9ICPt4L092082
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 18 Oct 2019 07:25:55 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 18
+ Oct 2019 07:25:47 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 18 Oct 2019 07:25:55 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9ICPtfL012253;
+        Fri, 18 Oct 2019 07:25:55 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v14 02/19] dt-bindings: leds: Add multicolor ID to the color ID list
+Date:   Fri, 18 Oct 2019 07:25:04 -0500
+Message-ID: <20191018122521.6757-3-dmurphy@ti.com>
+X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
+In-Reply-To: <20191018122521.6757-1-dmurphy@ti.com>
+References: <20191018122521.6757-1-dmurphy@ti.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Be consistent with the rest of the code base.
+Add a new color ID that is declared as MULTICOLOR as with the
+multicolor framework declaring a definitive color is not accurate
+as the node can contain multiple colors.
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- drivers/gpu/drm/virtio/virtgpu_drv.h   |  4 ++--
- drivers/gpu/drm/virtio/virtgpu_plane.c | 12 ++++++------
- drivers/gpu/drm/virtio/virtgpu_vq.c    | 12 ++++++------
- 3 files changed, 14 insertions(+), 14 deletions(-)
+ include/dt-bindings/leds/common.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
-index 314e02f94d9c..0b56ba005e25 100644
---- a/drivers/gpu/drm/virtio/virtgpu_drv.h
-+++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-@@ -267,8 +267,8 @@ void virtio_gpu_cmd_unref_resource(struct virtio_gpu_device *vgdev,
- 				   uint32_t resource_id);
- void virtio_gpu_cmd_transfer_to_host_2d(struct virtio_gpu_device *vgdev,
- 					uint64_t offset,
--					__le32 width, __le32 height,
--					__le32 x, __le32 y,
-+					uint32_t width, uint32_t height,
-+					uint32_t x, uint32_t y,
- 					struct virtio_gpu_object_array *objs,
- 					struct virtio_gpu_fence *fence);
- void virtio_gpu_cmd_resource_flush(struct virtio_gpu_device *vgdev,
-diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
-index f4b7360282ce..390524143139 100644
---- a/drivers/gpu/drm/virtio/virtgpu_plane.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
-@@ -132,10 +132,10 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
- 			virtio_gpu_array_add_obj(objs, vgfb->base.obj[0]);
- 			virtio_gpu_cmd_transfer_to_host_2d
- 				(vgdev, 0,
--				 cpu_to_le32(plane->state->src_w >> 16),
--				 cpu_to_le32(plane->state->src_h >> 16),
--				 cpu_to_le32(plane->state->src_x >> 16),
--				 cpu_to_le32(plane->state->src_y >> 16),
-+				 plane->state->src_w >> 16,
-+				 plane->state->src_h >> 16,
-+				 plane->state->src_x >> 16,
-+				 plane->state->src_y >> 16,
- 				 objs, NULL);
- 		}
- 	} else {
-@@ -234,8 +234,8 @@ static void virtio_gpu_cursor_plane_update(struct drm_plane *plane,
- 		virtio_gpu_array_add_obj(objs, vgfb->base.obj[0]);
- 		virtio_gpu_cmd_transfer_to_host_2d
- 			(vgdev, 0,
--			 cpu_to_le32(plane->state->crtc_w),
--			 cpu_to_le32(plane->state->crtc_h),
-+			 plane->state->crtc_w,
-+			 plane->state->crtc_h,
- 			 0, 0, objs, vgfb->fence);
- 		dma_fence_wait(&vgfb->fence->f, true);
- 		dma_fence_put(&vgfb->fence->f);
-diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index 80176f379ad5..74ad3bc3ebe8 100644
---- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -549,8 +549,8 @@ void virtio_gpu_cmd_resource_flush(struct virtio_gpu_device *vgdev,
+diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
+index 9e1256a7c1bf..7006d15f71e8 100644
+--- a/include/dt-bindings/leds/common.h
++++ b/include/dt-bindings/leds/common.h
+@@ -29,7 +29,8 @@
+ #define LED_COLOR_ID_VIOLET	5
+ #define LED_COLOR_ID_YELLOW	6
+ #define LED_COLOR_ID_IR		7
+-#define LED_COLOR_ID_MAX	8
++#define LED_COLOR_ID_MULTI	8
++#define LED_COLOR_ID_MAX	9
  
- void virtio_gpu_cmd_transfer_to_host_2d(struct virtio_gpu_device *vgdev,
- 					uint64_t offset,
--					__le32 width, __le32 height,
--					__le32 x, __le32 y,
-+					uint32_t width, uint32_t height,
-+					uint32_t x, uint32_t y,
- 					struct virtio_gpu_object_array *objs,
- 					struct virtio_gpu_fence *fence)
- {
-@@ -571,10 +571,10 @@ void virtio_gpu_cmd_transfer_to_host_2d(struct virtio_gpu_device *vgdev,
- 	cmd_p->hdr.type = cpu_to_le32(VIRTIO_GPU_CMD_TRANSFER_TO_HOST_2D);
- 	cmd_p->resource_id = cpu_to_le32(bo->hw_res_handle);
- 	cmd_p->offset = cpu_to_le64(offset);
--	cmd_p->r.width = width;
--	cmd_p->r.height = height;
--	cmd_p->r.x = x;
--	cmd_p->r.y = y;
-+	cmd_p->r.width = cpu_to_le32(width);
-+	cmd_p->r.height = cpu_to_le32(height);
-+	cmd_p->r.x = cpu_to_le32(x);
-+	cmd_p->r.y = cpu_to_le32(y);
- 
- 	virtio_gpu_queue_fenced_ctrl_buffer(vgdev, vbuf, &cmd_p->hdr, fence);
- }
+ /* Standard LED functions */
+ #define LED_FUNCTION_ACTIVITY "activity"
 -- 
-2.18.1
+2.22.0.214.g8dca754b1e
 
