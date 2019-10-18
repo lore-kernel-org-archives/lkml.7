@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C12DCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37071CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB871222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 068F922466
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:05:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436326;
-	bh=o8P20wrNaZNXOqJF+YTebFW1ptiMmPp0UsImFpua9LQ=;
+	s=default; t=1571436331;
+	bh=LKQ3SUcS0O1HPhubqHJSlaoEhXrbVSoPR6JIftk12GY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ldlbo0fuhVLxOzWD3lsPc6k0N2riL5MsWqibeglQWogiORJ+71FCuLXv58sYpL1Ye
-	 xCXoEaVvXEjazuwv3ovzBcNFwaiv4zsOZDMUJllQtGJwVmdFIFvQj46cJrtseDzX59
-	 3nc6fTxsJX87lcWC8pdfCLyoM9ovG4rFkjCYGwFA=
+	b=Pw4Io3j7cok+Xz79tN7bj8AmrZIHgHf/wqYVhs/xpB6Jpc/Yk3KqsjM3ekvCjAqJP
+	 8r5I/yhZytWB5k+Gw9U7KEd7QAq4AwrjTCsjPumEV7MND8XMZSK5NRBFIgiyxLfUfj
+	 Ep5E7T5ObwNAABpx0aUpSHI2Lx/92uMtfDm954TA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729673AbfJRWFY (ORCPT
+        id S1729741AbfJRWF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:05:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37098 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:05:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729482AbfJRWFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:05:18 -0400
+        id S1729541AbfJRWFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:05:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 647D9222D2;
-        Fri, 18 Oct 2019 22:05:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE7DA20679;
+        Fri, 18 Oct 2019 22:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436317;
-        bh=o8P20wrNaZNXOqJF+YTebFW1ptiMmPp0UsImFpua9LQ=;
+        s=default; t=1571436321;
+        bh=LKQ3SUcS0O1HPhubqHJSlaoEhXrbVSoPR6JIftk12GY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hOi6OKOZyAfd3fQ4xIALDojORDcMCOL+lnIB6L0+vYbAVo4atc6LMcq6bi5d32vtB
-         pkMjAZOMTzODOeRG0ILTybSJ4IGkc9j78Ts8W+PCqrob/IGCaafawGJeYBT/Ln0JQb
-         JO3bv4YPr7tao2DyAte/fAhp0gcZIKDMXZUdrZa8=
+        b=BqoecOvlE6RVqdiYWwxj6pMuhdjB12HPSASJdXnyMYVrLuTyBiuMcrDBn448xVwro
+         KrVuw6oqmWcCcXpSG9pLBlXiy0+hTIuLGpavIIAH2qHwb/dVH6gVWwT5vxNOwn/HTN
+         zJsXsC/zvEu8FZpQg+/KYJhWZjKz/yxC8lU3+qbw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiubo Li <xiubli@redhat.com>, Mike Christie <mchristi@redhat.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org, nbd@other.debian.org
-Subject: [PATCH AUTOSEL 5.3 85/89] nbd: fix possible sysfs duplicate warning
-Date:   Fri, 18 Oct 2019 18:03:20 -0400
-Message-Id: <20191018220324.8165-85-sashal@kernel.org>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 89/89] tracing: Initialize iter->seq after zeroing in tracing_read_pipe()
+Date:   Fri, 18 Oct 2019 18:03:24 -0400
+Message-Id: <20191018220324.8165-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -60,47 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiubo Li <xiubli@redhat.com>
+From: Petr Mladek <pmladek@suse.com>
 
-[ Upstream commit 862488105b84ca744b3d8ff131e0fcfe10644be1 ]
+[ Upstream commit d303de1fcf344ff7c15ed64c3f48a991c9958775 ]
 
-1. nbd_put takes the mutex and drops nbd->ref to 0. It then does
-idr_remove and drops the mutex.
+A customer reported the following softlockup:
 
-2. nbd_genl_connect takes the mutex. idr_find/idr_for_each fails
-to find an existing device, so it does nbd_dev_add.
+[899688.160002] NMI watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [test.sh:16464]
+[899688.160002] CPU: 0 PID: 16464 Comm: test.sh Not tainted 4.12.14-6.23-azure #1 SLE12-SP4
+[899688.160002] RIP: 0010:up_write+0x1a/0x30
+[899688.160002] Kernel panic - not syncing: softlockup: hung tasks
+[899688.160002] RIP: 0010:up_write+0x1a/0x30
+[899688.160002] RSP: 0018:ffffa86784d4fde8 EFLAGS: 00000257 ORIG_RAX: ffffffffffffff12
+[899688.160002] RAX: ffffffff970fea00 RBX: 0000000000000001 RCX: 0000000000000000
+[899688.160002] RDX: ffffffff00000001 RSI: 0000000000000080 RDI: ffffffff970fea00
+[899688.160002] RBP: ffffffffffffffff R08: ffffffffffffffff R09: 0000000000000000
+[899688.160002] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8b59014720d8
+[899688.160002] R13: ffff8b59014720c0 R14: ffff8b5901471090 R15: ffff8b5901470000
+[899688.160002]  tracing_read_pipe+0x336/0x3c0
+[899688.160002]  __vfs_read+0x26/0x140
+[899688.160002]  vfs_read+0x87/0x130
+[899688.160002]  SyS_read+0x42/0x90
+[899688.160002]  do_syscall_64+0x74/0x160
 
-3. just before the nbd_put could call nbd_dev_remove or not finished
-totally, but if nbd_dev_add try to add_disk, we can hit:
+It caught the process in the middle of trace_access_unlock(). There is
+no loop. So, it must be looping in the caller tracing_read_pipe()
+via the "waitagain" label.
 
-debugfs: Directory 'nbd1' with parent 'block' already present!
+Crashdump analyze uncovered that iter->seq was completely zeroed
+at this point, including iter->seq.seq.size. It means that
+print_trace_line() was never able to print anything and
+there was no forward progress.
 
-This patch will make sure all the disk add/remove stuff are done
-by holding the nbd_index_mutex lock.
+The culprit seems to be in the code:
 
-Reported-by: Mike Christie <mchristi@redhat.com>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+	/* reset all but tr, trace, and overruns */
+	memset(&iter->seq, 0,
+	       sizeof(struct trace_iterator) -
+	       offsetof(struct trace_iterator, seq));
+
+It was added by the commit 53d0aa773053ab182877 ("ftrace:
+add logic to record overruns"). It was v2.6.27-rc1.
+It was the time when iter->seq looked like:
+
+     struct trace_seq {
+	unsigned char		buffer[PAGE_SIZE];
+	unsigned int		len;
+     };
+
+There was no "size" variable and zeroing was perfectly fine.
+
+The solution is to reinitialize the structure after or without
+zeroing.
+
+Link: http://lkml.kernel.org/r/20191011142134.11997-1-pmladek@suse.com
+
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/nbd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 0b727f7432f9e..bd164192045b0 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -230,8 +230,8 @@ static void nbd_put(struct nbd_device *nbd)
- 	if (refcount_dec_and_mutex_lock(&nbd->refs,
- 					&nbd_index_mutex)) {
- 		idr_remove(&nbd_index_idr, nbd->index);
--		mutex_unlock(&nbd_index_mutex);
- 		nbd_dev_remove(nbd);
-+		mutex_unlock(&nbd_index_mutex);
- 	}
- }
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 563e80f9006a4..79573ec5e0267 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -5999,6 +5999,7 @@ tracing_read_pipe(struct file *filp, char __user *ubuf,
+ 	       sizeof(struct trace_iterator) -
+ 	       offsetof(struct trace_iterator, seq));
+ 	cpumask_clear(iter->started);
++	trace_seq_init(&iter->seq);
+ 	iter->pos = -1;
  
+ 	trace_event_read_lock();
 -- 
 2.20.1
 
