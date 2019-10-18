@@ -2,120 +2,91 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B91D3CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1687CCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D33C21897
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:17:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571426277;
-	bh=eV7mirDFw0+qyswNuXVjYVmF2Tyu4+UpVHXC8TzLnvU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=W012ola0N88cgFec4Ywrb6nsUxWBOu0DBQUdbcekv/0UnZfmCSvpWamdIQb4ti1ZH
-	 KpPFzfry0LAti0O72iT7nZbTgvr8DMk2APisc0Y06xPMmjv7VxMM0JAJhlV2yU2U1d
-	 pP30XCEjlIntg6gzZyWD4s6oFfN6vLv3XV2DCTnY=
+	by mail.kernel.org (Postfix) with ESMTP id E8A2B21897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:19:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505948AbfJRTR4 (ORCPT
+        id S2505956AbfJRTTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 15:17:56 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41525 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388138AbfJRTRz (ORCPT
+        Fri, 18 Oct 2019 15:19:09 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:35427 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388138AbfJRTTJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 15:17:55 -0400
-Received: by mail-lj1-f193.google.com with SMTP id f5so7299097ljg.8
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 12:17:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gfI0AJSthc554vKx2lGALI0At1GBVKK3lR5urVM2u5o=;
-        b=VgncGr5yjc//ouu/7v1mSUHDd6fZju6z/Ht4L7uJcHz8C5ZjHqzHf/QU+HEdUYxEO2
-         0wbGYwcxszbE4giQskHtZ5f0P2usEjfcHedLpFS+fuP/DSwO6J6N7ZCr6xa/ushP5O/t
-         SIhcZZVoAesRsxU+OQYIUywvth6XYUmMSzw1s=
+        Fri, 18 Oct 2019 15:19:09 -0400
+Received: by mail-qt1-f196.google.com with SMTP id m15so10720251qtq.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 12:19:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=gfI0AJSthc554vKx2lGALI0At1GBVKK3lR5urVM2u5o=;
-        b=l0kCWVC1VWWIUa9n/BkDMDQTTA18N7atfCL77cVCsvoRhNlH5tT3yyZxu4jU5Hlt0U
-         ETUCwFUAIePEFMSDVnhhVSlJSuE9jqELjcyvRXkS9m4ujVTemrHgWfa6RWT47tNu99iM
-         4XxATepXRi9XzPGAmFxtWkSp9bY0A+glIEzPGH7soDgzhaCE3A/OzGnegNq9zMsbWOcS
-         cLJADe2QpMlJSddYKE7GinqDZLtmv2+ed6sqbHzTs6GLIVIGDOwdtuPj1+B75mKCURzx
-         +IYO7XFKHkA+SAKzHhdZ89Eb5RUOfJ12QDzvPib60w0J0Ln3VUxChOF8fkA2J9OpjA2d
-         QnBQ==
-X-Gm-Message-State: APjAAAWZz0MSrmUmcg4EJ+Yg5OUjZzzMbVdj3TfV/BxGuZVqcF137OGn
-        hi8kmPLy0Nrzp7gmHx76xQ+X0aBC12g=
-X-Google-Smtp-Source: APXvYqzRDk2Ndpvq2BX25IA5cqar/G5GbneAmsteBFeHpoBSFUocWcpsUCuuam2ccyE5TgSTzkKFbA==
-X-Received: by 2002:a2e:1214:: with SMTP id t20mr7068307lje.191.1571426272164;
-        Fri, 18 Oct 2019 12:17:52 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id m21sm2761335lfh.39.2019.10.18.12.17.50
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Oct 2019 12:17:51 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id v8so4929418lfa.12
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 12:17:50 -0700 (PDT)
-X-Received: by 2002:a19:f709:: with SMTP id z9mr7071645lfe.170.1571426270371;
- Fri, 18 Oct 2019 12:17:50 -0700 (PDT)
+        bh=E3U4XGKYJwhdQD0/oZgkQawFhyEgJU1s1iV2DJRNVE0=;
+        b=E4K3fsEpbGRU96ifyfJUBhRH5+3380tM/UpQFIYcemC62gkZ4ZP59P+fSvWJAME/kL
+         pEdZZC5lTMx83uCHQPhH5YOqM5RlUirv3kd1AHZJJtFjEiZkPkxTfN36iotbE0A2IEbV
+         otMXVknkWOJY8WzevPbXfoJ9I96zG+uxMpgNJf/8uh3xSDNyh237AJM/RtEkrX4etDEh
+         qBQc3jPGOuGdlynDT+1IxaSJxgZvikH1ycupDizIKatodjqF461G4Ep5k2Ax0Pf+Q1ur
+         mK4tHo4m1RPffdrztqjyb23+AWImxDIaKktds0RzcwREmiOiAbvDc+5QmkeA898QDFO9
+         anKg==
+X-Gm-Message-State: APjAAAX4203WzXybwDHZu9/dbMZVBYK9wtco94jaMKrfekHj2j/9rBSo
+        LlOVCJYGxqLrGa4nVdBQ49lqz68xK366hmXhdEw=
+X-Google-Smtp-Source: APXvYqxSdwLbuKUmnS6HRUngapjYIWC2HNoTLspIqQPpMjTGmKepluzI6LCX3jGsQESRx9rOP5yHQqeQSsLxa9EJpzQ=
+X-Received: by 2002:aed:3c67:: with SMTP id u36mr11534406qte.142.1571426348391;
+ Fri, 18 Oct 2019 12:19:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191017234348.wcbbo2njexn7ixpk@willie-the-truck>
- <CAHk-=wjPZYxiTs3F0Vbrd3kRizJGq-rQ_jqH1+8XR9Ai_kBoXg@mail.gmail.com> <20191018174153.slpmkvsz45hb6cts@willie-the-truck>
-In-Reply-To: <20191018174153.slpmkvsz45hb6cts@willie-the-truck>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 18 Oct 2019 12:17:34 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whmtB98b8=YL2b8HzPKRadk2A9pL0aasmvgebhePrDP9w@mail.gmail.com>
-Message-ID: <CAHk-=whmtB98b8=YL2b8HzPKRadk2A9pL0aasmvgebhePrDP9w@mail.gmail.com>
-Subject: Re: [GIT PULL] arm64: Fixes for -rc4
-To:     Will Deacon <will@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM Kernel Mailing List 
-        <linux-arm-kernel@lists.infradead.org>
+References: <20191018163047.1284736-1-arnd@arndb.de> <20191018163047.1284736-6-arnd@arndb.de>
+ <20191018190135.GF24810@lunn.ch>
+In-Reply-To: <20191018190135.GF24810@lunn.ch>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 18 Oct 2019 21:18:52 +0200
+Message-ID: <CAK8P3a1hw7Zi_g=F2ZThDW0FCKO1941f0yM8b0OA4d0toTRpUQ@mail.gmail.com>
+Subject: Re: [PATCH 6/6] ARM: orion: unify Makefile/Kconfig files
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 10:42 AM Will Deacon <will@kernel.org> wrote:
+On Fri, Oct 18, 2019 at 9:01 PM Andrew Lunn <andrew@lunn.ch> wrote:
 >
-> Thanks, that's helpful to know for next time. I guess I'm most surprised by
-> the discrepancy between the shortlog and the diffstat, whereas I intuitively
-> expected them to be generated in the same way.
+> On Fri, Oct 18, 2019 at 06:29:19PM +0200, Arnd Bergmann wrote:
+> > +config MACH_TERASTATION_WXL
+> > +     bool "Buffalo WLX (Terastation Duo) NAS"
+> > +     help
+> > +       Say 'Y' here if you want your kernel to support the
+> > +       Buffalo WXL Nas.
+> > +
+> > +endif
+> > +
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> > +menuconfig ARCH_ORION5X
+> > +     bool "Marvell Orion"
+> > +     depends on MMU && ARCH_MULTI_V5
+> > +     select CPU_FEROCEON
+> > +     select GENERIC_CLOCKEVENTS
+> > +     select FORCE_PCI
+> > +     select PHYLIB if NETDEVICES
+> > +     select PLAT_ORION_LEGACY
+> > +     help
+> > +       Support for the following Marvell Orion 5x series SoCs:
+> > +       Orion-1 (5181), Orion-VoIP (5181L), Orion-NAS (5182),
+> > +       Orion-2 (5281), Orion-1-90 (6183).
+>
+> Hi Arnd
+>
+> I don't think this SPDX line should be in the middle of the file?
 
-So logs and diffs are fundamentally different.
+Fixed now, thanks!
 
-A log is an operation on a _set_ of commits (that's the whole point -
-you don't list the beginning and the end, you list all the commits in
-between), while a diff is fundamentally an operation on two end-points
-and shows the code difference between those two points.
-
-And the summary versions of those operations (shortlog and diffstat)
-are no different.
-
-So as a set operation, "shortlog" has no issues with multiple merge
-bases. Doing a shortlog is still just a set difference between your
-commits and the upstream commits, and the number of merge bases is
-irrelevant. "List all commits that I have, but upstream doesn't have"
-is a very straightforward and natural set operation.
-
-But as a "two endpoints" operation, diffstat has real problems any
-time you have more than two endpoints - when you have multiple merge
-bases, you fundamentally have more than two endpoints: you have all of
-the merge bases, and then you have your end result.
-
-What you doing the merge does is to turn the multiple merge bases into
-just one point: the thing you merged against now becomes the common
-merge point, and now you have a "two endpoints" for the diffstat: the
-thing you merged against, and your end result are now the two points
-that you can diff against.
-
-But the shortlog is always correct, because it just doesn't even care
-about that whole issue.
-
-                Linus
+      Arnd
