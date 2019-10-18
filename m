@@ -2,105 +2,119 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F322FCA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15792CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6ACE222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D70AD222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:00:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jatNbz0I"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="LNjzhGzW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441949AbfJRFAT (ORCPT
+        id S2441973AbfJRFAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:00:19 -0400
-Received: from mail-pg1-f176.google.com ([209.85.215.176]:41558 "EHLO
-        mail-pg1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbfJRFAT (ORCPT
+        Fri, 18 Oct 2019 01:00:24 -0400
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:57008 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2441963AbfJRFAW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:00:19 -0400
-Received: by mail-pg1-f176.google.com with SMTP id t3so2649322pga.8;
-        Thu, 17 Oct 2019 22:00:18 -0700 (PDT)
+        Fri, 18 Oct 2019 01:00:22 -0400
+X-Greylist: delayed 300 seconds by postgrey-1.27 at vger.kernel.org; Fri, 18 Oct 2019 01:00:21 EDT
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 6C39CB5E
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 04:41:57 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 4RnzG78ndPZU for <linux-kernel@vger.kernel.org>;
+        Thu, 17 Oct 2019 23:41:57 -0500 (CDT)
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 436B6B53
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 23:41:57 -0500 (CDT)
+Received: by mail-io1-f69.google.com with SMTP id w8so6931782iol.20
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 21:41:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hkRzongkuOUe83ChWkL44NvN9Te54QbJ4HXExHzR2dY=;
-        b=jatNbz0IMlnkkWt3Xg1ggLGyaO+fIaHEXiyAghJ3oj3XGcTM6ib5fXHRjNOMzSfc4i
-         vCGp5w1Z+JLotu0IymLr1p0tRWNP7CE0HJgfQHkCoZlqf1NltbKigkHVou6QPc5+xzcG
-         Ww7lLxU48nRRFiQuTCC1TPVDsWKgpHK0/dVgJrMSojuoJrL5UpXHuK31cxiPqs1gQSJS
-         vyxwxHLJ3L3U3jWa10U+hHtsRIlCqeD4B0R6bWzLub+bEXq28Ws5rcGM/JIM9JVLxmQw
-         BlqDV8QwxTIGdGa42EtKB6wDuHg84K2VTcc4AcfkL5/cjszzprioS+kQ2JoyiJeHb3Bi
-         ut3Q==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=KZJ0qgGHHAivbnxIOZfhWtlIHuWG04Vj3FxHQ3w/GEE=;
+        b=LNjzhGzWitDO6Aa3bHfiAIwrG2rfKBT+UuuKAqLWwQm9ZoUQBg/dJQlS+sbtMORRxa
+         QLu+0EGyNHvfahcj4E5lZBPcYiQeACpKJETL3bb1hsWZjgcDjONw8wofFojapCsbneaC
+         ULB9gI3Il9/kfr5+o8P39xuoixmebvksqeWje76HFyiQ0g0Br6H8VZykRZcOqRaTNOIG
+         h7qRv1ptesw4P5E4PaW+nlmq9splbvENohVJpFPRat3KB2/gZxXc4o+BG3oGInvbnQJ0
+         lmcGmT4wOWpSiJoR8UlRP3zZYkYoGllHW7vJor/uZZRincMS4LUiDd2Pb6ljf1C34SM8
+         H1dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hkRzongkuOUe83ChWkL44NvN9Te54QbJ4HXExHzR2dY=;
-        b=ZB6qLK+Rj3bFNulOGUkke6WTqYS7bmQStwEE+tqQgTkK1afgpTYhXx+/zb5bHdk390
-         KUpxi6j0Zc4R+dAN45RmugCVQR7eiyQ3gIlFsNmZq/Zi9PTMhCrQ7S+Vf0s5CI/aotul
-         FIbnZH4BpSbiLMfsI7cSsd4Wn8V4GD4ONsLyreXMy6aGwoVxWxiOuoJ37RF9gOhry9HM
-         OFhGL8688mjjXObw4eVE8y3EVVIuH9d45nr7O2Sv2bSbCfVXPo6tr7jqf035VxX9gn8L
-         JMDL2FdfPz9kFyIq8hzr48Sm3d+UZbVI0oVg5mZ2LAuiyj2uuB6knmCM/jXk2Z68mpOK
-         fj6Q==
-X-Gm-Message-State: APjAAAUvc6jVZUI1Tj19a53uFDv81RcXMiLWsbGfnbBdNXxMQ+T1nzm9
-        /1Kaq7sb1xnr5VjTPpHS2z0=
-X-Google-Smtp-Source: APXvYqwaO3NXr1IrOUdk7COhtE8etBUdbbxwgbUaqCWe2dBM2NF7UNRJQNPJdNWWjJt44Zo+wGuoMQ==
-X-Received: by 2002:aa7:8691:: with SMTP id d17mr4373530pfo.218.1571374818508;
-        Thu, 17 Oct 2019 22:00:18 -0700 (PDT)
-Received: from ast-mbp ([2620:10d:c090:180::cfd0])
-        by smtp.gmail.com with ESMTPSA id r24sm4564056pfh.69.2019.10.17.22.00.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Oct 2019 22:00:17 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 22:00:15 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: Re: linux-next: manual merge of the tip tree with the net-next tree
-Message-ID: <20191018050013.sle55bwea5kxovej@ast-mbp>
-References: <20191018133139.30c88807@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018133139.30c88807@canb.auug.org.au>
-User-Agent: NeoMutt/20180223
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=KZJ0qgGHHAivbnxIOZfhWtlIHuWG04Vj3FxHQ3w/GEE=;
+        b=ZzBelZRRhLDfzrl/EwI+9skcikFzaxCOtXy89Kjrjnq/1XmemmeAq3lDMmWiWSaq8x
+         JcTuN4zDzlXwtgCCpJM2piSQD0RDTyBQxpxegYpDXnMwn0BBX8Owv4Y2GQ2h3x/LeXNN
+         IIr5TZhs8T0/Ew/trbBHq5opGYLyEGwjXkyGsaW5g63j5ek3QICE0AuaCPF9GOjw744a
+         fCHDEeet7L2QmR8U0jzr3d9aLCDf3eWyLnJYidFAnWUWhCMxh23qzoZEsyM3/EbZjFO/
+         u25vNvG08Lc3q5swooa6gR/kMOVZNVq74BBIAzWJtbPTTDom4S7gYjMXgaXEmmTQcC9a
+         kCQg==
+X-Gm-Message-State: APjAAAVkTEaBI43ciI0h8MqjoIo2O4j3CC46gTHItSJyW5hGC1MEUs+n
+        DvIOe4Wjz4fTjf4Nrfb/o316twkBnmcwlVWSK+rv3es7gjPbNBIxll8gA1QuYcGeWx7klPD9G4m
+        NjythhEGHmY8U8FPTXUp/qdx21sKB
+X-Received: by 2002:a92:8941:: with SMTP id n62mr7842855ild.20.1571373716852;
+        Thu, 17 Oct 2019 21:41:56 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyoJ/tH4b5jxVJp8nBGw2QY5zm9BMxuCAeD6/be5zL/8OGhFhhi/R6r6p196AViBR8ZnBWC9Q==
+X-Received: by 2002:a92:8941:: with SMTP id n62mr7842836ild.20.1571373716551;
+        Thu, 17 Oct 2019 21:41:56 -0700 (PDT)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id w68sm2042093ili.59.2019.10.17.21.41.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 21:41:55 -0700 (PDT)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/gma500: fix memory disclosures due to uninitialized bytes
+Date:   Thu, 17 Oct 2019 23:41:50 -0500
+Message-Id: <20191018044150.1899-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 01:31:39PM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the tip tree got a conflict in:
-> 
->   samples/bpf/Makefile
-> 
-> between commit:
-> 
->   1d97c6c2511f ("samples/bpf: Base target programs rules on Makefile.target")
-> 
-> from the net-next tree and commit:
-> 
->   fce9501aec6b ("samples/bpf: fix build by setting HAVE_ATTR_TEST to zero")
-> 
-> from the tip tree.
+"clock" may be copied to "best_clock". Initializing best_clock
+is not sufficient. The fix initializes clock as well to avoid
+memory disclosures and informaiton leaks.
 
-Argh.
-Can tip folks revert the patch and let it go the normal route via bpf trees?
-There was no good reason in creating such conflicts.
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+---
+ drivers/gpu/drm/gma500/oaktrail_crtc.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/gpu/drm/gma500/oaktrail_crtc.c b/drivers/gpu/drm/gma500/oaktrail_crtc.c
+index 167c10767dd4..900e5499249d 100644
+--- a/drivers/gpu/drm/gma500/oaktrail_crtc.c
++++ b/drivers/gpu/drm/gma500/oaktrail_crtc.c
+@@ -129,6 +129,7 @@ static bool mrst_sdvo_find_best_pll(const struct gma_limit_t *limit,
+ 	s32 freq_error, min_error = 100000;
+ 
+ 	memset(best_clock, 0, sizeof(*best_clock));
++	memset(&clock, 0, sizeof(clock));
+ 
+ 	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
+ 		for (clock.n = limit->n.min; clock.n <= limit->n.max;
+@@ -185,6 +186,7 @@ static bool mrst_lvds_find_best_pll(const struct gma_limit_t *limit,
+ 	int err = target;
+ 
+ 	memset(best_clock, 0, sizeof(*best_clock));
++	memset(&clock, 0, sizeof(clock));
+ 
+ 	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
+ 		for (clock.p1 = limit->p1.min; clock.p1 <= limit->p1.max;
+-- 
+2.17.1
 
