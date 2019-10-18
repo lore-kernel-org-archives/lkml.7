@@ -2,166 +2,158 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 539D7CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09332CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28B692054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C69C92054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:38:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W69Zhxtc"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="PmFQYioV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443489AbfJRUh4 (ORCPT
+        id S2502981AbfJRUiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 16:37:56 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46270 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2443483AbfJRUhx (ORCPT
+        Fri, 18 Oct 2019 16:38:12 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38131 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731326AbfJRUiK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 16:37:53 -0400
-Received: by mail-wr1-f66.google.com with SMTP id o18so7521377wrv.13
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 13:37:51 -0700 (PDT)
+        Fri, 18 Oct 2019 16:38:10 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w8so3395957plq.5
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 13:38:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X3UV8UFcJXmjR8xWcyajZiE4sW1UaQr14OUnxYin0zs=;
-        b=W69ZhxtcR3kEhzKTH2ppDDQlp2xuHqjvVPvb8g7MCaMKvJtrGmDQfS+xmx1MWd1hh3
-         QdpwpFZ99tTKz2te6dL/wBpDqKbY0S5bSaMX6Vmp4JINdE+Bqt+lk1Wu1u5kD84Dc2Q+
-         5RtBaef8PynQwb9Ljk6vWRAshRymWsFte5uNn66HYAcKz651iy77RKs5rnO3gqJzMp7b
-         QVcQ7OI19bTTvuIugp4NbrXZyotEiFX6o3wLZaO/VZDeL1y5KG+ZQo1DiG85Du2xp/X2
-         BUjDvNl/1m/N2FUK5XNLaiu/lZLRzh8MOKLMQc1M62AgAd8VCpzGhFglTNx88iFW8aDW
-         S4jQ==
+        d=sifive.com; s=google;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Js8UyXKzcNoEJJmDg2fB7ETZw1UXZrdaUdx46TnSzV4=;
+        b=PmFQYioVvRr2wRTUyHxpUOWHMVdu2thIjey8wW+t1W0rNA8gV8xD+qzVNMJgwsoJ+s
+         0vY1RJJoS5FGWiyKZ0yzgg4GvAK997c+qFIJ7rda8sls+g72uwDctwaE9TgXDCSGCNRB
+         673GKj5l/F5sgl/YxgqJD3cG2/ziJBAzhM7pJFcqjOlGlgykC+mTzeLDbc/ZsX63X4NR
+         JvARjArPuTkFdVl7WNt3JU/En33mF6//9NP6rkGcJ6wsBWuPfYWYI2NQxniixZcLot4g
+         a7vvRgCmgXXN77Sacj+NOQVObFJHbEaZIxAqegMjy8bGOiid9UwyAJuG3Rqb3PllEgJn
+         RMRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X3UV8UFcJXmjR8xWcyajZiE4sW1UaQr14OUnxYin0zs=;
-        b=cuv3Ry9pTyW7xINsNSs8GgmKVxxIfCwCPS1B9vQ6ltSJ+KUQVXM/Uo8o1GycTCdhC5
-         VcQg/qCLU6/I3AN0FtkGgtYSEIz2uNj67ht5iDX1FTgrNezHGlnTK98nKL6U36SBKK/2
-         X5G7hAWW3/P4MY0zS9UmJKpJAc2Gu2vT1st+3lVQGdaat+Au8fOlxgrKmz9uf165vEM/
-         Ye/QgMVYb34fJ+dU8UubUsAt2sWmhpC23GxsqtOd2v3Phpih4b2tGHWs8NWjzaekTjk3
-         h5VyBQXVBgCoK6GYgpzsM59MKFr+uQcsDOaYE83NHuANKh6q4yIp3jExuJHaPjNPTwta
-         FY7g==
-X-Gm-Message-State: APjAAAVqAHKly+g2ibDiBOHWxZ/QpLZYM0ujZBawJsVLkO3ALu+uxJlT
-        8iepqN9NLJCMV7yRlmk/5k5WwqNH3XXyWH9hn+cwqsDgnuc=
-X-Google-Smtp-Source: APXvYqw2ZOeG9Qok15FEuCqv0VPjp925ukdnNDK2HvOgBeJidTalVOsPQfwmo811wLb4RXONWUEEJmfoTECJ+r0Plkw=
-X-Received: by 2002:a05:6000:92:: with SMTP id m18mr6224464wrx.105.1571431071003;
- Fri, 18 Oct 2019 13:37:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191002231617.3670-1-john.stultz@linaro.org> <20191002231617.3670-3-john.stultz@linaro.org>
- <2e369349-41f6-bd15-2829-fa886f209b39@redhat.com> <CALAqxLVcQ7yZuJCUEqGmvqcz5u0Gd=xJzqLbmiXKR+LJrOhvMQ@mail.gmail.com>
- <b8695418-9d3a-96a6-9587-c9a790f49740@redhat.com> <CALAqxLVh6GbiKmuK60e6f+_dWh-TS2ZLrwx0WsSo5bKp-F3iLA@mail.gmail.com>
- <648e2943-42f5-e07d-5bb4-f6fd8b38b726@redhat.com> <CALAqxLWh0=GRod5ORpi+ENpWCkmY39mUw_=NV67sKY8qH_otZw@mail.gmail.com>
- <f2236442-111d-cd84-fc47-0737df71cf3a@redhat.com> <CALAqxLWHbhst5KXAGCswKVp7ztzFHxdb6nskfze+Jk+xWo2Ssw@mail.gmail.com>
- <7877d69b-b17c-d4a4-9806-3dca98fc9e26@redhat.com> <CALAqxLWE-8YkYmrKoP6-+2xherwsGZ8-CeUyOFe9YPQj6EuSpg@mail.gmail.com>
- <7ea7824f-abc2-4cf6-720a-3668b6286781@redhat.com> <CALAqxLVrEYT5RbL_R0tx_3jHzt7ZuWHDPuEwt1r2iXgPwR+Czw@mail.gmail.com>
- <f5c9f5a3-97b8-389b-47ee-cfa5ddb9afa7@redhat.com>
-In-Reply-To: <f5c9f5a3-97b8-389b-47ee-cfa5ddb9afa7@redhat.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Fri, 18 Oct 2019 13:37:39 -0700
-Message-ID: <CALAqxLW5vYpGY1yLTvRefiX6anOGsPWW_Dc1Rj8kdf9+BDm0kw@mail.gmail.com>
-Subject: Re: [RFC][PATCH 2/3] usb: roles: Add usb role switch notifier.
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=Js8UyXKzcNoEJJmDg2fB7ETZw1UXZrdaUdx46TnSzV4=;
+        b=AUD0ylbuVpjny6EVvLAVY2d6DFmCH34UVa8nak1zPn5QuX1FQb80FFFTwMEZVUUUMJ
+         tGIt3cFl6YmNquni1jQcfQdYONGUPzmomCGRQyQR8P4VMw7LPaUkbWyFGIucc70zxWml
+         gGPtJG4Ea4Q4afFY0gwULGBXAuS+B8Ee8C0I3YOBpSOQT4KuR++Vp6XtEZ7LQ4O4Gifm
+         XhcMK/ZYT/s3EDFLbw/omiXUYHZwFWQVPYzEQ70pm6mpyuByWA9z1EJIgoLYAyv4YQuH
+         sjsLrteuikhfOaJm/cp5v15XS3Ge/kW+8sVCZG+UIw0zDCnqhmEzR9WCXEDu3ZZOdOvx
+         qErQ==
+X-Gm-Message-State: APjAAAUY9kYtXgiXF02ebJT9ztXRIc0af7TMyxkQRg1mnagI8JdLXqbI
+        pVtaYQ2FpovfGSXJvhUNWYziPg==
+X-Google-Smtp-Source: APXvYqx2jdlimEr6T3ephzi5HPyQ4wjtemZopyPGMNsdL8fHGE93OsN+AwxNxupLGPcLH65It1Ds+g==
+X-Received: by 2002:a17:902:fe04:: with SMTP id g4mr4203122plj.58.1571431089200;
+        Fri, 18 Oct 2019 13:38:09 -0700 (PDT)
+Received: from localhost ([152.179.112.46])
+        by smtp.gmail.com with ESMTPSA id bb15sm6704697pjb.2.2019.10.18.13.38.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 13:38:08 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 13:38:08 -0700 (PDT)
+X-Google-Original-Date: Fri, 18 Oct 2019 13:36:06 PDT (-0700)
+Subject:     Re: [PATCH v10 3/3] mm: fix double page fault on arm64 if PTE_AF is cleared
+In-Reply-To: <20191016234607.626nzv5kf5fgz25x@willie-the-truck>
+CC:     Justin.He@arm.com, Catalin.Marinas@arm.com, Mark.Rutland@arm.com,
+        James.Morse@arm.com, maz@kernel.org, willy@infradead.org,
+        kirill.shutemov@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, punitagrawal@gmail.com, tglx@linutronix.de,
+        akpm@linux-foundation.org, hejianet@gmail.com, Kaly.Xin@arm.com,
+        nd@arm.com
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     will@kernel.org
+Message-ID: <mhng-265b415f-c8ff-4727-a8fa-2f3e51937ba6@palmer-si-x1c4>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 1:21 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 18-10-2019 22:12, John Stultz wrote:
-> > On Fri, Oct 18, 2019 at 12:59 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >> On 18-10-2019 21:53, John Stultz wrote:
-> >>> On Fri, Oct 18, 2019 at 12:30 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >>>> Looking at drivers/usb/typec/tcpm/tcpci.c: tcpci_set_vconn I see that
-> >>>> there is a data struct with vendor specific callbacks and that the
-> >>>> drivers/usb/typec/tcpm/tcpci_rt1711h.c implements that.
-> >>>>
-> >>>> So you may want something similar here. But things are tricky here,
-> >>>> because when nothing is connected you want to provide Vbus for
-> >>>> the USB-A ports, which means that if someone then connects a
-> >>>> USB-A to C cable to connect the board to a PC (switching the port
-> >>>> to device mode) there will be a time when both sides are supplying
-> >>>> 5V if I remember the schedule correctly.
-> >>>
-> >>> Ok. Thanks for the pointer, I'll take a look at that to see if I can
-> >>> get it to work.
-> >>>
-> >>>> I think that the original hack might not be that bad, the whole hw
-> >>>> design seems so, erm, broken, that you probably cannot do proper
-> >>>> roleswapping anyways.  So just tying Vbus to host mode might be
-> >>>> fine, the question then becomes again how can some other piece
-> >>>> of code listen to the role-switch events...
-> >>>
-> >>> So, at least in the current approach (see the v3 series), I've
-> >>> basically set the hub driver as an role-switch intermediary, sitting
-> >>> between the calls from the tcpm to the dwc3 driver. It actually works
-> >>> better then the earlier notifier method (which had some issues with
-> >>> reliably establishing the initial state on boot).  Does that approach
-> >>> work for you?
-> >>
-> >> That sounds like it might be a nice solution. But I have not seen the
-> >> code, I think I was not Cc-ed on v3. Do you have a patchwork or
-> >> lore.kernel.org link for me?
-> >
-> > Oh! I think I had you on CC, maybe it got caught in your spam folder?
+On Wed, 16 Oct 2019 16:46:08 PDT (-0700), will@kernel.org wrote:
+> Hey Palmer,
 >
-> More likely I just deleted mail to aggressively, sorry.
+> On Wed, Oct 16, 2019 at 04:21:59PM -0700, Palmer Dabbelt wrote:
+>> On Tue, 08 Oct 2019 05:39:44 PDT (-0700), will@kernel.org wrote:
+>> > On Tue, Oct 08, 2019 at 02:19:05AM +0000, Justin He (Arm Technology China) wrote:
+>> > > > On Mon, Sep 30, 2019 at 09:57:40AM +0800, Jia He wrote:
+>> > > > > diff --git a/mm/memory.c b/mm/memory.c
+>> > > > > index b1ca51a079f2..1f56b0118ef5 100644
+>> > > > > --- a/mm/memory.c
+>> > > > > +++ b/mm/memory.c
+>> > > > > @@ -118,6 +118,13 @@ int randomize_va_space __read_mostly =
+>> > > > >  					2;
+>> > > > >  #endif
+>> > > > >
+>> > > > > +#ifndef arch_faults_on_old_pte
+>> > > > > +static inline bool arch_faults_on_old_pte(void)
+>> > > > > +{
+>> > > > > +	return false;
+>> > > > > +}
+>> > > > > +#endif
+>> > > >
+>> > > > Kirill has acked this, so I'm happy to take the patch as-is, however isn't
+>> > > > it the case that /most/ architectures will want to return true for
+>> > > > arch_faults_on_old_pte()? In which case, wouldn't it make more sense for
+>> > > > that to be the default, and have x86 and arm64 provide an override? For
+>> > > > example, aren't most architectures still going to hit the double fault
+>> > > > scenario even with your patch applied?
+>> > >
+>> > > No, after applying my patch series, only those architectures which don't provide
+>> > > setting access flag by hardware AND don't implement their arch_faults_on_old_pte
+>> > > will hit the double page fault.
+>> > >
+>> > > The meaning of true for arch_faults_on_old_pte() is "this arch doesn't have the hardware
+>> > > setting access flag way, it might cause page fault on an old pte"
+>> > > I don't want to change other architectures' default behavior here. So by default,
+>> > > arch_faults_on_old_pte() is false.
+>> >
+>> > ...and my complaint is that this is the majority of supported architectures,
+>> > so you're fixing something for arm64 which also affects arm, powerpc,
+>> > alpha, mips, riscv, ...
+>> >
+>> > Chances are, they won't even realise they need to implement
+>> > arch_faults_on_old_pte() until somebody runs into the double fault and
+>> > wastes lots of time debugging it before they spot your patch.
+>>
+>> If I understand the semantics correctly, we should have this set to true.  I
+>> don't have any context here, but we've got
+>>
+>>                /*
+>>                 * The kernel assumes that TLBs don't cache invalid
+>>                 * entries, but in RISC-V, SFENCE.VMA specifies an
+>>                 * ordering constraint, not a cache flush; it is
+>>                 * necessary even after writing invalid entries.
+>>                 */
+>>                local_flush_tlb_page(addr);
+>>
+>> in do_page_fault().
 >
-> > My apologies either way! The thread is here:
-> >    https://lore.kernel.org/lkml/20191016033340.1288-1-john.stultz@linaro.org/
-> >
-> > And the hub/role-switch-intermediary driver is here:
-> >    https://lore.kernel.org/lkml/20191016033340.1288-12-john.stultz@linaro.org/
+> Ok, although I think this is really about whether or not your hardware can
+> make a pte young when accessed, or whether you take a fault and do it
+> by updating the pte explicitly.
 >
-> Hm, this looks very nice actually, much much better then the notifier stuff!
+> v12 of the patches did change the default, so you should be "safe" with
+> those either way:
 >
-> As for your:
->
-> "NOTE: It was noted that controlling the TYPEC_VBUS_POWER_OFF and
-> TYPEC_VBUS_POWER_ON values here is not reccomended. I'm looking
-> for a way to remove that bit from the logic here, but wanted to
-> still get feedback on this approach."
->
-> Comment in the commit message, normally a type-c port would turn external Vbus
-> off until a sink is connected, IIRC the same Vbus is also used for the TupeA ports
-> on the hub, so that would mean those are unusable when nothing is connected to
-> the TypeC port, which is not what you want.
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2019-October/686030.html
 
-Uh, so I think for the HiKey960, the type-A ports on the hub are
-separately powered via the hub_power_ctrl(hisi_hikey_usb,
-HUB_VBUS_POWER_OFF/ON) call.
+OK, that fence is because we allow invalid translations to be cached, which is a 
+completely different issue.
 
-At least, with the current driver, the functionality is working as
-expected: remove the USB-C cable, and devices connected to the hub
-power on, plug something into the USB-C port and devices plugged into
-the hub shutdown.
+RISC-V implementations are allowed to have software managed accessed/dirty 
+bits.  For some reason I thought we were relying on the firmware to handle 
+this, but I can't actually find the code so I might be crazy.  Wherever it's 
+done, there's no spec enforcing it so we should leave this true on RISC-V.
 
-But maybe I'm missing what you mean?
+Thanks!
 
-> So I think that given the special case / hack-ish hw you have, that just setting
-> Vbus based on the role is ok(ish).
-
-Ok. I'm happy to stick with what works here, since it is at least the
-oddness is isolated to the device specific hub driver.
-
-thanks
--john
+> Will
