@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20823CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E90E2CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB7B5205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B25C4205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437449;
-	bh=Z1qQ8+UxlcQJijWJfUxbC1ce0XHXMOMUHXD/QovTDxA=;
+	s=default; t=1571437458;
+	bh=uEND3GKoWK+g/JWo/oyDeh6QDH6dGdOrvIJh9bfh8S0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lYvBCj6uR/LuaII8karpnGNBK0kstVp2b0o2wSr0CVoXbhTdwJhXCD/Ar3E/bqlAu
-	 ylE4RUeu+u7ZofBKHdBD/yXCOmwIJAfkH21cCV9QJ0Jp1h/7acOhKgynbmRU+A/v/d
-	 JAwMPbf4RSRO/nnlaq0G409yzKTSFky+bFUgVrkY=
+	b=HXqaZrwh5+8g7gyH2nhSXQ9n2oNH+ZIrVl+LMioJaCC2Z3MWWKc614IuxOHiAV5Ih
+	 DAqw55E8v6qk1kjg2SwHvfgTTjC5SNFAgmIXjwJPebFmdAsQsHG3Vuj3D4wOoYnPQm
+	 hwM/FFYrNZOIot0om8/fSzvcBZv5uRmYm0rkBfIg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405603AbfJRWYH (ORCPT
+        id S2394374AbfJRWYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:24:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36874 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:24:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729130AbfJRWFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:05:05 -0400
+        id S1728911AbfJRWFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:05:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BADA5222CD;
-        Fri, 18 Oct 2019 22:05:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 698F520679;
+        Fri, 18 Oct 2019 22:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436304;
-        bh=Z1qQ8+UxlcQJijWJfUxbC1ce0XHXMOMUHXD/QovTDxA=;
+        s=default; t=1571436302;
+        bh=uEND3GKoWK+g/JWo/oyDeh6QDH6dGdOrvIJh9bfh8S0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XVvYgOivY2mCGPyTKIYE1TFCqoPzaNbmr66DVwfxOQI36T8phq82bnIUj8R99ByNM
-         g+uIceyy07HCm1ALyEMjH6zb4K1IVkhZI8pj+EMoHnWR2M/DbM+3AWCs6koGD3hYr3
-         l1CFg6tREAfvQg2UFbRWxiIaluweuTGvZymUyMwU=
+        b=wi6WjNs1F+abJcYvp3SABJyqSRMnaXLODl1drlgBXBOJplzIofRmxLKSdl/gGY7Jg
+         Wx26B6eI7IGLcgFTy3xQFFwesOGJjkLZFTIEsVEL8ZGOU1IOt3oTccUrzVdAVjPmT0
+         Jr7tdmsBbhLWYytaYOwUEQKONVHd4TrzNn8NxfvI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 75/89] iio: imu: st_lsm6dsx: fix waitime for st_lsm6dsx i2c controller
-Date:   Fri, 18 Oct 2019 18:03:10 -0400
-Message-Id: <20191018220324.8165-75-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 73/89] iio: imu: adis16400: release allocated memory on failure
+Date:   Fri, 18 Oct 2019 18:03:08 -0400
+Message-Id: <20191018220324.8165-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -59,41 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit fdb828e2c71a09bb9e865f41b015597c5f671705 ]
+[ Upstream commit ab612b1daf415b62c58e130cb3d0f30b255a14d0 ]
 
-i2c controller available in st_lsm6dsx series performs i2c slave
-configuration using accel clock as trigger.
-st_lsm6dsx_shub_wait_complete routine is used to wait the controller has
-carried out the requested configuration. However if the accel sensor is not
-enabled we should not use its configured odr to estimate a proper timeout
+In adis_update_scan_mode, if allocation for adis->buffer fails,
+previously allocated adis->xfer needs to be released.
 
-Fixes: c91c1c844ebd ("iio: imu: st_lsm6dsx: add i2c embedded controller support")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/iio/imu/adis_buffer.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c
-index 66fbcd94642d4..4c754a02717b3 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c
-@@ -92,9 +92,11 @@ static const struct st_lsm6dsx_ext_dev_settings st_lsm6dsx_ext_dev_table[] = {
- static void st_lsm6dsx_shub_wait_complete(struct st_lsm6dsx_hw *hw)
- {
- 	struct st_lsm6dsx_sensor *sensor;
-+	u16 odr;
+diff --git a/drivers/iio/imu/adis_buffer.c b/drivers/iio/imu/adis_buffer.c
+index 9ac8356d9a954..f446ff4978091 100644
+--- a/drivers/iio/imu/adis_buffer.c
++++ b/drivers/iio/imu/adis_buffer.c
+@@ -78,8 +78,11 @@ int adis_update_scan_mode(struct iio_dev *indio_dev,
+ 		return -ENOMEM;
  
- 	sensor = iio_priv(hw->iio_devs[ST_LSM6DSX_ID_ACC]);
--	msleep((2000U / sensor->odr) + 1);
-+	odr = (hw->enable_mask & BIT(ST_LSM6DSX_ID_ACC)) ? sensor->odr : 13;
-+	msleep((2000U / odr) + 1);
- }
+ 	adis->buffer = kcalloc(indio_dev->scan_bytes, 2, GFP_KERNEL);
+-	if (!adis->buffer)
++	if (!adis->buffer) {
++		kfree(adis->xfer);
++		adis->xfer = NULL;
+ 		return -ENOMEM;
++	}
  
- /**
+ 	rx = adis->buffer;
+ 	tx = rx + scan_count;
 -- 
 2.20.1
 
