@@ -2,98 +2,184 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F0BCA9EC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A56DCA9EC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA28121D80
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:15:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="awDrOrTN"
+	by mail.kernel.org (Postfix) with ESMTP id 45AC021852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:25:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409233AbfJRBPe (ORCPT
+        id S2409434AbfJRBZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 21:15:34 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:38881 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391934AbfJRBPe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 21:15:34 -0400
-Received: by mail-il1-f195.google.com with SMTP id y5so3986236ilb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 18:15:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=xMVFVGLiYSSLdYjE6VASkhDClgpi5ByjWpde3EPzDTo=;
-        b=awDrOrTNZsTliFwdBDUIyxs4uX5joR2/y276X1UXTxr76eI9fflr4Pp//BNKhw4LDP
-         udF5JY/ajGrCY8RdxmG2kJGXyipHWyNWPld3aZCqGILhwuTzivqGa1IDcV2DNRnj84q3
-         jlhnWl/WK/LTKjgg1pinyZrNLcMWVxx9FOwlZFX2iHQXHVfBZCuyWYvdWDFdVSM66+B4
-         SHBwMkz/wzQWkQVbZR+r2lNRYuiUTKLqYPo0e3CA1LavnCJGdkOF8sRgaNGe05WYeZC+
-         xG/cSojbKWDQHv1N8NC8pVWLjReHS2jTlxCJFM1wMFgozUD9nbcTIJIUroCyYj2/DMdi
-         Udlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=xMVFVGLiYSSLdYjE6VASkhDClgpi5ByjWpde3EPzDTo=;
-        b=jqTow5UiKaM8eD4i9yUyNH2X1pig+Uw/A/vAS32krEaeXRvKGmoksddXUqY4gXyVmM
-         /3nhuGwyVG0yQsur7Si6N7TlA+ZCOwc2fWa13ra/KcnCqz6i1QQW6sP6TrpKtXjuIsZx
-         gMzvQDvcoronOQRWcGuoo1VIiCa49tpUuzAvQl6r+Z5sf4/SARyOH8zgROV2LywDTL82
-         0ggzQEuXFhCw4GZNd54P2ltkgj3GrJsQRjhMgZQnka8tdikX/4zEelgGm0TKHSiIx53j
-         8cmFO7nFgukOLwBE+Gb+rQJYmJxb1RCkx87sJenFiOD/XyZVQim/cimPxsZ+rwiwOgXr
-         O10A==
-X-Gm-Message-State: APjAAAUKHSsEH7xH/LYcVkkI2V2U4jW/FqSC2GGwiMO0KoIn2lqEDDMi
-        /PDuUkGRshGKA/lBbVIAZSM2iQ4ERRY=
-X-Google-Smtp-Source: APXvYqzDVQiMyZIgvTZC/Q7ZcqBa0pFaN3EJ5m9p1+F6LuzHOYBWFwOn3qLkn0mFMNJ187/UdFrNTw==
-X-Received: by 2002:a92:83c5:: with SMTP id p66mr7527394ilk.204.1571361331720;
-        Thu, 17 Oct 2019 18:15:31 -0700 (PDT)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id t86sm1829722ila.21.2019.10.17.18.15.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 18:15:31 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 18:15:29 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     linux-riscv@lists.infradead.org
-cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/8] riscv: add prototypes for assembly language functions
- from head.S
-In-Reply-To: <20191018004929.3445-3-paul.walmsley@sifive.com>
-Message-ID: <alpine.DEB.2.21.9999.1910171814310.12651@viisi.sifive.com>
-References: <20191018004929.3445-1-paul.walmsley@sifive.com> <20191018004929.3445-3-paul.walmsley@sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Thu, 17 Oct 2019 21:25:13 -0400
+Received: from mga18.intel.com ([134.134.136.126]:24104 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391934AbfJRBZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 21:25:12 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 18:25:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,309,1566889200"; 
+   d="scan'208";a="208468202"
+Received: from unknown (HELO localhost) ([10.239.159.128])
+  by orsmga002.jf.intel.com with ESMTP; 17 Oct 2019 18:25:09 -0700
+Date:   Fri, 18 Oct 2019 09:28:09 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Jim Mattson <jmattson@google.com>,
+        Yang Weijiang <weijiang.yang@intel.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [PATCH v7 1/7] KVM: CPUID: Fix IA32_XSS support in CPUID(0xd,i)
+ enumeration
+Message-ID: <20191018012809.GA2286@local-michael-cet-test>
+References: <20190927021927.23057-1-weijiang.yang@intel.com>
+ <20190927021927.23057-2-weijiang.yang@intel.com>
+ <CALMp9eRXoyoX6GHQgVTXemJjm69MwqN+VDN47X=5BN36rvrAgA@mail.gmail.com>
+ <20191017194622.GI20903@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191017194622.GI20903@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019, Paul Walmsley wrote:
+On Thu, Oct 17, 2019 at 12:46:22PM -0700, Sean Christopherson wrote:
+> On Wed, Oct 02, 2019 at 10:26:10AM -0700, Jim Mattson wrote:
+> > On Thu, Sep 26, 2019 at 7:17 PM Yang Weijiang <weijiang.yang@intel.com> wrote:
+> > > @@ -414,6 +419,50 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
+> > >         }
+> > >  }
+> > >
+> > > +static inline void do_cpuid_0xd_mask(struct kvm_cpuid_entry2 *entry, int index)
+> > > +{
+> > > +       unsigned int f_xsaves = kvm_x86_ops->xsaves_supported() ? F(XSAVES) : 0;
+> > 
+> > Does Intel have CPUs that support XSAVES but don't support the "enable
+> > XSAVES/XRSTORS" VM-execution control?
+> 
+> I doubt it.
+> 
+> > If so, what is the behavior of XSAVESXRSTORS on those CPUs in VMX
+> > non-root mode?
+> 
+> #UD.  If not, the CPU would be in violation of the SDM:
+> 
+>   If the "enable XSAVES/XRSTORS" VM-execution control is 0, XRSTORS causes
+>   an invalid-opcode exception (#UD).
+> 
+> > If not, why is this conditional F(XSAVES) here?
+> 
+> Because it's technically legal for the control to not be supported even
+> if the host doesn't have support.
+> 
+> > > +       /* cpuid 0xD.1.eax */
+> > > +       const u32 kvm_cpuid_D_1_eax_x86_features =
+> > > +               F(XSAVEOPT) | F(XSAVEC) | F(XGETBV1) | f_xsaves;
+> > > +       u64 u_supported = kvm_supported_xcr0();
+> > > +       u64 s_supported = kvm_supported_xss();
+> > > +       u64 supported;
+> > > +
+> > > +       switch (index) {
+> > > +       case 0:
+> > > +               entry->eax &= u_supported;
+> > > +               entry->ebx = xstate_required_size(u_supported, false);
+> > 
+> > EBX could actually be zero, couldn't it? Since this output is
+> > context-dependent, I'm not sure how to interpret it when returned from
+> > KVM_GET_SUPPORTED_CPUID.
+> 
+> *sigh*.  It took me something like ten read throughs to understand what
+> you're saying.
+> 
+> Yes, it could be zero, though that ship may have sailed since the previous
+> code reported a non-zero value.  Whatever is done, KVM should be consistent
+> for all indices, i.e. either report zero or the max size.
+>
+Thanks Seans! So I will add the check  *if (!supported)* back in next
+version.
 
-> Add prototypes for assembly language functions defined in head.S,
-> and include these prototypes into C source files that call those
-> functions.
-
-[ ... ]
-
-> diff --git a/arch/riscv/mm/fault.c b/arch/riscv/mm/fault.c
-> index 96add1427a75..ec15a9b15448 100644
-> --- a/arch/riscv/mm/fault.c
-> +++ b/arch/riscv/mm/fault.c
-> @@ -18,6 +18,8 @@
->  #include <asm/ptrace.h>
->  #include <asm/tlbflush.h>
+> > > +               entry->ecx = entry->ebx;
+> > > +               entry->edx = 0;
+> > 
+> > Shouldn't this be: entry->edx &= u_supported >> 32?
+> 
+> Probably.  The confusion likely stems from this wording in the SDM, where
+> it states the per-bit behavior and then also says all bits are reserved.
+> I think it makes sense to do as Jim suggested, and defer the reserved bit
+> handling to kvm_supported_{xcr0,xss}().
+> 
+>   Bit 31 - 00: Reports the supported bits of the upper 32 bits of XCR0.
+>   XCR0[n+32] can be set to 1 only if EDX[n] is 1.
+>   Bits 31 - 00: Reserved
 >  
-> +#include "../head.h"
-> +
+> > > +               break;
+> > > +       case 1:
+> > > +               supported = u_supported | s_supported;
+> > > +               entry->eax &= kvm_cpuid_D_1_eax_x86_features;
+> > > +               cpuid_mask(&entry->eax, CPUID_D_1_EAX);
+> > > +               entry->ebx = 0;
+> > > +               entry->edx = 0;
+> > 
+> > Shouldn't this be: entry->edx &= s_supported >> 32?
+> 
+> Same as above.
+>  
+Yes, I followed Jim's comments.
 
-"../kernel/head.h", rather.
+> > > +               entry->ecx &= s_supported;
+> > > +               if (entry->eax & (F(XSAVES) | F(XSAVEC)))
+> > > +                       entry->ebx = xstate_required_size(supported, true);
+> > 
+> > As above, can't EBX just be zero, since it's context-dependent? What
+> > is the context when processing KVM_GET_SUPPORTED_CPUID? And why do we
+> > only fill this in when XSAVES or XSAVEC is supported?
+> > 
+> > > +               break;
+> > > +       default:
+> > > +               supported = (entry->ecx & 1) ? s_supported : u_supported;
+> > > +               if (!(supported & ((u64)1 << index))) {
+> > 
+> > Nit: 1ULL << index.
+> 
+> Even better:  BIT_ULL(index)
+> 
+> > > +                       entry->eax = 0;
+> > > +                       entry->ebx = 0;
+> > > +                       entry->ecx = 0;
+> > > +                       entry->edx = 0;
+> > > +                       return;
+> > > +               }
+> > > +               if (entry->ecx)
+> > > +                       entry->ebx = 0;
+> > 
+> > This seems to back up my claims above regarding the EBX output for
+> > cases 0 and 1, but aside from those subleaves, is this correct? For
+> > subleaves > 1, ECX bit 1 can be set for extended state components that
+> > need to be cache-line aligned. Such components could map to a valid
+> > bit in XCR0 and have a non-zero offset from the beginning of the
+> > non-compacted XSAVE area.
+> > 
+> > > +               entry->edx = 0;
+> > 
+> > This seems too aggressive. See my comments above regarding EDX outputs
+> > for cases 0 and 1.
+> > 
+Sean, I don't know how to deal with entry->edx here as SDM says it's
+reserved for valid subleaf.
 
-
-- Paul
+> > > +               break;
+> > > +       }
+> > > +}
