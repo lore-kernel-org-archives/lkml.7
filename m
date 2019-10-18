@@ -2,151 +2,700 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43936CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA207CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16FD8222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:55:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WlTqEoi5"
+	by mail.kernel.org (Postfix) with ESMTP id 7B3E2222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:55:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409223AbfJREzr (ORCPT
+        id S2408408AbfJREzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 18 Oct 2019 00:55:47 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:2690 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392808AbfJREzq (ORCPT
+Received: from mail-sz.amlogic.com ([211.162.65.117]:18375 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726103AbfJREzq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 18 Oct 2019 00:55:46 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5da945d60000>; Thu, 17 Oct 2019 21:55:50 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 17 Oct 2019 21:55:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 17 Oct 2019 21:55:45 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 18 Oct
- 2019 04:55:45 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 18 Oct 2019 04:55:45 +0000
-Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5da945d10003>; Thu, 17 Oct 2019 21:55:45 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Preeti U Murthy <preeti@linux.vnet.ibm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        <linux-pm@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>
-Subject: [PATCH v2] cpufreq: powernv: fix stack bloat and NR_CPUS limitation
-Date:   Thu, 17 Oct 2019 21:55:39 -0700
-Message-ID: <20191018045539.3765565-1-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.23.0
+Received: from [10.28.19.114] (10.28.19.114) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Fri, 18 Oct
+ 2019 11:42:02 +0800
+Subject: Re: [PATCH 2/2] clk: meson: a1: add support for Amlogic A1 clock
+ driver
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC:     Neil Armstrong <narmstrong@baylibre.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <1569411888-98116-1-git-send-email-jian.hu@amlogic.com>
+ <1569411888-98116-3-git-send-email-jian.hu@amlogic.com>
+ <1j1rw4mmzw.fsf@starbuckisacylon.baylibre.com>
+ <a830a0d1-680c-86ec-e858-4470c67865e2@amlogic.com>
+ <1jimpd27cb.fsf@starbuckisacylon.baylibre.com>
+ <5fd57563-0c34-be14-132a-74fd2c5a5275@amlogic.com>
+ <052b0a5c-c913-a9ff-65b9-5b7eb0aecd6e@amlogic.com>
+ <1jsgnz20jq.fsf@starbuckisacylon.baylibre.com>
+ <8ae988c2-68f5-603e-843b-9cd70e4d4349@amlogic.com>
+ <1jr23f1imo.fsf@starbuckisacylon.baylibre.com>
+From:   Jian Hu <jian.hu@amlogic.com>
+Message-ID: <ffa9a3ae-52d4-8ac7-534c-87e639b3a51c@amlogic.com>
+Date:   Fri, 18 Oct 2019 11:42:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1571374550; bh=df18Gs5j3cwrHl5PwObGl2FSzw7tZwBe+5B9upV/qmU=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=WlTqEoi5Gs0evA3sLhhGZhfcxwx3m/vSQElv4bqkxcVwKpJJr19qDRntWBEMKxukr
-         pvDQ8O0f8J0Y0ueNopFf/SiMkUxcKJWUMbyucxzHNsumK+iBvAMwN6k1LFlyMgKhuK
-         QMB93N+E2Rz3FittCdYokclkYTAA7YRoW0o6AkQhwCI8n6HZADPwqGZSl55kv/oQN7
-         /7avi+Xqhrt8s/39ZIs70NEca9ePo3eccO4OhblbWS3XWTaSNG6KO1GAZa0A52UTRO
-         hU0PkUcGepqdlRb1NlIKtyGwVnfJiWQWKNqFRQBisPvefqIsZNaxio6Y6pAl9kPvTf
-         /92RK4C9M0l3Q==
+In-Reply-To: <1jr23f1imo.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.28.19.114]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following build warning occurred on powerpc 64-bit builds:
+Hi, jerome
 
-drivers/cpufreq/powernv-cpufreq.c: In function 'init_chip_info':
-drivers/cpufreq/powernv-cpufreq.c:1070:1: warning: the frame size of 1040 b=
-ytes is larger than 1024 bytes [-Wframe-larger-than=3D]
+On 2019/10/14 22:55, Jerome Brunet wrote:
+> 
+> On Mon 14 Oct 2019 at 15:42, Jian Hu <jian.hu@amlogic.com> wrote:
+> 
+>>>> if peripheral clocks probe first, it will fail to get
+>>>> fixed_pll clocks. A lot of peripheral clocks parent are fclk_div2/3/5/7.
+>>>> and we can not get fclk_div2/3/5/7 clocks.
+>>>
+>>> What does "fail" mean ?
+>>> I intended to get clock using devm_clk_get API in each driver, In this
+>> scene，it will get failed because of the clock not being reigstered. In
+>> fact, we could not use devm_clk_get.
+> 
+> Unless I missed somthing, I don't see why you would need to call
+> devm_clk_get(). This is now handled directly by the framework.
+> 
+Just my wrong idea，I had not noticed the CCF would do it.
+>>>>
+>>>> I can think of two solutions:
+>>>> 1) Do not describe xtal_fixpll, xtal_hifipll.
+>>>>      that is to say, do not decribe the SYS_OSCIN_CTRL register.
+>>>>
+>>>> 2) Put peripheral and pll clock driver in one driver.
+>>>
+>>> Those are work arounds. Actually fixing the problem is usually
+>>> preferable.
+>>>
+>>>    So if rephrase your problem:
+>>>
+>>>    * We have 2 clock controllers (A and B)
+>>>    * Clock are passed between the controllers using DT
+>>>    * We have a PLL in controller B which is used by clocks in
+>>>      controller A.
+>>>    * the PLL parent clock is in controller A.
+>>>
+>> Yeah, it is the scene.
+>>> => So if I understand correctly you are saying that it will "fail"
+>>> because there is a circular dependency between controller A and B, right
+>>> ?
+>>>
+>>> Do you have evidence that your problem comes from this circular
+>>> dependency ?
+>>>
+>> I have realized the peripheral driver and PLL drivers,
+>>
+>> PLL driver probes first, Peripheral clock driver is the second.
+> 
+> It should work regarless of the order.
+> 
+>>
+>> In addition，for A1 SoC， it will not work using meson_clk_pll_ops,
+>>
+>> it needs strictly sequence，so maybe another ops is required.hifi pll will
+>> be sent with sys pll and CPU clock driver.
+> 
+> The PCie PLL has a good reason to have a single frequency, only one is needed
+> 
+> That's the case the case of the HIFI PLL which, as explained in previous
+> mails, needs to provide more that the single frenquency you have described.
+> 
+> If the pll driver needs to extended with new ops that's fine. Please
+> explain this "strict sequence" you are refering too.
+> What is part of the initial settings, what needs to be done each time ?
+> 
+The inital settings is the PLL internal analog modules Power-on 
+sequence, and it is provided by the VLSI colleague.
 
-This is due to putting 1024 bytes on the stack:
+For A1 PLL, the pll lock monitor block will initialise again in each 
+time. It is the internal principle.It should keep the strict sequence 
+when set one target frequency.
 
-    unsigned int chip[256];
-
-...and while looking at this, it also has a bug: it fails with a stack
-overrun, if CONFIG_NR_CPUS > 256.
-
-Fix both problems by dynamically allocating based on CONFIG_NR_CPUS.
-
-Fixes: 053819e0bf840 ("cpufreq: powernv: Handle throttling due to Pmax capp=
-ing at chip level")
-Cc: Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
-Cc: Preeti U Murthy <preeti@linux.vnet.ibm.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-Cc: linux-pm@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
-
-Changes since v1: includes Viresh's review commit fixes.
-
- drivers/cpufreq/powernv-cpufreq.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/cpufreq/powernv-cpufreq.c b/drivers/cpufreq/powernv-cp=
-ufreq.c
-index 6061850e59c9..5b2e968cb5ea 100644
---- a/drivers/cpufreq/powernv-cpufreq.c
-+++ b/drivers/cpufreq/powernv-cpufreq.c
-@@ -1041,9 +1041,14 @@ static struct cpufreq_driver powernv_cpufreq_driver =
-=3D {
-=20
- static int init_chip_info(void)
- {
--	unsigned int chip[256];
-+	unsigned int *chip;
- 	unsigned int cpu, i;
- 	unsigned int prev_chip_id =3D UINT_MAX;
-+	int ret =3D 0;
-+
-+	chip =3D kcalloc(CONFIG_NR_CPUS, sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
-=20
- 	for_each_possible_cpu(cpu) {
- 		unsigned int id =3D cpu_to_chip_id(cpu);
-@@ -1055,8 +1060,10 @@ static int init_chip_info(void)
- 	}
-=20
- 	chips =3D kcalloc(nr_chips, sizeof(struct chip), GFP_KERNEL);
--	if (!chips)
--		return -ENOMEM;
-+	if (!chips) {
-+		ret =3D -ENOMEM;
-+		goto free_and_return;
-+	}
-=20
- 	for (i =3D 0; i < nr_chips; i++) {
- 		chips[i].id =3D chip[i];
-@@ -1066,7 +1073,9 @@ static int init_chip_info(void)
- 			per_cpu(chip_info, cpu) =3D  &chips[i];
- 	}
-=20
--	return 0;
-+free_and_return:
-+	kfree(chip);
-+	return ret;
- }
-=20
- static inline void clean_chip_info(void)
---=20
-2.23.0
-
+>>> AFAIK, CCF will orphan the clock and continue if the parent is not
+>>> available. Later, when the parent comes up, the orphan will be
+>>> reparented.
+>>>
+>>> IOW, the problem you are reporting should already be covered by CCF.
+>>>
+>>>>
+>>>> And  which sulution is better above two?
+>>>
+>>> Neither, I'm afraid
+>>>
+>>>>
+>>>> Or maybe other good ideas for it?
+>>>
+>>> My bet would be that an important clocks (maybe more than 1) is being
+>>> gated during the init process.
+>>>
+>>> Maybe you should try the command line parameter "clk_ignore_unused"
+>>> until you get things running with your 2 controllers.
+>>>
+>>>>
+>>>> On 2019/9/29 17:38, Jian Hu wrote:
+>>>>>
+>>>>>
+>>>>> On 2019/9/27 21:32, Jerome Brunet wrote:
+>>>>>>
+>>>>>> On Fri 27 Sep 2019 at 11:52, Jian Hu <jian.hu@amlogic.com> wrote:
+>>>>>>
+>>>>>>> Hi, Jerome
+>>>>>>>
+>>>>>>> Thank you for review.
+>>>>>>>
+>>>>>>> On 2019/9/25 23:09, Jerome Brunet wrote:
+>>>>>>>> On Wed 25 Sep 2019 at 19:44, Jian Hu <jian.hu@amlogic.com> wrote:
+>>>>>>>>
+>>>>>>>>> The Amlogic A1 clock includes three parts:
+>>>>>>>>> peripheral clocks, pll clocks, CPU clocks.
+>>>>>>>>> sys pll and CPU clocks will be sent in next patch.
+>>>>>>>>>
+>>>>>>>>> Unlike the previous series, there is no EE/AO domain
+>>>>>>>>> in A1 CLK controllers.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>>>>>>>>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+>>>>>>>>> ---
+>>>>>>>>>      arch/arm64/Kconfig.platforms |    1 +
+>>>>>>>>>      drivers/clk/meson/Kconfig    |   10 +
+>>>>>>>>>      drivers/clk/meson/Makefile   |    1 +
+>>>>>>>>>      drivers/clk/meson/a1.c       | 2617
+>>>>>>>>> ++++++++++++++++++++++++++++++++++++++++++
+>>>>>>>>>      drivers/clk/meson/a1.h       |  172 +++
+>>>>>>>>>      5 files changed, 2801 insertions(+)
+>>>>>>>>>      create mode 100644 drivers/clk/meson/a1.c
+>>>>>>>>>      create mode 100644 drivers/clk/meson/a1.h
+>>>>>>>>>
+>>>> [...]
+>>>>>>>>> diff --git a/drivers/clk/meson/a1.c b/drivers/clk/meson/a1.c
+>>>>>>>>> new file mode 100644
+>>>>>>>>> index 0000000..26edae0f
+>>>>>>>>> --- /dev/null
+>>>>>>>>> +++ b/drivers/clk/meson/a1.c
+>>>>>>>>> @@ -0,0 +1,2617 @@
+>>>>>>>>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>>>>>>>>> +/*
+>>>>>>>>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+>>>>>>>>> + */
+>>>>>>>>> +
+>>>>>>>>> +#include <linux/clk-provider.h>
+>>>>>>>>> +#include <linux/init.h>
+>>>>>>>>> +#include <linux/of_device.h>
+>>>>>>>>> +#include <linux/platform_device.h>
+>>>>>>>>> +#include <linux/of_address.h>
+>>>>>>>>> +#include "clk-mpll.h"
+>>>>>>>>> +#include "clk-pll.h"
+>>>>>>>>> +#include "clk-regmap.h"
+>>>>>>>>> +#include "vid-pll-div.h"
+>>>>>>>>> +#include "clk-dualdiv.h"
+>>>>>>>>> +#include "meson-eeclk.h"
+>>>>>>>>> +#include "a1.h"
+>>>>>>>>> +
+>>>>>>>>> +/* PLLs clock in gates, its parent is xtal */
+>>>>>>>>> +static struct clk_regmap a1_xtal_clktree = {
+>>>>>>>>> +    .data = &(struct clk_regmap_gate_data){
+>>>>>>>>> +        .offset = SYS_OSCIN_CTRL,
+>>>>>>>>> +        .bit_idx = 0,
+>>>>>>>>> +    },
+>>>>>>>>> +    .hw.init = &(struct clk_init_data) {
+>>>>>>>>> +        .name = "xtal_clktree",
+>>>>>>>>> +        .ops = &clk_regmap_gate_ops,
+>>>>>>>>> +        .parent_data = &(const struct clk_parent_data) {
+>>>>>>>>> +            .fw_name = "xtal",
+>>>>>>>>> +        },
+>>>>>>>>> +        .num_parents = 1,
+>>>>>>>>> +        .flags = CLK_IS_CRITICAL,
+>>>>>>>>
+>>>>>>>> Is CCF even expected to touch this ever ? what about RO ops ?
+>>>>>>>> Please review your other clocks with this in mind
+>>>>>>>>
+>>>>>>> the clock should not be changed at runtime.clk_regmap_gate_ro_ops
+>>>>>>> is a good idea. Set RO ops and remove the CLK_IS_CRITICAL flag.
+>>>>>>>>> +    },
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +static struct clk_regmap a1_xtal_fixpll = {
+>>>>>>>>> +    .data = &(struct clk_regmap_gate_data){
+>>>>>>>>> +        .offset = SYS_OSCIN_CTRL,
+>>>>>>>>> +        .bit_idx = 1,
+>>>>>>>>> +    },
+>>>>>>>>> +    .hw.init = &(struct clk_init_data) {
+>>>>>>>>> +        .name = "xtal_fixpll",
+>>>>>>>>> +        .ops = &clk_regmap_gate_ops,
+>>>>>>>>> +        .parent_data = &(const struct clk_parent_data) {
+>>>>>>>>> +            .fw_name = "xtal",
+>>>>>>>>> +        },
+>>>>>>>>> +        .num_parents = 1,
+>>>>>>>>> +        .flags = CLK_IS_CRITICAL,
+>>>>>>>>> +    },
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +static struct clk_regmap a1_xtal_usb_phy = {
+>>>>>>>>> +    .data = &(struct clk_regmap_gate_data){
+>>>>>>>>> +        .offset = SYS_OSCIN_CTRL,
+>>>>>>>>> +        .bit_idx = 2,
+>>>>>>>>> +    },
+>>>>>>>>> +    .hw.init = &(struct clk_init_data) {
+>>>>>>>>> +        .name = "xtal_usb_phy",
+>>>>>>>>> +        .ops = &clk_regmap_gate_ops,
+>>>>>>>>> +        .parent_data = &(const struct clk_parent_data) {
+>>>>>>>>> +            .fw_name = "xtal",
+>>>>>>>>> +        },
+>>>>>>>>> +        .num_parents = 1,
+>>>>>>>>> +        .flags = CLK_IS_CRITICAL,
+>>>>>>>>
+>>>>>>>> How is an USB clock critical to the system ?
+>>>>>>>> Please review your other clocks with comment in mind ...
+>>>>>>> the usb clock does not affect the system,
+>>>>>>> remove the CLK_IS_CRITICAL flag
+>>>>>>>>
+>>>>>>>>> +    },
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +static struct clk_regmap a1_xtal_usb_ctrl = {
+>>>>>>>>> +    .data = &(struct clk_regmap_gate_data){
+>>>>>>>>> +        .offset = SYS_OSCIN_CTRL,
+>>>>>>>>> +        .bit_idx = 3,
+>>>>>>>>> +    },
+>>>>>>>>> +    .hw.init = &(struct clk_init_data) {
+>>>>>>>>> +        .name = "xtal_usb_ctrl",
+>>>>>>>>> +        .ops = &clk_regmap_gate_ops,
+>>>>>>>>> +        .parent_data = &(const struct clk_parent_data) {
+>>>>>>>>> +            .fw_name = "xtal",
+>>>>>>>>> +        },
+>>>>>>>>> +        .num_parents = 1,
+>>>>>>>>> +        .flags = CLK_IS_CRITICAL,
+>>>>>>>>> +    },
+>>>>>>>>> +};
+>>>>>>> the usb clock does not affect the system,
+>>>>>>> remove the CLK_IS_CRITICAL flag
+>>>>>>>>> +
+>>>>>>>>> +static struct clk_regmap a1_xtal_hifipll = {
+>>>>>>>>> +    .data = &(struct clk_regmap_gate_data){
+>>>>>>>>> +        .offset = SYS_OSCIN_CTRL,
+>>>>>>>>> +        .bit_idx = 4,
+>>>>>>>>> +    },
+>>>>>>>>> +    .hw.init = &(struct clk_init_data) {
+>>>>>>>>> +        .name = "xtal_hifipll",
+>>>>>>>>> +        .ops = &clk_regmap_gate_ops,
+>>>>>>>>> +        .parent_data = &(const struct clk_parent_data) {
+>>>>>>>>> +            .fw_name = "xtal",
+>>>>>>>>> +        },
+>>>>>>>>> +        .num_parents = 1,
+>>>>>>>>> +        .flags = CLK_IS_CRITICAL,
+>>>>>>>>> +    },
+>>>>>>>>> +};
+>>>>>>> CLK_IS_CRITICAL is need to lock hifi pll.
+>>>>>>
+>>>>>> That's not how CCF works, this falg is not ok here.
+>>>>>> CCF will enable this clock before calling enable on your hifi pll
+>>>>>>
+>>>>> ok， I will remove it.
+>>>>>>>>> +
+>>>>>>>>> +static struct clk_regmap a1_xtal_syspll = {
+>>>>>>>>> +    .data = &(struct clk_regmap_gate_data){
+>>>>>>>>> +        .offset = SYS_OSCIN_CTRL,
+>>>>>>>>> +        .bit_idx = 5,
+>>>>>>>>> +    },
+>>>>>>>>> +    .hw.init = &(struct clk_init_data) {
+>>>>>>>>> +        .name = "xtal_syspll",
+>>>>>>>>> +        .ops = &clk_regmap_gate_ops,
+>>>>>>>>> +        .parent_data = &(const struct clk_parent_data) {
+>>>>>>>>> +            .fw_name = "xtal",
+>>>>>>>>> +        },
+>>>>>>>>> +        .num_parents = 1,
+>>>>>>>>> +        .flags = CLK_IS_CRITICAL,
+>>>>>>>>> +    },
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>> when CPU clock is at fixed clock, sys pll
+>>>>>>> will be disabled, xtal_syspll will be disabled too.
+>>>>>>> when setting sys pll, call clk_set_rate to lock
+>>>>>>> sys pll, add RO ops to avoid disabling the clock
+>>>>>>
+>>>>>> Again not Ok.
+>>>>>> If you mechanism to lock the PLL is properly implemented in the enable
+>>>>>> callback of the sys pll, still kind of work around are not needed
+>>>>>>
+>>>>>> This has worked on the pll we had so far.
+>>>>>>
+>>>>> ok, I will remove it.
+>>>>>>>
+>>>>>>>>> +static struct clk_regmap a1_xtal_dds = {
+>>>>>>>>> +    .data = &(struct clk_regmap_gate_data){
+>>>>>>>>> +        .offset = SYS_OSCIN_CTRL,
+>>>>>>>>> +        .bit_idx = 6,
+>>>>>>>>> +    },
+>>>>>>>>> +    .hw.init = &(struct clk_init_data) {
+>>>>>>>>> +        .name = "xtal_dds",
+>>>>>>>>> +        .ops = &clk_regmap_gate_ops,
+>>>>>>>>> +        .parent_data = &(const struct clk_parent_data) {
+>>>>>>>>> +            .fw_name = "xtal",
+>>>>>>>>> +        },
+>>>>>>>>> +        .num_parents = 1,
+>>>>>>>>> +        .flags = CLK_IS_CRITICAL,
+>>>>>>>>> +    },
+>>>>>>>>> +};
+>>>>>>> CLK_IS_CRITICAL is need to lock dds
+>>>>>>>>> +
+>>>>>>>>> +/* fixed pll = 1536M
+>>>>>>>>> + *
+>>>>>>>>> + * fixed pll ----- fclk_div2 = 768M
+>>>>>>>>> + *           |
+>>>>>>>>> + *           ----- fclk_div3 = 512M
+>>>>>>>>> + *           |
+>>>>>>>>> + *           ----- fclk_div5 = 307.2M
+>>>>>>>>> + *           |
+>>>>>>>>> + *           ----- fclk_div7 = 219.4M
+>>>>>>>>> + */
+>>>>>>>>
+>>>>>>>> The framework will make those calculation ... you can remove this
+>>>>>>>>
+>>>>>>> ok, I will remote the comment.
+>>>>>>>>> +static struct clk_regmap a1_fixed_pll_dco = {
+>>>>>>>>> +    .data = &(struct meson_clk_pll_data){
+>>>>>>>>> +        .en = {
+>>>>>>>>> +            .reg_off = ANACTRL_FIXPLL_CTRL0,
+>>>>>>>>> +            .shift   = 28,
+>>>>>>>>> +            .width   = 1,
+>>>>>>>>> +        },
+>>>>>>>>> +        .m = {
+>>>>>>>>> +            .reg_off = ANACTRL_FIXPLL_CTRL0,
+>>>>>>>>> +            .shift   = 0,
+>>>>>>>>> +            .width   = 8,
+>>>>>>>>> +        },
+>>>>>>>>> +        .n = {
+>>>>>>>>> +            .reg_off = ANACTRL_FIXPLL_CTRL0,
+>>>>>>>>> +            .shift   = 10,
+>>>>>>>>> +            .width   = 5,
+>>>>>>>>> +        },
+>>>>>>>>> +        .frac = {
+>>>>>>>>> +            .reg_off = ANACTRL_FIXPLL_CTRL1,
+>>>>>>>>> +            .shift   = 0,
+>>>>>>>>> +            .width   = 19,
+>>>>>>>>> +        },
+>>>>>>>>> +        .l = {
+>>>>>>>>> +            .reg_off = ANACTRL_FIXPLL_CTRL0,
+>>>>>>>>> +            .shift   = 31,
+>>>>>>>>> +            .width   = 1,
+>>>>>>>>> +        },
+>>>>>>>>> +        .rst = {
+>>>>>>>>> +            .reg_off = ANACTRL_FIXPLL_CTRL0,
+>>>>>>>>> +            .shift   = 29,
+>>>>>>>>> +            .width   = 1,
+>>>>>>>>> +        },
+>>>>>>>>> +    },
+>>>>>>>>> +    .hw.init = &(struct clk_init_data){
+>>>>>>>>> +        .name = "fixed_pll_dco",
+>>>>>>>>> +        .ops = &meson_clk_pll_ro_ops,
+>>>>>>>>> +        .parent_hws = (const struct clk_hw *[]) {
+>>>>>>>>> +            &a1_xtal_fixpll.hw
+>>>>>>>>> +        },
+>>>>>>>>> +        .num_parents = 1,
+>>>>>>>>> +    },
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +static struct clk_regmap a1_fixed_pll = {
+>>>>>>>>> +    .data = &(struct clk_regmap_gate_data){
+>>>>>>>>> +        .offset = ANACTRL_FIXPLL_CTRL0,
+>>>>>>>>> +        .bit_idx = 20,
+>>>>>>>>> +    },
+>>>>>>>>> +    .hw.init = &(struct clk_init_data) {
+>>>>>>>>> +        .name = "fixed_pll",
+>>>>>>>>> +        .ops = &clk_regmap_gate_ops,
+>>>>>>>>> +        .parent_hws = (const struct clk_hw *[]) {
+>>>>>>>>> +            &a1_fixed_pll_dco.hw
+>>>>>>>>> +        },
+>>>>>>>>> +        .num_parents = 1,
+>>>>>>>>> +        .flags = CLK_IGNORE_UNUSED,
+>>>>>>>>> +    },
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +static const struct pll_params_table a1_hifi_pll_params_table[] = {
+>>>>>>>>> +    PLL_PARAMS(128, 5), /* DCO = 614.4M */
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +static const struct reg_sequence a1_hifi_init_regs[] = {
+>>>>>>>>> +    { .reg = ANACTRL_HIFIPLL_CTRL1,    .def = 0x01800000 },
+>>>>>>>>> +    { .reg = ANACTRL_HIFIPLL_CTRL2,    .def = 0x00001100 },
+>>>>>>>>> +    { .reg = ANACTRL_HIFIPLL_CTRL3,    .def = 0x10022200 },
+>>>>>>>>> +    { .reg = ANACTRL_HIFIPLL_CTRL4,    .def = 0x00301000 },
+>>>>>>>>> +    { .reg = ANACTRL_HIFIPLL_CTRL0, .def = 0x01f19480 },
+>>>>>>>>> +    { .reg = ANACTRL_HIFIPLL_CTRL0, .def = 0x11f19480, .delay_us =
+>>>>>>>>> 10 },
+>>>>>>>>> +    { .reg = ANACTRL_HIFIPLL_CTRL0,    .def = 0x15f11480, .delay_us
+>>>>>>>>> = 40 },
+>>>>>>>>> +    { .reg = ANACTRL_HIFIPLL_CTRL2,    .def = 0x00001140 },
+>>>>>>>>> +    { .reg = ANACTRL_HIFIPLL_CTRL2,    .def = 0x00001100 },
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +/*
+>>>>>>>>> + * The Meson A1 HIFI PLL is 614.4M, it requires
+>>>>>>>>> + * a strict register sequence to enable the PLL.
+>>>>>>>>> + * set meson_clk_pcie_pll_ops as its ops
+>>>>>>>>> + */
+>>>>>>>>
+>>>>>>>> Could you elaborate on this ? What need to be done to enable the clock
+>>>>>>>> ?
+>>>>>>>> Also the HIFI PLL used to be able to do a *LOT* of different rate which
+>>>>>>>> might be desirable for audio use case. Why is this one restricted to
+>>>>>>>> one
+>>>>>>>> particular rate ?
+>>>>>>>>
+>>>>>>> The audio working frequency are 44.1khz, 48khz and 192khz.
+>>>>>>>
+>>>>>>> 614.4M can meet the three frequency.
+>>>>>>>
+>>>>>>> after the hifi pll, there are two dividers in Audio clock.
+>>>>>>>
+>>>>>>> 614.4M/3200 = 192khz
+>>>>>>>
+>>>>>>> 614.4M/12800 = 48khz
+>>>>>>>
+>>>>>>> 614,4M/13932 = 44.0999khz
+>>>>>>
+>>>>>> It does not really answer my question though.
+>>>>>> You are locking a use case here, which is 32 bit sample width
+>>>>>>
+>>>>>> We have other constraint with the upstream audio driver, and we usually
+>>>>>> looking for base frequency that a multiple of 768 (24*32).
+>>>>>>
+>>>>>> If you need your PLL to be set to a particular rate for a use case, the
+>>>>>> correct way is "assigned-rate" in DT
+>>>>>>
+>>>>>> so the question still stands, the HIFI pll before was pretty easy to set
+>>>>>> at a wide variety of rate (same as GP0) ... is it not the case anymore ?
+>>>>>> If yes, could you decribe the constraints.
+>>>>>>
+>>>>>> All this took us a long time to figure out on our own, which is why I'd
+>>>>>> prefer to get the proper constraints in from the beginning this time
+>>>>>>
+>>>>> ok, I will verify it and  describe the constraints about it
+>>>>>>
+>>>>>>>
+>>>>>>>>> +static struct clk_regmap a1_hifi_pll = {
+>>>>>>>>> +    .data = &(struct meson_clk_pll_data){
+>>>>>>>>> +        .en = {
+>>>>>>>>> +            .reg_off = ANACTRL_HIFIPLL_CTRL0,
+>>>>>>>>> +            .shift   = 28,
+>>>>>>>>> +            .width   = 1,
+>>>>>>>>> +        },
+>>>>>>>>> +        .m = {
+>>>>>>>>> +            .reg_off = ANACTRL_HIFIPLL_CTRL0,
+>>>>>>>>> +            .shift   = 0,
+>>>>>>>>> +            .width   = 8,
+>>>>>>>>> +        },
+>>>>>>>>> +        .n = {
+>>>>>>>>> +            .reg_off = ANACTRL_HIFIPLL_CTRL0,
+>>>>>>>>> +            .shift   = 10,
+>>>>>>>>> +            .width   = 5,
+>>>>>>>>> +        },
+>>>>>>>>> +        .frac = {
+>>>>>>>>> +            .reg_off = ANACTRL_HIFIPLL_CTRL1,
+>>>>>>>>> +            .shift   = 0,
+>>>>>>>>> +            .width   = 19,
+>>>>>>>>> +        },
+>>>>>>>>> +        .l = {
+>>>>>>>>> +            .reg_off = ANACTRL_HIFIPLL_STS,
+>>>>>>>>> +            .shift   = 31,
+>>>>>>>>> +            .width   = 1,
+>>>>>>>>> +        },
+>>>>>>>>> +        .table = a1_hifi_pll_params_table,
+>>>>>>>>> +        .init_regs = a1_hifi_init_regs,
+>>>>>>>>> +        .init_count = ARRAY_SIZE(a1_hifi_init_regs),
+>>>>>>>>> +    },
+>>>>>>>>> +    .hw.init = &(struct clk_init_data){
+>>>>>>>>> +        .name = "hifi_pll",
+>>>>>>>>> +        .ops = &meson_clk_pcie_pll_ops,
+>>>>>>>>> +        .parent_hws = (const struct clk_hw *[]) {
+>>>>>>>>> +            &a1_xtal_hifipll.hw
+>>>>>>>>> +        },
+>>>>>>>>> +        .num_parents = 1,
+>>>>>>>>> +    },
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +static struct clk_fixed_factor a1_fclk_div2_div = {
+>>>>>>>>> +    .mult = 1,
+>>>>>>>>> +    .div = 2,
+>>>>>>>>> +    .hw.init = &(struct clk_init_data){
+>>>>>>>>> +        .name = "fclk_div2_div",
+>>>>>>>>> +        .ops = &clk_fixed_factor_ops,
+>>>>>>>>> +        .parent_hws = (const struct clk_hw *[]) {
+>>>>>>>>> +            &a1_fixed_pll.hw
+>>>>>>>>> +        },
+>>>>>>>>> +        .num_parents = 1,
+>>>>>>>>> +    },
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +static struct clk_regmap a1_fclk_div2 = {
+>>>>>>>>> +    .data = &(struct clk_regmap_gate_data){
+>>>>>>>>> +        .offset = ANACTRL_FIXPLL_CTRL0,
+>>>>>>>>> +        .bit_idx = 21,
+>>>>>>>>> +    },
+>>>>>>>>> +    .hw.init = &(struct clk_init_data){
+>>>>>>>>> +        .name = "fclk_div2",
+>>>>>>>>> +        .ops = &clk_regmap_gate_ops,
+>>>>>>>>> +        .parent_hws = (const struct clk_hw *[]) {
+>>>>>>>>> +            &a1_fclk_div2_div.hw
+>>>>>>>>> +        },
+>>>>>>>>> +        .num_parents = 1,
+>>>>>>>>> +        /*
+>>>>>>>>> +         * add CLK_IS_CRITICAL flag to avoid being disabled by clk
+>>>>>>>>> core
+>>>>>>>>> +         * or its children clocks.
+>>>>>>>>> +         */
+>>>>>>>>
+>>>>>>>> The meaning of this flag is already documented in clk-provider.h
+>>>>>>>> The reason why you need this flag is lot more interesting here ...
+>>>>>>>>
+>>>>>>>> Same below
+>>>>>>> ok, I will replace new comments here.
+>>>>>>>>
+>>>>>>>>> +        .flags = CLK_IS_CRITICAL,
+>>>>>>>>> +    },
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +static struct clk_fixed_factor a1_fclk_div3_div = {
+>>>>>>>>> +    .mult = 1,
+>>>>>>>>> +    .div = 3,
+>>>>>>>>> +    .hw.init = &(struct clk_init_data){
+>>>>>>>>> +        .name = "fclk_div3_div",
+>>>>>>>>> +        .ops = &clk_fixed_factor_ops,
+>>>>>>>>> +        .parent_hws = (const struct clk_hw *[]) {
+>>>>>>>>> +            &a1_fixed_pll.hw
+>>>>>>>>> +        },
+>>>>>>>>> +        .num_parents = 1,
+>>>>>>>>> +    },
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +static struct clk_regmap a1_fclk_div3 = {
+>>>>>>>>> +    .data = &(struct clk_regmap_gate_data){
+>>>>>>>>> +        .offset = ANACTRL_FIXPLL_CTRL0,
+>>>>>>>>> +        .bit_idx = 22,
+>>>>>>>>> +    },
+>>>>>>>>> +    .hw.init = &(struct clk_init_data){
+>>>>>>>>> +        .name = "fclk_div3",
+>>>>>>>>> +        .ops = &clk_regmap_gate_ops,
+>>>>>>>>> +        .parent_hws = (const struct clk_hw *[]) {
+>>>>>>>>> +            &a1_fclk_div3_div.hw
+>>>>>>>>> +        },
+>>>>>>>>> +        .num_parents = 1,
+>>>>>>>>> +        /*
+>>>>>>>>> +         * add CLK_IS_CRITICAL flag to avoid being disabled by clk
+>>>>>>>>> core
+>>>>>>>>> +         * its children clocks.
+>>>>>>>>> +         */
+>>>>>>>>> +        .flags = CLK_IS_CRITICAL,
+>>>>>>>>> +    },
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +static struct clk_fixed_factor a1_fclk_div5_div = {
+>>>>>>>>> +    .mult = 1,
+>>>>>>>>> +    .div = 5,
+>>>>>>>>> +    .hw.init = &(struct clk_init_data){
+>>>>>>>>> +        .name = "fclk_div5_div",
+>>>>>>>>> +        .ops = &clk_fixed_factor_ops,
+>>>>>>>>> +        .parent_hws = (const struct clk_hw *[]) {
+>>>>>>>>> +            &a1_fixed_pll.hw
+>>>>>>>>> +        },
+>>>>>>>>> +        .num_parents = 1,
+>>>>>>>>> +    },
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +static struct clk_regmap a1_fclk_div5 = {
+>>>>>>>>> +    .data = &(struct clk_regmap_gate_data){
+>>>>>>>>> +        .offset = ANACTRL_FIXPLL_CTRL0,
+>>>>>>>>> +        .bit_idx = 23,
+>>>>>>>>> +    },
+>>>>>>>>> +    .hw.init = &(struct clk_init_data){
+>>>>>>>>> +        .name = "fclk_div5",
+>>>>>>>>> +        .ops = &clk_regmap_gate_ops,
+>>>>>>>>> +        .parent_hws = (const struct clk_hw *[]) {
+>>>>>>>>> +            &a1_fclk_div5_div.hw
+>>>>>>>>> +        },
+>>>>>>>>> +        .num_parents = 1,
+>>>>>>>>> +        /*
+>>>>>>>>> +         * add CLK_IS_CRITICAL flag to avoid being disabled by clk
+>>>>>>>>> core
+>>>>>>>>> +         * its children clocks.
+>>>>>>>>> +         */
+>>>>>>>>> +        .flags = CLK_IS_CRITICAL,
+>>>>>>>>> +    },
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +static struct clk_fixed_factor a1_fclk_div7_div = {
+>>>>>>>>> +    .mult = 1,
+>>>>>>>>> +    .div = 7,
+>>>>>>>>> +    .hw.init = &(struct clk_init_data){
+>>>>>>>>> +        .name = "fclk_div7_div",
+>>>>>>>>> +        .ops = &clk_fixed_factor_ops,
+>>>>>>>>> +        .parent_hws = (const struct clk_hw *[]) {
+>>>>>>>>> +            &a1_fixed_pll.hw
+>>>>>>>>> +        },
+>>>>>>>>> +        .num_parents = 1,
+>>>>>>>>> +    },
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +static struct clk_regmap a1_fclk_div7 = {
+>>>>>>>>> +    .data = &(struct clk_regmap_gate_data){
+>>>>>>>>> +        .offset = ANACTRL_FIXPLL_CTRL0,
+>>>>>>>>> +        .bit_idx = 23,
+>>>>>>>>> +    },
+>>>>>>>>> +    .hw.init = &(struct clk_init_data){
+>>>>>>>>> +        .name = "fclk_div7",
+>>>>>>>>> +        .ops = &clk_regmap_gate_ops,
+>>>>>>>>> +        .parent_hws = (const struct clk_hw *[]) {
+>>>>>>>>> +            &a1_fclk_div7_div.hw
+>>>>>>>>> +        },
+>>>>>>>>> +        .num_parents = 1,
+>>>>>>>>> +        /*
+>>>>>>>>> +         * add CLK_IS_CRITICAL flag to avoid being disabled by clk
+>>>>>>>>> core
+>>>>>>>>> +         * or its children clock.
+>>>>>>>>> +         */
+>>>>>>>>> +        .flags = CLK_IS_CRITICAL,
+>>>>>>>>> +    },
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>> [...]
+>>>>>>>>> -- 
+>>>>>>>>> 1.9.1
+>>>>>>>>
+>>>>>>>> .
+>>>>>>>>
+>>>>>>
+>>>>>> .
+>>>>>>
+>>>
+>>> .
+>>>
+> 
+> .
+> 
