@@ -2,128 +2,123 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 817C6CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E734CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60DD62245A
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D6BF2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:30:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="irU81VrR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BxoE4ac1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505730AbfJRS3y (ORCPT
+        id S2505808AbfJRSaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:29:54 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:53816 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505612AbfJRS3x (ORCPT
+        Fri, 18 Oct 2019 14:30:22 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:46909 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505459AbfJRSaV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:29:53 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9IIJfYu123323;
-        Fri, 18 Oct 2019 18:29:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=hXYMrEGZzwQiBxefoyJmePRgdYQb4j68CrcBDe3IDzc=;
- b=irU81VrR8BTGLN/APpFS6rFQslAg28wtt7vglzPr5k/IKawaYwfKfMh34HxiwPz94aoh
- XkCrBIM6l4o4QjmnbYgatJPl9bbrrDynx6tk907cdw9lLeGXLPqyuCZgbJhAEvCBpPke
- X60aYbk4UpEn1GcAyAmX4zkVlK24V2SpQZJ6lGfxzBoYfalMg5zpMwHPiEQxhGMJuAkx
- Z7mIO8Vd6FOOZTsGsnadC2Caw0gqOghhxhwqLPFKnJSC7t7Vgt6+uxI2G+QlDN22e6Ut
- 95//l/QYvn0FoSNHiU51RjTB+gcIO15O7gNImniu7VxLDO6OvvNJlSG4SRIXTwW2AqRx XQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2vq0q45hj1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 18 Oct 2019 18:29:45 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9IIN4Gd145695;
-        Fri, 18 Oct 2019 18:29:44 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2vq0ewyd9b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 18 Oct 2019 18:29:44 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9IITfS8021199;
-        Fri, 18 Oct 2019 18:29:41 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 18 Oct 2019 18:29:41 +0000
-Subject: Re: [PATCH] hugetlb: Add nohugepages parameter to prevent hugepages
- creation
-To:     "Guilherme G. Piccoli" <guilherme@gpiccoli.net>,
-        Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>
-Cc:     Guilherme Piccoli <gpiccoli@canonical.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
-        "Guilherme G. Piccoli" <kernel@gpiccoli.net>
-References: <CAHD1Q_ynd6f2Jc54k1D9JjmtD6tGhkDcAHRzd5nZt5LUdQTvaw@mail.gmail.com>
- <4641B95A-6DD8-4E8A-AD53-06E7B72D956C@lca.pw>
- <CAHD1Q_x+m0ZT_xfLV3j6ma3Cc88fk9KnoS4yytS=PHBvJN7nnQ@mail.gmail.com>
- <20191015121803.GB24932@dhcp22.suse.cz>
- <b6617b4b-bcab-3b40-7d46-46a5d9682856@gpiccoli.net>
- <20191015140508.GJ317@dhcp22.suse.cz>
- <2d593c95-3c69-8f50-17ff-223bd607caf1@gpiccoli.net>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <2df9c30d-b1e0-648e-93ba-85c78fbcbd0e@oracle.com>
-Date:   Fri, 18 Oct 2019 11:29:40 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 18 Oct 2019 14:30:21 -0400
+Received: by mail-il1-f195.google.com with SMTP id c4so6373790ilq.13;
+        Fri, 18 Oct 2019 11:30:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9TR74HliKcGhhcpIlRpbuDwy+ebGrtVv1gRKo2YxR5I=;
+        b=BxoE4ac1hUXyK3iN/dztnkpo2HRqcCiIx+R7gMLQsFGU0EjvBUCotiiVqGE32Kwc80
+         syGCtHKrtf+WBBLegwEU0Grd9YcqpAe8kRMh0uf7wNibSZnTwgx6bnYwMaiJgKMkUtvo
+         V6wzJzSPWdhHkHmagod2RpcgEO8azBPP/+0IgTHaGtQrNwM/ltGZ+Ho9cvXaKbOQvUaZ
+         BKxaVABbtNqsSzgLhW3Wy3VnGF3jyUegAj2foSi2cau4PRpSkLJfw2hHtmLbEGoKf8TC
+         wPLBhSIgxA/CWRS2pgAilLXVhAonsSDzX3Fmh8v7I4TRjutF+x9/7oXcck7rTbLqA04V
+         6lXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9TR74HliKcGhhcpIlRpbuDwy+ebGrtVv1gRKo2YxR5I=;
+        b=okF16vaWqogOMIbnPZP+8hlpjoiK91yREB98cnvZcp1yVquMsoapqmulLXw259EFUQ
+         Y3m6oWQsIqo/QWY17gF17Wkm5gGCEfS8g8P23njZdU5Ogc0xEZUgChCHJMcnlIgRayRa
+         nyBYIF1NOl2n0Gbw2bhYhBb3dpfRjbeC/gZHidlCq5SEmMXoZgebE6C3mzEIk8+cBOSi
+         VdWkrnwieqH9AVJBy1WOnYlXvoYkXKcTAk43bs7b/8fqO2EBEB7v0iEoZ/Ais4uamZSU
+         E29pDOgQVKTfhVVp9hxWIMTXtUeAPDmUpDwM4eeFIW55YKjSv7+Og4WKpt/aRtGDc/Pp
+         MR6A==
+X-Gm-Message-State: APjAAAUHj5S9eJx2ZiI1iaowjQtr+6vZSr8ycWmIN8uv9EUm1bKinAAf
+        Rj3YFwxvIChq2s5v/hlz+43iH+Yv70JjbWpSq4w=
+X-Google-Smtp-Source: APXvYqwAI9gQqLm22/B1368wsSMuRTHJtUuE6XEUIQlrStLbW1GE1BraOtx6vAS4S4+6LNLvSHi7kwqz6Hx2Liv124k=
+X-Received: by 2002:a05:6e02:783:: with SMTP id q3mr11223281ils.33.1571423420264;
+ Fri, 18 Oct 2019 11:30:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2d593c95-3c69-8f50-17ff-223bd607caf1@gpiccoli.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9414 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=27 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910180165
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9414 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=27 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910180165
+References: <20191017212955.6266-1-jeffrey.l.hugo@gmail.com> <20191018180339.GQ87296@google.com>
+In-Reply-To: <20191018180339.GQ87296@google.com>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Fri, 18 Oct 2019 12:30:09 -0600
+Message-ID: <CAOCk7NrN0sjLk3onvZn7+bhs_v3A4H6CHh=XPo_NU2XzUWeEGw@mail.gmail.com>
+Subject: Re: [PATCH] Bluetooth: hci_qca: Add delay for wcn3990 stability
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        c-hbandi@codeaurora.org, bgodavar@codeaurora.org,
+        linux-bluetooth@vger.kernel.org,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/15/19 7:09 AM, Guilherme G. Piccoli wrote:
-> 
-> 
-> On 10/15/19 11:05 AM, Michal Hocko wrote:
->> On Tue 15-10-19 10:58:36, Guilherme G. Piccoli wrote:
->>> On 10/15/19 9:18 AM, Michal Hocko wrote:
->>>> I do agree with Qian Cai here. Kdump kernel requires a very tailored
->>>> environment considering it is running in a very restricted
->>>> configuration. The hugetlb pre-allocation sounds like a tooling problem
->>>> and should be fixed at that layer.
->>>>
->>>
->>> Hi Michal, thanks for your response. Can you suggest me a current way of
->>> preventing hugepages for being created, using userspace? The goal for this
->>> patch is exactly this, introduce such a way.
->>
->> Simply restrict the environment to not allocate any hugepages? Kdump
->> already controls the kernel command line and it also starts only a very
->> minimal subset of services. So who is allocating those hugepages?
->> sysctls should be already excluded by default as Qian mentioned.
->>
-> 
-> 
-> OK, thanks Michal and Qian, I'll try to make things work from kdump perspective. The trick part is exactly preventing the sysctl to get applied heh
-> 
+On Fri, Oct 18, 2019 at 12:03 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> On Thu, Oct 17, 2019 at 02:29:55PM -0700, Jeffrey Hugo wrote:
+> > On the msm8998 mtp, the response to the baudrate change command is never
+> > received.  On the Lenovo Miix 630, the response to the baudrate change
+> > command is corrupted - "Frame reassembly failed (-84)".
+> >
+> > Adding a 50ms delay before re-enabling flow to receive the baudrate change
+> > command response from the wcn3990 addesses both issues, and allows
+> > bluetooth to become functional.
+>
+> From my earlier debugging on sdm845 I don't think this is what happens.
+> The problem is that the wcn3990 sends the response to the baudrate change
+> command using the new baudrate, while the UART on the SoC still operates
+> with the prior speed (for details see 2faa3f15fa2f ("Bluetooth: hci_qca:
+> wcn3990: Drop baudrate change vendor event"))
+>
+> IIRC the 50ms delay causes the HCI core to discard the received data,
+> which is why the "Frame reassembly failed" message disappears, not
+> because the response was received. In theory commit 78e8fa2972e5
+> ("Bluetooth: hci_qca: Deassert RTS while baudrate change command")
+> should have fixed those messages, do you know if CTS/RTS are connected
+> on the Bluetooth UART of the Lenovo Miix 630?
 
-Please do let us know if this can be done in tooling.
+I was testing with 5.4-rc1 which contains the indicated RTS fix.
 
-I am not opposed to the approach taken in your v2 patch as it essentially
-uses the hugepages_supported() functionality that exists today.  However,
-it seems that other distros have ways around this issue.  As such, I would
-prefer if the issue was addressed in the tooling.
--- 
-Mike Kravetz
+Yes, CTS/RTS are connected on the Lenovo Miix 630.
+
+I added debug statements which indicated that data was received,
+however it was corrupt, and the packet type did not match what was
+expected, hence the frame reassembly errors.
+
+In response to this patch, Balakrishna pointed me to a bug report
+which indicated that some of the UART GPIO lines need to have a bias
+applied to prevent errant data from floating lines -
+
+https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1391888
+
+It turns out this fix was never applied to msm8998.  Applying the fix
+does cause the the frame reassembly errors to go away, however then
+the host SoC never receives the baud rate change response (I increased
+the timeout from 2faa3f15fa2f ("Bluetooth: hci_qca: wcn3990: Drop
+baudrate change vendor event") to 5 seconds).  As of now, this patch
+is still required.
+
+I have no idea why the delay is required, and was hoping that posting
+this patch would result in someone else providing some missing pieces
+to determine the real root cause.  I suspect that asserting RTS at the
+wrong time may cause an issue for the wcn3990, but I have no data nor
+documentation to support this guess.  I welcome any further insights
+you may have.
