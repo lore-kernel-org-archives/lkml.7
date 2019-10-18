@@ -2,134 +2,137 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14064CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EA2CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DED7520820
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:56:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sfw7CJKy"
+	by mail.kernel.org (Postfix) with ESMTP id C436820820
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:56:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504041AbfJRF4B (ORCPT
+        id S2504113AbfJRF4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:56:01 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41359 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392030AbfJRF4A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:56:00 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p4so4781092wrm.8
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:55:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0RX/eZVxJTs9fdKiBk/fJa6nhTLf1toXcxAcB3Pwujk=;
-        b=sfw7CJKy5k8boS6JMeROudXdBBBjjIVKJrZYxCI6saAh0WDUnKZ5Gv4p2lUzQTLblg
-         Pam9xKNx4ksKyqH8JysNrdhaGzWFxvLlxY23dPDalnzM6FAtgYVAUvv0V0yGWF37Ow1p
-         dv5gGTgZomYK8VbHoXBLpDztiZFM/xIK+yGpq+q+l9icE0vv+DiNxPI5NBSB9ffDhKNY
-         erAby/3GNgQBsoOlV6n9h8RDimV1kJhSW1oQ/FMQ5cuyd5rVG+l4ZslbC6rpw93MnIT6
-         lyt/IPVcp73hXjs/W4fSd+SegGPzBmHOgJS7TtMa/S5fgEaxTqGGdp/r27xPuOVUc77J
-         JsOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0RX/eZVxJTs9fdKiBk/fJa6nhTLf1toXcxAcB3Pwujk=;
-        b=glI9np9hziftjDBlOxP+r3AsLIwUmP20qYvaKglZtbsLuDHeQKtXwBuLekty0/cVf/
-         Iedosyw6/4v3DWlN33CUd3e+/qU2hZR5w+HGpR0PfJPt+uJ4bzWsObGLSACuj5fi1Zl/
-         gHLl2zo8CwAyban2jSlW5xq2mYN4XGbe7dF7MUYmAxbQPN0q8WaeeTZLQEW45lhOdFj0
-         /GUP8PzuQozwgO26Buz94/cdhjfSi3HvKrcZEq3aKdLH7BJXU/UYBISk2XUNl2thny/+
-         lPfITfcUKIM2rjdVKwXhyDQpiF1GiIsDO3XphsGSgoO0fKYRC9H8secrqfcrRo9tRL3q
-         7vBA==
-X-Gm-Message-State: APjAAAUHhGmalzfH58zrSO5L0z4zYlIhEfy5k/wDayp/Hm5loAKVxhNQ
-        sxj0iGg9htwQfIffJApVxE9rcV7t+2EJNRFzYazD0Q==
-X-Google-Smtp-Source: APXvYqyVa2tdZUqgwmas2Off/KMa7do38JBAZiNLti1ibsNaD8x0PeLlp8nm8+4re5slTCw/ZLGPlAqydiSGFc9te/0=
-X-Received: by 2002:a5d:50c9:: with SMTP id f9mr5917799wrt.36.1571378156662;
- Thu, 17 Oct 2019 22:55:56 -0700 (PDT)
+        Fri, 18 Oct 2019 01:56:11 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:55370 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1733227AbfJRF4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 01:56:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D34B329;
+        Thu, 17 Oct 2019 22:55:46 -0700 (PDT)
+Received: from e107533-lin.cambridge.arm.com (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CCD643F68E;
+        Thu, 17 Oct 2019 22:58:30 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 06:55:33 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cpufreq: flush any pending policy update work scheduled
+ before freeing
+Message-ID: <20191018055533.GC31836@e107533-lin.cambridge.arm.com>
+References: <20191017163503.30791-1-sudeep.holla@arm.com>
+ <CAJZ5v0gTpK0cJhsWGVvs-=Sbgcia0jz2j5QNYRL+1wOz=2xkJQ@mail.gmail.com>
+ <CAJZ5v0h0ioEZqLuaW1jz_8jRuGYZLQS3fbpv9ctyV9ucXb1WiA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191002231617.3670-1-john.stultz@linaro.org> <20191002231617.3670-3-john.stultz@linaro.org>
- <2e369349-41f6-bd15-2829-fa886f209b39@redhat.com> <CALAqxLVcQ7yZuJCUEqGmvqcz5u0Gd=xJzqLbmiXKR+LJrOhvMQ@mail.gmail.com>
- <b8695418-9d3a-96a6-9587-c9a790f49740@redhat.com> <CALAqxLVh6GbiKmuK60e6f+_dWh-TS2ZLrwx0WsSo5bKp-F3iLA@mail.gmail.com>
- <648e2943-42f5-e07d-5bb4-f6fd8b38b726@redhat.com>
-In-Reply-To: <648e2943-42f5-e07d-5bb4-f6fd8b38b726@redhat.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Thu, 17 Oct 2019 22:55:45 -0700
-Message-ID: <CALAqxLWh0=GRod5ORpi+ENpWCkmY39mUw_=NV67sKY8qH_otZw@mail.gmail.com>
-Subject: Re: [RFC][PATCH 2/3] usb: roles: Add usb role switch notifier.
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0h0ioEZqLuaW1jz_8jRuGYZLQS3fbpv9ctyV9ucXb1WiA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 12:27 AM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 10/15/19 7:39 AM, John Stultz wrote:
-> > On Thu, Oct 3, 2019 at 1:51 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >> On 03-10-2019 22:37, John Stultz wrote:
-> >>> Fair point. I'm sort of taking a larger patchset and trying to break
-> >>> it up into more easily reviewable chunks, but I guess here I mis-cut.
-> >>>
-> >>> The user is the hikey960 gpio hub driver here:
-> >>>     https://git.linaro.org/people/john.stultz/android-dev.git/commit/?id=b06158a2d3eb00c914f12c76c93695e92d9af00f
-> >>
-> >> Hmm, that seems to tie the TypeC data-role to the power-role, which
-> >> is not going to work with role swapping.
+On Thu, Oct 17, 2019 at 11:26:54PM +0200, Rafael J. Wysocki wrote:
+> On Thu, Oct 17, 2019 at 9:36 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
 > >
-> > Thanks again for the feedback here. Sorry for the slow response. Been
-> > reworking some of the easier changes but am starting to look at how to
-> > address your feedback here.
+> > On Thu, Oct 17, 2019 at 6:35 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> > >
+> > > dev_pm_qos_remove_request ends calling {max,min}_freq_req QoS notifiers
+> > > which schedule policy update work. It may end up racing with the freeing
+> > > the policy and unregistering the driver.
+> > >
+> > > One possible race is as below where the cpufreq_driver is unregistered
+> > > but the scheduled work gets executed at later stage when cpufreq_driver
+> > > is NULL(i.e. after freeing the policy and driver)
+> > >
+> > > Unable to handle kernel NULL pointer dereference at virtual address 0000001c
+> > > pgd = (ptrval)
+> > > [0000001c] *pgd=80000080204003, *pmd=00000000
+> > > Internal error: Oops: 206 [#1] SMP THUMB2
+> > > Modules linked in:
+> > > CPU: 0 PID: 34 Comm: kworker/0:1 Not tainted 5.4.0-rc3-00006-g67f5a8081a4b #86
+> > > Hardware name: ARM-Versatile Express
+> > > Workqueue: events handle_update
+> > > PC is at cpufreq_set_policy+0x58/0x228
+> > > LR is at dev_pm_qos_read_value+0x77/0xac
+> > > Control: 70c5387d  Table: 80203000  DAC: fffffffd
+> > > Process kworker/0:1 (pid: 34, stack limit = 0x(ptrval))
+> > >         (cpufreq_set_policy) from (refresh_frequency_limits.part.24+0x37/0x48)
+> > >         (refresh_frequency_limits.part.24) from (handle_update+0x2f/0x38)
+> > >         (handle_update) from (process_one_work+0x16d/0x3cc)
+> > >         (process_one_work) from (worker_thread+0xff/0x414)
+> > >         (worker_thread) from (kthread+0xff/0x100)
+> > >         (kthread) from (ret_from_fork+0x11/0x28)
+> > >
+> > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > > Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> > > ---
+> > >  drivers/cpufreq/cpufreq.c | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > Hi Rafael, Viresh,
+> > >
+> > > This fixed the boot issue I reported[1] on TC2 with bL switcher enabled.
+> > > I have based this patch on -rc3 and not on top of your patches. This
+> > > only fixes the boot issue but I hit the other crashes while continuously
+> > > switching on and off the bL switcher that register/unregister the driver
+> > > Your patch series fixes them. I can based this on top of those if you
+> > > prefer.
+> > >
+> > > Regards,
+> > > Sudeep
+> > >
+> > > [1] https://lore.kernel.org/linux-pm/20191015155735.GA29105@bogus/
+> > >
+> > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > > index c52d6fa32aac..b703c29a84be 100644
+> > > --- a/drivers/cpufreq/cpufreq.c
+> > > +++ b/drivers/cpufreq/cpufreq.c
+> > > @@ -1278,6 +1278,9 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
+> > >         }
+> > >
+> > >         dev_pm_qos_remove_request(policy->min_freq_req);
+> > > +       /* flush the pending policy->update work before freeing the policy */
+> > > +       if (work_pending(&policy->update))
 > >
-> >> What is controlling the usb-role-switch, and thus ultimately
-> >> causing the notifier you are suggesting to get called ?
+> > Isn't this racy?
 > >
-> > The tcpm_mux_set() call via tcpm_state_machine_work()
+> > It still may be running if the pending bit is clear and we still need
+> > to wait for it then, don't we?
 > >
-> >> Things like TYPEC_VBUS_POWER_OFF and TYPEC_VBUS_POWER_ON
-> >> really beg to be modeled as a regulator and then the
-> >> Type-C controller (using e.g. the drivers/usb/typec/tcpm/tcpm.c
-> >> framework) can use that regulator to control things.
-> >> in case of the tcpm.c framework it can then use that
-> >> regulator to implement the set_vbus callback.
-> >
-> > So I'm looking at the bindings and I'm not sure exactly how to tie a
-> > regulator style driver into the tcpm for this?
-> > Looking at the driver I just see this commented out bit:
-> >     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/usb/typec/tcpm/tcpm.c#n3075
-> >
-> > Do you happen to have a pointer to something closer to what you are describing?
->
-> Look at the tcpm_set_vbus implementation in drivers/usb/typec/tcpm/fusb302.c
-> you need to do something similar in your Type-C controller driver and
-> export the GPIO as as a gpio-controlled regulator and tie the regulator to
-> the connector.
+> > Why don't you do an unconditional flush_work() here?
+> 
+> You may as well do a cancel_work_sync() here, because whether or not
+> the last update of the policy happens before it goes away is a matter
+> of timing in any case
 
-Thanks for the suggestion, I really appreciate it! One more question
-though, since I'm using the tcpci_rt1711h driver, which re-uses the
-somewhat sparse tcpci.c implementation, would you recommend trying to
-add generic regulator support to the tcpci code or trying to extend
-the implementation somehow allow the tcpci_rt1711h driver replace just
-the set_vbus function?
+In fact that's the first thing I tried to fix the issue I was seeing.
+But I then thought it would be better to complete the update as the PM
+QoS were getting updated back to DEFAULT values for the device. Even
+this works.
 
-thanks
--john
+What is your preference ? flush_work or cancel_work_sync ? I will
+update accordingly. I may need to do some more testing with
+cancel_work_sync as I just checked that quickly to confirm the race.
+
+--
+Regards,
+Sudeep
