@@ -7,45 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B97ECCA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1E7CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8471D2246E
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50351222D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:04:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436296;
-	bh=Odrr+zmNdI6AN052yBovEOwzEQZbeXlYtg8noSwp/dI=;
+	s=default; t=1571436299;
+	bh=jn36PS6JD/UCan94jV0PXlMdlJkaCs61c+4OM1G1KZo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OUtT95EUAo6TUBX+6nf6tVvPvp9P/FZbpwual29omDBjdr+Fir7wv/nrLkduvmBGD
-	 TvSmNpfD04W9Sc8xi1TWh6R+O2aJVYqG+Nk7PFrErDgxGQNp6AahLYMU2On8lXPHKr
-	 02kgCMT6PNGaAajddQ1YqSPNcxGzaHhH+zI6mQwA=
+	b=f+9KqeF09gaeER+0v/hD6+lYNg9Nif0pmqZnsneI1lhtixKRSwkCaTocB0gbdKChB
+	 /bqkuum2rJ0JvZsmC+Kggh7OaWV1+jb4Pe+jZnNgkeh6N868TcepBImY+DQ73kLcz4
+	 pPH+rXyevIraXMvOkfkUgmM5Pit0Nkjt9mHXfZA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbfJRWEy (ORCPT
+        id S1728958AbfJRWE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:04:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36480 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:04:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728651AbfJRWEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:04:45 -0400
+        id S1728812AbfJRWEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:04:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFF5B2246B;
-        Fri, 18 Oct 2019 22:04:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D37A222CC;
+        Fri, 18 Oct 2019 22:04:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436285;
-        bh=Odrr+zmNdI6AN052yBovEOwzEQZbeXlYtg8noSwp/dI=;
+        s=default; t=1571436289;
+        bh=jn36PS6JD/UCan94jV0PXlMdlJkaCs61c+4OM1G1KZo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NASvWmS9Tu0L/UrZlxFPE0N1xQB3aCJoCn8Hd6wd08mu2VxoUSJuKJTyCQd/4YK2q
-         nqNMbgzqpcmQcGMWDX2Si4cv5Ghp03WUz0j1OBRo+kVnDN4yeXT7bxT2v55dpyB9le
-         5QM+Fv7AXo6lhIkHYyFRb6SncFtRpft1OG7ZbXiE=
+        b=EF2bXxepyfWSkqVLPYRAhxLXHQTvbrN2FSuuY1DbJGs002vYmOYwWvbHyFkgoNTHR
+         EwzpM68PVZi/ys7wLdRTm3McCf+jLCOPknsPrR1/eMGFdd6fnmsdcMWdHpoSDtCz3T
+         S3Ws2bmlrFuXoe+1aR1Mn9JRlHAGsnUQjTNLuGrY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yunfeng Ye <yeyunfeng@huawei.com>, Will Deacon <will@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 61/89] arm64: armv8_deprecated: Checking return value for memory allocation
-Date:   Fri, 18 Oct 2019 18:02:56 -0400
-Message-Id: <20191018220324.8165-61-sashal@kernel.org>
+Cc:     Xuewei Zhang <xueweiz@google.com>, Phil Auld <pauld@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Ben Segall <bsegall@google.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 63/89] sched/fair: Scale bandwidth quota and period without losing quota/period ratio precision
+Date:   Fri, 18 Oct 2019 18:02:58 -0400
+Message-Id: <20191018220324.8165-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -58,43 +68,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+From: Xuewei Zhang <xueweiz@google.com>
 
-[ Upstream commit 3e7c93bd04edfb0cae7dad1215544c9350254b8f ]
+[ Upstream commit 4929a4e6faa0f13289a67cae98139e727f0d4a97 ]
 
-There are no return value checking when using kzalloc() and kcalloc() for
-memory allocation. so add it.
+The quota/period ratio is used to ensure a child task group won't get
+more bandwidth than the parent task group, and is calculated as:
 
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+  normalized_cfs_quota() = [(quota_us << 20) / period_us]
+
+If the quota/period ratio was changed during this scaling due to
+precision loss, it will cause inconsistency between parent and child
+task groups.
+
+See below example:
+
+A userspace container manager (kubelet) does three operations:
+
+ 1) Create a parent cgroup, set quota to 1,000us and period to 10,000us.
+ 2) Create a few children cgroups.
+ 3) Set quota to 1,000us and period to 10,000us on a child cgroup.
+
+These operations are expected to succeed. However, if the scaling of
+147/128 happens before step 3, quota and period of the parent cgroup
+will be changed:
+
+  new_quota: 1148437ns,   1148us
+ new_period: 11484375ns, 11484us
+
+And when step 3 comes in, the ratio of the child cgroup will be
+104857, which will be larger than the parent cgroup ratio (104821),
+and will fail.
+
+Scaling them by a factor of 2 will fix the problem.
+
+Tested-by: Phil Auld <pauld@redhat.com>
+Signed-off-by: Xuewei Zhang <xueweiz@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Phil Auld <pauld@redhat.com>
+Cc: Anton Blanchard <anton@ozlabs.org>
+Cc: Ben Segall <bsegall@google.com>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Fixes: 2e8e19226398 ("sched/fair: Limit sched_cfs_period_timer() loop to avoid hard lockup")
+Link: https://lkml.kernel.org/r/20191004001243.140897-1-xueweiz@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/armv8_deprecated.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ kernel/sched/fair.c | 36 ++++++++++++++++++++++--------------
+ 1 file changed, 22 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm64/kernel/armv8_deprecated.c b/arch/arm64/kernel/armv8_deprecated.c
-index 2ec09debc2bb1..ca158be21f833 100644
---- a/arch/arm64/kernel/armv8_deprecated.c
-+++ b/arch/arm64/kernel/armv8_deprecated.c
-@@ -174,6 +174,9 @@ static void __init register_insn_emulation(struct insn_emulation_ops *ops)
- 	struct insn_emulation *insn;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 86cfc5d5129ce..16b5d29bd7300 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4995,20 +4995,28 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+ 		if (++count > 3) {
+ 			u64 new, old = ktime_to_ns(cfs_b->period);
  
- 	insn = kzalloc(sizeof(*insn), GFP_KERNEL);
-+	if (!insn)
-+		return;
+-			new = (old * 147) / 128; /* ~115% */
+-			new = min(new, max_cfs_quota_period);
+-
+-			cfs_b->period = ns_to_ktime(new);
+-
+-			/* since max is 1s, this is limited to 1e9^2, which fits in u64 */
+-			cfs_b->quota *= new;
+-			cfs_b->quota = div64_u64(cfs_b->quota, old);
+-
+-			pr_warn_ratelimited(
+-	"cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us %lld, cfs_quota_us = %lld)\n",
+-				smp_processor_id(),
+-				div_u64(new, NSEC_PER_USEC),
+-				div_u64(cfs_b->quota, NSEC_PER_USEC));
++			/*
++			 * Grow period by a factor of 2 to avoid losing precision.
++			 * Precision loss in the quota/period ratio can cause __cfs_schedulable
++			 * to fail.
++			 */
++			new = old * 2;
++			if (new < max_cfs_quota_period) {
++				cfs_b->period = ns_to_ktime(new);
++				cfs_b->quota *= 2;
 +
- 	insn->ops = ops;
- 	insn->min = INSN_UNDEF;
++				pr_warn_ratelimited(
++	"cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us = %lld, cfs_quota_us = %lld)\n",
++					smp_processor_id(),
++					div_u64(new, NSEC_PER_USEC),
++					div_u64(cfs_b->quota, NSEC_PER_USEC));
++			} else {
++				pr_warn_ratelimited(
++	"cfs_period_timer[cpu%d]: period too short, but cannot scale up without losing precision (cfs_period_us = %lld, cfs_quota_us = %lld)\n",
++					smp_processor_id(),
++					div_u64(old, NSEC_PER_USEC),
++					div_u64(cfs_b->quota, NSEC_PER_USEC));
++			}
  
-@@ -233,6 +236,8 @@ static void __init register_insn_emulation_sysctl(void)
- 
- 	insns_sysctl = kcalloc(nr_insn_emulated + 1, sizeof(*sysctl),
- 			       GFP_KERNEL);
-+	if (!insns_sysctl)
-+		return;
- 
- 	raw_spin_lock_irqsave(&insn_emulation_lock, flags);
- 	list_for_each_entry(insn, &insn_emulation, node) {
+ 			/* reset count so we don't come right back in here */
+ 			count = 0;
 -- 
 2.20.1
 
