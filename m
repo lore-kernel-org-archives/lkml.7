@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2FDCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 23:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CADB6CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 23:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82ACE21D7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 23:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E6552089C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 23:21:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732292AbfJRXUx (ORCPT
+        id S1732597AbfJRXV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 19:20:53 -0400
-Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139]:46842
+        Fri, 18 Oct 2019 19:21:26 -0400
+Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139]:46862
         "EHLO rjones.pdc.gateworks.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729068AbfJRXUx (ORCPT
+        by vger.kernel.org with ESMTP id S1729068AbfJRXV0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 19:20:53 -0400
+        Fri, 18 Oct 2019 19:21:26 -0400
 Received: by rjones.pdc.gateworks.com (Postfix, from userid 1002)
-        id 0A7141A434C2; Fri, 18 Oct 2019 16:20:51 -0700 (PDT)
+        id C57361A434C2; Fri, 18 Oct 2019 16:21:25 -0700 (PDT)
 From:   Robert Jones <rjones@gateworks.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -33,72 +33,72 @@ Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Robert Jones <rjones@gateworks.com>
-Subject: [PATCH] ARM: dt: add fxos8700 on gateworks boards
-Date:   Fri, 18 Oct 2019 16:20:49 -0700
-Message-Id: <20191018232049.4045-1-rjones@gateworks.com>
+Subject: [PATCH] ARM: dt: add lsm9ds1 iio imu/magn support to gw553x
+Date:   Fri, 18 Oct 2019 16:21:24 -0700
+Message-Id: <20191018232124.4126-1-rjones@gateworks.com>
 X-Mailer: git-send-email 2.9.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add fxos8700 iio imu entries for Gateworks SBCs.
+Add one node for the accel/gyro i2c device and another for the separate
+magnetometer device in the lsm9ds1.
 
 Signed-off-by: Robert Jones <rjones@gateworks.com>
 ---
- arch/arm/boot/dts/imx6qdl-gw52xx.dtsi | 5 +++++
- arch/arm/boot/dts/imx6qdl-gw53xx.dtsi | 5 +++++
- arch/arm/boot/dts/imx6qdl-gw54xx.dtsi | 5 +++++
- 3 files changed, 15 insertions(+)
+ arch/arm/boot/dts/imx6qdl-gw553x.dtsi | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
-index 1a9a9d9..ffc4449 100644
---- a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
-@@ -306,6 +306,11 @@
- 		VDDIO-supply = <&reg_3p3v>;
- 	};
+diff --git a/arch/arm/boot/dts/imx6qdl-gw553x.dtsi b/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
+index a106689..55e6922 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
+@@ -173,6 +173,25 @@
+ 	pinctrl-0 = <&pinctrl_i2c2>;
+ 	status = "okay";
  
-+	fxos8700@1e {
-+		compatible = "nxp,fxos8700";
-+		reg = <0x1e>;
++	lsm9ds1_ag@6a {
++		compatible = "st,lsm9ds1-imu";
++		reg = <0x6a>;
++		st,drdy-int-pin = <1>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_acc_gyro>;
++		interrupt-parent = <&gpio7>;
++		interrupts = <13 IRQ_TYPE_LEVEL_HIGH>;
 +	};
 +
- 	touchscreen: egalax_ts@4 {
- 		compatible = "eeti,egalax_ts";
- 		reg = <0x04>;
-diff --git a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
-index 54b2bea..ebbd1c8 100644
---- a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
-@@ -297,6 +297,11 @@
- 		VDDIO-supply = <&reg_3p3v>;
- 	};
- 
-+	fxos8700@1e {
-+		compatible = "nxp,fxos8700";
-+		reg = <0x1e>;
++	lsm9ds1_m@1c {
++		compatible = "st,lsm9ds1-magn";
++		reg = <0x1c>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_mag>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <2 IRQ_TYPE_EDGE_RISING>;
 +	};
 +
- 	touchscreen: egalax_ts@4 {
- 		compatible = "eeti,egalax_ts";
- 		reg = <0x04>;
-diff --git a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-index 1b6c133..67d4725 100644
---- a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-@@ -354,6 +354,11 @@
- 		VDDIO-supply = <&reg_3p3v>;
+ 	ltc3676: pmic@3c {
+ 		compatible = "lltc,ltc3676";
+ 		reg = <0x3c>;
+@@ -462,6 +481,18 @@
+ 		>;
  	};
  
-+	fxos8700@1e {
-+		compatible = "nxp,fxos8700";
-+		reg = <0x1e>;
++	pinctrl_acc_gyro: acc_gyrogrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_18__GPIO7_IO13		0x1b0b0
++		>;
 +	};
 +
- 	touchscreen: egalax_ts@4 {
- 		compatible = "eeti,egalax_ts";
- 		reg = <0x04>;
++	pinctrl_mag: maggrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x1b0b0
++		>;
++	};
++
+ 	pinctrl_pps: ppsgrp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x1b0b1
 -- 
 2.9.2
 
