@@ -2,91 +2,92 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 615BCCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5C0CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40D9E20869
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 161A720854
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:23:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gWAXdHWe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436854AbfJRQWF (ORCPT
+        id S2437047AbfJRQXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:22:05 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:45050 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1727154AbfJRQWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:22:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9EB30CA2;
-        Fri, 18 Oct 2019 09:21:37 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E10B3F718;
-        Fri, 18 Oct 2019 09:21:36 -0700 (PDT)
-Subject: Re: [PATCH 2/2] mfd: mfd-core: Honour Device Tree's request to
- disable a child-device
-To:     Lee Jones <lee.jones@linaro.org>, broonie@kernel.org,
-        linus.walleij@linaro.org, daniel.thompson@linaro.org, arnd@arndb.de
-Cc:     baohua@kernel.org, stephan@gerhold.net,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20191018122647.3849-1-lee.jones@linaro.org>
- <20191018122647.3849-3-lee.jones@linaro.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <b7c59d6e-2ad8-30a1-013a-53c116f7b6ba@arm.com>
-Date:   Fri, 18 Oct 2019 17:21:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 18 Oct 2019 12:23:49 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38389 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436477AbfJRQXt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 12:23:49 -0400
+Received: by mail-lj1-f195.google.com with SMTP id b20so6823817ljj.5
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:23:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N2wi/OP6d586EjQAloFweW5u491ag8tawEzsEIxjYjU=;
+        b=gWAXdHWezuL7R7MxC2NfJ3S5dFAkcyD/B3wZtCJhaIwbxT+AtYrGGZXYT3PYNaHZPN
+         aNxBbzbwcOq5SXNumdwzY4Rf7WSbUPl08miDtH5aWH0SIwtzB/sHoV/tqp9PjY0RJ0k4
+         2K+dxm8DfDwbQZ3d5xTscF4fOiP4QI1r+Pl/M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N2wi/OP6d586EjQAloFweW5u491ag8tawEzsEIxjYjU=;
+        b=bpNa/++duce9KUXVO6ans2rdavnyl+0W+EMUyHArXtpGGUNk12aJSeSAjefCREE/9s
+         P3M1MNgvQTA57Z6ogrFVkLQR6DkON3w4/+i6I72law1H4MBnwOvcoxB7wawBLq4UPaKt
+         LKXMXZKte2WAm6V/2+SRmukjtDoWAtMscW5nJofOltYMCIwfwx5ENbUIYlSTsJIK4NEO
+         c8L/Pv/Q/ThY7cx0lkTmShTs1F12XAGXjZTXRE7HX+IpmpEWs+KiCYsmojgKM3d1Tqi/
+         VInmT+GMjvMgAm2r4P15Wz+HeFTu0B5P8qTvst3EANae1HL9hldOEwqzzDZ6UOtCag8m
+         kJ5A==
+X-Gm-Message-State: APjAAAUQcx8Ue9vOOpykOgNbWA2r7Ki4QR4TcFH8B0WjJBHzHQMq6ygz
+        wj62XnjHAQEXctRx6fPe36vhYrykbkk=
+X-Google-Smtp-Source: APXvYqzPzFWygZaYfNA0I0EhL1TQv2pqdE3D+xmBOXw0sCFH3z7fSf4+symhdvGRyq3cZ/l7pYZLrQ==
+X-Received: by 2002:a2e:6a04:: with SMTP id f4mr6537269ljc.164.1571415826154;
+        Fri, 18 Oct 2019 09:23:46 -0700 (PDT)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
+        by smtp.gmail.com with ESMTPSA id z20sm3031320ljk.63.2019.10.18.09.23.45
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Oct 2019 09:23:45 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id a22so6843924ljd.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:23:45 -0700 (PDT)
+X-Received: by 2002:a2e:3c05:: with SMTP id j5mr6983552lja.24.1571415824724;
+ Fri, 18 Oct 2019 09:23:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191018122647.3849-3-lee.jones@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20191005101345.146460-1-ikjn@chromium.org> <CAATdQgBQiFnP3+Dtz8EGCRNiCOWRoJ+zK25iESNLPmVJ+exPmw@mail.gmail.com>
+In-Reply-To: <CAATdQgBQiFnP3+Dtz8EGCRNiCOWRoJ+zK25iESNLPmVJ+exPmw@mail.gmail.com>
+From:   Dmitry Torokhov <dtor@chromium.org>
+Date:   Fri, 18 Oct 2019 09:23:33 -0700
+X-Gmail-Original-Message-ID: <CAE_wzQ-E0qZJj4KwV51k5b6nT1PmOsVsR3GM+i-D5f_34qy1NA@mail.gmail.com>
+Message-ID: <CAE_wzQ-E0qZJj4KwV51k5b6nT1PmOsVsR3GM+i-D5f_34qy1NA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: input: Add DT bindings for Whiskers switch
+To:     Ikjoon Jang <ikjn@chromium.org>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Enrico Granata <egranata@google.com>,
+        Nicolas Boichat <drinkcat@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/10/2019 13:26, Lee Jones wrote:
-> Until now, MFD has assumed all child devices passed to it (via
-> mfd_cells) are to be registered.  It does not take into account
-> requests from Device Tree and the like to disable child devices
-> on a per-platform basis.
-> 
-> Well now it does.
-> 
-> Reported-by: Barry Song <Baohua.Song@csr.com>
-> Reported-by: Stephan Gerhold <stephan@gerhold.net>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->   drivers/mfd/mfd-core.c | 5 +++++
->   1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-> index eafdadd58e8b..24c139633524 100644
-> --- a/drivers/mfd/mfd-core.c
-> +++ b/drivers/mfd/mfd-core.c
-> @@ -182,6 +182,11 @@ static int mfd_add_device(struct device *parent, int id,
->   	if (parent->of_node && cell->of_compatible) {
->   		for_each_child_of_node(parent->of_node, np) {
->   			if (of_device_is_compatible(np, cell->of_compatible)) {
-> +				if (!of_device_is_available(np)) {
-> +					/* Ignore disabled devices error free */
-> +					ret = 0;
-> +					goto fail_alias;
-> +				}
+Hi Ikjoon,
 
-Is it possible for a device to have multiple children of the same type? 
-If so, it seems like this might not work as desired if, say, the first 
-child was disabled but subsequent ones weren't.
+On Thu, Oct 17, 2019 at 8:10 PM Ikjoon Jang <ikjn@chromium.org> wrote:
+>
+> A gentle ping on adding DT binding for Hammer (1/2).
 
-It might make sense to use for_each_available_child_of_node() for the 
-outer loop, then check afterwards if anything was found.
+DT bindings need to be sent to devicetree@vger.kernel.org and Rob
+Herring <robh+dt@kernel.org>
 
-Robin.
-
->   				pdev->dev.of_node = np;
->   				pdev->dev.fwnode = &np->fwnode;
->   				break;
-> 
+Thanks,
+Dmitry
