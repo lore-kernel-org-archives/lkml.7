@@ -4,61 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 452B1CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D391CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1960B2089C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EBE02089C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436672;
-	bh=vhLLu4Q3ANV96K9R9BBwMJ7SfEgIHXx42oFIcggazeo=;
+	s=default; t=1571436684;
+	bh=AW8JRg+49P+wsK0+18mdLzxYSUk1aFhVRS5tmh8A+Fw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XEMwE72NrR2xMTQxzo/sTkPNCPRrBEXYZfMNzANTbbxBBqr/z8gjNvuwwf1HGZA3c
-	 c34GHJbbCuRFyh1lWvdwz4IrpAfE4zLOw0ZRl/fYtRFEt+Yk8uKe9snTPDrafeA5mt
-	 OUqfCoq9bhqg1IxSsd2lqdPf4jTGJpp+cCXVWwSM=
+	b=kdEwjvXbRp0krTShtjWj/idCoaEy6i3DeWe3PdXD6qfCs890iBndNNP+U7ucQ2fDb
+	 DsYwY4FlDutlcxf92x3yykqQ/A2SB4OAN/7v08vh/iEmgQ6Lcg6uTzMzJvReoGG8Yd
+	 s+DerScJC39ZKMpu12Pnj5a+XxwpoXhxdE1arH9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390735AbfJRWKv (ORCPT
+        id S2391079AbfJRWLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:10:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43412 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:11:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390102AbfJRWK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:10:29 -0400
+        id S2390477AbfJRWKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:10:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6ED4822474;
-        Fri, 18 Oct 2019 22:10:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E3B62246F;
+        Fri, 18 Oct 2019 22:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436628;
-        bh=vhLLu4Q3ANV96K9R9BBwMJ7SfEgIHXx42oFIcggazeo=;
+        s=default; t=1571436637;
+        bh=AW8JRg+49P+wsK0+18mdLzxYSUk1aFhVRS5tmh8A+Fw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j/U/S3OH5a541G28VJ24XlddlyM4h+klwPf787X09xZ7ofhoxkEsX8I0tN0lez2/I
-         d5f0enVjB5/sJrIF2H9kT7dxYh1wngcaFtrGzwbasMWUpE84DahB9z7ub94r6XS4R/
-         5CPYyP/z39Djmn8iP2PG0AeOa8uZg1Tq5Iz4B15I=
+        b=TC1g4vBnGTpDAGtGYYkZ+erpQHZUmXuvO4B9Mt7uNrFIrvp1F2AtcZ9zHAWaV/5te
+         Oe0x7q7xJqbBna7ezcmbBeny0BFRJkZh9mtGVqCaQQqT4lBhHp2FZFfiZ+YevMiL9l
+         n5yNkGU1V0zF0komiw8UgIFTeWFAgt547/FMSeUI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Young <dyoung@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lukas Wunner <lukas@wunner.de>, Lyude Paul <lyude@redhat.com>,
-        Octavian Purdila <octavian.purdila@intel.com>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Scott Talbert <swt@techie.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 13/21] efi/x86: Do not clean dummy variable in kexec path
-Date:   Fri, 18 Oct 2019 18:09:59 -0400
-Message-Id: <20191018221007.10851-13-sashal@kernel.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 20/21] NFSv4: Fix leak of clp->cl_acceptor string
+Date:   Fri, 18 Oct 2019 18:10:06 -0400
+Message-Id: <20191018221007.10851-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018221007.10851-1-sashal@kernel.org>
 References: <20191018221007.10851-1-sashal@kernel.org>
@@ -71,59 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Young <dyoung@redhat.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit 2ecb7402cfc7f22764e7bbc80790e66eadb20560 ]
+[ Upstream commit 1047ec868332034d1fbcb2fae19fe6d4cb869ff2 ]
 
-kexec reboot fails randomly in UEFI based KVM guest.  The firmware
-just resets while calling efi_delete_dummy_variable();  Unfortunately
-I don't know how to debug the firmware, it is also possible a potential
-problem on real hardware as well although nobody reproduced it.
+Our client can issue multiple SETCLIENTID operations to the same
+server in some circumstances. Ensure that calls to
+nfs4_proc_setclientid() after the first one do not overwrite the
+previously allocated cl_acceptor string.
 
-The intention of the efi_delete_dummy_variable is to trigger garbage collection
-when entering virtual mode.  But SetVirtualAddressMap can only run once
-for each physical reboot, thus kexec_enter_virtual_mode() is not necessarily
-a good place to clean a dummy object.
+unreferenced object 0xffff888461031800 (size 32):
+  comm "mount.nfs", pid 2227, jiffies 4294822467 (age 1407.749s)
+  hex dump (first 32 bytes):
+    6e 66 73 40 6b 6c 69 6d 74 2e 69 62 2e 31 30 31  nfs@klimt.ib.101
+    35 67 72 61 6e 67 65 72 2e 6e 65 74 00 00 00 00  5granger.net....
+  backtrace:
+    [<00000000ab820188>] __kmalloc+0x128/0x176
+    [<00000000eeaf4ec8>] gss_stringify_acceptor+0xbd/0x1a7 [auth_rpcgss]
+    [<00000000e85e3382>] nfs4_proc_setclientid+0x34e/0x46c [nfsv4]
+    [<000000003d9cf1fa>] nfs40_discover_server_trunking+0x7a/0xed [nfsv4]
+    [<00000000b81c3787>] nfs4_discover_server_trunking+0x81/0x244 [nfsv4]
+    [<000000000801b55f>] nfs4_init_client+0x1b0/0x238 [nfsv4]
+    [<00000000977daf7f>] nfs4_set_client+0xfe/0x14d [nfsv4]
+    [<0000000053a68a2a>] nfs4_create_server+0x107/0x1db [nfsv4]
+    [<0000000088262019>] nfs4_remote_mount+0x2c/0x59 [nfsv4]
+    [<00000000e84a2fd0>] legacy_get_tree+0x2d/0x4c
+    [<00000000797e947c>] vfs_get_tree+0x20/0xc7
+    [<00000000ecabaaa8>] fc_mount+0xe/0x36
+    [<00000000f15fafc2>] vfs_kern_mount+0x74/0x8d
+    [<00000000a3ff4e26>] nfs_do_root_mount+0x8a/0xa3 [nfsv4]
+    [<00000000d1c2b337>] nfs4_try_mount+0x58/0xad [nfsv4]
+    [<000000004c9bddee>] nfs_fs_mount+0x820/0x869 [nfs]
 
-Drop the efi_delete_dummy_variable so that kexec reboot can work.
-
-Signed-off-by: Dave Young <dyoung@redhat.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Acked-by: Matthew Garrett <mjg59@google.com>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Octavian Purdila <octavian.purdila@intel.com>
-Cc: Peter Jones <pjones@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Scott Talbert <swt@techie.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Cc: linux-integrity@vger.kernel.org
-Link: https://lkml.kernel.org/r/20191002165904.8819-8-ard.biesheuvel@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: f11b2a1cfbf5 ("nfs4: copy acceptor name from context ... ")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/platform/efi/efi.c | 3 ---
- 1 file changed, 3 deletions(-)
+ fs/nfs/nfs4proc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index ad285404ea7f5..4bc352fc08f19 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -859,9 +859,6 @@ static void __init kexec_enter_virtual_mode(void)
- 
- 	if (efi_enabled(EFI_OLD_MEMMAP) && (__supported_pte_mask & _PAGE_NX))
- 		runtime_code_page_mkexec();
--
--	/* clean DUMMY object */
--	efi_delete_dummy_variable();
- #endif
- }
- 
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index d1816ee0c11be..900a62a9ad4e5 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -5255,6 +5255,7 @@ int nfs4_proc_setclientid(struct nfs_client *clp, u32 program,
+ 	}
+ 	status = task->tk_status;
+ 	if (setclientid.sc_cred) {
++		kfree(clp->cl_acceptor);
+ 		clp->cl_acceptor = rpcauth_stringify_acceptor(setclientid.sc_cred);
+ 		put_rpccred(setclientid.sc_cred);
+ 	}
 -- 
 2.20.1
 
