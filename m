@@ -2,164 +2,135 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B620CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6F5CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3F3221925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9698A222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:39:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bvSaYRK/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QKiKLVDI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506183AbfJRVjN (ORCPT
+        id S2506194AbfJRVjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 17:39:13 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:55824 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729496AbfJRVjN (ORCPT
+        Fri, 18 Oct 2019 17:39:49 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:36398 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729496AbfJRVjt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 17:39:13 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9ILZ6ag074664;
-        Fri, 18 Oct 2019 21:38:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=sZQ9OqPwUxjOm8RziMERTbkSNvmy/hpOfAE/PjKrlhU=;
- b=bvSaYRK/Nd79dT6XNWKy4Br5pqJVwrFamZSAcfwGQzCWkvUXhWpewaXpq2r12treyYxk
- snU2APjmW902mRRgz4b7mDs0Q2A48I7LJoCgywboH39fbGNRpFWn2wOAODf5hqe+Fbg7
- RV0GqBjvtyKkYqVKrudbU8VOP2P507CRgHMxcDFxedw+hWtC1v6hWA/wJZ/pqu2HGuWI
- uoCQgDEnPG1m750e4IDG3aLTBG6Mwa2bmhMG+I2FXZaWd/HM1mITDc8mE545VtIR4Akl
- gy7a4LvzxJNblw4Pm6vKc5YQuBtaa2L9C9yJfBoP61SPN0i0R3u2YhX+I5Vbdw6Wh32e 1A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2vq0q4685k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 18 Oct 2019 21:38:07 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9ILc2Y1042326;
-        Fri, 18 Oct 2019 21:38:06 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2vq0dyjm5m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 18 Oct 2019 21:38:06 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9ILbisJ002499;
-        Fri, 18 Oct 2019 21:37:44 GMT
-Received: from [172.31.33.200] (/155.48.255.248)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 18 Oct 2019 21:37:43 +0000
-Content-Type: text/plain; charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 10.2 \(3259\))
-Subject: Re: [PATCH v5 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-From:   Alex Kogan <alex.kogan@oracle.com>
-In-Reply-To: <6ce50aeb-6b87-5d1c-9011-4329e8dadfec@redhat.com>
-Date:   Fri, 18 Oct 2019 17:37:51 -0400
-Cc:     linux@armlinux.org.uk, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, hpa@zytor.com, x86@kernel.org,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jan Glauber <jglauber@marvell.com>,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        dave.dice@oracle.com, Rahul Yadav <rahul.x.yadav@oracle.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <1B59E517-D418-46DF-BC58-174BAFC5EC23@oracle.com>
-References: <20191016042903.61081-1-alex.kogan@oracle.com>
- <20191016042903.61081-4-alex.kogan@oracle.com>
- <6ce50aeb-6b87-5d1c-9011-4329e8dadfec@redhat.com>
-To:     Waiman Long <longman@redhat.com>
-X-Mailer: Apple Mail (2.3259)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9414 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=970
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910180190
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9414 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910180189
+        Fri, 18 Oct 2019 17:39:49 -0400
+Received: by mail-qk1-f195.google.com with SMTP id y189so6713503qkc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 14:39:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bY4NoLLIA2LxI2FyZ9aT3ORwvJrt5W+Zk+P87M9n+pk=;
+        b=QKiKLVDIzFSHKUdugd17QjjW7ZK9xWnIft/pB3KIyyahySNnv9Zzbdtt1jtshbe9rO
+         kCAfYk/7g6+T54u1ZvAgHnoBMtBbl7X1zZ1OjcYQ1vbGqo0/dN2cqhcH3K3wOCOZXYNZ
+         XyY23Q4vhkwoEA27BMwX6wMp7pQuVC2RUZGP2daSuFYTFJToYF6yzzBPgpkyfZ8br4xU
+         JdqtVRC85gxwisHMIrTWSkoS8I1vQhJFeQOIaYrZqStYlaDzAh4ZR3EKkzWSXoG3xypE
+         G2EAOfT2+qavqzrJvDtqlt4JYoqJmnGlQ1Jx9hlCj5PNW36Tf1T+PRlDVh5Of1Z079ay
+         p1HA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bY4NoLLIA2LxI2FyZ9aT3ORwvJrt5W+Zk+P87M9n+pk=;
+        b=RSZDwrNSLb4EGS6zGrC2Gv7zgnfX5ylKgDBxBjJ6rdXNNVQlxmM1sjQvw8J8m/qEJk
+         jAPqk+k6DbQCaq9eB/Uzgv0RV77vY4eCV3f+f9fZn3lUA5BvxiqptwTWPOPx2K/0r9yQ
+         qFQUsPZtTWUJiEKjI82lD3Z3XvDvc1q21eI8kj5d448o4gIhjH3kmfsuMXa5YxYRI0aj
+         eDhkv7Ic7eYWON8XwumsywAs/Da0hMgDxnOGCjyohi+pm0k1ATmQj/3V6LvIXzCQkob+
+         uuAYUCTB48fsdKR8gSDqt/qjaZ0YgdyEa4KuN3Mo7Le+5oCRLBuejDOlIHUwyJhobFZu
+         rAPw==
+X-Gm-Message-State: APjAAAWy++7aVKCTb8ysErDCGkl+f4jYgOuNOZVRKOubqGXoWY+HNM5g
+        XgJqpnu2VRME+pqrvkb+XdGvoMjgqjz64dS0jZE=
+X-Google-Smtp-Source: APXvYqxBDQBjlYNcXuWgi6Z/8MKJ3/Q6fRnQiF/OXUjrxAyj4RaKcjPeB0LFAQTCe8+AuFmUUHdnYkae8oiTNgXh6K8=
+X-Received: by 2002:a05:620a:20d5:: with SMTP id f21mr10873227qka.209.1571434788093;
+ Fri, 18 Oct 2019 14:39:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191016221148.F9CCD155@viggo.jf.intel.com> <20191018074411.GC5017@dhcp22.suse.cz>
+ <0b05c135-4762-e745-5289-58ee84cc8c3e@intel.com>
+In-Reply-To: <0b05c135-4762-e745-5289-58ee84cc8c3e@intel.com>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Fri, 18 Oct 2019 14:39:34 -0700
+Message-ID: <CAHbLzkq3h1u=EUXeR3+S7D4fru7U15Tw+5Am8BE_FUkpHQTuWg@mail.gmail.com>
+Subject: Re: [PATCH 0/4] [RFC] Migrate Pages in lieu of discard
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Oct 18, 2019 at 7:54 AM Dave Hansen <dave.hansen@intel.com> wrote:
+>
+> On 10/18/19 12:44 AM, Michal Hocko wrote:
+> > How does this compare to
+> > http://lkml.kernel.org/r/1560468577-101178-1-git-send-email-yang.shi@linux.alibaba.com
+>
+> It's a _bit_ more tied to persistent memory and it appears a bit more
+> tied to two tiers rather something arbitrarily deep.  They're pretty
+> similar conceptually although there are quite a few differences.
 
-> On Oct 18, 2019, at 12:03 PM, Waiman Long <longman@redhat.com> wrote:
->=20
-> On 10/16/19 12:29 AM, Alex Kogan wrote:
->> +static inline void cna_pass_lock(struct mcs_spinlock *node,
->> +				 struct mcs_spinlock *next)
->> +{
->> +	struct cna_node *cn =3D (struct cna_node *)node;
->> +	struct mcs_spinlock *next_holder =3D next, *tail_2nd;
->> +	u32 val =3D 1;
->> +
->> +	u32 scan =3D cn->pre_scan_result;
->> +
->> +	/*
->> +	 * check if a successor from the same numa node has not been =
-found in
->> +	 * pre-scan, and if so, try to find it in post-scan starting =
-from the
->> +	 * node where pre-scan stopped (stored in @pre_scan_result)
->> +	 */
->> +	if (scan > 0)
->> +		scan =3D cna_scan_main_queue(node, decode_tail(scan));
->> +
->> +	if (!scan) { /* if found a successor from the same numa node */
->> +		next_holder =3D node->next;
->> +		/*
->> +		 * make sure @val gets 1 if current holder's @locked is =
-0 as
->> +		 * we have to store a non-zero value in successor's =
-@locked
->> +		 * to pass the lock
->> +		 */
->> +		val =3D node->locked + (node->locked =3D=3D 0);
->=20
-> node->locked can be 0 when the cpu enters into an empty MCS queue. We
-> could unconditionally set node->locked to 1 for this case in =
-qspinlock.c
-> or with your above code.
+My patches do assume two tiers for now but it is not hard to extend to
+multiple tiers. Since it is a RFC so I didn't make it that
+complicated.
 
-Right, I was doing that in the first two versions of the series. It adds=20=
+However, IMHO I really don't think supporting multiple tiers by making
+the migration path configurable to admins or users is a good choice.
+Memory migration caused by compaction or reclaim (not via syscall)
+should be transparent to the users, it is the kernel internal
+activity. It shouldn't be exposed to the end users.
 
-unnecessary store into @locked for non-CNA variants, and even if it does =
-not
-have any real performance implications, I think Peter did not like that =
-(or,=20
-at least, the comment I had to explain why we needed that store).
+I prefer firmware or OS build the migration path personally.
 
-> Perhaps, a comment about when node->locked will
-> be 0.
-Yeah, I was tinkering with this comment. Here is how it read in v3:
-/*
- * We unlock a successor by passing a non-zero value,
- * so set @val to 1 iff @locked is 0, which will happen
- * if we acquired the MCS lock when its queue was empty
- */
+>
+> For instance, what I posted has a static mapping for the migration path.
+>  If node A is in reclaim, we always try to allocate pages on node B.
+> There are no restrictions on what those nodes can be.  In Yang Shi's
+> apporach, there's a dynamic search for a target migration node on each
+> migration that follows the normal alloc fallback path.  This ends up
+> making migration nodes special.
 
-I can change back to something like that if it is better.
+The reason that I didn't pursue static mapping is that the node might
+be offlined or onlined, so you have to keep the mapping right every
+time the node state is changed. Dynamic search just returns the
+closest migration target node no matter what the topology is. It
+should be not time consuming.
 
->=20
-> It may be easier to understand if you just do
->=20
->     val =3D node->locked ? node->locked : 1;
-You=E2=80=99re right, that=E2=80=99s another possibility.
-However, it adds yet another if-statement on the critical path, which I =
-was
-trying to avoid that.
+Actually, my patches don't restrict the migration target node has to
+be PMEM, it could be any memory lower than DRAM, but it just happens
+PMEM is the only available media. My patch's commit log explains this
+point. Again I really prefer the firmware or HMAT or ACPI driver could
+build the migration path in kernel.
 
-Best regards,
-=E2=80=94 Alex
+In addition, DRAM node is definitely excluded from migration target
+since I don't think doing such migration between DRAM nodes is a good
+idea in general.
 
+>
+> There are also some different choices that are pretty arbitrary.  For
+> instance, when you allocation a migration target page, should you cause
+> memory pressure on the target?
+
+Yes, those are definitely arbitrary. We do need sort of a lot of
+details in the future by figuring out how real life workload work.
+
+>
+> To be honest, though, I don't see anything fatally flawed with it.  It's
+> probably a useful exercise to factor out the common bits from the two
+> sets and see what we can agree on being absolutely necessary.
+
+Sure, that definitely would help us move forward.
+
+>
