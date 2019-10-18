@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C491CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 927C4CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD2921852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 638A421852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437227;
-	bh=XYF7y0BM07GfP9nY7zrjKzNbEKYrD2mjyfQAzvcSNZg=;
+	s=default; t=1571437233;
+	bh=sP7BL7tqYErBOvL8W0EM0ifrxBAL2ZwmaMUBXDKCsdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xtq+FPS6q3fj/cDXEJ/0nDOFI11J3/1K6gyMZw2kKmnnwX26oyEHNrvK0vAdompUm
-	 ClEVNCId4092SE/iAf0gkkCs1x1ibs9Os/af2ShCZyY5oa42c0dXW+bNXl01wGw67f
-	 oDmB1XJlDXoVBKUchvGBzYZEbjFJw0UTy99GU7dU=
+	b=KkzF1d5STgZwciyfIfP8uxP8rhprSq+SYxGtK7MtrZGeaIueI3PRcOrLI16VSWLQV
+	 m8q8bH8lb7h5MgF065/cDjS8tu80gFjnk7ZrpyEr0h1PQedQHxfiWNViEDn7W4Jlep
+	 Qww4UkvHe5pEtilABPylx+niRDQoIzCePHRvHHg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394002AbfJRWUZ (ORCPT
+        id S2394049AbfJRWUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:20:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38632 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:20:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731839AbfJRWGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:06:40 -0400
+        id S1731836AbfJRWGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:06:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1678222D1;
-        Fri, 18 Oct 2019 22:06:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78629222C2;
+        Fri, 18 Oct 2019 22:06:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436399;
-        bh=XYF7y0BM07GfP9nY7zrjKzNbEKYrD2mjyfQAzvcSNZg=;
+        s=default; t=1571436398;
+        bh=sP7BL7tqYErBOvL8W0EM0ifrxBAL2ZwmaMUBXDKCsdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=glyBhlngT6a49CHs5Dh2X4Uu/WIOV+2kNtIE4owXMLLTpg0S9F3kQQRff4f8nEHDq
-         yrLyOu3/qJIDIwHM1dL4XfyaletQOMrOYnodl+5PxjLjxm0oMp5W6t6yGIEtU0JD1q
-         hxeGEBaCTvZwVnSmFQnkS74NlJEKHkTtrbIqQF78=
+        b=valtOsQvBzlvgw7jNJ5cyJgTEKRNy5EHCpL5VXtTx1yj7OG3/oIUs5K82jSFZd5j9
+         wMe4aMOj0mK9yEgHYn6YnwiBle0tTBAVmUoUa0mxRxmOXRTQmcUCwrSJTQaYgnCp6Y
+         lnM+e4HsvKf7Gc6zCEaZngFN4TgolzqoR9WcE+fI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Alexander Kurz <akurz@blala.de>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 049/100] power: supply: max14656: fix potential use-after-free
-Date:   Fri, 18 Oct 2019 18:04:34 -0400
-Message-Id: <20191018220525.9042-49-sashal@kernel.org>
+Cc:     Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        Tony Cheng <Tony.Cheng@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 048/100] drm/amd/display: fix odm combine pipe reset
+Date:   Fri, 18 Oct 2019 18:04:33 -0400
+Message-Id: <20191018220525.9042-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -61,69 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Van Asbroeck <thesven73@gmail.com>
+From: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
 
-[ Upstream commit 252fbeb86ceffa549af9842cefca2412d53a7653 ]
+[ Upstream commit f25f06b67ba237b76092a6fc522b1a94e84bfa85 ]
 
-Explicitly cancel/sync the irq_work delayed work, otherwise
-there's a chance that it will run after the device is removed,
-which would result in a use-after-free.
+We fail to reset the second odm combine pipe. This change fixes
+odm pointer management.
 
-Note that cancel/sync should happen:
-- after irq's have been disabled, as the isr re-schedules the work
-- before the power supply is unregistered, because the work func
-    uses the power supply handle.
-
-Cc: Alexander Kurz <akurz@blala.de>
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
+Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../power/supply/max14656_charger_detector.c    | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc_resource.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/power/supply/max14656_charger_detector.c b/drivers/power/supply/max14656_charger_detector.c
-index d19307f791c68..9e6472834e373 100644
---- a/drivers/power/supply/max14656_charger_detector.c
-+++ b/drivers/power/supply/max14656_charger_detector.c
-@@ -240,6 +240,14 @@ static enum power_supply_property max14656_battery_props[] = {
- 	POWER_SUPPLY_PROP_MANUFACTURER,
- };
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
+index d440b28ee43fb..6896d69b8c240 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
+@@ -1399,9 +1399,9 @@ bool dc_remove_plane_from_context(
+ 			 * For head pipe detach surfaces from pipe for tail
+ 			 * pipe just zero it out
+ 			 */
+-			if (!pipe_ctx->top_pipe ||
+-				(!pipe_ctx->top_pipe->top_pipe &&
++			if (!pipe_ctx->top_pipe || (!pipe_ctx->top_pipe->top_pipe &&
+ 					pipe_ctx->top_pipe->stream_res.opp != pipe_ctx->stream_res.opp)) {
++				pipe_ctx->top_pipe = NULL;
+ 				pipe_ctx->plane_state = NULL;
+ 				pipe_ctx->bottom_pipe = NULL;
+ 			} else {
+@@ -1803,8 +1803,6 @@ enum dc_status dc_remove_stream_from_ctx(
+ 				dc->res_pool->funcs->remove_stream_from_ctx(dc, new_ctx, stream);
  
-+static void stop_irq_work(void *data)
-+{
-+	struct max14656_chip *chip = data;
-+
-+	cancel_delayed_work_sync(&chip->irq_work);
-+}
-+
-+
- static int max14656_probe(struct i2c_client *client,
- 			  const struct i2c_device_id *id)
- {
-@@ -278,8 +286,6 @@ static int max14656_probe(struct i2c_client *client,
- 	if (ret)
- 		return -ENODEV;
- 
--	INIT_DELAYED_WORK(&chip->irq_work, max14656_irq_worker);
+ 			memset(del_pipe, 0, sizeof(*del_pipe));
 -
- 	chip->detect_psy = devm_power_supply_register(dev,
- 		       &chip->psy_desc, &psy_cfg);
- 	if (IS_ERR(chip->detect_psy)) {
-@@ -287,6 +293,13 @@ static int max14656_probe(struct i2c_client *client,
- 		return -EINVAL;
+-			break;
+ 		}
  	}
  
-+	INIT_DELAYED_WORK(&chip->irq_work, max14656_irq_worker);
-+	ret = devm_add_action(dev, stop_irq_work, chip);
-+	if (ret) {
-+		dev_err(dev, "devm_add_action %d failed\n", ret);
-+		return ret;
-+	}
-+
- 	ret = devm_request_irq(dev, chip->irq, max14656_irq,
- 			       IRQF_TRIGGER_FALLING,
- 			       MAX14656_NAME, chip);
 -- 
 2.20.1
 
