@@ -2,150 +2,113 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6136CA9EC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB966CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2EC21D7D
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BBC9222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:54:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="N5x8bC5o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441809AbfJRBzF (ORCPT
+        id S2439087AbfJREyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 21:55:05 -0400
-Received: from mga03.intel.com ([134.134.136.65]:14654 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406929AbfJRBzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 21:55:05 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 18:55:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,309,1566889200"; 
-   d="scan'208";a="221590130"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by fmsmga004.fm.intel.com with ESMTP; 17 Oct 2019 18:55:02 -0700
-Date:   Fri, 18 Oct 2019 09:58:02 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jim Mattson <jmattson@google.com>,
-        Yang Weijiang <weijiang.yang@intel.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Subject: Re: [PATCH v7 5/7] kvm: x86: Add CET CR4 bit and XSS support
-Message-ID: <20191018015802.GD2286@local-michael-cet-test>
-References: <20190927021927.23057-1-weijiang.yang@intel.com>
- <20190927021927.23057-6-weijiang.yang@intel.com>
- <CALMp9eStz-VCv5G60KFtumQ8W1Jqf9bOcK_=KwL1P3LLjgajnQ@mail.gmail.com>
- <20191017195642.GJ20903@linux.intel.com>
+        Fri, 18 Oct 2019 00:54:08 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:35569 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726952AbfJREyF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 00:54:05 -0400
+Received: by mail-il1-f196.google.com with SMTP id j9so4358682ilr.2
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 21:54:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=ofLqnhuaTacSfKe2YQoATYL+HC8rQjiCUNcY3XPivmE=;
+        b=N5x8bC5o7w6rADZFh4KHeDpeb6o3Jgm+KphbQhVkPqZz1Fd8E9M3PaWuoBNyLGjNby
+         FcCFIu+ox9T9DjhSC9heNZjMQrgm4xMjJ8TFBQCdlE86wvAdlBsUPOrsnGVYu9lKKeHQ
+         D7w1xDFzmUYo0NdnoKDfVHfBV9rDMkKr3XHd+n6zCsh3R453pBKlec2RqfraXt+7FOJg
+         3/bKBkC2vF8FVFJOQ2O0M59pBjRLRRSRz4XeMXB7o18TKzN8hqr5whm5Tas+OI+iIky7
+         4MLLxBvYd+AUGMn4Rl6c+9BDiHaJCgsFf4PgCwD87izM7iHj9N5OArKOuTr8d8G+a9R5
+         mQMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=ofLqnhuaTacSfKe2YQoATYL+HC8rQjiCUNcY3XPivmE=;
+        b=jUPa9Zxv2XF2Ll3dw05ocJCsEk7KYuPeDZ1FD6yJoJzmqnpulgNBQQT7765dblC1FT
+         pkusquBY6XPyljk84XBlfkNiU9BzuuO9AzmluANATj0iCoDx79n5uStLMQ5E4Urubaii
+         S3yfA9giTsVgFK+hNoouGEkmgva8H4FOzXydPJOTOp/xLcyFwp/V6tBT+u40farcI0JB
+         bRypGjtJutrWWHb4eDe8pu7Tlg2O+WEnusFQxzGWMlURTRIClUITHP6XBOGCNrkUwmCw
+         a8ClDgAmwBYdHzODKwci9KiAI1MZjJRRlQsr+j36MbpEm70N/WGLa7DV+r11v/N0r/SK
+         ovxQ==
+X-Gm-Message-State: APjAAAUgPdEZ0BnAUOZc96ycLR0ue6oe685mbTKwHA+33aPWWYPTtNXv
+        AbHhBKfPEVb0F5OkizpFuJZfKA==
+X-Google-Smtp-Source: APXvYqykkUrK0vrBdmDDbwAwwr+5ZePp14K9XbkSbU4CaVjxo7HzjYRIh3HQWncCN26aSDHosD7Fnw==
+X-Received: by 2002:a92:9a54:: with SMTP id t81mr8275762ili.197.1571370138242;
+        Thu, 17 Oct 2019 20:42:18 -0700 (PDT)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id d6sm1356657iop.34.2019.10.17.20.42.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 20:42:16 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 20:42:14 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Christoph Hellwig <hch@lst.de>
+cc:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org,
+        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        openrisc@lists.librecores.org, linux-mtd@lists.infradead.org,
+        linux-alpha@vger.kernel.org, sparclinux@vger.kernel.org,
+        nios2-dev@lists.rocketboards.org, linux-riscv@lists.infradead.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 18/21] riscv: use the generic ioremap code
+In-Reply-To: <20191017174554.29840-19-hch@lst.de>
+Message-ID: <alpine.DEB.2.21.9999.1910172038040.3156@viisi.sifive.com>
+References: <20191017174554.29840-1-hch@lst.de> <20191017174554.29840-19-hch@lst.de>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191017195642.GJ20903@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 12:56:42PM -0700, Sean Christopherson wrote:
-> On Wed, Oct 02, 2019 at 12:05:23PM -0700, Jim Mattson wrote:
-> > On Thu, Sep 26, 2019 at 7:17 PM Yang Weijiang <weijiang.yang@intel.com> wrote:
-> > >
-> > > CR4.CET(bit 23) is master enable bit for CET feature.
-> > > Previously, KVM did not support setting any bits in XSS
-> > > so it's hardcoded to check and inject a #GP if Guest
-> > > attempted to write a non-zero value to XSS, now it supports
-> > > CET related bits setting.
-> > >
-> > > Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> > > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> > > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> > > ---
-> > >  arch/x86/include/asm/kvm_host.h |  4 +++-
-> > >  arch/x86/kvm/cpuid.c            | 11 +++++++++--
-> > >  arch/x86/kvm/vmx/vmx.c          |  6 +-----
-> > >  3 files changed, 13 insertions(+), 8 deletions(-)
-> > >
-> > > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> > > index d018df8c5f32..8f97269d6d9f 100644
-> > > --- a/arch/x86/include/asm/kvm_host.h
-> > > +++ b/arch/x86/include/asm/kvm_host.h
-> > > @@ -90,7 +90,8 @@
-> > >                           | X86_CR4_PGE | X86_CR4_PCE | X86_CR4_OSFXSR | X86_CR4_PCIDE \
-> > >                           | X86_CR4_OSXSAVE | X86_CR4_SMEP | X86_CR4_FSGSBASE \
-> > >                           | X86_CR4_OSXMMEXCPT | X86_CR4_LA57 | X86_CR4_VMXE \
-> > > -                         | X86_CR4_SMAP | X86_CR4_PKE | X86_CR4_UMIP))
-> > > +                         | X86_CR4_SMAP | X86_CR4_PKE | X86_CR4_UMIP \
-> > > +                         | X86_CR4_CET))
-> > >
-> > >  #define CR8_RESERVED_BITS (~(unsigned long)X86_CR8_TPR)
-> > >
-> > > @@ -623,6 +624,7 @@ struct kvm_vcpu_arch {
-> > >
-> > >         u64 xcr0;
-> > >         u64 guest_supported_xcr0;
-> > > +       u64 guest_supported_xss;
-> > >         u32 guest_xstate_size;
-> > >
-> > >         struct kvm_pio_request pio;
-> > > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> > > index 0a47b9e565be..dd3ddc6daa58 100644
-> > > --- a/arch/x86/kvm/cpuid.c
-> > > +++ b/arch/x86/kvm/cpuid.c
-> > > @@ -120,8 +120,15 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
-> > >         }
-> > >
-> > >         best = kvm_find_cpuid_entry(vcpu, 0xD, 1);
-> > > -       if (best && (best->eax & (F(XSAVES) | F(XSAVEC))))
-> > > -               best->ebx = xstate_required_size(vcpu->arch.xcr0, true);
-> > > +       if (best && (best->eax & (F(XSAVES) | F(XSAVEC)))) {
-> > 
-> > Is XSAVEC alone sufficient? Don't we explicitly need XSAVES to
-> > save/restore the extended state components enumerated by IA32_XSS?
-> 
-> Hmm, I think the check would be ok as-is if vcpu->arch.ia32_xss is used
-> below, as ia32_xss is guaranteed to be zero if XSAVES isn't supported.
-> 
-Thanks Sean having me re-capture this reply thread, it's lost in my
-folder.
-I added kvm_x86_ops->xsaves_supported() in kvm_supported_xss() and it
-returns 0 if xsaves is not supported which suggested by Jim.
+On Thu, 17 Oct 2019, Christoph Hellwig wrote:
 
-> > > +               u64 kvm_xss = kvm_supported_xss();
-> > > +
-> > > +               best->ebx =
-> > > +                       xstate_required_size(vcpu->arch.xcr0 | kvm_xss, true);
-> > 
-> > Shouldn't this size be based on the *current* IA32_XSS value, rather
-> > than the supported IA32_XSS bits? (i.e.
-> > s/kvm_xss/vcpu->arch.ia32_xss/)
+> Use the generic ioremap code instead of providing a local version.
+> Note that this relies on the asm-generic no-op definition of
+> pgprot_noncached.
 > 
-> Ya.
->
-I'm not sure if I understand correctly, kvm_xss is what KVM supports,
-but arch.ia32_xss reflects what guest currently is using, shoudn't CPUID
-report what KVM supports instead of current status?
-Will CPUID match current IA32_XSS status if guest changes it runtime?
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-> > > +               vcpu->arch.guest_supported_xss = best->ecx & kvm_xss;
-> > 
-> > Shouldn't unsupported bits in best->ecx be masked off, so that the
-> > guest CPUID doesn't mis-report the capabilities of the vCPU?
-> 
-> I thought KVM liked to let userspace blow off their foot whenever possible?
-> KVM already enumerated what features are supported, it's a userspace bug
-> if it ignores the enumeration.
-> 
-> > > +       } else {
-> > > +               vcpu->arch.guest_supported_xss = 0;
-> > > +       }
-> > >
-> > >         /*
+According to the series introduction E-mail:
+
+https://lore.kernel.org/linux-riscv/20191017174554.29840-1-hch@lst.de/T/#m9ac4010fd725c8c84179fa99aa391a6f701a32de
+
+nothing substantive related to RISC-V or the common code has changed since 
+the first version of this series, and this RISC-V-specific patch appears 
+to be quite close (if not identical) to the first version of the patch:
+
+https://lore.kernel.org/linux-riscv/alpine.DEB.2.21.9999.1908171421560.4130@viisi.sifive.com/
+
+Thus the Tested-by, Reviewed-by, and Acked-by for RISC-V should all still 
+apply:
+
+https://lore.kernel.org/linux-riscv/alpine.DEB.2.21.9999.1908171421560.4130@viisi.sifive.com/
+
+
+- Paul
