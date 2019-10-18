@@ -2,165 +2,149 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A860CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E90CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2CB2064B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FAC6222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:20:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408103AbfJRKTy (ORCPT
+        id S2405188AbfJRKUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 06:19:54 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:33568 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S2387890AbfJRKTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 06:19:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A1B0BAB6;
-        Fri, 18 Oct 2019 03:19:31 -0700 (PDT)
-Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D4C6C3F6C4;
-        Fri, 18 Oct 2019 03:19:30 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 11:19:24 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cpufreq: flush any pending policy update work scheduled
- before freeing
-Message-ID: <20191018101924.GA25540@bogus>
-References: <20191017163503.30791-1-sudeep.holla@arm.com>
- <CAJZ5v0gTpK0cJhsWGVvs-=Sbgcia0jz2j5QNYRL+1wOz=2xkJQ@mail.gmail.com>
- <CAJZ5v0h0ioEZqLuaW1jz_8jRuGYZLQS3fbpv9ctyV9ucXb1WiA@mail.gmail.com>
- <20191018055533.GC31836@e107533-lin.cambridge.arm.com>
- <20191018060247.g5asfuh3kncoj7kl@vireshk-i7>
+        Fri, 18 Oct 2019 06:20:50 -0400
+Received: from mga04.intel.com ([192.55.52.120]:24969 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387890AbfJRKUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 06:20:50 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 03:20:50 -0700
+X-IronPort-AV: E=Sophos;i="5.67,311,1566889200"; 
+   d="scan'208";a="371425922"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.239.13.123]) ([10.239.13.123])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 18 Oct 2019 03:20:45 -0700
+Subject: Re: [RFD] x86/split_lock: Request to Intel
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org
+References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
+ <1560897679-228028-10-git-send-email-fenghua.yu@intel.com>
+ <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de>
+ <20190626203637.GC245468@romley-ivt3.sc.intel.com>
+ <alpine.DEB.2.21.1906262338220.32342@nanos.tec.linutronix.de>
+ <20190925180931.GG31852@linux.intel.com>
+ <3ec328dc-2763-9da5-28d6-e28970262c58@redhat.com>
+ <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de>
+ <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com>
+ <c3ff2fb3-4380-fb07-1fa3-15896a09e748@intel.com>
+ <d30652bb-89fa-671a-5691-e2c76af231d0@redhat.com>
+ <8808c9ac-0906-5eec-a31f-27cbec778f9c@intel.com>
+ <alpine.DEB.2.21.1910161519260.2046@nanos.tec.linutronix.de>
+ <ba2c0aab-1d7c-5cfd-0054-ac2c266c1df3@redhat.com>
+ <alpine.DEB.2.21.1910171322530.1824@nanos.tec.linutronix.de>
+ <5da90713-9a0d-6466-64f7-db435ba07dbe@intel.com>
+ <alpine.DEB.2.21.1910181100000.1869@nanos.tec.linutronix.de>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <763bb046-e016-9440-55c4-33438e35e436@intel.com>
+Date:   Fri, 18 Oct 2019 18:20:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018060247.g5asfuh3kncoj7kl@vireshk-i7>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <alpine.DEB.2.21.1910181100000.1869@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 11:32:47AM +0530, Viresh Kumar wrote:
-> On 18-10-19, 06:55, Sudeep Holla wrote:
-> > On Thu, Oct 17, 2019 at 11:26:54PM +0200, Rafael J. Wysocki wrote:
-> > > On Thu, Oct 17, 2019 at 9:36 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > >
-> > > > On Thu, Oct 17, 2019 at 6:35 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> > > > >
-> > > > > dev_pm_qos_remove_request ends calling {max,min}_freq_req QoS notifiers
-> > > > > which schedule policy update work. It may end up racing with the freeing
-> > > > > the policy and unregistering the driver.
-> > > > >
-> > > > > One possible race is as below where the cpufreq_driver is unregistered
-> > > > > but the scheduled work gets executed at later stage when cpufreq_driver
-> > > > > is NULL(i.e. after freeing the policy and driver)
-> > > > >
-> > > > > Unable to handle kernel NULL pointer dereference at virtual address 0000001c
-> > > > > pgd = (ptrval)
-> > > > > [0000001c] *pgd=80000080204003, *pmd=00000000
-> > > > > Internal error: Oops: 206 [#1] SMP THUMB2
-> > > > > Modules linked in:
-> > > > > CPU: 0 PID: 34 Comm: kworker/0:1 Not tainted 5.4.0-rc3-00006-g67f5a8081a4b #86
-> > > > > Hardware name: ARM-Versatile Express
-> > > > > Workqueue: events handle_update
-> > > > > PC is at cpufreq_set_policy+0x58/0x228
-> > > > > LR is at dev_pm_qos_read_value+0x77/0xac
-> > > > > Control: 70c5387d  Table: 80203000  DAC: fffffffd
-> > > > > Process kworker/0:1 (pid: 34, stack limit = 0x(ptrval))
-> > > > >         (cpufreq_set_policy) from (refresh_frequency_limits.part.24+0x37/0x48)
-> > > > >         (refresh_frequency_limits.part.24) from (handle_update+0x2f/0x38)
-> > > > >         (handle_update) from (process_one_work+0x16d/0x3cc)
-> > > > >         (process_one_work) from (worker_thread+0xff/0x414)
-> > > > >         (worker_thread) from (kthread+0xff/0x100)
-> > > > >         (kthread) from (ret_from_fork+0x11/0x28)
-> > > > >
-> > > > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > > > > Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> > > > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > > > > ---
-> > > > >  drivers/cpufreq/cpufreq.c | 3 +++
-> > > > >  1 file changed, 3 insertions(+)
-> > > > >
-> > > > > Hi Rafael, Viresh,
-> > > > >
-> > > > > This fixed the boot issue I reported[1] on TC2 with bL switcher enabled.
-> > > > > I have based this patch on -rc3 and not on top of your patches. This
-> > > > > only fixes the boot issue but I hit the other crashes while continuously
-> > > > > switching on and off the bL switcher that register/unregister the driver
-> > > > > Your patch series fixes them. I can based this on top of those if you
-> > > > > prefer.
-> > > > >
-> > > > > Regards,
-> > > > > Sudeep
-> > > > >
-> > > > > [1] https://lore.kernel.org/linux-pm/20191015155735.GA29105@bogus/
-> > > > >
-> > > > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > > > > index c52d6fa32aac..b703c29a84be 100644
-> > > > > --- a/drivers/cpufreq/cpufreq.c
-> > > > > +++ b/drivers/cpufreq/cpufreq.c
-> > > > > @@ -1278,6 +1278,9 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
-> > > > >         }
-> > > > >
-> > > > >         dev_pm_qos_remove_request(policy->min_freq_req);
-> > > > > +       /* flush the pending policy->update work before freeing the policy */
-> > > > > +       if (work_pending(&policy->update))
-> > > >
-> > > > Isn't this racy?
-> > > >
-> > > > It still may be running if the pending bit is clear and we still need
-> > > > to wait for it then, don't we?
-> > > >
-> > > > Why don't you do an unconditional flush_work() here?
-> > > 
-> > > You may as well do a cancel_work_sync() here, because whether or not
-> > > the last update of the policy happens before it goes away is a matter
-> > > of timing in any case
-> > 
-> > In fact that's the first thing I tried to fix the issue I was seeing.
-> > But I then thought it would be better to complete the update as the PM
-> > QoS were getting updated back to DEFAULT values for the device. Even
-> > this works.
-> > 
-> > What is your preference ? flush_work or cancel_work_sync ? I will
-> > update accordingly. I may need to do some more testing with
-> > cancel_work_sync as I just checked that quickly to confirm the race.
+On 10/18/2019 5:02 PM, Thomas Gleixner wrote:
+> On Fri, 18 Oct 2019, Xiaoyao Li wrote:
+>> On 10/17/2019 8:29 PM, Thomas Gleixner wrote:
+>>> The more I look at this trainwreck, the less interested I am in merging any
+>>> of this at all.
+>>>
+>>> The fact that it took Intel more than a year to figure out that the MSR is
+>>> per core and not per thread is yet another proof that this industry just
+>>> works by pure chance.
+>>>
+>>
+>> Whether it's per-core or per-thread doesn't affect much how we implement for
+>> host/native.
 > 
-> As I said in the other email, this work didn't come as a result of
-> removal of the qos request from cpufreq core and so must have come
-> from other thermal or similar events.
+> How useful.
 
-I don't think so. For sure not because of any thermal events. I didn't
-have log handy and hence had to wait till I was next to hardware.
+OK. IIUC. We can agree on the use model of native like below:
 
-This is log:
- cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max before
- cpufreq: cpufreq_notifier_max: schedule_work(&policy->update)
- cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max after
- cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min before
- cpufreq: cpufreq_notifier_min: schedule_work(&policy->update)
- cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min after
- cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max before
- cpufreq: cpufreq_notifier_max: schedule_work(&policy->update)
- cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max after
- cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min before
- cpufreq: cpufreq_notifier_min: schedule_work(&policy->update)
- cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min after
+We enable #AC on all cores/threads to detect split lock.
+  -If user space causes #AC, sending SIGBUS to it.
+  -If kernel causes #AC, we globally disable #AC on all cores/threads, 
+letting kernel go on working and WARN. (only disabling #AC on the thread 
+generates it just doesn't help, since the buggy kernel code is possible 
+to run on any threads and thus disabling #AC on all of them)
 
-So if I move the call above, it still crashes as the work is getting
-scheduled later.
+As described above, either enabled globally or disabled globally, so 
+whether it's per-core or per-thread really doesn't matter
 
---
-Regards,
-Sudeep
+>> And also, no matter it's per-core or per-thread, we always can do something in
+>> VIRT.
+> 
+> It matters a lot. If it would be per thread then we would not have this
+> discussion at all.
+
+Indeed, it's the fact that the control MSR bit is per-core to cause this 
+discussion. But the per-core scope only makes this feature difficult or 
+impossible to be virtualized.
+
+We could make the decision to not expose it to guest to avoid the really 
+bad thing. However, even we don't expose this feature to guest and don't 
+virtualize it, the below problem always here.
+
+If you think it's not a problem and acceptable to add an option to let 
+KVM disable host's #AC detection, we can just make it this way. And then 
+we can design the virtualizaion part without any change to native design 
+at all.
+
+>> Maybe what matters is below.
+>>
+>>> Seriously, this makes only sense when it's by default enabled and not
+>>> rendered useless by VIRT. Otherwise we never get any reports and none of
+>>> the issues are going to be fixed.
+>>>
+>>
+>> For VIRT, it doesn't want old guest to be killed due to #AC. But for native,
+>> it doesn't want VIRT to disable the #AC detection
+>>
+>> I think it's just about the default behavior that whether to disable the
+>> host's #AC detection or kill the guest (SIGBUS or something else) once there
+>> is an split-lock #AC in guest.
+>>
+>> So we can provide CONFIG option to set the default behavior and module
+>> parameter to let KVM set/change the default behavior.
+> 
+> Care to read through the whole discussion and figure out WHY it's not that
+> simple?
+> 
+> Thanks,
+> 
+> 	tglx
+> 
