@@ -2,148 +2,99 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADCECA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B81AECA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F588222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91435222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:52:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HNIkPwHs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q9FkMiMV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393888AbfJROwJ (ORCPT
+        id S2442906AbfJROw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 10:52:09 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41134 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729257AbfJROwI (ORCPT
+        Fri, 18 Oct 2019 10:52:57 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:35007 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394114AbfJROw5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 10:52:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571410327;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=C2xaVN1YDGZt57Fg4Tueyvg0ge8B6IjieBOqiv9q4PA=;
-        b=HNIkPwHsLABypCbTYNqn7XzroqCsfn3Nm6jonWUVa/gc6YjA/TjnvnkcEfLPR20trZK6Sf
-        CD/+FqhpKwfjDNiVADkzxzuIhoqnhR0iSdQV9P7Ydc9gcuizghYswOt3swC3FZTxQSffJH
-        MNRvGH0e0ZzldS2lFKCbQk4qCl+jV7A=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-179-nUFhmPMeNaSdTwhFi8L-Vg-1; Fri, 18 Oct 2019 10:52:06 -0400
-Received: by mail-qk1-f200.google.com with SMTP id 11so5737846qkh.15
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 07:52:06 -0700 (PDT)
+        Fri, 18 Oct 2019 10:52:57 -0400
+Received: by mail-il1-f193.google.com with SMTP id j9so5803768ilr.2;
+        Fri, 18 Oct 2019 07:52:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=utSOLik7GjZ8tmaygvRuxaRmMUvN6dgih61xSu5Jmm8=;
+        b=Q9FkMiMVEAJCDWueSjnSLm4tQPO/Wgdi9ZmU82lozZglM5JzA2FleaeSfYEEHGeOmo
+         Zot9oAH1NnjKktG+vjJ+w9xtHNDcCYf3myzEYdC6yoeMDGnA6FRbr587bNeKNbFlZ+8h
+         yoAYxYMBgWqAPgAl73p3QS4LHp0/BoBe15VnFIDntGhjlYCGAbVQ1uuB8BSU2JK7whZ5
+         i8jc8Amq7ODjcsbg5fIcHM6Ngn/fJ3/CoS3w1UgYOBWNcP6Csggf2WVdQXUclzWhWQAj
+         cyBNJBLt76eOHtEWyIoQ48arr1lAr43g8iA51ug/cRW82JD8lAjBF8JI0/qorQ0t2OZi
+         QsfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=b9cZq0CqcH8ZytwOHkNWIPhdJk6m17gLp4seEgaN+hk=;
-        b=UXnGhxaMron4//cy9baxXQh8XwdrewFUdAgYoznWjxEgDWLFrNNQKyZAgOa5sBfNOb
-         ZFSi8GrsKN4O7ZPujPtWGjN0AHWAd9BIhpdOUHjaq1g41pB/OlPjG7vADhfwpl+EQV1K
-         ljmZCxJ3rm2j0NuC5rkvcJUEDkHEkoPob+nwpoBYCWO6WjrP4TVj7rLRl7VKGowCLBxs
-         hqBRzYRPPNlYXLpzswnABBQ6gEoZEq4OVwtRIkAF6G7mcSs8r99Gsdkwk21eK77lsyqs
-         dwEXG7QcI1PWW6VptFLRVYGDlSzRPaIKBThrznGu58/4xofAnEqZgKPWTHTRm9dp1V6x
-         zmFQ==
-X-Gm-Message-State: APjAAAUMbjipdwJmnRo8NQNT/f+rCHNlJKxYippifzycyRdPvgN3Q+Gt
-        vwlNX5sBjKBCTUXC85hiDe9EUQZ9GrtGdoU8TztHp/9MMzdGGIULQEtDYJW/4+zRF36v+DDktWL
-        38rziNBk4GeduYx1qVYuNvfVf8g8rVmM7yCnZMG3L
-X-Received: by 2002:ac8:461a:: with SMTP id p26mr5295326qtn.31.1571410325644;
-        Fri, 18 Oct 2019 07:52:05 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy/VKFQ8LK5JCkS1ha/lieFjDpyY6JvHw1fBr+RScJtNeuXXfa383meU/jv5V/KO30Vio7RVa3CTNDIRb2LNaU=
-X-Received: by 2002:ac8:461a:: with SMTP id p26mr5295297qtn.31.1571410325296;
- Fri, 18 Oct 2019 07:52:05 -0700 (PDT)
+        bh=utSOLik7GjZ8tmaygvRuxaRmMUvN6dgih61xSu5Jmm8=;
+        b=lWX8TvoKzQV9bTfgiReq7XVNihB+EoWL4Og3ZbxqXlT+C0ORnfyVOHUSXsD0NZjugu
+         kK7IIKlxdMBXK/7KvqQwWGzSGrjp5ot1jaqxkdHuNpyiwsOsn1YMPctxNij892+8qMbZ
+         2lajwLv+0rvtAy3xIE90O4jJJ/mc5RWJbkzyXs7DjsgLVrN8czbwGMburoiQmrUQtmF5
+         3xKd+rJmSmHjvVXMOx7o5G+VJ2Et9Ac6uJYShX9BSCc87aE1Ijnsc1cYUb6qQuMC9wbP
+         WOW7pjGWFfuAp5Rj7wv6mdkSTdeMqQ0VcCXZKSwxVoI5+b7ZLS8HpSKK32e6AiM80F9+
+         +roA==
+X-Gm-Message-State: APjAAAUGT6S7/FBP3UVgPIy7W+0qgh/PFU/jwpaM22qzPyHVstp7pNgJ
+        CdjX41wZe64uDAt97XQaFoQYVk6kxTK6NGASDgLbCg==
+X-Google-Smtp-Source: APXvYqwZxihDJyEb880wxWXfeqFOnRr3tF09KeOIwu9FrNA6Q2cP1nvDvMOx62kBjxb6j+N7lp7/MBejPahYpRTbDxA=
+X-Received: by 2002:a05:6e02:783:: with SMTP id q3mr10176592ils.33.1571410374919;
+ Fri, 18 Oct 2019 07:52:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191018044517.6430-1-andrew.smirnov@gmail.com>
-In-Reply-To: <20191018044517.6430-1-andrew.smirnov@gmail.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Fri, 18 Oct 2019 16:51:54 +0200
-Message-ID: <CAO-hwJLDSaDko1pgOybQ3B7dUjg7boarob2xU+7EhwsjeuYayw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Logitech G920 fixes
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        Sam Bazely <sambazley@fastmail.com>,
-        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-        Austin Palmer <austinp@valvesoftware.com>,
-        lkml <linux-kernel@vger.kernel.org>
-X-MC-Unique: nUFhmPMeNaSdTwhFi8L-Vg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20191018052405.3693555-1-bjorn.andersson@linaro.org> <739222E4-F173-42A9-8D67-1BD8FEE227EC@holtmann.org>
+In-Reply-To: <739222E4-F173-42A9-8D67-1BD8FEE227EC@holtmann.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Fri, 18 Oct 2019 08:52:43 -0600
+Message-ID: <CAOCk7NpHVFBiWTh0Wk2fPAJDQxg8e36vGSP5mXRUUuOf8a57CA@mail.gmail.com>
+Subject: Re: [PATCH 0/4] Bluetooth: hci_qca: Regulator usage cleanup
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 6:45 AM Andrey Smirnov <andrew.smirnov@gmail.com> w=
-rote:
+On Fri, Oct 18, 2019 at 1:59 AM Marcel Holtmann <marcel@holtmann.org> wrote:
 >
-> Everyone:
+> Hi Bjorn,
 >
-> This series contains patches to fix a couple of regressions in G920
-> wheel support by hid-logitech-hidpp driver. Without the patches the
-> wheel remains stuck in autocentering mode ("resisting" any attempt to
-> trun) as well as missing support for any FF action.
+> > Clean up the regulator usage in hci_qca and in particular don't
+> > regulator_set_voltage() for fixed voltages. It cleans up the driver, but more
+> > important it makes bluetooth work on my Lenovo Yoga C630, where the regulator
+> > for vddch0 is defined with a voltage range that doesn't overlap the values in
+> > the driver.
+> >
+> > Bjorn Andersson (4):
+> >  Bluetooth: hci_qca: Update regulator_set_load() usage
+> >  Bluetooth: hci_qca: Don't vote for specific voltage
+> >  Bluetooth: hci_qca: Use regulator bulk enable/disable
+> >  Bluetooth: hci_qca: Split qca_power_setup()
+> >
+> > drivers/bluetooth/hci_qca.c | 135 +++++++++++++++---------------------
+> > 1 file changed, 55 insertions(+), 80 deletions(-)
 >
-> Thanks,
-> Andrey Smirnov
->
-> Changes since [v2]:
->
->      - Fixes a buggy validity check "HID: logitech-hidpp: rework
->        device validation" as pointed out by Benjamin Tissoires
->
->      - Marked "HID: logitech-hidpp: do all FF cleanup in
->        hidpp_ff_destroy()" as 5.2+ for stable
->
-> Changes since [v1]:
->
->      - "HID: logitech-hidpp: split g920_get_config()" is changed to
->        not rely on devres and be a self contained patch
->
->      - Quirk driven behaviour of "HID: logitech-hidpp: add G920 device
->        validation quirk" is replaced with generic validation algorithm
->        of "HID: logitech-hidpp: rework device validation"
->
->      - Fix for a poteintial race condition is added in
->        "HID: logitech-hidpp: do all FF cleanup in hidpp_ff_destroy()"
->        as per suggestion by Benjamin Tissoires
->
->      - Collected Tested-by from Sam Bazely for "HID: logitech-hidpp:
->        split g920_get_config()" since that patch didn't change
->        significantly since [v1]
->
->      - Specified stable kernel versions I think the patches should
->        apply to (hopefully I got that right)
->
-> [v2] lore.kernel.org/lkml/20191016182935.5616-1-andrew.smirnov@gmail.com
-> [v1] lore.kernel.org/lkml/20191007051240.4410-1-andrew.smirnov@gmail.com
->
-> Andrey Smirnov (3):
->   HID: logitech-hidpp: split g920_get_config()
->   HID: logitech-hidpp: rework device validation
->   HID: logitech-hidpp: do all FF cleanup in hidpp_ff_destroy()
->
->  drivers/hid/hid-logitech-hidpp.c | 237 +++++++++++++++++--------------
->  1 file changed, 131 insertions(+), 106 deletions(-)
->
+> all 4 patches have been applied to bluetooth-next tree.
 
-Thanks a lot for the work on this series.
+I know this is already applied, but I just wanted to follow up and indicate:
 
-I gave a slight test of the series with a bunch of devices handled by
-hid-logitech-hidpp without regressions.
+Tested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-Applied to for-5.4/upstream-fixes
-
-Cheers,
-Benjamin
-
-> --
-> 2.21.0
->
-
+Thanks for the cleanups Bjorn.
