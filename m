@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D11CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5A1CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0168121835
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15BFD21835
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:11:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436662;
-	bh=6BPGj6u+xlqZsrK7MEkO9cAhxCWjmQR538I3+hijwAE=;
+	s=default; t=1571436665;
+	bh=DuplhoRQredmAuojEW6TUPC1yPAM/K2dTnu2HW9tcM4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ebNYh7i63QfMSCsfp9/2XPETJ9/OJgppa5DcA8O23uaetvINEe70wawt2dvhv8mEM
-	 Jl6uwggkjYi00IQZLoza4RXxYdWkHAjWqWDCY6T5XentQtSLzDASU+TeYmXCvdagKS
-	 BS2DUz32w7y3XYpSfFXRt1eRXuTNjnwqgvRuRI2E=
+	b=uLGfzmtGcf2Gb0X+ajjMcuuyNRHwUg6jEC9a9EHZGHwZntNteZQXiuanW1S/pICwV
+	 weqJsfp6clSo6VohEENpqG1oKw28GOnR7Wz9EOpMt3UcEE5T+OUPdG1ttx54K/Kitw
+	 JDMh8blPBqpRl7IoKwuWCjCwN6I4eECRKETaKs6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390991AbfJRWLA (ORCPT
+        id S2390920AbfJRWK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:11:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43640 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:10:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390500AbfJRWKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:10:39 -0400
+        id S2390417AbfJRWKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:10:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18DBE2245C;
-        Fri, 18 Oct 2019 22:10:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE65A2248A;
+        Fri, 18 Oct 2019 22:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436638;
-        bh=6BPGj6u+xlqZsrK7MEkO9cAhxCWjmQR538I3+hijwAE=;
+        s=default; t=1571436635;
+        bh=DuplhoRQredmAuojEW6TUPC1yPAM/K2dTnu2HW9tcM4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FK90HuCK6jK5t9Pa7es8Iz3Um31n3PsBkM57N+xpzeHMogQE4CfOV+eYnxoUdXjGT
-         7kOFdIQja4qF68W/PEvPYyeiDDusHh52ZRpJHFKpySJ819keB7P0Kyvd1wWdIONEGQ
-         AKq6wx9kJ+GUWWj+ozIO1LJQUsQRzFWEiQq9LZe8=
+        b=Aq77ZbIssFOVb3HNsZMeVE+0afuHXkmjw443EA8iv/vza7c9tzYIR1IaiALPAuXaA
+         Q5asNN91udoV28AXcHeO7nVMx/T6iqk0U/qOM5fj2rds2zJ//NXxr2MjnTdkcXM7W6
+         2O5R+h9OMOgJhMe5xQbvU8vmHIyOzuf3lSwX2g4k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 21/21] tracing: Initialize iter->seq after zeroing in tracing_read_pipe()
-Date:   Fri, 18 Oct 2019 18:10:07 -0400
-Message-Id: <20191018221007.10851-21-sashal@kernel.org>
+Cc:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>, linux-mips@linux-mips.org
+Subject: [PATCH AUTOSEL 4.4 18/21] MIPS: fw: sni: Fix out of bounds init of o32 stack
+Date:   Fri, 18 Oct 2019 18:10:04 -0400
+Message-Id: <20191018221007.10851-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018221007.10851-1-sashal@kernel.org>
 References: <20191018221007.10851-1-sashal@kernel.org>
@@ -59,80 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Mladek <pmladek@suse.com>
+From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 
-[ Upstream commit d303de1fcf344ff7c15ed64c3f48a991c9958775 ]
+[ Upstream commit efcb529694c3b707dc0471b312944337ba16e4dd ]
 
-A customer reported the following softlockup:
+Use ARRAY_SIZE to caluculate the top of the o32 stack.
 
-[899688.160002] NMI watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [test.sh:16464]
-[899688.160002] CPU: 0 PID: 16464 Comm: test.sh Not tainted 4.12.14-6.23-azure #1 SLE12-SP4
-[899688.160002] RIP: 0010:up_write+0x1a/0x30
-[899688.160002] Kernel panic - not syncing: softlockup: hung tasks
-[899688.160002] RIP: 0010:up_write+0x1a/0x30
-[899688.160002] RSP: 0018:ffffa86784d4fde8 EFLAGS: 00000257 ORIG_RAX: ffffffffffffff12
-[899688.160002] RAX: ffffffff970fea00 RBX: 0000000000000001 RCX: 0000000000000000
-[899688.160002] RDX: ffffffff00000001 RSI: 0000000000000080 RDI: ffffffff970fea00
-[899688.160002] RBP: ffffffffffffffff R08: ffffffffffffffff R09: 0000000000000000
-[899688.160002] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8b59014720d8
-[899688.160002] R13: ffff8b59014720c0 R14: ffff8b5901471090 R15: ffff8b5901470000
-[899688.160002]  tracing_read_pipe+0x336/0x3c0
-[899688.160002]  __vfs_read+0x26/0x140
-[899688.160002]  vfs_read+0x87/0x130
-[899688.160002]  SyS_read+0x42/0x90
-[899688.160002]  do_syscall_64+0x74/0x160
-
-It caught the process in the middle of trace_access_unlock(). There is
-no loop. So, it must be looping in the caller tracing_read_pipe()
-via the "waitagain" label.
-
-Crashdump analyze uncovered that iter->seq was completely zeroed
-at this point, including iter->seq.seq.size. It means that
-print_trace_line() was never able to print anything and
-there was no forward progress.
-
-The culprit seems to be in the code:
-
-	/* reset all but tr, trace, and overruns */
-	memset(&iter->seq, 0,
-	       sizeof(struct trace_iterator) -
-	       offsetof(struct trace_iterator, seq));
-
-It was added by the commit 53d0aa773053ab182877 ("ftrace:
-add logic to record overruns"). It was v2.6.27-rc1.
-It was the time when iter->seq looked like:
-
-     struct trace_seq {
-	unsigned char		buffer[PAGE_SIZE];
-	unsigned int		len;
-     };
-
-There was no "size" variable and zeroing was perfectly fine.
-
-The solution is to reinitialize the structure after or without
-zeroing.
-
-Link: http://lkml.kernel.org/r/20191011142134.11997-1-pmladek@suse.com
-
-Signed-off-by: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/mips/fw/sni/sniprom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index c82ebd11414a9..b3fa2a0ed981c 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4790,6 +4790,7 @@ tracing_read_pipe(struct file *filp, char __user *ubuf,
- 	       sizeof(struct trace_iterator) -
- 	       offsetof(struct trace_iterator, seq));
- 	cpumask_clear(iter->started);
-+	trace_seq_init(&iter->seq);
- 	iter->pos = -1;
+diff --git a/arch/mips/fw/sni/sniprom.c b/arch/mips/fw/sni/sniprom.c
+index 6aa264b9856ac..7c6151d412bd7 100644
+--- a/arch/mips/fw/sni/sniprom.c
++++ b/arch/mips/fw/sni/sniprom.c
+@@ -42,7 +42,7 @@
  
- 	trace_event_read_lock();
+ /* O32 stack has to be 8-byte aligned. */
+ static u64 o32_stk[4096];
+-#define O32_STK	  &o32_stk[sizeof(o32_stk)]
++#define O32_STK	  (&o32_stk[ARRAY_SIZE(o32_stk)])
+ 
+ #define __PROM_O32(fun, arg) fun arg __asm__(#fun); \
+ 				     __asm__(#fun " = call_o32")
 -- 
 2.20.1
 
