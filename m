@@ -2,182 +2,199 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAF4CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EB8CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF1621925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 578F921925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:21:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="aFjIyDS0";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="aFjIyDS0"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="vOAgLbR7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394580AbfJRLVr (ORCPT
+        id S2442630AbfJRLV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 07:21:47 -0400
-Received: from mail-eopbgr30057.outbound.protection.outlook.com ([40.107.3.57]:31606
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728497AbfJRLVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 07:21:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BPLZIxh1tncLt4b/YZOh+TII6ZSm9Q/ESf/wWcPJUGA=;
- b=aFjIyDS0MLQvyciYJ+kRe4l3rDt14eDtt9IMXyuCFkki51jYazkPyKqPM5K0WCInNTWzOFwdAgrC4PMfxxGr5qvSnhZvkt/pwgtmGF7S4mBfJRRTjp51KeRMNHMHtEkkAbvRRXMXUY0uEsw0RKTjxbdaXa50GoJKDePRSYVriVw=
-Received: from HE1PR0802CA0017.eurprd08.prod.outlook.com (2603:10a6:3:bd::27)
- by VI1PR08MB3199.eurprd08.prod.outlook.com (2603:10a6:803:46::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.16; Fri, 18 Oct
- 2019 11:21:38 +0000
-Received: from DB5EUR03FT010.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e0a::208) by HE1PR0802CA0017.outlook.office365.com
- (2603:10a6:3:bd::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2347.17 via Frontend
- Transport; Fri, 18 Oct 2019 11:21:38 +0000
-Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
- header.from=arm.com;
-Received-SPF: TempError (protection.outlook.com: error in processing during
- lookup of arm.com: DNS Timeout)
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT010.mail.protection.outlook.com (10.152.20.96) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2305.15 via Frontend Transport; Fri, 18 Oct 2019 11:21:36 +0000
-Received: ("Tessian outbound e4042aced47b:v33"); Fri, 18 Oct 2019 11:21:32 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 7facaeab60f54ac9
-X-CR-MTA-TID: 64aa7808
-Received: from fdc714573029.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.10.53])
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id E0D0F47C-F187-408E-BA14-B88891B9BAA6.1;
-        Fri, 18 Oct 2019 11:21:27 +0000
-Received: from EUR03-DB5-obe.outbound.protection.outlook.com (mail-db5eur03lp2053.outbound.protection.outlook.com [104.47.10.53])
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id fdc714573029.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384);
-    Fri, 18 Oct 2019 11:21:27 +0000
+        Fri, 18 Oct 2019 07:21:58 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:12746 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728497AbfJRLV5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 07:21:57 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9IBHUQe031635;
+        Fri, 18 Oct 2019 07:21:55 -0400
+Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2055.outbound.protection.outlook.com [104.47.36.55])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2vk8pb2f1w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 18 Oct 2019 07:21:55 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=G7yuF9/Ys5BNF3eEwJVgv8SFbTBYOq6Zq4b2ueAV9EMSkFB7bxt+Ai1mtf3184iWnRNa2O/ZCRIGKEEDEFNf4atqsXD28pp/Au0WuP9HxvEQ7pBm6G0V5qTILthrcOmu1N6o2wv0TJLLfyCHZ6qKe03bGfLnrZLnbCLm4AXLbLLdS3mJ2ST++IXfgGAVd0/5Leu7jgeY6t/XDMoTdPE8Yh7D8Iz7eZ7Ww6L94pfM/Fd7LclPzRAf7LkG6XtaHUpojv44WCdGMzCt5XHXAGyxINOA2jnwfkbWV+5UolwYOjfzBXjpSYo2QU1GZy98Rj9MRHm+vtnJuBN830MaleD5yw==
+ b=Vp5Qi4KIG+8XfZCIRxRpMYhtKbOs0sM0ZkT/MQwZf4X4WJtnkMIHWHkD7F/7/TaBjHeEWtBu8sbMkj2vxFd0Yzh+RQ+eukaTiKcILgoBolF3BGK+sR9b0HTTUJRBdaVknvrx0G8OnWA7gpcykleUW3l13Qqvh7IxbH9APSDKJIcaStf+JJIhoyn4Lg6+BkU22KjHKtorAJ7chPg5BXrw8mpVyDasMETsECijJnfeL0EBHYVHOuyYw4yYaCDNwV9stxRttrbuOtVe2Gh47al2wboBqvPlVYj/9PhizTwyN88Z+feYrkyMUof9hoAUE79GMuqF0/ww9+vAagBztOoGoQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BPLZIxh1tncLt4b/YZOh+TII6ZSm9Q/ESf/wWcPJUGA=;
- b=KT2TiDJ26J4w//WJPSvBhvEPqEoO0hYQ/ChzpxaoX1dUwRJO/B9LQ2iRK0Icu4EYxyLnbvxbr5PEy+tQMjadfAur9SUjMSHKkdkisTBc9QVEWJw3O7sKu8X0d6p3aeCH6ekKltatVNGOAGSIexcIet2efEXWPYPrT3qIr0CPmnetxkthvBjsqr0eXQM/OiR3NqMeP9kVNo3LHtOqwaGz9AWtlcokd6dk6nOzvZk1HLFFnzIQG5Y17CqKgxct62p/Twvg07cJN3/vu3pgqvDo2WgUn19lifQSxgU+Zf6FXrpoYXoZiwAqey/PHZy/uAgtzBK9l01kR/V4n2WEuxvKDQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
+ bh=+SNxwd9Hf8Lct6yYE5eBxebfY7H0ana6yLvOBbUda/w=;
+ b=SKnE8wI1WzkOVOBYXNjiNjKPVY0voIIbi8mNWtWIPy0JXfAY3aAjwuGf2+U0RARBQY+7MYbix6KOVSw1yqb8vCR6XED27MY4Fhu3YqyMKeyEeRsIHODYvAcyV1/mcl3OWsFHUlHRbTjzkd5Ve3JoKULxZ8UmEe1Cgz4SvloaAj8XJ+/XQoPbUDG+2Q4Lk+oiMEgSAYrFENZUzWE2lrtCy2OxlaE2dZ8V7t45a7d+IteRJVIuDd0IBmV5hWtTV9ttDQFZf/FdqmRgRU90GH1tvh+9sBCpo8aGtOQFmJzZ6A4kf24eJc80k1KA14MZAtL7Vcf1RU8yLn66D9kQ/1YubA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.55) smtp.rcpttodomain=kernel.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BPLZIxh1tncLt4b/YZOh+TII6ZSm9Q/ESf/wWcPJUGA=;
- b=aFjIyDS0MLQvyciYJ+kRe4l3rDt14eDtt9IMXyuCFkki51jYazkPyKqPM5K0WCInNTWzOFwdAgrC4PMfxxGr5qvSnhZvkt/pwgtmGF7S4mBfJRRTjp51KeRMNHMHtEkkAbvRRXMXUY0uEsw0RKTjxbdaXa50GoJKDePRSYVriVw=
-Received: from AM6PR08MB3829.eurprd08.prod.outlook.com (20.178.89.14) by
- AM6PR08MB3784.eurprd08.prod.outlook.com (20.178.89.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.18; Fri, 18 Oct 2019 11:21:26 +0000
-Received: from AM6PR08MB3829.eurprd08.prod.outlook.com
- ([fe80::ce0:f47b:919d:561a]) by AM6PR08MB3829.eurprd08.prod.outlook.com
- ([fe80::ce0:f47b:919d:561a%5]) with mapi id 15.20.2347.023; Fri, 18 Oct 2019
- 11:21:26 +0000
-From:   Brian Starkey <Brian.Starkey@arm.com>
-To:     John Stultz <john.stultz@linaro.org>
-CC:     lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Hillf Danton <hdanton@sina.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        nd <nd@arm.com>
-Subject: Re: [PATCH v12 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
-Thread-Topic: [PATCH v12 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
-Thread-Index: AQHVhXQyqD9ep8kHGkCj5GCPsl03U6dgQXEA
-Date:   Fri, 18 Oct 2019 11:21:26 +0000
-Message-ID: <20191018112124.grjgqrn3ckuc7n4v@DESKTOP-E1NTVVP.localdomain>
-References: <20191018052323.21659-1-john.stultz@linaro.org>
- <20191018052323.21659-5-john.stultz@linaro.org>
-In-Reply-To: <20191018052323.21659-5-john.stultz@linaro.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: NeoMutt/20180716-849-147d51-dirty
-x-originating-ip: [217.140.106.52]
-x-clientproxiedby: LO2P265CA0423.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a0::27) To AM6PR08MB3829.eurprd08.prod.outlook.com
- (2603:10a6:20b:85::14)
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=Brian.Starkey@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-Correlation-Id: b280cacf-e61b-46be-8220-08d753bd56e4
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-TrafficTypeDiagnostic: AM6PR08MB3784:|AM6PR08MB3784:|VI1PR08MB3199:
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR08MB31999CA8E3FDAEBA6C7D6F19F06C0@VI1PR08MB3199.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-x-ms-oob-tlc-oobclassifiers: OLM:3513;OLM:3513;
-x-forefront-prvs: 01949FE337
-X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(346002)(376002)(39860400002)(396003)(189003)(199004)(9686003)(14444005)(54906003)(6512007)(5660300002)(256004)(25786009)(58126008)(316002)(86362001)(44832011)(66066001)(476003)(6916009)(305945005)(229853002)(446003)(52116002)(486006)(11346002)(99286004)(7416002)(14454004)(478600001)(6486002)(7736002)(4744005)(66476007)(66556008)(64756008)(26005)(66446008)(66946007)(6246003)(76176011)(6116002)(3846002)(4326008)(1076003)(71190400001)(8936002)(81166006)(81156014)(8676002)(71200400001)(386003)(186003)(6506007)(2906002)(102836004)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR08MB3784;H:AM6PR08MB3829.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: 8lhuemaxl5ATSrmo/7W+8i0b5C0t2Szsnbo4pKoyKeTJR6Hr2TUlNgYh9SgRui5BB3R6UcEyRm1Kf8c1r2+nyA55Mr81QRD/ThGspiLTjkJT/2RVMy+Rei99kQus4zt7PfexZog4a8oTxurHPixfH3DgF1FOz1uS9IaNawCHwBIMJl2zub9AAz+l2SkdH3lxRIlpDTvxrXT9dwvAI7Psl2fwkkmayVK44UjF65FgtqqPjz8WqfoWThu87U4R7/fCXnSbMQi/T0Ji5PPecnqws29biEb0nZtjkQPw1tVkbca3cZz+iNoc5iQADDONQfyl1Ov82j2qfsyCZDcUFsdCQsgBkkkJBxlwLT81oAsiEsaNdjZYlLY/5DqCoCTEib3ThqVdpx72kAn6WmnctDuEucRy+JG9zZe3ovD2uFWhdD8=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <0FA79C5A3857CD428812B53E127A0C4A@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+ bh=+SNxwd9Hf8Lct6yYE5eBxebfY7H0ana6yLvOBbUda/w=;
+ b=vOAgLbR7Gd/zpyEJZF4CXNrMgBTOfpnHxKJ5BrSo3whtlvmxFqMQOvKB3na55FnFSPQh0U1i3g+qnwRwfzRInIZMpGRLpW5q3LzgADLS9NfIFTUgIhSf7hWpsV4ajkAmlrH6IvzoAZuj28NB8fHJDJ8D2d95JY2iHxR/1JWuKvw=
+Received: from BN6PR03CA0004.namprd03.prod.outlook.com (2603:10b6:404:23::14)
+ by SN6PR03MB4159.namprd03.prod.outlook.com (2603:10b6:805:b8::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.19; Fri, 18 Oct
+ 2019 11:21:53 +0000
+Received: from CY1NAM02FT060.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::209) by BN6PR03CA0004.outlook.office365.com
+ (2603:10b6:404:23::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.17 via Frontend
+ Transport; Fri, 18 Oct 2019 11:21:53 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ CY1NAM02FT060.mail.protection.outlook.com (10.152.74.252) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2367.14
+ via Frontend Transport; Fri, 18 Oct 2019 11:21:53 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x9IBLqen011013
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Fri, 18 Oct 2019 04:21:52 -0700
+Received: from saturn.ad.analog.com (10.48.65.112) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Fri, 18 Oct 2019 07:21:52 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
+        Dragos Bogdan <dragos.bogdan@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] media: adv7604: extend deep color mode to ADV7611
+Date:   Fri, 18 Oct 2019 14:21:57 +0300
+Message-ID: <20191018112157.31657-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB3784
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Brian.Starkey@arm.com; 
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
 X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT010.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(346002)(396003)(376002)(199004)(189003)(446003)(476003)(66066001)(126002)(63350400001)(11346002)(336012)(486006)(102836004)(99286004)(316002)(58126008)(5660300002)(356004)(54906003)(4744005)(1076003)(386003)(6506007)(186003)(76176011)(50466002)(14454004)(6512007)(9686003)(6486002)(7736002)(26005)(305945005)(6862004)(46406003)(86362001)(6246003)(23726003)(70206006)(70586007)(97756001)(22756006)(6116002)(3846002)(229853002)(76130400001)(2906002)(81156014)(47776003)(81166006)(478600001)(14444005)(8676002)(25786009)(8936002)(8746002)(26826003)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB3199;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: f2f75511-d717-44a6-04a6-08d753bd5073
-NoDisclaimer: True
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(136003)(376002)(396003)(346002)(199004)(189003)(5660300002)(26005)(51416003)(50466002)(8676002)(36756003)(1076003)(186003)(44832011)(7636002)(126002)(486006)(4326008)(476003)(86362001)(478600001)(7696005)(70206006)(70586007)(305945005)(47776003)(50226002)(356004)(106002)(48376002)(2870700001)(316002)(54906003)(426003)(336012)(110136005)(246002)(2616005)(107886003)(8936002)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR03MB4159;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c2ded6d2-40fc-4bfc-8b0b-08d753bd60ae
+X-MS-TrafficTypeDiagnostic: SN6PR03MB4159:
+X-Microsoft-Antispam-PRVS: <SN6PR03MB415961ED1A1F47551032B6C8F96C0@SN6PR03MB4159.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
 X-Forefront-PRVS: 01949FE337
+X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 70RZsdeWTrIhbHb5p4jTuxkjYdsZZ7eNXH+eA9KlPqQTx4M9Ww5K0lR4fskhiviMuFr6i9gmw2w8AoSfrxr0FHFvEMVblIFzC/EIH5DuziWE2vOVclGoH+gwJHDlirDwKx5+AZFBmRlekoiAoWJeURl7NJ0IF0SY7/RyVfBilIrD3CMXAqjYcwg+ApM+7mgZr3r29bdu5QzLW97jtOOf2jYytjlFVDyxaJtP2Lht4vEZll29P5tyfMJgMFsfpK5Sm4+daFT9/BoqkyyOaH+UAk1eJwXxgSevMya3iWcorKkqs9lG5+GwTGIKMTJPIMHUUkr0eOx3SEYu3BKbRf9w4eq33w/cmgv8+4kM5RtXkE90PCuahAOOJrIzP7z2fE3LMgJfy1S71U1e14GKBAzZkI9enSEI8k2J/IQ19Wc0cdo=
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2019 11:21:36.7454
+X-Microsoft-Antispam-Message-Info: Q+v8Jbd3sc1LjCRFxqja7Tve/LrYDcYReVKux+ZJB0G9vxYXlVsSzjnifKbghVQP8gL69u8NCoqVeFZtoqXoBc8gfEx/bucHvepGFjn8znl5YamYJiXWehgjr2gMu7gmF9GitRpVgLfb62rrdCpEvWC/pzGOvcepx5CSiF+Si24VhIYAbxEU8jbY2Rf0tmLBhaNx/taPHKrQV8xLi5sNBzTiaWjFemrAy8gdKvJH7EZ8YXlF4aJN5wgT6tshDM7N0ISsGE5hlR6eaeyVtflj23c2V9S1PQePg4NT2NhFtEHl/qtYJ4rPN+u7DcT+20ChSv4Z0D1B4vbhv34k0hWe4UZUAzQWHw7Ti5pALA2C3KIYgyIVR3oscSUIEb9Mfv/lXyxmhI99L1D+naSIZvmRyxUT5qu5jL15RQo5jX8WMrY=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2019 11:21:53.1039
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b280cacf-e61b-46be-8220-08d753bd56e4
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2ded6d2-40fc-4bfc-8b0b-08d753bd60ae
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3199
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR03MB4159
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-18_03:2019-10-18,2019-10-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ mlxlogscore=999 clxscore=1011 mlxscore=0 spamscore=0 malwarescore=0
+ priorityscore=1501 adultscore=0 lowpriorityscore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910180109
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 05:23:22AM +0000, John Stultz wrote:
-> This adds a CMA heap, which allows userspace to allocate
-> a dma-buf of contiguous memory out of a CMA region.
->=20
-> This code is an evolution of the Android ION implementation, so
-> thanks to its original author and maintainters:
->   Benjamin Gaignard, Laura Abbott, and others!
->=20
-> NOTE: This patch only adds the default CMA heap. We will enable
-> selectively adding other CMA memory regions to the dmabuf heaps
-> interface with a later patch (which requires a dt binding)
+From: Dragos Bogdan <dragos.bogdan@analog.com>
 
-That'll teach me for reading my email in FIFO order.
+The AD7611 chip supports the same Deep Color Mode settings as the AD7604.
+This change extends support for this feature to the AD7611 by adding a
+wrapper function for the `read_hdmi_pixelclock` hook and adding the same
+frequency adjustment logic.
 
-This approach makes sense to me.
+Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/media/i2c/adv7604.c | 32 +++++++++++++++++++++-----------
+ 1 file changed, 21 insertions(+), 11 deletions(-)
 
--Brian
+diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
+index 28a84bf9f8a9..5384c40eed7d 100644
+--- a/drivers/media/i2c/adv7604.c
++++ b/drivers/media/i2c/adv7604.c
+@@ -1503,23 +1503,14 @@ static void adv76xx_fill_optional_dv_timings_fields(struct v4l2_subdev *sd,
+ 
+ static unsigned int adv7604_read_hdmi_pixelclock(struct v4l2_subdev *sd)
+ {
+-	unsigned int freq;
+ 	int a, b;
+ 
+ 	a = hdmi_read(sd, 0x06);
+ 	b = hdmi_read(sd, 0x3b);
+ 	if (a < 0 || b < 0)
+ 		return 0;
+-	freq =  a * 1000000 + ((b & 0x30) >> 4) * 250000;
+-
+-	if (is_hdmi(sd)) {
+-		/* adjust for deep color mode */
+-		unsigned bits_per_channel = ((hdmi_read(sd, 0x0b) & 0x60) >> 4) + 8;
+-
+-		freq = freq * 8 / bits_per_channel;
+-	}
+ 
+-	return freq;
++	return a * 1000000 + ((b & 0x30) >> 4) * 250000;
+ }
+ 
+ static unsigned int adv7611_read_hdmi_pixelclock(struct v4l2_subdev *sd)
+@@ -1530,9 +1521,28 @@ static unsigned int adv7611_read_hdmi_pixelclock(struct v4l2_subdev *sd)
+ 	b = hdmi_read(sd, 0x52);
+ 	if (a < 0 || b < 0)
+ 		return 0;
++
+ 	return ((a << 1) | (b >> 7)) * 1000000 + (b & 0x7f) * 1000000 / 128;
+ }
+ 
++static unsigned int adv76xx_read_hdmi_pixelclock(struct v4l2_subdev *sd)
++{
++	struct adv76xx_state *state = to_state(sd);
++	const struct adv76xx_chip_info *info = state->info;
++	unsigned int freq;
++
++	freq = info->read_hdmi_pixelclock(sd);
++	if (is_hdmi(sd)) {
++		/* adjust for deep color mode and pixel repetition */
++		unsigned bits_per_channel = ((hdmi_read(sd, 0x0b) & 0x60) >> 4) + 8;
++		unsigned pixelrepetition = (hdmi_read(sd, 0x05) & 0x0f) + 1;
++
++		freq = freq * 8 / bits_per_channel / pixelrepetition;
++	}
++
++	return freq;
++}
++
+ static int adv76xx_query_dv_timings(struct v4l2_subdev *sd,
+ 			struct v4l2_dv_timings *timings)
+ {
+@@ -1579,7 +1589,7 @@ static int adv76xx_query_dv_timings(struct v4l2_subdev *sd,
+ 
+ 		bt->width = w;
+ 		bt->height = h;
+-		bt->pixelclock = info->read_hdmi_pixelclock(sd);
++		bt->pixelclock = adv76xx_read_hdmi_pixelclock(sd);
+ 		bt->hfrontporch = hdmi_read16(sd, 0x20, info->hfrontporch_mask);
+ 		bt->hsync = hdmi_read16(sd, 0x22, info->hsync_mask);
+ 		bt->hbackporch = hdmi_read16(sd, 0x24, info->hbackporch_mask);
+-- 
+2.20.1
 
