@@ -2,135 +2,375 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB7DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9BADCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 096372089C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9402121897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:23:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634144AbfJROU1 (ORCPT
+        id S2410103AbfJROX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 10:20:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47794 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393962AbfJROU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 10:20:27 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 778C7C057F2C;
-        Fri, 18 Oct 2019 14:20:26 +0000 (UTC)
-Received: from gondolin (dhcp-192-202.str.redhat.com [10.33.192.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 45C8519D70;
-        Fri, 18 Oct 2019 14:20:10 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 16:20:07 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-Subject: Re: [PATCH V4 5/6] virtio: introduce a mdev based transport
-Message-ID: <20191018162007.31631039.cohuck@redhat.com>
-In-Reply-To: <20191017104836.32464-6-jasowang@redhat.com>
-References: <20191017104836.32464-1-jasowang@redhat.com>
-        <20191017104836.32464-6-jasowang@redhat.com>
-Organization: Red Hat GmbH
+        Fri, 18 Oct 2019 10:23:26 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:50291 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731923AbfJROX0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 10:23:26 -0400
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 62409200009;
+        Fri, 18 Oct 2019 14:23:23 +0000 (UTC)
+Date:   Fri, 18 Oct 2019 16:23:23 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?iso-8859-1?Q?K=E9vin?= RAYMOND <k.raymond@overkiz.com>,
+        Mickael GARDET <m.gardet@overkiz.com>
+Subject: Re: [PATCH 2/2] ARM: dts: at91: add a common kizboxmini dtsi file
+Message-ID: <20191018142323.GI3125@piout.net>
+References: <20191018140304.31547-1-kamel.bouhara@bootlin.com>
+ <20191018140304.31547-3-kamel.bouhara@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 18 Oct 2019 14:20:27 +0000 (UTC)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191018140304.31547-3-kamel.bouhara@bootlin.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019 18:48:35 +0800
-Jason Wang <jasowang@redhat.com> wrote:
-
-> This patch introduces a new mdev transport for virtio. This is used to
-> use kernel virtio driver to drive the mediated device that is capable
-> of populating virtqueue directly.
+On 18/10/2019 16:03:04+0200, Kamel Bouhara wrote:
+> Split the Kizbox Mini boards into two board configuration, the
+> Kizboxmini Mother board and the Kizboxmini RailDIN board.
 > 
-> A new virtio-mdev driver will be registered to the mdev bus, when a
-> new virtio-mdev device is probed, it will register the device with
-> mdev based config ops. This means it is a software transport between
-> mdev driver and mdev device. The transport was implemented through
-> device specific ops which is a part of mdev_parent_ops now.
-> 
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> Signed-off-by: Kévin RAYMOND <k.raymond@overkiz.com>
+> Signed-off-by: Mickael GARDET <m.gardet@overkiz.com>
 > ---
->  drivers/virtio/Kconfig       |   7 +
->  drivers/virtio/Makefile      |   1 +
->  drivers/virtio/virtio_mdev.c | 409 +++++++++++++++++++++++++++++++++++
->  3 files changed, 417 insertions(+)
+>  arch/arm/boot/dts/Makefile                    |   2 +
+>  arch/arm/boot/dts/at91-kizboxmini-mb.dts      |  38 ++++
+>  arch/arm/boot/dts/at91-kizboxmini-rd.dts      |  54 ++++++
+>  arch/arm/boot/dts/at91-kizboxmini_common.dtsi | 166 ++++++++++++++++++
 
-(...)
+This adds more than the subject says.
 
-> +static int virtio_mdev_probe(struct device *dev)
-> +{
-> +	struct mdev_device *mdev = mdev_from_dev(dev);
-> +	const struct virtio_mdev_device_ops *ops = mdev_get_dev_ops(mdev);
-> +	struct virtio_mdev_device *vm_dev;
-> +	int rc;
-> +
-> +	vm_dev = devm_kzalloc(dev, sizeof(*vm_dev), GFP_KERNEL);
-> +	if (!vm_dev)
-> +		return -ENOMEM;
-> +
-> +	vm_dev->vdev.dev.parent = dev;
-> +	vm_dev->vdev.dev.release = virtio_mdev_release_dev;
-> +	vm_dev->vdev.config = &virtio_mdev_config_ops;
-> +	vm_dev->mdev = mdev;
-> +	INIT_LIST_HEAD(&vm_dev->virtqueues);
-> +	spin_lock_init(&vm_dev->lock);
-> +
-> +	vm_dev->version = ops->get_mdev_features(mdev);
-> +	if (vm_dev->version != VIRTIO_MDEV_F_VERSION_1) {
-> +		dev_err(dev, "VIRTIO_MDEV_F_VERSION_1 is mandatory\n");
-> +		return -ENXIO;
-> +	}
+>  4 files changed, 260 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/at91-kizboxmini-mb.dts
+>  create mode 100644 arch/arm/boot/dts/at91-kizboxmini-rd.dts
+>  create mode 100644 arch/arm/boot/dts/at91-kizboxmini_common.dtsi
+> 
 
-Hm, so how is that mdev features interface supposed to work? If
-VIRTIO_MDEV_F_VERSION_1 is a bit, I would expect this code to test for
-its presence, and not for identity.
+Is arch/arm/boot/dts/at91-kizboxmini.dts still necessary after that?
 
-What will happen if we come up with a version 2? If this is backwards
-compatible, will both version 2 and version 1 be set?
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index c976b72a4c94..6b3a65f3f6f8 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -38,6 +38,8 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
+>  	at91-ariettag25.dtb \
+>  	at91-cosino_mega2560.dtb \
+>  	at91-kizboxmini.dtb \
+> +	at91-kizboxmini-mb.dtb \
+> +	at91-kizboxmini-rd.dtb \
+>  	at91-wb45n.dtb \
+>  	at91sam9g15ek.dtb \
+>  	at91sam9g25ek.dtb \
+> diff --git a/arch/arm/boot/dts/at91-kizboxmini-mb.dts b/arch/arm/boot/dts/at91-kizboxmini-mb.dts
+> new file mode 100644
+> index 000000000000..52921f547dd6
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/at91-kizboxmini-mb.dts
+> @@ -0,0 +1,38 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2015-2018 Overkiz SAS
+> + *   Author: Mickael Gardet <m.gardet@overkiz.com>
+> + *           Kévin Raymond <k.raymond@overkiz.com>
+> + */
+> +/dts-v1/;
+> +#include "at91-kizboxmini_common.dtsi"
+> +
+> +/ {
+> +	model = "Overkiz Kizbox Mini Mother Board";
+> +	compatible = "overkiz,kizboxmini-mb", "atmel,at91sam9g25",
+> +		     "atmel,at91sam9x5", "atmel,at91sam9";
+> +
+> +	clocks {
+> +		slow_xtal {
+> +			clock-frequency = <32768>;
+> +		};
+> +	};
+> +
+> +	pwm_leds {
+> +		blue {
+> +			label = "pwm:blue:user";
+> +			pwms = <&pwm0 2 10000000 0>;
+> +			max-brightness = <255>;
+> +			linux,default-trigger = "none";
 
-> +
-> +	vm_dev->vdev.id.device = ops->get_device_id(mdev);
-> +	if (vm_dev->vdev.id.device == 0)
-> +		return -ENODEV;
-> +
-> +	vm_dev->vdev.id.vendor = ops->get_vendor_id(mdev);
-> +	rc = register_virtio_device(&vm_dev->vdev);
-> +	if (rc)
-> +		put_device(dev);
-> +	else
-> +		dev_set_drvdata(dev, vm_dev);
-> +
-> +	return rc;
-> +}
+The pwm is redefined here but is still left disabled from the common
+dtsi.
 
-(...)
+> +		};
+> +	};
+> +};
+> +
+> +&usb0 {
+> +	num-ports = <2>;
+> +};
+> +
+> +&rtc {
+> +	status = "okay";
+> +};
+> +
+> diff --git a/arch/arm/boot/dts/at91-kizboxmini-rd.dts b/arch/arm/boot/dts/at91-kizboxmini-rd.dts
+> new file mode 100644
+> index 000000000000..1d2db8e16271
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/at91-kizboxmini-rd.dts
+> @@ -0,0 +1,54 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2015-2018 Overkiz SAS
+> + *   Author: Mickael Gardet <m.gardet@overkiz.com>
+> + *           Kévin Raymond <k.raymond@overkiz.com>
+> + */
+> +/dts-v1/;
+> +#include "at91-kizboxmini_common.dtsi"
+> +
+> +/ {
+> +	model = "Overkiz Kizbox Mini RailDIN";
+> +	compatible = "overkiz,kizboxmini-rd", "atmel,at91sam9g25",
+> +		     "atmel,at91sam9x5", "atmel,at91sam9";
+> +
+> +	clocks {
+> +		slow_xtal {
+> +			clock-frequency = <32768>;
+> +		};
+> +		adc_op_clk {
+> +			status = "okay";
+> +		};
+> +	};
+> +};
+> +
+> +&pinctrl {
+> +	adc0 {
+> +		pinctrl_adc0_ad5: adc0_ad5-0 {
+> +			/* pull-up disable */
+> +			atmel,pins = <AT91_PIOB 16 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
+> +		};
+> +	};
+> +};
+> +
+> +&usart0 {
+> +	status = "disabled";
+> +};
+> +
+> +&rtc {
+> +	status = "okay";
+> +};
+> +
+> +&leds {
+> +	blue {
+> +		status = "okay";
+> +	};
+> +};
+> +
+> +&adc0 {
+> +	atmel,adc-vref = <2500>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_adc0_ad5>;
+> +	atmel,adc-channels-used = <0x0020>;
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/boot/dts/at91-kizboxmini_common.dtsi b/arch/arm/boot/dts/at91-kizboxmini_common.dtsi
+> new file mode 100644
+> index 000000000000..2598b776a278
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/at91-kizboxmini_common.dtsi
+> @@ -0,0 +1,166 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * at91-kizboxmini.dts - Device Tree file for Overkiz Kizbox mini board
+> + *
+> + * Copyright (C) 2014-2018 Overkiz SAS
+> + *   Author: Antoine Aubert <a.aubert@overkiz.com>
+> + *           Gaël Portay <g.portay@overkiz.com>
+> + *           Kévin Raymond <k.raymond@overkiz.com>
+> + *           Dorian Rocipon <d.rocipon@overkiz.com>
+> + */
+> +#include "at91sam9g25.dtsi"
+> +
+> +/ {
+> +	chosen {
+> +		bootargs = "ubi.mtd=ubi";
+> +		stdout-path = &dbgu;
+> +	};
+> +
+> +	memory {
+> +		reg = <0x20000000 0x8000000>;
+> +	};
+> +
+> +	clocks {
+> +		main_xtal {
+> +			clock-frequency = <12000000>;
+> +		};
+> +
+> +		adc_op_clk {
+> +			status = "disabled";
+> +		};
+> +	};
+> +
+> +	gpio_keys {
+> +		compatible = "gpio-keys";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		prog {
+> +			label = "PB_PROG";
+> +			gpios = <&pioC 17 GPIO_ACTIVE_LOW>;
+> +			linux,code = <0x102>;
+> +			wakeup-source;
+> +		};
+> +
+> +		reset {
+> +			label = "PB_RST";
+> +			gpios = <&pioC 16 GPIO_ACTIVE_LOW>;
+> +			linux,code = <0x100>;
+> +			wakeup-source;
+> +		};
+> +	};
+> +
+> +	leds: pwm_leds {
+> +		compatible = "pwm-leds";
+> +
+> +		blue {
+> +			label = "pwm:blue:user";
+> +			pwms = <&pwm0 2 10000000 0>;
+> +			max-brightness = <255>;
+> +			linux,default-trigger = "none";
+> +			status = "disabled";
+> +		};
+> +
+> +		green {
+> +			label = "pwm:green:user";
+> +			pwms = <&pwm0 0 10000000 0>;
+> +			max-brightness = <255>;
+> +			linux,default-trigger = "default-on";
+> +		};
+> +
+> +		red {
+> +			label = "pwm:red:user";
+> +			pwms = <&pwm0 1 10000000 0>;
+> +			max-brightness = <255>;
+> +			linux,default-trigger = "default-on";
+> +		};
+> +	};
+> +};
+> +
+> +&usart0 {
+> +	atmel,use-dma-rx;
+> +	atmel,use-dma-tx;
+> +	status = "okay";
+> +};
+> +
+> +&macb0 {
+> +	phy-mode = "rmii";
+> +	status = "okay";
+> +};
+> +
+> +&pwm0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_pwm0_pwm0_1
+> +		     &pinctrl_pwm0_pwm1_1
+> +		     &pinctrl_pwm0_pwm2_1>;
+> +	status = "okay";
+> +};
+> +
+> +&dbgu {
+> +	status = "okay";
+> +};
+> +
+> +&watchdog {
+> +	status = "okay";
+> +};
+> +
+> +&adc0 {
+> +	status = "disabled";
+> +};
+> +
+> +&rtc {
+> +	status = "disabled";
+> +};
+> +
+> +&ebi {
+> +	pinctrl-0 = <&pinctrl_ebi_addr_nand
+> +			&pinctrl_ebi_data_0_7>;
+> +	pinctrl-names = "default";
+> +	status = "okay";
+> +};
+> +
+> +&nand_controller {
+> +	status = "okay";
+> +	pinctrl-0 = <&pinctrl_nand_oe_we
+> +		     &pinctrl_nand_cs
+> +		     &pinctrl_nand_rb>;
+> +	pinctrl-names = "default";
+> +
+> +	nand@3 {
+> +		reg = <0x3 0x0 0x800000>;
+> +		rb-gpios = <&pioD 5 GPIO_ACTIVE_HIGH>;
+> +		cs-gpios = <&pioD 4 GPIO_ACTIVE_HIGH>;
+> +		nand-bus-width = <8>;
+> +		nand-ecc-mode = "hw";
+> +		nand-ecc-strength = <4>;
+> +		nand-ecc-step-size = <512>;
+> +		nand-on-flash-bbt;
+> +		label = "atmel_nand";
+> +
+> +		partitions {
+> +			compatible = "fixed-partitions";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +
+> +			bootstrap@0 {
+> +				label = "bootstrap";
+> +				reg = <0x0 0x20000>;
+> +			};
+> +
+> +			ubi@20000 {
+> +				label = "ubi";
+> +				reg = <0x20000 0x7fe0000>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&usb0 {
+> +	num-ports = <1>;
+> +	status = "okay";
+> +};
+> +
+> +&usb1 {
+> +	status = "okay";
+> +};
+> +
+> -- 
+> 2.23.0
+> 
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
