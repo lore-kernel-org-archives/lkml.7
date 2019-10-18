@@ -7,49 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C065ACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED61FCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9139B222D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEE2922478
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436629;
-	bh=oJIRM0n6QdbNHpcbVS9o/HQsuOyL/2RYPP3+GDL/60A=;
+	s=default; t=1571436639;
+	bh=NKZrH064zSWHbCkv4ldq9xtQnckfn8tIW6d4IdRtN2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SlYpidNyIX1yS4wcpj0jal1h489F/RtwEYmQLlM+T3nKbFjdmF3kNTmGgHwQzOT5/
-	 wLF7qYycnZijWXc5hc0V5n3RwN5ot7jiLoNdCOY5iLWllsa4OFbZ63jy7MCDQqSwLo
-	 waKC4tXeDKAKhKebDS518vaL8tKatK+mcfIdDnag=
+	b=Z9vqwFTASxDta5vB6CvfBKjPPbcAtm6K8Ks1/J6oldVdgKp9Kwlp3dHgFvzS5ncnK
+	 YbMRcMetddwbUlBvE2QomGSadGHu8FEaNTcuA6nRPgnz++pOY3vZnqtLdVKd3o3aV2
+	 VZeed+lNuWQNvDnKtY3b+oAUNcW7BSvXPcORt9I0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390151AbfJRWK2 (ORCPT
+        id S2390478AbfJRWKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:10:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42894 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:10:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389665AbfJRWKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:10:05 -0400
+        id S2389829AbfJRWKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:10:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED83C222D1;
-        Fri, 18 Oct 2019 22:10:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 161F12246F;
+        Fri, 18 Oct 2019 22:10:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436604;
-        bh=oJIRM0n6QdbNHpcbVS9o/HQsuOyL/2RYPP3+GDL/60A=;
+        s=default; t=1571436613;
+        bh=NKZrH064zSWHbCkv4ldq9xtQnckfn8tIW6d4IdRtN2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZeDj4IS5WX0Xiam8ccuvNU9oat3vHrd6X6cehN7A9Xg6AKOOu4bqfrws2jRYK/08b
-         tO2iVQAD4R7q/WSC0/8YjdvfO/br369PUYqxgm9Fq07zKIeRcY+mOr8Lh3SyGRwzib
-         9NoFy0XtYjiYjBN90s1dwWvXh8ViS+k/6846ptAU=
+        b=SimeTUxnyL7552Z4tnVmFMgRB1exBKT6XWH8UNTFqGjZXd4usRfA+hnhFIrehRQul
+         ECYv4zilJa4PfcCP591j6AG9cW3Dbh8TWowvNkvel9KmkFh8eJlJwkdvxpu8KlFHWO
+         p0jAM3GtfuL9F/KKumthjyWAQjIsxdkYl1OQzvrA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 27/29] NFSv4: Fix leak of clp->cl_acceptor string
-Date:   Fri, 18 Oct 2019 18:09:18 -0400
-Message-Id: <20191018220920.10545-27-sashal@kernel.org>
+Cc:     Brian Norris <briannorris@chromium.org>,
+        Christian Kujau <lists@nerdbynature.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
+        Genki Sky <sky@genki.is>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 03/21] scripts/setlocalversion: Improve -dirty check with git-status --no-optional-locks
+Date:   Fri, 18 Oct 2019 18:09:49 -0400
+Message-Id: <20191018221007.10851-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191018220920.10545-1-sashal@kernel.org>
-References: <20191018220920.10545-1-sashal@kernel.org>
+In-Reply-To: <20191018221007.10851-1-sashal@kernel.org>
+References: <20191018221007.10851-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,58 +63,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Brian Norris <briannorris@chromium.org>
 
-[ Upstream commit 1047ec868332034d1fbcb2fae19fe6d4cb869ff2 ]
+[ Upstream commit ff64dd4857303dd5550faed9fd598ac90f0f2238 ]
 
-Our client can issue multiple SETCLIENTID operations to the same
-server in some circumstances. Ensure that calls to
-nfs4_proc_setclientid() after the first one do not overwrite the
-previously allocated cl_acceptor string.
+git-diff-index does not refresh the index for you, so using it for a
+"-dirty" check can give misleading results. Commit 6147b1cf19651
+("scripts/setlocalversion: git: Make -dirty check more robust") tried to
+fix this by switching to git-status, but it overlooked the fact that
+git-status also writes to the .git directory of the source tree, which
+is definitely not kosher for an out-of-tree (O=) build. That is getting
+reverted.
 
-unreferenced object 0xffff888461031800 (size 32):
-  comm "mount.nfs", pid 2227, jiffies 4294822467 (age 1407.749s)
-  hex dump (first 32 bytes):
-    6e 66 73 40 6b 6c 69 6d 74 2e 69 62 2e 31 30 31  nfs@klimt.ib.101
-    35 67 72 61 6e 67 65 72 2e 6e 65 74 00 00 00 00  5granger.net....
-  backtrace:
-    [<00000000ab820188>] __kmalloc+0x128/0x176
-    [<00000000eeaf4ec8>] gss_stringify_acceptor+0xbd/0x1a7 [auth_rpcgss]
-    [<00000000e85e3382>] nfs4_proc_setclientid+0x34e/0x46c [nfsv4]
-    [<000000003d9cf1fa>] nfs40_discover_server_trunking+0x7a/0xed [nfsv4]
-    [<00000000b81c3787>] nfs4_discover_server_trunking+0x81/0x244 [nfsv4]
-    [<000000000801b55f>] nfs4_init_client+0x1b0/0x238 [nfsv4]
-    [<00000000977daf7f>] nfs4_set_client+0xfe/0x14d [nfsv4]
-    [<0000000053a68a2a>] nfs4_create_server+0x107/0x1db [nfsv4]
-    [<0000000088262019>] nfs4_remote_mount+0x2c/0x59 [nfsv4]
-    [<00000000e84a2fd0>] legacy_get_tree+0x2d/0x4c
-    [<00000000797e947c>] vfs_get_tree+0x20/0xc7
-    [<00000000ecabaaa8>] fc_mount+0xe/0x36
-    [<00000000f15fafc2>] vfs_kern_mount+0x74/0x8d
-    [<00000000a3ff4e26>] nfs_do_root_mount+0x8a/0xa3 [nfsv4]
-    [<00000000d1c2b337>] nfs4_try_mount+0x58/0xad [nfsv4]
-    [<000000004c9bddee>] nfs_fs_mount+0x820/0x869 [nfs]
+Fortunately, git-status now supports avoiding writing to the index via
+the --no-optional-locks flag, as of git 2.14. It still calculates an
+up-to-date index, but it avoids writing it out to the .git directory.
 
-Fixes: f11b2a1cfbf5 ("nfs4: copy acceptor name from context ... ")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+So, let's retry the solution from commit 6147b1cf19651 using this new
+flag first, and if it fails, we assume this is an older version of git
+and just use the old git-diff-index method.
+
+It's hairy to get the 'grep -vq' (inverted matching) correct by stashing
+the output of git-status (you have to be careful about the difference
+betwen "empty stdin" and "blank line on stdin"), so just pipe the output
+directly to grep and use a regex that's good enough for both the
+git-status and git-diff-index version.
+
+Cc: Christian Kujau <lists@nerdbynature.de>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Suggested-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Tested-by: Genki Sky <sky@genki.is>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c | 1 +
- 1 file changed, 1 insertion(+)
+ scripts/setlocalversion | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index ea29c608be893..8354dfae7038e 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -5544,6 +5544,7 @@ int nfs4_proc_setclientid(struct nfs_client *clp, u32 program,
- 	}
- 	status = task->tk_status;
- 	if (setclientid.sc_cred) {
-+		kfree(clp->cl_acceptor);
- 		clp->cl_acceptor = rpcauth_stringify_acceptor(setclientid.sc_cred);
- 		put_rpccred(setclientid.sc_cred);
- 	}
+diff --git a/scripts/setlocalversion b/scripts/setlocalversion
+index 966dd3924ea9c..aa28c3f298093 100755
+--- a/scripts/setlocalversion
++++ b/scripts/setlocalversion
+@@ -72,8 +72,16 @@ scm_version()
+ 			printf -- '-svn%s' "`git svn find-rev $head`"
+ 		fi
+ 
+-		# Check for uncommitted changes
+-		if git diff-index --name-only HEAD | grep -qv "^scripts/package"; then
++		# Check for uncommitted changes.
++		# First, with git-status, but --no-optional-locks is only
++		# supported in git >= 2.14, so fall back to git-diff-index if
++		# it fails. Note that git-diff-index does not refresh the
++		# index, so it may give misleading results. See
++		# git-update-index(1), git-diff-index(1), and git-status(1).
++		if {
++			git --no-optional-locks status -uno --porcelain 2>/dev/null ||
++			git diff-index --name-only HEAD
++		} | grep -qvE '^(.. )?scripts/package'; then
+ 			printf '%s' -dirty
+ 		fi
+ 
 -- 
 2.20.1
 
