@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6490BCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B0CCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38C3E222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD048222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:11:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sClupJ7s"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XB6QWz3N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502615AbfJRQLY (ORCPT
+        id S2502660AbfJRQL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:11:24 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:39685 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502587AbfJRQLV (ORCPT
+        Fri, 18 Oct 2019 12:11:27 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:54281 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502587AbfJRQLZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:11:21 -0400
-Received: by mail-pg1-f201.google.com with SMTP id m20so4589743pgv.6
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:11:21 -0700 (PDT)
+        Fri, 18 Oct 2019 12:11:25 -0400
+Received: by mail-pl1-f202.google.com with SMTP id j9so4008498plk.21
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:11:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=K1ZhNofnBR/XSzepuNm2GXj6CjTITzvlb/GIVw7T7D4=;
-        b=sClupJ7s2vyir/7TQw4u1wskJ40f2afok9L62g3bdETWOSrvPIoJbt2TUVhCDZl2Ll
-         jSD1Pe1pU7jtmC4+A/khfQCqIGy7o+x3Glnf1WXjzHqx9iAelj7PV0FH9T6XgXbpgXPr
-         QmyFwYa7yB+qCqYypJwWf511MkYFKNAU+aHSUjTgdgKc/LGoN7I1EdcPjslTcJn6Nsnh
-         zpS9sYd2YqSiWR32qZg1jO6XyvMv14Qmysa4U0MKWEQOtGZOZsv14zS5QNAzrCYTZwhv
-         xDZy49ncrITpJUlYkIIuqsGVZMQ4LMcDek2uuDnjzpOLCvDTsilhXvrJN1MvHxPElje/
-         wDsw==
+        bh=J6SOPI1rQkBRz/oAhlc59Qnl/pEg0yYrtpuJkIBOBkk=;
+        b=XB6QWz3NWtjFWDb+Z+2Cr8pmFgRAQYSnL3Uid2Hg1L3X4a6VceEhm2xwPy1aK+VoSw
+         9aDveAT40bEva7mRzlDierznfNSbLqDMAgSgjhFynz+GencRC+yEXI9GlTtBT22sGU3p
+         BgssCzMTgiVVKQ7dMBIH2LGWSYP103Svydpv/Qk8+Xt+dKrQ9nOnszXcbv17KY+4wwg4
+         NXeKJ9olZaMc5VRteVjdV9T7bI7kUuufX9b3S6ryE8d0aJM7RC3oqJ3jQ0cSx2x8TLsX
+         ddVquFcsQoFiGmYXXscZ5m21z4LgANVA4sAoVnGTE5uNuWZVS07mkE/xs/dMfJWy0ygM
+         tC4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=K1ZhNofnBR/XSzepuNm2GXj6CjTITzvlb/GIVw7T7D4=;
-        b=Ejrl83SqObZiKnxhJmhY8QnbCD61uAFHFJxnUPkCvEFBV/q0efm41Y+7BrK+PsGrqE
-         ipx5F2pzh76dT8S8/2Srm38IO4K75cjTiW1yDK6EtM4aUWdpVZWgBKmxQkiEB8DCcqh7
-         z3QMiWIgNImGtj+7/tQ7vL4Ej6WGxwwZMEt1QeGa1UiyT795uQE7UUP5hyi33tfqMD+1
-         e0C59DbtM+AcEVEtr6Ngis0bTd9kKAU/2Dq1ioRrHyGUr82DNPhAnFr4cfRmnnF8cG4v
-         jndQH8nr8mn61ATvTutBe16wx9m+O82EI7ta6RAT5DVXo17c9rjLqOH+JKdQcd+NlIOn
-         wG2A==
-X-Gm-Message-State: APjAAAUMY2Wv8zjfpHVzv49tvPOmA2Pn6URnQWkXD02ryhRl95j2c7TB
-        iY3IczMZZwObCKrs7HlCWzbEpfHW9fIJSheIMZE=
-X-Google-Smtp-Source: APXvYqxQZgJ8+dUeSHjL/X4r9AY12JB0O/dDMacaQgZEGqyCDds26CgWDH7ZPg+xHY8lSTXkA3/VdzbOvvEqn3IOjDM=
-X-Received: by 2002:a63:eb52:: with SMTP id b18mr10634742pgk.205.1571415080458;
- Fri, 18 Oct 2019 09:11:20 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 09:10:27 -0700
+        bh=J6SOPI1rQkBRz/oAhlc59Qnl/pEg0yYrtpuJkIBOBkk=;
+        b=d3s/LM5NCbT6k4G08B9W2QgBEV2MauKAnz6igiRiUi8myGS99vfY3MljHDppDGmBn8
+         lYl93lF6ZSiqN62eXgF/oo7jhGYyY5MzgVvB48L9JYByUMWXz/Yyw/iDcIWmwejt49B8
+         IDaOuK6/ZOyA0sCmbghOhKEOGFykVMEciEM/c9owe2EPBRBJUSRpteZkr/V28iVEKZze
+         XLR7CmlBWLu7LCI1MBKkOQfsN9QSPv66BLOlbbayqB02x/j5ikiOVw4H47Wx4mWsfxvl
+         1N3GhfNc5+f4K41rgVwLLo6i2b9JtSa48X1ZIBHny1kqrjFXiKQ8I7FhW1EIIbXpRsEM
+         siWg==
+X-Gm-Message-State: APjAAAVGvjoZ1Avds71JK+Lknxw7AruxKtTFxI8pTXtoqsXy41xAxf3a
+        g0C6GkgnfjNqtF8URTTBRR5ULTBWzuKvCDYvBXw=
+X-Google-Smtp-Source: APXvYqx8PtU7/rtmLemGGFK39JXzIOz2FvaCxezwKfcFnavxjhOconPajgJzRwBjZVVbgrCp+Uo7fSkc9snzmg9De7Q=
+X-Received: by 2002:a63:1e59:: with SMTP id p25mr10856086pgm.361.1571415082807;
+ Fri, 18 Oct 2019 09:11:22 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 09:10:28 -0700
 In-Reply-To: <20191018161033.261971-1-samitolvanen@google.com>
-Message-Id: <20191018161033.261971-13-samitolvanen@google.com>
+Message-Id: <20191018161033.261971-14-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-Subject: [PATCH 12/18] arm64: reserve x18 only with Shadow Call Stack
+Subject: [PATCH 13/18] arm64: preserve x18 when CPU is suspended
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -79,38 +79,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only reserve x18 with CONFIG_SHADOW_CALL_STACK. Note that all external
-kernel modules must also have x18 reserved if the kernel uses SCS.
+Don't lose the current task's shadow stack when the CPU is suspended.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/arm64/Makefile | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/arm64/mm/proc.S | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index 1c7b276bc7c5..ef76101201b2 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -55,7 +55,7 @@ endif
+diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+index fdabf40a83c8..9a8bd4bc8549 100644
+--- a/arch/arm64/mm/proc.S
++++ b/arch/arm64/mm/proc.S
+@@ -73,6 +73,9 @@ alternative_endif
+ 	stp	x8, x9, [x0, #48]
+ 	stp	x10, x11, [x0, #64]
+ 	stp	x12, x13, [x0, #80]
++#ifdef CONFIG_SHADOW_CALL_STACK
++	stp	x18, xzr, [x0, #96]
++#endif
+ 	ret
+ ENDPROC(cpu_do_suspend)
  
- KBUILD_CFLAGS	+= -mgeneral-regs-only $(lseinstr) $(brokengasinst)	\
- 		   $(compat_vdso) $(cc_has_k_constraint)
--KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables -ffixed-x18
-+KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
- KBUILD_CFLAGS	+= $(call cc-disable-warning, psabi)
- KBUILD_AFLAGS	+= $(lseinstr) $(brokengasinst) $(compat_vdso)
- 
-@@ -72,6 +72,10 @@ stack_protector_prepare: prepare0
- 					include/generated/asm-offsets.h))
- endif
- 
-+ifeq ($(CONFIG_SHADOW_CALL_STACK), y)
-+KBUILD_CFLAGS	+= -ffixed-x18
-+endif
-+
- ifeq ($(CONFIG_CPU_BIG_ENDIAN), y)
- KBUILD_CPPFLAGS	+= -mbig-endian
- CHECKFLAGS	+= -D__AARCH64EB__
+@@ -89,6 +92,9 @@ ENTRY(cpu_do_resume)
+ 	ldp	x9, x10, [x0, #48]
+ 	ldp	x11, x12, [x0, #64]
+ 	ldp	x13, x14, [x0, #80]
++#ifdef CONFIG_SHADOW_CALL_STACK
++	ldp	x18, x19, [x0, #96]
++#endif
+ 	msr	tpidr_el0, x2
+ 	msr	tpidrro_el0, x3
+ 	msr	contextidr_el1, x4
 -- 
 2.23.0.866.gb869b98d4c-goog
 
