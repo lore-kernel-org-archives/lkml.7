@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB9FCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2ACCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2865921925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5862221897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:22:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pQ8NT+0t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RZj04qOt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410552AbfJRRVZ (ORCPT
+        id S2410565AbfJRRWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 13:21:25 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:36408 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408707AbfJRRVZ (ORCPT
+        Fri, 18 Oct 2019 13:22:20 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:41702 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393523AbfJRRWT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 13:21:25 -0400
-Received: by mail-ed1-f65.google.com with SMTP id h2so5159904edn.3
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 10:21:23 -0700 (PDT)
+        Fri, 18 Oct 2019 13:22:19 -0400
+Received: by mail-ed1-f68.google.com with SMTP id f20so5145202edv.8
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 10:22:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=MASR/FluEaPV2kJBRmj9lbqGkWJRGtvA3nfWqAmQsg0=;
-        b=pQ8NT+0tsGNtMagaX7Tu2Rr0xjvmXc31c3M9U/Cl/6XDylf0f4BGoqPA4sfKB90rTw
-         zdNfT+9oWsr6QtoxEvGNFE8TQekabGvDwXP+s3fQG5151ZOksSOMDa+nE6/fl7yUsDFW
-         TsEqjMiSCT8IZiNw9d09oh714m6hU9MPx6apykqG/x3/AY+3uHJB4uZGcv+LZGCBpNvZ
-         XPYVtqdXXinQWkRBRVSKRtXc5dn7Mfx1ddXjtGYL8r0ghwW9DLRRExa+Gse3eB42XM6W
-         rrHe2fpWXlPyygkB6S4LPSeW6oNdYQ3k4mobsR5lp9ZPrWGCChtNcW/EhTNl0rbKUH6Y
-         DYZA==
+        bh=9/5cBvlfd/HVF8jB3IVrtvid7CzwMy5BdqMWt2gEtp8=;
+        b=RZj04qOtuBW8S2yh/+xTbKgyPlzHtmvOnBSTfNX0EIPTC8TndKkInaRzfA9UZWTmXe
+         s3hu5phn5+Q2qLVQv52fxITLLNt17HeoZiR8K7Yw6yU22I7VA7816cCa5NxvZwJOHugb
+         gj5FMCDK5Z4uawa09iZKnNj/yZXGL+br9i55D5Wb+u1w01O0cI87EvOts+1CnkP2gKNP
+         /eIAl5MkZIiQ3OXxy+ticBr11gRFJ9pQYrrJY7taXU032zbk+4ao303MOF33jePpna1l
+         INZK44WZx0FmgOo/AtGh49WuqdGbbmYbJQg+RMKqUEONL5R0ML4ibga2ztpBgsTyES3a
+         3SQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=MASR/FluEaPV2kJBRmj9lbqGkWJRGtvA3nfWqAmQsg0=;
-        b=IqljmKwJAwsuU/kLGqp2+Sw5KV4VABZGQhZ9UP8NnZw2NPtlf/f/3HVR5sWKg1aeKT
-         sCALi/gWem67uJCv97lTu463NqPPDYTQJ+bN8vFSKrEUC9vBHCmVA9IgArLbn/qx7QoZ
-         6plFabDHijYsqNA2lwWFbxE58t0gtqqy/OrSKy2uLd55nFOxP8FW9SG9WTjM9TQE2svf
-         snsx+ZWOHxPLBWJqBtkUkYWYqkYMQxiC4yxS1nul0fM8FjkeKjkacj31u3GmGVzKQGFx
-         YSf59iGkh6qAwd9U8ujA4LlSlqvYV6t6zP+jlUWk643rCUwgU7MMjJIWQn5pPsMLyKRF
-         UT0g==
-X-Gm-Message-State: APjAAAUJBLO/RiSADhJtBCrxonNbWziApJXD1uDjLVYw6IzbiSuP7ix0
-        bhAa5RdwXoWNXzOqRSKfVFw=
-X-Google-Smtp-Source: APXvYqzHuCJU6yhwvYqDq8AxCf5dOHwojd8no7m1kZ5vJgdGxf6LFFSehvkVof556M1zZjn72V+qyg==
-X-Received: by 2002:aa7:ccd3:: with SMTP id y19mr10936407edt.122.1571419282514;
-        Fri, 18 Oct 2019 10:21:22 -0700 (PDT)
+        bh=9/5cBvlfd/HVF8jB3IVrtvid7CzwMy5BdqMWt2gEtp8=;
+        b=ntJF+IdT8aEkP4muWdTMmBf7C4ceNmfOd2JqhyMMQm2o66otfMHHcJ0j2EOjCkQowQ
+         5hykPVLlVKzD5YelCDMtd2OdLHSKp5g1UqC+7MNBRSH1eun9GNKS/OFbCa/TNpgB6+aL
+         OPaCBfLD3w4bZx4DaVyzRoyZ5gf/JH7ykd+jRVSs+KTpc7QjPFPS6TzF/1O6qc/sUGWc
+         JwIhEF/eCCxaFgspHmfkV2StT6AJapAbbZH1+4hDM93/aG68uLgexllZuACMwaGUDNab
+         JY9JRpZmkhxlJoIpSBad26gV2ft3ZlbRz9ttdCr3pK1gxpSVIyPqarBGqyCZ3Y1pnWbj
+         9jIQ==
+X-Gm-Message-State: APjAAAVzQwuPYARsvEVdEUMmjSdcM7a7fGpp32DQHcUDKvyJXhO3KgYo
+        6tV85yccoOZxno0AzRdAXv2eT+Z1
+X-Google-Smtp-Source: APXvYqyR8R07MY7CQI3yhDo3/xom6+gFbQfUg5zMww0YrAyZQ/oW7k5cMuYXphOY+Oj6qFF17afR2g==
+X-Received: by 2002:a17:906:6a43:: with SMTP id n3mr9638676ejs.292.1571419337351;
+        Fri, 18 Oct 2019 10:22:17 -0700 (PDT)
 Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id g15sm273729edp.0.2019.10.18.10.21.20
+        by smtp.googlemail.com with ESMTPSA id c32sm288559eda.97.2019.10.18.10.22.15
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 18 Oct 2019 10:21:21 -0700 (PDT)
-Subject: Re: [GIT PULL 3/3] bcm2835-maintainers-next-2019-10-15
+        Fri, 18 Oct 2019 10:22:16 -0700 (PDT)
+Subject: Re: [GIT PULL 2/3] bcm2835-soc-next-2019-10-15
 To:     Stefan Wahren <wahrenst@gmx.net>
 Cc:     Eric Anholt <eric@anholt.net>, linux-kernel@vger.kernel.org,
         bcm-kernel-feedback-list@broadcom.com,
         linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
 References: <1571159725-5090-1-git-send-email-wahrenst@gmx.net>
- <1571159725-5090-3-git-send-email-wahrenst@gmx.net>
+ <1571159725-5090-2-git-send-email-wahrenst@gmx.net>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
@@ -123,12 +123,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
  6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9Za0Dx0yyp44iD1OvHtkEI
  M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <892848b4-6104-2588-0e94-ebf1b3305a3d@gmail.com>
-Date:   Fri, 18 Oct 2019 10:21:18 -0700
+Message-ID: <03466247-807c-5fe7-b63e-2a90d1e3b04e@gmail.com>
+Date:   Fri, 18 Oct 2019 10:22:13 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <1571159725-5090-3-git-send-email-wahrenst@gmx.net>
+In-Reply-To: <1571159725-5090-2-git-send-email-wahrenst@gmx.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -146,18 +146,16 @@ On 10/15/19 10:15 AM, Stefan Wahren wrote:
 > 
 > are available in the git repository at:
 > 
->   git://github.com/anholt/linux tags/bcm2835-maintainers-next-2019-10-15
+>   git://github.com/anholt/linux tags/bcm2835-soc-next-2019-10-15
 > 
-> for you to fetch changes up to a91f757bda1a48317f692487addf832ebf8e93aa:
+> for you to fetch changes up to 781fa0a954240c8487683ddf837fb2c4ede8e7ca:
 > 
->   mailmap: Add Simon Arlott (replacement for expired email address) (2019-10-12 12:48:25 +0200)
-> 
-> ----------------------------------------------------------------
-> This pull request clarifies maintainership of the BCM2711 and adds a replacement
-> mail address for a former contributor.
+>   ARM: bcm: Add support for BCM2711 SoC (2019-10-10 19:21:03 +0200)
 > 
 > ----------------------------------------------------------------
+> This pull request introduces the machine board code for the BCM2711,
+> which is placed on the Raspberry Pi 4.
 
-Merged into maintainers/next, thanks Stefan!
+Merged into soc/next, thanks Stefan!
 -- 
 Florian
