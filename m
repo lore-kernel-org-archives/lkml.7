@@ -2,129 +2,145 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEC9CA9EA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EEC0CA9EA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0C6021D80
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB62621D80
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:20:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="pleO0mhH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504291AbfJRGTx (ORCPT
+        id S2504354AbfJRGUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 02:19:53 -0400
-Received: from tyo185.gate.nec.co.jp ([114.179.232.185]:51073 "EHLO
-        tyo185.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2504151AbfJRGTx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 02:19:53 -0400
-X-Greylist: delayed 854 seconds by postgrey-1.27 at vger.kernel.org; Fri, 18 Oct 2019 02:19:52 EDT
-Received: from tyo161.gate.nec.co.jp (tyo161.gate.nec.co.jp [114.179.232.161])
-        by tyo185.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x9I2KetU024767
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO)
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 11:20:40 +0900
-Received: from mailgate02.nec.co.jp ([114.179.233.122])
-        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x9I2KN3O018239
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Fri, 18 Oct 2019 11:20:23 +0900
-Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9I2KNEF011422;
-        Fri, 18 Oct 2019 11:20:23 +0900
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
-        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9I2HWGm017083;
-        Fri, 18 Oct 2019 11:20:23 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.147] [10.38.151.147]) by mail01b.kamome.nec.co.jp with ESMTP id BT-MMP-9619683; Fri, 18 Oct 2019 11:19:08 +0900
-Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
- BPXC19GP.gisp.nec.co.jp ([10.38.151.147]) with mapi id 14.03.0439.000; Fri,
- 18 Oct 2019 11:19:07 +0900
-From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-To:     Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        David Hildenbrand <david@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: Re: memory offline infinite loop after soft offline
-Thread-Topic: memory offline infinite loop after soft offline
-Thread-Index: AQHVgHtyUduz67i7AUWqxWZ+Pu+7vadZPeAAgATGWACAAAeGAIAAh9KAgAAFzYCAAIOhAA==
-Date:   Fri, 18 Oct 2019 02:19:06 +0000
-Message-ID: <20191018021906.GA24978@hori.linux.bs1.fc.nec.co.jp>
-References: <1570829564.5937.36.camel@lca.pw>
- <20191014083914.GA317@dhcp22.suse.cz>
- <20191017093410.GA19973@hori.linux.bs1.fc.nec.co.jp>
- <20191017100106.GF24485@dhcp22.suse.cz> <1571335633.5937.69.camel@lca.pw>
- <20191017182759.GN24485@dhcp22.suse.cz>
-In-Reply-To: <20191017182759.GN24485@dhcp22.suse.cz>
-Accept-Language: en-US, ja-JP
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.150]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DC510FC488A40B42B7307CB672E6C538@gisp.nec.co.jp>
-Content-Transfer-Encoding: base64
+        Fri, 18 Oct 2019 02:20:32 -0400
+Received: from mail-eopbgr810072.outbound.protection.outlook.com ([40.107.81.72]:23639
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2504133AbfJRGUc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 02:20:32 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZVu4PIVrUMvpsmjPdQUhGbHdQlAxuGC5tzTB0Wrp6vsjHQg8iw2/c419reIvuhefBuvZphOg33NdbT9KQX0/tErLeE+F+8624Llo1vdo1AJScMm7bqfIfmU+k5rh74QhZCAq45M+kjJdb0PiR+4d/WfOKdL/K0PuyuWJrhUCvDMtDdyyiyJxQFwXoEF1f7z12FBCEzWDHjfxVL3nDD0qeB++idvt+dDT5PNgCz1mM6Q70F1uLNkSc4aqwKzA5o66CgQF8ERNRi4h/Y23R69jmsry8/s+n2Qwzm+HeTtqiibIwLk9Wo1LG0Oaw8vt3pYxpxDUjOPDj9RDCbR5cRxVow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rJMnugmn9lY1GyY1L9mzZ+Gx9W/C+bvit5AS/LW60NM=;
+ b=IbupMxOzvFKOx5lO8KQOcep2vNZqGtqwjhDLtiiz9EYW1GXanlu2iiFjYzEW7fPoZjtpQlOvgFnSsdAgzrrude1NDjVoVAncBIPfwS1y8o4jI2jjBJ06Mu/DeGhmrzEA+oF/6nmbh6iHehJdNgZ4+XXc01zCcWpUByl9j3xJnatcsfUIQHnLpOUrO0hJ7GDyq0D0j4Azwwho7Exz/5XYyk8IZET9/bmrVjRkX67nYvZ3eEULiJMAjg8ld2b0R6Wxcw1R8UM+MtS69w1KenZcspbuxXILu9laEXqLeZFA0mIappM5XvdC2Gzrj4NA2MHDsOf3txjicKGtRRwkX9NFVg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=sifive.com smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rJMnugmn9lY1GyY1L9mzZ+Gx9W/C+bvit5AS/LW60NM=;
+ b=pleO0mhHcKFl9Th7N3TCUz0ptwepnbvvtkZswBPzStbrgofXXtdEpKB2u7u3ldPaprhUmTiLWOrOikG4/9yCzjE1vDMMQQZiLAGCO399vDrRAacTf0gouB1yi0oIxO/Xa9jTxXUBOO7V6IDiWjt+Jt5R8FBsSxZvjs2tEeOnsGw=
+Received: from SN4PR0201CA0002.namprd02.prod.outlook.com
+ (2603:10b6:803:2b::12) by BL0PR02MB3700.namprd02.prod.outlook.com
+ (2603:10b6:207:4a::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.16; Fri, 18 Oct
+ 2019 06:20:28 +0000
+Received: from SN1NAM02FT034.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::200) by SN4PR0201CA0002.outlook.office365.com
+ (2603:10b6:803:2b::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.18 via Frontend
+ Transport; Fri, 18 Oct 2019 06:20:28 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; sifive.com; dkim=none (message not signed)
+ header.d=none;sifive.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT034.mail.protection.outlook.com (10.152.72.141) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2367.14
+ via Frontend Transport; Fri, 18 Oct 2019 06:20:28 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1iLLch-0004D7-NI; Thu, 17 Oct 2019 23:20:27 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1iLLcc-0002dq-JT; Thu, 17 Oct 2019 23:20:22 -0700
+Received: from xsj-pvapsmtp01 (smtp.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x9I6KG4u017760;
+        Thu, 17 Oct 2019 23:20:17 -0700
+Received: from [172.30.17.123]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1iLLcW-0002HF-Ed; Thu, 17 Oct 2019 23:20:16 -0700
+Subject: Re: PCI/MSI: Remove the PCI_MSI_IRQ_DOMAIN architecture whitelist
+To:     Palmer Dabbelt <palmer@sifive.com>,
+        Christoph Hellwig <hch@infradead.org>, michal.simek@xilinx.com,
+        helgaas@kernel.org
+Cc:     tony.luck@intel.com, fenghua.yu@intel.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, bhelgaas@google.com, will@kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        kstewart@linuxfoundation.org, pbonzini@redhat.com,
+        firoz.khan@linaro.org, yamada.masahiro@socionext.com,
+        longman@redhat.com, mingo@kernel.org, peterz@infradead.org,
+        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20191017181937.7004-1-palmer@sifive.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <995f625b-1f56-6d97-ba99-9a4298e9dd37@xilinx.com>
+Date:   Fri, 18 Oct 2019 08:20:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+In-Reply-To: <20191017181937.7004-1-palmer@sifive.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(346002)(39860400002)(189003)(199004)(6246003)(11346002)(2616005)(126002)(5660300002)(65806001)(186003)(65956001)(8936002)(229853002)(23676004)(31696002)(446003)(26005)(76176011)(426003)(336012)(2486003)(9786002)(476003)(966005)(478600001)(486006)(44832011)(31686004)(230700001)(7416002)(4326008)(2906002)(106002)(47776003)(305945005)(50466002)(356004)(6666004)(58126008)(4744005)(110136005)(36386004)(70206006)(316002)(70586007)(8676002)(81166006)(81156014)(6306002)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR02MB3700;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a93dbf3d-8800-4096-75d7-08d753934536
+X-MS-TrafficTypeDiagnostic: BL0PR02MB3700:
+X-MS-Exchange-PUrlCount: 1
+X-Microsoft-Antispam-PRVS: <BL0PR02MB37005E1A6C767D4C8C55E0E0C66C0@BL0PR02MB3700.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 01949FE337
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dcMFSbqHT+mqW0iGLxROaHPNSIofx+sEzp7jYBtiR919pjUprvMVY7n3oQYpmAXV11YAXKthQdL9T6ZJVk+RxFy4c2nal8Zzr9S+Plh0pBzqnnpZ/TdniJM4VagLL8nLNGsSM+IB7x92Q/GK7y3XI578GXsC2y2N417uqkKkUMRbY++wL3gGMxGGhLw0u1u3DumQxZ7s1I5MAxiy+MrUXXsLk7g/TnFMjPsACUUuuwmhq0yxvV5+vAuKPB/UJLi35tj9FfNhlKPVnEvO54C1cOYW8bgfZCp//W6zI2hUIklDWBHrcKFmT/sDg4x6rXld35WbMLf5MCsQFRlU4VJGDRvRMW9ugplG7R3i6RlWD3qLYmHgtuscNebHqJzrNrCVcNBSExPyoNeV8NKUsWS6zodZvIH07oNxo4OWL9xsSWHXHink7DnzSLA7skZPcfjL8yVk9HS+245/QxVkkQycpA==
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2019 06:20:28.1578
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a93dbf3d-8800-4096-75d7-08d753934536
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR02MB3700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCBPY3QgMTcsIDIwMTkgYXQgMDg6Mjc6NTlQTSArMDIwMCwgTWljaGFsIEhvY2tvIHdy
-b3RlOg0KPiBPbiBUaHUgMTctMTAtMTkgMTQ6MDc6MTMsIFFpYW4gQ2FpIHdyb3RlOg0KPiA+IE9u
-IFRodSwgMjAxOS0xMC0xNyBhdCAxMjowMSArMDIwMCwgTWljaGFsIEhvY2tvIHdyb3RlOg0KPiA+
-ID4gT24gVGh1IDE3LTEwLTE5IDA5OjM0OjEwLCBOYW95YSBIb3JpZ3VjaGkgd3JvdGU6DQo+ID4g
-PiA+IE9uIE1vbiwgT2N0IDE0LCAyMDE5IGF0IDEwOjM5OjE0QU0gKzAyMDAsIE1pY2hhbCBIb2Nr
-byB3cm90ZToNCj4gPiA+IA0KPiA+ID4gWy4uLl0NCj4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvbW0v
-cGFnZV9pc29sYXRpb24uYyBiL21tL3BhZ2VfaXNvbGF0aW9uLmMNCj4gPiA+ID4gPiBpbmRleCA4
-OWMxOWMwZmVhZGIuLjVmYjNmZWUxNmZkZSAxMDA2NDQNCj4gPiA+ID4gPiAtLS0gYS9tbS9wYWdl
-X2lzb2xhdGlvbi5jDQo+ID4gPiA+ID4gKysrIGIvbW0vcGFnZV9pc29sYXRpb24uYw0KPiA+ID4g
-PiA+IEBAIC0yNzQsNyArMjc0LDcgQEAgX190ZXN0X3BhZ2VfaXNvbGF0ZWRfaW5fcGFnZWJsb2Nr
-KHVuc2lnbmVkIGxvbmcgcGZuLCB1bnNpZ25lZCBsb25nIGVuZF9wZm4sDQo+ID4gPiA+ID4gIAkJ
-CSAqIHNpbXBsZSB3YXkgdG8gdmVyaWZ5IHRoYXQgYXMgVk1fQlVHX09OKCksIHRob3VnaC4NCj4g
-PiA+ID4gPiAgCQkJICovDQo+ID4gPiA+ID4gIAkJCXBmbiArPSAxIDw8IHBhZ2Vfb3JkZXIocGFn
-ZSk7DQo+ID4gPiA+ID4gLQkJZWxzZSBpZiAoc2tpcF9od3BvaXNvbmVkX3BhZ2VzICYmIFBhZ2VI
-V1BvaXNvbihwYWdlKSkNCj4gPiA+ID4gPiArCQllbHNlIGlmIChza2lwX2h3cG9pc29uZWRfcGFn
-ZXMgJiYgUGFnZUhXUG9pc29uKGNvbXBvdW5kX2hlYWQocGFnZSkpKQ0KPiA+ID4gPiA+ICAJCQkv
-KiBBIEhXUG9pc29uZWQgcGFnZSBjYW5ub3QgYmUgYWxzbyBQYWdlQnVkZHkgKi8NCj4gPiA+ID4g
-PiAgCQkJcGZuKys7DQo+ID4gPiA+ID4gIAkJZWxzZQ0KPiA+ID4gPiANCj4gPiA+ID4gVGhpcyBm
-aXggbG9va3MgZ29vZCB0byBtZS4gVGhlIG9yaWdpbmFsIGNvZGUgb25seSBhZGRyZXNzZXMgaHdw
-b2lzb25lZCA0a0ItcGFnZSwNCj4gPiA+ID4gd2Ugc2VlbSB0byBoYXZlIHRoaXMgaXNzdWUgc2lu
-Y2UgdGhlIGZvbGxvd2luZyBjb21taXQsDQo+ID4gPiANCj4gPiA+IFRoYW5rcyBhIGxvdCBmb3Ig
-ZG91YmxlIGNoZWNraW5nIE5hb3lhIQ0KPiA+ID4gIA0KPiA+ID4gPiAgIGNvbW1pdCBiMDIzZjQ2
-ODEzY2RlNmUzYjhhOGMyNGY0MzJmZjljMWZkOGU5YTY0DQo+ID4gPiA+ICAgQXV0aG9yOiBXZW4g
-Q29uZ3lhbmcgPHdlbmN5QGNuLmZ1aml0c3UuY29tPg0KPiA+ID4gPiAgIERhdGU6ICAgVHVlIERl
-YyAxMSAxNjowMDo0NSAyMDEyIC0wODAwDQo+ID4gPiA+ICAgDQo+ID4gPiA+ICAgICAgIG1lbW9y
-eS1ob3RwbHVnOiBza2lwIEhXUG9pc29uZWQgcGFnZSB3aGVuIG9mZmxpbmluZyBwYWdlcw0KPiA+
-ID4gPiANCj4gPiA+ID4gYW5kIGV4dGVuc2lvbiBvZiBMVFAgY292ZXJhZ2UgZmluYWxseSBkaXNj
-b3ZlcmVkIHRoaXMuDQo+ID4gPiANCj4gPiA+IFFpYW4sIGNvdWxkIHlvdSBnaXZlIHRoZSBwYXRj
-aCBzb21lIHRlc3Rpbmc/DQo+ID4gDQo+ID4gVW5mb3J0dW5hdGVseSwgdGhpcyBkb2VzIG5vdCBz
-b2x2ZSB0aGUgcHJvYmxlbS7CoEl0IGxvb2tzIHRvIG1lIHRoYXQgaW4NCj4gPiBzb2Z0X29mZmxp
-bmVfaHVnZV9wYWdlKCksIHNldF9od3BvaXNvbl9mcmVlX2J1ZGR5X3BhZ2UoKSB3aWxsIG9ubHkg
-c2V0DQo+ID4gUEdfaHdwb2lzb24gZm9yIGJ1ZGR5IHBhZ2VzLCBzbyB0aGUgZXZlbiB0aGUgY29t
-cG91bmRfaGVhZCgpIGhhcyBubyBQR19od3BvaXNvbg0KPiA+IHNldC4NCj4gPiANCj4gPiAJCWlm
-IChQYWdlQnVkZHkocGFnZV9oZWFkKSAmJiBwYWdlX29yZGVyKHBhZ2VfaGVhZCkgPj0gb3JkZXIp
-IHsNCj4gPiAJCQlpZiAoIVRlc3RTZXRQYWdlSFdQb2lzb24ocGFnZSkpDQo+ID4gCQkJCWh3cG9p
-c29uZWQgPSB0cnVlOw0KPiANCj4gVGhpcyBpcyBtb3JlIHRoYW4gdW5leHBlY3RlZC4gSG93IGFy
-ZSB3ZSBzdXBwb3NlZCB0byBmaW5kIG91dCB0aGF0IHRoZQ0KPiBwYWdlIGlzIHBvaXNvbmVkPyBB
-bnkgaWRlYSBOYW95YT8NCg0KIyBzb3JyeSBmb3IgbXkgcG9vciByZXZpZXcuLi4NCg0KV2Ugc2V0
-IFBHX2h3cG9pc29uIGJpdCBvbmx5IG9uIHRoZSBoZWFkIHBhZ2UgZm9yIGh1Z2V0bGIsIHRoYXQn
-cyBiZWNhdXNlDQp3ZSBoYW5kbGUgbXVsdGlwbGUgcGFnZXMgYXMgYSBzaW5nbGUgb25lIGZvciBo
-dWdldGxiLiBTbyBpdCdzIGVub3VnaA0KdG8gY2hlY2sgaXNvbGF0aW9uIG9ubHkgb24gdGhlIGhl
-YWQgcGFnZS4gIFNpbXBseSBza2lwcGluZyBwZm4gY3Vyc29yIHRvDQp0aGUgcGFnZSBhZnRlciB0
-aGUgaHVnZXBhZ2Ugc2hvdWxkIGF2b2lkIHRoZSBpbmZpbml0ZSBsb29wOg0KDQogIEBAIC0yNzQs
-OSArMjc0LDEzIEBAIF9fdGVzdF9wYWdlX2lzb2xhdGVkX2luX3BhZ2VibG9jayh1bnNpZ25lZCBs
-b25nIHBmbiwgdW5zaWduZWQgbG9uZyBlbmRfcGZuLA0KICAgCQkJICogc2ltcGxlIHdheSB0byB2
-ZXJpZnkgdGhhdCBhcyBWTV9CVUdfT04oKSwgdGhvdWdoLg0KICAgCQkJICovDQogICAJCQlwZm4g
-Kz0gMSA8PCBwYWdlX29yZGVyKHBhZ2UpOw0KICAtCQllbHNlIGlmIChza2lwX2h3cG9pc29uZWRf
-cGFnZXMgJiYgUGFnZUhXUG9pc29uKHBhZ2UpKQ0KICAtCQkJLyogQSBIV1BvaXNvbmVkIHBhZ2Ug
-Y2Fubm90IGJlIGFsc28gUGFnZUJ1ZGR5ICovDQogIC0JCQlwZm4rKzsNCiAgKwkJZWxzZSBpZiAo
-c2tpcF9od3BvaXNvbmVkX3BhZ2VzICYmIFBhZ2VIV1BvaXNvbihjb21wb3VuZF9oZWFkKHBhZ2Up
-KSkNCiAgKwkJCS8qDQogICsJCQkgKiBBIEhXUG9pc29uZWQgcGFnZSBjYW5ub3QgYmUgYWxzbyBQ
-YWdlQnVkZHkuDQogICsJCQkgKiBQR19od3BvaXNvbiBjb3VsZCBiZSBzZXQgb25seSBvbiB0aGUg
-aGVhZCBwYWdlIGluDQogICsJCQkgKiBodWdldGxiIGNhc2UsIHNvIG5vIG5lZWQgdG8gY2hlY2sg
-dGFpbCBwYWdlcy4NCiAgKwkJCSAqLw0KICArCQkJcGZuICs9IDEgPDwgY29tcG91bmRfb3JkZXIo
-cGFnZSk7DQogICAJCWVsc2UNCiAgIAkJCWJyZWFrOw0KICAgCX0NCg0KUWlhbiwgY291bGQgeW91
-IHBsZWFzZSB0cnkgdGhpcz8NCg0KVGhhbmtzLA0KTmFveWEgSG9yaWd1Y2hp
+Hi,
+
+On 17. 10. 19 20:19, Palmer Dabbelt wrote:
+> This came up in the context of the microblaze port, where a patch was
+> recently posted to extend the whitelist.
+
+I hoped you were aware about this discussion we have with Christoph.
+https://lkml.org/lkml/2019/10/8/682
+
+It means 1/3 and 2/3 should be replaced by mandatory-y and I expect
+msi.h can be removed from architecture Kbuild too.
+
+Thanks,
+Michal
+
 
