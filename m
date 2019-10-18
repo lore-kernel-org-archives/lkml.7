@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A7DCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 097E6CA9EAB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E326921925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C663A21925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:15:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436926;
-	bh=aCSTbAXnQHzJmonbmjRU/TNSmpSmUo2JY9jr4+RSpH0=;
+	s=default; t=1571436928;
+	bh=Kov+8kMB59hOV7LwB2j8HIHtBltTnISJ1UT9ZfpCrrg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z7+oQY44Z78Zv2dG09oAPXBVqylY3Aq3FIOaHpQIUz8ef6VPX8HNq39lMM2JGu9NX
-	 q2gR4UZIOxHq31pbcQ647jHgcOByRidX75jiR5rZl1bdY0G4wUTGr54m0+22TO+V+A
-	 5FNvrwACcVJ873w1hFZDqAKE4q4t+eu62vcR6kZc=
+	b=odEBdMnggU4/n0krsWAVpJm+l7U2Z5W4lbeawaP73crJFjPg5Bs3s4Pz8ONyZQKm5
+	 aOpPUmuHvcSVo5aM4tZ1nZuoJye3qTFFiFNzzQycE6F3J1mcUID+SL9P/WSHl3iDAN
+	 wlCJyThmrhMH68r+7rW0k9TruI0/z47UmAIRGFcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388451AbfJRWJB (ORCPT
+        id S2388333AbfJRWI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:09:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41194 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:08:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388015AbfJRWIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:08:39 -0400
+        id S2387966AbfJRWIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:08:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C94C2245D;
-        Fri, 18 Oct 2019 22:08:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B43E22459;
+        Fri, 18 Oct 2019 22:08:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436519;
-        bh=aCSTbAXnQHzJmonbmjRU/TNSmpSmUo2JY9jr4+RSpH0=;
+        s=default; t=1571436517;
+        bh=Kov+8kMB59hOV7LwB2j8HIHtBltTnISJ1UT9ZfpCrrg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oaJFm9eszIobE5UrYyzc6uZN6ZaPR1Jp6Nfq2D1tbTtwij05q6TaPpaaDtfTuRoyz
-         5KI5JrnF6PAa/c0pryofVcXj676makHrdKmdRp5+92UOoYVLm+AeKX9CUpUNysO84E
-         iSk0c3xSTfylFpvhp0f2WUY+q538WuLuKvf8KP/w=
+        b=bsq6WNJ7HHiN2e2QA8vfZzFeATkuFDtpB3x5WGQYnZxUgIV0/WDqLFH9IMLO/tnc/
+         X4GbJbQ1Cyw6QbW4gz9kaNlCgGXqcHFvwdOk3zL57PenPgn0X61a4RpB+uo5E6LAQ2
+         847GIlHIxpgZ2pV23j7mIw9BZqMSEGWphBDMgU4c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 26/56] crypto: arm/aes-ce - add dependency on AES library
-Date:   Fri, 18 Oct 2019 18:07:23 -0400
-Message-Id: <20191018220753.10002-26-sashal@kernel.org>
+Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 24/56] perf jevents: Fix period for Intel fixed counters
+Date:   Fri, 18 Oct 2019 18:07:21 -0400
+Message-Id: <20191018220753.10002-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
 References: <20191018220753.10002-1-sashal@kernel.org>
@@ -59,32 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Andi Kleen <ak@linux.intel.com>
 
-[ Upstream commit f703964fc66804e6049f2670fc11045aa8359b1a ]
+[ Upstream commit 6bdfd9f118bd59cf0f85d3bf4b72b586adea17c1 ]
 
-The ARM accelerated AES driver depends on the new AES library for
-its non-SIMD fallback so express this in its Kconfig declaration.
+The Intel fixed counters use a special table to override the JSON
+information.
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+During this override the period information from the JSON file got
+dropped, which results in inst_retired.any and similar running with
+frequency mode instead of a period.
+
+Just specify the expected period in the table.
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Link: http://lore.kernel.org/lkml/20190927233546.11533-2-andi@firstfloor.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/crypto/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/pmu-events/jevents.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/crypto/Kconfig b/arch/arm/crypto/Kconfig
-index b8e69fe282b8d..44278f375ae23 100644
---- a/arch/arm/crypto/Kconfig
-+++ b/arch/arm/crypto/Kconfig
-@@ -89,6 +89,7 @@ config CRYPTO_AES_ARM_CE
- 	tristate "Accelerated AES using ARMv8 Crypto Extensions"
- 	depends on KERNEL_MODE_NEON
- 	select CRYPTO_BLKCIPHER
-+	select CRYPTO_LIB_AES
- 	select CRYPTO_SIMD
- 	help
- 	  Use an implementation of AES in CBC, CTR and XTS modes that uses
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index 94a7cabe9b824..6f9f247b45162 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -342,12 +342,12 @@ static struct fixed {
+ 	const char *name;
+ 	const char *event;
+ } fixed[] = {
+-	{ "inst_retired.any", "event=0xc0" },
+-	{ "inst_retired.any_p", "event=0xc0" },
+-	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03" },
+-	{ "cpu_clk_unhalted.thread", "event=0x3c" },
+-	{ "cpu_clk_unhalted.core", "event=0x3c" },
+-	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1" },
++	{ "inst_retired.any", "event=0xc0,period=2000003" },
++	{ "inst_retired.any_p", "event=0xc0,period=2000003" },
++	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03,period=2000003" },
++	{ "cpu_clk_unhalted.thread", "event=0x3c,period=2000003" },
++	{ "cpu_clk_unhalted.core", "event=0x3c,period=2000003" },
++	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1,period=2000003" },
+ 	{ NULL, NULL},
+ };
+ 
 -- 
 2.20.1
 
