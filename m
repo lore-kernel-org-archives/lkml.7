@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6475CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E226CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0BB21852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4761C21852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:21:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437269;
-	bh=HKTIdQwMrvjWDforNYHTyKrkVYHiKnZQBFV//gOWcXo=;
+	s=default; t=1571437272;
+	bh=YL/GOslPbKzWPVIGCvbmtekbS/5Pr6SFRznL14kivv0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pjv7B8sPMHbP/csNtne2aVmCfqnO5W10xwyunwB1aQH/W5wNCyqWDS7ZyFmE3k7LN
-	 xI8Vk0FcvP/HRfTJd7pMJYkIVNxBeNjeo42BKhWaRWARFA6AoH3nW4hUHxsPp3m6sR
-	 ZWpVMhwP2hww+qDtnYcm0EM5qzzCfZuBjWOGq9+o=
+	b=Yrgi5C3mIAA5rh6XLgb1ZZfMrtyiDrcJ3ZKar6opVbj8l/OwoQgvTYUcHQWWcnT5u
+	 ADu6ZDTHOq7Cmxxncn1xp16+X4RtaaA1/mJM0w6TWi6XXTW4VTwKtVJurkOdq+TxdD
+	 Gze5mDPSyfEcLe70NAAPQi7/HS6JE00RdR1P/4sE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731485AbfJRWG1 (ORCPT
+        id S2404581AbfJRWVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:06:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38182 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:21:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731085AbfJRWGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:06:15 -0400
+        id S1731506AbfJRWG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:06:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA7D2205F4;
-        Fri, 18 Oct 2019 22:06:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97D792245A;
+        Fri, 18 Oct 2019 22:06:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436374;
-        bh=HKTIdQwMrvjWDforNYHTyKrkVYHiKnZQBFV//gOWcXo=;
+        s=default; t=1571436387;
+        bh=YL/GOslPbKzWPVIGCvbmtekbS/5Pr6SFRznL14kivv0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TtQxZuNggzbhcRWNWiONnVFAKKbOz4T9v3g7ZUIM7FT/SAlumhoRhFP1GDe4UWfNG
-         am4upmtfcn0pAAOgx0BSjAFZfTPQZWWOeNzom7FKAdwSNyDxX6EdKgClHDlomeA0jb
-         H2i4NOMFrM8ZvEGWdhZLIhHB4cEM/6zbD5/FmgzY=
+        b=cSM9Gd2j4TvvyQfbl8tJjTxUYw66fUkL01oXnpZRQW+fPynuEsrl8L4a2MrL7sEVs
+         EynnaFMDvHqpFNp7BN4+YHfEts1Mg7sHrTzWjs89ls1ZJOgFekz38b1FUv6YIWRqEP
+         Lc8nfIX6SRV6qAm4/hlKLpGJxgZAe8YtRbmzix4Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 028/100] HID: steam: fix boot loop with bluetooth firmware
-Date:   Fri, 18 Oct 2019 18:04:13 -0400
-Message-Id: <20191018220525.9042-28-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 039/100] scsi: lpfc: Correct localport timeout duration error
+Date:   Fri, 18 Oct 2019 18:04:24 -0400
+Message-Id: <20191018220525.9042-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -59,121 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit cf28aee292e102740e49f74385b4b89c00050763 ]
+[ Upstream commit 2a0fb340fcc816975b8b0f2fef913d11999c39cf ]
 
-There is a new firmware for the Steam Controller with support for BLE
-connections. When using such a device with a wired connection, it
-reboots itself every 10 seconds unless an application has opened it.
+Current code incorrectly specifies a completion wait timeout duration in 5
+jiffies, when it should have been 5 seconds.
 
-Doing hid_hw_open() unconditionally on probe fixes the issue, and the
-code becomes simpler.
+Fix the adjust for units for the completion timeout call.
 
-Signed-off-by: Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+[mkp: manual merge]
+
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-steam.c | 34 +++++++++++-----------------------
- 1 file changed, 11 insertions(+), 23 deletions(-)
+ drivers/scsi/lpfc/lpfc_nvmet.c | 6 +++++-
+ drivers/scsi/lpfc/lpfc_nvmet.h | 2 ++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-steam.c b/drivers/hid/hid-steam.c
-index dc4128bfe2ca9..8141cadfca0e3 100644
---- a/drivers/hid/hid-steam.c
-+++ b/drivers/hid/hid-steam.c
-@@ -283,11 +283,6 @@ static void steam_set_lizard_mode(struct steam_device *steam, bool enable)
- static int steam_input_open(struct input_dev *dev)
- {
- 	struct steam_device *steam = input_get_drvdata(dev);
--	int ret;
--
--	ret = hid_hw_open(steam->hdev);
--	if (ret)
--		return ret;
- 
- 	mutex_lock(&steam->mutex);
- 	if (!steam->client_opened && lizard_mode)
-@@ -304,8 +299,6 @@ static void steam_input_close(struct input_dev *dev)
- 	if (!steam->client_opened && lizard_mode)
- 		steam_set_lizard_mode(steam, true);
- 	mutex_unlock(&steam->mutex);
--
--	hid_hw_close(steam->hdev);
- }
- 
- static enum power_supply_property steam_battery_props[] = {
-@@ -623,11 +616,6 @@ static void steam_client_ll_stop(struct hid_device *hdev)
- static int steam_client_ll_open(struct hid_device *hdev)
- {
- 	struct steam_device *steam = hdev->driver_data;
--	int ret;
--
--	ret = hid_hw_open(steam->hdev);
--	if (ret)
--		return ret;
- 
- 	mutex_lock(&steam->mutex);
- 	steam->client_opened = true;
-@@ -635,7 +623,7 @@ static int steam_client_ll_open(struct hid_device *hdev)
- 
- 	steam_input_unregister(steam);
- 
--	return ret;
-+	return 0;
- }
- 
- static void steam_client_ll_close(struct hid_device *hdev)
-@@ -646,7 +634,6 @@ static void steam_client_ll_close(struct hid_device *hdev)
- 	steam->client_opened = false;
- 	mutex_unlock(&steam->mutex);
- 
--	hid_hw_close(steam->hdev);
- 	if (steam->connected) {
- 		steam_set_lizard_mode(steam, lizard_mode);
- 		steam_input_register(steam);
-@@ -759,14 +746,15 @@ static int steam_probe(struct hid_device *hdev,
- 	if (ret)
- 		goto client_hdev_add_fail;
- 
-+	ret = hid_hw_open(hdev);
-+	if (ret) {
-+		hid_err(hdev,
-+			"%s:hid_hw_open\n",
-+			__func__);
-+		goto hid_hw_open_fail;
-+	}
-+
- 	if (steam->quirks & STEAM_QUIRK_WIRELESS) {
--		ret = hid_hw_open(hdev);
--		if (ret) {
--			hid_err(hdev,
--				"%s:hid_hw_open for wireless\n",
--				__func__);
--			goto hid_hw_open_fail;
--		}
- 		hid_info(hdev, "Steam wireless receiver connected");
- 		steam_request_conn_status(steam);
- 	} else {
-@@ -781,8 +769,8 @@ static int steam_probe(struct hid_device *hdev,
- 
- 	return 0;
- 
--hid_hw_open_fail:
- input_register_fail:
-+hid_hw_open_fail:
- client_hdev_add_fail:
- 	hid_hw_stop(hdev);
- hid_hw_start_fail:
-@@ -809,8 +797,8 @@ static void steam_remove(struct hid_device *hdev)
- 	cancel_work_sync(&steam->work_connect);
- 	if (steam->quirks & STEAM_QUIRK_WIRELESS) {
- 		hid_info(hdev, "Steam wireless receiver disconnected");
--		hid_hw_close(hdev);
+diff --git a/drivers/scsi/lpfc/lpfc_nvmet.c b/drivers/scsi/lpfc/lpfc_nvmet.c
+index e2575c8ec93e8..22efefcc6cd84 100644
+--- a/drivers/scsi/lpfc/lpfc_nvmet.c
++++ b/drivers/scsi/lpfc/lpfc_nvmet.c
+@@ -1713,7 +1713,11 @@ lpfc_nvmet_destroy_targetport(struct lpfc_hba *phba)
+ 		}
+ 		tgtp->tport_unreg_cmp = &tport_unreg_cmp;
+ 		nvmet_fc_unregister_targetport(phba->targetport);
+-		wait_for_completion_timeout(&tport_unreg_cmp, 5);
++		if (!wait_for_completion_timeout(tgtp->tport_unreg_cmp,
++					msecs_to_jiffies(LPFC_NVMET_WAIT_TMO)))
++			lpfc_printf_log(phba, KERN_ERR, LOG_NVME,
++					"6179 Unreg targetport %p timeout "
++					"reached.\n", phba->targetport);
+ 		lpfc_nvmet_cleanup_io_context(phba);
  	}
-+	hid_hw_close(hdev);
- 	hid_hw_stop(hdev);
- 	steam_unregister(steam);
- }
+ 	phba->targetport = NULL;
+diff --git a/drivers/scsi/lpfc/lpfc_nvmet.h b/drivers/scsi/lpfc/lpfc_nvmet.h
+index 0ec1082ce7ef6..3b170284a0e59 100644
+--- a/drivers/scsi/lpfc/lpfc_nvmet.h
++++ b/drivers/scsi/lpfc/lpfc_nvmet.h
+@@ -31,6 +31,8 @@
+ #define LPFC_NVMET_MRQ_AUTO		0
+ #define LPFC_NVMET_MRQ_MAX		16
+ 
++#define LPFC_NVMET_WAIT_TMO		(5 * MSEC_PER_SEC)
++
+ /* Used for NVME Target */
+ struct lpfc_nvmet_tgtport {
+ 	struct lpfc_hba *phba;
 -- 
 2.20.1
 
