@@ -2,59 +2,60 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9925BCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B01CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E94221852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE0B121852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hqj4UAEp"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="filJIWvV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633353AbfJRPcL (ORCPT
+        id S2410626AbfJRPcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:32:11 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:47646 "EHLO
+        Fri, 18 Oct 2019 11:32:14 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:47682 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2410600AbfJRPcI (ORCPT
+        with ESMTP id S2633375AbfJRPcM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:32:08 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9IFW5U4013340;
-        Fri, 18 Oct 2019 10:32:05 -0500
+        Fri, 18 Oct 2019 11:32:12 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9IFWBQ7013383;
+        Fri, 18 Oct 2019 10:32:11 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571412725;
-        bh=Nlh6upxYhOieNJD7MW/qDml7WrFkn9NVQpn1e0i2QaQ=;
+        s=ti-com-17Q1; t=1571412731;
+        bh=ZJfZ53pYIRfGAB29qt+twF5p9lOD9hiLOcYLhuZ1TDo=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=hqj4UAEpTNpyRQYs10oQn8txCrFG4ck1WaivUrLZnpFSo3aZAmU+2PE1XFUUqa3d5
-         22x0bVH6cws+uKBT94vX7ahoXrxoywCuTxiHvNXFTMegrTlh+XLydmZZrw0fvpkWaj
-         1fUdH5NG22Wn8lzZeELam2WT6/T04pJaP+M/unJU=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFW5Ua105576;
-        Fri, 18 Oct 2019 10:32:05 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+        b=filJIWvVsvAVztE+/jMTuGWerVMYrSC2tkbDeJHz536mHKR3RV0fA+ivMWlIBddu8
+         Y8e6C2dqVQ0vvD1LY5U8/XwXmg0A8ZBFpIOuhzpgaaryLmFfwU8l2EN4nkONpNtuDS
+         Fc0Zn5I2OoSMVtVinwSX3lHyuvYNuNCMaC3LIkb0=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9IFWB19080525
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 18 Oct 2019 10:32:11 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 18
- Oct 2019 10:31:57 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 10:32:02 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 18 Oct 2019 10:32:05 -0500
+ Frontend Transport; Fri, 18 Oct 2019 10:32:02 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFW15H080266;
-        Fri, 18 Oct 2019 10:32:05 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFW15L080266;
+        Fri, 18 Oct 2019 10:32:10 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>
 CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 03/19] media: ti-vpe: cal: Add per platform data support
-Date:   Fri, 18 Oct 2019 10:34:21 -0500
-Message-ID: <20191018153437.20614-4-bparrot@ti.com>
+        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>,
+        Jyri Sarha <jsarha@ti.com>
+Subject: [Patch 07/19] media: ti-vpe: cal: add CSI2 PHY LDO errata support
+Date:   Fri, 18 Oct 2019 10:34:25 -0500
+Message-ID: <20191018153437.20614-8-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191018153437.20614-1-bparrot@ti.com>
 References: <20191018153437.20614-1-bparrot@ti.com>
@@ -66,408 +67,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-First this patch adds a method to access the CTRL_CORE_CAMERRX_CONTROL
-register to use the syscon mechanism. For backward compatibility we also
-handle using the existing camerrx_control "reg" entry if a syscon node
-is not found.
-
-In addition the register bit layout for the CTRL_CORE_CAMERRX_CONTROL
-changes depending on the device. In order to support this we need to use
-a register access scheme based on data configuration instead of using
-static macro.
-
-In this case we make use of the regmap facility and create data set
-based on the various device and phy available.
+Apply Errata i913 every time the functional clock is enabled.
+This should take care of suspend/resume case as well.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
 ---
- drivers/media/platform/ti-vpe/cal.c | 281 +++++++++++++++++++++-------
- 1 file changed, 212 insertions(+), 69 deletions(-)
+ drivers/media/platform/ti-vpe/cal.c      | 56 +++++++++++++++++++++++-
+ drivers/media/platform/ti-vpe/cal_regs.h | 27 ++++++++++++
+ 2 files changed, 82 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-index 223161f9c403..26f95a81e4ed 100644
+index 62aeedb705e9..3cbc4dca6de8 100644
 --- a/drivers/media/platform/ti-vpe/cal.c
 +++ b/drivers/media/platform/ti-vpe/cal.c
-@@ -14,6 +14,8 @@
- #include <linux/delay.h>
- #include <linux/pm_runtime.h>
- #include <linux/slab.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/regmap.h>
- #include <linux/videodev2.h>
- #include <linux/of_device.h>
- #include <linux/of_graph.h>
-@@ -220,20 +222,66 @@ struct cal_dmaqueue {
- 	int			ini_jiffies;
+@@ -284,6 +284,13 @@ static struct cal_data dra72x_cal_data = {
+ 	.flags = 0,
  };
  
--struct cm_data {
-+struct cc_data {
- 	void __iomem		*base;
- 	struct resource		*res;
- 
--	unsigned int		camerrx_control;
--
- 	struct platform_device *pdev;
- };
- 
--struct cc_data {
--	void __iomem		*base;
--	struct resource		*res;
-+/* CTRL_CORE_CAMERRX_CONTROL register field id */
-+enum cal_camerarx_field {
-+	F_CTRLCLKEN,
-+	F_CAMMODE,
-+	F_LANEENABLE,
-+	F_CSI_MODE,
- 
--	struct platform_device *pdev;
-+	F_MAX_FIELDS,
-+};
-+
-+struct cal_csi2_phy {
-+	struct regmap_field *fields[F_MAX_FIELDS];
-+	struct reg_field *base_fields;
-+	const int num_lanes;
-+};
-+
-+struct cal_data {
-+	const int num_csi2_phy;
-+	struct cal_csi2_phy *csi2_phy_core;
-+
-+	const unsigned int flags;
-+};
-+
-+static struct reg_field dra72x_ctrl_core_csi0_reg_fields[F_MAX_FIELDS] = {
-+	[F_CTRLCLKEN] = REG_FIELD(0, 10, 10),
-+	[F_CAMMODE] = REG_FIELD(0, 11, 12),
-+	[F_LANEENABLE] = REG_FIELD(0, 13, 16),
-+	[F_CSI_MODE] = REG_FIELD(0, 17, 17),
-+};
-+
-+static struct reg_field dra72x_ctrl_core_csi1_reg_fields[F_MAX_FIELDS] = {
-+	[F_CTRLCLKEN] = REG_FIELD(0, 0, 0),
-+	[F_CAMMODE] = REG_FIELD(0, 1, 2),
-+	[F_LANEENABLE] = REG_FIELD(0, 3, 4),
-+	[F_CSI_MODE] = REG_FIELD(0, 5, 5),
-+};
-+
-+static struct cal_csi2_phy dra72x_cal_csi_phy[] = {
-+	{
-+		.base_fields = dra72x_ctrl_core_csi0_reg_fields,
-+		.num_lanes = 4,
-+	},
-+	{
-+		.base_fields = dra72x_ctrl_core_csi1_reg_fields,
-+		.num_lanes = 2,
-+	},
-+};
-+
-+static struct cal_data dra72x_cal_data = {
++static struct cal_data dra72x_es1_cal_data = {
 +	.csi2_phy_core = dra72x_cal_csi_phy,
 +	.num_csi2_phy = ARRAY_SIZE(dra72x_cal_csi_phy),
 +
-+	.flags = 0,
- };
- 
- /*
-@@ -247,8 +295,15 @@ struct cal_dev {
- 	struct platform_device	*pdev;
- 	struct v4l2_device	v4l2_dev;
- 
-+	/* Controller flags for special cases */
-+	unsigned int		flags;
-+
-+	struct cal_data		*data;
-+
- 	/* Control Module handle */
--	struct cm_data		*cm;
-+	struct regmap		*syscon_camerrx;
-+	u32			syscon_camerrx_offset;
-+
- 	/* Camera Core Module handle */
- 	struct cc_data		*cc[CAL_NUM_CSI2_PORTS];
- 
-@@ -359,73 +414,113 @@ static inline void set_field(u32 *valp, u32 field, u32 mask)
- 	*valp = val;
- }
- 
--/*
-- * Control Module block access
-- */
--static struct cm_data *cm_create(struct cal_dev *dev)
-+static u32 cal_data_get_phy_max_lanes(struct cal_ctx *ctx)
- {
--	struct platform_device *pdev = dev->pdev;
--	struct cm_data *cm;
-+	struct cal_dev *dev = ctx->dev;
-+	u32 phy_id = ctx->csi2_port - 1;
- 
--	cm = devm_kzalloc(&pdev->dev, sizeof(*cm), GFP_KERNEL);
--	if (!cm)
--		return ERR_PTR(-ENOMEM);
-+	return dev->data->csi2_phy_core[phy_id].num_lanes;
-+}
-+
-+static u32 cal_data_get_num_csi2_phy(struct cal_dev *dev)
-+{
-+	return dev->data->num_csi2_phy;
-+}
-+
-+static int cal_camerarx_regmap_init(struct cal_dev *dev)
-+{
-+	struct reg_field *field;
-+	struct cal_csi2_phy *phy;
-+	int i, j;
-+
-+	if (!dev->data)
-+		return -EINVAL;
- 
--	cm->res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
--						"camerrx_control");
--	cm->base = devm_ioremap_resource(&pdev->dev, cm->res);
--	if (IS_ERR(cm->base)) {
-+	for (i = 0; i < cal_data_get_num_csi2_phy(dev); i++) {
-+		phy = &dev->data->csi2_phy_core[i];
-+		for (j = 0; j < F_MAX_FIELDS; j++) {
-+			field = &phy->base_fields[j];
-+			/*
-+			 * Here we update the reg offset with the
-+			 * value found in DT
-+			 */
-+			field->reg = dev->syscon_camerrx_offset;
-+			phy->fields[j] =
-+				devm_regmap_field_alloc(&dev->pdev->dev,
-+							dev->syscon_camerrx,
-+							*field);
-+			if (IS_ERR(phy->fields[j])) {
-+				cal_err(dev, "Unable to allocate regmap fields\n");
-+				return PTR_ERR(phy->fields[j]);
-+			}
-+		}
-+	}
-+	return 0;
-+}
-+
-+static const struct regmap_config cal_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
++	.flags = DRA72_CAL_PRE_ES2_LDO_DISABLE,
 +};
 +
-+static struct regmap *cal_get_camerarx_regmap(struct cal_dev *dev)
-+{
-+	struct platform_device *pdev = dev->pdev;
-+	struct regmap *regmap;
-+	void __iomem *base;
-+	u32 reg_io_width;
-+	struct regmap_config r_config = cal_regmap_config;
-+	struct resource *res;
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+					   "camerrx_control");
-+	base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(base)) {
- 		cal_err(dev, "failed to ioremap\n");
--		return ERR_CAST(cm->base);
-+		return ERR_CAST(base);
- 	}
- 
- 	cal_dbg(1, dev, "ioresource %s at %pa - %pa\n",
--		cm->res->name, &cm->res->start, &cm->res->end);
-+		res->name, &res->start, &res->end);
-+
-+	reg_io_width = 4;
-+	r_config.reg_stride = reg_io_width;
-+	r_config.val_bits = reg_io_width * 8;
-+	r_config.max_register = resource_size(res) - reg_io_width;
- 
--	return cm;
-+	regmap = regmap_init_mmio(NULL, base, &r_config);
-+	if (IS_ERR(regmap))
-+		pr_err("regmap init failed\n");
-+
-+	return regmap;
+ /*
+  * there is one cal_dev structure in the driver, it is shared by
+  * all instances.
+@@ -569,9 +576,52 @@ static void cal_get_hwinfo(struct cal_dev *dev)
+ 		hwinfo);
  }
  
 +/*
-+ * Control Module CAMERARX block access
++ *   Errata i913: CSI2 LDO Needs to be disabled when module is powered on
++ *
++ *   Enabling CSI2 LDO shorts it to core supply. It is crucial the 2 CSI2
++ *   LDOs on the device are disabled if CSI-2 module is powered on
++ *   (0x4845 B304 | 0x4845 B384 [28:27] = 0x1) or in ULPS (0x4845 B304
++ *   | 0x4845 B384 [28:27] = 0x2) mode. Common concerns include: high
++ *   current draw on the module supply in active mode.
++ *
++ *   Errata does not apply when CSI-2 module is powered off
++ *   (0x4845 B304 | 0x4845 B384 [28:27] = 0x0).
++ *
++ * SW Workaround:
++ *	Set the following register bits to disable the LDO,
++ *	which is essentially CSI2 REG10 bit 6:
++ *
++ *		Core 0:  0x4845 B828 = 0x0000 0040
++ *		Core 1:  0x4845 B928 = 0x0000 0040
 + */
- static void camerarx_phy_enable(struct cal_ctx *ctx)
++static void i913_errata(struct cal_dev *dev, unsigned int port)
++{
++	u32 reg10 = reg_read(dev->cc[port], CAL_CSI2_PHY_REG10);
++
++	set_field(&reg10, CAL_CSI2_PHY_REG0_HSCLOCKCONFIG_DISABLE,
++		  CAL_CSI2_PHY_REG10_I933_LDO_DISABLE_MASK);
++
++	cal_dbg(1, dev, "CSI2_%d_REG10 = 0x%08x\n", port, reg10);
++	reg_write(dev->cc[port], CAL_CSI2_PHY_REG10, reg10);
++}
++
+ static inline int cal_runtime_get(struct cal_dev *dev)
  {
--	u32 val;
--
--	if (!ctx->dev->cm->base) {
--		ctx_err(ctx, "cm not mapped\n");
--		return;
--	}
--
--	val = reg_read(ctx->dev->cm, CM_CTRL_CORE_CAMERRX_CONTROL);
--	if (ctx->csi2_port == 1) {
--		set_field(&val, 1, CM_CAMERRX_CTRL_CSI0_CTRLCLKEN_MASK);
--		set_field(&val, 0, CM_CAMERRX_CTRL_CSI0_CAMMODE_MASK);
--		/* enable all lanes by default */
--		set_field(&val, 0xf, CM_CAMERRX_CTRL_CSI0_LANEENABLE_MASK);
--		set_field(&val, 1, CM_CAMERRX_CTRL_CSI0_MODE_MASK);
--	} else if (ctx->csi2_port == 2) {
--		set_field(&val, 1, CM_CAMERRX_CTRL_CSI1_CTRLCLKEN_MASK);
--		set_field(&val, 0, CM_CAMERRX_CTRL_CSI1_CAMMODE_MASK);
--		/* enable all lanes by default */
--		set_field(&val, 0x3, CM_CAMERRX_CTRL_CSI1_LANEENABLE_MASK);
--		set_field(&val, 1, CM_CAMERRX_CTRL_CSI1_MODE_MASK);
--	}
--	reg_write(ctx->dev->cm, CM_CTRL_CORE_CAMERRX_CONTROL, val);
-+	struct cal_csi2_phy *phy;
-+	u32 phy_id = ctx->csi2_port - 1;
-+	u32 max_lanes;
+-	return pm_runtime_get_sync(&dev->pdev->dev);
++	int r;
 +
-+	phy = &ctx->dev->data->csi2_phy_core[phy_id];
-+	regmap_field_write(phy->fields[F_CAMMODE], 0);
-+	/* Always enable all lanes at the phy control level */
-+	max_lanes = (1 << cal_data_get_phy_max_lanes(ctx)) - 1;
-+	regmap_field_write(phy->fields[F_LANEENABLE], max_lanes);
-+	regmap_field_write(phy->fields[F_CSI_MODE], 1);
-+	regmap_field_write(phy->fields[F_CTRLCLKEN], 1);
- }
- 
- static void camerarx_phy_disable(struct cal_ctx *ctx)
- {
--	u32 val;
--
--	if (!ctx->dev->cm->base) {
--		ctx_err(ctx, "cm not mapped\n");
--		return;
--	}
-+	struct cal_csi2_phy *phy;
-+	u32 phy_id = ctx->csi2_port - 1;
- 
--	val = reg_read(ctx->dev->cm, CM_CTRL_CORE_CAMERRX_CONTROL);
--	if (ctx->csi2_port == 1)
--		set_field(&val, 0x0, CM_CAMERRX_CTRL_CSI0_CTRLCLKEN_MASK);
--	else if (ctx->csi2_port == 2)
--		set_field(&val, 0x0, CM_CAMERRX_CTRL_CSI1_CTRLCLKEN_MASK);
--	reg_write(ctx->dev->cm, CM_CTRL_CORE_CAMERRX_CONTROL, val);
-+	phy = &ctx->dev->data->csi2_phy_core[phy_id];
-+	regmap_field_write(phy->fields[F_CTRLCLKEN], 0);
- }
- 
- /*
-@@ -508,12 +603,6 @@ static void cal_quickdump_regs(struct cal_dev *dev)
- 			       resource_size(dev->ctx[1]->cc->res),
- 			       false);
- 	}
--
--	cal_info(dev, "CAMERRX_Control Registers @ %pa:\n",
--		 &dev->cm->res->start);
--	print_hex_dump(KERN_INFO, "", DUMP_PREFIX_OFFSET, 16, 4,
--		       (__force const void *)dev->cm->base,
--		       resource_size(dev->cm->res), false);
- }
- 
- /*
-@@ -1804,10 +1893,16 @@ static struct cal_ctx *cal_create_instance(struct cal_dev *dev, int inst)
- 	return NULL;
- }
- 
-+static const struct of_device_id cal_of_match[];
++	r = pm_runtime_get_sync(&dev->pdev->dev);
 +
- static int cal_probe(struct platform_device *pdev)
- {
- 	struct cal_dev *dev;
- 	struct cal_ctx *ctx;
-+	const struct of_device_id *match;
-+	struct device_node *parent = pdev->dev.of_node;
-+	struct regmap *syscon_camerrx = NULL;
-+	u32 syscon_camerrx_offset = 0;
- 	int ret;
- 	int irq;
- 	int i;
-@@ -1816,6 +1911,18 @@ static int cal_probe(struct platform_device *pdev)
- 	if (!dev)
- 		return -ENOMEM;
- 
-+	match = of_match_device(of_match_ptr(cal_of_match), &pdev->dev);
-+	if (!match)
-+		return -ENODEV;
-+
-+	if (match->data) {
-+		dev->data = (struct cal_data *)match->data;
-+		dev->flags = dev->data->flags;
-+	} else {
-+		dev_err(&pdev->dev, "Could not get feature data based on compatible version\n");
-+		return -ENODEV;
-+	}
-+
- 	/* set pseudo v4l2 device name so we can use v4l2_printk */
- 	strscpy(dev->v4l2_dev.name, CAL_MODULE_NAME,
- 		sizeof(dev->v4l2_dev.name));
-@@ -1823,6 +1930,43 @@ static int cal_probe(struct platform_device *pdev)
- 	/* save pdev pointer */
- 	dev->pdev = pdev;
- 
-+	if (parent && of_property_read_bool(parent, "syscon-camerrx")) {
-+		syscon_camerrx =
-+			syscon_regmap_lookup_by_phandle(parent,
-+							"syscon-camerrx");
-+		if (IS_ERR(syscon_camerrx)) {
-+			dev_err(&pdev->dev, "failed to get syscon-camerrx regmap\n");
-+			return PTR_ERR(syscon_camerrx);
-+		}
-+
-+		if (of_property_read_u32_index(parent, "syscon-camerrx", 1,
-+					       &syscon_camerrx_offset)) {
-+			dev_err(&pdev->dev, "failed to get syscon-camerrx offset\n");
-+			return -EINVAL;
-+		}
-+	} else {
++	if (dev->flags & DRA72_CAL_PRE_ES2_LDO_DISABLE) {
 +		/*
-+		 * Backward DTS compatibility.
-+		 * If syscon entry is not present then check if the
-+		 * camerrx_control resource is present.
++		 * Apply errata on both port eveytime we (re-)enable
++		 * the clock
 +		 */
-+		syscon_camerrx = cal_get_camerarx_regmap(dev);
-+		if (IS_ERR(syscon_camerrx)) {
-+			dev_err(&pdev->dev, "failed to get camerrx_control regmap\n");
-+			return PTR_ERR(syscon_camerrx);
-+		}
-+		/* In this case the base already point to the direct
-+		 * CM register so no need for an offset
-+		 */
-+		syscon_camerrx_offset = 0;
++		i913_errata(dev, 0);
++		i913_errata(dev, 1);
 +	}
 +
-+	dev->syscon_camerrx = syscon_camerrx;
-+	dev->syscon_camerrx_offset = syscon_camerrx_offset;
-+	ret = cal_camerarx_regmap_init(dev);
-+	if (ret)
-+		return ret;
-+
- 	dev->res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
- 						"cal_top");
- 	dev->base = devm_ioremap_resource(&pdev->dev, dev->res);
-@@ -1841,10 +1985,6 @@ static int cal_probe(struct platform_device *pdev)
++	return r;
+ }
  
- 	platform_set_drvdata(pdev, dev);
- 
--	dev->cm = cm_create(dev);
--	if (IS_ERR(dev->cm))
--		return PTR_ERR(dev->cm);
--
- 	dev->cc[0] = cc_create(dev, 0);
- 	if (IS_ERR(dev->cc[0]))
- 		return PTR_ERR(dev->cc[0]);
-@@ -1924,7 +2064,10 @@ static int cal_remove(struct platform_device *pdev)
- 
- #if defined(CONFIG_OF)
- static const struct of_device_id cal_of_match[] = {
--	{ .compatible = "ti,dra72-cal", },
+ static inline void cal_runtime_put(struct cal_dev *dev)
+@@ -2071,6 +2121,10 @@ static const struct of_device_id cal_of_match[] = {
+ 		.compatible = "ti,dra72-cal",
+ 		.data = (void *)&dra72x_cal_data,
+ 	},
 +	{
-+		.compatible = "ti,dra72-cal",
-+		.data = (void *)&dra72x_cal_data,
++		.compatible = "ti,dra72-pre-es2-cal",
++		.data = (void *)&dra72x_es1_cal_data,
 +	},
  	{},
  };
  MODULE_DEVICE_TABLE(of, cal_of_match);
+diff --git a/drivers/media/platform/ti-vpe/cal_regs.h b/drivers/media/platform/ti-vpe/cal_regs.h
+index 68cfc922b422..78d6f015c9ea 100644
+--- a/drivers/media/platform/ti-vpe/cal_regs.h
++++ b/drivers/media/platform/ti-vpe/cal_regs.h
+@@ -10,6 +10,30 @@
+ #ifndef __TI_CAL_REGS_H
+ #define __TI_CAL_REGS_H
+ 
++/*
++ * struct cal_dev.flags possibilities
++ *
++ * DRA72_CAL_PRE_ES2_LDO_DISABLE:
++ *   Errata i913: CSI2 LDO Needs to be disabled when module is powered on
++ *
++ *   Enabling CSI2 LDO shorts it to core supply. It is crucial the 2 CSI2
++ *   LDOs on the device are disabled if CSI-2 module is powered on
++ *   (0x4845 B304 | 0x4845 B384 [28:27] = 0x1) or in ULPS (0x4845 B304
++ *   | 0x4845 B384 [28:27] = 0x2) mode. Common concerns include: high
++ *   current draw on the module supply in active mode.
++ *
++ *   Errata does not apply when CSI-2 module is powered off
++ *   (0x4845 B304 | 0x4845 B384 [28:27] = 0x0).
++ *
++ * SW Workaround:
++ *	Set the following register bits to disable the LDO,
++ *	which is essentially CSI2 REG10 bit 6:
++ *
++ *		Core 0:  0x4845 B828 = 0x0000 0040
++ *		Core 1:  0x4845 B928 = 0x0000 0040
++ */
++#define DRA72_CAL_PRE_ES2_LDO_DISABLE BIT(0)
++
+ #define CAL_NUM_CSI2_PORTS		2
+ 
+ /* CAL register offsets */
+@@ -71,6 +95,7 @@
+ #define CAL_CSI2_PHY_REG0		0x000
+ #define CAL_CSI2_PHY_REG1		0x004
+ #define CAL_CSI2_PHY_REG2		0x008
++#define CAL_CSI2_PHY_REG10		0x028
+ 
+ /* CAL Control Module Core Camerrx Control register offsets */
+ #define CM_CTRL_CORE_CAMERRX_CONTROL	0x000
+@@ -458,6 +483,8 @@
+ #define CAL_CSI2_PHY_REG1_CLOCK_MISS_DETECTOR_STATUS_SUCCESS		0
+ #define CAL_CSI2_PHY_REG1_RESET_DONE_STATUS_MASK		GENMASK(29, 28)
+ 
++#define CAL_CSI2_PHY_REG10_I933_LDO_DISABLE_MASK		BIT_MASK(6)
++
+ #define CAL_CSI2_PHY_REG2_CCP2_SYNC_PATTERN_MASK		GENMASK(23, 0)
+ #define CAL_CSI2_PHY_REG2_TRIGGER_CMD_RXTRIGESC3_MASK		GENMASK(25, 24)
+ #define CAL_CSI2_PHY_REG2_TRIGGER_CMD_RXTRIGESC2_MASK		GENMASK(27, 26)
 -- 
 2.17.1
 
