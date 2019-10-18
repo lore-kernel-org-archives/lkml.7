@@ -2,143 +2,111 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 133CFCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE53FCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E105721D7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C25AA21925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:04:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PRl4/YMK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407830AbfJRMDn (ORCPT
+        id S2409944AbfJRMEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 08:03:43 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4689 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2392487AbfJRMDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 08:03:43 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 48475E0CF41259E163D3;
-        Fri, 18 Oct 2019 20:03:40 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Fri, 18 Oct 2019
- 20:03:31 +0800
-Subject: Re: [PATCH V3] arm64: psci: Reduce waiting time for
- cpu_psci_cpu_kill()
-To:     Sudeep Holla <sudeep.holla@arm.com>
-CC:     <catalin.marinas@arm.com>, <will@kernel.org>,
-        <kstewart@linuxfoundation.org>, <gregkh@linuxfoundation.org>,
-        <lorenzo.pieralisi@arm.com>, <tglx@linutronix.de>,
-        <David.Laight@ACULAB.COM>, <ard.biesheuvel@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
-        <wuyun.wu@huawei.com>,
-        "linfeilong@huawei.com" <linfeilong@huawei.com>
-References: <433980c7-f246-f741-f00c-fce103a60af7@huawei.com>
- <20191018114529.GA15116@bogus>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Message-ID: <0baccab6-9804-7b59-0ad6-765af7980714@huawei.com>
-Date:   Fri, 18 Oct 2019 20:03:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 18 Oct 2019 08:04:05 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46587 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392487AbfJRMEF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 08:04:05 -0400
+Received: by mail-qt1-f195.google.com with SMTP id u22so8618761qtq.13
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 05:04:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Zgv+qsT50asyCBxx8dHLrc/7R2zuXJqrAElFwEmz+6o=;
+        b=PRl4/YMK8PN+sw8qz9vbBuWmnDNxUIbUV/4by7yJ/ZaetJCfkYyfwrAGp4L4IH6LoP
+         X90KnC+d9bCIKe0fkrb8KwvqpCKLZfxHCWiRVC5+Avh65mJjwzKqn/c7tQy4nIFc43w6
+         fEhxkzcQyeFDnYdq9lc6NIglUPHlGjhxzCtISkWH0lr1mN/d5ArBGgrWkrdHp3Fe8Lyd
+         mX6Uxi4EFn19ZqRvFKdtnYLqjyXoc84MmMj+814gfoww9pORycIuZnYnOy5whHI3n0U7
+         fWrPnn2VRYK4wEAYgggIvmmEHwL+yRBrdIpc5fY7eSH2tabBEWdHELFqZ+S8jDFESWhz
+         xVmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Zgv+qsT50asyCBxx8dHLrc/7R2zuXJqrAElFwEmz+6o=;
+        b=kbCTKpLYurM8Xyli6l/Hd63KPj8PfcbiW48TcZLK3T03wHt6FdVnrHKr0wnSsjYnbg
+         lLEPmnR+3Q2Yo0KGDt3yH6knAkaUXSY4gzZ4pwtboyJaqobuAG6SBFTFAdgRP2vHwVWG
+         oL6Vvku2TXL9jmbHWdjEGMG1W+XjwMK7y2cKWmwwE79HQjfpDlXWtwtK+9ojcarm5o3G
+         +FupVNeQSLCx/eVmkvheY6EuzapjfOZBtfL1d+sur4OyS62qwz04SYfEJYxcvBFCoGPX
+         yFcJqYX+C5zhPMiCku7S1vfpfj01R5Lm4Lw7xFH6cAoWjZjJC+tMWCLU9G1Mdo8p7myc
+         +l+A==
+X-Gm-Message-State: APjAAAXHOyN7cwgnfKYBUlXYSgGx4a1D5Oe22mOdjKKybvrIYNMdq8t7
+        iH7+eIABxNrOxXiRpI5ABPIT5Wzm31MPikuqBvBuQw==
+X-Google-Smtp-Source: APXvYqxN/PMVQWc4kwuCABb8SVWIpRbyl131FT7CZcvatX5vcKooHrltGmgsSQcxbFgna4xwbUWch+DuxQg3HoR+XIE=
+X-Received: by 2002:ac8:110d:: with SMTP id c13mr9331476qtj.209.1571400244300;
+ Fri, 18 Oct 2019 05:04:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191018114529.GA15116@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+References: <20191018052323.21659-1-john.stultz@linaro.org>
+ <20191018052323.21659-5-john.stultz@linaro.org> <20191018112124.grjgqrn3ckuc7n4v@DESKTOP-E1NTVVP.localdomain>
+In-Reply-To: <20191018112124.grjgqrn3ckuc7n4v@DESKTOP-E1NTVVP.localdomain>
+From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Date:   Fri, 18 Oct 2019 14:03:53 +0200
+Message-ID: <CA+M3ks6KqqXCfqA6VDKnQOsvFLQfaGrUnA+eesnyzMRniFB00A@mail.gmail.com>
+Subject: Re: [PATCH v12 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
+To:     Brian Starkey <Brian.Starkey@arm.com>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Hillf Danton <hdanton@sina.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        nd <nd@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Le ven. 18 oct. 2019 =C3=A0 13:21, Brian Starkey <Brian.Starkey@arm.com> a =
+=C3=A9crit :
+>
+> On Fri, Oct 18, 2019 at 05:23:22AM +0000, John Stultz wrote:
+> > This adds a CMA heap, which allows userspace to allocate
+> > a dma-buf of contiguous memory out of a CMA region.
+> >
+> > This code is an evolution of the Android ION implementation, so
+> > thanks to its original author and maintainters:
+> >   Benjamin Gaignard, Laura Abbott, and others!
+> >
+> > NOTE: This patch only adds the default CMA heap. We will enable
+> > selectively adding other CMA memory regions to the dmabuf heaps
+> > interface with a later patch (which requires a dt binding)
 
+Maybe we can use "no-map" DT property to trigger that. If set do not expose=
+ the
+cma heap.
 
-On 2019/10/18 19:45, Sudeep Holla wrote:
-> On Fri, Oct 18, 2019 at 07:24:14PM +0800, Yunfeng Ye wrote:
->> In a case like suspend-to-disk, a large number of CPU cores need to be
-> 
-> Add suspend-to-ram also to list, i.e.
-> "In case like suspend-to-disk and suspend-to-ram, a large number..."
-> 
-ok, thanks.
-
->> shut down. At present, the CPU hotplug operation is serialised, and the
->> CPU cores can only be shut down one by one. In this process, if PSCI
->> affinity_info() does not return LEVEL_OFF quickly, cpu_psci_cpu_kill()
->> needs to wait for 10ms. If hundreds of CPU cores need to be shut down,
->> it will take a long time.
->>
->> Normally, it is no need to wait 10ms in cpu_psci_cpu_kill(). So change
-> 
-> s/it is/there is/
-> 
-ok, thanks.
-
->> the wait interval from 10 ms to max 1 ms and use usleep_range() instead
->> of msleep() for more accurate schedule.
->>
-> 
-> s/for more accurate schedule/for more accurate timer/
-> 
-ok, thanks.
-
->> In addition, reduce the time interval will increase the messages output,
-> 
-> s/reduce/reducing/
-> 
-ok, thanks.
-
->> so remove the "Retry ..." message, instead, put the number of waiting
->> times to the sucessful message.
->>
->> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
->> ---
->> v2 -> v3:
->>  - update the comment
->>  - remove the busy-wait logic, modify the loop logic and output message
->>
->> v1 -> v2:
->>  - use usleep_range() instead of udelay() after waiting for a while
->>
->>  arch/arm64/kernel/psci.c | 7 +++----
->>  1 file changed, 3 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
->> index c9f72b2665f1..00b8c0825a08 100644
->> --- a/arch/arm64/kernel/psci.c
->> +++ b/arch/arm64/kernel/psci.c
->> @@ -91,15 +91,14 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
->>  	 * while it is dying. So, try again a few times.
->>  	 */
->>
->> -	for (i = 0; i < 10; i++) {
->> +	for (i = 0; i < 100; i++) {
->>  		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
->>  		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
->> -			pr_info("CPU%d killed.\n", cpu);
->> +			pr_info("CPU%d killed by waiting %d loops.\n", cpu, i);
->>  			return 0;
->>  		}
->>
->> -		msleep(10);
->> -		pr_info("Retrying again to check for CPU kill\n");
->> +		usleep_range(100, 1000);
-> 
-> Since usleep_range can return anytime between 100us to 1ms, does it make
-> sense to check for (time_before(jiffies, timeout)) you had in v2 ?
-> 
-ok, if using (time_before(jiffies, timeout)), the output message change to print
-waiting xxx jiffies ? or still print the number of loops?
-
-> --
-> Regards,
-> Sudeep
-> 
-> .
-> 
-
+Benjamin
+>
+> That'll teach me for reading my email in FIFO order.
+>
+> This approach makes sense to me.
+>
+> -Brian
+>
