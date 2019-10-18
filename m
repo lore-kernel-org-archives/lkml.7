@@ -2,100 +2,118 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74205CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 059D8CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B94B2089C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:05:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R26e3FoL"
+	by mail.kernel.org (Postfix) with ESMTP id D875020700
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:06:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442798AbfJRNFR (ORCPT
+        id S2442810AbfJRNGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 09:05:17 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:41948 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389472AbfJRNFQ (ORCPT
+        Fri, 18 Oct 2019 09:06:12 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16414 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2442800AbfJRNGM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 09:05:16 -0400
-Received: by mail-il1-f196.google.com with SMTP id z10so5449082ilo.8;
-        Fri, 18 Oct 2019 06:05:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=wslZP9DyUNwxdK90AGoUp/+vNWKDF9e6TBPPPKDycR4=;
-        b=R26e3FoL8FgJN2mCMM/VZQPzwm6UsJc7GLuX4uVFH2N2mklVJoAxY7Umfit1hI6Z5z
-         MShdWDJwM5jodqTXjq/gWkY5ApLNa1lFw5MXEJAJD5B52mjrYGJ1zASE4D87kJYZpM80
-         u0l0APphzADqlPbWMlI7qI2lGrYmldhOQP1N/5qFN3lIBUtyurGrHEw3gkbqlvEU1bHp
-         33r7rwaSFhMll9ldeioA7+/ElW3Vpi/snZ7TCdmGZzkHkxupp/DrSznmacIqnOYDKyHN
-         oXAzRt7VlzJKcRUCHItkJjV+RCPJEaVOX/w53mRNN6ahpzySIhLjFy04aSf6Ze6LQ3h5
-         lpyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=wslZP9DyUNwxdK90AGoUp/+vNWKDF9e6TBPPPKDycR4=;
-        b=D8os1W1cz89RqtXgRBWh0AD1oY9j2mlO1qoRqdMmqJIeTOlVchramGqPzkf4WBea3O
-         erjrCBw8BzOAKcjb1XY/NXhO4iVy1SLuhuz2NipjgfNHEhd0VroLQnya+D8W/0qnsF2B
-         ZeZJ+wxK2bzIFxlfAD8IfBnwKtmdx4/xp9zQ7Hkvt3d8fNWLVN+VoGWJjTUo1sFd5sFK
-         SdjxCaqZDpqujPteUWsD//XL++E19eKDRFaZcgFvKUDWj9ozHd/M4U4yBTWS26A0gjU+
-         nBPA2zaUC2yrqXM+nSa5qg0JSS952HYrWGCopFdOWy5lS+PrD0LlGB21hxkLe8+tljmk
-         9vkg==
-X-Gm-Message-State: APjAAAXO+117DIhZGfBBOXhtLNxK/zGTOZWuucGEXdErFn5CMy4JiaRn
-        gZqprxoSaZpofWRqjeERP1QqO0Bg9Bs=
-X-Google-Smtp-Source: APXvYqyVLyg3TSt8bgKaczCT8sQ+l5ipZRXdDehyXDMBnKImdJLAjHgbrbjbyA85mvpwRuxVNcHyew==
-X-Received: by 2002:a92:c849:: with SMTP id b9mr9215673ilq.68.1571403914324;
-        Fri, 18 Oct 2019 06:05:14 -0700 (PDT)
-Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id h62sm2622831ild.78.2019.10.18.06.05.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 06:05:13 -0700 (PDT)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-fbdev@vger.kernel.org
-Cc:     linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tomi.valkeinen@ti.com, adam.ford@logicpd.com,
-        Adam Ford <aford173@gmail.com>, stable@vger.kernel.org
-Subject: [PATCH] fbdev/omap: fix max fclk divider for omap36xx
-Date:   Fri, 18 Oct 2019 08:05:07 -0500
-Message-Id: <20191018130507.29893-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 18 Oct 2019 09:06:12 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9ID3DII020977
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:06:11 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vqcatuypm-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:06:10 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <sourabhjain@linux.ibm.com>;
+        Fri, 18 Oct 2019 14:06:08 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 18 Oct 2019 14:06:06 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9ID64kX32243746
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 18 Oct 2019 13:06:04 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C5420A404D;
+        Fri, 18 Oct 2019 13:06:04 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C6900A4051;
+        Fri, 18 Oct 2019 13:06:02 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.85.73.145])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 18 Oct 2019 13:06:02 +0000 (GMT)
+From:   Sourabh Jain <sourabhjain@linux.ibm.com>
+To:     mpe@ellerman.id.au
+Cc:     mahesh@linux.vnet.ibm.com, hbathini@linux.ibm.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
+        corbet@lwn.net, linux-doc@vger.kernel.org,
+        Sourabh Jain <sourabhjain@linux.ibm.com>
+Subject: [PATCH v2 0/4] reorganize and add FADump sysfs files
+Date:   Fri, 18 Oct 2019 18:35:53 +0530
+X-Mailer: git-send-email 2.17.2
+X-TM-AS-GCONF: 00
+x-cbid: 19101813-0008-0000-0000-000003234936
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101813-0009-0000-0000-00004A426AFB
+Message-Id: <20191018130557.2217-1-sourabhjain@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-18_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=892 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910180123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The OMAP36xx and AM/DM37x TRMs say that the maximum divider for DSS fclk
-(in CM_CLKSEL_DSS) is 32. Experimentation shows that this is not
-correct, and using divider of 32 breaks DSS with a flood or underflows
-and sync losts. Dividers up to 31 seem to work fine.
+Currently, FADump sysfs files are present inside /sys/kernel directory.
+But as the number of FADump sysfs file increases it is not a good idea to
+push all of them in /sys/kernel directory. It is better to have separate
+directory to keep all the FADump sysfs files.
 
-There is another patch to the DT files to limit the divider correctly,
-but as the DSS driver also needs to know the maximum divider to be able
-to iteratively find good rates, we also need to do the fix in the DSS
-driver.
+The patch series reorganizes the FADump sysfs files and avail all the
+existing FADump sysfs files present inside /sys/kernel into a new
+directory /sys/kernel/fadump. Currently, all the FADump sysfs files
+are replicated into a new directory to maintain the backward compatibility
+and will eventually get removed in future. In addition to this a new FADump
+sys interface is added to get the amount of memory reserved by FADump for
+saving the crash dump.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: stable@vger.kernel.org # linux-4.4.y only
+Changelog v1->v2:
+ - Move fadump_release_opalcore sysfs to FADump Kobject instead of
+   replicating.
+ - Changed the patch order 1,2,3,4 -> 2,1,3,4 (First add the ABI doc for
+   exisiting sysfs file then replicate them under FADump kobject).
 
-diff --git a/drivers/video/fbdev/omap2/dss/dss.c b/drivers/video/fbdev/omap2/dss/dss.c
-index 9200a8668b49..a57c3a5f4bf8 100644
---- a/drivers/video/fbdev/omap2/dss/dss.c
-+++ b/drivers/video/fbdev/omap2/dss/dss.c
-@@ -843,7 +843,7 @@ static const struct dss_features omap34xx_dss_feats = {
- };
- 
- static const struct dss_features omap3630_dss_feats = {
--	.fck_div_max		=	32,
-+	.fck_div_max		=	31,
- 	.dss_fck_multiplier	=	1,
- 	.parent_clk_name	=	"dpll4_ck",
- 	.dpi_select_source	=	&dss_dpi_select_source_omap2_omap3,
+Sourabh Jain (4):
+  Documentation/ABI: add ABI documentation for /sys/kernel/fadump_*
+  powerpc/fadump: reorganize /sys/kernel/fadump_* sysfs files
+  Documentation/ABI: mark /sys/kernel/fadump_* sysfs files deprecated
+  powerpc/fadump: sysfs for fadump memory reservation
+
+ .../ABI/obsolete/sysfs-kernel-fadump_enabled  | 10 ++++
+ .../obsolete/sysfs-kernel-fadump_registered   | 11 +++++
+ .../obsolete/sysfs-kernel-fadump_release_mem  | 11 +++++
+ .../sysfs-kernel-fadump_release_opalcore      |  9 ++++
+ Documentation/ABI/testing/sysfs-kernel-fadump | 48 +++++++++++++++++++
+ .../powerpc/firmware-assisted-dump.rst        | 20 +++++++-
+ arch/powerpc/kernel/fadump.c                  | 42 ++++++++++++++++
+ arch/powerpc/platforms/powernv/opal-core.c    |  6 ++-
+ 8 files changed, 154 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/ABI/obsolete/sysfs-kernel-fadump_enabled
+ create mode 100644 Documentation/ABI/obsolete/sysfs-kernel-fadump_registered
+ create mode 100644 Documentation/ABI/obsolete/sysfs-kernel-fadump_release_mem
+ create mode 100644 Documentation/ABI/removed/sysfs-kernel-fadump_release_opalcore
+ create mode 100644 Documentation/ABI/testing/sysfs-kernel-fadump
+
 -- 
-2.17.1
+2.17.2
 
