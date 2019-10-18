@@ -2,135 +2,113 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77183CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C9ACA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ABF5222C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE94D222C5
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:07:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kRzCl2sU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Or1S1NJB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504355AbfJRFHO (ORCPT
+        id S2504366AbfJRFHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:07:14 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39170 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2504332AbfJRFHL (ORCPT
+        Fri, 18 Oct 2019 01:07:18 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34371 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504025AbfJRFHQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:07:11 -0400
-Received: by mail-pf1-f194.google.com with SMTP id v4so3087555pff.6;
-        Thu, 17 Oct 2019 22:07:11 -0700 (PDT)
+        Fri, 18 Oct 2019 01:07:16 -0400
+Received: by mail-pl1-f193.google.com with SMTP id k7so2270445pll.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:07:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Dxf8j2dEp3gTKMidNHZOyi9cs38t6awcBjwDt5BGhco=;
-        b=kRzCl2sU8HhkN2FXU+AB6DHrD5pGZGK8OzQmjA2iRV6j8bod6JDJwCXwZC8OqJep3i
-         QNOn6QPM8Bq+xIddUidzOPgmu00nR5ZPwUV7rrfcXd2kzv461ggEh4UgeDVYvC0n30Pq
-         RaU1oHJXZyKXREXUNgwJr6IkVla6HHwlvRVaZ5SDQcJwXNjhLA+evDK9MEmFovwM5Bfc
-         HLqGNtPyecQjdt66rCHEz+h+1dr028s9/pFc3Fs65iCHDm/IGdPVpX9sDB1W1FIRzrJ5
-         YFC3yFRe0G0Fs+luyOzFip9poCXoUo8sJAN3HXEZu9QoPJzGJGsHl5eIUCZctGMuOeEf
-         2oYA==
+        bh=BN38U1tWSQycIwUtKvgVS41nw2Y5xmAR6qADXcgIN/E=;
+        b=Or1S1NJBS21mZ3T0kRuw3+pg9/9vA19tlOBKzPCu+VJOzUGorap9nhyIFOs7X2qgrg
+         zvJDJQwIS1BW+6v7Hpb7lsxv4M+N1QE5YfJhC/1Fj5/SMhEmHI+miSmHuYfJPzUy6eFa
+         GC0iDI+pBneF36jZra4sKjv7DLrI/2YleI/qLkqhHXu5iCL7IzKssn9od150fmLSzfsz
+         LCOOYySKfikf3B2ZqQcd/I/6X7u97Zel3TIjOM8ZSAJdp2jpXC24fyV1GimkEn+jQcpD
+         jBnPpOKMTIiYCrVbDyuUNr2v1+bDc60g12qFOhDG8ORiKRo/fqfAbqCIaTrPDAbvhTUO
+         GGdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Dxf8j2dEp3gTKMidNHZOyi9cs38t6awcBjwDt5BGhco=;
-        b=TsIvVYg91c/j+hQqMVQl4rYoTHUFIeBsflKovafgcj3B6NuEavA16Nm5cF24DgaqOB
-         GRth1ERyBWnVKh0XYxwrknC1KmTJjHkKlt14EXi3NyQ2eL5SYecl5vJH184m4OuEFwjy
-         j0P4gBakmm/0P7SBAC71cXriHY42LMBMCJ6AJV1vAvO/yRBQf5Lyi+OD2J9oeKaXU54a
-         qVXv4JuQ1xf2yq65l0c3F0hiRzx+WK7H2SLoECR3HodwdOz9pc+qdTX5nSRDnquPX+iO
-         0uVBMEmxZFUQlrwZJ4LIdjjL9JfCWIrbX5+UQJJzjs9LrQFKDQfNe9hr8vYfhpzln8Ls
-         bz/g==
-X-Gm-Message-State: APjAAAXaDKri+4RYM7bSIqLjMV5kgU/pOGW74unq1CW7XArix2nvHjEs
-        QC64My3a+I+aJE6iLafOoWxO9L/I
-X-Google-Smtp-Source: APXvYqx7/HwYNBy93h+fmNaI9cnTLMGY7XFYbErDicOBeRlQ0eTPm/1tR+ecZKuvPeC4oiDJ4HVdmw==
-X-Received: by 2002:a17:90a:9201:: with SMTP id m1mr8641712pjo.74.1571371532978;
-        Thu, 17 Oct 2019 21:05:32 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m2sm6433577pff.154.2019.10.17.21.05.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 17 Oct 2019 21:05:31 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 21:05:30 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Hui Peng <benquike@gmail.com>, davem@davemloft.net,
-        Mathias Payer <mathias.payer@nebelwelt.net>,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] Fix a NULL-ptr-deref bug in
- ath10k_usb_alloc_urb_from_pipe
-Message-ID: <20191018040530.GA28167@roeck-us.net>
-References: <20190804003101.11541-1-benquike@gmail.com>
- <20190831213139.GA32507@roeck-us.net>
- <87ftlgqw42.fsf@kamboji.qca.qualcomm.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BN38U1tWSQycIwUtKvgVS41nw2Y5xmAR6qADXcgIN/E=;
+        b=as3mvW1Jlod6/UAwJdphflMMFR7ACMitXMFsutiQLXZ6K28wkX5Ebs7liDv8Fw5hKM
+         /xzr5X7HLk+kwv49spYtKDYiTe+DAJGlFSUCbbg7qICGqPlKInADTOdK7zeNZhqdNJGm
+         k0rh1FKvsi11baWDNqr+eCSW+nzeTCDV0RS6m71UDkFe9o5S8kOrHR6TftHK7UjB4YIB
+         wzyHiklPgkDXJFqCX01AX0ycnCWO/4vHrN47Hdg4JD4w+qSm/6YjYdvE99yI2/8rtciJ
+         Qn3nnn5J7Yt8XrUzvOb8q+plhnSH2+/yXwVm7zfoNDh7fXjYNgSjjB65jDNSvlQQJDWY
+         fqCQ==
+X-Gm-Message-State: APjAAAVGFj6d5RPss65HyYYcB/XecK9cUsCFUAzRPs1qtAvdv/gFEa0m
+        I5mOSeBNOOR81O2aYy3sCxdzeGgf3cQ=
+X-Google-Smtp-Source: APXvYqzkRC1EwPpxmXJHKXXdNdXNMqjA0MEl0CEAzz/4I6yX9UtNA1XEwdpB6tAX43Fk+9Ejz7Ry3Q==
+X-Received: by 2002:a17:902:904b:: with SMTP id w11mr7882591plz.182.1571375235738;
+        Thu, 17 Oct 2019 22:07:15 -0700 (PDT)
+Received: from localhost ([122.172.151.112])
+        by smtp.gmail.com with ESMTPSA id 74sm4821485pfy.78.2019.10.17.22.07.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 17 Oct 2019 22:07:14 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 10:37:12 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Preeti U Murthy <preeti@linux.vnet.ibm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2] cpufreq: powernv: fix stack bloat and NR_CPUS
+ limitation
+Message-ID: <20191018050712.qr2axffmbms5h4xb@vireshk-i7>
+References: <20191018045539.3765565-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87ftlgqw42.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191018045539.3765565-1-jhubbard@nvidia.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 01, 2019 at 11:06:05AM +0300, Kalle Valo wrote:
-> Guenter Roeck <linux@roeck-us.net> writes:
+On 17-10-19, 21:55, John Hubbard wrote:
+> The following build warning occurred on powerpc 64-bit builds:
 > 
-> > Hi,
-> >
-> > On Sat, Aug 03, 2019 at 08:31:01PM -0400, Hui Peng wrote:
-> >> The `ar_usb` field of `ath10k_usb_pipe_usb_pipe` objects
-> >> are initialized to point to the containing `ath10k_usb` object
-> >> according to endpoint descriptors read from the device side, as shown
-> >> below in `ath10k_usb_setup_pipe_resources`:
-> >> 
-> >> for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
-> >>         endpoint = &iface_desc->endpoint[i].desc;
-> >> 
-> >>         // get the address from endpoint descriptor
-> >>         pipe_num = ath10k_usb_get_logical_pipe_num(ar_usb,
-> >>                                                 endpoint->bEndpointAddress,
-> >>                                                 &urbcount);
-> >>         ......
-> >>         // select the pipe object
-> >>         pipe = &ar_usb->pipes[pipe_num];
-> >> 
-> >>         // initialize the ar_usb field
-> >>         pipe->ar_usb = ar_usb;
-> >> }
-> >> 
-> >> The driver assumes that the addresses reported in endpoint
-> >> descriptors from device side  to be complete. If a device is
-> >> malicious and does not report complete addresses, it may trigger
-> >> NULL-ptr-deref `ath10k_usb_alloc_urb_from_pipe` and
-> >> `ath10k_usb_free_urb_to_pipe`.
-> >> 
-> >> This patch fixes the bug by preventing potential NULL-ptr-deref.
-> >> 
-> >> Signed-off-by: Hui Peng <benquike@gmail.com>
-> >> Reported-by: Hui Peng <benquike@gmail.com>
-> >> Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
-> >
-> > This patch fixes CVE-2019-15099, which has CVSS scores of 7.5 (CVSS 3.0)
-> > and 7.8 (CVSS 2.0). Yet, I don't find it in the upstream kernel or in Linux
-> > next.
-> >
-> > Is the patch going to be applied to the upstream kernel anytime soon ?
+> drivers/cpufreq/powernv-cpufreq.c: In function 'init_chip_info':
+> drivers/cpufreq/powernv-cpufreq.c:1070:1: warning: the frame size of 1040 bytes is larger than 1024 bytes [-Wframe-larger-than=]
 > 
-> Same answer as in patch 1:
+> This is due to putting 1024 bytes on the stack:
 > 
-> https://patchwork.kernel.org/patch/11074655/
+>     unsigned int chip[256];
 > 
+> ...and while looking at this, it also has a bug: it fails with a stack
+> overrun, if CONFIG_NR_CPUS > 256.
+> 
+> Fix both problems by dynamically allocating based on CONFIG_NR_CPUS.
+> 
+> Fixes: 053819e0bf840 ("cpufreq: powernv: Handle throttling due to Pmax capping at chip level")
+> Cc: Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
+> Cc: Preeti U Murthy <preeti@linux.vnet.ibm.com>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Cc: linux-pm@vger.kernel.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+> 
+> Changes since v1: includes Viresh's review commit fixes.
+> 
+>  drivers/cpufreq/powernv-cpufreq.c | 17 +++++++++++++----
+>  1 file changed, 13 insertions(+), 4 deletions(-)
 
-Sorry to bring this up again. The ath6k patch made it into the upstream
-kernel, but the ath10k patch didn't. Did it get lost, or was there a
-reason not to apply this patch ?
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Thanks,
-Guenter
+-- 
+viresh
