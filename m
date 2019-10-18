@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D0DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB9FCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D736F21897
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2865921925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:21:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mNEFyDnD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pQ8NT+0t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410538AbfJRRU3 (ORCPT
+        id S2410552AbfJRRVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 13:20:29 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38378 "EHLO
+        Fri, 18 Oct 2019 13:21:25 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:36408 "EHLO
         mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2410488AbfJRRU3 (ORCPT
+        with ESMTP id S2408707AbfJRRVZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 13:20:29 -0400
-Received: by mail-ed1-f65.google.com with SMTP id l21so5145643edr.5
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 10:20:27 -0700 (PDT)
+        Fri, 18 Oct 2019 13:21:25 -0400
+Received: by mail-ed1-f65.google.com with SMTP id h2so5159904edn.3
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 10:21:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=RJPPT9pPW5OphgQ4a95JZZfPEol1maidcg9gTZiFqH8=;
-        b=mNEFyDnDLHNrZNLMwu1suUNdWhXsAfR7NmCwg2m7RN1St7T4pjhABXYj7hI2AzxaVc
-         GK5Q8ULIndcbp86+BKvfos/vip2LcJ0DVsEGbFN2lFkM8GI2J1lEF3ONfMxvd90vZrro
-         vqfzxymkDV0D8w4XwPYJUWGwduKAWZzRTl9U1Q4Yc35q0nJsX8TT8i9xBAn5WsKdAVKu
-         AqFggPFF+W3CbyaiYaBlbUtorlEhmFUnvZ2Mlzsqr2dLHi6idzQGfkv/25g1Fup4mdEy
-         X1OjHpxbOB88zI72cnmMBx2rU72T7qXS1FCFvYeE8dkpWAHAKYu9H0jhInrDAsZ7I457
-         EE7Q==
+        bh=MASR/FluEaPV2kJBRmj9lbqGkWJRGtvA3nfWqAmQsg0=;
+        b=pQ8NT+0tsGNtMagaX7Tu2Rr0xjvmXc31c3M9U/Cl/6XDylf0f4BGoqPA4sfKB90rTw
+         zdNfT+9oWsr6QtoxEvGNFE8TQekabGvDwXP+s3fQG5151ZOksSOMDa+nE6/fl7yUsDFW
+         TsEqjMiSCT8IZiNw9d09oh714m6hU9MPx6apykqG/x3/AY+3uHJB4uZGcv+LZGCBpNvZ
+         XPYVtqdXXinQWkRBRVSKRtXc5dn7Mfx1ddXjtGYL8r0ghwW9DLRRExa+Gse3eB42XM6W
+         rrHe2fpWXlPyygkB6S4LPSeW6oNdYQ3k4mobsR5lp9ZPrWGCChtNcW/EhTNl0rbKUH6Y
+         DYZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=RJPPT9pPW5OphgQ4a95JZZfPEol1maidcg9gTZiFqH8=;
-        b=p+ohR2Fll81HFujWQ5QqHvZID4Tfl0iIG7NWqwDwcVutz8b39t7Yr4vR0tElz6++es
-         mG9+hrfJ22SeLqnQqmcEIB1nvu0PxpPWauFI7woX/lGRFcqcrE0uQOI0M9cE9bYGAOu9
-         RAuAdubOIldKtJk9pbfq3GyqCRWo0rwAwSCexKmM0DSeeMlWWXCGh2r4XbsRLesQVD3s
-         wbjG70MpiD9C/LOs1YM1ImqrfPW4EURryaHdV7qioEQmPWrjQK2D5IH4JlnZ8tp9ib3Z
-         oVpNysDorLUBdlR3fynyRFLMAZkkXInjpc0revmmrs5yxhrXLGNLQKhvibkuABNbQvRh
-         CjiA==
-X-Gm-Message-State: APjAAAWYCWMqapO07YzpjaAErdwOe5J5JXJ+lu07nJKZkijIqNRtyeud
-        5TcuhW9RupTMB4eBfj6FF9c=
-X-Google-Smtp-Source: APXvYqyJF3PjXWZdycITnIRQnpJA+oh3YbEBKazpFdHKVgzOVU/63dH4LEVrACFiyao5EyGwljxBtQ==
-X-Received: by 2002:a05:6402:2042:: with SMTP id bc2mr10967463edb.12.1571419226307;
-        Fri, 18 Oct 2019 10:20:26 -0700 (PDT)
+        bh=MASR/FluEaPV2kJBRmj9lbqGkWJRGtvA3nfWqAmQsg0=;
+        b=IqljmKwJAwsuU/kLGqp2+Sw5KV4VABZGQhZ9UP8NnZw2NPtlf/f/3HVR5sWKg1aeKT
+         sCALi/gWem67uJCv97lTu463NqPPDYTQJ+bN8vFSKrEUC9vBHCmVA9IgArLbn/qx7QoZ
+         6plFabDHijYsqNA2lwWFbxE58t0gtqqy/OrSKy2uLd55nFOxP8FW9SG9WTjM9TQE2svf
+         snsx+ZWOHxPLBWJqBtkUkYWYqkYMQxiC4yxS1nul0fM8FjkeKjkacj31u3GmGVzKQGFx
+         YSf59iGkh6qAwd9U8ujA4LlSlqvYV6t6zP+jlUWk643rCUwgU7MMjJIWQn5pPsMLyKRF
+         UT0g==
+X-Gm-Message-State: APjAAAUJBLO/RiSADhJtBCrxonNbWziApJXD1uDjLVYw6IzbiSuP7ix0
+        bhAa5RdwXoWNXzOqRSKfVFw=
+X-Google-Smtp-Source: APXvYqzHuCJU6yhwvYqDq8AxCf5dOHwojd8no7m1kZ5vJgdGxf6LFFSehvkVof556M1zZjn72V+qyg==
+X-Received: by 2002:aa7:ccd3:: with SMTP id y19mr10936407edt.122.1571419282514;
+        Fri, 18 Oct 2019 10:21:22 -0700 (PDT)
 Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id x5sm35379ejc.53.2019.10.18.10.20.23
+        by smtp.googlemail.com with ESMTPSA id g15sm273729edp.0.2019.10.18.10.21.20
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 18 Oct 2019 10:20:25 -0700 (PDT)
-Subject: Re: [GIT PULL 1/3] bcm2835-dt-next-2019-10-15
-To:     Stefan Wahren <wahrenst@gmx.net>,
-        Florian Fainelli <f.fainelli@gmail.com>
+        Fri, 18 Oct 2019 10:21:21 -0700 (PDT)
+Subject: Re: [GIT PULL 3/3] bcm2835-maintainers-next-2019-10-15
+To:     Stefan Wahren <wahrenst@gmx.net>
 Cc:     Eric Anholt <eric@anholt.net>, linux-kernel@vger.kernel.org,
         bcm-kernel-feedback-list@broadcom.com,
         linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
 References: <1571159725-5090-1-git-send-email-wahrenst@gmx.net>
+ <1571159725-5090-3-git-send-email-wahrenst@gmx.net>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
@@ -123,12 +123,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
  6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9Za0Dx0yyp44iD1OvHtkEI
  M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <a962dde6-7dc1-1bc1-5da3-d8822799c51b@gmail.com>
-Date:   Fri, 18 Oct 2019 10:20:21 -0700
+Message-ID: <892848b4-6104-2588-0e94-ebf1b3305a3d@gmail.com>
+Date:   Fri, 18 Oct 2019 10:21:18 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <1571159725-5090-1-git-send-email-wahrenst@gmx.net>
+In-Reply-To: <1571159725-5090-3-git-send-email-wahrenst@gmx.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -146,26 +146,18 @@ On 10/15/19 10:15 AM, Stefan Wahren wrote:
 > 
 > are available in the git repository at:
 > 
->   git://github.com/anholt/linux tags/bcm2835-dt-next-2019-10-15
+>   git://github.com/anholt/linux tags/bcm2835-maintainers-next-2019-10-15
 > 
-> for you to fetch changes up to 46fdee06aeefedfc62a4c33b2c4a7a74682ac755:
+> for you to fetch changes up to a91f757bda1a48317f692487addf832ebf8e93aa:
 > 
->   arm64: dts: broadcom: Add reference to RPi 4 B (2019-10-10 19:14:28 +0200)
-> 
-> ----------------------------------------------------------------
-> This pull request introduce initial Raspberry Pi 4 support. But all the fancy
-> stuff like GENET, PCIe, xHCI, 40 bit DMA and V3D is missing.
+>   mailmap: Add Simon Arlott (replacement for expired email address) (2019-10-12 12:48:25 +0200)
 > 
 > ----------------------------------------------------------------
-> Stefan Wahren (7):
->       ARM: dts: bcm283x: Remove simple-bus from fixed clocks
->       ARM: dts: bcm283x: Remove brcm,bcm2835-pl011 compatible
->       ARM: dts: bcm283x: Move BCM2835/6/7 specific to bcm2835-common.dtsi
->       dt-bindings: arm: Convert BCM2835 board/soc bindings to json-schema
->       dt-bindings: arm: bcm2835: Add Raspberry Pi 4 to DT schema
->       ARM: dts: Add minimal Raspberry Pi 4 support
->       arm64: dts: broadcom: Add reference to RPi 4 B
+> This pull request clarifies maintainership of the BCM2711 and adds a replacement
+> mail address for a former contributor.
+> 
+> ----------------------------------------------------------------
 
-Merged into devicetree/next, thanks Stefan.
+Merged into maintainers/next, thanks Stefan!
 -- 
 Florian
