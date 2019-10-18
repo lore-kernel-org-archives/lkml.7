@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E73FBCA9EC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8638CA9EB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B29CD21852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E4121D7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:29:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ehEiL+RE"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="A0BdNat4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407389AbfJRA2x (ORCPT
+        id S2407319AbfJRA2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 20:28:53 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:8898 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2407057AbfJRA2o (ORCPT
+        Thu, 17 Oct 2019 20:28:52 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:8396 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2406928AbfJRA2m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 20:28:44 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9I0NP8N030781
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 17:28:44 -0700
+        Thu, 17 Oct 2019 20:28:42 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9I0NcwL008470
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 17:28:41 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=s80/47kE6++tjdDNDZ71sdnneLbV+d8/4baGT5d2jWI=;
- b=ehEiL+REFcXkCl2jWCZJFBSXuMYLEyM+eas/WM3mqQKdRJZWL25klYW7SKcCrJ+ir401
- 4b3tJ5z55pf7S6abaWORhsVi7EKlGS42C+F1BHdPUWFz0b+78yNQQ0/mjxtPlizmU+sm
- 5JbcfjwOV0OrPQxZp8788aZu9uHmoOev9iI= 
+ content-type; s=facebook; bh=V0YM/pCY9GLC/OQdYE1wIpM4De9idAVu4Mjnr3cz5NE=;
+ b=A0BdNat4X8rp15Sa2mMZvJJHR8nBRZ8XtxdWss1kzxwAIB9QvjwagT2Rsl5exfykhW5L
+ +qXM5cq2YQvkTNfetyn1ich9cAe3PbkJzDD0axto7+pmMG6O/uaz/cYjhONLR0I7n9Ad
+ MhVrYLUWWRfOu5vxaFXUnuw/Mj5FBhCTGU0= 
 Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2vpj8rvkye-14
+        by mx0a-00082601.pphosted.com with ESMTP id 2vpw9r9fae-14
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 17:28:44 -0700
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 17:28:41 -0700
 Received: from 2401:db00:30:600c:face:0:39:0 (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
+ mail.thefacebook.com (2620:10d:c0a8:83::4) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 17 Oct 2019 17:28:35 -0700
+ 15.1.1713.5; Thu, 17 Oct 2019 17:28:36 -0700
 Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
-        id 05BC618CE8483; Thu, 17 Oct 2019 17:28:34 -0700 (PDT)
+        id 1FE2218CE8491; Thu, 17 Oct 2019 17:28:34 -0700 (PDT)
 Smtp-Origin-Hostprefix: devvm
 From:   Roman Gushchin <guro@fb.com>
 Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
@@ -54,9 +54,9 @@ CC:     Michal Hocko <mhocko@kernel.org>,
         Waiman Long <longman@redhat.com>,
         Christoph Lameter <cl@linux.com>, Roman Gushchin <guro@fb.com>
 Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH 08/16] mm: memcg: introduce __mod_lruvec_memcg_state()
-Date:   Thu, 17 Oct 2019 17:28:12 -0700
-Message-ID: <20191018002820.307763-9-guro@fb.com>
+Subject: [PATCH 15/16] tools/cgroup: make slabinfo.py compatible with new slab controller
+Date:   Thu, 17 Oct 2019 17:28:19 -0700
+Message-ID: <20191018002820.307763-16-guro@fb.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191018002820.307763-1-guro@fb.com>
 References: <20191018002820.307763-1-guro@fb.com>
@@ -65,10 +65,10 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
  definitions=2019-10-17_07:2019-10-17,2019-10-17 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=761
- clxscore=1015 spamscore=0 impostorscore=0 priorityscore=1501
- lowpriorityscore=0 suspectscore=3 malwarescore=0 adultscore=0 bulkscore=0
- mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=726
+ lowpriorityscore=0 mlxscore=0 suspectscore=1 phishscore=0 clxscore=1015
+ adultscore=0 spamscore=0 bulkscore=0 priorityscore=1501 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-1908290000 definitions=main-1910180001
 X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,137 +76,179 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To prepare for per-object accounting of slab objects, let's introduce
-__mod_lruvec_memcg_state() and mod_lruvec_memcg_state() helpers,
-which are similar to mod_lruvec_state(), but do not update global
-node counters, only lruvec and per-cgroup.
+Make slabinfo.py compatible with the new slab controller.
 
-It's necessary because soon node slab counters will be used for
-accounting of all memory used by slab pages, however on memcg level
-only the actually used memory will be counted. Free space will be
-shared between all cgroups, so it can't be accounted to any.
+Because there are no more per-memcg kmem_caches, and also there
+is no list of all slab pages in the system, it has to walk over
+all pages and filter out slab pages belonging to non-root kmem_caches.
+
+Then it counts objects belonging to the given cgroup. It might
+sound as a very slow operation, however it's not so slow. It takes
+about 30s seconds to walk over 8Gb of slabs out of 64Gb, and filter
+out all objects belonging to the cgroup of interest.
+
+Also, it provides an accurate number of active objects, which isn't
+true for the old slab controller.
+
+The script is backward compatible and works for both kernel versions.
 
 Signed-off-by: Roman Gushchin <guro@fb.com>
 ---
- include/linux/memcontrol.h | 22 ++++++++++++++++++++++
- mm/memcontrol.c            | 37 +++++++++++++++++++++++++++----------
- 2 files changed, 49 insertions(+), 10 deletions(-)
+ tools/cgroup/slabinfo.py | 105 ++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 98 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 7a6713dc52ce..bf1fcf85abd8 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -738,6 +738,8 @@ static inline unsigned long lruvec_page_state_local(struct lruvec *lruvec,
+diff --git a/tools/cgroup/slabinfo.py b/tools/cgroup/slabinfo.py
+index 40b01a6ec4b0..79909ee36fe3 100755
+--- a/tools/cgroup/slabinfo.py
++++ b/tools/cgroup/slabinfo.py
+@@ -8,7 +8,10 @@ import argparse
+ import sys
  
- void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
- 			int val);
-+void __mod_lruvec_memcg_state(struct lruvec *lruvec, enum node_stat_item idx,
-+			      int val);
- void __mod_lruvec_slab_state(void *p, enum node_stat_item idx, int val);
+ from drgn.helpers.linux import list_for_each_entry, list_empty
+-from drgn import container_of
++from drgn.helpers.linux import for_each_page
++from drgn.helpers.linux.cpumask import for_each_online_cpu
++from drgn.helpers.linux.percpu import per_cpu_ptr
++from drgn import container_of, FaultError
  
- static inline void mod_lruvec_state(struct lruvec *lruvec,
-@@ -750,6 +752,16 @@ static inline void mod_lruvec_state(struct lruvec *lruvec,
- 	local_irq_restore(flags);
- }
  
-+static inline void mod_lruvec_memcg_state(struct lruvec *lruvec,
-+					  enum node_stat_item idx, int val)
-+{
-+	unsigned long flags;
+ DESC = """
+@@ -47,7 +50,7 @@ def is_root_cache(s):
+ 
+ def cache_name(s):
+     if is_root_cache(s):
+-        return s.name
++        return s.name.string_().decode('utf-8')
+     else:
+         return s.memcg_params.root_cache.name.string_().decode('utf-8')
+ 
+@@ -99,12 +102,16 @@ def slub_get_slabinfo(s, cfg):
+ # SLAB-specific functions can be added here...
+ 
+ 
+-def cache_show(s, cfg):
++def cache_show(s, cfg, objs):
+     if cfg['allocator'] == 'SLUB':
+         sinfo = slub_get_slabinfo(s, cfg)
+     else:
+         err('SLAB isn\'t supported yet')
+ 
++    if cfg['shared_slab_pages']:
++        sinfo['active_objs'] = objs
++        sinfo['num_objs'] = objs
 +
-+	local_irq_save(flags);
-+	__mod_lruvec_memcg_state(lruvec, idx, val);
-+	local_irq_restore(flags);
-+}
-+
- static inline void __mod_lruvec_page_state(struct page *page,
- 					   enum node_stat_item idx, int val)
- {
-@@ -1142,6 +1154,16 @@ static inline void mod_lruvec_state(struct lruvec *lruvec,
- 	mod_node_page_state(lruvec_pgdat(lruvec), idx, val);
- }
+     print('%-17s %6lu %6lu %6u %4u %4d'
+           ' : tunables %4u %4u %4u'
+           ' : slabdata %6lu %6lu %6lu' % (
+@@ -127,9 +134,60 @@ def detect_kernel_config():
+     else:
+         err('Can\'t determine the slab allocator')
  
-+static inline void __mod_lruvec_memcg_state(struct lruvec *lruvec,
-+					    enum node_stat_item idx, int val)
-+{
-+}
++    if prog.type('struct memcg_cache_params').members[1][1] == 'memcg_cache':
++        cfg['shared_slab_pages'] = True
++    else:
++        cfg['shared_slab_pages'] = False
 +
-+static inline void mod_lruvec_memcg_state(struct lruvec *lruvec,
-+					  enum node_stat_item idx, int val)
-+{
-+}
-+
- static inline void __mod_lruvec_page_state(struct page *page,
- 					   enum node_stat_item idx, int val)
- {
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index d9d5f77a783d..ebaa4ff36e0c 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -787,16 +787,16 @@ parent_nodeinfo(struct mem_cgroup_per_node *pn, int nid)
- }
+     return cfg
  
- /**
-- * __mod_lruvec_state - update lruvec memory statistics
-+ * __mod_lruvec_memcg_state - update lruvec memory statistics
-  * @lruvec: the lruvec
-  * @idx: the stat item
-  * @val: delta to add to the counter, can be negative
-  *
-  * The lruvec is the intersection of the NUMA node and a cgroup. This
-- * function updates the all three counters that are affected by a
-- * change of state at this level: per-node, per-cgroup, per-lruvec.
-+ * function updates the two of three counters that are affected by a
-+ * change of state at this level: per-cgroup and per-lruvec.
-  */
--void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
-+void __mod_lruvec_memcg_state(struct lruvec *lruvec, enum node_stat_item idx,
- 			int val)
- {
- 	pg_data_t *pgdat = lruvec_pgdat(lruvec);
-@@ -804,12 +804,6 @@ void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
- 	struct mem_cgroup *memcg;
- 	long x, threshold = MEMCG_CHARGE_BATCH;
  
--	/* Update node */
--	__mod_node_page_state(pgdat, idx, val);
--
--	if (mem_cgroup_disabled())
--		return;
--
- 	pn = container_of(lruvec, struct mem_cgroup_per_node, lruvec);
- 	memcg = pn->memcg;
++def for_each_slab_page(prog):
++    PGSlab = 1 << prog.constant('PG_slab')
++    PGHead = 1 << prog.constant('PG_head')
++
++    for page in for_each_page(prog):
++        try:
++            if page.flags.value_() & PGSlab:
++                yield page
++        except FaultError:
++            pass
++
++
++# it doesn't find all objects, because by default full slabs are not
++# placed to the full list. however, it can be used in certain cases.
++def for_each_slab_page_fast(prog):
++    for s in list_for_each_entry('struct kmem_cache',
++                                 prog['slab_caches'].address_of_(),
++                                 'list'):
++        if is_root_cache(s):
++            continue
++
++        if s.cpu_partial:
++            for cpu in for_each_online_cpu(prog):
++                cpu_slab = per_cpu_ptr(s.cpu_slab, cpu)
++                if cpu_slab.page:
++                    yield cpu_slab.page
++
++                page = cpu_slab.partial
++                while page:
++                    yield page
++                    page = page.next
++
++        for node in range(prog['nr_online_nodes'].value_()):
++            n = s.node[node]
++
++            for page in list_for_each_entry('struct page',
++                                            n.partial.address_of_(),
++                                            'slab_list'):
++                yield page
++
++            for page in list_for_each_entry('struct page',
++                                            n.full.address_of_(),
++                                            'slab_list'):
++                yield page
++
++
+ def main():
+     parser = argparse.ArgumentParser(description=DESC,
+                                      formatter_class=argparse.RawTextHelpFormatter)
+@@ -150,10 +208,43 @@ def main():
+           ' : tunables <limit> <batchcount> <sharedfactor>'
+           ' : slabdata <active_slabs> <num_slabs> <sharedavail>')
  
-@@ -833,6 +827,29 @@ void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
- 	__this_cpu_write(pn->lruvec_stat_cpu->count[idx], x);
- }
+-    for s in list_for_each_entry('struct kmem_cache',
+-                                 memcg.kmem_caches.address_of_(),
+-                                 'memcg_params.kmem_caches_node'):
+-        cache_show(s, cfg)
++    if cfg['shared_slab_pages']:
++        memcg_ptrs = set()
++        stats = {}
++        caches = {}
++
++        # find memcg pointers belonging to the specified cgroup
++        for ptr in list_for_each_entry('struct mem_cgroup_ptr',
++                                       memcg.kmem_memcg_ptr_list.address_of_(),
++                                       'list'):
++            memcg_ptrs.add(ptr.value_())
++
++        # look over all slab pages, belonging to non-root memcgs
++        # and look for objects belonging to the given memory cgroup
++        for page in for_each_slab_page(prog):
++            cache = page.slab_cache
++            if not cache or is_root_cache(cache):
++                continue
++            addr = cache.value_()
++            caches[addr] = cache
++            memcg_vec = page.mem_cgroup_vec
++
++            if addr not in stats:
++                stats[addr] = 0
++
++            for i in range(oo_objects(cache)):
++                if memcg_vec[i].value_() in memcg_ptrs:
++                    stats[addr] += 1
++
++        for addr in caches:
++            if stats[addr] > 0:
++                cache_show(caches[addr], cfg, stats[addr])
++
++    else:
++        for s in list_for_each_entry('struct kmem_cache',
++                                     memcg.kmem_caches.address_of_(),
++                                     'memcg_params.kmem_caches_node'):
++            cache_show(s, cfg, None)
  
-+/**
-+ * __mod_lruvec_state - update lruvec memory statistics
-+ * @lruvec: the lruvec
-+ * @idx: the stat item
-+ * @val: delta to add to the counter, can be negative
-+ *
-+ * The lruvec is the intersection of the NUMA node and a cgroup. This
-+ * function updates the all three counters that are affected by a
-+ * change of state at this level: per-node, per-cgroup, per-lruvec.
-+ */
-+void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
-+			int val)
-+{
-+	pg_data_t *pgdat = lruvec_pgdat(lruvec);
-+
-+	/* Update node */
-+	__mod_node_page_state(pgdat, idx, val);
-+
-+	/* Update per-cgroup and per-lruvec stats */
-+	if (!mem_cgroup_disabled())
-+		__mod_lruvec_memcg_state(lruvec, idx, val);
-+}
-+
- void __mod_lruvec_slab_state(void *p, enum node_stat_item idx, int val)
- {
- 	struct page *page = virt_to_head_page(p);
+ 
+ main()
 -- 
 2.21.0
 
