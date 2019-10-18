@@ -6,154 +6,99 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35636CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9523BCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 060C72089C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E02E2089C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571401135;
-	bh=h3QdAZG89Sa61h5qqoGHTR3Nl8T+0un+jfDmI8KkK88=;
+	s=default; t=1571401307;
+	bh=aZ4sD3NhDln0b6sHN9JC+hjFDBwzr5tX2IXHtBrWAnk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dJ2b+9mDUON2LQtvjT48CF2aM3sGEZ3/1YjBqVM9NiPyWRYrXP9fHspnGAcU0FZc+
-	 3pNv6QAuzgzhi1QsW8BXB1E448M9O042+sDH/9hYochJa0OZvuc+fntwbZOi2y9KgM
-	 OtcfbmygX/9ywKj/eh5vmbjPUbX3to+gUTexDEWs=
+	b=RM2ADp1JRP/YlJbiKiRiH2mXPbZFSpXeXsmOfbctih5K1+vJmMBvoSiroXEo/KMsb
+	 8DNUPsS5zJfIE5psU/F30df6Q/Lri1CC7tQ33kMxsx0Tmn8pVOEzyBMwnSvZizmPOM
+	 knlUBUvwERQWy9VQb8SJmoAbq8TW6I6hfkxVA3CM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442698AbfJRMSy (ORCPT
+        id S2442701AbfJRMVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 08:18:54 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35164 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404901AbfJRMSx (ORCPT
+        Fri, 18 Oct 2019 08:21:46 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37076 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387570AbfJRMVp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 08:18:53 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 205so3794116pfw.2;
-        Fri, 18 Oct 2019 05:18:53 -0700 (PDT)
+        Fri, 18 Oct 2019 08:21:45 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p1so3301533pgi.4;
+        Fri, 18 Oct 2019 05:21:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=HzCZCqhtcM0Kfq8LNIg6bDch5I26sRahsuifFN7TYPc=;
-        b=XI4Eol7+vM1fw1yJ7XIlo3J6yhr0alZ5AU0dkW2JmZM5jUfbwiOLF2f2zvTYEZ3O/C
-         djzH7maJ8aX6nR0nWjX+BsqvMOkaKxf/6xFrZ/lLRdGk9762fY9J4hjdkK2CMU9fs8uu
-         4syPzasDLwLDbKXxXYa2iRZWU8H5y+96FAbYyEZRZnH9RO/DCOG3lYL4gSgZcRTyJ4Uw
-         qKI0MQSQQmGf1gdSEzlcjD2IT1ZxaUvlWuOPYdIt/verp4P71rbJ1k7WH9LtGx8gLL9j
-         UYfSRq4UacEDpy+ZQv3Z23f2bobes4LnaxpND1Dnlyr0UMelYxDHLy6einArjiAIcDXk
-         RiqA==
-X-Gm-Message-State: APjAAAVQkqoRF79s/yZ+LzhYxgP5oSY5VzS+nA2SMqBNdGVf7u1sHtVN
-        i07zhTmmIEyeN1jsIY7IqTQ=
-X-Google-Smtp-Source: APXvYqxorxs0xmFs5umyAcxgYNWtmIzh52uV76BA/wm3EQofGTbViY97Mp2XNKsNiq9DJj45LtYcag==
-X-Received: by 2002:a65:66c4:: with SMTP id c4mr10015575pgw.42.1571401132663;
-        Fri, 18 Oct 2019 05:18:52 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VcukdS+h2wwJ3/U/N/4m0S2AoPCXUWoZLLc3DYniW2I=;
+        b=Q1msBJ3e099t2nSvYex7Z+jTlpopRllh6mguFZOeeE/m7DMYYYL/lcy4zZY7iravmh
+         8j9vf+/tlXDsLORK298oltaRNxfF6CBcQjtLOArMJyzbhA1ZpLrJj+BWFWS0IaN728eQ
+         xsZTBwLn41uMv4KqA9pw3hGXllxMNnqTCEfew/8Ly4k0XbdwWGAsB0ok7BAxw4iljEiI
+         5EfWa71cpcSoM2uC4hAwdkGO+KeoRuRoxAprpIkCUPs+fJsU67Zbd8bT1GGV6QHGEgFe
+         3cHE1udYLTIJQU0ttyl5AdAJ1iPS/qYkGW4cGlDVS7GwZ2hewbDQkTTVImp9LzkWg0TI
+         /4Kw==
+X-Gm-Message-State: APjAAAUsMEl/Ik/gBhxQlSpCpK7vgio3BMcbFr7GADiKQz94GQjNiD+J
+        TJvpz7wziqUL4cdVqnxVlc4=
+X-Google-Smtp-Source: APXvYqx1rmDV8Tbar4XUzXvi4MjLnC0zwf0LcXubUrDJ70/UhX+bBzy1YlAwSw1OAw5siYTwcytnzg==
+X-Received: by 2002:a62:ae06:: with SMTP id q6mr6445843pff.96.1571401304946;
+        Fri, 18 Oct 2019 05:21:44 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id x72sm7862284pfc.89.2019.10.18.05.18.48
+        by smtp.gmail.com with ESMTPSA id r24sm6749355pfh.69.2019.10.18.05.21.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 05:18:49 -0700 (PDT)
+        Fri, 18 Oct 2019 05:21:43 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 4F9574042C; Fri, 18 Oct 2019 12:18:48 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 12:18:48 +0000
+        id 843DE4042C; Fri, 18 Oct 2019 12:21:42 +0000 (UTC)
+Date:   Fri, 18 Oct 2019 12:21:42 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Matthias Maennich <maennich@google.com>
-Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
-        Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: Module loading problem since 5.3
-Message-ID: <20191018121848.GB11244@42.do-not-panic.com>
-References: <20191014085235.GW16384@42.do-not-panic.com>
- <20191014144440.GG35313@google.com>
- <20191016125030.GH16384@42.do-not-panic.com>
- <20191016133710.GB35139@google.com>
+To:     Alan Maguire <alan.maguire@oracle.com>,
+        Matthias Maennich <maennich@google.com>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
+        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
+        changbin.du@intel.com, kunit-dev@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Knut Omang <knut.omang@oracle.com>
+Subject: Re: [PATCH v2 linux-kselftest-test 1/3] kunit: allow kunit tests to
+ be loaded as a module
+Message-ID: <20191018122142.GC11244@42.do-not-panic.com>
+References: <1570546546-549-1-git-send-email-alan.maguire@oracle.com>
+ <1570546546-549-2-git-send-email-alan.maguire@oracle.com>
+ <20191008213535.GB186342@google.com>
+ <alpine.LRH.2.20.1910091726010.2517@dhcp-10-175-191-127.vpn.oracle.com>
+ <CAFd5g46_6McK06XSrX=EZ9AaYYitQzd2CTvPMX+rPymisDq5uQ@mail.gmail.com>
+ <alpine.LRH.2.20.1910111105350.21459@dhcp-10-175-191-48.vpn.oracle.com>
+ <20191016230116.GA82401@google.com>
+ <alpine.LRH.2.20.1910171930410.21739@dhcp-10-175-161-223.vpn.oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191016133710.GB35139@google.com>
+In-Reply-To: <alpine.LRH.2.20.1910171930410.21739@dhcp-10-175-161-223.vpn.oracle.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 02:37:10PM +0100, Matthias Maennich wrote:
-> On Wed, Oct 16, 2019 at 12:50:30PM +0000, Luis Chamberlain wrote:
-> > On Mon, Oct 14, 2019 at 03:44:40PM +0100, Matthias Maennich wrote:
-> > > Hi Luis!
-> > > 
-> > > On Mon, Oct 14, 2019 at 08:52:35AM +0000, Luis Chamberlain wrote:
-> > > > On Fri, Oct 11, 2019 at 09:26:05PM +0200, Heiner Kallweit wrote:
-> > > > > On 10.10.2019 19:15, Luis Chamberlain wrote:
-> > > > > >
-> > > > > >
-> > > > > > On Thu, Oct 10, 2019, 6:50 PM Heiner Kallweit <hkallweit1@gmail.com <mailto:hkallweit1@gmail.com>> wrote:
-> > > > > >
-> > > > > >        MODULE_SOFTDEP("pre: realtek")
-> > > > > >
-> > > > > >     Are you aware of any current issues with module loading
-> > > > > >     that could cause this problem?
-> > > > > >
-> > > > > >
-> > > > > > Nope. But then again I was not aware of MODULE_SOFTDEP(). I'd encourage an extension to lib/kmod.c or something similar which stress tests this. One way that comes to mind to test this is to allow a new tests case which loads two drives which co depend on each other using this macro. That'll surely blow things up fast. That is, the current kmod tests uses request_module() or get_fs_type(), you'd want a new test case with this added using then two new dummy test drivers with the macro dependency.
-> > > > > >
-> > > > > > If you want to resolve this using a more tested path, you could have request_module() be used as that is currently tested. Perhaps a test patch for that can rule out if it's the macro magic which is the issue.
-> > > > > >
-> > > > > >   Luis
-> > > > >
-> > > > > Maybe issue is related to a bug in introduction of symbol namespaces, see here:
-> > > > > https://lkml.org/lkml/2019/10/11/659
-> > > >
-> > > > Can you have your user with issues either revert 8651ec01daed or apply the fixes
-> > > > mentioned by Matthias to see if that was the issue?
-> > > >
-> > > > Matthias what module did you run into which let you run into the issue
-> > > > with depmod? I ask as I think it would be wise for us to add a test case
-> > > > using lib/test_kmod.c and tools/testing/selftests/kmod/kmod.sh for the
-> > > > regression you detected.
-> > > 
-> > > The depmod warning can be reproduced when using a symbol that is built
-> > > into vmlinux and used from a module. E.g. with CONFIG_USB_STORAGE=y and
-> > > CONFIG_USB_UAS=m, the symbol `usb_stor_adjust_quirks` is built in with
-> > > namespace USB_STORAGE and depmod stumbles upon this emitting the
-> > > following warning (e.g. during make modules_install).
-> > > 
-> > >  depmod: WARNING: [...]/uas.ko needs unknown symbol usb_stor_adjust_quirks
-> > > 
-> > > As there is another (less intrusive) way of implementing the namespace
-> > > feature, I posted a patch series [1] on last Thursday that should
-> > > mitigate the issue as the ksymtab entries depmod eventually relies on
-> > > are no longer carrying the namespace in their names.
-> > > 
-> > > Cheers,
-> > > Matthias
-> > > 
-> > > [1] https://lore.kernel.org/lkml/20191010151443.7399-1-maennich@google.com/
-> > 
-> > Yes but kmalloc() is built-in, and used by *all* drivers compiled as
-> > modules, so why was that an issue?
-> 
-> I believe you meant, "why was that *not* an issue?".
+On Thu, Oct 17, 2019 at 07:32:18PM +0100, Alan Maguire wrote:
+> kunit needs a non-exported global kernel symbol 
+> (sysctl_hung_task_timeout_secs).
 
-Right.
+Sounds like a perfect use case for the new symbol namespaces [0]. We
+wouldn't want random drivers importing this namespace, but for kunit it
+would seem reasonable.
 
-> In ksymtab, namespaced symbols had the format
-> 
->  __ksymtab_<NAMESPACE>.<symbol>
-> 
-> while symbols without namespace would still use the old format
-> 
->  __ksymtab_<symbol>
-
-Ah, I didn't see the symbol namespace patches, good stuff!
-
-> These are also the names that are extracted into System.map (using
-> scripts/mksysmap). Depmod is reading the System.map and for symbols used
-> by modules that are in a namespace, it would not find a match as it does
-> not understand the namespace notation. Depmod would still not emit a
-> warning for symbols without namespace as their format did not change.
-
-Can we have a test case for this to ensure we don't regress on this
-again? Or put another way, what test cases were implemented for symbol
-namespaces?
+[0] https://lwn.net/Articles/798254/
 
   Luis
