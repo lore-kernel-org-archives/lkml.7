@@ -2,110 +2,126 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6220CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E51F1CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9E6E222C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B62A7222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:32:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="qaiuU0Go"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410349AbfJRNbe (ORCPT
+        id S2408509AbfJRNcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 09:31:34 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:45416 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408509AbfJRNbe (ORCPT
+        Fri, 18 Oct 2019 09:32:35 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43020 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729783AbfJRNcf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 09:31:34 -0400
-Received: by mail-qk1-f194.google.com with SMTP id z67so5230288qkb.12;
-        Fri, 18 Oct 2019 06:31:33 -0700 (PDT)
+        Fri, 18 Oct 2019 09:32:35 -0400
+Received: by mail-lf1-f65.google.com with SMTP id u3so4717072lfl.10
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 06:32:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=syfG/SB9c17JrhI1N+k3VpvBr6cBzB/Bcv38TbgnCxM=;
+        b=qaiuU0GoVjsz/FcEqLxFFZ8qZsTLE3jHdRFi++Ifuafz0dbtwSO+XYhUrSxl2sf4Vh
+         3nBdCnCbfb2bAfDAegfpRX3zsvhPjlZCAKt3qS/w9rrf6QVThLrKDZG3yLeCGfhVkG3E
+         +CN7Gjmezq3qLL7oDOQwbe0tRoGLZzFVVk3CzWbrbVFWRkS435+D0a9f1iAlRqar60LU
+         SKqys5I2rTnXWhAYMHS3JAUCn7Oeuij/i5Ga51hMeAEKGkpZOn2b4J4xNSHm4BE93Nie
+         qvJR3macVG00ZvCX2a+l++KLa83rTMENA7yJbLjdDhpKEC/GcjBfsk0R+/OE+gAP0NMQ
+         2nfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tpuqPfUBPTEqWzHgbYNa7ad4BsKzW7eS2KnXx2Hiqco=;
-        b=txP5fwCI3WUIZws4MVeGifPoLuCDRPA7Plw7TyNdkA53uP+G8MWtyuFOH+lfR22JFj
-         +DroiMesz8CxtTpkRL1TAWOLARyE8GPTdVUuz4VBpaxHcrcDh8SsaP5rNqfgP3gm7+PN
-         ECLoGVu53k9z9B41BZ7G2Fvj0FV7WIWC1JQEOUlKpxpz7LN7w/P/x4aumhm3oFXKXMrz
-         y/kizVxtj4OOLWW7XnSkC4aRq9wCoSX/ADsRGlobqepGAglSjvtLxnjF1zOmbc9K9jIv
-         OkOv9fmie4IjnvHRGizDncx3j1RD4EriOoE4zj41tho/ptxHB3XqvWyImDxmI3/gdHPL
-         k8zQ==
-X-Gm-Message-State: APjAAAUC6wfDQkGolXKY+AfONn+/eXLzKpkD+4amJQt1tzKwYOpq3Nd1
-        JaV54ly69MkRPgWEKu6Y9s0c+pEdrVdr+1Oyi8o3zqo+
-X-Google-Smtp-Source: APXvYqzOMqpWH53nssj4UOb90GoWE0aTwtTW8fdt3FuVvxqZJH/Yp7jjOPhd0gjMwu9H15wolHwF2BSyXBxNndzQuco=
-X-Received: by 2002:a37:9442:: with SMTP id w63mr8599892qkd.138.1571405492947;
- Fri, 18 Oct 2019 06:31:32 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=syfG/SB9c17JrhI1N+k3VpvBr6cBzB/Bcv38TbgnCxM=;
+        b=AW0f6mdMp09mw04autWIHr6umfMeJx21VY+lX0izMfGzcrOV60tRp9GP2wrRjT0jlK
+         FgeqmIxPcCD722dGfpXC3yELjM8ScBTu+HD3LCfBZqL56UJ5LY0bl4g+oR/6Kj0t+2fH
+         53TQWtdNo3w724TtPOIeNxDPRAL2nVwq64q6j2eDGgwHiEIJ59/9gvbESkkQJ2P2Si/H
+         MFsOQLfCnKbMmnGULYVCr4NT5ceDad3DArv/FjvfPROYdZM6IE+KxeUL6n/f45rbqO9M
+         PuTkz32byE0eQoaQP4aaVMLnAGgLPtmdKX/9/KVfs9VFF7QXmWlD7jeSpizPrcMKrcKg
+         ajJQ==
+X-Gm-Message-State: APjAAAU9UxI8TVOarqxUVV+LhYDmNU56sPQWhqjnb7uVcChpRBIgh0tK
+        vbb6ytgKw3kso1OJ6z+1/3Tk0g==
+X-Google-Smtp-Source: APXvYqwrxtLRmt+8UAyTlIHQEatVXYuACllCoLjAk0nlKHS8TfYkWurnoaWInEMJmJg0RIhdnUw+sw==
+X-Received: by 2002:ac2:4196:: with SMTP id z22mr6088549lfh.171.1571405553345;
+        Fri, 18 Oct 2019 06:32:33 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id 77sm2273995ljj.84.2019.10.18.06.32.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 06:32:32 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 13348100D76; Fri, 18 Oct 2019 16:32:31 +0300 (+03)
+Date:   Fri, 18 Oct 2019 16:32:31 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Yang Shi <shy828301@gmail.com>
+Cc:     Song Liu <songliubraving@fb.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        matthew.wilcox@oracle.com, kernel-team@fb.com,
+        william.kucharski@oracle.com,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v2 4/5] mm/thp: allow drop THP from page cache
+Message-ID: <20191018133231.vifgnueulyo57vpy@box>
+References: <20191017164223.2762148-1-songliubraving@fb.com>
+ <20191017164223.2762148-5-songliubraving@fb.com>
+ <CAHbLzkoTT4p9u__EdFgt7_47NHOV5r=nB8EmvBx+1TcyzX5RJg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191009190853.245077-1-arnd@arndb.de> <20191009191044.308087-32-arnd@arndb.de>
- <1984049ff0e359801401fbbcbdbc21ee0a64c1a9.camel@codethink.co.uk>
-In-Reply-To: <1984049ff0e359801401fbbcbdbc21ee0a64c1a9.camel@codethink.co.uk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 18 Oct 2019 15:31:16 +0200
-Message-ID: <CAK8P3a2V_xP44X-Y3Mx1jX_16wKbc+T_REUP-jzj8bxPMVnifQ@mail.gmail.com>
-Subject: Re: [Y2038] [PATCH v6 31/43] compat_ioctl: move WDIOC handling into
- wdt drivers
-To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHbLzkoTT4p9u__EdFgt7_47NHOV5r=nB8EmvBx+1TcyzX5RJg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 2:49 PM Ben Hutchings
-<ben.hutchings@codethink.co.uk> wrote:
->
-> On Wed, 2019-10-09 at 21:10 +0200, Arnd Bergmann wrote:
-> > All watchdog drivers implement the same set of ioctl commands, and
-> > fortunately all of them are compatible between 32-bit and 64-bit
-> > architectures.
+On Thu, Oct 17, 2019 at 02:46:38PM -0700, Yang Shi wrote:
+> On Thu, Oct 17, 2019 at 9:42 AM Song Liu <songliubraving@fb.com> wrote:
 > >
-> > Modern drivers always go through drivers/watchdog/wdt.c as an abstraction
-> > layer, but older ones implement their own file_operations on a character
-> > device for this.
+> > From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 > >
-> > Move the handling from fs/compat_ioctl.c into the individual drivers.
+> > Once a THP is added to the page cache, it cannot be dropped via
+> > /proc/sys/vm/drop_caches. Fix this issue with proper handling in
+> > invalidate_mapping_pages().
 > >
-> > Note that most of the legacy drivers will never be used on 64-bit
-> > hardware, because they are for an old 32-bit SoC implementation, but
-> > doing them all at once is safer than trying to guess which ones do
-> > or do not need the compat_ioctl handling.
-> >
-> > Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > Fixes: 99cb0dbd47a1 ("mm,thp: add read-only THP support for (non-shmem) FS")
+> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > Tested-by: Song Liu <songliubraving@fb.com>
+> > Signed-off-by: Song Liu <songliubraving@fb.com>
 > > ---
-> >  arch/powerpc/platforms/52xx/mpc52xx_gpt.c |  1 +
-> >  arch/um/drivers/harddog_kern.c            |  1 +
-> >  drivers/char/ipmi/ipmi_watchdog.c         |  1 +
-> >  drivers/hwmon/fschmd.c                    |  1 +
-> >  drivers/rtc/rtc-ds1374.c                  |  1 +
-> [...]
->
-> It Looks like you missed a couple:
->
-> drivers/rtc/rtc-m41t80.c
+> >  mm/truncate.c | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> >
+> > diff --git a/mm/truncate.c b/mm/truncate.c
+> > index 8563339041f6..dd9ebc1da356 100644
+> > --- a/mm/truncate.c
+> > +++ b/mm/truncate.c
+> > @@ -592,6 +592,16 @@ unsigned long invalidate_mapping_pages(struct address_space *mapping,
+> >                                         unlock_page(page);
+> >                                         continue;
+> >                                 }
+> > +
+> > +                               /* Take a pin outside pagevec */
+> > +                               get_page(page);
+> > +
+> > +                               /*
+> > +                                * Drop extra pins before trying to invalidate
+> > +                                * the huge page.
+> > +                                */
+> > +                               pagevec_remove_exceptionals(&pvec);
+> > +                               pagevec_release(&pvec);
+> 
+> Shall we skip the outer pagevec_remove_exceptions() if it has been done here?
 
-No idea how I missed this. Adding it now.
+It will be NOP and skipping would complicate the code.
 
-> drivers/watchdog/kempld_wdt.c
-
-This one is covered: the watchdog_ops->ioctl is called by
-the wdt_dev_ioctl() function as a fallback.
-
-After checking once more, I did find another instance I missed
-though: drivers/hwmon/w83793.c, I'm adding that as welll now.
-
-m41t80 does not seem to have any 64-bit machines using it,
-but w83793 does, and they clearly both should have been
-changed.
-
-Thanks for the review!
-
-     Arnd
+-- 
+ Kirill A. Shutemov
