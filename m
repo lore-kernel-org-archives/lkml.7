@@ -2,165 +2,333 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFAECA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCACCA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF89F222C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D04A420700
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:59:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571396394;
+	bh=C0oaF/LUZbwGSmIKK8nfBLn+DFTEexNnXTvK9V8ECJQ=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=C6/GhTyLVMV0+mmQgK2Yxy96q79N0VSChf/2e+IPHejPKYhYj5quUKrp1NpiwgObM
+	 KP+NH9oLXS7Kt0w+7BLp0+pG9TrMFtxSwuSMJ5c1QrrtDL7HlvXhJb4+lTC9WT3O54
+	 MkanTpvDs1+LK/k/djPs+VD4J3mcskqtfJzpgZ3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633398AbfJRK7V (ORCPT
+        id S2407745AbfJRK7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 06:59:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55788 "EHLO mx1.redhat.com"
+        Fri, 18 Oct 2019 06:59:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392257AbfJRK7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 06:59:21 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2392257AbfJRK7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 06:59:53 -0400
+Received: from localhost (unknown [209.136.236.94])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3DBB3CA377;
-        Fri, 18 Oct 2019 10:59:20 +0000 (UTC)
-Received: from [10.72.12.59] (ovpn-12-59.pek2.redhat.com [10.72.12.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 87CDC60852;
-        Fri, 18 Oct 2019 10:57:30 +0000 (UTC)
-Subject: Re: [PATCH V4 4/6] mdev: introduce virtio device and its device ops
-To:     Tiwei Bie <tiwei.bie@intel.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-References: <20191017104836.32464-1-jasowang@redhat.com>
- <20191017104836.32464-5-jasowang@redhat.com> <20191018094655.GA4200@___>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <a2a8e447-c778-59db-071a-ffa348a69bb8@redhat.com>
-Date:   Fri, 18 Oct 2019 18:57:22 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A94020700;
+        Fri, 18 Oct 2019 10:59:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571396391;
+        bh=C0oaF/LUZbwGSmIKK8nfBLn+DFTEexNnXTvK9V8ECJQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=GCdbKZabd0mmNR0MZdjnYfq5flKbovSS5779a2cL5Y/d9BiPSaobQztEDxoPRZ/Ok
+         i7BtO1doGjU1Ru3aI/gnswHCE6ZL+wduoEBBvdfVv9Obu0MYL0YVlGmAFaCKoUMuv9
+         MWapOB1gNU8hZyn8KOd8znrKXtIXcHgX44tgV5mw=
+Date:   Fri, 18 Oct 2019 03:59:50 -0700
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.4.197
+Message-ID: <20191018105950.GA1176229@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20191018094655.GA4200@___>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 18 Oct 2019 10:59:20 +0000 (UTC)
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+I'm announcing the release of the 4.4.197 kernel.
 
-On 2019/10/18 下午5:46, Tiwei Bie wrote:
-> On Thu, Oct 17, 2019 at 06:48:34PM +0800, Jason Wang wrote:
->> + * @get_vq_state:		Get the state for a virtqueue
->> + *				@mdev: mediated device
->> + *				@idx: virtqueue index
->> + *				Returns virtqueue state (last_avail_idx)
->> + * @get_vq_align:		Get the virtqueue align requirement
->> + *				for the device
->> + *				@mdev: mediated device
->> + *				Returns virtqueue algin requirement
->> + * @get_features:		Get virtio features supported by the device
->> + *				@mdev: mediated device
->> + *				Returns the virtio features support by the
->> + *				device
->> + * @get_features:		Set virtio features supported by the driver
-> s/get_features/set_features/
+All users of the 4.4 kernel series must upgrade.
 
+The updated 4.4.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.4.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
-Will fix.
+thanks,
 
+greg k-h
 
->
->> + *				configration space
->> + * @get_mdev_features:		Get the feature of virtio mdev device
->> + *				@mdev: mediated device
->> + *				Returns the mdev features (API) support by
->> + *				the device.
->> + * @get_generation:		Get device generaton
->> + *				@mdev: mediated device
->> + *				Returns u32: device generation
->> + */
->> +struct virtio_mdev_device_ops {
->> +	/* Virtqueue ops */
->> +	int (*set_vq_address)(struct mdev_device *mdev,
->> +			      u16 idx, u64 desc_area, u64 driver_area,
->> +			      u64 device_area);
->> +	void (*set_vq_num)(struct mdev_device *mdev, u16 idx, u32 num);
->> +	void (*kick_vq)(struct mdev_device *mdev, u16 idx);
->> +	void (*set_vq_cb)(struct mdev_device *mdev, u16 idx,
->> +			  struct virtio_mdev_callback *cb);
->> +	void (*set_vq_ready)(struct mdev_device *mdev, u16 idx, bool ready);
->> +	bool (*get_vq_ready)(struct mdev_device *mdev, u16 idx);
->> +	int (*set_vq_state)(struct mdev_device *mdev, u16 idx, u64 state);
->> +	u64 (*get_vq_state)(struct mdev_device *mdev, u16 idx);
->> +
->> +	/* Device ops */
->> +	u16 (*get_vq_align)(struct mdev_device *mdev);
->> +	u64 (*get_features)(struct mdev_device *mdev);
->> +	int (*set_features)(struct mdev_device *mdev, u64 features);
->> +	void (*set_config_cb)(struct mdev_device *mdev,
->> +			      struct virtio_mdev_callback *cb);
->> +	u16 (*get_vq_num_max)(struct mdev_device *mdev);
->> +	u32 (*get_device_id)(struct mdev_device *mdev);
->> +	u32 (*get_vendor_id)(struct mdev_device *mdev);
->> +	u8 (*get_status)(struct mdev_device *mdev);
->> +	void (*set_status)(struct mdev_device *mdev, u8 status);
->> +	void (*get_config)(struct mdev_device *mdev, unsigned int offset,
->> +			   void *buf, unsigned int len);
->> +	void (*set_config)(struct mdev_device *mdev, unsigned int offset,
->> +			   const void *buf, unsigned int len);
->> +	u64 (*get_mdev_features)(struct mdev_device *mdev);
-> Do we need a .set_mdev_features method as well?
+------------
 
+ Documentation/usb/rio.txt                      |  138 -----
+ MAINTAINERS                                    |    7 
+ Makefile                                       |    2 
+ arch/arm/configs/badge4_defconfig              |    1 
+ arch/arm/configs/corgi_defconfig               |    1 
+ arch/arm/configs/s3c2410_defconfig             |    1 
+ arch/arm/configs/spitz_defconfig               |    1 
+ arch/arm64/include/asm/cpufeature.h            |   29 -
+ arch/arm64/kernel/cpufeature.c                 |   35 -
+ arch/arm64/kernel/debug-monitors.c             |    2 
+ arch/arm64/kvm/sys_regs.c                      |    2 
+ arch/arm64/mm/context.c                        |    3 
+ arch/mips/configs/mtx1_defconfig               |    1 
+ arch/mips/configs/rm200_defconfig              |    1 
+ arch/powerpc/platforms/powernv/opal.c          |   11 
+ arch/s390/kernel/topology.c                    |    3 
+ arch/s390/kvm/kvm-s390.c                       |    2 
+ arch/x86/include/asm/mwait.h                   |    2 
+ arch/x86/kvm/vmx.c                             |    2 
+ arch/x86/lib/delay.c                           |    4 
+ drivers/crypto/caam/caamalg.c                  |   11 
+ drivers/crypto/qat/qat_common/adf_common_drv.h |    2 
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c        |    3 
+ drivers/iio/adc/ad799x.c                       |    4 
+ drivers/iio/light/opt3001.c                    |    6 
+ drivers/media/usb/stkwebcam/stk-webcam.c       |    3 
+ drivers/net/can/spi/mcp251x.c                  |   19 
+ drivers/net/ieee802154/atusb.c                 |    3 
+ drivers/s390/cio/ccwgroup.c                    |    2 
+ drivers/s390/cio/css.c                         |    2 
+ drivers/staging/fbtft/fbtft-core.c             |    7 
+ drivers/staging/vt6655/device_main.c           |    4 
+ drivers/thermal/thermal_core.c                 |    2 
+ drivers/tty/serial/uartlite.c                  |    3 
+ drivers/usb/class/usblp.c                      |    8 
+ drivers/usb/gadget/udc/dummy_hcd.c             |    3 
+ drivers/usb/host/xhci.c                        |   32 -
+ drivers/usb/image/microtek.c                   |    4 
+ drivers/usb/misc/Kconfig                       |   10 
+ drivers/usb/misc/Makefile                      |    1 
+ drivers/usb/misc/adutux.c                      |   26 -
+ drivers/usb/misc/chaoskey.c                    |    5 
+ drivers/usb/misc/iowarrior.c                   |   16 
+ drivers/usb/misc/ldusb.c                       |   24 -
+ drivers/usb/misc/legousbtower.c                |   58 +-
+ drivers/usb/misc/rio500.c                      |  578 -------------------------
+ drivers/usb/misc/rio500_usb.h                  |   37 -
+ drivers/usb/misc/usblcd.c                      |   33 +
+ drivers/usb/misc/yurex.c                       |   18 
+ drivers/usb/renesas_usbhs/common.h             |    1 
+ drivers/usb/renesas_usbhs/fifo.c               |    2 
+ drivers/usb/renesas_usbhs/fifo.h               |    1 
+ drivers/usb/renesas_usbhs/mod_gadget.c         |   18 
+ drivers/usb/renesas_usbhs/pipe.c               |   15 
+ drivers/usb/renesas_usbhs/pipe.h               |    1 
+ drivers/usb/serial/ftdi_sio.c                  |    3 
+ drivers/usb/serial/ftdi_sio_ids.h              |    9 
+ drivers/usb/serial/keyspan.c                   |    4 
+ drivers/usb/serial/option.c                    |   11 
+ drivers/usb/serial/usb-serial.c                |    5 
+ drivers/usb/usb-skeleton.c                     |   15 
+ drivers/xen/pci.c                              |   21 
+ fs/9p/vfs_file.c                               |    3 
+ fs/ceph/inode.c                                |    7 
+ fs/cifs/dir.c                                  |    8 
+ fs/cifs/file.c                                 |    6 
+ fs/cifs/inode.c                                |   28 +
+ fs/fuse/cuse.c                                 |    1 
+ fs/nfs/nfs4xdr.c                               |    2 
+ fs/xfs/xfs_super.c                             |   10 
+ include/linux/ieee80211.h                      |   53 ++
+ include/sound/soc-dapm.h                       |    2 
+ kernel/elfcore.c                               |    1 
+ kernel/fork.c                                  |    4 
+ kernel/panic.c                                 |    1 
+ kernel/trace/trace.c                           |   17 
+ net/wireless/nl80211.c                         |   39 +
+ net/wireless/reg.c                             |    2 
+ net/wireless/wext-compat.c                     |    2 
+ security/integrity/ima/ima_crypto.c            |    5 
+ sound/soc/codecs/sgtl5000.c                    |  232 ++++++++--
+ tools/lib/traceevent/event-parse.c             |    3 
+ tools/perf/builtin-stat.c                      |    2 
+ tools/perf/util/llvm-utils.c                   |    6 
+ 84 files changed, 718 insertions(+), 994 deletions(-)
 
-Good question. To me I think we may document that the API provides 
-backward compatibility, so there's no need for set_mdev_features. Or is 
-there any other chance that we need that?
+Alan Stern (1):
+      USB: yurex: Don't retry on unexpected errors
 
+Alexander Sverdlin (1):
+      crypto: qat - Silence smp_processor_id() warning
 
->
-> It's not very clear what does mdev_features mean.
-> Does it mean the vhost backend features?
->
-> https://github.com/torvalds/linux/blob/0e2adab6cf285c41e825b6c74a3aa61324d1132c/include/uapi/linux/vhost.h#L93-L94
+Andrew Donnellan (1):
+      powerpc/powernv: Restrict OPAL symbol map to only be readable by root
 
+Bastien Nocera (1):
+      USB: rio500: Remove Rio 500 kernel driver
 
-Something like this, it's kind of the version of the API, except for the 
-_F_VERSION_1, the first user should be _F_LOG_ALL. I will add more docs 
-for this API.
+Beni Mahler (1):
+      USB: serial: ftdi_sio: add device IDs for Sienna and Echelon PL-20
 
-Thanks
+Chengguang Xu (1):
+      9p: avoid attaching writeback_fid on mmap with type PRIVATE
 
+Colin Ian King (1):
+      USB: adutux: remove redundant variable minor
 
->
->
->> +	u32 (*get_generation)(struct mdev_device *mdev);
->> +};
->> +
->> +void mdev_set_virtio_ops(struct mdev_device *mdev,
->> +			 const struct virtio_mdev_device_ops *virtio_ops);
->> +
->> +#endif
->> -- 
->> 2.19.1
->>
+Daniele Palmas (1):
+      USB: serial: option: add Telit FN980 compositions
+
+Dave Chinner (1):
+      xfs: clear sb->s_fs_info on mount failure
+
+David Frey (1):
+      iio: light: opt3001: fix mutex unlock race
+
+Greg Kroah-Hartman (1):
+      Linux 4.4.197
+
+Horia Geantă (1):
+      crypto: caam - fix concurrency issue in givencrypt descriptor
+
+Ian Rogers (1):
+      perf llvm: Don't access out-of-scope array
+
+Ido Schimmel (1):
+      thermal: Fix use-after-free when unregistering thermal zone device
+
+Igor Druzhinin (1):
+      xen/pci: reserve MCFG areas earlier
+
+Jack Wang (1):
+      KVM: nVMX: handle page fault in vmread fix
+
+Jacky.Cao@sony.com (1):
+      USB: dummy-hcd: fix power budget for SuperSpeed mode
+
+Jan Schmidt (1):
+      xhci: Check all endpoints for LPM timeout
+
+Janakarajan Natarajan (1):
+      x86/asm: Fix MWAITX C-state hint value
+
+Jia-Ju Bai (1):
+      fs: nfs: Fix possible null-pointer dereferences in encode_attrs()
+
+Johan Hovold (23):
+      ieee802154: atusb: fix use-after-free at disconnect
+      USB: yurex: fix NULL-derefs on disconnect
+      USB: usb-skeleton: fix runtime PM after driver unbind
+      USB: usb-skeleton: fix NULL-deref on disconnect
+      USB: adutux: fix use-after-free on disconnect
+      USB: adutux: fix NULL-derefs on disconnect
+      USB: adutux: fix use-after-free on release
+      USB: iowarrior: fix use-after-free on disconnect
+      USB: iowarrior: fix use-after-free on release
+      USB: iowarrior: fix use-after-free after driver unbind
+      USB: usblp: fix runtime PM after driver unbind
+      USB: chaoskey: fix use-after-free on release
+      USB: ldusb: fix NULL-derefs on driver unbind
+      USB: serial: keyspan: fix NULL-derefs on open() and write()
+      USB: serial: fix runtime PM after driver unbind
+      USB: usblcd: fix I/O after disconnect
+      USB: microtek: fix info-leak at probe
+      USB: legousbtower: fix slab info leak at probe
+      USB: legousbtower: fix deadlock on disconnect
+      USB: legousbtower: fix potential NULL-deref on disconnect
+      USB: legousbtower: fix open after failed reset request
+      USB: legousbtower: fix use-after-free on release
+      media: stkwebcam: fix runtime PM after driver unbind
+
+Johannes Berg (3):
+      cfg80211: initialize on-stack chandefs
+      cfg80211: add and use strongly typed element iteration macros
+      nl80211: validate beacon head
+
+Jouni Malinen (1):
+      cfg80211: Use const more consistently in for_each_element macros
+
+Kai-Heng Feng (1):
+      xhci: Increase STS_SAVE timeout in xhci_suspend()
+
+Luis Henriques (1):
+      ceph: fix directories inode i_blkbits initialization
+
+Marc Kleine-Budde (1):
+      can: mcp251x: mcp251x_hw_reset(): allow more time after a reset
+
+Marco Felsch (1):
+      iio: adc: ad799x: fix probe error handling
+
+Mathias Nyman (1):
+      xhci: Prevent device initiated U1/U2 link pm if exit latency is too long
+
+Michal Hocko (1):
+      kernel/sysctl.c: do not override max_threads provided by userspace
+
+Navid Emamdoost (2):
+      staging: vt6655: Fix memory leak in vt6655_probe
+      Staging: fbtft: fix memory leak in fbtft_framebuffer_alloc
+
+Oleksandr Suvorov (2):
+      ASoC: Define a set of DAPM pre/post-up events
+      ASoC: sgtl5000: Improve VAG power and mute control
+
+Pavel Shilovsky (3):
+      CIFS: Gracefully handle QueryInfo errors during open
+      CIFS: Force reval dentry if LOOKUP_REVAL flag is set
+      CIFS: Force revalidate inode when dentry is stale
+
+Randy Dunlap (1):
+      serial: uartlite: fix exit path null pointer
+
+Reinhard Speyerer (1):
+      USB: serial: option: add support for Cinterion CLS8 devices
+
+Rick Tseng (1):
+      usb: xhci: wait for CNR controller not ready bit in xhci resume
+
+Ross Lagerwall (1):
+      cifs: Check uniqueid for SMB2+ and return -ESTALE if necessary
+
+Sascha Hauer (1):
+      ima: always return negative code for error
+
+Srikar Dronamraju (1):
+      perf stat: Fix a segmentation fault when using repeat forever
+
+Steven Rostedt (VMware) (2):
+      tools lib traceevent: Do not free tep->cmdlines in add_new_comm() on failure
+      tracing: Get trace_array reference for available_tracers files
+
+Suzuki K Poulose (2):
+      arm64: capabilities: Handle sign of the feature bit
+      arm64: Rename cpuid_feature field extract routines
+
+Thomas Huth (1):
+      KVM: s390: Test for bad access register and size at the start of S390_MEM_OP
+
+Trek (1):
+      drm/amdgpu: Check for valid number of registers to read
+
+Valdis Kletnieks (1):
+      kernel/elfcore.c: include proper prototypes
+
+Vasily Gorbik (3):
+      s390/topology: avoid firing events before kobjs are created
+      s390/cio: avoid calling strlen on null pointer
+      s390/cio: exclude subchannels with no parent from pseudo check
+
+Will Deacon (1):
+      panic: ensure preemption is disabled during panic()
+
+Yoshihiro Shimoda (2):
+      usb: renesas_usbhs: gadget: Do not discard queues in usb_ep_set_{halt,wedge}()
+      usb: renesas_usbhs: gadget: Fix usb_ep_set_{halt,wedge}() behavior
+
+zhengbin (1):
+      fuse: fix memleak in cuse_channel_open
+
