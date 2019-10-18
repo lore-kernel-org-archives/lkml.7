@@ -2,157 +2,131 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 364E9CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48778CA9EA6
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 067C42089C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:01:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571403693;
-	bh=Bevh8gSJ/jtVLsZIKj/ZV4ezP4mN9fYBUs3vexfffSo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F1/1QaLhlreCMugmoBNpJD4URy/39L9XD3MnXkoIWhKgEVievq6eJc+2LuFUc9qTZ
-	 a+LcLxJItc3NTLSbZHPJ/V71ukFqrHtnbGjSfwMB/H04MuL0YfXyajbKd7CEyBJnNN
-	 h+P0rhRkXws0jq3KNy2kWcZLYVpRGezXRINpZ6ho=
+	by mail.kernel.org (Postfix) with ESMTP id 222F12089C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:01:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="V36NPl2g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410211AbfJRNBb (ORCPT
+        id S2410221AbfJRNBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 09:01:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44958 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2410165AbfJRNBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 09:01:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 70035AEF3;
-        Fri, 18 Oct 2019 13:01:28 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 15:01:27 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Borislav Petkov <bp@alien8.de>, Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] mm, meminit: Recalculate pcpu batch and high limits
- after init completes
-Message-ID: <20191018130127.GP5017@dhcp22.suse.cz>
-References: <20191018105606.3249-1-mgorman@techsingularity.net>
- <20191018105606.3249-3-mgorman@techsingularity.net>
+        Fri, 18 Oct 2019 09:01:33 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:48132 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2410201AbfJRNBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 09:01:32 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46vmPk1lMZzB09b0;
+        Fri, 18 Oct 2019 15:01:30 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=V36NPl2g; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 7kP6dKzeFt4q; Fri, 18 Oct 2019 15:01:30 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46vmPk0gjjzB09Zw;
+        Fri, 18 Oct 2019 15:01:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1571403690; bh=I1VMzgDpQacCcFVqFBepaAY9ZdCU2g4skomvficbUgo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=V36NPl2ghgYXPsiMJKmq37EE8nFCg3F0wUdkilhhKCYptgtZHVg0yYaXsgcfJB/dw
+         XgTxpVCnTzH5bl2NXEdBstoRltcAzsC9WQn81wfpkNh6WEyaK1buqVUWoWaEIxuqYx
+         8J8Ie7KRb54AKQutihiVrpv9VXDnAOpxxVgAZARw=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0038F8B802;
+        Fri, 18 Oct 2019 15:01:29 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id SGZtcWX72nh9; Fri, 18 Oct 2019 15:01:29 +0200 (CEST)
+Received: from [192.168.204.43] (unknown [192.168.204.43])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 20E738B800;
+        Fri, 18 Oct 2019 15:01:29 +0200 (CEST)
+Subject: Re: [PATCH 2/7] soc: fsl: qe: drop volatile qualifier of struct
+ qe_ic::regs
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
+ <20191018125234.21825-3-linux@rasmusvillemoes.dk>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <841cd430-4e8b-13fd-1f80-27aef9e1bd11@c-s.fr>
+Date:   Fri, 18 Oct 2019 15:01:28 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018105606.3249-3-mgorman@techsingularity.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191018125234.21825-3-linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 18-10-19 11:56:05, Mel Gorman wrote:
-> Deferred memory initialisation updates zone->managed_pages during
-> the initialisation phase but before that finishes, the per-cpu page
-> allocator (pcpu) calculates the number of pages allocated/freed in
-> batches as well as the maximum number of pages allowed on a per-cpu list.
-> As zone->managed_pages is not up to date yet, the pcpu initialisation
-> calculates inappropriately low batch and high values.
-> 
-> This increases zone lock contention quite severely in some cases with the
-> degree of severity depending on how many CPUs share a local zone and the
-> size of the zone. A private report indicated that kernel build times were
-> excessive with extremely high system CPU usage. A perf profile indicated
-> that a large chunk of time was lost on zone->lock contention.
-> 
-> This patch recalculates the pcpu batch and high values after deferred
-> initialisation completes on each node. It was tested on a 2-socket AMD
-> EPYC 2 machine using a kernel compilation workload -- allmodconfig and
-> all available CPUs.
-> 
-> mmtests configuration: config-workload-kernbench-max
-> Configuration was modified to build on a fresh XFS partition.
-> 
-> kernbench
->                                 5.4.0-rc3              5.4.0-rc3
->                                   vanilla         resetpcpu-v1r1
-> Amean     user-256    13249.50 (   0.00%)    15928.40 * -20.22%*
-> Amean     syst-256    14760.30 (   0.00%)     4551.77 *  69.16%*
-> Amean     elsp-256      162.42 (   0.00%)      118.46 *  27.06%*
-> Stddev    user-256       42.97 (   0.00%)       50.83 ( -18.30%)
-> Stddev    syst-256      336.87 (   0.00%)       33.70 (  90.00%)
-> Stddev    elsp-256        2.46 (   0.00%)        0.81 (  67.01%)
-> 
->                    5.4.0-rc3   5.4.0-rc3
->                      vanillaresetpcpu-v1r1
-> Duration User       39766.24    47802.92
-> Duration System     44298.10    13671.93
-> Duration Elapsed      519.11      387.65
-> 
-> The patch reduces system CPU usage by 69.16% and total build time by
-> 27.06%. The variance of system CPU usage is also much reduced.
 
-The fix makes sense. It would be nice to see the difference in the batch
-sizes from the initial setup compared to the one after the deferred
-intialization is done
 
-> Cc: stable@vger.kernel.org # v4.15+
-
-Hmm, are you sure about 4.15? Doesn't this go all the way down to
-deferred initialization? I do not see any recent changes on when
-setup_per_cpu_pageset is called.
-
-> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-
+Le 18/10/2019 à 14:52, Rasmus Villemoes a écrit :
+> The actual io accessors (e.g. in_be32) implicitly add a volatile
+> qualifier to their address argument. Remove volatile from the struct
+> definition and the qe_ic_(read/write) helpers, in preparation for
+> switching from the ppc-specific io accessors to generic ones.
+> 
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 > ---
->  mm/page_alloc.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+>   drivers/soc/fsl/qe/qe_ic.c | 4 ++--
+>   drivers/soc/fsl/qe/qe_ic.h | 2 +-
+>   2 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index cafe568d36f6..0a0dd74edc83 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -1818,6 +1818,14 @@ static int __init deferred_init_memmap(void *data)
->  	 */
->  	while (spfn < epfn)
->  		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
-> +
-> +	/*
-> +	 * The number of managed pages has changed due to the initialisation
-> +	 * so the pcpu batch and high limits needs to be updated or the limits
-> +	 * will be artificially small.
-> +	 */
-> +	zone_pcp_update(zone);
-> +
->  zone_empty:
->  	pgdat_resize_unlock(pgdat, &flags);
->  
-> @@ -8516,7 +8524,6 @@ void free_contig_range(unsigned long pfn, unsigned int nr_pages)
->  	WARN(count != 0, "%d pages are still in use!\n", count);
->  }
->  
-> -#ifdef CONFIG_MEMORY_HOTPLUG
->  /*
->   * The zone indicated has a new number of managed_pages; batch sizes and percpu
->   * page high values need to be recalulated.
-> @@ -8527,7 +8534,6 @@ void __meminit zone_pcp_update(struct zone *zone)
->  	__zone_pcp_update(zone);
->  	mutex_unlock(&pcp_batch_high_lock);
->  }
-> -#endif
->  
->  void zone_pcp_reset(struct zone *zone)
->  {
-> -- 
-> 2.16.4
+> diff --git a/drivers/soc/fsl/qe/qe_ic.c b/drivers/soc/fsl/qe/qe_ic.c
+> index 9bac546998d3..9694569dcc76 100644
+> --- a/drivers/soc/fsl/qe/qe_ic.c
+> +++ b/drivers/soc/fsl/qe/qe_ic.c
+> @@ -171,12 +171,12 @@ static struct qe_ic_info qe_ic_info[] = {
+>   		},
+>   };
+>   
+> -static inline u32 qe_ic_read(volatile __be32  __iomem * base, unsigned int reg)
+> +static inline u32 qe_ic_read(__be32  __iomem * base, unsigned int reg)
+
+No space between '*' and 'base' please
+
+>   {
+>   	return in_be32(base + (reg >> 2));
+>   }
+>   
+> -static inline void qe_ic_write(volatile __be32  __iomem * base, unsigned int reg,
+> +static inline void qe_ic_write(__be32  __iomem * base, unsigned int reg,
+
+same
+
+>   			       u32 value)
+>   {
+>   	out_be32(base + (reg >> 2), value);
+> diff --git a/drivers/soc/fsl/qe/qe_ic.h b/drivers/soc/fsl/qe/qe_ic.h
+> index 08c695672a03..9420378d9b6b 100644
+> --- a/drivers/soc/fsl/qe/qe_ic.h
+> +++ b/drivers/soc/fsl/qe/qe_ic.h
+> @@ -72,7 +72,7 @@
+>   
+>   struct qe_ic {
+>   	/* Control registers offset */
+> -	volatile u32 __iomem *regs;
+> +	u32 __iomem *regs;
+>   
+>   	/* The remapper for this QEIC */
+>   	struct irq_domain *irqhost;
 > 
 
--- 
-Michal Hocko
-SUSE Labs
+Christophe
