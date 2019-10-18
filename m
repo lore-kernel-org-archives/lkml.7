@@ -5,61 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A7DCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DFFCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA45020869
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B28A420869
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571422054;
-	bh=SbhS45iqyc4NiRh9Fs8kUBN+NhCAOfl5HPcgwXXZ5WM=;
+	s=default; t=1571422062;
+	bh=9c6VdGtaB1yKtKhcvfzPm9WWJK2yJtZD8fOc7L5QBU0=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=TA6GyT1XzycZ/qMn/SWJHUJltsmgTUfTk4AlpVvR4IVUh9YzncgTU9Iuh8HfVrRuI
-	 ef9ZiwqmUjgnzZkoV1mtmnj78Fzrc5OtxcPwnuvgHUd3r7/Imn+VEvCFrhoL3aGoy/
-	 lr5IUJ8uXCIBCyc6sLvyL+gOjKOJSDqkUvm6oZVw=
+	b=VV5qi6jkqz6dcUyVy9B5nwHVAjdp9nEH8rXaIiKDiDdgGuGrXjQ0wFcf5DimJ3oR+
+	 ndy7540zOz4pwZ92k4u+I1OoihR+Dw60LFTDu+6xB16eHT2cfockvarP9/oNJna+qD
+	 JKpmBqvAk59j73nZ51lKOF3NFASfju58hrMjuF7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634530AbfJRSH1 (ORCPT
+        id S2634541AbfJRSHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:07:27 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45320 "EHLO
+        Fri, 18 Oct 2019 14:07:41 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45488 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505757AbfJRSHR (ORCPT
+        with ESMTP id S2634478AbfJRSHW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:07:17 -0400
+        Fri, 18 Oct 2019 14:07:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=UWYU2hlp/17q+ZNz6t8G1ig3ksQwGbwgwvY2Lux56Yk=; b=JqPCc9ztbqfq
-        YSnIrMln6LZiMJrCkj5Yq128E60d+oXbv7oWH0G0CtqD0z3X+lROeWhcIjkT10OY59dEvCKncns10
-        0rZk1rwVRh1AtMJjGNWPfBzgvpN5lX1MLg1Hqd4xAQpqaAOWdOIvH9pb9QkfrBVCycfL+kW83BCEC
-        mJSR0=;
+        List-Archive; bh=dHAwUaRTj6WzF3k5/983amBt+WSwLh0j0L7nOIxWmDw=; b=dyuu+/tMviLx
+        TOcnOCm5pCzaLOxSuAVGQpml4EQrF+FxOrYBy56ouq5fq2JdCDiLh/vtMyQeMAVw997JNd6e6+Kws
+        XKigfZ4ajuB+jjwbCoUiZcfzLhmOyxzCnWrt1Ssjwh+Em14kpVGlJVAdUJ07dpsd96lo/kQ+2KcVp
+        hSfyw=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iLWec-0004I2-Rf; Fri, 18 Oct 2019 18:07:10 +0000
+        id 1iLWeT-0004Fm-3M; Fri, 18 Oct 2019 18:07:01 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 4E1912743259; Fri, 18 Oct 2019 19:07:10 +0100 (BST)
+        id 819E72743276; Fri, 18 Oct 2019 19:07:00 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        <stable@vger.kernel.org>, stable@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Applied "spi: Fix SPI_CS_HIGH setting when using native and GPIO CS" to the spi tree
-In-Reply-To: <20191018152929.3287-1-gregory.clement@bootlin.com>
+To:     Junya Monden <jmonden@jp.adit-jv.com>
+Cc:     alsa-devel@alsa-project.org,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jiada Wang <jiada_wang@mentor.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>, stable@vger.kernel.org,
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+        Timo Wischer <twischer@de.adit-jv.com>
+Subject: Applied "ASoC: rsnd: Reinitialize bit clock inversion flag for every format setting" to the asoc tree
+In-Reply-To: <20191016124255.7442-1-erosca@de.adit-jv.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191018180710.4E1912743259@ypsilon.sirena.org.uk>
-Date:   Fri, 18 Oct 2019 19:07:10 +0100 (BST)
+Message-Id: <20191018180700.819E72743276@ypsilon.sirena.org.uk>
+Date:   Fri, 18 Oct 2019 19:07:00 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -67,11 +72,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: Fix SPI_CS_HIGH setting when using native and GPIO CS
+   ASoC: rsnd: Reinitialize bit clock inversion flag for every format setting
 
-has been applied to the spi tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -92,66 +97,45 @@ to this mail.
 Thanks,
 Mark
 
-From 3e5ec1db8bfee845d9f8560d1c64aeaccd586398 Mon Sep 17 00:00:00 2001
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Date: Fri, 18 Oct 2019 17:29:29 +0200
-Subject: [PATCH] spi: Fix SPI_CS_HIGH setting when using native and GPIO CS
+From 22e58665a01006d05f0239621f7d41cacca96cc4 Mon Sep 17 00:00:00 2001
+From: Junya Monden <jmonden@jp.adit-jv.com>
+Date: Wed, 16 Oct 2019 14:42:55 +0200
+Subject: [PATCH] ASoC: rsnd: Reinitialize bit clock inversion flag for every
+ format setting
 
-When improving the CS GPIO support at core level, the SPI_CS_HIGH
-has been enabled for all the CS lines used for a given SPI controller.
+Unlike other format-related DAI parameters, rdai->bit_clk_inv flag
+is not properly re-initialized when setting format for new stream
+processing. The inversion, if requested, is then applied not to default,
+but to a previous value, which leads to SCKP bit in SSICR register being
+set incorrectly.
+Fix this by re-setting the flag to its initial value, determined by format.
 
-However, the SPI framework allows to have on the same controller native
-CS and GPIO CS. The native CS may not support the SPI_CS_HIGH, so they
-should not be setup automatically.
-
-With this patch the setting is done only for the CS that will use a
-GPIO as CS
-
-Fixes: f3186dd87669 ("spi: Optionally use GPIO descriptors for CS GPIOs")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20191018152929.3287-1-gregory.clement@bootlin.com
+Fixes: 1a7889ca8aba3 ("ASoC: rsnd: fixup SND_SOC_DAIFMT_xB_xF behavior")
+Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Cc: Jiada Wang <jiada_wang@mentor.com>
+Cc: Timo Wischer <twischer@de.adit-jv.com>
+Cc: stable@vger.kernel.org # v3.17+
+Signed-off-by: Junya Monden <jmonden@jp.adit-jv.com>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Link: https://lore.kernel.org/r/20191016124255.7442-1-erosca@de.adit-jv.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ sound/soc/sh/rcar/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index f8b4654a57d3..d07517151340 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1711,15 +1711,7 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
- 		spi->mode |= SPI_3WIRE;
- 	if (of_property_read_bool(nc, "spi-lsb-first"))
- 		spi->mode |= SPI_LSB_FIRST;
--
--	/*
--	 * For descriptors associated with the device, polarity inversion is
--	 * handled in the gpiolib, so all chip selects are "active high" in
--	 * the logical sense, the gpiolib will invert the line if need be.
--	 */
--	if (ctlr->use_gpio_descriptors)
--		spi->mode |= SPI_CS_HIGH;
--	else if (of_property_read_bool(nc, "spi-cs-high"))
-+	if (of_property_read_bool(nc, "spi-cs-high"))
- 		spi->mode |= SPI_CS_HIGH;
- 
- 	/* Device DUAL/QUAD mode */
-@@ -1783,6 +1775,14 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
+diff --git a/sound/soc/sh/rcar/core.c b/sound/soc/sh/rcar/core.c
+index bda5b958d0dc..e9596c2096cd 100644
+--- a/sound/soc/sh/rcar/core.c
++++ b/sound/soc/sh/rcar/core.c
+@@ -761,6 +761,7 @@ static int rsnd_soc_dai_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
  	}
- 	spi->chip_select = value;
  
-+	/*
-+	 * For descriptors associated with the device, polarity inversion is
-+	 * handled in the gpiolib, so all gpio chip selects are "active high"
-+	 * in the logical sense, the gpiolib will invert the line if need be.
-+	 */
-+	if ((ctlr->use_gpio_descriptors) && ctlr->cs_gpiods[spi->chip_select])
-+		spi->mode |= SPI_CS_HIGH;
-+
- 	/* Device speed */
- 	rc = of_property_read_u32(nc, "spi-max-frequency", &value);
- 	if (rc) {
+ 	/* set format */
++	rdai->bit_clk_inv = 0;
+ 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+ 	case SND_SOC_DAIFMT_I2S:
+ 		rdai->sys_delay = 0;
 -- 
 2.20.1
 
