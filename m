@@ -2,110 +2,112 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2CDCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1E9CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F173E222C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A18521835
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:33:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439901AbfJRQd3 (ORCPT
+        id S2443132AbfJRQdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:33:29 -0400
-Received: from mga06.intel.com ([134.134.136.31]:14218 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405782AbfJRQd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:33:27 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 09:33:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,312,1566889200"; 
-   d="scan'208";a="199757212"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga003.jf.intel.com with ESMTP; 18 Oct 2019 09:33:11 -0700
-Date:   Fri, 18 Oct 2019 09:33:10 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        clang-built-linux@googlegroups.com,
+        Fri, 18 Oct 2019 12:33:39 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57687 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439813AbfJRQar (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 12:30:47 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iLV9D-0002xX-Ox; Fri, 18 Oct 2019 18:30:39 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 860911C04A9;
+        Fri, 18 Oct 2019 18:30:32 +0200 (CEST)
+Date:   Fri, 18 Oct 2019 16:30:32 -0000
+From:   "tip-bot2 for Jiri Slaby" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/asm] x86/uaccess: Annotate local function
+Cc:     Jiri Slaby <jslaby@suse.cz>, Borislav Petkov <bp@suse.de>,
         "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Borislav Petkov <bp@suse.de>
-Subject: Re: [PATCH 1/2] x86/cpu/vmware: Use the full form of INL in
- VMWARE_HYPERCALL
-Message-ID: <20191018163310.GB26319@linux.intel.com>
-References: <20191018134052.3023-1-thomas_os@shipmail.org>
- <20191018134052.3023-2-thomas_os@shipmail.org>
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        linux-arch@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "x86-ml" <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191011115108.12392-9-jslaby@suse.cz>
+References: <20191011115108.12392-9-jslaby@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191018134052.3023-2-thomas_os@shipmail.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Message-ID: <157141623236.29376.16892257264383831942.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 03:40:51PM +0200, Thomas Hellström (VMware) wrote:
-> From: Thomas Hellstrom <thellstrom@vmware.com>
-> 
-> LLVM's assembler doesn't accept the short form INL instruction:
-> 
->   inl (%%dx)
-> 
-> but instead insists on the output register to be explicitly specified.
-> 
-> This was previously fixed for the VMWARE_PORT macro. Fix it also for
-> the VMWARE_HYPERCALL macro.
-> 
-> Fixes: b4dd4f6e3648 ("Add a header file for hypercall definitions")
-> Suggested-by: Sami Tolvanen <samitolvanen@google.com>
-> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-> Cc: clang-built-linux@googlegroups.com
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: x86-ml <x86@kernel.org>
-> Cc: Borislav Petkov <bp@suse.de>
-> ---
->  arch/x86/include/asm/vmware.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/vmware.h b/arch/x86/include/asm/vmware.h
-> index e00c9e875933..f5fbe3778aef 100644
-> --- a/arch/x86/include/asm/vmware.h
-> +++ b/arch/x86/include/asm/vmware.h
-> @@ -29,7 +29,8 @@
->  
->  /* The low bandwidth call. The low word of edx is presumed clear. */
->  #define VMWARE_HYPERCALL						\
-> -	ALTERNATIVE_2("movw $" VMWARE_HYPERVISOR_PORT ", %%dx; inl (%%dx)", \
-> +	ALTERNATIVE_2("movw $" VMWARE_HYPERVISOR_PORT			\
-> +		      ", %%dx; inl (%%dx), %%eax",			\
+The following commit has been merged into the x86/asm branch of tip:
 
-Why wrap in the middle of movw?  Wrapping between instructions or letting
-the line poke out is more readable IMO, e.g.
+Commit-ID:     fa97220196fda2613a6226cc30b573bd8976e15b
+Gitweb:        https://git.kernel.org/tip/fa97220196fda2613a6226cc30b573bd8976e15b
+Author:        Jiri Slaby <jslaby@suse.cz>
+AuthorDate:    Fri, 11 Oct 2019 13:50:48 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Fri, 18 Oct 2019 10:31:42 +02:00
 
-	ALTERNATIVE_2("movw $" VMWARE_HYPERVISOR_PORT ", %%dx; "	\
-		      "inl (%%dx), %%eax",				\
+x86/uaccess: Annotate local function
 
-or
+.Lcopy_user_handle_tail is a self-standing local function, annotate it
+as such using SYM_CODE_START_LOCAL.
 
-	ALTERNATIVE_2("movw $" VMWARE_HYPERVISOR_PORT ", %%dx; inl (%%dx), %%eax", \
+Again, no functional change, just documentation.
 
->  		      "vmcall", X86_FEATURE_VMCALL,			\
->  		      "vmmcall", X86_FEATURE_VMW_VMMCALL)
->  
-> -- 
-> 2.21.0
-> 
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: linux-arch@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20191011115108.12392-9-jslaby@suse.cz
+---
+ arch/x86/lib/copy_user_64.S | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/lib/copy_user_64.S b/arch/x86/lib/copy_user_64.S
+index 86976b5..4a12b3c 100644
+--- a/arch/x86/lib/copy_user_64.S
++++ b/arch/x86/lib/copy_user_64.S
+@@ -230,8 +230,7 @@ EXPORT_SYMBOL(copy_user_enhanced_fast_string)
+  * Output:
+  * eax uncopied bytes or 0 if successful.
+  */
+-ALIGN;
+-.Lcopy_user_handle_tail:
++SYM_CODE_START_LOCAL(.Lcopy_user_handle_tail)
+ 	movl %edx,%ecx
+ 1:	rep movsb
+ 2:	mov %ecx,%eax
+@@ -239,7 +238,7 @@ ALIGN;
+ 	ret
+ 
+ 	_ASM_EXTABLE_UA(1b, 2b)
+-END(.Lcopy_user_handle_tail)
++SYM_CODE_END(.Lcopy_user_handle_tail)
+ 
+ /*
+  * copy_user_nocache - Uncached memory copy with exception handling
