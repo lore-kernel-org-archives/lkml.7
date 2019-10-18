@@ -2,113 +2,83 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 844B2CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D54DCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61DF820820
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:17:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hJcc17Pd"
+	by mail.kernel.org (Postfix) with ESMTP id 6C59A20820
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:18:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443006AbfJRSRm (ORCPT
+        id S2502625AbfJRSSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:17:42 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39574 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390705AbfJRSRl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:17:41 -0400
-Received: by mail-pl1-f196.google.com with SMTP id s17so3222555plp.6
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 11:17:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=v9YW7BHNgsQ/SyyPbXQbYasZCLbj5buK6hp2Stw/kRY=;
-        b=hJcc17Pd04cJA9HC+GwMAMjYVUY11jji7LMtJg0uX3pJdY5BbI2BFW0vbvi+yrWNz2
-         8nDsrbt4SefCcegWAfhpV1uSHk8BJ9PXRXnyjzPdYtazh1O5lcgZhGE6zCb2lJOfdree
-         xXRnqRdH7uKj9Pms/4+rIb+CNct97IEgJLAe2neoEwUUc0VcAdAotoXBAS0q7OW67pCV
-         N2ARLR1P9E732WCxfon75MUVThi+EwBib+mU6HGk1+FNlVkb9cS5GbchqGqmQGfTYyMp
-         mnI9CNShj6oOspxWy0WylGQJg99plx0jN7qJz+d+UeHSh6+NnqGdqu9qgxYjVnswNoBE
-         wy5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=v9YW7BHNgsQ/SyyPbXQbYasZCLbj5buK6hp2Stw/kRY=;
-        b=Hnh0VVrzJgxYeYQTNwRulqrocrghK1zCZM7mhxS1njGPfTxEmVzmPKnRD6b5qPT6tf
-         1idjCcmOiXS70NVHXsXabSV1FcjhlFYjUQmjnuE4VUPcvO9BiFN4cSgALMWU+96YyIPv
-         CzlzRf+1x6sL9dLupwEaHO7aFULpYkyM31J5kOaANhbS+HcyhYzE7NUf8DczIwMUJ6y8
-         kcrXzPNznt1Onn+y6k2IMSMuy/aqfqeUVVBgq4lQo51ggNrrj6wMrrSKbJ7hdMaizMzp
-         u4t99PYt7vlXpTPSGmvc+Qr+c3A+vIlAX5Niz0jr1u+xp68KgrVmLxH08YSNtbuN+SvC
-         pdew==
-X-Gm-Message-State: APjAAAU5I6yuqoK9Uke58pnd6x3qFChNrV6mILhFcbaXM8QTE6uklb5s
-        Yfi/7mAawE+kj24Q6gNWm8NE/w==
-X-Google-Smtp-Source: APXvYqwAW1evszJK3zfKVU5qC+kUrzT5nkGmV8rakyUXPWbliiBzm+rVT0a7YhJdlz/GJxIQ+EvtqA==
-X-Received: by 2002:a17:902:9a88:: with SMTP id w8mr11523945plp.129.1571422651552;
-        Fri, 18 Oct 2019 11:17:31 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:4083:538b:22e5:c2ac])
-        by smtp.gmail.com with ESMTPSA id h8sm7654640pfo.64.2019.10.18.11.17.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 18 Oct 2019 11:17:31 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org, christianshewitt@gmail.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: dts: meson-g12b-khadas-vim3: add missing frddr_a status property
-In-Reply-To: <1jbluef2sd.fsf@starbuckisacylon.baylibre.com>
-References: <20191018140216.4257-1-narmstrong@baylibre.com> <1jbluef2sd.fsf@starbuckisacylon.baylibre.com>
-Date:   Fri, 18 Oct 2019 11:17:30 -0700
-Message-ID: <7hbludc405.fsf@baylibre.com>
+        Fri, 18 Oct 2019 14:18:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58862 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2394221AbfJRSSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 14:18:44 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 914AF756;
+        Fri, 18 Oct 2019 18:18:44 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D65E21001B00;
+        Fri, 18 Oct 2019 18:18:43 +0000 (UTC)
+Subject: Re: [PATCH RT] kernel/sched: Don't recompute cpumask weight in
+ migrate_enable_update_cpus_allowed()
+To:     Scott Wood <swood@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-rt-users@vger.kernel.org
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juri Lelli <jlelli@redhat.com>
+References: <20191011140908.5161-1-longman@redhat.com>
+ <0979a9a345e47be69783a2183dd31911e9fc755e.camel@redhat.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <fc777b62-63e2-8391-ce02-3fa7b88db27a@redhat.com>
+Date:   Fri, 18 Oct 2019 14:18:43 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <0979a9a345e47be69783a2183dd31911e9fc755e.camel@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 18 Oct 2019 18:18:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
-
-> On Fri 18 Oct 2019 at 16:02, Neil Armstrong <narmstrong@baylibre.com> wrote:
->
->> In the process of moving the VIM3 audio nodes to a G12B specific dtsi
->> for enabling the SM1 based VIM3L, the frddr_a status = "okay" property
->> got dropped.
->> This re-enables the frddr_a node to fix audio support.
+On 10/12/19 3:06 AM, Scott Wood wrote:
+> On Fri, 2019-10-11 at 10:09 -0400, Waiman Long wrote:
+>> At each invocation of rt_spin_unlock(), cpumask_weight() is called
+>> via migrate_enable_update_cpus_allowed() to recompute the weight of
+>> cpus_mask which doesn't change that often.
 >>
->> Fixes: 4f26cc1c96c9 ("arm64: dts: khadas-vim3: move common nodes into meson-khadas-vim3.dtsi")
->> Reported-by: Christian Hewitt <christianshewitt@gmail.com>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->>  arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi | 4 ++++
->>  1 file changed, 4 insertions(+)
+>> The following is a sample output of perf-record running the testpmd
+>> microbenchmark on an RT kernel:
 >>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
->> index 554863429aa6..e2094575f528 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
->> @@ -152,6 +152,10 @@
->>  	clock-latency = <50000>;
->>  };
->>  
->> +&frddr_a {
->> +	status = "okay";
->> +};
->> +
->>  &frddr_b {
->>  	status = "okay";
->>  };
+>>   34.77%   1.65%  testpmd  [kernel.kallsyms]  [k] rt_spin_unlock
+>>   34.32%   2.52%  testpmd  [kernel.kallsyms]  [k] migrate_enable
+>>   21.76%  21.76%  testpmd  [kernel.kallsyms]  [k] __bitmap_weight
+>>
+>> By adding an extra variable to keep track of the weight of cpus_mask,
+>> we could eliminate the frequent call to cpumask_weight() and replace
+>> it with simple assignment.
+> Can you try this with my migrate disable patchset (which makes
+> amigrate_enable_update_cpus_allowed() be called much less often) and see if
+> caching nr_cpus_allowed still makes a difference?
 >
-> Acked-by: Jerome Brunet <jbrunet@baylibre.com>
+> -Scott
 
-Queued as a fix for v5.4-rc,
+With lazy migrate_disable, I do think my patch will no longer be necessary.
 
 Thanks,
+Longman
 
-Kevin
