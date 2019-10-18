@@ -2,74 +2,107 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDFECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5367CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EAAB21852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B93B921852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:35:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RAcZMOWD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442287AbfJRJeL (ORCPT
+        id S2392164AbfJRJfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 05:34:11 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:49773 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728507AbfJRJeK (ORCPT
+        Fri, 18 Oct 2019 05:35:03 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46873 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727917AbfJRJfD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 05:34:10 -0400
-Received: from 79.184.255.51.ipv4.supernova.orange.pl (79.184.255.51) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 10524a0729761fd6; Fri, 18 Oct 2019 11:34:08 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: linux-next: manual merge of the pm tree with the printk tree
-Date:   Fri, 18 Oct 2019 11:34:08 +0200
-Message-ID: <2158297.kSde27ogMe@kreacher>
-In-Reply-To: <20191018101938.0947d0b2@canb.auug.org.au>
-References: <20191018101938.0947d0b2@canb.auug.org.au>
+        Fri, 18 Oct 2019 05:35:03 -0400
+Received: by mail-pl1-f196.google.com with SMTP id q24so2558877plr.13;
+        Fri, 18 Oct 2019 02:35:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zr8X80FCYGX3NS6q9lz/ERKNDbQdTzcOLi07a/VkvfQ=;
+        b=RAcZMOWD82a0s6I1gcxzhmBdLU4sVZdK3yGz6Jjs25y3EznSN5eVKpll2358Hrj84u
+         APlxx26N4fwfgRJiFJ3sc5LoxBXcNQRTt/vElvG+W7kkosg66YwJWoZkFCz0xTfMvR6f
+         Cbjd+SgRLI8/CUJ1oQ20/w7/U3I+PL006t8sQWvLz38Yc2tf9QieGrjd592HdCGX69Cg
+         74loV0t60w65irSxdkjPdEWFSMhshoRMFOVGmFBnebKIMvqsp5MvdTjjjRGoCG0iFtiU
+         h1wO5yRg6ve6/4y64whxVgtn/1JdbbSxx2ZSNWTw0Q0U4by3x1tJ6j6655oXad9I+dDE
+         rJ8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zr8X80FCYGX3NS6q9lz/ERKNDbQdTzcOLi07a/VkvfQ=;
+        b=sq22LqApW9FEsoqV0aGahv+YquuRg3W1xSqEhhMXOMX5agYTJQNmmFQOdlSDdhCi0I
+         xKbXIpW27Mgev8H7nnuEVMScEK187JYnDnloD/EGGLmvGIHENDBn84SbQYnCzaUPjQIq
+         IqclwSuVIW6ZVyDxBLNE1V1xQVHDJrLZCw3v/DpLqtKEB6QgspTSaXHo0PCc8HQ5ghgA
+         M39wUSHe2JOJsCCxOYx0GkaAo/bvxtBZ/jw+2luwZmS/BFIo0Rt7q/caJDLUbh+JDb5Y
+         jEoDXjyAu4quiWBwNIPImYbVk+mWcIBDm5JQE4hCghXKBkgBu6vb8KNCOrMkAxZuR4xt
+         WD7A==
+X-Gm-Message-State: APjAAAV13qLqKf5vpAkBg/2jm2C5/5EA5xJf9EPfGZM9svTPWWpNUtFZ
+        2XVGAxOBXKbUI/p5LVpoiXxi1L5+qASpDRo0nmw=
+X-Google-Smtp-Source: APXvYqw4nAZfs4DJx1QtvaqZHEiRDgYXllfSaC8wgJ0IuaKqJS3EAvQxq6VuFyH8PluuguPVcRUER8YMtjWt98dTnbE=
+X-Received: by 2002:a17:902:b110:: with SMTP id q16mr8804423plr.262.1571391302793;
+ Fri, 18 Oct 2019 02:35:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20191017025058.31528-1-hslester96@gmail.com>
+In-Reply-To: <20191017025058.31528-1-hslester96@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 18 Oct 2019 12:34:52 +0300
+Message-ID: <CAHp75Vd2SMERjtvNumxAF1HSp8GSThmcyx96zkFzUXKwnD5d2Q@mail.gmail.com>
+Subject: Re: [PATCH] spi: pxa2xx: Add missed security checks
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, October 18, 2019 1:19:38 AM CEST Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the pm tree got a conflict in:
-> 
->   lib/test_printf.c
-> 
-> between commit:
-> 
->   57f5677e535b ("printf: add support for printing symbolic error names")
-> 
-> from the printk tree and commit:
-> 
->   f1ce39df508d ("lib/test_printf: Add tests for %pfw printk modifier")
-> 
-> from the pm tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
+On Fri, Oct 18, 2019 at 8:59 AM Chuhong Yuan <hslester96@gmail.com> wrote:
+>
+> pxa2xx_spi_init_pdata misses checks for devm_clk_get and
+> platform_get_irq.
+> Add checks for them to fix the bugs.
+>
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> ---
+>  drivers/spi/spi-pxa2xx.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+> index bb6a14d1ab0f..2e73d75a6ac5 100644
+> --- a/drivers/spi/spi-pxa2xx.c
+> +++ b/drivers/spi/spi-pxa2xx.c
+> @@ -1565,7 +1565,13 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
+>  #endif
+>
+>         ssp->clk = devm_clk_get(&pdev->dev, NULL);
+> +       if (IS_ERR(ssp->clk))
+> +               return NULL;
+> +
+>         ssp->irq = platform_get_irq(pdev, 0);
+> +       if (ssp->irq < 0)
+> +               return NULL;
 
-The resolution looks good to me, thank you!
+I'm not sure they are mandatory for all platforms.
+To be on the safe side, you simple need to add _optional() to the both
+call along with above change.
 
-Sakari, please double check.
-
-
-
+-- 
+With Best Regards,
+Andy Shevchenko
