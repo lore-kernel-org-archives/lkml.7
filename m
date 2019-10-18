@@ -2,125 +2,129 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A28BCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA412CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DAD920872
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:54:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PVLMysH0"
+	by mail.kernel.org (Postfix) with ESMTP id B356D20700
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:55:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440496AbfJRVyY (ORCPT
+        id S2440552AbfJRVzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 17:54:24 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:38802 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394243AbfJRVyX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 17:54:23 -0400
-Received: by mail-qt1-f196.google.com with SMTP id j31so11262857qta.5
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 14:54:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x/NuivOaNcoVxSGecvK1Wkc/UqqJxGqtaVPaOthR2x8=;
-        b=PVLMysH0ZgoHbB8ys0h71PvCjq6BoXMmpyc7E3kYu6dUDS/qfK95htRVtkaJH9jH0F
-         mSX0SISUKRjEVV6wtc/sQLngzyFkyrX26j0lRtGMQezlu/+2uIxqazah6sz53SNS0XKM
-         Ri4HGtynzc9X8OPa5RDRpAt7ar9r1cb4KcgKSI9CxjltPdi1F/qLUrK6VxCcfhh+zOy/
-         ZExxxaE5zQghDP9lkihlIPfYql4LOVSA6z8EiO7orY+2w1MYsZ80OQVikwhIMM9l3FDH
-         4dL4E0Sor3fijW8SH2FZpsxzyFAdw/RgqdOAgccnl2ZA3xUoQFpjx7AbCiFRCOy28Q8K
-         4IkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x/NuivOaNcoVxSGecvK1Wkc/UqqJxGqtaVPaOthR2x8=;
-        b=d+qOcwFf/0RfY7vLbd8UYh/hr8zY1O5c+w/jD75JsRhPtlYt77kO3SUtzgPMyoR4Sa
-         zGKbMcKkxtc5Xui23/xA7S8a2nZCXxho26llizGtYWgJHy8HjtcL32QUXpqUO/Nf8BYF
-         26ivTuxJEDIrZ3yDmRLTVzNgs+5KTJrX+pHQzDL63OJaPJj1XgHBpjbNr8mzm9kggGiN
-         flGgSSYKSdtkROxYh/4arwpJI8g8kHF14VoiHu+JUUhjsYrHihvbxqdLRHsCh4RSuQOa
-         THzC4TT4u3397aGaodnyHbggGgwFBF2zgUt+lhh83lBRuDB6vTDipRfqnlLNq7YB+sBU
-         axRA==
-X-Gm-Message-State: APjAAAW5zJsxpQX5t/natb8T4gP/hzRgPAuyD9jcfYgwCUKLk6xZxaHA
-        jZuG9h6/CLfh36keS5d2SUej6FuZalfEUloJyAU=
-X-Google-Smtp-Source: APXvYqw6UQGbFGK6oM1Jx+Eq1w8Q45Sy98nmnXn8Bg4aR3D9UWf+fS0HS1BwJJBa7OtrUyeC9NP9fNdol8AT9qvmNKY=
-X-Received: by 2002:ac8:2a5d:: with SMTP id l29mr12091370qtl.314.1571435662831;
- Fri, 18 Oct 2019 14:54:22 -0700 (PDT)
+        Fri, 18 Oct 2019 17:55:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40610 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2394243AbfJRVzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 17:55:05 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4B51D307C65B;
+        Fri, 18 Oct 2019 21:55:04 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-120-190.rdu2.redhat.com [10.10.120.190])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A5E5A5D713;
+        Fri, 18 Oct 2019 21:55:01 +0000 (UTC)
+Subject: Re: [PATCH v5 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+To:     Alex Kogan <alex.kogan@oracle.com>
+Cc:     linux@armlinux.org.uk, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, hpa@zytor.com, x86@kernel.org,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jan Glauber <jglauber@marvell.com>,
+        Steven Sistare <steven.sistare@oracle.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        dave.dice@oracle.com, Rahul Yadav <rahul.x.yadav@oracle.com>
+References: <20191016042903.61081-1-alex.kogan@oracle.com>
+ <20191016042903.61081-4-alex.kogan@oracle.com>
+ <6ce50aeb-6b87-5d1c-9011-4329e8dadfec@redhat.com>
+ <1B59E517-D418-46DF-BC58-174BAFC5EC23@oracle.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <3b8afb53-18e8-bd1d-9def-e1e7bdc73087@redhat.com>
+Date:   Fri, 18 Oct 2019 17:55:01 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20191017164223.2762148-1-songliubraving@fb.com>
- <20191017164223.2762148-5-songliubraving@fb.com> <CAHbLzkoTT4p9u__EdFgt7_47NHOV5r=nB8EmvBx+1TcyzX5RJg@mail.gmail.com>
- <20191018133231.vifgnueulyo57vpy@box>
-In-Reply-To: <20191018133231.vifgnueulyo57vpy@box>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Fri, 18 Oct 2019 14:54:09 -0700
-Message-ID: <CAHbLzkr967JVjnv=kyuUdYJvdAKKbQy67-MvUrb7VeQUZAuHXQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] mm/thp: allow drop THP from page cache
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Song Liu <songliubraving@fb.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        matthew.wilcox@oracle.com, kernel-team@fb.com,
-        william.kucharski@oracle.com,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1B59E517-D418-46DF-BC58-174BAFC5EC23@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 18 Oct 2019 21:55:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 6:32 AM Kirill A. Shutemov <kirill@shutemov.name> wrote:
+On 10/18/19 5:37 PM, Alex Kogan wrote:
+>> On Oct 18, 2019, at 12:03 PM, Waiman Long <longman@redhat.com> wrote:
+>>
+>> On 10/16/19 12:29 AM, Alex Kogan wrote:
+>>> +static inline void cna_pass_lock(struct mcs_spinlock *node,
+>>> +				 struct mcs_spinlock *next)
+>>> +{
+>>> +	struct cna_node *cn = (struct cna_node *)node;
+>>> +	struct mcs_spinlock *next_holder = next, *tail_2nd;
+>>> +	u32 val = 1;
+>>> +
+>>> +	u32 scan = cn->pre_scan_result;
+>>> +
+>>> +	/*
+>>> +	 * check if a successor from the same numa node has not been found in
+>>> +	 * pre-scan, and if so, try to find it in post-scan starting from the
+>>> +	 * node where pre-scan stopped (stored in @pre_scan_result)
+>>> +	 */
+>>> +	if (scan > 0)
+>>> +		scan = cna_scan_main_queue(node, decode_tail(scan));
+>>> +
+>>> +	if (!scan) { /* if found a successor from the same numa node */
+>>> +		next_holder = node->next;
+>>> +		/*
+>>> +		 * make sure @val gets 1 if current holder's @locked is 0 as
+>>> +		 * we have to store a non-zero value in successor's @locked
+>>> +		 * to pass the lock
+>>> +		 */
+>>> +		val = node->locked + (node->locked == 0);
+>> node->locked can be 0 when the cpu enters into an empty MCS queue. We
+>> could unconditionally set node->locked to 1 for this case in qspinlock.c
+>> or with your above code.
+> Right, I was doing that in the first two versions of the series. It adds 
+> unnecessary store into @locked for non-CNA variants, and even if it does not
+> have any real performance implications, I think Peter did not like that (or, 
+> at least, the comment I had to explain why we needed that store).
 >
-> On Thu, Oct 17, 2019 at 02:46:38PM -0700, Yang Shi wrote:
-> > On Thu, Oct 17, 2019 at 9:42 AM Song Liu <songliubraving@fb.com> wrote:
-> > >
-> > > From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> > >
-> > > Once a THP is added to the page cache, it cannot be dropped via
-> > > /proc/sys/vm/drop_caches. Fix this issue with proper handling in
-> > > invalidate_mapping_pages().
-> > >
-> > > Fixes: 99cb0dbd47a1 ("mm,thp: add read-only THP support for (non-shmem) FS")
-> > > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > > Tested-by: Song Liu <songliubraving@fb.com>
-> > > Signed-off-by: Song Liu <songliubraving@fb.com>
-> > > ---
-> > >  mm/truncate.c | 12 ++++++++++++
-> > >  1 file changed, 12 insertions(+)
-> > >
-> > > diff --git a/mm/truncate.c b/mm/truncate.c
-> > > index 8563339041f6..dd9ebc1da356 100644
-> > > --- a/mm/truncate.c
-> > > +++ b/mm/truncate.c
-> > > @@ -592,6 +592,16 @@ unsigned long invalidate_mapping_pages(struct address_space *mapping,
-> > >                                         unlock_page(page);
-> > >                                         continue;
-> > >                                 }
-> > > +
-> > > +                               /* Take a pin outside pagevec */
-> > > +                               get_page(page);
-> > > +
-> > > +                               /*
-> > > +                                * Drop extra pins before trying to invalidate
-> > > +                                * the huge page.
-> > > +                                */
-> > > +                               pagevec_remove_exceptionals(&pvec);
-> > > +                               pagevec_release(&pvec);
-> >
-> > Shall we skip the outer pagevec_remove_exceptions() if it has been done here?
+>> Perhaps, a comment about when node->locked will
+>> be 0.
+> Yeah, I was tinkering with this comment. Here is how it read in v3:
+> /*
+>  * We unlock a successor by passing a non-zero value,
+>  * so set @val to 1 iff @locked is 0, which will happen
+>  * if we acquired the MCS lock when its queue was empty
+>  */
 >
-> It will be NOP and skipping would complicate the code.
+> I can change back to something like that if it is better.
+That looks OK.
+>> It may be easier to understand if you just do
+>>
+>>     val = node->locked ? node->locked : 1;
+> You’re right, that’s another possibility.
+> However, it adds yet another if-statement on the critical path, which I was
+> trying to avoid that.
 
-Yes, it would be. Anyway, it looks ok too. Acked-by: Yang Shi
-<yang.shi@linux.alibaba.com>
+Have you compared the generated assembly code if one is better than the
+other? I am OK with whatever one generates a better code, but often time
+cmove is used for ?: statements. If the same code is generated, I will
+prefer an easier to understand statement.
 
->
-> --
->  Kirill A. Shutemov
+Cheers,
+Longman
+
+
