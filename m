@@ -2,115 +2,143 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E3ECA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2222CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E368921897
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:03:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571414629;
-	bh=L4Rhk1txuMllxJGJBcl7nwjt2jmQPELN19+vNBe4yyQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AtoTrh7A1SUelfhg46nGTxLSxG4kDQbju9Awp0bOpqwlao3FZX1287ax0+hsMYDfH
-	 9pfw/4FKZuKY47QezGrM3p6ruDPMMvXyArh4dJH3qUQg2hiGtF9LmibaojyTW3vZn2
-	 XVuiMXLvtkc92eJHIJndW6dKshd+nGwex5Ifb3BU=
+	by mail.kernel.org (Postfix) with ESMTP id 873EB21897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:04:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GZOZIsJp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502371AbfJRQDr (ORCPT
+        id S2394099AbfJRQEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:03:47 -0400
-Received: from mail-qk1-f175.google.com ([209.85.222.175]:33929 "EHLO
-        mail-qk1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389793AbfJRQDr (ORCPT
+        Fri, 18 Oct 2019 12:04:25 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38447 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389793AbfJRQEZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:03:47 -0400
-Received: by mail-qk1-f175.google.com with SMTP id f18so5162594qkm.1
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:03:46 -0700 (PDT)
+        Fri, 18 Oct 2019 12:04:25 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 3so6620488wmi.3
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:04:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zLp1+uce/82spUwz58lSU9bq+f/LyVwG+zR5ofSPevQ=;
-        b=MT7j6VuXBKW/1H3pnSmpNBezwuw1A1g0KfcJDbq4dCocf/Cyf8WYpn4uYIeG7sWAil
-         o3jHr3UpG1mEBwip0Ums+C4OSVhlsJHzMgsy2tVFXN949jG7td009fg0pZi19Jl30Lac
-         +PtPwdfcXsLohUSjTqcbAezqomPiE3Wjf8AL4=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Yc/ESgAECZFZFTl6VRSyrtsk401b5UBT2U4wK4t3Xg8=;
+        b=GZOZIsJp6efqo33qitUnH5+hoiujQW5tjyGLqMwZL8Ci8opGSflROmREeaZ/qTwHpz
+         IPwlviGDRDESd5aTdKL+H4u9smqnim0zNVsOCR+Tny5Dmk9I8SfwIPsf6r9hMwVcLlv2
+         m0GvxJXvU8rZxw9DLJGncGn7euxXas/moBvLPYVm2fyItuJ2nbCboH3O3JItDGRFkiRt
+         2qf94qHECOxmvaydzT2/99i7AneXTm1Y6/P4lf+Sjytj9SYUmk3yUAkJRG/95RtbqDsg
+         RbckDBLEj+DQx9Q/qvsD0LFOQADTXPesLzMC0p2c3a/S3tWDcY2MGA7TjYwgLNXoA9ul
+         gCLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=zLp1+uce/82spUwz58lSU9bq+f/LyVwG+zR5ofSPevQ=;
-        b=Y8zvehyQItIXwHrYW0jzQBtuR0birXpxVFuWi/qeKFxHcoGggIlyzxPUgQxPCVgJtj
-         uMJbu3yD9IBiV9+gCkkxBJtGqOL+V3wlicfyBH3tAK2+9oZbbfSKt4bq4CzJL2Ot+uVj
-         VfGFE1tdLwJJlBInSy2Ck+TTrgM8k2xfjCSx1vGHEGzxKtHWU99CgscFBM770GHWt+mg
-         2ZY/sWTzrrlPptiZ99iXxGO5kfSuPZKnCyaC64jnx43tFGoZyO4wqspPppJBfhMsFvJk
-         86IyPNVUWx35LAQ69expjbUQw5sah5GAqNo5l6YKejIHwAUSvhm8fhqL0FYgRW7bIDsK
-         jHlg==
-X-Gm-Message-State: APjAAAX1tv7ksxHx8NmwZ4GgjOnsyWQp2sOyJxaDXXgTv3rx7mwJRncv
-        N+y9T986dmXowi0JMzybMmQdgQ==
-X-Google-Smtp-Source: APXvYqxaSFFnCUWDXGSs/4g30alrIcbHoxKHK9VsIwer424Fky63UM5YEWt1Eu3QeIBy1+SXbU8W8w==
-X-Received: by 2002:a37:a8d3:: with SMTP id r202mr8948996qke.405.1571414626275;
-        Fri, 18 Oct 2019 09:03:46 -0700 (PDT)
-Received: from chatter.i7.local (192-0-228-88.cpe.teksavvy.com. [192.0.228.88])
-        by smtp.gmail.com with ESMTPSA id g33sm2747388qtd.12.2019.10.18.09.03.44
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Yc/ESgAECZFZFTl6VRSyrtsk401b5UBT2U4wK4t3Xg8=;
+        b=BLv3194VtS7mYz0xRC34+6TpuN2bqA1NgswFj0nGxuDt6J+GC6KRlDp+/GKU2kVkZZ
+         7hFoqpLwCQ56alja+f+6ETv2yOKLU5cU3S8SePVFL16h/1fRqt1uDQOXZXdGTd8hGf8o
+         suR2GoJJ28BBpcWginwH3wp8a/2rsD4p9z65QI3JO4B4xiVVDOO6+t2epKdfUb4Txv4X
+         boI61cJTlLGXKqCMuWL2coAVNvqEAuP870xmqm9YAv34hMsJrvjq9UhuFBIT7tm9ReF9
+         n1q1KF0EvpIuGVb4AfrZodeeHeYw1EAqC7dZXyL4HUZo/ztskw0GQI7cRloDTEYaOTm0
+         4TAg==
+X-Gm-Message-State: APjAAAUIoApEGLxrrw8cyaB7fv4HZscnVZ90KV7JNpRAqIelEeFw6Hin
+        XIf0SUEqXmvtgpWDkRUsX25Lsw==
+X-Google-Smtp-Source: APXvYqwtDbGUo784uN0YShVP0F5YD9wvytRqbKRWisGJiiC2UoG4WYTgx/6R+3jhOU45zbrA14u+uw==
+X-Received: by 2002:a1c:804d:: with SMTP id b74mr8423828wmd.170.1571414662644;
+        Fri, 18 Oct 2019 09:04:22 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id r2sm5875238wrm.3.2019.10.18.09.04.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 09:03:45 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 12:03:43 -0400
-From:   Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To:     Santiago Torres Arias <santiago@nyu.edu>
-Cc:     Vegard Nossum <vegard.nossum@oracle.com>, Willy Tarreau <w@1wt.eu>,
-        workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, Eric Wong <e@80x24.org>
-Subject: Re: email as a bona fide git transport
-Message-ID: <20191018160343.GB25456@chatter.i7.local>
-Mail-Followup-To: Santiago Torres Arias <santiago@nyu.edu>,
-        Vegard Nossum <vegard.nossum@oracle.com>, Willy Tarreau <w@1wt.eu>,
-        workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, Eric Wong <e@80x24.org>
-References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
- <20191016111009.GE13154@1wt.eu>
- <20191016144517.giwip4yuaxtcd64g@LykOS.localdomain>
- <56664222-6c29-09dc-ef78-7b380b113c4a@oracle.com>
- <20191018155408.dk4tsjrne42ufpvv@LykOS.localdomain>
+        Fri, 18 Oct 2019 09:04:21 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 17:04:19 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     broonie@kernel.org, linus.walleij@linaro.org, arnd@arndb.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        baohua@kernel.org, stephan@gerhold.net
+Subject: Re: [PATCH 1/2] mfd: mfd-core: Allocate reference counting memory
+ directly to the platform device
+Message-ID: <20191018160419.rm2ogvh3k3jdx3tn@holly.lan>
+References: <20191018122647.3849-1-lee.jones@linaro.org>
+ <20191018122647.3849-2-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191018155408.dk4tsjrne42ufpvv@LykOS.localdomain>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191018122647.3849-2-lee.jones@linaro.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 11:54:09AM -0400, Santiago Torres Arias wrote:
->> Seeing how large this signature is, I have to admit that I am partial to
->> Konstantin's suggestion of using minisign. This seems like something
->> that could be added to git as an alternative to gpg without too much
->> trouble, I think.
->
->I wonder how big the pgp payload would be with ed25519 as the underlying
->algorithm. AFAICT, the payload of a minisign signature vs a signature
->packet have almost the same fields...
+On Fri, Oct 18, 2019 at 01:26:46PM +0100, Lee Jones wrote:
+> MFD provides reference counting (for the 2 consumers who actually use it!)
+> via mfd_cell's 'usage_count' member.  However, since MFD cells become
+> read-only (const), MFD needs to allocate writable memory and assign it to
+> 'usage_count' before first registration.  It currently does this by
+> allocating enough memory for all requested child devices (yes, even disabled
+> ones - but we'll get to that) and assigning the base pointer plus sub-device
+> index to each device in the cell.
+> 
+> The difficulty comes when trying to free that memory.  During the removal of
+> the parent device, MFD unregisters each child device, keeping a tally on the
+> lowest memory location pointed to by a child device's 'usage_count'.  Once
+> all of the children are unregistered, the lowest memory location must be the
+> base address of the previously allocated array, right?
+> 
+> Well yes, until we try to honour the disabling of devices via Device Tree
+> for instance.  If the first child device in the provided batch is disabled,
+> simply skipping registration (and consequentially deregistration) will mean
+> that the first device's 'usage_count' pointer will not be accounted for when
+> attempting to find the base.  In which case, MFD will assume the first non-
+> disabled 'usage_count' pointer is the base and subsequently attempt to
+> erroneously free it.
+> 
+> We can avoid all of this hoop jumping by simply allocating memory to each
+> single child device before it is considered read-only.  We can then free
+> it on a per-device basis during deregistration.
+> 
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/mfd/mfd-core.c | 42 ++++++++++++++++++------------------------
+>  1 file changed, 18 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+> index 23276a80e3b4..eafdadd58e8b 100644
+> --- a/drivers/mfd/mfd-core.c
+> +++ b/drivers/mfd/mfd-core.c
+> @@ -404,7 +398,7 @@ int mfd_clone_cell(const char *cell, const char **clones, size_t n_clones)
+>  		cell_entry.name = clones[i];
+>  		/* don't give up if a single call fails; just report error */
+>  		if (mfd_add_device(pdev->dev.parent, -1, &cell_entry,
+> -				   cell_entry.usage_count, NULL, 0, NULL))
+> +				   NULL, 0, NULL))
 
-It's smaller, but it's not a one-liner. Here's a comparison using 
-ED25519 keys of the same length:
+I think this change is broken.
 
-minisign:
+Cloned cells are supposed to share the same reference counter as their
+template and this change results in each clone having its own counter.
+That means the "the 2 consumers who actually use it" will both end up
+calling cs5535_mfd_res_enable() (and whichever loses the race will fail
+to probe).
 
-RWQ4kF9UdFgeSt3LqnS3WnrLlx2EnuIFW7euw5JnLUHY/79ipftmj7A2ug7FiR2WmnFNoSacWr7llBuyInVmRL/VRovj1LFtvA0=
+To be honest it might be easier to move the request_region() into
+cs5535_mfd_probe() and rip out the entire reference counting mechanism
+since at that point it would be unused (the other callers of
+mfd_cell_enable() look safe w/o a counter).
 
-pgp:
 
------BEGIN PGP SIGNATURE-----
+Daniel.
 
-iHUEARYIAB0WIQR2vl2yUnHhSB5njDW2xBzjVmSZbAUCXaniFAAKCRC2xBzjVmSZ
-bHA5AP46sSPFJfL2tbXwswvj0v2DjLAQ9doxl9bfj9iPZu+3qwEAw5qAMbjw9teL
-L7+NbJ0WVniDWTgt+5ruQ2V9vyfYxAc=
-=B/St
------END PGP SIGNATURE-----
-
--K
+>  			dev_err(dev, "failed to create platform device '%s'\n",
+>  					clones[i]);
+>  	}
+> -- 
+> 2.17.1
+> 
