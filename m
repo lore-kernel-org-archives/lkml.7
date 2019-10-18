@@ -2,107 +2,138 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F43CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9111FCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8D6E2070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70ABD2070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:38:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408792AbfJRQiN (ORCPT
+        id S2437137AbfJRQi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:38:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45428 "EHLO mx1.redhat.com"
+        Fri, 18 Oct 2019 12:38:29 -0400
+Received: from mga02.intel.com ([134.134.136.20]:56208 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729010AbfJRQiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:38:13 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 80F98307D98A;
-        Fri, 18 Oct 2019 16:38:09 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-84.rdu2.redhat.com [10.10.121.84])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4F90660600;
-        Fri, 18 Oct 2019 16:38:06 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAHk-=wjFozfjV34_qy3_Z155uz_Z7qFVfE8h=_9ceGU-SVk9hA@mail.gmail.com>
-References: <CAHk-=wjFozfjV34_qy3_Z155uz_Z7qFVfE8h=_9ceGU-SVk9hA@mail.gmail.com> <000000000000830fe50595115344@google.com> <00000000000071e2fc05951229ad@google.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dhowells@redhat.com,
-        syzbot <syzbot+6455648abc28dbdd1e7f@syzkaller.appspotmail.com>,
-        aou@eecs.berkeley.edu,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris James Morris <jmorris@namei.org>,
-        keyrings@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: WARNING: refcount bug in find_key_to_update
+        id S1728368AbfJRQi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 12:38:28 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 09:38:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,312,1566889200"; 
+   d="scan'208";a="397991951"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga006.fm.intel.com with ESMTP; 18 Oct 2019 09:38:27 -0700
+Date:   Fri, 18 Oct 2019 09:38:27 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        Borislav Petkov <bp@suse.de>
+Subject: Re: [PATCH 2/2] x86/cpu/vmware: Fix platform detection VMWARE_PORT
+ macro
+Message-ID: <20191018163827.GC26319@linux.intel.com>
+References: <20191018134052.3023-1-thomas_os@shipmail.org>
+ <20191018134052.3023-3-thomas_os@shipmail.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <31179.1571416685.1@warthog.procyon.org.uk>
-Date:   Fri, 18 Oct 2019 17:38:05 +0100
-Message-ID: <31180.1571416685@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 18 Oct 2019 16:38:13 +0000 (UTC)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191018134052.3023-3-thomas_os@shipmail.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
-
-> The backtrace looks simple enough, though:
+On Fri, Oct 18, 2019 at 03:40:52PM +0200, Thomas Hellström (VMware) wrote:
+> From: Thomas Hellstrom <thellstrom@vmware.com>
 > 
->   RIP: 0010:refcount_inc_checked+0x2b/0x30 lib/refcount.c:156
->    __key_get include/linux/key.h:281 [inline]
->    find_key_to_update+0x67/0x80 security/keys/keyring.c:1127
->    key_create_or_update+0x4e5/0xb20 security/keys/key.c:905
->    __do_sys_add_key security/keys/keyctl.c:132 [inline]
->    __se_sys_add_key security/keys/keyctl.c:72 [inline]
->    __x64_sys_add_key+0x219/0x3f0 security/keys/keyctl.c:72
->    do_syscall_64+0xd0/0x540 arch/x86/entry/common.c:296
->    entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> The platform detection VMWARE_PORT macro uses the VMWARE_HYPERVISOR_PORT
+> definition, but expects it to be an integer. However, when it was moved
+> to the new vmware.h include file, it was changed to be a string to better
+> fit into the VMWARE_HYPERCALL set of macros. This obviously breaks the
+> platform detection VMWARE_PORT functionality.
 > 
-> which to me implies that there's some locking bug, and somebody
-> released the key without holding a lock.
->
-> That code looks a bit confused to me. Releasing a key without holding
-> a lock looks permitted, but if that's the case then __key_get() is
-> complete garbage. It would need to use 'refcount_inc_not_zero()' and
-> failure would require failing the caller.
+> Change the VMWARE_HYPERVISOR_PORT and VMWARE_HYPERVISOR_PORT_HB
+> definitions to be integers, and use __stringify() for their stringified
+> form when needed.
+> 
+> Fixes: b4dd4f6e3648 ("Add a header file for hypercall definitions")
+> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: x86-ml <x86@kernel.org>
+> Cc: Borislav Petkov <bp@suse.de>
+> ---
+>  arch/x86/include/asm/vmware.h | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/vmware.h b/arch/x86/include/asm/vmware.h
+> index f5fbe3778aef..d20eda0c6ed8 100644
+> --- a/arch/x86/include/asm/vmware.h
+> +++ b/arch/x86/include/asm/vmware.h
+> @@ -4,6 +4,7 @@
+>  
+>  #include <asm/cpufeatures.h>
+>  #include <asm/alternative.h>
+> +#include <linux/stringify.h>
+>  
+>  /*
+>   * The hypercall definitions differ in the low word of the %edx argument
+> @@ -20,8 +21,8 @@
+>   */
+>  
+>  /* Old port-based version */
+> -#define VMWARE_HYPERVISOR_PORT    "0x5658"
+> -#define VMWARE_HYPERVISOR_PORT_HB "0x5659"
+> +#define VMWARE_HYPERVISOR_PORT    0x5658
+> +#define VMWARE_HYPERVISOR_PORT_HB 0x5659
+>  
+>  /* Current vmcall / vmmcall version */
+>  #define VMWARE_HYPERVISOR_HB   BIT(0)
+> @@ -29,7 +30,7 @@
+>  
+>  /* The low bandwidth call. The low word of edx is presumed clear. */
+>  #define VMWARE_HYPERCALL						\
+> -	ALTERNATIVE_2("movw $" VMWARE_HYPERVISOR_PORT			\
+> +	ALTERNATIVE_2("movw $" __stringify(VMWARE_HYPERVISOR_PORT)	\
+>  		      ", %%dx; inl (%%dx), %%eax",			\
+>  		      "vmcall", X86_FEATURE_VMCALL,			\
+>  		      "vmmcall", X86_FEATURE_VMW_VMMCALL)
+> @@ -39,7 +40,8 @@
+>   * HB and OUT bits set.
+>   */
+>  #define VMWARE_HYPERCALL_HB_OUT						\
+> -	ALTERNATIVE_2("movw $" VMWARE_HYPERVISOR_PORT_HB ", %%dx; rep outsb", \
+> +	ALTERNATIVE_2("movw $" __stringify(VMWARE_HYPERVISOR_PORT_HB)	\
+> +		      ", %%dx; rep outsb",				\
+>  		      "vmcall", X86_FEATURE_VMCALL,			\
+>  		      "vmmcall", X86_FEATURE_VMW_VMMCALL)
+>  
+> @@ -48,7 +50,8 @@
+>   * HB bit set.
+>   */
+>  #define VMWARE_HYPERCALL_HB_IN						\
+> -	ALTERNATIVE_2("movw $" VMWARE_HYPERVISOR_PORT_HB ", %%dx; rep insb", \
+> +	ALTERNATIVE_2("movw $" __stringify(VMWARE_HYPERVISOR_PORT_HB)	\
+> +		      ", %%dx; rep insb",				\
 
-find_key_to_update() must be called with the keyring-to-be-searched locked, as
-stated in the comment on that function.
+Same comment on wrapping in the middle of an instruction.  Wrapping after
+movw will stick out, but only by a char or two.
 
-If a key-to-be-updated can be found in that keyring, then the keyring must be
-holding a ref on that key already, so it's refcount must be > 0, so it
-shouldn't be necessary to use refcount_inc_not_zero().
-
-There shouldn't be a race with key_link(), key_unlink(), key_move(),
-keyring_clear() or keyring_gc() (garbage collection) as all of those take a
-write-lock on the keyring.
-
-> But I haven't followed the key locking rules, so who knows. That "put
-> without lock" scenario would explain the crash, though.
-
-That shouldn't explain it.  When key_put() reduces the refcount to 0, it just
-schedules the garbage collector.  It doesn't touch the key again directly.
-
-I would guess that something incorrectly put a ref when it shouldn't have.  Do
-we know which type of key is involved?  Looking at the syzkaller reproducer,
-it's adding an encrypted key and a user key to the process keyring -
-presumably repeating the procedure within the same process, hence how it finds
-something to update.
-
-David
+>  		      "vmcall", X86_FEATURE_VMCALL,			\
+>  		      "vmmcall", X86_FEATURE_VMW_VMMCALL)
+>  #endif
+> -- 
+> 2.21.0
+> 
