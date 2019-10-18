@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A49CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C1CCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C1F42245C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5039422459
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:08:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436486;
-	bh=xXS8p/EblncHJQHEhAPsiIeE9RiB5ZxpflNfzXPTfaQ=;
+	s=default; t=1571436488;
+	bh=7khnZJWJ7vIgs08vHDk9ylnVLrS98r5d9JQHYR0MKeI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2vfbixXsxZhKPZ0Uxkm2a/b7TGu3nNnOb8rBebd5zfFWGfCfUquPc1bKraGMXSn7F
-	 mDjmmRkpCMrvTq9NdGMCRdq646aO2z0xloi6VH0IjfdZDsNOBnkDgv5+CHI7UPI0fj
-	 UcOxQgtaKLL8RMzySh5WRyK3uDsgsnk6us4e8loM=
+	b=ohPkIOEb2+h7etgWNMM3RKcHxk3aKBbgHQR/Yb3z+JLFAFFB5naNGgXkLqBF683kj
+	 uyGuD2T3iUEpeysvkHIqIpjFTP6J8486xajQelzfSwfN1gMu5PENMhc20pAPJ77kS8
+	 7+QiMdFgTtrB7v7JENLFlup6RUpRyC9kr3ZX7xZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387484AbfJRWIB (ORCPT
+        id S2387534AbfJRWIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:08:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40256 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:08:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733281AbfJRWHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:07:50 -0400
+        id S1733298AbfJRWHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:07:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7859C222D4;
-        Fri, 18 Oct 2019 22:07:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9817C22459;
+        Fri, 18 Oct 2019 22:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436470;
-        bh=xXS8p/EblncHJQHEhAPsiIeE9RiB5ZxpflNfzXPTfaQ=;
+        s=default; t=1571436471;
+        bh=7khnZJWJ7vIgs08vHDk9ylnVLrS98r5d9JQHYR0MKeI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=krHBCYfAoKl/7I6w37QsAmUlEvsQ4tFsLkZpX78updqCRPT25w6jG/p3Vl/BkuW89
-         w6rFKpoV9+A2KI2xrUS2k+2WrXHCutrrPJNxNKjyVCMENQz+at+UlmtNpP/eEuQ7Wy
-         Sf/taBhtmsKZoEQLavGGYLS3m+ABPxpldCWIBWII=
+        b=VGnJ0p955I0ey2rCZckX4/cpW/h4j/ZjdB7WhC226BvX2wCJopREwWKIXVfKtLsQd
+         27u3EYMkBbT9Gl5cOlFqRSZ3YTlhUJA7dPqYJbTipW9IUcAhIxUJJnNIWgCvOKd5zX
+         1V3a9/R4wQ5Pal5bYsfzSBOMUYiQ+GLv8uj2A/go=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 099/100] s390/uaccess: avoid (false positive) compiler warnings
-Date:   Fri, 18 Oct 2019 18:05:24 -0400
-Message-Id: <20191018220525.9042-99-sashal@kernel.org>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 100/100] tracing: Initialize iter->seq after zeroing in tracing_read_pipe()
+Date:   Fri, 18 Oct 2019 18:05:25 -0400
+Message-Id: <20191018220525.9042-100-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,55 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Borntraeger <borntraeger@de.ibm.com>
+From: Petr Mladek <pmladek@suse.com>
 
-[ Upstream commit 062795fcdcb2d22822fb42644b1d76a8ad8439b3 ]
+[ Upstream commit d303de1fcf344ff7c15ed64c3f48a991c9958775 ]
 
-Depending on inlining decisions by the compiler, __get/put_user_fn
-might become out of line. Then the compiler is no longer able to tell
-that size can only be 1,2,4 or 8 due to the check in __get/put_user
-resulting in false positives like
+A customer reported the following softlockup:
 
-./arch/s390/include/asm/uaccess.h: In function ‘__put_user_fn’:
-./arch/s390/include/asm/uaccess.h:113:9: warning: ‘rc’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-  113 |  return rc;
-      |         ^~
-./arch/s390/include/asm/uaccess.h: In function ‘__get_user_fn’:
-./arch/s390/include/asm/uaccess.h:143:9: warning: ‘rc’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-  143 |  return rc;
-      |         ^~
+[899688.160002] NMI watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [test.sh:16464]
+[899688.160002] CPU: 0 PID: 16464 Comm: test.sh Not tainted 4.12.14-6.23-azure #1 SLE12-SP4
+[899688.160002] RIP: 0010:up_write+0x1a/0x30
+[899688.160002] Kernel panic - not syncing: softlockup: hung tasks
+[899688.160002] RIP: 0010:up_write+0x1a/0x30
+[899688.160002] RSP: 0018:ffffa86784d4fde8 EFLAGS: 00000257 ORIG_RAX: ffffffffffffff12
+[899688.160002] RAX: ffffffff970fea00 RBX: 0000000000000001 RCX: 0000000000000000
+[899688.160002] RDX: ffffffff00000001 RSI: 0000000000000080 RDI: ffffffff970fea00
+[899688.160002] RBP: ffffffffffffffff R08: ffffffffffffffff R09: 0000000000000000
+[899688.160002] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8b59014720d8
+[899688.160002] R13: ffff8b59014720c0 R14: ffff8b5901471090 R15: ffff8b5901470000
+[899688.160002]  tracing_read_pipe+0x336/0x3c0
+[899688.160002]  __vfs_read+0x26/0x140
+[899688.160002]  vfs_read+0x87/0x130
+[899688.160002]  SyS_read+0x42/0x90
+[899688.160002]  do_syscall_64+0x74/0x160
 
-These functions are supposed to be always inlined. Mark it as such.
+It caught the process in the middle of trace_access_unlock(). There is
+no loop. So, it must be looping in the caller tracing_read_pipe()
+via the "waitagain" label.
 
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Crashdump analyze uncovered that iter->seq was completely zeroed
+at this point, including iter->seq.seq.size. It means that
+print_trace_line() was never able to print anything and
+there was no forward progress.
+
+The culprit seems to be in the code:
+
+	/* reset all but tr, trace, and overruns */
+	memset(&iter->seq, 0,
+	       sizeof(struct trace_iterator) -
+	       offsetof(struct trace_iterator, seq));
+
+It was added by the commit 53d0aa773053ab182877 ("ftrace:
+add logic to record overruns"). It was v2.6.27-rc1.
+It was the time when iter->seq looked like:
+
+     struct trace_seq {
+	unsigned char		buffer[PAGE_SIZE];
+	unsigned int		len;
+     };
+
+There was no "size" variable and zeroing was perfectly fine.
+
+The solution is to reinitialize the structure after or without
+zeroing.
+
+Link: http://lkml.kernel.org/r/20191011142134.11997-1-pmladek@suse.com
+
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/uaccess.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/trace/trace.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uaccess.h
-index 5332f628c1edc..40194f8c772a0 100644
---- a/arch/s390/include/asm/uaccess.h
-+++ b/arch/s390/include/asm/uaccess.h
-@@ -84,7 +84,7 @@ raw_copy_to_user(void __user *to, const void *from, unsigned long n);
- 	__rc;							\
- })
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 3b0de19b9ed75..706155ca344b0 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -5753,6 +5753,7 @@ tracing_read_pipe(struct file *filp, char __user *ubuf,
+ 	       sizeof(struct trace_iterator) -
+ 	       offsetof(struct trace_iterator, seq));
+ 	cpumask_clear(iter->started);
++	trace_seq_init(&iter->seq);
+ 	iter->pos = -1;
  
--static inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
-+static __always_inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
- {
- 	unsigned long spec = 0x010000UL;
- 	int rc;
-@@ -114,7 +114,7 @@ static inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
- 	return rc;
- }
- 
--static inline int __get_user_fn(void *x, const void __user *ptr, unsigned long size)
-+static __always_inline int __get_user_fn(void *x, const void __user *ptr, unsigned long size)
- {
- 	unsigned long spec = 0x01UL;
- 	int rc;
+ 	trace_event_read_lock();
 -- 
 2.20.1
 
