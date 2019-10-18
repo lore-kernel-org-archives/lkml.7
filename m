@@ -2,321 +2,287 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB78CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 936EFCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE8C72067B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:32:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="WnxLA/4q"
+	by mail.kernel.org (Postfix) with ESMTP id 60EC92067B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:32:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437986AbfJRFcI (ORCPT
+        id S2504055AbfJRFcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:32:08 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54253 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727399AbfJRFcI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:32:08 -0400
-Received: by mail-wm1-f67.google.com with SMTP id i16so4744718wmd.3
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:32:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WpUdtRZLCMWCE2pmgbqMCnO+ca2VrAa6THp+EdS32g0=;
-        b=WnxLA/4qFYmYNv+uh8zSB+n98MDKY4/X+1hsTlDKM6RySJ1Uu6y3xAksZ6QWCGMNuC
-         rVIHurjG66Ir2cp37i2ZVQGuY2U5sd3aBt9dr8Vu95rOkRqGnLYG6d3CvhKkiS0cvF1n
-         9duE+0KqbkjsxnKCZHMMKoXyiyiaVlcXe0jvrnul7wIRSnsZqQSV71NpfYO66++PWPMY
-         p1t3824K6uFYswQXepQ5H7PmsaOjTQW8MSL5L6JZpgQdUGemG6h5a1xVmau+J3VVqKqM
-         v2sas0q8Ws64hksvWfbacUnNkfetqIBgcinGxwGvsDWgCPH5TcbEExKomIPYvoBH+/Hu
-         TSHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WpUdtRZLCMWCE2pmgbqMCnO+ca2VrAa6THp+EdS32g0=;
-        b=n3c+OVhd3sIjGAMUYGD08EL3yCT8AnW6NxwwcYIqaEWkZQpyt9fhLA5meEMvUNQokk
-         Mibyn+9+dlKM7AU6FCUA/mSAuVzIfnIwWMhR7abJkuS58B+4ERKZjDWYpGNhlfY9VhrX
-         eVzZeoDXlLtWUz1bQ5l6NgS0wqu2h/kAGIUa5CZ7M1G//UkPkB8MTLY7zXP0/YatoS7U
-         t6noz+WMznshxeq+jJ50QFq+/nXFmOnfopYvgTrYwpZq+YO0vrl17hjM9u56RT+E5nNC
-         ALivwvtU8jgwXupyHq6e2hhX5Yh5I/EcYyIU5lai23f1ER1iXoITApanV2qFCpFGVkaQ
-         P9aA==
-X-Gm-Message-State: APjAAAX4oiQ4GDUoDqKl0su3mNa6eMkj5v0MY+Wc+5NoQCJA1mmnoafg
-        k69Bq1NHafGXlDqIXa8GzBQs0I+AeQOw9tpRmiWzotapmOM=
-X-Google-Smtp-Source: APXvYqwwwBuUBCt7oqEwdI8TI1PlPWwkwe5zKEfrYA6s60h8NummaGNVZdFHXmYdZXHuWxAqMUcCKTRj1ImrgTkeu60=
-X-Received: by 2002:a1c:a697:: with SMTP id p145mr5028401wme.24.1571367619176;
- Thu, 17 Oct 2019 20:00:19 -0700 (PDT)
+        Fri, 18 Oct 2019 01:32:12 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4719 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727399AbfJRFcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 01:32:10 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id C6360874604BD2901D3E;
+        Fri, 18 Oct 2019 11:45:48 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.132) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 18 Oct 2019 11:45:39 +0800
+From:   Huazhong Tan <tanhuazhong@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
+        Yonglong Liu <liuyonglong@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net] net: hns3: fix mis-counting IRQ vector numbers issue
+Date:   Fri, 18 Oct 2019 11:42:59 +0800
+Message-ID: <1571370179-52008-1-git-send-email-tanhuazhong@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20191017173743.5430-1-hch@lst.de> <20191017173743.5430-10-hch@lst.de>
-In-Reply-To: <20191017173743.5430-10-hch@lst.de>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Fri, 18 Oct 2019 08:30:08 +0530
-Message-ID: <CAAhSdy288Mue2YE-MWNW9KcYvF_5qswpqjeMycxiN0GGNMHNOg@mail.gmail.com>
-Subject: Re: [PATCH 09/15] riscv: provide native clint access for M-mode
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.132]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 11:08 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> RISC-V has the concept of a cpu level interrupt controller.  The
-> interface for it is split between a standardized part that is exposed
-> as bits in the mstatus/sstatus register and the mie/mip/sie/sip
-> CRS.  But the bit to actually trigger IPIs is not standardized and
-> just mentioned as implementable using MMIO.
->
-> Add support for IPIs using MMIO using the SiFive clint layout (which is
-> also shared by Ariane, Kendrye and the Qemu virt platform).  Additional
-> the MMIO block also support the time value and timer compare registers,
-> so they are also set up using the same OF node.  Support for other
-> layouts should also be relatively easy to add in the future.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/riscv/include/asm/clint.h | 39 ++++++++++++++++++++++++++++++
->  arch/riscv/include/asm/sbi.h   |  2 ++
->  arch/riscv/kernel/Makefile     |  1 +
->  arch/riscv/kernel/clint.c      | 44 ++++++++++++++++++++++++++++++++++
->  arch/riscv/kernel/setup.c      |  2 ++
->  arch/riscv/kernel/smp.c        | 16 ++++++++++---
->  arch/riscv/kernel/smpboot.c    |  4 ++++
->  7 files changed, 105 insertions(+), 3 deletions(-)
->  create mode 100644 arch/riscv/include/asm/clint.h
->  create mode 100644 arch/riscv/kernel/clint.c
->
-> diff --git a/arch/riscv/include/asm/clint.h b/arch/riscv/include/asm/clint.h
-> new file mode 100644
-> index 000000000000..02a26b68f21d
-> --- /dev/null
-> +++ b/arch/riscv/include/asm/clint.h
-> @@ -0,0 +1,39 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#ifndef _ASM_CLINT_H
-> +#define _ASM_CLINT_H 1
-> +
-> +#include <linux/io.h>
-> +#include <linux/smp.h>
-> +
-> +#ifdef CONFIG_RISCV_M_MODE
-> +extern u32 __iomem *clint_ipi_base;
-> +
-> +void clint_init_boot_cpu(void);
-> +
-> +static inline void clint_send_ipi_single(unsigned long hartid)
-> +{
-> +       writel(1, clint_ipi_base + hartid);
-> +}
-> +
-> +static inline void clint_send_ipi_mask(const struct cpumask *hartid_mask)
-> +{
-> +       int hartid;
-> +
-> +       for_each_cpu(hartid, hartid_mask)
-> +               clint_send_ipi_single(hartid);
-> +}
-> +
-> +static inline void clint_clear_ipi(unsigned long hartid)
-> +{
-> +       writel(0, clint_ipi_base + hartid);
-> +}
-> +#else /* CONFIG_RISCV_M_MODE */
-> +#define clint_init_boot_cpu()  do { } while (0)
-> +
-> +/* stubs to for code is only reachable under IS_ENABLED(CONFIG_RISCV_M_MODE): */
-> +void clint_send_ipi_single(unsigned long hartid);
-> +void clint_send_ipi_mask(const struct cpumask *hartid_mask);
-> +void clint_clear_ipi(unsigned long hartid);
-> +#endif /* CONFIG_RISCV_M_MODE */
-> +
-> +#endif /* _ASM_CLINT_H */
-> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-> index a4774bafe033..407d1024f9eb 100644
-> --- a/arch/riscv/include/asm/sbi.h
-> +++ b/arch/riscv/include/asm/sbi.h
-> @@ -97,6 +97,8 @@ static inline void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
->  #else /* CONFIG_RISCV_SBI */
->  /* stubs to for code is only reachable under IS_ENABLED(CONFIG_RISCV_SBI): */
->  void sbi_set_timer(uint64_t stime_value);
-> +void sbi_clear_ipi(void);
-> +void sbi_send_ipi(const unsigned long *hart_mask);
->  void sbi_remote_fence_i(const unsigned long *hart_mask);
->  #endif /* CONFIG_RISCV_SBI */
->  #endif /* _ASM_RISCV_SBI_H */
-> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-> index d8c35fa93cc6..2dca51046899 100644
-> --- a/arch/riscv/kernel/Makefile
-> +++ b/arch/riscv/kernel/Makefile
-> @@ -29,6 +29,7 @@ obj-y += vdso.o
->  obj-y  += cacheinfo.o
->  obj-y  += vdso/
->
-> +obj-$(CONFIG_RISCV_M_MODE)     += clint.o
->  obj-$(CONFIG_FPU)              += fpu.o
->  obj-$(CONFIG_SMP)              += smpboot.o
->  obj-$(CONFIG_SMP)              += smp.o
-> diff --git a/arch/riscv/kernel/clint.c b/arch/riscv/kernel/clint.c
-> new file mode 100644
-> index 000000000000..3647980d14c3
-> --- /dev/null
-> +++ b/arch/riscv/kernel/clint.c
-> @@ -0,0 +1,44 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019 Christoph Hellwig.
-> + */
-> +
-> +#include <linux/io.h>
-> +#include <linux/of_address.h>
-> +#include <linux/types.h>
-> +#include <asm/clint.h>
-> +#include <asm/csr.h>
-> +#include <asm/timex.h>
-> +#include <asm/smp.h>
-> +
-> +/*
-> + * This is the layout used by the SiFive clint, which is also shared by the qemu
-> + * virt platform, and the Kendryte KD210 at least.
-> + */
-> +#define CLINT_IPI_OFF          0
-> +#define CLINT_TIME_CMP_OFF     0x4000
-> +#define CLINT_TIME_VAL_OFF     0xbff8
-> +
-> +u32 __iomem *clint_ipi_base;
-> +
-> +void clint_init_boot_cpu(void)
-> +{
-> +       struct device_node *np;
-> +       void __iomem *base;
-> +
-> +       np = of_find_compatible_node(NULL, NULL, "riscv,clint0");
-> +       if (!np) {
-> +               panic("clint not found");
-> +               return;
-> +       }
-> +
-> +       base = of_iomap(np, 0);
-> +       if (!base)
-> +               panic("could not map CLINT");
-> +
-> +       clint_ipi_base = base + CLINT_IPI_OFF;
-> +       riscv_time_cmp = base + CLINT_TIME_CMP_OFF;
-> +       riscv_time_val = base + CLINT_TIME_VAL_OFF;
-> +
-> +       clint_clear_ipi(boot_cpu_hartid);
-> +}
-> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
-> index a990a6cb184f..f4ba71b66c73 100644
-> --- a/arch/riscv/kernel/setup.c
-> +++ b/arch/riscv/kernel/setup.c
-> @@ -17,6 +17,7 @@
->  #include <linux/sched/task.h>
->  #include <linux/swiotlb.h>
->
-> +#include <asm/clint.h>
->  #include <asm/setup.h>
->  #include <asm/sections.h>
->  #include <asm/pgtable.h>
-> @@ -65,6 +66,7 @@ void __init setup_arch(char **cmdline_p)
->         setup_bootmem();
->         paging_init();
->         unflatten_device_tree();
-> +       clint_init_boot_cpu();
->
->  #ifdef CONFIG_SWIOTLB
->         swiotlb_init(1);
-> diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
-> index b18cd6c8e8fb..c46df9c2e927 100644
-> --- a/arch/riscv/kernel/smp.c
-> +++ b/arch/riscv/kernel/smp.c
-> @@ -14,6 +14,7 @@
->  #include <linux/seq_file.h>
->  #include <linux/delay.h>
->
-> +#include <asm/clint.h>
->  #include <asm/sbi.h>
->  #include <asm/tlbflush.h>
->  #include <asm/cacheflush.h>
-> @@ -90,7 +91,10 @@ static void send_ipi_mask(const struct cpumask *mask, enum ipi_message_type op)
->         smp_mb__after_atomic();
->
->         riscv_cpuid_to_hartid_mask(mask, &hartid_mask);
-> -       sbi_send_ipi(cpumask_bits(&hartid_mask));
-> +       if (IS_ENABLED(CONFIG_RISCV_SBI))
-> +               sbi_send_ipi(cpumask_bits(&hartid_mask));
-> +       else
-> +               clint_send_ipi_mask(&hartid_mask);
->  }
->
->  static void send_ipi_single(int cpu, enum ipi_message_type op)
-> @@ -101,12 +105,18 @@ static void send_ipi_single(int cpu, enum ipi_message_type op)
->         set_bit(op, &ipi_data[cpu].bits);
->         smp_mb__after_atomic();
->
-> -       sbi_send_ipi(cpumask_bits(cpumask_of(hartid)));
-> +       if (IS_ENABLED(CONFIG_RISCV_SBI))
-> +               sbi_send_ipi(cpumask_bits(cpumask_of(hartid)));
-> +       else
-> +               clint_send_ipi_single(hartid);
->  }
->
->  static inline void clear_ipi(void)
->  {
-> -       csr_clear(CSR_SIP, SIE_SSIE);
-> +       if (IS_ENABLED(CONFIG_RISCV_SBI))
-> +               csr_clear(CSR_SIP, SIE_SSIE);
-> +       else
-> +               clint_clear_ipi(cpuid_to_hartid_map(smp_processor_id()));
->  }
->
->  void riscv_software_interrupt(void)
-> diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
-> index 18ae6da5115e..6300b09f1d1d 100644
-> --- a/arch/riscv/kernel/smpboot.c
-> +++ b/arch/riscv/kernel/smpboot.c
-> @@ -24,6 +24,7 @@
->  #include <linux/of.h>
->  #include <linux/sched/task_stack.h>
->  #include <linux/sched/mm.h>
-> +#include <asm/clint.h>
->  #include <asm/irq.h>
->  #include <asm/mmu_context.h>
->  #include <asm/tlbflush.h>
-> @@ -134,6 +135,9 @@ asmlinkage void __init smp_callin(void)
->  {
->         struct mm_struct *mm = &init_mm;
->
-> +       if (!IS_ENABLED(CONFIG_RISCV_SBI))
-> +               clint_clear_ipi(cpuid_to_hartid_map(smp_processor_id()));
-> +
->         /* All kernel threads share the same mm context.  */
->         mmgrab(mm);
->         current->active_mm = mm;
-> --
-> 2.20.1
->
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+From: Yonglong Liu <liuyonglong@huawei.com>
 
-LGTM.
+Currently, the num_msi_left means the vector numbers of NIC,
+but if the PF supported RoCE, it contains the vector numbers
+of NIC and RoCE(Not expected).
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
+This may cause interrupts lost in some case, because of the
+NIC module used the vector resources which belongs to RoCE.
 
-Regards,
-Anup
+This patch adds a new variable num_nic_msi to store the vector
+numbers of NIC, and adjust the default TQP numbers and rss_size
+according to the value of num_nic_msi.
+
+Fixes: 46a3df9f9718 ("net: hns3: Add HNS3 Acceleration Engine & Compatibility Layer Support")
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+---
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h        |  2 ++
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 21 +++++++++++++++-
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  1 +
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c  | 11 +++++++--
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 28 +++++++++++++++++++---
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h  |  1 +
+ 6 files changed, 58 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+index c4b7bf8..75ccc1e 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+@@ -32,6 +32,8 @@
+ 
+ #define HNAE3_MOD_VERSION "1.0"
+ 
++#define HNAE3_MIN_VECTOR_NUM	2 /* first one for misc, another for IO */
++
+ /* Device IDs */
+ #define HNAE3_DEV_ID_GE				0xA220
+ #define HNAE3_DEV_ID_25GE			0xA221
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index fd7f943..e02e01b 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -906,6 +906,9 @@ static int hclge_query_pf_resource(struct hclge_dev *hdev)
+ 		hnae3_get_field(__le16_to_cpu(req->pf_intr_vector_number),
+ 				HCLGE_PF_VEC_NUM_M, HCLGE_PF_VEC_NUM_S);
+ 
++		/* nic's msix numbers is always equals to the roce's. */
++		hdev->num_nic_msi = hdev->num_roce_msi;
++
+ 		/* PF should have NIC vectors and Roce vectors,
+ 		 * NIC vectors are queued before Roce vectors.
+ 		 */
+@@ -915,6 +918,15 @@ static int hclge_query_pf_resource(struct hclge_dev *hdev)
+ 		hdev->num_msi =
+ 		hnae3_get_field(__le16_to_cpu(req->pf_intr_vector_number),
+ 				HCLGE_PF_VEC_NUM_M, HCLGE_PF_VEC_NUM_S);
++
++		hdev->num_nic_msi = hdev->num_msi;
++	}
++
++	if (hdev->num_nic_msi < HNAE3_MIN_VECTOR_NUM) {
++		dev_err(&hdev->pdev->dev,
++			"Just %u msi resources, not enough for pf(min:2).\n",
++			hdev->num_nic_msi);
++		return -EINVAL;
+ 	}
+ 
+ 	return 0;
+@@ -1507,6 +1519,10 @@ static int  hclge_assign_tqp(struct hclge_vport *vport, u16 num_tqps)
+ 	kinfo->rss_size = min_t(u16, hdev->rss_size_max,
+ 				vport->alloc_tqps / hdev->tm_info.num_tc);
+ 
++	/* ensure one to one mapping between irq and queue at default */
++	kinfo->rss_size = min_t(u16, kinfo->rss_size,
++				(hdev->num_nic_msi - 1) / hdev->tm_info.num_tc);
++
+ 	return 0;
+ }
+ 
+@@ -2285,7 +2301,8 @@ static int hclge_init_msi(struct hclge_dev *hdev)
+ 	int vectors;
+ 	int i;
+ 
+-	vectors = pci_alloc_irq_vectors(pdev, 1, hdev->num_msi,
++	vectors = pci_alloc_irq_vectors(pdev, HNAE3_MIN_VECTOR_NUM,
++					hdev->num_msi,
+ 					PCI_IRQ_MSI | PCI_IRQ_MSIX);
+ 	if (vectors < 0) {
+ 		dev_err(&pdev->dev,
+@@ -2300,6 +2317,7 @@ static int hclge_init_msi(struct hclge_dev *hdev)
+ 
+ 	hdev->num_msi = vectors;
+ 	hdev->num_msi_left = vectors;
++
+ 	hdev->base_msi_vector = pdev->irq;
+ 	hdev->roce_base_vector = hdev->base_msi_vector +
+ 				hdev->roce_base_msix_offset;
+@@ -3903,6 +3921,7 @@ static int hclge_get_vector(struct hnae3_handle *handle, u16 vector_num,
+ 	int alloc = 0;
+ 	int i, j;
+ 
++	vector_num = min_t(u16, hdev->num_nic_msi - 1, vector_num);
+ 	vector_num = min(hdev->num_msi_left, vector_num);
+ 
+ 	for (j = 0; j < vector_num; j++) {
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+index 3e9574a..c3d56b8 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -763,6 +763,7 @@ struct hclge_dev {
+ 	u32 base_msi_vector;
+ 	u16 *vector_status;
+ 	int *vector_irq;
++	u16 num_nic_msi;	/* Num of nic vectors for this PF */
+ 	u16 num_roce_msi;	/* Num of roce vectors for this PF */
+ 	int roce_base_vector;
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
+index 9f0e35f..62399cc 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
+@@ -537,9 +537,16 @@ static void hclge_tm_vport_tc_info_update(struct hclge_vport *vport)
+ 		kinfo->rss_size = kinfo->req_rss_size;
+ 	} else if (kinfo->rss_size > max_rss_size ||
+ 		   (!kinfo->req_rss_size && kinfo->rss_size < max_rss_size)) {
++		/* if user not set rss, the rss_size should compare with the
++		 * valid msi numbers to ensure one to one map between tqp and
++		 * irq as default.
++		 */
++		if (!kinfo->req_rss_size)
++			max_rss_size = min_t(u16, max_rss_size,
++					     (hdev->num_nic_msi - 1) /
++					     kinfo->num_tc);
++
+ 		/* Set to the maximum specification value (max_rss_size). */
+-		dev_info(&hdev->pdev->dev, "rss changes from %d to %d\n",
+-			 kinfo->rss_size, max_rss_size);
+ 		kinfo->rss_size = max_rss_size;
+ 	}
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index e3090b3..7d7e712 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -411,6 +411,13 @@ static int hclgevf_knic_setup(struct hclgevf_dev *hdev)
+ 		kinfo->tqp[i] = &hdev->htqp[i].q;
+ 	}
+ 
++	/* after init the max rss_size and tqps, adjust the default tqp numbers
++	 * and rss size with the actual vector numbers
++	 */
++	kinfo->num_tqps = min_t(u16, hdev->num_nic_msix - 1, kinfo->num_tqps);
++	kinfo->rss_size = min_t(u16, kinfo->num_tqps / kinfo->num_tc,
++				kinfo->rss_size);
++
+ 	return 0;
+ }
+ 
+@@ -502,6 +509,7 @@ static int hclgevf_get_vector(struct hnae3_handle *handle, u16 vector_num,
+ 	int alloc = 0;
+ 	int i, j;
+ 
++	vector_num = min_t(u16, hdev->num_nic_msix - 1, vector_num);
+ 	vector_num = min(hdev->num_msi_left, vector_num);
+ 
+ 	for (j = 0; j < vector_num; j++) {
+@@ -2246,13 +2254,14 @@ static int hclgevf_init_msi(struct hclgevf_dev *hdev)
+ 	int vectors;
+ 	int i;
+ 
+-	if (hnae3_get_bit(hdev->ae_dev->flag, HNAE3_DEV_SUPPORT_ROCE_B))
++	if (hnae3_dev_roce_supported(hdev))
+ 		vectors = pci_alloc_irq_vectors(pdev,
+ 						hdev->roce_base_msix_offset + 1,
+ 						hdev->num_msi,
+ 						PCI_IRQ_MSIX);
+ 	else
+-		vectors = pci_alloc_irq_vectors(pdev, 1, hdev->num_msi,
++		vectors = pci_alloc_irq_vectors(pdev, HNAE3_MIN_VECTOR_NUM,
++						hdev->num_msi,
+ 						PCI_IRQ_MSI | PCI_IRQ_MSIX);
+ 
+ 	if (vectors < 0) {
+@@ -2268,6 +2277,7 @@ static int hclgevf_init_msi(struct hclgevf_dev *hdev)
+ 
+ 	hdev->num_msi = vectors;
+ 	hdev->num_msi_left = vectors;
++
+ 	hdev->base_msi_vector = pdev->irq;
+ 	hdev->roce_base_vector = pdev->irq + hdev->roce_base_msix_offset;
+ 
+@@ -2533,7 +2543,7 @@ static int hclgevf_query_vf_resource(struct hclgevf_dev *hdev)
+ 
+ 	req = (struct hclgevf_query_res_cmd *)desc.data;
+ 
+-	if (hnae3_get_bit(hdev->ae_dev->flag, HNAE3_DEV_SUPPORT_ROCE_B)) {
++	if (hnae3_dev_roce_supported(hdev)) {
+ 		hdev->roce_base_msix_offset =
+ 		hnae3_get_field(__le16_to_cpu(req->msixcap_localid_ba_rocee),
+ 				HCLGEVF_MSIX_OFT_ROCEE_M,
+@@ -2542,6 +2552,9 @@ static int hclgevf_query_vf_resource(struct hclgevf_dev *hdev)
+ 		hnae3_get_field(__le16_to_cpu(req->vf_intr_vector_number),
+ 				HCLGEVF_VEC_NUM_M, HCLGEVF_VEC_NUM_S);
+ 
++		/* nic's msix numbers is always equals to the roce's. */
++		hdev->num_nic_msix = hdev->num_roce_msix;
++
+ 		/* VF should have NIC vectors and Roce vectors, NIC vectors
+ 		 * are queued before Roce vectors. The offset is fixed to 64.
+ 		 */
+@@ -2551,6 +2564,15 @@ static int hclgevf_query_vf_resource(struct hclgevf_dev *hdev)
+ 		hdev->num_msi =
+ 		hnae3_get_field(__le16_to_cpu(req->vf_intr_vector_number),
+ 				HCLGEVF_VEC_NUM_M, HCLGEVF_VEC_NUM_S);
++
++		hdev->num_nic_msix = hdev->num_msi;
++	}
++
++	if (hdev->num_nic_msix < HNAE3_MIN_VECTOR_NUM) {
++		dev_err(&hdev->pdev->dev,
++			"Just %u msi resources, not enough for vf(min:2).\n",
++			hdev->num_nic_msix);
++		return -EINVAL;
+ 	}
+ 
+ 	return 0;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
+index bdde3af..2b8d6bc 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
+@@ -270,6 +270,7 @@ struct hclgevf_dev {
+ 	u16 num_msi;
+ 	u16 num_msi_left;
+ 	u16 num_msi_used;
++	u16 num_nic_msix;	/* Num of nic vectors for this VF */
+ 	u16 num_roce_msix;	/* Num of roce vectors for this VF */
+ 	u16 roce_base_msix_offset;
+ 	int roce_base_vector;
+-- 
+2.7.4
+
