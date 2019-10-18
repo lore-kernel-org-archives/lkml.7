@@ -2,91 +2,167 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 778EBCA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0908CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43792222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8589C222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:03:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FZ0tEDaK"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="A3o4N4A+";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TRC7Fdhx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409574AbfJRFBM (ORCPT
+        id S2503547AbfJRFDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:01:12 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36436 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407184AbfJRFBM (ORCPT
+        Fri, 18 Oct 2019 01:03:12 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:35342 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbfJRFDL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:01:12 -0400
-Received: by mail-pl1-f194.google.com with SMTP id j11so2256918plk.3;
-        Thu, 17 Oct 2019 22:01:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wpJfPZmMYz1gHLTNi+cKJTn1LIoYcx1Zone10S78hMg=;
-        b=FZ0tEDaKSb1fjZ35ji80nGBEkLxkXPIXJ2FvWbrkcMTHJwnnbaOejUCN23Q2cfSp7G
-         a7iRe4brGFHMvYqxelgkcTNRPK22hSf8NEaUxvPvNabN9WcB7jUijIgIlDZ2JHj0Roiu
-         p4+P+kEoqzv/73jmaP3gRXUkHTOXN5rXd/uiS8b+WphgcEU4zkHXzjtZOvDwIR+7W41V
-         WJxIBek3fEIO+i+u7AAhsDfy5UOXgdrJxiuVJ6gzALiWuHWdIK3zkT/slxgCkweStRkr
-         gbOrWYsJ4MojCeGdlm51kVCrSD0cEqz1g70jncmaD2Xn0KWjig8Yto64REnBiVZqrJ19
-         CRPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wpJfPZmMYz1gHLTNi+cKJTn1LIoYcx1Zone10S78hMg=;
-        b=kkFcHpMDYhX+7ugzXM/NJmmbU/bCUbaC8S7p8IoJRE+xVS+z+wYUGRSJmI7HgQsgdF
-         MQo5/tjDCC6SrqOJEUxTCUAlmZwuLiBxIEPh82PHHYSlTVoSzVF7MZJ4OUQO+JLWqyQz
-         WJnofjjwOmSlo3HSM5GR2hgolILxcoUbORxQ73YBMIVg5vSTGSSaWGt2LU1i8jXxsNxz
-         Cv3XGmUoGLdgjVNZA+HdGjZcZHKEWwrF8IOegQn8+OqQG1vPIpvQOScveq2r70cSQHbB
-         h9WVrMl2jNBNuERS6d/dCPl01lCmmJUPev9tlSvilDeAYeltH0SeollwTOLAruOYryhZ
-         82lA==
-X-Gm-Message-State: APjAAAVQ5ofgOtxXC8lAO9We2RyXRGiMYZSo40FbtekJT2oRw1YtAutG
-        QlnyTBj+frn/CisViK0/WlDD8gvB
-X-Google-Smtp-Source: APXvYqyyRC3rRWHEdU/4ehIqVTyMDDP6d3MBshcdRrCKVsJhdcNuojXErnWWf00fZs7sEBIVI05X/w==
-X-Received: by 2002:a17:902:b94b:: with SMTP id h11mr7840953pls.21.1571374871038;
-        Thu, 17 Oct 2019 22:01:11 -0700 (PDT)
-Received: from ast-mbp ([2620:10d:c090:180::cfd0])
-        by smtp.gmail.com with ESMTPSA id s141sm5721197pfs.13.2019.10.17.22.01.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Oct 2019 22:01:10 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 22:01:08 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: linux-next: build warning after merge of the bpf-next tree
-Message-ID: <20191018050107.dsnt4ukq6n6l6luy@ast-mbp>
-References: <20191018105657.4584ec67@canb.auug.org.au>
+        Fri, 18 Oct 2019 01:03:11 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3235D611B5; Fri, 18 Oct 2019 05:03:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571374990;
+        bh=xkwmYNFg1uTAlzxvBXAlwxTv5Amb5w9CFHuhTI/GUFA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=A3o4N4A+ThwRlG0WSfKtqT+hdLXEqISvjODSLiJHe4LxZGoNQBMc5MIXYw7MF9EVC
+         js9ZQULfDl1XODGzDcP3gvCoVYqwRJaQTvhXuwkCjDGdTQsEZSUQHGcMl+bFYCjy70
+         fxfT6dIU4Pxvz6drxmEw7n86GORXOvEzbRMQxVkc=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id F337560614;
+        Fri, 18 Oct 2019 05:03:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571374989;
+        bh=xkwmYNFg1uTAlzxvBXAlwxTv5Amb5w9CFHuhTI/GUFA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TRC7FdhxqcvRaLT3Z2cDlrb+g+4pDGxEVYxnLUuUgZoPoO/wtPLN9gVyReShp55gi
+         xZfl6WnVEscRs/4rMCP9o3Hi44mrwgtKDlPFI1iIAUnFJrl48mgT1qNXIlpGaBK86l
+         7u9NU5BBQd7q9vlZZZkKwbJac2wZrnyGnJTpDrlA=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018105657.4584ec67@canb.auug.org.au>
-User-Agent: NeoMutt/20180223
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 18 Oct 2019 10:33:08 +0530
+From:   kgunda@codeaurora.org
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
+        daniel.thompson@linaro.org, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH V7 6/6] backlight: qcom-wled: Add auto string detection
+ logic
+In-Reply-To: <20191017133024.GQ4365@dell>
+References: <1571220826-7740-1-git-send-email-kgunda@codeaurora.org>
+ <1571220826-7740-7-git-send-email-kgunda@codeaurora.org>
+ <20191017122653.GO4365@dell>
+ <689831a9d7561f51cdb7ea0a1760d472@codeaurora.org>
+ <20191017133024.GQ4365@dell>
+Message-ID: <1b21d0a80847173c4a1ee1943f974bda@codeaurora.org>
+X-Sender: kgunda@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 10:56:57AM +1100, Stephen Rothwell wrote:
-> Hi all,
+On 2019-10-17 19:00, Lee Jones wrote:
+> On Thu, 17 Oct 2019, kgunda@codeaurora.org wrote:
 > 
-> After merging the bpf-next tree, today's linux-next build (powerpc
-> ppc64_defconfig) produced this warning:
+>> On 2019-10-17 17:56, Lee Jones wrote:
+>> > On Wed, 16 Oct 2019, Kiran Gunda wrote:
+>> >
+>> > > The auto string detection algorithm checks if the current WLED
+>> > > sink configuration is valid. It tries enabling every sink and
+>> > > checks if the OVP fault is observed. Based on this information
+>> > > it detects and enables the valid sink configuration.
+>> > > Auto calibration will be triggered when the OVP fault interrupts
+>> > > are seen frequently thereby it tries to fix the sink configuration.
+>> > >
+>> > > The auto-detection also kicks in when the connected LED string
+>> > > of the display-backlight malfunctions (because of damage) and
+>> > > requires the damaged string to be turned off to prevent the
+>> > > complete panel and/or board from being damaged.
+>> > >
+>> > > Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+>> > > ---
+>> > >  drivers/video/backlight/qcom-wled.c | 410
+>> > > +++++++++++++++++++++++++++++++++++-
+>> > >  1 file changed, 404 insertions(+), 6 deletions(-)
+>> > >
+>> > > diff --git a/drivers/video/backlight/qcom-wled.c
+>> > > b/drivers/video/backlight/qcom-wled.c
+>> > > index b5b125c..ff7c409 100644
+>> > > --- a/drivers/video/backlight/qcom-wled.c
+>> > > +++ b/drivers/video/backlight/qcom-wled.c
 > 
-> WARNING: 2 bad relocations
-> c000000001998a48 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_start
-> c000000001998a50 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_end
-
-Can ppc folks help me figure out what this warning means?
-
+> [...]
+> 
+>> > > +		if (int_sts & WLED3_CTRL_REG_OVP_FAULT_STATUS)
+>> > > +			dev_dbg(wled->dev, "WLED OVP fault detected with SINK %d\n",
+>> > > +				i + 1);
+>> >
+>> > I haven't reviewed the whole patch, but this caught my eye.
+>> >
+>> > I think this should be upgraded to dev_warn().
+>> >
+>> Thought of keeping these messages silent, Because the string 
+>> configuration
+>> will be corrected in this
+>> and informing it at end of the auto string detection.
+> 
+> [...]
+> 
+>> > > +	} else {
+>> > > +		dev_warn(wled->dev, "New WLED string configuration found %x\n",
+>> > > +			 sink_valid);
+>> >
+>> > Why would the user care about this?  Is it not normal?
+>> >
+>> Actually, it comes here if the user provided string configuration in 
+>> the
+>> device tree is in-correct.
+>> That's why just informing the user about the right string 
+>> configuration,
+>> after the auto string detection.
+> 
+> Then I think we need to be more forthcoming.  Tell the user the
+> configuration is incorrect and what you've done to rectify it.
+> 
+> "XXX is not a valid configuration - using YYY instead"
+> 
+Sure. Will update it in the next series.
+> [...]
+> 
+>> > > +static int wled_configure_ovp_irq(struct wled *wled,
+>> > > +				  struct platform_device *pdev)
+>> > > +{
+>> > > +	int rc;
+>> > > +	u32 val;
+>> > > +
+>> > > +	wled->ovp_irq = platform_get_irq_byname(pdev, "ovp");
+>> > > +	if (wled->ovp_irq < 0) {
+>> > > +		dev_dbg(&pdev->dev, "ovp irq is not used\n");
+>> >
+>> > I assume this is optional.  What happens if no IRQ is provided?
+>> >
+>> Here OVP IRQ is used to detect the wrong string detection. If it is 
+>> not
+>> provided the auto string detection logic won't work.
+> 
+> "OVP IRQ not found - disabling automatic string detection"
+> 
+Sure. Will update it in the next series.
+>> > If, for instance, polling mode is enabled, maybe something like this
+>> > would be better?
+>> >
+>> >       dev_warn(&pdev->dev, "No IRQ found, falling back to polling
+>> > mode\n");
