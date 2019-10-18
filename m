@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D71CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B757BCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4908620872
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88868205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437524;
-	bh=XMB82K2xXOWsCRusDL8vhZUFHGoHirItflBZMUYFA0A=;
+	s=default; t=1571437527;
+	bh=n5uNfqPFplx3jfycm2S+aIa/zP6GuyposK3H0PiCmjo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hHH6c0qQHecfhjdbo8EoVUEySEXmpTkEftkFsTDHbZr83SfnSufOpWuWhsHTY116Z
-	 XRCZbVNb5IIunXvyZbLCJoyPK5MkXShCEoaOF/qUGeLLDixNmVH2PCdcv1CWD9/KdL
-	 Hagqid1+0gAUpyyStImLt44bV9jxg+RgVgHbAxy0=
+	b=TSqF2ry/vd3OS9qAxr3eKrc5njORjDCR3w3NLvENma27svYhatpKkTC/gbmEhmK90
+	 mW1TL2PX15n9zFZHyYUlMswAsN1YRCChxp5Mc9VN0i1uJr4Wxm9eNcTmd1sl8021qv
+	 2DJ+C/mERq+oAVYnM0LPOIeoQckxVbCqsWmeU3Vk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbfJRWEj (ORCPT
+        id S2405746AbfJRWZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:04:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36190 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:25:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728266AbfJRWEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:04:31 -0400
+        id S1728445AbfJRWEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:04:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 014B8222D3;
-        Fri, 18 Oct 2019 22:04:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38A0E222D1;
+        Fri, 18 Oct 2019 22:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436270;
-        bh=XMB82K2xXOWsCRusDL8vhZUFHGoHirItflBZMUYFA0A=;
+        s=default; t=1571436278;
+        bh=n5uNfqPFplx3jfycm2S+aIa/zP6GuyposK3H0PiCmjo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pE5uUkz1W+XBAV1hHvFx6JzZDlCV1t2AzbYmhkXrivrn6deBsA1jjbUYLulRwZNzJ
-         w8uJ7st7AIjRXFhwCXNMqjoeWgwFzlMWJZIId31eWUJzA4iErsh6Z0zX1gMKNrAYSw
-         Co5UN7l09IVDbTCnuvbaZJJqFtlu+vrl9Ik7EPYY=
+        b=1tGW48eql75g5pWzLnh2bFY+Z3oYYjNZU7O6l3d4dI2aavkV7JhTsXI9MDWM6BUYU
+         0i60sxiXRjsmfK34dNS1sP9Y2pZRBctYTDFaR/N2TnJs2Ym1dA3J6WPVedWmQMrJNy
+         BoOTLRpZfpLplqt9qS+DNw9eNBk1CbCfNKoBLDrY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Matthias Maennich <maennich@google.com>,
-        Jessica Yu <jeyu@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 50/89] kbuild: fix build error of 'make nsdeps' in clean tree
-Date:   Fri, 18 Oct 2019 18:02:45 -0400
-Message-Id: <20191018220324.8165-50-sashal@kernel.org>
+Cc:     Jia Guo <guojia12@huawei.com>, Yiwen Jiang <jiangyiwen@huawei.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Joseph Qi <joseph.qi@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 56/89] ocfs2: clear zero in unaligned direct IO
+Date:   Fri, 18 Oct 2019 18:02:51 -0400
+Message-Id: <20191018220324.8165-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -60,43 +64,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Jia Guo <guojia12@huawei.com>
 
-[ Upstream commit d85103ac78a6d8573b21348b36f4cca2e1839a31 ]
+[ Upstream commit 7a243c82ea527cd1da47381ad9cd646844f3b693 ]
 
-Running 'make nsdeps' in a clean source tree fails as follows:
+Unused portion of a part-written fs-block-sized block is not set to zero
+in unaligned append direct write.This can lead to serious data
+inconsistencies.
 
-$ make -s clean; make -s defconfig; make nsdeps
-   [ snip ]
-awk: fatal: cannot open file `init/modules.order' for reading (No such file or directory)
-make: *** [Makefile;1307: modules.order] Error 2
-make: *** Deleting file 'modules.order'
-make: *** Waiting for unfinished jobs....
+Ocfs2 manage disk with cluster size(for example, 1M), part-written in
+one cluster will change the cluster state from UN-WRITTEN to WRITTEN,
+VFS(function dio_zero_block) doesn't do the cleaning because bh's state
+is not set to NEW in function ocfs2_dio_wr_get_block when we write a
+WRITTEN cluster.  For example, the cluster size is 1M, file size is 8k
+and we direct write from 14k to 15k, then 12k~14k and 15k~16k will
+contain dirty data.
 
-The cause of the error is 'make nsdeps' does not build modules at all.
-Set KBUILD_MODULES to fix it.
+We have to deal with two cases:
+ 1.The starting position of direct write is outside the file.
+ 2.The starting position of direct write is located in the file.
 
-Reviewed-by: Matthias Maennich <maennich@google.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
+We need set bh's state to NEW in the first case.  In the second case, we
+need mapped twice because bh's state of area out file should be set to
+NEW while area in file not.
+
+[akpm@linux-foundation.org: coding style fixes]
+Link: http://lkml.kernel.org/r/5292e287-8f1a-fd4a-1a14-661e555e0bed@huawei.com
+Signed-off-by: Jia Guo <guojia12@huawei.com>
+Reviewed-by: Yiwen Jiang <jiangyiwen@huawei.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Joseph Qi <joseph.qi@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ocfs2/aops.c | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index d7469f0926a67..62b9640d007a0 100644
---- a/Makefile
-+++ b/Makefile
-@@ -594,7 +594,7 @@ endif
- # in addition to whatever we do anyway.
- # Just "make" or "make all" shall build modules as well
+diff --git a/fs/ocfs2/aops.c b/fs/ocfs2/aops.c
+index a4c905d6b5755..3e0a93e799ea1 100644
+--- a/fs/ocfs2/aops.c
++++ b/fs/ocfs2/aops.c
+@@ -2139,13 +2139,30 @@ static int ocfs2_dio_wr_get_block(struct inode *inode, sector_t iblock,
+ 	struct ocfs2_dio_write_ctxt *dwc = NULL;
+ 	struct buffer_head *di_bh = NULL;
+ 	u64 p_blkno;
+-	loff_t pos = iblock << inode->i_sb->s_blocksize_bits;
++	unsigned int i_blkbits = inode->i_sb->s_blocksize_bits;
++	loff_t pos = iblock << i_blkbits;
++	sector_t endblk = (i_size_read(inode) - 1) >> i_blkbits;
+ 	unsigned len, total_len = bh_result->b_size;
+ 	int ret = 0, first_get_block = 0;
  
--ifneq ($(filter all _all modules,$(MAKECMDGOALS)),)
-+ifneq ($(filter all _all modules nsdeps,$(MAKECMDGOALS)),)
-   KBUILD_MODULES := 1
- endif
+ 	len = osb->s_clustersize - (pos & (osb->s_clustersize - 1));
+ 	len = min(total_len, len);
  
++	/*
++	 * bh_result->b_size is count in get_more_blocks according to write
++	 * "pos" and "end", we need map twice to return different buffer state:
++	 * 1. area in file size, not set NEW;
++	 * 2. area out file size, set  NEW.
++	 *
++	 *		   iblock    endblk
++	 * |--------|---------|---------|---------
++	 * |<-------area in file------->|
++	 */
++
++	if ((iblock <= endblk) &&
++	    ((iblock + ((len - 1) >> i_blkbits)) > endblk))
++		len = (endblk - iblock + 1) << i_blkbits;
++
+ 	mlog(0, "get block of %lu at %llu:%u req %u\n",
+ 			inode->i_ino, pos, len, total_len);
+ 
+@@ -2229,6 +2246,9 @@ static int ocfs2_dio_wr_get_block(struct inode *inode, sector_t iblock,
+ 	if (desc->c_needs_zero)
+ 		set_buffer_new(bh_result);
+ 
++	if (iblock > endblk)
++		set_buffer_new(bh_result);
++
+ 	/* May sleep in end_io. It should not happen in a irq context. So defer
+ 	 * it to dio work queue. */
+ 	set_buffer_defer_completion(bh_result);
 -- 
 2.20.1
 
