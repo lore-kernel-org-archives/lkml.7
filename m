@@ -2,158 +2,112 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C7FCA9EA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2273CA9EA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CA71222C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:53:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571385216;
-	bh=zeLyRPW6ZGhjb4o28kj6dktEdZ2lt6aLY/MBZ0nABSM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UYg53O9T8rBEsDHGFKxp6PCLShSqNT/Wng111zvSa/5fnGJmVksdOVP3t3tvVn2P2
-	 T1LysoSfIG6gZFbtvIJfveqhxsQ972nYH8HrXOnnW4Cf50oAUj2oOXm1hDRRB6l8wS
-	 V9Sob2kLC1+jzZKQKoB2tRa6pguJ5kTtCdETBwPc=
+	by mail.kernel.org (Postfix) with ESMTP id 8BA0921897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:55:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="M++K6rEj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393105AbfJRHxf (ORCPT
+        id S2391356AbfJRHzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 03:53:35 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33988 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389483AbfJRHxe (ORCPT
+        Fri, 18 Oct 2019 03:55:07 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:11062 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728064AbfJRHzG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 03:53:34 -0400
-Received: by mail-oi1-f196.google.com with SMTP id 83so4487826oii.1;
-        Fri, 18 Oct 2019 00:53:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FGwGKswYlm8qaeis0iFsbVhgq2LVEVHU2LaBuG3PciM=;
-        b=JsZNJh6vTCjw3zMeEHoU+HmixoCOencWP1LRftDwpjltuTTfB2Cj/+B0Vte/WdnaYy
-         V513eEm7+/QJX2DWGu0wK+Zzjxzwb5nJULtRc0LBtxN//Ve23u8wxqCsXLQaZXT/5SL6
-         +jqyesZB7Ye8UjlACZbpcrJ48ax6aDAswlSCtaqzJP875MPvNbRH6CwdiJe8atc9QQLS
-         SM1YPtZU/iSZANfUB7fDoFmXdv0uU2UIRjKzftfmVdPOJkCu31ER4Y+VxedjgpLsc8AR
-         MDShdlURhupscRvastRrgBY7wRgilhMk7iXKwTGVQY19rHEUZL18TJ8Kck6lmZBn2hGp
-         vkMg==
-X-Gm-Message-State: APjAAAVsYzXUfIoeY2LxFBgPyg5gHNma6EI8NeAVceObAd2CAutuFGAH
-        IyEuzGkTX0c0od21SUOMIvAkP9WiELnTK4eVpVQ=
-X-Google-Smtp-Source: APXvYqxUo39R22IVM2V43Dq/N/66E03d1vqWWeDpxTi6q71S7C/QviIVZAi9rhlCbAdM1SF/aj03YJgVhwxln/mK+R8=
-X-Received: by 2002:a05:6808:917:: with SMTP id w23mr6558466oih.68.1571385213609;
- Fri, 18 Oct 2019 00:53:33 -0700 (PDT)
+        Fri, 18 Oct 2019 03:55:06 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5da96fde0000>; Fri, 18 Oct 2019 00:55:10 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 18 Oct 2019 00:55:06 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 18 Oct 2019 00:55:06 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 18 Oct
+ 2019 07:55:06 +0000
+Received: from [10.21.133.51] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 18 Oct
+ 2019 07:55:03 +0000
+Subject: Re: [PATCH 4.4 00/79] 4.4.197-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20191016214729.758892904@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <11fd4e3d-7487-b7a2-9f23-2f536f1459f7@nvidia.com>
+Date:   Fri, 18 Oct 2019 08:55:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191017163503.30791-1-sudeep.holla@arm.com> <20191018053844.s2fbk2le6uz3chk6@vireshk-i7>
-In-Reply-To: <20191018053844.s2fbk2le6uz3chk6@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 18 Oct 2019 09:53:22 +0200
-Message-ID: <CAJZ5v0hhFtKddeoSQwM6XGeeztgfcatG_cry5-bKEO=8EzGR1g@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: flush any pending policy update work scheduled
- before freeing
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1571385311; bh=XBd7l6J4ICA6DeU5pmurU+x1NeQvbgPFG6ah7rWtzQc=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=M++K6rEj0tWrnrHkcP0GtXNEgAfWfcPu7WEg0FvsPq16D0fRtfpnY2L1w/UMRYXsR
+         lP4ztKnMuLfCE+Lq47cnNneu+vgKwhp7/aQxtJsSoiCNVe4jzErfWNXFivwVveQ1xj
+         uETqkPRTcFkBNY04ZwCfiDdUhTAIqMYXuuuu9DEAkRpLunH2NUVDwXeUDreL2TVlio
+         XjCYv7efXW0424JBeMBjyz5BW7yVm8bFmdhfMhyMDb2p8JQzi5MK6sciJAElcIkfL9
+         n1mmx0kH7sjuX2vVlRcm7mRLNPtxRAMx+7Q1Zyt/9nhO8Nc1S/ESkTockDpxTNngjD
+         aAJ9k3whUkzQA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 7:38 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 17-10-19, 17:35, Sudeep Holla wrote:
-> > dev_pm_qos_remove_request ends calling {max,min}_freq_req QoS notifiers
-> > which schedule policy update work.
->
-> I don't think that's correct. We remove the notifiers first and then
-> only remove the requests. Though it is possible due to the other bug
-> we are discussing where the notifier doesn't really get removed from
-> the right CPU, but even that patch didn't fix your issue.
 
-Right, that async update comes from somewhere else.
+On 16/10/2019 22:49, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.197 release.
+> There are 79 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri 18 Oct 2019 09:43:41 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.197-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-> Looks like we are still missing something ?
->
-> > It may end up racing with the freeing
-> > the policy and unregistering the driver.
-> >
-> > One possible race is as below where the cpufreq_driver is unregistered
-> > but the scheduled work gets executed at later stage when cpufreq_driver
-> > is NULL(i.e. after freeing the policy and driver)
-> >
-> > Unable to handle kernel NULL pointer dereference at virtual address 0000001c
-> > pgd = (ptrval)
-> > [0000001c] *pgd=80000080204003, *pmd=00000000
-> > Internal error: Oops: 206 [#1] SMP THUMB2
-> > Modules linked in:
-> > CPU: 0 PID: 34 Comm: kworker/0:1 Not tainted 5.4.0-rc3-00006-g67f5a8081a4b #86
-> > Hardware name: ARM-Versatile Express
-> > Workqueue: events handle_update
-> > PC is at cpufreq_set_policy+0x58/0x228
-> > LR is at dev_pm_qos_read_value+0x77/0xac
-> > Control: 70c5387d  Table: 80203000  DAC: fffffffd
-> > Process kworker/0:1 (pid: 34, stack limit = 0x(ptrval))
-> >       (cpufreq_set_policy) from (refresh_frequency_limits.part.24+0x37/0x48)
-> >       (refresh_frequency_limits.part.24) from (handle_update+0x2f/0x38)
-> >       (handle_update) from (process_one_work+0x16d/0x3cc)
-> >       (process_one_work) from (worker_thread+0xff/0x414)
-> >       (worker_thread) from (kthread+0xff/0x100)
-> >       (kthread) from (ret_from_fork+0x11/0x28)
-> >
-> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > ---
-> >  drivers/cpufreq/cpufreq.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > Hi Rafael, Viresh,
-> >
-> > This fixed the boot issue I reported[1] on TC2 with bL switcher enabled.
-> > I have based this patch on -rc3 and not on top of your patches. This
-> > only fixes the boot issue but I hit the other crashes while continuously
-> > switching on and off the bL switcher that register/unregister the driver
-> > Your patch series fixes them. I can based this on top of those if you
-> > prefer.
-> >
-> > Regards,
-> > Sudeep
-> >
-> > [1] https://lore.kernel.org/linux-pm/20191015155735.GA29105@bogus/
-> >
-> > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > index c52d6fa32aac..b703c29a84be 100644
-> > --- a/drivers/cpufreq/cpufreq.c
-> > +++ b/drivers/cpufreq/cpufreq.c
-> > @@ -1278,6 +1278,9 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
-> >       }
-> >
-> >       dev_pm_qos_remove_request(policy->min_freq_req);
-> > +     /* flush the pending policy->update work before freeing the policy */
-> > +     if (work_pending(&policy->update))
-> > +             flush_work(&policy->update);
->
-> This diff surely makes sense even without the QoS stuff, this race can
-> still happen, very unlikely though.
->
-> And yes, you must use the other variant that Rafael suggested, we are
-> already doing similar thing in a bunch of cpufreq governors :)
->
-> And I will probably add this after calling
-> dev_pm_qos_remove_notifier() for the MAX policy as this doesn't and
-> shouldn't depend on removing the qos request.
 
-Good point.
+All tests passing for Tegra ...
 
-This is after taking the last CPU in the policy offline, so
-policy->update cannot be scheduled from anywhere at this point.
+Test results for stable-v4.4:
+    6 builds:	6 pass, 0 fail
+    12 boots:	12 pass, 0 fail
+    19 tests:	19 pass, 0 fail
 
-> >       kfree(policy->min_freq_req);
-> >
-> >       cpufreq_policy_put_kobj(policy);
-> > --
+Linux version:	4.4.197-rc1-gcb63cd392f38
+Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+                tegra30-cardhu-a04
+
+Cheers
+Jon
+
+-- 
+nvpublic
