@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CEFCA9EC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BF9CA9EB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 225BA21D80
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6814D21852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:28:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="BzfCiED/"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="a0Ye3dCf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438381AbfJRA2u (ORCPT
+        id S2408121AbfJRA2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 20:28:50 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:3030 "EHLO
+        Thu, 17 Oct 2019 20:28:55 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:53396 "EHLO
         mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2406858AbfJRA2l (ORCPT
+        by vger.kernel.org with ESMTP id S2407073AbfJRA2q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 20:28:41 -0400
+        Thu, 17 Oct 2019 20:28:46 -0400
 Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9I0SS6i006818
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 17:28:41 -0700
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9I0SS6r006818
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 17:28:45 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=6Ev+lnUz8ysIJ2nTszRvb3nHp4nlZwcg8+MVkeEzkbM=;
- b=BzfCiED/BTDWiypVOyIO3EvbRtDWSojBXM1GJoUYwrUx5ZJCHyGXbLSR9/8fzBlRPDdh
- mE8am/BkOGAAG1WpXo0+UjrozDcrRaIN/+tCrqkgdfAOnvIgRruwZcrdhTCSBRByqq8c
- LC8FvzyQHp3YyANwP5AcXWU0ZwE3ICRNMII= 
+ content-type; s=facebook; bh=XjP6Hsf0nCO9KA2kBEt8lNgVHBpEkM8eL2jAQ11uV7M=;
+ b=a0Ye3dCf0syr/dxXLC3ywDL2waIFIb3ACX1tW45HtrO/O1pE35hQCn1Pvmxbo4sSyxSk
+ Rd5nDaGFIE8CyICmU6iDcZ6cUuQqJEehKzEFbZMZNgYqLYqY6umZ56Es0mOzR10ZfVxe
+ 9bu7hJEz9+T7ZL85gWrV/DNEQXGL2vg026s= 
 Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2vpsd6atu7-6
+        by mx0a-00082601.pphosted.com with ESMTP id 2vpsd6atu7-15
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 17:28:41 -0700
-Received: from 2401:db00:30:600c:face:0:1f:0 (2620:10d:c0a8:1b::d) by
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 17:28:45 -0700
+Received: from 2401:db00:12:9028:face:0:29:0 (2620:10d:c0a8:1b::d) by
  mail.thefacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
  15.1.1713.5; Thu, 17 Oct 2019 17:28:35 -0700
 Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
-        id E37CA18CE8475; Thu, 17 Oct 2019 17:28:33 -0700 (PDT)
+        id EF6B718CE847D; Thu, 17 Oct 2019 17:28:33 -0700 (PDT)
 Smtp-Origin-Hostprefix: devvm
 From:   Roman Gushchin <guro@fb.com>
 Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
@@ -54,9 +54,9 @@ CC:     Michal Hocko <mhocko@kernel.org>,
         Waiman Long <longman@redhat.com>,
         Christoph Lameter <cl@linux.com>, Roman Gushchin <guro@fb.com>
 Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH 01/16] mm: memcg: introduce mem_cgroup_ptr
-Date:   Thu, 17 Oct 2019 17:28:05 -0700
-Message-ID: <20191018002820.307763-2-guro@fb.com>
+Subject: [PATCH 05/16] mm: slub: implement SLUB version of obj_to_index()
+Date:   Thu, 17 Oct 2019 17:28:09 -0700
+Message-ID: <20191018002820.307763-6-guro@fb.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191018002820.307763-1-guro@fb.com>
 References: <20191018002820.307763-1-guro@fb.com>
@@ -67,7 +67,7 @@ X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
  definitions=2019-10-17_07:2019-10-17,2019-10-17 signatures=0
 X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
  malwarescore=0 bulkscore=0 priorityscore=1501 spamscore=0
- lowpriorityscore=0 mlxlogscore=999 impostorscore=0 mlxscore=0
+ lowpriorityscore=0 mlxlogscore=872 impostorscore=0 mlxscore=0
  clxscore=1015 phishscore=0 suspectscore=3 classifier=spam adjust=0
  reason=mlx scancount=1 engine=8.12.0-1908290000
  definitions=main-1910180001
@@ -77,254 +77,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit introduces mem_cgroup_ptr structure and corresponding API.
-It implements a pointer to a memory cgroup with a built-in reference
-counter. The main goal of it is to implement reparenting efficiently.
+This commit implements SLUB version of the obj_to_index() function,
+which will be required to calculate the offset of memcg_ptr in the
+mem_cgroup_vec to store/obtain the memcg ownership data.
 
-If a number of objects (e.g. slab pages) have to keep a pointer and
-a reference to a memory cgroup, they can use mem_cgroup_ptr instead.
-On reparenting, only one mem_cgroup_ptr->memcg pointer has to be
-changed, instead of walking over all accounted objects.
-
-mem_cgroup_ptr holds a single reference to the corresponding memory
-cgroup. Because it's initialized before the css reference counter,
-css's refcounter can't be bumped at allocation time. Instead, it's
-bumped on reparenting which happens during offlining. A cgroup is
-never released online, so it's fine.
-
-mem_cgroup_ptr is released using rcu, so memcg->kmem_memcg_ptr can
-be accessed in a rcu read section. On reparenting it's atomically
-switched to NULL. If the reader gets NULL, it can just read parent's
-kmem_memcg_ptr instead.
-
-Each memory cgroup contains a list of kmem_memcg_ptrs. On reparenting
-the list is spliced into the parent's list. The list is protected
-using the css set lock.
+To make it faster, let's repeat the SLAB's trick introduced by
+commit 6a2d7a955d8d ("[PATCH] SLAB: use a multiply instead of a
+divide in obj_to_index()") and avoid an expensive division.
 
 Signed-off-by: Roman Gushchin <guro@fb.com>
 ---
- include/linux/memcontrol.h | 50 ++++++++++++++++++++++
- mm/memcontrol.c            | 87 ++++++++++++++++++++++++++++++++++++--
- 2 files changed, 133 insertions(+), 4 deletions(-)
+ include/linux/slub_def.h | 9 +++++++++
+ mm/slub.c                | 1 +
+ 2 files changed, 10 insertions(+)
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 99033f9bd319..da864fded297 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -23,6 +23,7 @@
- #include <linux/page-flags.h>
+diff --git a/include/linux/slub_def.h b/include/linux/slub_def.h
+index d2153789bd9f..200ea292f250 100644
+--- a/include/linux/slub_def.h
++++ b/include/linux/slub_def.h
+@@ -8,6 +8,7 @@
+  * (C) 2007 SGI, Christoph Lameter
+  */
+ #include <linux/kobject.h>
++#include <linux/reciprocal_div.h>
  
- struct mem_cgroup;
-+struct mem_cgroup_ptr;
- struct page;
- struct mm_struct;
- struct kmem_cache;
-@@ -198,6 +199,22 @@ struct memcg_cgwb_frn {
- 	struct wb_completion done;	/* tracks in-flight foreign writebacks */
- };
- 
-+/*
-+ * A pointer to a memory cgroup with a built-in reference counter.
-+ * For a use as an intermediate object to simplify reparenting of
-+ * objects charged to the cgroup. The memcg pointer can be switched
-+ * to the parent cgroup without a need to modify all objects
-+ * which hold the reference to the cgroup.
-+ */
-+struct mem_cgroup_ptr {
-+	struct percpu_ref refcnt;
-+	struct mem_cgroup *memcg;
-+	union {
-+		struct list_head list;
-+		struct rcu_head rcu;
-+	};
-+};
-+
- /*
-  * The memory controller data structure. The memory controller controls both
-  * page cache and RSS per cgroup. We would eventually like to provide
-@@ -311,6 +328,8 @@ struct mem_cgroup {
- 	int kmemcg_id;
- 	enum memcg_kmem_state kmem_state;
- 	struct list_head kmem_caches;
-+	struct mem_cgroup_ptr __rcu *kmem_memcg_ptr;
-+	struct list_head kmem_memcg_ptr_list;
- #endif
- 
- 	int last_scanned_node;
-@@ -439,6 +458,21 @@ struct mem_cgroup *mem_cgroup_from_css(struct cgroup_subsys_state *css){
- 	return css ? container_of(css, struct mem_cgroup, css) : NULL;
+ enum stat_item {
+ 	ALLOC_FASTPATH,		/* Allocation from cpu slab */
+@@ -86,6 +87,7 @@ struct kmem_cache {
+ 	unsigned long min_partial;
+ 	unsigned int size;	/* The size of an object including metadata */
+ 	unsigned int object_size;/* The size of an object without metadata */
++	struct reciprocal_value reciprocal_size;
+ 	unsigned int offset;	/* Free pointer offset */
+ #ifdef CONFIG_SLUB_CPU_PARTIAL
+ 	/* Number of per cpu partial objects to keep around */
+@@ -182,4 +184,11 @@ static inline void *nearest_obj(struct kmem_cache *cache, struct page *page,
+ 	return result;
  }
  
-+static inline bool mem_cgroup_ptr_tryget(struct mem_cgroup_ptr *ptr)
++static inline unsigned int obj_to_index(const struct kmem_cache *cache,
++					const struct page *page, void *obj)
 +{
-+	return percpu_ref_tryget(&ptr->refcnt);
++	return reciprocal_divide(kasan_reset_tag(obj) - page_address(page),
++				 cache->reciprocal_size);
 +}
 +
-+static inline void mem_cgroup_ptr_get(struct mem_cgroup_ptr *ptr)
-+{
-+	percpu_ref_get(&ptr->refcnt);
-+}
-+
-+static inline void mem_cgroup_ptr_put(struct mem_cgroup_ptr *ptr)
-+{
-+	percpu_ref_put(&ptr->refcnt);
-+}
-+
- static inline void mem_cgroup_put(struct mem_cgroup *memcg)
- {
- 	if (memcg)
-@@ -1435,6 +1469,22 @@ static inline int memcg_cache_id(struct mem_cgroup *memcg)
- 	return memcg ? memcg->kmemcg_id : -1;
- }
- 
-+static inline struct mem_cgroup_ptr *
-+mem_cgroup_get_kmem_ptr(struct mem_cgroup *memcg)
-+{
-+	struct mem_cgroup_ptr *memcg_ptr;
-+
-+	rcu_read_lock();
-+	do {
-+		memcg_ptr = rcu_dereference(memcg->kmem_memcg_ptr);
-+		if (memcg_ptr && mem_cgroup_ptr_tryget(memcg_ptr))
-+			break;
-+	} while ((memcg = parent_mem_cgroup(memcg)));
-+	rcu_read_unlock();
-+
-+	return memcg_ptr;
-+}
-+
- #else
- 
- static inline int memcg_kmem_charge(struct page *page, gfp_t gfp, int order)
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index c3bdb8d4c355..cd8ac747827e 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -258,6 +258,77 @@ struct cgroup_subsys_state *vmpressure_to_css(struct vmpressure *vmpr)
- }
- 
- #ifdef CONFIG_MEMCG_KMEM
-+extern spinlock_t css_set_lock;
-+
-+static void memcg_ptr_release(struct percpu_ref *ref)
-+{
-+	struct mem_cgroup_ptr *ptr = container_of(ref, struct mem_cgroup_ptr,
-+						  refcnt);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&css_set_lock, flags);
-+	list_del(&ptr->list);
-+	spin_unlock_irqrestore(&css_set_lock, flags);
-+
-+	mem_cgroup_put(ptr->memcg);
-+	percpu_ref_exit(ref);
-+	kfree_rcu(ptr, rcu);
-+}
-+
-+static int memcg_init_kmem_memcg_ptr(struct mem_cgroup *memcg)
-+{
-+	struct mem_cgroup_ptr *kmem_memcg_ptr;
-+	int ret;
-+
-+	kmem_memcg_ptr = kmalloc(sizeof(struct mem_cgroup_ptr), GFP_KERNEL);
-+	if (!kmem_memcg_ptr)
-+		return -ENOMEM;
-+
-+	ret = percpu_ref_init(&kmem_memcg_ptr->refcnt, memcg_ptr_release,
-+			      0, GFP_KERNEL);
-+	if (ret) {
-+		kfree(kmem_memcg_ptr);
-+		return ret;
-+	}
-+
-+	kmem_memcg_ptr->memcg = memcg;
-+	INIT_LIST_HEAD(&kmem_memcg_ptr->list);
-+	rcu_assign_pointer(memcg->kmem_memcg_ptr, kmem_memcg_ptr);
-+	list_add(&kmem_memcg_ptr->list, &memcg->kmem_memcg_ptr_list);
-+	return 0;
-+}
-+
-+static void memcg_reparent_kmem_memcg_ptr(struct mem_cgroup *memcg,
-+					  struct mem_cgroup *parent)
-+{
-+	unsigned int nr_reparented = 0;
-+	struct mem_cgroup_ptr *memcg_ptr = NULL;
-+
-+	rcu_swap_protected(memcg->kmem_memcg_ptr, memcg_ptr, true);
-+	percpu_ref_kill(&memcg_ptr->refcnt);
-+
-+	/*
-+	 * kmem_memcg_ptr is initialized before css refcounter, so until now
-+	 * it doesn't hold a reference to the memcg. Bump it here.
-+	 */
-+	css_get(&memcg->css);
-+
-+	spin_lock_irq(&css_set_lock);
-+	list_for_each_entry(memcg_ptr, &memcg->kmem_memcg_ptr_list, list) {
-+		xchg(&memcg_ptr->memcg, parent);
-+		nr_reparented++;
-+	}
-+	if (nr_reparented)
-+		list_splice(&memcg->kmem_memcg_ptr_list,
-+			    &parent->kmem_memcg_ptr_list);
-+	spin_unlock_irq(&css_set_lock);
-+
-+	if (nr_reparented) {
-+		css_get_many(&parent->css, nr_reparented);
-+		css_put_many(&memcg->css, nr_reparented);
-+	}
-+}
-+
- /*
-  * This will be the memcg's index in each cache's ->memcg_params.memcg_caches.
-  * The main reason for not using cgroup id for this:
-@@ -3572,7 +3643,7 @@ static void memcg_flush_percpu_vmevents(struct mem_cgroup *memcg)
- #ifdef CONFIG_MEMCG_KMEM
- static int memcg_online_kmem(struct mem_cgroup *memcg)
- {
--	int memcg_id;
-+	int memcg_id, ret;
- 
- 	if (cgroup_memory_nokmem)
- 		return 0;
-@@ -3584,6 +3655,12 @@ static int memcg_online_kmem(struct mem_cgroup *memcg)
- 	if (memcg_id < 0)
- 		return memcg_id;
- 
-+	ret = memcg_init_kmem_memcg_ptr(memcg);
-+	if (ret) {
-+		memcg_free_cache_id(memcg_id);
-+		return ret;
-+	}
-+
- 	static_branch_inc(&memcg_kmem_enabled_key);
- 	/*
- 	 * A memory cgroup is considered kmem-online as soon as it gets
-@@ -3619,12 +3696,13 @@ static void memcg_offline_kmem(struct mem_cgroup *memcg)
- 		parent = root_mem_cgroup;
- 
- 	/*
--	 * Deactivate and reparent kmem_caches. Then flush percpu
--	 * slab statistics to have precise values at the parent and
--	 * all ancestor levels. It's required to keep slab stats
-+	 * Deactivate and reparent kmem_caches and reparent kmem_memcg_ptr.
-+	 * Then flush percpu slab statistics to have precise values at the
-+	 * parent and all ancestor levels. It's required to keep slab stats
- 	 * accurate after the reparenting of kmem_caches.
+ #endif /* _LINUX_SLUB_DEF_H */
+diff --git a/mm/slub.c b/mm/slub.c
+index e810582f5b86..557ea45a5d75 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -3600,6 +3600,7 @@ static int calculate_sizes(struct kmem_cache *s, int forced_order)
  	 */
- 	memcg_deactivate_kmem_caches(memcg, parent);
-+	memcg_reparent_kmem_memcg_ptr(memcg, parent);
- 	memcg_flush_percpu_vmstats(memcg, true);
- 
- 	kmemcg_id = memcg->kmemcg_id;
-@@ -5180,6 +5258,7 @@ static struct mem_cgroup *mem_cgroup_alloc(void)
- 	memcg->socket_pressure = jiffies;
- #ifdef CONFIG_MEMCG_KMEM
- 	memcg->kmemcg_id = -1;
-+	INIT_LIST_HEAD(&memcg->kmem_memcg_ptr_list);
- #endif
- #ifdef CONFIG_CGROUP_WRITEBACK
- 	INIT_LIST_HEAD(&memcg->cgwb_list);
+ 	size = ALIGN(size, s->align);
+ 	s->size = size;
++	s->reciprocal_size = reciprocal_value(size);
+ 	if (forced_order >= 0)
+ 		order = forced_order;
+ 	else
 -- 
 2.21.0
 
