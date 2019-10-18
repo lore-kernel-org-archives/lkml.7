@@ -2,161 +2,251 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3581CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E44BCA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A889F222C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:54:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IYTVyaw4"
+	by mail.kernel.org (Postfix) with ESMTP id 66AC9222C5
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:54:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729297AbfJREyF (ORCPT
+        id S1727350AbfJREyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 00:54:05 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35217 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbfJRExy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 00:53:54 -0400
-Received: by mail-pl1-f193.google.com with SMTP id c3so2249180plo.2;
-        Thu, 17 Oct 2019 21:53:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=JNvDqC31WTWdI2vpSAPtpYynuJNNNTYl8P0mHvHLMNk=;
-        b=IYTVyaw4C9oBzL+7mOyH7VFzP20az+ts6hbtvsVnXIWzQjm+ppeVosbblAdJYMzyXO
-         I5ySkabTrYIu71JT/oLm10CmVQNxy7JUvfKgQSe1CTTyUMwGiEhe7m5oZ+YgH9cWydBE
-         IDDEWvFEdnBZQXi+KYd3vpAJCpuHsDcidlquMM+hsgk5bE2IJ2njN4YnKDQRmpQlnC3r
-         p20wP8peXRSf9V7dRjbC8bdn/8elPZfGp+DKjm2kjB+VHqD57lk8i05ZFQ9lBS0rwY7M
-         m9Dpu4vonPmTHFlk7B8u40nwAA83fJOGKow5EFfqP0QxulRmfwfuPkqdbE4FWxonW4z3
-         f8Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=JNvDqC31WTWdI2vpSAPtpYynuJNNNTYl8P0mHvHLMNk=;
-        b=IXhYvdJ8fUcK5L4tRmEjfYU+++B7E5mOMyvMm/bPsOkkcBH1Au6pbH69H37i9MbLaK
-         35qmrjGNhQ3pzi5b5Js0NYKSiEPj/vABOZVUp9ltU8FrxMAfNvGjyDdzq38R25reU6j+
-         6N8mbeQjA5gggJ5Hb0/kLpFrldxWbr9EIMjSEYMi4Rzrufx64vqsVgqdlPpWrgWTyoGJ
-         /1IRfy/wQHvcghG1XmAVPq3vSa7Kkl4wzg3nLjP1S9/VHo1lpCOdesr2sNGVwyO1WxUJ
-         i93DZtXLKTqM1ZEYD1vYfcOjUba4GWSJr1QFz23lqHv7YS60aXFYXYuERDDCKBq52p/5
-         2+LA==
-X-Gm-Message-State: APjAAAW0kmZ3NZ8aRMbrLcQ0lP/rdtkgcdc0MAeoE76CZA7jqhnRPPcp
-        zR45BNBZg6q1jucgxN6dyOFPtcBN+e8=
-X-Google-Smtp-Source: APXvYqyK1y01wydsFJcLUX52fuVNf1rbAwNe2Kgq8tlf4HAFeD9RwxPa0/AfHGZuhADnxHmeOWjyHw==
-X-Received: by 2002:a17:902:101:: with SMTP id 1mr7757492plb.170.1571373944591;
-        Thu, 17 Oct 2019 21:45:44 -0700 (PDT)
-Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id b3sm3696445pjp.13.2019.10.17.21.45.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 21:45:43 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-input@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-        Austin Palmer <austinp@valvesoftware.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH v3 3/3] HID: logitech-hidpp: do all FF cleanup in hidpp_ff_destroy()
-Date:   Thu, 17 Oct 2019 21:45:17 -0700
-Message-Id: <20191018044517.6430-4-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191018044517.6430-1-andrew.smirnov@gmail.com>
-References: <20191018044517.6430-1-andrew.smirnov@gmail.com>
+        Fri, 18 Oct 2019 00:54:04 -0400
+Received: from mga05.intel.com ([192.55.52.43]:24459 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725940AbfJRExf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 00:53:35 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 19:48:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,310,1566889200"; 
+   d="scan'208";a="371330005"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orsmga005.jf.intel.com with ESMTP; 17 Oct 2019 19:48:21 -0700
+Date:   Thu, 17 Oct 2019 19:48:20 -0700
+From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Andi Kleen <andi.kleen@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        iommu@lists.linux-foundation.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Wincy Van <fanwenyi0529@gmail.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Baoquan He <bhe@redhat.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: Re: [RFC PATCH v4 20/21] iommu/vt-d: hpet: Reserve an interrupt
+ remampping table entry for watchdog
+Message-ID: <20191018024820.GA26311@ranerica-svr.sc.intel.com>
+References: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
+ <1558660583-28561-21-git-send-email-ricardo.neri-calderon@linux.intel.com>
+ <alpine.DEB.2.21.1906162049300.1760@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1906171007360.1760@nanos.tec.linutronix.de>
+ <CABPqkBTai76Bgb4E61tF-mJUkFNxVa4B8M2bxTEYVgBsuAANNQ@mail.gmail.com>
+ <alpine.DEB.2.21.1906172343120.1963@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1906172343120.1963@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All of the FF-related resources belong to corresponding FF device, so
-they should be freed as a part of hidpp_ff_destroy() to avoid
-potential race condidions.
+On Tue, Jun 18, 2019 at 01:08:06AM +0200, Thomas Gleixner wrote:
+> Stephane,
+> 
+> On Mon, 17 Jun 2019, Stephane Eranian wrote:
+> > On Mon, Jun 17, 2019 at 1:25 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > > Great that there is no trace of any mail from Andi or Stephane about this
+> > > on LKML. There is no problem with talking offlist about this stuff, but
+> > > then you should at least provide a rationale for those who were not part of
+> > > the private conversation.
+> > >
+> > Let me add some context to this whole patch series. The pressure on the
+> > core PMU counters is increasing as more people want to use them to
+> > measure always more events. When the PMU is overcommitted, i.e., more
+> > events than counters for them, there is multiplexing. It comes with an
+> > overhead that is too high for certain applications. One way to avoid this
+> > is to lower the multiplexing frequency, which is by default 1ms, but that
+> > comes with loss of accuracy. Another approach is to measure only a small
+> > number of events at a time and use multiple runs, but then you lose
+> > consistent event view. Another approach is to push for increasing the
+> > number of counters. But getting new hardware counters takes time. Short
+> > term, we can investigate what it would take to free one cycle-capable
+> > counter which is commandeered by the hard lockup detector on all X86
+> > processors today. The functionality of the watchdog, being able to get a
+> > crash dump on kernel deadlocks, is important and we cannot simply disable
+> > it. At scale, many bugs are exposed and thus machines
+> > deadlock. Therefore, we want to investigate what it would take to move
+> > the detector to another NMI-capable source, such as the HPET because the
+> > detector does not need high low granularity timer and interrupts only
+> > every 2s.
+> 
+> I'm well aware about the reasons for this.
+> 
+> > Furthermore, recent Intel erratum, e.g., the TSX issue forcing the TFA
+> > code in perf_events, have increased the pressure even more with only 3
+> > generic counters left. Thus, it is time to look at alternative ways of
+> > getting a hard lockup detector (NMI watchdog) from another NMI source
+> > than the PMU. To that extent, I have been discussing about alternatives.
+> >
+> > Intel suggested using the HPET and Ricardo has been working on
+> > producing this patch series. It is clear from your review
+> > that the patches have issues, but I am hoping that they can be
+> > resolved with constructive feedback knowing what the end goal is.
+> 
+> Well, I gave constructive feedback from the very first version on. But
+> essential parts of that feedback have been ignored for whatever reasons.
+> 
+> > As for the round-robin changes, yes, we discussed this as an alternative
+> > to avoid overloading CPU0 with handling all of the work to broadcasting
+> > IPI to 100+ other CPUs.
+> 
+> I can understand the reason why you don't want to do that, but again, I
+> said way before this was tried that changing affinity from NMI context with
+> the IOMMU cannot work by just calling into the iommu code and it needs some
+> deep investigation with the IOMMU wizards whether a preallocated entry can
+> be used lockless (including the subsequently required flush).
+> 
+> The outcome is that the change was implemented by simply calling into
+> functions which I told that they cannot be called from NMI context.
+> 
+> Unless this problem is not solved and I doubt it can be solved after
+> talking to IOMMU people and studying manuals, the round robin mechanics in
+> the current form are not going to happen. We'd need a SMI based lockup
+> detector to debug the resulting livelock wreckage.
+> 
+> There are two possible options:
+> 
+>   1) Back to the IPI approach
+> 
+>      The probem with broadcast is that it sends IPIs one by one to each
+>      online CPU, which sums up with a large number of CPUs.
+> 
+>      The interesting question is why the kernel does not utilize the all
+>      excluding self destination shorthand for this. The SDM is not giving
+>      any information.
+> 
+>      But there is a historic commit which is related and gives a hint:
+> 
+>         commit e77deacb7b078156fcadf27b838a4ce1a65eda04
+>         Author: Keith Owens <kaos@sgi.com>
+>         Date:   Mon Jun 26 13:59:56 2006 +0200
+> 
+>         [PATCH] x86_64: Avoid broadcasting NMI IPIs
+>     
+>         On some i386/x86_64 systems, sending an NMI IPI as a broadcast will
+>     	reset the system.  This seems to be a BIOS bug which affects
+>     	machines where one or more cpus are not under OS control.  It
+>     	occurs on HT systems with a version of the OS that is not compiled
+>     	without HT support.  It also occurs when a system is booted with
+>     	max_cpus=n where 2 <= n < cpus known to the BIOS.  The fix is to
+>     	always send NMI IPI as a mask instead of as a broadcast.
+> 
+>     I can see the issue with max_cpus and that'd be trivial to solve by
+>     disabling the HPET watchdog when maxcpus < num_present_cpus is on the
+>     command line (That's broken anyway with respect to MCEs. See the stupid
+>     dance we need to do for 'nosmt').
+> 
+>     Though the HT part of the changelog is unparseable garbage but might be
+>     a cryptic hint to the 'nosmt' mess. Though back then we did not have
+>     a way to disable the siblings (or did we?). Weird...
+> 
+>     It definitely would be worthwhile to experiment with that. if we could
+>     use shorthands (also for regular IPIs) that would be a great
+>     improvement in general and would nicely solve that NMI issue. Beware of
+>     the dragons though.
+> 
+>   2) Delegate round robin to irq_work
+> 
+>     Use the same mechanism as perf for stuff which needs to be done outside
+>     of NMI context.
+> 
+>     That can solve the issue, but the drawback is that in case the NMI hits
+>     a locked up interrupt disabled region the affinity stays on the same
+>     CPU as the regular IPI which kicks the irq work is not going to be
+>     handled.  Might not be a big issue as we could detect the situation
+>     that the IPI comes back to the same CPU. Not pretty and lots of nasty
+>     corner case and race condition handling.
+> 
+>     There is another issue with that round robin scheme as I pointed out to
+>     Ricardo:
+> 
+>       With a small watchdog threshold and tons of CPUs the time to switch
+>       the affinity becomes short. That brings the HPET reprogramming (in
+>       case of oneshot) into the SMI endagered zone and aside of that it
+>       will eat performance as well because with lets say 1 second threshold
+>       and 1000 CPUs we are going to flush the interrupt remapping
+>       table/entry once per millisecond. No idea how big the penalty is, but
+>       it's certainly not free.
+> 
+>     One possible way out would be to use a combined approach of building
+>     CPU groups (lets say 8) where one of the CPUs gets the NMI and IPIs the
+>     other 7 and then round robins to the next group. Whether that's any
+>     better, I can't tell.
+> 
+> Sorry that I can't come up with the magic cure and just can provide more
+> questions than answers.
 
-Fixes: ff21a635dd1a ("HID: logitech-hidpp: Force feedback support for the Logitech G920")
-Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Jiri Kosina <jikos@kernel.org>
-Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: Henrik Rydberg <rydberg@bitmath.org>
-Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
-Cc: Austin Palmer <austinp@valvesoftware.com>
-Cc: linux-input@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org # 5.2+
----
- drivers/hid/hid-logitech-hidpp.c | 33 +++++---------------------------
- 1 file changed, 5 insertions(+), 28 deletions(-)
+I am sorry it took this long to reply to this thread. I'd like to kindly
+ask for your feedback on my proposed changes for the following iteration.
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-index 6e669eb7dc69..8e91e2f06cb4 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -2078,7 +2078,12 @@ static DEVICE_ATTR(range, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH, hidpp
- static void hidpp_ff_destroy(struct ff_device *ff)
- {
- 	struct hidpp_ff_private_data *data = ff->private;
-+	struct hid_device *hid = data->hidpp->hid_dev;
- 
-+	hid_info(hid, "Unloading HID++ force feedback.\n");
-+
-+	device_remove_file(&hid->dev, &dev_attr_range);
-+	destroy_workqueue(data->wq);
- 	kfree(data->effect_ids);
- }
- 
-@@ -2170,31 +2175,6 @@ static int hidpp_ff_init(struct hidpp_device *hidpp,
- 	return 0;
- }
- 
--static int hidpp_ff_deinit(struct hid_device *hid)
--{
--	struct hid_input *hidinput = list_entry(hid->inputs.next, struct hid_input, list);
--	struct input_dev *dev = hidinput->input;
--	struct hidpp_ff_private_data *data;
--
--	if (!dev) {
--		hid_err(hid, "Struct input_dev not found!\n");
--		return -EINVAL;
--	}
--
--	hid_info(hid, "Unloading HID++ force feedback.\n");
--	data = dev->ff->private;
--	if (!data) {
--		hid_err(hid, "Private data not found!\n");
--		return -EINVAL;
--	}
--
--	destroy_workqueue(data->wq);
--	device_remove_file(&hid->dev, &dev_attr_range);
--
--	return 0;
--}
--
--
- /* ************************************************************************** */
- /*                                                                            */
- /* Device Support                                                             */
-@@ -3713,9 +3693,6 @@ static void hidpp_remove(struct hid_device *hdev)
- 
- 	sysfs_remove_group(&hdev->dev.kobj, &ps_attribute_group);
- 
--	if (hidpp->quirks & HIDPP_QUIRK_CLASS_G920)
--		hidpp_ff_deinit(hdev);
--
- 	hid_hw_stop(hdev);
- 	cancel_work_sync(&hidpp->work);
- 	mutex_destroy(&hidpp->send_mutex);
--- 
-2.21.0
+ * Jacob and Ashok, who work on IOMMU stuff, agreed that updating the
+   interrupt remapping table in NMI context is not possible as we would
+   always fall into locking issues. Hence, as you suggest, I will defer
+   this to an irq_work (and add checks in case the interrupt affinity did
+   not change).
 
+ * You have said in the past that you would not like to have a
+   request_nmi() interface for x86. For !IRQ_REMAP this is not a problem
+   as the MSI message can be programmed directly in the hardlockup
+   detector. However, for IRQ_REMAP, I would need to use request_irq()
+   and possibly have an interrupt handler that does nothing. The NMI
+   handler is still needed. This looks a little awkward but it does
+   allow to use the existing IRQ subsystem and hierarchy.
+
+ * Since in x86 there is not a IRQF_NMI flag, the interrupt remapping
+   driver needs a way to identify the special case in which the entity
+   requesting the interrupt is the HPET hardlockup detector. This can be
+   done in the interrupt remapping driver .alloc() function. It would
+   look at the irq_alloc_info to determine if it is of type
+   IRQ_ALLOC_TYPE_HPET. If this is the case, the data of the associated
+   HPET channel is available. Such channel had been previously reserved
+   to be used by the HPET initalization code and added to the
+   IR-HPET-MSI domain. Once identified, the interrupt remapping driver
+   changes the delivery mode to NMI before creating the interrupt
+   remapping table entry. Furthermore, this will not break the AMD
+   driver as all it has to do is implement the same one-line change.
+
+ * In order to avoid HPET NMI interrupts that are too close together, as
+   you described earlier, a mixed mechanism can be used in which groups
+   of N CPUs receive IPIs (using your updated shorthands). The affinity of
+   the HPET interrupt would only target every (N+1)'th CPU.
+
+I have a quick-and-dirty implementation of this but wanted to check with
+you first if this sounds reasonable.
+
+Thanks and BR,
+Ricardo
