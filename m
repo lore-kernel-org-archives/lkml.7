@@ -2,136 +2,133 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCF3CA9EC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 743FDCA9EB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2261221852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4749021852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:49:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LxXhWjj4"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="GYOLJ/hG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407144AbfJRArf (ORCPT
+        id S2407189AbfJRAtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 20:47:35 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:45682 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbfJRAre (ORCPT
+        Thu, 17 Oct 2019 20:49:47 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:35885 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726951AbfJRAtq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 20:47:34 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9I0iDGT068362;
-        Fri, 18 Oct 2019 00:47:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=xOteuv/hucrhRyVuvpzt4Om0EvOQwTqguA72Fbv6uHE=;
- b=LxXhWjj4U4EHNr7wkcLHjUiyUGyurRvALfeYKnbhVJ5hiYxnTFbni0yCIPtWTiQWin/g
- RM0DdPCpN16jg3DvNMA+oZbshCf0XBqA9hmdhHHz5aMbHcYRbmafqhOhMCITgJVqALY3
- jx/K/9Afuw7b+M54rZZ8bq1dPWXEyJmVTTfga222wZLx+S0MydUaYPRQ7z+Giv0Pc9rd
- PCSfOJmtyfRgGWTkfX3PUi5tllMg1CBNyBpjCcWZgThdUov2R2LgX/12Cd9tf94CyUvz
- 7TxltS3w79s6KL1y357qex3gH+0cqg1HbKo44T7U2ZLqGVjNJiGL2EDISTpYG2TZBICw Lg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2vq0q48g0m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 18 Oct 2019 00:47:16 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9I0h9Ko018419;
-        Fri, 18 Oct 2019 00:47:16 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2vq0dw8rwu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 18 Oct 2019 00:47:15 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9I0lAB7013883;
-        Fri, 18 Oct 2019 00:47:10 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 18 Oct 2019 00:47:10 +0000
-Subject: Re: [PATCH] hugetlbfs: fix error handling in init_hugetlbfs_fs()
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-To:     Chengguang Xu <cgxu519@mykernel.net>,
-        David Howells <dhowells@redhat.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20191017103822.8610-1-cgxu519@mykernel.net>
- <ccfddf19-630f-ad38-68b3-16003e740113@oracle.com>
-Message-ID: <49ec37c4-bb74-d0d2-1dee-00778e08b8cb@oracle.com>
-Date:   Thu, 17 Oct 2019 17:47:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Thu, 17 Oct 2019 20:49:46 -0400
+Received: by mail-il1-f193.google.com with SMTP id z2so3955106ilb.3
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 17:49:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jFfZXZiKtRiLwkH3KZouo9ewXcERlfI4Qt0T9yHG1+Y=;
+        b=GYOLJ/hGsqg9L3+YH0VojwgZ7sJyAI9IvNkUYkqm6vEr18NHeVtIC9WtuUVPWo89lN
+         qpd9aqBAqBhN233DhZ+UUlG4OV7cCA05fb3AZQiE7KXgQdQyjlg311F4avHOGlcHh6gU
+         vCRxfTR1WZCHhIkSDL4zD56KWMQKrbY9JYXaOvx4rT96hnd0ImbqmNUKxpEnKgwSDGpY
+         vzzYu8QQ7+KWP/J77A80k+nqodwhb5WVvdCM5o1DwFlNR39tW0yKiBhEXeNCOFl5/2kb
+         0yaq6YiaRLKg0RjzRYueXp5yKqZulygbYoAwqISUpKMyAxhDnutwMMVSpHso7KwxZFi5
+         BntQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jFfZXZiKtRiLwkH3KZouo9ewXcERlfI4Qt0T9yHG1+Y=;
+        b=GjCr44kCeGC4nzJEeZyWuKCpiHzu/RHm0J/D8hDU1nfECbymYB1sHFzqGxDekbULMD
+         EXILg1HZfeNAZKJHAaH9UMB8Tuf36O6z9jzq54HSGbgxS2vgK+KgnfSCZlZ1sNWHP/GX
+         toqBmt+N08o3CHQnXo15iSoPQ/WbMqCC7UZDlJOShWnewwYs/dHSC7f4AWQzkkbo3sqE
+         XqCTWkmI0anBnkaZ7oy49jEoFdPVzNhTqEdFvmzLZgvlg2of3LGSZGhKqfk6yEd3bmSt
+         BlsP+5HJt54x8+HYpvsXTFwCdAgRjKYzLZV3Dm+36CJHR6bHff7q8ROXFhUS5jSBWt57
+         Bu0Q==
+X-Gm-Message-State: APjAAAVOswqkRlLdVVHjUka2kdF6HZFoVlickUR+bWZFYzqhCRttQhBH
+        UEtw4Q8AscMfMXmHazRQotKeBZp+HH4=
+X-Google-Smtp-Source: APXvYqwyrG116vwg8myi/qv9m0/GlzNq94ku4zq8HETmqKe/a0qZ85AOPQzXEPT3HCudMAel6Z7Ayg==
+X-Received: by 2002:a92:c60f:: with SMTP id p15mr7450539ilm.19.1571359785740;
+        Thu, 17 Oct 2019 17:49:45 -0700 (PDT)
+Received: from viisi.Home ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id z20sm1493891iof.38.2019.10.17.17.49.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 17:49:45 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+To:     linux-riscv@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH 0/8] riscv: resolve most warnings from sparse
+Date:   Thu, 17 Oct 2019 17:49:21 -0700
+Message-Id: <20191018004929.3445-1-paul.walmsley@sifive.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <ccfddf19-630f-ad38-68b3-16003e740113@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910180004
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910180004
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry for noise, left off David
+Resolve most warnings from the 'sparse' static analysis tool for the
+arch/riscv codebase.  This makes life easier for us as maintainers,
+and makes it easier for developers to use static analysis tools on
+their own changes.
 
-On 10/17/19 5:08 PM, Mike Kravetz wrote:
-> Cc: David
-> On 10/17/19 3:38 AM, Chengguang Xu wrote:
->> In order to avoid using incorrect mnt, we should set
->> mnt to NULL when we get error from mount_one_hugetlbfs().
->>
->> Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
->> ---
->>  fs/hugetlbfs/inode.c | 9 ++++++---
->>  1 file changed, 6 insertions(+), 3 deletions(-)
->>
->> diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
->> index a478df035651..427d845e7706 100644
->> --- a/fs/hugetlbfs/inode.c
->> +++ b/fs/hugetlbfs/inode.c
->> @@ -1470,9 +1470,12 @@ static int __init init_hugetlbfs_fs(void)
->>  	i = 0;
->>  	for_each_hstate(h) {
->>  		mnt = mount_one_hugetlbfs(h);
->> -		if (IS_ERR(mnt) && i == 0) {
->> -			error = PTR_ERR(mnt);
->> -			goto out;
->> +		if (IS_ERR(mnt)) {
->> +			if (i == 0) {
->> +				error = PTR_ERR(mnt);
->> +				goto out;
->> +			}
->> +			mnt = NULL;
->>  		}
->>  		hugetlbfs_vfsmount[i] = mnt;
->>  		i++;
-> 
-> Thanks!
-> 
-> That should be fixed.  It was introduced with commit 32021982a324 ("hugetlbfs:
-> Convert to fs_context").  
-> 
-> That commit also changed the condition for which init_hugetlbfs_fs() would
-> 'error' and remove the inode cache.  Previously, it would do that if there
-> was an error creating a mount for the default_hstate_idx hstate.  It now does
-> that for the '0' hstate, and 0 is not always equal to default_hstate_idx.
-> 
-> David was that intentional or an oversight?  I can fix up, just wanted to
-> make sure there was not some reason for the change.
-> 
+This patch series incorporates some changes based on feedback from
+Christoph Hellwig <hch@lst.de>.
 
+Applies on the current riscv fixes branch that is based on v5.4-rc3.
+
+
+- Paul
+
+
+Paul Walmsley (8):
+  riscv: add prototypes for assembly language functions from entry.S
+  riscv: add prototypes for assembly language functions from head.S
+  riscv: init: merge split string literals in preprocessor directive
+  riscv: ensure RISC-V C model definitions are passed to static
+    analyzers
+  riscv: add missing prototypes
+  riscv: mark some code and data as file-static
+  riscv: add missing header file includes
+  riscv: fp: add missing __user pointer annotations
+
+Kernel object size difference:
+   text	   data     bss	    dec	    hex	filename
+6664206 2136568  312608 9113382  8b0f26	vmlinux.orig
+6664186 2136552	 312608 9113346  8b0f02	vmlinux.patched
+
+ arch/riscv/Makefile                 |  2 ++
+ arch/riscv/include/asm/irq.h        |  6 ++++++
+ arch/riscv/include/asm/pgtable.h    |  2 ++
+ arch/riscv/include/asm/processor.h  |  4 ++++
+ arch/riscv/include/asm/ptrace.h     |  4 ++++
+ arch/riscv/include/asm/smp.h        |  2 ++
+ arch/riscv/include/asm/switch_to.h  |  1 +
+ arch/riscv/kernel/cpufeature.c      |  1 +
+ arch/riscv/kernel/entry.h           | 29 +++++++++++++++++++++++++++++
+ arch/riscv/kernel/head.h            | 21 +++++++++++++++++++++
+ arch/riscv/kernel/module-sections.c |  1 +
+ arch/riscv/kernel/process.c         |  2 ++
+ arch/riscv/kernel/reset.c           |  1 +
+ arch/riscv/kernel/setup.c           |  2 ++
+ arch/riscv/kernel/signal.c          |  6 ++++--
+ arch/riscv/kernel/smp.c             |  2 ++
+ arch/riscv/kernel/smpboot.c         |  3 +++
+ arch/riscv/kernel/stacktrace.c      |  6 ++++--
+ arch/riscv/kernel/syscall_table.c   |  1 +
+ arch/riscv/kernel/time.c            |  1 +
+ arch/riscv/kernel/traps.c           |  2 ++
+ arch/riscv/kernel/vdso.c            |  3 ++-
+ arch/riscv/mm/context.c             |  1 +
+ arch/riscv/mm/fault.c               |  2 ++
+ arch/riscv/mm/init.c                | 17 ++++++++++-------
+ arch/riscv/mm/sifive_l2_cache.c     |  2 +-
+ 26 files changed, 111 insertions(+), 13 deletions(-)
+ create mode 100644 arch/riscv/kernel/entry.h
+ create mode 100644 arch/riscv/kernel/head.h
 
 -- 
-Mike Kravetz
+2.23.0
+
