@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB76CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A84C8CA9EAB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3F9C20872
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72F40222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:18:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437130;
-	bh=5IFpmLN3JhJf8ksQjkcKwGvyr/g/pPEKDHGq8xP3mCU=;
+	s=default; t=1571437134;
+	bh=aCSTbAXnQHzJmonbmjRU/TNSmpSmUo2JY9jr4+RSpH0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bXtjJmv0YrM6cyGfoXZ9JbKoqMvOgEGshsgXCQdX/ilqMp4WpL2LGbG3dUiMb1GiY
-	 60LYku7wzAjePTJjL5sH83NpIpnsEKHSLlBJmETGVuTlJQNS3YT9r+iJNXZ5QnIuk6
-	 5wMFPuZRTP8Xxsu9fj6TVbcLe+rjacZo/Tiic2n8=
+	b=QYGLVjNuGBZB1LTyB40CCoEl9ZNruT+DwsGa5d4VqqsKDei6qIfKVQNEFQUD8Tg27
+	 MZO3zLXD/6vLt4XTU9lM+ItoqrZgO7RUSQHcGz7lkxUZO9CCiu0ZYebriVjSKy/9dr
+	 HUAOiU97Kqxmnw92KBkGzsr0kWVdN7fT2wRWP784=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404275AbfJRWSt (ORCPT
+        id S1732463AbfJRWHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:18:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39298 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:07:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732540AbfJRWHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:07:11 -0400
+        id S1732275AbfJRWHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:07:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A7E522473;
-        Fri, 18 Oct 2019 22:07:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38DDF22468;
+        Fri, 18 Oct 2019 22:07:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436431;
-        bh=5IFpmLN3JhJf8ksQjkcKwGvyr/g/pPEKDHGq8xP3mCU=;
+        s=default; t=1571436420;
+        bh=aCSTbAXnQHzJmonbmjRU/TNSmpSmUo2JY9jr4+RSpH0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l1NYLNuKd7VXLDUaOiop+4rsVq26hGMu2DoSDYlwBneh433tlQtCYUm1xTPgB3AJM
-         dl0QrO+FrnVdcXaHKdJW7BK12iaBKYpr+zgiakRi/CtCGp837rQ5yy4gmGT0rBKpu+
-         f4XzqoN2675OIPclN0seZ6hev96W7kaxgPX2g5W4=
+        b=UGGcueTAINxrjRjROzRRfHKy289JVCfrgJpcEvGesZ6FnpQk2/hXLZy+QyEvRF9W8
+         8WLh1bEp0SgDTamqvIrjB7wM1K3CFEyeBa70uvjlTdQ7dFXhxZrP4KvwqMD0Q6T0GO
+         JmurC0sFVW/Zp8Cy/lzY7tRSvhQUPwglzyWmhBPs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thierry Reding <treding@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 072/100] gpio: max77620: Use correct unit for debounce times
-Date:   Fri, 18 Oct 2019 18:04:57 -0400
-Message-Id: <20191018220525.9042-72-sashal@kernel.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 063/100] crypto: arm/aes-ce - add dependency on AES library
+Date:   Fri, 18 Oct 2019 18:04:48 -0400
+Message-Id: <20191018220525.9042-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -59,43 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-[ Upstream commit fffa6af94894126994a7600c6f6f09b892e89fa9 ]
+[ Upstream commit f703964fc66804e6049f2670fc11045aa8359b1a ]
 
-The gpiod_set_debounce() function takes the debounce time in
-microseconds. Adjust the switch/case values in the MAX77620 GPIO to use
-the correct unit.
+The ARM accelerated AES driver depends on the new AES library for
+its non-SIMD fallback so express this in its Kconfig declaration.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://lore.kernel.org/r/20191002122825.3948322-1-thierry.reding@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-max77620.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/crypto/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
-index 538bce4b5b427..ac6c1c0548b69 100644
---- a/drivers/gpio/gpio-max77620.c
-+++ b/drivers/gpio/gpio-max77620.c
-@@ -163,13 +163,13 @@ static int max77620_gpio_set_debounce(struct max77620_gpio *mgpio,
- 	case 0:
- 		val = MAX77620_CNFG_GPIO_DBNC_None;
- 		break;
--	case 1 ... 8:
-+	case 1000 ... 8000:
- 		val = MAX77620_CNFG_GPIO_DBNC_8ms;
- 		break;
--	case 9 ... 16:
-+	case 9000 ... 16000:
- 		val = MAX77620_CNFG_GPIO_DBNC_16ms;
- 		break;
--	case 17 ... 32:
-+	case 17000 ... 32000:
- 		val = MAX77620_CNFG_GPIO_DBNC_32ms;
- 		break;
- 	default:
+diff --git a/arch/arm/crypto/Kconfig b/arch/arm/crypto/Kconfig
+index b8e69fe282b8d..44278f375ae23 100644
+--- a/arch/arm/crypto/Kconfig
++++ b/arch/arm/crypto/Kconfig
+@@ -89,6 +89,7 @@ config CRYPTO_AES_ARM_CE
+ 	tristate "Accelerated AES using ARMv8 Crypto Extensions"
+ 	depends on KERNEL_MODE_NEON
+ 	select CRYPTO_BLKCIPHER
++	select CRYPTO_LIB_AES
+ 	select CRYPTO_SIMD
+ 	help
+ 	  Use an implementation of AES in CBC, CTR and XTS modes that uses
 -- 
 2.20.1
 
