@@ -2,141 +2,110 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0755ACA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2CDCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA44A222C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F173E222C5
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:33:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443118AbfJRQda (ORCPT
+        id S2439901AbfJRQd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:33:30 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57685 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439805AbfJRQar (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:30:47 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iLV97-0002pv-Sb; Fri, 18 Oct 2019 18:30:34 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9FD261C0494;
-        Fri, 18 Oct 2019 18:30:30 +0200 (CEST)
-Date:   Fri, 18 Oct 2019 16:30:30 -0000
-From:   "tip-bot2 for Jiri Slaby" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/asm] xen/pvh: Annotate data appropriately
-Cc:     Jiri Slaby <jslaby@suse.cz>, Borislav Petkov <bp@suse.de>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
+        Fri, 18 Oct 2019 12:33:29 -0400
+Received: from mga06.intel.com ([134.134.136.31]:14218 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405782AbfJRQd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 12:33:27 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 09:33:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,312,1566889200"; 
+   d="scan'208";a="199757212"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga003.jf.intel.com with ESMTP; 18 Oct 2019 09:33:11 -0700
+Date:   Fri, 18 Oct 2019 09:33:10 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        clang-built-linux@googlegroups.com,
         "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Juergen Gross <jgross@suse.com>, linux-arch@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86-ml" <x86@kernel.org>, xen-devel@lists.xenproject.org,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191011115108.12392-15-jslaby@suse.cz>
-References: <20191011115108.12392-15-jslaby@suse.cz>
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        Borislav Petkov <bp@suse.de>
+Subject: Re: [PATCH 1/2] x86/cpu/vmware: Use the full form of INL in
+ VMWARE_HYPERCALL
+Message-ID: <20191018163310.GB26319@linux.intel.com>
+References: <20191018134052.3023-1-thomas_os@shipmail.org>
+ <20191018134052.3023-2-thomas_os@shipmail.org>
 MIME-Version: 1.0
-Message-ID: <157141623045.29376.2755641744903920106.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191018134052.3023-2-thomas_os@shipmail.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/asm branch of tip:
+On Fri, Oct 18, 2019 at 03:40:51PM +0200, Thomas Hellström (VMware) wrote:
+> From: Thomas Hellstrom <thellstrom@vmware.com>
+> 
+> LLVM's assembler doesn't accept the short form INL instruction:
+> 
+>   inl (%%dx)
+> 
+> but instead insists on the output register to be explicitly specified.
+> 
+> This was previously fixed for the VMWARE_PORT macro. Fix it also for
+> the VMWARE_HYPERCALL macro.
+> 
+> Fixes: b4dd4f6e3648 ("Add a header file for hypercall definitions")
+> Suggested-by: Sami Tolvanen <samitolvanen@google.com>
+> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+> Cc: clang-built-linux@googlegroups.com
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: x86-ml <x86@kernel.org>
+> Cc: Borislav Petkov <bp@suse.de>
+> ---
+>  arch/x86/include/asm/vmware.h | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/include/asm/vmware.h b/arch/x86/include/asm/vmware.h
+> index e00c9e875933..f5fbe3778aef 100644
+> --- a/arch/x86/include/asm/vmware.h
+> +++ b/arch/x86/include/asm/vmware.h
+> @@ -29,7 +29,8 @@
+>  
+>  /* The low bandwidth call. The low word of edx is presumed clear. */
+>  #define VMWARE_HYPERCALL						\
+> -	ALTERNATIVE_2("movw $" VMWARE_HYPERVISOR_PORT ", %%dx; inl (%%dx)", \
+> +	ALTERNATIVE_2("movw $" VMWARE_HYPERVISOR_PORT			\
+> +		      ", %%dx; inl (%%dx), %%eax",			\
 
-Commit-ID:     1de5bdce0c3f8294d0aabc48fb5497814589422f
-Gitweb:        https://git.kernel.org/tip/1de5bdce0c3f8294d0aabc48fb5497814589422f
-Author:        Jiri Slaby <jslaby@suse.cz>
-AuthorDate:    Fri, 11 Oct 2019 13:50:54 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Fri, 18 Oct 2019 10:46:06 +02:00
+Why wrap in the middle of movw?  Wrapping between instructions or letting
+the line poke out is more readable IMO, e.g.
 
-xen/pvh: Annotate data appropriately
+	ALTERNATIVE_2("movw $" VMWARE_HYPERVISOR_PORT ", %%dx; "	\
+		      "inl (%%dx), %%eax",				\
 
-Use the new SYM_DATA_START_LOCAL, and SYM_DATA_END* macros to get:
+or
 
-  0000     8 OBJECT  LOCAL  DEFAULT    6 gdt
-  0008    32 OBJECT  LOCAL  DEFAULT    6 gdt_start
-  0028     0 OBJECT  LOCAL  DEFAULT    6 gdt_end
-  0028   256 OBJECT  LOCAL  DEFAULT    6 early_stack
-  0128     0 OBJECT  LOCAL  DEFAULT    6 early_stack
+	ALTERNATIVE_2("movw $" VMWARE_HYPERVISOR_PORT ", %%dx; inl (%%dx), %%eax", \
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Andy Shevchenko <andy@infradead.org>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: linux-arch@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Cc: xen-devel@lists.xenproject.org
-Link: https://lkml.kernel.org/r/20191011115108.12392-15-jslaby@suse.cz
----
- arch/x86/platform/pvh/head.S | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/platform/pvh/head.S b/arch/x86/platform/pvh/head.S
-index 1f8825b..4e63480 100644
---- a/arch/x86/platform/pvh/head.S
-+++ b/arch/x86/platform/pvh/head.S
-@@ -150,11 +150,12 @@ END(pvh_start_xen)
- 
- 	.section ".init.data","aw"
- 	.balign 8
--gdt:
-+SYM_DATA_START_LOCAL(gdt)
- 	.word gdt_end - gdt_start
- 	.long _pa(gdt_start)
- 	.word 0
--gdt_start:
-+SYM_DATA_END(gdt)
-+SYM_DATA_START_LOCAL(gdt_start)
- 	.quad 0x0000000000000000            /* NULL descriptor */
- #ifdef CONFIG_X86_64
- 	.quad GDT_ENTRY(0xa09a, 0, 0xfffff) /* PVH_CS_SEL */
-@@ -163,15 +164,14 @@ gdt_start:
- #endif
- 	.quad GDT_ENTRY(0xc092, 0, 0xfffff) /* PVH_DS_SEL */
- 	.quad GDT_ENTRY(0x4090, 0, 0x18)    /* PVH_CANARY_SEL */
--gdt_end:
-+SYM_DATA_END_LABEL(gdt_start, SYM_L_LOCAL, gdt_end)
- 
- 	.balign 16
--canary:
--	.fill 48, 1, 0
-+SYM_DATA_LOCAL(canary, .fill 48, 1, 0)
- 
--early_stack:
-+SYM_DATA_START_LOCAL(early_stack)
- 	.fill BOOT_STACK_SIZE, 1, 0
--early_stack_end:
-+SYM_DATA_END_LABEL(early_stack, SYM_L_LOCAL, early_stack_end)
- 
- 	ELFNOTE(Xen, XEN_ELFNOTE_PHYS32_ENTRY,
- 	             _ASM_PTR (pvh_start_xen - __START_KERNEL_map))
+>  		      "vmcall", X86_FEATURE_VMCALL,			\
+>  		      "vmmcall", X86_FEATURE_VMW_VMMCALL)
+>  
+> -- 
+> 2.21.0
+> 
