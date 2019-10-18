@@ -2,181 +2,109 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A606CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EDBCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CC9F222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2655621D7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:48:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XwpQPnbE"
+	dkim=pass (2048-bit key) header.d=codeblueprint-co-uk.20150623.gappssmtp.com header.i=@codeblueprint-co-uk.20150623.gappssmtp.com header.b="hdKBeJOF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410361AbfJROsM (ORCPT
+        id S2410445AbfJROs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 10:48:12 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40059 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729257AbfJROsL (ORCPT
+        Fri, 18 Oct 2019 10:48:28 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43981 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389365AbfJROs2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 10:48:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571410090;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+xUWPDHliBoxc0ihU+NKk1qsJN/0TLVezwKKP1i/PSI=;
-        b=XwpQPnbEtf3ilv0j2DNlwQK8EFvVQtAmfdUbFyWITxKJzAlt6WDJJ5DK3Mh+GJhHnqeNl8
-        ctHBNLbTlue3YmQsVkCbjKJoxejEipUHQgvdqmnDn+ehNYEsVjIVmkESoyzf9B/tPvP8Zo
-        pJlY5gNZJEZSOKrieCBg6IYfjUOWKTs=
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
- [209.85.166.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-234-pZzxmlt4NnSyyMPj27bJ8Q-1; Fri, 18 Oct 2019 10:48:08 -0400
-Received: by mail-il1-f198.google.com with SMTP id o12so1952643ilf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 07:48:08 -0700 (PDT)
+        Fri, 18 Oct 2019 10:48:28 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c2so1333294wrr.10
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 07:48:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=codeblueprint-co-uk.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZPMR7fELUyaaR1SCfz3L2Xbka0mvOZ72DEuGj3/RI2w=;
+        b=hdKBeJOFMgcZ2K3egqHxgsOX6HKzfDlcjGvdJAhytJp1VBC6RoraWwRXKKQIzGiH74
+         0469dFYMx9wgfqpnrBHhqJ3PGfNiphU54VWFyt0bTGC0EasKSyizTmm9FSfRMhS4HROr
+         ELT8aqD4BfZe63JrbY7t799h3pblhTacGWL55hk0B+7/mPn4VBR2I+547AaCPmCLdWkZ
+         eTeUAwY7AD3nIkO4UGTyX0ShFBakEkYdBG+YzdTOmxNapd9ByXhlsRzrNNz8SplDpNUO
+         DoDPBi1jlBdb5SXcQze4sA/GWJ9R5t/9sx2wI9NJJqCwajbapUKbdRWbGqVgI8Lcds4s
+         5owQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=0SSL2373lC6DgsMmmsDZmA6zvnlA8UickiHBAjdntOQ=;
-        b=ey3eyzN49kIlI7JR7WANDY++5cjnuTPx9baaz1wpUMoJD4nYoL+eXBnooM6XA+m08I
-         Fha2tTmUGBj07GSYGxMRi6xUWRAXm9CLq5+Bc418bAU1dq8/ysRJBgkc3c7t+57GSxu+
-         RHtvtLkAXQg88SfP2sVN2cCPGMjFI8TZw4llxCZs48wTqMfvWUlfVrN4hgtqjkizrW66
-         +6xNv1P/W7b4FmnwtyiQbQOVRluxuoAp881vjS1hXtN7PjFOscdRmQgcoFj6ZBTYYtoI
-         iwX59yW3wyVMUtADUKNx3CDJYuDTnJyVaD9eq0aZt6hYaZe+0FTb2JpD+ZRpihJeRmiu
-         bwiA==
-X-Gm-Message-State: APjAAAU8Lpwd4vbsawhagK09j4WOsJgX5MEdolhpBp9uof+JK2y44Zmd
-        1UU7izBE7gMi8WNkgp+7UMAhcphTNBeXwyIqzUn8OJJXh5VooTf4fQTI10gwFY7QtfqKGVITx3A
-        DqVVr3V6A+Sg7T+NhNeKOMsbv
-X-Received: by 2002:a92:c2:: with SMTP id 185mr10527385ila.92.1571410088307;
-        Fri, 18 Oct 2019 07:48:08 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwWbRwj/fjTBeTuKTGQTT7Fu5ra8qoDURv6eP3usXETnKzvD8vxqCt0UkKoNoyNlAsUsHb8gQ==
-X-Received: by 2002:a92:c2:: with SMTP id 185mr10527353ila.92.1571410088007;
-        Fri, 18 Oct 2019 07:48:08 -0700 (PDT)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id l3sm1778016ioj.7.2019.10.18.07.48.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 07:48:07 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 07:48:05 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Qian Cai <cai@lca.pw>, don.brace@microsemi.com,
-        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        jejb@linux.ibm.com, esc.storagedev@microsemi.com,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: Re: [PATCH] iommu/amd: Check PM_LEVEL_SIZE() condition in locked
- section
-Message-ID: <20191018144805.ici3ewsvonlgketl@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Joerg Roedel <jroedel@suse.de>, Qian Cai <cai@lca.pw>,
-        don.brace@microsemi.com, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, jejb@linux.ibm.com,
-        esc.storagedev@microsemi.com, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-References: <20191016225859.j3jq6pt73mn56chn@cantor>
- <577A2A6B-3012-4CDE-BE57-3E0D628572CB@lca.pw>
- <20191018093830.GA26328@suse.de>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZPMR7fELUyaaR1SCfz3L2Xbka0mvOZ72DEuGj3/RI2w=;
+        b=d9GzzPlfRd9xNA0Q2CXuWIJIRrWZyrrowgSaTVObAstjdIEN0pL9KYw5ybsoX+S5aQ
+         oZfGbWvHlngcfDlf6sMGH/4BF2PZSqTdyRKZsDT7vh5FnHT6sr2GJyyoGZBpepZIHjjf
+         CaGzBVieexcOPY1phu9/wSZexnbu4CyYsG+gF7yI4TAJJoW5TX/GS0gSr3fnIYVFjdTd
+         irz096OLbpw3+7W2aCskLExHL+Lhg5UZAF08AgPO/iIHkIDVqlNrtt40k0cuWM4mG11w
+         jO+JFhsOmxWITOQP2jBqDbgI9bNdldZEtSCbTgfLUigTgWzOxQDlPrVWfiHJ3K8CSE98
+         I3Wg==
+X-Gm-Message-State: APjAAAWuC6zJaX3SL++xqFIvoYOJntosqNigGBOQXhttsyUc8xyUgjII
+        40+/OxhvObrpnX/IAdcC6JusnQ==
+X-Google-Smtp-Source: APXvYqzJc29WWep05M5xxc3UBmfFQINrDjz6Iczi9uObDd9pvggV0EMQsE0errdfRHR1WVqfUgep7w==
+X-Received: by 2002:adf:e747:: with SMTP id c7mr8183157wrn.384.1571410106491;
+        Fri, 18 Oct 2019 07:48:26 -0700 (PDT)
+Received: from localhost (97e34ace.skybroadband.com. [151.227.74.206])
+        by smtp.gmail.com with ESMTPSA id u26sm5916793wrd.87.2019.10.18.07.48.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 18 Oct 2019 07:48:25 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 15:48:24 +0100
+From:   Matt Fleming <matt@codeblueprint.co.uk>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/3] Recalculate per-cpu page allocator batch and high
+ limits after deferred meminit
+Message-ID: <20191018144824.GI4065@codeblueprint.co.uk>
+References: <20191018105606.3249-1-mgorman@techsingularity.net>
+ <20191018115849.GH4065@codeblueprint.co.uk>
+ <20191018125449.GJ3321@techsingularity.net>
 MIME-Version: 1.0
-In-Reply-To: <20191018093830.GA26328@suse.de>
-User-Agent: NeoMutt/20180716
-X-MC-Unique: pZzxmlt4NnSyyMPj27bJ8Q-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191018125449.GJ3321@techsingularity.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri Oct 18 19, Joerg Roedel wrote:
->On Thu, Oct 17, 2019 at 07:36:51AM -0400, Qian Cai wrote:
->>
->>
->> > On Oct 16, 2019, at 6:59 PM, Jerry Snitselaar <jsnitsel@redhat.com> wr=
-ote:
->> >
->> > I guess the mode level 6 check is really for other potential callers
->> > increase_address_space, none exist at the moment, and the condition
->> > of the while loop in alloc_pte should fail if the mode level is 6.
->>
->> Because there is no locking around iommu_map_page(), if there are
->> several concurrent callers of it for the same domain, could it be that
->> it silently corrupt data due to invalid access?
->
->No, that can't happen because increase_address_space locks the domain
->before actually doing anything. So the address space can't grow above
->domain->mode =3D=3D 6. But what can happen is that the WARN_ON_ONCE trigge=
-rs
->in there and that the address space is increased multiple times when
->only one increase would be sufficient.
->
->To fix this we just need to check the PM_LEVEL_SIZE() condition again
->when we hold the lock:
->
->From e930e792a998e89dfd4feef15fbbf289c45124dc Mon Sep 17 00:00:00 2001
->From: Joerg Roedel <jroedel@suse.de>
->Date: Fri, 18 Oct 2019 11:34:22 +0200
->Subject: [PATCH] iommu/amd: Check PM_LEVEL_SIZE() condition in locked sect=
-ion
->
->The increase_address_space() function has to check the PM_LEVEL_SIZE()
->condition again under the domain->lock to avoid a false trigger of the
->WARN_ON_ONCE() and to avoid that the address space is increase more
->often than necessary.
->
->Reported-by: Qian Cai <cai@lca.pw>
->Fixes: 754265bcab78 ("iommu/amd: Fix race in increase_address_space()")
->Signed-off-by: Joerg Roedel <jroedel@suse.de>
->---
-> drivers/iommu/amd_iommu.c | 7 ++++---
-> 1 file changed, 4 insertions(+), 3 deletions(-)
->
->diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
->index 2369b8af81f3..a0639e511ffe 100644
->--- a/drivers/iommu/amd_iommu.c
->+++ b/drivers/iommu/amd_iommu.c
->@@ -1463,6 +1463,7 @@ static void free_pagetable(struct protection_domain =
-*domain)
->  * to 64 bits.
->  */
-> static bool increase_address_space(struct protection_domain *domain,
->+=09=09=09=09   unsigned long address,
-> =09=09=09=09   gfp_t gfp)
-> {
-> =09unsigned long flags;
->@@ -1471,8 +1472,8 @@ static bool increase_address_space(struct protection=
-_domain *domain,
->
-> =09spin_lock_irqsave(&domain->lock, flags);
->
->-=09if (WARN_ON_ONCE(domain->mode =3D=3D PAGE_MODE_6_LEVEL))
->-=09=09/* address space already 64 bit large */
->+=09if (address <=3D PM_LEVEL_SIZE(domain->mode) ||
->+=09    WARN_ON_ONCE(domain->mode =3D=3D PAGE_MODE_6_LEVEL))
-> =09=09goto out;
->
-> =09pte =3D (void *)get_zeroed_page(gfp);
->@@ -1505,7 +1506,7 @@ static u64 *alloc_pte(struct protection_domain *doma=
-in,
-> =09BUG_ON(!is_power_of_2(page_size));
->
-> =09while (address > PM_LEVEL_SIZE(domain->mode))
->-=09=09*updated =3D increase_address_space(domain, gfp) || *updated;
->+=09=09*updated =3D increase_address_space(domain, address, gfp) || *updat=
-ed;
->
-> =09level   =3D domain->mode - 1;
-> =09pte     =3D &domain->pt_root[PM_LEVEL_INDEX(level, address)];
->--=20
->2.16.4
->
+On Fri, 18 Oct, at 01:54:49PM, Mel Gorman wrote:
+> On Fri, Oct 18, 2019 at 12:58:49PM +0100, Matt Fleming wrote:
+> > On Fri, 18 Oct, at 11:56:03AM, Mel Gorman wrote:
+> > > A private report stated that system CPU usage was excessive on an AMD
+> > > EPYC 2 machine while building kernels with much longer build times than
+> > > expected. The issue is partially explained by high zone lock contention
+> > > due to the per-cpu page allocator batch and high limits being calculated
+> > > incorrectly. This series addresses a large chunk of the problem. Patch 1
+> > > is mostly cosmetic but prepares for patch 2 which is the real fix. Patch
+> > > 3 is definiely cosmetic but was noticed while implementing the fix. Proper
+> > > details are in the changelog for patch 2.
+> > > 
+> > >  include/linux/mm.h |  3 ---
+> > >  mm/internal.h      |  3 +++
+> > >  mm/page_alloc.c    | 33 ++++++++++++++++++++-------------
+> > >  3 files changed, 23 insertions(+), 16 deletions(-)
+> > 
+> > Just to confirm, these patches don't fix the issue we're seeing on the
+> > EPYC 2 machines, but they do return the batch sizes to sensible values.
+> 
+> To be clear, does the patch a) fix *some* of the issue and there is
+> something else also going on that needs to be chased down or b) has no
+> impact on build time or system CPU usage on your machine?
 
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Sorry, I realise my email was pretty unclear.
 
+These patches *do* fix some of the issue because I no longer see as
+much contention on the zone locks with the patches applied.
