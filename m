@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50530CA9ED2
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC2DCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3070621835
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:06:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B0E221835
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:06:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504257AbfJRFG2 (ORCPT
+        id S2504273AbfJRFGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:06:28 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4274 "EHLO huawei.com"
+        Fri, 18 Oct 2019 01:06:33 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58184 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2504044AbfJRFFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:05:12 -0400
+        id S1733173AbfJRFGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 01:06:31 -0400
 Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D74973EE7A7819AFB10D;
-        Fri, 18 Oct 2019 11:19:30 +0800 (CST)
+        by Forcepoint Email with ESMTP id 00CA92E612082A8887EB;
+        Fri, 18 Oct 2019 11:19:46 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
  DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 18 Oct 2019 11:19:20 +0800
+ 14.3.439.0; Fri, 18 Oct 2019 11:19:35 +0800
 From:   Kefeng Wang <wangkefeng.wang@huawei.com>
 To:     Petr Mladek <pmladek@suse.com>, <linux-kernel@vger.kernel.org>
 CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: [PATCH v2 03/33] ia64: Use pr_warn instead of pr_warning
-Date:   Fri, 18 Oct 2019 11:18:20 +0800
-Message-ID: <20191018031850.48498-3-wangkefeng.wang@huawei.com>
+Subject: [PATCH v2 26/33] trace: Use pr_warn instead of pr_warning
+Date:   Fri, 18 Oct 2019 11:18:43 +0800
+Message-ID: <20191018031850.48498-26-wangkefeng.wang@huawei.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018031850.48498-1-wangkefeng.wang@huawei.com>
 References: <20191018031710.41052-1-wangkefeng.wang@huawei.com>
@@ -52,27 +52,36 @@ As said in commit f2c2cbcc35d4 ("powerpc: Use pr_warn instead of
 pr_warning"), removing pr_warning so all logging messages use a
 consistent <prefix>_warn style. Let's do it.
 
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 ---
- arch/ia64/kernel/setup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace_benchmark.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/ia64/kernel/setup.c b/arch/ia64/kernel/setup.c
-index bb320c6d0cc9..c49fcef754de 100644
---- a/arch/ia64/kernel/setup.c
-+++ b/arch/ia64/kernel/setup.c
-@@ -289,7 +289,7 @@ static void __init setup_crashkernel(unsigned long total, int *n)
- 		}
+diff --git a/kernel/trace/trace_benchmark.c b/kernel/trace/trace_benchmark.c
+index 80e0b2aca703..2e9a4746ea85 100644
+--- a/kernel/trace/trace_benchmark.c
++++ b/kernel/trace/trace_benchmark.c
+@@ -178,14 +178,14 @@ static int benchmark_event_kthread(void *arg)
+ int trace_benchmark_reg(void)
+ {
+ 	if (!ok_to_run) {
+-		pr_warning("trace benchmark cannot be started via kernel command line\n");
++		pr_warn("trace benchmark cannot be started via kernel command line\n");
+ 		return -EBUSY;
+ 	}
  
- 		if (!check_crashkernel_memory(base, size)) {
--			pr_warning("crashkernel: There would be kdump memory "
-+			pr_warn("crashkernel: There would be kdump memory "
- 				"at %ld GB but this is unusable because it "
- 				"must\nbe below 4 GB. Change the memory "
- 				"configuration of the machine.\n",
+ 	bm_event_thread = kthread_run(benchmark_event_kthread,
+ 				      NULL, "event_benchmark");
+ 	if (IS_ERR(bm_event_thread)) {
+-		pr_warning("trace benchmark failed to create kernel thread\n");
++		pr_warn("trace benchmark failed to create kernel thread\n");
+ 		return PTR_ERR(bm_event_thread);
+ 	}
+ 
 -- 
 2.20.1
 
