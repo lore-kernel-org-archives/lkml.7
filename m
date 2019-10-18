@@ -2,79 +2,120 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 676FFCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B91D3CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D2592070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D33C21897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:17:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571426277;
+	bh=eV7mirDFw0+qyswNuXVjYVmF2Tyu4+UpVHXC8TzLnvU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=W012ola0N88cgFec4Ywrb6nsUxWBOu0DBQUdbcekv/0UnZfmCSvpWamdIQb4ti1ZH
+	 KpPFzfry0LAti0O72iT7nZbTgvr8DMk2APisc0Y06xPMmjv7VxMM0JAJhlV2yU2U1d
+	 pP30XCEjlIntg6gzZyWD4s6oFfN6vLv3XV2DCTnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505945AbfJRTPd (ORCPT
+        id S2505948AbfJRTR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 15:15:33 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:57928 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2394833AbfJRTPd (ORCPT
+        Fri, 18 Oct 2019 15:17:56 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41525 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388138AbfJRTRz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 15:15:33 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-98.corp.google.com [104.133.0.98] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x9IJEu32003509
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 18 Oct 2019 15:14:57 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 1F67B420458; Fri, 18 Oct 2019 15:14:56 -0400 (EDT)
-Date:   Fri, 18 Oct 2019 15:14:56 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Vegard Nossum <vegard.nossum@oracle.com>
-Cc:     Santiago Torres Arias <santiago@nyu.edu>, Willy Tarreau <w@1wt.eu>,
-        workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        Eric Wong <e@80x24.org>
-Subject: Re: email as a bona fide git transport
-Message-ID: <20191018191456.GI21137@mit.edu>
-References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
- <20191016111009.GE13154@1wt.eu>
- <20191016144517.giwip4yuaxtcd64g@LykOS.localdomain>
- <56664222-6c29-09dc-ef78-7b380b113c4a@oracle.com>
- <20191018161547.GG21137@mit.edu>
- <de49fe5e-85cb-9fb0-f9f4-c294d72e356c@oracle.com>
+        Fri, 18 Oct 2019 15:17:55 -0400
+Received: by mail-lj1-f193.google.com with SMTP id f5so7299097ljg.8
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 12:17:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gfI0AJSthc554vKx2lGALI0At1GBVKK3lR5urVM2u5o=;
+        b=VgncGr5yjc//ouu/7v1mSUHDd6fZju6z/Ht4L7uJcHz8C5ZjHqzHf/QU+HEdUYxEO2
+         0wbGYwcxszbE4giQskHtZ5f0P2usEjfcHedLpFS+fuP/DSwO6J6N7ZCr6xa/ushP5O/t
+         SIhcZZVoAesRsxU+OQYIUywvth6XYUmMSzw1s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gfI0AJSthc554vKx2lGALI0At1GBVKK3lR5urVM2u5o=;
+        b=l0kCWVC1VWWIUa9n/BkDMDQTTA18N7atfCL77cVCsvoRhNlH5tT3yyZxu4jU5Hlt0U
+         ETUCwFUAIePEFMSDVnhhVSlJSuE9jqELjcyvRXkS9m4ujVTemrHgWfa6RWT47tNu99iM
+         4XxATepXRi9XzPGAmFxtWkSp9bY0A+glIEzPGH7soDgzhaCE3A/OzGnegNq9zMsbWOcS
+         cLJADe2QpMlJSddYKE7GinqDZLtmv2+ed6sqbHzTs6GLIVIGDOwdtuPj1+B75mKCURzx
+         +IYO7XFKHkA+SAKzHhdZ89Eb5RUOfJ12QDzvPib60w0J0Ln3VUxChOF8fkA2J9OpjA2d
+         QnBQ==
+X-Gm-Message-State: APjAAAWZz0MSrmUmcg4EJ+Yg5OUjZzzMbVdj3TfV/BxGuZVqcF137OGn
+        hi8kmPLy0Nrzp7gmHx76xQ+X0aBC12g=
+X-Google-Smtp-Source: APXvYqzRDk2Ndpvq2BX25IA5cqar/G5GbneAmsteBFeHpoBSFUocWcpsUCuuam2ccyE5TgSTzkKFbA==
+X-Received: by 2002:a2e:1214:: with SMTP id t20mr7068307lje.191.1571426272164;
+        Fri, 18 Oct 2019 12:17:52 -0700 (PDT)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id m21sm2761335lfh.39.2019.10.18.12.17.50
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Oct 2019 12:17:51 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id v8so4929418lfa.12
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 12:17:50 -0700 (PDT)
+X-Received: by 2002:a19:f709:: with SMTP id z9mr7071645lfe.170.1571426270371;
+ Fri, 18 Oct 2019 12:17:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <de49fe5e-85cb-9fb0-f9f4-c294d72e356c@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191017234348.wcbbo2njexn7ixpk@willie-the-truck>
+ <CAHk-=wjPZYxiTs3F0Vbrd3kRizJGq-rQ_jqH1+8XR9Ai_kBoXg@mail.gmail.com> <20191018174153.slpmkvsz45hb6cts@willie-the-truck>
+In-Reply-To: <20191018174153.slpmkvsz45hb6cts@willie-the-truck>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 18 Oct 2019 12:17:34 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whmtB98b8=YL2b8HzPKRadk2A9pL0aasmvgebhePrDP9w@mail.gmail.com>
+Message-ID: <CAHk-=whmtB98b8=YL2b8HzPKRadk2A9pL0aasmvgebhePrDP9w@mail.gmail.com>
+Subject: Re: [GIT PULL] arm64: Fixes for -rc4
+To:     Will Deacon <will@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM Kernel Mailing List 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 06:50:51PM +0200, Vegard Nossum wrote:
-> I started out using this approach, but I changed it because the
-> implementation was a bit annoying: 'git am' runs 'git mailsplit',
-> which just splits the email into two parts:
-> 
-> 1) headers, changelog, and diffstat;
-> 2) diff and signature.
-> 
-> One of my PoC patches changes mailsplit to split the extra metadata into
-> a third file.
-> 
-> The problem I ran into with putting the metadata at the end was
-> detecting where the diff ends. A comment in 'git apply' suggested that
-> detecting the difference between "--" as a diff/signature separator and
-> as part of the diff is nontrivial in the sense that you need to actually
-> do some parsing and keep track of hunk sizes.
+On Fri, Oct 18, 2019 at 10:42 AM Will Deacon <will@kernel.org> wrote:
+>
+> Thanks, that's helpful to know for next time. I guess I'm most surprised by
+> the discrepancy between the shortlog and the diffstat, whereas I intuitively
+> expected them to be generated in the same way.
 
-Could we cheat by having "git format-patch" add a "Diff-size" in the
-header which gives the number of lines in the diff so git am can just
-count lines to find the Trailer section?
+So logs and diffs are fundamentally different.
 
-Thanks,
+A log is an operation on a _set_ of commits (that's the whole point -
+you don't list the beginning and the end, you list all the commits in
+between), while a diff is fundamentally an operation on two end-points
+and shows the code difference between those two points.
 
-					- Ted
+And the summary versions of those operations (shortlog and diffstat)
+are no different.
+
+So as a set operation, "shortlog" has no issues with multiple merge
+bases. Doing a shortlog is still just a set difference between your
+commits and the upstream commits, and the number of merge bases is
+irrelevant. "List all commits that I have, but upstream doesn't have"
+is a very straightforward and natural set operation.
+
+But as a "two endpoints" operation, diffstat has real problems any
+time you have more than two endpoints - when you have multiple merge
+bases, you fundamentally have more than two endpoints: you have all of
+the merge bases, and then you have your end result.
+
+What you doing the merge does is to turn the multiple merge bases into
+just one point: the thing you merged against now becomes the common
+merge point, and now you have a "two endpoints" for the diffstat: the
+thing you merged against, and your end result are now the two points
+that you can diff against.
+
+But the shortlog is always correct, because it just doesn't even care
+about that whole issue.
+
+                Linus
