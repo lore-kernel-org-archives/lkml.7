@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E59BCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBC6CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3470F21D7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8BF4222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:26:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="V4GD5JNc"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QFMy/67T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633723AbfJRM0D (ORCPT
+        id S2633713AbfJRM0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 08:26:03 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:48408 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2633675AbfJRM0A (ORCPT
+        Fri, 18 Oct 2019 08:26:02 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:45838 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbfJRMZ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 08:26:00 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9ICPvPv066241;
-        Fri, 18 Oct 2019 07:25:57 -0500
+        Fri, 18 Oct 2019 08:25:59 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9ICPtfF087338;
+        Fri, 18 Oct 2019 07:25:55 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571401557;
-        bh=95PMofJsyIEn3NAsJyz9IppOg+cVPNREQZwHO7yf3yY=;
+        s=ti-com-17Q1; t=1571401555;
+        bh=vNLixCA7rV3r89geVpDyZT2afzJln66pkNhtKdigswM=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=V4GD5JNcxkAr3ANPK92qLT7Vr/VH3z5DqhkN5C9FkgM+HsQgwrRRhXRaiDfP39MO2
-         +ohFuBBpwltIF1GM/LVWbQvKr6EJea6PHOiJGdeFidni9gDVMr1GbiyGd3iF8TMWLL
-         niZbY8SUlRBoXU/uMirZwoTY0u46xfIN3PvSBYR0=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9ICPvPG091735;
-        Fri, 18 Oct 2019 07:25:57 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+        b=QFMy/67TiHTiWIA7TF8pdGi7P4giM89qEEUcGvrpuQE20eBpPFlHoOKrTNQlNon6l
+         1Jqb2JZ8HiHsJ6SlZhOJAXAYGBcPPU5A4q2qqnOupnVUtd94pL/ZZOGv9HV6nI9exk
+         RLUzFevnaW7OHpGzNJypz3W/KvtBf6Jx51iU/1pk=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9ICPtDW060733
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 18 Oct 2019 07:25:55 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 18
- Oct 2019 07:25:48 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 07:25:47 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 18 Oct 2019 07:25:57 -0500
+ Frontend Transport; Fri, 18 Oct 2019 07:25:47 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9ICPuLi092021;
-        Fri, 18 Oct 2019 07:25:56 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9ICPtWC073303;
+        Fri, 18 Oct 2019 07:25:55 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v14 11/19] ARM: dts: ste-href: Add reg property to the LP5521 channel nodes
-Date:   Fri, 18 Oct 2019 07:25:13 -0500
-Message-ID: <20191018122521.6757-12-dmurphy@ti.com>
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v14 03/19] leds: Add multicolor ID to the color ID list
+Date:   Fri, 18 Oct 2019 07:25:05 -0500
+Message-ID: <20191018122521.6757-4-dmurphy@ti.com>
 X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
 In-Reply-To: <20191018122521.6757-1-dmurphy@ti.com>
 References: <20191018122521.6757-1-dmurphy@ti.com>
@@ -67,71 +67,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the reg property to each channel node.  This update is
-to accomodate the multicolor framework.  In addition to the
-accomodation this allows the LEDs to be placed on any channel
-and allow designs to skip channels as opposed to requiring
-sequential order.
+Add a new color ID that is declared as MULTICOLOR as with the
+multicolor framework declaring a definitive color is not accurate
+as the node can contain multiple colors.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
-CC: Linus Walleij <linus.walleij@linaro.org>
 ---
- arch/arm/boot/dts/ste-href.dtsi | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ drivers/leds/led-core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/ste-href.dtsi b/arch/arm/boot/dts/ste-href.dtsi
-index 4f6acbd8c040..8a873da102d3 100644
---- a/arch/arm/boot/dts/ste-href.dtsi
-+++ b/arch/arm/boot/dts/ste-href.dtsi
-@@ -56,16 +56,21 @@
- 				reg = <0x33>;
- 				label = "lp5521_pri";
- 				clock-mode = /bits/ 8 <2>;
--				chan0 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				chan@0 {
-+					reg = <0>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 					linux,default-trigger = "heartbeat";
- 				};
--				chan1 {
-+				chan@1 {
-+					reg = <1>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
--				chan2 {
-+				chan@2 {
-+					reg = <2>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
-@@ -75,15 +80,20 @@
- 				reg = <0x34>;
- 				label = "lp5521_sec";
- 				clock-mode = /bits/ 8 <2>;
--				chan0 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				chan@0 {
-+					reg = <0>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
--				chan1 {
-+				chan@1 {
-+					reg = <1>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
--				chan2 {
-+				chan@2 {
-+					reg = <2>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
+diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+index f1f718dbe0f8..846248a0693d 100644
+--- a/drivers/leds/led-core.c
++++ b/drivers/leds/led-core.c
+@@ -34,6 +34,7 @@ const char * const led_colors[LED_COLOR_ID_MAX] = {
+ 	[LED_COLOR_ID_VIOLET] = "violet",
+ 	[LED_COLOR_ID_YELLOW] = "yellow",
+ 	[LED_COLOR_ID_IR] = "ir",
++	[LED_COLOR_ID_MULTI] = "multicolor",
+ };
+ EXPORT_SYMBOL_GPL(led_colors);
+ 
 -- 
 2.22.0.214.g8dca754b1e
 
