@@ -2,114 +2,171 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA6CCA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 549DCCA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BFCA222C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 219FB222C5
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:00:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="HWO1Og9h"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MS6cWvzg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441992AbfJRFAi (ORCPT
+        id S2409212AbfJRFAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:00:38 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41032 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727627AbfJRFAh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:00:37 -0400
-Received: by mail-io1-f65.google.com with SMTP id n26so5885829ioj.8
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:00:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=Ar03SN8ojdCPgdDDnhBr1SKZnLdM9cLb9Yk7E1pUhvA=;
-        b=HWO1Og9hde/TMA3RyAXmPzOZqdhjb5gLcg2VdZkxBTWSAXVnVEHtmfUEZ9Bdly/5Pj
-         zUkp/siL3Z0sOwANXcY9TGdwcTIzYUymEUTEU5H0I1Am5BoqlQo0OLsDJGzB77MM8N8C
-         Hmhp9f2ap3GaScWS15oXAGTsnLgOK1ldfs73dPBEWXcUdizem3nAcwjd5oJfiNgygKQG
-         iCwbs/OLUDnLvmaDsIp0/+OXeV1rAq+wHHvKKm8qhbNm+O996t7m7xzDEgBHD4e//0LM
-         5v5kEu60irubA+e/vdEIosEV4qfWiihBbyd1ClO2GgDjBojWmczJzJHzjx1OPqxvtykj
-         rNyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=Ar03SN8ojdCPgdDDnhBr1SKZnLdM9cLb9Yk7E1pUhvA=;
-        b=Bl8PHzaSAVTHxjTTT+xyPH5rVmopCQD2oWBi3nEZhmD6y2QlImNyxnH7apTOE+Ev4O
-         XYVkIb2QH0NANGU/cCeeaGbOuCBX0bNhr1jnJ7kEFq51gFGWCLK4irPN3ahpPX1Dn9cc
-         CsX5DJtqSs6VRylwFcoHNfH2YB0llFJRGHDMo54PFyDs8L3bvpSZcuoLyLL1Lf1FwUQw
-         Byz1fc/HAvLvqaOw179KZX4pzPKXfRX7BqlWf490XpisqR++em2ZWVTb7Ro9ebmYN9IS
-         wLmabZDtCy0RDeQ/PJbEU3JvYD+ukcebNGf/IXc4ubVMf6iFTzmvRtvZqjq/DyHb6H3F
-         K4wg==
-X-Gm-Message-State: APjAAAWG81OWEl1kYT9RAm/k07eGIlajMfmKVD7xZnBszF0rurmUTyXn
-        g34lcD1juFbdWQP1WYVZ5Rn5dorL/tE=
-X-Google-Smtp-Source: APXvYqySaMUMX6+h6cD/AKKX0qnuUY0VtV4hMOq6tJB5V4tLWwii7PNoFEbMhirlF6g4QwMw2BBzzA==
-X-Received: by 2002:a5e:da45:: with SMTP id o5mr3854840iop.177.1571373500501;
-        Thu, 17 Oct 2019 21:38:20 -0700 (PDT)
-Received: from localhost (67-0-11-246.albq.qwest.net. [67.0.11.246])
-        by smtp.gmail.com with ESMTPSA id y23sm1544228iob.28.2019.10.17.21.38.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 21:38:19 -0700 (PDT)
-Date:   Thu, 17 Oct 2019 21:38:18 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/8] riscv: init: merge split string literals in preprocessor
- directive
-In-Reply-To: <20191018040237.3eyrfrty72r63pkz@ltop.local>
-Message-ID: <alpine.DEB.2.21.9999.1910172127220.3026@viisi.sifive.com>
-References: <20191018004929.3445-1-paul.walmsley@sifive.com> <20191018004929.3445-4-paul.walmsley@sifive.com> <20191018040237.3eyrfrty72r63pkz@ltop.local>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Fri, 18 Oct 2019 01:00:47 -0400
+Received: from ozlabs.org ([203.11.71.1]:59595 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727627AbfJRFAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 01:00:46 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46vVR047dMz9sP3;
+        Fri, 18 Oct 2019 13:31:40 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1571365907;
+        bh=STqXBQt1of/WFIT0GVfq42YrvZ3JDvNR2LFQ87IDERM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=MS6cWvzglWlyRB1w1pnINex7OcQ3VsrD6+OCHaOiorDM2hqOFT+bs6SohJ5s1g4HP
+         vW6Szz6i+lJL6exfdTptnjlKSFlCZDhRWs5mfxoRZY65p2NWSBbasLKAu6Dmgitx60
+         oVtxsMEcCCZjlGZjq/+3wJ8gvP58kESCloqqyNATJlCdu76ilIkdgck8K2et+Evcld
+         tEib04l9lohK/Vm4W3NKebRKq+zC2UgdjWZG0UeFJlCONTCPGpiBayAp0iCJyXbxtw
+         VF361NIm2M4bTZFuxmC58w7cphh5VhbYm9ji9ITsLigVsrESCFuvlMeTzJ41WqaeMS
+         vCpvnt4KZ+rUA==
+Date:   Fri, 18 Oct 2019 13:31:39 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBl?= =?UTF-8?B?bA==?= 
+        <bjorn.topel@intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: linux-next: manual merge of the tip tree with the net-next tree
+Message-ID: <20191018133139.30c88807@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; boundary="Sig_/Z+ofq0xCGo0+RR6uVsB2NLd";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 18 Oct 2019, Luc Van Oostenryck wrote:
+--Sig_/Z+ofq0xCGo0+RR6uVsB2NLd
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> On Thu, Oct 17, 2019 at 05:49:24PM -0700, Paul Walmsley wrote:
-> > sparse complains loudly when string literals associated with
-> > preprocessor directives are split into multiple, separately quoted
-> > strings across different lines:
-> 
-> ...
->  
-> >  #ifndef __riscv_cmodel_medany
-> > -#error "setup_vm() is called from head.S before relocate so it should "
-> > -	"not use absolute addressing."
-> > +#error "setup_vm() is called from head.S before relocate so it should not use absolute addressing."
-> >  #endif
-> 
-> Using a blacslash should do the trick :
-> 	#error "blablablablablablablablablablablabla" \
-> 			"and blablabla again"
-> Or if need I cn fix Sparse if needed and desiable.
+Hi all,
 
-Thanks for the kind offer!
+Today's linux-next merge of the tip tree got a conflict in:
 
-The backslashless syntax is pretty horrible to my eyes.  As far as I can 
-tell from a brief glance, the instance fixed by this patch was the only 
-instance of its kind in the kernel.  The existing kernel precedents appear 
-to be to simply use a single long line.  Example:
+  samples/bpf/Makefile
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/compiler-gcc.h#n3
+between commit:
 
-So, from a kernel point of view, we should just fix this specific 
-instance.  It doesn't seem worth changing sparse for such a rare case.
+  1d97c6c2511f ("samples/bpf: Base target programs rules on Makefile.target=
+")
 
-On the other hand, gcc seems to support the non-backslashed syntax.  So if 
-the intention is for sparse to follow the gcc practice, and to be used 
-beyond the kernel, maybe it's worth aligning sparse to gcc?  Only if 
-you're bored, I suppose...
+from the net-next tree and commit:
 
+  fce9501aec6b ("samples/bpf: fix build by setting HAVE_ATTR_TEST to zero")
 
-- Paul
+from the tip tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc samples/bpf/Makefile
+index 4df11ddb9c75,42b571cde177..000000000000
+--- a/samples/bpf/Makefile
++++ b/samples/bpf/Makefile
+@@@ -168,38 -171,21 +168,39 @@@ always +=3D ibumad_kern.
+  always +=3D hbm_out_kern.o
+  always +=3D hbm_edt_kern.o
+ =20
+ -KBUILD_HOSTCFLAGS +=3D -I$(objtree)/usr/include
+ -KBUILD_HOSTCFLAGS +=3D -I$(srctree)/tools/lib/bpf/
+ -KBUILD_HOSTCFLAGS +=3D -I$(srctree)/tools/testing/selftests/bpf/
+ -KBUILD_HOSTCFLAGS +=3D -I$(srctree)/tools/lib/ -I$(srctree)/tools/include
+ -KBUILD_HOSTCFLAGS +=3D -I$(srctree)/tools/perf
+ -KBUILD_HOSTCFLAGS +=3D -DHAVE_ATTR_TEST=3D0
+ +ifeq ($(ARCH), arm)
+ +# Strip all except -D__LINUX_ARM_ARCH__ option needed to handle linux
+ +# headers when arm instruction set identification is requested.
+ +ARM_ARCH_SELECTOR :=3D $(filter -D__LINUX_ARM_ARCH__%, $(KBUILD_CFLAGS))
+ +BPF_EXTRA_CFLAGS :=3D $(ARM_ARCH_SELECTOR)
+ +TPROGS_CFLAGS +=3D $(ARM_ARCH_SELECTOR)
+ +endif
+ +
+ +TPROGS_CFLAGS +=3D -Wall -O2
+ +TPROGS_CFLAGS +=3D -Wmissing-prototypes
+ +TPROGS_CFLAGS +=3D -Wstrict-prototypes
+ +
+ +TPROGS_CFLAGS +=3D -I$(objtree)/usr/include
+ +TPROGS_CFLAGS +=3D -I$(srctree)/tools/lib/bpf/
+ +TPROGS_CFLAGS +=3D -I$(srctree)/tools/testing/selftests/bpf/
+ +TPROGS_CFLAGS +=3D -I$(srctree)/tools/lib/
+ +TPROGS_CFLAGS +=3D -I$(srctree)/tools/include
+ +TPROGS_CFLAGS +=3D -I$(srctree)/tools/perf
+++TPROGS_CFLAGS +=3D -DHAVE_ATTR_TEST=3D0
+ =20
+ -HOSTCFLAGS_bpf_load.o +=3D -I$(objtree)/usr/include -Wno-unused-variable
+ +ifdef SYSROOT
+ +TPROGS_CFLAGS +=3D --sysroot=3D$(SYSROOT)
+ +TPROGS_LDFLAGS :=3D -L$(SYSROOT)/usr/lib
+ +endif
+ +
+ +TPROGCFLAGS_bpf_load.o +=3D -Wno-unused-variable
+ =20
+ -KBUILD_HOSTLDLIBS		+=3D $(LIBBPF) -lelf
+ -HOSTLDLIBS_tracex4		+=3D -lrt
+ -HOSTLDLIBS_trace_output	+=3D -lrt
+ -HOSTLDLIBS_map_perf_test	+=3D -lrt
+ -HOSTLDLIBS_test_overhead	+=3D -lrt
+ -HOSTLDLIBS_xdpsock		+=3D -pthread
+ +TPROGS_LDLIBS			+=3D $(LIBBPF) -lelf
+ +TPROGLDLIBS_tracex4		+=3D -lrt
+ +TPROGLDLIBS_trace_output	+=3D -lrt
+ +TPROGLDLIBS_map_perf_test	+=3D -lrt
+ +TPROGLDLIBS_test_overhead	+=3D -lrt
+ +TPROGLDLIBS_xdpsock		+=3D -pthread
+ =20
+  # Allows pointing LLC/CLANG to a LLVM backend with bpf support, redefine =
+on cmdline:
+  #  make samples/bpf/ LLC=3D~/git/llvm/build/bin/llc CLANG=3D~/git/llvm/bu=
+ild/bin/clang
+
+--Sig_/Z+ofq0xCGo0+RR6uVsB2NLd
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2pJAsACgkQAVBC80lX
+0GyqEwf/UuMAsHsveGo2AA1IPKiMbsDeaMyqQOSlVmR60dCwQFt/0FIiGRYvDOj1
+Bj8APje30mHsjkB8soqEQ6wZAdDmzzrSIlI55bubZp2ogCBhoP4r+eDfYZJyLiCL
+O3tzu/owv5qrURc6e1qHQch6LhT5So77T3UPpL8xEPoGMPOpMVHeaHwq4H+B9ldA
+JpiMbPI+gRpaDghkt8ZwnPeetv6hChoeZVUKATArwuk5jJM4n+fIpnWratvgI+eZ
+AVPrdPGXNfFqttwLvq/dgjSxwplSn+onU6XtmO7reAPN6NHjPC1F6KNQYOg6nEQQ
+KJer+ciicgEiQ5jNLlr1fRuq0f8f4Q==
+=1V2Z
+-----END PGP SIGNATURE-----
+
+--Sig_/Z+ofq0xCGo0+RR6uVsB2NLd--
