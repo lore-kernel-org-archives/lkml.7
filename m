@@ -2,170 +2,90 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEC7CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1447ACA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C45C121925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC90421925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:45:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409607AbfJRHo1 (ORCPT
+        id S2504530AbfJRHpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 03:44:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54362 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727388AbfJRHo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 03:44:27 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BB379793F4;
-        Fri, 18 Oct 2019 07:44:25 +0000 (UTC)
-Received: from gondolin (dhcp-192-202.str.redhat.com [10.33.192.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 024D160600;
-        Fri, 18 Oct 2019 07:44:09 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 09:44:07 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-Subject: Re: [PATCH V4 3/6] mdev: introduce device specific ops
-Message-ID: <20191018094407.1a91e843.cohuck@redhat.com>
-In-Reply-To: <20191017115310.0481cc52@x1.home>
-References: <20191017104836.32464-1-jasowang@redhat.com>
-        <20191017104836.32464-4-jasowang@redhat.com>
-        <20191017170755.15506ada.cohuck@redhat.com>
-        <20191017115310.0481cc52@x1.home>
-Organization: Red Hat GmbH
+        Fri, 18 Oct 2019 03:45:10 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:57362 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2404288AbfJRHpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 03:45:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8DA8F332;
+        Fri, 18 Oct 2019 00:44:47 -0700 (PDT)
+Received: from [192.168.0.9] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8ED2B3F718;
+        Fri, 18 Oct 2019 00:44:45 -0700 (PDT)
+Subject: Re: [RFC PATCH v3 0/6] sched/cpufreq: Make schedutil energy aware
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Quentin Perret <qperret@google.com>
+Cc:     Douglas Raillard <douglas.raillard@arm.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        mingo@redhat.com, rjw@rjwysocki.net, viresh.kumar@linaro.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        qperret@qperret.net, patrick.bellasi@matbug.net, dh.han@samsung.com
+References: <20191011134500.235736-1-douglas.raillard@arm.com>
+ <20191014145315.GZ2311@hirez.programming.kicks-ass.net>
+ <a1ce67d7-62c3-b78b-1d87-23ef4dbc2274@arm.com>
+ <20191017095015.GI2311@hirez.programming.kicks-ass.net>
+ <20191017111116.GA27006@google.com>
+ <20191017141107.GJ2311@hirez.programming.kicks-ass.net>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <2cbde0fe-c10c-0ebb-32ef-2d522986bc89@arm.com>
+Date:   Fri, 18 Oct 2019 09:44:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191017141107.GJ2311@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 18 Oct 2019 07:44:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019 11:53:10 -0600
-Alex Williamson <alex.williamson@redhat.com> wrote:
+On 17/10/2019 16:11, Peter Zijlstra wrote:
+> On Thu, Oct 17, 2019 at 12:11:16PM +0100, Quentin Perret wrote:
 
-> On Thu, 17 Oct 2019 17:07:55 +0200
-> Cornelia Huck <cohuck@redhat.com> wrote:
-> 
-> > On Thu, 17 Oct 2019 18:48:33 +0800
-> > Jason Wang <jasowang@redhat.com> wrote:
-> >   
-> > > Currently, except for the create and remove, the rest of
-> > > mdev_parent_ops is designed for vfio-mdev driver only and may not help
-> > > for kernel mdev driver. With the help of class id, this patch
-> > > introduces device specific callbacks inside mdev_device
-> > > structure. This allows different set of callback to be used by
-> > > vfio-mdev and virtio-mdev.
-> > > 
-> > > Signed-off-by: Jason Wang <jasowang@redhat.com>
-> > > ---
-> > >  .../driver-api/vfio-mediated-device.rst       | 25 +++++----
-> > >  MAINTAINERS                                   |  1 +
-> > >  drivers/gpu/drm/i915/gvt/kvmgt.c              | 18 ++++---
-> > >  drivers/s390/cio/vfio_ccw_ops.c               | 18 ++++---
-> > >  drivers/s390/crypto/vfio_ap_ops.c             | 14 +++--
-> > >  drivers/vfio/mdev/mdev_core.c                 | 18 +++++--
-> > >  drivers/vfio/mdev/mdev_private.h              |  1 +
-> > >  drivers/vfio/mdev/vfio_mdev.c                 | 37 ++++++-------
-> > >  include/linux/mdev.h                          | 45 ++++------------
-> > >  include/linux/vfio_mdev.h                     | 52 +++++++++++++++++++
-> > >  samples/vfio-mdev/mbochs.c                    | 20 ++++---
-> > >  samples/vfio-mdev/mdpy.c                      | 20 ++++---
-> > >  samples/vfio-mdev/mtty.c                      | 18 ++++---
-> > >  13 files changed, 184 insertions(+), 103 deletions(-)
-> > >  create mode 100644 include/linux/vfio_mdev.h
-> > > 
-> > > diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Documentation/driver-api/vfio-mediated-device.rst
-> > > index f9a78d75a67a..0cca84d19603 100644
-> > > --- a/Documentation/driver-api/vfio-mediated-device.rst
-> > > +++ b/Documentation/driver-api/vfio-mediated-device.rst
-> > > @@ -152,11 +152,22 @@ callbacks per mdev parent device, per mdev type, or any other categorization.
-> > >  Vendor drivers are expected to be fully asynchronous in this respect or
-> > >  provide their own internal resource protection.)
-> > >  
-> > > -The callbacks in the mdev_parent_ops structure are as follows:
-> > > -
-> > > -* open: open callback of mediated device
-> > > -* close: close callback of mediated device
-> > > -* ioctl: ioctl callback of mediated device
-> > > +As multiple types of mediated devices may be supported, the device
-> > > +must set up the class id and the device specific callbacks in create()    
-> > 
-> > s/in create()/in the create()/
-> >   
-> > > +callback. E.g for vfio-mdev device it needs to be done through:    
-> > 
-> > "Each class provides a helper function to do so; e.g. for vfio-mdev
-> > devices, the function to be called is:"
-> > 
-> > ?
-> >   
-> > > +
-> > > +    int mdev_set_vfio_ops(struct mdev_device *mdev,
-> > > +                          const struct vfio_mdev_ops *vfio_ops);
-> > > +
-> > > +The class id (set to MDEV_CLASS_ID_VFIO) is used to match a device    
-> > 
-> > "(set by this helper function to MDEV_CLASS_ID_VFIO)" ?
-> >   
-> > > +with an mdev driver via its id table. The device specific callbacks
-> > > +(specified in *ops) are obtainable via mdev_get_dev_ops() (for use by    
-> > 
-> > "(specified in *vfio_ops by the caller)" ?
-> >   
-> > > +the mdev bus driver). A vfio-mdev device (class id MDEV_CLASS_ID_VFIO)
-> > > +uses the following device-specific ops:
-> > > +
-> > > +* open: open callback of vfio mediated device
-> > > +* close: close callback of vfio mediated device
-> > > +* ioctl: ioctl callback of vfio mediated device
-> > >  * read : read emulation callback
-> > >  * write: write emulation callback
-> > >  * mmap: mmap emulation callback
-> > > @@ -167,10 +178,6 @@ register itself with the mdev core driver::
-> > >  	extern int  mdev_register_device(struct device *dev,
-> > >  	                                 const struct mdev_parent_ops *ops);
-> > >  
-> > > -It is also required to specify the class_id in create() callback through::
-> > > -
-> > > -	int mdev_set_class(struct mdev_device *mdev, u16 id);
-> > > -    
-> > 
-> > I'm wondering if this patch set should start out with introducing
-> > helper functions already (i.e. don't introduce mdev_set_class(), but
-> > start out with mdev_set_class_vfio() which will gain the *vfio_ops
-> > argument in this patch.)  
-> 
-> Yes, it would be cleaner, but is it really worth the churn?  Correct me
-> if I'm wrong, but I think we get to the same point after this patch and
-> aside from the function name itself, the difference is really just that
-> the class_id is briefly exposed to the parent driver, right?  Thanks,
+[...]
 
-Yes, it does not really matter much. If there's no other reason to
-rework things, I'd just keep this as it is now.
+> It only boosts when 'rq->cfs.avg.util' increases while
+> 'rq->cfs.avg.util_est.enqueued' remains unchanged (and util > util_est
+> obv).
+> 
+> This condition can be true for select_task_rq_fair(), because that is
+> ran before we do enqueue_task_fair() (for obvious raisins).
+> 
+>>> I'm still thinking about the exact means you're using to raise C; that
+>>> is, the 'util - util_est' as cost_margin. It hurts my brain still.
+>>
+>> +1 ...
+> 
+> cost_i = capacity_i / power_i ; for the i-th OPP
+
+I get confused by this definition. efficiency=capacity/power but the
+cs->cost value used in em_pd_get_higher_freq() is defined as
+
+cs_cost = cs->power * cpu_max_freq / cs->freq [energy_model.h]
+
+> We then do: 'x = util - util_avg' and use that on the first
+> OPP >= min_freq:
+> 
+> 	cost(x) = cost_j + cost_j * x ; freq_j >= min_freq
+> 	        = cost_j * (1 + x)
+> 
+> And then we find the highest OPP that has:
+> 
+> 	cost_k <= cost(x)
+
+[...]
