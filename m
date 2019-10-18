@@ -6,303 +6,291 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CBFCA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D98CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01BD821852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6891B21852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:43:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505249AbfJRPmw (ORCPT
+        id S2505352AbfJRPn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:42:52 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:50619 "EHLO
+        Fri, 18 Oct 2019 11:43:29 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:59679 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505191AbfJRPmn (ORCPT
+        with ESMTP id S2505232AbfJRPmv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:42:43 -0400
+        Fri, 18 Oct 2019 11:42:51 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MqrwN-1hhUo60Vc1-00moY8; Fri, 18 Oct 2019 17:42:27 +0200
+ 1MJV5K-1iaoKF3RSi-00JvoD; Fri, 18 Oct 2019 17:42:31 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Daniel Mack <daniel@zonque.org>,
         Haojian Zhuang <haojian.zhuang@gmail.com>,
         Robert Jarzmik <robert.jarzmik@free.fr>
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH 21/46] ARM: pxa: spitz: use gpio descriptors for audio
-Date:   Fri, 18 Oct 2019 17:41:36 +0200
-Message-Id: <20191018154201.1276638-21-arnd@arndb.de>
+        Arnd Bergmann <arnd@arndb.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-clk@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [PATCH 35/46] cpufreq: pxa3: move clk register access to clk driver
+Date:   Fri, 18 Oct 2019 17:41:50 +0200
+Message-Id: <20191018154201.1276638-35-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191018154052.1276506-1-arnd@arndb.de>
 References: <20191018154052.1276506-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:EnGATBO6UcVguXcv7G62u/so/z4MGLoOyIeCs3iHNegQs2eAeZx
- RXCX3mThC+ltOlQdPgJxtQZMZlOJ3twIf0mEeLe18rdoMMe6IE0UavPRiwZY+GxnbCoIXXx
- siq75br/ck5gUvdB2C3VR34VF3oWZTLCtTdwjYxeT5yXVF7pAztV6fyrPa/tQoSOff6iOPp
- zo94i1VPUXq+5/kWovNeA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:gb1LxFRHfzU=:NfvjD9Kuk7/AeZGNDEvdV5
- /bA7c+abFvFFLaLKBvWWnHjzupokHiHg+jaqNzpFE2WYjHrtVuC4gMgvdZO4y3S34PNXdWjfM
- wqnMk/b2q75h1WdC6/kWPHOhbZNQr0ANRen9w1R70PqjvOCI7XcpjgRHimD2CzXB7AzVFcdoZ
- pPtTdkbQYvTSLxw8BYBW0i4v7yZHl5P59PDCdn2AtdJWVUfaRRmTs0dagR3/WQ/DODNBZxfM/
- p6kbEQ8tNW7bhHzZBXJ7axwTspl8UXp6zg1Tk/fAh2x4rG+pOOHq6RoHMTD6t9HaP/rgv6gXf
- 5OFYhi91hf2ie0nje0StPKzkgLRKO7gUty9VBnyVCtI/6Rj7xcB5jzN/gsvV11G6+6e+y2GUz
- 7t26S42/ZX7OgdCDpAheaGua3bETTjvsPIBIfhetggs3Epj3Z6NTVX6cL+4Ivr7+4nhWY/qXI
- AYth/l5P6vp8KCf77uHQBogHOKmwJDXErHvdIUq3X5U+pIz/ktxdh6pN8SmVbA8YD+Hkq3anT
- GzbxCqdRH8nJfiftqSrar5m9Q969UJl8/Ge1ByvLjkN5fcWhnE6ZjK9jo8xRdqz9gKC7o+q7+
- x8oU/4DNj52NVSPjh2Qb3PHMOfV6ZX1Ev7+bPWibNMlKkVqjGET3b/6QnaJ3BcQ/22q/YH8FU
- 3/qDrnVldAV+jR6qk6Eo+h6TluH8p89dkfB13mGUNThpGCPiz0AJorbMciyZ8PuLkix1Qp9rC
- NMH2LjHPDg0qwgyC/LCkvS5bRUiNT7TFDxcv3qFg7v6CS4ZFPNRsGFiwuxFBqpzn7Mmh3gUzY
- +GAC7QacilOEXNX3IXRGa7guukryclQBQCGzVNLeOc5B1pqXFRg8qVMAZnvmsSPIWlsHgaqzE
- r39gMLYEcFN91mxgZCVw==
+X-Provags-ID: V03:K1:o6X2GiFCPtFxV5PV4sLe6Tx6xb21oUZGUcOOgBZYSAWwgzC/jUs
+ abp20CFjc8Gs/k0Su9brUxTD84fcvVQQtcJavFiUOTjyGSzT8fasOvVv8Ys2yjSE3K+myed
+ BaKW+CywNxsRd3Xs2rFhVUAEZYNQVoYpLtdLwYDSjD/9vnWLsl+IRnJCb3oPXk/U1Jbvg/e
+ hftOaj3iY8ausiGmW7uCQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ueaPjGNhuIE=:1FLilwW1vyaKgPnng20RZ1
+ ZlaSi7S7KKZuUfLe2WmUHUFJT105z4pBScav2My1yCieflkzBq6JBUJkQyrkxs9BlobMjdbXf
+ DyEBUREJzUSqA66Vf2xBip4NIFIEE6NY8vGV6rGo1m2wHovva0XLuilzAfWQiSrSfDMvUFTU4
+ nhlFbbwN1kkfqPxt4dQ7APxGUF4BO0Tpu9O3uqSNhW22FM06WrS5I0e3aPECBG7cjnUGvo2F7
+ CqUDR8/QKOr+ca8lNWJ8L34kwK7rPr7/CfKplj9U7s6rZAQKhAb16s26aen+hsEmiNoekHfqf
+ 02q9grZ2vie9X6dQnyray55I6GTsiprURnSn9w/4XI1FA4PH8WETdpUJyuoT+B4Teg7Zx56ob
+ mNqSA5Xo4Lbmyiz3/z90lQf/pJWllUVW3bGhnvFfA41uE0Ln6Qvyius0UT+bXceqFwr6LQ0xf
+ npfdsSFK0wVy2+3aQGt0h53pSwFAOctARLf5FLTpJOmqb075Pn5tGyQp+H2k7uZmjxIFQmcu0
+ s1NYlBSRvBYmF16WO7L58LqJ3FoCzcYnXYeKaFLF9WdDaPFYl6HJPktvZFbfwwyoOAWad3v66
+ chZJWSv4YvuGXzUw+8zlkQotHIzVjX+V4Q61vvGr4phijW6etbDjnUSx3ECfrcnJd7kxpWP/J
+ l2Pis0BC69MqQuzSGgaPRlw4clxbgl7BipVLt+BiR5hdAH43Q2LYzpf/Qa7qoiLcAUc2yOuQ3
+ sXOah/cqonxg+s/w0x3FSoFPVvmkyFhlN99Kai+WCVABHEa8OoAVR5iVW8IsvCMM4ONdL7mHA
+ /LhQGDt9twu7pbBdKvSYX+0t7gq4B5U18tLMKVUmoddNow58+unq4dMVcV2gHwSB4DgT7WnQS
+ ukpLbvjVKENo67/dCcOQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The audio driver should not use a hardwired gpio number
-from the header. Change it to use a lookup table.
+The driver needs some low-level register access for setting
+the core and bus frequencies. These registers are owned
+by the clk driver, so move the low-level access into that
+driver with a slightly higher-level interface and avoid
+any machine header file dependencies.
 
-Cc: Mark Brown <broonie@kernel.org>
-Cc: alsa-devel@alsa-project.org
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: linux-clk@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/arm/mach-pxa/spitz.c                    | 33 ++++++++++-
- arch/arm/mach-pxa/{include/mach => }/spitz.h |  2 +-
- arch/arm/mach-pxa/spitz_pm.c                 |  2 +-
- sound/soc/pxa/spitz.c                        | 58 ++++++++------------
- 4 files changed, 57 insertions(+), 38 deletions(-)
- rename arch/arm/mach-pxa/{include/mach => }/spitz.h (99%)
+ arch/arm/mach-pxa/generic.h              |  1 -
+ arch/arm/mach-pxa/include/mach/generic.h |  5 --
+ arch/arm/mach-pxa/pxa3xx.c               |  1 +
+ drivers/clk/pxa/clk-pxa3xx.c             | 16 ++++++
+ drivers/cpufreq/pxa2xx-cpufreq.c         |  3 --
+ drivers/cpufreq/pxa3xx-cpufreq.c         | 64 +++++++++++++-----------
+ include/linux/clk/pxa.h                  |  9 ++++
+ 7 files changed, 62 insertions(+), 37 deletions(-)
+ delete mode 100644 arch/arm/mach-pxa/include/mach/generic.h
+ create mode 100644 include/linux/clk/pxa.h
 
-diff --git a/arch/arm/mach-pxa/spitz.c b/arch/arm/mach-pxa/spitz.c
-index a4fdc399d152..6028fd83c44d 100644
---- a/arch/arm/mach-pxa/spitz.c
-+++ b/arch/arm/mach-pxa/spitz.c
-@@ -44,7 +44,7 @@
- #include <linux/platform_data/mmc-pxamci.h>
- #include <linux/platform_data/usb-ohci-pxa27x.h>
- #include <linux/platform_data/video-pxafb.h>
--#include <mach/spitz.h>
-+#include "spitz.h"
- #include "sharpsl_pm.h"
+diff --git a/arch/arm/mach-pxa/generic.h b/arch/arm/mach-pxa/generic.h
+index 2f706ef97357..487eadb0fc2a 100644
+--- a/arch/arm/mach-pxa/generic.h
++++ b/arch/arm/mach-pxa/generic.h
+@@ -7,7 +7,6 @@
+  */
+ 
+ #include <linux/reboot.h>
+-#include <mach/generic.h>
+ 
+ struct irq_data;
+ 
+diff --git a/arch/arm/mach-pxa/include/mach/generic.h b/arch/arm/mach-pxa/include/mach/generic.h
+deleted file mode 100644
+index 613f6a299d0d..000000000000
+--- a/arch/arm/mach-pxa/include/mach/generic.h
++++ /dev/null
+@@ -1,5 +0,0 @@
+-#ifdef CONFIG_PXA3xx
+-extern unsigned	pxa3xx_get_clk_frequency_khz(int);
+-#else
+-#define pxa3xx_get_clk_frequency_khz(x)		(0)
+-#endif
+diff --git a/arch/arm/mach-pxa/pxa3xx.c b/arch/arm/mach-pxa/pxa3xx.c
+index 7881888107c7..f4657f4edb3b 100644
+--- a/arch/arm/mach-pxa/pxa3xx.c
++++ b/arch/arm/mach-pxa/pxa3xx.c
+@@ -25,6 +25,7 @@
+ #include <linux/platform_data/i2c-pxa.h>
+ #include <linux/platform_data/mmp_dma.h>
+ #include <linux/soc/pxa/cpu.h>
++#include <linux/clk/pxa.h>
+ 
+ #include <asm/mach/map.h>
+ #include <asm/suspend.h>
+diff --git a/drivers/clk/pxa/clk-pxa3xx.c b/drivers/clk/pxa/clk-pxa3xx.c
+index 027b78183565..60a0db4f3790 100644
+--- a/drivers/clk/pxa/clk-pxa3xx.c
++++ b/drivers/clk/pxa/clk-pxa3xx.c
+@@ -16,6 +16,7 @@
+ #include <linux/of.h>
+ #include <linux/soc/pxa/cpu.h>
  #include <mach/smemc.h>
++#include <linux/clk/pxa.h>
+ #include <mach/pxa3xx-regs.h>
  
-@@ -948,11 +948,42 @@ static void __init spitz_i2c_init(void)
- static inline void spitz_i2c_init(void) {}
- #endif
+ #include <dt-bindings/clock/pxa-clock.h>
+@@ -79,6 +80,21 @@ unsigned int pxa3xx_get_clk_frequency_khz(int info)
+ 	return (unsigned int)clks[0] / KHz;
+ }
  
-+static struct gpiod_lookup_table spitz_audio_gpio_table = {
-+	.dev_id = "spitz-audio",
-+	.table = {
-+		GPIO_LOOKUP("sharp-scoop.0", SPITZ_GPIO_MUTE_L - SPITZ_SCP_GPIO_BASE,
-+			    "mute-l", GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP("sharp-scoop.0", SPITZ_GPIO_MUTE_R - SPITZ_SCP_GPIO_BASE,
-+			    "mute-r", GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP("sharp-scoop.1", SPITZ_GPIO_MIC_BIAS - SPITZ_SCP2_GPIO_BASE,
-+			    "mic", GPIO_ACTIVE_HIGH),
-+		{ },
-+	},
-+};
++void pxa3xx_clk_update_accr(u32 disable, u32 enable, u32 xclkcfg, u32 mask)
++{
++	u32 accr = ACCR;
 +
-+static struct gpiod_lookup_table akita_audio_gpio_table = {
-+	.dev_id = "spitz-audio",
-+	.table = {
-+		GPIO_LOOKUP("sharp-scoop.0", SPITZ_GPIO_MUTE_L - SPITZ_SCP_GPIO_BASE,
-+			    "mute-l", GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP("sharp-scoop.0", SPITZ_GPIO_MUTE_R - SPITZ_SCP_GPIO_BASE,
-+			    "mute-r", GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP("gpio-pxa", AKITA_GPIO_MIC_BIAS - AKITA_IOEXP_GPIO_BASE,
-+			    "mic", GPIO_ACTIVE_HIGH),
-+		{ },
-+	},
-+};
++	accr &= ~disable;
++	accr |= enable;
 +
- /******************************************************************************
-  * Audio devices
-  ******************************************************************************/
- static inline void spitz_audio_init(void)
- {
-+	if (machine_is_akita())
-+		gpiod_add_lookup_table(&akita_audio_gpio_table);
-+	else
-+		gpiod_add_lookup_table(&spitz_audio_gpio_table);
++	ACCR = accr;
++	if (xclkcfg)
++		__asm__("mcr p14, 0, %0, c6, c0, 0\n" : : "r"(xclkcfg));
 +
- 	platform_device_register_simple("spitz-audio", -1, NULL, 0);
- }
- 
-diff --git a/arch/arm/mach-pxa/include/mach/spitz.h b/arch/arm/mach-pxa/spitz.h
-similarity index 99%
-rename from arch/arm/mach-pxa/include/mach/spitz.h
-rename to arch/arm/mach-pxa/spitz.h
-index 04828d8918aa..f97e3ebd762d 100644
---- a/arch/arm/mach-pxa/include/mach/spitz.h
-+++ b/arch/arm/mach-pxa/spitz.h
-@@ -11,7 +11,7 @@
- #define __ASM_ARCH_SPITZ_H  1
- #endif
- 
--#include "irqs.h" /* PXA_NR_BUILTIN_GPIO, PXA_GPIO_TO_IRQ */
-+#include <mach/irqs.h> /* PXA_NR_BUILTIN_GPIO, PXA_GPIO_TO_IRQ */
- #include <linux/fb.h>
- 
- /* Spitz/Akita GPIOs */
-diff --git a/arch/arm/mach-pxa/spitz_pm.c b/arch/arm/mach-pxa/spitz_pm.c
-index 201dabe883b6..6689b67f9ce5 100644
---- a/arch/arm/mach-pxa/spitz_pm.c
-+++ b/arch/arm/mach-pxa/spitz_pm.c
-@@ -19,7 +19,7 @@
- #include <asm/irq.h>
- #include <asm/mach-types.h>
- 
--#include <mach/spitz.h>
-+#include "spitz.h"
- #include "pxa27x.h"
- #include "sharpsl_pm.h"
- 
-diff --git a/sound/soc/pxa/spitz.c b/sound/soc/pxa/spitz.c
-index f7babffb7228..8fcdade9c8dd 100644
---- a/sound/soc/pxa/spitz.c
-+++ b/sound/soc/pxa/spitz.c
-@@ -14,13 +14,12 @@
- #include <linux/timer.h>
- #include <linux/interrupt.h>
- #include <linux/platform_device.h>
--#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <sound/core.h>
- #include <sound/pcm.h>
- #include <sound/soc.h>
- 
- #include <asm/mach-types.h>
--#include <mach/spitz.h>
- #include "../codecs/wm8750.h"
- #include "pxa2xx-i2s.h"
- 
-@@ -37,7 +36,7 @@
- 
- static int spitz_jack_func;
- static int spitz_spk_func;
--static int spitz_mic_gpio;
-+static struct gpio_desc *gpiod_mic, *gpiod_mute_l, *gpiod_mute_r;
- 
- static void spitz_ext_control(struct snd_soc_dapm_context *dapm)
++	while ((ACSR & mask) != (accr & mask))
++		cpu_relax();
++}
++
+ static unsigned long clk_pxa3xx_ac97_get_rate(struct clk_hw *hw,
+ 					     unsigned long parent_rate)
  {
-@@ -56,8 +55,8 @@ static void spitz_ext_control(struct snd_soc_dapm_context *dapm)
- 		snd_soc_dapm_disable_pin_unlocked(dapm, "Mic Jack");
- 		snd_soc_dapm_disable_pin_unlocked(dapm, "Line Jack");
- 		snd_soc_dapm_enable_pin_unlocked(dapm, "Headphone Jack");
--		gpio_set_value(SPITZ_GPIO_MUTE_L, 1);
--		gpio_set_value(SPITZ_GPIO_MUTE_R, 1);
-+		gpiod_set_value(gpiod_mute_l, 1);
-+		gpiod_set_value(gpiod_mute_r, 1);
- 		break;
- 	case SPITZ_MIC:
- 		/* enable mic jack and bias, mute hp */
-@@ -65,8 +64,8 @@ static void spitz_ext_control(struct snd_soc_dapm_context *dapm)
- 		snd_soc_dapm_disable_pin_unlocked(dapm, "Headset Jack");
- 		snd_soc_dapm_disable_pin_unlocked(dapm, "Line Jack");
- 		snd_soc_dapm_enable_pin_unlocked(dapm, "Mic Jack");
--		gpio_set_value(SPITZ_GPIO_MUTE_L, 0);
--		gpio_set_value(SPITZ_GPIO_MUTE_R, 0);
-+		gpiod_set_value(gpiod_mute_l, 0);
-+		gpiod_set_value(gpiod_mute_r, 0);
- 		break;
- 	case SPITZ_LINE:
- 		/* enable line jack, disable mic bias and mute hp */
-@@ -74,8 +73,8 @@ static void spitz_ext_control(struct snd_soc_dapm_context *dapm)
- 		snd_soc_dapm_disable_pin_unlocked(dapm, "Headset Jack");
- 		snd_soc_dapm_disable_pin_unlocked(dapm, "Mic Jack");
- 		snd_soc_dapm_enable_pin_unlocked(dapm, "Line Jack");
--		gpio_set_value(SPITZ_GPIO_MUTE_L, 0);
--		gpio_set_value(SPITZ_GPIO_MUTE_R, 0);
-+		gpiod_set_value(gpiod_mute_l, 0);
-+		gpiod_set_value(gpiod_mute_r, 0);
- 		break;
- 	case SPITZ_HEADSET:
- 		/* enable and unmute headset jack enable mic bias, mute L hp */
-@@ -83,8 +82,8 @@ static void spitz_ext_control(struct snd_soc_dapm_context *dapm)
- 		snd_soc_dapm_enable_pin_unlocked(dapm, "Mic Jack");
- 		snd_soc_dapm_disable_pin_unlocked(dapm, "Line Jack");
- 		snd_soc_dapm_enable_pin_unlocked(dapm, "Headset Jack");
--		gpio_set_value(SPITZ_GPIO_MUTE_L, 0);
--		gpio_set_value(SPITZ_GPIO_MUTE_R, 1);
-+		gpiod_set_value(gpiod_mute_l, 0);
-+		gpiod_set_value(gpiod_mute_r, 1);
- 		break;
- 	case SPITZ_HP_OFF:
+diff --git a/drivers/cpufreq/pxa2xx-cpufreq.c b/drivers/cpufreq/pxa2xx-cpufreq.c
+index e74d36d6f78d..ed1ae061a687 100644
+--- a/drivers/cpufreq/pxa2xx-cpufreq.c
++++ b/drivers/cpufreq/pxa2xx-cpufreq.c
+@@ -27,9 +27,6 @@
+ #include <linux/soc/pxa/cpu.h>
+ #include <linux/io.h>
  
-@@ -93,8 +92,8 @@ static void spitz_ext_control(struct snd_soc_dapm_context *dapm)
- 		snd_soc_dapm_disable_pin_unlocked(dapm, "Headset Jack");
- 		snd_soc_dapm_disable_pin_unlocked(dapm, "Mic Jack");
- 		snd_soc_dapm_disable_pin_unlocked(dapm, "Line Jack");
--		gpio_set_value(SPITZ_GPIO_MUTE_L, 0);
--		gpio_set_value(SPITZ_GPIO_MUTE_R, 0);
-+		gpiod_set_value(gpiod_mute_l, 0);
-+		gpiod_set_value(gpiod_mute_r, 0);
- 		break;
- 	}
+-#include <mach/pxa2xx-regs.h>
+-#include <mach/smemc.h>
+-
+ #ifdef DEBUG
+ static unsigned int freq_debug;
+ module_param(freq_debug, uint, 0);
+diff --git a/drivers/cpufreq/pxa3xx-cpufreq.c b/drivers/cpufreq/pxa3xx-cpufreq.c
+index d3b398b4aa6a..4afa48d172db 100644
+--- a/drivers/cpufreq/pxa3xx-cpufreq.c
++++ b/drivers/cpufreq/pxa3xx-cpufreq.c
+@@ -9,12 +9,10 @@
+ #include <linux/init.h>
+ #include <linux/cpufreq.h>
+ #include <linux/soc/pxa/cpu.h>
++#include <linux/clk/pxa.h>
+ #include <linux/slab.h>
+ #include <linux/io.h>
  
-@@ -199,7 +198,7 @@ static int spitz_set_spk(struct snd_kcontrol *kcontrol,
- static int spitz_mic_bias(struct snd_soc_dapm_widget *w,
- 	struct snd_kcontrol *k, int event)
+-#include <mach/generic.h>
+-#include <mach/pxa3xx-regs.h>
+-
+ #define HSS_104M	(0)
+ #define HSS_156M	(1)
+ #define HSS_208M	(2)
+@@ -35,6 +33,28 @@
+ #define DMCFS_26M	(0)
+ #define DMCFS_260M	(3)
+ 
++#define ACCR_XPDIS		(1 << 31)	/* Core PLL Output Disable */
++#define ACCR_SPDIS		(1 << 30)	/* System PLL Output Disable */
++#define ACCR_D0CS		(1 << 26)	/* D0 Mode Clock Select */
++#define ACCR_PCCE		(1 << 11)	/* Power Mode Change Clock Enable */
++#define ACCR_DDR_D0CS		(1 << 7)	/* DDR SDRAM clock frequency in D0CS (PXA31x only) */
++
++#define ACCR_SMCFS_MASK		(0x7 << 23)	/* Static Memory Controller Frequency Select */
++#define ACCR_SFLFS_MASK		(0x3 << 18)	/* Frequency Select for Internal Memory Controller */
++#define ACCR_XSPCLK_MASK	(0x3 << 16)	/* Core Frequency during Frequency Change */
++#define ACCR_HSS_MASK		(0x3 << 14)	/* System Bus-Clock Frequency Select */
++#define ACCR_DMCFS_MASK		(0x3 << 12)	/* Dynamic Memory Controller Clock Frequency Select */
++#define ACCR_XN_MASK		(0x7 << 8)	/* Core PLL Turbo-Mode-to-Run-Mode Ratio */
++#define ACCR_XL_MASK		(0x1f)		/* Core PLL Run-Mode-to-Oscillator Ratio */
++
++#define ACCR_SMCFS(x)		(((x) & 0x7) << 23)
++#define ACCR_SFLFS(x)		(((x) & 0x3) << 18)
++#define ACCR_XSPCLK(x)		(((x) & 0x3) << 16)
++#define ACCR_HSS(x)		(((x) & 0x3) << 14)
++#define ACCR_DMCFS(x)		(((x) & 0x3) << 12)
++#define ACCR_XN(x)		(((x) & 0x7) << 8)
++#define ACCR_XL(x)		((x) & 0x1f)
++
+ struct pxa3xx_freq_info {
+ 	unsigned int cpufreq_mhz;
+ 	unsigned int core_xl : 5;
+@@ -112,41 +132,29 @@ static int setup_freqs_table(struct cpufreq_policy *policy,
+ 
+ static void __update_core_freq(struct pxa3xx_freq_info *info)
  {
--	gpio_set_value_cansleep(spitz_mic_gpio, SND_SOC_DAPM_EVENT_ON(event));
-+	gpiod_set_value_cansleep(gpiod_mic, SND_SOC_DAPM_EVENT_ON(event));
- 	return 0;
+-	uint32_t mask = ACCR_XN_MASK | ACCR_XL_MASK;
+-	uint32_t accr = ACCR;
+-	uint32_t xclkcfg;
+-
+-	accr &= ~(ACCR_XN_MASK | ACCR_XL_MASK | ACCR_XSPCLK_MASK);
+-	accr |= ACCR_XN(info->core_xn) | ACCR_XL(info->core_xl);
++	u32 mask, disable, enable, xclkcfg;
+ 
++	mask	= ACCR_XN_MASK | ACCR_XL_MASK;
++	disable = mask | ACCR_XSPCLK_MASK;
++	enable  = ACCR_XN(info->core_xn) | ACCR_XL(info->core_xl);
+ 	/* No clock until core PLL is re-locked */
+-	accr |= ACCR_XSPCLK(XSPCLK_NONE);
+-
++	enable |= ACCR_XSPCLK(XSPCLK_NONE);
+ 	xclkcfg = (info->core_xn == 2) ? 0x3 : 0x2;	/* turbo bit */
+ 
+-	ACCR = accr;
+-	__asm__("mcr p14, 0, %0, c6, c0, 0\n" : : "r"(xclkcfg));
+-
+-	while ((ACSR & mask) != (accr & mask))
+-		cpu_relax();
++	pxa3xx_clk_update_accr(disable, enable, xclkcfg, mask);
  }
  
-@@ -287,39 +286,28 @@ static int spitz_probe(struct platform_device *pdev)
- 	struct snd_soc_card *card = &snd_soc_spitz;
- 	int ret;
- 
--	if (machine_is_akita())
--		spitz_mic_gpio = AKITA_GPIO_MIC_BIAS;
--	else
--		spitz_mic_gpio = SPITZ_GPIO_MIC_BIAS;
--
--	ret = gpio_request(spitz_mic_gpio, "MIC GPIO");
--	if (ret)
--		goto err1;
--
--	ret = gpio_direction_output(spitz_mic_gpio, 0);
--	if (ret)
--		goto err2;
-+	gpiod_mic = devm_gpiod_get(&pdev->dev, "mic", GPIOD_OUT_LOW);
-+	if (IS_ERR(gpiod_mic))
-+		return PTR_ERR(gpiod_mic);
-+	gpiod_mute_l = devm_gpiod_get(&pdev->dev, "mute-l", GPIOD_OUT_LOW);
-+	if (IS_ERR(gpiod_mute_l))
-+		return PTR_ERR(gpiod_mute_l);
-+	gpiod_mute_r = devm_gpiod_get(&pdev->dev, "mute-r", GPIOD_OUT_LOW);
-+	if (IS_ERR(gpiod_mute_r))
-+		return PTR_ERR(gpiod_mute_r);
- 
- 	card->dev = &pdev->dev;
- 
- 	ret = devm_snd_soc_register_card(&pdev->dev, card);
--	if (ret) {
-+	if (ret)
- 		dev_err(&pdev->dev, "snd_soc_register_card() failed: %d\n",
- 			ret);
--		goto err2;
--	}
--
--	return 0;
- 
--err2:
--	gpio_free(spitz_mic_gpio);
--err1:
- 	return ret;
- }
- 
- static int spitz_remove(struct platform_device *pdev)
+ static void __update_bus_freq(struct pxa3xx_freq_info *info)
  {
--	gpio_free(spitz_mic_gpio);
- 	return 0;
+-	uint32_t mask;
+-	uint32_t accr = ACCR;
+-
+-	mask = ACCR_SMCFS_MASK | ACCR_SFLFS_MASK | ACCR_HSS_MASK |
+-		ACCR_DMCFS_MASK;
+-
+-	accr &= ~mask;
+-	accr |= ACCR_SMCFS(info->smcfs) | ACCR_SFLFS(info->sflfs) |
+-		ACCR_HSS(info->hss) | ACCR_DMCFS(info->dmcfs);
++	u32 mask, disable, enable;
+ 
+-	ACCR = accr;
++	mask	= ACCR_SMCFS_MASK | ACCR_SFLFS_MASK | ACCR_HSS_MASK |
++		  ACCR_DMCFS_MASK;
++	disable = mask;
++	enable	= ACCR_SMCFS(info->smcfs) | ACCR_SFLFS(info->sflfs) |
++		  ACCR_HSS(info->hss) | ACCR_DMCFS(info->dmcfs);
+ 
+-	while ((ACSR & mask) != (accr & mask))
+-		cpu_relax();
++	pxa3xx_clk_update_accr(disable, enable, 0, mask);
  }
  
+ static unsigned int pxa3xx_cpufreq_get(unsigned int cpu)
+diff --git a/include/linux/clk/pxa.h b/include/linux/clk/pxa.h
+new file mode 100644
+index 000000000000..e5516c608c99
+--- /dev/null
++++ b/include/linux/clk/pxa.h
+@@ -0,0 +1,9 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++
++#ifdef CONFIG_PXA3xx
++extern unsigned	pxa3xx_get_clk_frequency_khz(int);
++extern void pxa3xx_clk_update_accr(u32 disable, u32 enable, u32 xclkcfg, u32 mask);
++#else
++#define pxa3xx_get_clk_frequency_khz(x)		(0)
++#define pxa3xx_clk_update_accr(disable, enable, xclkcfg, mask) do { } while (0)
++#endif
 -- 
 2.20.0
 
