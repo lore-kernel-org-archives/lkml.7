@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4973CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38EF0CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A91EF21852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CA4821852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:16:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436993;
-	bh=lcRJMau4MilgjA1G5AsVvBldze0ky+F5z1BAy1+tpLc=;
+	s=default; t=1571436996;
+	bh=H12XsaAVdOeeHzLMIlQdJrBU963KqbPjLFf+EN77ZTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TS8Xd/tkwc8Xq7UXZi8OqWl7xMgJx1e5Shi4KdIsx1U7AbsAdhfvr/Fv1TH1TWPPZ
-	 HUGfE/xhNSwCt1qjtqTmYZ0bs3iafO8IgFaaziYEi3W2Guv3oGv/AeKtI2vFWG56Ta
-	 c4+oTmzmw9vohdMxQgfg8hTNm3sqSVAWYl66HB6w=
+	b=qRFiZBFJr9+LXs//mlX1gB/97L0Tkc8lHKFnLtcNYKHp6qKaMlP/vom9kaLMV31XK
+	 I6YVPzAtlK55Xpv3bjOjbVYM8gHwrapm5OtPmJSKckh81VdmdT2yZCF6IwHC6eHhvS
+	 SlnYXUp+17k+pzxISpQ62p8swwnZKYEODDhzh5R8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393008AbfJRWQc (ORCPT
+        id S2392954AbfJRWQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:16:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40676 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:16:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387615AbfJRWIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:08:16 -0400
+        id S2387662AbfJRWIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:08:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DB7B22459;
-        Fri, 18 Oct 2019 22:08:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E3A7222D4;
+        Fri, 18 Oct 2019 22:08:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436495;
-        bh=lcRJMau4MilgjA1G5AsVvBldze0ky+F5z1BAy1+tpLc=;
+        s=default; t=1571436497;
+        bh=H12XsaAVdOeeHzLMIlQdJrBU963KqbPjLFf+EN77ZTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BOog/SHyF2DZUbNgKscrCQe5L1ThAsSEB4Tcx9iGVkQX61W2QusUNmKQcveenjxju
-         qoDJqRC1QW7Ni0f3VmcaB0u3IcpDrZGFpD01aqLTO2SBf9TwEqqp+RGXdoAwlcp7kL
-         qS1WpWaDNJmyzEsU3z+WJlkbqnggMCHMfXaQ3U6k=
+        b=mQwi+LXRG/wOHZTyi4GXvezuQoXlgqhmwQqapGKgo21II7SxmDx5cZTu9DoKW3iQ8
+         1hJzM+2EzGWvDq6pqq2KTn6LhGp5Eaz0ePD8k79YdH+HGuBEVsCuTVTpB7ZezX2GWI
+         bzeQLjti8mA15jbLGTeLKkzJzE36RM/+4K/mRsLY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brian Norris <briannorris@chromium.org>,
-        Christian Kujau <lists@nerdbynature.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
-        Genki Sky <sky@genki.is>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 09/56] scripts/setlocalversion: Improve -dirty check with git-status --no-optional-locks
-Date:   Fri, 18 Oct 2019 18:07:06 -0400
-Message-Id: <20191018220753.10002-9-sashal@kernel.org>
+Cc:     Jan-Marek Glogowski <glogow@fbihome.de>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 11/56] usb: handle warm-reset port requests on hub resume
+Date:   Fri, 18 Oct 2019 18:07:08 -0400
+Message-Id: <20191018220753.10002-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
 References: <20191018220753.10002-1-sashal@kernel.org>
@@ -63,66 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+From: Jan-Marek Glogowski <glogow@fbihome.de>
 
-[ Upstream commit ff64dd4857303dd5550faed9fd598ac90f0f2238 ]
+[ Upstream commit 4fdc1790e6a9ef22399c6bc6e63b80f4609f3b7e ]
 
-git-diff-index does not refresh the index for you, so using it for a
-"-dirty" check can give misleading results. Commit 6147b1cf19651
-("scripts/setlocalversion: git: Make -dirty check more robust") tried to
-fix this by switching to git-status, but it overlooked the fact that
-git-status also writes to the .git directory of the source tree, which
-is definitely not kosher for an out-of-tree (O=) build. That is getting
-reverted.
+On plug-in of my USB-C device, its USB_SS_PORT_LS_SS_INACTIVE
+link state bit is set. Greping all the kernel for this bit shows
+that the port status requests a warm-reset this way.
 
-Fortunately, git-status now supports avoiding writing to the index via
-the --no-optional-locks flag, as of git 2.14. It still calculates an
-up-to-date index, but it avoids writing it out to the .git directory.
+This just happens, if its the only device on the root hub, the hub
+therefore resumes and the HCDs status_urb isn't yet available.
+If a warm-reset request is detected, this sets the hubs event_bits,
+which will prevent any auto-suspend and allows the hubs workqueue
+to warm-reset the port later in port_event.
 
-So, let's retry the solution from commit 6147b1cf19651 using this new
-flag first, and if it fails, we assume this is an older version of git
-and just use the old git-diff-index method.
-
-It's hairy to get the 'grep -vq' (inverted matching) correct by stashing
-the output of git-status (you have to be careful about the difference
-betwen "empty stdin" and "blank line on stdin"), so just pipe the output
-directly to grep and use a regex that's good enough for both the
-git-status and git-diff-index version.
-
-Cc: Christian Kujau <lists@nerdbynature.de>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Suggested-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Tested-by: Genki Sky <sky@genki.is>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Jan-Marek Glogowski <glogow@fbihome.de>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/setlocalversion | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/usb/core/hub.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/scripts/setlocalversion b/scripts/setlocalversion
-index 71f39410691b6..365b3c2b8f431 100755
---- a/scripts/setlocalversion
-+++ b/scripts/setlocalversion
-@@ -73,8 +73,16 @@ scm_version()
- 			printf -- '-svn%s' "`git svn find-rev $head`"
- 		fi
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index b543a4730ef24..bb20aa433e984 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -104,6 +104,8 @@ EXPORT_SYMBOL_GPL(ehci_cf_port_reset_rwsem);
+ static void hub_release(struct kref *kref);
+ static int usb_reset_and_verify_device(struct usb_device *udev);
+ static int hub_port_disable(struct usb_hub *hub, int port1, int set_state);
++static bool hub_port_warm_reset_required(struct usb_hub *hub, int port1,
++		u16 portstatus);
  
--		# Check for uncommitted changes
--		if git diff-index --name-only HEAD | grep -qv "^scripts/package"; then
-+		# Check for uncommitted changes.
-+		# First, with git-status, but --no-optional-locks is only
-+		# supported in git >= 2.14, so fall back to git-diff-index if
-+		# it fails. Note that git-diff-index does not refresh the
-+		# index, so it may give misleading results. See
-+		# git-update-index(1), git-diff-index(1), and git-status(1).
-+		if {
-+			git --no-optional-locks status -uno --porcelain 2>/dev/null ||
-+			git diff-index --name-only HEAD
-+		} | grep -qvE '^(.. )?scripts/package'; then
- 			printf '%s' -dirty
- 		fi
+ static inline char *portspeed(struct usb_hub *hub, int portstatus)
+ {
+@@ -1110,6 +1112,11 @@ static void hub_activate(struct usb_hub *hub, enum hub_activation_type type)
+ 						   USB_PORT_FEAT_ENABLE);
+ 		}
  
++		/* Make sure a warm-reset request is handled by port_event */
++		if (type == HUB_RESUME &&
++		    hub_port_warm_reset_required(hub, port1, portstatus))
++			set_bit(port1, hub->event_bits);
++
+ 		/*
+ 		 * Add debounce if USB3 link is in polling/link training state.
+ 		 * Link will automatically transition to Enabled state after
 -- 
 2.20.1
 
