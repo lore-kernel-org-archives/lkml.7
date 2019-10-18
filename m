@@ -2,121 +2,165 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C582CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A860CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAEA62064B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:19:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LvCathnn"
+	by mail.kernel.org (Postfix) with ESMTP id 6E2CB2064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:19:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405129AbfJRKTM (ORCPT
+        id S2408103AbfJRKTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 06:19:12 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35911 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387890AbfJRKTM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 06:19:12 -0400
-Received: by mail-wr1-f65.google.com with SMTP id w18so5072388wrt.3
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 03:19:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=fnATaW9ephvwvPIyDu9BKf/c05TQ0wSwN/dIqZgvugk=;
-        b=LvCathnnZqgDCLo1l3AW4XbNKY2KSY04m6yhoRjC5AmKX5HWfnD/vppmA2kwp8XxgP
-         5+1xYROysX0afo8bdEPzxPmIQ3ZwxJYRFLWMsxcApdmMbJ1pKJy9hy05a2Dxxf/LTZY7
-         QzPvLXQVHsYsGZtd5hA9dQKrGqw7BY4cxkFf9JqMc6ULVUF/ZWOHSICP3LCrDqWwfkaS
-         7zKRHa69Qn9hpQ87SNVP9peJdRBJhaYRTNd+RbOKcVZt4eOW02yg214Z2N6ZB8W+YHOK
-         jihUPvamEx4I11Io1flJFanKe6JJywvkdhvUV7ddDJWKEj4toZdSJiOCvUB0DXqTtojM
-         UwSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=fnATaW9ephvwvPIyDu9BKf/c05TQ0wSwN/dIqZgvugk=;
-        b=T7U/TsU4Jr8w0onDGrjG2FJ0nWJ6krSXHsiklsKi7AkWtvCJSivizHWrEjqQv3Miqn
-         Tobf5cDyUqxwjRs7gDuIm3mBQg78VI0g5saidjKIYt/jVMezxix+9T82HbuBnzmK1bDM
-         phNxSWlPKt0t0S7eR12tq3rCzE3MnnXMaEGwdfmSYUtDrVVsZM0jTQIh79IyJtKUIUjQ
-         aesUsKMtVSYEOn+Sr+BYZ4Va3Mlj9l8ADv8gFZ9OPd6SLstufdZdBeeZaL9VLZgMKMxi
-         zWnPGpM49XaE8dF9h+3yA9hbjT0MJDS8oGoiZucjI7i+dIHFwrU0E9+pkvaU5QtQYa+v
-         Uutw==
-X-Gm-Message-State: APjAAAW+BTbVIA8HkT1toht+ng3MqELXGDD3LjxjofkgK4/Fiz/j4FWA
-        xMNz1ANT8xmwmsY/d0Ufrnb/Vofl
-X-Google-Smtp-Source: APXvYqywHV94RcJEq0nHkmWdndohv2Iz2ONUjsUdcV0JFte3xCtqDbRfCgZC+JVDIvXFXmDAMm9hFg==
-X-Received: by 2002:a05:6000:92:: with SMTP id m18mr3902567wrx.105.1571393950050;
-        Fri, 18 Oct 2019 03:19:10 -0700 (PDT)
-Received: from debian.office.codethink.co.uk. ([78.40.148.180])
-        by smtp.gmail.com with ESMTPSA id d78sm4675028wmd.47.2019.10.18.03.19.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 18 Oct 2019 03:19:09 -0700 (PDT)
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Subject: [PATCH] staging: rtl8723bs: reduce stack usage of cfg80211_rtw_scan
-Date:   Fri, 18 Oct 2019 11:18:54 +0100
-Message-Id: <20191018101854.31876-1-sudipm.mukherjee@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Fri, 18 Oct 2019 06:19:54 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:33568 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2387890AbfJRKTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 06:19:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A1B0BAB6;
+        Fri, 18 Oct 2019 03:19:31 -0700 (PDT)
+Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D4C6C3F6C4;
+        Fri, 18 Oct 2019 03:19:30 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 11:19:24 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cpufreq: flush any pending policy update work scheduled
+ before freeing
+Message-ID: <20191018101924.GA25540@bogus>
+References: <20191017163503.30791-1-sudeep.holla@arm.com>
+ <CAJZ5v0gTpK0cJhsWGVvs-=Sbgcia0jz2j5QNYRL+1wOz=2xkJQ@mail.gmail.com>
+ <CAJZ5v0h0ioEZqLuaW1jz_8jRuGYZLQS3fbpv9ctyV9ucXb1WiA@mail.gmail.com>
+ <20191018055533.GC31836@e107533-lin.cambridge.arm.com>
+ <20191018060247.g5asfuh3kncoj7kl@vireshk-i7>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018060247.g5asfuh3kncoj7kl@vireshk-i7>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The build of xtensa allmodconfig gives warning of:
-In function 'cfg80211_rtw_scan':
-warning: the frame size of 1040 bytes is larger than 1024 bytes
+On Fri, Oct 18, 2019 at 11:32:47AM +0530, Viresh Kumar wrote:
+> On 18-10-19, 06:55, Sudeep Holla wrote:
+> > On Thu, Oct 17, 2019 at 11:26:54PM +0200, Rafael J. Wysocki wrote:
+> > > On Thu, Oct 17, 2019 at 9:36 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > >
+> > > > On Thu, Oct 17, 2019 at 6:35 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> > > > >
+> > > > > dev_pm_qos_remove_request ends calling {max,min}_freq_req QoS notifiers
+> > > > > which schedule policy update work. It may end up racing with the freeing
+> > > > > the policy and unregistering the driver.
+> > > > >
+> > > > > One possible race is as below where the cpufreq_driver is unregistered
+> > > > > but the scheduled work gets executed at later stage when cpufreq_driver
+> > > > > is NULL(i.e. after freeing the policy and driver)
+> > > > >
+> > > > > Unable to handle kernel NULL pointer dereference at virtual address 0000001c
+> > > > > pgd = (ptrval)
+> > > > > [0000001c] *pgd=80000080204003, *pmd=00000000
+> > > > > Internal error: Oops: 206 [#1] SMP THUMB2
+> > > > > Modules linked in:
+> > > > > CPU: 0 PID: 34 Comm: kworker/0:1 Not tainted 5.4.0-rc3-00006-g67f5a8081a4b #86
+> > > > > Hardware name: ARM-Versatile Express
+> > > > > Workqueue: events handle_update
+> > > > > PC is at cpufreq_set_policy+0x58/0x228
+> > > > > LR is at dev_pm_qos_read_value+0x77/0xac
+> > > > > Control: 70c5387d  Table: 80203000  DAC: fffffffd
+> > > > > Process kworker/0:1 (pid: 34, stack limit = 0x(ptrval))
+> > > > >         (cpufreq_set_policy) from (refresh_frequency_limits.part.24+0x37/0x48)
+> > > > >         (refresh_frequency_limits.part.24) from (handle_update+0x2f/0x38)
+> > > > >         (handle_update) from (process_one_work+0x16d/0x3cc)
+> > > > >         (process_one_work) from (worker_thread+0xff/0x414)
+> > > > >         (worker_thread) from (kthread+0xff/0x100)
+> > > > >         (kthread) from (ret_from_fork+0x11/0x28)
+> > > > >
+> > > > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > > > > Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> > > > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> > > > > ---
+> > > > >  drivers/cpufreq/cpufreq.c | 3 +++
+> > > > >  1 file changed, 3 insertions(+)
+> > > > >
+> > > > > Hi Rafael, Viresh,
+> > > > >
+> > > > > This fixed the boot issue I reported[1] on TC2 with bL switcher enabled.
+> > > > > I have based this patch on -rc3 and not on top of your patches. This
+> > > > > only fixes the boot issue but I hit the other crashes while continuously
+> > > > > switching on and off the bL switcher that register/unregister the driver
+> > > > > Your patch series fixes them. I can based this on top of those if you
+> > > > > prefer.
+> > > > >
+> > > > > Regards,
+> > > > > Sudeep
+> > > > >
+> > > > > [1] https://lore.kernel.org/linux-pm/20191015155735.GA29105@bogus/
+> > > > >
+> > > > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > > > > index c52d6fa32aac..b703c29a84be 100644
+> > > > > --- a/drivers/cpufreq/cpufreq.c
+> > > > > +++ b/drivers/cpufreq/cpufreq.c
+> > > > > @@ -1278,6 +1278,9 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
+> > > > >         }
+> > > > >
+> > > > >         dev_pm_qos_remove_request(policy->min_freq_req);
+> > > > > +       /* flush the pending policy->update work before freeing the policy */
+> > > > > +       if (work_pending(&policy->update))
+> > > >
+> > > > Isn't this racy?
+> > > >
+> > > > It still may be running if the pending bit is clear and we still need
+> > > > to wait for it then, don't we?
+> > > >
+> > > > Why don't you do an unconditional flush_work() here?
+> > > 
+> > > You may as well do a cancel_work_sync() here, because whether or not
+> > > the last update of the policy happens before it goes away is a matter
+> > > of timing in any case
+> > 
+> > In fact that's the first thing I tried to fix the issue I was seeing.
+> > But I then thought it would be better to complete the update as the PM
+> > QoS were getting updated back to DEFAULT values for the device. Even
+> > this works.
+> > 
+> > What is your preference ? flush_work or cancel_work_sync ? I will
+> > update accordingly. I may need to do some more testing with
+> > cancel_work_sync as I just checked that quickly to confirm the race.
+> 
+> As I said in the other email, this work didn't come as a result of
+> removal of the qos request from cpufreq core and so must have come
+> from other thermal or similar events.
 
-Allocate memory for ssid dynamically to reduce the stack usage, as an
-added benifit we can remove the memset by using kzalloc while allocating
-memory.
+I don't think so. For sure not because of any thermal events. I didn't
+have log handy and hence had to wait till I was next to hardware.
 
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
----
- drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+This is log:
+ cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max before
+ cpufreq: cpufreq_notifier_max: schedule_work(&policy->update)
+ cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max after
+ cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min before
+ cpufreq: cpufreq_notifier_min: schedule_work(&policy->update)
+ cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min after
+ cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max before
+ cpufreq: cpufreq_notifier_max: schedule_work(&policy->update)
+ cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request max after
+ cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min before
+ cpufreq: cpufreq_notifier_min: schedule_work(&policy->update)
+ cpufreq: cpufreq_policy_free: dev_pm_qos_remove_request min after
 
-diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-index 8555f52ceb7c..59ea4fce9a08 100644
---- a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-+++ b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-@@ -1512,7 +1512,7 @@ static int cfg80211_rtw_scan(struct wiphy *wiphy
- 	int i;
- 	u8 _status = false;
- 	int ret = 0;
--	struct ndis_802_11_ssid ssid[RTW_SSID_SCAN_AMOUNT];
-+	struct ndis_802_11_ssid *ssid = NULL;
- 	struct rtw_ieee80211_channel ch[RTW_CHANNEL_SCAN_AMOUNT];
- 	u8 survey_times =3;
- 	u8 survey_times_for_one_ch =6;
-@@ -1603,7 +1603,13 @@ static int cfg80211_rtw_scan(struct wiphy *wiphy
- 		goto check_need_indicate_scan_done;
- 	}
- 
--	memset(ssid, 0, sizeof(struct ndis_802_11_ssid)*RTW_SSID_SCAN_AMOUNT);
-+	ssid = kzalloc(RTW_SSID_SCAN_AMOUNT * sizeof(struct ndis_802_11_ssid),
-+		       GFP_KERNEL);
-+	if (!ssid) {
-+		ret = -ENOMEM;
-+		goto check_need_indicate_scan_done;
-+	}
-+
- 	/* parsing request ssids, n_ssids */
- 	for (i = 0; i < request->n_ssids && i < RTW_SSID_SCAN_AMOUNT; i++) {
- 		#ifdef DEBUG_CFG80211
-@@ -1647,6 +1653,7 @@ static int cfg80211_rtw_scan(struct wiphy *wiphy
- 	}
- 
- check_need_indicate_scan_done:
-+	kfree(ssid);
- 	if (need_indicate_scan_done)
- 	{
- 		rtw_cfg80211_surveydone_event_callback(padapter);
--- 
-2.11.0
+So if I move the call above, it still crashes as the work is getting
+scheduled later.
 
+--
+Regards,
+Sudeep
