@@ -7,67 +7,69 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20578CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 413A8CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE4DC20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EBBB20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:42:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="axy9avYM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NTI6bv/P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391045AbfJRWmd (ORCPT
+        id S2395080AbfJRWml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:42:33 -0400
-Received: from mail-yb1-f182.google.com ([209.85.219.182]:42464 "EHLO
-        mail-yb1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726827AbfJRWmd (ORCPT
+        Fri, 18 Oct 2019 18:42:41 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:44116 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726827AbfJRWmk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:42:33 -0400
-Received: by mail-yb1-f182.google.com with SMTP id 4so2298831ybq.9;
-        Fri, 18 Oct 2019 15:42:33 -0700 (PDT)
+        Fri, 18 Oct 2019 18:42:40 -0400
+Received: by mail-yb1-f193.google.com with SMTP id v1so2300682ybo.11;
+        Fri, 18 Oct 2019 15:42:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=3zrsI5rFL6aWl8+FvhNVZd4YBmAJUYa6PdGTurxD/7o=;
-        b=axy9avYMDMNr51+VyGcyNhHilqglIkhIqEfInbqrI+Y1d5KFx8GRBEVZ/Z2tLf02Pn
-         xBgyNC2jrZULg/somCXRbBL9Ys5c+FRhU6ecpg+99o19dgH9D8UZ9rJ3dSk/9TWFOBbs
-         SQWmQqiNsxaFlccnnaf4p+G+TtqpM9zyqBhFSKdAkuMID3JDQ3QeIIv9AGkDXvByGN2l
-         TLUukDdAgz7qdch5LiKU2eKNPj08jNeekntSZAmPF5rUjTuvFuEhSBPsFNun4CoPOYKy
-         wv9uuQ9N7Hb6g2H3bcevNB3lJjQz88FzJ+FP34qWfDWneqLMi+E4MsAbuhqFy4GjgzEL
-         UX0g==
+        bh=WvT6llug8K7grtGTEVP8teBbNB9xwEIQgTbnaQCarqA=;
+        b=NTI6bv/Phk+bn8UhCzQDEe8765VKffHg6fSlaLZ9tOdvyvi8kxdKlKifkp2iNuAQWg
+         f8p7zHL4OtfLIsgLu43eGXPeueYzKzWMOvgmTCqNFbdxBu8cmEtg059hsuoTx5nQKcbb
+         PXJg/YRtQPNDcl2VCq5Y/U3kpgKiWWC59tgPOZrGYFLq9v1dkzikBPO4aq7tXM2KAN52
+         z5n5pK2Mm0PExWMUHiLkQYHuK0cHyjjGKyv1t53uFVKZDUP+uHgZ5CuoNM4B2uQjMFeD
+         O3gYXehL2GjSVA6D9zU2E/fN4CVwB1MF9DcQ1BjXGJlEcW3TbppomFlRALPWxc9g9mEq
+         Y6nA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3zrsI5rFL6aWl8+FvhNVZd4YBmAJUYa6PdGTurxD/7o=;
-        b=r6V9RFPeigh2Plc87INtYNR9ocEk7VY+c89HmxHe0NbMiZ/alBHvQBYSRHQiBe+Ffm
-         7pXsak6gkFPMXQjhEENB18Ak48ge7rgoDJsocXcERMFcqqq3MZhijn04bWaCGBDrSJlL
-         mACjdFc06/+6S076Kin0MzoPDouacq7B+8dmNYgS0iSfL62/kROPh4gTo5m0CIgoy9PS
-         8hXBIg8TobPB5teF9ATbLs7pJHmNEF6qR+KYj7hrVw0SQwDJYz07b1Hn6ABmAOjGPtT0
-         JehCA1xbpjKCyXaqN8NE32zM+Cwemf9skPcbLh7PtCqgJ9P+/hmL7/D4YNina6hhpn0R
-         az/A==
-X-Gm-Message-State: APjAAAWlb8ozwyFA/npUXwfORhHRHIXLmmzJ3YzWacCFD8GCaYtj994A
-        pDvqS5bMiiVZyNT//degrQ==
-X-Google-Smtp-Source: APXvYqw5DvbASEeHlQBZa248ii+jELoiVL2K94crkEBUhLUR/acf3+6rbM525u+o61cM6SDqccnWpQ==
-X-Received: by 2002:a25:13c1:: with SMTP id 184mr8369705ybt.20.1571438552294;
-        Fri, 18 Oct 2019 15:42:32 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=WvT6llug8K7grtGTEVP8teBbNB9xwEIQgTbnaQCarqA=;
+        b=BzgO+XfZKcJnCCuM5rghFZNpihTarywv8Ce49yeC8sBu8/uc33vLh6960SY3Lo4Hbx
+         PTO4DWs+mhNr6UtwnSXVnRcrnYLFETw1WFtMi2RVDoDVAHrHIpDDIXDvUWBjH3FElBdw
+         ZLTln34IZ3HCe7D447NIAbcXiEZjY61Z3GuUDa3GgZ/JULC9x/o9Z/B5SwVrj6nI+/zf
+         oPKA5Z09oYtgyyooe6FwtX9Xg+Spoqi3GCHXxq0Z0bGqX3qIHmZlldtlw/ys2m7gpod9
+         rNzGmyLGMJV2ei1IGYzxBw6G+/15VIfAYk3w5Zx6aiaA0fUZo+iz+TgFAOnjnjXUb4sQ
+         TPPQ==
+X-Gm-Message-State: APjAAAXvwCo9+1/247JMQvgyI9TzGrUvIrCESzQYuM6ZOt1pYEtVbiw7
+        k1bdZymmAhIsS0dsPtBIig==
+X-Google-Smtp-Source: APXvYqyGiQ5zs3604TFg/MCSHC7inrtSY7DzlvMyqOrSpFF4P4OJqc4ntmgqGz1UIBCzpQKl1dPNEg==
+X-Received: by 2002:a05:6902:510:: with SMTP id x16mr7341660ybs.324.1571438559250;
+        Fri, 18 Oct 2019 15:42:39 -0700 (PDT)
 Received: from 960.localdomain ([64.192.53.12])
-        by smtp.gmail.com with ESMTPSA id d188sm1645412ywa.88.2019.10.18.15.42.31
+        by smtp.gmail.com with ESMTPSA id d188sm1645412ywa.88.2019.10.18.15.42.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 15:42:31 -0700 (PDT)
+        Fri, 18 Oct 2019 15:42:38 -0700 (PDT)
 From:   Ayman Bagabas <ayman.bagabas@gmail.com>
 To:     Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>,
         Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Mattias Jacobsson <2pi@mok.nu>, Takashi Iwai <tiwai@suse.de>,
+        Takashi Iwai <tiwai@suse.de>, Mattias Jacobsson <2pi@mok.nu>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         kbuild test robot <lkp@intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] platform/x86: huawei-wmi: Stricter battery thresholds set
-Date:   Fri, 18 Oct 2019 18:42:13 -0400
-Message-Id: <20191018224221.15495-1-ayman.bagabas@gmail.com>
+Subject: [PATCH 2/2] platform/x86: huawei-wmi: No need to check for battery name
+Date:   Fri, 18 Oct 2019 18:42:14 -0400
+Message-Id: <20191018224221.15495-2-ayman.bagabas@gmail.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191018224221.15495-1-ayman.bagabas@gmail.com>
+References: <20191018224221.15495-1-ayman.bagabas@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,26 +77,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check if battery thresholds are within 0 and 100.
+No need to check for battery name, we already check if the WMI function is
+available in huawei_wmi_battery_setup.
 ---
- drivers/platform/x86/huawei-wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/huawei-wmi.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index 5837d1b8693d..26041d44286a 100644
+index 26041d44286a..7373a65a61d3 100644
 --- a/drivers/platform/x86/huawei-wmi.c
 +++ b/drivers/platform/x86/huawei-wmi.c
-@@ -345,7 +345,7 @@ static int huawei_wmi_battery_set(int start, int end)
- 	union hwmi_arg arg;
- 	int err;
+@@ -471,10 +471,6 @@ static DEVICE_ATTR_RW(charge_control_thresholds);
  
--	if (start < 0 || end > 100)
-+	if (start < 0 || end < 0 || start > 100 || end > 100)
- 		return -EINVAL;
+ static int huawei_wmi_battery_add(struct power_supply *battery)
+ {
+-	/* Huawei laptops come with one battery only */
+-	if (strcmp(battery->desc->name, "BAT") != 1)
+-		return -ENODEV;
+-
+ 	device_create_file(&battery->dev, &dev_attr_charge_control_start_threshold);
+ 	device_create_file(&battery->dev, &dev_attr_charge_control_end_threshold);
  
- 	arg.cmd = BATTERY_THRESH_SET;
-
-base-commit: fd13c8622a5ad4f7317b64de4f6aa2de1962220e
 -- 
 2.21.0
 
