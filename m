@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1104CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D71CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B51D1205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4908620872
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437518;
-	bh=BxApMd0qieTY69NEaU79UX3kq6GvphxUoxWKUwi1xlA=;
+	s=default; t=1571437524;
+	bh=XMB82K2xXOWsCRusDL8vhZUFHGoHirItflBZMUYFA0A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BGElPdiWQ66MJK1+KPKopnqreQMeqL3ze/w5FxECQXyB7+f8Ai6MGoyfFLdgMoLcn
-	 5p8LAwk68WJXw65YmbEOFEm9JHvkDjFKL64ew8QfRBngKzFpemc3IDVJC66UaPY6yH
-	 PGzCe7SjNMQ6nrh+vVtexzSem/GqllwMDz8tDS8k=
+	b=hHH6c0qQHecfhjdbo8EoVUEySEXmpTkEftkFsTDHbZr83SfnSufOpWuWhsHTY116Z
+	 XRCZbVNb5IIunXvyZbLCJoyPK5MkXShCEoaOF/qUGeLLDixNmVH2PCdcv1CWD9/KdL
+	 Hagqid1+0gAUpyyStImLt44bV9jxg+RgVgHbAxy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394671AbfJRWZR (ORCPT
+        id S1728453AbfJRWEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:25:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36402 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:04:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728536AbfJRWEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:04:42 -0400
+        id S1728266AbfJRWEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:04:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65ED3222D2;
-        Fri, 18 Oct 2019 22:04:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 014B8222D3;
+        Fri, 18 Oct 2019 22:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436281;
-        bh=BxApMd0qieTY69NEaU79UX3kq6GvphxUoxWKUwi1xlA=;
+        s=default; t=1571436270;
+        bh=XMB82K2xXOWsCRusDL8vhZUFHGoHirItflBZMUYFA0A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ajZo0vKzxEXzq+KKtnwioyfUi/KIm37lqBtWuTgwu+C3XFj2naSsZZivbylNLpK3u
-         A9F31Joqdm48TbIrBp7do+TUJYsP5CbX/a2EDPwUEU1jaV+gOI3hAdKDBFpwHQgOCv
-         UIsdICQI1CiKPZ/SefZZsmUV/CEIisENLggXtn6Q=
+        b=pE5uUkz1W+XBAV1hHvFx6JzZDlCV1t2AzbYmhkXrivrn6deBsA1jjbUYLulRwZNzJ
+         w8uJ7st7AIjRXFhwCXNMqjoeWgwFzlMWJZIId31eWUJzA4iErsh6Z0zX1gMKNrAYSw
+         Co5UN7l09IVDbTCnuvbaZJJqFtlu+vrl9Ik7EPYY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 58/89] fs: ocfs2: fix a possible null-pointer dereference in ocfs2_write_end_nolock()
-Date:   Fri, 18 Oct 2019 18:02:53 -0400
-Message-Id: <20191018220324.8165-58-sashal@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Matthias Maennich <maennich@google.com>,
+        Jessica Yu <jeyu@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 50/89] kbuild: fix build error of 'make nsdeps' in clean tree
+Date:   Fri, 18 Oct 2019 18:02:45 -0400
+Message-Id: <20191018220324.8165-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -66,57 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit 583fee3e12df0e6f1f66f063b989d8e7fed0e65a ]
+[ Upstream commit d85103ac78a6d8573b21348b36f4cca2e1839a31 ]
 
-In ocfs2_write_end_nolock(), there are an if statement on lines 1976,
-2047 and 2058, to check whether handle is NULL:
+Running 'make nsdeps' in a clean source tree fails as follows:
 
-    if (handle)
+$ make -s clean; make -s defconfig; make nsdeps
+   [ snip ]
+awk: fatal: cannot open file `init/modules.order' for reading (No such file or directory)
+make: *** [Makefile;1307: modules.order] Error 2
+make: *** Deleting file 'modules.order'
+make: *** Waiting for unfinished jobs....
 
-When handle is NULL, it is used on line 2045:
+The cause of the error is 'make nsdeps' does not build modules at all.
+Set KBUILD_MODULES to fix it.
 
-	ocfs2_update_inode_fsync_trans(handle, inode, 1);
-        oi->i_sync_tid = handle->h_transaction->t_tid;
-
-Thus, a possible null-pointer dereference may occur.
-
-To fix this bug, handle is checked before calling
-ocfs2_update_inode_fsync_trans().
-
-This bug is found by a static analysis tool STCheck written by us.
-
-Link: http://lkml.kernel.org/r/20190726033705.32307-1-baijiaju1990@gmail.com
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reviewed-by: Matthias Maennich <maennich@google.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/aops.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ocfs2/aops.c b/fs/ocfs2/aops.c
-index 3e0a93e799ea1..9b827143a3504 100644
---- a/fs/ocfs2/aops.c
-+++ b/fs/ocfs2/aops.c
-@@ -2042,7 +2042,8 @@ int ocfs2_write_end_nolock(struct address_space *mapping,
- 		inode->i_mtime = inode->i_ctime = current_time(inode);
- 		di->i_mtime = di->i_ctime = cpu_to_le64(inode->i_mtime.tv_sec);
- 		di->i_mtime_nsec = di->i_ctime_nsec = cpu_to_le32(inode->i_mtime.tv_nsec);
--		ocfs2_update_inode_fsync_trans(handle, inode, 1);
-+		if (handle)
-+			ocfs2_update_inode_fsync_trans(handle, inode, 1);
- 	}
- 	if (handle)
- 		ocfs2_journal_dirty(handle, wc->w_di_bh);
+diff --git a/Makefile b/Makefile
+index d7469f0926a67..62b9640d007a0 100644
+--- a/Makefile
++++ b/Makefile
+@@ -594,7 +594,7 @@ endif
+ # in addition to whatever we do anyway.
+ # Just "make" or "make all" shall build modules as well
+ 
+-ifneq ($(filter all _all modules,$(MAKECMDGOALS)),)
++ifneq ($(filter all _all modules nsdeps,$(MAKECMDGOALS)),)
+   KBUILD_MODULES := 1
+ endif
+ 
 -- 
 2.20.1
 
