@@ -2,119 +2,189 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5F1CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A12ACCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC4D8222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:42:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BU0oYx0F"
+	by mail.kernel.org (Postfix) with ESMTP id 78CB2222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:45:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634218AbfJROmQ (ORCPT
+        id S2439454AbfJROpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 10:42:16 -0400
-Received: from mail-eopbgr30074.outbound.protection.outlook.com ([40.107.3.74]:57154
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2634209AbfJROmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 10:42:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KTf0m4ucVqhxJyXJO/0exttXQXB1qGBLYaWe13jb3yTlnRjMawJUnkF7+9jIVEfUHuUNt/az3QnJmwHEpqR5uVfQcGRIR1L9jATyVE6ba6bfASeYrkEQSu4Krr/RUshlKZf67ERFnd3kEj+qyospNH8dA2KmA3jS+llYaEoBVHh7BgFr3x4TSpTfYOvo3/8wGZn4hkARY+8UyxRnPMdp2JoveeZj4IQSsZO8Ui2v75nvE7JiVZgJx6x3XauRxaXLcJv7v6kmZoz5/2+ceaxlrp8BOmipdPYdeqwscSMFjyGoHZZa6bzursoA0I44jqmN1p7o/cSRfmE0QecaPRDwUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7d45jBOeqBbKymE2IdKuXiniRWOk1mMm2BRHWF5SS6I=;
- b=jwr+5fj0bw+oky+LUs5WaxqTK5mmTQNWU3agutemeCHqYlBbqUp9BvpJ7LuzMgLW6ZFU0/D0EI2xQFYZwRMUJwR2Fr15nBEHhlqL5UNqKALKKr+SupWWp0EFfr8/LTiYbGtcTx+8mL2Xx4QggabUFV+AOpVMlirnzi2B5uTPUtox+RA7dvRvabTT5V9iMMr0TwvmxaF5cHdg7LlwF2DpH7Ejlx5SEHE/CPZvASKoVWdD4Y3HD2Ixi54BGv7ZqmhoyKU5hSjrQtSF+R/2qYut6TgjKh82LdBbTybX891qD6mUWhzh+JkJ+Q6ynbY7dmN+nYGtSfTx8p8awdI1xdC2hw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7d45jBOeqBbKymE2IdKuXiniRWOk1mMm2BRHWF5SS6I=;
- b=BU0oYx0FFL1qKQy0/+X6dDB9pKjrjJ4INsBquM8U9AaK/YCX0O4E4DRo2B96ULAzqRANABQVHat/KXFzSvSZq/yWV9AVaSXar/08no+Ik5gcvt7bK9pjydaF11G3h1VO0CLGkZjXR2FPsEYrtTil/AlRrha1MfoIDxP4N5Cfp8g=
-Received: from DB7PR04MB4425.eurprd04.prod.outlook.com (52.135.140.156) by
- DB7PR04MB3979.eurprd04.prod.outlook.com (52.134.107.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.19; Fri, 18 Oct 2019 14:42:12 +0000
-Received: from DB7PR04MB4425.eurprd04.prod.outlook.com
- ([fe80::c068:28ec:7f2f:4a5e]) by DB7PR04MB4425.eurprd04.prod.outlook.com
- ([fe80::c068:28ec:7f2f:4a5e%6]) with mapi id 15.20.2347.024; Fri, 18 Oct 2019
- 14:42:12 +0000
-From:   Peng Ma <peng.ma@nxp.com>
-To:     Fabio Estevam <festevam@gmail.com>
-CC:     Vinod <vkoul@kernel.org>, Dan Williams <dan.j.williams@intel.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        =?utf-8?B?S3J6eXN6dG9mIEtvesWCb3dza2k=?= <k.kozlowski.k@gmail.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCH] dmaengine: fsl-edma: Add eDMA support for QorIQ
- LS1028A platform
-Thread-Topic: [EXT] Re: [PATCH] dmaengine: fsl-edma: Add eDMA support for
- QorIQ LS1028A platform
-Thread-Index: AQHVhLtWQPtc6yR4Rkmk/ITG0gU0sqdgdkiAgAAAQmCAAAPyAIAAAD1Q
-Date:   Fri, 18 Oct 2019 14:42:12 +0000
-Message-ID: <DB7PR04MB442531FC495F99A80011E392ED6C0@DB7PR04MB4425.eurprd04.prod.outlook.com>
-References: <20191017070923.6705-1-peng.ma@nxp.com>
- <CAOMZO5AK+wv0vAfqv7PC-gYF32MSD9nMqFCuRmLxMN6dYZdvGA@mail.gmail.com>
- <DB7PR04MB4425E937B423C39F0F45FCEDED6C0@DB7PR04MB4425.eurprd04.prod.outlook.com>
- <CAOMZO5DrJ=T1CZE4bb5bQngrcjDAxMWck-ru25Ew5oeA62L0kA@mail.gmail.com>
-In-Reply-To: <CAOMZO5DrJ=T1CZE4bb5bQngrcjDAxMWck-ru25Ew5oeA62L0kA@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.ma@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f303bab3-d974-40cc-1e6a-08d753d95c8b
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: DB7PR04MB3979:|DB7PR04MB3979:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB39794D062147A7AD952CBF12ED6C0@DB7PR04MB3979.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
-x-forefront-prvs: 01949FE337
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(39860400002)(366004)(396003)(136003)(13464003)(189003)(199004)(5660300002)(6436002)(66066001)(54906003)(305945005)(86362001)(99286004)(71190400001)(71200400001)(66446008)(64756008)(66476007)(66946007)(66556008)(7736002)(186003)(74316002)(26005)(4744005)(76116006)(76176011)(316002)(52536014)(3846002)(6116002)(6506007)(229853002)(14454004)(256004)(7696005)(9686003)(6916009)(102836004)(8676002)(44832011)(33656002)(8936002)(446003)(25786009)(486006)(478600001)(11346002)(476003)(6246003)(81156014)(4326008)(81166006)(55016002)(1411001)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB3979;H:DB7PR04MB4425.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: b6LKx07Cu6pSFnC9DDThaynZqHT0nv46uPQhNIG3MIAZ5lQz3/BxzFqI0t9vyw2wwfKg/O0kBQusWHrzhjcGn702vwd2tKATNreURrxRCty0Yh8jzVfAszphvyWNcPCVe/awUTIbj7y/KgjtRTbLwxbImxjRa4ac6QzEoAF7/etD/NhfaBSlfh3lKLwz3fl5uslQiBBDat/CmeyMrV3bpaW2TtQxEG45ObvWRp+y+PHVWw0eysJjFNCq3L23VrLzxMfbwOxDpLFq1f2ecNiA9NBLmtqkExiNNJ77iXUrL0+GcCL4Iv8XMKoY1EwRLn2PKyCxkORtlCNJxFcKxBEP8/0o4y/Ewx5vi5EmpMYNxDNtJ1PXtLS7UqC6HDOdcAOaEqpxreiOeitOWy2w3Cs5S70CHHx/0NjrT55dQSoGods=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 18 Oct 2019 10:45:08 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:41430 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2405365AbfJROpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 10:45:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8439B57;
+        Fri, 18 Oct 2019 07:44:44 -0700 (PDT)
+Received: from [10.1.195.43] (e107049-lin.cambridge.arm.com [10.1.195.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F5B13F718;
+        Fri, 18 Oct 2019 07:44:43 -0700 (PDT)
+Subject: Re: [RFC PATCH v3 0/6] sched/cpufreq: Make schedutil energy aware
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        mingo@redhat.com, rjw@rjwysocki.net, viresh.kumar@linaro.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, qperret@google.com,
+        patrick.bellasi@matbug.net, dh.han@samsung.com
+References: <20191011134500.235736-1-douglas.raillard@arm.com>
+ <20191014145315.GZ2311@hirez.programming.kicks-ass.net>
+ <a1ce67d7-62c3-b78b-1d87-23ef4dbc2274@arm.com>
+ <20191017095015.GI2311@hirez.programming.kicks-ass.net>
+ <7edb1b73-54e7-5729-db5d-6b3b1b616064@arm.com>
+ <20191017190708.GF22902@worktop.programming.kicks-ass.net>
+ <0b807cb3-6a88-1138-dc66-9a32d9bba7ea@arm.com>
+ <20191018120719.GH2328@hirez.programming.kicks-ass.net>
+From:   Douglas Raillard <douglas.raillard@arm.com>
+Organization: ARM
+Message-ID: <32d07c51-847d-9d51-480c-c8836f1aedc7@arm.com>
+Date:   Fri, 18 Oct 2019 15:44:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f303bab3-d974-40cc-1e6a-08d753d95c8b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Oct 2019 14:42:12.0934
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 813EwoQfUSBDLF3OrcOQNHb0l2B43j8MI/mEiRSH9zhTUpJugzcGlCfi7gNsIMBd
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB3979
+In-Reply-To: <20191018120719.GH2328@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB-large
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRmFiaW8sDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEZhYmlvIEVz
-dGV2YW0gPGZlc3RldmFtQGdtYWlsLmNvbT4NCj5TZW50OiAyMDE55bm0MTDmnIgxOOaXpSAyMjo0
-MA0KPlRvOiBQZW5nIE1hIDxwZW5nLm1hQG54cC5jb20+DQo+Q2M6IFZpbm9kIDx2a291bEBrZXJu
-ZWwub3JnPjsgRGFuIFdpbGxpYW1zIDxkYW4uai53aWxsaWFtc0BpbnRlbC5jb20+OyBMZW8NCj5M
-aSA8bGVveWFuZy5saUBueHAuY29tPjsgS3J6eXN6dG9mIEtvesWCb3dza2kgPGsua296bG93c2tp
-LmtAZ21haWwuY29tPjsNCj5GYWJpbyBFc3RldmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+OyBk
-bWFlbmdpbmVAdmdlci5rZXJuZWwub3JnOw0KPmxpbnV4LWtlcm5lbCA8bGludXgta2VybmVsQHZn
-ZXIua2VybmVsLm9yZz4NCj5TdWJqZWN0OiBSZTogW0VYVF0gUmU6IFtQQVRDSF0gZG1hZW5naW5l
-OiBmc2wtZWRtYTogQWRkIGVETUEgc3VwcG9ydCBmb3INCj5Rb3JJUSBMUzEwMjhBIHBsYXRmb3Jt
-DQo+DQo+Q2F1dGlvbjogRVhUIEVtYWlsDQo+DQo+SGkgUGVuZywNCj4NCj5PbiBGcmksIE9jdCAx
-OCwgMjAxOSBhdCAxMToyOCBBTSBQZW5nIE1hIDxwZW5nLm1hQG54cC5jb20+IHdyb3RlOg0KPj4N
-Cj4+IEhpIEZhYmlvLA0KPj4NCj4+IFRoYW5rcyBmb3IgeW91ciBjb21tZW50cy4NCj4+IERvIHlv
-dSBtZWFuIEkgZXhwbGFpbiAiT3VyIHBsYXRmb3JtcyIgaGVyZSBvciBpbiBwYXRjaD8NCj4NCj5J
-dCB3b3VsZCBiZSBiZXR0ZXIgdG8gc2VuZCBhIHYyIHdpdGggYW4gaW1wcm92ZWQgY29tbWl0IGxv
-Zywgd2hpY2ggZXhwbGFpbnMNCj53aGF0ICJPdXIgcGxhdGZvcm1zIiBtZWFuLg0KPg0KPlRoYW5r
-cw0KW1BlbmcgTWFdIEdvZCBpdCAsdGhhbmtzLg0KDQpCZXN0IFJlZ2FyZHMsDQpQZW5nDQo=
+
+
+On 10/18/19 1:07 PM, Peter Zijlstra wrote:
+> On Fri, Oct 18, 2019 at 12:46:25PM +0100, Douglas Raillard wrote:
+> 
+>>> What I don't see is how that that difference makes sense as input to:
+>>>
+>>>     cost(x) : (1 + x) * cost_j
+>>
+>> The actual input is:
+>> x = (EM_COST_MARGIN_SCALE/SCHED_CAPACITY_SCALE) * (util - util_est)
+>>
+>> Since EM_COST_MARGIN_SCALE == SCHED_CAPACITY_SCALE == 1024, this factor of 1
+>> is not directly reflected in the code but is important for units
+>> consistency.
+> 
+> But completely irrelevant for the actual math and conceptual
+> understanding.
+
+ > how that that difference makes sense as input to
+I was unsure if you referred to the units being inconsistent or the 
+actual way of computing values being strange, so I provided some 
+justification for both.
+
+> Just because computers suck at real numbers, and floats
+> are expensive, doesn't mean we have to burden ourselves with fixed point
+> when writing equations.
+> 
+> Also, as a physicist I'm prone to normalizing everything to 1, because
+> that's lazy.
+> 
+>>> I suppose that limits the additional OPP to twice the previously
+>>> selected cost / efficiency (see the confusion from that other email).
+>>> But given that efficency drops (or costs rise) for higher OPPs that
+>>> still doesn't really make sense..
+> 
+>> Yes, this current limit to +100% freq boosting is somehow arbitrary and
+>> could probably benefit from being tunable in some way (Kconfig option
+>> maybe). When (margin > 0), we end up selecting an OPP that has a higher cost
+>> than the one strictly required, which is expected. The goal is to speed
+>> things up at the expense of more power consumed to achieve the same work,
+>> hence at a lower efficiency (== higher cost).
+> 
+> No, no Kconfig knobs.
+> 
+>> That's the main reason why this boosting apply a margin on the cost of the
+>> selected OPP rather than just inflating the util. This allows controlling
+>> directly how much more power (battery life) we are going to spend to achieve
+>> some work that we know could be achieved with less power.
+> 
+> But you're not; the margin is relative to the OPP, it is not absolute.
+
+Considering a CPU with 1024 max capacity (since we are not talking about 
+migrations here, we can ignore CPU invariance):
+
+work = normalized number of iterations of a given busy loop
+# Thanks to freq invariance
+work = util (between 0 and 1)
+util = f/f_max
+
+# f(work) is the min freq that is admissible for "work", which we will
+# abbreviate as "f"
+f(work) = work * f_max
+
+# from struct em_cap_state doc in energy_model.h
+cost(f) = power(f) * f_max / f
+cost(f) = power(f) / util
+cost(f) = power(f) / work
+power(f) = cost(f) * work
+
+boosted_cost(f) = cost(f) + x
+boosted_power(f) = boosted_cost(f) * work
+boosted_power(f) = (cost(f) + x) * work
+
+# Let's normalize cost() so we can forget about f and deal only with work.
+cost'(work) = cost(f)/cost(f_max)
+x' = x/cost(f_max)
+boosted_power'(work) = (cost'(work) + x') * work
+boosted_power'(work) = cost'(work) * work + x' * work
+boosted_power'(work) = power'(work) + x' * work
+boosted_power'(work) = power'(work) + A(work)
+
+# Over a duration T, spend an extra B unit of energy
+B(work) = A(work) * T
+lost_battery_percent(work) = 100 * B(work)/total_battery_energy
+lost_battery_percent(work) = 100 * T * x' * work /total_battery_energy
+lost_battery_percent(work) =
+  (100 * T / cost(f_max) / total_battery_energy) * x * work
+
+This means that the effect of boosting on battery life is proportional 
+to "x" unless I made a mistake somewhere.
+
+> 
+> Or rather, the only actual limit is in relation to the max OPP. So you
+> have very little actual control over how much more energy you're
+> spending.
+> 
+>>> So while I agree that 2) is a reasonable signal to work from, everything
+>>> that comes after is still much confusing me.
+> 
+>> "When applying these boosting rules on the runqueue util signals ...":
+>> Assuming the set of enqueued tasks stays the same between 2 observations
+>> from schedutil, if we see the rq util_avg increase above its
+>> util_est.enqueued, that means that at least one task had its util_avg go
+>> above util_est.enqueued. We might miss some boosting opportunities if some
+>> (util - util_est) compensates:
+>> TASK_1(util - util_est) = - TASK_2(util - util_est)
+>> but working on the aggregated value is much easier in schedutil, to avoid
+>> crawling the list of entities.
+> 
+> That still does not explain why 'util - util_est', when >0, makes for a
+> sensible input into an OPP relative function > I agree that 'util - util_est', when >0, indicates utilization is
+> increasing (for the aperiodic blah blah blah). But after that I'm still
+> confused.
+
+For the same reason PELT makes a sensible input for OPP selection.
+Currently, OPP selection is based on max(util_avg, util_est.enqueued) 
+(from cpu_util_cfs in sched.h), so as soon as we have
+(util - util_est > 0), the OPP will be selected according to util_avg. 
+In a way, using util_avg there is already some kind of boosting.
+
+Since the boosting is essentially (util - constant), it grows the same 
+way as util. If we think of (util - util_est) as being some estimation 
+of how wrong we were in the estimation of the task "true" utilization of 
+the CPU, then it makes sense to feed that to the boost. The wronger we 
+were, the more we want to boost, because the more time passes, the more 
+the scheduler realizes it actually does not know what the task needs. In 
+doubt, provide a higher freq than usual until we get to know this task 
+better. When that happens (at the next period), boosting is disabled and 
+we revert to the usual behavior (aka margin=0).
+
+Hope we are converging to some wording that makes sense.
