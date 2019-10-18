@@ -2,64 +2,63 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC4BCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09167CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6373222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD68421D7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:11:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XTGR5ysV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B7xenBDH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442974AbfJRQLe (ORCPT
+        id S2442986AbfJRQLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:11:34 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:53451 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502695AbfJRQLc (ORCPT
+        Fri, 18 Oct 2019 12:11:37 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:44226 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436621AbfJRQLf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:11:32 -0400
-Received: by mail-pg1-f202.google.com with SMTP id r25so4569870pga.20
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:11:30 -0700 (PDT)
+        Fri, 18 Oct 2019 12:11:35 -0400
+Received: by mail-pf1-f202.google.com with SMTP id b204so4972871pfb.11
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:11:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=21PQYFGMSyR0vWwlJoWUR0F8CwzgoNMVM1L0Pe6MFrQ=;
-        b=XTGR5ysVCvFcDPfDZ2uRa4LSCFJbZwlyniF9TrCYGMBPbkIf0K085EjiQt4ffVYZbT
-         yaiGK3y6faisAh6U9/CxmFlLU76VW2yJBLJXrJA65l2MTuNELcBcEAKKoaa0/ytobYt1
-         fHBOBarOVqcb9kanEUVa8Ddgrfl9iIQEWkgSVtgsKdKE18WzVjzt/JiQzP1DlMT6n4jU
-         kAXZNvTi8r9G3/D4MyaIAco80dTDl8K/TpV2nIA1UUazOM41jXMV5YIAb/W//1YPMnKI
-         Y+DGVHPZ9eY1T49HNVfdlWN6taf0ZPGpl8IGYtJKJPC8pDOBJ6EMgatwO8Hvvq48VXqN
-         DmCw==
+        bh=5u5MugUg2eXeQck5Unb3LYQo29vaVROeFk+dSkSebHA=;
+        b=B7xenBDHHI7ayNn+BP1Q6X8wnTR9uTlyid2Lxqej61gj2k9iN/wuKOJNKBobLxaFjR
+         hT53He9gZ81WBRA7k1srlE5y9pRls5zgdJRc8CkufohNb7pDylEtWxFwrE2uoJHPqVMe
+         SXZ+LI2gVL3V+ZFsZVGAp19D4zWSpAGia2X5kfETCOjg6mYUy8e3oO5INhcW9tdCJs3Z
+         R+qaaFeh57hjiYMhdf3zjE/30gJ8GCvzwq1j+lgdEDaXxK/SXne8U2YrUzyBDK25HLGv
+         sScwvilKx4tvHpfuXY9/27TdPb7wP+y5Fbv94C3Elzkmapg0qVwLdFfipvrL/n4U5zdf
+         mmCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=21PQYFGMSyR0vWwlJoWUR0F8CwzgoNMVM1L0Pe6MFrQ=;
-        b=O9o5bGSbUCvvU2xowPeUcXlt8pCAuaFGsX1XExQxVSwD6Q9QAHquKrVjJ4fM2rbQNh
-         9Z3/dA/7svuC4oI++p01KKaNMDVI/p0Dj6P0rU8r0uaMDoFcQbu8IMblaiDT6IVso0wb
-         PGSYwP44ubgyaznkfP2FZ0UzJV7nuyvyc2ynHRSFuIpWZVXiFWdCiWN4LHFYM/x1qyEV
-         OeQV9NTrks7UIEtFX6cVOFaNex8lwUnnXROwiUwBFkjlEXLde3hECzlBxdaHrTMLBGh7
-         aNS7yKOuwEQpY+MsdBwTulZbjaEbpS/LnjG6dGXwTzUI9m2y6KOmtjVUPLH6+mVMJ3iB
-         0m1A==
-X-Gm-Message-State: APjAAAXSjL8H6uYuqW4cqxPt+8vox8NHmEBBJG9eNjjMUzq4BrgF1EMY
-        eBG/pj68+W2Wd8vgCVd//q2JSj9NLxMm5qcjVZI=
-X-Google-Smtp-Source: APXvYqz2h3FK6fOLNjeif4Cg24fCITnU5ZQBquMxea8azTfQWEvOTaNE9xdQyiziN7s60FAxuGyTh4t3prrtUVRlSk8=
-X-Received: by 2002:a63:1250:: with SMTP id 16mr10784356pgs.331.1571415090313;
- Fri, 18 Oct 2019 09:11:30 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 09:10:31 -0700
+        bh=5u5MugUg2eXeQck5Unb3LYQo29vaVROeFk+dSkSebHA=;
+        b=OgajzZz4mz0Kw1oyWFDR+krKJMkV/RnmCc68SKoPgB6ymsz1LfR+DeET0AmIshv0yV
+         2+ZhDPyR7xIjX6GrQsok+ffzuMLJiuNocTkCH3cS5sdvZxaFHhVZEkbKCeOPxZ9CSOaP
+         Qr9JakpRYjYvTgtlYozufCKXT5xNO3KPuzJaDP14niP4uGFhxFbeHwHMYYnhTBTNAU2V
+         5IPqOiADDkHPsEI/hroyGIB26/Djuj4a2SaGOfzoK25ukNoH07GO0/AgCD/zCPN7/AS0
+         Lcq5tuyVbdvHVW+GAx7dPL5z2cU/HlQy0QMT9gtHyHJrSvwDXYYZbnVRvrlvWDLM4DzO
+         5vFg==
+X-Gm-Message-State: APjAAAVuqFF9Xbj8Fc92T2+cfSeU9VI8yc/DyeLXeCi8ijc7paL/XEMd
+        E4iFHGzmdOIgInKp/VV3P29IX2gLQVaU48yO62U=
+X-Google-Smtp-Source: APXvYqzL1rNkHTnWVT3YklNHjYJF0z1ethJHe5MAlJ9H7HUMSZwkLdmWhiBEeQet4XLN4HbPHGGrf5qLcex/d/OTBLw=
+X-Received: by 2002:a63:541e:: with SMTP id i30mr10990238pgb.130.1571415092950;
+ Fri, 18 Oct 2019 09:11:32 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 09:10:32 -0700
 In-Reply-To: <20191018161033.261971-1-samitolvanen@google.com>
-Message-Id: <20191018161033.261971-17-samitolvanen@google.com>
+Message-Id: <20191018161033.261971-18-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-Subject: [PATCH 16/18] arm64: kprobes: fix kprobes without CONFIG_KRETPROBES
+Subject: [PATCH 17/18] arm64: disable SCS for hypervisor code
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -80,34 +79,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows CONFIG_KRETPROBES to be disabled without disabling
-kprobes entirely.
-
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/arm64/kernel/probes/kprobes.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/kvm/hyp/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
-index c4452827419b..98230ae979ca 100644
---- a/arch/arm64/kernel/probes/kprobes.c
-+++ b/arch/arm64/kernel/probes/kprobes.c
-@@ -551,6 +551,7 @@ void __kprobes __used *trampoline_probe_handler(struct pt_regs *regs)
- 	return (void *)orig_ret_address;
- }
+diff --git a/arch/arm64/kvm/hyp/Makefile b/arch/arm64/kvm/hyp/Makefile
+index ea710f674cb6..96073d81cb3b 100644
+--- a/arch/arm64/kvm/hyp/Makefile
++++ b/arch/arm64/kvm/hyp/Makefile
+@@ -4,7 +4,8 @@
+ #
  
-+#ifdef CONFIG_KRETPROBES
- void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
- 				      struct pt_regs *regs)
- {
-@@ -564,6 +565,7 @@ int __kprobes arch_trampoline_kprobe(struct kprobe *p)
- {
- 	return 0;
- }
-+#endif
+ ccflags-y += -fno-stack-protector -DDISABLE_BRANCH_PROFILING \
+-		$(DISABLE_STACKLEAK_PLUGIN)
++		$(DISABLE_STACKLEAK_PLUGIN) \
++		$(DISABLE_SCS)
  
- int __init arch_init_kprobes(void)
- {
+ KVM=../../../../virt/kvm
+ 
 -- 
 2.23.0.866.gb869b98d4c-goog
 
