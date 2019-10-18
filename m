@@ -2,124 +2,92 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2013CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55144CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E4FA2067B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28C5B2067B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:56:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DD4RNHCQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634268AbfJRO4F convert rfc822-to-8bit (ORCPT
+        id S2634282AbfJRO4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 10:56:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33136 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727242AbfJRO4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 10:56:05 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 81E618A1C8F;
-        Fri, 18 Oct 2019 14:56:04 +0000 (UTC)
-Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2961860600;
-        Fri, 18 Oct 2019 14:56:04 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 08:56:02 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Ben Luo <luoben@linux.alibaba.com>
-Cc:     aarcange@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] vfio/type1: remove hugepage checks in
- is_invalid_reserved_pfn()
-Message-ID: <20191018085602.17f2edbb@x1.home>
-In-Reply-To: <ae787a52-a7ed-f7b8-074f-ab8883037ac0@linux.alibaba.com>
-References: <1d6b7e1c40783f2db4c6cb15bf679a94222ec6a3.1570073993.git.luoben@linux.alibaba.com>
-        <20191003164133.GG13922@redhat.com>
-        <ae787a52-a7ed-f7b8-074f-ab8883037ac0@linux.alibaba.com>
-Organization: Red Hat
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Fri, 18 Oct 2019 14:56:04 +0000 (UTC)
+        Fri, 18 Oct 2019 10:56:09 -0400
+Received: from mail-wr1-f73.google.com ([209.85.221.73]:37654 "EHLO
+        mail-wr1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727242AbfJRO4H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 10:56:07 -0400
+Received: by mail-wr1-f73.google.com with SMTP id v7so858676wrf.4
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 07:56:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=yc/eud15jtn/68GNn5D6RpG4esICx8d3KE84rtJsHck=;
+        b=DD4RNHCQEYgY4LPTbWF0bEzKJpj56iYSVfCGi1ZakRuOvBmPkCeTTXZ9q/SkW8cIUe
+         CgjVN+PqHKS9AmkhTwxFW0xc4rfeCokgJ4Axa1SSaAbPSMG5TYkGLp6JxMzbpWAnscvq
+         DAWdpivSmAHrr61L3t/2s+/cQfqljrgLtTQvgwBtmtzr4Zvl7hTBKYXKYNGap/wRDYI5
+         1wG137HJ/Wy+rWeYjSTTmbyypl7QLpFfZwKa3zgKRQyqmQsbqsN5/VXdl1+VLnCmcufz
+         KH3T510Qw/0dBnofaoT0FuGq2zAzuh9AyAQYRP9DjYDbIpBYBAEy/jrQsihtYxFikj8Y
+         PIhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=yc/eud15jtn/68GNn5D6RpG4esICx8d3KE84rtJsHck=;
+        b=WltqE/946jy7Ckr7rSou8x+7vXTSGC5aPRx9fEYl+g2eSIk/OV6VNGeEpjbd7VXIjH
+         LdCIulrCa5Q9GDSpn6JAdbuPWveFXUQnCBX7hMspeG2MUdw8h5oJYljO73Naf1wYVmFY
+         VEuic7pPkRk72LLXkrFwYN6kttiFmJQBar+Z5J5NaqSGC9JBTpuQPUBYi3y0G5atBLRy
+         cKNJ08ms7mbN2YOaBUYFF/NTc/SLVpDFCvyiHQD2PjenPtujmEp3pPWPHXU6vS9o8TMx
+         0Zpeaz2kDZ9jCXay955wneKUaj8usddXjcTjEg/stbl0ShRshjcloihTTJc0k25rRmPq
+         WdCQ==
+X-Gm-Message-State: APjAAAX25j9eITRn0CpHsT9PHqoq5TpNElqwgwmKA1ZyMx3UQh00XBhT
+        PJzoks4ife2NFb+TM2D0WwPUd66pPidQxG1a
+X-Google-Smtp-Source: APXvYqxyyrELtJ6sDmBfP7yBYHlnJtgNogNsv+PAFdAKgnfpSGntk1T5IuEHltHnQI7E9E7kzLuIOUqT0dorLOup
+X-Received: by 2002:a5d:4ace:: with SMTP id y14mr2449479wrs.131.1571410564846;
+ Fri, 18 Oct 2019 07:56:04 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 16:55:56 +0200
+Message-Id: <7a9d6e35873d52ec0ab1e6b9827d9299a1f4fb0d.1571409250.git.andreyknvl@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
+Subject: [PATCH 1/2] USB: dummy-hcd: increase max number of devices to 32
+From:   Andrey Konovalov <andreyknvl@google.com>
+To:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        "Jacky . Cao @ sony . com" <Jacky.Cao@sony.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 18 Oct 2019 14:42:32 +0800
-Ben Luo <luoben@linux.alibaba.com> wrote:
+This patch increases the maximum number of Dummy UDC/HCD devices to 32.
+---
+ drivers/usb/gadget/udc/dummy_hcd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> A friendly reminder :)
-> 
-
-Thanks Ben!  I've added this to the vfio next branch for v5.5 with
-Andrea's R-b.  Thanks,
-
-Alex
-
-> 在 2019/10/4 上午12:41, Andrea Arcangeli 写道:
-> > On Thu, Oct 03, 2019 at 11:49:42AM +0800, Ben Luo wrote:  
-> >> Currently, no hugepage split code can transfer the reserved bit
-> >> from head to tail during the split, so checking the head can't make
-> >> a difference in a racing condition with hugepage spliting.
-> >>
-> >> The buddy wouldn't allow a driver to allocate an hugepage if any
-> >> subpage is reserved in the e820 map at boot, if any driver sets the
-> >> reserved bit of head page before mapping the hugepage in userland,
-> >> it needs to set the reserved bit in all subpages to be safe.
-> >>
-> >> Signed-off-by: Ben Luo <luoben@linux.alibaba.com>  
-> > Reviewed-by: Andrea Arcangeli <aarcange@redhat.com>
-> >
-> >  
-> >> ---
-> >>   drivers/vfio/vfio_iommu_type1.c | 26 ++++----------------------
-> >>   1 file changed, 4 insertions(+), 22 deletions(-)
-> >>
-> >> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> >> index 054391f..e2019ba 100644
-> >> --- a/drivers/vfio/vfio_iommu_type1.c
-> >> +++ b/drivers/vfio/vfio_iommu_type1.c
-> >> @@ -287,31 +287,13 @@ static int vfio_lock_acct(struct vfio_dma *dma, long npage, bool async)
-> >>    * Some mappings aren't backed by a struct page, for example an mmap'd
-> >>    * MMIO range for our own or another device.  These use a different
-> >>    * pfn conversion and shouldn't be tracked as locked pages.
-> >> + * For compound pages, any driver that sets the reserved bit in head
-> >> + * page needs to set the reserved bit in all subpages to be safe.
-> >>    */
-> >>   static bool is_invalid_reserved_pfn(unsigned long pfn)
-> >>   {
-> >> -	if (pfn_valid(pfn)) {
-> >> -		bool reserved;
-> >> -		struct page *tail = pfn_to_page(pfn);
-> >> -		struct page *head = compound_head(tail);
-> >> -		reserved = !!(PageReserved(head));
-> >> -		if (head != tail) {
-> >> -			/*
-> >> -			 * "head" is not a dangling pointer
-> >> -			 * (compound_head takes care of that)
-> >> -			 * but the hugepage may have been split
-> >> -			 * from under us (and we may not hold a
-> >> -			 * reference count on the head page so it can
-> >> -			 * be reused before we run PageReferenced), so
-> >> -			 * we've to check PageTail before returning
-> >> -			 * what we just read.
-> >> -			 */
-> >> -			smp_rmb();
-> >> -			if (PageTail(tail))
-> >> -				return reserved;
-> >> -		}
-> >> -		return PageReserved(tail);
-> >> -	}
-> >> +	if (pfn_valid(pfn))
-> >> +		return PageReserved(pfn_to_page(pfn));
-> >>   
-> >>   	return true;
-> >>   }
-> >> -- 
-> >> 1.8.3.1
-> >>  
+diff --git a/drivers/usb/gadget/udc/dummy_hcd.c b/drivers/usb/gadget/udc/dummy_hcd.c
+index 3d499d93c083..a8f1e5707c14 100644
+--- a/drivers/usb/gadget/udc/dummy_hcd.c
++++ b/drivers/usb/gadget/udc/dummy_hcd.c
+@@ -2725,7 +2725,7 @@ static struct platform_driver dummy_hcd_driver = {
+ };
+ 
+ /*-------------------------------------------------------------------------*/
+-#define MAX_NUM_UDC	2
++#define MAX_NUM_UDC	32
+ static struct platform_device *the_udc_pdev[MAX_NUM_UDC];
+ static struct platform_device *the_hcd_pdev[MAX_NUM_UDC];
+ 
+-- 
+2.23.0.866.gb869b98d4c-goog
 
