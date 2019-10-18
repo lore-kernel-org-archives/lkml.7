@@ -7,58 +7,60 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A681ACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E2ACA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0FB20869
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 827DA20869
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571422045;
-	bh=PIgAGdt9on0j/WN0lnyMNa18LdmBOVi2ERi2NW+sYfw=;
+	s=default; t=1571422051;
+	bh=W2NE2Z5+fYaR20AAxk1J8abxM7cQPTYOPbWljunsf2Q=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=hhGRukI+kryG6nGzZtMupRAiSTKgknP203StYwJxV41e5xPF7EJqvgQcXE6yZk0xU
-	 nZ+qnf8QzEZNY9CM2hENWVAczK27VlvjzAMRjjHTVuWYqIlEOdwwPxyd1l+PVqAYgo
-	 g4sPizIn8OfRLwcvmFkdLcLilMCcWCuEEh+diPyU=
+	b=zv8W4roQqHnbGWMj+bd3j+dLuj6CqqHvE+4gqiD8718ClHDvptggJlP+LIk8nhWUe
+	 WcqTSGxJ9GyEf7rs+O5B+SUAj2THn88kI7sgh6ROppHCOBLcqoZsAI4AjZNwiGNmjT
+	 a6ti/7Ha8jZgnZcwnO8KRqbscr/uaDebMZM4ozH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634519AbfJRSHY (ORCPT
+        id S2505778AbfJRSHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:07:24 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45322 "EHLO
+        Fri, 18 Oct 2019 14:07:30 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45486 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505759AbfJRSHR (ORCPT
+        with ESMTP id S2634467AbfJRSHW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:07:17 -0400
+        Fri, 18 Oct 2019 14:07:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=TJSOTBg5uxsGq0E3SQaQTNlPvSqo6dIF5AgA35J30g4=; b=hM1DJuTQokPQ
-        i2+799Z//Rv9NMZ6HfIhzKDZURp+kzcuokqeciLIRjPe3Jnifg2g2gKUJjBhrR+7KeN4AcvBxxu1P
-        2G51OlZcZOWB5iI8bRvGPgIvlNue6D/izFCbLjKFZh1aFdgzp15nCZXO9M67dqqmhgP/GIj6iyXed
-        0rlKM=;
+        List-Archive; bh=djFLKeCvPYC1JI92wnKGfQBYAzanIKZZLgVKtsjqlsM=; b=hjAvJWo86YgT
+        YloZHOX/P9PXV5w7GM4QznPW9FfFp8TN4tma8sqPWc6YUDmdTEBIXkqAvpFAeJbYV4KdFWyd8lI5z
+        NfE+vYFsMl/6cqI6GQRHR36pqObYoO3MxIhgvJ0/9gwdo2nmOIIKBpbKp52QAKO3GF/BrEPiPnNND
+        8u55M=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iLWeb-0004H9-7v; Fri, 18 Oct 2019 18:07:09 +0000
+        id 1iLWea-0004Gu-25; Fri, 18 Oct 2019 18:07:08 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id AC1FD2743273; Fri, 18 Oct 2019 19:07:08 +0100 (BST)
+        id 8A5912741DEA; Fri, 18 Oct 2019 19:07:07 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     Mans Rullgard <mans@mansr.com>
 Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org,
         Ludovic Desroches <ludovic.desroches@microchip.com>,
         Mark Brown <broonie@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@atmel.com>,
         Nicolas Ferre <nicolas.ferre@microchip.com>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Applied "spi: atmel: Configure GPIO per CS instead of by controller" to the spi tree
-In-Reply-To: <20191017141846.7523-4-gregory.clement@bootlin.com>
+Subject: Applied "spi: atmel: fix handling of cs_change set on non-last xfer" to the spi tree
+In-Reply-To: <20191018153504.4249-1-gregory.clement@bootlin.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191018180708.AC1FD2743273@ypsilon.sirena.org.uk>
-Date:   Fri, 18 Oct 2019 19:07:08 +0100 (BST)
+Message-Id: <20191018180707.8A5912741DEA@ypsilon.sirena.org.uk>
+Date:   Fri, 18 Oct 2019 19:07:07 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,11 +68,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: atmel: Configure GPIO per CS instead of by controller
+   spi: atmel: fix handling of cs_change set on non-last xfer
 
 has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -91,119 +93,65 @@ to this mail.
 Thanks,
 Mark
 
-From 585d18f7ebd1dba7400dcc7189a5f7223b821374 Mon Sep 17 00:00:00 2001
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Date: Thu, 17 Oct 2019 16:18:42 +0200
-Subject: [PATCH] spi: atmel: Configure GPIO per CS instead of by controller
+From fed8d8c7a6dc2a76d7764842853d81c770b0788e Mon Sep 17 00:00:00 2001
+From: Mans Rullgard <mans@mansr.com>
+Date: Fri, 18 Oct 2019 17:35:04 +0200
+Subject: [PATCH] spi: atmel: fix handling of cs_change set on non-last xfer
 
-Instead of setting up the GPIO configuration for the whole controller,
-do it at CS level. It will allow to mix internal CS and GPIO CS, which
-is not possible with the current implementation.
+The driver does the wrong thing when cs_change is set on a non-last
+xfer in a message.  When cs_change is set, the driver deactivates the
+CS and leaves it off until a later xfer again has cs_change set whereas
+it should be briefly toggling CS off and on again.
 
+This patch brings the behaviour of the driver back in line with the
+documentation and common sense.  The delay of 10 us is the same as is
+used by the default spi_transfer_one_message() function in spi.c.
+[gregory: rebased on for-5.5 from spi tree]
+Fixes: 8090d6d1a415 ("spi: atmel: Refactor spi-atmel to use SPI framework queue")
+Signed-off-by: Mans Rullgard <mans@mansr.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20191017141846.7523-4-gregory.clement@bootlin.com
+Link: https://lore.kernel.org/r/20191018153504.4249-1-gregory.clement@bootlin.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-atmel.c | 32 ++++++++------------------------
- 1 file changed, 8 insertions(+), 24 deletions(-)
+ drivers/spi/spi-atmel.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
-index 6e08ae539bc0..b511df6a4846 100644
+index acf318e7330c..2f8c79ce05c8 100644
 --- a/drivers/spi/spi-atmel.c
 +++ b/drivers/spi/spi-atmel.c
-@@ -275,7 +275,6 @@ struct atmel_spi {
- 
- 	bool			use_dma;
- 	bool			use_pdc;
--	bool			use_cs_gpios;
+@@ -302,7 +302,6 @@ struct atmel_spi {
+ 	bool			use_cs_gpios;
  
  	bool			keep_cs;
- 	bool			cs_active;
-@@ -348,7 +347,7 @@ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
+-	bool			cs_active;
+ 
+ 	u32			fifo_size;
+ };
+@@ -1376,11 +1375,9 @@ static int atmel_spi_one_transfer(struct spi_master *master,
+ 				 &msg->transfers)) {
+ 			as->keep_cs = true;
+ 		} else {
+-			as->cs_active = !as->cs_active;
+-			if (as->cs_active)
+-				cs_activate(as, msg->spi);
+-			else
+-				cs_deactivate(as, msg->spi);
++			cs_deactivate(as, msg->spi);
++			udelay(10);
++			cs_activate(as, msg->spi);
  		}
- 
- 		mr = spi_readl(as, MR);
--		if (as->use_cs_gpios)
-+		if (asd->npcs_pin)
- 			gpiod_set_value(asd->npcs_pin, 1);
- 	} else {
- 		u32 cpol = (spi->mode & SPI_CPOL) ? SPI_BIT(CPOL) : 0;
-@@ -365,7 +364,7 @@ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
- 
- 		mr = spi_readl(as, MR);
- 		mr = SPI_BFINS(PCS, ~(1 << spi->chip_select), mr);
--		if (as->use_cs_gpios && spi->chip_select != 0)
-+		if (asd->npcs_pin && spi->chip_select != 0)
- 			gpiod_set_value(asd->npcs_pin, 1);
- 		spi_writel(as, MR, mr);
  	}
-@@ -389,7 +388,7 @@ static void cs_deactivate(struct atmel_spi *as, struct spi_device *spi)
  
- 	dev_dbg(&spi->dev, "DEactivate NPCS, mr %08x\n", mr);
+@@ -1403,7 +1400,6 @@ static int atmel_spi_transfer_one_message(struct spi_master *master,
+ 	atmel_spi_lock(as);
+ 	cs_activate(as, spi);
  
--	if (!as->use_cs_gpios)
-+	if (!asd->npcs_pin)
- 		spi_writel(as, CR, SPI_BIT(LASTXFER));
- 	else if (atmel_spi_is_v2(as) || spi->chip_select != 0)
- 		gpiod_set_value(asd->npcs_pin, 0);
-@@ -1176,7 +1175,7 @@ static int atmel_spi_setup(struct spi_device *spi)
- 	as = spi_master_get_devdata(spi->master);
+-	as->cs_active = true;
+ 	as->keep_cs = false;
  
- 	/* see notes above re chipselect */
--	if (!as->use_cs_gpios && (spi->mode & SPI_CS_HIGH)) {
-+	if (!spi->cs_gpiod && (spi->mode & SPI_CS_HIGH)) {
- 		dev_warn(&spi->dev, "setup: non GPIO CS can't be active-high\n");
- 		return -EINVAL;
- 	}
-@@ -1186,9 +1185,9 @@ static int atmel_spi_setup(struct spi_device *spi)
- 		csr |= SPI_BIT(CPOL);
- 	if (!(spi->mode & SPI_CPHA))
- 		csr |= SPI_BIT(NCPHA);
--	if (!as->use_cs_gpios)
--		csr |= SPI_BIT(CSAAT);
- 
-+	if (!spi->cs_gpiod)
-+		csr |= SPI_BIT(CSAAT);
- 	csr |= SPI_BF(DLYBS, 0);
- 
- 	word_delay_csr = atmel_word_delay_csr(spi, as);
-@@ -1206,20 +1205,8 @@ static int atmel_spi_setup(struct spi_device *spi)
- 		if (!asd)
- 			return -ENOMEM;
- 
--		/*
--		 * If use_cs_gpios is true this means that we have "cs-gpios"
--		 * defined in the device tree node so we should have
--		 * gotten the GPIO lines from the device tree inside the
--		 * SPI core. Warn if this is not the case but continue since
--		 * CS GPIOs are after all optional.
--		 */
--		if (as->use_cs_gpios) {
--			if (!spi->cs_gpiod) {
--				dev_err(&spi->dev,
--					"host claims to use CS GPIOs but no CS found in DT by the SPI core\n");
--			}
-+		if (spi->cs_gpiod)
- 			asd->npcs_pin = spi->cs_gpiod;
--		}
- 
- 		spi->controller_state = asd;
- 	}
-@@ -1551,13 +1538,10 @@ static int atmel_spi_probe(struct platform_device *pdev)
- 	 * discovered by the SPI core when registering the SPI master
- 	 * and assigned to each SPI device.
- 	 */
--	as->use_cs_gpios = true;
- 	if (atmel_spi_is_v2(as) &&
- 	    pdev->dev.of_node &&
--	    !of_get_property(pdev->dev.of_node, "cs-gpios", NULL)) {
--		as->use_cs_gpios = false;
-+	    !of_get_property(pdev->dev.of_node, "cs-gpios", NULL))
- 		master->num_chipselect = 4;
--	}
- 
- 	as->use_dma = false;
- 	as->use_pdc = false;
+ 	msg->status = 0;
 -- 
 2.20.1
 
