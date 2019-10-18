@@ -2,89 +2,130 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B683ECA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E651CCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82311222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9DA0222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:15:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ffgdHLQr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t5Dq1zRK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393563AbfJRFPp (ORCPT
+        id S2405326AbfJRFPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:15:45 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:49695 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728302AbfJRFPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:15:45 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46vXMg4j4xz9sPW;
-        Fri, 18 Oct 2019 14:58:54 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1571371135;
-        bh=wO2rnQEfFabWDx7yJbQXx/8U/u93yDA+NcdDOwCKOfk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ffgdHLQryZywbPqY1f+qL0vItMTcIWfH9inoGS/Cgrwv2hVMcUYQuAZkGMxibGV7n
-         LVeSKBAK1U5+XYx7KyM9fQjHHhgAIN+qjZcCAputivkKjZ+7kZVuLgOh0PSZJh7iDW
-         rpTuGNfZPzsFDY6msb7gUdqXrZFqmKeL+34b91pcJvd/LQpz1IaGvw/76Xh9xJi/Tq
-         S1zj7zZPYaRK9IfABuc1hZGSQhpCSGSLF80TSm0jdGKuyyclwGYbqa7t4LOrCKXVJJ
-         I4dLZkS9QWz9VfO0TKPKNgpsUVHBpYoLkkgEHS92l5fQLw6u/tqoSalUovNSDud4sa
-         uedJhjQawh7Vw==
-Date:   Fri, 18 Oct 2019 14:58:54 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the block tree
-Message-ID: <20191018145854.26b2c645@canb.auug.org.au>
-In-Reply-To: <5a9bf632-2466-bc73-45d3-104c4bb0245a@kernel.dk>
-References: <20191018115126.6263a3e3@canb.auug.org.au>
-        <5a9bf632-2466-bc73-45d3-104c4bb0245a@kernel.dk>
+        Fri, 18 Oct 2019 01:15:53 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:42407 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393761AbfJRFPx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 01:15:53 -0400
+Received: by mail-qt1-f194.google.com with SMTP id w14so7342012qto.9;
+        Thu, 17 Oct 2019 22:15:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sV/yp4uqHU1crLu9pC0wLbsbQ7Aq/erC7q2I15YJ9GM=;
+        b=t5Dq1zRK0HLlkQxAprLociv5KSGzvgFz+5sPaKre1VcMY33wWTuuneFzSnYSUoCu2G
+         sXPNrKasrO90Ig5aBHRbAj5LQcWe6qrI+EVW2k+04kkKYwxWEbi+vD4n0XLmucqYRfut
+         Rlv5UsbxiKkf6hDD2sgShaR1AJJzUM7YVS6vxLlKVXmjzXDLOCZRDGhoeO7fwLoSnSHo
+         i58k0ACK1WM5uVXTQYuKBkaL2doDCWknHAbRJfdL+wNSlOQl3TDy6hSWOCNfoGi0NlV9
+         PM8XaP6N2aWa20iczB0fWWD15XT5YFgxBHLdPN2LiXm6uBTJ/pf0YWWQ60ssjMI38erb
+         Tdxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sV/yp4uqHU1crLu9pC0wLbsbQ7Aq/erC7q2I15YJ9GM=;
+        b=YjqRsgvlkfIDn70uYvRzKRyLzmMd8EsgKeQIh9yBVfQBoQpwdEYXog5kOlFkIDMSGI
+         qExO6P/JST2JeIhlBfbh+il9a1VyQUusbo/PPjXOplArZlfMWpvmKaI7jAeaoC1yh+rv
+         B93YIuWqirUD/WHPXBTk8zqpLF8DQL4rdZePxLgpSq61Q0AwRm3okfaDceXycxEWEtaP
+         SiodGEXtnTIRCp+73WsR53g71zeCEutKPKkHkd4c4YGx2qqd7dK/emCOucOXZtBOidwi
+         iPCtadsQSsj8Vv4T2VC3fN4JA5cKYzkycU6J19JJwYg2p5aOVcb0IQbwIy6fwrbMnGYi
+         Zu6g==
+X-Gm-Message-State: APjAAAXTwj/N2X14pbhHtNyiAup3Kk+p13MHxNbMveaAteZUtN9eL8jy
+        /KxGxvUWb2KT0yKs88eyh+OBmFLboDE=
+X-Google-Smtp-Source: APXvYqxwS4OmMdWzpIhS4OUmUBQs2MuOcVZMwEf0txmixcAcQSmOHd0XKjQ7cnDjYeLGBLad/wtInA==
+X-Received: by 2002:a65:5603:: with SMTP id l3mr8009046pgs.56.1571373940009;
+        Thu, 17 Oct 2019 21:45:40 -0700 (PDT)
+Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
+        by smtp.gmail.com with ESMTPSA id b3sm3696445pjp.13.2019.10.17.21.45.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 21:45:38 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-input@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Sam Bazely <sambazley@fastmail.com>,
+        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+        Austin Palmer <austinp@valvesoftware.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/3] Logitech G920 fixes
+Date:   Thu, 17 Oct 2019 21:45:14 -0700
+Message-Id: <20191018044517.6430-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/1xzrzn7NBgTfyXx4jJy1aoi";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/1xzrzn7NBgTfyXx4jJy1aoi
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Everyone:
 
-Hi Jens,
+This series contains patches to fix a couple of regressions in G920
+wheel support by hid-logitech-hidpp driver. Without the patches the
+wheel remains stuck in autocentering mode ("resisting" any attempt to
+trun) as well as missing support for any FF action.
 
-On Thu, 17 Oct 2019 18:56:39 -0600 Jens Axboe <axboe@kernel.dk> wrote:
->
-> I'll fix these warnings up, guessing it's 32-bit?
+Thanks,
+Andrey Smirnov
 
-Thanks.  Yeah 32 bit.
+Changes since [v2]:
 
---=20
-Cheers,
-Stephen Rothwell
+     - Fixes a buggy validity check "HID: logitech-hidpp: rework
+       device validation" as pointed out by Benjamin Tissoires
 
---Sig_/1xzrzn7NBgTfyXx4jJy1aoi
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+     - Marked "HID: logitech-hidpp: do all FF cleanup in
+       hidpp_ff_destroy()" as 5.2+ for stable
 
------BEGIN PGP SIGNATURE-----
+Changes since [v1]:
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2pOH4ACgkQAVBC80lX
-0GzIPgf9EUVKAAVP/p8nrsw99OavZUJcxgUjuNG5LddAjYFMmtB3S01qu6KT5tL9
-jQBLGr6zlmHUoe6Xz6VUgP5ZS/fKnfXy12HMEeTPXJyYtq3FGiLplaQTn12Ja31i
-OiXeVOS2UAO40rtXB925Sp+WL+drWoJv2dFi27RPNxM8pY6WaqYJgEPTjx3ZZYlS
-WabaTqT56fm6UyMnp6XOrDyDqDAf6iX3pS6rjauL9lyGTcQA8cLP/7o55l7c0JCp
-LqXcGW8w4bWm4XZA3mk3B2ukNvtmcEqppU7LH0ok8IvAwgv+pFWcOo6v7yEZaVJn
-xCcCMX2CRahCF4U79E3R3pCFQsjfmA==
-=169m
------END PGP SIGNATURE-----
+     - "HID: logitech-hidpp: split g920_get_config()" is changed to
+       not rely on devres and be a self contained patch
 
---Sig_/1xzrzn7NBgTfyXx4jJy1aoi--
+     - Quirk driven behaviour of "HID: logitech-hidpp: add G920 device
+       validation quirk" is replaced with generic validation algorithm
+       of "HID: logitech-hidpp: rework device validation"
+
+     - Fix for a poteintial race condition is added in
+       "HID: logitech-hidpp: do all FF cleanup in hidpp_ff_destroy()"
+       as per suggestion by Benjamin Tissoires
+
+     - Collected Tested-by from Sam Bazely for "HID: logitech-hidpp:
+       split g920_get_config()" since that patch didn't change
+       significantly since [v1]
+
+     - Specified stable kernel versions I think the patches should
+       apply to (hopefully I got that right)
+
+[v2] lore.kernel.org/lkml/20191016182935.5616-1-andrew.smirnov@gmail.com
+[v1] lore.kernel.org/lkml/20191007051240.4410-1-andrew.smirnov@gmail.com
+
+Andrey Smirnov (3):
+  HID: logitech-hidpp: split g920_get_config()
+  HID: logitech-hidpp: rework device validation
+  HID: logitech-hidpp: do all FF cleanup in hidpp_ff_destroy()
+
+ drivers/hid/hid-logitech-hidpp.c | 237 +++++++++++++++++--------------
+ 1 file changed, 131 insertions(+), 106 deletions(-)
+
+-- 
+2.21.0
+
