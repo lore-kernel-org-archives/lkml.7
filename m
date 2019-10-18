@@ -7,44 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D308CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2D7CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2905205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0545C20872
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:21:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437257;
-	bh=M2+7pJvpH6DnbriKncCHiJQYaOrn1+WLYvLakRoGUIc=;
+	s=default; t=1571437261;
+	bh=LNNQLMxHuH//SF79byo4zmELq1YgTbZqrKBWxPS1E2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NrwFoZU9G+CjL5q8Qhu64BK/Eal2zBg9Ggv2UKr8N33lxSknqWZzfAEWuaauTOu7Z
-	 8crqf1r5kkvUaCztu3pbc4NVMirRszdB7zcQ9y+CSCJ6tBXRe5+KVYzMjPmSqLeLo/
-	 MLE69zLGiIE5u0NOdKB937giHnAj6xjc3Udrb1UE=
+	b=r201r+s7D0OVBLFqzfvjhsnAhAUc31ZYqY1sbxBIrjTecndTLX2LaC+ntjzcYIU0G
+	 jCnB7k9JAI/3tbEWrpDmOlVMQNOZDgrnGpEmNhyO6+HaGkOyx1yggMy7aOy2TzWwD5
+	 gQjxeec0nm4b/82PsukXZnXqVrXEzK7pPahl8+ws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394181AbfJRWU4 (ORCPT
+        id S1731591AbfJRWG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:20:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38464 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:06:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731607AbfJRWGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:06:31 -0400
+        id S1731176AbfJRWGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:06:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18EB2222D2;
-        Fri, 18 Oct 2019 22:06:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDF942245D;
+        Fri, 18 Oct 2019 22:06:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436390;
-        bh=M2+7pJvpH6DnbriKncCHiJQYaOrn1+WLYvLakRoGUIc=;
+        s=default; t=1571436376;
+        bh=LNNQLMxHuH//SF79byo4zmELq1YgTbZqrKBWxPS1E2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FUHf1l/9N4RNK+F7ggPbkmfi0CmBydqe+JdPFkYjCjvSXi6lSdaAERM0ySUM6TTKF
-         tp99vafjJAjw8Uudc6rT7a6vtbyBaoRrrQbYQ1hEbwN1lOKjCM7p5rXyBLDRo7/13F
-         +hl9TTVeufjoKqkYNVfy7rST3BkBZc88BGsjmHhI=
+        b=jRGMIYdtROGSkjtkyx3ePTTyBds6rcYNfq4ZzvDykyIlDkC7JKFLKP1i65ZKNuYIA
+         HbWJT+5Jr1KBlc/GRPoYDFgnYMXbA/FdpShX2+fGZ6l5bNmj3KXiD2lMWZdwToLy4Z
+         +39iXdhLffdtDLkrMfORe6VRvj7N0KeD36l2ZizI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 042/100] ALSA: hda/realtek - Apply ALC294 hp init also for S4 resume
-Date:   Fri, 18 Oct 2019 18:04:27 -0400
-Message-Id: <20191018220525.9042-42-sashal@kernel.org>
+Cc:     "Daniel T. Lee" <danieltimlee@gmail.com>,
+        Song Liu <songliubraving@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 030/100] samples: bpf: fix: seg fault with NULL pointer arg
+Date:   Fri, 18 Oct 2019 18:04:15 -0400
+Message-Id: <20191018220525.9042-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -57,38 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: "Daniel T. Lee" <danieltimlee@gmail.com>
 
-[ Upstream commit f6ef4e0e284251ff795c541db1129c84515ed044 ]
+[ Upstream commit d59dd69d5576d699d7d3f5da0b4738c3a36d0133 ]
 
-The init sequence for ALC294 headphone stuff is needed not only for
-the boot up time but also for the resume from hibernation, where the
-device is switched from the boot kernel without sound driver to the
-suspended image.  Since we record the PM event in the device
-power_state field, we can now recognize the call pattern and apply the
-sequence conditionally.
+When NULL pointer accidentally passed to write_kprobe_events,
+due to strlen(NULL), segmentation fault happens.
+Changed code returns -1 to deal with this situation.
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Bug issued with Smatch, static analysis.
+
+Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 4 +++-
+ samples/bpf/bpf_load.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index e1b08d6f2a519..5684e1d5e0f99 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -3457,7 +3457,9 @@ static void alc294_init(struct hda_codec *codec)
+diff --git a/samples/bpf/bpf_load.c b/samples/bpf/bpf_load.c
+index 5061a2ec45646..176c04a454dc9 100644
+--- a/samples/bpf/bpf_load.c
++++ b/samples/bpf/bpf_load.c
+@@ -59,7 +59,9 @@ static int write_kprobe_events(const char *val)
  {
- 	struct alc_spec *spec = codec->spec;
+ 	int fd, ret, flags;
  
--	if (!spec->done_hp_init) {
-+	/* required only at boot or S4 resume time */
-+	if (!spec->done_hp_init ||
-+	    codec->core.dev.power.power_state.event == PM_EVENT_RESTORE) {
- 		alc294_hp_init(codec);
- 		spec->done_hp_init = true;
- 	}
+-	if ((val != NULL) && (val[0] == '\0'))
++	if (val == NULL)
++		return -1;
++	else if (val[0] == '\0')
+ 		flags = O_WRONLY | O_TRUNC;
+ 	else
+ 		flags = O_WRONLY | O_APPEND;
 -- 
 2.20.1
 
