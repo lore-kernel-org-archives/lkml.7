@@ -2,87 +2,70 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C601CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D791CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25F0520854
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76AEB2089C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:57:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409322AbfJRQzy (ORCPT
+        id S2409363AbfJRQ5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:55:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48416 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 12:57:04 -0400
+Received: from unicorn.mansr.com ([81.2.72.234]:52096 "EHLO unicorn.mansr.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405642AbfJRQzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:55:53 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56FE620854;
-        Fri, 18 Oct 2019 16:55:52 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 12:55:50 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>, linux-pm@vger.kernel.org,
-        mingo@redhat.com, vincent.guittot@linaro.org,
-        daidavid1@codeaurora.org, okukatla@codeaurora.org,
-        evgreen@chromium.org, mka@chromium.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] interconnect: Add basic tracepoints
-Message-ID: <20191018125550.0ad0eefa@gandalf.local.home>
-In-Reply-To: <20191018164403.GB1669@tuxbook-pro>
-References: <20191018140224.15087-1-georgi.djakov@linaro.org>
-        <20191018164403.GB1669@tuxbook-pro>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S2405642AbfJRQ5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 12:57:03 -0400
+Received: by unicorn.mansr.com (Postfix, from userid 51770)
+        id 578A81560D; Fri, 18 Oct 2019 17:57:01 +0100 (BST)
+From:   Mans Rullgard <mans@mansr.com>
+To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Chen-Yu Tsai <wens@csie.org>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] net: ethernet: dwmac-sun8i: show message only when switching to promisc
+Date:   Fri, 18 Oct 2019 17:56:58 +0100
+Message-Id: <20191018165658.9752-1-mans@mansr.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 18 Oct 2019 09:44:03 -0700
-Bjorn Andersson <bjorn.andersson@linaro.org> wrote:
+Printing the info message every time more than the max number of mac
+addresses are requested generates unnecessary log spam.  Showing it only
+when the hw is not already in promiscous mode is equally informative
+without being annoying.
 
-> > @@ -449,6 +452,9 @@ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
-> >  
-> >  		/* aggregate requests for this node */
-> >  		aggregate_requests(node);
-> > +
-> > +		trace_icc_set_bw(node, dev_name(path->reqs[i].dev),
-> > +				 avg_bw, peak_bw);  
-> 
-> When I've been debugging interconnect things I've added a
-> kstrdup_const() of "name" in of_icc_get() and then included that here.
-> 
-> I find including the path name quite useful for devices with multiple
-> paths.
-> 
-> >  	}
-> >  
-> >  	ret = apply_constraints(path);
-> > @@ -461,6 +467,9 @@ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
-> >  			path->reqs[i].avg_bw = old_avg;
-> >  			path->reqs[i].peak_bw = old_peak;
-> >  			aggregate_requests(node);
-> > +
-> > +			trace_icc_set_bw(node, dev_name(path->reqs[i].dev),
-> > +					 old_avg, old_peak);
-> >  		}
-> >  		apply_constraints(path);  
-> 
-> And analog to e.g. the clock traces I would suggest that you trace
-> device, path and "ret" here.
+Signed-off-by: Mans Rullgard <mans@mansr.com>
+---
+Changed in v2:
+- test only RXALL bit
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-If you are going to switch to device name and path, please just pass in
-the path to the trace point. Then have the TP_fast_assign() do the rest
-of the work.
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+index 79c91526f3ec..c186de64e552 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+@@ -646,7 +646,8 @@ static void sun8i_dwmac_set_filter(struct mac_device_info *hw,
+ 			}
+ 		}
+ 	} else {
+-		netdev_info(dev, "Too many address, switching to promiscuous\n");
++		if (!(readl(ioaddr + EMAC_RX_FRM_FLT) & EMAC_FRM_FLT_RXALL))
++			netdev_info(dev, "Too many address, switching to promiscuous\n");
+ 		v = EMAC_FRM_FLT_RXALL;
+ 	}
+ 
+-- 
+2.23.0
 
-Thanks!
-
--- Steve
