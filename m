@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13205CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCE6CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B50222CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40F17222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:04:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436253;
-	bh=eAV/jO+TLQ0C4hnh/l6aSCSrwb/gp7mDLddYD/SJ/m4=;
+	s=default; t=1571436258;
+	bh=rADQ7uRo/1bD2l2NSIcwTk6GrNhK79IgegKRNKf2DhA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xq181ozSELKgSD0byxZa3LDVA/VxvcANfiQdL9WJe5oIRb0NYvfCR/xvWIrUVfJaK
-	 w3/e3Kxl+gY/ZL0dRYADsGfrTIUc50gjmlGJ72R+cNZywE4OCmerRgXYlP7Rb4v1s8
-	 yUAF1DvGTT1PT7Ko+C/e4knl7xBd1dPpbYQsyZak=
+	b=IXVfRFkFeOFRgsqYeOdfiRnfGhbJNFnVd0Hvhq3LxxhwFMp83MzN1XKNyEQgE+wOM
+	 ZcnSxyKY2vEZdcNLGtXcscktTCFot1Hu84ZuBAmSI2xzswVmiHceukG0NO9Z+B4RFO
+	 U54gmIVVr5FLN0rKDpSFs07lCoJd+0KClwWR9xmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbfJRWEL (ORCPT
+        id S1727955AbfJRWEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:04:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35744 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:04:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727730AbfJRWEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:04:08 -0400
+        id S1727868AbfJRWEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:04:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FCCC222C3;
-        Fri, 18 Oct 2019 22:04:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F2AB222C3;
+        Fri, 18 Oct 2019 22:04:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436247;
-        bh=eAV/jO+TLQ0C4hnh/l6aSCSrwb/gp7mDLddYD/SJ/m4=;
+        s=default; t=1571436253;
+        bh=rADQ7uRo/1bD2l2NSIcwTk6GrNhK79IgegKRNKf2DhA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mv/qj/SvkIA0aAJVtcwGh5LkNe1uwNpQ0ITBL4MlXpwFf+CDxkvWCFYg+1E9O+BNh
-         j5S+UNzjTmgHt4xMsle2kbbv07fEOrM1RQWNGcu39EKhaudwopemcjOqI6qkuvadIN
-         pgNcw0XeggVCzI+PIzf6oC4Su3lwarvKItq7SREE=
+        b=I0Ieb+RS4g3q4fhIN1sLMCQz3vyQ0TtQD7VjNo7dtA9fSLGGqeyuLf7D7p69cHcBa
+         8PeponsW//nR2r5H8TXOWMnhzs8v3dc5V415xQNjByu9bQU62CPkKDYe39MpfoquYo
+         TrkhVm6hb999r8EGWZGEy5/qeOhB3RdndHiE2UWw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        kbuild test robot <lkp@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 31/89] tty: n_hdlc: fix build on SPARC
-Date:   Fri, 18 Oct 2019 18:02:26 -0400
-Message-Id: <20191018220324.8165-31-sashal@kernel.org>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        Mark Zhang <markz@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 36/89] RDMA/nldev: Reshuffle the code to avoid need to rebind QP in error path
+Date:   Fri, 18 Oct 2019 18:02:31 -0400
+Message-Id: <20191018220324.8165-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -63,50 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Leon Romanovsky <leonro@mellanox.com>
 
-[ Upstream commit 47a7e5e97d4edd7b14974d34f0e5a5560fad2915 ]
+[ Upstream commit 594e6c5d41ed2471ab0b90f3f0b66cdf618b7ac9 ]
 
-Fix tty driver build on SPARC by not using __exitdata.
-It appears that SPARC does not support section .exit.data.
+Properly unwind QP counter rebinding in case of failure.
 
-Fixes these build errors:
+Trying to rebind the counter after unbiding it is not going to work
+reliably, move the unbind to the end so it doesn't have to be unwound.
 
-`.exit.data' referenced in section `.exit.text' of drivers/tty/n_hdlc.o: defined in discarded section `.exit.data' of drivers/tty/n_hdlc.o
-`.exit.data' referenced in section `.exit.text' of drivers/tty/n_hdlc.o: defined in discarded section `.exit.data' of drivers/tty/n_hdlc.o
-`.exit.data' referenced in section `.exit.text' of drivers/tty/n_hdlc.o: defined in discarded section `.exit.data' of drivers/tty/n_hdlc.o
-`.exit.data' referenced in section `.exit.text' of drivers/tty/n_hdlc.o: defined in discarded section `.exit.data' of drivers/tty/n_hdlc.o
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Fixes: 063246641d4a ("format-security: move static strings to const")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Link: https://lore.kernel.org/r/675e7bd9-955b-3ff3-1101-a973b58b5b75@infradead.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: b389327df905 ("RDMA/nldev: Allow counter manual mode configration through RDMA netlink")
+Link: https://lore.kernel.org/r/20191002115627.16740-1-leon@kernel.org
+Reviewed-by: Mark Zhang <markz@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/n_hdlc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/infiniband/core/nldev.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/tty/n_hdlc.c b/drivers/tty/n_hdlc.c
-index e55c79eb64309..98361acd3053f 100644
---- a/drivers/tty/n_hdlc.c
-+++ b/drivers/tty/n_hdlc.c
-@@ -968,6 +968,11 @@ static int __init n_hdlc_init(void)
- 	
- }	/* end of init_module() */
+diff --git a/drivers/infiniband/core/nldev.c b/drivers/infiniband/core/nldev.c
+index 91e2cc9ddb9f8..f42e856f30729 100644
+--- a/drivers/infiniband/core/nldev.c
++++ b/drivers/infiniband/core/nldev.c
+@@ -1787,10 +1787,6 @@ static int nldev_stat_del_doit(struct sk_buff *skb, struct nlmsghdr *nlh,
  
-+#ifdef CONFIG_SPARC
-+#undef __exitdata
-+#define __exitdata
-+#endif
+ 	cntn = nla_get_u32(tb[RDMA_NLDEV_ATTR_STAT_COUNTER_ID]);
+ 	qpn = nla_get_u32(tb[RDMA_NLDEV_ATTR_RES_LQPN]);
+-	ret = rdma_counter_unbind_qpn(device, port, qpn, cntn);
+-	if (ret)
+-		goto err_unbind;
+-
+ 	if (fill_nldev_handle(msg, device) ||
+ 	    nla_put_u32(msg, RDMA_NLDEV_ATTR_PORT_INDEX, port) ||
+ 	    nla_put_u32(msg, RDMA_NLDEV_ATTR_STAT_COUNTER_ID, cntn) ||
+@@ -1799,13 +1795,15 @@ static int nldev_stat_del_doit(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 		goto err_fill;
+ 	}
+ 
++	ret = rdma_counter_unbind_qpn(device, port, qpn, cntn);
++	if (ret)
++		goto err_fill;
 +
- static const char hdlc_unregister_ok[] __exitdata =
- 	KERN_INFO "N_HDLC: line discipline unregistered\n";
- static const char hdlc_unregister_fail[] __exitdata =
+ 	nlmsg_end(msg, nlh);
+ 	ib_device_put(device);
+ 	return rdma_nl_unicast(msg, NETLINK_CB(skb).portid);
+ 
+ err_fill:
+-	rdma_counter_bind_qpn(device, port, qpn, cntn);
+-err_unbind:
+ 	nlmsg_free(msg);
+ err:
+ 	ib_device_put(device);
 -- 
 2.20.1
 
