@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC563CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA4BCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B013920640
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDA4320640
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:27:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437659;
-	bh=+WX7nYZPnUOZdA4Nj3pS3DRAfu9FBRsMfLNZ9gGK/k4=;
+	s=default; t=1571437667;
+	bh=Gi+8uHxb/nH/ASrO4/N8M/j/xYpLyDr7wlMxycKl+WI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t/6tj3z8pPEt/ZvveIe47fewmf2/NT1diTsqvRkN/KWsnsp2CepjOOYsbPGjIEQET
-	 UsD/vNeuqSZRZX4H5GAyiO1OpatY5VvP6jSDo6DMIW5DuSbOCd0K2UUZGroMNFc6n+
-	 Z+qqfhmOTAcJ6TU+HgvgnAg9hLhcjQQxORt8HDs8=
+	b=BCzBrsSnjWTClWtgj5zVwQe8i0Kycbao26OfI3Bvx1aFYgvWo3WCHgFMmozOBzLom
+	 pM4PhW36UhlLOqZhXbdc7kGmcXYd4a21FTmTNn98q0hxPahpoN2Tf+XUdoX2wtV1Ad
+	 lFbJ/QdSI5wVcWbP3EwAMyIzesFHbP4E7zYHvfJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406545AbfJRW1d (ORCPT
+        id S2406603AbfJRW1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:27:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35586 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:27:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727554AbfJRWD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:03:59 -0400
+        id S1727398AbfJRWD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:03:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7D6720679;
-        Fri, 18 Oct 2019 22:03:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57B6322459;
+        Fri, 18 Oct 2019 22:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436238;
-        bh=+WX7nYZPnUOZdA4Nj3pS3DRAfu9FBRsMfLNZ9gGK/k4=;
+        s=default; t=1571436236;
+        bh=Gi+8uHxb/nH/ASrO4/N8M/j/xYpLyDr7wlMxycKl+WI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n7XtvDN53gqHs/VUMELXCNp//JS9u0kmdn3+2hSQa3NdIBOJ6W3qhMjTmAei5DF0e
-         cM6fXMGsS9pyeyRGXq4/9Su35oVMKtwG7K7iVdN8FUnn2t2XslcAFjpGRIo63SmAKx
-         DfGlzuOJ87TAcLCOsx88mPuJw5veN7ALO8OeDnpw=
+        b=i7AuZM5g3O44Dee9QsFtBqZCW4l9v7y0Uvqjqy/pNhZ8cMTJTNbPEyXV9u0OeZa+e
+         SBbRRrLBVedE3yCHAr0JD7QAsJeslSFoD9SYrIsjUCdtYAVtVGe3DGYbVb1akE8Gdh
+         1UVZJ2k/+BuLT3YUFY6aTh/mmlqyR5DTNdoHuKts=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 23/89] selftests/kselftest/runner.sh: Add 45 second timeout per test
-Date:   Fri, 18 Oct 2019 18:02:18 -0400
-Message-Id: <20191018220324.8165-23-sashal@kernel.org>
+Cc:     Dexuan Cui <decui@microsoft.com>, Jiri Kosina <jkosina@suse.cz>,
+        Sasha Levin <sashal@kernel.org>, devel@linuxdriverproject.org,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 21/89] HID: hyperv: Use in-place iterator API in the channel callback
+Date:   Fri, 18 Oct 2019 18:02:16 -0400
+Message-Id: <20191018220324.8165-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -60,115 +59,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Dexuan Cui <decui@microsoft.com>
 
-[ Upstream commit 852c8cbf34d3b3130a05c38064dd98614f97d3a8 ]
+[ Upstream commit 6a297c90efa68b2864483193b8bfb0d19478600c ]
 
-Commit a745f7af3cbd ("selftests/harness: Add 30 second timeout per
-test") solves the problem of kselftest_harness.h-using binary tests
-possibly hanging forever. However, scripts and other binaries can still
-hang forever. This adds a global timeout to each test script run.
+Simplify the ring buffer handling with the in-place API.
 
-To make this configurable (e.g. as needed in the "rtc" test case),
-include a new per-test-directory "settings" file (similar to "config")
-that can contain kselftest-specific settings. The first recognized field
-is "timeout".
+Also avoid the dynamic allocation and the memory leak in the channel
+callback function.
 
-Additionally, this splits the reporting for timeouts into a specific
-"TIMEOUT" not-ok (and adds exit code reporting in the remaining case).
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Acked-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/kselftest/runner.sh | 36 +++++++++++++++++++--
- tools/testing/selftests/rtc/settings        |  1 +
- 2 files changed, 34 insertions(+), 3 deletions(-)
- create mode 100644 tools/testing/selftests/rtc/settings
+ drivers/hid/hid-hyperv.c | 56 +++++++---------------------------------
+ 1 file changed, 10 insertions(+), 46 deletions(-)
 
-diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
-index 00c9020bdda8b..84de7bc74f2cf 100644
---- a/tools/testing/selftests/kselftest/runner.sh
-+++ b/tools/testing/selftests/kselftest/runner.sh
-@@ -3,9 +3,14 @@
- #
- # Runs a set of tests in a given subdirectory.
- export skip_rc=4
-+export timeout_rc=124
- export logfile=/dev/stdout
- export per_test_logging=
+diff --git a/drivers/hid/hid-hyperv.c b/drivers/hid/hid-hyperv.c
+index 7795831d37c21..f363163200759 100644
+--- a/drivers/hid/hid-hyperv.c
++++ b/drivers/hid/hid-hyperv.c
+@@ -314,60 +314,24 @@ static void mousevsc_on_receive(struct hv_device *device,
  
-+# Defaults for "settings" file fields:
-+# "timeout" how many seconds to let each test run before failing.
-+export kselftest_default_timeout=45
-+
- # There isn't a shell-agnostic way to find the path of a sourced file,
- # so we must rely on BASE_DIR being set to find other tools.
- if [ -z "$BASE_DIR" ]; then
-@@ -24,6 +29,16 @@ tap_prefix()
- 	fi
+ static void mousevsc_on_channel_callback(void *context)
+ {
+-	const int packet_size = 0x100;
+-	int ret;
+ 	struct hv_device *device = context;
+-	u32 bytes_recvd;
+-	u64 req_id;
+ 	struct vmpacket_descriptor *desc;
+-	unsigned char	*buffer;
+-	int	bufferlen = packet_size;
+-
+-	buffer = kmalloc(bufferlen, GFP_ATOMIC);
+-	if (!buffer)
+-		return;
+-
+-	do {
+-		ret = vmbus_recvpacket_raw(device->channel, buffer,
+-					bufferlen, &bytes_recvd, &req_id);
+-
+-		switch (ret) {
+-		case 0:
+-			if (bytes_recvd <= 0) {
+-				kfree(buffer);
+-				return;
+-			}
+-			desc = (struct vmpacket_descriptor *)buffer;
+-
+-			switch (desc->type) {
+-			case VM_PKT_COMP:
+-				break;
+-
+-			case VM_PKT_DATA_INBAND:
+-				mousevsc_on_receive(device, desc);
+-				break;
+-
+-			default:
+-				pr_err("unhandled packet type %d, tid %llx len %d\n",
+-					desc->type, req_id, bytes_recvd);
+-				break;
+-			}
+ 
++	foreach_vmbus_pkt(desc, device->channel) {
++		switch (desc->type) {
++		case VM_PKT_COMP:
+ 			break;
+ 
+-		case -ENOBUFS:
+-			kfree(buffer);
+-			/* Handle large packet */
+-			bufferlen = bytes_recvd;
+-			buffer = kmalloc(bytes_recvd, GFP_ATOMIC);
+-
+-			if (!buffer)
+-				return;
++		case VM_PKT_DATA_INBAND:
++			mousevsc_on_receive(device, desc);
++			break;
+ 
++		default:
++			pr_err("Unhandled packet type %d, tid %llx len %d\n",
++			       desc->type, desc->trans_id, desc->len8 * 8);
+ 			break;
+ 		}
+-	} while (1);
+-
++	}
  }
  
-+tap_timeout()
-+{
-+	# Make sure tests will time out if utility is available.
-+	if [ -x /usr/bin/timeout ] ; then
-+		/usr/bin/timeout "$kselftest_timeout" "$1"
-+	else
-+		"$1"
-+	fi
-+}
-+
- run_one()
- {
- 	DIR="$1"
-@@ -32,6 +47,18 @@ run_one()
- 
- 	BASENAME_TEST=$(basename $TEST)
- 
-+	# Reset any "settings"-file variables.
-+	export kselftest_timeout="$kselftest_default_timeout"
-+	# Load per-test-directory kselftest "settings" file.
-+	settings="$BASE_DIR/$DIR/settings"
-+	if [ -r "$settings" ] ; then
-+		while read line ; do
-+			field=$(echo "$line" | cut -d= -f1)
-+			value=$(echo "$line" | cut -d= -f2-)
-+			eval "kselftest_$field"="$value"
-+		done < "$settings"
-+	fi
-+
- 	TEST_HDR_MSG="selftests: $DIR: $BASENAME_TEST"
- 	echo "# $TEST_HDR_MSG"
- 	if [ ! -x "$TEST" ]; then
-@@ -44,14 +71,17 @@ run_one()
- 		echo "not ok $test_num $TEST_HDR_MSG"
- 	else
- 		cd `dirname $TEST` > /dev/null
--		(((((./$BASENAME_TEST 2>&1; echo $? >&3) |
-+		((((( tap_timeout ./$BASENAME_TEST 2>&1; echo $? >&3) |
- 			tap_prefix >&4) 3>&1) |
- 			(read xs; exit $xs)) 4>>"$logfile" &&
- 		echo "ok $test_num $TEST_HDR_MSG") ||
--		(if [ $? -eq $skip_rc ]; then	\
-+		(rc=$?;	\
-+		if [ $rc -eq $skip_rc ]; then	\
- 			echo "not ok $test_num $TEST_HDR_MSG # SKIP"
-+		elif [ $rc -eq $timeout_rc ]; then \
-+			echo "not ok $test_num $TEST_HDR_MSG # TIMEOUT"
- 		else
--			echo "not ok $test_num $TEST_HDR_MSG"
-+			echo "not ok $test_num $TEST_HDR_MSG # exit=$rc"
- 		fi)
- 		cd - >/dev/null
- 	fi
-diff --git a/tools/testing/selftests/rtc/settings b/tools/testing/selftests/rtc/settings
-new file mode 100644
-index 0000000000000..ba4d85f74cd6b
---- /dev/null
-+++ b/tools/testing/selftests/rtc/settings
-@@ -0,0 +1 @@
-+timeout=90
+ static int mousevsc_connect_to_vsp(struct hv_device *device)
 -- 
 2.20.1
 
