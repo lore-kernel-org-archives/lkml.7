@@ -2,115 +2,161 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED5ECA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE74CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E33FA20820
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1775820820
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:43:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XXpUDtHD";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gW0PUImE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504432AbfJRGmf (ORCPT
+        id S2407633AbfJRGm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 02:42:35 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:42106 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730508AbfJRGmf (ORCPT
+        Fri, 18 Oct 2019 02:42:59 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46322 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393594AbfJRGm6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 02:42:35 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=luoben@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0TfNs02I_1571380952;
-Received: from bn0418deMacBook-Pro.local(mailfrom:luoben@linux.alibaba.com fp:SMTPD_---0TfNs02I_1571380952)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 18 Oct 2019 14:42:33 +0800
-Subject: Re: [PATCH] vfio/type1: remove hugepage checks in
- is_invalid_reserved_pfn()
-To:     alex.williamson@redhat.com
-Cc:     aarcange@redhat.com, linux-kernel@vger.kernel.org
-References: <1d6b7e1c40783f2db4c6cb15bf679a94222ec6a3.1570073993.git.luoben@linux.alibaba.com>
- <20191003164133.GG13922@redhat.com>
-From:   Ben Luo <luoben@linux.alibaba.com>
-Message-ID: <ae787a52-a7ed-f7b8-074f-ab8883037ac0@linux.alibaba.com>
-Date:   Fri, 18 Oct 2019 14:42:32 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Fri, 18 Oct 2019 02:42:58 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 4EDDF610DC; Fri, 18 Oct 2019 06:42:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571380977;
+        bh=6TBlAdKQKJ2jvjGwgvWVKyvODqXx7MA+HnxHF0EkO/M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=XXpUDtHDTlxK4+UvWEa/J0kS0HjwY2zBjFYE7YpXGJAmogZBuItNCDKOCCoKd9sHw
+         j7laQYY1fc5Ie3Od2WNektEtPV7W7lVx9ovF5SOUdgYCEtFWEh42yQx1tkvgbpiQuc
+         9Q51u31cVnJSq1RadpOrTop88nLPI8gLZWDhFCiw=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 51E72610DC;
+        Fri, 18 Oct 2019 06:42:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571380976;
+        bh=6TBlAdKQKJ2jvjGwgvWVKyvODqXx7MA+HnxHF0EkO/M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gW0PUImE+THwnpgh1sMlgBvC+wHvJgH2dfUwZPnMJQ7NXR8nLTHYG6kMHd7zke0fQ
+         jsf4OF79koepY/K+yoYiF204JVVpAVxDfkKQO1EgSXeOjt2EQ9YxVRfGLagD86Oa+W
+         CjGLZ6+0LYrwcuBryQpPZXdoJgNDTOYZwxCrAF/s=
 MIME-Version: 1.0
-In-Reply-To: <20191003164133.GG13922@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 18 Oct 2019 12:12:56 +0530
+From:   kgunda@codeaurora.org
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH V7 6/6] backlight: qcom-wled: Add auto string detection
+ logic
+In-Reply-To: <20191017133954.7vgqjgwxojmjw446@holly.lan>
+References: <1571220826-7740-1-git-send-email-kgunda@codeaurora.org>
+ <1571220826-7740-7-git-send-email-kgunda@codeaurora.org>
+ <20191017112941.qqvgboyambzw63i3@holly.lan>
+ <fa32f7ec727cb2626ad877a6cef32a1b@codeaurora.org>
+ <20191017133954.7vgqjgwxojmjw446@holly.lan>
+Message-ID: <bd369e2d809d642867f712499df0eb33@codeaurora.org>
+X-Sender: kgunda@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A friendly reminder :)
-
-
-Thanks,
-
-     Ben
-
-在 2019/10/4 上午12:41, Andrea Arcangeli 写道:
-> On Thu, Oct 03, 2019 at 11:49:42AM +0800, Ben Luo wrote:
->> Currently, no hugepage split code can transfer the reserved bit
->> from head to tail during the split, so checking the head can't make
->> a difference in a racing condition with hugepage spliting.
->>
->> The buddy wouldn't allow a driver to allocate an hugepage if any
->> subpage is reserved in the e820 map at boot, if any driver sets the
->> reserved bit of head page before mapping the hugepage in userland,
->> it needs to set the reserved bit in all subpages to be safe.
->>
->> Signed-off-by: Ben Luo <luoben@linux.alibaba.com>
-> Reviewed-by: Andrea Arcangeli <aarcange@redhat.com>
->
->
->> ---
->>   drivers/vfio/vfio_iommu_type1.c | 26 ++++----------------------
->>   1 file changed, 4 insertions(+), 22 deletions(-)
->>
->> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
->> index 054391f..e2019ba 100644
->> --- a/drivers/vfio/vfio_iommu_type1.c
->> +++ b/drivers/vfio/vfio_iommu_type1.c
->> @@ -287,31 +287,13 @@ static int vfio_lock_acct(struct vfio_dma *dma, long npage, bool async)
->>    * Some mappings aren't backed by a struct page, for example an mmap'd
->>    * MMIO range for our own or another device.  These use a different
->>    * pfn conversion and shouldn't be tracked as locked pages.
->> + * For compound pages, any driver that sets the reserved bit in head
->> + * page needs to set the reserved bit in all subpages to be safe.
->>    */
->>   static bool is_invalid_reserved_pfn(unsigned long pfn)
->>   {
->> -	if (pfn_valid(pfn)) {
->> -		bool reserved;
->> -		struct page *tail = pfn_to_page(pfn);
->> -		struct page *head = compound_head(tail);
->> -		reserved = !!(PageReserved(head));
->> -		if (head != tail) {
->> -			/*
->> -			 * "head" is not a dangling pointer
->> -			 * (compound_head takes care of that)
->> -			 * but the hugepage may have been split
->> -			 * from under us (and we may not hold a
->> -			 * reference count on the head page so it can
->> -			 * be reused before we run PageReferenced), so
->> -			 * we've to check PageTail before returning
->> -			 * what we just read.
->> -			 */
->> -			smp_rmb();
->> -			if (PageTail(tail))
->> -				return reserved;
->> -		}
->> -		return PageReserved(tail);
->> -	}
->> +	if (pfn_valid(pfn))
->> +		return PageReserved(pfn_to_page(pfn));
->>   
->>   	return true;
->>   }
->> -- 
->> 1.8.3.1
->>
+On 2019-10-17 19:09, Daniel Thompson wrote:
+> On Thu, Oct 17, 2019 at 05:47:47PM +0530, kgunda@codeaurora.org wrote:
+>> On 2019-10-17 16:59, Daniel Thompson wrote:
+>> > On Wed, Oct 16, 2019 at 03:43:46PM +0530, Kiran Gunda wrote:
+>> > > The auto string detection algorithm checks if the current WLED
+>> > > sink configuration is valid. It tries enabling every sink and
+>> > > checks if the OVP fault is observed. Based on this information
+>> > > it detects and enables the valid sink configuration.
+>> > > Auto calibration will be triggered when the OVP fault interrupts
+>> > > are seen frequently thereby it tries to fix the sink configuration.
+>> > >
+>> > > The auto-detection also kicks in when the connected LED string
+>> > > of the display-backlight malfunctions (because of damage) and
+>> > > requires the damaged string to be turned off to prevent the
+>> > > complete panel and/or board from being damaged.
+>> > >
+>> > > Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+>> >
+>> > It's a complex bit of code but I'm OK with it in principle. Everything
+>> > below is about small details and/or nitpicking.
+>> >
+>> >
+>> > > +static void wled_ovp_work(struct work_struct *work)
+>> > > +{
+>> > > +	struct wled *wled = container_of(work,
+>> > > +					 struct wled, ovp_work.work);
+>> > > +	enable_irq(wled->ovp_irq);
+>> > > +}
+>> > > +
+>> >
+>> > A bit of commenting about why we have to wait 10ms before enabling the
+>> > OVP interrupt would be appreciated.
+>> >
+>> >
+>> Sure. Will add the comment in the next series.
+>> > > +static irqreturn_t wled_ovp_irq_handler(int irq, void *_wled)
+>> > > +{
+>> > > +	struct wled *wled = _wled;
+>> > > +	int rc;
+>> > > +	u32 int_sts, fault_sts;
+>> > > +
+>> > > +	rc = regmap_read(wled->regmap,
+>> > > +			 wled->ctrl_addr + WLED3_CTRL_REG_INT_RT_STS, &int_sts);
+>> > > +	if (rc < 0) {
+>> > > +		dev_err(wled->dev, "Error in reading WLED3_INT_RT_STS rc=%d\n",
+>> > > +			rc);
+>> > > +		return IRQ_HANDLED;
+>> > > +	}
+>> > > +
+>> > > +	rc = regmap_read(wled->regmap, wled->ctrl_addr +
+>> > > +			 WLED3_CTRL_REG_FAULT_STATUS, &fault_sts);
+>> > > +	if (rc < 0) {
+>> > > +		dev_err(wled->dev, "Error in reading WLED_FAULT_STATUS rc=%d\n",
+>> > > +			rc);
+>> > > +		return IRQ_HANDLED;
+>> > > +	}
+>> > > +
+>> > > +	if (fault_sts &
+>> > > +		(WLED3_CTRL_REG_OVP_FAULT_BIT | WLED3_CTRL_REG_ILIM_FAULT_BIT))
+>> > > +		dev_dbg(wled->dev, "WLED OVP fault detected, int_sts=%x
+>> > > fault_sts= %x\n",
+>> > > +			int_sts, fault_sts);
+>> > > +
+>> > > +	if (fault_sts & WLED3_CTRL_REG_OVP_FAULT_BIT) {
+>> > > +		mutex_lock(&wled->lock);
+>> > > +		disable_irq_nosync(wled->ovp_irq);
+>> >
+>> > We're currently running the threaded ISR for this irq. Do we really need
+>> > to disable it?
+>> >
+>> We need to disable this IRQ, during the auto string detection logic. 
+>> Because
+>> in the auto string detection we configure the current sinks one by one 
+>> and
+>> check the
+>> status register for the OVPs and set the right string configuration. 
+>> We
+>> enable it later after
+>> the auto string detection is completed.
+> 
+> This is a threaded oneshot interrupt handler. Why isn't the framework
+> masking sufficient for you here?
+> 
+> 
+> Daniel.
+Right .. I overlooked that it is a oneshot interrupt earlier.
+I will address it in the next series.
