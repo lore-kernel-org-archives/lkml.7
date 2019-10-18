@@ -2,484 +2,174 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EAFCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91387CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC2F222C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63D032067B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:30:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PdxOd+2e";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="k7iAQKZE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XEk+TXgF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394124AbfJRFau (ORCPT
+        id S2437704AbfJRFa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:30:50 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:45294 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727932AbfJRFat (ORCPT
+        Fri, 18 Oct 2019 01:30:56 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43003 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727932AbfJRFaz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:30:49 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3524E60927; Fri, 18 Oct 2019 04:11:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571371876;
-        bh=mSfM1NawIaDEgu9PXCb5vk5GE17i0StPNN7wxqxAZqM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=PdxOd+2eBk7JqZxxoFuzBXaqAuKQIHOXOIQjIQn1cOCV19pOhxUoDSGbQ8rzouLXh
-         o80bZPJ/ZURvHy09MOFYSICjal42+9ep1hi+USRLYUPBrPao9gBUIJDhgVvUpvnX/P
-         E3uzkYrYQd4a79z2wC+D/AWvFuntAqlAAFP2/sDU=
-Received: from [10.206.28.9] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C852D60927;
-        Fri, 18 Oct 2019 04:11:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571371874;
-        bh=mSfM1NawIaDEgu9PXCb5vk5GE17i0StPNN7wxqxAZqM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=k7iAQKZEyJGqJpl/oIT74OSl7du+4mJkuv6IH6LmEO0SFe+fs5PJT1dYprWMPaxeR
-         Kle/1qL0ySNlihPyxbI+dToffL4rOrGE0IGSHCZEuOSnNhx4GHfPceQlff0BDDxl5G
-         f4XmYpYlxNh6zKZfvgxRafhxqZ8fYs3rIwoSk3oQ=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C852D60927
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v4 1/2] clk: qcom: Add MSM8998 GPU Clock Controller
- (GPUCC) driver
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, mturquette@baylibre.com,
-        sboyd@kernel.org
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        marc.w.gonzalez@free.fr, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191002011555.36571-1-jeffrey.l.hugo@gmail.com>
- <20191002011640.36624-1-jeffrey.l.hugo@gmail.com>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <353b0e3f-80fc-6950-004b-e34e4ebb62b4@codeaurora.org>
-Date:   Fri, 18 Oct 2019 09:41:09 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 18 Oct 2019 01:30:55 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q12so3115585pff.9
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:30:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FUYBDax7NE3CDwWsYLZOhPAtyneP9Q/Jy0zNmRGZwqk=;
+        b=XEk+TXgFbeAE3e37n2OZJ2gc7DQz2UgSVuKwMUCPB2WRmo4ZEUyFBRhanr7tQGVC9X
+         qcOGvaw04wTYnk45J4bCBIcwnn6fx7r/2v6wIVQQrsNQ1iIw+v8h94s9XUgVWug4aA6O
+         qD8xN/3mgtupJyvN1mFLQzjJ8+J9zeamLEoam6KnRYkgKSMDMvt18aS7XAvqvZuy2o4E
+         9EVmvS3JmM21cgRhd4/8ObOSiFvEpeBIJqLHBMJb6kBIilkuoxPvkA7UpE4Kpld/aPl2
+         HV1zUNsO6vCMZ2rE8TS0bEtnoi9IMLjHZ/hW61XLGt5k6q22OPcDcp9ewwTgTLi3sz/z
+         HUNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FUYBDax7NE3CDwWsYLZOhPAtyneP9Q/Jy0zNmRGZwqk=;
+        b=V9YdDY9IvMESv7AggeIi/YU6oEKLjwpx9yz8k5ZzDoiS9V8fBMpb6IEG6iAQf/JgaN
+         IHf3B6i8ge51ChV7ALw4Irlrv8BEAdIyfyD6nRuYWZK4TF3uxhmXZ9VNh6jNQNmIxtuL
+         vWsZAqdtSrMwp6d9DT3VITwTjG2CcMpDvoMFd8iwgfLTyozM0TeUPr6BMSLhxQJXOWKQ
+         4MDdWaGXMS+sYMKuEw9uVaqDc//EbEIBlCJpe00hvIBryH8gPc/pIdXCl6NNpQypyecP
+         G7tZdbTEqnxQj4v5Sbr38l5WqoFvnCdOc3AjDzO1YoepjLnQIhtO+ngM2xlcBWph1e/3
+         mK7A==
+X-Gm-Message-State: APjAAAU4ORBjfgRLqO5W2IxY/kzhNEb3asHjA4VwhvSa3dsqNJ3+0W9b
+        71bBZQqXrQbISiDqAYeasxpTTQ==
+X-Google-Smtp-Source: APXvYqwu8XgdnF2JM+MIZ5+YJ18wqOQAMwBOQsDC97X7zyp+1ufZ3YNe9XktzUrdJo31658oXdc7GA==
+X-Received: by 2002:a17:90a:17c4:: with SMTP id q62mr8306937pja.83.1571372840048;
+        Thu, 17 Oct 2019 21:27:20 -0700 (PDT)
+Received: from localhost ([122.172.151.112])
+        by smtp.gmail.com with ESMTPSA id q6sm6160453pgn.44.2019.10.17.21.27.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 17 Oct 2019 21:27:18 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 09:57:15 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Preeti U Murthy <preeti@linux.vnet.ibm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] cpufreq: powernv: fix stack bloat and NR_CPUS limitation
+Message-ID: <20191018042715.f76bawmoyk66isap@vireshk-i7>
+References: <20191018000431.1675281-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20191002011640.36624-1-jeffrey.l.hugo@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018000431.1675281-1-jhubbard@nvidia.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jeffrey,
-
-On 10/2/2019 6:46 AM, Jeffrey Hugo wrote:
-> The GPUCC manages the clocks for the Adreno GPU found on MSM8998.
+On 17-10-19, 17:04, John Hubbard wrote:
+> The following build warning occurred on powerpc 64-bit builds:
 > 
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> drivers/cpufreq/powernv-cpufreq.c: In function 'init_chip_info':
+> drivers/cpufreq/powernv-cpufreq.c:1070:1: warning: the frame size of 1040 bytes is larger than 1024 bytes [-Wframe-larger-than=]
+
+How come we are catching this warning after 4 years ?
+
+> 
+> This is due to putting 1024 bytes on the stack:
+> 
+>     unsigned int chip[256];
+> 
+> ...and while looking at this, it also has a bug: it fails with a stack
+> overrun, if CONFIG_NR_CPUS > 256.
+> 
+> Fix both problems by dynamically allocating based on CONFIG_NR_CPUS.
+> 
+> Fixes: 053819e0bf840 ("cpufreq: powernv: Handle throttling due to Pmax capping at chip level")
+> Cc: Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
+> Cc: Preeti U Murthy <preeti@linux.vnet.ibm.com>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Cc: linux-pm@vger.kernel.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 > ---
->   drivers/clk/qcom/Kconfig         |   9 +
->   drivers/clk/qcom/Makefile        |   1 +
->   drivers/clk/qcom/gpucc-msm8998.c | 346 +++++++++++++++++++++++++++++++
->   3 files changed, 356 insertions(+)
->   create mode 100644 drivers/clk/qcom/gpucc-msm8998.c
 > 
-> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-> index 96efee18fa6c..31a70168327c 100644
-> --- a/drivers/clk/qcom/Kconfig
-> +++ b/drivers/clk/qcom/Kconfig
-> @@ -230,6 +230,15 @@ config MSM_MMCC_8998
->   	  Say Y if you want to support multimedia devices such as display,
->   	  graphics, video encode/decode, camera, etc.
->   
-> +config MSM_GPUCC_8998
-> +	tristate "MSM8998 Graphics Clock Controller"
-> +	select MSM_GCC_8998
-> +	select QCOM_GDSC
-> +	help
-> +	  Support for the graphics clock controller on MSM8998 devices.
-> +	  Say Y if you want to support graphics controller devices and
-> +	  functionality such as 3D graphics.
-> +
->   config QCS_GCC_404
->   	tristate "QCS404 Global Clock Controller"
->   	help
-> diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-> index 0ac3c1459313..616b68f91db6 100644
-> --- a/drivers/clk/qcom/Makefile
-> +++ b/drivers/clk/qcom/Makefile
-> @@ -33,6 +33,7 @@ obj-$(CONFIG_MSM_GCC_8994) += gcc-msm8994.o
->   obj-$(CONFIG_MSM_GCC_8996) += gcc-msm8996.o
->   obj-$(CONFIG_MSM_LCC_8960) += lcc-msm8960.o
->   obj-$(CONFIG_MSM_GCC_8998) += gcc-msm8998.o
-> +obj-$(CONFIG_MSM_GPUCC_8998) += gpucc-msm8998.o
->   obj-$(CONFIG_MSM_MMCC_8960) += mmcc-msm8960.o
->   obj-$(CONFIG_MSM_MMCC_8974) += mmcc-msm8974.o
->   obj-$(CONFIG_MSM_MMCC_8996) += mmcc-msm8996.o
-> diff --git a/drivers/clk/qcom/gpucc-msm8998.c b/drivers/clk/qcom/gpucc-msm8998.c
-> new file mode 100644
-> index 000000000000..f0ccb4963885
-> --- /dev/null
-> +++ b/drivers/clk/qcom/gpucc-msm8998.c
-> @@ -0,0 +1,346 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019, Jeffrey Hugo
-> + */
-> +
-
-Copyright (c) 2019, The Linux Foundation. All rights reserved.
-
-> +#include <linux/kernel.h>
-> +#include <linux/bitops.h>
-> +#include <linux/err.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/clk.h>
-> +
-> +#include <dt-bindings/clock/qcom,gpucc-msm8998.h>
-> +
-> +#include "common.h"
-> +#include "clk-regmap.h"
-> +#include "clk-regmap-divider.h"
-> +#include "clk-alpha-pll.h"
-> +#include "clk-rcg.h"
-> +#include "clk-branch.h"
-> +#include "reset.h"
-> +#include "gdsc.h"
-> +
-> +enum {
-> +	P_XO,
-> +	P_GPLL0,
-> +	P_GPUPLL0_OUT_EVEN,
-> +};
-> +
-> +/* Instead of going directly to the block, XO is routed through this branch */
-> +static struct clk_branch gpucc_cxo_clk = {
-> +	.halt_reg = 0x1020,
-> +	.clkr = {
-> +		.enable_reg = 0x1020,
-> +		.enable_mask = BIT(0),
-> +		.hw.init = &(struct clk_init_data){
-> +			.name = "gpucc_cxo_clk",
-> +			.parent_data = &(const struct clk_parent_data){
-> +				.fw_name = "xo",
-> +				.name = "xo"
-> +			},
-> +			.num_parents = 1,
-> +			.ops = &clk_branch2_ops,
-> +			.flags = CLK_IS_CRITICAL,
-> +		},
-> +	},
-> +};
-> +
-> +static const struct clk_div_table post_div_table_fabia_even[] = {
-> +	{ 0x0, 1 },
-> +	{ 0x1, 2 },
-> +	{ 0x3, 4 },
-> +	{ 0x7, 8 },
-> +	{ }
-> +};
-> +
-> +static struct clk_alpha_pll gpupll0 = {
-> +	.offset = 0x0,
-> +	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_FABIA],
-> +	.clkr.hw.init = &(struct clk_init_data){
-> +		.name = "gpupll0",
-> +		.parent_hws = (const struct clk_hw *[]){ &gpucc_cxo_clk.clkr.hw },
-> +		.num_parents = 1,
-> +		.ops = &clk_alpha_pll_fixed_fabia_ops,
-> +	},
-> +};
-> +
-> +static struct clk_alpha_pll_postdiv gpupll0_out_even = {
-> +	.offset = 0x0,
-> +	.post_div_shift = 8,
-> +	.post_div_table = post_div_table_fabia_even,
-> +	.num_post_div = ARRAY_SIZE(post_div_table_fabia_even),
-> +	.width = 4,
-> +	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_FABIA],
-> +	.clkr.hw.init = &(struct clk_init_data){
-> +		.name = "gpupll0_out_even",
-> +		.parent_hws = (const struct clk_hw *[]){ &gpupll0.clkr.hw },
-> +		.num_parents = 1,
-> +		.ops = &clk_alpha_pll_postdiv_fabia_ops,
-> +	},
-> +};
-> +
-> +static const struct parent_map gpu_xo_gpll0_map[] = {
-> +	{ P_XO, 0 },
-> +	{ P_GPLL0, 5 },
-> +};
-> +
-> +static const struct clk_parent_data gpu_xo_gpll0[] = {
-> +	{ .hw = &gpucc_cxo_clk.clkr.hw },
-> +	{ .fw_name = "gpll0", .name = "gpll0" },
-> +};
-> +
-> +static const struct parent_map gpu_xo_gpupll0_map[] = {
-> +	{ P_XO, 0 },
-> +	{ P_GPUPLL0_OUT_EVEN, 1 },
-> +};
-> +
-> +static const struct clk_parent_data gpu_xo_gpupll0[] = {
-> +	{ .hw = &gpucc_cxo_clk.clkr.hw },
-> +	{ .hw = &gpupll0_out_even.clkr.hw },
-> +};
-> +
-> +static const struct freq_tbl ftbl_rbcpr_clk_src[] = {
-> +	F(19200000, P_XO, 1, 0, 0),
-> +	F(50000000, P_GPLL0, 12, 0, 0),
-> +	{ }
-> +};
-> +
-> +static struct clk_rcg2 rbcpr_clk_src = {
-> +	.cmd_rcgr = 0x1030,
-> +	.hid_width = 5,
-> +	.parent_map = gpu_xo_gpll0_map,
-> +	.freq_tbl = ftbl_rbcpr_clk_src,
-> +	.clkr.hw.init = &(struct clk_init_data){
-> +		.name = "rbcpr_clk_src",
-> +		.parent_data = gpu_xo_gpll0,
-> +		.num_parents = 2,
-> +		.ops = &clk_rcg2_ops,
-> +	},
-> +};
-> +
-> +static const struct freq_tbl ftbl_gfx3d_clk_src[] = {
-> +	F(180000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
-> +	F(257000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
-> +	F(342000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
-> +	F(414000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
-> +	F(515000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
-> +	F(596000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
-> +	F(670000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
-> +	F(710000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
-> +	{ }
-> +};
-> +
-> +static struct clk_rcg2 gfx3d_clk_src = {
-> +	.cmd_rcgr = 0x1070,
-> +	.hid_width = 5,
-> +	.parent_map = gpu_xo_gpupll0_map,
-> +	.freq_tbl = ftbl_gfx3d_clk_src,
-> +	.clkr.hw.init = &(struct clk_init_data){
-> +		.name = "gfx3d_clk_src",
-> +		.parent_data = gpu_xo_gpupll0,
-> +		.num_parents = 2,
-> +		.ops = &clk_rcg2_ops,
-> +		.flags = CLK_OPS_PARENT_ENABLE,
-> +	},
-> +};
-> +
-> +static const struct freq_tbl ftbl_rbbmtimer_clk_src[] = {
-> +	F(19200000, P_XO, 1, 0, 0),
-> +	{ }
-> +};
-> +
-> +static struct clk_rcg2 rbbmtimer_clk_src = {
-> +	.cmd_rcgr = 0x10b0,
-> +	.hid_width = 5,
-> +	.parent_map = gpu_xo_gpll0_map,
-> +	.freq_tbl = ftbl_rbbmtimer_clk_src,
-> +	.clkr.hw.init = &(struct clk_init_data){
-> +		.name = "rbbmtimer_clk_src",
-> +		.parent_data = gpu_xo_gpll0,
-> +		.num_parents = 2,
-> +		.ops = &clk_rcg2_ops,
-> +	},
-> +};
-> +
-> +static const struct freq_tbl ftbl_gfx3d_isense_clk_src[] = {
-> +	F(19200000, P_XO, 1, 0, 0),
-> +	F(40000000, P_GPLL0, 15, 0, 0),
-> +	F(200000000, P_GPLL0, 3, 0, 0),
-> +	F(300000000, P_GPLL0, 2, 0, 0),
-> +	{ }
-> +};
-> +
-> +static struct clk_rcg2 gfx3d_isense_clk_src = {
-> +	.cmd_rcgr = 0x1100,
-> +	.hid_width = 5,
-> +	.parent_map = gpu_xo_gpll0_map,
-> +	.freq_tbl = ftbl_gfx3d_isense_clk_src,
-> +	.clkr.hw.init = &(struct clk_init_data){
-> +		.name = "gfx3d_isense_clk_src",
-> +		.parent_data = gpu_xo_gpll0,
-> +		.num_parents = 2,
-> +		.ops = &clk_rcg2_ops,
-> +	},
-> +};
-> +
-> +static struct clk_branch rbcpr_clk = {
-> +	.halt_reg = 0x1054,
-> +	.clkr = {
-> +		.enable_reg = 0x1054,
-> +		.enable_mask = BIT(0),
-> +		.hw.init = &(struct clk_init_data){
-> +			.name = "rbcpr_clk",
-> +			.parent_hws = (const struct clk_hw *[]){ &rbcpr_clk_src.clkr.hw },
-> +			.num_parents = 1,
-> +			.ops = &clk_branch2_ops,
-> +			.flags = CLK_SET_RATE_PARENT,
-> +		},
-> +	},
-> +};
-> +
-
-If unused by consumer it would good to drop this clock.
-
-> +static struct clk_branch gfx3d_clk = {
-> +	.halt_reg = 0x1098,
-> +	.clkr = {
-> +		.enable_reg = 0x1098,
-> +		.enable_mask = BIT(0),
-> +		.hw.init = &(struct clk_init_data){
-> +			.name = "gfx3d_clk",
-> +			.parent_hws = (const struct clk_hw *[]){ &gfx3d_clk_src.clkr.hw },
-> +			.num_parents = 1,
-> +			.ops = &clk_branch2_ops,
-> +			.flags = CLK_SET_RATE_PARENT,
-> +		},
-> +	},
-> +};
-> +
-> +static struct clk_branch rbbmtimer_clk = {
-> +	.halt_reg = 0x10d0,
-> +	.clkr = {
-> +		.enable_reg = 0x10d0,
-> +		.enable_mask = BIT(0),
-> +		.hw.init = &(struct clk_init_data){
-> +			.name = "rbbmtimer_clk",
-> +			.parent_hws = (const struct clk_hw *[]){ &rbbmtimer_clk_src.clkr.hw },
-> +			.num_parents = 1,
-> +			.ops = &clk_branch2_ops,
-> +			.flags = CLK_SET_RATE_PARENT,
-> +		},
-> +	},
-> +};
-> +
-> +static struct clk_branch gfx3d_isense_clk = {
-> +	.halt_reg = 0x1124,
-> +	.clkr = {
-> +		.enable_reg = 0x1124,
-> +		.enable_mask = BIT(0),
-> +		.hw.init = &(struct clk_init_data){
-> +			.name = "gfx3d_isense_clk",
-> +			.parent_hws = (const struct clk_hw *[]){ &gfx3d_isense_clk_src.clkr.hw },
-> +			.num_parents = 1,
-> +			.ops = &clk_branch2_ops,
-> +		},
-> +	},
-> +};
-> +
-> +static struct gdsc gpu_cx_gdsc = {
-> +	.gdscr = 0x1004,
-> +	.pd = {
-> +		.name = "gpu_cx",
-> +	},
-> +	.pwrsts = PWRSTS_OFF_ON,
-> +};
-> +
-> +static struct gdsc gpu_gx_gdsc = {
-> +	.gdscr = 0x1094,
-> +	.clamp_io_ctrl = 0x130,
-> +	.pd = {
-> +		.name = "gpu_gx",
-> +	},
-> +	.parent = &gpu_cx_gdsc.pd,
-> +	.pwrsts = PWRSTS_OFF_ON,
-> +	.flags = CLAMP_IO | AON_RESET,
-> +};
-> +
-> +static struct clk_regmap *gpucc_msm8998_clocks[] = {
-> +	[GPUPLL0] = &gpupll0.clkr,
-> +	[GPUPLL0_OUT_EVEN] = &gpupll0_out_even.clkr,
-> +	[RBCPR_CLK_SRC] = &rbcpr_clk_src.clkr,
-> +	[GFX3D_CLK_SRC] = &gfx3d_clk_src.clkr,
-> +	[RBBMTIMER_CLK_SRC] = &rbbmtimer_clk_src.clkr,
-> +	[GFX3D_ISENSE_CLK_SRC] = &gfx3d_isense_clk_src.clkr,
-> +	[RBCPR_CLK] = &rbcpr_clk.clkr,
-> +	[GFX3D_CLK] = &gfx3d_clk.clkr,
-> +	[RBBMTIMER_CLK] = &rbbmtimer_clk.clkr,
-> +	[GFX3D_ISENSE_CLK] = &gfx3d_isense_clk.clkr,
-> +	[GPUCC_CXO_CLK] = &gpucc_cxo_clk.clkr,
-> +};
-> +
-> +static struct gdsc *gpucc_msm8998_gdscs[] = {
-> +	[GPU_CX_GDSC] = &gpu_cx_gdsc,
-> +	[GPU_GX_GDSC] = &gpu_gx_gdsc,
-> +};
-> +
-> +static const struct qcom_reset_map gpucc_msm8998_resets[] = {
-> +	[GPU_CX_BCR] = { 0x1000 },
-> +	[RBCPR_BCR] = { 0x1050 },
-> +	[GPU_GX_BCR] = { 0x1090 },
-> +	[GPU_ISENSE_BCR] = { 0x1120 },
-> +};
-> +
-> +static const struct regmap_config gpucc_msm8998_regmap_config = {
-> +	.reg_bits	= 32,
-> +	.reg_stride	= 4,
-> +	.val_bits	= 32,
-> +	.max_register	= 0x9000,
-> +	.fast_io	= true,
-> +};
-> +
-> +static const struct qcom_cc_desc gpucc_msm8998_desc = {
-> +	.config = &gpucc_msm8998_regmap_config,
-> +	.clks = gpucc_msm8998_clocks,
-> +	.num_clks = ARRAY_SIZE(gpucc_msm8998_clocks),
-> +	.resets = gpucc_msm8998_resets,
-> +	.num_resets = ARRAY_SIZE(gpucc_msm8998_resets),
-> +	.gdscs = gpucc_msm8998_gdscs,
-> +	.num_gdscs = ARRAY_SIZE(gpucc_msm8998_gdscs),
-> +};
-> +
-> +static const struct of_device_id gpucc_msm8998_match_table[] = {
-> +	{ .compatible = "qcom,gpucc-msm8998" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, gpucc_msm8998_match_table);
-> +
-> +static int gpucc_msm8998_probe(struct platform_device *pdev)
-> +{
-> +	struct regmap *regmap;
-> +
-> +	regmap = qcom_cc_map(pdev, &gpucc_msm8998_desc);
-> +	if (IS_ERR(regmap))
-> +		return PTR_ERR(regmap);
-> +
-> +	/* force periph logic on to avoid perf counter corruption */
-> +	regmap_write_bits(regmap, gfx3d_clk.clkr.enable_reg, BIT(13), BIT(13));
-> +	/* tweak droop detector (GPUCC_GPU_DD_WRAP_CTRL) to reduce leakage */
-> +	regmap_write_bits(regmap, gfx3d_clk.clkr.enable_reg, BIT(0), BIT(0));
-> +
-> +	return qcom_cc_really_probe(pdev, &gpucc_msm8998_desc, regmap);
-> +}
-> +
-> +static struct platform_driver gpucc_msm8998_driver = {
-> +	.probe		= gpucc_msm8998_probe,
-> +	.driver		= {
-> +		.name	= "gpucc-msm8998",
-> +		.of_match_table = gpucc_msm8998_match_table,
-> +	},
-> +};
-> +module_platform_driver(gpucc_msm8998_driver);
-> +
-> +MODULE_DESCRIPTION("QCOM GPUCC MSM8998 Driver");
-> +MODULE_LICENSE("GPL v2");
+> Hi,
 > 
+> I have only compile-tested this, so I would appreciate if anyone
+> could do a basic runtime test on it. But (famous last words) it
+> seems simple enough that I'm confident it's correct. oh boy. :)
+> 
+> thanks,
+> John Hubbard
+> NVIDIA
+> 
+>  drivers/cpufreq/powernv-cpufreq.c | 17 +++++++++++++----
+>  1 file changed, 13 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/powernv-cpufreq.c b/drivers/cpufreq/powernv-cpufreq.c
+> index 6061850e59c9..78e04402125f 100644
+> --- a/drivers/cpufreq/powernv-cpufreq.c
+> +++ b/drivers/cpufreq/powernv-cpufreq.c
+> @@ -1041,9 +1041,14 @@ static struct cpufreq_driver powernv_cpufreq_driver = {
+>  
+>  static int init_chip_info(void)
+>  {
+> -	unsigned int chip[256];
+> +	unsigned int *chip;
+>  	unsigned int cpu, i;
+>  	unsigned int prev_chip_id = UINT_MAX;
+> +	int ret = 0;
+> +
+> +	chip = kcalloc(CONFIG_NR_CPUS, sizeof(int), GFP_KERNEL);
+
+                                       sizeof(*chip)
+
+> +	if (!chips)
+
+           (!chip)
+
+> +		return -ENOMEM;
+>  
+>  	for_each_possible_cpu(cpu) {
+>  		unsigned int id = cpu_to_chip_id(cpu);
+> @@ -1055,8 +1060,10 @@ static int init_chip_info(void)
+>  	}
+>  
+>  	chips = kcalloc(nr_chips, sizeof(struct chip), GFP_KERNEL);
+> -	if (!chips)
+> -		return -ENOMEM;
+> +	if (!chips) {
+> +		ret = -ENOMEM;
+> +		goto free_and_return;
+> +	}
+>  
+>  	for (i = 0; i < nr_chips; i++) {
+>  		chips[i].id = chip[i];
+> @@ -1066,7 +1073,9 @@ static int init_chip_info(void)
+>  			per_cpu(chip_info, cpu) =  &chips[i];
+>  	}
+>  
+> -	return 0;
+> +free_and_return:
+> +	kfree(chip);
+> +	return ret;
+>  }
+>  
+>  static inline void clean_chip_info(void)
+> -- 
+> 2.23.0
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
+viresh
