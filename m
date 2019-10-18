@@ -2,99 +2,133 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD669CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B502CCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 844DC2089C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:23:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bn/UYDge"
+	by mail.kernel.org (Postfix) with ESMTP id 91A0F2089C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:23:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442763AbfJRMXT (ORCPT
+        id S2442773AbfJRMX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 08:23:19 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:40516 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2442702AbfJRMXR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 08:23:17 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9ICN9Yf013215;
-        Fri, 18 Oct 2019 07:23:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571401389;
-        bh=I4qPIv3TfJomROlJ51jMxTwuDPaA3EB49Ea1gtA/Jko=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=bn/UYDgeGgGNFmMAAiWvSKqtuZFAHubxGv06IYeTTPmKm9TxpuiwSTQaEo9s4NS77
-         Jl/ry4jaSCy7V7kWJLvYXy/bxgdh2exp1AnTIYbRBnpNqcnxwze+G61jiDowvFuoDp
-         /xXabzz+n6YMFvx7DD4QHNCsRT5Sgr/WmxhPiPc8=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9ICN99P088786;
-        Fri, 18 Oct 2019 07:23:09 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 18
- Oct 2019 07:23:00 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 18 Oct 2019 07:23:09 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9ICN6Yl096018;
-        Fri, 18 Oct 2019 07:23:07 -0500
-Subject: Re: [PATCH] arm64: dts: ti: k3-am654-base-board: Add disable-wp for
- mmc0
-To:     Faiz Abbas <faiz_abbas@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>, <nm@ti.com>
-References: <20191003114251.20533-1-faiz_abbas@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <ea838a43-4ee7-3e40-e610-fe4bdbef81c9@ti.com>
-Date:   Fri, 18 Oct 2019 15:23:06 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191003114251.20533-1-faiz_abbas@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 18 Oct 2019 08:23:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40208 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2408123AbfJRMX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 08:23:56 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 47EAA307C656;
+        Fri, 18 Oct 2019 12:23:56 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-43.ams2.redhat.com [10.36.116.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6200060BF1;
+        Fri, 18 Oct 2019 12:23:53 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 5739616E08; Fri, 18 Oct 2019 14:23:52 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/virtio: move byteorder handling into virtio_gpu_cmd_transfer_to_host_2d function
+Date:   Fri, 18 Oct 2019 14:23:52 +0200
+Message-Id: <20191018122352.17019-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 18 Oct 2019 12:23:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/10/2019 14:42, Faiz Abbas wrote:
-> MMC0_SDWP is not connected to the card. Indicate this by adding a
-> disable-wp flag.
-> 
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> ---
->   arch/arm64/boot/dts/ti/k3-am654-base-board.dts | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-> index 1102b84f853d..143474119328 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-> @@ -221,6 +221,7 @@
->   	bus-width = <8>;
->   	non-removable;
->   	ti,driver-strength-ohm = <50>;
-> +	disable-wp;
->   };
->   
->   &dwc3_1 {
-> 
+Be consistent with the rest of the code base.
 
-Queuing up towards 5.5, thanks.
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ drivers/gpu/drm/virtio/virtgpu_drv.h   |  4 ++--
+ drivers/gpu/drm/virtio/virtgpu_plane.c | 12 ++++++------
+ drivers/gpu/drm/virtio/virtgpu_vq.c    | 12 ++++++------
+ 3 files changed, 14 insertions(+), 14 deletions(-)
 
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
+index 314e02f94d9c..0b56ba005e25 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_drv.h
++++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+@@ -267,8 +267,8 @@ void virtio_gpu_cmd_unref_resource(struct virtio_gpu_device *vgdev,
+ 				   uint32_t resource_id);
+ void virtio_gpu_cmd_transfer_to_host_2d(struct virtio_gpu_device *vgdev,
+ 					uint64_t offset,
+-					__le32 width, __le32 height,
+-					__le32 x, __le32 y,
++					uint32_t width, uint32_t height,
++					uint32_t x, uint32_t y,
+ 					struct virtio_gpu_object_array *objs,
+ 					struct virtio_gpu_fence *fence);
+ void virtio_gpu_cmd_resource_flush(struct virtio_gpu_device *vgdev,
+diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
+index f4b7360282ce..390524143139 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_plane.c
++++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
+@@ -132,10 +132,10 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
+ 			virtio_gpu_array_add_obj(objs, vgfb->base.obj[0]);
+ 			virtio_gpu_cmd_transfer_to_host_2d
+ 				(vgdev, 0,
+-				 cpu_to_le32(plane->state->src_w >> 16),
+-				 cpu_to_le32(plane->state->src_h >> 16),
+-				 cpu_to_le32(plane->state->src_x >> 16),
+-				 cpu_to_le32(plane->state->src_y >> 16),
++				 plane->state->src_w >> 16,
++				 plane->state->src_h >> 16,
++				 plane->state->src_x >> 16,
++				 plane->state->src_y >> 16,
+ 				 objs, NULL);
+ 		}
+ 	} else {
+@@ -234,8 +234,8 @@ static void virtio_gpu_cursor_plane_update(struct drm_plane *plane,
+ 		virtio_gpu_array_add_obj(objs, vgfb->base.obj[0]);
+ 		virtio_gpu_cmd_transfer_to_host_2d
+ 			(vgdev, 0,
+-			 cpu_to_le32(plane->state->crtc_w),
+-			 cpu_to_le32(plane->state->crtc_h),
++			 plane->state->crtc_w,
++			 plane->state->crtc_h,
+ 			 0, 0, objs, vgfb->fence);
+ 		dma_fence_wait(&vgfb->fence->f, true);
+ 		dma_fence_put(&vgfb->fence->f);
+diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
+index 80176f379ad5..74ad3bc3ebe8 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_vq.c
++++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
+@@ -549,8 +549,8 @@ void virtio_gpu_cmd_resource_flush(struct virtio_gpu_device *vgdev,
+ 
+ void virtio_gpu_cmd_transfer_to_host_2d(struct virtio_gpu_device *vgdev,
+ 					uint64_t offset,
+-					__le32 width, __le32 height,
+-					__le32 x, __le32 y,
++					uint32_t width, uint32_t height,
++					uint32_t x, uint32_t y,
+ 					struct virtio_gpu_object_array *objs,
+ 					struct virtio_gpu_fence *fence)
+ {
+@@ -571,10 +571,10 @@ void virtio_gpu_cmd_transfer_to_host_2d(struct virtio_gpu_device *vgdev,
+ 	cmd_p->hdr.type = cpu_to_le32(VIRTIO_GPU_CMD_TRANSFER_TO_HOST_2D);
+ 	cmd_p->resource_id = cpu_to_le32(bo->hw_res_handle);
+ 	cmd_p->offset = cpu_to_le64(offset);
+-	cmd_p->r.width = width;
+-	cmd_p->r.height = height;
+-	cmd_p->r.x = x;
+-	cmd_p->r.y = y;
++	cmd_p->r.width = cpu_to_le32(width);
++	cmd_p->r.height = cpu_to_le32(height);
++	cmd_p->r.x = cpu_to_le32(x);
++	cmd_p->r.y = cpu_to_le32(y);
+ 
+ 	virtio_gpu_queue_fenced_ctrl_buffer(vgdev, vbuf, &cmd_p->hdr, fence);
+ }
+-- 
+2.18.1
+
