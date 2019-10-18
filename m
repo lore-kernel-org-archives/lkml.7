@@ -2,376 +2,352 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2FDCA9EA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE2D7CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37908222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:34:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Pq5L/iDk";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XLOrcmW3"
+	by mail.kernel.org (Postfix) with ESMTP id BE77721852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:35:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633635AbfJRMed (ORCPT
+        id S2633839AbfJRMfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 08:34:33 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:52832 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408148AbfJRMe3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 08:34:29 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id CEA086126E; Fri, 18 Oct 2019 12:34:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571402068;
-        bh=wDNMjb0wqoOUV2dlwuv5kKKe9KtTtq+MXT2r8rru0t0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pq5L/iDkurGr2OUdpTFqAMaCCxjXKsFa0ymMeogHddSe25YGxW7Sdcw6fnQK+PGPQ
-         iH2QXH3gpC6eqoKHCfdnWlbpxH8pKcCaEwmUK4ci2UsDQ2fpT5ZH1u9R8rjC8tD3Hr
-         /4gXosDnTAJqgLGwxohqRD+buqr4iBP1QJ5Yh/wE=
-Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Fri, 18 Oct 2019 08:35:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:6024 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2633778AbfJRMfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 08:35:16 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kgunda@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BABD56106C;
-        Fri, 18 Oct 2019 12:34:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571402062;
-        bh=wDNMjb0wqoOUV2dlwuv5kKKe9KtTtq+MXT2r8rru0t0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XLOrcmW3u2VEqiajwCE8m2qx6qCu/GAD0iZInYUmQyrits2IdI7UisvmE4JvZnV9p
-         iymD6zNLRB9fWdgg4YtmWc26opwTV7zTRoZu5hFmk8OzGCx2Z/uf54cK8peITIWlZ1
-         SNHrgjwOb5HPBgpB0gGskdt5vpMcN7k43Zu2JsiI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BABD56106C
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
-From:   Kiran Gunda <kgunda@codeaurora.org>
-To:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        lee.jones@linaro.org, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-fbdev@vger.kernel.org
-Cc:     Kiran Gunda <kgunda@codeaurora.org>
-Subject: [PATCH V8 5/6] backlight: qcom-wled: add support for short circuit handling.
-Date:   Fri, 18 Oct 2019 18:03:28 +0530
-Message-Id: <1571402009-8706-6-git-send-email-kgunda@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1571402009-8706-1-git-send-email-kgunda@codeaurora.org>
-References: <1571402009-8706-1-git-send-email-kgunda@codeaurora.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id D231A10F0C;
+        Fri, 18 Oct 2019 12:35:14 +0000 (UTC)
+Received: from [10.36.118.23] (unknown [10.36.118.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CB6255C21E;
+        Fri, 18 Oct 2019 12:35:07 +0000 (UTC)
+Subject: Re: [PATCH RFC v3 6/9] mm: Allow to offline PageOffline() pages with
+ a reference count of 0
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtualization@lists.linux-foundation.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Juergen Gross <jgross@suse.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Yu Zhao <yuzhao@google.com>, Minchan Kim <minchan@kernel.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+References: <20190919142228.5483-1-david@redhat.com>
+ <20190919142228.5483-7-david@redhat.com>
+ <20191016114321.GX317@dhcp22.suse.cz>
+ <36fef317-78e3-0500-43ba-f537f9a6fea4@redhat.com>
+ <20191016140350.GD317@dhcp22.suse.cz>
+ <7c7bef01-f904-904a-b0a7-f7b514b8bda8@redhat.com>
+ <20191018081524.GD5017@dhcp22.suse.cz>
+ <83d0a961-952d-21e4-74df-267912b7b6fa@redhat.com>
+ <20191018111843.GH5017@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <709d39aa-a7ba-97aa-e66b-e2fec2fdf3c4@redhat.com>
+Date:   Fri, 18 Oct 2019 14:35:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <20191018111843.GH5017@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 18 Oct 2019 12:35:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Handle the short circuit interrupt and check if the short circuit
-interrupt is valid. Re-enable the module to check if it goes
-away. Disable the module altogether if the short circuit event
-persists.
+On 18.10.19 13:20, Michal Hocko wrote:
+> On Fri 18-10-19 10:50:24, David Hildenbrand wrote:
+>> On 18.10.19 10:15, Michal Hocko wrote:
+>>> On Wed 16-10-19 16:14:52, David Hildenbrand wrote:
+>>>> On 16.10.19 16:03, Michal Hocko wrote:
+>>> [...]
+>>>>> But why cannot you keep the reference count at 1 (do get_page when
+>>>>> offlining the page)? In other words as long as the driver knows the page
+>>>>> has been returned to the host then it has ref count at 1. Once the page
+>>>>> is returned to the guest for whatever reason it can free it to the
+>>>>> system by clearing the offline state and put_page.
+>>>>
+>>>> I think I explained how the reference count of 1 is problematic when wanting
+>>>> to offline the memory. After all that's the problem I try to solve: Keep
+>>>> PG_offline set until the memory is offline and make sure nobody will touch
+>>>> the page.
+>>>
+>>> Please bear with me but I still believe that elevated reference count
+>>> has some merits. I do understand that you maintain your metadata to
+>>> recognize that the memory handed over to the hypervisor will not
+>>> magically appear after onlining. But I believe that you can achieve
+>>> the same with an elevated reference count and have a more robust design
+>>> as well.
+>>
+>> Thanks for thinking about this. I still believe it is problematic. And I
+>> don't like releasing "pages that should not be used" to the buddy. It comes
+>> with some problems if offlining fails (see below).
+> 
+> Sure I will not be pushing if that turns out to be unfeasible. But I
+> would like to explore that path before giving up on it.
 
-Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
----
- drivers/video/backlight/qcom-wled.c | 144 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 140 insertions(+), 4 deletions(-)
+Sure, I appreciate that. I wrapped my head around a lot of these things 
+for a long time and came to the conclusion that it is complicated :)
 
-diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
-index 5386ca9..658b1e0 100644
---- a/drivers/video/backlight/qcom-wled.c
-+++ b/drivers/video/backlight/qcom-wled.c
-@@ -2,6 +2,9 @@
- /* Copyright (c) 2015, Sony Mobile Communications, AB.
+[read below, I think it makes sense if you can summarize the idea you 
+have that avoids releasing pages to the buddy - similar to this approach]
+
+>   
+> [...]
+>>> An elevated reference count would prevent offlining to finish. And I
+>>> believe this is a good thing because the owner of the offline page might
+>>> still need to do something to "untrack" that page. We have an interface
+>>
+>> And here is the thing: The owner of the page does not have to do anything to
+>> untrack the page. I mean that's what a reference count of zero actually
+>> means - no direct reference.
+> 
+> Will this be the case for other potential users of the similar/same
+> mechanism? I thought that this would become a more spread mechanism.
+
+Anybody who wants to use that mechanism has to respect these rules. I am 
+going to document that. It does not make sense for all balloon drivers 
+that can simply implement page compaction. E.g., PPC CMM, it makes much 
+more sense to switch to balloon compaction instead (because that's what 
+it really is, a balloon driver).
+
+I could imagine that HyperV might want to use that in the future. And it 
+should be possible to make them play with the rules. They already use 
+memory notifiers and online_page_callback_t.
+
+> 
+>>> for that - MEM_GOING_OFFLINE notification. This sounds like a good place
+>>> for the driver to decide whether it is safe to let the page go or not.
+>>
+>> As I explained, this is too late and fragile. I post again what I posted
+>> before with some further explanations
+>>
+>> __offline_pages() works like this:
+>>
+>> 1) start_isolate_page_range()
+>> -> offline pages with a reference count of one will be detected as
+>> unmovable -> offlining aborted. (see below on the memory isolation notifier)
+> 
+> I am assuming that has_unmovable_pages would skip over those pages. Your
+> patch already does that, no?
+
+Yes, this works IFF the reference count is 0 (IOW, this patch). Not with 
+a reference count of 1 (unless the pages are movable, like with balloon 
+compaction).
+
+Please note that we have other users that use PG_offline + refcount >= 1 
+(HyperV balloon, XEN). We should not affect these users (IOW, 
+has_unmovable_pages() has to stop right there if we see one of these pages).
+
+> 
+>> 2) memory_notify(MEM_GOING_OFFLINE, &arg);
+>> -> Here, we could release all pages to the buddy, clearing PG_offline
+>> -> PF_offline must not be cleared so dumping tools will not touch
+>>     these pages. There is a time where pages are !PageBuddy() and
+>>     !PageOffline().
+> 
+> Well, this is fully under control of the driver, no? Reference count
+> shouldn't play any role here AFAIU.
+
+Yes, this is more a PG_offline issue. The reference count is an issue of 
+reaching this call :) If we want to go via the buddy:
+
+1. Clear PG_offline
+2. Free page (gets set PG_buddy)
+
+Between 1 and 2, a dumping tool could not exclude these pages and 
+therefore try to read from these pages. That is an issue IFF we want to 
+return the pages back to the buddy instead of doing what I propose here.
+
+>   
+>> 3) scan_movable_pages() ...
+
+Please note that when we don't put the pages back to the buddy and don't 
+implement something like I have in this patch, we'll loop/fail here. 
+Especially if we have pages with PG_offline + refcount >= 1 .
+
+>>
+>> 4a) Memory offlining succeeded: memory_notify(MEM_OFFLINE, &arg);
+>>
+>> Perfect, it worked. Sections are offline.
+>>
+>> 4b) Memory offlining failed
+>>
+>>      undo_isolate_page_range(start_pfn, end_pfn, MIGRATE_MOVABLE);
+>>      memory_notify(MEM_CANCEL_OFFLINE, &arg);
+> 
+> Doesn't this return pages back to buddy only when they were marked Buddy
+> already?
+
+Yes, but I think you asked for evaluating what it would take to make the 
+reference count stay at 1 and return the pages to the buddy. I tried to 
+explain the pitfalls of that approach here :)
+
+Can you clarify what exactly you have in mind right now? (how to make 
+isolation work, how to make offlining work without putting pages back to 
+the buddy, etc .). I have the feeling I am missing the one part that 
+does not put the pages back to the buddy.
+
+> 
+> MEM_CANCEL_OFFLINE could gain the reference back to balance the
+> MEM_GOING_OFFLINE step.
+
+The pages are already unisolated and could be used by the buddy. But 
+again, I think you have an idea that tries to avoid putting pages to the 
+buddy.
+
+> 
+> One think that I would like to clarify because my previous email could
+> be misleading a bit. You do not really have to drop the reference by
+> releasing the page to the allocator (via put_page). You can also set
+> the reference count to 0 explicitly. The driver is in control of the
+> page, right?  And that is the whole point I wanted to make. There is an
+
+This is what virtio-mem does whenever it allocates a range using 
+alloc_contig_range(). It uses page_ref_dec() instead of put_page()
+
+/*
+  * Set a range of pages PG_offline and drop the reference. The dropped
+  * reference (0) and the flag allows isolation code to isolate thisrange
+  * and offline code to offline it.
   */
- 
-+#include <linux/delay.h>
-+#include <linux/interrupt.h>
-+#include <linux/ktime.h>
- #include <linux/kernel.h>
- #include <linux/backlight.h>
- #include <linux/module.h>
-@@ -56,6 +59,16 @@
- #define WLED3_SINK_REG_STR_CABC(n)			(0x66 + (n * 0x10))
- #define  WLED3_SINK_REG_STR_CABC_MASK			BIT(7)
- 
-+/* WLED4 specific control registers */
-+#define WLED4_CTRL_REG_SHORT_PROTECT			0x5e
-+#define  WLED4_CTRL_REG_SHORT_EN_MASK			BIT(7)
-+
-+#define WLED4_CTRL_REG_SEC_ACCESS			0xd0
-+#define  WLED4_CTRL_REG_SEC_UNLOCK			0xa5
-+
-+#define WLED4_CTRL_REG_TEST1				0xe2
-+#define  WLED4_CTRL_REG_TEST1_EXT_FET_DTEST2		0x09
-+
- /* WLED4 specific sink registers */
- #define WLED4_SINK_REG_CURR_SINK			0x46
- #define  WLED4_SINK_REG_CURR_SINK_MASK			GENMASK(7, 4)
-@@ -105,17 +118,24 @@ struct wled_config {
- 	bool cs_out_en;
- 	bool ext_gen;
- 	bool cabc;
-+	bool external_pfet;
- };
- 
- struct wled {
- 	const char *name;
- 	struct device *dev;
- 	struct regmap *regmap;
-+	struct mutex lock;	/* Lock to avoid race from thread irq handler */
-+	ktime_t last_short_event;
- 	u16 ctrl_addr;
- 	u16 sink_addr;
- 	u16 max_string_count;
- 	u32 brightness;
- 	u32 max_brightness;
-+	u32 short_count;
-+	bool disabled_by_short;
-+	bool has_short_detect;
-+	int short_irq;
- 
- 	struct wled_config cfg;
- 	int (*wled_set_brightness)(struct wled *wled, u16 brightness);
-@@ -166,6 +186,9 @@ static int wled_module_enable(struct wled *wled, int val)
- {
- 	int rc;
- 
-+	if (wled->disabled_by_short)
-+		return -ENXIO;
-+
- 	rc = regmap_update_bits(wled->regmap, wled->ctrl_addr +
- 				WLED3_CTRL_REG_MOD_EN,
- 				WLED3_CTRL_REG_MOD_EN_MASK,
-@@ -202,18 +225,19 @@ static int wled_update_status(struct backlight_device *bl)
- 	    bl->props.state & BL_CORE_FBBLANK)
- 		brightness = 0;
- 
-+	mutex_lock(&wled->lock);
- 	if (brightness) {
- 		rc = wled->wled_set_brightness(wled, brightness);
- 		if (rc < 0) {
- 			dev_err(wled->dev, "wled failed to set brightness rc:%d\n",
- 				rc);
--			return rc;
-+			goto unlock_mutex;
- 		}
- 
- 		rc = wled_sync_toggle(wled);
- 		if (rc < 0) {
- 			dev_err(wled->dev, "wled sync failed rc:%d\n", rc);
--			return rc;
-+			goto unlock_mutex;
- 		}
- 	}
- 
-@@ -221,15 +245,61 @@ static int wled_update_status(struct backlight_device *bl)
- 		rc = wled_module_enable(wled, !!brightness);
- 		if (rc < 0) {
- 			dev_err(wled->dev, "wled enable failed rc:%d\n", rc);
--			return rc;
-+			goto unlock_mutex;
- 		}
- 	}
- 
- 	wled->brightness = brightness;
- 
-+unlock_mutex:
-+	mutex_unlock(&wled->lock);
-+
- 	return rc;
- }
- 
-+#define WLED_SHORT_DLY_MS			20
-+#define WLED_SHORT_CNT_MAX			5
-+#define WLED_SHORT_RESET_CNT_DLY_US		USEC_PER_SEC
-+
-+static irqreturn_t wled_short_irq_handler(int irq, void *_wled)
-+{
-+	struct wled *wled = _wled;
-+	int rc;
-+	s64 elapsed_time;
-+
-+	wled->short_count++;
-+	mutex_lock(&wled->lock);
-+	rc = wled_module_enable(wled, false);
-+	if (rc < 0) {
-+		dev_err(wled->dev, "wled disable failed rc:%d\n", rc);
-+		goto unlock_mutex;
-+	}
-+
-+	elapsed_time = ktime_us_delta(ktime_get(),
-+				      wled->last_short_event);
-+	if (elapsed_time > WLED_SHORT_RESET_CNT_DLY_US)
-+		wled->short_count = 1;
-+
-+	if (wled->short_count > WLED_SHORT_CNT_MAX) {
-+		dev_err(wled->dev, "Short trigged %d times, disabling WLED forever!\n",
-+			wled->short_count);
-+		wled->disabled_by_short = true;
-+		goto unlock_mutex;
-+	}
-+
-+	wled->last_short_event = ktime_get();
-+
-+	msleep(WLED_SHORT_DLY_MS);
-+	rc = wled_module_enable(wled, true);
-+	if (rc < 0)
-+		dev_err(wled->dev, "wled enable failed rc:%d\n", rc);
-+
-+unlock_mutex:
-+	mutex_unlock(&wled->lock);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static int wled3_setup(struct wled *wled)
- {
- 	u16 addr;
-@@ -318,7 +388,7 @@ static int wled4_setup(struct wled *wled)
- 	int rc, temp, i, j;
- 	u16 addr;
- 	u8 sink_en = 0;
--	u32 sink_cfg = 0;
-+	u32 sink_cfg;
- 
- 	rc = regmap_update_bits(wled->regmap,
- 				wled->ctrl_addr + WLED3_CTRL_REG_OVP,
-@@ -340,6 +410,21 @@ static int wled4_setup(struct wled *wled)
- 	if (rc < 0)
- 		return rc;
- 
-+	if (wled->cfg.external_pfet) {
-+		/* Unlock the secure register access */
-+		rc = regmap_write(wled->regmap, wled->ctrl_addr +
-+				  WLED4_CTRL_REG_SEC_ACCESS,
-+				  WLED4_CTRL_REG_SEC_UNLOCK);
-+		if (rc < 0)
-+			return rc;
-+
-+		rc = regmap_write(wled->regmap,
-+				  wled->ctrl_addr + WLED4_CTRL_REG_TEST1,
-+				  WLED4_CTRL_REG_TEST1_EXT_FET_DTEST2);
-+		if (rc < 0)
-+			return rc;
-+	}
-+
- 	rc = regmap_read(wled->regmap, wled->sink_addr +
- 			 WLED4_SINK_REG_CURR_SINK, &sink_cfg);
- 	if (rc < 0)
-@@ -425,6 +510,7 @@ static int wled4_setup(struct wled *wled)
- 	.num_strings = 4,
- 	.switch_freq = 11,
- 	.cabc = false,
-+	.external_pfet = false,
- };
- 
- static const u32 wled3_boost_i_limit_values[] = {
-@@ -590,6 +676,7 @@ static int wled_configure(struct wled *wled, int version)
- 		{ "qcom,cs-out", &cfg->cs_out_en, },
- 		{ "qcom,ext-gen", &cfg->ext_gen, },
- 		{ "qcom,cabc", &cfg->cabc, },
-+		{ "qcom,external-pfet", &cfg->external_pfet, },
- 	};
- 
- 	prop_addr = of_get_address(dev->of_node, 0, NULL, NULL);
-@@ -678,6 +765,38 @@ static int wled_configure(struct wled *wled, int version)
- 	return 0;
- }
- 
-+static int wled_configure_short_irq(struct wled *wled,
-+				    struct platform_device *pdev)
-+{
-+	int rc;
-+
-+	if (!wled->has_short_detect)
-+		return 0;
-+
-+	rc = regmap_update_bits(wled->regmap, wled->ctrl_addr +
-+				WLED4_CTRL_REG_SHORT_PROTECT,
-+				WLED4_CTRL_REG_SHORT_EN_MASK,
-+				WLED4_CTRL_REG_SHORT_EN_MASK);
-+	if (rc < 0)
-+		return rc;
-+
-+	wled->short_irq = platform_get_irq_byname(pdev, "short");
-+	if (wled->short_irq < 0) {
-+		dev_dbg(&pdev->dev, "short irq is not used\n");
-+		return 0;
-+	}
-+
-+	rc = devm_request_threaded_irq(wled->dev, wled->short_irq,
-+				       NULL, wled_short_irq_handler,
-+				       IRQF_ONESHOT,
-+				       "wled_short_irq", wled);
-+	if (rc < 0)
-+		dev_err(wled->dev, "Unable to request short_irq (err:%d)\n",
-+			rc);
-+
-+	return rc;
-+}
-+
- static const struct backlight_ops wled_ops = {
- 	.update_status = wled_update_status,
- };
-@@ -711,6 +830,7 @@ static int wled_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
-+	mutex_init(&wled->lock);
- 	rc = wled_configure(wled, version);
- 	if (rc)
- 		return rc;
-@@ -725,6 +845,7 @@ static int wled_probe(struct platform_device *pdev)
- 		break;
- 
- 	case 4:
-+		wled->has_short_detect = true;
- 		rc = wled4_setup(wled);
- 		if (rc) {
- 			dev_err(&pdev->dev, "wled4_setup failed\n");
-@@ -737,6 +858,10 @@ static int wled_probe(struct platform_device *pdev)
- 		break;
- 	}
- 
-+	rc = wled_configure_short_irq(wled, pdev);
-+	if (rc < 0)
-+		return rc;
-+
- 	val = WLED_DEFAULT_BRIGHTNESS;
- 	of_property_read_u32(pdev->dev.of_node, "default-brightness", &val);
- 
-@@ -750,6 +875,16 @@ static int wled_probe(struct platform_device *pdev)
- 	return PTR_ERR_OR_ZERO(bl);
- };
- 
-+static int wled_remove(struct platform_device *pdev)
-+{
-+	struct wled *wled = dev_get_drvdata(&pdev->dev);
-+
-+	mutex_destroy(&wled->lock);
-+	disable_irq(wled->short_irq);
-+
-+	return 0;
-+}
-+
- static const struct of_device_id wled_match_table[] = {
- 	{ .compatible = "qcom,pm8941-wled", .data = (void *)3 },
- 	{ .compatible = "qcom,pmi8998-wled", .data = (void *)4 },
-@@ -760,6 +895,7 @@ static int wled_probe(struct platform_device *pdev)
- 
- static struct platform_driver wled_driver = {
- 	.probe = wled_probe,
-+	.remove = wled_remove,
- 	.driver	= {
- 		.name = "qcom,wled",
- 		.of_match_table	= wled_match_table,
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
- a Linux Foundation Collaborative Project
+static void virtio_mem_set_fake_offline(unsigned long pfn,
+                                         unsigned int nr_pages)
+{
+        for (; nr_pages--; pfn++) {
+                __SetPageOffline(pfn_to_page(pfn));
+                page_ref_dec(pfn_to_page(pfn));
+        }
+}
 
+The put_page() change is really only needed to avoid the mentioned race 
+if somebody succeeds with a get_page_unless_zero(page) followed by a 
+put_page() (bewlow).
+
+
+> explicit control via the reference count which is the standard way to
+> control the struct page life cycle.
+> 
+> Anyway hooking into __put_page (which tends to be a hot path with
+> something that is barely used on most systems) doesn't sound nice to me.
+> This is the whole point which made me think about the whole reference
+> count approach in the first place.
+
+Again, the race I think that is possible
+
+somebody: get_page_unless_zero(page)
+virtio_mem: page_ref_dec(pfn_to_page(pfn)
+somebody: put_page() -> straight to the buddy
+
+I am not yet sure if this will really be a performance issue in 
+put_page(). The branch predictor should do an excellent job here. 
+(especially on systems without users)
+
+> 
+> I do realize that the reference count doesn't solve the problem with
+> onlining. Drivers still have to special case the onlining and that is
+> something I really dislike but I do not have a good answer for.
+
+Yeah, especially due to HWPoison, this is to be solved differently. The 
+PG_offline part might not be nice, but certainly easier to handle 
+(online_page_callback_t).
+
+> 
+>>> If you can let the page go then just drop the reference count. The page
+>>> is isolated already by that time. If you cannot let it go for whatever
+>>> reason you can fail the offlining.
+>>
+>> We do have one hack in current MM code, which is the memory isolation
+>> notifier only used by CMM on PPC. It allows to "cheat" has_unmovable_pages()
+>> to skip over unmovable pages. But quite frankly, I rather want to get rid of
+>> that crap (something I am working on right now) than introduce new users.
+>> This stuff is racy as hell and for CMM, if memory offlining fails, the
+>> ballooned pages are suddenly part of the buddy. Fragile.
+> 
+> Could you be more specific please?
+
+Let's take a look at how arch/powerpc/platforms/pseries/cmm.c handles it:
+
+cmm_memory_isolate_cb() -> cmm_count_pages(arg):
+- Memory Isolation notifier callback
+- Count how many pages in the range to be isolated are in the ballooon
+- This makes has_unmovable_pages() succeed. Pages can be isolated.
+
+cmm_memory_cb -> cmm_mem_going_offline(arg):
+- Memory notifier (online/offline)
+- Release all pages in the range to the buddy
+
+If offlining fails, the pages are now in the buddy, no longer in the 
+balloon. MEM_CANCEL_ONLINE is too late, because the range is already 
+unisolated again and the pages might be in use.
+
+For CMM it might not be that bad, because it can actually "reloan" any 
+pages. In contrast, virtio-mem cannot simply go ahead and reuse random 
+memory in unplugged. Any access to these pages would be evil. Giving 
+them back to the buddy is dangerous.
+
+> 
+>>> An advantage is that the driver has the full control over offlining and
+>>> also you do not really have to track a new online request to do the
+>>> right thing.
+>>
+>> The driver still has to synchronize against onlining/offlining requests and
+>> track the state of the memory blocks.
+>>
+>> Simple example: virtio-mem wants to try yo unplug a 4MB chunk. If the memory
+>> block is online, it has to use alloc contig_range(). If the memory block is
+>> offline (e.g., user space has not onlined it yet), it is sufficient to
+>> update metadata. It has to be aware of the state of the memory blocks and
+>> synchronize against onlining/offlining.
+> 
+> Hmm, so the driver might offline a part of the memory which never got
+> onlined? Is there really a sensible usecases for that?
+
+Yes there is in general a demand for unplugging offline memory. E.g., 
+some configurable mode in the future could be that virtio-mem only 
+unplugs offline memory, because this way user space can control which 
+memory will actually get unplugged (compared to virtio-mem going ahead 
+and trying to find online chunks to unplug).
+
+Also, virtio-mem will be very careful with ZONE_MOVABLE memory. 
+ZONE_MOVABLE memory first has to be offlined by user space before 
+virtio-mem will go ahead and unplug parts (of the now offline memory). 
+The reason is that I don't want unmovable pages (IOW via 
+alloc_contig_range()) to end up in ZONE_MOVABLE - similar to gigantic 
+pages. But that's yet another discussion :)
+
+Thanks Michal!
+
+-- 
+
+Thanks,
+
+David / dhildenb
