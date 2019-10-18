@@ -2,109 +2,235 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 120CACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70B2CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC83C2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77E9A2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:29:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mCSqmO2X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qgj6QTI/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502949AbfJRS1G (ORCPT
+        id S2505599AbfJRS3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:27:06 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46602 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502485AbfJRS1G (ORCPT
+        Fri, 18 Oct 2019 14:29:37 -0400
+Received: from mail-qt1-f173.google.com ([209.85.160.173]:35226 "EHLO
+        mail-qt1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502485AbfJRS3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:27:06 -0400
-Received: by mail-wr1-f66.google.com with SMTP id o18so7219481wrv.13
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 11:27:05 -0700 (PDT)
+        Fri, 18 Oct 2019 14:29:36 -0400
+Received: by mail-qt1-f173.google.com with SMTP id m15so10510105qtq.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 11:29:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lO2StNiS2UHCj8+9SsvqSbVKFte3Dujsk2JYdGhstd0=;
-        b=mCSqmO2XSWm/BFp+YC0O5sy6vJ4J9PotAhn5xpwkgbLUAOKLOjfiuMwaNP4IM5w77D
-         1S15TG8+HjOpw2soOliWnJE23GXyYl2TXYvWNZArL9GbV9beblrMKFHKZdicosRbE4fq
-         yp47axUjsA6baFIHyOPPi3/rWce8BrLV6v0ZzfuMzwDU7prEK6y90itiERMCUMZV/lMu
-         m9sJHdbbrS7aaHwvAfm2Uk4/Y36IHrBd+TkMqVp8Kgr9XjSui6C2usRZeEb1khK3depA
-         U8LSiLkppE1IwqCCKIY5Nt4HDOBkjfuqMc4CQnwdfb+Grr1qOSqeYO3yF2hjUZY/LLGH
-         TFjg==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ka1jde4meHyxobWU4esILBOv5JEOtUjz6qkwUWVqweM=;
+        b=Qgj6QTI//JtzBjEw4ZWi4StC9S7tbLBWy2TH0BGjzLGRunn+mD60OHqCNIF18bQu1P
+         Pufp12x51hM9wWoBwgc9V9Lz+qFWCWfsCSFTA96wEPypA26nLBYFMyHC8chYrGCDdDCP
+         Pdolyenf36XjuyISmDaPY6Pa0NB3k0xKT6UqkaMad8vIl84dAuRkE0TywYt1B2vQDK1m
+         RH6zaWbPvXEnbzJ7NfOXpGWD9z3I92aaE89qD3c+rcKSLMA/mCCr+cwefIouRGGtZTs8
+         rvGDSMetv4gzEtgmtcbxa6EpoT12WsP/MG6qbVtLSGVOV9uKwetPX8ISZye+Gp3Rimo1
+         9fLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lO2StNiS2UHCj8+9SsvqSbVKFte3Dujsk2JYdGhstd0=;
-        b=Yfj/kkZXH4tIxu8rwwx1aSnupf38Rl/6Jy4p73fybz7jTtxE9x4KyAaT0MWJqM1iXj
-         BsJ5DhUXiKHCs1+xoktxYCcq29L6HlPmqDTL6aQ/Vc9P3qXGF28gsAw1UcExSGjvXXiX
-         YbCjGEiGNdl+3EtZ5DO0lvqw//5UOsriHrlpszeZRHEPaXhHUmAXWN2M4Dm+6c2Q4avt
-         Jc/TrzVpI5pKwYUFt0uyqB02G9XLfdDczNJbVDqISZWg/e+Xk/1LqFpEycgliTIfP1EA
-         DV0/NIigViaDCB5T8f4lBop3H9H4Np0Yn3kp3LWZsntJPiT8a+Rvxwm5mOtP4iPHxuZB
-         T6Sw==
-X-Gm-Message-State: APjAAAU3/dJAjlzTBxCkOr/Er7f8C9QZrefbOlOdWhzRU1794p1IN35v
-        QgIOc1ku+ZoZJ3GxCbPYOhHZBBqhwlmYub7WuQO5pg==
-X-Google-Smtp-Source: APXvYqy02V7JvYjspbL2KqGV67KwG+Nwl8JcMdFE4sjvajWRC5F41fOItfkNZW2vQ9MumjE8aMqtnrumrcIePCpePlw=
-X-Received: by 2002:adf:fb0b:: with SMTP id c11mr9338121wrr.50.1571423224434;
- Fri, 18 Oct 2019 11:27:04 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ka1jde4meHyxobWU4esILBOv5JEOtUjz6qkwUWVqweM=;
+        b=AI4byzQY3qBvGjmFcMyqQPSQNCm9uolQvuFad0O63bLLBddub1ia52oQ7XGKS5hrUV
+         pJ90BMevCnJaKEiON9m6OfJ5wz15jikBxXaN2Fl8LncUuqgIaf8RPN9YcSr6huwdw8xs
+         NHnhVLg1/m4nP+/bzU/cAWBoXVdAlpVh6tHgjIxWl53uYXliMnaz9RknQEWeSxjLRfdj
+         c/IZDpg2NisZucCmDnLnWV79W/kGbNGFOUmllJvP3njjJ1qIN4fWbouFZdRUBBZIfrcv
+         xd4ILQzHYBPzFeKJ8ZbYg4NXaRyM5plTj7wv1BiD1kCQjakFQrPJWam0lGzBvhf3vajV
+         cbvA==
+X-Gm-Message-State: APjAAAWX3Yn7qBU0sAWYIFb4jS8TG+NM3nd4xE+E35V8O1kWOvsjEHeU
+        GSDXWHGtF3gKFVfrWLOU4rHOM9lOw4E=
+X-Google-Smtp-Source: APXvYqzqjsWRa5qxWt9U0lAfYjxBbdSmGUCJRFQR5YOV5CURR4WlFQYentEbjzqlqVHUmvyF+VdqZw==
+X-Received: by 2002:a0c:8522:: with SMTP id n31mr11284330qva.161.1571423375639;
+        Fri, 18 Oct 2019 11:29:35 -0700 (PDT)
+Received: from quaco.ghostprotocols.net (179-240-170-47.3g.claro.net.br. [179.240.170.47])
+        by smtp.gmail.com with ESMTPSA id n42sm4843784qta.31.2019.10.18.11.29.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 11:29:34 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 3E1704DD66; Fri, 18 Oct 2019 15:29:31 -0300 (-03)
+Date:   Fri, 18 Oct 2019 15:29:31 -0300
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Kan Liang <kan.liang@linux.intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Stephane Eranian <eranian@google.com>,
+        Song Liu <songliubraving@fb.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: Re: [PATCHv3 00/10] libperf: Add sampling interface (leftover)
+Message-ID: <20191018182931.GG1797@kernel.org>
+References: <20191017105918.20873-1-jolsa@kernel.org>
 MIME-Version: 1.0
-References: <20191018052323.21659-1-john.stultz@linaro.org>
- <20191018052323.21659-2-john.stultz@linaro.org> <20191018111832.o7wx3x54jm3ic6cq@DESKTOP-E1NTVVP.localdomain>
-In-Reply-To: <20191018111832.o7wx3x54jm3ic6cq@DESKTOP-E1NTVVP.localdomain>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Fri, 18 Oct 2019 11:26:52 -0700
-Message-ID: <CALAqxLUVLP0ujB0SHyWHMncRMHkBvVj1+CpBgGUD8Xg3RexQ8w@mail.gmail.com>
-Subject: Re: [PATCH v12 1/5] dma-buf: Add dma-buf heaps framework
-To:     Brian Starkey <Brian.Starkey@arm.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        "Andrew F. Davis" <afd@ti.com>, Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Hillf Danton <hdanton@sina.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        nd <nd@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191017105918.20873-1-jolsa@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 4:18 AM Brian Starkey <Brian.Starkey@arm.com> wrote:
-> On Fri, Oct 18, 2019 at 05:23:19AM +0000, John Stultz wrote:
->
-> As in v3:
->
->  * Avoid EXPORT_SYMBOL until we finalize modules (suggested by
->    Brian)
+Em Thu, Oct 17, 2019 at 12:59:08PM +0200, Jiri Olsa escreveu:
+> hi,
+> sending changes for exporting basic sampling interface
+> in libperf. It's now possible to use following code in
+> applications via libperf:
+ 
 
-Heh. I guess it has been awhile.  :)
+Thanks, applied.
 
-> Did something change in that regard? I still think letting modules
-> register heaps without a way to remove them is a recipe for issues.
+- Arnaldo
+> --- (example is without error checks for simplicity)
+> 
+>   struct perf_event_attr attr = {
+>           .type             = PERF_TYPE_TRACEPOINT,
+>           .sample_period    = 1,
+>           .wakeup_watermark = 1,
+>           .disabled         = 1,
+>   };
+>   /* ... setup attr */
+> 
+>   cpus = perf_cpu_map__new(NULL);
+> 
+>   evlist = perf_evlist__new();
+>   evsel  = perf_evsel__new(&attr);
+>   perf_evlist__add(evlist, evsel);
+> 
+>   perf_evlist__set_maps(evlist, cpus, NULL);
+> 
+>   err = perf_evlist__open(evlist);
+>   err = perf_evlist__mmap(evlist, 4);
+> 
+>   err = perf_evlist__enable(evlist);
+> 
+>   /* ... monitored area, plus all the other cpus */
+> 
+>   err = perf_evlist__disable(evlist);
+> 
+>   perf_evlist__for_each_mmap(evlist, map) {
+>           if (perf_mmap__read_init(map) < 0)
+>                   continue;
+> 
+>           while ((event = perf_mmap__read_event(map)) != NULL) {
+>                   perf_mmap__consume(map);
+>           }
+> 
+>           perf_mmap__read_done(map);
+>   }
+> 
+>   perf_evlist__delete(evlist);
+>   perf_cpu_map__put(cpus);
+> 
+> --- (end)
+> 
+> Nothing is carved in stone so far, the interface is exported
+> as is available in perf now and we can change it as we want.
+> 
+> New tests are added in test-evlist.c to do thread and cpu based
+> sampling.
+> 
+> All the functionality should not change, however there's considerable
+> mmap code rewrite.
+> 
+> Now we have perf_evlist__mmap_ops called by both perf and libperf
+> mmaps functions with specific 'struct perf_evlist_mmap_ops'
+> callbacks:
+> 
+>   - get  - to get mmap object, both libperf and perf use different
+>            objects, because perf needs to carry more data for aio,
+>            compression and auxtrace
+>   - mmap - to actually mmap the object, it's simple mmap for libperf,
+>            but more work for perf wrt aio, compression and auxtrace
+>   - idx  - callback to get current IDs, used only in perf for auxtrace
+>            setup
+> 
+> 
+> It would be great if guys could run your usual workloads to see if all
+> is fine.. so far so good in my tests ;-)
+> 
+> 
+> It's also available in here:
+>   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+>   perf/lib
+> 
+> v3 changes:
+>   - changed mmap0 and mmap_ovw0 to mmap_first and mmap_ovw_first
+>   - rebased to latest perf/core
+>   - portion of patches already taken
+> 
+> v2 changes:
+>   - rebased to latest perf/core
+>   - portion of patches already taken
+>   - explained mmap refcnt management in following patch changelog:
+>     libperf: Centralize map refcnt setting
+> 
+> thanks,
+> jirka
+> 
+> 
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Stephane Eranian <eranian@google.com>
+> Cc: Song Liu <songliubraving@fb.com>
+> Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+> Cc: Andi Kleen <ak@linux.intel.com>
+> ---
+> Jiri Olsa (10):
+>       libperf: Add perf_evlist__for_each_mmap function
+>       libperf: Move mmap allocation to perf_evlist__mmap_ops::get
+>       libperf: Move mask setup to perf_evlist__mmap_ops function
+>       libperf: Link static tests with libapi.a
+>       libperf: Add _GNU_SOURCE define to compilation
+>       libperf: Add tests_mmap_thread test
+>       libperf: Add tests_mmap_cpus test
+>       libperf: Keep count of failed tests
+>       libperf: Do not export perf_evsel__init/perf_evlist__init
+>       libperf: Add pr_err macro
+> 
+>  tools/perf/lib/Makefile                  |   2 ++
+>  tools/perf/lib/evlist.c                  |  71 ++++++++++++++++++++++++++++++++++++++---------------
+>  tools/perf/lib/include/internal/evlist.h |   3 +++
+>  tools/perf/lib/include/internal/evsel.h  |   1 +
+>  tools/perf/lib/include/internal/mmap.h   |   5 ++--
+>  tools/perf/lib/include/internal/tests.h  |  20 ++++++++++++---
+>  tools/perf/lib/include/perf/core.h       |   1 +
+>  tools/perf/lib/include/perf/evlist.h     |  10 +++++++-
+>  tools/perf/lib/include/perf/evsel.h      |   2 --
+>  tools/perf/lib/internal.h                |   3 +++
+>  tools/perf/lib/libperf.map               |   3 +--
+>  tools/perf/lib/mmap.c                    |   6 +++--
+>  tools/perf/lib/tests/Makefile            |   8 +++---
+>  tools/perf/lib/tests/test-cpumap.c       |   2 +-
+>  tools/perf/lib/tests/test-evlist.c       | 218 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+>  tools/perf/lib/tests/test-evsel.c        |   2 +-
+>  tools/perf/lib/tests/test-threadmap.c    |   2 +-
+>  tools/perf/util/evlist.c                 |  29 +++++++++-------------
+>  18 files changed, 333 insertions(+), 55 deletions(-)
 
-So yea, in recent months, work around Android with their GKI effort
-has made it necessary for ION heaps to be loadable from modules. I had
-some patches in WIP tree to enable this, and in the rework I did
-yesterday for the CMA module trivially collided with parts, and
-forgetting the discussion back in v3, I figured I'd just fold those
-bits in before I resubmitted for v12.
+-- 
 
-If it's an issue, I can pull it out, but I'm going to be submitting
-module enablement for review as soon as the core bits are queued, as
-its going to be important to support for Android to switch to this
-from ION.
-
-thanks
--john
+- Arnaldo
