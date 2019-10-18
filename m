@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B45CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2715CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D94522467
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 688692245B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436385;
-	bh=MoM63U9fIL/AW03fDiyVHX9B4WUl0OJn03LJfTOOcXg=;
+	s=default; t=1571436392;
+	bh=uhPeJNd+u49dcc0yqvWhoBEO7i98kn3a/Loq3BHxCWo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zNEPSRrZVvb1EAEnrfm/DQ8Kop3EUGqvZt2WsbVSi6Z2R54/cDnijma49XzRO7aok
-	 p+H1xD4TqWRF2CmbNaUjaPjszR33i2LFmDB0cvY+wrQNM4/a8sAMpaQdJy75bzvwFT
-	 ydslN0d284oz5O62ro2eOP3nut5taTVGQlTlA3aw=
+	b=UkVIZezwVIP28+vX7qqqKWFSG20nFT+yVetEBfXzqSn4mvQft/XRKl5YY1cs6DMCx
+	 Ft9bMVsba9Rh21p07hCKwjTQ7Trl0eMFJre26gfObmzFHBuxd7O3aJnrfAIK/w9DNr
+	 FhqIO44WevFqLX5jLpupbj/IHPzU5boYjCvo9t24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731434AbfJRWGX (ORCPT
+        id S1731646AbfJRWGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:06:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38172 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:06:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731015AbfJRWGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:06:13 -0400
+        id S1731258AbfJRWGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:06:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6680222C6;
-        Fri, 18 Oct 2019 22:06:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1481B222D4;
+        Fri, 18 Oct 2019 22:06:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436373;
-        bh=MoM63U9fIL/AW03fDiyVHX9B4WUl0OJn03LJfTOOcXg=;
+        s=default; t=1571436378;
+        bh=uhPeJNd+u49dcc0yqvWhoBEO7i98kn3a/Loq3BHxCWo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a11fMCkvmWeWSHtXTs1yGCBz/yawc8piYSlKNm/JW41F79uEuKf0yOA9TC179kdH/
-         SZGobFJx78wKf3qKJpSWlTdYsib/h6m+x2aV8bgX2GkT1NcUYz3inyXgyeWgksmiDg
-         XhkWH11yTWg7s3xTyEpbfYQc22ET+sMEfdgjzTv4=
+        b=C/14N7qqjKO36MlSTZgO8Br465pUasQT4ZsyL7a0yrZL7D6T8/90uBKtIld7cgwv/
+         9aZMnwr7mJbnWTxY14ZVhvTQNkkBGI68sa+dSVN5I4fSG5i2R+enptJQRCjAmuHlem
+         F92+wW8XJHl5Dzoqn32zm9xN8PkX74GgzMFcZnoY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 027/100] NFSv4: Ensure that the state manager exits the loop on SIGKILL
-Date:   Fri, 18 Oct 2019 18:04:12 -0400
-Message-Id: <20191018220525.9042-27-sashal@kernel.org>
+Cc:     Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Thinh Nguyen <thinhn@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 032/100] usb: dwc3: gadget: clear DWC3_EP_TRANSFER_STARTED on cmd complete
+Date:   Fri, 18 Oct 2019 18:04:17 -0400
+Message-Id: <20191018220525.9042-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -58,29 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Felipe Balbi <felipe.balbi@linux.intel.com>
 
-[ Upstream commit a1aa09be21fa344d1f5585aab8164bfae55f57e3 ]
+[ Upstream commit acbfa6c26f21a18830ee064b588c92334305b6af ]
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+We must wait until End Transfer completes in order to clear
+DWC3_EP_TRANSFER_STARTED, otherwise we may confuse the driver.
+
+This patch is in preparation to fix a rare race condition that happens
+upon Disconnect Interrupt.
+
+Tested-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4state.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/dwc3/gadget.c | 19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
 
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index c36ef75f2054b..b3086e99420c7 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -2613,7 +2613,7 @@ static void nfs4_state_manager(struct nfs_client *clp)
- 			return;
- 		if (test_and_set_bit(NFS4CLNT_MANAGER_RUNNING, &clp->cl_state) != 0)
- 			return;
--	} while (refcount_read(&clp->cl_count) > 1);
-+	} while (refcount_read(&clp->cl_count) > 1 && !signalled());
- 	goto out_drain;
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 7b0957c530485..54de732550648 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -375,19 +375,9 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, unsigned cmd,
  
- out_error:
+ 	trace_dwc3_gadget_ep_cmd(dep, cmd, params, cmd_status);
+ 
+-	if (ret == 0) {
+-		switch (DWC3_DEPCMD_CMD(cmd)) {
+-		case DWC3_DEPCMD_STARTTRANSFER:
+-			dep->flags |= DWC3_EP_TRANSFER_STARTED;
+-			dwc3_gadget_ep_get_transfer_index(dep);
+-			break;
+-		case DWC3_DEPCMD_ENDTRANSFER:
+-			dep->flags &= ~DWC3_EP_TRANSFER_STARTED;
+-			break;
+-		default:
+-			/* nothing */
+-			break;
+-		}
++	if (ret == 0 && DWC3_DEPCMD_CMD(cmd) == DWC3_DEPCMD_STARTTRANSFER) {
++		dep->flags |= DWC3_EP_TRANSFER_STARTED;
++		dwc3_gadget_ep_get_transfer_index(dep);
+ 	}
+ 
+ 	if (unlikely(susphy)) {
+@@ -2417,7 +2407,8 @@ static void dwc3_endpoint_interrupt(struct dwc3 *dwc,
+ 		cmd = DEPEVT_PARAMETER_CMD(event->parameters);
+ 
+ 		if (cmd == DWC3_DEPCMD_ENDTRANSFER) {
+-			dep->flags &= ~DWC3_EP_END_TRANSFER_PENDING;
++			dep->flags &= ~(DWC3_EP_END_TRANSFER_PENDING |
++					DWC3_EP_TRANSFER_STARTED);
+ 			dwc3_gadget_ep_cleanup_cancelled_requests(dep);
+ 		}
+ 		break;
 -- 
 2.20.1
 
