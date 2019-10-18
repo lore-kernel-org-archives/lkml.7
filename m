@@ -2,46 +2,45 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7DDCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E85CA9EAB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74EE92054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C609D20854
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:27:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="ptKipoEs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="lrpn4r8T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506026AbfJRU1C (ORCPT
+        id S2506070AbfJRU1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 16:27:02 -0400
-Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.120]:22974 "EHLO
-        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2443433AbfJRU07 (ORCPT
+        Fri, 18 Oct 2019 16:27:08 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:21004 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2506014AbfJRU06 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 16:26:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571430353;
+        Fri, 18 Oct 2019 16:26:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571430346;
         s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=pAxH9f29zcPugwqQv3xhHDmS2G58xh9b8drWdUkj6h0=;
-        b=ptKipoEsJQVnJYfAkSLfH+eD9ZOHlJk+AaMZuQR8CCb+K8NFGSWzzCj3uru67M2ItZ
-        cko7RPa8LdJ7V7yb+d6ftGglmTcOiAh+y2yfhvmznNGF6E/bFLsTmdaXDfNOFPmle/+a
-        wgkrtEGXZyQvG10s1OUfbtIwa9mzVl+UrU716Ce/+K5FKy5w3zPfG0NI++7PZ3q4PLbn
-        g2nJK1k1x6vkGaSPb+rdalKLGnup+s2huyAR3zZVojjAFz7nWMu/7eZAn9XhsuUucSVq
-        zX+vI4Dpvc22ORSq2SBVyzdfuMJl+OxrgV2GoHU23XNAvCqqWns/XNpni9aaomvbhP3x
-        Jb9g==
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=i+n9s4XwY9DLFEIv0Q1xv72dgRxe/+bXdwtMcjVj36s=;
+        b=lrpn4r8TbGp5Vug1YtUEZiFh9x7BNBnKNq3HV710dgABIJEaeJx9xjcPPETJ1VUGZI
+        jHk1WeEXCiofL3L/yGzyOmkgW4tscUSvCPbF2g1WDlA8fGZh3KaVlxKW27JquybT+wZc
+        mKNCSV1M40lPtmLrwe1H4c52rNtc3hUrSuKuDnZTnnIFBdT5AYmchlnhkjubEu1eppeO
+        G58X6S6trwlaGWyMKQ1T6KF0TnJg1WlXa7DRZLVKqZtFRllm0ShFtwhk31hueFPCUIWI
+        fK8xcpN3r81h4l86IdUw7pqwlDX71aCHhYxU0JM/0ihrP/zg8/CAkBHZVloQJhxMzY4k
+        YHCQ==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6F3CFF60="
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
-        with ESMTPSA id R0b2a8v9IKPdDUv
+        with ESMTPSA id R0b2a8v9IKPVDUm
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
         (Client did not present a certificate);
-        Fri, 18 Oct 2019 22:25:39 +0200 (CEST)
+        Fri, 18 Oct 2019 22:25:31 +0200 (CEST)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
         Tony Lindgren <tony@atomide.com>,
@@ -68,70 +67,65 @@ Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mmc@vger.kernel.org, linux-wireless@vger.kernel.org,
         netdev@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, stable@vger.kernel.org
-Subject: [PATCH 9/9] net: wireless: ti: remove local VENDOR_ID and DEVICE_ID definitions
-Date:   Fri, 18 Oct 2019 22:25:30 +0200
-Message-Id: <f6d3ef06531cbbb366df7b5a4771084de59cd54b.1571430329.git.hns@goldelico.com>
+        kernel@pyra-handheld.com
+Subject: [PATCH 0/9] OpenPandora: make wl1251 connected to mmc3 sdio port of OpenPandora work again
+Date:   Fri, 18 Oct 2019 22:25:21 +0200
+Message-Id: <cover.1571430329.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <cover.1571430329.git.hns@goldelico.com>
-References: <cover.1571430329.git.hns@goldelico.com>
 MIME-Version: 1.0
+DT:     Pandora: fixes and extensions
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-They are already included from mmc/sdio_ids.h and do not need
-a local definition.
+
+Here we have a set of scattered patches to make the OpenPandora WiFi work again.
+
+v4.7 did break the pdata-quirks which made the mmc3 interface
+fail completely, because some code now assumes device tree
+based instantiation.
+
+Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
+
+v4.11 did break the sdio qirks for wl1251 which made the driver no longer
+load, although the device was found as an sdio client.
 
 Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks file")
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: <stable@vger.kernel.org> # 4.11.0
----
- drivers/net/wireless/ti/wl1251/sdio.c | 8 --------
- drivers/net/wireless/ti/wlcore/sdio.c | 8 --------
- 2 files changed, 16 deletions(-)
+To solve these issues:
+* we convert mmc3 and wl1251 initialization from pdata-quirks
+  to device tree
+* we make the wl1251 driver read properties from device tree
+* we fix the mmc core vendor ids and quirks
+* we fix the wl1251 (and wl1271) driver to use only vendor ids
+  from header file instead of (potentially conflicting) local
+  definitions
 
-diff --git a/drivers/net/wireless/ti/wl1251/sdio.c b/drivers/net/wireless/ti/wl1251/sdio.c
-index 42b55f3a50df..3c4d5e38c66c 100644
---- a/drivers/net/wireless/ti/wl1251/sdio.c
-+++ b/drivers/net/wireless/ti/wl1251/sdio.c
-@@ -22,14 +22,6 @@
- 
- #include "wl1251.h"
- 
--#ifndef SDIO_VENDOR_ID_TI
--#define SDIO_VENDOR_ID_TI		0x104c
--#endif
--
--#ifndef SDIO_DEVICE_ID_TI_WL1251
--#define SDIO_DEVICE_ID_TI_WL1251	0x9066
--#endif
--
- struct wl1251_sdio {
- 	struct sdio_func *func;
- 	u32 elp_val;
-diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
-index 7afaf35f2453..9fd8cf2d270c 100644
---- a/drivers/net/wireless/ti/wlcore/sdio.c
-+++ b/drivers/net/wireless/ti/wlcore/sdio.c
-@@ -26,14 +26,6 @@
- #include "wl12xx_80211.h"
- #include "io.h"
- 
--#ifndef SDIO_VENDOR_ID_TI
--#define SDIO_VENDOR_ID_TI		0x0097
--#endif
--
--#ifndef SDIO_DEVICE_ID_TI_WL1271
--#define SDIO_DEVICE_ID_TI_WL1271	0x4076
--#endif
--
- static bool dump = false;
- 
- struct wl12xx_sdio_glue {
+
+H. Nikolaus Schaller (9):
+  Documentation: dt: wireless: update wl1251 for sdio
+  net: wireless: ti: wl1251 add device tree support
+  DTS: ARM: pandora-common: define wl1251 as child node of mmc3
+  mmc: host: omap_hsmmc: add code for special init of wl1251 to get rid
+    of pandora_wl1251_init_card
+  omap: pdata-quirks: remove openpandora quirks for mmc3 and wl1251
+  mmc: sdio: fix wl1251 vendor id
+  mmc: core: fix wl1251 sdio quirks
+  net: wireless: ti: wl1251 use new SDIO_VENDOR_ID_TI_WL1251 definition
+  net: wireless: ti: remove local VENDOR_ID and DEVICE_ID definitions
+
+ .../bindings/net/wireless/ti,wl1251.txt       | 26 +++++++++++++
+ arch/arm/boot/dts/omap3-pandora-common.dtsi   | 37 ++++++++++++++++++-
+ arch/arm/mach-omap2/pdata-quirks.c            | 13 +++----
+ drivers/mmc/core/quirks.h                     |  7 ++++
+ drivers/mmc/host/omap_hsmmc.c                 | 21 +++++++++++
+ drivers/net/wireless/ti/wl1251/sdio.c         | 23 +++++++-----
+ drivers/net/wireless/ti/wlcore/sdio.c         |  8 ----
+ include/linux/mmc/sdio_ids.h                  |  2 +
+ 8 files changed, 111 insertions(+), 26 deletions(-)
+
 -- 
 2.19.1
 
