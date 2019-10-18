@@ -2,146 +2,101 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D18CA9EC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B9FCA9EC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F94D21852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 280D221852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:28:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fa62tk3M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390646AbfJRA1x (ORCPT
+        id S2392283AbfJRA2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 20:27:53 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:48372 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728495AbfJRA1x (ORCPT
+        Thu, 17 Oct 2019 20:28:15 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51889 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728495AbfJRA2P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 20:27:53 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iLG7R-0004bl-Gg; Fri, 18 Oct 2019 00:27:49 +0000
-Date:   Fri, 18 Oct 2019 01:27:49 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>
-Subject: [RFC] csum_and_copy_from_user() semantics
-Message-ID: <20191018002749.GA13188@ZenIV.linux.org.uk>
-References: <CAHk-=wgOWxqwqCFuP_Bw=Hxxf9njeHJs0OLNGNc63peNd=kRqw@mail.gmail.com>
- <20191010195504.GI26530@ZenIV.linux.org.uk>
- <CAHk-=wgWRQo0m7TUCK4T_J-3Vqte+p-FWzvT3CB1jJHgX-KctA@mail.gmail.com>
- <20191011001104.GJ26530@ZenIV.linux.org.uk>
- <CAHk-=wgg3jzkk-jObm1FLVYGS8JCTiKppEnA00_QX7Wsm5ieLQ@mail.gmail.com>
- <20191013181333.GK26530@ZenIV.linux.org.uk>
- <CAHk-=wgrWGyACBM8N8KP7Pu_2VopuzM4A12yQz6Eo=X2Jpwzcw@mail.gmail.com>
- <20191013191050.GL26530@ZenIV.linux.org.uk>
- <CAHk-=wjJNE9hOKuatqh6SFf4nd65LG4ZR3gQSgg+rjSpVxe89w@mail.gmail.com>
- <20191016202540.GQ26530@ZenIV.linux.org.uk>
+        Thu, 17 Oct 2019 20:28:15 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 7so4331530wme.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 17:28:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8NrXgXJZY222y3tTmyAGTvYq8mCRdP4iBc/fomM2DVk=;
+        b=fa62tk3MFVLXABWRGdL2LTQ/BrAfMWbpRfijB0brMR7Y1sAFftjZ4RFOAt3ocBBUhP
+         NLRJ7WRD50R/mHbnxf3yum/2pJa4DCOElKitUpa5hyTz9+zPPg5D+U4gp7ntqRrmgX77
+         MrS7GgUwmcq8fpeJIOJaHya7OVgS7pD3DMV/IgYe/PCSgSGuT84YWlQSjsdra242Sw+A
+         Hz4InP3HCaS5LS0NUug+TK5ux6cz37HHlLbtt4uEFdaAvY6vbcK0xg7x7UWlU8+XBvrW
+         xRZ8mpnTGjsFU7Sc7gN38w/k6SC1tbTGRUBQrGol+NQUfhaEIKgxFi9Db7UUC7qanrZB
+         xSYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8NrXgXJZY222y3tTmyAGTvYq8mCRdP4iBc/fomM2DVk=;
+        b=bI2KUSACFasxNKSLrYZpcpAUkp4hihX6p6j0y/sJtgedso0vs0rQU/N5U3vXlPpYWe
+         P/awG8yHO6QzZkJcywDQ8ghU2kUYXUmuSjAOEuXZCDKa8L/DYkkAyfSAB+7wlNfNEdq8
+         eY6I6Vsw77QvXa8ZYfZtlEHMFs0gzOYBMYyOIO2C45CQpUfMF9ZCWpePMz5CqoNhFull
+         Gk3VR15bIqE8aR6g2P3EHcj6IDx1gIcO8iX2+EoUa9Tv1RedwCOliT5mC+q2wjMv3g8o
+         O4lLI84626PwAZOiFoe5VgZfMUvnCIxC3Xcb20vAZopOGqoNp6NkGAQG2H+h8e6krwQm
+         5DJQ==
+X-Gm-Message-State: APjAAAWsw1nxVqGheELnWCwVaPHB0WjWvDRobcxO+66zprXbGw5yt6AI
+        lzQ1FJlV5EWhktM6lq8DWmw=
+X-Google-Smtp-Source: APXvYqw4ZtMTmE/XCbR4QpXNTKdqIwQsRgsQ0H56TVc6tKi8L75rnCkfVPSCAlC56cSujRMrG9/3Rw==
+X-Received: by 2002:a1c:1d15:: with SMTP id d21mr5007300wmd.5.1571358493087;
+        Thu, 17 Oct 2019 17:28:13 -0700 (PDT)
+Received: from localhost.localdomain ([104.238.174.53])
+        by smtp.gmail.com with ESMTPSA id p10sm4437649wrx.2.2019.10.17.17.28.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 17:28:11 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH v5 0/2] perf: add support for logging debug messages to file
+Date:   Fri, 18 Oct 2019 08:27:55 +0800
+Message-Id: <20191018002757.4112-1-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191016202540.GQ26530@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 09:25:40PM +0100, Al Viro wrote:
+When in TUI mode, it is impossible to show all the debug messages to
+console. This make it hard to debug perf issues using debug messages.
+This patch adds support for logging debug messages to file to resolve
+this problem.
 
-> 2) default csum_partial_copy_from_user().  What we need to do is
-> turn it into default csum_and_copy_from_user().  This
-> #ifndef _HAVE_ARCH_COPY_AND_CSUM_FROM_USER
-> static inline
-> __wsum csum_and_copy_from_user (const void __user *src, void *dst,
->                                       int len, __wsum sum, int *err_ptr)
-> {
->         if (access_ok(src, len))
->                 return csum_partial_copy_from_user(src, dst, len, sum, err_ptr);
-> 
->         if (len)
->                 *err_ptr = -EFAULT;
-> 
->         return sum;
-> }
-> #endif
-> in checksum.h is the only thing that calls that sucker and we can bloody
-> well combine them and make the users of lib/checksum.h define
-> _HAVE_ARCH_COPY_AND_CSUM_FROM_USER.  That puts us reasonably close
-> to having _HAVE_ARCH_COPY_AND_CSUM_FROM_USER unconditional and in any
-> case, __copy_from_user() in lib/checksum.h turns into copy_from_user().
+v5:
+  o doc default log path.
+v4:
+  o fix another segfault.
+v3:
+  o fix a segfault issue.
+v2:
+  o specific all debug options one time.
 
-Actually, that gets interesting.  First of all, csum_partial_copy_from_user()
-has almost no callers other than csum_and_copy_from_user() - the only
-exceptions are alpha and itanic, where csum_partial_copy_nocheck() instances
-are using it.
+Changbin Du (2):
+  perf: support multiple debug options separated by ','
+  perf: add support for logging debug messages to file
 
-Everything else goes through csum_and_copy_from_user().  And _that_ has
-only two callers -  csum_and_copy_from_iter() and csum_and_copy_from_iter_full().
-Both treat any failures as "discard the thing", for a good reason.  Namely,
-neither csum_and_copy_from_user() nor csum_partial_copy_from_user() have any
-means to tell the caller *where* has the fault happened.  So anything
-that calls them has to treat a fault as "nothing copied".  That, of course,
-goes both for data and csum.
+ tools/perf/Documentation/perf.txt |  16 ++--
+ tools/perf/util/debug.c           | 124 ++++++++++++++++++++----------
+ 2 files changed, 92 insertions(+), 48 deletions(-)
 
-Moreover, behaviour of instances on different architectures differs -
-some zero the uncopied-over part of destination, some do not, some
-just keep going treating every failed fetch as "got zero" (and returning
-the error in the end).
+-- 
+2.20.1
 
-We could, in theory, teach that thing to report the exact amount
-copied, so that new users (when and if such appear) could make use
-of that.  However, it means a lot of unpleasant work on e.g. sparc.
-For raw_copy_from_user() we had to do that, but here I don't see
-the point.
-
-As it is, it's only suitable for "discard if anything fails, treat
-the entire destination area as garbage in such case" uses.  Which is
-all we have for it at the moment.
-
-IOW, it might make sense to get rid of all the "memset the tail to
-zero on failure" logics in there - it's not consistently done and
-the callers have no way to make use of it anyway.
-
-In any case, there's no point keeping csum_and_copy_from_user()
-separate from csum_partial_copy_from_user().  As it is, the
-only real difference is that the former does access_ok(), while
-the latter might not (some instances do, in which case there's
-no difference at all).
-
-Questions from reviewing the instances:
-	* mips csum_and_partial_copy_from_user() tries to check
-if we are under KERNEL_DS, in which case it goes for kernel-to-kernel
-copy.  That's pointless - the callers are reading from an
-iovec-backed iov_iter, which can't be created under KERNEL_DS.
-So we would have to have set iovec-backed iov_iter while under
-USER_DS, then do set_fs(KERNEL_DS), then pass that iov_iter to
-->sendmsg().  Which doesn't happen.  IOW, the calls of
-__csum_partial_copy_kernel() never happen - neither for
-csum_and_copy_from_kernel() for csum_and_copy_to_kernel().
-
-	* ppc does something odd:
-        csum = csum_partial_copy_generic((void __force *)src, dst,
-                                         len, sum, err_ptr, NULL);
-
-        if (unlikely(*err_ptr)) {
-                int missing = __copy_from_user(dst, src, len);
-
-                if (missing) {
-                        memset(dst + len - missing, 0, missing);
-                        *err_ptr = -EFAULT;
-                } else {
-                        *err_ptr = 0;
-                }
-
-                csum = csum_partial(dst, len, sum);
-        }
-and since that happens under their stac equivalent, we get it nested -
-__copy_from_user() takes and drops it.  I would've said "don't bother
-trying to be smart on failures", if I'd been certain that it's not
-a fallback for e.g. csum_and_partial_copy_from_user() in misaligned
-case.  Could ppc folks clarify that?
