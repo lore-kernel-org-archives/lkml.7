@@ -2,126 +2,158 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC82CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35636CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F64F20640
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:16:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="cWZ5LNFZ"
+	by mail.kernel.org (Postfix) with ESMTP id 060C72089C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:18:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571401135;
+	bh=h3QdAZG89Sa61h5qqoGHTR3Nl8T+0un+jfDmI8KkK88=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dJ2b+9mDUON2LQtvjT48CF2aM3sGEZ3/1YjBqVM9NiPyWRYrXP9fHspnGAcU0FZc+
+	 3pNv6QAuzgzhi1QsW8BXB1E448M9O042+sDH/9hYochJa0OZvuc+fntwbZOi2y9KgM
+	 OtcfbmygX/9ywKj/eh5vmbjPUbX3to+gUTexDEWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442695AbfJRMQA (ORCPT
+        id S2442698AbfJRMSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 08:16:00 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:59912 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2408073AbfJRMPu (ORCPT
+        Fri, 18 Oct 2019 08:18:54 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35164 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404901AbfJRMSx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 08:15:50 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E2CB6C0488;
-        Fri, 18 Oct 2019 12:15:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1571400950; bh=9bNHRLE5N78H1xT78BVFMS/DIn9uGRWP5TXcJX4sEgI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cWZ5LNFZzJRboEUikg+T6P0uEr5Rpao9ocdZua/0Zfebkhj9mpj5xS5Txk2mVHqjS
-         jI1nJIh9+5pa1pgSkPesrAsJGvB06qCy3YAoRyyR/x/7oxohA/22zfDGkPwb3fC4Ua
-         4l0MsctXKIKqkll97ZELw0acr7I9guJ4KJhe3CeuacxgVbDH05v1kSClbD7RXoExet
-         r0zX+/WAEdShsQfoyHsaaHGoWaUijwCwHqEoaYHwZN8jqNZYLAWwEJXDRSaVuUdYlv
-         ePCQs6z+5TXCBhf0lyLJcDi31E2BFGJcxATSubkBFTL1LGxbSY+uyPjbEXr3dXU4Ly
-         uyL1IDKbclidQ==
-Received: from paltsev-e7480.internal.synopsys.com (paltsev-e7480.internal.synopsys.com [10.121.3.73])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 51016A0065;
-        Fri, 18 Oct 2019 12:15:48 +0000 (UTC)
-From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-To:     linux-snps-arc@lists.infradead.org,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [RFC 2/6] ARC: HAPS: cleanup defconfigs from unused IO-related options
-Date:   Fri, 18 Oct 2019 15:15:41 +0300
-Message-Id: <20191018121545.8907-3-Eugeniy.Paltsev@synopsys.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191018121545.8907-1-Eugeniy.Paltsev@synopsys.com>
-References: <20191018121545.8907-1-Eugeniy.Paltsev@synopsys.com>
+        Fri, 18 Oct 2019 08:18:53 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 205so3794116pfw.2;
+        Fri, 18 Oct 2019 05:18:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=HzCZCqhtcM0Kfq8LNIg6bDch5I26sRahsuifFN7TYPc=;
+        b=XI4Eol7+vM1fw1yJ7XIlo3J6yhr0alZ5AU0dkW2JmZM5jUfbwiOLF2f2zvTYEZ3O/C
+         djzH7maJ8aX6nR0nWjX+BsqvMOkaKxf/6xFrZ/lLRdGk9762fY9J4hjdkK2CMU9fs8uu
+         4syPzasDLwLDbKXxXYa2iRZWU8H5y+96FAbYyEZRZnH9RO/DCOG3lYL4gSgZcRTyJ4Uw
+         qKI0MQSQQmGf1gdSEzlcjD2IT1ZxaUvlWuOPYdIt/verp4P71rbJ1k7WH9LtGx8gLL9j
+         UYfSRq4UacEDpy+ZQv3Z23f2bobes4LnaxpND1Dnlyr0UMelYxDHLy6einArjiAIcDXk
+         RiqA==
+X-Gm-Message-State: APjAAAVQkqoRF79s/yZ+LzhYxgP5oSY5VzS+nA2SMqBNdGVf7u1sHtVN
+        i07zhTmmIEyeN1jsIY7IqTQ=
+X-Google-Smtp-Source: APXvYqxorxs0xmFs5umyAcxgYNWtmIzh52uV76BA/wm3EQofGTbViY97Mp2XNKsNiq9DJj45LtYcag==
+X-Received: by 2002:a65:66c4:: with SMTP id c4mr10015575pgw.42.1571401132663;
+        Fri, 18 Oct 2019 05:18:52 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id x72sm7862284pfc.89.2019.10.18.05.18.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 05:18:49 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 4F9574042C; Fri, 18 Oct 2019 12:18:48 +0000 (UTC)
+Date:   Fri, 18 Oct 2019 12:18:48 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Matthias Maennich <maennich@google.com>
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: Module loading problem since 5.3
+Message-ID: <20191018121848.GB11244@42.do-not-panic.com>
+References: <20191014085235.GW16384@42.do-not-panic.com>
+ <20191014144440.GG35313@google.com>
+ <20191016125030.GH16384@42.do-not-panic.com>
+ <20191016133710.GB35139@google.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191016133710.GB35139@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't have any peripherals on HAPS which may require FB or
-input_devices support. So get rid of them.
+On Wed, Oct 16, 2019 at 02:37:10PM +0100, Matthias Maennich wrote:
+> On Wed, Oct 16, 2019 at 12:50:30PM +0000, Luis Chamberlain wrote:
+> > On Mon, Oct 14, 2019 at 03:44:40PM +0100, Matthias Maennich wrote:
+> > > Hi Luis!
+> > > 
+> > > On Mon, Oct 14, 2019 at 08:52:35AM +0000, Luis Chamberlain wrote:
+> > > > On Fri, Oct 11, 2019 at 09:26:05PM +0200, Heiner Kallweit wrote:
+> > > > > On 10.10.2019 19:15, Luis Chamberlain wrote:
+> > > > > >
+> > > > > >
+> > > > > > On Thu, Oct 10, 2019, 6:50 PM Heiner Kallweit <hkallweit1@gmail.com <mailto:hkallweit1@gmail.com>> wrote:
+> > > > > >
+> > > > > >        MODULE_SOFTDEP("pre: realtek")
+> > > > > >
+> > > > > >     Are you aware of any current issues with module loading
+> > > > > >     that could cause this problem?
+> > > > > >
+> > > > > >
+> > > > > > Nope. But then again I was not aware of MODULE_SOFTDEP(). I'd encourage an extension to lib/kmod.c or something similar which stress tests this. One way that comes to mind to test this is to allow a new tests case which loads two drives which co depend on each other using this macro. That'll surely blow things up fast. That is, the current kmod tests uses request_module() or get_fs_type(), you'd want a new test case with this added using then two new dummy test drivers with the macro dependency.
+> > > > > >
+> > > > > > If you want to resolve this using a more tested path, you could have request_module() be used as that is currently tested. Perhaps a test patch for that can rule out if it's the macro magic which is the issue.
+> > > > > >
+> > > > > >   Luis
+> > > > >
+> > > > > Maybe issue is related to a bug in introduction of symbol namespaces, see here:
+> > > > > https://lkml.org/lkml/2019/10/11/659
+> > > >
+> > > > Can you have your user with issues either revert 8651ec01daed or apply the fixes
+> > > > mentioned by Matthias to see if that was the issue?
+> > > >
+> > > > Matthias what module did you run into which let you run into the issue
+> > > > with depmod? I ask as I think it would be wise for us to add a test case
+> > > > using lib/test_kmod.c and tools/testing/selftests/kmod/kmod.sh for the
+> > > > regression you detected.
+> > > 
+> > > The depmod warning can be reproduced when using a symbol that is built
+> > > into vmlinux and used from a module. E.g. with CONFIG_USB_STORAGE=y and
+> > > CONFIG_USB_UAS=m, the symbol `usb_stor_adjust_quirks` is built in with
+> > > namespace USB_STORAGE and depmod stumbles upon this emitting the
+> > > following warning (e.g. during make modules_install).
+> > > 
+> > >  depmod: WARNING: [...]/uas.ko needs unknown symbol usb_stor_adjust_quirks
+> > > 
+> > > As there is another (less intrusive) way of implementing the namespace
+> > > feature, I posted a patch series [1] on last Thursday that should
+> > > mitigate the issue as the ksymtab entries depmod eventually relies on
+> > > are no longer carrying the namespace in their names.
+> > > 
+> > > Cheers,
+> > > Matthias
+> > > 
+> > > [1] https://lore.kernel.org/lkml/20191010151443.7399-1-maennich@google.com/
+> > 
+> > Yes but kmalloc() is built-in, and used by *all* drivers compiled as
+> > modules, so why was that an issue?
+> 
+> I believe you meant, "why was that *not* an issue?".
 
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
----
- arch/arc/configs/haps_hs_defconfig     | 9 +++------
- arch/arc/configs/haps_hs_smp_defconfig | 9 +++------
- 2 files changed, 6 insertions(+), 12 deletions(-)
+Right.
 
-diff --git a/arch/arc/configs/haps_hs_defconfig b/arch/arc/configs/haps_hs_defconfig
-index e22f40612089..33b7a402b6bd 100644
---- a/arch/arc/configs/haps_hs_defconfig
-+++ b/arch/arc/configs/haps_hs_defconfig
-@@ -48,9 +48,9 @@ CONFIG_VIRTIO_NET=y
- # CONFIG_NET_VENDOR_WIZNET is not set
- # CONFIG_WLAN is not set
- CONFIG_INPUT_EVDEV=y
--CONFIG_MOUSE_PS2_TOUCHKIT=y
--# CONFIG_SERIO_SERPORT is not set
--CONFIG_SERIO_ARC_PS2=y
-+# CONFIG_INPUT_KEYBOARD is not set
-+# CONFIG_INPUT_MOUSE is not set
-+# CONFIG_SERIO is not set
- # CONFIG_LEGACY_PTYS is not set
- CONFIG_SERIAL_8250=y
- CONFIG_SERIAL_8250_CONSOLE=y
-@@ -60,9 +60,6 @@ CONFIG_SERIAL_8250_DW=y
- CONFIG_SERIAL_OF_PLATFORM=y
- # CONFIG_HW_RANDOM is not set
- # CONFIG_HWMON is not set
--CONFIG_FB=y
--CONFIG_FRAMEBUFFER_CONSOLE=y
--CONFIG_LOGO=y
- # CONFIG_HID is not set
- # CONFIG_USB_SUPPORT is not set
- CONFIG_VIRTIO_MMIO=y
-diff --git a/arch/arc/configs/haps_hs_smp_defconfig b/arch/arc/configs/haps_hs_smp_defconfig
-index ff4fcd7640a4..5586511a00bf 100644
---- a/arch/arc/configs/haps_hs_smp_defconfig
-+++ b/arch/arc/configs/haps_hs_smp_defconfig
-@@ -49,9 +49,9 @@ CONFIG_NETDEVICES=y
- # CONFIG_NET_VENDOR_WIZNET is not set
- # CONFIG_WLAN is not set
- CONFIG_INPUT_EVDEV=y
--CONFIG_MOUSE_PS2_TOUCHKIT=y
--# CONFIG_SERIO_SERPORT is not set
--CONFIG_SERIO_ARC_PS2=y
-+# CONFIG_INPUT_KEYBOARD is not set
-+# CONFIG_INPUT_MOUSE is not set
-+# CONFIG_SERIO is not set
- # CONFIG_LEGACY_PTYS is not set
- CONFIG_SERIAL_8250=y
- CONFIG_SERIAL_8250_CONSOLE=y
-@@ -61,9 +61,6 @@ CONFIG_SERIAL_8250_DW=y
- CONFIG_SERIAL_OF_PLATFORM=y
- # CONFIG_HW_RANDOM is not set
- # CONFIG_HWMON is not set
--CONFIG_FB=y
--CONFIG_FRAMEBUFFER_CONSOLE=y
--CONFIG_LOGO=y
- # CONFIG_HID is not set
- # CONFIG_USB_SUPPORT is not set
- # CONFIG_IOMMU_SUPPORT is not set
--- 
-2.21.0
+> In ksymtab, namespaced symbols had the format
+> 
+>  __ksymtab_<NAMESPACE>.<symbol>
+> 
+> while symbols without namespace would still use the old format
+> 
+>  __ksymtab_<symbol>
 
+Ah, I didn't see the symbol namespace patches, good stuff!
+
+> These are also the names that are extracted into System.map (using
+> scripts/mksysmap). Depmod is reading the System.map and for symbols used
+> by modules that are in a namespace, it would not find a match as it does
+> not understand the namespace notation. Depmod would still not emit a
+> warning for symbols without namespace as their format did not change.
+
+Can we have a test case for this to ensure we don't regress on this
+again? Or put another way, what test cases were implemented for symbol
+namespaces?
+
+  Luis
