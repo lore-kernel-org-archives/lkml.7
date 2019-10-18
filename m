@@ -2,148 +2,217 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 463F8CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 249B5CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24299222CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:38:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HDe9kDeK"
+	by mail.kernel.org (Postfix) with ESMTP id 01CA121835
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:38:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505855AbfJRSiD (ORCPT
+        id S2505865AbfJRSie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:38:03 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33980 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730794AbfJRSiC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:38:02 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b128so4416110pfa.1;
-        Fri, 18 Oct 2019 11:38:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IFDsqOMwc2ojaPSLkT8+wMYUXewN1acLP2lqR1XP15Q=;
-        b=HDe9kDeKBahe9NjGm/ugr3PrO4D0Lw085ywSNSA095A6Y7b0bdnZjmqC82XIISIIdt
-         HL1478hYPAIvWzZLWe743K+0Z4UKFrxK0/hQ9QagRbJbspKW/xQebobzv2mUFy3hRLKH
-         //wSlMwz56Seed2I+e/Y5zi3HKTITkVYbYNZcR/r9Ty9L4OUJxGZQa8n7sooJF+d06MV
-         U8c1Xqzj80SWkW1+fMzKDsGOIVt27mRFx9PdNgqZxq/nnXPUUxC1LvIFwI/iWySD+Mw9
-         Y/fW+KH35SuT8tMvpzVKHsaJfOpxO5whSf8Fu101J4r54ddKqPMDRDSv0HSvbuy5Taxu
-         2ebg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IFDsqOMwc2ojaPSLkT8+wMYUXewN1acLP2lqR1XP15Q=;
-        b=oQmEyaKbSDM+BjqtH9XH/ITkCs9nIAbpkizbSvzomnnq/0WoQtlqH+ZgB2NMm0sqyM
-         46jfYSYcmdghh+BLiwdnMur5fcuVVl6PZBR4Duj0vEJaxdUwajkJ1+I0kRfNwUEu7Nqu
-         LFIWf0HGvmwjhmAj3CGLg4COcqI1XNfQ+teg4tGyrVQ5OSd2bpo9lnC+9YemWrsnvNPx
-         V4n2+Rm8RJFkviWUpgc2SzFFKIydJdRW5pFB16+igXpEOgwFaeJBXkb1vLNJyq9PFu7f
-         8ZLX42oiOsFyC3ZhG7qLsIBE8Oxz6cqbcTajgQ7yjg8ZdDyJfe/tG97bNlPyNqi+R8le
-         8lig==
-X-Gm-Message-State: APjAAAVkC6MI9rbmGK5AsM/4nnVmhBP6ZwpDmT2NKV7C0BLUGKOr0CSe
-        STr4JWggU2B73+Bp2Iktk80=
-X-Google-Smtp-Source: APXvYqxI3fG8J2/DXNrMqbp5He+LcRaizowKU8zXJc/NBeHP6e+1CmGad85VCcLrdR+rSgjhba5HPg==
-X-Received: by 2002:a63:5762:: with SMTP id h34mr2723268pgm.235.1571423881363;
-        Fri, 18 Oct 2019 11:38:01 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id 69sm6908001pgh.47.2019.10.18.11.37.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 11:38:00 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 11:37:57 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Mark Brown <broonie@kernel.org>, linux-clk@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-rtc@vger.kernel.org,
-        linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH 05/46] ARM: pxa: split up mach/hardware.h
-Message-ID: <20191018183757.GL35946@dtor-ws>
-References: <20191018154052.1276506-1-arnd@arndb.de>
- <20191018154201.1276638-5-arnd@arndb.de>
+        Fri, 18 Oct 2019 14:38:34 -0400
+Received: from mga04.intel.com ([192.55.52.120]:57917 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730794AbfJRSie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 14:38:34 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 11:38:33 -0700
+X-IronPort-AV: E=Sophos;i="5.67,312,1566889200"; 
+   d="scan'208";a="190447610"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.171.209]) ([10.249.171.209])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 18 Oct 2019 11:38:31 -0700
+Subject: Re: [PATCH v2 2/3] KVM: VMX: Rename {vmx,nested_vmx}_vcpu_setup() and
+ minor cleanup
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191018093723.102471-1-xiaoyao.li@intel.com>
+ <20191018093723.102471-3-xiaoyao.li@intel.com>
+ <20191018170905.GE26319@linux.intel.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <94cd0e28-78c2-c304-5b9e-d6544142756f@intel.com>
+Date:   Sat, 19 Oct 2019 02:38:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018154201.1276638-5-arnd@arndb.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191018170905.GE26319@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 05:41:20PM +0200, Arnd Bergmann wrote:
-> The mach/hardware.h is included in lots of places, and it provides
-> three different things on pxa:
+On 10/19/2019 1:09 AM, Sean Christopherson wrote:
+> On Fri, Oct 18, 2019 at 05:37:22PM +0800, Xiaoyao Li wrote:
+>> Rename {vmx,nested_vmx}_vcpu_setup() to {vmx,nested_vmx}_vmcs_setup,
+>> to match what they really do.
+>>
+>> Aslo remove the vmcs unrelated codes to vmx_vcpu_create().
 > 
-> - the cpu_is_pxa* macros
-> - an indirect inclusion of mach/addr-map.h
-> - the __REG() and io_pv2() helper macros
+> Do this in a separate patch, just in case there is a dependencies we're
+> missing.
 > 
-> Split it up into separate <linux/soc/pxa/cpu.h> and mach/pxa-regs.h
-> headers, then change all the files that use mach/hardware.h to
-> include the exact set of those three headers that they actually
-> need, allowing for further more targeted cleanup.
+>> The initialization of vmx->hv_deadline_tsc can be removed here, because
+>> it will be called in vmx_vcpu_reset() as the flow:
+>>
+>> kvm_arch_vcpu_setup()
+>>    -> kvm_vcpu_reset()
+>>         -> vmx_vcpu_reset()
 > 
-> linux/soc/pxa/cpu.h can remain permanently exported and is now in
-> a global location along with similar headers. pxa-regs.h and
-> addr-map.h are only used in a very small number of drivers now
-> and can be moved to arch/arm/mach-pxa/ directly when those drivers
-> are to pass the necessary data as resources.
+> Definitely needs to be in a separate patch.
 > 
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-input@vger.kernel.org
-> Cc: linux-leds@vger.kernel.org
-> Cc: linux-mmc@vger.kernel.org
-> Cc: linux-mtd@lists.infradead.org
-> Cc: linux-rtc@vger.kernel.org
-> Cc: linux-usb@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-fbdev@vger.kernel.org
-> Cc: linux-watchdog@vger.kernel.org
-> Cc: alsa-devel@alsa-project.org
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-For input bits:
+OK, I'll split it into 3 patches.
 
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>>
+>> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+>> ---
+>> Changes in v2:
+>>    - move out the vmcs unrelated codes
+>> ---
+>>   arch/x86/kvm/vmx/nested.c |  2 +-
+>>   arch/x86/kvm/vmx/nested.h |  2 +-
+>>   arch/x86/kvm/vmx/vmx.c    | 45 +++++++++++++++++----------------------
+>>   3 files changed, 22 insertions(+), 27 deletions(-)
+>>
+>> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+>> index 5e231da00310..7935422d311f 100644
+>> --- a/arch/x86/kvm/vmx/nested.c
+>> +++ b/arch/x86/kvm/vmx/nested.c
+>> @@ -5768,7 +5768,7 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
+>>   	return ret;
+>>   }
+>>   
+>> -void nested_vmx_vcpu_setup(void)
+>> +void nested_vmx_vmcs_setup(void)
+> 
+> "vmcs_setup" sounds like we're allocating and loading a VMCS.  Maybe
+> {nested_,}vmx_set_initial_vmcs_state() a la vmx_set_constant_host_state()?
+> 
+>>   {
+>>   	if (enable_shadow_vmcs) {
+>>   		vmcs_write64(VMREAD_BITMAP, __pa(vmx_vmread_bitmap));
+>> diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
+>> index 187d39bf0bf1..2be1ba7482c9 100644
+>> --- a/arch/x86/kvm/vmx/nested.h
+>> +++ b/arch/x86/kvm/vmx/nested.h
+>> @@ -11,7 +11,7 @@ void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps,
+>>   				bool apicv);
+>>   void nested_vmx_hardware_unsetup(void);
+>>   __init int nested_vmx_hardware_setup(int (*exit_handlers[])(struct kvm_vcpu *));
+>> -void nested_vmx_vcpu_setup(void);
+>> +void nested_vmx_vmcs_setup(void);
+>>   void nested_vmx_free_vcpu(struct kvm_vcpu *vcpu);
+>>   int nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu, bool from_vmentry);
+>>   bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason);
+>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>> index ef567df344bf..b083316a598d 100644
+>> --- a/arch/x86/kvm/vmx/vmx.c
+>> +++ b/arch/x86/kvm/vmx/vmx.c
+>> @@ -4161,15 +4161,10 @@ static void ept_set_mmio_spte_mask(void)
+>>   
+>>   #define VMX_XSS_EXIT_BITMAP 0
+>>   
+>> -/*
+>> - * Sets up the vmcs for emulated real mode.
+>> - */
+>> -static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
+>> +static void vmx_vmcs_setup(struct vcpu_vmx *vmx)
+>>   {
+>> -	int i;
+>> -
+>>   	if (nested)
+>> -		nested_vmx_vcpu_setup();
+>> +		nested_vmx_vmcs_setup();
+>>   
+>>   	if (cpu_has_vmx_msr_bitmap())
+>>   		vmcs_write64(MSR_BITMAP, __pa(vmx->vmcs01.msr_bitmap));
+>> @@ -4178,7 +4173,6 @@ static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
+>>   
+>>   	/* Control */
+>>   	pin_controls_set(vmx, vmx_pin_based_exec_ctrl(vmx));
+>> -	vmx->hv_deadline_tsc = -1;
+>>   
+>>   	exec_controls_set(vmx, vmx_exec_control(vmx));
+>>   
+>> @@ -4227,21 +4221,6 @@ static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
+>>   	if (vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_IA32_PAT)
+>>   		vmcs_write64(GUEST_IA32_PAT, vmx->vcpu.arch.pat);
+>>   
+>> -	for (i = 0; i < ARRAY_SIZE(vmx_msr_index); ++i) {
+>> -		u32 index = vmx_msr_index[i];
+>> -		u32 data_low, data_high;
+>> -		int j = vmx->nmsrs;
+>> -
+>> -		if (rdmsr_safe(index, &data_low, &data_high) < 0)
+>> -			continue;
+>> -		if (wrmsr_safe(index, data_low, data_high) < 0)
+>> -			continue;
+>> -		vmx->guest_msrs[j].index = i;
+>> -		vmx->guest_msrs[j].data = 0;
+>> -		vmx->guest_msrs[j].mask = -1ull;
+>> -		++vmx->nmsrs;
+>> -	}
+>> -
+>>   	vm_exit_controls_set(vmx, vmx_vmexit_ctrl());
+>>   
+>>   	/* 22.2.1, 20.8.1 */
+>> @@ -6710,7 +6689,7 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
+>>   	int err;
+>>   	struct vcpu_vmx *vmx;
+>>   	unsigned long *msr_bitmap;
+>> -	int cpu;
+>> +	int i, cpu;
+>>   
+>>   	BUILD_BUG_ON_MSG(offsetof(struct vcpu_vmx, vcpu) != 0,
+>>   		"struct kvm_vcpu must be at offset 0 for arch usercopy region");
+>> @@ -6786,9 +6765,25 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
+>>   	cpu = get_cpu();
+>>   	vmx_vcpu_load(&vmx->vcpu, cpu);
+>>   	vmx->vcpu.cpu = cpu;
+>> -	vmx_vcpu_setup(vmx);
+>> +	vmx_vmcs_setup(vmx);
+>>   	vmx_vcpu_put(&vmx->vcpu);
+>>   	put_cpu();
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(vmx_msr_index); ++i) {
+>> +		u32 index = vmx_msr_index[i];
+>> +		u32 data_low, data_high;
+>> +		int j = vmx->nmsrs;
+>> +
+>> +		if (rdmsr_safe(index, &data_low, &data_high) < 0)
+>> +			continue;
+>> +		if (wrmsr_safe(index, data_low, data_high) < 0)
+>> +			continue;
+>> +		vmx->guest_msrs[j].index = i;
+>> +		vmx->guest_msrs[j].data = 0;
+>> +		vmx->guest_msrs[j].mask = -1ull;
+>> +		++vmx->nmsrs;
+>> +	}
+> 
+> I'd put this immediately after guest_msrs is allocated.  Yeah, we'll waste
+> a few cycles if allocating vmcs01 fails, but that should be a very rare
+> event.
+> 
 
--- 
-Dmitry
+OK.
+
+>> +
+>>   	if (cpu_need_virtualize_apic_accesses(&vmx->vcpu)) {
+>>   		err = alloc_apic_access_page(kvm);
+>>   		if (err)
+>> -- 
+>> 2.19.1
+>>
