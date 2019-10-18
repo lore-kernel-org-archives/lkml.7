@@ -5,63 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6162CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32961CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9069B222C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A218222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:53:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="O+2twWxd"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="I8XtwIaY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410114AbfJRMxE (ORCPT
+        id S2410122AbfJRMxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 08:53:04 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40562 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2410083AbfJRMwz (ORCPT
+        Fri, 18 Oct 2019 08:53:09 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36777 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2410020AbfJRMwx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 08:52:55 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 7so6107221ljw.7
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 05:52:54 -0700 (PDT)
+        Fri, 18 Oct 2019 08:52:53 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v24so6130605ljj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 05:52:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lfRyiPOJ+tpAygOEKq/virXF46WU8l1j3zrd6+53ses=;
-        b=O+2twWxd5ixrCSJsM3mqFuz2a0vonUX7o4geTRlccuwfBNBIkK0S/WNPoTXAT/ExaF
-         dkMsazXfL3MDmLS9//NfORvVoX4k5KWgn3R2GUa5kvsosQWeE4yx/GCfDaOYnuEKShPx
-         NZ8VzHB+aadfG9OCrBQ/8mnicW9eKOfG/sQjI=
+        bh=zynimEHSa2z793BfmzBbQkfkisgqCtAkV6BR9OsqlmE=;
+        b=I8XtwIaYLYlfxg9NNy6ELtflmn8AM1cj4JKiG746px15j1nQkF152ypbwtndZWIK6U
+         fpsGGyBDxtjg7QmbR17VQAv77y3IUubgjwsdpncHc0qga1+kFg35E3D1g6NMY/X4MLte
+         gBtvKk3S2nRNRmpwOlubL7lPWAZnrDp9bGpmU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lfRyiPOJ+tpAygOEKq/virXF46WU8l1j3zrd6+53ses=;
-        b=CM7E/Nxagm4qr1tej1xqAr8F6XX9t67pUkNrtH+XsDOV0l3+TtAtA81jFQIHUOqmhF
-         nV0PWd/+A9fXqDhJ5dsG897INInZRYmqaMwpC8FsSBcf6e4xHZsS8bC8oXAJfJdgen3m
-         Af2fM/M7i8EHsTy6ENGJSrU/dOx+rA+Q5N1fVZZdx1edxxRAqC70oQhmh20Ig+oBWWVe
-         llcl6G+zSCK9po9kt9CWIpk0WLfsqx6ufpzcpZS4KgEN2Q7PFNHfu4TWLYIdGx8b14O/
-         EoRLa6YYvouIPvzVqodKyLTpcxMoM0mGgB+q3jKztn+xsFORD9F/ojqAVYA04fXYsrHL
-         +kNw==
-X-Gm-Message-State: APjAAAXGBeKgVh/+XFKOW0Sv3MnROpj67NNHNI88fI7KUvCrsEZA9AcW
-        1ZC2N9Ytr8gGxZdbhRw16Q/zMA==
-X-Google-Smtp-Source: APXvYqxgLZsNIbhizhuYW69HOITY4WDfzxrxJeyVBTBM/JEr7MEt70x5TT22MnwDFNbFNwCyBKK2cw==
-X-Received: by 2002:a2e:b00c:: with SMTP id y12mr6149308ljk.113.1571403173688;
-        Fri, 18 Oct 2019 05:52:53 -0700 (PDT)
+        bh=zynimEHSa2z793BfmzBbQkfkisgqCtAkV6BR9OsqlmE=;
+        b=Jg1ypp2vEzSKeWrigdc+RvAby3OseJZhMNRlYEwj86LwsQamseZPd1ydeBNEe+G2Cc
+         7i5nvOPQ+IE5SyLK/Y5Ki2M3s6JTgdUd4GlzwYsOQyrOxwB74XNvu+1r+Y8g1Bkle+Rm
+         sWhxEoxiGJS/yRYL8dZpZQuxUbghPj6ZQ17RFI2elyz6lypMSSWG0SqNIal0808eI+AN
+         I8o7mfHBEwRsZ3B4WFOxu0SS3Czxa4qpGbNm5xlYO8mcjAREixQ0rpgucbmYiDWubIEl
+         7wmYrpz6z2KeB9/FEwV3pD3KzCZhyoIaTTK6s05KVsWPKFGOeK3Rxqnys0W3OoohP76K
+         4z/A==
+X-Gm-Message-State: APjAAAX10B8sjCcelekDQ5AXsgavqB6oXtA0QEkoB5Vxplh8XlQnGAz+
+        b5JJtHkdK1c8+TOvu45bI8jaMQ==
+X-Google-Smtp-Source: APXvYqzL15xzNiCg30fEr7XFvHwNNnUijyABeFrBXYL+96A0QzVaeXNN1l+/dWTNB2mw6SlvUo0HFQ==
+X-Received: by 2002:a2e:584b:: with SMTP id x11mr6266881ljd.36.1571403171701;
+        Fri, 18 Oct 2019 05:52:51 -0700 (PDT)
 Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id m17sm7454792lje.0.2019.10.18.05.52.52
+        by smtp.gmail.com with ESMTPSA id m17sm7454792lje.0.2019.10.18.05.52.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 05:52:53 -0700 (PDT)
+        Fri, 18 Oct 2019 05:52:50 -0700 (PDT)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+        Timur Tabi <timur@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
 Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linuxppc-dev@lists.ozlabs.org, linux-serial@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 7/7] soc/fsl/qe/qe.h: remove include of asm/cpm.h
-Date:   Fri, 18 Oct 2019 14:52:34 +0200
-Message-Id: <20191018125234.21825-8-linux@rasmusvillemoes.dk>
+Subject: [PATCH 6/7] serial: ucc_uart.c: explicitly include asm/cpm.h
+Date:   Fri, 18 Oct 2019 14:52:33 +0200
+Message-Id: <20191018125234.21825-7-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
 References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
@@ -72,27 +74,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-asm/cpm.h only exists on PPC, so this prevents use of this header on
-other platforms. Drivers that need asm/cpm.h (and are thus inherently
-PPC-specific) must include that explicitly.
+This driver uses #defines from asm/cpm.h, so instead of relying on
+some other header pulling that in, do that explicitly.
 
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- include/soc/fsl/qe/qe.h | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/tty/serial/ucc_uart.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/soc/fsl/qe/qe.h b/include/soc/fsl/qe/qe.h
-index c1036d16ed03..3768c226490e 100644
---- a/include/soc/fsl/qe/qe.h
-+++ b/include/soc/fsl/qe/qe.h
-@@ -17,7 +17,6 @@
- #include <linux/spinlock.h>
- #include <linux/errno.h>
- #include <linux/err.h>
--#include <asm/cpm.h>
- #include <soc/fsl/qe/immap_qe.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
+diff --git a/drivers/tty/serial/ucc_uart.c b/drivers/tty/serial/ucc_uart.c
+index a0555ae2b1ef..e2c998badf81 100644
+--- a/drivers/tty/serial/ucc_uart.c
++++ b/drivers/tty/serial/ucc_uart.c
+@@ -33,6 +33,7 @@
+ 
+ #include <linux/firmware.h>
+ #include <asm/reg.h>
++#include <asm/cpm.h>
+ 
+ /*
+  * The GUMR flag for Soft UART.  This would normally be defined in qe.h,
 -- 
 2.20.1
 
