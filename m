@@ -2,97 +2,96 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FCDCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4952BCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC8E21835
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B9721835
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:40:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bf5mqpce"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="cjFTfPVv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505912AbfJRSk1 (ORCPT
+        id S2505925AbfJRSke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:40:27 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45785 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394377AbfJRSkZ (ORCPT
+        Fri, 18 Oct 2019 14:40:34 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46042 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502264AbfJRSkc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:40:25 -0400
-Received: by mail-pg1-f193.google.com with SMTP id r1so3811341pgj.12;
-        Fri, 18 Oct 2019 11:40:25 -0700 (PDT)
+        Fri, 18 Oct 2019 14:40:32 -0400
+Received: by mail-lj1-f194.google.com with SMTP id q64so7175402ljb.12
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 11:40:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=E0Nr+xgvo/HGPyIRgeBTMe73qDbXu0iO1es6rYh3atw=;
-        b=Bf5mqpce+ifo+PJO0O/SZ7JgDewHLwuztM3akSVpq1Vran9Cwo7TXbaD18j+XelfCz
-         /vH1vTG4DsHYGzitLUHuNsDcjMGHoowXtcrHus+0aTCVda86N8BYRjPe84ybpLvopGC1
-         0bTmUK8pxbRiyO3f67IAHOa+e0fYPtCyC7XEnyHkSQm3O7ozpLeaMNJfOVqLo2/esk0i
-         gH1xIU1LRpcgoGHqQmw81kZNn9sjhBlsjMsm//1QPwir6pjOAljIfplB1CDZo9jr8Wfi
-         /X/MoZPaw01qrVsPPGIVn+2X6PlTzeR/z7s8O+F+XeNJQDjw2jzpdFXHBFVA854YXxWL
-         t7og==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=DO/a/phXhl0ktnXCOi2dJ5+kOviduNbcapLpkYYyEWk=;
+        b=cjFTfPVvbl8MsUWT2blqjI7D/UzWWqMscY/aoCSNagnAdLyZQUeALz92b4699wBlT+
+         IdWkW+u7rupW5TONGtLImo8d+MudfU57UxSXGjgQclwP2J1fL00HtCvYrSnItcRQGqqA
+         wqAVx4fbKWYXA6welrsOhQbGhWXCy3BH8mA97gbL/9FgT8AxoAL0PzpvUlxvnq5PbQY2
+         LEUyZn1y8d0hk2zpgTe/pXYFmaS5Jld+iImenu3pIk7Cue4giiHplBtsQdUznpFBfj72
+         4XFpY/UEBA7D54cOpRL8puvNcQ4v8gC62q5GcVphNUe3k1nSIxV8+LVNiYjRAIvABOOg
+         mn3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=E0Nr+xgvo/HGPyIRgeBTMe73qDbXu0iO1es6rYh3atw=;
-        b=NddDDq9zVYCRYvbUNg4t2aItiXhVA5KDqe2eYONvv1HC6fi2/tCfwUvQ2etAQJlkr6
-         WARrKkwLExs57+IUoBdoSu2ppIrSTLWVwybXFtufW0zmu2kz4KB7am7gshXAN647jIeJ
-         qFvUQT21yTBp92djfevHqrUT1hpbuAMh/tdG98SU3KcfL9ATKBDB2fpRkzvfl548+IyM
-         yI7YYKBmY8ttQ7IxmogcdbNQOKFRBJDPF1TiuyHsFTSzCyVzeaCqnVI8SQIAmFwZr24/
-         w5KUVoZpHzxOTSTzouRIu8aMV4rTf3jlAnPnwZCqkg4Vkegm0EoEE4gh2kXxEHyJs8y2
-         RvZA==
-X-Gm-Message-State: APjAAAXEokeTrvoWMjNg0cbkye1JZh0aEr1Qs7Abz4/ikzQn6Ma8vf7f
-        K/cvwAce2byy3WKrG3Xe/8Y=
-X-Google-Smtp-Source: APXvYqxZXck+TqDk8p3s1SMIsgJls7MRurLbHvbPWJuC+WsBJrXRQkFb0GC5zMWshR4Y7Y8BVTdeWQ==
-X-Received: by 2002:a63:155e:: with SMTP id 30mr12136523pgv.204.1571424024619;
-        Fri, 18 Oct 2019 11:40:24 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id w25sm6570261pfi.60.2019.10.18.11.40.23
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=DO/a/phXhl0ktnXCOi2dJ5+kOviduNbcapLpkYYyEWk=;
+        b=YA39QSuZwNNakKxAmiQCmbdTeyoF+Fc/7Pk2u2XW6EYeYd7tpKPxPSSwfIlxD02C1q
+         t+yvnjwYC/Tfta9dH0l8r+i77qC2+aDzoKFwFT9lNLBfdt4P8I4XhKj1OmifWLxmmAFn
+         mEpP3HXGhR1DOVbi2RAdESUQIku3Uxb9gBQWlv/L8y+g1ZCN/rVwha468i1EljMybkud
+         +bm9R4sq4hKmeAr5a+Telrxs/kJ8Ox2MLl/NWR/rgLWL5ufJfENSr69CuEgaJJw0CxeD
+         patvJ03i5lK9HbZjz8L6IJv2VHdsoQEzoA5JGJFYV2s0iyyzaCPNa2RTC0Krgxo483f0
+         zPvw==
+X-Gm-Message-State: APjAAAUlu8MoZwewcTuz6hs/eqF5GyV/5HwqgrWekfwIKQ0QTmk4atvQ
+        atUO+4HPdhtkWdifC2Isfn07kw==
+X-Google-Smtp-Source: APXvYqxVwKHqQth0WuJkrBlEYr1piTk8a9b4URutbVdDlPpWcrSkFRNIVYQf5fyo7E/Y60YvCoBoCw==
+X-Received: by 2002:a2e:a41a:: with SMTP id p26mr7331304ljn.49.1571424031135;
+        Fri, 18 Oct 2019 11:40:31 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id c4sm2716034lfm.4.2019.10.18.11.40.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 11:40:23 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 11:40:21 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH 27/46] input: touchscreen: mainstone: fix pxa2xx+pxa3xx
- configuration
-Message-ID: <20191018184021.GN35946@dtor-ws>
-References: <20191018154052.1276506-1-arnd@arndb.de>
- <20191018154201.1276638-27-arnd@arndb.de>
+        Fri, 18 Oct 2019 11:40:30 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 11:40:24 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Huazhong Tan <tanhuazhong@huawei.com>
+Cc:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <salil.mehta@huawei.com>,
+        <yisen.zhuang@huawei.com>, <linuxarm@huawei.com>,
+        Yonglong Liu <liuyonglong@huawei.com>
+Subject: Re: [PATCH net] net: hns3: fix mis-counting IRQ vector numbers
+ issue
+Message-ID: <20191018114024.2102cde5@cakuba.netronome.com>
+In-Reply-To: <1571370179-52008-1-git-send-email-tanhuazhong@huawei.com>
+References: <1571370179-52008-1-git-send-email-tanhuazhong@huawei.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018154201.1276638-27-arnd@arndb.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 05:41:42PM +0200, Arnd Bergmann wrote:
-> There are two different ways of flushing the ac97 queue
-> in this driver, selected by a compile time option.
+On Fri, 18 Oct 2019 11:42:59 +0800, Huazhong Tan wrote:
+> From: Yonglong Liu <liuyonglong@huawei.com>
 > 
-> Change this to a runtime selection to make it work when both
-> are enabled.
+> Currently, the num_msi_left means the vector numbers of NIC,
+> but if the PF supported RoCE, it contains the vector numbers
+> of NIC and RoCE(Not expected).
 > 
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: linux-input@vger.kernel.org
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> This may cause interrupts lost in some case, because of the
+> NIC module used the vector resources which belongs to RoCE.
+> 
+> This patch adds a new variable num_nic_msi to store the vector
+> numbers of NIC, and adjust the default TQP numbers and rss_size
+> according to the value of num_nic_msi.
+> 
+> Fixes: 46a3df9f9718 ("net: hns3: Add HNS3 Acceleration Engine & Compatibility Layer Support")
+> Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-
--- 
-Dmitry
+LGTM, thanks!
