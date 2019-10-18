@@ -2,317 +2,481 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFBECA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8784CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EE3D20700
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 904BC20700
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:01:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571396489;
+	bh=5aGFwVfXczKIvTE5QOUVz6cJuc5DaNKNF0ZHMfxptl8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=DnA/6PIXwEZh/mm3QZgcO8fp7s6EJVJOaaQJuMF197NxX2EV3bj5/ATbUp0IcC1HQ
+	 YCiCNqXcqY7pMOeaEAdLVganW/73vXtDps3YF0G4U/JCazE5BRTeJe+hOHzciCF6zr
+	 l/+Cg/FzjwayfHvbbNeAYTYmu3f/5ry49pRsWOug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633632AbfJRLBY (ORCPT
+        id S2409815AbfJRLB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 07:01:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57262 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2442524AbfJRLBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 07:01:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D744CAD1A;
-        Fri, 18 Oct 2019 11:01:17 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     rubini@gnudd.com, hch@infradead.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     helgaas@kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v2 2/2] x86/PCI: sta2x11: use default DMA address translation
-Date:   Fri, 18 Oct 2019 13:00:44 +0200
-Message-Id: <20191018110044.22062-3-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191018110044.22062-1-nsaenzjulienne@suse.de>
-References: <20191018110044.22062-1-nsaenzjulienne@suse.de>
+        Fri, 18 Oct 2019 07:01:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37198 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2439248AbfJRLBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 07:01:17 -0400
+Received: from localhost (unknown [209.136.236.94])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D60562064B;
+        Fri, 18 Oct 2019 11:01:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571396476;
+        bh=5aGFwVfXczKIvTE5QOUVz6cJuc5DaNKNF0ZHMfxptl8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=vBvmsv3GrR1nl4Bu39WD91z1M032mfHmje5UrrgqInoFL18BYTGJRykL1coPpcMUv
+         i+acdpbDwH4comsXqa4k22jjKIKEwD7STI0Fh5a8AHJU4aGJg5JyMHzqIIzZQQ7w3X
+         VA9MojZPu2CpfwPUby3JKl2lPCG/gPNL6hPzXp/E=
+Date:   Fri, 18 Oct 2019 04:01:14 -0700
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 5.3.7
+Message-ID: <20191018110114.GA1176597@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
+Content-Disposition: inline
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The devices found behind this PCIe chip have unusual DMA mapping
-constraints as there is an AMBA interconnect placed in between them and
-the different PCI endpoints. The offset between physical memory
-addresses and AMBA's view is provided by reading a PCI config register,
-which is saved and used whenever DMA mapping is needed.
 
-It turns out that this DMA setup can be represented by properly setting
-'dma_pfn_offset', 'dma_bus_mask' and 'dma_mask' during the PCI device
-enable fixup. And ultimately allows us to get rid of this device's
-custom DMA functions.
+--pWyiEgJYm5f9v55/
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Aside from the code deletion and DMA setup, sta2x11_pdev_to_mapping() is
-moved to avoid warnings whenever CONFIG_PM is not enabled.
+I'm announcing the release of the 5.3.7 kernel.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
+All users of the 5.3 kernel series must upgrade.
 
-Changed since v1:
-  - use variable to avoid recalculating AMBA's max address
-  - remove x86's dma-direct.h as it's not longer needed
+The updated 5.3.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
+x-5.3.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
+ummary
 
-Note: This was only compile tested. Also, there was some conversation
-      here: https://lkml.org/lkml/2019/10/17/1014, that Christoph might
-      have missed as I misspelled his email on v1.
+thanks,
 
- arch/x86/Kconfig                  |   1 -
- arch/x86/include/asm/device.h     |   3 -
- arch/x86/include/asm/dma-direct.h |   9 --
- arch/x86/pci/sta2x11-fixup.c      | 135 ++++++------------------------
- 4 files changed, 26 insertions(+), 122 deletions(-)
- delete mode 100644 arch/x86/include/asm/dma-direct.h
+greg k-h
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index abe822d52167..9c2a51e1cb59 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -708,7 +708,6 @@ config X86_SUPPORTS_MEMORY_FAILURE
- config STA2X11
- 	bool "STA2X11 Companion Chip Support"
- 	depends on X86_32_NON_STANDARD && PCI
--	select ARCH_HAS_PHYS_TO_DMA
- 	select SWIOTLB
- 	select MFD_STA2X11
- 	select GPIOLIB
-diff --git a/arch/x86/include/asm/device.h b/arch/x86/include/asm/device.h
-index a8f6c809d9b1..5e12c63b47aa 100644
---- a/arch/x86/include/asm/device.h
-+++ b/arch/x86/include/asm/device.h
-@@ -6,9 +6,6 @@ struct dev_archdata {
- #if defined(CONFIG_INTEL_IOMMU) || defined(CONFIG_AMD_IOMMU)
- 	void *iommu; /* hook for IOMMU specific extension */
- #endif
--#ifdef CONFIG_STA2X11
--	bool is_sta2x11;
--#endif
- };
- 
- #if defined(CONFIG_X86_DEV_DMA_OPS) && defined(CONFIG_PCI_DOMAINS)
-diff --git a/arch/x86/include/asm/dma-direct.h b/arch/x86/include/asm/dma-direct.h
-deleted file mode 100644
-index 1a19251eaac9..000000000000
---- a/arch/x86/include/asm/dma-direct.h
-+++ /dev/null
-@@ -1,9 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef ASM_X86_DMA_DIRECT_H
--#define ASM_X86_DMA_DIRECT_H 1
--
--bool dma_capable(struct device *dev, dma_addr_t addr, size_t size);
--dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr);
--phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t daddr);
--
--#endif /* ASM_X86_DMA_DIRECT_H */
-diff --git a/arch/x86/pci/sta2x11-fixup.c b/arch/x86/pci/sta2x11-fixup.c
-index 6269a175385d..4a631264b809 100644
---- a/arch/x86/pci/sta2x11-fixup.c
-+++ b/arch/x86/pci/sta2x11-fixup.c
-@@ -30,7 +30,6 @@ struct sta2x11_ahb_regs { /* saved during suspend */
- };
- 
- struct sta2x11_mapping {
--	u32 amba_base;
- 	int is_suspended;
- 	struct sta2x11_ahb_regs regs[STA2X11_NR_FUNCS];
- };
-@@ -92,18 +91,6 @@ static int sta2x11_pdev_to_ep(struct pci_dev *pdev)
- 	return pdev->bus->number - instance->bus0;
- }
- 
--static struct sta2x11_mapping *sta2x11_pdev_to_mapping(struct pci_dev *pdev)
--{
--	struct sta2x11_instance *instance;
--	int ep;
--
--	instance = sta2x11_pdev_to_instance(pdev);
--	if (!instance)
--		return NULL;
--	ep = sta2x11_pdev_to_ep(pdev);
--	return instance->map + ep;
--}
--
- /* This is exported, as some devices need to access the MFD registers */
- struct sta2x11_instance *sta2x11_get_instance(struct pci_dev *pdev)
- {
-@@ -111,39 +98,6 @@ struct sta2x11_instance *sta2x11_get_instance(struct pci_dev *pdev)
- }
- EXPORT_SYMBOL(sta2x11_get_instance);
- 
--
--/**
-- * p2a - Translate physical address to STA2x11 AMBA address,
-- *       used for DMA transfers to STA2x11
-- * @p: Physical address
-- * @pdev: PCI device (must be hosted within the connext)
-- */
--static dma_addr_t p2a(dma_addr_t p, struct pci_dev *pdev)
--{
--	struct sta2x11_mapping *map;
--	dma_addr_t a;
--
--	map = sta2x11_pdev_to_mapping(pdev);
--	a = p + map->amba_base;
--	return a;
--}
--
--/**
-- * a2p - Translate STA2x11 AMBA address to physical address
-- *       used for DMA transfers from STA2x11
-- * @a: STA2x11 AMBA address
-- * @pdev: PCI device (must be hosted within the connext)
-- */
--static dma_addr_t a2p(dma_addr_t a, struct pci_dev *pdev)
--{
--	struct sta2x11_mapping *map;
--	dma_addr_t p;
--
--	map = sta2x11_pdev_to_mapping(pdev);
--	p = a - map->amba_base;
--	return p;
--}
--
- /* At setup time, we use our own ops if the device is a ConneXt one */
- static void sta2x11_setup_pdev(struct pci_dev *pdev)
- {
-@@ -151,70 +105,12 @@ static void sta2x11_setup_pdev(struct pci_dev *pdev)
- 
- 	if (!instance) /* either a sta2x11 bridge or another ST device */
- 		return;
--	pci_set_consistent_dma_mask(pdev, STA2X11_AMBA_SIZE - 1);
--	pci_set_dma_mask(pdev, STA2X11_AMBA_SIZE - 1);
--	pdev->dev.archdata.is_sta2x11 = true;
- 
- 	/* We must enable all devices as master, for audio DMA to work */
- 	pci_set_master(pdev);
- }
- DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_STMICRO, PCI_ANY_ID, sta2x11_setup_pdev);
- 
--/*
-- * The following three functions are exported (used in swiotlb: FIXME)
-- */
--/**
-- * dma_capable - Check if device can manage DMA transfers (FIXME: kill it)
-- * @dev: device for a PCI device
-- * @addr: DMA address
-- * @size: DMA size
-- */
--bool dma_capable(struct device *dev, dma_addr_t addr, size_t size)
--{
--	struct sta2x11_mapping *map;
--
--	if (!dev->archdata.is_sta2x11) {
--		if (!dev->dma_mask)
--			return false;
--		return addr + size - 1 <= *dev->dma_mask;
--	}
--
--	map = sta2x11_pdev_to_mapping(to_pci_dev(dev));
--
--	if (!map || (addr < map->amba_base))
--		return false;
--	if (addr + size >= map->amba_base + STA2X11_AMBA_SIZE) {
--		return false;
--	}
--
--	return true;
--}
--
--/**
-- * __phys_to_dma - Return the DMA AMBA address used for this STA2x11 device
-- * @dev: device for a PCI device
-- * @paddr: Physical address
-- */
--dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
--{
--	if (!dev->archdata.is_sta2x11)
--		return paddr;
--	return p2a(paddr, to_pci_dev(dev));
--}
--
--/**
-- * dma_to_phys - Return the physical address used for this STA2x11 DMA address
-- * @dev: device for a PCI device
-- * @daddr: STA2x11 AMBA DMA address
-- */
--phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t daddr)
--{
--	if (!dev->archdata.is_sta2x11)
--		return daddr;
--	return a2p(daddr, to_pci_dev(dev));
--}
--
--
- /*
-  * At boot we must set up the mappings for the pcie-to-amba bridge.
-  * It involves device access, and the same happens at suspend/resume time
-@@ -234,12 +130,22 @@ phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t daddr)
- /* At probe time, enable mapping for each endpoint, using the pdev */
- static void sta2x11_map_ep(struct pci_dev *pdev)
- {
--	struct sta2x11_mapping *map = sta2x11_pdev_to_mapping(pdev);
-+	struct sta2x11_instance *instance = sta2x11_pdev_to_instance(pdev);
-+	struct device *dev = &pdev->dev;
-+	u32 amba_base, max_amba_addr;
- 	int i;
- 
--	if (!map)
-+	if (!instance)
- 		return;
--	pci_read_config_dword(pdev, AHB_BASE(0), &map->amba_base);
-+
-+	pci_read_config_dword(pdev, AHB_BASE(0), &amba_base);
-+	max_amba_addr = amba_base + STA2X11_AMBA_SIZE - 1;
-+
-+	dev->dma_pfn_offset = PFN_DOWN(-amba_base);
-+
-+	dev->bus_dma_mask = max_amba_addr;
-+	pci_set_consistent_dma_mask(pdev, max_amba_addr);
-+	pci_set_dma_mask(pdev, max_amba_addr);
- 
- 	/* Configure AHB mapping */
- 	pci_write_config_dword(pdev, AHB_PEXLBASE(0), 0);
-@@ -253,13 +159,24 @@ static void sta2x11_map_ep(struct pci_dev *pdev)
- 
- 	dev_info(&pdev->dev,
- 		 "sta2x11: Map EP %i: AMBA address %#8x-%#8x\n",
--		 sta2x11_pdev_to_ep(pdev),  map->amba_base,
--		 map->amba_base + STA2X11_AMBA_SIZE - 1);
-+		 sta2x11_pdev_to_ep(pdev), amba_base, max_amba_addr);
- }
- DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_STMICRO, PCI_ANY_ID, sta2x11_map_ep);
- 
- #ifdef CONFIG_PM /* Some register values must be saved and restored */
- 
-+static struct sta2x11_mapping *sta2x11_pdev_to_mapping(struct pci_dev *pdev)
-+{
-+	struct sta2x11_instance *instance;
-+	int ep;
-+
-+	instance = sta2x11_pdev_to_instance(pdev);
-+	if (!instance)
-+		return NULL;
-+	ep = sta2x11_pdev_to_ep(pdev);
-+	return instance->map + ep;
-+}
-+
- static void suspend_mapping(struct pci_dev *pdev)
- {
- 	struct sta2x11_mapping *map = sta2x11_pdev_to_mapping(pdev);
--- 
-2.23.0
+------------
 
+ Documentation/usb/rio.rst                                   |  109 --
+ MAINTAINERS                                                 |    7=20
+ Makefile                                                    |    2=20
+ arch/arm/configs/badge4_defconfig                           |    1=20
+ arch/arm/configs/corgi_defconfig                            |    1=20
+ arch/arm/configs/pxa_defconfig                              |    1=20
+ arch/arm/configs/s3c2410_defconfig                          |    1=20
+ arch/arm/configs/spitz_defconfig                            |    1=20
+ arch/arm64/kernel/process.c                                 |   32=20
+ arch/arm64/kernel/topology.c                                |   19=20
+ arch/mips/configs/mtx1_defconfig                            |    1=20
+ arch/mips/configs/rm200_defconfig                           |    1=20
+ arch/mips/include/uapi/asm/hwcap.h                          |   11=20
+ arch/mips/kernel/cpu-probe.c                                |   33=20
+ arch/mips/loongson64/Platform                               |    4=20
+ arch/mips/vdso/Makefile                                     |    1=20
+ arch/x86/include/asm/mwait.h                                |    2=20
+ arch/x86/lib/delay.c                                        |    4=20
+ block/blk-rq-qos.c                                          |   14=20
+ block/blk-rq-qos.h                                          |    4=20
+ block/blk-wbt.c                                             |    6=20
+ drivers/acpi/pptt.c                                         |   52 +
+ drivers/firmware/efi/efi.c                                  |    3=20
+ drivers/firmware/efi/tpm.c                                  |   26=20
+ drivers/firmware/google/vpd_decode.c                        |    2=20
+ drivers/gpio/gpio-eic-sprd.c                                |    7=20
+ drivers/gpio/gpiolib.c                                      |   29=20
+ drivers/gpu/drm/i915/display/intel_display.c                |   15=20
+ drivers/gpu/drm/i915/gem/i915_gem_mman.c                    |    6=20
+ drivers/gpu/drm/i915/gem/i915_gem_pm.c                      |    3=20
+ drivers/gpu/drm/i915/gt/intel_workarounds.c                 |    3=20
+ drivers/gpu/drm/i915/i915_drv.c                             |    5=20
+ drivers/gpu/drm/i915/selftests/i915_gem.c                   |    6=20
+ drivers/gpu/drm/msm/msm_gem.c                               |    4=20
+ drivers/iio/accel/adxl372.c                                 |   22=20
+ drivers/iio/adc/ad799x.c                                    |    4=20
+ drivers/iio/adc/axp288_adc.c                                |   32=20
+ drivers/iio/adc/hx711.c                                     |   10=20
+ drivers/iio/adc/stm32-adc-core.c                            |   70 -
+ drivers/iio/adc/stm32-adc-core.h                            |  137 ++
+ drivers/iio/adc/stm32-adc.c                                 |  109 --
+ drivers/iio/light/opt3001.c                                 |    6=20
+ drivers/iio/light/vcnl4000.c                                |   14=20
+ drivers/infiniband/core/security.c                          |    2=20
+ drivers/infiniband/hw/vmw_pvrdma/pvrdma_srq.c               |    2=20
+ drivers/media/usb/stkwebcam/stk-webcam.c                    |    3=20
+ drivers/misc/mei/bus-fixup.c                                |   14=20
+ drivers/misc/mei/hw-me-regs.h                               |    3=20
+ drivers/misc/mei/hw-me.c                                    |   21=20
+ drivers/misc/mei/hw-me.h                                    |    8=20
+ drivers/misc/mei/mei_dev.h                                  |    4=20
+ drivers/misc/mei/pci-me.c                                   |   13=20
+ drivers/mtd/nand/raw/au1550nd.c                             |    5=20
+ drivers/staging/fbtft/Kconfig                               |    2=20
+ drivers/staging/fbtft/fbtft-core.c                          |    7=20
+ drivers/staging/rtl8188eu/hal/hal8188e_rate_adaptive.c      |    2=20
+ drivers/staging/vc04_services/bcm2835-audio/bcm2835-pcm.c   |    4=20
+ drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c |    1=20
+ drivers/staging/vt6655/device_main.c                        |    4=20
+ drivers/tty/serial/uartlite.c                               |    3=20
+ drivers/tty/serial/xilinx_uartps.c                          |    8=20
+ drivers/usb/class/usblp.c                                   |    8=20
+ drivers/usb/gadget/udc/dummy_hcd.c                          |    3=20
+ drivers/usb/host/xhci-ring.c                                |    4=20
+ drivers/usb/host/xhci.c                                     |   78 +
+ drivers/usb/image/microtek.c                                |    4=20
+ drivers/usb/misc/Kconfig                                    |   10=20
+ drivers/usb/misc/Makefile                                   |    1=20
+ drivers/usb/misc/adutux.c                                   |   24=20
+ drivers/usb/misc/chaoskey.c                                 |    5=20
+ drivers/usb/misc/iowarrior.c                                |   16=20
+ drivers/usb/misc/ldusb.c                                    |   24=20
+ drivers/usb/misc/legousbtower.c                             |   58 -
+ drivers/usb/misc/rio500.c                                   |  561 -------=
+-----
+ drivers/usb/misc/rio500_usb.h                               |   20=20
+ drivers/usb/misc/usblcd.c                                   |   33=20
+ drivers/usb/misc/yurex.c                                    |   18=20
+ drivers/usb/renesas_usbhs/common.h                          |    1=20
+ drivers/usb/renesas_usbhs/fifo.c                            |    2=20
+ drivers/usb/renesas_usbhs/fifo.h                            |    1=20
+ drivers/usb/renesas_usbhs/mod_gadget.c                      |   18=20
+ drivers/usb/renesas_usbhs/pipe.c                            |   15=20
+ drivers/usb/renesas_usbhs/pipe.h                            |    1=20
+ drivers/usb/serial/ftdi_sio.c                               |    3=20
+ drivers/usb/serial/ftdi_sio_ids.h                           |    9=20
+ drivers/usb/serial/keyspan.c                                |    4=20
+ drivers/usb/serial/option.c                                 |   11=20
+ drivers/usb/serial/usb-serial.c                             |    5=20
+ drivers/usb/typec/tcpm/tcpm.c                               |   14=20
+ drivers/usb/typec/ucsi/displayport.c                        |    2=20
+ drivers/usb/typec/ucsi/ucsi_ccg.c                           |   42=20
+ drivers/usb/usb-skeleton.c                                  |   15=20
+ fs/btrfs/file.c                                             |   13=20
+ fs/btrfs/inode.c                                            |    3=20
+ fs/btrfs/ref-verify.c                                       |    2=20
+ fs/btrfs/relocation.c                                       |    9=20
+ fs/btrfs/tree-log.c                                         |   36=20
+ fs/btrfs/volumes.c                                          |    6=20
+ fs/cifs/dir.c                                               |    8=20
+ fs/cifs/file.c                                              |   33=20
+ fs/cifs/inode.c                                             |    4=20
+ fs/io_uring.c                                               |    3=20
+ fs/libfs.c                                                  |  134 +-
+ fs/nfs/direct.c                                             |   78 -
+ include/linux/acpi.h                                        |    5=20
+ include/linux/hwmon.h                                       |    2=20
+ include/linux/tpm_eventlog.h                                |   16=20
+ kernel/fork.c                                               |    4=20
+ kernel/panic.c                                              |    1=20
+ kernel/trace/ftrace.c                                       |   27=20
+ kernel/trace/trace.c                                        |   17=20
+ kernel/trace/trace_hwlat.c                                  |    4=20
+ mm/page_alloc.c                                             |    8=20
+ mm/vmpressure.c                                             |   20=20
+ mm/z3fold.c                                                 |   10=20
+ security/selinux/ss/services.c                              |    9=20
+ tools/perf/util/jitdump.c                                   |    6=20
+ tools/perf/util/llvm-utils.c                                |    6=20
+ 118 files changed, 1115 insertions(+), 1285 deletions(-)
+
+Adit Ranadive (1):
+      RDMA/vmw_pvrdma: Free SRQ only once
+
+Al Viro (1):
+      Fix the locking in dcache_readdir() and friends
+
+Alan Stern (1):
+      USB: yurex: Don't retry on unexpected errors
+
+Alexander Usyskin (1):
+      mei: avoid FW version request on Ibex Peak and earlier
+
+Andreas Klinger (1):
+      iio: adc: hx711: fix bug in sampling of data
+
+Ard Biesheuvel (1):
+      efivar/ssdt: Don't iterate over EFI vars if no SSDT override was spec=
+ified
+
+Bartosz Golaszewski (1):
+      gpiolib: don't clear FLAG_IS_OUT when emulating open-drain/open-source
+
+Bastien Nocera (1):
+      USB: rio500: Remove Rio 500 kernel driver
+
+Beni Mahler (1):
+      USB: serial: ftdi_sio: add device IDs for Sienna and Echelon PL-20
+
+Bill Kuzeja (1):
+      xhci: Prevent deadlock when xhci adapter breaks during init
+
+Brian Norris (1):
+      firmware: google: increment VPD key_len properly
+
+Bruce Chen (1):
+      gpio: eic: sprd: Fix the incorrect EIC offset when toggling
+
+Chris Wilson (2):
+      drm/i915: Perform GGTT restore much earlier during resume
+      drm/i915: Mark contents as dirty on a write fault
+
+Colin Ian King (1):
+      efi/tpm: Fix sanity check of unsigned tbl_size being less than zero
+
+Dan Carpenter (2):
+      usb: typec: tcpm: usb: typec: tcpm: Fix a signedness bug in tcpm_fw_g=
+et_caps()
+      mm/vmpressure.c: fix a signedness bug in vmpressure_register_event()
+
+Daniele Palmas (1):
+      USB: serial: option: add Telit FN980 compositions
+
+Dave Wysochanski (1):
+      cifs: use cifsInodeInfo->open_file_lock while iterating to avoid a pa=
+nic
+
+David Frey (1):
+      iio: light: opt3001: fix mutex unlock race
+
+Denis Efremov (1):
+      staging: rtl8188eu: fix HighestRate check in odm_ARFBRefresh_8188E()
+
+Fabrice Gasnier (2):
+      iio: adc: stm32-adc: move registers definitions
+      iio: adc: stm32-adc: fix a race when using several adcs with dma and =
+irq
+
+Filipe Manana (1):
+      Btrfs: fix memory leak due to concurrent append writes with fiemap
+
+Greg Kroah-Hartman (1):
+      Linux 5.3.7
+
+Hans de Goede (1):
+      iio: adc: axp288: Override TS pin bias current for some models
+
+Harshad Shirwadkar (1):
+      blk-wbt: fix performance regression in wbt scale_up/scale_down
+
+Heikki Krogerus (2):
+      usb: typec: ucsi: ccg: Remove run_isr flag
+      usb: typec: ucsi: displayport: Fix for the mode entering routine
+
+Ian Rogers (1):
+      perf llvm: Don't access out-of-scope array
+
+Jacky.Cao@sony.com (1):
+      USB: dummy-hcd: fix power budget for SuperSpeed mode
+
+Jan Schmidt (1):
+      xhci: Check all endpoints for LPM timeout
+
+Janakarajan Natarajan (1):
+      x86/asm: Fix MWAITX C-state hint value
+
+Jens Axboe (1):
+      io_uring: only flush workqueues on fileset removal
+
+Jeremy Linton (2):
+      ACPI/PPTT: Add support for ACPI 6.3 thread flag
+      arm64: topology: Use PPTT to determine if PE is a thread
+
+Jerry Snitselaar (1):
+      efi/tpm: Only set 'efi_tpm_final_log_size' after successful event log=
+ parsing
+
+Jiaxun Yang (1):
+      MIPS: elf_hwcap: Export userspace ASEs
+
+Johan Hovold (22):
+      USB: yurex: fix NULL-derefs on disconnect
+      USB: usb-skeleton: fix runtime PM after driver unbind
+      USB: usb-skeleton: fix NULL-deref on disconnect
+      USB: adutux: fix use-after-free on disconnect
+      USB: adutux: fix NULL-derefs on disconnect
+      USB: adutux: fix use-after-free on release
+      USB: iowarrior: fix use-after-free on disconnect
+      USB: iowarrior: fix use-after-free on release
+      USB: iowarrior: fix use-after-free after driver unbind
+      USB: usblp: fix runtime PM after driver unbind
+      USB: chaoskey: fix use-after-free on release
+      USB: ldusb: fix NULL-derefs on driver unbind
+      USB: serial: keyspan: fix NULL-derefs on open() and write()
+      USB: serial: fix runtime PM after driver unbind
+      USB: usblcd: fix I/O after disconnect
+      USB: microtek: fix info-leak at probe
+      USB: legousbtower: fix slab info leak at probe
+      USB: legousbtower: fix deadlock on disconnect
+      USB: legousbtower: fix potential NULL-deref on disconnect
+      USB: legousbtower: fix open after failed reset request
+      USB: legousbtower: fix use-after-free on release
+      media: stkwebcam: fix runtime PM after driver unbind
+
+Josef Bacik (3):
+      btrfs: allocate new inode in NOFS context
+      btrfs: fix incorrect updating of log root tree
+      btrfs: fix uninitialized ret in ref-verify
+
+Kai-Heng Feng (1):
+      xhci: Increase STS_SAVE timeout in xhci_suspend()
+
+Kenneth Graunke (1):
+      drm/i915: Whitelist COMMON_SLICE_CHICKEN2
+
+Marco Felsch (4):
+      iio: adc: ad799x: fix probe error handling
+      iio: light: add missing vcnl4040 of_compatible
+      gpio: fix getting nonexclusive gpiods from DT
+      iio: light: fix vcnl4000 devicetree hooks
+
+Masayoshi Mizuma (1):
+      arm64/sve: Fix wrong free for task->thread.sve_state
+
+Mathias Nyman (4):
+      xhci: Fix false warning message about wrong bounce buffer write length
+      xhci: Prevent device initiated U1/U2 link pm if exit latency is too l=
+ong
+      xhci: Fix USB 3.1 capability detection on early xHCI 1.1 spec based h=
+osts
+      xhci: Fix NULL pointer dereference in xhci_clear_tt_buffer_complete()
+
+Michal Hocko (1):
+      kernel/sysctl.c: do not override max_threads provided by userspace
+
+Michal Simek (1):
+      serial: uartps: Fix uartps_major handling
+
+Mohamad Heib (1):
+      IB/core: Fix wrong iterating on ports
+
+Navid Emamdoost (2):
+      Staging: fbtft: fix memory leak in fbtft_framebuffer_alloc
+      staging: vt6655: Fix memory leak in vt6655_probe
+
+Noralf Tr=F8nnes (1):
+      staging/fbtft: Depend on OF
+
+Nuno S=E1 (1):
+      hwmon: Fix HWMON_P_MIN_ALARM mask
+
+Ondrej Mosnacek (1):
+      selinux: fix context string corruption in convert_context()
+
+Paul Burton (2):
+      MIPS: Disable Loongson MMI instructions for kernel build
+      mtd: rawnand: au1550nd: Fix au_read_buf16() prototype
+
+Pavel Shilovsky (3):
+      CIFS: Gracefully handle QueryInfo errors during open
+      CIFS: Force revalidate inode when dentry is stale
+      CIFS: Force reval dentry if LOOKUP_REVAL flag is set
+
+Peter Jones (2):
+      efi/tpm: Don't access event->count when it isn't mapped
+      efi/tpm: Don't traverse an event log with no events
+
+Qian Cai (1):
+      mm/page_alloc.c: fix a crash in free_pages_prepare()
+
+Qu Wenruo (1):
+      btrfs: relocation: fix use-after-free on dead relocation roots
+
+Randy Dunlap (1):
+      serial: uartlite: fix exit path null pointer
+
+Reinhard Speyerer (1):
+      USB: serial: option: add support for Cinterion CLS8 devices
+
+Rick Tseng (1):
+      usb: xhci: wait for CNR controller not ready bit in xhci resume
+
+Rob Clark (1):
+      drm/msm: Use the correct dma_sync calls harder
+
+Srivatsa S. Bhat (VMware) (2):
+      tracing/hwlat: Report total time spent in all NMIs during the sample
+      tracing/hwlat: Don't ignore outer-loop duration when calculating max_=
+latency
+
+Stefan Popa (3):
+      iio: accel: adxl372: Fix/remove limitation for FIFO samples
+      iio: accel: adxl372: Fix push to buffers lost samples
+      iio: accel: adxl372: Perform a reset at start up
+
+Steve MacLean (1):
+      perf inject jit: Fix JIT_CODE_MOVE filename
+
+Steven Rostedt (VMware) (2):
+      ftrace: Get a reference counter for the trace_array on filter files
+      tracing: Get trace_array reference for available_tracers files
+
+Takashi Iwai (1):
+      staging: bcm2835-audio: Fix draining behavior regression
+
+Tomas Winkler (1):
+      mei: me: add comet point (lake) LP device ids
+
+Trond Myklebust (1):
+      NFS: Fix O_DIRECT accounting of number of bytes read/written
+
+Ville Syrj=E4l=E4 (1):
+      drm/i915: Bump skl+ max plane width to 5k for linear/x-tiled
+
+Vitaly Wool (1):
+      mm/z3fold.c: claim page in the beginning of free
+
+Will Deacon (1):
+      panic: ensure preemption is disabled during panic()
+
+Yoshihiro Shimoda (2):
+      usb: renesas_usbhs: gadget: Do not discard queues in usb_ep_set_{halt=
+,wedge}()
+      usb: renesas_usbhs: gadget: Fix usb_ep_set_{halt,wedge}() behavior
+
+Zygo Blaxell (1):
+      btrfs: fix balance convert to single on 32-bit host CPUs
+
+
+--pWyiEgJYm5f9v55/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl2pm3oACgkQONu9yGCS
+aT6VWg//X6RZYGUf3vSgujEDIJteBEl0/jqijLtmRQV/3geieK1hLMQcIb/F8b9q
+JTWvZtxnNpxstC0JYgcfUMLsAGY4owhBi0mVsfSTcFEmXLnE43babEru4JP1Rqwv
+bs6lCAbN0j9xWimHIt6ozHSJU0v/HEAA9RZChK2ihoq3KQdTfUK0CPjJUQPuscNS
+wOQmF9oJrlEXn56wcxdJmJjJsXNSEYW5aKBnixcKbjXh3PqEVwlTKFcxWfCVNyF6
+mkk8I6E3cO7njosACnNuZqP9+d3PMggxSgAPlhAMV0dRM2Pos6NHSmLCr6YgeotA
+AThjYcKqoFzEAMWOlNIeaeOGubUK+aj2zJbZxd+SBAiWSa0JXC7+usmUZe2q7/2t
+Xc4h8hd8zHo94UrOSNugNtJmNXAQBcPiRQoItWWXigcF2MzBk3suwcoU+P62ugNq
+CDzCt2J42Brj2j18l0UMY4ulM3hNVu4gQ4I0mw33/dyl6vhasMU8ZcEuKvaPk0KY
+KM8G1rbq4iCjn0eWQ5h7nKpXWR5SgCVNDTMbiLw3hWKCyCxiTJSykeO0o1uFGSNm
+3PN4M+Azd1VeMZFfaj+ip/9RtLOnMCqJXXcqsdprSW8aA06K0lY6jH9oq+C6Oxdd
+3c5NZDZ6hcvBCy90QSXaPkRlQx5WGwCPy7Z9pj0oRGzbTf39gIs=
+=PzqS
+-----END PGP SIGNATURE-----
+
+--pWyiEgJYm5f9v55/--
