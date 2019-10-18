@@ -2,204 +2,99 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9EDCA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6057CCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACCD021835
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F0B820872
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:41:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UMH8hxRF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505941AbfJRSkk (ORCPT
+        id S2502792AbfJRSlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:40:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44542 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505915AbfJRSki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:40:38 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D0E0CC053B26;
-        Fri, 18 Oct 2019 18:40:37 +0000 (UTC)
-Received: from crecklin.bos.com (ovpn-125-176.rdu2.redhat.com [10.10.125.176])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2FD3A1001B28;
-        Fri, 18 Oct 2019 18:40:31 +0000 (UTC)
-From:   Chris von Recklinghausen <crecklin@redhat.com>
-To:     David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Waiman Long <longman@redhat.com>,
-        Chris von Recklinghausen <crecklin@redhat.com>
-Subject: [PATCH] security/keyring: avoid pagefaults in keyring_read_iterator
-Date:   Fri, 18 Oct 2019 14:40:30 -0400
-Message-Id: <20191018184030.8407-1-crecklin@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Fri, 18 Oct 2019 18:40:38 +0000 (UTC)
+        Fri, 18 Oct 2019 14:41:15 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41596 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730794AbfJRSlO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 14:41:14 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q7so4394967pfh.8;
+        Fri, 18 Oct 2019 11:41:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UinSvkDLfTC+XiP2vKIBGyDn79x/XTvuzm7B+8AYlL8=;
+        b=UMH8hxRFJOOJeXzCIZPf/rIFEn6ODOgbq4Lr2sInLLFA23TvGvks6PCg8iFRBBYHjS
+         YBzH7x+7vY4NYCJDxaFSgfViupLFZN66oEC3pnGB1a8hFDK59fEBkLeS1usXlgtk5c8m
+         VaUNCgsWN2QJGxmzpd+oGw8qkSt8E9pNnWiQBzITyeiAFhe9kaZCEGoXNTWROYTItRB6
+         jmSKEQOc2Zb7raMcd0L8VtmJtGowntLNLqniq3GzzS+Eeq9UzZ74V+nydGwfSnS0HoX5
+         rtqdjVMQtZnXQ8G785RkuUtZ5fsuwYfIJooUd4glqLIcFxDEzPjEJbhgLi4geAjNxmXO
+         44qQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UinSvkDLfTC+XiP2vKIBGyDn79x/XTvuzm7B+8AYlL8=;
+        b=DyT02vHW/vMAvMmwaJjp8GdAc5q3aDuPTi+sxDZal7B4NLH85Gryx6kfcfCrASaaEp
+         HzuW+ui3WXpNkOkeYRX/0PJHKSg0kdwg+c6lJG7H4fxlpOpPEuyrZTMfxHJmOkdqQe6/
+         XsA0ysjsk1u5BjX7wWcK+jp4t5xbGLv0Z6ZO5xJmmyvUFwA4kFokW3vS9hlaelu0UYlK
+         G3ZK9VFjNXmesa49llQisOydeKveZnKNaV/NglCqczqpi9EFBypZkywURLL4565xmbTy
+         vUEM09w54o5FtwZUpKEqayQxLi3cAmfJR08FZ1xYVh9jR+05eO89Oi1G7HmypZFBm9fp
+         zGJA==
+X-Gm-Message-State: APjAAAW+B/tbP6WEzrsnk9cFn3cyNIKkn9pjD7HdMRyEd3TZQSH6Edrj
+        6w62g+6tb2JjGJSKFFky6fzt298a
+X-Google-Smtp-Source: APXvYqwKxmO277zrDN1ND2ApV7+ouGwspVhzN4O1aLlYUXNWPVKfzZL3GB1RBcqrzsjNvms1xruaEA==
+X-Received: by 2002:a17:90a:bd8e:: with SMTP id z14mr12420751pjr.40.1571424073790;
+        Fri, 18 Oct 2019 11:41:13 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id w189sm7451929pfw.101.2019.10.18.11.41.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 11:41:12 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 11:41:09 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH 28/46] input: touchscreen: mainstone: sync with zylonite
+ driver
+Message-ID: <20191018184109.GO35946@dtor-ws>
+References: <20191018154052.1276506-1-arnd@arndb.de>
+ <20191018154201.1276638-28-arnd@arndb.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018154201.1276638-28-arnd@arndb.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-under a debug kernel, the following circular locking dependency was observed:
+On Fri, Oct 18, 2019 at 05:41:43PM +0200, Arnd Bergmann wrote:
+> The two drivers are almost identical and can work on a variety
+> of hardware in principle. The mainstone driver supports additional
+> hardware, and the zylonite driver has a few cleanup patches.
+> 
+> Sync the two by adding the zylonite changes into the mainstone
+> one, and checking for the zylonite board to order to keep the
+> default behavior (interrupt enabled) there.
+> 
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: linux-input@vger.kernel.org
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-[ 5896.294840] ======================================================
-[ 5896.294846] [ INFO: possible circular locking dependency detected ]
-[ 5896.294852] 3.10.0-957.31.1.el7.ppc64le.debug #1 Tainted: G           OE  ------------ T
-[ 5896.294857] -------------------------------------------------------
-[ 5896.294863] keyctl/21719 is trying to acquire lock:
-[ 5896.294867]  (&mm->mmap_sem){++++++}, at: [<c000000000331db8>] might_fault+0x88/0xf0
-[ 5896.294881]
-[ 5896.294881] but task is already holding lock:
-[ 5896.294886]  (&type->lock_class){+++++.}, at: [<c0000000004ff504>] keyctl_read_key+0xb4/0x170
-[ 5896.294899]
-[ 5896.294899] which lock already depends on the new lock.
-[ 5896.294899]
-[ 5896.294905]
-[ 5896.294905] the existing dependency chain (in reverse order) is:
-[ 5896.294911]
--> #1 (&type->lock_class){+++++.}:
-[ 5896.294920]        [<c0000000001caaf4>] check_prevs_add+0x144/0x1d0
-[ 5896.294929]        [<c0000000001ce338>] lock_acquire+0xe38/0x16c0
-[ 5896.294936]        [<c000000000b8e5e4>] down_write+0x84/0x130
-[ 5896.294943]        [<c0000000004fd330>] key_link+0x90/0x2e0
-[ 5896.294949]        [<c000000000503f44>] call_sbin_request_key+0x154/0x640
-[ 5896.294956]        [<c000000000bb1424>] construct_key_and_link+0x38c/0x464
-[ 5896.294964]        [<c000000000504bb4>] request_key+0x214/0x230
-[ 5896.294970]        [<d0000000047e2490>] nfs_idmap_get_key+0x110/0x460 [nfsv4]
-[ 5896.294986]        [<d0000000047e3464>] nfs_map_name_to_uid+0x84/0x2f0 [nfsv4]
-[ 5896.294999]        [<d0000000047c3180>] decode_attr_owner+0x1d0/0x2c0 [nfsv4]
-[ 5896.295010]        [<d0000000047c6f18>] decode_getfattr_attrs+0x5a8/0xb80 [nfsv4]
-[ 5896.295022]        [<d0000000047c75cc>] decode_getfattr_generic.constprop.100+0xdc/0x200 [nfsv4]
-[ 5896.295033]        [<d0000000047c8048>] nfs4_xdr_dec_getattr+0xa8/0xb0 [nfsv4]
-[ 5896.295044]        [<d0000000035eff58>] rpcauth_unwrap_resp+0xf8/0x150 [sunrpc]
-[ 5896.295060]        [<d0000000035d357c>] call_decode+0x29c/0x910 [sunrpc]
-[ 5896.295071]        [<d0000000035eb940>] __rpc_execute+0xf0/0x870 [sunrpc]
-[ 5896.295083]        [<d0000000035d233c>] rpc_run_task+0x14c/0x1c0 [sunrpc]
-[ 5896.295094]        [<d0000000047a12f0>] nfs4_call_sync_sequence+0x70/0xb0 [nfsv4]
-[ 5896.295105]        [<d0000000047a2254>] _nfs4_proc_getattr+0xc4/0xf0 [nfsv4]
-[ 5896.295115]        [<d0000000047b9ee4>] nfs4_proc_getattr+0x84/0x220 [nfsv4]
-[ 5896.295126]        [<d00000000454519c>] __nfs_revalidate_inode+0x1cc/0x7a0 [nfs]
-[ 5896.295138]        [<d000000004546284>] nfs_revalidate_mapping+0x1f4/0x520 [nfs]
-[ 5896.295150]        [<d00000000453df98>] nfs_file_mmap+0x78/0xb0 [nfs]
-[ 5896.295160]        [<c000000000343df8>] mmap_region+0x518/0x780
-[ 5896.295167]        [<c000000000344488>] do_mmap+0x428/0x510
-[ 5896.295173]        [<c000000000317508>] vm_mmap_pgoff+0x108/0x150
-[ 5896.295179]        [<c000000000340f1c>] SyS_mmap_pgoff+0xec/0x2c0
-[ 5896.295186]        [<c0000000000173b8>] sys_mmap+0x78/0x90
-[ 5896.295192]        [<c00000000000a294>] system_call+0x3c/0x100
-[ 5896.295199]
--> #0 (&mm->mmap_sem){++++++}:
-[ 5896.295207]        [<c0000000001ca990>] check_prev_add+0xa50/0xa70
-[ 5896.295214]        [<c0000000001caaf4>] check_prevs_add+0x144/0x1d0
-[ 5896.295221]        [<c0000000001ce338>] lock_acquire+0xe38/0x16c0
-[ 5896.295228]        [<c000000000331de4>] might_fault+0xb4/0xf0
-[ 5896.295235]        [<c0000000004fc644>] keyring_read_iterator+0x54/0xd0
-[ 5896.295242]        [<c00000000060fe98>] assoc_array_subtree_iterate+0x4d8/0x790
-[ 5896.295249]        [<c0000000004fbc00>] keyring_read+0x80/0xa0
-[ 5896.295255]        [<c0000000004ff5a4>] keyctl_read_key+0x154/0x170
-[ 5896.295262]        [<c00000000000a294>] system_call+0x3c/0x100
-[ 5896.295269]
-[ 5896.295269] other info that might help us debug this:
-[ 5896.295275]  Possible unsafe locking scenario:
-[ 5896.295275]
-[ 5896.295281]        CPU0                    CPU1
-[ 5896.295285]        ----                    ----
-[ 5896.295289]   lock(&type->lock_class);
-[ 5896.295294]                                lock(&mm->mmap_sem);
-[ 5896.295301]                                lock(&type->lock_class);
-[ 5896.295308]   lock(&mm->mmap_sem);
-[ 5896.295313]
-[ 5896.295313]  *** DEADLOCK ***
-[ 5896.295313]
-[ 5896.295320] 1 lock held by keyctl/21719:
-[ 5896.295323]  #0:  (&type->lock_class){+++++.}, at: [<c0000000004ff504>] keyctl_read_key+0xb4/0x170
-[ 5896.295337]
-[ 5896.295337] stack backtrace:
-[ 5896.295343] CPU: 1 PID: 21719 Comm: keyctl Kdump: loaded Tainted: G           OE  ------------ T 3.10.0-957.31.1.el7.ppc64le.debug #1
-[ 5896.295351] Call Trace:
-[ 5896.295355] [c00000016100f8e0] [c0000000000205d0] show_stack+0x90/0x390 (unreliable)
-[ 5896.295363] [c00000016100f9a0] [c000000000bb37d0] dump_stack+0x30/0x44
-[ 5896.295371] [c00000016100f9c0] [c000000000ba7f3c] print_circular_bug+0x36c/0x3a0
-[ 5896.295379] [c00000016100fa60] [c0000000001ca990] check_prev_add+0xa50/0xa70
-[ 5896.295386] [c00000016100fb60] [c0000000001caaf4] check_prevs_add+0x144/0x1d0
-[ 5896.295393] [c00000016100fbb0] [c0000000001ce338] lock_acquire+0xe38/0x16c0
-[ 5896.295400] [c00000016100fce0] [c000000000331de4] might_fault+0xb4/0xf0
-[ 5896.295407] [c00000016100fd00] [c0000000004fc644] keyring_read_iterator+0x54/0xd0
-[ 5896.295415] [c00000016100fd40] [c00000000060fe98] assoc_array_subtree_iterate+0x4d8/0x790
-[ 5896.295423] [c00000016100fd90] [c0000000004fbc00] keyring_read+0x80/0xa0
-[ 5896.295430] [c00000016100fde0] [c0000000004ff5a4] keyctl_read_key+0x154/0x170
-[ 5896.295437] [c00000016100fe30] [c00000000000a294] system_call+0x3c/0x100
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-The put_user call from keyring_read_iterator caused a page fault which attempts
-to lock mm->mmap_sem and type->lock_class (key->sem) in the reverse order that
-keyring_read_iterator did, thus causing the circular locking dependency.
-
-Remedy this by using access_ok and __put_user instead of put_user so we'll
-return an error instead of faulting in the page.
-
-Also to prevent potential changes in behavior to applications, pre-fault the
-page(s) with the key in keyctl_read_key before taking the read semaphore to
-ensure that the page is present by the time keyring_read_iterator is called.
-
-Suggested-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Chris von Recklinghausen <crecklin@redhat.com>
----
- security/keys/keyctl.c  | 10 ++++++++--
- security/keys/keyring.c |  7 +++----
- 2 files changed, 11 insertions(+), 6 deletions(-)
-
-diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
-index 9b898c9..f8a2553 100644
---- a/security/keys/keyctl.c
-+++ b/security/keys/keyctl.c
-@@ -846,9 +846,15 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
- can_read_key:
- 	ret = -EOPNOTSUPP;
- 	if (key->type->read) {
--		/* Read the data with the semaphore held (since we might sleep)
--		 * to protect against the key being updated or revoked.
-+		/*
-+		 * Read the data with the semaphore held (since we might sleep)
-+		 * to protect against the key being updated or revoked. The
-+		 * user buffer, if not mapped yet, will be faulted in to
-+		 * prevent read failure.
- 		 */
-+		key_serial_t tmp;
-+
-+		get_user(tmp, buffer);  /* Prefault */
- 		down_read(&key->sem);
- 		ret = key_validate(key);
- 		if (ret == 0)
-diff --git a/security/keys/keyring.c b/security/keys/keyring.c
-index febf36c..7cac3c7 100644
---- a/security/keys/keyring.c
-+++ b/security/keys/keyring.c
-@@ -459,7 +459,6 @@ static int keyring_read_iterator(const void *object, void *data)
- {
- 	struct keyring_read_iterator_context *ctx = data;
- 	const struct key *key = keyring_ptr_to_key(object);
--	int ret;
- 
- 	kenter("{%s,%d},,{%zu/%zu}",
- 	       key->type->name, key->serial, ctx->count, ctx->buflen);
-@@ -467,9 +466,9 @@ static int keyring_read_iterator(const void *object, void *data)
- 	if (ctx->count >= ctx->buflen)
- 		return 1;
- 
--	ret = put_user(key->serial, ctx->buffer);
--	if (ret < 0)
--		return ret;
-+	if (!access_ok(ctx->buffer, sizeof(key->serial)) ||
-+		__put_user(key->serial, ctx->buffer) < 0)
-+		return -EFAULT;
- 	ctx->buffer++;
- 	ctx->count += sizeof(key->serial);
- 	return 0;
 -- 
-1.8.3.1
-
+Dmitry
