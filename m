@@ -2,149 +2,160 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A680CCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 262D3CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8429B21835
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:00:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571421631;
-	bh=L3zozLzhMTxvIKQ6d0Wn7/JusBBkzGSGTcWZxCpUwVk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ELtnVqmesY91llVfji5Kl2FwBZCwr32NsUgoPpTeQDUKNIWu7ISNwwRwDTO9FddE6
-	 cNOQqTZIxF6rRRqEg2mSuwrLksg/CEb0izdVUKimOzhOkQTGluaPlGOH+E5pBHRMQI
-	 Pkgl3EqmsDixnbo6/LInseqpHyDWIR1H4IAHrhIc=
+	by mail.kernel.org (Postfix) with ESMTP id ED0D321D7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:02:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rFLZ9FTT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410710AbfJRSAa (ORCPT
+        id S2502274AbfJRSCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:00:30 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:46779 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405272AbfJRSA3 (ORCPT
+        Fri, 18 Oct 2019 14:02:20 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40440 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406213AbfJRSCT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:00:29 -0400
-Received: by mail-qt1-f193.google.com with SMTP id u22so10272413qtq.13
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 11:00:29 -0700 (PDT)
+        Fri, 18 Oct 2019 14:02:19 -0400
+Received: by mail-wm1-f66.google.com with SMTP id b24so6934236wmj.5;
+        Fri, 18 Oct 2019 11:02:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=L3zozLzhMTxvIKQ6d0Wn7/JusBBkzGSGTcWZxCpUwVk=;
-        b=EdfMCu4RwaiqCEbwvJ0pe9pZ6LyrloV5VEgKK/Vy8rewVB0KG9Z6eqrMknhSFqCZ1z
-         S1SVdHi7ZgTviuWDYQwcQU+KlXbpgM48rK+7NUWJFdIvk+8hFir1VYI8erByGR22+Xaf
-         5CVFc8Q53zWmwxfaMRaQ2eDrVfluP+2RV048M=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tJMrfs5dQiANYwXWHGQRj7QlKn69tRfKal8fw4EDpNE=;
+        b=rFLZ9FTTelAqervLM2X0dWH/an9GjDseCsMgVhrWfaZHz+0iu7LlwCoWJGaMMwmtab
+         jbdvka4m5JFLoRrPpad/XDDJjCDPOGo2i48rgvX3ZYioBMu4onGcbpkuOWEK3cKh3jgn
+         JhddLlF7ZX5pEsx0RV3OMUUPWlZTat14s2uQC3SCFb35+Mpe8swDPEjdaS1ZEnNPmjYU
+         cEGstWG8+8hBuF13SNslIhMWlCQQmrHPmEVYY/DRwVzGSllHgE+i86uSm6r/iWdCVaJu
+         urmUynEL4IgmVIEzUHFNWn+EkaHTECpAa9sGJ8apmjkVUSGHSN2Pqb49ABGjazBLjPDL
+         kvMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=L3zozLzhMTxvIKQ6d0Wn7/JusBBkzGSGTcWZxCpUwVk=;
-        b=uktCQ9YSvx4EB5xMjtcMv1p/2k2672+EsCd0Z5XQq+nQ5LWC4HkTTfeyECxnvqj+dp
-         D+PR/V1pVFxXUGgVQJtCbhh7MblDRWA5f0PS2NyMuda1SUUAZQU/c4B6/RPwHGG3cEzs
-         NZufqsLb9zX2uWk8tzGx0QW+EsqN8oGDx+EgIYgI4DVD94VoObVDEinPy0/sC6FqRLJS
-         7CqqtczjZTPfHJaJ+NZ33RTFOKqj3li+IV/LZpQihCm5Vrw1R4QnYqoBvZI+HMtAjYZ7
-         ISRmMowiC8+uOcYRXAzly2dXVB3Zn7JK/rEpvCHnUCxwm6Oi1SQvr5wqTcvGL6eO96TO
-         a6Mg==
-X-Gm-Message-State: APjAAAU/kd5JD6GDKjZELBhYIbu4E9+iyPCkISinT8M6sv34JymBdTwZ
-        5Mm2KclTbgfJiWhqyLcAuCXcOA==
-X-Google-Smtp-Source: APXvYqwSjD5sAuLmxmdsh7lJNhjxTrfSDeUnm3NNAHEFVroKyFbsLT9IljlOGdm4f6qN21YIF1d1qQ==
-X-Received: by 2002:ac8:38e3:: with SMTP id g32mr11302377qtc.304.1571421628789;
-        Fri, 18 Oct 2019 11:00:28 -0700 (PDT)
-Received: from chatter.i7.local (192-0-228-88.cpe.teksavvy.com. [192.0.228.88])
-        by smtp.gmail.com with ESMTPSA id x33sm3556947qtd.79.2019.10.18.11.00.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 11:00:27 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 14:00:26 -0400
-From:   Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To:     Santiago Torres Arias <santiago@nyu.edu>
-Cc:     Vegard Nossum <vegard.nossum@oracle.com>, Willy Tarreau <w@1wt.eu>,
-        workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, Eric Wong <e@80x24.org>
-Subject: Re: email as a bona fide git transport
-Message-ID: <20191018180026.GD25456@chatter.i7.local>
-Mail-Followup-To: Santiago Torres Arias <santiago@nyu.edu>,
-        Vegard Nossum <vegard.nossum@oracle.com>, Willy Tarreau <w@1wt.eu>,
-        workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, Eric Wong <e@80x24.org>
-References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
- <20191016111009.GE13154@1wt.eu>
- <20191016144517.giwip4yuaxtcd64g@LykOS.localdomain>
- <56664222-6c29-09dc-ef78-7b380b113c4a@oracle.com>
- <20191018155408.dk4tsjrne42ufpvv@LykOS.localdomain>
- <20191018160343.GB25456@chatter.i7.local>
- <20191018161121.6qe5kkweh4u77gvn@LykOS.localdomain>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=tJMrfs5dQiANYwXWHGQRj7QlKn69tRfKal8fw4EDpNE=;
+        b=aUtjjMcl8y2KvosD80DxU4UTbHpOwI3Mn9U7HyhaL9gxqK35mye442pLFO1Fjv3nmo
+         +Ouh8i1p+1bRWZZPSWXNShsZJY09o1I/GXVWyeHfkkXz1Hs2MAI/l+2KwmdAmXxi+Zpt
+         EmSgl0iWjXJP+3KID6OHLxZs90u3j4bQiysFQD729IG+aY92tlLKXwwgEfrIdcVT/Gxw
+         WZt8jbXryh84r1oYH0WAaW865KIWPtmXBagPgCti5DNRmqMwOVid1ZJO/WpPPdZjWBqt
+         0FsGb6803A5Y+02zZxRLb8j2mNtlTnGGe6/kufELWYxMr2QWv1PxOca75TfQix5Al5rK
+         iB+w==
+X-Gm-Message-State: APjAAAVvySHxKSO9bokXc/BuutvJYAdkgVlQsp3XKs5SXtWrpYzmk55h
+        SxkmktiOF03h7+fOdz+E7JdNzdZ0
+X-Google-Smtp-Source: APXvYqxqDPRz69m1EIovJKm3pYFX83XZrE9So71TR7RLW1oW5vCT6jfrJST6vgwZAVtzAEfP3hTdcQ==
+X-Received: by 2002:a7b:cb8a:: with SMTP id m10mr8076927wmi.132.1571421736450;
+        Fri, 18 Oct 2019 11:02:16 -0700 (PDT)
+Received: from [192.168.1.19] (chp168.neoplus.adsl.tpnet.pl. [83.31.13.168])
+        by smtp.gmail.com with ESMTPSA id a204sm8091544wmh.21.2019.10.18.11.02.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 18 Oct 2019 11:02:15 -0700 (PDT)
+Subject: Re: [PATCH v14 12/19] leds: lp55xx: Convert LED class registration to
+ devm_*
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191018122521.6757-1-dmurphy@ti.com>
+ <20191018122521.6757-13-dmurphy@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <855cd70e-69d5-c5fe-3eb1-d0faee9327c6@gmail.com>
+Date:   Fri, 18 Oct 2019 20:02:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="W/nzBZO5zC0uMSeA"
-Content-Disposition: inline
-In-Reply-To: <20191018161121.6qe5kkweh4u77gvn@LykOS.localdomain>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191018122521.6757-13-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Dan,
 
---W/nzBZO5zC0uMSeA
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you for the patch.
 
-On Fri, Oct 18, 2019 at 12:11:22PM -0400, Santiago Torres Arias wrote:
->> It's smaller, but it's not a one-liner. Here's a comparison using=20
->> ED25519
->> keys of the same length:
->>
->> minisign:
->>
->> RWQ4kF9UdFgeSt3LqnS3WnrLlx2EnuIFW7euw5JnLUHY/79ipftmj7A2ug7FiR2WmnFNoSac=
-Wr7llBuyInVmRL/VRovj1LFtvA0=3D
->>
->> pgp:
->>
->> -----BEGIN PGP SIGNATURE-----
->>
->> iHUEARYIAB0WIQR2vl2yUnHhSB5njDW2xBzjVmSZbAUCXaniFAAKCRC2xBzjVmSZ
->> bHA5AP46sSPFJfL2tbXwswvj0v2DjLAQ9doxl9bfj9iPZu+3qwEAw5qAMbjw9teL
->> L7+NbJ0WVniDWTgt+5ruQ2V9vyfYxAc=3D
->> =3DB/St
->
->Yeah, the discrepancy mostly comes from pgp embedding a timestamp and a
->longer keyid (+a full keyid fingerprint in pgp 2.1+). Minisign keyids
->are 8 random bytes, apparently.
->
->It doesn't seem like an amazing win in terms of succintness, imvho...
+On 10/18/19 2:25 PM, Dan Murphy wrote:
+> Convert the LED class registration calls to the LED devm_*
+> registration calls.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  drivers/leds/leds-lp5521.c        |  9 +++------
+>  drivers/leds/leds-lp5523.c        |  9 +++------
+>  drivers/leds/leds-lp55xx-common.c | 15 +--------------
+>  drivers/leds/leds-lp55xx-common.h |  2 --
+>  drivers/leds/leds-lp8501.c        |  9 +++------
+>  5 files changed, 10 insertions(+), 34 deletions(-)
 
-There isn't, but ED25519 subkeys are still very rare among developers. =20
-Many have 4096-bit RSA subkeys, and you can imagine how large the sigs=20
-=66rom those are.
+What about drivers/leds/leds-lp5562.c?
 
-I want to underline that my use of minisign was specifically for patches=20
-sent via email, without the intent of preserving them in git history=20
-(which is why in my proposal they are put under the `---` cutoff). Git=20
-itself would continue to use PGP signing.
-
-(This also means that we don't necessarily need to make this a native=20
-part of git -- it can be accomplished by a combination of wrappers,=20
-git-format-patch parameters, and a pre-applypatch hook. However, the=20
-likelihood of adoption in this case would be very low.)
-
--K
-
---W/nzBZO5zC0uMSeA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQR2vl2yUnHhSB5njDW2xBzjVmSZbAUCXan9twAKCRC2xBzjVmSZ
-bHKSAQCBn6MNi5Y8+QZHCPiGG36Omh8KTlRDxzx2Kbvf/KvM2QEAtcIHs267maE9
-dgxYwuJWb17NdZtD7fvmhGvITT7MIQs=
-=h6t6
------END PGP SIGNATURE-----
-
---W/nzBZO5zC0uMSeA--
+-- 
+Best regards,
+Jacek Anaszewski
