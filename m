@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37071CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F704CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 068F922466
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AD5C222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:05:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436331;
-	bh=LKQ3SUcS0O1HPhubqHJSlaoEhXrbVSoPR6JIftk12GY=;
+	s=default; t=1571436334;
+	bh=xJzzJtZXbRm1xh6ZE8XImO/6+f842hylKe/AxX4lWSQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pw4Io3j7cok+Xz79tN7bj8AmrZIHgHf/wqYVhs/xpB6Jpc/Yk3KqsjM3ekvCjAqJP
-	 8r5I/yhZytWB5k+Gw9U7KEd7QAq4AwrjTCsjPumEV7MND8XMZSK5NRBFIgiyxLfUfj
-	 Ep5E7T5ObwNAABpx0aUpSHI2Lx/92uMtfDm954TA=
+	b=zFlMUOx4QZ6QemLj1xj8PkJFeCKB0S43HjuDVuDBEZYLptyWOALACTRUGSoZvDlNu
+	 IhyaHZy0lsYqdqC1/Txt0iB/CVpZpJY1/+WxO+pplN8MPlogplYThuTAF6OVnByC11
+	 V9jabWl3K2jZK+S8uHK9qh5aimsbAohs+kl62T64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729741AbfJRWF3 (ORCPT
+        id S1729827AbfJRWFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:05:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37206 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:05:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729541AbfJRWFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:05:22 -0400
+        id S1729541AbfJRWF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:05:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE7DA20679;
-        Fri, 18 Oct 2019 22:05:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82E06222C2;
+        Fri, 18 Oct 2019 22:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436321;
-        bh=LKQ3SUcS0O1HPhubqHJSlaoEhXrbVSoPR6JIftk12GY=;
+        s=default; t=1571436329;
+        bh=xJzzJtZXbRm1xh6ZE8XImO/6+f842hylKe/AxX4lWSQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BqoecOvlE6RVqdiYWwxj6pMuhdjB12HPSASJdXnyMYVrLuTyBiuMcrDBn448xVwro
-         KrVuw6oqmWcCcXpSG9pLBlXiy0+hTIuLGpavIIAH2qHwb/dVH6gVWwT5vxNOwn/HTN
-         zJsXsC/zvEu8FZpQg+/KYJhWZjKz/yxC8lU3+qbw=
+        b=UVxIlyy0tnwPVHgCTgVEGsru1HEzNRBsKhdO995E6OJj82c9kfKqmu97b5FcrIk0K
+         c06T2Ei5LFqFA+7OPbim34k0QfBry5kYUVLCDE1tx0OdrPl2sF425kQ5jGHXeBkBzQ
+         uAlGjtYW0wqSRCKG2UxhFGgKfnDPs7ixnsSR9lCw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 89/89] tracing: Initialize iter->seq after zeroing in tracing_read_pipe()
-Date:   Fri, 18 Oct 2019 18:03:24 -0400
-Message-Id: <20191018220324.8165-89-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 003/100] scsi: lpfc: Fix a duplicate 0711 log message number.
+Date:   Fri, 18 Oct 2019 18:03:48 -0400
+Message-Id: <20191018220525.9042-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
-References: <20191018220324.8165-1-sashal@kernel.org>
+In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
+References: <20191018220525.9042-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,80 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Mladek <pmladek@suse.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit d303de1fcf344ff7c15ed64c3f48a991c9958775 ]
+[ Upstream commit 2c4c91415a05677acc5c8131a5eb472d4aa96ae1 ]
 
-A customer reported the following softlockup:
+Renumber one of the 0711 log messages so there isn't a duplication.
 
-[899688.160002] NMI watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [test.sh:16464]
-[899688.160002] CPU: 0 PID: 16464 Comm: test.sh Not tainted 4.12.14-6.23-azure #1 SLE12-SP4
-[899688.160002] RIP: 0010:up_write+0x1a/0x30
-[899688.160002] Kernel panic - not syncing: softlockup: hung tasks
-[899688.160002] RIP: 0010:up_write+0x1a/0x30
-[899688.160002] RSP: 0018:ffffa86784d4fde8 EFLAGS: 00000257 ORIG_RAX: ffffffffffffff12
-[899688.160002] RAX: ffffffff970fea00 RBX: 0000000000000001 RCX: 0000000000000000
-[899688.160002] RDX: ffffffff00000001 RSI: 0000000000000080 RDI: ffffffff970fea00
-[899688.160002] RBP: ffffffffffffffff R08: ffffffffffffffff R09: 0000000000000000
-[899688.160002] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8b59014720d8
-[899688.160002] R13: ffff8b59014720c0 R14: ffff8b5901471090 R15: ffff8b5901470000
-[899688.160002]  tracing_read_pipe+0x336/0x3c0
-[899688.160002]  __vfs_read+0x26/0x140
-[899688.160002]  vfs_read+0x87/0x130
-[899688.160002]  SyS_read+0x42/0x90
-[899688.160002]  do_syscall_64+0x74/0x160
-
-It caught the process in the middle of trace_access_unlock(). There is
-no loop. So, it must be looping in the caller tracing_read_pipe()
-via the "waitagain" label.
-
-Crashdump analyze uncovered that iter->seq was completely zeroed
-at this point, including iter->seq.seq.size. It means that
-print_trace_line() was never able to print anything and
-there was no forward progress.
-
-The culprit seems to be in the code:
-
-	/* reset all but tr, trace, and overruns */
-	memset(&iter->seq, 0,
-	       sizeof(struct trace_iterator) -
-	       offsetof(struct trace_iterator, seq));
-
-It was added by the commit 53d0aa773053ab182877 ("ftrace:
-add logic to record overruns"). It was v2.6.27-rc1.
-It was the time when iter->seq looked like:
-
-     struct trace_seq {
-	unsigned char		buffer[PAGE_SIZE];
-	unsigned int		len;
-     };
-
-There was no "size" variable and zeroing was perfectly fine.
-
-The solution is to reinitialize the structure after or without
-zeroing.
-
-Link: http://lkml.kernel.org/r/20191011142134.11997-1-pmladek@suse.com
-
-Signed-off-by: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/lpfc/lpfc_scsi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 563e80f9006a4..79573ec5e0267 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5999,6 +5999,7 @@ tracing_read_pipe(struct file *filp, char __user *ubuf,
- 	       sizeof(struct trace_iterator) -
- 	       offsetof(struct trace_iterator, seq));
- 	cpumask_clear(iter->started);
-+	trace_seq_init(&iter->seq);
- 	iter->pos = -1;
- 
- 	trace_event_read_lock();
+diff --git a/drivers/scsi/lpfc/lpfc_scsi.c b/drivers/scsi/lpfc/lpfc_scsi.c
+index 200b5bca1f5f4..666495f21c246 100644
+--- a/drivers/scsi/lpfc/lpfc_scsi.c
++++ b/drivers/scsi/lpfc/lpfc_scsi.c
+@@ -4161,7 +4161,7 @@ lpfc_scsi_cmd_iocb_cmpl(struct lpfc_hba *phba, struct lpfc_iocbq *pIocbIn,
+ 	/* If pCmd was set to NULL from abort path, do not call scsi_done */
+ 	if (xchg(&lpfc_cmd->pCmd, NULL) == NULL) {
+ 		lpfc_printf_vlog(vport, KERN_INFO, LOG_FCP,
+-				 "0711 FCP cmd already NULL, sid: 0x%06x, "
++				 "5688 FCP cmd already NULL, sid: 0x%06x, "
+ 				 "did: 0x%06x, oxid: 0x%04x\n",
+ 				 vport->fc_myDID,
+ 				 (pnode) ? pnode->nlp_DID : 0,
 -- 
 2.20.1
 
