@@ -2,213 +2,317 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E706CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 548EBCA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC8C6222C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:14:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="r5Clx4kS"
+	by mail.kernel.org (Postfix) with ESMTP id 2D27C21D7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:14:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633459AbfJRKOD (ORCPT
+        id S2633472AbfJRKOG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 18 Oct 2019 06:14:06 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:32966 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2633454AbfJRKOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 18 Oct 2019 06:14:03 -0400
-Received: from mail-eopbgr730076.outbound.protection.outlook.com ([40.107.73.76]:35184
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2633425AbfJRKN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 06:13:59 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MO+N0Hxa7N4vbwq/CBLa6SBV9o1HPQ6Znz0x/5yM441/SsNCtKEYM76tKMBK3Hvg4j9x5aKZgIjOnPwaI3aixzkOzCyBGjpVUMmo89MJrGdINmzwrzA0gaB4qMWCva1cMOYG5I/TayhGpBsVu9PRSNhiKTET0nqX+psadhGDBAbhv9gDN6grH/xPH/qtmjUw4Qn4Q9kSG+nyfltcTFdKEqkLqn7+Z1J+TFX/TfkxIvmkbAfSP/wFT+VG7jjajIm8kgOHpRlYslrmksKzKjd1Ay9AUVjX9yyutXfLxBMAmVbjP3O9qMagc1IxyYLXaJn66KjnItPqiXE4VwiMmmt9JQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aYpJ9uj1CTfX4AuyoIWMcp1pYYgakrdxNKLujD4LVAU=;
- b=WYcTodfpC+5GkXeocm5SUHLW7edXQFSZu7Qf7mmglQyZz6vCa9lFXbkt8O5EJYi1x6FDG4ZlvCO6clIKcnBl7T0LVs3Yk97NPD/vlhPpz9EHAct9Bvl2k4N9fJ8OSOfvdfrmKajdFqgE3FjYrEbZjFTlv3uMvPU1GDaS1dC1ve9gD6msf+exb1Wl8VRDQM2T/b77GINrdSSdXrgc6qhL+6QELWir/4EjSSgaFkNiW9EzXkT8H03mWp5+0mJ9vjqJQ2cE7GqA1kkGRrBz7tqlpfGz5Zx6zeAB+8SUHb4LRMItBcDAZ6ha2AYUoovFYVUe4BDe4dlicHzKok5Oo9y5Sw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
- 165.204.84.17) smtp.rcpttodomain=gmail.com smtp.mailfrom=amd.com;
- dmarc=permerror action=none header.from=amd.com; dkim=none (message not
- signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aYpJ9uj1CTfX4AuyoIWMcp1pYYgakrdxNKLujD4LVAU=;
- b=r5Clx4kSqzOwnsH3lHS2M9BBRNJDR5G1KI3nCFr6nXut76XnMKAEu7tXYY7kwy7fKooDhuunDz96i2U+qsBCKmqzPiEX8bV2NGp559koao+Lg2FTnDm0T8Nybt5xCGfJpcgeyB2YkWZ9fSq8Swnpdl6SxcolHY4pje3VB1V3vHo=
-Received: from DM3PR12CA0130.namprd12.prod.outlook.com (2603:10b6:0:51::26) by
- DM6PR12MB2778.namprd12.prod.outlook.com (2603:10b6:5:50::17) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.19; Fri, 18 Oct 2019 10:13:55 +0000
-Received: from CO1NAM03FT030.eop-NAM03.prod.protection.outlook.com
- (2a01:111:f400:7e48::200) by DM3PR12CA0130.outlook.office365.com
- (2603:10b6:0:51::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.18 via Frontend
- Transport; Fri, 18 Oct 2019 10:13:55 +0000
-Authentication-Results: spf=none (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=permerror action=none header.from=amd.com;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-Received: from SATLEXMB01.amd.com (165.204.84.17) by
- CO1NAM03FT030.mail.protection.outlook.com (10.152.80.169) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.2367.14 via Frontend Transport; Fri, 18 Oct 2019 10:13:55 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB01.amd.com
- (10.181.40.142) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 18 Oct
- 2019 05:13:52 -0500
-Received: from SATLEXMB02.amd.com (10.181.40.143) by SATLEXMB05.amd.com
- (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 18 Oct
- 2019 05:13:51 -0500
-Received: from vishnu-All-Series.amd.com (10.180.168.240) by
- SATLEXMB02.amd.com (10.181.40.143) with Microsoft SMTP Server id 15.1.1713.5
- via Frontend Transport; Fri, 18 Oct 2019 05:13:43 -0500
-From:   Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>
-CC:     <Alexander.Deucher@amd.com>,
-        Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        "Takashi Iwai" <tiwai@suse.com>,
-        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-        "Maruthi Srinivas Bayyavarapu" <Maruthi.Bayyavarapu@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH 4/7] ASoC: amd: add ACP3x TDM mode support
-Date:   Sat, 19 Oct 2019 02:35:42 +0530
-Message-ID: <1571432760-3008-4-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1571432760-3008-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-References: <1571432760-3008-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9AF487BB;
+        Fri, 18 Oct 2019 03:13:42 -0700 (PDT)
+Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB5353F6C4;
+        Fri, 18 Oct 2019 03:13:39 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Steven Price <steven.price@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v12 14/22] mm: pagewalk: Add 'depth' parameter to pte_hole
+Date:   Fri, 18 Oct 2019 11:12:40 +0100
+Message-Id: <20191018101248.33727-15-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191018101248.33727-1-steven.price@arm.com>
+References: <20191018101248.33727-1-steven.price@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(39860400002)(136003)(396003)(428003)(189003)(199004)(50466002)(36756003)(47776003)(356004)(26005)(86362001)(336012)(305945005)(186003)(70586007)(70206006)(54906003)(1671002)(48376002)(5660300002)(316002)(478600001)(16586007)(76176011)(2906002)(126002)(11346002)(446003)(486006)(476003)(426003)(2616005)(8936002)(51416003)(7696005)(81156014)(53416004)(109986005)(8676002)(4326008)(50226002)(81166006)(266003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2778;H:SATLEXMB01.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d4d68600-cb9f-4fb0-d13c-08d753b3e213
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2778:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB27784699FC1982858493BDD8E76C0@DM6PR12MB2778.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2512;
-X-Forefront-PRVS: 01949FE337
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: wVD+2I2lz73YF+uDUozI2BIWwOSU9xHG9V7WO8P1VT0sHUA5sBA7LHymObehBT0r+K5nxu1Oax3ynHecU435yEs53EmDlNqT+IAhPSvYRZdDz5PoCLZe4O3xTbn3HWMZxTS+TKrtrfwwSf1x8wZ+yMKVNgfPH2q4ZFfQ6GyrtfAmvvSAfJ0oZaxmA+8PzjC45wlKVIhaltebOBjgiXL935WtLAxPrbeIK2zboGKt4MXCd6QHJAOyOOgsox59ZYv3CwVwA1HMjGp83BKsCbsYOFs0aK7D0ZSOTDv9uuJxM8/iIMUP/PQpE2oV76PClhptLYlUy4QM/ve+9MwDfy8YE0PQgMvYyxQjtKwXmzOcOPoy4kQAv6XL6gCdvFWDkr1jJ6k8nJWU03gUcPAnviSqtWKEnA2w5MHUhns830LRjw8=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2019 10:13:55.1783
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d4d68600-cb9f-4fb0-d13c-08d753b3e213
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB01.amd.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2778
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ACP3x I2S (CPU DAI) can act in normal I2S and TDM modes. Added support
-for TDM mode. Desired mode can be selected from ASoC machine driver.
+The pte_hole() callback is called at multiple levels of the page tables.
+Code dumping the kernel page tables needs to know what at what depth
+the missing entry is. Add this is an extra parameter to pte_hole().
+When the depth isn't know (e.g. processing a vma) then -1 is passed.
 
-Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
+The depth that is reported is the actual level where the entry is
+missing (ignoring any folding that is in place), i.e. any levels where
+PTRS_PER_P?D is set to 1 are ignored.
+
+Note that depth starts at 0 for a PGD so that PUD/PMD/PTE retain their
+natural numbers as levels 2/3/4.
+
+Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- sound/soc/amd/raven/acp3x-i2s.c | 51 +++++++++++++++++++++++++++++++++--------
- sound/soc/amd/raven/acp3x.h     |  2 ++
- 2 files changed, 43 insertions(+), 10 deletions(-)
+ fs/proc/task_mmu.c       |  4 ++--
+ include/linux/pagewalk.h |  7 +++++--
+ mm/hmm.c                 |  8 ++++----
+ mm/migrate.c             |  5 +++--
+ mm/mincore.c             |  1 +
+ mm/pagewalk.c            | 31 +++++++++++++++++++++++++------
+ 6 files changed, 40 insertions(+), 16 deletions(-)
 
-diff --git a/sound/soc/amd/raven/acp3x-i2s.c b/sound/soc/amd/raven/acp3x-i2s.c
-index b7f610f..7e22d22 100644
---- a/sound/soc/amd/raven/acp3x-i2s.c
-+++ b/sound/soc/amd/raven/acp3x-i2s.c
-@@ -43,7 +43,8 @@ static int acp3x_i2s_set_tdm_slot(struct snd_soc_dai *cpu_dai, u32 tx_mask,
- 		u32 rx_mask, int slots, int slot_width)
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index 9442631fd4af..3ba9ae83bff5 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -505,7 +505,7 @@ static void smaps_account(struct mem_size_stats *mss, struct page *page,
+ 
+ #ifdef CONFIG_SHMEM
+ static int smaps_pte_hole(unsigned long addr, unsigned long end,
+-		struct mm_walk *walk)
++			  __always_unused int depth, struct mm_walk *walk)
  {
- 	u32 val = 0;
--	u16 slot_len;
-+	u32 mode = 0;
-+	u16 slot_len, flen;
+ 	struct mem_size_stats *mss = walk->private;
  
- 	struct i2s_dev_data *adata = snd_soc_dai_get_drvdata(cpu_dai);
- 
-@@ -64,16 +65,46 @@ static int acp3x_i2s_set_tdm_slot(struct snd_soc_dai *cpu_dai, u32 tx_mask,
- 		return -EINVAL;
- 	}
- 
--	val = rv_readl(adata->acp3x_base + mmACP_BTTDM_ITER);
--	rv_writel((val | 0x2), adata->acp3x_base + mmACP_BTTDM_ITER);
--	val = rv_readl(adata->acp3x_base + mmACP_BTTDM_IRER);
--	rv_writel((val | 0x2), adata->acp3x_base + mmACP_BTTDM_IRER);
-+	/* Enable I2S / BT channels TDM and respective
-+	 * I2S/BT`s TX/RX Formats frame lengths.
-+	 */
-+	flen = (FRM_LEN | (slots << 15) | (slot_len << 18));
- 
--	val = (FRM_LEN | (slots << 15) | (slot_len << 18));
--	rv_writel(val, adata->acp3x_base + mmACP_BTTDM_TXFRMT);
--	rv_writel(val, adata->acp3x_base + mmACP_BTTDM_RXFRMT);
--
--	adata->tdm_fmt = val;
-+	if (adata->substream_type == SNDRV_PCM_STREAM_PLAYBACK) {
-+		switch (adata->i2s_instance) {
-+		case I2S_BT_INSTANCE:
-+			val = rv_readl(adata->acp3x_base + mmACP_BTTDM_ITER);
-+			rv_writel((val | 0x2),
-+				adata->acp3x_base + mmACP_BTTDM_ITER);
-+			rv_writel(flen,
-+				adata->acp3x_base + mmACP_BTTDM_TXFRMT);
-+		break;
-+		case I2S_SP_INSTANCE:
-+			val = rv_readl(adata->acp3x_base + mmACP_I2STDM_ITER);
-+			rv_writel((val | 0x2),
-+				adata->acp3x_base + mmACP_I2STDM_ITER);
-+			rv_writel(flen,
-+				adata->acp3x_base + mmACP_I2STDM_TXFRMT);
-+		}
-+	} else {
-+		switch (adata->i2s_instance) {
-+		case I2S_BT_INSTANCE:
-+			val = rv_readl(adata->acp3x_base + mmACP_BTTDM_IRER);
-+			rv_writel((val | 0x2),
-+				adata->acp3x_base + mmACP_BTTDM_IRER);
-+			rv_writel(flen,
-+				adata->acp3x_base + mmACP_BTTDM_RXFRMT);
-+		break;
-+		case I2S_SP_INSTANCE:
-+		default:
-+			val = rv_readl(adata->acp3x_base + mmACP_I2STDM_IRER);
-+			rv_writel((val | 0x2),
-+				adata->acp3x_base + mmACP_I2STDM_IRER);
-+			rv_writel(flen,
-+				adata->acp3x_base + mmACP_I2STDM_RXFRMT);
-+		}
-+	}
-+	adata->tdm_fmt = flen;
- 	return 0;
+@@ -1282,7 +1282,7 @@ static int add_to_pagemap(unsigned long addr, pagemap_entry_t *pme,
  }
  
-diff --git a/sound/soc/amd/raven/acp3x.h b/sound/soc/amd/raven/acp3x.h
-index b1990c9..dba7065 100644
---- a/sound/soc/amd/raven/acp3x.h
-+++ b/sound/soc/amd/raven/acp3x.h
-@@ -76,6 +76,8 @@ struct i2s_dev_data {
- 	bool tdm_mode;
- 	unsigned int i2s_irq;
- 	u32 tdm_fmt;
-+	u16 i2s_instance;
-+	u32 substream_type;
- 	void __iomem *acp3x_base;
- 	struct snd_pcm_substream *play_stream;
- 	struct snd_pcm_substream *capture_stream;
+ static int pagemap_pte_hole(unsigned long start, unsigned long end,
+-				struct mm_walk *walk)
++			    __always_unused int depth, struct mm_walk *walk)
+ {
+ 	struct pagemapread *pm = walk->private;
+ 	unsigned long addr = start;
+diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
+index df424197a25a..90466d60f87a 100644
+--- a/include/linux/pagewalk.h
++++ b/include/linux/pagewalk.h
+@@ -17,7 +17,10 @@ struct mm_walk;
+  *			split_huge_page() instead of handling it explicitly.
+  * @pte_entry:		if set, called for each non-empty PTE (lowest-level)
+  *			entry
+- * @pte_hole:		if set, called for each hole at all levels
++ * @pte_hole:		if set, called for each hole at all levels,
++ *			depth is -1 if not known, 0:PGD, 1:P4D, 2:PUD, 3:PMD
++ *			4:PTE. Any folded depths (where PTRS_PER_P?D is equal
++ *			to 1) are skipped.
+  * @hugetlb_entry:	if set, called for each hugetlb entry
+  * @test_walk:		caller specific callback function to determine whether
+  *			we walk over the current vma or not. Returning 0 means
+@@ -45,7 +48,7 @@ struct mm_walk_ops {
+ 	int (*pte_entry)(pte_t *pte, unsigned long addr,
+ 			 unsigned long next, struct mm_walk *walk);
+ 	int (*pte_hole)(unsigned long addr, unsigned long next,
+-			struct mm_walk *walk);
++			int depth, struct mm_walk *walk);
+ 	int (*hugetlb_entry)(pte_t *pte, unsigned long hmask,
+ 			     unsigned long addr, unsigned long next,
+ 			     struct mm_walk *walk);
+diff --git a/mm/hmm.c b/mm/hmm.c
+index 902f5fa6bf93..df3d531c8f2d 100644
+--- a/mm/hmm.c
++++ b/mm/hmm.c
+@@ -376,7 +376,7 @@ static void hmm_range_need_fault(const struct hmm_vma_walk *hmm_vma_walk,
+ }
+ 
+ static int hmm_vma_walk_hole(unsigned long addr, unsigned long end,
+-			     struct mm_walk *walk)
++			     __always_unused int depth, struct mm_walk *walk)
+ {
+ 	struct hmm_vma_walk *hmm_vma_walk = walk->private;
+ 	struct hmm_range *range = hmm_vma_walk->range;
+@@ -564,7 +564,7 @@ static int hmm_vma_walk_pmd(pmd_t *pmdp,
+ again:
+ 	pmd = READ_ONCE(*pmdp);
+ 	if (pmd_none(pmd))
+-		return hmm_vma_walk_hole(start, end, walk);
++		return hmm_vma_walk_hole(start, end, -1, walk);
+ 
+ 	if (thp_migration_supported() && is_pmd_migration_entry(pmd)) {
+ 		bool fault, write_fault;
+@@ -666,7 +666,7 @@ static int hmm_vma_walk_pud(pud_t *pudp, unsigned long start, unsigned long end,
+ again:
+ 	pud = READ_ONCE(*pudp);
+ 	if (pud_none(pud))
+-		return hmm_vma_walk_hole(start, end, walk);
++		return hmm_vma_walk_hole(start, end, -1, walk);
+ 
+ 	if (pud_huge(pud) && pud_devmap(pud)) {
+ 		unsigned long i, npages, pfn;
+@@ -674,7 +674,7 @@ static int hmm_vma_walk_pud(pud_t *pudp, unsigned long start, unsigned long end,
+ 		bool fault, write_fault;
+ 
+ 		if (!pud_present(pud))
+-			return hmm_vma_walk_hole(start, end, walk);
++			return hmm_vma_walk_hole(start, end, -1, walk);
+ 
+ 		i = (addr - range->start) >> PAGE_SHIFT;
+ 		npages = (end - addr) >> PAGE_SHIFT;
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 4fe45d1428c8..435258df9a36 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -2123,6 +2123,7 @@ int migrate_misplaced_transhuge_page(struct mm_struct *mm,
+ #ifdef CONFIG_DEVICE_PRIVATE
+ static int migrate_vma_collect_hole(unsigned long start,
+ 				    unsigned long end,
++				    __always_unused int depth,
+ 				    struct mm_walk *walk)
+ {
+ 	struct migrate_vma *migrate = walk->private;
+@@ -2167,7 +2168,7 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
+ 
+ again:
+ 	if (pmd_none(*pmdp))
+-		return migrate_vma_collect_hole(start, end, walk);
++		return migrate_vma_collect_hole(start, end, -1, walk);
+ 
+ 	if (pmd_trans_huge(*pmdp)) {
+ 		struct page *page;
+@@ -2200,7 +2201,7 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
+ 				return migrate_vma_collect_skip(start, end,
+ 								walk);
+ 			if (pmd_none(*pmdp))
+-				return migrate_vma_collect_hole(start, end,
++				return migrate_vma_collect_hole(start, end, -1,
+ 								walk);
+ 		}
+ 	}
+diff --git a/mm/mincore.c b/mm/mincore.c
+index 49b6fa2f6aa1..0e6dd9948f1a 100644
+--- a/mm/mincore.c
++++ b/mm/mincore.c
+@@ -112,6 +112,7 @@ static int __mincore_unmapped_range(unsigned long addr, unsigned long end,
+ }
+ 
+ static int mincore_unmapped_range(unsigned long addr, unsigned long end,
++				   __always_unused int depth,
+ 				   struct mm_walk *walk)
+ {
+ 	walk->private += __mincore_unmapped_range(addr, end,
+diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+index 43acffefd43f..b67400dc1def 100644
+--- a/mm/pagewalk.c
++++ b/mm/pagewalk.c
+@@ -4,6 +4,22 @@
+ #include <linux/sched.h>
+ #include <linux/hugetlb.h>
+ 
++/*
++ * We want to know the real level where a entry is located ignoring any
++ * folding of levels which may be happening. For example if p4d is folded then
++ * a missing entry found at level 1 (p4d) is actually at level 0 (pgd).
++ */
++static int real_depth(int depth)
++{
++	if (depth == 3 && PTRS_PER_PMD == 1)
++		depth = 2;
++	if (depth == 2 && PTRS_PER_PUD == 1)
++		depth = 1;
++	if (depth == 1 && PTRS_PER_P4D == 1)
++		depth = 0;
++	return depth;
++}
++
+ static int walk_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
+ 			  struct mm_walk *walk)
+ {
+@@ -33,6 +49,7 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
+ 	unsigned long next;
+ 	const struct mm_walk_ops *ops = walk->ops;
+ 	int err = 0;
++	int depth = real_depth(3);
+ 
+ 	if (ops->test_pmd) {
+ 		err = ops->test_pmd(addr, end, pmd_offset(pud, 0UL), walk);
+@@ -48,7 +65,7 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
+ 		next = pmd_addr_end(addr, end);
+ 		if (pmd_none(*pmd)) {
+ 			if (ops->pte_hole)
+-				err = ops->pte_hole(addr, next, walk);
++				err = ops->pte_hole(addr, next, depth, walk);
+ 			if (err)
+ 				break;
+ 			continue;
+@@ -92,6 +109,7 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+ 	unsigned long next;
+ 	const struct mm_walk_ops *ops = walk->ops;
+ 	int err = 0;
++	int depth = real_depth(2);
+ 
+ 	if (ops->test_pud) {
+ 		err = ops->test_pud(addr, end, pud_offset(p4d, 0UL), walk);
+@@ -107,7 +125,7 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+ 		next = pud_addr_end(addr, end);
+ 		if (pud_none(*pud)) {
+ 			if (ops->pte_hole)
+-				err = ops->pte_hole(addr, next, walk);
++				err = ops->pte_hole(addr, next, depth, walk);
+ 			if (err)
+ 				break;
+ 			continue;
+@@ -143,6 +161,7 @@ static int walk_p4d_range(pgd_t *pgd, unsigned long addr, unsigned long end,
+ 	unsigned long next;
+ 	const struct mm_walk_ops *ops = walk->ops;
+ 	int err = 0;
++	int depth = real_depth(1);
+ 
+ 	if (ops->test_p4d) {
+ 		err = ops->test_p4d(addr, end, p4d_offset(pgd, 0UL), walk);
+@@ -157,7 +176,7 @@ static int walk_p4d_range(pgd_t *pgd, unsigned long addr, unsigned long end,
+ 		next = p4d_addr_end(addr, end);
+ 		if (p4d_none_or_clear_bad(p4d)) {
+ 			if (ops->pte_hole)
+-				err = ops->pte_hole(addr, next, walk);
++				err = ops->pte_hole(addr, next, depth, walk);
+ 			if (err)
+ 				break;
+ 			continue;
+@@ -189,7 +208,7 @@ static int walk_pgd_range(unsigned long addr, unsigned long end,
+ 		next = pgd_addr_end(addr, end);
+ 		if (pgd_none_or_clear_bad(pgd)) {
+ 			if (ops->pte_hole)
+-				err = ops->pte_hole(addr, next, walk);
++				err = ops->pte_hole(addr, next, 0, walk);
+ 			if (err)
+ 				break;
+ 			continue;
+@@ -236,7 +255,7 @@ static int walk_hugetlb_range(unsigned long addr, unsigned long end,
+ 		if (pte)
+ 			err = ops->hugetlb_entry(pte, hmask, addr, next, walk);
+ 		else if (ops->pte_hole)
+-			err = ops->pte_hole(addr, next, walk);
++			err = ops->pte_hole(addr, next, -1, walk);
+ 
+ 		if (err)
+ 			break;
+@@ -280,7 +299,7 @@ static int walk_page_test(unsigned long start, unsigned long end,
+ 	if (vma->vm_flags & VM_PFNMAP) {
+ 		int err = 1;
+ 		if (ops->pte_hole)
+-			err = ops->pte_hole(start, end, walk);
++			err = ops->pte_hole(start, end, -1, walk);
+ 		return err ? err : 1;
+ 	}
+ 	return 0;
 -- 
-2.7.4
+2.20.1
 
