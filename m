@@ -2,398 +2,263 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	TVD_SUBJ_WIPE_DEBT,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8FDCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DE7CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46CA020679
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24EE42070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:34:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Av2WRpxY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506153AbfJRV3D (ORCPT
+        id S2506172AbfJRVd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 17:29:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:4863 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440440AbfJRV3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 17:29:03 -0400
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 787ECC03D478
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 21:29:02 +0000 (UTC)
-Received: by mail-wr1-f69.google.com with SMTP id m14so3275224wru.17
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 14:29:02 -0700 (PDT)
+        Fri, 18 Oct 2019 17:33:59 -0400
+Received: from mail-pf1-f171.google.com ([209.85.210.171]:41676 "EHLO
+        mail-pf1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2506134AbfJRVd7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 17:33:59 -0400
+Received: by mail-pf1-f171.google.com with SMTP id q7so4625811pfh.8
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 14:33:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NmcUecAGXuSApRjNtgEf0ETg8ugP5bkJRtiayEQOKqA=;
+        b=Av2WRpxYgSpf7TYLUsuUGfnXAcPeN7re/m6If3FYxqB2lfkQRVhu0Tc/kVAp3WKxbM
+         tLfjhVtLrtxb+mzef1nXTPDl1OgyoZAZsUhSh8HmY1TzHcQSRIzRiGKZzNQESk7KdST9
+         BGMRUD8iKjI7UUa0Q7eK7REzuRZUMI0LeMiXo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DAEt5og3w/x3538i25IRPJZ73lMCZsPZ9AJL7F+YPYw=;
-        b=OkLvQcdECEAnBIAgRe31caEBV8mq6K0T+NvLiTeJ6fnC6ijlJy0lJRzLudk71Q4kCC
-         GmTKNYTrGOVcIhhsrhtUCaL+x5YS+1yy6h2bWfGx2rfiu8zIBjFcDQ5MbUbb2iNAlmwl
-         rlY/xUnAmzh0oz+5/c/31svXIVhSzRIxR/uSNOIJUpCRVMub0ErpfOx2Dx2lgQ2HNiU6
-         9DAHKZbxyyQSilpM1/xcBGNvW09gBEDRrrIJmJtBJ/x5olv0sCzruu6vbD4sTgtYs8hh
-         t+a0DYKigZSSQe/Q32OVCcjvBm1ntQQxQWlszSLimulyt8dRsgolyN8zkbYrzXlwkkdK
-         zuow==
-X-Gm-Message-State: APjAAAVwoWH3VMkc5aozDahxxEt8WwsmmaJ9Wl2SvQFVjSXv0DwPAXEi
-        KA1qW40wA6edNep/QR0jrdJvkBIeUemmwuWeugqJz+97pfVRukM65yz3oVG+rAZeEXQlWf12ZAs
-        keGzgR5c6BFIREIVI2zhQb7xp
-X-Received: by 2002:a05:600c:2319:: with SMTP id 25mr4944142wmo.3.1571434140795;
-        Fri, 18 Oct 2019 14:29:00 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxg+y9O8NQx2z3pd+vnryj/CBQ2UV+Uor26HtnW8vJvIDyxu427UdU8tXOOrCmmLYchezNidA==
-X-Received: by 2002:a05:600c:2319:: with SMTP id 25mr4944104wmo.3.1571434140420;
-        Fri, 18 Oct 2019 14:29:00 -0700 (PDT)
-Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
-        by smtp.gmail.com with ESMTPSA id e9sm16039069wme.3.2019.10.18.14.28.59
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NmcUecAGXuSApRjNtgEf0ETg8ugP5bkJRtiayEQOKqA=;
+        b=HXVXUTzmXkFw4J5swH3M/ERUoKk1P+4pBoEJv1H2zjGkEjYTQZlMmn7iK4O+4sgavl
+         jeI3wgXHntZBTK8tPfYQJU/q+GWpTZe/HTTbfnvABVGBczlbiz2x2ckKBkH9foCDXfHw
+         Z1rYghlNroNM93Sn/rJpMGcBilI6AcsEHzNEHLGAVwbWEWiawW0Wu+QVrFdd93wFQ6uH
+         z34qYEIr6NK7/V+ZDR+Q1nILFqAbI42ZHO3PNEKZgDSZTbcVVqEkb6NGkc9urKYdqruy
+         sMD3QkppcSTHof+QdrSWPQk+1F0M+w8yDWWVSgU1WLvU8H4qWMZAMQ3+MAzvLmA9YBvG
+         7Bog==
+X-Gm-Message-State: APjAAAXPX3+PkBT1TMgJ87qArxoAp0NpBzOpGi7zChvK08kuQH0u/2sD
+        H1FSWqtrRqyHMULzy12d78HWoA==
+X-Google-Smtp-Source: APXvYqwo8SFxCbAvCb3he4r6oWWib3Hl6gWYFR5kfupd2w4iv4QPnM3NYBLX+rYv9vWkKmujHvVu0w==
+X-Received: by 2002:a63:f923:: with SMTP id h35mr12598461pgi.323.1571434436872;
+        Fri, 18 Oct 2019 14:33:56 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id x10sm6547446pgl.53.2019.10.18.14.33.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Oct 2019 14:28:59 -0700 (PDT)
-Subject: Re: [PATCH v2] HID: i2c-hid: Remove runtime power management
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, jikos@kernel.org,
-        benjamin.tissoires@redhat.com
-Cc:     vicamo.yang@canonical.com, mika.westerberg@linux.intel.com,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191016151224.1316-1-kai.heng.feng@canonical.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <0814b328-bc3e-6836-4c78-0bcd9252e916@redhat.com>
-Date:   Fri, 18 Oct 2019 23:28:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 18 Oct 2019 14:33:56 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 14:33:54 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        c-hbandi@codeaurora.org, bgodavar@codeaurora.org,
+        linux-bluetooth@vger.kernel.org,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Bluetooth: hci_qca: Add delay for wcn3990 stability
+Message-ID: <20191018213354.GC20212@google.com>
+References: <20191017212955.6266-1-jeffrey.l.hugo@gmail.com>
+ <20191018180339.GQ87296@google.com>
+ <CAOCk7NrN0sjLk3onvZn7+bhs_v3A4H6CHh=XPo_NU2XzUWeEGw@mail.gmail.com>
+ <20191018194039.GB20212@google.com>
+ <CAOCk7NqacfVLzKueTRTFQ6aWbLXFyMQaQNXeXENzLTyMNLSp9w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191016151224.1316-1-kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAOCk7NqacfVLzKueTRTFQ6aWbLXFyMQaQNXeXENzLTyMNLSp9w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 16-10-2019 17:12, Kai-Heng Feng wrote:
-> Runtime power management in i2c-hid brings lots of issues, such as:
-> - When transitioning from display manager to desktop session, i2c-hid
-> was closed and opened, so the device was set to SLEEP and ON in a short
-> period. Vendors confirmed that their devices can't handle fast ON/SLEEP
-> command because Windows doesn't have this behavior.
+On Fri, Oct 18, 2019 at 01:51:39PM -0600, Jeffrey Hugo wrote:
+> On Fri, Oct 18, 2019 at 1:40 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+> >
+> > On Fri, Oct 18, 2019 at 12:30:09PM -0600, Jeffrey Hugo wrote:
+> > > On Fri, Oct 18, 2019 at 12:03 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+> > > >
+> > > > On Thu, Oct 17, 2019 at 02:29:55PM -0700, Jeffrey Hugo wrote:
+> > > > > On the msm8998 mtp, the response to the baudrate change command is never
+> > > > > received.  On the Lenovo Miix 630, the response to the baudrate change
+> > > > > command is corrupted - "Frame reassembly failed (-84)".
+> > > > >
+> > > > > Adding a 50ms delay before re-enabling flow to receive the baudrate change
+> > > > > command response from the wcn3990 addesses both issues, and allows
+> > > > > bluetooth to become functional.
+> > > >
+> > > > From my earlier debugging on sdm845 I don't think this is what happens.
+> > > > The problem is that the wcn3990 sends the response to the baudrate change
+> > > > command using the new baudrate, while the UART on the SoC still operates
+> > > > with the prior speed (for details see 2faa3f15fa2f ("Bluetooth: hci_qca:
+> > > > wcn3990: Drop baudrate change vendor event"))
+> > > >
+> > > > IIRC the 50ms delay causes the HCI core to discard the received data,
+> > > > which is why the "Frame reassembly failed" message disappears, not
+> > > > because the response was received. In theory commit 78e8fa2972e5
+> > > > ("Bluetooth: hci_qca: Deassert RTS while baudrate change command")
+> > > > should have fixed those messages, do you know if CTS/RTS are connected
+> > > > on the Bluetooth UART of the Lenovo Miix 630?
+> > >
+> > > I was testing with 5.4-rc1 which contains the indicated RTS fix.
+> > >
+> > > Yes, CTS/RTS are connected on the Lenovo Miix 630.
+> > >
+> > > I added debug statements which indicated that data was received,
+> > > however it was corrupt, and the packet type did not match what was
+> > > expected, hence the frame reassembly errors.
+> >
+> > Do you know if any data is received during the delay? In theory that
+> > shouldn't be the case since RTS is deasserted, just double-checking.
 > 
-> - When rebooting, i2c-hid was closed, and the driver core put the device
-> back to full power before shutdown. This behavior also triggers a quick
-> SLEEP and ON commands that some devices can't handle, renders an
-> unusable touchpad after reboot.
+> I don't think so, but I've run so many tests, I'm not 100% positive.
+> Let me go double check and get back to you.
 > 
-> - Most importantly, my power meter reports little to none energy saving
-> when i2c-hid is runtime suspended.
+> >
+> > What happens if you add a longer delay (e.g. 1s) before/after setting
+> > the host baudrate?
 > 
-> So let's remove runtime power management since there is no actual
-> benefit.
+> Hmm, not exactly sure.  I will test.
 > 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-
-I was just debugging an issue with an i2c accelerometer which did not
-work. It turns out that it is using the same gpio for its enable pin
-as the i2c-hid touchscreen; and that gpio is only set by the touchscreen's
-_PS0 and _PS3 method.
-
-So I thought that this patch might help and it does, disabling runtime pm
-for i2c-hid as a side-effect fixes the accelerometer not working on this device.
-
-Before disabling runtime-pm I believe the following would happen:
-
-1) initrd loads i2c-hid
-2) i2c-hid runtime suspends, disabling the shared enable GPIO
-3) post switch-root accel driver loads, fails to communicate with -EREMOTEIO
-4) gdm starts runtime resuming i2c-hid, but too late
-
-With runtime pm disabled instead this happens:
-
-1) initrd loads i2c-hid, which enables the shared enable GPIO
-2) post switch-root accel driver loads, communicates successfully, success.
-
-Note for this to work i2c-hid must load before the accel driver,
-we are lucky that i2c-hid is in the initrd here, guaranteeing the
-load order we want.
-
-This is not really relevant to this whole discussion but IMHO this
-does show that Windows likely also does not runtime-suspend things.
-
-Regards,
-
-Hans
-
-
-
-
-
-
-
-
-
-
-
-
-
-> ---
-> v2:
-> - Remove unused label and wording change.
+> >
+> > > In response to this patch, Balakrishna pointed me to a bug report
+> > > which indicated that some of the UART GPIO lines need to have a bias
+> > > applied to prevent errant data from floating lines -
+> > >
+> > > https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1391888
+> >
+> > Yeah, that was another source of frame reassembly errors that we were
+> > seeing on SDM845.
+> >
+> > Balakrishna, please post these kind of replies on-list, so that
+> > everybody can benefit from possible solutions or contribute to the
+> > discussion.
+> >
+> > > It turns out this fix was never applied to msm8998.  Applying the fix
+> > > does cause the the frame reassembly errors to go away, however then
+> > > the host SoC never receives the baud rate change response (I increased
+> > > the timeout from 2faa3f15fa2f ("Bluetooth: hci_qca: wcn3990: Drop
+> > > baudrate change vendor event") to 5 seconds).  As of now, this patch
+> > > is still required.
+> >
+> > Interesting.
+> >
+> > FTR, this is the full UART pin configuration for cheza (SDM845):
+> >
+> > &qup_uart6_default {
+> >         /* Change pinmux to all 4 pins since CTS and RTS are connected */
+> >         pinmux {
+> >                 pins = "gpio45", "gpio46",
+> >                        "gpio47", "gpio48";
+> >         };
+> >
+> >         pinconf-cts {
+> >                 /*
+> >                  * Configure a pull-down on 45 (CTS) to match the pull of
+> >                  * the Bluetooth module.
+> >                  */
+> >                 pins = "gpio45";
+> >                 bias-pull-down;
+> >         };
+> >
+> >         pinconf-rts-tx {
+> >                 /* We'll drive 46 (RTS) and 47 (TX), so no pull */
+> >                 pins = "gpio46", "gpio47";
+> >                 drive-strength = <2>;
+> >                 bias-disable;
+> >         };
+> >
+> >         pinconf-rx {
+> >                 /*
+> >                  * Configure a pull-up on 48 (RX). This is needed to avoid
+> >                  * garbage data when the TX pin of the Bluetooth module is
+> >                  * in tri-state (module powered off or not driving the
+> >                  * signal yet).
+> >                  */
+> >                 pins = "gpio48";
+> >                 bias-pull-up;
+> >         };
+> > };
+> >
+> > Does this correspond to what you tried on the Lenovo Miix 630?
 > 
->   drivers/hid/i2c-hid/i2c-hid-core.c | 118 ++---------------------------
->   1 file changed, 7 insertions(+), 111 deletions(-)
+> Which GPIO maps to which pin is different -
+> 45 - TX
+> 46 - RX
+> 47 - CTS
+> 48 - RFR (RTS)
 > 
-> diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
-> index 2a7c6e33bb1c..d9c55e30f986 100644
-> --- a/drivers/hid/i2c-hid/i2c-hid-core.c
-> +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-> @@ -26,7 +26,6 @@
->   #include <linux/delay.h>
->   #include <linux/slab.h>
->   #include <linux/pm.h>
-> -#include <linux/pm_runtime.h>
->   #include <linux/device.h>
->   #include <linux/wait.h>
->   #include <linux/err.h>
-> @@ -48,8 +47,6 @@
->   /* quirks to control the device */
->   #define I2C_HID_QUIRK_SET_PWR_WAKEUP_DEV	BIT(0)
->   #define I2C_HID_QUIRK_NO_IRQ_AFTER_RESET	BIT(1)
-> -#define I2C_HID_QUIRK_NO_RUNTIME_PM		BIT(2)
-> -#define I2C_HID_QUIRK_DELAY_AFTER_SLEEP		BIT(3)
->   #define I2C_HID_QUIRK_BOGUS_IRQ			BIT(4)
->   
->   /* flags */
-> @@ -172,14 +169,7 @@ static const struct i2c_hid_quirks {
->   	{ USB_VENDOR_ID_WEIDA, HID_ANY_ID,
->   		I2C_HID_QUIRK_SET_PWR_WAKEUP_DEV },
->   	{ I2C_VENDOR_ID_HANTICK, I2C_PRODUCT_ID_HANTICK_5288,
-> -		I2C_HID_QUIRK_NO_IRQ_AFTER_RESET |
-> -		I2C_HID_QUIRK_NO_RUNTIME_PM },
-> -	{ I2C_VENDOR_ID_RAYDIUM, I2C_PRODUCT_ID_RAYDIUM_4B33,
-> -		I2C_HID_QUIRK_DELAY_AFTER_SLEEP },
-> -	{ USB_VENDOR_ID_LG, I2C_DEVICE_ID_LG_8001,
-> -		I2C_HID_QUIRK_NO_RUNTIME_PM },
-> -	{ I2C_VENDOR_ID_GOODIX, I2C_DEVICE_ID_GOODIX_01F0,
-> -		I2C_HID_QUIRK_NO_RUNTIME_PM },
-> +		I2C_HID_QUIRK_NO_IRQ_AFTER_RESET },
->   	{ USB_VENDOR_ID_ELAN, HID_ANY_ID,
->   		 I2C_HID_QUIRK_BOGUS_IRQ },
->   	{ 0, 0 }
-> @@ -397,7 +387,6 @@ static int i2c_hid_set_power(struct i2c_client *client, int power_state)
->   {
->   	struct i2c_hid *ihid = i2c_get_clientdata(client);
->   	int ret;
-> -	unsigned long now, delay;
->   
->   	i2c_hid_dbg(ihid, "%s\n", __func__);
->   
-> @@ -415,22 +404,9 @@ static int i2c_hid_set_power(struct i2c_client *client, int power_state)
->   			goto set_pwr_exit;
->   	}
->   
-> -	if (ihid->quirks & I2C_HID_QUIRK_DELAY_AFTER_SLEEP &&
-> -	    power_state == I2C_HID_PWR_ON) {
-> -		now = jiffies;
-> -		if (time_after(ihid->sleep_delay, now)) {
-> -			delay = jiffies_to_usecs(ihid->sleep_delay - now);
-> -			usleep_range(delay, delay + 1);
-> -		}
-> -	}
-> -
->   	ret = __i2c_hid_command(client, &hid_set_power_cmd, power_state,
->   		0, NULL, 0, NULL, 0);
->   
-> -	if (ihid->quirks & I2C_HID_QUIRK_DELAY_AFTER_SLEEP &&
-> -	    power_state == I2C_HID_PWR_SLEEP)
-> -		ihid->sleep_delay = jiffies + msecs_to_jiffies(20);
-> -
->   	if (ret)
->   		dev_err(&client->dev, "failed to change power setting.\n");
->   
-> @@ -791,11 +767,6 @@ static int i2c_hid_open(struct hid_device *hid)
->   {
->   	struct i2c_client *client = hid->driver_data;
->   	struct i2c_hid *ihid = i2c_get_clientdata(client);
-> -	int ret = 0;
-> -
-> -	ret = pm_runtime_get_sync(&client->dev);
-> -	if (ret < 0)
-> -		return ret;
->   
->   	set_bit(I2C_HID_STARTED, &ihid->flags);
->   	return 0;
-> @@ -807,27 +778,6 @@ static void i2c_hid_close(struct hid_device *hid)
->   	struct i2c_hid *ihid = i2c_get_clientdata(client);
->   
->   	clear_bit(I2C_HID_STARTED, &ihid->flags);
-> -
-> -	/* Save some power */
-> -	pm_runtime_put(&client->dev);
-> -}
-> -
-> -static int i2c_hid_power(struct hid_device *hid, int lvl)
-> -{
-> -	struct i2c_client *client = hid->driver_data;
-> -	struct i2c_hid *ihid = i2c_get_clientdata(client);
-> -
-> -	i2c_hid_dbg(ihid, "%s lvl:%d\n", __func__, lvl);
-> -
-> -	switch (lvl) {
-> -	case PM_HINT_FULLON:
-> -		pm_runtime_get_sync(&client->dev);
-> -		break;
-> -	case PM_HINT_NORMAL:
-> -		pm_runtime_put(&client->dev);
-> -		break;
-> -	}
-> -	return 0;
->   }
->   
->   struct hid_ll_driver i2c_hid_ll_driver = {
-> @@ -836,7 +786,6 @@ struct hid_ll_driver i2c_hid_ll_driver = {
->   	.stop = i2c_hid_stop,
->   	.open = i2c_hid_open,
->   	.close = i2c_hid_close,
-> -	.power = i2c_hid_power,
->   	.output_report = i2c_hid_output_report,
->   	.raw_request = i2c_hid_raw_request,
->   };
-> @@ -1104,9 +1053,6 @@ static int i2c_hid_probe(struct i2c_client *client,
->   
->   	i2c_hid_acpi_fix_up_power(&client->dev);
->   
-> -	pm_runtime_get_noresume(&client->dev);
-> -	pm_runtime_set_active(&client->dev);
-> -	pm_runtime_enable(&client->dev);
->   	device_enable_async_suspend(&client->dev);
->   
->   	/* Make sure there is something at this address */
-> @@ -1114,16 +1060,16 @@ static int i2c_hid_probe(struct i2c_client *client,
->   	if (ret < 0) {
->   		dev_dbg(&client->dev, "nothing at this address: %d\n", ret);
->   		ret = -ENXIO;
-> -		goto err_pm;
-> +		goto err_regulator;
->   	}
->   
->   	ret = i2c_hid_fetch_hid_descriptor(ihid);
->   	if (ret < 0)
-> -		goto err_pm;
-> +		goto err_regulator;
->   
->   	ret = i2c_hid_init_irq(client);
->   	if (ret < 0)
-> -		goto err_pm;
-> +		goto err_regulator;
->   
->   	hid = hid_allocate_device();
->   	if (IS_ERR(hid)) {
-> @@ -1154,9 +1100,6 @@ static int i2c_hid_probe(struct i2c_client *client,
->   		goto err_mem_free;
->   	}
->   
-> -	if (!(ihid->quirks & I2C_HID_QUIRK_NO_RUNTIME_PM))
-> -		pm_runtime_put(&client->dev);
-> -
->   	return 0;
->   
->   err_mem_free:
-> @@ -1165,10 +1108,6 @@ static int i2c_hid_probe(struct i2c_client *client,
->   err_irq:
->   	free_irq(client->irq, ihid);
->   
-> -err_pm:
-> -	pm_runtime_put_noidle(&client->dev);
-> -	pm_runtime_disable(&client->dev);
-> -
->   err_regulator:
->   	regulator_bulk_disable(ARRAY_SIZE(ihid->pdata.supplies),
->   			       ihid->pdata.supplies);
-> @@ -1181,12 +1120,6 @@ static int i2c_hid_remove(struct i2c_client *client)
->   	struct i2c_hid *ihid = i2c_get_clientdata(client);
->   	struct hid_device *hid;
->   
-> -	if (!(ihid->quirks & I2C_HID_QUIRK_NO_RUNTIME_PM))
-> -		pm_runtime_get_sync(&client->dev);
-> -	pm_runtime_disable(&client->dev);
-> -	pm_runtime_set_suspended(&client->dev);
-> -	pm_runtime_put_noidle(&client->dev);
-> -
->   	hid = ihid->hid;
->   	hid_destroy_device(hid);
->   
-> @@ -1219,25 +1152,15 @@ static int i2c_hid_suspend(struct device *dev)
->   	int wake_status;
->   
->   	if (hid->driver && hid->driver->suspend) {
-> -		/*
-> -		 * Wake up the device so that IO issues in
-> -		 * HID driver's suspend code can succeed.
-> -		 */
-> -		ret = pm_runtime_resume(dev);
-> -		if (ret < 0)
-> -			return ret;
-> -
->   		ret = hid->driver->suspend(hid, PMSG_SUSPEND);
->   		if (ret < 0)
->   			return ret;
->   	}
->   
-> -	if (!pm_runtime_suspended(dev)) {
-> -		/* Save some power */
-> -		i2c_hid_set_power(client, I2C_HID_PWR_SLEEP);
-> +	/* Save some power */
-> +	i2c_hid_set_power(client, I2C_HID_PWR_SLEEP);
->   
-> -		disable_irq(client->irq);
-> -	}
-> +	disable_irq(client->irq);
->   
->   	if (device_may_wakeup(&client->dev)) {
->   		wake_status = enable_irq_wake(client->irq);
-> @@ -1279,11 +1202,6 @@ static int i2c_hid_resume(struct device *dev)
->   				wake_status);
->   	}
->   
-> -	/* We'll resume to full power */
-> -	pm_runtime_disable(dev);
-> -	pm_runtime_set_active(dev);
-> -	pm_runtime_enable(dev);
-> -
->   	enable_irq(client->irq);
->   
->   	/* Instead of resetting device, simply powers the device on. This
-> @@ -1304,30 +1222,8 @@ static int i2c_hid_resume(struct device *dev)
->   }
->   #endif
->   
-> -#ifdef CONFIG_PM
-> -static int i2c_hid_runtime_suspend(struct device *dev)
-> -{
-> -	struct i2c_client *client = to_i2c_client(dev);
-> -
-> -	i2c_hid_set_power(client, I2C_HID_PWR_SLEEP);
-> -	disable_irq(client->irq);
-> -	return 0;
-> -}
-> -
-> -static int i2c_hid_runtime_resume(struct device *dev)
-> -{
-> -	struct i2c_client *client = to_i2c_client(dev);
-> -
-> -	enable_irq(client->irq);
-> -	i2c_hid_set_power(client, I2C_HID_PWR_ON);
-> -	return 0;
-> -}
-> -#endif
-> -
->   static const struct dev_pm_ops i2c_hid_pm = {
->   	SET_SYSTEM_SLEEP_PM_OPS(i2c_hid_suspend, i2c_hid_resume)
-> -	SET_RUNTIME_PM_OPS(i2c_hid_runtime_suspend, i2c_hid_runtime_resume,
-> -			   NULL)
->   };
->   
->   static const struct i2c_device_id i2c_hid_id_table[] = {
+> However, accounting for that, yes that corresponds to what I used.
+
+Thanks for re-confirming.
+
+> > > I have no idea why the delay is required, and was hoping that posting
+> > > this patch would result in someone else providing some missing pieces
+> > > to determine the real root cause.  I suspect that asserting RTS at the
+> > > wrong time may cause an issue for the wcn3990, but I have no data nor
+> > > documentation to support this guess.  I welcome any further insights
+> > > you may have.
+> >
+> > Unfortunately I don't have a clear suggestion at this point, debugging
+> > the original problem which lead to 2faa3f15fa2f ("Bluetooth: hci_qca:
+> > wcn3990: Drop baudrate change vendor event") involved quite some time
+> > and hooking up a scope/logic analyzer ...
+> >
+> > I also suspect RTS is involved, and potentially the configuration of
+> > the pulls. It might be interesting to analyze the data that leads to
+> > the frame assembly error and determine if it is just noise (wrong
+> > pulls/drive strength?) or received with a non-matching baud-rate.
 > 
+> I don't have a scope/logic analyzer, but since I hooked up the
+> blsp_bam I'm able to see the raw data from the uart before it gets to
+> the HCI stack or anything.  As a side note, having the bam or not
+> seemed to have no effect on the issue.
+
+It's not exactly the same though. I suppose with the blsp_bam you only
+see the actual data when the UART runs at the same speed as it's
+counterpart. With a logic analyzer you can change the speed after
+data capture, which might convert apparent garbage into reasonable
+data.
+
+> Most of the time the data was one byte (zero), some times it was a
+> string of zero bytes.  Rarely it would be random data.
+
+In terms of data ss there difference between a string of zero bytes
+and a single zero byte?
+
+From my notes the response (vendor event) to a baudrate change
+command on the WCN3990 is:
+
+04 0e 04 01 00 00 00
+
+The tail *might* be the zero(s) you are seeing, and the first part gets
+lost for some reason?
+
+A simplified version of the code in question:
+
+  set_RTS(false)
+
+  hci_set_baudrate(br)
+  host_set_baudrate(br)
+
+  msleep(50); // why is this needed???
+  set_RTS(true)
+
+  // supposedly wcn3990 now sends vendor event using the new baudrate
+
+  wait_for_vendor_event()
+    // ok with msleep, otherwise frame reassembly error
+
+
+Maybe the MSM8998 UART (driver) currently needs the delay to fully switch to
+the new baudrate? Perhaps the pinconfig still needs tweaking of some kind?
+
+You said when you apply the full configuration used on cheza you don't
+receive the response to the baudrate change command. Does it work when you
+only configure the pull-up on the RX (host) pin?
