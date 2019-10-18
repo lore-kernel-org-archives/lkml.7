@@ -7,44 +7,48 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4998CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D89ACCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C676421835
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B93EB222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:48:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633958AbfJRMs0 (ORCPT
+        id S2633971AbfJRMsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 08:48:26 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56769 "EHLO
+        Fri, 18 Oct 2019 08:48:31 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56785 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2633907AbfJRMsY (ORCPT
+        with ESMTP id S2633907AbfJRMsa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 08:48:24 -0400
+        Fri, 18 Oct 2019 08:48:30 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iLRfu-00075o-4O; Fri, 18 Oct 2019 14:48:10 +0200
+        id 1iLRg3-00078T-ED; Fri, 18 Oct 2019 14:48:19 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A5A981C009C;
-        Fri, 18 Oct 2019 14:48:09 +0200 (CEST)
-Date:   Fri, 18 Oct 2019 12:48:09 -0000
-From:   "tip-bot2 for Yunfeng Ye" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0FC761C0450;
+        Fri, 18 Oct 2019 14:48:19 +0200 (CEST)
+Date:   Fri, 18 Oct 2019 12:48:18 -0000
+From:   "tip-bot2 for Masami Hiramatsu" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/ring_buffer: Matching the memory allocate and
- free, in rb_alloc()
-Cc:     Yunfeng Ye <yeyunfeng@huawei.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>, <jolsa@redhat.co>,
-        <acme@kernel.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
-        <namhyung@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+Subject: [tip: x86/core] x86: xen: kvm: Gather the definition of emulate prefixes
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Juergen Gross <jgross@suse.com>, x86@kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, xen-devel@lists.xenproject.org,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <575c7e8c-90c7-4e3a-b41d-f894d8cdbd7f@huawei.com>
-References: <575c7e8c-90c7-4e3a-b41d-f894d8cdbd7f@huawei.com>
+In-Reply-To: <156777563917.25081.7286628561790289995.stgit@devnote2>
+References: <156777563917.25081.7286628561790289995.stgit@devnote2>
 MIME-Version: 1.0
-Message-ID: <157140288949.29376.10061367480857136332.tip-bot2@tip-bot2>
+Message-ID: <157140289884.29376.11452767773752821731.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,78 +62,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/core branch of tip:
+The following commit has been merged into the x86/core branch of tip:
 
-Commit-ID:     d7e78706e43107fa269fe34b1a69e653f5ec9f2c
-Gitweb:        https://git.kernel.org/tip/d7e78706e43107fa269fe34b1a69e653f5ec9f2c
-Author:        Yunfeng Ye <yeyunfeng@huawei.com>
-AuthorDate:    Mon, 14 Oct 2019 16:15:57 +08:00
+Commit-ID:     b3dc0695fa40c3b280230fb6fb7fb7a94ce28bf4
+Gitweb:        https://git.kernel.org/tip/b3dc0695fa40c3b280230fb6fb7fb7a94ce28bf4
+Author:        Masami Hiramatsu <mhiramat@kernel.org>
+AuthorDate:    Fri, 06 Sep 2019 22:13:59 +09:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Thu, 17 Oct 2019 21:31:55 +02:00
+CommitterDate: Thu, 17 Oct 2019 21:31:57 +02:00
 
-perf/ring_buffer: Matching the memory allocate and free, in rb_alloc()
+x86: xen: kvm: Gather the definition of emulate prefixes
 
-Currently perf_mmap_alloc_page() is used to allocate memory in
-rb_alloc(), but using free_page() to free memory in the failure path.
+Gather the emulate prefixes, which forcibly make the following
+instruction emulated on virtualization, in one place.
 
-It's better to use perf_mmap_free_page() instead.
-
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: <jolsa@redhat.co>
-Cc: <acme@kernel.org>
-Cc: <mingo@redhat.com>
-Cc: <mark.rutland@arm.com>
-Cc: <namhyung@kernel.org>
-Cc: <alexander.shishkin@linux.intel.com>
-Link: https://lkml.kernel.org/r/575c7e8c-90c7-4e3a-b41d-f894d8cdbd7f@huawei.com
+Cc: Juergen Gross <jgross@suse.com>
+Cc: x86@kernel.org
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: xen-devel@lists.xenproject.org
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Link: https://lkml.kernel.org/r/156777563917.25081.7286628561790289995.stgit@devnote2
 ---
- kernel/events/ring_buffer.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ arch/x86/include/asm/emulate_prefix.h | 14 ++++++++++++++
+ arch/x86/include/asm/xen/interface.h  | 11 ++++-------
+ arch/x86/kvm/x86.c                    |  4 +++-
+ 3 files changed, 21 insertions(+), 8 deletions(-)
+ create mode 100644 arch/x86/include/asm/emulate_prefix.h
 
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index abc145c..246c83a 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -754,6 +754,14 @@ static void *perf_mmap_alloc_page(int cpu)
- 	return page_address(page);
- }
- 
-+static void perf_mmap_free_page(void *addr)
-+{
-+	struct page *page = virt_to_page(addr);
+diff --git a/arch/x86/include/asm/emulate_prefix.h b/arch/x86/include/asm/emulate_prefix.h
+new file mode 100644
+index 0000000..70f5b98
+--- /dev/null
++++ b/arch/x86/include/asm/emulate_prefix.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_X86_EMULATE_PREFIX_H
++#define _ASM_X86_EMULATE_PREFIX_H
 +
-+	page->mapping = NULL;
-+	__free_page(page);
-+}
++/*
++ * Virt escape sequences to trigger instruction emulation;
++ * ideally these would decode to 'whole' instruction and not destroy
++ * the instruction stream; sadly this is not true for the 'kvm' one :/
++ */
 +
- struct ring_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
++#define __XEN_EMULATE_PREFIX  0x0f,0x0b,0x78,0x65,0x6e  /* ud2 ; .ascii "xen" */
++#define __KVM_EMULATE_PREFIX  0x0f,0x0b,0x6b,0x76,0x6d	/* ud2 ; .ascii "kvm" */
++
++#endif
+diff --git a/arch/x86/include/asm/xen/interface.h b/arch/x86/include/asm/xen/interface.h
+index 62ca03e..9139b3e 100644
+--- a/arch/x86/include/asm/xen/interface.h
++++ b/arch/x86/include/asm/xen/interface.h
+@@ -379,12 +379,9 @@ struct xen_pmu_arch {
+  * Prefix forces emulation of some non-trapping instructions.
+  * Currently only CPUID.
+  */
+-#ifdef __ASSEMBLY__
+-#define XEN_EMULATE_PREFIX .byte 0x0f,0x0b,0x78,0x65,0x6e ;
+-#define XEN_CPUID          XEN_EMULATE_PREFIX cpuid
+-#else
+-#define XEN_EMULATE_PREFIX ".byte 0x0f,0x0b,0x78,0x65,0x6e ; "
+-#define XEN_CPUID          XEN_EMULATE_PREFIX "cpuid"
+-#endif
++#include <asm/emulate_prefix.h>
++
++#define XEN_EMULATE_PREFIX __ASM_FORM(.byte __XEN_EMULATE_PREFIX ;)
++#define XEN_CPUID          XEN_EMULATE_PREFIX __ASM_FORM(cpuid)
+ 
+ #endif /* _ASM_X86_XEN_INTERFACE_H */
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 661e2bf..777574f 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -68,6 +68,7 @@
+ #include <asm/mshyperv.h>
+ #include <asm/hypervisor.h>
+ #include <asm/intel_pt.h>
++#include <asm/emulate_prefix.h>
+ #include <clocksource/hyperv_timer.h>
+ 
+ #define CREATE_TRACE_POINTS
+@@ -5446,6 +5447,7 @@ EXPORT_SYMBOL_GPL(kvm_write_guest_virt_system);
+ 
+ int handle_ud(struct kvm_vcpu *vcpu)
  {
- 	struct ring_buffer *rb;
-@@ -788,9 +796,9 @@ struct ring_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
- 
- fail_data_pages:
- 	for (i--; i >= 0; i--)
--		free_page((unsigned long)rb->data_pages[i]);
-+		perf_mmap_free_page(rb->data_pages[i]);
- 
--	free_page((unsigned long)rb->user_page);
-+	perf_mmap_free_page(rb->user_page);
- 
- fail_user_page:
- 	kfree(rb);
-@@ -799,14 +807,6 @@ fail:
- 	return NULL;
- }
- 
--static void perf_mmap_free_page(void *addr)
--{
--	struct page *page = virt_to_page(addr);
--
--	page->mapping = NULL;
--	__free_page(page);
--}
--
- void rb_free(struct ring_buffer *rb)
- {
- 	int i;
++	static const char kvm_emulate_prefix[] = { __KVM_EMULATE_PREFIX };
+ 	int emul_type = EMULTYPE_TRAP_UD;
+ 	char sig[5]; /* ud2; .ascii "kvm" */
+ 	struct x86_exception e;
+@@ -5453,7 +5455,7 @@ int handle_ud(struct kvm_vcpu *vcpu)
+ 	if (force_emulation_prefix &&
+ 	    kvm_read_guest_virt(vcpu, kvm_get_linear_rip(vcpu),
+ 				sig, sizeof(sig), &e) == 0 &&
+-	    memcmp(sig, "\xf\xbkvm", sizeof(sig)) == 0) {
++	    memcmp(sig, kvm_emulate_prefix, sizeof(sig)) == 0) {
+ 		kvm_rip_write(vcpu, kvm_rip_read(vcpu) + sizeof(sig));
+ 		emul_type = EMULTYPE_TRAP_UD_FORCED;
+ 	}
