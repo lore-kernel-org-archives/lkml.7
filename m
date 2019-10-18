@@ -2,128 +2,103 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF44CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE78CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4E12089C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C68C12089C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:42:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571398941;
+	bh=bxQ3oNa0TABOgDWBQ/9ale8vMQAfpMYiyrwn8aMjqW4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RMxfGFURDMDssAKDbLAQj2NEJ0hy0bt2QqvzzxWcdp2fxg3ALLTviiBRDTPumNlsH
+	 tRa59MBV32tzEqTN1nhmR+juL2jV1sQ1CdGGOtoLOqGMo3Zer7C4ohcPsnFpfGA2c2
+	 05n3eeT1v/yi6qZXC2CY1Mgwx6SBBVK5ZxwwZD2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442606AbfJRLmL (ORCPT
+        id S2442686AbfJRLmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 07:42:11 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:36286 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S2409900AbfJRLmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 07:42:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56AB8CA3;
-        Fri, 18 Oct 2019 04:41:47 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A87F3F6C4;
-        Fri, 18 Oct 2019 04:41:45 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 12:41:43 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Yunfeng Ye <yeyunfeng@huawei.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org,
-        kstewart@linuxfoundation.org, sudeep.holla@arm.com,
-        gregkh@linuxfoundation.org, lorenzo.pieralisi@arm.com,
-        tglx@linutronix.de, David.Laight@ACULAB.COM,
-        ard.biesheuvel@linaro.org,
-        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
-        "linfeilong@huawei.com" <linfeilong@huawei.com>,
-        wuyun.wu@huawei.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V3] arm64: psci: Reduce waiting time for
- cpu_psci_cpu_kill()
-Message-ID: <20191018114143.GE27759@lakrids.cambridge.arm.com>
-References: <433980c7-f246-f741-f00c-fce103a60af7@huawei.com>
+        Fri, 18 Oct 2019 07:42:20 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47584 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390948AbfJRLmT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 07:42:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=bxQ3oNa0TABOgDWBQ/9ale8vMQAfpMYiyrwn8aMjqW4=; b=PmMLrwSRB9YtHzgtZKWC6wq1G
+        G6wEOmkUGjj2wW5IUTNTKz9PkS2LYcKQuYVfZNb7Bh1Ziq9f/zs5b3wwx75SGVHd0ixGaqAAA2k/O
+        hefo7LXmBJcbXisZs+d0fDw4Kql6wiN5ifU4awYoCNtBXJHth1T9tahzZ/hMdGigxW64k=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iLQe4-0003Sm-Rt; Fri, 18 Oct 2019 11:42:12 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 057342741DEA; Fri, 18 Oct 2019 12:42:11 +0100 (BST)
+Date:   Fri, 18 Oct 2019 12:42:11 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Kamil Konieczny <k.konieczny@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] opp: core: Revert "add regulators enable and disable"
+Message-ID: <20191018114211.GA4828@sirena.co.uk>
+References: <CGME20191017102843eucas1p164993b3644d006481fb041e36175eebe@eucas1p1.samsung.com>
+ <20191017102758.8104-1-m.szyprowski@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
 Content-Disposition: inline
-In-Reply-To: <433980c7-f246-f741-f00c-fce103a60af7@huawei.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20191017102758.8104-1-m.szyprowski@samsung.com>
+X-Cookie: Smear the road with a runner!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 07:24:14PM +0800, Yunfeng Ye wrote:
-> In a case like suspend-to-disk, a large number of CPU cores need to be
-> shut down. At present, the CPU hotplug operation is serialised, and the
-> CPU cores can only be shut down one by one. In this process, if PSCI
-> affinity_info() does not return LEVEL_OFF quickly, cpu_psci_cpu_kill()
-> needs to wait for 10ms. If hundreds of CPU cores need to be shut down,
-> it will take a long time.
 
-Do we have an idea of roughly how long a CPU _usually_ takes to
-transition state?
+--ikeVEW9yuYc//A+q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-i.e. are we _just_ missing the transition the first time we call
-AFFINITY_INFO?
+On Thu, Oct 17, 2019 at 12:27:58PM +0200, Marek Szyprowski wrote:
+> All the drivers, which use the OPP framework control regulators, which
+> are already enabled. Typically those regulators are also system critical,
+> due to providing power to CPU core or system buses. It turned out that
+> there are cases, where calling regulator_enable() on such boot-enabled
+> regulator has side-effects and might change its initial voltage due to
+> performing initial voltage balancing without all restrictions from the
+> consumers. Until this issue becomes finally solved in regulator core,
+> avoid calling regulator_enable()/disable() from the OPP framework.
 
-> Normally, it is no need to wait 10ms in cpu_psci_cpu_kill(). So change
-> the wait interval from 10 ms to max 1 ms and use usleep_range() instead
-> of msleep() for more accurate schedule.
-> 
-> In addition, reduce the time interval will increase the messages output,
-> so remove the "Retry ..." message, instead, put the number of waiting
-> times to the sucessful message.
-> 
-> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-> ---
-> v2 -> v3:
->  - update the comment
->  - remove the busy-wait logic, modify the loop logic and output message
-> 
-> v1 -> v2:
->  - use usleep_range() instead of udelay() after waiting for a while
-> 
->  arch/arm64/kernel/psci.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
-> index c9f72b2665f1..00b8c0825a08 100644
-> --- a/arch/arm64/kernel/psci.c
-> +++ b/arch/arm64/kernel/psci.c
-> @@ -91,15 +91,14 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
->  	 * while it is dying. So, try again a few times.
->  	 */
-> 
-> -	for (i = 0; i < 10; i++) {
-> +	for (i = 0; i < 100; i++) {
->  		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
->  		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
-> -			pr_info("CPU%d killed.\n", cpu);
-> +			pr_info("CPU%d killed by waiting %d loops.\n", cpu, i);
+Reviewed-by: Mark Brown <broonie@kernel.org>
 
-Could we please make that:
+--ikeVEW9yuYc//A+q
+Content-Type: application/pgp-signature; name="signature.asc"
 
-			pr_info("CPU%d killed (polled %d times)\n", cpu, i + 1);
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2ppRMACgkQJNaLcl1U
+h9AQ0Qf/YJW+4sFCOojivciJSSqs/v5S0eCBH3F74e648ET8wW+lGP6d7Wabk09w
+lkvEnfxTqHUbDCKBN9GqkOKINxccWUlw4iSlPh24Z0J90Z/jXq0WpnzIxLyviQJh
+J0mDFLrAO1TU7Bu8Hq0qnjA9TFVL7ZtBJS4ShzCgTWzIZAa02VbIDYzE3sC3YhT1
+JJpkMq76noTi2LW9Rb6gsO+WXkDYrWxf9s3PKCkEyrVqRas+l01sYed8YQ/X4doW
+D6tb542gwAIlCEu7QM+XU3Gkdi3a/h3t0RM/SW4cMifuWlcXndcApzsmtslwfQSx
+dRCApMxr2BQbuHDWW3uWdE9VIk8Wow==
+=PYPe
+-----END PGP SIGNATURE-----
 
-
->  			return 0;
->  		}
-> 
-> -		msleep(10);
-> -		pr_info("Retrying again to check for CPU kill\n");
-> +		usleep_range(100, 1000);
-
-Hmm, so now we'll wait somewhere between 10ms and 100ms before giving up
-on a CPU depending on how long we actually sleep for each iteration of
-the loop. That should be called out in the commit message.
-
-That could matter for kdump when you have a large number of CPUs, as in
-the worst case for 256 CPUs we've gone from ~2.6s to ~26s. But tbh in
-that case I'm not sure I care that much...
-
-In the majority of cases I'd hope AFFINITY_INFO would return OFF after
-an iteration or two.
-
-Thanks,
-Mark.
+--ikeVEW9yuYc//A+q--
