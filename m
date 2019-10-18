@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CAFCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6475CA9EAB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 749D520872
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A0BB21852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:21:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437263;
-	bh=XeF4E6O1xicOpd4lFV31Ksy7SWvxr50/96ido8NDdcE=;
+	s=default; t=1571437269;
+	bh=HKTIdQwMrvjWDforNYHTyKrkVYHiKnZQBFV//gOWcXo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1IE3Otv7OutxwIQh0j6WrIusIPAtCMeJ6hHmyZxuYrV1dWpnmo1O21Wekd5vevUC3
-	 87RxjCRrAzsqeHJh/uxBIdO/HDSxSKEZjegqtE8k+mLmuIsrkJp4vig8N3cekpuBwx
-	 sG835NS0b9xpinGkL3lgK8O8Kmn7C0uSx0rPKqkw=
+	b=Pjv7B8sPMHbP/csNtne2aVmCfqnO5W10xwyunwB1aQH/W5wNCyqWDS7ZyFmE3k7LN
+	 xI8Vk0FcvP/HRfTJd7pMJYkIVNxBeNjeo42BKhWaRWARFA6AoH3nW4hUHxsPp3m6sR
+	 ZWpVMhwP2hww+qDtnYcm0EM5qzzCfZuBjWOGq9+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394228AbfJRWVB (ORCPT
+        id S1731485AbfJRWG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:21:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38448 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:06:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731590AbfJRWGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:06:30 -0400
+        id S1731085AbfJRWGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:06:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2C1D222D1;
-        Fri, 18 Oct 2019 22:06:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA7D2205F4;
+        Fri, 18 Oct 2019 22:06:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436389;
-        bh=XeF4E6O1xicOpd4lFV31Ksy7SWvxr50/96ido8NDdcE=;
+        s=default; t=1571436374;
+        bh=HKTIdQwMrvjWDforNYHTyKrkVYHiKnZQBFV//gOWcXo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xzNP+71ZJX4UXxJ++NE/PWOMm4nspRZN6avr0RNBdwJ7e6eHAioI7NAovsEtOVa6c
-         AyHKyXph3nhi7lLUUIO+RmpPQ4iR+Tf13y2d8jBzFsnDfyRXTl+CR6y7atkCHiX9eH
-         HnRhIgUg+s9RxlCJENT8R2+QrcBOFPXiCdbfGmuE=
+        b=TtQxZuNggzbhcRWNWiONnVFAKKbOz4T9v3g7ZUIM7FT/SAlumhoRhFP1GDe4UWfNG
+         am4upmtfcn0pAAOgx0BSjAFZfTPQZWWOeNzom7FKAdwSNyDxX6EdKgClHDlomeA0jb
+         H2i4NOMFrM8ZvEGWdhZLIhHB4cEM/6zbD5/FmgzY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 041/100] cifs: add credits from unmatched responses/messages
-Date:   Fri, 18 Oct 2019 18:04:26 -0400
-Message-Id: <20191018220525.9042-41-sashal@kernel.org>
+Cc:     Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 028/100] HID: steam: fix boot loop with bluetooth firmware
+Date:   Fri, 18 Oct 2019 18:04:13 -0400
+Message-Id: <20191018220525.9042-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -60,86 +59,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>
 
-[ Upstream commit eca004523811f816bcfca3046ab54e1278e0973b ]
+[ Upstream commit cf28aee292e102740e49f74385b4b89c00050763 ]
 
-We should add any credits granted to us from unmatched server responses.
+There is a new firmware for the Steam Controller with support for BLE
+connections. When using such a device with a wired connection, it
+reboots itself every 10 seconds unless an application has opened it.
 
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Doing hid_hw_open() unconditionally on probe fixes the issue, and the
+code becomes simpler.
+
+Signed-off-by: Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c  | 22 ++++++++++++++++++++++
- fs/cifs/smb2misc.c |  7 -------
- 2 files changed, 22 insertions(+), 7 deletions(-)
+ drivers/hid/hid-steam.c | 34 +++++++++++-----------------------
+ 1 file changed, 11 insertions(+), 23 deletions(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 966e493c82e57..7e85070d010f4 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -930,6 +930,26 @@ cifs_handle_standard(struct TCP_Server_Info *server, struct mid_q_entry *mid)
- 	return 0;
+diff --git a/drivers/hid/hid-steam.c b/drivers/hid/hid-steam.c
+index dc4128bfe2ca9..8141cadfca0e3 100644
+--- a/drivers/hid/hid-steam.c
++++ b/drivers/hid/hid-steam.c
+@@ -283,11 +283,6 @@ static void steam_set_lizard_mode(struct steam_device *steam, bool enable)
+ static int steam_input_open(struct input_dev *dev)
+ {
+ 	struct steam_device *steam = input_get_drvdata(dev);
+-	int ret;
+-
+-	ret = hid_hw_open(steam->hdev);
+-	if (ret)
+-		return ret;
+ 
+ 	mutex_lock(&steam->mutex);
+ 	if (!steam->client_opened && lizard_mode)
+@@ -304,8 +299,6 @@ static void steam_input_close(struct input_dev *dev)
+ 	if (!steam->client_opened && lizard_mode)
+ 		steam_set_lizard_mode(steam, true);
+ 	mutex_unlock(&steam->mutex);
+-
+-	hid_hw_close(steam->hdev);
  }
  
-+static void
-+smb2_add_credits_from_hdr(char *buffer, struct TCP_Server_Info *server)
-+{
-+	struct smb2_sync_hdr *shdr = (struct smb2_sync_hdr *)buffer;
-+
-+	/*
-+	 * SMB1 does not use credits.
-+	 */
-+	if (server->vals->header_preamble_size)
-+		return;
-+
-+	if (shdr->CreditRequest) {
-+		spin_lock(&server->req_lock);
-+		server->credits += le16_to_cpu(shdr->CreditRequest);
-+		spin_unlock(&server->req_lock);
-+		wake_up(&server->request_q);
-+	}
-+}
-+
-+
- static int
- cifs_demultiplex_thread(void *p)
+ static enum power_supply_property steam_battery_props[] = {
+@@ -623,11 +616,6 @@ static void steam_client_ll_stop(struct hid_device *hdev)
+ static int steam_client_ll_open(struct hid_device *hdev)
  {
-@@ -1059,6 +1079,7 @@ cifs_demultiplex_thread(void *p)
- 			} else if (server->ops->is_oplock_break &&
- 				   server->ops->is_oplock_break(bufs[i],
- 								server)) {
-+				smb2_add_credits_from_hdr(bufs[i], server);
- 				cifs_dbg(FYI, "Received oplock break\n");
- 			} else {
- 				cifs_dbg(VFS, "No task to wake, unknown frame "
-@@ -1070,6 +1091,7 @@ cifs_demultiplex_thread(void *p)
- 				if (server->ops->dump_detail)
- 					server->ops->dump_detail(bufs[i],
- 								 server);
-+				smb2_add_credits_from_hdr(bufs[i], server);
- 				cifs_dump_mids(server);
- #endif /* CIFS_DEBUG2 */
- 			}
-diff --git a/fs/cifs/smb2misc.c b/fs/cifs/smb2misc.c
-index 0a7ed2e3ad4f2..e311f58dc1c82 100644
---- a/fs/cifs/smb2misc.c
-+++ b/fs/cifs/smb2misc.c
-@@ -659,13 +659,6 @@ smb2_is_valid_oplock_break(char *buffer, struct TCP_Server_Info *server)
- 	if (rsp->sync_hdr.Command != SMB2_OPLOCK_BREAK)
- 		return false;
- 
--	if (rsp->sync_hdr.CreditRequest) {
--		spin_lock(&server->req_lock);
--		server->credits += le16_to_cpu(rsp->sync_hdr.CreditRequest);
--		spin_unlock(&server->req_lock);
--		wake_up(&server->request_q);
--	}
+ 	struct steam_device *steam = hdev->driver_data;
+-	int ret;
 -
- 	if (rsp->StructureSize !=
- 				smb2_rsp_struct_sizes[SMB2_OPLOCK_BREAK_HE]) {
- 		if (le16_to_cpu(rsp->StructureSize) == 44)
+-	ret = hid_hw_open(steam->hdev);
+-	if (ret)
+-		return ret;
+ 
+ 	mutex_lock(&steam->mutex);
+ 	steam->client_opened = true;
+@@ -635,7 +623,7 @@ static int steam_client_ll_open(struct hid_device *hdev)
+ 
+ 	steam_input_unregister(steam);
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static void steam_client_ll_close(struct hid_device *hdev)
+@@ -646,7 +634,6 @@ static void steam_client_ll_close(struct hid_device *hdev)
+ 	steam->client_opened = false;
+ 	mutex_unlock(&steam->mutex);
+ 
+-	hid_hw_close(steam->hdev);
+ 	if (steam->connected) {
+ 		steam_set_lizard_mode(steam, lizard_mode);
+ 		steam_input_register(steam);
+@@ -759,14 +746,15 @@ static int steam_probe(struct hid_device *hdev,
+ 	if (ret)
+ 		goto client_hdev_add_fail;
+ 
++	ret = hid_hw_open(hdev);
++	if (ret) {
++		hid_err(hdev,
++			"%s:hid_hw_open\n",
++			__func__);
++		goto hid_hw_open_fail;
++	}
++
+ 	if (steam->quirks & STEAM_QUIRK_WIRELESS) {
+-		ret = hid_hw_open(hdev);
+-		if (ret) {
+-			hid_err(hdev,
+-				"%s:hid_hw_open for wireless\n",
+-				__func__);
+-			goto hid_hw_open_fail;
+-		}
+ 		hid_info(hdev, "Steam wireless receiver connected");
+ 		steam_request_conn_status(steam);
+ 	} else {
+@@ -781,8 +769,8 @@ static int steam_probe(struct hid_device *hdev,
+ 
+ 	return 0;
+ 
+-hid_hw_open_fail:
+ input_register_fail:
++hid_hw_open_fail:
+ client_hdev_add_fail:
+ 	hid_hw_stop(hdev);
+ hid_hw_start_fail:
+@@ -809,8 +797,8 @@ static void steam_remove(struct hid_device *hdev)
+ 	cancel_work_sync(&steam->work_connect);
+ 	if (steam->quirks & STEAM_QUIRK_WIRELESS) {
+ 		hid_info(hdev, "Steam wireless receiver disconnected");
+-		hid_hw_close(hdev);
+ 	}
++	hid_hw_close(hdev);
+ 	hid_hw_stop(hdev);
+ 	steam_unregister(steam);
+ }
 -- 
 2.20.1
 
