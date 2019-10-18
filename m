@@ -2,165 +2,65 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 171F7CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2358ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D83B72064B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:16:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="KpAHtxkV"
+	by mail.kernel.org (Postfix) with ESMTP id 04FDD222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:16:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392915AbfJRKQG (ORCPT
+        id S2438445AbfJRKQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 06:16:06 -0400
-Received: from mail-eopbgr740058.outbound.protection.outlook.com ([40.107.74.58]:2720
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2633420AbfJRKOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 06:14:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CK/vK5Kx8mrMyfIlDU5ErA3/3iUcSk/4pXRgqn71WTK9Zlavxx4kkANLE2aVyo5eJia4BR1e739poZsiGmn7I2iL2q2mIcf4TOktUIVNj7pzV5eBugVSC/PdT8klgFTd3AkrnrKXKwjO9PR3uQE2yeJy+KHBbPhN2S519M7LlWLyUbFaqM30a1LzH8k2sLt8JrUTc2I2eRlGbs2jg4qk2PauAvuRtv54fj9wZ6gGgOxuRhgid3JTqqg7aRsFKKi64A8lEhDvGm/I5exX0v9IK0xcZMkJvnTqxHxxUsxaMb6Zd/PHv84pjcq7NBmB9RZTRXkJcIWJdNlu6mN0LrEwOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZCKYJoN2HCXCPnEpWoGpXvMuEAVQOEWMN/ynR0iqfrk=;
- b=PYgBzq07vEUK2EBxEpvOqXhgHaPDIYrEuTpBzJySfQasQX76inFS/7ZR8t0p5u2ABLuAxK23sLgJ6KaUmR3gvP7C1u5IJutuZ/bnRZtuuOkPF8edpvSBev8lZgeT60zXOh0NnmoBBE4/Aaq1kmw0oNO6pRuswVK/JbaX+MxUJSaRp7IURSsW8QKBY79+DcZaIQNvQv5W7l3PblZ2AIHJvAEq5OifQzkRLD3hNN6/r1Ef1waeDv56kdU0+5jET1WgdnlgkKMlHAJDzNx3ayII0OyENWbUpc4qyky+A5lS1z3ARIWvcC5DchPZ4HdPuzyE2Rf5zeyef9ggBay9TIgtKw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
- 165.204.84.17) smtp.rcpttodomain=gmail.com smtp.mailfrom=amd.com;
- dmarc=permerror action=none header.from=amd.com; dkim=none (message not
- signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZCKYJoN2HCXCPnEpWoGpXvMuEAVQOEWMN/ynR0iqfrk=;
- b=KpAHtxkVRPgSyTf48KCpajwQsBzzbmswEntC4ga1rETp966LDkR/U0pgTQmggHfS2cUOQ62f0FlOPDUfjOY0zRuEiDIMLa63FD5U0S6qQp0V2NZYCA6MdO2E+2xD1M3vY1ogT58XWbPhNdsWiyuAsHwOtYPZljD4pamq+V941yc=
-Received: from BN4PR12CA0003.namprd12.prod.outlook.com (2603:10b6:403:2::13)
- by DM6PR12MB4267.namprd12.prod.outlook.com (2603:10b6:5:21e::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.23; Fri, 18 Oct
- 2019 10:14:00 +0000
-Received: from CO1NAM03FT025.eop-NAM03.prod.protection.outlook.com
- (2a01:111:f400:7e48::209) by BN4PR12CA0003.outlook.office365.com
- (2603:10b6:403:2::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2367.20 via Frontend
- Transport; Fri, 18 Oct 2019 10:13:59 +0000
-Authentication-Results: spf=none (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=permerror action=none header.from=amd.com;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-Received: from SATLEXMB01.amd.com (165.204.84.17) by
- CO1NAM03FT025.mail.protection.outlook.com (10.152.80.163) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.2367.14 via Frontend Transport; Fri, 18 Oct 2019 10:13:59 +0000
-Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB01.amd.com
- (10.181.40.142) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 18 Oct
- 2019 05:13:58 -0500
-Received: from SATLEXMB02.amd.com (10.181.40.143) by SATLEXMB06.amd.com
- (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 18 Oct
- 2019 05:13:58 -0500
-Received: from vishnu-All-Series.amd.com (10.180.168.240) by
- SATLEXMB02.amd.com (10.181.40.143) with Microsoft SMTP Server id 15.1.1713.5
- via Frontend Transport; Fri, 18 Oct 2019 05:13:54 -0500
-From:   Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>
-CC:     <Alexander.Deucher@amd.com>,
-        Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        "Takashi Iwai" <tiwai@suse.com>,
-        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-        "Maruthi Bayyavarapu" <maruthi.bayyavarapu@amd.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "Kuninori Morimoto" <kuninori.morimoto.gx@renesas.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        "open list" <linux-kernel@vger.kernel.org>
-Subject: [PATCH 5/7] ASoC: amd: handle ACP3x i2s-sp watermark interrupt.
-Date:   Sat, 19 Oct 2019 02:35:43 +0530
-Message-ID: <1571432760-3008-5-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1571432760-3008-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-References: <1571432760-3008-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+        Fri, 18 Oct 2019 06:16:30 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:46964 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732465AbfJRKQa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 06:16:30 -0400
+Received: from 79.184.255.51.ipv4.supernova.orange.pl (79.184.255.51) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 6845964ed128a594; Fri, 18 Oct 2019 12:16:27 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Maximilian Luz <luzmaximilian@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh@kernel.org>,
+        Jiri Slaby <jslaby@suse.com>, Len Brown <lenb@kernel.org>,
+        linux-serial@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] serdev: Add ACPI devices by ResourceSource field
+Date:   Fri, 18 Oct 2019 12:16:27 +0200
+Message-ID: <2257692.4kSTgpFGC2@kreacher>
+In-Reply-To: <84883ba0-ec01-9114-5c4a-e468cf85dfec@gmail.com>
+References: <20190924162226.1493407-1-luzmaximilian@gmail.com> <03d11e04-aaad-4851-c7d6-feaf62793670@redhat.com> <84883ba0-ec01-9114-5c4a-e468cf85dfec@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(396003)(136003)(39860400002)(428003)(199004)(189003)(54906003)(316002)(2906002)(53416004)(86362001)(76176011)(36756003)(16586007)(486006)(446003)(11346002)(2616005)(305945005)(47776003)(51416003)(7696005)(126002)(476003)(6666004)(426003)(8936002)(336012)(1671002)(81166006)(81156014)(109986005)(26005)(8676002)(478600001)(356004)(50226002)(5660300002)(4326008)(48376002)(50466002)(70586007)(70206006)(186003)(266003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB4267;H:SATLEXMB01.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6b97823b-5c45-47bf-ce87-08d753b3e4a5
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4267:|DM6PR12MB4267:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB42675F4E91F98CB9AFD9AA89E76C0@DM6PR12MB4267.namprd12.prod.outlook.com>
-X-MS-Exchange-Transport-Forked: True
-X-MS-Oob-TLC-OOBClassifiers: OLM:431;
-X-Forefront-PRVS: 01949FE337
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: cf1jVqVHtp5j2/XvXCpKSPJSYk5JMnh+3xxHOwJvm+J1Lzdya3KoA9+ekyloNUGEjDLGusCEhMfCOsO+L9byOjkiOQqc2wVWk5qkR56hkCCXBr6YEXI2jFrnwqETYMf8sYZcqTuJ66oE+vlKBgwjFOazyTEvQjg/YyD+T4qE+xrNHW3NXG/3WIg75SE3F3FqsuQ0aLtdPVqgJKp6JGJQGd/t/+b+TywvSAPIMlRtMAE8F4FeUf2FEBgdT9I1mlXhgwAklGgahCoK3GXV6Pt6VTStlEXFy1BJPc02pFT5NrGN+GFe38HHruvEixtyRZ7Z/3UxVeJbQaBrT/NkQ9AAlzHqCQYrCyzCg7VwlD30XGw7K2NUF1RXVtPUambEyPo+pcWcwatkQAfaMde0UxWS2Piu7a/aA5o44nUAUt6RPow=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2019 10:13:59.4906
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b97823b-5c45-47bf-ce87-08d753b3e4a5
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB01.amd.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4267
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-whenever audio data equal to I2S-SP fifo watermark level is
-produced/consumed, interrupt is generated.
+On Thursday, October 10, 2019 3:18:58 PM CEST Maximilian Luz wrote:
+> Hi,
+> 
+> On 10/10/19 12:22 PM, Hans de Goede wrote:
+> > This patch looks good to me and it works on my test hw with serial
+> > attached BT HCI:
+> > 
+> > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> > Tested-by: Hans de Goede <hdegoede@redhat.com>
+> > 
+> > Regards,
+> > 
+> > Hans
+> 
+> Awesome, thank you!
 
-Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
----
- sound/soc/amd/raven/acp3x-pcm-dma.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Is anyone taking care of this patch, or should I do that?
 
-diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
-index 4fcef3f..a000ac4 100644
---- a/sound/soc/amd/raven/acp3x-pcm-dma.c
-+++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
-@@ -176,6 +176,13 @@ static irqreturn_t i2s_irq_handler(int irq, void *dev_id)
- 		snd_pcm_period_elapsed(rv_i2s_data->play_stream);
- 		play_flag = 1;
- 	}
-+	if ((val & BIT(I2S_TX_THRESHOLD)) &&
-+				rv_i2s_data->i2ssp_play_stream) {
-+		rv_writel(BIT(I2S_TX_THRESHOLD),
-+			rv_i2s_data->acp3x_base	+ mmACP_EXTERNAL_INTR_STAT);
-+		snd_pcm_period_elapsed(rv_i2s_data->i2ssp_play_stream);
-+		play_flag = 1;
-+	}
- 
- 	if ((val & BIT(BT_RX_THRESHOLD)) && rv_i2s_data->capture_stream) {
- 		rv_writel(BIT(BT_RX_THRESHOLD), rv_i2s_data->acp3x_base +
-@@ -183,6 +190,13 @@ static irqreturn_t i2s_irq_handler(int irq, void *dev_id)
- 		snd_pcm_period_elapsed(rv_i2s_data->capture_stream);
- 		cap_flag = 1;
- 	}
-+	if ((val & BIT(I2S_RX_THRESHOLD)) &&
-+				rv_i2s_data->i2ssp_capture_stream) {
-+		rv_writel(BIT(I2S_RX_THRESHOLD),
-+			 rv_i2s_data->acp3x_base + mmACP_EXTERNAL_INTR_STAT);
-+		snd_pcm_period_elapsed(rv_i2s_data->i2ssp_capture_stream);
-+		cap_flag = 1;
-+	}
- 
- 	if (play_flag | cap_flag)
- 		return IRQ_HANDLED;
--- 
-2.7.4
+
 
