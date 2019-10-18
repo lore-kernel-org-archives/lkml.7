@@ -2,146 +2,117 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FE9CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9209CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2DEA21D80
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A1DD21D80
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:12:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CkyYl2n2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MZmqGthJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393754AbfJRHMB (ORCPT
+        id S2504547AbfJRHM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 03:12:01 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:51737 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731291AbfJRHMB (ORCPT
+        Fri, 18 Oct 2019 03:12:29 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:33942 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728008AbfJRHM3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 03:12:01 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191018071158euoutp0276bd6b819a4db325cdf1cbeb0220ff6a~OrEHhChX20233702337euoutp02S
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 07:11:58 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191018071158euoutp0276bd6b819a4db325cdf1cbeb0220ff6a~OrEHhChX20233702337euoutp02S
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1571382718;
-        bh=/b+UtEDzqIRy6CN2PZOjcj8YUjV1F/6jvH4ZCUASKwQ=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=CkyYl2n2M+rMDRP/d/kPhsf5OJI7YdicMcRVpvMpNv+QMgrdQFCfWdKtWdaAm9kQP
-         BYifBme/C7N5wNk8ucTlmPV3QzC5qyWznE3ndq2V46gD9UVBLaN2khDUB7G4K1hahA
-         ycnFLc1R0ZKj95+N6uaQoWmQzAh4YLDHaqHjXrpE=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191018071158eucas1p1b4360baf515416e1769aa7c27d3c2e17~OrEHNxF4h3269432694eucas1p1Y;
-        Fri, 18 Oct 2019 07:11:58 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 8B.D4.04469.EB569AD5; Fri, 18
-        Oct 2019 08:11:58 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191018071158eucas1p122811d8eafc3a26ec01c1402ad4fbd29~OrEGtj5PQ0537705377eucas1p1S;
-        Fri, 18 Oct 2019 07:11:58 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191018071158eusmtrp151f87c2ded25646c165448642c0527fa~OrEGsxByD0657006570eusmtrp1k;
-        Fri, 18 Oct 2019 07:11:58 +0000 (GMT)
-X-AuditID: cbfec7f2-54fff70000001175-c4-5da965bec4ee
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id EC.36.04117.DB569AD5; Fri, 18
-        Oct 2019 08:11:57 +0100 (BST)
-Received: from [106.120.51.15] (unknown [106.120.51.15]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191018071157eusmtip2c2847cd7dea4752f23fb6028350b0127~OrEGDvu8D0960909609eusmtip2W;
-        Fri, 18 Oct 2019 07:11:57 +0000 (GMT)
-Subject: Re: [PATCH] opp: core: Revert "add regulators enable and disable"
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Kamil Konieczny <k.konieczny@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <db377033-3d1d-f8c7-b0c0-5a7359022a62@samsung.com>
-Date:   Fri, 18 Oct 2019 09:11:56 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
+        Fri, 18 Oct 2019 03:12:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=70RBmu/1BKwG1muO4mtJ8TJ8hCo34siAp8SqvZX3CFM=; b=MZmqGthJx7fbQD70+n0/DOoYl
+        XZy310QUlkaYt0C572lLZ2EWBUV2zOOC4uODDZ+vSBp7x23sbJeZvNscfu1/8W+MqiqY1jn9WEjB2
+        vjJ09Q78/z7dpvr8htRb1FH3RndJn1EL6oJC6jLRrPtzuMO9USUfEnvn7Np282u2bXezEsfqF3K6s
+        VN8hllpfC9hUDOKROgcDN6ZXAvRqi49o6O3wcu3bTf03IZNUtHQM8OwugR+idpkdei6mQLvHr3H+F
+        BsCMLZlf4xYnTj+gsoUlSqVREG/PKKn2jsDZWVaIsZQgbVRQMrfCxyRpVCIdUWQ1ccCzSxdQc/OsI
+        7O/nMHFGQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iLMQj-0007Bj-L3; Fri, 18 Oct 2019 07:12:09 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 19AFE305803;
+        Fri, 18 Oct 2019 09:11:10 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A753B2B17E62E; Fri, 18 Oct 2019 09:12:06 +0200 (CEST)
+Date:   Fri, 18 Oct 2019 09:12:06 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        tim.c.chen@linux.intel.com, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Subject: Re: [PATCH] x86: Don't use MWAIT if explicitly requested
+Message-ID: <20191018071206.GZ2328@hirez.programming.kicks-ass.net>
+References: <1571370354-17736-1-git-send-email-zhenzhong.duan@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20191018043026.xm7a6emczm6w7bck@vireshk-i7>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SfyyUcRzHfe957rnH5exx2H1Go27Tlq2TxnrErNIfN2smWW3pyskzLD+u
-        O0StzY/04yJGhstGNvkVOowjGZJL1hEjFEOqMbeGrKvVVXePyn/vz/v7+n4/7/f2JTHhc64L
-        GZeYzCgT5fFigo+3D34z7Oth6mT7zW/EtLa0mUsXLywRdMPae0RXrpdy6ZGRxzx6vKucoDfy
-        BhBdOtLDoVdNrzi0eVKL09pNKd06P0gctpN2amZ50pb624T03WQ3Ib3bVo+k+qkOjnSjxS2U
-        OMMPiGbi41IZpVdgJD92wBymaCDTfmX+4GUgE6FGtiRQPlCUX81TIz4ppGoR5LSYcHb4gqC4
-        YprDDhsIVu6PIzUirVd02mDWr0EwqNduQUYEc0+qrJAjFQw5qxKLdKI8YXmasSAYdQ+D9p/5
-        mGU1QXmD2qi2xhBQgVA4VGn1ccoDarSTuEU7UzKYM+kxlnGAobIlq29L+UH+QCvHojHKHTqM
-        5RirRTCzVGHNA9QiD3RZmxw29DHIrg5jKzvCir6Nx+qdMFyUi7N8NoIFQyOPHXIRjGeVIpby
-        h2f611zLQxi1F5q7vFj7CDQVvMDY9+1hyujAZrCHwvaSLVsAt24IWXoPaPRN/9b2jY5hBUis
-        2dZMs62NZlsbzf+9lQivRyImRZUQw6i8E5nLEpU8QZWSGCO5kJTQgv58rmGzfl2HNsei+hFF
-        IrGdQBdaKxNy5amq9IR+BCQmdhKc9K+TCQXR8vQrjDLpvDIlnlH1I1cSF4sEV23mI4RUjDyZ
-        ucgwCkb595RD2rpkIAeP9cLIiADZpYdlb5t2nbgpM3QdellyztXQ5xf33d435ENGXna3sFbk
-        1rswdu1sxvRBY3Lm7HRQ6HGbEMOa39eJB/69BwbNVY3LrWN1p+74OJ/WhiuUK2mjqYum609X
-        ojiuZCe5e+ZRmsTjqMI3MujThHTHx3DGP1CTWVLmXvV5SYyrYuXenphSJf8NGUtu8VgDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOIsWRmVeSWpSXmKPExsVy+t/xe7p7U1fGGmxusLbYOGM9q8XUh0/Y
-        LFZ/fMxoseDTDFaL8+c3sFtc3jWHzeJz7xFGixnn9zFZvPlxlsni37WNLBYbv3pYbH5wjM2B
-        x2PnrLvsHptWdbJ53Lm2h82jb8sqRo/jN7YzeXzeJBfAFqVnU5RfWpKqkJFfXGKrFG1oYaRn
-        aGmhZ2RiqWdobB5rZWSqpG9nk5Kak1mWWqRvl6CXceRfUMFqjor/jX/YGxh/sHUxcnBICJhI
-        7Njo1cXIxSEksJRR4uvnh+xdjJxAcRmJk9MaWCFsYYk/17rYIIpeM0rseriEGaRZWMBLovWN
-        HogpIqAl8fJmKkgJs8A0ZonLPz+yQ9TvZ5TYtPEr2FA2AUOJrrcggzg5eAXsJCadXMAMYrMI
-        qEos33iNBWSQqECsxKa9ZhAlghInZz5hAbE5BSwl+o9sZgKxmQXMJOZtfsgMYctLbH87B8oW
-        l7j1ZD7TBEahWUjaZyFpmYWkZRaSlgWMLKsYRVJLi3PTc4uN9IoTc4tL89L1kvNzNzECI3Xb
-        sZ9bdjB2vQs+xCjAwajEw7sjYEWsEGtiWXFl7iFGCQ5mJRHeYOuVsUK8KYmVValF+fFFpTmp
-        xYcYTYF+m8gsJZqcD0wieSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1MLUotg+pg4
-        OKUaGLsezt4udTvcv62+hu/d/rg1sfaBV87wV8eW719kbRfw9I4C86Il139pn3Xzap5xuMaY
-        48/fezO+cnrUbZq05B1zHB9v7Ow9EZ4zHstOSb11rklF6FPSPc31G+a2m3a6hUvGMx1/ySi5
-        tEjaxGn22p9TVkqbnwwR3LVyHt9kl/aLe3ITZl25pqzEUpyRaKjFXFScCACz7TtV6gIAAA==
-X-CMS-MailID: 20191018071158eucas1p122811d8eafc3a26ec01c1402ad4fbd29
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191017102843eucas1p164993b3644d006481fb041e36175eebe
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191017102843eucas1p164993b3644d006481fb041e36175eebe
-References: <CGME20191017102843eucas1p164993b3644d006481fb041e36175eebe@eucas1p1.samsung.com>
-        <20191017102758.8104-1-m.szyprowski@samsung.com>
-        <20191018043026.xm7a6emczm6w7bck@vireshk-i7>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571370354-17736-1-git-send-email-zhenzhong.duan@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Oct 18, 2019 at 11:45:54AM +0800, Zhenzhong Duan wrote:
+> If 'idle=nomwait' is specified or process matching what's in
+> processor_idle_dmi_table, we should't use MWAIT at bootup stage before
+> cpuidle driver loaded, even if it's preferred by default on Intel.
+> 
+> Add a check so that HALT instruction is used in those cases.
 
-On 18.10.2019 06:30, Viresh Kumar wrote:
-> On 17-10-19, 12:27, Marek Szyprowski wrote:
->> All the drivers, which use the OPP framework control regulators, which
->> are already enabled. Typically those regulators are also system critical,
->> due to providing power to CPU core or system buses. It turned out that
->> there are cases, where calling regulator_enable() on such boot-enabled
->> regulator has side-effects and might change its initial voltage due to
->> performing initial voltage balancing without all restrictions from the
->> consumers. Until this issue becomes finally solved in regulator core,
->> avoid calling regulator_enable()/disable() from the OPP framework.
->>
->> This reverts commit 7f93ff73f7c8c8bfa6be33bcc16470b0b44682aa.
->>
->> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> ---
->> This is a follow-up from the following discussion:
->> https://lkml.org/lkml/2019/10/9/541
-> I suppose this must go the v5.4-rcs, right ?
+The comment in idle_setup():
 
-Yes, please.
+	/*
+	 * If the boot option of "idle=nomwait" is added,
+	 * it means that mwait will be disabled for CPU C2/C3
+	 * states. In such case it won't touch the variable
+	 * of boot_option_idle_override.
+	 */
+	boot_option_idle_override = IDLE_NOMWAIT;
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+explicitly states this option is for C2+
 
+> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> ---
+>  arch/x86/kernel/process.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+> index 5e94c43..37fc577 100644
+> --- a/arch/x86/kernel/process.c
+> +++ b/arch/x86/kernel/process.c
+> @@ -667,6 +667,10 @@ static void amd_e400_idle(void)
+>   */
+>  static int prefer_mwait_c1_over_halt(const struct cpuinfo_x86 *c)
+>  {
+> +	/* Don't use MWAIT-C1 if explicitly requested */
+> +	if (boot_option_idle_override == IDLE_NOMWAIT)
+> +		return 0;
+
+And this is very much about C1...
+
+OTOH, "idle=halt" should be forcing HLT over MWAIT, so did you want to
+write:
+
+	if (boot_option_idle_override == IDLE_HALT)
+		return 0;
+
+instead?
