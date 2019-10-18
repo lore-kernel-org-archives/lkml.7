@@ -2,700 +2,262 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD0CFCA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C500CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D6D220820
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37A2520820
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:39:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="xBmbfXXa";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="xBmbfXXa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504467AbfJRGgb (ORCPT
+        id S2442062AbfJRGjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 02:36:31 -0400
-Received: from mga05.intel.com ([192.55.52.43]:30427 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2504449AbfJRGga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 02:36:30 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 23:36:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,310,1566889200"; 
-   d="scan'208";a="226439100"
-Received: from lingshan-mobl5.ccr.corp.intel.com (HELO [10.255.30.7]) ([10.255.30.7])
-  by fmsmga002.fm.intel.com with ESMTP; 17 Oct 2019 23:36:26 -0700
-Subject: Re: [RFC 2/2] vhost: IFC VF vdpa layer
-To:     Jason Wang <jasowang@redhat.com>, mst@redhat.com,
-        alex.williamson@redhat.com
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, tiwei.bie@intel.com, jason.zeng@intel.com,
-        zhiyuan.lv@intel.com
-References: <20191016013050.3918-1-lingshan.zhu@intel.com>
- <20191016013050.3918-3-lingshan.zhu@intel.com>
- <9495331d-3c65-6f49-dcd9-bfdb17054cf0@redhat.com>
-From:   "Zhu, Lingshan" <lingshan.zhu@intel.com>
-Message-ID: <0234bb73-4e05-2626-ec57-67454bf204ff@intel.com>
-Date:   Fri, 18 Oct 2019 14:36:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
-MIME-Version: 1.0
-In-Reply-To: <9495331d-3c65-6f49-dcd9-bfdb17054cf0@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Fri, 18 Oct 2019 02:39:20 -0400
+Received: from mail-eopbgr90082.outbound.protection.outlook.com ([40.107.9.82]:65168
+        "EHLO FRA01-MR2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728284AbfJRGjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 02:39:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=deovY0igDeil9fRvR2ecRNrPldYF/S5H5KUBG8sFtx8=;
+ b=xBmbfXXaTXaZFtWgGvSc06WvtqMYf1gz2CKPIVupo+vTyr9zj5LkcFy2Ti7pIuVmmvtY3Il6aeobiiXBYrUojMiArkc9jp08fzmpkD6TSiCph0oJP15R0qqQq85P860R0RiuRWKWfrbjPYhVL0MZcaSrSPhpHEdixxB7oC6YUeY=
+Received: from DB6PR0802CA0040.eurprd08.prod.outlook.com (2603:10a6:4:a3::26)
+ by PR2PR08MB4857.eurprd08.prod.outlook.com (2603:10a6:101:1c::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.21; Fri, 18 Oct
+ 2019 06:39:11 +0000
+Received: from DB5EUR03FT029.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e0a::209) by DB6PR0802CA0040.outlook.office365.com
+ (2603:10a6:4:a3::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2347.16 via Frontend
+ Transport; Fri, 18 Oct 2019 06:39:11 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DB5EUR03FT029.mail.protection.outlook.com (10.152.20.131) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2305.15 via Frontend Transport; Fri, 18 Oct 2019 06:39:08 +0000
+Received: ("Tessian outbound e4042aced47b:v33"); Fri, 18 Oct 2019 06:39:06 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 3c989cafdc21090c
+X-CR-MTA-TID: 64aa7808
+Received: from 788a2b172e8a.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.6.59])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 7B99A076-E363-42E5-834E-1D73A5D76034.1;
+        Fri, 18 Oct 2019 06:39:01 +0000
+Received: from EUR02-VE1-obe.outbound.protection.outlook.com (mail-ve1eur02lp2059.outbound.protection.outlook.com [104.47.6.59])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 788a2b172e8a.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Fri, 18 Oct 2019 06:39:01 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W4Rh0z9bOo7CPDhPYaxazNMQjMU0QU1zeITCajUOrXWW4t2K21mFwAGzNAxaI7RJFtSw5fZse5jBhGcCbIdmYzmG17k77ye1O4i/8eTA5C63/4OXtud2q1t4vx2Uos6CtUSwuTz0AfTIbMWkwLYJrauTQmo5TGRxqjYCMMWLMawxptaZmxeip1auN7Wzasa/vF4P+xa15JASx90y6W2IbLx+U8kvkfOg/nFkslHHFCSOgXSUulhFk8O3JcmOAxanxtWtYA6bsjyZrLtim+Wygz0QdH4BEPsYOoLc7PlEGbez7W3zZJUEv91XnhkCjn1MkDz1/yQwVGvcBXWX1LA40A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=deovY0igDeil9fRvR2ecRNrPldYF/S5H5KUBG8sFtx8=;
+ b=QT6RcJlaBt6iJY9hsOX+bJMLhVS2LvHd7kicSFCWakZqib8ocDIajZBWMik4xWLK+tbqtqKAR+tSrNVaWQPuGeK8BGZ/Igd7g88V+6nlgUXlGqI/xw9jNj335krNx8URa2GGDxxWzDsBCriC5UG2crBhxzvAy2pl+DZ/Q3GoMgfCZDWqVwPUwLLKy4ZICaF0hWKYZDApTdAkPoVJx/WU16jvLEUOL6/r+p9F/M1zIu96ns4BWFtVZQddU0WdzAzde3QRzoeCVFInP6RUtMK3sDWtW2Khr8ZdKzUETDzmTa/y1WxaiVomYrSVgm/xA5e2qOJ6hOUSwJQ0NmSQhEp7Fw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=deovY0igDeil9fRvR2ecRNrPldYF/S5H5KUBG8sFtx8=;
+ b=xBmbfXXaTXaZFtWgGvSc06WvtqMYf1gz2CKPIVupo+vTyr9zj5LkcFy2Ti7pIuVmmvtY3Il6aeobiiXBYrUojMiArkc9jp08fzmpkD6TSiCph0oJP15R0qqQq85P860R0RiuRWKWfrbjPYhVL0MZcaSrSPhpHEdixxB7oC6YUeY=
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
+ VE1PR08MB4637.eurprd08.prod.outlook.com (10.255.114.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Fri, 18 Oct 2019 06:38:59 +0000
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::40ed:7ed3:90cf:ece5]) by VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::40ed:7ed3:90cf:ece5%3]) with mapi id 15.20.2347.026; Fri, 18 Oct 2019
+ 06:38:59 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     Brian Starkey <Brian.Starkey@arm.com>
+CC:     Mihail Atanassov <Mihail.Atanassov@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Maxime Ripard <mripard@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>, Sean Paul <sean@poorly.run>
+Subject: Re: [RFC,3/3] drm/komeda: Allow non-component drm_bridge only
+ endpoints
+Thread-Topic: [RFC,3/3] drm/komeda: Allow non-component drm_bridge only
+ endpoints
+Thread-Index: AQHVfmX7+sBzYHhR8EiYyRUjNjETp6dddmWAgAAIg4CAALRsAIAAV3gAgAAhhoCAAAegAIABTKqA
+Date:   Fri, 18 Oct 2019 06:38:59 +0000
+Message-ID: <20191018063851.GA18702@jamwan02-TSP300>
+References: <20191004143418.53039-4-mihail.atanassov@arm.com>
+ <20191009055407.GA3082@jamwan02-TSP300> <5390495.Gzyn2rW8Nj@e123338-lin>
+ <20191016162206.u2yo37rtqwou4oep@DESKTOP-E1NTVVP.localdomain>
+ <20191017030752.GA3109@jamwan02-TSP300>
+ <20191017082043.bpiuvfr3r4jngxtu@DESKTOP-E1NTVVP.localdomain>
+ <20191017102055.GA8308@jamwan02-TSP300>
+ <20191017104812.6qpuzoh5bx5i2y3m@DESKTOP-E1NTVVP.localdomain>
+In-Reply-To: <20191017104812.6qpuzoh5bx5i2y3m@DESKTOP-E1NTVVP.localdomain>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mutt/1.10.1 (2018-07-13)
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK2PR0401CA0009.apcprd04.prod.outlook.com
+ (2603:1096:202:2::19) To VE1PR08MB5006.eurprd08.prod.outlook.com
+ (2603:10a6:803:113::31)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-Correlation-Id: 15f8a52d-e942-4d4b-f8f2-08d75395e130
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-TrafficTypeDiagnostic: VE1PR08MB4637:|VE1PR08MB4637:|PR2PR08MB4857:
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <PR2PR08MB4857D42038AD76E01C61C6D3B36C0@PR2PR08MB4857.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:8882;OLM:8882;
+x-forefront-prvs: 01949FE337
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(376002)(346002)(396003)(39860400002)(136003)(366004)(199004)(189003)(26005)(66066001)(2906002)(7736002)(8676002)(6862004)(4326008)(478600001)(256004)(71190400001)(71200400001)(66946007)(54906003)(9686003)(6512007)(6636002)(14444005)(229853002)(66556008)(66476007)(66446008)(64756008)(386003)(55236004)(5660300002)(86362001)(102836004)(6506007)(25786009)(186003)(11346002)(446003)(14454004)(76176011)(81156014)(486006)(33656002)(6486002)(1076003)(8936002)(3846002)(316002)(33716001)(6246003)(305945005)(58126008)(81166006)(52116002)(476003)(6116002)(99286004)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB4637;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: mo+P8P+FR6ADw2qI5/d3qNSHHTIQkurKYgLLStVPsJxsjTnXENiIOvaZBEvvRnJ6XItx5m5I11lQjgoSJJhb0+fPmH07t/WO5Gpa/qlN+0zooQjJXd+a558FflkNxgnI2IJ6+S6VKLyHrIelj06yJxuaQAWOMcHRPvh6EiA/RehxtzG3t+RYJxNlJzR7nzKMIIytsiQfclGi45bsTBfw8QJbblwsO0HvJbrtSy2V6cUZRHYFw2L27ZjNpRUU6dZlGbIuOeejOeEffeEAgVbxXv5JxrGAfPBoA4XzoQfQXn0p+VRyHUZgOxHdCAAnmjDZ1C8zdHuqmPyK0shms+kNo1fRs4GbqWapX2wPm6X1UQB8O8KuBGlXmxlGJFVbGnnhgIPeVdBgBaUPmzxJfS/nhe6T8cClEKupL/Pl211hhmE=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <534A4133140A7F41969D6124426D8D8A@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB4637
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT029.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(7916004)(4636009)(376002)(39860400002)(396003)(346002)(136003)(189003)(199004)(126002)(11346002)(86362001)(476003)(5660300002)(33656002)(46406003)(76130400001)(81156014)(8746002)(8936002)(76176011)(81166006)(50466002)(8676002)(478600001)(7736002)(305945005)(4326008)(14444005)(33716001)(47776003)(66066001)(6636002)(26826003)(446003)(6246003)(6862004)(336012)(14454004)(107886003)(99286004)(25786009)(70206006)(2906002)(229853002)(70586007)(102836004)(6506007)(386003)(6512007)(9686003)(26005)(186003)(3846002)(6116002)(356004)(23726003)(54906003)(6486002)(316002)(97756001)(1076003)(22756006)(63350400001)(486006)(58126008);DIR:OUT;SFP:1101;SCL:1;SRVR:PR2PR08MB4857;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 414fd9d1-46eb-4c6f-2918-08d75395db44
+NoDisclaimer: True
+X-Forefront-PRVS: 01949FE337
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: W/xhuMicTBb6KwutbFaWPvHPWVBdsdIrnS2+WmCBFQZK1XGLutl2bFjGNh9TEOtTRCCO0xkwHLBQydT4EVdVYIe1HPvDIuWUzHOZ27/cHZFjML+64Zu9QQz5va2OZflD66+oxjYvZo9iN6ZtQRQW1kRERREDQxG7yts3OXgAWIKQ6dCmJF28nZvMsXWpTc6yysNQuPAwXFzewpwy4igBeqHwy4Dw9wPUb4ZCNQTUYxgBaR2MucOen1fXfc9YQG6BWMPRQHFpgp//F2E1Z+r46eL5T5qw+j5kkJiNlCpYbbsZZlZJTpHcw0chbAi0HqU+kX9TBg0FtcGkXiMl7d9ZrL4I5P2XODtsKK3R038q9dnGsqgnda9IgRVgrZbJRm8wI6ewirMLRs1ZZHLAkq6aQ9Dbof591VngSLjUPZ4EvDM=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2019 06:39:08.7508
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 15f8a52d-e942-4d4b-f8f2-08d75395e130
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR2PR08MB4857
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Jason,
+On Thu, Oct 17, 2019 at 10:48:12AM +0000, Brian Starkey wrote:
+> On Thu, Oct 17, 2019 at 10:21:03AM +0000, james qian wang (Arm Technology=
+ China) wrote:
+> > On Thu, Oct 17, 2019 at 08:20:56AM +0000, Brian Starkey wrote:
+> > > On Thu, Oct 17, 2019 at 03:07:59AM +0000, james qian wang (Arm Techno=
+logy China) wrote:
+> > > > On Wed, Oct 16, 2019 at 04:22:07PM +0000, Brian Starkey wrote:
+> > > > >=20
+> > > > > If James is strongly against merging this, maybe we just swap
+> > > > > wholesale to bridge? But for me, the pragmatic approach would be =
+this
+> > > > > stop-gap.
+> > > > >
+> > > >=20
+> > > > This is a good idea, and I vote +ULONG_MAX :)
+> > > >=20
+> > > > and I also checked tda998x driver, it supports bridge. so swap the
+> > > > wholesale to brige is perfect. :)
+> > > >=20
+> > >=20
+> > > Well, as Mihail wrote, it's definitely not perfect.
+> > >=20
+> > > Today, if you rmmod tda998x with the DPU driver still loaded,
+> > > everything will be unbound gracefully.
+> > >=20
+> > > If we swap to bridge, then rmmod'ing tda998x (or any other bridge
+> > > driver the DPU is using) with the DPU driver still loaded will result
+> > > in a crash.
+> >=20
+> > I haven't read the bridge code, but seems this is a bug of drm_bridge,
+> > since if the bridge is still in using by others, the rmmod should fail
+> >=20
+>=20
+> Correct, but there's no fix for that today. You can also take a look
+> at the thread linked from Mihail's cover letter.
+>=20
+> > And personally opinion, if the bridge doesn't handle the dependence.
+> > for us:
+> >=20
+> > - add such support to bridge
+>=20
+> That would certainly be helpful. I don't know if there's consensus on
+> how to do that.
+>=20
+> >   or
+> > - just do the insmod/rmmod in correct order.
+> >=20
+> > > So, there really are proper benefits to sticking with the component
+> > > code for tda998x, which is why I'd like to understand why you're so
+> > > against this patch?
+> > >
+> >=20
+> > This change handles two different connectors in komeda internally, comp=
+are
+> > with one interface, it increases the complexity, more risk of bug and m=
+ore
+> > cost of maintainance.
+> >=20
+>=20
+> Well, it's only about how to bind the drivers - two different methods
+> of binding, not two different connectors. I would argue that carrying
+> our out-of-tree patches to support both platforms is a larger
+> maintenance burden.
+>=20
+> Honestly this looks like a win-win to me. We get the superior approach
+> when its supported, and still get to support bridges which are more
+> common.
+>
 
-Thanks for your comments, I am on a conference travel, I will reply next 
-Monday.
+My consideration is: if we support both link methods, we may suffering
 
-Thanks,
-BR
-Zhu Lingshan
-On 10/16/2019 6:19 PM, Jason Wang wrote:
->
-> On 2019/10/16 上午9:30, Zhu Lingshan wrote:
->> This commit introduced IFC VF operations for vdpa, which complys to
->> vhost_mdev interfaces, handles IFC VF initialization,
->> configuration and removal.
->>
->> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
->> ---
->>   drivers/vhost/ifcvf/ifcvf_main.c | 541 
->> +++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 541 insertions(+)
->>   create mode 100644 drivers/vhost/ifcvf/ifcvf_main.c
->>
->> diff --git a/drivers/vhost/ifcvf/ifcvf_main.c 
->> b/drivers/vhost/ifcvf/ifcvf_main.c
->> new file mode 100644
->> index 000000000000..c48a29969a85
->> --- /dev/null
->> +++ b/drivers/vhost/ifcvf/ifcvf_main.c
->> @@ -0,0 +1,541 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Copyright (C) 2019 Intel Corporation.
->> + */
->> +
->> +#include <linux/interrupt.h>
->> +#include <linux/module.h>
->> +#include <linux/mdev.h>
->> +#include <linux/pci.h>
->> +#include <linux/sysfs.h>
->> +
->> +#include "ifcvf_base.h"
->> +
->> +#define VERSION_STRING    "0.1"
->> +#define DRIVER_AUTHOR    "Intel Corporation"
->> +#define IFCVF_DRIVER_NAME    "ifcvf"
->> +
->> +static irqreturn_t ifcvf_intr_handler(int irq, void *arg)
->> +{
->> +    struct vring_info *vring = arg;
->> +
->> +    if (vring->cb.callback)
->> +        return vring->cb.callback(vring->cb.private);
->> +
->> +    return IRQ_HANDLED;
->> +}
->> +
->> +static u64 ifcvf_mdev_get_features(struct mdev_device *mdev)
->> +{
->> +    return IFC_SUPPORTED_FEATURES;
->
->
-> I would expect this should be done by querying the hw. Or IFC VF can't 
-> get any update through its firmware?
->
->
->> +}
->> +
->> +static int ifcvf_mdev_set_features(struct mdev_device *mdev, u64 
->> features)
->> +{
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    vf->req_features = features;
->> +
->> +    return 0;
->> +}
->> +
->> +static u64 ifcvf_mdev_get_vq_state(struct mdev_device *mdev, u16 qid)
->> +{
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    return vf->vring[qid].last_avail_idx;
->
->
-> Does this really work? I'd expect it should be fetched from hw since 
-> it's an internal state.
->
->
->> +}
->> +
->> +static int ifcvf_mdev_set_vq_state(struct mdev_device *mdev, u16 
->> qid, u64 num)
->> +{
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    vf->vring[qid].last_used_idx = num;
->
->
-> I fail to understand why last_used_idx is needed. It looks to me the 
-> used idx in the used ring is sufficient.
->
->
->> +    vf->vring[qid].last_avail_idx = num;
->
->
-> Do we need a synchronization with hw immediately here?
->
->
->> +
->> +    return 0;
->> +}
->> +
->> +static int ifcvf_mdev_set_vq_address(struct mdev_device *mdev, u16 idx,
->> +                     u64 desc_area, u64 driver_area,
->> +                     u64 device_area)
->> +{
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    vf->vring[idx].desc = desc_area;
->> +    vf->vring[idx].avail = driver_area;
->> +    vf->vring[idx].used = device_area;
->> +
->> +    return 0;
->> +}
->> +
->> +static void ifcvf_mdev_set_vq_num(struct mdev_device *mdev, u16 qid, 
->> u32 num)
->> +{
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    vf->vring[qid].size = num;
->> +}
->> +
->> +static void ifcvf_mdev_set_vq_ready(struct mdev_device *mdev,
->> +                u16 qid, bool ready)
->> +{
->> +
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    vf->vring[qid].ready = ready;
->> +}
->> +
->> +static bool ifcvf_mdev_get_vq_ready(struct mdev_device *mdev, u16 qid)
->> +{
->> +
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    return vf->vring[qid].ready;
->> +}
->> +
->> +static void ifcvf_mdev_set_vq_cb(struct mdev_device *mdev, u16 idx,
->> +                 struct virtio_mdev_callback *cb)
->> +{
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    vf->vring[idx].cb = *cb;
->> +}
->> +
->> +static void ifcvf_mdev_kick_vq(struct mdev_device *mdev, u16 idx)
->> +{
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    ifcvf_notify_queue(vf, idx);
->> +}
->> +
->> +static u8 ifcvf_mdev_get_status(struct mdev_device *mdev)
->> +{
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    return vf->status;
->> +}
->> +
->> +static u32 ifcvf_mdev_get_generation(struct mdev_device *mdev)
->> +{
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    return vf->generation;
->> +}
->> +
->> +static int ifcvf_mdev_get_version(struct mdev_device *mdev)
->> +{
->> +    return VIRTIO_MDEV_VERSION;
->> +}
->> +
->> +static u32 ifcvf_mdev_get_device_id(struct mdev_device *mdev)
->> +{
->> +    return IFCVF_DEVICE_ID;
->> +}
->> +
->> +static u32 ifcvf_mdev_get_vendor_id(struct mdev_device *mdev)
->> +{
->> +    return IFCVF_VENDOR_ID;
->> +}
->> +
->> +static u16 ifcvf_mdev_get_vq_align(struct mdev_device *mdev)
->> +{
->> +    return IFCVF_QUEUE_ALIGNMENT;
->> +}
->> +
->> +static int ifcvf_start_datapath(void *private)
->> +{
->> +    int i, ret;
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(private);
->> +
->> +    for (i = 0; i < (IFCVF_MAX_QUEUE_PAIRS * 2); i++) {
->> +        if (!vf->vring[i].ready)
->> +            break;
->
->
-> Looks like error should be returned here?
->
->
->> +
->> +        if (!vf->vring[i].size)
->> +            break;
->> +
->> +        if (!vf->vring[i].desc || !vf->vring[i].avail ||
->> +            !vf->vring[i].used)
->> +            break;
->> +    }
->> +    vf->nr_vring = i;
->> +
->> +    ret = ifcvf_start_hw(vf);
->> +    return ret;
->> +}
->> +
->> +static int ifcvf_stop_datapath(void *private)
->> +{
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(private);
->> +    int i;
->> +
->> +    for (i = 0; i < IFCVF_MAX_QUEUES; i++)
->> +        vf->vring[i].cb.callback = NULL;
->
->
-> Any synchronization is needed for the vq irq handler?
->
->
->> +
->> +    ifcvf_stop_hw(vf);
->> +
->> +    return 0;
->> +}
->> +
->> +static void ifcvf_reset_vring(struct ifcvf_adapter *adapter)
->> +{
->> +    int i;
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
->> +        vf->vring[i].last_used_idx = 0;
->> +        vf->vring[i].last_avail_idx = 0;
->> +        vf->vring[i].desc = 0;
->> +        vf->vring[i].avail = 0;
->> +        vf->vring[i].used = 0;
->> +        vf->vring[i].ready = 0;
->> +        vf->vring->cb.callback = NULL;
->> +        vf->vring->cb.private = NULL;
->> +    }
->> +}
->> +
->> +static void ifcvf_mdev_set_status(struct mdev_device *mdev, u8 status)
->> +{
->> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +
->> +    vf->status = status;
->> +
->> +    if (status == 0) {
->> +        ifcvf_stop_datapath(adapter);
->> +        ifcvf_reset_vring(adapter);
->> +        return;
->> +    }
->> +
->> +    if (status & VIRTIO_CONFIG_S_DRIVER_OK) {
->> +        ifcvf_start_datapath(adapter);
->> +        return;
->> +    }
->> +}
->> +
->> +static u16 ifcvf_mdev_get_queue_max(struct mdev_device *mdev)
->> +{
->> +    return IFCVF_MAX_QUEUES;
->
->
-> The name is confusing, it was used to return the maximum queue size. 
-> In new version of virtio-mdev, the callback was renamed as 
-> get_vq_num_max().
->
->
->> +}
->> +
->> +static struct virtio_mdev_device_ops ifc_mdev_ops = {
->> +    .get_features  = ifcvf_mdev_get_features,
->> +    .set_features  = ifcvf_mdev_set_features,
->> +    .get_status    = ifcvf_mdev_get_status,
->> +    .set_status    = ifcvf_mdev_set_status,
->> +    .get_queue_max = ifcvf_mdev_get_queue_max,
->> +    .get_vq_state   = ifcvf_mdev_get_vq_state,
->> +    .set_vq_state   = ifcvf_mdev_set_vq_state,
->> +    .set_vq_cb      = ifcvf_mdev_set_vq_cb,
->> +    .set_vq_ready   = ifcvf_mdev_set_vq_ready,
->> +    .get_vq_ready    = ifcvf_mdev_get_vq_ready,
->> +    .set_vq_num     = ifcvf_mdev_set_vq_num,
->> +    .set_vq_address = ifcvf_mdev_set_vq_address,
->> +    .kick_vq        = ifcvf_mdev_kick_vq,
->> +    .get_generation    = ifcvf_mdev_get_generation,
->> +    .get_version    = ifcvf_mdev_get_version,
->> +    .get_device_id    = ifcvf_mdev_get_device_id,
->> +    .get_vendor_id    = ifcvf_mdev_get_vendor_id,
->> +    .get_vq_align    = ifcvf_mdev_get_vq_align,
->> +};
->
->
-> set_config/get_config is missing. It looks to me they are not hard, 
-> just implementing the access to dev_cfg. It's key to make kernel 
-> virtio driver to work.
->
-> And in the new version of virito-mdev, features like _F_LOG_ALL should 
-> be advertised through get_mdev_features.
->
->
->> +
->> +static int ifcvf_init_msix(struct ifcvf_adapter *adapter)
->> +{
->> +    int vector, i, ret, irq;
->> +    struct pci_dev *pdev = to_pci_dev(adapter->dev);
->> +    struct ifcvf_hw *vf = &adapter->vf;
->> +
->> +    ret = pci_alloc_irq_vectors(pdev, IFCVF_MAX_INTR,
->> +            IFCVF_MAX_INTR, PCI_IRQ_MSIX);
->> +    if (ret < 0) {
->> +        IFC_ERR(adapter->dev, "Failed to alloc irq vectors.\n");
->> +        return ret;
->> +    }
->> +
->> +    for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
->> +        vector = i + IFCVF_MSI_QUEUE_OFF;
->> +        irq = pci_irq_vector(pdev, vector);
->> +        ret = request_irq(irq, ifcvf_intr_handler, 0,
->> +                pci_name(pdev), &vf->vring[i]);
->> +        if (ret) {
->> +            IFC_ERR(adapter->dev,
->> +                "Failed to request irq for vq %d.\n", i);
->> +            return ret;
->> +        }
->> +    }
->
->
-> Do we need to provide fallback when we can't do per vq MSIX?
->
->
->> +
->> +    return 0;
->> +}
->> +
->> +static void ifcvf_destroy_adapter(struct ifcvf_adapter *adapter)
->> +{
->> +    int i, vector, irq;
->> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->> +    struct pci_dev *pdev = to_pci_dev(adapter->dev);
->> +
->> +    for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
->> +        vector = i + IFCVF_MSI_QUEUE_OFF;
->> +        irq = pci_irq_vector(pdev, vector);
->> +        free_irq(irq, &vf->vring[i]);
->> +    }
->> +}
->> +
->> +static ssize_t name_show(struct kobject *kobj, struct device *dev, 
->> char *buf)
->> +{
->> +    const char *name = "vhost accelerator (virtio ring compatible)";
->> +
->> +    return sprintf(buf, "%s\n", name);
->> +}
->> +MDEV_TYPE_ATTR_RO(name);
->> +
->> +static ssize_t device_api_show(struct kobject *kobj, struct device 
->> *dev,
->> +                   char *buf)
->> +{
->> +    return sprintf(buf, "%s\n", VIRTIO_MDEV_DEVICE_API_STRING);
->> +}
->> +MDEV_TYPE_ATTR_RO(device_api);
->> +
->> +static ssize_t available_instances_show(struct kobject *kobj,
->> +                    struct device *dev, char *buf)
->> +{
->> +    struct pci_dev *pdev = to_pci_dev(dev);
->> +    struct ifcvf_adapter *adapter = pci_get_drvdata(pdev);
->> +
->> +    return sprintf(buf, "%d\n", adapter->mdev_count);
->> +}
->> +
->> +MDEV_TYPE_ATTR_RO(available_instances);
->> +
->> +static ssize_t type_show(struct kobject *kobj,
->> +            struct device *dev, char *buf)
->> +{
->> +    return sprintf(buf, "%s\n", "net");
->> +}
->> +
->> +MDEV_TYPE_ATTR_RO(type);
->> +
->> +
->> +static struct attribute *mdev_types_attrs[] = {
->> +    &mdev_type_attr_name.attr,
->> +    &mdev_type_attr_device_api.attr,
->> +    &mdev_type_attr_available_instances.attr,
->> +    &mdev_type_attr_type.attr,
->> +    NULL,
->> +};
->> +
->> +static struct attribute_group mdev_type_group = {
->> +    .name  = "vdpa_virtio",
->
->
-> To be consistent, it should be "vhost" or "virtio".
->
->
->> +    .attrs = mdev_types_attrs,
->> +};
->> +
->> +static struct attribute_group *mdev_type_groups[] = {
->> +    &mdev_type_group,
->> +    NULL,
->> +};
->> +
->> +const struct attribute_group *mdev_dev_groups[] = {
->> +    NULL,
->> +};
->> +
->> +static int ifcvf_mdev_create(struct kobject *kobj, struct 
->> mdev_device *mdev)
->> +{
->> +    struct device *dev = mdev_parent_dev(mdev);
->> +    struct pci_dev *pdev = to_pci_dev(dev);
->> +    struct ifcvf_adapter *adapter = pci_get_drvdata(pdev);
->> +    int ret = 0;
->> +
->> +    mutex_lock(&adapter->mdev_lock);
->> +
->> +    if (adapter->mdev_count < 1) {
->> +        ret = -EINVAL;
->> +        goto out;
->> +    }
->> +
->> +    mdev_set_class_id(mdev, MDEV_ID_VHOST);
->> +    mdev_set_dev_ops(mdev, &ifc_mdev_ops);
->> +
->> +    mdev_set_drvdata(mdev, adapter);
->> +    mdev_set_iommu_device(mdev_dev(mdev), dev);
->> +
->> +    INIT_LIST_HEAD(&adapter->dma_maps);
->> +    adapter->mdev_count--;
->> +
->> +out:
->> +    mutex_unlock(&adapter->mdev_lock);
->> +    return ret;
->> +}
->> +
->> +static int ifcvf_mdev_remove(struct mdev_device *mdev)
->> +{
->> +    struct device *dev = mdev_parent_dev(mdev);
->> +    struct pci_dev *pdev = to_pci_dev(dev);
->> +    struct ifcvf_adapter *adapter = pci_get_drvdata(pdev);
->> +
->> +    mutex_lock(&adapter->mdev_lock);
->> +    adapter->mdev_count++;
->> +    mutex_unlock(&adapter->mdev_lock);
->> +
->> +    return 0;
->> +}
->> +
->> +static struct mdev_parent_ops ifcvf_mdev_fops = {
->> +    .owner            = THIS_MODULE,
->> +    .supported_type_groups    = mdev_type_groups,
->> +    .mdev_attr_groups    = mdev_dev_groups,
->> +    .create            = ifcvf_mdev_create,
->> +    .remove            = ifcvf_mdev_remove,
->> +};
->> +
->> +static int ifcvf_probe(struct pci_dev *pdev, const struct 
->> pci_device_id *id)
->> +{
->> +    struct device *dev = &pdev->dev;
->> +    struct ifcvf_adapter *adapter;
->> +    struct ifcvf_hw *vf;
->> +    int ret, i;
->> +
->> +    adapter = kzalloc(sizeof(struct ifcvf_adapter), GFP_KERNEL);
->> +    if (adapter == NULL) {
->> +        ret = -ENOMEM;
->> +        goto fail;
->> +    }
->> +
->> +    mutex_init(&adapter->mdev_lock);
->> +    adapter->mdev_count = 1;
->
->
-> So this is per VF based vDPA implementation, which seems not 
-> convenient for management.  Anyhow we can control the creation in PF?
->
-> Thanks
->
->
->> +    adapter->dev = dev;
->> +
->> +    pci_set_drvdata(pdev, adapter);
->> +
->> +    ret = pci_enable_device(pdev);
->> +    if (ret) {
->> +        IFC_ERR(adapter->dev, "Failed to enable device.\n");
->> +        goto free_adapter;
->> +    }
->> +
->> +    ret = pci_request_regions(pdev, IFCVF_DRIVER_NAME);
->> +    if (ret) {
->> +        IFC_ERR(adapter->dev, "Failed to request MMIO region.\n");
->> +        goto disable_device;
->> +    }
->> +
->> +    pci_set_master(pdev);
->> +
->> +    ret = ifcvf_init_msix(adapter);
->> +    if (ret) {
->> +        IFC_ERR(adapter->dev, "Failed to initialize MSIX.\n");
->> +        goto free_msix;
->> +    }
->> +
->> +    vf = &adapter->vf;
->> +    for (i = 0; i < IFCVF_PCI_MAX_RESOURCE; i++) {
->> +        vf->mem_resource[i].phys_addr = pci_resource_start(pdev, i);
->> +        vf->mem_resource[i].len = pci_resource_len(pdev, i);
->> +        if (!vf->mem_resource[i].len) {
->> +            vf->mem_resource[i].addr = NULL;
->> +            continue;
->> +        }
->> +
->> +        vf->mem_resource[i].addr = pci_iomap_range(pdev, i, 0,
->> +                vf->mem_resource[i].len);
->> +        if (!vf->mem_resource[i].addr) {
->> +            IFC_ERR(adapter->dev, "Failed to map IO resource %d\n",
->> +                i);
->> +            return -1;
->> +        }
->> +    }
->> +
->> +    if (ifcvf_init_hw(vf, pdev) < 0)
->> +        return -1;
->> +
->> +    ret = mdev_register_device(dev, &ifcvf_mdev_fops);
->> +    if (ret) {
->> +        IFC_ERR(adapter->dev,  "Failed to register mdev device\n");
->> +        goto destroy_adapter;
->> +    }
->> +
->> +    return 0;
->> +
->> +destroy_adapter:
->> +    ifcvf_destroy_adapter(adapter);
->> +free_msix:
->> +    pci_free_irq_vectors(pdev);
->> +    pci_release_regions(pdev);
->> +disable_device:
->> +    pci_disable_device(pdev);
->> +free_adapter:
->> +    kfree(adapter);
->> +fail:
->> +    return ret;
->> +}
->> +
->> +static void ifcvf_remove(struct pci_dev *pdev)
->> +{
->> +    struct device *dev = &pdev->dev;
->> +    struct ifcvf_adapter *adapter = pci_get_drvdata(pdev);
->> +    struct ifcvf_hw *vf;
->> +    int i;
->> +
->> +    mdev_unregister_device(dev);
->> +
->> +    vf = &adapter->vf;
->> +    for (i = 0; i < IFCVF_PCI_MAX_RESOURCE; i++) {
->> +        if (vf->mem_resource[i].addr) {
->> +            pci_iounmap(pdev, vf->mem_resource[i].addr);
->> +            vf->mem_resource[i].addr = NULL;
->> +        }
->> +    }
->> +
->> +    ifcvf_destroy_adapter(adapter);
->> +    pci_free_irq_vectors(pdev);
->> +
->> +    pci_release_regions(pdev);
->> +    pci_disable_device(pdev);
->> +
->> +    kfree(adapter);
->> +}
->> +
->> +static struct pci_device_id ifcvf_pci_ids[] = {
->> +    { PCI_DEVICE_SUB(IFCVF_VENDOR_ID,
->> +            IFCVF_DEVICE_ID,
->> +            IFCVF_SUBSYS_VENDOR_ID,
->> +            IFCVF_SUBSYS_DEVICE_ID) },
->> +    { 0 },
->> +};
->> +MODULE_DEVICE_TABLE(pci, ifcvf_pci_ids);
->> +
->> +static struct pci_driver ifcvf_driver = {
->> +    .name     = IFCVF_DRIVER_NAME,
->> +    .id_table = ifcvf_pci_ids,
->> +    .probe    = ifcvf_probe,
->> +    .remove   = ifcvf_remove,
->> +};
->> +
->> +static int __init ifcvf_init_module(void)
->> +{
->> +    int ret;
->> +
->> +    ret = pci_register_driver(&ifcvf_driver);
->> +    return ret;
->> +}
->> +
->> +static void __exit ifcvf_exit_module(void)
->> +{
->> +    pci_unregister_driver(&ifcvf_driver);
->> +}
->> +
->> +module_init(ifcvf_init_module);
->> +module_exit(ifcvf_exit_module);
->> +
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_VERSION(VERSION_STRING);
->> +MODULE_AUTHOR(DRIVER_AUTHOR);
+- 1. bridge reference cnt problem
+- 2. maintance two link methods.
+
+the 1) seems unavoidable, so swap all to bridage at least can avoid
+the pain of 2). that's why I thought your idea "swap all to bridage"
+is good.
+
+Thanks
+James.
+
+> As/when improvements are made to the bridge code we can remove the
+> component bits and not lose anything.
+>=20
+> > So my suggestion is keeping on one single interface in komeda, no
+> > matter it is bridge or component, but I'd like it only one, but not
+> > them both in komeda.
+>=20
+> If we can put the effort into fixing bridges then I guess that's the
+> best approach for everyone :-) Might not be easy though!
+>=20
+> -Brian
+>=20
+> >=20
+> > Thanks
+> > James
+> >=20
+> > > Thanks,
+> > > -Brian
