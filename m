@@ -2,131 +2,79 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1830CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 546CACA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 824B421D7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:37:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TvUQBq/N"
+	by mail.kernel.org (Postfix) with ESMTP id 288F020854
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:38:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407322AbfJRLhP (ORCPT
+        id S2407745AbfJRLih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 07:37:15 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:36652 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389955AbfJRLhO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 07:37:14 -0400
-Received: by mail-ed1-f67.google.com with SMTP id h2so4317737edn.3;
-        Fri, 18 Oct 2019 04:37:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vfacdRIZROtgaYKyvVVlViTaU4E6jqDJejGD7tuz/+s=;
-        b=TvUQBq/NsvkK0uCyK5aaB1cOiOq38Cq7pGNXyhyOMe3ai76NPGio2T0PBOiFlsDSLZ
-         R1sshtOTbas68n6dMsqEFSXVaqG4IevQuXPdjVu1uEIG6biMwYUGzfYiYtAI82R/BHDQ
-         93FUxB1OwxHTphdgReKffJfPJ+UwhufDFKK7AoYI7qJrCzkXl1ewHruSYOkaAv7oZQPf
-         qROubUq5dNJqlQt3Jn6QT3+p36Ij8wTlbM+kF7U05qeTtXpOV+L19PUsMIm32ErniBaY
-         Ed2mj1G6gOS6Tuj2Nzck3c4Gx2RKyCehPdoOBwpR1QSXzbSyeJ3MjUCkprA0q8skNpxR
-         C/UA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vfacdRIZROtgaYKyvVVlViTaU4E6jqDJejGD7tuz/+s=;
-        b=ilfIHWBw7gukntxxwviQUyknN7wT3K9ax9eAUnZjBqg10HcXzD0MiZctaOJezGNkoe
-         pnmQz4HkUh5h45Z4pOh+7Jugn8Dzlg9VuugYEc03p64gEYP/y/f7mAIJsXXOQ++zjyzY
-         dzkIEnEVbnaeXR4Ll6xNNyQ/ETgfTHB5LzbhI5Mw/q2CjS2K1v91KokG4XDuj0Mu+yHv
-         h/tGZBqVRC/GxfRDUtZyTnDeqfaiOqfpO9+vanA6CUYghZCioIjIzHWdhYHjEi3tQ17e
-         EJuWpul7CRyC2y2frKHMClv/DpgfOSdudC9hghNrCgP2XTv337VJyS7gvx0hX8F10IZR
-         Fw8Q==
-X-Gm-Message-State: APjAAAWDlfSnAVz2eMVESANfePY3BC1w5B0A2iX9HGh/mRBE7lxD0a6b
-        2c7Z763uCfk9Fj11B+0NX2cvwlGJTktso9y9MuY=
-X-Google-Smtp-Source: APXvYqxUlMOimXUQfuCPwVTgyEMSYOoYavmpO7+8E+tfkwKA7hFgTUZ0o1J9m28yzcNWZg5OMp9rzMEP5i8JNur5xEo=
-X-Received: by 2002:a17:907:4182:: with SMTP id mz2mr8019392ejb.326.1571398632465;
- Fri, 18 Oct 2019 04:37:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191017025058.31528-1-hslester96@gmail.com> <CAHp75Vd2SMERjtvNumxAF1HSp8GSThmcyx96zkFzUXKwnD5d2Q@mail.gmail.com>
- <CANhBUQ2yxGbjk_DgXbip=TPT=evzA5naoJSY9t1_Ep47e9oupw@mail.gmail.com> <CAHp75VeLyTi=gqfNr-=Tg36yQs_fYG__iQAxAEKdks0mqsTbug@mail.gmail.com>
-In-Reply-To: <CAHp75VeLyTi=gqfNr-=Tg36yQs_fYG__iQAxAEKdks0mqsTbug@mail.gmail.com>
-From:   Chuhong Yuan <hslester96@gmail.com>
-Date:   Fri, 18 Oct 2019 19:37:00 +0800
-Message-ID: <CANhBUQ1CnCHiY8tkCMcXZ3DAPcfnQZgfA_Fj4qf3yYBKGg10Wg@mail.gmail.com>
-Subject: Re: [PATCH] spi: pxa2xx: Add missed security checks
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 18 Oct 2019 07:38:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37172 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729803AbfJRLig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 07:38:36 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7899F11A2F;
+        Fri, 18 Oct 2019 11:38:36 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-43.ams2.redhat.com [10.36.116.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3D25C5D9D5;
+        Fri, 18 Oct 2019 11:38:33 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 2E9C99DB6; Fri, 18 Oct 2019 13:38:32 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/virtio: print a single line with device features
+Date:   Fri, 18 Oct 2019 13:38:32 +0200
+Message-Id: <20191018113832.5460-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 18 Oct 2019 11:38:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 7:14 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Fri, Oct 18, 2019 at 1:39 PM Chuhong Yuan <hslester96@gmail.com> wrote:
-> >
-> > On Fri, Oct 18, 2019 at 5:35 PM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > >
-> > > On Fri, Oct 18, 2019 at 8:59 AM Chuhong Yuan <hslester96@gmail.com> wrote:
-> > > >
-> > > > pxa2xx_spi_init_pdata misses checks for devm_clk_get and
-> > > > platform_get_irq.
-> > > > Add checks for them to fix the bugs.
-> > > >
-> > > > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > > > ---
-> > > >  drivers/spi/spi-pxa2xx.c | 6 ++++++
-> > > >  1 file changed, 6 insertions(+)
-> > > >
-> > > > diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-> > > > index bb6a14d1ab0f..2e73d75a6ac5 100644
-> > > > --- a/drivers/spi/spi-pxa2xx.c
-> > > > +++ b/drivers/spi/spi-pxa2xx.c
-> > > > @@ -1565,7 +1565,13 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
-> > > >  #endif
-> > > >
-> > > >         ssp->clk = devm_clk_get(&pdev->dev, NULL);
-> > > > +       if (IS_ERR(ssp->clk))
-> > > > +               return NULL;
-> > > > +
-> > > >         ssp->irq = platform_get_irq(pdev, 0);
-> > > > +       if (ssp->irq < 0)
-> > > > +               return NULL;
-> > >
-> > > I'm not sure they are mandatory for all platforms.
-> > > To be on the safe side, you simple need to add _optional() to the both
-> > > call along with above change.
-> > >
-> >
-> > As I know, this is the only one in spi which does not have a check for
-> > devm_clk_get.
->
-> For some it still may be optional. That's why better to check it and
-> mention in the commit message.
->
-> > Even if add _optional(), they still may return errors and need security checks.
->
-> Of course, see "along with" in my previous comment.
->
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ drivers/gpu/drm/virtio/virtgpu_kms.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-Got it. I will send version 2 in which both _optional() and security
-checks will be added.
+diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
+index 0b3cdb0d83b0..2f5773e43557 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_kms.c
++++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
+@@ -155,16 +155,15 @@ int virtio_gpu_init(struct drm_device *dev)
+ #ifdef __LITTLE_ENDIAN
+ 	if (virtio_has_feature(vgdev->vdev, VIRTIO_GPU_F_VIRGL))
+ 		vgdev->has_virgl_3d = true;
+-	DRM_INFO("virgl 3d acceleration %s\n",
+-		 vgdev->has_virgl_3d ? "enabled" : "not supported by host");
+-#else
+-	DRM_INFO("virgl 3d acceleration not supported by guest\n");
+ #endif
+ 	if (virtio_has_feature(vgdev->vdev, VIRTIO_GPU_F_EDID)) {
+ 		vgdev->has_edid = true;
+-		DRM_INFO("EDID support available.\n");
+ 	}
+ 
++	DRM_INFO("features: %cvirgl %cedid\n",
++		 vgdev->has_virgl_3d ? '+' : '-',
++		 vgdev->has_edid     ? '+' : '-');
++
+ 	ret = virtio_find_vqs(vgdev->vdev, 2, vqs, callbacks, names, NULL);
+ 	if (ret) {
+ 		DRM_ERROR("failed to find virt queues\n");
+-- 
+2.18.1
 
-> --
-> With Best Regards,
-> Andy Shevchenko
