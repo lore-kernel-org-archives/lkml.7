@@ -2,92 +2,170 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2290CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEC7CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 892DE21925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:44:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571384654;
-	bh=azma7LQs8ZO7QqTinH/NH5IEVQ4d5o2RuE2NP5fOSCo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yFDJMnO8V9q5J7DsemSJkichbfT+rCPu/yoxWjgfBf4YlcdaJvyhUZb07XXo9XUeL
-	 0igb1vWpfkqGJB3eStOpQd/JBoiSldLgJDE/F49X+jR3cVcFgfltz/i3QtSsgr1HHY
-	 sAwv/izVXjk5VHr2QbDDOOB/ezzU/yAkKrtjMxpM=
+	by mail.kernel.org (Postfix) with ESMTP id C45C121925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:44:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407332AbfJRHoN (ORCPT
+        id S2409607AbfJRHo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 03:44:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33520 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727388AbfJRHoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 03:44:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7AA88B1BB;
-        Fri, 18 Oct 2019 07:44:11 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 09:44:11 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Dave Hansen <dave.hansen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        dan.j.williams@intel.com
-Subject: Re: [PATCH 0/4] [RFC] Migrate Pages in lieu of discard
-Message-ID: <20191018074411.GC5017@dhcp22.suse.cz>
-References: <20191016221148.F9CCD155@viggo.jf.intel.com>
+        Fri, 18 Oct 2019 03:44:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54362 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727388AbfJRHo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 03:44:27 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BB379793F4;
+        Fri, 18 Oct 2019 07:44:25 +0000 (UTC)
+Received: from gondolin (dhcp-192-202.str.redhat.com [10.33.192.202])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 024D160600;
+        Fri, 18 Oct 2019 07:44:09 +0000 (UTC)
+Date:   Fri, 18 Oct 2019 09:44:07 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+Subject: Re: [PATCH V4 3/6] mdev: introduce device specific ops
+Message-ID: <20191018094407.1a91e843.cohuck@redhat.com>
+In-Reply-To: <20191017115310.0481cc52@x1.home>
+References: <20191017104836.32464-1-jasowang@redhat.com>
+        <20191017104836.32464-4-jasowang@redhat.com>
+        <20191017170755.15506ada.cohuck@redhat.com>
+        <20191017115310.0481cc52@x1.home>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191016221148.F9CCD155@viggo.jf.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 18 Oct 2019 07:44:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 16-10-19 15:11:48, Dave Hansen wrote:
-> We're starting to see systems with more and more kinds of memory such
-> as Intel's implementation of persistent memory.
-> 
-> Let's say you have a system with some DRAM and some persistent memory.
-> Today, once DRAM fills up, reclaim will start and some of the DRAM
-> contents will be thrown out.  Allocations will, at some point, start
-> falling over to the slower persistent memory.
-> 
-> That has two nasty properties.  First, the newer allocations can end
-> up in the slower persistent memory.  Second, reclaimed data in DRAM
-> are just discarded even if there are gobs of space in persistent
-> memory that could be used.
-> 
-> This set implements a solution to these problems.  At the end of the
-> reclaim process in shrink_page_list() just before the last page
-> refcount is dropped, the page is migrated to persistent memory instead
-> of being dropped.
-> 
-> While I've talked about a DRAM/PMEM pairing, this approach would
-> function in any environment where memory tiers exist.
-> 
-> This is not perfect.  It "strands" pages in slower memory and never
-> brings them back to fast DRAM.  Other things need to be built to
-> promote hot pages back to DRAM.
-> 
-> This is part of a larger patch set.  If you want to apply these or
-> play with them, I'd suggest using the tree from here.  It includes
-> autonuma-based hot page promotion back to DRAM:
-> 
-> 	http://lkml.kernel.org/r/c3d6de4d-f7c3-b505-2e64-8ee5f70b2118@intel.com
-> 
-> This is also all based on an upstream mechanism that allows
-> persistent memory to be onlined and used as if it were volatile:
-> 
-> 	http://lkml.kernel.org/r/20190124231441.37A4A305@viggo.jf.intel.com
+On Thu, 17 Oct 2019 11:53:10 -0600
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
-How does this compare to
-http://lkml.kernel.org/r/1560468577-101178-1-git-send-email-yang.shi@linux.alibaba.com?
+> On Thu, 17 Oct 2019 17:07:55 +0200
+> Cornelia Huck <cohuck@redhat.com> wrote:
+> 
+> > On Thu, 17 Oct 2019 18:48:33 +0800
+> > Jason Wang <jasowang@redhat.com> wrote:
+> >   
+> > > Currently, except for the create and remove, the rest of
+> > > mdev_parent_ops is designed for vfio-mdev driver only and may not help
+> > > for kernel mdev driver. With the help of class id, this patch
+> > > introduces device specific callbacks inside mdev_device
+> > > structure. This allows different set of callback to be used by
+> > > vfio-mdev and virtio-mdev.
+> > > 
+> > > Signed-off-by: Jason Wang <jasowang@redhat.com>
+> > > ---
+> > >  .../driver-api/vfio-mediated-device.rst       | 25 +++++----
+> > >  MAINTAINERS                                   |  1 +
+> > >  drivers/gpu/drm/i915/gvt/kvmgt.c              | 18 ++++---
+> > >  drivers/s390/cio/vfio_ccw_ops.c               | 18 ++++---
+> > >  drivers/s390/crypto/vfio_ap_ops.c             | 14 +++--
+> > >  drivers/vfio/mdev/mdev_core.c                 | 18 +++++--
+> > >  drivers/vfio/mdev/mdev_private.h              |  1 +
+> > >  drivers/vfio/mdev/vfio_mdev.c                 | 37 ++++++-------
+> > >  include/linux/mdev.h                          | 45 ++++------------
+> > >  include/linux/vfio_mdev.h                     | 52 +++++++++++++++++++
+> > >  samples/vfio-mdev/mbochs.c                    | 20 ++++---
+> > >  samples/vfio-mdev/mdpy.c                      | 20 ++++---
+> > >  samples/vfio-mdev/mtty.c                      | 18 ++++---
+> > >  13 files changed, 184 insertions(+), 103 deletions(-)
+> > >  create mode 100644 include/linux/vfio_mdev.h
+> > > 
+> > > diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Documentation/driver-api/vfio-mediated-device.rst
+> > > index f9a78d75a67a..0cca84d19603 100644
+> > > --- a/Documentation/driver-api/vfio-mediated-device.rst
+> > > +++ b/Documentation/driver-api/vfio-mediated-device.rst
+> > > @@ -152,11 +152,22 @@ callbacks per mdev parent device, per mdev type, or any other categorization.
+> > >  Vendor drivers are expected to be fully asynchronous in this respect or
+> > >  provide their own internal resource protection.)
+> > >  
+> > > -The callbacks in the mdev_parent_ops structure are as follows:
+> > > -
+> > > -* open: open callback of mediated device
+> > > -* close: close callback of mediated device
+> > > -* ioctl: ioctl callback of mediated device
+> > > +As multiple types of mediated devices may be supported, the device
+> > > +must set up the class id and the device specific callbacks in create()    
+> > 
+> > s/in create()/in the create()/
+> >   
+> > > +callback. E.g for vfio-mdev device it needs to be done through:    
+> > 
+> > "Each class provides a helper function to do so; e.g. for vfio-mdev
+> > devices, the function to be called is:"
+> > 
+> > ?
+> >   
+> > > +
+> > > +    int mdev_set_vfio_ops(struct mdev_device *mdev,
+> > > +                          const struct vfio_mdev_ops *vfio_ops);
+> > > +
+> > > +The class id (set to MDEV_CLASS_ID_VFIO) is used to match a device    
+> > 
+> > "(set by this helper function to MDEV_CLASS_ID_VFIO)" ?
+> >   
+> > > +with an mdev driver via its id table. The device specific callbacks
+> > > +(specified in *ops) are obtainable via mdev_get_dev_ops() (for use by    
+> > 
+> > "(specified in *vfio_ops by the caller)" ?
+> >   
+> > > +the mdev bus driver). A vfio-mdev device (class id MDEV_CLASS_ID_VFIO)
+> > > +uses the following device-specific ops:
+> > > +
+> > > +* open: open callback of vfio mediated device
+> > > +* close: close callback of vfio mediated device
+> > > +* ioctl: ioctl callback of vfio mediated device
+> > >  * read : read emulation callback
+> > >  * write: write emulation callback
+> > >  * mmap: mmap emulation callback
+> > > @@ -167,10 +178,6 @@ register itself with the mdev core driver::
+> > >  	extern int  mdev_register_device(struct device *dev,
+> > >  	                                 const struct mdev_parent_ops *ops);
+> > >  
+> > > -It is also required to specify the class_id in create() callback through::
+> > > -
+> > > -	int mdev_set_class(struct mdev_device *mdev, u16 id);
+> > > -    
+> > 
+> > I'm wondering if this patch set should start out with introducing
+> > helper functions already (i.e. don't introduce mdev_set_class(), but
+> > start out with mdev_set_class_vfio() which will gain the *vfio_ops
+> > argument in this patch.)  
+> 
+> Yes, it would be cleaner, but is it really worth the churn?  Correct me
+> if I'm wrong, but I think we get to the same point after this patch and
+> aside from the function name itself, the difference is really just that
+> the class_id is briefly exposed to the parent driver, right?  Thanks,
 
--- 
-Michal Hocko
-SUSE Labs
+Yes, it does not really matter much. If there's no other reason to
+rework things, I'd just keep this as it is now.
