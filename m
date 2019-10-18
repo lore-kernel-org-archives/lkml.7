@@ -2,134 +2,73 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093BCCA9EA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDF5CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1A9B20663
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81FC7222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:41:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="SsF4ZbqW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410422AbfJRNlC (ORCPT
+        id S2439523AbfJRNlK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 09:41:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40414 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728150AbfJRNlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 09:41:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0FBAFB1D4;
-        Fri, 18 Oct 2019 13:41:00 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 15:40:58 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Miroslav Benes <mbenes@suse.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
-Message-ID: <20191018134058.7zyls4746wpa7jy5@pathway.suse.cz>
-References: <20191015135634.GK2328@hirez.programming.kicks-ass.net>
- <alpine.LSU.2.21.1910151611000.13169@pobox.suse.cz>
- <88bab814-ea24-ece9-2bc0-7a1e10a62f12@redhat.com>
- <20191015153120.GA21580@linux-8ccs>
- <7e9c7dd1-809e-f130-26a3-3d3328477437@redhat.com>
- <20191015182705.1aeec284@gandalf.local.home>
- <20191016074951.GM2328@hirez.programming.kicks-ass.net>
- <alpine.LSU.2.21.1910161216100.7750@pobox.suse.cz>
- <alpine.LSU.2.21.1910161521010.7750@pobox.suse.cz>
- <20191018130342.GA4625@linux-8ccs>
+        Fri, 18 Oct 2019 09:41:10 -0400
+Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:37454 "EHLO
+        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392320AbfJRNlK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 09:41:10 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id CF66C3F867;
+        Fri, 18 Oct 2019 15:41:07 +0200 (CEST)
+Authentication-Results: ste-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=SsF4ZbqW;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
+        dkim=pass (1024-bit key) header.d=shipmail.org
+Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id TOTufyBBa0V2; Fri, 18 Oct 2019 15:41:04 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 45F6F3F7F6;
+        Fri, 18 Oct 2019 15:41:04 +0200 (CEST)
+Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id C66A6360591;
+        Fri, 18 Oct 2019 15:41:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1571406063; bh=gGaWHO4KvUf91pQm6umckHTl12QmRAuYU6HJ9fAM6fU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=SsF4ZbqWje6RizrLxTyQMT92ptjr6gRwqIXdD9hUUFujuA41PVa7zh4zPIxM68BbK
+         EZwfg2h+hTRdzj0I+1OTyCWw5BXC88tbzLuZgIRG26EmlcH1Ipt1tu7/noxLZWwRC2
+         6v7jR+JeYLC0c+7GUGJyv7lkLKFGw5X1/fbqnE/o=
+From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
+        <thomas_os@shipmail.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Thomas Hellstrom <thellstrom@vmware.com>
+Subject: [PATCH 0/2] x86/cpu/vmware: Fixes for 5.4
+Date:   Fri, 18 Oct 2019 15:40:50 +0200
+Message-Id: <20191018134052.3023-1-thomas_os@shipmail.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018130342.GA4625@linux-8ccs>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2019-10-18 15:03:42, Jessica Yu wrote:
-> +++ Miroslav Benes [16/10/19 15:29 +0200]:
-> > On Wed, 16 Oct 2019, Miroslav Benes wrote:
-> > Thinking about it more... crazy idea. I think we could leverage these new
-> > ELF .text per vmlinux/module sections for the reinvention I was talking
-> > about. If we teach module loader to relocate (and apply alternatives and
-> > so on, everything in arch-specific module_finalize()) not the whole module
-> > in case of live patch modules, but separate ELF .text sections, it could
-> > solve the issue with late module patching we have. It is a variation on
-> > Steven's idea. When live patch module is loaded, only its section for
-> > present modules would be processed. Then whenever a to-be-patched module
-> > is loaded, its .text section in all present patch module would be
-> > processed.
-> > 
-> > The upside is that almost no work would be required on patch modules
-> > creation side. The downside is that klp_modinfo must stay. Module loader
-> > needs to be hacked a lot in both cases. So it remains to be seen which
-> > idea is easier to implement.
-> > 
-> > Jessica, do you think it would be feasible?
-> 
-> I think that does sound feasible. I'm trying to visualize how that
-> would look. I guess there would need to be various livepatching hooks
-> called during the different stages (apply_relocate_add(),
-> module_finalize(), module_enable_ro/x()).
-> 
-> So maybe something like the following?
-> 
-> When a livepatch module loads:
->    apply_relocate_add()
->        klp hook: apply .klp.rela.$objname relocations *only* for
->        already loaded modules
->    module_finalize()
->        klp hook: apply .klp.arch.$objname changes for already loaded modules
->    module_enable_ro()
->        klp hook: only enable ro/x for .klp.text.$objname for already
->        loaded modules
+From: Thomas Hellstrom <thellstrom@vmware.com>
 
-Just for record. We should also set ro for the not-yet used
-.klp.text.$objname at this stage so that it can't be modified
-easily "by accident".
+Two fixes for recently introduced regressions:
 
+Patch 1 is more or less idential to a previous patch fixing the VMW_PORT
+macro on LLVM's assembler. However, that patch left out the VMW_HYPERCALL
+macro (probably not configured for use), so let's fix that also.
 
-> When a to-be-patched module loads:
->    apply_relocate_add()
->        klp hook: for each patch module that patches the coming
->        module, apply .klp.rela.$objname relocations for this object
->    module_finalize()
->        klp hook: for each patch module that patches the coming
->        module, apply .klp.arch.$objname changes for this object
->    module_enable_ro()
->        klp hook: for each patch module, apply ro/x permissions for
->        .klp.text.$objname for this object
-> 
-> Then, in klp_module_coming, we only need to do the callbacks and
-> enable the patch, and get rid of the module_disable_ro->apply
-> relocs->module_enable_ro block.
-> 
-> Does that sound like what you had in mind or am I totally off?
-
-Makes sense to me.
-
-Well, I wonder if it is really any better from what we have now.
-We would still need special delayed handling for the module-specific
-elf sections. Also we still would not need to clear the modifications
-in these sections when the livepatched object gets unloaded.
-
-I am afraid that the real difference might come when we split
-the livepatch into per-livepatched object modules. This would
-move the complexity to another parts of the code ;-) I am
-unable to say what approach is easier and more safe to maintain
-at the moment.
-
-Best Regards,
-Petr
+Patch 2 fixes another VMW_PORT run-time regression at platform detection
+time
