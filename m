@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F5BCA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC64CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E014D205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00FF421852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437513;
-	bh=ApFT2yRZPjE5kYFWb07gNAkCn4f1C3IPuAu8B/kloaw=;
+	s=default; t=1571437516;
+	bh=aegePsCGy2VO/H5hhQQ8jO5KqxsWMEzetylC96FYYSU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sljv36qRLu3eiZTVH0EIX7ShLbqZ3GrvaD370WxaqcU2u/EFzTQvCcqdaqfFpYA2f
-	 cn1pJKyXXKPBS8pRW5iZtJdaSIs+p0/bVIRkgV59dfx0pYOvnwRx3kt62mLt01gVoL
-	 kbSeGaf+GLiKa1sXIBVo9P6J7Ew3qlIIPLdbgcPI=
+	b=qWoZq0iZbmTjzAo4arT5pVNbemqnMbFbZXDu1UPqV2JYRfu6L1Jk6IuLwNuJ3oZzq
+	 7wcGiSGa9ORV8E3DQJpZj7TAYk58mMQtF+xhlpwWzMrqfbwrLxcMHFVADu/y6ff+k0
+	 5B/6ZLoAwa06jxis+bsO2TrhU/atkmeRBECkrNF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728582AbfJRWEn (ORCPT
+        id S1728534AbfJRWEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:04:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36278 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:04:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728366AbfJRWEe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:04:34 -0400
+        id S1728300AbfJRWEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:04:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF6E1222D1;
-        Fri, 18 Oct 2019 22:04:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D80B222C6;
+        Fri, 18 Oct 2019 22:04:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436274;
-        bh=ApFT2yRZPjE5kYFWb07gNAkCn4f1C3IPuAu8B/kloaw=;
+        s=default; t=1571436272;
+        bh=aegePsCGy2VO/H5hhQQ8jO5KqxsWMEzetylC96FYYSU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CLaazqccVC1w9LktKM01EE9p/yydtlC58IRMscYSVrbK15O9iQ2BRuH0y+1aXRJWT
-         eo8fPvVRSgDf7xT7KrXDT+uIZFLaLx4UbkXJsZyzXkZb5lU4eEt5BoJfw8Jl7MAWkU
-         9naslxYnrZZlgKuEhWBJdevxKFQ5/t35/icvlhPM=
+        b=kCV92dt+PWwTaQ1LW2JVAmVug0qJ3I7xhWReUFIV08buFa2TouvaodaWY4Qze0RMY
+         JwbgQyb2vnzR8hOhWsKNxztrx9MhlEmU8zlAcXXyY+7wXJu/VVWakemsm5xI869Rwd
+         jWYZsGjLrwbhbUXwXe7pfjanYAopA1/jNufKJoug=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vincent Chen <vincent.chen@sifive.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 53/89] riscv: avoid sending a SIGTRAP to a user thread trapped in WARN()
-Date:   Fri, 18 Oct 2019 18:02:48 -0400
-Message-Id: <20191018220324.8165-53-sashal@kernel.org>
+Cc:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>, linux-mips@linux-mips.org
+Subject: [PATCH AUTOSEL 5.3 51/89] MIPS: include: Mark __cmpxchg as __always_inline
+Date:   Fri, 18 Oct 2019 18:02:46 -0400
+Message-Id: <20191018220324.8165-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -60,37 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Chen <vincent.chen@sifive.com>
+From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 
-[ Upstream commit e0c0fc18f10d5080cddde0e81505fd3e952c20c4 ]
+[ Upstream commit 88356d09904bc606182c625575237269aeece22e ]
 
-On RISC-V, when the kernel runs code on behalf of a user thread, and the
-kernel executes a WARN() or WARN_ON(), the user thread will be sent
-a bogus SIGTRAP.  Fix the RISC-V kernel code to not send a SIGTRAP when
-a WARN()/WARN_ON() is executed.
+Commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
+forcibly") allows compiler to uninline functions marked as 'inline'.
+In cace of cmpxchg this would cause to reference function
+__cmpxchg_called_with_bad_pointer, which is a error case
+for catching bugs and will not happen for correct code, if
+__cmpxchg is inlined.
 
-Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-[paul.walmsley@sifive.com: fixed subject]
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+[paul.burton@mips.com: s/__cmpxchd/__cmpxchg in subject]
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/kernel/traps.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/include/asm/cmpxchg.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-index 055a937aca70a..82f42a55451eb 100644
---- a/arch/riscv/kernel/traps.c
-+++ b/arch/riscv/kernel/traps.c
-@@ -134,7 +134,7 @@ asmlinkage void do_trap_break(struct pt_regs *regs)
- 			break;
- 		case BUG_TRAP_TYPE_WARN:
- 			regs->sepc += get_break_insn_length(regs->sepc);
--			break;
-+			return;
- 		case BUG_TRAP_TYPE_BUG:
- #endif /* CONFIG_GENERIC_BUG */
- 		default:
+diff --git a/arch/mips/include/asm/cmpxchg.h b/arch/mips/include/asm/cmpxchg.h
+index c8a47d18f6288..319522fa3a45e 100644
+--- a/arch/mips/include/asm/cmpxchg.h
++++ b/arch/mips/include/asm/cmpxchg.h
+@@ -153,8 +153,9 @@ static inline unsigned long __xchg(volatile void *ptr, unsigned long x,
+ extern unsigned long __cmpxchg_small(volatile void *ptr, unsigned long old,
+ 				     unsigned long new, unsigned int size);
+ 
+-static inline unsigned long __cmpxchg(volatile void *ptr, unsigned long old,
+-				      unsigned long new, unsigned int size)
++static __always_inline
++unsigned long __cmpxchg(volatile void *ptr, unsigned long old,
++			unsigned long new, unsigned int size)
+ {
+ 	switch (size) {
+ 	case 1:
 -- 
 2.20.1
 
