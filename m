@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 784F5CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4FECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50359222C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31C06222C5
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:11:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uErhWC3l"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cCT9hs91"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502540AbfJRQLQ (ORCPT
+        id S2502562AbfJRQLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:11:16 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:51607 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732328AbfJRQLN (ORCPT
+        Fri, 18 Oct 2019 12:11:17 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:36825 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729912AbfJRQLN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 18 Oct 2019 12:11:13 -0400
-Received: by mail-pf1-f202.google.com with SMTP id s137so4952508pfs.18
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:11:11 -0700 (PDT)
+Received: by mail-pg1-f202.google.com with SMTP id q1so4602782pgj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:11:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=+oBtFp6IQZ5946CFExp5BXllfwypP5AUtOYhvu+6eDg=;
-        b=uErhWC3lFP8THQ9YjycpXkAl85COCd6lh+RqxQAfdCNUSVTiEfspc2alvbCgArV2fu
-         ls4p2vGwJ3M8+8dC+pxUbBcocxnmbIOx1oZI7haycpR/idqzr0yRfNB9QU0r3L0Ad+LB
-         AODIdu+bBRBco2jvuX999sV5JPTfKSeK6DQgqagm1V48qwgIQ9QQo3kPVBNgSxrwUzDc
-         J7z1g1ZIddJjuwZ9NXT+KTuZuEnEru2YIfSdVRPO6N1MNFiWgJDAJs9A6AicwQY5z5mf
-         Ozj1xQ9RCTG/l6zakh/4DEHsBfg5zP3zC8lFWduaZXJzlKOfJV8siLAxWkKPzGoNNYpY
-         BIXw==
+        bh=xX5gUTsoboVAmCrU5x0kxTyEAN1I1znyOrkoj+71V3E=;
+        b=cCT9hs91spgek13wGsP9y0ttC9ve4IQ6YalGlMpwduvwu42Woqshf/GsDukku4Rd7z
+         LzngBaQqis4pXbheJCLuLc/BuznaLuuhhZ0eQYxuqnnHcZIUFUvXDs57h723E1aVsqCN
+         hDJ9NJVmzOzxHezv4iMvDqkeOoKw8JtHeSXKma4kAFNaEABY3mU6axzTP9w4Lq+UPCd3
+         3Ot78e0aaFfEd1x8s4TQXDNAkM6/+cID/LMqGDex4NuLmCmij2J8d1teYJAiH7hir7mz
+         bJcHXcpZNWl2UPJrt20n+Cj5d8KKW3//pqk3cC5O9Pz9D8EOb1EO2oSOjKTQQUWNt+am
+         FQTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=+oBtFp6IQZ5946CFExp5BXllfwypP5AUtOYhvu+6eDg=;
-        b=as3hmCfz7S7byGXcozV+VI4gbB53mhJGEX9v4Dg2vuIpZmfRTSu32ELcmx3b80cbVm
-         SqjE6NfyuVFXV0nnBWVpAv4ynMLJaShPug7ZVrC83BiNekvAMBgbTplARoXEWwQpgj5R
-         7oZRyBLM4NKO221y6Dj4ZC3ZTcalpfGF9/0lEso+rmDNqz4VCUpYtFSn+HyosxOOoXcT
-         iSXmZrdSip57fuxnAp8oYT+Mm4edGYxFjMMvc8PeSOWANW2XW9BKX4j5iQTTW7jlhNMf
-         ckejVkCDgTgbtFoB4e+0u/QaeyhzJCv3FS4AYQv7WIaCZvlcV/vSxHtSs6IFHUpvluFJ
-         2pRg==
-X-Gm-Message-State: APjAAAVlNyaV/aBrqRuKmJz1ASUcZDRT2CxifykRLURqjVgGsGBmdzTu
-        ryDaajylh8UhfkjjU2lwl/1jy0JlNFKxL3N13Q0=
-X-Google-Smtp-Source: APXvYqxHqmmpD11MJRO6yuoyBvltYKFWJkQq7UxJVT4qvc6swUR9mDIPTvziXaDvcDGhe+mECq8Qr7PX0sGP/3daZE0=
-X-Received: by 2002:a63:7845:: with SMTP id t66mr10836733pgc.31.1571415070584;
- Fri, 18 Oct 2019 09:11:10 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 09:10:23 -0700
+        bh=xX5gUTsoboVAmCrU5x0kxTyEAN1I1znyOrkoj+71V3E=;
+        b=RYAHHsfwFUrqU4Lwik5gVm3j/J5aFumFsN8GzqEyzVhuSnl+a4s3y2d7s3W3saudRp
+         E2Ja26KWleP2R0Om9AHs+64WYiVFx2J3Z6VKCUB3UO57HAzFcp9w4+YhGkFJW7Hk4kbm
+         h784wH7ZwDtkGkKh1Q0BoNUiFhVcfiqKqMgopGk0m1u3zvwJHVM15W0jU5A+fHJZsaxF
+         /6hdCsZVDY5HCAYkOfKZOAlHhDyvh3rIxGhDgrq+lp31xStIcKFKCzHluONG/GU4Wpxb
+         DS3js/cbi9HVk7v8G1tkSI6XedjCSwI64utiV8/n3moa6+zJejQHfbv2aAuS9pkq2TLx
+         4ehg==
+X-Gm-Message-State: APjAAAU2FRI7rUj2n1qZ8xs/HG2NM95v6bFRZOmxm1C0bioyoWtZy+JG
+        /BEEqLqwWKw639zMQn6OOrquwEH1IRtOi8GGfiM=
+X-Google-Smtp-Source: APXvYqxwiguloHdhaLpo4FBp0WjObBKG43Zxu/Qf9Jmum2rfBGkEmvxrlieIAShHEtrTW/4mJFtXISqp4bSzlzbpPKY=
+X-Received: by 2002:a63:e148:: with SMTP id h8mr10684150pgk.297.1571415072880;
+ Fri, 18 Oct 2019 09:11:12 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 09:10:24 -0700
 In-Reply-To: <20191018161033.261971-1-samitolvanen@google.com>
-Message-Id: <20191018161033.261971-9-samitolvanen@google.com>
+Message-Id: <20191018161033.261971-10-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-Subject: [PATCH 08/18] scs: add support for stack usage debugging
+Subject: [PATCH 09/18] trace: disable function graph tracing with SCS
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -79,70 +79,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implements CONFIG_DEBUG_STACK_USAGE for shadow stacks.
+With CONFIG_FUNCTION_GRAPH_TRACER, function return addresses are
+modified in ftrace_graph_caller and prepare_ftrace_return to redirect
+control flow to ftrace_return_to_handler. This is incompatible with
+return address protection.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- kernel/scs.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ kernel/trace/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/scs.c b/kernel/scs.c
-index 0e3cba49ea1a..1ec5c5a8dfae 100644
---- a/kernel/scs.c
-+++ b/kernel/scs.c
-@@ -161,6 +161,44 @@ int scs_prepare(struct task_struct *tsk, int node)
- 	return 0;
- }
- 
-+#ifdef CONFIG_DEBUG_STACK_USAGE
-+static inline unsigned long scs_used(struct task_struct *tsk)
-+{
-+	unsigned long *p = __scs_base(tsk);
-+	unsigned long *end = scs_magic(tsk);
-+	uintptr_t s = (uintptr_t)p;
-+
-+	while (p < end && *p)
-+		p++;
-+
-+	return (uintptr_t)p - s;
-+}
-+
-+static void scs_check_usage(struct task_struct *tsk)
-+{
-+	static DEFINE_SPINLOCK(lock);
-+	static unsigned long highest;
-+	unsigned long used = scs_used(tsk);
-+
-+	if (used <= highest)
-+		return;
-+
-+	spin_lock(&lock);
-+
-+	if (used > highest) {
-+		pr_info("%s: highest shadow stack usage %lu bytes\n",
-+			__func__, used);
-+		highest = used;
-+	}
-+
-+	spin_unlock(&lock);
-+}
-+#else
-+static inline void scs_check_usage(struct task_struct *tsk)
-+{
-+}
-+#endif
-+
- bool scs_corrupted(struct task_struct *tsk)
- {
- 	return *scs_magic(tsk) != SCS_END_MAGIC;
-@@ -175,6 +213,7 @@ void scs_release(struct task_struct *tsk)
- 		return;
- 
- 	WARN_ON(scs_corrupted(tsk));
-+	scs_check_usage(tsk);
- 
- 	scs_account(tsk, -1);
- 	scs_task_init(tsk);
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index e08527f50d2a..b7e5e3bfa0f4 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -161,6 +161,7 @@ config FUNCTION_GRAPH_TRACER
+ 	depends on HAVE_FUNCTION_GRAPH_TRACER
+ 	depends on FUNCTION_TRACER
+ 	depends on !X86_32 || !CC_OPTIMIZE_FOR_SIZE
++	depends on ROP_PROTECTION_NONE
+ 	default y
+ 	help
+ 	  Enable the kernel to trace a function at both its return
 -- 
 2.23.0.866.gb869b98d4c-goog
 
