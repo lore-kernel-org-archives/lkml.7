@@ -2,314 +2,143 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB1DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED774CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69D6A2089C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:23:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SgFKgnTV"
+	by mail.kernel.org (Postfix) with ESMTP id D065B21D80
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:31:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504602AbfJRHXw (ORCPT
+        id S2504628AbfJRHbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 03:23:52 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46893 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728011AbfJRHXv (ORCPT
+        Fri, 18 Oct 2019 03:31:09 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36638 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394031AbfJRHbI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 03:23:51 -0400
-Received: by mail-pl1-f193.google.com with SMTP id q24so2401153plr.13;
-        Fri, 18 Oct 2019 00:23:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oURX1jatq95p/LOVREIyzuENJitA0cliieG2C4uLfJ0=;
-        b=SgFKgnTV4m6E5YvLcdWAZ0nwZVCZH17M7wZ8RNdeW8360T4VhoLbxI6YV2uJez2m0c
-         kEjdvSkbbtMAdz0USdqoDoSkLi1V1A73wuh1eeVJU2r5aX7HoZn6zuvKvdOPJVeuiPDu
-         t/cafyuoc/5xX//WWg4Mrd9zrUU3gKUIa44FvbTW5i29pa83qPYXIGRzKPhiZzeVCwVw
-         1o31zP05NIAtfcsCgQFAyfywnczNbG0WjC+Dp7Zbxufa2ONuzux5lHp4/Scysk4X51h4
-         z+j3owVojlR03UdJBlViTI7WqO99Oq1dYHukmEL2hgvV0UFuFdz3bzNsEcp2WKwz9eSr
-         1j3A==
+        Fri, 18 Oct 2019 03:31:08 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 67so4178483oto.3;
+        Fri, 18 Oct 2019 00:31:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oURX1jatq95p/LOVREIyzuENJitA0cliieG2C4uLfJ0=;
-        b=jliyeoFlH7+ZNCr2K/u2gA8uiDlxOIkAdfzIjnXNO1d/nb/6jQcptxEfx+le2eKqvY
-         /lzNj83ifMB2YW6VYEJYk79O3Cyr4d5dqWdXoqkW9nkhMzfuky1PpZQUp95hy7AX51Cw
-         5EnA6SykdyKYc5hdXjMUyl49JPqzSrISjWKPCxU3Wi4up0jFm1Fl/ouSBsHVuGO4XNbW
-         Axupkot2sqozYjmSA9eShrvoa5HyqKUWGpxuI1MZhQKdpl/kkrsV7QyeR6G/zmLDuYBo
-         ITpiPUsPhAUYGyG6yn7Y4LLwy3TBYQfY+lKDe7wKRJxnUHX+s5jefpO55Q+PhyM0DAsl
-         oQEw==
-X-Gm-Message-State: APjAAAWhJ/cMmN+aWfl7jNvo9qxNi02QaWt91UuToyTubp08yyAnEXL/
-        mvk/LTPxrLylP/7T/QvU6Jtw7A/d0+tJcTKm3vE=
-X-Google-Smtp-Source: APXvYqzyjiVfSAkK/kZ9HBuHbW+swauFuUO99rgqSZMr6aHybtgffwSHIamiL0dBLu6xKNB3EmXSc+7cNtLexyqleew=
-X-Received: by 2002:a17:902:b110:: with SMTP id q16mr8275237plr.262.1571383429214;
- Fri, 18 Oct 2019 00:23:49 -0700 (PDT)
+        bh=1vcvhB5CLF/+MeUyHDDl7fZL+tAXhkabxwY8RzqlUc4=;
+        b=K7Yt9YoviXa1EKl7IKMUxzV7fJKccYRkl/f/zlrsDAxPX7Y9NmcboBMaiUIBkisj6s
+         K/0rvmrdS4ruOkQk5Hdy5r6QgqM1ptvNEsMgEXyzH8j6K0hnmphrD4eoFVYR+YrhhTji
+         sv+lhgqy6QZRgZD9UXmKb0NmFnA2KEJsRyI8XTEnOKaVxHXC04Fd1wRItkbgJivTsSzv
+         WEjfcgaPLmReo38CmBMZ/lqF/gNrP8OH1ATnQNrGFeXk1zTfNbGS0Z139E6RYM4lQPHa
+         YGrHDrKdq3kF/mSl878GMtb0SEYzxy5WW3bYfpCTb0nm0HnvYBXtXxIRewJLiRbL9mf0
+         r1zg==
+X-Gm-Message-State: APjAAAUdHG9sRGDmTM/26149dvkFYcNaNyzvjXWe3Xz+3DsVdopC+4VX
+        Fd9KC55bUts+HuDpW7qo55LwNuOur/drHhczNuw=
+X-Google-Smtp-Source: APXvYqz5ZTzm2szPG0oqRjP0bYm68wI5cC2zWPx8OuV5blCVSPhZgU0siPaT+bnCFclqt0wG9CC25EAYDHrDP1i11C0=
+X-Received: by 2002:a9d:70d0:: with SMTP id w16mr6117171otj.107.1571383865678;
+ Fri, 18 Oct 2019 00:31:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191018031848.18538-1-dan@dlrobertson.com> <20191018031848.18538-3-dan@dlrobertson.com>
-In-Reply-To: <20191018031848.18538-3-dan@dlrobertson.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 18 Oct 2019 10:23:38 +0300
-Message-ID: <CAHp75VfMW0fvmO9jGTnQumJ9Sm-SgNL0ohjSR4qRQY365aeMBw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] iio: (bma400) add driver for the BMA400
-To:     Dan Robertson <dan@dlrobertson.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        devicetree <devicetree@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+References: <20191017174554.29840-1-hch@lst.de> <20191017174554.29840-14-hch@lst.de>
+In-Reply-To: <20191017174554.29840-14-hch@lst.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 18 Oct 2019 09:30:54 +0200
+Message-ID: <CAMuHMdWaQ15j7fQ9-8XKgrSwgf96nT=yY+FCPWPxoPC9LGqvbQ@mail.gmail.com>
+Subject: Re: [PATCH 13/21] m68k: rename __iounmap and mark it static
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org, linux-mips@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Openrisc <openrisc@lists.librecores.org>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        nios2-dev@lists.rocketboards.org, linux-riscv@lists.infradead.org,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 6:44 AM Dan Robertson <dan@dlrobertson.com> wrote:
+Hi Christoph,
+
+On Thu, Oct 17, 2019 at 7:53 PM Christoph Hellwig <hch@lst.de> wrote:
+> m68k uses __iounmap as the name for an internal helper that is only
+> used for some CPU types.  Mark it static and give it a better name.
 >
-> Add a IIO driver for the Bosch BMA400 3-axes ultra-low power accelerometer.
-> The driver supports reading from the acceleration and temperature
-> registers. The driver also supports reading and configuring the output data
-> rate, oversampling ratio, and scale.
-
-Thanks for an update, my comments below.
-
-
-> @@ -0,0 +1,85 @@
-
-> + * bma400.h - Register constants and other forward declarations
-> + *            needed by the bma400 sources.
-
-Including file name in the file is not the best practice. Imagine if
-by some reason we will need to rename it (to support more sensors, for
-example, and reflect it by replacing 00 -> 0x).
-So, please, remove here and everywhere else.
-
-> + *
-> + * Copyright 2019 Dan Robertson <dan@dlrobertson.com>
-> + */
-
-> +#define BMA400_TWO_BITS_MASK    0x03
-> +#define BMA400_LP_OSR_MASK      0x60
-> +#define BMA400_NP_OSR_MASK      0x30
-> +#define BMA400_ACC_ODR_MASK     0x0f
-> +#define BMA400_ACC_SCALE_MASK   0xc0
-
-GENMASK()
-(Don't forget to include bits.h for it)
-
-> +extern const struct regmap_config bma400_regmap_config;
-
-I'm not sure, why you need this exposed.
-
-> + * bma400_core.c - Core IIO driver for Bosch BMA400 triaxial acceleration
-> + *                 sensor. Used by bma400-i2c.
-
-No name.
-
-> +/*
-> + * The G-range selection may be one of 2g, 4g, 8, or 16g. The scale may
-> + * be selected with the acc_range bits of the ACC_CONFIG1 register.
-> + */
-> +static const int bma400_scale_table[] = {
-> +       0, 38344,
-> +       0, 76590,
-> +       0, 153277,
-
-> +       0, 306457
-
-Better to leave comma here. It doesn't matter for this device, but
-make of use the better practices.
-
-> +};
-
-Also, I'm wondering why values are not exactly multiply by 2. Is in DS
-of the chip any explanation for this?
-
-> +static const int bma400_osr_table[] = { 0, 1, 3 };
-
-> +/* See the ACC_CONFIG1 section of the datasheet */
-> +static const int bma400_sample_freqs[] = {
-> +       12,  500000,
-> +       25,  0,
-> +       50,  0,
-> +       100, 0,
-> +       200, 0,
-> +       400, 0,
-> +       800, 0,
-> +};
-
-This can be replaced by a formula(s).
-
-> +struct bma400_sample_freq {
-> +       int hz;
-> +       int uhz;
-> +};
-
-I'm wondering why above table is not using this struct.
-
-> +const struct regmap_config bma400_regmap_config = {
-> +       .reg_bits = 8,
-> +       .val_bits = 8,
-> +       .max_register = BMA400_CMD_REG,
-> +       .cache_type = REGCACHE_RBTREE,
-> +       .writeable_reg = bma400_is_writable_reg,
-> +       .volatile_reg = bma400_is_volatile_reg,
-> +};
-
-> +EXPORT_SYMBOL(bma400_regmap_config);
-
-Why? And why it's not _GPL?
-
-> +       int ret;
-> +       int host_temp;
-> +       unsigned int raw_temp;
-
-Better reversed xmas tree order.
-
-> +       ret = regmap_read(data->regmap, BMA400_TEMP_DATA_REG, &raw_temp);
-
-> +
-
-Redundant blank line..
-
-> +       if (ret < 0)
-> +               return ret;
-
-> +               odr = (val & BMA400_ACC_ODR_MASK);
-
-Too many parentheses.
-
-> +               idx = (odr - BMA400_ACC_ODR_MIN) * 2;
-
-> +
-
-Redundant.
-
-> +               if (idx + 1 >= ARRAY_SIZE(bma400_sample_freqs)) {
-
-Why do you need this churn with +1 and = ?
-
-> +                       dev_err(data->dev, "sample freq index is too high");
-> +                       ret = -EINVAL;
-> +                       goto error;
-> +               }
-
-
-> +       for (i = 0; i + 1 < ARRAY_SIZE(bma400_sample_freqs); i += 2) {
-
-Using defined struct will guarantee you to have always 2x members in
-the array. So, drop this arithmetic churn.
-
-> +       if (i + 1 >= ARRAY_SIZE(bma400_sample_freqs))
-
-As a bit above.
-
-> +               return -EINVAL;
-
-> +       ret = regmap_read(data->regmap, BMA400_ACC_CONFIG1_REG, &val);
-
-> +
-
-Redundant.
-
-> +       if (ret < 0)
-> +               return ret;
-
-> +       idx = (((val & BMA400_ACC_SCALE_MASK) >> BMA400_SCALE_SHIFT) * 2) + 1;
-
-Too many parentheses.
-
-> +       if (idx >= ARRAY_SIZE(bma400_scale_table))
-> +               return -EINVAL;
-
-Why + 1 above and =  here?
-You may do + 1 below.
-
-> +       data->scale = bma400_scale_table[idx];
-
-
-> +       idx = bma400_get_accel_scale_idx(data, val);
-
-> +
-
-Redundant
-
-> +       if (idx < 0)
-> +               return idx;
-
-
-> +       /* Preserve the low-power oversample ratio etc */
-> +       ret = regmap_write(data->regmap, BMA400_ACC_CONFIG0_REG,
-> +                          mode | (val & ~BMA400_TWO_BITS_MASK));
-
-> +
-
-Redundant
-
-> +       if (ret < 0) {
-> +               dev_err(data->dev, "Failed to write to power-mode");
-> +               return ret;
-> +       }
-
-> +static int bma400_init(struct bma400_data *data)
-> +{
-> +       int ret;
-> +       unsigned int val;
-> +
-> +       /* Try to read chip_id register. It must return 0x90. */
-> +       ret = regmap_read(data->regmap, BMA400_CHIP_ID_REG, &val);
-> +
-> +       if (ret < 0) {
-> +               dev_err(data->dev, "Failed to read chip id register: %x!", ret);
-
-%x for returned error code is too hackerish.
-
-> +               return ret;
-
-> +       } else if (val != BMA400_ID_REG_VAL) {
-
-Redundant 'else'
-
-> +               dev_err(data->dev, "CHIP ID MISMATCH: %x!", ret);
-
-Hacker detected!
-
-> +               return -ENODEV;
-> +       }
-
-> +               /*
-> +                * TODO: The datasheet waits 1500us here in the example, but
-> +                * lists 2/ODR as the wakeup time.
-> +                */
-> +               usleep_range(1500, 20000);
-
-These range values are too sparse. Usually the second one is less than
-first one * 2.
-Fix it now.
-
-> +EXPORT_SYMBOL(bma400_probe);
-
-Why is not GPL?
-
-> +EXPORT_SYMBOL(bma400_remove);
-
-Ditto.
-
-P.S. I probably missed some places with the same mistake as commented
-above. Please address all places in the code where my comments are
-applicable.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+Thanks for your patch!
+
+> --- a/arch/m68k/mm/kmap.c
+> +++ b/arch/m68k/mm/kmap.c
+> @@ -52,6 +52,7 @@ static inline void free_io_area(void *addr)
+>
+>  #define IO_SIZE                (256*1024)
+>
+> +static void __free_io_area(void *addr, unsigned long size);
+>  static struct vm_struct *iolist;
+>
+>  static struct vm_struct *get_io_area(unsigned long size)
+> @@ -90,7 +91,7 @@ static inline void free_io_area(void *addr)
+>                 if (tmp->addr == addr) {
+>                         *p = tmp->next;
+>                         /* remove gap added in get_io_area() */
+> -                       __iounmap(tmp->addr, tmp->size - IO_SIZE);
+> +                       __free_io_area(tmp->addr, tmp->size - IO_SIZE);
+>                         kfree(tmp);
+>                         return;
+>                 }
+> @@ -249,12 +250,13 @@ void iounmap(void __iomem *addr)
+>  }
+>  EXPORT_SYMBOL(iounmap);
+>
+> +#ifndef CPU_M68040_OR_M68060_ONLY
+
+Can you please move this block up, instead of adding more #ifdef cluttery?
+That would also remove the need for a forward declaration.
+
+>  /*
+> - * __iounmap unmaps nearly everything, so be careful
+> + * __free_io_area unmaps nearly everything, so be careful
+>   * Currently it doesn't free pointer/page tables anymore but this
+>   * wasn't used anyway and might be added later.
+>   */
+> -void __iounmap(void *addr, unsigned long size)
+> +static void __free_io_area(void *addr, unsigned long size)
+>  {
+>         unsigned long virtaddr = (unsigned long)addr;
+>         pgd_t *pgd_dir;
+> @@ -297,6 +299,7 @@ void __iounmap(void *addr, unsigned long size)
+>
+>         flush_tlb_all();
+>  }
+> +#endif /* CPU_M68040_OR_M68060_ONLY */
+>
+>  /*
+>   * Set new cache mode for some kernel address space.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
