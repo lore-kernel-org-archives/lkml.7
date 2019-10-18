@@ -2,98 +2,118 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 593E6CA9EAC
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5ECCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31ECF21852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84C0821852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GiAD4YwW"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fGkAhBIE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410579AbfJRPcC (ORCPT
+        id S2410594AbfJRPcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:32:02 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40279 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2410487AbfJRPcB (ORCPT
+        Fri, 18 Oct 2019 11:32:05 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40648 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2410487AbfJRPcE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:32:01 -0400
-Received: by mail-lj1-f194.google.com with SMTP id 7so6658470ljw.7;
-        Fri, 18 Oct 2019 08:32:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ei51YZAvEhA4r5N+YGs4qYhuh8+slSCkMfLH0jqZnD8=;
-        b=GiAD4YwWVjSWvaK8Av5lcBHH0qomSRpUNph7poGrauD6glP+bDoN6fcrk3m03qOOai
-         BpEJN6xOeocNXiR+hA8o3lvvVplAu+l/cN05qIFs38/3DttNJn7v/2iCRbvOmYZeJD4Y
-         //Wwnbd99k1MgCsN6sMjwDh4XdsoGgQSHDYzT9dIgGRW0Kndhyhgm7PgRgGZOgL8aBDw
-         SJrj2LewHiHI/23l1XERDDAQhm5Pipp8KaFxovjtCqxKxRPRmTAUDM49qyTeUadt0rrd
-         ydeaXk+nlcwUchVz4XV40YcgIMkVgyHx2Ub3gu710baDSvs03w9D9cS1qD8B/HNFyfyE
-         RYqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ei51YZAvEhA4r5N+YGs4qYhuh8+slSCkMfLH0jqZnD8=;
-        b=G7bUb/P2ATuBUGy8nyEaLugzKSN+zYnKQWi9oupRpEnkwzhI30aYYxd/SNHHv6wRPM
-         QzOE6MK/FJ2zOZLxxZRnb/qT2umWfgbVxBdsTJBbiTmmav3uugBS2ULmWzfYpi5ZRvee
-         4JwpBzoRvT/vJ8Mlec70YWBCxhB0qcYMY+h1eeFbL3FHHUN3xMH7o8jw/7k/01U76G0m
-         zK06JWKY/qG2cuV9TunQZaROZp4vfEuOmhZpQwOYBaUPl1VOW++ci/E76DWDcjYLGzpi
-         zlSLG0XTjcdgkH6YPHmQ1GHq6uTP+fiGOes65MPzug2FL7e5JlrSL7YzMe7CHO0C6ztD
-         aqpg==
-X-Gm-Message-State: APjAAAVRiwfTMncMGrP3oo2ES/6safKZJtNLL4ySCa3xuTrsLVreFeAM
-        yqQXc+mmmyZ5iOrMSTNwnMNBPfqg
-X-Google-Smtp-Source: APXvYqygSb9yccN0GFabj4MMsATDGDUIKCShWULu3efw0Wwdj02JGA47qkbMQUKzv7Put1QCPNQTBg==
-X-Received: by 2002:a2e:9205:: with SMTP id k5mr6297192ljg.246.1571412719588;
-        Fri, 18 Oct 2019 08:31:59 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.10.250])
-        by smtp.googlemail.com with ESMTPSA id s1sm2274235lfd.14.2019.10.18.08.31.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Oct 2019 08:31:58 -0700 (PDT)
-Subject: Re: [RFT][PATCH 2/3] cpufreq: Use per-policy frequency QoS
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-References: <2811202.iOFZ6YHztY@kreacher> <20154332.AJkCBzCetj@kreacher>
- <1707f018-fc6b-0122-17e0-635340daa4ef@gmail.com>
- <d88fc9b4-24af-6081-96e4-5a0b93c59d43@gmail.com>
- <20191018092933.2i7dpr35wkxemgby@vireshk-i7>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <a4337199-5a69-1604-836b-f69436865b11@gmail.com>
-Date:   Fri, 18 Oct 2019 18:31:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 18 Oct 2019 11:32:04 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9IFW2H1002558;
+        Fri, 18 Oct 2019 10:32:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571412722;
+        bh=/YKNqD/6ZGTEd6vo7678PvL+PAspt5iQ6uoWMMZXLTI=;
+        h=From:To:CC:Subject:Date;
+        b=fGkAhBIEXOSEtrhMaII1nKgPsMipkBxkNpgwDk2MkYXcemLFIqT1yVYzq59W7audu
+         xUItnBiV5HoV/mF13iIEgnUWRjFhJdmOn8U8UobKzar7FZwVCo6wIQd1/ozQ9n1RvG
+         uq6E9YBO7tr8eu7T+tMlQGxJnLr4DzAznnvNPWMk=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9IFW15D084478
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 18 Oct 2019 10:32:02 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 18
+ Oct 2019 10:31:53 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 18 Oct 2019 10:31:53 -0500
+Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFW15E080266;
+        Fri, 18 Oct 2019 10:32:01 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
+Subject: [Patch 00/19] media: ti-vpe: cal: maintenance
+Date:   Fri, 18 Oct 2019 10:34:18 -0500
+Message-ID: <20191018153437.20614-1-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20191018092933.2i7dpr35wkxemgby@vireshk-i7>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-18.10.2019 12:29, Viresh Kumar пишет:
-> On 18-10-19, 00:29, Dmitry Osipenko wrote:
->> Viresh, the warning is actually triggered by this line:
->>
->> https://elixir.bootlin.com/linux/v5.4-rc2/source/drivers/opp/of.c#L664
->>
->> So it looks like the cpufreq-dt driver removal drops
->> opp_table->list_kref more times than it should be. I may try to take a
->> closer look at it later on, please let me know if you have any suggestions.
-> 
-> I was able to reproduce it and have sent a fix and cc'd you on it.
-> Please give it a try.
+This a collection of backlog patches I have been carrying for the CAL
+driver.
 
-Thanks!
+- Add support for SoC variants.
+
+- Switches to syscon/regmap to access a system controller register for
+the DPHY configuration. This register has different bit layout depending
+on the SoC version.
+
+- It adds supports for pre ES2.0 silicon errata.
+
+- Reworked the DPHY initialization sequence to match the technical
+reference manual and provide a more robust restartability.
+
+- Adds the missing ability to power subdevice.
+
+- Update the devicetree binding and then converts it to dt-schema 
+
+Benoit Parrot (18):
+  dt-bindings: media: cal: update binding to use syscon
+  dt-bindings: media: cal: update binding example
+  media: ti-vpe: cal: Add per platform data support
+  media: ti-vpe: cal: Enable DMABUF export
+  dt-bindings: media: cal: update binding to add PHY LDO errata support
+  media: ti-vpe: cal: add CSI2 PHY LDO errata support
+  media: ti-vpe: cal: Fix ths_term/ths_settle parameters
+  media: ti-vpe: cal: Fix pixel processing parameters
+  media: ti-vpe: cal: Align DPHY init sequence with docs
+  dt-bindings: media: cal: update binding to add DRA76x support
+  media: ti-vpe: cal: Add DRA76x support
+  dt-bindings: media: cal: update binding to add AM654 support
+  media: ti-vpe: cal: Add AM654 support
+  media: ti-vpe: cal: Add subdev s_power hooks
+  media: ti-vpe: cal: Properly calculate max resolution boundary
+  media: ti-vpe: cal: Fix a WARN issued when start streaming fails
+  media: ti-vpe: cal: fix enum_mbus_code/frame_size subdev arguments
+  dt-bindings: media: cal: convert binding to yaml
+
+Nikhil Devshatwar (1):
+  media: ti-vpe: cal: Restrict DMA to avoid memory corruption
+
+ .../devicetree/bindings/media/ti,cal.yaml     | 186 +++++
+ .../devicetree/bindings/media/ti-cal.txt      |  72 --
+ drivers/media/platform/Kconfig                |   2 +-
+ drivers/media/platform/ti-vpe/cal.c           | 775 ++++++++++++++----
+ drivers/media/platform/ti-vpe/cal_regs.h      |  27 +
+ 5 files changed, 830 insertions(+), 232 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/ti,cal.yaml
+ delete mode 100644 Documentation/devicetree/bindings/media/ti-cal.txt
+
+-- 
+2.17.1
+
