@@ -2,123 +2,129 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27296CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DC3CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 005772089C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:26:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vuMiDNpR"
+	by mail.kernel.org (Postfix) with ESMTP id 875352089C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:26:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633808AbfJRM0g (ORCPT
+        id S2633820AbfJRM0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 08:26:36 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:48416 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2633694AbfJRM0B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 08:26:01 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9ICPwm2066260;
-        Fri, 18 Oct 2019 07:25:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571401558;
-        bh=96XKwsvfr/hilZmCToqslXZd9JY49viDUA+WUPFaAOY=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=vuMiDNpRLQODv3yxgUHazpLE7igf/4LxgYcEU3A334R3hdez6dXqT3GYJdI/nnDSG
-         0CkOwG5pXKwtif/ixjiDI9isJVrtXtKKL7uhILiIpZOvlwn6CyKzK3bPlpvRMSa75b
-         JIg7NVgjdTftSpuzwSkQQjxgJvR0T+1cetLR2I28=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9ICPwSC053657
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 18 Oct 2019 07:25:58 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 18
- Oct 2019 07:25:50 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 18 Oct 2019 07:25:50 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9ICPwn6092036;
-        Fri, 18 Oct 2019 07:25:58 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v14 19/19] leds: lp55xx-common: Remove extern from lp55xx-common header
-Date:   Fri, 18 Oct 2019 07:25:21 -0500
-Message-ID: <20191018122521.6757-20-dmurphy@ti.com>
-X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
-In-Reply-To: <20191018122521.6757-1-dmurphy@ti.com>
-References: <20191018122521.6757-1-dmurphy@ti.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 18 Oct 2019 08:26:39 -0400
+Received: from mga06.intel.com ([134.134.136.31]:61121 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2633694AbfJRM0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 08:26:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 05:26:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,311,1566889200"; 
+   d="scan'208";a="186812318"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.31])
+  by orsmga007.jf.intel.com with ESMTP; 18 Oct 2019 05:26:36 -0700
+Message-ID: <c2ce4ef128aad84616b2dc21f6230ad4db12194b.camel@linux.intel.com>
+Subject: Re: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal
+ throttle messages
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "bberg@redhat.com" <bberg@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "ckellner@redhat.com" <ckellner@redhat.com>
+Date:   Fri, 18 Oct 2019 05:26:36 -0700
+In-Reply-To: <20191017214445.GG14441@zn.tnic>
+References: <2c2b65c23be3064504566c5f621c1f37bf7e7326.camel@redhat.com>
+         <20191014212101.25719-1-srinivas.pandruvada@linux.intel.com>
+         <20191015084833.GD2311@hirez.programming.kicks-ass.net>
+         <f481b4ab6dfebbc0637c843e5f1cd4ddfd4bd60b.camel@linux.intel.com>
+         <20191016081405.GO2328@hirez.programming.kicks-ass.net>
+         <20191016140001.GF1138@zn.tnic>
+         <3908561D78D1C84285E8C5FCA982C28F7F4A57D0@ORSMSX115.amr.corp.intel.com>
+         <20191017214445.GG14441@zn.tnic>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-extern is implied and is not needed in the common header file.
-Remove the extern keyword and re-align the code.
+On Thu, 2019-10-17 at 23:44 +0200, Borislav Petkov wrote:
+> On Thu, Oct 17, 2019 at 09:31:30PM +0000, Luck, Tony wrote:
+> > That sounds like the right short term action.
+> > 
+> > Depending on what we end up with from Srinivas ... we may want
+> > to reconsider the severity.  The basic premise of Srinivas' patch
+> > is to avoid printing anything for short excursions above
+> > temperature
+> > threshold. But the effect of that is that when we find the
+> > core/package
+> > staying above temperature for an extended period of time, we are
+> > in a serious situation where some action may be needed. E.g.
+> > move the laptop off the soft surface that is blocking the air
+> > vents.
+> 
+> I don't think having a critical severity message is nearly enough.
+> There are cases where the users simply won't see that message, no
+> shell
+> opened, nothing scanning dmesg, nothing pops up on the desktop to
+> show
+> KERN_CRIT messages, etc.
+> 
+> If we really wanna handle this case then we must be much more
+> reliable:
+> 
+> * we throttle the machine from within the kernel - whatever that may
+> mean
+There are actions associated with the high temperature using acpi
+thermal subsystems. The problem with associating with this warning
+directly is that,  this threhold temperature is set to too low in some
+recent laptops at power up.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- drivers/leds/leds-lp55xx-common.h | 24 +++++++++++-------------
- 1 file changed, 11 insertions(+), 13 deletions(-)
+Server/desktops generally rely on the embedded controller for FAN
+control, which  kernel have no control. For them this warning helps to
+either bring in additional cooling or fix existing cooling.
 
-diff --git a/drivers/leds/leds-lp55xx-common.h b/drivers/leds/leds-lp55xx-common.h
-index 4a0cdbfe54a6..69ae96a0a24e 100644
---- a/drivers/leds/leds-lp55xx-common.h
-+++ b/drivers/leds/leds-lp55xx-common.h
-@@ -183,28 +183,26 @@ struct lp55xx_led {
- };
- 
- /* register access */
--extern int lp55xx_write(struct lp55xx_chip *chip, u8 reg, u8 val);
--extern int lp55xx_read(struct lp55xx_chip *chip, u8 reg, u8 *val);
--extern int lp55xx_update_bits(struct lp55xx_chip *chip, u8 reg,
--			u8 mask, u8 val);
-+int lp55xx_write(struct lp55xx_chip *chip, u8 reg, u8 val);
-+int lp55xx_read(struct lp55xx_chip *chip, u8 reg, u8 *val);
-+int lp55xx_update_bits(struct lp55xx_chip *chip, u8 reg, u8 mask, u8 val);
- 
- /* external clock detection */
--extern bool lp55xx_is_extclk_used(struct lp55xx_chip *chip);
-+bool lp55xx_is_extclk_used(struct lp55xx_chip *chip);
- 
- /* common device init/deinit functions */
--extern int lp55xx_init_device(struct lp55xx_chip *chip);
--extern void lp55xx_deinit_device(struct lp55xx_chip *chip);
-+int lp55xx_init_device(struct lp55xx_chip *chip);
-+void lp55xx_deinit_device(struct lp55xx_chip *chip);
- 
- /* common LED class device functions */
--extern int lp55xx_register_leds(struct lp55xx_led *led,
--				struct lp55xx_chip *chip);
-+int lp55xx_register_leds(struct lp55xx_led *led, struct lp55xx_chip *chip);
- 
- /* common device attributes functions */
--extern int lp55xx_register_sysfs(struct lp55xx_chip *chip);
--extern void lp55xx_unregister_sysfs(struct lp55xx_chip *chip);
-+int lp55xx_register_sysfs(struct lp55xx_chip *chip);
-+void lp55xx_unregister_sysfs(struct lp55xx_chip *chip);
- 
- /* common device tree population function */
--extern struct lp55xx_platform_data
--*lp55xx_of_populate_pdata(struct device *dev, struct device_node *np);
-+struct lp55xx_platform_data *lp55xx_of_populate_pdata(struct device *dev,
-+						      struct device_node *np);
- 
- #endif /* _LEDS_LP55XX_COMMON_H */
--- 
-2.22.0.214.g8dca754b1e
+If something needs to force throttle from kernel, then we should use
+some offset from the max temperature (aka TJMax), instead of this
+warning threshold. Then we can use idle injection or change duty cycle
+of CPU clocks.
+
+Thanks,
+Srinivas
+
+> * if that doesn't help, we stop scheduling !root tasks
+> * if that doesn't help, we halt
+> * ...
+> 
+> These are purely hypothetical things to do but I'm pointing them out
+> as
+> an example that in a high temperature situation we should be actively
+> doing something and not wait for the user to do that.
+> 
+> Come to think of it, one can apply the same type of logic here and
+> split
+> the temp severity into action-required events and action-optional
+> events
+> and then depending on the type, we do things.
+> 
+> Now what those things are, should be determined by the severity of
+> the
+> events. Which would mean, we'd need to know how severe those events
+> are.
+> And since this is left in the hands of the OEMs, good luck to us. ;-\
+> 
 
