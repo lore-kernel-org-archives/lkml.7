@@ -2,76 +2,91 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC74CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 615BCCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99F8F205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40D9E20869
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:22:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436745AbfJRQVO (ORCPT
+        id S2436854AbfJRQWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:21:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43046 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727154AbfJRQVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:21:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 63664B2D4;
-        Fri, 18 Oct 2019 16:21:12 +0000 (UTC)
-From:   Daniel Wagner <dwagner@suse.de>
-To:     linux-scsi@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        Daniel Wagner <dwagner@suse.de>,
-        James Smart <jsmart2021@gmail.com>
-Subject: [PATCH] scsi: lpfc: Check queue pointer before use
-Date:   Fri, 18 Oct 2019 18:21:11 +0200
-Message-Id: <20191018162111.8798-1-dwagner@suse.de>
-X-Mailer: git-send-email 2.16.4
+        Fri, 18 Oct 2019 12:22:05 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:45050 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1727154AbfJRQWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 12:22:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9EB30CA2;
+        Fri, 18 Oct 2019 09:21:37 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E10B3F718;
+        Fri, 18 Oct 2019 09:21:36 -0700 (PDT)
+Subject: Re: [PATCH 2/2] mfd: mfd-core: Honour Device Tree's request to
+ disable a child-device
+To:     Lee Jones <lee.jones@linaro.org>, broonie@kernel.org,
+        linus.walleij@linaro.org, daniel.thompson@linaro.org, arnd@arndb.de
+Cc:     baohua@kernel.org, stephan@gerhold.net,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20191018122647.3849-1-lee.jones@linaro.org>
+ <20191018122647.3849-3-lee.jones@linaro.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <b7c59d6e-2ad8-30a1-013a-53c116f7b6ba@arm.com>
+Date:   Fri, 18 Oct 2019 17:21:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20191018122647.3849-3-lee.jones@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The queue pointer might not be valid. The rest of the code checks the
-pointer before accessing it. lpfc_sli4_process_missed_mbox_completions
-is the only place where the check is missing.
+On 18/10/2019 13:26, Lee Jones wrote:
+> Until now, MFD has assumed all child devices passed to it (via
+> mfd_cells) are to be registered.  It does not take into account
+> requests from Device Tree and the like to disable child devices
+> on a per-platform basis.
+> 
+> Well now it does.
+> 
+> Reported-by: Barry Song <Baohua.Song@csr.com>
+> Reported-by: Stephan Gerhold <stephan@gerhold.net>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>   drivers/mfd/mfd-core.c | 5 +++++
+>   1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+> index eafdadd58e8b..24c139633524 100644
+> --- a/drivers/mfd/mfd-core.c
+> +++ b/drivers/mfd/mfd-core.c
+> @@ -182,6 +182,11 @@ static int mfd_add_device(struct device *parent, int id,
+>   	if (parent->of_node && cell->of_compatible) {
+>   		for_each_child_of_node(parent->of_node, np) {
+>   			if (of_device_is_compatible(np, cell->of_compatible)) {
+> +				if (!of_device_is_available(np)) {
+> +					/* Ignore disabled devices error free */
+> +					ret = 0;
+> +					goto fail_alias;
+> +				}
 
-Fixes: 657add4e5e15 ("scsi: lpfc: Fix poor use of hardware queues if fewer irq vectors")
-Cc: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
----
-Hi,
+Is it possible for a device to have multiple children of the same type? 
+If so, it seems like this might not work as desired if, say, the first 
+child was disabled but subsequent ones weren't.
 
-Not entirely sure if this correct. I tried to understand the logic of
-the mentioned patch but failed to grasps all the details. Anyway, we
-observe a crash in lpfc_sli4_process_missed_mbox_completions() while
-iterating the array. All but the last one entry has a valid pointer.
+It might make sense to use for_each_available_child_of_node() for the 
+outer loop, then check afterwards if anything was found.
 
-Thanks,
-Daniel
+Robin.
 
- drivers/scsi/lpfc/lpfc_sli.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 379c37451645..149966ba8a17 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -7906,7 +7906,7 @@ lpfc_sli4_process_missed_mbox_completions(struct lpfc_hba *phba)
- 	if (sli4_hba->hdwq) {
- 		for (eqidx = 0; eqidx < phba->cfg_irq_chann; eqidx++) {
- 			eq = phba->sli4_hba.hba_eq_hdl[eqidx].eq;
--			if (eq->queue_id == sli4_hba->mbx_cq->assoc_qid) {
-+			if (eq && eq->queue_id == sli4_hba->mbx_cq->assoc_qid) {
- 				fpeq = eq;
- 				break;
- 			}
--- 
-2.16.4
-
+>   				pdev->dev.of_node = np;
+>   				pdev->dev.fwnode = &np->fwnode;
+>   				break;
+> 
