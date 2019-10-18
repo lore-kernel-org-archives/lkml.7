@@ -2,109 +2,119 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A5ACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F230FCA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5430B2089C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D195D20700
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:46:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633201AbfJRLn1 (ORCPT
+        id S2409916AbfJRLqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 07:43:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55800 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390498AbfJRLn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 07:43:27 -0400
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C7F92C057F31
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 11:43:26 +0000 (UTC)
-Received: by mail-qt1-f198.google.com with SMTP id z21so5562500qtq.21
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 04:43:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6Ub6Gl8wiH8cmKTsFrafRHW9fuJ5vrtuEMWyvrQhDdg=;
-        b=qahmlgTt/GZXyH7BGgXbbf5yCAQTYcSQ4IwXV4qXXX/e4sfzoImxsPFRkek84YfMbr
-         3TJpU9Fg5sP/+lJugx63UBqaXWgrnpJcVVn7YvNHrh7OOX/y2sVYO88JAoqZIIBlO8nd
-         e3AywCljk5x7KK0YvJYhLX0w+D5TJNkzO0XE5uvNDLA0evlF0N8ca1SxsnGfboA/5lCI
-         wL+M6jlGBARPqtNOe3hMQw12VwQV3+pq432qzj51I3SYofzunYTdeWu+Fs6qO8/E63fg
-         OyJloD2Yw5ZQVtrjiNWcc7KlsmuE7YcN9VIlenM0IUQ8+jkP2b2u+d7z2o6xmWsExBS1
-         BPrQ==
-X-Gm-Message-State: APjAAAUIyVBWFT9o7O8QANgToqJQTzLddVcpbULSJa54jipu9Lrr6rMg
-        5a9RCrRtae3k5DQnMTwmuDyEj7i7l4A11iy0xYvz2M3rpQUN9bNCyqQhfCbmvNex2QF7bHuKiLa
-        xXlj1e9yZoDHCjEyBqiehbrsD
-X-Received: by 2002:ac8:141a:: with SMTP id k26mr9417397qtj.372.1571399005325;
-        Fri, 18 Oct 2019 04:43:25 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwjEavSnVnimGynhK2zUjx91XWTp3w/V3NUGx/C7pvOgTC+fTUzLspHsEQefImPQDlxwBybyQ==
-X-Received: by 2002:ac8:141a:: with SMTP id k26mr9417366qtj.372.1571399005006;
-        Fri, 18 Oct 2019 04:43:25 -0700 (PDT)
-Received: from labbott-redhat.redhat.com (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
-        by smtp.gmail.com with ESMTPSA id d205sm3031043qke.96.2019.10.18.04.43.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 04:43:24 -0700 (PDT)
-From:   Laura Abbott <labbott@redhat.com>
-To:     Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     Laura Abbott <labbott@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Nicolas Waisman <nico@semmle.com>
-Subject: [PATCH v2] rtlwifi: Fix potential overflow on P2P code
-Date:   Fri, 18 Oct 2019 07:43:21 -0400
-Message-Id: <20191018114321.13131-1-labbott@redhat.com>
-X-Mailer: git-send-email 2.21.0
+        Fri, 18 Oct 2019 07:46:06 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:36394 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2389864AbfJRLqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 07:46:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D43DCA3;
+        Fri, 18 Oct 2019 04:45:45 -0700 (PDT)
+Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7F1EE3F6C4;
+        Fri, 18 Oct 2019 04:45:43 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 12:45:29 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org,
+        kstewart@linuxfoundation.org, gregkh@linuxfoundation.org,
+        lorenzo.pieralisi@arm.com, tglx@linutronix.de,
+        David.Laight@ACULAB.COM, ard.biesheuvel@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        "hushiyuan@huawei.com" <hushiyuan@huawei.com>, wuyun.wu@huawei.com,
+        "linfeilong@huawei.com" <linfeilong@huawei.com>
+Subject: Re: [PATCH V3] arm64: psci: Reduce waiting time for
+ cpu_psci_cpu_kill()
+Message-ID: <20191018114529.GA15116@bogus>
+References: <433980c7-f246-f741-f00c-fce103a60af7@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <433980c7-f246-f741-f00c-fce103a60af7@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nicolas Waisman noticed that even though noa_len is checked for
-a compatible length it's still possible to overrun the buffers
-of p2pinfo since there's no check on the upper bound of noa_num.
-Bound noa_num against P2P_MAX_NOA_NUM.
+On Fri, Oct 18, 2019 at 07:24:14PM +0800, Yunfeng Ye wrote:
+> In a case like suspend-to-disk, a large number of CPU cores need to be
 
-Reported-by: Nicolas Waisman <nico@semmle.com>
-Signed-off-by: Laura Abbott <labbott@redhat.com>
----
-v2: Use P2P_MAX_NOA_NUM instead of erroring out.
----
- drivers/net/wireless/realtek/rtlwifi/ps.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Add suspend-to-ram also to list, i.e.
+"In case like suspend-to-disk and suspend-to-ram, a large number..."
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/ps.c b/drivers/net/wireless/realtek/rtlwifi/ps.c
-index 70f04c2f5b17..fff8dda14023 100644
---- a/drivers/net/wireless/realtek/rtlwifi/ps.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/ps.c
-@@ -754,6 +754,9 @@ static void rtl_p2p_noa_ie(struct ieee80211_hw *hw, void *data,
- 				return;
- 			} else {
- 				noa_num = (noa_len - 2) / 13;
-+				if (noa_num > P2P_MAX_NOA_NUM)
-+					noa_num = P2P_MAX_NOA_NUM;
-+
- 			}
- 			noa_index = ie[3];
- 			if (rtlpriv->psc.p2p_ps_info.p2p_ps_mode ==
-@@ -848,6 +851,9 @@ static void rtl_p2p_action_ie(struct ieee80211_hw *hw, void *data,
- 				return;
- 			} else {
- 				noa_num = (noa_len - 2) / 13;
-+				if (noa_num > P2P_MAX_NOA_NUM)
-+					noa_num = P2P_MAX_NOA_NUM;
-+
- 			}
- 			noa_index = ie[3];
- 			if (rtlpriv->psc.p2p_ps_info.p2p_ps_mode ==
--- 
-2.21.0
+> shut down. At present, the CPU hotplug operation is serialised, and the
+> CPU cores can only be shut down one by one. In this process, if PSCI
+> affinity_info() does not return LEVEL_OFF quickly, cpu_psci_cpu_kill()
+> needs to wait for 10ms. If hundreds of CPU cores need to be shut down,
+> it will take a long time.
+>
+> Normally, it is no need to wait 10ms in cpu_psci_cpu_kill(). So change
 
+s/it is/there is/
+
+> the wait interval from 10 ms to max 1 ms and use usleep_range() instead
+> of msleep() for more accurate schedule.
+>
+
+s/for more accurate schedule/for more accurate timer/
+
+> In addition, reduce the time interval will increase the messages output,
+
+s/reduce/reducing/
+
+> so remove the "Retry ..." message, instead, put the number of waiting
+> times to the sucessful message.
+> 
+> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+> ---
+> v2 -> v3:
+>  - update the comment
+>  - remove the busy-wait logic, modify the loop logic and output message
+> 
+> v1 -> v2:
+>  - use usleep_range() instead of udelay() after waiting for a while
+> 
+>  arch/arm64/kernel/psci.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+> index c9f72b2665f1..00b8c0825a08 100644
+> --- a/arch/arm64/kernel/psci.c
+> +++ b/arch/arm64/kernel/psci.c
+> @@ -91,15 +91,14 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
+>  	 * while it is dying. So, try again a few times.
+>  	 */
+> 
+> -	for (i = 0; i < 10; i++) {
+> +	for (i = 0; i < 100; i++) {
+>  		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
+>  		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
+> -			pr_info("CPU%d killed.\n", cpu);
+> +			pr_info("CPU%d killed by waiting %d loops.\n", cpu, i);
+>  			return 0;
+>  		}
+> 
+> -		msleep(10);
+> -		pr_info("Retrying again to check for CPU kill\n");
+> +		usleep_range(100, 1000);
+
+Since usleep_range can return anytime between 100us to 1ms, does it make
+sense to check for (time_before(jiffies, timeout)) you had in v2 ?
+
+--
+Regards,
+Sudeep
