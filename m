@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB7ACA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5B5CA9EAC
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4767720679
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:16:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F9D8222CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436973;
-	bh=lw0JyGOxgays0gFUTdF0ko9uxwQo/GwdpXu+mxHUcLs=;
+	s=default; t=1571436980;
+	bh=Z4Vr1KaooQILrkTf+O1jZFGQD7EZq+zGisiVEVxIL2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KnqcPae/+6B5QQ3bxw5FTheae2MTL2+Vl7yROgmQvq2AcOGrS+HeT8QmKgigBTNxQ
-	 EZuv1ZSWJSkVSptHppAI8ooJiFuYY+ruBSQbMdtbLafJRSM9+3upFOtDQqU3bTj8pV
-	 nK/Ze+ahKPMREdtjfCthCqKMOzXwRLsaJwEVVlXw=
+	b=tlBZPkrY3teshRIYhU8+kxPuB0Ac7cIGxj3Zeu6gVQStRNFFZ5kSQyci6bWAhAuJb
+	 xt+Rv+w5NlXtB5bRew7YgFFrJHmeAfn0OVyFA55aonqeQwXrOxfXBM0DLczIlFnlgk
+	 MCFsQ3dqyYRkh5k7fpUifWG5XnBgmaHVAp8QvoA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392819AbfJRWQL (ORCPT
+        id S2387823AbfJRWIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:16:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41184 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:08:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387992AbfJRWIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:08:39 -0400
+        id S2387671AbfJRWIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:08:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94023222C2;
-        Fri, 18 Oct 2019 22:08:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B4AB205F4;
+        Fri, 18 Oct 2019 22:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436518;
-        bh=lw0JyGOxgays0gFUTdF0ko9uxwQo/GwdpXu+mxHUcLs=;
+        s=default; t=1571436499;
+        bh=Z4Vr1KaooQILrkTf+O1jZFGQD7EZq+zGisiVEVxIL2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vW1ccD7oWiwh4yc14ZPZ7JU9oeDlFy58S/zUlB9PYjcATwPBovCzi2nhVDISC2edL
-         ujRZqY74N0DAD9Ur7/SOA16tTUiHejlJpsktcgDb4Honcoyt0DeFsTZwEz0Y5AemMf
-         N3IYielT1yVHRbETiLtcA1u3vzmuUL7vm6Hdgz50=
+        b=ml7D9Tkhmi+TTFYxHgGvzoyS3P2l3J+Sx+0QQ2LjPW3DGldWxPqQ7iJpmlusqwWqp
+         0vVfBaW/bi4ecnb9I8/S3Iu7Lc9pTvTpUuZqPPbXnvtqiI2Oti56GmtG763eFzxsFL
+         f9TA4OC/mBDZVsmqEhX8VpjRY5TVXyPyzImT8DKU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Connor Kuehl <connor.kuehl@canonical.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 4.14 25/56] staging: rtl8188eu: fix null dereference when kzalloc fails
-Date:   Fri, 18 Oct 2019 18:07:22 -0400
-Message-Id: <20191018220753.10002-25-sashal@kernel.org>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 12/56] rtc: pcf8523: set xtal load capacitance from DT
+Date:   Fri, 18 Oct 2019 18:07:09 -0400
+Message-Id: <20191018220753.10002-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
 References: <20191018220753.10002-1-sashal@kernel.org>
@@ -59,46 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Connor Kuehl <connor.kuehl@canonical.com>
+From: Sam Ravnborg <sam@ravnborg.org>
 
-[ Upstream commit 955c1532a34305f2f780b47f0c40cc7c65500810 ]
+[ Upstream commit 189927e719e36ceefbb8037f23d3849e47833aef ]
 
-If kzalloc() returns NULL, the error path doesn't stop the flow of
-control from entering rtw_hal_read_chip_version() which dereferences the
-null pointer. Fix this by adding a 'goto' to the error path to more
-gracefully handle the issue and avoid proceeding with initialization
-steps that we're no longer prepared to handle.
+Add support for specifying the xtal load capacitance in the DT node.
+The pcf8523 supports xtal load capacitance of 7pF or 12.5pF.
+If the rtc has the wrong configuration the time will
+drift several hours/week.
 
-Also update the debug message to be more consistent with the other debug
-messages in this function.
+The driver use the default value 12.5pF.
 
-Addresses-Coverity: ("Dereference after null check")
+The DT may specify either 7000fF or 12500fF.
+(The DT uses femto Farad to avoid decimal numbers).
+Other values are warned and the driver uses the default value.
 
-Signed-off-by: Connor Kuehl <connor.kuehl@canonical.com>
-Link: https://lore.kernel.org/r/20190927214415.899-1-connor.kuehl@canonical.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/rtl8188eu/os_dep/usb_intf.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/rtc/rtc-pcf8523.c | 28 ++++++++++++++++++++--------
+ 1 file changed, 20 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/staging/rtl8188eu/os_dep/usb_intf.c b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-index 2fc7056cbff74..77c339a935258 100644
---- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-+++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-@@ -357,8 +357,10 @@ static struct adapter *rtw_usb_if1_init(struct dvobj_priv *dvobj,
- 	}
+diff --git a/drivers/rtc/rtc-pcf8523.c b/drivers/rtc/rtc-pcf8523.c
+index 3c8c6f942e67f..a06792966ea90 100644
+--- a/drivers/rtc/rtc-pcf8523.c
++++ b/drivers/rtc/rtc-pcf8523.c
+@@ -94,8 +94,9 @@ static int pcf8523_voltage_low(struct i2c_client *client)
+ 	return !!(value & REG_CONTROL3_BLF);
+ }
  
- 	padapter->HalData = kzalloc(sizeof(struct hal_data_8188e), GFP_KERNEL);
--	if (!padapter->HalData)
--		DBG_88E("cant not alloc memory for HAL DATA\n");
-+	if (!padapter->HalData) {
-+		DBG_88E("Failed to allocate memory for HAL data\n");
-+		goto free_adapter;
+-static int pcf8523_select_capacitance(struct i2c_client *client, bool high)
++static int pcf8523_load_capacitance(struct i2c_client *client)
+ {
++	u32 load;
+ 	u8 value;
+ 	int err;
+ 
+@@ -103,14 +104,24 @@ static int pcf8523_select_capacitance(struct i2c_client *client, bool high)
+ 	if (err < 0)
+ 		return err;
+ 
+-	if (!high)
+-		value &= ~REG_CONTROL1_CAP_SEL;
+-	else
++	load = 12500;
++	of_property_read_u32(client->dev.of_node, "quartz-load-femtofarads",
++			     &load);
++
++	switch (load) {
++	default:
++		dev_warn(&client->dev, "Unknown quartz-load-femtofarads value: %d. Assuming 12500",
++			 load);
++		/* fall through */
++	case 12500:
+ 		value |= REG_CONTROL1_CAP_SEL;
++		break;
++	case 7000:
++		value &= ~REG_CONTROL1_CAP_SEL;
++		break;
 +	}
  
- 	/* step read_chip_version */
- 	rtw_hal_read_chip_version(padapter);
+ 	err = pcf8523_write(client, REG_CONTROL1, value);
+-	if (err < 0)
+-		return err;
+ 
+ 	return err;
+ }
+@@ -307,9 +318,10 @@ static int pcf8523_probe(struct i2c_client *client,
+ 	if (!pcf)
+ 		return -ENOMEM;
+ 
+-	err = pcf8523_select_capacitance(client, true);
++	err = pcf8523_load_capacitance(client);
+ 	if (err < 0)
+-		return err;
++		dev_warn(&client->dev, "failed to set xtal load capacitance: %d",
++			 err);
+ 
+ 	err = pcf8523_set_pm(client, 0);
+ 	if (err < 0)
 -- 
 2.20.1
 
