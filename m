@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D67E7CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D47CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC60205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8864E205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437539;
-	bh=vOxgA07gZhgreIxvC378VR7YjrXYnrjkGDXa/aPtFWM=;
+	s=default; t=1571437545;
+	bh=d/6zc+tZJQ0l59lFjH5IKUXNkBz2OQ9GKqznhzOEnoA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dZx8N3QszNayn7DP14goB7I6FvnINvHXVrx5FgaXYqwMz9zljlq0cwKSXYYXpWNkn
-	 JsEg6dwgqW3jbGVBj1Dn5YC2gWXtyzthsgk9Y/NY/LMNpUBY2xAFtmag1q6CDH8+oT
-	 N0wWbPtmByUNo3pVZC8Mmp0tc1kYbzj4uTaAFJ5A=
+	b=E1ULWzFISRovjiRW3OVDB4HfPRyJ0C9jFJvi0TdlPRCmjNyUn5q6t5HvFrRD/2s9H
+	 +0Qm/T374Scltq9fDf0VeC2n5CgnfUiUeci2sy1o3SDxAxLbfh2UIwGVyFaVjU6/nm
+	 xujYwCf9VUrDA7NxLQOH9PPKim0b6Ec6cFgoiXPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbfJRWEe (ORCPT
+        id S2405857AbfJRWZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:04:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36026 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:25:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728132AbfJRWEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:04:23 -0400
+        id S1728314AbfJRWEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:04:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AC5D222C3;
-        Fri, 18 Oct 2019 22:04:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F3A6222CC;
+        Fri, 18 Oct 2019 22:04:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436263;
-        bh=vOxgA07gZhgreIxvC378VR7YjrXYnrjkGDXa/aPtFWM=;
+        s=default; t=1571436273;
+        bh=d/6zc+tZJQ0l59lFjH5IKUXNkBz2OQ9GKqznhzOEnoA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SZ9MqoHAbQFXjrsFXiixRxE8S/iFEzbJd990tTRgDnnmXM0MAeVUoijPD5UurRO8g
-         foD7XOrpjjvom9I8ypiBHe0M8fXzGZ0fs5UCRolfpKfGQTS2tKem5T20gqSwvAp7lv
-         fPeFW9kaSdWjE2Xd1I+MfzzUluepzEPGctPK9Zow=
+        b=XV6zvPvZKq2mDapBa8Eg5nDYTtjfwT3evZnCkwNwOxRlgKsjY4XDWpyGPeCjIkcRG
+         /uyTqfhvej73GzkelNEFeX0NNyW2WcPUGGL+ipr17BmtX/aX1MVdQBtXf4TsnFgxpf
+         9lkK3zIHpqBEl5nkGlyGlWNIOzhO1i7Pj9qR2V+E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Adam Ford <aford173@gmail.com>,
-        Yegor Yefremov <yegorslists@googlemail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 45/89] serial: 8250_omap: Fix gpio check for auto RTS/CTS
-Date:   Fri, 18 Oct 2019 18:02:40 -0400
-Message-Id: <20191018220324.8165-45-sashal@kernel.org>
+Cc:     Vincent Chen <vincent.chen@sifive.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 52/89] riscv: avoid kernel hangs when trapped in BUG()
+Date:   Fri, 18 Oct 2019 18:02:47 -0400
+Message-Id: <20191018220324.8165-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -60,49 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Vincent Chen <vincent.chen@sifive.com>
 
-[ Upstream commit fc64f7abbef2dae7ee4c94702fb3cf9a2be5431a ]
+[ Upstream commit 8b04825ed205da38754f86f4c07ea8600d8c2a65 ]
 
-There are two checks to see if the manual gpio is configured, but
-these the check is seeing if the structure is NULL instead it
-should check to see if there are CTS and/or RTS pins defined.
+When the CONFIG_GENERIC_BUG is disabled by disabling CONFIG_BUG, if a
+kernel thread is trapped by BUG(), the whole system will be in the
+loop that infinitely handles the ebreak exception instead of entering the
+die function. To fix this problem, the do_trap_break() will always call
+the die() to deal with the break exception as the type of break is
+BUG_TRAP_TYPE_BUG.
 
-This patch uses checks for those individual pins instead of
-checking for the structure itself to restore auto RTS/CTS.
-
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Reviewed-by: Yegor Yefremov <yegorslists@googlemail.com>
-Link: https://lore.kernel.org/r/20191006163314.23191-2-aford173@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/8250/8250_omap.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/riscv/kernel/traps.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
-index 3ef65cbd2478a..e4b08077f8757 100644
---- a/drivers/tty/serial/8250/8250_omap.c
-+++ b/drivers/tty/serial/8250/8250_omap.c
-@@ -141,7 +141,7 @@ static void omap8250_set_mctrl(struct uart_port *port, unsigned int mctrl)
+diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+index 424eb72d56b10..055a937aca70a 100644
+--- a/arch/riscv/kernel/traps.c
++++ b/arch/riscv/kernel/traps.c
+@@ -124,23 +124,23 @@ static inline unsigned long get_break_insn_length(unsigned long pc)
  
- 	serial8250_do_set_mctrl(port, mctrl);
+ asmlinkage void do_trap_break(struct pt_regs *regs)
+ {
+-#ifdef CONFIG_GENERIC_BUG
+ 	if (!user_mode(regs)) {
+ 		enum bug_trap_type type;
  
--	if (!up->gpios) {
-+	if (!mctrl_gpio_to_gpiod(up->gpios, UART_GPIO_RTS)) {
- 		/*
- 		 * Turn off autoRTS if RTS is lowered and restore autoRTS
- 		 * setting if RTS is raised
-@@ -456,7 +456,8 @@ static void omap_8250_set_termios(struct uart_port *port,
- 	up->port.status &= ~(UPSTAT_AUTOCTS | UPSTAT_AUTORTS | UPSTAT_AUTOXOFF);
+ 		type = report_bug(regs->sepc, regs);
+ 		switch (type) {
++#ifdef CONFIG_GENERIC_BUG
+ 		case BUG_TRAP_TYPE_NONE:
+ 			break;
+ 		case BUG_TRAP_TYPE_WARN:
+ 			regs->sepc += get_break_insn_length(regs->sepc);
+ 			break;
+ 		case BUG_TRAP_TYPE_BUG:
++#endif /* CONFIG_GENERIC_BUG */
++		default:
+ 			die(regs, "Kernel BUG");
+ 		}
+ 	}
+-#endif /* CONFIG_GENERIC_BUG */
+-
+ 	force_sig_fault(SIGTRAP, TRAP_BRKPT, (void __user *)(regs->sepc));
+ }
  
- 	if (termios->c_cflag & CRTSCTS && up->port.flags & UPF_HARD_FLOW &&
--	    !up->gpios) {
-+	    !mctrl_gpio_to_gpiod(up->gpios, UART_GPIO_RTS) &&
-+	    !mctrl_gpio_to_gpiod(up->gpios, UART_GPIO_CTS)) {
- 		/* Enable AUTOCTS (autoRTS is enabled when RTS is raised) */
- 		up->port.status |= UPSTAT_AUTOCTS | UPSTAT_AUTORTS;
- 		priv->efr |= UART_EFR_CTS;
 -- 
 2.20.1
 
