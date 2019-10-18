@@ -2,149 +2,155 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E90CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF30CA9EA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FAC6222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B05292064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:22:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405188AbfJRKUu (ORCPT
+        id S2408067AbfJRKWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 06:20:50 -0400
-Received: from mga04.intel.com ([192.55.52.120]:24969 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387890AbfJRKUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 06:20:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 03:20:50 -0700
-X-IronPort-AV: E=Sophos;i="5.67,311,1566889200"; 
-   d="scan'208";a="371425922"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.239.13.123]) ([10.239.13.123])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 18 Oct 2019 03:20:45 -0700
-Subject: Re: [RFD] x86/split_lock: Request to Intel
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
+        Fri, 18 Oct 2019 06:22:12 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:61869 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728989AbfJRKWM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 06:22:12 -0400
+Received: from 79.184.255.51.ipv4.supernova.orange.pl (79.184.255.51) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 6ce2739a0f04cd0d; Fri, 18 Oct 2019 12:22:10 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        daniel.lezcano@linaro.org, viresh.kumar@linaro.org,
+        sudeep.holla@arm.com, bjorn.andersson@linaro.org,
+        edubezval@gmail.com, agross@kernel.org, tdas@codeaurora.org,
+        swboyd@chromium.org, ilina@codeaurora.org,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Ben Segall <bsegall@google.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Mel Gorman <mgorman@suse.de>,
         Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org
-References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
- <1560897679-228028-10-git-send-email-fenghua.yu@intel.com>
- <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de>
- <20190626203637.GC245468@romley-ivt3.sc.intel.com>
- <alpine.DEB.2.21.1906262338220.32342@nanos.tec.linutronix.de>
- <20190925180931.GG31852@linux.intel.com>
- <3ec328dc-2763-9da5-28d6-e28970262c58@redhat.com>
- <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de>
- <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com>
- <c3ff2fb3-4380-fb07-1fa3-15896a09e748@intel.com>
- <d30652bb-89fa-671a-5691-e2c76af231d0@redhat.com>
- <8808c9ac-0906-5eec-a31f-27cbec778f9c@intel.com>
- <alpine.DEB.2.21.1910161519260.2046@nanos.tec.linutronix.de>
- <ba2c0aab-1d7c-5cfd-0054-ac2c266c1df3@redhat.com>
- <alpine.DEB.2.21.1910171322530.1824@nanos.tec.linutronix.de>
- <5da90713-9a0d-6466-64f7-db435ba07dbe@intel.com>
- <alpine.DEB.2.21.1910181100000.1869@nanos.tec.linutronix.de>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <763bb046-e016-9440-55c4-33438e35e436@intel.com>
-Date:   Fri, 18 Oct 2019 18:20:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 3/6] cpufreq: Initialise the governors in core_initcall
+Date:   Fri, 18 Oct 2019 12:22:09 +0200
+Message-ID: <1627245.O3FKD7HvXP@kreacher>
+In-Reply-To: <aa02366951fb174077a945761a7cda03d08acab5.1571387352.git.amit.kucheria@linaro.org>
+References: <cover.1571387352.git.amit.kucheria@linaro.org> <aa02366951fb174077a945761a7cda03d08acab5.1571387352.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1910181100000.1869@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/18/2019 5:02 PM, Thomas Gleixner wrote:
-> On Fri, 18 Oct 2019, Xiaoyao Li wrote:
->> On 10/17/2019 8:29 PM, Thomas Gleixner wrote:
->>> The more I look at this trainwreck, the less interested I am in merging any
->>> of this at all.
->>>
->>> The fact that it took Intel more than a year to figure out that the MSR is
->>> per core and not per thread is yet another proof that this industry just
->>> works by pure chance.
->>>
->>
->> Whether it's per-core or per-thread doesn't affect much how we implement for
->> host/native.
+On Friday, October 18, 2019 10:52:00 AM CEST Amit Kucheria wrote:
+> Initialise the cpufreq governors earlier to allow for earlier
+> performance control during the boot process.
 > 
-> How useful.
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-OK. IIUC. We can agree on the use model of native like below:
+No more issues found, so
 
-We enable #AC on all cores/threads to detect split lock.
-  -If user space causes #AC, sending SIGBUS to it.
-  -If kernel causes #AC, we globally disable #AC on all cores/threads, 
-letting kernel go on working and WARN. (only disabling #AC on the thread 
-generates it just doesn't help, since the buggy kernel code is possible 
-to run on any threads and thus disabling #AC on all of them)
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-As described above, either enabled globally or disabled globally, so 
-whether it's per-core or per-thread really doesn't matter
-
->> And also, no matter it's per-core or per-thread, we always can do something in
->> VIRT.
+> ---
+>  drivers/cpufreq/cpufreq_conservative.c | 2 +-
+>  drivers/cpufreq/cpufreq_ondemand.c     | 2 +-
+>  drivers/cpufreq/cpufreq_performance.c  | 2 +-
+>  drivers/cpufreq/cpufreq_powersave.c    | 2 +-
+>  drivers/cpufreq/cpufreq_userspace.c    | 2 +-
+>  kernel/sched/cpufreq_schedutil.c       | 2 +-
+>  6 files changed, 6 insertions(+), 6 deletions(-)
 > 
-> It matters a lot. If it would be per thread then we would not have this
-> discussion at all.
-
-Indeed, it's the fact that the control MSR bit is per-core to cause this 
-discussion. But the per-core scope only makes this feature difficult or 
-impossible to be virtualized.
-
-We could make the decision to not expose it to guest to avoid the really 
-bad thing. However, even we don't expose this feature to guest and don't 
-virtualize it, the below problem always here.
-
-If you think it's not a problem and acceptable to add an option to let 
-KVM disable host's #AC detection, we can just make it this way. And then 
-we can design the virtualizaion part without any change to native design 
-at all.
-
->> Maybe what matters is below.
->>
->>> Seriously, this makes only sense when it's by default enabled and not
->>> rendered useless by VIRT. Otherwise we never get any reports and none of
->>> the issues are going to be fixed.
->>>
->>
->> For VIRT, it doesn't want old guest to be killed due to #AC. But for native,
->> it doesn't want VIRT to disable the #AC detection
->>
->> I think it's just about the default behavior that whether to disable the
->> host's #AC detection or kill the guest (SIGBUS or something else) once there
->> is an split-lock #AC in guest.
->>
->> So we can provide CONFIG option to set the default behavior and module
->> parameter to let KVM set/change the default behavior.
+> diff --git a/drivers/cpufreq/cpufreq_conservative.c b/drivers/cpufreq/cpufreq_conservative.c
+> index b66e81c06a575..737ff3b9c2c09 100644
+> --- a/drivers/cpufreq/cpufreq_conservative.c
+> +++ b/drivers/cpufreq/cpufreq_conservative.c
+> @@ -346,7 +346,7 @@ struct cpufreq_governor *cpufreq_default_governor(void)
+>  	return CPU_FREQ_GOV_CONSERVATIVE;
+>  }
+>  
+> -fs_initcall(cpufreq_gov_dbs_init);
+> +core_initcall(cpufreq_gov_dbs_init);
+>  #else
+>  module_init(cpufreq_gov_dbs_init);
+>  #endif
+> diff --git a/drivers/cpufreq/cpufreq_ondemand.c b/drivers/cpufreq/cpufreq_ondemand.c
+> index dced033875bf8..82a4d37ddecb3 100644
+> --- a/drivers/cpufreq/cpufreq_ondemand.c
+> +++ b/drivers/cpufreq/cpufreq_ondemand.c
+> @@ -483,7 +483,7 @@ struct cpufreq_governor *cpufreq_default_governor(void)
+>  	return CPU_FREQ_GOV_ONDEMAND;
+>  }
+>  
+> -fs_initcall(cpufreq_gov_dbs_init);
+> +core_initcall(cpufreq_gov_dbs_init);
+>  #else
+>  module_init(cpufreq_gov_dbs_init);
+>  #endif
+> diff --git a/drivers/cpufreq/cpufreq_performance.c b/drivers/cpufreq/cpufreq_performance.c
+> index aaa04dfcacd9d..def9afe0f5b86 100644
+> --- a/drivers/cpufreq/cpufreq_performance.c
+> +++ b/drivers/cpufreq/cpufreq_performance.c
+> @@ -50,5 +50,5 @@ MODULE_AUTHOR("Dominik Brodowski <linux@brodo.de>");
+>  MODULE_DESCRIPTION("CPUfreq policy governor 'performance'");
+>  MODULE_LICENSE("GPL");
+>  
+> -fs_initcall(cpufreq_gov_performance_init);
+> +core_initcall(cpufreq_gov_performance_init);
+>  module_exit(cpufreq_gov_performance_exit);
+> diff --git a/drivers/cpufreq/cpufreq_powersave.c b/drivers/cpufreq/cpufreq_powersave.c
+> index c143dc237d878..1ae66019eb835 100644
+> --- a/drivers/cpufreq/cpufreq_powersave.c
+> +++ b/drivers/cpufreq/cpufreq_powersave.c
+> @@ -43,7 +43,7 @@ struct cpufreq_governor *cpufreq_default_governor(void)
+>  	return &cpufreq_gov_powersave;
+>  }
+>  
+> -fs_initcall(cpufreq_gov_powersave_init);
+> +core_initcall(cpufreq_gov_powersave_init);
+>  #else
+>  module_init(cpufreq_gov_powersave_init);
+>  #endif
+> diff --git a/drivers/cpufreq/cpufreq_userspace.c b/drivers/cpufreq/cpufreq_userspace.c
+> index cbd81c58cb8f0..b43e7cd502c58 100644
+> --- a/drivers/cpufreq/cpufreq_userspace.c
+> +++ b/drivers/cpufreq/cpufreq_userspace.c
+> @@ -147,7 +147,7 @@ struct cpufreq_governor *cpufreq_default_governor(void)
+>  	return &cpufreq_gov_userspace;
+>  }
+>  
+> -fs_initcall(cpufreq_gov_userspace_init);
+> +core_initcall(cpufreq_gov_userspace_init);
+>  #else
+>  module_init(cpufreq_gov_userspace_init);
+>  #endif
+> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+> index 86800b4d5453f..322ca8860f548 100644
+> --- a/kernel/sched/cpufreq_schedutil.c
+> +++ b/kernel/sched/cpufreq_schedutil.c
+> @@ -915,7 +915,7 @@ static int __init sugov_register(void)
+>  {
+>  	return cpufreq_register_governor(&schedutil_gov);
+>  }
+> -fs_initcall(sugov_register);
+> +core_initcall(sugov_register);
+>  
+>  #ifdef CONFIG_ENERGY_MODEL
+>  extern bool sched_energy_update;
 > 
-> Care to read through the whole discussion and figure out WHY it's not that
-> simple?
-> 
-> Thanks,
-> 
-> 	tglx
-> 
+
+
+
+
