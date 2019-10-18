@@ -2,125 +2,193 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7A0CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8121CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B622F21852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B743721852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:36:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="etA65N0L"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PBY8Ku6C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408856AbfJRPfS (ORCPT
+        id S2408849AbfJRPgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:35:18 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33302 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbfJRPfR (ORCPT
+        Fri, 18 Oct 2019 11:36:22 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51454 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728110AbfJRPgW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:35:17 -0400
-Received: by mail-lf1-f66.google.com with SMTP id y127so5079267lfc.0;
-        Fri, 18 Oct 2019 08:35:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4cEbWVoMsomp5+smVoDWnMUG+heNzW3PrwY50bFdoEc=;
-        b=etA65N0L5/S+fwIc3YZUUZh84+iGUKox/ueSm4qpWgZghQgqxD2HWoEXNNo4l8SvYc
-         L20bdDMxfJGd16qkuo/sZ4j1p3BVyB7gmivjabYtrzres3YcK1BAGZb5/XDhQDlgGYtH
-         fzrtRjP9Crb4RoWE9/Dx+acs5lIEzd3l0YSc2doBxidXSX2td2X3yKFfB+FsUTgrkFA9
-         1DFC9KmRFVx1La6z/tjDJKtPqwcm4C+N3YMcbycA4HRN3dUBFo+uIBgQU6sRvEJj/F82
-         M/mx82ggV1uMhSgC0z+cCp9K61rL3Bf+kLvwhGAHmfsd7/Qhs4FG5N3p9jtG3FRxt+Nc
-         gWGQ==
+        Fri, 18 Oct 2019 11:36:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571412980;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lyYjRHP3gN7IAdSg/zSTXjc0q+hU5LSKzHOdTvgAUVk=;
+        b=PBY8Ku6Cg2kvibOgu1+U3iKKgQWUzzsl1gPkaO66AjLtx4jShD0PuTL/iO1CRUpmNzf2bc
+        FB1vV41osUbKa1I06PIOojcZy63+UbVxtx+dVWVkc9izl4MITc3NRktQNaYhPGYCM2J41l
+        ZHWa7IsOXJezLe5iexAr9eFBd5yxfW8=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-252-7_zfvF7mOJGR_VmxSpkQ6w-1; Fri, 18 Oct 2019 11:36:17 -0400
+Received: by mail-qt1-f198.google.com with SMTP id 59so6250857qtc.5
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 08:36:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4cEbWVoMsomp5+smVoDWnMUG+heNzW3PrwY50bFdoEc=;
-        b=OiUYsDDUnbhwOkrLAouXpqovFSQ0uOPwFSAkSJ2wGiDXNmb2MF6/NMRrvetFkq0zQ3
-         o4mNsT7cnCR4eCrvXtH4ag72mJouWl1FOBJZBR1NkOC4FCpS7ZagxTHySQfhaAyw7oSM
-         IBKReUbc5Vy4NFIYIFjAFEtvdibDM0Qjj+0xvILhO4Xu7q/exxUHrzOlP3r4UIYTo3l4
-         282nNn/KL+OfIhaiDUi0K/12uK6HLnW7CI0tkS0FAL7t3lWqr0ZV1j26WJm+PaYXmEgO
-         ZTF9UkUk+Kxh9LvdVpcsTJ5oEmgh2EDpeDRGG2TeESAldipldM+G5Li2PL2VtvQ50a43
-         Byaw==
-X-Gm-Message-State: APjAAAVGkhamR4d3tyIf1cS7y/b6MtqbH2efqKjVY5V47pWttKC/TjN4
-        CJC5jY1ZQ6v6rC6tOYlmf3l8dks1
-X-Google-Smtp-Source: APXvYqw80j5ipJulm8UbDjl4XTHI89oYL6Y1/kniXE+dnHyX8NQnFl7UazpiBcQR1JPbf1Mn2T1uxA==
-X-Received: by 2002:a19:651b:: with SMTP id z27mr5121254lfb.117.1571412915156;
-        Fri, 18 Oct 2019 08:35:15 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.10.250])
-        by smtp.googlemail.com with ESMTPSA id p18sm3208038lfh.24.2019.10.18.08.35.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Oct 2019 08:35:14 -0700 (PDT)
-Subject: Re: [PATCH] opp: Reinitialize the list_kref before adding the static
- OPPs again
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        linux-kernel@vger.kernel.org
-References: <2700308706c0d46ca06eeb973079a1f18bf553dd.1571390916.git.viresh.kumar@linaro.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b1d263bb-f797-0f0d-5beb-0747c564ca90@gmail.com>
-Date:   Fri, 18 Oct 2019 18:35:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3XjpxhccyZHQzqrK60FF7DFkSZmCbVnNJ0TkofNodrU=;
+        b=Xi9R5Bxuwjb/Posv+ewPEpvsouK4xOktxKKUFVaQtiCQTeDvB6ELlLByUKeGqQdaR3
+         8W8pd6QWm0+jLjSoujPYmvZKQ9x+z/F9+GhVVCRfQVilQOhFr+M3WJwvz+ypPrO0VixT
+         sew8RU7R+TswXLCNhKOFHHUrXSRhbeFOX1ORp+b2WLH5W1HesbCfxsSysxn0T4PpRCV/
+         zorNYb+xr16JwVpSN/B2Aa5+TV/YexTOS4PcL0k6TOFVoC3l8YYiaPmvYKU3cqkp1N+t
+         G7qvN2MVY8cIHsjRwbZZgJqWIj9Ya1aC/ghgBiQd2kSQgUvH9oUQMjggMKoEN+ef5l2Z
+         otJQ==
+X-Gm-Message-State: APjAAAVpqdhzu6wKLIeZdS+tPb0iHDp9cs1PSJ5R1XX0xGdZHjJl7Xfs
+        Ct+2NSQ2heWUWIAPIq8699Z+IZGUkZVX1fzVQ681MgjQeYeH9uFZrfwaEdGMSSu9ULar1gESn4X
+        rMh91JRN/JGu+u/g6hMgF0vJlq5UJRG4ebiaCKWmi
+X-Received: by 2002:a0c:8eca:: with SMTP id y10mr10417375qvb.138.1571412976764;
+        Fri, 18 Oct 2019 08:36:16 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyTyDdlpvS579S+SFTu+02sCbWuhKx0mODNMGrum4qpeM6witBSpxOSFS1KklAzUZNuddH9XQ07M2b48KhYCS4=
+X-Received: by 2002:a0c:8eca:: with SMTP id y10mr10417349qvb.138.1571412976482;
+ Fri, 18 Oct 2019 08:36:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2700308706c0d46ca06eeb973079a1f18bf553dd.1571390916.git.viresh.kumar@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <ggKipcQplIlTFmoP3hPnrQ-7_5-C0PKGd5feFymts3uenIBA8zOwz47YmKheD34H1rpkguDAGdx5YbS9UqpwfjT5Ir0Lji941liLVp--QtQ=@protonmail.com>
+In-Reply-To: <ggKipcQplIlTFmoP3hPnrQ-7_5-C0PKGd5feFymts3uenIBA8zOwz47YmKheD34H1rpkguDAGdx5YbS9UqpwfjT5Ir0Lji941liLVp--QtQ=@protonmail.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Fri, 18 Oct 2019 17:36:05 +0200
+Message-ID: <CAO-hwJJ18L3nDMQ_OqCZPyA+FFk3QsnbY=dYSNkELWzTSAnQLA@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] HID: logitech: Add MX Master over Bluetooth
+To:     Mazin Rezk <mnrzk@protonmail.com>
+Cc:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "jikos@kernel.org" <jikos@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>
+X-MC-Unique: 7_zfvF7mOJGR_VmxSpkQ6w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-18.10.2019 12:28, Viresh Kumar пишет:
-> The list_kref reaches a count of 0 when all the static OPPs are removed,
-> for example when dev_pm_opp_of_cpumask_remove_table() is called, though
-> the actual OPP table may not get freed as it may still be referenced by
-> other parts of the kernel, like from a call to
-> dev_pm_opp_set_supported_hw(). And if we call
-> dev_pm_opp_of_cpumask_add_table() again at this point, we must
-> reinitialize the list_kref otherwise the kernel will hit a WARN() in
-> kref infrastructure for incrementing a kref with value 0.
-> 
-> Fixes: 11e1a1648298 ("opp: Don't decrement uninitialized list_kref")
-> Reported-by: Dmitry Osipenko <digetx@gmail.com>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Hi Mazin,
+
+On Mon, Oct 14, 2019 at 8:36 PM Mazin Rezk <mnrzk@protonmail.com> wrote:
+>
+> This patch adds support for the MX Master (b01e and b012) and also adds
+> foundational code for other Bluetooth LE HID++ devices to be added.
+>
+> Some devices do not support short reports and thus have a quirk
+> (HIDPP_QUIRK_MISSING_SHORT_REPORTS) that forces short reports to be sent =
+as
+> long reports. Since all Bluetooth LE HID++ devices seem to act this way,
+> HIDPP_QUIRK_CLASS_BLUETOOTH_LE aliases this quirk.
+>
+> To allow for some space for future quirks, I changed the comment that
+> defines the bits reserved for classes from 2...20 to 2..15.
+>
+> Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
 > ---
->  drivers/opp/of.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> index 6dc41faf74b5..1cbb58240b80 100644
-> --- a/drivers/opp/of.c
-> +++ b/drivers/opp/of.c
-> @@ -663,6 +663,13 @@ static int _of_add_opp_table_v2(struct device *dev, struct opp_table *opp_table)
->  		return 0;
->  	}
->  
-> +	/*
-> +	 * Re-initialize list_kref every time we add static OPPs to the OPP
-> +	 * table as the reference count may be 0 after the last tie static OPPs
-> +	 * were removed.
-> +	 */
-> +	kref_init(&opp_table->list_kref);
+>  drivers/hid/hid-logitech-hidpp.c | 24 +++++++++++++++++++++++-
+>  1 file changed, 23 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-=
+hidpp.c
+> index 0179f7ed77e5..997b1056850a 100644
+> --- a/drivers/hid/hid-logitech-hidpp.c
+> +++ b/drivers/hid/hid-logitech-hidpp.c
+> @@ -59,7 +59,8 @@ MODULE_PARM_DESC(disable_tap_to_click,
+>  #define HIDPP_QUIRK_CLASS_G920                 BIT(3)
+>  #define HIDPP_QUIRK_CLASS_K750                 BIT(4)
+>
+> -/* bits 2..20 are reserved for classes */
+> +/* bits 2..15 are reserved for classes */
+> +#define HIDPP_QUIRK_MISSING_SHORT_REPORTS      BIT(20)
+>  /* #define HIDPP_QUIRK_CONNECT_EVENTS          BIT(21) disabled */
+>  #define HIDPP_QUIRK_WTP_PHYSICAL_BUTTONS       BIT(22)
+>  #define HIDPP_QUIRK_NO_HIDINPUT                        BIT(23)
+> @@ -81,6 +82,8 @@ MODULE_PARM_DESC(disable_tap_to_click,
+>                                          HIDPP_QUIRK_HI_RES_SCROLL_X2120 =
+| \
+>                                          HIDPP_QUIRK_HI_RES_SCROLL_X2121)
+>
+> +#define HIDPP_QUIRK_CLASS_BLUETOOTH_LE HIDPP_QUIRK_MISSING_SHORT_REPORTS
 > +
->  	/* We have opp-table node now, iterate over it and add OPPs */
->  	for_each_available_child_of_node(opp_table->np, np) {
->  		opp = _opp_add_static_v2(opp_table, dev, np);
-> 
+>  #define HIDPP_QUIRK_DELAYED_INIT               HIDPP_QUIRK_NO_HIDINPUT
+>
+>  #define HIDPP_CAPABILITY_HIDPP10_BATTERY       BIT(0)
+> @@ -340,6 +343,12 @@ static int hidpp_send_rap_command_sync(struct hidpp_=
+device *hidpp_dev,
+>         struct hidpp_report *message;
+>         int ret, max_count;
+>
+> +       /* Force long reports on devices that do not support short report=
+s */
+> +       if (hidpp_dev->quirks & HIDPP_QUIRK_MISSING_SHORT_REPORTS &&
+> +           report_id =3D=3D REPORT_ID_HIDPP_SHORT)
+> +               report_id =3D REPORT_ID_HIDPP_LONG;
 
-I don't see the warning anymore, cpufreq-dt module reloading works fine
-now. Thank you very much!
+Wouldn't it be faster to just store which report needs to be put here
+in struct hidpp_device?
 
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
+> +
+> +
+>         switch (report_id) {
+>         case REPORT_ID_HIDPP_SHORT:
+>                 max_count =3D HIDPP_REPORT_SHORT_LENGTH - 4;
+> @@ -3482,6 +3491,12 @@ static bool hidpp_validate_report(struct hid_devic=
+e *hdev, int id,
+>
+>  static bool hidpp_validate_device(struct hid_device *hdev)
+>  {
+> +       struct hidpp_device *hidpp =3D hid_get_drvdata(hdev);
+> +       /* Skip the short report check if the device does not support it =
+*/
+> +       if (hidpp->quirks & HIDPP_QUIRK_MISSING_SHORT_REPORTS)
+> +               return hidpp_validate_report(hdev, REPORT_ID_HIDPP_LONG,
+> +                                            HIDPP_REPORT_LONG_LENGTH, fa=
+lse);
+> +
+
+I just merged Andrey's report detection, which means you will need to
+update this hunk:
+https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git/commit/?h=3Dfor=
+-5.4/upstream-fixes&id=3D905d754c53a522aacf806ea1d3e7c929148c1910
+
+The good thing, is that now you can simply auto-detect if the short
+report is missing. If the returned report_length is null, you know
+that the report is missing (and thus you can remember to set the
+quirk/which report id is needed).
+
+Cheers,
+Benjamin
+
+>         return hidpp_validate_report(hdev, REPORT_ID_HIDPP_SHORT,
+>                                      HIDPP_REPORT_SHORT_LENGTH, false) &&
+>                hidpp_validate_report(hdev, REPORT_ID_HIDPP_LONG,
+> @@ -3773,6 +3788,13 @@ static const struct hid_device_id hidpp_devices[] =
+=3D {
+>         { /* MX5500 keyboard over Bluetooth */
+>           HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb30b),
+>           .driver_data =3D HIDPP_QUIRK_HIDPP_CONSUMER_VENDOR_KEYS },
+> +       { /* MX Master mouse over Bluetooth */
+> +         HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb012),
+> +         .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 |
+> +                        HIDPP_QUIRK_CLASS_BLUETOOTH_LE },
+> +       { HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb01e),
+> +         .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 |
+> +                        HIDPP_QUIRK_CLASS_BLUETOOTH_LE },
+>         {}
+>  };
+>
+> --
+> 2.23.0
+>
+
