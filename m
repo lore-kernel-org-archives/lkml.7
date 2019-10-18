@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8005BCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2AECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 511922246F
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B64B42246F
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436647;
-	bh=3fIb/XpE5v/FmqlNuybYCPwnbwJAl3gVKkv+KO2OZGw=;
+	s=default; t=1571436649;
+	bh=EjkITLXyNWDDCTnEmWuqo6H79NQjrvKt7URBqdB9VYw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CDOK5vFIwEJ3Y9LOcJgs52al39oFlc9bNA3dg8gmAolawLqHfV4tB/Wx1U+YE43nm
-	 e6wM7SyOXWDTPNqsAS8+nQJ3AgHD6b+3yCjE4q3MheikXIv472XE0dZEKM61+eijg7
-	 NSzojLZHPIG4V4L6895vNEOxZPXMpvg+OwzJmLjU=
+	b=ry1gAtempYWSyTAOF071imx4V/OHmOySrNOt+nCCGuVu42UFCaWSOEPJiz3GRkLmx
+	 KglhU72EqHIp8YQjMSdR3uGrDBILNQx1MOL2WrZah2nQP9D9Mt/WuAvL31wEL1C7NE
+	 CeaFcZ4RrnG5mI/f3b5pawKQHM3FW4Cu9q/JNx5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390625AbfJRWKp (ORCPT
+        id S2390668AbfJRWKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:10:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43156 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:10:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389866AbfJRWKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:10:16 -0400
+        id S2390049AbfJRWKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:10:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D6902246A;
-        Fri, 18 Oct 2019 22:10:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BD6222476;
+        Fri, 18 Oct 2019 22:10:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436615;
-        bh=3fIb/XpE5v/FmqlNuybYCPwnbwJAl3gVKkv+KO2OZGw=;
+        s=default; t=1571436623;
+        bh=EjkITLXyNWDDCTnEmWuqo6H79NQjrvKt7URBqdB9VYw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KRkrv16kbZL+EriiPxzY/u7XqnkIEJnb21xVwW3o/EHgRP6qt59TztKfCshpV/gxr
-         qBHvtE6EzqNncSJMHR2ef3gA+NRsAOZ2VLW1vYzUZY5u9z4sQ7j1GojclXUZ0Taeab
-         TukBqzIuRXSJfbSThXEL7TRTiI2BbYTFrWjfmc5I=
+        b=rgrtKyvqePzvoI+8DptvfUfhxkC9uvV+Wqs3oFL/Y5O10F7DVcoBsaqr20JAO3v+t
+         A3mEofOjOtemz8JfBZg5ZBF1M3FI3rEgFAerBdXGd2hnNzVZi+wlbVwsC2yny6LG5M
+         Km4Z+oiNWRWkXTriH7YxvxtCdrMpDK6mU1vjRgYI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Samuel Dionne-Riel <samuel@dionne-riel.com>,
-        Richard Weinberger <richard.weinberger@gmail.com>,
-        Graham Christensen <graham@grahamc.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 05/21] exec: load_script: Do not exec truncated interpreter path
-Date:   Fri, 18 Oct 2019 18:09:51 -0400
-Message-Id: <20191018221007.10851-5-sashal@kernel.org>
+Cc:     Adam Ford <aford173@gmail.com>,
+        Yegor Yefremov <yegorslists@googlemail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 11/21] serial: mctrl_gpio: Check for NULL pointer
+Date:   Fri, 18 Oct 2019 18:09:57 -0400
+Message-Id: <20191018221007.10851-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018221007.10851-1-sashal@kernel.org>
 References: <20191018221007.10851-1-sashal@kernel.org>
@@ -65,118 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Adam Ford <aford173@gmail.com>
 
-[ Upstream commit b5372fe5dc84235dbe04998efdede3c4daa866a9 ]
+[ Upstream commit 37e3ab00e4734acc15d96b2926aab55c894f4d9c ]
 
-Commit 8099b047ecc4 ("exec: load_script: don't blindly truncate
-shebang string") was trying to protect against a confused exec of a
-truncated interpreter path. However, it was overeager and also refused
-to truncate arguments as well, which broke userspace, and it was
-reverted. This attempts the protection again, but allows arguments to
-remain truncated. In an effort to improve readability, helper functions
-and comments have been added.
+When using mctrl_gpio_to_gpiod, it dereferences gpios into a single
+requested GPIO.  This dereferencing can break if gpios is NULL,
+so this patch adds a NULL check before dereferencing it.  If
+gpios is NULL, this function will also return NULL.
 
-Co-developed-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Samuel Dionne-Riel <samuel@dionne-riel.com>
-Cc: Richard Weinberger <richard.weinberger@gmail.com>
-Cc: Graham Christensen <graham@grahamc.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Reviewed-by: Yegor Yefremov <yegorslists@googlemail.com>
+Link: https://lore.kernel.org/r/20191006163314.23191-1-aford173@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/binfmt_script.c | 57 ++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 48 insertions(+), 9 deletions(-)
+ drivers/tty/serial/serial_mctrl_gpio.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/binfmt_script.c b/fs/binfmt_script.c
-index afdf4e3cafc2a..37c2093a24d3c 100644
---- a/fs/binfmt_script.c
-+++ b/fs/binfmt_script.c
-@@ -14,14 +14,31 @@
- #include <linux/err.h>
- #include <linux/fs.h>
- 
-+static inline bool spacetab(char c) { return c == ' ' || c == '\t'; }
-+static inline char *next_non_spacetab(char *first, const char *last)
-+{
-+	for (; first <= last; first++)
-+		if (!spacetab(*first))
-+			return first;
-+	return NULL;
-+}
-+static inline char *next_terminator(char *first, const char *last)
-+{
-+	for (; first <= last; first++)
-+		if (spacetab(*first) || !*first)
-+			return first;
-+	return NULL;
-+}
-+
- static int load_script(struct linux_binprm *bprm)
+diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
+index 02147361eaa94..2b5329a3d716a 100644
+--- a/drivers/tty/serial/serial_mctrl_gpio.c
++++ b/drivers/tty/serial/serial_mctrl_gpio.c
+@@ -67,6 +67,9 @@ EXPORT_SYMBOL_GPL(mctrl_gpio_set);
+ struct gpio_desc *mctrl_gpio_to_gpiod(struct mctrl_gpios *gpios,
+ 				      enum mctrl_gpio_idx gidx)
  {
- 	const char *i_arg, *i_name;
--	char *cp;
-+	char *cp, *buf_end;
- 	struct file *file;
- 	char interp[BINPRM_BUF_SIZE];
- 	int retval;
- 
-+	/* Not ours to exec if we don't start with "#!". */
- 	if ((bprm->buf[0] != '#') || (bprm->buf[1] != '!'))
- 		return -ENOEXEC;
- 
-@@ -34,18 +51,40 @@ static int load_script(struct linux_binprm *bprm)
- 	if (bprm->interp_flags & BINPRM_FLAGS_PATH_INACCESSIBLE)
- 		return -ENOENT;
- 
--	/*
--	 * This section does the #! interpretation.
--	 * Sorta complicated, but hopefully it will work.  -TYT
--	 */
--
-+	/* Release since we are not mapping a binary into memory. */
- 	allow_write_access(bprm->file);
- 	fput(bprm->file);
- 	bprm->file = NULL;
- 
--	bprm->buf[BINPRM_BUF_SIZE - 1] = '\0';
--	if ((cp = strchr(bprm->buf, '\n')) == NULL)
--		cp = bprm->buf+BINPRM_BUF_SIZE-1;
-+	/*
-+	 * This section handles parsing the #! line into separate
-+	 * interpreter path and argument strings. We must be careful
-+	 * because bprm->buf is not yet guaranteed to be NUL-terminated
-+	 * (though the buffer will have trailing NUL padding when the
-+	 * file size was smaller than the buffer size).
-+	 *
-+	 * We do not want to exec a truncated interpreter path, so either
-+	 * we find a newline (which indicates nothing is truncated), or
-+	 * we find a space/tab/NUL after the interpreter path (which
-+	 * itself may be preceded by spaces/tabs). Truncating the
-+	 * arguments is fine: the interpreter can re-read the script to
-+	 * parse them on its own.
-+	 */
-+	buf_end = bprm->buf + sizeof(bprm->buf) - 1;
-+	cp = strnchr(bprm->buf, sizeof(bprm->buf), '\n');
-+	if (!cp) {
-+		cp = next_non_spacetab(bprm->buf + 2, buf_end);
-+		if (!cp)
-+			return -ENOEXEC; /* Entire buf is spaces/tabs */
-+		/*
-+		 * If there is no later space/tab/NUL we must assume the
-+		 * interpreter path is truncated.
-+		 */
-+		if (!next_terminator(cp, buf_end))
-+			return -ENOEXEC;
-+		cp = buf_end;
-+	}
-+	/* NUL-terminate the buffer and any trailing spaces/tabs. */
- 	*cp = '\0';
- 	while (cp > bprm->buf) {
- 		cp--;
++	if (gpios == NULL)
++		return NULL;
++
+ 	return gpios->gpio[gidx];
+ }
+ EXPORT_SYMBOL_GPL(mctrl_gpio_to_gpiod);
 -- 
 2.20.1
 
