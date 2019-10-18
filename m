@@ -2,110 +2,128 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 722D2CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF44CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51A8921D7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4E12089C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:42:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409899AbfJRLlh (ORCPT
+        id S2442606AbfJRLmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 07:41:37 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56572 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729803AbfJRLlg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 07:41:36 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iLQdL-000647-6G; Fri, 18 Oct 2019 13:41:27 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BC8291C03AB;
-        Fri, 18 Oct 2019 13:41:26 +0200 (CEST)
-Date:   Fri, 18 Oct 2019 11:41:26 -0000
-From:   "tip-bot2 for Andrea Parri" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/hyperv: Set pv_info.name to "Hyper-V"
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wei Liu <wei.liu@kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191015103502.13156-1-parri.andrea@gmail.com>
-References: <20191015103502.13156-1-parri.andrea@gmail.com>
+        Fri, 18 Oct 2019 07:42:11 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:36286 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2409900AbfJRLmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 07:42:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56AB8CA3;
+        Fri, 18 Oct 2019 04:41:47 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A87F3F6C4;
+        Fri, 18 Oct 2019 04:41:45 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 12:41:43 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org,
+        kstewart@linuxfoundation.org, sudeep.holla@arm.com,
+        gregkh@linuxfoundation.org, lorenzo.pieralisi@arm.com,
+        tglx@linutronix.de, David.Laight@ACULAB.COM,
+        ard.biesheuvel@linaro.org,
+        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
+        "linfeilong@huawei.com" <linfeilong@huawei.com>,
+        wuyun.wu@huawei.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH V3] arm64: psci: Reduce waiting time for
+ cpu_psci_cpu_kill()
+Message-ID: <20191018114143.GE27759@lakrids.cambridge.arm.com>
+References: <433980c7-f246-f741-f00c-fce103a60af7@huawei.com>
 MIME-Version: 1.0
-Message-ID: <157139888658.29376.12730864004180074032.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <433980c7-f246-f741-f00c-fce103a60af7@huawei.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Fri, Oct 18, 2019 at 07:24:14PM +0800, Yunfeng Ye wrote:
+> In a case like suspend-to-disk, a large number of CPU cores need to be
+> shut down. At present, the CPU hotplug operation is serialised, and the
+> CPU cores can only be shut down one by one. In this process, if PSCI
+> affinity_info() does not return LEVEL_OFF quickly, cpu_psci_cpu_kill()
+> needs to wait for 10ms. If hundreds of CPU cores need to be shut down,
+> it will take a long time.
 
-Commit-ID:     f7c0f50f1857c1cf013466fcea4dc98d116bf456
-Gitweb:        https://git.kernel.org/tip/f7c0f50f1857c1cf013466fcea4dc98d116bf456
-Author:        Andrea Parri <parri.andrea@gmail.com>
-AuthorDate:    Tue, 15 Oct 2019 12:35:02 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 18 Oct 2019 13:33:38 +02:00
+Do we have an idea of roughly how long a CPU _usually_ takes to
+transition state?
 
-x86/hyperv: Set pv_info.name to "Hyper-V"
+i.e. are we _just_ missing the transition the first time we call
+AFFINITY_INFO?
 
-Michael reported that the x86/hyperv initialization code prints the
-following dmesg when running in a VM on Hyper-V:
+> Normally, it is no need to wait 10ms in cpu_psci_cpu_kill(). So change
+> the wait interval from 10 ms to max 1 ms and use usleep_range() instead
+> of msleep() for more accurate schedule.
+> 
+> In addition, reduce the time interval will increase the messages output,
+> so remove the "Retry ..." message, instead, put the number of waiting
+> times to the sucessful message.
+> 
+> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+> ---
+> v2 -> v3:
+>  - update the comment
+>  - remove the busy-wait logic, modify the loop logic and output message
+> 
+> v1 -> v2:
+>  - use usleep_range() instead of udelay() after waiting for a while
+> 
+>  arch/arm64/kernel/psci.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+> index c9f72b2665f1..00b8c0825a08 100644
+> --- a/arch/arm64/kernel/psci.c
+> +++ b/arch/arm64/kernel/psci.c
+> @@ -91,15 +91,14 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
+>  	 * while it is dying. So, try again a few times.
+>  	 */
+> 
+> -	for (i = 0; i < 10; i++) {
+> +	for (i = 0; i < 100; i++) {
+>  		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
+>  		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
+> -			pr_info("CPU%d killed.\n", cpu);
+> +			pr_info("CPU%d killed by waiting %d loops.\n", cpu, i);
 
-  [    0.000738] Booting paravirtualized kernel on bare hardware
+Could we please make that:
 
-Let the x86/hyperv initialization code set pv_info.name to "Hyper-V" so
-dmesg reports correctly:
-
-  [    0.000172] Booting paravirtualized kernel on Hyper-V
-
-[ tglx: Folded build fix provided by Yue ]
-
-Reported-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Wei Liu <wei.liu@kernel.org>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Link: https://lkml.kernel.org/r/20191015103502.13156-1-parri.andrea@gmail.com
+			pr_info("CPU%d killed (polled %d times)\n", cpu, i + 1);
 
 
----
- arch/x86/kernel/cpu/mshyperv.c | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 267daad..c656d92 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -216,6 +216,10 @@ static void __init ms_hyperv_init_platform(void)
- 	int hv_host_info_ecx;
- 	int hv_host_info_edx;
- 
-+#ifdef CONFIG_PARAVIRT
-+	pv_info.name = "Hyper-V";
-+#endif
-+
- 	/*
- 	 * Extract the features and hints
- 	 */
+>  			return 0;
+>  		}
+> 
+> -		msleep(10);
+> -		pr_info("Retrying again to check for CPU kill\n");
+> +		usleep_range(100, 1000);
+
+Hmm, so now we'll wait somewhere between 10ms and 100ms before giving up
+on a CPU depending on how long we actually sleep for each iteration of
+the loop. That should be called out in the commit message.
+
+That could matter for kdump when you have a large number of CPUs, as in
+the worst case for 256 CPUs we've gone from ~2.6s to ~26s. But tbh in
+that case I'm not sure I care that much...
+
+In the majority of cases I'd hope AFFINITY_INFO would return OFF after
+an iteration or two.
+
+Thanks,
+Mark.
