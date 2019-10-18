@@ -2,135 +2,118 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6F5CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCEECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9698A222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DF5B21925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:40:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QKiKLVDI"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="X49zCiEx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506194AbfJRVjt (ORCPT
+        id S2506205AbfJRVkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 17:39:49 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:36398 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729496AbfJRVjt (ORCPT
+        Fri, 18 Oct 2019 17:40:33 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37724 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729496AbfJRVkc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 17:39:49 -0400
-Received: by mail-qk1-f195.google.com with SMTP id y189so6713503qkc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 14:39:48 -0700 (PDT)
+        Fri, 18 Oct 2019 17:40:32 -0400
+Received: by mail-pg1-f195.google.com with SMTP id p1so4053453pgi.4
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 14:40:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bY4NoLLIA2LxI2FyZ9aT3ORwvJrt5W+Zk+P87M9n+pk=;
-        b=QKiKLVDIzFSHKUdugd17QjjW7ZK9xWnIft/pB3KIyyahySNnv9Zzbdtt1jtshbe9rO
-         kCAfYk/7g6+T54u1ZvAgHnoBMtBbl7X1zZ1OjcYQ1vbGqo0/dN2cqhcH3K3wOCOZXYNZ
-         XyY23Q4vhkwoEA27BMwX6wMp7pQuVC2RUZGP2daSuFYTFJToYF6yzzBPgpkyfZ8br4xU
-         JdqtVRC85gxwisHMIrTWSkoS8I1vQhJFeQOIaYrZqStYlaDzAh4ZR3EKkzWSXoG3xypE
-         G2EAOfT2+qavqzrJvDtqlt4JYoqJmnGlQ1Jx9hlCj5PNW36Tf1T+PRlDVh5Of1Z079ay
-         p1HA==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=7OJQvUdbIgU24dX8Wppa0p8i/hgWncJ+YoZFNcc+lGc=;
+        b=X49zCiExyAyWi1+gFzVqGwmOWpWLxwXDEx200I8M4RnY/uPMTul/q6C+vTAekR09fZ
+         aTOimWrmwWA2QxlHdN3Zm6/r+Pn4IUll1jKMiZWooV7Z3zcVn3D1uU2qv+gfSrPc7eo5
+         hrErgAxJB9PXQktTfkYLWdLON3cUApaxcjXoQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bY4NoLLIA2LxI2FyZ9aT3ORwvJrt5W+Zk+P87M9n+pk=;
-        b=RSZDwrNSLb4EGS6zGrC2Gv7zgnfX5ylKgDBxBjJ6rdXNNVQlxmM1sjQvw8J8m/qEJk
-         jAPqk+k6DbQCaq9eB/Uzgv0RV77vY4eCV3f+f9fZn3lUA5BvxiqptwTWPOPx2K/0r9yQ
-         qFQUsPZtTWUJiEKjI82lD3Z3XvDvc1q21eI8kj5d448o4gIhjH3kmfsuMXa5YxYRI0aj
-         eDhkv7Ic7eYWON8XwumsywAs/Da0hMgDxnOGCjyohi+pm0k1ATmQj/3V6LvIXzCQkob+
-         uuAYUCTB48fsdKR8gSDqt/qjaZ0YgdyEa4KuN3Mo7Le+5oCRLBuejDOlIHUwyJhobFZu
-         rAPw==
-X-Gm-Message-State: APjAAAWy++7aVKCTb8ysErDCGkl+f4jYgOuNOZVRKOubqGXoWY+HNM5g
-        XgJqpnu2VRME+pqrvkb+XdGvoMjgqjz64dS0jZE=
-X-Google-Smtp-Source: APXvYqxBDQBjlYNcXuWgi6Z/8MKJ3/Q6fRnQiF/OXUjrxAyj4RaKcjPeB0LFAQTCe8+AuFmUUHdnYkae8oiTNgXh6K8=
-X-Received: by 2002:a05:620a:20d5:: with SMTP id f21mr10873227qka.209.1571434788093;
- Fri, 18 Oct 2019 14:39:48 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=7OJQvUdbIgU24dX8Wppa0p8i/hgWncJ+YoZFNcc+lGc=;
+        b=frTOP9WkMm08RX+z9uKQOjIvf8nYDylxIYbZ7uy85reFl1w7uqUUaZl/4ZSj3PzFcm
+         +3iaJM9jZiEnqezkSYfjdTsQieo1SOm1EYXv5VjUNIaG+Pgcds7Jp+Q72mBC6o3sKeHA
+         7LdENzRAiBTJoeIlhI3YOMl80Vk5RTmFMg+zn6eRoxzwWsN0xAirFOnEghtUkG0LMHG5
+         wPYRJsZlgwZLBoV9jZxun23DOx3RERjkCQpYuttN99C6WNRsSSay70CRpxzEvIPriWg5
+         u6FXuhqClwGXE9bgRHMV1JOPZctXeMYO3dBedWIFwymPyIqkazq0dLgennnnitrq+1nD
+         bPPw==
+X-Gm-Message-State: APjAAAUdOfAjofKPVHtQbM4GuuvglL+cZP7n+5pVMPgJneb+70u7N38e
+        uIaaZwEV9GFAL5lIRjxFqc8hsA==
+X-Google-Smtp-Source: APXvYqyd70104l4NfgYqs0u3fMh/peuUQcWQ+/X7Dt/uJkQR3dIru18MtlzyrY5v+4YirtGrxn9NKQ==
+X-Received: by 2002:a17:90a:1aa9:: with SMTP id p38mr14177240pjp.142.1571434832108;
+        Fri, 18 Oct 2019 14:40:32 -0700 (PDT)
+Received: from [10.69.45.46] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id t21sm7903012pgi.87.2019.10.18.14.40.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 18 Oct 2019 14:40:31 -0700 (PDT)
+Subject: Re: [PATCH] scsi: lpfc: Check queue pointer before use
+To:     Daniel Wagner <dwagner@suse.de>, linux-scsi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>
+References: <20191018162111.8798-1-dwagner@suse.de>
+From:   James Smart <james.smart@broadcom.com>
+Message-ID: <3624b42a-712a-bab5-c325-7171f71a51e1@broadcom.com>
+Date:   Fri, 18 Oct 2019 14:40:27 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191016221148.F9CCD155@viggo.jf.intel.com> <20191018074411.GC5017@dhcp22.suse.cz>
- <0b05c135-4762-e745-5289-58ee84cc8c3e@intel.com>
-In-Reply-To: <0b05c135-4762-e745-5289-58ee84cc8c3e@intel.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Fri, 18 Oct 2019 14:39:34 -0700
-Message-ID: <CAHbLzkq3h1u=EUXeR3+S7D4fru7U15Tw+5Am8BE_FUkpHQTuWg@mail.gmail.com>
-Subject: Re: [PATCH 0/4] [RFC] Migrate Pages in lieu of discard
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191018162111.8798-1-dwagner@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 7:54 AM Dave Hansen <dave.hansen@intel.com> wrote:
+On 10/18/2019 9:21 AM, Daniel Wagner wrote:
+> The queue pointer might not be valid. The rest of the code checks the
+> pointer before accessing it. lpfc_sli4_process_missed_mbox_completions
+> is the only place where the check is missing.
 >
-> On 10/18/19 12:44 AM, Michal Hocko wrote:
-> > How does this compare to
-> > http://lkml.kernel.org/r/1560468577-101178-1-git-send-email-yang.shi@linux.alibaba.com
+> Fixes: 657add4e5e15 ("scsi: lpfc: Fix poor use of hardware queues if fewer irq vectors")
+> Cc: James Smart <jsmart2021@gmail.com>
+> Signed-off-by: Daniel Wagner <dwagner@suse.de>
+> ---
+> Hi,
 >
-> It's a _bit_ more tied to persistent memory and it appears a bit more
-> tied to two tiers rather something arbitrarily deep.  They're pretty
-> similar conceptually although there are quite a few differences.
-
-My patches do assume two tiers for now but it is not hard to extend to
-multiple tiers. Since it is a RFC so I didn't make it that
-complicated.
-
-However, IMHO I really don't think supporting multiple tiers by making
-the migration path configurable to admins or users is a good choice.
-Memory migration caused by compaction or reclaim (not via syscall)
-should be transparent to the users, it is the kernel internal
-activity. It shouldn't be exposed to the end users.
-
-I prefer firmware or OS build the migration path personally.
-
+> Not entirely sure if this correct. I tried to understand the logic of
+> the mentioned patch but failed to grasps all the details. Anyway, we
+> observe a crash in lpfc_sli4_process_missed_mbox_completions() while
+> iterating the array. All but the last one entry has a valid pointer.
 >
-> For instance, what I posted has a static mapping for the migration path.
->  If node A is in reclaim, we always try to allocate pages on node B.
-> There are no restrictions on what those nodes can be.  In Yang Shi's
-> apporach, there's a dynamic search for a target migration node on each
-> migration that follows the normal alloc fallback path.  This ends up
-> making migration nodes special.
-
-The reason that I didn't pursue static mapping is that the node might
-be offlined or onlined, so you have to keep the mapping right every
-time the node state is changed. Dynamic search just returns the
-closest migration target node no matter what the topology is. It
-should be not time consuming.
-
-Actually, my patches don't restrict the migration target node has to
-be PMEM, it could be any memory lower than DRAM, but it just happens
-PMEM is the only available media. My patch's commit log explains this
-point. Again I really prefer the firmware or HMAT or ACPI driver could
-build the migration path in kernel.
-
-In addition, DRAM node is definitely excluded from migration target
-since I don't think doing such migration between DRAM nodes is a good
-idea in general.
-
+> Thanks,
+> Daniel
 >
-> There are also some different choices that are pretty arbitrary.  For
-> instance, when you allocation a migration target page, should you cause
-> memory pressure on the target?
-
-Yes, those are definitely arbitrary. We do need sort of a lot of
-details in the future by figuring out how real life workload work.
-
+>   drivers/scsi/lpfc/lpfc_sli.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> To be honest, though, I don't see anything fatally flawed with it.  It's
-> probably a useful exercise to factor out the common bits from the two
-> sets and see what we can agree on being absolutely necessary.
+> diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+> index 379c37451645..149966ba8a17 100644
+> --- a/drivers/scsi/lpfc/lpfc_sli.c
+> +++ b/drivers/scsi/lpfc/lpfc_sli.c
+> @@ -7906,7 +7906,7 @@ lpfc_sli4_process_missed_mbox_completions(struct lpfc_hba *phba)
+>   	if (sli4_hba->hdwq) {
+>   		for (eqidx = 0; eqidx < phba->cfg_irq_chann; eqidx++) {
+>   			eq = phba->sli4_hba.hba_eq_hdl[eqidx].eq;
+> -			if (eq->queue_id == sli4_hba->mbx_cq->assoc_qid) {
+> +			if (eq && eq->queue_id == sli4_hba->mbx_cq->assoc_qid) {
+>   				fpeq = eq;
+>   				break;
+>   			}
 
-Sure, that definitely would help us move forward.
+looks fine. Thanks!
 
->
+Reviewed by: James Smart <james.smart@broadcom.com>
+
+-- james
+
