@@ -4,56 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A408CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C5CCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B1E420854
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29FE520854
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436847;
-	bh=ovT+YY6J3EIP56Anwt7CNtWnyGZ15befber1YB3kycw=;
+	s=default; t=1571436850;
+	bh=Z4Vr1KaooQILrkTf+O1jZFGQD7EZq+zGisiVEVxIL2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JUmbg3TiCGF5PuTqO1IcRb7Yh11pzQBn4cezRN0tE67gnERVkrAfhcLXHuLvSCES4
-	 LipRxlbiiWFFtGnijugtuglX9HJD0vyNjtYD2G8zQDmrMYHpJuNMDciyjxyIdmZp/+
-	 yI/Ba26RelQASMAXi9xtgTZYznRSNoXW6y0CPQKs=
+	b=mYqOeIMIBcmuTm1HNWj5KrExpkw5QepAgn1YQJ9F2/VYsI/GJxUY0qxTA6S/nFCu7
+	 moIMmJ8N4kCW7ObEY0SGtIb1Zu6J7I4x4n2HoH6BksrDEKy6uaDBffzItvhAADW2X1
+	 04HukRWuXHkvUJBnT4LC7oeL+q5rlu/WPyx7h2HA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389009AbfJRWJf (ORCPT
+        id S2403947AbfJRWOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:09:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41772 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:14:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388564AbfJRWJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:09:07 -0400
+        id S2389020AbfJRWJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:09:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45928205F4;
-        Fri, 18 Oct 2019 22:09:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D0E1222C2;
+        Fri, 18 Oct 2019 22:09:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436546;
-        bh=ovT+YY6J3EIP56Anwt7CNtWnyGZ15befber1YB3kycw=;
+        s=default; t=1571436575;
+        bh=Z4Vr1KaooQILrkTf+O1jZFGQD7EZq+zGisiVEVxIL2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FJLCaQMIKnL4t0GdwHZvfq9Ior1iL1x0m8wZTPS7sgKTDCQlUO3HkeavYbDZIZfMk
-         3n1X1Yvbbk4qFY1NwU8ZxXN5OJxvWh1db/R1c2U8eULlVMDKiNZAQvvfdRXy/B/gwy
-         rZlCxtRACPCa5nPsx7MZD9Frch5Egc/a+GECy5vE=
+        b=hZtv6ykupRIlGI7s6t3v3J+m+r20e9d+V0OXVUiaJE2b1Uu6I/jRW39MzG8mROBMB
+         5AclyWBJWDgwbr84LMv7l/Z2axTOSUNQ5qDu65dIPVjSLG19xIVZ8ODMzp+k3uhxr8
+         APQAKcIvJbGQH2et56Qy87k+om0YT/TmyBlllJhU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Frederic Weisbecker <frederic@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rik van Riel <riel@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 46/56] sched/vtime: Fix guest/system mis-accounting on task switch
-Date:   Fri, 18 Oct 2019 18:07:43 -0400
-Message-Id: <20191018220753.10002-46-sashal@kernel.org>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 07/29] rtc: pcf8523: set xtal load capacitance from DT
+Date:   Fri, 18 Oct 2019 18:08:58 -0400
+Message-Id: <20191018220920.10545-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
-References: <20191018220753.10002-1-sashal@kernel.org>
+In-Reply-To: <20191018220920.10545-1-sashal@kernel.org>
+References: <20191018220920.10545-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -63,77 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frederic Weisbecker <frederic@kernel.org>
+From: Sam Ravnborg <sam@ravnborg.org>
 
-[ Upstream commit 68e7a4d66b0ce04bf18ff2ffded5596ab3618585 ]
+[ Upstream commit 189927e719e36ceefbb8037f23d3849e47833aef ]
 
-vtime_account_system() assumes that the target task to account cputime
-to is always the current task. This is most often true indeed except on
-task switch where we call:
+Add support for specifying the xtal load capacitance in the DT node.
+The pcf8523 supports xtal load capacitance of 7pF or 12.5pF.
+If the rtc has the wrong configuration the time will
+drift several hours/week.
 
-	vtime_common_task_switch(prev)
-		vtime_account_system(prev)
+The driver use the default value 12.5pF.
 
-Here prev is the scheduling-out task where we account the cputime to. It
-doesn't match current that is already the scheduling-in task at this
-stage of the context switch.
+The DT may specify either 7000fF or 12500fF.
+(The DT uses femto Farad to avoid decimal numbers).
+Other values are warned and the driver uses the default value.
 
-So we end up checking the wrong task flags to determine if we are
-accounting guest or system time to the previous task.
-
-As a result the wrong task is used to check if the target is running in
-guest mode. We may then spuriously account or leak either system or
-guest time on task switch.
-
-Fix this assumption and also turn vtime_guest_enter/exit() to use the
-task passed in parameter as well to avoid future similar issues.
-
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Fixes: 2a42eb9594a1 ("sched/cputime: Accumulate vtime on top of nsec clocksource")
-Link: https://lkml.kernel.org/r/20190925214242.21873-1-frederic@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/cputime.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/rtc/rtc-pcf8523.c | 28 ++++++++++++++++++++--------
+ 1 file changed, 20 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-index 14d2dbf97c531..45c2cd37fe6b0 100644
---- a/kernel/sched/cputime.c
-+++ b/kernel/sched/cputime.c
-@@ -738,7 +738,7 @@ void vtime_account_system(struct task_struct *tsk)
- 
- 	write_seqcount_begin(&vtime->seqcount);
- 	/* We might have scheduled out from guest path */
--	if (current->flags & PF_VCPU)
-+	if (tsk->flags & PF_VCPU)
- 		vtime_account_guest(tsk, vtime);
- 	else
- 		__vtime_account_system(tsk, vtime);
-@@ -781,7 +781,7 @@ void vtime_guest_enter(struct task_struct *tsk)
- 	 */
- 	write_seqcount_begin(&vtime->seqcount);
- 	__vtime_account_system(tsk, vtime);
--	current->flags |= PF_VCPU;
-+	tsk->flags |= PF_VCPU;
- 	write_seqcount_end(&vtime->seqcount);
+diff --git a/drivers/rtc/rtc-pcf8523.c b/drivers/rtc/rtc-pcf8523.c
+index 3c8c6f942e67f..a06792966ea90 100644
+--- a/drivers/rtc/rtc-pcf8523.c
++++ b/drivers/rtc/rtc-pcf8523.c
+@@ -94,8 +94,9 @@ static int pcf8523_voltage_low(struct i2c_client *client)
+ 	return !!(value & REG_CONTROL3_BLF);
  }
- EXPORT_SYMBOL_GPL(vtime_guest_enter);
-@@ -792,7 +792,7 @@ void vtime_guest_exit(struct task_struct *tsk)
  
- 	write_seqcount_begin(&vtime->seqcount);
- 	vtime_account_guest(tsk, vtime);
--	current->flags &= ~PF_VCPU;
-+	tsk->flags &= ~PF_VCPU;
- 	write_seqcount_end(&vtime->seqcount);
+-static int pcf8523_select_capacitance(struct i2c_client *client, bool high)
++static int pcf8523_load_capacitance(struct i2c_client *client)
+ {
++	u32 load;
+ 	u8 value;
+ 	int err;
+ 
+@@ -103,14 +104,24 @@ static int pcf8523_select_capacitance(struct i2c_client *client, bool high)
+ 	if (err < 0)
+ 		return err;
+ 
+-	if (!high)
+-		value &= ~REG_CONTROL1_CAP_SEL;
+-	else
++	load = 12500;
++	of_property_read_u32(client->dev.of_node, "quartz-load-femtofarads",
++			     &load);
++
++	switch (load) {
++	default:
++		dev_warn(&client->dev, "Unknown quartz-load-femtofarads value: %d. Assuming 12500",
++			 load);
++		/* fall through */
++	case 12500:
+ 		value |= REG_CONTROL1_CAP_SEL;
++		break;
++	case 7000:
++		value &= ~REG_CONTROL1_CAP_SEL;
++		break;
++	}
+ 
+ 	err = pcf8523_write(client, REG_CONTROL1, value);
+-	if (err < 0)
+-		return err;
+ 
+ 	return err;
  }
- EXPORT_SYMBOL_GPL(vtime_guest_exit);
+@@ -307,9 +318,10 @@ static int pcf8523_probe(struct i2c_client *client,
+ 	if (!pcf)
+ 		return -ENOMEM;
+ 
+-	err = pcf8523_select_capacitance(client, true);
++	err = pcf8523_load_capacitance(client);
+ 	if (err < 0)
+-		return err;
++		dev_warn(&client->dev, "failed to set xtal load capacitance: %d",
++			 err);
+ 
+ 	err = pcf8523_set_pm(client, 0);
+ 	if (err < 0)
 -- 
 2.20.1
 
