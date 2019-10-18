@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF04CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B45CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76163205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D94522467
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:06:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436382;
-	bh=kjo9ICuQPkhOav4Yl9dBwJDDgT/2AfUsxxAO5HKP1Sg=;
+	s=default; t=1571436385;
+	bh=MoM63U9fIL/AW03fDiyVHX9B4WUl0OJn03LJfTOOcXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=06aS0ib+yVHrIzfliGkb3emM3zRB9d0ntulav5d1GQ5CDs0qok3EDQ/DvgjLbAJCP
-	 LKuQQYOls8Y24rFUJ5esd5cwvrH5joiqBBIa5gRJXyLBG3Hrj8yLs347Hn/xSHKNrx
-	 qbNepX+/eiCUtAf0v9bLFE0i96S+1xpvnZDv8kGY=
+	b=zNEPSRrZVvb1EAEnrfm/DQ8Kop3EUGqvZt2WsbVSi6Z2R54/cDnijma49XzRO7aok
+	 p+H1xD4TqWRF2CmbNaUjaPjszR33i2LFmDB0cvY+wrQNM4/a8sAMpaQdJy75bzvwFT
+	 ydslN0d284oz5O62ro2eOP3nut5taTVGQlTlA3aw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731351AbfJRWGV (ORCPT
+        id S1731434AbfJRWGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:06:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38140 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:06:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730981AbfJRWGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731015AbfJRWGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 18 Oct 2019 18:06:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD80B222CD;
-        Fri, 18 Oct 2019 22:06:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6680222C6;
+        Fri, 18 Oct 2019 22:06:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436372;
-        bh=kjo9ICuQPkhOav4Yl9dBwJDDgT/2AfUsxxAO5HKP1Sg=;
+        s=default; t=1571436373;
+        bh=MoM63U9fIL/AW03fDiyVHX9B4WUl0OJn03LJfTOOcXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dZr0YxpW2Z7PnLpagBopHJ6AkvQj5nbff1UKvgWRldGgeoGyKVdFNSrZrxM6GhBBH
-         w6ImvCPT8ZpVoaqn4Q0FE6OjLwIbdH3kOD+VHoue8tM3dSZn/Ke7sIZlA5XgQLVCBz
-         SASC4myCOulwdNLv4tU/PBsTXT0qpddMamJijxK8=
+        b=a11fMCkvmWeWSHtXTs1yGCBz/yawc8piYSlKNm/JW41F79uEuKf0yOA9TC179kdH/
+         SZGobFJx78wKf3qKJpSWlTdYsib/h6m+x2aV8bgX2GkT1NcUYz3inyXgyeWgksmiDg
+         XhkWH11yTWg7s3xTyEpbfYQc22ET+sMEfdgjzTv4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     NOGUCHI Hiroshi <drvlabo@gmail.com>, Jiri Kosina <jkosina@suse.cz>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 026/100] HID: Add ASUS T100CHI keyboard dock battery quirks
-Date:   Fri, 18 Oct 2019 18:04:11 -0400
-Message-Id: <20191018220525.9042-26-sashal@kernel.org>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 027/100] NFSv4: Ensure that the state manager exits the loop on SIGKILL
+Date:   Fri, 18 Oct 2019 18:04:12 -0400
+Message-Id: <20191018220525.9042-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -58,34 +58,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: NOGUCHI Hiroshi <drvlabo@gmail.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit a767ffea05d2737f6542cd78458a84a157fa216d ]
+[ Upstream commit a1aa09be21fa344d1f5585aab8164bfae55f57e3 ]
 
-Add ASUS Transbook T100CHI/T90CHI keyboard dock into battery quirk list, in
-order to add specific implementation in hid-asus.
-
-Signed-off-by: NOGUCHI Hiroshi <drvlabo@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-input.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/nfs/nfs4state.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index d988b92b20c82..01bed2f6862ee 100644
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -328,6 +328,9 @@ static const struct hid_device_id hid_battery_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYMBOL,
- 		USB_DEVICE_ID_SYMBOL_SCANNER_3),
- 	  HID_BATTERY_QUIRK_IGNORE },
-+	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_ASUSTEK,
-+		USB_DEVICE_ID_ASUSTEK_T100CHI_KEYBOARD),
-+	  HID_BATTERY_QUIRK_IGNORE },
- 	{}
- };
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index c36ef75f2054b..b3086e99420c7 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -2613,7 +2613,7 @@ static void nfs4_state_manager(struct nfs_client *clp)
+ 			return;
+ 		if (test_and_set_bit(NFS4CLNT_MANAGER_RUNNING, &clp->cl_state) != 0)
+ 			return;
+-	} while (refcount_read(&clp->cl_count) > 1);
++	} while (refcount_read(&clp->cl_count) > 1 && !signalled());
+ 	goto out_drain;
  
+ out_error:
 -- 
 2.20.1
 
