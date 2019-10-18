@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14618CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07170CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0DAA222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D37C5222C5
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571422094;
-	bh=Eki3mHWWB/b2+fIfIm4jIpBykWaxQqrUj4/pSJZ+Dac=;
+	s=default; t=1571422098;
+	bh=xjCew2fyAMJ/kTeMgSUul3MJEuYKt90pfdYZoa0tzM4=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=kqZr4OTmCGgO5nRt5dwgsCaoGEGZYME4lPVNNs2kRLTTR46y6J+9Xtpc/VG1qFjR9
-	 Qmb93PXlgRMZxwdxf4U1EfvVyyl64ri9fof3sY0SYdmDP/J6L8oXMPS8/5KB+/Ekpr
-	 4s92b8QNeVIB18GJ1khLU6S/7c6CcNOsfK7r2Nxo=
+	b=Z1UKzm2gOKuext1/Ld6ji6pzXv3xnowWTSorcfE67D7WkJBDDEPAEPZyis09AnPQA
+	 fnbZC/TvA87kamdAfeCL/M6pNhtEMCp1JgQD4Yez63xDfZADEip80MrxnxwymXf1WC
+	 IY3xIgU5YAwq4U/AHN4qtHz5w88WBnONHwgN0nYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505800AbfJRSIM (ORCPT
+        id S2505809AbfJRSIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:08:12 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45394 "EHLO
+        Fri, 18 Oct 2019 14:08:17 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45318 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505766AbfJRSHS (ORCPT
+        with ESMTP id S2505756AbfJRSHQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:07:18 -0400
+        Fri, 18 Oct 2019 14:07:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=6OLawQSqK81xzP4HuvY/4eKlvEfofNZTR3ny2vEIaSE=; b=R7V5aLOUCrwT
-        iSzdAwE5I/Q1zcSDYocrvBhgoOUp0LB51unN2EIya735X7smxBIscTp+co/GgGwmqm1YJKqlddFxD
-        OcjrJxAVxa+KxL5N9fEmEdp73t4uqyFgBuYQdz3cL1o9oFcOkDvzYLIB2CLhS9er5h9NtLiZDRbUP
-        Lh+Cg=;
+        List-Archive; bh=3hcMcor/FN+8Ad96YbO9u/6CZToK6CJA7ZrtqwtS/rc=; b=jyusJVGaSS2W
+        TsynWLOOKgiRRyo961YezP6/4Q0uwa7yA2HkIiCqH/NzO1NasX4a/bbr6lgOkjyG6JSnrPRXuok5J
+        y4TWUJMfwDFRf5dPlrLmKMjI289EsVP+nfIAXv1TrIzNKZJLDlq+uEQ5cFRDmvBvJ/mKXepSP1Sl+
+        qTtX8=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iLWea-0004H3-QA; Fri, 18 Oct 2019 18:07:08 +0000
+        id 1iLWeS-0004Fh-QU; Fri, 18 Oct 2019 18:07:00 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 500EB2743259; Fri, 18 Oct 2019 19:07:08 +0100 (BST)
+        id 4E8672743273; Fri, 18 Oct 2019 19:07:00 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Applied "spi: atmel: Remove useless private field" to the spi tree
-In-Reply-To: <20191017141846.7523-5-gregory.clement@bootlin.com>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     alsa-devel@alsa-project.org, "Cc:"@sirena.co.uk,
+        "Cc:"@sirena.co.uk, Cezary Rojewski <cezary.rojewski@intel.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: Intel: sof-rt5682: add a check for devm_clk_get" to the asoc tree
+In-Reply-To: <20191017025044.31474-1-hslester96@gmail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191018180708.500EB2743259@ypsilon.sirena.org.uk>
-Date:   Fri, 18 Oct 2019 19:07:08 +0100 (BST)
+Message-Id: <20191018180700.4E8672743273@ypsilon.sirena.org.uk>
+Date:   Fri, 18 Oct 2019 19:07:00 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,11 +67,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: atmel: Remove useless private field
+   ASoC: Intel: sof-rt5682: add a check for devm_clk_get
 
-has been applied to the spi tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -91,87 +92,42 @@ to this mail.
 Thanks,
 Mark
 
-From 60086e23e64f7b3b60d957471cfd10948e25648e Mon Sep 17 00:00:00 2001
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Date: Thu, 17 Oct 2019 16:18:43 +0200
-Subject: [PATCH] spi: atmel: Remove useless private field
+From e5f0d490fb718254a884453e47fcd48493cd67ea Mon Sep 17 00:00:00 2001
+From: Chuhong Yuan <hslester96@gmail.com>
+Date: Thu, 17 Oct 2019 10:50:44 +0800
+Subject: [PATCH] ASoC: Intel: sof-rt5682: add a check for devm_clk_get
 
-Since the conversion to GPIO descriptor, the GPIO used as chip select,
-can be directly access from the spi_device struct. So there is no need
-to keep the field npcs_pin.
+sof_audio_probe misses a check for devm_clk_get and may cause problems.
+Add a check for it to fix the bug.
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20191017141846.7523-5-gregory.clement@bootlin.com
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20191017025044.31474-1-hslester96@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-atmel.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+ sound/soc/intel/boards/sof_rt5682.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
-index b511df6a4846..19600de40422 100644
---- a/drivers/spi/spi-atmel.c
-+++ b/drivers/spi/spi-atmel.c
-@@ -284,7 +284,6 @@ struct atmel_spi {
- 
- /* Controller-specific per-slave state */
- struct atmel_spi_device {
--	struct gpio_desc	*npcs_pin;
- 	u32			csr;
- };
- 
-@@ -347,8 +346,8 @@ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
- 		}
- 
- 		mr = spi_readl(as, MR);
--		if (asd->npcs_pin)
--			gpiod_set_value(asd->npcs_pin, 1);
-+		if (spi->cs_gpiod)
-+			gpiod_set_value(spi->cs_gpiod, 1);
- 	} else {
- 		u32 cpol = (spi->mode & SPI_CPOL) ? SPI_BIT(CPOL) : 0;
- 		int i;
-@@ -364,8 +363,8 @@ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
- 
- 		mr = spi_readl(as, MR);
- 		mr = SPI_BFINS(PCS, ~(1 << spi->chip_select), mr);
--		if (asd->npcs_pin && spi->chip_select != 0)
--			gpiod_set_value(asd->npcs_pin, 1);
-+		if (spi->cs_gpiod && spi->chip_select != 0)
-+			gpiod_set_value(spi->cs_gpiod, 1);
- 		spi_writel(as, MR, mr);
- 	}
- 
-@@ -374,7 +373,6 @@ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
- 
- static void cs_deactivate(struct atmel_spi *as, struct spi_device *spi)
- {
--	struct atmel_spi_device *asd = spi->controller_state;
- 	u32 mr;
- 
- 	/* only deactivate *this* device; sometimes transfers to
-@@ -388,10 +386,10 @@ static void cs_deactivate(struct atmel_spi *as, struct spi_device *spi)
- 
- 	dev_dbg(&spi->dev, "DEactivate NPCS, mr %08x\n", mr);
- 
--	if (!asd->npcs_pin)
-+	if (!spi->cs_gpiod)
- 		spi_writel(as, CR, SPI_BIT(LASTXFER));
- 	else if (atmel_spi_is_v2(as) || spi->chip_select != 0)
--		gpiod_set_value(asd->npcs_pin, 0);
-+		gpiod_set_value(spi->cs_gpiod, 0);
- }
- 
- static void atmel_spi_lock(struct atmel_spi *as) __acquires(&as->lock)
-@@ -1205,9 +1203,6 @@ static int atmel_spi_setup(struct spi_device *spi)
- 		if (!asd)
- 			return -ENOMEM;
- 
--		if (spi->cs_gpiod)
--			asd->npcs_pin = spi->cs_gpiod;
--
- 		spi->controller_state = asd;
- 	}
- 
+diff --git a/sound/soc/intel/boards/sof_rt5682.c b/sound/soc/intel/boards/sof_rt5682.c
+index 5ce643d62faf..4f6e58c3954a 100644
+--- a/sound/soc/intel/boards/sof_rt5682.c
++++ b/sound/soc/intel/boards/sof_rt5682.c
+@@ -603,6 +603,15 @@ static int sof_audio_probe(struct platform_device *pdev)
+ 	/* need to get main clock from pmc */
+ 	if (sof_rt5682_quirk & SOF_RT5682_MCLK_BYTCHT_EN) {
+ 		ctx->mclk = devm_clk_get(&pdev->dev, "pmc_plt_clk_3");
++		if (IS_ERR(ctx->mclk)) {
++			ret = PTR_ERR(ctx->mclk);
++
++			dev_err(&pdev->dev,
++				"Failed to get MCLK from pmc_plt_clk_3: %d\n",
++				ret);
++			return ret;
++		}
++
+ 		ret = clk_prepare_enable(ctx->mclk);
+ 		if (ret < 0) {
+ 			dev_err(&pdev->dev,
 -- 
 2.20.1
 
