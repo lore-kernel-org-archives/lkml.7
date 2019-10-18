@@ -2,201 +2,89 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C85F0CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6944FCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9AAF222C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36EDA2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:41:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rq4Rw84j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442005AbfJRFlU (ORCPT
+        id S2442038AbfJRFla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:41:20 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:31112 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2389961AbfJRFlU (ORCPT
+        Fri, 18 Oct 2019 01:41:30 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43103 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389961AbfJRFl3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:41:20 -0400
-X-UUID: 2be832a9497145dbb013a68753705429-20191018
-X-UUID: 2be832a9497145dbb013a68753705429-20191018
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1470944434; Fri, 18 Oct 2019 13:41:14 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 18 Oct 2019 13:41:11 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 18 Oct 2019 13:41:11 +0800
-Message-ID: <1571377272.11955.6.camel@mtkswgap22>
-Subject: Re: [PATCH v4 2/3] dt-bindings: rng: add bindings for MediaTek
- ARMv8 SoCs
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Crystal Guo =?UTF-8?Q?=28=E9=83=AD=E6=99=B6=29?= 
-        <Crystal.Guo@mediatek.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Matt Mackall <mpm@selenic.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Neal Liu <neal.liu@mediatek.com>
-Date:   Fri, 18 Oct 2019 13:41:12 +0800
-In-Reply-To: <1570024070.4002.1.camel@mtkswgap22>
-References: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
-         <1561361052-13072-3-git-send-email-neal.liu@mediatek.com>
-         <20190722171320.GA9806@bogus> <1563848465.31451.4.camel@mtkswgap22>
-         <CAL_Jsq+SRhd=-5O2G_CMfJX9Z188kvA05MQOXaU1J8iExwUixQ@mail.gmail.com>
-         <1568771054.21700.7.camel@mtkswgap22> <1570024070.4002.1.camel@mtkswgap22>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Fri, 18 Oct 2019 01:41:29 -0400
+Received: by mail-pf1-f194.google.com with SMTP id a2so3129840pfo.10
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:41:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=p0ZcA5/U4vLBP3fm6ZAT4nlCcb5dQ4JwVYP/+NI5L6w=;
+        b=Rq4Rw84jFpBv+yeL1kstTX8oUutO2S4aOm/OKwIv0HgnEm+eEWyDVp+n+8sV/yLTlp
+         EKNLZNFpF/6t0n6akdQb6609x3y19LkwO48lMQrq+mLQ1bv3DpCLuS5ohwyegSa08yKf
+         CqkF4CgAc0jtuOKIUMudTnVuk8MMCG3MVyIYs/YU61Hbb3zRxI9JgxFWiUWZQVwz1yXa
+         eHuGTbH/apzwV1r0LiLS5r9Rz8N51bC1LcbgWN7HuAoMf5BD+d2ktkJ6+tg7EeE22NTL
+         e8MhubDpr7usb9CeDrkGO0y+6iqpx2UuYMg/Op6fwXmBI+IStEyRnouVbgCXf0NRZJlD
+         rWow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=p0ZcA5/U4vLBP3fm6ZAT4nlCcb5dQ4JwVYP/+NI5L6w=;
+        b=a7BNXfbr5y2rhPFH5h74BZlUMwmrLzNaV4yQSWa3vi1SWW4FPTwdkzEocQluQamUWb
+         XCrXeyuC6rx998oyCooXvR933bn9P9sRey+/wCPLNHJM1RCxtGF0AwEs5EO7RVmMvLX1
+         YAidbLfU6jP2i9US+4i8ogzRqrMArQeNV0tXbEeir9KVTIaWqQ0KtK8HkaozRBxxNWVu
+         eUhvHHUH8IYTDWF+iRPVq4Fd61DR+g0oz1ebqSBsMSur06jY9curv57UyODJYIokdutX
+         OwD96XEAjqeqYEzzd66KLKiTAxDizDd4aKAa4Jb8CDKKUVxw1Z0c6LndLAW+W6SC9Ooe
+         4I+Q==
+X-Gm-Message-State: APjAAAVolVCtZaH04prxbksV+KtH35BMuMqJZ45EhkYUo7Mi0duF+lgW
+        cm7wIgwySQTTOgiyyGQ3+Tq/TqyPdfo=
+X-Google-Smtp-Source: APXvYqxCBYnbkeb5IZKjGre+6VciDOyz3GYaUWRD7jLEy8anyNUwplve1VOtoA2UYkJzC8Y5d9VTag==
+X-Received: by 2002:a17:90a:9406:: with SMTP id r6mr9337135pjo.0.1571377289149;
+        Thu, 17 Oct 2019 22:41:29 -0700 (PDT)
+Received: from localhost ([122.172.151.112])
+        by smtp.gmail.com with ESMTPSA id k17sm5036033pgh.30.2019.10.17.22.41.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 17 Oct 2019 22:41:28 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 11:11:26 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [RFT][PATCH 1/3] PM: QoS: Introduce frequency QoS
+Message-ID: <20191018054126.n7zsqut7z3hzh7bc@vireshk-i7>
+References: <2811202.iOFZ6YHztY@kreacher>
+ <4551555.oysnf1Sd0E@kreacher>
+ <20191017094143.fhmhgltv6ujccxlp@vireshk-i7>
+ <CAJZ5v0hDhJrCWnPxbV54yWAB=DKCLz33Sq8J4kXtqH4+mJn2eQ@mail.gmail.com>
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0hDhJrCWnPxbV54yWAB=DKCLz33Sq8J4kXtqH4+mJn2eQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-10-02 at 21:47 +0800, Neal Liu wrote:
-> Dear Rob,
-> 
-> Just a gentle ping.
-> 
-> Neal
-> 
-> On Wed, 2019-09-18 at 09:44 +0800, Neal Liu wrote:
-> > On Tue, 2019-07-23 at 22:35 +0800, Rob Herring wrote:
-> > > On Mon, Jul 22, 2019 at 8:21 PM Neal Liu <neal.liu@mediatek.com> wrote:
-> > > >
-> > > 
-> > > Please don't top post to lists.
-> > > 
-> > > > Dear Rob,
-> > > >         You can check my driver for detail:
-> > > >         http://patchwork.kernel.org/patch/11012475/ or patchset 3/3
-> > > 
-> > > I could, or you could just answer my question.
-> > > 
-> > > >
-> > > >         This driver is registered as hardware random number generator, and
-> > > > combines with rng-core.
-> > > >         We want to add one rng hw based on the dts. Is this proper or do you
-> > > > have other suggestion to meet this requirement?
-> > > 
-> > > It depends. There doesn't appear to be any resource configuration, so
-> > > why does it need to be in DT. DT is not the only way instantiate
-> > > drivers.
-> > > 
-> > > Rob
-> > > 
-> > 
-> > We would like to consult more about this patch.
-> > We cannot figure out what method should be used instead of DT.
-> > The interface to access firmware is "smc" and firmware function only
-> > exists on certain platforms.
-> > Some DT has similar way, like:
-> > http://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts#L470
-> > 
-> > 	firmware {
-> > 		optee {
-> > 			compatible = "linaro,optee-tz";
-> > 			method = "smc";
-> > 		};
-> > 	};
-> > 
-> > Is there any way to instantiate driver on certain platforms without DT?
-> > Could you give us some examples?
-> > Thanks
-> > 
-> > > >
-> > > >         Thanks
-> > > >
-> > > >
-> > > > On Tue, 2019-07-23 at 01:13 +0800, Rob Herring wrote:
-> > > > > On Mon, Jun 24, 2019 at 03:24:11PM +0800, Neal Liu wrote:
-> > > > > > Document the binding used by the MediaTek ARMv8 SoCs random
-> > > > > > number generator with TrustZone enabled.
-> > > > > >
-> > > > > > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
-> > > > > > ---
-> > > > > >  .../devicetree/bindings/rng/mtk-sec-rng.txt        |   10 ++++++++++
-> > > > > >  1 file changed, 10 insertions(+)
-> > > > > >  create mode 100644 Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
-> > > > > >
-> > > > > > diff --git a/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
-> > > > > > new file mode 100644
-> > > > > > index 0000000..c04ce15
-> > > > > > --- /dev/null
-> > > > > > +++ b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
-> > > > > > @@ -0,0 +1,10 @@
-> > > > > > +MediaTek random number generator with TrustZone enabled
-> > > > > > +
-> > > > > > +Required properties:
-> > > > > > +- compatible : Should be "mediatek,mtk-sec-rng"
-> > > > >
-> > > > > What's the interface to access this?
-> > > > >
-> > > > > A node with a 'compatible' and nothing else is a sign of something that
-> > > > > a parent device should instantiate and doesn't need to be in DT. IOW,
-> > > > > what do complete bindings for firmware functions look like?
-> > > > >
+On 17-10-19, 16:16, Rafael J. Wysocki wrote:
+> [Also note that the current code in device PM QoS uses MIN and MAX
+> here in the same way. :-)]
 
-We would like to revise our DT node as below:
+Stupid me, enough embarrassment for the day :(
 
-firmware {
-	hwrng {
-		compatible = "mediatek,mtk-sec-rng";
-		method = "smc";
-	};
-};
-
-And dt-bindings path would be changed because it's base on ARM TrustZone
-Firmware.
-From "Documentation/devicetree/bindings/rng/mtk-sec-rng.txt"
-To
-"Documentation/devicetree/bindings/arm/firmware/mediatek,mtk-sec-rng.txt"
-
-We found some similar examples which also provide an interface to trap
-to Secure State through SMC instruction.
-Example 1: Documentation/devicetree/bindings/arm/firmware/xxx.txt
-Example 2: Documentation/devicetree/bindings/arm/psci.txt
-
-Is that okay for you?
-
-Neal
-
-> > > > > > +
-> > > > > > +Example:
-> > > > > > +
-> > > > > > +hwrng: hwrng {
-> > > > > > +   compatible = "mediatek,mtk-sec-rng";
-> > > > > > +}
-> > > > > > --
-> > > > > > 1.7.9.5
-> > > > > >
-> > > > >
-> > > > > _______________________________________________
-> > > > > Linux-mediatek mailing list
-> > > > > Linux-mediatek@lists.infradead.org
-> > > > > http://lists.infradead.org/mailman/listinfo/linux-mediatek
-> > > >
-> > > >
-> > 
-> 
-
-
+-- 
+viresh
