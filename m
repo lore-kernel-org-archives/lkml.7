@@ -2,174 +2,159 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 197B2CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9B1CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C0720700
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:59:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571425179;
-	bh=1LGsLjidu4GWpyPbnG47biJHYr4slOyuXbtj6n/gJec=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aZSW02nvwcyvnn70JwqV81q6NRKhTtcqz0IK972bQBVJDPPpUqXMaNzQBx76jYwPJ
-	 CMCnh6GIVTG9ZNNIr07VwBhpKY2KSku3TLhCVhmZ3amw0Q1/la9OTd1NRmibv9QcHE
-	 ypkpTDsve9wJIOfk+7reipBOoCgoLYWeFaSV9g9A=
+	by mail.kernel.org (Postfix) with ESMTP id 60F6020700
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:00:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZI5aiYWM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443191AbfJRS7h (ORCPT
+        id S2443202AbfJRTA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:59:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56344 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726421AbfJRS7h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:59:37 -0400
-Received: from localhost (unknown [38.98.37.137])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73D2B20700;
-        Fri, 18 Oct 2019 18:59:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571425176;
-        bh=1LGsLjidu4GWpyPbnG47biJHYr4slOyuXbtj6n/gJec=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=stt2z4TUOuGGT3/TzXo++JWK8AWvyLZF/d/QkYxCaTUiTXq7NpBxd1QbpffU1DGZ4
-         baKU/fcEqVzykoaWndzCmdnmtgEiBhh4Gz03IWJt5iZz6tqeUP2agemebG36aqMurw
-         5GGuCH6TNkF06R5nxQDgfEeKuTtypPrpL74C50c4=
-Date:   Fri, 18 Oct 2019 11:59:18 -0700
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        USB list <linux-usb@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] usb: Add a new quirk to let buggy hub enable and
- disable LPM during suspend and resume
-Message-ID: <20191018185918.GA1204767@kroah.com>
-References: <Pine.LNX.4.44L0.1910031503050.1797-100000@iolanthe.rowland.org>
- <A6EC775D-CE42-4F34-9B87-478482EF683A@canonical.com>
+        Fri, 18 Oct 2019 15:00:27 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:34207 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2443193AbfJRTAZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 15:00:25 -0400
+Received: by mail-oi1-f196.google.com with SMTP id 83so6129042oii.1
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 12:00:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=t99ObJB56KhBS/WNpgsgAnYcJ+G543s7eRggbvF+GSc=;
+        b=ZI5aiYWM+xn39N9ZL4bzOc/HegZiWV9I8vBroRd4GUo4BX8a7uWfmvRi1rOlQ0yOrm
+         F2179cWsuL18gEZhsafeFRl2Kd1ODlkoge3lflx7dcGTLhP5mUamYddeu5/X3VGr74F9
+         VWi93Dqdvc2LrlYCPsfEqE5NP58rgHfjloniDzkqOnOP4qFHLzxyCRYDZeJhxSQ0dQNg
+         XzdQ6ua1WZ61PFAu9IJbUwo1iVS70dOWIMPFL7LvxLeUbsw1NOGnUy3xQ+qNVitnWQbW
+         tfJfJJ/on8S90wHJ0FlTGGVjqegtf10GO1HyEhdxyJShol9qzaWIQXbdtRMuLFIdRj+G
+         bttQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=t99ObJB56KhBS/WNpgsgAnYcJ+G543s7eRggbvF+GSc=;
+        b=oe2Ztf7urwbtUuwGgl8v95e3fiwA5fVYPqZJQcKHPE1O+IT2ZMaMShTd/oTmrffhCJ
+         w5qdwVqad9nsJO1wISJkPRCDwPaywjT8XkKnFPVYiLi1EvyTW8/62f40CzIc0mHpguvc
+         YAk3JfhzopiL3oPUQ71kNyWXJezzJOyfmsF9JuomBH66bjCv1T8xC5dUkXX7W/uBqJEZ
+         Z5jBTIpSWl9ohw/3jvM3Yr+CTn2iQ5G5h1U15pgWzPdI7VfY+dNISQ9DnRP64KidV/mO
+         IL0s9rVYJ914XGNVVOd8B29e6CbalVE9xysQWtmQWQTx4CGtKjc89iEDjOWBO0jsTmQN
+         fwyg==
+X-Gm-Message-State: APjAAAXg4cVYCujszlX28NOcT+VWdVlUCoK6zE7ZZY0CO/Vsk7b3MsyF
+        OW8p7yN1Rx095+z961qBXwM=
+X-Google-Smtp-Source: APXvYqzCUlmptopKF+iqEPn/QEAG2McNNSZzczXsm6/Z8KP5BPeeLepxWUZOBD8o9+Z2WvXmnnIjSw==
+X-Received: by 2002:aca:1b04:: with SMTP id b4mr2309849oib.81.1571425224537;
+        Fri, 18 Oct 2019 12:00:24 -0700 (PDT)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id u14sm1745760otj.61.2019.10.18.12.00.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 18 Oct 2019 12:00:23 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 12:00:22 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 3/3] powerpc/prom_init: Use -ffreestanding to avoid a
+ reference to bcmp
+Message-ID: <20191018190022.GA1292@ubuntu-m2-xlarge-x86>
+References: <20190911182049.77853-1-natechancellor@gmail.com>
+ <20191014025101.18567-1-natechancellor@gmail.com>
+ <20191014025101.18567-4-natechancellor@gmail.com>
+ <20191014093501.GE28442@gate.crashing.org>
+ <CAKwvOdmcUT2A9FG0JD9jd0s=gAavRc_h+RLG6O3mBz4P1FfF8w@mail.gmail.com>
+ <20191014191141.GK28442@gate.crashing.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <A6EC775D-CE42-4F34-9B87-478482EF683A@canonical.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191014191141.GK28442@gate.crashing.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 02:33:00PM +0800, Kai-Heng Feng wrote:
+On Mon, Oct 14, 2019 at 02:11:41PM -0500, Segher Boessenkool wrote:
+> On Mon, Oct 14, 2019 at 08:56:12AM -0700, Nick Desaulniers wrote:
+> > On Mon, Oct 14, 2019 at 2:35 AM Segher Boessenkool
+> > <segher@kernel.crashing.org> wrote:
+> > >
+> > > On Sun, Oct 13, 2019 at 07:51:01PM -0700, Nathan Chancellor wrote:
+> > > > r374662 gives LLVM the ability to convert certain loops into a reference
+> > > > to bcmp as an optimization; this breaks prom_init_check.sh:
+> > >
+> > > When/why does LLVM think this is okay?  This function has been removed
+> > > from POSIX over a decade ago (and before that it always was marked as
+> > > legacy).
+> > 
+> > Segher, do you have links for any of the above? If so, that would be
+> > helpful to me.
+> 
+> Sure!
+> 
+> https://pubs.opengroup.org/onlinepubs/9699919799/xrat/V4_xsh_chap03.html
+> 
+> Older versions are harder to find online, unfortunately.  But there is
+> 
+> https://kernel.org/pub/linux/docs/man-pages/man-pages-posix/
+> 
+> in which man3p/bcmp.3p says:
+> 
+> FUTURE DIRECTIONS
+>        This function may be withdrawn in a future version.
+> 
+> Finally, the Linux man pages say (man bcmp):
+> 
+> CONFORMING TO
+>        4.3BSD.   This  function   is   deprecated   (marked   as   LEGACY   in
+>        POSIX.1-2001): use memcmp(3) in new programs.  POSIX.1-2008 removes the
+>        specification of bcmp().
 > 
 > 
-> > On Oct 4, 2019, at 03:04, Alan Stern <stern@rowland.harvard.edu> wrote:
-> > 
-> > On Fri, 4 Oct 2019, Kai-Heng Feng wrote:
-> > 
-> >> Dell WD15 dock has a topology like this:
-> >> /:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/2p, 10000M
-> >>    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/7p, 5000M
-> >>            |__ Port 2: Dev 3, If 0, Class=Vendor Specific Class, Driver=r8152, 5000M
-> >> 
-> >> Their IDs:
-> >> Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
-> >> Bus 004 Device 002: ID 0424:5537 Standard Microsystems Corp.
-> >> Bus 004 Device 004: ID 0bda:8153 Realtek Semiconductor Corp.
-> >> 
-> >> Ethernet cannot be detected after plugging ethernet cable to the dock,
-> >> the hub and roothub get runtime resumed and runtime suspended
-> >> immediately:
-> >> ...
-> >> [  433.315169] xhci_hcd 0000:3a:00.0: hcd_pci_runtime_resume: 0
-> >> [  433.315204] usb usb4: usb auto-resume
-> >> [  433.315226] hub 4-0:1.0: hub_resume
-> >> [  433.315239] xhci_hcd 0000:3a:00.0: Get port status 4-1 read: 0x10202e2, return 0x10343
-> >> [  433.315264] usb usb4-port1: status 0343 change 0001
-> >> [  433.315279] xhci_hcd 0000:3a:00.0: clear port1 connect change, portsc: 0x10002e2
-> >> [  433.315293] xhci_hcd 0000:3a:00.0: Get port status 4-2 read: 0x2a0, return 0x2a0
-> >> [  433.317012] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
-> >> [  433.422282] xhci_hcd 0000:3a:00.0: Get port status 4-1 read: 0x10002e2, return 0x343
-> >> 
-> >> At this point the SMSC hub (usb 4-1) enters into compliance mode
-> >> (USB_SS_PORT_LS_COMP_MOD), and USB core tries to warm-reset it,
-> >> 
-> >> [  433.422307] usb usb4-port1: do warm reset
-> >> [  433.422311] usb 4-1: device reset not allowed in state 8
-> >> [  433.422339] hub 4-0:1.0: state 7 ports 2 chg 0002 evt 0000
-> >> [  433.422346] xhci_hcd 0000:3a:00.0: Get port status 4-1 read: 0x10002e2, return 0x343
-> >> [  433.422356] usb usb4-port1: do warm reset
-> >> [  433.422358] usb 4-1: device reset not allowed in state 8
-> >> [  433.422428] xhci_hcd 0000:3a:00.0: set port remote wake mask, actual port 0 status  = 0xf0002e2
-> >> [  433.422455] xhci_hcd 0000:3a:00.0: set port remote wake mask, actual port 1 status  = 0xe0002a0
-> >> [  433.422465] hub 4-0:1.0: hub_suspend
-> >> [  433.422475] usb usb4: bus auto-suspend, wakeup 1
-> >> [  433.426161] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
-> >> [  433.466209] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-> >> [  433.510204] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-> >> [  433.554051] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-> >> [  433.598235] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-> >> [  433.642154] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-> >> [  433.686204] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-> >> [  433.730205] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-> >> [  433.774203] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-> >> [  433.818207] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-> >> [  433.862040] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-> >> [  433.862053] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
-> >> [  433.862077] xhci_hcd 0000:3a:00.0: xhci_suspend: stopping port polling.
-> >> [  433.862096] xhci_hcd 0000:3a:00.0: // Setting command ring address to 0x8578fc001
-> >> [  433.862312] xhci_hcd 0000:3a:00.0: hcd_pci_runtime_suspend: 0
-> >> [  433.862445] xhci_hcd 0000:3a:00.0: PME# enabled
-> >> [  433.902376] xhci_hcd 0000:3a:00.0: restoring config space at offset 0xc (was 0x0, writing 0x20)
-> >> [  433.902395] xhci_hcd 0000:3a:00.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100403)
-> >> [  433.902490] xhci_hcd 0000:3a:00.0: PME# disabled
-> >> [  433.902504] xhci_hcd 0000:3a:00.0: enabling bus mastering
-> >> [  433.902547] xhci_hcd 0000:3a:00.0: // Setting command ring address to 0x8578fc001
-> >> [  433.902649] pcieport 0000:00:1b.0: PME: Spurious native interrupt!
-> >> [  433.902839] xhci_hcd 0000:3a:00.0: Port change event, 4-1, id 3, portsc: 0xb0202e2
-> >> [  433.902842] xhci_hcd 0000:3a:00.0: resume root hub
-> >> [  433.902845] xhci_hcd 0000:3a:00.0: handle_port_status: starting port polling.
-> >> [  433.902877] xhci_hcd 0000:3a:00.0: xhci_resume: starting port polling.
-> >> [  433.902889] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
-> >> [  433.902891] xhci_hcd 0000:3a:00.0: hcd_pci_runtime_resume: 0
-> >> [  433.902919] usb usb4: usb wakeup-resume
-> >> [  433.902942] usb usb4: usb auto-resume
-> >> [  433.902966] hub 4-0:1.0: hub_resume
-> >> ...
-> >> 
-> >> However the warm-reset never success, the asserted PCI PME keeps the
-> >> runtime-resume, warm-reset and runtime-suspend loop which never bring it back
-> >> and causing spurious interrupts floods.
-> >> 
-> >> After some trial and errors, the issue goes away if LPM on the SMSC hub
-> >> is disabled. Digging further, enabling and disabling LPM during runtime
-> >> resume and runtime suspend respectively can solve the issue.
-> >> 
-> >> So bring back the old LPM behavior as a quirk and use it for the SMSC
-> >> hub to solve the issue.
-> >> 
-> >> Fixes: d590c2311150 ("usb: Avoid unnecessary LPM enabling and disabling during suspend and resume")
-> >> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> >> ---
-> >> v3:
-> >> - Add forgotten patch revision changelog.
-> >> 
-> >> v2:
-> >> - Explained by Alan, the hub should properly handle U3 -> U0 transition.
-> >>  So use a quirk to target this buggy device only.
-> >> 
-> >> Documentation/admin-guide/kernel-parameters.txt |  3 +++
-> >> drivers/usb/core/hub.c                          | 15 +++++++++++++++
-> >> drivers/usb/core/quirks.c                       |  6 ++++++
-> >> include/linux/usb/quirks.h                      |  3 +++
-> >> 4 files changed, 27 insertions(+)
-> > 
-> > Mathias may want to try something different to fix this problem.  But
-> > if he doesn't, this patch is okay with me.
-> > 
-> > Acked-by: Alan Stern <stern@rowland.harvard.edu>
+> > I'm arguing against certain transforms that assume that
+> > one library function is faster than another, when such claims are
+> > based on measurements from one stdlib implementation.
 > 
-> If there's no objection, can we merge this patch?
+> Wow.  The difference between memcmp and bcmp is trivial (just the return
+> value is different, and that costs hardly anything to add).  And memcmp
+> is guaranteed to exist since C89/C90 at least.
+> 
+> > The rationale for why it was added was that memcmp takes a measurable
+> > amount of time in Google's fleet, and most calls to memcmp don't care
+> > about the position of the mismatch; bcmp is lower overhead (or at
+> > least for our libc implementation, not sure about others).
+> 
+> You just have to do the read of the last words you compare as big-endian,
+> and then you can just subtract the two words, convert that to "int" (which
+> is very inconvenient to do, but hardly expensive), and there you go.
+> 
+> Or on x86 use the bswap insn, or something like it.
+> 
+> Or, if you use GCC, it has __builtin_memcmp but also __builtin_memcmp_eq,
+> and those are automatically used, too.
+> 
+> 
+> Segher
 
-I wanted to have Mathias weigh in on this before merging it...
+Just as an FYI, there was some more discussion around the availablity
+and use of bcmp in this LLVM bug which spawned
+commit 5f074f3e192f ("lib/string.c: implement a basic bcmp").
+
+https://bugs.llvm.org/show_bug.cgi?id=41035#c13
+
+I believe this is the proper solution but I am fine with whatever works,
+I just want our CI to be green without any out of tree patches again...
+
+Cheers,
+Nathan
