@@ -2,161 +2,105 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE74CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D06FCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1775820820
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6120F20820
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:43:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XXpUDtHD";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gW0PUImE"
+	dkim=pass (2048-bit key) header.d=gandi.net header.i=@gandi.net header.b="SPPiFN+n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407633AbfJRGm7 (ORCPT
+        id S2408991AbfJRGnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 02:42:59 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46322 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393594AbfJRGm6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 02:42:58 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4EDDF610DC; Fri, 18 Oct 2019 06:42:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571380977;
-        bh=6TBlAdKQKJ2jvjGwgvWVKyvODqXx7MA+HnxHF0EkO/M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=XXpUDtHDTlxK4+UvWEa/J0kS0HjwY2zBjFYE7YpXGJAmogZBuItNCDKOCCoKd9sHw
-         j7laQYY1fc5Ie3Od2WNektEtPV7W7lVx9ovF5SOUdgYCEtFWEh42yQx1tkvgbpiQuc
-         9Q51u31cVnJSq1RadpOrTop88nLPI8gLZWDhFCiw=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 51E72610DC;
-        Fri, 18 Oct 2019 06:42:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571380976;
-        bh=6TBlAdKQKJ2jvjGwgvWVKyvODqXx7MA+HnxHF0EkO/M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gW0PUImE+THwnpgh1sMlgBvC+wHvJgH2dfUwZPnMJQ7NXR8nLTHYG6kMHd7zke0fQ
-         jsf4OF79koepY/K+yoYiF204JVVpAVxDfkKQO1EgSXeOjt2EQ9YxVRfGLagD86Oa+W
-         CjGLZ6+0LYrwcuBryQpPZXdoJgNDTOYZwxCrAF/s=
+        Fri, 18 Oct 2019 02:43:50 -0400
+Received: from mail12.gandi.net ([217.70.182.73]:41477 "EHLO gandi.net"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2393594AbfJRGnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 02:43:49 -0400
+X-Greylist: delayed 570 seconds by postgrey-1.27 at vger.kernel.org; Fri, 18 Oct 2019 02:43:48 EDT
+Received: from diconico07.dev (unknown [IPv6:2001:4b98:beef:a:e921:9c91:35ed:759a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by gandi.net (Postfix) with ESMTPSA id A11781602FD;
+        Fri, 18 Oct 2019 06:34:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gandi.net; s=20190808;
+        t=1571380457;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Jpi61/2s16j3fMtRfMj2xF4NuVyqdh4656NY34j9qBw=;
+        b=SPPiFN+nP1KBYsIYmk+vIOht95Cx/oNJm0rrk9zrtSCBbrDaeHT9N6rOdh/dcMYOFYIC9e
+        GMqfRhIz+DG2+i/FP0IUHyBNeWxWHeH2GAt7iSIiIsY10NtgT6ZbbW1NT4VWG1V71ix3x5
+        fFGMVgRdw9v50NGTsTNv6pXL+AddYF2oxvRz5ZX6g3wdFSbZNI/+sudoqkIXG4myGeeVY+
+        ZxXIvpAAHW4hMdiB+fqIU8DkUMGwbd7km1DW81Ke9JidW9LieCaIPAgy3hxTm+IbPQY8tk
+        HwqjI93URS2jntDPKiBZukWPnJs68Aaxb6tw2Tpsshg4Z/+Tc16flbeB9m0zMQ==
+Subject: Re: email as a bona fide git transport
+To:     Willy Tarreau <w@1wt.eu>, Greg KH <greg@kroah.com>,
+        Santiago Torres Arias <santiago@nyu.edu>,
+        Vegard Nossum <vegard.nossum@oracle.com>,
+        workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, Eric Wong <e@80x24.org>
+References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
+ <20191016111009.GE13154@1wt.eu>
+ <20191016144517.giwip4yuaxtcd64g@LykOS.localdomain>
+ <20191017204343.GA1132188@kroah.com> <20191017204532.GA6446@chatter.i7.local>
+ <20191018013029.GA1167832@kroah.com> <20191018015447.GB6446@chatter.i7.local>
+ <20191018025215.GA15777@1wt.eu>
+From:   Nicolas Belouin <nicolas.belouin@gandi.net>
+Message-ID: <4ea21178-0cac-e958-7c69-ad5b4a74e6b5@gandi.net>
+Date:   Fri, 18 Oct 2019 08:34:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20191018025215.GA15777@1wt.eu>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 18 Oct 2019 12:12:56 +0530
-From:   kgunda@codeaurora.org
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        lee.jones@linaro.org, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH V7 6/6] backlight: qcom-wled: Add auto string detection
- logic
-In-Reply-To: <20191017133954.7vgqjgwxojmjw446@holly.lan>
-References: <1571220826-7740-1-git-send-email-kgunda@codeaurora.org>
- <1571220826-7740-7-git-send-email-kgunda@codeaurora.org>
- <20191017112941.qqvgboyambzw63i3@holly.lan>
- <fa32f7ec727cb2626ad877a6cef32a1b@codeaurora.org>
- <20191017133954.7vgqjgwxojmjw446@holly.lan>
-Message-ID: <bd369e2d809d642867f712499df0eb33@codeaurora.org>
-X-Sender: kgunda@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-17 19:09, Daniel Thompson wrote:
-> On Thu, Oct 17, 2019 at 05:47:47PM +0530, kgunda@codeaurora.org wrote:
->> On 2019-10-17 16:59, Daniel Thompson wrote:
->> > On Wed, Oct 16, 2019 at 03:43:46PM +0530, Kiran Gunda wrote:
->> > > The auto string detection algorithm checks if the current WLED
->> > > sink configuration is valid. It tries enabling every sink and
->> > > checks if the OVP fault is observed. Based on this information
->> > > it detects and enables the valid sink configuration.
->> > > Auto calibration will be triggered when the OVP fault interrupts
->> > > are seen frequently thereby it tries to fix the sink configuration.
->> > >
->> > > The auto-detection also kicks in when the connected LED string
->> > > of the display-backlight malfunctions (because of damage) and
->> > > requires the damaged string to be turned off to prevent the
->> > > complete panel and/or board from being damaged.
->> > >
->> > > Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
->> >
->> > It's a complex bit of code but I'm OK with it in principle. Everything
->> > below is about small details and/or nitpicking.
->> >
->> >
->> > > +static void wled_ovp_work(struct work_struct *work)
->> > > +{
->> > > +	struct wled *wled = container_of(work,
->> > > +					 struct wled, ovp_work.work);
->> > > +	enable_irq(wled->ovp_irq);
->> > > +}
->> > > +
->> >
->> > A bit of commenting about why we have to wait 10ms before enabling the
->> > OVP interrupt would be appreciated.
->> >
->> >
->> Sure. Will add the comment in the next series.
->> > > +static irqreturn_t wled_ovp_irq_handler(int irq, void *_wled)
->> > > +{
->> > > +	struct wled *wled = _wled;
->> > > +	int rc;
->> > > +	u32 int_sts, fault_sts;
->> > > +
->> > > +	rc = regmap_read(wled->regmap,
->> > > +			 wled->ctrl_addr + WLED3_CTRL_REG_INT_RT_STS, &int_sts);
->> > > +	if (rc < 0) {
->> > > +		dev_err(wled->dev, "Error in reading WLED3_INT_RT_STS rc=%d\n",
->> > > +			rc);
->> > > +		return IRQ_HANDLED;
->> > > +	}
->> > > +
->> > > +	rc = regmap_read(wled->regmap, wled->ctrl_addr +
->> > > +			 WLED3_CTRL_REG_FAULT_STATUS, &fault_sts);
->> > > +	if (rc < 0) {
->> > > +		dev_err(wled->dev, "Error in reading WLED_FAULT_STATUS rc=%d\n",
->> > > +			rc);
->> > > +		return IRQ_HANDLED;
->> > > +	}
->> > > +
->> > > +	if (fault_sts &
->> > > +		(WLED3_CTRL_REG_OVP_FAULT_BIT | WLED3_CTRL_REG_ILIM_FAULT_BIT))
->> > > +		dev_dbg(wled->dev, "WLED OVP fault detected, int_sts=%x
->> > > fault_sts= %x\n",
->> > > +			int_sts, fault_sts);
->> > > +
->> > > +	if (fault_sts & WLED3_CTRL_REG_OVP_FAULT_BIT) {
->> > > +		mutex_lock(&wled->lock);
->> > > +		disable_irq_nosync(wled->ovp_irq);
->> >
->> > We're currently running the threaded ISR for this irq. Do we really need
->> > to disable it?
->> >
->> We need to disable this IRQ, during the auto string detection logic. 
->> Because
->> in the auto string detection we configure the current sinks one by one 
->> and
->> check the
->> status register for the OVPs and set the right string configuration. 
->> We
->> enable it later after
->> the auto string detection is completed.
-> 
-> This is a threaded oneshot interrupt handler. Why isn't the framework
-> masking sufficient for you here?
-> 
-> 
-> Daniel.
-Right .. I overlooked that it is a oneshot interrupt earlier.
-I will address it in the next series.
+On 10/18/19 4:52 AM, Willy Tarreau wrote:
+> On Thu, Oct 17, 2019 at 09:54:47PM -0400, Konstantin Ryabitsev wrote:
+>> On Thu, Oct 17, 2019 at 06:30:29PM -0700, Greg KH wrote:
+>>>> It could only possibly work if nobody ever adds their own
+>>>> "Signed-Off-By" or
+>>>> any other bylines. I expect this is a deal-breaker for most maintainers.
+>>> Yeah it is :(
+>>>
+>>> But, if we could just have the signature on the code change, not the
+>>> changelog text, that would help with that issue.
+>> We totally should, and I even mused on how we would do that here:
+>> https://public-inbox.org/git/20190910121324.GA6867@pure.paranoia.local/
+>>
+>> However, since git's PGP signatures are made for the content in the actual
+>> commit record (tree hash, parent, author, commit message, etc), the only way
+>> we could preserve them between the email and the git tree is if we never
+>> modify any of that data. The SOB and other trailers would have to only be
+>> applied to the merge commit, or migrate into commit notes.
+> There's also the possibility to handle this a bit like we do when adding
+> comments before the SOB: a PGP signature would apply to the text *before*
+> it only. We could then have long chains of SOB, PGP, SOB, PGP etc.
+>
+> Willy
+
+I don't think it can work that easily as the signed content is not just
+the message.
+It would need git to support nesting signatures and to allow amending a
+commit without
+touching the signature and to allow adding one to cover the new content
+and to have a
+way to verify every step.
+Moreover you won't be able to reparent the commit as a maintainer (wich
+I think is
+also a deal-breaker)
+
+Nicolas
+
