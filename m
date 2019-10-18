@@ -2,147 +2,168 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A420CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E925CA9EAB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF23821925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:59:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="exyDsaRy"
+	by mail.kernel.org (Postfix) with ESMTP id 5176920663
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:07:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443365AbfJRT76 (ORCPT
+        id S2443401AbfJRUHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 15:59:58 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20854 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2440148AbfJRT76 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 15:59:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571428796;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HY9LZl5Qc/JmP6FOZkiAXVJNeytiYRMe4zXOpb3ECF4=;
-        b=exyDsaRyHxDCMDgc+2sPWih2wgvAKUl9o7j3yTCAG3Ye0oyRCpZxI8v94uNC06Zxm19UTy
-        g48B3b4AmW1Fng+W2mAn5DAzzTY+/vUYlyyhYNbyR6llLqFaWS7H9EOz9B+sbFNJPatrmA
-        u/VrGpFhpz8latE6WbXO6B66/6ttIKk=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-380-trmYH-7xMKqJ8goLgs8ZEA-1; Fri, 18 Oct 2019 15:59:54 -0400
-Received: by mail-wm1-f71.google.com with SMTP id f63so2765458wma.7
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 12:59:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mdVnAWOXIUqPZERi9Vvyl1DX/oz70rB8oZJj6tien0A=;
-        b=kliQr/KE8Ha8dkrx9qwBhw04QmteivpA8r/TOspVso0t2WfbhDRRzUj/jQko8I4p5g
-         Iwf+xUpOCtirjpVTUBJ061T90REoWV+vDRYsZbK52anmJlRUd8xU64ruAoPQGC6fB7Ml
-         DRANZ+X6urYvhd0Z2dzWetOnUgwEZpMXWBLABwlfsqq2+m+emjS2kZ90QOlT6rm4qB9u
-         QTFsvbN151tngw5PDbqn3VijyVmC95ZgrYcIp2zRefCfwJDFegLoXwiWTOr2EL7QTLZt
-         a7uBhbV56jhDWKgPwc+nmz5Nip7+bLLtz3jn/M90knigO2zCVTNK7EXHBkRp/q40Lu/C
-         /YhQ==
-X-Gm-Message-State: APjAAAXraWYm3jOpt08hS02RYDTJNE5RtJcIsHgTaNtADQLFne9pM/2a
-        jFCDyk/6TylMQ7fXg1IGbxEC48FX0FXwe8broouQreDlwjxVrx1j92m/CHPWQCOfnJSaKmDOzTf
-        CxzeUI1jcXSGuS3kZE9sNdG/t
-X-Received: by 2002:a1c:f60d:: with SMTP id w13mr9661976wmc.150.1571428793498;
-        Fri, 18 Oct 2019 12:59:53 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxBZX8nOVNI/ZgwbU6kp7bzmIkZW189C+ngLEMg/4SVkGuCV6L3PLcChQuI2EwAl2Qz7NnazA==
-X-Received: by 2002:a1c:f60d:: with SMTP id w13mr9661961wmc.150.1571428793247;
-        Fri, 18 Oct 2019 12:59:53 -0700 (PDT)
-Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
-        by smtp.gmail.com with ESMTPSA id d4sm8485046wrc.54.2019.10.18.12.59.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Oct 2019 12:59:52 -0700 (PDT)
-Subject: Re: [RFC][PATCH 2/3] usb: roles: Add usb role switch notifier.
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <20191002231617.3670-1-john.stultz@linaro.org>
- <20191002231617.3670-3-john.stultz@linaro.org>
- <2e369349-41f6-bd15-2829-fa886f209b39@redhat.com>
- <CALAqxLVcQ7yZuJCUEqGmvqcz5u0Gd=xJzqLbmiXKR+LJrOhvMQ@mail.gmail.com>
- <b8695418-9d3a-96a6-9587-c9a790f49740@redhat.com>
- <CALAqxLVh6GbiKmuK60e6f+_dWh-TS2ZLrwx0WsSo5bKp-F3iLA@mail.gmail.com>
- <648e2943-42f5-e07d-5bb4-f6fd8b38b726@redhat.com>
- <CALAqxLWh0=GRod5ORpi+ENpWCkmY39mUw_=NV67sKY8qH_otZw@mail.gmail.com>
- <f2236442-111d-cd84-fc47-0737df71cf3a@redhat.com>
- <CALAqxLWHbhst5KXAGCswKVp7ztzFHxdb6nskfze+Jk+xWo2Ssw@mail.gmail.com>
- <7877d69b-b17c-d4a4-9806-3dca98fc9e26@redhat.com>
- <CALAqxLWE-8YkYmrKoP6-+2xherwsGZ8-CeUyOFe9YPQj6EuSpg@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <7ea7824f-abc2-4cf6-720a-3668b6286781@redhat.com>
-Date:   Fri, 18 Oct 2019 21:59:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 18 Oct 2019 16:07:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39112 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2440361AbfJRUEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 16:04:41 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DC3E21D7C;
+        Fri, 18 Oct 2019 20:04:39 +0000 (UTC)
+Date:   Fri, 18 Oct 2019 16:04:38 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, George Spelvin <lkml@sdf.org>
+Subject: Re: [PATCH v1 3/3] tracing: Use generic type for comparator
+ function
+Message-ID: <20191018160438.5a6ded3d@gandalf.local.home>
+In-Reply-To: <20191007135656.37734-3-andriy.shevchenko@linux.intel.com>
+References: <20191007135656.37734-1-andriy.shevchenko@linux.intel.com>
+        <20191007135656.37734-3-andriy.shevchenko@linux.intel.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CALAqxLWE-8YkYmrKoP6-+2xherwsGZ8-CeUyOFe9YPQj6EuSpg@mail.gmail.com>
-Content-Language: en-US
-X-MC-Unique: trmYH-7xMKqJ8goLgs8ZEA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon,  7 Oct 2019 16:56:56 +0300
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-On 18-10-2019 21:53, John Stultz wrote:
-> On Fri, Oct 18, 2019 at 12:30 PM Hans de Goede <hdegoede@redhat.com> wrot=
-e:
->> Looking at drivers/usb/typec/tcpm/tcpci.c: tcpci_set_vconn I see that
->> there is a data struct with vendor specific callbacks and that the
->> drivers/usb/typec/tcpm/tcpci_rt1711h.c implements that.
->>
->> So you may want something similar here. But things are tricky here,
->> because when nothing is connected you want to provide Vbus for
->> the USB-A ports, which means that if someone then connects a
->> USB-A to C cable to connect the board to a PC (switching the port
->> to device mode) there will be a time when both sides are supplying
->> 5V if I remember the schedule correctly.
->=20
-> Ok. Thanks for the pointer, I'll take a look at that to see if I can
-> get it to work.
->=20
->> I think that the original hack might not be that bad, the whole hw
->> design seems so, erm, broken, that you probably cannot do proper
->> roleswapping anyways.  So just tying Vbus to host mode might be
->> fine, the question then becomes again how can some other piece
->> of code listen to the role-switch events...
->=20
-> So, at least in the current approach (see the v3 series), I've
-> basically set the hub driver as an role-switch intermediary, sitting
-> between the calls from the tcpm to the dwc3 driver. It actually works
-> better then the earlier notifier method (which had some issues with
-> reliably establishing the initial state on boot).  Does that approach
-> work for you?
+Hi Andy,
 
-That sounds like it might be a nice solution. But I have not seen the
-code, I think I was not Cc-ed on v3. Do you have a patchwork or
-lore.kernel.org link for me?
+FYI, when sending more than one patch, you should have a cover letter.
 
-Regards,
+Andrew,
 
-Hans
+Do you want to take this series?
+
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+-- Steve
+
+> Comparator function type, cmp_func_t, is defined in the types.h,
+> use it in the code.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  kernel/trace/ftrace.c       | 12 ++++++------
+>  kernel/trace/trace_branch.c |  8 ++++----
+>  kernel/trace/trace_stat.c   |  6 ++----
+>  kernel/trace/trace_stat.h   |  2 +-
+>  4 files changed, 13 insertions(+), 15 deletions(-)
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 62a50bf399d6..3bf9e805c46c 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -462,10 +462,10 @@ static void *function_stat_start(struct tracer_stat *trace)
+>  
+>  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>  /* function graph compares on total time */
+> -static int function_stat_cmp(void *p1, void *p2)
+> +static int function_stat_cmp(const void *p1, const void *p2)
+>  {
+> -	struct ftrace_profile *a = p1;
+> -	struct ftrace_profile *b = p2;
+> +	const struct ftrace_profile *a = p1;
+> +	const struct ftrace_profile *b = p2;
+>  
+>  	if (a->time < b->time)
+>  		return -1;
+> @@ -476,10 +476,10 @@ static int function_stat_cmp(void *p1, void *p2)
+>  }
+>  #else
+>  /* not function graph compares against hits */
+> -static int function_stat_cmp(void *p1, void *p2)
+> +static int function_stat_cmp(const void *p1, const void *p2)
+>  {
+> -	struct ftrace_profile *a = p1;
+> -	struct ftrace_profile *b = p2;
+> +	const struct ftrace_profile *a = p1;
+> +	const struct ftrace_profile *b = p2;
+>  
+>  	if (a->counter < b->counter)
+>  		return -1;
+> diff --git a/kernel/trace/trace_branch.c b/kernel/trace/trace_branch.c
+> index 3ea65cdff30d..88e158d27965 100644
+> --- a/kernel/trace/trace_branch.c
+> +++ b/kernel/trace/trace_branch.c
+> @@ -244,7 +244,7 @@ static int annotated_branch_stat_headers(struct seq_file *m)
+>  	return 0;
+>  }
+>  
+> -static inline long get_incorrect_percent(struct ftrace_branch_data *p)
+> +static inline long get_incorrect_percent(const struct ftrace_branch_data *p)
+>  {
+>  	long percent;
+>  
+> @@ -332,10 +332,10 @@ annotated_branch_stat_next(void *v, int idx)
+>  	return p;
+>  }
+>  
+> -static int annotated_branch_stat_cmp(void *p1, void *p2)
+> +static int annotated_branch_stat_cmp(const void *p1, const void *p2)
+>  {
+> -	struct ftrace_branch_data *a = p1;
+> -	struct ftrace_branch_data *b = p2;
+> +	const struct ftrace_branch_data *a = p1;
+> +	const struct ftrace_branch_data *b = p2;
+>  
+>  	long percent_a, percent_b;
+>  
+> diff --git a/kernel/trace/trace_stat.c b/kernel/trace/trace_stat.c
+> index 75bf1bcb4a8a..dd9960a2dd0c 100644
+> --- a/kernel/trace/trace_stat.c
+> +++ b/kernel/trace/trace_stat.c
+> @@ -72,9 +72,7 @@ static void destroy_session(struct stat_session *session)
+>  	kfree(session);
+>  }
+>  
+> -typedef int (*cmp_stat_t)(void *, void *);
+> -
+> -static int insert_stat(struct rb_root *root, void *stat, cmp_stat_t cmp)
+> +static int insert_stat(struct rb_root *root, void *stat, cmp_func_t cmp)
+>  {
+>  	struct rb_node **new = &(root->rb_node), *parent = NULL;
+>  	struct stat_node *data;
+> @@ -112,7 +110,7 @@ static int insert_stat(struct rb_root *root, void *stat, cmp_stat_t cmp)
+>   * This one will force an insertion as right-most node
+>   * in the rbtree.
+>   */
+> -static int dummy_cmp(void *p1, void *p2)
+> +static int dummy_cmp(const void *p1, const void *p2)
+>  {
+>  	return -1;
+>  }
+> diff --git a/kernel/trace/trace_stat.h b/kernel/trace/trace_stat.h
+> index 8786d17caf49..31d7dc5bf1db 100644
+> --- a/kernel/trace/trace_stat.h
+> +++ b/kernel/trace/trace_stat.h
+> @@ -16,7 +16,7 @@ struct tracer_stat {
+>  	void			*(*stat_start)(struct tracer_stat *trace);
+>  	void			*(*stat_next)(void *prev, int idx);
+>  	/* Compare two entries for stats sorting */
+> -	int			(*stat_cmp)(void *p1, void *p2);
+> +	cmp_func_t		stat_cmp;
+>  	/* Print a stat entry */
+>  	int			(*stat_show)(struct seq_file *s, void *p);
+>  	/* Release an entry */
 
