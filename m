@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0D7CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD1ACA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9504121852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B656020872
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437109;
-	bh=4yf0xY+siayprstSH7pJ9lhW841VNU30MNrW/1kjx+c=;
+	s=default; t=1571437123;
+	bh=IlBkFwGUgAC2Wa9c3vMk16ObPVRv9tfoUaey65R1+pA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c2rQu5SXHzzyPlQjtlbuUXUpLXrqdzc/ieyC3QrvmOltKkic/gkyP3oIy/AEviL0V
-	 5shmLIvblVlMAwaMkCVn85yBo8A7JR8p+6ulB7AAbZIXXof+I5JHpxFtFWUN/4IfvF
-	 UglXpITt6mlIF9IQhfM/cLGWNvBvpUopRpw04Jkc=
+	b=eTKIhrF3zZDeIVD82ds0prIccgqDlEqIOGqI9ktQQVbj515q32SDB4JBMDcnUwkoe
+	 SZzCcCwHzsLCbfm4It7qAoCS0YEXSlQpZRW1wsXOiXLeN4lroV9p3fmdYjPhLl69TV
+	 owmrOnAQZJFDV2Wp8eR6C76r+faS9fVCytogGjy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404180AbfJRWS2 (ORCPT
+        id S2404221AbfJRWSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:18:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39498 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:18:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732709AbfJRWHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:07:19 -0400
+        id S1732555AbfJRWHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:07:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C1572245A;
-        Fri, 18 Oct 2019 22:07:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84588222D2;
+        Fri, 18 Oct 2019 22:07:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436439;
-        bh=4yf0xY+siayprstSH7pJ9lhW841VNU30MNrW/1kjx+c=;
+        s=default; t=1571436432;
+        bh=IlBkFwGUgAC2Wa9c3vMk16ObPVRv9tfoUaey65R1+pA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i/rh2mtDREerSrS3peKVEZlluwtER3OUv/EIAySS5oGZfOz1RIDN/wi1Gvlufo859
-         wPl0aRVmqUx5xaatUdJpePAjalQOtTzVIzNeSXTDWAR3ga2srEQXlwbB3hwwfGX+ts
-         nBIDgKvXujbX0HeGatNKueBptBh4fclwo7z7TEVU=
+        b=k1YDzOZ0AAuFq7Ztu47evBP4cvm+Xtzu6/jtBYCpboR7WtqbtCCK3bLHpCnGRyVPl
+         vrK4l+sbJbkShXmdeieD3eH33bISdAnjVpDe5wSderWcuMIlvTqwAaiHKk/7J0pUSA
+         ezSA4nIIJ1G5AO4YTTinWdOrBqimUz33m3l6elgk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Matthias Maennich <maennich@google.com>,
-        Jessica Yu <jeyu@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 077/100] kbuild: fix build error of 'make nsdeps' in clean tree
-Date:   Fri, 18 Oct 2019 18:05:02 -0400
-Message-Id: <20191018220525.9042-77-sashal@kernel.org>
+Cc:     Austin Kim <austindh.kim@gmail.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 073/100] fs: cifs: mute -Wunused-const-variable message
+Date:   Fri, 18 Oct 2019 18:04:58 -0400
+Message-Id: <20191018220525.9042-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -60,43 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Austin Kim <austindh.kim@gmail.com>
 
-[ Upstream commit d85103ac78a6d8573b21348b36f4cca2e1839a31 ]
+[ Upstream commit dd19c106a36690b47bb1acc68372f2b472b495b8 ]
 
-Running 'make nsdeps' in a clean source tree fails as follows:
+After 'Initial git repository build' commit,
+'mapping_table_ERRHRD' variable has not been used.
 
-$ make -s clean; make -s defconfig; make nsdeps
-   [ snip ]
-awk: fatal: cannot open file `init/modules.order' for reading (No such file or directory)
-make: *** [Makefile;1307: modules.order] Error 2
-make: *** Deleting file 'modules.order'
-make: *** Waiting for unfinished jobs....
+So 'mapping_table_ERRHRD' const variable could be removed
+to mute below warning message:
 
-The cause of the error is 'make nsdeps' does not build modules at all.
-Set KBUILD_MODULES to fix it.
-
-Reviewed-by: Matthias Maennich <maennich@google.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
+   fs/cifs/netmisc.c:120:40: warning: unused variable 'mapping_table_ERRHRD' [-Wunused-const-variable]
+   static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
+                                           ^
+Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/netmisc.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 4d29c7370b464..80f169534c4a7 100644
---- a/Makefile
-+++ b/Makefile
-@@ -566,7 +566,7 @@ endif
- # in addition to whatever we do anyway.
- # Just "make" or "make all" shall build modules as well
+diff --git a/fs/cifs/netmisc.c b/fs/cifs/netmisc.c
+index fdd908e4a26b3..66c10121a6eae 100644
+--- a/fs/cifs/netmisc.c
++++ b/fs/cifs/netmisc.c
+@@ -130,10 +130,6 @@ static const struct smb_to_posix_error mapping_table_ERRSRV[] = {
+ 	{0, 0}
+ };
  
--ifneq ($(filter all _all modules,$(MAKECMDGOALS)),)
-+ifneq ($(filter all _all modules nsdeps,$(MAKECMDGOALS)),)
-   KBUILD_MODULES := 1
- endif
- 
+-static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
+-	{0, 0}
+-};
+-
+ /*
+  * Convert a string containing text IPv4 or IPv6 address to binary form.
+  *
 -- 
 2.20.1
 
