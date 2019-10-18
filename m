@@ -2,109 +2,196 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB566CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D1CCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A947B222C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8087222C5
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:55:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WlTTFGi+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CfRbqYmy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441962AbfJREzK (ORCPT
+        id S2407258AbfJREza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 00:55:10 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:14945 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726103AbfJREzE (ORCPT
+        Fri, 18 Oct 2019 00:55:30 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:32939 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726103AbfJREz1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 00:55:04 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5da940f00000>; Thu, 17 Oct 2019 21:34:56 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 17 Oct 2019 21:34:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 17 Oct 2019 21:34:45 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 18 Oct
- 2019 04:34:45 +0000
-Received: from [10.110.48.28] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 18 Oct
- 2019 04:34:44 +0000
-Subject: Re: [PATCH] cpufreq: powernv: fix stack bloat and NR_CPUS limitation
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-CC:     Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Preeti U Murthy <preeti@linux.vnet.ibm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        <linux-pm@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>
-References: <20191018000431.1675281-1-jhubbard@nvidia.com>
- <20191018042715.f76bawmoyk66isap@vireshk-i7>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <c3f16019-5724-a181-8068-8dda60fb67fa@nvidia.com>
-Date:   Thu, 17 Oct 2019 21:34:44 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191018042715.f76bawmoyk66isap@vireshk-i7>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1571373296; bh=Rx+GgSz5ZaCKM6ZVWjMWxWP6l9wESsNJ8Pg+CRriU3k=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=WlTTFGi+AW1cpVxLjrs3k8ct7IRcSwLMlcB1VoUvIgOvhpy0sZ7jLoFWyB5BHgNiM
-         5wp7xLBwKA2KvbE5a57Ovnr0pgIO1B8wmxe5lOcpdzaChYnL4yshjN+bKWPDZdELEC
-         y6g/otss4TxpEUxCddKfKfsIKq9efIPvw/Ac+RMdtQhpc7m5ha1SBpohR3cgEmKNp7
-         RSvUEvFKLYIpfE+ObXISnyRzueh0vip+XorSEzzaVDrk2ubY10iIZQI7BXD/nQEtKB
-         39GaFWZiltzh212WsM6Vk3/Qk4IZx+C+j1KSICJbrQZpJkhSU2WFJBOUBlfAgnglt9
-         jNdFGP9PTB6PA==
+        Fri, 18 Oct 2019 00:55:27 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q10so3088576pfl.0;
+        Thu, 17 Oct 2019 21:55:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=ucTp4pYNsoXIVC4j9OusGhsOmcXWf7rr6MoAdvFKtu4=;
+        b=CfRbqYmycchsM1bJlVBRGEXaNsWo9LlbTr2NcLF7r1E4npsvAZAH5jd4uh3EpePLd5
+         ufr+cUV7VAX39CfjOthSGrd8LF6VP60ThHzbx7hhKguPAUPX3VFIQ5DSNZjjGtsX8Az9
+         fyL5HFvwPvE4/BpTzU/czRQaKcUE5AZPsxtj5m6ILQftjNw5CmEbccaSjS4jVzmEtuJS
+         Di6XKPjFXwR4+vVOK5SO4TzIQ/ANsljiFWP8dsFftOju0dwfTqqn18Ivjcq5QCsittKl
+         +OW7o1R7IXY7w2qGgF5hzwCF4gCWh5CxiIRIQWu3jt3XR3GRw7xlxvRbun6FKx6qwgof
+         zSFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=ucTp4pYNsoXIVC4j9OusGhsOmcXWf7rr6MoAdvFKtu4=;
+        b=PD5OLkAOB64o/kBfg44Zlsz9+TtqBM3IlhP5mPNzVJgIOxIuVMqaqjnB+m79JYIJ8U
+         Stng45FZfa8wFObE6C71f/NxmhNSCPG7GAyoLzX1uVFJrugrNQivFlEqxwht8s2dvOo2
+         psDrt47Kl2mThmjqJ/AWruUgMg3fnGq4cZxRy2dsE4iwTSD2l7lwdaFK7QSS3IFHdZhG
+         RaqLfWRk53Kc+s+DwcWNFPrmMdR0jSYqPfOR1rjxrMQdYgpvls+EBXIIueFr93fzUYuI
+         dtINcsW+vBu7GbBw741rSUxn9KH31IRF821G2nqpV58E8dZctABnyIQjd6NlDb3WqYFh
+         eAAw==
+X-Gm-Message-State: APjAAAXv+zRIGGoSr22PX6zHzgPQ8LIxfA9GKMkSHgSfvY2aeIb7qsWb
+        t+KnuoWSBPb3ekPoLPoW0xtnrn8h+vg=
+X-Google-Smtp-Source: APXvYqy96D31GFo6gGMu/neDxNH+1DxPMLtYZjXD3nhnD1h0yzdmy0NM2aKr4ORijlMkp8mxDhk3lA==
+X-Received: by 2002:a17:90a:80c2:: with SMTP id k2mr8322228pjw.92.1571367467557;
+        Thu, 17 Oct 2019 19:57:47 -0700 (PDT)
+Received: from software.domain.org ([66.42.68.162])
+        by smtp.gmail.com with ESMTPSA id a7sm3451692pjv.0.2019.10.17.19.57.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 17 Oct 2019 19:57:46 -0700 (PDT)
+From:   Huacai Chen <chenhc@lemote.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        chenhuacai@gmail.com, linux-kernel@vger.kernel.org,
+        Huacai Chen <chenhc@lemote.com>, stable@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] lib/vdso: Use __arch_use_vsyscall() to indicate fallback
+Date:   Fri, 18 Oct 2019 11:00:19 +0800
+Message-Id: <1571367619-13573-1-git-send-email-chenhc@lemote.com>
+X-Mailer: git-send-email 2.7.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/17/19 9:27 PM, Viresh Kumar wrote:
-> On 17-10-19, 17:04, John Hubbard wrote:
->> The following build warning occurred on powerpc 64-bit builds:
->>
->> drivers/cpufreq/powernv-cpufreq.c: In function 'init_chip_info':
->> drivers/cpufreq/powernv-cpufreq.c:1070:1: warning: the frame size of 1040 bytes is larger than 1024 bytes [-Wframe-larger-than=]
-> 
-> How come we are catching this warning after 4 years ?
-> 
+In do_hres(), we currently use whether the return value of __arch_get_
+hw_counter() is negtive to indicate fallback, but this is not a good
+idea. Because:
 
-Newer compilers. And btw, I don't spend a lot of time in powerpc
-code, so I just recently ran this, and I guess everyone has been on less
-new compilers so far, it seems.
+1, ARM64 returns ULL_MAX but MIPS returns 0 when clock_mode is invalid;
+2, For a 64bit counter, a "negtive" value of counter is actually valid.
 
-I used a gcc 8.1 cross compiler in this case:
+To solve this problem, we use U64_MAX as the only "invalid" return
+value -- this is still not fully correct, but has no problem in most
+cases. Moreover, all vdso time-related functions should rely on the
+return value of __arch_use_vsyscall(), because update_vdso_data() and
+update_vsyscall_tz() also rely on it. So, in the core functions of
+__cvdso_gettimeofday(), __cvdso_clock_gettime() and __cvdso_clock_
+getres(), if __arch_use_vsyscall() returns false, we use the fallback
+functions directly.
 
-$ $ /blue_exp/kernel/cross-compilers/powerpc64/gcc-8.1.0-nolibc/powerpc64-linux/bin/powerpc64-linux-gcc -v
-Using built-in specs.
-COLLECT_GCC=/blue_exp/kernel/cross-compilers/powerpc64/gcc-8.1.0-nolibc/powerpc64-linux/bin/powerpc64-linux-gcc
-COLLECT_LTO_WRAPPER=/home/jhubbard/blue_exp/kernel/cross-compilers/powerpc64/gcc-8.1.0-nolibc/powerpc64-linux/bin/../libexec/gcc/powerpc64-linux/8.1.0/lto-wrapper
-Target: powerpc64-linux
-Configured with: /home/arnd/git/gcc/configure --target=powerpc64-linux --enable-targets=all --prefix=/home/arnd/cross/x86_64/gcc-8.1.0-nolibc/powerpc64-linux --enable-languages=c --without-headers --disable-bootstrap --disable-nls --disable-threads --disable-shared --disable-libmudflap --disable-libssp --disable-libgomp --disable-decimal-float --disable-libquadmath --disable-libatomic --disable-libcc1 --disable-libmpx --enable-checking=release
-Thread model: single
-gcc version 8.1.0 (GCC) 
+Fixes: 00b26474c2f1613d7ab894c5 ("lib/vdso: Provide generic VDSO implementation")
+Cc: stable@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+---
+ arch/arm64/include/asm/vdso/vsyscall.h |  2 +-
+ arch/mips/include/asm/vdso/vsyscall.h  |  2 +-
+ include/asm-generic/vdso/vsyscall.h    |  2 +-
+ lib/vdso/gettimeofday.c                | 12 +++++++++++-
+ 4 files changed, 14 insertions(+), 4 deletions(-)
 
-
-
-thanks,
-
-John Hubbard
-NVIDIA
+diff --git a/arch/arm64/include/asm/vdso/vsyscall.h b/arch/arm64/include/asm/vdso/vsyscall.h
+index 0c731bf..406e6de 100644
+--- a/arch/arm64/include/asm/vdso/vsyscall.h
++++ b/arch/arm64/include/asm/vdso/vsyscall.h
+@@ -31,7 +31,7 @@ int __arm64_get_clock_mode(struct timekeeper *tk)
+ #define __arch_get_clock_mode __arm64_get_clock_mode
+ 
+ static __always_inline
+-int __arm64_use_vsyscall(struct vdso_data *vdata)
++int __arm64_use_vsyscall(const struct vdso_data *vdata)
+ {
+ 	return !vdata[CS_HRES_COARSE].clock_mode;
+ }
+diff --git a/arch/mips/include/asm/vdso/vsyscall.h b/arch/mips/include/asm/vdso/vsyscall.h
+index 1953147..8b10dd7 100644
+--- a/arch/mips/include/asm/vdso/vsyscall.h
++++ b/arch/mips/include/asm/vdso/vsyscall.h
+@@ -29,7 +29,7 @@ int __mips_get_clock_mode(struct timekeeper *tk)
+ #define __arch_get_clock_mode __mips_get_clock_mode
+ 
+ static __always_inline
+-int __mips_use_vsyscall(struct vdso_data *vdata)
++int __mips_use_vsyscall(const struct vdso_data *vdata)
+ {
+ 	return (vdata[CS_HRES_COARSE].clock_mode != VDSO_CLOCK_NONE);
+ }
+diff --git a/include/asm-generic/vdso/vsyscall.h b/include/asm-generic/vdso/vsyscall.h
+index e94b1978..ac05a625 100644
+--- a/include/asm-generic/vdso/vsyscall.h
++++ b/include/asm-generic/vdso/vsyscall.h
+@@ -26,7 +26,7 @@ static __always_inline int __arch_get_clock_mode(struct timekeeper *tk)
+ #endif /* __arch_get_clock_mode */
+ 
+ #ifndef __arch_use_vsyscall
+-static __always_inline int __arch_use_vsyscall(struct vdso_data *vdata)
++static __always_inline int __arch_use_vsyscall(const struct vdso_data *vdata)
+ {
+ 	return 1;
+ }
+diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
+index e630e7f..4ad062e 100644
+--- a/lib/vdso/gettimeofday.c
++++ b/lib/vdso/gettimeofday.c
+@@ -9,6 +9,7 @@
+ #include <linux/hrtimer_defs.h>
+ #include <vdso/datapage.h>
+ #include <vdso/helpers.h>
++#include <vdso/vsyscall.h>
+ 
+ /*
+  * The generic vDSO implementation requires that gettimeofday.h
+@@ -50,7 +51,7 @@ static int do_hres(const struct vdso_data *vd, clockid_t clk,
+ 		cycles = __arch_get_hw_counter(vd->clock_mode);
+ 		ns = vdso_ts->nsec;
+ 		last = vd->cycle_last;
+-		if (unlikely((s64)cycles < 0))
++		if (unlikely(cycles == U64_MAX))
+ 			return -1;
+ 
+ 		ns += vdso_calc_delta(cycles, last, vd->mask, vd->mult);
+@@ -91,6 +92,9 @@ __cvdso_clock_gettime_common(clockid_t clock, struct __kernel_timespec *ts)
+ 	if (unlikely((u32) clock >= MAX_CLOCKS))
+ 		return -1;
+ 
++	if (!__arch_use_vsyscall(vd))
++		return -1;
++
+ 	/*
+ 	 * Convert the clockid to a bitmask and use it to check which
+ 	 * clocks are handled in the VDSO directly.
+@@ -145,6 +149,9 @@ __cvdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz)
+ {
+ 	const struct vdso_data *vd = __arch_get_vdso_data();
+ 
++	if (!__arch_use_vsyscall(vd))
++		return gettimeofday_fallback(tv, tz);
++
+ 	if (likely(tv != NULL)) {
+ 		struct __kernel_timespec ts;
+ 
+@@ -189,6 +196,9 @@ int __cvdso_clock_getres_common(clockid_t clock, struct __kernel_timespec *res)
+ 	if (unlikely((u32) clock >= MAX_CLOCKS))
+ 		return -1;
+ 
++	if (!__arch_use_vsyscall(vd))
++		return -1;
++
+ 	hrtimer_res = READ_ONCE(vd[CS_HRES_COARSE].hrtimer_res);
+ 	/*
+ 	 * Convert the clockid to a bitmask and use it to check which
+-- 
+2.7.0
 
