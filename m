@@ -2,138 +2,92 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9111FCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82365CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70ABD2070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BCBF2070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:40:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571416842;
+	bh=K2kmdzvZ0PoJaTMqG8RbMV2VFT2lgWX9XMW2rld7+lw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=WFRdG76HCtgTjz6zK0yXOQhhVuF+txxhPMM9ZCKdDbqhzl7+gMFNYB7XzgId1fmtx
+	 EiIFar0zKX9jrYHaxpt0TW5xTxAT7yjQPXAt3juGq3Rb2MkX+haJB196k7B6aWbYth
+	 evUoQSJUIetusOzQJENs8kPfnJ8gC2sDetyv37mk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437137AbfJRQi3 (ORCPT
+        id S2405805AbfJRQkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:38:29 -0400
-Received: from mga02.intel.com ([134.134.136.20]:56208 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728368AbfJRQi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:38:28 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 09:38:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,312,1566889200"; 
-   d="scan'208";a="397991951"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga006.fm.intel.com with ESMTP; 18 Oct 2019 09:38:27 -0700
-Date:   Fri, 18 Oct 2019 09:38:27 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Borislav Petkov <bp@suse.de>
-Subject: Re: [PATCH 2/2] x86/cpu/vmware: Fix platform detection VMWARE_PORT
- macro
-Message-ID: <20191018163827.GC26319@linux.intel.com>
-References: <20191018134052.3023-1-thomas_os@shipmail.org>
- <20191018134052.3023-3-thomas_os@shipmail.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191018134052.3023-3-thomas_os@shipmail.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Fri, 18 Oct 2019 12:40:41 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:57275 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728368AbfJRQkk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 12:40:40 -0400
+Received: from [213.166.56.99] (helo=big-swifty.misterjones.org)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iLVIk-0002nV-PR; Fri, 18 Oct 2019 18:40:30 +0200
+Date:   Fri, 18 Oct 2019 17:40:29 +0100
+Message-ID: <86h846ypky.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Mark Rutland <mark.rutland@arm.com>, rnayak@codeaurora.org,
+        suzuki.poulose@arm.com, catalin.marinas@arm.com,
+        linux-arm-kernel <linux-arm-kernel-bounces@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, jeremy.linton@arm.com,
+        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        andrew.murray@arm.com, will@kernel.org, dave.martin@arm.com,
+        linux-arm-kernel@lists.infradead.org, marc.w.gonzalez@free.fr
+Subject: Re: Relax CPU features sanity checking on heterogeneous architectures
+In-Reply-To: <5da9cd3a.1c69fb81.95e9.e5e2@mx.google.com>
+References: <b3606e76af42f7ecf65b1bfc2a5ed30a@codeaurora.org>
+        <20191011105010.GA29364@lakrids.cambridge.arm.com>
+        <7910f428bd96834c15fb56262f3c10f8@codeaurora.org>
+        <20191011143442.515659f4@why>
+        <ac7599b30461d6a814e4f36d68bba6c2@codeaurora.org>
+        <5da8c868.1c69fb81.ae709.97ff@mx.google.com>
+        <c9285391dbbe936d3f242bdd0d226b93@www.loen.fr>
+        <5da9cd3a.1c69fb81.95e9.e5e2@mx.google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 213.166.56.99
+X-SA-Exim-Rcpt-To: swboyd@chromium.org, saiprakash.ranjan@codeaurora.org, mark.rutland@arm.com, rnayak@codeaurora.org, suzuki.poulose@arm.com, catalin.marinas@arm.com, linux-arm-kernel-bounces@lists.infradead.org, linux-kernel@vger.kernel.org, jeremy.linton@arm.com, bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, andrew.murray@arm.com, will@kernel.org, dave.martin@arm.com, linux-arm-kernel@lists.infradead.org, marc.w.gonzalez@free.fr
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 03:40:52PM +0200, Thomas Hellström (VMware) wrote:
-> From: Thomas Hellstrom <thellstrom@vmware.com>
+On Fri, 18 Oct 2019 15:33:29 +0100,
+Stephen Boyd <swboyd@chromium.org> wrote:
 > 
-> The platform detection VMWARE_PORT macro uses the VMWARE_HYPERVISOR_PORT
-> definition, but expects it to be an integer. However, when it was moved
-> to the new vmware.h include file, it was changed to be a string to better
-> fit into the VMWARE_HYPERCALL set of macros. This obviously breaks the
-> platform detection VMWARE_PORT functionality.
+> Quoting Marc Zyngier (2019-10-18 00:20:56)
+> > 
+> > If this SoC is anythinig like SM8150, 32bit guests will be hit and 
+> > miss,
+> > depending on the CPU your guest runs on, or is migrated to. We need to
+> > either drop capabilities from the 32bit-capable CPU, or prevent the
+> > non-32bit capable CPU from booting if a 32bit guest has been started.
+> > 
+> > You just have to hope that the kernel is entered at EL2, and that QC's
+> > "value add" has been moved somewhere else...
+> > 
 > 
-> Change the VMWARE_HYPERVISOR_PORT and VMWARE_HYPERVISOR_PORT_HB
-> definitions to be integers, and use __stringify() for their stringified
-> form when needed.
-> 
-> Fixes: b4dd4f6e3648 ("Add a header file for hypercall definitions")
-> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: x86-ml <x86@kernel.org>
-> Cc: Borislav Petkov <bp@suse.de>
-> ---
->  arch/x86/include/asm/vmware.h | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/vmware.h b/arch/x86/include/asm/vmware.h
-> index f5fbe3778aef..d20eda0c6ed8 100644
-> --- a/arch/x86/include/asm/vmware.h
-> +++ b/arch/x86/include/asm/vmware.h
-> @@ -4,6 +4,7 @@
->  
->  #include <asm/cpufeatures.h>
->  #include <asm/alternative.h>
-> +#include <linux/stringify.h>
->  
->  /*
->   * The hypercall definitions differ in the low word of the %edx argument
-> @@ -20,8 +21,8 @@
->   */
->  
->  /* Old port-based version */
-> -#define VMWARE_HYPERVISOR_PORT    "0x5658"
-> -#define VMWARE_HYPERVISOR_PORT_HB "0x5659"
-> +#define VMWARE_HYPERVISOR_PORT    0x5658
-> +#define VMWARE_HYPERVISOR_PORT_HB 0x5659
->  
->  /* Current vmcall / vmmcall version */
->  #define VMWARE_HYPERVISOR_HB   BIT(0)
-> @@ -29,7 +30,7 @@
->  
->  /* The low bandwidth call. The low word of edx is presumed clear. */
->  #define VMWARE_HYPERCALL						\
-> -	ALTERNATIVE_2("movw $" VMWARE_HYPERVISOR_PORT			\
-> +	ALTERNATIVE_2("movw $" __stringify(VMWARE_HYPERVISOR_PORT)	\
->  		      ", %%dx; inl (%%dx), %%eax",			\
->  		      "vmcall", X86_FEATURE_VMCALL,			\
->  		      "vmmcall", X86_FEATURE_VMW_VMMCALL)
-> @@ -39,7 +40,8 @@
->   * HB and OUT bits set.
->   */
->  #define VMWARE_HYPERCALL_HB_OUT						\
-> -	ALTERNATIVE_2("movw $" VMWARE_HYPERVISOR_PORT_HB ", %%dx; rep outsb", \
-> +	ALTERNATIVE_2("movw $" __stringify(VMWARE_HYPERVISOR_PORT_HB)	\
-> +		      ", %%dx; rep outsb",				\
->  		      "vmcall", X86_FEATURE_VMCALL,			\
->  		      "vmmcall", X86_FEATURE_VMW_VMMCALL)
->  
-> @@ -48,7 +50,8 @@
->   * HB bit set.
->   */
->  #define VMWARE_HYPERCALL_HB_IN						\
-> -	ALTERNATIVE_2("movw $" VMWARE_HYPERVISOR_PORT_HB ", %%dx; rep insb", \
-> +	ALTERNATIVE_2("movw $" __stringify(VMWARE_HYPERVISOR_PORT_HB)	\
-> +		      ", %%dx; rep insb",				\
+> Ok that's good.
 
-Same comment on wrapping in the middle of an instruction.  Wrapping after
-movw will stick out, but only by a char or two.
+I need a new signature.
 
->  		      "vmcall", X86_FEATURE_VMCALL,			\
->  		      "vmmcall", X86_FEATURE_VMW_VMMCALL)
->  #endif
-> -- 
-> 2.21.0
-> 
+	M.
+
+-- 
+Jazz is not dead, it just smells funny.
