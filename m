@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E226CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 120FACA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4761C21852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA58C21852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437272;
-	bh=YL/GOslPbKzWPVIGCvbmtekbS/5Pr6SFRznL14kivv0=;
+	s=default; t=1571437277;
+	bh=b3xdM3roLtUKI9V1E4GtHK+Asz06JOQbR6cG2m2Koxg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yrgi5C3mIAA5rh6XLgb1ZZfMrtyiDrcJ3ZKar6opVbj8l/OwoQgvTYUcHQWWcnT5u
-	 ADu6ZDTHOq7Cmxxncn1xp16+X4RtaaA1/mJM0w6TWi6XXTW4VTwKtVJurkOdq+TxdD
-	 Gze5mDPSyfEcLe70NAAPQi7/HS6JE00RdR1P/4sE=
+	b=2t3EvUoIgxX8fFbiGMNBOJJeRWyE4HWwY1R1JZnRwJ1qsILE6gV4UznZFhMTimhi3
+	 m4uD7Eb46LDDk/Pk2zr62ieyml6Oa8rGXJNicd9Df4n63DdjS3AwerzTu7xVar3ANu
+	 sdO5lqJKVRs6gVGsMdNzj5Yc2n6W1I0Et5UAsRl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404581AbfJRWVK (ORCPT
+        id S2404653AbfJRWVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:21:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38424 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:21:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731506AbfJRWG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:06:27 -0400
+        id S1731439AbfJRWGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:06:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97D792245A;
-        Fri, 18 Oct 2019 22:06:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDB92222D4;
+        Fri, 18 Oct 2019 22:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436387;
-        bh=YL/GOslPbKzWPVIGCvbmtekbS/5Pr6SFRznL14kivv0=;
+        s=default; t=1571436384;
+        bh=b3xdM3roLtUKI9V1E4GtHK+Asz06JOQbR6cG2m2Koxg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cSM9Gd2j4TvvyQfbl8tJjTxUYw66fUkL01oXnpZRQW+fPynuEsrl8L4a2MrL7sEVs
-         EynnaFMDvHqpFNp7BN4+YHfEts1Mg7sHrTzWjs89ls1ZJOgFekz38b1FUv6YIWRqEP
-         Lc8nfIX6SRV6qAm4/hlKLpGJxgZAe8YtRbmzix4Q=
+        b=iQRhrXiUFtkpsDvJlZV+DoXCRULgsGMWK+Cow+U51wP5Ig2KKvPNvLEeYgErI/0mu
+         jnPgmlW4M4xbeF7+JzmtaPHTaqWeBuFZz5evV8KjM/+JDmngeZ3ROtb1ZLqak5ABj4
+         nx69jAHbFE/hVrWxh3tuyF0F0+g13ZALC1tm6Vyc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 039/100] scsi: lpfc: Correct localport timeout duration error
-Date:   Fri, 18 Oct 2019 18:04:24 -0400
-Message-Id: <20191018220525.9042-39-sashal@kernel.org>
+Cc:     Nir Dotan <nird@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 037/100] mlxsw: spectrum: Set LAG port collector only when active
+Date:   Fri, 18 Oct 2019 18:04:22 -0400
+Message-Id: <20191018220525.9042-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -60,56 +60,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Nir Dotan <nird@mellanox.com>
 
-[ Upstream commit 2a0fb340fcc816975b8b0f2fef913d11999c39cf ]
+[ Upstream commit 48ebab31d424fbdb8ede8914923bec671a933246 ]
 
-Current code incorrectly specifies a completion wait timeout duration in 5
-jiffies, when it should have been 5 seconds.
+The LAG port collecting (receive) function was mistakenly set when the
+port was registered as a LAG member, while it should be set only when
+the port collection state is set to true. Set LAG port to collecting
+when it is set to distributing, as described in the IEEE link
+aggregation standard coupled control mux machine state diagram.
 
-Fix the adjust for units for the completion timeout call.
-
-[mkp: manual merge]
-
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Nir Dotan <nird@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_nvmet.c | 6 +++++-
- drivers/scsi/lpfc/lpfc_nvmet.h | 2 ++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ .../net/ethernet/mellanox/mlxsw/spectrum.c    | 62 ++++++++++++++-----
+ 1 file changed, 45 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_nvmet.c b/drivers/scsi/lpfc/lpfc_nvmet.c
-index e2575c8ec93e8..22efefcc6cd84 100644
---- a/drivers/scsi/lpfc/lpfc_nvmet.c
-+++ b/drivers/scsi/lpfc/lpfc_nvmet.c
-@@ -1713,7 +1713,11 @@ lpfc_nvmet_destroy_targetport(struct lpfc_hba *phba)
- 		}
- 		tgtp->tport_unreg_cmp = &tport_unreg_cmp;
- 		nvmet_fc_unregister_targetport(phba->targetport);
--		wait_for_completion_timeout(&tport_unreg_cmp, 5);
-+		if (!wait_for_completion_timeout(tgtp->tport_unreg_cmp,
-+					msecs_to_jiffies(LPFC_NVMET_WAIT_TMO)))
-+			lpfc_printf_log(phba, KERN_ERR, LOG_NVME,
-+					"6179 Unreg targetport %p timeout "
-+					"reached.\n", phba->targetport);
- 		lpfc_nvmet_cleanup_io_context(phba);
- 	}
- 	phba->targetport = NULL;
-diff --git a/drivers/scsi/lpfc/lpfc_nvmet.h b/drivers/scsi/lpfc/lpfc_nvmet.h
-index 0ec1082ce7ef6..3b170284a0e59 100644
---- a/drivers/scsi/lpfc/lpfc_nvmet.h
-+++ b/drivers/scsi/lpfc/lpfc_nvmet.h
-@@ -31,6 +31,8 @@
- #define LPFC_NVMET_MRQ_AUTO		0
- #define LPFC_NVMET_MRQ_MAX		16
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+index ee126bcf7c350..ccd9aca281b37 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+@@ -4410,9 +4410,6 @@ static int mlxsw_sp_port_lag_join(struct mlxsw_sp_port *mlxsw_sp_port,
+ 	err = mlxsw_sp_lag_col_port_add(mlxsw_sp_port, lag_id, port_index);
+ 	if (err)
+ 		goto err_col_port_add;
+-	err = mlxsw_sp_lag_col_port_enable(mlxsw_sp_port, lag_id);
+-	if (err)
+-		goto err_col_port_enable;
  
-+#define LPFC_NVMET_WAIT_TMO		(5 * MSEC_PER_SEC)
+ 	mlxsw_core_lag_mapping_set(mlxsw_sp->core, lag_id, port_index,
+ 				   mlxsw_sp_port->local_port);
+@@ -4427,8 +4424,6 @@ static int mlxsw_sp_port_lag_join(struct mlxsw_sp_port *mlxsw_sp_port,
+ 
+ 	return 0;
+ 
+-err_col_port_enable:
+-	mlxsw_sp_lag_col_port_remove(mlxsw_sp_port, lag_id);
+ err_col_port_add:
+ 	if (!lag->ref_count)
+ 		mlxsw_sp_lag_destroy(mlxsw_sp, lag_id);
+@@ -4447,7 +4442,6 @@ static void mlxsw_sp_port_lag_leave(struct mlxsw_sp_port *mlxsw_sp_port,
+ 	lag = mlxsw_sp_lag_get(mlxsw_sp, lag_id);
+ 	WARN_ON(lag->ref_count == 0);
+ 
+-	mlxsw_sp_lag_col_port_disable(mlxsw_sp_port, lag_id);
+ 	mlxsw_sp_lag_col_port_remove(mlxsw_sp_port, lag_id);
+ 
+ 	/* Any VLANs configured on the port are no longer valid */
+@@ -4492,21 +4486,56 @@ static int mlxsw_sp_lag_dist_port_remove(struct mlxsw_sp_port *mlxsw_sp_port,
+ 	return mlxsw_reg_write(mlxsw_sp->core, MLXSW_REG(sldr), sldr_pl);
+ }
+ 
+-static int mlxsw_sp_port_lag_tx_en_set(struct mlxsw_sp_port *mlxsw_sp_port,
+-				       bool lag_tx_enabled)
++static int
++mlxsw_sp_port_lag_col_dist_enable(struct mlxsw_sp_port *mlxsw_sp_port)
+ {
+-	if (lag_tx_enabled)
+-		return mlxsw_sp_lag_dist_port_add(mlxsw_sp_port,
+-						  mlxsw_sp_port->lag_id);
+-	else
+-		return mlxsw_sp_lag_dist_port_remove(mlxsw_sp_port,
+-						     mlxsw_sp_port->lag_id);
++	int err;
 +
- /* Used for NVME Target */
- struct lpfc_nvmet_tgtport {
- 	struct lpfc_hba *phba;
++	err = mlxsw_sp_lag_col_port_enable(mlxsw_sp_port,
++					   mlxsw_sp_port->lag_id);
++	if (err)
++		return err;
++
++	err = mlxsw_sp_lag_dist_port_add(mlxsw_sp_port, mlxsw_sp_port->lag_id);
++	if (err)
++		goto err_dist_port_add;
++
++	return 0;
++
++err_dist_port_add:
++	mlxsw_sp_lag_col_port_disable(mlxsw_sp_port, mlxsw_sp_port->lag_id);
++	return err;
++}
++
++static int
++mlxsw_sp_port_lag_col_dist_disable(struct mlxsw_sp_port *mlxsw_sp_port)
++{
++	int err;
++
++	err = mlxsw_sp_lag_dist_port_remove(mlxsw_sp_port,
++					    mlxsw_sp_port->lag_id);
++	if (err)
++		return err;
++
++	err = mlxsw_sp_lag_col_port_disable(mlxsw_sp_port,
++					    mlxsw_sp_port->lag_id);
++	if (err)
++		goto err_col_port_disable;
++
++	return 0;
++
++err_col_port_disable:
++	mlxsw_sp_lag_dist_port_add(mlxsw_sp_port, mlxsw_sp_port->lag_id);
++	return err;
+ }
+ 
+ static int mlxsw_sp_port_lag_changed(struct mlxsw_sp_port *mlxsw_sp_port,
+ 				     struct netdev_lag_lower_state_info *info)
+ {
+-	return mlxsw_sp_port_lag_tx_en_set(mlxsw_sp_port, info->tx_enabled);
++	if (info->tx_enabled)
++		return mlxsw_sp_port_lag_col_dist_enable(mlxsw_sp_port);
++	else
++		return mlxsw_sp_port_lag_col_dist_disable(mlxsw_sp_port);
+ }
+ 
+ static int mlxsw_sp_port_stp_set(struct mlxsw_sp_port *mlxsw_sp_port,
+@@ -4668,8 +4697,7 @@ static int mlxsw_sp_netdevice_port_upper_event(struct net_device *lower_dev,
+ 				err = mlxsw_sp_port_lag_join(mlxsw_sp_port,
+ 							     upper_dev);
+ 			} else {
+-				mlxsw_sp_port_lag_tx_en_set(mlxsw_sp_port,
+-							    false);
++				mlxsw_sp_port_lag_col_dist_disable(mlxsw_sp_port);
+ 				mlxsw_sp_port_lag_leave(mlxsw_sp_port,
+ 							upper_dev);
+ 			}
 -- 
 2.20.1
 
