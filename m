@@ -7,91 +7,100 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A18CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F322FCA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20824222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6ACE222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:00:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JljwbGRT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jatNbz0I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440826AbfJRFAB (ORCPT
+        id S2441949AbfJRFAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:00:01 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34455 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbfJRFAA (ORCPT
+        Fri, 18 Oct 2019 01:00:19 -0400
+Received: from mail-pg1-f176.google.com ([209.85.215.176]:41558 "EHLO
+        mail-pg1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbfJRFAT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:00:00 -0400
-Received: by mail-wm1-f66.google.com with SMTP id y135so8447831wmc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 21:59:59 -0700 (PDT)
+        Fri, 18 Oct 2019 01:00:19 -0400
+Received: by mail-pg1-f176.google.com with SMTP id t3so2649322pga.8;
+        Thu, 17 Oct 2019 22:00:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=TGIeMHWXK53sHye5G1LgnfCP8Ga7F8A0ZVwuDPcGRt4=;
-        b=JljwbGRTq1E6mquIfDwk+xIsr8rGHug6c2MDq2EbaJSII1XUYxA/xrd2MX5v/Wb+yy
-         yMqgKBOTpFzBB7hjADLAg/CkmrD946ZY+ATcnXTBsYxMeYzmRmgbQDdKyPqdiDj2qMha
-         XgbjW27wieRO9ktfmfDUGR4J3YTSIMf9hV4A62eqGAtTX3Vc7m3MeNR9ie7VWLXQ8c55
-         uSO/mVVKpXDWD1lTVkfjKuaiZVNECxJxPjk+lt7j0OxeJeR1qdiqSC8ziCRuE5pZvlzs
-         JDBLG+vv+qjCPme7i7SjW4VSHZYY0M3+dhj/TUgQ2r/TyudulEdFpv0UWuK7UF0RH01h
-         8dmw==
+        bh=hkRzongkuOUe83ChWkL44NvN9Te54QbJ4HXExHzR2dY=;
+        b=jatNbz0IMlnkkWt3Xg1ggLGyaO+fIaHEXiyAghJ3oj3XGcTM6ib5fXHRjNOMzSfc4i
+         vCGp5w1Z+JLotu0IymLr1p0tRWNP7CE0HJgfQHkCoZlqf1NltbKigkHVou6QPc5+xzcG
+         Ww7lLxU48nRRFiQuTCC1TPVDsWKgpHK0/dVgJrMSojuoJrL5UpXHuK31cxiPqs1gQSJS
+         vyxwxHLJ3L3U3jWa10U+hHtsRIlCqeD4B0R6bWzLub+bEXq28Ws5rcGM/JIM9JVLxmQw
+         BlqDV8QwxTIGdGa42EtKB6wDuHg84K2VTcc4AcfkL5/cjszzprioS+kQ2JoyiJeHb3Bi
+         ut3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TGIeMHWXK53sHye5G1LgnfCP8Ga7F8A0ZVwuDPcGRt4=;
-        b=qQGe/GSLWazhg7jOZmLPubBBlgonvrtigVNLZ/JRDN++tk9BV9IzC4da/znl/QGckb
-         V0hMb0cjquwJlmJ4Y0UkWiKMdRGLEDVifw6o7DjJLrCALtyQabrUE4CSID3PtPdmi79m
-         lM/L5M7+0dXUUqE3UyXnZQWZ9WJx+WGgWkTfAj2iCQTqWeUNKSJf8SZ4o8VsbaCzzz10
-         OGGD6N4iMtBT22obcL3up76MYWBygyAAQolHja5M4fMGX+vxNU64uWI3UcKb02/q1iwn
-         R+ZCb59YcLxd03exLC6qsEzQD4aHaL+UlUOTt5uOvOEZPJoIJ13rXoWZDY23R6reKrYJ
-         ufUg==
-X-Gm-Message-State: APjAAAVkI28h+jy62QZpgQyq6owTOgpmznrKAsIAdbq1SKuqaUcXN3qd
-        bZs5wBS/+GfutNtxEnmzXMyY2+ft
-X-Google-Smtp-Source: APXvYqw2h7j0z61HR1StZiLhVSnluIve/ZvioYgT9l/NCWXf13qZK2iZSZmrNPZxvp9A/BW7wSEurQ==
-X-Received: by 2002:a05:600c:143:: with SMTP id w3mr5566109wmm.17.1571371361356;
-        Thu, 17 Oct 2019 21:02:41 -0700 (PDT)
-Received: from ltop.local ([2a02:a03f:40ac:ce00:18e1:7d90:ccf5:4489])
-        by smtp.gmail.com with ESMTPSA id u25sm3951686wml.4.2019.10.17.21.02.39
+        bh=hkRzongkuOUe83ChWkL44NvN9Te54QbJ4HXExHzR2dY=;
+        b=ZB6qLK+Rj3bFNulOGUkke6WTqYS7bmQStwEE+tqQgTkK1afgpTYhXx+/zb5bHdk390
+         KUpxi6j0Zc4R+dAN45RmugCVQR7eiyQ3gIlFsNmZq/Zi9PTMhCrQ7S+Vf0s5CI/aotul
+         FIbnZH4BpSbiLMfsI7cSsd4Wn8V4GD4ONsLyreXMy6aGwoVxWxiOuoJ37RF9gOhry9HM
+         OFhGL8688mjjXObw4eVE8y3EVVIuH9d45nr7O2Sv2bSbCfVXPo6tr7jqf035VxX9gn8L
+         JMDL2FdfPz9kFyIq8hzr48Sm3d+UZbVI0oVg5mZ2LAuiyj2uuB6knmCM/jXk2Z68mpOK
+         fj6Q==
+X-Gm-Message-State: APjAAAUvc6jVZUI1Tj19a53uFDv81RcXMiLWsbGfnbBdNXxMQ+T1nzm9
+        /1Kaq7sb1xnr5VjTPpHS2z0=
+X-Google-Smtp-Source: APXvYqwaO3NXr1IrOUdk7COhtE8etBUdbbxwgbUaqCWe2dBM2NF7UNRJQNPJdNWWjJt44Zo+wGuoMQ==
+X-Received: by 2002:aa7:8691:: with SMTP id d17mr4373530pfo.218.1571374818508;
+        Thu, 17 Oct 2019 22:00:18 -0700 (PDT)
+Received: from ast-mbp ([2620:10d:c090:180::cfd0])
+        by smtp.gmail.com with ESMTPSA id r24sm4564056pfh.69.2019.10.17.22.00.16
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Oct 2019 21:02:40 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 06:02:38 +0200
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/8] riscv: init: merge split string literals in
- preprocessor directive
-Message-ID: <20191018040237.3eyrfrty72r63pkz@ltop.local>
-References: <20191018004929.3445-1-paul.walmsley@sifive.com>
- <20191018004929.3445-4-paul.walmsley@sifive.com>
+        Thu, 17 Oct 2019 22:00:17 -0700 (PDT)
+Date:   Thu, 17 Oct 2019 22:00:15 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: Re: linux-next: manual merge of the tip tree with the net-next tree
+Message-ID: <20191018050013.sle55bwea5kxovej@ast-mbp>
+References: <20191018133139.30c88807@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191018004929.3445-4-paul.walmsley@sifive.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191018133139.30c88807@canb.auug.org.au>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 05:49:24PM -0700, Paul Walmsley wrote:
-> sparse complains loudly when string literals associated with
-> preprocessor directives are split into multiple, separately quoted
-> strings across different lines:
+On Fri, Oct 18, 2019 at 01:31:39PM +1100, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the tip tree got a conflict in:
+> 
+>   samples/bpf/Makefile
+> 
+> between commit:
+> 
+>   1d97c6c2511f ("samples/bpf: Base target programs rules on Makefile.target")
+> 
+> from the net-next tree and commit:
+> 
+>   fce9501aec6b ("samples/bpf: fix build by setting HAVE_ATTR_TEST to zero")
+> 
+> from the tip tree.
 
-...
- 
->  #ifndef __riscv_cmodel_medany
-> -#error "setup_vm() is called from head.S before relocate so it should "
-> -	"not use absolute addressing."
-> +#error "setup_vm() is called from head.S before relocate so it should not use absolute addressing."
->  #endif
+Argh.
+Can tip folks revert the patch and let it go the normal route via bpf trees?
+There was no good reason in creating such conflicts.
 
-Using a blacslash should do the trick :
-	#error "blablablablablablablablablablablabla" \
-			"and blablabla again"
-Or if need I cn fix Sparse if needed and desiable.
- 
-Best regards
--- Luc Van Oostenryck
