@@ -2,92 +2,175 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF88ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 535CCCA9EAB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5312222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26AAE222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:34:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mgZQm0sR"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dran/X3V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634117AbfJROdd (ORCPT
+        id S2442842AbfJROeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 10:33:33 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44345 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729584AbfJROdd (ORCPT
+        Fri, 18 Oct 2019 10:34:17 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51540 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408662AbfJROeQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 10:33:33 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q21so4002197pfn.11
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 07:33:31 -0700 (PDT)
+        Fri, 18 Oct 2019 10:34:16 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 7so6461269wme.1
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 07:34:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:to:cc:subject:user-agent:date;
-        bh=9FdeX//RORLUFpjlpqzmkWcuma9KNw3Y4e/bxxikMGs=;
-        b=mgZQm0sR8WKQrmUO/Ec704rT1C8wtIciVL2b+nWpl29cgS7J33UQ+t7jNOVMR6jF+U
-         HWGLTBl6M8wNDuU43rK33SZdn5y+IWVauGkxXFYBzcNcsiN5dQzXV/G31uWt17CosPZZ
-         0eGrFDR6iOrxg05bdnB8FmUzVEDvTXB2AZ19c=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=qRJSjSfwWk65VGJdf4XvN9SqgEtDgNCxKyoZRmSRziU=;
+        b=Dran/X3VvHsOsLxMHx2mR4Tbc2E0CsYuXkAVyxt+rQg1nOiiruEmPu6Rq/0c282a+F
+         ggJOtx621SXz4bS1W6J3oTzOrrCZthi6et66yFpQYwUW2P9id96GcGZMCfdcXwbLX5es
+         ve8HtlmX+75D9UfDTi1k9mYUAFEwXCjB8Q5j2H7CuqjYuTNuHkEXO7gqEN/vVEffGumb
+         bPwC0XzbDLfAfKN1WTlLIxCzJsSCIt2y6MkGh031HvQEv9/LlHfkESbTMlJ0AYSuR5mG
+         oeShHCaasoNi9k/zgpcPJBvcsuumloyWQqdDVf6fcgvcjI+LILE1fhCeVpnrMRN7cTPP
+         XEpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
-         :user-agent:date;
-        bh=9FdeX//RORLUFpjlpqzmkWcuma9KNw3Y4e/bxxikMGs=;
-        b=OowDFJVcQuumpUlDooWDjIDjw5SCyra9HGJ38G1m9uQjEpz9OoD1LJAcY5c1UaV4Gw
-         YuZaIi9IAzUXUxF4WS/195AQKHPLhRIkSrDgQCqSdwH0g2ws/pEka6+F15Rc4NW67HiM
-         l+85/IxYkrWnd8Pc4TyGMh2zvUFtrJZVau9WBaDsLhTlySpNr9XyftLil/8BwuMaSkMZ
-         dQs8oe2qR0ns3Y3PEnVN8q1oJXK2gDQDlI3keyQhbWck9Y5ESbDLA8ut0WZOkjBB17Rt
-         h6T+/RP0x8J/PwxMebVgiJNAdyrAzyico2q27JRaHFi9XlAEbSPCnP1qeeEVieXaomSC
-         HYFg==
-X-Gm-Message-State: APjAAAWlMTW7x2eHrqV5tUAfiz1dEpFiVKXMaF4d+hyojaofrFSSnF8J
-        Z9IpwxBlvm045h1E4MFsxZK7mQ==
-X-Google-Smtp-Source: APXvYqxSlXq4d41beIN21IYEkdivZabzNQu+TLotvUAaXFaTv2YNZH6ZxASkgzaeHk7uRZoKe62kbQ==
-X-Received: by 2002:a62:685:: with SMTP id 127mr7241020pfg.227.1571409211238;
-        Fri, 18 Oct 2019 07:33:31 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id y22sm5468041pjn.12.2019.10.18.07.33.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 07:33:30 -0700 (PDT)
-Message-ID: <5da9cd3a.1c69fb81.95e9.e5e2@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qRJSjSfwWk65VGJdf4XvN9SqgEtDgNCxKyoZRmSRziU=;
+        b=LwpkW9+L8kO5C0NtLtWUYQrhL5H1uiy0cu+a3I105xOTugbeq5VOd5dfEh47FhnfkE
+         duaX6qsqM7zdktKsXothsRUnRxPXPWIuUI/ONDtjPGdDje1PEPa+wSPX6zLyDHZlLl8c
+         8IhM5gUbO9Rm3IVXghCMXxA2COhcDjL1L3v/Bnxl2VaYvv6yhEnGZnywvSYFbckWKytX
+         yHopAFBb4XWEVe23mQZlwDel26eLbcOJwDTUugJv7u3R8vy61b81BtOULhpn7No8uL1e
+         xxssL1znk35SBJxCvFXTVG55eWcofc8PNBfaihoRX2mCXY9HR9mA6DoSGHvA/nYWvFRO
+         SFxQ==
+X-Gm-Message-State: APjAAAU9c8JpoZMCZjYw+mfGF7p8uMQiZtixixquQJwOcKbzG7/LRqiS
+        DzbsUYAyu0ye6TLZ41hyhDjP2KsCXnMFECM2yIIUKA==
+X-Google-Smtp-Source: APXvYqx5fIkvKBTZRLKu9evz7okLaALBFiYvdfXt23Zivfzy0uSIv3xvGaPkDb4c0B8dNmIBr6OCZSHyRLUQMglcJRw=
+X-Received: by 2002:a05:600c:2196:: with SMTP id e22mr2108693wme.79.1571409254188;
+ Fri, 18 Oct 2019 07:34:14 -0700 (PDT)
 MIME-Version: 1.0
+References: <0000000000006120c905952febbd@google.com> <5289022.tfFiBPLraV@bentobox>
+In-Reply-To: <5289022.tfFiBPLraV@bentobox>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Fri, 18 Oct 2019 16:34:02 +0200
+Message-ID: <CAG_fn=VFnPmhupvPLZMZWJP6U_-w=fxoZd+R668rzBeCGh+S3A@mail.gmail.com>
+Subject: Re: KMSAN: uninit-value in batadv_hard_if_event
+To:     Sven Eckelmann <sven@narfation.org>
+Cc:     syzbot <syzbot+0183453ce4de8bdf9214@syzkaller.appspotmail.com>,
+        a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
+        David Miller <davem@davemloft.net>,
+        LKML <linux-kernel@vger.kernel.org>, mareklindner@neomailbox.ch,
+        Networking <netdev@vger.kernel.org>, sw@simonwunderlich.de,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Petko Manolov <petkan@nucleusys.com>,
+        USB list <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <c9285391dbbe936d3f242bdd0d226b93@www.loen.fr>
-References: <b3606e76af42f7ecf65b1bfc2a5ed30a@codeaurora.org> <20191011105010.GA29364@lakrids.cambridge.arm.com> <7910f428bd96834c15fb56262f3c10f8@codeaurora.org> <20191011143442.515659f4@why> <ac7599b30461d6a814e4f36d68bba6c2@codeaurora.org> <5da8c868.1c69fb81.ae709.97ff@mx.google.com> <c9285391dbbe936d3f242bdd0d226b93@www.loen.fr>
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Mark Rutland <mark.rutland@arm.com>, rnayak@codeaurora.org,
-        suzuki.poulose@arm.com, catalin.marinas@arm.com,
-        linux-arm-kernel <linux-arm-kernel-bounces@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, jeremy.linton@arm.com,
-        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        andrew.murray@arm.com, will@kernel.org, dave.martin@arm.com,
-        linux-arm-kernel@lists.infradead.org, marc.w.gonzalez@free.fr
-Subject: Re: Relax CPU features sanity checking on heterogeneous architectures
-User-Agent: alot/0.8.1
-Date:   Fri, 18 Oct 2019 07:33:29 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Marc Zyngier (2019-10-18 00:20:56)
->=20
-> If this SoC is anythinig like SM8150, 32bit guests will be hit and=20
-> miss,
-> depending on the CPU your guest runs on, or is migrated to. We need to
-> either drop capabilities from the 32bit-capable CPU, or prevent the
-> non-32bit capable CPU from booting if a 32bit guest has been started.
->=20
-> You just have to hope that the kernel is entered at EL2, and that QC's
-> "value add" has been moved somewhere else...
->=20
+On Fri, Oct 18, 2019 at 4:32 PM Sven Eckelmann <sven@narfation.org> wrote:
+>
+> Hi,
+>
+> not sure whether this is now a bug in batman-adv or in the rtl8150 driver=
+. See
+> my comments inline.
+>
+> On Friday, 18 October 2019 16:12:08 CEST syzbot wrote:
+> [...]
+> > usb 1-1: config 0 has no interface number 0
+> > usb 1-1: New USB device found, idVendor=3D0411, idProduct=3D0012,
+> > bcdDevice=3D56.5f
+> > usb 1-1: New USB device strings: Mfr=3D0, Product=3D0, SerialNumber=3D0
+> > usb 1-1: config 0 descriptor??
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+> > BUG: KMSAN: uninit-value in batadv_check_known_mac_addr
+> > net/batman-adv/hard-interface.c:511 [inline]
+> > BUG: KMSAN: uninit-value in batadv_hardif_add_interface
+> > net/batman-adv/hard-interface.c:942 [inline]
+> > BUG: KMSAN: uninit-value in batadv_hard_if_event+0x23c0/0x3260
+> > net/batman-adv/hard-interface.c:1032
+> > CPU: 0 PID: 13223 Comm: kworker/0:3 Not tainted 5.4.0-rc3+ #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Workqueue: usb_hub_wq hub_event
+> > Call Trace:
+> >   __dump_stack lib/dump_stack.c:77 [inline]
+> >   dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+> >   kmsan_report+0x14a/0x2f0 mm/kmsan/kmsan_report.c:109
+> >   __msan_warning+0x73/0xf0 mm/kmsan/kmsan_instr.c:245
+> >   batadv_check_known_mac_addr net/batman-adv/hard-interface.c:511 [inli=
+ne]
+> >   batadv_hardif_add_interface net/batman-adv/hard-interface.c:942 [inli=
+ne]
+> >   batadv_hard_if_event+0x23c0/0x3260 net/batman-adv/hard-interface.c:10=
+32
+> >   notifier_call_chain kernel/notifier.c:95 [inline]
+> [...]
+>
+> The line in batman-adv is (batadv_check_known_mac_addr):
+>
+>                 if (!batadv_compare_eth(hard_iface->net_dev->dev_addr,
+>                                         net_dev->dev_addr))
+>
+> So it goes through the list of ethernet interfaces (which are currently
+> attached to a batadv interface) and compares it with the new device's MAC
+> address. And it seems like the new device doesn't have the mac address pa=
+rt
+> initialized yet.
+>
+> Is this allowed in NETDEV_REGISTER/NETDEV_POST_TYPE_CHANGE?
+>
+> > Uninit was stored to memory at:
+> >   kmsan_save_stack_with_flags mm/kmsan/kmsan.c:150 [inline]
+> >   kmsan_internal_chain_origin+0xbd/0x170 mm/kmsan/kmsan.c:317
+> >   kmsan_memcpy_memmove_metadata+0x25c/0x2e0 mm/kmsan/kmsan.c:253
+> >   kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:273
+> >   __msan_memcpy+0x56/0x70 mm/kmsan/kmsan_instr.c:129
+> >   set_ethernet_addr drivers/net/usb/rtl8150.c:282 [inline]
+> >   rtl8150_probe+0x1143/0x14a0 drivers/net/usb/rtl8150.c:912
+>
+> This looks like it should store the mac address at this point.
+>
+>     static inline void set_ethernet_addr(rtl8150_t * dev)
+>     {
+>         u8 node_id[6];
+>
+>         get_registers(dev, IDR, sizeof(node_id), node_id);
+>         memcpy(dev->netdev->dev_addr, node_id, sizeof(node_id));
+>     }
+>
+> But it seems more like get_registers failed and the uninitialized was sti=
+ll
+> copied to the mac address. Thus causing the KMSAN error in batman-adv.
+Yes, most of such reports is usually because functions like
+get_registers() fail or read 0 bytes.
 
-Ok that's good.
+> Is this interpretation of the KMSAN output correct or do I miss something=
+?
+>
+> Kind regards,
+>         Sven
 
+
+
+--=20
+Alexander Potapenko
+Software Engineer
+
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
+
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
