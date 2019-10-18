@@ -2,103 +2,122 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4BDCA9EA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CD1CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1611B21925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:16:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="idopb+em"
+	by mail.kernel.org (Postfix) with ESMTP id 8B8F321925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:18:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442189AbfJRIQD (ORCPT
+        id S2442215AbfJRISQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:16:03 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44371 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731008AbfJRIQC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 04:16:02 -0400
-Received: by mail-pl1-f196.google.com with SMTP id q15so2471812pll.11;
-        Fri, 18 Oct 2019 01:16:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=M3S4yTtVgaNC9BkQRuSaEuAlwVVJJ6jYNkihyhEpRi8=;
-        b=idopb+em4RetH9GiUvFvJK761YLj4h6/AlCEqA6bzDqYMWGLNUahqbQH6A69wIQsDT
-         hGUNY4MnXEekB51MQ8sI59BW/kyjexIGJ27cjEtI5itCrGT05nVYV1OaFaEroBFeGMaG
-         eJ22SaHega6SqNDS+lIcWSOr1k5ibLmeJaJgDUIVnz2whel16FRvcsc3ELS39qvMbq4t
-         MR6mf+Egztb99o9k/MJeOkKYfNR/6m2xs+Lk93ZwnZ8ivpWphIuUT6XJoRLZGrCQjR/2
-         2KJ7MUOXFIZHIi0TTCDKvTHAniMnSSF061ZM/nRfh5OLP1gEuyhNu6XRAt129699POlC
-         qQ1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=M3S4yTtVgaNC9BkQRuSaEuAlwVVJJ6jYNkihyhEpRi8=;
-        b=NKpuxb/t14ngqbPUwZUUxiu0AXo7xLpDVOQLJ5WHN7ml0FcoZWDetjifI9V1xJ/4po
-         /0KGV5Vf90WvFJ55ueFE/hWmEYgcCzyV8t8Pdo+ytVlu1KG1A/ylDwn+IV4Gn3hzAZjE
-         r9LeuMm4+DMwASGlUDgCoXuM6SLkeZhyJV77BUkuk+KqvIcTaN7oF1/7D4D459Dw1U+s
-         2Ec4rgBUSAQzoD9rqG22E3jLFEpibGZdNVufRiSdhRP8hix1cP6rTzbilp5KK996jdrD
-         DiVHlLXhY8tLntnMBnnU0Woh2khNCTi/6i8LBMb954rwaRfuwg5JzpiMIu9JjSLkzUBM
-         PY+w==
-X-Gm-Message-State: APjAAAVdkhABs725Hn2+3XkiGrGOXb9DPKWCMHvqhwoc2M2tiTWYNXTH
-        6aEcyrmCyjq3+izxw49qaw7/EOEc6NQ=
-X-Google-Smtp-Source: APXvYqxOyPRwYYZarT0UfJktCM8UsTrZreWvRAg17Hy3LBgoxoEYTPHLs16Xe3qS9t4vyyElzAggng==
-X-Received: by 2002:a17:902:bc41:: with SMTP id t1mr8649031plz.34.1571386561943;
-        Fri, 18 Oct 2019 01:16:01 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id e10sm7216574pfh.77.2019.10.18.01.15.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 01:16:01 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] IB/uverbs: Add a check for uverbs_attr_get
-Date:   Fri, 18 Oct 2019 16:15:34 +0800
-Message-Id: <20191018081533.8544-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Fri, 18 Oct 2019 04:18:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40810 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2442192AbfJRISQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 04:18:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3F37BB445;
+        Fri, 18 Oct 2019 08:18:14 +0000 (UTC)
+Date:   Fri, 18 Oct 2019 10:18:14 +0200
+Message-ID: <s5hr23ah3g9.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 1/2] PCI: Add a helper to check Power Resource Requirements _PR3 existence
+In-Reply-To: <20191018073848.14590-1-kai.heng.feng@canonical.com>
+References: <20191018073848.14590-1-kai.heng.feng@canonical.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only uverbs_copy_to_struct_or_zero in uverbs_ioctl.c does not have a
-check for uverbs_attr_get.
-Although its usage in uverbs_response has a check for attr's validity,
-UVERBS_HANDLER does not.
-Therefore, it is better to add a check like other functions in
-uverbs_ioctl.c.
+On Fri, 18 Oct 2019 09:38:47 +0200,
+Kai-Heng Feng wrote:
+> 
+> A driver may want to know the existence of _PR3, to choose different
+> runtime suspend behavior. A user will be add in next patch.
+> 
+> This is mostly the same as nouveau_pr3_present().
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/infiniband/core/uverbs_ioctl.c | 3 +++
- 1 file changed, 3 insertions(+)
+It's confusing -- this particular change isn't reported by the test
+bot, but only about the lack of the CONFIG_ACPI ifdef.
 
-diff --git a/drivers/infiniband/core/uverbs_ioctl.c b/drivers/infiniband/core/uverbs_ioctl.c
-index 61758201d9b2..269938f59d3f 100644
---- a/drivers/infiniband/core/uverbs_ioctl.c
-+++ b/drivers/infiniband/core/uverbs_ioctl.c
-@@ -795,6 +795,9 @@ int uverbs_copy_to_struct_or_zero(const struct uverbs_attr_bundle *bundle,
- {
- 	const struct uverbs_attr *attr = uverbs_attr_get(bundle, idx);
- 
-+	if (IS_ERR(attr))
-+		return PTR_ERR(attr);
-+
- 	if (size < attr->ptr_attr.len) {
- 		if (clear_user(u64_to_user_ptr(attr->ptr_attr.data) + size,
- 			       attr->ptr_attr.len - size))
--- 
-2.20.1
 
+thanks,
+
+Takashi
+
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+> v6:
+> - Only define the function when CONFIG_ACPI is set.
+> v5:
+> - Add wording suggestion from Bjorn.
+> v4:
+> - Let caller to find its upstream port device.
+> 
+>  drivers/pci/pci.c   | 18 ++++++++++++++++++
+>  include/linux/pci.h |  2 ++
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e7982af9a5d8..1df99d9e350e 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5856,6 +5856,24 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_ACPI
+> +bool pci_pr3_present(struct pci_dev *pdev)
+> +{
+> +	struct acpi_device *adev;
+> +
+> +	if (acpi_disabled)
+> +		return false;
+> +
+> +	adev = ACPI_COMPANION(&pdev->dev);
+> +	if (!adev)
+> +		return false;
+> +
+> +	return adev->power.flags.power_resources &&
+> +		acpi_has_method(adev->handle, "_PR3");
+> +}
+> +EXPORT_SYMBOL_GPL(pci_pr3_present);
+> +#endif
+> +
+>  /**
+>   * pci_add_dma_alias - Add a DMA devfn alias for a device
+>   * @dev: the PCI device for which alias is added
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index f9088c89a534..1d15c5d49cdd 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -2310,9 +2310,11 @@ struct irq_domain *pci_host_bridge_acpi_msi_domain(struct pci_bus *bus);
+>  
+>  void
+>  pci_msi_register_fwnode_provider(struct fwnode_handle *(*fn)(struct device *));
+> +bool pci_pr3_present(struct pci_dev *pdev);
+>  #else
+>  static inline struct irq_domain *
+>  pci_host_bridge_acpi_msi_domain(struct pci_bus *bus) { return NULL; }
+> +static bool pci_pr3_present(struct pci_dev *pdev) { return false; }
+>  #endif
+>  
+>  #ifdef CONFIG_EEH
+> -- 
+> 2.17.1
+> 
