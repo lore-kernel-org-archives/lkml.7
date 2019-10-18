@@ -2,100 +2,127 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C68ADCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F04CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B89621835
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:49:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iJ5TSOPL"
+	by mail.kernel.org (Postfix) with ESMTP id 7E26D20854
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:51:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571403083;
+	bh=V6dayAdIvSVOwzTCZhu4LltyIQp0Va5bZ/2w7e7Nga8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TEbFd82ZBWFzWXdMS5mLMJapaYifVpx74AqzDei7V8yVRcnuXMtcmW8YJpxsAbkMD
+	 nDdXh/dkHLLRUrd4KcoRFLgC4v01uQWWZfqnWIVReOVXbF4sOdCFz84JXhZMmhRQvr
+	 viovIcMemS1OBSp6sy7wYwcdmpttmkVcozXOsgLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405100AbfJRMt6 (ORCPT
+        id S2407926AbfJRMvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 08:49:58 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43470 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726706AbfJRMt6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 08:49:58 -0400
-Received: by mail-io1-f65.google.com with SMTP id v2so7250694iob.10;
-        Fri, 18 Oct 2019 05:49:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=vt2yevto8JpVokDOAHk/MhpPGOGQv2lzrfEs5YW1bcs=;
-        b=iJ5TSOPL6guDtN+KkWvp7kq9fmbhR6QT7qC4fHwOqs6WlpIcdWtK+D90h8pl8wzGny
-         5nsnGSra/XZ0yKI/66CRCG1s24VKLQRy5yojj19uhmeiwyAo57k3UsCw5uix68W3in0A
-         at0rdp0RXaNp9DxEbO7zIpYwuODy8CoIhrzhntfzoe0vorcEmCTPyGAGv1B13FlCDVEF
-         rdSY0+i/aDWZMJHBYTnPNw+S8WyT3pOELkI/ToEjxHOz7aC7uTxiLz2N4LV00uMC7Vvk
-         rE/BdRxCBEAv13ZASSKL1Cl85btRQOTnGOGK11X0rcbL/o7TroRihlv9are58zGZu12y
-         CBeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=vt2yevto8JpVokDOAHk/MhpPGOGQv2lzrfEs5YW1bcs=;
-        b=eA5mIjQEaA/9ajeYsLIPCVQanr9sFz99zxALAN+H4NNaYokf3/j3xozOAjKjyjivkG
-         X2n9rInEFZMAGyl2NZCQykVH4Oot++asArL99uoLy1DoVF0PnDWTFMZagcJd4S7DLdnG
-         k5tDNsA4CkLUZl9TcOalMNzfDujd3xOlArd6bIb16Av0fRtlEUL1IIxNTlK/rwfidUQG
-         PGft/X008jgcLeDBgcRIPuoJvRT3QAvyVjSAs0/R5AOgQRwNcCumIqGDh2YCQAoBVeMv
-         llDV78i/bYJhu7aphDa26MQ+a1/VOiWj2QekmlJz9QzUKy2cMtsiTkNV1pgoDnm/NCnD
-         7hjA==
-X-Gm-Message-State: APjAAAUzbRVP5HfXSBycPIz/ydsKATGNS3+ARM2ej0nCtqnijN+ZPwlY
-        NSp8eoX0kCyP5EVh3nTBm0OaJMjB44A=
-X-Google-Smtp-Source: APXvYqyzzvszH1UbTyYx0NKA2hnNmpf8BjkjTNbKO7/3o54SB64EMA8N5/EMTTSPCcKrWfhQGNSgZg==
-X-Received: by 2002:a5e:9e0a:: with SMTP id i10mr8199609ioq.172.1571402996741;
-        Fri, 18 Oct 2019 05:49:56 -0700 (PDT)
-Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id q74sm2003992iod.72.2019.10.18.05.49.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 05:49:55 -0700 (PDT)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-fbdev@vger.kernel.org
-Cc:     linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tomi.valkeinen@ti.com, adam.ford@logicpd.com,
-        Adam Ford <aford173@gmail.com>, stable@vger.kernel.org
-Subject: [PATCH] fbdev/omap: fix max fclk divider for omap36xx
-Date:   Fri, 18 Oct 2019 07:49:38 -0500
-Message-Id: <20191018124938.29313-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 18 Oct 2019 08:51:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40408 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726875AbfJRMvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 08:51:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4CE4FB3B6;
+        Fri, 18 Oct 2019 12:51:20 +0000 (UTC)
+Date:   Fri, 18 Oct 2019 14:51:19 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Borislav Petkov <bp@alien8.de>, Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] mm, pcp: Share common code between memory hotplug
+ and percpu sysctl handler
+Message-ID: <20191018125119.GO5017@dhcp22.suse.cz>
+References: <20191018105606.3249-1-mgorman@techsingularity.net>
+ <20191018105606.3249-2-mgorman@techsingularity.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018105606.3249-2-mgorman@techsingularity.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The OMAP36xx and AM/DM37x TRMs say that the maximum divider for DSS fclk
-(in CM_CLKSEL_DSS) is 32. Experimentation shows that this is not
-correct, and using divider of 32 breaks DSS with a flood or underflows
-and sync losts. Dividers up to 31 seem to work fine.
+On Fri 18-10-19 11:56:04, Mel Gorman wrote:
+> Both the percpu_pagelist_fraction sysctl handler and memory hotplug
+> have a common requirement of updating the pcpu page allocation batch
+> and high values. Split the relevant helper to share common code.
+> 
+> No functional change.
+> 
+> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
 
-There is another patch to the DT files to limit the divider correctly,
-but as the DSS driver also needs to know the maximum divider to be able
-to iteratively find good rates, we also need to do the fix in the DSS
-driver.
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: stable@vger.kernel.org #linux-4.9.y+
+> ---
+>  mm/page_alloc.c | 23 ++++++++++++-----------
+>  1 file changed, 12 insertions(+), 11 deletions(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index c0b2e0306720..cafe568d36f6 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -7983,6 +7983,15 @@ int lowmem_reserve_ratio_sysctl_handler(struct ctl_table *table, int write,
+>  	return 0;
+>  }
+>  
+> +static void __zone_pcp_update(struct zone *zone)
+> +{
+> +	unsigned int cpu;
+> +
+> +	for_each_possible_cpu(cpu)
+> +		pageset_set_high_and_batch(zone,
+> +				per_cpu_ptr(zone->pageset, cpu));
+> +}
+> +
+>  /*
+>   * percpu_pagelist_fraction - changes the pcp->high for each zone on each
+>   * cpu.  It is the fraction of total pages in each zone that a hot per cpu
+> @@ -8014,13 +8023,8 @@ int percpu_pagelist_fraction_sysctl_handler(struct ctl_table *table, int write,
+>  	if (percpu_pagelist_fraction == old_percpu_pagelist_fraction)
+>  		goto out;
+>  
+> -	for_each_populated_zone(zone) {
+> -		unsigned int cpu;
+> -
+> -		for_each_possible_cpu(cpu)
+> -			pageset_set_high_and_batch(zone,
+> -					per_cpu_ptr(zone->pageset, cpu));
+> -	}
+> +	for_each_populated_zone(zone)
+> +		__zone_pcp_update(zone);
+>  out:
+>  	mutex_unlock(&pcp_batch_high_lock);
+>  	return ret;
+> @@ -8519,11 +8523,8 @@ void free_contig_range(unsigned long pfn, unsigned int nr_pages)
+>   */
+>  void __meminit zone_pcp_update(struct zone *zone)
+>  {
+> -	unsigned cpu;
+>  	mutex_lock(&pcp_batch_high_lock);
+> -	for_each_possible_cpu(cpu)
+> -		pageset_set_high_and_batch(zone,
+> -				per_cpu_ptr(zone->pageset, cpu));
+> +	__zone_pcp_update(zone);
+>  	mutex_unlock(&pcp_batch_high_lock);
+>  }
+>  #endif
+> -- 
+> 2.16.4
+> 
 
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dss.c b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-index 48c6500c24e1..4429ad37b64c 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-@@ -843,7 +843,7 @@ static const struct dss_features omap34xx_dss_feats = {
- };
- 
- static const struct dss_features omap3630_dss_feats = {
--	.fck_div_max		=	32,
-+	.fck_div_max		=	31,
- 	.dss_fck_multiplier	=	1,
- 	.parent_clk_name	=	"dpll4_ck",
- 	.dpi_select_source	=	&dss_dpi_select_source_omap2_omap3,
 -- 
-2.17.1
-
+Michal Hocko
+SUSE Labs
