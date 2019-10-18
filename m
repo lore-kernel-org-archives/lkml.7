@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7437DCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD35CA9EAC
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41768205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B12205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437536;
-	bh=QhHN1i/apWtfsJxZ56V2XWINw49Kv7/OXH9TlRgBoH8=;
+	s=default; t=1571437537;
+	bh=BlP8IYozOevQrxXlH5TJfSbvPd0H39Pymk/5eaQJdRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v5qpurRN+aKmkxa0jlaFBYVzQ0CzX8HZo9D5SLJFq0u6uwLx16S4h/FjFAgGpFJ1J
-	 ZuQ4WKHcS4HWRV9jd2XicZ/QmJXG7Vnl2n8UY7ZItvXp1y81uSQebbh2PHHeT6f0S1
-	 /J5RnCL73l5DUH04hGH4apyZ3rXKyW8StOSMfQBA=
+	b=TRWUSa3WyemSofyBLG7GHDVLpVONTdYlRz8p+4MlbeYQiNU6u9TYvZDsWvW9lAi1h
+	 YTrnIJKpXBqWFMHZEjvbz2jm7G/A1zWx8+ORI4rjySI4Epc6PW9cmK3AO3kpuv4y57
+	 YydFERbhKKKCC6Dv+holbbI7zTnIgEiWAk8S1bao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405794AbfJRWZe (ORCPT
+        id S1728405AbfJRWEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:25:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36324 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:04:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728407AbfJRWEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:04:37 -0400
+        id S1728160AbfJRWE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:04:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E58B222CC;
-        Fri, 18 Oct 2019 22:04:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 968A2222C6;
+        Fri, 18 Oct 2019 22:04:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436276;
-        bh=QhHN1i/apWtfsJxZ56V2XWINw49Kv7/OXH9TlRgBoH8=;
+        s=default; t=1571436265;
+        bh=BlP8IYozOevQrxXlH5TJfSbvPd0H39Pymk/5eaQJdRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i4YClWMPFGWDJ9dzKaO+hc85WM3CHUA2gtLIbsPbJ85D2WDfXPhrPW3pyPKqh6yZD
-         ySHBIHCxiXW9syoF9jQGTy60A+EGV4UJtVVrd5QRLjtwH4f3QjXwxheshkMi+WhHud
-         /6YcvRUM2MA1sunZmuXfTBtHUK4Wjq9WlYJM2k0w=
+        b=fNmbX7jGq/DrK6kmfx5OlJ1JvGoYUowaeNGDMxoPE57V9eQ1URpZYxBthbY/89Xzi
+         t2VR27F/t0FFYeSpFC++qPZeCrZh9BiqiuXH9tDxE4dfHra+lYUrPyuTUN4WMV7TON
+         C0GGYrxuKI5IWQ99yv7nnvMYXwPdx7rb+ctRXqzM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        James Dingwall <james@dingwall.me.uk>,
-        Juergen Gross <jgross@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-doc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 55/89] x86/xen: Return from panic notifier
-Date:   Fri, 18 Oct 2019 18:02:50 -0400
-Message-Id: <20191018220324.8165-55-sashal@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 47/89] arm64: vdso32: Don't use KBUILD_CPPFLAGS unconditionally
+Date:   Fri, 18 Oct 2019 18:02:42 -0400
+Message-Id: <20191018220324.8165-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -60,100 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit c6875f3aacf2a5a913205accddabf0bfb75cac76 ]
+[ Upstream commit c71e88c437962c1ec43d4d23a0ebf4c9cf9bee0d ]
 
-Currently execution of panic() continues until Xen's panic notifier
-(xen_panic_event()) is called at which point we make a hypercall that
-never returns.
+KBUILD_CPPFLAGS is defined differently depending on whether the main
+compiler is clang or not. This means that it is not possible to build
+the compat vDSO with GCC if the rest of the kernel is built with clang.
 
-This means that any notifier that is supposed to be called later as
-well as significant part of panic() code (such as pstore writes from
-kmsg_dump()) is never executed.
+Define VDSO_CPPFLAGS directly to break this dependency and allow a clang
+kernel to build a compat vDSO with GCC:
 
-There is no reason for xen_panic_event() to be this last point in
-execution since panic()'s emergency_restart() will call into
-xen_emergency_restart() from where we can perform our hypercall.
+  $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- \
+    CROSS_COMPILE_COMPAT=arm-linux-gnueabihf- CC=clang \
+    COMPATCC=arm-linux-gnueabihf-gcc
 
-Nevertheless, we will provide xen_legacy_crash boot option that will
-preserve original behavior during crash. This option could be used,
-for example, if running kernel dumper (which happens after panic
-notifiers) is undesirable.
-
-Reported-by: James Dingwall <james@dingwall.me.uk>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../admin-guide/kernel-parameters.txt         |  4 +++
- arch/x86/xen/enlighten.c                      | 28 +++++++++++++++++--
- 2 files changed, 29 insertions(+), 3 deletions(-)
+ arch/arm64/kernel/vdso32/Makefile | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 4c1971960afa3..5ea005c9e2d60 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5267,6 +5267,10 @@
- 				the unplug protocol
- 			never -- do not unplug even if version check succeeds
+diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
+index 77aa613403747..aa171b043287b 100644
+--- a/arch/arm64/kernel/vdso32/Makefile
++++ b/arch/arm64/kernel/vdso32/Makefile
+@@ -25,11 +25,9 @@ cc32-as-instr = $(call try-run,\
+ # arm64 one.
+ # As a result we set our own flags here.
  
-+	xen_legacy_crash	[X86,XEN]
-+			Crash from Xen panic notifier, without executing late
-+			panic() code such as dumping handler.
-+
- 	xen_nopvspin	[X86,XEN]
- 			Disables the ticketlock slowpath using Xen PV
- 			optimizations.
-diff --git a/arch/x86/xen/enlighten.c b/arch/x86/xen/enlighten.c
-index 750f46ad018a0..205b1176084f5 100644
---- a/arch/x86/xen/enlighten.c
-+++ b/arch/x86/xen/enlighten.c
-@@ -269,19 +269,41 @@ void xen_reboot(int reason)
- 		BUG();
- }
+-# From top-level Makefile
+-# NOSTDINC_FLAGS
+-VDSO_CPPFLAGS := -nostdinc -isystem $(shell $(COMPATCC) -print-file-name=include)
++# KBUILD_CPPFLAGS and NOSTDINC_FLAGS from top-level Makefile
++VDSO_CPPFLAGS := -D__KERNEL__ -nostdinc -isystem $(shell $(COMPATCC) -print-file-name=include)
+ VDSO_CPPFLAGS += $(LINUXINCLUDE)
+-VDSO_CPPFLAGS += $(KBUILD_CPPFLAGS)
  
-+static int reboot_reason = SHUTDOWN_reboot;
-+static bool xen_legacy_crash;
- void xen_emergency_restart(void)
- {
--	xen_reboot(SHUTDOWN_reboot);
-+	xen_reboot(reboot_reason);
- }
- 
- static int
- xen_panic_event(struct notifier_block *this, unsigned long event, void *ptr)
- {
--	if (!kexec_crash_loaded())
--		xen_reboot(SHUTDOWN_crash);
-+	if (!kexec_crash_loaded()) {
-+		if (xen_legacy_crash)
-+			xen_reboot(SHUTDOWN_crash);
-+
-+		reboot_reason = SHUTDOWN_crash;
-+
-+		/*
-+		 * If panic_timeout==0 then we are supposed to wait forever.
-+		 * However, to preserve original dom0 behavior we have to drop
-+		 * into hypervisor. (domU behavior is controlled by its
-+		 * config file)
-+		 */
-+		if (panic_timeout == 0)
-+			panic_timeout = -1;
-+	}
- 	return NOTIFY_DONE;
- }
- 
-+static int __init parse_xen_legacy_crash(char *arg)
-+{
-+	xen_legacy_crash = true;
-+	return 0;
-+}
-+early_param("xen_legacy_crash", parse_xen_legacy_crash);
-+
- static struct notifier_block xen_panic_block = {
- 	.notifier_call = xen_panic_event,
- 	.priority = INT_MIN
+ # Common C and assembly flags
+ # From top-level Makefile
 -- 
 2.20.1
 
