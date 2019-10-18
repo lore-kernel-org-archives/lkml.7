@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B7BCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C115CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0640F22489
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0779622474
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:10:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436599;
-	bh=NKZrH064zSWHbCkv4ldq9xtQnckfn8tIW6d4IdRtN2M=;
+	s=default; t=1571436602;
+	bh=3fIb/XpE5v/FmqlNuybYCPwnbwJAl3gVKkv+KO2OZGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c2OcTiZ5iFzhKy4sKwOYqvv+dbjXAyknUR7GakghbZ1ttkzfV+r26J2gTHn0oeLpu
-	 kRJ/ysVBXLm4yI96PaIq0oeWXIQ6CdNwo+hHdJRenLT1DGgFcQagtzR31y36kuoFcw
-	 iGDIazrLeoXeTwkaDS9L39wzxwm8AMmVw/TcaUDc=
+	b=caQ2HLjfJmDXj4Ctp/Oql8Fz9wki8nHcz4XncqAlvT25L2sjpiFCKplCAeIAa/lVA
+	 izuaNatUYQsvm+2aRjK5sMjw8AiiBl/iIquApJlFdJO3+NzwNPHbT9r/sHjr8v+icl
+	 ZXGCQRJUbLclTv/lh3uWqJYDj6VkvG7rUfDRxLt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389521AbfJRWJ5 (ORCPT
+        id S2389572AbfJRWKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:09:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42134 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:10:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388983AbfJRWJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:09:34 -0400
+        id S2389049AbfJRWJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:09:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CE57222D1;
-        Fri, 18 Oct 2019 22:09:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BA3F22468;
+        Fri, 18 Oct 2019 22:09:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436573;
-        bh=NKZrH064zSWHbCkv4ldq9xtQnckfn8tIW6d4IdRtN2M=;
+        s=default; t=1571436577;
+        bh=3fIb/XpE5v/FmqlNuybYCPwnbwJAl3gVKkv+KO2OZGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dAg2cssE6SLiQ+pw7Dg6zAucyzeQlfK8nRlBlpJXu3Zs+TTwma6oxtIxJv5S9zgdz
-         vMkUGb7rgeAY54IHsYA70OI1w3jzQ77st+gCN/gjyTWWgJsxr7SrNjG8jIoQVh0qM9
-         JcYkJrv4d9DMyfCUVeQr5NmGNmrpvuSxv/V+soWw=
+        b=b+7r/xosIiGmb/zp1zW18pp99Cch0VBJQlJCXl8sl7AA6HiyLvXsFd54WetQhpfHF
+         gHsg9ufzVcU3IRsuU0PR+nG2nCkkBFgEDjalDoW0+ikh2MF3UUbNCRC+hlDNlGSp//
+         7TpXPQCz2vLHhSLWhj2BvdabqNtkIHSu0gM/d1AY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brian Norris <briannorris@chromium.org>,
-        Christian Kujau <lists@nerdbynature.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
-        Genki Sky <sky@genki.is>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 05/29] scripts/setlocalversion: Improve -dirty check with git-status --no-optional-locks
-Date:   Fri, 18 Oct 2019 18:08:56 -0400
-Message-Id: <20191018220920.10545-5-sashal@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Samuel Dionne-Riel <samuel@dionne-riel.com>,
+        Richard Weinberger <richard.weinberger@gmail.com>,
+        Graham Christensen <graham@grahamc.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 08/29] exec: load_script: Do not exec truncated interpreter path
+Date:   Fri, 18 Oct 2019 18:08:59 -0400
+Message-Id: <20191018220920.10545-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220920.10545-1-sashal@kernel.org>
 References: <20191018220920.10545-1-sashal@kernel.org>
@@ -63,66 +65,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit ff64dd4857303dd5550faed9fd598ac90f0f2238 ]
+[ Upstream commit b5372fe5dc84235dbe04998efdede3c4daa866a9 ]
 
-git-diff-index does not refresh the index for you, so using it for a
-"-dirty" check can give misleading results. Commit 6147b1cf19651
-("scripts/setlocalversion: git: Make -dirty check more robust") tried to
-fix this by switching to git-status, but it overlooked the fact that
-git-status also writes to the .git directory of the source tree, which
-is definitely not kosher for an out-of-tree (O=) build. That is getting
-reverted.
+Commit 8099b047ecc4 ("exec: load_script: don't blindly truncate
+shebang string") was trying to protect against a confused exec of a
+truncated interpreter path. However, it was overeager and also refused
+to truncate arguments as well, which broke userspace, and it was
+reverted. This attempts the protection again, but allows arguments to
+remain truncated. In an effort to improve readability, helper functions
+and comments have been added.
 
-Fortunately, git-status now supports avoiding writing to the index via
-the --no-optional-locks flag, as of git 2.14. It still calculates an
-up-to-date index, but it avoids writing it out to the .git directory.
-
-So, let's retry the solution from commit 6147b1cf19651 using this new
-flag first, and if it fails, we assume this is an older version of git
-and just use the old git-diff-index method.
-
-It's hairy to get the 'grep -vq' (inverted matching) correct by stashing
-the output of git-status (you have to be careful about the difference
-betwen "empty stdin" and "blank line on stdin"), so just pipe the output
-directly to grep and use a regex that's good enough for both the
-git-status and git-diff-index version.
-
-Cc: Christian Kujau <lists@nerdbynature.de>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Suggested-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Tested-by: Genki Sky <sky@genki.is>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Co-developed-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Samuel Dionne-Riel <samuel@dionne-riel.com>
+Cc: Richard Weinberger <richard.weinberger@gmail.com>
+Cc: Graham Christensen <graham@grahamc.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/setlocalversion | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ fs/binfmt_script.c | 57 ++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 48 insertions(+), 9 deletions(-)
 
-diff --git a/scripts/setlocalversion b/scripts/setlocalversion
-index 966dd3924ea9c..aa28c3f298093 100755
---- a/scripts/setlocalversion
-+++ b/scripts/setlocalversion
-@@ -72,8 +72,16 @@ scm_version()
- 			printf -- '-svn%s' "`git svn find-rev $head`"
- 		fi
+diff --git a/fs/binfmt_script.c b/fs/binfmt_script.c
+index afdf4e3cafc2a..37c2093a24d3c 100644
+--- a/fs/binfmt_script.c
++++ b/fs/binfmt_script.c
+@@ -14,14 +14,31 @@
+ #include <linux/err.h>
+ #include <linux/fs.h>
  
--		# Check for uncommitted changes
--		if git diff-index --name-only HEAD | grep -qv "^scripts/package"; then
-+		# Check for uncommitted changes.
-+		# First, with git-status, but --no-optional-locks is only
-+		# supported in git >= 2.14, so fall back to git-diff-index if
-+		# it fails. Note that git-diff-index does not refresh the
-+		# index, so it may give misleading results. See
-+		# git-update-index(1), git-diff-index(1), and git-status(1).
-+		if {
-+			git --no-optional-locks status -uno --porcelain 2>/dev/null ||
-+			git diff-index --name-only HEAD
-+		} | grep -qvE '^(.. )?scripts/package'; then
- 			printf '%s' -dirty
- 		fi
++static inline bool spacetab(char c) { return c == ' ' || c == '\t'; }
++static inline char *next_non_spacetab(char *first, const char *last)
++{
++	for (; first <= last; first++)
++		if (!spacetab(*first))
++			return first;
++	return NULL;
++}
++static inline char *next_terminator(char *first, const char *last)
++{
++	for (; first <= last; first++)
++		if (spacetab(*first) || !*first)
++			return first;
++	return NULL;
++}
++
+ static int load_script(struct linux_binprm *bprm)
+ {
+ 	const char *i_arg, *i_name;
+-	char *cp;
++	char *cp, *buf_end;
+ 	struct file *file;
+ 	char interp[BINPRM_BUF_SIZE];
+ 	int retval;
  
++	/* Not ours to exec if we don't start with "#!". */
+ 	if ((bprm->buf[0] != '#') || (bprm->buf[1] != '!'))
+ 		return -ENOEXEC;
+ 
+@@ -34,18 +51,40 @@ static int load_script(struct linux_binprm *bprm)
+ 	if (bprm->interp_flags & BINPRM_FLAGS_PATH_INACCESSIBLE)
+ 		return -ENOENT;
+ 
+-	/*
+-	 * This section does the #! interpretation.
+-	 * Sorta complicated, but hopefully it will work.  -TYT
+-	 */
+-
++	/* Release since we are not mapping a binary into memory. */
+ 	allow_write_access(bprm->file);
+ 	fput(bprm->file);
+ 	bprm->file = NULL;
+ 
+-	bprm->buf[BINPRM_BUF_SIZE - 1] = '\0';
+-	if ((cp = strchr(bprm->buf, '\n')) == NULL)
+-		cp = bprm->buf+BINPRM_BUF_SIZE-1;
++	/*
++	 * This section handles parsing the #! line into separate
++	 * interpreter path and argument strings. We must be careful
++	 * because bprm->buf is not yet guaranteed to be NUL-terminated
++	 * (though the buffer will have trailing NUL padding when the
++	 * file size was smaller than the buffer size).
++	 *
++	 * We do not want to exec a truncated interpreter path, so either
++	 * we find a newline (which indicates nothing is truncated), or
++	 * we find a space/tab/NUL after the interpreter path (which
++	 * itself may be preceded by spaces/tabs). Truncating the
++	 * arguments is fine: the interpreter can re-read the script to
++	 * parse them on its own.
++	 */
++	buf_end = bprm->buf + sizeof(bprm->buf) - 1;
++	cp = strnchr(bprm->buf, sizeof(bprm->buf), '\n');
++	if (!cp) {
++		cp = next_non_spacetab(bprm->buf + 2, buf_end);
++		if (!cp)
++			return -ENOEXEC; /* Entire buf is spaces/tabs */
++		/*
++		 * If there is no later space/tab/NUL we must assume the
++		 * interpreter path is truncated.
++		 */
++		if (!next_terminator(cp, buf_end))
++			return -ENOEXEC;
++		cp = buf_end;
++	}
++	/* NUL-terminate the buffer and any trailing spaces/tabs. */
+ 	*cp = '\0';
+ 	while (cp > bprm->buf) {
+ 		cp--;
 -- 
 2.20.1
 
