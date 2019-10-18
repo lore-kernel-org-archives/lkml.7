@@ -2,105 +2,354 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D06FCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF90CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6120F20820
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07145222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 06:44:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gandi.net header.i=@gandi.net header.b="SPPiFN+n"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="X642gj4n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408991AbfJRGnu (ORCPT
+        id S2504471AbfJRGoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 02:43:50 -0400
-Received: from mail12.gandi.net ([217.70.182.73]:41477 "EHLO gandi.net"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2393594AbfJRGnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 02:43:49 -0400
-X-Greylist: delayed 570 seconds by postgrey-1.27 at vger.kernel.org; Fri, 18 Oct 2019 02:43:48 EDT
-Received: from diconico07.dev (unknown [IPv6:2001:4b98:beef:a:e921:9c91:35ed:759a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by gandi.net (Postfix) with ESMTPSA id A11781602FD;
-        Fri, 18 Oct 2019 06:34:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gandi.net; s=20190808;
-        t=1571380457;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Jpi61/2s16j3fMtRfMj2xF4NuVyqdh4656NY34j9qBw=;
-        b=SPPiFN+nP1KBYsIYmk+vIOht95Cx/oNJm0rrk9zrtSCBbrDaeHT9N6rOdh/dcMYOFYIC9e
-        GMqfRhIz+DG2+i/FP0IUHyBNeWxWHeH2GAt7iSIiIsY10NtgT6ZbbW1NT4VWG1V71ix3x5
-        fFGMVgRdw9v50NGTsTNv6pXL+AddYF2oxvRz5ZX6g3wdFSbZNI/+sudoqkIXG4myGeeVY+
-        ZxXIvpAAHW4hMdiB+fqIU8DkUMGwbd7km1DW81Ke9JidW9LieCaIPAgy3hxTm+IbPQY8tk
-        HwqjI93URS2jntDPKiBZukWPnJs68Aaxb6tw2Tpsshg4Z/+Tc16flbeB9m0zMQ==
-Subject: Re: email as a bona fide git transport
-To:     Willy Tarreau <w@1wt.eu>, Greg KH <greg@kroah.com>,
-        Santiago Torres Arias <santiago@nyu.edu>,
-        Vegard Nossum <vegard.nossum@oracle.com>,
-        workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, Eric Wong <e@80x24.org>
-References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
- <20191016111009.GE13154@1wt.eu>
- <20191016144517.giwip4yuaxtcd64g@LykOS.localdomain>
- <20191017204343.GA1132188@kroah.com> <20191017204532.GA6446@chatter.i7.local>
- <20191018013029.GA1167832@kroah.com> <20191018015447.GB6446@chatter.i7.local>
- <20191018025215.GA15777@1wt.eu>
-From:   Nicolas Belouin <nicolas.belouin@gandi.net>
-Message-ID: <4ea21178-0cac-e958-7c69-ad5b4a74e6b5@gandi.net>
-Date:   Fri, 18 Oct 2019 08:34:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 18 Oct 2019 02:44:21 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:43311 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2409212AbfJRGoV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 02:44:21 -0400
+Received: by mail-ot1-f65.google.com with SMTP id o44so4061620ota.10
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 23:44:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=PqrHMEru6U7zAeRhmkEeGaUX7eyVnHwu6NVw9nt+5n4=;
+        b=X642gj4nqUg9O16iP8e6WyArE8LA8pUVECviq0/UcImbNqxGdjgPAlZIELXUUwhoGk
+         JEy6vlFzYV1e4zjFjrotawnyNEqBJoUELB9mhoLsyG+o5JmbkK7xafoNf44NIbRe7eiq
+         INgYICoOVclkvpuAlaWAJniume/jz29is7UUiFQZzcuBDdg6g76tK5ulCnP3o/wQV8Vi
+         LmNODRkFB1hmny/qPqT4yW2YTxpbh4pkm3pFxbWbJYUkCQ3tBqVyNalduMrepdKIc0h9
+         L8tcO0hgfz3i8EUJEytIhhQgfq68fd+sHa//Zy4yOWEVOYcRRtuj1qo6eXOkHM+GYHVM
+         Pm1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=PqrHMEru6U7zAeRhmkEeGaUX7eyVnHwu6NVw9nt+5n4=;
+        b=Apw94uO4HxegODGBJkVCRkl5Yg69Hqnmqy6b5gvdAhZq3qY3kPUSNcCXkbAX02OSnw
+         4tMriFP97TTYr11ZtdIZOmg2LeFQEeWgs4dWToEfAgrKaNHXGeOVjkeeaoT2VxKFlTqZ
+         BTekhAcfmzhRMeSsOyNN2qRLqrsbluSJ6gEeXh4oaZP3KPhYkKiXcX0PJ9DVYVGtsQqG
+         u2enIzsLOEzlhhwmCQFUmVRUoetoGBzuNSxJXQNpj0asl6B4YMmXsMPEy60ESxZlKImF
+         5KVxeGbpX4g3S5iEJwc920UloUEPIgzgTvAvLMSBDku4PV1pt0X0PC5xN/Pb1rniY5k3
+         0l7g==
+X-Gm-Message-State: APjAAAXwmO34+abu30Np5T+/KgIghB0+D8bwFWG8rbWM80VYBPDMwP0+
+        jIBILsyZvfPdTnv4ef/68mbdUBsxiYRtF81S0yakqQ==
+X-Google-Smtp-Source: APXvYqypuBiJnTlXuHGNsWMdVVjE2C9cyf1zOybXwkR8VjvVS0geUtcMoLmLtbul1PMl5xKFQTj18h1q6nMas8C698w=
+X-Received: by 2002:a9d:7dd6:: with SMTP id k22mr6185960otn.256.1571381058667;
+ Thu, 17 Oct 2019 23:44:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191018025215.GA15777@1wt.eu>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20191017071234.8719-1-brgl@bgdev.pl> <20191017071234.8719-2-brgl@bgdev.pl>
+ <20191017183106.GA11667@bogus>
+In-Reply-To: <20191017183106.GA11667@bogus>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 18 Oct 2019 08:44:07 +0200
+Message-ID: <CAMpxmJXoA2GW9s9r0KZetfUjMKPxWMa5MDFSLchfZ-3gnE+JvA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/6] dt-bindings: mfd: max77650: convert the binding
+ document to yaml
+To:     Rob Herring <robh@kernel.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        linux-pm <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/18/19 4:52 AM, Willy Tarreau wrote:
-> On Thu, Oct 17, 2019 at 09:54:47PM -0400, Konstantin Ryabitsev wrote:
->> On Thu, Oct 17, 2019 at 06:30:29PM -0700, Greg KH wrote:
->>>> It could only possibly work if nobody ever adds their own
->>>> "Signed-Off-By" or
->>>> any other bylines. I expect this is a deal-breaker for most maintainers.
->>> Yeah it is :(
->>>
->>> But, if we could just have the signature on the code change, not the
->>> changelog text, that would help with that issue.
->> We totally should, and I even mused on how we would do that here:
->> https://public-inbox.org/git/20190910121324.GA6867@pure.paranoia.local/
->>
->> However, since git's PGP signatures are made for the content in the actual
->> commit record (tree hash, parent, author, commit message, etc), the only way
->> we could preserve them between the email and the git tree is if we never
->> modify any of that data. The SOB and other trailers would have to only be
->> applied to the merge commit, or migrate into commit notes.
-> There's also the possibility to handle this a bit like we do when adding
-> comments before the SOB: a PGP signature would apply to the text *before*
-> it only. We could then have long chains of SOB, PGP, SOB, PGP etc.
+czw., 17 pa=C5=BA 2019 o 20:31 Rob Herring <robh@kernel.org> napisa=C5=82(a=
+):
 >
-> Willy
+> On Thu, Oct 17, 2019 at 09:12:29AM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Convert the binding document for MAX77650 core MFD module to YAML.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > ---
+> >  .../devicetree/bindings/mfd/max77650.txt      |  46 ------
+> >  .../devicetree/bindings/mfd/max77650.yaml     | 151 ++++++++++++++++++
+> >  2 files changed, 151 insertions(+), 46 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/max77650.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/mfd/max77650.txt b/Docum=
+entation/devicetree/bindings/mfd/max77650.txt
+> > deleted file mode 100644
+> > index b529d8d19335..000000000000
+> > --- a/Documentation/devicetree/bindings/mfd/max77650.txt
+> > +++ /dev/null
+> > @@ -1,46 +0,0 @@
+> > -MAX77650 ultra low-power PMIC from Maxim Integrated.
+> > -
+> > -Required properties:
+> > --------------------
+> > -- compatible:                Must be "maxim,max77650"
+> > -- reg:                       I2C device address.
+> > -- interrupts:                The interrupt on the parent the controlle=
+r is
+> > -                     connected to.
+> > -- interrupt-controller: Marks the device node as an interrupt controll=
+er.
+> > -- #interrupt-cells:  Must be <2>.
+> > -
+> > -- gpio-controller:   Marks the device node as a gpio controller.
+> > -- #gpio-cells:               Must be <2>. The first cell is the pin nu=
+mber and
+> > -                     the second cell is used to specify the gpio activ=
+e
+> > -                     state.
+> > -
+> > -Optional properties:
+> > ---------------------
+> > -gpio-line-names:     Single string containing the name of the GPIO lin=
+e.
+> > -
+> > -The GPIO-controller module is represented as part of the top-level PMI=
+C
+> > -node. The device exposes a single GPIO line.
+> > -
+> > -For device-tree bindings of other sub-modules (regulator, power supply=
+,
+> > -LEDs and onkey) refer to the binding documents under the respective
+> > -sub-system directories.
+> > -
+> > -For more details on GPIO bindings, please refer to the generic GPIO DT
+> > -binding document <devicetree/bindings/gpio/gpio.txt>.
+> > -
+> > -Example:
+> > ---------
+> > -
+> > -     pmic@48 {
+> > -             compatible =3D "maxim,max77650";
+> > -             reg =3D <0x48>;
+> > -
+> > -             interrupt-controller;
+> > -             interrupt-parent =3D <&gpio2>;
+> > -             #interrupt-cells =3D <2>;
+> > -             interrupts =3D <3 IRQ_TYPE_LEVEL_LOW>;
+> > -
+> > -             gpio-controller;
+> > -             #gpio-cells =3D <2>;
+> > -             gpio-line-names =3D "max77650-charger";
+> > -     };
+> > diff --git a/Documentation/devicetree/bindings/mfd/max77650.yaml b/Docu=
+mentation/devicetree/bindings/mfd/max77650.yaml
+> > new file mode 100644
+> > index 000000000000..66a447e1cf56
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/max77650.yaml
+> > @@ -0,0 +1,151 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/mfd/max77650.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: MAX77650 ultra low-power PMIC from Maxim Integrated.
+> > +
+> > +maintainers:
+> > +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > +
+> > +description: |
+> > +  This document describes the DT properties of the core MFD controller=
+.
+>
+> So does every file in this directory.
+>
+> Describe what this chip is.
+>
+> > +
+> > +  The GPIO-controller module is represented as part of the top-level P=
+MIC
+> > +  node. The device exposes a single GPIO line.
+> > +
+> > +  For device-tree bindings of other sub-modules (regulator, power supp=
+ly,
+> > +  LEDs and onkey) refer to the binding documents under the respective
+> > +  sub-system directories.
+> > +
+> > +  For more details on GPIO bindings, please refer to the generic GPIO =
+DT
+> > +  binding document <devicetree/bindings/gpio/gpio.txt>.
+>
+> Also fairly useless and another reference to maintain...
+>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: maxim,max77650
+> > +
+> > +  reg:
+> > +    description:
+> > +      I2C device address.
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  interrupt-controller: true
+> > +
+> > +  "#interrupt-cells":
+> > +    const: 2
+> > +    description:
+> > +      The first cell is the IRQ number, the second cell is the trigger=
+ type.
+> > +
+> > +  gpio-controller: true
+> > +
+> > +  "#gpio-cells":
+> > +    const: 2
+> > +    description:
+> > +      The first cell is the pin number and the second cell is used to =
+specify
+> > +      the gpio active state.
+> > +
+> > +  gpio-line-names:
+> > +    maxItems: 1
+> > +    description:
+> > +      Single string containing the name of the GPIO line.
+> > +
+> > +  regulators:
+> > +    $ref: ../regulator/max77650-regulator.yaml
+>
+> Not bisectable... This patch needs to come last.
+>
+> > +
+> > +  charger:
+> > +    $ref: ../power/supply/max77650-charger.yaml
+> > +
+> > +  leds:
+> > +    $ref: ../leds/leds-max77650.yaml
+> > +
+> > +  onkey:
+> > +    $ref: ../input/max77650-onkey.yaml
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - interrupt-controller
+> > +  - "#interrupt-cells"
+> > +  - gpio-controller
+> > +  - "#gpio-cells"
+>
+> None of the child nodes are required?
+>
 
-I don't think it can work that easily as the signed content is not just
-the message.
-It would need git to support nesting signatures and to allow amending a
-commit without
-touching the signature and to allow adding one to cover the new content
-and to have a
-way to verify every step.
-Moreover you won't be able to reparent the commit as a maintainer (wich
-I think is
-also a deal-breaker)
+Technically no, and now when I think about it, neither are the
+following two properties really:
 
-Nicolas
+  - gpio-controller
+  - "#gpio-cells"
 
+You can define an empty device, it's just going to be useless. For
+practical purposes you can use any combination of modules, so I
+wouldn't make any of them required.
+
+Bart
+
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > +    #include <dt-bindings/input/linux-event-codes.h>
+> > +    i2c {
+> > +        #address-cells =3D <1>;
+> > +        #size-cells =3D <0>;
+> > +
+> > +        pmic@48 {
+> > +            compatible =3D "maxim,max77650";
+> > +            reg =3D <0x48>;
+> > +
+> > +            interrupt-controller;
+> > +            interrupt-parent =3D <&gpio2>;
+> > +            #interrupt-cells =3D <2>;
+> > +            interrupts =3D <3 IRQ_TYPE_LEVEL_LOW>;
+> > +
+> > +            gpio-controller;
+> > +            #gpio-cells =3D <2>;
+> > +            gpio-line-names =3D "max77650-charger";
+> > +
+> > +            regulators {
+> > +                compatible =3D "maxim,max77650-regulator";
+> > +
+> > +                max77650_ldo: regulator@0 {
+> > +                    regulator-compatible =3D "ldo";
+> > +                    regulator-name =3D "max77650-ldo";
+> > +                    regulator-min-microvolt =3D <1350000>;
+> > +                    regulator-max-microvolt =3D <2937500>;
+> > +                };
+> > +
+> > +                max77650_sbb0: regulator@1 {
+> > +                    regulator-compatible =3D "sbb0";
+> > +                    regulator-name =3D "max77650-sbb0";
+> > +                    regulator-min-microvolt =3D <800000>;
+> > +                    regulator-max-microvolt =3D <1587500>;
+> > +                };
+> > +            };
+> > +
+> > +            charger {
+> > +                compatible =3D "maxim,max77650-charger";
+> > +                input-voltage-min-microvolt =3D <4200000>;
+> > +                input-current-limit-microamp =3D <285000>;
+> > +            };
+> > +
+> > +            leds {
+> > +                compatible =3D "maxim,max77650-led";
+> > +                #address-cells =3D <1>;
+> > +                #size-cells =3D <0>;
+> > +
+> > +                led@0 {
+> > +                    reg =3D <0>;
+> > +                    label =3D "blue:usr0";
+> > +                };
+> > +
+> > +                led@1 {
+> > +                    reg =3D <1>;
+> > +                    label =3D "red:usr1";
+> > +                    linux,default-trigger =3D "heartbeat";
+> > +                };
+> > +
+> > +                led@2 {
+> > +                    reg =3D <2>;
+> > +                    label =3D "green:usr2";
+> > +                };
+> > +            };
+> > +
+> > +            onkey {
+> > +                compatible =3D "maxim,max77650-onkey";
+> > +                linux,code =3D <KEY_END>;
+> > +                maxim,onkey-slide;
+> > +            };
+> > +        };
+> > +    };
+> > --
+> > 2.23.0
+> >
