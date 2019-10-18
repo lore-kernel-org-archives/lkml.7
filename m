@@ -2,118 +2,105 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1FDCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 610C8CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D11FE222C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:08:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W/SfQlwI"
+	by mail.kernel.org (Postfix) with ESMTP id 40A7D21835
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:08:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395047AbfJRFI0 (ORCPT
+        id S2441974AbfJRFIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:08:26 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39276 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726417AbfJRFIX (ORCPT
+        Fri, 18 Oct 2019 01:08:36 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36141 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726417AbfJRFIe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:08:23 -0400
-Received: by mail-pf1-f194.google.com with SMTP id v4so3089320pff.6
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:08:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zENMsCD8dx7TXInXG1c8zW/Hg/QaJI92iPuy+e/kV6E=;
-        b=W/SfQlwIceHYRgJXK7o3/l/lkWGdnSVrFfem2LS5AoOoZT7g6Q6t6pDrBEZ9+07t+M
-         +Ti1hPL13mqCsIyQKq/AFE6C6lU+7LWFud86PSQDcCzlLOF/AJU7QWZGHjpr9KoU6M49
-         nF6/6KbZeepbruq+UcDfkmHak9ysobHGjX46g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zENMsCD8dx7TXInXG1c8zW/Hg/QaJI92iPuy+e/kV6E=;
-        b=TwSgpc/6cXpIZRtMSJYOJ2hkvC9ztjhh9SLIdFMKerOgc+NBSWUTnQAYtHIRZg74Rw
-         YPFSkMTdcVQW2obThx8KO+ACXW6HJcRUJLWGIqGpnUS8pIxrij7j3AgmbvJP3udF8zsk
-         ofbZ3OxC3YzsGODyacnTxy0ttYk5xocQzMuQij7q1BbQ+0psRM8TP4LDQ0+id4XCU+pa
-         wFfqTkR8MCbRUxk3k/ztBUxbRs9PywK5DDFxBCbLyUhjdRbcfJki4rz+4xlOyXfq6j4Q
-         V/8P0u2wDU/HVhxblOttTm5fgE3tXtkQqa8Zh9jGPFBYts+FDlJoa9noLQXnOsOHOanY
-         9lMg==
-X-Gm-Message-State: APjAAAWTNFxsSu4QtFDz1ghsrKdj2BcjQruEFF5IDGuQWI+7cu2Zm6KP
-        ty/Cqp/1JozBi5lzBYvRsaOb8NiZcbTR5xtMb9kuTSSQ9xM=
-X-Google-Smtp-Source: APXvYqwbU0rnTOMgSlBPq6asT4KTn47yVp25SmbpyYC2P+M0FWHZyEbDR4vduuE8vfeSHRbH2LfGtdyPTN5PaOcgFL4=
-X-Received: by 2002:a63:2049:: with SMTP id r9mr7827967pgm.257.1571368471920;
- Thu, 17 Oct 2019 20:14:31 -0700 (PDT)
+        Fri, 18 Oct 2019 01:08:34 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1iLKFZ-00046M-Le; Fri, 18 Oct 2019 06:52:29 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1iLKFW-0006rT-3o; Fri, 18 Oct 2019 06:52:26 +0200
+Date:   Fri, 18 Oct 2019 06:52:26 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>, Chris Snook <chris.snook@gmail.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v1 4/4] net: dsa: add support for Atheros AR9331 build-in
+ switch
+Message-ID: <20191018045226.hi2nybxkwopclajy@pengutronix.de>
+References: <20191014061549.3669-1-o.rempel@pengutronix.de>
+ <20191014061549.3669-5-o.rempel@pengutronix.de>
+ <2ad26bdc-e099-ded6-1337-5793aba0958d@gmail.com>
 MIME-Version: 1.0
-References: <20191005101444.146554-1-ikjn@chromium.org>
-In-Reply-To: <20191005101444.146554-1-ikjn@chromium.org>
-From:   Ikjoon Jang <ikjn@chromium.org>
-Date:   Fri, 18 Oct 2019 11:14:21 +0800
-Message-ID: <CAATdQgBRiNpwgy403jThUbgxSZA-Z8bYCQnc_rVB+nu4LwtMrA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] HID: google: Add of_match table to Whiskers switch device.
-To:     jikos@kernel.org, Dmitry Torokhov <dtor@chromium.org>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <groeck@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Enrico Granata <egranata@google.com>,
-        Nicolas Boichat <drinkcat@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2ad26bdc-e099-ded6-1337-5793aba0958d@gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 06:42:51 up 153 days, 11:01, 96 users,  load average: 0.03, 0.02,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A gentle ping on adding DT binding for Hammer (2/2).
+On Thu, Oct 17, 2019 at 11:35:48AM -0700, Florian Fainelli wrote:
+> 
+> 
+> On 10/13/2019 11:15 PM, Oleksij Rempel wrote:
+> > Provide basic support for Atheros AR9331 build-in switch. So far it
+> > works as port multiplexer without any hardware offloading support.
+> 
+> I glanced through the functional parts of the code, and it looks pretty
+> straight forward, since there is no offloading done so far, do you plan
+> on adding bridge offload eventually if nothing more?
 
-On Sat, Oct 5, 2019 at 6:14 PM Ikjoon Jang <ikjn@chromium.org> wrote:
->
-> Add a device tree match table.
->
-> Change-Id: Iaee68311073cefa4b99cde182bd37d1a67c94ea6
-> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
-> ---
->  drivers/hid/hid-google-hammer.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/drivers/hid/hid-google-hammer.c b/drivers/hid/hid-google-hammer.c
-> index 31e4a39946f5..bf2b6c6c9787 100644
-> --- a/drivers/hid/hid-google-hammer.c
-> +++ b/drivers/hid/hid-google-hammer.c
-> @@ -17,6 +17,7 @@
->  #include <linux/hid.h>
->  #include <linux/leds.h>
->  #include <linux/module.h>
-> +#include <linux/of.h>
->  #include <linux/platform_data/cros_ec_commands.h>
->  #include <linux/platform_data/cros_ec_proto.h>
->  #include <linux/platform_device.h>
-> @@ -272,12 +273,21 @@ static const struct acpi_device_id cbas_ec_acpi_ids[] = {
->  };
->  MODULE_DEVICE_TABLE(acpi, cbas_ec_acpi_ids);
->
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id cbas_ec_of_match[] = {
-> +       { .compatible = "google,cros-cbas" },
-> +       { },
-> +};
-> +MODULE_DEVICE_TABLE(of, cbas_ec_of_match);
-> +#endif
-> +
->  static struct platform_driver cbas_ec_driver = {
->         .probe = cbas_ec_probe,
->         .remove = cbas_ec_remove,
->         .driver = {
->                 .name = "cbas_ec",
->                 .acpi_match_table = ACPI_PTR(cbas_ec_acpi_ids),
-> +               .of_match_table = of_match_ptr(cbas_ec_of_match),
->                 .pm = &cbas_ec_pm_ops,
->         },
->  };
-> --
-> 2.23.0.581.g78d2f28ef7-goog
->
+Currently not. There are following reasons:
+- I do it for the Freifunk project. It is currently not clear, what
+  functionality has higher priority.
+- there are not many ar9331 based devices with enough RAM to run any
+  thing modern. There is even less devices using more then one switch
+  port.
+- IPv6 support is important for this project, but old Atheros switches have some
+  known issues with IPv6 packages in hardware bridge mode. So, this
+  functionality will need more testing.
+
+> When you submit v2, I would suggest splitting the tagger code from the
+> switch driver code, just to make them easier to review.
+
+ok.
+
+Regards,
+Oleksij
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
