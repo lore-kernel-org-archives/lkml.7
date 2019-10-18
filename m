@@ -2,387 +2,147 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 056F3CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3FBCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C00BF222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18D4E222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:55:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="dHEMBOSs"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="B8ayynvx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409734AbfJRJyY (ORCPT
+        id S2409749AbfJRJzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 05:54:24 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:60554 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389081AbfJRJyY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 05:54:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KDV6ccsLS3feh3Iruqf7spU78bDJQj6RxEPb42FOPhY=; b=dHEMBOSsX+wvdlZsjOrnKn9oO
-        7Zko7bahQdx5rDXvDgE3ZhI+pyMwuuEyixB/laksdLHiFz+x/egjcYaE8PZwk46sGFMHZvPN/zgip
-        M3n9SGI4iyG38Qm6qazlJC4mvMHwibKN5Ul/rafn6nV4jYqTBOEInLT7YaMJ38zz1+pwnOo+gKs26
-        3MoBmGm5TieFRmPankxk7pRgZgpTvitz0UnIBCzGtFJ59kfY/K9HEmuQ49SVJ9RW+Vr7WGavm12YV
-        o7XYJBravC3hYYl39mXCObKNRZqr8PSv+UPesqlVnjibjjoy+MEh2KgE9/fLgxWcr5DqQLposKFrC
-        38TcKHdjQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:55898)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iLOxI-0006gf-DU; Fri, 18 Oct 2019 10:53:56 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iLOxB-0000d6-DP; Fri, 18 Oct 2019 10:53:49 +0100
-Date:   Fri, 18 Oct 2019 10:53:49 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Chris Snook <chris.snook@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] net: ag71xx: port to phylink
-Message-ID: <20191018095349.GF25745@shell.armlinux.org.uk>
-References: <20191018093929.19299-1-o.rempel@pengutronix.de>
- <20191018093929.19299-2-o.rempel@pengutronix.de>
+        Fri, 18 Oct 2019 05:55:12 -0400
+Received: from mail-eopbgr140113.outbound.protection.outlook.com ([40.107.14.113]:59025
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389081AbfJRJzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 05:55:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SIy5ne8pU/dJJmDINzhcDRQGeS8VHYLMgLbrO10Y0hEEjvn3cL2soshAFTQGmCDDlM4S5s64VkJx2i5xfAvFLosVM3UMNkoSBs2m0tKaqetQxiZbt9oNv59r9FLT+1gvWza+2BmhbQaicVmrDLZiO/Zb38jLJWMvuIRl3caCiJ9Hhea+6vbrTLMlfuwv+BjvMCI1XDQCEFZLvo8YehH0Gx9aG0pr8EKbEE+1xhJPe5tlTDER4irvfcKu9PSIX0mYn+tmuvb5XRUzNnqSAm6lSggFAk6N5wCp9594+tOr9suQpzvp5ERWXonrS+Or3hfX54dK1nJigQPXrORenPcmpQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g+2r6QL/+kkttbY8p/Pq518SB5aAm7pzwDtwsG9hw1E=;
+ b=ikP+Amiw+SEwzi554V8H1UJ581/ncZCOu2l8UtHL/amST6eqCKiyQWou8clwuDbif6TAJXXgdSNXQdfvmuKagL/653X9bHLDv5B28dStJOEwWDmfRmy6WuVHH5OyU3oM6aALRns2xOohxo5OrpJtewCMby70/JjPlsjDICCJThOZ+yRonJERqaRQK6A/k9KJQoRTeAMxN7rbl/oZRTaFkva3/gUGlKx0Sm1JtuXnD1NZXaPPaWUTtttGnvsbH3lrrfBxKJs9g9ZW2BZpMsc0sgtC0d7h7ZCF47+/3CdGL51toIDOelsmfeF8ENcI2X5zMEF8h6qbbKh9gfnfrMS9DQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g+2r6QL/+kkttbY8p/Pq518SB5aAm7pzwDtwsG9hw1E=;
+ b=B8ayynvxLaQ12OtMbM331meox+kV42ANGH5avJCLavE+vaTuHdGZAV/3U5jy/lnNFK0WF8hp719ruR4gywP3fQGcWTerYJmZ9xXIPyz4II/tc5yxxx73mLbh0yoVS5XLCJfoSvPHRXlGaiS1Xr8mI2jTARZSDECcEy4S3JsZRzo=
+Received: from AM6PR05MB6535.eurprd05.prod.outlook.com (20.179.18.212) by
+ AM6PR05MB4504.eurprd05.prod.outlook.com (52.135.168.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.18; Fri, 18 Oct 2019 09:55:05 +0000
+Received: from AM6PR05MB6535.eurprd05.prod.outlook.com
+ ([fe80::c9f9:f21d:d401:7f35]) by AM6PR05MB6535.eurprd05.prod.outlook.com
+ ([fe80::c9f9:f21d:d401:7f35%5]) with mapi id 15.20.2347.024; Fri, 18 Oct 2019
+ 09:55:05 +0000
+From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+To:     "broonie@kernel.org" <broonie@kernel.org>
+CC:     "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>
+Subject: Re: [PATCH 5.3 112/112] ASoC: sgtl5000: add ADC mute control
+Thread-Topic: [PATCH 5.3 112/112] ASoC: sgtl5000: add ADC mute control
+Thread-Index: AQHVhPVsKAZEluJB9E6wNlSBYDJtdadfCNyAgAEhcoA=
+Date:   Fri, 18 Oct 2019 09:55:04 +0000
+Message-ID: <1811a32aef35a221ad0b247f7de5241e51363904.camel@toradex.com>
+References: <20191016214907.599726506@linuxfoundation.org>
+         <20191016220044.GB11473@sirena.co.uk> <20191016221025.GA990599@kroah.com>
+         <20191016223518.GC11473@sirena.co.uk> <20191016232358.GA994597@kroah.com>
+         <de9630e5-341f-b48d-029a-ef1a516bf820@skidata.com>
+         <AM6PR05MB653568E379699EE907E146BDF96D0@AM6PR05MB6535.eurprd05.prod.outlook.com>
+         <CAGgjyvFQQ4E5VfZ3nwFu+7UiGOmkyXK-n9PHjo1p=iYNX5JrPw@mail.gmail.com>
+         <20191017111122.GA4976@sirena.co.uk>
+         <b90f4cfc04686a669d145b5c5e7e59e2edf58779.camel@toradex.com>
+         <20191017163905.GH4976@sirena.co.uk>
+In-Reply-To: <20191017163905.GH4976@sirena.co.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=oleksandr.suvorov@toradex.com; 
+x-originating-ip: [194.105.145.90]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0f3402ee-1fef-404e-7a01-08d753b14061
+x-ms-traffictypediagnostic: AM6PR05MB4504:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR05MB4504C239AEA01865610F4E55F96C0@AM6PR05MB4504.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 01949FE337
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(136003)(366004)(189003)(199004)(186003)(6512007)(2351001)(2501003)(102836004)(36756003)(66066001)(476003)(2906002)(2616005)(446003)(44832011)(8676002)(5660300002)(486006)(71190400001)(11346002)(54906003)(76176011)(99286004)(71200400001)(118296001)(6436002)(6486002)(26005)(5640700003)(4001150100001)(25786009)(6116002)(6246003)(229853002)(305945005)(6506007)(3846002)(4326008)(7736002)(91956017)(107886003)(76116006)(64756008)(6916009)(256004)(508600001)(14444005)(66556008)(66476007)(66446008)(66946007)(14454004)(1730700003)(81156014)(8936002)(81166006)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR05MB4504;H:AM6PR05MB6535.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: iGdF5rwryxXohp/fu0G4gwGHu4lIxuTMJYnVmOMzrF1OwXejhWMnYobZ479Nbbmhvl0PJpzn8WKuH2q5WoPQyw3WDw4uI5OAO/5YXAMMjuQ6ubdSCm3a0WzRvvFr7vw0NKVDIurzmzPpTZ4f2BVH3PomVu+1p9yyCzK1NBb7rLeTMpfVsyn6iuCEkedvdaimGMlXtBNneD5GQ0Nu3qfOcS5RUOXnfxkAZjk3wo2EvpP/Bwbf27zWgIbUcQCwQ3WLUR9HMU8iW34XKSHowfU2Cv2cipgwt5mkcf0hLA9ORBGfjLRb2/A2LQL1/eNMG9g/wpGoi1NMzZiE4v0jRw5RCNm3ja1rTwU8FjuPHV0qm1ZpLZi3aIn2R2naca0DM6zVyxZOB6Fi1JYneFJk6kl8MRoN9MmX92/N1DK6jfvPPHM=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6DE9FBA6AF368644B4F5DC32F58C7D8D@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018093929.19299-2-o.rempel@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f3402ee-1fef-404e-7a01-08d753b14061
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Oct 2019 09:55:04.9611
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8lcRW6C2Nngk62dLJ+KojwLxk6SgLXBnElqFujjNLPh9bZxyOOeYxNcLjniArbq1ri4ZASwd9paFSE0NcVQMDfSSJSPyOwAoB6hHIT43JkU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB4504
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Fri, Oct 18, 2019 at 11:39:25AM +0200, Oleksij Rempel wrote:
-> The port to phylink was done as close as possible to initial
-> functionality.
-> Theoretically this HW can support flow control, practically seems to be not
-> enough to just enable it. So, more work should be done.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->  drivers/net/ethernet/atheros/Kconfig  |   2 +-
->  drivers/net/ethernet/atheros/ag71xx.c | 146 +++++++++++++++-----------
->  2 files changed, 87 insertions(+), 61 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/atheros/Kconfig b/drivers/net/ethernet/atheros/Kconfig
-> index 0058051ba925..2720bde5034e 100644
-> --- a/drivers/net/ethernet/atheros/Kconfig
-> +++ b/drivers/net/ethernet/atheros/Kconfig
-> @@ -20,7 +20,7 @@ if NET_VENDOR_ATHEROS
->  config AG71XX
->  	tristate "Atheros AR7XXX/AR9XXX built-in ethernet mac support"
->  	depends on ATH79
-> -	select PHYLIB
-> +	select PHYLINK
->  	help
->  	  If you wish to compile a kernel for AR7XXX/91XXX and enable
->  	  ethernet support, then you should always answer Y to this.
-> diff --git a/drivers/net/ethernet/atheros/ag71xx.c b/drivers/net/ethernet/atheros/ag71xx.c
-> index 1b1a09095c0d..4ad587d6a8e8 100644
-> --- a/drivers/net/ethernet/atheros/ag71xx.c
-> +++ b/drivers/net/ethernet/atheros/ag71xx.c
-> @@ -32,6 +32,7 @@
->  #include <linux/of_mdio.h>
->  #include <linux/of_net.h>
->  #include <linux/of_platform.h>
-> +#include <linux/phylink.h>
->  #include <linux/regmap.h>
->  #include <linux/reset.h>
->  #include <linux/clk.h>
-> @@ -314,6 +315,8 @@ struct ag71xx {
->  	dma_addr_t stop_desc_dma;
->  
->  	int phy_if_mode;
-> +	struct phylink *phylink;
-> +	struct phylink_config phylink_config;
->  
->  	struct delayed_work restart_work;
->  	struct timer_list oom_timer;
-> @@ -845,24 +848,20 @@ static void ag71xx_hw_start(struct ag71xx *ag)
->  	netif_wake_queue(ag->ndev);
->  }
->  
-> -static void ag71xx_link_adjust(struct ag71xx *ag, bool update)
-> +static void ag71xx_mac_config(struct phylink_config *config, unsigned int mode,
-> +			      const struct phylink_link_state *state)
->  {
-> -	struct phy_device *phydev = ag->ndev->phydev;
-> +	struct ag71xx *ag = netdev_priv(to_net_dev(config->dev));
->  	u32 cfg2;
->  	u32 ifctl;
->  	u32 fifo5;
->  
-> -	if (!phydev->link && update) {
-> -		ag71xx_hw_stop(ag);
-> -		return;
-> -	}
-> -
->  	if (!ag71xx_is(ag, AR7100) && !ag71xx_is(ag, AR9130))
->  		ag71xx_fast_reset(ag);
->  
->  	cfg2 = ag71xx_rr(ag, AG71XX_REG_MAC_CFG2);
->  	cfg2 &= ~(MAC_CFG2_IF_1000 | MAC_CFG2_IF_10_100 | MAC_CFG2_FDX);
-> -	cfg2 |= (phydev->duplex) ? MAC_CFG2_FDX : 0;
-> +	cfg2 |= (state->duplex) ? MAC_CFG2_FDX : 0;
->  
->  	ifctl = ag71xx_rr(ag, AG71XX_REG_MAC_IFCTL);
->  	ifctl &= ~(MAC_IFCTL_SPEED);
-> @@ -870,7 +869,7 @@ static void ag71xx_link_adjust(struct ag71xx *ag, bool update)
->  	fifo5 = ag71xx_rr(ag, AG71XX_REG_FIFO_CFG5);
->  	fifo5 &= ~FIFO_CFG5_BM;
->  
-> -	switch (phydev->speed) {
-> +	switch (state->speed) {
-
-Please see the documentation for the mac_config() method in
-include/linux/phylink.h wrt state->speed and state->duplex validity.
-
->  	case SPEED_1000:
->  		cfg2 |= MAC_CFG2_IF_1000;
->  		fifo5 |= FIFO_CFG5_BM;
-> @@ -883,7 +882,6 @@ static void ag71xx_link_adjust(struct ag71xx *ag, bool update)
->  		cfg2 |= MAC_CFG2_IF_10_100;
->  		break;
->  	default:
-> -		WARN(1, "not supported speed %i\n", phydev->speed);
->  		return;
->  	}
->  
-> @@ -897,58 +895,78 @@ static void ag71xx_link_adjust(struct ag71xx *ag, bool update)
->  	ag71xx_wr(ag, AG71XX_REG_MAC_CFG2, cfg2);
->  	ag71xx_wr(ag, AG71XX_REG_FIFO_CFG5, fifo5);
->  	ag71xx_wr(ag, AG71XX_REG_MAC_IFCTL, ifctl);
-> -
-> -	ag71xx_hw_start(ag);
-> -
-> -	if (update)
-> -		phy_print_status(phydev);
->  }
->  
-> -static void ag71xx_phy_link_adjust(struct net_device *ndev)
-> +static void ag71xx_mac_validate(struct phylink_config *config,
-> +			    unsigned long *supported,
-> +			    struct phylink_link_state *state)
->  {
-> -	struct ag71xx *ag = netdev_priv(ndev);
-> +	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
-> +
-> +	if (state->interface != PHY_INTERFACE_MODE_NA &&
-> +	    state->interface != PHY_INTERFACE_MODE_GMII &&
-> +	    state->interface != PHY_INTERFACE_MODE_MII) {
-> +		bitmap_zero(supported, __ETHTOOL_LINK_MODE_MASK_NBITS);
-> +		return;
-> +	}
-> +
-> +	phylink_set(mask, MII);
-> +
-> +	/* flow control is not supported */
->  
-> -	ag71xx_link_adjust(ag, true);
-> +	phylink_set(mask, 10baseT_Half);
-> +	phylink_set(mask, 10baseT_Full);
-> +	phylink_set(mask, 100baseT_Half);
-> +	phylink_set(mask, 100baseT_Full);
-> +
-> +	if (state->interface = PHY_INTERFACE_MODE_GMII) {
-
-This is an assignment, is always true, and will produce a compiler
-warning.
-
-Please see the documentation for the validate() method in
-include/linux/phylink.h wrt PHY_INTERFACE_MODE_NA handling.
-
-Thanks.
-
-> +		phylink_set(mask, 1000baseT_Full);
-> +		phylink_set(mask, 1000baseX_Full);
-> +	}
-> +
-> +	bitmap_and(supported, supported, mask,
-> +		   __ETHTOOL_LINK_MODE_MASK_NBITS);
-> +	bitmap_and(state->advertising, state->advertising, mask,
-> +		   __ETHTOOL_LINK_MODE_MASK_NBITS);
->  }
->  
-> -static int ag71xx_phy_connect(struct ag71xx *ag)
-> +static void ag71xx_mac_link_down(struct phylink_config *config,
-> +				 unsigned int mode, phy_interface_t interface)
->  {
-> -	struct device_node *np = ag->pdev->dev.of_node;
-> -	struct net_device *ndev = ag->ndev;
-> -	struct device_node *phy_node;
-> -	struct phy_device *phydev;
-> -	int ret;
-> +	struct ag71xx *ag = netdev_priv(to_net_dev(config->dev));
->  
-> -	if (of_phy_is_fixed_link(np)) {
-> -		ret = of_phy_register_fixed_link(np);
-> -		if (ret < 0) {
-> -			netif_err(ag, probe, ndev, "Failed to register fixed PHY link: %d\n",
-> -				  ret);
-> -			return ret;
-> -		}
-> +	ag71xx_hw_stop(ag);
-> +}
->  
-> -		phy_node = of_node_get(np);
-> -	} else {
-> -		phy_node = of_parse_phandle(np, "phy-handle", 0);
-> -	}
-> +static void ag71xx_mac_link_up(struct phylink_config *config, unsigned int mode,
-> +			       phy_interface_t interface,
-> +			       struct phy_device *phy)
-> +{
-> +	struct ag71xx *ag = netdev_priv(to_net_dev(config->dev));
->  
-> -	if (!phy_node) {
-> -		netif_err(ag, probe, ndev, "Could not find valid phy node\n");
-> -		return -ENODEV;
-> -	}
-> +	ag71xx_hw_start(ag);
-> +}
->  
-> -	phydev = of_phy_connect(ag->ndev, phy_node, ag71xx_phy_link_adjust,
-> -				0, ag->phy_if_mode);
-> +static const struct phylink_mac_ops ag71xx_phylink_mac_ops = {
-> +	.validate = ag71xx_mac_validate,
-> +	.mac_config = ag71xx_mac_config,
-> +	.mac_link_down = ag71xx_mac_link_down,
-> +	.mac_link_up = ag71xx_mac_link_up,
-> +};
->  
-> -	of_node_put(phy_node);
-> +static int ag71xx_phy_setup(struct ag71xx *ag)
-> +{
-> +	struct phylink *phylink;
->  
-> -	if (!phydev) {
-> -		netif_err(ag, probe, ndev, "Could not connect to PHY device\n");
-> -		return -ENODEV;
-> -	}
-> +	ag->phylink_config.dev = &ag->ndev->dev;
-> +	ag->phylink_config.type = PHYLINK_NETDEV;
->  
-> -	phy_attached_info(phydev);
-> +	phylink = phylink_create(&ag->phylink_config, ag->pdev->dev.fwnode,
-> +				 ag->phy_if_mode, &ag71xx_phylink_mac_ops);
-> +	if (IS_ERR(phylink))
-> +		return PTR_ERR(phylink);
->  
-> +	ag->phylink = phylink;
->  	return 0;
->  }
->  
-> @@ -1239,6 +1257,13 @@ static int ag71xx_open(struct net_device *ndev)
->  	unsigned int max_frame_len;
->  	int ret;
->  
-> +	ret = phylink_of_phy_connect(ag->phylink, ag->pdev->dev.of_node, 0);
-> +	if (ret) {
-> +		netif_err(ag, link, ndev, "phylink_of_phy_connect filed with err: %i\n",
-> +			  ret);
-> +		goto err;
-> +	}
-> +
->  	max_frame_len = ag71xx_max_frame_len(ndev->mtu);
->  	ag->rx_buf_size =
->  		SKB_DATA_ALIGN(max_frame_len + NET_SKB_PAD + NET_IP_ALIGN);
-> @@ -1251,11 +1276,7 @@ static int ag71xx_open(struct net_device *ndev)
->  	if (ret)
->  		goto err;
->  
-> -	ret = ag71xx_phy_connect(ag);
-> -	if (ret)
-> -		goto err;
-> -
-> -	phy_start(ndev->phydev);
-> +	phylink_start(ag->phylink);
->  
->  	return 0;
->  
-> @@ -1268,8 +1289,7 @@ static int ag71xx_stop(struct net_device *ndev)
->  {
->  	struct ag71xx *ag = netdev_priv(ndev);
->  
-> -	phy_stop(ndev->phydev);
-> -	phy_disconnect(ndev->phydev);
-> +	phylink_stop(ag->phylink);
->  	ag71xx_hw_disable(ag);
->  
->  	return 0;
-> @@ -1396,10 +1416,9 @@ static netdev_tx_t ag71xx_hard_start_xmit(struct sk_buff *skb,
->  
->  static int ag71xx_do_ioctl(struct net_device *ndev, struct ifreq *ifr, int cmd)
->  {
-> -	if (!ndev->phydev)
-> -		return -EINVAL;
-> +	struct ag71xx *ag = netdev_priv(ndev);
->  
-> -	return phy_mii_ioctl(ndev->phydev, ifr, cmd);
-> +	return phylink_mii_ioctl(ag->phylink, ifr, cmd);
->  }
->  
->  static void ag71xx_oom_timer_handler(struct timer_list *t)
-> @@ -1422,13 +1441,14 @@ static void ag71xx_restart_work_func(struct work_struct *work)
->  {
->  	struct ag71xx *ag = container_of(work, struct ag71xx,
->  					 restart_work.work);
-> -	struct net_device *ndev = ag->ndev;
->  
->  	rtnl_lock();
->  	ag71xx_hw_disable(ag);
->  	ag71xx_hw_enable(ag);
-> -	if (ndev->phydev->link)
-> -		ag71xx_link_adjust(ag, false);
-> +
-> +	phylink_stop(ag->phylink);
-> +	phylink_start(ag->phylink);
-> +
->  	rtnl_unlock();
->  }
->  
-> @@ -1769,6 +1789,12 @@ static int ag71xx_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, ndev);
->  
-> +	err = ag71xx_phy_setup(ag);
-> +	if (err) {
-> +		netif_err(ag, probe, ndev, "failed to setup phy (%d)\n", err);
-> +		goto err_mdio_remove;
-> +	}
-> +
->  	err = register_netdev(ndev);
->  	if (err) {
->  		netif_err(ag, probe, ndev, "unable to register net device\n");
-> -- 
-> 2.23.0
-> 
-> 
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+T24gVGh1LCAyMDE5LTEwLTE3IGF0IDE3OjM5ICswMTAwLCBNYXJrIEJyb3duIHdyb3RlOg0KPiAN
+Cj4gQWxsIHZlcnNpb25zIG9mIGRyaXZlciBzZ3RsNTAwMCAoc2luY2UgY3JlYXRpbmcgaW4gMjAx
+MSkgaGFzIGEgYnVnIGluDQo+ID4gc2d0bDUwMDBfcHJvYmUoKToNCj4gPiAuLi4NCj4gPiAgICAg
+ICAgc25kX3NvY193cml0ZShjb2RlYywgU0dUTDUwMDBfQ0hJUF9BTkFfQ1RSTCwNCj4gPiAgICAg
+ICAgICAgICAgICAgICAgICAgIFNHVEw1MDAwX0hQX1pDRF9FTiB8DQo+ID4gICAgICAgICAgICAg
+ICAgICAgICAgICBTR1RMNTAwMF9BRENfWkNEX0VOKTsNCj4gPiAuLi4NCj4gPiBUaGlzIGNvbW1h
+bmQgcmV3cml0ZXMgdGhlIHdob2xlIHJlZ2lzdGVyIHZhbHVlIGluc3RlYWQgb2YganVzdA0KPiA+
+IGVuYWJsaW5nDQo+ID4gWkNEIGZlYXR1cmUgZm9yIGhlYWRwaG9uZSBhbmQgYWRjLg0KPiA+IFRo
+aXMgcmVnaXN0ZXIgaGFzIGJpdHMgZm9yIEhQL0xpbmVPdXQvQURDIG11dGluZywgdGh1cw0KPiA+
+IHNndGw1MDAwX3Byb2JlKCkNCj4gPiBhbHdheXMgdW5tdXRlcyBIUC9MaW5lT3V0L0FEQy4NCj4g
+DQo+IFllcywgb3IgYXQgdGhlIHZlcnkgbGVhc3QgdGhpcyBpcyBhIGJhZGx5IGRvY3VtZW50ZWQg
+Yml0IG9mDQo+IGludGVudGlvbmFsDQo+IGNvZGUuICBJIHN1c3BlY3QgaXQgbWF5IGJlIHRoZSBs
+YXR0ZXIgYnV0IGF0IHRoaXMgcG9pbnQgd2UgY2FuJ3QNCj4gdGVsbC4NCj4gPiAyLiBrZWVwIDYz
+MWJjOGYwMTM0YWUgYW5kIGFkZCA2OTRiMTQ1NTRkNzVmIHRvIDQuMTksIDUuMiBhbmQgNS4zLg0K
+PiANCj4gVGhpcyBtZWFucyB0aGUgcGF0Y2ggdGhhdCBtYWtlcyBaQyBvbmx5IHVwZGF0ZSB0aGUg
+WkMgYml0cyBhbmQgYWxzbw0KPiB0aGUNCj4gcGF0Y2ggdGhhdCBtYWtlcyB0aGUgbXV0ZXMgdXNl
+ciBjb250cm9sbGFibGUsIHRoZSBkZWZhdWx0IGJlaW5nDQo+IG11dGVkLg0KPiBBcyBJIHBvaW50
+ZWQgb3V0IHVwIHRocmVhZCB0aGlzIHdvdWxkIG1lYW4gdGhhdCBzb21lb25lIHVwZ3JhZGluZyB0
+bw0KPiBhDQo+IG5ld2VyIHN0YWJsZSBtYXkgbmVlZCB0byBjaGFuZ2UgdGhlaXIgdXNlcnNwYWNl
+IHRvIGRvIHRoZSB1bm11dGUNCj4gaW5zdGVhZA0KPiBvZiBoYXZpbmcgdGhpbmdzIHVuY29uZGl0
+aW9uYWxseSB1bm11dGVkIGJ5IHRoZSBkcml2ZXIuICBUaGlzIGlzIG5vdA0KPiByZWFsbHkgd2hh
+dCBwZW9wbGUgZXhwZWN0IGZyb20gc3RhYmxlIHVwZGF0ZXMsIHdlIHdhbnQgdGhlbSB0byBiZQ0K
+PiBhYmxlDQo+IHRvIHB1bGwgdGhlc2UgaW4gd2l0aG91dCB0aGlua2luZyBhYm91dCBpdC4gIGkN
+Cg0KSSB0aGluayBub3cgSSBzZWUsIHdoYXQgeW91IG1lYW4uDQoNCk9mIGNvcnNlLCB3ZSBjYW4g
+Y2hhbmdlIHRoZSBvcmlnaW5hbCBjb21taXQNClsgNjMxYmM4ZjAxMzRhZSBBU29DOiBzZ3RsNTAw
+MDogRml4IG9mIHVubXV0ZSBvdXRwdXRzIG9uIHByb2JlIF0NCmZvciBzdGFibGUgYnJhbmNoZXMs
+IHVubXV0aW5nIEFEQy9IUC9MaW5lb3V0IGF0IHRoZSBlbmQgb2YgcHJvYmluZy4NCldlIGtlZXAg
+YW4gb3JpZ2luYWwgYmVoYXZpb3VyIGZvciB1c2VycyBhbmQgcmVkdWNlIHRoZSBwb3NzaWJsZSAn
+cG9wJw0Kb24gcHJvYmUuDQoNCkJ1dCwgdG8gdGFrZSBzaWduaWZpY2FudCBhZHZhbnRhZ2UsIHdl
+IHNob3VsZCBhZGQgQURDIGNvbnRyb2wgdG9vLCBhbmQsDQphcyB0aGlzIGlzIGEgZmVhdHVyZSwg
+aXQgaXMgdW5kZXNpcmFibGUgZm9yIHN0YWJsZSBicmFuY2hlcy4NCg0KU28gcHJvYmFibHkgdGhl
+IGJlc3QgZGVjaXNpb24gaXMgdG8gcm9sbCBvcmlnaW5hbCA2MzFiYzhmMDEzNGFlIGJhY2sgaW4N
+CmFsbCBzdGFibGUgYnJhbmNoZXMgd2hlcmUgaXQgd2FzIGFkZGVkLg0KDQpUaGFuayB5b3UsIE1h
+cmsuIFlvdXIgZXhwbGFuYXRpb24gaXMgZXh0cmVtZWx5IHVzZWZ1bC4NCg0KPiBUbyBiYWNrcG9y
+dCB0aGUgYWRkaXRpb24gb2YgdGhlIGNvbnRyb2xzIHRvIHN0YWJsZSB3ZSdkIG5lZWQgYW4NCj4g
+YWRkaXRpb25hbCBjaGFuZ2Ugd2hpY2ggc2V0cyB0aGUgZGVmYXVsdCBmb3IgdGhpcyBjb250cm9s
+IHRvIHVubXV0ZWQsDQo+IHRoZXJlJ3MgYSBjYXNlIGZvciBoYXZpbmcgc3VjaCBhIGNoYW5nZSB1
+cHN0cmVhbSByZWdhcmRsZXNzIGJ1dCBpdCdzDQo+IHN0aWxsIG5vdCBjbGVhciBpZiBhbnkgb2Yg
+dGhlc2UgY2hhbmdlcyBhcmUgcmVhbGx5IGZpeGVzIGluIHRoZSBzZW5zZQ0KPiB0aGF0IHdlIG1l
+YW4gZm9yIHN0YWJsZS4NCg==
