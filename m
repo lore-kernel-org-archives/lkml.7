@@ -2,104 +2,109 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1700CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FD2CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9849222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83A0D2089C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:01:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="M64u0/vx"
+	dkim=pass (1024-bit key) header.d=AQUANTIA1COM.onmicrosoft.com header.i=@AQUANTIA1COM.onmicrosoft.com header.b="XtX7rlSI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410164AbfJRM50 (ORCPT
+        id S2410181AbfJRNBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 08:57:26 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:31567 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733180AbfJRM50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 08:57:26 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46vmJz4VtKzB09b0;
-        Fri, 18 Oct 2019 14:57:23 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=M64u0/vx; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id MA8gt4jfKrnu; Fri, 18 Oct 2019 14:57:23 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46vmJz3NhFzB09Zw;
-        Fri, 18 Oct 2019 14:57:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1571403443; bh=P+VjSeFKR0YVZlm5oe6xprbP52ac0pv0a6AOQUrclV0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=M64u0/vx1KJeUMfPLBz2jFxYbbMSbfmpl2+OuzWSbkbGwFaNqegzEC67qIu3LFiPX
-         6P4YxoIVPsXKPTqIgr1qlPuSVJny52O2xFRTtfoZW90pa8kk0AyHXaZfrhqunqGvWK
-         hwU92378jbMtIN5poP5BwtAJX5Att83hc9NSfPj0=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6F8038B802;
-        Fri, 18 Oct 2019 14:57:23 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id JnffNplE4Ump; Fri, 18 Oct 2019 14:57:23 +0200 (CEST)
-Received: from [192.168.204.43] (unknown [192.168.204.43])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 661508B800;
-        Fri, 18 Oct 2019 14:57:22 +0200 (CEST)
-Subject: Re: [PATCH 1/7] soc: fsl: qe: remove space-before-tab
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
- <20191018125234.21825-2-linux@rasmusvillemoes.dk>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <89dc8d74-b1fc-19f5-d8a5-cd43eda27b4d@c-s.fr>
-Date:   Fri, 18 Oct 2019 14:57:21 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 18 Oct 2019 09:01:07 -0400
+Received: from mail-eopbgr730048.outbound.protection.outlook.com ([40.107.73.48]:56288
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2410136AbfJRNBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 09:01:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nbrmzLDSlOS5EiRDID5f654PGNovjBRTpTzg89or9Wntkc4DKAH6jz1RPwsQtBdUEtXhfciuN23Rnp9s0QPlW6OQgifSx15zdDl5M42HKNeySVvANCx53l+6SiPOc83/DGgoXVJV2tQH2bUw5kAO6n1/pmpkxvDhicdPI++v6fcf1XysaoEnDKHlo+pf1BSgV1J5YS/DsRbMusr2bbMh43JiI8g7Pf8ULGHdsVTrY/YhlZzYJi+djFFQskwvBmQjFKGPtTjayT/UpbSU7yomk0up/lUhmXI2b+DnhACnK2hbcurKCFFR4HU8/JkZz+1nV56g9eg7nE08AG1cd5wTeQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QjDzHjU7jd3fX4mjgmy33/k9Z/RrS4Mwc6nUvZtGPcY=;
+ b=MfvDpzJHQYz4xWzK7lEJKjITsEOhZHmhZMQX8vmo3Xo62MzcYaYcfZY5BjGePHpkhbZ4flnjM0rdyyuj6MkF//ecH2pTRqgVyr4pnxn3VpP+8lSETzwyPV9gsEV3Y+sNlc4ii0BJ/CA9GvMV7K946J0eCRg5Xe+yv7Wl5BqYZcu2plp5AgubkeFz4L2sZK1rYQlUiQR7T3Y10ngdtH8FJCmMt1LC6TrR8W/HGU4f3fku94ESFcvGic9vrxxGBgvOfx10CvLJS/RD7Z619dOrQQQFui2y2y6lTfjrQkr/QUCtfyGhL3Z4KeA5Gqje4zUTVCZ67kRaMD5hD6blY/wZmw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=aquantia.com; dmarc=pass action=none header.from=aquantia.com;
+ dkim=pass header.d=aquantia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=AQUANTIA1COM.onmicrosoft.com; s=selector2-AQUANTIA1COM-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QjDzHjU7jd3fX4mjgmy33/k9Z/RrS4Mwc6nUvZtGPcY=;
+ b=XtX7rlSIFNyG+ifg/f0fmZn+pfNJPLskdToQQnwMR+T1uxcT7Oe6DrM+RJDOlcgtihiDb3UdZEV0fATh7J1Gf0iwuyKUrwH/mQOYlT+ACEBl2UCv1NuCNg2zTma75lhsToSTFDLEqaF75sNSqx/cRFBP5SYNWdkmwX85B9oGMs4=
+Received: from BN8PR11MB3762.namprd11.prod.outlook.com (20.178.221.83) by
+ BN8PR11MB3716.namprd11.prod.outlook.com (20.178.220.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.19; Fri, 18 Oct 2019 13:01:02 +0000
+Received: from BN8PR11MB3762.namprd11.prod.outlook.com
+ ([fe80::accc:44e2:f64d:f2f]) by BN8PR11MB3762.namprd11.prod.outlook.com
+ ([fe80::accc:44e2:f64d:f2f%3]) with mapi id 15.20.2347.024; Fri, 18 Oct 2019
+ 13:01:02 +0000
+From:   Igor Russkikh <Igor.Russkikh@aquantia.com>
+To:     Chen Wandun <chenwandun@huawei.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] net: aquantia: add an error handling in
+ aq_nic_set_multicast_list
+Thread-Topic: [PATCH v2] net: aquantia: add an error handling in
+ aq_nic_set_multicast_list
+Thread-Index: AQHVhZzB3xc8p4AAK0GwsqOl7MTQo6dgXPCA
+Date:   Fri, 18 Oct 2019 13:01:02 +0000
+Message-ID: <89eede3b-2b8c-8d0b-3ffc-adf71f26e883@aquantia.com>
+References: <1571394037-19978-1-git-send-email-chenwandun@huawei.com>
+In-Reply-To: <1571394037-19978-1-git-send-email-chenwandun@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR0P264CA0020.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100::32)
+ To BN8PR11MB3762.namprd11.prod.outlook.com (2603:10b6:408:8d::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Igor.Russkikh@aquantia.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [95.79.108.179]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8d6d164f-6e0f-4757-bc04-08d753cb3a8a
+x-ms-traffictypediagnostic: BN8PR11MB3716:
+x-microsoft-antispam-prvs: <BN8PR11MB3716E54A626C9C07CF902254986C0@BN8PR11MB3716.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 01949FE337
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(366004)(136003)(39850400004)(346002)(199004)(189003)(2906002)(14444005)(25786009)(4744005)(14454004)(256004)(2201001)(66066001)(5660300002)(508600001)(11346002)(36756003)(486006)(446003)(2616005)(476003)(44832011)(6246003)(186003)(6512007)(6436002)(6486002)(71190400001)(52116002)(81156014)(64756008)(229853002)(81166006)(2501003)(26005)(102836004)(99286004)(76176011)(6506007)(305945005)(386003)(31696002)(66556008)(66446008)(53546011)(66946007)(8936002)(7736002)(110136005)(66476007)(6116002)(86362001)(8676002)(3846002)(316002)(31686004)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR11MB3716;H:BN8PR11MB3762.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: aquantia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: RBbI6zpxoJrAvefQcO0ckuOYQdN/IGvwOZzUI2hvF6RFkyYM/I1ZbSxzzyo+P34kqgkLRxvRyKJM0Xj4KgL5QLTX0NOMgV4tN/d/THyYxXsrZzixdyc+iWzzju7v5O8A941FsiOwizdt8TAbUdcy3PV6s6eVjpoDSY1raKbFzpCK9F8r+RR9+oWAGrHnNAMURD47SHVmTvTPksPdv1de/dhl7qTYdgqMBFTgu0nfEnoe3M40gj+c0IlamyDN1GwJeBOkhR80+QPZsFHIxrvk43C7MNLPC4ePRu4Jcx+tML28xnFlQWXFL9lWohU+nFHNWX01PYcXZorBaMUgu7dRRuf3H8AhtXWDKUv0j9T8PK5hgKdKvv1dZ7sW7BJTWvCCktMP6kWk1dEpmu0f4np3DibWcpizpunw+DYW6KU7cAM=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0FF8810558AEAC408D9BA93A96E7A013@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20191018125234.21825-2-linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: aquantia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8d6d164f-6e0f-4757-bc04-08d753cb3a8a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Oct 2019 13:01:02.6908
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 83e2e134-991c-4ede-8ced-34d47e38e6b1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +O28YHBEkbpsPKEAfBnIM+Tur56Gw7YfA0yJy6Vhxap/Zd5WjRPtmwhEkO2l6lVw8tWERRF5J1qIXaJE/Ifl+Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR11MB3716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 18/10/2019 à 14:52, Rasmus Villemoes a écrit :
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> ---
->   drivers/soc/fsl/qe/qe.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/soc/fsl/qe/qe.c b/drivers/soc/fsl/qe/qe.c
-> index 417df7e19281..6fcbfad408de 100644
-> --- a/drivers/soc/fsl/qe/qe.c
-> +++ b/drivers/soc/fsl/qe/qe.c
-> @@ -378,8 +378,8 @@ static int qe_sdma_init(void)
->   	}
->   
->   	out_be32(&sdma->sdebcr, (u32) sdma_buf_offset & QE_SDEBCR_BA_MASK);
-> - 	out_be32(&sdma->sdmr, (QE_SDMR_GLB_1_MSK |
-> - 					(0x1 << QE_SDMR_CEN_SHIFT)));
-> +	out_be32(&sdma->sdmr, (QE_SDMR_GLB_1_MSK |
-> +					(0x1 << QE_SDMR_CEN_SHIFT)));
-
-Could you also align the second line properly ?
-
-Christophe
-
->   
->   	return 0;
->   }
-> 
+VGhhbmtzLCBDaGVuLg0KDQpPbiAxOC4xMC4yMDE5IDEzOjIwLCBDaGVuIFdhbmR1biB3cm90ZToN
+Cj4gRnJvbTogQ2hlbndhbmR1biA8Y2hlbndhbmR1bkBodWF3ZWkuY29tPg0KPiANCj4gYWRkIGFu
+IGVycm9yIGhhbmRsaW5nIGluIGFxX25pY19zZXRfbXVsdGljYXN0X2xpc3QsIGl0IG1heSBub3QN
+Cj4gd29yayB3aGVuIGh3X211bHRpY2FzdF9saXN0X3NldCBlcnJvcjsgYW5kIGF0IHRoZSBzYW1l
+IHRpbWUNCj4gaXQgd2lsbCByZW1vdmUgZ2NjIFd1bnVzZWQtYnV0LXNldC12YXJpYWJsZSB3YXJu
+aW5nLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQ2hlbndhbmR1biA8Y2hlbndhbmR1bkBodWF3ZWku
+Y29tPg0KDQpSZXZpZXdlZC1ieTogSWdvciBSdXNza2lraCA8aWdvci5ydXNza2lraEBhcXVhbnRp
+YS5jb20+DQoNClJlZ2FyZHMsDQogIElnb3INCg==
