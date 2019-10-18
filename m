@@ -2,168 +2,88 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0975CA9EA8
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AAE5CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB87222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52886222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:39:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571395161;
+	bh=fAxq5uZDgA71q0E+EM9KYGGqgdMO/URCOCKYV60akkU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ri1GEnZCrfJZuPMLDeqYlx9SWDItJ5unj8JUu2azpMYRDFx+U1zkjEfGuESzBm+4f
+	 MATGp9mlIljhhIHrpT24A7gTsFXECSx59S/5FzVYu8+srs17yFyeXxJmwcJA09dQ/y
+	 SpdUYuhhubXCte4i/7tBIPr4xgnFw/If5MTmZGtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439248AbfJRKir (ORCPT
+        id S2439343AbfJRKjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 06:38:47 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:34262 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S2439166AbfJRKiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 06:38:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 755D3C8F;
-        Fri, 18 Oct 2019 03:38:05 -0700 (PDT)
-Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8CA923F6C4;
-        Fri, 18 Oct 2019 03:38:04 -0700 (PDT)
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, nico@fluxnic.net
-Subject: [PATCH v3 5/5] cpufreq: vexpress-spc: fix some coding style issues
-Date:   Fri, 18 Oct 2019 11:37:49 +0100
-Message-Id: <20191018103749.11226-6-sudeep.holla@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191018103749.11226-1-sudeep.holla@arm.com>
-References: <20191018103749.11226-1-sudeep.holla@arm.com>
+        Fri, 18 Oct 2019 06:39:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60388 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2439166AbfJRKjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 06:39:17 -0400
+Received: from localhost (unknown [209.136.236.94])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D14FC222BD;
+        Fri, 18 Oct 2019 10:39:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571395156;
+        bh=fAxq5uZDgA71q0E+EM9KYGGqgdMO/URCOCKYV60akkU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BN1+wD0qTRHbnQIaZ8UODya+pY1GZy3Nd9ZrsTsookRPYfazZtby9emFzpMHVT48/
+         qIJkZZtvCS8lan184PtgnlkqAg7xufbYFWexLZsaL2PY439SHQlVJVvV7Wun6LwY0f
+         lHYYBBJ0moU9cyAc+IG7zfK7+9KD0T6SzgftEyXY=
+Date:   Fri, 18 Oct 2019 03:39:15 -0700
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
+        Johan Hovold <johan@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Rob Herring <robh@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        Len Brown <lenb@kernel.org>, linux-serial@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] serdev: Add ACPI devices by ResourceSource field
+Message-ID: <20191018103915.GA1174466@kroah.com>
+References: <20190924162226.1493407-1-luzmaximilian@gmail.com>
+ <03d11e04-aaad-4851-c7d6-feaf62793670@redhat.com>
+ <84883ba0-ec01-9114-5c4a-e468cf85dfec@gmail.com>
+ <2257692.4kSTgpFGC2@kreacher>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2257692.4kSTgpFGC2@kreacher>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following checkpatch checks/warnings:
+On Fri, Oct 18, 2019 at 12:16:27PM +0200, Rafael J. Wysocki wrote:
+> On Thursday, October 10, 2019 3:18:58 PM CEST Maximilian Luz wrote:
+> > Hi,
+> > 
+> > On 10/10/19 12:22 PM, Hans de Goede wrote:
+> > > This patch looks good to me and it works on my test hw with serial
+> > > attached BT HCI:
+> > > 
+> > > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> > > Tested-by: Hans de Goede <hdegoede@redhat.com>
+> > > 
+> > > Regards,
+> > > 
+> > > Hans
+> > 
+> > Awesome, thank you!
+> 
+> Is anyone taking care of this patch, or should I do that?
 
-CHECK: Unnecessary parentheses around the code
-CHECK: Alignment should match open parenthesis
-CHECK: Prefer kernel type 'u32' over 'uint32_t'
-WARNING: Missing a blank line after declarations
+It's already in my tty-next branch, so no need for you to do anything :)
 
-Acked-by: Nicolas Pitre <nico@fluxnic.net>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- drivers/cpufreq/vexpress-spc-cpufreq.c | 36 +++++++++++++-------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
+thanks,
 
-diff --git a/drivers/cpufreq/vexpress-spc-cpufreq.c b/drivers/cpufreq/vexpress-spc-cpufreq.c
-index 132610424747..3259498d7eaa 100644
---- a/drivers/cpufreq/vexpress-spc-cpufreq.c
-+++ b/drivers/cpufreq/vexpress-spc-cpufreq.c
-@@ -79,8 +79,8 @@ static unsigned int find_cluster_maxfreq(int cluster)
- 	for_each_online_cpu(j) {
- 		cpu_freq = per_cpu(cpu_last_req_freq, j);
- 
--		if ((cluster == per_cpu(physical_cluster, j)) &&
--				(max_freq < cpu_freq))
-+		if (cluster == per_cpu(physical_cluster, j) &&
-+		    max_freq < cpu_freq)
- 			max_freq = cpu_freq;
- 	}
- 
-@@ -190,13 +190,11 @@ static int ve_spc_cpufreq_set_target(struct cpufreq_policy *policy,
- 	freqs_new = freq_table[cur_cluster][index].frequency;
- 
- 	if (is_bL_switching_enabled()) {
--		if ((actual_cluster == A15_CLUSTER) &&
--				(freqs_new < clk_big_min)) {
-+		if (actual_cluster == A15_CLUSTER && freqs_new < clk_big_min)
- 			new_cluster = A7_CLUSTER;
--		} else if ((actual_cluster == A7_CLUSTER) &&
--				(freqs_new > clk_little_max)) {
-+		else if (actual_cluster == A7_CLUSTER &&
-+			 freqs_new > clk_little_max)
- 			new_cluster = A15_CLUSTER;
--		}
- 	}
- 
- 	ret = ve_spc_cpufreq_set_rate(cpu, actual_cluster, new_cluster,
-@@ -224,7 +222,8 @@ static inline u32 get_table_count(struct cpufreq_frequency_table *table)
- static inline u32 get_table_min(struct cpufreq_frequency_table *table)
- {
- 	struct cpufreq_frequency_table *pos;
--	uint32_t min_freq = ~0;
-+	u32 min_freq = ~0;
-+
- 	cpufreq_for_each_entry(pos, table)
- 		if (pos->frequency < min_freq)
- 			min_freq = pos->frequency;
-@@ -235,7 +234,8 @@ static inline u32 get_table_min(struct cpufreq_frequency_table *table)
- static inline u32 get_table_max(struct cpufreq_frequency_table *table)
- {
- 	struct cpufreq_frequency_table *pos;
--	uint32_t max_freq = 0;
-+	u32 max_freq = 0;
-+
- 	cpufreq_for_each_entry(pos, table)
- 		if (pos->frequency > max_freq)
- 			max_freq = pos->frequency;
-@@ -259,10 +259,9 @@ static int merge_cluster_tables(void)
- 	/* Add in reverse order to get freqs in increasing order */
- 	for (i = MAX_CLUSTERS - 1; i >= 0; i--) {
- 		for (j = 0; freq_table[i][j].frequency != CPUFREQ_TABLE_END;
--				j++) {
--			table[k].frequency = VIRT_FREQ(i,
--					freq_table[i][j].frequency);
--			k++;
-+		     j++, k++) {
-+			table[k].frequency =
-+				VIRT_FREQ(i, freq_table[i][j].frequency);
- 		}
- 	}
- 
-@@ -335,13 +334,13 @@ static int _get_cluster_clk_and_freq_table(struct device *cpu_dev,
- 		return 0;
- 
- 	dev_err(cpu_dev, "%s: Failed to get clk for cpu: %d, cluster: %d\n",
--			__func__, cpu_dev->id, cluster);
-+		__func__, cpu_dev->id, cluster);
- 	ret = PTR_ERR(clk[cluster]);
- 	dev_pm_opp_free_cpufreq_table(cpu_dev, &freq_table[cluster]);
- 
- out:
- 	dev_err(cpu_dev, "%s: Failed to get data for cluster: %d\n", __func__,
--			cluster);
-+		cluster);
- 	return ret;
- }
- 
-@@ -411,7 +410,7 @@ static int ve_spc_cpufreq_init(struct cpufreq_policy *policy)
- 	cpu_dev = get_cpu_device(policy->cpu);
- 	if (!cpu_dev) {
- 		pr_err("%s: failed to get cpu%d device\n", __func__,
--				policy->cpu);
-+		       policy->cpu);
- 		return -ENODEV;
- 	}
- 
-@@ -437,7 +436,8 @@ static int ve_spc_cpufreq_init(struct cpufreq_policy *policy)
- 	dev_pm_opp_of_register_em(policy->cpus);
- 
- 	if (is_bL_switching_enabled())
--		per_cpu(cpu_last_req_freq, policy->cpu) = clk_get_cpu_rate(policy->cpu);
-+		per_cpu(cpu_last_req_freq, policy->cpu) =
-+						clk_get_cpu_rate(policy->cpu);
- 
- 	dev_info(cpu_dev, "%s: CPU %d initialized\n", __func__, policy->cpu);
- 	return 0;
-@@ -456,7 +456,7 @@ static int ve_spc_cpufreq_exit(struct cpufreq_policy *policy)
- 	cpu_dev = get_cpu_device(policy->cpu);
- 	if (!cpu_dev) {
- 		pr_err("%s: failed to get cpu%d device\n", __func__,
--				policy->cpu);
-+		       policy->cpu);
- 		return -ENODEV;
- 	}
- 
--- 
-2.17.1
-
+greg k-h
