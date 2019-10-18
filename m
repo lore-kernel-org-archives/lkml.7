@@ -2,119 +2,120 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE274CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBE7CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC4AC222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6BB0222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:51:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V/FFYf/O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442378AbfJRJvK (ORCPT
+        id S2633072AbfJRJvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 05:51:10 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:60222 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1730808AbfJRJvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 05:51:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3540A492;
-        Fri, 18 Oct 2019 02:50:45 -0700 (PDT)
-Received: from [192.168.1.123] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 235593F6C4;
-        Fri, 18 Oct 2019 02:50:43 -0700 (PDT)
-Subject: Re: [PATCH] iommu/amd: Pass gfp flags to iommu_map_page() in
- amd_iommu_map()
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org, Joerg Roedel <jroedel@suse.de>,
-        linux-kernel@vger.kernel.org
-References: <20191018090736.18819-1-joro@8bytes.org>
- <20191018092750.GK21344@kadam>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <31ba66a3-2435-2fb1-3fc6-782a2f583bf2@arm.com>
-Date:   Fri, 18 Oct 2019 10:50:34 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 18 Oct 2019 05:51:50 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46082 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730808AbfJRJvt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 05:51:49 -0400
+Received: by mail-pg1-f196.google.com with SMTP id e15so3056434pgu.13
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 02:51:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=B1DJCyKm+S5XN5LjovT0twn7TgHW8lL5z4RVqMp1tlM=;
+        b=V/FFYf/OuXCokyuYNICYTsOvDfHT2yoEM0xGfhHD0pEItrFk646z79oIUBDZPOYTBf
+         FYFIA4K2n4IkuiyRgvs8Kui0DycUEheMtqBVWIiWlBZrHByWyG2UXLJPiJi+Ayh+6lO1
+         YGgpnYDX21HkyArYX8kEhSlQqrotkzPmxk8jaLmd4ts2Wiepepys9WI+wNNnSvlilEAR
+         QfkMNGklic/SUXOnvSmRPYpNpg4f1wVdIX87t22MfotD4805dB5R+QQ4PrRMB6gxULiC
+         NMFMhmB5X1M1rzOoumdzXMuTjCdq18bYFHsORPSOt3Qgvfj7z+8H+4wULIo3HFoo0Wcl
+         KjFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=B1DJCyKm+S5XN5LjovT0twn7TgHW8lL5z4RVqMp1tlM=;
+        b=IMvtBWly3da7SpHNNqejtWVZCeYB34Ql2X77AUIobNl6vZnPumt33iW2gHkG6DeMh2
+         xEnYKPw/h7KOCyPPvdzA4ukxuIltcndG3M14mnjHiMHNjJiGvLRAL4fKTAsMraKMo/NE
+         nYLpywaGmbgt40W1M1FYShak91WxgdV185KCE7BLuZMNLgF96inyMRQCvL0tHUaN8ph/
+         GC+/JXqx/h46rxqdHDGLwvwSgXG4xBnaUTBlg5QcvxRq+PjY3ArF2qxlzww2ONptjOQx
+         JkbqLvWhJqOj+6IHydz6mhGd3xxGKTiS94V4/gwYTtGCSsAe3Nzb6wQMd+Om62Rj7Pd7
+         h+/Q==
+X-Gm-Message-State: APjAAAVf/04/XdIsP2qN+tYqmCMzOEsoTXPHmxUMtBW8xhQ2jwUkgm8H
+        eSB/bbHh5uLiPICYalbZPJPlEw==
+X-Google-Smtp-Source: APXvYqyNFkRvnZmGknv26Wp3KPaMZo7qL0J/v5oMpgC4CJHep/qjBswXaNrsjN566/STEj+4OQukbA==
+X-Received: by 2002:a62:cf45:: with SMTP id b66mr5530793pfg.150.1571392308876;
+        Fri, 18 Oct 2019 02:51:48 -0700 (PDT)
+Received: from localhost ([122.172.151.112])
+        by smtp.gmail.com with ESMTPSA id a13sm6722689pfg.10.2019.10.18.02.51.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 18 Oct 2019 02:51:48 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 15:21:45 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        daniel.lezcano@linaro.org, sudeep.holla@arm.com,
+        bjorn.andersson@linaro.org, edubezval@gmail.com, agross@kernel.org,
+        tdas@codeaurora.org, swboyd@chromium.org, ilina@codeaurora.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Ben Segall <bsegall@google.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 6/6] cpufreq: qcom-hw: Move driver initialisation
+ earlier
+Message-ID: <20191018095145.tdlozkz7qlb5z4r3@vireshk-i7>
+References: <cover.1571387352.git.amit.kucheria@linaro.org>
+ <3d367762ba72fa1cbd6391dc55d94b3284f6c00c.1571387352.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20191018092750.GK21344@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3d367762ba72fa1cbd6391dc55d94b3284f6c00c.1571387352.git.amit.kucheria@linaro.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-18 10:27 am, Dan Carpenter wrote:
-> Did you get a chance to look at iommu_dma_alloc_remap() as well?
+On 18-10-19, 14:22, Amit Kucheria wrote:
+> Allow qcom-hw driver to initialise right after the cpufreq and thermal
+> subsystems are initialised in core_initcall so we get earlier access to
+> thermal mitigation.
 > 
-> drivers/iommu/dma-iommu.c
->     584  static void *iommu_dma_alloc_remap(struct device *dev, size_t size,
->     585                  dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
->                                                  ^^^^^^^^^
->     586  {
->     587          struct iommu_domain *domain = iommu_get_dma_domain(dev);
->     588          struct iommu_dma_cookie *cookie = domain->iova_cookie;
->     589          struct iova_domain *iovad = &cookie->iovad;
->     590          bool coherent = dev_is_dma_coherent(dev);
->     591          int ioprot = dma_info_to_prot(DMA_BIDIRECTIONAL, coherent, attrs);
->     592          pgprot_t prot = dma_pgprot(dev, PAGE_KERNEL, attrs);
->     593          unsigned int count, min_size, alloc_sizes = domain->pgsize_bitmap;
->     594          struct page **pages;
->     595          struct sg_table sgt;
->     596          dma_addr_t iova;
->     597          void *vaddr;
->     598
->     599          *dma_handle = DMA_MAPPING_ERROR;
->     600
->     601          if (unlikely(iommu_dma_deferred_attach(dev, domain)))
->     602                  return NULL;
->     603
->     604          min_size = alloc_sizes & -alloc_sizes;
->     605          if (min_size < PAGE_SIZE) {
->     606                  min_size = PAGE_SIZE;
->     607                  alloc_sizes |= PAGE_SIZE;
->     608          } else {
->     609                  size = ALIGN(size, min_size);
->     610          }
->     611          if (attrs & DMA_ATTR_ALLOC_SINGLE_PAGES)
->     612                  alloc_sizes = min_size;
->     613
->     614          count = PAGE_ALIGN(size) >> PAGE_SHIFT;
->     615          pages = __iommu_dma_alloc_pages(dev, count, alloc_sizes >> PAGE_SHIFT,
->     616                                          gfp);
->     617          if (!pages)
->     618                  return NULL;
->     619
->     620          size = iova_align(iovad, size);
->     621          iova = iommu_dma_alloc_iova(domain, size, dev->coherent_dma_mask, dev);
->     622          if (!iova)
->     623                  goto out_free_pages;
->     624
->     625          if (sg_alloc_table_from_pages(&sgt, pages, count, 0, size, GFP_KERNEL))
->                                                                             ^^^^^^^^^^
-> gfp here instead of GFP_KERNEL?
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Acked-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  drivers/cpufreq/qcom-cpufreq-hw.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
+> index a9ae2f84a4efc..fc92a8842e252 100644
+> --- a/drivers/cpufreq/qcom-cpufreq-hw.c
+> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+> @@ -334,7 +334,7 @@ static int __init qcom_cpufreq_hw_init(void)
+>  {
+>  	return platform_driver_register(&qcom_cpufreq_hw_driver);
+>  }
+> -device_initcall(qcom_cpufreq_hw_init);
+> +postcore_initcall(qcom_cpufreq_hw_init);
+>  
+>  static void __exit qcom_cpufreq_hw_exit(void)
+>  {
 
-This is, from what I remember, intentional - it's a temporary allocation 
-which doesn't need to have the same restrictions as the actual buffer 
-being allocated (e.g. GFP_DMA32 etc.). We don't need to worry about 
-GFP_ATOMIC since the whole thing is only ever called in sleeping contexts.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Robin.
-
-> 
->     626                  goto out_free_iova;
->     627
->     628          if (!(ioprot & IOMMU_CACHE)) {
-> 
-> regards,
-> dan carpenter
-> 
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
-> 
+-- 
+viresh
