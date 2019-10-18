@@ -2,268 +2,126 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A14CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A995CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0092B21835
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCDAC21835
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:48:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633934AbfJRMrU (ORCPT
+        id S2633946AbfJRMsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 08:47:20 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4734 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2633907AbfJRMrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 08:47:20 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E6B4EFB0A86FFA338901;
-        Fri, 18 Oct 2019 20:47:17 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Fri, 18 Oct 2019
- 20:47:10 +0800
-Date:   Fri, 18 Oct 2019 13:46:56 +0100
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-CC:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>,
-        Keith Busch <keith.busch@intel.com>, <jglisse@redhat.com>,
-        <linuxarm@huawei.com>, Andrew Morton <akpm@linux-foundation.org>,
-        "Dan Williams" <dan.j.williams@intel.com>
-Subject: Re: [PATCH V5 1/4] ACPI: Support Generic Initiator only domains
-Message-ID: <20191018134656.00000f70@huawei.com>
-In-Reply-To: <1895971.7mY3IlW731@kreacher>
-References: <20191004114330.104746-1-Jonathan.Cameron@huawei.com>
-        <20191004114330.104746-2-Jonathan.Cameron@huawei.com>
-        <1895971.7mY3IlW731@kreacher>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Fri, 18 Oct 2019 08:48:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56758 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2633907AbfJRMsV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 08:48:21 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iLRfu-00075v-U5; Fri, 18 Oct 2019 14:48:11 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 804081C009C;
+        Fri, 18 Oct 2019 14:48:10 +0200 (CEST)
+Date:   Fri, 18 Oct 2019 12:48:10 -0000
+From:   "tip-bot2 for Valentin Schneider" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/core] sched/topology: Don't set SD_BALANCE_WAKE on cpuset
+ domain relax
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>, mingo@kernel.org,
+        vincent.guittot@linaro.org, juri.lelli@redhat.com,
+        seto.hidetoshi@jp.fujitsu.com, qperret@google.com,
+        Dietmar.Eggemann@arm.com, morten.rasmussen@arm.com,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191014164408.32596-1-valentin.schneider@arm.com>
+References: <20191014164408.32596-1-valentin.schneider@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Message-ID: <157140289031.29376.17217031888705940708.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 18 Oct 2019 12:18:33 +0200
-"Rafael J. Wysocki" <rjw@rjwysocki.net> wrote:
+The following commit has been merged into the sched/core branch of tip:
 
-> On Friday, October 4, 2019 1:43:27 PM CEST Jonathan Cameron wrote:
-> > Generic Initiators are a new ACPI concept that allows for the
-> > description of proximity domains that contain a device which
-> > performs memory access (such as a network card) but neither
-> > host CPU nor Memory.
-> > 
-> > This patch has the parsing code and provides the infrastructure
-> > for an architecture to associate these new domains with their
-> > nearest memory processing node.
-> > 
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>  
-> 
-> This depends on the series from Dan at:
-> 
-> https://lore.kernel.org/linux-acpi/CAPcyv4gBSX58CWH4HZ28w0_cZRzJrhgdEFHa2g8KDqyv8aFqZQ@mail.gmail.com/T/#m1acce3ae8f29f680c0d95fd1e840e703949fbc48
-> 
-Hi Rafael,
+Commit-ID:     9ae7ab20b4835dbea0e5fc6a5c70171dc354a72e
+Gitweb:        https://git.kernel.org/tip/9ae7ab20b4835dbea0e5fc6a5c70171dc354a72e
+Author:        Valentin Schneider <valentin.schneider@arm.com>
+AuthorDate:    Mon, 14 Oct 2019 17:44:08 +01:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Thu, 17 Oct 2019 21:31:54 +02:00
 
-Yes. Cover letter mentions it was rebased on v4 of that series.
+sched/topology: Don't set SD_BALANCE_WAKE on cpuset domain relax
 
-> AFAICS, so please respin when that one hits the Linus' tree.
+As pointed out in commit
 
-Sure, though that pushes it out another cycle and it's beginning to
-get a bit silly (just rebases since April).
+  182a85f8a119 ("sched: Disable wakeup balancing")
 
-I guess it can't be helped given the series hits several trees.
+SD_BALANCE_WAKE is a tad too aggressive, and is usually left unset.
 
-Note that this version applies completely clean on top of V7 of
-Dan's SPM/hmem set applied to the tip tree (which I assume is the
-route that will take).  Hence, unless something else changes, the
-respin will be identical to this version.
+However, it turns out cpuset domain relaxation will unconditionally set it
+on domains below the relaxation level. This made sense back when
+SD_BALANCE_WAKE was set unconditionally, but it no longer is the case.
 
-Thanks,
+We can improve things slightly by noticing that set_domain_attribute() is
+always called after sd_init(), so rather than setting flags we can rely on
+whatever sd_init() is doing and only clear certain flags when above the
+relaxation level.
 
-Jonathan
+While at it, slightly clean up the function and flip the relax level
+check to be more human readable.
 
-> 
-> > ---
-> >  drivers/acpi/numa/srat.c       | 62 +++++++++++++++++++++++++++++++++-
-> >  drivers/base/node.c            |  3 ++
-> >  include/asm-generic/topology.h |  3 ++
-> >  include/linux/nodemask.h       |  1 +
-> >  include/linux/topology.h       |  7 ++++
-> >  5 files changed, 75 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-> > index eadbf90e65d1..fe34315a9234 100644
-> > --- a/drivers/acpi/numa/srat.c
-> > +++ b/drivers/acpi/numa/srat.c
-> > @@ -170,6 +170,38 @@ acpi_table_print_srat_entry(struct acpi_subtable_header *header)
-> >  		}
-> >  		break;
-> >  
-> > +	case ACPI_SRAT_TYPE_GENERIC_AFFINITY:
-> > +	{
-> > +		struct acpi_srat_generic_affinity *p =
-> > +			(struct acpi_srat_generic_affinity *)header;
-> > +		char name[9] = {};
-> > +
-> > +		if (p->device_handle_type == 0) {
-> > +			/*
-> > +			 * For pci devices this may be the only place they
-> > +			 * are assigned a proximity domain
-> > +			 */
-> > +			pr_debug("SRAT Generic Initiator(Seg:%u BDF:%u) in proximity domain %d %s\n",
-> > +				 *(u16 *)(&p->device_handle[0]),
-> > +				 *(u16 *)(&p->device_handle[2]),
-> > +				 p->proximity_domain,
-> > +				 (p->flags & ACPI_SRAT_GENERIC_AFFINITY_ENABLED) ?
-> > +				"enabled" : "disabled");
-> > +		} else {
-> > +			/*
-> > +			 * In this case we can rely on the device having a
-> > +			 * proximity domain reference
-> > +			 */
-> > +			memcpy(name, p->device_handle, 8);
-> > +			pr_info("SRAT Generic Initiator(HID=%.8s UID=%.4s) in proximity domain %d %s\n",
-> > +				(char *)(&p->device_handle[0]),
-> > +				(char *)(&p->device_handle[8]),
-> > +				p->proximity_domain,
-> > +				(p->flags & ACPI_SRAT_GENERIC_AFFINITY_ENABLED) ?
-> > +				"enabled" : "disabled");
-> > +		}
-> > +	}
-> > +	break;
-> >  	default:
-> >  		pr_warn("Found unsupported SRAT entry (type = 0x%x)\n",
-> >  			header->type);
-> > @@ -378,6 +410,32 @@ acpi_parse_gicc_affinity(union acpi_subtable_headers *header,
-> >  	return 0;
-> >  }
-> >  
-> > +static int __init
-> > +acpi_parse_gi_affinity(union acpi_subtable_headers *header,
-> > +		       const unsigned long end)
-> > +{
-> > +	struct acpi_srat_generic_affinity *gi_affinity;
-> > +	int node;
-> > +
-> > +	gi_affinity = (struct acpi_srat_generic_affinity *)header;
-> > +	if (!gi_affinity)
-> > +		return -EINVAL;
-> > +	acpi_table_print_srat_entry(&header->common);
-> > +
-> > +	if (!(gi_affinity->flags & ACPI_SRAT_GENERIC_AFFINITY_ENABLED))
-> > +		return -EINVAL;
-> > +
-> > +	node = acpi_map_pxm_to_node(gi_affinity->proximity_domain);
-> > +	if (node == NUMA_NO_NODE || node >= MAX_NUMNODES) {
-> > +		pr_err("SRAT: Too many proximity domains.\n");
-> > +		return -EINVAL;
-> > +	}
-> > +	node_set(node, numa_nodes_parsed);
-> > +	node_set_state(node, N_GENERIC_INITIATOR);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static int __initdata parsed_numa_memblks;
-> >  
-> >  static int __init
-> > @@ -433,7 +491,7 @@ int __init acpi_numa_init(void)
-> >  
-> >  	/* SRAT: System Resource Affinity Table */
-> >  	if (!acpi_table_parse(ACPI_SIG_SRAT, acpi_parse_srat)) {
-> > -		struct acpi_subtable_proc srat_proc[3];
-> > +		struct acpi_subtable_proc srat_proc[4];
-> >  
-> >  		memset(srat_proc, 0, sizeof(srat_proc));
-> >  		srat_proc[0].id = ACPI_SRAT_TYPE_CPU_AFFINITY;
-> > @@ -442,6 +500,8 @@ int __init acpi_numa_init(void)
-> >  		srat_proc[1].handler = acpi_parse_x2apic_affinity;
-> >  		srat_proc[2].id = ACPI_SRAT_TYPE_GICC_AFFINITY;
-> >  		srat_proc[2].handler = acpi_parse_gicc_affinity;
-> > +		srat_proc[3].id = ACPI_SRAT_TYPE_GENERIC_AFFINITY;
-> > +		srat_proc[3].handler = acpi_parse_gi_affinity;
-> >  
-> >  		acpi_table_parse_entries_array(ACPI_SIG_SRAT,
-> >  					sizeof(struct acpi_table_srat),
-> > diff --git a/drivers/base/node.c b/drivers/base/node.c
-> > index 296546ffed6c..e5863baa8cb6 100644
-> > --- a/drivers/base/node.c
-> > +++ b/drivers/base/node.c
-> > @@ -977,6 +977,8 @@ static struct node_attr node_state_attr[] = {
-> >  #endif
-> >  	[N_MEMORY] = _NODE_ATTR(has_memory, N_MEMORY),
-> >  	[N_CPU] = _NODE_ATTR(has_cpu, N_CPU),
-> > +	[N_GENERIC_INITIATOR] = _NODE_ATTR(has_generic_initiator,
-> > +					   N_GENERIC_INITIATOR),
-> >  };
-> >  
-> >  static struct attribute *node_state_attrs[] = {
-> > @@ -988,6 +990,7 @@ static struct attribute *node_state_attrs[] = {
-> >  #endif
-> >  	&node_state_attr[N_MEMORY].attr.attr,
-> >  	&node_state_attr[N_CPU].attr.attr,
-> > +	&node_state_attr[N_GENERIC_INITIATOR].attr.attr,
-> >  	NULL
-> >  };
-> >  
-> > diff --git a/include/asm-generic/topology.h b/include/asm-generic/topology.h
-> > index 238873739550..54d0b4176a45 100644
-> > --- a/include/asm-generic/topology.h
-> > +++ b/include/asm-generic/topology.h
-> > @@ -71,6 +71,9 @@
-> >  #ifndef set_cpu_numa_mem
-> >  #define set_cpu_numa_mem(cpu, node)
-> >  #endif
-> > +#ifndef set_gi_numa_mem
-> > +#define set_gi_numa_mem(gi, node)
-> > +#endif
-> >  
-> >  #endif	/* !CONFIG_NUMA || !CONFIG_HAVE_MEMORYLESS_NODES */
-> >  
-> > diff --git a/include/linux/nodemask.h b/include/linux/nodemask.h
-> > index 27e7fa36f707..1aebf766fb52 100644
-> > --- a/include/linux/nodemask.h
-> > +++ b/include/linux/nodemask.h
-> > @@ -399,6 +399,7 @@ enum node_states {
-> >  #endif
-> >  	N_MEMORY,		/* The node has memory(regular, high, movable) */
-> >  	N_CPU,		/* The node has one or more cpus */
-> > +	N_GENERIC_INITIATOR,	/* The node is a GI only node */
-> >  	NR_NODE_STATES
-> >  };
-> >  
-> > diff --git a/include/linux/topology.h b/include/linux/topology.h
-> > index eb2fe6edd73c..05ccf011e489 100644
-> > --- a/include/linux/topology.h
-> > +++ b/include/linux/topology.h
-> > @@ -140,6 +140,13 @@ static inline void set_numa_mem(int node)
-> >  }
-> >  #endif
-> >  
-> > +#ifndef set_gi_numa_mem
-> > +static inline void set_gi_numa_mem(int gi, int node)
-> > +{
-> > +	_node_numa_mem_[gi] = node;
-> > +}
-> > +#endif
-> > +
-> >  #ifndef node_to_mem_node
-> >  static inline int node_to_mem_node(int node)
-> >  {
-> >   
-> 
-> 
-> 
-> 
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: mingo@kernel.org
+Cc: vincent.guittot@linaro.org
+Cc: juri.lelli@redhat.com
+Cc: seto.hidetoshi@jp.fujitsu.com
+Cc: qperret@google.com
+Cc: Dietmar.Eggemann@arm.com
+Cc: morten.rasmussen@arm.com
+Link: https://lkml.kernel.org/r/20191014164408.32596-1-valentin.schneider@arm.com
+---
+ kernel/sched/topology.c |  9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index b5667a2..3623ffe 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1201,16 +1201,13 @@ static void set_domain_attribute(struct sched_domain *sd,
+ 	if (!attr || attr->relax_domain_level < 0) {
+ 		if (default_relax_domain_level < 0)
+ 			return;
+-		else
+-			request = default_relax_domain_level;
++		request = default_relax_domain_level;
+ 	} else
+ 		request = attr->relax_domain_level;
+-	if (request < sd->level) {
++
++	if (sd->level > request) {
+ 		/* Turn off idle balance on this domain: */
+ 		sd->flags &= ~(SD_BALANCE_WAKE|SD_BALANCE_NEWIDLE);
+-	} else {
+-		/* Turn on idle balance on this domain: */
+-		sd->flags |= (SD_BALANCE_WAKE|SD_BALANCE_NEWIDLE);
+ 	}
+ }
+ 
