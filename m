@@ -2,60 +2,63 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC269CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A36B6CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5DC32082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B63C2064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:46:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KG1ZY15o"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Co2TjTHR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502177AbfJRPqS (ORCPT
+        id S2502282AbfJRPqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:46:18 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:42150 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409052AbfJRPqQ (ORCPT
+        Fri, 18 Oct 2019 11:46:21 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:46284 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2409052AbfJRPqT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:46:16 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9IFkDSu005895;
-        Fri, 18 Oct 2019 10:46:13 -0500
+        Fri, 18 Oct 2019 11:46:19 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9IFkGwU120233;
+        Fri, 18 Oct 2019 10:46:16 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571413573;
-        bh=QIHNicus3UqUNLJM8IoaxNSWcvCYyJXUsrZb07TeW2I=;
-        h=From:To:CC:Subject:Date;
-        b=KG1ZY15ohlTbhuUOSOFwoJlqxPKAxPDTIGvk8TKan8xgllpfpmFj+szxujfu5/A2w
-         galPXyHHlLSq01Bv8S7YBlhnZOydVva/pwQj5Ogxu150xn4x5Mq+evS7t937FHqaG/
-         SWt1avt9pYlqHHnP9erzy1YfLM6B0JxnH1jXZWGI=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFkDBK128650;
-        Fri, 18 Oct 2019 10:46:13 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+        s=ti-com-17Q1; t=1571413576;
+        bh=AhKW4zr3y6EnszWY1v1ZvsH1fjzX055dXtF+Ryq9cP0=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=Co2TjTHRd8/bgq3vBKC1prulo6lCzYTwmoOn3pBY+t411HX9AR5CiB/8TO21Ykrb0
+         EgdTRS3SOwFgTYx7uWhMTbISiJFBZnvJKfPHpSmwvQmlySFkD9L+r3iZb2+mgwWvSe
+         g80qJ++lgEirJuYd3xQPsSiDzVSCj0vAy/MSG6gA=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9IFkGlh109053
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 18 Oct 2019 10:46:16 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 18
- Oct 2019 10:46:13 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 10:46:16 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 18 Oct 2019 10:46:05 -0500
+ Frontend Transport; Fri, 18 Oct 2019 10:46:15 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFkDAM045642;
-        Fri, 18 Oct 2019 10:46:13 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFkDAO045642;
+        Fri, 18 Oct 2019 10:46:15 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
 CC:     Rob Herring <robh+dt@kernel.org>, <linux-omap@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 0/9] ARM: dts: dra7: add cal nodes 
-Date:   Fri, 18 Oct 2019 10:48:40 -0500
-Message-ID: <20191018154849.3127-1-bparrot@ti.com>
+Subject: [Patch 2/9] ARM: OMAP: DRA7xx: Make CAM clock domain SWSUP only
+Date:   Fri, 18 Oct 2019 10:48:42 -0500
+Message-ID: <20191018154849.3127-3-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191018154849.3127-1-bparrot@ti.com>
+References: <20191018154849.3127-1-bparrot@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -64,34 +67,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series adds the needed clkctrl and ty-sysc nodes for CAL module.
-It also adds support for the module in related dtsi and dts for DRA72,
-DRA76 and AM654 SoC.
+Both CAL and VIP rely on this clock domain. But CAL DPHY require
+LVDSRX_96M_GFCLK to be active. When this domain is set to HWSUP the
+LVDSRX_96M_GFCLK is on;y active when VIP1 clock is also active.  If only
+CAL on DRA72x (which uses the VIP2 clkctrl) probes the CAM domain is
+enabled but the LVDSRX_96M_GFCLK is left gated. Since LVDSRX_96M_GFCLK
+is sourcing the input clock to the DPHY then actual frame capture cannot
+start as the phy are inactive.
 
-Benoit Parrot (9):
-  ARM: dts: dra7: add cam clkctrl node
-  ARM: OMAP: DRA7xx: Make CAM clock domain SWSUP only
-  ARM: dts: dra7-l4: Add ti-sysc node for CAM
-  ARM: dts: DRA72: Add CAL dtsi node
-  arm: dts: dra72-evm-common: Add entries for the CSI2 cameras
-  arm: dtsi: dra76x: Add CAL dtsi node
-  arm: dts: dra76-evm: Add CAL and OV5640 nodes
-  arm64: dts: k3-am65-main Add CAL node
-  arm64: dts: k3-am654-base-board: Add CSI2 OV5640 camera
+So we either have to also enabled VIP1 even if we don't intend on using
+it or we need to set the CAM domain to use SWSUP only.
 
- arch/arm/boot/dts/dra7-l4.dtsi                | 43 ++++++++++++++++---
- arch/arm/boot/dts/dra72-evm-common.dtsi       | 35 +++++++++++++++
- arch/arm/boot/dts/dra72x.dtsi                 | 43 +++++++++++++++++++
- arch/arm/boot/dts/dra76-evm.dts               | 39 +++++++++++++++++
- arch/arm/boot/dts/dra76x.dtsi                 | 43 +++++++++++++++++++
- arch/arm/boot/dts/dra7xx-clocks.dtsi          | 14 ++++++
- arch/arm/mach-omap2/clockdomains7xx_data.c    |  2 +-
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 23 ++++++++++
- .../arm64/boot/dts/ti/k3-am654-base-board.dts | 36 ++++++++++++++++
- drivers/clk/ti/clk-7xx.c                      | 19 ++++++++
- include/dt-bindings/clock/dra7.h              | 10 +++++
- 11 files changed, 300 insertions(+), 7 deletions(-)
+This patch implements the latter.
 
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+---
+ arch/arm/mach-omap2/clockdomains7xx_data.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/mach-omap2/clockdomains7xx_data.c b/arch/arm/mach-omap2/clockdomains7xx_data.c
+index 3068802824b7..27835c4d1aa9 100644
+--- a/arch/arm/mach-omap2/clockdomains7xx_data.c
++++ b/arch/arm/mach-omap2/clockdomains7xx_data.c
+@@ -606,7 +606,7 @@ static struct clockdomain cam_7xx_clkdm = {
+ 	.dep_bit	  = DRA7XX_CAM_STATDEP_SHIFT,
+ 	.wkdep_srcs	  = cam_wkup_sleep_deps,
+ 	.sleepdep_srcs	  = cam_wkup_sleep_deps,
+-	.flags		  = CLKDM_CAN_HWSUP_SWSUP,
++	.flags		  = CLKDM_CAN_SWSUP,
+ };
+ 
+ static struct clockdomain l4per_7xx_clkdm = {
 -- 
 2.17.1
 
