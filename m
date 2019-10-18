@@ -7,51 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC69CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2977CCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C4FE20872
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E83FE21852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437419;
-	bh=c1WbYc7+1DaUk7tz5oVMf3z3M5NgNPMbvxSbncKOJaI=;
+	s=default; t=1571437422;
+	bh=K0t/5gdRAUZIWMHMVHKYMsEkOxWj+ixEwMT6gmbfnko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UjHGw4Vbwuk2yJO1N1W/a40F96r8SWlGGF7r4E7peAm4RuHlggRyx/6kUjAOma0jR
-	 h9RhOF/LyAI+NPguxmHR69tWCkoNRPtGnzIfdpGQIHXfgJM6TXWuhlc+liiYvOadKJ
-	 QkcGoYCNpE1hunQ7TXBmB4qcfCp6por7fhOgW+rg=
+	b=w6BSi1IXa8t+fXI0G2slKiWfHB1RXvAm/2I+aTfQWrzqnfHmLp8QF8juERGQhaYPH
+	 Y8OgGoPuwvgRMcb8mtKu4rdLb2zDntHY+ZFmnoG2dDqG/mRsINgMoXXWNFwislSg6j
+	 kUZPFBkQ4N5dZj12uk9xeYLaCdSVX41d99izpu74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405360AbfJRWXi (ORCPT
+        id S1729395AbfJRWFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:23:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37086 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:05:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729419AbfJRWFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:05:16 -0400
+        id S1729258AbfJRWFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:05:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A58D22459;
-        Fri, 18 Oct 2019 22:05:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6A7920679;
+        Fri, 18 Oct 2019 22:05:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436316;
-        bh=c1WbYc7+1DaUk7tz5oVMf3z3M5NgNPMbvxSbncKOJaI=;
+        s=default; t=1571436310;
+        bh=K0t/5gdRAUZIWMHMVHKYMsEkOxWj+ixEwMT6gmbfnko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dtGZ0CLCeos4fmToUieEPTIyfdvoSUyORncso4DpbgK5O/BciV0F2NzIK7HkBcaeP
-         Tsst6eRCKz9Ug3Al5BvoXqxVn8w3jQhynn4FuNNpSo6lb5eAP1jRHy4OxbrwAFn29M
-         1jCt7m09ProMAx3G8+wAIfha+CCE6flkyRpIPoi4=
+        b=gePyJkW1HoOPIR+psCtLI8kyC6q0VBQsBM53rgFfeba8VHdJ3VMrqlfJxdmkrwTZm
+         eYUPuhCLYbNqJFU81+1A/nBcCT2/XcbZ71eb+QTbTydSCBZSTa4iUxhxh6uiiREHuB
+         vMv2JUQOngf7YeBTNYKmhpGtOoYRf/l4Gdbb3Pvk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 84/89] virt: vbox: fix memory leak in hgcm_call_preprocess_linaddr
-Date:   Fri, 18 Oct 2019 18:03:19 -0400
-Message-Id: <20191018220324.8165-84-sashal@kernel.org>
+Cc:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>, linux-mips@linux-mips.org
+Subject: [PATCH AUTOSEL 5.3 80/89] MIPS: include: Mark __xchg as __always_inline
+Date:   Fri, 18 Oct 2019 18:03:15 -0400
+Message-Id: <20191018220324.8165-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,47 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 
-[ Upstream commit e0b0cb9388642c104838fac100a4af32745621e2 ]
+[ Upstream commit 46f1619500d022501a4f0389f9f4c349ab46bb86 ]
 
-In hgcm_call_preprocess_linaddr memory is allocated for bounce_buf but
-is not released if copy_form_user fails. In order to prevent memory leak
-in case of failure, the assignment to bounce_buf_ret is moved before the
-error check. This way the allocated bounce_buf will be released by the
-caller.
+Commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
+forcibly") allows compiler to uninline functions marked as 'inline'.
+In cace of __xchg this would cause to reference function
+__xchg_called_with_bad_pointer, which is an error case
+for catching bugs and will not happen for correct code, if
+__xchg is inlined.
 
-Fixes: 579db9d45cb4 ("virt: Add vboxguest VMMDEV communication code")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20190930204223.3660-1-navid.emamdoost@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/virt/vboxguest/vboxguest_utils.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/mips/include/asm/cmpxchg.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/virt/vboxguest/vboxguest_utils.c b/drivers/virt/vboxguest/vboxguest_utils.c
-index 75fd140b02ff8..43c391626a000 100644
---- a/drivers/virt/vboxguest/vboxguest_utils.c
-+++ b/drivers/virt/vboxguest/vboxguest_utils.c
-@@ -220,6 +220,8 @@ static int hgcm_call_preprocess_linaddr(
- 	if (!bounce_buf)
- 		return -ENOMEM;
+diff --git a/arch/mips/include/asm/cmpxchg.h b/arch/mips/include/asm/cmpxchg.h
+index 319522fa3a45e..2b61052e10c94 100644
+--- a/arch/mips/include/asm/cmpxchg.h
++++ b/arch/mips/include/asm/cmpxchg.h
+@@ -77,8 +77,8 @@ extern unsigned long __xchg_called_with_bad_pointer(void)
+ extern unsigned long __xchg_small(volatile void *ptr, unsigned long val,
+ 				  unsigned int size);
  
-+	*bounce_buf_ret = bounce_buf;
-+
- 	if (copy_in) {
- 		ret = copy_from_user(bounce_buf, (void __user *)buf, len);
- 		if (ret)
-@@ -228,7 +230,6 @@ static int hgcm_call_preprocess_linaddr(
- 		memset(bounce_buf, 0, len);
- 	}
- 
--	*bounce_buf_ret = bounce_buf;
- 	hgcm_call_add_pagelist_size(bounce_buf, len, extra);
- 	return 0;
- }
+-static inline unsigned long __xchg(volatile void *ptr, unsigned long x,
+-				   int size)
++static __always_inline
++unsigned long __xchg(volatile void *ptr, unsigned long x, int size)
+ {
+ 	switch (size) {
+ 	case 1:
 -- 
 2.20.1
 
