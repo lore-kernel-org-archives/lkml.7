@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E471ACA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20823CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4FED21852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB7B5205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437444;
-	bh=G4sDF3vhwbkUaEFN14W+cmsj6eadQ2Ap69Vcige+G98=;
+	s=default; t=1571437449;
+	bh=Z1qQ8+UxlcQJijWJfUxbC1ce0XHXMOMUHXD/QovTDxA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sIUY3v/tw8SBhEC/EngGSMHoX3yc/WZsMhUwqsCl7cfCutISPJw5PHL7Q+I9lUXWO
-	 4sid/Y0UUk093wKqwd3LFEdXy7Uml/t1m4hlgzZ/J0DIRaF/4R2+e5tSk5JTavuV75
-	 CziOeoa8KUHKIwZWCRXlEPCKzIlWvh0OoqsS6CdI=
+	b=lYvBCj6uR/LuaII8karpnGNBK0kstVp2b0o2wSr0CVoXbhTdwJhXCD/Ar3E/bqlAu
+	 ylE4RUeu+u7ZofBKHdBD/yXCOmwIJAfkH21cCV9QJ0Jp1h/7acOhKgynbmRU+A/v/d
+	 JAwMPbf4RSRO/nnlaq0G409yzKTSFky+bFUgVrkY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405529AbfJRWYC (ORCPT
+        id S2405603AbfJRWYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:24:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36922 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:24:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729199AbfJRWFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:05:07 -0400
+        id S1729130AbfJRWFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:05:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28A5922459;
-        Fri, 18 Oct 2019 22:05:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BADA5222CD;
+        Fri, 18 Oct 2019 22:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436306;
-        bh=G4sDF3vhwbkUaEFN14W+cmsj6eadQ2Ap69Vcige+G98=;
+        s=default; t=1571436304;
+        bh=Z1qQ8+UxlcQJijWJfUxbC1ce0XHXMOMUHXD/QovTDxA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zJxyJvi6AgWzLjt+eZnHt6jkobnXr8iNGMq8klw7E37s2P4lNoZSofBpKD43uGXQz
-         3kwUOG6CSVBtSfWzkgIBjKyor2BxZQJzOmUU9+dwNMzTLB15UNu22KXPBjEWHEE8LH
-         Sjq3EzMtgGyxS0+ONqVBcvsLEGZCUkejbXRklsUM=
+        b=XVvYgOivY2mCGPyTKIYE1TFCqoPzaNbmr66DVwfxOQI36T8phq82bnIUj8R99ByNM
+         g+uIceyy07HCm1ALyEMjH6zb4K1IVkhZI8pj+EMoHnWR2M/DbM+3AWCs6koGD3hYr3
+         l1CFg6tREAfvQg2UFbRWxiIaluweuTGvZymUyMwU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marco Felsch <m.felsch@pengutronix.de>, Stable@vger.kernel.org,
+Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 77/89] iio: light: add missing vcnl4040 of_compatible
-Date:   Fri, 18 Oct 2019 18:03:12 -0400
-Message-Id: <20191018220324.8165-77-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 75/89] iio: imu: st_lsm6dsx: fix waitime for st_lsm6dsx i2c controller
+Date:   Fri, 18 Oct 2019 18:03:10 -0400
+Message-Id: <20191018220324.8165-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -59,39 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit 7fd1c2606508eb384992251e87d50591393a48d0 ]
+[ Upstream commit fdb828e2c71a09bb9e865f41b015597c5f671705 ]
 
-Commit 5a441aade5b3 ("iio: light: vcnl4000 add support for the VCNL4040
-proximity and light sensor") added the support for the vcnl4040 but
-forgot to add the of_compatible. Fix this by adding it now.
+i2c controller available in st_lsm6dsx series performs i2c slave
+configuration using accel clock as trigger.
+st_lsm6dsx_shub_wait_complete routine is used to wait the controller has
+carried out the requested configuration. However if the accel sensor is not
+enabled we should not use its configured odr to estimate a proper timeout
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Fixes: 5a441aade5b3 ("iio: light: vcnl4000 add support for the VCNL4040 proximity and light sensor")
-Reviewed-by: Angus Ainslie (Purism) angus@akkea.ca
-Cc: <Stable@vger.kernel.org>
+Fixes: c91c1c844ebd ("iio: imu: st_lsm6dsx: add i2c embedded controller support")
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/light/vcnl4000.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
-index f522cb863e8c8..16dacea9eadfa 100644
---- a/drivers/iio/light/vcnl4000.c
-+++ b/drivers/iio/light/vcnl4000.c
-@@ -408,6 +408,10 @@ static const struct of_device_id vcnl_4000_of_match[] = {
- 		.compatible = "vishay,vcnl4020",
- 		.data = (void *)VCNL4010,
- 	},
-+	{
-+		.compatible = "vishay,vcnl4040",
-+		.data = (void *)VCNL4040,
-+	},
- 	{
- 		.compatible = "vishay,vcnl4200",
- 		.data = (void *)VCNL4200,
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c
+index 66fbcd94642d4..4c754a02717b3 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c
+@@ -92,9 +92,11 @@ static const struct st_lsm6dsx_ext_dev_settings st_lsm6dsx_ext_dev_table[] = {
+ static void st_lsm6dsx_shub_wait_complete(struct st_lsm6dsx_hw *hw)
+ {
+ 	struct st_lsm6dsx_sensor *sensor;
++	u16 odr;
+ 
+ 	sensor = iio_priv(hw->iio_devs[ST_LSM6DSX_ID_ACC]);
+-	msleep((2000U / sensor->odr) + 1);
++	odr = (hw->enable_mask & BIT(ST_LSM6DSX_ID_ACC)) ? sensor->odr : 13;
++	msleep((2000U / odr) + 1);
+ }
+ 
+ /**
 -- 
 2.20.1
 
