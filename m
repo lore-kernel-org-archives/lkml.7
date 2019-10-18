@@ -7,56 +7,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E921ACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D49CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADF50222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A158721852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:31:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="OewSOied"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="wijl5GYz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410538AbfJRPbd (ORCPT
+        id S2410553AbfJRPbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:31:33 -0400
-Received: from mail-eopbgr810051.outbound.protection.outlook.com ([40.107.81.51]:25120
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        Fri, 18 Oct 2019 11:31:39 -0400
+Received: from mail-eopbgr720052.outbound.protection.outlook.com ([40.107.72.52]:48496
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2408746AbfJRPba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:31:30 -0400
+        id S2501906AbfJRPbh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 11:31:37 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UNQc3BSBxm+q46DenpSj1at9nMR9pSt+GJZTxeRqvirF2CCPR8fB4+gOnYgLSEhO8RBXH2fKngr/Yf8vc5dgHQxGnBERPBqcNkToNS1eg5nk9kJL0X8Uds9fPTkyQ+S+2nWNZ3Imir3NabBRLcx9RndCcVa3xJKDmQxOLqv85SPQsAuMKXgOA00xuMHh2hnahB65VYXYHaA49LrH84zW3LkJRP8QpNzYvVZMfInFGadkV5FSveKY04raQ/OORNgppGKxuBKt6jocI16bbc6WGcJ1PqEObCxfYpC3swk7jt/Yb5m1+pOTF1euwQQaDFwEPuPS7J6UxY3j4Aj+Ad/ogw==
+ b=Mapa8PI2QyeSUY0KQON7HmLzYgWj+y18HnKp1DsxrXFO32EOUent9xe2+XVIkw8C5+HFRJXK6FgeEGseqHhMkK47onDs+rJBcJZgh3+MFxJTOAkQQIwazprZcqkD1WHAcu1efDkORkMnaRu2r1HLTWocRrW8otdhQXZl81vJph3J8zp+WDa834RAsG8f85XurTueIbIgroF3iUnhuVwLu/LL4Q85xr8rOwkoJ6/E6bcPzpJvF+ozip3ZPfjpIJHYcml+m7KkJxgH5l9oN11lwsivGrxAujsOkKvu/Qzd8M/cceuGm8E+sEutjV8wf1E44KdTANmzJBmVRWAGNoCtTg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zdDnu0mZPu9t0RGqUjxBqXtlbVQYMmOr6qufEl7SIbs=;
- b=cVph4N2aQPuEgL8WV8bg9LXH+Em1bmVk25q0LSDWYO1tNA4bP0Bt9RuAvXFsN0sxjqrMD46qRrcYz1eo4X73DV0qzQY19CyzhAaIeuTwh+EVtLzWxUsWqu/Qat4L2ogsr5KeoOwZas9uSWvjSqsAtBdGzz7xyoK/Wxh9oWSPU6hSlSNj7K2RZZB0Vlev9Ay5dBy3J6a8JqoTdELymu2KFWaT3w3jdIofOgxp2O8oCft5RKjYeJdlx3AxBlVYUNyYnRW7dvFcmBMmGHqs1TNlf6ZHLH3KmlXIawDFU9Jqak5/QbomO+wPaUiNnS5h73riwh4JXb0INO3Lqa+PwBABAw==
+ bh=KC8zJqJtdxmy/HxrTxNIEVgY48Vc+1j1tgy8Abxr7mM=;
+ b=VSPwO+Z2Ql6FRhNM3l65lzr2Eequ4zCs0cyW4Fca34CnfwtNFU77yR3zesNoduv4W8W7EA4QLNJF8V3QLW/yRDV71uVo9L1eeww89rsMgUeBYnm2iIrbblqduI4f/UsldU6dp9Ln8mg8rnD0q/wVn1RRESI9NTk3bz9Ra75RAkUnraHN+XrTwGQI+ZDkwwhYK3QJFrygXVwcFlCVRU41svfsxxzQQki713FXRxExvCpIJiE+Vqx/iBTurO+F8w7YuqzjqOP8qfCVa1y569/t3WSu4H3ZiC3Zdq45Pk0qeR8GJgqhQlR3Su/kpl58r9dmGclda+wINM/WVc2u/seNvQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zdDnu0mZPu9t0RGqUjxBqXtlbVQYMmOr6qufEl7SIbs=;
- b=OewSOiedztjwZb+iwHVRzYXeF+k9dGXBfiS9bkgnXI1qb8/i38lyPysdgCRyijDaYXiwa7xweZxGiu0guDyv/ld72QIu1wxws4F8QBJbyq/uP74Dh48ORF9hqBVJP19LM3puP01eqaGH2D4aAyk9daqNypypjvvskDsfsXluyHI=
+ bh=KC8zJqJtdxmy/HxrTxNIEVgY48Vc+1j1tgy8Abxr7mM=;
+ b=wijl5GYz8QrLqyatCr235iBzgJUH8yHk/APDIiNlrS/hEmZF2UYZ49oIxi0mFvvJqUjnHXE49q5vEK/+AbKs2STUcnqK1NQ5fXS6sj+5bn6ZCMHWMfGA4cDiQKTHO4jeeUEcvJL6Q9ougqa46DHlgx03o4eb5yoIEJrfq0X8/k8=
 Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
- SN6PR12MB2670.namprd12.prod.outlook.com (52.135.103.23) with Microsoft SMTP
+ SN6PR12MB2608.namprd12.prod.outlook.com (52.135.102.161) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16; Fri, 18 Oct 2019 15:31:27 +0000
+ 15.20.2347.21; Fri, 18 Oct 2019 15:31:28 +0000
 Received: from SN6PR12MB2639.namprd12.prod.outlook.com
  ([fe80::ac86:15de:e8d6:61c8]) by SN6PR12MB2639.namprd12.prod.outlook.com
  ([fe80::ac86:15de:e8d6:61c8%7]) with mapi id 15.20.2367.019; Fri, 18 Oct 2019
- 15:31:27 +0000
+ 15:31:28 +0000
 From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
 To:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
 CC:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "bp@alien8.de" <bp@alien8.de>
-Subject: [PATCH 3/6] EDAC/amd64: Save max number of controllers to family type
-Thread-Topic: [PATCH 3/6] EDAC/amd64: Save max number of controllers to family
- type
-Thread-Index: AQHVhckbtn+w81QWL0WFYihGLnPZQw==
-Date:   Fri, 18 Oct 2019 15:31:26 +0000
-Message-ID: <20191018153114.39378-4-Yazen.Ghannam@amd.com>
+Subject: [PATCH 5/6] EDAC/amd64: Check for memory before fully initializing an
+ instance
+Thread-Topic: [PATCH 5/6] EDAC/amd64: Check for memory before fully
+ initializing an instance
+Thread-Index: AQHVhckb2h8vvebLQEi9ylCDe5/coQ==
+Date:   Fri, 18 Oct 2019 15:31:27 +0000
+Message-ID: <20191018153114.39378-6-Yazen.Ghannam@amd.com>
 References: <20191018153114.39378-1-Yazen.Ghannam@amd.com>
 In-Reply-To: <20191018153114.39378-1-Yazen.Ghannam@amd.com>
 Accept-Language: en-US
@@ -72,33 +73,33 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.17.1
 x-originating-ip: [165.204.78.2]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a56fd85f-b561-4beb-a211-08d753e03d82
+x-ms-office365-filtering-correlation-id: e5b276ba-5d6f-4578-d788-08d753e03e2a
 x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: SN6PR12MB2670:
+x-ms-traffictypediagnostic: SN6PR12MB2608:
 x-ms-exchange-purlcount: 1
 x-ld-processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR12MB2670C029A16B9D5C7A68E8CBF86C0@SN6PR12MB2670.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-microsoft-antispam-prvs: <SN6PR12MB2608FE4722736928E24632C2F86C0@SN6PR12MB2608.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
 x-forefront-prvs: 01949FE337
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(396003)(366004)(136003)(39860400002)(199004)(189003)(6512007)(6306002)(1076003)(316002)(3846002)(4326008)(6116002)(66946007)(66066001)(25786009)(256004)(66476007)(5660300002)(6916009)(2351001)(66556008)(66446008)(14454004)(26005)(486006)(76176011)(99286004)(52116002)(305945005)(2616005)(446003)(11346002)(50226002)(7736002)(476003)(2501003)(478600001)(6436002)(2906002)(5640700003)(6506007)(102836004)(71200400001)(36756003)(966005)(8676002)(64756008)(186003)(81166006)(81156014)(8936002)(6486002)(86362001)(386003)(71190400001)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2670;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(376002)(346002)(396003)(136003)(189003)(199004)(6506007)(386003)(186003)(2906002)(6512007)(6436002)(6486002)(2351001)(6306002)(3846002)(478600001)(6116002)(5640700003)(7736002)(305945005)(26005)(102836004)(966005)(446003)(76176011)(71190400001)(71200400001)(66446008)(64756008)(66556008)(66476007)(66946007)(11346002)(476003)(256004)(14444005)(2616005)(52116002)(50226002)(86362001)(6916009)(99286004)(8936002)(81156014)(25786009)(81166006)(486006)(8676002)(2501003)(36756003)(1076003)(5660300002)(4326008)(14454004)(316002)(66066001)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2608;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: M62KFx1eRu6ZYZIMO0KP2b78KGPUOGkJCR0RgBcisChOZLtrsgIOWsRDFV5OTCSgFdJPe2jiFMYNePNk7rZHQOwXA03im0cJKtVJCGFunMDwYkucgLIJH7202DH+lXpE7r5z17Al0evP4dGWexmRfUgYaiUDmTo5M33AK/Q/azFFRJjD78BZ7nQPnXSrG/CLt/C60gY06eCmRufy9sThg0qKsPM3syGbWm/HnnlQNY2N9xbrVa97cuucYUpEaSi9WDOdmp41FBv3FCHEZeRmLdVGCrhgrYOyRrjDzOwUIt4qYts+D/mB9heqFx3ZLWkJpRKGhOCwcZvHj19SaNo4AksKV/mMFWWIOvgF34ZZku7Lr2snFie2nM9Eae9z9219AWXMmPQakH5a5xyZdo2jFGzDNhPGQAN/Xfe8HQlVpZUbzq151VEAVVrMTO0CTeBvHS+GdIYVc10DCn1Bq3JMyQ==
+x-microsoft-antispam-message-info: mxzz45lXjBfdsfBs/3p95V1h5ag1c+tF1v/Nv2yyOJP/FbEXb3Ml/xzNCuTYA7AsOkyoEo2pJFigp1a+TLUzB+rpjicDqDuhpV+TuyHEwbMojth2nf86lrEkI1oLudseNYB+K/SiEujZ78q91PM7f3IV+9x74GbPXRIm80hnfkfWKAl5W7zRuozCN+mJBv/kLY4udLUcOqiEKSZYpHvxk8WbSsRie/8Pqlt9Q4iHXdj9t2O9zkcYciGV7UHRQQ6mdDZ/TKYLOmDuTbymyUkjSNfdUgVYNxKaDVsbEokB2212qMmIATeM7aAiGa62YKqzsHllC0+8Zi3F38fHBunUIs29W92TCB+qppXjpaBvr4YD7ARknonupKvaU4FNkaLeYvvygrE6R7n5YNkLrWFP2XjGGtC1hOTc3/kzIcel2+8bLD5mdMy1udza8RniVPRTs1B12RZF2q4TqISZeEiGSA==
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a56fd85f-b561-4beb-a211-08d753e03d82
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Oct 2019 15:31:26.7974
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5b276ba-5d6f-4578-d788-08d753e03e2a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Oct 2019 15:31:27.9347
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MbgyUPHqk1xhNMPmQMZA0T/s695Ay6r4gD9V/NWGnv4x8CnaLfpsAemb8m5JjRv/pFFFguitDgdX2U7GUulx3A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2670
+X-MS-Exchange-CrossTenant-userprincipalname: abyQS1ckWwzBYaAXq52dLlTYivEX3bOz8Ahchx+qA/C+iE3ALWiD0E/roZD5fQHNC+uKWWdwUbyLUHQ+WJGaWA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2608
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -106,216 +107,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yazen Ghannam <yazen.ghannam@amd.com>
 
-The maximum number of memory controllers is fixed within a family/model
-group. In most cases, this has been fixed at 2, but some systems may
-have up to 8.
+Return early before checking for ECC if the node does not have any
+populated memory.
 
-The struct amd64_family_type already contains family/model-specific
-information, and this can be used rather than adding model checks to
-various functions.
+Free any cached hardware data before returning. Also, return 0 in this
+case since this is not a failure. Other nodes may have memory and the
+module should attempt to load an instance for them.
 
-Create a new field in struct amd64_family_type for max_num_controllers.
-Set this when setting other family type information, and use this when
-needing the maximum number of memory controllers possible for a system.
+Move printing of hardware information to after the instance is
+initialized, so that the information is only printed for nodes with
+memory.
 
 Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
 ---
 Link:
-https://lkml.kernel.org/r/20190821235938.118710-9-Yazen.Ghannam@amd.com
+https://lkml.kernel.org/r/20190821235938.118710-11-Yazen.Ghannam@amd.com
 
 rfc -> v1:
-* New patch.
-* Idea came up from Boris' comment about compute_num_umcs().
+* Change message severity to "info".
+  * Nodes without memory is a valid configuration. The user doesn't
+    need to be warned.
+* Drop "DRAM ECC disabled" from message.
+  * The message is given when no memory was detected on a node.
+  * The state of DRAM ECC is not checked here.
 
- drivers/edac/amd64_edac.c | 45 +++++++++++++--------------------------
- drivers/edac/amd64_edac.h |  1 +
- 2 files changed, 16 insertions(+), 30 deletions(-)
+ drivers/edac/amd64_edac.c | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-index 4410da7c3a25..0fde5ad2fdcd 100644
+index feb68c0a3217..2a0a8be8f767 100644
 --- a/drivers/edac/amd64_edac.c
 +++ b/drivers/edac/amd64_edac.c
-@@ -21,9 +21,6 @@ static struct amd64_family_type *fam_type;
- /* Per-node stuff */
- static struct ecc_settings **ecc_stngs;
+@@ -2848,8 +2848,6 @@ static void read_mc_regs(struct amd64_pvt *pvt)
+ 	edac_dbg(1, "  DIMM type: %s\n", edac_mem_types[pvt->dram_type]);
 =20
--/* Number of Unified Memory Controllers */
--static u8 num_umcs;
+ 	determine_ecc_sym_sz(pvt);
 -
- /*
-  * Valid scrub rates for the K8 hardware memory scrubber. We map the scrub=
-bing
-  * bandwidth to a valid bit pattern. The 'set' operation finds the 'matchi=
-ng-
-@@ -456,7 +453,7 @@ static void get_cs_base_and_mask(struct amd64_pvt *pvt,=
- int csrow, u8 dct,
- 	for (i =3D 0; i < pvt->csels[dct].m_cnt; i++)
-=20
- #define for_each_umc(i) \
--	for (i =3D 0; i < num_umcs; i++)
-+	for (i =3D 0; i < fam_type->max_num_controllers; i++)
+-	dump_misc_regs(pvt);
+ }
 =20
  /*
-  * @input_addr is an InputAddr associated with the node given by mci. Retu=
-rn the
-@@ -2226,6 +2223,7 @@ static struct amd64_family_type family_types[] =3D {
- 		.ctl_name =3D "K8",
- 		.f1_id =3D PCI_DEVICE_ID_AMD_K8_NB_ADDRMAP,
- 		.f2_id =3D PCI_DEVICE_ID_AMD_K8_NB_MEMCTL,
-+		.max_num_controllers =3D 2,
- 		.ops =3D {
- 			.early_channel_count	=3D k8_early_channel_count,
- 			.map_sysaddr_to_csrow	=3D k8_map_sysaddr_to_csrow,
-@@ -2236,6 +2234,7 @@ static struct amd64_family_type family_types[] =3D {
- 		.ctl_name =3D "F10h",
- 		.f1_id =3D PCI_DEVICE_ID_AMD_10H_NB_MAP,
- 		.f2_id =3D PCI_DEVICE_ID_AMD_10H_NB_DRAM,
-+		.max_num_controllers =3D 2,
- 		.ops =3D {
- 			.early_channel_count	=3D f1x_early_channel_count,
- 			.map_sysaddr_to_csrow	=3D f1x_map_sysaddr_to_csrow,
-@@ -2246,6 +2245,7 @@ static struct amd64_family_type family_types[] =3D {
- 		.ctl_name =3D "F15h",
- 		.f1_id =3D PCI_DEVICE_ID_AMD_15H_NB_F1,
- 		.f2_id =3D PCI_DEVICE_ID_AMD_15H_NB_F2,
-+		.max_num_controllers =3D 2,
- 		.ops =3D {
- 			.early_channel_count	=3D f1x_early_channel_count,
- 			.map_sysaddr_to_csrow	=3D f1x_map_sysaddr_to_csrow,
-@@ -2256,6 +2256,7 @@ static struct amd64_family_type family_types[] =3D {
- 		.ctl_name =3D "F15h_M30h",
- 		.f1_id =3D PCI_DEVICE_ID_AMD_15H_M30H_NB_F1,
- 		.f2_id =3D PCI_DEVICE_ID_AMD_15H_M30H_NB_F2,
-+		.max_num_controllers =3D 2,
- 		.ops =3D {
- 			.early_channel_count	=3D f1x_early_channel_count,
- 			.map_sysaddr_to_csrow	=3D f1x_map_sysaddr_to_csrow,
-@@ -2266,6 +2267,7 @@ static struct amd64_family_type family_types[] =3D {
- 		.ctl_name =3D "F15h_M60h",
- 		.f1_id =3D PCI_DEVICE_ID_AMD_15H_M60H_NB_F1,
- 		.f2_id =3D PCI_DEVICE_ID_AMD_15H_M60H_NB_F2,
-+		.max_num_controllers =3D 2,
- 		.ops =3D {
- 			.early_channel_count	=3D f1x_early_channel_count,
- 			.map_sysaddr_to_csrow	=3D f1x_map_sysaddr_to_csrow,
-@@ -2276,6 +2278,7 @@ static struct amd64_family_type family_types[] =3D {
- 		.ctl_name =3D "F16h",
- 		.f1_id =3D PCI_DEVICE_ID_AMD_16H_NB_F1,
- 		.f2_id =3D PCI_DEVICE_ID_AMD_16H_NB_F2,
-+		.max_num_controllers =3D 2,
- 		.ops =3D {
- 			.early_channel_count	=3D f1x_early_channel_count,
- 			.map_sysaddr_to_csrow	=3D f1x_map_sysaddr_to_csrow,
-@@ -2286,6 +2289,7 @@ static struct amd64_family_type family_types[] =3D {
- 		.ctl_name =3D "F16h_M30h",
- 		.f1_id =3D PCI_DEVICE_ID_AMD_16H_M30H_NB_F1,
- 		.f2_id =3D PCI_DEVICE_ID_AMD_16H_M30H_NB_F2,
-+		.max_num_controllers =3D 2,
- 		.ops =3D {
- 			.early_channel_count	=3D f1x_early_channel_count,
- 			.map_sysaddr_to_csrow	=3D f1x_map_sysaddr_to_csrow,
-@@ -2296,6 +2300,7 @@ static struct amd64_family_type family_types[] =3D {
- 		.ctl_name =3D "F17h",
- 		.f0_id =3D PCI_DEVICE_ID_AMD_17H_DF_F0,
- 		.f6_id =3D PCI_DEVICE_ID_AMD_17H_DF_F6,
-+		.max_num_controllers =3D 2,
- 		.ops =3D {
- 			.early_channel_count	=3D f17_early_channel_count,
- 			.dbam_to_cs		=3D f17_addr_mask_to_cs_size,
-@@ -2305,6 +2310,7 @@ static struct amd64_family_type family_types[] =3D {
- 		.ctl_name =3D "F17h_M10h",
- 		.f0_id =3D PCI_DEVICE_ID_AMD_17H_M10H_DF_F0,
- 		.f6_id =3D PCI_DEVICE_ID_AMD_17H_M10H_DF_F6,
-+		.max_num_controllers =3D 2,
- 		.ops =3D {
- 			.early_channel_count	=3D f17_early_channel_count,
- 			.dbam_to_cs		=3D f17_addr_mask_to_cs_size,
-@@ -2314,6 +2320,7 @@ static struct amd64_family_type family_types[] =3D {
- 		.ctl_name =3D "F17h_M30h",
- 		.f0_id =3D PCI_DEVICE_ID_AMD_17H_M30H_DF_F0,
- 		.f6_id =3D PCI_DEVICE_ID_AMD_17H_M30H_DF_F6,
-+		.max_num_controllers =3D 8,
- 		.ops =3D {
- 			.early_channel_count	=3D f17_early_channel_count,
- 			.dbam_to_cs		=3D f17_addr_mask_to_cs_size,
-@@ -2323,6 +2330,7 @@ static struct amd64_family_type family_types[] =3D {
- 		.ctl_name =3D "F17h_M70h",
- 		.f0_id =3D PCI_DEVICE_ID_AMD_17H_M70H_DF_F0,
- 		.f6_id =3D PCI_DEVICE_ID_AMD_17H_M70H_DF_F6,
-+		.max_num_controllers =3D 2,
- 		.ops =3D {
- 			.early_channel_count	=3D f17_early_channel_count,
- 			.dbam_to_cs		=3D f17_addr_mask_to_cs_size,
-@@ -3400,29 +3408,14 @@ static const struct attribute_group *amd64_edac_att=
-r_groups[] =3D {
- 	NULL
- };
+@@ -3501,6 +3499,19 @@ static int init_one_instance(struct amd64_pvt *pvt)
+ 	return ret;
+ }
 =20
--/* Set the number of Unified Memory Controllers in the system. */
--static void compute_num_umcs(void)
--{
--	u8 model =3D boot_cpu_data.x86_model;
--
--	if (boot_cpu_data.x86 < 0x17)
--		return;
--
--	if (model >=3D 0x30 && model <=3D 0x3f)
--		num_umcs =3D 8;
--	else
--		num_umcs =3D 2;
--
--	edac_dbg(1, "Number of UMCs: %x", num_umcs);
--}
--
- static int get_hardware_info(struct amd64_pvt *pvt)
++static bool instance_has_memory(struct amd64_pvt *pvt)
++{
++	bool cs_enabled =3D false;
++	int cs =3D 0, dct =3D 0;
++
++	for (dct =3D 0; dct < fam_type->max_num_controllers; dct++) {
++		for_each_chip_select(cs, dct, pvt)
++			cs_enabled |=3D csrow_enabled(cs, dct, pvt);
++	}
++
++	return cs_enabled;
++}
++
+ static int probe_one_instance(unsigned int nid)
  {
- 	u16 pci_id1, pci_id2;
- 	int ret =3D -EINVAL;
+ 	struct pci_dev *F3 =3D node_to_amd_nb(nid)->misc;
+@@ -3530,6 +3541,12 @@ static int probe_one_instance(unsigned int nid)
+ 	if (ret < 0)
+ 		goto err_enable;
 =20
- 	if (pvt->fam >=3D 0x17) {
--		pvt->umc =3D kcalloc(num_umcs, sizeof(struct amd64_umc), GFP_KERNEL);
-+		pvt->umc =3D kcalloc(fam_type->max_num_controllers,
-+				   sizeof(struct amd64_umc), GFP_KERNEL);
- 		if (!pvt->umc) {
- 			ret =3D -ENOMEM;
- 			goto err_ret;
-@@ -3476,14 +3469,8 @@ static int init_one_instance(struct amd64_pvt *pvt)
- 	 * Always allocate two channels since we can have setups with DIMMs on
- 	 * only one channel. Also, this simplifies handling later for the price
- 	 * of a couple of KBs tops.
--	 *
--	 * On Fam17h+, the number of controllers may be greater than two. So set
--	 * the size equal to the maximum number of UMCs.
- 	 */
--	if (pvt->fam >=3D 0x17)
--		layers[1].size =3D num_umcs;
--	else
--		layers[1].size =3D 2;
-+	layers[1].size =3D fam_type->max_num_controllers;
- 	layers[1].is_virt_csrow =3D false;
++	ret =3D 0;
++	if (!instance_has_memory(pvt)) {
++		amd64_info("Node %d: No DIMMs detected.\n", nid);
++		goto err_enable;
++	}
++
+ 	if (!ecc_enabled(pvt)) {
+ 		ret =3D 0;
 =20
- 	mci =3D edac_mc_alloc(pvt->mc_node_id, ARRAY_SIZE(layers), layers, 0);
-@@ -3678,8 +3665,6 @@ static int __init amd64_edac_init(void)
- 	if (!msrs)
- 		goto err_free;
+@@ -3556,6 +3573,8 @@ static int probe_one_instance(unsigned int nid)
+ 		goto err_enable;
+ 	}
 =20
--	compute_num_umcs();
--
- 	for (i =3D 0; i < amd_nb_num(); i++) {
- 		err =3D probe_one_instance(i);
- 		if (err) {
-diff --git a/drivers/edac/amd64_edac.h b/drivers/edac/amd64_edac.h
-index 8c3cda81e619..0d5a9bc4d6de 100644
---- a/drivers/edac/amd64_edac.h
-+++ b/drivers/edac/amd64_edac.h
-@@ -479,6 +479,7 @@ struct low_ops {
- struct amd64_family_type {
- 	const char *ctl_name;
- 	u16 f0_id, f1_id, f2_id, f6_id;
-+	u8 max_num_controllers;
- 	struct low_ops ops;
- };
++	dump_misc_regs(pvt);
++
+ 	return ret;
 =20
+ err_enable:
 --=20
 2.17.1
 
