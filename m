@@ -2,128 +2,103 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 000D9CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0282FCA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0200222C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:09:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA94121D80
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:10:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IK3Ai6M2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439352AbfJRHJk (ORCPT
+        id S2442062AbfJRHKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 03:09:40 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58162 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729689AbfJRHJk (ORCPT
+        Fri, 18 Oct 2019 03:10:01 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33766 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727306AbfJRHKB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 03:09:40 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9I77n1i081734
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 03:09:39 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vq84d99g8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 03:09:38 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Fri, 18 Oct 2019 08:09:36 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 18 Oct 2019 08:09:32 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9I79WVa54657042
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 18 Oct 2019 07:09:32 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 00C3B11C054;
-        Fri, 18 Oct 2019 07:09:32 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 97BF911C050;
-        Fri, 18 Oct 2019 07:09:31 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 18 Oct 2019 07:09:31 +0000 (GMT)
-Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 74FE2A022E;
-        Fri, 18 Oct 2019 18:09:29 +1100 (AEDT)
-Subject: Re: [PATCH v3 06/15] powerpc/32: prepare for CONFIG_VMAP_STACK
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
-        dja@axtens.net
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org
-References: <cover.1568106758.git.christophe.leroy@c-s.fr>
- <7e9771a56539c58dcd8a871c3dfbe7a932e427b0.1568106758.git.christophe.leroy@c-s.fr>
- <d181b762-3e7b-7a0a-2505-54ead241456d@linux.ibm.com>
- <baff8ef3-a3c6-c6e2-732f-4d521d92140b@c-s.fr>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Date:   Fri, 18 Oct 2019 18:09:29 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 18 Oct 2019 03:10:01 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i76so2857180pgc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 00:10:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aUKSB/eobGAaYzA+zetYK7qwC81TH5UGLLG8mpvrqjM=;
+        b=IK3Ai6M2vww5v5zDqMVx2Y5Ux3F2JnNbcrzWeRo30ZlpTw/YxKGRFm5dPAXISnId2K
+         LUWF/zq8wvhnBjW1sgSnfDfDCqSvxFALW1h/kZFJG+U6kfujlc5CLhE2+gvUrYIYFLyF
+         eYQbv0KgtyRC03j5YNpvQHy4YWzrw9/v5m4U4iurnbFirv8SLE43Ls6jgVGAdTeTNZeQ
+         TJP6IPJpuWU4YtkwYL3o0qYlasjzi57kp9+cmR9IpAQvIjoBtnnC3DPmEQeaqAusnGcb
+         ZRae5QAaF5VL/IjzD4UHIeSDiqqqaPtfwmoriJTp7xN5z/F29hwErInQVeEHmxtTc7mJ
+         QwBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aUKSB/eobGAaYzA+zetYK7qwC81TH5UGLLG8mpvrqjM=;
+        b=G4eMAmEof8kTjYcOt7uVdMNLx8lsBCwp9+7x1krmvKk2hCwzbbS/vc4fww2uNGWsLb
+         Cv1dLje9QmxvkEWaseKMjKK0jU2QOpAGrJGF6SWd/qLkHOoUczBPCnFdILYRaGS5ukYw
+         3ALBsTouipbZn5YU0cVaDnvPhD5CU78vQt8nEwPERHVN8X3SUy2YQsAmhIUCHv/tVXIR
+         8MBpyiz6DO4TPYVlNIIEajrcmdV5mR3IbWKLSUCP4oipHj7+2ZzxC15DUbA6Pt3LmR7q
+         YIp69/R6fICy8a7rAhoSIaPyw6sV0PnCjbm09VId9dmKRSyyzKY/SgTslUkXB+n4f17e
+         N8Mg==
+X-Gm-Message-State: APjAAAVXEaCJKDoOGM6qhKZfimgdIYGuLg2uikTSAeOWvjuHcLpXadNs
+        JvJ2fi0NRQK8RY9xcAzXgL4=
+X-Google-Smtp-Source: APXvYqwG6pgWoLTskuPSqA1ZK0IIJIG9b5lF34gkizyFXbN0bJnAbqjQXy5U4vUskXlAmbg0A2NDFA==
+X-Received: by 2002:aa7:9907:: with SMTP id z7mr4977952pff.133.1571382600635;
+        Fri, 18 Oct 2019 00:10:00 -0700 (PDT)
+Received: from localhost.localdomain ([45.52.215.209])
+        by smtp.gmail.com with ESMTPSA id s97sm6974508pjc.4.2019.10.18.00.09.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 00:09:59 -0700 (PDT)
+From:   Chandra Annamaneni <chandra627@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     gneukum1@gmail.com, dan.carpenter@oracle.com,
+        michael.scheiderer@fau.de, fabian.krueger@fau.de,
+        chandra627@gmail.com, simon@nikanor.nu, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/4] staging: KPC2000: kpc2000_spi.c: Fix style issues (misaligned brace)
+Date:   Fri, 18 Oct 2019 00:09:48 -0700
+Message-Id: <20191018070948.22279-1-chandra627@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <baff8ef3-a3c6-c6e2-732f-4d521d92140b@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19101807-4275-0000-0000-000003733550
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19101807-4276-0000-0000-000038865061
-Message-Id: <d3908c21-553a-029e-d671-2cd3628776dc@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-18_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=685 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910180068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/10/19 5:46 pm, Christophe Leroy wrote:
-> 
-> 
-> Le 17/10/2019 à 09:36, Andrew Donnellan a écrit :
->> On 10/9/19 7:16 pm, Christophe Leroy wrote:
->>> +#if defined(CONFIG_VMAP_STACK) && CONFIG_THREAD_SHIFT < PAGE_SHIFT
->>> +#define THREAD_SHIFT        PAGE_SHIFT
->>> +#else
->>>   #define THREAD_SHIFT        CONFIG_THREAD_SHIFT
->>> +#endif
->>>
->>>   #define THREAD_SIZE        (1 << THREAD_SHIFT)
->>>
->>
->> Looking at 64-bit book3s: with 64K pages, this results in a 
->> THREAD_SIZE that's too large for immediate mode arithmetic operations, 
->> which is annoying. Hmm.
->>
-> 
-> Which operation are you thinking about ?
-> 
-> For instance, 'addi' can't be used anymore, but 'addis' can.
+Resolved: ERROR: else should follow close brace '}'
 
-Right, I didn't look too closely - yes, they're "addi"s. But also 
-DS-form stores:
+Signed-off-by: Chandra Annamaneni <chandra627@gmail.com>
+---
+Previous versions of these patches were not split into different 
+patches, did not have different patch numbers and did not have the
+keyword staging. The previous version of this patch had the wrong 
+description and subject.
+ drivers/staging/kpc2000/kpc2000_spi.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-	stdu	r1,THREAD_SIZE-STACK_FRAME_OVERHEAD(r3)
-
-Anyway, this is just the first thing that broke when I wondered whether 
-a ppc64le_defconfig would even build if I just switched on VMAP_STACK, 
-I'll work around it
-
+diff --git a/drivers/staging/kpc2000/kpc2000_spi.c b/drivers/staging/kpc2000/kpc2000_spi.c
+index 5712a88c8788..929136cdc3e1 100644
+--- a/drivers/staging/kpc2000/kpc2000_spi.c
++++ b/drivers/staging/kpc2000/kpc2000_spi.c
+@@ -226,8 +226,7 @@ kp_spi_txrx_pio(struct spi_device *spidev, struct spi_transfer *transfer)
+ 			kp_spi_write_reg(cs, KP_SPI_REG_TXDATA, val);
+ 			processed++;
+ 		}
+-	}
+-	else if (rx) {
++	} else if (rx) {
+ 		for (i = 0 ; i < c ; i++) {
+ 			char test = 0;
+ 
 -- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
+2.20.1
 
