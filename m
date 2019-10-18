@@ -2,76 +2,70 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AABCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD6CCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37D7521897
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA4512064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:50:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571413807;
+	bh=pbmgVM5FBJRtDKo2MHb0gJ8MdlAWiu/R5y4aNSZOQow=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=WT9jykEPuNK+FNUEIsluNJ5WTRtTKhl5j6tU5kjFRUAcHAOKeas+Wc/JlgpLNDP2C
+	 osGvcA6NmV6W/lcq0BSdYgVVa7j3L3ReRY4uTQZBRuoAdzXQVzMYYecoU7yOzt+3wv
+	 J9EZRafyYdVovYKqNizgAfkOPLjRvABsNOn5luc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409104AbfJRPtd (ORCPT
+        id S2409150AbfJRPuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:49:33 -0400
-Received: from ms.lwn.net ([45.79.88.28]:36726 "EHLO ms.lwn.net"
+        Fri, 18 Oct 2019 11:50:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394157AbfJRPtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:49:33 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id E3A256D9;
-        Fri, 18 Oct 2019 15:49:32 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 09:49:31 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Albert Vaca Cintora <albertvaka@gmail.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Updated iostats docs
-Message-ID: <20191018094931.60df486f@lwn.net>
-In-Reply-To: <20191016201337.88554-1-albertvaka@gmail.com>
-References: <20191016201337.88554-1-albertvaka@gmail.com>
-Organization: LWN.net
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+        id S2394076AbfJRPuG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 11:50:06 -0400
+Subject: Re: [GIT PULL] Power management fixes for v5.4-rc4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571413805;
+        bh=pbmgVM5FBJRtDKo2MHb0gJ8MdlAWiu/R5y4aNSZOQow=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=m0KLCB4QcXtUHDW/Y64t1MG4q9toc9vbemYzeuWibLfnktF4g1X9XVxORC6TWtp9u
+         oiletYwW+azX1WQ6BUC4hdTmSxqmgTqo+FGKsh1d5XdcIuMxV5LxicDdWRg7PCgwG5
+         u+qeek1RDbYsPxWcT0lwe7Pvz78JUVhJqo5l4TJc=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAJZ5v0iMdUWVv8G1D075eSEBOMoqUfoWC_ik6qy5CxNapUo1xg@mail.gmail.com>
+References: <CAJZ5v0iMdUWVv8G1D075eSEBOMoqUfoWC_ik6qy5CxNapUo1xg@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAJZ5v0iMdUWVv8G1D075eSEBOMoqUfoWC_ik6qy5CxNapUo1xg@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.4-rc4
+X-PR-Tracked-Commit-Id: b23eb5c74e6eb6a0b3fb9cf3eb64481a17ce1cd1
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: e59b76ff67e527e58914409f13a9cffa1cbf42e7
+Message-Id: <157141380553.28894.10224105996340827276.pr-tracker-bot@kernel.org>
+Date:   Fri, 18 Oct 2019 15:50:05 +0000
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 16 Oct 2019 22:13:37 +0200
-Albert Vaca Cintora <albertvaka@gmail.com> wrote:
+The pull request you sent on Fri, 18 Oct 2019 11:17:32 +0200:
 
-> revious docs mentioned 11 unsigned long fields, when the reality is that
-> we have 15 fields with a mix of unsigned long and unsigned int.
-> 
-> Signed-off-by: Albert Vaca Cintora <albertvaka@gmail.com>
-> ---
->  Documentation/admin-guide/iostats.rst | 47 ++++++++++++++-------------
->  1 file changed, 24 insertions(+), 23 deletions(-)
+> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.4-rc4
 
-I've applied this as an improvement over what's there now, but...
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/e59b76ff67e527e58914409f13a9cffa1cbf42e7
 
-> diff --git a/Documentation/admin-guide/iostats.rst b/Documentation/admin-guide/iostats.rst
-> index 5d63b18bd6d1..321aae8d7e10 100644
-> --- a/Documentation/admin-guide/iostats.rst
-> +++ b/Documentation/admin-guide/iostats.rst
-> @@ -46,78 +46,79 @@ each snapshot of your disk statistics.
->  In 2.4, the statistics fields are those after the device name. In
->  the above example, the first field of statistics would be 446216.
->  By contrast, in 2.6+ if you look at ``/sys/block/hda/stat``, you'll
-> -find just the eleven fields, beginning with 446216.  If you look at
-> -``/proc/diskstats``, the eleven fields will be preceded by the major and
-> +find just the 15 fields, beginning with 446216.  If you look at
-> +``/proc/diskstats``, the 15 fields will be preceded by the major and
+Thank you!
 
-This document is full of information about the behavior of the 2.4 kernel,
-which seems less than fully interesting in 2019.  It would be Really Nice
-if somebody could go through and simply update this document to current
-reality and discard all of the cruft.
-
-Thanks,
-
-jon
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
