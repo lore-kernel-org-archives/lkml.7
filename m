@@ -2,56 +2,52 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEF2CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A66CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 320F320679
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8957F21852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:19:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437141;
-	bh=FxnXi6ieQJiByUUrfBmm0/Y9UkyehQruV0wZx9VOxbc=;
+	s=default; t=1571437144;
+	bh=BYsbJjo25ob2w4vEbmdMvtR1SJRInPAA1UGSNr2lkXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kqvei6w2zFdgitX0jCbZkU3IG6aMtbgRn4vESH7MXFCeCkDWfGRvcrNgvW/+C4ND3
-	 CIw7giLSsdku2lF6hgLXTzy+/jun454CMOUAeBFHZqEYIORcvi8O3CQNFAgX9Fwbim
-	 KSuyFg0IeBhhSnV02hN7K44L8m8hXDtRDt2wK3ZU=
+	b=UBLfxcjF3cukzjUTg/xfcEsioGwKutU/jjUHnAmlT4IgvjHRqH6nDkHMqAZ88eWix
+	 bZ+QZk90ddzkSLrVlp3nwLgZQaHdZUEbreiWoHyGSG34mo4yVUEPfAgT9oTW1hoscW
+	 KE6PEMtenb1hXWVD/pF2x9SBVqDIsWIYD1osTEHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732422AbfJRWHG (ORCPT
+        id S2404377AbfJRWTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:07:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39008 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:19:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732127AbfJRWGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:06:55 -0400
+        id S1732409AbfJRWHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:07:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31F502245D;
-        Fri, 18 Oct 2019 22:06:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE318222D4;
+        Fri, 18 Oct 2019 22:07:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436415;
-        bh=FxnXi6ieQJiByUUrfBmm0/Y9UkyehQruV0wZx9VOxbc=;
+        s=default; t=1571436425;
+        bh=BYsbJjo25ob2w4vEbmdMvtR1SJRInPAA1UGSNr2lkXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u8fm2q1Ykhj9xMqkT2LTIW3oWMy9VTdIK6Klv4OJ/oRF9dUnW4OOW4HY+3UOA6dok
-         8Phvde1pbv7Bp39AU/ygQoqlCdwbGCcuc/oJsAn3fDatJPSnOZl6hmeoE7/WZCUBpY
-         RNQwdI2CktVgFSBk/DYi9RE2W4hYnyUISbbL0yfc=
+        b=q3TxJDjM7EzRiWo1RgrR1XHtlzGK+KS+w2FYIezGNW/M2/cTrJ5T8IlmEbactIBHg
+         7Z3CZne1MG7zkwPKv+loc/0i6KNchRwFGF0/Fh2zSEgpdk2CiWnkF/5z3P+DOHWgyB
+         u1OApzPGyjmoxA5/FIooebDyy0PoB9YSZFp0bi4U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 059/100] perf annotate: Fix the signedness of failure returns
-Date:   Fri, 18 Oct 2019 18:04:44 -0400
-Message-Id: <20191018220525.9042-59-sashal@kernel.org>
+Cc:     ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 067/100] nfs: Fix nfsi->nrequests count error on nfs_inode_remove_request
+Date:   Fri, 18 Oct 2019 18:04:52 -0400
+Message-Id: <20191018220525.9042-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -64,42 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
 
-[ Upstream commit 28f4417c3333940b242af03d90214f713bbef232 ]
+[ Upstream commit 33ea5aaa87cdae0f9af4d6b7ee4f650a1a36fd1d ]
 
-Callers of symbol__annotate() expect a errno value or some other
-extended error value range in symbol__strerror_disassemble() to
-convert to a proper error string, fix it when propagating a failure to
-find the arch specific annotation routines via arch__find(arch_name).
+When xfstests testing, there are some WARNING as below:
 
-Reported-by: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-Cc: Will Deacon <will@kernel.org>
-Link: https://lkml.kernel.org/n/tip-o0k6dw7cas0vvmjjvgsyvu1i@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+WARNING: CPU: 0 PID: 6235 at fs/nfs/inode.c:122 nfs_clear_inode+0x9c/0xd8
+Modules linked in:
+CPU: 0 PID: 6235 Comm: umount.nfs
+Hardware name: linux,dummy-virt (DT)
+pstate: 60000005 (nZCv daif -PAN -UAO)
+pc : nfs_clear_inode+0x9c/0xd8
+lr : nfs_evict_inode+0x60/0x78
+sp : fffffc000f68fc00
+x29: fffffc000f68fc00 x28: fffffe00c53155c0
+x27: fffffe00c5315000 x26: fffffc0009a63748
+x25: fffffc000f68fd18 x24: fffffc000bfaaf40
+x23: fffffc000936d3c0 x22: fffffe00c4ff5e20
+x21: fffffc000bfaaf40 x20: fffffe00c4ff5d10
+x19: fffffc000c056000 x18: 000000000000003c
+x17: 0000000000000000 x16: 0000000000000000
+x15: 0000000000000040 x14: 0000000000000228
+x13: fffffc000c3a2000 x12: 0000000000000045
+x11: 0000000000000000 x10: 0000000000000000
+x9 : 0000000000000000 x8 : 0000000000000000
+x7 : 0000000000000000 x6 : fffffc00084b027c
+x5 : fffffc0009a64000 x4 : fffffe00c0e77400
+x3 : fffffc000c0563a8 x2 : fffffffffffffffb
+x1 : 000000000000764e x0 : 0000000000000001
+Call trace:
+ nfs_clear_inode+0x9c/0xd8
+ nfs_evict_inode+0x60/0x78
+ evict+0x108/0x380
+ dispose_list+0x70/0xa0
+ evict_inodes+0x194/0x210
+ generic_shutdown_super+0xb0/0x220
+ nfs_kill_super+0x40/0x88
+ deactivate_locked_super+0xb4/0x120
+ deactivate_super+0x144/0x160
+ cleanup_mnt+0x98/0x148
+ __cleanup_mnt+0x38/0x50
+ task_work_run+0x114/0x160
+ do_notify_resume+0x2f8/0x308
+ work_pending+0x8/0x14
+
+The nrequest should be increased/decreased only if PG_INODE_REF flag
+was setted.
+
+But in the nfs_inode_remove_request function, it maybe decrease when
+no PG_INODE_REF flag, this maybe lead nrequests count error.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/annotate.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/write.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 4ef62bcdc80f0..b4946ef48b621 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1875,7 +1875,7 @@ int symbol__annotate(struct symbol *sym, struct map *map,
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index 5ab997912d8d5..117ffd90419e2 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -783,7 +783,6 @@ static void nfs_inode_remove_request(struct nfs_page *req)
+ 	struct nfs_inode *nfsi = NFS_I(inode);
+ 	struct nfs_page *head;
  
- 	args.arch = arch = arch__find(arch_name);
- 	if (arch == NULL)
--		return -ENOTSUP;
-+		return ENOTSUP;
+-	atomic_long_dec(&nfsi->nrequests);
+ 	if (nfs_page_group_sync_on_bit(req, PG_REMOVE)) {
+ 		head = req->wb_head;
  
- 	if (parch)
- 		*parch = arch;
+@@ -796,8 +795,10 @@ static void nfs_inode_remove_request(struct nfs_page *req)
+ 		spin_unlock(&mapping->private_lock);
+ 	}
+ 
+-	if (test_and_clear_bit(PG_INODE_REF, &req->wb_flags))
++	if (test_and_clear_bit(PG_INODE_REF, &req->wb_flags)) {
+ 		nfs_release_request(req);
++		atomic_long_dec(&nfsi->nrequests);
++	}
+ }
+ 
+ static void
 -- 
 2.20.1
 
