@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F717CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99104CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0115E222C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BAAC222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:24:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hw4u9oUL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IfD36HjG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442021AbfJRFYO (ORCPT
+        id S2442032AbfJRFYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:24:14 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43607 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2442007AbfJRFYM (ORCPT
+        Fri, 18 Oct 2019 01:24:18 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34219 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2442007AbfJRFYQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:24:12 -0400
-Received: by mail-pg1-f194.google.com with SMTP id i32so2676690pgl.10
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:24:11 -0700 (PDT)
+        Fri, 18 Oct 2019 01:24:16 -0400
+Received: by mail-pg1-f193.google.com with SMTP id k20so2702878pgi.1
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:24:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=SCHFSyaag0fV1b4EweLCBFXNBv8kfZEJeYucJn2bT6s=;
-        b=hw4u9oULAXd4AgBXp/9AkA/ZPr6fbU5xbqz+K4prhY2sBWfo6tcRdGLwkUIANg0L0f
-         P2yLfr36x3oE0QkslOhGU+UDIxrQjvWRODCZdl6Y28FDVIY9hR8ejkxbnY1kOsK5ZIpz
-         ytvLYeIH4v35kAltNoItGw13qjJptaT1zPStmQ+vK9RrdlyrizLKUfQ3rbUOsOcjpbiG
-         ZIcw3HIPXjrylIN94yNLpR3+MKld5fYz1/keO7Ap0ElxG3eQpMCiZjjjK9Vtn5Ck/PU6
-         722cqOBCeyGm3LVzIepS8zG5qF+e65mB+X/fpp623lIqID98jPJt7WDR7quxYdizaOCr
-         qzog==
+        bh=A290/OLSMIdz1gm9E9GKn5KBPV2wOKoLOZi6+j+W8B0=;
+        b=IfD36HjGXoGW/VytrSV0TZUsgREKFpfzsFqdazfZT5W9+9uAFfPaereqHTYaqLxqSP
+         vmFfmuKv7WFbkNZP2ssJRHR3sMm2GyNJenRdVZ+L5vmjKAgJGosyzWEyJXRzeZmjPngU
+         5aG4eZJuVoaAPzHfyx9iVKXEDZgmgcNmCGIv/0OnvNnY6HPDo1FPy0bmXaMJjfB95Em2
+         XJ9DDJp7yjOJ8DKUUe6ZYpaNawX+bnZltgVLbJ8o9ueyVv5vmB3Hji1mTAstDOOJHXoP
+         /7GzzhJschEmR5wMZJTzENRhZVT5G98euWMDl50oSmvCQjsBExx2Nk6FNVkbQNwfkHAp
+         TUbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SCHFSyaag0fV1b4EweLCBFXNBv8kfZEJeYucJn2bT6s=;
-        b=i5G4ZKmjiQ74+L6iuj1DWs8Y4+UuswLz6cJZR4RTkVfojnaqh4roFguecWSa0zCFDK
-         jtVS2jDmyDenJkmCeADPXBy8F8vvSStdoxbRA1YEaARXpQSTW/lv1rxudSkr3Zf9rX/4
-         ltQ19WraXBJs5pqfkLwAhRvKifEu9LdCWTlN+4pSlqY48yaV5aqRCNOKzi/WC53Wnyv6
-         I48F/0wiwClg4s4u20ksABcjEn2VXHR/HXrTRmUFmEk99g0eAIjEV5vZ8rqEAZ3oLYDY
-         6ojfetu15zTM5emFPevV6rXv063TFYOz4gYrohXe2HJTGxPSsL2oYy/4aRpYLdewTHu+
-         L+XA==
-X-Gm-Message-State: APjAAAWbMwh2HKuX816OfpvT6gOc2Kzdpj4nQwIcl2R0aeL8fz4L39gm
-        TqNgCPnUlsk8a0+iab1pa4S5jg==
-X-Google-Smtp-Source: APXvYqxiYxLZewwp9KcTgIFmEdtCpwB0laxma0SN+SBePnLsJMhJ+CE7AhZMTyxGFreXWcaDl2FgFw==
-X-Received: by 2002:a62:6842:: with SMTP id d63mr4426461pfc.166.1571376251002;
-        Thu, 17 Oct 2019 22:24:11 -0700 (PDT)
+        bh=A290/OLSMIdz1gm9E9GKn5KBPV2wOKoLOZi6+j+W8B0=;
+        b=BI8b96jHg0/arSyTpH0fBhwOd6OnXIXMq8zdXk+v1SMQ3Lpp80BPWjX67iShmp7Mwg
+         m2AP3VKe5czmL97KCeXALPruggr7ruPLv8OLGi1UaRl0BruljXgNLus1rWbcUGjECx9N
+         mPaBVIorawLhuNe4yQ1SEpjmxuuFjuxHBVc8EAj4n0G+4VBgC7i6pafzpK6wrFuFfpZW
+         S+ujL1oGEybSOGmSCYzgi1IoLae+AL04mTeCq5rzLtHVKMz+AGBK7S+ST389Y/1LKS0p
+         WRGiiI74QjI16QUE1QvyUadqWkFyQfbN/YOTl/ZpeO2f4Vr22itSASq+OAv4B0unha+9
+         8syA==
+X-Gm-Message-State: APjAAAUQsNdiMTXTmrUgHZRAAnG3ShQILPHupMEpKG8rZaJPbkjjW7I+
+        OvpPiG7jaUQYTdj1mp7WK4PwBQ==
+X-Google-Smtp-Source: APXvYqx0ozYSKrJgMxYmOdz9sS6M85YH2jq18jmBXCmjgB4jia0KZ5uXnddL537MflX50Cf7VM8eOA==
+X-Received: by 2002:a63:1904:: with SMTP id z4mr8210286pgl.413.1571376253468;
+        Thu, 17 Oct 2019 22:24:13 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id u11sm2178760pgc.61.2019.10.17.22.24.09
+        by smtp.gmail.com with ESMTPSA id u11sm2178760pgc.61.2019.10.17.22.24.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 22:24:10 -0700 (PDT)
+        Thu, 17 Oct 2019 22:24:12 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Marcel Holtmann <marcel@holtmann.org>,
         Johan Hedberg <johan.hedberg@gmail.com>
 Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
         linux-arm-msm@vger.kernel.org
-Subject: [PATCH 2/4] Bluetooth: hci_qca: Don't vote for specific voltage
-Date:   Thu, 17 Oct 2019 22:24:02 -0700
-Message-Id: <20191018052405.3693555-3-bjorn.andersson@linaro.org>
+Subject: [PATCH 4/4] Bluetooth: hci_qca: Split qca_power_setup()
+Date:   Thu, 17 Oct 2019 22:24:04 -0700
+Message-Id: <20191018052405.3693555-5-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191018052405.3693555-1-bjorn.andersson@linaro.org>
 References: <20191018052405.3693555-1-bjorn.andersson@linaro.org>
@@ -75,85 +75,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Devices with specific voltage requirements should not request voltage
-from the driver, but instead rely on the system configuration to define
-appropriate voltages for each rail.
-
-This ensures that PMIC and board variations are accounted for, something
-that the 0.1V range in the hci_qca driver currently tries to address.
-But on the Lenovo Yoga C630 (with wcn3990) vddch0 is 3.1V, which means
-the driver will fail to set the voltage.
+Split and rename qca_power_setup() in order to simplify each code path
+and to clarify that it is unrelated to qca_power_off() and
+qca_power_setup().
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/bluetooth/hci_qca.c | 26 ++++++++------------------
- 1 file changed, 8 insertions(+), 18 deletions(-)
+ drivers/bluetooth/hci_qca.c | 61 ++++++++++++++++++++++---------------
+ 1 file changed, 36 insertions(+), 25 deletions(-)
 
 diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index c07c529b0d81..54aafcc69d06 100644
+index 01f941e9adf3..c591a8ba9d93 100644
 --- a/drivers/bluetooth/hci_qca.c
 +++ b/drivers/bluetooth/hci_qca.c
-@@ -130,8 +130,6 @@ enum qca_speed_type {
-  */
- struct qca_vreg {
- 	const char *name;
--	unsigned int min_uV;
--	unsigned int max_uV;
- 	unsigned int load_uA;
+@@ -160,7 +160,8 @@ struct qca_serdev {
+ 	const char *firmware_name;
  };
  
-@@ -1332,10 +1330,10 @@ static const struct hci_uart_proto qca_proto = {
- static const struct qca_vreg_data qca_soc_data_wcn3990 = {
- 	.soc_type = QCA_WCN3990,
- 	.vregs = (struct qca_vreg []) {
--		{ "vddio",   1800000, 1900000,  15000  },
--		{ "vddxo",   1800000, 1900000,  80000  },
--		{ "vddrf",   1300000, 1350000,  300000 },
--		{ "vddch0",  3300000, 3400000,  450000 },
-+		{ "vddio", 15000  },
-+		{ "vddxo", 80000  },
-+		{ "vddrf", 300000 },
-+		{ "vddch0", 450000 },
- 	},
- 	.num_vregs = 4,
- };
-@@ -1343,10 +1341,10 @@ static const struct qca_vreg_data qca_soc_data_wcn3990 = {
- static const struct qca_vreg_data qca_soc_data_wcn3998 = {
- 	.soc_type = QCA_WCN3998,
- 	.vregs = (struct qca_vreg []) {
--		{ "vddio",   1800000, 1900000,  10000  },
--		{ "vddxo",   1800000, 1900000,  80000  },
--		{ "vddrf",   1300000, 1352000,  300000 },
--		{ "vddch0",  3300000, 3300000,  450000 },
-+		{ "vddio", 10000  },
-+		{ "vddxo", 80000  },
-+		{ "vddrf", 300000 },
-+		{ "vddch0", 450000 },
- 	},
- 	.num_vregs = 4,
- };
-@@ -1386,13 +1384,6 @@ static int qca_power_off(struct hci_dev *hdev)
- static int qca_enable_regulator(struct qca_vreg vregs,
- 				struct regulator *regulator)
+-static int qca_power_setup(struct hci_uart *hu, bool on);
++static int qca_regulator_enable(struct qca_serdev *qcadev);
++static void qca_regulator_disable(struct qca_serdev *qcadev);
+ static void qca_power_shutdown(struct hci_uart *hu);
+ static int qca_power_off(struct hci_dev *hdev);
+ 
+@@ -516,7 +517,7 @@ static int qca_open(struct hci_uart *hu)
+ 		} else {
+ 			hu->init_speed = qcadev->init_speed;
+ 			hu->oper_speed = qcadev->oper_speed;
+-			ret = qca_power_setup(hu, true);
++			ret = qca_regulator_enable(qcadev);
+ 			if (ret) {
+ 				destroy_workqueue(qca->workqueue);
+ 				kfree_skb(qca->rx_skb);
+@@ -1186,7 +1187,7 @@ static int qca_wcn3990_init(struct hci_uart *hu)
+ 	qcadev = serdev_device_get_drvdata(hu->serdev);
+ 	if (!qcadev->bt_power->vregs_on) {
+ 		serdev_device_close(hu->serdev);
+-		ret = qca_power_setup(hu, true);
++		ret = qca_regulator_enable(qcadev);
+ 		if (ret)
+ 			return ret;
+ 
+@@ -1351,9 +1352,12 @@ static const struct qca_vreg_data qca_soc_data_wcn3998 = {
+ 
+ static void qca_power_shutdown(struct hci_uart *hu)
  {
--	int ret;
--
--	ret = regulator_set_voltage(regulator, vregs.min_uV,
--				    vregs.max_uV);
--	if (ret)
--		return ret;
--
- 	return regulator_enable(regulator);
++	struct qca_serdev *qcadev;
+ 	struct qca_data *qca = hu->priv;
+ 	unsigned long flags;
  
- }
-@@ -1401,7 +1392,6 @@ static void qca_disable_regulator(struct qca_vreg vregs,
- 				  struct regulator *regulator)
- {
- 	regulator_disable(regulator);
--	regulator_set_voltage(regulator, 0, vregs.max_uV);
++	qcadev = serdev_device_get_drvdata(hu->serdev);
++
+ 	/* From this point we go into power off state. But serial port is
+ 	 * still open, stop queueing the IBS data and flush all the buffered
+ 	 * data in skb's.
+@@ -1365,7 +1369,7 @@ static void qca_power_shutdown(struct hci_uart *hu)
  
+ 	host_set_baudrate(hu, 2400);
+ 	qca_send_power_pulse(hu, false);
+-	qca_power_setup(hu, false);
++	qca_regulator_disable(qcadev);
  }
  
+ static int qca_power_off(struct hci_dev *hdev)
+@@ -1381,36 +1385,43 @@ static int qca_power_off(struct hci_dev *hdev)
+ 	return 0;
+ }
+ 
+-static int qca_power_setup(struct hci_uart *hu, bool on)
++static int qca_regulator_enable(struct qca_serdev *qcadev)
+ {
+-	struct regulator_bulk_data *vreg_bulk;
+-	struct qca_serdev *qcadev;
+-	int num_vregs;
+-	int ret = 0;
++	struct qca_power *power = qcadev->bt_power;
++	int ret;
+ 
+-	qcadev = serdev_device_get_drvdata(hu->serdev);
+-	if (!qcadev || !qcadev->bt_power || !qcadev->bt_power->vreg_bulk)
+-		return -EINVAL;
++	/* Already enabled */
++	if (power->vregs_on)
++		return 0;
+ 
+-	vreg_bulk = qcadev->bt_power->vreg_bulk;
+-	num_vregs = qcadev->bt_power->num_vregs;
+-	BT_DBG("on: %d (%d regulators)", on, num_vregs);
+-	if (on && !qcadev->bt_power->vregs_on) {
+-		ret = regulator_bulk_enable(num_vregs, vreg_bulk);
+-		if (ret)
+-			return ret;
++	BT_DBG("enabling %d regulators)", power->num_vregs);
+ 
+-		qcadev->bt_power->vregs_on = true;
+-	} else if (!on && qcadev->bt_power->vregs_on) {
+-		/* turn off regulator in reverse order */
+-		regulator_bulk_disable(num_vregs, vreg_bulk);
++	ret = regulator_bulk_enable(power->num_vregs, power->vreg_bulk);
++	if (ret)
++		return ret;
+ 
+-		qcadev->bt_power->vregs_on = false;
+-	}
++	power->vregs_on = true;
+ 
+ 	return 0;
+ }
+ 
++static void qca_regulator_disable(struct qca_serdev *qcadev)
++{
++	struct qca_power *power;
++
++	if (!qcadev)
++		return;
++
++	power = qcadev->bt_power;
++
++	/* Already disabled? */
++	if (!power->vregs_on)
++		return;
++
++	regulator_bulk_disable(power->num_vregs, power->vreg_bulk);
++	power->vregs_on = false;
++}
++
+ static int qca_init_regulators(struct qca_power *qca,
+ 				const struct qca_vreg *vregs, size_t num_vregs)
+ {
 -- 
 2.23.0
 
