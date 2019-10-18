@@ -4,53 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A92CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BA1CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFC8C21925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C3E421852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:14:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436894;
-	bh=uhc6qrmgYf8tNuiZPGZcsbbrTbtSfMBBHflqUUXRHqw=;
+	s=default; t=1571436899;
+	bh=WEjXPYN/4z2tLd11WOkLYZH11e/S5V8qQlTCbEuf090=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rtvj5EPcr85SfXsnBR4f7vfTeJiWEW8WOJp+vYpRapMQarydD6vFzw90EugG8h6TS
-	 lTrl8gTSWEe5mq12ghc9aisRJr3tESmYYoZbMmyINQURW+psrUCP4kA/QTiuGBP2vj
-	 PfO59jjPPY4MP1L0qvPaet5MlzQTVfVLLkha7hDU=
+	b=I9GlSuwaSmKrzLpJr3Spxke84wjR65fM4Ezzepn3N4QyJ9vCB7X8wACN0zQ1lev3A
+	 tdVAJ/437px1Fd1pU9dZQdkqVByfKrBsXw6vQYEY7ntor4n13hGCahLS5bW9KWQrWb
+	 lYfYvT0WW2i1S/wtkrTQ6VVD4peufaOdC6heAa34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388705AbfJRWJP (ORCPT
+        id S2392470AbfJRWO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:09:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41386 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:14:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388208AbfJRWIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:08:49 -0400
+        id S2388649AbfJRWJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:09:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61C972245A;
-        Fri, 18 Oct 2019 22:08:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D20422468;
+        Fri, 18 Oct 2019 22:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436529;
-        bh=uhc6qrmgYf8tNuiZPGZcsbbrTbtSfMBBHflqUUXRHqw=;
+        s=default; t=1571436552;
+        bh=WEjXPYN/4z2tLd11WOkLYZH11e/S5V8qQlTCbEuf090=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K2X/470m/6TusE+wLAqzmAHy6nb/aABT8ySe6KIzuSe9YwcDrH1H7BitWwSwOT/XQ
-         oPyrs9DyViPbLABHMrnHbnMSVSKVQCwYpP7+RqW1x6pNG3PObYGyf19LMKykAp0zeb
-         B5CYmJT/L4pUIiYOAilxSyIRNSYkdcOL8ygbMGS8=
+        b=vFEOdYiah+Mr0DrCzYdIXEPpBXrWjTxdY2qG1ODKZZkQISOCZL+HmHj4couyFv47T
+         a8qQPxUoseSOrU/7kVX0UKnvJm4mpNamz1W96b/ZXigc2KjE/EHc9Gx1uNOgVWjXqw
+         0UKg63jd29L9YlHYAjsrTZFz09m0rNyeX5VFPJNg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Austin Kim <austindh.kim@gmail.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 35/56] fs: cifs: mute -Wunused-const-variable message
-Date:   Fri, 18 Oct 2019 18:07:32 -0400
-Message-Id: <20191018220753.10002-35-sashal@kernel.org>
+Cc:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>, linux-mips@linux-mips.org
+Subject: [PATCH AUTOSEL 4.14 50/56] MIPS: include: Mark __xchg as __always_inline
+Date:   Fri, 18 Oct 2019 18:07:47 -0400
+Message-Id: <20191018220753.10002-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
 References: <20191018220753.10002-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,41 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Austin Kim <austindh.kim@gmail.com>
+From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 
-[ Upstream commit dd19c106a36690b47bb1acc68372f2b472b495b8 ]
+[ Upstream commit 46f1619500d022501a4f0389f9f4c349ab46bb86 ]
 
-After 'Initial git repository build' commit,
-'mapping_table_ERRHRD' variable has not been used.
+Commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
+forcibly") allows compiler to uninline functions marked as 'inline'.
+In cace of __xchg this would cause to reference function
+__xchg_called_with_bad_pointer, which is an error case
+for catching bugs and will not happen for correct code, if
+__xchg is inlined.
 
-So 'mapping_table_ERRHRD' const variable could be removed
-to mute below warning message:
-
-   fs/cifs/netmisc.c:120:40: warning: unused variable 'mapping_table_ERRHRD' [-Wunused-const-variable]
-   static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
-                                           ^
-Signed-off-by: Austin Kim <austindh.kim@gmail.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/netmisc.c | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/mips/include/asm/cmpxchg.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/cifs/netmisc.c b/fs/cifs/netmisc.c
-index cc88f4f0325ef..bed9733302279 100644
---- a/fs/cifs/netmisc.c
-+++ b/fs/cifs/netmisc.c
-@@ -130,10 +130,6 @@ static const struct smb_to_posix_error mapping_table_ERRSRV[] = {
- 	{0, 0}
- };
+diff --git a/arch/mips/include/asm/cmpxchg.h b/arch/mips/include/asm/cmpxchg.h
+index 895f91b9e89c3..520ca166cbed5 100644
+--- a/arch/mips/include/asm/cmpxchg.h
++++ b/arch/mips/include/asm/cmpxchg.h
+@@ -73,8 +73,8 @@ extern unsigned long __xchg_called_with_bad_pointer(void)
+ extern unsigned long __xchg_small(volatile void *ptr, unsigned long val,
+ 				  unsigned int size);
  
--static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
--	{0, 0}
--};
--
- /*
-  * Convert a string containing text IPv4 or IPv6 address to binary form.
-  *
+-static inline unsigned long __xchg(volatile void *ptr, unsigned long x,
+-				   int size)
++static __always_inline
++unsigned long __xchg(volatile void *ptr, unsigned long x, int size)
+ {
+ 	switch (size) {
+ 	case 1:
 -- 
 2.20.1
 
