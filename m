@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2056CA9EAC
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EE6CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B538E2245C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5050221852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:21:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437292;
-	bh=fxdugRaZcLgOseleGocQUAJOQjGs8F4EZ2YaQ26avFk=;
+	s=default; t=1571437297;
+	bh=1+u1DkWnQPvDJmZtTN8GhHQZL6ffowQ+Ec2hlERuOeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RdERP5J3+h7+fyhuxryig2m9EmenGfbpMNueiOVY6KTU3vxBV3l4w6Q3vnAmUZqjz
-	 dla/dwFNowPfNFuqDxsrrfgYWy+utict8rjjikEKzv/twq4rt9vwvWAzjfNwH4w0M7
-	 yDKq9ZoOCtDXXOt1cN4a45Do8uqwzKdJ5OVFgy7k=
+	b=NG4rxW/C0rIU7jkr0TiFQe3S9OnwI5IBBrI3AtU8AQODh0trm3LW573qbXO78cZKa
+	 xTlDsk0Tv2JCYU/veToXUZrYjPTIoRGRxXtEZ08LpEMHSSOvzQPcb8Vc+CF4ZqHa72
+	 sNEnRSo+UxAFRN78wukHYnSXaZds3w/L3RnkiLuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731248AbfJRWGT (ORCPT
+        id S2404770AbfJRWVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:06:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38122 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:21:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730760AbfJRWGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:06:12 -0400
+        id S1731221AbfJRWGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:06:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFC25205F4;
-        Fri, 18 Oct 2019 22:06:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11C6B222C6;
+        Fri, 18 Oct 2019 22:06:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436371;
-        bh=fxdugRaZcLgOseleGocQUAJOQjGs8F4EZ2YaQ26avFk=;
+        s=default; t=1571436377;
+        bh=1+u1DkWnQPvDJmZtTN8GhHQZL6ffowQ+Ec2hlERuOeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U3ovjam4QJJxytX2QsIOE36t3xXFrXnlVFBgmBrY4DFqamslVqvKvrZc+WK05uN8H
-         bfBOrPhsz40PWklx49aAGntolZ195Bq1+3xgmz2OKUrm+JDA+3rU/N0T6qVruAQEWA
-         RifszM9oKepDQhgF5OpSORur8FpZYfR4i7OgqHmw=
+        b=r5d0g8Q1BYteq+sN4xx68E/aZAINGCm1HBHORF7qNk/I9EJ92ty5gJcFVUffPzfo/
+         bvTONBSTvAY7AMStiFtS6Msqv9WSXWQMFEXfLH24kLKTe0viAyP74FGcvHDaUyVc14
+         kwF5fqbcpTROoQ3CXB0VBKOxaukGxsmEDz7KdB+c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        NeilBrown <neil@brown.name>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 4.19 025/100] staging: mt7621-pinctrl: use pinconf-generic for 'dt_node_to_map' and 'dt_free_map'
-Date:   Fri, 18 Oct 2019 18:04:10 -0400
-Message-Id: <20191018220525.9042-25-sashal@kernel.org>
+Cc:     Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Thinh Nguyen <thinhn@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 031/100] usb: dwc3: gadget: early giveback if End Transfer already completed
+Date:   Fri, 18 Oct 2019 18:04:16 -0400
+Message-Id: <20191018220525.9042-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -60,114 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+From: Felipe Balbi <felipe.balbi@linux.intel.com>
 
-[ Upstream commit 0ca1f90861b6d64386261096b42bfc81ce11948a ]
+[ Upstream commit 9f45581f5eec6786c6eded2b3c85345d82a910c9 ]
 
-Instead of reimplement afunction to do 'dt_node_to_map' task like
-'rt2880_pinctrl_dt_node_to_map' make use of 'pinconf_generic_dt_node_to_map_all'
-generic function for this task. Also use its equivalent function for free which
-is 'pinconf_generic_dt_free_map'. Remove 'rt2880_pinctrl_dt_node_to_map' function
-which is not needed anymore. This decrease a bit driver LOC and make it more
-generic. To properly compile this changes 'GENERIC_PINCONF' option is selected
-with the driver in its Kconfig file.
+There is a rare race condition that may happen during a Disconnect
+Interrupt if we have a started request that happens to be
+dequeued *after* completion of End Transfer command. If that happens,
+that request will be left waiting for completion of an End Transfer
+command that will never happen.
 
-This also fix a problem with function 'rt2880_pinctrl_dt_node_to_map' which was
-calling internally 'pinctrl_utils_reserve_map' which expects 'num_maps' to be initialized.
-It does a memory allocation based on the value, and triggers the following
-warning if is not properly set:
+If End Transfer command has already completed before, we are safe to
+giveback the request straight away.
 
-if (unlikely(order >= MAX_ORDER)) {
-        WARN_ON_ONCE(!(gfp_mask & __GFP_NOWARN));
-        return NULL;
-}
-
-Generic function 'pinconf_generic_dt_node_to_map_all' initializes properly
-'num_maps' to zero fixing the problem.
-
-Fixes: e12a1a6e087b ("staging: mt7621-pinctrl: refactor rt2880_pinctrl_dt_node_to_map function")
-Reported-by: NeilBrown <neil@brown.name>
-Tested-by: NeilBrown <neil@brown.name>
-Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Tested-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/mt7621-pinctrl/Kconfig        |  1 +
- .../staging/mt7621-pinctrl/pinctrl-rt2880.c   | 41 ++-----------------
- 2 files changed, 4 insertions(+), 38 deletions(-)
+ drivers/usb/dwc3/gadget.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/mt7621-pinctrl/Kconfig b/drivers/staging/mt7621-pinctrl/Kconfig
-index 37cf9c3273beb..fc36127113072 100644
---- a/drivers/staging/mt7621-pinctrl/Kconfig
-+++ b/drivers/staging/mt7621-pinctrl/Kconfig
-@@ -2,3 +2,4 @@ config PINCTRL_RT2880
- 	bool "RT2800 pinctrl driver for RALINK/Mediatek SOCs"
- 	depends on RALINK
- 	select PINMUX
-+	select GENERIC_PINCONF
-diff --git a/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c b/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c
-index aa98fbb170139..80e7067cfb797 100644
---- a/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c
-+++ b/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c
-@@ -11,6 +11,7 @@
- #include <linux/of.h>
- #include <linux/pinctrl/pinctrl.h>
- #include <linux/pinctrl/pinconf.h>
-+#include <linux/pinctrl/pinconf-generic.h>
- #include <linux/pinctrl/pinmux.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/pinctrl/machine.h>
-@@ -73,48 +74,12 @@ static int rt2880_get_group_pins(struct pinctrl_dev *pctrldev,
- 	return 0;
- }
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index e7461c995116a..7b0957c530485 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -1410,7 +1410,10 @@ static int dwc3_gadget_ep_dequeue(struct usb_ep *ep,
+ 				goto out0;
  
--static int rt2880_pinctrl_dt_node_to_map(struct pinctrl_dev *pctrldev,
--					 struct device_node *np_config,
--					 struct pinctrl_map **map,
--					 unsigned int *num_maps)
--{
--	struct rt2880_priv *p = pinctrl_dev_get_drvdata(pctrldev);
--	struct property *prop;
--	const char *function_name, *group_name;
--	int ret;
--	int ngroups = 0;
--	unsigned int reserved_maps = 0;
--
--	for_each_node_with_property(np_config, "group")
--		ngroups++;
--
--	*map = NULL;
--	ret = pinctrl_utils_reserve_map(pctrldev, map, &reserved_maps,
--					num_maps, ngroups);
--	if (ret) {
--		dev_err(p->dev, "can't reserve map: %d\n", ret);
--		return ret;
--	}
--
--	of_property_for_each_string(np_config, "group", prop, group_name) {
--		ret = pinctrl_utils_add_map_mux(pctrldev, map, &reserved_maps,
--						num_maps, group_name,
--						function_name);
--		if (ret) {
--			dev_err(p->dev, "can't add map: %d\n", ret);
--			return ret;
--		}
--	}
--
--	return 0;
--}
--
- static const struct pinctrl_ops rt2880_pctrl_ops = {
- 	.get_groups_count	= rt2880_get_group_count,
- 	.get_group_name		= rt2880_get_group_name,
- 	.get_group_pins		= rt2880_get_group_pins,
--	.dt_node_to_map		= rt2880_pinctrl_dt_node_to_map,
--	.dt_free_map		= pinctrl_utils_free_map,
-+	.dt_node_to_map		= pinconf_generic_dt_node_to_map_all,
-+	.dt_free_map		= pinconf_generic_dt_free_map,
- };
+ 			dwc3_gadget_move_cancelled_request(req);
+-			goto out0;
++			if (dep->flags & DWC3_EP_TRANSFER_STARTED)
++				goto out0;
++			else
++				goto out1;
+ 		}
+ 		dev_err(dwc->dev, "request %pK was not queued to %s\n",
+ 				request, ep->name);
+@@ -1418,6 +1421,7 @@ static int dwc3_gadget_ep_dequeue(struct usb_ep *ep,
+ 		goto out0;
+ 	}
  
- static int rt2880_pmx_func_count(struct pinctrl_dev *pctrldev)
++out1:
+ 	dwc3_gadget_giveback(dep, req, -ECONNRESET);
+ 
+ out0:
 -- 
 2.20.1
 
