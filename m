@@ -2,152 +2,144 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99708CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D355CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7728F21897
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60A4121897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:03:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571411003;
+	bh=1OYwBxrVpRaowZrupSu6BKSJ+fz37DvMtcr+rxQkOuQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gRDN+tSeelyShi8rOL9DQ1j+wXVREc+p6b3/m1QeT9/Z2dqRQVYESg3g0YerF4BKN
+	 EOCvYnxpOhdkTN4sA2g97qACzfoocdDmyM5Dut75wG8gjLwTj4wnUFZeZOVhTDSn9V
+	 YD0Sfhj3pR0DL9aL6c3BQVBYuUjHexPtrvAwhHtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634324AbfJRPCn (ORCPT
+        id S2634328AbfJRPDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:02:43 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:47445 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2634283AbfJRPCm (ORCPT
+        Fri, 18 Oct 2019 11:03:22 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45116 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2634203AbfJRPDW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:02:42 -0400
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 7412A100004;
-        Fri, 18 Oct 2019 15:02:36 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 17:04:26 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v5 0/7] backlight: gpio: simplify the driver
-Message-ID: <20191018150426.7w5q55nhkiqbqhuk@uno.localdomain>
-References: <20191007033200.13443-1-brgl@bgdev.pl>
- <20191014081220.GK4545@dell>
- <CACRpkda9Kco-bVPw1OA6FMpQ1L8dZ4WFJ227wTCM9rh5JE7-+A@mail.gmail.com>
- <20191016130536.222vsi5whkoy6vzo@uno.localdomain>
- <20191017072550.GK4365@dell>
+        Fri, 18 Oct 2019 11:03:22 -0400
+Received: by mail-lj1-f195.google.com with SMTP id q64so6531590ljb.12;
+        Fri, 18 Oct 2019 08:03:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XFN5CU9XZuSVc2bYbY/HDqoKRZEKGUyQPQg3On2l0sE=;
+        b=gBkToDaoKGRVwJreDGo607Fv70ru++/1xO32/vIMRQhKLqTYQ7kahpEbeCj8Di84as
+         63/7G6dKfn3FRVVa29BE6NwahNXhuruXe1k4tVqjjD/q9CiEw1n1XOPnTrUvjmZ6KVf3
+         6wWscf7tiT662US35hZfwOqHA5jyJk9V1tAKKO9aHwcU0dj8IQKm0Nqb84bP6yN5D50q
+         kZ6ZFFB+F/h4AD3/yVlo+FkeiOj3B4cJ2gLJNDwYdaa9Gk5n6t66BnBek24ZifmP0REZ
+         3LeUgbu3K9D12FrLLa9z+CcchT+KTVllIgjWM0YbQegN/ku3/xfDSvXqDbUQ7OD+0ZeT
+         2Ovg==
+X-Gm-Message-State: APjAAAUEpIBkH7Fz+o7IYvyxHBvYs8kCiHitk1bZzKfeqRjiOc8LIhXO
+        NNtzyq/0g/SSTykpOx/jWmg=
+X-Google-Smtp-Source: APXvYqwxdjJ+MtoBj9uhvCnlqOpwlR/Dxd78cC1h8ehsF5PmgDyA+G27aJtxy1wsDyFkxYXymLe/1g==
+X-Received: by 2002:a2e:481a:: with SMTP id v26mr4158614lja.41.1571410998012;
+        Fri, 18 Oct 2019 08:03:18 -0700 (PDT)
+Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
+        by smtp.gmail.com with ESMTPSA id j7sm2690715lfc.16.2019.10.18.08.03.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 18 Oct 2019 08:03:17 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.2)
+        (envelope-from <johan@kernel.org>)
+        id 1iLTmq-0006YT-9P; Fri, 18 Oct 2019 17:03:29 +0200
+Date:   Fri, 18 Oct 2019 17:03:28 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Oliver Neukum <oneukum@suse.com>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>,
+        stable <stable@vger.kernel.org>,
+        syzbot+6fe95b826644f7f12b0b@syzkaller.appspotmail.com
+Subject: Re: [PATCH 1/2] USB: ldusb: fix read info leaks
+Message-ID: <20191018150328.GC24768@localhost>
+References: <20191018141750.23756-1-johan@kernel.org>
+ <20191018141750.23756-2-johan@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jig6tcqnwznz3xde"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191017072550.GK4365@dell>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191018141750.23756-2-johan@kernel.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Oct 18, 2019 at 04:17:49PM +0200, Johan Hovold wrote:
+> Fix broken read implementation, which could be used to trigger slab info
+> leaks.
+> 
+> The driver failed to check if the custom ring buffer was still empty
+> when waking up after having waited for more data. This would happen on
+> every interrupt-in completion, even if no data had been added to the
+> ring buffer (e.g. on disconnect events).
+> 
+> Due to missing sanity checks and uninitialised (kmalloced) ring-buffer
+> entries, this meant that huge slab info leaks could easily be triggered.
+> 
+> Note that the empty-buffer check after wakeup is enough to fix the info
+> leak on disconnect, but let's clear the buffer on allocation and add a
+> sanity check to read() to prevent further leaks.
+> 
+> Fixes: 2824bd250f0b ("[PATCH] USB: add ldusb driver")
+> Cc: stable <stable@vger.kernel.org>     # 2.6.13
+> Reported-by: syzbot+6fe95b826644f7f12b0b@syzkaller.appspotmail.com
+> Signed-off-by: Johan Hovold <johan@kernel.org>
+> ---
+>  drivers/usb/misc/ldusb.c | 18 +++++++++++-------
+>  1 file changed, 11 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/usb/misc/ldusb.c b/drivers/usb/misc/ldusb.c
+> index 147c90c2a4e5..94780e14e95d 100644
+> --- a/drivers/usb/misc/ldusb.c
+> +++ b/drivers/usb/misc/ldusb.c
+> @@ -464,7 +464,7 @@ static ssize_t ld_usb_read(struct file *file, char __user *buffer, size_t count,
+>  
+>  	/* wait for data */
+>  	spin_lock_irq(&dev->rbsl);
+> -	if (dev->ring_head == dev->ring_tail) {
+> +	while (dev->ring_head == dev->ring_tail) {
+>  		dev->interrupt_in_done = 0;
+>  		spin_unlock_irq(&dev->rbsl);
+>  		if (file->f_flags & O_NONBLOCK) {
+> @@ -474,12 +474,17 @@ static ssize_t ld_usb_read(struct file *file, char __user *buffer, size_t count,
+>  		retval = wait_event_interruptible(dev->read_wait, dev->interrupt_in_done);
+>  		if (retval < 0)
+>  			goto unlock_exit;
+> -	} else {
+> -		spin_unlock_irq(&dev->rbsl);
+> +
+> +		spin_lock_irq(&dev->rbsl);
+>  	}
+> +	spin_unlock_irq(&dev->rbsl);
+>  
+>  	/* actual_buffer contains actual_length + interrupt_in_buffer */
+>  	actual_buffer = (size_t *)(dev->ring_buffer + dev->ring_tail * (sizeof(size_t)+dev->interrupt_in_endpoint_size));
+> +	if (*actual_buffer > sizeof(size_t) + dev->interrupt_in_endpoint_size) {
 
---jig6tcqnwznz3xde
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Bah, this should have been just
 
-Hi,
+	if (*actual_buffer > dev->interrupt_in_endpoint_size)
 
-On Thu, Oct 17, 2019 at 08:25:50AM +0100, Lee Jones wrote:
-> On Wed, 16 Oct 2019, Jacopo Mondi wrote:
->
-> > Hi, sorry for not having replied earlier
-> >
-> > On Wed, Oct 16, 2019 at 02:56:57PM +0200, Linus Walleij wrote:
-> > > On Mon, Oct 14, 2019 at 10:12 AM Lee Jones <lee.jones@linaro.org> wro=
-te:
-> > >
-> > > > >  arch/sh/boards/mach-ecovec24/setup.c         |  33 ++++--
-> > > >
-> > > > I guess we're just waiting for the SH Acks now?
-> > >
-> > > The one maintainer with this board is probably overloaded.
-> > >
-> > > I would say just apply it, it can't hold back the entire series.
-> >
-> > I've been able to resurect the Ecovec, and I've also been given a copy
-> > of its schematics file a few weeks ago.
-> >
-> > It's in my TODO list to test this series but I didn't manage to find
-> > time. If I pinky promise I get back to you before end of the week,
-> > could you wait for me ? :)
+will send a v2.
+	
+> +		retval = -EIO;
+> +		goto unlock_exit;
+> +	}
+>  	bytes_to_read = min(count, *actual_buffer);
+>  	if (bytes_to_read < *actual_buffer)
+>  		dev_warn(&dev->intf->dev, "Read buffer overflow, %zd bytes dropped\n",
 
-Finally had some time to spend on this.
-
-As I've reported to Bartosz, this version does not work on Ecovec out
-of the box, as the GPIO line connected to the backlight needs to be
-configured to work in output mode before registering the backlight
-device.
-
-With this simple change:
-
-$ git diff
-diff --git a/arch/sh/boards/mach-ecovec24/setup.c b/arch/sh/boards/mach-eco=
-vec24/setup.c
-index dd427bac5cde..eec6e805c3ed 100644
---- a/arch/sh/boards/mach-ecovec24/setup.c
-+++ b/arch/sh/boards/mach-ecovec24/setup.c
-@@ -1473,6 +1473,7 @@ static int __init arch_setup(void)
- #endif
- #endif
-
-+       gpio_direction_output(GPIO_PTR1, 1);
-        gpiod_add_lookup_table(&gpio_backlight_lookup);
-        gpio_backlight_device =3D platform_device_register_full(
-                                        &gpio_backlight_device_info);
-
-I can now control the gpio through the backlight interface.
-
-So please add this bit on top of next iteration and add my:
-Tested-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-
-Thanks and sorry for the long time it took!
-
->
-> Yes, no problem.
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-> Linaro Services Technical Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
-
---jig6tcqnwznz3xde
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl2p1HoACgkQcjQGjxah
-Vjw07Q//bXUAvYL4NvrQlWy03A4kCrvX0kolkx71JTQHnVprfyCz2qyP1BvfL7Cc
-VM0CnuW2dGjWKd1/9Fx9ltM25fbm/OJzGLCa+OLeGH54sTUzDTAwdkDkpqLAVM16
-lOx7QxHu+prPYDwbjwnS6lvO+SppEigTCV+NPXT2Y7qKkYiNb9COLsiYu+hkXAia
-lxyogP5H+JWKEPLK5uYhASSqKCcxgu39dIWxItj7+mfjOBiUHOFCpHIee2kY1+Q2
-+wrIXrET20X4YDvCQPZd2egXin5k+hLD0LtR9Gcel+w4Eikg7vB8vRm7I0NJ2g5a
-FbOpRDdyLj+7uh4vyNeW8gbrnsJ4qPhtb5KxUlQ48WVrIhtLsfLnYqN/WjN4n2ET
-lR6BKAjyZuo7PQ9xBzU0/O2s7bCOsLVHTu3iH97ZWy5KMbXEuKMCxK4UGiGjyYmX
-mhqSDXEamf7x/8NqJmEZ/iam4/9GbrMa7p0uQVODMz3xJjgkjMbSvWCNMoqe4vv+
-hM5JyuSDKvrJ7DHXi8TNXb6l5iInQVijhRPh/k2YrwA22DKcxrn42QMb1XmIZgTh
-1Db7DHdBOULpQIxDjzJ7zOOOH1GbCO6SlMtRzwMuT8O2PuX8W6PkFd32UDjZgyPQ
-tAy24dJqceX2t2EVUY86PWKi3hH6fmtkTzVbVw8JNLl61ZATd3I=
-=T0RW
------END PGP SIGNATURE-----
-
---jig6tcqnwznz3xde--
+Johan
