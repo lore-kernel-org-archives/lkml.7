@@ -2,190 +2,117 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA21CCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9E4CA9EAB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9452720679
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:02:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cwydHiem"
+	by mail.kernel.org (Postfix) with ESMTP id 8272C222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:03:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571436208;
+	bh=gQfdSseJIHTjOoyUiK2pAFA1G+4rHT3VQvtfGLrK9No=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=tYu0UKK2N+tr8COYKCAvrYY2Na21taifVjqCuLUkrrCUl24t/Z8ce/FT57u159SOf
+	 HxTFBHVLAaUddAyI6dSw7BcvH+iEzBMOVwr+K+GMdBy8LI1z0fBTyOdA20TeAskRbq
+	 U6aE9c7w10JLwqbRf8IKX6+pI0XoyMuCxmguZxbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbfJRWCX (ORCPT
+        id S1726718AbfJRWD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:02:23 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37645 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726258AbfJRWCW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:02:22 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p14so7732107wro.4;
-        Fri, 18 Oct 2019 15:02:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6dQAFshhL48PZ+aODCJDOIXc/B1ygVRm2PcTJmwhQZ8=;
-        b=cwydHiem7kl9J2qd7uKTtF7J3wM7jjKn7b3x/mJriNM9J7l5wBiO2EME5a9xo6R+7f
-         j1IH2FdosiljJjZcC7LIwbBEPKqXoVeiJfUeGFen/vpQgwZnxvZq2g5Y87xVgkx2UCmQ
-         1ssjdMs7qVaKw2xQlNOL9P1trEyCwiZi77iGdNlVylEYSyop/oRQTK4MUsOqR6C5Qzmw
-         QHOYhTfg875nJNw7AsJsaS+y7Fx5/h0GfIUeoufMY5iZNyWB3yVos/+nvOzXgdB2SwjO
-         kCxKviBAwsb6UgQudRgt6mZYw28n3STyfBZ1pb9mKH3sAfYzAKKqFoGQk/60EZOqF3dj
-         GrEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=6dQAFshhL48PZ+aODCJDOIXc/B1ygVRm2PcTJmwhQZ8=;
-        b=RHnPDPBkQrmjbkLrXjj3Q+G52ttqFMWHnJQojVbJe3nDqNwayK1sp43vdBcfk7ST69
-         /aA2OOop75qeG/wI1LuiWKqvu1T3ksc/y+129ne3q2R+9ahRwjQ2umR/ucM/nx6cIu2S
-         8aTahWjbhzESAX/jg/QhHpsb9ml86hCSOC4OVBN6o97pjJso5voRaLRDY2YtJfuNK01g
-         N8x3SAIP+2Tt7EPtJwlFzeoEXmeDQ3aOO1Orzk/eNqGLh6ZY1MQA40MzweQu7QyMhLzc
-         hk3vFfA+GKuI95rAajsfG3NkLd8CjB9FhHA6CxLsuWbGyVLeuJbHvza9w9GnntE03D/E
-         QklA==
-X-Gm-Message-State: APjAAAWPmbQ3tDvg8Elx5JYgw5ulXg4zdBdxIxE2nJD/uj9rd+l3FL44
-        Y1NxcMvHkjcOIEg8vdmaIi+h83rK
-X-Google-Smtp-Source: APXvYqyJamAIE/iZ1SsNp2IPEgLxsZddLjBtyTAv6MDoLxl2+xd7ipsQNJY8QGlXN/dHP2ffTpKgbw==
-X-Received: by 2002:adf:a157:: with SMTP id r23mr9149541wrr.51.1571436139336;
-        Fri, 18 Oct 2019 15:02:19 -0700 (PDT)
-Received: from [192.168.1.19] (chp168.neoplus.adsl.tpnet.pl. [83.31.13.168])
-        by smtp.gmail.com with ESMTPSA id q19sm8985483wra.89.2019.10.18.15.02.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 18 Oct 2019 15:02:18 -0700 (PDT)
-Subject: Re: [PATCH v14 13/19] leds: lp55xx: Add multicolor framework support
- to lp55xx
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191018122521.6757-1-dmurphy@ti.com>
- <20191018122521.6757-14-dmurphy@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- mQINBFWjfaEBEADd66EQbd6yd8YjG0kbEDT2QIkx8C7BqMXR8AdmA1OMApbfSvEZFT1D/ECR
- eWFBS8XtApKQx1xAs1j5z70k3zebk2eeNs5ahxi6vM4Qh89vBM46biSKeeX5fLcv7asmGb/a
- FnHPAfQaKFyG/Bj9V+//ef67hpjJWR3s74C6LZCFLcbZM0z/wTH+baA5Jwcnqr4h/ygosvhP
- X3gkRzJLSFYekmEv+WHieeKXLrJdsUPUvPJTZtvi3ELUxHNOZwX2oRJStWpmL2QGMwPokRNQ
- 29GvnueQdQrIl2ylhul6TSrClMrKZqOajDFng7TLgvNfyVZE8WQwmrkTrdzBLfu3kScjE14Q
- Volq8OtQpTsw5570D4plVKh2ahlhrwXdneSot0STk9Dh1grEB/Jfw8dknvqkdjALUrrM45eF
- FM4FSMxIlNV8WxueHDss9vXRbCUxzGw37Ck9JWYo0EpcpcvwPf33yntYCbnt+RQRjv7vy3w5
- osVwRR4hpbL/fWt1AnZ+RvbP4kYSptOCPQ+Pp1tCw16BOaPjtlqSTcrlD2fo2IbaB5D21SUa
- IsdZ/XkD+V2S9jCrN1yyK2iKgxtDoUkWiqlfRgH2Ep1tZtb4NLF/S0oCr7rNLO7WbqLZQh1q
- ShfZR16h7YW//1/NFwnyCVaG1CP/L/io719dPWgEd/sVSKT2TwARAQABtC1KYWNlayBBbmFz
- emV3c2tpIDxqYWNlay5hbmFzemV3c2tpQGdtYWlsLmNvbT6JAlgEEwEIAEICGwMHCwkIBwMC
- AQYVCAIJCgsDFgIBAh4BAheABQkJZgNMFiEEvx38ClaPBfeVdXCQvWpQHLeLfCYFAl05/9sC
- GQEACgkQvWpQHLeLfCarMQ/9FN/WqJdN2tf6xkP0RFyS4ft0sT04zkOCFfOMxs8mZ+KZoMU+
- X3a+fEppDL7xgRFpHyGaEel7lSi1eqtzsqZ5JiHbDS1Ht1G8TtATb8q8id68qeSeW2mfzaLQ
- 98NPELGfUXFoUqUQkG5z2p92UrGF4Muj1vOIW93pwvE4uDpNsl+jriwHomLtjIUoZtIRjGfZ
- RCyUQI0vi5LYzXCebuzAjGD7Jh2YAp7fDGrv3qTq8sX+DUJ4H/+I8PiL+jXKkEeppqIhlBJJ
- l4WcgggMu3c2uljYDuqRYghte33BXyCPAocfO2/sN+yJRUTVuRFlOxUk4srz/W8SQDwOAwtK
- V7TzdyF1/jOGBxWwS13EjMb4u3XwPMzcPlEQNdIqz76NFmJ99xYEvgkAmFmRioxuBTRv8Fs1
- c1jQ00WWJ5vezqY6lccdDroPalXWeFzfPjIhKbV3LAYTlqv0It75GW9+0TBhPqdTM15DrCVX
- B7Ues7UnD5FBtWwewTnwr+cu8te449VDMzN2I+a9YKJ1s6uZmzh5HnuKn6tAfGyQh8MujSOM
- lZrNHrRsIsLXOjeGVa84Qk/watEcOoyQ7d+YaVosU0OCZl0GldvbGp1z2u8cd2N/HJ7dAgFh
- Q7dtGXmdXpt2WKQvTvQXhIrCWVQErNYbDZDD2V0TZtlPBaZP4fkUDkvH+Sy5Ag0EVaN9oQEQ
- AMPNymBNoCWc13U6qOztXrIKBVsLGZXq/yOaR2n7gFbFACD0TU7XuH2UcnwvNR+uQFwSrRqa
- EczX2V6iIy2CITXKg5Yvg12yn09gTmafuoIyKoU16XvC3aZQQ2Bn3LO2sRP0j/NuMD9GlO37
- pHCVRpI2DPxFE39TMm1PLbHnDG8+lZql+dpNwWw8dDaRgyXx2Le542CcTBT52VCeeWDtqd2M
- wOr4LioYlfGfAqmwcwucBdTEBUxklQaOR3VbJQx6ntI2oDOBlNGvjnVDzZe+iREd5l40l+Oj
- TaiWvBGXkv6OI+wx5TFPp+BM6ATU+6UzFRTUWbj+LqVA/JMqYHQp04Y4H5GtjbHCa8abRvBw
- IKEvpwTyWZlfXPtp8gRlNmxYn6gQlTyEZAWodXwE7CE+KxNnq7bPHeLvrSn8bLNK682PoTGr
- 0Y00bguYLfyvEwuDYek1/h9YSXtHaCR3CEj4LU1B561G1j7FVaeYbX9bKBAoy/GxAW8J5O1n
- mmw7FnkSHuwO/QDe0COoO0QZ620Cf9IBWYHW4m2M2yh5981lUaiMcNM2kPgsJFYloFo2XGn6
- lWU9BrWjEoNDhHZtF+yaPEuwjZo6x/3E2Tu3E5Jj0VpVcE9U1Zq/fquDY79l2RJn5ENogOs5
- +Pi0GjVpEYQVWfm0PTCxNPOzOzGR4QB3BNFvABEBAAGJAiUEGAEIAA8FAlWjfaECGwwFCQlm
- AYAACgkQvWpQHLeLfCZqGxAAlWBWVvjU6xj70GwengiqYZwmW1i8gfS4TNibQT/KRq0zkBnE
- wgKwXRbVoW38pYVuGa5x/JDQMJDrLAJ0wrCOS3XxbSHCWOl/k2ZD9OaxUeXq6N+OmGTzfrYv
- PUvWS1Hy04q9AD1dIaMNruZQmvnRfkOk2UDncDIg0166/NTHiYI09H5mpWGpHn/2aT6dmpVw
- uoM9/rHlF5s5qAAo95tZ0QW2BtIceG9/rbYlL57waSMPF49awvwLQX5RhWoF8mPS5LsBrXXK
- hmizIsn40tLbi2RtWjzDWgZYitqmmqijeCnDvISN4qJ/nCLO4DjiSGs59w5HR+l0nwePDhOC
- A4RYZqS1e2Clx1VSkDXFpL3egabcIsqK7CZ6a21r8lXVpo4RnMlQsmXZTnRx4SajFvX7PrRg
- /02C811fLfh2r5O5if8sKQ6BKKlHpuuioqfj/w9z3B0aQ71e4n1zNJBO1kcdznikPLAbr7jG
- gkBUXT1yJiwpTfRQr5y2Uo12IJsKxohnNFVYtK8X/R6S0deKPjrZWvAkllgIPcHjMi2Va8yw
- KTj/JgcpUO5KN906Pf7ywZISe7Kbcc/qnE0YjPPSqFOvoeZvHe6EZCMW9+xZsaipvlqpByQV
- UHnVg09K9YFvjUBsBPdC8ef6YwgfR9o6AnPmxl0oMUIXkCCC5c99fzJY/k+JAq0EGAEIACAW
- IQS/HfwKVo8F95V1cJC9alAct4t8JgUCWwqKhgIbAgCBCRC9alAct4t8JnYgBBkWCAAdFiEE
- FMMcSshOZf56bfAEYhBsURv0pdsFAlsKioYACgkQYhBsURv0pdvELgD/U+y3/hsz0bIjMQJY
- 0LLxM/rFY9Vz1L43+lQHXjL3MPsA/1lNm5sailsY7aFBVJxAzTa8ZAGWBdVaGo6KCvimDB8G
- 7joP/jx+oGOmdRogs7mG//H+w9DTnBfPpnfkeiiokGYo/+huWO5V0Ac9tTqZeFc//t/YuYJn
- wWvS0Rx+KL0fT3eh9BQo47uF4yDiZIiWLNh4Agpup1MUSVsz4MjD0lW6ghtnLcGlIgoVHW0v
- tPW1m9jATYyJSOG/MC1iDrcYcp9uVYn5tKfkEeQNspuG6iSfS0q3tajPKnT1nJxMTxVOD2RW
- EIGfaV9Scrou92VD/eC+/8INRsiWS93j3hOKIAV5XRNINFqtzkagPYAP8r6wksjSjh01fSTB
- p5zxjfsIwWDDzDrqgzwv83CvrLXRV3OlG1DNUDYA52qJr47paH5QMWmHW5TNuoBX8qb6RW/H
- M3DzPgT+l+r1pPjMPfvL1t7civZUoPuNzoyFpQRj6TvWi2bGGMQKryeYksXG2zi2+avMFnLe
- lOxGdUZ7jn1SJ6Abba5WL3VrXCP+TUE6bZLgfw8kYa8QSXP3ysyeMI0topHFntBZ8a0KXBNs
- qqFCBWmTHXfwsfW0VgBmRtPO7eXVBybjJ1VXKR2RZxwSq/GoNXh/yrRXQxbcpZ+QP3/Tttsb
- FdKciZ4u3ts+5UwYra0BRuvb51RiZR2wRNnUeBnXWagJVTlG7RHBO/2jJOE6wrcdCMjs0Iiw
- PNWmiVoZA930TvHA5UeGENxdGqo2MvMdRJ54YaIR
-Message-ID: <2da123af-8cbe-e143-73f2-ca741e0923d2@gmail.com>
-Date:   Sat, 19 Oct 2019 00:02:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 18 Oct 2019 18:03:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726604AbfJRWD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:03:27 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8278C20679;
+        Fri, 18 Oct 2019 22:03:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571436206;
+        bh=gQfdSseJIHTjOoyUiK2pAFA1G+4rHT3VQvtfGLrK9No=;
+        h=From:To:Cc:Subject:Date:From;
+        b=osYUVrORP+k5gDMxBmlK1vvXSVvjXxUAK1m0Y9NxhnPUvTH4ci8xX4pVO4lM6nPx3
+         UBHPxnPmcVegVJ0glBC3W7CZ5rqGP4PUD79i9hZl5+KJ8s5MEC6WrHhR2ac8K00thB
+         PzG2fe0nuibXssy0CxOrzKKcJjzedTyCr/vqEu+c=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Remi Pommarel <repk@triplefau.lt>,
+        Elie Roudninski <xademax@gmail.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.3 01/89] iio: adc: meson_saradc: Fix memory allocation order
+Date:   Fri, 18 Oct 2019 18:01:56 -0400
+Message-Id: <20191018220324.8165-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191018122521.6757-14-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
+From: Remi Pommarel <repk@triplefau.lt>
 
-I forgot to mention one thing below.
+[ Upstream commit de10ac47597e7a3596b27631d0d5ce5f48d2c099 ]
 
-On 10/18/19 2:25 PM, Dan Murphy wrote:
-> Add multicolor framework support for the lp55xx family.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
-[...]
+meson_saradc's irq handler uses priv->regmap so make sure that it is
+allocated before the irq get enabled.
 
-> -	led->cdev.default_trigger = pdata->led_config[chan].default_trigger;
->  
->  	if (led->chan_nr >= max_channel) {
->  		dev_err(dev, "Use channel numbers between 0 and %d\n",
-> @@ -170,18 +242,13 @@ static int lp55xx_init_led(struct lp55xx_led *led,
->  		return -EINVAL;
->  	}
->  
-> -	led->cdev.brightness_set_blocking = lp55xx_set_brightness;
-> -	led->cdev.groups = lp55xx_led_groups;
-> -
-> -	if (pdata->led_config[chan].name) {
-> -		led->cdev.name = pdata->led_config[chan].name;
-> -	} else {
-> -		snprintf(name, sizeof(name), "%s:channel%d",
-> -			pdata->label ? : chip->cl->name, chan);
-> -		led->cdev.name = name;
-> -	}
-> +#if IS_ENABLED(CONFIG_LEDS_CLASS_MULTI_COLOR)
-> +	if (pdata->led_config[chan].num_colors > 1)
-> +		ret = devm_led_classdev_multicolor_register(dev, &led->mc_cdev);
-> +	else
-> +#endif
+This also fixes crash when CONFIG_DEBUG_SHIRQ is enabled, as device
+managed resources are freed in the inverted order they had been
+allocated, priv->regmap was freed before the spurious fake irq that
+CONFIG_DEBUG_SHIRQ adds called the handler.
 
-This looks odd. I think that no-ops from previous version were OK.
+Fixes: 3af109131b7eb8 ("iio: adc: meson-saradc: switch from polling to interrupt mode")
+Reported-by: Elie Roudninski <xademax@gmail.com>
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Tested-by: Elie ROUDNINSKI <xademax@gmail.com>
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/iio/adc/meson_saradc.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-> +		ret = devm_led_classdev_register(dev, &led->cdev);
->  
-> -	ret = devm_led_classdev_register(dev, &led->cdev);
->  	if (ret) {
->  		dev_err(dev, "led register err: %d\n", ret);
->  		return ret;
-> @@ -525,6 +592,82 @@ void lp55xx_unregister_sysfs(struct lp55xx_chip *chip)
->  }
->  EXPORT_SYMBOL_GPL(lp55xx_unregister_sysfs);
->  
-
-
+diff --git a/drivers/iio/adc/meson_saradc.c b/drivers/iio/adc/meson_saradc.c
+index 7b28d045d2719..7b27306330a35 100644
+--- a/drivers/iio/adc/meson_saradc.c
++++ b/drivers/iio/adc/meson_saradc.c
+@@ -1219,6 +1219,11 @@ static int meson_sar_adc_probe(struct platform_device *pdev)
+ 	if (IS_ERR(base))
+ 		return PTR_ERR(base);
+ 
++	priv->regmap = devm_regmap_init_mmio(&pdev->dev, base,
++					     priv->param->regmap_config);
++	if (IS_ERR(priv->regmap))
++		return PTR_ERR(priv->regmap);
++
+ 	irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
+ 	if (!irq)
+ 		return -EINVAL;
+@@ -1228,11 +1233,6 @@ static int meson_sar_adc_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	priv->regmap = devm_regmap_init_mmio(&pdev->dev, base,
+-					     priv->param->regmap_config);
+-	if (IS_ERR(priv->regmap))
+-		return PTR_ERR(priv->regmap);
+-
+ 	priv->clkin = devm_clk_get(&pdev->dev, "clkin");
+ 	if (IS_ERR(priv->clkin)) {
+ 		dev_err(&pdev->dev, "failed to get clkin\n");
 -- 
-Best regards,
-Jacek Anaszewski
+2.20.1
+
