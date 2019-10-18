@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA4BCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA26ECA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDA4320640
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F45720640
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437667;
-	bh=Gi+8uHxb/nH/ASrO4/N8M/j/xYpLyDr7wlMxycKl+WI=;
+	s=default; t=1571437669;
+	bh=Z8kNSpZKICsj64i1BK953BmpbaZEYmjCSvxuGKfVnTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BCzBrsSnjWTClWtgj5zVwQe8i0Kycbao26OfI3Bvx1aFYgvWo3WCHgFMmozOBzLom
-	 pM4PhW36UhlLOqZhXbdc7kGmcXYd4a21FTmTNn98q0hxPahpoN2Tf+XUdoX2wtV1Ad
-	 lFbJ/QdSI5wVcWbP3EwAMyIzesFHbP4E7zYHvfJo=
+	b=mDQMJ38vewA9Qnya/Mnh9u+N68YLu9TO/6bqfCViHtitxqx7ztDIw1jVokvCle0MD
+	 1fgYdX9COTXiXLsgbEt0RD1lNODw28ge3VlXqrM3dao0TQOZNXlOdsyGLpijp1Ds+Z
+	 ZLk8TrkfBkeSIhDgCfCO8rATsh26yxjk1wMjovUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406603AbfJRW1p (ORCPT
+        id S2406638AbfJRW1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:27:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35526 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:27:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727398AbfJRWD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:03:56 -0400
+        id S1727476AbfJRWDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:03:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57B6322459;
-        Fri, 18 Oct 2019 22:03:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55FEE2245D;
+        Fri, 18 Oct 2019 22:03:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436236;
-        bh=Gi+8uHxb/nH/ASrO4/N8M/j/xYpLyDr7wlMxycKl+WI=;
+        s=default; t=1571436235;
+        bh=Z8kNSpZKICsj64i1BK953BmpbaZEYmjCSvxuGKfVnTE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i7AuZM5g3O44Dee9QsFtBqZCW4l9v7y0Uvqjqy/pNhZ8cMTJTNbPEyXV9u0OeZa+e
-         SBbRRrLBVedE3yCHAr0JD7QAsJeslSFoD9SYrIsjUCdtYAVtVGe3DGYbVb1akE8Gdh
-         1UVZJ2k/+BuLT3YUFY6aTh/mmlqyR5DTNdoHuKts=
+        b=FwG0meJObO8KxVQtfNMVk2JdySkMg2+vGKEl8fvTr06uvyEYTm/V0d/aIFjX5QiEW
+         z2pPFK31mS3rDpz1nyiGRjXiYOhsgkvRn66oHNTrwKNnnjtW4W+TuFZBG7l/SHoog0
+         wYEs8VzhBx5ompKe4tauokwVuAip3Z/BE8+rZYM0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dexuan Cui <decui@microsoft.com>, Jiri Kosina <jkosina@suse.cz>,
-        Sasha Levin <sashal@kernel.org>, devel@linuxdriverproject.org,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 21/89] HID: hyperv: Use in-place iterator API in the channel callback
-Date:   Fri, 18 Oct 2019 18:02:16 -0400
-Message-Id: <20191018220324.8165-21-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 20/89] RDMA/iwcm: Fix a lock inversion issue
+Date:   Fri, 18 Oct 2019 18:02:15 -0400
+Message-Id: <20191018220324.8165-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -59,97 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 6a297c90efa68b2864483193b8bfb0d19478600c ]
+[ Upstream commit b66f31efbdad95ec274345721d99d1d835e6de01 ]
 
-Simplify the ring buffer handling with the in-place API.
+This patch fixes the lock inversion complaint:
 
-Also avoid the dynamic allocation and the memory leak in the channel
-callback function.
+============================================
+WARNING: possible recursive locking detected
+5.3.0-rc7-dbg+ #1 Not tainted
+--------------------------------------------
+kworker/u16:6/171 is trying to acquire lock:
+00000000035c6e6c (&id_priv->handler_mutex){+.+.}, at: rdma_destroy_id+0x78/0x4a0 [rdma_cm]
 
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Acked-by: Jiri Kosina <jkosina@suse.cz>
+but task is already holding lock:
+00000000bc7c307d (&id_priv->handler_mutex){+.+.}, at: iw_conn_req_handler+0x151/0x680 [rdma_cm]
+
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock(&id_priv->handler_mutex);
+  lock(&id_priv->handler_mutex);
+
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+3 locks held by kworker/u16:6/171:
+ #0: 00000000e2eaa773 ((wq_completion)iw_cm_wq){+.+.}, at: process_one_work+0x472/0xac0
+ #1: 000000001efd357b ((work_completion)(&work->work)#3){+.+.}, at: process_one_work+0x476/0xac0
+ #2: 00000000bc7c307d (&id_priv->handler_mutex){+.+.}, at: iw_conn_req_handler+0x151/0x680 [rdma_cm]
+
+stack backtrace:
+CPU: 3 PID: 171 Comm: kworker/u16:6 Not tainted 5.3.0-rc7-dbg+ #1
+Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
+Workqueue: iw_cm_wq cm_work_handler [iw_cm]
+Call Trace:
+ dump_stack+0x8a/0xd6
+ __lock_acquire.cold+0xe1/0x24d
+ lock_acquire+0x106/0x240
+ __mutex_lock+0x12e/0xcb0
+ mutex_lock_nested+0x1f/0x30
+ rdma_destroy_id+0x78/0x4a0 [rdma_cm]
+ iw_conn_req_handler+0x5c9/0x680 [rdma_cm]
+ cm_work_handler+0xe62/0x1100 [iw_cm]
+ process_one_work+0x56d/0xac0
+ worker_thread+0x7a/0x5d0
+ kthread+0x1bc/0x210
+ ret_from_fork+0x24/0x30
+
+This is not a bug as there are actually two lock classes here.
+
+Link: https://lore.kernel.org/r/20190930231707.48259-3-bvanassche@acm.org
+Fixes: de910bd92137 ("RDMA/cma: Simplify locking needed for serialization of callbacks")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-hyperv.c | 56 +++++++---------------------------------
- 1 file changed, 10 insertions(+), 46 deletions(-)
+ drivers/infiniband/core/cma.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-hyperv.c b/drivers/hid/hid-hyperv.c
-index 7795831d37c21..f363163200759 100644
---- a/drivers/hid/hid-hyperv.c
-+++ b/drivers/hid/hid-hyperv.c
-@@ -314,60 +314,24 @@ static void mousevsc_on_receive(struct hv_device *device,
+diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
+index a68d0ccf67a43..2e48b59926c19 100644
+--- a/drivers/infiniband/core/cma.c
++++ b/drivers/infiniband/core/cma.c
+@@ -2396,9 +2396,10 @@ static int iw_conn_req_handler(struct iw_cm_id *cm_id,
+ 		conn_id->cm_id.iw = NULL;
+ 		cma_exch(conn_id, RDMA_CM_DESTROYING);
+ 		mutex_unlock(&conn_id->handler_mutex);
++		mutex_unlock(&listen_id->handler_mutex);
+ 		cma_deref_id(conn_id);
+ 		rdma_destroy_id(&conn_id->id);
+-		goto out;
++		return ret;
+ 	}
  
- static void mousevsc_on_channel_callback(void *context)
- {
--	const int packet_size = 0x100;
--	int ret;
- 	struct hv_device *device = context;
--	u32 bytes_recvd;
--	u64 req_id;
- 	struct vmpacket_descriptor *desc;
--	unsigned char	*buffer;
--	int	bufferlen = packet_size;
--
--	buffer = kmalloc(bufferlen, GFP_ATOMIC);
--	if (!buffer)
--		return;
--
--	do {
--		ret = vmbus_recvpacket_raw(device->channel, buffer,
--					bufferlen, &bytes_recvd, &req_id);
--
--		switch (ret) {
--		case 0:
--			if (bytes_recvd <= 0) {
--				kfree(buffer);
--				return;
--			}
--			desc = (struct vmpacket_descriptor *)buffer;
--
--			switch (desc->type) {
--			case VM_PKT_COMP:
--				break;
--
--			case VM_PKT_DATA_INBAND:
--				mousevsc_on_receive(device, desc);
--				break;
--
--			default:
--				pr_err("unhandled packet type %d, tid %llx len %d\n",
--					desc->type, req_id, bytes_recvd);
--				break;
--			}
- 
-+	foreach_vmbus_pkt(desc, device->channel) {
-+		switch (desc->type) {
-+		case VM_PKT_COMP:
- 			break;
- 
--		case -ENOBUFS:
--			kfree(buffer);
--			/* Handle large packet */
--			bufferlen = bytes_recvd;
--			buffer = kmalloc(bytes_recvd, GFP_ATOMIC);
--
--			if (!buffer)
--				return;
-+		case VM_PKT_DATA_INBAND:
-+			mousevsc_on_receive(device, desc);
-+			break;
- 
-+		default:
-+			pr_err("Unhandled packet type %d, tid %llx len %d\n",
-+			       desc->type, desc->trans_id, desc->len8 * 8);
- 			break;
- 		}
--	} while (1);
--
-+	}
- }
- 
- static int mousevsc_connect_to_vsp(struct hv_device *device)
+ 	mutex_unlock(&conn_id->handler_mutex);
 -- 
 2.20.1
 
