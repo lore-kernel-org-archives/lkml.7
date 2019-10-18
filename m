@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D0FCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94972CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC16B222C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73DC4222C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:13:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633387AbfJRKNt (ORCPT
+        id S2442477AbfJRKNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 06:13:49 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:32778 "EHLO foss.arm.com"
+        Fri, 18 Oct 2019 06:13:52 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:32776 "EHLO foss.arm.com"
         rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S2442459AbfJRKNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 06:13:47 -0400
+        id S2442460AbfJRKNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 06:13:48 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89F5E625;
-        Fri, 18 Oct 2019 03:13:25 -0700 (PDT)
-Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 873F23F6C4;
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 505165B1;
         Fri, 18 Oct 2019 03:13:22 -0700 (PDT)
+Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 33FF43F6C4;
+        Fri, 18 Oct 2019 03:13:19 -0700 (PDT)
 From:   Steven Price <steven.price@arm.com>
 To:     linux-mm@kvack.org
 Cc:     Steven Price <steven.price@arm.com>,
@@ -44,13 +44,13 @@ Cc:     Steven Price <steven.price@arm.com>,
         Mark Rutland <Mark.Rutland@arm.com>,
         "Liang, Kan" <kan.liang@linux.intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: [PATCH v12 08/22] s390: mm: Add p?d_leaf() definitions
-Date:   Fri, 18 Oct 2019 11:12:34 +0100
-Message-Id: <20191018101248.33727-9-steven.price@arm.com>
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv@lists.infradead.org, Alexandre Ghiti <alex@ghiti.fr>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Subject: [PATCH v12 07/22] riscv: mm: Add p?d_leaf() definitions
+Date:   Fri, 18 Oct 2019 11:12:33 +0100
+Message-Id: <20191018101248.33727-8-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018101248.33727-1-steven.price@arm.com>
 References: <20191018101248.33727-1-steven.price@arm.com>
@@ -66,39 +66,56 @@ those of user space. For this it needs to know when it has reached a
 'leaf' entry in the page tables. This information is provided by the
 p?d_leaf() functions/macros.
 
-For s390, pud_large() and pmd_large() are already implemented as static
-inline functions. Add a macro to provide the p?d_leaf names for the
-generic code to use.
+For riscv a page is a leaf page when it has a read, write or execute bit
+set on it.
 
-CC: Heiko Carstens <heiko.carstens@de.ibm.com>
-CC: Vasily Gorbik <gor@linux.ibm.com>
-CC: Christian Borntraeger <borntraeger@de.ibm.com>
-CC: linux-s390@vger.kernel.org
+CC: Palmer Dabbelt <palmer@sifive.com>
+CC: Albert Ou <aou@eecs.berkeley.edu>
+CC: linux-riscv@lists.infradead.org
+Reviewed-by: Alexandre Ghiti <alex@ghiti.fr>
+Acked-by: Paul Walmsley <paul.walmsley@sifive.com> # for arch/riscv
 Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- arch/s390/include/asm/pgtable.h | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/riscv/include/asm/pgtable-64.h | 7 +++++++
+ arch/riscv/include/asm/pgtable.h    | 7 +++++++
+ 2 files changed, 14 insertions(+)
 
-diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
-index 36c578c0ff96..acab5a455490 100644
---- a/arch/s390/include/asm/pgtable.h
-+++ b/arch/s390/include/asm/pgtable.h
-@@ -675,6 +675,7 @@ static inline int pud_none(pud_t pud)
- 	return pud_val(pud) == _REGION3_ENTRY_EMPTY;
+diff --git a/arch/riscv/include/asm/pgtable-64.h b/arch/riscv/include/asm/pgtable-64.h
+index 74630989006d..e88a8e8acbdf 100644
+--- a/arch/riscv/include/asm/pgtable-64.h
++++ b/arch/riscv/include/asm/pgtable-64.h
+@@ -43,6 +43,13 @@ static inline int pud_bad(pud_t pud)
+ 	return !pud_present(pud);
  }
  
-+#define pud_leaf	pud_large
- static inline int pud_large(pud_t pud)
++#define pud_leaf	pud_leaf
++static inline int pud_leaf(pud_t pud)
++{
++	return pud_present(pud)
++		&& (pud_val(pud) & (_PAGE_READ | _PAGE_WRITE | _PAGE_EXEC));
++}
++
+ static inline void set_pud(pud_t *pudp, pud_t pud)
  {
- 	if ((pud_val(pud) & _REGION_ENTRY_TYPE_MASK) != _REGION_ENTRY_TYPE_R3)
-@@ -692,6 +693,7 @@ static inline unsigned long pud_pfn(pud_t pud)
- 	return (pud_val(pud) & origin_mask) >> PAGE_SHIFT;
+ 	*pudp = pud;
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 7255f2d8395b..b9a679153265 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -130,6 +130,13 @@ static inline int pmd_bad(pmd_t pmd)
+ 	return !pmd_present(pmd);
  }
  
-+#define pmd_leaf	pmd_large
- static inline int pmd_large(pmd_t pmd)
++#define pmd_leaf	pmd_leaf
++static inline int pmd_leaf(pmd_t pmd)
++{
++	return pmd_present(pmd)
++		&& (pmd_val(pmd) & (_PAGE_READ | _PAGE_WRITE | _PAGE_EXEC));
++}
++
+ static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
  {
- 	return (pmd_val(pmd) & _SEGMENT_ENTRY_LARGE) != 0;
+ 	*pmdp = pmd;
 -- 
 2.20.1
 
