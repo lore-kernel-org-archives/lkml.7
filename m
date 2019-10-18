@@ -2,144 +2,197 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6144CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BBCCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BFD321852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EF9621852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:48:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iFql2BBI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632938AbfJRIrq (ORCPT
+        id S2632949AbfJRIsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:47:46 -0400
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:36034 "EHLO
-        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730669AbfJRIrq (ORCPT
+        Fri, 18 Oct 2019 04:48:06 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:45858 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2632940AbfJRIsF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 04:47:46 -0400
-Received: from mailgate01.nec.co.jp ([114.179.233.122])
-        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x9I8lSho028617
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Fri, 18 Oct 2019 17:47:28 +0900
-Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9I8lStp003906;
-        Fri, 18 Oct 2019 17:47:28 +0900
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
-        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9I8l4aE002929;
-        Fri, 18 Oct 2019 17:47:28 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.151] [10.38.151.151]) by mail01b.kamome.nec.co.jp with ESMTP id BT-MMP-9643500; Fri, 18 Oct 2019 17:46:04 +0900
-Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
- BPXC23GP.gisp.nec.co.jp ([10.38.151.151]) with mapi id 14.03.0439.000; Fri,
- 18 Oct 2019 17:46:04 +0900
-From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-To:     Michal Hocko <mhocko@kernel.org>
-CC:     Qian Cai <cai@lca.pw>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        David Hildenbrand <david@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: Re: memory offline infinite loop after soft offline
-Thread-Topic: memory offline infinite loop after soft offline
-Thread-Index: AQHVgHtyUduz67i7AUWqxWZ+Pu+7vadZPeAAgATGWACAAAeGAIAAh9KAgAAFzYCAAIOhAIAAP4+AgAAHNACAABD9AIAAFF4A
-Date:   Fri, 18 Oct 2019 08:46:04 +0000
-Message-ID: <20191018084603.GA5821@hori.linux.bs1.fc.nec.co.jp>
-References: <1570829564.5937.36.camel@lca.pw>
- <20191014083914.GA317@dhcp22.suse.cz>
- <20191017093410.GA19973@hori.linux.bs1.fc.nec.co.jp>
- <20191017100106.GF24485@dhcp22.suse.cz> <1571335633.5937.69.camel@lca.pw>
- <20191017182759.GN24485@dhcp22.suse.cz>
- <20191018021906.GA24978@hori.linux.bs1.fc.nec.co.jp>
- <20191018060635.GA5017@dhcp22.suse.cz>
- <20191018063222.GA15406@hori.linux.bs1.fc.nec.co.jp>
- <20191018073310.GB5017@dhcp22.suse.cz>
-In-Reply-To: <20191018073310.GB5017@dhcp22.suse.cz>
-Accept-Language: en-US, ja-JP
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.150]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FF33C9B5D9D42A4387CEC5653B21960F@gisp.nec.co.jp>
-Content-Transfer-Encoding: base64
+        Fri, 18 Oct 2019 04:48:05 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9I8i9BP028994;
+        Fri, 18 Oct 2019 08:47:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=XykSB0gBQiTVbG4KBFgo1d2RuALABYecpLgSMG6zHrw=;
+ b=iFql2BBIM8CpDm7UmmJuk9L3BBkuCq28HuJKP+91dn+Ln6VMIKeq1vx20gmMCz88eO3h
+ 6LfQmusNCEIvzU8+Fvik5FjIi/pcdy/58K5jL3+AOFj9OTMFK15GqSW2oA5OVm8eyh6z
+ dSt8L71v448jrwxkxNs/o8s2WHTbVErLESEAkLnjUfuOiNTsF9LdNA1XPemEWQFhVS9Q
+ 4rPycX5dq7ZnHcI1vgAAK5XpQ95dnaBE0qErpBOAWZw59OcGc7NCOdOXSp+uCUh+EdB2
+ ogdAweSU7aOqvZNDJvb08sNXpRuxDpU7gWHyxKv6gEUNJqLpb3H+ocqE5UpOnrASGgFQ mQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2vq0q42e7j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 18 Oct 2019 08:47:32 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9I8hXMK173381;
+        Fri, 18 Oct 2019 08:47:31 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2vq0dxdmt6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 18 Oct 2019 08:47:31 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9I8lOnR002288;
+        Fri, 18 Oct 2019 08:47:28 GMT
+Received: from [10.191.11.92] (/10.191.11.92)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 18 Oct 2019 08:47:24 +0000
+Subject: Re: [PATCH] x86: Don't use MWAIT if explicitly requested
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        tim.c.chen@linux.intel.com, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+References: <1571370354-17736-1-git-send-email-zhenzhong.duan@oracle.com>
+ <20191018071206.GZ2328@hirez.programming.kicks-ass.net>
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <56b074ab-8718-180c-b3dd-72687025c5a8@oracle.com>
+Date:   Fri, 18 Oct 2019 16:47:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+In-Reply-To: <20191018071206.GZ2328@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910180086
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910180086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCBPY3QgMTgsIDIwMTkgYXQgMDk6MzM6MTBBTSArMDIwMCwgTWljaGFsIEhvY2tvIHdy
-b3RlOg0KPiBPbiBGcmkgMTgtMTAtMTkgMDY6MzI6MjIsIE5hb3lhIEhvcmlndWNoaSB3cm90ZToN
-Cj4gPiBPbiBGcmksIE9jdCAxOCwgMjAxOSBhdCAwODowNjozNUFNICswMjAwLCBNaWNoYWwgSG9j
-a28gd3JvdGU6DQo+ID4gPiBPbiBGcmkgMTgtMTAtMTkgMDI6MTk6MDYsIE5hb3lhIEhvcmlndWNo
-aSB3cm90ZToNCj4gPiA+ID4gT24gVGh1LCBPY3QgMTcsIDIwMTkgYXQgMDg6Mjc6NTlQTSArMDIw
-MCwgTWljaGFsIEhvY2tvIHdyb3RlOg0KPiA+ID4gPiA+IE9uIFRodSAxNy0xMC0xOSAxNDowNzox
-MywgUWlhbiBDYWkgd3JvdGU6DQo+ID4gPiA+ID4gPiBPbiBUaHUsIDIwMTktMTAtMTcgYXQgMTI6
-MDEgKzAyMDAsIE1pY2hhbCBIb2NrbyB3cm90ZToNCj4gPiA+ID4gPiA+ID4gT24gVGh1IDE3LTEw
-LTE5IDA5OjM0OjEwLCBOYW95YSBIb3JpZ3VjaGkgd3JvdGU6DQo+ID4gPiA+ID4gPiA+ID4gT24g
-TW9uLCBPY3QgMTQsIDIwMTkgYXQgMTA6Mzk6MTRBTSArMDIwMCwgTWljaGFsIEhvY2tvIHdyb3Rl
-Og0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gWy4uLl0NCj4gPiA+ID4gPiA+ID4gPiA+
-IGRpZmYgLS1naXQgYS9tbS9wYWdlX2lzb2xhdGlvbi5jIGIvbW0vcGFnZV9pc29sYXRpb24uYw0K
-PiA+ID4gPiA+ID4gPiA+ID4gaW5kZXggODljMTljMGZlYWRiLi41ZmIzZmVlMTZmZGUgMTAwNjQ0
-DQo+ID4gPiA+ID4gPiA+ID4gPiAtLS0gYS9tbS9wYWdlX2lzb2xhdGlvbi5jDQo+ID4gPiA+ID4g
-PiA+ID4gPiArKysgYi9tbS9wYWdlX2lzb2xhdGlvbi5jDQo+ID4gPiA+ID4gPiA+ID4gPiBAQCAt
-Mjc0LDcgKzI3NCw3IEBAIF9fdGVzdF9wYWdlX2lzb2xhdGVkX2luX3BhZ2VibG9jayh1bnNpZ25l
-ZCBsb25nIHBmbiwgdW5zaWduZWQgbG9uZyBlbmRfcGZuLA0KPiA+ID4gPiA+ID4gPiA+ID4gIAkJ
-CSAqIHNpbXBsZSB3YXkgdG8gdmVyaWZ5IHRoYXQgYXMgVk1fQlVHX09OKCksIHRob3VnaC4NCj4g
-PiA+ID4gPiA+ID4gPiA+ICAJCQkgKi8NCj4gPiA+ID4gPiA+ID4gPiA+ICAJCQlwZm4gKz0gMSA8
-PCBwYWdlX29yZGVyKHBhZ2UpOw0KPiA+ID4gPiA+ID4gPiA+ID4gLQkJZWxzZSBpZiAoc2tpcF9o
-d3BvaXNvbmVkX3BhZ2VzICYmIFBhZ2VIV1BvaXNvbihwYWdlKSkNCj4gPiA+ID4gPiA+ID4gPiA+
-ICsJCWVsc2UgaWYgKHNraXBfaHdwb2lzb25lZF9wYWdlcyAmJiBQYWdlSFdQb2lzb24oY29tcG91
-bmRfaGVhZChwYWdlKSkpDQo+ID4gPiA+ID4gPiA+ID4gPiAgCQkJLyogQSBIV1BvaXNvbmVkIHBh
-Z2UgY2Fubm90IGJlIGFsc28gUGFnZUJ1ZGR5ICovDQo+ID4gPiA+ID4gPiA+ID4gPiAgCQkJcGZu
-Kys7DQo+ID4gPiA+ID4gPiA+ID4gPiAgCQllbHNlDQo+ID4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+
-ID4gPiA+ID4gVGhpcyBmaXggbG9va3MgZ29vZCB0byBtZS4gVGhlIG9yaWdpbmFsIGNvZGUgb25s
-eSBhZGRyZXNzZXMgaHdwb2lzb25lZCA0a0ItcGFnZSwNCj4gPiA+ID4gPiA+ID4gPiB3ZSBzZWVt
-IHRvIGhhdmUgdGhpcyBpc3N1ZSBzaW5jZSB0aGUgZm9sbG93aW5nIGNvbW1pdCwNCj4gPiA+ID4g
-PiA+ID4gDQo+ID4gPiA+ID4gPiA+IFRoYW5rcyBhIGxvdCBmb3IgZG91YmxlIGNoZWNraW5nIE5h
-b3lhIQ0KPiA+ID4gPiA+ID4gPiAgDQo+ID4gPiA+ID4gPiA+ID4gICBjb21taXQgYjAyM2Y0Njgx
-M2NkZTZlM2I4YThjMjRmNDMyZmY5YzFmZDhlOWE2NA0KPiA+ID4gPiA+ID4gPiA+ICAgQXV0aG9y
-OiBXZW4gQ29uZ3lhbmcgPHdlbmN5QGNuLmZ1aml0c3UuY29tPg0KPiA+ID4gPiA+ID4gPiA+ICAg
-RGF0ZTogICBUdWUgRGVjIDExIDE2OjAwOjQ1IDIwMTIgLTA4MDANCj4gPiA+ID4gPiA+ID4gPiAg
-IA0KPiA+ID4gPiA+ID4gPiA+ICAgICAgIG1lbW9yeS1ob3RwbHVnOiBza2lwIEhXUG9pc29uZWQg
-cGFnZSB3aGVuIG9mZmxpbmluZyBwYWdlcw0KPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4g
-PiA+IGFuZCBleHRlbnNpb24gb2YgTFRQIGNvdmVyYWdlIGZpbmFsbHkgZGlzY292ZXJlZCB0aGlz
-Lg0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gUWlhbiwgY291bGQgeW91IGdpdmUgdGhl
-IHBhdGNoIHNvbWUgdGVzdGluZz8NCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gVW5mb3J0dW5h
-dGVseSwgdGhpcyBkb2VzIG5vdCBzb2x2ZSB0aGUgcHJvYmxlbS7CoEl0IGxvb2tzIHRvIG1lIHRo
-YXQgaW4NCj4gPiA+ID4gPiA+IHNvZnRfb2ZmbGluZV9odWdlX3BhZ2UoKSwgc2V0X2h3cG9pc29u
-X2ZyZWVfYnVkZHlfcGFnZSgpIHdpbGwgb25seSBzZXQNCj4gPiA+ID4gPiA+IFBHX2h3cG9pc29u
-IGZvciBidWRkeSBwYWdlcywgc28gdGhlIGV2ZW4gdGhlIGNvbXBvdW5kX2hlYWQoKSBoYXMgbm8g
-UEdfaHdwb2lzb24NCj4gPiA+ID4gPiA+IHNldC4NCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4g
-CQlpZiAoUGFnZUJ1ZGR5KHBhZ2VfaGVhZCkgJiYgcGFnZV9vcmRlcihwYWdlX2hlYWQpID49IG9y
-ZGVyKSB7DQo+ID4gPiA+ID4gPiAJCQlpZiAoIVRlc3RTZXRQYWdlSFdQb2lzb24ocGFnZSkpDQo+
-ID4gPiA+ID4gPiAJCQkJaHdwb2lzb25lZCA9IHRydWU7DQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4g
-VGhpcyBpcyBtb3JlIHRoYW4gdW5leHBlY3RlZC4gSG93IGFyZSB3ZSBzdXBwb3NlZCB0byBmaW5k
-IG91dCB0aGF0IHRoZQ0KPiA+ID4gPiA+IHBhZ2UgaXMgcG9pc29uZWQ/IEFueSBpZGVhIE5hb3lh
-Pw0KPiA+ID4gPiANCj4gPiA+ID4gIyBzb3JyeSBmb3IgbXkgcG9vciByZXZpZXcuLi4NCj4gPiA+
-ID4gDQo+ID4gPiA+IFdlIHNldCBQR19od3BvaXNvbiBiaXQgb25seSBvbiB0aGUgaGVhZCBwYWdl
-IGZvciBodWdldGxiLCB0aGF0J3MgYmVjYXVzZQ0KPiA+ID4gPiB3ZSBoYW5kbGUgbXVsdGlwbGUg
-cGFnZXMgYXMgYSBzaW5nbGUgb25lIGZvciBodWdldGxiLiBTbyBpdCdzIGVub3VnaA0KPiA+ID4g
-PiB0byBjaGVjayBpc29sYXRpb24gb25seSBvbiB0aGUgaGVhZCBwYWdlLiAgU2ltcGx5IHNraXBw
-aW5nIHBmbiBjdXJzb3IgdG8NCj4gPiA+ID4gdGhlIHBhZ2UgYWZ0ZXIgdGhlIGh1Z2VwYWdlIHNo
-b3VsZCBhdm9pZCB0aGUgaW5maW5pdGUgbG9vcDoNCj4gPiA+IA0KPiA+ID4gQnV0IHRoZSBwYWdl
-IGR1bXAgUWlhbiBwcm92aWRlZCBzaG93cyB0aGF0IHRoZSBoZWFkIHBhZ2UgZG9lc24ndCBoYXZl
-DQo+ID4gPiBIV1BvaXNvbiBiaXQgZWl0aGVyLiBJZiBpdCBoYWQgdGhlbiBnb2luZyBwZm4gYXQg
-YSB0aW1lIHNob3VsZCBqdXN0IHdvcmsNCj4gPiA+IGJlY2F1c2UgYWxsIHRhaWwgcGFnZXMgd291
-bGQgYmUgc2tpcHBlZC4gT3IgZG8gSSBtaXNzIHNvbWV0aGluZz8NCj4gPiANCj4gPiBZb3UncmUg
-cmlnaHQsIHRoZW4gSSBkb24ndCBzZWUgaG93IHRoaXMgaGFwcGVucy4NCj4gDQo+IE9LLCB0aGlz
-IGlzIGEgYml0IHJlbGlldmluZy4gSSB0aG91Z2h0IHRoYXQgdGhlcmUgYXJlIGxlZ2l0aW1hdGUg
-Y2FzZXMNCj4gd2hlbiBub25lIG9mIHRoZSBodWdldGxiIGdldHMgdGhlIEhXUG9pc29uIGJpdCAo
-ZS5nLiB3aGVuIHRoZSBwYWdlIGhhcyAwDQo+IHJlZmVyZW5jZSBjb3VudCB3aGljaCBpcyB0aGUg
-Y2FzZSBoZXJlKS4gVGhhdCB3b3VsZCBiZSB1dHRlcmx5IGJyb2tlbg0KPiBiZWNhdXNlIHdlIHdv
-dWxkIGhhdmUgbm8gd2F5IHRvIHRlbGwgdGhlIHBhZ2UgaXMgaHdwb2lzb25lZC4NCj4gDQo+IEFu
-eXdheSwgZG8geW91IHRoaW5rIHRoZSBwYXRjaCBhcyBJJ3ZlIHBvc3RlZCBtYWtlcyBzZW5zZSBy
-ZWdhcmRsZXNzDQo+IGFub3RoZXIgcG90ZW50aWFsIHByb2JsZW0/IE9yIHdvdWxkIHlvdSBsaWtl
-IHRvIHJlc2VuZCB5b3VycyB3aGljaCBza2lwcw0KPiBvdmVyIHRhaWwgcGFnZXMgYXQgb25jZT8N
-Cg0KSSB0aGluayB0aGUgcGF0Y2ggZG9lcyBubyBoYXJtIGJ1dCB3ZSBtYXkgcHV0IHRoaXMgcGVu
-ZGluZyB1bnRpbCB3ZQ0KdW5kZXJzdGFuZCB0aGUgbWVjaGFuaXNtIG9mIHRoZSBidWcuIEknbGwg
-ZGlnIHRoaXMgbW9yZSBuZXh0IHdlZWsuDQoNClRoYW5rcywNCk5hb3lhIEhvcmlndWNoaQ==
+
+On 2019/10/18 15:12, Peter Zijlstra wrote:
+> On Fri, Oct 18, 2019 at 11:45:54AM +0800, Zhenzhong Duan wrote:
+>> If 'idle=nomwait' is specified or process matching what's in
+>> processor_idle_dmi_table, we should't use MWAIT at bootup stage before
+>> cpuidle driver loaded, even if it's preferred by default on Intel.
+>>
+>> Add a check so that HALT instruction is used in those cases.
+> The comment in idle_setup():
+>
+> 	/*
+> 	 * If the boot option of "idle=nomwait" is added,
+> 	 * it means that mwait will be disabled for CPU C2/C3
+> 	 * states. In such case it won't touch the variable
+> 	 * of boot_option_idle_override.
+> 	 */
+> 	boot_option_idle_override = IDLE_NOMWAIT;
+>
+> explicitly states this option is for C2+
+
+Yea, this is confusing. Other place referencing 
+boot_option_idle_override tell me
+
+"idle=nomwait" means not using mwait for all cstates. Maybe 'C2/C3' could be
+
+removed from above comment?
+
+See drivers/acpi/processor_idle.c:
+
+                         if (cx.type == ACPI_STATE_C1 &&
+                             (boot_option_idle_override == IDLE_NOMWAIT)) {
+                                 /*
+                                  * In most cases the C1 space_id 
+obtained from
+                                  * _CST object is FIXED_HARDWARE access 
+mode.
+                                  * But when the option of idle=halt is 
+added,
+                                  * the entry_method type should be 
+changed from
+                                  * CSTATE_FFH to CSTATE_HALT.
+                                  * When the option of idle=nomwait is 
+added,
+                                  * the C1 entry_method type should be
+                                  * CSTATE_HALT.
+                                  */
+                                 cx.entry_method = ACPI_CSTATE_HALT;
+                                 snprintf(cx.desc, ACPI_CX_DESC_LEN, 
+"ACPI HLT");
+                         }
+
+and drivers/acpi/processor_pdc.c:
+
+         if (boot_option_idle_override == IDLE_NOMWAIT) {
+                 /*
+                  * If mwait is disabled for CPU C-states, the C2C3_FFH 
+access
+                  * mode will be disabled in the parameter of _PDC object.
+                  * Of course C1_FFH access mode will also be disabled.
+                  */
+                 union acpi_object *obj;
+                 u32 *buffer = NULL;
+
+                 obj = pdc_in->pointer;
+                 buffer = (u32 *)(obj->buffer.pointer);
+                 buffer[2] &= ~(ACPI_PDC_C_C2C3_FFH | ACPI_PDC_C_C1_FFH);
+
+         }
+
+>
+>> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Borislav Petkov <bp@alien8.de>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: "H. Peter Anvin" <hpa@zytor.com>
+>> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+>> ---
+>>   arch/x86/kernel/process.c | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+>> index 5e94c43..37fc577 100644
+>> --- a/arch/x86/kernel/process.c
+>> +++ b/arch/x86/kernel/process.c
+>> @@ -667,6 +667,10 @@ static void amd_e400_idle(void)
+>>    */
+>>   static int prefer_mwait_c1_over_halt(const struct cpuinfo_x86 *c)
+>>   {
+>> +	/* Don't use MWAIT-C1 if explicitly requested */
+>> +	if (boot_option_idle_override == IDLE_NOMWAIT)
+>> +		return 0;
+> And this is very much about C1...
+>
+> OTOH, "idle=halt" should be forcing HLT over MWAIT, so did you want to
+> write:
+>
+> 	if (boot_option_idle_override == IDLE_HALT)
+> 		return 0;
+>
+> instead?
+
+I think it's not necessory, if 'idle=halt' specified, 
+select_idle_routine() returns early,
+
+prefer_mwait_c1_over_halt() is never called.
+
+Zhenzhong
 
