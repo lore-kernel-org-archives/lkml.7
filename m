@@ -2,251 +2,228 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E44BCA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F73CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66AC9222C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D333F222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 04:54:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LMn5Lir/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727350AbfJREyE (ORCPT
+        id S2441922AbfJREy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 00:54:04 -0400
-Received: from mga05.intel.com ([192.55.52.43]:24459 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725940AbfJRExf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 00:53:35 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 19:48:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,310,1566889200"; 
-   d="scan'208";a="371330005"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orsmga005.jf.intel.com with ESMTP; 17 Oct 2019 19:48:21 -0700
-Date:   Thu, 17 Oct 2019 19:48:20 -0700
-From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <andi.kleen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Wincy Van <fanwenyi0529@gmail.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Baoquan He <bhe@redhat.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: Re: [RFC PATCH v4 20/21] iommu/vt-d: hpet: Reserve an interrupt
- remampping table entry for watchdog
-Message-ID: <20191018024820.GA26311@ranerica-svr.sc.intel.com>
-References: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
- <1558660583-28561-21-git-send-email-ricardo.neri-calderon@linux.intel.com>
- <alpine.DEB.2.21.1906162049300.1760@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1906171007360.1760@nanos.tec.linutronix.de>
- <CABPqkBTai76Bgb4E61tF-mJUkFNxVa4B8M2bxTEYVgBsuAANNQ@mail.gmail.com>
- <alpine.DEB.2.21.1906172343120.1963@nanos.tec.linutronix.de>
+        Fri, 18 Oct 2019 00:54:26 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37000 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbfJREyY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 00:54:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=+gmJFwPTLJnUh/WDPO0VF7a4d47hpgmMAOiP9M55Zeg=; b=LMn5Lir/3N/LryNFA6ICA1zrV
+        FWVCnM95mEduMlCsXkkLjjwC5ps8TjttTYNwbjogDo73VgiqSSI/3irCgsT818J4S4tsPyNQ2CU2Z
+        7WTjF778dM6svp/5Pq+xHtZB2v+CnyBHC1CGbTT92hL6q61q77HPRuO7YTFGI0G+roa01DAvGqdo9
+        ZvNTjVDJlIm1nzxRJQeB0ypxI+rMchwbplGpIouuwS3dtABbrWISYHG4mcxqn6dSuWVuV+/DRDR+e
+        DgOkFxuc63Jt/jP2rKeTG35bPyK0JENMFWECC1LBJgZTS/5uZbUY3j4G5tK8OE2CDgbANGYsA5PyO
+        +ltEZYi9Q==;
+Received: from [2601:1c0:6280:3f0::9ef4]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iLJpa-0000XQ-JC; Fri, 18 Oct 2019 04:25:38 +0000
+Subject: Re: [PATCH v4 2/2] iio: (bma400) add driver for the BMA400
+To:     Dan Robertson <dan@dlrobertson.com>,
+        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+References: <20191018031848.18538-1-dan@dlrobertson.com>
+ <20191018031848.18538-3-dan@dlrobertson.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <487efd2c-b453-6c8b-eaac-7ba168bb4d77@infradead.org>
+Date:   Thu, 17 Oct 2019 21:25:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1906172343120.1963@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191018031848.18538-3-dan@dlrobertson.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 01:08:06AM +0200, Thomas Gleixner wrote:
-> Stephane,
+On 10/17/19 8:18 PM, Dan Robertson wrote:
+> Add a IIO driver for the Bosch BMA400 3-axes ultra-low power accelerometer.
+> The driver supports reading from the acceleration and temperature
+> registers. The driver also supports reading and configuring the output data
+> rate, oversampling ratio, and scale.
 > 
-> On Mon, 17 Jun 2019, Stephane Eranian wrote:
-> > On Mon, Jun 17, 2019 at 1:25 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > > Great that there is no trace of any mail from Andi or Stephane about this
-> > > on LKML. There is no problem with talking offlist about this stuff, but
-> > > then you should at least provide a rationale for those who were not part of
-> > > the private conversation.
-> > >
-> > Let me add some context to this whole patch series. The pressure on the
-> > core PMU counters is increasing as more people want to use them to
-> > measure always more events. When the PMU is overcommitted, i.e., more
-> > events than counters for them, there is multiplexing. It comes with an
-> > overhead that is too high for certain applications. One way to avoid this
-> > is to lower the multiplexing frequency, which is by default 1ms, but that
-> > comes with loss of accuracy. Another approach is to measure only a small
-> > number of events at a time and use multiple runs, but then you lose
-> > consistent event view. Another approach is to push for increasing the
-> > number of counters. But getting new hardware counters takes time. Short
-> > term, we can investigate what it would take to free one cycle-capable
-> > counter which is commandeered by the hard lockup detector on all X86
-> > processors today. The functionality of the watchdog, being able to get a
-> > crash dump on kernel deadlocks, is important and we cannot simply disable
-> > it. At scale, many bugs are exposed and thus machines
-> > deadlock. Therefore, we want to investigate what it would take to move
-> > the detector to another NMI-capable source, such as the HPET because the
-> > detector does not need high low granularity timer and interrupts only
-> > every 2s.
-> 
-> I'm well aware about the reasons for this.
-> 
-> > Furthermore, recent Intel erratum, e.g., the TSX issue forcing the TFA
-> > code in perf_events, have increased the pressure even more with only 3
-> > generic counters left. Thus, it is time to look at alternative ways of
-> > getting a hard lockup detector (NMI watchdog) from another NMI source
-> > than the PMU. To that extent, I have been discussing about alternatives.
-> >
-> > Intel suggested using the HPET and Ricardo has been working on
-> > producing this patch series. It is clear from your review
-> > that the patches have issues, but I am hoping that they can be
-> > resolved with constructive feedback knowing what the end goal is.
-> 
-> Well, I gave constructive feedback from the very first version on. But
-> essential parts of that feedback have been ignored for whatever reasons.
-> 
-> > As for the round-robin changes, yes, we discussed this as an alternative
-> > to avoid overloading CPU0 with handling all of the work to broadcasting
-> > IPI to 100+ other CPUs.
-> 
-> I can understand the reason why you don't want to do that, but again, I
-> said way before this was tried that changing affinity from NMI context with
-> the IOMMU cannot work by just calling into the iommu code and it needs some
-> deep investigation with the IOMMU wizards whether a preallocated entry can
-> be used lockless (including the subsequently required flush).
-> 
-> The outcome is that the change was implemented by simply calling into
-> functions which I told that they cannot be called from NMI context.
-> 
-> Unless this problem is not solved and I doubt it can be solved after
-> talking to IOMMU people and studying manuals, the round robin mechanics in
-> the current form are not going to happen. We'd need a SMI based lockup
-> detector to debug the resulting livelock wreckage.
-> 
-> There are two possible options:
-> 
->   1) Back to the IPI approach
-> 
->      The probem with broadcast is that it sends IPIs one by one to each
->      online CPU, which sums up with a large number of CPUs.
-> 
->      The interesting question is why the kernel does not utilize the all
->      excluding self destination shorthand for this. The SDM is not giving
->      any information.
-> 
->      But there is a historic commit which is related and gives a hint:
-> 
->         commit e77deacb7b078156fcadf27b838a4ce1a65eda04
->         Author: Keith Owens <kaos@sgi.com>
->         Date:   Mon Jun 26 13:59:56 2006 +0200
-> 
->         [PATCH] x86_64: Avoid broadcasting NMI IPIs
->     
->         On some i386/x86_64 systems, sending an NMI IPI as a broadcast will
->     	reset the system.  This seems to be a BIOS bug which affects
->     	machines where one or more cpus are not under OS control.  It
->     	occurs on HT systems with a version of the OS that is not compiled
->     	without HT support.  It also occurs when a system is booted with
->     	max_cpus=n where 2 <= n < cpus known to the BIOS.  The fix is to
->     	always send NMI IPI as a mask instead of as a broadcast.
-> 
->     I can see the issue with max_cpus and that'd be trivial to solve by
->     disabling the HPET watchdog when maxcpus < num_present_cpus is on the
->     command line (That's broken anyway with respect to MCEs. See the stupid
->     dance we need to do for 'nosmt').
-> 
->     Though the HT part of the changelog is unparseable garbage but might be
->     a cryptic hint to the 'nosmt' mess. Though back then we did not have
->     a way to disable the siblings (or did we?). Weird...
-> 
->     It definitely would be worthwhile to experiment with that. if we could
->     use shorthands (also for regular IPIs) that would be a great
->     improvement in general and would nicely solve that NMI issue. Beware of
->     the dragons though.
-> 
->   2) Delegate round robin to irq_work
-> 
->     Use the same mechanism as perf for stuff which needs to be done outside
->     of NMI context.
-> 
->     That can solve the issue, but the drawback is that in case the NMI hits
->     a locked up interrupt disabled region the affinity stays on the same
->     CPU as the regular IPI which kicks the irq work is not going to be
->     handled.  Might not be a big issue as we could detect the situation
->     that the IPI comes back to the same CPU. Not pretty and lots of nasty
->     corner case and race condition handling.
-> 
->     There is another issue with that round robin scheme as I pointed out to
->     Ricardo:
-> 
->       With a small watchdog threshold and tons of CPUs the time to switch
->       the affinity becomes short. That brings the HPET reprogramming (in
->       case of oneshot) into the SMI endagered zone and aside of that it
->       will eat performance as well because with lets say 1 second threshold
->       and 1000 CPUs we are going to flush the interrupt remapping
->       table/entry once per millisecond. No idea how big the penalty is, but
->       it's certainly not free.
-> 
->     One possible way out would be to use a combined approach of building
->     CPU groups (lets say 8) where one of the CPUs gets the NMI and IPIs the
->     other 7 and then round robins to the next group. Whether that's any
->     better, I can't tell.
-> 
-> Sorry that I can't come up with the magic cure and just can provide more
-> questions than answers.
+> Signed-off-by: Dan Robertson <dan@dlrobertson.com>
 
-I am sorry it took this long to reply to this thread. I'd like to kindly
-ask for your feedback on my proposed changes for the following iteration.
+Hi,
+I'm repeating some comments from my V2 review.
 
- * Jacob and Ashok, who work on IOMMU stuff, agreed that updating the
-   interrupt remapping table in NMI context is not possible as we would
-   always fall into locking issues. Hence, as you suggest, I will defer
-   this to an irq_work (and add checks in case the interrupt affinity did
-   not change).
+> ---
+>  drivers/iio/accel/Kconfig       |  18 +
+>  drivers/iio/accel/Makefile      |   2 +
+>  drivers/iio/accel/bma400.h      |  85 ++++
+>  drivers/iio/accel/bma400_core.c | 796 ++++++++++++++++++++++++++++++++
+>  drivers/iio/accel/bma400_i2c.c  |  60 +++
+>  5 files changed, 961 insertions(+)
+>  create mode 100644 drivers/iio/accel/bma400.h
+>  create mode 100644 drivers/iio/accel/bma400_core.c
+>  create mode 100644 drivers/iio/accel/bma400_i2c.c
+> 
+> diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
+> index 9b9656ce37e6..a1081b902d16 100644
+> --- a/drivers/iio/accel/Kconfig
+> +++ b/drivers/iio/accel/Kconfig
+> @@ -112,6 +112,24 @@ config BMA220
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called bma220_spi.
+>  
+> +config BMA400
+> +	tristate "Bosch BMA400 3-Axis Accelerometer Driver"
+> +	depends on I2C
+> +	select REGMAP
+> +	select BMA400_I2C if (I2C)
 
- * You have said in the past that you would not like to have a
-   request_nmi() interface for x86. For !IRQ_REMAP this is not a problem
-   as the MSI message can be programmed directly in the hardlockup
-   detector. However, for IRQ_REMAP, I would need to use request_irq()
-   and possibly have an interrupt handler that does nothing. The NMI
-   handler is still needed. This looks a little awkward but it does
-   allow to use the existing IRQ subsystem and hierarchy.
+Since BMA400 already depends on I2C, the "if (I2C)" above is
+redundant so it's not needed.
 
- * Since in x86 there is not a IRQF_NMI flag, the interrupt remapping
-   driver needs a way to identify the special case in which the entity
-   requesting the interrupt is the HPET hardlockup detector. This can be
-   done in the interrupt remapping driver .alloc() function. It would
-   look at the irq_alloc_info to determine if it is of type
-   IRQ_ALLOC_TYPE_HPET. If this is the case, the data of the associated
-   HPET channel is available. Such channel had been previously reserved
-   to be used by the HPET initalization code and added to the
-   IR-HPET-MSI domain. Once identified, the interrupt remapping driver
-   changes the delivery mode to NMI before creating the interrupt
-   remapping table entry. Furthermore, this will not break the AMD
-   driver as all it has to do is implement the same one-line change.
+> +	help
+> +	  Say Y here if you want to build a driver for the Bosch BMA400
+> +	  triaxial acceleration sensor.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called bma400_core and you will also get
+> +	  bma400_i2c for I2C.
+> +
+> +config BMA400_I2C
+> +	tristate
+> +	depends on BMA400
+> +	select REGMAP_I2C
+> +
+>  config BMC150_ACCEL
+>  	tristate "Bosch BMC150 Accelerometer Driver"
+>  	select IIO_BUFFER
 
- * In order to avoid HPET NMI interrupts that are too close together, as
-   you described earlier, a mixed mechanism can be used in which groups
-   of N CPUs receive IPIs (using your updated shorthands). The affinity of
-   the HPET interrupt would only target every (N+1)'th CPU.
 
-I have a quick-and-dirty implementation of this but wanted to check with
-you first if this sounds reasonable.
+> diff --git a/drivers/iio/accel/bma400_core.c b/drivers/iio/accel/bma400_core.c
+> new file mode 100644
+> index 000000000000..80f1ee6713fa
+> --- /dev/null
+> +++ b/drivers/iio/accel/bma400_core.c
+> @@ -0,0 +1,796 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * bma400_core.c - Core IIO driver for Bosch BMA400 triaxial acceleration
+> + *                 sensor. Used by bma400-i2c.
+> + *
+> + * Copyright 2019 Dan Robertson <dan@dlrobertson.com>
+> + *
+> + * TODO:
+> + *  - Support for power management
+> + *  - Support events and interrupts
+> + *  - Create channel the step count
+> + *  - Create channel for sensor time
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
+> +#include <linux/bitops.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +
+> +#include "bma400.h"
+> +
+> +/*
+> + * The G-range selection may be one of 2g, 4g, 8, or 16g. The scale may
+> + * be selected with the acc_range bits of the ACC_CONFIG1 register.
+> + */
+> +static const int bma400_scale_table[] = {
+> +	0, 38344,
+> +	0, 76590,
+> +	0, 153277,
+> +	0, 306457
+> +};
+> +
+> +static const int bma400_osr_table[] = { 0, 1, 3 };
+> +
+> +/* See the ACC_CONFIG1 section of the datasheet */
+> +static const int bma400_sample_freqs[] = {
+> +	12,  500000,
+> +	25,  0,
+> +	50,  0,
+> +	100, 0,
+> +	200, 0,
+> +	400, 0,
+> +	800, 0,
+> +};
+> +
+> +/* See the ACC_CONFIG0 section of the datasheet */
+> +enum bma400_power_mode {
+> +	POWER_MODE_SLEEP   = 0x00,
+> +	POWER_MODE_LOW     = 0x01,
+> +	POWER_MODE_NORMAL  = 0x02,
+> +	POWER_MODE_INVALID = 0x03,
+> +};
+> +
+> +struct bma400_sample_freq {
+> +	int hz;
+> +	int uhz;
+> +};
+> +
+> +struct bma400_data {
+> +	struct device *dev;
+> +	struct mutex mutex; /* data register lock */
 
-Thanks and BR,
-Ricardo
+needs #include <linux/mutex.h>
+
+> +	struct iio_mount_matrix orientation;
+> +	struct regmap *regmap;
+> +	enum bma400_power_mode power_mode;
+> +	struct bma400_sample_freq sample_freq;
+> +	int oversampling_ratio;
+> +	int scale;
+> +};
+> +
+
+[snip]
+
+> +static int bma400_get_accel_scale_idx(struct bma400_data *data, int val)
+> +{
+> +	int i;
+> +
+> +	for (i = 1; i < ARRAY_SIZE(bma400_scale_table); i += 2) {
+
+needs #include <linux/kernel.h>
+for ARRAY_SIZE()
+
+> +		if (bma400_scale_table[i] == val)
+> +			return i - 1;
+> +	}
+> +	return -EINVAL;
+> +}
+
+[snip]
+
+Thanks.
+
+-- 
+~Randy
+See Documentation/process/submit-checklist.rst, especially Rule #1.
+
