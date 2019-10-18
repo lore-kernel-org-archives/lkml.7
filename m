@@ -2,167 +2,103 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 355C5CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4BDCA9EA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 143BF21925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1611B21925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:16:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="idopb+em"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442177AbfJRIPu (ORCPT
+        id S2442189AbfJRIQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:15:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42410 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731008AbfJRIPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 04:15:50 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0A8377E424;
-        Fri, 18 Oct 2019 08:15:50 +0000 (UTC)
-Received: from [10.36.118.57] (unknown [10.36.118.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 93E8B600C1;
-        Fri, 18 Oct 2019 08:15:48 +0000 (UTC)
-Subject: Re: [RFC PATCH v2 16/16] mm, soft-offline: convert parameter to pfn
-To:     Oscar Salvador <osalvador@suse.de>, n-horiguchi@ah.jp.nec.com
-Cc:     mhocko@kernel.org, mike.kravetz@oracle.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20191017142123.24245-1-osalvador@suse.de>
- <20191017142123.24245-17-osalvador@suse.de>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <62eb5232-1e4d-22cf-0026-3e37ac06f3a3@redhat.com>
-Date:   Fri, 18 Oct 2019 10:15:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 18 Oct 2019 04:16:03 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44371 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731008AbfJRIQC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 04:16:02 -0400
+Received: by mail-pl1-f196.google.com with SMTP id q15so2471812pll.11;
+        Fri, 18 Oct 2019 01:16:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=M3S4yTtVgaNC9BkQRuSaEuAlwVVJJ6jYNkihyhEpRi8=;
+        b=idopb+em4RetH9GiUvFvJK761YLj4h6/AlCEqA6bzDqYMWGLNUahqbQH6A69wIQsDT
+         hGUNY4MnXEekB51MQ8sI59BW/kyjexIGJ27cjEtI5itCrGT05nVYV1OaFaEroBFeGMaG
+         eJ22SaHega6SqNDS+lIcWSOr1k5ibLmeJaJgDUIVnz2whel16FRvcsc3ELS39qvMbq4t
+         MR6mf+Egztb99o9k/MJeOkKYfNR/6m2xs+Lk93ZwnZ8ivpWphIuUT6XJoRLZGrCQjR/2
+         2KJ7MUOXFIZHIi0TTCDKvTHAniMnSSF061ZM/nRfh5OLP1gEuyhNu6XRAt129699POlC
+         qQ1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=M3S4yTtVgaNC9BkQRuSaEuAlwVVJJ6jYNkihyhEpRi8=;
+        b=NKpuxb/t14ngqbPUwZUUxiu0AXo7xLpDVOQLJ5WHN7ml0FcoZWDetjifI9V1xJ/4po
+         /0KGV5Vf90WvFJ55ueFE/hWmEYgcCzyV8t8Pdo+ytVlu1KG1A/ylDwn+IV4Gn3hzAZjE
+         r9LeuMm4+DMwASGlUDgCoXuM6SLkeZhyJV77BUkuk+KqvIcTaN7oF1/7D4D459Dw1U+s
+         2Ec4rgBUSAQzoD9rqG22E3jLFEpibGZdNVufRiSdhRP8hix1cP6rTzbilp5KK996jdrD
+         DiVHlLXhY8tLntnMBnnU0Woh2khNCTi/6i8LBMb954rwaRfuwg5JzpiMIu9JjSLkzUBM
+         PY+w==
+X-Gm-Message-State: APjAAAVdkhABs725Hn2+3XkiGrGOXb9DPKWCMHvqhwoc2M2tiTWYNXTH
+        6aEcyrmCyjq3+izxw49qaw7/EOEc6NQ=
+X-Google-Smtp-Source: APXvYqxOyPRwYYZarT0UfJktCM8UsTrZreWvRAg17Hy3LBgoxoEYTPHLs16Xe3qS9t4vyyElzAggng==
+X-Received: by 2002:a17:902:bc41:: with SMTP id t1mr8649031plz.34.1571386561943;
+        Fri, 18 Oct 2019 01:16:01 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id e10sm7216574pfh.77.2019.10.18.01.15.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 01:16:01 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] IB/uverbs: Add a check for uverbs_attr_get
+Date:   Fri, 18 Oct 2019 16:15:34 +0800
+Message-Id: <20191018081533.8544-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191017142123.24245-17-osalvador@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 18 Oct 2019 08:15:50 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.10.19 16:21, Oscar Salvador wrote:
-> From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-> 
-> Currently soft_offline_page() receives struct page, and its sibling
-> memory_failure() receives pfn. This discrepancy looks weird and makes
-> precheck on pfn validity tricky. So let's align them.
-> 
-> Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-> Signed-off-by: Oscar Salvador <osalvador@suse.de>
-> ---
->   drivers/base/memory.c |  7 +------
->   include/linux/mm.h    |  2 +-
->   mm/madvise.c          |  2 +-
->   mm/memory-failure.c   | 17 +++++++++--------
->   4 files changed, 12 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index b3cae2eb1c4f..b510b4d176c9 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -538,12 +538,7 @@ static ssize_t soft_offline_page_store(struct device *dev,
->   	if (kstrtoull(buf, 0, &pfn) < 0)
->   		return -EINVAL;
->   	pfn >>= PAGE_SHIFT;
-> -	if (!pfn_valid(pfn))
-> -		return -ENXIO;
-> -	/* Only online pages can be soft-offlined (esp., not ZONE_DEVICE). */
-> -	if (!pfn_to_online_page(pfn))
-> -		return -EIO;
-> -	ret = soft_offline_page(pfn_to_page(pfn));
-> +	ret = soft_offline_page(pfn);
->   	return ret == 0 ? count : ret;
->   }
->   
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 0f80a1ce4e86..40722854d357 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2791,7 +2791,7 @@ extern int sysctl_memory_failure_early_kill;
->   extern int sysctl_memory_failure_recovery;
->   extern void shake_page(struct page *p, int access);
->   extern atomic_long_t num_poisoned_pages __read_mostly;
-> -extern int soft_offline_page(struct page *page);
-> +extern int soft_offline_page(unsigned long pfn);
->   
->   
->   /*
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index 9ca48345ce45..f83b7d4c68c1 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -890,7 +890,7 @@ static int madvise_inject_error(int behavior,
->   		if (behavior == MADV_SOFT_OFFLINE) {
->   			pr_info("Soft offlining pfn %#lx at process virtual address %#lx\n",
->   				 pfn, start);
-> -			ret = soft_offline_page(page);
-> +			ret = soft_offline_page(pfn);
->   		} else {
->   			pr_info("Injecting memory failure for pfn %#lx at process virtual address %#lx\n",
->   				 pfn, start);
-> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-> index c038896bedf0..bfecb61fc064 100644
-> --- a/mm/memory-failure.c
-> +++ b/mm/memory-failure.c
-> @@ -1521,7 +1521,7 @@ static void memory_failure_work_func(struct work_struct *work)
->   		if (!gotten)
->   			break;
->   		if (entry.flags & MF_SOFT_OFFLINE)
-> -			soft_offline_page(pfn_to_page(entry.pfn));
-> +			soft_offline_page(entry.pfn);
->   		else
->   			memory_failure(entry.pfn, entry.flags);
->   	}
-> @@ -1834,7 +1834,7 @@ static int soft_offline_free_page(struct page *page)
->   
->   /**
->    * soft_offline_page - Soft offline a page.
-> - * @page: page to offline
-> + * @pfn: pfn to soft-offline
->    *
->    * Returns 0 on success, otherwise negated errno.
->    *
-> @@ -1853,16 +1853,17 @@ static int soft_offline_free_page(struct page *page)
->    * This is not a 100% solution for all memory, but tries to be
->    * ``good enough'' for the majority of memory.
->    */
-> -int soft_offline_page(struct page *page)
-> +int soft_offline_page(unsigned long pfn)
->   {
->   	int ret;
-> -	unsigned long pfn = page_to_pfn(page);
-> +	struct page *page;
->   
-> -	if (is_zone_device_page(page)) {
-> -		pr_debug_ratelimited("soft_offline: %#lx page is device page\n",
-> -				pfn);
-> +	if (!pfn_valid(pfn))
-> +		return -ENXIO;
-> +	/* Only online pages can be soft-offlined (esp., not ZONE_DEVICE). */
-> +	page = pfn_to_online_page(pfn);
-> +	if (!page)
->   		return -EIO;
-> -	}
->   
->   	if (PageHWPoison(page)) {
->   		pr_info("soft offline: %#lx page already poisoned\n", pfn);
-> 
+Only uverbs_copy_to_struct_or_zero in uverbs_ioctl.c does not have a
+check for uverbs_attr_get.
+Although its usage in uverbs_response has a check for attr's validity,
+UVERBS_HANDLER does not.
+Therefore, it is better to add a check like other functions in
+uverbs_ioctl.c.
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/infiniband/core/uverbs_ioctl.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
+diff --git a/drivers/infiniband/core/uverbs_ioctl.c b/drivers/infiniband/core/uverbs_ioctl.c
+index 61758201d9b2..269938f59d3f 100644
+--- a/drivers/infiniband/core/uverbs_ioctl.c
++++ b/drivers/infiniband/core/uverbs_ioctl.c
+@@ -795,6 +795,9 @@ int uverbs_copy_to_struct_or_zero(const struct uverbs_attr_bundle *bundle,
+ {
+ 	const struct uverbs_attr *attr = uverbs_attr_get(bundle, idx);
+ 
++	if (IS_ERR(attr))
++		return PTR_ERR(attr);
++
+ 	if (size < attr->ptr_attr.len) {
+ 		if (clear_user(u64_to_user_ptr(attr->ptr_attr.data) + size,
+ 			       attr->ptr_attr.len - size))
 -- 
+2.20.1
 
-Thanks,
-
-David / dhildenb
