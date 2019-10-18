@@ -2,125 +2,96 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F60CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA4FCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D73320854
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D4A20854
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:49:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="avwoHFY5"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ped4rrJo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439988AbfJRQtf (ORCPT
+        id S2634342AbfJRQtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:49:35 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36899 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437269AbfJRQte (ORCPT
+        Fri, 18 Oct 2019 12:49:50 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41651 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437269AbfJRQtr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:49:34 -0400
-Received: by mail-pg1-f195.google.com with SMTP id p1so3687189pgi.4
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:49:34 -0700 (PDT)
+        Fri, 18 Oct 2019 12:49:47 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q7so4229257pfh.8
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:49:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6mKQPL/e7dgXDTrUQfJTszcQHu3ycRwNWrvUbHLb4pk=;
-        b=avwoHFY5CW3JD7pFCn4n29wE6NiGHkirgHDoIVifZVsZL4y+SlMfOxesI682OTDpPr
-         fFMjgep4cFlosOsjjEllbB10AlrvG3W2M8so8tnovxudL3Fnr2jRYL3m20YfhXFXiql4
-         YYV2FAqAxa1SUnQUjrvRBLsJzPigiZyieER9bEuAyzFDDpqgXg0PS7F91qEI3rZASNj/
-         x1S9cd0eWsR188TqUpS+/Mmf/vhy38JniOEz/ZK0Uhw6NKJX4sswW0+SOrWYXCeoqTVW
-         NuHBVQntzhM2hJG8H38DUhHoPaoGsnAGtVvqyZ7liKevC5AP2i2yiIximEnQJ18clNZ6
-         PqSg==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Fk5TkOpRTpvTPvIhw+jhlH/EWYQ8SCFWPxmF3GrKXeU=;
+        b=ped4rrJomSO8Qcd+AsAMZA070NAYHWro7VtIKJuL9kgSqKl/bjXvFmpIJGE+GbioWu
+         KuDeNNAkDwi9w5N50nVaR08kMiP11Nu+jKWWqtcTHKKo1X03N3iP7L9NNy9p1j6ori5Y
+         8E3a+TgNF4HIaBlwLWgOl+mZg4mzfvuJq+BDzUDc+XTK9DIBnXv+o7lvmPoQIBkvW5pk
+         UFnYHPWDqeoXf1abjMPdqglUBJeL7VPQXxex0TGM4sgbIgatSyUjEdhuemM7bTsGDqWR
+         TxXCq0/BvwqWM1HmnVe4wz9K2N29lO7r1wVVC07/hc9cIil6wLqiZuQhcLhbLKff7nig
+         GI1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6mKQPL/e7dgXDTrUQfJTszcQHu3ycRwNWrvUbHLb4pk=;
-        b=XzEwhjiYwoEYeHZoPqQtCRYVjcTptl7X6Z9P4hj9+4jlZJgvLI9baf4I6z5ze6Glq8
-         r/dyISllPGgoPmuwJmxEjXCRrbSk5O7+TOwtu9vnCjGKUEgb0LnwvIgIwnOUlGvPanqt
-         p+Qx7x7FIjuyRISF8p6ppkrTHPs+tRvcY1oYzb7xy0WoOwfkzUl3rYCNY907JMgB6RKe
-         eY0b9ymCDFGFnCbKj0j81UiLp6pv+qfCXuJx0ORVKnULNMv2kYVEmlOyuA2IqRfDpvXp
-         PwjX+eDmKQzIEyNp6fDGvLLaZTilcvDoGq5Nsts1xjEclp6C70Bom31JQW6o5M7nxczf
-         H+7Q==
-X-Gm-Message-State: APjAAAWhnHBTpFsE9RdfUD0K7BOE8op8FnTM0B6OayaKaHMlhxKoSZHu
-        eBWdY/PT5rMjo6moGIxK5bddpcK0Cm/Y7G/rvhtA8g==
-X-Google-Smtp-Source: APXvYqwGHsfE+gcGNX/CNr6xsUAMOGd4jaqDKhx5i50DIeOxIYrr7yFluB8PcrxyB5XuOda6b/Qeh6/IFkeALLNCeCw=
-X-Received: by 2002:a17:90a:b285:: with SMTP id c5mr12166608pjr.123.1571417373841;
- Fri, 18 Oct 2019 09:49:33 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Fk5TkOpRTpvTPvIhw+jhlH/EWYQ8SCFWPxmF3GrKXeU=;
+        b=lAqG9O7YJnz5kapaoKK4WmuY+9UDC7DXXaV1/dIE7FUgQ3TmLdwvIWwtTZwFHPjFjM
+         Bkxi0k+pcwyVH6Q2GdQPAdU3vCDGyChwUo3Tn5CMoAw1GZBC030bKmpzKN8R0x7nUdeb
+         1zORFSZOFV5p0t0Vxjfc/dSXVNAoo7eSA2BKPfJh9wined9CK9zURxcW7/igzAPJJZ1R
+         0D3iNe3KIsbnrrnyuMV66Dx8YYf1MqJDrI0ZJjY9FG3zgmiOMXnCrOk6PtOGai4lIvt1
+         hjav871lM68HUFOySi14PpENzWSseLQ4u26uI7O8eir1epJj0nZj6E0VfkSvBtPQQkfQ
+         xDyw==
+X-Gm-Message-State: APjAAAW6xeCJZdP8mT4aJp/gCdMg8q0FgL1HirtN/E+6NRMMjxtpWcRT
+        7ayFa64xd9ZAx6IGyAAyrty/IQ==
+X-Google-Smtp-Source: APXvYqzNkyEbDBFSb68fMtMY4IH1lrlqz0jazTRwI0mKFFgI83JhTG+uTnC9dghY0c7f09Cj90/1hQ==
+X-Received: by 2002:a63:394:: with SMTP id 142mr11150477pgd.375.1571417385868;
+        Fri, 18 Oct 2019 09:49:45 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:180::ac1a])
+        by smtp.gmail.com with ESMTPSA id v9sm6691727pfe.109.2019.10.18.09.49.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 09:49:45 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 12:49:43 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, matthew.wilcox@oracle.com,
+        kernel-team@fb.com, william.kucharski@oracle.com,
+        kirill.shutemov@linux.intel.com, Hugh Dickins <hughd@google.com>
+Subject: Re: [PATCH v2] mm,thp: recheck each page before collapsing file THP
+Message-ID: <20191018164943.GA179426@cmpxchg.org>
+References: <20191018163754.3736610-1-songliubraving@fb.com>
 MIME-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com> <20191018161033.261971-14-samitolvanen@google.com>
-In-Reply-To: <20191018161033.261971-14-samitolvanen@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 18 Oct 2019 09:49:22 -0700
-Message-ID: <CAKwvOd=7g2zbGpL41KC=VgapTYYd7-XqFxf+WQUyHVVJSMq=5A@mail.gmail.com>
-Subject: Re: [PATCH 13/18] arm64: preserve x18 when CPU is suspended
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        kernel-hardening@lists.openwall.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018163754.3736610-1-songliubraving@fb.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 9:11 AM Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> Don't lose the current task's shadow stack when the CPU is suspended.
->
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> ---
->  arch/arm64/mm/proc.S | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-> index fdabf40a83c8..9a8bd4bc8549 100644
-> --- a/arch/arm64/mm/proc.S
-> +++ b/arch/arm64/mm/proc.S
-> @@ -73,6 +73,9 @@ alternative_endif
->         stp     x8, x9, [x0, #48]
->         stp     x10, x11, [x0, #64]
->         stp     x12, x13, [x0, #80]
-> +#ifdef CONFIG_SHADOW_CALL_STACK
-> +       stp     x18, xzr, [x0, #96]
+On Fri, Oct 18, 2019 at 09:37:54AM -0700, Song Liu wrote:
+> In collapse_file(), after locking the page, it is necessary to recheck
+> that the page is up-to-date. Add PageUptodate() check for both shmem THP
+> and file THP.
+> 
+> Current khugepaged should not try to collapse dirty file THP, because it
+> is limited to read only text. Add a PageDirty check and warning for file
+> THP. This is added after page_mapping() check, because if the page is
+> truncated, it might be dirty.
+> 
+> Fixes: 99cb0dbd47a1 ("mm,thp: add read-only THP support for (non-shmem) FS")
+> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: William Kucharski <william.kucharski@oracle.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Song Liu <songliubraving@fb.com>
 
-Could this be a str/ldr of just x18 rather than stp/ldp of x18 +
-garbage?  Maybe there's no real cost difference, or some kind of
-alignment invariant?
-
-> +#endif
->         ret
->  ENDPROC(cpu_do_suspend)
->
-> @@ -89,6 +92,9 @@ ENTRY(cpu_do_resume)
->         ldp     x9, x10, [x0, #48]
->         ldp     x11, x12, [x0, #64]
->         ldp     x13, x14, [x0, #80]
-> +#ifdef CONFIG_SHADOW_CALL_STACK
-> +       ldp     x18, x19, [x0, #96]
-> +#endif
->         msr     tpidr_el0, x2
->         msr     tpidrro_el0, x3
->         msr     contextidr_el1, x4
-> --
-> 2.23.0.866.gb869b98d4c-goog
->
-
-
--- 
-Thanks,
-~Nick Desaulniers
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
