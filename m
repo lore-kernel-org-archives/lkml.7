@@ -2,143 +2,110 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E76FDCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6220CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B13A4222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9E6E222C5
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:31:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408506AbfJRNbO convert rfc822-to-8bit (ORCPT
+        id S2410349AbfJRNbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 09:31:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45750 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729783AbfJRNbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 09:31:13 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CE75D307D986;
-        Fri, 18 Oct 2019 13:31:12 +0000 (UTC)
-Received: from gondolin (dhcp-192-202.str.redhat.com [10.33.192.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 406EB60619;
-        Fri, 18 Oct 2019 13:30:45 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 15:30:42 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-Subject: Re: [PATCH V4 4/6] mdev: introduce virtio device and its device ops
-Message-ID: <20191018153042.3516cde1.cohuck@redhat.com>
-In-Reply-To: <733c0cfe-064f-c8ba-6bf8-165db88d7e07@redhat.com>
-References: <20191017104836.32464-1-jasowang@redhat.com>
-        <20191017104836.32464-5-jasowang@redhat.com>
-        <20191018114614.6f1e79dc.cohuck@redhat.com>
-        <733c0cfe-064f-c8ba-6bf8-165db88d7e07@redhat.com>
-Organization: Red Hat GmbH
+        Fri, 18 Oct 2019 09:31:34 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:45416 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408509AbfJRNbe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 09:31:34 -0400
+Received: by mail-qk1-f194.google.com with SMTP id z67so5230288qkb.12;
+        Fri, 18 Oct 2019 06:31:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tpuqPfUBPTEqWzHgbYNa7ad4BsKzW7eS2KnXx2Hiqco=;
+        b=txP5fwCI3WUIZws4MVeGifPoLuCDRPA7Plw7TyNdkA53uP+G8MWtyuFOH+lfR22JFj
+         +DroiMesz8CxtTpkRL1TAWOLARyE8GPTdVUuz4VBpaxHcrcDh8SsaP5rNqfgP3gm7+PN
+         ECLoGVu53k9z9B41BZ7G2Fvj0FV7WIWC1JQEOUlKpxpz7LN7w/P/x4aumhm3oFXKXMrz
+         y/kizVxtj4OOLWW7XnSkC4aRq9wCoSX/ADsRGlobqepGAglSjvtLxnjF1zOmbc9K9jIv
+         OkOv9fmie4IjnvHRGizDncx3j1RD4EriOoE4zj41tho/ptxHB3XqvWyImDxmI3/gdHPL
+         k8zQ==
+X-Gm-Message-State: APjAAAUC6wfDQkGolXKY+AfONn+/eXLzKpkD+4amJQt1tzKwYOpq3Nd1
+        JaV54ly69MkRPgWEKu6Y9s0c+pEdrVdr+1Oyi8o3zqo+
+X-Google-Smtp-Source: APXvYqzOMqpWH53nssj4UOb90GoWE0aTwtTW8fdt3FuVvxqZJH/Yp7jjOPhd0gjMwu9H15wolHwF2BSyXBxNndzQuco=
+X-Received: by 2002:a37:9442:: with SMTP id w63mr8599892qkd.138.1571405492947;
+ Fri, 18 Oct 2019 06:31:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 18 Oct 2019 13:31:13 +0000 (UTC)
+References: <20191009190853.245077-1-arnd@arndb.de> <20191009191044.308087-32-arnd@arndb.de>
+ <1984049ff0e359801401fbbcbdbc21ee0a64c1a9.camel@codethink.co.uk>
+In-Reply-To: <1984049ff0e359801401fbbcbdbc21ee0a64c1a9.camel@codethink.co.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 18 Oct 2019 15:31:16 +0200
+Message-ID: <CAK8P3a2V_xP44X-Y3Mx1jX_16wKbc+T_REUP-jzj8bxPMVnifQ@mail.gmail.com>
+Subject: Re: [Y2038] [PATCH v6 31/43] compat_ioctl: move WDIOC handling into
+ wdt drivers
+To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 18 Oct 2019 18:55:02 +0800
-Jason Wang <jasowang@redhat.com> wrote:
+On Fri, Oct 18, 2019 at 2:49 PM Ben Hutchings
+<ben.hutchings@codethink.co.uk> wrote:
+>
+> On Wed, 2019-10-09 at 21:10 +0200, Arnd Bergmann wrote:
+> > All watchdog drivers implement the same set of ioctl commands, and
+> > fortunately all of them are compatible between 32-bit and 64-bit
+> > architectures.
+> >
+> > Modern drivers always go through drivers/watchdog/wdt.c as an abstraction
+> > layer, but older ones implement their own file_operations on a character
+> > device for this.
+> >
+> > Move the handling from fs/compat_ioctl.c into the individual drivers.
+> >
+> > Note that most of the legacy drivers will never be used on 64-bit
+> > hardware, because they are for an old 32-bit SoC implementation, but
+> > doing them all at once is safer than trying to guess which ones do
+> > or do not need the compat_ioctl handling.
+> >
+> > Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  arch/powerpc/platforms/52xx/mpc52xx_gpt.c |  1 +
+> >  arch/um/drivers/harddog_kern.c            |  1 +
+> >  drivers/char/ipmi/ipmi_watchdog.c         |  1 +
+> >  drivers/hwmon/fschmd.c                    |  1 +
+> >  drivers/rtc/rtc-ds1374.c                  |  1 +
+> [...]
+>
+> It Looks like you missed a couple:
+>
+> drivers/rtc/rtc-m41t80.c
 
-> On 2019/10/18 下午5:46, Cornelia Huck wrote:
-> > On Thu, 17 Oct 2019 18:48:34 +0800
-> > Jason Wang <jasowang@redhat.com> wrote:
+No idea how I missed this. Adding it now.
 
-> >> + * @get_vendor_id:		Get virtio vendor id
-> >> + *				@mdev: mediated device
-> >> + *				Returns u32: virtio vendor id  
-> > How is the vendor id defined? As for normal virtio-pci devices?  
-> 
-> 
-> The vendor that provides this device. So something like this
-> 
-> I notice that MMIO also had this so it looks to me it's not pci specific.
+> drivers/watchdog/kempld_wdt.c
 
-Ok. Would be good to specify this more explicitly.
+This one is covered: the watchdog_ops->ioctl is called by
+the wdt_dev_ioctl() function as a fallback.
 
-> 
-> 
-> >  
-> >> + * @get_status: 		Get the device status
-> >> + *				@mdev: mediated device
-> >> + *				Returns u8: virtio device status
-> >> + * @set_status: 		Set the device status
-> >> + *				@mdev: mediated device
-> >> + *				@status: virtio device status
-> >> + * @get_config: 		Read from device specific configuration space
-> >> + *				@mdev: mediated device
-> >> + *				@offset: offset from the beginning of
-> >> + *				configuration space
-> >> + *				@buf: buffer used to read to
-> >> + *				@len: the length to read from
-> >> + *				configration space
-> >> + * @set_config: 		Write to device specific configuration space
-> >> + *				@mdev: mediated device
-> >> + *				@offset: offset from the beginning of
-> >> + *				configuration space
-> >> + *				@buf: buffer used to write from
-> >> + *				@len: the length to write to
-> >> + *				configration space
-> >> + * @get_mdev_features:		Get the feature of virtio mdev device
-> >> + *				@mdev: mediated device
-> >> + *				Returns the mdev features (API) support by
-> >> + *				the device.  
-> > What kind of 'features' are supposed to go in there? Are these bits,
-> > like you defined for VIRTIO_MDEV_F_VERSION_1 above?  
-> 
-> 
-> It's the API or mdev features other than virtio features. It could be 
-> used by driver to determine the capability of the mdev device. Besides 
-> _F_VERSION_1, we may add dirty page tracking etc which means we need new 
-> device ops.
+After checking once more, I did find another instance I missed
+though: drivers/hwmon/w83793.c, I'm adding that as welll now.
 
-Ok, so that's supposed to be distinct bits that can be or'ed together?
-Makes sense, but probably needs some more documentation somewhere.
+m41t80 does not seem to have any 64-bit machines using it,
+but w83793 does, and they clearly both should have been
+changed.
 
-> 
-> 
-> >  
-> >> + * @get_generation:		Get device generaton
-> >> + *				@mdev: mediated device
-> >> + *				Returns u32: device generation  
-> > Is that callback mandatory?  
-> 
-> 
-> I think so, it's hard to emulate that completely in virtio-mdev transport.
+Thanks for the review!
 
-IIRC, the generation stuff is not mandatory in the current version of
-virtio, as not all transports have that concept.
-
-Generally, are any of the callbacks optional, or are all of them
-mandatory? From what I understand, you plan to add new things that
-depend on features... would that mean non-mandatory callbacks?
+     Arnd
