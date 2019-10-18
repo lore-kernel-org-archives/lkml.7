@@ -2,167 +2,133 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7759FCA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3615CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C26C222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89F3121897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:20:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ACvp92dW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R4/Ih84F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409659AbfJRJTH (ORCPT
+        id S2409669AbfJRJUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 05:19:07 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:46932 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390499AbfJRJTH (ORCPT
+        Fri, 18 Oct 2019 05:20:12 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53350 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2390499AbfJRJUL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 05:19:07 -0400
-Received: by mail-yw1-f67.google.com with SMTP id l64so1908814ywe.13;
-        Fri, 18 Oct 2019 02:19:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Z+lQ2vvz51oFYeiM6k7BQbwMui72bfHQHjmRy0L+AxA=;
-        b=ACvp92dWges5svxbhRUbOeZgMj4RVHJBCPyqRlUDAbQOWOtKdysk3+ZmIzVP3/p9of
-         8QEJ0hTE5RHPa3EX4JMa/5betwdH08Nu0KjN60a++w/MREl7B0IP1Ha/Jvz2Ip6bDDpe
-         HiAe2+rRuHb894TeULs91YERSQcOiCXJaQEx/Ni96LitP6ZmM3mlof0Jl7HkdE6VqHvS
-         S2RBXc6NpfJIuvRXju4BmvjCvz8xaf5sNYPtzOhg5OluuDcmZf1HTcoZ3bqWnBbfTCCi
-         wg/0CizUmf2y7YO5n7SceAu14dPfN4d04yO+VrcCkgBOOk4+O8gzD6FYMXl8xwDIp89S
-         S9lw==
+        Fri, 18 Oct 2019 05:20:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571390409;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lqNjg+EaGLj4NJ+f3f6IUdn2NqQIeIPYBk4IKGTbgOg=;
+        b=R4/Ih84FKt7lli57JnZjHf+PvNHaIqny3n7y9OnfhSsLdLQI9/UBVbJ5/flDX/9prz0ahM
+        ipTw0EXV1MsgT+GwaHKuaoEdl8RRLmqIjMYL9dECLuHyATxcirv3xO/E6jUKkK92iyklmk
+        XdC+OH2ia7IoaUjxpX5qNXIsQiAQJww=
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
+ [209.85.166.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-169-RuTZFAEQP36o0U1mzFLIvQ-1; Fri, 18 Oct 2019 05:20:05 -0400
+Received: by mail-io1-f72.google.com with SMTP id r5so7814316iop.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 02:20:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Z+lQ2vvz51oFYeiM6k7BQbwMui72bfHQHjmRy0L+AxA=;
-        b=Asfw7EEr+Z3DhA0Vs10+th+/hLuaiI1mSwSDt0jbTPUmYGj2OI8f3veOLNQXUmEY7z
-         jhxR0k8NR5ZBL4sZ/cMzUxGVXzOsEf6Yq+KT0XKM/2riqOo7aZ2d25wIBfipUiAvK1ZI
-         U2f3YZCQEZHRj0pD71VSW+whCQyRT4PfFkbpLerQNj4bcCQkzibIhWWiGtjUNfONKUYT
-         Co7wlEBTnO+OOjXabeFIPZtpcCOqydqm9mz+UOMCX/gZHmWGU4B2sxeJ1iP/91J+u9wd
-         SdZNpWaOmGtS4Vqmu8fGpztRnFxIFVSFRgTUcG40O4eeaoBOJM8Mc4V5i6whpb4aDMVO
-         B5gw==
-X-Gm-Message-State: APjAAAWIAGnAYTKrEIi0NOyzYQoRsS6j2i15RD+qsLjpTGCSQIwQfRq9
-        2xmTYALC7r785tMGit6IEwQ7MHXqzBLslR4n59Q=
-X-Google-Smtp-Source: APXvYqyxtzf+5bBLVuzlkXmXNftfRV/zdGyqW/ymUVUbvCi5HWZYp9XZivPbaMnTq4UTh6nHp++iGJRqsdcPz6YG/iE=
-X-Received: by 2002:a81:5742:: with SMTP id l63mr5816824ywb.295.1571390346123;
- Fri, 18 Oct 2019 02:19:06 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=RHTr/G3jxXej8cUMFfKi+HcWzJkXtd79itVbm58x3Nc=;
+        b=O+z8DNpBh99caZkjVEnMfY3chq6nRrbUr3Dx1f0hR76WtQkDd4FmbPIhvlheuxiNO3
+         b6M2wWiEXOSDnfaH3k628PHYyQycm+ks19GXuktviPc2bsg3bL+PHXZ2XD+Xdk8qFrkZ
+         xY1ewceZBFhKVDILwTJ3af+MpHQTSVFLrDmjDpTEOWM/EzJAohShGGC0R1LCtihMZ70A
+         WkukmQDxql5ZH8Y/Nb04zm6FHiqCIdtAnTvXEwowUfspbGRwq9Y4k7qAroraMtAOrNV9
+         X06vakw4BkvO2bi8OIV9p9LeHfRj5CaOTs4zaYyu5hBdn96pggTfDsYe+gINTvQFBMvx
+         wGMA==
+X-Gm-Message-State: APjAAAUjhTRQaNowYSIWP1qJyoYaZ/MCVDOcQ/BtrEt1DiAF/2LxLILn
+        JuycfS2EeHXyGopC1LHzVgY6GXF33fAeacsAydfd4WN5MWRrzJ9n3xNIZN9I0FexqYz+REPbFSQ
+        Ri+idyxAklodM63uOQtoD0ser
+X-Received: by 2002:a05:6638:3a6:: with SMTP id z6mr8060189jap.33.1571390404917;
+        Fri, 18 Oct 2019 02:20:04 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyeKV0GqHl8jqRB2FJYh+++6hNUR6kyjWJgdRjbQacCDJrFh4dUI6qLBvlkxQiaCvoFXgmjew==
+X-Received: by 2002:a05:6638:3a6:: with SMTP id z6mr8060170jap.33.1571390404644;
+        Fri, 18 Oct 2019 02:20:04 -0700 (PDT)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id n26sm2180447ili.8.2019.10.18.02.20.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 02:20:03 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 02:20:02 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, Joerg Roedel <jroedel@suse.de>,
+        linux-kernel@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH] iommu/amd: Pass gfp flags to iommu_map_page() in
+ amd_iommu_map()
+Message-ID: <20191018092002.wmgjhfit56ezkyu6@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, Joerg Roedel <jroedel@suse.de>,
+        linux-kernel@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>
+References: <20191018090736.18819-1-joro@8bytes.org>
 MIME-Version: 1.0
-References: <1571218608-15933-1-git-send-email-gkulkarni@marvell.com>
- <1571218608-15933-3-git-send-email-gkulkarni@marvell.com> <b8e1a637-faf4-4567-7d3e-a4f13dfa1cf0@huawei.com>
- <CAKTKpr4QoTDjbSxO4CvSH2sNvmrTJKjxi+RZH4mYfyDaaN96Sw@mail.gmail.com>
- <20191017154750.jgn6e3465qrsu53e@willie-the-truck> <CAKTKpr5ntp5X6Lvp=rKT_F1E1ftdqtjSWTgpEOqEwaDMH2kc1w@mail.gmail.com>
- <f7c91a7d-1f0e-24be-1491-fd0dae7f1daf@huawei.com>
-In-Reply-To: <f7c91a7d-1f0e-24be-1491-fd0dae7f1daf@huawei.com>
-From:   Ganapatrao Kulkarni <gklkml16@gmail.com>
-Date:   Fri, 18 Oct 2019 14:48:55 +0530
-Message-ID: <CAKTKpr5-m3s_7zE1C=62yjUL8mPURzTBTiR2OD8bgx65LEAj9w@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] drivers/perf: Add CCPI2 PMU support in ThunderX2
- UNCORE driver.
-To:     John Garry <john.garry@huawei.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        Jan Glauber <jglauber@marvell.com>,
-        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Zhangshaokun <zhangshaokun@hisilicon.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191018090736.18819-1-joro@8bytes.org>
+User-Agent: NeoMutt/20180716
+X-MC-Unique: RuTZFAEQP36o0U1mzFLIvQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 2:08 PM John Garry <john.garry@huawei.com> wrote:
+On Fri Oct 18 19, Joerg Roedel wrote:
+>From: Joerg Roedel <jroedel@suse.de>
 >
-> On 18/10/2019 05:21, Ganapatrao Kulkarni wrote:
-> > Hi Will,
-> >
-> > On Thu, Oct 17, 2019 at 9:17 PM Will Deacon <will@kernel.org> wrote:
-> >>
-> >> On Thu, Oct 17, 2019 at 12:38:51PM +0530, Ganapatrao Kulkarni wrote:
-> >>> On Wed, Oct 16, 2019 at 7:01 PM John Garry <john.garry@huawei.com> wrote:
-> >>>>> +TX2_EVENT_ATTR(req_pktsent, CCPI2_EVENT_REQ_PKT_SENT);
-> >>>>> +TX2_EVENT_ATTR(snoop_pktsent, CCPI2_EVENT_SNOOP_PKT_SENT);
-> >>>>> +TX2_EVENT_ATTR(data_pktsent, CCPI2_EVENT_DATA_PKT_SENT);
-> >>>>> +TX2_EVENT_ATTR(gic_pktsent, CCPI2_EVENT_GIC_PKT_SENT);
-> >>>>> +
-> >>>>> +static struct attribute *ccpi2_pmu_events_attrs[] = {
-> >>>>> +     &tx2_pmu_event_attr_req_pktsent.attr.attr,
-> >>>>> +     &tx2_pmu_event_attr_snoop_pktsent.attr.attr,
-> >>>>> +     &tx2_pmu_event_attr_data_pktsent.attr.attr,
-> >>>>> +     &tx2_pmu_event_attr_gic_pktsent.attr.attr,
-> >>>>> +     NULL,
-> >>>>> +};
-> >>>>
-> >>>> Hi Ganapatrao,
-> >>>>
-> >>>> Have you considered adding these as uncore pmu-events in the perf tool?
-> >>>>
-> >>> At the moment no, since the number of events exposed/listed are very few.
-> >>
-> >> Then sounds like a perfect time to nip it in the bud before the list grows
-> >> ;)
-> >
-> > I had internal discussion with architecture team, they have confirmed
-> > that, these are the only published events and no plan to add new.
-> > However, If any such request comes from HW team in future, i will add
-> > them to JSON files.
+>A recent commit added a gfp parameter to amd_iommu_map() to make it
+>callable from atomic context, but forgot to pass it down to
+>iommu_map_page() and left GFP_KERNEL there. This caused
+>sleep-while-atomic warnings and needs to be fixed.
 >
-> Don't you find perf list is swamped with all the uncore events?
+>Reported-by: Qian Cai <cai@lca.pw>
+>Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+>Fixes: 781ca2de89ba ("iommu: Add gfp parameter to iommu_ops::map")
+>Signed-off-by: Joerg Roedel <jroedel@suse.de>
+>---
+> drivers/iommu/amd_iommu.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> For Huawei platform, I find this:
-> ./perf list pmu | grep "Kernel PMU event" | grep hisi | wc -l
-> 648
+>diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+>index 0d2479546b77..fb54df5c2e11 100644
+>--- a/drivers/iommu/amd_iommu.c
+>+++ b/drivers/iommu/amd_iommu.c
+>@@ -2561,7 +2561,7 @@ static int amd_iommu_map(struct iommu_domain *dom, u=
+nsigned long iova,
+> =09if (iommu_prot & IOMMU_WRITE)
+> =09=09prot |=3D IOMMU_PROT_IW;
 >
+>-=09ret =3D iommu_map_page(domain, iova, paddr, page_size, prot, GFP_KERNE=
+L);
+>+=09ret =3D iommu_map_page(domain, iova, paddr, page_size, prot, gfp);
+>
+> =09domain_flush_np_cache(domain, iova, page_size);
+>
+>--=20
+>2.16.4
+>
+>_______________________________________________
+>iommu mailing list
+>iommu@lists.linux-foundation.org
+>https://lists.linuxfoundation.org/mailman/listinfo/iommu
 
-We don't have such issue at the moment. As i said earlier, the events
-exposed are limited.
-Total 16 events altogether(DMC, L3C and CCPI2) per socket.
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
 
-root@SBR-26>~>> perf list | grep uncore | wc -l
-32
-
-> That's because we have so many instances of the same PMUs, not because
-> there are many events per PMU.
->
-> TBH, I would like to delete all the events from the hisi uncore kernel
-> drivers, now that they're supported in the perf tool, but I think that
-> would constitute an ABI breakage.
->
-> Maybe there is a way to hide them, but I couldn't find it.
->
-> John
->
-> >
-> > I have incorporate all your previous comments, Can you please Ack and
-> > queue it to 5.5?
-> >
-> >>
-> >> If you can manage with these things in userspace, then I agree with John
-> >> that it would be preferential to do it that way. It also offers more
-> >> flexibility if we get the metricgroup stuff working properly (I think it's
-> >> buggered for big/little atm).
-> >>
-> >> Will
-> >
-> > Thanks,
-> > Ganapat
-> >
-> > .
-> >
->
->
-
-Thanks,
-Ganapat
