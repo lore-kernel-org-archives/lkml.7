@@ -2,103 +2,109 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE78CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A5ACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C68C12089C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:42:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571398941;
-	bh=bxQ3oNa0TABOgDWBQ/9ale8vMQAfpMYiyrwn8aMjqW4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RMxfGFURDMDssAKDbLAQj2NEJ0hy0bt2QqvzzxWcdp2fxg3ALLTviiBRDTPumNlsH
-	 tRa59MBV32tzEqTN1nhmR+juL2jV1sQ1CdGGOtoLOqGMo3Zer7C4ohcPsnFpfGA2c2
-	 05n3eeT1v/yi6qZXC2CY1Mgwx6SBBVK5ZxwwZD2U=
+	by mail.kernel.org (Postfix) with ESMTP id 5430B2089C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:43:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442686AbfJRLmU (ORCPT
+        id S2633201AbfJRLn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 07:42:20 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47584 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390948AbfJRLmT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 07:42:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=bxQ3oNa0TABOgDWBQ/9ale8vMQAfpMYiyrwn8aMjqW4=; b=PmMLrwSRB9YtHzgtZKWC6wq1G
-        G6wEOmkUGjj2wW5IUTNTKz9PkS2LYcKQuYVfZNb7Bh1Ziq9f/zs5b3wwx75SGVHd0ixGaqAAA2k/O
-        hefo7LXmBJcbXisZs+d0fDw4Kql6wiN5ifU4awYoCNtBXJHth1T9tahzZ/hMdGigxW64k=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iLQe4-0003Sm-Rt; Fri, 18 Oct 2019 11:42:12 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 057342741DEA; Fri, 18 Oct 2019 12:42:11 +0100 (BST)
-Date:   Fri, 18 Oct 2019 12:42:11 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Kamil Konieczny <k.konieczny@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] opp: core: Revert "add regulators enable and disable"
-Message-ID: <20191018114211.GA4828@sirena.co.uk>
-References: <CGME20191017102843eucas1p164993b3644d006481fb041e36175eebe@eucas1p1.samsung.com>
- <20191017102758.8104-1-m.szyprowski@samsung.com>
+        Fri, 18 Oct 2019 07:43:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55800 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390498AbfJRLn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 07:43:27 -0400
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C7F92C057F31
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 11:43:26 +0000 (UTC)
+Received: by mail-qt1-f198.google.com with SMTP id z21so5562500qtq.21
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 04:43:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6Ub6Gl8wiH8cmKTsFrafRHW9fuJ5vrtuEMWyvrQhDdg=;
+        b=qahmlgTt/GZXyH7BGgXbbf5yCAQTYcSQ4IwXV4qXXX/e4sfzoImxsPFRkek84YfMbr
+         3TJpU9Fg5sP/+lJugx63UBqaXWgrnpJcVVn7YvNHrh7OOX/y2sVYO88JAoqZIIBlO8nd
+         e3AywCljk5x7KK0YvJYhLX0w+D5TJNkzO0XE5uvNDLA0evlF0N8ca1SxsnGfboA/5lCI
+         wL+M6jlGBARPqtNOe3hMQw12VwQV3+pq432qzj51I3SYofzunYTdeWu+Fs6qO8/E63fg
+         OyJloD2Yw5ZQVtrjiNWcc7KlsmuE7YcN9VIlenM0IUQ8+jkP2b2u+d7z2o6xmWsExBS1
+         BPrQ==
+X-Gm-Message-State: APjAAAUIyVBWFT9o7O8QANgToqJQTzLddVcpbULSJa54jipu9Lrr6rMg
+        5a9RCrRtae3k5DQnMTwmuDyEj7i7l4A11iy0xYvz2M3rpQUN9bNCyqQhfCbmvNex2QF7bHuKiLa
+        xXlj1e9yZoDHCjEyBqiehbrsD
+X-Received: by 2002:ac8:141a:: with SMTP id k26mr9417397qtj.372.1571399005325;
+        Fri, 18 Oct 2019 04:43:25 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwjEavSnVnimGynhK2zUjx91XWTp3w/V3NUGx/C7pvOgTC+fTUzLspHsEQefImPQDlxwBybyQ==
+X-Received: by 2002:ac8:141a:: with SMTP id k26mr9417366qtj.372.1571399005006;
+        Fri, 18 Oct 2019 04:43:25 -0700 (PDT)
+Received: from labbott-redhat.redhat.com (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
+        by smtp.gmail.com with ESMTPSA id d205sm3031043qke.96.2019.10.18.04.43.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 04:43:24 -0700 (PDT)
+From:   Laura Abbott <labbott@redhat.com>
+To:     Ping-Ke Shih <pkshih@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     Laura Abbott <labbott@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Nicolas Waisman <nico@semmle.com>
+Subject: [PATCH v2] rtlwifi: Fix potential overflow on P2P code
+Date:   Fri, 18 Oct 2019 07:43:21 -0400
+Message-Id: <20191018114321.13131-1-labbott@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
-Content-Disposition: inline
-In-Reply-To: <20191017102758.8104-1-m.szyprowski@samsung.com>
-X-Cookie: Smear the road with a runner!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Nicolas Waisman noticed that even though noa_len is checked for
+a compatible length it's still possible to overrun the buffers
+of p2pinfo since there's no check on the upper bound of noa_num.
+Bound noa_num against P2P_MAX_NOA_NUM.
 
---ikeVEW9yuYc//A+q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Reported-by: Nicolas Waisman <nico@semmle.com>
+Signed-off-by: Laura Abbott <labbott@redhat.com>
+---
+v2: Use P2P_MAX_NOA_NUM instead of erroring out.
+---
+ drivers/net/wireless/realtek/rtlwifi/ps.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-On Thu, Oct 17, 2019 at 12:27:58PM +0200, Marek Szyprowski wrote:
-> All the drivers, which use the OPP framework control regulators, which
-> are already enabled. Typically those regulators are also system critical,
-> due to providing power to CPU core or system buses. It turned out that
-> there are cases, where calling regulator_enable() on such boot-enabled
-> regulator has side-effects and might change its initial voltage due to
-> performing initial voltage balancing without all restrictions from the
-> consumers. Until this issue becomes finally solved in regulator core,
-> avoid calling regulator_enable()/disable() from the OPP framework.
+diff --git a/drivers/net/wireless/realtek/rtlwifi/ps.c b/drivers/net/wireless/realtek/rtlwifi/ps.c
+index 70f04c2f5b17..fff8dda14023 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/ps.c
++++ b/drivers/net/wireless/realtek/rtlwifi/ps.c
+@@ -754,6 +754,9 @@ static void rtl_p2p_noa_ie(struct ieee80211_hw *hw, void *data,
+ 				return;
+ 			} else {
+ 				noa_num = (noa_len - 2) / 13;
++				if (noa_num > P2P_MAX_NOA_NUM)
++					noa_num = P2P_MAX_NOA_NUM;
++
+ 			}
+ 			noa_index = ie[3];
+ 			if (rtlpriv->psc.p2p_ps_info.p2p_ps_mode ==
+@@ -848,6 +851,9 @@ static void rtl_p2p_action_ie(struct ieee80211_hw *hw, void *data,
+ 				return;
+ 			} else {
+ 				noa_num = (noa_len - 2) / 13;
++				if (noa_num > P2P_MAX_NOA_NUM)
++					noa_num = P2P_MAX_NOA_NUM;
++
+ 			}
+ 			noa_index = ie[3];
+ 			if (rtlpriv->psc.p2p_ps_info.p2p_ps_mode ==
+-- 
+2.21.0
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
-
---ikeVEW9yuYc//A+q
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2ppRMACgkQJNaLcl1U
-h9AQ0Qf/YJW+4sFCOojivciJSSqs/v5S0eCBH3F74e648ET8wW+lGP6d7Wabk09w
-lkvEnfxTqHUbDCKBN9GqkOKINxccWUlw4iSlPh24Z0J90Z/jXq0WpnzIxLyviQJh
-J0mDFLrAO1TU7Bu8Hq0qnjA9TFVL7ZtBJS4ShzCgTWzIZAa02VbIDYzE3sC3YhT1
-JJpkMq76noTi2LW9Rb6gsO+WXkDYrWxf9s3PKCkEyrVqRas+l01sYed8YQ/X4doW
-D6tb542gwAIlCEu7QM+XU3Gkdi3a/h3t0RM/SW4cMifuWlcXndcApzsmtslwfQSx
-dRCApMxr2BQbuHDWW3uWdE9VIk8Wow==
-=PYPe
------END PGP SIGNATURE-----
-
---ikeVEW9yuYc//A+q--
