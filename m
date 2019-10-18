@@ -2,101 +2,112 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC4DCA9EA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 825C7CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96E8021897
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CD8A2089C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:00:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eKYQpl5s"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="iHBrPJOk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405702AbfJRIAJ (ORCPT
+        id S2406921AbfJRIAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:00:09 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45250 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbfJRIAI (ORCPT
+        Fri, 18 Oct 2019 04:00:55 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:4742 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726820AbfJRIAy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 04:00:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=EqbNkq3NXDaozgxKuEkuj/09gigpd848uWFkythDoCg=; b=eKYQpl5sgbs4oQyPeMStDnMME
-        t268Z95rGPqAG8NmJqz/jgnaUypVZj9fi6V04iisf+qJuAwVV3u+51icrNL7GTonTRQx/Nrpcr0yH
-        wrFM2gzLxnWSWAbIJ44lIRm98Jmbpl3ymUPxqMDajXrzxnf6Ha6tVEEcFoxw44SJcnWZgnGEPXHQx
-        DqEDERI1De4WDAGXki1yeZuedc6M2dEmU3nkhn8GNfIaUhWm4d5PHwpfufMVdhSi03SVCqzwA9Pwj
-        ndiT3+c9b1XJO34Q+shYim+Cgs381C024zF74IyXIVuU7BSKISApSyeTDUZ4kqmcv16wSVJr3iEXy
-        3aj8m/O3w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iLNB1-0003kF-VX; Fri, 18 Oct 2019 08:00:00 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4AD25301245;
-        Fri, 18 Oct 2019 09:59:02 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id CAEE7200DE9FA; Fri, 18 Oct 2019 09:59:57 +0200 (CEST)
-Date:   Fri, 18 Oct 2019 09:59:57 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Quentin Perret <qperret@google.com>,
-        Douglas Raillard <douglas.raillard@arm.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        mingo@redhat.com, rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        qperret@qperret.net, patrick.bellasi@matbug.net, dh.han@samsung.com
-Subject: Re: [RFC PATCH v3 0/6] sched/cpufreq: Make schedutil energy aware
-Message-ID: <20191018075957.GD2328@hirez.programming.kicks-ass.net>
-References: <20191011134500.235736-1-douglas.raillard@arm.com>
- <20191014145315.GZ2311@hirez.programming.kicks-ass.net>
- <a1ce67d7-62c3-b78b-1d87-23ef4dbc2274@arm.com>
- <20191017095015.GI2311@hirez.programming.kicks-ass.net>
- <20191017111116.GA27006@google.com>
- <20191017141107.GJ2311@hirez.programming.kicks-ass.net>
- <2cbde0fe-c10c-0ebb-32ef-2d522986bc89@arm.com>
+        Fri, 18 Oct 2019 04:00:54 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5da971410000>; Fri, 18 Oct 2019 01:01:05 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 18 Oct 2019 01:00:54 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 18 Oct 2019 01:00:54 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 18 Oct
+ 2019 08:00:53 +0000
+Received: from [10.21.133.51] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 18 Oct
+ 2019 08:00:50 +0000
+Subject: Re: [PATCH 4.19 00/81] 4.19.80-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20191016214805.727399379@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <b0bedc5a-7679-1a0f-0fd3-3f0259df8fcb@nvidia.com>
+Date:   Fri, 18 Oct 2019 09:00:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2cbde0fe-c10c-0ebb-32ef-2d522986bc89@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1571385665; bh=HZGKMUz3y/oZAxACLZN2ZSqnYqfwP1CNzLpdSq5zgf0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=iHBrPJOkcbzLxgjbBPrDkPUYkVTqwlV8cCZEHeMy5wtTBb78yG+90sk2aCJO54oqg
+         Jc2OhpquLVcN2W8k6Ar6BXyAf1EjWnhDdoI5GmPFvv92KjTtA/9/3qu/7RTiNdrpD9
+         mW5dxFfw+YCSgYZn4hvfw8Lwx0I+F4V+9P0iBnQb5pvgUedEDJ4TjotixlmD88++up
+         dw0TqV+WI+fWQoZ2NNEq4FAs6a3CYzYDY+jdeYPKWIWIfvZb0KMpnVQcPks8Esws4k
+         hAZN2Fl1vO5gKzo/ASQGWYvDSHmXC45DfjgPc/LROAwGi271UqKkSAhtFkt7Lj5dOc
+         A0purTOHn1kvA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 09:44:44AM +0200, Dietmar Eggemann wrote:
-> On 17/10/2019 16:11, Peter Zijlstra wrote:
-> > On Thu, Oct 17, 2019 at 12:11:16PM +0100, Quentin Perret wrote:
-> 
-> [...]
-> 
-> > It only boosts when 'rq->cfs.avg.util' increases while
-> > 'rq->cfs.avg.util_est.enqueued' remains unchanged (and util > util_est
-> > obv).
-> > 
-> > This condition can be true for select_task_rq_fair(), because that is
-> > ran before we do enqueue_task_fair() (for obvious raisins).
-> > 
-> >>> I'm still thinking about the exact means you're using to raise C; that
-> >>> is, the 'util - util_est' as cost_margin. It hurts my brain still.
-> >>
-> >> +1 ...
-> > 
-> > cost_i = capacity_i / power_i ; for the i-th OPP
-> 
-> I get confused by this definition. efficiency=capacity/power but the
-> cs->cost value used in em_pd_get_higher_freq() is defined as
-> 
-> cs_cost = cs->power * cpu_max_freq / cs->freq [energy_model.h]
 
-Well, chalk that up to confusion inspired by the Changelog of patch 1.
+On 16/10/2019 22:50, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.80 release.
+> There are 81 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri 18 Oct 2019 09:43:41 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.80-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Let me redo it with that formula then.
+All tests passing for Tegra ...
+
+Test results for stable-v4.19:
+    12 builds:	12 pass, 0 fail
+    22 boots:	22 pass, 0 fail
+    32 tests:	32 pass, 0 fail
+
+Linux version:	4.19.80-rc1-g99661e9ccf92
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
+
+Cheers
+Jon
+
+-- 
+nvpublic
