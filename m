@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B96CCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D32FCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D59E221852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 156D521852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437492;
-	bh=NynUHA4qevW95zKm+h3K9YX279or91FM4C/MRJ+5jkI=;
+	s=default; t=1571437498;
+	bh=l4ufX9DFTWVEsodenjVNjo/1QN5IcvrZe4Qls64Ta0g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vHJq+5RLhOTxWxuGK7kYhTKEuEEMRoui5CFDc9IpuY6x18ot66bsOHmyrAbH8XUWw
-	 Mf0nG8+Wp1jVlkUE9eMifod4B31QbnjjY8rI8zX/GrPdtagraZOzsrPFjKqAA+Wphf
-	 Dge21f6B7DVM6XW3IE0rOlMB3LJzwYZKxnt1UCFY=
+	b=pATafuChDUbEEEiNLdVgvgqdtCXM8M+b7pnVPYQOunGn2DAZBPwUCA34wH1k7O3t9
+	 3I2ZxpXUsKhCp1AFRbrjuaUPXaDhN0l1appBdGxSgWUKI95x062p/TcOM/+NPNzkuU
+	 k9EYXmq0ZBSJjCxakuWuJbq3xbfEFea1A9RZxHtM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405661AbfJRWYu (ORCPT
+        id S1728813AbfJRWEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:24:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36576 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:04:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728836AbfJRWEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:04:51 -0400
+        id S1728517AbfJRWEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:04:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6394D2245C;
-        Fri, 18 Oct 2019 22:04:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09C7A22466;
+        Fri, 18 Oct 2019 22:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436290;
-        bh=NynUHA4qevW95zKm+h3K9YX279or91FM4C/MRJ+5jkI=;
+        s=default; t=1571436283;
+        bh=l4ufX9DFTWVEsodenjVNjo/1QN5IcvrZe4Qls64Ta0g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iQxPYW5YNaa63MhM5KQVz7VpSnaDzd5QZaC0Mp7fJ4lyY2AYtbJJ8iHoltuPa6IEt
-         4haadkFYkmkcCkItEWvrUJDRh1FUHE61YRNkiQoQUtcuQvh5Oyd1NrXKQjPZzKYqQx
-         Ro0dYAwhvhTRSAdjijbq7Rh4CpAnlGkoAocfINbo=
+        b=k0U2PauwcPVCggutvxsR4lR8JsVl6tgwOEdx0gLL0aIMiUDuTF9d97g9p0eOdspX0
+         y750xzQoAHswCKtcmbmJBi7bqIq+Zp4rD+k1UJRusRh/zy2C2vx0YTmS1QWxYlF0IL
+         wLeVuMdex1jbL2OaDsE0UPHWFcas+KliL0gVy/bk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Frederic Weisbecker <frederic@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Rik van Riel <riel@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 64/89] sched/vtime: Fix guest/system mis-accounting on task switch
-Date:   Fri, 18 Oct 2019 18:02:59 -0400
-Message-Id: <20191018220324.8165-64-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 59/89] fs: ocfs2: fix a possible null-pointer dereference in ocfs2_info_scan_inode_alloc()
+Date:   Fri, 18 Oct 2019 18:02:54 -0400
+Message-Id: <20191018220324.8165-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -63,77 +66,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frederic Weisbecker <frederic@kernel.org>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 68e7a4d66b0ce04bf18ff2ffded5596ab3618585 ]
+[ Upstream commit 2abb7d3b12d007c30193f48bebed781009bebdd2 ]
 
-vtime_account_system() assumes that the target task to account cputime
-to is always the current task. This is most often true indeed except on
-task switch where we call:
+In ocfs2_info_scan_inode_alloc(), there is an if statement on line 283
+to check whether inode_alloc is NULL:
 
-	vtime_common_task_switch(prev)
-		vtime_account_system(prev)
+    if (inode_alloc)
 
-Here prev is the scheduling-out task where we account the cputime to. It
-doesn't match current that is already the scheduling-in task at this
-stage of the context switch.
+When inode_alloc is NULL, it is used on line 287:
 
-So we end up checking the wrong task flags to determine if we are
-accounting guest or system time to the previous task.
+    ocfs2_inode_lock(inode_alloc, &bh, 0);
+        ocfs2_inode_lock_full_nested(inode, ...)
+            struct ocfs2_super *osb = OCFS2_SB(inode->i_sb);
 
-As a result the wrong task is used to check if the target is running in
-guest mode. We may then spuriously account or leak either system or
-guest time on task switch.
+Thus, a possible null-pointer dereference may occur.
 
-Fix this assumption and also turn vtime_guest_enter/exit() to use the
-task passed in parameter as well to avoid future similar issues.
+To fix this bug, inode_alloc is checked on line 286.
 
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Fixes: 2a42eb9594a1 ("sched/cputime: Accumulate vtime on top of nsec clocksource")
-Link: https://lkml.kernel.org/r/20190925214242.21873-1-frederic@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+This bug is found by a static analysis tool STCheck written by us.
+
+Link: http://lkml.kernel.org/r/20190726033717.32359-1-baijiaju1990@gmail.com
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/cputime.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/ocfs2/ioctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-index 2305ce89a26cf..46ed4e1383e21 100644
---- a/kernel/sched/cputime.c
-+++ b/kernel/sched/cputime.c
-@@ -740,7 +740,7 @@ void vtime_account_system(struct task_struct *tsk)
+diff --git a/fs/ocfs2/ioctl.c b/fs/ocfs2/ioctl.c
+index d6f7b299eb236..efeea208fdebd 100644
+--- a/fs/ocfs2/ioctl.c
++++ b/fs/ocfs2/ioctl.c
+@@ -283,7 +283,7 @@ static int ocfs2_info_scan_inode_alloc(struct ocfs2_super *osb,
+ 	if (inode_alloc)
+ 		inode_lock(inode_alloc);
  
- 	write_seqcount_begin(&vtime->seqcount);
- 	/* We might have scheduled out from guest path */
--	if (current->flags & PF_VCPU)
-+	if (tsk->flags & PF_VCPU)
- 		vtime_account_guest(tsk, vtime);
- 	else
- 		__vtime_account_system(tsk, vtime);
-@@ -783,7 +783,7 @@ void vtime_guest_enter(struct task_struct *tsk)
- 	 */
- 	write_seqcount_begin(&vtime->seqcount);
- 	__vtime_account_system(tsk, vtime);
--	current->flags |= PF_VCPU;
-+	tsk->flags |= PF_VCPU;
- 	write_seqcount_end(&vtime->seqcount);
- }
- EXPORT_SYMBOL_GPL(vtime_guest_enter);
-@@ -794,7 +794,7 @@ void vtime_guest_exit(struct task_struct *tsk)
- 
- 	write_seqcount_begin(&vtime->seqcount);
- 	vtime_account_guest(tsk, vtime);
--	current->flags &= ~PF_VCPU;
-+	tsk->flags &= ~PF_VCPU;
- 	write_seqcount_end(&vtime->seqcount);
- }
- EXPORT_SYMBOL_GPL(vtime_guest_exit);
+-	if (o2info_coherent(&fi->ifi_req)) {
++	if (inode_alloc && o2info_coherent(&fi->ifi_req)) {
+ 		status = ocfs2_inode_lock(inode_alloc, &bh, 0);
+ 		if (status < 0) {
+ 			mlog_errno(status);
 -- 
 2.20.1
 
