@@ -2,112 +2,106 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B89FCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B77CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26A812082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50B8720869
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:47:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="BIR8VSbt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CINJsrk3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440148AbfJRTpG (ORCPT
+        id S2440155AbfJRTr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 15:45:06 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:51604 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390538AbfJRTpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 15:45:06 -0400
-Received: from zn.tnic (p200300EC2F0DFC00B10F655CBDDB26D7.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:fc00:b10f:655c:bddb:26d7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 38D341EC0CE2;
-        Fri, 18 Oct 2019 21:45:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1571427905;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=bqqMYBGGMf2TyWw1T2TB93J5v/cN7UWzlq77s4/kdIk=;
-        b=BIR8VSbtU1LQQuslMHrzpIZV0kYwWUnop0056+Z6JWV4tegrtlMwlOWdFxGVnGdKHyIgs5
-        CqgfY7irKwxnWiTdjDvEK3jc5dBCqhYPJ8eMlQxnVt2XkQYtCBv2OFE5C7WTlzF0tP4Fk4
-        c4MqudItEJeUArCuI9DvwbaM9uw8pkA=
-Date:   Fri, 18 Oct 2019 21:45:03 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "bberg@redhat.com" <bberg@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "ckellner@redhat.com" <ckellner@redhat.com>
-Subject: Re: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal
- throttle messages
-Message-ID: <20191018194503.GF17053@zn.tnic>
-References: <20191014212101.25719-1-srinivas.pandruvada@linux.intel.com>
- <20191015084833.GD2311@hirez.programming.kicks-ass.net>
- <f481b4ab6dfebbc0637c843e5f1cd4ddfd4bd60b.camel@linux.intel.com>
- <20191016081405.GO2328@hirez.programming.kicks-ass.net>
- <20191016140001.GF1138@zn.tnic>
- <3908561D78D1C84285E8C5FCA982C28F7F4A57D0@ORSMSX115.amr.corp.intel.com>
- <20191017214445.GG14441@zn.tnic>
- <c2ce4ef128aad84616b2dc21f6230ad4db12194b.camel@linux.intel.com>
- <20191018132309.GD17053@zn.tnic>
- <20191018180257.GA23835@agluck-desk2.amr.corp.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191018180257.GA23835@agluck-desk2.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 18 Oct 2019 15:47:27 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55456 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730242AbfJRTr0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 15:47:26 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a6so7297484wma.5;
+        Fri, 18 Oct 2019 12:47:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=29JeKgSY9LOeN+no+XK07axfqq3O5QcjOGKm4qRL5EM=;
+        b=CINJsrk36mjN7138rzjhlMMfh4ilot3xmvC1TB2d9BRMmAacU52tSwExBmUwbYZjRl
+         nqJ6tQzdzbYY+DvgKoxR9QJBH/HWI05vv4ChdX4pB02PH3lmbKTvUC1OCi08k+osbo0z
+         aGt3tSr8qVVSKLa+/2lYqorZVEdCWuyxsY+TKNX9IUbUVLaA0PFfJ/Ci6UZeykwMOBJW
+         nBdAFdHArkTvM2OJMedMfGZ1ojFwLr2qJhkZ2iPrqbseNMxIzJ8n64X5FHJ6NF4kRwPU
+         odLGBVCQZcrBIzlbkptRcvY/z8jSbm5K0ZosPqNxBmcJ4ycyZSkQ1c+9aIUYzpXYSTke
+         Iqaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=29JeKgSY9LOeN+no+XK07axfqq3O5QcjOGKm4qRL5EM=;
+        b=jha1AXYPpHJsP8pe/r3NUuIQsa0Aj32m0fNr1dCz1+6d1lRsYA0QbYAsT6X8CsETDu
+         s7hsmp+5E2jC9KKmppHDbbpU8Y7imUTq+KFvOC/ERMuNPFCOCvVqn8ZzUDcwmOzujTeV
+         H58ty54aXwYeGBBOlscTG6jLjjoPGxN1G4bJmSXKB2XZDxf+vb2xbkOUupunAI6Jm0CS
+         y/wvag84cxTWerA30ZIhaXdJ1F4+It41dOCBzyo6rTR4+4tRkiLgtdufpf7vokaRM1WH
+         dhFh24cnQuRgGsw7k8bn/znDAl0XO3mY+5Xl++bUYBtRIXUr/jg4BTUN5wsHpMxl3ElK
+         Zxlw==
+X-Gm-Message-State: APjAAAUxDIIxyFEq6zb4Ys47dXR7uQ4GyYAYoKoBEhm7FcqKoCRedYLL
+        jeAOZtUYZcQrdYDDXFIDDY4zCA66
+X-Google-Smtp-Source: APXvYqy5sv6eFU4eQ/y6qL6QoHw1G3w39Y6P+ecZKsa5W/pDOYxVgfTVPiUv+YZiOHdPCetozDLF7Q==
+X-Received: by 2002:a7b:c94f:: with SMTP id i15mr9181923wml.8.1571428043566;
+        Fri, 18 Oct 2019 12:47:23 -0700 (PDT)
+Received: from debian.office.codethink.co.uk. ([78.40.148.180])
+        by smtp.gmail.com with ESMTPSA id q124sm11346224wma.5.2019.10.18.12.47.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 18 Oct 2019 12:47:22 -0700 (PDT)
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: [PATCH] tty: serial: samsung: rename to fix build warning
+Date:   Fri, 18 Oct 2019 20:47:07 +0100
+Message-Id: <20191018194707.27188-1-sudipm.mukherjee@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 11:02:57AM -0700, Luck, Tony wrote:
-> So what should we do next?
+The build of arm allmodconfig gives a warning:
 
-I was simply keying off this statement of yours:
+warning: same module names found:
+  drivers/tty/serial/samsung.ko
+  drivers/mtd/nand/onenand/samsung.ko
 
-"Depending on what we end up with from Srinivas ... we may want to
-reconsider the severity."
+Rename drivers/tty/serial/samsung.c to drivers/tty/serial/samsung_tty.c
+to fix the warning.
 
-and I don't think that having KERN_CRIT severity for those messages
-makes any sense. That's why I was hinting at us organizing and defining
-our handling of thermal interrupt events properly so that we handle
-those things correctly and not have people look at dmesg.
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+---
+ drivers/tty/serial/Makefile                     | 2 +-
+ drivers/tty/serial/{samsung.c => samsung_tty.c} | 0
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename drivers/tty/serial/{samsung.c => samsung_tty.c} (100%)
 
-> I don't think there is much by way of actions that the kernel should
-> take. While we could stop scheduling processes, the h/w and f/w have
-> better tools to reduce frequency, inject idle cycles, speed up fans,
-> etc. If you do have ideas ... then please share.
-
-See above. All resulted from me stating that KERN_CRIT messages or any
-type of messages in dmesg as a result of hitting thermal limits are
-useless. If we wanna handle those properly, then we need to do something
-else.
-
-> Proposal on the table is the algoritm embodied in Srinivas'
-> patch (which originated from Alan Cox).
-
-I think we agree on doing the dynamic threshold determination, no?
-
-If, as Srinivas points out in another mail, the purpose of those
-messages is when one wants to examine what happened, then fine. If we
-must do more, then see above.
-
-Does that make more sense?
-
+diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
+index 863f47056539..d056ee6cca33 100644
+--- a/drivers/tty/serial/Makefile
++++ b/drivers/tty/serial/Makefile
+@@ -30,7 +30,7 @@ obj-$(CONFIG_SERIAL_PXA_NON8250) += pxa.o
+ obj-$(CONFIG_SERIAL_PNX8XXX) += pnx8xxx_uart.o
+ obj-$(CONFIG_SERIAL_SA1100) += sa1100.o
+ obj-$(CONFIG_SERIAL_BCM63XX) += bcm63xx_uart.o
+-obj-$(CONFIG_SERIAL_SAMSUNG) += samsung.o
++obj-$(CONFIG_SERIAL_SAMSUNG) += samsung_tty.o
+ obj-$(CONFIG_SERIAL_MAX3100) += max3100.o
+ obj-$(CONFIG_SERIAL_MAX310X) += max310x.o
+ obj-$(CONFIG_SERIAL_IP22_ZILOG) += ip22zilog.o
+diff --git a/drivers/tty/serial/samsung.c b/drivers/tty/serial/samsung_tty.c
+similarity index 100%
+rename from drivers/tty/serial/samsung.c
+rename to drivers/tty/serial/samsung_tty.c
 -- 
-Regards/Gruss,
-    Boris.
+2.11.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
