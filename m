@@ -2,131 +2,85 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E508CCA9EB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4CCCA9EC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B270E2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:02:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AYIORJ8G"
+	by mail.kernel.org (Postfix) with ESMTP id B441220820
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:09:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441907AbfJRBCk (ORCPT
+        id S2406816AbfJRBI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 21:02:40 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:56840 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438932AbfJRBCk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 21:02:40 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9I0xAZ8061631;
-        Fri, 18 Oct 2019 01:02:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=KIdZhhQ2Vqp+kaZOoHPRxHGK+Q3KpMgoj0WvJXugb7k=;
- b=AYIORJ8GdoR18Y4ft0wcHXHCL80szwV8y6pzady+EXQsc7nLsV3bCSsFr5VWmoaOkkcT
- VRjlP6lcTTn1RST7AuNAhJwi9oD6CzRhk/49c6AgesUsiLbWe2deK3yyYDzX38PywQ61
- EPyJw4k/PSFPBNS890RxzCz15Y0LmPhx6RpXHTapc+XaZpwP85iYFeBmPc53o1aYYY/j
- KaCGxlwzm3Nc8roHGijbAPV1TkI3c+jfvaQU/LhQOivlKfof1imzTeKjpjcikmtqxy3+
- EWC4/grWYXdocz0j9oV3ix9bGmGVw5vCeAxRaBR2Lkaq8/dTrde4fBR4s2ZVQfbejV2k mA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2vq0q40hsc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 18 Oct 2019 01:02:24 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9I0wCP7053445;
-        Fri, 18 Oct 2019 01:02:24 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2vq0ed0fvv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 18 Oct 2019 01:02:24 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9I12Mac003521;
-        Fri, 18 Oct 2019 01:02:22 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 18 Oct 2019 01:02:21 +0000
-Date:   Thu, 17 Oct 2019 18:02:20 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Matthew Bobrowski <mbobrowski@mbobrowski.org>
-Cc:     Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@lst.de>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Dave Chinner <dchinner@redhat.com>
-Subject: Re: [PATCH 01/14] iomap: iomap that extends beyond EOF should be
- marked dirty
-Message-ID: <20191018010220.GR13108@magnolia>
-References: <20191017175624.30305-1-hch@lst.de>
- <20191017175624.30305-2-hch@lst.de>
- <20191017183917.GL13108@magnolia>
- <20191017215613.GN16973@dread.disaster.area>
- <20191017230814.GB31874@bobrowski>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191017230814.GB31874@bobrowski>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910180006
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910180007
+        Thu, 17 Oct 2019 21:08:56 -0400
+Received: from mga01.intel.com ([192.55.52.88]:46857 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392283AbfJRBIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 21:08:55 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 18:08:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,309,1566889200"; 
+   d="scan'208";a="202553412"
+Received: from intel10-debian.sh.intel.com ([10.239.53.1])
+  by FMSMGA003.fm.intel.com with ESMTP; 17 Oct 2019 18:08:54 -0700
+From:   Zhengjun Xing <zhengjun.xing@linux.intel.com>
+To:     rostedt@goodmis.org, mingo@redhat.com, tom.zanussi@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, zhengjun.xing@linux.intel.com
+Subject: [PATCH v2] tracing: fix "gfp_t" format for synthetic events
+Date:   Fri, 18 Oct 2019 09:20:34 +0800
+Message-Id: <20191018012034.6404-1-zhengjun.xing@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 10:08:14AM +1100, Matthew Bobrowski wrote:
-> On Fri, Oct 18, 2019 at 08:56:13AM +1100, Dave Chinner wrote:
-> > On Thu, Oct 17, 2019 at 11:39:17AM -0700, Darrick J. Wong wrote:
-> > > On Thu, Oct 17, 2019 at 07:56:11PM +0200, Christoph Hellwig wrote:
-> > > > From: Dave Chinner <dchinner@redhat.com>
-> > > > 
-> > > > When doing a direct IO that spans the current EOF, and there are
-> > > > written blocks beyond EOF that extend beyond the current write, the
-> > > > only metadata update that needs to be done is a file size extension.
-> > > > 
-> > > > However, we don't mark such iomaps as IOMAP_F_DIRTY to indicate that
-> > > > there is IO completion metadata updates required, and hence we may
-> > > > fail to correctly sync file size extensions made in IO completion
-> > > > when O_DSYNC writes are being used and the hardware supports FUA.
-> > > > 
-> > > > Hence when setting IOMAP_F_DIRTY, we need to also take into account
-> > > > whether the iomap spans the current EOF. If it does, then we need to
-> > > > mark it dirty so that IO completion will call generic_write_sync()
-> > > > to flush the inode size update to stable storage correctly.
-> > > > 
-> > > > Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> > > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > 
-> > > Looks ok, but need fixes tag.  Also, might it be wise to split off the
-> > > ext4 section into a separate patch so that it can be backported
-> > > separately?
-> > 
-> > I 've done a bit more digging on this, and the ext4 part is not
-> > needed for DAX as IOMAP_F_DIRTY is only used in the page fault path
-> > and hence can't change the file size. As such, this only affects
-> > direct IO. Hence the ext4 hunk can be added to the ext4 iomap-dio
-> > patchset that is being developed rather than being in this patch.
-> 
-> Noted, thanks Dave. I've incorporated the ext4 related change into my patch
-> series.
+In the format of synthetic events, the "gfp_t" is shown as "signed:1",
+but in fact the "gfp_t" is "unsigned", should be shown as "signed:0".
 
-Ok, I've dropped the ext4 hunk from my branch.
+The issue can be reproduced by the following commands:
 
---D
+echo 'memlatency u64 lat; unsigned int order; gfp_t gfp_flags; int migratetype' > /sys/kernel/debug/tracing/synthetic_events
+cat  /sys/kernel/debug/tracing/events/synthetic/memlatency/format
 
-> --<M>--
+name: memlatency
+ID: 2233
+format:
+        field:unsigned short common_type;       offset:0;       size:2; signed:0;
+        field:unsigned char common_flags;       offset:2;       size:1; signed:0;
+        field:unsigned char common_preempt_count;       offset:3;       size:1; signed:0;
+        field:int common_pid;   offset:4;       size:4; signed:1;
+
+        field:u64 lat;  offset:8;       size:8; signed:0;
+        field:unsigned int order;       offset:16;      size:4; signed:0;
+        field:gfp_t gfp_flags;  offset:24;      size:4; signed:1;
+        field:int migratetype;  offset:32;      size:4; signed:1;
+
+print fmt: "lat=%llu, order=%u, gfp_flags=%x, migratetype=%d", REC->lat, REC->order, REC->gfp_flags, REC->migratetype
+
+Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+---
+ kernel/trace/trace_events_hist.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 57648c5aa679..7482a1466ebf 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -679,6 +679,8 @@ static bool synth_field_signed(char *type)
+ {
+ 	if (str_has_prefix(type, "u"))
+ 		return false;
++	if (strcmp(type, "gfp_t") == 0)
++		return false;
+ 
+ 	return true;
+ }
+-- 
+2.17.1
+
