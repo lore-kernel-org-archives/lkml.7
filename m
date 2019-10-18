@@ -2,148 +2,121 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB5DCA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFDF5CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBE19222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7555222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:55:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="nP0UyKnv"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Prb4MoXR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442851AbfJRNyW (ORCPT
+        id S2633897AbfJRNzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 09:54:22 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:35436 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727349AbfJRNyW (ORCPT
+        Fri, 18 Oct 2019 09:55:24 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:60160 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505071AbfJRNzY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 09:54:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=xySmRcW7GgvpKnVFRCDEwywcn86eeUCzX2OE1gITPPg=; b=nP0UyKnvD1/DO0qM+gQcdJk7e
-        l4/HQALh9wS10nBJBOSCYRx4052BvALPTbJGYfoUKbRv+a34eY5Hg9+9g77ETW40T9Or8GbDINcyY
-        dviCw9RKcNEi2bRG3Jb4m4KuuPTm4sebEnQNcn0VjDkhzEcmyeDp652EHNWzGg+otF421dQzXDfHE
-        1gSgCtfkazHykOCC+YWH3pxXqKrHF+rWKZopHiupIobBXL7i8Aibd26jXt/P8W08aq5Owua9G5+qR
-        RwTIZJYA62iO7O3jd+Y8MeI3s/SsxEE1i+qMYCF8IHWZrdMKQNRDlFvFQwx+o3bmMUosKt6i00KqJ
-        FYEiVTK4Q==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:44318)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iLShr-0007vV-3p; Fri, 18 Oct 2019 14:54:15 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iLShn-0000m9-HF; Fri, 18 Oct 2019 14:54:11 +0100
-Date:   Fri, 18 Oct 2019 14:54:11 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, cphealy@gmail.com,
-        Jose Abreu <joabreu@synopsys.com>
-Subject: Re: [PATCH net-next 2/2] net: phy: Add ability to debug RGMII
- connections
-Message-ID: <20191018135411.GJ25745@shell.armlinux.org.uk>
-References: <20191015224953.24199-1-f.fainelli@gmail.com>
- <20191015224953.24199-3-f.fainelli@gmail.com>
- <4feb3979-1d59-4ad3-b2f1-90d82cfbdf54@gmail.com>
- <c4244c9a-28cb-7e37-684d-64e6cdc89b67@gmail.com>
- <CA+h21hrLHe2n0OxJyCKTU0r7mSB1zK9ggP1-1TCednFN_0rXfg@mail.gmail.com>
- <20191018130121.GK4780@lunn.ch>
- <CA+h21hoPrwcgz-q=UROAu0PC=6JbKtbdPhJtZg5ge32_2xJ3TQ@mail.gmail.com>
- <20191018132316.GI25745@shell.armlinux.org.uk>
- <CA+h21hqVZ=LF3bQGtqFh4uMu6AhNFcrwQuUcEH-Fc1VrWku-eg@mail.gmail.com>
+        Fri, 18 Oct 2019 09:55:24 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9IDsrP3114107;
+        Fri, 18 Oct 2019 08:54:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571406893;
+        bh=gy7n9P0uBhu8M6TfOX+hY8VcIvOtD4Bt1FjdWFdP+lY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Prb4MoXRDxDZQQhH293iBAsVCyrlojpGcQS93wlZlwYmsrOkHkKfpwjYkH0DTx1iH
+         1duOV3f3UkvIDIYVymxZz1aTXRGRLp1ZqDhvBHDwKUhIBpOaVMcprD4BlitFSoKcUW
+         5MLN47MVbvK5Rh6hgxxPtl5yGkD0LBPZKwe/bSsE=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9IDsrNu065857
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 18 Oct 2019 08:54:53 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 18
+ Oct 2019 08:54:53 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 18 Oct 2019 08:54:53 -0500
+Received: from [10.250.79.55] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IDsqJP036329;
+        Fri, 18 Oct 2019 08:54:52 -0500
+Subject: Re: [PATCH v12 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
+To:     Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Brian Starkey <Brian.Starkey@arm.com>
+CC:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Hillf Danton <hdanton@sina.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        nd <nd@arm.com>
+References: <20191018052323.21659-1-john.stultz@linaro.org>
+ <20191018052323.21659-5-john.stultz@linaro.org>
+ <20191018112124.grjgqrn3ckuc7n4v@DESKTOP-E1NTVVP.localdomain>
+ <CA+M3ks6KqqXCfqA6VDKnQOsvFLQfaGrUnA+eesnyzMRniFB00A@mail.gmail.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <5a172663-21d5-5f5d-c9d3-f643d8dadc34@ti.com>
+Date:   Fri, 18 Oct 2019 09:54:52 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+h21hqVZ=LF3bQGtqFh4uMu6AhNFcrwQuUcEH-Fc1VrWku-eg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CA+M3ks6KqqXCfqA6VDKnQOsvFLQfaGrUnA+eesnyzMRniFB00A@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 04:37:55PM +0300, Vladimir Oltean wrote:
-> On Fri, 18 Oct 2019 at 16:23, Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> >
-> > On Fri, Oct 18, 2019 at 04:09:30PM +0300, Vladimir Oltean wrote:
-> > > Hi Andrew,
-> > >
-> > > On Fri, 18 Oct 2019 at 16:01, Andrew Lunn <andrew@lunn.ch> wrote:
-> > > >
-> > > > > Well, that's the tricky part. You're sending a frame out, with no
-> > > > > guarantee you'll get the same frame back in. So I'm not sure that any
-> > > > > identifiers put inside the frame will survive.
-> > > > > How do the tests pan out for you? Do you actually get to trigger this
-> > > > > check? As I mentioned, my NIC drops the frames with bad FCS.
-> > > >
-> > > > My experience is, the NIC drops the frame and increments some the
-> > > > counter about bad FCS. I do very occasionally see a frame delivered,
-> > > > but i guess that is 1/65536 where the FCS just happens to be good by
-> > > > accident. So i think some other algorithm should be used which is
-> > > > unlikely to be good when the FCS is accidentally good, or just check
-> > > > the contents of the packet, you know what is should contain.
-> > > >
-> > > > Are there any NICs which don't do hardware FCS? Is that something we
-> > > > realistically need to consider?
-> > > >
-> > > > > Yes, but remember, nobody guarantees that a frame with DMAC
-> > > > > ff:ff:ff:ff:ff:ff on egress will still have it on its way back. Again,
-> > > > > this all depends on how you plan to manage the rx-all ethtool feature.
-> > > >
-> > > > Humm. Never heard that before. Are you saying some NICs rewrite the
-> > > > DMAN?
-> > > >
-> > >
-> > > I'm just trying to understand the circumstances under which this
-> > > kernel thread makes sense.
-> > > Checking for FCS validity means that the intention was to enable the
-> > > reception of frames with bad FCS.
-> > > Bad FCS after bad RGMII setup/hold times doesn't mean there's a small
-> > > guy in there who rewrites the checksum. It means that frame octets get
-> > > garbled. All octets are just as likely to get garbled, including the
-> > > SFD, preamble, DMAC, etc.
-> > > All I'm saying is that, if the intention of the patch is to actually
-> > > process the FCS of frames before and after, then it should actually
-> > > put the interface in promiscuous mode, so that frames with a
-> > > non-garbled SFD and preamble can still be received, even though their
-> > > DMAC was the one that got garbled.
-> >
-> > Isn't the point of this to see which RGMII setting results in a working
-> > setup?
-> >
-> > So, is it not true that what we're after is receiving a _correct_ frame
-> > that corresponds to the frame that was sent out?
-> >
+On 10/18/19 8:03 AM, Benjamin Gaignard wrote:
+> Le ven. 18 oct. 2019 à 13:21, Brian Starkey <Brian.Starkey@arm.com> a écrit :
+>>
+>> On Fri, Oct 18, 2019 at 05:23:22AM +0000, John Stultz wrote:
+>>> This adds a CMA heap, which allows userspace to allocate
+>>> a dma-buf of contiguous memory out of a CMA region.
+>>>
+>>> This code is an evolution of the Android ION implementation, so
+>>> thanks to its original author and maintainters:
+>>>   Benjamin Gaignard, Laura Abbott, and others!
+>>>
+>>> NOTE: This patch only adds the default CMA heap. We will enable
+>>> selectively adding other CMA memory regions to the dmabuf heaps
+>>> interface with a later patch (which requires a dt binding)
 > 
-> Only true if the MAC does not drop bad frames by itself. Then the FCS
-> check in the kernel thread is superfluous.
+> Maybe we can use "no-map" DT property to trigger that. If set do not expose the
+> cma heap.
 
-If a MAC driver doesn't drop bad frames, then surely it's buggy, since
-there isn't (afaik) a way of marking a received skb with a FCS error.
-Therefore, forwarding frames with bad FCS into the Linux networking
-stack will allow the reception of bad frames as if they were good.
 
-All the network drivers I've looked at (and written), when encountering
-a packet with an error, update the statistic counters and drop the
-errored packet.
+"no-map" means it can't be used as a regular CMA either, we want some
+way to both have it as a device usable CMA but also not be exposed to
+userspace if needed.
 
-Do you know of any that don't?
+Andrew
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+> 
+> Benjamin
+>>
+>> That'll teach me for reading my email in FIFO order.
+>>
+>> This approach makes sense to me.
+>>
+>> -Brian
+>>
