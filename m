@@ -4,57 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3A8CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0265CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A473C20854
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75B7C21852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:14:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436865;
-	bh=A4LuE0B2XQw91MC87WI669/azX4ZbkPOGBnRQ/z7kuA=;
+	s=default; t=1571436869;
+	bh=xYkyonlbbCi3GuGegpMQfZcWMAhNVgBaZPtUflwvvUM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z4py/A+SGZVJ0TONx63PcFKkswp+esXZvTa/idIsuAZ342GPkXnoyn5F/Sl1XpwTb
-	 0Vu6MaJWDtlC+Bq/fp4b5JeAsqJGdDxU6HejM881QCmcylolbRrJViNtsCCZDwXNfG
-	 brAFXc/nRyWFFocObE6XF37k/X99bIJBo1JH+oZE=
+	b=Jypq0tdwKlracYB4Z6LHhLWMHlpbcsO3EUNdbO++ydlbQp3aEKoLAU/u/KhoqLvOO
+	 BUCpn/LiUjjEcgUgSbqM0B0b2ioEnllXgkIscmiYZ7h8sZmV6hykxtimHNQCMJq9mu
+	 nwo5USSwcnPYJUvWxN2XrQiOSrSOdcrLF4VfZpOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388930AbfJRWJa (ORCPT
+        id S2388908AbfJRWJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:09:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41656 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:09:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388452AbfJRWJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:09:02 -0400
+        id S2388421AbfJRWJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:09:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 495FB22459;
-        Fri, 18 Oct 2019 22:09:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC2F52246A;
+        Fri, 18 Oct 2019 22:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436541;
-        bh=A4LuE0B2XQw91MC87WI669/azX4ZbkPOGBnRQ/z7kuA=;
+        s=default; t=1571436539;
+        bh=xYkyonlbbCi3GuGegpMQfZcWMAhNVgBaZPtUflwvvUM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rVumd5f5+CTBsRX+Jku07Z1TlqHL43B68YVHjoLYLkLcvpXJoXjpQ8QS4KJQBgfq/
-         FE8hMt/iie8bBF7gz4FfjJ7T58kFBNcE3dKJw6Je6a9dgoaKzXKwcE0b12GsYGxS3Y
-         sCb4xzxQBh7xgRZNZP0JCcqq+c51U/TDtPWLV40s=
+        b=rKeWGVCxZQDiSMp9PjBd+ewAEmEtKmiJz6l5PceF7+ECoGCU8cdVCHdgbxp9C7WDh
+         kz7B7gzF6DNMcIZDkg0iADWP8XFSPm45VUSXqZPSfdZsYUV0zU6jZOsiYvQ0icl5FN
+         Si5H8RUgq3tdL+jr9Zw7CTPKs5a7fLDu0vUibUEY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
+Cc:     Jia Guo <guojia12@huawei.com>, Yiwen Jiang <jiangyiwen@huawei.com>,
         Mark Fasheh <mark@fasheh.com>,
         Joel Becker <jlbec@evilplan.org>,
         Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Joseph Qi <joseph.qi@huawei.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 43/56] fs: ocfs2: fix possible null-pointer dereferences in ocfs2_xa_prepare_entry()
-Date:   Fri, 18 Oct 2019 18:07:40 -0400
-Message-Id: <20191018220753.10002-43-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 42/56] ocfs2: clear zero in unaligned direct IO
+Date:   Fri, 18 Oct 2019 18:07:39 -0400
+Message-Id: <20191018220753.10002-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
 References: <20191018220753.10002-1-sashal@kernel.org>
@@ -67,128 +64,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Jia Guo <guojia12@huawei.com>
 
-[ Upstream commit 56e94ea132bb5c2c1d0b60a6aeb34dcb7d71a53d ]
+[ Upstream commit 7a243c82ea527cd1da47381ad9cd646844f3b693 ]
 
-In ocfs2_xa_prepare_entry(), there is an if statement on line 2136 to
-check whether loc->xl_entry is NULL:
+Unused portion of a part-written fs-block-sized block is not set to zero
+in unaligned append direct write.This can lead to serious data
+inconsistencies.
 
-    if (loc->xl_entry)
+Ocfs2 manage disk with cluster size(for example, 1M), part-written in
+one cluster will change the cluster state from UN-WRITTEN to WRITTEN,
+VFS(function dio_zero_block) doesn't do the cleaning because bh's state
+is not set to NEW in function ocfs2_dio_wr_get_block when we write a
+WRITTEN cluster.  For example, the cluster size is 1M, file size is 8k
+and we direct write from 14k to 15k, then 12k~14k and 15k~16k will
+contain dirty data.
 
-When loc->xl_entry is NULL, it is used on line 2158:
+We have to deal with two cases:
+ 1.The starting position of direct write is outside the file.
+ 2.The starting position of direct write is located in the file.
 
-    ocfs2_xa_add_entry(loc, name_hash);
-        loc->xl_entry->xe_name_hash = cpu_to_le32(name_hash);
-        loc->xl_entry->xe_name_offset = cpu_to_le16(loc->xl_size);
+We need set bh's state to NEW in the first case.  In the second case, we
+need mapped twice because bh's state of area out file should be set to
+NEW while area in file not.
 
-and line 2164:
-
-    ocfs2_xa_add_namevalue(loc, xi);
-        loc->xl_entry->xe_value_size = cpu_to_le64(xi->xi_value_len);
-        loc->xl_entry->xe_name_len = xi->xi_name_len;
-
-Thus, possible null-pointer dereferences may occur.
-
-To fix these bugs, if loc-xl_entry is NULL, ocfs2_xa_prepare_entry()
-abnormally returns with -EINVAL.
-
-These bugs are found by a static analysis tool STCheck written by us.
-
-[akpm@linux-foundation.org: remove now-unused ocfs2_xa_add_entry()]
-Link: http://lkml.kernel.org/r/20190726101447.9153-1-baijiaju1990@gmail.com
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+[akpm@linux-foundation.org: coding style fixes]
+Link: http://lkml.kernel.org/r/5292e287-8f1a-fd4a-1a14-661e555e0bed@huawei.com
+Signed-off-by: Jia Guo <guojia12@huawei.com>
+Reviewed-by: Yiwen Jiang <jiangyiwen@huawei.com>
 Cc: Mark Fasheh <mark@fasheh.com>
 Cc: Joel Becker <jlbec@evilplan.org>
 Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Joseph Qi <joseph.qi@huawei.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/xattr.c | 56 ++++++++++++++++++++----------------------------
- 1 file changed, 23 insertions(+), 33 deletions(-)
+ fs/ocfs2/aops.c | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ocfs2/xattr.c b/fs/ocfs2/xattr.c
-index 77740ef5a8e85..eca49da6d7e0d 100644
---- a/fs/ocfs2/xattr.c
-+++ b/fs/ocfs2/xattr.c
-@@ -1497,18 +1497,6 @@ static int ocfs2_xa_check_space(struct ocfs2_xa_loc *loc,
- 	return loc->xl_ops->xlo_check_space(loc, xi);
- }
+diff --git a/fs/ocfs2/aops.c b/fs/ocfs2/aops.c
+index 99550f4bd159a..ebeec7530cb60 100644
+--- a/fs/ocfs2/aops.c
++++ b/fs/ocfs2/aops.c
+@@ -2151,13 +2151,30 @@ static int ocfs2_dio_wr_get_block(struct inode *inode, sector_t iblock,
+ 	struct ocfs2_dio_write_ctxt *dwc = NULL;
+ 	struct buffer_head *di_bh = NULL;
+ 	u64 p_blkno;
+-	loff_t pos = iblock << inode->i_sb->s_blocksize_bits;
++	unsigned int i_blkbits = inode->i_sb->s_blocksize_bits;
++	loff_t pos = iblock << i_blkbits;
++	sector_t endblk = (i_size_read(inode) - 1) >> i_blkbits;
+ 	unsigned len, total_len = bh_result->b_size;
+ 	int ret = 0, first_get_block = 0;
  
--static void ocfs2_xa_add_entry(struct ocfs2_xa_loc *loc, u32 name_hash)
--{
--	loc->xl_ops->xlo_add_entry(loc, name_hash);
--	loc->xl_entry->xe_name_hash = cpu_to_le32(name_hash);
--	/*
--	 * We can't leave the new entry's xe_name_offset at zero or
--	 * add_namevalue() will go nuts.  We set it to the size of our
--	 * storage so that it can never be less than any other entry.
--	 */
--	loc->xl_entry->xe_name_offset = cpu_to_le16(loc->xl_size);
--}
--
- static void ocfs2_xa_add_namevalue(struct ocfs2_xa_loc *loc,
- 				   struct ocfs2_xattr_info *xi)
- {
-@@ -2140,29 +2128,31 @@ static int ocfs2_xa_prepare_entry(struct ocfs2_xa_loc *loc,
- 	if (rc)
- 		goto out;
+ 	len = osb->s_clustersize - (pos & (osb->s_clustersize - 1));
+ 	len = min(total_len, len);
  
--	if (loc->xl_entry) {
--		if (ocfs2_xa_can_reuse_entry(loc, xi)) {
--			orig_value_size = loc->xl_entry->xe_value_size;
--			rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
--			if (rc)
--				goto out;
--			goto alloc_value;
--		}
-+	if (!loc->xl_entry) {
-+		rc = -EINVAL;
-+		goto out;
-+	}
- 
--		if (!ocfs2_xattr_is_local(loc->xl_entry)) {
--			orig_clusters = ocfs2_xa_value_clusters(loc);
--			rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
--			if (rc) {
--				mlog_errno(rc);
--				ocfs2_xa_cleanup_value_truncate(loc,
--								"overwriting",
--								orig_clusters);
--				goto out;
--			}
-+	if (ocfs2_xa_can_reuse_entry(loc, xi)) {
-+		orig_value_size = loc->xl_entry->xe_value_size;
-+		rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
-+		if (rc)
-+			goto out;
-+		goto alloc_value;
-+	}
++	/*
++	 * bh_result->b_size is count in get_more_blocks according to write
++	 * "pos" and "end", we need map twice to return different buffer state:
++	 * 1. area in file size, not set NEW;
++	 * 2. area out file size, set  NEW.
++	 *
++	 *		   iblock    endblk
++	 * |--------|---------|---------|---------
++	 * |<-------area in file------->|
++	 */
 +
-+	if (!ocfs2_xattr_is_local(loc->xl_entry)) {
-+		orig_clusters = ocfs2_xa_value_clusters(loc);
-+		rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
-+		if (rc) {
-+			mlog_errno(rc);
-+			ocfs2_xa_cleanup_value_truncate(loc,
-+							"overwriting",
-+							orig_clusters);
-+			goto out;
- 		}
--		ocfs2_xa_wipe_namevalue(loc);
--	} else
--		ocfs2_xa_add_entry(loc, name_hash);
-+	}
-+	ocfs2_xa_wipe_namevalue(loc);
++	if ((iblock <= endblk) &&
++	    ((iblock + ((len - 1) >> i_blkbits)) > endblk))
++		len = (endblk - iblock + 1) << i_blkbits;
++
+ 	mlog(0, "get block of %lu at %llu:%u req %u\n",
+ 			inode->i_ino, pos, len, total_len);
  
- 	/*
- 	 * If we get here, we have a blank entry.  Fill it.  We grow our
+@@ -2241,6 +2258,9 @@ static int ocfs2_dio_wr_get_block(struct inode *inode, sector_t iblock,
+ 	if (desc->c_needs_zero)
+ 		set_buffer_new(bh_result);
+ 
++	if (iblock > endblk)
++		set_buffer_new(bh_result);
++
+ 	/* May sleep in end_io. It should not happen in a irq context. So defer
+ 	 * it to dio work queue. */
+ 	set_buffer_defer_completion(bh_result);
 -- 
 2.20.1
 
