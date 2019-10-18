@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA45DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35985CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3C7C222D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D31222D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:03:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436228;
-	bh=WD4dEYGfx+vDqZ++erXNFlqFoVPlAJ90CR+pwNc7X8c=;
+	s=default; t=1571436232;
+	bh=zm7yG+3kxIcdd+11wso79gPFDd+Tjus8jTpuCGsKBhw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aaF8IEiuhrKTcyVkcm/AI5Qa9k8L/sDJV/3KfZ/0tw3xXf04TFU5aInt3P3uKXzNQ
-	 UevYpkat6LPahjeotwqzKEBOMvjbeufcsXSO5rtYTKvOdY/Kw42/S9SoCuN2k3IJtk
-	 vb4BklQhOGPoR5//UnKI5tyObZoS81KYEfdiVF1A=
+	b=br96pD2ekfgzCkLuEymzn8cr4cRDyBOPE7r4fKZWlQXdS9GGT+PdTkvj9vHfHx0i+
+	 Y9z39K4VP5hNibnGn7KoqBC0GizjOtnB6oHQoTLEqFxUo7iIQr/e8vvanAUuT9AmXt
+	 qJJBCnS9bH5wcXwcJGbT5IbEuGU4TIv36xDGj8Q4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbfJRWDr (ORCPT
+        id S1727408AbfJRWDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:03:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35136 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:03:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727166AbfJRWDl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:03:41 -0400
+        id S1727329AbfJRWDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:03:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B51920679;
-        Fri, 18 Oct 2019 22:03:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06CA8222CD;
+        Fri, 18 Oct 2019 22:03:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436220;
-        bh=WD4dEYGfx+vDqZ++erXNFlqFoVPlAJ90CR+pwNc7X8c=;
+        s=default; t=1571436226;
+        bh=zm7yG+3kxIcdd+11wso79gPFDd+Tjus8jTpuCGsKBhw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IjFsrJRUUa7NzXnDTvdsm3TI0Cr+EUwX3yYuORBY7plDfl9JMBsKwZNH2LxATGpzT
-         TZvO8b7JZ32qNTVoa06XbLdC3E/xWy8scPxHDfd66FmCJGcq2tkAjiICEeKvIHeMnm
-         i7WDKC65pLbgepmPkf+xDEHynTeRePFdKvb24cV8=
+        b=mrO9gmoqyR+WvY0NI48lsPvP6pQx+3sOT+hg4rSqJwUOq7Y8+wMFqdAUlaI/O/xV3
+         ke5tdRlUGwYG1f5jU5VEULqodmpt6D3s2nO55A56OCORuWvnp6MWVWNZ3uF+Kb/eeT
+         wDXeOzDa3IQa5eDS+HBv892cstvlYCF+7RdRgmeM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
@@ -49,9 +49,9 @@ Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 10/89] perf annotate: Fix the signedness of failure returns
-Date:   Fri, 18 Oct 2019 18:02:05 -0400
-Message-Id: <20191018220324.8165-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 13/89] perf annotate: Return appropriate error code for allocation failures
+Date:   Fri, 18 Oct 2019 18:02:08 -0400
+Message-Id: <20191018220324.8165-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -66,12 +66,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit 28f4417c3333940b242af03d90214f713bbef232 ]
+[ Upstream commit 16ed3c1e91159e28b02f11f71ff4ce4cbc6f99e4 ]
 
-Callers of symbol__annotate() expect a errno value or some other
-extended error value range in symbol__strerror_disassemble() to
-convert to a proper error string, fix it when propagating a failure to
-find the arch specific annotation routines via arch__find(arch_name).
+We should return errno or the annotation extra range understood by
+symbol__strerror_disassemble() instead of -1, fix it, returning ENOMEM
+instead.
 
 Reported-by: Russell King - ARM Linux admin <linux@armlinux.org.uk>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -80,26 +79,35 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>,
 Cc: Will Deacon <will@kernel.org>
-Link: https://lkml.kernel.org/n/tip-o0k6dw7cas0vvmjjvgsyvu1i@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-8of1cmj3rz0mppfcshc9bbqq@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/annotate.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/annotate.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 6d9642c082e52..2dac51e9e4180 100644
+index b475449f955ef..ab7851ec0ce53 100644
 --- a/tools/perf/util/annotate.c
 +++ b/tools/perf/util/annotate.c
-@@ -2069,7 +2069,7 @@ int symbol__annotate(struct symbol *sym, struct map *map,
+@@ -1662,7 +1662,7 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
  
- 	args.arch = arch = arch__find(arch_name);
- 	if (arch == NULL)
--		return -ENOTSUP;
-+		return ENOTSUP;
+ 	build_id_path = strdup(filename);
+ 	if (!build_id_path)
+-		return -1;
++		return ENOMEM;
  
- 	if (parch)
- 		*parch = arch;
+ 	/*
+ 	 * old style build-id cache has name of XX/XXXXXXX.. while
+@@ -2971,7 +2971,7 @@ int symbol__annotate2(struct symbol *sym, struct map *map, struct perf_evsel *ev
+ 
+ 	notes->offsets = zalloc(size * sizeof(struct annotation_line *));
+ 	if (notes->offsets == NULL)
+-		return -1;
++		return ENOMEM;
+ 
+ 	if (perf_evsel__is_group_event(evsel))
+ 		nr_pcnt = evsel->nr_members;
 -- 
 2.20.1
 
