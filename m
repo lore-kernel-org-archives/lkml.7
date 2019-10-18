@@ -2,129 +2,91 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01322CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E719CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D472021835
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D3002064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:03:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634403AbfJRRDA (ORCPT
+        id S2634419AbfJRRD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 13:03:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50240 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 13:03:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49650 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387714AbfJRRDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 13:03:00 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2634399AbfJRRD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 13:03:56 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 819952064A;
-        Fri, 18 Oct 2019 17:02:58 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 13:02:57 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 10/18] kprobes: fix compilation without
- CONFIG_KRETPROBES
-Message-ID: <20191018130257.3376e397@gandalf.local.home>
-In-Reply-To: <20191018161033.261971-11-samitolvanen@google.com>
-References: <20191018161033.261971-1-samitolvanen@google.com>
-        <20191018161033.261971-11-samitolvanen@google.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mx1.redhat.com (Postfix) with ESMTPS id 63ED13083362;
+        Fri, 18 Oct 2019 17:03:56 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 590365C21A;
+        Fri, 18 Oct 2019 17:03:55 +0000 (UTC)
+Subject: Re: [PATCH 00/16] The new slab memory controller
+To:     Roman Gushchin <guro@fb.com>, linux-mm@kvack.org
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Christoph Lameter <cl@linux.com>
+References: <20191018002820.307763-1-guro@fb.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <f3eb1843-8f10-1e7e-9cc7-9e0209c837ce@redhat.com>
+Date:   Fri, 18 Oct 2019 13:03:54 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191018002820.307763-1-guro@fb.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 18 Oct 2019 17:03:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 10/17/19 8:28 PM, Roman Gushchin wrote:
+> The existing slab memory controller is based on the idea of replicating
+> slab allocator internals for each memory cgroup. This approach promises
+> a low memory overhead (one pointer per page), and isn't adding too much
+> code on hot allocation and release paths. But is has a very serious flaw:
+                                               ^it^
+> it leads to a low slab utilization.
+>
+> Using a drgn* script I've got an estimation of slab utilization on
+> a number of machines running different production workloads. In most
+> cases it was between 45% and 65%, and the best number I've seen was
+> around 85%. Turning kmem accounting off brings it to high 90s. Also
+> it brings back 30-50% of slab memory. It means that the real price
+> of the existing slab memory controller is way bigger than a pointer
+> per page.
+>
+> The real reason why the existing design leads to a low slab utilization
+> is simple: slab pages are used exclusively by one memory cgroup.
+> If there are only few allocations of certain size made by a cgroup,
+> or if some active objects (e.g. dentries) are left after the cgroup is
+> deleted, or the cgroup contains a single-threaded application which is
+> barely allocating any kernel objects, but does it every time on a new CPU:
+> in all these cases the resulting slab utilization is very low.
+> If kmem accounting is off, the kernel is able to use free space
+> on slab pages for other allocations.
 
-Added Masami who's the maintainer of kprobes.
+In the case of slub memory allocator, it is not just unused space within
+a slab. It is also the use of per-cpu slabs that can hold up a lot of
+memory, especially if the tasks jump around to different cpus. The
+problem is compounded if a lot of memcgs are being used. Memory
+utilization can improve quite significantly if per-cpu slabs are
+disabled. Of course, it comes with a performance cost.
 
--- Steve
-
-
-On Fri, 18 Oct 2019 09:10:25 -0700
-Sami Tolvanen <samitolvanen@google.com> wrote:
-
-> kprobe_on_func_entry and arch_kprobe_on_func_entry need to be available
-> even if CONFIG_KRETPROBES is not selected.
-> 
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> ---
->  kernel/kprobes.c | 38 +++++++++++++++++++-------------------
->  1 file changed, 19 insertions(+), 19 deletions(-)
-> 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index 53534aa258a6..b5e20a4669b8 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -1829,6 +1829,25 @@ unsigned long __weak arch_deref_entry_point(void *entry)
->  	return (unsigned long)entry;
->  }
->  
-> +bool __weak arch_kprobe_on_func_entry(unsigned long offset)
-> +{
-> +	return !offset;
-> +}
-> +
-> +bool kprobe_on_func_entry(kprobe_opcode_t *addr, const char *sym, unsigned long offset)
-> +{
-> +	kprobe_opcode_t *kp_addr = _kprobe_addr(addr, sym, offset);
-> +
-> +	if (IS_ERR(kp_addr))
-> +		return false;
-> +
-> +	if (!kallsyms_lookup_size_offset((unsigned long)kp_addr, NULL, &offset) ||
-> +						!arch_kprobe_on_func_entry(offset))
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
->  #ifdef CONFIG_KRETPROBES
->  /*
->   * This kprobe pre_handler is registered with every kretprobe. When probe
-> @@ -1885,25 +1904,6 @@ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
->  }
->  NOKPROBE_SYMBOL(pre_handler_kretprobe);
->  
-> -bool __weak arch_kprobe_on_func_entry(unsigned long offset)
-> -{
-> -	return !offset;
-> -}
-> -
-> -bool kprobe_on_func_entry(kprobe_opcode_t *addr, const char *sym, unsigned long offset)
-> -{
-> -	kprobe_opcode_t *kp_addr = _kprobe_addr(addr, sym, offset);
-> -
-> -	if (IS_ERR(kp_addr))
-> -		return false;
-> -
-> -	if (!kallsyms_lookup_size_offset((unsigned long)kp_addr, NULL, &offset) ||
-> -						!arch_kprobe_on_func_entry(offset))
-> -		return false;
-> -
-> -	return true;
-> -}
-> -
->  int register_kretprobe(struct kretprobe *rp)
->  {
->  	int ret = 0;
+Cheers,
+Longman
 
