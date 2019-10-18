@@ -2,160 +2,112 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75ADCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4675CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8214D2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:31:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ilKVSCYU"
+	by mail.kernel.org (Postfix) with ESMTP id 88CA32082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:33:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505985AbfJRTbB (ORCPT
+        id S2439982AbfJRTc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 15:31:01 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30034 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2410703AbfJRTbA (ORCPT
+        Fri, 18 Oct 2019 15:32:59 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:37369 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394807AbfJRTc6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 15:31:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571427059;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GCowdiB5wH88eDhECViL4GzSTGcbuiwoq+hzcOFtFWA=;
-        b=ilKVSCYUL7S+aA1ejU9432MG4SuQsIUd09WQ+dlG36j1AB2777zYg3/CIoUaUSCZaaLkfh
-        tK5DYnpYlcuOwWE/+shoYM8pxW0dmUl8uhgrP+WS2QguFUDDib2dH47jFbNSBAV/rE58xA
-        KwAmaom2PzNB45ByTT9FtKbiHE8e9YY=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-323-kMpf113cPDaWjU9g-ADfVw-1; Fri, 18 Oct 2019 15:30:52 -0400
-Received: by mail-wr1-f70.google.com with SMTP id s9so3138536wrw.23
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 12:30:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zXQhJk8nZ3hMJ2QotwK3o31o6jt9cup6ThIJ+icUhu0=;
-        b=IAA9zyq6L8z0WzZUccYhC6I5sy2oDxOa/jW4+XjXWUdGJHPoOQKrhd7b4iO967GHQo
-         aqWthQul4JjAAtEsc8KIsjN3I3YpOd1NyQSvFmocMvpBMPGjIt+a4/u/8u0/eOzS20P9
-         e+MgG7FgkIDDwnYMx/K2BuZ10XT/kKURjytbgIG5I8+J7oXZfOg+cdCGOEZwVs5iA95l
-         WjVP7cR7KmOyRAWnT586Et/KzIfbeJ6JbmX9w+ABd8/5nkM0lHmo7apsBBJzrOHm4/FN
-         bDU1rUhaJr5PnGPOx5jGJ+Ul8drI4baGqVSDivzI01ZGB3+t0UY7DErdgH2knlPedA/j
-         vASw==
-X-Gm-Message-State: APjAAAU3nGE2Olebp9w+1HsEgsVLpQ4kX33R82PTX8G6JKZWYD0K9LbI
-        UfQNxcpd1r/T68MNATPSKdbkizdWj2w0UXLpDkqZOd4CQ2LY6FVbcqSmMFoi+KDUoDU/pr1UlWH
-        NcE3Bm31rZMU207h+cuplneeq
-X-Received: by 2002:a1c:1d15:: with SMTP id d21mr8852419wmd.5.1571427051729;
-        Fri, 18 Oct 2019 12:30:51 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzB5ZuAbSbEpJBbWhzk7s06BVvp1z0AurRYFn3yyELAtFY9VenvhylaTxh6cbJT5cmWp0tPIg==
-X-Received: by 2002:a1c:1d15:: with SMTP id d21mr8852400wmd.5.1571427051474;
-        Fri, 18 Oct 2019 12:30:51 -0700 (PDT)
-Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
-        by smtp.gmail.com with ESMTPSA id q10sm6905431wrd.39.2019.10.18.12.30.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Oct 2019 12:30:50 -0700 (PDT)
-Subject: Re: [RFC][PATCH 2/3] usb: roles: Add usb role switch notifier.
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <20191002231617.3670-1-john.stultz@linaro.org>
- <20191002231617.3670-3-john.stultz@linaro.org>
- <2e369349-41f6-bd15-2829-fa886f209b39@redhat.com>
- <CALAqxLVcQ7yZuJCUEqGmvqcz5u0Gd=xJzqLbmiXKR+LJrOhvMQ@mail.gmail.com>
- <b8695418-9d3a-96a6-9587-c9a790f49740@redhat.com>
- <CALAqxLVh6GbiKmuK60e6f+_dWh-TS2ZLrwx0WsSo5bKp-F3iLA@mail.gmail.com>
- <648e2943-42f5-e07d-5bb4-f6fd8b38b726@redhat.com>
- <CALAqxLWh0=GRod5ORpi+ENpWCkmY39mUw_=NV67sKY8qH_otZw@mail.gmail.com>
- <f2236442-111d-cd84-fc47-0737df71cf3a@redhat.com>
- <CALAqxLWHbhst5KXAGCswKVp7ztzFHxdb6nskfze+Jk+xWo2Ssw@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <7877d69b-b17c-d4a4-9806-3dca98fc9e26@redhat.com>
-Date:   Fri, 18 Oct 2019 21:30:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 18 Oct 2019 15:32:58 -0400
+Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N5UoU-1hx1rB0p0k-016tR7; Fri, 18 Oct 2019 21:32:55 +0200
+Received: by mail-qk1-f179.google.com with SMTP id u184so6377750qkd.4;
+        Fri, 18 Oct 2019 12:32:54 -0700 (PDT)
+X-Gm-Message-State: APjAAAWOMUseeQAnmf5ePLjWA4QTqPmO0TGTh8vzYVIg+mSZ45wpLuT4
+        58u8s2senhYMMa3qH1GwOLEUY2VGgyDQeT6vYe0=
+X-Google-Smtp-Source: APXvYqzndIi4+lrEFsQAJTvDSAykrBEjXYWBlihPsFokm/QiIqztK3NntxmM4iVAVoSe7PNdrIRvDpgwbQhfLS5cKrs=
+X-Received: by 2002:a37:db0a:: with SMTP id e10mr10369877qki.3.1571427173049;
+ Fri, 18 Oct 2019 12:32:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CALAqxLWHbhst5KXAGCswKVp7ztzFHxdb6nskfze+Jk+xWo2Ssw@mail.gmail.com>
-Content-Language: en-US
-X-MC-Unique: kMpf113cPDaWjU9g-ADfVw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <20191018154052.1276506-1-arnd@arndb.de> <87v9slg9k5.fsf@belgarion.home>
+ <CAK8P3a1JDtHsOW=iaxEycbJ4TBkR9MHUyDMeJnwxCtb=tefnBQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a1JDtHsOW=iaxEycbJ4TBkR9MHUyDMeJnwxCtb=tefnBQ@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 18 Oct 2019 21:32:36 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0376Anmoc8VWXcEBg+z2B+1vcxJoywYYROBQNxpVmZuA@mail.gmail.com>
+Message-ID: <CAK8P3a0376Anmoc8VWXcEBg+z2B+1vcxJoywYYROBQNxpVmZuA@mail.gmail.com>
+Subject: Re: [PATCH 00/46] ARM: pxa: towards multiplatform support
+To:     Robert Jarzmik <robert.jarzmik@free.fr>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        IDE-ML <linux-ide@vger.kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        linux-leds@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-rtc@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:x6rjh/SYhkhVXFY7sn38XpS2jNl7mZ+ZSAgBlTmeuBIEAqo8moQ
+ ZloY0yHOr0VObCTuKLP4a+2rBvJkW653ZyzZa/eWVN3/Ovj/BNRg9Ewp1Qf7rCBMO8Hhk1D
+ iwosZq0hvegBArF9MtuUzikr1dATmDPGh2GE3ojjjAh3L/xbOPWehNtgUykguhtLo25ub3e
+ Gh9uYlRVvIqPMYEpjyOxg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xqW7pTXOCNI=:B+AiqXxm34TeJktaofJfOW
+ XqUjplt4t0CUZ2O55g6B1bgZZacd+rT+JuPTFvuaVx1dQM1GrEbNii30aJz0qTY/9r2GHRVUi
+ OvSlVnq3juFgtcY+5TmDRWP+EjFL1/t5QgjdUXDpsAc1iUjtxFwuDKrEFw+SMqJFj+Evb4M8L
+ 7wbYHomgQQY+uoWcF9O5DLciqMHlDIzbauOi8Lb8bts8RuWV8MWXNKV6pySMZBfkvYKfVY6Id
+ dRjDuhZDsgP5jWCbtzO12OqzKnxMnZUkvtuNqE907owCD6DW0lhUjJdXJhyg1DtnUR53aLxXm
+ uyT/qud2H90oWDD31hBeJ6MHXUOHppefVXVH9rJMm26ZRkgxdiioxTD1OTJ3EFcBSYEbMiSdD
+ m5KrdOruT25lSFB4y/FukEE5zBpl7S+BgJvHFF6Lpzaci4tD8YF/Hro/LlSi2jylbMPpLzp0o
+ KFXy7N7zXVPStE+nf8LQ+jE3PgkeG0V+cB2bFyTkuUjr3n3f0q/2MDNhY0CG1kmgrpZlzzT3C
+ nFqWmIbnG7sOILmVeWRjrQKFkoHeOzeRBURJlkJHZ3Gutmq6dZJlxibBGXhwRR/y/DLzj1lOO
+ nJSr90gM3rzdbOXgkUqkX6zqSQRolgGoHmR78xCiWTiTij+CXnBDpAbXF7ph7vNR8G4br9z3F
+ 7GSqCWBHVQSTXQR8mPCBUBGRHGWz00P0gLcFNQnu04PqT8bERSnbgL6kj6jQEO2gPIvxVswEo
+ KaV2YTmOgsEA8o5SRMsZ1yI0YtaDQ+9tFZs7P8kssy4pBkyQoodTbi6OXh3O/ve4sCf1oXpS0
+ hLIQTF7A215Fx0yevnxC4Wa+lLYgROb6ZPDKBCkqsk9/rn4KMZ6nxOo4JptuWrj4WMJY71M9w
+ TgvMufS3940rCabHvzVQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Oct 18, 2019 at 9:17 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> On Fri, Oct 18, 2019 at 9:04 PM Robert Jarzmik <robert.jarzmik@free.fr> wrote:
+> > Arnd Bergmann <arnd@arndb.de> writes:
+> >
+> > > Hi PXA maintainers,
+> > >
+> > > I'm in the process of getting the old ARM platforms to all build
+> > > in a single kernel. The largest part of that work is changing all
+> > > the device drivers to no longer require mach/*.h header files.
+> > >
+> > > This series does it for arch/pxa/.
+> > >
+> > > As with the omap1 and s3c24xx series I sent before, I don't
+> > > expect this all to be correct in the first version, though
+> > > a lot of the patches are fairly simple and I did exhaustive
+> > > compile-time testing on them.
+> > >
+> > > Please test if you have the hardware, or review!
+> >
+> > Hi Arnd,
+> >
+> > Would you have a git tree I can pull from ?
+> > That would make my life easier than applying manually 46 patches...
+>
+> I've now pushed it to
+>
+> git://git.kernel.org:/pub/scm/linux/kernel/git/arnd/playground.git
+> pxa-multiplatform
 
-On 18-10-2019 20:39, John Stultz wrote:
-> On Fri, Oct 18, 2019 at 1:06 AM Hans de Goede <hdegoede@redhat.com> wrote=
-:
->> On 18-10-2019 07:55, John Stultz wrote:
->>> On Wed, Oct 16, 2019 at 12:27 AM Hans de Goede <hdegoede@redhat.com> wr=
-ote:
->>>> Look at the tcpm_set_vbus implementation in drivers/usb/typec/tcpm/fus=
-b302.c
->>>> you need to do something similar in your Type-C controller driver and
->>>> export the GPIO as as a gpio-controlled regulator and tie the regulato=
-r to
->>>> the connector.
->>>
->>> Thanks for the suggestion, I really appreciate it! One more question
->>> though, since I'm using the tcpci_rt1711h driver, which re-uses the
->>> somewhat sparse tcpci.c implementation, would you recommend trying to
->>> add generic regulator support to the tcpci code or trying to extend
->>> the implementation somehow allow the tcpci_rt1711h driver replace just
->>> the set_vbus function?
->>
->> I have the feeling that this is more of a question for Heikki.
->>
->> My first instinct is: if you are using tcpci can't you put all
->> the hacks you need for the usb connection shared between hub
->> and type-c in your firmware ?
->=20
-> I appreciate the suggestion, but I'm not aware of any USB firmware for
-> the board, nor do I think I have any such source.  :(
+Sorry for the duplication, I had some problems with email configuration
+so my reply got rejected, let's see if it goes through this time.
 
-My bad, I was under the impression that tcpci was a firmware interface,
-but it is not (I was confusing it with ucsi).
-
-Looking at drivers/usb/typec/tcpm/tcpci.c: tcpci_set_vconn I see that
-there is a data struct with vendor specific callbacks and that the
-drivers/usb/typec/tcpm/tcpci_rt1711h.c implements that.
-
-So you may want something similar here. But things are tricky here,
-because when nothing is connected you want to provide Vbus for
-the USB-A ports, which means that if someone then connects a
-USB-A to C cable to connect the board to a PC (switching the port
-to device mode) there will be a time when both sides are supplying
-5V if I remember the schedule correctly.
-
-I think that the original hack might not be that bad, the whole hw
-design seems so, erm, broken, that you probably cannot do proper
-roleswapping anyways.  So just tying Vbus to host mode might be
-fine, the question then becomes again how can some other piece
-of code listen to the role-switch events...
-
-Regards,
-
-Hans
-
+       Arnd
