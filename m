@@ -2,120 +2,149 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA9EBCA9EA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E47DFCA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4E812064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:12:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="X4HC/htE"
+	by mail.kernel.org (Postfix) with ESMTP id C51122064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:13:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395502AbfJRIME (ORCPT
+        id S2395523AbfJRINj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:12:04 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53016 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727918AbfJRIME (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 04:12:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=tA/jFxjvIHq0tQ9bAEhe6lZyldnVuvn0ypIwLrAbRC8=; b=X4HC/htEf84+RawY1Xmok8qZZ
-        nfVykWThT6oMbX6rJ8l2fPLcdqiZz4H2ZFz5IaEHEPBZSFq1P6vOUyMi+8II/FXRzscg4tVV5PSfK
-        QmkF7NRenb8zMCgnJAWWdyH53N7T7lXnyQ7Jr2JDim2G9FsS0EvtTIKSt66v5LSThomRjm0DCACcC
-        atVs2UPy2xqCs+jUEGsHepUH8kz+iCrb2e5dNXNwV3tIgKGPQ0VnQ0LD0K9hoPnPlMyZBOrZvryV4
-        WuNIA0usVXeywej/s7pTKU2QM1tt7BqTD/NXyww5x5nIraTE2nkj98LzZy2QFnE9K0Z1HR7wQXQoY
-        nclXpC0JA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iLNMZ-0001bB-Lx; Fri, 18 Oct 2019 08:11:55 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 000E630018A;
-        Fri, 18 Oct 2019 10:10:57 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A2F99200DE9FA; Fri, 18 Oct 2019 10:11:53 +0200 (CEST)
-Date:   Fri, 18 Oct 2019 10:11:53 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Quentin Perret <qperret@google.com>,
-        Douglas Raillard <douglas.raillard@arm.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        mingo@redhat.com, rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        qperret@qperret.net, patrick.bellasi@matbug.net, dh.han@samsung.com
-Subject: Re: [RFC PATCH v3 0/6] sched/cpufreq: Make schedutil energy aware
-Message-ID: <20191018081153.GE2328@hirez.programming.kicks-ass.net>
-References: <20191011134500.235736-1-douglas.raillard@arm.com>
- <20191014145315.GZ2311@hirez.programming.kicks-ass.net>
- <a1ce67d7-62c3-b78b-1d87-23ef4dbc2274@arm.com>
- <20191017095015.GI2311@hirez.programming.kicks-ass.net>
- <20191017111116.GA27006@google.com>
- <20191017141107.GJ2311@hirez.programming.kicks-ass.net>
- <2cbde0fe-c10c-0ebb-32ef-2d522986bc89@arm.com>
+        Fri, 18 Oct 2019 04:13:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37656 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732147AbfJRINj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 04:13:39 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EC35C10CC1E6;
+        Fri, 18 Oct 2019 08:13:38 +0000 (UTC)
+Received: from [10.36.118.57] (unknown [10.36.118.57])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6F0A85C1B5;
+        Fri, 18 Oct 2019 08:13:37 +0000 (UTC)
+Subject: Re: memory offline infinite loop after soft offline
+To:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+References: <1570829564.5937.36.camel@lca.pw>
+ <20191014083914.GA317@dhcp22.suse.cz>
+ <20191017093410.GA19973@hori.linux.bs1.fc.nec.co.jp>
+ <20191017100106.GF24485@dhcp22.suse.cz> <1571335633.5937.69.camel@lca.pw>
+ <20191017182759.GN24485@dhcp22.suse.cz>
+ <20191018021906.GA24978@hori.linux.bs1.fc.nec.co.jp>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <33946728-bdeb-494a-5db8-e279acebca47@redhat.com>
+Date:   Fri, 18 Oct 2019 10:13:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2cbde0fe-c10c-0ebb-32ef-2d522986bc89@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191018021906.GA24978@hori.linux.bs1.fc.nec.co.jp>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Fri, 18 Oct 2019 08:13:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 09:44:44AM +0200, Dietmar Eggemann wrote:
-> On 17/10/2019 16:11, Peter Zijlstra wrote:
-> > On Thu, Oct 17, 2019 at 12:11:16PM +0100, Quentin Perret wrote:
+On 18.10.19 04:19, Naoya Horiguchi wrote:
+> On Thu, Oct 17, 2019 at 08:27:59PM +0200, Michal Hocko wrote:
+>> On Thu 17-10-19 14:07:13, Qian Cai wrote:
+>>> On Thu, 2019-10-17 at 12:01 +0200, Michal Hocko wrote:
+>>>> On Thu 17-10-19 09:34:10, Naoya Horiguchi wrote:
+>>>>> On Mon, Oct 14, 2019 at 10:39:14AM +0200, Michal Hocko wrote:
+>>>>
+>>>> [...]
+>>>>>> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+>>>>>> index 89c19c0feadb..5fb3fee16fde 100644
+>>>>>> --- a/mm/page_isolation.c
+>>>>>> +++ b/mm/page_isolation.c
+>>>>>> @@ -274,7 +274,7 @@ __test_page_isolated_in_pageblock(unsigned long pfn, unsigned long end_pfn,
+>>>>>>   			 * simple way to verify that as VM_BUG_ON(), though.
+>>>>>>   			 */
+>>>>>>   			pfn += 1 << page_order(page);
+>>>>>> -		else if (skip_hwpoisoned_pages && PageHWPoison(page))
+>>>>>> +		else if (skip_hwpoisoned_pages && PageHWPoison(compound_head(page)))
+>>>>>>   			/* A HWPoisoned page cannot be also PageBuddy */
+>>>>>>   			pfn++;
+>>>>>>   		else
+>>>>>
+>>>>> This fix looks good to me. The original code only addresses hwpoisoned 4kB-page,
+>>>>> we seem to have this issue since the following commit,
+>>>>
+>>>> Thanks a lot for double checking Naoya!
+>>>>   
+>>>>>    commit b023f46813cde6e3b8a8c24f432ff9c1fd8e9a64
+>>>>>    Author: Wen Congyang <wency@cn.fujitsu.com>
+>>>>>    Date:   Tue Dec 11 16:00:45 2012 -0800
+>>>>>    
+>>>>>        memory-hotplug: skip HWPoisoned page when offlining pages
+>>>>>
+>>>>> and extension of LTP coverage finally discovered this.
+>>>>
+>>>> Qian, could you give the patch some testing?
+>>>
+>>> Unfortunately, this does not solve the problem. It looks to me that in
+>>> soft_offline_huge_page(), set_hwpoison_free_buddy_page() will only set
+>>> PG_hwpoison for buddy pages, so the even the compound_head() has no PG_hwpoison
+>>> set.
+>>>
+>>> 		if (PageBuddy(page_head) && page_order(page_head) >= order) {
+>>> 			if (!TestSetPageHWPoison(page))
+>>> 				hwpoisoned = true;
+>>
+>> This is more than unexpected. How are we supposed to find out that the
+>> page is poisoned? Any idea Naoya?
 > 
-> [...]
+> # sorry for my poor review...
 > 
-> > It only boosts when 'rq->cfs.avg.util' increases while
-> > 'rq->cfs.avg.util_est.enqueued' remains unchanged (and util > util_est
-> > obv).
-> > 
-> > This condition can be true for select_task_rq_fair(), because that is
-> > ran before we do enqueue_task_fair() (for obvious raisins).
-> > 
-> >>> I'm still thinking about the exact means you're using to raise C; that
-> >>> is, the 'util - util_est' as cost_margin. It hurts my brain still.
-> >>
-> >> +1 ...
-> > 
-> > cost_i = capacity_i / power_i ; for the i-th OPP
+> We set PG_hwpoison bit only on the head page for hugetlb, that's because
+> we handle multiple pages as a single one for hugetlb. So it's enough
+> to check isolation only on the head page.  Simply skipping pfn cursor to
+> the page after the hugepage should avoid the infinite loop:
 > 
-> I get confused by this definition. efficiency=capacity/power but the
-> cs->cost value used in em_pd_get_higher_freq() is defined as
+>    @@ -274,9 +274,13 @@ __test_page_isolated_in_pageblock(unsigned long pfn, unsigned long end_pfn,
+>     			 * simple way to verify that as VM_BUG_ON(), though.
+>     			 */
+>     			pfn += 1 << page_order(page);
+>    -		else if (skip_hwpoisoned_pages && PageHWPoison(page))
+>    -			/* A HWPoisoned page cannot be also PageBuddy */
+>    -			pfn++;
+>    +		else if (skip_hwpoisoned_pages && PageHWPoison(compound_head(page)))
+>    +			/*
+>    +			 * A HWPoisoned page cannot be also PageBuddy.
+>    +			 * PG_hwpoison could be set only on the head page in
+>    +			 * hugetlb case, so no need to check tail pages.
+>    +			 */
+>    +			pfn += 1 << compound_order(page);
+>     		else
+>     			break;
+>     	}
 > 
-> cs_cost = cs->power * cpu_max_freq / cs->freq [energy_model.h]
+> Qian, could you please try this?
 
-	cost_i = power_i * f_max / f_i
+That should result in the same behavior if I'm not wrong.
 
-	cost(x) = cost_j * (1 + x) ; f_j >= min_freq
+a) Checking the head, skipping over the tail
+b) Checking for every tail the head
 
-	cost_k <= cost(x)
+However, if the compound page spans multiple pageblocks, I am not sure 
+if your change is correct. (if you don't start at the compoound head - 
+when page != compoound_head(page), you would still jump 1 << 
+compound_order(page))
 
-	P = C*V^2*f, V ~ f -> P ~ f^3
+-- 
 
-	cost_i ~ f_i^3 * f_max / f_i
-	       = f_i^2 * f_max
+Thanks,
 
-	cost(x) = (1 + x) * f_j^2 * f_max
-
-	cost_k = cost(x)
-
-	f_k^2 * f_max = (1 + x) * f_j^2 * f_max
-
-	f_k = sqrt(1 + x) * f_j
-
-Which does indeed make more sense... However, I still struggle with
-using our 'x = util - util_est' as input for an OPP specific increase.
-
+David / dhildenb
