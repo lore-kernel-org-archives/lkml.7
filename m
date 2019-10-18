@@ -2,66 +2,159 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 283D7CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C2BCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 031962070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:04:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="IGyKEOZx"
+	by mail.kernel.org (Postfix) with ESMTP id 669742070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:07:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571425651;
+	bh=ZvKSuxQuN/jT3Fmjbjwnw6yt3Bbj3F9A+MC7acj1eYo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=F/GYg+kzANJtNlrzZJwT82nQZGZN/sBW8+EYiaBw5OwP9+pw0UdrEUiy9xTDPONgc
+	 DGz8kjX0WPSQLHjQ07dT4VM/dSUGV2KyHUQnJCoRHcTY3ZYlJII1wzLeG96WcS5FaF
+	 Qj7XVj9ksFmkBTV7Xe4Z+cyGflLpDz9FVE2QVsK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443246AbfJRTEp (ORCPT
+        id S2443250AbfJRTHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 15:04:45 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:53204 "EHLO vps0.lunn.ch"
+        Fri, 18 Oct 2019 15:07:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2443231AbfJRTEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 15:04:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=gChMufF7pDlsTELG5XA6EwZSwB7D7Bj07q+bOG1oGb4=; b=IGyKEOZxoCUxnUeBCWOSJG2WA1
-        pwJZL0JfM1HnI+xcXSvrTouBqKE3Mc7qzDHniX8gNfhsM2muWm6BjYSAn1xIqqVE3EXORzkqF1y5C
-        XOJvSFQxejNpDcR5xhWrLVoezqOGDnZrYxYswo7rAkTvoiDzEtyWq7LjfIYxen+XJk08=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iLXYA-0002oW-Fo; Fri, 18 Oct 2019 21:04:34 +0200
-Date:   Fri, 18 Oct 2019 21:04:34 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Chen Wandun <chenwandun@huawei.com>
-Cc:     igor.russkikh@aquantia.com, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] net: aquantia: add an error handling in
- aq_nic_set_multicast_list
-Message-ID: <20191018190434.GG24810@lunn.ch>
-References: <1571394037-19978-1-git-send-email-chenwandun@huawei.com>
+        id S2436505AbfJRTH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 15:07:29 -0400
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 070A2222CC;
+        Fri, 18 Oct 2019 19:07:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571425648;
+        bh=ZvKSuxQuN/jT3Fmjbjwnw6yt3Bbj3F9A+MC7acj1eYo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=r3J6l9JZJc1Zp8tJF9mLQSmXEA68DllcySKWuRRg/es60oLadlYjJhDaAjldnASSb
+         ATx8Um+zjpqNtXvhGwZLcVJe0hgMmNdA9edlIZqFx/1a8JB/Sb5YemGVg4SUJXOiKR
+         jRtSfzVPwCdgSZPJWLYASOe3Oyl6UG1dXPjI3dRE=
+Received: by mail-qk1-f176.google.com with SMTP id u184so6302458qkd.4;
+        Fri, 18 Oct 2019 12:07:27 -0700 (PDT)
+X-Gm-Message-State: APjAAAVqzXlNJnNjJ81jSPsM8O8tkPvTcnq71VAfKdCP4a0THxoUFi0+
+        uzBdVPjL2XkndqxsBQZDVGI1oMTwUbSLk2Dtdw==
+X-Google-Smtp-Source: APXvYqyEfCrAtNPgA6gsKBq8urq8H5iqVlTDcHX0aikHpYcOCmiQnShU4x9vV/ge/RWs5MTLKNtafQj54U/NALrxbdY=
+X-Received: by 2002:a05:620a:12f1:: with SMTP id f17mr10482791qkl.152.1571425646996;
+ Fri, 18 Oct 2019 12:07:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571394037-19978-1-git-send-email-chenwandun@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191017031051.20366-1-chris.packham@alliedtelesis.co.nz>
+ <20191017031051.20366-2-chris.packham@alliedtelesis.co.nz>
+ <20191017192437.GA24080@bogus> <CAMpxmJVrFK38BPjoUtGt99sqgFeOA=wHFAu=QNQg_5Rj1gU92A@mail.gmail.com>
+In-Reply-To: <CAMpxmJVrFK38BPjoUtGt99sqgFeOA=wHFAu=QNQg_5Rj1gU92A@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 18 Oct 2019 14:07:15 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+iad9+SE8kwKdxKfOF6TsbTF1V+3yNOLhNNsgnmhSCiA@mail.gmail.com>
+Message-ID: <CAL_Jsq+iad9+SE8kwKdxKfOF6TsbTF1V+3yNOLhNNsgnmhSCiA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: brcm: Add bindings for xgs-iproc
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 06:20:37PM +0800, Chen Wandun wrote:
-> From: Chenwandun <chenwandun@huawei.com>
-> 
-> add an error handling in aq_nic_set_multicast_list, it may not
-> work when hw_multicast_list_set error; and at the same time
-> it will remove gcc Wunused-but-set-variable warning.
-> 
-> Signed-off-by: Chenwandun <chenwandun@huawei.com>
+On Fri, Oct 18, 2019 at 1:00 AM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+>
+> czw., 17 pa=C5=BA 2019 o 21:24 Rob Herring <robh@kernel.org> napisa=C5=82=
+(a):
+> >
+> > On Thu, Oct 17, 2019 at 04:10:50PM +1300, Chris Packham wrote:
+> > > This GPIO controller is present on a number of Broadcom switch ASICs
+> > > with integrated SoCs. It is similar to the nsp-gpio and iproc-gpio
+> > > blocks but different enough to require a separate driver.
+> > >
+> > > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> > > ---
+> > >
+> > > Notes:
+> > >     Changes in v2:
+> > >     - Document as DT schema
+> > >     - Include ngpios, #gpio-cells and gpio-controller properties
+> > >
+> > >  .../bindings/gpio/brcm,xgs-iproc.yaml         | 83 +++++++++++++++++=
+++
+> > >  1 file changed, 83 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/gpio/brcm,xgs-i=
+proc.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.ya=
+ml b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
+> > > new file mode 100644
+> > > index 000000000000..71998551209e
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
+> > > @@ -0,0 +1,83 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/gpio/brcm,xgs-iproc.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Broadcom XGS iProc GPIO controller
+> > > +
+> > > +maintainers:
+> > > +  - Chris Packham <chris.packham@alliedtelesis.co.nz>
+> > > +
+> > > +description: |
+> > > +  This controller is the Chip Common A GPIO present on a number of B=
+roadcom
+> > > +  switch ASICs with integrated SoCs.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - brcm,iproc-gpio-cca
+> >
+> > enum vs. const usage depends on whether you think you'll add more
+> > compatibles.
+> >
+>
+> What if you don't know yet? For instance we use a const compatible and
+> then a new chip is released for which we can reuse the driver?
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Then you just change it to an enum (or oneOf if the new compatible has
+a fallback to the old one). Not really a big deal.
 
-    Andrew
+> Is this
+> something that is expected to remain stable in the binding document?
+
+No, only in the sense we want to minimize changes.
+
+> The question is unrelated to this patch, I'm just unsure about my own
+> approach to writing yaml bindings.
+
+We could perhaps just say single entries should always be 'const'
+because then we could write a meta-schema enforcing that:
+
+properties:
+  enum:
+    minItems: 2
+
+I don't think we should be that strict though unless it becomes a
+frequent review topic. So either way is fine, it's up to your
+judgement, and let's stop talking about it before I change my mind. :)
+
+Rob
