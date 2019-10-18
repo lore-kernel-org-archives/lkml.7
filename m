@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E90E2CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD24CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B25C4205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1106420872
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437458;
-	bh=uEND3GKoWK+g/JWo/oyDeh6QDH6dGdOrvIJh9bfh8S0=;
+	s=default; t=1571437466;
+	bh=1a7w7GetW5FhHuRCvaMI7Qle4+x0C2k7Ge+UODumWyk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HXqaZrwh5+8g7gyH2nhSXQ9n2oNH+ZIrVl+LMioJaCC2Z3MWWKc614IuxOHiAV5Ih
-	 DAqw55E8v6qk1kjg2SwHvfgTTjC5SNFAgmIXjwJPebFmdAsQsHG3Vuj3D4wOoYnPQm
-	 hwM/FFYrNZOIot0om8/fSzvcBZv5uRmYm0rkBfIg=
+	b=NBlEpcLdpTWWERRi6W8Sg8r2Myy5uMD2TQvchBgqxVG8IgWiO2nZKx1OM6YFS7w7u
+	 uIrPOZW0GvWFfF4i30FVvGfyXXS2JoHoQtiEBC9qaHLTCG9uUKDbLESw9zr3trgwNH
+	 yaBzc48TdRKlTFyn4uNA49PKPCoBFwgfdTAZ8lhg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394374AbfJRWYQ (ORCPT
+        id S2394396AbfJRWYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:24:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36828 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:24:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728911AbfJRWFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:05:02 -0400
+        id S1729035AbfJRWFB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:05:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 698F520679;
-        Fri, 18 Oct 2019 22:05:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F542222CD;
+        Fri, 18 Oct 2019 22:05:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436302;
-        bh=uEND3GKoWK+g/JWo/oyDeh6QDH6dGdOrvIJh9bfh8S0=;
+        s=default; t=1571436301;
+        bh=1a7w7GetW5FhHuRCvaMI7Qle4+x0C2k7Ge+UODumWyk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wi6WjNs1F+abJcYvp3SABJyqSRMnaXLODl1drlgBXBOJplzIofRmxLKSdl/gGY7Jg
-         Wx26B6eI7IGLcgFTy3xQFFwesOGJjkLZFTIEsVEL8ZGOU1IOt3oTccUrzVdAVjPmT0
-         Jr7tdmsBbhLWYytaYOwUEQKONVHd4TrzNn8NxfvI=
+        b=ddaftopwMGTzQDX46oQMo+dzQbSkd3fhv+O29K8Uia45O0LVzJhQIkOoJbR989OyI
+         7Zrlqbdi3luP9NnaQNZXY5EEIKocpySNDWn+9njgXJkFyH4aTnUlV2OEEqcTzdwXVD
+         9qvY7kYnpeTZ4A5lcUnf4dfaFdVq9xT2mbnTiPWI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+Cc:     Stefan Popa <stefan.popa@analog.com>, Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 73/89] iio: imu: adis16400: release allocated memory on failure
-Date:   Fri, 18 Oct 2019 18:03:08 -0400
-Message-Id: <20191018220324.8165-73-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 72/89] iio: accel: adxl372: Perform a reset at start up
+Date:   Fri, 18 Oct 2019 18:03:07 -0400
+Message-Id: <20191018220324.8165-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -60,38 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Stefan Popa <stefan.popa@analog.com>
 
-[ Upstream commit ab612b1daf415b62c58e130cb3d0f30b255a14d0 ]
+[ Upstream commit d9a997bd4d762d5bd8cc548d762902f58b5e0a74 ]
 
-In adis_update_scan_mode, if allocation for adis->buffer fails,
-previously allocated adis->xfer needs to be released.
+We need to perform a reset a start up to make sure that the chip is in a
+consistent state. This reset also disables all the interrupts which
+should only be enabled together with the iio buffer. Not doing this, was
+sometimes causing unwanted interrupts to trigger.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+Fixes: f4f55ce38e5f ("iio:adxl372: Add FIFO and interrupts support")
+Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/imu/adis_buffer.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/iio/accel/adxl372.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/iio/imu/adis_buffer.c b/drivers/iio/imu/adis_buffer.c
-index 9ac8356d9a954..f446ff4978091 100644
---- a/drivers/iio/imu/adis_buffer.c
-+++ b/drivers/iio/imu/adis_buffer.c
-@@ -78,8 +78,11 @@ int adis_update_scan_mode(struct iio_dev *indio_dev,
- 		return -ENOMEM;
+diff --git a/drivers/iio/accel/adxl372.c b/drivers/iio/accel/adxl372.c
+index fbad4b45fe42d..67b8817995c04 100644
+--- a/drivers/iio/accel/adxl372.c
++++ b/drivers/iio/accel/adxl372.c
+@@ -575,6 +575,14 @@ static int adxl372_setup(struct adxl372_state *st)
+ 		return -ENODEV;
+ 	}
  
- 	adis->buffer = kcalloc(indio_dev->scan_bytes, 2, GFP_KERNEL);
--	if (!adis->buffer)
-+	if (!adis->buffer) {
-+		kfree(adis->xfer);
-+		adis->xfer = NULL;
- 		return -ENOMEM;
-+	}
- 
- 	rx = adis->buffer;
- 	tx = rx + scan_count;
++	/*
++	 * Perform a software reset to make sure the device is in a consistent
++	 * state after start up.
++	 */
++	ret = regmap_write(st->regmap, ADXL372_RESET, ADXL372_RESET_CODE);
++	if (ret < 0)
++		return ret;
++
+ 	ret = adxl372_set_op_mode(st, ADXL372_STANDBY);
+ 	if (ret < 0)
+ 		return ret;
 -- 
 2.20.1
 
