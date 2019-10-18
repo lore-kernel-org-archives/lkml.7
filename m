@@ -6,74 +6,129 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9498CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AA5CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8C91222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AB5321897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:38:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407487AbfJRIiY (ORCPT
+        id S2407597AbfJRIi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:38:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52764 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405150AbfJRIiX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 04:38:23 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A1C20306A21B;
-        Fri, 18 Oct 2019 08:38:23 +0000 (UTC)
-Received: from [10.36.118.57] (unknown [10.36.118.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 526C15D713;
-        Fri, 18 Oct 2019 08:38:22 +0000 (UTC)
-Subject: Re: memory offline infinite loop after soft offline
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, Qian Cai <cai@lca.pw>,
+        Fri, 18 Oct 2019 04:38:27 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4730 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727903AbfJRIiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 04:38:25 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8334FBB43E802C608D56;
+        Fri, 18 Oct 2019 16:38:22 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.179) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Fri, 18 Oct 2019
+ 16:38:13 +0800
+Subject: Re: [PATCH v6 2/2] drivers/perf: Add CCPI2 PMU support in ThunderX2
+ UNCORE driver.
+To:     Ganapatrao Kulkarni <gklkml16@gmail.com>,
+        Will Deacon <will@kernel.org>
+References: <1571218608-15933-1-git-send-email-gkulkarni@marvell.com>
+ <1571218608-15933-3-git-send-email-gkulkarni@marvell.com>
+ <b8e1a637-faf4-4567-7d3e-a4f13dfa1cf0@huawei.com>
+ <CAKTKpr4QoTDjbSxO4CvSH2sNvmrTJKjxi+RZH4mYfyDaaN96Sw@mail.gmail.com>
+ <20191017154750.jgn6e3465qrsu53e@willie-the-truck>
+ <CAKTKpr5ntp5X6Lvp=rKT_F1E1ftdqtjSWTgpEOqEwaDMH2kc1w@mail.gmail.com>
+CC:     Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-References: <1570829564.5937.36.camel@lca.pw>
- <20191014083914.GA317@dhcp22.suse.cz>
- <20191017093410.GA19973@hori.linux.bs1.fc.nec.co.jp>
- <20191017100106.GF24485@dhcp22.suse.cz> <1571335633.5937.69.camel@lca.pw>
- <20191017182759.GN24485@dhcp22.suse.cz>
- <20191018021906.GA24978@hori.linux.bs1.fc.nec.co.jp>
- <33946728-bdeb-494a-5db8-e279acebca47@redhat.com>
- <20191018082459.GE5017@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <f065d998-7fa3-ef9a-c2f4-5b9116f5596b@redhat.com>
-Date:   Fri, 18 Oct 2019 10:38:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        Jan Glauber <jglauber@marvell.com>,
+        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Zhangshaokun <zhangshaokun@hisilicon.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <f7c91a7d-1f0e-24be-1491-fd0dae7f1daf@huawei.com>
+Date:   Fri, 18 Oct 2019 09:38:06 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-In-Reply-To: <20191018082459.GE5017@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <CAKTKpr5ntp5X6Lvp=rKT_F1E1ftdqtjSWTgpEOqEwaDMH2kc1w@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 18 Oct 2019 08:38:23 +0000 (UTC)
+X-Originating-IP: [10.202.227.179]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.10.19 10:24, Michal Hocko wrote:
-> On Fri 18-10-19 10:13:36, David Hildenbrand wrote:
-> [...]
->> However, if the compound page spans multiple pageblocks
-> 
-> Although hugetlb pages spanning pageblocks are possible this shouldn't
-> matter in__test_page_isolated_in_pageblock because this function doesn't
-> really operate on pageblocks as the name suggests.  It is simply
-> traversing all valid RAM ranges (see walk_system_ram_range).
+On 18/10/2019 05:21, Ganapatrao Kulkarni wrote:
+> Hi Will,
+>
+> On Thu, Oct 17, 2019 at 9:17 PM Will Deacon <will@kernel.org> wrote:
+>>
+>> On Thu, Oct 17, 2019 at 12:38:51PM +0530, Ganapatrao Kulkarni wrote:
+>>> On Wed, Oct 16, 2019 at 7:01 PM John Garry <john.garry@huawei.com> wrote:
+>>>>> +TX2_EVENT_ATTR(req_pktsent, CCPI2_EVENT_REQ_PKT_SENT);
+>>>>> +TX2_EVENT_ATTR(snoop_pktsent, CCPI2_EVENT_SNOOP_PKT_SENT);
+>>>>> +TX2_EVENT_ATTR(data_pktsent, CCPI2_EVENT_DATA_PKT_SENT);
+>>>>> +TX2_EVENT_ATTR(gic_pktsent, CCPI2_EVENT_GIC_PKT_SENT);
+>>>>> +
+>>>>> +static struct attribute *ccpi2_pmu_events_attrs[] = {
+>>>>> +     &tx2_pmu_event_attr_req_pktsent.attr.attr,
+>>>>> +     &tx2_pmu_event_attr_snoop_pktsent.attr.attr,
+>>>>> +     &tx2_pmu_event_attr_data_pktsent.attr.attr,
+>>>>> +     &tx2_pmu_event_attr_gic_pktsent.attr.attr,
+>>>>> +     NULL,
+>>>>> +};
+>>>>
+>>>> Hi Ganapatrao,
+>>>>
+>>>> Have you considered adding these as uncore pmu-events in the perf tool?
+>>>>
+>>> At the moment no, since the number of events exposed/listed are very few.
+>>
+>> Then sounds like a perfect time to nip it in the bud before the list grows
+>> ;)
+>
+> I had internal discussion with architecture team, they have confirmed
+> that, these are the only published events and no plan to add new.
+> However, If any such request comes from HW team in future, i will add
+> them to JSON files.
 
-As long as the hugepages don't span memory blocks/sections, you are 
-right. I have no experience with gigantic pages in this regard.
+Don't you find perf list is swamped with all the uncore events?
 
--- 
+For Huawei platform, I find this:
+./perf list pmu | grep "Kernel PMU event" | grep hisi | wc -l
+648
 
-Thanks,
+That's because we have so many instances of the same PMUs, not because 
+there are many events per PMU.
 
-David / dhildenb
+TBH, I would like to delete all the events from the hisi uncore kernel 
+drivers, now that they're supported in the perf tool, but I think that 
+would constitute an ABI breakage.
+
+Maybe there is a way to hide them, but I couldn't find it.
+
+John
+
+>
+> I have incorporate all your previous comments, Can you please Ack and
+> queue it to 5.5?
+>
+>>
+>> If you can manage with these things in userspace, then I agree with John
+>> that it would be preferential to do it that way. It also offers more
+>> flexibility if we get the metricgroup stuff working properly (I think it's
+>> buggered for big/little atm).
+>>
+>> Will
+>
+> Thanks,
+> Ganapat
+>
+> .
+>
+
+
