@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1616FCA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95787CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2B9720679
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AE7D20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:17:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437020;
-	bh=7anIju3GzbRm18JdCkJS7Bg+9lKUk0OQ3BDxqqY5L24=;
+	s=default; t=1571437024;
+	bh=3csVmTOHNGTB+c9xUv/fHEeweHnvr5OV6v+ydEEUMDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xl9ozI/f5FXJj3QYFPP+i/SPkJxGfwwQAUI8kY/I11Oj3tQpjzjDfklqSG63b8B1O
-	 TMlLPl5maclRHYpPNrhXrEjqD75GxtZQOISs59Q9Ijws7jj12Rh7CjClEkiaLOjb19
-	 d/UZoca7lMBtidi6zp7KaSLGg+MChQHIN75YWUuo=
+	b=OzjDnXFK9pbWdXeHSfLO13At8vzKbNXRGpU4+7cVm+dsE9HyguJ34wNBzYxSHTC3f
+	 vnuwjUO4hsfWd0Im7W3+VPz37uV64hxwS3nZ/ndGsM1M9QfNkey9DdPqZ4/TS8E8gF
+	 OhHbU3Earsn1ARXB2gquvhxL8fP3HNRm+kD0aywY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387450AbfJRWH6 (ORCPT
+        id S2393287AbfJRWRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:07:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40212 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:17:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733241AbfJRWHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:07:48 -0400
+        id S2387430AbfJRWH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:07:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D95CE222D1;
-        Fri, 18 Oct 2019 22:07:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84612222D1;
+        Fri, 18 Oct 2019 22:07:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436467;
-        bh=7anIju3GzbRm18JdCkJS7Bg+9lKUk0OQ3BDxqqY5L24=;
+        s=default; t=1571436476;
+        bh=3csVmTOHNGTB+c9xUv/fHEeweHnvr5OV6v+ydEEUMDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bu2c6ZrzQNAgR6iUWOCpixSD+B04Rsv6aarfMBTMe8KLw9q7Wx2uK/MQyVraFke2I
-         UH8guMLvzeUnMb6sox1lEzGI8oKUoucXPhGlKZnPbwVMg7ikEz2U9Bvk6HlqPLRrOf
-         G9ys6yR/f1qX27nunWHK5WhWXcguntLWaS2eoS90=
+        b=UtpwT+NJQ000CGAj3zB4FB8nZvH5H6I4HYqA1AtwkooSYKHpy4ipWs+TCObEgWlyr
+         3im/NQlgWJNygbqYLc9z4taAA0LjIXdbw66wcerGbekhVds4IwIBzQXbtnSGsTt7up
+         W3KbEiV/6VfxJm5K47LHSrWV52Z3FHKKin55aoFo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiubo Li <xiubli@redhat.com>, Mike Christie <mchristi@redhat.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org, nbd@other.debian.org
-Subject: [PATCH AUTOSEL 4.19 097/100] nbd: fix possible sysfs duplicate warning
-Date:   Fri, 18 Oct 2019 18:05:22 -0400
-Message-Id: <20191018220525.9042-97-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 02/56] scsi: lpfc: Fix a duplicate 0711 log message number.
+Date:   Fri, 18 Oct 2019 18:06:59 -0400
+Message-Id: <20191018220753.10002-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
-References: <20191018220525.9042-1-sashal@kernel.org>
+In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
+References: <20191018220753.10002-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,47 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiubo Li <xiubli@redhat.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 862488105b84ca744b3d8ff131e0fcfe10644be1 ]
+[ Upstream commit 2c4c91415a05677acc5c8131a5eb472d4aa96ae1 ]
 
-1. nbd_put takes the mutex and drops nbd->ref to 0. It then does
-idr_remove and drops the mutex.
+Renumber one of the 0711 log messages so there isn't a duplication.
 
-2. nbd_genl_connect takes the mutex. idr_find/idr_for_each fails
-to find an existing device, so it does nbd_dev_add.
-
-3. just before the nbd_put could call nbd_dev_remove or not finished
-totally, but if nbd_dev_add try to add_disk, we can hit:
-
-debugfs: Directory 'nbd1' with parent 'block' already present!
-
-This patch will make sure all the disk add/remove stuff are done
-by holding the nbd_index_mutex lock.
-
-Reported-by: Mike Christie <mchristi@redhat.com>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/nbd.c | 2 +-
+ drivers/scsi/lpfc/lpfc_scsi.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index bc2fa4e85f0ca..d445195945618 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -228,8 +228,8 @@ static void nbd_put(struct nbd_device *nbd)
- 	if (refcount_dec_and_mutex_lock(&nbd->refs,
- 					&nbd_index_mutex)) {
- 		idr_remove(&nbd_index_idr, nbd->index);
--		mutex_unlock(&nbd_index_mutex);
- 		nbd_dev_remove(nbd);
-+		mutex_unlock(&nbd_index_mutex);
- 	}
- }
- 
+diff --git a/drivers/scsi/lpfc/lpfc_scsi.c b/drivers/scsi/lpfc/lpfc_scsi.c
+index 4ade13d72deb3..07cb671bb8550 100644
+--- a/drivers/scsi/lpfc/lpfc_scsi.c
++++ b/drivers/scsi/lpfc/lpfc_scsi.c
+@@ -4152,7 +4152,7 @@ lpfc_scsi_cmd_iocb_cmpl(struct lpfc_hba *phba, struct lpfc_iocbq *pIocbIn,
+ 	/* If pCmd was set to NULL from abort path, do not call scsi_done */
+ 	if (xchg(&lpfc_cmd->pCmd, NULL) == NULL) {
+ 		lpfc_printf_vlog(vport, KERN_INFO, LOG_FCP,
+-				 "0711 FCP cmd already NULL, sid: 0x%06x, "
++				 "5688 FCP cmd already NULL, sid: 0x%06x, "
+ 				 "did: 0x%06x, oxid: 0x%04x\n",
+ 				 vport->fc_myDID,
+ 				 (pnode) ? pnode->nlp_DID : 0,
 -- 
 2.20.1
 
