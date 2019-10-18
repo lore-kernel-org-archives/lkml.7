@@ -6,20 +6,20 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53839CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 328A2CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B18921852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 145F521852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:33:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633043AbfJRJdE (ORCPT
+        id S2409844AbfJRJdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 05:33:04 -0400
+        Fri, 18 Oct 2019 05:33:13 -0400
 Received: from mail-sh.amlogic.com ([58.32.228.43]:32069 "EHLO
         mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409780AbfJRJc5 (ORCPT
+        with ESMTP id S2409821AbfJRJdD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 05:32:57 -0400
+        Fri, 18 Oct 2019 05:33:03 -0400
 Received: from droid13.amlogic.com (116.236.93.172) by mail-sh.amlogic.com
  (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 18 Oct 2019
  17:33:01 +0800
@@ -37,9 +37,9 @@ CC:     Jianxin Pan <jianxin.pan@amlogic.com>,
         Hanjie Lin <hanjie.lin@amlogic.com>,
         Victor Wan <victor.wan@amlogic.com>,
         Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: [PATCH v3 2/4] firmware: meson_sm: Add secure power domain support
-Date:   Fri, 18 Oct 2019 17:32:45 +0800
-Message-ID: <1571391167-79679-3-git-send-email-jianxin.pan@amlogic.com>
+Subject: [PATCH v3 4/4] arm64: dts: meson: a1: add secure power domain controller
+Date:   Fri, 18 Oct 2019 17:32:47 +0800
+Message-ID: <1571391167-79679-5-git-send-email-jianxin.pan@amlogic.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1571391167-79679-1-git-send-email-jianxin.pan@amlogic.com>
 References: <1571391167-79679-1-git-send-email-jianxin.pan@amlogic.com>
@@ -51,41 +51,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Amlogic Meson A1/C1 Secure Monitor implements calls to control power
-domain.
+Enable power domain controller for Meson A1 SoC.
 
 Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
 ---
- drivers/firmware/meson/meson_sm.c       | 2 ++
- include/linux/firmware/meson/meson_sm.h | 2 ++
- 2 files changed, 4 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/firmware/meson/meson_sm.c b/drivers/firmware/meson/meson_sm.c
-index 1d5b4d7..7ec09f5 100644
---- a/drivers/firmware/meson/meson_sm.c
-+++ b/drivers/firmware/meson/meson_sm.c
-@@ -44,6 +44,8 @@ static const struct meson_sm_chip gxbb_chip = {
- 		CMD(SM_EFUSE_WRITE,	0x82000031),
- 		CMD(SM_EFUSE_USER_MAX,	0x82000033),
- 		CMD(SM_GET_CHIP_ID,	0x82000044),
-+		CMD(SM_PWRC_SET,	0x82000093),
-+		CMD(SM_PWRC_GET,	0x82000095),
- 		{ /* sentinel */ },
- 	},
- };
-diff --git a/include/linux/firmware/meson/meson_sm.h b/include/linux/firmware/meson/meson_sm.h
-index 6669e2a..4ed3989 100644
---- a/include/linux/firmware/meson/meson_sm.h
-+++ b/include/linux/firmware/meson/meson_sm.h
-@@ -12,6 +12,8 @@ enum {
- 	SM_EFUSE_WRITE,
- 	SM_EFUSE_USER_MAX,
- 	SM_GET_CHIP_ID,
-+	SM_PWRC_SET,
-+	SM_PWRC_GET,
- };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+index 7210ad0..081bc31 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+@@ -5,6 +5,7 @@
  
- struct meson_sm_firmware;
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/power/meson-a1-power.h>
+ 
+ / {
+ 	compatible = "amlogic,a1";
+@@ -93,6 +94,13 @@
+ 				clock-names = "xtal", "pclk", "baud";
+ 				status = "disabled";
+ 			};
++
++			pwrc: power-controller {
++				compatible = "amlogic,meson-a1-pwrc";
++				#power-domain-cells = <1>;
++				secure-monitor = <&sm>;
++				status = "okay";
++			};
+ 		};
+ 
+ 		gic: interrupt-controller@ff901000 {
 -- 
 2.7.4
 
