@@ -2,175 +2,132 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42543CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA4DCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 145EB20869
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571422073;
-	bh=HD5vXzu0B85BKBCXtPCBmphgnPr/8YfkGK2nY4/Mlk8=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Nx0klx25pAyUuU/zS0l4m32slZXX+Okg4ZIkExXQK0f2BqftKTbjNWxOxPvh3NOmK
-	 pCrrmz4IMfISSsCxmXSCX4Jh0kAAVM3snI9yACa6tRYhH/ASPjEAeS4EpWYCyJVYYV
-	 kYGXBPDdH2jabHvksn8TtttcC6Tw0DJygKP9uin8=
+	by mail.kernel.org (Postfix) with ESMTP id 0167420869
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:08:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sWU3T83Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634554AbfJRSHv (ORCPT
+        id S2505785AbfJRSIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:07:51 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45396 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505767AbfJRSHT (ORCPT
+        Fri, 18 Oct 2019 14:08:01 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35439 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2634544AbfJRSHr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:07:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=guA/i0Uq64Yo/U66ppqvJs5Wtp9eMPnLNdsvkfrKWEM=; b=NLE5qEEX8zc8
-        lXwP9x3+uAYLk7OGLMXIVHDHE0bfj5FQHIa9vX5dzHn+5Kl4MWj11GOVawoon3YowcUOjvoUKI08I
-        aJk7AkM+2WqOWbaSwmBPqokVj0s62wg0TUOIJIcED1NmInAiBgw2oP+BFyeTrYxyrmbX2TwTEiPYA
-        h+ytY=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iLWea-0004H0-Kz; Fri, 18 Oct 2019 18:07:08 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 2111C2741DEA; Fri, 18 Oct 2019 19:07:08 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Applied "spi: atmel: Remove platform data support" to the spi tree
-In-Reply-To: <20191017141846.7523-6-gregory.clement@bootlin.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20191018180708.2111C2741DEA@ypsilon.sirena.org.uk>
-Date:   Fri, 18 Oct 2019 19:07:08 +0100 (BST)
+        Fri, 18 Oct 2019 14:07:47 -0400
+Received: by mail-qk1-f194.google.com with SMTP id w2so6146107qkf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 11:07:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ph1gsWl8b+KE0jxl78060VBvyBbktI0ey+ejee4Ra+M=;
+        b=sWU3T83YtwtKbPCpz47RAxEs8mvbBVd81ozmTNKEGnuqYPCvpcU6Wsi09Xt8hKO1LJ
+         wPSEdxn3BwM2jceEQeOiwf9GxDfM/rEYKy/rjEOpJFh/lk0uDkQF/ZxvXnPIilVHnizv
+         hzM5CTAO3dSkXjLBnkHNJCmK+izfW3yUhdVOWtZJX7LWTk4CW9svOUyu6qB+6V/DM/x+
+         uZ3Ru6M7nxLbVoJ7BscjR7u1KTmxWmdtYM6rreQJPXc3RvAT/RjDOnLDE0q7jAf3vVfB
+         q9NfOjJzGubVGVMGQ7C4rb1FWiWPtnXU73xsbJ7ESI58l9oX0lJ5dab3228Fer5osrBu
+         a5SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ph1gsWl8b+KE0jxl78060VBvyBbktI0ey+ejee4Ra+M=;
+        b=MQP+qkR68Eb7vVG+oXPwE13tDLBygHwbDAmNd5vngewicSnUWcj6TjmGLij2mhfQEZ
+         9anOdDhx1seRcSn3/isT4LQEV31CYTQURWgA8niYBDR92ZMw4DrPMYznAGWoXyPUL/zP
+         euzaNyZA9P0uUbq0ueZXlagvi7Zao2KIB75odRJ0NE853dUDXvmSgb9f+ir75kwbyAP7
+         i/VJJMFUxb1Qxh4G0cWuLMgrnEQu1f3/zIfmMyrw9sWI686pcQBvYOSi5N+ILoxpxwMm
+         MUx+fFrjNGj8/UHhHbpHpHn5N0sMliJtUf1X88ZP3/4ULQVjCIGIUNe/DPw3Z7lHYv+z
+         U2Gg==
+X-Gm-Message-State: APjAAAVDo7IemSmfVpylxOrh23McuTM1t7REBPDI+3/IdKRW43qwavqV
+        F0nR94XKA9md92bw3qvyFpw=
+X-Google-Smtp-Source: APXvYqwO6jVQPXxC22MlgfbIb12hr47Prv/SXLJuhkT6R3SEbKaWgxTVpTQYicMzs+Gni7aJLdrTRw==
+X-Received: by 2002:a37:85c5:: with SMTP id h188mr2708920qkd.191.1571422065884;
+        Fri, 18 Oct 2019 11:07:45 -0700 (PDT)
+Received: from quaco.ghostprotocols.net (179-240-170-47.3g.claro.net.br. [179.240.170.47])
+        by smtp.gmail.com with ESMTPSA id i66sm3049654qkb.105.2019.10.18.11.07.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 11:07:43 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 8818A4DD66; Fri, 18 Oct 2019 15:07:38 -0300 (-03)
+Date:   Fri, 18 Oct 2019 15:07:38 -0300
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: Re: [PATCH 05/10] libperf: Add _GNU_SOURCE define to compilation
+Message-ID: <20191018180738.GD1797@kernel.org>
+References: <20191017105918.20873-1-jolsa@kernel.org>
+ <20191017105918.20873-6-jolsa@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191017105918.20873-6-jolsa@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
 
-   spi: atmel: Remove platform data support
+Why?
 
-has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
+Em Thu, Oct 17, 2019 at 12:59:13PM +0200, Jiri Olsa escreveu:
+> Link: http://lkml.kernel.org/n/tip-m7t1e9kgea4jc3piyvjju7ps@git.kernel.org
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/lib/Makefile       | 1 +
+>  tools/perf/lib/tests/Makefile | 2 ++
+>  2 files changed, 3 insertions(+)
+> 
+> diff --git a/tools/perf/lib/Makefile b/tools/perf/lib/Makefile
+> index 0f233638ef1f..20396f68fcad 100644
+> --- a/tools/perf/lib/Makefile
+> +++ b/tools/perf/lib/Makefile
+> @@ -73,6 +73,7 @@ override CFLAGS += -Werror -Wall
+>  override CFLAGS += -fPIC
+>  override CFLAGS += $(INCLUDES)
+>  override CFLAGS += -fvisibility=hidden
+> +override CFLAGS += -D_GNU_SOURCE
+>  
+>  all:
+>  
+> diff --git a/tools/perf/lib/tests/Makefile b/tools/perf/lib/tests/Makefile
+> index a43cd08c5c03..78c3d8c83c53 100644
+> --- a/tools/perf/lib/tests/Makefile
+> +++ b/tools/perf/lib/tests/Makefile
+> @@ -12,6 +12,8 @@ else
+>    CFLAGS := -g -Wall
+>  endif
+>  
+> +CFLAGS += -D_GNU_SOURCE
+> +
+>  all:
+>  
+>  include $(srctree)/tools/scripts/Makefile.include
+> -- 
+> 2.21.0
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 1cb84b02bf130f34ee81f99bc7dee5bca2943ed7 Mon Sep 17 00:00:00 2001
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Date: Thu, 17 Oct 2019 16:18:44 +0200
-Subject: [PATCH] spi: atmel: Remove platform data support
-
-This driver is now only used through the device tree. Simplify code
-by explicitly depend on device tree.
-
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20191017141846.7523-6-gregory.clement@bootlin.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/Kconfig     |  1 +
- drivers/spi/spi-atmel.c | 16 ++--------------
- 2 files changed, 3 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 6f7fdcbb9151..6c0c1f55bd71 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -80,6 +80,7 @@ config SPI_ARMADA_3700
- config SPI_ATMEL
- 	tristate "Atmel SPI Controller"
- 	depends on ARCH_AT91 || COMPILE_TEST
-+	depends on OF
- 	help
- 	  This selects a driver for the Atmel SPI Controller, present on
- 	  many AT91 ARM chips.
-diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
-index 19600de40422..1ff5b20eabf7 100644
---- a/drivers/spi/spi-atmel.c
-+++ b/drivers/spi/spi-atmel.c
-@@ -1500,7 +1500,7 @@ static int atmel_spi_probe(struct platform_device *pdev)
- 	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(8, 16);
- 	master->dev.of_node = pdev->dev.of_node;
- 	master->bus_num = pdev->id;
--	master->num_chipselect = master->dev.of_node ? 0 : 4;
-+	master->num_chipselect = 4;
- 	master->setup = atmel_spi_setup;
- 	master->flags = (SPI_MASTER_MUST_RX | SPI_MASTER_MUST_TX);
- 	master->transfer_one_message = atmel_spi_transfer_one_message;
-@@ -1528,16 +1528,6 @@ static int atmel_spi_probe(struct platform_device *pdev)
- 
- 	atmel_get_caps(as);
- 
--	/*
--	 * If there are chip selects in the device tree, those will be
--	 * discovered by the SPI core when registering the SPI master
--	 * and assigned to each SPI device.
--	 */
--	if (atmel_spi_is_v2(as) &&
--	    pdev->dev.of_node &&
--	    !of_get_property(pdev->dev.of_node, "cs-gpios", NULL))
--		master->num_chipselect = 4;
--
- 	as->use_dma = false;
- 	as->use_pdc = false;
- 	if (as->caps.has_dma_support) {
-@@ -1745,20 +1735,18 @@ static const struct dev_pm_ops atmel_spi_pm_ops = {
- #define ATMEL_SPI_PM_OPS	NULL
- #endif
- 
--#if defined(CONFIG_OF)
- static const struct of_device_id atmel_spi_dt_ids[] = {
- 	{ .compatible = "atmel,at91rm9200-spi" },
- 	{ /* sentinel */ }
- };
- 
- MODULE_DEVICE_TABLE(of, atmel_spi_dt_ids);
--#endif
- 
- static struct platform_driver atmel_spi_driver = {
- 	.driver		= {
- 		.name	= "atmel_spi",
- 		.pm	= ATMEL_SPI_PM_OPS,
--		.of_match_table	= of_match_ptr(atmel_spi_dt_ids),
-+		.of_match_table	= atmel_spi_dt_ids,
- 	},
- 	.probe		= atmel_spi_probe,
- 	.remove		= atmel_spi_remove,
 -- 
-2.20.1
 
+- Arnaldo
