@@ -2,114 +2,134 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B16D8CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2505CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF36222CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:29:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3D6A222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:29:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="iVxQpCnY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394894AbfJRF3H convert rfc822-to-8bit (ORCPT
+        id S2395211AbfJRF3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:29:07 -0400
-Received: from sender4-op-o19.zoho.com ([136.143.188.19]:17908 "EHLO
-        sender4-op-o19.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731644AbfJRF3G (ORCPT
+        Fri, 18 Oct 2019 01:29:21 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44296 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393371AbfJRF3U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:29:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1571370212; cv=none; 
-        d=zoho.com; s=zohoarc; 
-        b=kbAtEvTx8j677Jh3CDpgwDgzcmgvqS0LPM28Mv1oyoCNcv4QI587ONMf2RGEn4tb6tKGwlXnGUGIMsOF4Mhto2GnYYFzD7W1WEJQHAdoQQhmqr1xjZsgKPS7G+udQW7oRBiwXeMSEWesetIZdgaAdUSgy+vba1uxrI0aFzwVsJY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1571370212; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=0M608GbAEJ9tM/ZcceqJxrV2lLBxBGooik+pYAv+CVU=; 
-        b=UXve6fXAJA6R0D03WQobADYB1lMiPgVuwUvKMiFrth6H1b7xHRU3iOXZKsQCuJGBrC15OuIVgMUQyU8BRZTL5thfeL4xV4fWIMHK/qrETAHnItgHidQTd8Vhr8yyvj8PDNCAV4xZ4i2G+zlJp4gBJ6qkbmtJq+yG4Xjzabm9t24=
-ARC-Authentication-Results: i=1; mx.zoho.com;
-        dkim=pass  header.i=dlrobertson.com;
-        spf=pass  smtp.mailfrom=dan@dlrobertson.com;
-        dmarc=pass header.from=<dan@dlrobertson.com> header.from=<dan@dlrobertson.com>
-Received: from nessie.verizon.net (pool-100-15-144-194.washdc.fios.verizon.net [100.15.144.194]) by mx.zohomail.com
-        with SMTPS id 1571370211739228.7610384308789; Thu, 17 Oct 2019 20:43:31 -0700 (PDT)
-From:   Dan Robertson <dan@dlrobertson.com>
-To:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Dan Robertson <dan@dlrobertson.com>
-Message-ID: <20191018031848.18538-2-dan@dlrobertson.com>
-Subject: [PATCH v4 1/2] dt-bindings: iio: accel: bma400: add bindings
-Date:   Fri, 18 Oct 2019 03:18:47 +0000
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191018031848.18538-1-dan@dlrobertson.com>
-References: <20191018031848.18538-1-dan@dlrobertson.com>
+        Fri, 18 Oct 2019 01:29:20 -0400
+Received: by mail-wr1-f66.google.com with SMTP id z9so4722353wrl.11
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:29:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1L7f/uGvROZCVtz1Hvo5nsOEYV/tzFdc7Jvsq90u0ec=;
+        b=iVxQpCnYqNXc4Cij1up0Y1wu0M6UegLV1122D9YlF8s9T2CDAYVt1sC9yaAZtO+IXa
+         2DQxUapTjWzwHwSN/u70Xw8pbrnPcLYlice8p0PbOlMUIVXKl7eCZJxosYm8gz/41SyY
+         qRKUtYfv9DTZHhE/hjTH3xJl6jWx3RjDZYlKHdPCy0/FJYmnmMq5YSOdultPUTvZuF+2
+         2l3Y9KB4MrVL3Mgp+wy3fbOPNqGQt0/UiTyJdKQYs1yNC2PbeTXLOTK59Pkgou1rtR2d
+         tBBjbvQmRJxtcj6wp52J2zr1QHOqrbSfOua8Ivs6yTu+iYgTKsn0NUstWAz/qysDqT/G
+         KUpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1L7f/uGvROZCVtz1Hvo5nsOEYV/tzFdc7Jvsq90u0ec=;
+        b=U0d2D51ivrhGXO9+uyAdtEu3yoJQ2f/Wkjo7IYuGE+XlF7o48oCe/aWLd4gLBdeavM
+         N/SCu92JwIvsvmsWq39VH4ZsWzotR2wyg4MHLo2tafnk0P/ljGVrdNc7RzYMobvF9Fkm
+         U+7bY6noP/efmz3OAYcSxwts69756jDMYN1wHJirX8VV5tE6mCNGNZfn7o73z7erQ7vu
+         xSlD/vkZCqciQU0PauMVWhXz5xaXqy98dyXCWnlFnc5m1GIjOEGvpJlxG+EfPMwx8lIj
+         Wsp6pLvJ9CqxM0S8vFY4rwouBlRnQC/jkwex8sUG8cRw9JZ912w6ZxoIqPc4nYTjnjPj
+         x+aw==
+X-Gm-Message-State: APjAAAUzZWihTBrEbU0XBRV+z7GzB3AaYB0S0Ymlza2qfuwlKW850Sqo
+        fHPwOxiBkzDMTs91ZFrDdiVQRxi5JRnXD5qG5427tY6p9Bg=
+X-Google-Smtp-Source: APXvYqxzmddrHUI9HqFZ9O/ss44G8uvOHzcgCjU4n2xlXZo3KwPjpnG8lAZNMu2zdDfMWUcl2LR7kj0WtZ4S9n7osVQ=
+X-Received: by 2002:a5d:42c2:: with SMTP id t2mr5350499wrr.251.1571367672210;
+ Thu, 17 Oct 2019 20:01:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-X-ZohoMailClient: External
-Content-Type: text/plain; charset=utf8
+References: <20191017173743.5430-1-hch@lst.de> <20191017173743.5430-11-hch@lst.de>
+In-Reply-To: <20191017173743.5430-11-hch@lst.de>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Fri, 18 Oct 2019 08:31:01 +0530
+Message-ID: <CAAhSdy2Sb+aizuNtKvindH1yowey-_uvJw9jGf=QGAgPMJsDWw@mail.gmail.com>
+Subject: Re: [PATCH 10/15] riscv: read the hart ID from mhartid on boot
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add devicetree binding for the Bosch BMA400 3-axes ultra-low power
-accelerometer sensor.
+On Thu, Oct 17, 2019 at 11:08 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> From: Damien Le Moal <Damien.LeMoal@wdc.com>
+>
+> When in M-Mode, we can use the mhartid CSR to get the ID of the running
+> HART. Doing so, direct M-Mode boot without firmware is possible.
+>
+> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  arch/riscv/include/asm/csr.h | 1 +
+>  arch/riscv/kernel/head.S     | 8 ++++++++
+>  2 files changed, 9 insertions(+)
+>
+> diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
+> index 0dae5c361f29..d0b5113e1a54 100644
+> --- a/arch/riscv/include/asm/csr.h
+> +++ b/arch/riscv/include/asm/csr.h
+> @@ -81,6 +81,7 @@
+>  #define SIE_SEIE               (_AC(0x1, UL) << IRQ_S_EXT)
+>
+>  /* symbolic CSR names: */
+> +#define CSR_MHARTID            0xf14
+>  #define CSR_MSTATUS            0x300
+>  #define CSR_MIE                        0x304
+>  #define CSR_MTVEC              0x305
+> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+> index 679e63d29edb..583784cb3a32 100644
+> --- a/arch/riscv/kernel/head.S
+> +++ b/arch/riscv/kernel/head.S
+> @@ -50,6 +50,14 @@ _start_kernel:
+>         csrw CSR_XIE, zero
+>         csrw CSR_XIP, zero
+>
+> +#ifdef CONFIG_RISCV_M_MODE
+> +       /*
+> +        * The hartid in a0 is expected later on, and we have no firmware
+> +        * to hand it to us.
+> +        */
+> +       csrr a0, CSR_MHARTID
+> +#endif
+> +
+>         /* Load the global pointer */
+>  .option push
+>  .option norelax
+> --
+> 2.20.1
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
 
-Signed-off-by: Dan Robertson <dan@dlrobertson.com>
----
- .../devicetree/bindings/iio/accel/bma400.yaml | 39 +++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/accel/bma400.yaml
+LGTM.
 
-diff --git a/Documentation/devicetree/bindings/iio/accel/bma400.yaml b/Documentation/devicetree/bindings/iio/accel/bma400.yaml
-new file mode 100644
-index 000000000000..e0a85dc7bf34
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/accel/bma400.yaml
-@@ -0,0 +1,39 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/accel/bma400.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Bosch BMA400 triaxial acceleration sensor
-+
-+maintainers:
-+  - Dan Robertson <dan@dlrobertson.com>
-+
-+description: |
-+  Acceleration and temerature iio sensors with an i2c interface
-+
-+  Specifications about the sensor can be found at:
-+    https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST-BMA400-DS000.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - bosch,bma400
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c0 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      bma400@14 {
-+        compatible = "bosch,bma400";
-+        reg = <0x14>;
-+      };
-+    };
+Reviewed-by: Anup Patel <anup@brainfault.org>
 
-
+Regards,
+Anup
