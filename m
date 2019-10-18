@@ -2,61 +2,235 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E5ECA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD521CA9EAB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBB7F2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF3892070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:12:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qE/iv/Xu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505903AbfJRTLB (ORCPT
+        id S2439837AbfJRTMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 15:11:01 -0400
-Received: from www62.your-server.de ([213.133.104.62]:60092 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502792AbfJRTLB (ORCPT
+        Fri, 18 Oct 2019 15:12:05 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39673 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388065AbfJRTMF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 15:11:01 -0400
-Received: from 55.249.197.178.dynamic.dsl-lte-bonding.lssmb00p-msn.res.cust.swisscom.ch ([178.197.249.55] helo=localhost)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iLXeM-0005sD-1a; Fri, 18 Oct 2019 21:10:58 +0200
-Date:   Fri, 18 Oct 2019 21:10:57 +0200
-From:   Daniel Borkmann <daniel@iogearbox.net>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     rostedt@goodmis.org, mingo@redhat.com, ast@kernel.org,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next] bpf: Fix build error without CONFIG_NET
-Message-ID: <20191018191057.GG26267@pc-63.home>
-References: <20191018090344.26936-1-yuehaibing@huawei.com>
+        Fri, 18 Oct 2019 15:12:05 -0400
+Received: by mail-lj1-f193.google.com with SMTP id y3so7291949ljj.6;
+        Fri, 18 Oct 2019 12:12:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ruqCqNBnsNum43HyB2OnTjtqaOgr+5y6aliLgOFBaak=;
+        b=qE/iv/XuOJvgVBtMv5w93GcqREh9iAXEVUGCk9gHiaA1ocGMuNaphGSyuTY6tPFMyG
+         zIy5NLsstNN+usLScCBOBiPkd7FPpoQNPBlTLkVUkZV99Ll6Q2EJjQT5FUPCOjkEdJyV
+         mUVZL3VNDXXMmGyMqJaJs99rpZfKIUgGLYS4IgkC4fEYNecSObA57y16V0YB0kr67r5H
+         m8j7uvIXF1HricCi5xP6SedrNoyImXoCKzuacmifeGNOgiMfIOkkM7RsCdFNrtpj0FtA
+         wape1SF0O3Z/k74EqvDgHCHII3aUP2CgCo/x8BTqxNDpiv4tTYR9c6sfYjX9U5KkmBTZ
+         +YCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ruqCqNBnsNum43HyB2OnTjtqaOgr+5y6aliLgOFBaak=;
+        b=s3vea+EleN5B9DzvAVO/u9wtlHEFn7kO/MctHP26tkPYQzggZXzRCu/b+FEpaZq4mK
+         FR2oIeMtIpAEnC7oPQJqi/dF9g3Itj8iZi9XnR2vl1+DTX4mGAbRsCFOkwlJHW6EDz1M
+         c6oxtgvNI2qh4FNTLJpJrdm8k3Ko7EJ37xN021cAk1/iVFsu5/iEArb+Nw3fxcdqhqTY
+         N/Zb936xKBvIpU5pd8jylgryGNZ8ocfenMmVDTY8dVDTmO850fM6w83L8ppyuyFja5we
+         b9Gi+nz49au2K3Apl3XKNwOzMSCQQO3ddUvx3/59TZOHROtYx7EFARysbeqs3SCFJu6K
+         2Ymw==
+X-Gm-Message-State: APjAAAWvSYLFndynJOiNRAyp3NhNG9LnF0sHeQRXCOlttuZx+EC5l68t
+        j8HN48HtM9aEb/ZdPQOOwVAlCELVTDc=
+X-Google-Smtp-Source: APXvYqy/rX2Xx4xOaU8wIKgtzxtrlJitQCKuHfErMFZm6GOZm/x0hOv5z+NWFHuBJopVVZImIG267g==
+X-Received: by 2002:a2e:964c:: with SMTP id z12mr7021213ljh.79.1571425922270;
+        Fri, 18 Oct 2019 12:12:02 -0700 (PDT)
+Received: from z50.localnet (109241207190.gdansk.vectranet.pl. [109.241.207.190])
+        by smtp.gmail.com with ESMTPSA id k13sm3093323ljc.96.2019.10.18.12.12.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 18 Oct 2019 12:12:01 -0700 (PDT)
+From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/6] media: ov6650: Fix arbitrary selection of master clock rate
+Date:   Fri, 18 Oct 2019 21:11:59 +0200
+Message-ID: <1995941.OKZ89KhD3d@z50>
+In-Reply-To: <20191018185419.GC3712@kekkonen.localdomain>
+References: <20191013125050.4153-1-jmkrzyszt@gmail.com> <20191013125050.4153-7-jmkrzyszt@gmail.com> <20191018185419.GC3712@kekkonen.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018090344.26936-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25606/Fri Oct 18 10:58:40 2019)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 05:03:44PM +0800, YueHaibing wrote:
-> If CONFIG_NET is n, building fails:
-> 
-> kernel/trace/bpf_trace.o: In function `raw_tp_prog_func_proto':
-> bpf_trace.c:(.text+0x1a34): undefined reference to `bpf_skb_output_proto'
-> 
-> Wrap it into a #ifdef to fix this.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: a7658e1a4164 ("bpf: Check types of arguments passed into helpers")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Hi Sakari,
 
-Applied, thanks!
+On Friday, October 18, 2019 8:54:19 P.M. CEST Sakari Ailus wrote:
+> Hi Janusz,
+> 
+> On Sun, Oct 13, 2019 at 02:50:50PM +0200, Janusz Krzysztofik wrote:
+> > A hardcoded 12 MHz master clock frequency has been assumed since
+> > conversion of the driver from soc_camera sensor to a standalone V4L2
+> > subdevice by commit 23a52386fabe ("media: ov6650: convert to standalone
+> > v4l2 subdevice").  Fix it.
+> > 
+> > Define a static table of supported master clock rates (fix misnamed
+> > symbol while being at it), then use v4l2_clk_get/set_rate() to obtain
+> > a clock rate matching one of those supported.  On success, apply
+> > respective master clock hardware divisor provided by the matching
+> > element of the table.
+> > 
+> > Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+> > ---
+> >  drivers/media/i2c/ov6650.c | 64 ++++++++++++++++++++++++++++++++++----
+> >  1 file changed, 58 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
+> > index f4723c0b5c70..13fd7c4699b2 100644
+> > --- a/drivers/media/i2c/ov6650.c
+> > +++ b/drivers/media/i2c/ov6650.c
+> > @@ -124,7 +124,7 @@
+> >  
+> >  #define DEF_AECH		0x4D
+> >  
+> > -#define CLKRC_6MHz		0x00
+> > +#define CLKRC_8MHz		0x00
+> >  #define CLKRC_12MHz		0x40
+> >  #define CLKRC_16MHz		0x80
+> >  #define CLKRC_24MHz		0xc0
+> > @@ -201,6 +201,29 @@ struct ov6650 {
+> >  	u32 code;
+> >  };
+> >  
+> > +struct ov6650_xclk {
+> > +	unsigned long	rate;
+> > +	u8		clkrc;
+> > +};
+> > +
+> > +static const struct ov6650_xclk ov6650_xclk[] = {
+> > +{
+> > +	.rate	= 8000000,
+> > +	.clkrc	= CLKRC_8MHz,
+> > +},
+> > +{
+> > +	.rate	= 12000000,
+> > +	.clkrc	= CLKRC_12MHz,
+> > +},
+> > +{
+> > +	.rate	= 16000000,
+> > +	.clkrc	= CLKRC_16MHz,
+> > +},
+> > +{
+> > +	.rate	= 24000000,
+> > +	.clkrc	= CLKRC_24MHz,
+> > +},
+> > +};
+> >  
+> >  static u32 ov6650_codes[] = {
+> >  	MEDIA_BUS_FMT_YUYV8_2X8,
+> > @@ -774,7 +797,7 @@ static int ov6650_reset(struct i2c_client *client)
+> >  }
+> >  
+> >  /* program default register values */
+> > -static int ov6650_prog_dflt(struct i2c_client *client)
+> > +static int ov6650_prog_dflt(struct i2c_client *client, u8 clkrc)
+> >  {
+> >  	int ret;
+> >  
+> > @@ -782,7 +805,7 @@ static int ov6650_prog_dflt(struct i2c_client *client)
+> >  
+> >  	ret = ov6650_reg_write(client, REG_COMA, 0);	/* ~COMA_RESET */
+> >  	if (!ret)
+> > -		ret = ov6650_reg_write(client, REG_CLKRC, CLKRC_12MHz);
+> > +		ret = ov6650_reg_write(client, REG_CLKRC, clkrc);
+> >  	if (!ret)
+> >  		ret = ov6650_reg_rmw(client, REG_COMB, 0, COMB_BAND_FILTER);
+> >  
+> > @@ -793,8 +816,10 @@ static int ov6650_video_probe(struct v4l2_subdev *sd)
+> >  {
+> >  	struct i2c_client *client = v4l2_get_subdevdata(sd);
+> >  	struct ov6650 *priv = to_ov6650(client);
+> > -	u8		pidh, pidl, midh, midl;
+> > -	int		ret;
+> > +	const struct ov6650_xclk *xclk;
+> > +	unsigned long rate;
+> > +	u8 pidh, pidl, midh, midl;
+> > +	int i, ret;
+> >  
+> >  	priv->clk = v4l2_clk_get(&client->dev, NULL);
+> >  	if (IS_ERR(priv->clk)) {
+> > @@ -803,6 +828,33 @@ static int ov6650_video_probe(struct v4l2_subdev *sd)
+> >  		return ret;
+> >  	}
+> >  
+> > +	rate = v4l2_clk_get_rate(priv->clk);
+> > +	for (i = 0; rate && i < ARRAY_SIZE(ov6650_xclk); i++) {
+> > +		if (rate != ov6650_xclk[i].rate)
+> > +			continue;
+> > +
+> > +		xclk = &ov6650_xclk[i];
+> > +		dev_info(&client->dev, "using host default clock rate %lukHz\n",
+> > +			 rate / 1000);
+> > +		break;
+> > +	}
+> 
+> xclk is undefined unless it was set in the previous loop. 
+
+Indeed, sorry for that.
+
+> Please initialise
+> to to NULL. I can fix that, too, while applying the patch.
+
+OK, please do if you can.
+
+Thanks,
+Janusz
+
+
+> > +	for (i = 0; !xclk && i < ARRAY_SIZE(ov6650_xclk); i++) {
+> > +		ret = v4l2_clk_set_rate(priv->clk, ov6650_xclk[i].rate);
+> > +		if (ret || v4l2_clk_get_rate(priv->clk) != ov6650_xclk[i].rate)
+> > +			continue;
+> > +
+> > +		xclk = &ov6650_xclk[i];
+> > +		dev_info(&client->dev, "using negotiated clock rate %lukHz\n",
+> > +			 xclk->rate / 1000);
+> > +		break;
+> > +	}
+> > +	if (!xclk) {
+> > +		dev_err(&client->dev, "unable to get supported clock rate\n");
+> > +		if (!ret)
+> > +			ret = -EINVAL;
+> > +		goto eclkput;
+> > +	}
+> > +
+> >  	ret = ov6650_s_power(sd, 1);
+> >  	if (ret < 0)
+> >  		goto eclkput;
+> > @@ -836,7 +888,7 @@ static int ov6650_video_probe(struct v4l2_subdev *sd)
+> >  
+> >  	ret = ov6650_reset(client);
+> >  	if (!ret)
+> > -		ret = ov6650_prog_dflt(client);
+> > +		ret = ov6650_prog_dflt(client, xclk->clkrc);
+> >  	if (!ret) {
+> >  		struct v4l2_mbus_framefmt mf = ov6650_def_fmt;
+> >  
+> 
+> 
+
+
+
+
