@@ -2,128 +2,157 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F9ACA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1319DCA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:21:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0F212245C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D97D1222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:21:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LB2/6gRP"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="pUdAa7J2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407629AbfJRFUo (ORCPT
+        id S2437421AbfJRFVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:20:44 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:34905 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbfJRFUo (ORCPT
+        Fri, 18 Oct 2019 01:21:55 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43179 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbfJRFVz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:20:44 -0400
-Received: by mail-yw1-f66.google.com with SMTP id r134so1754021ywg.2;
-        Thu, 17 Oct 2019 22:20:42 -0700 (PDT)
+        Fri, 18 Oct 2019 01:21:55 -0400
+Received: by mail-wr1-f66.google.com with SMTP id j18so4721103wrq.10
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:21:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xsX/qftxhkazt9hFT8dF57W5m8I435Z6GlII9cy+ECY=;
-        b=LB2/6gRPtiwyOpmLwPi7yLfXzO/o74TSfvJfCt2GXYIAZXk8+Pf8VSZlmSRym9BhXU
-         U5be31A1gQfNPmpGHHuUtf9B7X3L9QIQN6VdP1M/ufmL7MCuXFikuhLTDWjzGAhBq3V8
-         mXga5/iHEYkl2fY5yH5MoccwlTwfjuJP2JeTKpSPLCsJWiY1E0UuEl7vL8htolCtAIVi
-         yXEq15oEn0F6yyhSH+A8h2la3ySKUlKrFxDil1lNU2ahbL8u0jqtpXCEh0tEDer8H7nd
-         6Y+CxLkBrQxqbAUGA7BoVFLcXfWMW90K61E+pYHK+otV2dkI5Yr3+lyuIc5InASL/zeV
-         eXNg==
+        bh=YMtJ/rq4br1ldAroW8Dm9Xv9y05Fk6K5c9x3oKp9k7Q=;
+        b=pUdAa7J2Gehc3Z5S9pU0pPhmaabw9SjD3IScdYFCqeiH3a9/O0nd+npGP8SCaXV7ud
+         Mq/tpXJ03zoiJlySIp+C2bLcFQE3kz3xaUxLuoAgZsHlPhtDFPgaJgtQMwLCgRcyLqKl
+         pdNCMoaioINJYJGKaVPopoS23vLTZ8HYzl0/Toz2zbNO7gNdxWPh+lUW8akLY5nFvoaB
+         kR88ZMGqusSaZpH70Hpwo8f62b5xlkn/owvdAxJezCkYbdpfqMAygH4I6W6zwMcqPTrZ
+         jBxqiBp9fNjosicT7b99eNAyLeQ51Exl8xFWH245qIEAIQFebZQvModDW1RNp3gphBe/
+         N/HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xsX/qftxhkazt9hFT8dF57W5m8I435Z6GlII9cy+ECY=;
-        b=Pc7sZ+eKVMeKVtKXPQ6MLqpWQ7ObGArYB2GM3WGC6+HDkiHFxj7fUrATgEMC7xK9am
-         xNPiPfApJQIzgAcW/jyVW5qI3mRvJtHeoOaROMvmYrMSpVjsJXf5wi0gaW8rNpSLxNY5
-         eNYty7GzceupC+zNUwFZOIhrH6i8V+RZ7Mn16/8msnoYC4fQQ+dA202tArCq1mswoWW0
-         YuE5KTJC69rWi9Dc7k5eHtO50MQeakH223gUGomUxxPShgWyVtxwgDaHiHe5ujbVyZ64
-         M/8SuYUv1VkYVd13RAwEf0MdGlgPpMTRmCpfVPpGdBZ17nrGwsI9l87QnmAh3T1TZe+7
-         VwUQ==
-X-Gm-Message-State: APjAAAUwavxPiGzLeI1FOMGgWuxgZW/I7wM0lzcwemiwyEqGM69OJdZ+
-        YOrNxB38F6JICXoABI5Ab+9G8fvA+Ajn8M7bAco=
-X-Google-Smtp-Source: APXvYqxwvxHZjKJg/YnuStSLc4n0H5LSqtfMOTfh+SFjPsB+sGtqQKsOlHWmrzk0Hkx+oX8i4/YwLHRT6gmxcwX16E8=
-X-Received: by 2002:a0d:d605:: with SMTP id y5mr5180535ywd.13.1571372506022;
- Thu, 17 Oct 2019 21:21:46 -0700 (PDT)
+        bh=YMtJ/rq4br1ldAroW8Dm9Xv9y05Fk6K5c9x3oKp9k7Q=;
+        b=l9NlFYldSqrVPYL8e3JlyFcmr6Xfa75RZjOiK3LxEfLj2hKNX6R83gvjUUYyoX51Ss
+         obj3ZjUXMxMPkqH8vMdPV+ZdPuMltskh73rz+2IPv7M70kVxntPhcG9w7HBjItQlc8YH
+         5fnZ9aPCBqVOCTwKe6BOGONMe1Q2e8hE6l0QZ6O0lwZEOQtq+qLz/GH4UaU+y02x7cHs
+         4UEtNULoV+QxXgEmZBVjNBAkVrYYcTP8t5YzO7s+CY3MSwhFz2UJ2S4R5yYqo4lQB3jT
+         OEjYMNV0Yj2KfztCpbzizaQz6b0XA9yAl4cH8ndOEYatMsWB0s0x2yTzZNmY/Jt9JUk2
+         kw6w==
+X-Gm-Message-State: APjAAAW9k29JZMtWCpWqTxxK2lHssUtpWeR0boCvoC7T/94swFFRFB24
+        YU43SH+KdD7IPmLff3DnWPVPF6tI5m11/EI7r7cKWMiQ
+X-Google-Smtp-Source: APXvYqyzL5PfqPUeOPJfIRSruOHCy55CDY3oAd0o+CVn7dWhpcrArUiDxTSajhvUF6JsyyNVFOA2Vcdi1oVTjp+LITs=
+X-Received: by 2002:a5d:440b:: with SMTP id z11mr5349333wrq.309.1571367051591;
+ Thu, 17 Oct 2019 19:50:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <1571218608-15933-1-git-send-email-gkulkarni@marvell.com>
- <1571218608-15933-3-git-send-email-gkulkarni@marvell.com> <b8e1a637-faf4-4567-7d3e-a4f13dfa1cf0@huawei.com>
- <CAKTKpr4QoTDjbSxO4CvSH2sNvmrTJKjxi+RZH4mYfyDaaN96Sw@mail.gmail.com> <20191017154750.jgn6e3465qrsu53e@willie-the-truck>
-In-Reply-To: <20191017154750.jgn6e3465qrsu53e@willie-the-truck>
-From:   Ganapatrao Kulkarni <gklkml16@gmail.com>
-Date:   Fri, 18 Oct 2019 09:51:34 +0530
-Message-ID: <CAKTKpr5ntp5X6Lvp=rKT_F1E1ftdqtjSWTgpEOqEwaDMH2kc1w@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] drivers/perf: Add CCPI2 PMU support in ThunderX2
- UNCORE driver.
-To:     Will Deacon <will@kernel.org>
-Cc:     John Garry <john.garry@huawei.com>,
-        Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        Jan Glauber <jglauber@marvell.com>,
-        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Zhangshaokun <zhangshaokun@hisilicon.com>
+References: <20191017173743.5430-1-hch@lst.de> <20191017173743.5430-2-hch@lst.de>
+In-Reply-To: <20191017173743.5430-2-hch@lst.de>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Fri, 18 Oct 2019 08:20:40 +0530
+Message-ID: <CAAhSdy2fKnGbNHQHaxcthEsVDX_Jv3ZqPWHfmqn1gpB4sPho5g@mail.gmail.com>
+Subject: Re: [PATCH 01/15] riscv: cleanup <asm/bug.h>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
-
-On Thu, Oct 17, 2019 at 9:17 PM Will Deacon <will@kernel.org> wrote:
+On Thu, Oct 17, 2019 at 11:07 PM Christoph Hellwig <hch@lst.de> wrote:
 >
-> On Thu, Oct 17, 2019 at 12:38:51PM +0530, Ganapatrao Kulkarni wrote:
-> > On Wed, Oct 16, 2019 at 7:01 PM John Garry <john.garry@huawei.com> wrote:
-> > > > +TX2_EVENT_ATTR(req_pktsent, CCPI2_EVENT_REQ_PKT_SENT);
-> > > > +TX2_EVENT_ATTR(snoop_pktsent, CCPI2_EVENT_SNOOP_PKT_SENT);
-> > > > +TX2_EVENT_ATTR(data_pktsent, CCPI2_EVENT_DATA_PKT_SENT);
-> > > > +TX2_EVENT_ATTR(gic_pktsent, CCPI2_EVENT_GIC_PKT_SENT);
-> > > > +
-> > > > +static struct attribute *ccpi2_pmu_events_attrs[] = {
-> > > > +     &tx2_pmu_event_attr_req_pktsent.attr.attr,
-> > > > +     &tx2_pmu_event_attr_snoop_pktsent.attr.attr,
-> > > > +     &tx2_pmu_event_attr_data_pktsent.attr.attr,
-> > > > +     &tx2_pmu_event_attr_gic_pktsent.attr.attr,
-> > > > +     NULL,
-> > > > +};
-> > >
-> > > Hi Ganapatrao,
-> > >
-> > > Have you considered adding these as uncore pmu-events in the perf tool?
-> > >
-> > At the moment no, since the number of events exposed/listed are very few.
+> Remove various not required ifdefs and externs.
 >
-> Then sounds like a perfect time to nip it in the bud before the list grows
-> ;)
-
-I had internal discussion with architecture team, they have confirmed
-that, these are the only published events and no plan to add new.
-However, If any such request comes from HW team in future, i will add
-them to JSON files.
-
-I have incorporate all your previous comments, Can you please Ack and
-queue it to 5.5?
-
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/riscv/include/asm/bug.h | 16 +++-------------
+>  1 file changed, 3 insertions(+), 13 deletions(-)
 >
-> If you can manage with these things in userspace, then I agree with John
-> that it would be preferential to do it that way. It also offers more
-> flexibility if we get the metricgroup stuff working properly (I think it's
-> buggered for big/little atm).
+> diff --git a/arch/riscv/include/asm/bug.h b/arch/riscv/include/asm/bug.h
+> index 07ceee8b1747..75604fec1b1b 100644
+> --- a/arch/riscv/include/asm/bug.h
+> +++ b/arch/riscv/include/asm/bug.h
+> @@ -12,7 +12,6 @@
 >
-> Will
+>  #include <asm/asm.h>
+>
+> -#ifdef CONFIG_GENERIC_BUG
+>  #define __INSN_LENGTH_MASK  _UL(0x3)
+>  #define __INSN_LENGTH_32    _UL(0x3)
+>  #define __COMPRESSED_INSN_MASK _UL(0xffff)
+> @@ -20,7 +19,6 @@
+>  #define __BUG_INSN_32  _UL(0x00100073) /* ebreak */
+>  #define __BUG_INSN_16  _UL(0x9002) /* c.ebreak */
+>
+> -#ifndef __ASSEMBLY__
+>  typedef u32 bug_insn_t;
+>
+>  #ifdef CONFIG_GENERIC_BUG_RELATIVE_POINTERS
+> @@ -43,6 +41,7 @@ typedef u32 bug_insn_t;
+>         RISCV_SHORT " %2"
+>  #endif
+>
+> +#ifdef CONFIG_GENERIC_BUG
+>  #define __BUG_FLAGS(flags)                                     \
+>  do {                                                           \
+>         __asm__ __volatile__ (                                  \
+> @@ -58,14 +57,10 @@ do {                                                                \
+>                   "i" (flags),                                  \
+>                   "i" (sizeof(struct bug_entry)));              \
+>  } while (0)
+> -
+> -#endif /* !__ASSEMBLY__ */
+>  #else /* CONFIG_GENERIC_BUG */
+> -#ifndef __ASSEMBLY__
+>  #define __BUG_FLAGS(flags) do {                                        \
+>         __asm__ __volatile__ ("ebreak\n");                      \
+>  } while (0)
+> -#endif /* !__ASSEMBLY__ */
+>  #endif /* CONFIG_GENERIC_BUG */
+>
+>  #define BUG() do {                                             \
+> @@ -79,15 +74,10 @@ do {                                                                \
+>
+>  #include <asm-generic/bug.h>
+>
+> -#ifndef __ASSEMBLY__
+> -
+>  struct pt_regs;
+>  struct task_struct;
+>
+> -extern void die(struct pt_regs *regs, const char *str);
+> -extern void do_trap(struct pt_regs *regs, int signo, int code,
+> -       unsigned long addr);
+> -
+> -#endif /* !__ASSEMBLY__ */
+> +void die(struct pt_regs *regs, const char *str);
+> +void do_trap(struct pt_regs *regs, int signo, int code, unsigned long addr);
+>
+>  #endif /* _ASM_RISCV_BUG_H */
+> --
+> 2.20.1
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
 
-Thanks,
-Ganapat
+LGTM.
+
+Reviewed-by: Anup Patel <anup@brainfault.org>
+
+Regards,
+Anup
