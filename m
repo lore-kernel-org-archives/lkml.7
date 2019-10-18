@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE44DCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 125F3CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD54205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D32B4205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:22:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437370;
-	bh=0K1mygL3oJRRaNMfeI7bjrL+a8KoQGX3ZDU9u0jJ3dg=;
+	s=default; t=1571437375;
+	bh=iSuchusAehub8/OSSTazSzsq4ZRiyFsHmrWUsdoSclw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aS5D20P8uAXQScKo9WJ0JQWnE7frBt08SSOhp9bjoMjd3ptAHSurqiF8Xh6DxBTex
-	 nfBKC/9xD9VjIdpCZ2oIrMPITI25e/j2L1S4Novm3fItcUka6TugMqD1/ACip1ZfhX
-	 RFbv/KKavWslIFly2UqYBIrdOHiOTf/wAlF3v8Tc=
+	b=vX3UJ+BnRkQ1Wqhl/8qjLtE1oBQ4OXez/XAr4k7E1y7sTiRa+SNIJmYAZkbGPoJ9h
+	 AqYTEZz6F/WGgTeGd+td1L5oq2Or8EPZ0DEuO8UVEvBXVYvXB1kS5h8vvp/lsegxha
+	 KUWLA16xZ05YwJtErTxxFR1hcZE8dsT1NgXOIFDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404903AbfJRWWs (ORCPT
+        id S2404941AbfJRWWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:22:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37618 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:22:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729994AbfJRWFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:05:42 -0400
+        id S1729890AbfJRWFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:05:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CD7B22466;
-        Fri, 18 Oct 2019 22:05:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95D2B2245D;
+        Fri, 18 Oct 2019 22:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436342;
-        bh=0K1mygL3oJRRaNMfeI7bjrL+a8KoQGX3ZDU9u0jJ3dg=;
+        s=default; t=1571436336;
+        bh=iSuchusAehub8/OSSTazSzsq4ZRiyFsHmrWUsdoSclw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ns2Y0BsaTOL1itcmphvGQvwKU1aft6McU0dNenmYMuXazh0+uWKzpxoynnZJW+fGw
-         +Z/Q0Abizk8GoAPF7ysPFTFAdvGAIReqOqgMUi7AOB/zgl2cDrZ5Gvv9tNaa0vHtcT
-         NJ0zja0qeKugXoG7lisjtpdCNM/aECQWWrdAsEYs=
+        b=laPB7R6wUcwUOPXyfRB/T8Q5RNFXyYsfYoQYs0gPEVsSQziQtKOmUnfRtBhlMoVUR
+         i3DXhlM6AJ9pXfuCOyQM/c+Yps1waat+LlttuVysz1KsMnK4mbDazPHIMciLzzBw31
+         nP5wr7JdkI11NaCxSyVUg5gdGnycStS+XgDO7Pdg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Artur Petrosyan <arturp@synopsys.com>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 009/100] usb: dwc2: fix unbalanced use of external vbus-supply
-Date:   Fri, 18 Oct 2019 18:03:54 -0400
-Message-Id: <20191018220525.9042-9-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 007/100] f2fs: fix to recover inode->i_flags of inode block during POR
+Date:   Fri, 18 Oct 2019 18:03:52 -0400
+Message-Id: <20191018220525.9042-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -62,139 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit cd7cd0e6cedfda8da6668a4af6748f96bbb6fed4 ]
+[ Upstream commit 0c093b590efb5c1ccdc835868dc2ae94bd2e14dc ]
 
-When using external vbus supply regulator, it should be enabled
-synchronously with PWR bit in HPRT register. This also fixes
-unbalanced use of this optional regulator (This can be reproduced
-easily when unbinding the driver).
+Testcase to reproduce this bug:
+1. mkfs.f2fs /dev/sdd
+2. mount -t f2fs /dev/sdd /mnt/f2fs
+3. touch /mnt/f2fs/file
+4. sync
+5. chattr +a /mnt/f2fs/file
+6. xfs_io -a /mnt/f2fs/file -c "fsync"
+7. godown /mnt/f2fs
+8. umount /mnt/f2fs
+9. mount -t f2fs /dev/sdd /mnt/f2fs
+10. xfs_io /mnt/f2fs/file
 
-Fixes: 531ef5ebea96 ("usb: dwc2: add support for host mode external
-vbus supply")
+There is no error when opening this file w/o O_APPEND, but actually,
+we expect the correct result should be:
 
-Tested-by: Artur Petrosyan <arturp@synopsys.com>
-Acked-by: Minas Harutyunyan <hminas@synopsys.com>
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+/mnt/f2fs/file: Operation not permitted
+
+The root cause is, in recover_inode(), we recover inode->i_flags more
+than F2FS_I(inode)->i_flags, so fix it.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc2/hcd.c | 33 ++++++++++++++++++++++++++-------
- 1 file changed, 26 insertions(+), 7 deletions(-)
+ fs/f2fs/recovery.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/dwc2/hcd.c b/drivers/usb/dwc2/hcd.c
-index aad7edc29bddd..a5c8329fd4625 100644
---- a/drivers/usb/dwc2/hcd.c
-+++ b/drivers/usb/dwc2/hcd.c
-@@ -3568,6 +3568,7 @@ static int dwc2_hcd_hub_control(struct dwc2_hsotg *hsotg, u16 typereq,
- 	u32 port_status;
- 	u32 speed;
- 	u32 pcgctl;
-+	u32 pwr;
+diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+index 281ba46b5b359..2c3be4c3c626f 100644
+--- a/fs/f2fs/recovery.c
++++ b/fs/f2fs/recovery.c
+@@ -226,6 +226,7 @@ static void recover_inode(struct inode *inode, struct page *page)
  
- 	switch (typereq) {
- 	case ClearHubFeature:
-@@ -3616,8 +3617,11 @@ static int dwc2_hcd_hub_control(struct dwc2_hsotg *hsotg, u16 typereq,
- 			dev_dbg(hsotg->dev,
- 				"ClearPortFeature USB_PORT_FEAT_POWER\n");
- 			hprt0 = dwc2_read_hprt0(hsotg);
-+			pwr = hprt0 & HPRT0_PWR;
- 			hprt0 &= ~HPRT0_PWR;
- 			dwc2_writel(hsotg, hprt0, HPRT0);
-+			if (pwr)
-+				dwc2_vbus_supply_exit(hsotg);
- 			break;
+ 	F2FS_I(inode)->i_advise = raw->i_advise;
+ 	F2FS_I(inode)->i_flags = le32_to_cpu(raw->i_flags);
++	f2fs_set_inode_flags(inode);
+ 	F2FS_I(inode)->i_gc_failures[GC_FAILURE_PIN] =
+ 				le16_to_cpu(raw->i_gc_failures);
  
- 		case USB_PORT_FEAT_INDICATOR:
-@@ -3827,8 +3831,11 @@ static int dwc2_hcd_hub_control(struct dwc2_hsotg *hsotg, u16 typereq,
- 			dev_dbg(hsotg->dev,
- 				"SetPortFeature - USB_PORT_FEAT_POWER\n");
- 			hprt0 = dwc2_read_hprt0(hsotg);
-+			pwr = hprt0 & HPRT0_PWR;
- 			hprt0 |= HPRT0_PWR;
- 			dwc2_writel(hsotg, hprt0, HPRT0);
-+			if (!pwr)
-+				dwc2_vbus_supply_init(hsotg);
- 			break;
- 
- 		case USB_PORT_FEAT_RESET:
-@@ -3845,6 +3852,7 @@ static int dwc2_hcd_hub_control(struct dwc2_hsotg *hsotg, u16 typereq,
- 			dwc2_writel(hsotg, 0, PCGCTL);
- 
- 			hprt0 = dwc2_read_hprt0(hsotg);
-+			pwr = hprt0 & HPRT0_PWR;
- 			/* Clear suspend bit if resetting from suspend state */
- 			hprt0 &= ~HPRT0_SUSP;
- 
-@@ -3858,6 +3866,8 @@ static int dwc2_hcd_hub_control(struct dwc2_hsotg *hsotg, u16 typereq,
- 				dev_dbg(hsotg->dev,
- 					"In host mode, hprt0=%08x\n", hprt0);
- 				dwc2_writel(hsotg, hprt0, HPRT0);
-+				if (!pwr)
-+					dwc2_vbus_supply_init(hsotg);
- 			}
- 
- 			/* Clear reset bit in 10ms (FS/LS) or 50ms (HS) */
-@@ -4400,6 +4410,7 @@ static int _dwc2_hcd_start(struct usb_hcd *hcd)
- 	struct dwc2_hsotg *hsotg = dwc2_hcd_to_hsotg(hcd);
- 	struct usb_bus *bus = hcd_to_bus(hcd);
- 	unsigned long flags;
-+	u32 hprt0;
- 	int ret;
- 
- 	dev_dbg(hsotg->dev, "DWC OTG HCD START\n");
-@@ -4416,12 +4427,16 @@ static int _dwc2_hcd_start(struct usb_hcd *hcd)
- 
- 	dwc2_hcd_reinit(hsotg);
- 
--	/* enable external vbus supply before resuming root hub */
--	spin_unlock_irqrestore(&hsotg->lock, flags);
--	ret = dwc2_vbus_supply_init(hsotg);
--	if (ret)
--		return ret;
--	spin_lock_irqsave(&hsotg->lock, flags);
-+	hprt0 = dwc2_read_hprt0(hsotg);
-+	/* Has vbus power been turned on in dwc2_core_host_init ? */
-+	if (hprt0 & HPRT0_PWR) {
-+		/* Enable external vbus supply before resuming root hub */
-+		spin_unlock_irqrestore(&hsotg->lock, flags);
-+		ret = dwc2_vbus_supply_init(hsotg);
-+		if (ret)
-+			return ret;
-+		spin_lock_irqsave(&hsotg->lock, flags);
-+	}
- 
- 	/* Initialize and connect root hub if one is not already attached */
- 	if (bus->root_hub) {
-@@ -4443,6 +4458,7 @@ static void _dwc2_hcd_stop(struct usb_hcd *hcd)
- {
- 	struct dwc2_hsotg *hsotg = dwc2_hcd_to_hsotg(hcd);
- 	unsigned long flags;
-+	u32 hprt0;
- 
- 	/* Turn off all host-specific interrupts */
- 	dwc2_disable_host_interrupts(hsotg);
-@@ -4451,6 +4467,7 @@ static void _dwc2_hcd_stop(struct usb_hcd *hcd)
- 	synchronize_irq(hcd->irq);
- 
- 	spin_lock_irqsave(&hsotg->lock, flags);
-+	hprt0 = dwc2_read_hprt0(hsotg);
- 	/* Ensure hcd is disconnected */
- 	dwc2_hcd_disconnect(hsotg, true);
- 	dwc2_hcd_stop(hsotg);
-@@ -4459,7 +4476,9 @@ static void _dwc2_hcd_stop(struct usb_hcd *hcd)
- 	clear_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
- 	spin_unlock_irqrestore(&hsotg->lock, flags);
- 
--	dwc2_vbus_supply_exit(hsotg);
-+	/* keep balanced supply init/exit by checking HPRT0_PWR */
-+	if (hprt0 & HPRT0_PWR)
-+		dwc2_vbus_supply_exit(hsotg);
- 
- 	usleep_range(1000, 3000);
- }
 -- 
 2.20.1
 
