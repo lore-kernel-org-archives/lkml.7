@@ -2,188 +2,149 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04409CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A680CCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0A5E222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:59:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BT4N0WgM"
+	by mail.kernel.org (Postfix) with ESMTP id 8429B21835
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:00:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571421631;
+	bh=L3zozLzhMTxvIKQ6d0Wn7/JusBBkzGSGTcWZxCpUwVk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ELtnVqmesY91llVfji5Kl2FwBZCwr32NsUgoPpTeQDUKNIWu7ISNwwRwDTO9FddE6
+	 cNOQqTZIxF6rRRqEg2mSuwrLksg/CEb0izdVUKimOzhOkQTGluaPlGOH+E5pBHRMQI
+	 Pkgl3EqmsDixnbo6/LInseqpHyDWIR1H4IAHrhIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505646AbfJRR70 (ORCPT
+        id S2410710AbfJRSAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 13:59:26 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:43576 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505577AbfJRR70 (ORCPT
+        Fri, 18 Oct 2019 14:00:30 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:46779 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405272AbfJRSA3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 13:59:26 -0400
-Received: by mail-qk1-f196.google.com with SMTP id a194so2010079qkg.10
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 10:59:25 -0700 (PDT)
+        Fri, 18 Oct 2019 14:00:29 -0400
+Received: by mail-qt1-f193.google.com with SMTP id u22so10272413qtq.13
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 11:00:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7ecMN7RCihceURPicB6OoYAunxLf2+vRZsYu+FJ9JKU=;
-        b=BT4N0WgMKUaa+kVJfM1Hl4S1b2FLBqiG3CTVqBj4ElZE0g7USU+833RtYU+/oFfXvd
-         cOe19aQs9uLjSjMeGXvaCQx4d65bhIuUyGGKAXRKJenrvK8VQKdrNT9PN7Q/kr62z3Ph
-         ieVcYIqR7h7qLOV1TTWVJS82MZAK3fZXJyuYgUa1ImWVO7tBYEI98EfqhaPeL9ENVcuy
-         frNRFUTPcTNaIELmILb1Lly8HX0Rdsxhha/8LZqZ+UCpHOEvq5lhqv9WjlAb4IxfLCf6
-         AvxM/CB4jms/X55CYrtdImirBfMQ411UfFkWyKJkQdxGpaIQtd5kCVpb3FfBNdTIVzTq
-         NkLQ==
+        d=linuxfoundation.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=L3zozLzhMTxvIKQ6d0Wn7/JusBBkzGSGTcWZxCpUwVk=;
+        b=EdfMCu4RwaiqCEbwvJ0pe9pZ6LyrloV5VEgKK/Vy8rewVB0KG9Z6eqrMknhSFqCZ1z
+         S1SVdHi7ZgTviuWDYQwcQU+KlXbpgM48rK+7NUWJFdIvk+8hFir1VYI8erByGR22+Xaf
+         5CVFc8Q53zWmwxfaMRaQ2eDrVfluP+2RV048M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7ecMN7RCihceURPicB6OoYAunxLf2+vRZsYu+FJ9JKU=;
-        b=r0c0UOAdy14W6pri51y1ILAe9vIzjZ9S8/uL3FTKA8L+/q7NDBT5+IV+BSLArAAReh
-         f/wn5d8sXqrbmz0UcKTUCtDmJoFMJ2TA6kxRrV4QOOsnGIQqbOUB0TE92mJ/s5W0crh9
-         al6vZTy/gAa31nxb21hvzYnWhj38HJqOzm+lvVV8eKodG+GmUmNfxFw3wYT9Nmf3RPUh
-         GcpNfPr6ICGa4p6B0BQLuAw2svw8WDQGD1YLvzkKe9ZHQeEg0xMHLa8pHCXV9HkR/Vpl
-         FXb5yNvov438m3QNXn8nfODwqzInmn/WKBw+irqCmd1wgMp5OOCYBTa0L8/hv7+qifWf
-         ZgZg==
-X-Gm-Message-State: APjAAAX3ikeRbyziEOKV6rW89ds0aKX9MrflDSDcy+DOpzWk+QT02Yo+
-        TRqnDZSctrOUUfBYxGK7f4A=
-X-Google-Smtp-Source: APXvYqypUFaO8lwxL0khauMIjyib6Q6hRS0z1+9pSsQGEF2YYnL0Pielqe3U8a4gBZGlWz1Hg1MmFQ==
-X-Received: by 2002:a37:a283:: with SMTP id l125mr8203680qke.298.1571421564645;
-        Fri, 18 Oct 2019 10:59:24 -0700 (PDT)
-Received: from quaco.ghostprotocols.net (179-240-170-47.3g.claro.net.br. [179.240.170.47])
-        by smtp.gmail.com with ESMTPSA id g10sm3328303qkm.38.2019.10.18.10.59.23
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=L3zozLzhMTxvIKQ6d0Wn7/JusBBkzGSGTcWZxCpUwVk=;
+        b=uktCQ9YSvx4EB5xMjtcMv1p/2k2672+EsCd0Z5XQq+nQ5LWC4HkTTfeyECxnvqj+dp
+         D+PR/V1pVFxXUGgVQJtCbhh7MblDRWA5f0PS2NyMuda1SUUAZQU/c4B6/RPwHGG3cEzs
+         NZufqsLb9zX2uWk8tzGx0QW+EsqN8oGDx+EgIYgI4DVD94VoObVDEinPy0/sC6FqRLJS
+         7CqqtczjZTPfHJaJ+NZ33RTFOKqj3li+IV/LZpQihCm5Vrw1R4QnYqoBvZI+HMtAjYZ7
+         ISRmMowiC8+uOcYRXAzly2dXVB3Zn7JK/rEpvCHnUCxwm6Oi1SQvr5wqTcvGL6eO96TO
+         a6Mg==
+X-Gm-Message-State: APjAAAU/kd5JD6GDKjZELBhYIbu4E9+iyPCkISinT8M6sv34JymBdTwZ
+        5Mm2KclTbgfJiWhqyLcAuCXcOA==
+X-Google-Smtp-Source: APXvYqwSjD5sAuLmxmdsh7lJNhjxTrfSDeUnm3NNAHEFVroKyFbsLT9IljlOGdm4f6qN21YIF1d1qQ==
+X-Received: by 2002:ac8:38e3:: with SMTP id g32mr11302377qtc.304.1571421628789;
+        Fri, 18 Oct 2019 11:00:28 -0700 (PDT)
+Received: from chatter.i7.local (192-0-228-88.cpe.teksavvy.com. [192.0.228.88])
+        by smtp.gmail.com with ESMTPSA id x33sm3556947qtd.79.2019.10.18.11.00.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 10:59:24 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 9A07C4DD66; Fri, 18 Oct 2019 14:59:19 -0300 (-03)
-Date:   Fri, 18 Oct 2019 14:59:19 -0300
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Brajeswar Ghosh <brajeswar.linux@gmail.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 3/3] perf tests: Disable bp_signal testing for arm64
-Message-ID: <20191018175919.GC1797@kernel.org>
-References: <20191018085531.6348-1-leo.yan@linaro.org>
- <20191018085531.6348-3-leo.yan@linaro.org>
+        Fri, 18 Oct 2019 11:00:27 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 14:00:26 -0400
+From:   Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+To:     Santiago Torres Arias <santiago@nyu.edu>
+Cc:     Vegard Nossum <vegard.nossum@oracle.com>, Willy Tarreau <w@1wt.eu>,
+        workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, Eric Wong <e@80x24.org>
+Subject: Re: email as a bona fide git transport
+Message-ID: <20191018180026.GD25456@chatter.i7.local>
+Mail-Followup-To: Santiago Torres Arias <santiago@nyu.edu>,
+        Vegard Nossum <vegard.nossum@oracle.com>, Willy Tarreau <w@1wt.eu>,
+        workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, Eric Wong <e@80x24.org>
+References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
+ <20191016111009.GE13154@1wt.eu>
+ <20191016144517.giwip4yuaxtcd64g@LykOS.localdomain>
+ <56664222-6c29-09dc-ef78-7b380b113c4a@oracle.com>
+ <20191018155408.dk4tsjrne42ufpvv@LykOS.localdomain>
+ <20191018160343.GB25456@chatter.i7.local>
+ <20191018161121.6qe5kkweh4u77gvn@LykOS.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="W/nzBZO5zC0uMSeA"
 Content-Disposition: inline
-In-Reply-To: <20191018085531.6348-3-leo.yan@linaro.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20191018161121.6qe5kkweh4u77gvn@LykOS.localdomain>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Oct 18, 2019 at 04:55:31PM +0800, Leo Yan escreveu:
-> As there have several discussions for enabling Perf breakpoint signal
-> testing on arm64 platform; arm64 needs to rely on single-step to execute
-> the breakpointed instruction and then reinstall the breakpoint exception
-> handler.  But if hook the breakpoint with a signal, the signal handler
-> will do the stepping rather than the breakpointed instruction, this
-> causes infinite loops as below:
-> 
->          Kernel space              |            Userspace
-> -----------------------------------|--------------------------------
->                                    |  __test_function() -> hit
-> 				   |                       breakpoint
->   breakpoint_handler()             |
->     `-> user_enable_single_step()  |
->   do_signal()                      |
->                                    |  sig_handler() -> Step one
-> 				   |                instruction and
-> 				   |                trap to kernel
->   single_step_handler()            |
->     `-> reinstall_suspended_bps()  |
->                                    |  __test_function() -> hit
-> 				   |     breakpoint again and
-> 				   |     repeat up flow infinitely
-> 
-> As Will Deacon mentioned [1]: "that we require the overflow handler to
-> do the stepping on arm/arm64, which is relied upon by GDB/ptrace. The
-> hw_breakpoint code is a complete disaster so my preference would be to
-> rip out the perf part and just implement something directly in ptrace,
-> but it's a pretty horrible job".  Though Will commented this on arm
-> architecture, but the comment also can apply on arm64 architecture.
-> 
-> For complete information, I searched online and found a few years back,
-> Wang Nan sent one patch 'arm64: Store breakpoint single step state into
-> pstate' [2]; the patch tried to resolve this issue by avoiding single
-> stepping in signal handler and defer to enable the signal stepping when
-> return to __test_function().  The fixing was not merged due to the
-> concern for missing to handle different usage cases.
-> 
-> Based on the info, the most feasible way is to skip Perf breakpoint
-> signal testing for arm64 and this could avoid the duplicate
-> investigation efforts when people see the failure.  This patch skips
-> this case on arm64 platform, which is same with arm architecture.
 
-Ok, applying,
+--W/nzBZO5zC0uMSeA
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-- Arnaldo
- 
-> [1] https://lkml.org/lkml/2018/11/15/205
-> [2] https://lkml.org/lkml/2015/12/23/477
-> 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  tools/perf/tests/bp_signal.c | 15 ++++++---------
->  1 file changed, 6 insertions(+), 9 deletions(-)
-> 
-> diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
-> index c1c2c13de254..166f411568a5 100644
-> --- a/tools/perf/tests/bp_signal.c
-> +++ b/tools/perf/tests/bp_signal.c
-> @@ -49,14 +49,6 @@ asm (
->  	"__test_function:\n"
->  	"incq (%rdi)\n"
->  	"ret\n");
-> -#elif defined (__aarch64__)
-> -extern void __test_function(volatile long *ptr);
-> -asm (
-> -	".globl __test_function\n"
-> -	"__test_function:\n"
-> -	"str x30, [x0]\n"
-> -	"ret\n");
-> -
->  #else
->  static void __test_function(volatile long *ptr)
->  {
-> @@ -302,10 +294,15 @@ bool test__bp_signal_is_supported(void)
->  	 * stepping into the SIGIO handler and getting stuck on the
->  	 * breakpointed instruction.
->  	 *
-> +	 * Since arm64 has the same issue with arm for the single-step
-> +	 * handling, this case also gets suck on the breakpointed
-> +	 * instruction.
-> +	 *
->  	 * Just disable the test for these architectures until these
->  	 * issues are resolved.
->  	 */
-> -#if defined(__powerpc__) || defined(__s390x__) || defined(__arm__)
-> +#if defined(__powerpc__) || defined(__s390x__) || defined(__arm__) || \
-> +    defined(__aarch64__)
->  	return false;
->  #else
->  	return true;
-> -- 
-> 2.17.1
+On Fri, Oct 18, 2019 at 12:11:22PM -0400, Santiago Torres Arias wrote:
+>> It's smaller, but it's not a one-liner. Here's a comparison using=20
+>> ED25519
+>> keys of the same length:
+>>
+>> minisign:
+>>
+>> RWQ4kF9UdFgeSt3LqnS3WnrLlx2EnuIFW7euw5JnLUHY/79ipftmj7A2ug7FiR2WmnFNoSac=
+Wr7llBuyInVmRL/VRovj1LFtvA0=3D
+>>
+>> pgp:
+>>
+>> -----BEGIN PGP SIGNATURE-----
+>>
+>> iHUEARYIAB0WIQR2vl2yUnHhSB5njDW2xBzjVmSZbAUCXaniFAAKCRC2xBzjVmSZ
+>> bHA5AP46sSPFJfL2tbXwswvj0v2DjLAQ9doxl9bfj9iPZu+3qwEAw5qAMbjw9teL
+>> L7+NbJ0WVniDWTgt+5ruQ2V9vyfYxAc=3D
+>> =3DB/St
+>
+>Yeah, the discrepancy mostly comes from pgp embedding a timestamp and a
+>longer keyid (+a full keyid fingerprint in pgp 2.1+). Minisign keyids
+>are 8 random bytes, apparently.
+>
+>It doesn't seem like an amazing win in terms of succintness, imvho...
 
--- 
+There isn't, but ED25519 subkeys are still very rare among developers. =20
+Many have 4096-bit RSA subkeys, and you can imagine how large the sigs=20
+=66rom those are.
 
-- Arnaldo
+I want to underline that my use of minisign was specifically for patches=20
+sent via email, without the intent of preserving them in git history=20
+(which is why in my proposal they are put under the `---` cutoff). Git=20
+itself would continue to use PGP signing.
+
+(This also means that we don't necessarily need to make this a native=20
+part of git -- it can be accomplished by a combination of wrappers,=20
+git-format-patch parameters, and a pre-applypatch hook. However, the=20
+likelihood of adoption in this case would be very low.)
+
+-K
+
+--W/nzBZO5zC0uMSeA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQR2vl2yUnHhSB5njDW2xBzjVmSZbAUCXan9twAKCRC2xBzjVmSZ
+bHKSAQCBn6MNi5Y8+QZHCPiGG36Omh8KTlRDxzx2Kbvf/KvM2QEAtcIHs267maE9
+dgxYwuJWb17NdZtD7fvmhGvITT7MIQs=
+=h6t6
+-----END PGP SIGNATURE-----
+
+--W/nzBZO5zC0uMSeA--
