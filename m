@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D877CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FCBCA9EA5
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53F6921D80
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E4E0222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:08:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="VdiO5twV"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="UYH865nc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504976AbfJRIIy (ORCPT
+        id S2504998AbfJRII6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:08:54 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37048 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728146AbfJRIIw (ORCPT
+        Fri, 18 Oct 2019 04:08:58 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:33161 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504981AbfJRII4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 04:08:52 -0400
-Received: by mail-io1-f65.google.com with SMTP id b19so6403879iob.4
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 01:08:52 -0700 (PDT)
+        Fri, 18 Oct 2019 04:08:56 -0400
+Received: by mail-il1-f195.google.com with SMTP id v2so4742795ilm.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 01:08:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gALXE7phMSnF5XNrDSEyjkXd1DZJtTY9PSTVrsQZe00=;
-        b=VdiO5twVtCF9UsEJN/g/Ibi63daAcXzXNmZwrtCD1RybuXu7p4ff+DqxMMhOvSexJ9
-         O+h+RCzoMAYVvqRmSYWRgQ0cKZ4kGPOd2mYMuTQE8CbqgQ4NrCDOD1MNtlJsLs/QBVck
-         yDEzptuIrt49pyuPEslqXvV0+EtOBXjCLscuS8Zztqra4SVC/n4wl43V2OBapnsBnS7l
-         ScmBx8PLNNCUyWrl5FE0itd8L+nCgKDR9xwi/In98CmvYPv4qoYlpdl2id6DvE5MWOC3
-         m16329oHHSaXla9lmZ93+A/+QggzKyLBRL24MePHKpxlby7tgnemMvIAYIDjBc5HF3Bu
-         4fOA==
+        bh=dSBcDIKx5nYgnvY0E6Lcwtwu4qqsxuq/VRdIo5y+2Cg=;
+        b=UYH865ncXlKhaR/ruHoaa2j5syS/lseyRuqhuEhLj5/69PK7JaW0oh8UpKzb/YJo53
+         MteWuPrAiD6AhSp7Aax50FcMDGjpjzl/NDMbni9cBk6cdG7vronHFfvQcI8SWhGHCtt4
+         4N8UDH6QdyWc0ciGW1+12iM+2BvwEeHXHXvhzSmCiXQY0mJMOIF4gNQEMf8XjgVQgxrH
+         D5aK+hOzRVfDTbusI617sI+EeQZG4m2KuCcjeuG8uayegjuDC3phM47GxQGhZuVL3bZX
+         w8Z6vZ9+VIRBn9Erp572wwfEkS3C5ikie31Ll8tw1iFbAmJJbDLb5hm7Fre/Wdd1oVqG
+         erYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gALXE7phMSnF5XNrDSEyjkXd1DZJtTY9PSTVrsQZe00=;
-        b=uQJuSMOjoLtd0r7iF7j9sWe9+r+Q2zszzzIi/d0k9XyMoiaCGBDqKn/l5nvawtM18r
-         h1dxgbgPrjUJnHuL13/88Pq7PjZdNMYsdzobxQtTUFJYcYHh/MOfqXeP3wOBlAZkk88E
-         gSLhyETSMi36vitT0DebWzO4JRGlwgsuaRpv8i/G2f+4NonG9AcaVq8/jRTNYus0Yx5b
-         aw5mCquETbSthaHC7GjbcxB6B0GvbmsQLhdhX+AcYAp9xGg/yQBL7Ii3s1dqrSoCRE4M
-         k4hCVrufyKtTRCxOxKKypKMAeOFX4/AFhFcak161gSI3SUmcoPdPODbVkoMGLcCEfLOE
-         4ZDw==
-X-Gm-Message-State: APjAAAWpoPvfkeUNOgq4UsVnfPdR9RwrP/kANvzyGgPv5+ASHQPU2662
-        vP/az32qN+Q8wfIJMt8CmKNa/g==
-X-Google-Smtp-Source: APXvYqzfJ8zKMPYKiC0SIxFmIQKB8w+RgetlcbhzplyFFJO/YWgSaIBZm0V0UHqa+RzxKZ3ivY9Rew==
-X-Received: by 2002:a02:1d44:: with SMTP id 65mr7665917jaj.129.1571386131665;
-        Fri, 18 Oct 2019 01:08:51 -0700 (PDT)
+        bh=dSBcDIKx5nYgnvY0E6Lcwtwu4qqsxuq/VRdIo5y+2Cg=;
+        b=jG4ACDNMcAlOwipbnqRzaN8iqn0jRpn4zLQZWRAN2y59jWHR8AMVFb4o/aeGuzDDsP
+         aRZDLUGQrSxa5u5xza0EfRN4DXSSn6M7lBaCKhOpVt3w30goo9jNmBUvIvcwBfKc393n
+         s8GXkv9vRKAcI58WkQm/ylEIC9YVo7zKOIRu6Q1SlM0CW6zDd06XyaUEAxVlZ4shz21d
+         bl+CKvc+RAWuAtFK5cKLmLbEbLBKK8hs7a3Rpu0HnvaVAPA7XnOktTFog1OAv/1hNm8Y
+         Q/J4ok1jTjL6Syb7CS/pIYLFwhfseIProQ/VvYFGHcE5RCLsfJokCxv6gTFk4NqwTEwb
+         YT6Q==
+X-Gm-Message-State: APjAAAXt1njTuo8NYndBnyemG3Fpl5+G7TznidlnzRGgJINpWm3nCdbb
+        L8lLIkTGqOl9RhGY7JeWZPv6yw==
+X-Google-Smtp-Source: APXvYqzKI2kk5lHMs0yEtKm+xbMxG2eju3cK4Gef8i8iQDD25JUnHl+bMAFlMgwk9ylcXNg+trIVzQ==
+X-Received: by 2002:a92:5a9b:: with SMTP id b27mr8731380ilg.180.1571386135351;
+        Fri, 18 Oct 2019 01:08:55 -0700 (PDT)
 Received: from viisi.Home ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id z86sm2121026ilf.73.2019.10.18.01.08.50
+        by smtp.gmail.com with ESMTPSA id z86sm2121026ilf.73.2019.10.18.01.08.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 01:08:51 -0700 (PDT)
+        Fri, 18 Oct 2019 01:08:54 -0700 (PDT)
 From:   Paul Walmsley <paul.walmsley@sifive.com>
 To:     linux-riscv@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/8] riscv: add prototypes for assembly language functions from entry.S
-Date:   Fri, 18 Oct 2019 01:08:34 -0700
-Message-Id: <20191018080841.26712-2-paul.walmsley@sifive.com>
+Subject: [PATCH v3 4/8] riscv: add missing prototypes
+Date:   Fri, 18 Oct 2019 01:08:37 -0700
+Message-Id: <20191018080841.26712-5-paul.walmsley@sifive.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191018080841.26712-1-paul.walmsley@sifive.com>
 References: <20191018080841.26712-1-paul.walmsley@sifive.com>
@@ -72,104 +72,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add prototypes for assembly language functions defined in entry.S,
-and include these prototypes into C source files that call those
-functions.
+sparse identifies these missing prototypes when building arch/riscv:
 
-This patch resolves the following warnings from sparse:
+arch/riscv/kernel/cpu.c:149:29: warning: symbol 'cpuinfo_op' was not declared. Should it be static?
+arch/riscv/kernel/irq.c:27:29: warning: symbol 'do_IRQ' was not declared. Should it be static?
+arch/riscv/kernel/irq.c:57:13: warning: symbol 'init_IRQ' was not declared. Should it be static?
+arch/riscv/kernel/syscall_table.c:15:6: warning: symbol 'sys_call_table' was not declared. Should it be static?
+arch/riscv/kernel/time.c:15:13: warning: symbol 'time_init' was not declared. Should it be static?
+arch/riscv/kernel/smpboot.c:135:24: warning: symbol 'smp_callin' was not declared. Should it be static?
+arch/riscv/kernel/smp.c:72:5: warning: symbol 'setup_profiling_timer' was not declared. Should it be static?
+arch/riscv/mm/init.c:151:7: warning: symbol 'trampoline_pg_dir' was not declared. Should it be static?
+arch/riscv/mm/init.c:157:7: warning: symbol 'early_pg_dir' was not declared. Should it be static?
+arch/riscv/kernel/process.c:32:6: warning: symbol 'show_regs' was not declared. Should it be static?
 
-arch/riscv/kernel/signal.c:32:53: warning: incorrect type in initializer (different address spaces)
-arch/riscv/kernel/signal.c:45:23: warning: incorrect type in initializer (different address spaces)
-arch/riscv/kernel/signal.c:59:53: warning: incorrect type in initializer (different address spaces)
-arch/riscv/kernel/signal.c:69:23: warning: incorrect type in initializer (different address spaces)
-arch/riscv/kernel/signal.c:89:48: warning: incorrect type in argument 2 (different address spaces)
-arch/riscv/kernel/signal.c:142:45: warning: incorrect type in argument 2 (different address spaces)
-arch/riscv/kernel/signal.c:295:17: warning: symbol 'do_notify_resume' was not declared. Should it be static?
-arch/riscv/kernel/traps.c:91:1: warning: symbol 'do_trap_unknown' was not declared. Should it be static?
-arch/riscv/kernel/traps.c:93:1: warning: symbol 'do_trap_insn_misaligned' was not declared. Should it be static?
-arch/riscv/kernel/traps.c:95:1: warning: symbol 'do_trap_insn_fault' was not declared. Should it be static?
-arch/riscv/kernel/traps.c:97:1: warning: symbol 'do_trap_insn_illegal' was not declared. Should it be static?
-arch/riscv/kernel/traps.c:99:1: warning: symbol 'do_trap_load_misaligned' was not declared. Should it be static?
-arch/riscv/kernel/traps.c:101:1: warning: symbol 'do_trap_load_fault' was not declared. Should it be static?
-arch/riscv/kernel/traps.c:103:1: warning: symbol 'do_trap_store_misaligned' was not declared. Should it be static?
-arch/riscv/kernel/traps.c:105:1: warning: symbol 'do_trap_store_fault' was not declared. Should it be static?
-arch/riscv/kernel/traps.c:107:1: warning: symbol 'do_trap_ecall_u' was not declared. Should it be static?
-arch/riscv/kernel/traps.c:109:1: warning: symbol 'do_trap_ecall_s' was not declared. Should it be static?
-arch/riscv/kernel/traps.c:111:1: warning: symbol 'do_trap_ecall_m' was not declared. Should it be static?
-arch/riscv/kernel/traps.c:125:17: warning: symbol 'do_trap_break' was not declared. Should it be static?
-arch/riscv/kernel/traps.c:163:13: warning: symbol 'trap_init' was not declared. Should it be static?
+Fix by adding the missing prototypes to the appropriate header files.
 
 This change should have no functional impact.
 
 Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
 ---
- arch/riscv/kernel/entry.h  | 29 +++++++++++++++++++++++++++++
- arch/riscv/kernel/signal.c |  2 ++
- arch/riscv/kernel/traps.c  |  2 ++
- 3 files changed, 33 insertions(+)
- create mode 100644 arch/riscv/kernel/entry.h
+ arch/riscv/include/asm/irq.h       | 3 +++
+ arch/riscv/include/asm/pgtable.h   | 2 ++
+ arch/riscv/include/asm/processor.h | 4 ++++
+ arch/riscv/include/asm/ptrace.h    | 2 ++
+ arch/riscv/include/asm/smp.h       | 2 ++
+ 5 files changed, 13 insertions(+)
 
-diff --git a/arch/riscv/kernel/entry.h b/arch/riscv/kernel/entry.h
-new file mode 100644
-index 000000000000..73bfcda993d0
---- /dev/null
-+++ b/arch/riscv/kernel/entry.h
-@@ -0,0 +1,29 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2019 SiFive, Inc.
-+ */
-+#ifndef __ASM_ENTRY_H
-+#define __ASM_ENTRY_H
-+
-+#include <linux/linkage.h>
-+#include <linux/init.h>
-+
-+asmlinkage void do_trap_unknown(struct pt_regs *regs);
-+asmlinkage void do_trap_insn_misaligned(struct pt_regs *regs);
-+asmlinkage void do_trap_insn_fault(struct pt_regs *regs);
-+asmlinkage void do_trap_insn_illegal(struct pt_regs *regs);
-+asmlinkage void do_trap_load_misaligned(struct pt_regs *regs);
-+asmlinkage void do_trap_load_fault(struct pt_regs *regs);
-+asmlinkage void do_trap_store_misaligned(struct pt_regs *regs);
-+asmlinkage void do_trap_store_fault(struct pt_regs *regs);
-+asmlinkage void do_trap_ecall_u(struct pt_regs *regs);
-+asmlinkage void do_trap_ecall_s(struct pt_regs *regs);
-+asmlinkage void do_trap_ecall_m(struct pt_regs *regs);
-+asmlinkage void do_trap_break(struct pt_regs *regs);
-+
-+asmlinkage void do_notify_resume(struct pt_regs *regs,
-+				 unsigned long thread_info_flags);
-+
-+void __init trap_init(void);
-+
-+#endif /* __ASM__H */
-diff --git a/arch/riscv/kernel/signal.c b/arch/riscv/kernel/signal.c
-index b14d7647d800..85c700ad47e9 100644
---- a/arch/riscv/kernel/signal.c
-+++ b/arch/riscv/kernel/signal.c
-@@ -17,6 +17,8 @@
- #include <asm/switch_to.h>
- #include <asm/csr.h>
+diff --git a/arch/riscv/include/asm/irq.h b/arch/riscv/include/asm/irq.h
+index 75576424c0f7..589e2d9fb2a6 100644
+--- a/arch/riscv/include/asm/irq.h
++++ b/arch/riscv/include/asm/irq.h
+@@ -12,6 +12,9 @@
+ void riscv_timer_interrupt(void);
+ void riscv_software_interrupt(void);
  
-+#include "entry.h"
++asmlinkage void do_IRQ(struct pt_regs *regs);
++void __init init_IRQ(void);
 +
- #define DEBUG_SIG 0
+ #include <asm-generic/irq.h>
  
- struct rt_sigframe {
-diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-index 1ac75f7d0bff..eff679c3b618 100644
---- a/arch/riscv/kernel/traps.c
-+++ b/arch/riscv/kernel/traps.c
-@@ -19,6 +19,8 @@
- #include <asm/ptrace.h>
- #include <asm/csr.h>
+ #endif /* _ASM_RISCV_IRQ_H */
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 42292d99cc74..7fc5e4a56715 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -61,6 +61,8 @@
  
-+#include "entry.h"
+ #define PAGE_TABLE		__pgprot(_PAGE_TABLE)
+ 
++extern pgd_t trampoline_pg_dir[];
++extern pgd_t early_pg_dir[];
+ extern pgd_t swapper_pg_dir[];
+ 
+ /* MAP_PRIVATE permissions: xwr (copy-on-write) */
+diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
+index f539149d04c2..ab56435de629 100644
+--- a/arch/riscv/include/asm/processor.h
++++ b/arch/riscv/include/asm/processor.h
+@@ -78,6 +78,10 @@ int riscv_of_processor_hartid(struct device_node *node);
+ 
+ extern void riscv_fill_hwcap(void);
+ 
++extern const struct seq_operations cpuinfo_op;
 +
- int show_unhandled_signals = 1;
++void time_init(void);
++
+ #endif /* __ASSEMBLY__ */
  
- extern asmlinkage void handle_exception(void);
+ #endif /* _ASM_RISCV_PROCESSOR_H */
+diff --git a/arch/riscv/include/asm/ptrace.h b/arch/riscv/include/asm/ptrace.h
+index d48d1e13973c..c851c095b674 100644
+--- a/arch/riscv/include/asm/ptrace.h
++++ b/arch/riscv/include/asm/ptrace.h
+@@ -101,6 +101,8 @@ static inline unsigned long regs_return_value(struct pt_regs *regs)
+ 	return regs->a0;
+ }
+ 
++void show_regs(struct pt_regs *regs);
++
+ #endif /* __ASSEMBLY__ */
+ 
+ #endif /* _ASM_RISCV_PTRACE_H */
+diff --git a/arch/riscv/include/asm/smp.h b/arch/riscv/include/asm/smp.h
+index a83451d73a4e..d19dd2e2e1da 100644
+--- a/arch/riscv/include/asm/smp.h
++++ b/arch/riscv/include/asm/smp.h
+@@ -15,6 +15,8 @@
+ struct seq_file;
+ extern unsigned long boot_cpu_hartid;
+ 
++asmlinkage void __init smp_callin(void);
++
+ #ifdef CONFIG_SMP
+ /*
+  * Mapping between linux logical cpu index and hartid.
 -- 
 2.23.0
 
