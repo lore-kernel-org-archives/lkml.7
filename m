@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5886CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4973CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A3A2222D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A91EF21852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:16:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436989;
-	bh=a4hWbx/OJTFq6/zncSC4Cw+aLZpikdZTGHzDZjdvTL4=;
+	s=default; t=1571436993;
+	bh=lcRJMau4MilgjA1G5AsVvBldze0ky+F5z1BAy1+tpLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zqPd8QaU32fRVgotxSal8z6vMi3ELp14uIkuXfxBIhbrcXRXK1KJWgL/CQgcYaLst
-	 30+HkLHldviSPPwWX+RFavmFWSxQhwnmqTaSaiHbKPvZacpd/pd3pTRCg/UXJ3HIxL
-	 LLb4eR4ZIv36GlAH7mcJkUzaSvmHgf4xN2TtYEng=
+	b=TS8Xd/tkwc8Xq7UXZi8OqWl7xMgJx1e5Shi4KdIsx1U7AbsAdhfvr/Fv1TH1TWPPZ
+	 HUGfE/xhNSwCt1qjtqTmYZ0bs3iafO8IgFaaziYEi3W2Guv3oGv/AeKtI2vFWG56Ta
+	 c4+oTmzmw9vohdMxQgfg8hTNm3sqSVAWYl66HB6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392893AbfJRWQ1 (ORCPT
+        id S2393008AbfJRWQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:16:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40752 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:16:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387677AbfJRWIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:08:21 -0400
+        id S2387615AbfJRWIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:08:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E5202245A;
-        Fri, 18 Oct 2019 22:08:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DB7B22459;
+        Fri, 18 Oct 2019 22:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436500;
-        bh=a4hWbx/OJTFq6/zncSC4Cw+aLZpikdZTGHzDZjdvTL4=;
+        s=default; t=1571436495;
+        bh=lcRJMau4MilgjA1G5AsVvBldze0ky+F5z1BAy1+tpLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MKGVEraRE6vT0B81xsEsu4LaqbA43qI8jUM4s2W5t+jdhf257r1FU/opjOdRhZ5et
-         mcuXUuhyctEmcdR3X9ZaVMjKTl6CuIrlckPwq+ManHFN+UWHj1CURqJwxca9XXuGgR
-         kEN1pIx3Vjcxo2WKfFL8E1qui7SuFRxHl8vZs8EM=
+        b=BOog/SHyF2DZUbNgKscrCQe5L1ThAsSEB4Tcx9iGVkQX61W2QusUNmKQcveenjxju
+         qoDJqRC1QW7Ni0f3VmcaB0u3IcpDrZGFpD01aqLTO2SBf9TwEqqp+RGXdoAwlcp7kL
+         qS1WpWaDNJmyzEsU3z+WJlkbqnggMCHMfXaQ3U6k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nir Dotan <nird@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 13/56] mlxsw: spectrum: Set LAG port collector only when active
-Date:   Fri, 18 Oct 2019 18:07:10 -0400
-Message-Id: <20191018220753.10002-13-sashal@kernel.org>
+Cc:     Brian Norris <briannorris@chromium.org>,
+        Christian Kujau <lists@nerdbynature.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
+        Genki Sky <sky@genki.is>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 09/56] scripts/setlocalversion: Improve -dirty check with git-status --no-optional-locks
+Date:   Fri, 18 Oct 2019 18:07:06 -0400
+Message-Id: <20191018220753.10002-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
 References: <20191018220753.10002-1-sashal@kernel.org>
@@ -60,132 +63,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nir Dotan <nird@mellanox.com>
+From: Brian Norris <briannorris@chromium.org>
 
-[ Upstream commit 48ebab31d424fbdb8ede8914923bec671a933246 ]
+[ Upstream commit ff64dd4857303dd5550faed9fd598ac90f0f2238 ]
 
-The LAG port collecting (receive) function was mistakenly set when the
-port was registered as a LAG member, while it should be set only when
-the port collection state is set to true. Set LAG port to collecting
-when it is set to distributing, as described in the IEEE link
-aggregation standard coupled control mux machine state diagram.
+git-diff-index does not refresh the index for you, so using it for a
+"-dirty" check can give misleading results. Commit 6147b1cf19651
+("scripts/setlocalversion: git: Make -dirty check more robust") tried to
+fix this by switching to git-status, but it overlooked the fact that
+git-status also writes to the .git directory of the source tree, which
+is definitely not kosher for an out-of-tree (O=) build. That is getting
+reverted.
 
-Signed-off-by: Nir Dotan <nird@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fortunately, git-status now supports avoiding writing to the index via
+the --no-optional-locks flag, as of git 2.14. It still calculates an
+up-to-date index, but it avoids writing it out to the .git directory.
+
+So, let's retry the solution from commit 6147b1cf19651 using this new
+flag first, and if it fails, we assume this is an older version of git
+and just use the old git-diff-index method.
+
+It's hairy to get the 'grep -vq' (inverted matching) correct by stashing
+the output of git-status (you have to be careful about the difference
+betwen "empty stdin" and "blank line on stdin"), so just pipe the output
+directly to grep and use a regex that's good enough for both the
+git-status and git-diff-index version.
+
+Cc: Christian Kujau <lists@nerdbynature.de>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Suggested-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Tested-by: Genki Sky <sky@genki.is>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/mellanox/mlxsw/spectrum.c    | 62 ++++++++++++++-----
- 1 file changed, 45 insertions(+), 17 deletions(-)
+ scripts/setlocalversion | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-index 5c74787f903b7..a909aa315a92a 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-@@ -4077,9 +4077,6 @@ static int mlxsw_sp_port_lag_join(struct mlxsw_sp_port *mlxsw_sp_port,
- 	err = mlxsw_sp_lag_col_port_add(mlxsw_sp_port, lag_id, port_index);
- 	if (err)
- 		goto err_col_port_add;
--	err = mlxsw_sp_lag_col_port_enable(mlxsw_sp_port, lag_id);
--	if (err)
--		goto err_col_port_enable;
+diff --git a/scripts/setlocalversion b/scripts/setlocalversion
+index 71f39410691b6..365b3c2b8f431 100755
+--- a/scripts/setlocalversion
++++ b/scripts/setlocalversion
+@@ -73,8 +73,16 @@ scm_version()
+ 			printf -- '-svn%s' "`git svn find-rev $head`"
+ 		fi
  
- 	mlxsw_core_lag_mapping_set(mlxsw_sp->core, lag_id, port_index,
- 				   mlxsw_sp_port->local_port);
-@@ -4094,8 +4091,6 @@ static int mlxsw_sp_port_lag_join(struct mlxsw_sp_port *mlxsw_sp_port,
+-		# Check for uncommitted changes
+-		if git diff-index --name-only HEAD | grep -qv "^scripts/package"; then
++		# Check for uncommitted changes.
++		# First, with git-status, but --no-optional-locks is only
++		# supported in git >= 2.14, so fall back to git-diff-index if
++		# it fails. Note that git-diff-index does not refresh the
++		# index, so it may give misleading results. See
++		# git-update-index(1), git-diff-index(1), and git-status(1).
++		if {
++			git --no-optional-locks status -uno --porcelain 2>/dev/null ||
++			git diff-index --name-only HEAD
++		} | grep -qvE '^(.. )?scripts/package'; then
+ 			printf '%s' -dirty
+ 		fi
  
- 	return 0;
- 
--err_col_port_enable:
--	mlxsw_sp_lag_col_port_remove(mlxsw_sp_port, lag_id);
- err_col_port_add:
- 	if (!lag->ref_count)
- 		mlxsw_sp_lag_destroy(mlxsw_sp, lag_id);
-@@ -4114,7 +4109,6 @@ static void mlxsw_sp_port_lag_leave(struct mlxsw_sp_port *mlxsw_sp_port,
- 	lag = mlxsw_sp_lag_get(mlxsw_sp, lag_id);
- 	WARN_ON(lag->ref_count == 0);
- 
--	mlxsw_sp_lag_col_port_disable(mlxsw_sp_port, lag_id);
- 	mlxsw_sp_lag_col_port_remove(mlxsw_sp_port, lag_id);
- 
- 	/* Any VLANs configured on the port are no longer valid */
-@@ -4159,21 +4153,56 @@ static int mlxsw_sp_lag_dist_port_remove(struct mlxsw_sp_port *mlxsw_sp_port,
- 	return mlxsw_reg_write(mlxsw_sp->core, MLXSW_REG(sldr), sldr_pl);
- }
- 
--static int mlxsw_sp_port_lag_tx_en_set(struct mlxsw_sp_port *mlxsw_sp_port,
--				       bool lag_tx_enabled)
-+static int
-+mlxsw_sp_port_lag_col_dist_enable(struct mlxsw_sp_port *mlxsw_sp_port)
- {
--	if (lag_tx_enabled)
--		return mlxsw_sp_lag_dist_port_add(mlxsw_sp_port,
--						  mlxsw_sp_port->lag_id);
--	else
--		return mlxsw_sp_lag_dist_port_remove(mlxsw_sp_port,
--						     mlxsw_sp_port->lag_id);
-+	int err;
-+
-+	err = mlxsw_sp_lag_col_port_enable(mlxsw_sp_port,
-+					   mlxsw_sp_port->lag_id);
-+	if (err)
-+		return err;
-+
-+	err = mlxsw_sp_lag_dist_port_add(mlxsw_sp_port, mlxsw_sp_port->lag_id);
-+	if (err)
-+		goto err_dist_port_add;
-+
-+	return 0;
-+
-+err_dist_port_add:
-+	mlxsw_sp_lag_col_port_disable(mlxsw_sp_port, mlxsw_sp_port->lag_id);
-+	return err;
-+}
-+
-+static int
-+mlxsw_sp_port_lag_col_dist_disable(struct mlxsw_sp_port *mlxsw_sp_port)
-+{
-+	int err;
-+
-+	err = mlxsw_sp_lag_dist_port_remove(mlxsw_sp_port,
-+					    mlxsw_sp_port->lag_id);
-+	if (err)
-+		return err;
-+
-+	err = mlxsw_sp_lag_col_port_disable(mlxsw_sp_port,
-+					    mlxsw_sp_port->lag_id);
-+	if (err)
-+		goto err_col_port_disable;
-+
-+	return 0;
-+
-+err_col_port_disable:
-+	mlxsw_sp_lag_dist_port_add(mlxsw_sp_port, mlxsw_sp_port->lag_id);
-+	return err;
- }
- 
- static int mlxsw_sp_port_lag_changed(struct mlxsw_sp_port *mlxsw_sp_port,
- 				     struct netdev_lag_lower_state_info *info)
- {
--	return mlxsw_sp_port_lag_tx_en_set(mlxsw_sp_port, info->tx_enabled);
-+	if (info->tx_enabled)
-+		return mlxsw_sp_port_lag_col_dist_enable(mlxsw_sp_port);
-+	else
-+		return mlxsw_sp_port_lag_col_dist_disable(mlxsw_sp_port);
- }
- 
- static int mlxsw_sp_port_stp_set(struct mlxsw_sp_port *mlxsw_sp_port,
-@@ -4309,8 +4338,7 @@ static int mlxsw_sp_netdevice_port_upper_event(struct net_device *lower_dev,
- 				err = mlxsw_sp_port_lag_join(mlxsw_sp_port,
- 							     upper_dev);
- 			} else {
--				mlxsw_sp_port_lag_tx_en_set(mlxsw_sp_port,
--							    false);
-+				mlxsw_sp_port_lag_col_dist_disable(mlxsw_sp_port);
- 				mlxsw_sp_port_lag_leave(mlxsw_sp_port,
- 							upper_dev);
- 			}
 -- 
 2.20.1
 
