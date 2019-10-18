@@ -2,93 +2,117 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D8ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6AECA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63DD520700
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:48:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571399316;
-	bh=idJrDIQCpgFChGbt+UHdm83yNIaMd7O80kxnumL0Ejg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GJO5Z9NFjCjptgAL6oHygCKmZMmQ0by3tTfdPtX693qUwcsjEnoWeBhprE14WKuOo
-	 V8ss1er1GZYGRC4RchTNAlnYMDaS4/EEJmos0L4ciPt51x3mowumD8qTzZL1T8shfR
-	 R7rtCTuJ2jyM3mMQYOZIYpKfMGRS+panBsU3CFTM=
+	by mail.kernel.org (Postfix) with ESMTP id 3A3AF20700
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:51:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633592AbfJRLsf (ORCPT
+        id S2633635AbfJRLvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 07:48:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58434 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729946AbfJRLse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 07:48:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3F776B537;
-        Fri, 18 Oct 2019 11:48:33 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 13:48:32 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     n-horiguchi@ah.jp.nec.com, mike.kravetz@oracle.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 01/16] mm,hwpoison: cleanup unused PageHuge() check
-Message-ID: <20191018114832.GK5017@dhcp22.suse.cz>
-References: <20191017142123.24245-1-osalvador@suse.de>
- <20191017142123.24245-2-osalvador@suse.de>
+        Fri, 18 Oct 2019 07:51:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51460 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729946AbfJRLvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 07:51:15 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 55E59756;
+        Fri, 18 Oct 2019 11:51:15 +0000 (UTC)
+Received: from [10.36.118.23] (unknown [10.36.118.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8FD1360BF4;
+        Fri, 18 Oct 2019 11:51:13 +0000 (UTC)
+Subject: Re: memory offline infinite loop after soft offline
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, Qian Cai <cai@lca.pw>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+References: <20191017093410.GA19973@hori.linux.bs1.fc.nec.co.jp>
+ <20191017100106.GF24485@dhcp22.suse.cz> <1571335633.5937.69.camel@lca.pw>
+ <20191017182759.GN24485@dhcp22.suse.cz>
+ <20191018021906.GA24978@hori.linux.bs1.fc.nec.co.jp>
+ <33946728-bdeb-494a-5db8-e279acebca47@redhat.com>
+ <20191018082459.GE5017@dhcp22.suse.cz>
+ <f065d998-7fa3-ef9a-c2f4-5b9116f5596b@redhat.com>
+ <20191018085528.GG5017@dhcp22.suse.cz>
+ <3ac0ad7a-7dd2-c851-858d-2986fa8d44b6@redhat.com>
+ <20191018113437.GJ5017@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <0ee3f0d3-470b-a42f-6b4b-805dfc891b7a@redhat.com>
+Date:   Fri, 18 Oct 2019 13:51:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191017142123.24245-2-osalvador@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191018113437.GJ5017@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 18 Oct 2019 11:51:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 17-10-19 16:21:08, Oscar Salvador wrote:
-> From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+On 18.10.19 13:34, Michal Hocko wrote:
+> On Fri 18-10-19 13:00:45, David Hildenbrand wrote:
+>> On 18.10.19 10:55, Michal Hocko wrote:
+>>> On Fri 18-10-19 10:38:21, David Hildenbrand wrote:
+>>>> On 18.10.19 10:24, Michal Hocko wrote:
+>>>>> On Fri 18-10-19 10:13:36, David Hildenbrand wrote:
+>>>>> [...]
+>>>>>> However, if the compound page spans multiple pageblocks
+>>>>>
+>>>>> Although hugetlb pages spanning pageblocks are possible this shouldn't
+>>>>> matter in__test_page_isolated_in_pageblock because this function doesn't
+>>>>> really operate on pageblocks as the name suggests.  It is simply
+>>>>> traversing all valid RAM ranges (see walk_system_ram_range).
+>>>>
+>>>> As long as the hugepages don't span memory blocks/sections, you are right. I
+>>>> have no experience with gigantic pages in this regard.
+>>>
+>>> They can clearly span sections (1GB is larger than 128MB). Why do you
+>>> think it matters actually? walk_system_ram_range walks RAM ranges and no
+>>> allocation should span holes in RAM right?
+>>>
+>>
+>> Let's explore what I was thinking. If we can agree that any compound page is
+>> always aligned to its size , then what I tell here is not applicable. I know
+>> it is true for gigantic pages.
+>>
+>> Some extreme example to clarify
+>>
+>> [ memory block 0 (128MB) ][ memory block 1 (128MB) ]
+>>                [ compound page (128MB)  ]
+>>
+>> If you would offline memory block 1, and you detect PG_offline on the first
+>> page of that memory block (PageHWPoison(compound_head(page))), you would
+>> jump over the whole memory block (pfn += 1 << compound_order(page)), leaving
+>> 64MB of the memory block unchecked.
+>>
+>> Again, if any compound page has the alignment restrictions (PFN of head
+>> aligned to 1 << compound_order(page)), this is not possible.
+>>
+>>
+>> If it is, however, possible, the "clean" thing would be to only jump over
+>> the remaining part of the compound page, e.g., something like
+>>
+>> pfn += (1 << compound_order(page)) - (page - compound_head(page)));
 > 
-> Drop the PageHuge check since memory_failure forks into memory_failure_hugetlb()
-> for hugetlb pages.
+> OK, I see what you mean now. In other words similar to eeb0efd071d82.
 > 
-> Signed-off-by: Oscar Salvador <osalvador@suse.de>
-> Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
 
-s-o-b chain is reversed.
-
-The code is a bit confusing. Doesn't this check aim for THP? AFAICS
-PageTransHuge(hpage) will split the THP or fail so PageTransHuge
-shouldn't be possible anymore, right? But why does hwpoison_user_mappings
-still work with hpage then?
-
-> ---
->  mm/memory-failure.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-> index 05c8c6df25e6..2cbadb58c7df 100644
-> --- a/mm/memory-failure.c
-> +++ b/mm/memory-failure.c
-> @@ -1345,10 +1345,7 @@ int memory_failure(unsigned long pfn, int flags)
->  	 * page_remove_rmap() in try_to_unmap_one(). So to determine page status
->  	 * correctly, we save a copy of the page flags at this time.
->  	 */
-> -	if (PageHuge(p))
-> -		page_flags = hpage->flags;
-> -	else
-> -		page_flags = p->flags;
-> +	page_flags = p->flags;
->  
->  	/*
->  	 * unpoison always clear PG_hwpoison inside page lock
-> -- 
-> 2.12.3
+Exactly.
 
 -- 
-Michal Hocko
-SUSE Labs
+
+Thanks,
+
+David / dhildenb
