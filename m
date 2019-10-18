@@ -2,411 +2,333 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9190ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 718AACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ECBF20659
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:33:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D52F222C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:33:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Noahe+cw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634358AbfJRQdD (ORCPT
+        id S2439945AbfJRQay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:33:03 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57768 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439948AbfJRQa5 (ORCPT
+        Fri, 18 Oct 2019 12:30:54 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33168 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439782AbfJRQao (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:30:57 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iLV98-0002ja-0v; Fri, 18 Oct 2019 18:30:34 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 735761C03AB;
-        Fri, 18 Oct 2019 18:30:28 +0200 (CEST)
-Date:   Fri, 18 Oct 2019 16:30:28 -0000
-From:   "tip-bot2 for Jiri Slaby" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/asm] x86/asm: Make some functions local
-Cc:     Jiri Slaby <jslaby@suse.cz>, Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Darren Hart <dvhart@infradead.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Juergen Gross <jgross@suse.com>, linux-arch@vger.kernel.org,
-        "linux-efi" <linux-efi@vger.kernel.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86-ml" <x86@kernel.org>, xen-devel@lists.xenproject.org,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191011115108.12392-21-jslaby@suse.cz>
-References: <20191011115108.12392-21-jslaby@suse.cz>
-MIME-Version: 1.0
-Message-ID: <157141622822.29376.17208623014273753631.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Fri, 18 Oct 2019 12:30:44 -0400
+Received: by mail-pl1-f193.google.com with SMTP id d22so3110748pls.0;
+        Fri, 18 Oct 2019 09:30:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ioUxflPJk241Sd8uCqW+4LLu7go7mYYjazg2y5D+euI=;
+        b=Noahe+cw+oe1BNvUPmv9cmXuYAKMcdh3TkhmHpUDgLyEFiBRsD2jru5PXvGJv6MqXD
+         /XE4wG0iZksfhB3BVRXjItDttPFMoTynMQEr4YV3TzLLTmoj2anNAaQxKvmiwQtaGAYW
+         ebL2vANtuNHEEWUB7RMeOcu/IHGCk56GOas1WYXY1J1qi9OmkvE1W1CQ2hLaOSqbZ7wC
+         jfGIXBjPUYCaCteWsopRhzZPIPrQjFGm7/5E1yJI1WYUzlxKDM7ItznQIpyo3BYb58Tu
+         HuaAgYGftDjRcrkxwaBmPCVYz/uxrugxf8eOXf9Ex0kEZJRbcZNZT4JMpBNXeqqjElUq
+         jc3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ioUxflPJk241Sd8uCqW+4LLu7go7mYYjazg2y5D+euI=;
+        b=oTri8ugRFfZtAXpTDYUBFarwfklJqHb3yEH8lM1VBhkeoNp476+naOrf+2H68QcpB/
+         lqArz4xVfsmN0bS8HEhk301pdqkR9KALbfjkHEwhlzLhPKib47BjJvovvyIY7K1+Y902
+         RaM1ni64zks/SWaJZ0MC2GybBg8VhJRiGRYxUwm1VRV0RvYJHzGOV07zRqiwwHJbkegm
+         0SSjUHE076etyChn2IUnm1RwfsOSD0PUS2qf+5OYPzDiVGSToLImAa8QHb8yCJbbq1in
+         yzqcj18ukkPmhqunEonphZ4V/79gZSJu21/eDD1V7jU5XbLWizxn5wIkIlV8CQJyjNZH
+         URkQ==
+X-Gm-Message-State: APjAAAVOF9cDbA0QTkRdBUBF1UY1AEb/ICH7p+ps6DkNLEliEwu39knI
+        aktZ8t64/LKTlwVKdByG2BM=
+X-Google-Smtp-Source: APXvYqz9AgnO5wJDvm1Pg6p/ZgeOIqLXWnWPY63JzbbCx7GJI5f+EhGIc58hMebd7OYELWuIV0XCUg==
+X-Received: by 2002:a17:902:9682:: with SMTP id n2mr10572124plp.52.1571416243179;
+        Fri, 18 Oct 2019 09:30:43 -0700 (PDT)
+Received: from localhost.localdomain ([94.204.252.234])
+        by smtp.gmail.com with ESMTPSA id u3sm6401575pfn.134.2019.10.18.09.30.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 18 Oct 2019 09:30:42 -0700 (PDT)
+From:   Christian Hewitt <christianshewitt@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH] arm64: dts: meson: khadas-vim3: move audio nodes to common dtsi
+Date:   Fri, 18 Oct 2019 20:29:45 +0400
+Message-Id: <1571416185-6449-1-git-send-email-christianshewitt@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/asm branch of tip:
+Move VIM3 audio nodes to meson-khadas-vim3.dtsi to enable audio for all
+boards in the VIM3 family including VIM3L.
 
-Commit-ID:     ef1e03152cb027d5925646d4d1772ced7595292f
-Gitweb:        https://git.kernel.org/tip/ef1e03152cb027d5925646d4d1772ced7595292f
-Author:        Jiri Slaby <jslaby@suse.cz>
-AuthorDate:    Fri, 11 Oct 2019 13:51:00 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Fri, 18 Oct 2019 11:34:39 +02:00
+This change depends on [1] being merged/applied first.
 
-x86/asm: Make some functions local
+[1] https://patchwork.kernel.org/patch/11198535/
 
-There are a couple of assembly functions which are invoked only locally
-in the file they are defined. In C, they are marked "static". In
-assembly, annotate them using SYM_{FUNC,CODE}_START_LOCAL (and switch
-their ENDPROC to SYM_{FUNC,CODE}_END too). Whether FUNC or CODE is used,
-depends on whether ENDPROC or END was used for a particular function
-before.
-
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Andy Shevchenko <andy@infradead.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: linux-arch@vger.kernel.org
-Cc: linux-efi <linux-efi@vger.kernel.org>
-Cc: linux-efi@vger.kernel.org
-Cc: Matt Fleming <matt@codeblueprint.co.uk>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Cc: xen-devel@lists.xenproject.org
-Link: https://lkml.kernel.org/r/20191011115108.12392-21-jslaby@suse.cz
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- arch/x86/boot/compressed/efi_thunk_64.S |  8 ++++----
- arch/x86/entry/entry_64.S               | 21 +++++++++++----------
- arch/x86/lib/copy_page_64.S             |  4 ++--
- arch/x86/lib/memcpy_64.S                | 12 ++++++------
- arch/x86/lib/memset_64.S                |  8 ++++----
- arch/x86/platform/efi/efi_thunk_64.S    | 12 ++++++------
- arch/x86/platform/pvh/head.S            |  4 ++--
- 7 files changed, 35 insertions(+), 34 deletions(-)
+ .../boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi   | 89 ----------------------
+ arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi | 88 +++++++++++++++++++++
+ 2 files changed, 88 insertions(+), 89 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/efi_thunk_64.S b/arch/x86/boot/compressed/efi_thunk_64.S
-index d66000d..3131207 100644
---- a/arch/x86/boot/compressed/efi_thunk_64.S
-+++ b/arch/x86/boot/compressed/efi_thunk_64.S
-@@ -99,12 +99,12 @@ ENTRY(efi64_thunk)
- 	ret
- ENDPROC(efi64_thunk)
- 
--ENTRY(efi_exit32)
-+SYM_FUNC_START_LOCAL(efi_exit32)
- 	movq	func_rt_ptr(%rip), %rax
- 	push	%rax
- 	mov	%rdi, %rax
- 	ret
--ENDPROC(efi_exit32)
-+SYM_FUNC_END(efi_exit32)
- 
- 	.code32
- /*
-@@ -112,7 +112,7 @@ ENDPROC(efi_exit32)
-  *
-  * The stack should represent the 32-bit calling convention.
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
+index 69019d0..190e934 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
+@@ -5,8 +5,6 @@
+  * Copyright (c) 2019 Christian Hewitt <christianshewitt@gmail.com>
   */
--ENTRY(efi_enter32)
-+SYM_FUNC_START_LOCAL(efi_enter32)
- 	movl	$__KERNEL_DS, %eax
- 	movl	%eax, %ds
- 	movl	%eax, %es
-@@ -172,7 +172,7 @@ ENTRY(efi_enter32)
- 	btsl	$X86_CR0_PG_BIT, %eax
- 	movl	%eax, %cr0
- 	lret
--ENDPROC(efi_enter32)
-+SYM_FUNC_END(efi_enter32)
  
- 	.data
- 	.balign	8
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 57d2460..1568da6 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1101,7 +1101,8 @@ idtentry hypervisor_callback xen_do_hypervisor_callback has_error_code=0
-  * existing activation in its critical region -- if so, we pop the current
-  * activation and restart the handler using the previous one.
-  */
--ENTRY(xen_do_hypervisor_callback)		/* do_hypervisor_callback(struct *pt_regs) */
-+/* do_hypervisor_callback(struct *pt_regs) */
-+SYM_CODE_START_LOCAL(xen_do_hypervisor_callback)
+-#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
+-
+ / {
+ 	vddcpu_a: regulator-vddcpu-a {
+ 		/*
+@@ -45,69 +43,6 @@
+ 		regulator-boot-on;
+ 		regulator-always-on;
+ 	};
+-
+-	sound {
+-		compatible = "amlogic,axg-sound-card";
+-		model = "G12A-KHADAS-VIM3";
+-		audio-aux-devs = <&tdmout_b>;
+-		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
+-				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
+-				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
+-				"TDM_B Playback", "TDMOUT_B OUT";
+-
+-		assigned-clocks = <&clkc CLKID_MPLL2>,
+-				  <&clkc CLKID_MPLL0>,
+-				  <&clkc CLKID_MPLL1>;
+-		assigned-clock-parents = <0>, <0>, <0>;
+-		assigned-clock-rates = <294912000>,
+-				       <270950400>,
+-				       <393216000>;
+-		status = "okay";
+-
+-		dai-link-0 {
+-			sound-dai = <&frddr_a>;
+-		};
+-
+-		dai-link-1 {
+-			sound-dai = <&frddr_b>;
+-		};
+-
+-		dai-link-2 {
+-			sound-dai = <&frddr_c>;
+-		};
+-
+-		/* 8ch hdmi interface */
+-		dai-link-3 {
+-			sound-dai = <&tdmif_b>;
+-			dai-format = "i2s";
+-			dai-tdm-slot-tx-mask-0 = <1 1>;
+-			dai-tdm-slot-tx-mask-1 = <1 1>;
+-			dai-tdm-slot-tx-mask-2 = <1 1>;
+-			dai-tdm-slot-tx-mask-3 = <1 1>;
+-			mclk-fs = <256>;
+-
+-			codec {
+-				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
+-			};
+-		};
+-
+-		/* hdmi glue */
+-		dai-link-4 {
+-			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
+-
+-			codec {
+-				sound-dai = <&hdmi_tx>;
+-			};
+-		};
+-	};
+-};
+-
+-&arb {
+-	status = "okay";
+-};
+-
+-&clkc_audio {
+-	status = "okay";
+ };
  
- /*
-  * Since we don't modify %rdi, evtchn_do_upall(struct *pt_regs) will
-@@ -1119,7 +1120,7 @@ ENTRY(xen_do_hypervisor_callback)		/* do_hypervisor_callback(struct *pt_regs) */
- 	call	xen_maybe_preempt_hcall
- #endif
- 	jmp	error_exit
--END(xen_do_hypervisor_callback)
-+SYM_CODE_END(xen_do_hypervisor_callback)
+ &cpu0 {
+@@ -152,18 +87,6 @@
+ 	clock-latency = <50000>;
+ };
  
- /*
-  * Hypervisor uses this for application faults while it executes.
-@@ -1214,7 +1215,7 @@ idtentry machine_check		do_mce			has_error_code=0	paranoid=1
-  * Use slow, but surefire "are we in kernel?" check.
-  * Return: ebx=0: need swapgs on exit, ebx=1: otherwise
-  */
--ENTRY(paranoid_entry)
-+SYM_CODE_START_LOCAL(paranoid_entry)
- 	UNWIND_HINT_FUNC
- 	cld
- 	PUSH_AND_CLEAR_REGS save_ret=1
-@@ -1248,7 +1249,7 @@ ENTRY(paranoid_entry)
- 	FENCE_SWAPGS_KERNEL_ENTRY
+-&frddr_a {
+-        status = "okay";
+-};
+-
+-&frddr_b {
+-	status = "okay";
+-};
+-
+-&frddr_c {
+-	status = "okay";
+-};
+-
+ &pwm_ab {
+ 	pinctrl-0 = <&pwm_a_e_pins>;
+ 	pinctrl-names = "default";
+@@ -179,15 +102,3 @@
+ 	clock-names = "clkin1";
+ 	status = "okay";
+ };
+-
+-&tdmif_b {
+-	status = "okay";
+-};
+-
+-&tdmout_b {
+-	status = "okay";
+-};
+-
+-&tohdmitx {
+-	status = "okay";
+-};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+index 90815fa..3f5c373 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+@@ -7,6 +7,7 @@
  
- 	ret
--END(paranoid_entry)
-+SYM_CODE_END(paranoid_entry)
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/gpio/meson-g12a-gpio.h>
++#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
  
- /*
-  * "Paranoid" exit path from exception stack.  This is invoked
-@@ -1262,7 +1263,7 @@ END(paranoid_entry)
-  *
-  * On entry, ebx is "no swapgs" flag (1: don't need swapgs, 0: need it)
-  */
--ENTRY(paranoid_exit)
-+SYM_CODE_START_LOCAL(paranoid_exit)
- 	UNWIND_HINT_REGS
- 	DISABLE_INTERRUPTS(CLBR_ANY)
- 	TRACE_IRQS_OFF_DEBUG
-@@ -1279,12 +1280,12 @@ ENTRY(paranoid_exit)
- 	RESTORE_CR3	scratch_reg=%rbx save_reg=%r14
- .Lparanoid_exit_restore:
- 	jmp restore_regs_and_return_to_kernel
--END(paranoid_exit)
-+SYM_CODE_END(paranoid_exit)
+ / {
+ 	model = "Khadas VIM3";
+@@ -76,6 +77,61 @@
+ 		clock-names = "ext_clock";
+ 	};
  
- /*
-  * Save all registers in pt_regs, and switch GS if needed.
-  */
--ENTRY(error_entry)
-+SYM_CODE_START_LOCAL(error_entry)
- 	UNWIND_HINT_FUNC
- 	cld
- 	PUSH_AND_CLEAR_REGS save_ret=1
-@@ -1364,16 +1365,16 @@ ENTRY(error_entry)
- 	call	fixup_bad_iret
- 	mov	%rax, %rsp
- 	jmp	.Lerror_entry_from_usermode_after_swapgs
--END(error_entry)
-+SYM_CODE_END(error_entry)
++	sound {
++		compatible = "amlogic,axg-sound-card";
++		model = "G12A-KHADAS-VIM3";
++		audio-aux-devs = <&tdmout_b>;
++		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
++				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
++				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
++				"TDM_B Playback", "TDMOUT_B OUT";
++
++		assigned-clocks = <&clkc CLKID_MPLL2>,
++				  <&clkc CLKID_MPLL0>,
++				  <&clkc CLKID_MPLL1>;
++		assigned-clock-parents = <0>, <0>, <0>;
++		assigned-clock-rates = <294912000>,
++				       <270950400>,
++				       <393216000>;
++		status = "okay";
++
++		dai-link-0 {
++			sound-dai = <&frddr_a>;
++		};
++
++		dai-link-1 {
++			sound-dai = <&frddr_b>;
++		};
++
++		dai-link-2 {
++			sound-dai = <&frddr_c>;
++		};
++
++		/* 8ch hdmi interface */
++		dai-link-3 {
++			sound-dai = <&tdmif_b>;
++			dai-format = "i2s";
++			dai-tdm-slot-tx-mask-0 = <1 1>;
++			dai-tdm-slot-tx-mask-1 = <1 1>;
++			dai-tdm-slot-tx-mask-2 = <1 1>;
++			dai-tdm-slot-tx-mask-3 = <1 1>;
++			mclk-fs = <256>;
++
++			codec {
++				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
++			};
++		};
++
++		/* hdmi glue */
++		dai-link-4 {
++			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
++
++			codec {
++				sound-dai = <&hdmi_tx>;
++			};
++		};
++	};
++
+ 	dc_in: regulator-dc_in {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "DC_IN";
+@@ -171,6 +227,14 @@
+ 	};
+ };
  
--ENTRY(error_exit)
-+SYM_CODE_START_LOCAL(error_exit)
- 	UNWIND_HINT_REGS
- 	DISABLE_INTERRUPTS(CLBR_ANY)
- 	TRACE_IRQS_OFF
- 	testb	$3, CS(%rsp)
- 	jz	retint_kernel
- 	jmp	.Lretint_user
--END(error_exit)
-+SYM_CODE_END(error_exit)
++&arb {
++	status = "okay";
++};
++
++&clkc_audio {
++	status = "okay";
++};
++
+ &cec_AO {
+ 	pinctrl-0 = <&cec_ao_a_h_pins>;
+ 	pinctrl-names = "default";
+@@ -206,6 +270,18 @@
+         amlogic,tx-delay-ns = <2>;
+ };
  
- /*
-  * Runs on exception stack.  Xen PV does not go through this path at all,
-diff --git a/arch/x86/lib/copy_page_64.S b/arch/x86/lib/copy_page_64.S
-index fd2d09a..f505870 100644
---- a/arch/x86/lib/copy_page_64.S
-+++ b/arch/x86/lib/copy_page_64.S
-@@ -21,7 +21,7 @@ ENTRY(copy_page)
- ENDPROC(copy_page)
- EXPORT_SYMBOL(copy_page)
++&frddr_a {
++	status = "okay";
++};
++
++&frddr_b {
++	status = "okay";
++};
++
++&frddr_c {
++	status = "okay";
++};
++
+ &hdmi_tx {
+ 	status = "okay";
+ 	pinctrl-0 = <&hdmitx_hpd_pins>, <&hdmitx_ddc_pins>;
+@@ -328,6 +404,18 @@
+ 	vqmmc-supply = <&emmc_1v8>;
+ };
  
--ENTRY(copy_page_regs)
-+SYM_FUNC_START_LOCAL(copy_page_regs)
- 	subq	$2*8,	%rsp
- 	movq	%rbx,	(%rsp)
- 	movq	%r12,	1*8(%rsp)
-@@ -86,4 +86,4 @@ ENTRY(copy_page_regs)
- 	movq	1*8(%rsp), %r12
- 	addq	$2*8, %rsp
- 	ret
--ENDPROC(copy_page_regs)
-+SYM_FUNC_END(copy_page_regs)
-diff --git a/arch/x86/lib/memcpy_64.S b/arch/x86/lib/memcpy_64.S
-index 57a6426..3265b21 100644
---- a/arch/x86/lib/memcpy_64.S
-+++ b/arch/x86/lib/memcpy_64.S
-@@ -29,7 +29,7 @@
-  * rax original destination
-  */
- SYM_FUNC_START_ALIAS(__memcpy)
--ENTRY(memcpy)
-+SYM_FUNC_START_LOCAL(memcpy)
- 	ALTERNATIVE_2 "jmp memcpy_orig", "", X86_FEATURE_REP_GOOD, \
- 		      "jmp memcpy_erms", X86_FEATURE_ERMS
- 
-@@ -41,7 +41,7 @@ ENTRY(memcpy)
- 	movl %edx, %ecx
- 	rep movsb
- 	ret
--ENDPROC(memcpy)
-+SYM_FUNC_END(memcpy)
- SYM_FUNC_END_ALIAS(__memcpy)
- EXPORT_SYMBOL(memcpy)
- EXPORT_SYMBOL(__memcpy)
-@@ -50,14 +50,14 @@ EXPORT_SYMBOL(__memcpy)
-  * memcpy_erms() - enhanced fast string memcpy. This is faster and
-  * simpler than memcpy. Use memcpy_erms when possible.
-  */
--ENTRY(memcpy_erms)
-+SYM_FUNC_START_LOCAL(memcpy_erms)
- 	movq %rdi, %rax
- 	movq %rdx, %rcx
- 	rep movsb
- 	ret
--ENDPROC(memcpy_erms)
-+SYM_FUNC_END(memcpy_erms)
- 
--ENTRY(memcpy_orig)
-+SYM_FUNC_START_LOCAL(memcpy_orig)
- 	movq %rdi, %rax
- 
- 	cmpq $0x20, %rdx
-@@ -182,7 +182,7 @@ ENTRY(memcpy_orig)
- 
- .Lend:
- 	retq
--ENDPROC(memcpy_orig)
-+SYM_FUNC_END(memcpy_orig)
- 
- #ifndef CONFIG_UML
- 
-diff --git a/arch/x86/lib/memset_64.S b/arch/x86/lib/memset_64.S
-index 927ac44..564abf9 100644
---- a/arch/x86/lib/memset_64.S
-+++ b/arch/x86/lib/memset_64.S
-@@ -59,16 +59,16 @@ EXPORT_SYMBOL(__memset)
-  *
-  * rax   original destination
-  */
--ENTRY(memset_erms)
-+SYM_FUNC_START_LOCAL(memset_erms)
- 	movq %rdi,%r9
- 	movb %sil,%al
- 	movq %rdx,%rcx
- 	rep stosb
- 	movq %r9,%rax
- 	ret
--ENDPROC(memset_erms)
-+SYM_FUNC_END(memset_erms)
- 
--ENTRY(memset_orig)
-+SYM_FUNC_START_LOCAL(memset_orig)
- 	movq %rdi,%r10
- 
- 	/* expand byte value  */
-@@ -139,4 +139,4 @@ ENTRY(memset_orig)
- 	subq %r8,%rdx
- 	jmp .Lafter_bad_alignment
- .Lfinal:
--ENDPROC(memset_orig)
-+SYM_FUNC_END(memset_orig)
-diff --git a/arch/x86/platform/efi/efi_thunk_64.S b/arch/x86/platform/efi/efi_thunk_64.S
-index 46c58b0..d677a7e 100644
---- a/arch/x86/platform/efi/efi_thunk_64.S
-+++ b/arch/x86/platform/efi/efi_thunk_64.S
-@@ -67,7 +67,7 @@ ENDPROC(efi64_thunk)
-  *
-  * This function must be invoked with a 1:1 mapped stack.
-  */
--ENTRY(__efi64_thunk)
-+SYM_FUNC_START_LOCAL(__efi64_thunk)
- 	movl	%ds, %eax
- 	push	%rax
- 	movl	%es, %eax
-@@ -114,14 +114,14 @@ ENTRY(__efi64_thunk)
- 	or	%rcx, %rax
- 1:
- 	ret
--ENDPROC(__efi64_thunk)
-+SYM_FUNC_END(__efi64_thunk)
- 
--ENTRY(efi_exit32)
-+SYM_FUNC_START_LOCAL(efi_exit32)
- 	movq	func_rt_ptr(%rip), %rax
- 	push	%rax
- 	mov	%rdi, %rax
- 	ret
--ENDPROC(efi_exit32)
-+SYM_FUNC_END(efi_exit32)
- 
- 	.code32
- /*
-@@ -129,7 +129,7 @@ ENDPROC(efi_exit32)
-  *
-  * The stack should represent the 32-bit calling convention.
-  */
--ENTRY(efi_enter32)
-+SYM_FUNC_START_LOCAL(efi_enter32)
- 	movl	$__KERNEL_DS, %eax
- 	movl	%eax, %ds
- 	movl	%eax, %es
-@@ -145,7 +145,7 @@ ENTRY(efi_enter32)
- 	pushl	%eax
- 
- 	lret
--ENDPROC(efi_enter32)
-+SYM_FUNC_END(efi_enter32)
- 
- 	.data
- 	.balign	8
-diff --git a/arch/x86/platform/pvh/head.S b/arch/x86/platform/pvh/head.S
-index 4e63480..43b4d86 100644
---- a/arch/x86/platform/pvh/head.S
-+++ b/arch/x86/platform/pvh/head.S
-@@ -50,7 +50,7 @@
- #define PVH_DS_SEL		(PVH_GDT_ENTRY_DS * 8)
- #define PVH_CANARY_SEL		(PVH_GDT_ENTRY_CANARY * 8)
- 
--ENTRY(pvh_start_xen)
-+SYM_CODE_START_LOCAL(pvh_start_xen)
- 	cld
- 
- 	lgdt (_pa(gdt))
-@@ -146,7 +146,7 @@ ENTRY(pvh_start_xen)
- 
- 	ljmp $PVH_CS_SEL, $_pa(startup_32)
- #endif
--END(pvh_start_xen)
-+SYM_CODE_END(pvh_start_xen)
- 
- 	.section ".init.data","aw"
- 	.balign 8
++&tdmif_b {
++	status = "okay";
++};
++
++&tdmout_b {
++	status = "okay";
++};
++
++&tohdmitx {
++	status = "okay";
++};
++
+ &uart_A {
+ 	status = "okay";
+ 	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
+-- 
+2.7.4
+
