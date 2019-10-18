@@ -2,166 +2,101 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D26D9CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94638CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E5BA21925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:32:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571383940;
-	bh=EQeKoCpXpwTvRnZZMg106dxS9XAskErBDtA+of2bSIE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ltfHp4qY4Jjigpj2F3ATfhDB9H2AyK6qy6UXbkSrJMGJvFD2/2wb7q9hkqQh6eLsD
-	 guSqqWbMWiTbJFrOSa0XMQ/sHXsRnbT5iNLYkt8yzqZNvQYZ5epMp38TLywD20aE3P
-	 kTytEcPGyFxInLg3tiNOhuPdJPzT4L0ypZDBSUsQ=
+	by mail.kernel.org (Postfix) with ESMTP id 6E71921925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:32:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QDjSdwVh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504652AbfJRHcT (ORCPT
+        id S2504671AbfJRHci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 03:32:19 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:38776 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394031AbfJRHcT (ORCPT
+        Fri, 18 Oct 2019 03:32:38 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38598 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504654AbfJRHci (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 03:32:19 -0400
-Received: by mail-oi1-f193.google.com with SMTP id d140so107680oib.5;
-        Fri, 18 Oct 2019 00:32:18 -0700 (PDT)
+        Fri, 18 Oct 2019 03:32:38 -0400
+Received: by mail-lj1-f194.google.com with SMTP id b20so5155000ljj.5;
+        Fri, 18 Oct 2019 00:32:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M59q7a9C0OgA4oCmsCvNmrsotdikD3/oQO5y00c53pE=;
+        b=QDjSdwVhwSC0JWfWLJhp/h9DdZY9n0KxIP8OCUJAgh30ovPE8RBv1vHr+hVbVE0tME
+         iJD/yM8B0njK1VSHughXZlw5SQkhpbffxcCOWITVKsRI0dqS8/ILGqUXSDE6L6GQObAB
+         8Spdl/ikovaOjEkQ7UyA0Glo6fnrOJKKEAP/gqHenduF5Lu0WFI9N0bTzyfpDg3zfBV2
+         IRnoDoHGZNoLlHtk2Azb1de+77SEAhw9DcNfUSfk+GVqyQLuuShl+xT1Ca29rp3J6LGC
+         y80VJ4sumAssPPDxX3/qBR8wbdfQ+PliuJhcYWI5xzyfTw1IL0YY22z+NQybKAWp1Wdy
+         emHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=z4xqOeM1YeUE2INYqT11uITzrVuWoTUfm8bOzhEZ/mY=;
-        b=jJRqrneVn/Onz2K3aMMimxKiRNo5MGjJybA0dseLJ9k6lxteJX8nFqCxQSyGNwIyNQ
-         UaP1KkDLAvJfWzCsg82vLJD+Ztb7A56lx70k81SlmexQB3qKtbf5Yv2rBJVgYIH76Thg
-         yioGVR9ALfE+R0HcAlZXGFSX+vV6pEShZocCZ5RqL6Y4R/9kwi1vQirWByIpQRyMz0Ld
-         i9epHPvcWTtpvLlZMd0Q51GxhTHfBq4dMD77CFzU24TpQjitRUB/E0zKGc4A+iP6iET5
-         yw4MkF8OWOmXk1kQ+6t0K53ZjvuooK3hWy3IndFl7b1MvSKIXygdaJYampxUuE4xqRug
-         QSNA==
-X-Gm-Message-State: APjAAAVaswvPjw8hOtt4to2I+/MlsVdj59dtI0e2ri/L3Tjy/d0y205X
-        J88XYBjhcHMFucTw8t5NEuryBilLbMdcI7mxh5M=
-X-Google-Smtp-Source: APXvYqxdFvDgt95Tzyq9b603RSO/NBOLxoNSFfckU1680dG9VNFBUqPiu4wuKPbLwLUdPqYpW/PzUKRy+W8ijyGu4/0=
-X-Received: by 2002:aca:5885:: with SMTP id m127mr7009246oib.110.1571383937445;
- Fri, 18 Oct 2019 00:32:17 -0700 (PDT)
+        bh=M59q7a9C0OgA4oCmsCvNmrsotdikD3/oQO5y00c53pE=;
+        b=OqejqXKR2Btm1eTSswEz+ntVUVN002t/R6PIbFviDA8rDmBsMfnOqN1irwdOo3hjLk
+         YCQJmYJPPmSSliIOEzh3BExrQKzDWEeiUZ8AayTQPl8freFcAAWECvbqNSjxLkdTQxQH
+         4kBGov1jEAb74kfS/wwJFKQ6ZC0kK+QCpj9Tek0yKgWE5jmyg2HTCo2Z5ljF7rAOuRYV
+         CGtjMwbu5cewKg1OpkImqfETsVT4bRSnps0DURCtaijdt2vXKKxSPkUdDmLC/DiX+kCY
+         LzDHJlA+CWX3ZvLndruQAhUAB/FTET9F+bvfxQ79i8N6bJpAMb6VP2lEpy23OeWbbf4U
+         8qSQ==
+X-Gm-Message-State: APjAAAUKB0TO2VE+TYCtmu/wgTBKNDFG/DLwK/HVpgBXIRZMFh15wFHX
+        891On3Yw/5kr2uKORTWgdzQPvF5k2OXAXMhuJaY=
+X-Google-Smtp-Source: APXvYqxGOxFAMF/DGekSaTRLTT9JUI7FrVcOqmXscMrke5xrFR1FwSh6E7g1AZnXqZ7em90pHobqgkjM7M2X9uVhFI0=
+X-Received: by 2002:a2e:b4a8:: with SMTP id q8mr5095902ljm.106.1571383954846;
+ Fri, 18 Oct 2019 00:32:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191017163503.30791-1-sudeep.holla@arm.com> <CAJZ5v0gTpK0cJhsWGVvs-=Sbgcia0jz2j5QNYRL+1wOz=2xkJQ@mail.gmail.com>
- <CAJZ5v0h0ioEZqLuaW1jz_8jRuGYZLQS3fbpv9ctyV9ucXb1WiA@mail.gmail.com>
- <20191018055533.GC31836@e107533-lin.cambridge.arm.com> <20191018060247.g5asfuh3kncoj7kl@vireshk-i7>
-In-Reply-To: <20191018060247.g5asfuh3kncoj7kl@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 18 Oct 2019 09:32:06 +0200
-Message-ID: <CAJZ5v0h0vY9OBYg-_pR-hu_TJkE0odf5Nnd8qnJc17+8NQo=7w@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: flush any pending policy update work scheduled
- before freeing
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A22E@ALPMBAPA12.e2k.ad.ge.com>
+ <20191004182711.GC6945@linux.intel.com> <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
+ <20191007000520.GA17116@linux.intel.com> <59b88042-9c56-c891-f75e-7c0719eb5ff9@linux.ibm.com>
+ <20191008234935.GA13926@linux.intel.com> <20191008235339.GB13926@linux.intel.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2B995@ALPMBAPA12.e2k.ad.ge.com>
+ <20191014190033.GA15552@linux.intel.com> <1571081397.3728.9.camel@HansenPartnership.com>
+ <20191016110031.GE10184@linux.intel.com> <1571229252.3477.7.camel@HansenPartnership.com>
+In-Reply-To: <1571229252.3477.7.camel@HansenPartnership.com>
+From:   Janne Karhunen <janne.karhunen@gmail.com>
+Date:   Fri, 18 Oct 2019 10:32:23 +0300
+Message-ID: <CAE=NcrbSrqNUF_Jhe4cL=BSmY=p45nS8axkSJC6HWeGo2NnXDA@mail.gmail.com>
+Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+To:     James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        "Safford, David (GE Global Research, US)" <david.safford@ge.com>,
+        Ken Goldman <kgold@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 8:02 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 18-10-19, 06:55, Sudeep Holla wrote:
-> > On Thu, Oct 17, 2019 at 11:26:54PM +0200, Rafael J. Wysocki wrote:
-> > > On Thu, Oct 17, 2019 at 9:36 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > >
-> > > > On Thu, Oct 17, 2019 at 6:35 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> > > > >
-> > > > > dev_pm_qos_remove_request ends calling {max,min}_freq_req QoS notifiers
-> > > > > which schedule policy update work. It may end up racing with the freeing
-> > > > > the policy and unregistering the driver.
-> > > > >
-> > > > > One possible race is as below where the cpufreq_driver is unregistered
-> > > > > but the scheduled work gets executed at later stage when cpufreq_driver
-> > > > > is NULL(i.e. after freeing the policy and driver)
-> > > > >
-> > > > > Unable to handle kernel NULL pointer dereference at virtual address 0000001c
-> > > > > pgd = (ptrval)
-> > > > > [0000001c] *pgd=80000080204003, *pmd=00000000
-> > > > > Internal error: Oops: 206 [#1] SMP THUMB2
-> > > > > Modules linked in:
-> > > > > CPU: 0 PID: 34 Comm: kworker/0:1 Not tainted 5.4.0-rc3-00006-g67f5a8081a4b #86
-> > > > > Hardware name: ARM-Versatile Express
-> > > > > Workqueue: events handle_update
-> > > > > PC is at cpufreq_set_policy+0x58/0x228
-> > > > > LR is at dev_pm_qos_read_value+0x77/0xac
-> > > > > Control: 70c5387d  Table: 80203000  DAC: fffffffd
-> > > > > Process kworker/0:1 (pid: 34, stack limit = 0x(ptrval))
-> > > > >         (cpufreq_set_policy) from (refresh_frequency_limits.part.24+0x37/0x48)
-> > > > >         (refresh_frequency_limits.part.24) from (handle_update+0x2f/0x38)
-> > > > >         (handle_update) from (process_one_work+0x16d/0x3cc)
-> > > > >         (process_one_work) from (worker_thread+0xff/0x414)
-> > > > >         (worker_thread) from (kthread+0xff/0x100)
-> > > > >         (kthread) from (ret_from_fork+0x11/0x28)
-> > > > >
-> > > > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > > > > Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> > > > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > > > > ---
-> > > > >  drivers/cpufreq/cpufreq.c | 3 +++
-> > > > >  1 file changed, 3 insertions(+)
-> > > > >
-> > > > > Hi Rafael, Viresh,
-> > > > >
-> > > > > This fixed the boot issue I reported[1] on TC2 with bL switcher enabled.
-> > > > > I have based this patch on -rc3 and not on top of your patches. This
-> > > > > only fixes the boot issue but I hit the other crashes while continuously
-> > > > > switching on and off the bL switcher that register/unregister the driver
-> > > > > Your patch series fixes them. I can based this on top of those if you
-> > > > > prefer.
-> > > > >
-> > > > > Regards,
-> > > > > Sudeep
-> > > > >
-> > > > > [1] https://lore.kernel.org/linux-pm/20191015155735.GA29105@bogus/
-> > > > >
-> > > > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > > > > index c52d6fa32aac..b703c29a84be 100644
-> > > > > --- a/drivers/cpufreq/cpufreq.c
-> > > > > +++ b/drivers/cpufreq/cpufreq.c
-> > > > > @@ -1278,6 +1278,9 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
-> > > > >         }
-> > > > >
-> > > > >         dev_pm_qos_remove_request(policy->min_freq_req);
-> > > > > +       /* flush the pending policy->update work before freeing the policy */
-> > > > > +       if (work_pending(&policy->update))
-> > > >
-> > > > Isn't this racy?
-> > > >
-> > > > It still may be running if the pending bit is clear and we still need
-> > > > to wait for it then, don't we?
-> > > >
-> > > > Why don't you do an unconditional flush_work() here?
-> > >
-> > > You may as well do a cancel_work_sync() here, because whether or not
-> > > the last update of the policy happens before it goes away is a matter
-> > > of timing in any case
-> >
-> > In fact that's the first thing I tried to fix the issue I was seeing.
-> > But I then thought it would be better to complete the update as the PM
-> > QoS were getting updated back to DEFAULT values for the device. Even
-> > this works.
-> >
-> > What is your preference ? flush_work or cancel_work_sync ? I will
-> > update accordingly. I may need to do some more testing with
-> > cancel_work_sync as I just checked that quickly to confirm the race.
->
-> As I said in the other email, this work didn't come as a result of
-> removal of the qos request from cpufreq core and so must have come
-> from other thermal or similar events. In that case maybe doing
-> flush_work() is better before we remove the cpufreq driver. Though
-> Rafael's timing related comment makes sense as well, but now that we
-> have received the work before policy is removed, I will rather
-> complete the work and quit.
+On Wed, Oct 16, 2019 at 6:35 PM James Bottomley
+<James.Bottomley@hansenpartnership.com> wrote:
 
-Well, the policy is going away, so the governor has been stopped for
-it already.  Even if the limit is updated, it will not be used anyway,
-so why bother with updating it?
+> > The documentation says that krng is suitable for key generation.
+> > Should the documentation changed to state that it is unsuitable?
+>
+> How do you get that from the argument above?  The krng is about the
+> best we have in terms of unpredictable key generation, so of course it
+> is suitable ... provided you give the entropy enough time to have
+> sufficient entropy.
+
+Yes, so it can be both the safest and the least safe option available.
+By default it's the worst one, but use it wisely and it can be the
+best source. Hence I was proposing that kconfig option + boot time
+printout to make this clear for everyone..
+
+
+--
+Janne
