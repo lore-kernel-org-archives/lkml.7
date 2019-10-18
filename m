@@ -2,160 +2,248 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D099ACA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 688C8CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F60021897
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34F11222CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:09:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aHNodF4+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CwAEdNJr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505122AbfJRPJH (ORCPT
+        id S1728728AbfJRPJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:09:07 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35553 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392875AbfJRPJE (ORCPT
+        Fri, 18 Oct 2019 11:09:01 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42488 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392041AbfJRPI7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:09:04 -0400
-Received: by mail-lf1-f66.google.com with SMTP id w6so5001989lfl.2
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 08:09:02 -0700 (PDT)
+        Fri, 18 Oct 2019 11:08:59 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n14so6642020wrw.9
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 08:08:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5G0J25R+L4feZP0FafuhoQQw/6NR5l7vb68kANu0aIA=;
-        b=aHNodF4+80Cs0F+qKHJFEivmVOS/gdvgET6bxn8yoLENBeRXCYqvhl9v/M38MMaq6e
-         8YEB1vcD78CyP1nZqpmkhVrEwEqWrPGEYETQ3SAxQwo1566wLhjx5I1waaOy5F1DrMl1
-         fzH6qT+nhlfOSYQdEX1ysLJ9RV/Q//0jpr6RM5ZNUCfJPezwIDf8rbzK4qmYYlFv0ojj
-         WyZI/n6b23ZWuxTlX/c0rzzB7kTZLToBsd3B228rP4wWcZDGLL3/Wy2vwKdQAF7spZIi
-         UWZnd6jTHHjHclmoVg4QAoodG5xoUF4BJ3vrComUCsW1g6J5vu5ug0PxqzIrknDASLVZ
-         n2Lw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Uo29UJjtvwL9o1yUeP9/ak16jHRTsPhb3jCWvXhXP4E=;
+        b=CwAEdNJrX1vvGP546EweBvQs90jLqJGMkP2ujgEGpr+/bLIW1+iZn+Gep54McD3zab
+         gjqWmU92bI/MfVzm/cjQo/8leLOGkTmHex3IzaAmL4LHjLB+eFYjhNhmRGJeh+5C9nna
+         BPhMhv9k4MTHpCpzk/hE4Nd3xB3lkgvO3Ismzg+LIn3XuOV8VuxN7Z9UcKUHNfodfOTf
+         LOhW3CAM5BnN4h4I1SvSWTmGttXXizHCyDMfn5ysSlYK7Z0+Mfg9/qgswc7O0fFPQvpI
+         xrazG0s8o/dGUUL3z75G5yawuB5lnBG3y8kMypNvpRuc+N7HNJXtJMioRbTzUI/kjutg
+         LcLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5G0J25R+L4feZP0FafuhoQQw/6NR5l7vb68kANu0aIA=;
-        b=UlRLdQRA2Y/9QMTOihs5PopXsjwA+jy6wTdCH7pXQuK7Dvr9bhEmG2qhIPOTAXwXFx
-         e51YlETHeH6JWxOxNgxbz6J3DbFh3Pr4hoSJGIHzq0tII/XkC00pl26yzv7yc38s+k9Y
-         N3xOUDQnRqZf1mZHCz0dwbEVw09v68l/1BGh512Q1zZMvbKCinR13yUWg4khh2/z+/hc
-         bPlguiRajiq1hfDr+iSGdErCHYNGsCd/KKFtZHEQdRR2ShZELahIt/uqDRy6cxK/l4Oe
-         zL22q8L2IqJcztlckHHc4LLFAVrIDjyqXLrg/9jAeeBdnFzmN5lU5uhimXPJlxL3M/Ec
-         23QQ==
-X-Gm-Message-State: APjAAAUh0ofP3rvaMXztl6e2Wr/uWR5rrO1d64L5ONU9HHLPNw8yuK+A
-        nc4dP7Sz6qPoQhE8h/hUzReB30SmYGBGNjmFRPzV8rDX
-X-Google-Smtp-Source: APXvYqxTW3nVCTJY1fAE6D+bC1VpeJos310SOzFkH+H7YLp7iiJ9gn4VcyP4oTpzXYRtxrUcWAOcYHqpKOIQj2eDm6s=
-X-Received: by 2002:ac2:533c:: with SMTP id f28mr6535730lfh.0.1571411341666;
- Fri, 18 Oct 2019 08:09:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191016082430.5955-1-poeschel@lemonage.de> <CANiq72=uXWpEWHixM+wwyxZfzQ41WYvQsoV8B3+JLRharDjC0w@mail.gmail.com>
- <20191017080741.GA17556@lem-wkst-02.lemonage>
-In-Reply-To: <20191017080741.GA17556@lem-wkst-02.lemonage>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Fri, 18 Oct 2019 17:08:50 +0200
-Message-ID: <CANiq72m0V5CBxp97Q4h70Gup1DCoZj4ZFa6VWQLk0jyurxeztQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] auxdisplay: Make charlcd.[ch] more general
-To:     Lars Poeschel <poeschel@lemonage.de>
-Cc:     Willy Tarreau <willy@haproxy.com>,
-        Ksenija Stanojevic <ksenija.stanojevic@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Uo29UJjtvwL9o1yUeP9/ak16jHRTsPhb3jCWvXhXP4E=;
+        b=EzKnwAOFvG3JzhUhG5IkWSoAZPigQc1wrl5h0iUp0WOl+cLeBiX8PRKgW4bFkRH+ap
+         5EZsi3u2wF0dDBEMjYhtcqFlhH3FSDNUgiCowcZxqiIUjITthpeiCDx07GpYySMr9iuV
+         t+BMc1q3dRp5dLduSJgTAKmTqmHAi8MBMLOpjZhkhfErBh8YghTng2zMmx8QMC7LvR0/
+         Np/oJk/x0sVb6Vtu3jvsMjJ3fqSL8DCfK8mH1tqFwFmfkVOGFhMTaBExLV32Xfo84L36
+         W/SD8N5viMeUdiOAJcFy1lwxPDyzZZ46R43+/TIgqlH/7ycB6AWMxThOxiN/lDbvvAJK
+         eNKw==
+X-Gm-Message-State: APjAAAXbwRx28RMXpUtU9bmeGcw4Rtf6QyoxuCmyRdsS8cUxHzz05czt
+        YfryId4va9WL0QI9eZ2YYg==
+X-Google-Smtp-Source: APXvYqy7mufT5baw/dcFWkcg/qLc0zmWihchUjihgZEOTeFKGOzjXQp7S0F5ERYHtI+icHZknCYkJA==
+X-Received: by 2002:adf:a516:: with SMTP id i22mr8951223wrb.273.1571411336124;
+        Fri, 18 Oct 2019 08:08:56 -0700 (PDT)
+Received: from buster-jangle.bmw-carit.intra ([217.89.178.117])
+        by smtp.gmail.com with ESMTPSA id z6sm6035074wro.16.2019.10.18.08.08.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 08:08:55 -0700 (PDT)
+From:   "Viktor Rosendahl (BMW)" <viktor.rosendahl@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        "Viktor Rosendahl (BMW)" <viktor.rosendahl@gmail.com>
+Subject: [PATCH v10 1/4] ftrace: Implement fs notification for tracing_max_latency
+Date:   Fri, 18 Oct 2019 17:08:49 +0200
+Message-Id: <20191018150852.4322-2-viktor.rosendahl@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191018150852.4322-1-viktor.rosendahl@gmail.com>
+References: <20191018150852.4322-1-viktor.rosendahl@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 10:07 AM Lars Poeschel <poeschel@lemonage.de> wrote:
->
-> That panel.c doesn't compile is of course a no-go. Sorry. I missed
-> something and I will fix this in a next version of the patch. But before
-> submitting a next version, I will wait some time, if there is more
-> feedback.
+This patch implements the feature that the tracing_max_latency file,
+e.g. /sys/kernel/debug/tracing/tracing_max_latency will receive
+notifications through the fsnotify framework when a new latency is
+available.
 
-I meant I wasn't sure if the overall patch as that well tested ;-)
+One particularly interesting use of this facility is when enabling
+threshold tracing, through /sys/kernel/debug/tracing/tracing_thresh,
+together with the preempt/irqsoff tracers. This makes it possible to
+implement a user space program that can, with equal probability,
+obtain traces of latencies that occur immediately after each other in
+spite of the fact that the preempt/irqsoff tracers operate in overwrite
+mode.
 
-> The idea with changing the return types: It seems a bit, that with this
-> patch charlcd is becoming more of an universal interface and maybe more
-> display backends get added - maybe with displays, that can report
-> failure of operations. And I thought, it will be better to have this
-> earlier and have the "interface" stable and more uniform. But you are
-> the maintainer. If you don't like the changed return types I happily
-> revert back to the original ones in the next version of the patch.
+This facility works with the preempt/irqsoff, and wakeup tracers.
 
-I see the value of the idea, but given kernel APIs are not stable
-anyway, I prefer not to have things that we do not use yet. If someone
-requires returning an error code in a future driver, they can change
-it later on. I don't have a strong opinion on this anyway.
+The tracers may call the latency_fsnotify() from places such as
+__schedule() or do_idle(); this makes it impossible to call
+queue_work() directly without risking a deadlock. The same would
+happen with a softirq,  kernel thread or tasklet. For this reason we
+use the irq_work mechanism to call queue_work().
 
-> >   * Some things (e.g. the addition of enums like charlcd_onoff) seem
-> > like could have been done other patches (since they are not really
-> > related to the reorganization).
->
-> I can split this out into separate patches. It'd be good know what else
-> you mean by "some things" so I can do this as well. Do you want each
-> enum as a separate patch or one big enum patch ?
+This patch creates a new workqueue. The reason for doing this is that
+I wanted to use the WQ_UNBOUND and WQ_HIGHPRI flags.  My thinking was
+that WQ_UNBOUND might help with the latency in some important cases.
 
-As Andy said, ideally patches/commits implement logical changes, i.e.
-broken down as much as reasonably possible. For instance, changing the
-interface from int/bool to an enum is probably a good idea, but it is
-not related to the overall reorganization. In fact, it is orthogonal,
-since it could be done either before or after the reorganization.
+If we use:
 
-In general, it is much more easy to understand and review changes if
-you split them. For instance, I noticed the enum change by chance, I
-may have not noticed it; but if it was in a different patch, it would
-have been clear for everyone. It also allows you to explain each
-change individually in the commit message. Another of those "things"
-is what Andy suggested. Of course, after you split things, it will
-become easier to spot other things too, so we might have to do another
-round etc.
+queue_work(system_highpri_wq, &tr->fsnotify_work);
 
-A single patch for all the enums is fine. We could split those too,
-but given the change has the same rationale, and is small enough, we
-can put them together and share the commit message + is easier for you
-and us to handle too. That is the "as much as reasonably possible"
-part of the guideline ;-)
+then the work will (almost) always execute on the same CPU but if we are
+unlucky that CPU could be too busy while there could be another CPU in
+the system that would be able to process the work soon enough.
 
-> Strange. I did indeed checkpatch.pl the patches before submitting and I
-> got no complaints about whitespace or line endings. There was "WARNING:
-> added, moved or deleted file(s), does MAINTAINERS need updating?" and
-> patch 1 also has "WARNING: please write a paragraph that describes the
-> config symbol fully". I submitted the patches with git send-email so it
-> is very unlikely, that the mailer messed up the patches. Strange...
+queue_work_on() could be used to queue the work on another CPU but it
+seems difficult to select the right CPU.
 
-Hm... Try sending the series to yourself and see if you can reproduce it.
+Signed-off-by: Viktor Rosendahl (BMW) <viktor.rosendahl@gmail.com>
+---
+ kernel/trace/trace.c | 73 ++++++++++++++++++++++++++++++++++++++++++--
+ kernel/trace/trace.h |  7 +++++
+ 2 files changed, 78 insertions(+), 2 deletions(-)
 
-> Oh by the way: Do you know what I can do to make checkpatch happy with
-> its describing of the config symbol ? I tried writing a help paragraph
-> for the config symbols in Kconfig, but that did not help.
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 6a0ee9178365..2124646dfb2a 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -45,6 +45,9 @@
+ #include <linux/trace.h>
+ #include <linux/sched/clock.h>
+ #include <linux/sched/rt.h>
++#include <linux/fsnotify.h>
++#include <linux/irq_work.h>
++#include <linux/workqueue.h>
+ 
+ #include "trace.h"
+ #include "trace_output.h"
+@@ -1497,6 +1500,70 @@ static ssize_t trace_seq_to_buffer(struct trace_seq *s, void *buf, size_t cnt)
+ }
+ 
+ unsigned long __read_mostly	tracing_thresh;
++static const struct file_operations tracing_max_lat_fops;
++
++#if defined(CONFIG_TRACER_MAX_TRACE) && defined(CONFIG_FSNOTIFY)
++
++static struct workqueue_struct *fsnotify_wq;
++
++static void latency_fsnotify_workfn(struct work_struct *work)
++{
++	struct trace_array *tr = container_of(work, struct trace_array,
++					      fsnotify_work);
++	fsnotify(tr->d_max_latency->d_inode, FS_MODIFY,
++		 tr->d_max_latency->d_inode, FSNOTIFY_EVENT_INODE, NULL, 0);
++}
++
++static void latency_fsnotify_workfn_irq(struct irq_work *iwork)
++{
++	struct trace_array *tr = container_of(iwork, struct trace_array,
++					      fsnotify_irqwork);
++	queue_work(fsnotify_wq, &tr->fsnotify_work);
++}
++
++static void trace_create_maxlat_file(struct trace_array *tr,
++				     struct dentry *d_tracer)
++{
++	INIT_WORK(&tr->fsnotify_work, latency_fsnotify_workfn);
++	init_irq_work(&tr->fsnotify_irqwork, latency_fsnotify_workfn_irq);
++	tr->d_max_latency = trace_create_file("tracing_max_latency", 0644,
++					      d_tracer, &tr->max_latency,
++					      &tracing_max_lat_fops);
++}
++
++__init static int latency_fsnotify_init(void)
++{
++	fsnotify_wq = alloc_workqueue("tr_max_lat_wq",
++				      WQ_UNBOUND | WQ_HIGHPRI, 0);
++	if (!fsnotify_wq) {
++		pr_err("Unable to allocate tr_max_lat_wq\n");
++		return -ENOMEM;
++	}
++	return 0;
++}
++
++late_initcall_sync(latency_fsnotify_init);
++
++static void latency_fsnotify(struct trace_array *tr)
++{
++	if (!fsnotify_wq)
++		return;
++	/*
++	 * We cannot call queue_work(&tr->fsnotify_work) from here because it's
++	 * possible that we are called from __schedule() or do_idle(), which
++	 * could cause a deadlock.
++	 */
++	irq_work_queue(&tr->fsnotify_irqwork);
++}
++
++
++#else /* defined(CONFIG_TRACER_MAX_TRACE) && defined(CONFIG_FSNOTIFY) */
++
++#define trace_create_maxlat_file(tr, d_tracer)				\
++	trace_create_file("tracing_max_latency", 0644, d_tracer,	\
++			  &tr->max_latency, &tracing_max_lat_fops)
++
++#endif
+ 
+ #ifdef CONFIG_TRACER_MAX_TRACE
+ /*
+@@ -1536,6 +1603,9 @@ __update_max_tr(struct trace_array *tr, struct task_struct *tsk, int cpu)
+ 
+ 	/* record this tasks comm */
+ 	tracing_record_cmdline(tsk);
++#ifdef CONFIG_FSNOTIFY
++	latency_fsnotify(tr);
++#endif
+ }
+ 
+ /**
+@@ -8585,8 +8655,7 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
+ 	create_trace_options_dir(tr);
+ 
+ #if defined(CONFIG_TRACER_MAX_TRACE) || defined(CONFIG_HWLAT_TRACER)
+-	trace_create_file("tracing_max_latency", 0644, d_tracer,
+-			&tr->max_latency, &tracing_max_lat_fops);
++	trace_create_maxlat_file(tr, d_tracer);
+ #endif
+ 
+ 	if (ftrace_create_function_files(tr, d_tracer))
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index d685c61085c0..8564c72ea7b5 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -16,6 +16,8 @@
+ #include <linux/trace_events.h>
+ #include <linux/compiler.h>
+ #include <linux/glob.h>
++#include <linux/irq_work.h>
++#include <linux/workqueue.h>
+ 
+ #ifdef CONFIG_FTRACE_SYSCALLS
+ #include <asm/unistd.h>		/* For NR_SYSCALLS	     */
+@@ -264,6 +266,11 @@ struct trace_array {
+ #endif
+ #if defined(CONFIG_TRACER_MAX_TRACE) || defined(CONFIG_HWLAT_TRACER)
+ 	unsigned long		max_latency;
++#endif
++#if defined(CONFIG_TRACER_MAX_TRACE) && defined(CONFIG_FSNOTIFY)
++	struct dentry		*d_max_latency;
++	struct work_struct	fsnotify_work;
++	struct irq_work		fsnotify_irqwork;
+ #endif
+ 	struct trace_pid_list	__rcu *filtered_pids;
+ 	/*
+-- 
+2.17.1
 
-CC'ing Joe.
-
-> > I am not capable of testing this, so extra testing by anyone who has
-> > the different hardware affected around is very welcome.
->
-> Are you able to test the panel driver ?
-
-Even worse: at the moment I cannot test any of the drivers (and more
-have been added over time). The 3 of them I could test are very
-old/obsolete and I will be dropping them, so my role here is basically
-"abstract" :-)
-
-If there is anyone that can actually test most of the drivers in
-auxdisplay and wants to help maintaining, it would be great, in fact.
-
-> Thank you for your prompt feedback!
-
-You're welcome!
-
-Cheers,
-Miguel
