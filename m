@@ -2,117 +2,111 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F291CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE8DCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00A6220872
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D7F820872
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:30:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CG+DDVPE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ustvlh1T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392972AbfJRW3u (ORCPT
+        id S2406707AbfJRWaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:29:50 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38826 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbfJRW3u (ORCPT
+        Fri, 18 Oct 2019 18:30:19 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55287 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfJRWaS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:29:50 -0400
-Received: by mail-ot1-f67.google.com with SMTP id e11so6279144otl.5;
-        Fri, 18 Oct 2019 15:29:49 -0700 (PDT)
+        Fri, 18 Oct 2019 18:30:18 -0400
+Received: by mail-wm1-f66.google.com with SMTP id p7so7636688wmp.4;
+        Fri, 18 Oct 2019 15:30:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gYjp0Wpg6EG197+ZFDkyqIAQeoiHNqMZ3URZHgzwFVk=;
-        b=CG+DDVPEaOnFGfnX2ISfmL4mZqbzmEAIbGWfbjxRDSLmPn6aIYcFS4gTZVXm9Bj8ej
-         YLVGNj0lRCT1EXe7sRHLW5UA2jIi7j7FNKz1y6joV8CnrEp4V9jrmIIMbqFuMXviV4K8
-         bowTCm/uuDEqVWieqWY/M0KNygZXEIOevq3qLdPILARttNQekgxdMyTC6KjipZpad35Y
-         8Qcg0DPWbum/kFeLmko9f/uSHaHrDDfp2fZWnB34r/fz7Q2c1rKZ9s1VYf0Bt/guFKp8
-         9ObVAM20hKcDZG+FlOcDCz3FbMoJc9NFyuUGaCushW6golxrlPVqduTiTZdLtUwnqpwJ
-         KQ+Q==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LDipa+pHzraU7AGfSCkk9cS4X3bVgRZMrlZ0/HVNYsA=;
+        b=ustvlh1TIqREMXUWZS1iLAzKjUfrnCI+UqhCZkGebqu8AOs9XDDbRdrD5iy//Uguw8
+         Nk4MyI/zsEE0TTz0m5dmFW/i+nrCqGXajx0D2CTeIPh4kezIOMJ/uG5BV6z9Y3KUdvib
+         pFTUKcqH4cei8hyXkLhbIjQNSqo+9GarqPwRePCNQ3Kn5IiqHbl9DAZyqutkaJ3+RgVh
+         W1+7pVnw+zh3yuv6kbpsZ1uC07oE4hfSeVgHUKJK/T/qOyuj41aI85J9hait2pZj0oUz
+         6hZbFuY8i/MW0t7aHElaJUBHdPjy6b+9rKMXnbqr/pwuPnRUBRlEFfM7wUCUyOP/Q1X/
+         2TLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gYjp0Wpg6EG197+ZFDkyqIAQeoiHNqMZ3URZHgzwFVk=;
-        b=aiZdu5k8cCzxHvJqWs3vN5Cb5xBhFxJOl4sQBdHyLSJR3Y8hB+R/dEm+j8zDZ5g/yq
-         gxfCtBHIUdd5d2X7razi2zhLFMxW4bGcfxmwp+rmu/ul0FCTBQIIpeACXRHE5M4hoxjU
-         cYecwNBKfRFkxEtn8I1RO5oyZA3hukhGIXZnvJrR75ucXHVLgH7r4Wghb1ltbmEyjpP+
-         VGSfXfNjOWEO+NObSq3DmgKVAwd6Mjj5BqHNfXedjuD5oY9vQq1H+9sE2iUG720es7wM
-         awgcMS5ZiUhHqbzBdUIFsvIeOgzBP+yXq0T0NdhDg/xdGVEOZoPBbKbTPCa/2somg08O
-         LICg==
-X-Gm-Message-State: APjAAAUlLuNb6E3+9+tly3ELnSUzv53dZfpG7p35io2ENX0Au7W2J5nx
-        EFkRcQ0H6JKu/qCIilisjhk=
-X-Google-Smtp-Source: APXvYqwqQOprKFp6KyDaZ0PVvUETxuW3CphHo+XWTDhUp53PiifgIminlDOngOXLSRhP6Xt3LFcmYw==
-X-Received: by 2002:a9d:ba6:: with SMTP id 35mr1229290oth.143.1571437789127;
-        Fri, 18 Oct 2019 15:29:49 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id q18sm1871422otk.57.2019.10.18.15.29.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 15:29:48 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>
-Cc:     Amit K Bag <amit.k.bag@intel.com>,
-        Chethan T N <chethan.tumkur.narayan@intel.com>,
-        Raghuram Hegde <raghuram.hegde@intel.com>,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH -next] Bluetooth: btusb: Remove return statement in btintel_reset_to_bootloader
-Date:   Fri, 18 Oct 2019 15:29:24 -0700
-Message-Id: <20191018222924.49256-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191018111343.5a34ee33@canb.auug.org.au>
-References: <20191018111343.5a34ee33@canb.auug.org.au>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LDipa+pHzraU7AGfSCkk9cS4X3bVgRZMrlZ0/HVNYsA=;
+        b=eTwXqJtFNenZ4SlgocddGqQXIOYywDjglLjGRK78tj+MMlU1VG4ATc0gmNJo6LCMFn
+         0hF8dXb/Q1HbfFReaG+loV+FNzJtu3tRVG9vC4QoYbOsYpqUKC2ne8D3zqbGodFfpyMp
+         wsv4a4PalSg0vVMK9BLgAe5SBBJZVrs46fxiyK72rduLRHDk05DiDsXRQwMm4JE+wFzp
+         QGTO5xyDf5AME9y2Hf8f6MP6OM9T98kH1JOrXiff4BvE3C8tPJRNBfYLWVm5jIVLoggJ
+         S4DC29ZVfCwlZKM6HOaoLnNE65mp2+yd2T0/4ly3DElJoKGTGsrpDTd/BpeNBdlkd4l+
+         jDaA==
+X-Gm-Message-State: APjAAAVZ3a0JkGvKCzKDc3YBvbJ4SoLtfwVLD9G4+qis70IvbYMx+HQD
+        3PDOHL2+z9GvSNNtFhuG+2uAg2gLnDg=
+X-Google-Smtp-Source: APXvYqx0nhZn+ANbaDKEXUF+gtPz7+Tpqlx3lB7NVJMmoz+GpA6CPYWuDTVtZ4m90EA2B7Rma8qNrQ==
+X-Received: by 2002:a7b:cab1:: with SMTP id r17mr9081696wml.106.1571437815707;
+        Fri, 18 Oct 2019 15:30:15 -0700 (PDT)
+Received: from debian (host-78-144-219-162.as13285.net. [78.144.219.162])
+        by smtp.gmail.com with ESMTPSA id x2sm6728897wrn.81.2019.10.18.15.30.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 18 Oct 2019 15:30:15 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 23:30:12 +0100
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+To:     Ladislav Michl <ladis@linux-mips.org>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH] omapfb: reduce stack usage
+Message-ID: <20191018223012.tkpwbo3mg5mthlnz@debian>
+References: <20191018163004.23498-1-sudipm.mukherjee@gmail.com>
+ <20191018172728.GA11857@lenoch>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018172728.GA11857@lenoch>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building with Clang and CONFIG_BT_INTEL unset, the following error
-occurs:
+On Fri, Oct 18, 2019 at 07:27:28PM +0200, Ladislav Michl wrote:
+> On Fri, Oct 18, 2019 at 05:30:04PM +0100, Sudip Mukherjee wrote:
+> > The build of xtensa allmodconfig is giving a warning of:
+> > In function 'dsi_dump_dsidev_irqs':
+> > warning: the frame size of 1120 bytes is larger than 1024 bytes
+> > 
+> > Allocate the memory for 'struct dsi_irq_stats' dynamically instead
+> > of assigning it in stack.
+> 
+> So now function can fail silently, executes longer, code is sligthly
+> bigger... And all that to silent warning about exceeding frame size.
+> Is it really worth "fixing"?
 
-In file included from drivers/bluetooth/hci_ldisc.c:34:
-drivers/bluetooth/btintel.h:188:2: error: void function
-'btintel_reset_to_bootloader' should not return a value [-Wreturn-type]
-        return -EOPNOTSUPP;
-        ^      ~~~~~~~~~~~
-1 error generated.
+The only point of failure is if kmalloc() fails and if kmalloc() fails then
+there will be error prints in dmesg to tell the user that there is no
+memory left in the system. About the size bigger, it seems
+the drivers/video/fbdev/omap2/omapfb/dss/dsi.o file is smaller with the
+patch.
+This is without the patch:
+-rw-r--r-- 1 sudip sudip 316856 Oct 18 22:27 drivers/video/fbdev/omap2/omapfb/dss/dsi.o
+And this is with the patch:
+-rw-r--r-- 1 sudip sudip 316436 Oct 18 20:09 drivers/video/fbdev/omap2/omapfb/dss/dsi.o
 
-Remove the unneeded return statement to fix this.
+And also, objdump shows me that <dsi_dump_dsidev_irqs> was taking up 0xD7D
+bytes, and now with the patch it is taking up 0xBED bytes, thats a saving
+of 400 bytes. If it has 400 bytes of less code to execute will it not be
+faster now?
 
-Fixes: b9a2562f4918 ("Bluetooth: btusb: Trigger Intel FW download error recovery")
-Link: https://github.com/ClangBuiltLinux/linux/issues/743
-Reported-by: <ci_notify@linaro.org>
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/bluetooth/btintel.h | 1 -
- 1 file changed, 1 deletion(-)
+But, I may be totally wrong in my thinking, and in that case, please feel
+free to reject the patch.
 
-diff --git a/drivers/bluetooth/btintel.h b/drivers/bluetooth/btintel.h
-index d2311156f778..a69ea8a87b9b 100644
---- a/drivers/bluetooth/btintel.h
-+++ b/drivers/bluetooth/btintel.h
-@@ -185,6 +185,5 @@ static inline int btintel_download_firmware(struct hci_dev *dev,
- 
- static inline void btintel_reset_to_bootloader(struct hci_dev *hdev)
- {
--	return -EOPNOTSUPP;
- }
- #endif
--- 
-2.23.0
-
+--
+Regards
+Sudip
