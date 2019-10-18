@@ -7,59 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BD5CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBC7CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD3F02053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 905BE20640
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:26:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437557;
-	bh=FrzwZv6FVNvvAr07Vc1/1PA+4MPp/UssWIY/WONUOQo=;
+	s=default; t=1571437564;
+	bh=OPQh/w0HN7ptn6tENX2+5V6kRqT+2oS1MekYamXmnGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b7Uf7wFbv4TCuPrN0KwuUN4Ad5jGdmm5mZboaUM/ZK/ITzw9g8QzeBqs53EWh8Zpd
-	 jyNarBH1dj07dQO6Jsws4/07z65fiQxxrRv7lsIczS2h0ZldJ0LOamYHBsE2cf9R3C
-	 bEta9dHMMXJwyNeAOfP7CeIErzVyY/1hAOUMMy5U=
+	b=1r/oLvdsgcEDvs+zEFxX4Ru2NU/jBFhgMq+gcpie8FPAQmp8ub+pfkuWsmojzoFEb
+	 gMCSg+Z0/fPt0VgU3UEqvZfjxpD+Qhh/jm3NKxJD1JOG/LfLjy+1cnhPTytU0pz5Zn
+	 xoQzC7+/WkYvm3ycYkEChf1k2WZ8t1nhLSytHp7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394703AbfJRWZz (ORCPT
+        id S2405976AbfJRW0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:25:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36100 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:26:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728205AbfJRWE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:04:28 -0400
+        id S1728140AbfJRWEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:04:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88068222C3;
-        Fri, 18 Oct 2019 22:04:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 846E8222C5;
+        Fri, 18 Oct 2019 22:04:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436267;
-        bh=FrzwZv6FVNvvAr07Vc1/1PA+4MPp/UssWIY/WONUOQo=;
+        s=default; t=1571436264;
+        bh=OPQh/w0HN7ptn6tENX2+5V6kRqT+2oS1MekYamXmnGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LKpfSIixH6I86iLZqeL5cnQ+1fheAdULtWAoLgg+ltCawi0fKrt0TRdnkCF+PubKx
-         IIXF4+lEzOS38xAc6PMQYvDf/kDCZZD7FD+EQjJMnXK0kRbV0/wtNiJY1l4KCQEA3P
-         isgTA2A6NqSW169ULn+g2nTHSpyDlBbHfy2oiKJQ=
+        b=ZskRA1csfKJ5xKxjFP5cTTgkZB75xSTdoYB4jXAO81fGmuSXTOKEF/NgKCWOGCep3
+         B1Cril9d8nqP0cA/KuC1CxhoyC67HP2/pMD4vAvcdLFYj1Uqw5oGk8WD3poSSAhtiH
+         PrdqH8mg/bc2qJyJbNa9x+uGZnHuwgN4OhtvSmDk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lukas Wunner <lukas@wunner.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Dave Young <dyoung@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Octavian Purdila <octavian.purdila@intel.com>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Scott Talbert <swt@techie.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 48/89] efi/cper: Fix endianness of PCIe class code
-Date:   Fri, 18 Oct 2019 18:02:43 -0400
-Message-Id: <20191018220324.8165-48-sashal@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 46/89] arm64: Default to building compat vDSO with clang when CONFIG_CC_IS_CLANG
+Date:   Fri, 18 Oct 2019 18:02:41 -0400
+Message-Id: <20191018220324.8165-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -72,59 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 6fb9367a15d1a126d222d738b2702c7958594a5f ]
+[ Upstream commit 24ee01a927bfe56c66429ec4b1df6955a814adc8 ]
 
-The CPER parser assumes that the class code is big endian, but at least
-on this edk2-derived Intel Purley platform it's little endian:
+Rather than force the use of GCC for the compat cross-compiler, instead
+extract the target from CROSS_COMPILE_COMPAT and pass it to clang if the
+main compiler is clang.
 
-    efi: EFI v2.50 by EDK II BIOS ID:PLYDCRB1.86B.0119.R05.1701181843
-    DMI: Intel Corporation PURLEY/PURLEY, BIOS PLYDCRB1.86B.0119.R05.1701181843 01/18/2017
-
-    {1}[Hardware Error]:   device_id: 0000:5d:00.0
-    {1}[Hardware Error]:   slot: 0
-    {1}[Hardware Error]:   secondary_bus: 0x5e
-    {1}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x2030
-    {1}[Hardware Error]:   class_code: 000406
-                                       ^^^^^^ (should be 060400)
-
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Matthew Garrett <mjg59@google.com>
-Cc: Octavian Purdila <octavian.purdila@intel.com>
-Cc: Peter Jones <pjones@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Scott Talbert <swt@techie.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Cc: linux-integrity@vger.kernel.org
-Link: https://lkml.kernel.org/r/20191002165904.8819-2-ard.biesheuvel@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/cper.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-index addf0749dd8b6..b1af0de2e1008 100644
---- a/drivers/firmware/efi/cper.c
-+++ b/drivers/firmware/efi/cper.c
-@@ -381,7 +381,7 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
- 		printk("%s""vendor_id: 0x%04x, device_id: 0x%04x\n", pfx,
- 		       pcie->device_id.vendor_id, pcie->device_id.device_id);
- 		p = pcie->device_id.class_code;
--		printk("%s""class_code: %02x%02x%02x\n", pfx, p[0], p[1], p[2]);
-+		printk("%s""class_code: %02x%02x%02x\n", pfx, p[2], p[1], p[0]);
- 	}
- 	if (pcie->validation_bits & CPER_PCIE_VALID_SERIAL_NUMBER)
- 		printk("%s""serial number: 0x%04x, 0x%04x\n", pfx,
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index 9743b50bdee7d..5858d6e449268 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -47,7 +47,11 @@ $(warning Detected assembler with broken .inst; disassembly will be unreliable)
+   endif
+ endif
+ 
++ifeq ($(CONFIG_CC_IS_CLANG), y)
++COMPATCC ?= $(CC) --target=$(notdir $(CROSS_COMPILE_COMPAT:%-=%))
++else
+ COMPATCC ?= $(CROSS_COMPILE_COMPAT)gcc
++endif
+ export COMPATCC
+ 
+ ifeq ($(CONFIG_GENERIC_COMPAT_VDSO), y)
 -- 
 2.20.1
 
