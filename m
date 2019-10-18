@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE575CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A04D8CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80680222D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70EF3222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436566;
-	bh=K7ijbg6IVjhRC7/PIpkToO6jKzcs6lrtL1NQcqpfzSc=;
+	s=default; t=1571436574;
+	bh=pJmHRk7bu3NM0gfkU7axpYHHrVISABF6wmOGLGcFUtI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GqyWkbxsQnlBEV26QqHSf+zLHrZxwuxfr8TXtXaAoUn4X+8nn4zfVX6rtt7pC3Qav
-	 76dWKaQRS2WfVEcHdIH5kNo7UMbhS9WeLLn+k5rNSpjB5iZekEFn3dVxRntkxg7QJJ
-	 W3KTw5EGabhLNOc41lt3xJGQQ/ABqhTT5vg70aok=
+	b=FopyE3CjoNfhhxFJMbrsqLWtkep+y4to5ADggG2Ac+BIYglMsFDpISRqNsxQscGec
+	 YnOeS//7sH6fGVXokIsOj9T4Is6W647Ir7bcZ+HtMPQHc+nGxyUKW9IQE0BxaFXwua
+	 Yu84MneWD5OZw5aIfe2McK48XI25wiacAiFadASU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388868AbfJRWJZ (ORCPT
+        id S2388975AbfJRWJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:09:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41624 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:09:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388387AbfJRWI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:08:59 -0400
+        id S2388492AbfJRWJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:09:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFC402246E;
-        Fri, 18 Oct 2019 22:08:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07E5822472;
+        Fri, 18 Oct 2019 22:09:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436538;
-        bh=K7ijbg6IVjhRC7/PIpkToO6jKzcs6lrtL1NQcqpfzSc=;
+        s=default; t=1571436543;
+        bh=pJmHRk7bu3NM0gfkU7axpYHHrVISABF6wmOGLGcFUtI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ji/YNXCyHxb/dAsv02RY5q2SvJAMftZojbChAjMtivPQUj+sGWSD8ys9w5NuVrIYn
-         yBoBzQvG/262nvNUEUTkGlPqHUTyRpHPWJVF/2s+6FMqj9So2w+V5wjtaHOs0+Xh2P
-         XpkcAxAPWM5hdigPJ0QAOYNVVz5eWEiwMjY0ES8w=
+        b=h1WWzUe3g07ZUfbYZ3mPliT9gftxkdtdBEbbH+thv21URR3U7epYMldbTD3BIB5bO
+         5oX96AR+rLLGXVtD65M2je80EtI/R4cOF+VSL5mN0ZqEDQwP8mG0DkSFuauF/uJE8P
+         atPrST3x5StvBivnBoL6Jso4DzkQHXKJo8P27Bm0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        James Dingwall <james@dingwall.me.uk>,
-        Juergen Gross <jgross@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-doc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 41/56] x86/xen: Return from panic notifier
-Date:   Fri, 18 Oct 2019 18:07:38 -0400
-Message-Id: <20191018220753.10002-41-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 44/56] fs: ocfs2: fix a possible null-pointer dereference in ocfs2_write_end_nolock()
+Date:   Fri, 18 Oct 2019 18:07:41 -0400
+Message-Id: <20191018220753.10002-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
 References: <20191018220753.10002-1-sashal@kernel.org>
@@ -60,100 +66,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit c6875f3aacf2a5a913205accddabf0bfb75cac76 ]
+[ Upstream commit 583fee3e12df0e6f1f66f063b989d8e7fed0e65a ]
 
-Currently execution of panic() continues until Xen's panic notifier
-(xen_panic_event()) is called at which point we make a hypercall that
-never returns.
+In ocfs2_write_end_nolock(), there are an if statement on lines 1976,
+2047 and 2058, to check whether handle is NULL:
 
-This means that any notifier that is supposed to be called later as
-well as significant part of panic() code (such as pstore writes from
-kmsg_dump()) is never executed.
+    if (handle)
 
-There is no reason for xen_panic_event() to be this last point in
-execution since panic()'s emergency_restart() will call into
-xen_emergency_restart() from where we can perform our hypercall.
+When handle is NULL, it is used on line 2045:
 
-Nevertheless, we will provide xen_legacy_crash boot option that will
-preserve original behavior during crash. This option could be used,
-for example, if running kernel dumper (which happens after panic
-notifiers) is undesirable.
+	ocfs2_update_inode_fsync_trans(handle, inode, 1);
+        oi->i_sync_tid = handle->h_transaction->t_tid;
 
-Reported-by: James Dingwall <james@dingwall.me.uk>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
+Thus, a possible null-pointer dereference may occur.
+
+To fix this bug, handle is checked before calling
+ocfs2_update_inode_fsync_trans().
+
+This bug is found by a static analysis tool STCheck written by us.
+
+Link: http://lkml.kernel.org/r/20190726033705.32307-1-baijiaju1990@gmail.com
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../admin-guide/kernel-parameters.txt         |  4 +++
- arch/x86/xen/enlighten.c                      | 28 +++++++++++++++++--
- 2 files changed, 29 insertions(+), 3 deletions(-)
+ fs/ocfs2/aops.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 188a7db8501bd..9d8b42afbe4f9 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4873,6 +4873,10 @@
- 				the unplug protocol
- 			never -- do not unplug even if version check succeeds
- 
-+	xen_legacy_crash	[X86,XEN]
-+			Crash from Xen panic notifier, without executing late
-+			panic() code such as dumping handler.
-+
- 	xen_nopvspin	[X86,XEN]
- 			Disables the ticketlock slowpath using Xen PV
- 			optimizations.
-diff --git a/arch/x86/xen/enlighten.c b/arch/x86/xen/enlighten.c
-index 515d5e4414c29..00fc683a20110 100644
---- a/arch/x86/xen/enlighten.c
-+++ b/arch/x86/xen/enlighten.c
-@@ -259,19 +259,41 @@ void xen_reboot(int reason)
- 		BUG();
- }
- 
-+static int reboot_reason = SHUTDOWN_reboot;
-+static bool xen_legacy_crash;
- void xen_emergency_restart(void)
- {
--	xen_reboot(SHUTDOWN_reboot);
-+	xen_reboot(reboot_reason);
- }
- 
- static int
- xen_panic_event(struct notifier_block *this, unsigned long event, void *ptr)
- {
--	if (!kexec_crash_loaded())
--		xen_reboot(SHUTDOWN_crash);
-+	if (!kexec_crash_loaded()) {
-+		if (xen_legacy_crash)
-+			xen_reboot(SHUTDOWN_crash);
-+
-+		reboot_reason = SHUTDOWN_crash;
-+
-+		/*
-+		 * If panic_timeout==0 then we are supposed to wait forever.
-+		 * However, to preserve original dom0 behavior we have to drop
-+		 * into hypervisor. (domU behavior is controlled by its
-+		 * config file)
-+		 */
-+		if (panic_timeout == 0)
-+			panic_timeout = -1;
-+	}
- 	return NOTIFY_DONE;
- }
- 
-+static int __init parse_xen_legacy_crash(char *arg)
-+{
-+	xen_legacy_crash = true;
-+	return 0;
-+}
-+early_param("xen_legacy_crash", parse_xen_legacy_crash);
-+
- static struct notifier_block xen_panic_block = {
- 	.notifier_call = xen_panic_event,
- 	.priority = INT_MIN
+diff --git a/fs/ocfs2/aops.c b/fs/ocfs2/aops.c
+index ebeec7530cb60..7de0c9562b707 100644
+--- a/fs/ocfs2/aops.c
++++ b/fs/ocfs2/aops.c
+@@ -2054,7 +2054,8 @@ int ocfs2_write_end_nolock(struct address_space *mapping,
+ 		inode->i_mtime = inode->i_ctime = current_time(inode);
+ 		di->i_mtime = di->i_ctime = cpu_to_le64(inode->i_mtime.tv_sec);
+ 		di->i_mtime_nsec = di->i_ctime_nsec = cpu_to_le32(inode->i_mtime.tv_nsec);
+-		ocfs2_update_inode_fsync_trans(handle, inode, 1);
++		if (handle)
++			ocfs2_update_inode_fsync_trans(handle, inode, 1);
+ 	}
+ 	if (handle)
+ 		ocfs2_journal_dirty(handle, wc->w_di_bh);
 -- 
 2.20.1
 
