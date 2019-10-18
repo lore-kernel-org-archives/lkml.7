@@ -6,706 +6,1402 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B28CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AD5CA9EAC
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0013E20659
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:32:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A363220659
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:32:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634075AbfJRQcD (ORCPT
+        id S2502751AbfJRQcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:32:03 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:40329 "EHLO
+        Fri, 18 Oct 2019 12:32:02 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:33381 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502333AbfJRQbt (ORCPT
+        with ESMTP id S2443054AbfJRQbd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:31:49 -0400
+        Fri, 18 Oct 2019 12:31:33 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1M6VNX-1iNR6h1hd3-006tHV; Fri, 18 Oct 2019 18:31:38 +0200
+ 1Mrggc-1hiqw143z2-00nfbo; Fri, 18 Oct 2019 18:30:50 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>
-Subject: [PATCH 6/6] ARM: orion: unify Makefile/Kconfig files
-Date:   Fri, 18 Oct 2019 18:29:19 +0200
-Message-Id: <20191018163047.1284736-6-arnd@arndb.de>
+        Linus Walleij <linus.walleij@linaro.org>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Russell King <linux@armlinux.org.uk>
+Subject: [PATCH 1/6] ARM: versatile: move integrator/realview/vexpress to versatile
+Date:   Fri, 18 Oct 2019 18:29:14 +0200
+Message-Id: <20191018163047.1284736-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191018163047.1284736-1-arnd@arndb.de>
-References: <20191018163047.1284736-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:TuAspewuqamCkrx/L3rEFa20b0IEdAzjEp5Ax35Eax97TyknExo
- gu9rruc4dHOViCbXKw+zFUxTcxQMIZRxRcenbZPsB5vap29EcChhJ2OtGRVa23QxEgPwEOn
- 2Se2m7JdCDRdexlhC7GFoCbzh455TGBEptrFcaJ8DeswfZ2upE4P5z842xNGkNmQ9WD/5li
- hhWFHwkvo2QIMruats2UQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:kdju0oXzgYg=:BqOAqLqMsSQt/gCpjxHBGq
- YeRxManuVjEw9CwFxmfC5zlBP4jyfsopEFM+NlgGaxbzgzsUQl0zjbF4K7DISv4wWyM+VuNko
- 7wIBwZ6yAclzicUyMQqYkz4USMUPxhbYuhBAbsS+OuLTyFtp42O3lCwXL8LDLNUKXXb9sIT27
- xIJAm/3+2p4gutoKZ7oiHc69DvDmw5t1Y+hY8ZQ4k5KqJ7oM8bqQ/kas9IrcakHozzsdaEE3C
- b/tMa+41QPoUZgJgfLwIFbnvf/9p8sQPsWQS4tsdw7kDBt5yqGcy3mRUddbuenBx1p9ywwauk
- GHwJoZvpsIWBcCVFLb+qGuQDQsKhs0i/2RB2kQWn4G1kS94N+nUJQG0sJCjfA+YrBcw0evska
- UOZGh4jXoi1T5bAx4R60OLQ6s687E/IqxuSsUJx3EBpWOfraIK1WZIiFhp2wmN8AKT1NLXKvU
- /574RVdAB35T+glaFdHMtKfe4ZeMuiHMv1mB/n9OLdMdF5VCWAYPW6jAe/pPs/GaJFZCocTlt
- +yitiTiIOt6GB+8OLygamOYbKZnskMit3c98T98AdiMlezvsTJA90C3RRDPetxXwgrrl83avx
- Wk3gkcSWA3VDNfc5Ah6WjOZShvfJ6y76xHL3nat5Nv2nYrJbdChuq4hWDBHbqichjJUKqsTd5
- QRQUGa/VVOZlLEySNvPfogmcEKcz620D7uB6JzeNhUI4Rq3DEPe/y68A5eaAvVB0NjtoEu/MU
- L0maSUChlArky+n3jUnFDQZHzfuom/hxknNOGa5p6CgAiDMXqY8wvYZQ0Xoe8ShzxmyKhICGs
- 7F1qE5tJmbc+6z5IoFYtcnVs8F7nYzBvuPtgWlsnLiSsoHLsrbAobpgNy6vmrsQya3qb6thAy
- bRem2s2fBsBTdhEy1sBw==
+X-Provags-ID: V03:K1:I+/9pbKfxz4+JWNzZgaDP53mode4OFLqi2uQKwSEPfSkeBgeZt9
+ KIvX9Aw7F8qr4kTkdgNw2mbsx2DXHV3rzBDDwib1j4HOFxD2WPt9rq3/czntYcARHUANayl
+ OiPhR0LxY6XwiGjuy+apmpgKcqsJoDtw+/5ghftOISqeQOxPFy4avhq1imBHgi0Of7j6q38
+ kVXMFRmGjlQ/DOLO/47Ww==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BtcrccKziqQ=:+MB8+f5OPRcGdv+fKt+THO
+ V6BwqgK0Ns7lIcf+Dh21Ms0ABuS9eI2uPpywJfQ1sLnp0tcsDyE81EWrj629lA25LXR+nla8N
+ JMlO3NnzJ0pIhHupYMxbuXOvDi6MvSGmt9inIrJVXS6yYw2eSfvFJSRElj22h1tTOnRZ+TBRO
+ bV2Z81DjnHcNtM2gjaLS1nUy3zUmIwF5kFwgtajW3BmoybjIyCR5gjmcMwwodxZpBZnFIcJKA
+ 2mZqDP15MMdmg7sjOsFvUnl4mxAONNacT9xMwYztS5cXT7tK+m5UAAbZ8jpeYGSOdgPebn49g
+ uGHEm2XckRFa9P14tg6eXrzrEmd+jC4XmCWB0lNjRf9olklIpx+95R7esuX0DfqDBGdeI9GX3
+ iIYMFc7f15NCrB7hH1lAuGkDLtHxN1dT83lDcQNyCEZQwudoCwiAOxh/cJLJo3+yCGRQCwT1O
+ fCz4rQkQXcU7qVmxzt77Zk9SICbnF4U97J4BZgDxR5UI7TFconFTh3RawrWtoRJp8nX7Y5FTU
+ Ply3AnCBcNNAGGzkKu1Xm37TFJ/nKZzKyaun+46Q98ULbvr69C1zG3WMxmiPgFcggUy7zdEVR
+ F4yDI/R54F/9G6IvCxSXOSMccggOnaVU25BJKKgjML6gc1ApffWMb9Cumtel9JK4gwfcgoH7J
+ Huz8kWRDL+lm8H+b/LrHMfQZvSkYI6o1yBNif7OaCXSRRmjTf1p/oQNXTE0pa4S8XOOOdwlwe
+ W5MGjimkpmVFUikoPNYys3YLefJ4Vey9VO+jSbMbOcrzNlJ//1XWKHSsVo+j9oxXUDfEjZmjs
+ DqslNn629uKAuNHSfV2cHQeU/1XIRkTMBZq3OvqtIM7L+q/Z3qfHd0yuvpDts5xBnaVtk3J70
+ h4qFVCMDRVKsE1OmQ99Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no reason to keep these separate, so move them into
-the generic files.
+These are all fairly small platforms by now, and they are
+closely related. Just move them all into a single directory.
 
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Gregory Clement <gregory.clement@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Liviu Dudau <liviu.dudau@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/arm/mach-orion/Kconfig          | 232 ++++++++++++++++++++++++++-
- arch/arm/mach-orion/Kconfig.dove     |  34 ----
- arch/arm/mach-orion/Kconfig.mv78xx0  |  34 ----
- arch/arm/mach-orion/Kconfig.orion5x  | 170 --------------------
- arch/arm/mach-orion/Makefile         |  54 +++++--
- arch/arm/mach-orion/Makefile.dove    |   6 -
- arch/arm/mach-orion/Makefile.mv78xx0 |   5 -
- arch/arm/mach-orion/Makefile.orion5x |  24 ---
- 8 files changed, 268 insertions(+), 291 deletions(-)
- delete mode 100644 arch/arm/mach-orion/Kconfig.dove
- delete mode 100644 arch/arm/mach-orion/Kconfig.mv78xx0
- delete mode 100644 arch/arm/mach-orion/Kconfig.orion5x
- delete mode 100644 arch/arm/mach-orion/Makefile.dove
- delete mode 100644 arch/arm/mach-orion/Makefile.mv78xx0
- delete mode 100644 arch/arm/mach-orion/Makefile.orion5x
+ arch/arm/Kconfig                              |   7 -
+ arch/arm/Makefile                             |   7 +-
+ arch/arm/mach-integrator/Kconfig              | 161 --------
+ arch/arm/mach-integrator/Makefile             |  11 -
+ arch/arm/mach-realview/Kconfig                | 113 ------
+ arch/arm/mach-realview/Makefile               |   8 -
+ arch/arm/mach-versatile/Kconfig               | 360 ++++++++++++++++++
+ arch/arm/mach-versatile/Makefile              |  34 +-
+ .../Makefile.boot                             |   0
+ .../{mach-integrator => mach-versatile}/cm.h  |   0
+ .../common.h                                  |   0
+ .../core.c                                    |   2 -
+ .../{mach-vexpress => mach-versatile}/core.h  |   0
+ .../{mach-vexpress => mach-versatile}/dcscb.c |   2 +-
+ .../dcscb_setup.S                             |   2 -
+ .../hardware.h                                |   0
+ .../headsmp.S                                 |   2 -
+ .../hotplug.c                                 |   2 +-
+ .../impd1.c                                   |   2 -
+ .../impd1.h                                   |   0
+ .../integrator_ap.c                           |   2 -
+ .../integrator_cp.c                           |   2 -
+ .../{mach-integrator => mach-versatile}/lm.c  |   2 -
+ .../{mach-integrator => mach-versatile}/lm.h  |   0
+ .../platsmp-realview.c}                       |   2 +-
+ .../platsmp-vexpress.c}                       |   5 +-
+ .../platsmp.c                                 |   4 +-
+ .../include/plat => mach-versatile}/platsmp.h |   2 -
+ .../realview-dt.c                             |   0
+ .../sched-clock.c                             |   4 +-
+ .../plat => mach-versatile}/sched_clock.h     |   0
+ .../{mach-vexpress => mach-versatile}/spc.c   |   0
+ .../{mach-vexpress => mach-versatile}/spc.h   |   0
+ .../tc2_pm.c                                  |   2 -
+ .../v2m-mps2.c                                |   0
+ .../{mach-vexpress => mach-versatile}/v2m.c   |   0
+ arch/arm/mach-vexpress/Kconfig                |  84 ----
+ arch/arm/mach-vexpress/Makefile               |  19 -
+ arch/arm/plat-versatile/Kconfig               |   7 -
+ arch/arm/plat-versatile/Makefile              |   6 -
+ 40 files changed, 400 insertions(+), 454 deletions(-)
+ delete mode 100644 arch/arm/mach-integrator/Kconfig
+ delete mode 100644 arch/arm/mach-integrator/Makefile
+ delete mode 100644 arch/arm/mach-realview/Kconfig
+ delete mode 100644 arch/arm/mach-realview/Makefile
+ rename arch/arm/{mach-vexpress => mach-versatile}/Makefile.boot (100%)
+ rename arch/arm/{mach-integrator => mach-versatile}/cm.h (100%)
+ rename arch/arm/{mach-integrator => mach-versatile}/common.h (100%)
+ rename arch/arm/{mach-integrator => mach-versatile}/core.c (97%)
+ rename arch/arm/{mach-vexpress => mach-versatile}/core.h (100%)
+ rename arch/arm/{mach-vexpress => mach-versatile}/dcscb.c (98%)
+ rename arch/arm/{mach-vexpress => mach-versatile}/dcscb_setup.S (95%)
+ rename arch/arm/{mach-integrator => mach-versatile}/hardware.h (100%)
+ rename arch/arm/{plat-versatile => mach-versatile}/headsmp.S (94%)
+ rename arch/arm/{plat-versatile => mach-versatile}/hotplug.c (98%)
+ rename arch/arm/{mach-integrator => mach-versatile}/impd1.c (99%)
+ rename arch/arm/{mach-integrator => mach-versatile}/impd1.h (100%)
+ rename arch/arm/{mach-integrator => mach-versatile}/integrator_ap.c (98%)
+ rename arch/arm/{mach-integrator => mach-versatile}/integrator_cp.c (98%)
+ rename arch/arm/{mach-integrator => mach-versatile}/lm.c (97%)
+ rename arch/arm/{mach-integrator => mach-versatile}/lm.h (100%)
+ rename arch/arm/{mach-realview/platsmp-dt.c => mach-versatile/platsmp-realview.c} (98%)
+ rename arch/arm/{mach-vexpress/platsmp.c => mach-versatile/platsmp-vexpress.c} (96%)
+ rename arch/arm/{plat-versatile => mach-versatile}/platsmp.c (97%)
+ rename arch/arm/{plat-versatile/include/plat => mach-versatile}/platsmp.h (87%)
+ rename arch/arm/{mach-realview => mach-versatile}/realview-dt.c (100%)
+ rename arch/arm/{plat-versatile => mach-versatile}/sched-clock.c (86%)
+ rename arch/arm/{plat-versatile/include/plat => mach-versatile}/sched_clock.h (100%)
+ rename arch/arm/{mach-vexpress => mach-versatile}/spc.c (100%)
+ rename arch/arm/{mach-vexpress => mach-versatile}/spc.h (100%)
+ rename arch/arm/{mach-vexpress => mach-versatile}/tc2_pm.c (99%)
+ rename arch/arm/{mach-vexpress => mach-versatile}/v2m-mps2.c (100%)
+ rename arch/arm/{mach-vexpress => mach-versatile}/v2m.c (100%)
+ delete mode 100644 arch/arm/mach-vexpress/Kconfig
+ delete mode 100644 arch/arm/mach-vexpress/Makefile
+ delete mode 100644 arch/arm/plat-versatile/Kconfig
+ delete mode 100644 arch/arm/plat-versatile/Makefile
 
-diff --git a/arch/arm/mach-orion/Kconfig b/arch/arm/mach-orion/Kconfig
-index bad1fe673674..67e1e0b0c831 100644
---- a/arch/arm/mach-orion/Kconfig
-+++ b/arch/arm/mach-orion/Kconfig
-@@ -3,12 +3,238 @@ config PLAT_ORION
- 	select CLKSRC_MMIO
- 	select COMMON_CLK
- 	select GENERIC_IRQ_CHIP
-+	select GPIOLIB
- 	select IRQ_DOMAIN
-+	select MVEBU_MBUS
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 330a1685101a..b6681b61e46c 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -647,8 +647,6 @@ source "arch/arm/mach-hisi/Kconfig"
  
- config PLAT_ORION_LEGACY
- 	bool
- 	select PLAT_ORION
+ source "arch/arm/mach-imx/Kconfig"
  
--source "arch/arm/mach-orion/Kconfig.dove"
--source "arch/arm/mach-orion/Kconfig.mv78xx0"
--source "arch/arm/mach-orion/Kconfig.orion5x"
-+menuconfig ARCH_DOVE
-+	bool "Marvell Dove" if ARCH_MULTI_V7
-+	select CPU_PJ4
-+	select PINCTRL
-+	select PINCTRL_DOVE
-+	select PLAT_ORION_LEGACY
-+	select PM_GENERIC_DOMAINS if PM
-+	help
-+	  Support for the Marvell Dove SoC 88AP510
-+
-+if ARCH_DOVE
-+
-+config MACH_DOVE_DB
-+	bool "Marvell DB-MV88AP510 Development Board"
-+	select I2C_BOARDINFO if I2C
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  Marvell DB-MV88AP510 Development Board.
-+
-+config MACH_CM_A510
-+	bool "CompuLab CM-A510 Board"
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  CompuLab CM-A510 Board.
-+
-+endif
-+
-+menuconfig ARCH_MV78XX0
-+	bool "Marvell MV78xx0"
-+	depends on ARCH_MULTI_V5
-+	select CPU_FEROCEON
-+	select FORCE_PCI
-+	select PLAT_ORION_LEGACY
-+	help
-+	  Support for the following Marvell MV78xx0 series SoCs:
-+	  MV781x0, MV782x0.
-+
-+if ARCH_MV78XX0
-+
-+config MACH_DB78X00_BP
-+	bool "Marvell DB-78x00-BP Development Board"
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  Marvell DB-78x00-BP Development Board.
-+
-+config MACH_RD78X00_MASA
-+	bool "Marvell RD-78x00-mASA Reference Design"
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  Marvell RD-78x00-mASA Reference Design.
-+
-+config MACH_TERASTATION_WXL
-+	bool "Buffalo WLX (Terastation Duo) NAS"
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  Buffalo WXL Nas.
-+
-+endif
-+
-+# SPDX-License-Identifier: GPL-2.0-only
-+menuconfig ARCH_ORION5X
-+	bool "Marvell Orion"
-+	depends on MMU && ARCH_MULTI_V5
-+	select CPU_FEROCEON
-+	select GENERIC_CLOCKEVENTS
-+	select FORCE_PCI
-+	select PHYLIB if NETDEVICES
-+	select PLAT_ORION_LEGACY
-+	help
-+	  Support for the following Marvell Orion 5x series SoCs:
-+	  Orion-1 (5181), Orion-VoIP (5181L), Orion-NAS (5182),
-+	  Orion-2 (5281), Orion-1-90 (6183).
-+
-+if ARCH_ORION5X
-+
-+config ARCH_ORION5X_DT
-+	bool "Marvell Orion5x Flattened Device Tree"
-+	select USE_OF
-+	select ORION_CLK
-+	select ORION_IRQCHIP
-+	select ORION_TIMER
-+	select PINCTRL
-+	select PINCTRL_ORION
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  Marvell Orion5x using flattened device tree.
-+
-+config MACH_DB88F5281
-+	bool "Marvell Orion-2 Development Board"
-+	select I2C_BOARDINFO if I2C
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  Marvell Orion-2 (88F5281) Development Board
-+
-+config MACH_RD88F5182
-+	bool "Marvell Orion-NAS Reference Design"
-+	select I2C_BOARDINFO if I2C
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  Marvell Orion-NAS (88F5182) RD2
-+
-+config MACH_RD88F5182_DT
-+	bool "Marvell Orion-NAS Reference Design (Flattened Device Tree)"
-+	select ARCH_ORION5X_DT
-+	select I2C_BOARDINFO if I2C
-+	help
-+	  Say 'Y' here if you want your kernel to support the Marvell
-+	  Orion-NAS (88F5182) RD2, Flattened Device Tree.
-+
-+config MACH_KUROBOX_PRO
-+	bool "KuroBox Pro"
-+	select I2C_BOARDINFO if I2C
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  KuroBox Pro platform.
-+
-+config MACH_DNS323
-+	bool "D-Link DNS-323"
-+	select I2C_BOARDINFO if I2C
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  D-Link DNS-323 platform.
-+
-+config MACH_TS209
-+	bool "QNAP TS-109/TS-209"
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  QNAP TS-109/TS-209 platform.
-+
-+config MACH_TERASTATION_PRO2
-+	bool "Buffalo Terastation Pro II/Live"
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  Buffalo Terastation Pro II/Live platform.
-+
-+config MACH_LINKSTATION_PRO
-+	bool "Buffalo Linkstation Pro/Live"
-+	select I2C_BOARDINFO if I2C
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  Buffalo Linkstation Pro/Live platform. Both v1 and
-+	  v2 devices are supported.
-+
-+config MACH_LINKSTATION_MINI
-+	bool "Buffalo Linkstation Mini (Flattened Device Tree)"
-+	select ARCH_ORION5X_DT
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  Buffalo Linkstation Mini (LS-WSGL) platform.
-+
-+config MACH_LINKSTATION_LS_HGL
-+	bool "Buffalo Linkstation LS-HGL"
-+	select I2C_BOARDINFO if I2C
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  Buffalo Linkstation LS-HGL platform.
-+
-+config MACH_TS409
-+	bool "QNAP TS-409"
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  QNAP TS-409 platform.
-+
-+config MACH_WRT350N_V2
-+	bool "Linksys WRT350N v2"
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  Linksys WRT350N v2 platform.
-+
-+config MACH_TS78XX
-+	bool "Technologic Systems TS-78xx"
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  Technologic Systems TS-78xx platform.
-+
-+config MACH_MV2120
-+	bool "HP Media Vault mv2120"
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  HP Media Vault mv2120 or mv5100.
-+
-+config MACH_D2NET_DT
-+	bool "LaCie d2 Network / Big Disk Network (Flattened Device Tree)"
-+	select ARCH_ORION5X_DT
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  LaCie d2 Network NAS.
-+
-+config MACH_NET2BIG
-+	bool "LaCie 2Big Network"
-+	select I2C_BOARDINFO if I2C
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  LaCie 2Big Network NAS.
-+
-+config MACH_MSS2_DT
-+	bool "Maxtor Shared Storage II (Flattened Device Tree)"
-+	select ARCH_ORION5X_DT
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  Maxtor Shared Storage II platform.
-+
-+config MACH_WNR854T
-+	bool "Netgear WNR854T"
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  Netgear WNR854T platform.
-+
-+config MACH_RD88F5181L_GE
-+	bool "Marvell Orion-VoIP GE Reference Design"
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  Marvell Orion-VoIP GE (88F5181L) RD.
-+
-+config MACH_RD88F5181L_FXO
-+	bool "Marvell Orion-VoIP FXO Reference Design"
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  Marvell Orion-VoIP FXO (88F5181L) RD.
-+
-+config MACH_RD88F6183AP_GE
-+	bool "Marvell Orion-1-90 AP GE Reference Design"
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  Marvell Orion-1-90 (88F6183) AP GE RD.
-+
-+endif
-diff --git a/arch/arm/mach-orion/Kconfig.dove b/arch/arm/mach-orion/Kconfig.dove
+-source "arch/arm/mach-integrator/Kconfig"
+-
+ source "arch/arm/mach-iop32x/Kconfig"
+ 
+ source "arch/arm/mach-ixp4xx/Kconfig"
+@@ -700,8 +698,6 @@ source "arch/arm/mach-qcom/Kconfig"
+ 
+ source "arch/arm/mach-rda/Kconfig"
+ 
+-source "arch/arm/mach-realview/Kconfig"
+-
+ source "arch/arm/mach-rockchip/Kconfig"
+ 
+ source "arch/arm/mach-s3c24xx/Kconfig"
+@@ -736,9 +732,6 @@ source "arch/arm/mach-ux500/Kconfig"
+ 
+ source "arch/arm/mach-versatile/Kconfig"
+ 
+-source "arch/arm/mach-vexpress/Kconfig"
+-source "arch/arm/plat-versatile/Kconfig"
+-
+ source "arch/arm/mach-vt8500/Kconfig"
+ 
+ source "arch/arm/mach-zx/Kconfig"
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index 09622c26a8a4..db39707fa600 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -180,7 +180,6 @@ machine-$(CONFIG_ARCH_FOOTBRIDGE)	+= footbridge
+ machine-$(CONFIG_ARCH_GEMINI)		+= gemini
+ machine-$(CONFIG_ARCH_HIGHBANK)		+= highbank
+ machine-$(CONFIG_ARCH_HISI)		+= hisi
+-machine-$(CONFIG_ARCH_INTEGRATOR)	+= integrator
+ machine-$(CONFIG_ARCH_IOP32X)		+= iop32x
+ machine-$(CONFIG_ARCH_IXP4XX)		+= ixp4xx
+ machine-$(CONFIG_ARCH_KEYSTONE)		+= keystone
+@@ -188,7 +187,6 @@ machine-$(CONFIG_ARCH_LPC18XX)		+= lpc18xx
+ machine-$(CONFIG_ARCH_LPC32XX)		+= lpc32xx
+ machine-$(CONFIG_ARCH_MESON)		+= meson
+ machine-$(CONFIG_ARCH_MMP)		+= mmp
+-machine-$(CONFIG_ARCH_MPS2)		+= vexpress
+ machine-$(CONFIG_ARCH_MOXART)		+= moxart
+ machine-$(CONFIG_ARCH_MV78XX0)		+= mv78xx0
+ machine-$(CONFIG_ARCH_MVEBU)		+= mvebu
+@@ -207,7 +205,6 @@ machine-$(CONFIG_ARCH_PICOXCELL)	+= picoxcell
+ machine-$(CONFIG_ARCH_PXA)		+= pxa
+ machine-$(CONFIG_ARCH_QCOM)		+= qcom
+ machine-$(CONFIG_ARCH_RDA)		+= rda
+-machine-$(CONFIG_ARCH_REALVIEW)		+= realview
+ machine-$(CONFIG_ARCH_ROCKCHIP)		+= rockchip
+ machine-$(CONFIG_ARCH_RPC)		+= rpc
+ machine-$(CONFIG_ARCH_S3C24XX)		+= s3c24xx
+@@ -224,11 +221,10 @@ machine-$(CONFIG_ARCH_TANGO)		+= tango
+ machine-$(CONFIG_ARCH_TEGRA)		+= tegra
+ machine-$(CONFIG_ARCH_U300)		+= u300
+ machine-$(CONFIG_ARCH_U8500)		+= ux500
+-machine-$(CONFIG_ARCH_VERSATILE)	+= versatile
+-machine-$(CONFIG_ARCH_VEXPRESS)		+= vexpress
+ machine-$(CONFIG_ARCH_VT8500)		+= vt8500
+ machine-$(CONFIG_ARCH_ZX)		+= zx
+ machine-$(CONFIG_ARCH_ZYNQ)		+= zynq
++machine-$(CONFIG_PLAT_VERSATILE)	+= versatile
+ machine-$(CONFIG_PLAT_SPEAR)		+= spear
+ 
+ # Platform directory name.  This list is sorted alphanumerically
+@@ -239,7 +235,6 @@ plat-$(CONFIG_ARCH_S3C64XX)	+= samsung
+ plat-$(CONFIG_ARCH_S5PV210)	+= samsung
+ plat-$(CONFIG_PLAT_ORION)	+= orion
+ plat-$(CONFIG_PLAT_S3C24XX)	+= samsung
+-plat-$(CONFIG_PLAT_VERSATILE)	+= versatile
+ 
+ ifeq ($(CONFIG_ARCH_EBSA110),y)
+ # This is what happens if you forget the IOCS16 line.
+diff --git a/arch/arm/mach-integrator/Kconfig b/arch/arm/mach-integrator/Kconfig
 deleted file mode 100644
-index c30c69c664ea..000000000000
---- a/arch/arm/mach-orion/Kconfig.dove
+index 982eabc36163..000000000000
+--- a/arch/arm/mach-integrator/Kconfig
 +++ /dev/null
-@@ -1,34 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--menuconfig ARCH_DOVE
--	bool "Marvell Dove" if ARCH_MULTI_V7
--	select CPU_PJ4
--	select GPIOLIB
--	select MVEBU_MBUS
--	select PINCTRL
--	select PINCTRL_DOVE
--	select PLAT_ORION_LEGACY
--	select PM_GENERIC_DOMAINS if PM
--	help
--	  Support for the Marvell Dove SoC 88AP510
--
--if ARCH_DOVE
--
--config DOVE_LEGACY
--	bool
--
--config MACH_DOVE_DB
--	bool "Marvell DB-MV88AP510 Development Board"
--	select DOVE_LEGACY
--	select I2C_BOARDINFO if I2C
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  Marvell DB-MV88AP510 Development Board.
--
--config MACH_CM_A510
--	bool "CompuLab CM-A510 Board"
--	select DOVE_LEGACY
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  CompuLab CM-A510 Board.
--
--endif
-diff --git a/arch/arm/mach-orion/Kconfig.mv78xx0 b/arch/arm/mach-orion/Kconfig.mv78xx0
-deleted file mode 100644
-index ea52c7fabb79..000000000000
---- a/arch/arm/mach-orion/Kconfig.mv78xx0
-+++ /dev/null
-@@ -1,34 +0,0 @@
+@@ -1,161 +0,0 @@
 -# SPDX-License-Identifier: GPL-2.0-only
--menuconfig ARCH_MV78XX0
--	bool "Marvell MV78xx0"
+-menuconfig ARCH_INTEGRATOR
+-	bool "ARM Ltd. Integrator family"
+-	depends on ARCH_MULTI_V4T || ARCH_MULTI_V5 || ARCH_MULTI_V6
+-	select ARM_AMBA
+-	select COMMON_CLK_VERSATILE
+-	select HAVE_TCM
+-	select ICST
+-	select MFD_SYSCON
+-	select PLAT_VERSATILE
+-	select POWER_RESET
+-	select POWER_RESET_VERSATILE
+-	select POWER_SUPPLY
+-	select SOC_INTEGRATOR_CM
+-	select SPARSE_IRQ
+-	select VERSATILE_FPGA_IRQ
+-	help
+-	  Support for ARM's Integrator platform.
+-
+-if ARCH_INTEGRATOR
+-
+-config ARCH_INTEGRATOR_AP
+-	bool "Support Integrator/AP and Integrator/PP2 platforms"
+-	select INTEGRATOR_AP_TIMER
+-	select SERIAL_AMBA_PL010 if TTY
+-	select SERIAL_AMBA_PL010_CONSOLE if TTY
+-	select SOC_BUS
+-	help
+-	  Include support for the ARM(R) Integrator/AP and
+-	  Integrator/PP2 platforms.
+-
+-config INTEGRATOR_IMPD1
+-	bool "Include support for Integrator/IM-PD1"
+-	depends on ARCH_INTEGRATOR_AP
+-	select ARM_VIC
+-	select GPIO_PL061
+-	select GPIOLIB
+-	help
+-	  The IM-PD1 is an add-on logic module for the Integrator which
+-	  allows ARM(R) Ltd PrimeCells to be developed and evaluated.
+-	  The IM-PD1 can be found on the Integrator/PP2 platform.
+-
+-	  To compile this driver as a module, choose M here: the
+-	  module will be called impd1.
+-
+-config INTEGRATOR_CM7TDMI
+-	bool "Integrator/CM7TDMI core module"
+-	depends on ARCH_INTEGRATOR_AP
+-	depends on ARCH_MULTI_V4 && !MMU
+-	select CPU_ARM7TDMI
+-
+-config INTEGRATOR_CM720T
+-	bool "Integrator/CM720T core module"
+-	depends on ARCH_INTEGRATOR_AP
+-	depends on ARCH_MULTI_V4T
+-	select CPU_ARM720T
+-
+-config INTEGRATOR_CM740T
+-	bool "Integrator/CM740T core module"
+-	depends on ARCH_INTEGRATOR_AP
+-	depends on ARCH_MULTI_V4T && !MMU
+-	select CPU_ARM740T
+-
+-config INTEGRATOR_CM920T
+-	bool "Integrator/CM920T core module"
+-	depends on ARCH_INTEGRATOR_AP
+-	depends on ARCH_MULTI_V4T
+-	select CPU_ARM920T
+-
+-config INTEGRATOR_CM922T_XA10
+-	bool "Integrator/CM922T-XA10 core module"
+-	depends on ARCH_MULTI_V4T
+-	depends on ARCH_INTEGRATOR_AP
+-	select CPU_ARM922T
+-
+-config INTEGRATOR_CM926EJS
+-	bool "Integrator/CM926EJ-S core module"
+-	depends on ARCH_INTEGRATOR_AP
 -	depends on ARCH_MULTI_V5
--	select CPU_FEROCEON
--	select GPIOLIB
--	select MVEBU_MBUS
--	select FORCE_PCI
--	select PLAT_ORION_LEGACY
--	help
--	  Support for the following Marvell MV78xx0 series SoCs:
--	  MV781x0, MV782x0.
+-	select CPU_ARM926T
 -
--if ARCH_MV78XX0
+-config INTEGRATOR_CM940T
+-	bool "Integrator/CM940T core module"
+-	depends on ARCH_INTEGRATOR_AP
+-	depends on ARCH_MULTI_V4T && !MMU
+-	select CPU_ARM940T
 -
--config MACH_DB78X00_BP
--	bool "Marvell DB-78x00-BP Development Board"
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  Marvell DB-78x00-BP Development Board.
+-config INTEGRATOR_CM946ES
+-	bool "Integrator/CM946E-S core module"
+-	depends on ARCH_INTEGRATOR_AP
+-	depends on ARCH_MULTI_V5 && !MMU
+-	select CPU_ARM946E
 -
--config MACH_RD78X00_MASA
--	bool "Marvell RD-78x00-mASA Reference Design"
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  Marvell RD-78x00-mASA Reference Design.
+-config INTEGRATOR_CM966ES
+-	bool "Integrator/CM966E-S core module"
+-	depends on ARCH_INTEGRATOR_AP
+-	depends on BROKEN # no kernel support
 -
--config MACH_TERASTATION_WXL
--	bool "Buffalo WLX (Terastation Duo) NAS"
+-config INTEGRATOR_CM10200E_REV0
+-	bool "Integrator/CM10200E rev.0 core module"
+-	depends on ARCH_INTEGRATOR_AP && n
+-	depends on ARCH_MULTI_V5
+-	select CPU_ARM1020
+-
+-config INTEGRATOR_CM10200E
+-	bool "Integrator/CM10200E core module"
+-	depends on ARCH_INTEGRATOR_AP && n
+-	depends on ARCH_MULTI_V5
+-	select CPU_ARM1020E
+-
+-config INTEGRATOR_CM10220E
+-	bool "Integrator/CM10220E core module"
+-	depends on ARCH_INTEGRATOR_AP
+-	depends on ARCH_MULTI_V5
+-	select CPU_ARM1022
+-
+-config INTEGRATOR_CM1026EJS
+-	bool "Integrator/CM1026EJ-S core module"
+-	depends on ARCH_INTEGRATOR_AP
+-	depends on ARCH_MULTI_V5
+-	select CPU_ARM1026
+-
+-config INTEGRATOR_CM1136JFS
+-	bool "Integrator/CM1136JF-S core module"
+-	depends on ARCH_INTEGRATOR_AP
+-	depends on ARCH_MULTI_V6
+-	select CPU_V6
+-
+-config ARCH_INTEGRATOR_CP
+-	bool "Support Integrator/CP platform"
+-	depends on (!MMU || ARCH_MULTI_V5 || ARCH_MULTI_V6)
+-	select ARM_TIMER_SP804
+-	select SERIAL_AMBA_PL011 if TTY
+-	select SERIAL_AMBA_PL011_CONSOLE if TTY
+-	select SOC_BUS
 -	help
--	  Say 'Y' here if you want your kernel to support the
--	  Buffalo WXL Nas.
+-	  Include support for the ARM(R) Integrator CP platform.
+-
+-config INTEGRATOR_CT7T
+-	bool "Integrator/CT7TD (ARM7TDMI) core tile"
+-	depends on ARCH_INTEGRATOR_CP
+-	depends on ARCH_MULTI_V4T && !MMU
+-	select CPU_ARM7TDMI
+-
+-config INTEGRATOR_CT926
+-	bool "Integrator/CT926 (ARM926EJ-S) core tile"
+-	depends on ARCH_INTEGRATOR_CP
+-	depends on ARCH_MULTI_V5
+-	select CPU_ARM926T
+-
+-config INTEGRATOR_CTB36
+-	bool "Integrator/CTB36 (ARM1136JF-S) core tile"
+-	depends on ARCH_INTEGRATOR_CP
+-	depends on ARCH_MULTI_V6
+-	select CPU_V6
+-
+-config ARCH_CINTEGRATOR
+-	depends on ARCH_INTEGRATOR_CP
+-	def_bool y
 -
 -endif
-diff --git a/arch/arm/mach-orion/Kconfig.orion5x b/arch/arm/mach-orion/Kconfig.orion5x
+diff --git a/arch/arm/mach-integrator/Makefile b/arch/arm/mach-integrator/Makefile
 deleted file mode 100644
-index cf9cb3d2590e..000000000000
---- a/arch/arm/mach-orion/Kconfig.orion5x
+index 71b97ffe8d32..000000000000
+--- a/arch/arm/mach-integrator/Makefile
 +++ /dev/null
-@@ -1,170 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--menuconfig ARCH_ORION5X
--	bool "Marvell Orion"
--	depends on MMU && ARCH_MULTI_V5
--	select CPU_FEROCEON
--	select GENERIC_CLOCKEVENTS
--	select GPIOLIB
--	select MVEBU_MBUS
--	select FORCE_PCI
--	select PHYLIB if NETDEVICES
--	select PLAT_ORION_LEGACY
--	help
--	  Support for the following Marvell Orion 5x series SoCs:
--	  Orion-1 (5181), Orion-VoIP (5181L), Orion-NAS (5182),
--	  Orion-2 (5281), Orion-1-90 (6183).
--
--if ARCH_ORION5X
--
--config ARCH_ORION5X_DT
--	bool "Marvell Orion5x Flattened Device Tree"
--	select USE_OF
--	select ORION_CLK
--	select ORION_IRQCHIP
--	select ORION_TIMER
--	select PINCTRL
--	select PINCTRL_ORION
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  Marvell Orion5x using flattened device tree.
--
--config MACH_DB88F5281
--	bool "Marvell Orion-2 Development Board"
--	select I2C_BOARDINFO if I2C
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  Marvell Orion-2 (88F5281) Development Board
--
--config MACH_RD88F5182
--	bool "Marvell Orion-NAS Reference Design"
--	select I2C_BOARDINFO if I2C
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  Marvell Orion-NAS (88F5182) RD2
--
--config MACH_RD88F5182_DT
--	bool "Marvell Orion-NAS Reference Design (Flattened Device Tree)"
--	select ARCH_ORION5X_DT
--	select I2C_BOARDINFO if I2C
--	help
--	  Say 'Y' here if you want your kernel to support the Marvell
--	  Orion-NAS (88F5182) RD2, Flattened Device Tree.
--
--config MACH_KUROBOX_PRO
--	bool "KuroBox Pro"
--	select I2C_BOARDINFO if I2C
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  KuroBox Pro platform.
--
--config MACH_DNS323
--	bool "D-Link DNS-323"
--	select I2C_BOARDINFO if I2C
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  D-Link DNS-323 platform.
--
--config MACH_TS209
--	bool "QNAP TS-109/TS-209"
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  QNAP TS-109/TS-209 platform.
--
--config MACH_TERASTATION_PRO2
--	bool "Buffalo Terastation Pro II/Live"
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  Buffalo Terastation Pro II/Live platform.
--
--config MACH_LINKSTATION_PRO
--	bool "Buffalo Linkstation Pro/Live"
--	select I2C_BOARDINFO if I2C
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  Buffalo Linkstation Pro/Live platform. Both v1 and
--	  v2 devices are supported.
--
--config MACH_LINKSTATION_MINI
--	bool "Buffalo Linkstation Mini (Flattened Device Tree)"
--	select ARCH_ORION5X_DT
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  Buffalo Linkstation Mini (LS-WSGL) platform.
--
--config MACH_LINKSTATION_LS_HGL
--	bool "Buffalo Linkstation LS-HGL"
--	select I2C_BOARDINFO if I2C
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  Buffalo Linkstation LS-HGL platform.
--
--config MACH_TS409
--	bool "QNAP TS-409"
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  QNAP TS-409 platform.
--
--config MACH_WRT350N_V2
--	bool "Linksys WRT350N v2"
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  Linksys WRT350N v2 platform.
--
--config MACH_TS78XX
--	bool "Technologic Systems TS-78xx"
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  Technologic Systems TS-78xx platform.
--
--config MACH_MV2120
--	bool "HP Media Vault mv2120"
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  HP Media Vault mv2120 or mv5100.
--
--config MACH_D2NET_DT
--	bool "LaCie d2 Network / Big Disk Network (Flattened Device Tree)"
--	select ARCH_ORION5X_DT
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  LaCie d2 Network NAS.
--
--config MACH_NET2BIG
--	bool "LaCie 2Big Network"
--	select I2C_BOARDINFO if I2C
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  LaCie 2Big Network NAS.
--
--config MACH_MSS2_DT
--	bool "Maxtor Shared Storage II (Flattened Device Tree)"
--	select ARCH_ORION5X_DT
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  Maxtor Shared Storage II platform.
--
--config MACH_WNR854T
--	bool "Netgear WNR854T"
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  Netgear WNR854T platform.
--
--config MACH_RD88F5181L_GE
--	bool "Marvell Orion-VoIP GE Reference Design"
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  Marvell Orion-VoIP GE (88F5181L) RD.
--
--config MACH_RD88F5181L_FXO
--	bool "Marvell Orion-VoIP FXO Reference Design"
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  Marvell Orion-VoIP FXO (88F5181L) RD.
--
--config MACH_RD88F6183AP_GE
--	bool "Marvell Orion-1-90 AP GE Reference Design"
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  Marvell Orion-1-90 (88F6183) AP GE RD.
--
--endif
-diff --git a/arch/arm/mach-orion/Makefile b/arch/arm/mach-orion/Makefile
-index ded450d9bda3..bcfba0c64587 100644
---- a/arch/arm/mach-orion/Makefile
-+++ b/arch/arm/mach-orion/Makefile
-@@ -1,21 +1,45 @@
- # SPDX-License-Identifier: GPL-2.0-only
+@@ -1,11 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0
 -#
 -# Makefile for the linux kernel.
 -#
--ccflags-$(CONFIG_ARCH_MULTIPLATFORM) := -I$(srctree)/$(src)/include
- 
--orion-gpio-$(CONFIG_GPIOLIB)      += gpio.o
--obj-$(CONFIG_PLAT_ORION_LEGACY)   += irq.o pcie.o time.o common.o mpp.o
--obj-$(CONFIG_PLAT_ORION_LEGACY)   += $(orion-gpio-y)
-+orion-gpio-$(CONFIG_GPIOLIB)		+= gpio.o
-+obj-$(CONFIG_PLAT_ORION_LEGACY)		+= irq.o time.o common.o mpp.o
-+obj-$(CONFIG_PLAT_ORION_LEGACY)		+= $(orion-gpio-y)
- 
--ifdef CONFIG_ARCH_DOVE
--include $(src)/Makefile.dove
-+ifdef CONFIG_PCI
-+obj-$(CONFIG_PLAT_ORION_LEGACY)		+= pcie.o
-+obj-$(CONFIG_ARCH_DOVE)			+= dove-pcie.o
-+obj-$(CONFIG_ARCH_MV78XX0)		+= mv78xx0-pcie.o
-+obj-$(CONFIG_ARCH_ORION5X)		+= orion5x-pci.o
- endif
- 
--ifdef CONFIG_ARCH_MV78XX0
--include $(src)/Makefile.mv78xx0
--endif
-+obj-$(CONFIG_ARCH_DOVE)			+= dove-common.o dove-irq.o dove-mpp.o
-+obj-$(CONFIG_MACH_DOVE_DB)		+= dove-db-setup.o
-+obj-$(CONFIG_MACH_CM_A510)		+= cm-a510.o
- 
--ifdef CONFIG_ARCH_ORION5X
--include $(src)/Makefile.orion5x
--endif
-+obj-$(CONFIG_ARCH_MV78XX0)		+= mv78xx0-common.o mv78xx0-mpp.o mv78xx0-irq.o
-+obj-$(CONFIG_MACH_DB78X00_BP)		+= db78x00-bp-setup.o
-+obj-$(CONFIG_MACH_RD78X00_MASA)		+= rd78x00-masa-setup.o
-+obj-$(CONFIG_MACH_TERASTATION_WXL)	+= buffalo-wxl-setup.o
-+
-+obj-$(CONFIG_ARCH_ORION5X)		+= orion5x.o orion5x-irq.o orion5x-mpp.o
-+obj-$(CONFIG_MACH_DB88F5281)		+= db88f5281-setup.o
-+obj-$(CONFIG_MACH_RD88F5182)		+= rd88f5182-setup.o
-+obj-$(CONFIG_MACH_KUROBOX_PRO)		+= kurobox_pro-setup.o
-+obj-$(CONFIG_MACH_TERASTATION_PRO2)	+= terastation_pro2-setup.o
-+obj-$(CONFIG_MACH_LINKSTATION_PRO)	+= kurobox_pro-setup.o
-+obj-$(CONFIG_MACH_LINKSTATION_LS_HGL)	+= ls_hgl-setup.o
-+obj-$(CONFIG_MACH_DNS323)		+= dns323-setup.o
-+obj-$(CONFIG_MACH_TS209)		+= ts209-setup.o tsx09-common.o
-+obj-$(CONFIG_MACH_TS409)		+= ts409-setup.o tsx09-common.o
-+obj-$(CONFIG_MACH_WRT350N_V2)		+= wrt350n-v2-setup.o
-+obj-$(CONFIG_MACH_TS78XX)		+= ts78xx-setup.o
-+obj-$(CONFIG_MACH_MV2120)		+= mv2120-setup.o
-+obj-$(CONFIG_MACH_NET2BIG)		+= net2big-setup.o
-+obj-$(CONFIG_MACH_WNR854T)		+= wnr854t-setup.o
-+obj-$(CONFIG_MACH_RD88F5181L_GE)	+= rd88f5181l-ge-setup.o
-+obj-$(CONFIG_MACH_RD88F5181L_FXO)	+= rd88f5181l-fxo-setup.o
-+obj-$(CONFIG_MACH_RD88F6183AP_GE)	+= rd88f6183ap-ge-setup.o
-+
-+obj-$(CONFIG_ARCH_ORION5X_DT)		+= board-dt.o
-+obj-$(CONFIG_MACH_D2NET_DT)		+= board-d2net.o
-+obj-$(CONFIG_MACH_MSS2_DT)		+= board-mss2.o
-+obj-$(CONFIG_MACH_RD88F5182_DT)		+= board-rd88f5182.o
-diff --git a/arch/arm/mach-orion/Makefile.dove b/arch/arm/mach-orion/Makefile.dove
+-
+-# Object file lists.
+-
+-obj-y					:= core.o lm.o
+-obj-$(CONFIG_ARCH_INTEGRATOR_AP)	+= integrator_ap.o
+-obj-$(CONFIG_ARCH_INTEGRATOR_CP)	+= integrator_cp.o
+-obj-$(CONFIG_INTEGRATOR_IMPD1)		+= impd1.o
+diff --git a/arch/arm/mach-realview/Kconfig b/arch/arm/mach-realview/Kconfig
 deleted file mode 100644
-index 1e85d595836a..000000000000
---- a/arch/arm/mach-orion/Makefile.dove
+index 44ebbf9ec673..000000000000
+--- a/arch/arm/mach-realview/Kconfig
++++ /dev/null
+@@ -1,113 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-only
+-menuconfig ARCH_REALVIEW
+-	bool "ARM Ltd. RealView family"
+-	depends on ARCH_MULTI_V5 || ARCH_MULTI_V6 || ARCH_MULTI_V7
+-	select ARM_AMBA
+-	select ARM_GIC
+-	select ARM_TIMER_SP804
+-	select CLK_SP810
+-	select COMMON_CLK_VERSATILE
+-	select GPIO_PL061 if GPIOLIB
+-	select HAVE_ARM_SCU if SMP
+-	select HAVE_ARM_TWD if SMP
+-	select HAVE_PATA_PLATFORM
+-	select HAVE_TCM
+-	select ICST
+-	select MACH_REALVIEW_EB if ARCH_MULTI_V5
+-	select MFD_SYSCON
+-	select PLAT_VERSATILE
+-	select PLAT_VERSATILE_SCHED_CLOCK
+-	select POWER_RESET
+-	select POWER_RESET_VERSATILE
+-	select POWER_SUPPLY
+-	select SOC_REALVIEW
+-	select USE_OF
+-	help
+-	  This enables support for ARM Ltd RealView boards.
+-
+-if ARCH_REALVIEW
+-
+-config MACH_REALVIEW_EB
+-	bool "Support RealView(R) Emulation Baseboard"
+-	select ARM_GIC
+-	select CPU_ARM926T if ARCH_MULTI_V5
+-	help
+-	  Include support for the ARM(R) RealView(R) Emulation Baseboard
+-	  platform. On an ARMv5 kernel, this will include support for
+-	  the ARM926EJ-S core tile, while on an ARMv6/v7 kernel, at least
+-	  one of the ARM1136, ARM1176, ARM11MPCore or Cortex-A9MPCore
+-	  core tile options should be enabled.
+-
+-config REALVIEW_EB_ARM1136
+-	bool "Support ARM1136J(F)-S Tile"
+-	depends on MACH_REALVIEW_EB && ARCH_MULTI_V6
+-	select CPU_V6
+-	help
+-	  Enable support for the ARM1136 tile fitted to the
+-	  Realview(R) Emulation Baseboard platform.
+-
+-config REALVIEW_EB_ARM1176
+-	bool "Support ARM1176JZ(F)-S Tile"
+-	depends on MACH_REALVIEW_EB && ARCH_MULTI_V6
+-	help
+-	  Enable support for the ARM1176 tile fitted to the
+-	  Realview(R) Emulation Baseboard platform.
+-
+-config REALVIEW_EB_A9MP
+-	bool "Support Multicore Cortex-A9 Tile"
+-	depends on MACH_REALVIEW_EB && ARCH_MULTI_V7
+-	select HAVE_SMP
+-	select MIGHT_HAVE_CACHE_L2X0
+-	help
+-	  Enable support for the Cortex-A9MPCore tile fitted to the
+-	  Realview(R) Emulation Baseboard platform.
+-
+-config REALVIEW_EB_ARM11MP
+-	bool "Support ARM11MPCore Tile"
+-	depends on MACH_REALVIEW_EB && ARCH_MULTI_V6
+-	select HAVE_SMP
+-	select MIGHT_HAVE_CACHE_L2X0
+-	help
+-	  Enable support for the ARM11MPCore tile fitted to the Realview(R)
+-	  Emulation Baseboard platform.
+-
+-config MACH_REALVIEW_PB11MP
+-	bool "Support RealView(R) Platform Baseboard for ARM11MPCore"
+-	depends on ARCH_MULTI_V6
+-	select HAVE_SMP
+-	select MIGHT_HAVE_CACHE_L2X0
+-	help
+-	  Include support for the ARM(R) RealView(R) Platform Baseboard for
+-	  the ARM11MPCore.  This platform has an on-board ARM11MPCore and has
+-	  support for PCI-E and Compact Flash.
+-
+-# ARMv6 CPU without K extensions, but does have the new exclusive ops
+-config MACH_REALVIEW_PB1176
+-	bool "Support RealView(R) Platform Baseboard for ARM1176JZF-S"
+-	depends on ARCH_MULTI_V6
+-	select CPU_V6
+-	select HAVE_TCM
+-	select MIGHT_HAVE_CACHE_L2X0
+-	help
+-	  Include support for the ARM(R) RealView(R) Platform Baseboard for
+-	  ARM1176JZF-S.
+-
+-config MACH_REALVIEW_PBA8
+-	bool "Support RealView(R) Platform Baseboard for Cortex(tm)-A8 platform"
+-	depends on ARCH_MULTI_V7
+-	help
+-	  Include support for the ARM(R) RealView Platform Baseboard for
+-	  Cortex(tm)-A8.  This platform has an on-board Cortex-A8 and has
+-	  support for PCI-E and Compact Flash.
+-
+-config MACH_REALVIEW_PBX
+-	bool "Support RealView(R) Platform Baseboard Explore for Cortex-A9"
+-	depends on ARCH_MULTI_V7
+-	select HAVE_SMP
+-	select MIGHT_HAVE_CACHE_L2X0
+-	select ZONE_DMA
+-	help
+-	  Include support for the ARM(R) RealView(R) Platform Baseboard
+-	  Explore.
+-
+-endif
+diff --git a/arch/arm/mach-realview/Makefile b/arch/arm/mach-realview/Makefile
+deleted file mode 100644
+index e259091591b8..000000000000
+--- a/arch/arm/mach-realview/Makefile
++++ /dev/null
+@@ -1,8 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-only
+-#
+-# Makefile for the linux kernel.
+-#
+-ccflags-$(CONFIG_ARCH_MULTIPLATFORM) := -I$(srctree)/arch/arm/plat-versatile/include
+-
+-obj-y					+= realview-dt.o
+-obj-$(CONFIG_SMP)			+= platsmp-dt.o
+diff --git a/arch/arm/mach-versatile/Kconfig b/arch/arm/mach-versatile/Kconfig
+index f5c275434d6c..e6feca83451b 100644
+--- a/arch/arm/mach-versatile/Kconfig
++++ b/arch/arm/mach-versatile/Kconfig
+@@ -17,3 +17,363 @@ config ARCH_VERSATILE
+ 	help
+ 	  This enables support for ARM Ltd Versatile board.
+ 
++menuconfig ARCH_INTEGRATOR
++	bool "ARM Ltd. Integrator family"
++	depends on ARCH_MULTI_V4T || ARCH_MULTI_V5 || ARCH_MULTI_V6
++	select ARM_AMBA
++	select COMMON_CLK_VERSATILE
++	select HAVE_TCM
++	select ICST
++	select MFD_SYSCON
++	select PLAT_VERSATILE
++	select POWER_RESET
++	select POWER_RESET_VERSATILE
++	select POWER_SUPPLY
++	select SOC_INTEGRATOR_CM
++	select SPARSE_IRQ
++	select VERSATILE_FPGA_IRQ
++	help
++	  Support for ARM's Integrator platform.
++
++if ARCH_INTEGRATOR
++
++config ARCH_INTEGRATOR_AP
++	bool "Support Integrator/AP and Integrator/PP2 platforms"
++	select INTEGRATOR_AP_TIMER
++	select SERIAL_AMBA_PL010 if TTY
++	select SERIAL_AMBA_PL010_CONSOLE if TTY
++	select SOC_BUS
++	help
++	  Include support for the ARM(R) Integrator/AP and
++	  Integrator/PP2 platforms.
++
++config INTEGRATOR_IMPD1
++	bool "Include support for Integrator/IM-PD1"
++	depends on ARCH_INTEGRATOR_AP
++	select ARM_VIC
++	select GPIO_PL061
++	select GPIOLIB
++	help
++	  The IM-PD1 is an add-on logic module for the Integrator which
++	  allows ARM(R) Ltd PrimeCells to be developed and evaluated.
++	  The IM-PD1 can be found on the Integrator/PP2 platform.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called impd1.
++
++config INTEGRATOR_CM7TDMI
++	bool "Integrator/CM7TDMI core module"
++	depends on ARCH_INTEGRATOR_AP
++	depends on ARCH_MULTI_V4 && !MMU
++	select CPU_ARM7TDMI
++
++config INTEGRATOR_CM720T
++	bool "Integrator/CM720T core module"
++	depends on ARCH_INTEGRATOR_AP
++	depends on ARCH_MULTI_V4T
++	select CPU_ARM720T
++
++config INTEGRATOR_CM740T
++	bool "Integrator/CM740T core module"
++	depends on ARCH_INTEGRATOR_AP
++	depends on ARCH_MULTI_V4T && !MMU
++	select CPU_ARM740T
++
++config INTEGRATOR_CM920T
++	bool "Integrator/CM920T core module"
++	depends on ARCH_INTEGRATOR_AP
++	depends on ARCH_MULTI_V4T
++	select CPU_ARM920T
++
++config INTEGRATOR_CM922T_XA10
++	bool "Integrator/CM922T-XA10 core module"
++	depends on ARCH_MULTI_V4T
++	depends on ARCH_INTEGRATOR_AP
++	select CPU_ARM922T
++
++config INTEGRATOR_CM926EJS
++	bool "Integrator/CM926EJ-S core module"
++	depends on ARCH_INTEGRATOR_AP
++	depends on ARCH_MULTI_V5
++	select CPU_ARM926T
++
++config INTEGRATOR_CM940T
++	bool "Integrator/CM940T core module"
++	depends on ARCH_INTEGRATOR_AP
++	depends on ARCH_MULTI_V4T && !MMU
++	select CPU_ARM940T
++
++config INTEGRATOR_CM946ES
++	bool "Integrator/CM946E-S core module"
++	depends on ARCH_INTEGRATOR_AP
++	depends on ARCH_MULTI_V5 && !MMU
++	select CPU_ARM946E
++
++config INTEGRATOR_CM966ES
++	bool "Integrator/CM966E-S core module"
++	depends on ARCH_INTEGRATOR_AP
++	depends on BROKEN # no kernel support
++
++config INTEGRATOR_CM10200E_REV0
++	bool "Integrator/CM10200E rev.0 core module"
++	depends on ARCH_INTEGRATOR_AP && n
++	depends on ARCH_MULTI_V5
++	select CPU_ARM1020
++
++config INTEGRATOR_CM10200E
++	bool "Integrator/CM10200E core module"
++	depends on ARCH_INTEGRATOR_AP && n
++	depends on ARCH_MULTI_V5
++	select CPU_ARM1020E
++
++config INTEGRATOR_CM10220E
++	bool "Integrator/CM10220E core module"
++	depends on ARCH_INTEGRATOR_AP
++	depends on ARCH_MULTI_V5
++	select CPU_ARM1022
++
++config INTEGRATOR_CM1026EJS
++	bool "Integrator/CM1026EJ-S core module"
++	depends on ARCH_INTEGRATOR_AP
++	depends on ARCH_MULTI_V5
++	select CPU_ARM1026
++
++config INTEGRATOR_CM1136JFS
++	bool "Integrator/CM1136JF-S core module"
++	depends on ARCH_INTEGRATOR_AP
++	depends on ARCH_MULTI_V6
++	select CPU_V6
++
++config ARCH_INTEGRATOR_CP
++	bool "Support Integrator/CP platform"
++	depends on (!MMU || ARCH_MULTI_V5 || ARCH_MULTI_V6)
++	select ARM_TIMER_SP804
++	select SERIAL_AMBA_PL011 if TTY
++	select SERIAL_AMBA_PL011_CONSOLE if TTY
++	select SOC_BUS
++	help
++	  Include support for the ARM(R) Integrator CP platform.
++
++config INTEGRATOR_CT7T
++	bool "Integrator/CT7TD (ARM7TDMI) core tile"
++	depends on ARCH_INTEGRATOR_CP
++	depends on ARCH_MULTI_V4T && !MMU
++	select CPU_ARM7TDMI
++
++config INTEGRATOR_CT926
++	bool "Integrator/CT926 (ARM926EJ-S) core tile"
++	depends on ARCH_INTEGRATOR_CP
++	depends on ARCH_MULTI_V5
++	select CPU_ARM926T
++
++config INTEGRATOR_CTB36
++	bool "Integrator/CTB36 (ARM1136JF-S) core tile"
++	depends on ARCH_INTEGRATOR_CP
++	depends on ARCH_MULTI_V6
++	select CPU_V6
++
++config ARCH_CINTEGRATOR
++	depends on ARCH_INTEGRATOR_CP
++	def_bool y
++
++endif
++
++menuconfig ARCH_REALVIEW
++	bool "ARM Ltd. RealView family"
++	depends on ARCH_MULTI_V5 || ARCH_MULTI_V6 || ARCH_MULTI_V7
++	select ARM_AMBA
++	select ARM_GIC
++	select ARM_TIMER_SP804
++	select CLK_SP810
++	select COMMON_CLK_VERSATILE
++	select GPIO_PL061 if GPIOLIB
++	select HAVE_ARM_SCU if SMP
++	select HAVE_ARM_TWD if SMP
++	select HAVE_PATA_PLATFORM
++	select HAVE_TCM
++	select ICST
++	select MACH_REALVIEW_EB if ARCH_MULTI_V5
++	select MFD_SYSCON
++	select PLAT_VERSATILE
++	select PLAT_VERSATILE_SCHED_CLOCK
++	select POWER_RESET
++	select POWER_RESET_VERSATILE
++	select POWER_SUPPLY
++	select SOC_REALVIEW
++	select USE_OF
++	help
++	  This enables support for ARM Ltd RealView boards.
++
++if ARCH_REALVIEW
++
++config PLAT_VERSATILE_SCHED_CLOCK
++	bool
++
++config MACH_REALVIEW_EB
++	bool "Support RealView(R) Emulation Baseboard"
++	select ARM_GIC
++	select CPU_ARM926T if ARCH_MULTI_V5
++	help
++	  Include support for the ARM(R) RealView(R) Emulation Baseboard
++	  platform. On an ARMv5 kernel, this will include support for
++	  the ARM926EJ-S core tile, while on an ARMv6/v7 kernel, at least
++	  one of the ARM1136, ARM1176, ARM11MPCore or Cortex-A9MPCore
++	  core tile options should be enabled.
++
++config REALVIEW_EB_ARM1136
++	bool "Support ARM1136J(F)-S Tile"
++	depends on MACH_REALVIEW_EB && ARCH_MULTI_V6
++	select CPU_V6
++	help
++	  Enable support for the ARM1136 tile fitted to the
++	  Realview(R) Emulation Baseboard platform.
++
++config REALVIEW_EB_ARM1176
++	bool "Support ARM1176JZ(F)-S Tile"
++	depends on MACH_REALVIEW_EB && ARCH_MULTI_V6
++	help
++	  Enable support for the ARM1176 tile fitted to the
++	  Realview(R) Emulation Baseboard platform.
++
++config REALVIEW_EB_A9MP
++	bool "Support Multicore Cortex-A9 Tile"
++	depends on MACH_REALVIEW_EB && ARCH_MULTI_V7
++	select HAVE_SMP
++	select MIGHT_HAVE_CACHE_L2X0
++	help
++	  Enable support for the Cortex-A9MPCore tile fitted to the
++	  Realview(R) Emulation Baseboard platform.
++
++config REALVIEW_EB_ARM11MP
++	bool "Support ARM11MPCore Tile"
++	depends on MACH_REALVIEW_EB && ARCH_MULTI_V6
++	select HAVE_SMP
++	select MIGHT_HAVE_CACHE_L2X0
++	help
++	  Enable support for the ARM11MPCore tile fitted to the Realview(R)
++	  Emulation Baseboard platform.
++
++config MACH_REALVIEW_PB11MP
++	bool "Support RealView(R) Platform Baseboard for ARM11MPCore"
++	depends on ARCH_MULTI_V6
++	select HAVE_SMP
++	select MIGHT_HAVE_CACHE_L2X0
++	help
++	  Include support for the ARM(R) RealView(R) Platform Baseboard for
++	  the ARM11MPCore.  This platform has an on-board ARM11MPCore and has
++	  support for PCI-E and Compact Flash.
++
++# ARMv6 CPU without K extensions, but does have the new exclusive ops
++config MACH_REALVIEW_PB1176
++	bool "Support RealView(R) Platform Baseboard for ARM1176JZF-S"
++	depends on ARCH_MULTI_V6
++	select CPU_V6
++	select HAVE_TCM
++	select MIGHT_HAVE_CACHE_L2X0
++	help
++	  Include support for the ARM(R) RealView(R) Platform Baseboard for
++	  ARM1176JZF-S.
++
++config MACH_REALVIEW_PBA8
++	bool "Support RealView(R) Platform Baseboard for Cortex(tm)-A8 platform"
++	depends on ARCH_MULTI_V7
++	help
++	  Include support for the ARM(R) RealView Platform Baseboard for
++	  Cortex(tm)-A8.  This platform has an on-board Cortex-A8 and has
++	  support for PCI-E and Compact Flash.
++
++config MACH_REALVIEW_PBX
++	bool "Support RealView(R) Platform Baseboard Explore for Cortex-A9"
++	depends on ARCH_MULTI_V7
++	select HAVE_SMP
++	select MIGHT_HAVE_CACHE_L2X0
++	select ZONE_DMA
++	help
++	  Include support for the ARM(R) RealView(R) Platform Baseboard
++	  Explore.
++
++endif
++
++menuconfig ARCH_VEXPRESS
++	bool "ARM Ltd. Versatile Express family"
++	depends on ARCH_MULTI_V7
++	select ARCH_SUPPORTS_BIG_ENDIAN
++	select ARM_AMBA
++	select ARM_GIC
++	select ARM_GLOBAL_TIMER
++	select ARM_TIMER_SP804
++	select COMMON_CLK_VERSATILE
++	select GPIOLIB
++	select HAVE_ARM_SCU if SMP
++	select HAVE_ARM_TWD if SMP
++	select HAVE_PATA_PLATFORM
++	select ICST
++	select NO_IOPORT_MAP
++	select PLAT_VERSATILE
++	select POWER_RESET
++	select POWER_RESET_VEXPRESS
++	select POWER_SUPPLY
++	select REGULATOR if MMC_ARMMMCI
++	select REGULATOR_FIXED_VOLTAGE if REGULATOR
++	select VEXPRESS_CONFIG
++	select VEXPRESS_SYSCFG
++	select MFD_VEXPRESS_SYSREG
++	help
++	  This option enables support for systems using Cortex processor based
++	  ARM core and logic (FPGA) tiles on the Versatile Express motherboard,
++	  for example:
++
++	  - CoreTile Express A5x2 (V2P-CA5s)
++	  - CoreTile Express A9x4 (V2P-CA9)
++	  - CoreTile Express A15x2 (V2P-CA15)
++	  - LogicTile Express 13MG (V2F-2XV6) with A5, A7, A9 or A15 SMMs
++	    (Soft Macrocell Models)
++	  - Versatile Express RTSMs (Models)
++
++	  You must boot using a Flattened Device Tree in order to use these
++	  platforms. The traditional (ATAGs) boot method is not usable on
++	  these boards with this option.
++
++if ARCH_VEXPRESS
++
++config ARCH_VEXPRESS_CORTEX_A5_A9_ERRATA
++	bool "Enable A5 and A9 only errata work-arounds"
++	default y
++	select ARM_ERRATA_643719 if SMP
++	select ARM_ERRATA_720789
++	select PL310_ERRATA_753970 if CACHE_L2X0
++	help
++	  Provides common dependencies for Versatile Express platforms
++	  based on Cortex-A5 and Cortex-A9 processors. In order to
++	  build a working kernel, you must also enable relevant core
++	  tile support or Flattened Device Tree based support options.
++
++config ARCH_VEXPRESS_DCSCB
++	bool "Dual Cluster System Control Block (DCSCB) support"
++	depends on MCPM
++	select ARM_CCI400_PORT_CTRL
++	help
++	  Support for the Dual Cluster System Configuration Block (DCSCB).
++	  This is needed to provide CPU and cluster power management
++	  on RTSM implementing big.LITTLE.
++
++config ARCH_VEXPRESS_SPC
++	bool "Versatile Express Serial Power Controller (SPC)"
++	select PM_OPP
++	help
++	  The TC2 (A15x2 A7x3) versatile express core tile integrates a logic
++	  block called Serial Power Controller (SPC) that provides the interface
++	  between the dual cluster test-chip and the M3 microcontroller that
++	  carries out power management.
++
++config ARCH_VEXPRESS_TC2_PM
++	bool "Versatile Express TC2 power management"
++	depends on MCPM
++	select ARM_CCI400_PORT_CTRL
++	select ARCH_VEXPRESS_SPC
++	select ARM_CPU_SUSPEND
++	help
++	  Support for CPU and cluster power management on Versatile Express
++	  with a TC2 (A15x2 A7x3) big.LITTLE core tile.
++
++endif
+diff --git a/arch/arm/mach-versatile/Makefile b/arch/arm/mach-versatile/Makefile
+index 2b907718d467..fe8b62714ee1 100644
+--- a/arch/arm/mach-versatile/Makefile
++++ b/arch/arm/mach-versatile/Makefile
+@@ -3,4 +3,36 @@
+ # Makefile for the linux kernel.
+ #
+ 
+-obj-y					:= versatile_dt.o
++# versatile
++obj-$(CONFIG_ARCH_VERSATILE)		+= versatile_dt.o
++
++# integrator
++obj-$(CONFIG_ARCH_INTEGRATOR)		+= core.o lm.o
++obj-$(CONFIG_ARCH_INTEGRATOR_AP)	+= integrator_ap.o
++obj-$(CONFIG_ARCH_INTEGRATOR_CP)	+= integrator_cp.o
++obj-$(CONFIG_INTEGRATOR_IMPD1)		+= impd1.o
++
++# realview
++obj-$(CONFIG_ARCH_REALVIEW)		+= realview-dt.o
++obj-$(CONFIG_PLAT_VERSATILE_SCHED_CLOCK) += sched-clock.o
++
++# vexpress
++obj-$(CONFIG_ARCH_VEXPRESS)		:= v2m.o
++obj-$(CONFIG_ARCH_VEXPRESS_DCSCB)	+= dcscb.o	dcscb_setup.o
++CFLAGS_dcscb.o				+= -march=armv7-a
++CFLAGS_REMOVE_dcscb.o			= -pg
++obj-$(CONFIG_ARCH_VEXPRESS_SPC)		+= spc.o
++CFLAGS_REMOVE_spc.o			= -pg
++obj-$(CONFIG_ARCH_VEXPRESS_TC2_PM)	+= tc2_pm.o
++CFLAGS_tc2_pm.o				+= -march=armv7-a
++CFLAGS_REMOVE_tc2_pm.o			= -pg
++
++# mps2
++obj-$(CONFIG_ARCH_MPS2)			+= v2m-mps2.o
++
++ifdef CONFIG_SMP
++obj-y					+= headsmp.o platsmp.o
++obj-$(CONFIG_ARCH_REALVIEW)		+= platsmp-realview.o
++obj-$(CONFIG_ARCH_VEXPRESS)		+= platsmp-vexpress.o
++obj-$(CONFIG_HOTPLUG_CPU)		+= hotplug.o
++endif
+diff --git a/arch/arm/mach-vexpress/Makefile.boot b/arch/arm/mach-versatile/Makefile.boot
+similarity index 100%
+rename from arch/arm/mach-vexpress/Makefile.boot
+rename to arch/arm/mach-versatile/Makefile.boot
+diff --git a/arch/arm/mach-integrator/cm.h b/arch/arm/mach-versatile/cm.h
+similarity index 100%
+rename from arch/arm/mach-integrator/cm.h
+rename to arch/arm/mach-versatile/cm.h
+diff --git a/arch/arm/mach-integrator/common.h b/arch/arm/mach-versatile/common.h
+similarity index 100%
+rename from arch/arm/mach-integrator/common.h
+rename to arch/arm/mach-versatile/common.h
+diff --git a/arch/arm/mach-integrator/core.c b/arch/arm/mach-versatile/core.c
+similarity index 97%
+rename from arch/arm/mach-integrator/core.c
+rename to arch/arm/mach-versatile/core.c
+index 9da3ae232211..40294435cfef 100644
+--- a/arch/arm/mach-integrator/core.c
++++ b/arch/arm/mach-versatile/core.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- *  linux/arch/arm/mach-integrator/core.c
+- *
+  *  Copyright (C) 2000-2003 Deep Blue Solutions Ltd
+  */
+ #include <linux/types.h>
+diff --git a/arch/arm/mach-vexpress/core.h b/arch/arm/mach-versatile/core.h
+similarity index 100%
+rename from arch/arm/mach-vexpress/core.h
+rename to arch/arm/mach-versatile/core.h
+diff --git a/arch/arm/mach-vexpress/dcscb.c b/arch/arm/mach-versatile/dcscb.c
+similarity index 98%
+rename from arch/arm/mach-vexpress/dcscb.c
+rename to arch/arm/mach-versatile/dcscb.c
+index 46a903c88c6a..ced7d6a6cb8f 100644
+--- a/arch/arm/mach-vexpress/dcscb.c
++++ b/arch/arm/mach-versatile/dcscb.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * arch/arm/mach-vexpress/dcscb.c - Dual Cluster System Configuration Block
++ * dcscb.c - Dual Cluster System Configuration Block
+  *
+  * Created by:	Nicolas Pitre, May 2012
+  * Copyright:	(C) 2012-2013  Linaro Limited
+diff --git a/arch/arm/mach-vexpress/dcscb_setup.S b/arch/arm/mach-versatile/dcscb_setup.S
+similarity index 95%
+rename from arch/arm/mach-vexpress/dcscb_setup.S
+rename to arch/arm/mach-versatile/dcscb_setup.S
+index 0614b2ebd354..92d1fd9d7f6a 100644
+--- a/arch/arm/mach-vexpress/dcscb_setup.S
++++ b/arch/arm/mach-versatile/dcscb_setup.S
+@@ -1,7 +1,5 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+- * arch/arm/include/asm/dcscb_setup.S
+- *
+  * Created by:  Dave Martin, 2012-06-22
+  * Copyright:   (C) 2012-2013  Linaro Limited
+  */
+diff --git a/arch/arm/mach-integrator/hardware.h b/arch/arm/mach-versatile/hardware.h
+similarity index 100%
+rename from arch/arm/mach-integrator/hardware.h
+rename to arch/arm/mach-versatile/hardware.h
+diff --git a/arch/arm/plat-versatile/headsmp.S b/arch/arm/mach-versatile/headsmp.S
+similarity index 94%
+rename from arch/arm/plat-versatile/headsmp.S
+rename to arch/arm/mach-versatile/headsmp.S
+index 09d9fc30c8ca..99c32db412ae 100644
+--- a/arch/arm/plat-versatile/headsmp.S
++++ b/arch/arm/mach-versatile/headsmp.S
+@@ -1,7 +1,5 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+- *  linux/arch/arm/plat-versatile/headsmp.S
+- *
+  *  Copyright (c) 2003 ARM Limited
+  *  All Rights Reserved
+  */
+diff --git a/arch/arm/plat-versatile/hotplug.c b/arch/arm/mach-versatile/hotplug.c
+similarity index 98%
+rename from arch/arm/plat-versatile/hotplug.c
+rename to arch/arm/mach-versatile/hotplug.c
+index 2e9dca38bec0..5a152175578b 100644
+--- a/arch/arm/plat-versatile/hotplug.c
++++ b/arch/arm/mach-versatile/hotplug.c
+@@ -15,7 +15,7 @@
+ #include <asm/smp_plat.h>
+ #include <asm/cp15.h>
+ 
+-#include <plat/platsmp.h>
++#include "platsmp.h"
+ 
+ static inline void versatile_immitation_enter_lowpower(unsigned int actrl_mask)
+ {
+diff --git a/arch/arm/mach-integrator/impd1.c b/arch/arm/mach-versatile/impd1.c
+similarity index 99%
+rename from arch/arm/mach-integrator/impd1.c
+rename to arch/arm/mach-versatile/impd1.c
+index 1ecbea5331d6..89649a3fe332 100644
+--- a/arch/arm/mach-integrator/impd1.c
++++ b/arch/arm/mach-versatile/impd1.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- *  linux/arch/arm/mach-integrator/impd1.c
+- *
+  *  Copyright (C) 2003 Deep Blue Solutions Ltd, All Rights Reserved.
+  *
+  *  This file provides the core support for the IM-PD1 module.
+diff --git a/arch/arm/mach-integrator/impd1.h b/arch/arm/mach-versatile/impd1.h
+similarity index 100%
+rename from arch/arm/mach-integrator/impd1.h
+rename to arch/arm/mach-versatile/impd1.h
+diff --git a/arch/arm/mach-integrator/integrator_ap.c b/arch/arm/mach-versatile/integrator_ap.c
+similarity index 98%
+rename from arch/arm/mach-integrator/integrator_ap.c
+rename to arch/arm/mach-versatile/integrator_ap.c
+index 035069ea2c8b..0001aca181c2 100644
+--- a/arch/arm/mach-integrator/integrator_ap.c
++++ b/arch/arm/mach-versatile/integrator_ap.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ /*
+- *  linux/arch/arm/mach-integrator/integrator_ap.c
+- *
+  *  Copyright (C) 2000-2003 Deep Blue Solutions Ltd
+  */
+ #include <linux/kernel.h>
+diff --git a/arch/arm/mach-integrator/integrator_cp.c b/arch/arm/mach-versatile/integrator_cp.c
+similarity index 98%
+rename from arch/arm/mach-integrator/integrator_cp.c
+rename to arch/arm/mach-versatile/integrator_cp.c
+index b7eb4038798b..9cbcb3e97558 100644
+--- a/arch/arm/mach-integrator/integrator_cp.c
++++ b/arch/arm/mach-versatile/integrator_cp.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- *  linux/arch/arm/mach-integrator/integrator_cp.c
+- *
+  *  Copyright (C) 2003 Deep Blue Solutions Ltd
+  */
+ #include <linux/kernel.h>
+diff --git a/arch/arm/mach-integrator/lm.c b/arch/arm/mach-versatile/lm.c
+similarity index 97%
+rename from arch/arm/mach-integrator/lm.c
+rename to arch/arm/mach-versatile/lm.c
+index 55cd173d1d76..1bf3ec2ac770 100644
+--- a/arch/arm/mach-integrator/lm.c
++++ b/arch/arm/mach-versatile/lm.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- *  linux/arch/arm/mach-integrator/lm.c
+- *
+  *  Copyright (C) 2003 Deep Blue Solutions Ltd, All Rights Reserved.
+  */
+ #include <linux/module.h>
+diff --git a/arch/arm/mach-integrator/lm.h b/arch/arm/mach-versatile/lm.h
+similarity index 100%
+rename from arch/arm/mach-integrator/lm.h
+rename to arch/arm/mach-versatile/lm.h
+diff --git a/arch/arm/mach-realview/platsmp-dt.c b/arch/arm/mach-versatile/platsmp-realview.c
+similarity index 98%
+rename from arch/arm/mach-realview/platsmp-dt.c
+rename to arch/arm/mach-versatile/platsmp-realview.c
+index 5ae783767a5d..5d363385c801 100644
+--- a/arch/arm/mach-realview/platsmp-dt.c
++++ b/arch/arm/mach-versatile/platsmp-realview.c
+@@ -13,7 +13,7 @@
+ #include <asm/smp_plat.h>
+ #include <asm/smp_scu.h>
+ 
+-#include <plat/platsmp.h>
++#include "platsmp.h"
+ 
+ #define REALVIEW_SYS_FLAGSSET_OFFSET	0x30
+ 
+diff --git a/arch/arm/mach-vexpress/platsmp.c b/arch/arm/mach-versatile/platsmp-vexpress.c
+similarity index 96%
+rename from arch/arm/mach-vexpress/platsmp.c
+rename to arch/arm/mach-versatile/platsmp-vexpress.c
+index 99c93124aa68..a2228c7a3d99 100644
+--- a/arch/arm/mach-vexpress/platsmp.c
++++ b/arch/arm/mach-versatile/platsmp-vexpress.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- *  linux/arch/arm/mach-vexpress/platsmp.c
+- *
+  *  Copyright (C) 2002 ARM Ltd.
+  *  All Rights Reserved
+  */
+@@ -16,8 +14,7 @@
+ #include <asm/smp_scu.h>
+ #include <asm/mach/map.h>
+ 
+-#include <plat/platsmp.h>
+-
++#include "platsmp.h"
+ #include "core.h"
+ 
+ bool __init vexpress_smp_init_ops(void)
+diff --git a/arch/arm/plat-versatile/platsmp.c b/arch/arm/mach-versatile/platsmp.c
+similarity index 97%
+rename from arch/arm/plat-versatile/platsmp.c
+rename to arch/arm/mach-versatile/platsmp.c
+index 3567296cec2a..fa7378321e23 100644
+--- a/arch/arm/plat-versatile/platsmp.c
++++ b/arch/arm/mach-versatile/platsmp.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- *  linux/arch/arm/plat-versatile/platsmp.c
+- *
+  *  Copyright (C) 2002 ARM Ltd.
+  *  All Rights Reserved
+  *
+@@ -20,7 +18,7 @@
+ #include <asm/cacheflush.h>
+ #include <asm/smp_plat.h>
+ 
+-#include <plat/platsmp.h>
++#include "platsmp.h"
+ 
+ /*
+  * versatile_cpu_release controls the release of CPUs from the holding
+diff --git a/arch/arm/plat-versatile/include/plat/platsmp.h b/arch/arm/mach-versatile/platsmp.h
+similarity index 87%
+rename from arch/arm/plat-versatile/include/plat/platsmp.h
+rename to arch/arm/mach-versatile/platsmp.h
+index 500605f48b80..171a0ab72220 100644
+--- a/arch/arm/plat-versatile/include/plat/platsmp.h
++++ b/arch/arm/mach-versatile/platsmp.h
+@@ -1,7 +1,5 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+- *  linux/arch/arm/plat-versatile/include/plat/platsmp.h
+- *
+  *  Copyright (C) 2011 ARM Ltd.
+  *  All Rights Reserved
+  */
+diff --git a/arch/arm/mach-realview/realview-dt.c b/arch/arm/mach-versatile/realview-dt.c
+similarity index 100%
+rename from arch/arm/mach-realview/realview-dt.c
+rename to arch/arm/mach-versatile/realview-dt.c
+diff --git a/arch/arm/plat-versatile/sched-clock.c b/arch/arm/mach-versatile/sched-clock.c
+similarity index 86%
+rename from arch/arm/plat-versatile/sched-clock.c
+rename to arch/arm/mach-versatile/sched-clock.c
+index ecb7913d2f53..4e3ffa4156f3 100644
+--- a/arch/arm/plat-versatile/sched-clock.c
++++ b/arch/arm/mach-versatile/sched-clock.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ /*
+- *  linux/arch/arm/plat-versatile/sched-clock.c
+- *
+  *  Copyright (C) 1999 - 2003 ARM Limited
+  *  Copyright (C) 2000 Deep Blue Solutions Ltd
+  */
+@@ -9,7 +7,7 @@
+ #include <linux/io.h>
+ #include <linux/sched_clock.h>
+ 
+-#include <plat/sched_clock.h>
++#include "sched_clock.h"
+ 
+ static void __iomem *ctr;
+ 
+diff --git a/arch/arm/plat-versatile/include/plat/sched_clock.h b/arch/arm/mach-versatile/sched_clock.h
+similarity index 100%
+rename from arch/arm/plat-versatile/include/plat/sched_clock.h
+rename to arch/arm/mach-versatile/sched_clock.h
+diff --git a/arch/arm/mach-vexpress/spc.c b/arch/arm/mach-versatile/spc.c
+similarity index 100%
+rename from arch/arm/mach-vexpress/spc.c
+rename to arch/arm/mach-versatile/spc.c
+diff --git a/arch/arm/mach-vexpress/spc.h b/arch/arm/mach-versatile/spc.h
+similarity index 100%
+rename from arch/arm/mach-vexpress/spc.h
+rename to arch/arm/mach-versatile/spc.h
+diff --git a/arch/arm/mach-vexpress/tc2_pm.c b/arch/arm/mach-versatile/tc2_pm.c
+similarity index 99%
+rename from arch/arm/mach-vexpress/tc2_pm.c
+rename to arch/arm/mach-versatile/tc2_pm.c
+index e96c42ae3602..0fe78da0c109 100644
+--- a/arch/arm/mach-vexpress/tc2_pm.c
++++ b/arch/arm/mach-versatile/tc2_pm.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * arch/arm/mach-vexpress/tc2_pm.c - TC2 power management support
+- *
+  * Created by:	Nicolas Pitre, October 2012
+  * Copyright:	(C) 2012-2013  Linaro Limited
+  *
+diff --git a/arch/arm/mach-vexpress/v2m-mps2.c b/arch/arm/mach-versatile/v2m-mps2.c
+similarity index 100%
+rename from arch/arm/mach-vexpress/v2m-mps2.c
+rename to arch/arm/mach-versatile/v2m-mps2.c
+diff --git a/arch/arm/mach-vexpress/v2m.c b/arch/arm/mach-versatile/v2m.c
+similarity index 100%
+rename from arch/arm/mach-vexpress/v2m.c
+rename to arch/arm/mach-versatile/v2m.c
+diff --git a/arch/arm/mach-vexpress/Kconfig b/arch/arm/mach-vexpress/Kconfig
+deleted file mode 100644
+index 726a68085c3b..000000000000
+--- a/arch/arm/mach-vexpress/Kconfig
++++ /dev/null
+@@ -1,84 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0
+-menuconfig ARCH_VEXPRESS
+-	bool "ARM Ltd. Versatile Express family"
+-	depends on ARCH_MULTI_V7
+-	select ARCH_SUPPORTS_BIG_ENDIAN
+-	select ARM_AMBA
+-	select ARM_GIC
+-	select ARM_GLOBAL_TIMER
+-	select ARM_TIMER_SP804
+-	select COMMON_CLK_VERSATILE
+-	select GPIOLIB
+-	select HAVE_ARM_SCU if SMP
+-	select HAVE_ARM_TWD if SMP
+-	select HAVE_PATA_PLATFORM
+-	select ICST
+-	select NO_IOPORT_MAP
+-	select PLAT_VERSATILE
+-	select POWER_RESET
+-	select POWER_RESET_VEXPRESS
+-	select POWER_SUPPLY
+-	select REGULATOR if MMC_ARMMMCI
+-	select REGULATOR_FIXED_VOLTAGE if REGULATOR
+-	select VEXPRESS_CONFIG
+-	select VEXPRESS_SYSCFG
+-	select MFD_VEXPRESS_SYSREG
+-	help
+-	  This option enables support for systems using Cortex processor based
+-	  ARM core and logic (FPGA) tiles on the Versatile Express motherboard,
+-	  for example:
+-
+-	  - CoreTile Express A5x2 (V2P-CA5s)
+-	  - CoreTile Express A9x4 (V2P-CA9)
+-	  - CoreTile Express A15x2 (V2P-CA15)
+-	  - LogicTile Express 13MG (V2F-2XV6) with A5, A7, A9 or A15 SMMs
+-	    (Soft Macrocell Models)
+-	  - Versatile Express RTSMs (Models)
+-
+-	  You must boot using a Flattened Device Tree in order to use these
+-	  platforms. The traditional (ATAGs) boot method is not usable on
+-	  these boards with this option.
+-
+-if ARCH_VEXPRESS
+-
+-config ARCH_VEXPRESS_CORTEX_A5_A9_ERRATA
+-	bool "Enable A5 and A9 only errata work-arounds"
+-	default y
+-	select ARM_ERRATA_643719 if SMP
+-	select ARM_ERRATA_720789
+-	select PL310_ERRATA_753970 if CACHE_L2X0
+-	help
+-	  Provides common dependencies for Versatile Express platforms
+-	  based on Cortex-A5 and Cortex-A9 processors. In order to
+-	  build a working kernel, you must also enable relevant core
+-	  tile support or Flattened Device Tree based support options.
+-
+-config ARCH_VEXPRESS_DCSCB
+-	bool "Dual Cluster System Control Block (DCSCB) support"
+-	depends on MCPM
+-	select ARM_CCI400_PORT_CTRL
+-	help
+-	  Support for the Dual Cluster System Configuration Block (DCSCB).
+-	  This is needed to provide CPU and cluster power management
+-	  on RTSM implementing big.LITTLE.
+-
+-config ARCH_VEXPRESS_SPC
+-	bool "Versatile Express Serial Power Controller (SPC)"
+-	select PM_OPP
+-	help
+-	  The TC2 (A15x2 A7x3) versatile express core tile integrates a logic
+-	  block called Serial Power Controller (SPC) that provides the interface
+-	  between the dual cluster test-chip and the M3 microcontroller that
+-	  carries out power management.
+-
+-config ARCH_VEXPRESS_TC2_PM
+-	bool "Versatile Express TC2 power management"
+-	depends on MCPM
+-	select ARM_CCI400_PORT_CTRL
+-	select ARCH_VEXPRESS_SPC
+-	select ARM_CPU_SUSPEND
+-	help
+-	  Support for CPU and cluster power management on Versatile Express
+-	  with a TC2 (A15x2 A7x3) big.LITTLE core tile.
+-
+-endif
+diff --git a/arch/arm/mach-vexpress/Makefile b/arch/arm/mach-vexpress/Makefile
+deleted file mode 100644
+index 3651a1ed0f2b..000000000000
+--- a/arch/arm/mach-vexpress/Makefile
++++ /dev/null
+@@ -1,19 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0
+-#
+-# Makefile for the linux kernel.
+-#
+-ccflags-$(CONFIG_ARCH_MULTIPLATFORM) := \
+-	-I$(srctree)/arch/arm/plat-versatile/include
+-
+-obj-$(CONFIG_ARCH_VEXPRESS)		:= v2m.o
+-obj-$(CONFIG_ARCH_VEXPRESS_DCSCB)	+= dcscb.o	dcscb_setup.o
+-CFLAGS_dcscb.o				+= -march=armv7-a
+-CFLAGS_REMOVE_dcscb.o			= -pg
+-obj-$(CONFIG_ARCH_VEXPRESS_SPC)		+= spc.o
+-CFLAGS_REMOVE_spc.o			= -pg
+-obj-$(CONFIG_ARCH_VEXPRESS_TC2_PM)	+= tc2_pm.o
+-CFLAGS_tc2_pm.o				+= -march=armv7-a
+-CFLAGS_REMOVE_tc2_pm.o			= -pg
+-obj-$(CONFIG_SMP)			+= platsmp.o
+-
+-obj-$(CONFIG_ARCH_MPS2)			+= v2m-mps2.o
+diff --git a/arch/arm/plat-versatile/Kconfig b/arch/arm/plat-versatile/Kconfig
+deleted file mode 100644
+index 748238f9f10e..000000000000
+--- a/arch/arm/plat-versatile/Kconfig
++++ /dev/null
+@@ -1,7 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-only
+-if PLAT_VERSATILE
+-
+-config PLAT_VERSATILE_SCHED_CLOCK
+-	bool
+-
+-endif
+diff --git a/arch/arm/plat-versatile/Makefile b/arch/arm/plat-versatile/Makefile
+deleted file mode 100644
+index e856f0a4ac6e..000000000000
+--- a/arch/arm/plat-versatile/Makefile
 +++ /dev/null
 @@ -1,6 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--obj-y				+= dove-common.o
--obj-$(CONFIG_DOVE_LEGACY)	+= dove-irq.o dove-mpp.o
--obj-$(CONFIG_PCI)		+= dove-pcie.o
--obj-$(CONFIG_MACH_DOVE_DB)	+= dove-db-setup.o
--obj-$(CONFIG_MACH_CM_A510)	+= cm-a510.o
-diff --git a/arch/arm/mach-orion/Makefile.mv78xx0 b/arch/arm/mach-orion/Makefile.mv78xx0
-deleted file mode 100644
-index c56ee058808a..000000000000
---- a/arch/arm/mach-orion/Makefile.mv78xx0
-+++ /dev/null
-@@ -1,5 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--obj-y				+= mv78xx0-common.o mv78xx0-mpp.o mv78xx0-irq.o mv78xx0-pcie.o
--obj-$(CONFIG_MACH_DB78X00_BP)	+= db78x00-bp-setup.o
--obj-$(CONFIG_MACH_RD78X00_MASA)	+= rd78x00-masa-setup.o
--obj-$(CONFIG_MACH_TERASTATION_WXL) += buffalo-wxl-setup.o
-diff --git a/arch/arm/mach-orion/Makefile.orion5x b/arch/arm/mach-orion/Makefile.orion5x
-deleted file mode 100644
-index a36c5e504698..000000000000
---- a/arch/arm/mach-orion/Makefile.orion5x
-+++ /dev/null
-@@ -1,24 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--obj-y				+= orion5x.o orion5x-pci.o orion5x-irq.o orion5x-mpp.o
--obj-$(CONFIG_MACH_DB88F5281)	+= db88f5281-setup.o
--obj-$(CONFIG_MACH_RD88F5182)	+= rd88f5182-setup.o
--obj-$(CONFIG_MACH_KUROBOX_PRO)	+= kurobox_pro-setup.o
--obj-$(CONFIG_MACH_TERASTATION_PRO2)	+= terastation_pro2-setup.o
--obj-$(CONFIG_MACH_LINKSTATION_PRO) += kurobox_pro-setup.o
--obj-$(CONFIG_MACH_LINKSTATION_LS_HGL) += ls_hgl-setup.o
--obj-$(CONFIG_MACH_DNS323)	+= dns323-setup.o
--obj-$(CONFIG_MACH_TS209)	+= ts209-setup.o tsx09-common.o
--obj-$(CONFIG_MACH_TS409)	+= ts409-setup.o tsx09-common.o
--obj-$(CONFIG_MACH_WRT350N_V2)	+= wrt350n-v2-setup.o
--obj-$(CONFIG_MACH_TS78XX)	+= ts78xx-setup.o
--obj-$(CONFIG_MACH_MV2120)	+= mv2120-setup.o
--obj-$(CONFIG_MACH_NET2BIG)	+= net2big-setup.o
--obj-$(CONFIG_MACH_WNR854T)	+= wnr854t-setup.o
--obj-$(CONFIG_MACH_RD88F5181L_GE)	+= rd88f5181l-ge-setup.o
--obj-$(CONFIG_MACH_RD88F5181L_FXO)	+= rd88f5181l-fxo-setup.o
--obj-$(CONFIG_MACH_RD88F6183AP_GE)	+= rd88f6183ap-ge-setup.o
+-# SPDX-License-Identifier: GPL-2.0-only
+-ccflags-$(CONFIG_ARCH_MULTIPLATFORM) := -I$(srctree)/$(src)/include
 -
--obj-$(CONFIG_ARCH_ORION5X_DT)		+= board-dt.o
--obj-$(CONFIG_MACH_D2NET_DT)	+= board-d2net.o
--obj-$(CONFIG_MACH_MSS2_DT)	+= board-mss2.o
--obj-$(CONFIG_MACH_RD88F5182_DT)	+= board-rd88f5182.o
+-obj-$(CONFIG_PLAT_VERSATILE_SCHED_CLOCK) += sched-clock.o
+-obj-$(CONFIG_SMP) += headsmp.o platsmp.o
+-obj-$(CONFIG_HOTPLUG_CPU)		+= hotplug.o
 -- 
 2.20.0
 
