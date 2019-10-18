@@ -2,110 +2,140 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51996CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AEF5CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 349A920854
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F6FC21D80
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:37:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439311AbfJRHgA (ORCPT
+        id S2503764AbfJRHhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 03:36:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60296 "EHLO mx1.redhat.com"
+        Fri, 18 Oct 2019 03:37:40 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:37236 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727388AbfJRHgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 03:36:00 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 148FC3071D99;
-        Fri, 18 Oct 2019 07:36:00 +0000 (UTC)
-Received: from [10.72.12.183] (ovpn-12-183.pek2.redhat.com [10.72.12.183])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 249DB5D712;
-        Fri, 18 Oct 2019 07:35:37 +0000 (UTC)
-Subject: Re: [PATCH V4 4/6] mdev: introduce virtio device and its device ops
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-References: <20191017104836.32464-1-jasowang@redhat.com>
- <20191017104836.32464-5-jasowang@redhat.com>
- <20191017115329.47d4a165@x1.home>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <24a96fca-926d-38ee-4dab-5f3715ef1433@redhat.com>
-Date:   Fri, 18 Oct 2019 15:35:34 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1728302AbfJRHhk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 03:37:40 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1iLMoG-0004PG-JE; Fri, 18 Oct 2019 18:36:29 +1100
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 18 Oct 2019 18:36:16 +1100
+Date:   Fri, 18 Oct 2019 17:56:23 +1100
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jiri Slaby <jslaby@suse.cz>, tglx@linutronix.de,
+        mingo@redhat.com, hpa@zytor.com, x86@kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Juergen Gross <jgross@suse.com>, linux-crypto@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-efi@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v9 24/28] x86_64/asm: Change all ENTRY+ENDPROC to
+ SYM_FUNC_*
+Message-ID: <20191018065623.GA15199@gondor.apana.org.au>
+References: <20191011115108.12392-1-jslaby@suse.cz>
+ <20191011115108.12392-25-jslaby@suse.cz>
+ <20191016071230.GD1138@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <20191017115329.47d4a165@x1.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 18 Oct 2019 07:36:00 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016071230.GD1138@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 16, 2019 at 09:12:30AM +0200, Borislav Petkov wrote:
+> Hi,
+> 
+> On Fri, Oct 11, 2019 at 01:51:04PM +0200, Jiri Slaby wrote:
+> > These are all functions which are invoked from elsewhere, so annotate
+> > them as global using the new SYM_FUNC_START. And their ENDPROC's by
+> > SYM_FUNC_END.
+> > 
+> > And make sure ENTRY/ENDPROC is not defined on X86_64, given these were
+> > the last users.
+> > 
+> > Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+> > Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com> [hibernate]
+> > Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com> [xen bits]
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Cc: Borislav Petkov <bp@alien8.de>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: x86@kernel.org
+> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > Cc: Len Brown <len.brown@intel.com>
+> > Cc: Pavel Machek <pavel@ucw.cz>
+> > Cc: Matt Fleming <matt@codeblueprint.co.uk>
+> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> > Cc: Juergen Gross <jgross@suse.com>
+> > Cc: linux-crypto@vger.kernel.org
+> > Cc: linux-pm@vger.kernel.org
+> > Cc: linux-efi@vger.kernel.org
+> > Cc: xen-devel@lists.xenproject.org
+> > ---
+> >  arch/x86/boot/compressed/efi_thunk_64.S      |  4 +-
+> >  arch/x86/boot/compressed/head_64.S           | 16 +++---
+> >  arch/x86/boot/compressed/mem_encrypt.S       |  8 +--
+> >  arch/x86/crypto/aegis128-aesni-asm.S         | 28 ++++-----
+> >  arch/x86/crypto/aes_ctrby8_avx-x86_64.S      | 12 ++--
+> >  arch/x86/crypto/aesni-intel_asm.S            | 60 ++++++++++----------
+> >  arch/x86/crypto/aesni-intel_avx-x86_64.S     | 32 +++++------
+> >  arch/x86/crypto/blowfish-x86_64-asm_64.S     | 16 +++---
+> >  arch/x86/crypto/camellia-aesni-avx-asm_64.S  | 24 ++++----
+> >  arch/x86/crypto/camellia-aesni-avx2-asm_64.S | 24 ++++----
+> >  arch/x86/crypto/camellia-x86_64-asm_64.S     | 16 +++---
+> >  arch/x86/crypto/cast5-avx-x86_64-asm_64.S    | 16 +++---
+> >  arch/x86/crypto/cast6-avx-x86_64-asm_64.S    | 24 ++++----
+> >  arch/x86/crypto/chacha-avx2-x86_64.S         | 12 ++--
+> >  arch/x86/crypto/chacha-avx512vl-x86_64.S     | 12 ++--
+> >  arch/x86/crypto/chacha-ssse3-x86_64.S        | 12 ++--
+> >  arch/x86/crypto/crc32-pclmul_asm.S           |  4 +-
+> >  arch/x86/crypto/crc32c-pcl-intel-asm_64.S    |  4 +-
+> >  arch/x86/crypto/crct10dif-pcl-asm_64.S       |  4 +-
+> >  arch/x86/crypto/des3_ede-asm_64.S            |  8 +--
+> >  arch/x86/crypto/ghash-clmulni-intel_asm.S    |  8 +--
+> >  arch/x86/crypto/nh-avx2-x86_64.S             |  4 +-
+> >  arch/x86/crypto/nh-sse2-x86_64.S             |  4 +-
+> >  arch/x86/crypto/poly1305-avx2-x86_64.S       |  4 +-
+> >  arch/x86/crypto/poly1305-sse2-x86_64.S       |  8 +--
+> >  arch/x86/crypto/serpent-avx-x86_64-asm_64.S  | 24 ++++----
+> >  arch/x86/crypto/serpent-avx2-asm_64.S        | 24 ++++----
+> >  arch/x86/crypto/serpent-sse2-x86_64-asm_64.S |  8 +--
+> >  arch/x86/crypto/sha1_avx2_x86_64_asm.S       |  4 +-
+> >  arch/x86/crypto/sha1_ni_asm.S                |  4 +-
+> >  arch/x86/crypto/sha1_ssse3_asm.S             |  4 +-
+> >  arch/x86/crypto/sha256-avx-asm.S             |  4 +-
+> >  arch/x86/crypto/sha256-avx2-asm.S            |  4 +-
+> >  arch/x86/crypto/sha256-ssse3-asm.S           |  4 +-
+> >  arch/x86/crypto/sha256_ni_asm.S              |  4 +-
+> >  arch/x86/crypto/sha512-avx-asm.S             |  4 +-
+> >  arch/x86/crypto/sha512-avx2-asm.S            |  4 +-
+> >  arch/x86/crypto/sha512-ssse3-asm.S           |  4 +-
+> >  arch/x86/crypto/twofish-avx-x86_64-asm_64.S  | 24 ++++----
+> >  arch/x86/crypto/twofish-x86_64-asm_64-3way.S |  8 +--
+> >  arch/x86/crypto/twofish-x86_64-asm_64.S      |  8 +--
+> 
+> I could use an ACK for the crypto bits...
 
-On 2019/10/18 上午1:53, Alex Williamson wrote:
-> On Thu, 17 Oct 2019 18:48:34 +0800
-> Jason Wang<jasowang@redhat.com>  wrote:
->
->> This patch implements basic support for mdev driver that supports
->> virtio transport for kernel virtio driver.
->>
->> Signed-off-by: Jason Wang<jasowang@redhat.com>
->> ---
->>   drivers/vfio/mdev/mdev_core.c |  12 +++
->>   include/linux/mdev.h          |   4 +
->>   include/linux/virtio_mdev.h   | 151 ++++++++++++++++++++++++++++++++++
->>   3 files changed, 167 insertions(+)
->>   create mode 100644 include/linux/virtio_mdev.h
->>
->> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
->> index d0f3113c8071..5834f6b7c7a5 100644
->> --- a/drivers/vfio/mdev/mdev_core.c
->> +++ b/drivers/vfio/mdev/mdev_core.c
->> @@ -57,6 +57,18 @@ void mdev_set_vfio_ops(struct mdev_device *mdev,
->>   }
->>   EXPORT_SYMBOL(mdev_set_vfio_ops);
->>   
->> +/* Specify the virtio device ops for the mdev device, this
->> + * must be called during create() callback for virtio mdev device.
->> + */
->> +void mdev_set_virtio_ops(struct mdev_device *mdev,
->> +			 const struct virtio_mdev_device_ops *virtio_ops)
->> +{
->> +	BUG_ON(mdev->class_id);
-> Nit, this one is a BUG_ON, but the vfio one is a WARN_ON.  Thanks,
->
-> Alex
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-
-Let me fix in next version.
-
-Thanks
-
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
