@@ -2,124 +2,120 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98989CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D042CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7127C222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:31:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RWOqByZZ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PLEjqrTK"
+	by mail.kernel.org (Postfix) with ESMTP id 4CB05222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:35:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408205AbfJRKbr (ORCPT
+        id S2408239AbfJRKft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 06:31:47 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:40394 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729479AbfJRKbr (ORCPT
+        Fri, 18 Oct 2019 06:35:49 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42168 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2407941AbfJRKfs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 06:31:47 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 2084A6121D; Fri, 18 Oct 2019 10:31:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571394706;
-        bh=JsxKFSAy1iuf/aPktsC6FZcWFRE+QUyAl6FXx4ZIliQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=RWOqByZZFhO30hXT5mph+CcZRdB2FdL4DN8NACEA6PLudAh9mwFGB7h0/bzUFgrM3
-         PvhD+o5btMTaDxkRp0f9pFUIXwSkjmxZu4I3nOdU5JI/IB/B4j4HzAVV74NUX9l5t9
-         A6BVriwNLe2/e2WqDSNpaa4nVa6sBqEKb+SRNsLY=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 2BAF960D8F;
-        Fri, 18 Oct 2019 10:31:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571394705;
-        bh=JsxKFSAy1iuf/aPktsC6FZcWFRE+QUyAl6FXx4ZIliQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PLEjqrTKNVywoJ79b0L13gACxAMsJ/2aGT7iUIgh/M8z1sbbNVoBNz9aZ8I+FicJw
-         QKBwcdjHsOfst1MaOgV54d9YmiJt4a9k4A+6JRVr9SsnKzs/IH9Oq43tNWB/Jo5SqY
-         q1A0mR6Hui5m0HIWVdCzyj6nIK1DnFBwhOKWYZAM=
+        Fri, 18 Oct 2019 06:35:48 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9IARiJB086511
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 06:35:47 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vq968ehfg-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 06:35:47 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Fri, 18 Oct 2019 11:35:45 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 18 Oct 2019 11:35:43 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9IAZACY37290384
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 18 Oct 2019 10:35:10 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 797F842041;
+        Fri, 18 Oct 2019 10:35:42 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3A5C04203F;
+        Fri, 18 Oct 2019 10:35:42 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.85])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri, 18 Oct 2019 10:35:42 +0000 (GMT)
+Date:   Fri, 18 Oct 2019 12:35:40 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Steffen Maier <maier@linux.ibm.com>
+Subject: Re: [GIT PULL] SCSI fixes for 5.4-rc3
+References: <1571166922.15362.19.camel@HansenPartnership.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 18 Oct 2019 16:01:45 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: dts: qcom: c630: Enable adsp, cdsp and mpss
-In-Reply-To: <20191018055706.3729469-1-bjorn.andersson@linaro.org>
-References: <20191018055706.3729469-1-bjorn.andersson@linaro.org>
-Message-ID: <3e528de55c8d9ff36c6e532ffb1c3cf8@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571166922.15362.19.camel@HansenPartnership.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19101810-4275-0000-0000-0000037345A6
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101810-4276-0000-0000-00003886617A
+Message-Id: <20191018103540.GC3885@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-18_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=718 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910180102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-18 11:27, Bjorn Andersson wrote:
-> Specify the firmware-name for the adsp, cdsp and mpss and enable the
-> nodes.
+On Tue, Oct 15, 2019 at 03:15:22PM -0400, James Bottomley wrote:
+> Five changes, two in drivers (qla2xxx, zfcp), one to MAINTAINERS
+> (qla2xxx) and two in the core.  The last two are mostly about removing
+> incorrect messages from the kernel log: the resid message is definitely
+> wrong and the sync cache on protected drive problem is arguably wrong.
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> The patch is available here:
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+> 
+> The short changelog is:
+> 
+> Damien Le Moal (1):
+>       scsi: core: save/restore command resid for error handling
+> 
+> Daniel Wagner (1):
+>       scsi: qla2xxx: Remove WARN_ON_ONCE in qla2x00_status_cont_entry()
+> 
+> Himanshu Madhani (1):
+>       scsi: MAINTAINERS: Update qla2xxx driver
+> 
+> Oliver Neukum (1):
+>       scsi: sd: Ignore a failure to sync cache due to lack of authorization
+> 
+> Steffen Maier (1):
+>       scsi: zfcp: fix reaction on bit error threshold notification
 
-Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+James, Martin, I do not know how you coordinate your work, however is
+there any chance that the two fixes sitting in
 
-> ---
->  .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts      | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> index ded120d3aef5..13dc619687f3 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> @@ -20,6 +20,11 @@
->  	};
->  };
-> 
-> +&adsp_pas {
-> +	firmware-name = "qcom/LENOVO/81JL/qcadsp850.mbn";
-> +	status = "okay";
-> +};
-> +
->  &apps_rsc {
->  	pm8998-rpmh-regulators {
->  		compatible = "qcom,pm8998-rpmh-regulators";
-> @@ -229,6 +234,11 @@
->  	status = "disabled";
->  };
-> 
-> +&cdsp_pas {
-> +	firmware-name = "qcom/LENOVO/81JL/qccdsp850.mbn";
-> +	status = "okay";
-> +};
-> +
->  &gcc {
->  	protected-clocks = <GCC_QSPI_CORE_CLK>,
->  			   <GCC_QSPI_CORE_CLK_SRC>,
-> @@ -296,6 +306,10 @@
->  	};
->  };
-> 
-> +&mss_pil {
-> +	firmware-name = "qcom/LENOVO/81JL/qcdsp1v2850.mbn",
-> "qcom/LENOVO/81JL/qcdsp2850.mbn";
-> +};
-> +
->  &qup_i2c12_default {
->  	drive-strength = <2>;
->  	bias-disable;
+https://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git/log/?h=postmerge
 
--- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+get merged anytime soon?
+
+6b6fa7a5c86e1269d9f0c9a5b902072351317387 ("scsi: core: fix dh and multipathing for SCSI hosts without request batching")
+82a9ac7130cf51c2640800fb0ef19d3a05cb8fff ("scsi: core: fix missing .cleanup_rq for SCSI hosts without request batching")
+
+I have a CI system which fails to boot since two weeks because of this...
+
