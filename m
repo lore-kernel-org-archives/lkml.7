@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CAECA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC34CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE08C20872
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B96920663
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437596;
-	bh=ZsYsQjET2eBXHpj8p6+4hCJCBPZ/9D9ILF5vWY4Tb/w=;
+	s=default; t=1571437608;
+	bh=Q2r+wUblGCSZcJscrAMf78V19psDjFOH4jTfp5UiFkU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pxjLKfmos61aYH92nn5612A7UwsAkIF5QCRKGjUkZNw+weka4joTgQwbFrlZ57ffA
-	 SAQEZarunrZwqGy1t0iyVr8SfGqxT2kHUtMUjvVQO+5OXJMcHNEkcXpZ6NxdOq13qL
-	 paNgvl0NM8j0gT34mV4u2AXs5eDF66oI5uiX2sw8=
+	b=mm1wg86GPhkzYYlU4Q+MhLudMrOlnEnXbD8Mu70o7aaRh/nXZbQJTrAEQnSLo9A1W
+	 fEtMbQRsYu9Q0x0VUxKZ+Lk8hHkaTt72clMh+6pk9vZw0R4857zariPJV3Rw2ZJ5V6
+	 rMxYneP1puvYi0EgsUEZfHTxi3qzgub55oYF74rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406173AbfJRW0f (ORCPT
+        id S2406264AbfJRW0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:26:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35860 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:26:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727892AbfJRWEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:04:14 -0400
+        id S1727804AbfJRWEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:04:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67519222C5;
-        Fri, 18 Oct 2019 22:04:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D80A6222C6;
+        Fri, 18 Oct 2019 22:04:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436254;
-        bh=ZsYsQjET2eBXHpj8p6+4hCJCBPZ/9D9ILF5vWY4Tb/w=;
+        s=default; t=1571436250;
+        bh=Q2r+wUblGCSZcJscrAMf78V19psDjFOH4jTfp5UiFkU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sihkb84tWGRLulaBQrLLWsFR4vYB/fcBquZnhSvdspHWXabFXcb2aZkUCANtGG/Wm
-         9LuxElrnAJyJ8clmogaU4dOUDnfO0NYxkjbJKYI2eNU4iTWjlruGHki502WE/ZQjpo
-         JF2EVLp7aSbVIilgMO5h6TUa/YSrMxeaYVHmsdI8=
+        b=gjtXs+OMQ5DL4slE8rdGyUHtz0A3JOqyVvyOFxBErG5/K8ZJyeYwN3v03WSXOtbTz
+         Nm1oxeHYVlnhq9d1YXuxCdSK+rESgzGzkpcJ/7Q0oAX8L6nzvaJkKyZXeE22l/Vxo2
+         WtU/zUK43vcEBSfuShdsITzA0d4pOdn3tFjIKoWQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
+Cc:     Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 37/89] RDMA/mlx5: Do not allow rereg of a ODP MR
-Date:   Fri, 18 Oct 2019 18:02:32 -0400
-Message-Id: <20191018220324.8165-37-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 34/89] RDMA/cm: Fix memory leak in cm_add/remove_one
+Date:   Fri, 18 Oct 2019 18:02:29 -0400
+Message-Id: <20191018220324.8165-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -59,54 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Jack Morgenstein <jackm@dev.mellanox.co.il>
 
-[ Upstream commit 880505cfef1d086d18b59d2920eb2160429ffa1f ]
+[ Upstream commit 94635c36f3854934a46d9e812e028d4721bbb0e6 ]
 
-This code is completely broken, the umem of a ODP MR simply cannot be
-discarded without a lot more locking, nor can an ODP mkey be blithely
-destroyed via destroy_mkey().
+In the process of moving the debug counters sysfs entries, the commit
+mentioned below eliminated the cm_infiniband sysfs directory.
 
-Fixes: 6aec21f6a832 ("IB/mlx5: Page faults handling infrastructure")
-Link: https://lore.kernel.org/r/20191001153821.23621-2-jgg@ziepe.ca
-Reviewed-by: Artemy Kovalyov <artemyko@mellanox.com>
+This sysfs directory was tied to the cm_port object allocated in procedure
+cm_add_one().
+
+Before the commit below, this cm_port object was freed via a call to
+kobject_put(port->kobj) in procedure cm_remove_port_fs().
+
+Since port no longer uses its kobj, kobject_put(port->kobj) was eliminated.
+This, however, meant that kfree was never called for the cm_port buffers.
+
+Fix this by adding explicit kfree(port) calls to functions cm_add_one()
+and cm_remove_one().
+
+Note: the kfree call in the first chunk below (in the cm_add_one error
+flow) fixes an old, undetected memory leak.
+
+Fixes: c87e65cfb97c ("RDMA/cm: Move debug counters to be under relevant IB device")
+Link: https://lore.kernel.org/r/20190916071154.20383-2-leon@kernel.org
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/mr.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/infiniband/core/cm.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/infiniband/hw/mlx5/mr.c b/drivers/infiniband/hw/mlx5/mr.c
-index 3401f5f6792e6..c4ba8838d2c46 100644
---- a/drivers/infiniband/hw/mlx5/mr.c
-+++ b/drivers/infiniband/hw/mlx5/mr.c
-@@ -1423,6 +1423,9 @@ int mlx5_ib_rereg_user_mr(struct ib_mr *ib_mr, int flags, u64 start,
- 	if (!mr->umem)
- 		return -EINVAL;
+diff --git a/drivers/infiniband/core/cm.c b/drivers/infiniband/core/cm.c
+index da10e6ccb43cd..5920c0085d35b 100644
+--- a/drivers/infiniband/core/cm.c
++++ b/drivers/infiniband/core/cm.c
+@@ -4399,6 +4399,7 @@ static void cm_add_one(struct ib_device *ib_device)
+ error1:
+ 	port_modify.set_port_cap_mask = 0;
+ 	port_modify.clr_port_cap_mask = IB_PORT_CM_SUP;
++	kfree(port);
+ 	while (--i) {
+ 		if (!rdma_cap_ib_cm(ib_device, i))
+ 			continue;
+@@ -4407,6 +4408,7 @@ static void cm_add_one(struct ib_device *ib_device)
+ 		ib_modify_port(ib_device, port->port_num, 0, &port_modify);
+ 		ib_unregister_mad_agent(port->mad_agent);
+ 		cm_remove_port_fs(port);
++		kfree(port);
+ 	}
+ free:
+ 	kfree(cm_dev);
+@@ -4460,6 +4462,7 @@ static void cm_remove_one(struct ib_device *ib_device, void *client_data)
+ 		spin_unlock_irq(&cm.state_lock);
+ 		ib_unregister_mad_agent(cur_mad_agent);
+ 		cm_remove_port_fs(port);
++		kfree(port);
+ 	}
  
-+	if (is_odp_mr(mr))
-+		return -EOPNOTSUPP;
-+
- 	if (flags & IB_MR_REREG_TRANS) {
- 		addr = virt_addr;
- 		len = length;
-@@ -1468,8 +1471,6 @@ int mlx5_ib_rereg_user_mr(struct ib_mr *ib_mr, int flags, u64 start,
- 		}
- 
- 		mr->allocated_from_cache = 0;
--		if (IS_ENABLED(CONFIG_INFINIBAND_ON_DEMAND_PAGING))
--			mr->live = 1;
- 	} else {
- 		/*
- 		 * Send a UMR WQE
-@@ -1498,7 +1499,6 @@ int mlx5_ib_rereg_user_mr(struct ib_mr *ib_mr, int flags, u64 start,
- 
- 	set_mr_fields(dev, mr, npages, len, access_flags);
- 
--	update_odp_mr(mr);
- 	return 0;
- 
- err:
+ 	kfree(cm_dev);
 -- 
 2.20.1
 
