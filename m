@@ -2,147 +2,106 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA66BCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDC2CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87D2321835
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E06F421835
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:11:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NFaKn8K/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634466AbfJRRLN (ORCPT
+        id S2634479AbfJRRL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 13:11:13 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:46422 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S2388005AbfJRRLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 13:11:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 23BE2101E;
-        Fri, 18 Oct 2019 10:10:48 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8C3A53F718;
-        Fri, 18 Oct 2019 10:10:46 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 18:10:40 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Steven Price <steven.price@arm.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 01/10] KVM: arm64: Document PV-time interface
-Message-ID: <20191018171039.GA18838@lakrids.cambridge.arm.com>
-References: <20191011125930.40834-1-steven.price@arm.com>
- <20191011125930.40834-2-steven.price@arm.com>
- <20191015175651.GF24604@lakrids.cambridge.arm.com>
+        Fri, 18 Oct 2019 13:11:28 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:37498 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388005AbfJRRL2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 13:11:28 -0400
+Received: by mail-vs1-f67.google.com with SMTP id p13so4517290vsr.4
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 10:11:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XATsmiiQ65kT4ODqJ8G67gOZ75F3gzeYi1y9XLQaIlM=;
+        b=NFaKn8K/6s2O1InStTL9sLz1AskGb0puzLhWcn2tdgY8ZmCLY7XOJRYveX8vbFZU0f
+         AivKBQvkf/pODzLL5A4lcri/koO4kVh6iykeyqn4iKMkTaY1LVSs0gwEl9DJOigy8q8Q
+         WPtHpYV0+uIe6amcTjkQLuADzSGPUx4rs/QmPrhO0WC+aS/VPjA8tDxGnOE6xkLGpQLv
+         lTimTCE/K9U0RF4C039OIDi0j2iIowkJYeW6TPrBZBYFSBCJ9uXp+uP1gTWL63kz/VIn
+         F7pEhz3ucREkKYmQDI91cCQ4B4+VGr1SMl0Byq8KA2sUVL6ZDahv6K/J2fUilePUK8ER
+         3UWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XATsmiiQ65kT4ODqJ8G67gOZ75F3gzeYi1y9XLQaIlM=;
+        b=aBvhGhxhayJKoDW5nVybNwjFCyrrYc6NlX8VK+9k7jXEqETGC2fLnRZ1UWWpTIicXf
+         8RuK2Q8sWeAiKkeLPtre13Onrv+lvG2aHXSaXflK4oCn+hko69NYYvZB3Le5klBf44dC
+         6Ts8XzhgUS7+S6PYphK0f+2OpGTEMNYF1SKxx/xabzic/hRW0Ki3HMrFA+kVDQK6zXAP
+         pG00JBl/nfnylgqeQiLq4iy7gpKiWYuDZiO/K1Z94isFAvS0BV0jlsPTxcOb2JpNo5bF
+         farkBAGvAhrkWKpY/DSnu/Qwhvo2YJsIdT+1Fbq6Ne7HtSYz3phPruHCGdCsZKjVJIhI
+         WcHw==
+X-Gm-Message-State: APjAAAUoZWMoxuOJTv56Wgo90c6J3IKfmJPihlQOODzJzpg6DrC+Gger
+        y8ZRoDMNOvOiJwUJP9HrwR/CQj0d2y37ivMWGuwg7Q==
+X-Google-Smtp-Source: APXvYqxbFqx52fMmsudugE6XC0yz5SmZysXaFv9YWU7egAQ4sBR35UABj4n5x4ayDTqcJ+9yTIIHMtatlqnJPxGnKEw=
+X-Received: by 2002:a67:ed8b:: with SMTP id d11mr6025118vsp.104.1571418687239;
+ Fri, 18 Oct 2019 10:11:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015175651.GF24604@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191018161033.261971-7-samitolvanen@google.com> <CAKwvOd=z3RxvJeNV1sBE=Y1b6HgXdnT4M9bwMrUNZcvcSOqwTw@mail.gmail.com>
+In-Reply-To: <CAKwvOd=z3RxvJeNV1sBE=Y1b6HgXdnT4M9bwMrUNZcvcSOqwTw@mail.gmail.com>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Fri, 18 Oct 2019 10:11:16 -0700
+Message-ID: <CABCJKud6+F=yhTo6xTXkHhtLWcSE99K=NcfKW_5E4swS4seKMw@mail.gmail.com>
+Subject: Re: [PATCH 06/18] add support for Clang's Shadow Call Stack (SCS)
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 06:56:51PM +0100, Mark Rutland wrote:
-> Hi Steven,
-> 
-> On Fri, Oct 11, 2019 at 01:59:21PM +0100, Steven Price wrote:
-> > Introduce a paravirtualization interface for KVM/arm64 based on the
-> > "Arm Paravirtualized Time for Arm-Base Systems" specification DEN 0057A.
-> 
-> I notice that as published, this is a BETA Draft, with the explicit
-> note:
-> 
-> | This document is for review purposes only and should not be used
-> | for any implementation as changes are likely.
-> 
-> ... what's the plan for getting a finalised version published?
-
-Hmmm. Not sure how I manged to find the old version of the spec given
-your cover letter links to the finalised version.
-
-Sorry for the noise!
- 
-> > This only adds the details about "Stolen Time" as the details of "Live
-> > Physical Time" have not been fully agreed.
-> 
-> ... and what do we expect to happen on this front?
-
-... and I see this has been removed from the spec for now.
-
-[...]
-
-> > +PV_TIME_ST
-> > +    ============= ========    ==========
-> > +    Function ID:  (uint32)    0xC5000021
-> > +    Return value: (int64)     IPA of the stolen time data structure for this
-> > +                              VCPU. On failure:
-> > +                              NOT_SUPPORTED (-1)
-> > +    ============= ========    ==========
+On Fri, Oct 18, 2019 at 10:08 AM 'Nick Desaulniers' via Clang Built
+Linux <clang-built-linux@googlegroups.com> wrote:
+> > diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-clang.h
+> > index 333a6695a918..9af08391f205 100644
+> > --- a/include/linux/compiler-clang.h
+> > +++ b/include/linux/compiler-clang.h
+> > @@ -42,3 +42,5 @@
+> >   * compilers, like ICC.
+> >   */
+> >  #define barrier() __asm__ __volatile__("" : : : "memory")
 > > +
-> > +The IPA returned by PV_TIME_ST should be mapped by the guest as normal memory
-> > +with inner and outer write back caching attributes, in the inner shareable
-> > +domain. A total of 16 bytes from the IPA returned are guaranteed to be
-> > +meaningfully filled by the hypervisor (see structure below).
-> 
-> At what granularity is this allowed to share IPA space with other
-> mappings? The spec doesn't provide any guidance here, and I strongly
-> suspect that it should.
-> 
-> To support a 64K guest, we must ensure that this doesn't share a 64K IPA
-> granule with any MMIO, and it probably only makes sense for an instance
-> of this structure to share that granule with another vCPU's structure.
-> 
-> We probably _also_ want to ensure that this doesn't share a 64K granule
-> with memory the guest sees as regular system RAM. Otherwise we're liable
-> to force it into having mismatched attributes for any of that RAM it
-> happens to map as part of mapping the PV_TIME_ST structure.
+> > +#define __noscs                __attribute__((no_sanitize("shadow-call-stack")))
+>
+> It looks like this attribute, (and thus a requirement to use this
+> feature), didn't exist until Clang 7.0: https://godbolt.org/z/p9u1we
+> (as noted above)
+>
+> I think it's better to put __noscs behind a __has_attribute guard in
+> include/linux/compiler_attributes.h.  Otherwise, what will happen when
+> Clang 6.0 sees __noscs, for example? (-Wunknown-sanitizers will
+> happen).
 
-I guess we can say that it's userspace's responsibiltiy to set this up
-with sufficient alignment, but I do think we want to make a
-recommendataion here.
+Good point, I'll fix this in v2. Thanks.
 
-[...]
-
-> > +PV_TIME_ST returns the structure for the calling VCPU.
-> > +
-> > +Stolen Time
-> > +-----------
-> > +
-> > +The structure pointed to by the PV_TIME_ST hypercall is as follows:
-> > +
-> > ++-------------+-------------+-------------+----------------------------+
-> > +| Field       | Byte Length | Byte Offset | Description                |
-> > ++=============+=============+=============+============================+
-> > +| Revision    |      4      |      0      | Must be 0 for version 1.0  |
-> > ++-------------+-------------+-------------+----------------------------+
-> > +| Attributes  |      4      |      4      | Must be 0                  |
-> > ++-------------+-------------+-------------+----------------------------+
-> > +| Stolen time |      8      |      8      | Stolen time in unsigned    |
-> > +|             |             |             | nanoseconds indicating how |
-> > +|             |             |             | much time this VCPU thread |
-> > +|             |             |             | was involuntarily not      |
-> > +|             |             |             | running on a physical CPU. |
-> > ++-------------+-------------+-------------+----------------------------+
-> > +
-> > +All values in the structure are stored little-endian.
-> 
-> Looking at the published DEN 0057A, endianness is never stated. Is this
-> going to be corrected in the next release?
-
-I'm assuming that this has been communicated internally, and we can
-assume the next rev of the spec will state so.
-
-Assuming so, this looks good to me.
-
-Thanks,
-Mark.
+Sami
