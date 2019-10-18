@@ -2,93 +2,151 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E438ACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BE6CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA23A20700
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:24:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571433890;
-	bh=XodxEAJdmw1CAkdlRH8NDfuJ2VdPX6jco4O3Dft4HDg=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=QQPLdVEyyoIh+WWPG9GpjHSK3ED8N2Y+MQrLTV0o/c0JJE4+GpbkKzAV9+f+LTe3S
-	 NAGDgPhrHlcCyVZXrmAZ3PQ1Sl2mTCjkP375HgPT2SQjssX7Fohb5nOIbozQ/ETmEi
-	 1oywb1v6FvMJOckrX9GiM8Zo9NAPVeHe3rwk9iIw=
+	by mail.kernel.org (Postfix) with ESMTP id E357D20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:25:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iWYh2Nd0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440416AbfJRVYt (ORCPT
+        id S2440481AbfJRVZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 17:24:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57578 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727508AbfJRVYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 17:24:48 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C003220679;
-        Fri, 18 Oct 2019 21:24:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571433888;
-        bh=XodxEAJdmw1CAkdlRH8NDfuJ2VdPX6jco4O3Dft4HDg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=KoftfP9L9mtOV63jzH9uu+GmN+JK5PpRj3eSRelYfKiy6VH7uM4mcfNv/2BgUhLwu
-         KAG5tIcPS2ugb0iRDxQ7V59K2OO7FlSry9EhwqOxPT3htauyAb7jE2f0DpqMNinClF
-         Nu83MEJLmwFc9xXqtgqwB8LbBWu/TFB4+R4lefXQ=
-Subject: Re: [PATCH linux-kselftest/test v2] lib/list-test: add a test for the
- 'list' doubly linked list
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        David Gow <davidgow@google.com>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20191010185631.26541-1-davidgow@google.com>
- <20191011140727.49160042fafa20d5867f8df7@linux-foundation.org>
- <CABVgOS=UwWxwD97c6y-XzbLWVhznPjBO3qvQEzX=8jTJ-gBi3A@mail.gmail.com>
- <20191011145519.7b7a1d16ecdead9bec212c01@linux-foundation.org>
- <CABVgOS=W4cfFoE=JT4mbk1zkUsreucrw_B81R2jwDCFPocomHQ@mail.gmail.com>
- <20191016173233.2bd9c9d47f12453c1cb4a9b7@linux-foundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <84f0b15f-f451-fce7-1ab2-1ecdf740c864@kernel.org>
-Date:   Fri, 18 Oct 2019 15:24:46 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 18 Oct 2019 17:25:13 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37243 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727508AbfJRVZN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 17:25:13 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f22so7373663wmc.2;
+        Fri, 18 Oct 2019 14:25:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=yZfAzIb/Kba55Aw+sHVK09/x4YWKV6syg8pmtZMsJ50=;
+        b=iWYh2Nd0eM/HeqF1v6SwZNakMYD+XJJS0R7WEABGsIvTS0U12VMb4Hk3oKkMK5BqB9
+         oNRweWnwMGVcURXallNaXSuhdW284JnhCX3GtezlOZCnlaJcZlxdmBHtuM1AywT8B64G
+         ncMAmpyBemJRtB945SHX4Nd09pVpLJB1QroQvqfdzRduyXPLk7+woTUBFctpALyGfR1z
+         qH5jTQGvwSPOP3Rxq+gNcFjM+z9N7veA5jqu/oG6cq1ZuboLCw8nz3QvsM5Q2YFRZE+R
+         buUB1MFfEtNjaJ3sPBn3VprE5bUwWtJzT2nsCN5F4zrkaOvuSsYxpqzwcOsft93+NVtH
+         OBdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=yZfAzIb/Kba55Aw+sHVK09/x4YWKV6syg8pmtZMsJ50=;
+        b=Cv4253a9aiYLzmsH5kGQ7LQCrSquORduTavKPOflolwLu+m3fg0HseQarO/H20FwRy
+         8O6QeHtrgL7oRFFZKu60OQrKXAB37vhLfaI44WSAxhkIGM+Q+zDja7goDERXpetRjSit
+         HKRdnaY2ebxNV2dcXnEhc0pt+CC+U1y3x3TWCLyno7wWVn97rs3ZJtoV+u05rLgryo1e
+         6JfqJPHHXFPZrc9jqNH98XaI0VRsoGzZ8HWwXVEzPaE6wWYGyM6vILyORruzgHF0I7nV
+         RjbMLUgkcPnwV/4U0yzqa2uyfT5NrDralvgM6jadPw7k+6COCiq075muZ84VKfTB5lTt
+         SlZA==
+X-Gm-Message-State: APjAAAVoZ0I7NBnKkT8p1rNOSOSIcyMgfBESDyrXXW8gskcmnfxR745e
+        s72Zw7J4Bw1Tw35M3usG9Uo=
+X-Google-Smtp-Source: APXvYqxCdRItkxuKaHa8vVnC37xc2LT62VfKDXi9PnR0prcxbx8kyqmTXYuS4mI4Jr57p8oZmKa0cg==
+X-Received: by 2002:a05:600c:29a:: with SMTP id 26mr9887170wmk.127.1571433909253;
+        Fri, 18 Oct 2019 14:25:09 -0700 (PDT)
+Received: from jimi ([77.138.210.146])
+        by smtp.gmail.com with ESMTPSA id r2sm6461653wrm.3.2019.10.18.14.25.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 14:25:08 -0700 (PDT)
+Date:   Sat, 19 Oct 2019 00:25:02 +0300
+From:   Eyal Birger <eyal.birger@gmail.com>
+To:     Zhiyuan Hou <zhiyuan2048@linux.alibaba.com>
+Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, shmulik.ladkani@gmail.com
+Subject: Re: [PATCH net] net: sched: act_mirred: drop skb's dst_entry in
+ ingress redirection
+Message-ID: <20191019002502.0519ea9b@jimi>
+In-Reply-To: <e16cfafe-059c-3106-835e-d32b7bb5ba61@linux.alibaba.com>
+References: <20191012071620.8595-1-zhiyuan2048@linux.alibaba.com>
+        <CAM_iQpVkTb6Qf9J-PuXJoQTZa5ojN_oun64SMv9Kji7tZkxSyA@mail.gmail.com>
+        <e2bd3004-9f4b-f3ce-1214-2140f0b7cc61@linux.alibaba.com>
+        <20191016151307.40f63896@jimi>
+        <e16cfafe-059c-3106-835e-d32b7bb5ba61@linux.alibaba.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191016173233.2bd9c9d47f12453c1cb4a9b7@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/16/19 6:32 PM, Andrew Morton wrote:
-> On Wed, 16 Oct 2019 14:48:59 -0700 David Gow <davidgow@google.com> wrote:
-> 
->> Since KUnit is not yet in Linus' branch, though, it probably makes
->> sense to put this test into the linux-kselftest/test branch, so that
->> there aren't any chances of the list test getting in without the KUnit
->> infrastructure. Ultimately, once KUnit is upstream, this shouldn't be
->> an issue, but it is probably easier to consolidate things for now.
->> Does that sound sensible?
-> 
-> Well, whatever.  I have a note that it's dependent on kunit.
-> 
-David and Andrew,
+Hi,
 
-I have a few comments on CONFIG naming to be consistent with the other
-kunit ext4 test and a couple of other comments that would requite v3.
+On Fri, 18 Oct 2019 00:33:53 +0800
+Zhiyuan Hou <zhiyuan2048@linux.alibaba.com> wrote:
 
-I would like to bundle these in the pull request with KUnit framework.
-Hope that is okay with you.
+> On 2019/10/16 8:13 =E4=B8=8B=E5=8D=88, Eyal Birger wrote:
+> > Hi,
+> >
+> > On Wed, 16 Oct 2019 01:22:01 +0800
+> > Zhiyuan Hou <zhiyuan2048@linux.alibaba.com> wrote:
+> > =20
+> >> On 2019/10/15 1:57 =E4=B8=8A=E5=8D=88, Cong Wang wrote: =20
+> >>> On Sat, Oct 12, 2019 at 12:16 AM Zhiyuan Hou
+> >>> <zhiyuan2048@linux.alibaba.com> wrote: =20
+> >>>> diff --git a/net/sched/act_mirred.c b/net/sched/act_mirred.c
+> >>>> index 9ce073a05414..6108a64c0cd5 100644
+> >>>> --- a/net/sched/act_mirred.c
+> >>>> +++ b/net/sched/act_mirred.c
+> >>>> @@ -18,6 +18,7 @@
+> >>>>    #include <linux/gfp.h>
+> >>>>    #include <linux/if_arp.h>
+> >>>>    #include <net/net_namespace.h>
+> >>>> +#include <net/dst.h>
+> >>>>    #include <net/netlink.h>
+> >>>>    #include <net/pkt_sched.h>
+> >>>>    #include <net/pkt_cls.h>
+> >>>> @@ -298,8 +299,10 @@ static int tcf_mirred_act(struct sk_buff
+> >>>> *skb, const struct tc_action *a,
+> >>>>
+> >>>>           if (!want_ingress)
+> >>>>                   err =3D dev_queue_xmit(skb2);
+> >>>> -       else
+> >>>> +       else {
+> >>>> +               skb_dst_drop(skb2);
+> >>>>                   err =3D netif_receive_skb(skb2);
+> >>>> +       } =20
+> >>> Good catch! =20
+> > Indeed! Thanks for fixing this!
+> > =20
+> >>> I don't want to be picky, but it seems this is only needed
+> >>> when redirecting from egress to ingress, right? That is,
+> >>> ingress to ingress, or ingress to egress is okay? If not,
+> >>> please fix all the cases while you are on it? =20
+> >> Sure. But I think this patch is also needed when redirecting from
+> >> ingress to ingress. Because we cannot assure that a skb has null
+> >> dst in ingress redirection path. For example, if redirecting a skb
+> >> from loopback's ingress to other device's ingress, the skb will
+> >> take a dst.
+> >>
+> >> As commit logs point out, skb with valid dst cannot be made routing
+> >> decision in following process. original dst may cause skb loss or
+> >> other unexpected behavior. =20
+> > On the other hand, removing the dst on ingress-to-ingress
+> > redirection may remove LWT information on incoming packets, which
+> > may be undesired. =20
+> Sorry, I do not understand why lwt information is needed on
+> ingress-to-ingress redirection. lwt is used on output path, isn't it?
+> Can you please give more information?
 
-thanks,
--- Shuah
+On rx path tunnelled packets parameters received on a collect_md tunnel dev=
+ice
+are kept in a metadata dst. See ip_tunnel_rcv() 'tun_dst' parameter.
 
+The rx metadata dst can be matched by a number of mechanisms like routing
+rules, eBPF, OVS, and netfilter.
 
+Eyal.
