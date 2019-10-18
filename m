@@ -2,245 +2,127 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 531F3CA9EA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C0BCA9EA5
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32ECA222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1BE3222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 10:38:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Yms85Xbu";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cF+N8Uwk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438991AbfJRKig (ORCPT
+        id S2439145AbfJRKim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 06:38:36 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:34236 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S2438605AbfJRKib (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 06:38:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 57A91B57;
-        Fri, 18 Oct 2019 03:38:04 -0700 (PDT)
-Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6BFB83F6C4;
-        Fri, 18 Oct 2019 03:38:03 -0700 (PDT)
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, nico@fluxnic.net
-Subject: [PATCH v3 4/5] cpufreq: vexpress-spc: remove lots of debug messages
-Date:   Fri, 18 Oct 2019 11:37:48 +0100
-Message-Id: <20191018103749.11226-5-sudeep.holla@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191018103749.11226-1-sudeep.holla@arm.com>
-References: <20191018103749.11226-1-sudeep.holla@arm.com>
+        Fri, 18 Oct 2019 06:38:42 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:43556 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408284AbfJRKiX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 06:38:23 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 4393A612F6; Fri, 18 Oct 2019 10:38:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571395102;
+        bh=DDzea6D+szQ9vq8iio9ZbHXTx9y94I7ALFnpAw8tZ/Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Yms85Xbu2q9tQbXVKsZUqDHJR6CzSTqesztydnB1bfmQEXszanTjxHPOSm+BwmBT8
+         JR9mtoSLxc4VwK+upe5/KWrt3tH0qhfEdev/iJQLnqnRffjlU4D2ql72FkI/av+iRt
+         CTP5btPKVKVCBhN107zfobsvCYpOSzjvk2V3J12k=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 01224612E2;
+        Fri, 18 Oct 2019 10:38:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571395099;
+        bh=DDzea6D+szQ9vq8iio9ZbHXTx9y94I7ALFnpAw8tZ/Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cF+N8Uwkb5NwlB/zkGAHv6ZvarrVhig1upqcadwyDtotmcpP9jl2eYWdHJ50+zChi
+         AhsA7dqi8S9Km3a0tAeZNjst7Qszf4i6CW3H0q13fiURPAkK267mG89KFAtRNpvhiH
+         WLjH3BvVBn4OQzVaDVPhv3VzJdq2XBioXEdEs7O4=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 18 Oct 2019 16:08:18 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Maxime Ripard <mripard@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Alex Elder <elder@linaro.org>,
+        linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH] arm64: defconfig: Enable Qualcomm remoteproc dependencies
+In-Reply-To: <20191009001442.15719-1-bjorn.andersson@linaro.org>
+References: <20191009001442.15719-1-bjorn.andersson@linaro.org>
+Message-ID: <95a80ff0e89a568d223fab6eb1f9362a@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver have been used and tested for year now and the extensive
-debug/log messages in the driver are not really required anymore.
-Get rid of those unnecessary log messages.
+On 2019-10-09 05:44, Bjorn Andersson wrote:
+> Enable the the power domains, reset controllers and remote block device
+> memory access drivers necessary to boot the Audio, Compute and Modem
+> DSPs on Qualcomm SDM845.
+> 
+> None of the power domains are system critical, but needs to be builtin
+> as the driver core prohibits probe deferal past late initcall.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Acked-by: Nicolas Pitre <nico@fluxnic.net>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- drivers/cpufreq/vexpress-spc-cpufreq.c | 69 ++++++--------------------
- 1 file changed, 14 insertions(+), 55 deletions(-)
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 
-diff --git a/drivers/cpufreq/vexpress-spc-cpufreq.c b/drivers/cpufreq/vexpress-spc-cpufreq.c
-index 3eaeefea66b9..132610424747 100644
---- a/drivers/cpufreq/vexpress-spc-cpufreq.c
-+++ b/drivers/cpufreq/vexpress-spc-cpufreq.c
-@@ -84,9 +84,6 @@ static unsigned int find_cluster_maxfreq(int cluster)
- 			max_freq = cpu_freq;
- 	}
- 
--	pr_debug("%s: cluster: %d, max freq: %d\n", __func__, cluster,
--			max_freq);
--
- 	return max_freq;
- }
- 
-@@ -99,22 +96,15 @@ static unsigned int clk_get_cpu_rate(unsigned int cpu)
- 	if (is_bL_switching_enabled())
- 		rate = VIRT_FREQ(cur_cluster, rate);
- 
--	pr_debug("%s: cpu: %d, cluster: %d, freq: %u\n", __func__, cpu,
--			cur_cluster, rate);
--
- 	return rate;
- }
- 
- static unsigned int ve_spc_cpufreq_get_rate(unsigned int cpu)
- {
--	if (is_bL_switching_enabled()) {
--		pr_debug("%s: freq: %d\n", __func__, per_cpu(cpu_last_req_freq,
--					cpu));
--
-+	if (is_bL_switching_enabled())
- 		return per_cpu(cpu_last_req_freq, cpu);
--	} else {
-+	else
- 		return clk_get_cpu_rate(cpu);
--	}
- }
- 
- static unsigned int
-@@ -137,9 +127,6 @@ ve_spc_cpufreq_set_rate(u32 cpu, u32 old_cluster, u32 new_cluster, u32 rate)
- 		new_rate = rate;
- 	}
- 
--	pr_debug("%s: cpu: %d, old cluster: %d, new cluster: %d, freq: %d\n",
--			__func__, cpu, old_cluster, new_cluster, new_rate);
--
- 	ret = clk_set_rate(clk[new_cluster], new_rate * 1000);
- 	if (!ret) {
- 		/*
-@@ -155,8 +142,6 @@ ve_spc_cpufreq_set_rate(u32 cpu, u32 old_cluster, u32 new_cluster, u32 rate)
- 	}
- 
- 	if (WARN_ON(ret)) {
--		pr_err("clk_set_rate failed: %d, new cluster: %d\n", ret,
--				new_cluster);
- 		if (bLs) {
- 			per_cpu(cpu_last_req_freq, cpu) = prev_rate;
- 			per_cpu(physical_cluster, cpu) = old_cluster;
-@@ -171,9 +156,6 @@ ve_spc_cpufreq_set_rate(u32 cpu, u32 old_cluster, u32 new_cluster, u32 rate)
- 
- 	/* Recalc freq for old cluster when switching clusters */
- 	if (old_cluster != new_cluster) {
--		pr_debug("%s: cpu: %d, old cluster: %d, new cluster: %d\n",
--				__func__, cpu, old_cluster, new_cluster);
--
- 		/* Switch cluster */
- 		bL_switch_request(cpu, new_cluster);
- 
-@@ -183,13 +165,10 @@ ve_spc_cpufreq_set_rate(u32 cpu, u32 old_cluster, u32 new_cluster, u32 rate)
- 		new_rate = find_cluster_maxfreq(old_cluster);
- 		new_rate = ACTUAL_FREQ(old_cluster, new_rate);
- 
--		if (new_rate) {
--			pr_debug("%s: Updating rate of old cluster: %d, to freq: %d\n",
--					__func__, old_cluster, new_rate);
--
--			if (clk_set_rate(clk[old_cluster], new_rate * 1000))
--				pr_err("%s: clk_set_rate failed: %d, old cluster: %d\n",
--						__func__, ret, old_cluster);
-+		if (new_rate &&
-+		    clk_set_rate(clk[old_cluster], new_rate * 1000)) {
-+			pr_err("%s: clk_set_rate failed: %d, old cluster: %d\n",
-+			       __func__, ret, old_cluster);
- 		}
- 		mutex_unlock(&cluster_lock[old_cluster]);
- 	}
-@@ -283,8 +262,6 @@ static int merge_cluster_tables(void)
- 				j++) {
- 			table[k].frequency = VIRT_FREQ(i,
- 					freq_table[i][j].frequency);
--			pr_debug("%s: index: %d, freq: %d\n", __func__, k,
--					table[k].frequency);
- 			k++;
- 		}
- 	}
-@@ -292,8 +269,6 @@ static int merge_cluster_tables(void)
- 	table[k].driver_data = k;
- 	table[k].frequency = CPUFREQ_TABLE_END;
- 
--	pr_debug("%s: End, table: %p, count: %d\n", __func__, table, k);
--
- 	return 0;
- }
- 
-@@ -307,7 +282,6 @@ static void _put_cluster_clk_and_freq_table(struct device *cpu_dev,
- 
- 	clk_put(clk[cluster]);
- 	dev_pm_opp_free_cpufreq_table(cpu_dev, &freq_table[cluster]);
--	dev_dbg(cpu_dev, "%s: cluster: %d\n", __func__, cluster);
- }
- 
- static void put_cluster_clk_and_freq_table(struct device *cpu_dev,
-@@ -324,10 +298,9 @@ static void put_cluster_clk_and_freq_table(struct device *cpu_dev,
- 
- 	for_each_present_cpu(i) {
- 		struct device *cdev = get_cpu_device(i);
--		if (!cdev) {
--			pr_err("%s: failed to get cpu%d device\n", __func__, i);
-+
-+		if (!cdev)
- 			return;
--		}
- 
- 		_put_cluster_clk_and_freq_table(cdev, cpumask);
- 	}
-@@ -354,19 +327,12 @@ static int _get_cluster_clk_and_freq_table(struct device *cpu_dev,
- 		goto out;
- 
- 	ret = dev_pm_opp_init_cpufreq_table(cpu_dev, &freq_table[cluster]);
--	if (ret) {
--		dev_err(cpu_dev, "%s: failed to init cpufreq table, cpu: %d, err: %d\n",
--				__func__, cpu_dev->id, ret);
-+	if (ret)
- 		goto out;
--	}
- 
- 	clk[cluster] = clk_get(cpu_dev, NULL);
--	if (!IS_ERR(clk[cluster])) {
--		dev_dbg(cpu_dev, "%s: clk: %p & freq table: %p, cluster: %d\n",
--				__func__, clk[cluster], freq_table[cluster],
--				cluster);
-+	if (!IS_ERR(clk[cluster]))
- 		return 0;
--	}
- 
- 	dev_err(cpu_dev, "%s: Failed to get clk for cpu: %d, cluster: %d\n",
- 			__func__, cpu_dev->id, cluster);
-@@ -401,10 +367,9 @@ static int get_cluster_clk_and_freq_table(struct device *cpu_dev,
- 	 */
- 	for_each_present_cpu(i) {
- 		struct device *cdev = get_cpu_device(i);
--		if (!cdev) {
--			pr_err("%s: failed to get cpu%d device\n", __func__, i);
-+
-+		if (!cdev)
- 			return -ENODEV;
--		}
- 
- 		ret = _get_cluster_clk_and_freq_table(cdev, cpumask);
- 		if (ret)
-@@ -419,18 +384,14 @@ static int get_cluster_clk_and_freq_table(struct device *cpu_dev,
- 	clk_big_min = get_table_min(freq_table[0]);
- 	clk_little_max = VIRT_FREQ(1, get_table_max(freq_table[1]));
- 
--	pr_debug("%s: cluster: %d, clk_big_min: %d, clk_little_max: %d\n",
--			__func__, cluster, clk_big_min, clk_little_max);
--
- 	return 0;
- 
- put_clusters:
- 	for_each_present_cpu(i) {
- 		struct device *cdev = get_cpu_device(i);
--		if (!cdev) {
--			pr_err("%s: failed to get cpu%d device\n", __func__, i);
-+
-+		if (!cdev)
- 			return -ENODEV;
--		}
- 
- 		_put_cluster_clk_and_freq_table(cdev, cpumask);
- 	}
-@@ -500,8 +461,6 @@ static int ve_spc_cpufreq_exit(struct cpufreq_policy *policy)
- 	}
- 
- 	put_cluster_clk_and_freq_table(cpu_dev, policy->related_cpus);
--	dev_dbg(cpu_dev, "%s: Exited, cpu: %d\n", __func__, policy->cpu);
--
- 	return 0;
- }
- 
+> ---
+>  arch/arm64/configs/defconfig | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm64/configs/defconfig 
+> b/arch/arm64/configs/defconfig
+> index c9a867ac32d4..42f042ba1039 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -732,10 +732,13 @@ CONFIG_RPMSG_QCOM_GLINK_SMEM=m
+>  CONFIG_RPMSG_QCOM_SMD=y
+>  CONFIG_RASPBERRYPI_POWER=y
+>  CONFIG_IMX_SCU_SOC=y
+> +CONFIG_QCOM_AOSS_QMP=y
+>  CONFIG_QCOM_COMMAND_DB=y
+>  CONFIG_QCOM_GENI_SE=y
+>  CONFIG_QCOM_GLINK_SSR=m
+> +CONFIG_QCOM_RMTFS_MEM=m
+>  CONFIG_QCOM_RPMH=y
+> +CONFIG_QCOM_RPMHPD=y
+>  CONFIG_QCOM_SMEM=y
+>  CONFIG_QCOM_SMD_RPM=y
+>  CONFIG_QCOM_SMP2P=y
+> @@ -780,6 +783,8 @@ CONFIG_PWM_ROCKCHIP=y
+>  CONFIG_PWM_SAMSUNG=y
+>  CONFIG_PWM_SUN4I=m
+>  CONFIG_PWM_TEGRA=m
+> +CONFIG_RESET_QCOM_AOSS=y
+
+I should probably fix this ^^
+
+> +CONFIG_RESET_QCOM_PDC=m
+>  CONFIG_RESET_TI_SCI=y
+>  CONFIG_PHY_XGENE=y
+>  CONFIG_PHY_SUN4I_USB=y
+
 -- 
-2.17.1
-
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
