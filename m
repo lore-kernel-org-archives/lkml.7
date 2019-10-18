@@ -2,81 +2,199 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8E2CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 155BACA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7DB921897
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:55:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571424917;
-	bh=K/12HBOLREs70oPt0BZw/4JhTqL9elo+MXR7+xUsZpc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mEbtJCuWoeGdVWTH4iMP44Ga5ycBqEzqpTgcPNzRnlnSYQYbNI7lP34mzTMmWXMl0
-	 Aw3y3Rd7vLs+5fcvBcFYyntSIpgASdSUoobCmdbRQNtr1SbSpuP40g7dJx/t76txyw
-	 1RGie8m5vmAEQ1Gbi4kqWXB8oBawFphuv4zOLL64=
+	by mail.kernel.org (Postfix) with ESMTP id EF6A020640
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:57:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443110AbfJRSzQ (ORCPT
+        id S2443171AbfJRS5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:55:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55574 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 14:57:45 -0400
+Received: from mga02.intel.com ([134.134.136.20]:1321 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726421AbfJRSzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:55:16 -0400
-Received: from localhost (unknown [38.98.37.137])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F60220640;
-        Fri, 18 Oct 2019 18:55:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571424915;
-        bh=K/12HBOLREs70oPt0BZw/4JhTqL9elo+MXR7+xUsZpc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lSZOPZ5s+y6I0QKlrMUyTBW6wCcQf+ClsnwoUbqkZ0ShgPjqSHXIqLI1ZUmD9voHo
-         yVeGB/LPOjtZuCbmteO7cUk+fNre3cNoksos3d9qDvait1oTrFbG1ewzJq71c+lmx1
-         STz8i25nWbFnfehNscC5vHfMSPlSsNncz7Sd001g=
-Date:   Fri, 18 Oct 2019 11:54:58 -0700
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Oliver Neukum <oneukum@suse.com>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 2/2] USB: ldusb: fix ring-buffer locking
-Message-ID: <20191018185458.GA1191145@kroah.com>
-References: <20191018151955.25135-1-johan@kernel.org>
- <20191018151955.25135-3-johan@kernel.org>
+        id S2443133AbfJRS5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 14:57:45 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 11:57:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,312,1566889200"; 
+   d="scan'208";a="195545164"
+Received: from wittejoe-mobl.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.249.39.3])
+  by fmsmga008.fm.intel.com with ESMTP; 18 Oct 2019 11:57:42 -0700
+Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
+        id 81E0121E76; Fri, 18 Oct 2019 21:54:19 +0300 (EEST)
+Date:   Fri, 18 Oct 2019 21:54:19 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/6] media: ov6650: Fix arbitrary selection of master
+ clock rate
+Message-ID: <20191018185419.GC3712@kekkonen.localdomain>
+References: <20191013125050.4153-1-jmkrzyszt@gmail.com>
+ <20191013125050.4153-7-jmkrzyszt@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191018151955.25135-3-johan@kernel.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191013125050.4153-7-jmkrzyszt@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 05:19:55PM +0200, Johan Hovold wrote:
-> The custom ring-buffer implementation was merged without any locking
-> whatsoever, but a spinlock was later added by commit 9d33efd9a791
-> ("USB: ldusb bugfix").
+Hi Janusz,
+
+On Sun, Oct 13, 2019 at 02:50:50PM +0200, Janusz Krzysztofik wrote:
+> A hardcoded 12 MHz master clock frequency has been assumed since
+> conversion of the driver from soc_camera sensor to a standalone V4L2
+> subdevice by commit 23a52386fabe ("media: ov6650: convert to standalone
+> v4l2 subdevice").  Fix it.
 > 
-> The lock did not cover the loads from the ring-buffer entry after
-> determining the buffer was non-empty, nor the update of the tail index
-> once the entry had been processed. The former could lead to stale data
-> being returned, while the latter could lead to memory corruption on
-> sufficiently weakly ordered architectures.
+> Define a static table of supported master clock rates (fix misnamed
+> symbol while being at it), then use v4l2_clk_get/set_rate() to obtain
+> a clock rate matching one of those supported.  On success, apply
+> respective master clock hardware divisor provided by the matching
+> element of the table.
+> 
+> Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+> ---
+>  drivers/media/i2c/ov6650.c | 64 ++++++++++++++++++++++++++++++++++----
+>  1 file changed, 58 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
+> index f4723c0b5c70..13fd7c4699b2 100644
+> --- a/drivers/media/i2c/ov6650.c
+> +++ b/drivers/media/i2c/ov6650.c
+> @@ -124,7 +124,7 @@
+>  
+>  #define DEF_AECH		0x4D
+>  
+> -#define CLKRC_6MHz		0x00
+> +#define CLKRC_8MHz		0x00
+>  #define CLKRC_12MHz		0x40
+>  #define CLKRC_16MHz		0x80
+>  #define CLKRC_24MHz		0xc0
+> @@ -201,6 +201,29 @@ struct ov6650 {
+>  	u32 code;
+>  };
+>  
+> +struct ov6650_xclk {
+> +	unsigned long	rate;
+> +	u8		clkrc;
+> +};
+> +
+> +static const struct ov6650_xclk ov6650_xclk[] = {
+> +{
+> +	.rate	= 8000000,
+> +	.clkrc	= CLKRC_8MHz,
+> +},
+> +{
+> +	.rate	= 12000000,
+> +	.clkrc	= CLKRC_12MHz,
+> +},
+> +{
+> +	.rate	= 16000000,
+> +	.clkrc	= CLKRC_16MHz,
+> +},
+> +{
+> +	.rate	= 24000000,
+> +	.clkrc	= CLKRC_24MHz,
+> +},
+> +};
+>  
+>  static u32 ov6650_codes[] = {
+>  	MEDIA_BUS_FMT_YUYV8_2X8,
+> @@ -774,7 +797,7 @@ static int ov6650_reset(struct i2c_client *client)
+>  }
+>  
+>  /* program default register values */
+> -static int ov6650_prog_dflt(struct i2c_client *client)
+> +static int ov6650_prog_dflt(struct i2c_client *client, u8 clkrc)
+>  {
+>  	int ret;
+>  
+> @@ -782,7 +805,7 @@ static int ov6650_prog_dflt(struct i2c_client *client)
+>  
+>  	ret = ov6650_reg_write(client, REG_COMA, 0);	/* ~COMA_RESET */
+>  	if (!ret)
+> -		ret = ov6650_reg_write(client, REG_CLKRC, CLKRC_12MHz);
+> +		ret = ov6650_reg_write(client, REG_CLKRC, clkrc);
+>  	if (!ret)
+>  		ret = ov6650_reg_rmw(client, REG_COMB, 0, COMB_BAND_FILTER);
+>  
+> @@ -793,8 +816,10 @@ static int ov6650_video_probe(struct v4l2_subdev *sd)
+>  {
+>  	struct i2c_client *client = v4l2_get_subdevdata(sd);
+>  	struct ov6650 *priv = to_ov6650(client);
+> -	u8		pidh, pidl, midh, midl;
+> -	int		ret;
+> +	const struct ov6650_xclk *xclk;
+> +	unsigned long rate;
+> +	u8 pidh, pidl, midh, midl;
+> +	int i, ret;
+>  
+>  	priv->clk = v4l2_clk_get(&client->dev, NULL);
+>  	if (IS_ERR(priv->clk)) {
+> @@ -803,6 +828,33 @@ static int ov6650_video_probe(struct v4l2_subdev *sd)
+>  		return ret;
+>  	}
+>  
+> +	rate = v4l2_clk_get_rate(priv->clk);
+> +	for (i = 0; rate && i < ARRAY_SIZE(ov6650_xclk); i++) {
+> +		if (rate != ov6650_xclk[i].rate)
+> +			continue;
+> +
+> +		xclk = &ov6650_xclk[i];
+> +		dev_info(&client->dev, "using host default clock rate %lukHz\n",
+> +			 rate / 1000);
+> +		break;
+> +	}
 
-Ugh.
+xclk is undefined unless it was set in the previous loop. Please initialise
+to to NULL. I can fix that, too, while applying the patch.
 
-This almost looks sane, but what's the odds there is some other issue in
-here as well?  Would it make sense to just convert the code to use the
-"standard" ring buffer code instead?
+> +	for (i = 0; !xclk && i < ARRAY_SIZE(ov6650_xclk); i++) {
+> +		ret = v4l2_clk_set_rate(priv->clk, ov6650_xclk[i].rate);
+> +		if (ret || v4l2_clk_get_rate(priv->clk) != ov6650_xclk[i].rate)
+> +			continue;
+> +
+> +		xclk = &ov6650_xclk[i];
+> +		dev_info(&client->dev, "using negotiated clock rate %lukHz\n",
+> +			 xclk->rate / 1000);
+> +		break;
+> +	}
+> +	if (!xclk) {
+> +		dev_err(&client->dev, "unable to get supported clock rate\n");
+> +		if (!ret)
+> +			ret = -EINVAL;
+> +		goto eclkput;
+> +	}
+> +
+>  	ret = ov6650_s_power(sd, 1);
+>  	if (ret < 0)
+>  		goto eclkput;
+> @@ -836,7 +888,7 @@ static int ov6650_video_probe(struct v4l2_subdev *sd)
+>  
+>  	ret = ov6650_reset(client);
+>  	if (!ret)
+> -		ret = ov6650_prog_dflt(client);
+> +		ret = ov6650_prog_dflt(client, xclk->clkrc);
+>  	if (!ret) {
+>  		struct v4l2_mbus_framefmt mf = ov6650_def_fmt;
+>  
 
-thanks,
+-- 
+Regards,
 
-greg k-h
+Sakari Ailus
+sakari.ailus@linux.intel.com
