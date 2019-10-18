@@ -2,104 +2,90 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0507CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED42ACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9657F2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9724222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:40:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="moNJ/PZS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506015AbfJRTjw (ORCPT
+        id S2634596AbfJRTk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 15:39:52 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:39375 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505992AbfJRTju (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 15:39:50 -0400
-Received: from mail-qt1-f170.google.com ([209.85.160.170]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1Mrxjf-1hjTbV3OxZ-00o0kM; Fri, 18 Oct 2019 21:39:49 +0200
-Received: by mail-qt1-f170.google.com with SMTP id n7so10752588qtb.6;
-        Fri, 18 Oct 2019 12:39:48 -0700 (PDT)
-X-Gm-Message-State: APjAAAUK5K9x/R6uirYIaH9GaEfAt5J9Eqfxp+mosm0Vgq/0cewGOobI
-        OI3Kwv2eQPQYptIzcxgSX6a9M3ISTcgHqSf50/w=
-X-Google-Smtp-Source: APXvYqymx9pRQIUe2GYLUGRMu9h+M26SuGVUoD8rv9IlkdyulST9oDUMU0vWJ1+HJSdIkbSMY8qPMr5o0NKJV3kBq/8=
-X-Received: by 2002:ac8:6956:: with SMTP id n22mr11586436qtr.7.1571427587664;
- Fri, 18 Oct 2019 12:39:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191018154052.1276506-1-arnd@arndb.de> <20191018154201.1276638-29-arnd@arndb.de>
- <20191018184815.GP35946@dtor-ws> <CAK8P3a27==9TeS-RWEvrpnxh+6McqRF-xeb8WPj9pHOn+0zbOQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a27==9TeS-RWEvrpnxh+6McqRF-xeb8WPj9pHOn+0zbOQ@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 18 Oct 2019 21:39:31 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0AP8q9Hk1DB+E=xFGV5RqXnkjkcZRobgU1NRDFMH00AA@mail.gmail.com>
-Message-ID: <CAK8P3a0AP8q9Hk1DB+E=xFGV5RqXnkjkcZRobgU1NRDFMH00AA@mail.gmail.com>
-Subject: Fwd: [PATCH 29/46] Input: touchscreen: use wrapper for pxa2xx ac97 registers
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Fri, 18 Oct 2019 15:40:27 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:50884 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2634531AbfJRTk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 15:40:27 -0400
+Received: from zn.tnic (p200300EC2F0DFC00B10F655CBDDB26D7.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:fc00:b10f:655c:bddb:26d7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E56291EC0CED;
+        Fri, 18 Oct 2019 21:40:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1571427626;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=iewD9vPSIWGz1bjjA+UNy0j+ZZ2OvCwBO2+HWiabPhs=;
+        b=moNJ/PZSE7Aff8oGARRMGz6NPrNiGJtcU5UdXvdc0/tPZReDNw2mwvaIgiKLVB9PLyW36/
+        KiYAOQCMKJGFGxl/RBfkyEYmom5G+Tevx2aTUce7onEmvJEAv3A2+KkjInJnRiTVzAMyPo
+        pUm/cFewqn1MyMZuruBhUY4plUX2QgI=
+Date:   Fri, 18 Oct 2019 21:40:17 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     "Luck, Tony" <tony.luck@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "bberg@redhat.com" <bberg@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Wz3Fi9UiXU9+UcMz0qKaLkLgty2yDv0Y3PQQgWLNrn9Y0xImMiK
- 8L0RKi2nfv0XDU8VyxieYNZU7GyBRf9ouDlH62Wb5aSTJWSqbjoxo0CptSDUTC64ILdccab
- GxpbMyRuU3i/5AqNsTPh4uELAHpoMLsI3c6hMx5G+vRIh14GQGSFrg3+GRDs2EQQcfGlZ1x
- 5y+RXd1QC4jb43v0QEVUw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xZiNwD2NB1w=:XGz2CoblvP1GYfGg0A/JUU
- haYn97PtA1OTO6hIncdQAktykgfCHdR6mx+Z7DgZmrAfLWe7FAVlKdVwDDBjs+LMnnIGKpNYc
- 8YuZDw/jXVuKg7NzOp1Up4aUao56+QBrTcR7UW8sY+VY74S0ftML4ZOCUYy8807+8SOvUYaJI
- TuXwN5v6ooA2M7SCzdpJleBEMVFbbcqaHMtedUUExwb3aT4RvCwkQ3qhmCCKguQGSzONvGC/H
- AVONIxsZ8yzi7IReSryTz42lRhM4T5usyCs81nXQxfc/HPgmXCRzrC/M9JB2eaq0ReaOn9bTY
- 6GLUAouZtUVVLhhXIiez38gGNDqre7WX9NQwWxskI04l4PigDZP524n3iPQMTvfmF85790Hwl
- H1WDqxAlaTiMBNtIV4Wzq6Imam1RkEPaWejiHE1eqClWlYeTSUAUaVWITHEFQrGGkL32aTORf
- RfBRjfooNc/AqJp+EVYH8bm+d+qBCFl329IqZW7Dl5+A6BmjDI0hRVxclano1Usfnx3tiStup
- uLOnOo5mCb/wSeQ/ISGGZsZVxZDBFMa8z2Q/wXhk9Zgk9xNK+ZB3sWK3LtyrKEtidD85CnDSr
- bMNK0m73po/EewKIeGe5HfSRbJ/6UtEqKAuCAEAjIESX4ZTbV04uGkJhdK8KWZOp95Phu4YoK
- T54DlleleyAbZxqLgUE3bn8Weskbq1psXTbVFb6lhyrvZehlg94rq6kwZDS955Mj95Fr1hiVz
- oH5yy4e3Xff+EZ/1+EKFyo8ZLkitzxixXkdQtZWEMoA9KkzCWnUHoly8xg9HPEJ/H7lQkh9N8
- uonOo7wqHKMAptb/qAqmRJ4D1uHn2irzgN3T2Le965h9doCbtjWADjuMaEGNjhm6fZUdbZefb
- aUyGOZgshiYm3XHjbESA==
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "ckellner@redhat.com" <ckellner@redhat.com>
+Subject: Re: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal
+ throttle messages
+Message-ID: <20191018194017.GE17053@zn.tnic>
+References: <20191014212101.25719-1-srinivas.pandruvada@linux.intel.com>
+ <20191015084833.GD2311@hirez.programming.kicks-ass.net>
+ <f481b4ab6dfebbc0637c843e5f1cd4ddfd4bd60b.camel@linux.intel.com>
+ <20191016081405.GO2328@hirez.programming.kicks-ass.net>
+ <20191016140001.GF1138@zn.tnic>
+ <3908561D78D1C84285E8C5FCA982C28F7F4A57D0@ORSMSX115.amr.corp.intel.com>
+ <20191017214445.GG14441@zn.tnic>
+ <c2ce4ef128aad84616b2dc21f6230ad4db12194b.camel@linux.intel.com>
+ <20191018132309.GD17053@zn.tnic>
+ <0f78feb77feba6d3add74a46a16b9d0b3b9c3653.camel@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <0f78feb77feba6d3add74a46a16b9d0b3b9c3653.camel@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 8:48 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> On Fri, Oct 18, 2019 at 05:41:44PM +0200, Arnd Bergmann wrote:
-> > To avoid a dependency on the pxa platform header files with
-> > hardcoded registers, change the driver to call a wrapper
-> > in the pxa2xx-ac97-lib that encapsulates all the other
-> > ac97 stuff.
->
-> Not supper happy about adding module dependencies. Can we include
-> mach/regs-ac97.h from include/sound/pxa2xx-lib.h and use static inlines?
-> Someone needs to include mach/regs-ac97.h in the end...
->
-> Or there is something later in the series that needs it?
+On Fri, Oct 18, 2019 at 08:55:17AM -0700, Srinivas Pandruvada wrote:
+> I assume that someone is having performance issues or occasion reboots,
+> look at the logs. Is it a fair assumption?
 
-One of the goals of the series is to completely remove all mach/*.h headers
-and place them somewhere else, ideally inaccessible to device drivers.
+Yes, that is a valid use case IMO.
 
-In case of mach/regs-ac97.h, the later patch "ASoC: pxa: ac97: use normal
-MMIO accessors" passes the physical register base address as a platform
-device resource that gets ioremapped in the ac97 driver, rather than
-hardcoding the virtual address in a global header.
+> But if a system is running at up to 87.5% of duty cycle on top of
+> lowest possible frequency of around 800MHz, someone will notice.
 
-I agree that the exported function is still ugly, but I hope it's enough of
-an improvement over the previous state that we can do it anyway.
+Yes, but that doesn't justify for those printk statements to be
+KERN_CRIT. They're just fine as warnings.
 
-If you have any better ideas though, I can give that a try, too.
-One possibility would be a higher-level interface exported on top
-of 'struct snd_ac97', but I could not figure out how to do this.
+-- 
+Regards/Gruss,
+    Boris.
 
-     Arnd
+https://people.kernel.org/tglx/notes-about-netiquette
