@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02882CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 484CACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF31521925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:15:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CF8921925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436910;
-	bh=NLmoFS64RoWdYxbg20A3xc1xvUz733WUVaV8uglnhwk=;
+	s=default; t=1571436918;
+	bh=6lfw3MQx37kk/pOuC3qfn5dmCfIy7mklSWz7Kk50wx8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QwG2EEicRPdIAWlXOqEb9qQI44dbqafkscv8+umkTHYpjMDIws2AgMgXvqEfvH+uV
-	 lpjvfYMvXHci/ANlL6Me92E8BOCCplkL2MeyG+WYTO2wR3b6cu0R8aa4btaK+F0+5J
-	 uZxi4s6XQc3SMMHS00y+/AReEPn3L7YTDqwx1yZs=
+	b=LHr3+xnDHhRsxLHp3//3yIGL3dF1A9EaWFpT8KoOjXDqL/t63vu3WNxbR94aEhXS+
+	 SrCdvaPLKYD8GdTheCXot3L37Acknz+YpDqDnbMj/u42TOmR6RtKd0OxAR8UQ94X79
+	 yBINPu5k89LiuxE4UIEpr+pqHNj4VLdx/7Dxcvxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392530AbfJRWPJ (ORCPT
+        id S2392568AbfJRWPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:15:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41860 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:15:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388596AbfJRWJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:09:10 -0400
+        id S2388515AbfJRWJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:09:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F257222D4;
-        Fri, 18 Oct 2019 22:09:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E1C02247A;
+        Fri, 18 Oct 2019 22:09:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436549;
-        bh=NLmoFS64RoWdYxbg20A3xc1xvUz733WUVaV8uglnhwk=;
+        s=default; t=1571436544;
+        bh=6lfw3MQx37kk/pOuC3qfn5dmCfIy7mklSWz7Kk50wx8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lC+U6hmC1IFKxHk2G4AFT780ecdmfzCLEbhQ6tSkjqFTs8+CsOWkbOsZAQg1WtYGj
-         ouwVFFko8JNKdyTBOCUPJ0ToWpSD0NdSLXBphta6oGjRRgTBVCQ/YLZ3u2tFlogJSj
-         JlUkuwrauBtSMv1ODWHVRvAWXyxLgjzzx9kKKeIs=
+        b=QVfY9t3tWytQ8+FBvvIqEVCQwe8H7bPXREEdZAWYHcalnZEJRv6GWopk6Oy9RdcLg
+         ZXsAem8TyZRsj/A+85EqmGzG5dHfbdxCYXbShXzVVszEeYAOWpcVovB21vdxNFykRW
+         DLMeiD3mVQt1MXumQhSzqfXfq8znmMyCn/8g+bMI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marco Felsch <m.felsch@pengutronix.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 48/56] iio: adc: ad799x: fix probe error handling
-Date:   Fri, 18 Oct 2019 18:07:45 -0400
-Message-Id: <20191018220753.10002-48-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 45/56] fs: ocfs2: fix a possible null-pointer dereference in ocfs2_info_scan_inode_alloc()
+Date:   Fri, 18 Oct 2019 18:07:42 -0400
+Message-Id: <20191018220753.10002-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
 References: <20191018220753.10002-1-sashal@kernel.org>
@@ -61,41 +66,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit c62dd44901cfff12acc5792bf3d2dec20bcaf392 ]
+[ Upstream commit 2abb7d3b12d007c30193f48bebed781009bebdd2 ]
 
-Since commit 0f7ddcc1bff1 ("iio:adc:ad799x: Write default config on probe
-and reset alert status on probe") the error path is wrong since it
-leaves the vref regulator on. Fix this by disabling both regulators.
+In ocfs2_info_scan_inode_alloc(), there is an if statement on line 283
+to check whether inode_alloc is NULL:
 
-Fixes: 0f7ddcc1bff1 ("iio:adc:ad799x: Write default config on probe and reset alert status on probe")
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+    if (inode_alloc)
+
+When inode_alloc is NULL, it is used on line 287:
+
+    ocfs2_inode_lock(inode_alloc, &bh, 0);
+        ocfs2_inode_lock_full_nested(inode, ...)
+            struct ocfs2_super *osb = OCFS2_SB(inode->i_sb);
+
+Thus, a possible null-pointer dereference may occur.
+
+To fix this bug, inode_alloc is checked on line 286.
+
+This bug is found by a static analysis tool STCheck written by us.
+
+Link: http://lkml.kernel.org/r/20190726033717.32359-1-baijiaju1990@gmail.com
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/ad799x.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/ocfs2/ioctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iio/adc/ad799x.c b/drivers/iio/adc/ad799x.c
-index 22426ae4af97a..7d1895035af68 100644
---- a/drivers/iio/adc/ad799x.c
-+++ b/drivers/iio/adc/ad799x.c
-@@ -817,10 +817,10 @@ static int ad799x_probe(struct i2c_client *client,
+diff --git a/fs/ocfs2/ioctl.c b/fs/ocfs2/ioctl.c
+index ab30c005cc4bc..9fa98abecfc6b 100644
+--- a/fs/ocfs2/ioctl.c
++++ b/fs/ocfs2/ioctl.c
+@@ -290,7 +290,7 @@ static int ocfs2_info_scan_inode_alloc(struct ocfs2_super *osb,
+ 	if (inode_alloc)
+ 		inode_lock(inode_alloc);
  
- 	ret = ad799x_write_config(st, st->chip_config->default_config);
- 	if (ret < 0)
--		goto error_disable_reg;
-+		goto error_disable_vref;
- 	ret = ad799x_read_config(st);
- 	if (ret < 0)
--		goto error_disable_reg;
-+		goto error_disable_vref;
- 	st->config = ret;
- 
- 	ret = iio_triggered_buffer_setup(indio_dev, NULL,
+-	if (o2info_coherent(&fi->ifi_req)) {
++	if (inode_alloc && o2info_coherent(&fi->ifi_req)) {
+ 		status = ocfs2_inode_lock(inode_alloc, &bh, 0);
+ 		if (status < 0) {
+ 			mlog_errno(status);
 -- 
 2.20.1
 
