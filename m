@@ -2,110 +2,97 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2FDCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 484EACA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E24E720854
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17D5B2054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:29:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="U2/qBjFc"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YkN24xcm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506106AbfJRU1d (ORCPT
+        id S2406515AbfJRU2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 16:27:33 -0400
-Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.123]:19624 "EHLO
-        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2443420AbfJRU07 (ORCPT
+        Fri, 18 Oct 2019 16:28:54 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:53280 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404558AbfJRU2L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 16:26:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571430351;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=NW3mRlbGbfeDunz3kPNWIYRsTEKfeJ6w6UloX2TJNho=;
-        b=U2/qBjFcCR+uj7xSqRH4N19PmmWnjZw2Hg0fRB4mFVhR9eYJvS5qP+qnEyRXC0zaJo
-        ioG5Znk7xL0khCEUntYrGM0zSrsv/vYhSfl0IY0Doc12CS2Tla+k/6dE6EIafdTu59fy
-        7x/DC3rgCdA5QcpoM+I/io/5NhcD2kO47XYCxMgDFNsRUAYelWwRSoX6cg3RCfY5SPu2
-        /Px31ZT3Tl/zr87mqBwtHd/u3izGT5mgP5hzQOZ7/SvP08kMgQoVEinMlgKCtbI1hERd
-        8C8umNIml2k5N8CVZrbOz4I9EmzcuhynWHCpujGALoxo5nVM8zfd3Qg6A9I0NtxJ2l6P
-        0EcA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6F3CFF60="
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
-        with ESMTPSA id R0b2a8v9IKPcDUu
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Fri, 18 Oct 2019 22:25:38 +0200 (CEST)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        David Sterba <dsterba@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, stable@vger.kernel.org
-Subject: [PATCH 8/9] net: wireless: ti: wl1251 use new SDIO_VENDOR_ID_TI_WL1251 definition
-Date:   Fri, 18 Oct 2019 22:25:29 +0200
-Message-Id: <ddc2d28c3cd12e69ccad0819e5ed97ca204d04dc.1571430329.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <cover.1571430329.git.hns@goldelico.com>
-References: <cover.1571430329.git.hns@goldelico.com>
+        Fri, 18 Oct 2019 16:28:11 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9IKS3IM085329;
+        Fri, 18 Oct 2019 15:28:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571430483;
+        bh=a+GAE0sVEXOhLy6brVlHTcwN/KDv0zWpSHSOu4P36c8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=YkN24xcmOMIn0U7VQzsxJBYzWI0nHZRNSIlCd3PeJdqcVkqxl/Vq7GXzK0Cx0PIrG
+         wkHWok4zRTKOwXMROQyN+5u03K3V1Wj26OVXs3gNgIwU0oR2a2XewH75iB8hsmLqRW
+         J5eZvK7/x5vr2uV1v6JtVPyOcSBusdta861oOtN8=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9IKS36B024931
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 18 Oct 2019 15:28:03 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 18
+ Oct 2019 15:28:03 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 18 Oct 2019 15:27:55 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IKS3wP067488;
+        Fri, 18 Oct 2019 15:28:03 -0500
+Subject: Re: [PATCH v14 12/19] leds: lp55xx: Convert LED class registration to
+ devm_*
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191018122521.6757-1-dmurphy@ti.com>
+ <20191018122521.6757-13-dmurphy@ti.com>
+ <855cd70e-69d5-c5fe-3eb1-d0faee9327c6@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <b7d84fe5-8a19-2635-c696-06d539cff3d3@ti.com>
+Date:   Fri, 18 Oct 2019 15:27:30 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <855cd70e-69d5-c5fe-3eb1-d0faee9327c6@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SDIO_VENDOR_ID_TI_WL1251 is now defined in mmc/sdio_ids.h separately
-from SDIO_VENDOR_ID_TI for wl1271.
+Jacek
 
-Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks file")
+On 10/18/19 1:02 PM, Jacek Anaszewski wrote:
+> Dan,
+>
+> Thank you for the patch.
+>
+> On 10/18/19 2:25 PM, Dan Murphy wrote:
+>> Convert the LED class registration calls to the LED devm_*
+>> registration calls.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   drivers/leds/leds-lp5521.c        |  9 +++------
+>>   drivers/leds/leds-lp5523.c        |  9 +++------
+>>   drivers/leds/leds-lp55xx-common.c | 15 +--------------
+>>   drivers/leds/leds-lp55xx-common.h |  2 --
+>>   drivers/leds/leds-lp8501.c        |  9 +++------
+>>   5 files changed, 10 insertions(+), 34 deletions(-)
+> What about drivers/leds/leds-lp5562.c?
+>
+Ack I will make that change too.
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: <stable@vger.kernel.org> # 4.11.0
----
- drivers/net/wireless/ti/wl1251/sdio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/ti/wl1251/sdio.c b/drivers/net/wireless/ti/wl1251/sdio.c
-index c54a273713ed..42b55f3a50df 100644
---- a/drivers/net/wireless/ti/wl1251/sdio.c
-+++ b/drivers/net/wireless/ti/wl1251/sdio.c
-@@ -52,7 +52,7 @@ static void wl1251_sdio_interrupt(struct sdio_func *func)
- }
- 
- static const struct sdio_device_id wl1251_devices[] = {
--	{ SDIO_DEVICE(SDIO_VENDOR_ID_TI, SDIO_DEVICE_ID_TI_WL1251) },
-+	{ SDIO_DEVICE(SDIO_VENDOR_ID_TI_WL1251, SDIO_DEVICE_ID_TI_WL1251) },
- 	{}
- };
- MODULE_DEVICE_TABLE(sdio, wl1251_devices);
--- 
-2.19.1
+Dn
 
