@@ -2,215 +2,162 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A67FCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D30CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22963222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C85E205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:20:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="RsS1qicP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393750AbfJRQTy (ORCPT
+        id S2394846AbfJRQUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:19:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48746 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727429AbfJRQTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:19:54 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AA51610C0943;
-        Fri, 18 Oct 2019 16:19:53 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BFA125D9CA;
-        Fri, 18 Oct 2019 16:19:51 +0000 (UTC)
-Subject: Re: [PATCH v5 0/5] Add NUMA-awareness to qspinlock
-To:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
-        peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com
-Cc:     steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com, rahul.x.yadav@oracle.com
-References: <20191016042903.61081-1-alex.kogan@oracle.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <312ebdff-b1fe-489d-384a-bb3f268500f1@redhat.com>
-Date:   Fri, 18 Oct 2019 12:19:51 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 18 Oct 2019 12:20:32 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:45958 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390022AbfJRQUb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 12:20:31 -0400
+Received: by mail-il1-f195.google.com with SMTP id u1so6031079ilq.12
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:20:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=9uIYAnyPMezy1SrLVChvjUvSTT25CSaPRKsdjVZO6n8=;
+        b=RsS1qicPZcnkl76YmnbfWfB4DsiuiCLUqloFqkV4cKo1n8DFJo7UEQSSDFodJSbKB/
+         aBWZqVCPZgMDcLDXyYzENWxYIXywuatRXqle5E7LpooPoQQUBy7bYET/lR3hCkblPVpQ
+         lRCxDCweDqgN5VH3+jmycEAt4tkhNiTGcj63IOj6HoqYIOC+FHhzbw0j2Z6Q6PcheRlq
+         V05ZlaVDqncElnNNeR/8BJBUr0rrldkoPBjEym9DYsl1rkcPeHcDWbU59h32Cz6ffBHn
+         hRdElR9UrqvDGkKzkyMvLFvQ1KF9n7QBf9pfXR5M4kaxLzPEox6QLi5JDuA66WL4yGC9
+         X2Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=9uIYAnyPMezy1SrLVChvjUvSTT25CSaPRKsdjVZO6n8=;
+        b=JSNvTQvDFXgrKIPqo5SIN78XHx/XRxzIwxseYPp9UFEQ7B1grTyYX0ulJxQnoz+8CW
+         uV2Bjn7h1JS+uM6dSeHRG/VUqMKn1Ge9lYYDgFLlJkeZn2GLlIcY1F0+uGHulDMAF5pM
+         o3A4nn8G+k6L2qzzI2VZupEkf5U9bR92ali6sy5CrihB0qeb8+iCq95oj90acajdmEHc
+         g0cJUnFIzJPxbTvYIgixvntgpqDe8lvcpgw8YdDtQHsAZvlWM8fsdmOpmgY8+UYvtM8h
+         jGHIIK8/JNhiMPCc/LfPY0RfgsKpG8amI4pJ4bKDTjkPOwfBo33GdZoCpUmyojYqeWBs
+         IMOw==
+X-Gm-Message-State: APjAAAVApKgeaaGh2/VhOQrEfwCxrBpt60smzKB/BnCz52Mt420udJpM
+        xgZK2wa0WwtKFHPbjLThoLUH8GPnmrHhgAqRVgOChw==
+X-Google-Smtp-Source: APXvYqw2YK1lwgF/TFTkt9RSwtJ17zC9sjmAtKYD5ZCcsqeN2ggjp9zo5LRHoqTvo6xjx+0AuXbxZHCiRDt5708hL+c=
+X-Received: by 2002:a92:410c:: with SMTP id o12mr11498464ila.287.1571415630625;
+ Fri, 18 Oct 2019 09:20:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191016042903.61081-1-alex.kogan@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Fri, 18 Oct 2019 16:19:53 +0000 (UTC)
+References: <20191007033200.13443-1-brgl@bgdev.pl> <20191014081220.GK4545@dell>
+ <CACRpkda9Kco-bVPw1OA6FMpQ1L8dZ4WFJ227wTCM9rh5JE7-+A@mail.gmail.com>
+ <20191016130536.222vsi5whkoy6vzo@uno.localdomain> <20191017072550.GK4365@dell>
+ <20191018150426.7w5q55nhkiqbqhuk@uno.localdomain>
+In-Reply-To: <20191018150426.7w5q55nhkiqbqhuk@uno.localdomain>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 18 Oct 2019 18:20:19 +0200
+Message-ID: <CAMRc=Mc0-c_Cnbbh981pXQHW70GW1kh5hYioxJQM6JrOnCe4NQ@mail.gmail.com>
+Subject: Re: [PATCH v5 0/7] backlight: gpio: simplify the driver
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/16/19 12:28 AM, Alex Kogan wrote:
-> Changes from v4:
-> ----------------
+pt., 18 pa=C5=BA 2019 o 17:02 Jacopo Mondi <jacopo@jmondi.org> napisa=C5=82=
+(a):
 >
-> - Switch to a deterministic bound on the number of intra-node handoffs,
-> as suggested by Longman.
+> Hi,
 >
-> - Scan the main queue after acquiring the MCS lock and before acquiring 
-> the spinlock (pre-scan), as suggested by Longman. If no thread is found 
-> in pre-scan, try again after acquiring the spinlock, resuming from the
-> same place where pre-scan stopped.
+> On Thu, Oct 17, 2019 at 08:25:50AM +0100, Lee Jones wrote:
+> > On Wed, 16 Oct 2019, Jacopo Mondi wrote:
+> >
+> > > Hi, sorry for not having replied earlier
+> > >
+> > > On Wed, Oct 16, 2019 at 02:56:57PM +0200, Linus Walleij wrote:
+> > > > On Mon, Oct 14, 2019 at 10:12 AM Lee Jones <lee.jones@linaro.org> w=
+rote:
+> > > >
+> > > > > >  arch/sh/boards/mach-ecovec24/setup.c         |  33 ++++--
+> > > > >
+> > > > > I guess we're just waiting for the SH Acks now?
+> > > >
+> > > > The one maintainer with this board is probably overloaded.
+> > > >
+> > > > I would say just apply it, it can't hold back the entire series.
+> > >
+> > > I've been able to resurect the Ecovec, and I've also been given a cop=
+y
+> > > of its schematics file a few weeks ago.
+> > >
+> > > It's in my TODO list to test this series but I didn't manage to find
+> > > time. If I pinky promise I get back to you before end of the week,
+> > > could you wait for me ? :)
 >
-> - Convert the secondary queue to a cyclic list such that the tail’s @next
-> points to the head of the queue. Store the pointer to the secondary queue
-> tail (rather than head) in @locked. This eliminates the need for the @tail
-> field in CNA nodes, making space for fields required by the two changes
-> above.
+> Finally had some time to spend on this.
 >
-> - Change arch_mcs_spin_lock_contended() to arch_mcs_spin_lock(), and
-> fix misuse of old macro names, as suggested by Hanjun.
+> As I've reported to Bartosz, this version does not work on Ecovec out
+> of the box, as the GPIO line connected to the backlight needs to be
+> configured to work in output mode before registering the backlight
+> device.
 >
+> With this simple change:
 >
-> Summary
-> -------
+> $ git diff
+> diff --git a/arch/sh/boards/mach-ecovec24/setup.c b/arch/sh/boards/mach-e=
+covec24/setup.c
+> index dd427bac5cde..eec6e805c3ed 100644
+> --- a/arch/sh/boards/mach-ecovec24/setup.c
+> +++ b/arch/sh/boards/mach-ecovec24/setup.c
+> @@ -1473,6 +1473,7 @@ static int __init arch_setup(void)
+>  #endif
+>  #endif
 >
-> Lock throughput can be increased by handing a lock to a waiter on the
-> same NUMA node as the lock holder, provided care is taken to avoid
-> starvation of waiters on other NUMA nodes. This patch introduces CNA
-> (compact NUMA-aware lock) as the slow path for qspinlock. It is
-> enabled through a configuration option (NUMA_AWARE_SPINLOCKS).
->
-> CNA is a NUMA-aware version of the MCS lock. Spinning threads are
-> organized in two queues, a main queue for threads running on the same
-> node as the current lock holder, and a secondary queue for threads
-> running on other nodes. Threads store the ID of the node on which
-> they are running in their queue nodes. After acquiring the MCS lock and
-> before acquiring the spinlock, the lock holder scans the main queue
-> looking for a thread running on the same node (pre-scan). If found (call
-> it thread T), all threads in the main queue between the current lock
-> holder and T are moved to the end of the secondary queue.  If such T
-> is not found, we make another scan of the main queue after acquiring 
-> the spinlock when unlocking the MCS lock (post-scan), starting at the
-> node where pre-scan stopped. If both scans fail to find such T, the
-> MCS lock is passed to the first thread in the secondary queue. If the
-> secondary queue is empty, the MCS lock is passed to the next thread in the
-> main queue. To avoid starvation of threads in the secondary queue, those
-> threads are moved back to the head of the main queue after a certain
-> number of intra-node lock hand-offs.
->
-> More details are available at https://arxiv.org/abs/1810.05600.
->
-> We have done some performance evaluation with the locktorture module
-> as well as with several benchmarks from the will-it-scale repo.
-> The following locktorture results are from an Oracle X5-4 server
-> (four Intel Xeon E7-8895 v3 @ 2.60GHz sockets with 18 hyperthreaded
-> cores each). Each number represents an average (over 25 runs) of the
-> total number of ops (x10^7) reported at the end of each run. The 
-> standard deviation is also reported in (), and in general is about 3%
-> from the average. The 'stock' kernel is v5.4.0-rc1,
-> commit d90f2df63c5c, compiled in the default configuration. 
-> 'patch-CNA' is the modified kernel with NUMA_AWARE_SPINLOCKS set; 
-> the speedup is calculated dividing 'patch-CNA' by 'stock'.
->
-> #thr  	 stock        patch-CNA   speedup (patch-CNA/stock)
->   1  2.674 (0.118)  2.736 (0.119)  1.023
->   2  2.588 (0.141)  2.603 (0.108)  1.006
->   4  4.230 (0.120)  4.220 (0.127)  0.998
->   8  5.362 (0.181)  6.679 (0.182)  1.246
->  16  6.639 (0.133)  8.050 (0.200)  1.213
->  32  7.359 (0.149)  8.792 (0.168)  1.195
->  36  7.443 (0.142)  8.873 (0.230)  1.192
->  72  6.554 (0.147)  9.317 (0.158)  1.421
-> 108  6.156 (0.093)  9.404 (0.191)  1.528
-> 142  5.659 (0.093)  9.361 (0.184)  1.654
->
-> The following tables contain throughput results (ops/us) from the same
-> setup for will-it-scale/open1_threads: 
->
-> #thr  	 stock        patch-CNA   speedup (patch-CNA/stock)
->   1  0.532 (0.002)  0.532 (0.003)  1.000
->   2  0.785 (0.024)  0.779 (0.025)  0.992
->   4  1.426 (0.018)  1.409 (0.021)  0.988
->   8  1.779 (0.101)  1.711 (0.127)  0.962
->  16  1.761 (0.093)  1.671 (0.104)  0.949
->  32  0.935 (0.063)  1.619 (0.093)  1.731
->  36  0.936 (0.082)  1.591 (0.086)  1.699
->  72  0.839 (0.043)  1.667 (0.097)  1.988
-> 108  0.842 (0.035)  1.701 (0.091)  2.021
-> 142  0.830 (0.037)  1.714 (0.098)  2.066
->
-> and will-it-scale/lock2_threads:
->
-> #thr  	 stock        patch-CNA   speedup (patch-CNA/stock)
->   1  1.555 (0.009)  1.577 (0.002)  1.014
->   2  2.644 (0.060)  2.682 (0.062)  1.014
->   4  5.159 (0.205)  5.197 (0.231)  1.007
->   8  4.302 (0.221)  4.279 (0.318)  0.995
->  16  4.259 (0.111)  4.087 (0.163)  0.960
->  32  2.583 (0.112)  4.077 (0.120)  1.578
->  36  2.499 (0.106)  4.076 (0.106)  1.631
->  72  1.979 (0.085)  4.077 (0.123)  2.061
-> 108  2.096 (0.090)  4.043 (0.130)  1.929
-> 142  1.913 (0.109)  3.984 (0.108)  2.082
->
-> Our evaluation shows that CNA also improves performance of user 
-> applications that have hot pthread mutexes. Those mutexes are 
-> blocking, and waiting threads park and unpark via the futex 
-> mechanism in the kernel. Given that kernel futex chains, which
-> are hashed by the mutex address, are each protected by a 
-> chain-specific spin lock, the contention on a user-mode mutex 
-> translates into contention on a kernel level spinlock. 
->
-> Here are the results for the leveldb ‘readrandom’ benchmark:
->
-> #thr  	 stock        patch-CNA   speedup (patch-CNA/stock)
->   1  0.532 (0.007)  0.535 (0.015)  1.006
->   2  0.665 (0.030)  0.673 (0.034)  1.011
->   4  0.715 (0.023)  0.716 (0.026)  1.002
->   8  0.686 (0.023)  0.686 (0.024)  1.001
->  16  0.719 (0.030)  0.737 (0.025)  1.025
->  32  0.740 (0.034)  0.959 (0.105)  1.296
->  36  0.730 (0.024)  1.079 (0.112)  1.478
->  72  0.652 (0.018)  1.160 (0.024)  1.778
-> 108  0.622 (0.016)  1.157 (0.028)  1.860
-> 142  0.600 (0.015)  1.145 (0.035)  1.908
->
-> Additional performance numbers are available in previous revisions
-> of the series.
->
-> Further comments are welcome and appreciated.
->
-> Alex Kogan (5):
->   locking/qspinlock: Rename mcs lock/unlock macros and make them more
->     generic
->   locking/qspinlock: Refactor the qspinlock slow path
->   locking/qspinlock: Introduce CNA into the slow path of qspinlock
->   locking/qspinlock: Introduce starvation avoidance into CNA
->   locking/qspinlock: Introduce the shuffle reduction optimization into
->     CNA
->
->  arch/arm/include/asm/mcs_spinlock.h |   6 +-
->  arch/x86/Kconfig                    |  19 +++
->  arch/x86/include/asm/qspinlock.h    |   4 +
->  arch/x86/kernel/alternative.c       |  41 +++++
->  include/asm-generic/mcs_spinlock.h  |   4 +-
->  kernel/locking/mcs_spinlock.h       |  20 +--
->  kernel/locking/qspinlock.c          |  77 ++++++++-
->  kernel/locking/qspinlock_cna.h      | 312 ++++++++++++++++++++++++++++++++++++
->  kernel/locking/qspinlock_paravirt.h |   2 +-
->  9 files changed, 462 insertions(+), 23 deletions(-)
->  create mode 100644 kernel/locking/qspinlock_cna.h
->
-I have reviewed this patchset. Asides from a few issues I had raised in
-earlier emails, I don't see other problems in the code. Thanks for your
-hard work. I think we are almost there.
+> +       gpio_direction_output(GPIO_PTR1, 1);
 
-Cheers,
-Longman
+This is a hack actually. The problem lies with the gpio backlight
+driver - it should really set the mode to output, not leave it as is.
+If there's no good reason to keep it as it is now, I'll add another
+patch to the series that moves the call to devm_gpiod_get() to where
+we've already determined the initial value in probe() and pass an
+appropriate GPIOD_OUT_HIGH/LOW flag.
 
+Bart
+
+>         gpiod_add_lookup_table(&gpio_backlight_lookup);
+>         gpio_backlight_device =3D platform_device_register_full(
+>                                         &gpio_backlight_device_info);
+>
+> I can now control the gpio through the backlight interface.
+>
+> So please add this bit on top of next iteration and add my:
+> Tested-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>
+> Thanks and sorry for the long time it took!
+>
+> >
+> > Yes, no problem.
+> >
+> > --
+> > Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+> > Linaro Services Technical Lead
+> > Linaro.org =E2=94=82 Open source software for ARM SoCs
+> > Follow Linaro: Facebook | Twitter | Blog
