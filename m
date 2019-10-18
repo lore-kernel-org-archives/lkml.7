@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB52CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C09CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1E320872
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 654B520872
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437480;
-	bh=KT6JUrdslB3ISnhA1e5qu4apPwPFT29frazQVGLrH9w=;
+	s=default; t=1571437485;
+	bh=M2HzMP+l+Weo8FPbty/bQt2z8x2v4tAHox0FIemkwwE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RWHvRkEWmhwI0v78CGNjoAwWpWssWT9SaVk4v3lHBPrzp5SkB/SlzloubHqvMn7zY
-	 TYgQ3HhDB05Sx6ru0fvXSqbmEiLywolbfHw4bb+AbLt6j7lMMi4Gh+7/D18s8ZBNgm
-	 qD6zfq/P7Ti0wqKvuGg7najznicj13iw0sbAs7QI=
+	b=DMak+QESz3smpVRlncpxP/szYjztcvIAJz74DR/wgi4xX6jNeMUHERrxdduoRQ4Nx
+	 qKxG5sgqNdTQdsblaCnLTaP4jsbx+2BUc38lPx25LdD2Kv7iPKc5KdpkaZ0rSBcQ8c
+	 CGa05zn7nX8eXOB0GhSfjVMbiWPpZle8kn8NwzVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394526AbfJRWYi (ORCPT
+        id S2394559AbfJRWYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:24:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36770 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:24:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728993AbfJRWE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:04:59 -0400
+        id S1728947AbfJRWE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:04:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EEEE20679;
-        Fri, 18 Oct 2019 22:04:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB7E02245A;
+        Fri, 18 Oct 2019 22:04:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436298;
-        bh=KT6JUrdslB3ISnhA1e5qu4apPwPFT29frazQVGLrH9w=;
+        s=default; t=1571436296;
+        bh=M2HzMP+l+Weo8FPbty/bQt2z8x2v4tAHox0FIemkwwE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pUitnbIb4idLkYAgJ1WPahi57kbRl1UgMb36wzjRg8iYrvfZfcTFzbPh9820Ms0mb
-         71DOOzeAr2OcyCWhlKXOLT/3yiN+ajobJ1hv46z0n3gId7f1SZBqXLyvX/v/GdlqmH
-         hEgEw71pigqQ2G2qcCyjU9yHKDoxCTe/326ZeUO8=
+        b=rNw6x9AZfiqn74/FDK4j/YtZpihauN+e0ozH2BJohw0gq2RwxpLked+47uzHi6nht
+         9hgpyJnY10xYtsbMUhkdaDMONdGxga6XN+/iGY0iH1Wozb+5afXD+jk+1rWFh0uSgz
+         +HQWVMDZDakqftpSSVCZnV0Bu3vt7/zwDaitYf08=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Popa <stefan.popa@analog.com>, Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 70/89] iio: accel: adxl372: Fix/remove limitation for FIFO samples
-Date:   Fri, 18 Oct 2019 18:03:05 -0400
-Message-Id: <20191018220324.8165-70-sashal@kernel.org>
+Cc:     Nirmoy Das <nirmoy.das@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.3 68/89] drm/amdgpu: fix memory leak
+Date:   Fri, 18 Oct 2019 18:03:03 -0400
+Message-Id: <20191018220324.8165-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,49 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Popa <stefan.popa@analog.com>
+From: Nirmoy Das <nirmoy.das@amd.com>
 
-[ Upstream commit d202ce4787e446556c6b9d01f84734c3f8174ba3 ]
+[ Upstream commit 083164dbdb17c5ea4ad92c1782b59c9d75567790 ]
 
-Currently, the driver sets the FIFO_SAMPLES register with the number of
-sample sets (maximum of 170 for 3 axis data, 256 for 2-axis and 512 for
-single axis). However, the FIFO_SAMPLES register should store the number
-of samples, regardless of how the FIFO format is configured.
+cleanup error handling code and make sure temporary info array
+with the handles are freed by amdgpu_bo_list_put() on
+idr_replace()'s failure.
 
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-Fixes: f4f55ce38e5f ("iio:adxl372: Add FIFO and interrupts support")
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Nirmoy Das <nirmoy.das@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/accel/adxl372.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/iio/accel/adxl372.c b/drivers/iio/accel/adxl372.c
-index 055227cb3d43c..863fe61a371fb 100644
---- a/drivers/iio/accel/adxl372.c
-+++ b/drivers/iio/accel/adxl372.c
-@@ -474,12 +474,17 @@ static int adxl372_configure_fifo(struct adxl372_state *st)
- 	if (ret < 0)
- 		return ret;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
+index 7bcf86c619995..61e38e43ad1d5 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
+@@ -270,7 +270,7 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
  
--	fifo_samples = st->watermark & 0xFF;
-+	/*
-+	 * watermark stores the number of sets; we need to write the FIFO
-+	 * registers with the number of samples
-+	 */
-+	fifo_samples = (st->watermark * st->fifo_set_size);
- 	fifo_ctl = ADXL372_FIFO_CTL_FORMAT_MODE(st->fifo_format) |
- 		   ADXL372_FIFO_CTL_MODE_MODE(st->fifo_mode) |
--		   ADXL372_FIFO_CTL_SAMPLES_MODE(st->watermark);
-+		   ADXL372_FIFO_CTL_SAMPLES_MODE(fifo_samples);
+ 	r = amdgpu_bo_create_list_entry_array(&args->in, &info);
+ 	if (r)
+-		goto error_free;
++		return r;
  
--	ret = regmap_write(st->regmap, ADXL372_FIFO_SAMPLES, fifo_samples);
-+	ret = regmap_write(st->regmap,
-+			   ADXL372_FIFO_SAMPLES, fifo_samples & 0xFF);
- 	if (ret < 0)
- 		return ret;
+ 	switch (args->in.operation) {
+ 	case AMDGPU_BO_LIST_OP_CREATE:
+@@ -283,8 +283,7 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
+ 		r = idr_alloc(&fpriv->bo_list_handles, list, 1, 0, GFP_KERNEL);
+ 		mutex_unlock(&fpriv->bo_list_lock);
+ 		if (r < 0) {
+-			amdgpu_bo_list_put(list);
+-			return r;
++			goto error_put_list;
+ 		}
  
+ 		handle = r;
+@@ -306,9 +305,8 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
+ 		mutex_unlock(&fpriv->bo_list_lock);
+ 
+ 		if (IS_ERR(old)) {
+-			amdgpu_bo_list_put(list);
+ 			r = PTR_ERR(old);
+-			goto error_free;
++			goto error_put_list;
+ 		}
+ 
+ 		amdgpu_bo_list_put(old);
+@@ -325,8 +323,10 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
+ 
+ 	return 0;
+ 
++error_put_list:
++	amdgpu_bo_list_put(list);
++
+ error_free:
+-	if (info)
+-		kvfree(info);
++	kvfree(info);
+ 	return r;
+ }
 -- 
 2.20.1
 
