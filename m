@@ -2,108 +2,192 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89562CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6B7CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FCA020869
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:12:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571433136;
-	bh=nWv0pT1v8ileCG/uTO1XI4TI/P//OjNODZ+LjyV8Pnk=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=vCXDkpJx4ZImVQkvfafU82JzKlZWmox7cThYN2F3HNBKWeWt0FjvCBxAtwv6F5Tzr
-	 THi2iBzpKn8kgKsfQGO2bwzmEoxfWas/EoBJUqd+2LaolXt7sWD4042pVQBv3XN7r/
-	 MYGvvDpU8zO3rZTVo72q6usVfmzGwY5GMNGUD27U=
+	by mail.kernel.org (Postfix) with ESMTP id D3EC12089C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:12:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506123AbfJRVMP (ORCPT
+        id S2506134AbfJRVMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 17:12:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52054 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 17:12:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394095AbfJRVMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 17:12:14 -0400
-Received: from kernel.org (unknown [104.132.0.74])
+        id S2394095AbfJRVMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 17:12:20 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 444D32089C;
-        Fri, 18 Oct 2019 21:12:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571433134;
-        bh=nWv0pT1v8ileCG/uTO1XI4TI/P//OjNODZ+LjyV8Pnk=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=g0MrlMp1cPSmyMilQM/x8aUF2msz5Kh9rffAd7IdbaMnxc3U+UbXjiLIo+wxDNa0G
-         xpMfhYlByJM55jASjiX64wuV127c/ULYwYDlRTFP9+X2hahQKxZgk7+J+jKsveSc+Y
-         u2SyLbvDNl6nIL8wIhnBcA04FCEZI81l3hYDDUXs=
-Content-Type: text/plain; charset="utf-8"
+        by mail.kernel.org (Postfix) with ESMTPSA id 261EE222C3;
+        Fri, 18 Oct 2019 21:12:18 +0000 (UTC)
+Date:   Fri, 18 Oct 2019 17:12:16 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Prateek Sood <prsood@codeaurora.org>
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
+        kaushalk@codeaurora.org, Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>
+Subject: Re: [PATCH] trace: fix race in perf_trace_buf initialization
+Message-ID: <20191018171216.3e446f1e@gandalf.local.home>
+In-Reply-To: <1571120245-4186-1-git-send-email-prsood@codeaurora.org>
+References: <1571120245-4186-1-git-send-email-prsood@codeaurora.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <2700308706c0d46ca06eeb973079a1f18bf553dd.1571390916.git.viresh.kumar@linaro.org>
-References: <2700308706c0d46ca06eeb973079a1f18bf553dd.1571390916.git.viresh.kumar@linaro.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Nishanth Menon <nm@ti.com>, Viresh Kumar <viresh.kumar@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] opp: Reinitialize the list_kref before adding the static OPPs again
-User-Agent: alot/0.8.1
-Date:   Fri, 18 Oct 2019 14:12:13 -0700
-Message-Id: <20191018211214.444D32089C@mail.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Viresh Kumar (2019-10-18 02:28:41)
-> The list_kref reaches a count of 0 when all the static OPPs are removed,
-> for example when dev_pm_opp_of_cpumask_remove_table() is called, though
-> the actual OPP table may not get freed as it may still be referenced by
-> other parts of the kernel, like from a call to
-> dev_pm_opp_set_supported_hw(). And if we call
-> dev_pm_opp_of_cpumask_add_table() again at this point, we must
-> reinitialize the list_kref otherwise the kernel will hit a WARN() in
-> kref infrastructure for incrementing a kref with value 0.
->=20
-> Fixes: 11e1a1648298 ("opp: Don't decrement uninitialized list_kref")
-> Reported-by: Dmitry Osipenko <digetx@gmail.com>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+
+Peter told me it was fine, but I'm also adding Song who is the author
+of the code.
+
+Also needs the tags (which I'll add)
+
+Cc: stable@vger.kernel.org
+Fixes: e12f03d7031a9 ("perf/core: Implement the 'perf_kprobe' PMU")
+
+-- Steve
+
+
+On Tue, 15 Oct 2019 11:47:25 +0530
+Prateek Sood <prsood@codeaurora.org> wrote:
+
+> [  943.034988] Unable to handle kernel paging request at virtual address 0000003106f2003c
+> [  943.043653] Mem abort info:
+> [  943.046679]   ESR = 0x96000045
+> [  943.050428]   Exception class = DABT (current EL), IL = 32 bits
+> [  943.056643]   SET = 0, FnV = 0
+> [  943.060168]   EA = 0, S1PTW = 0
+> [  943.063449] Data abort info:
+> [  943.066474]   ISV = 0, ISS = 0x00000045
+> [  943.070856]   CM = 0, WnR = 1
+> [  943.074016] user pgtable: 4k pages, 39-bit VAs, pgdp = ffffffc034b9b000
+> [  943.081446] [0000003106f2003c] pgd=0000000000000000, pud=0000000000000000
+> [  943.088862] Internal error: Oops: 96000045 [#1] PREEMPT SMP
+> [  943.141700] Process syz-executor (pid: 18393, stack limit = 0xffffffc093190000)
+> [  943.164146] pstate: 80400005 (Nzcv daif +PAN -UAO)
+> [  943.169119] pc : __memset+0x20/0x1ac
+> [  943.172831] lr : memset+0x3c/0x50
+> [  943.176269] sp : ffffffc09319fc50
+> 
+> [  943.557593]  __memset+0x20/0x1ac
+> [  943.560953]  perf_trace_buf_alloc+0x140/0x1a0
+> [  943.565472]  perf_trace_sys_enter+0x158/0x310
+> [  943.569985]  syscall_trace_enter+0x348/0x7c0
+> [  943.574413]  el0_svc_common+0x11c/0x368
+> [  943.578394]  el0_svc_handler+0x12c/0x198
+> [  943.582459]  el0_svc+0x8/0xc
+> 
+> In Ramdumps:
+> total_ref_count = 3
+> perf_trace_buf = (
+>     0x0 -> NULL,
+>     0x0 -> NULL,
+>     0x0 -> NULL,
+>     0x0 -> NULL)
+> 
+> event_call in perf_trace_sys_enter()
+> event_call = 0xFFFFFF900CB511D8 -> (
+>     list = (next = 0xFFFFFF900CB4E2E0, prev = 0xFFFFFF900CB512B0),
+>     class = 0xFFFFFF900CDC8308,
+>     name = 0xFFFFFF900CDDA1D8,
+>     tp = 0xFFFFFF900CDDA1D8,
+>     event = (
+>       node = (next = 0x0, pprev = 0xFFFFFF900CB80210),
+>       list = (next = 0xFFFFFF900CB512E0, prev = 0xFFFFFF900CB4E310),
+>       type = 21,
+>       funcs = 0xFFFFFF900CB51130),
+>     print_fmt = 0xFFFFFF900CB51150,
+>     filter = 0x0,
+>     mod = 0x0,
+>     data = 0x0,
+>     flags = 18,
+>     perf_refcount = 1,
+>     perf_events = 0xFFFFFF8DB8E54158,
+>     prog_array = 0x0,
+>     perf_perm = 0x0)
+> 
+> perf_events added on CPU0
+> (struct hlist_head *)(0xFFFFFF8DB8E54158+__per_cpu_offset[0]) -> (
+>     first = 0xFFFFFFC0980FD0E0 -> (
+>       next = 0x0,
+>       pprev = 0xFFFFFFBEBFD74158))
+> 
+> Could you please confirm:
+> 1) the race mentioned below exists or not.
+> 2) if following patch fixes it.
+> 
+> 
+> >8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8  
+> 
+> A race condition exists while initialiazing perf_trace_buf from
+> perf_trace_init() and perf_kprobe_init().
+> 
+>       CPU0                                        CPU1
+> perf_trace_init()
+>   mutex_lock(&event_mutex)
+>     perf_trace_event_init()
+>       perf_trace_event_reg()
+>         total_ref_count == 0
+> 	buf = alloc_percpu()
+>         perf_trace_buf[i] = buf
+>         tp_event->class->reg() //fails       perf_kprobe_init()
+> 	goto fail                              perf_trace_event_init()
+>                                                  perf_trace_event_reg()
+>         fail:
+> 	  total_ref_count == 0
+> 
+>                                                    total_ref_count == 0
+>                                                    buf = alloc_percpu()
+>                                                    perf_trace_buf[i] = buf
+>                                                    tp_event->class->reg()
+>                                                    total_ref_count++
+> 
+>           free_percpu(perf_trace_buf[i])
+>           perf_trace_buf[i] = NULL
+> 
+> Any subsequent call to perf_trace_event_reg() will observe total_ref_count > 0,
+> causing the perf_trace_buf to be NULL always. This can result in perf_trace_buf
+> getting accessed from perf_trace_buf_alloc() without being initialized. Acquiring
+> event_mutex in perf_kprobe_init() before calling perf_trace_event_init() should
+> fix this race.
+> 
+> Signed-off-by: Prateek Sood <prsood@codeaurora.org>
 > ---
->  drivers/opp/of.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->=20
-> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> index 6dc41faf74b5..1cbb58240b80 100644
-> --- a/drivers/opp/of.c
-> +++ b/drivers/opp/of.c
-> @@ -663,6 +663,13 @@ static int _of_add_opp_table_v2(struct device *dev, =
-struct opp_table *opp_table)
->                 return 0;
->         }
-> =20
-> +       /*
-> +        * Re-initialize list_kref every time we add static OPPs to the O=
-PP
-> +        * table as the reference count may be 0 after the last tie stati=
-c OPPs
+>  kernel/trace/trace_event_perf.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
+> index 4629a61..48ee92c 100644
+> --- a/kernel/trace/trace_event_perf.c
+> +++ b/kernel/trace/trace_event_perf.c
+> @@ -272,9 +272,11 @@ int perf_kprobe_init(struct perf_event *p_event, bool is_retprobe)
+>  		goto out;
+>  	}
+>  
+> +	mutex_lock(&event_mutex);
+>  	ret = perf_trace_event_init(tp_event, p_event);
+>  	if (ret)
+>  		destroy_local_trace_kprobe(tp_event);
+> +	mutex_unlock(&event_mutex);
+>  out:
+>  	kfree(func);
+>  	return ret;
+> @@ -282,8 +284,10 @@ int perf_kprobe_init(struct perf_event *p_event, bool is_retprobe)
+>  
+>  void perf_kprobe_destroy(struct perf_event *p_event)
+>  {
+> +	mutex_lock(&event_mutex);
+>  	perf_trace_event_close(p_event);
+>  	perf_trace_event_unreg(p_event);
+> +	mutex_unlock(&event_mutex);
+>  
+>  	destroy_local_trace_kprobe(p_event->tp_event);
+>  }
 
-s/tie/time/
-
-> +        * were removed.
-> +        */
-> +       kref_init(&opp_table->list_kref);
-
-It seems racy. Why are we doing this vs. making an entirely new and
-different OPP structure? Or why is the count reaching 0 when something
-is obviously still referencing it?
-
-> +
->         /* We have opp-table node now, iterate over it and add OPPs */
->         for_each_available_child_of_node(opp_table->np, np) {
->                 opp =3D _opp_add_static_v2(opp_table, dev, np);
