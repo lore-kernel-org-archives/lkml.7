@@ -2,104 +2,112 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8825BCA9EA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3C5CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65DE4222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 136EA21D80
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:40:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pJCPbtlK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504628AbfJRHjD (ORCPT
+        id S2442133AbfJRHkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 03:39:03 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37818 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407483AbfJRHjB (ORCPT
+        Fri, 18 Oct 2019 03:40:14 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36907 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393834AbfJRHkN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 03:39:01 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1iLMqf-0006HU-RX; Fri, 18 Oct 2019 07:38:58 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     bhelgaas@google.com, tiwai@suse.com
-Cc:     linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH v6 2/2] ALSA: hda: Allow HDA to be runtime suspended when dGPU is not bound to a driver
-Date:   Fri, 18 Oct 2019 15:38:48 +0800
-Message-Id: <20191018073848.14590-2-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191018073848.14590-1-kai.heng.feng@canonical.com>
-References: <20191018073848.14590-1-kai.heng.feng@canonical.com>
+        Fri, 18 Oct 2019 03:40:13 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p14so5081804wro.4
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 00:40:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=5iztkm06g93DGhL7MltWaye7ky43Diy2spcjfqFIzXg=;
+        b=pJCPbtlKt6Rvp+pV9pRvRRTB2+C2HV3kB8c8I0/yqQfCX1XILLaTFo35IB5nQTJtDM
+         r9tTOQbpFgwCznZAP7qrE4cjnzi9qj6ZmdZGM1h1W5XfeazaxmF2MQu7674gQ2JvQYEr
+         2njL2yf4ovlyLYmjBr4GUucktQC+SrgIDf56mP73dW7lI8dxYXSRuGNBDTX7/SweYT2e
+         riAEXLMNTeT5LEopMjCuOCz8mo1DZscS2DBrV7iO6lbt7JZpcOHcZSgvd4iCvqII523b
+         d9g8mpFLw5ipUQ2n81QUKvjxUvNjgP/G6QBe5rqiruEoearvj6JcSGh2PPB4m2NZOlgO
+         ra8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=5iztkm06g93DGhL7MltWaye7ky43Diy2spcjfqFIzXg=;
+        b=X64ednzFAOmAc7HBfc6nzGpMeM3d1Nqd7bmnPZn5t6CfYqVIOovg4lzfliuE3fIAJO
+         5QJETgEg+h8KRLgm/nYMalI3pW1yppLJTgIcujdaQIRaLvzroYhCjBA5OnzNay2Yvz7d
+         iyOLabGNZYm2W2927xfFo/pCoHTqBbTvYcTjFDXAe8+Ybe+a7si4U6JH9n3fJaZm5e9q
+         mLEqAoGsH0WCdXJN0/gPemnWI5+TWvh0btIkGkUgWdMObITup8r7UgytYHz/vE8hkfEO
+         i2Yhyyu8flZq1pAbQmNBljMr4MgUqUHkYoeGd/pmiPgQfeHIU9bh9Cp3StIZjjB+pZp5
+         QBBg==
+X-Gm-Message-State: APjAAAV8KkVtNQUgRSod3gW2Ta9kZtPFecKy+BHOJKywuXD32NSOwfPE
+        1F7F9mMwqGW/OubdMoFt6V18CsFJPsY=
+X-Google-Smtp-Source: APXvYqyaR1yIy6/nHTciHSlsM7Yad4h/pKWcFB87SKBaPMe+VEelXm6J/rsxud+fKoJs55M7U1t4SQ==
+X-Received: by 2002:adf:a141:: with SMTP id r1mr6580104wrr.122.1571384409625;
+        Fri, 18 Oct 2019 00:40:09 -0700 (PDT)
+Received: from dell ([95.149.164.47])
+        by smtp.gmail.com with ESMTPSA id y1sm5466054wrw.6.2019.10.18.00.40.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 18 Oct 2019 00:40:09 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 08:40:07 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH 29/34] backlight/jornada720: Use CONFIG_PREEMPTION
+Message-ID: <20191018074007.GV4365@dell>
+References: <20191015191821.11479-1-bigeasy@linutronix.de>
+ <20191015191821.11479-30-bigeasy@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191015191821.11479-30-bigeasy@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nvidia proprietary driver doesn't support runtime power management, so
-when a user only wants to use the integrated GPU, it's a common practice
-to let dGPU not to bind any driver, and let its upstream port to be
-runtime suspended. At the end of runtime suspension the port uses
-platform power management to disable power through _OFF method of power
-resource, which is listed by _PR3.
+On Tue, 15 Oct 2019, Sebastian Andrzej Siewior wrote:
 
-After commit b516ea586d71 ("PCI: Enable NVIDIA HDA controllers"), when
-the dGPU comes with an HDA function, the HDA won't be suspended if the
-dGPU is unbound, so the power resource can't be turned off by its
-upstream port driver.
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
+> Both PREEMPT and PREEMPT_RT require the same functionality which today
+> depends on CONFIG_PREEMPT.
+> 
+> Switch the Kconfig dependency to CONFIG_PREEMPTION.
+> 
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Daniel Thompson <daniel.thompson@linaro.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-fbdev@vger.kernel.org
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> [bigeasy: +LCD_HP700]
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+>  drivers/video/backlight/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Commit 37a3a98ef601 ("ALSA: hda - Enable runtime PM only for
-discrete GPU") only allows HDA to be runtime suspended once GPU is
-bound, to keep APU's HDA working.
+Applied, thanks.
 
-However, HDA on dGPU isn't that useful if dGPU is not bound to any
-driver.  So let's relax the runtime suspend requirement for dGPU's HDA
-function, to disable the power source to save lots of power.
-
-BugLink: https://bugs.launchpad.net/bugs/1840835
-Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllers")
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
-v5, v6:
-- No change.
-v4:
-- Find upstream port, it's callee's responsibility now.
-v3:
-- Make changelog more clear.
-v2:
-- Change wording.
-- Rebase to Tiwai's branch.
- sound/pci/hda/hda_intel.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 240f4ca76391..e63b871343e5 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1280,11 +1280,17 @@ static void init_vga_switcheroo(struct azx *chip)
- {
- 	struct hda_intel *hda = container_of(chip, struct hda_intel, chip);
- 	struct pci_dev *p = get_bound_vga(chip->pci);
-+	struct pci_dev *parent;
- 	if (p) {
- 		dev_info(chip->card->dev,
- 			 "Handle vga_switcheroo audio client\n");
- 		hda->use_vga_switcheroo = 1;
--		chip->bus.keep_power = 1; /* cleared in either gpu_bound op or codec probe */
-+
-+		/* cleared in either gpu_bound op or codec probe, or when its
-+		 * upstream port has _PR3 (i.e. dGPU).
-+		 */
-+		parent = pci_upstream_bridge(p);
-+		chip->bus.keep_power = parent ? !pci_pr3_present(parent) : 1;
- 		chip->driver_caps |= AZX_DCAPS_PM_RUNTIME;
- 		pci_dev_put(p);
- 	}
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
