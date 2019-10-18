@@ -2,120 +2,119 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F827CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5F1CA9EAB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61AA8222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:41:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571409676;
-	bh=2mbmhzgegCQlyYXrF5P5gLydyrxlewiD8+y0Ccn/JzU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=J/4OX2AATncbXUz93Vdc0FRlZVo/Ih8yNjoTLSaRF1FnIq3FbQcwIws86j05eTa5X
-	 fxJ1B4CW0dPN73UfVp0RkH3FOd90VkVkZbS9P3Ukb1rTCI21PmP1JFaUq1mMbN0h5A
-	 /XHs8nRaMoTlK7vmD4jyYMfPOo5eq4hWWOQxi2s8=
+	by mail.kernel.org (Postfix) with ESMTP id CC4D8222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:42:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BU0oYx0F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634198AbfJROlO (ORCPT
+        id S2634218AbfJROmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 10:41:14 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40633 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393897AbfJROlN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 10:41:13 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 7so6484992ljw.7;
-        Fri, 18 Oct 2019 07:41:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ysRS4s8CxY/X140fibWCkqyMnE6CoZKaKn2AR9b3AvM=;
-        b=q+yGq87oO6W0uq/4nYX3ExYbn+5Qm051RN0ZcUspbNZZBDKj7X6aMg0tsr8WUyAor4
-         WQVrud/2IuD0q0Xw/SWHTNKEtEaS0ICACbsqoa/Fd5ElsL0hwYNqSqVt5PJ5WBaR2+7T
-         po05GfLFodwytAaVsK4hFAjv0SVQBa3BLGT3a2oN/ohtBf4XPr4fCYD3yOwQ/ktwuaQ6
-         oOeTqwSGLYJjDSd6OfHb4dhSPG0usDtKuNZX/7KhbfQOYqFiGP7K7E/4lAUsxJHnXIcu
-         9pA8O3Ha12oFvEhJoIfcYCbq6vEHsruHagUOAL2XDGWw/pwEdMs7XaHmvFl1FoJzlT+I
-         QKGg==
-X-Gm-Message-State: APjAAAXQPQsRPfP6MliIhQC5Y4OqquPFGcQQ0KeuLISf9ST+xOoNMSkE
-        0kLw84ykCHd7uVgleSPfluE=
-X-Google-Smtp-Source: APXvYqxPNnGLE3QDYPozwfB7fnL0DuUsf074dWCOMMuY5c7yaTj4cr1EQAmQ3SHJnOee2VwHSkZWcQ==
-X-Received: by 2002:a2e:8593:: with SMTP id b19mr6473865lji.34.1571409671391;
-        Fri, 18 Oct 2019 07:41:11 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id o13sm2488267lji.31.2019.10.18.07.41.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 18 Oct 2019 07:41:10 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.2)
-        (envelope-from <johan@kernel.org>)
-        id 1iLTRS-0006RH-Nq; Fri, 18 Oct 2019 16:41:22 +0200
-Date:   Fri, 18 Oct 2019 16:41:22 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     syzbot <syzbot+ba00d6a2a24df57a94ca@syzkaller.appspotmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in ld_usb_read
-Message-ID: <20191018144122.GH21827@localhost>
-References: <0000000000003c013f058fea8493@google.com>
- <CAAeHK+xr9DoBHvF9B8+hN=4iEa-oVDogDtCcb04cxp+Mj3g-dg@mail.gmail.com>
+        Fri, 18 Oct 2019 10:42:16 -0400
+Received: from mail-eopbgr30074.outbound.protection.outlook.com ([40.107.3.74]:57154
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2634209AbfJROmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 10:42:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KTf0m4ucVqhxJyXJO/0exttXQXB1qGBLYaWe13jb3yTlnRjMawJUnkF7+9jIVEfUHuUNt/az3QnJmwHEpqR5uVfQcGRIR1L9jATyVE6ba6bfASeYrkEQSu4Krr/RUshlKZf67ERFnd3kEj+qyospNH8dA2KmA3jS+llYaEoBVHh7BgFr3x4TSpTfYOvo3/8wGZn4hkARY+8UyxRnPMdp2JoveeZj4IQSsZO8Ui2v75nvE7JiVZgJx6x3XauRxaXLcJv7v6kmZoz5/2+ceaxlrp8BOmipdPYdeqwscSMFjyGoHZZa6bzursoA0I44jqmN1p7o/cSRfmE0QecaPRDwUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7d45jBOeqBbKymE2IdKuXiniRWOk1mMm2BRHWF5SS6I=;
+ b=jwr+5fj0bw+oky+LUs5WaxqTK5mmTQNWU3agutemeCHqYlBbqUp9BvpJ7LuzMgLW6ZFU0/D0EI2xQFYZwRMUJwR2Fr15nBEHhlqL5UNqKALKKr+SupWWp0EFfr8/LTiYbGtcTx+8mL2Xx4QggabUFV+AOpVMlirnzi2B5uTPUtox+RA7dvRvabTT5V9iMMr0TwvmxaF5cHdg7LlwF2DpH7Ejlx5SEHE/CPZvASKoVWdD4Y3HD2Ixi54BGv7ZqmhoyKU5hSjrQtSF+R/2qYut6TgjKh82LdBbTybX891qD6mUWhzh+JkJ+Q6ynbY7dmN+nYGtSfTx8p8awdI1xdC2hw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7d45jBOeqBbKymE2IdKuXiniRWOk1mMm2BRHWF5SS6I=;
+ b=BU0oYx0FFL1qKQy0/+X6dDB9pKjrjJ4INsBquM8U9AaK/YCX0O4E4DRo2B96ULAzqRANABQVHat/KXFzSvSZq/yWV9AVaSXar/08no+Ik5gcvt7bK9pjydaF11G3h1VO0CLGkZjXR2FPsEYrtTil/AlRrha1MfoIDxP4N5Cfp8g=
+Received: from DB7PR04MB4425.eurprd04.prod.outlook.com (52.135.140.156) by
+ DB7PR04MB3979.eurprd04.prod.outlook.com (52.134.107.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.19; Fri, 18 Oct 2019 14:42:12 +0000
+Received: from DB7PR04MB4425.eurprd04.prod.outlook.com
+ ([fe80::c068:28ec:7f2f:4a5e]) by DB7PR04MB4425.eurprd04.prod.outlook.com
+ ([fe80::c068:28ec:7f2f:4a5e%6]) with mapi id 15.20.2347.024; Fri, 18 Oct 2019
+ 14:42:12 +0000
+From:   Peng Ma <peng.ma@nxp.com>
+To:     Fabio Estevam <festevam@gmail.com>
+CC:     Vinod <vkoul@kernel.org>, Dan Williams <dan.j.williams@intel.com>,
+        Leo Li <leoyang.li@nxp.com>,
+        =?utf-8?B?S3J6eXN6dG9mIEtvesWCb3dza2k=?= <k.kozlowski.k@gmail.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] Re: [PATCH] dmaengine: fsl-edma: Add eDMA support for QorIQ
+ LS1028A platform
+Thread-Topic: [EXT] Re: [PATCH] dmaengine: fsl-edma: Add eDMA support for
+ QorIQ LS1028A platform
+Thread-Index: AQHVhLtWQPtc6yR4Rkmk/ITG0gU0sqdgdkiAgAAAQmCAAAPyAIAAAD1Q
+Date:   Fri, 18 Oct 2019 14:42:12 +0000
+Message-ID: <DB7PR04MB442531FC495F99A80011E392ED6C0@DB7PR04MB4425.eurprd04.prod.outlook.com>
+References: <20191017070923.6705-1-peng.ma@nxp.com>
+ <CAOMZO5AK+wv0vAfqv7PC-gYF32MSD9nMqFCuRmLxMN6dYZdvGA@mail.gmail.com>
+ <DB7PR04MB4425E937B423C39F0F45FCEDED6C0@DB7PR04MB4425.eurprd04.prod.outlook.com>
+ <CAOMZO5DrJ=T1CZE4bb5bQngrcjDAxMWck-ru25Ew5oeA62L0kA@mail.gmail.com>
+In-Reply-To: <CAOMZO5DrJ=T1CZE4bb5bQngrcjDAxMWck-ru25Ew5oeA62L0kA@mail.gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.ma@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f303bab3-d974-40cc-1e6a-08d753d95c8b
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: DB7PR04MB3979:|DB7PR04MB3979:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB39794D062147A7AD952CBF12ED6C0@DB7PR04MB3979.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-forefront-prvs: 01949FE337
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(39860400002)(366004)(396003)(136003)(13464003)(189003)(199004)(5660300002)(6436002)(66066001)(54906003)(305945005)(86362001)(99286004)(71190400001)(71200400001)(66446008)(64756008)(66476007)(66946007)(66556008)(7736002)(186003)(74316002)(26005)(4744005)(76116006)(76176011)(316002)(52536014)(3846002)(6116002)(6506007)(229853002)(14454004)(256004)(7696005)(9686003)(6916009)(102836004)(8676002)(44832011)(33656002)(8936002)(446003)(25786009)(486006)(478600001)(11346002)(476003)(6246003)(81156014)(4326008)(81166006)(55016002)(1411001)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB3979;H:DB7PR04MB4425.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: b6LKx07Cu6pSFnC9DDThaynZqHT0nv46uPQhNIG3MIAZ5lQz3/BxzFqI0t9vyw2wwfKg/O0kBQusWHrzhjcGn702vwd2tKATNreURrxRCty0Yh8jzVfAszphvyWNcPCVe/awUTIbj7y/KgjtRTbLwxbImxjRa4ac6QzEoAF7/etD/NhfaBSlfh3lKLwz3fl5uslQiBBDat/CmeyMrV3bpaW2TtQxEG45ObvWRp+y+PHVWw0eysJjFNCq3L23VrLzxMfbwOxDpLFq1f2ecNiA9NBLmtqkExiNNJ77iXUrL0+GcCL4Iv8XMKoY1EwRLn2PKyCxkORtlCNJxFcKxBEP8/0o4y/Ewx5vi5EmpMYNxDNtJ1PXtLS7UqC6HDOdcAOaEqpxreiOeitOWy2w3Cs5S70CHHx/0NjrT55dQSoGods=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAeHK+xr9DoBHvF9B8+hN=4iEa-oVDogDtCcb04cxp+Mj3g-dg@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f303bab3-d974-40cc-1e6a-08d753d95c8b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Oct 2019 14:42:12.0934
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 813EwoQfUSBDLF3OrcOQNHb0l2B43j8MI/mEiRSH9zhTUpJugzcGlCfi7gNsIMBd
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB3979
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 02:22:52PM +0200, Andrey Konovalov wrote:
-> On Mon, Aug 12, 2019 at 2:18 PM syzbot
-> <syzbot+ba00d6a2a24df57a94ca@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
-> > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=162aac02600000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=ba00d6a2a24df57a94ca
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1123edc2600000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16079d2c600000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+ba00d6a2a24df57a94ca@syzkaller.appspotmail.com
-> >
-> > ldusb 1-1:0.28: Read buffer overflow, -131386046930688 bytes dropped
-> > ==================================================================
-> > BUG: KASAN: slab-out-of-bounds in _copy_to_user+0x124/0x150
-> > lib/usercopy.c:27
-> > Read of size 2147479552 at addr ffff8881cd580008 by task
-> > syz-executor268/1890
-> >
-> > CPU: 0 PID: 1890 Comm: syz-executor268 Not tainted 5.3.0-rc2+ #25
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Call Trace:
-> >   __dump_stack lib/dump_stack.c:77 [inline]
-> >   dump_stack+0xca/0x13e lib/dump_stack.c:113
-> >   print_address_description+0x6a/0x32c mm/kasan/report.c:351
-> >   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
-> >   kasan_report+0xe/0x12 mm/kasan/common.c:612
-> >   check_memory_region_inline mm/kasan/generic.c:185 [inline]
-> >   check_memory_region+0x128/0x190 mm/kasan/generic.c:192
-> >   _copy_to_user+0x124/0x150 lib/usercopy.c:27
-> >   copy_to_user include/linux/uaccess.h:152 [inline]
-> >   ld_usb_read+0x31a/0x780 drivers/usb/misc/ldusb.c:495
-> 
-> #syz dup: KASAN: use-after-free Read in ld_usb_release
-
-#syz dup: KASAN: slab-out-of-bounds Read in ld_usb_read (3)
+SGkgRmFiaW8sDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEZhYmlvIEVz
+dGV2YW0gPGZlc3RldmFtQGdtYWlsLmNvbT4NCj5TZW50OiAyMDE55bm0MTDmnIgxOOaXpSAyMjo0
+MA0KPlRvOiBQZW5nIE1hIDxwZW5nLm1hQG54cC5jb20+DQo+Q2M6IFZpbm9kIDx2a291bEBrZXJu
+ZWwub3JnPjsgRGFuIFdpbGxpYW1zIDxkYW4uai53aWxsaWFtc0BpbnRlbC5jb20+OyBMZW8NCj5M
+aSA8bGVveWFuZy5saUBueHAuY29tPjsgS3J6eXN6dG9mIEtvesWCb3dza2kgPGsua296bG93c2tp
+LmtAZ21haWwuY29tPjsNCj5GYWJpbyBFc3RldmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+OyBk
+bWFlbmdpbmVAdmdlci5rZXJuZWwub3JnOw0KPmxpbnV4LWtlcm5lbCA8bGludXgta2VybmVsQHZn
+ZXIua2VybmVsLm9yZz4NCj5TdWJqZWN0OiBSZTogW0VYVF0gUmU6IFtQQVRDSF0gZG1hZW5naW5l
+OiBmc2wtZWRtYTogQWRkIGVETUEgc3VwcG9ydCBmb3INCj5Rb3JJUSBMUzEwMjhBIHBsYXRmb3Jt
+DQo+DQo+Q2F1dGlvbjogRVhUIEVtYWlsDQo+DQo+SGkgUGVuZywNCj4NCj5PbiBGcmksIE9jdCAx
+OCwgMjAxOSBhdCAxMToyOCBBTSBQZW5nIE1hIDxwZW5nLm1hQG54cC5jb20+IHdyb3RlOg0KPj4N
+Cj4+IEhpIEZhYmlvLA0KPj4NCj4+IFRoYW5rcyBmb3IgeW91ciBjb21tZW50cy4NCj4+IERvIHlv
+dSBtZWFuIEkgZXhwbGFpbiAiT3VyIHBsYXRmb3JtcyIgaGVyZSBvciBpbiBwYXRjaD8NCj4NCj5J
+dCB3b3VsZCBiZSBiZXR0ZXIgdG8gc2VuZCBhIHYyIHdpdGggYW4gaW1wcm92ZWQgY29tbWl0IGxv
+Zywgd2hpY2ggZXhwbGFpbnMNCj53aGF0ICJPdXIgcGxhdGZvcm1zIiBtZWFuLg0KPg0KPlRoYW5r
+cw0KW1BlbmcgTWFdIEdvZCBpdCAsdGhhbmtzLg0KDQpCZXN0IFJlZ2FyZHMsDQpQZW5nDQo=
