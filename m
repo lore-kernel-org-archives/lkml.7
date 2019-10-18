@@ -5,62 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E2ACA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A7DCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 827DA20869
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA45020869
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571422051;
-	bh=W2NE2Z5+fYaR20AAxk1J8abxM7cQPTYOPbWljunsf2Q=;
+	s=default; t=1571422054;
+	bh=SbhS45iqyc4NiRh9Fs8kUBN+NhCAOfl5HPcgwXXZ5WM=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=zv8W4roQqHnbGWMj+bd3j+dLuj6CqqHvE+4gqiD8718ClHDvptggJlP+LIk8nhWUe
-	 WcqTSGxJ9GyEf7rs+O5B+SUAj2THn88kI7sgh6ROppHCOBLcqoZsAI4AjZNwiGNmjT
-	 a6ti/7Ha8jZgnZcwnO8KRqbscr/uaDebMZM4ozH0=
+	b=TA6GyT1XzycZ/qMn/SWJHUJltsmgTUfTk4AlpVvR4IVUh9YzncgTU9Iuh8HfVrRuI
+	 ef9ZiwqmUjgnzZkoV1mtmnj78Fzrc5OtxcPwnuvgHUd3r7/Imn+VEvCFrhoL3aGoy/
+	 lr5IUJ8uXCIBCyc6sLvyL+gOjKOJSDqkUvm6oZVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505778AbfJRSHa (ORCPT
+        id S2634530AbfJRSH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:07:30 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45486 "EHLO
+        Fri, 18 Oct 2019 14:07:27 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45320 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2634467AbfJRSHW (ORCPT
+        with ESMTP id S2505757AbfJRSHR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:07:22 -0400
+        Fri, 18 Oct 2019 14:07:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=djFLKeCvPYC1JI92wnKGfQBYAzanIKZZLgVKtsjqlsM=; b=hjAvJWo86YgT
-        YloZHOX/P9PXV5w7GM4QznPW9FfFp8TN4tma8sqPWc6YUDmdTEBIXkqAvpFAeJbYV4KdFWyd8lI5z
-        NfE+vYFsMl/6cqI6GQRHR36pqObYoO3MxIhgvJ0/9gwdo2nmOIIKBpbKp52QAKO3GF/BrEPiPnNND
-        8u55M=;
+        List-Archive; bh=UWYU2hlp/17q+ZNz6t8G1ig3ksQwGbwgwvY2Lux56Yk=; b=JqPCc9ztbqfq
+        YSnIrMln6LZiMJrCkj5Yq128E60d+oXbv7oWH0G0CtqD0z3X+lROeWhcIjkT10OY59dEvCKncns10
+        0rZk1rwVRh1AtMJjGNWPfBzgvpN5lX1MLg1Hqd4xAQpqaAOWdOIvH9pb9QkfrBVCycfL+kW83BCEC
+        mJSR0=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iLWea-0004Gu-25; Fri, 18 Oct 2019 18:07:08 +0000
+        id 1iLWec-0004I2-Rf; Fri, 18 Oct 2019 18:07:10 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 8A5912741DEA; Fri, 18 Oct 2019 19:07:07 +0100 (BST)
+        id 4E1912743259; Fri, 18 Oct 2019 19:07:10 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Mans Rullgard <mans@mansr.com>
+To:     Gregory CLEMENT <gregory.clement@bootlin.com>
 Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org,
         Ludovic Desroches <ludovic.desroches@microchip.com>,
         Mark Brown <broonie@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@atmel.com>,
         Nicolas Ferre <nicolas.ferre@microchip.com>,
+        <stable@vger.kernel.org>, stable@vger.kernel.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Applied "spi: atmel: fix handling of cs_change set on non-last xfer" to the spi tree
-In-Reply-To: <20191018153504.4249-1-gregory.clement@bootlin.com>
+Subject: Applied "spi: Fix SPI_CS_HIGH setting when using native and GPIO CS" to the spi tree
+In-Reply-To: <20191018152929.3287-1-gregory.clement@bootlin.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191018180707.8A5912741DEA@ypsilon.sirena.org.uk>
-Date:   Fri, 18 Oct 2019 19:07:07 +0100 (BST)
+Message-Id: <20191018180710.4E1912743259@ypsilon.sirena.org.uk>
+Date:   Fri, 18 Oct 2019 19:07:10 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -68,7 +67,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: atmel: fix handling of cs_change set on non-last xfer
+   spi: Fix SPI_CS_HIGH setting when using native and GPIO CS
 
 has been applied to the spi tree at
 
@@ -93,65 +92,66 @@ to this mail.
 Thanks,
 Mark
 
-From fed8d8c7a6dc2a76d7764842853d81c770b0788e Mon Sep 17 00:00:00 2001
-From: Mans Rullgard <mans@mansr.com>
-Date: Fri, 18 Oct 2019 17:35:04 +0200
-Subject: [PATCH] spi: atmel: fix handling of cs_change set on non-last xfer
+From 3e5ec1db8bfee845d9f8560d1c64aeaccd586398 Mon Sep 17 00:00:00 2001
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Date: Fri, 18 Oct 2019 17:29:29 +0200
+Subject: [PATCH] spi: Fix SPI_CS_HIGH setting when using native and GPIO CS
 
-The driver does the wrong thing when cs_change is set on a non-last
-xfer in a message.  When cs_change is set, the driver deactivates the
-CS and leaves it off until a later xfer again has cs_change set whereas
-it should be briefly toggling CS off and on again.
+When improving the CS GPIO support at core level, the SPI_CS_HIGH
+has been enabled for all the CS lines used for a given SPI controller.
 
-This patch brings the behaviour of the driver back in line with the
-documentation and common sense.  The delay of 10 us is the same as is
-used by the default spi_transfer_one_message() function in spi.c.
-[gregory: rebased on for-5.5 from spi tree]
-Fixes: 8090d6d1a415 ("spi: atmel: Refactor spi-atmel to use SPI framework queue")
-Signed-off-by: Mans Rullgard <mans@mansr.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+However, the SPI framework allows to have on the same controller native
+CS and GPIO CS. The native CS may not support the SPI_CS_HIGH, so they
+should not be setup automatically.
+
+With this patch the setting is done only for the CS that will use a
+GPIO as CS
+
+Fixes: f3186dd87669 ("spi: Optionally use GPIO descriptors for CS GPIOs")
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20191018153504.4249-1-gregory.clement@bootlin.com
+Link: https://lore.kernel.org/r/20191018152929.3287-1-gregory.clement@bootlin.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-atmel.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/spi/spi.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
-index acf318e7330c..2f8c79ce05c8 100644
---- a/drivers/spi/spi-atmel.c
-+++ b/drivers/spi/spi-atmel.c
-@@ -302,7 +302,6 @@ struct atmel_spi {
- 	bool			use_cs_gpios;
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index f8b4654a57d3..d07517151340 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -1711,15 +1711,7 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
+ 		spi->mode |= SPI_3WIRE;
+ 	if (of_property_read_bool(nc, "spi-lsb-first"))
+ 		spi->mode |= SPI_LSB_FIRST;
+-
+-	/*
+-	 * For descriptors associated with the device, polarity inversion is
+-	 * handled in the gpiolib, so all chip selects are "active high" in
+-	 * the logical sense, the gpiolib will invert the line if need be.
+-	 */
+-	if (ctlr->use_gpio_descriptors)
+-		spi->mode |= SPI_CS_HIGH;
+-	else if (of_property_read_bool(nc, "spi-cs-high"))
++	if (of_property_read_bool(nc, "spi-cs-high"))
+ 		spi->mode |= SPI_CS_HIGH;
  
- 	bool			keep_cs;
--	bool			cs_active;
- 
- 	u32			fifo_size;
- };
-@@ -1376,11 +1375,9 @@ static int atmel_spi_one_transfer(struct spi_master *master,
- 				 &msg->transfers)) {
- 			as->keep_cs = true;
- 		} else {
--			as->cs_active = !as->cs_active;
--			if (as->cs_active)
--				cs_activate(as, msg->spi);
--			else
--				cs_deactivate(as, msg->spi);
-+			cs_deactivate(as, msg->spi);
-+			udelay(10);
-+			cs_activate(as, msg->spi);
- 		}
+ 	/* Device DUAL/QUAD mode */
+@@ -1783,6 +1775,14 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
  	}
+ 	spi->chip_select = value;
  
-@@ -1403,7 +1400,6 @@ static int atmel_spi_transfer_one_message(struct spi_master *master,
- 	atmel_spi_lock(as);
- 	cs_activate(as, spi);
- 
--	as->cs_active = true;
- 	as->keep_cs = false;
- 
- 	msg->status = 0;
++	/*
++	 * For descriptors associated with the device, polarity inversion is
++	 * handled in the gpiolib, so all gpio chip selects are "active high"
++	 * in the logical sense, the gpiolib will invert the line if need be.
++	 */
++	if ((ctlr->use_gpio_descriptors) && ctlr->cs_gpiods[spi->chip_select])
++		spi->mode |= SPI_CS_HIGH;
++
+ 	/* Device speed */
+ 	rc = of_property_read_u32(nc, "spi-max-frequency", &value);
+ 	if (rc) {
 -- 
 2.20.1
 
