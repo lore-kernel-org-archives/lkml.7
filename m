@@ -2,102 +2,89 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E04CA9EB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 508C6CA9EC8
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18AC421897
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:13:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="m/omOlUv"
+	by mail.kernel.org (Postfix) with ESMTP id 2F1A221897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:14:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441878AbfJRANs (ORCPT
+        id S2441888AbfJRAOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 20:13:48 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:51381 "EHLO ozlabs.org"
+        Thu, 17 Oct 2019 20:14:03 -0400
+Received: from mga17.intel.com ([192.55.52.151]:52115 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727941AbfJRANs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 20:13:48 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46vRMs67Y6z9sPl;
-        Fri, 18 Oct 2019 11:13:44 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1571357626;
-        bh=12snFaB8rmDnPOpJxigp4Lb1Qpp4paHuFv7dBtqnEd8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=m/omOlUvmitiMtCjMV5DsUxExhUyzV+Rf98Q/tlDYbMy5Fv4Jdaws2CagVmDqMm8U
-         9opLXar9lVbpsXB1Qjb/4tXrDxOSIU8zrMEYzP3t0dAFZ8nYlEET1u8c8v9H5LL8p9
-         WIpK1RMChOvdvl8cZ+GrE5d7DYf9cf//GXHJ8Ao2A3+Fkom5zzzOTOlHkdiYtpa9+T
-         /1horLuYYlik+bHbQjNRUIM6UBwX54HJXqtolQupSMYPR8s6MZCPOmeUTkvHJtHmNX
-         Uasfr9Kf77Bp84FSXLq4johhADOeylO2zsIQOcKIVidSaCSdaT4Sv/rTc7PX5GgusP
-         qEn8KJGSlUwbw==
-Date:   Fri, 18 Oct 2019 11:13:43 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Amit K Bag <amit.k.bag@intel.com>,
-        Raghuram Hegde <raghuram.hegde@intel.com>,
-        Chethan T N <chethan.tumkur.narayan@intel.com>
-Subject: linux-next: build failure after merge of the bluetooth tree
-Message-ID: <20191018111343.5a34ee33@canb.auug.org.au>
+        id S2441865AbfJRAOC (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 20:14:02 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 17:14:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,309,1566889200"; 
+   d="scan'208";a="226360732"
+Received: from guidongj-mobl1.ccr.corp.intel.com (HELO [10.254.214.28]) ([10.254.214.28])
+  by fmsmga002.fm.intel.com with ESMTP; 17 Oct 2019 17:13:59 -0700
+Subject: Re: [PATCH v2] perf list: Separate the deprecated events
+To:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, kan.liang@intel.com,
+        yao.jin@intel.com
+References: <20191017135214.18620-1-yao.jin@linux.intel.com>
+ <20191017144644.GV9933@tassilo.jf.intel.com> <20191017152100.GC21168@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <ef2fec7e-84e7-63bb-5dcb-3f85d7d78653@linux.intel.com>
+Date:   Fri, 18 Oct 2019 08:13:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/EDCZHYmrUaSWx1COA65IzzB";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20191017152100.GC21168@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/EDCZHYmrUaSWx1COA65IzzB
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-After merging the bluetooth tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+On 10/17/2019 11:21 PM, Jiri Olsa wrote:
+> On Thu, Oct 17, 2019 at 07:46:44AM -0700, Andi Kleen wrote:
+>>>   v2:
+>>>   ---
+>>>   In v1, the deprecated events are hidden by default but they can be
+>>>   displayed when option "--deprecated" is enabled. In v2, we don't use
+>>>   the new option "--deprecated". Instead, we just display the deprecated
+>>>   events under the title "--- Following are deprecated events ---".
+>>
+>> It's redundant with what the event description already says.
+>> If we always want to show it we don't need to do anything.
+>>
+>> I really would much prefer to hide it. What's the point of showing
+>> something that people are not supposed to use?
+>>
+>> The only reason for keeping the deprecated events is to not
+>> break old scripts, but those don't care about perf list output.
+> 
+> I thought this might be a problem for users,
+> but don't have anything to back this up ;-)
+> 
+> if that's the case we can go with the original patch
+> 
+> jirka
+> 
 
-In file included from drivers/bluetooth/hci_ldisc.c:34:
-drivers/bluetooth/btintel.h: In function 'btintel_reset_to_bootloader':
-drivers/bluetooth/btintel.h:188:9: warning: 'return' with a value, in funct=
-ion returning void [-Wreturn-type]
-  188 |  return -EOPNOTSUPP;
-      |         ^
-drivers/bluetooth/btintel.h:186:20: note: declared here
-  186 | static inline void btintel_reset_to_bootloader(struct hci_dev *hdev)
-      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+I'm fine to go with the original patch. :)
 
-Caused by commit
+Thanks
+Jin Yao
 
-  b9a2562f4918 ("Bluetooth: btusb: Trigger Intel FW download error recovery=
-")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/EDCZHYmrUaSWx1COA65IzzB
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2pA7cACgkQAVBC80lX
-0GzIhQf/YSRi7+l7tuvIlcJ0F/IFpnHjhx8BG4KAcMQCeLADYo5aVdUHCNMJJOKU
-i88A8NgxzTkm0ML3xfyCUKwTJMhrHIf+mrdYUn8eSe2k7SxC3DqUt4QhNa2BspE1
-mpKxDnQjAkXMGqMWEiyNTFPKGrODD2BbCWEuW9AMLauwo/o77TGerqGCOJWZSMQN
-gjeR0qIrzA6XE3BjxpppJc3OhL4KXAe4PYFvgGDf7BI8Q5FvDKhYl+vLw8VZxGha
-ZbndAyBngo2arShuVUYFS8pJnzrVfI9Y8ij3s0aK7NKH+809TAAPG1+kk++xTOxn
-MgN/Dh0qC1eKUQd6XZQmMZbldOrJew==
-=9VWU
------END PGP SIGNATURE-----
-
---Sig_/EDCZHYmrUaSWx1COA65IzzB--
+>>
+>> So I think the only sane option is to hide it by default.
+>>
+>> -Andi
