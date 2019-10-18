@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA0FCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B08FCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5356821852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3493621852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436817;
-	bh=/SmDa1GiWZJ/WBG/5ipgS+68v/PafN5F5tqY/+4b/ac=;
+	s=default; t=1571436824;
+	bh=uhc6qrmgYf8tNuiZPGZcsbbrTbtSfMBBHflqUUXRHqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YRB8AmdrftKLjo2gUudYGsaKjI0rK86b803d8b3pmPPXBqiCwzqpduk4LJ9OJD/xn
-	 /7gO+EoYOFofB96DFENhiX8bJsThTZixqoai9aJqqdqTBbboGE8u1uGMFbcwnCvbxX
-	 JjtKX8PIt2ZGXDftKT9qdofMaQsjk1vRbsZiqXcg=
+	b=d1UzVQkEdAWHVujJE+NTNZISkBLcpAigJYdIL0z5VnfCtB8j44vFlT0S25exdPsnL
+	 t61fTy+1VLdLJuKwNWR64GmmySsIHt/Im02nu3ZNwtiuv29XHccFyJEM1TXD54BPkA
+	 jvlI19ZJPJzx8tJyaVvf/a/2p9wFCMSixx2eGquk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389319AbfJRWJu (ORCPT
+        id S2403878AbfJRWNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:09:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41998 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:13:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388783AbfJRWJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:09:19 -0400
+        id S2389253AbfJRWJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:09:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B84E2245D;
-        Fri, 18 Oct 2019 22:09:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E38A022477;
+        Fri, 18 Oct 2019 22:09:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436559;
-        bh=/SmDa1GiWZJ/WBG/5ipgS+68v/PafN5F5tqY/+4b/ac=;
+        s=default; t=1571436586;
+        bh=uhc6qrmgYf8tNuiZPGZcsbbrTbtSfMBBHflqUUXRHqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S9/p7w8OMC3Ti78+RcL+bxsB9EXGZyhtXwPoXxw6P3CQaA1SeGT3f6WqFpdy4zjO3
-         rZC6QpJA7WN+anuQkE5WBwFH3MO+VRdxwnbv5mmGYLmChfVcVgBMLKUr8RV45PKmJe
-         LKcjNly9h5vLiYg6xcVb36SSLQemjzRjvYU5Lpmo=
+        b=mjkyIWz/ilKep35HrCmdQsbMF0rAF6h2UZoGuGlVlCxPeVsawLViZyAKu9yXEwpKU
+         iq8l6uLXlYE5bVdDcSqQzSZpgIOBznc/n34GX9h1hSQuJ/5cxlcJqKikD8Dh6jMExC
+         QZuuhKffBU5ZvQbCo8tTC0XKeEPiGlDJbIxNegP8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 56/56] tracing: Initialize iter->seq after zeroing in tracing_read_pipe()
-Date:   Fri, 18 Oct 2019 18:07:53 -0400
-Message-Id: <20191018220753.10002-56-sashal@kernel.org>
+Cc:     Austin Kim <austindh.kim@gmail.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 15/29] fs: cifs: mute -Wunused-const-variable message
+Date:   Fri, 18 Oct 2019 18:09:06 -0400
+Message-Id: <20191018220920.10545-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
-References: <20191018220753.10002-1-sashal@kernel.org>
+In-Reply-To: <20191018220920.10545-1-sashal@kernel.org>
+References: <20191018220920.10545-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,80 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Mladek <pmladek@suse.com>
+From: Austin Kim <austindh.kim@gmail.com>
 
-[ Upstream commit d303de1fcf344ff7c15ed64c3f48a991c9958775 ]
+[ Upstream commit dd19c106a36690b47bb1acc68372f2b472b495b8 ]
 
-A customer reported the following softlockup:
+After 'Initial git repository build' commit,
+'mapping_table_ERRHRD' variable has not been used.
 
-[899688.160002] NMI watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [test.sh:16464]
-[899688.160002] CPU: 0 PID: 16464 Comm: test.sh Not tainted 4.12.14-6.23-azure #1 SLE12-SP4
-[899688.160002] RIP: 0010:up_write+0x1a/0x30
-[899688.160002] Kernel panic - not syncing: softlockup: hung tasks
-[899688.160002] RIP: 0010:up_write+0x1a/0x30
-[899688.160002] RSP: 0018:ffffa86784d4fde8 EFLAGS: 00000257 ORIG_RAX: ffffffffffffff12
-[899688.160002] RAX: ffffffff970fea00 RBX: 0000000000000001 RCX: 0000000000000000
-[899688.160002] RDX: ffffffff00000001 RSI: 0000000000000080 RDI: ffffffff970fea00
-[899688.160002] RBP: ffffffffffffffff R08: ffffffffffffffff R09: 0000000000000000
-[899688.160002] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8b59014720d8
-[899688.160002] R13: ffff8b59014720c0 R14: ffff8b5901471090 R15: ffff8b5901470000
-[899688.160002]  tracing_read_pipe+0x336/0x3c0
-[899688.160002]  __vfs_read+0x26/0x140
-[899688.160002]  vfs_read+0x87/0x130
-[899688.160002]  SyS_read+0x42/0x90
-[899688.160002]  do_syscall_64+0x74/0x160
+So 'mapping_table_ERRHRD' const variable could be removed
+to mute below warning message:
 
-It caught the process in the middle of trace_access_unlock(). There is
-no loop. So, it must be looping in the caller tracing_read_pipe()
-via the "waitagain" label.
-
-Crashdump analyze uncovered that iter->seq was completely zeroed
-at this point, including iter->seq.seq.size. It means that
-print_trace_line() was never able to print anything and
-there was no forward progress.
-
-The culprit seems to be in the code:
-
-	/* reset all but tr, trace, and overruns */
-	memset(&iter->seq, 0,
-	       sizeof(struct trace_iterator) -
-	       offsetof(struct trace_iterator, seq));
-
-It was added by the commit 53d0aa773053ab182877 ("ftrace:
-add logic to record overruns"). It was v2.6.27-rc1.
-It was the time when iter->seq looked like:
-
-     struct trace_seq {
-	unsigned char		buffer[PAGE_SIZE];
-	unsigned int		len;
-     };
-
-There was no "size" variable and zeroing was perfectly fine.
-
-The solution is to reinitialize the structure after or without
-zeroing.
-
-Link: http://lkml.kernel.org/r/20191011142134.11997-1-pmladek@suse.com
-
-Signed-off-by: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+   fs/cifs/netmisc.c:120:40: warning: unused variable 'mapping_table_ERRHRD' [-Wunused-const-variable]
+   static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
+                                           ^
+Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/cifs/netmisc.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 91227e339ef60..5e2f0fb9994d1 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5751,6 +5751,7 @@ tracing_read_pipe(struct file *filp, char __user *ubuf,
- 	       sizeof(struct trace_iterator) -
- 	       offsetof(struct trace_iterator, seq));
- 	cpumask_clear(iter->started);
-+	trace_seq_init(&iter->seq);
- 	iter->pos = -1;
+diff --git a/fs/cifs/netmisc.c b/fs/cifs/netmisc.c
+index cc88f4f0325ef..bed9733302279 100644
+--- a/fs/cifs/netmisc.c
++++ b/fs/cifs/netmisc.c
+@@ -130,10 +130,6 @@ static const struct smb_to_posix_error mapping_table_ERRSRV[] = {
+ 	{0, 0}
+ };
  
- 	trace_event_read_lock();
+-static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
+-	{0, 0}
+-};
+-
+ /*
+  * Convert a string containing text IPv4 or IPv6 address to binary form.
+  *
 -- 
 2.20.1
 
