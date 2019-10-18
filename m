@@ -2,115 +2,125 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E77CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D65B8CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BD0A2070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAC9B2070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:56:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W+dMBzk4"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZxRofBTL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439665AbfJRU4l (ORCPT
+        id S2502079AbfJRU4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 16:56:41 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38509 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388245AbfJRU4l (ORCPT
+        Fri, 18 Oct 2019 16:56:47 -0400
+Received: from mail-ua1-f74.google.com ([209.85.222.74]:47445 "EHLO
+        mail-ua1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388245AbfJRU4q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 16:56:41 -0400
-Received: by mail-pl1-f196.google.com with SMTP id w8so3416099plq.5;
-        Fri, 18 Oct 2019 13:56:40 -0700 (PDT)
+        Fri, 18 Oct 2019 16:56:46 -0400
+Received: by mail-ua1-f74.google.com with SMTP id 4so1013011uay.14
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 13:56:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1Bh90+9APPDZOx6f6esXItoQjc1PkixlnP0eFA/mCVI=;
-        b=W+dMBzk49oCPLVcN0Df1VUZxAhD15QLK/ZabCx9yBy1+FPb3JP84hKqdtYXVPSRrWt
-         pdj3RUEtS3Gb4CtqXSJ8YEg37O5BrmWvR3BvcbiUIXWS0qnOqikoFddBjPKkjzps7y33
-         YlT3chJfwVjXFs6aQnvGcT2oOLjhbxIm/BF3m5ZQCYUuF8Q+jIg0GLu0kAht7LkSykc+
-         lP1MKdJiNbiqp15eC89qh1P7s5MVV86Vhq3agr+bkvt8nzhr21D6P8EHNbXS8lZKc/QF
-         ZmgK9/ofNp1XU/E5HBaSS3kzxCwP0jEb32iMXKoFVQo7GccV5vLcyB8AfUoCZ91JJ2+N
-         2tpQ==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=pFSHWfsa4OYLf86WgPeUBVlVGsm2bxueW/eIsJSwKiQ=;
+        b=ZxRofBTLLxqPyCT9Ejy040W4kNnnOcsZi+MYGlj8YmtDrP9euwn9536tbUMP5I5E9E
+         F0qx7pSkCzwWzszOhh0BzfZEdDFhioSEIQsOAfXYzm67ai6YT5MHVUIh3otszhFmuwXm
+         g3AqXIn7dagWoecDRZTNGWVxcocTUDUSU3HbY4V/ColcRzFd3jctb+BIV4Gt/lHRqXVg
+         Ru7ba3cotGuss8tpCcF2Gt34tcszr8ssTjjdaM3cj+weEdMzb/JIGkO2ToQDLHGjH4iL
+         qE9H6KIJiORtyryH1SHjaK45+zN7i1fJGvekzSHyy3Gdl62cIuKAlqcUdWw0l7TCTYVj
+         YKmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1Bh90+9APPDZOx6f6esXItoQjc1PkixlnP0eFA/mCVI=;
-        b=gI2NYwTr1CiHGzEeciTBlQjsPdASEbT8Ss9xOsYaHCOiFGLan3A3DoP4eus4xBVUvH
-         1fBcFlGIWYIaZgERjBMFss9VpBwsjMCwNFB0VFwRABywEFC6Fo98tGiXZfFJdzSCnkwg
-         N7GL+tWaZ7zBy/72VPw8fptmxypzvi3/YgpDgBXNRUSlLGBZ3ADdAsY6ogDeSO5yaIUx
-         CHuJtHfx+7G93Z/QSwvTa9kf9PABVmgyRNxAwCPnhm9tlFRs0fog3BecTM+azShbHnyO
-         ePs8LKVOkuySsfDfzQYc25aJz9wESBsRjEAQXJW6mi+lphN8MwybsQB6Cf1GlVAZq6Ki
-         S1nw==
-X-Gm-Message-State: APjAAAXGI6bzXxket1x9jYJJz5STrAMGr2Wawfj87nI+XUaDoHZBqwJB
-        VNEv4WsRMNGkFuCWVPKNC54=
-X-Google-Smtp-Source: APXvYqyZ16Yr+AO5Q5vWtUkZnIl11OBN3oIFY905K5S4POMVBw8yw+OOwSQTYvbT7scAoyBK9HLWXw==
-X-Received: by 2002:a17:902:8b83:: with SMTP id ay3mr11787876plb.269.1571432199889;
-        Fri, 18 Oct 2019 13:56:39 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id s97sm9325439pjc.4.2019.10.18.13.56.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 13:56:39 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 13:56:37 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Jakub Ladman <ladmanj@volny.cz>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH][RESEND] New driver for TLV493D-A1B6 I2C chip, input and
- hwmon class device.
-Message-ID: <20191018205637.GS35946@dtor-ws>
-References: <966f09b8-0936-6d90-2ec8-bcb1b94c81aa@volny.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <966f09b8-0936-6d90-2ec8-bcb1b94c81aa@volny.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=pFSHWfsa4OYLf86WgPeUBVlVGsm2bxueW/eIsJSwKiQ=;
+        b=PPIslm/QGimVHVJT74TOhrW8IdFeIWyKdiQZz45dXzxzyo71e5Yb/zLvpfIOEPQPBG
+         ETB4UOnUTPPsfBQ8e0TA2z14KRpLQ+pdMUwtvuHO4SY1fzSDH2glFSJToagNvm0Kft8v
+         FyLEXLD4t4L45hnEtFuvIGN5F0ywri2hwSWYwO7BboV8bRuFiwNWrJHdORbj4njnxoo9
+         cliEN4y81tAbCK9mJ6PxRyg8qcevxfd9amwEFfVWH3FJ3yXg1jeji024jrx/fP+FmxX+
+         nYFSJJL9xnc8SNrWSadhOXVksxINNn1DXK4/sEWsBvZAJdjYV9uVrnUlFPS8rO6qku8I
+         ZuWQ==
+X-Gm-Message-State: APjAAAXKbqKv+XdSf3PQYubQRZ/05l2BhqSCKvKuPGZo/AbA9qAUqGCH
+        nma2rO1wFG/W5ZYNMHJsRRKkbEsMYA==
+X-Google-Smtp-Source: APXvYqw3YHqNer9uDRETXpkMeSewm1GG1VHr/SMOl/zfhsvRorqD8QIY7Bi+m+OskYEEZDdwy6ZMEtTZhw==
+X-Received: by 2002:ac5:cb62:: with SMTP id l2mr6580899vkn.32.1571432203606;
+ Fri, 18 Oct 2019 13:56:43 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 22:56:29 +0200
+Message-Id: <20191018205631.248274-1-jannh@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
+Subject: [PATCH 1/3] binder: Fix race between mmap() and binder_alloc_print_pages()
+From:   Jann Horn <jannh@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>, jannh@google.com
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jakub,
+binder_alloc_print_pages() iterates over
+alloc->pages[0..alloc->buffer_size-1] under alloc->mutex.
+binder_alloc_mmap_handler() writes alloc->pages and alloc->buffer_size
+without holding that lock, and even writes them before the last bailout
+point.
 
-On Fri, Oct 18, 2019 at 10:10:19PM +0200, Jakub Ladman wrote:
-> Dear maintainers.
-> 
-> As a linux-patch newbie i made some mistakes in my first attempt to send
-> this patch.
-> This patch contains a new driver for i2c connected chip, Infineon
-> TLV493D-A1B6.
-> The chip is 3D hall-effect sensor with thermometer.
-> 
-> This particular driver senses magnetic field rotation in X/Y plane with 1
-> degree resolution and +/- 1 degree error.
-> 
-> Input device is created for the angle sensing part.
-> Hwmon device is created for the thermometer part.
-> 
-> Input device axis must be configured by device-tree. There are also optional
-> parameters regarding absolute/relative mode switching, minimum step in
-> relative mode, filtering and thermometer calibration.
-> 
-> We are using that device as high reliability rotary encoder.
+Unfortunately we can't take the alloc->mutex in the ->mmap() handler
+because mmap_sem can be taken while alloc->mutex is held.
+So instead, we have to locklessly check whether the binder_alloc has been
+fully initialized with binder_alloc_get_vma(), like in
+binder_alloc_new_buf_locked().
 
-I wonder if IIO subsystem that support s magnetometers and temperature
-sensors would not be a better hone for this.
+Fixes: 8ef4665aa129 ("android: binder: Add page usage in binder stats")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jann Horn <jannh@google.com>
+---
+ drivers/android/binder_alloc.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
-CC-ing Jonathan.
-
-Also, your mailer mangled your patch pretty badly, please consider using
-git send-email next time.
-
-Thanks.
-
+diff --git a/drivers/android/binder_alloc.c b/drivers/android/binder_alloc.c
+index eb76a823fbb2..21952dfa147d 100644
+--- a/drivers/android/binder_alloc.c
++++ b/drivers/android/binder_alloc.c
+@@ -841,14 +841,20 @@ void binder_alloc_print_pages(struct seq_file *m,
+ 	int free = 0;
+ 
+ 	mutex_lock(&alloc->mutex);
+-	for (i = 0; i < alloc->buffer_size / PAGE_SIZE; i++) {
+-		page = &alloc->pages[i];
+-		if (!page->page_ptr)
+-			free++;
+-		else if (list_empty(&page->lru))
+-			active++;
+-		else
+-			lru++;
++	/*
++	 * Make sure the binder_alloc is fully initialized, otherwise we might
++	 * read inconsistent state.
++	 */
++	if (binder_alloc_get_vma(alloc) != NULL) {
++		for (i = 0; i < alloc->buffer_size / PAGE_SIZE; i++) {
++			page = &alloc->pages[i];
++			if (!page->page_ptr)
++				free++;
++			else if (list_empty(&page->lru))
++				active++;
++			else
++				lru++;
++		}
+ 	}
+ 	mutex_unlock(&alloc->mutex);
+ 	seq_printf(m, "  pages: %d:%d:%d\n", active, lru, free);
 -- 
-Dmitry
+2.23.0.866.gb869b98d4c-goog
+
