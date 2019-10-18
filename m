@@ -2,51 +2,56 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D65CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEF2CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBA1920679
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 320F320679
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:19:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437137;
-	bh=a7lsjfD5XOqATd/HHMEqnA12kAyKJex2d6w/wuLsBQY=;
+	s=default; t=1571437141;
+	bh=FxnXi6ieQJiByUUrfBmm0/Y9UkyehQruV0wZx9VOxbc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j6euxc5NdZLl89zjsG+88e8N8uK969e3nsAWBbS+gl9+27any8kXnTTYQvyZqKjDt
-	 jk+pcJ+18yYrLHCAzfzIZJkb7TR6q/DqzqHelYKyR6q96GME/GRh0t2kqBvGR4wL2T
-	 q/PY3L2rEUz+Bu2r9ApKeWm1HuY/LkijeIGiUUmQ=
+	b=kqvei6w2zFdgitX0jCbZkU3IG6aMtbgRn4vESH7MXFCeCkDWfGRvcrNgvW/+C4ND3
+	 CIw7giLSsdku2lF6hgLXTzy+/jun454CMOUAeBFHZqEYIORcvi8O3CQNFAgX9Fwbim
+	 KSuyFg0IeBhhSnV02hN7K44L8m8hXDtRDt2wK3ZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404333AbfJRWSy (ORCPT
+        id S1732422AbfJRWHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:18:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39222 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:07:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732466AbfJRWHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:07:08 -0400
+        id S1732127AbfJRWGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:06:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D595B222D1;
-        Fri, 18 Oct 2019 22:07:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31F502245D;
+        Fri, 18 Oct 2019 22:06:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436427;
-        bh=a7lsjfD5XOqATd/HHMEqnA12kAyKJex2d6w/wuLsBQY=;
+        s=default; t=1571436415;
+        bh=FxnXi6ieQJiByUUrfBmm0/Y9UkyehQruV0wZx9VOxbc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l8K8kXkV5X6ITlNBvmDS/Yc57O6AcvtHUCDIzhi+vl2O9KlNS5vtP2ixgJn/Sv+8W
-         32b8UJ37BAn5V6xJxKhKn7QuikiWlX6l2lFSRjv4i0zLvit+QYrMSvW9oasMR5ZOC7
-         AQhH1ZRaGVIpqbXwhtWoJt7cIM7EKUD1TSh36+jE=
+        b=u8fm2q1Ykhj9xMqkT2LTIW3oWMy9VTdIK6Klv4OJ/oRF9dUnW4OOW4HY+3UOA6dok
+         8Phvde1pbv7Bp39AU/ygQoqlCdwbGCcuc/oJsAn3fDatJPSnOZl6hmeoE7/WZCUBpY
+         RNQwdI2CktVgFSBk/DYi9RE2W4hYnyUISbbL0yfc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 069/100] tty: serial: owl: Fix the link time qualifier of 'owl_uart_exit()'
-Date:   Fri, 18 Oct 2019 18:04:54 -0400
-Message-Id: <20191018220525.9042-69-sashal@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 059/100] perf annotate: Fix the signedness of failure returns
+Date:   Fri, 18 Oct 2019 18:04:44 -0400
+Message-Id: <20191018220525.9042-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -59,34 +64,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit 6264dab6efd6069f0387efb078a9960b5642377b ]
+[ Upstream commit 28f4417c3333940b242af03d90214f713bbef232 ]
 
-'exit' functions should be marked as __exit, not __init.
+Callers of symbol__annotate() expect a errno value or some other
+extended error value range in symbol__strerror_disassemble() to
+convert to a proper error string, fix it when propagating a failure to
+find the arch specific annotation routines via arch__find(arch_name).
 
-Fixes: fc60a8b675bd ("tty: serial: owl: Implement console driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Link: https://lore.kernel.org/r/20190910041129.6978-1-christophe.jaillet@wanadoo.fr
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+Cc: Will Deacon <will@kernel.org>
+Link: https://lkml.kernel.org/n/tip-o0k6dw7cas0vvmjjvgsyvu1i@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/owl-uart.c | 2 +-
+ tools/perf/util/annotate.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/owl-uart.c b/drivers/tty/serial/owl-uart.c
-index 29a6dc6a8d23c..73fcc6bdb0312 100644
---- a/drivers/tty/serial/owl-uart.c
-+++ b/drivers/tty/serial/owl-uart.c
-@@ -742,7 +742,7 @@ static int __init owl_uart_init(void)
- 	return ret;
- }
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 4ef62bcdc80f0..b4946ef48b621 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1875,7 +1875,7 @@ int symbol__annotate(struct symbol *sym, struct map *map,
  
--static void __init owl_uart_exit(void)
-+static void __exit owl_uart_exit(void)
- {
- 	platform_driver_unregister(&owl_uart_platform_driver);
- 	uart_unregister_driver(&owl_uart_driver);
+ 	args.arch = arch = arch__find(arch_name);
+ 	if (arch == NULL)
+-		return -ENOTSUP;
++		return ENOTSUP;
+ 
+ 	if (parch)
+ 		*parch = arch;
 -- 
 2.20.1
 
