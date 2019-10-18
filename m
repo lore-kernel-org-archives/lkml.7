@@ -2,159 +2,115 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C699CA9EC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E664ECA9EB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 217CA21D7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:04:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jG+wp7iH"
+	by mail.kernel.org (Postfix) with ESMTP id B8A4D222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:07:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571357269;
+	bh=KGUwgbrSrcRabFAXqNoJDzTfWljrn6ul+unKIrpgego=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=x/jeDNC/cMkCEu3kPRCu17mB19Cu8aRCGQn4fuvUV0kMoHfeG9ySfDywJBJ6OVRx+
+	 S/7f5ldA81kej/GrgkCxFzaTed5Fn3D3WsGIUpvc80ECaaLVoyOnvrfCGDFfxuhp/1
+	 jgayueNS9FfiBjVowKr7D0k6uk6Y3JTicYQ0RhyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503781AbfJRAEo (ORCPT
+        id S2441847AbfJRAHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 20:04:44 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:3840 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2441811AbfJRAEn (ORCPT
+        Thu, 17 Oct 2019 20:07:43 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33726 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438763AbfJRAHR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 20:04:43 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5da901a60000>; Thu, 17 Oct 2019 17:04:54 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 17 Oct 2019 17:04:42 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 17 Oct 2019 17:04:42 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 18 Oct
- 2019 00:04:42 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 18 Oct 2019 00:04:42 +0000
-Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5da9019a0000>; Thu, 17 Oct 2019 17:04:42 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Preeti U Murthy <preeti@linux.vnet.ibm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        <linux-pm@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>
-Subject: [PATCH] cpufreq: powernv: fix stack bloat and NR_CPUS limitation
-Date:   Thu, 17 Oct 2019 17:04:31 -0700
-Message-ID: <20191018000431.1675281-1-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.23.0
+        Thu, 17 Oct 2019 20:07:17 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y127so3278717lfc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 17:07:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k57WvexPDzWhZ12Of1tOHrp0702fGU2Gj8454jm70nc=;
+        b=Ad9lRUGdbedhRZCYVLx3Ld+8Vb8YQ9pzptyJsMjKTj+qGH2s9TQhwWB0mAQQldc0zz
+         Aoi1l0RHkbkMBHPFuO2iD4GUS7g6GpvYJF/+rvwqsR0GYO+ZbU8VOsL8jTdkgih+e7SN
+         rxkRVhOwYaejpJHeojcMBN63yYEk4IJMz+9ns=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k57WvexPDzWhZ12Of1tOHrp0702fGU2Gj8454jm70nc=;
+        b=NabRjjS/35dd+RwQGOq1Ka+McS8+nGKyH43PxydqD54NeB0XfaoDKg0fLUsDHRCFwM
+         Gg+mEeiybezejfEgCHqCu25WnVYkoWjCC41ugJsBOVgXh3Jo9YHEz1Uk+S7YMEm6HlwV
+         j3eArHVXwi56ZpV3ItHdAzavEawt4+zK3DFBk5xqPDQ3BKBpswiO2jCwr1rDXGRRP9SU
+         /rjVWkWl9GrAQ+cpsAtj1GXgnXA30rEU8aFSIkHODo9bz+4DbU90BTV37m0kMfdp5808
+         dRbbInZcSIpYg42EE8CgfbU7aS3gkDkuq7hq90LlC/lyygNxn7yRSVHt2MsyRUlEe7VJ
+         rtPg==
+X-Gm-Message-State: APjAAAWtvi6E0girlzyvYMAkdnKNa91DiGolaK+Fur2XSZxVZnY0LnRn
+        kEV9fvXo9dqq5LmaSLiU3mNlf9AfhZw=
+X-Google-Smtp-Source: APXvYqxv6NeA8IQCHpqsgBi5PWcxlHqHDJj8u93ooBhQHB1Hm7LHf6zkSKC9kHtgYDFxjHVtSD+1Tg==
+X-Received: by 2002:ac2:4283:: with SMTP id m3mr4082323lfh.41.1571357232162;
+        Thu, 17 Oct 2019 17:07:12 -0700 (PDT)
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
+        by smtp.gmail.com with ESMTPSA id q24sm1984730lfa.94.2019.10.17.17.07.10
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Oct 2019 17:07:10 -0700 (PDT)
+Received: by mail-lf1-f52.google.com with SMTP id t8so3228644lfc.13
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 17:07:10 -0700 (PDT)
+X-Received: by 2002:ac2:43a8:: with SMTP id t8mr4026546lfl.134.1571357230358;
+ Thu, 17 Oct 2019 17:07:10 -0700 (PDT)
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1571357094; bh=jMIVMS2k3nt+KBSFjXMj5e0P3S6l8dH7Zx0lZXXcpko=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=jG+wp7iHF0RN5Tn/nZDD4xJriVKb5DiI5acvhritKAZypir3iuZnXHppODrfo1kdX
-         hABXN5bOYSgzMQ6qiuADHLmVo/eJsdldhda46dDKKqWNBXa6BSSWBeggxjkJ+hoJmQ
-         XKlYnzLP+dXh7+EiIVlO17gtQZM6dpCs53U0WwySjpngtZzhB8k85+sq45N7HQKc3k
-         kk0yIkUz9j4PWXLn9+66jbovHjoQIy3aJjW7UmkfZ63aHn7dGwfnFfI4fGqiTMvoUI
-         wV+sd9odwKKDD1xlDIA8JrL3mAWof1mnmZsHHyChaQQyBCrIgi54fg61Vxywik3Scc
-         UTCqawVY+jwCw==
+References: <20191017234348.wcbbo2njexn7ixpk@willie-the-truck>
+In-Reply-To: <20191017234348.wcbbo2njexn7ixpk@willie-the-truck>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 17 Oct 2019 17:06:54 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjPZYxiTs3F0Vbrd3kRizJGq-rQ_jqH1+8XR9Ai_kBoXg@mail.gmail.com>
+Message-ID: <CAHk-=wjPZYxiTs3F0Vbrd3kRizJGq-rQ_jqH1+8XR9Ai_kBoXg@mail.gmail.com>
+Subject: Re: [GIT PULL] arm64: Fixes for -rc4
+To:     Will Deacon <will@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM Kernel Mailing List 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following build warning occurred on powerpc 64-bit builds:
+On Thu, Oct 17, 2019 at 4:43 PM Will Deacon <will@kernel.org> wrote:
+>
+> Note that the workaround code ended up being based on -rc2, so I had a
+> bit of a faff trying to generate the right diffstat for this pull request
+> after merging that branch into our fixes branch based on -rc1. In the end
+> I had to emulate the pull locally because I couldn't figure out how to
+> drive request-pull correctly despite the shortlog being correct. I'd love
+> to know what I should've done instead.
 
-drivers/cpufreq/powernv-cpufreq.c: In function 'init_chip_info':
-drivers/cpufreq/powernv-cpufreq.c:1070:1: warning: the frame size of 1040 b=
-ytes is larger than 1024 bytes [-Wframe-larger-than=3D]
+You did the right thing.
 
-This is due to putting 1024 bytes on the stack:
+When there are multiple merge bases, a regular "git diff" doesn't work
+since it's fundamentally about two end-points (well, it _can_ work
+almost by mistake, but doesn't work in the general case). So the only
+way to get a "proper" diff is to do a merge and then diff the result.
 
-    unsigned int chip[256];
+That said, I also accept the output of "git diff" which will then have
+a lot of noise from all the _other_ work done between the two merge
+bases. I can figure out what happened, and do my own two-endpoint diff
+and see what happened, and still se that "yes, that's what the pull
+request meant, and that's why the diffstat is garbage".
 
-...and while looking at this, it also has a bug: it fails with a stack
-overrun, if CONFIG_NR_CPUS > 256.
+What you did is the "good quality" pull request, though.
 
-Fix both problems by dynamically allocating based on CONFIG_NR_CPUS.
+In general, people who aren't doing fancy things with git should never
+get to the "multiple merge bases" situation, and then the regular pull
+request logic works fine.
 
-Fixes: 053819e0bf840 ("cpufreq: powernv: Handle throttling due to Pmax capp=
-ing at chip level")
-Cc: Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
-Cc: Preeti U Murthy <preeti@linux.vnet.ibm.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-Cc: linux-pm@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
+And people likme you who are doing multiple branches and know what
+they are doing are also able to them handle the "uhhuh, I need to do a
+merge to get a good diffstat" situation.
 
-Hi,
-
-I have only compile-tested this, so I would appreciate if anyone
-could do a basic runtime test on it. But (famous last words) it
-seems simple enough that I'm confident it's correct. oh boy. :)
-
-thanks,
-John Hubbard
-NVIDIA
-
- drivers/cpufreq/powernv-cpufreq.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/cpufreq/powernv-cpufreq.c b/drivers/cpufreq/powernv-cp=
-ufreq.c
-index 6061850e59c9..78e04402125f 100644
---- a/drivers/cpufreq/powernv-cpufreq.c
-+++ b/drivers/cpufreq/powernv-cpufreq.c
-@@ -1041,9 +1041,14 @@ static struct cpufreq_driver powernv_cpufreq_driver =
-=3D {
-=20
- static int init_chip_info(void)
- {
--	unsigned int chip[256];
-+	unsigned int *chip;
- 	unsigned int cpu, i;
- 	unsigned int prev_chip_id =3D UINT_MAX;
-+	int ret =3D 0;
-+
-+	chip =3D kcalloc(CONFIG_NR_CPUS, sizeof(int), GFP_KERNEL);
-+	if (!chips)
-+		return -ENOMEM;
-=20
- 	for_each_possible_cpu(cpu) {
- 		unsigned int id =3D cpu_to_chip_id(cpu);
-@@ -1055,8 +1060,10 @@ static int init_chip_info(void)
- 	}
-=20
- 	chips =3D kcalloc(nr_chips, sizeof(struct chip), GFP_KERNEL);
--	if (!chips)
--		return -ENOMEM;
-+	if (!chips) {
-+		ret =3D -ENOMEM;
-+		goto free_and_return;
-+	}
-=20
- 	for (i =3D 0; i < nr_chips; i++) {
- 		chips[i].id =3D chip[i];
-@@ -1066,7 +1073,9 @@ static int init_chip_info(void)
- 			per_cpu(chip_info, cpu) =3D  &chips[i];
- 	}
-=20
--	return 0;
-+free_and_return:
-+	kfree(chip);
-+	return ret;
- }
-=20
- static inline void clean_chip_info(void)
---=20
-2.23.0
-
+            Linus
