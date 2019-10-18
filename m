@@ -6,33 +6,34 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 818F0CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7655CCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53600222C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5622621835
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:07:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407510AbfJRFH3 (ORCPT
+        id S2405742AbfJRFHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:07:29 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4267 "EHLO huawei.com"
+        Fri, 18 Oct 2019 01:07:32 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4268 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2504026AbfJRFFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2504027AbfJRFFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 18 Oct 2019 01:05:08 -0400
 Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 00CE0176ACC8D3C32C18;
-        Fri, 18 Oct 2019 11:19:36 +0800 (CST)
+        by Forcepoint Email with ESMTP id 4E432DD69CE0E7A93452;
+        Fri, 18 Oct 2019 11:19:41 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
  DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 18 Oct 2019 11:19:25 +0800
+ 14.3.439.0; Fri, 18 Oct 2019 11:19:31 +0800
 From:   Kefeng Wang <wangkefeng.wang@huawei.com>
 To:     Petr Mladek <pmladek@suse.com>, <linux-kernel@vger.kernel.org>
 CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: [PATCH v2 11/33] clocksource: samsung_pwm_timer: Use pr_warn instead of pr_warning
-Date:   Fri, 18 Oct 2019 11:18:28 +0800
-Message-ID: <20191018031850.48498-11-wangkefeng.wang@huawei.com>
+Subject: [PATCH v2 21/33] scsi: Use pr_warn instead of pr_warning
+Date:   Fri, 18 Oct 2019 11:18:38 +0800
+Message-ID: <20191018031850.48498-21-wangkefeng.wang@huawei.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018031850.48498-1-wangkefeng.wang@huawei.com>
 References: <20191018031710.41052-1-wangkefeng.wang@huawei.com>
@@ -51,27 +52,27 @@ As said in commit f2c2cbcc35d4 ("powerpc: Use pr_warn instead of
 pr_warning"), removing pr_warning so all logging messages use a
 consistent <prefix>_warn style. Let's do it.
 
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
 Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 ---
- drivers/clocksource/samsung_pwm_timer.c | 2 +-
+ drivers/scsi/a3000.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clocksource/samsung_pwm_timer.c b/drivers/clocksource/samsung_pwm_timer.c
-index 895f53eb5771..0274219e1720 100644
---- a/drivers/clocksource/samsung_pwm_timer.c
-+++ b/drivers/clocksource/samsung_pwm_timer.c
-@@ -430,7 +430,7 @@ static int __init samsung_pwm_alloc(struct device_node *np,
+diff --git a/drivers/scsi/a3000.c b/drivers/scsi/a3000.c
+index 222c77c9621f..b6a0432f305a 100644
+--- a/drivers/scsi/a3000.c
++++ b/drivers/scsi/a3000.c
+@@ -39,7 +39,7 @@ static irqreturn_t a3000_intr(int irq, void *data)
+ 		spin_unlock_irqrestore(instance->host_lock, flags);
+ 		return IRQ_HANDLED;
+ 	}
+-	pr_warning("Non-serviced A3000 SCSI-interrupt? ISTR = %02x\n", status);
++	pr_warn("Non-serviced A3000 SCSI-interrupt? ISTR = %02x\n", status);
+ 	return IRQ_NONE;
+ }
  
- 	of_property_for_each_u32(np, "samsung,pwm-outputs", prop, cur, val) {
- 		if (val >= SAMSUNG_PWM_NUM) {
--			pr_warning("%s: invalid channel index in samsung,pwm-outputs property\n",
-+			pr_warn("%s: invalid channel index in samsung,pwm-outputs property\n",
- 								__func__);
- 			continue;
- 		}
 -- 
 2.20.1
 
