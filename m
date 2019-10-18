@@ -2,131 +2,143 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B592CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D8DCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 193C6222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3EAB222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:50:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407747AbfJRJtd (ORCPT
+        id S2437609AbfJRJuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 05:49:33 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:60164 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S2391488AbfJRJtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 05:49:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E1790492;
-        Fri, 18 Oct 2019 02:49:08 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C26FD3F6C4;
-        Fri, 18 Oct 2019 02:49:08 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id 81002682189; Fri, 18 Oct 2019 10:49:07 +0100 (BST)
-Date:   Fri, 18 Oct 2019 10:49:07 +0100
-From:   Liviu Dudau <liviu.dudau@arm.com>
-To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-Cc:     linux-kernel@lists.codethink.co.uk,
-        Brian Starkey <brian.starkey@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, malidp@foss.arm.com,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/arm: make undeclared items static
-Message-ID: <20191018094907.66ghzs3qiyelibzh@e110455-lin.cambridge.arm.com>
-References: <20191017111756.12861-1-ben.dooks@codethink.co.uk>
+        Fri, 18 Oct 2019 05:50:08 -0400
+Received: from mga02.intel.com ([134.134.136.20]:27222 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730808AbfJRJuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 05:50:08 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 02:50:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,311,1566889200"; 
+   d="scan'208";a="195420728"
+Received: from dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.74])
+  by fmsmga008.fm.intel.com with ESMTP; 18 Oct 2019 02:50:00 -0700
+Date:   Fri, 18 Oct 2019 17:46:56 +0800
+From:   Tiwei Bie <tiwei.bie@intel.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+Subject: Re: [PATCH V4 4/6] mdev: introduce virtio device and its device ops
+Message-ID: <20191018094655.GA4200@___>
+References: <20191017104836.32464-1-jasowang@redhat.com>
+ <20191017104836.32464-5-jasowang@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191017111756.12861-1-ben.dooks@codethink.co.uk>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191017104836.32464-5-jasowang@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 12:17:55PM +0100, Ben Dooks (Codethink) wrote:
-> Make the following items static to avoid clashes with
-> other parts of the kernel (dev_attr_core_id) or just
-> silence the following sparse warning:
-> 
-> drivers/gpu/drm/arm/malidp_drv.c:371:24: warning: symbol 'malidp_fb_create' was not declared. Should it be static?
-> drivers/gpu/drm/arm/malidp_drv.c:494:6: warning: symbol 'malidp_error_stats_dump' was not declared. Should it be static?
-> drivers/gpu/drm/arm/malidp_drv.c:668:1: warning: symbol 'dev_attr_core_id' was not declared. Should it be static?
-> 
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+On Thu, Oct 17, 2019 at 06:48:34PM +0800, Jason Wang wrote:
+> + * @get_vq_state:		Get the state for a virtqueue
+> + *				@mdev: mediated device
+> + *				@idx: virtqueue index
+> + *				Returns virtqueue state (last_avail_idx)
+> + * @get_vq_align:		Get the virtqueue align requirement
+> + *				for the device
+> + *				@mdev: mediated device
+> + *				Returns virtqueue algin requirement
+> + * @get_features:		Get virtio features supported by the device
+> + *				@mdev: mediated device
+> + *				Returns the virtio features support by the
+> + *				device
+> + * @get_features:		Set virtio features supported by the driver
 
-Acked-by: Liviu Dudau <liviu.dudau@arm.com>
+s/get_features/set_features/
 
-Thanks for the patch! As a side note: the dim tool that we use in the DRM subsystem
-flags your S-o-b as being different from author, due to "(Codethink)" addition in the
-email name.
 
-Best regards,
-Liviu
+> + *				configration space
+> + * @get_mdev_features:		Get the feature of virtio mdev device
+> + *				@mdev: mediated device
+> + *				Returns the mdev features (API) support by
+> + *				the device.
+> + * @get_generation:		Get device generaton
+> + *				@mdev: mediated device
+> + *				Returns u32: device generation
+> + */
+> +struct virtio_mdev_device_ops {
+> +	/* Virtqueue ops */
+> +	int (*set_vq_address)(struct mdev_device *mdev,
+> +			      u16 idx, u64 desc_area, u64 driver_area,
+> +			      u64 device_area);
+> +	void (*set_vq_num)(struct mdev_device *mdev, u16 idx, u32 num);
+> +	void (*kick_vq)(struct mdev_device *mdev, u16 idx);
+> +	void (*set_vq_cb)(struct mdev_device *mdev, u16 idx,
+> +			  struct virtio_mdev_callback *cb);
+> +	void (*set_vq_ready)(struct mdev_device *mdev, u16 idx, bool ready);
+> +	bool (*get_vq_ready)(struct mdev_device *mdev, u16 idx);
+> +	int (*set_vq_state)(struct mdev_device *mdev, u16 idx, u64 state);
+> +	u64 (*get_vq_state)(struct mdev_device *mdev, u16 idx);
+> +
+> +	/* Device ops */
+> +	u16 (*get_vq_align)(struct mdev_device *mdev);
+> +	u64 (*get_features)(struct mdev_device *mdev);
+> +	int (*set_features)(struct mdev_device *mdev, u64 features);
+> +	void (*set_config_cb)(struct mdev_device *mdev,
+> +			      struct virtio_mdev_callback *cb);
+> +	u16 (*get_vq_num_max)(struct mdev_device *mdev);
+> +	u32 (*get_device_id)(struct mdev_device *mdev);
+> +	u32 (*get_vendor_id)(struct mdev_device *mdev);
+> +	u8 (*get_status)(struct mdev_device *mdev);
+> +	void (*set_status)(struct mdev_device *mdev, u8 status);
+> +	void (*get_config)(struct mdev_device *mdev, unsigned int offset,
+> +			   void *buf, unsigned int len);
+> +	void (*set_config)(struct mdev_device *mdev, unsigned int offset,
+> +			   const void *buf, unsigned int len);
+> +	u64 (*get_mdev_features)(struct mdev_device *mdev);
 
-> ---
-> Cc: Liviu Dudau <liviu.dudau@arm.com>
-> Cc: Brian Starkey <brian.starkey@arm.com>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: malidp@foss.arm.com
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-kernel@vger.kernel.org
-> .. (open list)
-> ---
->  drivers/gpu/drm/arm/malidp_drv.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/arm/malidp_drv.c b/drivers/gpu/drm/arm/malidp_drv.c
-> index 333b88a5efb0..18ca43c9cef4 100644
-> --- a/drivers/gpu/drm/arm/malidp_drv.c
-> +++ b/drivers/gpu/drm/arm/malidp_drv.c
-> @@ -368,7 +368,7 @@ malidp_verify_afbc_framebuffer(struct drm_device *dev, struct drm_file *file,
->  	return false;
->  }
->  
-> -struct drm_framebuffer *
-> +static struct drm_framebuffer *
->  malidp_fb_create(struct drm_device *dev, struct drm_file *file,
->  		 const struct drm_mode_fb_cmd2 *mode_cmd)
->  {
-> @@ -491,9 +491,9 @@ void malidp_error(struct malidp_drm *malidp,
->  	spin_unlock_irqrestore(&malidp->errors_lock, irqflags);
->  }
->  
-> -void malidp_error_stats_dump(const char *prefix,
-> -			     struct malidp_error_stats error_stats,
-> -			     struct seq_file *m)
-> +static void malidp_error_stats_dump(const char *prefix,
-> +				    struct malidp_error_stats error_stats,
-> +				    struct seq_file *m)
->  {
->  	seq_printf(m, "[%s] num_errors : %d\n", prefix,
->  		   error_stats.num_errors);
-> @@ -665,7 +665,7 @@ static ssize_t core_id_show(struct device *dev, struct device_attribute *attr,
->  	return snprintf(buf, PAGE_SIZE, "%08x\n", malidp->core_id);
->  }
->  
-> -DEVICE_ATTR_RO(core_id);
-> +static DEVICE_ATTR_RO(core_id);
->  
->  static int malidp_init_sysfs(struct device *dev)
->  {
+Do we need a .set_mdev_features method as well?
+
+It's not very clear what does mdev_features mean.
+Does it mean the vhost backend features?
+
+https://github.com/torvalds/linux/blob/0e2adab6cf285c41e825b6c74a3aa61324d1132c/include/uapi/linux/vhost.h#L93-L94
+
+
+> +	u32 (*get_generation)(struct mdev_device *mdev);
+> +};
+> +
+> +void mdev_set_virtio_ops(struct mdev_device *mdev,
+> +			 const struct virtio_mdev_device_ops *virtio_ops);
+> +
+> +#endif
 > -- 
-> 2.23.0
+> 2.19.1
 > 
-
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
