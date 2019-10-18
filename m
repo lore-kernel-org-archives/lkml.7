@@ -2,118 +2,135 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCEECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAE1CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DF5B21925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AECDE222C5
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:41:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="X49zCiEx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dv4zsmRJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506205AbfJRVkd (ORCPT
+        id S2506214AbfJRVly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 17:40:33 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37724 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729496AbfJRVkc (ORCPT
+        Fri, 18 Oct 2019 17:41:54 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36136 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2506198AbfJRVly (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 17:40:32 -0400
-Received: by mail-pg1-f195.google.com with SMTP id p1so4053453pgi.4
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 14:40:32 -0700 (PDT)
+        Fri, 18 Oct 2019 17:41:54 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y22so4650958pfr.3
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 14:41:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=7OJQvUdbIgU24dX8Wppa0p8i/hgWncJ+YoZFNcc+lGc=;
-        b=X49zCiExyAyWi1+gFzVqGwmOWpWLxwXDEx200I8M4RnY/uPMTul/q6C+vTAekR09fZ
-         aTOimWrmwWA2QxlHdN3Zm6/r+Pn4IUll1jKMiZWooV7Z3zcVn3D1uU2qv+gfSrPc7eo5
-         hrErgAxJB9PXQktTfkYLWdLON3cUApaxcjXoQ=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hB675E64nw6z0mCcKC5XdWKWFq2jH+IHeB9Onr50eJk=;
+        b=Dv4zsmRJo2A3OUBuY3Se6GL3N3SOEpmUZ9N5EEC2m1ZUOL2Wy9W45/J/RaJ0t9C/ql
+         edyVPXSWSlYxIzlvngP0j3G6pVOFnbQau6NDqujV1HzqnEF5CJjRChCSB145wMp7y6RR
+         8OHvE8LaxyDLyjUqLcdNDf243o/lSFax4zrSQ0+c4rOO4tcEHM9933OIZqoHufz3Ldq7
+         SgkUu+ur1967uOV3zKASFWF4Ptb3EBcruZWfxuK/fwTpuoH4KuvW1R0OJOEShhb+oawu
+         T8f6Qemur5xLLarXVuOsR+J39wgmHEx107Z9O3sQd8qYw5RC8DqjoV54RebL6Qn4Lf8l
+         zL0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=7OJQvUdbIgU24dX8Wppa0p8i/hgWncJ+YoZFNcc+lGc=;
-        b=frTOP9WkMm08RX+z9uKQOjIvf8nYDylxIYbZ7uy85reFl1w7uqUUaZl/4ZSj3PzFcm
-         +3iaJM9jZiEnqezkSYfjdTsQieo1SOm1EYXv5VjUNIaG+Pgcds7Jp+Q72mBC6o3sKeHA
-         7LdENzRAiBTJoeIlhI3YOMl80Vk5RTmFMg+zn6eRoxzwWsN0xAirFOnEghtUkG0LMHG5
-         wPYRJsZlgwZLBoV9jZxun23DOx3RERjkCQpYuttN99C6WNRsSSay70CRpxzEvIPriWg5
-         u6FXuhqClwGXE9bgRHMV1JOPZctXeMYO3dBedWIFwymPyIqkazq0dLgennnnitrq+1nD
-         bPPw==
-X-Gm-Message-State: APjAAAUdOfAjofKPVHtQbM4GuuvglL+cZP7n+5pVMPgJneb+70u7N38e
-        uIaaZwEV9GFAL5lIRjxFqc8hsA==
-X-Google-Smtp-Source: APXvYqyd70104l4NfgYqs0u3fMh/peuUQcWQ+/X7Dt/uJkQR3dIru18MtlzyrY5v+4YirtGrxn9NKQ==
-X-Received: by 2002:a17:90a:1aa9:: with SMTP id p38mr14177240pjp.142.1571434832108;
-        Fri, 18 Oct 2019 14:40:32 -0700 (PDT)
-Received: from [10.69.45.46] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id t21sm7903012pgi.87.2019.10.18.14.40.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 18 Oct 2019 14:40:31 -0700 (PDT)
-Subject: Re: [PATCH] scsi: lpfc: Check queue pointer before use
-To:     Daniel Wagner <dwagner@suse.de>, linux-scsi@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>
-References: <20191018162111.8798-1-dwagner@suse.de>
-From:   James Smart <james.smart@broadcom.com>
-Message-ID: <3624b42a-712a-bab5-c325-7171f71a51e1@broadcom.com>
-Date:   Fri, 18 Oct 2019 14:40:27 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hB675E64nw6z0mCcKC5XdWKWFq2jH+IHeB9Onr50eJk=;
+        b=XBGnlVfoGOUviN800YbGSsyJoPw2qggGdkLSaFlYl2AwydL1QN94F1RflV3ZwAxIjW
+         0xpy/BHqi3fEwI7bSyjmY14JrNh0HnLDysVWDG6IewKffplqeaVVMfblDi5qd2dJS2vS
+         GNn4qxenzHxVzmWLjgwY8Uy8HGQRQs6VwO4UevkTDkLXSnTgQfdGiZZ9KMCoq0wHLPPG
+         nsHRMgqeg6ROLkdmNRRd3C+x2WCN79zuFo49YKK63K+2d4akSU2qrzmZLZY1dmzZszSD
+         XCbjMjq/4OoxFYidXH38xCjYnXpF0nb7JePEAHPgN7P8gmX4TKfVP97WkDm+ePF1mmoe
+         mOtg==
+X-Gm-Message-State: APjAAAXK8TXLXxQIx8XNf/L3oYU7mR9sVQIZdaFpmu05fpcBjLuMAGDp
+        vPBqOpF7MwwVELYl5Quk8K6KCmmE0T/yktTyB94nGw==
+X-Google-Smtp-Source: APXvYqz0loB5waUCNTaItdo70SDJfGU6MsU/KHLszClQR43GlHkfVYKtZOJZwmWEv2CChhS5uqZRHje3MCRoUE9Cshk=
+X-Received: by 2002:a17:90a:f495:: with SMTP id bx21mr13128557pjb.84.1571434912732;
+ Fri, 18 Oct 2019 14:41:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191018162111.8798-1-dwagner@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20191018001816.94460-1-brendanhiggins@google.com>
+ <20191018004307.GA95597@google.com> <20191018162519.GH21137@mit.edu>
+In-Reply-To: <20191018162519.GH21137@mit.edu>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Fri, 18 Oct 2019 14:41:38 -0700
+Message-ID: <CAFd5g45LmnbD7L4LqdbfBV5YR377e81m61+z==RKCGjWBFqDGQ@mail.gmail.com>
+Subject: Re: [PATCH linux-kselftest/test v1] apparmor: add AppArmor KUnit
+ tests for policy unpack
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     shuah <shuah@kernel.org>,
+        John Johansen <john.johansen@canonical.com>, jmorris@namei.org,
+        serge@hallyn.com, Kees Cook <keescook@chromium.org>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Iurii Zaikin <yzaikin@google.com>,
+        David Gow <davidgow@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-security-module@vger.kernel.org,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Mike Salvatore <mike.salvatore@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/18/2019 9:21 AM, Daniel Wagner wrote:
-> The queue pointer might not be valid. The rest of the code checks the
-> pointer before accessing it. lpfc_sli4_process_missed_mbox_completions
-> is the only place where the check is missing.
+On Fri, Oct 18, 2019 at 9:25 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
 >
-> Fixes: 657add4e5e15 ("scsi: lpfc: Fix poor use of hardware queues if fewer irq vectors")
-> Cc: James Smart <jsmart2021@gmail.com>
-> Signed-off-by: Daniel Wagner <dwagner@suse.de>
-> ---
-> Hi,
+> On Thu, Oct 17, 2019 at 05:43:07PM -0700, Brendan Higgins wrote:
+> > > +config SECURITY_APPARMOR_TEST
+> > > +   bool "Build KUnit tests for policy_unpack.c"
+> > > +   default n
+> > > +   depends on KUNIT && SECURITY_APPARMOR
+> >
+> > Ted, here is an example where doing select on direct dependencies is
+> > tricky because SECURITY_APPARMOR has a number of indirect dependencies.
 >
-> Not entirely sure if this correct. I tried to understand the logic of
-> the mentioned patch but failed to grasps all the details. Anyway, we
-> observe a crash in lpfc_sli4_process_missed_mbox_completions() while
-> iterating the array. All but the last one entry has a valid pointer.
->
-> Thanks,
-> Daniel
->
->   drivers/scsi/lpfc/lpfc_sli.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-> index 379c37451645..149966ba8a17 100644
-> --- a/drivers/scsi/lpfc/lpfc_sli.c
-> +++ b/drivers/scsi/lpfc/lpfc_sli.c
-> @@ -7906,7 +7906,7 @@ lpfc_sli4_process_missed_mbox_completions(struct lpfc_hba *phba)
->   	if (sli4_hba->hdwq) {
->   		for (eqidx = 0; eqidx < phba->cfg_irq_chann; eqidx++) {
->   			eq = phba->sli4_hba.hba_eq_hdl[eqidx].eq;
-> -			if (eq->queue_id == sli4_hba->mbx_cq->assoc_qid) {
-> +			if (eq && eq->queue_id == sli4_hba->mbx_cq->assoc_qid) {
->   				fpeq = eq;
->   				break;
->   			}
+> Well, that could be solved by adding a select on all of the indirect
+> dependencies.  I did get your point about the fact that we could have
 
-looks fine. Thanks!
+In this particular case that would work.
 
-Reviewed by: James Smart <james.smart@broadcom.com>
+> cases where the indirect dependencies might conflict with one another.
+> That's going to be a tough situation regardless of whether we have a
+> sat-solver or a human who has to struggle with that situation.
 
--- james
+But yeah, that's the real problem.
 
+> It's also going to be a bit sad because it means that we won't be able
+> to create a single config that could be used to run all the kunit
+> tests when a user pushes a change to a Gerrit server for review.  :-/
+
+Yeah...well, we can do the next best thing and generate a set of
+kunitconfigs that in sum will run all the tests. Not nearly as nice,
+but it's the next best thing, right? If you think about it, it's
+really not all that different from the eventual goal of having many
+independent test binaries.
+
+> I suppose that if we use a strict definition of "unit tests", and we
+> assume that all of the tests impacted by a change in foo/bar/baz.c
+> will be found in foo/bar/baz-test.c, or maybe foo/bar/*-test.c, we can
+> automate the generation of the kunitconfig file, perhaps?
+
+Possibly. I have some friends on the TAP team (automated testing team
+within Google), and it sounds like that is actually a pretty hard
+problem, but something that is at least possible. Still, it would be
+nice to have a way to periodically run all the tests.
+
+> The other sad bit about having mutually exclusive config options is
+> that we can't easily "run all KUinit tests" for some kind of test
+> spinner or zero-day bot.
+>
+> I'm not sure there's a good solution to that issue, though.
+
+I think, as I mentioned above, the best we can do is probably have a
+thing which generates a set of kunitconfigs that in sum will run all
+the tests.
+
+Thoughts?
