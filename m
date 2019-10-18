@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD24CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A75CCA9EAB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1106420872
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DC09205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437466;
-	bh=1a7w7GetW5FhHuRCvaMI7Qle4+x0C2k7Ge+UODumWyk=;
+	s=default; t=1571437469;
+	bh=XeLQE1nbW8RszEs7Xij3l9Nh8vroHAGeSjIWSQUhe2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NBlEpcLdpTWWERRi6W8Sg8r2Myy5uMD2TQvchBgqxVG8IgWiO2nZKx1OM6YFS7w7u
-	 uIrPOZW0GvWFfF4i30FVvGfyXXS2JoHoQtiEBC9qaHLTCG9uUKDbLESw9zr3trgwNH
-	 yaBzc48TdRKlTFyn4uNA49PKPCoBFwgfdTAZ8lhg=
+	b=bctvm9jTGL0zhGoPDQT+Z058IXYe9T/ZI7VfVlnj+fIxXnQALPgYErAwhvml4PlFc
+	 hbCjxdBwLbCO892kE3KOuPKj0YXYuHeLXHzZUNXA5OSSupTZWrV7T1OMtWm+Vgbjdo
+	 80CLcfy/VaguU6sMGg7uVCjc4XNucHMFF71M/qC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394396AbfJRWYY (ORCPT
+        id S1729030AbfJRWFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:24:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36820 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729035AbfJRWFB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 18 Oct 2019 18:05:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36640 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728893AbfJRWEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:04:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F542222CD;
-        Fri, 18 Oct 2019 22:05:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F704222D2;
+        Fri, 18 Oct 2019 22:04:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436301;
-        bh=1a7w7GetW5FhHuRCvaMI7Qle4+x0C2k7Ge+UODumWyk=;
+        s=default; t=1571436293;
+        bh=XeLQE1nbW8RszEs7Xij3l9Nh8vroHAGeSjIWSQUhe2Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ddaftopwMGTzQDX46oQMo+dzQbSkd3fhv+O29K8Uia45O0LVzJhQIkOoJbR989OyI
-         7Zrlqbdi3luP9NnaQNZXY5EEIKocpySNDWn+9njgXJkFyH4aTnUlV2OEEqcTzdwXVD
-         9qvY7kYnpeTZ4A5lcUnf4dfaFdVq9xT2mbnTiPWI=
+        b=AQoaisWbmcf37CKqpHdomwic7Id6e776ztkRayMkuEkxY5DrghVmrsPOwueSj8csF
+         zz6IMg2PWAgW94Ayw2xLMk9rbfiHEJ3xqogH8LPX+MmcLfAX0QmxtJQht2HmuWpAdI
+         LcxC5f9nreXwRxSgSdptgxE41BbHzFIvgdzfx/+w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Popa <stefan.popa@analog.com>, Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 72/89] iio: accel: adxl372: Perform a reset at start up
-Date:   Fri, 18 Oct 2019 18:03:07 -0400
-Message-Id: <20191018220324.8165-72-sashal@kernel.org>
+Cc:     Song Liu <songliubraving@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>, kernel-team@fb.com,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 66/89] perf/core: Fix corner case in perf_rotate_context()
+Date:   Fri, 18 Oct 2019 18:03:01 -0400
+Message-Id: <20191018220324.8165-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -59,43 +63,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Popa <stefan.popa@analog.com>
+From: Song Liu <songliubraving@fb.com>
 
-[ Upstream commit d9a997bd4d762d5bd8cc548d762902f58b5e0a74 ]
+[ Upstream commit 7fa343b7fdc4f351de4e3f28d5c285937dd1f42f ]
 
-We need to perform a reset a start up to make sure that the chip is in a
-consistent state. This reset also disables all the interrupts which
-should only be enabled together with the iio buffer. Not doing this, was
-sometimes causing unwanted interrupts to trigger.
+In perf_rotate_context(), when the first cpu flexible event fail to
+schedule, cpu_rotate is 1, while cpu_event is NULL. Since cpu_event is
+NULL, perf_rotate_context will _NOT_ call cpu_ctx_sched_out(), thus
+cpuctx->ctx.is_active will have EVENT_FLEXIBLE set. Then, the next
+perf_event_sched_in() will skip all cpu flexible events because of the
+EVENT_FLEXIBLE bit.
 
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-Fixes: f4f55ce38e5f ("iio:adxl372: Add FIFO and interrupts support")
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+In the next call of perf_rotate_context(), cpu_rotate stays 1, and
+cpu_event stays NULL, so this process repeats. The end result is, flexible
+events on this cpu will not be scheduled (until another event being added
+to the cpuctx).
+
+Here is an easy repro of this issue. On Intel CPUs, where ref-cycles
+could only use one counter, run one pinned event for ref-cycles, one
+flexible event for ref-cycles, and one flexible event for cycles. The
+flexible ref-cycles is never scheduled, which is expected. However,
+because of this issue, the cycles event is never scheduled either.
+
+ $ perf stat -e ref-cycles:D,ref-cycles,cycles -C 5 -I 1000
+
+           time             counts unit events
+    1.000152973         15,412,480      ref-cycles:D
+    1.000152973      <not counted>      ref-cycles     (0.00%)
+    1.000152973      <not counted>      cycles         (0.00%)
+    2.000486957         18,263,120      ref-cycles:D
+    2.000486957      <not counted>      ref-cycles     (0.00%)
+    2.000486957      <not counted>      cycles         (0.00%)
+
+To fix this, when the flexible_active list is empty, try rotate the
+first event in the flexible_groups. Also, rename ctx_first_active() to
+ctx_event_to_rotate(), which is more accurate.
+
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: <kernel-team@fb.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 8d5bce0c37fa ("perf/core: Optimize perf_rotate_context() event scheduling")
+Link: https://lkml.kernel.org/r/20191008165949.920548-1-songliubraving@fb.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/accel/adxl372.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ kernel/events/core.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/iio/accel/adxl372.c b/drivers/iio/accel/adxl372.c
-index fbad4b45fe42d..67b8817995c04 100644
---- a/drivers/iio/accel/adxl372.c
-+++ b/drivers/iio/accel/adxl372.c
-@@ -575,6 +575,14 @@ static int adxl372_setup(struct adxl372_state *st)
- 		return -ENODEV;
- 	}
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index a0120bdbce177..32c54a761ad02 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -3694,11 +3694,23 @@ static void rotate_ctx(struct perf_event_context *ctx, struct perf_event *event)
+ 	perf_event_groups_insert(&ctx->flexible_groups, event);
+ }
  
-+	/*
-+	 * Perform a software reset to make sure the device is in a consistent
-+	 * state after start up.
-+	 */
-+	ret = regmap_write(st->regmap, ADXL372_RESET, ADXL372_RESET_CODE);
-+	if (ret < 0)
-+		return ret;
++/* pick an event from the flexible_groups to rotate */
+ static inline struct perf_event *
+-ctx_first_active(struct perf_event_context *ctx)
++ctx_event_to_rotate(struct perf_event_context *ctx)
+ {
+-	return list_first_entry_or_null(&ctx->flexible_active,
+-					struct perf_event, active_list);
++	struct perf_event *event;
 +
- 	ret = adxl372_set_op_mode(st, ADXL372_STANDBY);
- 	if (ret < 0)
- 		return ret;
++	/* pick the first active flexible event */
++	event = list_first_entry_or_null(&ctx->flexible_active,
++					 struct perf_event, active_list);
++
++	/* if no active flexible event, pick the first event */
++	if (!event) {
++		event = rb_entry_safe(rb_first(&ctx->flexible_groups.tree),
++				      typeof(*event), group_node);
++	}
++
++	return event;
+ }
+ 
+ static bool perf_rotate_context(struct perf_cpu_context *cpuctx)
+@@ -3723,9 +3735,9 @@ static bool perf_rotate_context(struct perf_cpu_context *cpuctx)
+ 	perf_pmu_disable(cpuctx->ctx.pmu);
+ 
+ 	if (task_rotate)
+-		task_event = ctx_first_active(task_ctx);
++		task_event = ctx_event_to_rotate(task_ctx);
+ 	if (cpu_rotate)
+-		cpu_event = ctx_first_active(&cpuctx->ctx);
++		cpu_event = ctx_event_to_rotate(&cpuctx->ctx);
+ 
+ 	/*
+ 	 * As per the order given at ctx_resched() first 'pop' task flexible
 -- 
 2.20.1
 
