@@ -2,137 +2,123 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EA2CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 075B2CA9EA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C436820820
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1F4921925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:57:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qqJwU622"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504113AbfJRF4L (ORCPT
+        id S2504138AbfJRF5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:56:11 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:55370 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1733227AbfJRF4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:56:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D34B329;
-        Thu, 17 Oct 2019 22:55:46 -0700 (PDT)
-Received: from e107533-lin.cambridge.arm.com (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CCD643F68E;
-        Thu, 17 Oct 2019 22:58:30 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 06:55:33 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cpufreq: flush any pending policy update work scheduled
- before freeing
-Message-ID: <20191018055533.GC31836@e107533-lin.cambridge.arm.com>
-References: <20191017163503.30791-1-sudeep.holla@arm.com>
- <CAJZ5v0gTpK0cJhsWGVvs-=Sbgcia0jz2j5QNYRL+1wOz=2xkJQ@mail.gmail.com>
- <CAJZ5v0h0ioEZqLuaW1jz_8jRuGYZLQS3fbpv9ctyV9ucXb1WiA@mail.gmail.com>
+        Fri, 18 Oct 2019 01:57:11 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33029 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733227AbfJRF5L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 01:57:11 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q10so3181752pfl.0
+        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:57:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Js+iQqRt+tyVvDa8T2+59UNIVU1o5cqdHzqCUWKNHTw=;
+        b=qqJwU622nloSCo+eDDdWSnXALFxYQYLLjz8aa6hvAtj2seJgktKl3vd4aabmeSwhGb
+         OyGXhneGLvb3zcZz5YnXVa1ueCFO6a4SXOOnXCSMvfNNt05L71C9df3cqbXSzMk9yX3j
+         lzl9kbUGj6FD5mDzCsiD7CbPIZE1e+3ZJkU3zvAOxG7OO41kZtXTwqk3r3R/YB6ZxWsR
+         ooy4DuMsAPqlnUEjkB8aCLuGfDzy3WGKvXzOOFQBAVL9/RwDcK+KX4eUwcAMX7VsFjRC
+         ZAoFnKs87Rf9fY/98feemSfbKPRQFdsMq0Ile4Pgb0f6vy7adqEoeovJ83oskUUAs/1Z
+         45eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Js+iQqRt+tyVvDa8T2+59UNIVU1o5cqdHzqCUWKNHTw=;
+        b=Lraw+fBXUrRXPkVH8r0M1I9XYiF3anEIGZyZGVbUYXZn7ZxXMDnnCwIXdogkAYzUpE
+         T2kROjDai1mtsXhFCYt4tGijtFr5099C95lxnf8fVbSsMKdY61fkObpaLKhQWGDsWtBb
+         jMrm13BRz6xMSW1gn2kQCdNCtEOBwr/nWfeaMDuI0EBEtVuEcj4x1px/piYcydFxgHhi
+         OlJjHSuklCzOZ8YcQkHAJ1QmsoPQazDM1qC0yt5pQ5rrIiwIrgl37x1nWzBYJSbQRUXg
+         92Kuqv75WHF8PsaY7rD1owgaLhIgRotgwrftluSACPVz0cMnbw7JLBBOCbUruEVcqhVs
+         PVuA==
+X-Gm-Message-State: APjAAAU63iT9mOx1f5jpCOx7503RW772rGO8ubC/gQCw1XjG8y+K6F0o
+        BCyKujxJy/B2HJeIeUAWigWjDEBQYw4=
+X-Google-Smtp-Source: APXvYqx+ArUOcJehPBAHXaUzSzo4RpxB23gWZCK+k/SVPFm4zblI2hb6HPl7/FJ4Y5BPypzM93yIwg==
+X-Received: by 2002:a62:e90d:: with SMTP id j13mr4734628pfh.237.1571378230140;
+        Thu, 17 Oct 2019 22:57:10 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id a11sm4467587pfo.165.2019.10.17.22.57.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 22:57:09 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] arm64: dts: qcom: c630: Enable adsp, cdsp and mpss
+Date:   Thu, 17 Oct 2019 22:57:06 -0700
+Message-Id: <20191018055706.3729469-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0h0ioEZqLuaW1jz_8jRuGYZLQS3fbpv9ctyV9ucXb1WiA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 11:26:54PM +0200, Rafael J. Wysocki wrote:
-> On Thu, Oct 17, 2019 at 9:36 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Thu, Oct 17, 2019 at 6:35 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> > >
-> > > dev_pm_qos_remove_request ends calling {max,min}_freq_req QoS notifiers
-> > > which schedule policy update work. It may end up racing with the freeing
-> > > the policy and unregistering the driver.
-> > >
-> > > One possible race is as below where the cpufreq_driver is unregistered
-> > > but the scheduled work gets executed at later stage when cpufreq_driver
-> > > is NULL(i.e. after freeing the policy and driver)
-> > >
-> > > Unable to handle kernel NULL pointer dereference at virtual address 0000001c
-> > > pgd = (ptrval)
-> > > [0000001c] *pgd=80000080204003, *pmd=00000000
-> > > Internal error: Oops: 206 [#1] SMP THUMB2
-> > > Modules linked in:
-> > > CPU: 0 PID: 34 Comm: kworker/0:1 Not tainted 5.4.0-rc3-00006-g67f5a8081a4b #86
-> > > Hardware name: ARM-Versatile Express
-> > > Workqueue: events handle_update
-> > > PC is at cpufreq_set_policy+0x58/0x228
-> > > LR is at dev_pm_qos_read_value+0x77/0xac
-> > > Control: 70c5387d  Table: 80203000  DAC: fffffffd
-> > > Process kworker/0:1 (pid: 34, stack limit = 0x(ptrval))
-> > >         (cpufreq_set_policy) from (refresh_frequency_limits.part.24+0x37/0x48)
-> > >         (refresh_frequency_limits.part.24) from (handle_update+0x2f/0x38)
-> > >         (handle_update) from (process_one_work+0x16d/0x3cc)
-> > >         (process_one_work) from (worker_thread+0xff/0x414)
-> > >         (worker_thread) from (kthread+0xff/0x100)
-> > >         (kthread) from (ret_from_fork+0x11/0x28)
-> > >
-> > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > > Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > > ---
-> > >  drivers/cpufreq/cpufreq.c | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > >
-> > > Hi Rafael, Viresh,
-> > >
-> > > This fixed the boot issue I reported[1] on TC2 with bL switcher enabled.
-> > > I have based this patch on -rc3 and not on top of your patches. This
-> > > only fixes the boot issue but I hit the other crashes while continuously
-> > > switching on and off the bL switcher that register/unregister the driver
-> > > Your patch series fixes them. I can based this on top of those if you
-> > > prefer.
-> > >
-> > > Regards,
-> > > Sudeep
-> > >
-> > > [1] https://lore.kernel.org/linux-pm/20191015155735.GA29105@bogus/
-> > >
-> > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > > index c52d6fa32aac..b703c29a84be 100644
-> > > --- a/drivers/cpufreq/cpufreq.c
-> > > +++ b/drivers/cpufreq/cpufreq.c
-> > > @@ -1278,6 +1278,9 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
-> > >         }
-> > >
-> > >         dev_pm_qos_remove_request(policy->min_freq_req);
-> > > +       /* flush the pending policy->update work before freeing the policy */
-> > > +       if (work_pending(&policy->update))
-> >
-> > Isn't this racy?
-> >
-> > It still may be running if the pending bit is clear and we still need
-> > to wait for it then, don't we?
-> >
-> > Why don't you do an unconditional flush_work() here?
-> 
-> You may as well do a cancel_work_sync() here, because whether or not
-> the last update of the policy happens before it goes away is a matter
-> of timing in any case
+Specify the firmware-name for the adsp, cdsp and mpss and enable the
+nodes.
 
-In fact that's the first thing I tried to fix the issue I was seeing.
-But I then thought it would be better to complete the update as the PM
-QoS were getting updated back to DEFAULT values for the device. Even
-this works.
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts      | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-What is your preference ? flush_work or cancel_work_sync ? I will
-update accordingly. I may need to do some more testing with
-cancel_work_sync as I just checked that quickly to confirm the race.
+diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+index ded120d3aef5..13dc619687f3 100644
+--- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
++++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+@@ -20,6 +20,11 @@
+ 	};
+ };
+ 
++&adsp_pas {
++	firmware-name = "qcom/LENOVO/81JL/qcadsp850.mbn";
++	status = "okay";
++};
++
+ &apps_rsc {
+ 	pm8998-rpmh-regulators {
+ 		compatible = "qcom,pm8998-rpmh-regulators";
+@@ -229,6 +234,11 @@
+ 	status = "disabled";
+ };
+ 
++&cdsp_pas {
++	firmware-name = "qcom/LENOVO/81JL/qccdsp850.mbn";
++	status = "okay";
++};
++
+ &gcc {
+ 	protected-clocks = <GCC_QSPI_CORE_CLK>,
+ 			   <GCC_QSPI_CORE_CLK_SRC>,
+@@ -296,6 +306,10 @@
+ 	};
+ };
+ 
++&mss_pil {
++	firmware-name = "qcom/LENOVO/81JL/qcdsp1v2850.mbn", "qcom/LENOVO/81JL/qcdsp2850.mbn";
++};
++
+ &qup_i2c12_default {
+ 	drive-strength = <2>;
+ 	bias-disable;
+-- 
+2.23.0
 
---
-Regards,
-Sudeep
