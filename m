@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A0BCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 762EBCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48399222D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D9D5222CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:05:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436313;
-	bh=6aa/a7zujgcd5pc1XDGvvY94SwdoNTlHCpqsNXN7EwA=;
+	s=default; t=1571436318;
+	bh=IEy/Uf64WWx5r28Ky/7zeFyYJNzL1e4yhFukKOfLYi8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XmBqpcxy4tNtRekrK5I3JS/Kvutvde2OKRCsUbeXjbUmZjy4oGs+3i7B9sQic//gC
-	 wGbg+Urpmpmj9bL8OZ4BheOcSMKUMRYO8+pL+RrxK9iqzp/ejBrP1aiu9tkYcNlbjv
-	 4/D7kuOhVHDpZFxRUnAEuBAm2Jprm/ly3P0XHLXY=
+	b=h/L1599tM9V+39rzImbj9hO6LyAAVhoxnoLsRUoHDNrq8ogF+djCfjIZJkcZQoVr0
+	 36QKy52Z6fiH/DuDa/gyjpul8c52ARo6SM6gyHpF8nr5HObF47x4jR1gfU4MliARfG
+	 QsbbogpVDXVkToD0ohaL9o4DbV+E2kQVgbS5j89w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729295AbfJRWFM (ORCPT
+        id S1729469AbfJRWFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:05:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36952 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:05:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729207AbfJRWFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:05:08 -0400
+        id S1729303AbfJRWFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:05:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40FA1222CD;
-        Fri, 18 Oct 2019 22:05:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BCD1222C2;
+        Fri, 18 Oct 2019 22:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436308;
-        bh=6aa/a7zujgcd5pc1XDGvvY94SwdoNTlHCpqsNXN7EwA=;
+        s=default; t=1571436312;
+        bh=IEy/Uf64WWx5r28Ky/7zeFyYJNzL1e4yhFukKOfLYi8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fyWNU1sPO/Zcq6c26Xm+B2dxaq6eyjH+rk90VM+VLtJXBFNLpuExULTJOUK6ga9L+
-         qDShaZ0mxNoNUXnds2cX8L1Eu1+7ioDln9yUp/fEPCBvGwraibP6eO94PRgfJ2bh6h
-         OdGQhffjOGkZy2cqprQ6AyaxczbxPj09Y8U7plzs=
+        b=l2udVMMqVdQ0ofSkB9+mNrjpa0I2q/ebAVS4NPV6Ji6S+uam1oDd19TIzQkREXBad
+         hf55RlCgg5jsCZWCmM6KkBlm6uxFp3hvGwiEXQv+HBOjegsOLrSKXm4ZS7A/c8HX8i
+         yEZXTB42O9DOnxdi39JbTLqShBuc57R4NrBCBntc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marco Felsch <m.felsch@pengutronix.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 78/89] iio: adc: ad799x: fix probe error handling
-Date:   Fri, 18 Oct 2019 18:03:13 -0400
-Message-Id: <20191018220324.8165-78-sashal@kernel.org>
+Cc:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>, linux-mips@linux-mips.org
+Subject: [PATCH AUTOSEL 5.3 81/89] MIPS: fw: sni: Fix out of bounds init of o32 stack
+Date:   Fri, 18 Oct 2019 18:03:16 -0400
+Message-Id: <20191018220324.8165-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -61,41 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 
-[ Upstream commit c62dd44901cfff12acc5792bf3d2dec20bcaf392 ]
+[ Upstream commit efcb529694c3b707dc0471b312944337ba16e4dd ]
 
-Since commit 0f7ddcc1bff1 ("iio:adc:ad799x: Write default config on probe
-and reset alert status on probe") the error path is wrong since it
-leaves the vref regulator on. Fix this by disabling both regulators.
+Use ARRAY_SIZE to caluculate the top of the o32 stack.
 
-Fixes: 0f7ddcc1bff1 ("iio:adc:ad799x: Write default config on probe and reset alert status on probe")
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/ad799x.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/mips/fw/sni/sniprom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iio/adc/ad799x.c b/drivers/iio/adc/ad799x.c
-index 5a3ca5904dedc..f658012baad88 100644
---- a/drivers/iio/adc/ad799x.c
-+++ b/drivers/iio/adc/ad799x.c
-@@ -810,10 +810,10 @@ static int ad799x_probe(struct i2c_client *client,
+diff --git a/arch/mips/fw/sni/sniprom.c b/arch/mips/fw/sni/sniprom.c
+index 8772617b64cef..80112f2298b68 100644
+--- a/arch/mips/fw/sni/sniprom.c
++++ b/arch/mips/fw/sni/sniprom.c
+@@ -43,7 +43,7 @@
  
- 	ret = ad799x_write_config(st, st->chip_config->default_config);
- 	if (ret < 0)
--		goto error_disable_reg;
-+		goto error_disable_vref;
- 	ret = ad799x_read_config(st);
- 	if (ret < 0)
--		goto error_disable_reg;
-+		goto error_disable_vref;
- 	st->config = ret;
+ /* O32 stack has to be 8-byte aligned. */
+ static u64 o32_stk[4096];
+-#define O32_STK	  &o32_stk[sizeof(o32_stk)]
++#define O32_STK	  (&o32_stk[ARRAY_SIZE(o32_stk)])
  
- 	ret = iio_triggered_buffer_setup(indio_dev, NULL,
+ #define __PROM_O32(fun, arg) fun arg __asm__(#fun); \
+ 				     __asm__(#fun " = call_o32")
 -- 
 2.20.1
 
