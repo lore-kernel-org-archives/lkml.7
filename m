@@ -2,145 +2,331 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA3CDCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68353CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9947B20659
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3422821835
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:31:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394076AbfJRQbk (ORCPT
+        id S2502118AbfJRQbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:31:40 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:39785 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2443020AbfJRQbO (ORCPT
+        Fri, 18 Oct 2019 12:31:47 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57843 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2443017AbfJRQbR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:31:14 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MK3mS-1icTm63Lji-00LXiw; Fri, 18 Oct 2019 18:31:00 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Hartley Sweeten <hsweeten@visionengravers.com>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Subject: [PATCH 3/6] ARM: ep93xx: make mach/ep93xx-regs.h local
-Date:   Fri, 18 Oct 2019 18:29:16 +0200
-Message-Id: <20191018163047.1284736-3-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191018163047.1284736-1-arnd@arndb.de>
-References: <20191018163047.1284736-1-arnd@arndb.de>
+        Fri, 18 Oct 2019 12:31:17 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iLV92-0002jQ-4w; Fri, 18 Oct 2019 18:30:28 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C22611C0450;
+        Fri, 18 Oct 2019 18:30:27 +0200 (CEST)
+Date:   Fri, 18 Oct 2019 16:30:27 -0000
+From:   "tip-bot2 for Jiri Slaby" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/asm] x86/asm/64: Add ENDs to some functions and relabel
+ with SYM_CODE_*
+Cc:     Jiri Slaby <jslaby@suse.cz>, Borislav Petkov <bp@suse.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Cao jin <caoj.fnst@cn.fujitsu.com>,
+        Darren Hart <dvhart@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        linux-arch@vger.kernel.org, linux-pm@vger.kernel.org,
+        Pavel Machek <pavel@ucw.cz>,
+        Pingfan Liu <kernelfans@gmail.com>,
+        platform-driver-x86@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wei Huang <wei@redhat.com>, "x86-ml" <x86@kernel.org>,
+        xen-devel@lists.xenproject.org,
+        Xiaoyao Li <xiaoyao.li@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191011115108.12392-23-jslaby@suse.cz>
+References: <20191011115108.12392-23-jslaby@suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Tlr/kGU2mrcS/i0RZ/FxB2SYCWQT8PnsZqB5BcF7KAjcRmXLUoF
- F9tlGC+3wNa5O5ykqO5dAN2TDQM0ig59FE1SOufdFwBDz5f7Eln7CUeDvq9Y5oe8gDIq3g6
- 0fDwY3z/aNnIGAGFB9uIwbx/4hf4Sc2khW/mncHRod8MA9YGAGM5IP+7H767jo4JR3PB0F4
- 8sIvE5utwNvgPaEv9jxSw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+IHzhn3/5XI=:3+rOIP+88JYxotOIBrvwLn
- epLEJlm/bm1m6smJnYwY6LsWyjAWKtgnQ9SOQ1u1kLeWB4lVdkM1zyfETbpfqKTI3gtUQGb31
- 7qvGQHo1ULmo3Kcwtgr/UMu/gNteiLmFh/FAjMCsWYbuv2y/FHnMPcmxDE6i4Wcg8hG6AHe5D
- auu0neWcvGuz5x6a4Pm6qHdFAELbHITngSBERzCYCkXBslEu1GcriGPbjubkt1nSMubPeOotQ
- /wUVDcOCmjJW8SlkBXiyaq7FBonl9BJUiwHHae6BrNzbwIJ0Z0WBywyTwqa7KzCAAZ9uZAGeY
- Rwn8hCH/JxbigA6n0Mu3WItmFLp4q9G6BXZFOggU1gFZg8kQB2B9e040Vk1B9axLzdu4NCGas
- NwPyzWqBGQd/SKn+S5jj4N5o41KkOk6HIJHLo/8uowM6eNHLCoX9iCZtfV+JbcCGLUPB0gva+
- etKp0YR9PCqjM3XjNiEwG9GysIP3HwQhZsQXRevLaqxtKPPh4QMkiw8tSoBMcPmFg6LYA5TTP
- dUWZOa/RvaL0rWzwdkgHOKi1sQmPotgs/y1WT5TI6uFHbFcFa3gNH9xhbDn1Wh/6uGx30cnbJ
- BgSlkjCou75M88kQbYGA1AOFWlIjW61hwm3jgPyWDon5z9bSGabmFB3DpHvFyOk+/oVw0dmrT
- NiD4hjy1o/Qsl5x7GWyNtJielZuoTj0gA3hSqaSdbQ0bpTbj9WMm6VpfNIE0qO5Rxvpx/ORgk
- jiM+56LMmAnxwY+UHxwG2so4GiG7WoNonQZSjUZj4BolzLlCXquFNDA/GgN/HVDSEpGMNU5Xx
- dtZtdH5FQp92SsdBIp11mJF5v0aPISl62FxZ6rx1yWCCNbdxZHOGiBHJ4XhoW5OgL0wlUtbx8
- gHaq77S5t+W3wz9jnl3w==
+Message-ID: <157141622755.29376.5490878094731204617.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nothing relies on it outside of arch/arm/mach-ep93xx/, so just move
-it there.
+The following commit has been merged into the x86/asm branch of tip:
 
-Cc: Hartley Sweeten <hsweeten@visionengravers.com>
-Cc: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Commit-ID:     4aec216b93dd8e3597124f41369ec835ff18dbd0
+Gitweb:        https://git.kernel.org/tip/4aec216b93dd8e3597124f41369ec835ff18dbd0
+Author:        Jiri Slaby <jslaby@suse.cz>
+AuthorDate:    Fri, 11 Oct 2019 13:51:02 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Fri, 18 Oct 2019 11:58:16 +02:00
+
+x86/asm/64: Add ENDs to some functions and relabel with SYM_CODE_*
+
+All these are functions which are invoked from elsewhere but they are
+not typical C functions. So annotate them using the new SYM_CODE_START.
+All these were not balanced with any END, so mark their ends by
+SYM_CODE_END appropriately too.
+
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com> [xen bits]
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com> [power mgmt]
+Cc: Andy Shevchenko <andy@infradead.org>
+Cc: Cao jin <caoj.fnst@cn.fujitsu.com>
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: linux-arch@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Pingfan Liu <kernelfans@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Wei Huang <wei@redhat.com>
+Cc: x86-ml <x86@kernel.org>
+Cc: xen-devel@lists.xenproject.org
+Cc: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+Link: https://lkml.kernel.org/r/20191011115108.12392-23-jslaby@suse.cz
 ---
- arch/arm/mach-ep93xx/crunch-bits.S                    | 2 +-
- arch/arm/mach-ep93xx/{include/mach => }/ep93xx-regs.h | 4 ----
- arch/arm/mach-ep93xx/gpio-ep93xx.h                    | 2 +-
- arch/arm/mach-ep93xx/include/mach/uncompress.h        | 1 -
- arch/arm/mach-ep93xx/soc.h                            | 2 +-
- 5 files changed, 3 insertions(+), 8 deletions(-)
- rename arch/arm/mach-ep93xx/{include/mach => }/ep93xx-regs.h (94%)
+ arch/x86/boot/compressed/head_64.S   |  6 ++++--
+ arch/x86/platform/olpc/xo1-wakeup.S  |  3 ++-
+ arch/x86/power/hibernate_asm_64.S    |  6 ++++--
+ arch/x86/realmode/rm/reboot.S        |  3 ++-
+ arch/x86/realmode/rm/trampoline_64.S | 10 +++++++---
+ arch/x86/realmode/rm/wakeup_asm.S    |  3 ++-
+ arch/x86/xen/xen-asm_64.S            |  6 ++++--
+ 7 files changed, 25 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/mach-ep93xx/crunch-bits.S b/arch/arm/mach-ep93xx/crunch-bits.S
-index fb2dbf76f09e..e6dd08538bb9 100644
---- a/arch/arm/mach-ep93xx/crunch-bits.S
-+++ b/arch/arm/mach-ep93xx/crunch-bits.S
-@@ -14,7 +14,7 @@
- #include <asm/thread_info.h>
- #include <asm/asm-offsets.h>
- #include <asm/assembler.h>
--#include <mach/ep93xx-regs.h>
-+#include "ep93xx-regs.h"
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index ca762ea..5580046 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -250,7 +250,7 @@ ENDPROC(efi32_stub_entry)
  
- /*
-  * We can't use hex constants here due to a bug in gas.
-diff --git a/arch/arm/mach-ep93xx/include/mach/ep93xx-regs.h b/arch/arm/mach-ep93xx/ep93xx-regs.h
-similarity index 94%
-rename from arch/arm/mach-ep93xx/include/mach/ep93xx-regs.h
-rename to arch/arm/mach-ep93xx/ep93xx-regs.h
-index 6839ea032e58..8fa3646de0a4 100644
---- a/arch/arm/mach-ep93xx/include/mach/ep93xx-regs.h
-+++ b/arch/arm/mach-ep93xx/ep93xx-regs.h
-@@ -1,8 +1,4 @@
- /* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * arch/arm/mach-ep93xx/include/mach/ep93xx-regs.h
-- */
--
- #ifndef __ASM_ARCH_EP93XX_REGS_H
- #define __ASM_ARCH_EP93XX_REGS_H
- 
-diff --git a/arch/arm/mach-ep93xx/gpio-ep93xx.h b/arch/arm/mach-ep93xx/gpio-ep93xx.h
-index 242af4a401ea..7b46eb7e5507 100644
---- a/arch/arm/mach-ep93xx/gpio-ep93xx.h
-+++ b/arch/arm/mach-ep93xx/gpio-ep93xx.h
-@@ -4,7 +4,7 @@
- #ifndef __GPIO_EP93XX_H
- #define __GPIO_EP93XX_H
- 
--#include <mach/ep93xx-regs.h>
-+#include "ep93xx-regs.h"
- 
- #define EP93XX_GPIO_PHYS_BASE		EP93XX_APB_PHYS(0x00040000)
- #define EP93XX_GPIO_BASE		EP93XX_APB_IOMEM(0x00040000)
-diff --git a/arch/arm/mach-ep93xx/include/mach/uncompress.h b/arch/arm/mach-ep93xx/include/mach/uncompress.h
-index b3ec1db988db..e20bcab702b2 100644
---- a/arch/arm/mach-ep93xx/include/mach/uncompress.h
-+++ b/arch/arm/mach-ep93xx/include/mach/uncompress.h
-@@ -5,7 +5,6 @@
-  * Copyright (C) 2006 Lennert Buytenhek <buytenh@wantstofly.org>
+ 	.code64
+ 	.org 0x200
+-ENTRY(startup_64)
++SYM_CODE_START(startup_64)
+ 	/*
+ 	 * 64bit entry is 0x200 and it is ABI so immutable!
+ 	 * We come here either from startup_32 or directly from a
+@@ -442,6 +442,7 @@ trampoline_return:
   */
+ 	leaq	.Lrelocated(%rbx), %rax
+ 	jmp	*%rax
++SYM_CODE_END(startup_64)
  
--#include <mach/ep93xx-regs.h>
- #include <asm/mach-types.h>
+ #ifdef CONFIG_EFI_STUB
  
- static unsigned char __raw_readb(unsigned int ptr)
-diff --git a/arch/arm/mach-ep93xx/soc.h b/arch/arm/mach-ep93xx/soc.h
-index 770743bbaf80..670884ba754e 100644
---- a/arch/arm/mach-ep93xx/soc.h
-+++ b/arch/arm/mach-ep93xx/soc.h
-@@ -9,7 +9,7 @@
- #ifndef _EP93XX_SOC_H
- #define _EP93XX_SOC_H
+@@ -571,7 +572,7 @@ SYM_FUNC_END(.Lrelocated)
+  * ECX contains the base address of the trampoline memory.
+  * Non zero RDX means trampoline needs to enable 5-level paging.
+  */
+-ENTRY(trampoline_32bit_src)
++SYM_CODE_START(trampoline_32bit_src)
+ 	/* Set up data and stack segments */
+ 	movl	$__KERNEL_DS, %eax
+ 	movl	%eax, %ds
+@@ -634,6 +635,7 @@ ENTRY(trampoline_32bit_src)
+ 	movl	%eax, %cr0
  
--#include <mach/ep93xx-regs.h>
-+#include "ep93xx-regs.h"
- #include "irqs.h"
+ 	lret
++SYM_CODE_END(trampoline_32bit_src)
+ 
+ 	.code64
+ SYM_FUNC_START_LOCAL_NOALIGN(.Lpaging_enabled)
+diff --git a/arch/x86/platform/olpc/xo1-wakeup.S b/arch/x86/platform/olpc/xo1-wakeup.S
+index 5fee3a2..75f4faf 100644
+--- a/arch/x86/platform/olpc/xo1-wakeup.S
++++ b/arch/x86/platform/olpc/xo1-wakeup.S
+@@ -90,7 +90,7 @@ restore_registers:
+ 
+ 	ret
+ 
+-ENTRY(do_olpc_suspend_lowlevel)
++SYM_CODE_START(do_olpc_suspend_lowlevel)
+ 	call	save_processor_state
+ 	call	save_registers
+ 
+@@ -110,6 +110,7 @@ ret_point:
+ 	call	restore_registers
+ 	call	restore_processor_state
+ 	ret
++SYM_CODE_END(do_olpc_suspend_lowlevel)
+ 
+ .data
+ saved_gdt:             .long   0,0
+diff --git a/arch/x86/power/hibernate_asm_64.S b/arch/x86/power/hibernate_asm_64.S
+index a4d5eb0..4057cd5 100644
+--- a/arch/x86/power/hibernate_asm_64.S
++++ b/arch/x86/power/hibernate_asm_64.S
+@@ -52,7 +52,7 @@ ENTRY(swsusp_arch_suspend)
+ 	ret
+ ENDPROC(swsusp_arch_suspend)
+ 
+-ENTRY(restore_image)
++SYM_CODE_START(restore_image)
+ 	/* prepare to jump to the image kernel */
+ 	movq	restore_jump_address(%rip), %r8
+ 	movq	restore_cr3(%rip), %r9
+@@ -67,9 +67,10 @@ ENTRY(restore_image)
+ 	/* jump to relocated restore code */
+ 	movq	relocated_restore_code(%rip), %rcx
+ 	jmpq	*%rcx
++SYM_CODE_END(restore_image)
+ 
+ 	/* code below has been relocated to a safe page */
+-ENTRY(core_restore_code)
++SYM_CODE_START(core_restore_code)
+ 	/* switch to temporary page tables */
+ 	movq	%rax, %cr3
+ 	/* flush TLB */
+@@ -97,6 +98,7 @@ ENTRY(core_restore_code)
+ .Ldone:
+ 	/* jump to the restore_registers address from the image header */
+ 	jmpq	*%r8
++SYM_CODE_END(core_restore_code)
+ 
+ 	 /* code below belongs to the image kernel */
+ 	.align PAGE_SIZE
+diff --git a/arch/x86/realmode/rm/reboot.S b/arch/x86/realmode/rm/reboot.S
+index 424826a..f10515b 100644
+--- a/arch/x86/realmode/rm/reboot.S
++++ b/arch/x86/realmode/rm/reboot.S
+@@ -19,7 +19,7 @@
+  */
+ 	.section ".text32", "ax"
+ 	.code32
+-ENTRY(machine_real_restart_asm)
++SYM_CODE_START(machine_real_restart_asm)
+ 
+ #ifdef CONFIG_X86_64
+ 	/* Switch to trampoline GDT as it is guaranteed < 4 GiB */
+@@ -63,6 +63,7 @@ SYM_INNER_LABEL(machine_real_restart_paging_off, SYM_L_GLOBAL)
+ 	movl	%ecx, %gs
+ 	movl	%ecx, %ss
+ 	ljmpw	$8, $1f
++SYM_CODE_END(machine_real_restart_asm)
  
  /*
--- 
-2.20.0
-
+  * This is 16-bit protected mode code to disable paging and the cache,
+diff --git a/arch/x86/realmode/rm/trampoline_64.S b/arch/x86/realmode/rm/trampoline_64.S
+index c1aeab1..251758e 100644
+--- a/arch/x86/realmode/rm/trampoline_64.S
++++ b/arch/x86/realmode/rm/trampoline_64.S
+@@ -38,7 +38,7 @@
+ 	.code16
+ 
+ 	.balign	PAGE_SIZE
+-ENTRY(trampoline_start)
++SYM_CODE_START(trampoline_start)
+ 	cli			# We should be safe anyway
+ 	wbinvd
+ 
+@@ -78,12 +78,14 @@ ENTRY(trampoline_start)
+ no_longmode:
+ 	hlt
+ 	jmp no_longmode
++SYM_CODE_END(trampoline_start)
++
+ #include "../kernel/verify_cpu.S"
+ 
+ 	.section ".text32","ax"
+ 	.code32
+ 	.balign 4
+-ENTRY(startup_32)
++SYM_CODE_START(startup_32)
+ 	movl	%edx, %ss
+ 	addl	$pa_real_mode_base, %esp
+ 	movl	%edx, %ds
+@@ -137,13 +139,15 @@ ENTRY(startup_32)
+ 	 * the new gdt/idt that has __KERNEL_CS with CS.L = 1.
+ 	 */
+ 	ljmpl	$__KERNEL_CS, $pa_startup_64
++SYM_CODE_END(startup_32)
+ 
+ 	.section ".text64","ax"
+ 	.code64
+ 	.balign 4
+-ENTRY(startup_64)
++SYM_CODE_START(startup_64)
+ 	# Now jump into the kernel using virtual addresses
+ 	jmpq	*tr_start(%rip)
++SYM_CODE_END(startup_64)
+ 
+ 	.section ".rodata","a"
+ 	# Duplicate the global descriptor table
+diff --git a/arch/x86/realmode/rm/wakeup_asm.S b/arch/x86/realmode/rm/wakeup_asm.S
+index 01092d6..02d0ba1 100644
+--- a/arch/x86/realmode/rm/wakeup_asm.S
++++ b/arch/x86/realmode/rm/wakeup_asm.S
+@@ -37,7 +37,7 @@ SYM_DATA_END(wakeup_header)
+ 	.code16
+ 
+ 	.balign	16
+-ENTRY(wakeup_start)
++SYM_CODE_START(wakeup_start)
+ 	cli
+ 	cld
+ 
+@@ -135,6 +135,7 @@ ENTRY(wakeup_start)
+ #else
+ 	jmp	trampoline_start
+ #endif
++SYM_CODE_END(wakeup_start)
+ 
+ bogus_real_magic:
+ 1:
+diff --git a/arch/x86/xen/xen-asm_64.S b/arch/x86/xen/xen-asm_64.S
+index 45c1249..c209c70 100644
+--- a/arch/x86/xen/xen-asm_64.S
++++ b/arch/x86/xen/xen-asm_64.S
+@@ -85,11 +85,12 @@ hypercall_iret = hypercall_page + __HYPERVISOR_iret * 32
+  *	r11		}<-- pushed by hypercall page
+  * rsp->rax		}
+  */
+-ENTRY(xen_iret)
++SYM_CODE_START(xen_iret)
+ 	pushq $0
+ 	jmp hypercall_iret
++SYM_CODE_END(xen_iret)
+ 
+-ENTRY(xen_sysret64)
++SYM_CODE_START(xen_sysret64)
+ 	/*
+ 	 * We're already on the usermode stack at this point, but
+ 	 * still with the kernel gs, so we can easily switch back.
+@@ -107,6 +108,7 @@ ENTRY(xen_sysret64)
+ 
+ 	pushq $VGCF_in_syscall
+ 	jmp hypercall_iret
++SYM_CODE_END(xen_sysret64)
+ 
+ /*
+  * Xen handles syscall callbacks much like ordinary exceptions, which
