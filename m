@@ -2,81 +2,92 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3815CA9EA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1485CA9EA5
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97226222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA79021897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:30:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571387450;
+	bh=sR8LGNWn5ye4HV5wuqrSqbgPTz3HHIYZY265Ose77AA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Hovmp0WJizgLB3egi9CIaaaaaopJW0V6Dy/Xx0H8GkydYIor26jI9/o19oo/hcPs7
+	 rEEu1zUotWRLo2+1tdHGN+GvYHUX7/s+umKpd825iMCfQzueD5Q/NbyAjX/foK+dMg
+	 99W8u9AvC7JAnb94aMrPF5a+VTTaxWAfCh/G+AiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632829AbfJRIaX (ORCPT
+        id S2632854AbfJRIat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:30:23 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4687 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727573AbfJRIaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 04:30:23 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C2E74FC5DD1294023AB5;
-        Fri, 18 Oct 2019 16:30:20 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Fri, 18 Oct 2019
- 16:30:10 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <kys@microsoft.com>, <haiyangz@microsoft.com>,
-        <sthemmin@microsoft.com>, <sashal@kernel.org>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>, <x86@kernel.org>, <mikelley@microsoft.com>,
-        <wei.liu@kernel.org>, <parri.andrea@gmail.com>
-CC:     <linux-hyperv@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] x86/hyperv: Fix build error while CONFIG_PARAVIRT=n
-Date:   Fri, 18 Oct 2019 16:29:21 +0800
-Message-ID: <20191018082921.28164-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 18 Oct 2019 04:30:49 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43954 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387458AbfJRIas (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 04:30:48 -0400
+Received: by mail-ot1-f68.google.com with SMTP id o44so4270955ota.10;
+        Fri, 18 Oct 2019 01:30:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sR8LGNWn5ye4HV5wuqrSqbgPTz3HHIYZY265Ose77AA=;
+        b=mjS11S6Tka6V8RX+s4ziVaIcr1kvyGUumQTrbZma3fn2wPGgE0pBNtKt9xFDQlnKpP
+         CGKH6LkBKgzVfDwxOgNSoXJKE3q1UBef5bNQCcAqWPF03lF+dzaNeSUFsTfBb2uugxI0
+         +QXn2hL2jFfPKHnBvSd9qAdVElXOaoz1Wzr7AectiKTR7toHmSoiiaoGYwIbPnVdzAda
+         yG68ySWkckPnF5rDA6RnLJJ6LukuPVuasifKDiR3kvEYXoEMZTw2PasEVsqUYsfFOzBP
+         l3EcQWqiA+kOjz9Szenvy4PGX5Tp/omrEwnSVh7CIMobXLf+bwXF+dokHj7kLnIVyxRp
+         xeRA==
+X-Gm-Message-State: APjAAAU5KqUyI55hMbX6iulgDgNtCz6z7pENPCSYaD/ONut8PlwR9z5z
+        7vUkIgonV5fBo/Zgj+NmlXAZdyldWi0K3X59O2Y=
+X-Google-Smtp-Source: APXvYqyOVj/WbgqsqGcPJx6u9Wa3Z53YLRML1XSQVYeYuPS2CTuwb8VYSp7/X11REuVAr8mknXzeAgjbgzlK6m++50Q=
+X-Received: by 2002:a9d:5a0f:: with SMTP id v15mr6816536oth.266.1571387447135;
+ Fri, 18 Oct 2019 01:30:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+References: <2811202.iOFZ6YHztY@kreacher> <20191016142343.GB5330@bogus>
+ <20191017095725.izchzl7enfylvpf3@vireshk-i7> <20191017095942.GF8978@bogus>
+ <CAJZ5v0ixS8ZS93Fgj8XGUMGcLdAy+Fgwp5z3QirccNSiiwLtDA@mail.gmail.com>
+ <20191018054433.tq2euue675xk4o63@vireshk-i7> <CAJZ5v0hpfvy5iELVRWFA3HS8NoAH0=py0cE+fLaUq2hDReCrnQ@mail.gmail.com>
+ <20191018082745.3zr6tc3yqmbydkrw@vireshk-i7>
+In-Reply-To: <20191018082745.3zr6tc3yqmbydkrw@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 18 Oct 2019 10:30:36 +0200
+Message-ID: <CAJZ5v0gR45YNwqrc8JQ_2qQBnYrxPeCHTnvQtEELD8VpXJrxLA@mail.gmail.com>
+Subject: Re: [RFT][PATCH 0/3] cpufreq / PM: QoS: Introduce frequency QoS and
+ use it in cpufreq
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Osipenko <digetx@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-while CONFIG_PARAVIRT=n, building fails:
+On Fri, Oct 18, 2019 at 10:27 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 18-10-19, 10:24, Rafael J. Wysocki wrote:
+> > On Fri, Oct 18, 2019 at 7:44 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > >
+> > > On 17-10-19, 18:34, Rafael J. Wysocki wrote:
+> > > > [BTW, Viresh, it looks like cpufreq_set_policy() should still ensure
+> > > > that the new min is less than the new max, because the QoS doesn't do
+> > > > that.]
+> > >
+> > > The ->verify() callback does that for us I believe.
+> >
+> > It does in practice AFAICS, but in theory it may assume the right
+> > ordering between the min and the max and just test the boundaries, may
+> > it not?
+>
+> I think cpufreq_verify_within_limits() gets called for sure from
+> within ->verify() for all platforms
 
-arch/x86/kernel/cpu/mshyperv.c: In function ms_hyperv_init_platform:
-arch/x86/kernel/cpu/mshyperv.c:219:2: error: pv_info undeclared (first use in this function); did you mean pr_info?
-  pv_info.name = "Hyper-V";
-  ^~~~~~~
-
-Wrap it into a #ifdef to fix this.
-
-Fixes: 628270ef628a ("x86/hyperv: Set pv_info.name to "Hyper-V"")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- arch/x86/kernel/cpu/mshyperv.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index e7f0776..c656d92 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -216,7 +216,9 @@ static void __init ms_hyperv_init_platform(void)
- 	int hv_host_info_ecx;
- 	int hv_host_info_edx;
- 
-+#ifdef CONFIG_PARAVIRT
- 	pv_info.name = "Hyper-V";
-+#endif
- 
- 	/*
- 	 * Extract the features and hints
--- 
-2.7.4
-
-
+That's why I mean by "in practice". :-)
