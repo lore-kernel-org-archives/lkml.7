@@ -2,105 +2,145 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5693CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B18CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC9A62089C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1318B20869
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:04:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YJ4zJBnO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="KgjNnBBR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506060AbfJRVDI (ORCPT
+        id S2440230AbfJRVEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 17:03:08 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:41011 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728410AbfJRVDI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 17:03:08 -0400
-Received: by mail-qk1-f196.google.com with SMTP id p10so6611583qkg.8
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 14:03:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w5yfTzlXuD4kav5HMjCh3XSfoZZpoehtbD9nhzYMyUM=;
-        b=YJ4zJBnOuYfs3IkYqza76LtzacYPjLmzE1cNIVUWPWz2I0HHMP/AG1snDhBdxcndda
-         qw5EzeWr8ANzVlfsn4a6eOjVa8PDZiQ4pdtSBDZ7qnt/hetcMXUycIb4e/VSfwEvdTSr
-         Yf1EDMGPNUeE96tDTbvbaSXACVbmO+TavnO9M/+y3Q14jTIq5aHb3nNobu3YsFZ60o75
-         KX5/tzztz2ov7+K0HXdIj1X7c/dPlSqFZujA4aixVjzeRdnSIKNult7EpppnRmVq3aNC
-         crCQlHQgq7GW/+SbgcqiOas9Hnwg4rluV7KDaBTV6mr5QUMCXkA0UG7o0nu4NEAiAipB
-         Rrxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w5yfTzlXuD4kav5HMjCh3XSfoZZpoehtbD9nhzYMyUM=;
-        b=pn0NYVPKwtfI0oz8GUf+XRZofGCDCYCAJtZL3rah6hqNR05ymLUrAf5+dXnNuhqavi
-         vqoHOCPpgeLavqe1lszgsi9r4TxkJ88m8xM3hxwqHspSRNn7ouPr6pMqlDl8gbXgEE39
-         b3v+jMukEDOQxdlIvWCJWa7s/vsA1kXmDr8TFwRc3H9jV6zq7m/jIYBR+46sfvdHcI0x
-         QLc6P36hVKb3TgCzCv6meQTcQQfLSYFu2YjHElTMSTWPwoSKayzRAJwVMCb6rqC7lpHm
-         LfTvystmCtJ5+Wdx3qmS04kCBvdLwQosvUF0Xlyuv7VWrDImSMF1ZAjUuwo5H/pJyYrw
-         AQOA==
-X-Gm-Message-State: APjAAAWC34Lyq89FQ/xY2O7k4i0WVwvhqhX6E1647p9Kl90ypKup0lB/
-        IKuOqbYGQG5EwuY4aX7RXZAyiGnLKB0tqrv1PSPvoVM0k9U=
-X-Google-Smtp-Source: APXvYqw8tNu0ZEcr9cUYkJv8QaKxcGJGz7c1mQDdMa03FSxMEnvUroWtRP1aKSvz4MkVzAn/r0dtQ+UUPuHmHpj4J9c=
-X-Received: by 2002:a05:620a:242:: with SMTP id q2mr10896151qkn.87.1571432587081;
- Fri, 18 Oct 2019 14:03:07 -0700 (PDT)
+        Fri, 18 Oct 2019 17:04:35 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:45297 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730793AbfJRVEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 17:04:35 -0400
+Received: from [IPv6:2601:646:8600:3281:c81c:8219:2587:2aad] ([IPv6:2601:646:8600:3281:c81c:8219:2587:2aad])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x9IL3s1Y3114321
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Fri, 18 Oct 2019 14:03:56 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x9IL3s1Y3114321
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019091901; t=1571432637;
+        bh=pgCUxipVhDY6K42fnCtrfVrYsH6X5lPe2Y45M3wSGS4=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=KgjNnBBRIT74Ipf0giXvMGL9Y96DNXVMLpQKziFzuXhxs45qVKwWrJw6pGnMV+PnS
+         jEGggD5AJaHmWRT89brTeVv53dgvti1GnmBVGgf0b+JoFBMWXNtRuP8zRl3RytDn3t
+         ms1J8Sn7NQjLKFWNfquZZY319BU13EIoUKhg9QIaDe0mo8Hh2PieksffqiA7rCr72k
+         Mb4vSPpzQxFES6X/f782xffizh/B+6hjm8DwCV6WiR3J3SXjG3H/7FTUuAJwUKVeTj
+         msfQf5y7B52u+bKDaCL6C0a6KmgzLZc+zZ2ZySSlO39cjzES7V5GeJGhKZYX9t0fOv
+         /Tu2WWwGYsryw==
+Date:   Fri, 18 Oct 2019 14:03:45 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <3c42bd1c3cb9469f8f762c97f52d8655@AcuMS.aculab.com>
+References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com> <1560897679-228028-10-git-send-email-fenghua.yu@intel.com> <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de> <20190626203637.GC245468@romley-ivt3.sc.intel.com> <alpine.DEB.2.21.1906262338220.32342@nanos.tec.linutronix.de> <20190925180931.GG31852@linux.intel.com> <3ec328dc-2763-9da5-28d6-e28970262c58@redhat.com> <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de> <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com> <c3ff2fb3-4380-fb07-1fa3-15896a09e748@intel.com> <d30652bb-89fa-671a-5691-e2c76af231d0@redhat.com> <8808c9ac-0906-5eec-a31f-27cbec778f9c@intel.com> <alpine.DEB.2.21.1910161519260.2046@nanos.tec.linutronix.de> <ba2c0aab-1d7c-5cfd-0054-ac2c266c1df3@redhat.com> <alpine.DEB.2.21.1910171322530.1824@nanos.tec.linutronix.de> <3908561D78D1C84285E8C5FCA982C28F7F4A5F08@ORSMSX115.amr.corp.intel.com> <3c42bd1c3cb9469f8f762c97f52d8655@AcuMS.aculab.com>
 MIME-Version: 1.0
-References: <20191016221148.F9CCD155@viggo.jf.intel.com> <20191016221152.BF2171A3@viggo.jf.intel.com>
- <CAHbLzkp_2UD50Vt8f_atxKcz4x8J3GB3YzTqMOd6Src_y2Yg2g@mail.gmail.com> <6ab6ca82-71d4-bdea-ae95-e0bebb5e71df@intel.com>
-In-Reply-To: <6ab6ca82-71d4-bdea-ae95-e0bebb5e71df@intel.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Fri, 18 Oct 2019 14:02:54 -0700
-Message-ID: <CAHbLzkppnNBXVkQ-eZx1=USaaKJWE-dd3_SkFk+y9vkMsm0oMQ@mail.gmail.com>
-Subject: Re: [PATCH 3/4] mm/vmscan: Attempt to migrate page in lieu of discard
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Keith Busch <keith.busch@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: RE: [RFD] x86/split_lock: Request to Intel
+To:     David Laight <David.Laight@ACULAB.COM>,
+        "'Luck, Tony'" <tony.luck@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paolo Bonzini <pbonzini@redhat.com>
+CC:     "Li, Xiaoyao" <xiaoyao.li@intel.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+From:   hpa@zytor.com
+Message-ID: <CB773347-E305-422B-ADAC-219D0F01E27E@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 11:15 AM Dave Hansen <dave.hansen@intel.com> wrote:
+On October 18, 2019 3:45:14 AM PDT, David Laight <David=2ELaight@ACULAB=2EC=
+OM> wrote:
+>From: Luck, Tony
+>> Sent: 18 October 2019 00:28
+>=2E=2E=2E
+>> 2) Fix set_bit() et=2E al=2E to not issue atomic operations that cross
+>boundaries=2E
+>>=20
+>> Fenghua had been pursuing option #1 in previous iterations=2E He found
+>a few
+>> more places with the help of the "grep" patterns suggested by David
+>Laight=2E
+>> So that path is up to ~8 patches now that do one of:
+>> 	+ Change from u32 to u64
+>> 	+ Force alignment with a union with a u64
+>> 	+ Change to non-atomic (places that didn't need atomic)
+>>=20
+>> Downside of strategy #1 is that people will add new misaligned cases
+>in the
+>> future=2E So this process has no defined end point=2E
+>>=20
+>> Strategy #2 begun when I looked at the split-lock issue I saw that
+>with a
+>> constant bit argument set_bit() just does a "ORB" on the affected
+>byte (i=2Ee=2E
+>> no split lock)=2E Similar for clear_bit() and change_bit()=2E Changing
+>code to also
+>> do that for the variable bit case is easy=2E
+>>=20
+>> test_and_clr_bit() needs more care, but luckily, we had Peter Anvin
+>nearby
+>> to give us a neat solution=2E
 >
-> On 10/17/19 10:30 AM, Yang Shi wrote:
-> >> +               if (!PageHuge(page)) {
-> >> +                       int rc = migrate_demote_mapping(page);
-> >> +
-> >> +                       /*
-> >> +                        * -ENOMEM on a THP may indicate either migration is
-> >> +                        * unsupported or there was not enough contiguous
-> >> +                        * space. Split the THP into base pages and retry the
-> >> +                        * head immediately. The tail pages will be considered
-> >> +                        * individually within the current loop's page list.
-> >> +                        */
-> >> +                       if (rc == -ENOMEM && PageTransHuge(page) &&
-> >> +                           !split_huge_page_to_list(page, page_list))
-> >> +                               rc = migrate_demote_mapping(page);
-> > I recalled when Keith posted the patch at the first time, I raised
-> > question about why not just migrating THP in a whole? The
-> > migrate_pages() could handle this. If it fails, it just fallbacks to
-> > base page.
+>Changing the x86-64 bitops to use 32bit memory cycles is trivial
+>(provided you are willing to accept a limit of 2G bits)=2E
 >
-> There's a pair of migrate_demote_mapping()s in there.  I expected that
-> the first will migrate the whole THP and the second plus the split is
-> only used if fails the whole migration.
+>OTOH this only works because x86 is LE=2E
+>On any BE systems passing an 'int []' to any of the bit-functions is so
+>terribly
+>wrong it is unbelievable=2E
+>
+>So changing the x86-64 bitops is largely papering over a crack=2E
+>
+>In essence any code that casts the argument to any of the bitops
+>functions
+>is almost certainly badly broken on BE systems=2E
+>
+>The x86 cpu features code is always LE=2E
+>It probably ought to have a typedef for a union of long [] and int []=2E
+>
+>	David
+>
+>-
+>Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes,
+>MK1 1PT, UK
+>Registration No: 1397386 (Wales)
 
-Ah, that's right. I mis-read the first migrate_demote_mapping(). But,
-why calling migrate_demote_mapping() twice for THP and base page (if
-THP is failed) instead of calling migrate_pages() that does deal with
-all the cases.
+One thing I suggested is that we should actually expose the violations at =
+committee time either by wrapping them in macros using __alignof__ and/or m=
+ake the kernel compile with -Wcast-align=2E
 
->
-> Am I reading it wrong?
+On x86 the btsl/btcl/btrl instructions can be used without limiting to 2Gb=
+it of the address is computed, the way one does for plain and, or, etc=2E H=
+owever, if the real toes for the arguments are exposed then or is possible =
+to do better=2E
+
+Finally, as far as bigendian is concerned: the problem Linux has on bigend=
+ian machines is that it tries to use littleendian bitmaps on bigendian mach=
+ines: on bigendian machines, bit 0 is naturally the MSB=2E If your reaction=
+ is "but that is absurd", then you have just grokked why bigendian is funda=
+mentally broken=2E
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
