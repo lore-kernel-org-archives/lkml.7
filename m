@@ -2,110 +2,148 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5467CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 463F8CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF34F20869
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24299222CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:38:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UzSwJdSH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HDe9kDeK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502793AbfJRSfv (ORCPT
+        id S2505855AbfJRSiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:35:51 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37084 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730701AbfJRSfu (ORCPT
+        Fri, 18 Oct 2019 14:38:03 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33980 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730794AbfJRSiC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:35:50 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p14so7283254wro.4
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 11:35:47 -0700 (PDT)
+        Fri, 18 Oct 2019 14:38:02 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b128so4416110pfa.1;
+        Fri, 18 Oct 2019 11:38:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kzOxNxVRX1SmQHuvJ1treZltNyYijexf2ck9J3jXKY8=;
-        b=UzSwJdSHGIGnMOL6in+EbhaqHjudWKwi1NoXNc6Uge3Dz+yb1bVaLT75noRv8dYHuV
-         ambS0/SltyEdVI84pa4PETyzZPBjm0QQeoohLUkpMbeUPDsW09cyefdSo3jhGiRdQFjh
-         LAEoSm3ko6X6szew313BbYAZTgKoPXf05eBXT4V6315zT8oeA4siuvoM8Fcw9gTHYMuB
-         lGI/ld+ycFiFQilNyDoK2BP/TnSDSiKKchL6SYYkSO/wC0GyF9CeqRJ2rHSxcbbfnNqi
-         ZM8nMiBXw96ozZGOoQvZfrqOOJUhOAEeoHrPbXl4IJloKUCXGUusZ+lnVNnKYNPTMY89
-         EcfQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IFDsqOMwc2ojaPSLkT8+wMYUXewN1acLP2lqR1XP15Q=;
+        b=HDe9kDeKBahe9NjGm/ugr3PrO4D0Lw085ywSNSA095A6Y7b0bdnZjmqC82XIISIIdt
+         HL1478hYPAIvWzZLWe743K+0Z4UKFrxK0/hQ9QagRbJbspKW/xQebobzv2mUFy3hRLKH
+         //wSlMwz56Seed2I+e/Y5zi3HKTITkVYbYNZcR/r9Ty9L4OUJxGZQa8n7sooJF+d06MV
+         U8c1Xqzj80SWkW1+fMzKDsGOIVt27mRFx9PdNgqZxq/nnXPUUxC1LvIFwI/iWySD+Mw9
+         Y/fW+KH35SuT8tMvpzVKHsaJfOpxO5whSf8Fu101J4r54ddKqPMDRDSv0HSvbuy5Taxu
+         2ebg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kzOxNxVRX1SmQHuvJ1treZltNyYijexf2ck9J3jXKY8=;
-        b=OWzZKwLVrfzKrQh2P4Rh3RZwBV3fzeMfwVCxjAsL4SbF07nm7IuVaTU+PChUgF5PUA
-         eT7ZGBik4KvPu3bLCSekbrI0L0dQ8/linFGwQ++ZMZvj9BMbENcSdP8V4ZR4DjczhJ+p
-         iu34JjQ/dIXRTWVYjZxzoKiYh/ZduqRrjqVwbdSosv1Tm/dpBR4mQ3L2cAvM1Xcw+fvU
-         38fgDxbkYqHzOPov5+aq+sSWiYlwaAulGA9+r6euvzhkl6bz66F/vmQ3O+/5XLVjr7gO
-         0o9k0hSOXzhB5J0MHl0SjCfxeAx1e2xpt7vPpbgaHXKM0qoUvJ4ED2aSNegV5FSBAqUQ
-         CdEA==
-X-Gm-Message-State: APjAAAVzJLDXhb8hv2gUlIX2dcUBppZHLAt6WcW5K5BbApVLIbGrlHju
-        F5MCUsn7DZ0Y9LARr2HGKY69Qw3bW5SdG2rb1rc=
-X-Google-Smtp-Source: APXvYqxgG14kjuTvpv6QghuU/6AEcoV0jY0g70gj1cgl2Yr04sPjTVuLXuZMnzd6TF8thZsV6Aj7jvraefEXiSU/vGY=
-X-Received: by 2002:adf:db42:: with SMTP id f2mr9736231wrj.287.1571423747128;
- Fri, 18 Oct 2019 11:35:47 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IFDsqOMwc2ojaPSLkT8+wMYUXewN1acLP2lqR1XP15Q=;
+        b=oQmEyaKbSDM+BjqtH9XH/ITkCs9nIAbpkizbSvzomnnq/0WoQtlqH+ZgB2NMm0sqyM
+         46jfYSYcmdghh+BLiwdnMur5fcuVVl6PZBR4Duj0vEJaxdUwajkJ1+I0kRfNwUEu7Nqu
+         LFIWf0HGvmwjhmAj3CGLg4COcqI1XNfQ+teg4tGyrVQ5OSd2bpo9lnC+9YemWrsnvNPx
+         V4n2+Rm8RJFkviWUpgc2SzFFKIydJdRW5pFB16+igXpEOgwFaeJBXkb1vLNJyq9PFu7f
+         8ZLX42oiOsFyC3ZhG7qLsIBE8Oxz6cqbcTajgQ7yjg8ZdDyJfe/tG97bNlPyNqi+R8le
+         8lig==
+X-Gm-Message-State: APjAAAVkC6MI9rbmGK5AsM/4nnVmhBP6ZwpDmT2NKV7C0BLUGKOr0CSe
+        STr4JWggU2B73+Bp2Iktk80=
+X-Google-Smtp-Source: APXvYqxI3fG8J2/DXNrMqbp5He+LcRaizowKU8zXJc/NBeHP6e+1CmGad85VCcLrdR+rSgjhba5HPg==
+X-Received: by 2002:a63:5762:: with SMTP id h34mr2723268pgm.235.1571423881363;
+        Fri, 18 Oct 2019 11:38:01 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id 69sm6908001pgh.47.2019.10.18.11.37.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 11:38:00 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 11:37:57 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Mark Brown <broonie@kernel.org>, linux-clk@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-rtc@vger.kernel.org,
+        linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        alsa-devel@alsa-project.org
+Subject: Re: [PATCH 05/46] ARM: pxa: split up mach/hardware.h
+Message-ID: <20191018183757.GL35946@dtor-ws>
+References: <20191018154052.1276506-1-arnd@arndb.de>
+ <20191018154201.1276638-5-arnd@arndb.de>
 MIME-Version: 1.0
-References: <20191017142229.3853-1-miquel.raynal@bootlin.com>
-In-Reply-To: <20191017142229.3853-1-miquel.raynal@bootlin.com>
-From:   Brian Norris <computersforpeace@gmail.com>
-Date:   Fri, 18 Oct 2019 11:35:36 -0700
-Message-ID: <CAN8TOE8mNf1VhoRLiiE6bjrVmDUHCwvPNaHuvDw71cxa9OhSYw@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: mtd/ubi/ubifs: Remove inactive maintainers
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     linux-mtd@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018154201.1276638-5-arnd@arndb.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 7:22 AM Miquel Raynal <miquel.raynal@bootlin.com> w=
-rote:
->
-> Despite their substantial personal investment in the MTD/UBI/UBIFS a
-> few years back, David, Brian, Artem and Adrian are not actively
-> maintaining the subsystem anymore. We warmly salute them for all the
-> work they have achieved and will of course still welcome their
-> participation and reviews.
->
-> That said, Marek retired himself a few weeks ago quoting Harald [1]:
->
->         It matters who has which title and when. Should somebody not
->         be an active maintainer, make sure he's not listed as such.
->
-> For this same reason, let=E2=80=99s trim the maintainers list with the
-> actually active ones over the past two years.
->
-> [1] http://laforge.gnumonks.org/blog/20180307-mchardy-gpl/
->
-> Cc: David Woodhouse <dwmw2@infradead.org>
-> Cc: Brian Norris <computersforpeace@gmail.com>
-> Cc: Artem Bityutskiy <dedekind1@gmail.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Marek Vasut <marek.vasut@gmail.com>
-> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-> Cc: Richard Weinberger <richard@nod.at>
-> Cc: Vignesh Raghavendra <vigneshr@ti.com>
-> Cc: Tudor Ambarus <tudor.ambarus@microchip.com>
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+On Fri, Oct 18, 2019 at 05:41:20PM +0200, Arnd Bergmann wrote:
+> The mach/hardware.h is included in lots of places, and it provides
+> three different things on pxa:
+> 
+> - the cpu_is_pxa* macros
+> - an indirect inclusion of mach/addr-map.h
+> - the __REG() and io_pv2() helper macros
+> 
+> Split it up into separate <linux/soc/pxa/cpu.h> and mach/pxa-regs.h
+> headers, then change all the files that use mach/hardware.h to
+> include the exact set of those three headers that they actually
+> need, allowing for further more targeted cleanup.
+> 
+> linux/soc/pxa/cpu.h can remain permanently exported and is now in
+> a global location along with similar headers. pxa-regs.h and
+> addr-map.h are only used in a very small number of drivers now
+> and can be moved to arch/arm/mach-pxa/ directly when those drivers
+> are to pass the necessary data as resources.
+> 
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: linux-clk@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-input@vger.kernel.org
+> Cc: linux-leds@vger.kernel.org
+> Cc: linux-mmc@vger.kernel.org
+> Cc: linux-mtd@lists.infradead.org
+> Cc: linux-rtc@vger.kernel.org
+> Cc: linux-usb@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-fbdev@vger.kernel.org
+> Cc: linux-watchdog@vger.kernel.org
+> Cc: alsa-devel@alsa-project.org
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-I've been meaning to do this for a while, so thanks.
+For input bits:
 
-Acked-by: Brian Norris <computersforpeace@gmail.com>
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+
+-- 
+Dmitry
