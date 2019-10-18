@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 369E2CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 496F7CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3775205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08706222D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:08:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436507;
-	bh=pmfg6LHYW/5retXYbGcvyYYHCQHShynOoxt3PYSYyg8=;
+	s=default; t=1571436513;
+	bh=XmiV9shyhIDIa3OFpD1U1MBqHaPljeOFs1xJ8axEo0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d7U9xj+fBvG17AhacJI3rDvvfOG7tDZbc4ipPW/8wUm98gXPpDmyIZ2U7AtRzkBVw
-	 qmknUPd/Ei+KW6zyfVZWHFMOQPZ1i2HHp19xEaaoWk96F4UDNbjr7O8VLUpUpSeN0/
-	 wDcnwgSHlOnCaOzvzVkPJ4hqSv3uLBUX5+wcnEAE=
+	b=Fp3E/om8bGEYQaK8MjMDQPOltZoryaJE498Rfy0zcasd5HF49C8xV0L4PwQdqf/lI
+	 6+QmlCYnyDeXoiHIJlburAToR8q3jIQMsZD0CWjzaZBO782/QL9NljAHBMSZcOxpG+
+	 nTrmvdmFoq9xvn++64QkfG3RAzS1AOTYbg7JHgFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387772AbfJRWI0 (ORCPT
+        id S2387846AbfJRWIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:08:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40696 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:08:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387638AbfJRWIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:08:16 -0400
+        id S2387691AbfJRWIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:08:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAF44205F4;
-        Fri, 18 Oct 2019 22:08:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAE02222C2;
+        Fri, 18 Oct 2019 22:08:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436496;
-        bh=pmfg6LHYW/5retXYbGcvyYYHCQHShynOoxt3PYSYyg8=;
+        s=default; t=1571436501;
+        bh=XmiV9shyhIDIa3OFpD1U1MBqHaPljeOFs1xJ8axEo0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hYLsAUbm9akWUaM6kTRcRQnakWZUE9x4Tg08B4M76rmMkk9u/Y0lGz3dqXp87eUVK
-         nrvsdANMKNZhZDiv0i7eYbjxHBuLHMq0MoTIXBP9BKM3IyYz7lT4oIBPN7vP7vzic2
-         WJoU7B4CGyznwTp74vqsv0i9sDGq/eDC9FsZ7uu4=
+        b=cG6WNgc4YoaXQ8iIKDOgwMGbEBQc97xzbU/SppNqEs1l+/6TUIsPIrEQ0S1RlYxEB
+         oPzTG7tx1Pu9AdyzNylgah6hpI1vJ5rvkc0o8fLErb5CoPXm9ZmZC9E3oxyBaX6IVm
+         tM2bA+X7giJhYQiyOwgkbr2OQd4a10cj5YXv//tc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     NOGUCHI Hiroshi <drvlabo@gmail.com>, Jiri Kosina <jkosina@suse.cz>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 10/56] HID: Add ASUS T100CHI keyboard dock battery quirks
-Date:   Fri, 18 Oct 2019 18:07:07 -0400
-Message-Id: <20191018220753.10002-10-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 14/56] ALSA: hda/realtek - Apply ALC294 hp init also for S4 resume
+Date:   Fri, 18 Oct 2019 18:07:11 -0400
+Message-Id: <20191018220753.10002-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
 References: <20191018220753.10002-1-sashal@kernel.org>
@@ -58,34 +57,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: NOGUCHI Hiroshi <drvlabo@gmail.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit a767ffea05d2737f6542cd78458a84a157fa216d ]
+[ Upstream commit f6ef4e0e284251ff795c541db1129c84515ed044 ]
 
-Add ASUS Transbook T100CHI/T90CHI keyboard dock into battery quirk list, in
-order to add specific implementation in hid-asus.
+The init sequence for ALC294 headphone stuff is needed not only for
+the boot up time but also for the resume from hibernation, where the
+device is switched from the boot kernel without sound driver to the
+suspended image.  Since we record the PM event in the device
+power_state field, we can now recognize the call pattern and apply the
+sequence conditionally.
 
-Signed-off-by: NOGUCHI Hiroshi <drvlabo@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-input.c | 3 +++
- 1 file changed, 3 insertions(+)
+ sound/pci/hda/patch_realtek.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index d723185de3ba2..9d24fb0715ba3 100644
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -328,6 +328,9 @@ static const struct hid_device_id hid_battery_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYMBOL,
- 		USB_DEVICE_ID_SYMBOL_SCANNER_3),
- 	  HID_BATTERY_QUIRK_IGNORE },
-+	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_ASUSTEK,
-+		USB_DEVICE_ID_ASUSTEK_T100CHI_KEYBOARD),
-+	  HID_BATTERY_QUIRK_IGNORE },
- 	{}
- };
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index ab7bc7ebb7215..fc935794d432d 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -3245,7 +3245,9 @@ static void alc294_init(struct hda_codec *codec)
+ {
+ 	struct alc_spec *spec = codec->spec;
  
+-	if (!spec->done_hp_init) {
++	/* required only at boot or S4 resume time */
++	if (!spec->done_hp_init ||
++	    codec->core.dev.power.power_state.event == PM_EVENT_RESTORE) {
+ 		alc294_hp_init(codec);
+ 		spec->done_hp_init = true;
+ 	}
 -- 
 2.20.1
 
