@@ -2,142 +2,220 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4732CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09581CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF64222C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:20:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571412015;
-	bh=xU5Dx7eteAD2BW458bVRl1RoNIe8FslE9TVPgGdDUdE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TFLUs8QKKg6QBUxPI+y4h3+JjsIOVbchKUE+Ou8qZAgDBev6QJ8elwImHpcMvTbnZ
-	 n1+4rqKMav3PDSwgw/r3vQJQBcg3UvYeCvek+3a+RQKARgZxcvU/KF/CFgwlfrcDSJ
-	 WuuuhdmgIEoQFPODEg5n3U4SXjMJ9h2qvfRe+bRk=
+	by mail.kernel.org (Postfix) with ESMTP id CDA1D222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:21:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ENDlG38c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633035AbfJRPUH (ORCPT
+        id S2408593AbfJRPVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:20:07 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35527 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2501908AbfJRPUF (ORCPT
+        Fri, 18 Oct 2019 11:21:11 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45437 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389421AbfJRPVL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:20:05 -0400
-Received: by mail-lf1-f68.google.com with SMTP id w6so5030121lfl.2;
-        Fri, 18 Oct 2019 08:20:02 -0700 (PDT)
+        Fri, 18 Oct 2019 11:21:11 -0400
+Received: by mail-lj1-f194.google.com with SMTP id q64so6592190ljb.12
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 08:21:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yLLmFOSm8HttUwzcA55yirZl/vYaKzUHayfsFn/aSKw=;
+        b=ENDlG38cJuub/7j/v0Rk3VPnVnnPDhPE1t/OdMIQBWilYVRbNguMx/WSjX1uY2RfI8
+         vD4ES6JgbzxSTPk8KQNPRgDo7LFw4Yg4W2plBYQJrQAM3Ju76KUvpBfLJlScuqhoHJ9U
+         cvsEpqnDWXakoF+30bCaS/6BzwGKGe0HNDJmA1/refOgDMxevJ6uFmLW+QK8dTiyLaCz
+         M64lky6fzJho9x5cV4tKntKJ2qXppel0FgLaSS7WioUq42gYFQrC+TnoUc1Xw9uzRV3A
+         EjbR3+ts5ypcUuBFxFd91FxTj72yHcY5TzVxE14dw5tuGgYTyyZnm2mDScbUsxL5VR/A
+         vrmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+AnJxrgOsF5pdHMRsdpMSMexStt/hgIWSycUyGA4QAg=;
-        b=JRFvI3s7v+dr38puTvmC9iBqpU9pPsECM026W3PKld7UNAXFPbFz5r9bdS4GFfP/eG
-         Dy+aWu+AXVRp9HoMfO+UZ3LYoxW/bFdgZrMu898bwULHsJ5fHZtFIOZofdxqRGNbvJ8T
-         NwlybpP7mUpSJgV6QM7b/ioPiyKDi6bea1tYcdVObMF2PFaeUuGUe0QMOykiaUqNGBlp
-         6M5KOL0N6nP7xQ861JL+sGHvmLghc852AP56TlmdZoK1kWrDihqTQBl+DJMrIGlOHLwh
-         Wdl0LVBv6yXnlcUKqrwk9ceSOaACbTIhidQdyiRJj050D8e8utsKCK6flI56tInSvgkx
-         121A==
-X-Gm-Message-State: APjAAAUn7mKJtsJaI4tKF3zZBDXDYxuRLYzJmSE4RxYFUaNWBYsa0lE6
-        h+VqRAFUoIWIOZ1oYhLe14U=
-X-Google-Smtp-Source: APXvYqwZnHP5fM5ugg6DkmTBhXwuX0nTdcQH4m5Fbj3XQEpFQnlDh8mVi/DdcZNeL+QLbwYoMnxK9w==
-X-Received: by 2002:a19:c6d6:: with SMTP id w205mr5561511lff.17.1571412001935;
-        Fri, 18 Oct 2019 08:20:01 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id x5sm3197980lfg.71.2019.10.18.08.19.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 18 Oct 2019 08:19:58 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.2)
-        (envelope-from <johan@xi.terra>)
-        id 1iLU31-0006YM-6x; Fri, 18 Oct 2019 17:20:11 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Oliver Neukum <oneukum@suse.com>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: [PATCH RFC v2 2/2] USB: ldusb: fix ring-buffer locking
-Date:   Fri, 18 Oct 2019 17:19:55 +0200
-Message-Id: <20191018151955.25135-3-johan@kernel.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191018151955.25135-1-johan@kernel.org>
-References: <20191018151955.25135-1-johan@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yLLmFOSm8HttUwzcA55yirZl/vYaKzUHayfsFn/aSKw=;
+        b=daUIpSor2EhgqFuhuvsqnGT5xt/xV5g30mze93gX/JRqXZF/a28GySkG3UOufzsBa4
+         T/R95txxk68GsSe9RNSPWqrwTS03tYG4x5GCU/pmvTBBP+V1njaUGrQYVdg8lmLKlRHo
+         /slsw+zynkoZ+1FrnRqYPWiYBYJzTUGDqnuEjprsde0yu6vGdf2LHvW1y/oA3IAbAhTf
+         GHaNM+01ed/j9/yLhaPYNnrsPuIplpe4p56/wNKWKsfJJTqKxjNsFq09nWxQKFXj2uvc
+         +1kSPZMLwIcE002AEogTjBdI/UoaN6omv9HH9NNozQ60Pgmmlw01+Fga7q6X0I2gjTpH
+         TeXw==
+X-Gm-Message-State: APjAAAUxefffECeH//1W+8o/2B2ZNDbeY92abqZnfWIpC+HaJxQ7FFCx
+        N69sRL/MRUVNCIoQKBUFX2leqsNZZQpcGuRebRorig==
+X-Google-Smtp-Source: APXvYqz4Wv3AkrCfOh8oziWK3sALJRx+kVJ83dMavDz796ZdwqqTDdu/P/JvbNY53ztyQ6M3c1B+qT9VQinwMDCoWt0=
+X-Received: by 2002:a2e:978e:: with SMTP id y14mr6233454lji.206.1571412067347;
+ Fri, 18 Oct 2019 08:21:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191011134500.235736-1-douglas.raillard@arm.com>
+ <20191014145315.GZ2311@hirez.programming.kicks-ass.net> <a1ce67d7-62c3-b78b-1d87-23ef4dbc2274@arm.com>
+ <20191017095015.GI2311@hirez.programming.kicks-ass.net> <7edb1b73-54e7-5729-db5d-6b3b1b616064@arm.com>
+ <20191017190708.GF22902@worktop.programming.kicks-ass.net>
+ <0b807cb3-6a88-1138-dc66-9a32d9bba7ea@arm.com> <20191018120719.GH2328@hirez.programming.kicks-ass.net>
+ <32d07c51-847d-9d51-480c-c8836f1aedc7@arm.com>
+In-Reply-To: <32d07c51-847d-9d51-480c-c8836f1aedc7@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Fri, 18 Oct 2019 17:20:55 +0200
+Message-ID: <CAKfTPtCECmWy9rTE1rgKd6uXcQCixZ3G7OLAM=Q=T5EM2414ZQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 0/6] sched/cpufreq: Make schedutil energy aware
+To:     Douglas Raillard <douglas.raillard@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        viresh kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Quentin Perret <qperret@google.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        dh.han@samsung.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The custom ring-buffer implementation was merged without any locking
-whatsoever, but a spinlock was later added by commit 9d33efd9a791
-("USB: ldusb bugfix").
+On Fri, 18 Oct 2019 at 16:44, Douglas Raillard <douglas.raillard@arm.com> wrote:
+>
+>
+>
+> On 10/18/19 1:07 PM, Peter Zijlstra wrote:
+> > On Fri, Oct 18, 2019 at 12:46:25PM +0100, Douglas Raillard wrote:
+> >
+> >>> What I don't see is how that that difference makes sense as input to:
+> >>>
+> >>>     cost(x) : (1 + x) * cost_j
+> >>
+> >> The actual input is:
+> >> x = (EM_COST_MARGIN_SCALE/SCHED_CAPACITY_SCALE) * (util - util_est)
+> >>
+> >> Since EM_COST_MARGIN_SCALE == SCHED_CAPACITY_SCALE == 1024, this factor of 1
+> >> is not directly reflected in the code but is important for units
+> >> consistency.
+> >
+> > But completely irrelevant for the actual math and conceptual
+> > understanding.
+>
+>  > how that that difference makes sense as input to
+> I was unsure if you referred to the units being inconsistent or the
+> actual way of computing values being strange, so I provided some
+> justification for both.
+>
+> > Just because computers suck at real numbers, and floats
+> > are expensive, doesn't mean we have to burden ourselves with fixed point
+> > when writing equations.
+> >
+> > Also, as a physicist I'm prone to normalizing everything to 1, because
+> > that's lazy.
+> >
+> >>> I suppose that limits the additional OPP to twice the previously
+> >>> selected cost / efficiency (see the confusion from that other email).
+> >>> But given that efficency drops (or costs rise) for higher OPPs that
+> >>> still doesn't really make sense..
+> >
+> >> Yes, this current limit to +100% freq boosting is somehow arbitrary and
+> >> could probably benefit from being tunable in some way (Kconfig option
+> >> maybe). When (margin > 0), we end up selecting an OPP that has a higher cost
+> >> than the one strictly required, which is expected. The goal is to speed
+> >> things up at the expense of more power consumed to achieve the same work,
+> >> hence at a lower efficiency (== higher cost).
+> >
+> > No, no Kconfig knobs.
+> >
+> >> That's the main reason why this boosting apply a margin on the cost of the
+> >> selected OPP rather than just inflating the util. This allows controlling
+> >> directly how much more power (battery life) we are going to spend to achieve
+> >> some work that we know could be achieved with less power.
+> >
+> > But you're not; the margin is relative to the OPP, it is not absolute.
+>
+> Considering a CPU with 1024 max capacity (since we are not talking about
+> migrations here, we can ignore CPU invariance):
+>
+> work = normalized number of iterations of a given busy loop
+> # Thanks to freq invariance
+> work = util (between 0 and 1)
+> util = f/f_max
+>
+> # f(work) is the min freq that is admissible for "work", which we will
+> # abbreviate as "f"
+> f(work) = work * f_max
+>
+> # from struct em_cap_state doc in energy_model.h
+> cost(f) = power(f) * f_max / f
+> cost(f) = power(f) / util
+> cost(f) = power(f) / work
+> power(f) = cost(f) * work
+>
+> boosted_cost(f) = cost(f) + x
+> boosted_power(f) = boosted_cost(f) * work
+> boosted_power(f) = (cost(f) + x) * work
+>
+> # Let's normalize cost() so we can forget about f and deal only with work.
+> cost'(work) = cost(f)/cost(f_max)
+> x' = x/cost(f_max)
+> boosted_power'(work) = (cost'(work) + x') * work
+> boosted_power'(work) = cost'(work) * work + x' * work
+> boosted_power'(work) = power'(work) + x' * work
+> boosted_power'(work) = power'(work) + A(work)
+>
+> # Over a duration T, spend an extra B unit of energy
+> B(work) = A(work) * T
+> lost_battery_percent(work) = 100 * B(work)/total_battery_energy
+> lost_battery_percent(work) = 100 * T * x' * work /total_battery_energy
+> lost_battery_percent(work) =
+>   (100 * T / cost(f_max) / total_battery_energy) * x * work
+>
+> This means that the effect of boosting on battery life is proportional
+> to "x" unless I made a mistake somewhere.
 
-The lock did not cover the loads from the ring-buffer entry after
-determining the buffer was non-empty, nor the update of the tail index
-once the entry had been processed. The former could lead to stale data
-being returned, while the latter could lead to memory corruption on
-sufficiently weakly ordered architectures.
+Because the boost is relative to cost(f) and cost is not linear to the
+frequency, I don't think that it's is a linear relation.
 
-Fixes: 2824bd250f0b ("[PATCH] USB: add ldusb driver")
-Fixes: 9d33efd9a791 ("USB: ldusb bugfix")
-Cc: stable <stable@vger.kernel.org>     # 2.6.13
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- drivers/usb/misc/ldusb.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/usb/misc/ldusb.c b/drivers/usb/misc/ldusb.c
-index 15b5f06fb0b3..6b5843b0071e 100644
---- a/drivers/usb/misc/ldusb.c
-+++ b/drivers/usb/misc/ldusb.c
-@@ -477,11 +477,11 @@ static ssize_t ld_usb_read(struct file *file, char __user *buffer, size_t count,
- 
- 		spin_lock_irq(&dev->rbsl);
- 	}
--	spin_unlock_irq(&dev->rbsl);
- 
- 	/* actual_buffer contains actual_length + interrupt_in_buffer */
- 	actual_buffer = (size_t *)(dev->ring_buffer + dev->ring_tail * (sizeof(size_t)+dev->interrupt_in_endpoint_size));
- 	if (*actual_buffer > dev->interrupt_in_endpoint_size) {
-+		spin_unlock_irq(&dev->rbsl);
- 		retval = -EIO;
- 		goto unlock_exit;
- 	}
-@@ -489,17 +489,26 @@ static ssize_t ld_usb_read(struct file *file, char __user *buffer, size_t count,
- 	if (bytes_to_read < *actual_buffer)
- 		dev_warn(&dev->intf->dev, "Read buffer overflow, %zd bytes dropped\n",
- 			 *actual_buffer-bytes_to_read);
-+	spin_unlock_irq(&dev->rbsl);
-+
-+	/*
-+	 * Pairs with spin_unlock_irqrestore() in
-+	 * ld_usb_interrupt_in_callback() and makes sure the ring-buffer entry
-+	 * has been updated before copy_to_user().
-+	 */
-+	smp_rmb();
- 
- 	/* copy one interrupt_in_buffer from ring_buffer into userspace */
- 	if (copy_to_user(buffer, actual_buffer+1, bytes_to_read)) {
- 		retval = -EFAULT;
- 		goto unlock_exit;
- 	}
--	dev->ring_tail = (dev->ring_tail+1) % ring_buffer_size;
--
- 	retval = bytes_to_read;
- 
- 	spin_lock_irq(&dev->rbsl);
-+
-+	dev->ring_tail = (dev->ring_tail + 1) % ring_buffer_size;
-+
- 	if (dev->buffer_overflow) {
- 		dev->buffer_overflow = 0;
- 		spin_unlock_irq(&dev->rbsl);
--- 
-2.23.0
-
+>
+> >
+> > Or rather, the only actual limit is in relation to the max OPP. So you
+> > have very little actual control over how much more energy you're
+> > spending.
+> >
+> >>> So while I agree that 2) is a reasonable signal to work from, everything
+> >>> that comes after is still much confusing me.
+> >
+> >> "When applying these boosting rules on the runqueue util signals ...":
+> >> Assuming the set of enqueued tasks stays the same between 2 observations
+> >> from schedutil, if we see the rq util_avg increase above its
+> >> util_est.enqueued, that means that at least one task had its util_avg go
+> >> above util_est.enqueued. We might miss some boosting opportunities if some
+> >> (util - util_est) compensates:
+> >> TASK_1(util - util_est) = - TASK_2(util - util_est)
+> >> but working on the aggregated value is much easier in schedutil, to avoid
+> >> crawling the list of entities.
+> >
+> > That still does not explain why 'util - util_est', when >0, makes for a
+> > sensible input into an OPP relative function > I agree that 'util - util_est', when >0, indicates utilization is
+> > increasing (for the aperiodic blah blah blah). But after that I'm still
+> > confused.
+>
+> For the same reason PELT makes a sensible input for OPP selection.
+> Currently, OPP selection is based on max(util_avg, util_est.enqueued)
+> (from cpu_util_cfs in sched.h), so as soon as we have
+> (util - util_est > 0), the OPP will be selected according to util_avg.
+> In a way, using util_avg there is already some kind of boosting.
+>
+> Since the boosting is essentially (util - constant), it grows the same
+> way as util. If we think of (util - util_est) as being some estimation
+> of how wrong we were in the estimation of the task "true" utilization of
+> the CPU, then it makes sense to feed that to the boost. The wronger we
+> were, the more we want to boost, because the more time passes, the more
+> the scheduler realizes it actually does not know what the task needs. In
+> doubt, provide a higher freq than usual until we get to know this task
+> better. When that happens (at the next period), boosting is disabled and
+> we revert to the usual behavior (aka margin=0).
+>
+> Hope we are converging to some wording that makes sense.
