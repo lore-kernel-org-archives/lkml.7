@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A68CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DAABCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A75AA20854
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EADE20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436957;
-	bh=HDsv24RpewDnlRB22Fo8IdX8RsS0btuV9oTMySaKPco=;
+	s=default; t=1571436963;
+	bh=6abuT28sK6AoYiuBi3gJJhKE0CsBcX2cC6f2YW2v8ns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z54ZWH3Vy5t2Yuh1ROYonCjLSEqypVhaol8loRKIdG8vuB3KbvR2Avf6UAebdS/UT
-	 aBvha4AKfD8fyv3fyNRZrU704VMnE7IylqIKALfYdjdEuYHu1RgjpaJr3BoCIqeD88
-	 uw8nxMj2ErxlBfzcLy9Y2CY6NpIz3S592kK7hvS4=
+	b=dRocBxbnHhUZGjIhJTnEMbM2zvSrEfEK6ylJqFrON9r4ekYA0Uxq/WbIJYVVhnnAc
+	 VquVmunxn2wCEkjeDcOqikEeG0c07I2ae2+0JojU2Ns9G+9oFWO+QxCHDD0vYdMc6y
+	 I1uBKTcGSgxc6HHxx/p4M1IpfOlkpuho7Kpra2/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730396AbfJRWIp (ORCPT
+        id S2392776AbfJRWQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:08:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40926 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:16:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387798AbfJRWI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:08:29 -0400
+        id S2387779AbfJRWIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:08:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DBB0222C2;
-        Fri, 18 Oct 2019 22:08:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDB0F22459;
+        Fri, 18 Oct 2019 22:08:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436508;
-        bh=HDsv24RpewDnlRB22Fo8IdX8RsS0btuV9oTMySaKPco=;
+        s=default; t=1571436522;
+        bh=6abuT28sK6AoYiuBi3gJJhKE0CsBcX2cC6f2YW2v8ns=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZcqajXV60nD2r+DiBGM/ZeVpWdf1OiJoWv4xjCWVxm/XernE1nBX+Ioc61k5UPncb
-         xlkLRkDkl2fDDWtCi2+5p/1vb7WnVm4POCt96IoI7LvKA6apEh2sU173hhdWWTOmaZ
-         6D48VoWi4HO1Y9JjrkvXzfcHTjbUREWqImAFBTsE=
+        b=lhAU3s43+A65y1jDyrctYfQrCRbcbAj8nPd6NYY825Q8DBR10SJJf+5rQFGHIVX1A
+         9b6gZaI6FDXhLJeTsv+0GYvAvDVu7zN74tbEUuZQzJmn7czofe/0GJWZWwivZATU+0
+         DomMsKty9ml/PPu54VGGwkaC4KuqmxkAzrrsnUgg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Remi Pommarel <repk@triplefau.lt>,
-        Elie Roudninski <xademax@gmail.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 19/56] iio: adc: meson_saradc: Fix memory allocation order
-Date:   Fri, 18 Oct 2019 18:07:16 -0400
-Message-Id: <20191018220753.10002-19-sashal@kernel.org>
+Cc:     Dexuan Cui <decui@microsoft.com>, Jiri Kosina <jkosina@suse.cz>,
+        Sasha Levin <sashal@kernel.org>, devel@linuxdriverproject.org,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 29/56] HID: hyperv: Use in-place iterator API in the channel callback
+Date:   Fri, 18 Oct 2019 18:07:26 -0400
+Message-Id: <20191018220753.10002-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
 References: <20191018220753.10002-1-sashal@kernel.org>
@@ -63,58 +59,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Remi Pommarel <repk@triplefau.lt>
+From: Dexuan Cui <decui@microsoft.com>
 
-[ Upstream commit de10ac47597e7a3596b27631d0d5ce5f48d2c099 ]
+[ Upstream commit 6a297c90efa68b2864483193b8bfb0d19478600c ]
 
-meson_saradc's irq handler uses priv->regmap so make sure that it is
-allocated before the irq get enabled.
+Simplify the ring buffer handling with the in-place API.
 
-This also fixes crash when CONFIG_DEBUG_SHIRQ is enabled, as device
-managed resources are freed in the inverted order they had been
-allocated, priv->regmap was freed before the spurious fake irq that
-CONFIG_DEBUG_SHIRQ adds called the handler.
+Also avoid the dynamic allocation and the memory leak in the channel
+callback function.
 
-Fixes: 3af109131b7eb8 ("iio: adc: meson-saradc: switch from polling to interrupt mode")
-Reported-by: Elie Roudninski <xademax@gmail.com>
-Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Tested-by: Elie ROUDNINSKI <xademax@gmail.com>
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Acked-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/meson_saradc.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/hid/hid-hyperv.c | 56 +++++++---------------------------------
+ 1 file changed, 10 insertions(+), 46 deletions(-)
 
-diff --git a/drivers/iio/adc/meson_saradc.c b/drivers/iio/adc/meson_saradc.c
-index 2515badf8b280..9b2121f249263 100644
---- a/drivers/iio/adc/meson_saradc.c
-+++ b/drivers/iio/adc/meson_saradc.c
-@@ -976,6 +976,11 @@ static int meson_sar_adc_probe(struct platform_device *pdev)
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
+diff --git a/drivers/hid/hid-hyperv.c b/drivers/hid/hid-hyperv.c
+index 5f1de24206ab2..220b3e5c9c39d 100644
+--- a/drivers/hid/hid-hyperv.c
++++ b/drivers/hid/hid-hyperv.c
+@@ -322,60 +322,24 @@ static void mousevsc_on_receive(struct hv_device *device,
  
-+	priv->regmap = devm_regmap_init_mmio(&pdev->dev, base,
-+					     priv->data->regmap_config);
-+	if (IS_ERR(priv->regmap))
-+		return PTR_ERR(priv->regmap);
-+
- 	irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
- 	if (!irq)
- 		return -EINVAL;
-@@ -985,11 +990,6 @@ static int meson_sar_adc_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	priv->regmap = devm_regmap_init_mmio(&pdev->dev, base,
--					     priv->data->regmap_config);
--	if (IS_ERR(priv->regmap))
--		return PTR_ERR(priv->regmap);
+ static void mousevsc_on_channel_callback(void *context)
+ {
+-	const int packet_size = 0x100;
+-	int ret;
+ 	struct hv_device *device = context;
+-	u32 bytes_recvd;
+-	u64 req_id;
+ 	struct vmpacket_descriptor *desc;
+-	unsigned char	*buffer;
+-	int	bufferlen = packet_size;
 -
- 	priv->clkin = devm_clk_get(&pdev->dev, "clkin");
- 	if (IS_ERR(priv->clkin)) {
- 		dev_err(&pdev->dev, "failed to get clkin\n");
+-	buffer = kmalloc(bufferlen, GFP_ATOMIC);
+-	if (!buffer)
+-		return;
+-
+-	do {
+-		ret = vmbus_recvpacket_raw(device->channel, buffer,
+-					bufferlen, &bytes_recvd, &req_id);
+-
+-		switch (ret) {
+-		case 0:
+-			if (bytes_recvd <= 0) {
+-				kfree(buffer);
+-				return;
+-			}
+-			desc = (struct vmpacket_descriptor *)buffer;
+-
+-			switch (desc->type) {
+-			case VM_PKT_COMP:
+-				break;
+-
+-			case VM_PKT_DATA_INBAND:
+-				mousevsc_on_receive(device, desc);
+-				break;
+-
+-			default:
+-				pr_err("unhandled packet type %d, tid %llx len %d\n",
+-					desc->type, req_id, bytes_recvd);
+-				break;
+-			}
+ 
++	foreach_vmbus_pkt(desc, device->channel) {
++		switch (desc->type) {
++		case VM_PKT_COMP:
+ 			break;
+ 
+-		case -ENOBUFS:
+-			kfree(buffer);
+-			/* Handle large packet */
+-			bufferlen = bytes_recvd;
+-			buffer = kmalloc(bytes_recvd, GFP_ATOMIC);
+-
+-			if (!buffer)
+-				return;
++		case VM_PKT_DATA_INBAND:
++			mousevsc_on_receive(device, desc);
++			break;
+ 
++		default:
++			pr_err("Unhandled packet type %d, tid %llx len %d\n",
++			       desc->type, desc->trans_id, desc->len8 * 8);
+ 			break;
+ 		}
+-	} while (1);
+-
++	}
+ }
+ 
+ static int mousevsc_connect_to_vsp(struct hv_device *device)
 -- 
 2.20.1
 
