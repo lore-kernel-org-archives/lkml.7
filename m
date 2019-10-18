@@ -2,52 +2,51 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C55BCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACCFCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 005C522468
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31BAC20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:04:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436243;
-	bh=fDteLza2W1wJUfSTg/wf7TafiBkuex3xqUTpb6zVZQg=;
+	s=default; t=1571436249;
+	bh=quMH6BLAanqnkodOpRh/9pwNNiHQ946QHMuulLUv/x4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mi/fXhbCy0oKt/PUQACNYkKDvb8PGWBUkr6QsXYLOZVzzSX0nAtD/FhWAaK3CG94+
-	 jnYWJt980vrzWOISCKoyaLLj8WqPklfmg+n7kCpoi7CdRkarjqFZ5IuGA7cbpX8RvW
-	 FS4Dam73SCFllw5VZ+oP3yKlVzNOnICQOUZ3jQGc=
+	b=k5wou+5Lf42/S7azroC864293SgwcEKTqU/jsVJzCVlVc1PGvXxaRX8xJPiRDfAez
+	 SXjJRNJAJOT6NpCn72Mo893dDVDvEvmVcHnBSV3pvS/I6J+dczKgT4eNx9SfcFwYPH
+	 zYHPedeO7qLiSqcGll3w6QJCMwsUs6e+kiy/IRqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727615AbfJRWEB (ORCPT
+        id S1727780AbfJRWEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:04:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35476 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:04:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727460AbfJRWDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:03:55 -0400
+        id S1727598AbfJRWEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:04:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CBBF222D3;
-        Fri, 18 Oct 2019 22:03:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40CD52245C;
+        Fri, 18 Oct 2019 22:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436233;
-        bh=fDteLza2W1wJUfSTg/wf7TafiBkuex3xqUTpb6zVZQg=;
+        s=default; t=1571436244;
+        bh=quMH6BLAanqnkodOpRh/9pwNNiHQ946QHMuulLUv/x4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XO9LiVOcRnV+PwvlVBaFRzIAZptSebYrbl4XPH4uMa1sPB/ouESXF1TshMop+SZhz
-         9goy0YuL3qnSqu1kQ8pcbopSj68Ic77zCQVMMjmsB8p/AKMRh/wUsZ1f8sNBM4DHpD
-         kMWe9gZBuqB+pWhK2cKIV9vpF3nIXZEVjsAZX8wY=
+        b=olgWT/GQv/4awqCHg6F07tzzOhusffJtTSkpRKWYFb2HoekxGESUkPrbsF8Da3GJR
+         C4ilnHeQBoGIFG1aLKGBs2+PiAuOS2htv0Gp3za9jznE34RZWb9E+BWFcitrWIEdPO
+         49e4FJSapheBjP1w4WyCWDPF75s4Nxlo+6cxGVxs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Potnuri Bharat Teja <bharat@chelsio.com>,
-        Rahul Kundu <rahul.kundu@chelsio.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 19/89] RDMA/iw_cxgb4: fix SRQ access from dump_qp()
-Date:   Fri, 18 Oct 2019 18:02:14 -0400
-Message-Id: <20191018220324.8165-19-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 29/89] tty: serial: rda: Fix the link time qualifier of 'rda_uart_exit()'
+Date:   Fri, 18 Oct 2019 18:02:24 -0400
+Message-Id: <20191018220324.8165-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -60,92 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Potnuri Bharat Teja <bharat@chelsio.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 91724c1e5afe45b64970036170659726e7dc5cff ]
+[ Upstream commit 5080d127127ac5b610b57900774d9559ae55e817 ]
 
-dump_qp() is wrongly trying to dump SRQ structures as QP when SRQ is used
-by the application. This patch matches the QPID before dumping them.  Also
-removes unwanted SRQ id addition to QP id xarray.
+'exit' functions should be marked as __exit, not __init.
 
-Fixes: 2f43129127e6 ("cxgb4: Convert qpidr to XArray")
-Link: https://lore.kernel.org/r/20190930074119.20046-1-bharat@chelsio.com
-Signed-off-by: Rahul Kundu <rahul.kundu@chelsio.com>
-Signed-off-by: Potnuri Bharat Teja <bharat@chelsio.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: c10b13325ced ("tty: serial: Add RDA8810PL UART driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Link: https://lore.kernel.org/r/20190910041702.7357-1-christophe.jaillet@wanadoo.fr
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/cxgb4/device.c |  7 +++++--
- drivers/infiniband/hw/cxgb4/qp.c     | 10 +---------
- 2 files changed, 6 insertions(+), 11 deletions(-)
+ drivers/tty/serial/rda-uart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/cxgb4/device.c b/drivers/infiniband/hw/cxgb4/device.c
-index a8b9548bd1a26..599340c1f0b82 100644
---- a/drivers/infiniband/hw/cxgb4/device.c
-+++ b/drivers/infiniband/hw/cxgb4/device.c
-@@ -242,10 +242,13 @@ static void set_ep_sin6_addrs(struct c4iw_ep *ep,
- 	}
+diff --git a/drivers/tty/serial/rda-uart.c b/drivers/tty/serial/rda-uart.c
+index 284623eefaeba..ba5e488a03742 100644
+--- a/drivers/tty/serial/rda-uart.c
++++ b/drivers/tty/serial/rda-uart.c
+@@ -817,7 +817,7 @@ static int __init rda_uart_init(void)
+ 	return ret;
  }
  
--static int dump_qp(struct c4iw_qp *qp, struct c4iw_debugfs_data *qpd)
-+static int dump_qp(unsigned long id, struct c4iw_qp *qp,
-+		   struct c4iw_debugfs_data *qpd)
+-static void __init rda_uart_exit(void)
++static void __exit rda_uart_exit(void)
  {
- 	int space;
- 	int cc;
-+	if (id != qp->wq.sq.qid)
-+		return 0;
- 
- 	space = qpd->bufsize - qpd->pos - 1;
- 	if (space == 0)
-@@ -350,7 +353,7 @@ static int qp_open(struct inode *inode, struct file *file)
- 
- 	xa_lock_irq(&qpd->devp->qps);
- 	xa_for_each(&qpd->devp->qps, index, qp)
--		dump_qp(qp, qpd);
-+		dump_qp(index, qp, qpd);
- 	xa_unlock_irq(&qpd->devp->qps);
- 
- 	qpd->buf[qpd->pos++] = 0;
-diff --git a/drivers/infiniband/hw/cxgb4/qp.c b/drivers/infiniband/hw/cxgb4/qp.c
-index eb9368be28c1d..bbcac539777a2 100644
---- a/drivers/infiniband/hw/cxgb4/qp.c
-+++ b/drivers/infiniband/hw/cxgb4/qp.c
-@@ -2737,15 +2737,11 @@ int c4iw_create_srq(struct ib_srq *ib_srq, struct ib_srq_init_attr *attrs,
- 	if (CHELSIO_CHIP_VERSION(rhp->rdev.lldi.adapter_type) > CHELSIO_T6)
- 		srq->flags = T4_SRQ_LIMIT_SUPPORT;
- 
--	ret = xa_insert_irq(&rhp->qps, srq->wq.qid, srq, GFP_KERNEL);
--	if (ret)
--		goto err_free_queue;
--
- 	if (udata) {
- 		srq_key_mm = kmalloc(sizeof(*srq_key_mm), GFP_KERNEL);
- 		if (!srq_key_mm) {
- 			ret = -ENOMEM;
--			goto err_remove_handle;
-+			goto err_free_queue;
- 		}
- 		srq_db_key_mm = kmalloc(sizeof(*srq_db_key_mm), GFP_KERNEL);
- 		if (!srq_db_key_mm) {
-@@ -2789,8 +2785,6 @@ int c4iw_create_srq(struct ib_srq *ib_srq, struct ib_srq_init_attr *attrs,
- 	kfree(srq_db_key_mm);
- err_free_srq_key_mm:
- 	kfree(srq_key_mm);
--err_remove_handle:
--	xa_erase_irq(&rhp->qps, srq->wq.qid);
- err_free_queue:
- 	free_srq_queue(srq, ucontext ? &ucontext->uctx : &rhp->rdev.uctx,
- 		       srq->wr_waitp);
-@@ -2813,8 +2807,6 @@ void c4iw_destroy_srq(struct ib_srq *ibsrq, struct ib_udata *udata)
- 	rhp = srq->rhp;
- 
- 	pr_debug("%s id %d\n", __func__, srq->wq.qid);
--
--	xa_erase_irq(&rhp->qps, srq->wq.qid);
- 	ucontext = rdma_udata_to_drv_context(udata, struct c4iw_ucontext,
- 					     ibucontext);
- 	free_srq_queue(srq, ucontext ? &ucontext->uctx : &rhp->rdev.uctx,
+ 	platform_driver_unregister(&rda_uart_platform_driver);
+ 	uart_unregister_driver(&rda_uart_driver);
 -- 
 2.20.1
 
