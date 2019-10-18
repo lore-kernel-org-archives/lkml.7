@@ -2,139 +2,93 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDA5CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E438ACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA2620679
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:23:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kmFuT5Kg"
+	by mail.kernel.org (Postfix) with ESMTP id BA23A20700
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:24:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571433890;
+	bh=XodxEAJdmw1CAkdlRH8NDfuJ2VdPX6jco4O3Dft4HDg=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=QQPLdVEyyoIh+WWPG9GpjHSK3ED8N2Y+MQrLTV0o/c0JJE4+GpbkKzAV9+f+LTe3S
+	 NAGDgPhrHlcCyVZXrmAZ3PQ1Sl2mTCjkP375HgPT2SQjssX7Fohb5nOIbozQ/ETmEi
+	 1oywb1v6FvMJOckrX9GiM8Zo9NAPVeHe3rwk9iIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506143AbfJRVXX (ORCPT
+        id S2440416AbfJRVYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 17:23:23 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45716 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727508AbfJRVXX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 17:23:23 -0400
-Received: by mail-pg1-f196.google.com with SMTP id r1so4010146pgj.12
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 14:23:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vIoI90AJcGtmRzHkaXHGdwrJxP2gbeW0bBXLDxZIi6o=;
-        b=kmFuT5Kg6bHVBqvSrwwjd80o3NyLk9kXgyAEqkBiecWeSw5sIbx2razxWIcHpKmuCx
-         bJO2L0Jt09AzB11Ioy48fJTW8FR+EMVEr0M9zHJAcwWGJOQg3HRcf2WrQ1l4SzEXAZq4
-         n6Xg7mC6TZcE9jyt02zaa38SwNptcs9lLZ8G/gPn1z84v6FiEYb28HVQX/UzL1C7GhyF
-         PAoEIeSihIs40ESqTd4Oi5iDvDNXP4+cR6jf/BkW9ReFPCWFW0DLQ4SlZLRQeGvSHN7n
-         CoZ3rxSv+LnWUEqcGvtveotIJsaouPfkBE7vIksnyOAEvvP1q7/C1giHe26s6vQXFvJX
-         liOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vIoI90AJcGtmRzHkaXHGdwrJxP2gbeW0bBXLDxZIi6o=;
-        b=OopL+GMTqHJ7w0071+WcPJZWq0pgPpvUGEtWXN45Kw0eg3swGBKdHaL/T/Z4qfWd15
-         i5cbqeuopWPwoEyBQyJt53wUhSxJ2bUpQD8wGBP81EeuLEyUY6MUMdZNxAxLhhv022iu
-         x0jlvQqljCaAl3ltr3z7ufdbRH60Nb2i1YvmZc3/MtHKRdnaxSGzuN2jVwMCg8EfKguK
-         TzDlUClKv6pGDLBexHtGJYKN+XThM+jjiok4c4U2aQAs3Wt1kc0c4UpTdkCufqEt2cPC
-         NW6054DMfLIPNOe+6CiJOOwJIRi6MBbacIO4grd7n4/AcQvn0FUxqu76InyIFpjAVNFP
-         ZkKA==
-X-Gm-Message-State: APjAAAUdmymz+EK8kScmc+zq1VUgcfRrLwZYCRTRgIBH7/XCYD9Y4TS0
-        1SCuUvBa6t3Oapb8MbhVLc9roRxRtJ8WxRVfaI0hcg==
-X-Google-Smtp-Source: APXvYqyiiPLOZOS1kQpsZ9qqN50RFADJX438WB0rEo22PxmnqtNJSl9IB/wB6WS07gKTHpmXSLKmBJieIge5XbhC8jY=
-X-Received: by 2002:aa7:8210:: with SMTP id k16mr9015314pfi.84.1571433802129;
- Fri, 18 Oct 2019 14:23:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com> <20191018161033.261971-13-samitolvanen@google.com>
-In-Reply-To: <20191018161033.261971-13-samitolvanen@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 18 Oct 2019 14:23:10 -0700
-Message-ID: <CAKwvOd=rU2cC7C3a=8D2WBEmS49YgR7=aCriE31JQx7ExfQZrg@mail.gmail.com>
-Subject: Re: [PATCH 12/18] arm64: reserve x18 only with Shadow Call Stack
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
+        Fri, 18 Oct 2019 17:24:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57578 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727508AbfJRVYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 17:24:48 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C003220679;
+        Fri, 18 Oct 2019 21:24:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571433888;
+        bh=XodxEAJdmw1CAkdlRH8NDfuJ2VdPX6jco4O3Dft4HDg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=KoftfP9L9mtOV63jzH9uu+GmN+JK5PpRj3eSRelYfKiy6VH7uM4mcfNv/2BgUhLwu
+         KAG5tIcPS2ugb0iRDxQ7V59K2OO7FlSry9EhwqOxPT3htauyAb7jE2f0DpqMNinClF
+         Nu83MEJLmwFc9xXqtgqwB8LbBWu/TFB4+R4lefXQ=
+Subject: Re: [PATCH linux-kselftest/test v2] lib/list-test: add a test for the
+ 'list' doubly linked list
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        David Gow <davidgow@google.com>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
         Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20191010185631.26541-1-davidgow@google.com>
+ <20191011140727.49160042fafa20d5867f8df7@linux-foundation.org>
+ <CABVgOS=UwWxwD97c6y-XzbLWVhznPjBO3qvQEzX=8jTJ-gBi3A@mail.gmail.com>
+ <20191011145519.7b7a1d16ecdead9bec212c01@linux-foundation.org>
+ <CABVgOS=W4cfFoE=JT4mbk1zkUsreucrw_B81R2jwDCFPocomHQ@mail.gmail.com>
+ <20191016173233.2bd9c9d47f12453c1cb4a9b7@linux-foundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <84f0b15f-f451-fce7-1ab2-1ecdf740c864@kernel.org>
+Date:   Fri, 18 Oct 2019 15:24:46 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191016173233.2bd9c9d47f12453c1cb4a9b7@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 9:11 AM 'Sami Tolvanen' via Clang Built Linux
-<clang-built-linux@googlegroups.com> wrote:
->
-> Only reserve x18 with CONFIG_SHADOW_CALL_STACK. Note that all external
-> kernel modules must also have x18 reserved if the kernel uses SCS.
+On 10/16/19 6:32 PM, Andrew Morton wrote:
+> On Wed, 16 Oct 2019 14:48:59 -0700 David Gow <davidgow@google.com> wrote:
+> 
+>> Since KUnit is not yet in Linus' branch, though, it probably makes
+>> sense to put this test into the linux-kselftest/test branch, so that
+>> there aren't any chances of the list test getting in without the KUnit
+>> infrastructure. Ultimately, once KUnit is upstream, this shouldn't be
+>> an issue, but it is probably easier to consolidate things for now.
+>> Does that sound sensible?
+> 
+> Well, whatever.  I have a note that it's dependent on kunit.
+> 
+David and Andrew,
 
-Ah, ok.  The tradeoff for maintainers to consider, either:
-1. one less GPR for ALL kernel code or
-2. remember not to use x18 in inline as lest you potentially break SCS
+I have a few comments on CONFIG naming to be consistent with the other
+kunit ext4 test and a couple of other comments that would requite v3.
 
-This patch is 2 (the earlier patch was 1).  Maybe we don't write
-enough inline asm that this will be hard to remember, and we do have
-CI in Android to watch for this (on mainline, not sure about -next).
+I would like to bundle these in the pull request with KUnit framework.
+Hope that is okay with you.
 
-Either way,
-Acked-by: Nick Desaulniers <ndesaulniers@google.com>
-
->
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> ---
->  arch/arm64/Makefile | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-> index 1c7b276bc7c5..ef76101201b2 100644
-> --- a/arch/arm64/Makefile
-> +++ b/arch/arm64/Makefile
-> @@ -55,7 +55,7 @@ endif
->
->  KBUILD_CFLAGS  += -mgeneral-regs-only $(lseinstr) $(brokengasinst)     \
->                    $(compat_vdso) $(cc_has_k_constraint)
-> -KBUILD_CFLAGS  += -fno-asynchronous-unwind-tables -ffixed-x18
-> +KBUILD_CFLAGS  += -fno-asynchronous-unwind-tables
->  KBUILD_CFLAGS  += $(call cc-disable-warning, psabi)
->  KBUILD_AFLAGS  += $(lseinstr) $(brokengasinst) $(compat_vdso)
->
-> @@ -72,6 +72,10 @@ stack_protector_prepare: prepare0
->                                         include/generated/asm-offsets.h))
->  endif
->
-> +ifeq ($(CONFIG_SHADOW_CALL_STACK), y)
-> +KBUILD_CFLAGS  += -ffixed-x18
-> +endif
-> +
->  ifeq ($(CONFIG_CPU_BIG_ENDIAN), y)
->  KBUILD_CPPFLAGS        += -mbig-endian
->  CHECKFLAGS     += -D__AARCH64EB__
-> --
-> 2.23.0.866.gb869b98d4c-goog
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20191018161033.261971-13-samitolvanen%40google.com.
+thanks,
+-- Shuah
 
 
-
--- 
-Thanks,
-~Nick Desaulniers
