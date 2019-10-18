@@ -2,42 +2,42 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1A9CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 23:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E13CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 23:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81FA922474
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 23:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52022222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 23:31:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NpCxPfSm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="K4WnvE3E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388650AbfJRXbc (ORCPT
+        id S2388869AbfJRXbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 19:31:32 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:15697 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733023AbfJRXbZ (ORCPT
+        Fri, 18 Oct 2019 19:31:34 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:11005 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387911AbfJRXbZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 18 Oct 2019 19:31:25 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5daa4b560000>; Fri, 18 Oct 2019 16:31:34 -0700
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5daa4b4e0002>; Fri, 18 Oct 2019 16:31:26 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
   Fri, 18 Oct 2019 16:31:23 -0700
 X-PGP-Universal: processed;
         by hqpgpgate102.nvidia.com on Fri, 18 Oct 2019 16:31:23 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 18 Oct
- 2019 23:31:22 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 18 Oct 2019 23:31:22 +0000
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 18 Oct
+ 2019 23:31:23 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 18 Oct 2019 23:31:23 +0000
 Received: from vdumpa-ubuntu.nvidia.com (Not Verified[172.17.173.140]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5daa4b4a0003>; Fri, 18 Oct 2019 16:31:22 -0700
+        id <B5daa4b4a000b>; Fri, 18 Oct 2019 16:31:22 -0700
 From:   Krishna Reddy <vdumpa@nvidia.com>
 CC:     <joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
         <linux-arm-kernel@lists.infradead.org>,
@@ -47,9 +47,9 @@ CC:     <joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
         <talho@nvidia.com>, <avanbrunt@nvidia.com>, <thomasz@nvidia.com>,
         <olof@lixom.net>, <jtukkinen@nvidia.com>, <mperttunen@nvidia.com>,
         <nicolinc@nvidia.com>, Krishna Reddy <vdumpa@nvidia.com>
-Subject: [PATCH v3 1/7] iommu/arm-smmu: prepare arm_smmu_flush_ops for override
-Date:   Fri, 18 Oct 2019 16:31:26 -0700
-Message-ID: <1571441492-21919-2-git-send-email-vdumpa@nvidia.com>
+Subject: [PATCH v3 6/7] arm64: tegra: Add DT node for T194 SMMU
+Date:   Fri, 18 Oct 2019 16:31:31 -0700
+Message-ID: <1571441492-21919-7-git-send-email-vdumpa@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1571441492-21919-1-git-send-email-vdumpa@nvidia.com>
 References: <1571441492-21919-1-git-send-email-vdumpa@nvidia.com>
@@ -57,128 +57,117 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1571441494; bh=hMkE9ZACb4SbwMYn549vbE/y19Mk47U2KnAgbKeRx6c=;
+        t=1571441486; bh=tqLHlhwV6+T9UcYIe3S/OScCHaVWaVpXBJd2VMOOnfE=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=NpCxPfSmbNRVMHyo8bhyoYuE3elFGxOnLaSNYVxZR3UN7ZKbLp7UXsgMBMdOfMycq
-         00J3awjjfInoDH9Ca6nbt9y2Qcl8XlnKri2F/ZmcVi9WtYj8qgDgxYKd/NvDs2xQwP
-         nDzd3bqWokJ7pVRGsGT9sqBY49NQ9F5LDMNzQeles3YYc1CHJwugXN4zdQt2c9UCLj
-         FU6zsHRfCsFwvdHkgrPdgYWE70ul8nYAgLx/lKr/+qW+H4iRc9VnOQ01Z0HEZ9uBW8
-         TTJPOBnM0V7+Rn09W8XBCkjhNvyu82XEP1LXD6yZtchgmDLGTGoh8shBkBuv/JVB70
-         vhuIrQBNyXFVA==
+        b=K4WnvE3EZ9qw+qgRFGUiLQpUY1FWd8lIWCEEwr3U2iDntAY5zfnU0Hs1sM3fNO/xH
+         Z8IIT4+QlV4JzW1l5E1AOZ651Dq2A7DoDCW0NjNb40QNDNBdkTkxi46D3OUXfIwemx
+         8yBdN3n+cph9qnYNPL/mUMl7Af+o42PiVNcMBVaEpzL4j9L5zkZVWmVs5z4SU95Vbg
+         Rl4qXdRJkhFlLxASwWfKbyM6uCecQEeIobWNpq/KAY1iX3X6yMbDIb8DIAp+dWPlgk
+         7XMTDjYZXGdf/xzU/FlHCF6xU2K7BvPameCM3TurcS7Rv4FV9Bm5TXLftE+thkzyHD
+         sOmgD9S4ouZvQ==
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove const keyword for arm_smmu_flush_ops in arm_smmu_domain
-and replace direct references to arm_smmu_tlb_sync* functions with
-arm_smmu_flush_ops->tlb_sync().
-This is necessary for vendor specific implementations that
-need to override arm_smmu_flush_ops in part or full.
+Add DT node for T194 SMMU to enable SMMU support.
 
 Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
 ---
- drivers/iommu/arm-smmu.c | 16 ++++++++--------
- drivers/iommu/arm-smmu.h |  4 +++-
- 2 files changed, 11 insertions(+), 9 deletions(-)
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 77 ++++++++++++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
 
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 91af695..fc0b27d 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -52,9 +52,6 @@
-  */
- #define QCOM_DUMMY_VAL -1
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index 1e0b54b..6f81e90 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -1436,6 +1436,83 @@
+ 			  0x82000000 0x0  0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+ 	};
  
--#define TLB_LOOP_TIMEOUT		1000000	/* 1s! */
--#define TLB_SPIN_COUNT			10
--
- #define MSI_IOVA_BASE			0x8000000
- #define MSI_IOVA_LENGTH			0x100000
- 
-@@ -290,6 +287,8 @@ static void arm_smmu_tlb_sync_vmid(void *cookie)
- static void arm_smmu_tlb_inv_context_s1(void *cookie)
- {
- 	struct arm_smmu_domain *smmu_domain = cookie;
-+	const struct arm_smmu_flush_ops *ops = smmu_domain->flush_ops;
++	smmu: iommu@12000000 {
++		compatible = "arm,mmu-500","nvidia,tegra194-smmu";
++		reg = <0 0x12000000 0 0x800000>,
++		      <0 0x11000000 0 0x800000>,
++		      <0 0x10000000 0 0x800000>;
++		interrupts = <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 240 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 240 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>;
++		stream-match-mask = <0x7f80>;
++		#global-interrupts = <3>;
++		#iommu-cells = <1>;
++	};
 +
- 	/*
- 	 * The TLBI write may be relaxed, so ensure that PTEs cleared by the
- 	 * current CPU are visible beforehand.
-@@ -297,18 +296,19 @@ static void arm_smmu_tlb_inv_context_s1(void *cookie)
- 	wmb();
- 	arm_smmu_cb_write(smmu_domain->smmu, smmu_domain->cfg.cbndx,
- 			  ARM_SMMU_CB_S1_TLBIASID, smmu_domain->cfg.asid);
--	arm_smmu_tlb_sync_context(cookie);
-+	ops->tlb_sync(cookie);
- }
- 
- static void arm_smmu_tlb_inv_context_s2(void *cookie)
- {
- 	struct arm_smmu_domain *smmu_domain = cookie;
- 	struct arm_smmu_device *smmu = smmu_domain->smmu;
-+	const struct arm_smmu_flush_ops *ops = smmu_domain->flush_ops;
- 
- 	/* See above */
- 	wmb();
- 	arm_smmu_gr0_write(smmu, ARM_SMMU_GR0_TLBIVMID, smmu_domain->cfg.vmid);
--	arm_smmu_tlb_sync_global(smmu);
-+	ops->tlb_sync(cookie);
- }
- 
- static void arm_smmu_tlb_inv_range_s1(unsigned long iova, size_t size,
-@@ -410,7 +410,7 @@ static void arm_smmu_tlb_add_page(struct iommu_iotlb_gather *gather,
- 	ops->tlb_inv_range(iova, granule, granule, true, cookie);
- }
- 
--static const struct arm_smmu_flush_ops arm_smmu_s1_tlb_ops = {
-+static struct arm_smmu_flush_ops arm_smmu_s1_tlb_ops = {
- 	.tlb = {
- 		.tlb_flush_all	= arm_smmu_tlb_inv_context_s1,
- 		.tlb_flush_walk	= arm_smmu_tlb_inv_walk,
-@@ -421,7 +421,7 @@ static const struct arm_smmu_flush_ops arm_smmu_s1_tlb_ops = {
- 	.tlb_sync		= arm_smmu_tlb_sync_context,
- };
- 
--static const struct arm_smmu_flush_ops arm_smmu_s2_tlb_ops_v2 = {
-+static struct arm_smmu_flush_ops arm_smmu_s2_tlb_ops_v2 = {
- 	.tlb = {
- 		.tlb_flush_all	= arm_smmu_tlb_inv_context_s2,
- 		.tlb_flush_walk	= arm_smmu_tlb_inv_walk,
-@@ -432,7 +432,7 @@ static const struct arm_smmu_flush_ops arm_smmu_s2_tlb_ops_v2 = {
- 	.tlb_sync		= arm_smmu_tlb_sync_context,
- };
- 
--static const struct arm_smmu_flush_ops arm_smmu_s2_tlb_ops_v1 = {
-+static struct arm_smmu_flush_ops arm_smmu_s2_tlb_ops_v1 = {
- 	.tlb = {
- 		.tlb_flush_all	= arm_smmu_tlb_inv_context_s2,
- 		.tlb_flush_walk	= arm_smmu_tlb_inv_walk,
-diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
-index b19b6ca..b2d6c7f 100644
---- a/drivers/iommu/arm-smmu.h
-+++ b/drivers/iommu/arm-smmu.h
-@@ -207,6 +207,8 @@ enum arm_smmu_cbar_type {
- /* Maximum number of context banks per SMMU */
- #define ARM_SMMU_MAX_CBS		128
- 
-+#define TLB_LOOP_TIMEOUT		1000000	/* 1s! */
-+#define TLB_SPIN_COUNT			10
- 
- /* Shared driver definitions */
- enum arm_smmu_arch_version {
-@@ -314,7 +316,7 @@ struct arm_smmu_flush_ops {
- struct arm_smmu_domain {
- 	struct arm_smmu_device		*smmu;
- 	struct io_pgtable_ops		*pgtbl_ops;
--	const struct arm_smmu_flush_ops	*flush_ops;
-+	struct arm_smmu_flush_ops	*flush_ops;
- 	struct arm_smmu_cfg		cfg;
- 	enum arm_smmu_domain_stage	stage;
- 	bool				non_strict;
+ 	sysram@40000000 {
+ 		compatible = "nvidia,tegra194-sysram", "mmio-sram";
+ 		reg = <0x0 0x40000000 0x0 0x50000>;
 -- 
 2.7.4
 
