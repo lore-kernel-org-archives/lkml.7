@@ -2,91 +2,112 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86729CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A93C9CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68E6F2067B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80A2F20820
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 12:38:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cxa/ORzp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633898AbfJRMgD (ORCPT
+        id S2438273AbfJRMh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 08:36:03 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:55119 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403808AbfJRMgC (ORCPT
+        Fri, 18 Oct 2019 08:37:59 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:59712 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728515AbfJRMh6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 08:36:02 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x9ICZi57020888, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCAS11.realtek.com.tw[172.21.6.12])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x9ICZi57020888
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 18 Oct 2019 20:35:44 +0800
-Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
- RTITCAS11.realtek.com.tw ([fe80::7c6d:ced5:c4ff:8297%15]) with mapi id
- 14.03.0468.000; Fri, 18 Oct 2019 20:35:43 +0800
-From:   Pkshih <pkshih@realtek.com>
-To:     "labbott@redhat.com" <labbott@redhat.com>,
-        "kvalo@codeaurora.org" <kvalo@codeaurora.org>
-CC:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "nico@semmle.com" <nico@semmle.com>
-Subject: Re: [PATCH v2] rtlwifi: Fix potential overflow on P2P code
-Thread-Topic: [PATCH v2] rtlwifi: Fix potential overflow on P2P code
-Thread-Index: AQHVhalClczxzfC5skeU3Go3kf32jKdfz60A
-Date:   Fri, 18 Oct 2019 12:35:43 +0000
-Message-ID: <1571402142.1994.6.camel@realtek.com>
-References: <20191018114321.13131-1-labbott@redhat.com>
-In-Reply-To: <20191018114321.13131-1-labbott@redhat.com>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.6.62]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9E6FC9AFA9152045A93C210744C36458@realtek.com>
-Content-Transfer-Encoding: base64
+        Fri, 18 Oct 2019 08:37:58 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9ICY1Te041516;
+        Fri, 18 Oct 2019 12:37:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
+ bh=jjxfyzdJ1DBzufbew6BAqGAiJy4K7X6iQAV3wpA/e8Q=;
+ b=cxa/ORzpbTVYnDdbYC6MD5SKE3vjaqqgIwwL3n82CIp1PBpzp2Rd0IPa2nLBUToR/YJ0
+ gFnqF63JkHJCZSDlg951JFzqO7eRPDZ0EVR7Uk81oKshMGSiIqzi+CUcPPmY7WjtmE9O
+ mfrBnBtY8YFPDCrutVSKZVi0qOdnieLPXhqz80jHG4eKoWJYo198POj2YSQ3Z9SD8yuI
+ zjo5oVAy+6eqKhOpfQn2BW2WRhC9Nj1OK62RJXUH6/aHP+R0FQxM8ftbFf3DhEJsMlvi
+ 38dXJqMOc9mdPHbeP36IDxBDOgqBibo0o0LPo4NqXt86UchqnR8tbAXEC6mYEdV7rGY6 3A== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2vq0q4bnr0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 18 Oct 2019 12:37:47 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9ICX7vw133010;
+        Fri, 18 Oct 2019 12:35:46 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2vq0dxfwr5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 18 Oct 2019 12:35:46 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9ICZiws009665;
+        Fri, 18 Oct 2019 12:35:44 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 18 Oct 2019 12:35:44 +0000
+Date:   Fri, 18 Oct 2019 15:35:34 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-nvdimm@lists.01.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] acpi/nfit: unlock on error in scrub_show()
+Message-ID: <20191018123534.GA6549@mwanda>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910180118
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910180118
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTEwLTE4IGF0IDA3OjQzIC0wNDAwLCBMYXVyYSBBYmJvdHQgd3JvdGU6DQo+
-IE5pY29sYXMgV2Fpc21hbiBub3RpY2VkIHRoYXQgZXZlbiB0aG91Z2ggbm9hX2xlbiBpcyBjaGVj
-a2VkIGZvcg0KPiBhIGNvbXBhdGlibGUgbGVuZ3RoIGl0J3Mgc3RpbGwgcG9zc2libGUgdG8gb3Zl
-cnJ1biB0aGUgYnVmZmVycw0KPiBvZiBwMnBpbmZvIHNpbmNlIHRoZXJlJ3Mgbm8gY2hlY2sgb24g
-dGhlIHVwcGVyIGJvdW5kIG9mIG5vYV9udW0uDQo+IEJvdW5kIG5vYV9udW0gYWdhaW5zdCBQMlBf
-TUFYX05PQV9OVU0uDQo+IA0KPiBSZXBvcnRlZC1ieTogTmljb2xhcyBXYWlzbWFuIDxuaWNvQHNl
-bW1sZS5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IExhdXJhIEFiYm90dCA8bGFiYm90dEByZWRoYXQu
-Y29tPg0KDQpBY2tlZC1ieTogUGluZy1LZSBTaGloIDxwa3NoaWhAcmVhbHRlay5jb20+DQphbmQg
-UGxlYXNlIENDIHRvIHN0YWJsZQ0KQ2M6IFN0YWJsZSA8c3RhYmxlQHZnZXIua2VybmVsLm9yZz4g
-IyA0LjQrDQoNCi0tLQ0KDQpIaSBLYWxsZSwNCg0KVGhpcyBidWcgd2FzIGV4aXN0aW5nIHNpbmNl
-IHYzLjEwLCBhbmQgZGlyZWN0b3J5IG9mIHdpcmVsZXNzIGRyaXZlcnMgd2VyZQ0KbW92ZWQgYXQg
-djQuNC4gRG8gSSBuZWVkIHNlbmQgYW5vdGhlciBwYXRjaCB0byBmaXggdGhpcyBpc3N1ZSBmb3Ig
-bG9uZ3Rlcm0NCmtlcm5lbCB2My4xNi43NT8NCg0KVGhhbmtzDQpQSw0KDQoNCj4gLS0tDQo+IHYy
-OiBVc2UgUDJQX01BWF9OT0FfTlVNIGluc3RlYWQgb2YgZXJyb3Jpbmcgb3V0Lg0KPiAtLS0NCj4g
-wqBkcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0bHdpZmkvcHMuYyB8IDYgKysrKysrDQo+
-IMKgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnRsd2lmaS9wcy5jDQo+IGIvZHJpdmVycy9uZXQv
-d2lyZWxlc3MvcmVhbHRlay9ydGx3aWZpL3BzLmMNCj4gaW5kZXggNzBmMDRjMmY1YjE3Li5mZmY4
-ZGRhMTQwMjMgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnRs
-d2lmaS9wcy5jDQo+ICsrKyBiL2RyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnRsd2lmaS9w
-cy5jDQo+IEBAIC03NTQsNiArNzU0LDkgQEAgc3RhdGljIHZvaWQgcnRsX3AycF9ub2FfaWUoc3Ry
-dWN0IGllZWU4MDIxMV9odyAqaHcsIHZvaWQNCj4gKmRhdGEsDQo+IMKgCQkJCXJldHVybjsNCj4g
-wqAJCQl9IGVsc2Ugew0KPiDCoAkJCQlub2FfbnVtID0gKG5vYV9sZW4gLSAyKSAvIDEzOw0KPiAr
-CQkJCWlmIChub2FfbnVtID4gUDJQX01BWF9OT0FfTlVNKQ0KPiArCQkJCQlub2FfbnVtID0gUDJQ
-X01BWF9OT0FfTlVNOw0KPiArDQo+IMKgCQkJfQ0KPiDCoAkJCW5vYV9pbmRleCA9IGllWzNdOw0K
-PiDCoAkJCWlmIChydGxwcml2LT5wc2MucDJwX3BzX2luZm8ucDJwX3BzX21vZGUgPT0NCj4gQEAg
-LTg0OCw2ICs4NTEsOSBAQCBzdGF0aWMgdm9pZCBydGxfcDJwX2FjdGlvbl9pZShzdHJ1Y3QgaWVl
-ZTgwMjExX2h3ICpodywNCj4gdm9pZCAqZGF0YSwNCj4gwqAJCQkJcmV0dXJuOw0KPiDCoAkJCX0g
-ZWxzZSB7DQo+IMKgCQkJCW5vYV9udW0gPSAobm9hX2xlbiAtIDIpIC8gMTM7DQo+ICsJCQkJaWYg
-KG5vYV9udW0gPiBQMlBfTUFYX05PQV9OVU0pDQo+ICsJCQkJCW5vYV9udW0gPSBQMlBfTUFYX05P
-QV9OVU07DQo+ICsNCj4gwqAJCQl9DQo+IMKgCQkJbm9hX2luZGV4ID0gaWVbM107DQo+IMKgCQkJ
-aWYgKHJ0bHByaXYtPnBzYy5wMnBfcHNfaW5mby5wMnBfcHNfbW9kZSA9PQ0KDQoNCg==
+We change the locking in this function and forgot to update this error
+path so we are accidentally still holding the "dev->lockdep_mutex".
+
+Fixes: 87a30e1f05d7 ("driver-core, libnvdimm: Let device subsystems add local lockdep coverage")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/acpi/nfit/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
+index 1413324982f0..14e68f202f81 100644
+--- a/drivers/acpi/nfit/core.c
++++ b/drivers/acpi/nfit/core.c
+@@ -1322,7 +1322,7 @@ static ssize_t scrub_show(struct device *dev,
+ 	nfit_device_lock(dev);
+ 	nd_desc = dev_get_drvdata(dev);
+ 	if (!nd_desc) {
+-		device_unlock(dev);
++		nfit_device_unlock(dev);
+ 		return rc;
+ 	}
+ 	acpi_desc = to_acpi_desc(nd_desc);
+-- 
+2.20.1
+
