@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6C9CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02882CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D471B21925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:15:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF31521925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:15:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436906;
-	bh=Xcw/RNR9EXgHEbuvdCsh/HVA7ipQvPjNV0sKMexd29I=;
+	s=default; t=1571436910;
+	bh=NLmoFS64RoWdYxbg20A3xc1xvUz733WUVaV8uglnhwk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mvD3SeFhKDuxJDlIWaHY2oBEiGSULlFAWnETMweurYepHhFe0GM1ZNn1K+qeJhfFL
-	 4o5W13ciGpqt8Hstj+Yx3iFcq51LNkeJ5YucO7zUDCE3bfhP89S7ljHAq2Kz79uF7k
-	 L3r/hzYtYEFtoasWAAWhwmJnIOWnnYNnw9iO4PtU=
+	b=QwG2EEicRPdIAWlXOqEb9qQI44dbqafkscv8+umkTHYpjMDIws2AgMgXvqEfvH+uV
+	 lpjvfYMvXHci/ANlL6Me92E8BOCCplkL2MeyG+WYTO2wR3b6cu0R8aa4btaK+F0+5J
+	 uZxi4s6XQc3SMMHS00y+/AReEPn3L7YTDqwx1yZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388602AbfJRWJK (ORCPT
+        id S2392530AbfJRWPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:09:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41274 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:15:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388109AbfJRWIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:08:45 -0400
+        id S2388596AbfJRWJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:09:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04A5522470;
-        Fri, 18 Oct 2019 22:08:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F257222D4;
+        Fri, 18 Oct 2019 22:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436523;
-        bh=Xcw/RNR9EXgHEbuvdCsh/HVA7ipQvPjNV0sKMexd29I=;
+        s=default; t=1571436549;
+        bh=NLmoFS64RoWdYxbg20A3xc1xvUz733WUVaV8uglnhwk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1q36PAmxVf9E+yxXLzJVxJqCeB1HwlGuxIFS3r9NeBif5YJPycLiVIy6qHdfR+7fh
-         rYKvornUVFwlAiOf2OqaOv+2RCy5N+sovm94/uod1LOnr1O4VJNh997vo+mdsSCHsC
-         Mga/ZPcIr/M53QeigD4m1wJQMZK1Mh3qr2o0SBEQ=
+        b=lC+U6hmC1IFKxHk2G4AFT780ecdmfzCLEbhQ6tSkjqFTs8+CsOWkbOsZAQg1WtYGj
+         ouwVFFko8JNKdyTBOCUPJ0ToWpSD0NdSLXBphta6oGjRRgTBVCQ/YLZ3u2tFlogJSj
+         JlUkuwrauBtSMv1ODWHVRvAWXyxLgjzzx9kKKeIs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 30/56] nfs: Fix nfsi->nrequests count error on nfs_inode_remove_request
-Date:   Fri, 18 Oct 2019 18:07:27 -0400
-Message-Id: <20191018220753.10002-30-sashal@kernel.org>
+Cc:     Marco Felsch <m.felsch@pengutronix.de>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 48/56] iio: adc: ad799x: fix probe error handling
+Date:   Fri, 18 Oct 2019 18:07:45 -0400
+Message-Id: <20191018220753.10002-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
 References: <20191018220753.10002-1-sashal@kernel.org>
@@ -60,89 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+From: Marco Felsch <m.felsch@pengutronix.de>
 
-[ Upstream commit 33ea5aaa87cdae0f9af4d6b7ee4f650a1a36fd1d ]
+[ Upstream commit c62dd44901cfff12acc5792bf3d2dec20bcaf392 ]
 
-When xfstests testing, there are some WARNING as below:
+Since commit 0f7ddcc1bff1 ("iio:adc:ad799x: Write default config on probe
+and reset alert status on probe") the error path is wrong since it
+leaves the vref regulator on. Fix this by disabling both regulators.
 
-WARNING: CPU: 0 PID: 6235 at fs/nfs/inode.c:122 nfs_clear_inode+0x9c/0xd8
-Modules linked in:
-CPU: 0 PID: 6235 Comm: umount.nfs
-Hardware name: linux,dummy-virt (DT)
-pstate: 60000005 (nZCv daif -PAN -UAO)
-pc : nfs_clear_inode+0x9c/0xd8
-lr : nfs_evict_inode+0x60/0x78
-sp : fffffc000f68fc00
-x29: fffffc000f68fc00 x28: fffffe00c53155c0
-x27: fffffe00c5315000 x26: fffffc0009a63748
-x25: fffffc000f68fd18 x24: fffffc000bfaaf40
-x23: fffffc000936d3c0 x22: fffffe00c4ff5e20
-x21: fffffc000bfaaf40 x20: fffffe00c4ff5d10
-x19: fffffc000c056000 x18: 000000000000003c
-x17: 0000000000000000 x16: 0000000000000000
-x15: 0000000000000040 x14: 0000000000000228
-x13: fffffc000c3a2000 x12: 0000000000000045
-x11: 0000000000000000 x10: 0000000000000000
-x9 : 0000000000000000 x8 : 0000000000000000
-x7 : 0000000000000000 x6 : fffffc00084b027c
-x5 : fffffc0009a64000 x4 : fffffe00c0e77400
-x3 : fffffc000c0563a8 x2 : fffffffffffffffb
-x1 : 000000000000764e x0 : 0000000000000001
-Call trace:
- nfs_clear_inode+0x9c/0xd8
- nfs_evict_inode+0x60/0x78
- evict+0x108/0x380
- dispose_list+0x70/0xa0
- evict_inodes+0x194/0x210
- generic_shutdown_super+0xb0/0x220
- nfs_kill_super+0x40/0x88
- deactivate_locked_super+0xb4/0x120
- deactivate_super+0x144/0x160
- cleanup_mnt+0x98/0x148
- __cleanup_mnt+0x38/0x50
- task_work_run+0x114/0x160
- do_notify_resume+0x2f8/0x308
- work_pending+0x8/0x14
-
-The nrequest should be increased/decreased only if PG_INODE_REF flag
-was setted.
-
-But in the nfs_inode_remove_request function, it maybe decrease when
-no PG_INODE_REF flag, this maybe lead nrequests count error.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: 0f7ddcc1bff1 ("iio:adc:ad799x: Write default config on probe and reset alert status on probe")
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/write.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/iio/adc/ad799x.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 3c1e46f4bce32..01b9d9341b541 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -783,7 +783,6 @@ static void nfs_inode_remove_request(struct nfs_page *req)
- 	struct nfs_inode *nfsi = NFS_I(inode);
- 	struct nfs_page *head;
+diff --git a/drivers/iio/adc/ad799x.c b/drivers/iio/adc/ad799x.c
+index 22426ae4af97a..7d1895035af68 100644
+--- a/drivers/iio/adc/ad799x.c
++++ b/drivers/iio/adc/ad799x.c
+@@ -817,10 +817,10 @@ static int ad799x_probe(struct i2c_client *client,
  
--	atomic_long_dec(&nfsi->nrequests);
- 	if (nfs_page_group_sync_on_bit(req, PG_REMOVE)) {
- 		head = req->wb_head;
+ 	ret = ad799x_write_config(st, st->chip_config->default_config);
+ 	if (ret < 0)
+-		goto error_disable_reg;
++		goto error_disable_vref;
+ 	ret = ad799x_read_config(st);
+ 	if (ret < 0)
+-		goto error_disable_reg;
++		goto error_disable_vref;
+ 	st->config = ret;
  
-@@ -796,8 +795,10 @@ static void nfs_inode_remove_request(struct nfs_page *req)
- 		spin_unlock(&mapping->private_lock);
- 	}
- 
--	if (test_and_clear_bit(PG_INODE_REF, &req->wb_flags))
-+	if (test_and_clear_bit(PG_INODE_REF, &req->wb_flags)) {
- 		nfs_release_request(req);
-+		atomic_long_dec(&nfsi->nrequests);
-+	}
- }
- 
- static void
+ 	ret = iio_triggered_buffer_setup(indio_dev, NULL,
 -- 
 2.20.1
 
