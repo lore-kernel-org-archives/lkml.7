@@ -2,87 +2,106 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBC9CA9EC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2FACA9EB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11F3C21D7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7DBC21852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 01:30:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="rXeFk8m6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tmq8jDKu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409486AbfJRB3O (ORCPT
+        id S2441674AbfJRBad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 21:29:14 -0400
-Received: from mga18.intel.com ([134.134.136.126]:24410 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391934AbfJRB3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 21:29:14 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 18:29:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,309,1566889200"; 
-   d="scan'208";a="226377085"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by fmsmga002.fm.intel.com with ESMTP; 17 Oct 2019 18:29:11 -0700
-Date:   Fri, 18 Oct 2019 09:32:11 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jim Mattson <jmattson@google.com>,
-        Yang Weijiang <weijiang.yang@intel.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Subject: Re: [PATCH v7 7/7] KVM: x86: Add user-space access interface for CET
- MSRs
-Message-ID: <20191018013211.GC2286@local-michael-cet-test>
-References: <20190927021927.23057-1-weijiang.yang@intel.com>
- <20190927021927.23057-8-weijiang.yang@intel.com>
- <CALMp9eQNDNmmCr8DM-2fMVYvQ-eTEpeE=bW8+BLbfxmBsTmQvg@mail.gmail.com>
- <20191017195811.GK20903@linux.intel.com>
+        Thu, 17 Oct 2019 21:30:33 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:35093 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2409455AbfJRBad (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 21:30:33 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 5E6052FA;
+        Thu, 17 Oct 2019 21:30:31 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Thu, 17 Oct 2019 21:30:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=pq7JnPVH1qpjTz0L7yOcPLAoIVZ
+        Xm4EsT9Idpgnd1I4=; b=rXeFk8m6yRHaRUuZ7dH4yi8NKBxBdyuwUXLPzaKrlIF
+        BYMuqS1ydTbYquvOZPff7j5NSpwqd/iKC7SuFsA7I7RlVXUCSgZoSeqP8AnTvOAM
+        yC31tI/gPgHnSXNFe3uymosBYlV/8gU6lI2tJaLZy63FmgrR2af+FnMfYp2SuoJO
+        WF30Y00Uqvyfpq5W7gdWjUlc9ZOcs/a4v0x128TQZHG5eY5tC/Vh0UsIc1IDkMhE
+        3f42Q0ejexzHGdNurWSo/zsIlsvcTlpBec6AnAfsRJohVChbKGiPbZHDVfrlQZa2
+        wZLLTG4AUZQONOhz/GagxUVp5a+xo4WjrXAUAGgb8Fg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=pq7JnP
+        VH1qpjTz0L7yOcPLAoIVZXm4EsT9Idpgnd1I4=; b=tmq8jDKuKozJEIjsoPgsxW
+        LKKy6Vs/EA+EokNQwlI4uG6UFQGg/V+ZG70GfBTKG/6itCyXoi2n4W2U9ompFd/V
+        TI7/ZOell+jp9bomTGgazNNJ2HZbanPx/k+xTCckeo/H35t2RBWdnlY7RqkeTLen
+        wvWFepzwmLnrO9zH9NZZDqWF+2QSPTA523EOku3C8RqXpr0Ucr52HaQyd/SXw0mT
+        1FXqd+DOxZiBKgHUxPwDMybZIKDqGIauiZszERfgC2/pvvUCc0s5g79d5yFF5RQj
+        zVxfjyPmjs73gJYolGIsiTUuu/155JfgJhjVzy5g4TepQ5dSecmNZRo4aemixMEA
+        ==
+X-ME-Sender: <xms:thWpXUV7Tgir_8Q3LCPydsDL_-0BqqLQz1S9OeCw0YqSOXt6-ToXMA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrjeekgdegfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepuddtgedrudefvddrtddrud
+    dtleenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
+    vehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:thWpXSMtW2FEOhuejp4R1JVWN-qMtTcGHJeSi8uPB6JYMXcbLY_QhA>
+    <xmx:thWpXYahdQaCOdVo3BgPMQNVOVQRUymotLl_Xb-2kGs3y_ANYPG_xg>
+    <xmx:thWpXWoyOr9GjzqUkLmaZ3kU4fp6m8YX1AsdsgkVBxBNnvQP3gCvkw>
+    <xmx:txWpXcYbXojnSSNJ1-senbnByNSglnvEcq0lXsA3mMDFt6uW-Y9h8Q>
+Received: from localhost (unknown [104.132.0.109])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 37504D6005D;
+        Thu, 17 Oct 2019 21:30:30 -0400 (EDT)
+Date:   Thu, 17 Oct 2019 18:30:29 -0700
+From:   Greg KH <greg@kroah.com>
+To:     Santiago Torres Arias <santiago@nyu.edu>, Willy Tarreau <w@1wt.eu>,
+        Vegard Nossum <vegard.nossum@oracle.com>,
+        workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, Eric Wong <e@80x24.org>
+Subject: Re: email as a bona fide git transport
+Message-ID: <20191018013029.GA1167832@kroah.com>
+References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
+ <20191016111009.GE13154@1wt.eu>
+ <20191016144517.giwip4yuaxtcd64g@LykOS.localdomain>
+ <20191017204343.GA1132188@kroah.com>
+ <20191017204532.GA6446@chatter.i7.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191017195811.GK20903@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20191017204532.GA6446@chatter.i7.local>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 12:58:11PM -0700, Sean Christopherson wrote:
-> On Wed, Oct 02, 2019 at 01:57:50PM -0700, Jim Mattson wrote:
-> > On Thu, Sep 26, 2019 at 7:17 PM Yang Weijiang <weijiang.yang@intel.com> wrote:
-> > >
-> > > There're two different places storing Guest CET states, the states
-> > > managed with XSAVES/XRSTORS, as restored/saved
-> > > in previous patch, can be read/write directly from/to the MSRs.
-> > > For those stored in VMCS fields, they're access via vmcs_read/
-> > > vmcs_write.
-> > >
-> > > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> > > ---
-> > >  arch/x86/kvm/vmx/vmx.c | 83 ++++++++++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 83 insertions(+)
-> > >
-> > > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > > index 44913e4ab558..5265db7cd2af 100644
-> > > --- a/arch/x86/kvm/vmx/vmx.c
-> > > +++ b/arch/x86/kvm/vmx/vmx.c
-> > > @@ -1671,6 +1671,49 @@ static int vmx_get_msr_feature(struct kvm_msr_entry *msr)
-> > >         return 0;
-> > >  }
-> > >
-> > > +static int check_cet_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+On Thu, Oct 17, 2019 at 04:45:32PM -0400, Konstantin Ryabitsev wrote:
+> On Thu, Oct 17, 2019 at 01:43:43PM -0700, Greg KH wrote:
+> > > I wonder if it'd be also possible to then embed gpg signatures over
+> > > send-mail payloads so as they can be transparently transferred to the
+> > > commit.
 > > 
-> > I'd suggest changing return type to bool, since you are essentially
-> > returning true or false.
+> > That's a crazy idea.  It would be nice if we could do that, I like it :)
 > 
-> I'd also be more explicit in the name, e.g. is_valid_cet_msr().
-Sure, thank you two.
+> It could only possibly work if nobody ever adds their own "Signed-Off-By" or
+> any other bylines. I expect this is a deal-breaker for most maintainers.
+
+Yeah it is :(
+
+But, if we could just have the signature on the code change, not the
+changelog text, that would help with that issue.
+
+thanks,
+
+rgeg k-h
