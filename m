@@ -2,151 +2,128 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B21CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B46CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4637222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:35:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aHYcGgCa"
+	by mail.kernel.org (Postfix) with ESMTP id 86C85222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:37:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410379AbfJRNfu (ORCPT
+        id S2410389AbfJRNhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 09:35:50 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43786 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728150AbfJRNfu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 09:35:50 -0400
-Received: by mail-pf1-f194.google.com with SMTP id a2so3910559pfo.10;
-        Fri, 18 Oct 2019 06:35:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=c+eVa0dX1kop+2tsq8KrMiGw2+4GgT6C7+BH1dW27GI=;
-        b=aHYcGgCaJslTpUkam+cYawYj1EaRI6rZvzNRxBcoYsQsVAUeK30TqNO+a87PL2sdmc
-         k2XY2kJOCh+NkZd51OE+x0vW1s818gsI/FX7cjt7ZvnB6/TcTa4BNHL8SEW7+hpfc9zU
-         VHHR+s/zt5ZBbUTrobNAW1K+9T8y0+BGJMT9SkRnGPPZGIaWU8HKwrIuvcAepvtJy/8n
-         gFF0X7vmGycIcihrIwt1ah57qxhOwhrGit/OOwQ446fA7z6gF96pIyhnDZph58x1s7Um
-         utsmLi918pqdLq0aBxbimq8aDtAm/RKC8ojpHq6A/InesFi7iQzy7ln0UOrsGWryk95O
-         Qszg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=c+eVa0dX1kop+2tsq8KrMiGw2+4GgT6C7+BH1dW27GI=;
-        b=NTsBnCi0p4ReugwmtrVqR9fahMbgOMfzxyKV5ij+AnSuBXSrU+1fHPtKonn18huqkj
-         RGn21nfHVzqrRROmikL9FaVnqZZuhvYjr5KqXLcgxrRENSiaGJ3FG+o1gE745fUyKqkW
-         xOz6pnnPv+7cTkDvTtpf0udiqufgC5Kqx8c1NMP8nOQICZGxaBCrl3fQTO0doG9KHvZC
-         m56yRTiV4iMA2YD2pfPUs5WUbKLuQiA1Kxbs6ZaS7JR4AUy/MJ3r//hzTvP8rAPPkDnF
-         LBFonYJFwVu9ZCX1VT7lqkIxIyi/W1f30p4F7yZLPOZDkxMvqALR0Fyu3rWnDkXRzzE7
-         eN6Q==
-X-Gm-Message-State: APjAAAVih9jDIujNS3EV+jjMfW2m6/mDSAIuesld49rpfrbkD2PfnN1T
-        Un+Q+vvg+g/Xz4okP5SIRf+bmJsO
-X-Google-Smtp-Source: APXvYqwxSMNs5esLdkoYCG6yzU0JGtKPvY5fdNDQDDB062FoWx32+QY1xWLP+X4HM9LEsUJPEbDq3g==
-X-Received: by 2002:a63:4d09:: with SMTP id a9mr9953861pgb.229.1571405748967;
-        Fri, 18 Oct 2019 06:35:48 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id r185sm6728195pfr.68.2019.10.18.06.35.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 18 Oct 2019 06:35:48 -0700 (PDT)
-Subject: Re: [PATCH 2/2] Fix a NULL-ptr-deref bug in
- ath10k_usb_alloc_urb_from_pipe
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Hui Peng <benquike@gmail.com>, davem@davemloft.net,
-        Mathias Payer <mathias.payer@nebelwelt.net>,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190804003101.11541-1-benquike@gmail.com>
- <20190831213139.GA32507@roeck-us.net>
- <87ftlgqw42.fsf@kamboji.qca.qualcomm.com>
- <20191018040530.GA28167@roeck-us.net>
- <875zkmxz6f.fsf@kamboji.qca.qualcomm.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <5e0e1760-07ee-efa1-1c33-3276dc81cc67@roeck-us.net>
-Date:   Fri, 18 Oct 2019 06:35:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 18 Oct 2019 09:37:03 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:39522 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1728150AbfJRNhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 09:37:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A62E03BB;
+        Fri, 18 Oct 2019 06:36:39 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BBC903F6C4;
+        Fri, 18 Oct 2019 06:36:36 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 14:36:34 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arch@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Florian Weimer <fweimer@redhat.com>,
+        linux-kernel@vger.kernel.org, Sudakshina Das <sudi.das@arm.com>
+Subject: Re: [PATCH v2 05/12] arm64: Basic Branch Target Identification
+ support
+Message-ID: <20191018133628.GC27757@arm.com>
+References: <1570733080-21015-1-git-send-email-Dave.Martin@arm.com>
+ <1570733080-21015-6-git-send-email-Dave.Martin@arm.com>
+ <20191011151028.GE33537@lakrids.cambridge.arm.com>
+ <4e09ca54-f353-9448-64ed-4ba1e38c6ebc@linaro.org>
+ <20191011153225.GL27757@arm.com>
+ <20191011154043.GG33537@lakrids.cambridge.arm.com>
+ <20191011154444.GN27757@arm.com>
+ <20191011160113.GO27757@arm.com>
+ <20191011164159.GP27757@arm.com>
+ <20191018110551.GB27759@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <875zkmxz6f.fsf@kamboji.qca.qualcomm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018110551.GB27759@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/18/19 12:58 AM, Kalle Valo wrote:
-> Guenter Roeck <linux@roeck-us.net> writes:
-> 
->> On Sun, Sep 01, 2019 at 11:06:05AM +0300, Kalle Valo wrote:
->>> Guenter Roeck <linux@roeck-us.net> writes:
->>>
->>>> Hi,
->>>>
->>>> On Sat, Aug 03, 2019 at 08:31:01PM -0400, Hui Peng wrote:
->>>>> The `ar_usb` field of `ath10k_usb_pipe_usb_pipe` objects
->>>>> are initialized to point to the containing `ath10k_usb` object
->>>>> according to endpoint descriptors read from the device side, as shown
->>>>> below in `ath10k_usb_setup_pipe_resources`:
->>>>>
->>>>> for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
->>>>>          endpoint = &iface_desc->endpoint[i].desc;
->>>>>
->>>>>          // get the address from endpoint descriptor
->>>>>          pipe_num = ath10k_usb_get_logical_pipe_num(ar_usb,
->>>>>                                                  endpoint->bEndpointAddress,
->>>>>                                                  &urbcount);
->>>>>          ......
->>>>>          // select the pipe object
->>>>>          pipe = &ar_usb->pipes[pipe_num];
->>>>>
->>>>>          // initialize the ar_usb field
->>>>>          pipe->ar_usb = ar_usb;
->>>>> }
->>>>>
->>>>> The driver assumes that the addresses reported in endpoint
->>>>> descriptors from device side  to be complete. If a device is
->>>>> malicious and does not report complete addresses, it may trigger
->>>>> NULL-ptr-deref `ath10k_usb_alloc_urb_from_pipe` and
->>>>> `ath10k_usb_free_urb_to_pipe`.
->>>>>
->>>>> This patch fixes the bug by preventing potential NULL-ptr-deref.
->>>>>
->>>>> Signed-off-by: Hui Peng <benquike@gmail.com>
->>>>> Reported-by: Hui Peng <benquike@gmail.com>
->>>>> Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
->>>>
->>>> This patch fixes CVE-2019-15099, which has CVSS scores of 7.5 (CVSS 3.0)
->>>> and 7.8 (CVSS 2.0). Yet, I don't find it in the upstream kernel or in Linux
->>>> next.
->>>>
->>>> Is the patch going to be applied to the upstream kernel anytime soon ?
->>>
->>> Same answer as in patch 1:
->>>
->>> https://patchwork.kernel.org/patch/11074655/
->>>
->>
->> Sorry to bring this up again. The ath6k patch made it into the upstream
->> kernel, but the ath10k patch didn't. Did it get lost, or was there a
->> reason not to apply this patch ?
-> 
-> This patch had a build warning, you can see it from patchwork:
-> 
-> https://patchwork.kernel.org/patch/11074657/
-> 
-> Can someone fix it and resend the patch, please?
-> 
+On Fri, Oct 18, 2019 at 12:05:52PM +0100, Mark Rutland wrote:
+> On Fri, Oct 11, 2019 at 05:42:00PM +0100, Dave Martin wrote:
+> > On Fri, Oct 11, 2019 at 05:01:13PM +0100, Dave Martin wrote:
+> > > On Fri, Oct 11, 2019 at 04:44:45PM +0100, Dave Martin wrote:
+> > > > On Fri, Oct 11, 2019 at 04:40:43PM +0100, Mark Rutland wrote:
+> > > > > On Fri, Oct 11, 2019 at 04:32:26PM +0100, Dave Martin wrote:
 
-Done.
+[...]
 
-Guenter
+> > > > > > Either way, I feel we should do this: any function in a PROT_BTI page
+> > > > > > should have a suitable landing pad.  There's no reason I can see why
+> > > > > > a protection given to any other callback function should be omitted
+> > > > > > for a signal handler.
+> > > > > > 
+> > > > > > Note, if the signal handler isn't in a PROT_BTI page then overriding
+> > > > > > BTYPE here will not trigger a Branch Target exception.
+> > > > > > 
+> > > > > > I'm happy to drop a brief comment into the code also, once we're
+> > > > > > agreed on what the code should be doing.
+> > > > > 
+> > > > > So long as there's a comment as to why, I have no strong feelings here.
+> > > > > :)
+> > > > 
+> > > > OK, I think it's worth a brief comment in the code either way, so I'll
+> > > > add something.
+> > > 
+> > > Hmm, come to think of it we do need special logic for a particular case
+> > > here:
+> > > 
+> > > If we are delivering a SIGILL here and the SIGILL handler was registered
+> > > with SA_NODEFER then we will get into a spin, repeatedly delivering
+> > > the BTI-triggered SIGILL to the same (bad) entry point.
+> > > 
+> > > Without SA_NODEFER, the SIGILL becomes fatal, which is the desired
+> > > behaviour, but we'll need to catch this recursion explicitly.
+> > > 
+> > > 
+> > > It's similar to the special force_sigsegv() case in
+> > > linux/kernel/signal.c...
+> > > 
+> > > Thoughts?
+> > 
+> > On second thought, maybe we don't need to do anything special.
+> > 
+> > A SIGSEGV handler registered with (SA_NODEFER & ~SA_RESETHAND) and that
+> > dereferences a duff address would spin similarly.
+> > 
+> > This SIGILL case doesn't really seem different.  Either way it's a
+> > livelock of the user task that doesn't compromise the kernel.  There
+> > are plenty of ways for such a livelock to happen.
+> 
+> That sounds reasonable to me.
+
+OK, I guess we can park this discussion for now.
+
+Cheers
+---Dave
