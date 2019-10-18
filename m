@@ -2,140 +2,132 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 775C6CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2826ACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BA9C2070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3B53222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:28:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GNarsndy"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="gWp0QO/x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632802AbfJRI14 (ORCPT
+        id S2632806AbfJRI2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:27:56 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40715 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392728AbfJRI1z (ORCPT
+        Fri, 18 Oct 2019 04:28:40 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:16332 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2392728AbfJRI2k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 04:27:55 -0400
-Received: by mail-ed1-f65.google.com with SMTP id v38so3910362edm.7;
-        Fri, 18 Oct 2019 01:27:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zDSqcOkP2VMM+VEiT/vRGRAsfqP4fI01tx/F/lL/3zY=;
-        b=GNarsndyF0j+Y7MyOM682hGvUhawyi9GWj/5AnmRiAn3Cis7AAXKrGt44hmJno6jyE
-         rEE7+ZNavYBrLHUyCeRxc4ebtm3auILatI/UlpEGifoEo1tVHDRgAbP4Qm/UHz9oRZg2
-         oHZ5EMgUYGJ3AXZkI2AmM5WtakVk3zt4QzzPnm7xzfwaV3KkEU7w0Vtnp+vl6Sgi990a
-         h4hwmc0EMhSf9PW05wHsNa4cEEO0ytiN9eiOm3tqvFxNK5tlPZpXily1AS36skhCxerG
-         52Q6Wf7fdxrKNQDPx0rze6tkQzyVL48xYAftqISJEUJ1DZ3Td+EpvPYNJCkdf1xTl4UL
-         AGMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zDSqcOkP2VMM+VEiT/vRGRAsfqP4fI01tx/F/lL/3zY=;
-        b=UjKhlxL2T4cyCnVjnzQmnAAa81pzj5Z25HCgACzfp2EFlunGj61SUher+xiN6y81Nm
-         RB4s4P0a8k4gBfAfeqrm0jfB9f4MwiOTWfMdzSIPipisJEssCbQA8onJhpj8jValGJXp
-         gO31+EYnw5ALJxNRpsTGxi4xysoy7qO5m9Zc+N2j+8e6aq1cmTsPnErbHEQojjIf1RWb
-         QlBvO6lMQSMUCuIGdbzS98h5F3qoLaT2YYG/YF/9AgC9qAW9S2Iuv2J5qhczbhz7kyvR
-         8/qzjVfy/b82S3PVfwnT8A/1KsBtezDkdN0n6hi+8hRilX/CN0dDI/bocwpWV/LSxRQC
-         8Ohw==
-X-Gm-Message-State: APjAAAX/WOC/tuyuMcjT/UXYV1hIIqnQgN4GMNrvngbIF/qT6jWXjg+6
-        24ITGVAh30JRUjymr+LFeKhR7+Bibdl5yEG8/l3ZPite
-X-Google-Smtp-Source: APXvYqzM8bpfqOg09DXLhEx8bCSMXiB5z3QiM35Q+iXMFoXOZQNth9n4ShsTqJ6X31CfKoWCmgf32N3Qz0DCGqV0kyo=
-X-Received: by 2002:a05:6402:7ca:: with SMTP id u10mr8320134edy.20.1571387273291;
- Fri, 18 Oct 2019 01:27:53 -0700 (PDT)
+        Fri, 18 Oct 2019 04:28:40 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9I8GwCa004597;
+        Fri, 18 Oct 2019 10:21:09 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=gSYSCXccs9DhicnJdZYsTLDwYosR5Ljw+yyIPovM2yU=;
+ b=gWp0QO/xNev/cjQnwT7BcMX/uzKloJS6XRgjcniJ+d3Kf4TDpJwo/1oMtmJdh2db94wR
+ T1i83m6RhCV6RzWz8POl7f/yGb/+3Iq+6qLMwizKUBnZTVtvCa+HGH1naGOIHuU/5E4V
+ 8BnDrs56NL4LC+//b/RXy9m9m7qxlG1hfksZsucmB9wptNE70mE0/JA0A0ppNtX/ryNy
+ mh3OIgYSP8hlGKUvr/NweNThwU2lAHIgxzqqP+7aye6yw5Cj1JiRVdwdGjfxT9w1WLqA
+ XVqQaX1Nj3iv2KgLGuk6M1iGQ6THYUuFi6XPP2HK1nzW5efBL8qanNyTJiUrkyYDBU/C Aw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2vk3ya8y4q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 18 Oct 2019 10:21:09 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9EC42100034;
+        Fri, 18 Oct 2019 10:21:08 +0200 (CEST)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6F12E2B894D;
+        Fri, 18 Oct 2019 10:21:08 +0200 (CEST)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.46) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 18 Oct
+ 2019 10:21:08 +0200
+Received: from localhost (10.201.21.218) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 18 Oct 2019 10:21:07
+ +0200
+From:   Olivier Moysan <olivier.moysan@st.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <alsa-devel@alsa-project.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>,
+        <arnaud.pouliquen@st.com>
+CC:     <benjamin.gaignard@st.com>
+Subject: [PATCH] ASoC: stm32: sai: fix sysclk management on shutdown
+Date:   Fri, 18 Oct 2019 10:20:40 +0200
+Message-ID: <20191018082040.31022-1-olivier.moysan@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20190922113436.10396-1-yamada.masahiro@socionext.com> <CAK7LNARXA4MnDyYHLphYEqMfEbh=cMk0i=pzDRbEODTeM+cJ4Q@mail.gmail.com>
-In-Reply-To: <CAK7LNARXA4MnDyYHLphYEqMfEbh=cMk0i=pzDRbEODTeM+cJ4Q@mail.gmail.com>
-From:   Anatoly Pugachev <matorola@gmail.com>
-Date:   Fri, 18 Oct 2019 11:27:42 +0300
-Message-ID: <CADxRZqy-3x4ZMSdGoxc1F2uE3x33kugD_wXdmUwBMy1s6Hqz0Q@mail.gmail.com>
-Subject: Re: [PATCH] sparc: vdso: fix build error of vdso32
-To:     sparclinux <sparclinux@vger.kernel.org>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "ndesaulniers@google.com" <ndesaulniers@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.201.21.218]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-18_02:2019-10-17,2019-10-18 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 6:47 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> On Sun, Sep 22, 2019 at 8:36 PM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > Since commit 54b8ae66ae1a ("kbuild: change *FLAGS_<basetarget>.o to
-> > take the path relative to $(obj)"), sparc allmodconfig fails to build
-> > as follows:
-> >
-> >   CC      arch/sparc/vdso/vdso32/vclock_gettime.o
-> > unrecognized e_machine 18 arch/sparc/vdso/vdso32/vclock_gettime.o
-> > arch/sparc/vdso/vdso32/vclock_gettime.o: failed
-> >
-> > The cause of the breakage is that -pg flag not being dropped.
-> >
-> > The vdso32 files are located in the vdso32/ subdirectory, but I missed
-> > to update the Makefile.
-> >
-> > Fixes: 54b8ae66ae1a ("kbuild: change *FLAGS_<basetarget>.o to take the path relative to $(obj)")
-> > Reported-by: Anatoly Pugachev <matorola@gmail.com>
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >
->
->
-> I am copy-pasting Tested-by from the reporter:
->
-> Tested-by: Anatoly Pugachev <matorola@gmail.com>
->
-> It was given here:
->
-> https://lkml.org/lkml/2019/9/25/197
->
->
->
->
-> >  arch/sparc/vdso/Makefile | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/sparc/vdso/Makefile b/arch/sparc/vdso/Makefile
-> > index 324a23947585..399bc22b1cf8 100644
-> > --- a/arch/sparc/vdso/Makefile
-> > +++ b/arch/sparc/vdso/Makefile
-> > @@ -67,12 +67,14 @@ $(vobjs): KBUILD_CFLAGS := $(filter-out $(GCC_PLUGINS_CFLAGS) $(SPARC_REG_CFLAGS
-> >  #
-> >  CFLAGS_REMOVE_vdso-note.o = -pg
-> >  CFLAGS_REMOVE_vclock_gettime.o = -pg
-> > +CFLAGS_REMOVE_vdso32/vdso-note.o = -pg
-> > +CFLAGS_REMOVE_vdso32/vclock_gettime.o = -pg
-> >
-> >  $(obj)/%.so: OBJCOPYFLAGS := -S
-> >  $(obj)/%.so: $(obj)/%.so.dbg FORCE
-> >         $(call if_changed,objcopy)
-> >
-> > -CPPFLAGS_vdso32.lds = $(CPPFLAGS_vdso.lds)
-> > +CPPFLAGS_vdso32/vdso32.lds = $(CPPFLAGS_vdso.lds)
-> >  VDSO_LDFLAGS_vdso32.lds = -m elf32_sparc -soname linux-gate.so.1
-> >
-> >  #This makes sure the $(obj) subdirectory exists even though vdso32/
+The commit below, adds a call to sysclk callback on shutdown.
+This introduces a regression in stm32 SAI driver, as some clock
+services are called twice, leading to unbalanced calls.
+Move processing related to mclk from shutdown to sysclk callback.
+When requested frequency is 0, assume shutdown and release mclk.
 
+Fixes: 2458adb8f92a ("SoC: simple-card-utils: set 0Hz to sysclk when shutdown")
 
-Hello!
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+---
+ sound/soc/stm/stm32_sai_sub.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-Can someone please pull/apply this to master ?!
+diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
+index d7501f88aaa6..a4060813bc74 100644
+--- a/sound/soc/stm/stm32_sai_sub.c
++++ b/sound/soc/stm/stm32_sai_sub.c
+@@ -505,10 +505,20 @@ static int stm32_sai_set_sysclk(struct snd_soc_dai *cpu_dai,
+ 	if (dir == SND_SOC_CLOCK_OUT && sai->sai_mclk) {
+ 		ret = regmap_update_bits(sai->regmap, STM_SAI_CR1_REGX,
+ 					 SAI_XCR1_NODIV,
+-					 (unsigned int)~SAI_XCR1_NODIV);
++					 freq ? 0 : SAI_XCR1_NODIV);
+ 		if (ret < 0)
+ 			return ret;
+ 
++		/* Assume shutdown if requested frequency is 0Hz */
++		if (!freq) {
++			/* Release mclk rate only if rate was actually set */
++			if (sai->mclk_rate) {
++				clk_rate_exclusive_put(sai->sai_mclk);
++				sai->mclk_rate = 0;
++			}
++			return 0;
++		}
++
+ 		/* If master clock is used, set parent clock now */
+ 		ret = stm32_sai_set_parent_clock(sai, freq);
+ 		if (ret)
+@@ -1093,15 +1103,6 @@ static void stm32_sai_shutdown(struct snd_pcm_substream *substream,
+ 
+ 	regmap_update_bits(sai->regmap, STM_SAI_IMR_REGX, SAI_XIMR_MASK, 0);
+ 
+-	regmap_update_bits(sai->regmap, STM_SAI_CR1_REGX, SAI_XCR1_NODIV,
+-			   SAI_XCR1_NODIV);
+-
+-	/* Release mclk rate only if rate was actually set */
+-	if (sai->mclk_rate) {
+-		clk_rate_exclusive_put(sai->sai_mclk);
+-		sai->mclk_rate = 0;
+-	}
+-
+ 	clk_disable_unprepare(sai->sai_ck);
+ 
+ 	spin_lock_irqsave(&sai->irq_lock, flags);
+-- 
+2.17.1
 
-Thanks!
