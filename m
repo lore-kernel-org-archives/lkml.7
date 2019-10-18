@@ -2,247 +2,97 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 271AFCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FCDCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05412222C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DC8E21835
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:40:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bf5mqpce"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505899AbfJRSkD (ORCPT
+        id S2505912AbfJRSk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:40:03 -0400
-Received: from mga12.intel.com ([192.55.52.136]:45142 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394568AbfJRSkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:40:02 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 11:40:01 -0700
-X-IronPort-AV: E=Sophos;i="5.67,312,1566889200"; 
-   d="scan'208";a="190447854"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.171.209]) ([10.249.171.209])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 18 Oct 2019 11:39:59 -0700
-Subject: Re: [PATCH v2 3/3] KVM: VMX: Some minor refactor of MSR bitmap
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191018093723.102471-1-xiaoyao.li@intel.com>
- <20191018093723.102471-4-xiaoyao.li@intel.com>
- <20191018172741.GF26319@linux.intel.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <f718d52f-690c-7595-2c18-9110b165058f@intel.com>
-Date:   Sat, 19 Oct 2019 02:39:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 18 Oct 2019 14:40:27 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45785 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394377AbfJRSkZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 14:40:25 -0400
+Received: by mail-pg1-f193.google.com with SMTP id r1so3811341pgj.12;
+        Fri, 18 Oct 2019 11:40:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=E0Nr+xgvo/HGPyIRgeBTMe73qDbXu0iO1es6rYh3atw=;
+        b=Bf5mqpce+ifo+PJO0O/SZ7JgDewHLwuztM3akSVpq1Vran9Cwo7TXbaD18j+XelfCz
+         /vH1vTG4DsHYGzitLUHuNsDcjMGHoowXtcrHus+0aTCVda86N8BYRjPe84ybpLvopGC1
+         0bTmUK8pxbRiyO3f67IAHOa+e0fYPtCyC7XEnyHkSQm3O7ozpLeaMNJfOVqLo2/esk0i
+         gH1xIU1LRpcgoGHqQmw81kZNn9sjhBlsjMsm//1QPwir6pjOAljIfplB1CDZo9jr8Wfi
+         /X/MoZPaw01qrVsPPGIVn+2X6PlTzeR/z7s8O+F+XeNJQDjw2jzpdFXHBFVA854YXxWL
+         t7og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=E0Nr+xgvo/HGPyIRgeBTMe73qDbXu0iO1es6rYh3atw=;
+        b=NddDDq9zVYCRYvbUNg4t2aItiXhVA5KDqe2eYONvv1HC6fi2/tCfwUvQ2etAQJlkr6
+         WARrKkwLExs57+IUoBdoSu2ppIrSTLWVwybXFtufW0zmu2kz4KB7am7gshXAN647jIeJ
+         qFvUQT21yTBp92djfevHqrUT1hpbuAMh/tdG98SU3KcfL9ATKBDB2fpRkzvfl548+IyM
+         yI7YYKBmY8ttQ7IxmogcdbNQOKFRBJDPF1TiuyHsFTSzCyVzeaCqnVI8SQIAmFwZr24/
+         w5KUVoZpHzxOTSTzouRIu8aMV4rTf3jlAnPnwZCqkg4Vkegm0EoEE4gh2kXxEHyJs8y2
+         RvZA==
+X-Gm-Message-State: APjAAAXEokeTrvoWMjNg0cbkye1JZh0aEr1Qs7Abz4/ikzQn6Ma8vf7f
+        K/cvwAce2byy3WKrG3Xe/8Y=
+X-Google-Smtp-Source: APXvYqxZXck+TqDk8p3s1SMIsgJls7MRurLbHvbPWJuC+WsBJrXRQkFb0GC5zMWshR4Y7Y8BVTdeWQ==
+X-Received: by 2002:a63:155e:: with SMTP id 30mr12136523pgv.204.1571424024619;
+        Fri, 18 Oct 2019 11:40:24 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id w25sm6570261pfi.60.2019.10.18.11.40.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 11:40:23 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 11:40:21 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH 27/46] input: touchscreen: mainstone: fix pxa2xx+pxa3xx
+ configuration
+Message-ID: <20191018184021.GN35946@dtor-ws>
+References: <20191018154052.1276506-1-arnd@arndb.de>
+ <20191018154201.1276638-27-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <20191018172741.GF26319@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018154201.1276638-27-arnd@arndb.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/19/2019 1:27 AM, Sean Christopherson wrote:
-> On Fri, Oct 18, 2019 at 05:37:23PM +0800, Xiaoyao Li wrote:
->> Move the MSR bitmap capability check from vmx_disable_intercept_for_msr()
->> and vmx_enable_intercept_for_msr(), so that we can do the check far
->> early before we really want to touch the bitmap.
->>
->> Also, we can move the common MSR not-intercept setup to where msr bitmap
->> is actually used.
->>
->> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
->> ---
->> Changes in v2:
->>    - Remove the check of cpu_has_vmx_msr_bitmap() from
->>      vmx_{disable,enable}_intercept_for_msr (Krish)
->> ---
->>   arch/x86/kvm/vmx/vmx.c | 65 +++++++++++++++++++++---------------------
->>   1 file changed, 33 insertions(+), 32 deletions(-)
->>
->> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->> index b083316a598d..017689d0144e 100644
->> --- a/arch/x86/kvm/vmx/vmx.c
->> +++ b/arch/x86/kvm/vmx/vmx.c
->> @@ -343,8 +343,8 @@ module_param_cb(vmentry_l1d_flush, &vmentry_l1d_flush_ops, NULL, 0644);
->>   
->>   static bool guest_state_valid(struct kvm_vcpu *vcpu);
->>   static u32 vmx_segment_access_rights(struct kvm_segment *var);
->> -static __always_inline void vmx_disable_intercept_for_msr(unsigned long *msr_bitmap,
->> -							  u32 msr, int type);
->> +static __always_inline void vmx_set_intercept_for_msr(unsigned long *msr_bitmap,
->> +		u32 msr, int type, bool value);
->>   
->>   void vmx_vmexit(void);
->>   
->> @@ -2000,9 +2000,9 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->>   		 * in the merging. We update the vmcs01 here for L1 as well
->>   		 * since it will end up touching the MSR anyway now.
->>   		 */
->> -		vmx_disable_intercept_for_msr(vmx->vmcs01.msr_bitmap,
->> -					      MSR_IA32_SPEC_CTRL,
->> -					      MSR_TYPE_RW);
->> +		vmx_set_intercept_for_msr(vmx->vmcs01.msr_bitmap,
->> +					  MSR_IA32_SPEC_CTRL,
->> +					  MSR_TYPE_RW, false);
+On Fri, Oct 18, 2019 at 05:41:42PM +0200, Arnd Bergmann wrote:
+> There are two different ways of flushing the ac97 queue
+> in this driver, selected by a compile time option.
 > 
-> IMO this is a net negative.  The explicit "disable" is significantly more
-> intuitive than "set" with a %false param, e.g. at a quick glance it would
-> be easy to think this code is "setting", i.e. "enabling" interception.
+> Change this to a runtime selection to make it work when both
+> are enabled.
 > 
->>   		break;
->>   	case MSR_IA32_PRED_CMD:
->>   		if (!msr_info->host_initiated &&
->> @@ -2028,8 +2028,9 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->>   		 * vmcs02.msr_bitmap here since it gets completely overwritten
->>   		 * in the merging.
->>   		 */
->> -		vmx_disable_intercept_for_msr(vmx->vmcs01.msr_bitmap, MSR_IA32_PRED_CMD,
->> -					      MSR_TYPE_W);
->> +		vmx_set_intercept_for_msr(vmx->vmcs01.msr_bitmap,
->> +					  MSR_IA32_PRED_CMD,
->> +					  MSR_TYPE_W, false);
->>   		break;
->>   	case MSR_IA32_CR_PAT:
->>   		if (!kvm_pat_valid(data))
->> @@ -3599,9 +3600,6 @@ static __always_inline void vmx_disable_intercept_for_msr(unsigned long *msr_bit
->>   {
->>   	int f = sizeof(unsigned long);
->>   
->> -	if (!cpu_has_vmx_msr_bitmap())
->> -		return;
-> 
-> As above, I'd rather keep these here.  Functionally it changes nothing on
-> CPUs with an MSR bitmap.  For old CPUs, it saves all of two uops in paths
-> that aren't performance critical.
-> 
->> -
->>   	if (static_branch_unlikely(&enable_evmcs))
->>   		evmcs_touch_msr_bitmap();
->>   
->> @@ -3637,9 +3635,6 @@ static __always_inline void vmx_enable_intercept_for_msr(unsigned long *msr_bitm
->>   {
->>   	int f = sizeof(unsigned long);
->>   
->> -	if (!cpu_has_vmx_msr_bitmap())
->> -		return;
->> -
->>   	if (static_branch_unlikely(&enable_evmcs))
->>   		evmcs_touch_msr_bitmap();
->>   
->> @@ -3673,6 +3668,9 @@ static __always_inline void vmx_enable_intercept_for_msr(unsigned long *msr_bitm
->>   static __always_inline void vmx_set_intercept_for_msr(unsigned long *msr_bitmap,
->>   			     			      u32 msr, int type, bool value)
->>   {
->> +	if (!cpu_has_vmx_msr_bitmap())
->> +		return;
->> +
->>   	if (value)
->>   		vmx_enable_intercept_for_msr(msr_bitmap, msr, type);
->>   	else
->> @@ -4163,11 +4161,30 @@ static void ept_set_mmio_spte_mask(void)
->>   
->>   static void vmx_vmcs_setup(struct vcpu_vmx *vmx)
->>   {
->> +	unsigned long *msr_bitmap;
->> +
->>   	if (nested)
->>   		nested_vmx_vmcs_setup();
->>   
->> -	if (cpu_has_vmx_msr_bitmap())
->> +	if (cpu_has_vmx_msr_bitmap()) {
->> +		msr_bitmap = vmx->vmcs01.msr_bitmap;
->> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_TSC, MSR_TYPE_R);
->> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_FS_BASE, MSR_TYPE_RW);
->> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_GS_BASE, MSR_TYPE_RW);
->> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_KERNEL_GS_BASE, MSR_TYPE_RW);
->> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_CS, MSR_TYPE_RW);
->> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_ESP, MSR_TYPE_RW);
->> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_EIP, MSR_TYPE_RW);
->> +		if (kvm_cstate_in_guest(vmx->vcpu.kvm)) {
->> +			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C1_RES, MSR_TYPE_R);
->> +			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C3_RESIDENCY, MSR_TYPE_R);
->> +			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
->> +			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
->> +		}
->> +
->>   		vmcs_write64(MSR_BITMAP, __pa(vmx->vmcs01.msr_bitmap));
->> +	}
->> +	vmx->msr_bitmap_mode = 0;
-> 
-> Zeroing msr_bitmap_mode can be skipped as well.
-> 
->>   	vmcs_write64(VMCS_LINK_POINTER, -1ull); /* 22.3.1.5 */
->>   
->> @@ -6074,7 +6091,8 @@ void vmx_set_virtual_apic_mode(struct kvm_vcpu *vcpu)
->>   	}
->>   	secondary_exec_controls_set(vmx, sec_exec_control);
->>   
->> -	vmx_update_msr_bitmap(vcpu);
->> +	if (cpu_has_vmx_msr_bitmap())
->> +		vmx_update_msr_bitmap(vcpu);
->>   }
->>   
->>   static void vmx_set_apic_access_page_addr(struct kvm_vcpu *vcpu, hpa_t hpa)
->> @@ -6688,7 +6706,6 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
->>   {
->>   	int err;
->>   	struct vcpu_vmx *vmx;
->> -	unsigned long *msr_bitmap;
->>   	int i, cpu;
->>   
->>   	BUILD_BUG_ON_MSG(offsetof(struct vcpu_vmx, vcpu) != 0,
->> @@ -6745,22 +6762,6 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
->>   	if (err < 0)
->>   		goto free_msrs;
->>   
->> -	msr_bitmap = vmx->vmcs01.msr_bitmap;
->> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_TSC, MSR_TYPE_R);
->> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_FS_BASE, MSR_TYPE_RW);
->> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_GS_BASE, MSR_TYPE_RW);
->> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_KERNEL_GS_BASE, MSR_TYPE_RW);
->> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_CS, MSR_TYPE_RW);
->> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_ESP, MSR_TYPE_RW);
->> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_EIP, MSR_TYPE_RW);
->> -	if (kvm_cstate_in_guest(kvm)) {
->> -		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C1_RES, MSR_TYPE_R);
->> -		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C3_RESIDENCY, MSR_TYPE_R);
->> -		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
->> -		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
->> -	}
->> -	vmx->msr_bitmap_mode = 0;
-> 
-> Keep this code here to be consistent with the previous change that moved
-> the guest_msrs intialization *out* of the VMCS specific function.  Both
-> are collateral pages that are not directly part of the VMCS.
->
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: linux-input@vger.kernel.org
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-OK. Then this patch is unnecessary too.
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-> I'd be tempted to use a goto to skip the code, the line length is bad
-> enough as it is, e.g.:
-> 
-> 	if (!cpu_has_vmx_msr_bitmap())
-> 		goto skip_msr_bitmap;
-> 
-> 	vmx->msr_bitmap_mode = 0;
-> skip_msr_bitmap:
-> 
->> -
->>   	vmx->loaded_vmcs = &vmx->vmcs01;
->>   	cpu = get_cpu();
->>   	vmx_vcpu_load(&vmx->vcpu, cpu);
->> -- 
->> 2.19.1
->>
+-- 
+Dmitry
