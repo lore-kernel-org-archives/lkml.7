@@ -2,105 +2,166 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E897CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D26D9CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E0EB21925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E5BA21925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:32:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571383940;
+	bh=EQeKoCpXpwTvRnZZMg106dxS9XAskErBDtA+of2bSIE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ltfHp4qY4Jjigpj2F3ATfhDB9H2AyK6qy6UXbkSrJMGJvFD2/2wb7q9hkqQh6eLsD
+	 guSqqWbMWiTbJFrOSa0XMQ/sHXsRnbT5iNLYkt8yzqZNvQYZ5epMp38TLywD20aE3P
+	 kTytEcPGyFxInLg3tiNOhuPdJPzT4L0ypZDBSUsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504640AbfJRHbs (ORCPT
+        id S2504652AbfJRHcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 03:31:48 -0400
-Received: from mga14.intel.com ([192.55.52.115]:58825 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394031AbfJRHbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 03:31:47 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 00:31:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,310,1566889200"; 
-   d="scan'208";a="190288563"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.55]) ([10.237.72.55])
-  by orsmga008.jf.intel.com with ESMTP; 18 Oct 2019 00:31:43 -0700
-Subject: Re: [RFC] mmc: cqhci: commit descriptors before setting the doorbell
-To:     Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org
-Cc:     ulf.hansson@linaro.org, asutoshd@codeaurora.org,
-        riteshh@codeaurora.org, venkatg@codeaurora.org
-References: <20191014183849.14864-1-faiz_abbas@ti.com>
- <fac9ad28-dbc3-3948-d99c-742420f3e651@ti.com>
- <ca62cbaa-111c-4546-afd5-aad70eb98993@intel.com>
- <2275bfdc-ff30-719e-ae78-8c8bd20b8c80@ti.com>
- <8fba4072-a252-7397-15b2-791e2619024d@ti.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <ce800827-d867-87a7-47fd-a65e92bd26db@intel.com>
-Date:   Fri, 18 Oct 2019 10:30:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 18 Oct 2019 03:32:19 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38776 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394031AbfJRHcT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 03:32:19 -0400
+Received: by mail-oi1-f193.google.com with SMTP id d140so107680oib.5;
+        Fri, 18 Oct 2019 00:32:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z4xqOeM1YeUE2INYqT11uITzrVuWoTUfm8bOzhEZ/mY=;
+        b=jJRqrneVn/Onz2K3aMMimxKiRNo5MGjJybA0dseLJ9k6lxteJX8nFqCxQSyGNwIyNQ
+         UaP1KkDLAvJfWzCsg82vLJD+Ztb7A56lx70k81SlmexQB3qKtbf5Yv2rBJVgYIH76Thg
+         yioGVR9ALfE+R0HcAlZXGFSX+vV6pEShZocCZ5RqL6Y4R/9kwi1vQirWByIpQRyMz0Ld
+         i9epHPvcWTtpvLlZMd0Q51GxhTHfBq4dMD77CFzU24TpQjitRUB/E0zKGc4A+iP6iET5
+         yw4MkF8OWOmXk1kQ+6t0K53ZjvuooK3hWy3IndFl7b1MvSKIXygdaJYampxUuE4xqRug
+         QSNA==
+X-Gm-Message-State: APjAAAVaswvPjw8hOtt4to2I+/MlsVdj59dtI0e2ri/L3Tjy/d0y205X
+        J88XYBjhcHMFucTw8t5NEuryBilLbMdcI7mxh5M=
+X-Google-Smtp-Source: APXvYqxdFvDgt95Tzyq9b603RSO/NBOLxoNSFfckU1680dG9VNFBUqPiu4wuKPbLwLUdPqYpW/PzUKRy+W8ijyGu4/0=
+X-Received: by 2002:aca:5885:: with SMTP id m127mr7009246oib.110.1571383937445;
+ Fri, 18 Oct 2019 00:32:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <8fba4072-a252-7397-15b2-791e2619024d@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191017163503.30791-1-sudeep.holla@arm.com> <CAJZ5v0gTpK0cJhsWGVvs-=Sbgcia0jz2j5QNYRL+1wOz=2xkJQ@mail.gmail.com>
+ <CAJZ5v0h0ioEZqLuaW1jz_8jRuGYZLQS3fbpv9ctyV9ucXb1WiA@mail.gmail.com>
+ <20191018055533.GC31836@e107533-lin.cambridge.arm.com> <20191018060247.g5asfuh3kncoj7kl@vireshk-i7>
+In-Reply-To: <20191018060247.g5asfuh3kncoj7kl@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 18 Oct 2019 09:32:06 +0200
+Message-ID: <CAJZ5v0h0vY9OBYg-_pR-hu_TJkE0odf5Nnd8qnJc17+8NQo=7w@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: flush any pending policy update work scheduled
+ before freeing
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/10/19 10:22 AM, Faiz Abbas wrote:
-> Adrian,
-> 
-> On 16/10/19 5:46 PM, Faiz Abbas wrote:
->> Adrian,
->>
->> On 15/10/19 7:15 PM, Adrian Hunter wrote:
->>> On 15/10/19 10:55 AM, Faiz Abbas wrote:
->>>> Hi,
->>>>
->>>> On 15/10/19 12:08 AM, Faiz Abbas wrote:
->>>>> Add a write memory barrier to make sure that descriptors are actually
->>>>> written to memory before ringing the doorbell.
->>>>>
->>>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->>>>> ---
->>>>>
->>>>> This patch fixes a very infrequent ADMA error (1 out of 100 times) that
->>>>> I have been seeing after enabling command queuing for J721e.
->>>>> Also looking at memory-barriers.txt and this commit[1],
->>>>> it looks like we should be doing this before any descriptor write
->>>>> followed by a doorbell ring operation. It'll be nice if someone with more
->>>>> expertise in memory barriers can comment.
->>>>>
->>>>> [1] ad1a1b9cd67a ("scsi: ufs: commit descriptors before setting the
->>>>>     doorbell")
->>>>
->>>> So I see that cqhci_readl/writel() use readl/writel_relaxed() which
->>>> seems to be causing this issue. Should I just fix this by converting
->>>> those to readl/writel with memory barriers instead?
->>>
->>> Perhaps we could do both changes i.e. add wmb() and convert to non-relaxed
->>> readl/writel
->>>
->>
->> readl is implemented as  readl_relaxed(); __rmb();
->> and
->> writel is implemented as wmb(); writel_relaxed();
->>
->> I think another wmb() before writel will be redundant.
->>
->> Maybe this patch is good enough in itself.
->>
-> 
-> Do you agree?
+On Fri, Oct 18, 2019 at 8:02 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 18-10-19, 06:55, Sudeep Holla wrote:
+> > On Thu, Oct 17, 2019 at 11:26:54PM +0200, Rafael J. Wysocki wrote:
+> > > On Thu, Oct 17, 2019 at 9:36 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > >
+> > > > On Thu, Oct 17, 2019 at 6:35 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> > > > >
+> > > > > dev_pm_qos_remove_request ends calling {max,min}_freq_req QoS notifiers
+> > > > > which schedule policy update work. It may end up racing with the freeing
+> > > > > the policy and unregistering the driver.
+> > > > >
+> > > > > One possible race is as below where the cpufreq_driver is unregistered
+> > > > > but the scheduled work gets executed at later stage when cpufreq_driver
+> > > > > is NULL(i.e. after freeing the policy and driver)
+> > > > >
+> > > > > Unable to handle kernel NULL pointer dereference at virtual address 0000001c
+> > > > > pgd = (ptrval)
+> > > > > [0000001c] *pgd=80000080204003, *pmd=00000000
+> > > > > Internal error: Oops: 206 [#1] SMP THUMB2
+> > > > > Modules linked in:
+> > > > > CPU: 0 PID: 34 Comm: kworker/0:1 Not tainted 5.4.0-rc3-00006-g67f5a8081a4b #86
+> > > > > Hardware name: ARM-Versatile Express
+> > > > > Workqueue: events handle_update
+> > > > > PC is at cpufreq_set_policy+0x58/0x228
+> > > > > LR is at dev_pm_qos_read_value+0x77/0xac
+> > > > > Control: 70c5387d  Table: 80203000  DAC: fffffffd
+> > > > > Process kworker/0:1 (pid: 34, stack limit = 0x(ptrval))
+> > > > >         (cpufreq_set_policy) from (refresh_frequency_limits.part.24+0x37/0x48)
+> > > > >         (refresh_frequency_limits.part.24) from (handle_update+0x2f/0x38)
+> > > > >         (handle_update) from (process_one_work+0x16d/0x3cc)
+> > > > >         (process_one_work) from (worker_thread+0xff/0x414)
+> > > > >         (worker_thread) from (kthread+0xff/0x100)
+> > > > >         (kthread) from (ret_from_fork+0x11/0x28)
+> > > > >
+> > > > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > > > > Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> > > > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> > > > > ---
+> > > > >  drivers/cpufreq/cpufreq.c | 3 +++
+> > > > >  1 file changed, 3 insertions(+)
+> > > > >
+> > > > > Hi Rafael, Viresh,
+> > > > >
+> > > > > This fixed the boot issue I reported[1] on TC2 with bL switcher enabled.
+> > > > > I have based this patch on -rc3 and not on top of your patches. This
+> > > > > only fixes the boot issue but I hit the other crashes while continuously
+> > > > > switching on and off the bL switcher that register/unregister the driver
+> > > > > Your patch series fixes them. I can based this on top of those if you
+> > > > > prefer.
+> > > > >
+> > > > > Regards,
+> > > > > Sudeep
+> > > > >
+> > > > > [1] https://lore.kernel.org/linux-pm/20191015155735.GA29105@bogus/
+> > > > >
+> > > > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > > > > index c52d6fa32aac..b703c29a84be 100644
+> > > > > --- a/drivers/cpufreq/cpufreq.c
+> > > > > +++ b/drivers/cpufreq/cpufreq.c
+> > > > > @@ -1278,6 +1278,9 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
+> > > > >         }
+> > > > >
+> > > > >         dev_pm_qos_remove_request(policy->min_freq_req);
+> > > > > +       /* flush the pending policy->update work before freeing the policy */
+> > > > > +       if (work_pending(&policy->update))
+> > > >
+> > > > Isn't this racy?
+> > > >
+> > > > It still may be running if the pending bit is clear and we still need
+> > > > to wait for it then, don't we?
+> > > >
+> > > > Why don't you do an unconditional flush_work() here?
+> > >
+> > > You may as well do a cancel_work_sync() here, because whether or not
+> > > the last update of the policy happens before it goes away is a matter
+> > > of timing in any case
+> >
+> > In fact that's the first thing I tried to fix the issue I was seeing.
+> > But I then thought it would be better to complete the update as the PM
+> > QoS were getting updated back to DEFAULT values for the device. Even
+> > this works.
+> >
+> > What is your preference ? flush_work or cancel_work_sync ? I will
+> > update accordingly. I may need to do some more testing with
+> > cancel_work_sync as I just checked that quickly to confirm the race.
+>
+> As I said in the other email, this work didn't come as a result of
+> removal of the qos request from cpufreq core and so must have come
+> from other thermal or similar events. In that case maybe doing
+> flush_work() is better before we remove the cpufreq driver. Though
+> Rafael's timing related comment makes sense as well, but now that we
+> have received the work before policy is removed, I will rather
+> complete the work and quit.
 
-Sure.
-
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Well, the policy is going away, so the governor has been stopped for
+it already.  Even if the limit is updated, it will not be used anyway,
+so why bother with updating it?
