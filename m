@@ -2,64 +2,51 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0272CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18011CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F6B421925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5C9621925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:12:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436729;
-	bh=7SOk7tiTVGhBb6vH7JX2MPjaoKS77atUxG4Pvnesje8=;
+	s=default; t=1571436736;
+	bh=uhc6qrmgYf8tNuiZPGZcsbbrTbtSfMBBHflqUUXRHqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0UTRC2mOb6b4bht09CkUrjsgCzsJyK0M+xHQg7bR64TwRFLcJJXfU8lRTEQ19dLFX
-	 coeEJjL7gzOar0TiE/YNX2pLhdu5E4A7P2n1BRVpAstqm9Q6f2kdfjF8v3h8T2u7xs
-	 kD43Gcc5E4K1wB7ENDuQ9k7Ly+fE74vBQekleNDo=
+	b=MLncORUiXzA56CD2Z9I47KaUQdEMfzubiQGjzti/mrtMPQGnxMA6Oncb8I9MB+HhP
+	 okMaLoWKl+rt0yi31Y7giJPfeQvnevxRQlx9xSpvwfzS9QuFSUSfM3pvkY5H0oYC9r
+	 OhoDYJEa8UKjOUtV/vj8umwACE5rktG/xVsYrVb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391430AbfJRWMI (ORCPT
+        id S2391473AbfJRWMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:12:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43366 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:12:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390094AbfJRWK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:10:27 -0400
+        id S2390028AbfJRWKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:10:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3692C2248C;
-        Fri, 18 Oct 2019 22:10:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14AC422474;
+        Fri, 18 Oct 2019 22:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436626;
-        bh=7SOk7tiTVGhBb6vH7JX2MPjaoKS77atUxG4Pvnesje8=;
+        s=default; t=1571436622;
+        bh=uhc6qrmgYf8tNuiZPGZcsbbrTbtSfMBBHflqUUXRHqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bDT/DQmMfFrdqRnANXVJ8x1+7PHqpgdERz5g90Fc0WqxrrrfIp/VUMQiY8jd/ovCm
-         75lAcHg058MBysY9fHstBJ1ZVR9CtOmjAdEa8xTCeukPh/kyaCilicDZIPgQDbDei+
-         +uURirgbJxmzYArglLlw0vgrW3vUTl+D/sYqMzz4=
+        b=ywZx1UowLZyFlsNBfznaDlsNQSg63PVxi/RTXUUO7EaRaLVNrUlf8xPgl5k6EiR/J
+         m8jFTFnXbDsFXPy471x219Z1Dph1VErxP3I0KSbHKmzeRk6PNn1PPchg2dqoCvyOrf
+         EhZljQGnIxbvGnxvsHNTYqz3weGLYUlDmd0wC2/0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lukas Wunner <lukas@wunner.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Dave Young <dyoung@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Octavian Purdila <octavian.purdila@intel.com>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Scott Talbert <swt@techie.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 12/21] efi/cper: Fix endianness of PCIe class code
-Date:   Fri, 18 Oct 2019 18:09:58 -0400
-Message-Id: <20191018221007.10851-12-sashal@kernel.org>
+Cc:     Austin Kim <austindh.kim@gmail.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 10/21] fs: cifs: mute -Wunused-const-variable message
+Date:   Fri, 18 Oct 2019 18:09:56 -0400
+Message-Id: <20191018221007.10851-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018221007.10851-1-sashal@kernel.org>
 References: <20191018221007.10851-1-sashal@kernel.org>
@@ -72,59 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Austin Kim <austindh.kim@gmail.com>
 
-[ Upstream commit 6fb9367a15d1a126d222d738b2702c7958594a5f ]
+[ Upstream commit dd19c106a36690b47bb1acc68372f2b472b495b8 ]
 
-The CPER parser assumes that the class code is big endian, but at least
-on this edk2-derived Intel Purley platform it's little endian:
+After 'Initial git repository build' commit,
+'mapping_table_ERRHRD' variable has not been used.
 
-    efi: EFI v2.50 by EDK II BIOS ID:PLYDCRB1.86B.0119.R05.1701181843
-    DMI: Intel Corporation PURLEY/PURLEY, BIOS PLYDCRB1.86B.0119.R05.1701181843 01/18/2017
+So 'mapping_table_ERRHRD' const variable could be removed
+to mute below warning message:
 
-    {1}[Hardware Error]:   device_id: 0000:5d:00.0
-    {1}[Hardware Error]:   slot: 0
-    {1}[Hardware Error]:   secondary_bus: 0x5e
-    {1}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x2030
-    {1}[Hardware Error]:   class_code: 000406
-                                       ^^^^^^ (should be 060400)
-
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Matthew Garrett <mjg59@google.com>
-Cc: Octavian Purdila <octavian.purdila@intel.com>
-Cc: Peter Jones <pjones@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Scott Talbert <swt@techie.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Cc: linux-integrity@vger.kernel.org
-Link: https://lkml.kernel.org/r/20191002165904.8819-2-ard.biesheuvel@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+   fs/cifs/netmisc.c:120:40: warning: unused variable 'mapping_table_ERRHRD' [-Wunused-const-variable]
+   static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
+                                           ^
+Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/cper.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/netmisc.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-index f40f7df4b7344..c0e54396f2502 100644
---- a/drivers/firmware/efi/cper.c
-+++ b/drivers/firmware/efi/cper.c
-@@ -375,7 +375,7 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
- 		printk("%s""vendor_id: 0x%04x, device_id: 0x%04x\n", pfx,
- 		       pcie->device_id.vendor_id, pcie->device_id.device_id);
- 		p = pcie->device_id.class_code;
--		printk("%s""class_code: %02x%02x%02x\n", pfx, p[0], p[1], p[2]);
-+		printk("%s""class_code: %02x%02x%02x\n", pfx, p[2], p[1], p[0]);
- 	}
- 	if (pcie->validation_bits & CPER_PCIE_VALID_SERIAL_NUMBER)
- 		printk("%s""serial number: 0x%04x, 0x%04x\n", pfx,
+diff --git a/fs/cifs/netmisc.c b/fs/cifs/netmisc.c
+index cc88f4f0325ef..bed9733302279 100644
+--- a/fs/cifs/netmisc.c
++++ b/fs/cifs/netmisc.c
+@@ -130,10 +130,6 @@ static const struct smb_to_posix_error mapping_table_ERRSRV[] = {
+ 	{0, 0}
+ };
+ 
+-static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
+-	{0, 0}
+-};
+-
+ /*
+  * Convert a string containing text IPv4 or IPv6 address to binary form.
+  *
 -- 
 2.20.1
 
