@@ -2,35 +2,42 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 268E0CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9909CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0515321852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:34:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA64821852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:35:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408823AbfJRPeT (ORCPT
+        id S2405541AbfJRPfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:34:19 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:49892 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732916AbfJRPeT (ORCPT
+        Fri, 18 Oct 2019 11:35:12 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:50419 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbfJRPfM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:34:19 -0400
-Received: from [185.81.138.19] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iLUGg-0005d2-DU; Fri, 18 Oct 2019 15:34:18 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [GIT PULL] usercopy for v5.4-rc4
-Date:   Fri, 18 Oct 2019 17:33:13 +0200
-Message-Id: <20191018153311.30516-1-christian.brauner@ubuntu.com>
+        Fri, 18 Oct 2019 11:35:12 -0400
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 1CD74200005;
+        Fri, 18 Oct 2019 15:35:10 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Mans Rullgard <mans@mansr.com>,
+        Nicolas Ferre <nicolas.ferre@atmel.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: [PATCH] spi: atmel: fix handling of cs_change set on non-last xfer
+Date:   Fri, 18 Oct 2019 17:35:04 +0200
+Message-Id: <20191018153504.4249-1-gregory.clement@bootlin.com>
 X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -39,49 +46,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+From: Mans Rullgard <mans@mansr.com>
 
-/* Summary */
-This contains two improvements for the copy_struct_from_user() tests:
-- The first patch is a coding style change to get rid of the ugly
-  if ((ret |= test())) you pointed out when you pulled the original patchset.
-- The second patch avoids soft lockups when running the usercopy tests on
-  machines with large page sizes by scanning only a 1024 byte region.
+The driver does the wrong thing when cs_change is set on a non-last
+xfer in a message.  When cs_change is set, the driver deactivates the
+CS and leaves it off until a later xfer again has cs_change set whereas
+it should be briefly toggling CS off and on again.
 
-The following changes since commit da0c9ea146cbe92b832f1b0f694840ea8eb33cce:
+This patch brings the behaviour of the driver back in line with the
+documentation and common sense.  The delay of 10 us is the same as is
+used by the default spi_transfer_one_message() function in spi.c.
+[gregory: rebased on for-5.5 from spi tree]
+Fixes: 8090d6d1a415 ("spi: atmel: Refactor spi-atmel to use SPI framework queue")
+Signed-off-by: Mans Rullgard <mans@mansr.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+---
+Hello,
 
-  Linux 5.4-rc2 (2019-10-06 14:27:30 -0700)
+This patch was first submitted 2 years[1] but was never applied while it
+has received the acked-by from Nicolas, and I don't see any review
+against it on the mailing list. So I resend it now.
 
-are available in the Git repository at:
+Thanks,
 
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/copy-struct-from-user-v5.4-rc4
+Gregory
 
-for you to fetch changes up to f418dddffc8007945fd5962380ebde770a240cf5:
+[1]: https://lkml.org/lkml/2016/1/17/31
 
-  usercopy: Avoid soft lockups in test_check_nonzero_user() (2019-10-16 14:56:21 +0200)
+ drivers/spi/spi-atmel.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-/* Testing */
-All patches have seen exposure in linux-next and are based on v5.4-rc2. 
+diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
+index d88e2aa64839..9e84a93083bc 100644
+--- a/drivers/spi/spi-atmel.c
++++ b/drivers/spi/spi-atmel.c
+@@ -277,7 +277,6 @@ struct atmel_spi {
+ 	bool			use_pdc;
+ 
+ 	bool			keep_cs;
+-	bool			cs_active;
+ 
+ 	u32			fifo_size;
+ 	u8			native_cs_free;
+@@ -1416,11 +1415,9 @@ static int atmel_spi_one_transfer(struct spi_master *master,
+ 				 &msg->transfers)) {
+ 			as->keep_cs = true;
+ 		} else {
+-			as->cs_active = !as->cs_active;
+-			if (as->cs_active)
+-				cs_activate(as, msg->spi);
+-			else
+-				cs_deactivate(as, msg->spi);
++			cs_deactivate(as, msg->spi);
++			udelay(10);
++			cs_activate(as, msg->spi);
+ 		}
+ 	}
+ 
+@@ -1443,7 +1440,6 @@ static int atmel_spi_transfer_one_message(struct spi_master *master,
+ 	atmel_spi_lock(as);
+ 	cs_activate(as, spi);
+ 
+-	as->cs_active = true;
+ 	as->keep_cs = false;
+ 
+ 	msg->status = 0;
+-- 
+2.23.0
 
-/* Conflicts */
-At the time of creating this PR no merge conflicts were reported from
-linux-next.
-
-Please consider pulling these changes from the signed
-copy-struct-from-user-v5.4-rc4 tag.
-
-Thanks!
-Christian
-
-----------------------------------------------------------------
-copy-struct-from-user-v5.4-rc4
-
-----------------------------------------------------------------
-Aleksa Sarai (1):
-      lib: test_user_copy: style cleanup
-
-Michael Ellerman (1):
-      usercopy: Avoid soft lockups in test_check_nonzero_user()
-
- lib/test_user_copy.c | 37 ++++++++++++++++++++++++++++---------
- 1 file changed, 28 insertions(+), 9 deletions(-)
