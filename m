@@ -2,105 +2,166 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B8BCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F2ACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D32E22089C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 177BC222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:03:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571403730;
-	bh=PgfarnClYjx8IXJcBwzxci1xDOFT0ttGWxv7Fk1YkRw=;
+	s=default; t=1571403832;
+	bh=lL8Za+mOfGulu5d9ptAB5Ims459ZMBbh69VwNRLPf3I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VPNbYxQEIBRvii21UCaNCG0JX4WAXmudGHu8tJM46KecYFOu7krEUffB5OXcGU3J1
-	 JbNrZw02FBMQJM5uV0VZva+LEvW3efamLHC9eDckfdntIlLjgo8VDSOAeDGP9ojIyH
-	 KB9MWGyTXquMGTzQhvrSY/4AXCEGSkOWCg/lHKMA=
+	b=viGpf8H6E42lwFd4eUIvzpvRti3J406yNROgmcSKzYUTz8lJOBeYZkRf346H2ZmKc
+	 LKbZ8nfMLp7GWBo0cYJNggwc7ZhSEAHqbnWcyT+ytyQz40vvk3A1Oc8db6aJhTv6z4
+	 dzssIWfA5Ku9E4ZipFpLduXQ/AFTyum+Ts3h0Pec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634062AbfJRNCJ (ORCPT
+        id S2442786AbfJRNDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 09:02:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45326 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2410200AbfJRNCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 09:02:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 857B0B193;
-        Fri, 18 Oct 2019 13:02:05 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 15:02:05 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Borislav Petkov <bp@alien8.de>, Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] mm, pcpu: Make zone pcp updates and reset internal
- to the mm
-Message-ID: <20191018130205.GQ5017@dhcp22.suse.cz>
-References: <20191018105606.3249-1-mgorman@techsingularity.net>
- <20191018105606.3249-4-mgorman@techsingularity.net>
+        Fri, 18 Oct 2019 09:03:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38870 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732402AbfJRNDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 09:03:50 -0400
+Received: from linux-8ccs (charybdis-ext.suse.de [195.135.221.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 629022089C;
+        Fri, 18 Oct 2019 13:03:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571403828;
+        bh=lL8Za+mOfGulu5d9ptAB5Ims459ZMBbh69VwNRLPf3I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2PiFZp/ttMIY0FneBPAgdpZDNxHFqsWozEphWvtfDcs97tJtvEztr1vZP3g5ZMMuy
+         5HyfKb5d65lgzxLvRCKTXY9XjZPaYTmEJhMmds0R9KCaiYqOV2Ftg9Sgl3EYieVKdZ
+         T0ca42vumyRuk9azSYRFw5DgGUVRMYvGeXM9cvHg=
+Date:   Fri, 18 Oct 2019 15:03:42 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
+        live-patching@vger.kernel.org, pmladek@suse.com
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+Message-ID: <20191018130342.GA4625@linux-8ccs>
+References: <20191015130739.GA23565@linux-8ccs>
+ <20191015135634.GK2328@hirez.programming.kicks-ass.net>
+ <alpine.LSU.2.21.1910151611000.13169@pobox.suse.cz>
+ <88bab814-ea24-ece9-2bc0-7a1e10a62f12@redhat.com>
+ <20191015153120.GA21580@linux-8ccs>
+ <7e9c7dd1-809e-f130-26a3-3d3328477437@redhat.com>
+ <20191015182705.1aeec284@gandalf.local.home>
+ <20191016074951.GM2328@hirez.programming.kicks-ass.net>
+ <alpine.LSU.2.21.1910161216100.7750@pobox.suse.cz>
+ <alpine.LSU.2.21.1910161521010.7750@pobox.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20191018105606.3249-4-mgorman@techsingularity.net>
+In-Reply-To: <alpine.LSU.2.21.1910161521010.7750@pobox.suse.cz>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 18-10-19 11:56:06, Mel Gorman wrote:
-> Memory hotplug needs to be able to reset and reinit the pcpu allocator
-> batch and high limits but this action is internal to the VM. Move
-> the declaration to internal.h
-> 
-> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
++++ Miroslav Benes [16/10/19 15:29 +0200]:
+>On Wed, 16 Oct 2019, Miroslav Benes wrote:
+>
+>> On Wed, 16 Oct 2019, Peter Zijlstra wrote:
+>>
+>> > On Tue, Oct 15, 2019 at 06:27:05PM -0400, Steven Rostedt wrote:
+>> >
+>> > > (7) Seventh session, titled "klp-convert and livepatch relocations", was led
+>> > > by Joe Lawrence.
+>> > >
+>> > > Joe started the session with problem statement: accessing non exported / static
+>> > > symbols from inside the patch module. One possible workardound is manually via
+>> > > kallsyms. Second workaround is klp-convert, which actually creates proper
+>> > > relocations inside the livepatch module from the symbol database during the
+>> > > final .ko link.
+>> > > Currently module loader looks for special livepatch relocations and resolves
+>> > > those during runtime; kernel support for these relocations have so far been
+>> > > added for x86 only. Special livepatch relocations are supported and processed
+>> > > also on other architectures. Special quirks/sections are not yet supported.
+>> > > Plus klp-convert would still be needed even with late module patching update.
+>> > > vmlinux or modules could have ambiguous static symbols.
+>> > >
+>> > > It turns out that the features / bugs below have to be resolved before we
+>> > > can claim the klp-convert support for relocation complete:
+>> > >     - handle all the corner cases (jump labels, static keys, ...) properly and
+>> > >       have a good regression tests in place
+>> >
+>> > I suppose all the patches in this series-of-series here will make life
+>> > harder for KLP, static_call() and 2 byte jumps etc..
+>>
+>> Yes, I think so. We'll have to deal with that once it lands. That is why
+>> we want to get rid of all this arch-specific code in livepatch and
+>> reinvent the late module patching. So it is perhaps better to start
+>> working on it sooner than later. Adding Petr, who hesitantly signed up for
+>> the task...
+>
+>Thinking about it more... crazy idea. I think we could leverage these new
+>ELF .text per vmlinux/module sections for the reinvention I was talking
+>about. If we teach module loader to relocate (and apply alternatives and
+>so on, everything in arch-specific module_finalize()) not the whole module
+>in case of live patch modules, but separate ELF .text sections, it could
+>solve the issue with late module patching we have. It is a variation on
+>Steven's idea. When live patch module is loaded, only its section for
+>present modules would be processed. Then whenever a to-be-patched module
+>is loaded, its .text section in all present patch module would be
+>processed.
+>
+>The upside is that almost no work would be required on patch modules
+>creation side. The downside is that klp_modinfo must stay. Module loader
+>needs to be hacked a lot in both cases. So it remains to be seen which
+>idea is easier to implement.
+>
+>Jessica, do you think it would be feasible?
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+I think that does sound feasible. I'm trying to visualize how that
+would look. I guess there would need to be various livepatching hooks
+called during the different stages (apply_relocate_add(),
+module_finalize(), module_enable_ro/x()).
 
-> ---
->  include/linux/mm.h | 3 ---
->  mm/internal.h      | 3 +++
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index cc292273e6ba..22d6104f2341 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2219,9 +2219,6 @@ void warn_alloc(gfp_t gfp_mask, nodemask_t *nodemask, const char *fmt, ...);
->  
->  extern void setup_per_cpu_pageset(void);
->  
-> -extern void zone_pcp_update(struct zone *zone);
-> -extern void zone_pcp_reset(struct zone *zone);
-> -
->  /* page_alloc.c */
->  extern int min_free_kbytes;
->  extern int watermark_boost_factor;
-> diff --git a/mm/internal.h b/mm/internal.h
-> index 0d5f720c75ab..0a3d41c7b3c5 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -165,6 +165,9 @@ extern void post_alloc_hook(struct page *page, unsigned int order,
->  					gfp_t gfp_flags);
->  extern int user_min_free_kbytes;
->  
-> +extern void zone_pcp_update(struct zone *zone);
-> +extern void zone_pcp_reset(struct zone *zone);
-> +
->  #if defined CONFIG_COMPACTION || defined CONFIG_CMA
->  
->  /*
-> -- 
-> 2.16.4
-> 
+So maybe something like the following?
 
--- 
-Michal Hocko
-SUSE Labs
+When a livepatch module loads:
+    apply_relocate_add()
+        klp hook: apply .klp.rela.$objname relocations *only* for
+        already loaded modules
+    module_finalize()
+        klp hook: apply .klp.arch.$objname changes for already loaded modules
+    module_enable_ro()
+        klp hook: only enable ro/x for .klp.text.$objname for already
+        loaded modules
+
+When a to-be-patched module loads:
+    apply_relocate_add()
+        klp hook: for each patch module that patches the coming
+        module, apply .klp.rela.$objname relocations for this object
+    module_finalize()
+        klp hook: for each patch module that patches the coming
+        module, apply .klp.arch.$objname changes for this object
+    module_enable_ro()
+        klp hook: for each patch module, apply ro/x permissions for
+        .klp.text.$objname for this object
+
+Then, in klp_module_coming, we only need to do the callbacks and
+enable the patch, and get rid of the module_disable_ro->apply
+relocs->module_enable_ro block.
+
+Does that sound like what you had in mind or am I totally off?
+
+Thanks!
+
+Jessica
+
