@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26531CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7185CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCF31222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC073222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436356;
-	bh=z0DvuLwhSC3a8DkNEt/tFpheLuPJ9uCVXMkkz4YfGcM=;
+	s=default; t=1571436360;
+	bh=b/VTm9YJ1NJyWJzB9JlmSk2ByMW0IN3eqaHT/MLyop0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tElPitm95HoMiKA/9oE+Qdnt/HwGpiCu3JogaMRJ5DgD9MXCz0aWta1QPHTr3T2Vz
-	 zLnBPdvotpuM3avsfyIp1RokBj6KGHUtXSPH0mN0B0xhS6movLuHAafbQXnl/gS1VI
-	 jMAcezxmhXTaHlvsbMgYDFT33HVD3E/k7oRpj5Gw=
+	b=RHN8KEh/9LZzxC9qOlJZIKG+m+OzN9ENiL/PXHrcx9WOhr1YeO4W+hUYsY/THvyiF
+	 CaVYZC7Rbi6vtktScbDv1cd7m9Fu4eVyAw/HfGLyGzTC0QuvhfFuoiUiNBuKzldIch
+	 THwS+3u6r6KlipqicKrEplNDGZwq89dT+fKRi16E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730447AbfJRWFy (ORCPT
+        id S1730590AbfJRWF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:05:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37750 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:05:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730156AbfJRWFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:05:48 -0400
+        id S1730287AbfJRWFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:05:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14C6020679;
-        Fri, 18 Oct 2019 22:05:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03F98222C6;
+        Fri, 18 Oct 2019 22:05:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436347;
-        bh=z0DvuLwhSC3a8DkNEt/tFpheLuPJ9uCVXMkkz4YfGcM=;
+        s=default; t=1571436351;
+        bh=b/VTm9YJ1NJyWJzB9JlmSk2ByMW0IN3eqaHT/MLyop0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1MbKwwh2cX19V3xN9QjLwALj28XH+R+Dn4APYv8bEwcET/qfdm54tpeJSFKGhQNim
-         xpmqZ931L2XSp8Vo6XYkXKUxM9pHEo2y2NJCm4/huUlcJbOUG/Tpv5N2y2xpYpy5il
-         e2+GlgPwzd5M9xAK/lJL26o24xnrrWSTIRAB1RB8=
+        b=bf/2qEGtvoEcwAf4RRZZYCaYdgKRj1UFxLH5qby1z7AhEg1Y53ERk3vLAX5ftD/au
+         vb3s/QLUqRckuocTjrPlE/GHBk13w2d5XRpKpqxezOoz8norSLFEPJnPI7BPxntDuX
+         e36qa/KUP9suiQNfpzfoCoaaiaBK0ROQ3y2SnN00=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org,
-        linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 013/100] bcache: fix input overflow to writeback_rate_minimum
-Date:   Fri, 18 Oct 2019 18:03:58 -0400
-Message-Id: <20191018220525.9042-13-sashal@kernel.org>
+Cc:     Stefano Brivio <sbrivio@redhat.com>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 016/100] netfilter: ipset: Make invalid MAC address checks consistent
+Date:   Fri, 18 Oct 2019 18:04:01 -0400
+Message-Id: <20191018220525.9042-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -59,41 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Stefano Brivio <sbrivio@redhat.com>
 
-[ Upstream commit dab71b2db98dcdd4657d151b01a7be88ce10f9d1 ]
+[ Upstream commit 29edbc3ebdb0faa934114f14bf12fc0b784d4f1b ]
 
-dc->writeback_rate_minimum is type unsigned integer variable, it is set
-via sysfs interface, and converte from input string to unsigned integer
-by d_strtoul_nonzero(). When the converted input value is larger than
-UINT_MAX, overflow to unsigned integer happens.
+Set types bitmap:ipmac and hash:ipmac check that MAC addresses
+are not all zeroes.
 
-This patch fixes the overflow by using sysfs_strotoul_clamp() to
-convert input string and limit the value in range [1, UINT_MAX], then
-the overflow can be avoided.
+Introduce one missing check, and make the remaining ones
+consistent, using is_zero_ether_addr() instead of comparing
+against an array containing zeroes.
 
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+This was already done for hash:mac sets in commit 26c97c5d8dac
+("netfilter: ipset: Use is_zero_ether_addr instead of static and
+memcmp").
+
+Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/sysfs.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/netfilter/ipset/ip_set_bitmap_ipmac.c |  3 +++
+ net/netfilter/ipset/ip_set_hash_ipmac.c   | 11 ++++-------
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
-index 5bb81e564ce88..3e8d1f1b562f8 100644
---- a/drivers/md/bcache/sysfs.c
-+++ b/drivers/md/bcache/sysfs.c
-@@ -289,7 +289,9 @@ STORE(__cached_dev)
- 	sysfs_strtoul_clamp(writeback_rate_p_term_inverse,
- 			    dc->writeback_rate_p_term_inverse,
- 			    1, UINT_MAX);
--	d_strtoul_nonzero(writeback_rate_minimum);
-+	sysfs_strtoul_clamp(writeback_rate_minimum,
-+			    dc->writeback_rate_minimum,
-+			    1, UINT_MAX);
+diff --git a/net/netfilter/ipset/ip_set_bitmap_ipmac.c b/net/netfilter/ipset/ip_set_bitmap_ipmac.c
+index 4f01321e793ce..794e0335a8648 100644
+--- a/net/netfilter/ipset/ip_set_bitmap_ipmac.c
++++ b/net/netfilter/ipset/ip_set_bitmap_ipmac.c
+@@ -235,6 +235,9 @@ bitmap_ipmac_kadt(struct ip_set *set, const struct sk_buff *skb,
+ 	else
+ 		ether_addr_copy(e.ether, eth_hdr(skb)->h_dest);
  
- 	sysfs_strtoul_clamp(io_error_limit, dc->error_limit, 0, INT_MAX);
++	if (is_zero_ether_addr(e.ether))
++		return -EINVAL;
++
+ 	return adtfn(set, &e, &ext, &opt->ext, opt->cmdflags);
+ }
  
+diff --git a/net/netfilter/ipset/ip_set_hash_ipmac.c b/net/netfilter/ipset/ip_set_hash_ipmac.c
+index 16ec822e40447..25560ea742d66 100644
+--- a/net/netfilter/ipset/ip_set_hash_ipmac.c
++++ b/net/netfilter/ipset/ip_set_hash_ipmac.c
+@@ -36,9 +36,6 @@ MODULE_ALIAS("ip_set_hash:ip,mac");
+ /* Type specific function prefix */
+ #define HTYPE		hash_ipmac
+ 
+-/* Zero valued element is not supported */
+-static const unsigned char invalid_ether[ETH_ALEN] = { 0 };
+-
+ /* IPv4 variant */
+ 
+ /* Member elements */
+@@ -104,7 +101,7 @@ hash_ipmac4_kadt(struct ip_set *set, const struct sk_buff *skb,
+ 	else
+ 		ether_addr_copy(e.ether, eth_hdr(skb)->h_dest);
+ 
+-	if (ether_addr_equal(e.ether, invalid_ether))
++	if (is_zero_ether_addr(e.ether))
+ 		return -EINVAL;
+ 
+ 	ip4addrptr(skb, opt->flags & IPSET_DIM_ONE_SRC, &e.ip);
+@@ -140,7 +137,7 @@ hash_ipmac4_uadt(struct ip_set *set, struct nlattr *tb[],
+ 	if (ret)
+ 		return ret;
+ 	memcpy(e.ether, nla_data(tb[IPSET_ATTR_ETHER]), ETH_ALEN);
+-	if (ether_addr_equal(e.ether, invalid_ether))
++	if (is_zero_ether_addr(e.ether))
+ 		return -IPSET_ERR_HASH_ELEM;
+ 
+ 	return adtfn(set, &e, &ext, &ext, flags);
+@@ -220,7 +217,7 @@ hash_ipmac6_kadt(struct ip_set *set, const struct sk_buff *skb,
+ 	else
+ 		ether_addr_copy(e.ether, eth_hdr(skb)->h_dest);
+ 
+-	if (ether_addr_equal(e.ether, invalid_ether))
++	if (is_zero_ether_addr(e.ether))
+ 		return -EINVAL;
+ 
+ 	ip6addrptr(skb, opt->flags & IPSET_DIM_ONE_SRC, &e.ip.in6);
+@@ -260,7 +257,7 @@ hash_ipmac6_uadt(struct ip_set *set, struct nlattr *tb[],
+ 		return ret;
+ 
+ 	memcpy(e.ether, nla_data(tb[IPSET_ATTR_ETHER]), ETH_ALEN);
+-	if (ether_addr_equal(e.ether, invalid_ether))
++	if (is_zero_ether_addr(e.ether))
+ 		return -IPSET_ERR_HASH_ELEM;
+ 
+ 	return adtfn(set, &e, &ext, &ext, flags);
 -- 
 2.20.1
 
