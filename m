@@ -2,82 +2,106 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D28ECA9EA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2F3CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB5EC21925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:25:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571387110;
-	bh=jEbq9QSiMUBdFgNaRu0lx2kBkFKJqECZlDVnFyvhGgk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ew1mSfW7k3cU99lJU2OsYCHqbVEzaPZSLfC7sgpU9y5gknAE7dEDGp5PCAsoyEoV1
-	 P3/UlcxUbCftozaQk+KkPzvHkQ2v8f89yfwFVb21EeaFncIaVdw5YmSkwGIxGbiQIu
-	 sIsQXtZu5cQUr9raW/ipxiiWyWzKAKc16ptX7Clw=
+	by mail.kernel.org (Postfix) with ESMTP id 07A362053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:25:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w6FPKVy7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632775AbfJRIZK (ORCPT
+        id S2632785AbfJRIZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:25:10 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38194 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2632763AbfJRIZJ (ORCPT
+        Fri, 18 Oct 2019 04:25:55 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38252 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504964AbfJRIZz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 04:25:09 -0400
-Received: by mail-ot1-f67.google.com with SMTP id e11so4276000otl.5;
-        Fri, 18 Oct 2019 01:25:07 -0700 (PDT)
+        Fri, 18 Oct 2019 04:25:55 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w3so2955044pgt.5
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 01:25:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=iWJsJQlGdhboGTRO6xGTgHejOY7YjGnLdBXsR1L3j7U=;
+        b=w6FPKVy7rWonAfd5KZIVpxgTdugcdhVUINzZw0AgG1jIVeukQ5Y/Y95/kWPBGYeCJo
+         Xt9bP8m5GVL1naqIsho+mbFdm0ifdJM2UsDDB0prC6WgS0R8hy5f7wMSsHxOgEWPjSwv
+         8zt8KWFyuiZT0cW6X0g3usA31WWfivnER/bEngzvvNSzs/zAXQgf/DYr0Q8eJjAbRYMo
+         2UDO0U6tiJgi1cMKZ7TbCVZzG+zz+bcNM38VAECq/8y8rGWkSSal2Ol5MKl3O1+w+BTy
+         FqyruVSuEFD0D1E3bqldXMfLNwK6QcG407xOeS20lpDVlRscspETNy9rmzdndLrt5+iB
+         N0LQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jEbq9QSiMUBdFgNaRu0lx2kBkFKJqECZlDVnFyvhGgk=;
-        b=NbD4/PUJZ51jDp5jGciPt8joG9eLxje610+QjVmfxHPB0FTJUnisNfOk/OQ3TjOb4w
-         8uN4326iHS0BiTwZEYDR8FzwhtwRbgsW1o2QbEDUiCYwJHLPv2uDx7hkL9ekxSfj7LNj
-         cqDp3BN+4vJnZO3nCVRwMhHGSfy/CMmkgSDHsOnKjEZ40JBM5efxIzX0NXbyMhfk8yPQ
-         SkHbTR8gdxn82X20Ar8oqdKSmhfssZZOVElqaJjXAZqaweTpZrBnzeUShygH7F7L9Lub
-         +bMB98UYdij2p+wvmx06CQw7rMs7ZAik4Y112KCTX8Eotrfg0iP5gX5qfALA4/TIRbyh
-         ttNA==
-X-Gm-Message-State: APjAAAUadT8183LwEl6LFQf1mLa/8GVdndUoiK1578qZaKnsfeuthlpR
-        L8nk6bxd+mSErznOmWyOeJJu9fRSxC3GpIV3cAw=
-X-Google-Smtp-Source: APXvYqwAdi4SbUncivySZf05920ohM9EzPpGF+cvDvfiO65zVjUe5FVnHgfQ1TQKvFSPNuyKSVyUItOZjrcK7vUTCVU=
-X-Received: by 2002:a9d:664:: with SMTP id 91mr235402otn.189.1571387107123;
- Fri, 18 Oct 2019 01:25:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <2811202.iOFZ6YHztY@kreacher> <20191016142343.GB5330@bogus>
- <20191017095725.izchzl7enfylvpf3@vireshk-i7> <20191017095942.GF8978@bogus>
- <CAJZ5v0ixS8ZS93Fgj8XGUMGcLdAy+Fgwp5z3QirccNSiiwLtDA@mail.gmail.com> <20191018054433.tq2euue675xk4o63@vireshk-i7>
-In-Reply-To: <20191018054433.tq2euue675xk4o63@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 18 Oct 2019 10:24:56 +0200
-Message-ID: <CAJZ5v0hpfvy5iELVRWFA3HS8NoAH0=py0cE+fLaUq2hDReCrnQ@mail.gmail.com>
-Subject: Re: [RFT][PATCH 0/3] cpufreq / PM: QoS: Introduce frequency QoS and
- use it in cpufreq
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iWJsJQlGdhboGTRO6xGTgHejOY7YjGnLdBXsR1L3j7U=;
+        b=Nl/Zyy6ptkeCuoMyWsYO3faxEK0p+ZIqHuiCaYWeeifYAhu31aiNehzHhUdhTU/08X
+         W+vxjLSzC66p9zgBbtL5S3ZmyIqgrnPabH8d/a+v63C3wE61udHtVylOT+u35JyDr/nB
+         gTS6WTahlVlE9spNgqKjYoMY1DjVESvh5ta0SknkD/bh8DvUvEg16px/OSEwDJotH8kO
+         IEYy7150YyWdheHB2hlkzSQSDo5bqD/nb70MGCSaYG7E7+Ay/lPP0aFtMpQ1b3orLCts
+         cfIIcxhsYTwBa2Pm1mpUD4tkrZehiQHEhIJzrng9MvM9HZmddtG6oGsElni2MO+hsmU8
+         TlDg==
+X-Gm-Message-State: APjAAAWgDnqj1guUf6ITUmSgqlnIYaCBzfH/gvTfn+TBwPaUkXEFY2j3
+        ZLaYViqNBk5SPpuf29Yrj82mmTm+9EE=
+X-Google-Smtp-Source: APXvYqxXpmTDebcgvJtGLDn0gKXe6Y3q+liJmVdqYzb4pUsIh/UAFo4UDPaJGXEawo5GGB2oipJ+AQ==
+X-Received: by 2002:a63:3754:: with SMTP id g20mr9170990pgn.349.1571387154351;
+        Fri, 18 Oct 2019 01:25:54 -0700 (PDT)
+Received: from localhost ([122.172.151.112])
+        by smtp.gmail.com with ESMTPSA id ep10sm19456321pjb.2.2019.10.18.01.25.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 18 Oct 2019 01:25:53 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 13:55:51 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Osipenko <digetx@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cpufreq: flush any pending policy update work scheduled
+ before freeing
+Message-ID: <20191018082551.zz7hazgodwgzaas3@vireshk-i7>
+References: <20191017163503.30791-1-sudeep.holla@arm.com>
+ <CAJZ5v0gTpK0cJhsWGVvs-=Sbgcia0jz2j5QNYRL+1wOz=2xkJQ@mail.gmail.com>
+ <CAJZ5v0h0ioEZqLuaW1jz_8jRuGYZLQS3fbpv9ctyV9ucXb1WiA@mail.gmail.com>
+ <20191018055533.GC31836@e107533-lin.cambridge.arm.com>
+ <20191018060247.g5asfuh3kncoj7kl@vireshk-i7>
+ <CAJZ5v0h0vY9OBYg-_pR-hu_TJkE0odf5Nnd8qnJc17+8NQo=7w@mail.gmail.com>
+ <20191018080338.vbgnrt3i6epkrx3u@vireshk-i7>
+ <CAJZ5v0gctj2QuEgq1Q3hoVbv=krw3ub4wcMt4vZ6=DxdDpVYcQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0gctj2QuEgq1Q3hoVbv=krw3ub4wcMt4vZ6=DxdDpVYcQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 7:44 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 17-10-19, 18:34, Rafael J. Wysocki wrote:
-> > [BTW, Viresh, it looks like cpufreq_set_policy() should still ensure
-> > that the new min is less than the new max, because the QoS doesn't do
-> > that.]
->
-> The ->verify() callback does that for us I believe.
+On 18-10-19, 10:19, Rafael J. Wysocki wrote:
+> On Fri, Oct 18, 2019 at 10:03 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > On 18-10-19, 09:32, Rafael J. Wysocki wrote:
+> > > Well, the policy is going away, so the governor has been stopped for
+> > > it already.  Even if the limit is updated, it will not be used anyway,
+> > > so why bother with updating it?
+> >
+> > The hardware will be programmed to run on that frequency before the
+> > policy exits,
+> 
+> How exactly?
+> 
+> The policy is inactive, so refresh_frequency_limits() won't even run
+> cpufreq_set_policy() for it.
 
-It does in practice AFAICS, but in theory it may assume the right
-ordering between the min and the max and just test the boundaries, may
-it not?
+Ahh, yes. We won't change the frequency, this is all useless in that
+case.
+
+-- 
+viresh
