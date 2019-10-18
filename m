@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9AD7CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 446FECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79CC3222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:27:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 054C821852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437678;
-	bh=p9C5sV/9RGDGSsR26ocpzESBcVa9EVNGwDLOF9hwdCM=;
+	s=default; t=1571437686;
+	bh=8b+rc10cF3+ehcKjsbukOG/c6H/IqWuM9gO4hAiVys8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YJhUxQ7D/0w/cQnC9F1nacAPUy/QuNg2CRuLqSnOyPbP7PNA53oOEkWCbF/i+QeAT
-	 qbmT47AfpGcG71Wc/bm020diXxPZkTRusMtwUoCPTyPBnTAKEZfaENv1cQSuvCpEkk
-	 mIz8agIZDQWYUTEkP+DFZ3mNYCSegjdGlPdPtCZA=
+	b=IxY1aauIanWpwp2mS49bLwfYVvkwfWT1cjftbfWdoWQBwAaBFK45ALBHUvzS3cp4Q
+	 rh4t+OCEpYbTrPOqPYKYR40I/ZbHzX30sWa+BaLsFGATxrrMn50Mkys8kF9LVZSu4u
+	 4ttKHCeFPEYvA99lx37wBkodbWpJ4p9+dluB3agI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406684AbfJRW14 (ORCPT
+        id S2394816AbfJRW2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:27:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35424 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:28:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727431AbfJRWDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:03:52 -0400
+        id S1727363AbfJRWDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:03:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5770222D4;
-        Fri, 18 Oct 2019 22:03:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7BA2222D3;
+        Fri, 18 Oct 2019 22:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436231;
-        bh=p9C5sV/9RGDGSsR26ocpzESBcVa9EVNGwDLOF9hwdCM=;
+        s=default; t=1571436229;
+        bh=8b+rc10cF3+ehcKjsbukOG/c6H/IqWuM9gO4hAiVys8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KN+mpTQpXhXETZoM7l+m1SBa/z/LcwqgZ4e2Xf+sILWTxlIY1beh4A9qPwjLh0vCk
-         rMAZyWZlycttm/p6niXpR3hobCb5eks2Eno9qncjJmpiohwNzIH3uGhw51HjTdpqC1
-         Ky1a6sCg1b9Kc82MDCyaE24jx8KPHgXb/bqp9dKs=
+        b=l2mL7ffeD204+dFEDJp3/Aol+22a+OOMT0pFNdoja835fbMVsf0ZeIh/tXgIONBlC
+         g4gO48DMgtBJ8z+tQPqGJdhA/PZgXL4Cw9OzmKeS5PiDndTmdpI3k7JLYJKwR517Qe
+         GHx1o3MyWcwsQlW7fqcNyMpQbo/S35H6xRt0Rthg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krishnamraju Eraparaju <krishna2@chelsio.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 17/89] RDMA/siw: Fix serialization issue in write_space()
-Date:   Fri, 18 Oct 2019 18:02:12 -0400
-Message-Id: <20191018220324.8165-17-sashal@kernel.org>
+Cc:     Connor Kuehl <connor.kuehl@canonical.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.3 15/89] staging: rtl8188eu: fix null dereference when kzalloc fails
+Date:   Fri, 18 Oct 2019 18:02:10 -0400
+Message-Id: <20191018220324.8165-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -60,107 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krishnamraju Eraparaju <krishna2@chelsio.com>
+From: Connor Kuehl <connor.kuehl@canonical.com>
 
-[ Upstream commit df791c54d627bae53c9be3be40a69594c55de487 ]
+[ Upstream commit 955c1532a34305f2f780b47f0c40cc7c65500810 ]
 
-In siw_qp_llp_write_space(), 'sock' members should be accessed with
-sk_callback_lock held, otherwise, it could race with
-siw_sk_restore_upcalls(). And this could cause "NULL deref" panic.  Below
-panic is due to the NULL cep returned from sk_to_cep(sk):
+If kzalloc() returns NULL, the error path doesn't stop the flow of
+control from entering rtw_hal_read_chip_version() which dereferences the
+null pointer. Fix this by adding a 'goto' to the error path to more
+gracefully handle the issue and avoid proceeding with initialization
+steps that we're no longer prepared to handle.
 
-  Call Trace:
-   <IRQ>    siw_qp_llp_write_space+0x11/0x40 [siw]
-   tcp_check_space+0x4c/0xf0
-   tcp_rcv_established+0x52b/0x630
-   tcp_v4_do_rcv+0xf4/0x1e0
-   tcp_v4_rcv+0x9b8/0xab0
-   ip_protocol_deliver_rcu+0x2c/0x1c0
-   ip_local_deliver_finish+0x44/0x50
-   ip_local_deliver+0x6b/0xf0
-   ? ip_protocol_deliver_rcu+0x1c0/0x1c0
-   ip_rcv+0x52/0xd0
-   ? ip_rcv_finish_core.isra.14+0x390/0x390
-   __netif_receive_skb_one_core+0x83/0xa0
-   netif_receive_skb_internal+0x73/0xb0
-   napi_gro_frags+0x1ff/0x2b0
-   t4_ethrx_handler+0x4a7/0x740 [cxgb4]
-   process_responses+0x2c9/0x590 [cxgb4]
-   ? t4_sge_intr_msix+0x1d/0x30 [cxgb4]
-   ? handle_irq_event_percpu+0x51/0x70
-   ? handle_irq_event+0x41/0x60
-   ? handle_edge_irq+0x97/0x1a0
-   napi_rx_handler+0x14/0xe0 [cxgb4]
-   net_rx_action+0x2af/0x410
-   __do_softirq+0xda/0x2a8
-   do_softirq_own_stack+0x2a/0x40
-   </IRQ>
-   do_softirq+0x50/0x60
-   __local_bh_enable_ip+0x50/0x60
-   ip_finish_output2+0x18f/0x520
-   ip_output+0x6e/0xf0
-   ? __ip_finish_output+0x1f0/0x1f0
-   __ip_queue_xmit+0x14f/0x3d0
-   ? __slab_alloc+0x4b/0x58
-   __tcp_transmit_skb+0x57d/0xa60
-   tcp_write_xmit+0x23b/0xfd0
-   __tcp_push_pending_frames+0x2e/0xf0
-   tcp_sendmsg_locked+0x939/0xd50
-   tcp_sendmsg+0x27/0x40
-   sock_sendmsg+0x57/0x80
-   siw_tx_hdt+0x894/0xb20 [siw]
-   ? find_busiest_group+0x3e/0x5b0
-   ? common_interrupt+0xa/0xf
-   ? common_interrupt+0xa/0xf
-   ? common_interrupt+0xa/0xf
-   siw_qp_sq_process+0xf1/0xe60 [siw]
-   ? __wake_up_common_lock+0x87/0xc0
-   siw_sq_resume+0x33/0xe0 [siw]
-   siw_run_sq+0xac/0x190 [siw]
-   ? remove_wait_queue+0x60/0x60
-   kthread+0xf8/0x130
-   ? siw_sq_resume+0xe0/0xe0 [siw]
-   ? kthread_bind+0x10/0x10
-   ret_from_fork+0x35/0x40
+Also update the debug message to be more consistent with the other debug
+messages in this function.
 
-Fixes: f29dd55b0236 ("rdma/siw: queue pair methods")
-Link: https://lore.kernel.org/r/20190923101112.32685-1-krishna2@chelsio.com
-Signed-off-by: Krishnamraju Eraparaju <krishna2@chelsio.com>
-Reviewed-by: Bernard Metzler <bmt@zurich.ibm.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Addresses-Coverity: ("Dereference after null check")
+
+Signed-off-by: Connor Kuehl <connor.kuehl@canonical.com>
+Link: https://lore.kernel.org/r/20190927214415.899-1-connor.kuehl@canonical.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/siw/siw_qp.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ drivers/staging/rtl8188eu/os_dep/usb_intf.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/sw/siw/siw_qp.c b/drivers/infiniband/sw/siw/siw_qp.c
-index 430314c8abd94..52d402f39df93 100644
---- a/drivers/infiniband/sw/siw/siw_qp.c
-+++ b/drivers/infiniband/sw/siw/siw_qp.c
-@@ -182,12 +182,19 @@ void siw_qp_llp_close(struct siw_qp *qp)
-  */
- void siw_qp_llp_write_space(struct sock *sk)
- {
--	struct siw_cep *cep = sk_to_cep(sk);
-+	struct siw_cep *cep;
+diff --git a/drivers/staging/rtl8188eu/os_dep/usb_intf.c b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
+index 664d93a7f90df..4fac9dca798e8 100644
+--- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
++++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
+@@ -348,8 +348,10 @@ static struct adapter *rtw_usb_if1_init(struct dvobj_priv *dvobj,
+ 	}
  
--	cep->sk_write_space(sk);
-+	read_lock(&sk->sk_callback_lock);
-+
-+	cep  = sk_to_cep(sk);
-+	if (cep) {
-+		cep->sk_write_space(sk);
- 
--	if (!test_bit(SOCK_NOSPACE, &sk->sk_socket->flags))
--		(void)siw_sq_start(cep->qp);
-+		if (!test_bit(SOCK_NOSPACE, &sk->sk_socket->flags))
-+			(void)siw_sq_start(cep->qp);
+ 	padapter->HalData = kzalloc(sizeof(struct hal_data_8188e), GFP_KERNEL);
+-	if (!padapter->HalData)
+-		DBG_88E("cant not alloc memory for HAL DATA\n");
++	if (!padapter->HalData) {
++		DBG_88E("Failed to allocate memory for HAL data\n");
++		goto free_adapter;
 +	}
-+
-+	read_unlock(&sk->sk_callback_lock);
- }
  
- static int siw_qp_readq_init(struct siw_qp *qp, int irq_size, int orq_size)
+ 	/* step read_chip_version */
+ 	rtw_hal_read_chip_version(padapter);
 -- 
 2.20.1
 
