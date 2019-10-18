@@ -4,25 +4,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D74CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A31ACA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1854C21852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33780222C5
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:44:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505425AbfJRPoa (ORCPT
+        id S2505435AbfJRPod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:44:30 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:43807 "EHLO
+        Fri, 18 Oct 2019 11:44:33 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:56099 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408933AbfJRPml (ORCPT
+        with ESMTP id S2505169AbfJRPml (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 18 Oct 2019 11:42:41 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1McY4R-1hklXG0AYf-00cyGG; Fri, 18 Oct 2019 17:42:31 +0200
+ 1M7JrG-1iOl7h3IKK-007k2b; Fri, 18 Oct 2019 17:42:29 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Daniel Mack <daniel@zonque.org>,
         Haojian Zhuang <haojian.zhuang@gmail.com>,
@@ -30,224 +31,208 @@ To:     Daniel Mack <daniel@zonque.org>,
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Dominik Brodowski <linux@dominikbrodowski.net>
-Subject: [PATCH 33/46] ARM: pxa: pcmcia: move smemc configuration back to arch
-Date:   Fri, 18 Oct 2019 17:41:48 +0200
-Message-Id: <20191018154201.1276638-33-arnd@arndb.de>
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: [PATCH 29/46] Input: touchscreen: use wrapper for pxa2xx ac97 registers
+Date:   Fri, 18 Oct 2019 17:41:44 +0200
+Message-Id: <20191018154201.1276638-29-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191018154052.1276506-1-arnd@arndb.de>
 References: <20191018154052.1276506-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:DxmH2LbQts0InxyxX242/6orRSxw7B2eJs5alq6ovf8VEIfUb1e
- UZLkuu4zbqGUYzh8bXbjGhPHAuE7IWtUvRkJsrYOTVyLkPFu+sN0iZ2AYJ/Ruy1xBpMoODO
- MBAK6lOCRMRdG9ct64YHJgEe2ug8h0m0Q+xUS7VsuovBC7AW5Y+9RMMeZghwwjY0/Q8oqSj
- /MgezRfvSGUpKTEVFylnA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WrnuPQtaRkI=:aNhI30tV/l0Fs9GdIHOfm4
- aPUOAjUVBVlceAwKIXu+nBeC8AIogNOMtkD4dqJrK7mcOXxk3t2B4recC/1NoWOBNPNb6fU7F
- iHMMov6kqXJRMwgk+s5sTJHamgOpl9Slb8AVU8RYDhinl2aJhMnOZB3aj1lEAFyrIUo/kVEql
- 3ZxoTy0miU0x7DIzze0QdufvwMjRu8s0eM4lzOUYamFB916hPXszevUVUJi512EoYRtiKBc7z
- y7hq1jDkjNIefOSgqhnYtrdZfPLFC2qibIB1X91n79UhW5ihdqIP0kPZ9qBdCDyJSn7b/a5Qy
- hDjels/uHN9r9hyyfCNgGQHf8+pILYGL/uPTzjqQgHPg4RHJHGVe3CG3OfMdqMLqk2UNfgRCs
- 3WN7p6O2rmSTRRbmBsxv9075NFdAJ1RjaUZZzCfTW8GeZCB7RBQ1WLeBC882w30bLnw1D/Z1x
- Xt2vt60+QICZZQPcu+InljDyGfql8R5CSr3yPunmfi6qMGuFsYDTuzEpX/Q33VyOArXpRyqZE
- YDCwHsak6Mc0u0rrxrkrzqFSWFGgnnmT9NhJcHcxaZqI/R8WcTwwhnN2FvyA3vXLRO/8DUJsq
- h4OPpRqdYQ1J1JzM/CvlQBAOnIJCBXDDYaz/QjBZ8JlZ9BRMYQjOQ69Id4Ur4qyuD+JyyPnlM
- KyxNE/Yqa2rvR0E9kG+Nzs/prbwLE7EtJmUve3hzZbb372ZlL9mTgTbLNiDQr6AzkSh2mIxC/
- cfbaVecWYcueyFCyx51RICqmkShMQ+PcXca+l3NPgqAuzPn3Lhu9I8LrzmeqEDqlxEAG11q4L
- AUpM+3gq+PV6jTOYiFZiPfikTyM2nFfmMuQqZn4kDmh5Us4pjCOzVMg9BzlsjdTPBZ9/crWaz
- dy7PM9mSbfkIJZpPSM8Q==
+X-Provags-ID: V03:K1:MK8JfTnTg0lPFTWmTXYVConFc6n0BBIQ8G+iv99wHsjwJ8GpckN
+ WfS0UdxIaZu/fxc1H/6LNUOHWpL2xSEFPQ6W03NM1LBrLN0j3TAEBNOHC9Ak+SZFqB5Np5P
+ cBv2685GglbI1t+P7kdvgbtFLL2aNQrwh/zUXcMSx23AYaxPMjFkmPfUeQEIBlSR8jJStci
+ PJterFpo7iLKTqstnNT4Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:GJMqnt/pGVA=:EKxLIgmzbmMu61TQSTosuf
+ gnVEJX0ztxVdyO4z7UFQ2x/wfcms3eF5wz06LFuo1kgZhPHx0v9J3kUVmEbt/IFOZHFMcTrzV
+ qxC7UEJMWIoxlDcv6rkIjvr1xYK4eJ8HIaD0Mvh0V3trgZaVQdjJOftHvkgAQ/rFUjEyqmjrn
+ l3zaJN9jvJcbxjPkZIDS1SKiqgdQ6FQAQY4+s1qHIJ5fW5yLZ/bCzxn8M3cfKIIMcuFO1x0Em
+ 9F74udBauIflN4XgL/mxj8HGSI2srkKNrDdfO/rmrA+FPUr1ERAVhAzhqxOglKChpDdqPi7kV
+ J+AqwsBF1idqsMZ7cApARQJl2Bz07q2+Cqql6vcV4A7x5oGw+y2nO5/mMrBgoyXqNjsyeZPde
+ VuRWY/PFkcCDyLjfFjCZESP9ggl9st3BNn5kEwRz8VS+PElmOelJfyxZyKWsGFDfy56jmYE1d
+ pCZG4geuaF7c+LEd08mmWO8rvfr2aOBFjSgPsw63Lg08tWx4OtK7miLsohhN+jIs7petifzUt
+ OgqjwpfdZgh8JM/+ztp1y1zGQzsS0nUyGyjud91BA0Sx4f2vD/qUToiGpv/dEC/YOB95uu4yq
+ i4BOkEYfAu1q0mgvm8uSrbTtiMMVXtibbi5CiTwm0WVxGgrlUVkUAdqyit+bYTVAyh0MuFvxK
+ B3x6QLwtp8rHSJO3LDDC8F+i3Yfpzb3w3HswLBcyyMHlHA7YhedHARB0+T4OnQp5O4dIEUz/+
+ lR/iB+chX7WlzQIkNTGRS739Zf/oUV7ixTwduxprShyU+CkUtPqmazK6GhRpwxI/qkICcmnce
+ QUfTdBWtkKyuIaknQt8IYi+FxwID9nB/IoSMUxX0rNUI5GE/bMQ0Sc8mS0MLhXyBx8t92xXTs
+ DkSH6kM4PoyPDWgHlHsw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rather than poking at the smemc registers directly from the
-pcmcia/pxa2xx_base driver, move those bits into machine file
-to have a cleaner interface.
+To avoid a dependency on the pxa platform header files with
+hardcoded registers, change the driver to call a wrapper
+in the pxa2xx-ac97-lib that encapsulates all the other
+ac97 stuff.
 
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org
+Cc: alsa-devel@alsa-project.org
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/arm/mach-pxa/generic.c   | 29 ++++++++++++++++++++++
- drivers/pcmcia/pxa2xx_base.c  | 46 ++++++++++++-----------------------
- include/linux/soc/pxa/smemc.h | 10 ++++++++
- 3 files changed, 55 insertions(+), 30 deletions(-)
- create mode 100644 include/linux/soc/pxa/smemc.h
+ drivers/input/touchscreen/Kconfig            |  2 ++
+ drivers/input/touchscreen/mainstone-wm97xx.c | 16 ++++++++--------
+ drivers/input/touchscreen/zylonite-wm97xx.c  | 12 ++++++------
+ include/sound/pxa2xx-lib.h                   |  4 ++++
+ sound/arm/pxa2xx-ac97-lib.c                  | 12 ++++++++++++
+ 5 files changed, 32 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm/mach-pxa/generic.c b/arch/arm/mach-pxa/generic.c
-index f9083c4f0aea..fe1d55d328e5 100644
---- a/arch/arm/mach-pxa/generic.c
-+++ b/arch/arm/mach-pxa/generic.c
-@@ -70,6 +70,35 @@ unsigned int get_clk_frequency_khz(int info)
- }
- EXPORT_SYMBOL(get_clk_frequency_khz);
- 
-+void pxa_smemc_set_pcmcia_timing(int sock, u32 mcmem, u32 mcatt, u32 mcio)
-+{
-+	__raw_writel(mcmem, MCMEM(sock));
-+	__raw_writel(mcatt, MCATT(sock));
-+	__raw_writel(mcio, MCIO(sock));
-+}
-+EXPORT_SYMBOL_GPL(pxa_smemc_set_pcmcia_timing);
-+
-+void pxa_smemc_set_pcmcia_socket(int nr)
-+{
-+	switch (nr) {
-+	case 0:
-+		__raw_writel(0, MECR);
-+		break;
-+	case 1:
-+		/*
-+		 * We have at least one socket, so set MECR:CIT
-+		 * (Card Is There)
-+		 */
-+		__raw_writel(MECR_CIT, MECR);
-+		break;
-+	case 2:
-+		/* Set CIT and MECR:NOS (Number Of Sockets) */
-+		__raw_writel(MECR_CIT | MECR_NOS, MECR);
-+		break;
-+	}
-+}
-+EXPORT_SYMBOL_GPL(pxa_smemc_set_pcmcia_socket);
-+
- /*
-  * Intel PXA2xx internal register mapping.
-  *
-diff --git a/drivers/pcmcia/pxa2xx_base.c b/drivers/pcmcia/pxa2xx_base.c
-index 7cd1375d6087..13880137f175 100644
---- a/drivers/pcmcia/pxa2xx_base.c
-+++ b/drivers/pcmcia/pxa2xx_base.c
-@@ -24,11 +24,10 @@
- #include <linux/spinlock.h>
- #include <linux/platform_device.h>
+diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
+index 46ad9090493b..c60199550d89 100644
+--- a/drivers/input/touchscreen/Kconfig
++++ b/drivers/input/touchscreen/Kconfig
+@@ -848,6 +848,7 @@ config TOUCHSCREEN_WM9713
+ config TOUCHSCREEN_WM97XX_MAINSTONE
+ 	tristate "WM97xx Mainstone/Palm accelerated touch"
+ 	depends on TOUCHSCREEN_WM97XX && ARCH_PXA
++	depends on SND_PXA2XX_LIB_AC97
+ 	help
+ 	  Say Y here for support for streaming mode with WM97xx touchscreens
+ 	  on Mainstone, Palm Tungsten T5, TX and LifeDrive systems.
+@@ -860,6 +861,7 @@ config TOUCHSCREEN_WM97XX_MAINSTONE
+ config TOUCHSCREEN_WM97XX_ZYLONITE
+ 	tristate "Zylonite accelerated touch"
+ 	depends on TOUCHSCREEN_WM97XX && MACH_ZYLONITE
++	depends on SND_PXA2XX_LIB_AC97
+ 	select TOUCHSCREEN_WM9713
+ 	help
+ 	  Say Y here for support for streaming mode with the touchscreen
+diff --git a/drivers/input/touchscreen/mainstone-wm97xx.c b/drivers/input/touchscreen/mainstone-wm97xx.c
+index 940d3c92b1f8..8f6fe68f1f99 100644
+--- a/drivers/input/touchscreen/mainstone-wm97xx.c
++++ b/drivers/input/touchscreen/mainstone-wm97xx.c
+@@ -28,7 +28,7 @@
  #include <linux/soc/pxa/cpu.h>
-+#include <linux/soc/pxa/smemc.h>
+ #include <linux/wm97xx.h>
  
--#include <mach/smemc.h>
- #include <asm/io.h>
- #include <asm/irq.h>
--#include <mach/pxa2xx-regs.h>
+-#include <mach/regs-ac97.h>
++#include <sound/pxa2xx-lib.h>
+ 
  #include <asm/mach-types.h>
  
- #include <pcmcia/ss.h>
-@@ -113,7 +112,7 @@ static inline u_int pxa2xx_pcmcia_cmd_time(u_int mem_clk_10khz,
- 	return (300000 * (pcmcia_mcxx_asst + 1) / mem_clk_10khz);
+@@ -104,11 +104,11 @@ static void wm97xx_acc_pen_up(struct wm97xx *wm)
+ 	msleep(1);
+ 
+ 	if (cpu_is_pxa27x()) {
+-		while (MISR & (1 << 2))
+-			MODR;
++		while (pxa2xx_ac97_read_misr() & (1 << 2))
++			pxa2xx_ac97_read_modr();
+ 	} else if (cpu_is_pxa3xx()) {
+ 		for (count = 0; count < 16; count++)
+-			MODR;
++			pxa2xx_ac97_read_modr();
+ 	}
  }
  
--static int pxa2xx_pcmcia_set_mcmem( int sock, int speed, int clock )
-+static uint32_t pxa2xx_pcmcia_mcmem(int sock, int speed, int clock)
- {
- 	uint32_t val;
+@@ -130,7 +130,7 @@ static int wm97xx_acc_pen_down(struct wm97xx *wm)
+ 		return RC_PENUP;
+ 	}
  
-@@ -124,12 +123,10 @@ static int pxa2xx_pcmcia_set_mcmem( int sock, int speed, int clock )
- 		| ((pxa2xx_mcxx_hold(speed, clock)
- 		& MCXX_HOLD_MASK) << MCXX_HOLD_SHIFT);
+-	x = MODR;
++	x = pxa2xx_ac97_read_modr();
+ 	if (x == last) {
+ 		tries++;
+ 		return RC_AGAIN;
+@@ -138,10 +138,10 @@ static int wm97xx_acc_pen_down(struct wm97xx *wm)
+ 	last = x;
+ 	do {
+ 		if (reads)
+-			x = MODR;
+-		y = MODR;
++			x = pxa2xx_ac97_read_modr();
++		y = pxa2xx_ac97_read_modr();
+ 		if (pressure)
+-			p = MODR;
++			p = pxa2xx_ac97_read_modr();
  
--	__raw_writel(val, MCMEM(sock));
--
--	return 0;
-+	return val;
+ 		dev_dbg(wm->dev, "Raw coordinates: x=%x, y=%x, p=%x\n",
+ 			x, y, p);
+diff --git a/drivers/input/touchscreen/zylonite-wm97xx.c b/drivers/input/touchscreen/zylonite-wm97xx.c
+index cabdd6e3c6f8..ed7eae638713 100644
+--- a/drivers/input/touchscreen/zylonite-wm97xx.c
++++ b/drivers/input/touchscreen/zylonite-wm97xx.c
+@@ -24,7 +24,7 @@
+ #include <linux/soc/pxa/cpu.h>
+ #include <linux/wm97xx.h>
+ 
+-#include <mach/regs-ac97.h>
++#include <sound/pxa2xx-lib.h>
+ 
+ struct continuous {
+ 	u16 id;    /* codec id */
+@@ -79,7 +79,7 @@ static void wm97xx_acc_pen_up(struct wm97xx *wm)
+ 	msleep(1);
+ 
+ 	for (i = 0; i < 16; i++)
+-		MODR;
++		pxa2xx_ac97_read_modr();
  }
  
--static int pxa2xx_pcmcia_set_mcio( int sock, int speed, int clock )
-+static int pxa2xx_pcmcia_mcio(int sock, int speed, int clock)
- {
- 	uint32_t val;
+ static int wm97xx_acc_pen_down(struct wm97xx *wm)
+@@ -100,7 +100,7 @@ static int wm97xx_acc_pen_down(struct wm97xx *wm)
+ 		return RC_PENUP;
+ 	}
  
-@@ -140,12 +137,11 @@ static int pxa2xx_pcmcia_set_mcio( int sock, int speed, int clock )
- 		| ((pxa2xx_mcxx_hold(speed, clock)
- 		& MCXX_HOLD_MASK) << MCXX_HOLD_SHIFT);
+-	x = MODR;
++	x = pxa2xx_ac97_read_modr();
+ 	if (x == last) {
+ 		tries++;
+ 		return RC_AGAIN;
+@@ -108,10 +108,10 @@ static int wm97xx_acc_pen_down(struct wm97xx *wm)
+ 	last = x;
+ 	do {
+ 		if (reads)
+-			x = MODR;
+-		y = MODR;
++			x = pxa2xx_ac97_read_modr();
++		y = pxa2xx_ac97_read_modr();
+ 		if (pressure)
+-			p = MODR;
++			p = pxa2xx_ac97_read_modr();
  
--	__raw_writel(val, MCIO(sock));
+ 		dev_dbg(wm->dev, "Raw coordinates: x=%x, y=%x, p=%x\n",
+ 			x, y, p);
+diff --git a/include/sound/pxa2xx-lib.h b/include/sound/pxa2xx-lib.h
+index 6758fc12fa84..79c32a8f4c91 100644
+--- a/include/sound/pxa2xx-lib.h
++++ b/include/sound/pxa2xx-lib.h
+@@ -41,4 +41,8 @@ extern int pxa2xx_ac97_hw_resume(void);
+ extern int pxa2xx_ac97_hw_probe(struct platform_device *dev);
+ extern void pxa2xx_ac97_hw_remove(struct platform_device *dev);
  
--	return 0;
-+	return val;
- }
- 
--static int pxa2xx_pcmcia_set_mcatt( int sock, int speed, int clock )
-+static int pxa2xx_pcmcia_mcatt(int sock, int speed, int clock)
- {
- 	uint32_t val;
- 
-@@ -156,31 +152,26 @@ static int pxa2xx_pcmcia_set_mcatt( int sock, int speed, int clock )
- 		| ((pxa2xx_mcxx_hold(speed, clock)
- 		& MCXX_HOLD_MASK) << MCXX_HOLD_SHIFT);
- 
--	__raw_writel(val, MCATT(sock));
- 
--	return 0;
-+	return val;
- }
- 
--static int pxa2xx_pcmcia_set_mcxx(struct soc_pcmcia_socket *skt, unsigned int clk)
-+static int pxa2xx_pcmcia_set_timing(struct soc_pcmcia_socket *skt)
- {
-+	unsigned long clk = clk_get_rate(skt->clk) / 1000;
- 	struct soc_pcmcia_timing timing;
- 	int sock = skt->nr;
- 
- 	soc_common_pcmcia_get_timing(skt, &timing);
- 
--	pxa2xx_pcmcia_set_mcmem(sock, timing.mem, clk);
--	pxa2xx_pcmcia_set_mcatt(sock, timing.attr, clk);
--	pxa2xx_pcmcia_set_mcio(sock, timing.io, clk);
-+	pxa_smemc_set_pcmcia_timing(sock,
-+		pxa2xx_pcmcia_mcmem(sock, timing.mem, clk),
-+		pxa2xx_pcmcia_mcatt(sock, timing.attr, clk),
-+		pxa2xx_pcmcia_mcio(sock, timing.io, clk));
- 
- 	return 0;
- }
- 
--static int pxa2xx_pcmcia_set_timing(struct soc_pcmcia_socket *skt)
--{
--	unsigned long clk = clk_get_rate(skt->clk);
--	return pxa2xx_pcmcia_set_mcxx(skt, clk / 10000);
--}
--
- #ifdef CONFIG_CPU_FREQ
- 
- static int
-@@ -215,18 +206,13 @@ pxa2xx_pcmcia_frequency_change(struct soc_pcmcia_socket *skt,
- 
- void pxa2xx_configure_sockets(struct device *dev, struct pcmcia_low_level *ops)
- {
--	/*
--	 * We have at least one socket, so set MECR:CIT
--	 * (Card Is There)
--	 */
--	uint32_t mecr = MECR_CIT;
-+	int nr = 1;
- 
--	/* Set MECR:NOS (Number Of Sockets) */
- 	if ((ops->first + ops->nr) > 1 ||
- 	    machine_is_viper() || machine_is_arcom_zeus())
--		mecr |= MECR_NOS;
-+		nr = 2;
- 
--	__raw_writel(mecr, MECR);
-+	pxa_smemc_set_pcmcia_socket(nr);
- }
- EXPORT_SYMBOL(pxa2xx_configure_sockets);
- 
-diff --git a/include/linux/soc/pxa/smemc.h b/include/linux/soc/pxa/smemc.h
-new file mode 100644
-index 000000000000..cbf1a2d8af29
---- /dev/null
-+++ b/include/linux/soc/pxa/smemc.h
-@@ -0,0 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef __PXA_REGS_H
-+#define __PXA_REGS_H
++/* modem registers, used by touchscreen driver */
++u32 pxa2xx_ac97_read_modr(void);
++u32 pxa2xx_ac97_read_misr(void);
 +
-+#include <linux/types.h>
+ #endif
+diff --git a/sound/arm/pxa2xx-ac97-lib.c b/sound/arm/pxa2xx-ac97-lib.c
+index 8c79d224f03b..572b73d73762 100644
+--- a/sound/arm/pxa2xx-ac97-lib.c
++++ b/sound/arm/pxa2xx-ac97-lib.c
+@@ -428,6 +428,18 @@ void pxa2xx_ac97_hw_remove(struct platform_device *dev)
+ }
+ EXPORT_SYMBOL_GPL(pxa2xx_ac97_hw_remove);
+ 
++u32 pxa2xx_ac97_read_modr(void)
++{
++	return MODR;
++}
++EXPORT_SYMBOL_GPL(pxa2xx_ac97_read_modr);
 +
-+void pxa_smemc_set_pcmcia_timing(int sock, u32 mcmem, u32 mcatt, u32 mcio);
-+void pxa_smemc_set_pcmcia_socket(int nr);
++u32 pxa2xx_ac97_read_misr(void)
++{
++	return MISR;
++}
++EXPORT_SYMBOL_GPL(pxa2xx_ac97_read_misr);
 +
-+#endif
+ MODULE_AUTHOR("Nicolas Pitre");
+ MODULE_DESCRIPTION("Intel/Marvell PXA sound library");
+ MODULE_LICENSE("GPL");
 -- 
 2.20.0
 
