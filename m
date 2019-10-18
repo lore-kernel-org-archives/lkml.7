@@ -2,145 +2,148 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BABDCCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADCECA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98F0621D7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F588222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:52:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HNIkPwHs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439535AbfJROth (ORCPT
+        id S2393888AbfJROwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 10:49:37 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:41518 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1729257AbfJROth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 10:49:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14ED1B57;
-        Fri, 18 Oct 2019 07:49:16 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E1803F718;
-        Fri, 18 Oct 2019 07:49:13 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 15:49:11 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arch@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Florian Weimer <fweimer@redhat.com>,
-        linux-kernel@vger.kernel.org, Sudakshina Das <sudi.das@arm.com>
-Subject: Re: [PATCH v2 11/12] arm64: BTI: Reset BTYPE when skipping emulated
- instructions
-Message-ID: <20191018144910.GF27757@arm.com>
-References: <1570733080-21015-1-git-send-email-Dave.Martin@arm.com>
- <1570733080-21015-12-git-send-email-Dave.Martin@arm.com>
- <20191011142157.GC33537@lakrids.cambridge.arm.com>
- <20191011144743.GJ27757@arm.com>
- <20191018110428.GA27759@lakrids.cambridge.arm.com>
+        Fri, 18 Oct 2019 10:52:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41134 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729257AbfJROwI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 10:52:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571410327;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=C2xaVN1YDGZt57Fg4Tueyvg0ge8B6IjieBOqiv9q4PA=;
+        b=HNIkPwHsLABypCbTYNqn7XzroqCsfn3Nm6jonWUVa/gc6YjA/TjnvnkcEfLPR20trZK6Sf
+        CD/+FqhpKwfjDNiVADkzxzuIhoqnhR0iSdQV9P7Ydc9gcuizghYswOt3swC3FZTxQSffJH
+        MNRvGH0e0ZzldS2lFKCbQk4qCl+jV7A=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-179-nUFhmPMeNaSdTwhFi8L-Vg-1; Fri, 18 Oct 2019 10:52:06 -0400
+Received: by mail-qk1-f200.google.com with SMTP id 11so5737846qkh.15
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 07:52:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b9cZq0CqcH8ZytwOHkNWIPhdJk6m17gLp4seEgaN+hk=;
+        b=UXnGhxaMron4//cy9baxXQh8XwdrewFUdAgYoznWjxEgDWLFrNNQKyZAgOa5sBfNOb
+         ZFSi8GrsKN4O7ZPujPtWGjN0AHWAd9BIhpdOUHjaq1g41pB/OlPjG7vADhfwpl+EQV1K
+         ljmZCxJ3rm2j0NuC5rkvcJUEDkHEkoPob+nwpoBYCWO6WjrP4TVj7rLRl7VKGowCLBxs
+         hqBRzYRPPNlYXLpzswnABBQ6gEoZEq4OVwtRIkAF6G7mcSs8r99Gsdkwk21eK77lsyqs
+         dwEXG7QcI1PWW6VptFLRVYGDlSzRPaIKBThrznGu58/4xofAnEqZgKPWTHTRm9dp1V6x
+         zmFQ==
+X-Gm-Message-State: APjAAAUMbjipdwJmnRo8NQNT/f+rCHNlJKxYippifzycyRdPvgN3Q+Gt
+        vwlNX5sBjKBCTUXC85hiDe9EUQZ9GrtGdoU8TztHp/9MMzdGGIULQEtDYJW/4+zRF36v+DDktWL
+        38rziNBk4GeduYx1qVYuNvfVf8g8rVmM7yCnZMG3L
+X-Received: by 2002:ac8:461a:: with SMTP id p26mr5295326qtn.31.1571410325644;
+        Fri, 18 Oct 2019 07:52:05 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqy/VKFQ8LK5JCkS1ha/lieFjDpyY6JvHw1fBr+RScJtNeuXXfa383meU/jv5V/KO30Vio7RVa3CTNDIRb2LNaU=
+X-Received: by 2002:ac8:461a:: with SMTP id p26mr5295297qtn.31.1571410325296;
+ Fri, 18 Oct 2019 07:52:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018110428.GA27759@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20191018044517.6430-1-andrew.smirnov@gmail.com>
+In-Reply-To: <20191018044517.6430-1-andrew.smirnov@gmail.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Fri, 18 Oct 2019 16:51:54 +0200
+Message-ID: <CAO-hwJLDSaDko1pgOybQ3B7dUjg7boarob2xU+7EhwsjeuYayw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] Logitech G920 fixes
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Sam Bazely <sambazley@fastmail.com>,
+        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+        Austin Palmer <austinp@valvesoftware.com>,
+        lkml <linux-kernel@vger.kernel.org>
+X-MC-Unique: nUFhmPMeNaSdTwhFi8L-Vg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 12:04:29PM +0100, Mark Rutland wrote:
-> On Fri, Oct 11, 2019 at 03:47:43PM +0100, Dave Martin wrote:
-> > On Fri, Oct 11, 2019 at 03:21:58PM +0100, Mark Rutland wrote:
-> > > On Thu, Oct 10, 2019 at 07:44:39PM +0100, Dave Martin wrote:
-> > > > Since normal execution of any non-branch instruction resets the
-> > > > PSTATE BTYPE field to 0, so do the same thing when emulating a
-> > > > trapped instruction.
-> > > > 
-> > > > Branches don't trap directly, so we should never need to assign a
-> > > > non-zero value to BTYPE here.
-> > > > 
-> > > > Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-> > > > ---
-> > > >  arch/arm64/kernel/traps.c | 2 ++
-> > > >  1 file changed, 2 insertions(+)
-> > > > 
-> > > > diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-> > > > index 3af2768..4d8ce50 100644
-> > > > --- a/arch/arm64/kernel/traps.c
-> > > > +++ b/arch/arm64/kernel/traps.c
-> > > > @@ -331,6 +331,8 @@ void arm64_skip_faulting_instruction(struct pt_regs *regs, unsigned long size)
-> > > >  
-> > > >  	if (regs->pstate & PSR_MODE32_BIT)
-> > > >  		advance_itstate(regs);
-> > > > +	else
-> > > > +		regs->pstate &= ~(u64)PSR_BTYPE_MASK;
-> > > 
-> > > This looks good to me, with one nit below.
-> > > 
-> > > We don't (currently) need the u64 cast here, and it's inconsistent with
-> > > what we do elsewhere. If the upper 32-bit of pstate get allocated, we'll
-> > > need to fix up all the other masking we do:
-> > 
-> > Huh, looks like I missed that.  Dang.  Will fix.
-> > 
-> > > [mark@lakrids:~/src/linux]% git grep 'pstate &= ~'
-> > > arch/arm64/kernel/armv8_deprecated.c:           regs->pstate &= ~PSR_AA32_E_BIT;
-> > > arch/arm64/kernel/cpufeature.c:         regs->pstate &= ~PSR_SSBS_BIT;
-> > > arch/arm64/kernel/debug-monitors.c:     regs->pstate &= ~DBG_SPSR_SS;
-> > > arch/arm64/kernel/insn.c:       pstate &= ~(pstate >> 1);       /* PSR_C_BIT &= ~PSR_Z_BIT */
-> > > arch/arm64/kernel/insn.c:       pstate &= ~(pstate >> 1);       /* PSR_C_BIT &= ~PSR_Z_BIT */
-> > > arch/arm64/kernel/probes/kprobes.c:     regs->pstate &= ~PSR_D_BIT;
-> > > arch/arm64/kernel/probes/kprobes.c:     regs->pstate &= ~DAIF_MASK;
-> > > arch/arm64/kernel/ptrace.c:     regs->pstate &= ~SPSR_EL1_AARCH32_RES0_BITS;
-> > > arch/arm64/kernel/ptrace.c:                     regs->pstate &= ~PSR_AA32_E_BIT;
-> > > arch/arm64/kernel/ptrace.c:     regs->pstate &= ~SPSR_EL1_AARCH64_RES0_BITS;
-> > > arch/arm64/kernel/ptrace.c:             regs->pstate &= ~DBG_SPSR_SS;
-> > > arch/arm64/kernel/ssbd.c:       task_pt_regs(task)->pstate &= ~val;
-> > > arch/arm64/kernel/traps.c:      regs->pstate &= ~PSR_AA32_IT_MASK;
-> > > 
-> > > ... and at that point I'd suggest we should just ensure the bit
-> > > definitions are all defined as unsigned long in the first place since
-> > > adding casts to each use is error-prone.
-> > 
-> > Are we concerned about changing the types of UAPI #defines?  That can
-> > cause subtle and unexpected breakage, especially when the signedness
-> > of a #define changes.
-> > 
-> > Ideally, we'd just change all these to 1UL << n.
-> 
-> I agree that's the ideal -- I don't know how concerned we are w.r.t. the
-> UAPI headers, I'm afraid.
+On Fri, Oct 18, 2019 at 6:45 AM Andrey Smirnov <andrew.smirnov@gmail.com> w=
+rote:
+>
+> Everyone:
+>
+> This series contains patches to fix a couple of regressions in G920
+> wheel support by hid-logitech-hidpp driver. Without the patches the
+> wheel remains stuck in autocentering mode ("resisting" any attempt to
+> trun) as well as missing support for any FF action.
+>
+> Thanks,
+> Andrey Smirnov
+>
+> Changes since [v2]:
+>
+>      - Fixes a buggy validity check "HID: logitech-hidpp: rework
+>        device validation" as pointed out by Benjamin Tissoires
+>
+>      - Marked "HID: logitech-hidpp: do all FF cleanup in
+>        hidpp_ff_destroy()" as 5.2+ for stable
+>
+> Changes since [v1]:
+>
+>      - "HID: logitech-hidpp: split g920_get_config()" is changed to
+>        not rely on devres and be a self contained patch
+>
+>      - Quirk driven behaviour of "HID: logitech-hidpp: add G920 device
+>        validation quirk" is replaced with generic validation algorithm
+>        of "HID: logitech-hidpp: rework device validation"
+>
+>      - Fix for a poteintial race condition is added in
+>        "HID: logitech-hidpp: do all FF cleanup in hidpp_ff_destroy()"
+>        as per suggestion by Benjamin Tissoires
+>
+>      - Collected Tested-by from Sam Bazely for "HID: logitech-hidpp:
+>        split g920_get_config()" since that patch didn't change
+>        significantly since [v1]
+>
+>      - Specified stable kernel versions I think the patches should
+>        apply to (hopefully I got that right)
+>
+> [v2] lore.kernel.org/lkml/20191016182935.5616-1-andrew.smirnov@gmail.com
+> [v1] lore.kernel.org/lkml/20191007051240.4410-1-andrew.smirnov@gmail.com
+>
+> Andrey Smirnov (3):
+>   HID: logitech-hidpp: split g920_get_config()
+>   HID: logitech-hidpp: rework device validation
+>   HID: logitech-hidpp: do all FF cleanup in hidpp_ff_destroy()
+>
+>  drivers/hid/hid-logitech-hidpp.c | 237 +++++++++++++++++--------------
+>  1 file changed, 131 insertions(+), 106 deletions(-)
+>
 
-OK, I'll following the existing convention for now, keep the #define as
-(implicitly) signed, and drop the u64 casts.
+Thanks a lot for the work on this series.
 
-At some point in the future we may want to refactor the headers so that
-the kernel uses shadow register bit definitions that are always u64.
-The new HWCAP definitions provide a reasonable template for doing that
-kind of thing.
+I gave a slight test of the series with a bunch of devices handled by
+hid-logitech-hidpp without regressions.
 
-It's probably best not to do anything to alter the types of the UAPI
-definitions.
+Applied to for-5.4/upstream-fixes
 
-I will shamelessly duck this for now :|
+Cheers,
+Benjamin
 
-Cheers
----Dave
+> --
+> 2.21.0
+>
+
