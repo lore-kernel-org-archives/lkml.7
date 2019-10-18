@@ -2,79 +2,106 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 546CACA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D8ACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 288F020854
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7752B20854
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 11:41:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JIy6ZkfZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407745AbfJRLih (ORCPT
+        id S2407755AbfJRLlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 07:38:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37172 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729803AbfJRLig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 07:38:36 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7899F11A2F;
-        Fri, 18 Oct 2019 11:38:36 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-43.ams2.redhat.com [10.36.116.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3D25C5D9D5;
-        Fri, 18 Oct 2019 11:38:33 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 2E9C99DB6; Fri, 18 Oct 2019 13:38:32 +0200 (CEST)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/virtio: print a single line with device features
-Date:   Fri, 18 Oct 2019 13:38:32 +0200
-Message-Id: <20191018113832.5460-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 18 Oct 2019 11:38:36 +0000 (UTC)
+        Fri, 18 Oct 2019 07:41:21 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45625 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729803AbfJRLlU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 07:41:20 -0400
+Received: by mail-pg1-f196.google.com with SMTP id r1so3220217pgj.12;
+        Fri, 18 Oct 2019 04:41:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vvNqJKeQ4VHN2Q+KmJAu1hW/F4EtjFyqZ69sSgSZUx0=;
+        b=JIy6ZkfZ18shf9qHLkOSgMk8Ska8cQ0h8hpJtdRx3EzswYa/CcgGd+PssSKQLqbyEg
+         J8OtwlYmkHtt/egPuMQFyNaM/8PUCVaQVu0WwYgrMsBdEyGifvPZiOmAvoM+oRX1dRq8
+         5c1bkC0V1WPpflvB/naXi0CfhbDnVBLERgs7x7Ppn2gSkYUgsbNUaFom7oX7MO6d5NQ2
+         szY5swXVI9wD31XHNvoCugEaLbjiuNKXO2sQTaP9RWq8bDk/R6S0l4/LN14ImSHdkefq
+         mOd605aBXmmjZOGDHTTDi9Ko29mo3BeGA8R/V5csQDR/gdGFUIxQ9bRlE5iGOZYviIOs
+         DYQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vvNqJKeQ4VHN2Q+KmJAu1hW/F4EtjFyqZ69sSgSZUx0=;
+        b=sRdBLFZZyDCEOF9GTzIIvZX964h9RDAvB3EW63RvA1zM5AfxTrlsbcnyX302vxzD5i
+         Qp0Ln1rzQMoU06fAXbwiKUx6OtIpS27WOMPlJbcUb7WX4TMz5Hb+Za0+1tcAz/EpK02p
+         2syVFH7XYb7CpqPBFY1huc8om/A5GmKf6vUGFY8agI9j9PMEvZQPU/SZy4uuenXE0Qga
+         moBWJ5LBnbaH6npRCg4/g6HsvJJSVMFOFZRrkCnX9OVdiL0FgSaWaLwLcdTvAJC5g2QY
+         2DX/ZJIxfS/vqShrvfSi9Fq0g0BNS+rC6TkbnJM4TBq9dZs0I/LWQKDXkYP4+w/ASaNy
+         yLEg==
+X-Gm-Message-State: APjAAAUOQQtJxZ4gGCcrmSnkBp6SfwX3uWeRTir39Jvnr3bmnwuwJN8h
+        JuCVx1MbGjTbC4zyiC8NyvCEMhil
+X-Google-Smtp-Source: APXvYqzIdbx+dFeJg+wrIEI91yG1IOMZXLd3DxUCqkiGIX2b08CJGHT5aZyV7WVaY8utlTjj8t4e3w==
+X-Received: by 2002:a63:e1f:: with SMTP id d31mr9595650pgl.379.1571398879949;
+        Fri, 18 Oct 2019 04:41:19 -0700 (PDT)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id p66sm7078592pfg.127.2019.10.18.04.41.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 04:41:19 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 04:41:16 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+Cc:     linux-kernel@lists.codethink.co.uk, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ptp_pch: include ethernet driver for external functions
+Message-ID: <20191018114116.GA1348@localhost>
+References: <20191018105128.4382-1-ben.dooks@codethink.co.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018105128.4382-1-ben.dooks@codethink.co.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- drivers/gpu/drm/virtio/virtgpu_kms.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+On Fri, Oct 18, 2019 at 11:51:28AM +0100, Ben Dooks (Codethink) wrote:
+> The driver uses a number of functions from the ethernet driver
+> so include the header to remove the following warnings from
+> sparse about undeclared functions:
+> 
+> drivers/ptp/ptp_pch.c:182:5: warning: symbol 'pch_ch_control_read' was not declared. Should it be static?
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
-index 0b3cdb0d83b0..2f5773e43557 100644
---- a/drivers/gpu/drm/virtio/virtgpu_kms.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
-@@ -155,16 +155,15 @@ int virtio_gpu_init(struct drm_device *dev)
- #ifdef __LITTLE_ENDIAN
- 	if (virtio_has_feature(vgdev->vdev, VIRTIO_GPU_F_VIRGL))
- 		vgdev->has_virgl_3d = true;
--	DRM_INFO("virgl 3d acceleration %s\n",
--		 vgdev->has_virgl_3d ? "enabled" : "not supported by host");
--#else
--	DRM_INFO("virgl 3d acceleration not supported by guest\n");
- #endif
- 	if (virtio_has_feature(vgdev->vdev, VIRTIO_GPU_F_EDID)) {
- 		vgdev->has_edid = true;
--		DRM_INFO("EDID support available.\n");
- 	}
- 
-+	DRM_INFO("features: %cvirgl %cedid\n",
-+		 vgdev->has_virgl_3d ? '+' : '-',
-+		 vgdev->has_edid     ? '+' : '-');
-+
- 	ret = virtio_find_vqs(vgdev->vdev, 2, vqs, callbacks, names, NULL);
- 	if (ret) {
- 		DRM_ERROR("failed to find virt queues\n");
--- 
-2.18.1
+That one is never used and should be removed.
 
+> drivers/ptp/ptp_pch.c:193:6: warning: symbol 'pch_ch_control_write' was not declared. Should it be static?
+> drivers/ptp/ptp_pch.c:201:5: warning: symbol 'pch_ch_event_read' was not declared. Should it be static?
+> drivers/ptp/ptp_pch.c:212:6: warning: symbol 'pch_ch_event_write' was not declared. Should it be static?
+> drivers/ptp/ptp_pch.c:220:5: warning: symbol 'pch_src_uuid_lo_read' was not declared. Should it be static?
+> drivers/ptp/ptp_pch.c:231:5: warning: symbol 'pch_src_uuid_hi_read' was not declared. Should it be static?
+> drivers/ptp/ptp_pch.c:242:5: warning: symbol 'pch_rx_snap_read' was not declared. Should it be static?
+> drivers/ptp/ptp_pch.c:259:5: warning: symbol 'pch_tx_snap_read' was not declared. Should it be static?
+> drivers/ptp/ptp_pch.c:300:5: warning: symbol 'pch_set_station_address' was not declared. Should it be static?
+
+> +#include <../net/ethernet/oki-semi/pch_gbe/pch_gbe.h>
+
+Instead of that long relative path, just move ptp_pch.c out of
+drivers/ptp and into drivers/net/ethernet/oki-semi/pch_gbe.
+
+Then move the shared declarations out of pch_gbe.h and into a new
+header file, included by both users with:
+
+#include "ptp_pch.h"
+
+Thanks,
+
+Richard
