@@ -4,54 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAEFCA9EAC
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B887CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4362A2246A
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AC91222D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571436536;
-	bh=sn9PuHWrsSWJy+qnRz1rl2QGZbrjTOyXUksthEqa3vc=;
+	s=default; t=1571436548;
+	bh=XT+45AHELqelbvkdANKgn/zccoTA/gMFB6V49Z8j63s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w3cqNgKHRJXR90vm/PZWVkMDG/os1/3YXlUH8eprOu5+RvjgG/hervzKFVUspIDfK
-	 P51je7b+X+xug0cEu+ajWKqhI24URjqBvACLUDhAgaIzl/J8MxtDCAiq1a6LFQrVQk
-	 2tuvowlMkDVRXTYcgP6V3aUIBHQa9m81X42PpmxM=
+	b=OObdYYREaL+kGd9hiKdbry6PZxcMcjHFZ8YfvO3YTQrrzDkNQKOT8Se+wh5wctctS
+	 PT0Z6fqrQUd0+lWd8NqpElnhc6ctRA6zWC1fyDISEiyQbhaJh4A3+5d5KjQq40aduy
+	 RKfcpeKEDoOiVfqVyufn3FW7yUNF3e4VUJ2Z4HQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388309AbfJRWIy (ORCPT
+        id S2388569AbfJRWJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:08:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40998 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:09:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387912AbfJRWIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:08:34 -0400
+        id S2388130AbfJRWIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:08:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 186ED222C2;
-        Fri, 18 Oct 2019 22:08:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19F312245D;
+        Fri, 18 Oct 2019 22:08:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436513;
-        bh=sn9PuHWrsSWJy+qnRz1rl2QGZbrjTOyXUksthEqa3vc=;
+        s=default; t=1571436524;
+        bh=XT+45AHELqelbvkdANKgn/zccoTA/gMFB6V49Z8j63s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=peyvUCPT0r28w5MHLBJ2Ljvqa6KYdzgrPbi/VlZ9lNqhinBsWkBhSu145cohnnE9D
-         X14HXzhUkwkaqBNnlftMfzzKF+suCtFmot+qmFqOe4MYJPFOYSKMvW32yFsZm1Se+l
-         m7SO0CiSV09dp9bPL52a7I1K9XxFgrX/AAkV1kJE=
+        b=VoWt2blg2q3n5eP6uTLziMSjo3juYJClT4HP7k7IfwjktdE7hvY/PZuw6TMnJiai6
+         6JwsDl4+9/cOD5nLYbajXXsSsd/w5zsaAYy7oE6ORfK1ZN1wHgUAryfFd6g8kK2H5l
+         T5jMYC5SdbkfAZG6Iyy2sqPpQ7bIZ87HPITe1W+E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Wang Nan <wangnan0@huawei.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 22/56] perf tests: Avoid raising SEGV using an obvious NULL dereference
-Date:   Fri, 18 Oct 2019 18:07:19 -0400
-Message-Id: <20191018220753.10002-22-sashal@kernel.org>
+Cc:     James Morse <james.morse@arm.com>, Will Deacon <will@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 31/56] arm64: ftrace: Ensure synchronisation in PLT setup for Neoverse-N1 #1542419
+Date:   Fri, 18 Oct 2019 18:07:28 -0400
+Message-Id: <20191018220753.10002-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
 References: <20191018220753.10002-1-sashal@kernel.org>
@@ -64,88 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: James Morse <james.morse@arm.com>
 
-[ Upstream commit e3e2cf3d5b1fe800b032e14c0fdcd9a6fb20cf3b ]
+[ Upstream commit dd8a1f13488438c6c220b7cafa500baaf21a6e53 ]
 
-An optimized build such as:
+CPUs affected by Neoverse-N1 #1542419 may execute a stale instruction if
+it was recently modified. The affected sequence requires freshly written
+instructions to be executable before a branch to them is updated.
 
-  make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-O3
+There are very few places in the kernel that modify executable text,
+all but one come with sufficient synchronisation:
+ * The module loader's flush_module_icache() calls flush_icache_range(),
+   which does a kick_all_cpus_sync()
+ * bpf_int_jit_compile() calls flush_icache_range().
+ * Kprobes calls aarch64_insn_patch_text(), which does its work in
+   stop_machine().
+ * static keys and ftrace both patch between nops and branches to
+   existing kernel code (not generated code).
 
-will turn the dereference operation into a ud2 instruction, raising a
-SIGILL rather than a SIGSEGV. Use raise(..) for correctness and clarity.
+The affected sequence is the interaction between ftrace and modules.
+The module PLT is cleaned using __flush_icache_range() as the trampoline
+shouldn't be executable until we update the branch to it.
 
-Similar issues were addressed in Numfor Mbiziwo-Tiapo's patch:
+Drop the double-underscore so that this path runs kick_all_cpus_sync()
+too.
 
-  https://lkml.org/lkml/2019/7/8/1234
-
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf test hooks
-  55: perf hooks                                            : Ok
-  [root@quaco ~]# perf test -v hooks
-  55: perf hooks                                            :
-  --- start ---
-  test child forked, pid 17092
-  SIGSEGV is observed as expected, try to recover.
-  Fatal error (SEGFAULT) in perf hook 'test'
-  test child finished with 0
-  ---- end ----
-  perf hooks: Ok
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf test hooks
-  55: perf hooks                                            : Ok
-  [root@quaco ~]# perf test -v hooks
-  55: perf hooks                                            :
-  --- start ---
-  test child forked, pid 17909
-  SIGSEGV is observed as expected, try to recover.
-  Fatal error (SEGFAULT) in perf hook 'test'
-  test child finished with 0
-  ---- end ----
-  perf hooks: Ok
-  [root@quaco ~]#
-
-Fixes: a074865e60ed ("perf tools: Introduce perf hooks")
-Signed-off-by: Ian Rogers <irogers@google.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lore.kernel.org/lkml/20190925195924.152834-2-irogers@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/perf-hooks.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm64/kernel/ftrace.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/perf-hooks.c b/tools/perf/tests/perf-hooks.c
-index a693bcf017ea2..44c16fd11bf6e 100644
---- a/tools/perf/tests/perf-hooks.c
-+++ b/tools/perf/tests/perf-hooks.c
-@@ -20,12 +20,11 @@ static void sigsegv_handler(int sig __maybe_unused)
- static void the_hook(void *_hook_flags)
- {
- 	int *hook_flags = _hook_flags;
--	int *p = NULL;
+diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
+index fac79d75d1d9d..6eefd5873aef4 100644
+--- a/arch/arm64/kernel/ftrace.c
++++ b/arch/arm64/kernel/ftrace.c
+@@ -119,7 +119,13 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
  
- 	*hook_flags = 1234;
- 
- 	/* Generate a segfault, test perf_hooks__recover */
--	*p = 0;
-+	raise(SIGSEGV);
- }
- 
- int test__perf_hooks(struct test *test __maybe_unused, int subtest __maybe_unused)
+ 			/*
+ 			 * Ensure updated trampoline is visible to instruction
+-			 * fetch before we patch in the branch.
++			 * fetch before we patch in the branch. Although the
++			 * architecture doesn't require an IPI in this case,
++			 * Neoverse-N1 erratum #1542419 does require one
++			 * if the TLB maintenance in module_enable_ro() is
++			 * skipped due to rodata_enabled. It doesn't seem worth
++			 * it to make it conditional given that this is
++			 * certainly not a fast-path.
+ 			 */
+ 			flush_icache_range((unsigned long)&dst[0],
+ 					   (unsigned long)&dst[1]);
 -- 
 2.20.1
 
