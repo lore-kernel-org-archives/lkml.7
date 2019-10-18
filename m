@@ -2,102 +2,68 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F1CCA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC61CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C0E222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B07A2222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 13:51:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405743AbfJRNu2 (ORCPT
+        id S2408628AbfJRNvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 09:50:28 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:54940 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731183AbfJRNu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 09:50:27 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 27700FB04;
-        Fri, 18 Oct 2019 15:50:24 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id TA8MpUsK2edw; Fri, 18 Oct 2019 15:50:23 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id B98DB49A41; Fri, 18 Oct 2019 15:50:22 +0200 (CEST)
-Date:   Fri, 18 Oct 2019 15:50:22 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     "To : Lucas Stach" <l.stach@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Carlo Caione <ccaione@baylibre.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 2/2] dt-bindings: etnaviv: Add #cooling-cells
-Message-ID: <20191018135022.GA6728@bogon.m.sigxcpu.org>
-References: <cover.1568255903.git.agx@sigxcpu.org>
- <6e9d761598b2361532146f43161fd05f3eee6545.1568255903.git.agx@sigxcpu.org>
+        Fri, 18 Oct 2019 09:51:48 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:40036 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1728022AbfJRNvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 09:51:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92E89FC2;
+        Fri, 18 Oct 2019 06:51:27 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A52A03F6C4;
+        Fri, 18 Oct 2019 06:51:26 -0700 (PDT)
+Subject: Re: [PATCH] iommu/dma: Relax locking in iommu_dma_prepare_msi()
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     joro@8bytes.org, iommu@lists.linux-foundation.org, maz@kernel.org,
+        julien.grall@arm.com, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+References: <5af5e77102ca52576cb96816f0abcf6398820055.1571245656.git.robin.murphy@arm.com>
+ <20191017162453.GA6012@infradead.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <2309c311-7378-385d-bf97-57965d36c18b@arm.com>
+Date:   Fri, 18 Oct 2019 14:51:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6e9d761598b2361532146f43161fd05f3eee6545.1568255903.git.agx@sigxcpu.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191017162453.GA6012@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Wed, Sep 11, 2019 at 07:40:36PM -0700, Guido Günther wrote:
-> Add #cooling-cells for when the gpu acts as a cooling device.
+On 17/10/2019 17:24, Christoph Hellwig wrote:
+> On Wed, Oct 16, 2019 at 06:07:36PM +0100, Robin Murphy wrote:
+>> @@ -1180,7 +1179,7 @@ int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr)
+>>   	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+>>   	struct iommu_dma_cookie *cookie;
+>>   	struct iommu_dma_msi_page *msi_page;
+>> -	unsigned long flags;
+>> +	static DEFINE_MUTEX(msi_prepare_lock);
 > 
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> ---
->  .../devicetree/bindings/display/etnaviv/etnaviv-drm.txt          | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-> index 8def11b16a24..640592e8ab2e 100644
-> --- a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-> +++ b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-> @@ -21,6 +21,7 @@ Required properties:
->  Optional properties:
->  - power-domains: a power domain consumer specifier according to
->    Documentation/devicetree/bindings/power/power_domain.txt
-> +- #cooling-cells: : If used as a cooling device, must be <2>
+> Just a style nitpick, but I find locks declared inside functions
+> really weird.  In addition to that locks not embedded into a structure
+> and not directly next to variables or data structures they protect
+> really need a comment explaining what they are trying to serialize.
 
-The other patch of the series made it into linux-next already but this
-documentation fixup didn't. Anything i can do to get this applied as
-well so documentation stays in sync?
-Cheers,
- -- Guido
+Hmm, the lock itself is merely a glorified comment, it's named for the 
+operation it protects, its entire existence spans 15 consecutive lines, 
+and 27% of those lines are dedicated to explaining that it's technically 
+redundant. Is there *really* anything that isn't clear from the context?
 
->  
->  example:
->  
-> -- 
-> 2.23.0.rc1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Robin.
