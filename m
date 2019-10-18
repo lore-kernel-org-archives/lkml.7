@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE9FCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAEDCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0455A20872
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:17:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83E9321852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:17:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437060;
-	bh=LsUG1KSp6iYx6j84Y/bZiOCQcl+x2YbXkmFR2WtwB3w=;
+	s=default; t=1571437066;
+	bh=Ehrg5XgGuNFqkKHJPJTzn6hfByC9BDvQYGD1d5MwaD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rsoc+sotOou8hrXoX5HZbUGQzrG96rbojisw0VQBcVlTucOq8AKRAOXY5AmeIjo4r
-	 k/++7ScM1Yk3Y0dgj0yjuwlPPXPp8bgxOo7xXs+h6RbZb2MhNOe1WlOxYRIBAzCBHD
-	 Y1ELneeZ5GCIzRjbggWvpMMEpw7woPIW9+ixu1kM=
+	b=cvMeIUKkUdbtlZNaqnPW5oijwQ/ijq4X2RSm1Yu/JcjnaDDdrXNm4BJjQ3qMcQ3wP
+	 NsE4opDMlfgysoEX1Jm1crSdmn1z0kD1hQoLxhDjSqw1K0s1KM0kwJPsqz8lxMC7hw
+	 YMKYCwIiTt87LJdg+AsQB+A80wA8t2d2BVJYRcys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404099AbfJRWRi (ORCPT
+        id S2393544AbfJRWRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:17:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40014 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:17:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733114AbfJRWHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:07:40 -0400
+        id S1733086AbfJRWHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:07:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDD332246A;
-        Fri, 18 Oct 2019 22:07:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD5022245C;
+        Fri, 18 Oct 2019 22:07:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436459;
-        bh=LsUG1KSp6iYx6j84Y/bZiOCQcl+x2YbXkmFR2WtwB3w=;
+        s=default; t=1571436458;
+        bh=Ehrg5XgGuNFqkKHJPJTzn6hfByC9BDvQYGD1d5MwaD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yQd2+h/0Yy1dweOGuZveJ1i4GO4PeH2hT2tT7Mkp/IN9byCt4hV9830snaRFoBwgI
-         CIgQds7MqB4ai+yKHrpGkOwAP5i59XGiJeq6o2lgkVuehktqVrXmavAaduNPCYksLR
-         otMlQ6TgSFLhpk05TZydgfIyzW7ARtVBbtLFmMSg=
+        b=1DbuJ+k5MIE5ue3y8PvB15ydQURyqE9z88Tocum4LJG4QZx1nhAGmyzPjQdXS6Frr
+         mwtWefK5Qa6W35Mp2it/TLt7Xcd3+t14WkZgQyq0fd3w3yZIZgsrnLKITFoa4cqpxQ
+         50oo6+4On3lAJ7pOzArNIYVm7BNG0VzMOd7EpKb8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marco Felsch <m.felsch@pengutronix.de>,
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
         Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 091/100] iio: adc: ad799x: fix probe error handling
-Date:   Fri, 18 Oct 2019 18:05:16 -0400
-Message-Id: <20191018220525.9042-91-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 090/100] iio: imu: adis16400: release allocated memory on failure
+Date:   Fri, 18 Oct 2019 18:05:15 -0400
+Message-Id: <20191018220525.9042-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -61,41 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit c62dd44901cfff12acc5792bf3d2dec20bcaf392 ]
+[ Upstream commit ab612b1daf415b62c58e130cb3d0f30b255a14d0 ]
 
-Since commit 0f7ddcc1bff1 ("iio:adc:ad799x: Write default config on probe
-and reset alert status on probe") the error path is wrong since it
-leaves the vref regulator on. Fix this by disabling both regulators.
+In adis_update_scan_mode, if allocation for adis->buffer fails,
+previously allocated adis->xfer needs to be released.
 
-Fixes: 0f7ddcc1bff1 ("iio:adc:ad799x: Write default config on probe and reset alert status on probe")
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/ad799x.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iio/imu/adis_buffer.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/adc/ad799x.c b/drivers/iio/adc/ad799x.c
-index e1da67d5ee220..9e61720db7eaf 100644
---- a/drivers/iio/adc/ad799x.c
-+++ b/drivers/iio/adc/ad799x.c
-@@ -814,10 +814,10 @@ static int ad799x_probe(struct i2c_client *client,
+diff --git a/drivers/iio/imu/adis_buffer.c b/drivers/iio/imu/adis_buffer.c
+index 76643c5571aa8..e59d0438de732 100644
+--- a/drivers/iio/imu/adis_buffer.c
++++ b/drivers/iio/imu/adis_buffer.c
+@@ -39,8 +39,11 @@ int adis_update_scan_mode(struct iio_dev *indio_dev,
+ 		return -ENOMEM;
  
- 	ret = ad799x_write_config(st, st->chip_config->default_config);
- 	if (ret < 0)
--		goto error_disable_reg;
-+		goto error_disable_vref;
- 	ret = ad799x_read_config(st);
- 	if (ret < 0)
--		goto error_disable_reg;
-+		goto error_disable_vref;
- 	st->config = ret;
+ 	adis->buffer = kcalloc(indio_dev->scan_bytes, 2, GFP_KERNEL);
+-	if (!adis->buffer)
++	if (!adis->buffer) {
++		kfree(adis->xfer);
++		adis->xfer = NULL;
+ 		return -ENOMEM;
++	}
  
- 	ret = iio_triggered_buffer_setup(indio_dev, NULL,
+ 	rx = adis->buffer;
+ 	tx = rx + scan_count;
 -- 
 2.20.1
 
