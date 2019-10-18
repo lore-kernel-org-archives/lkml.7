@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84517CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C11AECA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EED321852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92287205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437432;
-	bh=y6VryHO5+naC1eaHPBvno9Wffqz7+nBh++FjpxSa67Q=;
+	s=default; t=1571437438;
+	bh=+DOoDVc0VcnWbD40iSGHebhxChdm5C5qW61ySyP17ZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DL+O8QlqxKbCKjtqqx6e5q+w+bJfWgVHdE3FxIrxtt7fzT1iHWC8MlCfH/LHwNKf6
-	 AehgvLcIEpkLpBQv+5tToPYnOq7uSx1qP2CcoRJJcNHVxVgxWeeUwQfnuB/OlFXpYP
-	 JOZeGWpMGnVBXYfuvH18aogBLF3CxhAGd42VKwGY=
+	b=x8ihcFdhwWHPS4qC6oZ4a/BBapR7rSrZgF0Z2WS6EojrEdwFKqq2fZiwqlTquvsmd
+	 jdaiVGiwEG33oytoJuNVa64AJi7Rh2S5LwlTu7pwHbjchA67dh1rfUM868tPtBVPBS
+	 cOEuGyCA5nfi1THe6eFnDAJ50G+b/rINmpPMuMSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729228AbfJRWFJ (ORCPT
+        id S2405479AbfJRWX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:05:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36910 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:23:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729169AbfJRWFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:05:06 -0400
+        id S1729237AbfJRWFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:05:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5569222D2;
-        Fri, 18 Oct 2019 22:05:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D9252245B;
+        Fri, 18 Oct 2019 22:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436305;
-        bh=y6VryHO5+naC1eaHPBvno9Wffqz7+nBh++FjpxSa67Q=;
+        s=default; t=1571436309;
+        bh=+DOoDVc0VcnWbD40iSGHebhxChdm5C5qW61ySyP17ZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JwpBaNbOXEpNc+c0mmctL7h6iyjkjGVXDPSuUZl6rrQGfyMbDFtMAgMzwuqEAgGiJ
-         ydss04adYbsZsJPMJ8wGWyxiTc+Rc4GAmGAPGsrZ7QX2OWGGrEGrQ3SXsifiOzoSIv
-         LOV3ynvaadJpirrRdLgw2ra5rLtN0jNKbnmQYiaU=
+        b=ErK5GLxMF+lLVZggHVtdVJuIrTMoComiyHd4uwbXPzws0XRIcKp4Jq+oW13ewKw0q
+         kpFv7g6Ofu1RFqK8CeV/XrS0xJdNxqMYnjyGNKS2HnjQqzAkhNyIUia9fiEDV6VTQB
+         BSu7blfELmsRcgreZpWbVskk89TwiQ4YLK/6WM4o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marco Felsch <m.felsch@pengutronix.de>, Stable@vger.kernel.org,
+Cc:     David Frey <dpfrey@gmail.com>,
+        Andreas Dannenberg <dannenberg@ti.com>, Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 76/89] iio: light: fix vcnl4000 devicetree hooks
-Date:   Fri, 18 Oct 2019 18:03:11 -0400
-Message-Id: <20191018220324.8165-76-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 79/89] iio: light: opt3001: fix mutex unlock race
+Date:   Fri, 18 Oct 2019 18:03:14 -0400
+Message-Id: <20191018220324.8165-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
 References: <20191018220324.8165-1-sashal@kernel.org>
@@ -59,55 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: David Frey <dpfrey@gmail.com>
 
-[ Upstream commit 1436a78c63495dd94c8d4f84a76d78d5317d481b ]
+[ Upstream commit 82f3015635249a8c8c45bac303fd84905066f04f ]
 
-Since commit ebd457d55911 ("iio: light: vcnl4000 add devicetree hooks")
-the of_match_table is supported but the data shouldn't be a string.
-Instead it shall be one of 'enum vcnl4000_device_ids'. Also the matching
-logic for the vcnl4020 was wrong. Since the data retrieve mechanism is
-still based on the i2c_device_id no failures did appeared till now.
+When an end-of-conversion interrupt is received after performing a
+single-shot reading of the light sensor, the driver was waking up the
+result ready queue before checking opt->ok_to_ignore_lock to determine
+if it should unlock the mutex. The problem occurred in the case where
+the other thread woke up and changed the value of opt->ok_to_ignore_lock
+to false prior to the interrupt thread performing its read of the
+variable. In this case, the mutex would be unlocked twice.
 
-Fixes: ebd457d55911 ("iio: light: vcnl4000 add devicetree hooks")
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Reviewed-by: Angus Ainslie (Purism) angus@akkea.ca
+Signed-off-by: David Frey <dpfrey@gmail.com>
+Reviewed-by: Andreas Dannenberg <dannenberg@ti.com>
+Fixes: 94a9b7b1809f ("iio: light: add support for TI's opt3001 light sensor")
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/light/vcnl4000.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/iio/light/opt3001.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
-index 51421ac325177..f522cb863e8c8 100644
---- a/drivers/iio/light/vcnl4000.c
-+++ b/drivers/iio/light/vcnl4000.c
-@@ -398,19 +398,19 @@ static int vcnl4000_probe(struct i2c_client *client,
- static const struct of_device_id vcnl_4000_of_match[] = {
- 	{
- 		.compatible = "vishay,vcnl4000",
--		.data = "VCNL4000",
-+		.data = (void *)VCNL4000,
- 	},
- 	{
- 		.compatible = "vishay,vcnl4010",
--		.data = "VCNL4010",
-+		.data = (void *)VCNL4010,
- 	},
- 	{
--		.compatible = "vishay,vcnl4010",
--		.data = "VCNL4020",
-+		.compatible = "vishay,vcnl4020",
-+		.data = (void *)VCNL4010,
- 	},
- 	{
- 		.compatible = "vishay,vcnl4200",
--		.data = "VCNL4200",
-+		.data = (void *)VCNL4200,
- 	},
- 	{},
- };
+diff --git a/drivers/iio/light/opt3001.c b/drivers/iio/light/opt3001.c
+index e666879007d2c..92004a2563ea8 100644
+--- a/drivers/iio/light/opt3001.c
++++ b/drivers/iio/light/opt3001.c
+@@ -686,6 +686,7 @@ static irqreturn_t opt3001_irq(int irq, void *_iio)
+ 	struct iio_dev *iio = _iio;
+ 	struct opt3001 *opt = iio_priv(iio);
+ 	int ret;
++	bool wake_result_ready_queue = false;
+ 
+ 	if (!opt->ok_to_ignore_lock)
+ 		mutex_lock(&opt->lock);
+@@ -720,13 +721,16 @@ static irqreturn_t opt3001_irq(int irq, void *_iio)
+ 		}
+ 		opt->result = ret;
+ 		opt->result_ready = true;
+-		wake_up(&opt->result_ready_queue);
++		wake_result_ready_queue = true;
+ 	}
+ 
+ out:
+ 	if (!opt->ok_to_ignore_lock)
+ 		mutex_unlock(&opt->lock);
+ 
++	if (wake_result_ready_queue)
++		wake_up(&opt->result_ready_queue);
++
+ 	return IRQ_HANDLED;
+ }
+ 
 -- 
 2.20.1
 
