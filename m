@@ -2,200 +2,170 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD62CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F105FCA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02104222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4C28222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:40:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632893AbfJRIjR (ORCPT
+        id S2632918AbfJRIkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:39:17 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:44409 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727903AbfJRIjR (ORCPT
+        Fri, 18 Oct 2019 04:40:45 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51354 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727903AbfJRIkn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 04:39:17 -0400
-X-IronPort-AV: E=Sophos;i="5.67,311,1566831600"; 
-   d="scan'208";a="29209172"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 18 Oct 2019 17:39:14 +0900
-Received: from localhost.localdomain (unknown [10.166.17.210])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 65ACA4000C6E;
-        Fri, 18 Oct 2019 17:39:14 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH] dt-bindings: phy: renesas: usb3-phy: convert bindings to json-schema
-Date:   Fri, 18 Oct 2019 17:39:14 +0900
-Message-Id: <1571387954-23446-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 18 Oct 2019 04:40:43 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9I8bWWQ053607
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 04:40:42 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vqa0yr49v-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 04:40:41 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
+        Fri, 18 Oct 2019 09:40:39 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 18 Oct 2019 09:40:37 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9I8eb5g57475080
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 18 Oct 2019 08:40:37 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F2846A4054;
+        Fri, 18 Oct 2019 08:40:36 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9D828A405C;
+        Fri, 18 Oct 2019 08:40:36 +0000 (GMT)
+Received: from oc3784624756.ibm.com (unknown [9.152.212.90])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 18 Oct 2019 08:40:36 +0000 (GMT)
+Subject: Perf record is broken on kernel 5.4.0.rc3
+References: <b1678611-bafd-36db-b91c-aad87943489f@linux.ibm.com>
+To:     "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Song Liu <songliubraving@fb.com>, Hechao Li <hechaol@fb.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+From:   Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+X-Forwarded-Message-Id: <b1678611-bafd-36db-b91c-aad87943489f@linux.ibm.com>
+Date:   Fri, 18 Oct 2019 10:40:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <b1678611-bafd-36db-b91c-aad87943489f@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19101808-0008-0000-0000-00000323320C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101808-0009-0000-0000-00004A4252EF
+Message-Id: <318faccf-a5fb-50f3-2635-6037b4670eb6@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-18_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910180085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert Renesas R-Car generation 3 USB 3.0 PHY bindings documentation
-to json-schema.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- .../devicetree/bindings/phy/rcar-gen3-phy-usb3.txt | 52 --------------
- .../devicetree/bindings/phy/renesas,usb3-phy.yaml  | 80 ++++++++++++++++++++++
- 2 files changed, 80 insertions(+), 52 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt
- create mode 100644 Documentation/devicetree/bindings/phy/renesas,usb3-phy.yaml
+I ran into a eBPF program load error, system call bpf() returned -EPERM.
+It turned out that
+  bpf_prog_load()
+    bpf_prog_charge_memlock()
+     __bpf_prog_charge() operated on a strange value of user->locked_vm:
+                         user->locked_vm:0xfffffffffffffe04
+                         when accounting for 1 page.
 
-diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt
-deleted file mode 100644
-index 0fe433b..00000000
---- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt
-+++ /dev/null
-@@ -1,52 +0,0 @@
--* Renesas R-Car generation 3 USB 3.0 PHY
--
--This file provides information on what the device node for the R-Car generation
--3 and RZ/G2 USB 3.0 PHY contain.
--If you want to enable spread spectrum clock (ssc), you should use USB_EXTAL
--instead of USB3_CLK. However, if you don't want to these features, you don't
--need this driver.
--
--Required properties:
--- compatible: "renesas,r8a774a1-usb3-phy" if the device is a part of an R8A774A1
--	      SoC.
--	      "renesas,r8a774b1-usb3-phy" if the device is a part of an R8A774B1
--	      SoC.
--	      "renesas,r8a7795-usb3-phy" if the device is a part of an R8A7795
--	      SoC.
--	      "renesas,r8a7796-usb3-phy" if the device is a part of an R8A7796
--	      SoC.
--	      "renesas,r8a77965-usb3-phy" if the device is a part of an
--	      R8A77965 SoC.
--	      "renesas,rcar-gen3-usb3-phy" for a generic R-Car Gen3 or RZ/G2
--	      compatible device.
--
--	      When compatible with the generic version, nodes must list the
--	      SoC-specific version corresponding to the platform first
--	      followed by the generic version.
--
--- reg: offset and length of the USB 3.0 PHY register block.
--- clocks: A list of phandles and clock-specifier pairs.
--- clock-names: Name of the clocks.
--  - The funcional clock must be "usb3-if".
--  - The usb3's external clock must be "usb3s_clk".
--  - The usb2's external clock must be "usb_extal". If you want to use the ssc,
--    the clock-frequency must not be 0.
--- #phy-cells: see phy-bindings.txt in the same directory, must be <0>.
--
--Optional properties:
--- renesas,ssc-range: Enable/disable spread spectrum clock (ssc) by using
--		     the following values as u32:
--			- 0 (or the property doesn't exist): disable the ssc
--			- 4980: enable the ssc as -4980 ppm
--			- 4492: enable the ssc as -4492 ppm
--			- 4003: enable the ssc as -4003 ppm
--
--Example (R-Car H3):
--
--	usb-phy@e65ee000 {
--		compatible = "renesas,r8a7795-usb3-phy",
--			     "renesas,rcar-gen3-usb3-phy";
--		reg = <0 0xe65ee000 0 0x90>;
--		clocks = <&cpg CPG_MOD 328>, <&usb3s0_clk>, <&usb_extal>;
--		clock-names = "usb3-if", "usb3s_clk", "usb_extal";
--	};
-diff --git a/Documentation/devicetree/bindings/phy/renesas,usb3-phy.yaml b/Documentation/devicetree/bindings/phy/renesas,usb3-phy.yaml
-new file mode 100644
-index 00000000..42239e3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/renesas,usb3-phy.yaml
-@@ -0,0 +1,80 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/renesas,usb3-phy.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas R-Car generation 3 USB 3.0 PHY
-+
-+maintainers:
-+  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - renesas,r8a774a1-usb3-phy # RZ/G2M
-+              - renesas,r8a774b1-usb3-phy # RZ/G2N
-+              - renesas,r8a7795-usb3-phy  # R-Car H3
-+              - renesas,r8a7796-usb3-phy  # R-Car M3-W
-+              - renesas,r8a77965-usb3-phy # R-Car M3-N
-+          - const: renesas,rcar-gen3-usb3-phy
-+
-+  reg:
-+    # base address and length of the registers block for the PHY.
-+    maxItems: 1
-+
-+  clocks:
-+    # A list of phandles and clock-specifier pairs.
-+    maxItems: 3
-+
-+  clock-names:
-+    # If you want to use the ssc, the clock-frequency of usb_extal
-+    # must not be 0.
-+    maxItems: 3
-+    items:
-+      - const: usb3-if # The funcional clock
-+      - const: usb3s_clk # The usb3's external clock
-+      - const: usb_extal # The usb2's external clock
-+
-+  '#phy-cells':
-+    # see phy-bindings.txt in the same directory
-+    const: 0
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  renesas,ssc-range:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      Enable/disable spread spectrum clock (ssc) by using the following values
-+       - 0 (or the property doesn't exist): disable the ssc
-+       - 4980: enable the ssc as -4980 ppm
-+       - 4492: enable the ssc as -4492 ppm
-+       - 4003: enable the ssc as -4003 ppm
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - '#phy-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/r8a7795-cpg-mssr.h>
-+    #include <dt-bindings/power/r8a7795-sysc.h>
-+
-+    usb-phy@e65ee000 {
-+        compatible = "renesas,r8a7795-usb3-phy", "renesas,rcar-gen3-usb3-phy";
-+        reg = <0 0xe65ee000 0 0x90>;
-+        clocks = <&cpg CPG_MOD 328>, <&usb3s0_clk>, <&usb_extal>;
-+        clock-names = "usb3-if", "usb3s_clk", "usb_extal";
-+        #phy-cells = <0>;
-+    };
+I bisected this strange value to
+commit d44248a41337 ("perf/core: Rework memory accounting in perf_mmap()")
+
+I added printk at end of function perf_mmap() to show allocation
+and at end of function perf_mmap_close() to display memory release.
+Then I run command 'perf record -e rbd000' to record samples and saving
+them in the auxiliary trace buffer.
+
+Here is the output, copied from the dmesg buffer:
+
+During allocation the values increase
+[52.250027] perf_mmap user->locked_vm:0x87 pinned_vm:0x0 ret:0 
+[52.250115] perf_mmap user->locked_vm:0x107 pinned_vm:0x0 ret:0
+[52.250251] perf_mmap user->locked_vm:0x188 pinned_vm:0x0 ret:0
+[52.250326] perf_mmap user->locked_vm:0x208 pinned_vm:0x0 ret:0
+[52.250441] perf_mmap user->locked_vm:0x289 pinned_vm:0x0 ret:0
+[52.250498] perf_mmap user->locked_vm:0x309 pinned_vm:0x0 ret:0 
+[52.250613] perf_mmap user->locked_vm:0x38a pinned_vm:0x0 ret:0 
+[52.250715] perf_mmap user->locked_vm:0x408 pinned_vm:0x2 ret:0 
+[52.250834] perf_mmap user->locked_vm:0x408 pinned_vm:0x83 ret:0 
+[52.250915] perf_mmap user->locked_vm:0x408 pinned_vm:0x103 ret:0 
+[52.251061] perf_mmap user->locked_vm:0x408 pinned_vm:0x184 ret:0 
+[52.251146] perf_mmap user->locked_vm:0x408 pinned_vm:0x204 ret:0 
+[52.251299] perf_mmap user->locked_vm:0x408 pinned_vm:0x285 ret:0 
+[52.251383] perf_mmap user->locked_vm:0x408 pinned_vm:0x305 ret:0 
+[52.251544] perf_mmap user->locked_vm:0x408 pinned_vm:0x386 ret:0 
+[52.251634] perf_mmap user->locked_vm:0x408 pinned_vm:0x406 ret:0 
+[52.253018] perf_mmap user->locked_vm:0x408 pinned_vm:0x487 ret:0 
+[52.253197] perf_mmap user->locked_vm:0x408 pinned_vm:0x508 ret:0 
+[52.253374] perf_mmap user->locked_vm:0x408 pinned_vm:0x589 ret:0
+[52.253550] perf_mmap user->locked_vm:0x408 pinned_vm:0x60a ret:0
+[52.253726] perf_mmap user->locked_vm:0x408 pinned_vm:0x68b ret:0
+[52.253903] perf_mmap user->locked_vm:0x408 pinned_vm:0x70c ret:0
+[52.254084] perf_mmap user->locked_vm:0x408 pinned_vm:0x78d ret:0
+[52.254263] perf_mmap user->locked_vm:0x408 pinned_vm:0x80e ret:0
+
+The value of user->locked_vm increases to a limit then the memory
+is tracked by pinned_vm.
+
+During deallocation the size is subtracted from pinned_vm until
+it hits a limit. Then a larger value is subtracted from locked_vm
+leading to a large number (because of type unsigned):
+[64.267797] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x78d
+[64.267826] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x70c
+[64.267848] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x68b
+[64.267869] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x60a
+[64.267891] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x589
+[64.267911] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x508
+[64.267933] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x487
+[64.267952] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x406
+[64.268883] perf_mmap_close mmap_user->locked_vm:0x307 pinned_vm:0x406
+[64.269117] perf_mmap_close mmap_user->locked_vm:0x206 pinned_vm:0x406
+[64.269433] perf_mmap_close mmap_user->locked_vm:0x105 pinned_vm:0x406
+[64.269536] perf_mmap_close mmap_user->locked_vm:0x4 pinned_vm:0x404
+[64.269797] perf_mmap_close mmap_user->locked_vm:0xffffffffffffff84 pinned_vm:0x303
+[64.270105] perf_mmap_close mmap_user->locked_vm:0xffffffffffffff04 pinned_vm:0x202
+[64.270374] perf_mmap_close mmap_user->locked_vm:0xfffffffffffffe84 pinned_vm:0x101
+[64.270628] perf_mmap_close mmap_user->locked_vm:0xfffffffffffffe04 pinned_vm:0x0
+
+This value sticks for the user until system is rebooted, causing
+follow-on system calls using locked_vm resource limit to fail.
+
+This happens on a s390 (where I can proof it), but I am sure this
+affects other plattforms too as above commit changes common code.
+
+If you send me a fix, I can verify it.
+
 -- 
-2.7.4
+Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Matthias Hartmann
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
 
