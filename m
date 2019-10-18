@@ -2,106 +2,139 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49295CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1893CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22C7D21897
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:27:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571390828;
-	bh=WFCHWMpuOvk4Jfe0cTEExOuAzfZ+RF4o0B7Uope7Uy8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Etof6Sinrj2RtdY3Dh+iUfv2ssAXynno869Xm5pip1qgBvfG2cNvD5DT0jwFiA8aJ
-	 pD9nkftQPTbBJoRKOwcuw2G/hdhSchSJaaqbFwXtHJTOc542MsPYxjGPktFMLedFiI
-	 cf5Wx/IKd/7PYl7Ksx3+1o3Nm+r4C31VQYy4nwo0=
+	by mail.kernel.org (Postfix) with ESMTP id 8B9CA21897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:28:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Xm19njqr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409716AbfJRJ1G (ORCPT
+        id S2409723AbfJRJ2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 05:27:06 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40286 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390443AbfJRJ1G (ORCPT
+        Fri, 18 Oct 2019 05:28:15 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:33854 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390443AbfJRJ2O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 05:27:06 -0400
-Received: by mail-ot1-f65.google.com with SMTP id y39so4390078ota.7;
-        Fri, 18 Oct 2019 02:27:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WFCHWMpuOvk4Jfe0cTEExOuAzfZ+RF4o0B7Uope7Uy8=;
-        b=q/eHwS61dV5wCG71vH8/Dz/Gt/tearl3+Uik1DP0mWR+2k2s3FgRAdN48biaFyRcjT
-         tMf/AuFCHqxsPgUz9y+AfiiTaj7wValxNNx1Pj5vUNjiztPBcoRNnCKggcasXaaC/reS
-         m2MNf27dv1DgLiHOv8DaUje9S+7IjXb0CUdRuF9TWOJA8vEY/59SGmGMS2xV3ndsG6i8
-         QLZp4I91UYvPV8qHDNj2N8xRjxI8M/qRqqiMuq5Sb0Lg6LVFn/THJlls2a9Y69WOmOzn
-         Fem+1tjau55y+0rdfXHq0Vb97QQ7UDl8W0lVifNpY1kuJsMfHlKsNeCWn4MW83KqPCB7
-         uWuw==
-X-Gm-Message-State: APjAAAWX5DBDH2GoFzYmCH0CvgOnjhJ5ZkltHyb8tukez14dzj3UlHTB
-        RrrEy6b9hd4IxHIwbLElRwVEZjGCVHhWSoNwmp1XpQ==
-X-Google-Smtp-Source: APXvYqya815uon46X6ZdQgw//057c7fKahm7VPCQTdOF2gkg3Gt2kr4c6a0k71jx5wPq06RXRMuVpt5Z3mVkg0JKRQ8=
-X-Received: by 2002:a9d:664:: with SMTP id 91mr414823otn.189.1571390823637;
- Fri, 18 Oct 2019 02:27:03 -0700 (PDT)
+        Fri, 18 Oct 2019 05:28:14 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9I9O9ok079717;
+        Fri, 18 Oct 2019 09:28:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=yqAcSITwDl4ITklXkN8fnCXmwYAZHx33J2/ZPXlncVQ=;
+ b=Xm19njqr5T2ptjMqUaRMLj/CUxIY8G4ObTCbomjdBJdBp/txMj8MEfL1dWVGVZDvDbxD
+ qxAdjBJMdEkyzbQEUnQwxN1usz3V2+M8kUvHm5tnZTybkaunqpKklAa6g78a5ribp3JY
+ tKWpf1dyUVhaRhLh2n2arOT7Z93pGVhB1vT18w5snXelcmwAd9R3U3ryLk5XosY4PemC
+ BwvjsIA4C5lYzjaRTqUDCHJ3A5XP47RABWlZs/Secxaa/kL7803duVORbUglfQAN9lhk
+ zQq1xMx6ZiKZnA/flPGKFMr5U1mUy8v6NnU14k5vZDDXAn/VKrTo3/YWJrJKtsKkG9yy pg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2vq0q4aq2y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 18 Oct 2019 09:28:03 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9I9MwhQ138435;
+        Fri, 18 Oct 2019 09:28:03 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2vq0evy75d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 18 Oct 2019 09:28:03 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9I9Rv5u028440;
+        Fri, 18 Oct 2019 09:28:00 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 18 Oct 2019 09:27:57 +0000
+Date:   Fri, 18 Oct 2019 12:27:50 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Qian Cai <cai@lca.pw>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH] iommu/amd: Pass gfp flags to iommu_map_page() in
+ amd_iommu_map()
+Message-ID: <20191018092750.GK21344@kadam>
+References: <20191018090736.18819-1-joro@8bytes.org>
 MIME-Version: 1.0
-References: <2811202.iOFZ6YHztY@kreacher> <20191016142343.GB5330@bogus>
- <20191017095725.izchzl7enfylvpf3@vireshk-i7> <20191017095942.GF8978@bogus>
- <CAJZ5v0ixS8ZS93Fgj8XGUMGcLdAy+Fgwp5z3QirccNSiiwLtDA@mail.gmail.com>
- <20191018054433.tq2euue675xk4o63@vireshk-i7> <CAJZ5v0hpfvy5iELVRWFA3HS8NoAH0=py0cE+fLaUq2hDReCrnQ@mail.gmail.com>
- <20191018082745.3zr6tc3yqmbydkrw@vireshk-i7> <CAJZ5v0gR45YNwqrc8JQ_2qQBnYrxPeCHTnvQtEELD8VpXJrxLA@mail.gmail.com>
- <20191018092447.2utqazqfob65x4k2@vireshk-i7>
-In-Reply-To: <20191018092447.2utqazqfob65x4k2@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 18 Oct 2019 11:26:52 +0200
-Message-ID: <CAJZ5v0hZc5g+AUDSJUkaGSA92mKNSXGyHLd5Qxuf88wP1i4AdA@mail.gmail.com>
-Subject: Re: [RFT][PATCH 0/3] cpufreq / PM: QoS: Introduce frequency QoS and
- use it in cpufreq
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Osipenko <digetx@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018090736.18819-1-joro@8bytes.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910180091
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9413 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910180091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 11:24 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 18-10-19, 10:30, Rafael J. Wysocki wrote:
-> > On Fri, Oct 18, 2019 at 10:27 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > >
-> > > On 18-10-19, 10:24, Rafael J. Wysocki wrote:
-> > > > On Fri, Oct 18, 2019 at 7:44 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > > > >
-> > > > > On 17-10-19, 18:34, Rafael J. Wysocki wrote:
-> > > > > > [BTW, Viresh, it looks like cpufreq_set_policy() should still ensure
-> > > > > > that the new min is less than the new max, because the QoS doesn't do
-> > > > > > that.]
-> > > > >
-> > > > > The ->verify() callback does that for us I believe.
-> > > >
-> > > > It does in practice AFAICS, but in theory it may assume the right
-> > > > ordering between the min and the max and just test the boundaries, may
-> > > > it not?
-> > >
-> > > I think cpufreq_verify_within_limits() gets called for sure from
-> > > within ->verify() for all platforms
-> >
-> > That's why I mean by "in practice". :-)
->
-> Hmm, I am not sure if we should really add another min <= max check in
-> cpufreq_set_policy() as in practice it will never hit :)
+Did you get a chance to look at iommu_dma_alloc_remap() as well?
 
-Fair enough, but adding a comment regarding that in there would be prudent IMO.
+drivers/iommu/dma-iommu.c
+   584  static void *iommu_dma_alloc_remap(struct device *dev, size_t size,
+   585                  dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
+                                                ^^^^^^^^^
+   586  {
+   587          struct iommu_domain *domain = iommu_get_dma_domain(dev);
+   588          struct iommu_dma_cookie *cookie = domain->iova_cookie;
+   589          struct iova_domain *iovad = &cookie->iovad;
+   590          bool coherent = dev_is_dma_coherent(dev);
+   591          int ioprot = dma_info_to_prot(DMA_BIDIRECTIONAL, coherent, attrs);
+   592          pgprot_t prot = dma_pgprot(dev, PAGE_KERNEL, attrs);
+   593          unsigned int count, min_size, alloc_sizes = domain->pgsize_bitmap;
+   594          struct page **pages;
+   595          struct sg_table sgt;
+   596          dma_addr_t iova;
+   597          void *vaddr;
+   598  
+   599          *dma_handle = DMA_MAPPING_ERROR;
+   600  
+   601          if (unlikely(iommu_dma_deferred_attach(dev, domain)))
+   602                  return NULL;
+   603  
+   604          min_size = alloc_sizes & -alloc_sizes;
+   605          if (min_size < PAGE_SIZE) {
+   606                  min_size = PAGE_SIZE;
+   607                  alloc_sizes |= PAGE_SIZE;
+   608          } else {
+   609                  size = ALIGN(size, min_size);
+   610          }
+   611          if (attrs & DMA_ATTR_ALLOC_SINGLE_PAGES)
+   612                  alloc_sizes = min_size;
+   613  
+   614          count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+   615          pages = __iommu_dma_alloc_pages(dev, count, alloc_sizes >> PAGE_SHIFT,
+   616                                          gfp);
+   617          if (!pages)
+   618                  return NULL;
+   619  
+   620          size = iova_align(iovad, size);
+   621          iova = iommu_dma_alloc_iova(domain, size, dev->coherent_dma_mask, dev);
+   622          if (!iova)
+   623                  goto out_free_pages;
+   624  
+   625          if (sg_alloc_table_from_pages(&sgt, pages, count, 0, size, GFP_KERNEL))
+                                                                           ^^^^^^^^^^
+gfp here instead of GFP_KERNEL?
 
+   626                  goto out_free_iova;
+   627  
+   628          if (!(ioprot & IOMMU_CACHE)) {
 
->
-> --
-> viresh
+regards,
+dan carpenter
+
