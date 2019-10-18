@@ -2,89 +2,70 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 508C6CA9EC8
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 501AACA9EB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F1A221897
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2077621D7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 00:15:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571357708;
+	bh=soPDvfWZzCOiWR8Dc2S8JX5kOP5xHAukB2H+7IlVZ/M=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=q6Wy1fEEz9CLGOatZMLHa6sLtZduP7xSjcWCEQ1+n7kQ30RbUbX1PvsRJP/QK5c6+
+	 ESFRSyMrGKRWrDeVc6Owu/h6Z/DhjUTkQkci3sriEXCLAPIfURnYVeIkfH4Fn5gZre
+	 YMVe3WsTmeddTmo1rn2AEvM9Ai97A+188I0KxAkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441888AbfJRAOD (ORCPT
+        id S2503819AbfJRAPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 17 Oct 2019 20:14:03 -0400
-Received: from mga17.intel.com ([192.55.52.151]:52115 "EHLO mga17.intel.com"
+        Thu, 17 Oct 2019 20:15:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441865AbfJRAOC (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 17 Oct 2019 20:14:02 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Oct 2019 17:14:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,309,1566889200"; 
-   d="scan'208";a="226360732"
-Received: from guidongj-mobl1.ccr.corp.intel.com (HELO [10.254.214.28]) ([10.254.214.28])
-  by fmsmga002.fm.intel.com with ESMTP; 17 Oct 2019 17:13:59 -0700
-Subject: Re: [PATCH v2] perf list: Separate the deprecated events
-To:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, kan.liang@intel.com,
-        yao.jin@intel.com
-References: <20191017135214.18620-1-yao.jin@linux.intel.com>
- <20191017144644.GV9933@tassilo.jf.intel.com> <20191017152100.GC21168@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <ef2fec7e-84e7-63bb-5dcb-3f85d7d78653@linux.intel.com>
-Date:   Fri, 18 Oct 2019 08:13:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191017152100.GC21168@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S2503799AbfJRAPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 17 Oct 2019 20:15:06 -0400
+Subject: Re: [GIT PULL] arm64: Fixes for -rc4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571357705;
+        bh=soPDvfWZzCOiWR8Dc2S8JX5kOP5xHAukB2H+7IlVZ/M=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=BYBJnn6/CXgYjA1V2eIuGeqQT7SMdv9SdZw8uOwBw1C717umZ9oegwwG3oTZEfkJ4
+         yO3PiwgW2NThhEhZSOlnjR8/Ty6odUy0orF7Vi6stgwKIqZgqc6Fm5ivh6EMZv3J2p
+         g1QimGEDqZf0+tkzclrYu4QwN99g8pypKS+DpvyE=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20191017234348.wcbbo2njexn7ixpk@willie-the-truck>
+References: <20191017234348.wcbbo2njexn7ixpk@willie-the-truck>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191017234348.wcbbo2njexn7ixpk@willie-the-truck>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
+ tags/arm64-fixes
+X-PR-Tracked-Commit-Id: 777d062e5bee0e3c0751cdcbce116a76ee2310ec
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 0e2adab6cf285c41e825b6c74a3aa61324d1132c
+Message-Id: <157135770556.19677.2191598282446582691.pr-tracker-bot@kernel.org>
+Date:   Fri, 18 Oct 2019 00:15:05 +0000
+To:     Will Deacon <will@kernel.org>
+Cc:     torvalds@linux-foundation.org, catalin.marinas@arm.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM Kernel Mailing List 
+        <linux-arm-kernel@lists.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The pull request you sent on Fri, 18 Oct 2019 00:43:49 +0100:
 
+> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
 
-On 10/17/2019 11:21 PM, Jiri Olsa wrote:
-> On Thu, Oct 17, 2019 at 07:46:44AM -0700, Andi Kleen wrote:
->>>   v2:
->>>   ---
->>>   In v1, the deprecated events are hidden by default but they can be
->>>   displayed when option "--deprecated" is enabled. In v2, we don't use
->>>   the new option "--deprecated". Instead, we just display the deprecated
->>>   events under the title "--- Following are deprecated events ---".
->>
->> It's redundant with what the event description already says.
->> If we always want to show it we don't need to do anything.
->>
->> I really would much prefer to hide it. What's the point of showing
->> something that people are not supposed to use?
->>
->> The only reason for keeping the deprecated events is to not
->> break old scripts, but those don't care about perf list output.
-> 
-> I thought this might be a problem for users,
-> but don't have anything to back this up ;-)
-> 
-> if that's the case we can go with the original patch
-> 
-> jirka
-> 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/0e2adab6cf285c41e825b6c74a3aa61324d1132c
 
-I'm fine to go with the original patch. :)
+Thank you!
 
-Thanks
-Jin Yao
-
->>
->> So I think the only sane option is to hide it by default.
->>
->> -Andi
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
