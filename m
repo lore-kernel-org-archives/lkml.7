@@ -2,112 +2,175 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75455CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA5ACA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 577BD21D7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6076222C5
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:10:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qgbEQaGz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502483AbfJRQJc (ORCPT
+        id S2442629AbfJRQKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:09:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49488 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727834AbfJRQJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:09:31 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6547FC02E628;
-        Fri, 18 Oct 2019 16:09:31 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F99C5C1B5;
-        Fri, 18 Oct 2019 16:09:29 +0000 (UTC)
-Subject: Re: [PATCH v5 4/5] locking/qspinlock: Introduce starvation avoidance
- into CNA
-To:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
-        peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, linux-arch@vger.kernel.org,
+        Fri, 18 Oct 2019 12:10:47 -0400
+Received: from mail-yw1-f73.google.com ([209.85.161.73]:53688 "EHLO
+        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405669AbfJRQKr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 12:10:47 -0400
+Received: by mail-yw1-f73.google.com with SMTP id x198so4756329ywg.20
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 09:10:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=t+DRDqz67Twe6Iyofi8RQAeNodEvIc7fNPUNsIrBR+w=;
+        b=qgbEQaGzHqaPH3cxTJE6CGTvZ+cRjHUHTkYr1B9DStapni7EFSvFnUDWSGPFTm7gwQ
+         BQRlnzPOMPn4q93e238qrgFaMvCQf9Spzz7SINiIlVpuYks/Wu8Nwa1QmimiSJxpH3pA
+         zXtHmrE7MTXaAB6BLpC8vL3pFXfn9A40pGj+qHFCNXTwD0ywpccoB55v3hYAWCkjkCgv
+         t4a0qzeiaiVD3qeEEiRLETv6os7mi6JMjFcZQ7HZ3TsPYfuCCRN07OVVFEBv060hDwM0
+         Oe2+l3QRysVBZMWOYZ/v2Sou4QvuVNVoxWjAknk7l6ulOzhXQHgz5ej8/LwC2yX3JfcO
+         auvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=t+DRDqz67Twe6Iyofi8RQAeNodEvIc7fNPUNsIrBR+w=;
+        b=dq4JxeITAHUK7z1F8381fbek767rLcpWcFZSk2TocAx2rcP0ZAil5O2+48Ks+CarRY
+         IQrmOaNeXXMhZF9URy/1T2ZFioGlYNt8VTZRGRXfQeQOUEYNpb3xAmo9BXId0PxXqEUJ
+         clvwczDPJ+uAQg68m9Fk9iQzqyLn1dLEqwbXCaygHU06grSGU9kSRH8OMjDuM//VN4rP
+         cVQCofyqBEV+D16BFIyfOvbW7azpxH81XQJAhslBZDGs93ovq6fsFHvvxXBIGNGozGFV
+         CyZu2Dco8rVyDcf5YCqm50blPkq2aUZ2y52iDP6q/+HGl4uso6ZExaoxaVah32xqIB1D
+         GNWQ==
+X-Gm-Message-State: APjAAAUk9trpb84/+n+4ABt82Y0uZsqxJRvc78/VlW2wLEQaZQXfVaMs
+        Hyi+snPmikns2bd97+H/bJhiKi3S/YUhBukNt/s=
+X-Google-Smtp-Source: APXvYqyvgW1/nPqoxtlaKdWfjDEG7KEXwdtGVI7DdMRD1tlwHR6z5N+W9oDyStEa7Ea2uqFWOqGCG100k3GuhoDibZE=
+X-Received: by 2002:a25:a324:: with SMTP id d33mr6752834ybi.58.1571415044349;
+ Fri, 18 Oct 2019 09:10:44 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 09:10:15 -0700
+Message-Id: <20191018161033.261971-1-samitolvanen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
+Subject: [PATCH 00/18] add support for Clang's Shadow Call Stack
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com
-Cc:     steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com, rahul.x.yadav@oracle.com
-References: <20191016042903.61081-1-alex.kogan@oracle.com>
- <20191016042903.61081-5-alex.kogan@oracle.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <e83bfc8c-1c5b-572f-ef3a-a85e114f2677@redhat.com>
-Date:   Fri, 18 Oct 2019 12:09:29 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20191016042903.61081-5-alex.kogan@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 18 Oct 2019 16:09:31 +0000 (UTC)
+        Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/16/19 12:29 AM, Alex Kogan wrote:
-> Keep track of the number of intra-node lock handoffs, and force
-> inter-node handoff once this number reaches a preset threshold.
->
-> Signed-off-by: Alex Kogan <alex.kogan@oracle.com>
-> Reviewed-by: Steve Sistare <steven.sistare@oracle.com>
-> ---
->  kernel/locking/qspinlock.c     |  3 +++
->  kernel/locking/qspinlock_cna.h | 30 +++++++++++++++++++++++++++---
->  2 files changed, 30 insertions(+), 3 deletions(-)
->
-> diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
-> index 6d8c4a52e44e..1d0d884308ef 100644
-> --- a/kernel/locking/qspinlock.c
-> +++ b/kernel/locking/qspinlock.c
-> @@ -597,6 +597,9 @@ EXPORT_SYMBOL(queued_spin_lock_slowpath);
->  #if !defined(_GEN_CNA_LOCK_SLOWPATH) && defined(CONFIG_NUMA_AWARE_SPINLOCKS)
->  #define _GEN_CNA_LOCK_SLOWPATH
->  
-> +#undef pv_init_node
-> +#define pv_init_node			cna_init_node
-> +
->  #undef pv_wait_head_or_lock
->  #define pv_wait_head_or_lock		cna_pre_scan
->  
-> diff --git a/kernel/locking/qspinlock_cna.h b/kernel/locking/qspinlock_cna.h
-> index 4d095f742d31..b92a6f9a19db 100644
-> --- a/kernel/locking/qspinlock_cna.h
-> +++ b/kernel/locking/qspinlock_cna.h
-> @@ -50,9 +50,19 @@ struct cna_node {
->  	struct mcs_spinlock	mcs;
->  	int			numa_node;
->  	u32			encoded_tail;
-> -	u32			pre_scan_result; /* 0 or an encoded tail */
-> +	u32			pre_scan_result; /* 0, 1 or an encoded tail */
-> +	u32			intra_count;
->  };
->  
-> +/*
-> + * Controls the threshold for the number of intra-node lock hand-offs. It can
-> + * be tuned and depend, e.g., on the number of CPUs per node. For now,
-> + * choose a value that provides reasonable long-term fairness without
-> + * sacrificing performance compared to a version that does not have any
-> + * fairness guarantees.
-> + */
-> +#define INTRA_NODE_HANDOFF_THRESHOLD (1 << 16)
+This patch series adds support for Clang's Shadow Call Stack (SCS)
+mitigation, which uses a separately allocated shadow stack to protect
+against return address overwrites. More information can be found here:
 
-I think 64k is too high. I will be more comfortable with a number like
-(1 << 8). The worst case latency for a lock waiter from the other node
-is just not acceptable.
+  https://clang.llvm.org/docs/ShadowCallStack.html
 
-Cheers,
-Longman
+SCS is currently supported only on arm64, where the compiler requires
+the x18 register to be reserved for holding the current task's shadow
+stack pointer. Because of this, the series includes four patches from
+Ard to remove x18 usage from assembly code and to reserve the register
+from general allocation.
+
+With -fsanitize=shadow-call-stack, the compiler injects instructions
+to all non-leaf C functions to store the return address to the shadow
+stack and unconditionally load it again before returning. As a result,
+SCS is incompatible with features that rely on modifying function
+return addresses to alter control flow, such as function graph tracing
+and kretprobes. A copy of the return address is still kept in the
+kernel stack for compatibility with stack unwinding, for example.
+
+SCS has a minimal performance overhead, but allocating shadow stacks
+increases kernel memory usage. The feature is therefore mostly useful
+on hardware that lacks support for PAC instructions. This series adds
+a ROP protection choice to the kernel configuration, where other
+return address protection options can be selected as they are added to
+the kernel.
+
+
+Ard Biesheuvel (4):
+  arm64/lib: copy_page: avoid x18 register in assembler code
+  arm64: kvm: stop treating register x18 as caller save
+  arm64: kernel: avoid x18 as an arbitrary temp register
+  arm64: kbuild: reserve reg x18 from general allocation by the compiler
+
+Sami Tolvanen (14):
+  arm64: mm: don't use x18 in idmap_kpti_install_ng_mappings
+  add support for Clang's Shadow Call Stack (SCS)
+  scs: add accounting
+  scs: add support for stack usage debugging
+  trace: disable function graph tracing with SCS
+  kprobes: fix compilation without CONFIG_KRETPROBES
+  kprobes: disable kretprobes with SCS
+  arm64: reserve x18 only with Shadow Call Stack
+  arm64: preserve x18 when CPU is suspended
+  arm64: efi: restore x18 if it was corrupted
+  arm64: vdso: disable Shadow Call Stack
+  arm64: kprobes: fix kprobes without CONFIG_KRETPROBES
+  arm64: disable SCS for hypervisor code
+  arm64: implement Shadow Call Stack
+
+ Makefile                             |   6 +
+ arch/Kconfig                         |  41 ++++-
+ arch/arm64/Kconfig                   |   1 +
+ arch/arm64/Makefile                  |   4 +
+ arch/arm64/include/asm/scs.h         |  60 ++++++++
+ arch/arm64/include/asm/stacktrace.h  |   4 +
+ arch/arm64/include/asm/thread_info.h |   3 +
+ arch/arm64/kernel/Makefile           |   1 +
+ arch/arm64/kernel/asm-offsets.c      |   3 +
+ arch/arm64/kernel/cpu-reset.S        |   4 +-
+ arch/arm64/kernel/efi-rt-wrapper.S   |   7 +-
+ arch/arm64/kernel/entry.S            |  23 +++
+ arch/arm64/kernel/head.S             |   9 ++
+ arch/arm64/kernel/irq.c              |   2 +
+ arch/arm64/kernel/probes/kprobes.c   |   2 +
+ arch/arm64/kernel/process.c          |   3 +
+ arch/arm64/kernel/scs.c              |  39 +++++
+ arch/arm64/kernel/smp.c              |   4 +
+ arch/arm64/kernel/vdso/Makefile      |   2 +-
+ arch/arm64/kvm/hyp/Makefile          |   3 +-
+ arch/arm64/kvm/hyp/entry.S           |  12 +-
+ arch/arm64/lib/copy_page.S           |  38 ++---
+ arch/arm64/mm/proc.S                 |  69 +++++----
+ drivers/base/node.c                  |   6 +
+ fs/proc/meminfo.c                    |   4 +
+ include/linux/compiler-clang.h       |   2 +
+ include/linux/compiler_types.h       |   4 +
+ include/linux/mmzone.h               |   3 +
+ include/linux/scs.h                  |  88 +++++++++++
+ init/init_task.c                     |   6 +
+ init/main.c                          |   3 +
+ kernel/Makefile                      |   1 +
+ kernel/fork.c                        |   9 ++
+ kernel/kprobes.c                     |  38 ++---
+ kernel/sched/core.c                  |   2 +
+ kernel/sched/sched.h                 |   1 +
+ kernel/scs.c                         | 221 +++++++++++++++++++++++++++
+ kernel/trace/Kconfig                 |   1 +
+ mm/page_alloc.c                      |   6 +
+ mm/vmstat.c                          |   3 +
+ 40 files changed, 656 insertions(+), 82 deletions(-)
+ create mode 100644 arch/arm64/include/asm/scs.h
+ create mode 100644 arch/arm64/kernel/scs.c
+ create mode 100644 include/linux/scs.h
+ create mode 100644 kernel/scs.c
+
+-- 
+2.23.0.866.gb869b98d4c-goog
 
