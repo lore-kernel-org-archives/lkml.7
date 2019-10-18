@@ -2,135 +2,193 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26499CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3888DCA9EA8
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08D85222C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D89B21D80
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 14:12:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633970AbfJROKF (ORCPT
+        id S2634011AbfJROMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 10:10:05 -0400
-Received: from outbound-smtp16.blacknight.com ([46.22.139.233]:52314 "EHLO
-        outbound-smtp16.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727988AbfJROKF (ORCPT
+        Fri, 18 Oct 2019 10:12:10 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:33469 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439192AbfJROMJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 10:10:05 -0400
-Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
-        by outbound-smtp16.blacknight.com (Postfix) with ESMTPS id 312B41C2FD6
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 15:10:02 +0100 (IST)
-Received: (qmail 31552 invoked from network); 18 Oct 2019 14:10:01 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.19.210])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 18 Oct 2019 14:10:01 -0000
-Date:   Fri, 18 Oct 2019 15:09:59 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Borislav Petkov <bp@alien8.de>, Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] mm, meminit: Recalculate pcpu batch and high limits
- after init completes
-Message-ID: <20191018140959.GK3321@techsingularity.net>
-References: <20191018105606.3249-1-mgorman@techsingularity.net>
- <20191018105606.3249-3-mgorman@techsingularity.net>
- <20191018130127.GP5017@dhcp22.suse.cz>
+        Fri, 18 Oct 2019 10:12:09 -0400
+Received: by mail-il1-f197.google.com with SMTP id z14so1910397ill.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 07:12:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=HlcGe5jN7UTtW7EzEkZIqtzO8rSWJ3S7oFgrifLHZeQ=;
+        b=bfnYHdVN7cJt+d3PET94X9MNjsso/3iCmmv/npLDFMxCkganvg9eA17isxMkwhJHG/
+         B1X5WvN/AyjBfRo79PUQpNvpsQhu8FqA3rE7ho7VRx+aBpTZ6Tpsr51TZLD0bcB3Uf/4
+         cx01TOxob1r6G/Qr5rsfB98kdFhprtWzaTIOVwAzpaq3izlZBcI+kUhL3MhVmAN8jTGF
+         z3PFJiGcefnVnIEW4m3DkZyu/4YeuRmar6vqst7vXdt9FLGcPc/8RquSvCHdCm6b24kk
+         Zu3PmIyYVDfH7UQo0NTPcnjnw+to4tA6Dw9R8lLlm8+BzWLu1aFAhQqvzZ2Bx7eKZv3E
+         XP3Q==
+X-Gm-Message-State: APjAAAVa7k00uIfni3VaR7IdK5HTNRcMVZ6m2ocQR5eMstS2CGmQ9ifq
+        n59hjhhfLrR2//3r11TZse+N98AS4o5kcPnt/6Dz7ZTxVdwL
+X-Google-Smtp-Source: APXvYqxvl2Lf6XKaDD09V7d6S8o3rUzYZfEVOGj49scmvgTSC1qxYluaaBlj+UCPfz21cGsQ5Cjzs4ZHYGWHrMzxbpUPB6AIUrb1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <20191018130127.GP5017@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a6b:7115:: with SMTP id q21mr6729959iog.303.1571407928563;
+ Fri, 18 Oct 2019 07:12:08 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 07:12:08 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006120c905952febbd@google.com>
+Subject: KMSAN: uninit-value in batadv_hard_if_event
+From:   syzbot <syzbot+0183453ce4de8bdf9214@syzkaller.appspotmail.com>
+To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
+        davem@davemloft.net, glider@google.com,
+        linux-kernel@vger.kernel.org, mareklindner@neomailbox.ch,
+        netdev@vger.kernel.org, sven@narfation.org, sw@simonwunderlich.de,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 03:01:27PM +0200, Michal Hocko wrote:
-> On Fri 18-10-19 11:56:05, Mel Gorman wrote:
-> > Deferred memory initialisation updates zone->managed_pages during
-> > the initialisation phase but before that finishes, the per-cpu page
-> > allocator (pcpu) calculates the number of pages allocated/freed in
-> > batches as well as the maximum number of pages allowed on a per-cpu list.
-> > As zone->managed_pages is not up to date yet, the pcpu initialisation
-> > calculates inappropriately low batch and high values.
-> > 
-> > This increases zone lock contention quite severely in some cases with the
-> > degree of severity depending on how many CPUs share a local zone and the
-> > size of the zone. A private report indicated that kernel build times were
-> > excessive with extremely high system CPU usage. A perf profile indicated
-> > that a large chunk of time was lost on zone->lock contention.
-> > 
-> > This patch recalculates the pcpu batch and high values after deferred
-> > initialisation completes on each node. It was tested on a 2-socket AMD
-> > EPYC 2 machine using a kernel compilation workload -- allmodconfig and
-> > all available CPUs.
-> > 
-> > mmtests configuration: config-workload-kernbench-max
-> > Configuration was modified to build on a fresh XFS partition.
-> > 
-> > kernbench
-> >                                 5.4.0-rc3              5.4.0-rc3
-> >                                   vanilla         resetpcpu-v1r1
-> > Amean     user-256    13249.50 (   0.00%)    15928.40 * -20.22%*
-> > Amean     syst-256    14760.30 (   0.00%)     4551.77 *  69.16%*
-> > Amean     elsp-256      162.42 (   0.00%)      118.46 *  27.06%*
-> > Stddev    user-256       42.97 (   0.00%)       50.83 ( -18.30%)
-> > Stddev    syst-256      336.87 (   0.00%)       33.70 (  90.00%)
-> > Stddev    elsp-256        2.46 (   0.00%)        0.81 (  67.01%)
-> > 
-> >                    5.4.0-rc3   5.4.0-rc3
-> >                      vanillaresetpcpu-v1r1
-> > Duration User       39766.24    47802.92
-> > Duration System     44298.10    13671.93
-> > Duration Elapsed      519.11      387.65
-> > 
-> > The patch reduces system CPU usage by 69.16% and total build time by
-> > 27.06%. The variance of system CPU usage is also much reduced.
-> 
-> The fix makes sense. It would be nice to see the difference in the batch
-> sizes from the initial setup compared to the one after the deferred
-> intialization is done
-> 
+Hello,
 
-Before, this was the breakdown of batch and high values over all zones
-were
+syzbot found the following crash on:
 
-    256               batch: 1
-    256               batch: 63
-    512               batch: 7
+HEAD commit:    c2453450 kmsan: kcov: prettify the code unpoisoning area->..
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=10b0c06b600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3684f3c73f43899a
+dashboard link: https://syzkaller.appspot.com/bug?extid=0183453ce4de8bdf9214
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
 
-    256               high:  0
-    256               high:  378
-    512               high:  42
+Unfortunately, I don't have any reproducer for this crash yet.
 
-i.e. 512 pcpu pagesets had a batch limit of 7 and a high limit of 42.
-These were for the NORMAL zones on the system. After the patch
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+0183453ce4de8bdf9214@syzkaller.appspotmail.com
 
-    256               batch: 1
-    768               batch: 63
+usb 1-1: config 0 has no interface number 0
+usb 1-1: New USB device found, idVendor=0411, idProduct=0012,  
+bcdDevice=56.5f
+usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 1-1: config 0 descriptor??
+=====================================================
+BUG: KMSAN: uninit-value in batadv_check_known_mac_addr  
+net/batman-adv/hard-interface.c:511 [inline]
+BUG: KMSAN: uninit-value in batadv_hardif_add_interface  
+net/batman-adv/hard-interface.c:942 [inline]
+BUG: KMSAN: uninit-value in batadv_hard_if_event+0x23c0/0x3260  
+net/batman-adv/hard-interface.c:1032
+CPU: 0 PID: 13223 Comm: kworker/0:3 Not tainted 5.4.0-rc3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  kmsan_report+0x14a/0x2f0 mm/kmsan/kmsan_report.c:109
+  __msan_warning+0x73/0xf0 mm/kmsan/kmsan_instr.c:245
+  batadv_check_known_mac_addr net/batman-adv/hard-interface.c:511 [inline]
+  batadv_hardif_add_interface net/batman-adv/hard-interface.c:942 [inline]
+  batadv_hard_if_event+0x23c0/0x3260 net/batman-adv/hard-interface.c:1032
+  notifier_call_chain kernel/notifier.c:95 [inline]
+  __raw_notifier_call_chain kernel/notifier.c:396 [inline]
+  raw_notifier_call_chain+0x13d/0x240 kernel/notifier.c:403
+  call_netdevice_notifiers_info net/core/dev.c:1749 [inline]
+  call_netdevice_notifiers_extack net/core/dev.c:1761 [inline]
+  call_netdevice_notifiers net/core/dev.c:1775 [inline]
+  register_netdevice+0x2126/0x26a0 net/core/dev.c:8810
+  register_netdev+0x93/0xd0 net/core/dev.c:8901
+  rtl8150_probe+0x11ef/0x14a0 drivers/net/usb/rtl8150.c:916
+  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
+  really_probe+0xd91/0x1f90 drivers/base/dd.c:552
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:721
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:828
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:430
+  __device_attach+0x489/0x750 drivers/base/dd.c:894
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:941
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:490
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2201
+  usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
+  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
+  usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
+  really_probe+0xd91/0x1f90 drivers/base/dd.c:552
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:721
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:828
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:430
+  __device_attach+0x489/0x750 drivers/base/dd.c:894
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:941
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:490
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2201
+  usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2536
+  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+  port_event drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x581d/0x72f0 drivers/usb/core/hub.c:5441
+  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
+  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+  kthread+0x4b5/0x4f0 kernel/kthread.c:256
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
 
-    256               high:  0
-    768               high:  378
+Uninit was stored to memory at:
+  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:150 [inline]
+  kmsan_internal_chain_origin+0xbd/0x170 mm/kmsan/kmsan.c:317
+  kmsan_memcpy_memmove_metadata+0x25c/0x2e0 mm/kmsan/kmsan.c:253
+  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:273
+  __msan_memcpy+0x56/0x70 mm/kmsan/kmsan_instr.c:129
+  set_ethernet_addr drivers/net/usb/rtl8150.c:282 [inline]
+  rtl8150_probe+0x1143/0x14a0 drivers/net/usb/rtl8150.c:912
+  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
+  really_probe+0xd91/0x1f90 drivers/base/dd.c:552
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:721
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:828
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:430
+  __device_attach+0x489/0x750 drivers/base/dd.c:894
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:941
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:490
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2201
+  usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
+  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
+  usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
+  really_probe+0xd91/0x1f90 drivers/base/dd.c:552
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:721
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:828
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:430
+  __device_attach+0x489/0x750 drivers/base/dd.c:894
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:941
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:490
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2201
+  usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2536
+  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+  port_event drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x581d/0x72f0 drivers/usb/core/hub.c:5441
+  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
+  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+  kthread+0x4b5/0x4f0 kernel/kthread.c:256
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
 
-> > Cc: stable@vger.kernel.org # v4.15+
-> 
-> Hmm, are you sure about 4.15? Doesn't this go all the way down to
-> deferred initialization? I do not see any recent changes on when
-> setup_per_cpu_pageset is called.
-> 
+Local variable description: ----node_id.i@rtl8150_probe
+Variable was created at:
+  get_registers drivers/net/usb/rtl8150.c:911 [inline]
+  set_ethernet_addr drivers/net/usb/rtl8150.c:281 [inline]
+  rtl8150_probe+0xdc8/0x14a0 drivers/net/usb/rtl8150.c:912
+  get_registers drivers/net/usb/rtl8150.c:911 [inline]
+  set_ethernet_addr drivers/net/usb/rtl8150.c:281 [inline]
+  rtl8150_probe+0xdc8/0x14a0 drivers/net/usb/rtl8150.c:912
+=====================================================
 
-No, I'm not 100% sure. It looks like this was always an issue from the
-code but did not happen on at least one 4.12-based distribution kernel for
-reasons that are non-obvious. Either way, the tag should have been "v4.1+"
 
-Thanks.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
--- 
-Mel Gorman
-SUSE Labs
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
