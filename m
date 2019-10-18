@@ -2,136 +2,232 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35239CA9EA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16003CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA5F21D80
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:33:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571383995;
-	bh=WWhfIUGeyAdX3039RAFd4pa5upiMW7hePA7+4Sj9l88=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UAVaSORf3kzgU4IuageQbHWnc5x5BDYEry0dEjfA/Pb1Bpj6M8QfZG/B0+B/nsJKz
-	 UXMhlC14lgxD4cYLPnI+PyvcRmQei8nToq7AXws9f7UFI0uVplVcID08eGjpa7OaJd
-	 VxxNdziCjG+29rqZ23O9Yyl7730haSu8QQbJoKqg=
+	by mail.kernel.org (Postfix) with ESMTP id DF16421925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 07:35:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390517AbfJRHdN (ORCPT
+        id S2390989AbfJRHfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 03:33:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55816 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1733083AbfJRHdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 03:33:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0BB85B6A5;
-        Fri, 18 Oct 2019 07:33:11 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 09:33:10 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Cc:     Qian Cai <cai@lca.pw>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        David Hildenbrand <david@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: Re: memory offline infinite loop after soft offline
-Message-ID: <20191018073310.GB5017@dhcp22.suse.cz>
-References: <1570829564.5937.36.camel@lca.pw>
- <20191014083914.GA317@dhcp22.suse.cz>
- <20191017093410.GA19973@hori.linux.bs1.fc.nec.co.jp>
- <20191017100106.GF24485@dhcp22.suse.cz>
- <1571335633.5937.69.camel@lca.pw>
- <20191017182759.GN24485@dhcp22.suse.cz>
- <20191018021906.GA24978@hori.linux.bs1.fc.nec.co.jp>
- <20191018060635.GA5017@dhcp22.suse.cz>
- <20191018063222.GA15406@hori.linux.bs1.fc.nec.co.jp>
+        Fri, 18 Oct 2019 03:35:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55966 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728706AbfJRHfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 03:35:16 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A678F10DCC96;
+        Fri, 18 Oct 2019 07:35:14 +0000 (UTC)
+Received: from [10.72.12.183] (ovpn-12-183.pek2.redhat.com [10.72.12.183])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A27C960600;
+        Fri, 18 Oct 2019 07:34:48 +0000 (UTC)
+Subject: Re: [PATCH V4 3/6] mdev: introduce device specific ops
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+References: <20191017104836.32464-1-jasowang@redhat.com>
+ <20191017104836.32464-4-jasowang@redhat.com>
+ <20191017170755.15506ada.cohuck@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <a15f2cde-925a-cff0-d959-4a0cd510323a@redhat.com>
+Date:   Fri, 18 Oct 2019 15:34:44 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20191017170755.15506ada.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191018063222.GA15406@hori.linux.bs1.fc.nec.co.jp>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Fri, 18 Oct 2019 07:35:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 18-10-19 06:32:22, Naoya Horiguchi wrote:
-> On Fri, Oct 18, 2019 at 08:06:35AM +0200, Michal Hocko wrote:
-> > On Fri 18-10-19 02:19:06, Naoya Horiguchi wrote:
-> > > On Thu, Oct 17, 2019 at 08:27:59PM +0200, Michal Hocko wrote:
-> > > > On Thu 17-10-19 14:07:13, Qian Cai wrote:
-> > > > > On Thu, 2019-10-17 at 12:01 +0200, Michal Hocko wrote:
-> > > > > > On Thu 17-10-19 09:34:10, Naoya Horiguchi wrote:
-> > > > > > > On Mon, Oct 14, 2019 at 10:39:14AM +0200, Michal Hocko wrote:
-> > > > > > 
-> > > > > > [...]
-> > > > > > > > diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-> > > > > > > > index 89c19c0feadb..5fb3fee16fde 100644
-> > > > > > > > --- a/mm/page_isolation.c
-> > > > > > > > +++ b/mm/page_isolation.c
-> > > > > > > > @@ -274,7 +274,7 @@ __test_page_isolated_in_pageblock(unsigned long pfn, unsigned long end_pfn,
-> > > > > > > >  			 * simple way to verify that as VM_BUG_ON(), though.
-> > > > > > > >  			 */
-> > > > > > > >  			pfn += 1 << page_order(page);
-> > > > > > > > -		else if (skip_hwpoisoned_pages && PageHWPoison(page))
-> > > > > > > > +		else if (skip_hwpoisoned_pages && PageHWPoison(compound_head(page)))
-> > > > > > > >  			/* A HWPoisoned page cannot be also PageBuddy */
-> > > > > > > >  			pfn++;
-> > > > > > > >  		else
-> > > > > > > 
-> > > > > > > This fix looks good to me. The original code only addresses hwpoisoned 4kB-page,
-> > > > > > > we seem to have this issue since the following commit,
-> > > > > > 
-> > > > > > Thanks a lot for double checking Naoya!
-> > > > > >  
-> > > > > > >   commit b023f46813cde6e3b8a8c24f432ff9c1fd8e9a64
-> > > > > > >   Author: Wen Congyang <wency@cn.fujitsu.com>
-> > > > > > >   Date:   Tue Dec 11 16:00:45 2012 -0800
-> > > > > > >   
-> > > > > > >       memory-hotplug: skip HWPoisoned page when offlining pages
-> > > > > > > 
-> > > > > > > and extension of LTP coverage finally discovered this.
-> > > > > > 
-> > > > > > Qian, could you give the patch some testing?
-> > > > > 
-> > > > > Unfortunately, this does not solve the problem.�It looks to me that in
-> > > > > soft_offline_huge_page(), set_hwpoison_free_buddy_page() will only set
-> > > > > PG_hwpoison for buddy pages, so the even the compound_head() has no PG_hwpoison
-> > > > > set.
-> > > > > 
-> > > > > 		if (PageBuddy(page_head) && page_order(page_head) >= order) {
-> > > > > 			if (!TestSetPageHWPoison(page))
-> > > > > 				hwpoisoned = true;
-> > > > 
-> > > > This is more than unexpected. How are we supposed to find out that the
-> > > > page is poisoned? Any idea Naoya?
-> > > 
-> > > # sorry for my poor review...
-> > > 
-> > > We set PG_hwpoison bit only on the head page for hugetlb, that's because
-> > > we handle multiple pages as a single one for hugetlb. So it's enough
-> > > to check isolation only on the head page.  Simply skipping pfn cursor to
-> > > the page after the hugepage should avoid the infinite loop:
-> > 
-> > But the page dump Qian provided shows that the head page doesn't have
-> > HWPoison bit either. If it had then going pfn at a time should just work
-> > because all tail pages would be skipped. Or do I miss something?
-> 
-> You're right, then I don't see how this happens.
 
-OK, this is a bit relieving. I thought that there are legitimate cases
-when none of the hugetlb gets the HWPoison bit (e.g. when the page has 0
-reference count which is the case here). That would be utterly broken
-because we would have no way to tell the page is hwpoisoned.
+On 2019/10/17 下午11:07, Cornelia Huck wrote:
+> On Thu, 17 Oct 2019 18:48:33 +0800
+> Jason Wang <jasowang@redhat.com> wrote:
+>
+>> Currently, except for the create and remove, the rest of
+>> mdev_parent_ops is designed for vfio-mdev driver only and may not help
+>> for kernel mdev driver. With the help of class id, this patch
+>> introduces device specific callbacks inside mdev_device
+>> structure. This allows different set of callback to be used by
+>> vfio-mdev and virtio-mdev.
+>>
+>> Signed-off-by: Jason Wang <jasowang@redhat.com>
+>> ---
+>>   .../driver-api/vfio-mediated-device.rst       | 25 +++++----
+>>   MAINTAINERS                                   |  1 +
+>>   drivers/gpu/drm/i915/gvt/kvmgt.c              | 18 ++++---
+>>   drivers/s390/cio/vfio_ccw_ops.c               | 18 ++++---
+>>   drivers/s390/crypto/vfio_ap_ops.c             | 14 +++--
+>>   drivers/vfio/mdev/mdev_core.c                 | 18 +++++--
+>>   drivers/vfio/mdev/mdev_private.h              |  1 +
+>>   drivers/vfio/mdev/vfio_mdev.c                 | 37 ++++++-------
+>>   include/linux/mdev.h                          | 45 ++++------------
+>>   include/linux/vfio_mdev.h                     | 52 +++++++++++++++++++
+>>   samples/vfio-mdev/mbochs.c                    | 20 ++++---
+>>   samples/vfio-mdev/mdpy.c                      | 20 ++++---
+>>   samples/vfio-mdev/mtty.c                      | 18 ++++---
+>>   13 files changed, 184 insertions(+), 103 deletions(-)
+>>   create mode 100644 include/linux/vfio_mdev.h
+>>
+>> diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Documentation/driver-api/vfio-mediated-device.rst
+>> index f9a78d75a67a..0cca84d19603 100644
+>> --- a/Documentation/driver-api/vfio-mediated-device.rst
+>> +++ b/Documentation/driver-api/vfio-mediated-device.rst
+>> @@ -152,11 +152,22 @@ callbacks per mdev parent device, per mdev type, or any other categorization.
+>>   Vendor drivers are expected to be fully asynchronous in this respect or
+>>   provide their own internal resource protection.)
+>>   
+>> -The callbacks in the mdev_parent_ops structure are as follows:
+>> -
+>> -* open: open callback of mediated device
+>> -* close: close callback of mediated device
+>> -* ioctl: ioctl callback of mediated device
+>> +As multiple types of mediated devices may be supported, the device
+>> +must set up the class id and the device specific callbacks in create()
+> s/in create()/in the create()/
 
-Anyway, do you think the patch as I've posted makes sense regardless
-another potential problem? Or would you like to resend yours which skips
-over tail pages at once?
--- 
-Michal Hocko
-SUSE Labs
+
+Will fix.
+
+
+>
+>> +callback. E.g for vfio-mdev device it needs to be done through:
+> "Each class provides a helper function to do so; e.g. for vfio-mdev
+> devices, the function to be called is:"
+>
+> ?
+
+
+This looks better.
+
+
+>
+>> +
+>> +    int mdev_set_vfio_ops(struct mdev_device *mdev,
+>> +                          const struct vfio_mdev_ops *vfio_ops);
+>> +
+>> +The class id (set to MDEV_CLASS_ID_VFIO) is used to match a device
+> "(set by this helper function to MDEV_CLASS_ID_VFIO)" ?
+
+
+Yes.
+
+
+>> +with an mdev driver via its id table. The device specific callbacks
+>> +(specified in *ops) are obtainable via mdev_get_dev_ops() (for use by
+> "(specified in *vfio_ops by the caller)" ?
+
+
+Yes.
+
+
+>> +the mdev bus driver). A vfio-mdev device (class id MDEV_CLASS_ID_VFIO)
+>> +uses the following device-specific ops:
+>> +
+>> +* open: open callback of vfio mediated device
+>> +* close: close callback of vfio mediated device
+>> +* ioctl: ioctl callback of vfio mediated device
+>>   * read : read emulation callback
+>>   * write: write emulation callback
+>>   * mmap: mmap emulation callback
+>> @@ -167,10 +178,6 @@ register itself with the mdev core driver::
+>>   	extern int  mdev_register_device(struct device *dev,
+>>   	                                 const struct mdev_parent_ops *ops);
+>>   
+>> -It is also required to specify the class_id in create() callback through::
+>> -
+>> -	int mdev_set_class(struct mdev_device *mdev, u16 id);
+>> -
+> I'm wondering if this patch set should start out with introducing
+> helper functions already (i.e. don't introduce mdev_set_class(), but
+> start out with mdev_set_class_vfio() which will gain the *vfio_ops
+> argument in this patch.)
+
+
+I think it doesn't harm to keep it as is since in patch 1 we introduce 
+class_id and bus match method based on that without device ops there.  
+But if you stick I can change.
+
+Thanks
+
+
+>
+>>   However, the mdev_parent_ops structure is not required in the function call
+>>   that a driver should use to unregister itself with the mdev core driver::
+>>   
+> (...)
+>
+>> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+>> index 3a9c52d71b4e..d0f3113c8071 100644
+>> --- a/drivers/vfio/mdev/mdev_core.c
+>> +++ b/drivers/vfio/mdev/mdev_core.c
+>> @@ -45,15 +45,23 @@ void mdev_set_drvdata(struct mdev_device *mdev, void *data)
+>>   }
+>>   EXPORT_SYMBOL(mdev_set_drvdata);
+>>   
+>> -/* Specify the class for the mdev device, this must be called during
+>> - * create() callback.
+>> +/* Specify the VFIO device ops for the mdev device, this
+>> + * must be called during create() callback for VFIO mdev device.
+>>    */
+> /*
+>   * Specify the mdev device to be a VFIO mdev device, and set the
+>   * VFIO devices ops for it. This must be called from the create()
+>   * callback for VFIO mdev devices.
+>   */
+>
+> ?
+>
+>> -void mdev_set_class(struct mdev_device *mdev, u16 id)
+>> +void mdev_set_vfio_ops(struct mdev_device *mdev,
+>> +		       const struct vfio_mdev_device_ops *vfio_ops)
+>>   {
+>>   	WARN_ON(mdev->class_id);
+>> -	mdev->class_id = id;
+>> +	mdev->class_id = MDEV_CLASS_ID_VFIO;
+>> +	mdev->device_ops = vfio_ops;
+>>   }
+>> -EXPORT_SYMBOL(mdev_set_class);
+>> +EXPORT_SYMBOL(mdev_set_vfio_ops);
+>> +
+>> +const void *mdev_get_dev_ops(struct mdev_device *mdev)
+>> +{
+>> +	return mdev->device_ops;
+>> +}
+>> +EXPORT_SYMBOL(mdev_get_dev_ops);
+>>   
+>>   struct device *mdev_dev(struct mdev_device *mdev)
+>>   {
+> (...)
+>
+> The code change looks good to me; I'm just wondering if we should
+> introduce mdev_set_class() at all (see above).
