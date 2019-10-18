@@ -2,85 +2,76 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F091BCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AABCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C65D92064B
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:49:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TowSnp7u"
+	by mail.kernel.org (Postfix) with ESMTP id 37D7521897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:49:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392435AbfJRPtY (ORCPT
+        id S2409104AbfJRPtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:49:24 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41510 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727639AbfJRPtX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:49:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8KT4IP36gZnTunsT5P5euYTxP0e3wr/fT7JdxQVYOvk=; b=TowSnp7uroisERgSakdSB5a83
-        VQugpqnfOob+51TIzb+FT9gj6iB8L15Aq2RrJ8cJ7KWypqdC4/Zj4HiHR/HRiT9egOtbKOTkwY61l
-        tzdnZ484xOMi+3wPIai8IkQA+pNgU4KOSnM8fMqdTVYHh4UI+MJpwWkl+ewUnI3Nc+4bEdAOex3/o
-        LsNBI3Fbt+tQwFqrR58MU404N+CQ5rLFsPJKJlRE/CFeqNDE0UXEp4wk0mqbIleuffKvlJLaQv+yw
-        FQT/ZE9Hw4GKUUuo5TFjR+Y0ZgofYryV5prI6bxZzHhq6wWgU1KOAnxdQKR/hIKV8BQhm2LVh2TM9
-        l7rgGbv1A==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iLUVH-0006ZL-Dn; Fri, 18 Oct 2019 15:49:23 +0000
-Date:   Fri, 18 Oct 2019 08:49:23 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/8] riscv: add prototypes for assembly language
- functions from entry.S
-Message-ID: <20191018154923.GA23279@infradead.org>
-References: <20191018080841.26712-1-paul.walmsley@sifive.com>
- <20191018080841.26712-2-paul.walmsley@sifive.com>
+        Fri, 18 Oct 2019 11:49:33 -0400
+Received: from ms.lwn.net ([45.79.88.28]:36726 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2394157AbfJRPtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 11:49:33 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id E3A256D9;
+        Fri, 18 Oct 2019 15:49:32 +0000 (UTC)
+Date:   Fri, 18 Oct 2019 09:49:31 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Albert Vaca Cintora <albertvaka@gmail.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Updated iostats docs
+Message-ID: <20191018094931.60df486f@lwn.net>
+In-Reply-To: <20191016201337.88554-1-albertvaka@gmail.com>
+References: <20191016201337.88554-1-albertvaka@gmail.com>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018080841.26712-2-paul.walmsley@sifive.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 01:08:34AM -0700, Paul Walmsley wrote:
-> Add prototypes for assembly language functions defined in entry.S,
-> and include these prototypes into C source files that call those
-> functions.
+On Wed, 16 Oct 2019 22:13:37 +0200
+Albert Vaca Cintora <albertvaka@gmail.com> wrote:
+
+> revious docs mentioned 11 unsigned long fields, when the reality is that
+> we have 15 fields with a mix of unsigned long and unsigned int.
 > 
-> This patch resolves the following warnings from sparse:
-> 
-> arch/riscv/kernel/signal.c:32:53: warning: incorrect type in initializer (different address spaces)
+> Signed-off-by: Albert Vaca Cintora <albertvaka@gmail.com>
+> ---
+>  Documentation/admin-guide/iostats.rst | 47 ++++++++++++++-------------
+>  1 file changed, 24 insertions(+), 23 deletions(-)
 
-I don't see how adding prototypes will fix an address space warning.
+I've applied this as an improvement over what's there now, but...
 
-> +asmlinkage void do_trap_unknown(struct pt_regs *regs);
-> +asmlinkage void do_trap_insn_misaligned(struct pt_regs *regs);
-> +asmlinkage void do_trap_insn_fault(struct pt_regs *regs);
-> +asmlinkage void do_trap_insn_illegal(struct pt_regs *regs);
-> +asmlinkage void do_trap_load_misaligned(struct pt_regs *regs);
-> +asmlinkage void do_trap_load_fault(struct pt_regs *regs);
-> +asmlinkage void do_trap_store_misaligned(struct pt_regs *regs);
-> +asmlinkage void do_trap_store_fault(struct pt_regs *regs);
-> +asmlinkage void do_trap_ecall_u(struct pt_regs *regs);
-> +asmlinkage void do_trap_ecall_s(struct pt_regs *regs);
-> +asmlinkage void do_trap_ecall_m(struct pt_regs *regs);
-> +asmlinkage void do_trap_break(struct pt_regs *regs);
+> diff --git a/Documentation/admin-guide/iostats.rst b/Documentation/admin-guide/iostats.rst
+> index 5d63b18bd6d1..321aae8d7e10 100644
+> --- a/Documentation/admin-guide/iostats.rst
+> +++ b/Documentation/admin-guide/iostats.rst
+> @@ -46,78 +46,79 @@ each snapshot of your disk statistics.
+>  In 2.4, the statistics fields are those after the device name. In
+>  the above example, the first field of statistics would be 446216.
+>  By contrast, in 2.6+ if you look at ``/sys/block/hda/stat``, you'll
+> -find just the eleven fields, beginning with 446216.  If you look at
+> -``/proc/diskstats``, the eleven fields will be preceded by the major and
+> +find just the 15 fields, beginning with 446216.  If you look at
+> +``/proc/diskstats``, the 15 fields will be preceded by the major and
 
-All these are not defined in entry.S, but called from entry.S.
+This document is full of information about the behavior of the 2.4 kernel,
+which seems less than fully interesting in 2019.  It would be Really Nice
+if somebody could go through and simply update this document to current
+reality and discard all of the cruft.
 
-And as Luc pointed out last time the easiest way to fix the sparse
-warnings is to add __visible to the definitions of those functions.
+Thanks,
+
+jon
