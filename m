@@ -2,735 +2,1834 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
+X-Spam-Status: No, score=-14.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63ED4CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E84CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AE4320659
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AA0521835
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 16:32:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443098AbfJRQbx (ORCPT
+        id S2406044AbfJRQcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:31:53 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57840 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2443015AbfJRQbQ (ORCPT
+        Fri, 18 Oct 2019 12:32:04 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:40571 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2443095AbfJRQb7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 12:31:16 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iLV9G-00033g-4R; Fri, 18 Oct 2019 18:30:42 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CA5CC1C03AB;
-        Fri, 18 Oct 2019 18:30:34 +0200 (CEST)
-Date:   Fri, 18 Oct 2019 16:30:34 -0000
-From:   "tip-bot2 for Jiri Slaby" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/asm] linkage: Introduce new macros for assembler symbols
-Cc:     Jiri Slaby <jslaby@suse.cz>, Borislav Petkov <bp@suse.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Len Brown <len.brown@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, "x86-ml" <x86@kernel.org>,
-        xen-devel@lists.xenproject.org, Borislav Petkov <bp@alien8.de>
-In-Reply-To: <20191011115108.12392-2-jslaby@suse.cz>
-References: <20191011115108.12392-2-jslaby@suse.cz>
+        Fri, 18 Oct 2019 12:31:59 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1M1IRY-1iJqTA31H0-002mPy; Fri, 18 Oct 2019 18:31:30 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Alexander Clouter <alex@digriz.org.uk>
+Subject: [PATCH 5/6] ARM: orion/mv78xx0/dove: move to a common directory
+Date:   Fri, 18 Oct 2019 18:29:18 +0200
+Message-Id: <20191018163047.1284736-5-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191018163047.1284736-1-arnd@arndb.de>
+References: <20191018163047.1284736-1-arnd@arndb.de>
 MIME-Version: 1.0
-Message-ID: <157141623459.29376.12545407561193574329.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:sJRxlREPMM5i/b5zrUAPpoaQnnUxFau95Pf5wfEUJFSf78UpfUr
+ M5sSmXMhRgnBvsbgCK/4NRKdfU66jOQk6MogmRWmxd+brH/ojbSi0M5swZwnuT8CJ3JpzPO
+ LzbV9LNCoxJi96OiVCjQbg/ot9rzSFTxEkViYPBDE5oZXu4rqBT6MU7EbsKHzMHFRMlV4/T
+ 8CrZHzXSlfgeCpuhFeFHg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9ZAMntKezjM=:1bEu73cf8jpHCjb6LPYBdK
+ YVY2PPROnvxIqGcWxcjc9a8OG9eczbKd6RJ6zoTVuojGymEokbQX1Iw1rlqRPGr7BJdVfnObg
+ KwFWVzHIqnW4WnIS+Kd5kuT3DW5Lb8WQn1spVJIJPpz85iy2MLH+9m0R0eSgXygImbh78uK7P
+ fi0x/d6DH1EJDRGxSovn7EtasNodWdu2ujGtt4YlRUb8TTZ2NDsLzfcZ/QMOw0Z8VCHK7NFsv
+ k99oKXQhhtqQke0nw6/jyEuf2JdmL31a9nQFyP766sHtXJ3QYqq/4fdxs8AL4Fg6/IPZU6an/
+ kqOzjnSaNZ6F6jq2Obtl5yjFjdHY6lSa85Gqc1mHe38VyAzn7XBGFih0dXdbISBclWryVmIAe
+ ClyO6QgsyXvBnZnnOsxw++YnrkMwMab43tl2q6FZuKBWK+S+8crKgbI8UI7hUptqxUugC8HPy
+ OqshKK3yNQAZ/DI01jD1yJ/qQqNv6JtL+MbvdO/RBigmj3p2C7SUWfLjnxZnkxbYQAidWLFm7
+ n7M+8KppSYuuwrn0+4hB5m+yu4kmyltd+FiV6sNjt/kaTsG6IWDS4Kv4TDgRLkqPZfoFsPx4V
+ wJx3nmq2G1UwA7rdMQiO2FM/EZHh+KOQWVkS6CIs6lm9G2XtagOrQiEupJoof5zwUKgM1oWZE
+ tnrN4rdclPf/DEcwbY6UvEA18C/7fU8WMzK1/3v9th8iovp37uRzrdBt5fdsOHezB6ZG9eNPf
+ 75Euueq0KdAy5lPCYqZvvCzTlPz0MaXAVgGnG7AfPLMBwerjFZQAJCPLFuyXy4462Pxmwk6md
+ wioKgl1glYGNz2CcLpASg4ILDEJfPLHx7vAdUiOXLmGFxc5cckjz2d7UDfabqMELucnQpCFhU
+ inTbNrTrgEb8mLm+cjHg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/asm branch of tip:
+There are very vew contents left in mv78xx0, dove and the plat-orion
+directory, but having the files spread over four places increases
+the complexity and requires having shared header files.
 
-Commit-ID:     ffedeeb780dc554eff3d3b16e6a462a26a41d7ec
-Gitweb:        https://git.kernel.org/tip/ffedeeb780dc554eff3d3b16e6a462a26a41d7ec
-Author:        Jiri Slaby <jslaby@suse.cz>
-AuthorDate:    Fri, 11 Oct 2019 13:50:41 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Fri, 18 Oct 2019 09:48:11 +02:00
+Move everything to one directory, adapting the file names where
+necessary, but not much else. Additional cleanups that are
+enabled by this can come later.
 
-linkage: Introduce new macros for assembler symbols
-
-Introduce new C macros for annotations of functions and data in
-assembly. There is a long-standing mess in macros like ENTRY, END,
-ENDPROC and similar. They are used in different manners and sometimes
-incorrectly.
-
-So introduce macros with clear use to annotate assembly as follows:
-
-a) Support macros for the ones below
-   SYM_T_FUNC -- type used by assembler to mark functions
-   SYM_T_OBJECT -- type used by assembler to mark data
-   SYM_T_NONE -- type used by assembler to mark entries of unknown type
-
-   They are defined as STT_FUNC, STT_OBJECT, and STT_NOTYPE
-   respectively. According to the gas manual, this is the most portable
-   way. I am not sure about other assemblers, so this can be switched
-   back to %function and %object if this turns into a problem.
-   Architectures can also override them by something like ", @function"
-   if they need.
-
-   SYM_A_ALIGN, SYM_A_NONE -- align the symbol?
-   SYM_L_GLOBAL, SYM_L_WEAK, SYM_L_LOCAL -- linkage of symbols
-
-b) Mostly internal annotations, used by the ones below
-   SYM_ENTRY -- use only if you have to (for non-paired symbols)
-   SYM_START -- use only if you have to (for paired symbols)
-   SYM_END -- use only if you have to (for paired symbols)
-
-c) Annotations for code
-   SYM_INNER_LABEL_ALIGN -- only for labels in the middle of code
-   SYM_INNER_LABEL -- only for labels in the middle of code
-
-   SYM_FUNC_START_LOCAL_ALIAS -- use where there are two local names for
-	one function
-   SYM_FUNC_START_ALIAS -- use where there are two global names for one
-	function
-   SYM_FUNC_END_ALIAS -- the end of LOCAL_ALIASed or ALIASed function
-
-   SYM_FUNC_START -- use for global functions
-   SYM_FUNC_START_NOALIGN -- use for global functions, w/o alignment
-   SYM_FUNC_START_LOCAL -- use for local functions
-   SYM_FUNC_START_LOCAL_NOALIGN -- use for local functions, w/o
-	alignment
-   SYM_FUNC_START_WEAK -- use for weak functions
-   SYM_FUNC_START_WEAK_NOALIGN -- use for weak functions, w/o alignment
-   SYM_FUNC_END -- the end of SYM_FUNC_START_LOCAL, SYM_FUNC_START,
-	SYM_FUNC_START_WEAK, ...
-
-   For functions with special (non-C) calling conventions:
-   SYM_CODE_START -- use for non-C (special) functions
-   SYM_CODE_START_NOALIGN -- use for non-C (special) functions, w/o
-	alignment
-   SYM_CODE_START_LOCAL -- use for local non-C (special) functions
-   SYM_CODE_START_LOCAL_NOALIGN -- use for local non-C (special)
-	functions, w/o alignment
-   SYM_CODE_END -- the end of SYM_CODE_START_LOCAL or SYM_CODE_START
-
-d) For data
-   SYM_DATA_START -- global data symbol
-   SYM_DATA_START_LOCAL -- local data symbol
-   SYM_DATA_END -- the end of the SYM_DATA_START symbol
-   SYM_DATA_END_LABEL -- the labeled end of SYM_DATA_START symbol
-   SYM_DATA -- start+end wrapper around simple global data
-   SYM_DATA_LOCAL -- start+end wrapper around simple local data
-
-==========
-
-The macros allow to pair starts and ends of functions and mark functions
-correctly in the output ELF objects.
-
-All users of the old macros in x86 are converted to use these in further
-patches.
-
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Len Brown <len.brown@intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-arch@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will@kernel.org>
-Cc: x86-ml <x86@kernel.org>
-Cc: xen-devel@lists.xenproject.org
-Link: https://lkml.kernel.org/r/20191011115108.12392-2-jslaby@suse.cz
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Gregory Clement <gregory.clement@bootlin.com>
+Cc: Alexander Clouter <alex@digriz.org.uk>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- Documentation/asm-annotations.rst | 216 ++++++++++++++++++++++++++-
- Documentation/index.rst           |   8 +-
- arch/x86/include/asm/linkage.h    |  10 +-
- include/linux/linkage.h           | 245 ++++++++++++++++++++++++++++-
- 4 files changed, 468 insertions(+), 11 deletions(-)
- create mode 100644 Documentation/asm-annotations.rst
+ MAINTAINERS                                     |  7 ++-----
+ arch/arm/Kconfig                                | 17 +----------------
+ arch/arm/Makefile                               |  5 +----
+ arch/arm/mach-dove/Makefile                     |  8 --------
+ arch/arm/mach-orion/Kconfig                     | 14 ++++++++++++++
+ .../Kconfig => mach-orion/Kconfig.dove}         |  0
+ .../Kconfig => mach-orion/Kconfig.mv78xx0}      |  0
+ .../Kconfig => mach-orion/Kconfig.orion5x}      |  0
+ arch/arm/{plat-orion => mach-orion}/Makefile    | 12 ++++++++++++
+ .../arm/{mach-dove => mach-orion}/Makefile.boot |  0
+ arch/arm/mach-orion/Makefile.dove               |  6 ++++++
+ .../Makefile => mach-orion/Makefile.mv78xx0}    |  4 +---
+ .../Makefile => mach-orion/Makefile.orion5x}    |  4 +---
+ .../include/plat => mach-orion}/addr-map.h      |  2 --
+ .../{mach-orion5x => mach-orion}/board-d2net.c  |  6 ++----
+ .../arm/{mach-orion5x => mach-orion}/board-dt.c | 10 ++++------
+ .../{mach-orion5x => mach-orion}/board-mss2.c   |  4 ++--
+ .../board-rd88f5182.c                           |  4 +---
+ .../buffalo-wxl-setup.c                         |  6 ++----
+ arch/arm/{mach-dove => mach-orion}/cm-a510.c    |  4 +---
+ arch/arm/{plat-orion => mach-orion}/common.c    |  4 +---
+ .../include/plat => mach-orion}/common.h        |  2 --
+ .../db78x00-bp-setup.c                          |  4 +---
+ .../db88f5281-setup.c                           |  6 ++----
+ .../{mach-orion5x => mach-orion}/dns323-setup.c |  8 +++-----
+ .../dove-bridge-regs.h}                         |  0
+ .../common.c => mach-orion/dove-common.c}       | 13 +++++--------
+ .../common.h => mach-orion/dove-common.h}       |  2 --
+ .../{mach-dove => mach-orion}/dove-db-setup.c   |  4 +---
+ .../{mach-dove/irq.c => mach-orion/dove-irq.c}  | 12 +++++-------
+ .../irqs.h => mach-orion/dove-irqs.h}           |  0
+ .../{mach-dove/mpp.c => mach-orion/dove-mpp.c}  |  8 +++-----
+ .../{mach-dove/mpp.h => mach-orion/dove-mpp.h}  |  0
+ .../pcie.c => mach-orion/dove-pcie.c}           | 12 +++++-------
+ .../{mach-dove/pm.h => mach-orion/dove-pm.h}    |  2 +-
+ arch/arm/{mach-dove => mach-orion}/dove.h       |  2 +-
+ arch/arm/{plat-orion => mach-orion}/gpio.c      |  4 +---
+ arch/arm/{plat-orion => mach-orion}/irq.c       |  6 ++----
+ .../include/plat => mach-orion}/irq.h           |  2 --
+ .../kurobox_pro-setup.c                         |  6 ++----
+ .../{mach-orion5x => mach-orion}/ls_hgl-setup.c |  6 ++----
+ arch/arm/{plat-orion => mach-orion}/mpp.c       |  6 ++----
+ .../include/plat => mach-orion}/mpp.h           |  2 --
+ .../{mach-orion5x => mach-orion}/mv2120-setup.c |  4 ++--
+ .../mv78xx0-bridge-regs.h}                      |  0
+ .../common.c => mach-orion/mv78xx0-common.c}    | 12 +++++-------
+ .../common.h => mach-orion/mv78xx0-common.h}    |  2 --
+ .../irq.c => mach-orion/mv78xx0-irq.c}          | 10 ++++------
+ .../irqs.h => mach-orion/mv78xx0-irqs.h}        |  0
+ .../mpp.c => mach-orion/mv78xx0-mpp.c}          |  8 +++-----
+ .../mpp.h => mach-orion/mv78xx0-mpp.h}          |  3 +--
+ .../pcie.c => mach-orion/mv78xx0-pcie.c}        |  6 ++----
+ arch/arm/{mach-mv78xx0 => mach-orion}/mv78xx0.h |  2 +-
+ .../net2big-setup.c                             |  8 +++-----
+ .../include/plat => mach-orion}/orion-gpio.h    |  2 --
+ .../orion5x-bridge-regs.h}                      |  0
+ .../common.h => mach-orion/orion5x-common.h}    |  0
+ .../irq.c => mach-orion/orion5x-irq.c}          | 10 ++++------
+ .../irqs.h => mach-orion/orion5x-irqs.h}        |  0
+ .../mpp.c => mach-orion/orion5x-mpp.c}          |  8 +++-----
+ .../mpp.h => mach-orion/orion5x-mpp.h}          |  0
+ .../pci.c => mach-orion/orion5x-pci.c}          |  8 +++-----
+ .../common.c => mach-orion/orion5x.c}           | 10 ++++------
+ arch/arm/{mach-orion5x => mach-orion}/orion5x.h |  2 +-
+ arch/arm/{plat-orion => mach-orion}/pcie.c      |  6 ++----
+ .../include/plat => mach-orion}/pcie.h          |  2 --
+ .../rd78x00-masa-setup.c                        |  4 +---
+ .../rd88f5181l-fxo-setup.c                      |  6 ++----
+ .../rd88f5181l-ge-setup.c                       |  6 ++----
+ .../rd88f5182-setup.c                           |  6 ++----
+ .../rd88f6183ap-ge-setup.c                      |  4 +---
+ .../terastation_pro2-setup.c                    |  4 ++--
+ arch/arm/{plat-orion => mach-orion}/time.c      |  4 +---
+ .../include/plat => mach-orion}/time.h          |  2 --
+ .../{mach-orion5x => mach-orion}/ts209-setup.c  |  4 ++--
+ .../{mach-orion5x => mach-orion}/ts409-setup.c  |  4 ++--
+ .../{mach-orion5x => mach-orion}/ts78xx-fpga.h  |  0
+ .../{mach-orion5x => mach-orion}/ts78xx-setup.c |  6 ++----
+ .../{mach-orion5x => mach-orion}/tsx09-common.c |  4 +---
+ .../{mach-orion5x => mach-orion}/tsx09-common.h |  0
+ .../wnr854t-setup.c                             |  6 ++----
+ .../wrt350n-v2-setup.c                          |  6 ++----
+ 82 files changed, 147 insertions(+), 246 deletions(-)
+ delete mode 100644 arch/arm/mach-dove/Makefile
+ create mode 100644 arch/arm/mach-orion/Kconfig
+ rename arch/arm/{mach-dove/Kconfig => mach-orion/Kconfig.dove} (100%)
+ rename arch/arm/{mach-mv78xx0/Kconfig => mach-orion/Kconfig.mv78xx0} (100%)
+ rename arch/arm/{mach-orion5x/Kconfig => mach-orion/Kconfig.orion5x} (100%)
+ rename arch/arm/{plat-orion => mach-orion}/Makefile (62%)
+ rename arch/arm/{mach-dove => mach-orion}/Makefile.boot (100%)
+ create mode 100644 arch/arm/mach-orion/Makefile.dove
+ rename arch/arm/{mach-mv78xx0/Makefile => mach-orion/Makefile.mv78xx0} (62%)
+ rename arch/arm/{mach-orion5x/Makefile => mach-orion/Makefile.orion5x} (90%)
+ rename arch/arm/{plat-orion/include/plat => mach-orion}/addr-map.h (96%)
+ rename arch/arm/{mach-orion5x => mach-orion}/board-d2net.c (97%)
+ rename arch/arm/{mach-orion5x => mach-orion}/board-dt.c (94%)
+ rename arch/arm/{mach-orion5x => mach-orion}/board-mss2.c (97%)
+ rename arch/arm/{mach-orion5x => mach-orion}/board-rd88f5182.c (97%)
+ rename arch/arm/{mach-mv78xx0 => mach-orion}/buffalo-wxl-setup.c (97%)
+ rename arch/arm/{mach-dove => mach-orion}/cm-a510.c (97%)
+ rename arch/arm/{plat-orion => mach-orion}/common.c (99%)
+ rename arch/arm/{plat-orion/include/plat => mach-orion}/common.h (98%)
+ rename arch/arm/{mach-mv78xx0 => mach-orion}/db78x00-bp-setup.c (97%)
+ rename arch/arm/{mach-orion5x => mach-orion}/db88f5281-setup.c (99%)
+ rename arch/arm/{mach-orion5x => mach-orion}/dns323-setup.c (99%)
+ rename arch/arm/{mach-dove/bridge-regs.h => mach-orion/dove-bridge-regs.h} (100%)
+ rename arch/arm/{mach-dove/common.c => mach-orion/dove-common.c} (98%)
+ rename arch/arm/{mach-dove/common.h => mach-orion/dove-common.h} (97%)
+ rename arch/arm/{mach-dove => mach-orion}/dove-db-setup.c (97%)
+ rename arch/arm/{mach-dove/irq.c => mach-orion/dove-irq.c} (92%)
+ rename arch/arm/{mach-dove/irqs.h => mach-orion/dove-irqs.h} (100%)
+ rename arch/arm/{mach-dove/mpp.c => mach-orion/dove-mpp.c} (97%)
+ rename arch/arm/{mach-dove/mpp.h => mach-orion/dove-mpp.h} (100%)
+ rename arch/arm/{mach-dove/pcie.c => mach-orion/dove-pcie.c} (97%)
+ rename arch/arm/{mach-dove/pm.h => mach-orion/dove-pm.h} (99%)
+ rename arch/arm/{mach-dove => mach-orion}/dove.h (99%)
+ rename arch/arm/{plat-orion => mach-orion}/gpio.c (99%)
+ rename arch/arm/{plat-orion => mach-orion}/irq.c (92%)
+ rename arch/arm/{plat-orion/include/plat => mach-orion}/irq.h (88%)
+ rename arch/arm/{mach-orion5x => mach-orion}/kurobox_pro-setup.c (99%)
+ rename arch/arm/{mach-orion5x => mach-orion}/ls_hgl-setup.c (98%)
+ rename arch/arm/{plat-orion => mach-orion}/mpp.c (95%)
+ rename arch/arm/{plat-orion/include/plat => mach-orion}/mpp.h (95%)
+ rename arch/arm/{mach-orion5x => mach-orion}/mv2120-setup.c (99%)
+ rename arch/arm/{mach-mv78xx0/bridge-regs.h => mach-orion/mv78xx0-bridge-regs.h} (100%)
+ rename arch/arm/{mach-mv78xx0/common.c => mach-orion/mv78xx0-common.c} (98%)
+ rename arch/arm/{mach-mv78xx0/common.h => mach-orion/mv78xx0-common.h} (97%)
+ rename arch/arm/{mach-mv78xx0/irq.c => mach-orion/mv78xx0-irq.c} (93%)
+ rename arch/arm/{mach-mv78xx0/irqs.h => mach-orion/mv78xx0-irqs.h} (100%)
+ rename arch/arm/{mach-mv78xx0/mpp.c => mach-orion/mv78xx0-mpp.c} (91%)
+ rename arch/arm/{mach-mv78xx0/mpp.h => mach-orion/mv78xx0-mpp.h} (99%)
+ rename arch/arm/{mach-mv78xx0/pcie.c => mach-orion/mv78xx0-pcie.c} (98%)
+ rename arch/arm/{mach-mv78xx0 => mach-orion}/mv78xx0.h (99%)
+ rename arch/arm/{mach-orion5x => mach-orion}/net2big-setup.c (99%)
+ rename arch/arm/{plat-orion/include/plat => mach-orion}/orion-gpio.h (94%)
+ rename arch/arm/{mach-orion5x/bridge-regs.h => mach-orion/orion5x-bridge-regs.h} (100%)
+ rename arch/arm/{mach-orion5x/common.h => mach-orion/orion5x-common.h} (100%)
+ rename arch/arm/{mach-orion5x/irq.c => mach-orion/orion5x-irq.c} (89%)
+ rename arch/arm/{mach-orion5x/irqs.h => mach-orion/orion5x-irqs.h} (100%)
+ rename arch/arm/{mach-orion5x/mpp.c => mach-orion/orion5x-mpp.c} (92%)
+ rename arch/arm/{mach-orion5x/mpp.h => mach-orion/orion5x-mpp.h} (100%)
+ rename arch/arm/{mach-orion5x/pci.c => mach-orion/orion5x-pci.c} (99%)
+ rename arch/arm/{mach-orion5x/common.c => mach-orion/orion5x.c} (99%)
+ rename arch/arm/{mach-orion5x => mach-orion}/orion5x.h (99%)
+ rename arch/arm/{plat-orion => mach-orion}/pcie.c (98%)
+ rename arch/arm/{plat-orion/include/plat => mach-orion}/pcie.h (96%)
+ rename arch/arm/{mach-mv78xx0 => mach-orion}/rd78x00-masa-setup.c (96%)
+ rename arch/arm/{mach-orion5x => mach-orion}/rd88f5181l-fxo-setup.c (98%)
+ rename arch/arm/{mach-orion5x => mach-orion}/rd88f5181l-ge-setup.c (98%)
+ rename arch/arm/{mach-orion5x => mach-orion}/rd88f5182-setup.c (98%)
+ rename arch/arm/{mach-orion5x => mach-orion}/rd88f6183ap-ge-setup.c (97%)
+ rename arch/arm/{mach-orion5x => mach-orion}/terastation_pro2-setup.c (99%)
+ rename arch/arm/{plat-orion => mach-orion}/time.c (99%)
+ rename arch/arm/{plat-orion/include/plat => mach-orion}/time.h (90%)
+ rename arch/arm/{mach-orion5x => mach-orion}/ts209-setup.c (99%)
+ rename arch/arm/{mach-orion5x => mach-orion}/ts409-setup.c (99%)
+ rename arch/arm/{mach-orion5x => mach-orion}/ts78xx-fpga.h (100%)
+ rename arch/arm/{mach-orion5x => mach-orion}/ts78xx-setup.c (99%)
+ rename arch/arm/{mach-orion5x => mach-orion}/tsx09-common.c (97%)
+ rename arch/arm/{mach-orion5x => mach-orion}/tsx09-common.h (100%)
+ rename arch/arm/{mach-orion5x => mach-orion}/wnr854t-setup.c (98%)
+ rename arch/arm/{mach-orion5x => mach-orion}/wrt350n-v2-setup.c (98%)
 
-diff --git a/Documentation/asm-annotations.rst b/Documentation/asm-annotations.rst
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a69e6db80c79..28aa06350435 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1889,10 +1889,7 @@ M:	Gregory Clement <gregory.clement@bootlin.com>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/soc/dove/
+-F:	arch/arm/mach-dove/
+-F:	arch/arm/mach-mv78xx0/
+-F:	arch/arm/mach-orion5x/
+-F:	arch/arm/plat-orion/
++F:	arch/arm/mach-orion/
+ F:	arch/arm/boot/dts/dove*
+ F:	arch/arm/boot/dts/orion5x*
+ T:	git git://git.infradead.org/linux-mvebu.git
+@@ -2050,7 +2047,7 @@ M:	Alexander Clouter <alex@digriz.org.uk>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ W:	http://www.digriz.org.uk/ts78xx/kernel
+ S:	Maintained
+-F:	arch/arm/mach-orion5x/ts78xx-*
++F:	arch/arm/mach-orion/ts78xx-*
+ 
+ ARM/OXNAS platform support
+ M:	Neil Armstrong <narmstrong@baylibre.com>
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index eb019bc7a370..f9db9f390c1b 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -616,8 +616,6 @@ source "arch/arm/mach-davinci/Kconfig"
+ 
+ source "arch/arm/mach-digicolor/Kconfig"
+ 
+-source "arch/arm/mach-dove/Kconfig"
+-
+ source "arch/arm/mach-ep93xx/Kconfig"
+ 
+ source "arch/arm/mach-exynos/Kconfig"
+@@ -651,8 +649,6 @@ source "arch/arm/mach-mmp/Kconfig"
+ 
+ source "arch/arm/mach-moxart/Kconfig"
+ 
+-source "arch/arm/mach-mv78xx0/Kconfig"
+-
+ source "arch/arm/mach-mvebu/Kconfig"
+ 
+ source "arch/arm/mach-mxs/Kconfig"
+@@ -669,7 +665,7 @@ source "arch/arm/mach-omap1/Kconfig"
+ 
+ source "arch/arm/mach-omap2/Kconfig"
+ 
+-source "arch/arm/mach-orion5x/Kconfig"
++source "arch/arm/mach-orion/Kconfig"
+ 
+ source "arch/arm/mach-oxnas/Kconfig"
+ 
+@@ -764,17 +760,6 @@ config PLAT_IOP
+ 	bool
+ 	select GENERIC_CLOCKEVENTS
+ 
+-config PLAT_ORION
+-	bool
+-	select CLKSRC_MMIO
+-	select COMMON_CLK
+-	select GENERIC_IRQ_CHIP
+-	select IRQ_DOMAIN
+-
+-config PLAT_ORION_LEGACY
+-	bool
+-	select PLAT_ORION
+-
+ config PLAT_VERSATILE
+ 	bool
+ 
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index db39707fa600..f74668401ef6 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -171,7 +171,6 @@ machine-$(CONFIG_ARCH_CLPS711X)		+= clps711x
+ machine-$(CONFIG_ARCH_CNS3XXX)		+= cns3xxx
+ machine-$(CONFIG_ARCH_DAVINCI)		+= davinci
+ machine-$(CONFIG_ARCH_DIGICOLOR)	+= digicolor
+-machine-$(CONFIG_ARCH_DOVE)		+= dove
+ machine-$(CONFIG_ARCH_EBSA110)		+= ebsa110
+ machine-$(CONFIG_ARCH_EFM32)		+= efm32
+ machine-$(CONFIG_ARCH_EP93XX)		+= ep93xx
+@@ -188,7 +187,6 @@ machine-$(CONFIG_ARCH_LPC32XX)		+= lpc32xx
+ machine-$(CONFIG_ARCH_MESON)		+= meson
+ machine-$(CONFIG_ARCH_MMP)		+= mmp
+ machine-$(CONFIG_ARCH_MOXART)		+= moxart
+-machine-$(CONFIG_ARCH_MV78XX0)		+= mv78xx0
+ machine-$(CONFIG_ARCH_MVEBU)		+= mvebu
+ machine-$(CONFIG_ARCH_MXC)		+= imx
+ machine-$(CONFIG_ARCH_MEDIATEK)		+= mediatek
+@@ -200,7 +198,7 @@ machine-$(CONFIG_ARCH_NSPIRE)		+= nspire
+ machine-$(CONFIG_ARCH_OXNAS)		+= oxnas
+ machine-$(CONFIG_ARCH_OMAP1)		+= omap1
+ machine-$(CONFIG_ARCH_OMAP2PLUS)	+= omap2
+-machine-$(CONFIG_ARCH_ORION5X)		+= orion5x
++machine-$(CONFIG_PLAT_ORION)		+= orion
+ machine-$(CONFIG_ARCH_PICOXCELL)	+= picoxcell
+ machine-$(CONFIG_ARCH_PXA)		+= pxa
+ machine-$(CONFIG_ARCH_QCOM)		+= qcom
+@@ -233,7 +231,6 @@ plat-$(CONFIG_ARCH_EXYNOS)	+= samsung
+ plat-$(CONFIG_ARCH_OMAP)	+= omap
+ plat-$(CONFIG_ARCH_S3C64XX)	+= samsung
+ plat-$(CONFIG_ARCH_S5PV210)	+= samsung
+-plat-$(CONFIG_PLAT_ORION)	+= orion
+ plat-$(CONFIG_PLAT_S3C24XX)	+= samsung
+ 
+ ifeq ($(CONFIG_ARCH_EBSA110),y)
+diff --git a/arch/arm/mach-dove/Makefile b/arch/arm/mach-dove/Makefile
+deleted file mode 100644
+index e83f6492834d..000000000000
+--- a/arch/arm/mach-dove/Makefile
++++ /dev/null
+@@ -1,8 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0
+-ccflags-$(CONFIG_ARCH_MULTIPLATFORM) := -I$(srctree)/arch/arm/plat-orion/include
+-
+-obj-y				+= common.o
+-obj-$(CONFIG_DOVE_LEGACY)	+= irq.o mpp.o
+-obj-$(CONFIG_PCI)		+= pcie.o
+-obj-$(CONFIG_MACH_DOVE_DB)	+= dove-db-setup.o
+-obj-$(CONFIG_MACH_CM_A510)	+= cm-a510.o
+diff --git a/arch/arm/mach-orion/Kconfig b/arch/arm/mach-orion/Kconfig
 new file mode 100644
-index 0000000..29ccd6e
+index 000000000000..bad1fe673674
 --- /dev/null
-+++ b/Documentation/asm-annotations.rst
-@@ -0,0 +1,216 @@
-+Assembler Annotations
-+=====================
++++ b/arch/arm/mach-orion/Kconfig
+@@ -0,0 +1,14 @@
++config PLAT_ORION
++	bool
++	select CLKSRC_MMIO
++	select COMMON_CLK
++	select GENERIC_IRQ_CHIP
++	select IRQ_DOMAIN
 +
-+Copyright (c) 2017-2019 Jiri Slaby
++config PLAT_ORION_LEGACY
++	bool
++	select PLAT_ORION
 +
-+This document describes the new macros for annotation of data and code in
-+assembly. In particular, it contains information about ``SYM_FUNC_START``,
-+``SYM_FUNC_END``, ``SYM_CODE_START``, and similar.
++source "arch/arm/mach-orion/Kconfig.dove"
++source "arch/arm/mach-orion/Kconfig.mv78xx0"
++source "arch/arm/mach-orion/Kconfig.orion5x"
+diff --git a/arch/arm/mach-dove/Kconfig b/arch/arm/mach-orion/Kconfig.dove
+similarity index 100%
+rename from arch/arm/mach-dove/Kconfig
+rename to arch/arm/mach-orion/Kconfig.dove
+diff --git a/arch/arm/mach-mv78xx0/Kconfig b/arch/arm/mach-orion/Kconfig.mv78xx0
+similarity index 100%
+rename from arch/arm/mach-mv78xx0/Kconfig
+rename to arch/arm/mach-orion/Kconfig.mv78xx0
+diff --git a/arch/arm/mach-orion5x/Kconfig b/arch/arm/mach-orion/Kconfig.orion5x
+similarity index 100%
+rename from arch/arm/mach-orion5x/Kconfig
+rename to arch/arm/mach-orion/Kconfig.orion5x
+diff --git a/arch/arm/plat-orion/Makefile b/arch/arm/mach-orion/Makefile
+similarity index 62%
+rename from arch/arm/plat-orion/Makefile
+rename to arch/arm/mach-orion/Makefile
+index 4e3f25de13c1..ded450d9bda3 100644
+--- a/arch/arm/plat-orion/Makefile
++++ b/arch/arm/mach-orion/Makefile
+@@ -7,3 +7,15 @@ ccflags-$(CONFIG_ARCH_MULTIPLATFORM) := -I$(srctree)/$(src)/include
+ orion-gpio-$(CONFIG_GPIOLIB)      += gpio.o
+ obj-$(CONFIG_PLAT_ORION_LEGACY)   += irq.o pcie.o time.o common.o mpp.o
+ obj-$(CONFIG_PLAT_ORION_LEGACY)   += $(orion-gpio-y)
 +
-+Rationale
-+---------
-+Some code like entries, trampolines, or boot code needs to be written in
-+assembly. The same as in C, such code is grouped into functions and
-+accompanied with data. Standard assemblers do not force users into precisely
-+marking these pieces as code, data, or even specifying their length.
-+Nevertheless, assemblers provide developers with such annotations to aid
-+debuggers throughout assembly. On top of that, developers also want to mark
-+some functions as *global* in order to be visible outside of their translation
-+units.
++ifdef CONFIG_ARCH_DOVE
++include $(src)/Makefile.dove
++endif
 +
-+Over time, the Linux kernel has adopted macros from various projects (like
-+``binutils``) to facilitate such annotations. So for historic reasons,
-+developers have been using ``ENTRY``, ``END``, ``ENDPROC``, and other
-+annotations in assembly.  Due to the lack of their documentation, the macros
-+are used in rather wrong contexts at some locations. Clearly, ``ENTRY`` was
-+intended to denote the beginning of global symbols (be it data or code).
-+``END`` used to mark the end of data or end of special functions with
-+*non-standard* calling convention. In contrast, ``ENDPROC`` should annotate
-+only ends of *standard* functions.
++ifdef CONFIG_ARCH_MV78XX0
++include $(src)/Makefile.mv78xx0
++endif
 +
-+When these macros are used correctly, they help assemblers generate a nice
-+object with both sizes and types set correctly. For example, the result of
-+``arch/x86/lib/putuser.S``::
-+
-+   Num:    Value          Size Type    Bind   Vis      Ndx Name
-+    25: 0000000000000000    33 FUNC    GLOBAL DEFAULT    1 __put_user_1
-+    29: 0000000000000030    37 FUNC    GLOBAL DEFAULT    1 __put_user_2
-+    32: 0000000000000060    36 FUNC    GLOBAL DEFAULT    1 __put_user_4
-+    35: 0000000000000090    37 FUNC    GLOBAL DEFAULT    1 __put_user_8
-+
-+This is not only important for debugging purposes. When there are properly
-+annotated objects like this, tools can be run on them to generate more useful
-+information. In particular, on properly annotated objects, ``objtool`` can be
-+run to check and fix the object if needed. Currently, ``objtool`` can report
-+missing frame pointer setup/destruction in functions. It can also
-+automatically generate annotations for :doc:`ORC unwinder <x86/orc-unwinder>`
-+for most code. Both of these are especially important to support reliable
-+stack traces which are in turn necessary for :doc:`Kernel live patching
-+<livepatch/livepatch>`.
-+
-+Caveat and Discussion
-+---------------------
-+As one might realize, there were only three macros previously. That is indeed
-+insufficient to cover all the combinations of cases:
-+
-+* standard/non-standard function
-+* code/data
-+* global/local symbol
-+
-+There was a discussion_ and instead of extending the current ``ENTRY/END*``
-+macros, it was decided that brand new macros should be introduced instead::
-+
-+    So how about using macro names that actually show the purpose, instead
-+    of importing all the crappy, historic, essentially randomly chosen
-+    debug symbol macro names from the binutils and older kernels?
-+
-+.. _discussion: https://lkml.kernel.org/r/20170217104757.28588-1-jslaby@suse.cz
-+
-+Macros Description
-+------------------
-+
-+The new macros are prefixed with the ``SYM_`` prefix and can be divided into
-+three main groups:
-+
-+1. ``SYM_FUNC_*`` -- to annotate C-like functions. This means functions with
-+   standard C calling conventions, i.e. the stack contains a return address at
-+   the predefined place and a return from the function can happen in a
-+   standard way. When frame pointers are enabled, save/restore of frame
-+   pointer shall happen at the start/end of a function, respectively, too.
-+
-+   Checking tools like ``objtool`` should ensure such marked functions conform
-+   to these rules. The tools can also easily annotate these functions with
-+   debugging information (like *ORC data*) automatically.
-+
-+2. ``SYM_CODE_*`` -- special functions called with special stack. Be it
-+   interrupt handlers with special stack content, trampolines, or startup
-+   functions.
-+
-+   Checking tools mostly ignore checking of these functions. But some debug
-+   information still can be generated automatically. For correct debug data,
-+   this code needs hints like ``UNWIND_HINT_REGS`` provided by developers.
-+
-+3. ``SYM_DATA*`` -- obviously data belonging to ``.data`` sections and not to
-+   ``.text``. Data do not contain instructions, so they have to be treated
-+   specially by the tools: they should not treat the bytes as instructions,
-+   nor assign any debug information to them.
-+
-+Instruction Macros
-+~~~~~~~~~~~~~~~~~~
-+This section covers ``SYM_FUNC_*`` and ``SYM_CODE_*`` enumerated above.
-+
-+* ``SYM_FUNC_START`` and ``SYM_FUNC_START_LOCAL`` are supposed to be **the
-+  most frequent markings**. They are used for functions with standard calling
-+  conventions -- global and local. Like in C, they both align the functions to
-+  architecture specific ``__ALIGN`` bytes. There are also ``_NOALIGN`` variants
-+  for special cases where developers do not want this implicit alignment.
-+
-+  ``SYM_FUNC_START_WEAK`` and ``SYM_FUNC_START_WEAK_NOALIGN`` markings are
-+  also offered as an assembler counterpart to the *weak* attribute known from
-+  C.
-+
-+  All of these **shall** be coupled with ``SYM_FUNC_END``. First, it marks
-+  the sequence of instructions as a function and computes its size to the
-+  generated object file. Second, it also eases checking and processing such
-+  object files as the tools can trivially find exact function boundaries.
-+
-+  So in most cases, developers should write something like in the following
-+  example, having some asm instructions in between the macros, of course::
-+
-+    SYM_FUNC_START(function_hook)
-+        ... asm insns ...
-+    SYM_FUNC_END(function_hook)
-+
-+  In fact, this kind of annotation corresponds to the now deprecated ``ENTRY``
-+  and ``ENDPROC`` macros.
-+
-+* ``SYM_FUNC_START_ALIAS`` and ``SYM_FUNC_START_LOCAL_ALIAS`` serve for those
-+  who decided to have two or more names for one function. The typical use is::
-+
-+    SYM_FUNC_START_ALIAS(__memset)
-+    SYM_FUNC_START(memset)
-+        ... asm insns ...
-+    SYM_FUNC_END(memset)
-+    SYM_FUNC_END_ALIAS(__memset)
-+
-+  In this example, one can call ``__memset`` or ``memset`` with the same
-+  result, except the debug information for the instructions is generated to
-+  the object file only once -- for the non-``ALIAS`` case.
-+
-+* ``SYM_CODE_START`` and ``SYM_CODE_START_LOCAL`` should be used only in
-+  special cases -- if you know what you are doing. This is used exclusively
-+  for interrupt handlers and similar where the calling convention is not the C
-+  one. ``_NOALIGN`` variants exist too. The use is the same as for the ``FUNC``
-+  category above::
-+
-+    SYM_CODE_START_LOCAL(bad_put_user)
-+        ... asm insns ...
-+    SYM_CODE_END(bad_put_user)
-+
-+  Again, every ``SYM_CODE_START*`` **shall** be coupled by ``SYM_CODE_END``.
-+
-+  To some extent, this category corresponds to deprecated ``ENTRY`` and
-+  ``END``. Except ``END`` had several other meanings too.
-+
-+* ``SYM_INNER_LABEL*`` is used to denote a label inside some
-+  ``SYM_{CODE,FUNC}_START`` and ``SYM_{CODE,FUNC}_END``.  They are very similar
-+  to C labels, except they can be made global. An example of use::
-+
-+    SYM_CODE_START(ftrace_caller)
-+        /* save_mcount_regs fills in first two parameters */
-+        ...
-+
-+    SYM_INNER_LABEL(ftrace_caller_op_ptr, SYM_L_GLOBAL)
-+        /* Load the ftrace_ops into the 3rd parameter */
-+        ...
-+
-+    SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
-+        call ftrace_stub
-+        ...
-+        retq
-+    SYM_CODE_END(ftrace_caller)
-+
-+Data Macros
-+~~~~~~~~~~~
-+Similar to instructions, there is a couple of macros to describe data in the
-+assembly.
-+
-+* ``SYM_DATA_START`` and ``SYM_DATA_START_LOCAL`` mark the start of some data
-+  and shall be used in conjunction with either ``SYM_DATA_END``, or
-+  ``SYM_DATA_END_LABEL``. The latter adds also a label to the end, so that
-+  people can use ``lstack`` and (local) ``lstack_end`` in the following
-+  example::
-+
-+    SYM_DATA_START_LOCAL(lstack)
-+        .skip 4096
-+    SYM_DATA_END_LABEL(lstack, SYM_L_LOCAL, lstack_end)
-+
-+* ``SYM_DATA`` and ``SYM_DATA_LOCAL`` are variants for simple, mostly one-line
-+  data::
-+
-+    SYM_DATA(HEAP,     .long rm_heap)
-+    SYM_DATA(heap_end, .long rm_stack)
-+
-+  In the end, they expand to ``SYM_DATA_START`` with ``SYM_DATA_END``
-+  internally.
-+
-+Support Macros
-+~~~~~~~~~~~~~~
-+All the above reduce themselves to some invocation of ``SYM_START``,
-+``SYM_END``, or ``SYM_ENTRY`` at last. Normally, developers should avoid using
-+these.
-+
-+Further, in the above examples, one could see ``SYM_L_LOCAL``. There are also
-+``SYM_L_GLOBAL`` and ``SYM_L_WEAK``. All are intended to denote linkage of a
-+symbol marked by them. They are used either in ``_LABEL`` variants of the
-+earlier macros, or in ``SYM_START``.
-+
-+
-+Overriding Macros
-+~~~~~~~~~~~~~~~~~
-+Architecture can also override any of the macros in their own
-+``asm/linkage.h``, including macros specifying the type of a symbol
-+(``SYM_T_FUNC``, ``SYM_T_OBJECT``, and ``SYM_T_NONE``).  As every macro
-+described in this file is surrounded by ``#ifdef`` + ``#endif``, it is enough
-+to define the macros differently in the aforementioned architecture-dependent
-+header.
-diff --git a/Documentation/index.rst b/Documentation/index.rst
-index b843e31..2ceab19 100644
---- a/Documentation/index.rst
-+++ b/Documentation/index.rst
-@@ -135,6 +135,14 @@ needed).
-    mic/index
-    scheduler/index
++ifdef CONFIG_ARCH_ORION5X
++include $(src)/Makefile.orion5x
++endif
+diff --git a/arch/arm/mach-dove/Makefile.boot b/arch/arm/mach-orion/Makefile.boot
+similarity index 100%
+rename from arch/arm/mach-dove/Makefile.boot
+rename to arch/arm/mach-orion/Makefile.boot
+diff --git a/arch/arm/mach-orion/Makefile.dove b/arch/arm/mach-orion/Makefile.dove
+new file mode 100644
+index 000000000000..1e85d595836a
+--- /dev/null
++++ b/arch/arm/mach-orion/Makefile.dove
+@@ -0,0 +1,6 @@
++# SPDX-License-Identifier: GPL-2.0
++obj-y				+= dove-common.o
++obj-$(CONFIG_DOVE_LEGACY)	+= dove-irq.o dove-mpp.o
++obj-$(CONFIG_PCI)		+= dove-pcie.o
++obj-$(CONFIG_MACH_DOVE_DB)	+= dove-db-setup.o
++obj-$(CONFIG_MACH_CM_A510)	+= cm-a510.o
+diff --git a/arch/arm/mach-mv78xx0/Makefile b/arch/arm/mach-orion/Makefile.mv78xx0
+similarity index 62%
+rename from arch/arm/mach-mv78xx0/Makefile
+rename to arch/arm/mach-orion/Makefile.mv78xx0
+index a839e960b8c6..c56ee058808a 100644
+--- a/arch/arm/mach-mv78xx0/Makefile
++++ b/arch/arm/mach-orion/Makefile.mv78xx0
+@@ -1,7 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-ccflags-$(CONFIG_ARCH_MULTIPLATFORM) := -I$(srctree)/arch/arm/plat-orion/include
+-
+-obj-y				+= common.o mpp.o irq.o pcie.o
++obj-y				+= mv78xx0-common.o mv78xx0-mpp.o mv78xx0-irq.o mv78xx0-pcie.o
+ obj-$(CONFIG_MACH_DB78X00_BP)	+= db78x00-bp-setup.o
+ obj-$(CONFIG_MACH_RD78X00_MASA)	+= rd78x00-masa-setup.o
+ obj-$(CONFIG_MACH_TERASTATION_WXL) += buffalo-wxl-setup.o
+diff --git a/arch/arm/mach-orion5x/Makefile b/arch/arm/mach-orion/Makefile.orion5x
+similarity index 90%
+rename from arch/arm/mach-orion5x/Makefile
+rename to arch/arm/mach-orion/Makefile.orion5x
+index 1a585a62d5e6..a36c5e504698 100644
+--- a/arch/arm/mach-orion5x/Makefile
++++ b/arch/arm/mach-orion/Makefile.orion5x
+@@ -1,7 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-ccflags-$(CONFIG_ARCH_MULTIPLATFORM) := -I$(srctree)/arch/arm/plat-orion/include
+-
+-obj-y				+= common.o pci.o irq.o mpp.o
++obj-y				+= orion5x.o orion5x-pci.o orion5x-irq.o orion5x-mpp.o
+ obj-$(CONFIG_MACH_DB88F5281)	+= db88f5281-setup.o
+ obj-$(CONFIG_MACH_RD88F5182)	+= rd88f5182-setup.o
+ obj-$(CONFIG_MACH_KUROBOX_PRO)	+= kurobox_pro-setup.o
+diff --git a/arch/arm/plat-orion/include/plat/addr-map.h b/arch/arm/mach-orion/addr-map.h
+similarity index 96%
+rename from arch/arm/plat-orion/include/plat/addr-map.h
+rename to arch/arm/mach-orion/addr-map.h
+index b76c06569fe5..65fedcc1cf6f 100644
+--- a/arch/arm/plat-orion/include/plat/addr-map.h
++++ b/arch/arm/mach-orion/addr-map.h
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/plat-orion/include/plat/addr-map.h
+- *
+  * Marvell Orion SoC address map handling.
+  *
+  * This file is licensed under the terms of the GNU General Public
+diff --git a/arch/arm/mach-orion5x/board-d2net.c b/arch/arm/mach-orion/board-d2net.c
+similarity index 97%
+rename from arch/arm/mach-orion5x/board-d2net.c
+rename to arch/arm/mach-orion/board-d2net.c
+index a89376a5cd92..7dcd274bd6e1 100644
+--- a/arch/arm/mach-orion5x/board-d2net.c
++++ b/arch/arm/mach-orion/board-d2net.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-orion5x/board-d2net.c
+- *
+  * LaCie d2Network and Big Disk Network NAS setup
+  *
+  * Copyright (C) 2009 Simon Guinot <sguinot@lacie.com>
+@@ -20,8 +18,8 @@
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ #include <asm/mach/pci.h>
+-#include <plat/orion-gpio.h>
+-#include "common.h"
++#include "orion-gpio.h"
++#include "orion5x-common.h"
+ #include "orion5x.h"
  
-+Architecture-agnostic documentation
-+-----------------------------------
+ /*****************************************************************************
+diff --git a/arch/arm/mach-orion5x/board-dt.c b/arch/arm/mach-orion/board-dt.c
+similarity index 94%
+rename from arch/arm/mach-orion5x/board-dt.c
+rename to arch/arm/mach-orion/board-dt.c
+index 3d36f1d95196..85368319342f 100644
+--- a/arch/arm/mach-orion5x/board-dt.c
++++ b/arch/arm/mach-orion/board-dt.c
+@@ -1,8 +1,6 @@
+ /*
+  * Copyright 2012 (C), Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+  *
+- * arch/arm/mach-orion5x/board-dt.c
+- *
+  * Flattened Device Tree board initialization
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -20,11 +18,11 @@
+ #include <asm/system_misc.h>
+ #include <asm/mach/arch.h>
+ #include <asm/mach/map.h>
+-#include <plat/irq.h>
+-#include <plat/time.h>
++#include "irq.h"
++#include "time.h"
+ #include "orion5x.h"
+-#include "bridge-regs.h"
+-#include "common.h"
++#include "orion5x-bridge-regs.h"
++#include "orion5x-common.h"
+ 
+ static struct of_dev_auxdata orion5x_auxdata_lookup[] __initdata = {
+ 	OF_DEV_AUXDATA("marvell,orion-spi", 0xf1010600, "orion_spi.0", NULL),
+diff --git a/arch/arm/mach-orion5x/board-mss2.c b/arch/arm/mach-orion/board-mss2.c
+similarity index 97%
+rename from arch/arm/mach-orion5x/board-mss2.c
+rename to arch/arm/mach-orion/board-mss2.c
+index b0f16d223adf..6ab26b2dac84 100644
+--- a/arch/arm/mach-orion5x/board-mss2.c
++++ b/arch/arm/mach-orion/board-mss2.c
+@@ -14,8 +14,8 @@
+ #include <asm/mach/arch.h>
+ #include <asm/mach/pci.h>
+ #include "orion5x.h"
+-#include "bridge-regs.h"
+-#include "common.h"
++#include "orion5x-bridge-regs.h"
++#include "orion5x-common.h"
+ 
+ /*****************************************************************************
+  * Maxtor Shared Storage II Info
+diff --git a/arch/arm/mach-orion5x/board-rd88f5182.c b/arch/arm/mach-orion/board-rd88f5182.c
+similarity index 97%
+rename from arch/arm/mach-orion5x/board-rd88f5182.c
+rename to arch/arm/mach-orion/board-rd88f5182.c
+index b7b0f52f4c0a..b763229dfcdf 100644
+--- a/arch/arm/mach-orion5x/board-rd88f5182.c
++++ b/arch/arm/mach-orion/board-rd88f5182.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-orion5x/rd88f5182-setup.c
+- *
+  * Marvell Orion-NAS Reference Design Setup
+  *
+  * Maintainer: Ronen Shitrit <rshitrit@marvell.com>
+@@ -18,7 +16,7 @@
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ #include <asm/mach/pci.h>
+-#include "common.h"
++#include "orion5x-common.h"
+ #include "orion5x.h"
+ 
+ /*****************************************************************************
+diff --git a/arch/arm/mach-mv78xx0/buffalo-wxl-setup.c b/arch/arm/mach-orion/buffalo-wxl-setup.c
+similarity index 97%
+rename from arch/arm/mach-mv78xx0/buffalo-wxl-setup.c
+rename to arch/arm/mach-orion/buffalo-wxl-setup.c
+index e112f2e7cc9a..72605a54becf 100644
+--- a/arch/arm/mach-mv78xx0/buffalo-wxl-setup.c
++++ b/arch/arm/mach-orion/buffalo-wxl-setup.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-mv78xx0/buffalo-wxl-setup.c
+- *
+  * Buffalo WXL (Terastation Duo) Setup routines
+  *
+  * sebastien requiem <sebastien@requiem.fr>
+@@ -20,8 +18,8 @@
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ #include "mv78xx0.h"
+-#include "common.h"
+-#include "mpp.h"
++#include "mv78xx0-common.h"
++#include "mv78xx0-mpp.h"
+ 
+ 
+ /* This arch has 2 Giga Ethernet */
+diff --git a/arch/arm/mach-dove/cm-a510.c b/arch/arm/mach-orion/cm-a510.c
+similarity index 97%
+rename from arch/arm/mach-dove/cm-a510.c
+rename to arch/arm/mach-orion/cm-a510.c
+index 9f25c993d863..3f1c03b3e0d4 100644
+--- a/arch/arm/mach-dove/cm-a510.c
++++ b/arch/arm/mach-orion/cm-a510.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-dove/cm-a510.c
+- *
+  * Copyright (C) 2010 CompuLab, Ltd.
+  * Konstantin Sinyuk <kostyas@compulab.co.il>
+  *
+@@ -23,7 +21,7 @@
+ #include <asm/mach/arch.h>
+ 
+ #include "dove.h"
+-#include "common.h"
++#include "dove-common.h"
+ 
+ static struct mv643xx_eth_platform_data cm_a510_ge00_data = {
+ 	.phy_addr	= MV643XX_ETH_PHY_ADDR_DEFAULT,
+diff --git a/arch/arm/plat-orion/common.c b/arch/arm/mach-orion/common.c
+similarity index 99%
+rename from arch/arm/plat-orion/common.c
+rename to arch/arm/mach-orion/common.c
+index 8647cb80a93b..7f5a649d2ba3 100644
+--- a/arch/arm/plat-orion/common.c
++++ b/arch/arm/mach-orion/common.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/plat-orion/common.c
+- *
+  * Marvell Orion SoC common setup code used by multiple mach-/common.c
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -21,7 +19,7 @@
+ #include <linux/platform_data/dsa.h>
+ #include <linux/platform_data/dma-mv_xor.h>
+ #include <linux/platform_data/usb-ehci-orion.h>
+-#include <plat/common.h>
++#include "common.h"
+ #include <linux/phy.h>
+ 
+ /* Create a clkdev entry for a given device/clk */
+diff --git a/arch/arm/plat-orion/include/plat/common.h b/arch/arm/mach-orion/common.h
+similarity index 98%
+rename from arch/arm/plat-orion/include/plat/common.h
+rename to arch/arm/mach-orion/common.h
+index 3647d3b33c20..66e5d3503a1d 100644
+--- a/arch/arm/plat-orion/include/plat/common.h
++++ b/arch/arm/mach-orion/common.h
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/plat-orion/include/plat/common.h
+- *
+  * Marvell Orion SoC common setup code used by different mach-/common.c
+  *
+  * This file is licensed under the terms of the GNU General Public
+diff --git a/arch/arm/mach-mv78xx0/db78x00-bp-setup.c b/arch/arm/mach-orion/db78x00-bp-setup.c
+similarity index 97%
+rename from arch/arm/mach-mv78xx0/db78x00-bp-setup.c
+rename to arch/arm/mach-orion/db78x00-bp-setup.c
+index cf16e08d4cf5..b1c4870ab9ad 100644
+--- a/arch/arm/mach-mv78xx0/db78x00-bp-setup.c
++++ b/arch/arm/mach-orion/db78x00-bp-setup.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-mv78xx0/db78x00-bp-setup.c
+- *
+  * Marvell DB-78x00-BP Development Board Setup
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -18,7 +16,7 @@
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ #include "mv78xx0.h"
+-#include "common.h"
++#include "mv78xx0-common.h"
+ 
+ static struct mv643xx_eth_platform_data db78x00_ge00_data = {
+ 	.phy_addr	= MV643XX_ETH_PHY_ADDR(8),
+diff --git a/arch/arm/mach-orion5x/db88f5281-setup.c b/arch/arm/mach-orion/db88f5281-setup.c
+similarity index 99%
+rename from arch/arm/mach-orion5x/db88f5281-setup.c
+rename to arch/arm/mach-orion/db88f5281-setup.c
+index 39eae10ac8de..af97784a27f5 100644
+--- a/arch/arm/mach-orion5x/db88f5281-setup.c
++++ b/arch/arm/mach-orion/db88f5281-setup.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-orion5x/db88f5281-setup.c
+- *
+  * Marvell Orion-2 Development Board Setup
+  *
+  * Maintainer: Tzachi Perelstein <tzachi@marvell.com>
+@@ -24,8 +22,8 @@
+ #include <asm/mach/arch.h>
+ #include <asm/mach/pci.h>
+ #include <linux/platform_data/mtd-orion_nand.h>
+-#include "common.h"
+-#include "mpp.h"
++#include "orion5x-common.h"
++#include "orion5x-mpp.h"
+ #include "orion5x.h"
+ 
+ /*****************************************************************************
+diff --git a/arch/arm/mach-orion5x/dns323-setup.c b/arch/arm/mach-orion/dns323-setup.c
+similarity index 99%
+rename from arch/arm/mach-orion5x/dns323-setup.c
+rename to arch/arm/mach-orion/dns323-setup.c
+index d13344b2ddcd..9c827f76ae75 100644
+--- a/arch/arm/mach-orion5x/dns323-setup.c
++++ b/arch/arm/mach-orion/dns323-setup.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-orion5x/dns323-setup.c
+- *
+  * Copyright (C) 2007 Herbert Valerio Riedel <hvr@gnu.org>
+  *
+  * Support for HW Rev C1:
+@@ -33,10 +31,10 @@
+ #include <asm/mach/arch.h>
+ #include <asm/mach/pci.h>
+ #include <asm/system_info.h>
+-#include <plat/orion-gpio.h>
++#include "orion-gpio.h"
+ #include "orion5x.h"
+-#include "common.h"
+-#include "mpp.h"
++#include "orion5x-common.h"
++#include "orion5x-mpp.h"
+ 
+ /* Rev A1 and B1 */
+ #define DNS323_GPIO_LED_RIGHT_AMBER	1
+diff --git a/arch/arm/mach-dove/bridge-regs.h b/arch/arm/mach-orion/dove-bridge-regs.h
+similarity index 100%
+rename from arch/arm/mach-dove/bridge-regs.h
+rename to arch/arm/mach-orion/dove-bridge-regs.h
+diff --git a/arch/arm/mach-dove/common.c b/arch/arm/mach-orion/dove-common.c
+similarity index 98%
+rename from arch/arm/mach-dove/common.c
+rename to arch/arm/mach-orion/dove-common.c
+index 01b830afcea9..6946741c6c08 100644
+--- a/arch/arm/mach-dove/common.c
++++ b/arch/arm/mach-orion/dove-common.c
+@@ -1,7 +1,4 @@
+ /*
+- * arch/arm/mach-dove/common.c
+- *
+- * Core functions for Marvell Dove 88AP510 System On Chip
+  *
+  * This file is licensed under the terms of the GNU General Public
+  * License version 2.  This program is licensed "as is" without any
+@@ -22,12 +19,12 @@
+ #include <asm/mach/arch.h>
+ #include <asm/mach/map.h>
+ #include <asm/mach/time.h>
+-#include <plat/common.h>
+-#include <plat/irq.h>
+-#include <plat/time.h>
+-#include "bridge-regs.h"
+-#include "pm.h"
+ #include "common.h"
++#include "irq.h"
++#include "time.h"
++#include "dove-bridge-regs.h"
++#include "dove-pm.h"
++#include "dove-common.h"
+ 
+ /* These can go away once Dove uses the mvebu-mbus DT binding */
+ #define DOVE_MBUS_PCIE0_MEM_TARGET    0x4
+diff --git a/arch/arm/mach-dove/common.h b/arch/arm/mach-orion/dove-common.h
+similarity index 97%
+rename from arch/arm/mach-dove/common.h
+rename to arch/arm/mach-orion/dove-common.h
+index 1d725224d146..e79aac850f2a 100644
+--- a/arch/arm/mach-dove/common.h
++++ b/arch/arm/mach-orion/dove-common.h
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-dove/common.h
+- *
+  * Core functions for Marvell Dove 88AP510 System On Chip
+  *
+  * This file is licensed under the terms of the GNU General Public
+diff --git a/arch/arm/mach-dove/dove-db-setup.c b/arch/arm/mach-orion/dove-db-setup.c
+similarity index 97%
+rename from arch/arm/mach-dove/dove-db-setup.c
+rename to arch/arm/mach-orion/dove-db-setup.c
+index 418ab21b9d9b..e5c56c03c5f9 100644
+--- a/arch/arm/mach-dove/dove-db-setup.c
++++ b/arch/arm/mach-orion/dove-db-setup.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-dove/dove-db-setup.c
+- *
+  * Marvell DB-MV88AP510-BP Development Board Setup
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -25,7 +23,7 @@
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ #include "dove.h"
+-#include "common.h"
++#include "dove-common.h"
+ 
+ static struct mv643xx_eth_platform_data dove_db_ge00_data = {
+ 	.phy_addr	= MV643XX_ETH_PHY_ADDR_DEFAULT,
+diff --git a/arch/arm/mach-dove/irq.c b/arch/arm/mach-orion/dove-irq.c
+similarity index 92%
+rename from arch/arm/mach-dove/irq.c
+rename to arch/arm/mach-orion/dove-irq.c
+index 31ccbcee2627..052a88444fdb 100644
+--- a/arch/arm/mach-dove/irq.c
++++ b/arch/arm/mach-orion/dove-irq.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-dove/irq.c
+- *
+  * Dove IRQ handling.
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -12,12 +10,12 @@
+ #include <linux/io.h>
+ #include <asm/exception.h>
+ 
+-#include <plat/irq.h>
+-#include <plat/orion-gpio.h>
++#include "irq.h"
++#include "orion-gpio.h"
+ 
+-#include "pm.h"
+-#include "bridge-regs.h"
+-#include "common.h"
++#include "dove-pm.h"
++#include "dove-bridge-regs.h"
++#include "dove-common.h"
+ 
+ static int __initdata gpio0_irqs[4] = {
+ 	IRQ_DOVE_GPIO_0_7,
+diff --git a/arch/arm/mach-dove/irqs.h b/arch/arm/mach-orion/dove-irqs.h
+similarity index 100%
+rename from arch/arm/mach-dove/irqs.h
+rename to arch/arm/mach-orion/dove-irqs.h
+diff --git a/arch/arm/mach-dove/mpp.c b/arch/arm/mach-orion/dove-mpp.c
+similarity index 97%
+rename from arch/arm/mach-dove/mpp.c
+rename to arch/arm/mach-orion/dove-mpp.c
+index 6acd8488bb05..4b4f04e321c7 100644
+--- a/arch/arm/mach-dove/mpp.c
++++ b/arch/arm/mach-orion/dove-mpp.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-dove/mpp.c
+- *
+  * MPP functions for Marvell Dove SoCs
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -11,10 +9,10 @@
+ #include <linux/kernel.h>
+ #include <linux/gpio.h>
+ #include <linux/io.h>
+-#include <plat/mpp.h>
+-#include <plat/orion-gpio.h>
+-#include "dove.h"
+ #include "mpp.h"
++#include "orion-gpio.h"
++#include "dove.h"
++#include "dove-mpp.h"
+ 
+ struct dove_mpp_grp {
+ 	int start;
+diff --git a/arch/arm/mach-dove/mpp.h b/arch/arm/mach-orion/dove-mpp.h
+similarity index 100%
+rename from arch/arm/mach-dove/mpp.h
+rename to arch/arm/mach-orion/dove-mpp.h
+diff --git a/arch/arm/mach-dove/pcie.c b/arch/arm/mach-orion/dove-pcie.c
+similarity index 97%
+rename from arch/arm/mach-dove/pcie.c
+rename to arch/arm/mach-orion/dove-pcie.c
+index ee91ac6b5ebf..d3dbe0af6924 100644
+--- a/arch/arm/mach-dove/pcie.c
++++ b/arch/arm/mach-orion/dove-pcie.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-dove/pcie.c
+- *
+  * PCIe functions for Marvell Dove 88AP510 SoC
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -16,11 +14,11 @@
+ #include <asm/mach/arch.h>
+ #include <asm/setup.h>
+ #include <asm/delay.h>
+-#include <plat/pcie.h>
+-#include <plat/addr-map.h>
+-#include "irqs.h"
+-#include "bridge-regs.h"
+-#include "common.h"
++#include "pcie.h"
++#include "addr-map.h"
++#include "dove-irqs.h"
++#include "dove-bridge-regs.h"
++#include "dove-common.h"
+ 
+ struct pcie_port {
+ 	u8			index;
+diff --git a/arch/arm/mach-dove/pm.h b/arch/arm/mach-orion/dove-pm.h
+similarity index 99%
+rename from arch/arm/mach-dove/pm.h
+rename to arch/arm/mach-orion/dove-pm.h
+index 01267746d707..ce3521e1ef32 100644
+--- a/arch/arm/mach-dove/pm.h
++++ b/arch/arm/mach-orion/dove-pm.h
+@@ -8,7 +8,7 @@
+ #define __ASM_ARCH_PM_H
+ 
+ #include <asm/errno.h>
+-#include "irqs.h"
++#include "dove-irqs.h"
+ 
+ #define CLOCK_GATING_CONTROL	(DOVE_PMU_VIRT_BASE + 0x38)
+ #define  CLOCK_GATING_BIT_USB0		0
+diff --git a/arch/arm/mach-dove/dove.h b/arch/arm/mach-orion/dove.h
+similarity index 99%
+rename from arch/arm/mach-dove/dove.h
+rename to arch/arm/mach-orion/dove.h
+index 320ed1696abd..9c62704a5edd 100644
+--- a/arch/arm/mach-dove/dove.h
++++ b/arch/arm/mach-orion/dove.h
+@@ -9,7 +9,7 @@
+ #ifndef __ASM_ARCH_DOVE_H
+ #define __ASM_ARCH_DOVE_H
+ 
+-#include "irqs.h"
++#include "dove-irqs.h"
+ 
+ /*
+  * Marvell Dove address maps.
+diff --git a/arch/arm/plat-orion/gpio.c b/arch/arm/mach-orion/gpio.c
+similarity index 99%
+rename from arch/arm/plat-orion/gpio.c
+rename to arch/arm/mach-orion/gpio.c
+index 26a531ebb6e9..8dc74e059fa2 100644
+--- a/arch/arm/plat-orion/gpio.c
++++ b/arch/arm/mach-orion/gpio.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/plat-orion/gpio.c
+- *
+  * Marvell Orion SoC GPIO handling.
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -23,7 +21,7 @@
+ #include <linux/of.h>
+ #include <linux/of_irq.h>
+ #include <linux/of_address.h>
+-#include <plat/orion-gpio.h>
++#include "orion-gpio.h"
+ 
+ /*
+  * GPIO unit register offsets.
+diff --git a/arch/arm/plat-orion/irq.c b/arch/arm/mach-orion/irq.c
+similarity index 92%
+rename from arch/arm/plat-orion/irq.c
+rename to arch/arm/mach-orion/irq.c
+index 5b63b28b00ac..7015d34b6f5b 100644
+--- a/arch/arm/plat-orion/irq.c
++++ b/arch/arm/mach-orion/irq.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/plat-orion/irq.c
+- *
+  * Marvell Orion SoC IRQ handling.
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -16,8 +14,8 @@
+ #include <linux/of_address.h>
+ #include <linux/of_irq.h>
+ #include <asm/exception.h>
+-#include <plat/irq.h>
+-#include <plat/orion-gpio.h>
++#include "irq.h"
++#include "orion-gpio.h"
+ 
+ void __init orion_irq_init(unsigned int irq_start, void __iomem *maskaddr)
+ {
+diff --git a/arch/arm/plat-orion/include/plat/irq.h b/arch/arm/mach-orion/irq.h
+similarity index 88%
+rename from arch/arm/plat-orion/include/plat/irq.h
+rename to arch/arm/mach-orion/irq.h
+index 96be19e9bd93..892b95cfef47 100644
+--- a/arch/arm/plat-orion/include/plat/irq.h
++++ b/arch/arm/mach-orion/irq.h
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/plat-orion/include/plat/irq.h
+- *
+  * Marvell Orion SoC IRQ handling.
+  *
+  * This file is licensed under the terms of the GNU General Public
+diff --git a/arch/arm/mach-orion5x/kurobox_pro-setup.c b/arch/arm/mach-orion/kurobox_pro-setup.c
+similarity index 99%
+rename from arch/arm/mach-orion5x/kurobox_pro-setup.c
+rename to arch/arm/mach-orion/kurobox_pro-setup.c
+index 83d43cff4bd7..d936858b62f1 100644
+--- a/arch/arm/mach-orion5x/kurobox_pro-setup.c
++++ b/arch/arm/mach-orion/kurobox_pro-setup.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-orion5x/kurobox_pro-setup.c
+- *
+  * Maintainer: Ronen Shitrit <rshitrit@marvell.com>
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -24,8 +22,8 @@
+ #include <asm/mach/arch.h>
+ #include <asm/mach/pci.h>
+ #include <linux/platform_data/mtd-orion_nand.h>
+-#include "common.h"
+-#include "mpp.h"
++#include "orion5x-common.h"
++#include "orion5x-mpp.h"
+ #include "orion5x.h"
+ 
+ /*****************************************************************************
+diff --git a/arch/arm/mach-orion5x/ls_hgl-setup.c b/arch/arm/mach-orion/ls_hgl-setup.c
+similarity index 98%
+rename from arch/arm/mach-orion5x/ls_hgl-setup.c
+rename to arch/arm/mach-orion/ls_hgl-setup.c
+index 47ba6e0502f5..cce7696bd17a 100644
+--- a/arch/arm/mach-orion5x/ls_hgl-setup.c
++++ b/arch/arm/mach-orion/ls_hgl-setup.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-orion5x/ls_hgl-setup.c
+- *
+  * Maintainer: Zhu Qingsen <zhuqs@cn.fujitsu.com>
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -21,8 +19,8 @@
+ #include <linux/gpio.h>
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+-#include "common.h"
+-#include "mpp.h"
++#include "orion5x-common.h"
++#include "orion5x-mpp.h"
+ #include "orion5x.h"
+ 
+ /*****************************************************************************
+diff --git a/arch/arm/plat-orion/mpp.c b/arch/arm/mach-orion/mpp.c
+similarity index 95%
+rename from arch/arm/plat-orion/mpp.c
+rename to arch/arm/mach-orion/mpp.c
+index 8a6880d528b6..d0736f22c824 100644
+--- a/arch/arm/plat-orion/mpp.c
++++ b/arch/arm/mach-orion/mpp.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/plat-orion/mpp.c
+- *
+  * MPP functions for Marvell orion SoCs
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -13,8 +11,8 @@
+ #include <linux/mbus.h>
+ #include <linux/io.h>
+ #include <linux/gpio.h>
+-#include <plat/orion-gpio.h>
+-#include <plat/mpp.h>
++#include "orion-gpio.h"
++#include "mpp.h"
+ 
+ /* Address of the ith MPP control register */
+ static __init void __iomem *mpp_ctrl_addr(unsigned int i,
+diff --git a/arch/arm/plat-orion/include/plat/mpp.h b/arch/arm/mach-orion/mpp.h
+similarity index 95%
+rename from arch/arm/plat-orion/include/plat/mpp.h
+rename to arch/arm/mach-orion/mpp.h
+index 254552fee889..8100c82a2fa6 100644
+--- a/arch/arm/plat-orion/include/plat/mpp.h
++++ b/arch/arm/mach-orion/mpp.h
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/plat-orion/include/plat/mpp.h
+- *
+  * Marvell Orion SoC MPP handling.
+  *
+  * This file is licensed under the terms of the GNU General Public
+diff --git a/arch/arm/mach-orion5x/mv2120-setup.c b/arch/arm/mach-orion/mv2120-setup.c
+similarity index 99%
+rename from arch/arm/mach-orion5x/mv2120-setup.c
+rename to arch/arm/mach-orion/mv2120-setup.c
+index 2bf8ec75e908..9f001118e454 100644
+--- a/arch/arm/mach-orion5x/mv2120-setup.c
++++ b/arch/arm/mach-orion/mv2120-setup.c
+@@ -21,8 +21,8 @@
+ #include <linux/ata_platform.h>
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+-#include "common.h"
+-#include "mpp.h"
++#include "orion5x-common.h"
++#include "orion5x-mpp.h"
+ #include "orion5x.h"
+ 
+ #define MV2120_NOR_BOOT_BASE	0xf4000000
+diff --git a/arch/arm/mach-mv78xx0/bridge-regs.h b/arch/arm/mach-orion/mv78xx0-bridge-regs.h
+similarity index 100%
+rename from arch/arm/mach-mv78xx0/bridge-regs.h
+rename to arch/arm/mach-orion/mv78xx0-bridge-regs.h
+diff --git a/arch/arm/mach-mv78xx0/common.c b/arch/arm/mach-orion/mv78xx0-common.c
+similarity index 98%
+rename from arch/arm/mach-mv78xx0/common.c
+rename to arch/arm/mach-orion/mv78xx0-common.c
+index dd762d1b083f..b049b99527b7 100644
+--- a/arch/arm/mach-mv78xx0/common.c
++++ b/arch/arm/mach-orion/mv78xx0-common.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-mv78xx0/common.c
+- *
+  * Core functions for Marvell MV78xx0 SoCs
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -21,12 +19,12 @@
+ #include <asm/mach/time.h>
+ #include <linux/platform_data/usb-ehci-orion.h>
+ #include <linux/platform_data/mtd-orion_nand.h>
+-#include <plat/time.h>
+-#include <plat/common.h>
+-#include <plat/addr-map.h>
+-#include "mv78xx0.h"
+-#include "bridge-regs.h"
++#include "time.h"
+ #include "common.h"
++#include "addr-map.h"
++#include "mv78xx0.h"
++#include "mv78xx0-bridge-regs.h"
++#include "mv78xx0-common.h"
+ 
+ static int get_tclk(void);
+ 
+diff --git a/arch/arm/mach-mv78xx0/common.h b/arch/arm/mach-orion/mv78xx0-common.h
+similarity index 97%
+rename from arch/arm/mach-mv78xx0/common.h
+rename to arch/arm/mach-orion/mv78xx0-common.h
+index 6889af26077d..91164ef16030 100644
+--- a/arch/arm/mach-mv78xx0/common.h
++++ b/arch/arm/mach-orion/mv78xx0-common.h
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-mv78xx0/common.h
+- *
+  * Core functions for Marvell MV78xx0 SoCs
+  *
+  * This file is licensed under the terms of the GNU General Public
+diff --git a/arch/arm/mach-mv78xx0/irq.c b/arch/arm/mach-orion/mv78xx0-irq.c
+similarity index 93%
+rename from arch/arm/mach-mv78xx0/irq.c
+rename to arch/arm/mach-orion/mv78xx0-irq.c
+index 788569e960e1..e5a42c6fc7bf 100644
+--- a/arch/arm/mach-mv78xx0/irq.c
++++ b/arch/arm/mach-orion/mv78xx0-irq.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-mv78xx0/irq.c
+- *
+  * MV78xx0 IRQ handling.
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -12,10 +10,10 @@
+ #include <linux/irq.h>
+ #include <linux/io.h>
+ #include <asm/exception.h>
+-#include <plat/orion-gpio.h>
+-#include <plat/irq.h>
+-#include "bridge-regs.h"
+-#include "common.h"
++#include "orion-gpio.h"
++#include "irq.h"
++#include "mv78xx0-bridge-regs.h"
++#include "mv78xx0-common.h"
+ 
+ static int __initdata gpio0_irqs[4] = {
+ 	IRQ_MV78XX0_GPIO_0_7,
+diff --git a/arch/arm/mach-mv78xx0/irqs.h b/arch/arm/mach-orion/mv78xx0-irqs.h
+similarity index 100%
+rename from arch/arm/mach-mv78xx0/irqs.h
+rename to arch/arm/mach-orion/mv78xx0-irqs.h
+diff --git a/arch/arm/mach-mv78xx0/mpp.c b/arch/arm/mach-orion/mv78xx0-mpp.c
+similarity index 91%
+rename from arch/arm/mach-mv78xx0/mpp.c
+rename to arch/arm/mach-orion/mv78xx0-mpp.c
+index 72843c02e95a..2616b656d5f5 100644
+--- a/arch/arm/mach-mv78xx0/mpp.c
++++ b/arch/arm/mach-orion/mv78xx0-mpp.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-mv78x00/mpp.c
+- *
+  * MPP functions for Marvell MV78x00 SoCs
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -11,10 +9,10 @@
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+ #include <linux/io.h>
+-#include <plat/mpp.h>
+-#include "mv78xx0.h"
+-#include "common.h"
+ #include "mpp.h"
++#include "mv78xx0.h"
++#include "mv78xx0-common.h"
++#include "mv78xx0-mpp.h"
+ 
+ static unsigned int __init mv78xx0_variant(void)
+ {
+diff --git a/arch/arm/mach-mv78xx0/mpp.h b/arch/arm/mach-orion/mv78xx0-mpp.h
+similarity index 99%
+rename from arch/arm/mach-mv78xx0/mpp.h
+rename to arch/arm/mach-orion/mv78xx0-mpp.h
+index 3752302ae2ee..004f22d39c98 100644
+--- a/arch/arm/mach-mv78xx0/mpp.h
++++ b/arch/arm/mach-orion/mv78xx0-mpp.h
+@@ -1,6 +1,5 @@
+ /*
+- * linux/arch/arm/mach-mv78xx0/mpp.h -- Multi Purpose Pins
+- *
++ * Multi Purpose Pins
+  *
+  * sebastien requiem <sebastien@requiem.fr>
+  *
+diff --git a/arch/arm/mach-mv78xx0/pcie.c b/arch/arm/mach-orion/mv78xx0-pcie.c
+similarity index 98%
+rename from arch/arm/mach-mv78xx0/pcie.c
+rename to arch/arm/mach-orion/mv78xx0-pcie.c
+index 636d84b40466..d852ec563879 100644
+--- a/arch/arm/mach-mv78xx0/pcie.c
++++ b/arch/arm/mach-orion/mv78xx0-pcie.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-mv78xx0/pcie.c
+- *
+  * PCIe functions for Marvell MV78xx0 SoCs
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -14,9 +12,9 @@
+ #include <video/vga.h>
+ #include <asm/irq.h>
+ #include <asm/mach/pci.h>
+-#include <plat/pcie.h>
++#include "pcie.h"
+ #include "mv78xx0.h"
+-#include "common.h"
++#include "mv78xx0-common.h"
+ 
+ #define MV78XX0_MBUS_PCIE_MEM_TARGET(port, lane) ((port) ? 8 : 4)
+ #define MV78XX0_MBUS_PCIE_MEM_ATTR(port, lane)   (0xf8 & ~(0x10 << (lane)))
+diff --git a/arch/arm/mach-mv78xx0/mv78xx0.h b/arch/arm/mach-orion/mv78xx0.h
+similarity index 99%
+rename from arch/arm/mach-mv78xx0/mv78xx0.h
+rename to arch/arm/mach-orion/mv78xx0.h
+index c1a9a1d1b295..e24dc03c2742 100644
+--- a/arch/arm/mach-mv78xx0/mv78xx0.h
++++ b/arch/arm/mach-orion/mv78xx0.h
+@@ -10,7 +10,7 @@
+ #ifndef __ASM_ARCH_MV78XX0_H
+ #define __ASM_ARCH_MV78XX0_H
+ 
+-#include "irqs.h"
++#include "mv78xx0-irqs.h"
+ 
+ /*
+  * Marvell MV78xx0 address maps.
+diff --git a/arch/arm/mach-orion5x/net2big-setup.c b/arch/arm/mach-orion/net2big-setup.c
+similarity index 99%
+rename from arch/arm/mach-orion5x/net2big-setup.c
+rename to arch/arm/mach-orion/net2big-setup.c
+index bf6be4cfd238..46eef09a0bad 100644
+--- a/arch/arm/mach-orion5x/net2big-setup.c
++++ b/arch/arm/mach-orion/net2big-setup.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-orion5x/net2big-setup.c
+- *
+  * LaCie 2Big Network NAS setup
+  *
+  * Copyright (C) 2009 Simon Guinot <sguinot@lacie.com>
+@@ -24,9 +22,9 @@
+ #include <linux/delay.h>
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+-#include <plat/orion-gpio.h>
+-#include "common.h"
+-#include "mpp.h"
++#include "orion-gpio.h"
++#include "orion5x-common.h"
++#include "orion5x-mpp.h"
+ #include "orion5x.h"
+ 
+ /*****************************************************************************
+diff --git a/arch/arm/plat-orion/include/plat/orion-gpio.h b/arch/arm/mach-orion/orion-gpio.h
+similarity index 94%
+rename from arch/arm/plat-orion/include/plat/orion-gpio.h
+rename to arch/arm/mach-orion/orion-gpio.h
+index e856b073a9c8..5df030e391c9 100644
+--- a/arch/arm/plat-orion/include/plat/orion-gpio.h
++++ b/arch/arm/mach-orion/orion-gpio.h
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/plat-orion/include/plat/orion-gpio.h
+- *
+  * Marvell Orion SoC GPIO handling.
+  *
+  * This file is licensed under the terms of the GNU General Public
+diff --git a/arch/arm/mach-orion5x/bridge-regs.h b/arch/arm/mach-orion/orion5x-bridge-regs.h
+similarity index 100%
+rename from arch/arm/mach-orion5x/bridge-regs.h
+rename to arch/arm/mach-orion/orion5x-bridge-regs.h
+diff --git a/arch/arm/mach-orion5x/common.h b/arch/arm/mach-orion/orion5x-common.h
+similarity index 100%
+rename from arch/arm/mach-orion5x/common.h
+rename to arch/arm/mach-orion/orion5x-common.h
+diff --git a/arch/arm/mach-orion5x/irq.c b/arch/arm/mach-orion/orion5x-irq.c
+similarity index 89%
+rename from arch/arm/mach-orion5x/irq.c
+rename to arch/arm/mach-orion/orion5x-irq.c
+index ac4af2283bef..51ddf89dca00 100644
+--- a/arch/arm/mach-orion5x/irq.c
++++ b/arch/arm/mach-orion/orion5x-irq.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-orion5x/irq.c
+- *
+  * Core IRQ functions for Marvell Orion System On Chip
+  *
+  * Maintainer: Tzachi Perelstein <tzachi@marvell.com>
+@@ -13,11 +11,11 @@
+ #include <linux/kernel.h>
+ #include <linux/irq.h>
+ #include <linux/io.h>
+-#include <plat/orion-gpio.h>
+-#include <plat/irq.h>
++#include "orion-gpio.h"
++#include "irq.h"
+ #include <asm/exception.h>
+-#include "bridge-regs.h"
+-#include "common.h"
++#include "orion5x-bridge-regs.h"
++#include "orion5x-common.h"
+ 
+ static int __initdata gpio0_irqs[4] = {
+ 	IRQ_ORION5X_GPIO_0_7,
+diff --git a/arch/arm/mach-orion5x/irqs.h b/arch/arm/mach-orion/orion5x-irqs.h
+similarity index 100%
+rename from arch/arm/mach-orion5x/irqs.h
+rename to arch/arm/mach-orion/orion5x-irqs.h
+diff --git a/arch/arm/mach-orion5x/mpp.c b/arch/arm/mach-orion/orion5x-mpp.c
+similarity index 92%
+rename from arch/arm/mach-orion5x/mpp.c
+rename to arch/arm/mach-orion/orion5x-mpp.c
+index 19ef18594415..512090fda50c 100644
+--- a/arch/arm/mach-orion5x/mpp.c
++++ b/arch/arm/mach-orion/orion5x-mpp.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-orion5x/mpp.c
+- *
+  * MPP functions for Marvell Orion 5x SoCs
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -11,10 +9,10 @@
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+ #include <linux/io.h>
+-#include <plat/mpp.h>
+-#include "orion5x.h"
+ #include "mpp.h"
+-#include "common.h"
++#include "orion5x.h"
++#include "orion5x-mpp.h"
++#include "orion5x-common.h"
+ 
+ static unsigned int __init orion5x_variant(void)
+ {
+diff --git a/arch/arm/mach-orion5x/mpp.h b/arch/arm/mach-orion/orion5x-mpp.h
+similarity index 100%
+rename from arch/arm/mach-orion5x/mpp.h
+rename to arch/arm/mach-orion/orion5x-mpp.h
+diff --git a/arch/arm/mach-orion5x/pci.c b/arch/arm/mach-orion/orion5x-pci.c
+similarity index 99%
+rename from arch/arm/mach-orion5x/pci.c
+rename to arch/arm/mach-orion/orion5x-pci.c
+index 76951bfbacf5..cf7ed019b509 100644
+--- a/arch/arm/mach-orion5x/pci.c
++++ b/arch/arm/mach-orion/orion5x-pci.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-orion5x/pci.c
+- *
+  * PCI and PCIe functions for Marvell Orion System On Chip
+  *
+  * Maintainer: Tzachi Perelstein <tzachi@marvell.com>
+@@ -17,9 +15,9 @@
+ #include <video/vga.h>
+ #include <asm/irq.h>
+ #include <asm/mach/pci.h>
+-#include <plat/pcie.h>
+-#include <plat/addr-map.h>
+-#include "common.h"
++#include "pcie.h"
++#include "addr-map.h"
++#include "orion5x-common.h"
+ #include "orion5x.h"
+ 
+ /*****************************************************************************
+diff --git a/arch/arm/mach-orion5x/common.c b/arch/arm/mach-orion/orion5x.c
+similarity index 99%
+rename from arch/arm/mach-orion5x/common.c
+rename to arch/arm/mach-orion/orion5x.c
+index 7bcb41137bbf..d653c1713582 100644
+--- a/arch/arm/mach-orion5x/common.c
++++ b/arch/arm/mach-orion/orion5x.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-orion5x/common.c
+- *
+  * Core functions for Marvell Orion 5x SoCs
+  *
+  * Maintainer: Tzachi Perelstein <tzachi@marvell.com>
+@@ -30,11 +28,11 @@
+ #include <asm/mach/time.h>
+ #include <linux/platform_data/mtd-orion_nand.h>
+ #include <linux/platform_data/usb-ehci-orion.h>
+-#include <plat/time.h>
+-#include <plat/common.h>
+-
+-#include "bridge-regs.h"
++#include "time.h"
+ #include "common.h"
 +
-+.. toctree::
-+   :maxdepth: 2
-+
-+   asm-annotations
-+
- Architecture-specific documentation
- -----------------------------------
++#include "orion5x-bridge-regs.h"
++#include "orion5x-common.h"
+ #include "orion5x.h"
  
-diff --git a/arch/x86/include/asm/linkage.h b/arch/x86/include/asm/linkage.h
-index 14caa9d..e07188e 100644
---- a/arch/x86/include/asm/linkage.h
-+++ b/arch/x86/include/asm/linkage.h
-@@ -13,9 +13,13 @@
+ /*****************************************************************************
+diff --git a/arch/arm/mach-orion5x/orion5x.h b/arch/arm/mach-orion/orion5x.h
+similarity index 99%
+rename from arch/arm/mach-orion5x/orion5x.h
+rename to arch/arm/mach-orion/orion5x.h
+index 2b66120fba86..8eb42e7d6d14 100644
+--- a/arch/arm/mach-orion5x/orion5x.h
++++ b/arch/arm/mach-orion/orion5x.h
+@@ -12,7 +12,7 @@
+ #ifndef __ASM_ARCH_ORION5X_H
+ #define __ASM_ARCH_ORION5X_H
  
- #ifdef __ASSEMBLY__
+-#include "irqs.h"
++#include "orion5x-irqs.h"
  
--#define GLOBAL(name)	\
--	.globl name;	\
--	name:
-+/*
-+ * GLOBAL is DEPRECATED
-+ *
-+ * use SYM_DATA_START, SYM_FUNC_START, SYM_INNER_LABEL, SYM_CODE_START, or
-+ * similar
-+ */
-+#define GLOBAL(name)	SYM_ENTRY(name, SYM_L_GLOBAL, SYM_A_NONE)
+ /*****************************************************************************
+  * Orion Address Maps
+diff --git a/arch/arm/plat-orion/pcie.c b/arch/arm/mach-orion/pcie.c
+similarity index 98%
+rename from arch/arm/plat-orion/pcie.c
+rename to arch/arm/mach-orion/pcie.c
+index 8b8c06d2e9c4..f5dd78160a81 100644
+--- a/arch/arm/plat-orion/pcie.c
++++ b/arch/arm/mach-orion/pcie.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/plat-orion/pcie.c
+- *
+  * Marvell Orion SoC PCIe handling.
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -12,8 +10,8 @@
+ #include <linux/pci.h>
+ #include <linux/mbus.h>
+ #include <asm/mach/pci.h>
+-#include <plat/pcie.h>
+-#include <plat/addr-map.h>
++#include "pcie.h"
++#include "addr-map.h"
+ #include <linux/delay.h>
  
- #if defined(CONFIG_X86_64) || defined(CONFIG_X86_ALIGNMENT_16)
- #define __ALIGN		.p2align 4, 0x90
-diff --git a/include/linux/linkage.h b/include/linux/linkage.h
-index 7e02078..f3ae8f3 100644
---- a/include/linux/linkage.h
-+++ b/include/linux/linkage.h
-@@ -75,32 +75,58 @@
+ /*
+diff --git a/arch/arm/plat-orion/include/plat/pcie.h b/arch/arm/mach-orion/pcie.h
+similarity index 96%
+rename from arch/arm/plat-orion/include/plat/pcie.h
+rename to arch/arm/mach-orion/pcie.h
+index fe5b9e862747..d3dd6f2119c5 100644
+--- a/arch/arm/plat-orion/include/plat/pcie.h
++++ b/arch/arm/mach-orion/pcie.h
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/plat-orion/include/plat/pcie.h
+- *
+  * Marvell Orion SoC PCIe handling.
+  *
+  * This file is licensed under the terms of the GNU General Public
+diff --git a/arch/arm/mach-mv78xx0/rd78x00-masa-setup.c b/arch/arm/mach-orion/rd78x00-masa-setup.c
+similarity index 96%
+rename from arch/arm/mach-mv78xx0/rd78x00-masa-setup.c
+rename to arch/arm/mach-orion/rd78x00-masa-setup.c
+index 308ab71ec822..9405bfe5da61 100644
+--- a/arch/arm/mach-mv78xx0/rd78x00-masa-setup.c
++++ b/arch/arm/mach-orion/rd78x00-masa-setup.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-mv78x00/rd78x00-masa-setup.c
+- *
+  * Marvell RD-78x00-mASA Development Board Setup
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -17,7 +15,7 @@
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ #include "mv78xx0.h"
+-#include "common.h"
++#include "mv78xx0-common.h"
  
- #ifdef __ASSEMBLY__
+ static struct mv643xx_eth_platform_data rd78x00_masa_ge00_data = {
+ 	.phy_addr	= MV643XX_ETH_PHY_ADDR(8),
+diff --git a/arch/arm/mach-orion5x/rd88f5181l-fxo-setup.c b/arch/arm/mach-orion/rd88f5181l-fxo-setup.c
+similarity index 98%
+rename from arch/arm/mach-orion5x/rd88f5181l-fxo-setup.c
+rename to arch/arm/mach-orion/rd88f5181l-fxo-setup.c
+index c65ab7db36ad..3077fc122acc 100644
+--- a/arch/arm/mach-orion5x/rd88f5181l-fxo-setup.c
++++ b/arch/arm/mach-orion/rd88f5181l-fxo-setup.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-orion5x/rd88f5181l-fxo-setup.c
+- *
+  * Marvell Orion-VoIP FXO Reference Design Setup
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -20,8 +18,8 @@
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ #include <asm/mach/pci.h>
+-#include "common.h"
+-#include "mpp.h"
++#include "orion5x-common.h"
++#include "orion5x-mpp.h"
+ #include "orion5x.h"
  
-+/* SYM_T_FUNC -- type used by assembler to mark functions */
-+#ifndef SYM_T_FUNC
-+#define SYM_T_FUNC				STT_FUNC
-+#endif
-+
-+/* SYM_T_OBJECT -- type used by assembler to mark data */
-+#ifndef SYM_T_OBJECT
-+#define SYM_T_OBJECT				STT_OBJECT
-+#endif
-+
-+/* SYM_T_NONE -- type used by assembler to mark entries of unknown type */
-+#ifndef SYM_T_NONE
-+#define SYM_T_NONE				STT_NOTYPE
-+#endif
-+
-+/* SYM_A_* -- align the symbol? */
-+#define SYM_A_ALIGN				ALIGN
-+#define SYM_A_NONE				/* nothing */
-+
-+/* SYM_L_* -- linkage of symbols */
-+#define SYM_L_GLOBAL(name)			.globl name
-+#define SYM_L_WEAK(name)			.weak name
-+#define SYM_L_LOCAL(name)			/* nothing */
-+
- #ifndef LINKER_SCRIPT
- #define ALIGN __ALIGN
- #define ALIGN_STR __ALIGN_STR
+ /*****************************************************************************
+diff --git a/arch/arm/mach-orion5x/rd88f5181l-ge-setup.c b/arch/arm/mach-orion/rd88f5181l-ge-setup.c
+similarity index 98%
+rename from arch/arm/mach-orion5x/rd88f5181l-ge-setup.c
+rename to arch/arm/mach-orion/rd88f5181l-ge-setup.c
+index 76b8138d9d79..38e5db3cef5c 100644
+--- a/arch/arm/mach-orion5x/rd88f5181l-ge-setup.c
++++ b/arch/arm/mach-orion/rd88f5181l-ge-setup.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-orion5x/rd88f5181l-ge-setup.c
+- *
+  * Marvell Orion-VoIP GE Reference Design Setup
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -21,8 +19,8 @@
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ #include <asm/mach/pci.h>
+-#include "common.h"
+-#include "mpp.h"
++#include "orion5x-common.h"
++#include "orion5x-mpp.h"
+ #include "orion5x.h"
  
-+/* === DEPRECATED annotations === */
-+
- #ifndef GLOBAL
-+/* deprecated, use SYM_DATA*, SYM_ENTRY, or similar */
- #define GLOBAL(name) \
- 	.globl name ASM_NL \
- 	name:
- #endif
+ /*****************************************************************************
+diff --git a/arch/arm/mach-orion5x/rd88f5182-setup.c b/arch/arm/mach-orion/rd88f5182-setup.c
+similarity index 98%
+rename from arch/arm/mach-orion5x/rd88f5182-setup.c
+rename to arch/arm/mach-orion/rd88f5182-setup.c
+index fe3e67c81fb8..057df4f76299 100644
+--- a/arch/arm/mach-orion5x/rd88f5182-setup.c
++++ b/arch/arm/mach-orion/rd88f5182-setup.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-orion5x/rd88f5182-setup.c
+- *
+  * Marvell Orion-NAS Reference Design Setup
+  *
+  * Maintainer: Ronen Shitrit <rshitrit@marvell.com>
+@@ -23,8 +21,8 @@
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ #include <asm/mach/pci.h>
+-#include "common.h"
+-#include "mpp.h"
++#include "orion5x-common.h"
++#include "orion5x-mpp.h"
+ #include "orion5x.h"
  
- #ifndef ENTRY
-+/* deprecated, use SYM_FUNC_START */
- #define ENTRY(name) \
--	.globl name ASM_NL \
--	ALIGN ASM_NL \
--	name:
-+	SYM_FUNC_START(name)
- #endif
- #endif /* LINKER_SCRIPT */
+ /*****************************************************************************
+diff --git a/arch/arm/mach-orion5x/rd88f6183ap-ge-setup.c b/arch/arm/mach-orion/rd88f6183ap-ge-setup.c
+similarity index 97%
+rename from arch/arm/mach-orion5x/rd88f6183ap-ge-setup.c
+rename to arch/arm/mach-orion/rd88f6183ap-ge-setup.c
+index 5f388a1ed1e4..d9a2dc4ff8be 100644
+--- a/arch/arm/mach-orion5x/rd88f6183ap-ge-setup.c
++++ b/arch/arm/mach-orion/rd88f6183ap-ge-setup.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-orion5x/rd88f6183-ap-ge-setup.c
+- *
+  * Marvell Orion-1-90 AP GE Reference Design Setup
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -22,7 +20,7 @@
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ #include <asm/mach/pci.h>
+-#include "common.h"
++#include "orion5x-common.h"
+ #include "orion5x.h"
  
- #ifndef WEAK
-+/* deprecated, use SYM_FUNC_START_WEAK* */
- #define WEAK(name)	   \
--	.weak name ASM_NL   \
--	ALIGN ASM_NL \
--	name:
-+	SYM_FUNC_START_WEAK(name)
- #endif
+ static struct mv643xx_eth_platform_data rd88f6183ap_ge_eth_data = {
+diff --git a/arch/arm/mach-orion5x/terastation_pro2-setup.c b/arch/arm/mach-orion/terastation_pro2-setup.c
+similarity index 99%
+rename from arch/arm/mach-orion5x/terastation_pro2-setup.c
+rename to arch/arm/mach-orion/terastation_pro2-setup.c
+index 23a5521c6833..6f1e5a6f22bb 100644
+--- a/arch/arm/mach-orion5x/terastation_pro2-setup.c
++++ b/arch/arm/mach-orion/terastation_pro2-setup.c
+@@ -18,8 +18,8 @@
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ #include <asm/mach/pci.h>
+-#include "common.h"
+-#include "mpp.h"
++#include "orion5x-common.h"
++#include "orion5x-mpp.h"
+ #include "orion5x.h"
  
- #ifndef END
-+/* deprecated, use SYM_FUNC_END, SYM_DATA_END, or SYM_END */
- #define END(name) \
- 	.size name, .-name
- #endif
-@@ -110,11 +136,214 @@
-  * static analysis tools such as stack depth analyzer.
+ /*****************************************************************************
+diff --git a/arch/arm/plat-orion/time.c b/arch/arm/mach-orion/time.c
+similarity index 99%
+rename from arch/arm/plat-orion/time.c
+rename to arch/arm/mach-orion/time.c
+index ffb93db68e9c..ce6da19a3534 100644
+--- a/arch/arm/plat-orion/time.c
++++ b/arch/arm/mach-orion/time.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/plat-orion/time.c
+- *
+  * Marvell Orion SoC timer handling.
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -17,7 +15,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/sched_clock.h>
+-#include <plat/time.h>
++#include "time.h"
+ #include <asm/delay.h>
+ 
+ /*
+diff --git a/arch/arm/plat-orion/include/plat/time.h b/arch/arm/mach-orion/time.h
+similarity index 90%
+rename from arch/arm/plat-orion/include/plat/time.h
+rename to arch/arm/mach-orion/time.h
+index 07527e417c62..415cfa052b2d 100644
+--- a/arch/arm/plat-orion/include/plat/time.h
++++ b/arch/arm/mach-orion/time.h
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/plat-orion/include/plat/time.h
+- *
+  * Marvell Orion SoC time handling.
+  *
+  * This file is licensed under the terms of the GNU General Public
+diff --git a/arch/arm/mach-orion5x/ts209-setup.c b/arch/arm/mach-orion/ts209-setup.c
+similarity index 99%
+rename from arch/arm/mach-orion5x/ts209-setup.c
+rename to arch/arm/mach-orion/ts209-setup.c
+index bab8ba0e01ab..a77f3dcb3aa7 100644
+--- a/arch/arm/mach-orion5x/ts209-setup.c
++++ b/arch/arm/mach-orion/ts209-setup.c
+@@ -21,8 +21,8 @@
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ #include <asm/mach/pci.h>
+-#include "common.h"
+-#include "mpp.h"
++#include "orion5x-common.h"
++#include "orion5x-mpp.h"
+ #include "orion5x.h"
+ #include "tsx09-common.h"
+ 
+diff --git a/arch/arm/mach-orion5x/ts409-setup.c b/arch/arm/mach-orion/ts409-setup.c
+similarity index 99%
+rename from arch/arm/mach-orion5x/ts409-setup.c
+rename to arch/arm/mach-orion/ts409-setup.c
+index 6f60dc1dfa22..4e4b416cfa52 100644
+--- a/arch/arm/mach-orion5x/ts409-setup.c
++++ b/arch/arm/mach-orion/ts409-setup.c
+@@ -23,8 +23,8 @@
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ #include <asm/mach/pci.h>
+-#include "common.h"
+-#include "mpp.h"
++#include "orion5x-common.h"
++#include "orion5x-mpp.h"
+ #include "orion5x.h"
+ #include "tsx09-common.h"
+ 
+diff --git a/arch/arm/mach-orion5x/ts78xx-fpga.h b/arch/arm/mach-orion/ts78xx-fpga.h
+similarity index 100%
+rename from arch/arm/mach-orion5x/ts78xx-fpga.h
+rename to arch/arm/mach-orion/ts78xx-fpga.h
+diff --git a/arch/arm/mach-orion5x/ts78xx-setup.c b/arch/arm/mach-orion/ts78xx-setup.c
+similarity index 99%
+rename from arch/arm/mach-orion5x/ts78xx-setup.c
+rename to arch/arm/mach-orion/ts78xx-setup.c
+index fda9b75c3a33..6f67d03f0be3 100644
+--- a/arch/arm/mach-orion5x/ts78xx-setup.c
++++ b/arch/arm/mach-orion/ts78xx-setup.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-orion5x/ts78xx-setup.c
+- *
+  * Maintainer: Alexander Clouter <alex@digriz.org.uk>
+  *
+  * This file is licensed under the terms of the GNU General Public
+@@ -21,8 +19,8 @@
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ #include <asm/mach/map.h>
+-#include "common.h"
+-#include "mpp.h"
++#include "orion5x-common.h"
++#include "orion5x-mpp.h"
+ #include "orion5x.h"
+ #include "ts78xx-fpga.h"
+ 
+diff --git a/arch/arm/mach-orion5x/tsx09-common.c b/arch/arm/mach-orion/tsx09-common.c
+similarity index 97%
+rename from arch/arm/mach-orion5x/tsx09-common.c
+rename to arch/arm/mach-orion/tsx09-common.c
+index 099e6fdfa8e6..6ac62f58c160 100644
+--- a/arch/arm/mach-orion5x/tsx09-common.c
++++ b/arch/arm/mach-orion/tsx09-common.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ /*
+- * QNAP TS-x09 Boards common functions
+- *
+  * Maintainers: Lennert Buytenhek <buytenh@marvell.com>
+  *		Byron Bradley <byron.bbradley@gmail.com>
   */
- #ifndef ENDPROC
-+/* deprecated, use SYM_FUNC_END */
- #define ENDPROC(name) \
--	.type name, @function ASM_NL \
--	END(name)
-+	SYM_FUNC_END(name)
-+#endif
-+
-+/* === generic annotations === */
-+
-+/* SYM_ENTRY -- use only if you have to for non-paired symbols */
-+#ifndef SYM_ENTRY
-+#define SYM_ENTRY(name, linkage, align...)		\
-+	linkage(name) ASM_NL				\
-+	align ASM_NL					\
-+	name:
-+#endif
-+
-+/* SYM_START -- use only if you have to */
-+#ifndef SYM_START
-+#define SYM_START(name, linkage, align...)		\
-+	SYM_ENTRY(name, linkage, align)
-+#endif
-+
-+/* SYM_END -- use only if you have to */
-+#ifndef SYM_END
-+#define SYM_END(name, sym_type)				\
-+	.type name sym_type ASM_NL			\
-+	.size name, .-name
-+#endif
-+
-+/* === code annotations === */
-+
-+/*
-+ * FUNC -- C-like functions (proper stack frame etc.)
-+ * CODE -- non-C code (e.g. irq handlers with different, special stack etc.)
-+ *
-+ * Objtool validates stack for FUNC, but not for CODE.
-+ * Objtool generates debug info for both FUNC & CODE, but needs special
-+ * annotations for each CODE's start (to describe the actual stack frame).
-+ *
-+ * ALIAS -- does not generate debug info -- the aliased function will
-+ */
-+
-+/* SYM_INNER_LABEL_ALIGN -- only for labels in the middle of code */
-+#ifndef SYM_INNER_LABEL_ALIGN
-+#define SYM_INNER_LABEL_ALIGN(name, linkage)	\
-+	.type name SYM_T_NONE ASM_NL			\
-+	SYM_ENTRY(name, linkage, SYM_A_ALIGN)
-+#endif
-+
-+/* SYM_INNER_LABEL -- only for labels in the middle of code */
-+#ifndef SYM_INNER_LABEL
-+#define SYM_INNER_LABEL(name, linkage)		\
-+	.type name SYM_T_NONE ASM_NL			\
-+	SYM_ENTRY(name, linkage, SYM_A_NONE)
-+#endif
-+
-+/*
-+ * SYM_FUNC_START_LOCAL_ALIAS -- use where there are two local names for one
-+ * function
-+ */
-+#ifndef SYM_FUNC_START_LOCAL_ALIAS
-+#define SYM_FUNC_START_LOCAL_ALIAS(name)		\
-+	SYM_START(name, SYM_L_LOCAL, SYM_A_ALIGN)
-+#endif
-+
-+/*
-+ * SYM_FUNC_START_ALIAS -- use where there are two global names for one
-+ * function
-+ */
-+#ifndef SYM_FUNC_START_ALIAS
-+#define SYM_FUNC_START_ALIAS(name)			\
-+	SYM_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)
-+#endif
-+
-+/* SYM_FUNC_START -- use for global functions */
-+#ifndef SYM_FUNC_START
-+/*
-+ * The same as SYM_FUNC_START_ALIAS, but we will need to distinguish these two
-+ * later.
-+ */
-+#define SYM_FUNC_START(name)				\
-+	SYM_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)
-+#endif
-+
-+/* SYM_FUNC_START_NOALIGN -- use for global functions, w/o alignment */
-+#ifndef SYM_FUNC_START_NOALIGN
-+#define SYM_FUNC_START_NOALIGN(name)			\
-+	SYM_START(name, SYM_L_GLOBAL, SYM_A_NONE)
-+#endif
-+
-+/* SYM_FUNC_START_LOCAL -- use for local functions */
-+#ifndef SYM_FUNC_START_LOCAL
-+/* the same as SYM_FUNC_START_LOCAL_ALIAS, see comment near SYM_FUNC_START */
-+#define SYM_FUNC_START_LOCAL(name)			\
-+	SYM_START(name, SYM_L_LOCAL, SYM_A_ALIGN)
- #endif
+@@ -13,7 +11,7 @@
+ #include <linux/serial_reg.h>
+ #include "orion5x.h"
+ #include "tsx09-common.h"
+-#include "common.h"
++#include "orion5x-common.h"
  
-+/* SYM_FUNC_START_LOCAL_NOALIGN -- use for local functions, w/o alignment */
-+#ifndef SYM_FUNC_START_LOCAL_NOALIGN
-+#define SYM_FUNC_START_LOCAL_NOALIGN(name)		\
-+	SYM_START(name, SYM_L_LOCAL, SYM_A_NONE)
- #endif
+ /*****************************************************************************
+  * QNAP TS-x09 specific power off method via UART1-attached PIC
+diff --git a/arch/arm/mach-orion5x/tsx09-common.h b/arch/arm/mach-orion/tsx09-common.h
+similarity index 100%
+rename from arch/arm/mach-orion5x/tsx09-common.h
+rename to arch/arm/mach-orion/tsx09-common.h
+diff --git a/arch/arm/mach-orion5x/wnr854t-setup.c b/arch/arm/mach-orion/wnr854t-setup.c
+similarity index 98%
+rename from arch/arm/mach-orion5x/wnr854t-setup.c
+rename to arch/arm/mach-orion/wnr854t-setup.c
+index 83589a28a491..382ac84e82a8 100644
+--- a/arch/arm/mach-orion5x/wnr854t-setup.c
++++ b/arch/arm/mach-orion/wnr854t-setup.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-orion5x/wnr854t-setup.c
+- *
+  * This file is licensed under the terms of the GNU General Public
+  * License version 2.  This program is licensed "as is" without any
+  * warranty of any kind, whether express or implied.
+@@ -20,8 +18,8 @@
+ #include <asm/mach/arch.h>
+ #include <asm/mach/pci.h>
+ #include "orion5x.h"
+-#include "common.h"
+-#include "mpp.h"
++#include "orion5x-common.h"
++#include "orion5x-mpp.h"
  
-+/* SYM_FUNC_START_WEAK -- use for weak functions */
-+#ifndef SYM_FUNC_START_WEAK
-+#define SYM_FUNC_START_WEAK(name)			\
-+	SYM_START(name, SYM_L_WEAK, SYM_A_ALIGN)
- #endif
-+
-+/* SYM_FUNC_START_WEAK_NOALIGN -- use for weak functions, w/o alignment */
-+#ifndef SYM_FUNC_START_WEAK_NOALIGN
-+#define SYM_FUNC_START_WEAK_NOALIGN(name)		\
-+	SYM_START(name, SYM_L_WEAK, SYM_A_NONE)
-+#endif
-+
-+/* SYM_FUNC_END_ALIAS -- the end of LOCAL_ALIASed or ALIASed function */
-+#ifndef SYM_FUNC_END_ALIAS
-+#define SYM_FUNC_END_ALIAS(name)			\
-+	SYM_END(name, SYM_T_FUNC)
-+#endif
-+
-+/*
-+ * SYM_FUNC_END -- the end of SYM_FUNC_START_LOCAL, SYM_FUNC_START,
-+ * SYM_FUNC_START_WEAK, ...
-+ */
-+#ifndef SYM_FUNC_END
-+/* the same as SYM_FUNC_END_ALIAS, see comment near SYM_FUNC_START */
-+#define SYM_FUNC_END(name)				\
-+	SYM_END(name, SYM_T_FUNC)
-+#endif
-+
-+/* SYM_CODE_START -- use for non-C (special) functions */
-+#ifndef SYM_CODE_START
-+#define SYM_CODE_START(name)				\
-+	SYM_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)
-+#endif
-+
-+/* SYM_CODE_START_NOALIGN -- use for non-C (special) functions, w/o alignment */
-+#ifndef SYM_CODE_START_NOALIGN
-+#define SYM_CODE_START_NOALIGN(name)			\
-+	SYM_START(name, SYM_L_GLOBAL, SYM_A_NONE)
-+#endif
-+
-+/* SYM_CODE_START_LOCAL -- use for local non-C (special) functions */
-+#ifndef SYM_CODE_START_LOCAL
-+#define SYM_CODE_START_LOCAL(name)			\
-+	SYM_START(name, SYM_L_LOCAL, SYM_A_ALIGN)
-+#endif
-+
-+/*
-+ * SYM_CODE_START_LOCAL_NOALIGN -- use for local non-C (special) functions,
-+ * w/o alignment
-+ */
-+#ifndef SYM_CODE_START_LOCAL_NOALIGN
-+#define SYM_CODE_START_LOCAL_NOALIGN(name)		\
-+	SYM_START(name, SYM_L_LOCAL, SYM_A_NONE)
-+#endif
-+
-+/* SYM_CODE_END -- the end of SYM_CODE_START_LOCAL, SYM_CODE_START, ... */
-+#ifndef SYM_CODE_END
-+#define SYM_CODE_END(name)				\
-+	SYM_END(name, SYM_T_NONE)
-+#endif
-+
-+/* === data annotations === */
-+
-+/* SYM_DATA_START -- global data symbol */
-+#ifndef SYM_DATA_START
-+#define SYM_DATA_START(name)				\
-+	SYM_START(name, SYM_L_GLOBAL, SYM_A_NONE)
-+#endif
-+
-+/* SYM_DATA_START -- local data symbol */
-+#ifndef SYM_DATA_START_LOCAL
-+#define SYM_DATA_START_LOCAL(name)			\
-+	SYM_START(name, SYM_L_LOCAL, SYM_A_NONE)
-+#endif
-+
-+/* SYM_DATA_END -- the end of SYM_DATA_START symbol */
-+#ifndef SYM_DATA_END
-+#define SYM_DATA_END(name)				\
-+	SYM_END(name, SYM_T_OBJECT)
-+#endif
-+
-+/* SYM_DATA_END_LABEL -- the labeled end of SYM_DATA_START symbol */
-+#ifndef SYM_DATA_END_LABEL
-+#define SYM_DATA_END_LABEL(name, linkage, label)	\
-+	linkage(label) ASM_NL				\
-+	.type label SYM_T_OBJECT ASM_NL			\
-+	label:						\
-+	SYM_END(name, SYM_T_OBJECT)
-+#endif
-+
-+/* SYM_DATA -- start+end wrapper around simple global data */
-+#ifndef SYM_DATA
-+#define SYM_DATA(name, data...)				\
-+	SYM_DATA_START(name) ASM_NL				\
-+	data ASM_NL						\
-+	SYM_DATA_END(name)
-+#endif
-+
-+/* SYM_DATA_LOCAL -- start+end wrapper around simple local data */
-+#ifndef SYM_DATA_LOCAL
-+#define SYM_DATA_LOCAL(name, data...)			\
-+	SYM_DATA_START_LOCAL(name) ASM_NL			\
-+	data ASM_NL						\
-+	SYM_DATA_END(name)
-+#endif
-+
-+#endif /* __ASSEMBLY__ */
-+
-+#endif /* _LINUX_LINKAGE_H */
+ static unsigned int wnr854t_mpp_modes[] __initdata = {
+ 	MPP0_GPIO,		/* Power LED green (0=on) */
+diff --git a/arch/arm/mach-orion5x/wrt350n-v2-setup.c b/arch/arm/mach-orion/wrt350n-v2-setup.c
+similarity index 98%
+rename from arch/arm/mach-orion5x/wrt350n-v2-setup.c
+rename to arch/arm/mach-orion/wrt350n-v2-setup.c
+index cea08d4a2597..db8abe6be6c9 100644
+--- a/arch/arm/mach-orion5x/wrt350n-v2-setup.c
++++ b/arch/arm/mach-orion/wrt350n-v2-setup.c
+@@ -1,6 +1,4 @@
+ /*
+- * arch/arm/mach-orion5x/wrt350n-v2-setup.c
+- *
+  * This file is licensed under the terms of the GNU General Public
+  * License version 2.  This program is licensed "as is" without any
+  * warranty of any kind, whether express or implied.
+@@ -23,8 +21,8 @@
+ #include <asm/mach/arch.h>
+ #include <asm/mach/pci.h>
+ #include "orion5x.h"
+-#include "common.h"
+-#include "mpp.h"
++#include "orion5x-common.h"
++#include "orion5x-mpp.h"
+ 
+ /*
+  * LEDs attached to GPIO
+-- 
+2.20.0
+
