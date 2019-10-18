@@ -2,209 +2,171 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4729CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EE2CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABB7921835
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D87172064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 17:09:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HgVpSHzo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634438AbfJRRJH (ORCPT
+        id S2634446AbfJRRJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 13:09:07 -0400
-Received: from mga17.intel.com ([192.55.52.151]:64001 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393426AbfJRRJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 13:09:07 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 10:09:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,312,1566889200"; 
-   d="scan'208";a="348140716"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga004.jf.intel.com with ESMTP; 18 Oct 2019 10:09:05 -0700
-Date:   Fri, 18 Oct 2019 10:09:05 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] KVM: VMX: Rename {vmx,nested_vmx}_vcpu_setup()
- and minor cleanup
-Message-ID: <20191018170905.GE26319@linux.intel.com>
-References: <20191018093723.102471-1-xiaoyao.li@intel.com>
- <20191018093723.102471-3-xiaoyao.li@intel.com>
+        Fri, 18 Oct 2019 13:09:34 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:47034 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393426AbfJRRJe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 13:09:34 -0400
+Received: by mail-ed1-f67.google.com with SMTP id r18so5089083eds.13
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 10:09:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=clksMLL9dqHGJa+lx49tbTIJnq7LcyfIVczck6kgpoU=;
+        b=HgVpSHzo6It4aFRPOmIdJEUUJiU4mtVshde+8TMOBdpDrWkpsHkN7HruzO/7xDm0W+
+         hsc/sTyB5/Y60Y1oaZxQvEXf2ihLdvDFsvRDsEi1m5/iTrSwprjEBQE8Bt3//13qMfj7
+         20dOylKvnrB5fFFPSHGxhoMj6FUWr7rnAcHRCsdt4dLKH1zJUJbd+DBnOX79duPdAoj+
+         bs+TI6hx0MMPMHitUc/OAjCSTs0KSLOM7uo2IhnUXDHo1PvBE2k4QEBgMzxP4JheMpIT
+         Va7BQrjobw73WORkq+xrJIGpXnBoerBI8AJySO1xokb1zn4OsV9DBVlljMzMiTRNfRkv
+         jpjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=clksMLL9dqHGJa+lx49tbTIJnq7LcyfIVczck6kgpoU=;
+        b=d+m/IEmCTThqXqFNOHTYiug16C88CdVB5XSclUUT9Tfv1hfQlPfyYFp/1nZvR+1R7E
+         9STUymgofi1R5bjHGJvpPUHJNqurn+ERLXdeyLbYsgDsC26TkXkAUELrkdCrcySzoEGq
+         dXHuVGwk4JAxgwc41TnRolDRMqpLUD7WR4oTxbFne74jNDSReNIjwUknzlq23BzOaQpo
+         BjO+fPxKcu4o7PCCy4Q+GjIay2ZKm2tp9W51olLrfmK7Q0WJKmIZxFiLQON8LR3RHVvL
+         eeWJXMDM7gqz5BZz9sfWRY4FPGed0e37i9RZR35gu9BcB2YQZsg8GMVVmUsOGXz097tk
+         B8AQ==
+X-Gm-Message-State: APjAAAUR1LX42mMxI7JPJeuJoC4Zub1HPZGd6T1O2AVyUJuBhNVST187
+        YC+mLvPWudx8KB4MrfJ/ZSkf4qJs
+X-Google-Smtp-Source: APXvYqxc7vjg+aq/2SiPu9+H685NBQPmRm/E7a3PnYZpapMUtvLXIMwavK6PADtMm4nbdGa507mKVg==
+X-Received: by 2002:a17:906:90d8:: with SMTP id v24mr9934480ejw.60.1571418571684;
+        Fri, 18 Oct 2019 10:09:31 -0700 (PDT)
+Received: from [10.67.50.53] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id a20sm296904edt.95.2019.10.18.10.09.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 18 Oct 2019 10:09:30 -0700 (PDT)
+Subject: Re: [PATCH 0/8] memory: brcmstb: dpfe: introduce DPFE API v2.5
+To:     Markus Mayer <mmayer@broadcom.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Gregory Fong <gregory.0xf0@gmail.com>
+Cc:     Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
+        ARM Kernel List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191015224513.16969-1-mmayer@broadcom.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <56dbb61a-4d30-1b12-d6fb-961b197a0278@gmail.com>
+Date:   Fri, 18 Oct 2019 10:09:24 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018093723.102471-3-xiaoyao.li@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191015224513.16969-1-mmayer@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 05:37:22PM +0800, Xiaoyao Li wrote:
-> Rename {vmx,nested_vmx}_vcpu_setup() to {vmx,nested_vmx}_vmcs_setup,
-> to match what they really do.
+On 10/15/19 3:45 PM, Markus Mayer wrote:
+> Here are a few changes for the DPFE driver for Broadcom STB.
 > 
-> Aslo remove the vmcs unrelated codes to vmx_vcpu_create().
-
-Do this in a separate patch, just in case there is a dependencies we're
-missing.
-
-> The initialization of vmx->hv_deadline_tsc can be removed here, because
-> it will be called in vmx_vcpu_reset() as the flow:
+> The changes and enhancements fall into a few categories:
 > 
-> kvm_arch_vcpu_setup()
->   -> kvm_vcpu_reset()
->        -> vmx_vcpu_reset()
-
-Definitely needs to be in a separate patch.
-
+> - some code cleanup
+> - support for deferring firmware download if the rootfs isn't yet available
+> - introduce a "new v2 API", which is half way between the existing APIs
+>   v2 (now called "old v2") and v3
 > 
-> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> ---
-> Changes in v2:
->   - move out the vmcs unrelated codes
-> ---
->  arch/x86/kvm/vmx/nested.c |  2 +-
->  arch/x86/kvm/vmx/nested.h |  2 +-
->  arch/x86/kvm/vmx/vmx.c    | 45 +++++++++++++++++----------------------
->  3 files changed, 22 insertions(+), 27 deletions(-)
+
+Series applied to drivers/next, thanks Markus!
+
+> Florian Fainelli (2):
+>   memory: brcmstb: dpfe: Compute checksum at __send_command() time
+>   memory: brcmstb: dpfe: Fixup API version/commands for 7211
 > 
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index 5e231da00310..7935422d311f 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -5768,7 +5768,7 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
->  	return ret;
->  }
->  
-> -void nested_vmx_vcpu_setup(void)
-> +void nested_vmx_vmcs_setup(void)
-
-"vmcs_setup" sounds like we're allocating and loading a VMCS.  Maybe
-{nested_,}vmx_set_initial_vmcs_state() a la vmx_set_constant_host_state()?
-
->  {
->  	if (enable_shadow_vmcs) {
->  		vmcs_write64(VMREAD_BITMAP, __pa(vmx_vmread_bitmap));
-> diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
-> index 187d39bf0bf1..2be1ba7482c9 100644
-> --- a/arch/x86/kvm/vmx/nested.h
-> +++ b/arch/x86/kvm/vmx/nested.h
-> @@ -11,7 +11,7 @@ void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps,
->  				bool apicv);
->  void nested_vmx_hardware_unsetup(void);
->  __init int nested_vmx_hardware_setup(int (*exit_handlers[])(struct kvm_vcpu *));
-> -void nested_vmx_vcpu_setup(void);
-> +void nested_vmx_vmcs_setup(void);
->  void nested_vmx_free_vcpu(struct kvm_vcpu *vcpu);
->  int nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu, bool from_vmentry);
->  bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason);
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index ef567df344bf..b083316a598d 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -4161,15 +4161,10 @@ static void ept_set_mmio_spte_mask(void)
->  
->  #define VMX_XSS_EXIT_BITMAP 0
->  
-> -/*
-> - * Sets up the vmcs for emulated real mode.
-> - */
-> -static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
-> +static void vmx_vmcs_setup(struct vcpu_vmx *vmx)
->  {
-> -	int i;
-> -
->  	if (nested)
-> -		nested_vmx_vcpu_setup();
-> +		nested_vmx_vmcs_setup();
->  
->  	if (cpu_has_vmx_msr_bitmap())
->  		vmcs_write64(MSR_BITMAP, __pa(vmx->vmcs01.msr_bitmap));
-> @@ -4178,7 +4173,6 @@ static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
->  
->  	/* Control */
->  	pin_controls_set(vmx, vmx_pin_based_exec_ctrl(vmx));
-> -	vmx->hv_deadline_tsc = -1;
->  
->  	exec_controls_set(vmx, vmx_exec_control(vmx));
->  
-> @@ -4227,21 +4221,6 @@ static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
->  	if (vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_IA32_PAT)
->  		vmcs_write64(GUEST_IA32_PAT, vmx->vcpu.arch.pat);
->  
-> -	for (i = 0; i < ARRAY_SIZE(vmx_msr_index); ++i) {
-> -		u32 index = vmx_msr_index[i];
-> -		u32 data_low, data_high;
-> -		int j = vmx->nmsrs;
-> -
-> -		if (rdmsr_safe(index, &data_low, &data_high) < 0)
-> -			continue;
-> -		if (wrmsr_safe(index, data_low, data_high) < 0)
-> -			continue;
-> -		vmx->guest_msrs[j].index = i;
-> -		vmx->guest_msrs[j].data = 0;
-> -		vmx->guest_msrs[j].mask = -1ull;
-> -		++vmx->nmsrs;
-> -	}
-> -
->  	vm_exit_controls_set(vmx, vmx_vmexit_ctrl());
->  
->  	/* 22.2.1, 20.8.1 */
-> @@ -6710,7 +6689,7 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
->  	int err;
->  	struct vcpu_vmx *vmx;
->  	unsigned long *msr_bitmap;
-> -	int cpu;
-> +	int i, cpu;
->  
->  	BUILD_BUG_ON_MSG(offsetof(struct vcpu_vmx, vcpu) != 0,
->  		"struct kvm_vcpu must be at offset 0 for arch usercopy region");
-> @@ -6786,9 +6765,25 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
->  	cpu = get_cpu();
->  	vmx_vcpu_load(&vmx->vcpu, cpu);
->  	vmx->vcpu.cpu = cpu;
-> -	vmx_vcpu_setup(vmx);
-> +	vmx_vmcs_setup(vmx);
->  	vmx_vcpu_put(&vmx->vcpu);
->  	put_cpu();
-> +
-> +	for (i = 0; i < ARRAY_SIZE(vmx_msr_index); ++i) {
-> +		u32 index = vmx_msr_index[i];
-> +		u32 data_low, data_high;
-> +		int j = vmx->nmsrs;
-> +
-> +		if (rdmsr_safe(index, &data_low, &data_high) < 0)
-> +			continue;
-> +		if (wrmsr_safe(index, data_low, data_high) < 0)
-> +			continue;
-> +		vmx->guest_msrs[j].index = i;
-> +		vmx->guest_msrs[j].data = 0;
-> +		vmx->guest_msrs[j].mask = -1ull;
-> +		++vmx->nmsrs;
-> +	}
-
-I'd put this immediately after guest_msrs is allocated.  Yeah, we'll waste
-a few cycles if allocating vmcs01 fails, but that should be a very rare
-event.
-
-> +
->  	if (cpu_need_virtualize_apic_accesses(&vmx->vcpu)) {
->  		err = alloc_apic_access_page(kvm);
->  		if (err)
-> -- 
-> 2.19.1
+> Markus Mayer (6):
+>   memory: brcmstb: dpfe: rename struct private_data
+>   memory: brcmstb: dpfe: initialize priv->dev
+>   memory: brcmstb: dpfe: add locking around DCPU enable/disable
+>   memory: brcmstb: dpfe: move init_data into
+>     brcmstb_dpfe_download_firmware()
+>   memory: brcmstb: dpfe: pass *priv as argument to
+>     brcmstb_dpfe_download_firmware()
+>   memory: brcmstb: dpfe: support for deferred firmware download
 > 
+>  drivers/memory/brcmstb_dpfe.c | 164 +++++++++++++++++++++-------------
+>  1 file changed, 101 insertions(+), 63 deletions(-)
+> 
+
+
+-- 
+Florian
