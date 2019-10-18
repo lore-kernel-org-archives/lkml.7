@@ -2,53 +2,51 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7401CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0857CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78704222D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2FCD21852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:19:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437149;
-	bh=OpdQKWgkWEMQGNYgDw5UyjWUZH61gprm3YzQN2Eh7jA=;
+	s=default; t=1571437154;
+	bh=RKoO/50WWCrVLJkafaQkr4EOtCU9gOnnE+awNfgmwaM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hto/SKQ5EBfSXI9oi+BfcksSkg4gqjlivZZ8CRjqjVaTkKHqz8h/cicKmeczA0gFy
-	 vLVhJYM8Y5Nxgc3NN+tjqvOQr6QlERIR5Vqjd5hOOs/inXtiol2+sgs7UwG/EMGjJF
-	 tKhoywyr1wuK+F9r38ZTwkVtkEBGDcayc7KOIuqg=
+	b=GQQDsutL/49wg7e3ip+rc3dw/blRgtOmFtMahVjcICcjW/I8BAqEUm16DnHXLFhwd
+	 WeLJdDFwBwBKDEfffBjQuBPw9fiyXzV0lGfZYO2T79ZTtuf0wd2RXWQGUbn7PLpLWP
+	 SVYlBs/eTK18qsRfGkJqbIKoxFoibAgesxOKNAuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732380AbfJRWHF (ORCPT
+        id S2404414AbfJRWTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:07:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38926 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:19:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732082AbfJRWGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:06:52 -0400
+        id S1732372AbfJRWHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:07:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 472DD222C2;
-        Fri, 18 Oct 2019 22:06:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0BBC222D1;
+        Fri, 18 Oct 2019 22:07:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436412;
-        bh=OpdQKWgkWEMQGNYgDw5UyjWUZH61gprm3YzQN2Eh7jA=;
+        s=default; t=1571436424;
+        bh=RKoO/50WWCrVLJkafaQkr4EOtCU9gOnnE+awNfgmwaM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hrUD426vDf4BUBO/uj0EOKaqeBGjdrSHyPZ5fXCcZtUxy2D6SlKccdAVWXYKGxSJN
-         PRQFucowvGNxgerNWrVKUWaaqWSdAWCyJZBCtbCWhO8JQFdCd+GQmz+h3FEFrEXU2o
-         uLzJK7icnMvi3YQyg1ZjKKEF4jyNxb6XZLs9JM68=
+        b=J3+7DCEgDu76lCxX0/yXQ2HimHN6oeP1QcoDi1P2XowE6syFIeuFZlghUvx8Gp8+r
+         UxsM+W8DlGRVZm6VZiP9wiSpC3g95nS0FK/5GHgzUoV3ujKfeVtV7YLn5DKNIa1Ks2
+         E9RAmRlXTq3BjTquugO7AjTGLx7Zpmsq9sCVE8Bc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 057/100] perf tools: Propagate get_cpuid() error
-Date:   Fri, 18 Oct 2019 18:04:42 -0400
-Message-Id: <20191018220525.9042-57-sashal@kernel.org>
+Cc:     Dexuan Cui <decui@microsoft.com>, Jiri Kosina <jkosina@suse.cz>,
+        Sasha Levin <sashal@kernel.org>, devel@linuxdriverproject.org,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 066/100] HID: hyperv: Use in-place iterator API in the channel callback
+Date:   Fri, 18 Oct 2019 18:04:51 -0400
+Message-Id: <20191018220525.9042-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
 References: <20191018220525.9042-1-sashal@kernel.org>
@@ -61,136 +59,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Dexuan Cui <decui@microsoft.com>
 
-[ Upstream commit f67001a4a08eb124197ed4376941e1da9cf94b42 ]
+[ Upstream commit 6a297c90efa68b2864483193b8bfb0d19478600c ]
 
-For consistency, propagate the exact cause for get_cpuid() to have
-failed.
+Simplify the ring buffer handling with the in-place API.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-9ig269f7ktnhh99g4l15vpu2@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Also avoid the dynamic allocation and the memory leak in the channel
+callback function.
+
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Acked-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/arch/powerpc/util/header.c | 3 ++-
- tools/perf/arch/s390/util/header.c    | 9 +++++----
- tools/perf/arch/x86/util/header.c     | 3 ++-
- tools/perf/builtin-kvm.c              | 7 ++++---
- 4 files changed, 13 insertions(+), 9 deletions(-)
+ drivers/hid/hid-hyperv.c | 56 +++++++---------------------------------
+ 1 file changed, 10 insertions(+), 46 deletions(-)
 
-diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
-index 0b242664f5ea7..e46be9ef5a688 100644
---- a/tools/perf/arch/powerpc/util/header.c
-+++ b/tools/perf/arch/powerpc/util/header.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <sys/types.h>
-+#include <errno.h>
- #include <unistd.h>
- #include <stdio.h>
- #include <stdlib.h>
-@@ -31,7 +32,7 @@ get_cpuid(char *buffer, size_t sz)
- 		buffer[nb-1] = '\0';
- 		return 0;
- 	}
--	return -1;
-+	return ENOBUFS;
- }
+diff --git a/drivers/hid/hid-hyperv.c b/drivers/hid/hid-hyperv.c
+index 704049e62d58a..4d1496f60071f 100644
+--- a/drivers/hid/hid-hyperv.c
++++ b/drivers/hid/hid-hyperv.c
+@@ -322,60 +322,24 @@ static void mousevsc_on_receive(struct hv_device *device,
  
- char *
-diff --git a/tools/perf/arch/s390/util/header.c b/tools/perf/arch/s390/util/header.c
-index 163b92f339980..cc72554c362a1 100644
---- a/tools/perf/arch/s390/util/header.c
-+++ b/tools/perf/arch/s390/util/header.c
-@@ -11,6 +11,7 @@
-  */
- 
- #include <sys/types.h>
-+#include <errno.h>
- #include <unistd.h>
- #include <stdio.h>
- #include <string.h>
-@@ -56,7 +57,7 @@ int get_cpuid(char *buffer, size_t sz)
- 
- 	sysinfo = fopen(SYSINFO, "r");
- 	if (sysinfo == NULL)
--		return -1;
-+		return errno;
- 
- 	while ((read = getline(&line, &line_sz, sysinfo)) != -1) {
- 		if (!strncmp(line, SYSINFO_MANU, strlen(SYSINFO_MANU))) {
-@@ -91,7 +92,7 @@ int get_cpuid(char *buffer, size_t sz)
- 
- 	/* Missing manufacturer, type or model information should not happen */
- 	if (!manufacturer[0] || !type[0] || !model[0])
--		return -1;
-+		return EINVAL;
- 
- 	/*
- 	 * Scan /proc/service_levels and return the CPU-MF counter facility
-@@ -135,14 +136,14 @@ int get_cpuid(char *buffer, size_t sz)
- 	else
- 		nbytes = snprintf(buffer, sz, "%s,%s,%s", manufacturer, type,
- 				  model);
--	return (nbytes >= sz) ? -1 : 0;
-+	return (nbytes >= sz) ? ENOBUFS : 0;
- }
- 
- char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
+ static void mousevsc_on_channel_callback(void *context)
  {
- 	char *buf = malloc(128);
+-	const int packet_size = 0x100;
+-	int ret;
+ 	struct hv_device *device = context;
+-	u32 bytes_recvd;
+-	u64 req_id;
+ 	struct vmpacket_descriptor *desc;
+-	unsigned char	*buffer;
+-	int	bufferlen = packet_size;
+-
+-	buffer = kmalloc(bufferlen, GFP_ATOMIC);
+-	if (!buffer)
+-		return;
+-
+-	do {
+-		ret = vmbus_recvpacket_raw(device->channel, buffer,
+-					bufferlen, &bytes_recvd, &req_id);
+-
+-		switch (ret) {
+-		case 0:
+-			if (bytes_recvd <= 0) {
+-				kfree(buffer);
+-				return;
+-			}
+-			desc = (struct vmpacket_descriptor *)buffer;
+-
+-			switch (desc->type) {
+-			case VM_PKT_COMP:
+-				break;
+-
+-			case VM_PKT_DATA_INBAND:
+-				mousevsc_on_receive(device, desc);
+-				break;
+-
+-			default:
+-				pr_err("unhandled packet type %d, tid %llx len %d\n",
+-					desc->type, req_id, bytes_recvd);
+-				break;
+-			}
  
--	if (buf && get_cpuid(buf, 128) < 0)
-+	if (buf && get_cpuid(buf, 128))
- 		zfree(&buf);
- 	return buf;
- }
-diff --git a/tools/perf/arch/x86/util/header.c b/tools/perf/arch/x86/util/header.c
-index fb0d71afee8bb..2a5daec6fb8b0 100644
---- a/tools/perf/arch/x86/util/header.c
-+++ b/tools/perf/arch/x86/util/header.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <sys/types.h>
-+#include <errno.h>
- #include <unistd.h>
- #include <stdio.h>
- #include <stdlib.h>
-@@ -56,7 +57,7 @@ __get_cpuid(char *buffer, size_t sz, const char *fmt)
- 		buffer[nb-1] = '\0';
- 		return 0;
- 	}
--	return -1;
-+	return ENOBUFS;
- }
++	foreach_vmbus_pkt(desc, device->channel) {
++		switch (desc->type) {
++		case VM_PKT_COMP:
+ 			break;
  
- int
-diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 2b1ef704169f2..952e2228f6c60 100644
---- a/tools/perf/builtin-kvm.c
-+++ b/tools/perf/builtin-kvm.c
-@@ -699,14 +699,15 @@ static int process_sample_event(struct perf_tool *tool,
+-		case -ENOBUFS:
+-			kfree(buffer);
+-			/* Handle large packet */
+-			bufferlen = bytes_recvd;
+-			buffer = kmalloc(bytes_recvd, GFP_ATOMIC);
+-
+-			if (!buffer)
+-				return;
++		case VM_PKT_DATA_INBAND:
++			mousevsc_on_receive(device, desc);
++			break;
  
- static int cpu_isa_config(struct perf_kvm_stat *kvm)
- {
--	char buf[64], *cpuid;
-+	char buf[128], *cpuid;
- 	int err;
- 
- 	if (kvm->live) {
- 		err = get_cpuid(buf, sizeof(buf));
- 		if (err != 0) {
--			pr_err("Failed to look up CPU type\n");
--			return err;
-+			pr_err("Failed to look up CPU type: %s\n",
-+			       str_error_r(err, buf, sizeof(buf)));
-+			return -err;
++		default:
++			pr_err("Unhandled packet type %d, tid %llx len %d\n",
++			       desc->type, desc->trans_id, desc->len8 * 8);
+ 			break;
  		}
- 		cpuid = buf;
- 	} else
+-	} while (1);
+-
++	}
+ }
+ 
+ static int mousevsc_connect_to_vsp(struct hv_device *device)
 -- 
 2.20.1
 
