@@ -2,133 +2,297 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3615CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DD5CA9EA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89F3121897
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 145E3222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 09:23:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R4/Ih84F"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="WHYirSap"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409669AbfJRJUM (ORCPT
+        id S2409672AbfJRJXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 05:20:12 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53350 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2390499AbfJRJUL (ORCPT
+        Fri, 18 Oct 2019 05:23:53 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45895 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390043AbfJRJXw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 05:20:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571390409;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lqNjg+EaGLj4NJ+f3f6IUdn2NqQIeIPYBk4IKGTbgOg=;
-        b=R4/Ih84FKt7lli57JnZjHf+PvNHaIqny3n7y9OnfhSsLdLQI9/UBVbJ5/flDX/9prz0ahM
-        ipTw0EXV1MsgT+GwaHKuaoEdl8RRLmqIjMYL9dECLuHyATxcirv3xO/E6jUKkK92iyklmk
-        XdC+OH2ia7IoaUjxpX5qNXIsQiAQJww=
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
- [209.85.166.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-169-RuTZFAEQP36o0U1mzFLIvQ-1; Fri, 18 Oct 2019 05:20:05 -0400
-Received: by mail-io1-f72.google.com with SMTP id r5so7814316iop.2
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 02:20:05 -0700 (PDT)
+        Fri, 18 Oct 2019 05:23:52 -0400
+Received: by mail-wr1-f66.google.com with SMTP id q13so450706wrs.12
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 02:23:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CGQdxqGUDbNod+W6/TL8KymSEPAQ4wbTycas1Hr21Es=;
+        b=WHYirSap2bUDjtP7M2fOe2O0Ou7/QQgEoHjseYOk4GU4k3al2ziBF4JmE9clRV6FQq
+         CKx2JsJwoH2p+iy0RtgVorQ3rhMiDs/X1iqQPmDBI/a6LwZtALCbtDYIRS5PUG7c2EnM
+         coct8G+RQZpF6Il0qhRpDiHwiW1fCg4QT/vC0TvVbjHpWkouXgiMddsTp8P/NBBf0DmR
+         vDo4oBLgAbuKRhrMiDG/bJq5TsyxX/6g1QcG6wq3vPUQZljgAGFPnjyU42yDKZpQcn1m
+         WtuTvGUWTGvL4rlCw/aCaCexaBplzo211AxKm4z1Rj24RxXDordUc4kBKXpFAGvdSKPh
+         mPow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=RHTr/G3jxXej8cUMFfKi+HcWzJkXtd79itVbm58x3Nc=;
-        b=O+z8DNpBh99caZkjVEnMfY3chq6nRrbUr3Dx1f0hR76WtQkDd4FmbPIhvlheuxiNO3
-         b6M2wWiEXOSDnfaH3k628PHYyQycm+ks19GXuktviPc2bsg3bL+PHXZ2XD+Xdk8qFrkZ
-         xY1ewceZBFhKVDILwTJ3af+MpHQTSVFLrDmjDpTEOWM/EzJAohShGGC0R1LCtihMZ70A
-         WkukmQDxql5ZH8Y/Nb04zm6FHiqCIdtAnTvXEwowUfspbGRwq9Y4k7qAroraMtAOrNV9
-         X06vakw4BkvO2bi8OIV9p9LeHfRj5CaOTs4zaYyu5hBdn96pggTfDsYe+gINTvQFBMvx
-         wGMA==
-X-Gm-Message-State: APjAAAUjhTRQaNowYSIWP1qJyoYaZ/MCVDOcQ/BtrEt1DiAF/2LxLILn
-        JuycfS2EeHXyGopC1LHzVgY6GXF33fAeacsAydfd4WN5MWRrzJ9n3xNIZN9I0FexqYz+REPbFSQ
-        Ri+idyxAklodM63uOQtoD0ser
-X-Received: by 2002:a05:6638:3a6:: with SMTP id z6mr8060189jap.33.1571390404917;
-        Fri, 18 Oct 2019 02:20:04 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyeKV0GqHl8jqRB2FJYh+++6hNUR6kyjWJgdRjbQacCDJrFh4dUI6qLBvlkxQiaCvoFXgmjew==
-X-Received: by 2002:a05:6638:3a6:: with SMTP id z6mr8060170jap.33.1571390404644;
-        Fri, 18 Oct 2019 02:20:04 -0700 (PDT)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id n26sm2180447ili.8.2019.10.18.02.20.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 02:20:03 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 02:20:02 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org, Joerg Roedel <jroedel@suse.de>,
-        linux-kernel@vger.kernel.org,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH] iommu/amd: Pass gfp flags to iommu_map_page() in
- amd_iommu_map()
-Message-ID: <20191018092002.wmgjhfit56ezkyu6@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, Joerg Roedel <jroedel@suse.de>,
-        linux-kernel@vger.kernel.org,
-        Dan Carpenter <dan.carpenter@oracle.com>
-References: <20191018090736.18819-1-joro@8bytes.org>
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CGQdxqGUDbNod+W6/TL8KymSEPAQ4wbTycas1Hr21Es=;
+        b=PLYtabyl1nYq7U52tybBuVH/wIa9NdOJhoCHd0Me0aK9kxpz3f1PqinBsGTFEV1Ijz
+         9Bqh180ErsZQxvDRyxtDcK6pMOCYqtWh2ruH9p2w7pa225mc3ECI6APphk5QZYUmxttD
+         9XIoJvPAq1vQ+q1bV+GNvhQpyfBR6miKIVcON0VoaoZ8iQY9jH6mPd8WiSlg49besYPP
+         aTH5JVMfFv/UhS5TPk31jvKVuOfW1YWSMuACOYTD9A+tfC2JyQ8iuZDFmeTqBg+6gUFo
+         35SHttyAxcRhuhCyipeglJAvZYSIV+wUnXJJbxHnUj4AtEz4xavd4D8sT4RzQPHVITb/
+         Vr8w==
+X-Gm-Message-State: APjAAAUnY3A9CQN8V7fkFqybBoxFYLp6XqOd7w/J5/MPsKO5hZrSANlh
+        EmLqakYfrTBMBGJMvpKLhmgITsWksDA=
+X-Google-Smtp-Source: APXvYqz5yayycr/haox3KXGV1PtZEk+0quO02cuhxR+rLcj/Hs1NKXoIT8iRtMit6PSmBz7HvCK/gw==
+X-Received: by 2002:adf:b102:: with SMTP id l2mr7424627wra.269.1571390628507;
+        Fri, 18 Oct 2019 02:23:48 -0700 (PDT)
+Received: from [192.168.0.31] (abo-99-183-68.mtp.modulonet.fr. [85.68.183.99])
+        by smtp.gmail.com with ESMTPSA id o19sm5808085wmh.27.2019.10.18.02.23.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 18 Oct 2019 02:23:47 -0700 (PDT)
+Subject: Re: [PATCH 0/2] media: meson: vdec: Add compliant H264 support
+From:   Maxime Jourdan <mjourdan@baylibre.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+References: <20191007145909.29979-1-mjourdan@baylibre.com>
+ <8563127e-fe2c-a633-556b-8a883cebb171@xs4all.nl>
+ <977c48e8-8275-c96a-688b-ccfbb873eb79@baylibre.com>
+ <65a88bfc-d82b-1487-7983-507149b11673@xs4all.nl>
+ <acef4f1e-0b59-30f5-f31f-9fc22f393072@baylibre.com>
+ <fb6edb95-069e-abeb-416e-2327da0a87ab@xs4all.nl>
+ <CAMO6nazotuiZQROoA4+b8tHZ-qpR4TS1RZWV6=fyPVCdsxz1Zg@mail.gmail.com>
+Message-ID: <549936be-89ef-bfe7-8e38-924e4f284b98@baylibre.com>
+Date:   Fri, 18 Oct 2019 11:23:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191018090736.18819-1-joro@8bytes.org>
-User-Agent: NeoMutt/20180716
-X-MC-Unique: RuTZFAEQP36o0U1mzFLIvQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <CAMO6nazotuiZQROoA4+b8tHZ-qpR4TS1RZWV6=fyPVCdsxz1Zg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: tl
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri Oct 18 19, Joerg Roedel wrote:
->From: Joerg Roedel <jroedel@suse.de>
->
->A recent commit added a gfp parameter to amd_iommu_map() to make it
->callable from atomic context, but forgot to pass it down to
->iommu_map_page() and left GFP_KERNEL there. This caused
->sleep-while-atomic warnings and needs to be fixed.
->
->Reported-by: Qian Cai <cai@lca.pw>
->Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
->Fixes: 781ca2de89ba ("iommu: Add gfp parameter to iommu_ops::map")
->Signed-off-by: Joerg Roedel <jroedel@suse.de>
->---
-> drivers/iommu/amd_iommu.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
->index 0d2479546b77..fb54df5c2e11 100644
->--- a/drivers/iommu/amd_iommu.c
->+++ b/drivers/iommu/amd_iommu.c
->@@ -2561,7 +2561,7 @@ static int amd_iommu_map(struct iommu_domain *dom, u=
-nsigned long iova,
-> =09if (iommu_prot & IOMMU_WRITE)
-> =09=09prot |=3D IOMMU_PROT_IW;
->
->-=09ret =3D iommu_map_page(domain, iova, paddr, page_size, prot, GFP_KERNE=
-L);
->+=09ret =3D iommu_map_page(domain, iova, paddr, page_size, prot, gfp);
->
-> =09domain_flush_np_cache(domain, iova, page_size);
->
->--=20
->2.16.4
->
->_______________________________________________
->iommu mailing list
->iommu@lists.linux-foundation.org
->https://lists.linuxfoundation.org/mailman/listinfo/iommu
+On 18/10/2019 09:50, Maxime Jourdan wrote:
+> On Wed, Oct 9, 2019 at 2:01 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>>
+>> On 10/8/19 3:40 PM, Maxime Jourdan wrote:
+>>> On 07/10/2019 18:39, Hans Verkuil wrote:
+>>>> On 10/7/19 6:24 PM, Maxime Jourdan wrote:
+>>>>> On 07/10/2019 17:12, Hans Verkuil wrote:
+>>>>>> On 10/7/19 4:59 PM, Maxime Jourdan wrote:
+>>>>>>> Hello,
+>>>>>>>
+>>>>>>> This patch series aims to bring H.264 support as well as compliance update
+>>>>>>> to the amlogic stateful video decoder driver.
+>>>>>>>
+>>>>>>> There is 1 issue that remains currently:
+>>>>>>>
+>>>>>>>     - The following codepath had to be commented out from v4l2-compliance as
+>>>>>>> it led to stalling:
+>>>>>>>
+>>>>>>> if (node->codec_mask & STATEFUL_DECODER) {
+>>>>>>>       struct v4l2_decoder_cmd cmd;
+>>>>>>>       buffer buf_cap(m2m_q);
+>>>>>>>
+>>>>>>>       memset(&cmd, 0, sizeof(cmd));
+>>>>>>>       cmd.cmd = V4L2_DEC_CMD_STOP;
+>>>>>>>
+>>>>>>>       /* No buffers are queued, call STREAMON, then STOP */
+>>>>>>>       fail_on_test(node->streamon(q.g_type()));
+>>>>>>>       fail_on_test(node->streamon(m2m_q.g_type()));
+>>>>>>>       fail_on_test(doioctl(node, VIDIOC_DECODER_CMD, &cmd));
+>>>>>>>
+>>>>>>>       fail_on_test(buf_cap.querybuf(node, 0));
+>>>>>>>       fail_on_test(buf_cap.qbuf(node));
+>>>>>>>       fail_on_test(buf_cap.dqbuf(node));
+>>>>>>>       fail_on_test(!(buf_cap.g_flags() & V4L2_BUF_FLAG_LAST));
+>>>>>>>       for (unsigned p = 0; p < buf_cap.g_num_planes(); p++)
+>>>>>>>           fail_on_test(buf_cap.g_bytesused(p));
+>>>>>>>       fail_on_test(node->streamoff(q.g_type()));
+>>>>>>>       fail_on_test(node->streamoff(m2m_q.g_type()));
+>>>>>>>
+>>>>>>>       /* Call STREAMON, queue one CAPTURE buffer, then STOP */
+>>>>>>>       fail_on_test(node->streamon(q.g_type()));
+>>>>>>>       fail_on_test(node->streamon(m2m_q.g_type()));
+>>>>>>>       fail_on_test(buf_cap.querybuf(node, 0));
+>>>>>>>       fail_on_test(buf_cap.qbuf(node));
+>>>>>>>       fail_on_test(doioctl(node, VIDIOC_DECODER_CMD, &cmd));
+>>>>>>>
+>>>>>>>       fail_on_test(buf_cap.dqbuf(node));
+>>>>>>>       fail_on_test(!(buf_cap.g_flags() & V4L2_BUF_FLAG_LAST));
+>>>>>>>       for (unsigned p = 0; p < buf_cap.g_num_planes(); p++)
+>>>>>>>           fail_on_test(buf_cap.g_bytesused(p));
+>>>>>>>       fail_on_test(node->streamoff(q.g_type()));
+>>>>>>>       fail_on_test(node->streamoff(m2m_q.g_type()));
+>>>>>>> }
+>>>>>>>
+>>>>>>> The reason for this is because the driver has a limitation where all
+>>>>>>> capturebuffers must be queued to the driver before STREAMON is effective.
+>>>>>>> The firmware needs to know in advance what all the buffers are before
+>>>>>>> starting to decode.
+>>>>>>> This limitation is enforced via q->min_buffers_needed.
+>>>>>>> As such, in this compliance codepath, STREAMON is never actually called
+>>>>>>> driver-side and there is a stall on fail_on_test(buf_cap.dqbuf(node));
+>>>>>>
+>>>>>> That's interesting. I will have to look more closely at this.
+>>
+>> This requires a helper function in videobuf2-v4l2.c.
+>>
+>> In vdec_decoder_cmd you would need code like this:
+>>
+>>          if (!vb2_start_streaming_called(&capture_queue)) {
+>>                  vb2_dequeue_empty_last_buf(&capture_queue);
+>>                  return 0;
+>>          }
+>>
+>> The vb2_dequeue_empty_last_buf (function name can probably be improved upon!)
+>> does nothing if no capture buffers were queued, otherwise it takes the first
+>> buffer, sets the LAST flag and sets bytesused to 0 and marks it as DONE.
+>>
+>> The driver cannot do this directly, since the buffers were never queued to the
+>> driver and are owned by vb2.
+>>
+>> This is something that needs to be done for any codec driver that sets
+>> min_buffers_needed to a value > 1.
+>>
+>> The vb2 function would look something like this:
+>>
+>> void vb2_dqbuf_empty_last_buf(struct vb2_queue *q)
+>> {
+>>          struct vb2_buffer *vb;
+>>          struct vb2_v4l2_buffer *vbuf;
+>>          unsigned int i;
+>>
+>>          if (WARN_ON(q->is_output))
+>>                  return;
+>>          if (list_empty(&q->queued_list))
+>>                  return;
+>>          vb = list_first_entry(&q->queued_list, struct vb2_buffer, queued_entry);
+>>          list_del(&vb->queued_entry);
+>>          for (i = 0; i < vb->num_planes; i++)
+>>                  vb2_set_plane_payload(vb, i, 0)
+>>          vbuf = to_vb2_v4l2_buffer(vb);
+>>          vbuf->flags |= V4L2_BUF_FLAG_LAST;
+>>          vb2_buffer_done(vb, VB2_BUF_STATE_DONE);
+>> }
+>> EXPORT_SYMBOL_GPL(vb2_dqbuf_empty_last_buf);
+>>
+>> Neither compiled, nor tested, and I think this should be in v4l2-mem2mem.c instead of
+>> in videobuf2-v4l2.c since this is very m2m specific.
+>>
+>> So see this as a suggestion :-)
+>>
+>> Anyway, the key take-away from this is that userspace does not know if your driver
+>> behaves the way it does, so STOP should still produce a sane expected result.
+>>
+>> Which in this is just a single empty capture buffer marked LAST.
+> 
+> Thanks, this makes sense. It doesn't quite fit the current usage
+> unfortunately as the test in v4l2-compliance goes like this:
+> 
+> fail_on_test(doioctl(node, VIDIOC_DECODER_CMD, &cmd));
+> fail_on_test(buf_cap.querybuf(node, 0));
+> fail_on_test(buf_cap.qbuf(node));
+> fail_on_test(buf_cap.dqbuf(node));
+> fail_on_test(!(buf_cap.g_flags() & V4L2_BUF_FLAG_LAST));
+> 
+> Since the buffer is queued after issuing the stop cmd, it is not
+> possible to flag it as DONE in vdec_decoder_cmd.
+> 
+> A solution would be to hijack vidioc_qbuf and flag the buffer if a
+> stop has been issued previously and the capture queue is not
+> streaming. Would that be okay ?
+> 
 
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+I was able to pass the vanilla v4l2-compliance tests by hacking in the 
+following 2 things:
+
+1) Adding your function that I modified a bit (buffer had to be tagged 
+as VB2_BUF_STATE_ACTIVE, it shouldn't be removed from the list, and 
+q->owned_by_drv_count needs to be atomic_inc'd)
+
+void vb2_dqbuf_empty_last_buf(struct vb2_queue *q)
+{
+         struct vb2_buffer *vb;
+         struct vb2_v4l2_buffer *vbuf;
+         unsigned int i;
+
+         if (WARN_ON(q->is_output))
+                 return;
+         if (list_empty(&q->queued_list))
+                 return;
+
+         vb = list_first_entry(&q->queued_list, struct vb2_buffer, 
+queued_entry);
+         for (i = 0; i < vb->num_planes; i++)
+                 vb2_set_plane_payload(vb, i, 0);
+
+	vb->state = VB2_BUF_STATE_ACTIVE;
+	atomic_inc(&q->owned_by_drv_count);
+         vbuf = to_vb2_v4l2_buffer(vb);
+         vbuf->flags |= V4L2_BUF_FLAG_LAST;
+         vb2_buffer_done(vb, VB2_BUF_STATE_DONE);
+}
+
+2) Hijacking vidioc_qbuf to DONE the buffer if a stop was previously 
+asked for, and if the capture queue isn't streaming:
+
+static int vdec_qbuf(struct file *file, void *priv,
+		     struct v4l2_buffer *buf)
+{
+	struct v4l2_fh *fh = file->private_data;
+	struct amvdec_session *sess;
+	struct vb2_queue *vq;
+	int ret;
+
+	ret = v4l2_m2m_ioctl_qbuf(file, priv, buf);
+	if (ret)
+		return ret;
+
+	sess = container_of(file->private_data, struct amvdec_session, fh);
+	vq = v4l2_m2m_get_vq(fh->m2m_ctx, buf->type);
+	/*
+	 * If the capture queue isn't streaming and we were asked to
+	 * stop, DONE the buffer instantly
+	 */
+	if (!V4L2_TYPE_IS_OUTPUT(vq->type) &&
+	    !sess->streamon_cap && sess->should_stop)
+		vb2_dqbuf_empty_last_buf(vq);
+
+	return 0;
+}
+
+Overall it feels quite messy :( . It doesn't look like a buffer is 
+supposed to be dequeued if streaming hasn't started (they are tagged as 
+VB2_BUF_STATE_ACTIVE only when streaming starts, and this flag is a 
+requirement for vb2_buffer_done).
+
+All this could be built in more properly into v4l2-mem2mem.c, though it 
+would require the same hacks around VB2_BUF_STATE_ACTIVE and 
+q->owned_by_drv_count. Or it would need a vb2 function specifically for 
+this case, which would be very similar to vb2_buffer_done but allowing 
+the state being VB2_BUF_STATE_QUEUED and not changing q->owned_by_drv_count.
+
+>>
+>> Regards,
+>>
+>>          Hans
 
