@@ -2,144 +2,186 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB982CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE86CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 894E321925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C45EF222C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 20:48:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="dZOxx5ht"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ecNXxobj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395283AbfJRUm3 (ORCPT
+        id S2388652AbfJRUsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 16:42:29 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34942 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727793AbfJRUm2 (ORCPT
+        Fri, 18 Oct 2019 16:48:39 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42113 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfJRUsj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 16:42:28 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p30so3998150pgl.2
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 13:42:27 -0700 (PDT)
+        Fri, 18 Oct 2019 16:48:39 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g9so2092432plj.9;
+        Fri, 18 Oct 2019 13:48:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=VhVtaFR4lC9WpDLZGJuvhTXL3MmkTO55Z2XEXjz4Fqg=;
-        b=dZOxx5httOrKFoPQTyS276YZ2LuctMWAGeVKZClbnb3AEMHvWZufFPrh7SjZ9EzM17
-         YqTX/myX5BqFptcS1BISyWeGxpOUaEM2CfLC+4SLIKAHoqOYgCgcbT5B71Zxno8HsPyT
-         9eWovCFL0gi5RhJJlUQVcu94GiXfZp3XqclcY=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RcolS2WK2QNO/eFSnt70gILOjF3pCbIwHp6NSAOaUTU=;
+        b=ecNXxobj3K9jukXSeLOIi5dx987mjSdPiVgcy4pa6p8pChw9/USlayZI1O5fEoPaJY
+         McbzjwCQCaRhQsqCAbewvMOOWkK8ExnWgpLcAVyHoFEmb3LnBui1V8G0PvHBYSS6hoKf
+         9wJLpPSwbHTUKjY6bgNb9UJLQSuWhGSZJnOEZb4h2/oQHwRg+idXZy3wX4T3Gw8G7e6v
+         c2tgyBAwWwsH9jw6J7uzaXmVC0cUuwBnudoh8hx23vSxZHuyakFAbLqov1aRyoZl9gbg
+         0bFlKAaKas44Z/RylHw2jZLEIfhOJL4DG/WmlO93gWgM00MAn4s0Y+E/VQZACnULmqJO
+         hylA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=VhVtaFR4lC9WpDLZGJuvhTXL3MmkTO55Z2XEXjz4Fqg=;
-        b=WQdrkJr2ic/0S2LET1gFEnTjGDa8YF3RX8N0Ll436u94bKn1UOwfBaTiPx3H2MAzCE
-         VYt7cfXTxiQYqs5TCBZkbb94hBAeTDxUhat7cHGWHLg6574y/y7T9rZrMGYm9p6YosnB
-         mF7nLRFERWNe+IgOA+HLdDJcXqoYovFCp6eVgIJ8afo+JM7ZAUE1+j3xRpOaVS2kLcuu
-         TCKfYLBE/mZsaiQYOHosrz0dXazj/dGBmEd9LU/mdxmsPRhj7R9MfWo9/fxDK9spZfK0
-         YN+19TIEi4WmbQz5NuNWoNg1p2ZOV+zCPMoF3PiicOP4EmD8j7k0EGOdEW0juBuMcs7o
-         OjYQ==
-X-Gm-Message-State: APjAAAVR3dSEzfZMYuqpfDv65tlcT5s9vNj7IA/s481zF9K3h1ZChHCw
-        d5ngpQgU0Moc1c68EiOxEwEt7Q==
-X-Google-Smtp-Source: APXvYqzXJ/D3AABQOCh7mjUXCd8Dze6oOUF1vUVLaB1bqQzMDY3OgjNlRrK9x8ayHxXqFnyMqsICXg==
-X-Received: by 2002:a63:778f:: with SMTP id s137mr12009512pgc.147.1571431347415;
-        Fri, 18 Oct 2019 13:42:27 -0700 (PDT)
-Received: from cork (c-67-180-85-52.hsd1.ca.comcast.net. [67.180.85.52])
-        by smtp.gmail.com with ESMTPSA id u11sm4645761pgc.61.2019.10.18.13.42.26
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RcolS2WK2QNO/eFSnt70gILOjF3pCbIwHp6NSAOaUTU=;
+        b=PWhoCIvxF3Zn/8/Uj59MQdmjbRNcyPvchPqTEM1lnPgzyOf/QfMM83GuXA8HbCOHs8
+         mLK6tbPcKDsVjPRenwALz+gPG1uIRqiwBZREkYqX3HC4TJQKKlSDgkrTMZby18cDtyEZ
+         A0Nqacv5dnZLgRsTnJheSGPD8iFveRzBSSqHV3d7cU9yXYYIcVEdxm3yNzvLDvLVwadq
+         U5FhvJ61XP3+mDvVaidY15H1TbB7berE2YPGd2InTBPcbIkgCKhAKT5VvkwKymkexbRY
+         J9O1mk8yjzi39Jsg+pRTBm649VlX0s+OJ7s3Pwva1Uk1D7ZEbenTS3XgUeSN1KO7WmpR
+         sWcA==
+X-Gm-Message-State: APjAAAUrXHA50XoaZCxI//lPtRcyy1ghjdkOuX6Ddth/WfG6ZMPbUQwP
+        BYukesFHW4nK/Zlf8+jFKP0=
+X-Google-Smtp-Source: APXvYqyw9KkYo3e8BtV+g3MQIyw3iLsU4NoWFHeULWIQTewK8FksKO2hXy5R3V8vAD+MGsrEgRT5QQ==
+X-Received: by 2002:a17:902:9696:: with SMTP id n22mr11037394plp.252.1571431717821;
+        Fri, 18 Oct 2019 13:48:37 -0700 (PDT)
+Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id i190sm7936452pgc.93.2019.10.18.13.48.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 13:42:26 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 13:42:20 -0700
-From:   =?iso-8859-1?Q?J=F6rn?= Engel <joern@purestorage.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] random: make try_to_generate_entropy() more robust
-Message-ID: <20191018204220.GD31027@cork>
-References: <20191018203704.GC31027@cork>
+        Fri, 18 Oct 2019 13:48:37 -0700 (PDT)
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Mark Brown <broonie@kernel.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] Input: wm97xx - switch to using threaded IRQ
+Date:   Fri, 18 Oct 2019 13:48:33 -0700
+Message-Id: <20191018204834.213424-1-dmitry.torokhov@gmail.com>
+X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191018203704.GC31027@cork>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 01:37:04PM -0700, Jörn Engel wrote:
-> Sorry for coming late to the discussion.  I generally like the approach
-> in try_to_generate_entropy(), but I think we can do a little better
-> still.  Would something like this work?
+Instead of manually disabling and enabling interrupts and scheduling work
+to access the device, let's use threaded oneshot interrupt handler. It
+simplifies things.
 
-Fixed lkml address.
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
 
-> From 90078333edb6e720f13f6668376a69c0f9c570f5 Mon Sep 17 00:00:00 2001
-> From: Joern Engel <joern@purestorage.com>
-> Date: Fri, 18 Oct 2019 13:25:52 -0700
-> Subject: [PATCH] random: make try_to_generate_entropy() more robust
-> 
-> We can generate entropy on almost any CPU, even if it doesn't provide a
-> high-resolution timer for random_get_entropy().  As long as the CPU is
-> not idle, it changed the register file every few cycles.  As long as the
-> ALU isn't fully synchronized with the timer, the drift between the
-> register file and the timer is enough to generate entropy from.
-> 
-> Also print a warning on systems where entropy collection might be a
-> problem.  I have good confidence in two unsynchronized timers generating
-> entropy.  But I cannot tell whether timer and ALU are synchronized and
-> we ought to warn users if all their crypto is likely to be broken.
-> 
-> Signed-off-by: Joern Engel <joern@purestorage.com>
-> ---
->  drivers/char/random.c | 15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/char/random.c b/drivers/char/random.c
-> index de434feb873a..00a04efd0686 100644
-> --- a/drivers/char/random.c
-> +++ b/drivers/char/random.c
-> @@ -1748,6 +1748,16 @@ EXPORT_SYMBOL(get_random_bytes);
->   */
->  static void entropy_timer(struct timer_list *t)
->  {
-> +	struct pt_regs *regs = get_irq_regs();
-> +
-> +	/*
-> +	 * Even if we don't have a high-resolution timer in our system,
-> +	 * the register file itself is a high-resolution timer.  It
-> +	 * isn't monotonic or particularly useful to read the current
-> +	 * time.  But it changes with every retired instruction, which
-> +	 * is enough to generate entropy from.
-> +	 */
-> +	mix_pool_bytes(&input_pool, regs, sizeof(*regs));
->  	credit_entropy_bits(&input_pool, 1);
->  }
->  
-> @@ -1764,9 +1774,8 @@ static void try_to_generate_entropy(void)
->  
->  	stack.now = random_get_entropy();
->  
-> -	/* Slow counter - or none. Don't even bother */
-> -	if (stack.now == random_get_entropy())
-> -		return;
-> +	/* Slow counter - or none.  Warn user */
-> +	WARN_ON(stack.now == random_get_entropy());
->  
->  	timer_setup_on_stack(&stack.timer, entropy_timer, 0);
->  	while (!crng_ready()) {
-> -- 
-> 2.20.1
-> 
+ drivers/input/touchscreen/wm97xx-core.c | 42 +++++--------------------
+ include/linux/wm97xx.h                  |  1 -
+ 2 files changed, 7 insertions(+), 36 deletions(-)
 
-Jörn
+diff --git a/drivers/input/touchscreen/wm97xx-core.c b/drivers/input/touchscreen/wm97xx-core.c
+index 0a174bd82915..a9c6267a2998 100644
+--- a/drivers/input/touchscreen/wm97xx-core.c
++++ b/drivers/input/touchscreen/wm97xx-core.c
+@@ -285,11 +285,12 @@ void wm97xx_set_suspend_mode(struct wm97xx *wm, u16 mode)
+ EXPORT_SYMBOL_GPL(wm97xx_set_suspend_mode);
+ 
+ /*
+- * Handle a pen down interrupt.
++ * Codec PENDOWN irq handler
++ *
+  */
+-static void wm97xx_pen_irq_worker(struct work_struct *work)
++static irqreturn_t wm97xx_pen_interrupt(int irq, void *dev_id)
+ {
+-	struct wm97xx *wm = container_of(work, struct wm97xx, pen_event_work);
++	struct wm97xx *wm = dev_id;
+ 	int pen_was_down = wm->pen_is_down;
+ 
+ 	/* do we need to enable the touch panel reader */
+@@ -343,27 +344,6 @@ static void wm97xx_pen_irq_worker(struct work_struct *work)
+ 	if (!wm->pen_is_down && wm->mach_ops->acc_enabled)
+ 		wm->mach_ops->acc_pen_up(wm);
+ 
+-	wm->mach_ops->irq_enable(wm, 1);
+-}
+-
+-/*
+- * Codec PENDOWN irq handler
+- *
+- * We have to disable the codec interrupt in the handler because it
+- * can take up to 1ms to clear the interrupt source. We schedule a task
+- * in a work queue to do the actual interaction with the chip.  The
+- * interrupt is then enabled again in the slow handler when the source
+- * has been cleared.
+- */
+-static irqreturn_t wm97xx_pen_interrupt(int irq, void *dev_id)
+-{
+-	struct wm97xx *wm = dev_id;
+-
+-	if (!work_pending(&wm->pen_event_work)) {
+-		wm->mach_ops->irq_enable(wm, 0);
+-		queue_work(wm->ts_workq, &wm->pen_event_work);
+-	}
+-
+ 	return IRQ_HANDLED;
+ }
+ 
+@@ -374,12 +354,9 @@ static int wm97xx_init_pen_irq(struct wm97xx *wm)
+ {
+ 	u16 reg;
+ 
+-	/* If an interrupt is supplied an IRQ enable operation must also be
+-	 * provided. */
+-	BUG_ON(!wm->mach_ops->irq_enable);
+-
+-	if (request_irq(wm->pen_irq, wm97xx_pen_interrupt, IRQF_SHARED,
+-			"wm97xx-pen", wm)) {
++	if (request_threaded_irq(wm->pen_irq, NULL, wm97xx_pen_interrupt,
++				 IRQF_SHARED | IRQF_ONESHOT,
++				 "wm97xx-pen", wm)) {
+ 		dev_err(wm->dev,
+ 			"Failed to register pen down interrupt, polling");
+ 		wm->pen_irq = 0;
+@@ -509,7 +486,6 @@ static int wm97xx_ts_input_open(struct input_dev *idev)
+ 	wm->codec->dig_enable(wm, 1);
+ 
+ 	INIT_DELAYED_WORK(&wm->ts_reader, wm97xx_ts_reader);
+-	INIT_WORK(&wm->pen_event_work, wm97xx_pen_irq_worker);
+ 
+ 	wm->ts_reader_min_interval = HZ >= 100 ? HZ / 100 : 1;
+ 	if (wm->ts_reader_min_interval < 1)
+@@ -560,10 +536,6 @@ static void wm97xx_ts_input_close(struct input_dev *idev)
+ 
+ 	wm->pen_is_down = 0;
+ 
+-	/* Balance out interrupt disables/enables */
+-	if (cancel_work_sync(&wm->pen_event_work))
+-		wm->mach_ops->irq_enable(wm, 1);
+-
+ 	/* ts_reader rearms itself so we need to explicitly stop it
+ 	 * before we destroy the workqueue.
+ 	 */
+diff --git a/include/linux/wm97xx.h b/include/linux/wm97xx.h
+index 58e082dadc68..7d5496fa6ac7 100644
+--- a/include/linux/wm97xx.h
++++ b/include/linux/wm97xx.h
+@@ -281,7 +281,6 @@ struct wm97xx {
+ 	unsigned long ts_reader_min_interval; /* Minimum interval */
+ 	unsigned int pen_irq;		/* Pen IRQ number in use */
+ 	struct workqueue_struct *ts_workq;
+-	struct work_struct pen_event_work;
+ 	u16 acc_slot;			/* AC97 slot used for acc touch data */
+ 	u16 acc_rate;			/* acc touch data rate */
+ 	unsigned pen_is_down:1;		/* Pen is down */
+-- 
+2.23.0.866.gb869b98d4c-goog
 
---
-...one more straw can't possibly matter...
--- Kirby Bakken
