@@ -2,113 +2,145 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C9ACA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 827CDCA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE94D222C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:07:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Or1S1NJB"
+	by mail.kernel.org (Postfix) with ESMTP id 5D5C4222C5
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 05:07:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504366AbfJRFHS (ORCPT
+        id S2504336AbfJRFHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:07:18 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34371 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2504025AbfJRFHQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 01:07:16 -0400
-Received: by mail-pl1-f193.google.com with SMTP id k7so2270445pll.1
-        for <linux-kernel@vger.kernel.org>; Thu, 17 Oct 2019 22:07:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BN38U1tWSQycIwUtKvgVS41nw2Y5xmAR6qADXcgIN/E=;
-        b=Or1S1NJBS21mZ3T0kRuw3+pg9/9vA19tlOBKzPCu+VJOzUGorap9nhyIFOs7X2qgrg
-         zvJDJQwIS1BW+6v7Hpb7lsxv4M+N1QE5YfJhC/1Fj5/SMhEmHI+miSmHuYfJPzUy6eFa
-         GC0iDI+pBneF36jZra4sKjv7DLrI/2YleI/qLkqhHXu5iCL7IzKssn9od150fmLSzfsz
-         LCOOYySKfikf3B2ZqQcd/I/6X7u97Zel3TIjOM8ZSAJdp2jpXC24fyV1GimkEn+jQcpD
-         jBnPpOKMTIiYCrVbDyuUNr2v1+bDc60g12qFOhDG8ORiKRo/fqfAbqCIaTrPDAbvhTUO
-         GGdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BN38U1tWSQycIwUtKvgVS41nw2Y5xmAR6qADXcgIN/E=;
-        b=as3mvW1Jlod6/UAwJdphflMMFR7ACMitXMFsutiQLXZ6K28wkX5Ebs7liDv8Fw5hKM
-         /xzr5X7HLk+kwv49spYtKDYiTe+DAJGlFSUCbbg7qICGqPlKInADTOdK7zeNZhqdNJGm
-         k0rh1FKvsi11baWDNqr+eCSW+nzeTCDV0RS6m71UDkFe9o5S8kOrHR6TftHK7UjB4YIB
-         wzyHiklPgkDXJFqCX01AX0ycnCWO/4vHrN47Hdg4JD4w+qSm/6YjYdvE99yI2/8rtciJ
-         Qn3nnn5J7Yt8XrUzvOb8q+plhnSH2+/yXwVm7zfoNDh7fXjYNgSjjB65jDNSvlQQJDWY
-         fqCQ==
-X-Gm-Message-State: APjAAAVGFj6d5RPss65HyYYcB/XecK9cUsCFUAzRPs1qtAvdv/gFEa0m
-        I5mOSeBNOOR81O2aYy3sCxdzeGgf3cQ=
-X-Google-Smtp-Source: APXvYqzkRC1EwPpxmXJHKXXdNdXNMqjA0MEl0CEAzz/4I6yX9UtNA1XEwdpB6tAX43Fk+9Ejz7Ry3Q==
-X-Received: by 2002:a17:902:904b:: with SMTP id w11mr7882591plz.182.1571375235738;
-        Thu, 17 Oct 2019 22:07:15 -0700 (PDT)
-Received: from localhost ([122.172.151.112])
-        by smtp.gmail.com with ESMTPSA id 74sm4821485pfy.78.2019.10.17.22.07.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Oct 2019 22:07:14 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 10:37:12 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Preeti U Murthy <preeti@linux.vnet.ibm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2] cpufreq: powernv: fix stack bloat and NR_CPUS
- limitation
-Message-ID: <20191018050712.qr2axffmbms5h4xb@vireshk-i7>
-References: <20191018045539.3765565-1-jhubbard@nvidia.com>
+        Fri, 18 Oct 2019 01:07:12 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4718 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2407377AbfJRFHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 01:07:09 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CAF54C605E226D2ACC9E;
+        Fri, 18 Oct 2019 11:19:30 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 18 Oct 2019 11:19:22 +0800
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+To:     Petr Mladek <pmladek@suse.com>, <linux-kernel@vger.kernel.org>
+CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        "Rich Felker" <dalias@libc.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: [PATCH v2 05/33] sh: Use pr_warn instead of pr_warning
+Date:   Fri, 18 Oct 2019 11:18:22 +0800
+Message-ID: <20191018031850.48498-5-wangkefeng.wang@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191018031850.48498-1-wangkefeng.wang@huawei.com>
+References: <20191018031710.41052-1-wangkefeng.wang@huawei.com>
+ <20191018031850.48498-1-wangkefeng.wang@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191018045539.3765565-1-jhubbard@nvidia.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17-10-19, 21:55, John Hubbard wrote:
-> The following build warning occurred on powerpc 64-bit builds:
-> 
-> drivers/cpufreq/powernv-cpufreq.c: In function 'init_chip_info':
-> drivers/cpufreq/powernv-cpufreq.c:1070:1: warning: the frame size of 1040 bytes is larger than 1024 bytes [-Wframe-larger-than=]
-> 
-> This is due to putting 1024 bytes on the stack:
-> 
->     unsigned int chip[256];
-> 
-> ...and while looking at this, it also has a bug: it fails with a stack
-> overrun, if CONFIG_NR_CPUS > 256.
-> 
-> Fix both problems by dynamically allocating based on CONFIG_NR_CPUS.
-> 
-> Fixes: 053819e0bf840 ("cpufreq: powernv: Handle throttling due to Pmax capping at chip level")
-> Cc: Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
-> Cc: Preeti U Murthy <preeti@linux.vnet.ibm.com>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Cc: linux-pm@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
-> 
-> Changes since v1: includes Viresh's review commit fixes.
-> 
->  drivers/cpufreq/powernv-cpufreq.c | 17 +++++++++++++----
->  1 file changed, 13 insertions(+), 4 deletions(-)
+As said in commit f2c2cbcc35d4 ("powerpc: Use pr_warn instead of
+pr_warning"), removing pr_warning so all logging messages use a
+consistent <prefix>_warn style. Let's do it.
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+---
+ arch/sh/boards/mach-sdk7786/nmi.c    | 2 +-
+ arch/sh/drivers/pci/fixups-sdk7786.c | 2 +-
+ arch/sh/kernel/io_trapped.c          | 2 +-
+ arch/sh/kernel/setup.c               | 2 +-
+ arch/sh/mm/consistent.c              | 5 ++---
+ 5 files changed, 6 insertions(+), 7 deletions(-)
 
+diff --git a/arch/sh/boards/mach-sdk7786/nmi.c b/arch/sh/boards/mach-sdk7786/nmi.c
+index c2e09d798537..afba49679a12 100644
+--- a/arch/sh/boards/mach-sdk7786/nmi.c
++++ b/arch/sh/boards/mach-sdk7786/nmi.c
+@@ -37,7 +37,7 @@ static int __init nmi_mode_setup(char *str)
+ 		nmi_mode = NMI_MODE_ANY;
+ 	else {
+ 		nmi_mode = NMI_MODE_UNKNOWN;
+-		pr_warning("Unknown NMI mode %s\n", str);
++		pr_warn("Unknown NMI mode %s\n", str);
+ 	}
+ 
+ 	printk("Set NMI mode to %d\n", nmi_mode);
+diff --git a/arch/sh/drivers/pci/fixups-sdk7786.c b/arch/sh/drivers/pci/fixups-sdk7786.c
+index 8cbfa5310a4b..6972af7b4e93 100644
+--- a/arch/sh/drivers/pci/fixups-sdk7786.c
++++ b/arch/sh/drivers/pci/fixups-sdk7786.c
+@@ -53,7 +53,7 @@ static int __init sdk7786_pci_init(void)
+ 
+ 		/* Warn about forced rerouting if slot#3 is occupied */
+ 		if ((data & PCIECR_PRST3) == 0) {
+-			pr_warning("Unreachable card detected in slot#3\n");
++			pr_warn("Unreachable card detected in slot#3\n");
+ 			return -EBUSY;
+ 		}
+ 	} else
+diff --git a/arch/sh/kernel/io_trapped.c b/arch/sh/kernel/io_trapped.c
+index bacad6da4fe4..60c828a2b8a2 100644
+--- a/arch/sh/kernel/io_trapped.c
++++ b/arch/sh/kernel/io_trapped.c
+@@ -99,7 +99,7 @@ int register_trapped_io(struct trapped_io *tiop)
+ 
+ 	return 0;
+  bad:
+-	pr_warning("unable to install trapped io filter\n");
++	pr_warn("unable to install trapped io filter\n");
+ 	return -1;
+ }
+ EXPORT_SYMBOL_GPL(register_trapped_io);
+diff --git a/arch/sh/kernel/setup.c b/arch/sh/kernel/setup.c
+index 914174a125a4..d232cfa01877 100644
+--- a/arch/sh/kernel/setup.c
++++ b/arch/sh/kernel/setup.c
+@@ -355,7 +355,7 @@ void __init setup_arch(char **cmdline_p)
+ /* processor boot mode configuration */
+ int generic_mode_pins(void)
+ {
+-	pr_warning("generic_mode_pins(): missing mode pin configuration\n");
++	pr_warn("generic_mode_pins(): missing mode pin configuration\n");
+ 	return 0;
+ }
+ 
+diff --git a/arch/sh/mm/consistent.c b/arch/sh/mm/consistent.c
+index 792f36129062..3169a343a5ab 100644
+--- a/arch/sh/mm/consistent.c
++++ b/arch/sh/mm/consistent.c
+@@ -43,8 +43,7 @@ int __init platform_resource_setup_memory(struct platform_device *pdev,
+ 
+ 	r = pdev->resource + pdev->num_resources - 1;
+ 	if (r->flags) {
+-		pr_warning("%s: unable to find empty space for resource\n",
+-			name);
++		pr_warn("%s: unable to find empty space for resource\n", name);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -54,7 +53,7 @@ int __init platform_resource_setup_memory(struct platform_device *pdev,
+ 
+ 	buf = dma_alloc_coherent(&pdev->dev, memsize, &dma_handle, GFP_KERNEL);
+ 	if (!buf) {
+-		pr_warning("%s: unable to allocate memory\n", name);
++		pr_warn("%s: unable to allocate memory\n", name);
+ 		return -ENOMEM;
+ 	}
+ 
 -- 
-viresh
+2.20.1
+
