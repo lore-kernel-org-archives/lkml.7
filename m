@@ -2,117 +2,109 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA5BCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 120CACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2557420820
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC83C2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:27:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ISt0Da+O"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mCSqmO2X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502940AbfJRSZX (ORCPT
+        id S2502949AbfJRS1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:25:23 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:33571 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502886AbfJRSZW (ORCPT
+        Fri, 18 Oct 2019 14:27:06 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46602 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502485AbfJRS1G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:25:22 -0400
-Received: by mail-io1-f67.google.com with SMTP id z19so8616491ior.0
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 11:25:22 -0700 (PDT)
+        Fri, 18 Oct 2019 14:27:06 -0400
+Received: by mail-wr1-f66.google.com with SMTP id o18so7219481wrv.13
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 11:27:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=DDu/IAHCCoDYbrGWQJqHqgeQldPkoq1jl8KIeufJyiA=;
-        b=ISt0Da+OAsAtGt6QgzzKN5nThCoXEDZS6clnnScRtibWElaDsD/W4RTTNQ6acbpK/j
-         l95KMPu72vxXKr5UWzk4mDrPZKzMAmOFcRw3lJHfjIPeuHfXoLL5QdHQT2tusEOllbyI
-         d6ktFHxCNpFnl9myg4QWttqBICnHFvxFXLeVBMrbb7orBISgGFce/9Fxwto1lnNtCWYD
-         M5hBUSGFFn/Ntm1HMvUj0LdPYBi6FYVBUTigi0z3tnpxbBRl9gdb4MtOIf+KUEc9eEci
-         VxKJZqtwDRshEl/N2path8RwlSv2JqdGaPkkPjw7PeaXXOsE4Eqg7odxoJKsQyWd6+DO
-         RQtw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lO2StNiS2UHCj8+9SsvqSbVKFte3Dujsk2JYdGhstd0=;
+        b=mCSqmO2XSWm/BFp+YC0O5sy6vJ4J9PotAhn5xpwkgbLUAOKLOjfiuMwaNP4IM5w77D
+         1S15TG8+HjOpw2soOliWnJE23GXyYl2TXYvWNZArL9GbV9beblrMKFHKZdicosRbE4fq
+         yp47axUjsA6baFIHyOPPi3/rWce8BrLV6v0ZzfuMzwDU7prEK6y90itiERMCUMZV/lMu
+         m9sJHdbbrS7aaHwvAfm2Uk4/Y36IHrBd+TkMqVp8Kgr9XjSui6C2usRZeEb1khK3depA
+         U8LSiLkppE1IwqCCKIY5Nt4HDOBkjfuqMc4CQnwdfb+Grr1qOSqeYO3yF2hjUZY/LLGH
+         TFjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=DDu/IAHCCoDYbrGWQJqHqgeQldPkoq1jl8KIeufJyiA=;
-        b=sOKNS0YS0vx3BdIKSxn5IV+cNQo7Crr6Nx+POSRQyIszlogr2lRyc+EAK2EHNCD0Py
-         nO8oW20R4p9BBAwN7hsKc/1HYTs8sCzQH3MH/MHY6zBiHp0xNeUCF1l9O4qmFaCzjW0T
-         +0lBS+bwn4j6YelG4/9gveCIcYRAaidBTeGc+OUzsT1jBRRtEj8fq0hKGsdlRHVlphFT
-         vSGLlT9ahQCSOaoyGCcXaQI/gJvZXLYkSYUo2b3XpRVlpW3Oft15M8EzXMFb4rNDOAkQ
-         w5lVdEuI8JadUl1fMZyyzqgeJPG5VBcXX8t8yA3QYjIcUlLCTxvObckA07cmA8ziDrF0
-         8Pkw==
-X-Gm-Message-State: APjAAAUrEQ/62CdNGqNqY/fPFQ32l2FiUws0asVHspGoymBGC4D3L80R
-        BBHWz/WbeWdwNXrH1lWketSRZw==
-X-Google-Smtp-Source: APXvYqwFm8QnDjxMk1Ii/z0SeFVjpCdpbt8QkXM1VvTvVcOykUolmscleqfMpc4W6WEofHqEK2BJ8Q==
-X-Received: by 2002:a5d:9057:: with SMTP id v23mr3972088ioq.119.1571423121834;
-        Fri, 18 Oct 2019 11:25:21 -0700 (PDT)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id c8sm2044407iol.57.2019.10.18.11.25.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 11:25:21 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 11:25:19 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Atish Patra <Atish.Patra@wdc.com>
-cc:     "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "info@metux.net" <info@metux.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rfontana@redhat.com" <rfontana@redhat.com>,
-        "johan@kernel.org" <johan@kernel.org>,
-        "anup@brainfault.org" <anup@brainfault.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "allison@lohutok.net" <allison@lohutok.net>
-Subject: Re: [PATCH v2  2/2] RISC-V: Consolidate isa correctness check
-In-Reply-To: <a45f0c0e3db2e852770485bc581d489b6ee7545e.camel@wdc.com>
-Message-ID: <alpine.DEB.2.21.9999.1910181121270.21875@viisi.sifive.com>
-References: <20191009220058.24964-1-atish.patra@wdc.com>  <20191009220058.24964-3-atish.patra@wdc.com>  <alpine.DEB.2.21.9999.1910180142460.21875@viisi.sifive.com> <a45f0c0e3db2e852770485bc581d489b6ee7545e.camel@wdc.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lO2StNiS2UHCj8+9SsvqSbVKFte3Dujsk2JYdGhstd0=;
+        b=Yfj/kkZXH4tIxu8rwwx1aSnupf38Rl/6Jy4p73fybz7jTtxE9x4KyAaT0MWJqM1iXj
+         BsJ5DhUXiKHCs1+xoktxYCcq29L6HlPmqDTL6aQ/Vc9P3qXGF28gsAw1UcExSGjvXXiX
+         YbCjGEiGNdl+3EtZ5DO0lvqw//5UOsriHrlpszeZRHEPaXhHUmAXWN2M4Dm+6c2Q4avt
+         Jc/TrzVpI5pKwYUFt0uyqB02G9XLfdDczNJbVDqISZWg/e+Xk/1LqFpEycgliTIfP1EA
+         DV0/NIigViaDCB5T8f4lBop3H9H4Np0Yn3kp3LWZsntJPiT8a+Rvxwm5mOtP4iPHxuZB
+         T6Sw==
+X-Gm-Message-State: APjAAAU3/dJAjlzTBxCkOr/Er7f8C9QZrefbOlOdWhzRU1794p1IN35v
+        QgIOc1ku+ZoZJ3GxCbPYOhHZBBqhwlmYub7WuQO5pg==
+X-Google-Smtp-Source: APXvYqy02V7JvYjspbL2KqGV67KwG+Nwl8JcMdFE4sjvajWRC5F41fOItfkNZW2vQ9MumjE8aMqtnrumrcIePCpePlw=
+X-Received: by 2002:adf:fb0b:: with SMTP id c11mr9338121wrr.50.1571423224434;
+ Fri, 18 Oct 2019 11:27:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20191018052323.21659-1-john.stultz@linaro.org>
+ <20191018052323.21659-2-john.stultz@linaro.org> <20191018111832.o7wx3x54jm3ic6cq@DESKTOP-E1NTVVP.localdomain>
+In-Reply-To: <20191018111832.o7wx3x54jm3ic6cq@DESKTOP-E1NTVVP.localdomain>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Fri, 18 Oct 2019 11:26:52 -0700
+Message-ID: <CALAqxLUVLP0ujB0SHyWHMncRMHkBvVj1+CpBgGUD8Xg3RexQ8w@mail.gmail.com>
+Subject: Re: [PATCH v12 1/5] dma-buf: Add dma-buf heaps framework
+To:     Brian Starkey <Brian.Starkey@arm.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        "Andrew F. Davis" <afd@ti.com>, Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Hillf Danton <hdanton@sina.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        nd <nd@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 18 Oct 2019, Atish Patra wrote:
+On Fri, Oct 18, 2019 at 4:18 AM Brian Starkey <Brian.Starkey@arm.com> wrote:
+> On Fri, Oct 18, 2019 at 05:23:19AM +0000, John Stultz wrote:
+>
+> As in v3:
+>
+>  * Avoid EXPORT_SYMBOL until we finalize modules (suggested by
+>    Brian)
 
-> On Fri, 2019-10-18 at 01:43 -0700, Paul Walmsley wrote:
-> > On Wed, 9 Oct 2019, Atish Patra wrote:
-> > 
-> > > Currently, isa string is read and checked for correctness at 
-> > > multiple places.
-> > > 
-> > > Consolidate them into one function and use it only during early 
-> > > bootup. In case of a incorrect isa string, the cpu shouldn't boot at 
-> > > all.
-> > > 
-> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > 
-> > Looks like riscv_read_check_isa() is called twice for each hart.  Is 
-> > there any way to call it only once per hart?
-> > 
-> 
-> I had to add the check in riscv_fill_hwcap() because that function is
-> iterating over all cpu nodes to set the hwcap. Thus, some of the harts
-> that are not available due to incorrect isa string can affect hwcap.
-> 
-> We can check cpu_possible_mask to figure out the harts with invalid isa
-> strings but that will perform poorly as RISC-V have more harts in
-> future.
+Heh. I guess it has been awhile.  :)
 
-How about just calling riscv_read_check_isa() once for all harts and 
-leaving riscv_fill_hwcap() the way it was?  You'll probably need to hoist 
-the earlier call out of setup_smp(), so it still is called when 
-!CONFIG_SMP.
+> Did something change in that regard? I still think letting modules
+> register heaps without a way to remove them is a recipe for issues.
 
+So yea, in recent months, work around Android with their GKI effort
+has made it necessary for ION heaps to be loadable from modules. I had
+some patches in WIP tree to enable this, and in the rework I did
+yesterday for the CMA module trivially collided with parts, and
+forgetting the discussion back in v3, I figured I'd just fold those
+bits in before I resubmitted for v12.
 
-- Paul
+If it's an issue, I can pull it out, but I'm going to be submitting
+module enablement for review as soon as the core bits are queued, as
+its going to be important to support for Android to switch to this
+from ION.
+
+thanks
+-john
