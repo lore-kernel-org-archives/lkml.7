@@ -2,100 +2,84 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE72BCA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26191CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 891C921852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED851205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 22:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571437324;
-	bh=A+nXIhWOh/hn+hSxK3tP54icEmodpvMjam53PuBkrA4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FtVyVK0UsQOk5y8RT56OCMj/mUqivrEuJS4kGEANJukyF+0LVi21vcZQe+LzeL3RH
-	 XqAJRfQ27/PwjwrwxeR3P/yFHgEg/cwCvp23F9xZ6nVg58tT2MRrxP1xUSg0TI4i//
-	 lc3aMdlJAT+R/Ii69E0bfnMOo6Ssbnxf5ofJ8xK8=
+	s=default; t=1571437334;
+	bh=qAIBQeIpmd6hAmZu10ZR2fdEX8y4SeQuRmmYFchHdsI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e35d0mePF+nglUSpgSmGR7ecEO54k3UN1/LdBBJYKo9ZoeO1Dpc0HAkf69mTe3fC5
+	 kx9oVMByT9HKQxrE3RWtcKsIn3IDCDhzHqvsSQoXdEKCqbPGyTKbjWkQ/6WG5SZQu/
+	 OEjTOooBgJz2H+aSQcfgu8RF9zDNh+UG9SPrtpbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730746AbfJRWGG (ORCPT
+        id S2394259AbfJRWWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:06:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38014 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 18:22:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730287AbfJRWGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:06:04 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726205AbfJRWWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:22:07 -0400
+Received: from localhost (unknown [12.245.223.10])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AC71205F4;
-        Fri, 18 Oct 2019 22:06:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85ACC205C9;
+        Fri, 18 Oct 2019 22:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436363;
-        bh=A+nXIhWOh/hn+hSxK3tP54icEmodpvMjam53PuBkrA4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MI+tbiTdsoRX+ycBpVxs92MWoCr2Abb1yYbZZ4GQrJwNJ9C72w4vWfCW4VYPDMvXt
-         jrhGfwdZcVUdFPyGZNJRClb/5ylyB4pwKU336LFBP7TaFsRl9hGxOQV/6zlMkUhRwX
-         HH2GnW7q13Ka5wqzBhs3Ho+ULxOIzJKw4tg3D5V4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Rene Wagner <redhatbugzilla@callerid.de>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 019/100] HID: i2c-hid: Add Odys Winbook 13 to descriptor override
-Date:   Fri, 18 Oct 2019 18:04:04 -0400
-Message-Id: <20191018220525.9042-19-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
+        s=default; t=1571437326;
+        bh=qAIBQeIpmd6hAmZu10ZR2fdEX8y4SeQuRmmYFchHdsI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=u3KZZ1LTgCdf45rUtjlIg48GKcVjFB96rdYjKcelrz6bAiB8rkEUhdcqzsDDy3nZU
+         cYukfsuKsZH8Jd+/C6akNROyFB/FRD/Oz9nSUU9z6GpCJkNh74RvWAgRcJh1rbU6nb
+         gdnBKR6Oetd8v8ClUPucqUHTWyC4xz3AJcc4Ve6Y=
+Date:   Fri, 18 Oct 2019 18:22:05 -0400
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>, linux-usb@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.19 095/100] USB: usb-skeleton: fix
+ use-after-free after driver unbind
+Message-ID: <20191018222205.GA6978@kroah.com>
 References: <20191018220525.9042-1-sashal@kernel.org>
+ <20191018220525.9042-95-sashal@kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018220525.9042-95-sashal@kernel.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+On Fri, Oct 18, 2019 at 06:05:20PM -0400, Sasha Levin wrote:
+> From: Johan Hovold <johan@kernel.org>
+> 
+> [ Upstream commit 6353001852776e7eeaab4da78922d4c6f2b076af ]
+> 
+> The driver failed to stop its read URB on disconnect, something which
+> could lead to a use-after-free in the completion handler after driver
+> unbind in case the character device has been closed.
+> 
+> Fixes: e7389cc9a7ff ("USB: skel_read really sucks royally")
+> Signed-off-by: Johan Hovold <johan@kernel.org>
+> Link: https://lore.kernel.org/r/20191009170944.30057-3-johan@kernel.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/usb/usb-skeleton.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-[ Upstream commit f8f807441eefddc3c6d8a378421f0ede6361d565 ]
+This file does not even get built in the kernel tree, no need to
+backport anything for it :)
 
-The Odys Winbook 13 uses a SIPODEV SP1064 touchpad, which does not
-supply descriptors, add this to the DMI descriptor override list, fixing
-the touchpad not working.
+thanks,
 
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1526312
-Reported-by: Rene Wagner <redhatbugzilla@callerid.de>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-index 89f2976f9c534..fd1b6eea6d2fd 100644
---- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-@@ -346,6 +346,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
- 		},
- 		.driver_data = (void *)&sipodev_desc
- 	},
-+	{
-+		.ident = "Odys Winbook 13",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "AXDIA International GmbH"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "WINBOOK 13"),
-+		},
-+		.driver_data = (void *)&sipodev_desc
-+	},
- 	{ }	/* Terminate list */
- };
- 
--- 
-2.20.1
-
+greg k-h
