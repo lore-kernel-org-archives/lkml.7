@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBDBCA9EA6
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11540CA9EA7
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9688821897
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDF2C222C5
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:52:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="npNq6UNt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VmFlhBj2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632986AbfJRIwa (ORCPT
+        id S2632998AbfJRIwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:52:30 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38733 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2632964AbfJRIw2 (ORCPT
+        Fri, 18 Oct 2019 04:52:34 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41099 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2632989AbfJRIwd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 04:52:28 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w3so2992999pgt.5
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 01:52:28 -0700 (PDT)
+        Fri, 18 Oct 2019 04:52:33 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q7so3444886pfh.8
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 01:52:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=tSzJEpJmDmeHOSEU0I3AfQXPKpO46HQzH7+Mdke63aU=;
-        b=npNq6UNtXYpoaXJ3I7t2IdXdGe06e+rEdJhFxtv6H/2c3gYxsM311WsUfYe2YPeLXv
-         768UOT5TJugLFh5EWKwXxgf4gtmYK6e7eIRLahWH2yT1KURVAnfccBCO2XbYoIymgvLe
-         oZst0d+algxp9nI8DMjO10QY+hsuBXYeJ6RYVcE51TeViEB0PkvV9xzBvleJJJZps71V
-         lsDlm3yKkeYTjOg9cL7X6UdsU62Tc0D0PP1k+7cqUcXlI4ONOObK0fbVD9B6cNngIhZ0
-         kSh+IrH7TnmolNGlzhyO0VOTLYEfDqPxcS8iRqahIyPJVRFKb6+MQ/gJ++/MrcAHG6sG
-         aDNg==
+        bh=yJmW/rmXm26duaDyfOHOFYteagLDpotWOjrp7D9YhkU=;
+        b=VmFlhBj2FrlOil5Ro2+R3NNGOF/BhIIl/xJUhPKmdZjV4yp/3W9q2FDa07vgRUyBwe
+         77DJhlG/aRp27LbwoEJXO7aSur71B1sjKABDOgQo9FiuCPRzwhM2EGYDXppyDUskM2w4
+         oDQKuW9cziROsrSoLFPjze+hVNCnYlyglffqO4JyHA1qALqjQJkA+0jJJrI4srNoaco/
+         6gZXAyhkxhS6Z12KgmQrt3Ou3COXNlyA9t3QoHgdbQxa9NpK4QKcBfmpGK0KTEp58xFY
+         ZXoClqiKOSskIQt0qq3AHrxAfi3TvvA9L/F4nD/q4KeBj9rMfrxCDjL9eW/mmDmSOhtO
+         aj+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=tSzJEpJmDmeHOSEU0I3AfQXPKpO46HQzH7+Mdke63aU=;
-        b=UP5GsvEEMp3AeVWdPaaqiccs4XItQ9IOJ3GmhkvcuNahtIjdfM/47z67sJGprdf0ZC
-         GN9z6IQrHNHQKwTl6SdzrMBxmq/twa4ZOydJlYieqR4tLHfpxfFpVvsz3Dj1JPDz2beG
-         mQokvCxaBV/yyQlzU/A2KPs3xHzr6RZM5Hn8s6tNAfkC1UCHfQd7CTgBYD+Qy310SwKM
-         vTylc7iWLPPqvISC2X4s2qEYk+CGen8zFN8nHmSfDxztji3tlIFutS9APcM6QvUCynp3
-         4Tvcr+/ewoL+rKJFccrYpSCr7f6lf31Bzuc0rG5/+ipcA1L0OVvWWdyJhsMEyMxh3XaX
-         VQzQ==
-X-Gm-Message-State: APjAAAXGYbPUmcCUWBo7qUQTiL2xFHohEj67HWQuA+N3K3K3CTTP82PX
-        Ww6PtVT+O0pMvvIW0QoUlSTQov3dxpgDNA==
-X-Google-Smtp-Source: APXvYqwZ9DcorsT0otODsjVhMRV+5vmVK01y/h76Hpz5XctIkGGXzAYAJLgHoIMc38KZoHfdcV+AJw==
-X-Received: by 2002:a63:6b0a:: with SMTP id g10mr8500894pgc.296.1571388747372;
-        Fri, 18 Oct 2019 01:52:27 -0700 (PDT)
+        bh=yJmW/rmXm26duaDyfOHOFYteagLDpotWOjrp7D9YhkU=;
+        b=mZuSbiuKk6UhPsBUqrdulGNjrNUwbZYwIdDVf0BgqT37YpdFdm0MAGUjdIj9JBYncm
+         8s4tS2FgFSynQKWrk2L/MFKLeRaYEPeQgZdknuMoBIjUvrfVo9ARMjaRYbPe+aKlbzNj
+         xtBTNk3ERuxB+vYypua0auiLkO53xl9pdjw2cC6tRaxf4xivuhEjUkU4g4Wgc7nnbn75
+         ApR2Y9OJPxeV9f9Bu5X2SvTv73S7KmPvMPHMNuZcdjlAd4eXxrZp630qI/Iq5Co5UHPy
+         MSY4DwMb3s13dYMYCy1w14Ig4IyC3VAdskNynpfLRaziuKtoWWgmJpUxirUBrfdHEz4k
+         Gktw==
+X-Gm-Message-State: APjAAAW33ICzf0qcwHe95g3s8PaBJ8ECfUD64Snx1oVCb59PLFQA6LXW
+        2LlEzGHD53Lf4TkC84g1bf6zwxKpcUzJEQ==
+X-Google-Smtp-Source: APXvYqxI49Qp/6OHcYXVbuLyz5IE0hCMoyGFSumazKMZCgeoR23NYt8ytaEwx3DYBTG7pFS8jSIMCg==
+X-Received: by 2002:a63:f854:: with SMTP id v20mr8674374pgj.92.1571388751747;
+        Fri, 18 Oct 2019 01:52:31 -0700 (PDT)
 Received: from localhost ([49.248.178.134])
-        by smtp.gmail.com with ESMTPSA id x19sm8025248pgc.59.2019.10.18.01.52.26
+        by smtp.gmail.com with ESMTPSA id d11sm5278150pfo.104.2019.10.18.01.52.30
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 18 Oct 2019 01:52:26 -0700 (PDT)
+        Fri, 18 Oct 2019 01:52:31 -0700 (PDT)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         daniel.lezcano@linaro.org, viresh.kumar@linaro.org,
@@ -73,10 +73,10 @@ To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Steven Rostedt <rostedt@goodmis.org>,
         Vincent Guittot <vincent.guittot@linaro.org>,
         Zhang Rui <rui.zhang@intel.com>
-Cc:     linux-pm@vger.kernel.org
-Subject: [PATCH v4 4/6] cpufreq: Initialize cpufreq-dt driver earlier
-Date:   Fri, 18 Oct 2019 14:22:01 +0530
-Message-Id: <66d8ae593ce7936a5f492d0c6855c1ac225b64ee.1571387352.git.amit.kucheria@linaro.org>
+Cc:     linux-clk@vger.kernel.org
+Subject: [PATCH v4 5/6] clk: qcom: Initialise clock drivers earlier
+Date:   Fri, 18 Oct 2019 14:22:02 +0530
+Message-Id: <a59321a1016de3f08098739b6db5d5190ac1c85c.1571387352.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1571387352.git.amit.kucheria@linaro.org>
 References: <cover.1571387352.git.amit.kucheria@linaro.org>
@@ -87,24 +87,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows HW drivers that depend on cpufreq-dt to initialise earlier.
+Initialise the clock drivers on sdm845 and qcs404 in core_initcall so we
+can have earlier access to cpufreq during booting.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
 ---
- drivers/cpufreq/cpufreq-dt-platdev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/qcom/clk-rpmh.c   | 2 +-
+ drivers/clk/qcom/gcc-qcs404.c | 2 +-
+ drivers/clk/qcom/gcc-sdm845.c | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-index bca8d1f47fd2c..3282defe14d41 100644
---- a/drivers/cpufreq/cpufreq-dt-platdev.c
-+++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-@@ -180,4 +180,4 @@ static int __init cpufreq_dt_platdev_init(void)
- 			       -1, data,
- 			       sizeof(struct cpufreq_dt_platform_data)));
+diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
+index 96a36f6ff667d..20d4258f125b9 100644
+--- a/drivers/clk/qcom/clk-rpmh.c
++++ b/drivers/clk/qcom/clk-rpmh.c
+@@ -487,7 +487,7 @@ static int __init clk_rpmh_init(void)
+ {
+ 	return platform_driver_register(&clk_rpmh_driver);
  }
--device_initcall(cpufreq_dt_platdev_init);
-+core_initcall(cpufreq_dt_platdev_init);
+-subsys_initcall(clk_rpmh_init);
++core_initcall(clk_rpmh_init);
+ 
+ static void __exit clk_rpmh_exit(void)
+ {
+diff --git a/drivers/clk/qcom/gcc-qcs404.c b/drivers/clk/qcom/gcc-qcs404.c
+index bd32212f37e64..9b0c4ce2ef4ec 100644
+--- a/drivers/clk/qcom/gcc-qcs404.c
++++ b/drivers/clk/qcom/gcc-qcs404.c
+@@ -2855,7 +2855,7 @@ static int __init gcc_qcs404_init(void)
+ {
+ 	return platform_driver_register(&gcc_qcs404_driver);
+ }
+-subsys_initcall(gcc_qcs404_init);
++core_initcall(gcc_qcs404_init);
+ 
+ static void __exit gcc_qcs404_exit(void)
+ {
+diff --git a/drivers/clk/qcom/gcc-sdm845.c b/drivers/clk/qcom/gcc-sdm845.c
+index 95be125c3bddf..49dcff1af2db1 100644
+--- a/drivers/clk/qcom/gcc-sdm845.c
++++ b/drivers/clk/qcom/gcc-sdm845.c
+@@ -3628,7 +3628,7 @@ static int __init gcc_sdm845_init(void)
+ {
+ 	return platform_driver_register(&gcc_sdm845_driver);
+ }
+-subsys_initcall(gcc_sdm845_init);
++core_initcall(gcc_sdm845_init);
+ 
+ static void __exit gcc_sdm845_exit(void)
+ {
 -- 
 2.17.1
 
