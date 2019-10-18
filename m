@@ -2,221 +2,104 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A373ECA9EAB
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0A9CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 737F521925
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:51:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BJWkAycN"
+	by mail.kernel.org (Postfix) with ESMTP id 00E5B21925
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 19:52:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443351AbfJRTvv (ORCPT
+        id S2443365AbfJRTwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 15:51:51 -0400
-Received: from mail-io1-f42.google.com ([209.85.166.42]:32841 "EHLO
-        mail-io1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730242AbfJRTvv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 15:51:51 -0400
-Received: by mail-io1-f42.google.com with SMTP id z19so8898874ior.0;
-        Fri, 18 Oct 2019 12:51:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nGUCAVuzQo+xnMCaOAjx9liwcVqZ88iVtWXatHotefk=;
-        b=BJWkAycNrY0rqmpjdNIG4aBZUrHdBznCsB96rZND1ZlDbF+KzJY/gfRSRXnfgy2FQN
-         bFXZvz6fdtK/nwSsdwMiPTzxkVv7BI2yMkDc1yE79Pdg+HP4vGTY686hrQSPsTHbplvp
-         2y6LJ4lGLgix6On/I1nRU93mVx7hUwPXq0w/ANLlrw127e5xBjxewczO3160xEfVtpO/
-         6LmtZdxsllbN11tsMxLufAo96vY64jhSwIvWLir2fOZb0z43jZJ/Ad4hweXrDVBeZ9Mg
-         NqfV0wMajuQd8hifJGaVqFuflKAg/0TtTUwLOWoR4bKzuK5UdDRgAV6Bi0g8xHLJkDQL
-         JJnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nGUCAVuzQo+xnMCaOAjx9liwcVqZ88iVtWXatHotefk=;
-        b=hMITNVQA98xtNei5eh3qrclP8GDGq6hkJ777zkYbDeiwDzzLfPwFoVr5wR46RzbNmg
-         RGljA5KfqSBhZIMfCX6nvdzCn5LNgdDU0FAwQL8ROas86MmzJVMH+kEfhOyiT85MRkmn
-         Po95jtyRG7KembBOl+GgxeVluxHrwGOIsuG7p115oi0j+a+aTrHKGXnkMQNF5aVCHAJz
-         03vYsQFqqATA+flAyt+V5uEPbxJb7BhS2NM8mt1c7sXhk0F5954tHDN9JcWVEOaqAZG2
-         ETLcTqaySA+5lwZbbwYwi6B3KBNw1PtizLquq+wVeyE+ny2yuLVGDpSJy7uLo0a5MFo4
-         ahCA==
-X-Gm-Message-State: APjAAAXuM1eGc25EV+unAjpi4pKEsqrgpt59Ar0dakfYt17VG8BV/bh6
-        LkbqvKjVDUKhhMD0Ce65ay5GkTW2qPgEJIOMlYo=
-X-Google-Smtp-Source: APXvYqxKbRnvd+nMkgAH1JYMKvyig+DAYmNIC5N+jlduNH+mDbnMOGTdp6p4hEZveEfXylsfQcnDMHDqFLqu/dcU7VM=
-X-Received: by 2002:a6b:1504:: with SMTP id 4mr10564054iov.166.1571428310132;
- Fri, 18 Oct 2019 12:51:50 -0700 (PDT)
+        Fri, 18 Oct 2019 15:52:08 -0400
+Received: from mga02.intel.com ([134.134.136.20]:4510 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730242AbfJRTwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 15:52:08 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 12:52:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,312,1566889200"; 
+   d="scan'208";a="226654257"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga002.fm.intel.com with ESMTP; 18 Oct 2019 12:52:06 -0700
+Date:   Fri, 18 Oct 2019 12:52:06 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] KVM: VMX: Some minor refactor of MSR bitmap
+Message-ID: <20191018195206.GG26319@linux.intel.com>
+References: <20191018093723.102471-1-xiaoyao.li@intel.com>
+ <20191018093723.102471-4-xiaoyao.li@intel.com>
+ <20191018172741.GF26319@linux.intel.com>
+ <f718d52f-690c-7595-2c18-9110b165058f@intel.com>
 MIME-Version: 1.0
-References: <20191017212955.6266-1-jeffrey.l.hugo@gmail.com>
- <20191018180339.GQ87296@google.com> <CAOCk7NrN0sjLk3onvZn7+bhs_v3A4H6CHh=XPo_NU2XzUWeEGw@mail.gmail.com>
- <20191018194039.GB20212@google.com>
-In-Reply-To: <20191018194039.GB20212@google.com>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Fri, 18 Oct 2019 13:51:39 -0600
-Message-ID: <CAOCk7NqacfVLzKueTRTFQ6aWbLXFyMQaQNXeXENzLTyMNLSp9w@mail.gmail.com>
-Subject: Re: [PATCH] Bluetooth: hci_qca: Add delay for wcn3990 stability
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        c-hbandi@codeaurora.org, bgodavar@codeaurora.org,
-        linux-bluetooth@vger.kernel.org,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f718d52f-690c-7595-2c18-9110b165058f@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 1:40 PM Matthias Kaehlcke <mka@chromium.org> wrote:
->
-> On Fri, Oct 18, 2019 at 12:30:09PM -0600, Jeffrey Hugo wrote:
-> > On Fri, Oct 18, 2019 at 12:03 PM Matthias Kaehlcke <mka@chromium.org> wrote:
-> > >
-> > > On Thu, Oct 17, 2019 at 02:29:55PM -0700, Jeffrey Hugo wrote:
-> > > > On the msm8998 mtp, the response to the baudrate change command is never
-> > > > received.  On the Lenovo Miix 630, the response to the baudrate change
-> > > > command is corrupted - "Frame reassembly failed (-84)".
-> > > >
-> > > > Adding a 50ms delay before re-enabling flow to receive the baudrate change
-> > > > command response from the wcn3990 addesses both issues, and allows
-> > > > bluetooth to become functional.
-> > >
-> > > From my earlier debugging on sdm845 I don't think this is what happens.
-> > > The problem is that the wcn3990 sends the response to the baudrate change
-> > > command using the new baudrate, while the UART on the SoC still operates
-> > > with the prior speed (for details see 2faa3f15fa2f ("Bluetooth: hci_qca:
-> > > wcn3990: Drop baudrate change vendor event"))
-> > >
-> > > IIRC the 50ms delay causes the HCI core to discard the received data,
-> > > which is why the "Frame reassembly failed" message disappears, not
-> > > because the response was received. In theory commit 78e8fa2972e5
-> > > ("Bluetooth: hci_qca: Deassert RTS while baudrate change command")
-> > > should have fixed those messages, do you know if CTS/RTS are connected
-> > > on the Bluetooth UART of the Lenovo Miix 630?
+On Sat, Oct 19, 2019 at 02:39:57AM +0800, Xiaoyao Li wrote:
+> On 10/19/2019 1:27 AM, Sean Christopherson wrote:
+> >>@@ -6745,22 +6762,6 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
+> >>  	if (err < 0)
+> >>  		goto free_msrs;
+> >>-	msr_bitmap = vmx->vmcs01.msr_bitmap;
+> >>-	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_TSC, MSR_TYPE_R);
+> >>-	vmx_disable_intercept_for_msr(msr_bitmap, MSR_FS_BASE, MSR_TYPE_RW);
+> >>-	vmx_disable_intercept_for_msr(msr_bitmap, MSR_GS_BASE, MSR_TYPE_RW);
+> >>-	vmx_disable_intercept_for_msr(msr_bitmap, MSR_KERNEL_GS_BASE, MSR_TYPE_RW);
+> >>-	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_CS, MSR_TYPE_RW);
+> >>-	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_ESP, MSR_TYPE_RW);
+> >>-	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_EIP, MSR_TYPE_RW);
+> >>-	if (kvm_cstate_in_guest(kvm)) {
+> >>-		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C1_RES, MSR_TYPE_R);
+> >>-		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C3_RESIDENCY, MSR_TYPE_R);
+> >>-		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
+> >>-		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
+> >>-	}
+> >>-	vmx->msr_bitmap_mode = 0;
 > >
-> > I was testing with 5.4-rc1 which contains the indicated RTS fix.
+> >Keep this code here to be consistent with the previous change that moved
+> >the guest_msrs intialization *out* of the VMCS specific function.  Both
+> >are collateral pages that are not directly part of the VMCS.
 > >
-> > Yes, CTS/RTS are connected on the Lenovo Miix 630.
+> 
+> OK. Then this patch is unnecessary too.
+
+I'd keep the change to skip this code if the CPU doesn't have msr bitmaps.
+Performance wise it may be largely irrelevant, but it's a good change from
+a readability perspective.
+
+> 
+> >I'd be tempted to use a goto to skip the code, the line length is bad
+> >enough as it is, e.g.:
 > >
-> > I added debug statements which indicated that data was received,
-> > however it was corrupt, and the packet type did not match what was
-> > expected, hence the frame reassembly errors.
->
-> Do you know if any data is received during the delay? In theory that
-> shouldn't be the case since RTS is deasserted, just double-checking.
-
-I don't think so, but I've run so many tests, I'm not 100% positive.
-Let me go double check and get back to you.
-
->
-> What happens if you add a longer delay (e.g. 1s) before/after setting
-> the host baudrate?
-
-Hmm, not exactly sure.  I will test.
-
->
-> > In response to this patch, Balakrishna pointed me to a bug report
-> > which indicated that some of the UART GPIO lines need to have a bias
-> > applied to prevent errant data from floating lines -
+> >	if (!cpu_has_vmx_msr_bitmap())
+> >		goto skip_msr_bitmap;
 > >
-> > https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1391888
->
-> Yeah, that was another source of frame reassembly errors that we were
-> seeing on SDM845.
->
-> Balakrishna, please post these kind of replies on-list, so that
-> everybody can benefit from possible solutions or contribute to the
-> discussion.
->
-> > It turns out this fix was never applied to msm8998.  Applying the fix
-> > does cause the the frame reassembly errors to go away, however then
-> > the host SoC never receives the baud rate change response (I increased
-> > the timeout from 2faa3f15fa2f ("Bluetooth: hci_qca: wcn3990: Drop
-> > baudrate change vendor event") to 5 seconds).  As of now, this patch
-> > is still required.
->
-> Interesting.
->
-> FTR, this is the full UART pin configuration for cheza (SDM845):
->
-> &qup_uart6_default {
->         /* Change pinmux to all 4 pins since CTS and RTS are connected */
->         pinmux {
->                 pins = "gpio45", "gpio46",
->                        "gpio47", "gpio48";
->         };
->
->         pinconf-cts {
->                 /*
->                  * Configure a pull-down on 45 (CTS) to match the pull of
->                  * the Bluetooth module.
->                  */
->                 pins = "gpio45";
->                 bias-pull-down;
->         };
->
->         pinconf-rts-tx {
->                 /* We'll drive 46 (RTS) and 47 (TX), so no pull */
->                 pins = "gpio46", "gpio47";
->                 drive-strength = <2>;
->                 bias-disable;
->         };
->
->         pinconf-rx {
->                 /*
->                  * Configure a pull-up on 48 (RX). This is needed to avoid
->                  * garbage data when the TX pin of the Bluetooth module is
->                  * in tri-state (module powered off or not driving the
->                  * signal yet).
->                  */
->                 pins = "gpio48";
->                 bias-pull-up;
->         };
-> };
->
-> Does this correspond to what you tried on the Lenovo Miix 630?
-
-Which GPIO maps to which pin is different -
-45 - TX
-46 - RX
-47 - CTS
-48 - RFR (RTS)
-
-However, accounting for that, yes that corresponds to what I used.
-
->
-> > I have no idea why the delay is required, and was hoping that posting
-> > this patch would result in someone else providing some missing pieces
-> > to determine the real root cause.  I suspect that asserting RTS at the
-> > wrong time may cause an issue for the wcn3990, but I have no data nor
-> > documentation to support this guess.  I welcome any further insights
-> > you may have.
->
-> Unfortunately I don't have a clear suggestion at this point, debugging
-> the original problem which lead to 2faa3f15fa2f ("Bluetooth: hci_qca:
-> wcn3990: Drop baudrate change vendor event") involved quite some time
-> and hooking up a scope/logic analyzer ...
->
-> I also suspect RTS is involved, and potentially the configuration of
-> the pulls. It might be interesting to analyze the data that leads to
-> the frame assembly error and determine if it is just noise (wrong
-> pulls/drive strength?) or received with a non-matching baud-rate.
-
-I don't have a scope/logic analyzer, but since I hooked up the
-blsp_bam I'm able to see the raw data from the uart before it gets to
-the HCI stack or anything.  As a side note, having the bam or not
-seemed to have no effect on the issue.  Most of the time the data was
-one byte (zero), some times it was a string of zero bytes.  Rarely it
-would be random data.
-
->
-> The 50ms delay doesn't really cause any harm, but ideally we'd
-> understand what exactly is going on.
-
-Agreed.
+> >	vmx->msr_bitmap_mode = 0;
+> >skip_msr_bitmap:
+> >
+> >>-
+> >>  	vmx->loaded_vmcs = &vmx->vmcs01;
+> >>  	cpu = get_cpu();
+> >>  	vmx_vcpu_load(&vmx->vcpu, cpu);
+> >>-- 
+> >>2.19.1
+> >>
