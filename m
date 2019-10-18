@@ -2,79 +2,86 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2E3CA9EA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36641CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E18D222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19ED721897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 08:33:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632842AbfJRIar (ORCPT
+        id S2632843AbfJRIdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:30:47 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:58292 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1727573AbfJRIar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 04:30:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F9EF32B;
-        Fri, 18 Oct 2019 01:30:16 -0700 (PDT)
-Received: from [192.168.1.103] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C62413F718;
-        Fri, 18 Oct 2019 01:30:13 -0700 (PDT)
-Subject: Re: [PATCH] lib/vdso: Use __arch_use_vsyscall() to indicate fallback
-To:     Andy Lutomirski <luto@kernel.org>, Huacai Chen <chenhc@lemote.com>,
-        Maxime Bizon <mbizon@freebox.fr>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, chenhuacai@gmail.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-References: <1571367619-13573-1-git-send-email-chenhc@lemote.com>
- <CALCETrWXRgkQOJGRqa_sOLAG2zhjsEX6b86T2VTsNYN9ECRrtA@mail.gmail.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <6581a6e8-45c9-a80c-d2a4-33466f5712fd@arm.com>
-Date:   Fri, 18 Oct 2019 09:32:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 18 Oct 2019 04:33:45 -0400
+Received: from mail-sz.amlogic.com ([211.162.65.117]:35600 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387458AbfJRIdp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 04:33:45 -0400
+Received: from droid12-sz.software.amlogic (10.28.8.22) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 18 Oct 2019
+ 16:33:53 +0800
+From:   Xingyu Chen <xingyu.chen@amlogic.com>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Xingyu Chen <xingyu.chen@amlogic.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Qianggui Song <qianggui.song@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Jian Hu <jian.hu@amlogic.com>,
+        <linux-watchdog@vger.kernel.org>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v2 0/4] add meson secure watchdog driver
+Date:   Fri, 18 Oct 2019 16:33:37 +0800
+Message-ID: <1571387622-35132-1-git-send-email-xingyu.chen@amlogic.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <CALCETrWXRgkQOJGRqa_sOLAG2zhjsEX6b86T2VTsNYN9ECRrtA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.28.8.22]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy and Hucan,
+The watchdog controller on the Meson-A/C series SoCs is moved to secure world,
+We have to call SMC instruction to trap the ATF for watchdog operation. These
+operations are different from previous SoCs, so we introduce a new watchdog
+driver to support this kind of SoCs.
 
-On 10/18/19 4:15 AM, Andy Lutomirski wrote:
-> On Thu, Oct 17, 2019 at 7:57 PM Huacai Chen <chenhc@lemote.com> wrote:
->>
->> In do_hres(), we currently use whether the return value of __arch_get_
->> hw_counter() is negtive to indicate fallback, but this is not a good
->> idea. Because:
->>
->> 1, ARM64 returns ULL_MAX but MIPS returns 0 when clock_mode is invalid;
->> 2, For a 64bit counter, a "negtive" value of counter is actually valid.
-> 
-> s/negtive/negative
-> 
-> What's the actual bug?  Is it that MIPS is returning 0 but the check
-> is < 0?  Sounds like MIPS should get fixed.
-> 
+Changes since v1 at [0]:
+- add a new dependency in Kconfig
+- simplify/add the return operation
+- remove useless ping operation when setting the timeout
+- fix some return values
+- fix the license statement
 
-I submitted a patch for this yesterday to the MIPS maintainers [1]. The MIPS32
-r1 implementation had a bug when VDSO_CLOCK_NONE was set.
+[0]:https://lore.kernel.org/linux-amlogic/1570874721-36077-1-git-send-email-xingyu.chen@amlogic.com
 
-The issue has been reported by Maxime Bizon who tested the fix as well.
+Xingyu Chen (4):
+  firmware: meson_sm: add new SMC ID support for accessing secure
+    watchdog
+  dt-bindings: watchdog: add new binding for meson secure watchdog
+  watchdog: add meson secure watchdog driver
+  arm64: dts: a1: add secure watchdog controller
 
-[1] https://patchwork.kernel.org/patch/11193391/
+ .../bindings/watchdog/amlogic,meson-sec-wdt.yaml   |  34 ++++
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi          |   6 +
+ drivers/firmware/meson/meson_sm.c                  |   1 +
+ drivers/watchdog/Kconfig                           |  17 ++
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/meson_sec_wdt.c                   | 187 +++++++++++++++++++++
+ include/linux/firmware/meson/meson_sm.h            |   1 +
+ 7 files changed, 247 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/amlogic,meson-sec-wdt.yaml
+ create mode 100644 drivers/watchdog/meson_sec_wdt.c
 
 -- 
-Regards,
-Vincenzo
+2.7.4
+
