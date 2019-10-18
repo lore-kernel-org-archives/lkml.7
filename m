@@ -2,140 +2,125 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BFBCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A28BCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A608920700
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DAD920872
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 21:54:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PVLMysH0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440345AbfJRVwu (ORCPT
+        id S2440496AbfJRVyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 17:52:50 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35744 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394243AbfJRVwu (ORCPT
+        Fri, 18 Oct 2019 17:54:24 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38802 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394243AbfJRVyX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 17:52:50 -0400
-Received: by mail-ot1-f65.google.com with SMTP id z6so6230865otb.2;
-        Fri, 18 Oct 2019 14:52:49 -0700 (PDT)
+        Fri, 18 Oct 2019 17:54:23 -0400
+Received: by mail-qt1-f196.google.com with SMTP id j31so11262857qta.5
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 14:54:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x/NuivOaNcoVxSGecvK1Wkc/UqqJxGqtaVPaOthR2x8=;
+        b=PVLMysH0ZgoHbB8ys0h71PvCjq6BoXMmpyc7E3kYu6dUDS/qfK95htRVtkaJH9jH0F
+         mSX0SISUKRjEVV6wtc/sQLngzyFkyrX26j0lRtGMQezlu/+2uIxqazah6sz53SNS0XKM
+         Ri4HGtynzc9X8OPa5RDRpAt7ar9r1cb4KcgKSI9CxjltPdi1F/qLUrK6VxCcfhh+zOy/
+         ZExxxaE5zQghDP9lkihlIPfYql4LOVSA6z8EiO7orY+2w1MYsZ80OQVikwhIMM9l3FDH
+         4dL4E0Sor3fijW8SH2FZpsxzyFAdw/RgqdOAgccnl2ZA3xUoQFpjx7AbCiFRCOy28Q8K
+         4IkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HvighmfITJLDYGeaiDUTpHYE/uCdU2psCtkCA9EvB0w=;
-        b=Nu9Ve2oDpOof/eGiT7OPcea6CzsmSr5ukKTenpPwHxIqyYxY77mROE/qryNg8KG7lj
-         SVZk5Ec3XJ52g0IZPwPY0kAShzwMZ0rkiFTApPvEYWtoHwowr/2a1vmnDOhdORMydEAg
-         j9duL26c36oqVm1NGdhzsnopTIxplJUvlfHGKB+5QS13LePbacEI7q3bEmSQHiOt2z5d
-         3H/0HOyqT0ERySbxs6SSFRrDaIhdqvnN/Al1ARHCl3puyWvCcMLHP+sbe1XZ/2zHvej7
-         gYCmR8D/ADcS6PZbo6VXevclq08tcGroaq/gharU/VCBXdUfZRKNPKzt+xYWwT1cAuUD
-         VMEw==
-X-Gm-Message-State: APjAAAU0nQitoxloGzVeuZikurtHLDZsv6aIMiQE4oj9bt67sjs6AcvG
-        iqzFByg01qa0e57uoLIFgB5zdwFp
-X-Google-Smtp-Source: APXvYqxREG1tr1Cigq+v82UQPbTeqk/Bp8wNDigWOclFGW7C0PMHO75w2B94+RuSKNNqSTjLfpCCFQ==
-X-Received: by 2002:a05:6830:4c7:: with SMTP id s7mr9410967otd.3.1571435569212;
-        Fri, 18 Oct 2019 14:52:49 -0700 (PDT)
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com. [209.85.210.44])
-        by smtp.gmail.com with ESMTPSA id x140sm1736340oix.42.2019.10.18.14.52.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Oct 2019 14:52:48 -0700 (PDT)
-Received: by mail-ot1-f44.google.com with SMTP id c10so6198418otd.9;
-        Fri, 18 Oct 2019 14:52:48 -0700 (PDT)
-X-Received: by 2002:a9d:4d0d:: with SMTP id n13mr9769808otf.74.1571435568401;
- Fri, 18 Oct 2019 14:52:48 -0700 (PDT)
+        bh=x/NuivOaNcoVxSGecvK1Wkc/UqqJxGqtaVPaOthR2x8=;
+        b=d+qOcwFf/0RfY7vLbd8UYh/hr8zY1O5c+w/jD75JsRhPtlYt77kO3SUtzgPMyoR4Sa
+         zGKbMcKkxtc5Xui23/xA7S8a2nZCXxho26llizGtYWgJHy8HjtcL32QUXpqUO/Nf8BYF
+         26ivTuxJEDIrZ3yDmRLTVzNgs+5KTJrX+pHQzDL63OJaPJj1XgHBpjbNr8mzm9kggGiN
+         flGgSSYKSdtkROxYh/4arwpJI8g8kHF14VoiHu+JUUhjsYrHihvbxqdLRHsCh4RSuQOa
+         THzC4TT4u3397aGaodnyHbggGgwFBF2zgUt+lhh83lBRuDB6vTDipRfqnlLNq7YB+sBU
+         axRA==
+X-Gm-Message-State: APjAAAW5zJsxpQX5t/natb8T4gP/hzRgPAuyD9jcfYgwCUKLk6xZxaHA
+        jZuG9h6/CLfh36keS5d2SUej6FuZalfEUloJyAU=
+X-Google-Smtp-Source: APXvYqw6UQGbFGK6oM1Jx+Eq1w8Q45Sy98nmnXn8Bg4aR3D9UWf+fS0HS1BwJJBa7OtrUyeC9NP9fNdol8AT9qvmNKY=
+X-Received: by 2002:ac8:2a5d:: with SMTP id l29mr12091370qtl.314.1571435662831;
+ Fri, 18 Oct 2019 14:54:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
- <VE1PR04MB6687DA0268FAF03D3E77A23B8F6C0@VE1PR04MB6687.eurprd04.prod.outlook.com>
- <e02fa027-9c78-3272-d2d7-7ad2b0ed3ab0@rasmusvillemoes.dk>
-In-Reply-To: <e02fa027-9c78-3272-d2d7-7ad2b0ed3ab0@rasmusvillemoes.dk>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Fri, 18 Oct 2019 16:52:37 -0500
-X-Gmail-Original-Message-ID: <CADRPPNREUK1SVxO4P5qb2COn+T04dtYgpVEzrveKUt16hBqAtQ@mail.gmail.com>
-Message-ID: <CADRPPNREUK1SVxO4P5qb2COn+T04dtYgpVEzrveKUt16hBqAtQ@mail.gmail.com>
-Subject: Re: [PATCH 0/7] towards QE support on ARM
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Qiang Zhao <qiang.zhao@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Timur Tabi <timur@kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+References: <20191017164223.2762148-1-songliubraving@fb.com>
+ <20191017164223.2762148-5-songliubraving@fb.com> <CAHbLzkoTT4p9u__EdFgt7_47NHOV5r=nB8EmvBx+1TcyzX5RJg@mail.gmail.com>
+ <20191018133231.vifgnueulyo57vpy@box>
+In-Reply-To: <20191018133231.vifgnueulyo57vpy@box>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Fri, 18 Oct 2019 14:54:09 -0700
+Message-ID: <CAHbLzkr967JVjnv=kyuUdYJvdAKKbQy67-MvUrb7VeQUZAuHXQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] mm/thp: allow drop THP from page cache
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Song Liu <songliubraving@fb.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        matthew.wilcox@oracle.com, kernel-team@fb.com,
+        william.kucharski@oracle.com,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 3:54 PM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
+On Fri, Oct 18, 2019 at 6:32 AM Kirill A. Shutemov <kirill@shutemov.name> wrote:
 >
-> On 18/10/2019 22.16, Leo Li wrote:
+> On Thu, Oct 17, 2019 at 02:46:38PM -0700, Yang Shi wrote:
+> > On Thu, Oct 17, 2019 at 9:42 AM Song Liu <songliubraving@fb.com> wrote:
+> > >
+> > > From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> > >
+> > > Once a THP is added to the page cache, it cannot be dropped via
+> > > /proc/sys/vm/drop_caches. Fix this issue with proper handling in
+> > > invalidate_mapping_pages().
+> > >
+> > > Fixes: 99cb0dbd47a1 ("mm,thp: add read-only THP support for (non-shmem) FS")
+> > > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > > Tested-by: Song Liu <songliubraving@fb.com>
+> > > Signed-off-by: Song Liu <songliubraving@fb.com>
+> > > ---
+> > >  mm/truncate.c | 12 ++++++++++++
+> > >  1 file changed, 12 insertions(+)
+> > >
+> > > diff --git a/mm/truncate.c b/mm/truncate.c
+> > > index 8563339041f6..dd9ebc1da356 100644
+> > > --- a/mm/truncate.c
+> > > +++ b/mm/truncate.c
+> > > @@ -592,6 +592,16 @@ unsigned long invalidate_mapping_pages(struct address_space *mapping,
+> > >                                         unlock_page(page);
+> > >                                         continue;
+> > >                                 }
+> > > +
+> > > +                               /* Take a pin outside pagevec */
+> > > +                               get_page(page);
+> > > +
+> > > +                               /*
+> > > +                                * Drop extra pins before trying to invalidate
+> > > +                                * the huge page.
+> > > +                                */
+> > > +                               pagevec_remove_exceptionals(&pvec);
+> > > +                               pagevec_release(&pvec);
 > >
-> >>
-> >> There have been several attempts in the past few years to allow building the
-> >> QUICC engine drivers for platforms other than PPC. This is (the beginning of)
-> >> yet another attempt. I hope I can get someone to pick up these relatively
-> >> trivial patches (I _think_ they shouldn't change functionality at all), and then
-> >> I'll continue slowly working towards removing the PPC32 dependency for
-> >> CONFIG_QUICC_ENGINE.
-> >
-> > Hi Rasmus,
-> >
-> > I don't fully understand the motivation of this work.  As far as I know the QUICC ENGINE is only used on PowerPC based SoCs.
+> > Shall we skip the outer pagevec_remove_exceptions() if it has been done here?
 >
-> Hm, you're not the Leo Li that participated in this thread
-> <https://lore.kernel.org/lkml/AM3PR04MB11857AE8D2B0BE56121B97D391C90@AM3PR04MB1185.eurprd04.prod.outlook.com/T/#u>?
+> It will be NOP and skipping would complicate the code.
 
-Oops, I totally forgot about this discussion which is just three years
-ago.  :)  The QE-HDLC on LS1021a is kind of a special case.
+Yes, it would be. Anyway, it looks ok too. Acked-by: Yang Shi
+<yang.shi@linux.alibaba.com>
 
 >
->
->  Can you give an example on how is it used on ARM system?
->
-> LS1021A, for example, which is the one I'm aiming for getting fully
-> supported in mainline.
-> <https://www.nxp.com/products/processors-and-microcontrollers/arm-processors/layerscape-communication-process/qoriq-layerscape-1021a-dual-core-communications-processor-with-lcd-controller:LS1021A>
->
-> The forks at https://github.com/qoriq-open-source/linux.git have various
-> degrees of support (grep for commits saying stuff like "remove PPCisms"
-> - some versions can be found on
-> <https://lore.kernel.org/lkml/?q=remove+ppcisms>). Our current kernel is
-> based on commits from the now-vanished 4.1 branch, and unfortunately at
-> least the 4.14 branch (LSDK-18.06-V4.14) trivially doesn't build on ARM,
-> despite the PPC32 dependency having been removed from CONFIG_QUICC_ENGINE.
-
-Can you try the 4.14 branch from a newer LSDK release?  LS1021a should
-be supported platform on LSDK.  If it is broken, something is wrong.
-
->
-> >>
-> >> Tested on an MPC8309-derived board.
-> >
-> > MPC8309 is also PPC based.
->
-> True, of course. This is just some first few steps, and I'm not claiming
-> that this is sufficient to make the QE drivers build on ARM yet. But I
-> have a customer with both mpc8309-based and ls1021a-based platforms, and
-> they want to run the same, as-close-to-mainline-as-possible, kernel on
-> both. So I will take a piecemeal approach, and try to make sure I don't
-> break the ppc boards in the process (just building and booting one board
-> is of course not sufficient, but better than nothing). Once I get to
-> actually build some of the QE drivers for ARM, I'll of course also test
-> them.
-
-Understood.  Zhao Qiang also maintains some patches similar to your
-patchset and I think they are tested on ARM.  But the review of these
-patches from last submission didn't finish.  It looks like your
-patches are better divided but not really verified on ARM.  Zhao
-Qiang's patches are tested but maybe need some final touch for
-cleaning up.  I will let you guys decide what is the best approach to
-make this upstreamed.
-
-Regards,
-Leo
+> --
+>  Kirill A. Shutemov
