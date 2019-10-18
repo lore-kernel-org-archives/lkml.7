@@ -6,490 +6,298 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D29DCA9EA9
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4AACA9EAB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21D0421852
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 085F821852
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:43:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505283AbfJRPmz (ORCPT
+        id S2391191AbfJRPm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:42:55 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:43493 "EHLO
+        Fri, 18 Oct 2019 11:42:59 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:33889 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505206AbfJRPmr (ORCPT
+        with ESMTP id S2505254AbfJRPmy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:42:47 -0400
+        Fri, 18 Oct 2019 11:42:54 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MG9Xu-1iFzg916oG-00GVSz; Fri, 18 Oct 2019 17:42:37 +0200
+ 1MyK5K-1i6xDo48SK-00ykGf; Fri, 18 Oct 2019 17:42:33 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Daniel Mack <daniel@zonque.org>,
         Haojian Zhuang <haojian.zhuang@gmail.com>,
         Robert Jarzmik <robert.jarzmik@free.fr>
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 45/46] ARM: mmp: rename pxa_register_device
-Date:   Fri, 18 Oct 2019 17:42:00 +0200
-Message-Id: <20191018154201.1276638-45-arnd@arndb.de>
+        Arnd Bergmann <arnd@arndb.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: [PATCH 38/46] video: backlight: tosa: use gpio lookup table
+Date:   Fri, 18 Oct 2019 17:41:53 +0200
+Message-Id: <20191018154201.1276638-38-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191018154052.1276506-1-arnd@arndb.de>
 References: <20191018154052.1276506-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:1MdzDA9G4pdCO6aafQrVQzUXLRMu2MrkIvw1HqWUc0hHeFGp5Wt
- Q+ii75wOSdD0W+UocFW3fL7kS8nha8wHDK5rby9fV28FRRZ48tKUHFQcDkCJdE5NE4uBocZ
- nXhAR8qFxdyUftT5Tj8w4Wr7pHNq5frw8tdlAZaMYTuFlutypq5ikqhjiNii7Ot1N6DojIw
- 8XIlgDo7V21Gs5V6vJm6g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:jbY3gw+N3Sw=:6JF8OKi205HHhYxB9S4xRI
- E1sg/yBFeMLiVSnVGAg4fJ0Tp7s5dg5QhB+eoksXe5CEsuOhdJniTQPDxkUnLs4fZiXDA7tgs
- QPGPfE1huZzz4cdRC/3VPCd5xOv71bV8rnIMUX/2NS2iQPFv3APfWfTgKBepoFejFvjAICWJt
- ZwTTkZWqr4lOJjSnhBWqrn+cBIcEztYfS5+zJ84ZRVXQO5gpaDCL+eZ4yFan/A3IBG7hu6Q4j
- MOsUFw98Fq/c/NBwCCPS/gfC9gA+iZxR23EObhRWXuqpgjEMLxH3fDaBSQkDTDueqVy37jU96
- VJLxrpWHV+rZMdRSirBHri4mcJPv0AAO7lgyHwI1mo4zHfd6nDnlpX/2FDaeIQOq4UPK/TWFY
- pjeqUt/tDSEK+ADJwawO+0wo1BIrQLYL0J32/hyaCqZ4hCVLvO5lISdEDqjzeAn2+zFd4jOVE
- e79pHgIpnasra20wkntaF0n4m/9COw9/bUseyJmGrQZOPeU1DdPtmfRvAmHNFifp7TwbKYirr
- P3SrIOhEEgB07G5cvRs5WAn85F2dUq6NpBUs1SvWstvRPakzPX2JnrJF+Hit7Z/xJ7MKYQk1V
- qqh0zBKIVmLnqpRWMczliMc4ECJjXEl3VoaznJ+BcXiNRravgqOp6vECwx/jcIHrWUCy0ZqwU
- zHu2NnoJ5guisS4i83B9q0FAmu1Spa3D7r8LAEiBZZSGqvOSUD/IppE37XCedjnbbauIi9tFY
- qjpwe4iGZqljFOi36iWEBzARx8Cp6eEd4UKBCeAxoq9VTJhNLk4T8gQsbfkJeHItZ/LA7/1+d
- sW+8mNsG6W0SfU3cG9sXDu+RhQj/4EMXipDwkzkuHTGupL5wCbjwgqMwAmscHSwJNOTpOkVr+
- EHgWV9iB8/HqgnuPws+Q==
+X-Provags-ID: V03:K1:2OhedckVn2duIvbZrX9602vjNldufJeHeDgaeXumpkFb9kLtGA6
+ msV2qeFO73azgU68EuIPXTeNQ0kl8m+uEhwRmgp26oRSi2IlDmYS7TeGkJG8T2QJRa+ZOY1
+ FCEv/86qhKRQNWYRbVDm55L5Gc09o3aV+pltG9n/0uJi1/KTPl68o/c/HbKZOiAUE8C/URr
+ V58sD5sZMsaC/95RoUJqA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/Lw85U0rw3k=:QKhqL3L6NOnlz2xUIUUIXH
+ /WyjOTbWKRMCPIn7uogbvL5bl2Asw+QgOlDmFWghCCzGh3f2/rIV2+PTvOdH49apoaWFVYrGm
+ tVcRNcA6mwaSnyq1KrjvxaTIdyowqvN546cwkriRbr+0CScKif64mOuQoqAveW9UFeRstz0hT
+ oNHGr+8MoDJ99euK/WRIrFAMelPdXCDePYQbqk8iC+SwP2JwNpnFD1yr16ZVsJrW+DUlpc6zo
+ WJwGRhSZJGQ/WHE/PyE24Kq1pNOhRJWca8mI5g2yTlnNa6C59RroXaOe0XfGwnOWvtp+PHv/P
+ e9nGz+q8kUU3HPgpuEyrT35Z9wUFJ320U5hhprzySLPD+t+Rr1Fw5RSKu+TtogLy1nTfTkjpM
+ oS16Y3ezXogCTmi8sKED4EVCouWBf4eqPMnxNTc989gU3T0Pg4MQqKv+TTZ2r3Da3G2HzgjkI
+ iQEOehoFx3ql6NnZqvnAfYGDz4agMIzv9qOvyITI3kpENSUFVP0c11KTXnAzNzRYZZFFD+Bxm
+ vWBPaF3OivSKk7HTGp3PtD2pcKjdYsX6/rmGn4N11w5RtDRe4T6EaRlCcoKza/UfW5a4OZQL5
+ TAXS/elwcE/+dMYaahbAEC2F4l649bcKAnQ9sOqte/GwJ6cr+y12CKOmu83TPLtOZmUIsClIz
+ FnBzk65YyY4Sr0IDarAp8RXW7E80AIXVN/kBazywLNRFWRNibYjXbqLZC3xMNbyqw5Ay1P4+X
+ madc6XqvkkGv9P6nQrnREC17u0qEgZCzjwhwIb6RxkGl4GfJqCDfOQlIAq+1sARH6FXwKJRww
+ RCCIHxwUyEWQi41E5Prvl66m8gZiHWOTpVGzUdluz81iNnOOY5t2dYVa6GV6h7aCFHL8dVaLG
+ Hislp5hnyQMcoZ7Bu2hA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a multiplatform kernel that includes both pxa and mmp, we get a link
-failure from the clash of two pxa_register_device functions.
+The driver should not require a machine specific header. Change
+it to pass the gpio line through a lookup table, and move the
+timing generator definitions into the drivers itself.
 
-Rename the one in mach-mmp to mmp_register_device, along with with the
-rename of pxa_device_desc.
-
-Cc: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-fbdev@vger.kernel.org
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/mach-mmp/devices.c |  2 +-
- arch/arm/mach-mmp/devices.h | 10 +++----
- arch/arm/mach-mmp/mmp2.h    | 48 ++++++++++++++---------------
- arch/arm/mach-mmp/pxa168.h  | 60 ++++++++++++++++++-------------------
- arch/arm/mach-mmp/pxa910.h  | 38 +++++++++++------------
- arch/arm/mach-mmp/ttc_dkb.c |  6 ++--
- 6 files changed, 82 insertions(+), 82 deletions(-)
 
-diff --git a/arch/arm/mach-mmp/devices.c b/arch/arm/mach-mmp/devices.c
-index 130c1a603ba2..a9e6fd8d390d 100644
---- a/arch/arm/mach-mmp/devices.c
-+++ b/arch/arm/mach-mmp/devices.c
-@@ -14,7 +14,7 @@
- #include "cputype.h"
- #include "regs-usb.h"
+---
+I'm not overly confident that I got the correct device names
+for the lookup table, it would be good if someone could
+double-check.
+---
+ arch/arm/mach-pxa/include/mach/tosa.h | 15 --------------
+ arch/arm/mach-pxa/tosa.c              | 22 +++++++++++++++++++++
+ drivers/video/backlight/tosa_bl.c     | 10 +++++-----
+ drivers/video/backlight/tosa_bl.h     |  8 ++++++++
+ drivers/video/backlight/tosa_lcd.c    | 28 ++++++++++++++++++++-------
+ 5 files changed, 56 insertions(+), 27 deletions(-)
+ create mode 100644 drivers/video/backlight/tosa_bl.h
+
+diff --git a/arch/arm/mach-pxa/include/mach/tosa.h b/arch/arm/mach-pxa/include/mach/tosa.h
+index a499ed17931e..8bfaca3a8b64 100644
+--- a/arch/arm/mach-pxa/include/mach/tosa.h
++++ b/arch/arm/mach-pxa/include/mach/tosa.h
+@@ -72,18 +72,6 @@
+ #define TOSA_GPIO_BAT0_TH_ON		(TOSA_TC6393XB_GPIO_BASE + 14)
+ #define TOSA_GPIO_BAT1_TH_ON		(TOSA_TC6393XB_GPIO_BASE + 15)
  
--int __init pxa_register_device(struct pxa_device_desc *desc,
-+int __init mmp_register_device(struct mmp_device_desc *desc,
- 				void *data, size_t size)
- {
- 	struct platform_device *pdev;
-diff --git a/arch/arm/mach-mmp/devices.h b/arch/arm/mach-mmp/devices.h
-index 4df596c5c201..d4920ebfebc5 100644
---- a/arch/arm/mach-mmp/devices.h
-+++ b/arch/arm/mach-mmp/devices.h
-@@ -7,7 +7,7 @@
- #define MAX_RESOURCE_DMA	2
- 
- /* structure for describing the on-chip devices */
--struct pxa_device_desc {
-+struct mmp_device_desc {
- 	const char	*dev_name;
- 	const char	*drv_name;
- 	int		id;
-@@ -18,7 +18,7 @@ struct pxa_device_desc {
- };
- 
- #define PXA168_DEVICE(_name, _drv, _id, _irq, _start, _size, _dma...)	\
--struct pxa_device_desc pxa168_device_##_name __initdata = {		\
-+struct mmp_device_desc pxa168_device_##_name __initdata = {		\
- 	.dev_name	= "pxa168-" #_name,				\
- 	.drv_name	= _drv,						\
- 	.id		= _id,						\
-@@ -29,7 +29,7 @@ struct pxa_device_desc pxa168_device_##_name __initdata = {		\
- };
- 
- #define PXA910_DEVICE(_name, _drv, _id, _irq, _start, _size, _dma...)	\
--struct pxa_device_desc pxa910_device_##_name __initdata = {		\
-+struct mmp_device_desc pxa910_device_##_name __initdata = {		\
- 	.dev_name	= "pxa910-" #_name,				\
- 	.drv_name	= _drv,						\
- 	.id		= _id,						\
-@@ -40,7 +40,7 @@ struct pxa_device_desc pxa910_device_##_name __initdata = {		\
- };
- 
- #define MMP2_DEVICE(_name, _drv, _id, _irq, _start, _size, _dma...)	\
--struct pxa_device_desc mmp2_device_##_name __initdata = {		\
-+struct mmp_device_desc mmp2_device_##_name __initdata = {		\
- 	.dev_name	= "mmp2-" #_name,				\
- 	.drv_name	= _drv,						\
- 	.id		= _id,						\
-@@ -50,7 +50,7 @@ struct pxa_device_desc mmp2_device_##_name __initdata = {		\
- 	.dma		= { _dma },					\
- }
- 
--extern int pxa_register_device(struct pxa_device_desc *, void *, size_t);
-+extern int mmp_register_device(struct mmp_device_desc *, void *, size_t);
- extern int pxa_usb_phy_init(void __iomem *phy_reg);
- extern void pxa_usb_phy_deinit(void __iomem *phy_reg);
- 
-diff --git a/arch/arm/mach-mmp/mmp2.h b/arch/arm/mach-mmp/mmp2.h
-index adafc4fba8f4..3ebc1bb13f71 100644
---- a/arch/arm/mach-mmp/mmp2.h
-+++ b/arch/arm/mach-mmp/mmp2.h
-@@ -15,28 +15,28 @@ extern void mmp2_clear_pmic_int(void);
- 
- #include "devices.h"
- 
--extern struct pxa_device_desc mmp2_device_uart1;
--extern struct pxa_device_desc mmp2_device_uart2;
--extern struct pxa_device_desc mmp2_device_uart3;
--extern struct pxa_device_desc mmp2_device_uart4;
--extern struct pxa_device_desc mmp2_device_twsi1;
--extern struct pxa_device_desc mmp2_device_twsi2;
--extern struct pxa_device_desc mmp2_device_twsi3;
--extern struct pxa_device_desc mmp2_device_twsi4;
--extern struct pxa_device_desc mmp2_device_twsi5;
--extern struct pxa_device_desc mmp2_device_twsi6;
--extern struct pxa_device_desc mmp2_device_sdh0;
--extern struct pxa_device_desc mmp2_device_sdh1;
--extern struct pxa_device_desc mmp2_device_sdh2;
--extern struct pxa_device_desc mmp2_device_sdh3;
--extern struct pxa_device_desc mmp2_device_asram;
--extern struct pxa_device_desc mmp2_device_isram;
-+extern struct mmp_device_desc mmp2_device_uart1;
-+extern struct mmp_device_desc mmp2_device_uart2;
-+extern struct mmp_device_desc mmp2_device_uart3;
-+extern struct mmp_device_desc mmp2_device_uart4;
-+extern struct mmp_device_desc mmp2_device_twsi1;
-+extern struct mmp_device_desc mmp2_device_twsi2;
-+extern struct mmp_device_desc mmp2_device_twsi3;
-+extern struct mmp_device_desc mmp2_device_twsi4;
-+extern struct mmp_device_desc mmp2_device_twsi5;
-+extern struct mmp_device_desc mmp2_device_twsi6;
-+extern struct mmp_device_desc mmp2_device_sdh0;
-+extern struct mmp_device_desc mmp2_device_sdh1;
-+extern struct mmp_device_desc mmp2_device_sdh2;
-+extern struct mmp_device_desc mmp2_device_sdh3;
-+extern struct mmp_device_desc mmp2_device_asram;
-+extern struct mmp_device_desc mmp2_device_isram;
- 
- extern struct platform_device mmp2_device_gpio;
- 
- static inline int mmp2_add_uart(int id)
- {
--	struct pxa_device_desc *d = NULL;
-+	struct mmp_device_desc *d = NULL;
- 
- 	switch (id) {
- 	case 1: d = &mmp2_device_uart1; break;
-@@ -47,13 +47,13 @@ static inline int mmp2_add_uart(int id)
- 		return -EINVAL;
- 	}
- 
--	return pxa_register_device(d, NULL, 0);
-+	return mmp_register_device(d, NULL, 0);
- }
- 
- static inline int mmp2_add_twsi(int id, struct i2c_pxa_platform_data *data,
- 				  struct i2c_board_info *info, unsigned size)
- {
--	struct pxa_device_desc *d = NULL;
-+	struct mmp_device_desc *d = NULL;
- 	int ret;
- 
- 	switch (id) {
-@@ -71,12 +71,12 @@ static inline int mmp2_add_twsi(int id, struct i2c_pxa_platform_data *data,
- 	if (ret)
- 		return ret;
- 
--	return pxa_register_device(d, data, sizeof(*data));
-+	return mmp_register_device(d, data, sizeof(*data));
- }
- 
- static inline int mmp2_add_sdhost(int id, struct sdhci_pxa_platdata *data)
- {
--	struct pxa_device_desc *d = NULL;
-+	struct mmp_device_desc *d = NULL;
- 
- 	switch (id) {
- 	case 0: d = &mmp2_device_sdh0; break;
-@@ -87,17 +87,17 @@ static inline int mmp2_add_sdhost(int id, struct sdhci_pxa_platdata *data)
- 		return -EINVAL;
- 	}
- 
--	return pxa_register_device(d, data, sizeof(*data));
-+	return mmp_register_device(d, data, sizeof(*data));
- }
- 
- static inline int mmp2_add_asram(struct sram_platdata *data)
- {
--	return pxa_register_device(&mmp2_device_asram, data, sizeof(*data));
-+	return mmp_register_device(&mmp2_device_asram, data, sizeof(*data));
- }
- 
- static inline int mmp2_add_isram(struct sram_platdata *data)
- {
--	return pxa_register_device(&mmp2_device_isram, data, sizeof(*data));
-+	return mmp_register_device(&mmp2_device_isram, data, sizeof(*data));
- }
- 
- #endif /* __ASM_MACH_MMP2_H */
-diff --git a/arch/arm/mach-mmp/pxa168.h b/arch/arm/mach-mmp/pxa168.h
-index 0331c58b07a2..6dd17986e360 100644
---- a/arch/arm/mach-mmp/pxa168.h
-+++ b/arch/arm/mach-mmp/pxa168.h
-@@ -21,24 +21,24 @@ extern void pxa168_clear_keypad_wakeup(void);
- #include "devices.h"
- #include "cputype.h"
- 
--extern struct pxa_device_desc pxa168_device_uart1;
--extern struct pxa_device_desc pxa168_device_uart2;
--extern struct pxa_device_desc pxa168_device_uart3;
--extern struct pxa_device_desc pxa168_device_twsi0;
--extern struct pxa_device_desc pxa168_device_twsi1;
--extern struct pxa_device_desc pxa168_device_pwm1;
--extern struct pxa_device_desc pxa168_device_pwm2;
--extern struct pxa_device_desc pxa168_device_pwm3;
--extern struct pxa_device_desc pxa168_device_pwm4;
--extern struct pxa_device_desc pxa168_device_ssp1;
--extern struct pxa_device_desc pxa168_device_ssp2;
--extern struct pxa_device_desc pxa168_device_ssp3;
--extern struct pxa_device_desc pxa168_device_ssp4;
--extern struct pxa_device_desc pxa168_device_ssp5;
--extern struct pxa_device_desc pxa168_device_nand;
--extern struct pxa_device_desc pxa168_device_fb;
--extern struct pxa_device_desc pxa168_device_keypad;
--extern struct pxa_device_desc pxa168_device_eth;
-+extern struct mmp_device_desc pxa168_device_uart1;
-+extern struct mmp_device_desc pxa168_device_uart2;
-+extern struct mmp_device_desc pxa168_device_uart3;
-+extern struct mmp_device_desc pxa168_device_twsi0;
-+extern struct mmp_device_desc pxa168_device_twsi1;
-+extern struct mmp_device_desc pxa168_device_pwm1;
-+extern struct mmp_device_desc pxa168_device_pwm2;
-+extern struct mmp_device_desc pxa168_device_pwm3;
-+extern struct mmp_device_desc pxa168_device_pwm4;
-+extern struct mmp_device_desc pxa168_device_ssp1;
-+extern struct mmp_device_desc pxa168_device_ssp2;
-+extern struct mmp_device_desc pxa168_device_ssp3;
-+extern struct mmp_device_desc pxa168_device_ssp4;
-+extern struct mmp_device_desc pxa168_device_ssp5;
-+extern struct mmp_device_desc pxa168_device_nand;
-+extern struct mmp_device_desc pxa168_device_fb;
-+extern struct mmp_device_desc pxa168_device_keypad;
-+extern struct mmp_device_desc pxa168_device_eth;
- 
- /* pdata can be NULL */
- extern int __init pxa168_add_usb_host(struct mv_usb_platform_data *pdata);
-@@ -48,7 +48,7 @@ extern struct platform_device pxa168_device_gpio;
- 
- static inline int pxa168_add_uart(int id)
- {
--	struct pxa_device_desc *d = NULL;
-+	struct mmp_device_desc *d = NULL;
- 
- 	switch (id) {
- 	case 1: d = &pxa168_device_uart1; break;
-@@ -59,13 +59,13 @@ static inline int pxa168_add_uart(int id)
- 	if (d == NULL)
- 		return -EINVAL;
- 
--	return pxa_register_device(d, NULL, 0);
-+	return mmp_register_device(d, NULL, 0);
- }
- 
- static inline int pxa168_add_twsi(int id, struct i2c_pxa_platform_data *data,
- 				  struct i2c_board_info *info, unsigned size)
- {
--	struct pxa_device_desc *d = NULL;
-+	struct mmp_device_desc *d = NULL;
- 	int ret;
- 
- 	switch (id) {
-@@ -79,12 +79,12 @@ static inline int pxa168_add_twsi(int id, struct i2c_pxa_platform_data *data,
- 	if (ret)
- 		return ret;
- 
--	return pxa_register_device(d, data, sizeof(*data));
-+	return mmp_register_device(d, data, sizeof(*data));
- }
- 
- static inline int pxa168_add_pwm(int id)
- {
--	struct pxa_device_desc *d = NULL;
-+	struct mmp_device_desc *d = NULL;
- 
- 	switch (id) {
- 	case 1: d = &pxa168_device_pwm1; break;
-@@ -95,12 +95,12 @@ static inline int pxa168_add_pwm(int id)
- 		return -EINVAL;
- 	}
- 
--	return pxa_register_device(d, NULL, 0);
-+	return mmp_register_device(d, NULL, 0);
- }
- 
- static inline int pxa168_add_ssp(int id)
- {
--	struct pxa_device_desc *d = NULL;
-+	struct mmp_device_desc *d = NULL;
- 
- 	switch (id) {
- 	case 1: d = &pxa168_device_ssp1; break;
-@@ -111,17 +111,17 @@ static inline int pxa168_add_ssp(int id)
- 	default:
- 		return -EINVAL;
- 	}
--	return pxa_register_device(d, NULL, 0);
-+	return mmp_register_device(d, NULL, 0);
- }
- 
- static inline int pxa168_add_nand(struct pxa3xx_nand_platform_data *info)
- {
--	return pxa_register_device(&pxa168_device_nand, info, sizeof(*info));
-+	return mmp_register_device(&pxa168_device_nand, info, sizeof(*info));
- }
- 
- static inline int pxa168_add_fb(struct pxa168fb_mach_info *mi)
- {
--	return pxa_register_device(&pxa168_device_fb, mi, sizeof(*mi));
-+	return mmp_register_device(&pxa168_device_fb, mi, sizeof(*mi));
- }
- 
- static inline int pxa168_add_keypad(struct pxa27x_keypad_platform_data *data)
-@@ -129,11 +129,11 @@ static inline int pxa168_add_keypad(struct pxa27x_keypad_platform_data *data)
- 	if (cpu_is_pxa168())
- 		data->clear_wakeup_event = pxa168_clear_keypad_wakeup;
- 
--	return pxa_register_device(&pxa168_device_keypad, data, sizeof(*data));
-+	return mmp_register_device(&pxa168_device_keypad, data, sizeof(*data));
- }
- 
- static inline int pxa168_add_eth(struct pxa168_eth_platform_data *data)
- {
--	return pxa_register_device(&pxa168_device_eth, data, sizeof(*data));
-+	return mmp_register_device(&pxa168_device_eth, data, sizeof(*data));
- }
- #endif /* __ASM_MACH_PXA168_H */
-diff --git a/arch/arm/mach-mmp/pxa910.h b/arch/arm/mach-mmp/pxa910.h
-index 2dfe38e4acc1..6ace5a8aa15b 100644
---- a/arch/arm/mach-mmp/pxa910.h
-+++ b/arch/arm/mach-mmp/pxa910.h
-@@ -13,28 +13,28 @@ extern void __init pxa910_init_irq(void);
- 
- #include "devices.h"
- 
--extern struct pxa_device_desc pxa910_device_uart1;
--extern struct pxa_device_desc pxa910_device_uart2;
--extern struct pxa_device_desc pxa910_device_twsi0;
--extern struct pxa_device_desc pxa910_device_twsi1;
--extern struct pxa_device_desc pxa910_device_pwm1;
--extern struct pxa_device_desc pxa910_device_pwm2;
--extern struct pxa_device_desc pxa910_device_pwm3;
--extern struct pxa_device_desc pxa910_device_pwm4;
--extern struct pxa_device_desc pxa910_device_nand;
-+extern struct mmp_device_desc pxa910_device_uart1;
-+extern struct mmp_device_desc pxa910_device_uart2;
-+extern struct mmp_device_desc pxa910_device_twsi0;
-+extern struct mmp_device_desc pxa910_device_twsi1;
-+extern struct mmp_device_desc pxa910_device_pwm1;
-+extern struct mmp_device_desc pxa910_device_pwm2;
-+extern struct mmp_device_desc pxa910_device_pwm3;
-+extern struct mmp_device_desc pxa910_device_pwm4;
-+extern struct mmp_device_desc pxa910_device_nand;
- extern struct platform_device pxa168_device_usb_phy;
- extern struct platform_device pxa168_device_u2o;
- extern struct platform_device pxa168_device_u2ootg;
- extern struct platform_device pxa168_device_u2oehci;
--extern struct pxa_device_desc pxa910_device_disp;
--extern struct pxa_device_desc pxa910_device_fb;
--extern struct pxa_device_desc pxa910_device_panel;
-+extern struct mmp_device_desc pxa910_device_disp;
-+extern struct mmp_device_desc pxa910_device_fb;
-+extern struct mmp_device_desc pxa910_device_panel;
- extern struct platform_device pxa910_device_gpio;
- extern struct platform_device pxa910_device_rtc;
- 
- static inline int pxa910_add_uart(int id)
- {
--	struct pxa_device_desc *d = NULL;
-+	struct mmp_device_desc *d = NULL;
- 
- 	switch (id) {
- 	case 1: d = &pxa910_device_uart1; break;
-@@ -44,13 +44,13 @@ static inline int pxa910_add_uart(int id)
- 	if (d == NULL)
- 		return -EINVAL;
- 
--	return pxa_register_device(d, NULL, 0);
-+	return mmp_register_device(d, NULL, 0);
- }
- 
- static inline int pxa910_add_twsi(int id, struct i2c_pxa_platform_data *data,
- 				  struct i2c_board_info *info, unsigned size)
- {
--	struct pxa_device_desc *d = NULL;
-+	struct mmp_device_desc *d = NULL;
- 	int ret;
- 
- 	switch (id) {
-@@ -64,12 +64,12 @@ static inline int pxa910_add_twsi(int id, struct i2c_pxa_platform_data *data,
- 	if (ret)
- 		return ret;
- 
--	return pxa_register_device(d, data, sizeof(*data));
-+	return mmp_register_device(d, data, sizeof(*data));
- }
- 
- static inline int pxa910_add_pwm(int id)
- {
--	struct pxa_device_desc *d = NULL;
-+	struct mmp_device_desc *d = NULL;
- 
- 	switch (id) {
- 	case 1: d = &pxa910_device_pwm1; break;
-@@ -80,11 +80,11 @@ static inline int pxa910_add_pwm(int id)
- 		return -EINVAL;
- 	}
- 
--	return pxa_register_device(d, NULL, 0);
-+	return mmp_register_device(d, NULL, 0);
- }
- 
- static inline int pxa910_add_nand(struct pxa3xx_nand_platform_data *info)
- {
--	return pxa_register_device(&pxa910_device_nand, info, sizeof(*info));
-+	return mmp_register_device(&pxa910_device_nand, info, sizeof(*info));
- }
- #endif /* __ASM_MACH_PXA910_H */
-diff --git a/arch/arm/mach-mmp/ttc_dkb.c b/arch/arm/mach-mmp/ttc_dkb.c
-index 4f240760d4aa..345b2e6d5c7e 100644
---- a/arch/arm/mach-mmp/ttc_dkb.c
-+++ b/arch/arm/mach-mmp/ttc_dkb.c
-@@ -253,12 +253,12 @@ static struct spi_board_info spi_board_info[] __initdata = {
- 
- static void __init add_disp(void)
- {
--	pxa_register_device(&pxa910_device_disp,
-+	mmp_register_device(&pxa910_device_disp,
- 		&dkb_disp_info, sizeof(dkb_disp_info));
- 	spi_register_board_info(spi_board_info, ARRAY_SIZE(spi_board_info));
--	pxa_register_device(&pxa910_device_fb,
-+	mmp_register_device(&pxa910_device_fb,
- 		&dkb_fb_info, sizeof(dkb_fb_info));
--	pxa_register_device(&pxa910_device_panel,
-+	mmp_register_device(&pxa910_device_panel,
- 		&dkb_tpo_panel_info, sizeof(dkb_tpo_panel_info));
- }
+-/*
+- * Timing Generator
+- */
+-#define TG_PNLCTL 			0x00
+-#define TG_TPOSCTL 			0x01
+-#define TG_DUTYCTL 			0x02
+-#define TG_GPOSR 			0x03
+-#define TG_GPODR1 			0x04
+-#define TG_GPODR2 			0x05
+-#define TG_PINICTL 			0x06
+-#define TG_HPOSCTL 			0x07
+-
+ /*
+  * PXA GPIOs
+  */
+@@ -192,7 +180,4 @@
+ #define TOSA_KEY_MAIL		KEY_MAIL
  #endif
+ 
+-struct spi_device;
+-extern int tosa_bl_enable(struct spi_device *spi, int enable);
+-
+ #endif /* _ASM_ARCH_TOSA_H_ */
+diff --git a/arch/arm/mach-pxa/tosa.c b/arch/arm/mach-pxa/tosa.c
+index 9a7f1e42adac..8329a2969b2b 100644
+--- a/arch/arm/mach-pxa/tosa.c
++++ b/arch/arm/mach-pxa/tosa.c
+@@ -813,6 +813,26 @@ static struct pxa2xx_spi_controller pxa_ssp_master_info = {
+ 	.num_chipselect	= 1,
+ };
+ 
++static struct gpiod_lookup_table tosa_lcd_gpio_table = {
++	.dev_id = "spi2.0",
++	.table = {
++		GPIO_LOOKUP("tc6393xb",
++			    TOSA_GPIO_TG_ON - TOSA_TC6393XB_GPIO_BASE,
++			    "tg #pwr", GPIO_ACTIVE_HIGH),
++		{ },
++	},
++};
++
++static struct gpiod_lookup_table tosa_lcd_bl_gpio_table = {
++	.dev_id = "i2c-tosa-bl",
++	.table = {
++		GPIO_LOOKUP("tc6393xb",
++			    TOSA_GPIO_BL_C20MA - TOSA_TC6393XB_GPIO_BASE,
++			    "backlight", GPIO_ACTIVE_HIGH),
++		{ },
++	},
++};
++
+ static struct spi_board_info spi_board_info[] __initdata = {
+ 	{
+ 		.modalias	= "tosa-lcd",
+@@ -935,6 +955,8 @@ static void __init tosa_init(void)
+ 	platform_scoop_config = &tosa_pcmcia_config;
+ 
+ 	pxa2xx_set_spi_info(2, &pxa_ssp_master_info);
++	gpiod_add_lookup_table(&tosa_lcd_gpio_table);
++	gpiod_add_lookup_table(&tosa_lcd_bl_gpio_table);
+ 	spi_register_board_info(spi_board_info, ARRAY_SIZE(spi_board_info));
+ 
+ 	clk_add_alias("CLK_CK3P6MI", tc6393xb_device.name, "GPIO11_CLK", NULL);
+diff --git a/drivers/video/backlight/tosa_bl.c b/drivers/video/backlight/tosa_bl.c
+index 1275e815bd86..cff5e96fd988 100644
+--- a/drivers/video/backlight/tosa_bl.c
++++ b/drivers/video/backlight/tosa_bl.c
+@@ -18,7 +18,7 @@
+ 
+ #include <asm/mach/sharpsl_param.h>
+ 
+-#include <mach/tosa.h>
++#include "tosa_bl.h"
+ 
+ #define COMADJ_DEFAULT	97
+ 
+@@ -28,6 +28,7 @@
+ struct tosa_bl_data {
+ 	struct i2c_client *i2c;
+ 	struct backlight_device *bl;
++	struct gpio_desc *gpio;
+ 
+ 	int comadj;
+ };
+@@ -42,7 +43,7 @@ static void tosa_bl_set_backlight(struct tosa_bl_data *data, int brightness)
+ 	i2c_smbus_write_byte_data(data->i2c, DAC_CH2, (u8)(brightness & 0xff));
+ 
+ 	/* SetBacklightVR */
+-	gpio_set_value(TOSA_GPIO_BL_C20MA, brightness & 0x100);
++	gpiod_set_value(data->gpio, brightness & 0x100);
+ 
+ 	tosa_bl_enable(spi, brightness);
+ }
+@@ -87,9 +88,8 @@ static int tosa_bl_probe(struct i2c_client *client,
+ 		return -ENOMEM;
+ 
+ 	data->comadj = sharpsl_param.comadj == -1 ? COMADJ_DEFAULT : sharpsl_param.comadj;
+-
+-	ret = devm_gpio_request_one(&client->dev, TOSA_GPIO_BL_C20MA,
+-				GPIOF_OUT_INIT_LOW, "backlight");
++	data->gpio = devm_gpiod_get(&client->dev, "backlight", GPIOD_OUT_LOW);
++	ret = PTR_ERR_OR_ZERO(data->gpio);
+ 	if (ret) {
+ 		dev_dbg(&data->bl->dev, "Unable to request gpio!\n");
+ 		return ret;
+diff --git a/drivers/video/backlight/tosa_bl.h b/drivers/video/backlight/tosa_bl.h
+new file mode 100644
+index 000000000000..589e17e6fdb2
+--- /dev/null
++++ b/drivers/video/backlight/tosa_bl.h
+@@ -0,0 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef _TOSA_BL_H
++#define _TOSA_BL_H
++
++struct spi_device;
++extern int tosa_bl_enable(struct spi_device *spi, int enable);
++
++#endif
+diff --git a/drivers/video/backlight/tosa_lcd.c b/drivers/video/backlight/tosa_lcd.c
+index 29af8e27b6e5..e8ab583e5098 100644
+--- a/drivers/video/backlight/tosa_lcd.c
++++ b/drivers/video/backlight/tosa_lcd.c
+@@ -19,7 +19,7 @@
+ 
+ #include <asm/mach/sharpsl_param.h>
+ 
+-#include <mach/tosa.h>
++#include "tosa_bl.h"
+ 
+ #define POWER_IS_ON(pwr)	((pwr) <= FB_BLANK_NORMAL)
+ 
+@@ -28,12 +28,26 @@
+ #define TG_REG0_UD	0x0004
+ #define TG_REG0_LR	0x0008
+ 
++/*
++ * Timing Generator
++ */
++#define TG_PNLCTL 	0x00
++#define TG_TPOSCTL 	0x01
++#define TG_DUTYCTL 	0x02
++#define TG_GPOSR 	0x03
++#define TG_GPODR1 	0x04
++#define TG_GPODR2 	0x05
++#define TG_PINICTL 	0x06
++#define TG_HPOSCTL 	0x07
++
++
+ #define	DAC_BASE	0x4e
+ 
+ struct tosa_lcd_data {
+ 	struct spi_device *spi;
+ 	struct lcd_device *lcd;
+ 	struct i2c_client *i2c;
++	struct gpio_desc *gpiod_tg;
+ 
+ 	int lcd_power;
+ 	bool is_vga;
+@@ -66,7 +80,7 @@ EXPORT_SYMBOL(tosa_bl_enable);
+ static void tosa_lcd_tg_init(struct tosa_lcd_data *data)
+ {
+ 	/* TG on */
+-	gpio_set_value(TOSA_GPIO_TG_ON, 0);
++	gpiod_set_value(data->gpiod_tg, 0);
+ 
+ 	mdelay(60);
+ 
+@@ -100,6 +114,7 @@ static void tosa_lcd_tg_on(struct tosa_lcd_data *data)
+ 		 */
+ 		struct i2c_adapter *adap = i2c_get_adapter(0);
+ 		struct i2c_board_info info = {
++			.dev_name = "tosa-bl",
+ 			.type	= "tosa-bl",
+ 			.addr	= DAC_BASE,
+ 			.platform_data = data->spi,
+@@ -121,7 +136,7 @@ static void tosa_lcd_tg_off(struct tosa_lcd_data *data)
+ 	mdelay(50);
+ 
+ 	/* TG Off */
+-	gpio_set_value(TOSA_GPIO_TG_ON, 1);
++	gpiod_set_value(data->gpiod_tg, 1);
+ 	mdelay(100);
+ }
+ 
+@@ -191,10 +206,9 @@ static int tosa_lcd_probe(struct spi_device *spi)
+ 	data->spi = spi;
+ 	spi_set_drvdata(spi, data);
+ 
+-	ret = devm_gpio_request_one(&spi->dev, TOSA_GPIO_TG_ON,
+-				GPIOF_OUT_INIT_LOW, "tg #pwr");
+-	if (ret < 0)
+-		return ret;
++	data->gpiod_tg = devm_gpiod_get(&spi->dev, "tg #pwr", GPIOD_OUT_LOW);
++	if (IS_ERR(data->gpiod_tg))
++		return PTR_ERR(data->gpiod_tg);
+ 
+ 	mdelay(60);
+ 
 -- 
 2.20.0
 
