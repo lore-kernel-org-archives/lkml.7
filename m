@@ -2,67 +2,72 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE430CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B56E2CA9EAB
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 932FE222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8057C222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 15:20:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571412003;
-	bh=U1S6E5PNXafd96iGr1sZsrzy3/rNBAdHQr9LkX4Un+E=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=UOc8lxgmysakXOrsL1sfy8yhiGjDrLanaJApPQBMzD0FJVL0PT5h2gtvkCASZdYny
-	 lSQrkMSYFxezHDFuD3uK5C2VPwq1ZY1ngL2GkJv+JTj4/qalqJTJiyM//35+BwILjk
-	 JsTsTM2WEAYalxOZZOjLYy0Qr+mYGxKr9Dht6uHo=
+	s=default; t=1571412004;
+	bh=kuEJApMoHLL/9elbWnqOsRnyHcTfOGQdxJ1YleOYdOA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ml/m6wOS67hUy7JEkveN5uuoif+faaBitEooQceaBAg9Kxo5tlLEOMj7nOMgbPAQQ
+	 oxuQaNIdIa3MVoD7z2FjmoRPVf/JVx/N+Vj/VLZJUPaSS409BG0t7HyoL1anaBlnKp
+	 r4dSfpJgV7ZSfnF7f79jLZeCbPvCcMFFI0G81juY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439545AbfJRPUC (ORCPT
+        id S2501900AbfJRPUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:20:02 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38265 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732682AbfJRPUC (ORCPT
+        Fri, 18 Oct 2019 11:20:03 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45297 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390388AbfJRPUC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 18 Oct 2019 11:20:02 -0400
-Received: by mail-lf1-f66.google.com with SMTP id q28so1756113lfa.5;
-        Fri, 18 Oct 2019 08:20:00 -0700 (PDT)
+Received: by mail-lj1-f194.google.com with SMTP id q64so6588494ljb.12;
+        Fri, 18 Oct 2019 08:20:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=u2FnFyACZvrRV+bqhzHnYdXs/H6lR7JPzFZntZNQnSw=;
-        b=CsThKPeyQPFBB9/McwW9CQ5/2ykAGYMmB+I8YQk8EjQ1V9Ml5Ye7gi3gdfk/roWtYI
-         aMXyR0NDV/1/PhTBCTtTFcIfrSUZKc9E9YHOJ/iAnq5VtLvWFHreY5wGymZvScPXSTI9
-         i9gnvIN/MjYIUNWixA7ododScmLK8EEseJMRHhb3JosO9FkYPrA6GPXuSOcmYMoHQm45
-         Vbfh0lM42/maCwOKDZmE3s41muLsWRv6yh04nGdj9iffz4cTMd76J0rx2NhXKLuDuZ4M
-         /8vqtCMPXTlL4b89WqnF4AkXDz8Jpek0+bItfMPxACFQgoZGJp8KAPslTo8Lm3aMGFPn
-         K7CA==
-X-Gm-Message-State: APjAAAXkt06zRlWqy8s4Y7dSTIU2Z5nkmPk9tp8g7+utJBvMamFhXlWx
-        hck8uinQuyF4BFtba7wnA3c=
-X-Google-Smtp-Source: APXvYqxx22vrIkVRmaj0uy9waAgKOO6pL/ZoreUi3ajJjGn05eGS5ccmk9ol4nSCTVN2pYzhIhjuxA==
-X-Received: by 2002:ac2:44c3:: with SMTP id d3mr6201630lfm.109.1571411999790;
-        Fri, 18 Oct 2019 08:19:59 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=NWEsXs2dpg7Z5tah6xitYaTbPYgefyb7xkTWhkm2Qdg=;
+        b=RIJXSBl/VZkTLWruORCmOEYauiHEoxNiBYt2tKuZuWo4lBqT4RKwWH8clwAetLlSjg
+         y9m2NwyQr9jJdsGN9PLH7CwQN/xbs2xdV40o3grwQQTKvyT4YapYvkIbt6r+px8+HjVC
+         mCHpmTVjT8rLYOqXQmG7cJk+mymp8KYcvcYySfrpAWcWb9w1VbyLh1e8ddWwOntG+2Tl
+         Oqmj3lpgUtKmGrCLHqoOcSowC7iRJjnHQTFPTuQIVjhB7JWAPCQxPenZ/CHXq0AA8oVb
+         BLKneJZAzybZqdvT3kFH6DPvlDDEh36fBk0urlkFYd0wbLAG4iY8lyRwQWAfi7FcgVrb
+         C68g==
+X-Gm-Message-State: APjAAAVvf9/TaGcCg27mD7loPY48RAtn7hu2vcpREroK3sl+Bt4CQjdx
+        ywArCeBgt9Zw7AYvio//lTMmU/xW
+X-Google-Smtp-Source: APXvYqzXBMIbd9C3xS8GBqkUeuj4fmTPf93b5jl3oFBp4ALul+QVERZ5wgPQOftfyeX8gkzQrbE26Q==
+X-Received: by 2002:a2e:8e87:: with SMTP id z7mr6588549ljk.9.1571412000231;
+        Fri, 18 Oct 2019 08:20:00 -0700 (PDT)
 Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id i21sm2544449lfl.44.2019.10.18.08.19.58
+        by smtp.gmail.com with ESMTPSA id u21sm5340202lje.92.2019.10.18.08.19.58
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
         Fri, 18 Oct 2019 08:19:58 -0700 (PDT)
 Received: from johan by xi.terra with local (Exim 4.92.2)
         (envelope-from <johan@xi.terra>)
-        id 1iLU30-0006YC-9e; Fri, 18 Oct 2019 17:20:11 +0200
+        id 1iLU31-0006YH-3u; Fri, 18 Oct 2019 17:20:11 +0200
 From:   Johan Hovold <johan@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Alan Stern <stern@rowland.harvard.edu>,
         Oliver Neukum <oneukum@suse.com>,
         "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
         linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH v2 0/2] USB: ldusb: fix ring-buffer bugs
-Date:   Fri, 18 Oct 2019 17:19:53 +0200
-Message-Id: <20191018151955.25135-1-johan@kernel.org>
+        Johan Hovold <johan@kernel.org>,
+        stable <stable@vger.kernel.org>,
+        syzbot+6fe95b826644f7f12b0b@syzkaller.appspotmail.com
+Subject: [PATCH v2 1/2] USB: ldusb: fix read info leaks
+Date:   Fri, 18 Oct 2019 17:19:54 +0200
+Message-Id: <20191018151955.25135-2-johan@kernel.org>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191018151955.25135-1-johan@kernel.org>
+References: <20191018151955.25135-1-johan@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,39 +75,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Syzbot has been reporting a slab-out-of-bounds/bad user copy in ldusb
-for some time now.
+Fix broken read implementation, which could be used to trigger slab info
+leaks.
 
-This turned out to due to a bug in the read() implementation, which
-would have read() access the uninitialised ring buffer and leak huge
-amounts of slab data on URB completion errors (e.g. disconnect).
+The driver failed to check if the custom ring buffer was still empty
+when waking up after having waited for more data. This would happen on
+every interrupt-in completion, even if no data had been added to the
+ring buffer (e.g. on disconnect events).
 
-The first patch plugs the info leaks.
+Due to missing sanity checks and uninitialised (kmalloced) ring-buffer
+entries, this meant that huge slab info leaks could easily be triggered.
 
-The second patch fixes a couple of issues in the custom ring-buffer
-implementation, which before the first patch also could have led to
-info leaks.
+Note that the empty-buffer check after wakeup is enough to fix the info
+leak on disconnect, but let's clear the buffer on allocation and add a
+sanity check to read() to prevent further leaks.
 
-In an attempt to avoid copying the ring-buffer entry to a temporary
-buffer while holding the spinlock, I added an smp_rmb() before
-copy_to_user() which I think will suffice, but I'd appreciate if you
-could help me verify that. Hence the RFC on that one.
+Fixes: 2824bd250f0b ("[PATCH] USB: add ldusb driver")
+Cc: stable <stable@vger.kernel.org>     # 2.6.13
+Reported-by: syzbot+6fe95b826644f7f12b0b@syzkaller.appspotmail.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ drivers/usb/misc/ldusb.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-The first commit could go to Linus meanwhile.
-
-Johan
-
-v2
- - fix buffer-entry length check in 1/2
-
-
-Johan Hovold (2):
-  USB: ldusb: fix read info leaks
-  USB: ldusb: fix ring-buffer locking
-
- drivers/usb/misc/ldusb.c | 31 ++++++++++++++++++++++---------
- 1 file changed, 22 insertions(+), 9 deletions(-)
-
+diff --git a/drivers/usb/misc/ldusb.c b/drivers/usb/misc/ldusb.c
+index 147c90c2a4e5..15b5f06fb0b3 100644
+--- a/drivers/usb/misc/ldusb.c
++++ b/drivers/usb/misc/ldusb.c
+@@ -464,7 +464,7 @@ static ssize_t ld_usb_read(struct file *file, char __user *buffer, size_t count,
+ 
+ 	/* wait for data */
+ 	spin_lock_irq(&dev->rbsl);
+-	if (dev->ring_head == dev->ring_tail) {
++	while (dev->ring_head == dev->ring_tail) {
+ 		dev->interrupt_in_done = 0;
+ 		spin_unlock_irq(&dev->rbsl);
+ 		if (file->f_flags & O_NONBLOCK) {
+@@ -474,12 +474,17 @@ static ssize_t ld_usb_read(struct file *file, char __user *buffer, size_t count,
+ 		retval = wait_event_interruptible(dev->read_wait, dev->interrupt_in_done);
+ 		if (retval < 0)
+ 			goto unlock_exit;
+-	} else {
+-		spin_unlock_irq(&dev->rbsl);
++
++		spin_lock_irq(&dev->rbsl);
+ 	}
++	spin_unlock_irq(&dev->rbsl);
+ 
+ 	/* actual_buffer contains actual_length + interrupt_in_buffer */
+ 	actual_buffer = (size_t *)(dev->ring_buffer + dev->ring_tail * (sizeof(size_t)+dev->interrupt_in_endpoint_size));
++	if (*actual_buffer > dev->interrupt_in_endpoint_size) {
++		retval = -EIO;
++		goto unlock_exit;
++	}
+ 	bytes_to_read = min(count, *actual_buffer);
+ 	if (bytes_to_read < *actual_buffer)
+ 		dev_warn(&dev->intf->dev, "Read buffer overflow, %zd bytes dropped\n",
+@@ -690,10 +695,9 @@ static int ld_usb_probe(struct usb_interface *intf, const struct usb_device_id *
+ 		dev_warn(&intf->dev, "Interrupt out endpoint not found (using control endpoint instead)\n");
+ 
+ 	dev->interrupt_in_endpoint_size = usb_endpoint_maxp(dev->interrupt_in_endpoint);
+-	dev->ring_buffer =
+-		kmalloc_array(ring_buffer_size,
+-			      sizeof(size_t) + dev->interrupt_in_endpoint_size,
+-			      GFP_KERNEL);
++	dev->ring_buffer = kcalloc(ring_buffer_size,
++			sizeof(size_t) + dev->interrupt_in_endpoint_size,
++			GFP_KERNEL);
+ 	if (!dev->ring_buffer)
+ 		goto error;
+ 	dev->interrupt_in_buffer = kmalloc(dev->interrupt_in_endpoint_size, GFP_KERNEL);
 -- 
 2.23.0
 
