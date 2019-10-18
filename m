@@ -2,151 +2,150 @@ Return-Path: <SRS0=6OEZ=YL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 237F3CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A7FCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF15F222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8064F21897
+	for <linux-kernel@archiver.kernel.org>; Fri, 18 Oct 2019 18:49:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AG5lMhJ3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C87WZN4l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443142AbfJRSsY (ORCPT
+        id S2390708AbfJRSth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:48:24 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46460 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394249AbfJRSsW (ORCPT
+        Fri, 18 Oct 2019 14:49:37 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37678 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbfJRSth (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 14:48:22 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q5so4394774pfg.13
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 11:48:22 -0700 (PDT)
+        Fri, 18 Oct 2019 14:49:37 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p14so7316989wro.4
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 11:49:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xwzGc+WHtxxNubpXEGplLXbyrD4IAw1gaKqHGbFJijc=;
-        b=AG5lMhJ3vrGI7ffKJYvTSkGkVoK+6ZOwe/uvgBpFm2TfKdm/23PutDlc7DJrk+tjGs
-         45WEviF8bodCMZgcbplADqOR+pt+6X5NRhI4qK04CHLnWA7nikhTTIc8GgiDBW38eIaN
-         nF8DW2ruV53C2c++ogJsX+9EaULAEPo4h3J1ommgEDzk8Q8kLSAmSu9uPwuce9XRTNmf
-         HNTUO3B6FKgHSO+kJe5Y8TKZgEk/9cAOVwHiT/1k8lKmKElSe3Dzf6xUbC8J8rwBYbvv
-         mqCdLs1fRJXT8esBkfzkIzr5MnOfgT2q9gUjdozXTNePWgpXvjMkIMvOizqlP8WoXQeN
-         w70g==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aHwrkkqK+v7ttT3hkVnbsvrpjAbQK2fYZ6a+Ri81jgQ=;
+        b=C87WZN4lrYok7x6kNxv0f0V7ppeKpanyF4cDM/PfsE+M+YjE0iuSVN+/VcRd49e7LA
+         YE5LPYMob7fMxbLpv+EoYWVR0inRsUItRnCdIt397m1VUWWqVVjuM4LV2vX49cSP8Rxm
+         nUTrkPsAeE8JTzCJsyWV6DVzjCCsDRC94wvzybXU4QMjBBeSSVm9lJuPPzt6o+PjrX9T
+         AlKObj5riecOiesJDhAZOw4aUgNmajjyk/183XTLhsiNsq8rtaBDNHJV94i/IMp5FIBY
+         yVPl40u3fOh1qcLW0geb+swIlPmpweHyjqV4geYV557h3Xhlc+u4ylm2rQACxFKbjwlx
+         q4zA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=xwzGc+WHtxxNubpXEGplLXbyrD4IAw1gaKqHGbFJijc=;
-        b=flV61D2jiecq3Nq4uVPE9DXIGV7uxW6txI/sC23XnhRy6vswuDIX9ADZKzdeOC2nwS
-         pj+GGMUT1rZpWTSZMePPhBw9HMOjLwIaG20w/2eJ6ftMWu0WJk5wsh4cIMUDCegXmdNe
-         agtNdFwwzlcvOF4zTru7mgg7uY02agZcvvNxy855oRFCTis13yOBguGoLLHO1bZUGHxa
-         BBfQi8RGAfjFJMQnt5QYD0WwPciAj0mEW1WdHMYux1wUEoHaq1V+CSfNjaeE18JA8FqR
-         9A2gr19DgIjoBedLAo/SxViO8lJP0NGoHkuEFv+2cR5YNA44vBHfwtjxr4xIp9Ztq/aL
-         Ig6Q==
-X-Gm-Message-State: APjAAAXljf/UDcq8bO6aV9jOoFP0i/olWEwsEvbY9Igj+Ew0GHnLi8WX
-        oJA9qQ5ciIfynIeUIMo7dudH7wYpQXg=
-X-Google-Smtp-Source: APXvYqwtHRceRwMUaIW7Vuef/hyqGnE0x05ItPwgppjD30l4/mB8SXIhscWYg00vY9apfwgfA3RkPA==
-X-Received: by 2002:a17:90a:d991:: with SMTP id d17mr13306038pjv.73.1571424501337;
-        Fri, 18 Oct 2019 11:48:21 -0700 (PDT)
-Received: from [192.168.110.119] ([198.182.47.47])
-        by smtp.gmail.com with ESMTPSA id f188sm8730265pfa.170.2019.10.18.11.48.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 18 Oct 2019 11:48:20 -0700 (PDT)
-Subject: Re: [RFC 0/6] ARC: merge HAPS-HS with nSIM-HS configs
-To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        linux-snps-arc@lists.infradead.org,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        linux-kernel@vger.kernel.org
-References: <20191018121545.8907-1-Eugeniy.Paltsev@synopsys.com>
-From:   Vineet Gupta <vineetg76@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vineetg76@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- deE0Dvw98SWmZSNtdOPnJZ0D
-Message-ID: <8fd4f94b-c0e5-ed2c-ede3-5c4e77a5a0e4@gmail.com>
-Date:   Fri, 18 Oct 2019 11:48:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aHwrkkqK+v7ttT3hkVnbsvrpjAbQK2fYZ6a+Ri81jgQ=;
+        b=ZBZ5TfRgFpw5RCy2G173+s22kdKS4EiSWke0KglsLoNYsp0/S3EEs41c8PU6d8x/96
+         +dmDJdzQTjyP7VjpAcb8pQdFLnKQNodz/ePMERcPyxAa7OT2CyRCIh0XZVimqoROQy+K
+         QQ7jtGhv5dHAZWGh1Y05deXlOepUVWlUVrKBbz8szVyfMk6h2fyKONFwqG01By++7arW
+         wZNps+hG3wLfmW4r0QcSQulMXWS24ShWWqe1JGPLbGxc6H/alLoQqp8B9+JwrMh5m8Ck
+         UQ72vMRkegISteRmN+0PMhA1glcBAoi3FpWjbU5NPYHBpfBN0oc/bouOIDEzBy5FTfxO
+         XkKg==
+X-Gm-Message-State: APjAAAU207f87pP59sW6t/bTdYZO2NWGNqdbbhswSQ286mYGOjP3luOV
+        uxOvOCTCCEWa2RehbUd4fCle5LM2OwGFWcmI9YgQkQ==
+X-Google-Smtp-Source: APXvYqzEAUVJXB6Gp+u1CbtLAoa/ziEMiFEWlTCerkSuIf0yRZwzZiVqQ9e0pvTxq8U6NBXXT02BZ5WPL3KU1SkqmaQ=
+X-Received: by 2002:a5d:50c9:: with SMTP id f9mr8710623wrt.36.1571424573429;
+ Fri, 18 Oct 2019 11:49:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191018121545.8907-1-Eugeniy.Paltsev@synopsys.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAO_48GFHx4uK6cWwJ4oGdJ8HNZNZYDzdD=yR3VK0EXQ86ya9-g@mail.gmail.com>
+ <20190924162217.GA12974@arm.com> <20191009173742.GA2682@arm.com>
+ <f4fb09a5-999b-e676-0403-cc0de41be440@ti.com> <20191014090729.lwusl5zxa32a7uua@DESKTOP-E1NTVVP.localdomain>
+ <a213760f-1f41-c4a3-7e38-8619898adecd@ti.com> <CALAqxLV6EBHKPEaEkyfhEYyw0TXayTeY_4AWXfuASLLyxZh5+Q@mail.gmail.com>
+ <a3c66479-7433-ec29-fbec-81aef60cb063@ti.com> <CALAqxLWrsXG0XysL7RmhApbuZukDdG5VhdHOTS5odkG9f1ezwA@mail.gmail.com>
+ <20191018095516.inwes5avdeixl5nr@DESKTOP-E1NTVVP.localdomain> <20191018184123.GA10634@arm.com>
+In-Reply-To: <20191018184123.GA10634@arm.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Fri, 18 Oct 2019 11:49:22 -0700
+Message-ID: <CALAqxLXzOjyD1MpGeuZKLz+RNz1Utd8QpbvtSOodeqT-gCu6kA@mail.gmail.com>
+Subject: Re: [RESEND][PATCH v8 0/5] DMA-BUF Heaps (destaging ION)
+To:     Ayan Halder <Ayan.Halder@arm.com>
+Cc:     Brian Starkey <Brian.Starkey@arm.com>,
+        "Andrew F. Davis" <afd@ti.com>, nd <nd@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Liam Mark <lmark@codeaurora.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Pratik Patel <pratikp@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/18/19 5:15 AM, Eugeniy Paltsev wrote:
-> Starting from nSIM 2019.06 is possible to use DW UART
-> instead of ARC UART. That allows us to merge
-> "nsim_hs" with "haps_hs" and "nsim_hs_smp" with "haps_hs_smp"
-> mith some minor changes.
-> 
-> We eliminate nsim_hs_defconfig and nsim_hs_smp_defconfig
-> and leave haps_hs_defconfig and haps_hs_smp_defconfig
-> which can be used on HAPS / nSIM / ZEBU / QEMU platforms
-> without additionall changes in Linux kernel.
+On Fri, Oct 18, 2019 at 11:41 AM Ayan Halder <Ayan.Halder@arm.com> wrote:
+> On Fri, Oct 18, 2019 at 09:55:17AM +0000, Brian Starkey wrote:
+> > On Thu, Oct 17, 2019 at 01:57:45PM -0700, John Stultz wrote:
+> > > On Thu, Oct 17, 2019 at 12:29 PM Andrew F. Davis <afd@ti.com> wrote:
+> > > > On 10/17/19 3:14 PM, John Stultz wrote:
+> > > > > But if the objection stands, do you have a proposal for an alternative
+> > > > > way to enumerate a subset of CMA heaps?
+> > > > >
+> > > > When in staging ION had to reach into the CMA framework as the other
+> > > > direction would not be allowed, so cma_for_each_area() was added. If
+> > > > DMA-BUF heaps is not in staging then we can do the opposite, and have
+> > > > the CMA framework register heaps itself using our framework. That way
+> > > > the CMA system could decide what areas to export or not (maybe based on
+> > > > a DT property or similar).
+> > >
+> > > Ok. Though the CMA core doesn't have much sense of DT details either,
+> > > so it would probably have to be done in the reserved_mem logic, which
+> > > doesn't feel right to me.
+> > >
+> > > I'd probably guess we should have some sort of dt binding to describe
+> > > a dmabuf cma heap and from that node link to a CMA node via a
+> > > memory-region phandle. Along with maybe the default heap as well? Not
+> > > eager to get into another binding review cycle, and I'm not sure what
+> > > non-DT systems will do yet, but I'll take a shot at it and iterate.
+> > >
+> > > > The end result is the same so we can make this change later (it has to
+> > > > come after DMA-BUF heaps is in anyway).
+> > >
+> > > Well, I'm hesitant to merge code that exposes all the CMA heaps and
+> > > then add patches that becomes more selective, should anyone depend on
+> > > the initial behavior. :/
+> >
+> > How about only auto-adding the system default CMA region (cma->name ==
+> > "reserved")?
+> >
+> > And/or the CMA auto-add could be behind a config option? It seems a
+> > shame to further delay this, and the CMA heap itself really is useful.
+> >
+> A bit of a detour, comming back to the issue why the following node
+> was not getting detected by the dma-buf heaps framework.
+>
+>         reserved-memory {
+>                 #address-cells = <2>;
+>                 #size-cells = <2>;
+>                 ranges;
+>
+>                 display_reserved: framebuffer@60000000 {
+>                         compatible = "shared-dma-pool";
+>                         linux,cma-default;
+>                         reusable; <<<<<<<<<<<<-----------This was missing in our
+> earlier node
+>                         reg = <0 0x60000000 0 0x08000000>;
+>                 };
 
-Thx for doing this, I was planning to do this myself.
+Right. It has to be a CMA region for us to expose it from the cma heap.
 
-But remember that doing this will disturb existing nsim setups
-- Our internal linux/gnu regression jobs one of which tracks my for-curr and will
-  fail immediately
-- uClibc-ng maintainer who also seems to use nsim AFAIK for regression runs
 
-So we need to notify parties involves (and it would be best that we align this to
-a kernel release which anyways will be next one.
+> With 'reusable', rmem_cma_setup() succeeds , but the kernel crashes as follows :-
+>
+> [    0.450562] WARNING: CPU: 2 PID: 1 at mm/cma.c:110 cma_init_reserved_areas+0xec/0x22c
 
-Also go thru the github wiki pages and wherever applicable please add the config
-info for nsim (keep the old settings there for reference as well)
+Is the value 0x60000000 you're using something you just guessed at? It
+seems like the warning here is saying the pfn calculated from the base
+address isn't valid.
 
-Thx,
--Vineet
+thanks
+-john
