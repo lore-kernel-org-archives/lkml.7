@@ -4,35 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A2ACA9EAB
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 20:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4713CA9EAB
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 20:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0841721925
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 20:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E673222C5
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 20:50:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfJSUt7 (ORCPT
+        id S1726425AbfJSUts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 16:49:59 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:50765 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfJSUts (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 19 Oct 2019 16:49:48 -0400
-X-Originating-IP: 86.202.229.42
+Received: from relay10.mail.gandi.net ([217.70.178.230]:42437 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbfJSUtr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 19 Oct 2019 16:49:47 -0400
 Received: from localhost (lfbn-lyo-1-146-42.w86-202.abo.wanadoo.fr [86.202.229.42])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 782AA1C0004;
-        Sat, 19 Oct 2019 20:49:46 +0000 (UTC)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 0F1A1240004;
+        Sat, 19 Oct 2019 20:49:45 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     linux-rtc@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 7/9] rtc: ds1343: remove unnecessary mutex
-Date:   Sat, 19 Oct 2019 22:49:39 +0200
-Message-Id: <20191019204941.6203-7-alexandre.belloni@bootlin.com>
+Subject: [PATCH 6/9] rtc: ds1343: check regmap_read return value
+Date:   Sat, 19 Oct 2019 22:49:38 +0200
+Message-Id: <20191019204941.6203-6-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191019204941.6203-1-alexandre.belloni@bootlin.com>
 References: <20191019204941.6203-1-alexandre.belloni@bootlin.com>
@@ -43,141 +42,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use rtc_lock and rtc_unlock to lock the rtc from the interrupt handler.
-This removes the need for a driver specific lock.
+Check whether regmap_read fails before continuing in the sysfs .show
+callbacks.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-ds1343.c | 36 +++++++-----------------------------
- 1 file changed, 7 insertions(+), 29 deletions(-)
+ drivers/rtc/rtc-ds1343.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/rtc/rtc-ds1343.c b/drivers/rtc/rtc-ds1343.c
-index c96a505972e6..867187325d41 100644
+index 7532a2e8407e..c96a505972e6 100644
 --- a/drivers/rtc/rtc-ds1343.c
 +++ b/drivers/rtc/rtc-ds1343.c
-@@ -78,7 +78,6 @@ struct ds1343_priv {
- 	struct spi_device *spi;
- 	struct rtc_device *rtc;
- 	struct regmap *map;
--	struct mutex mutex;
- 	unsigned int irqen;
- 	int irq;
- 	int alarm_sec;
-@@ -290,17 +289,15 @@ static int ds1343_update_alarm(struct device *dev)
- static int ds1343_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
+@@ -92,8 +92,11 @@ static ssize_t ds1343_show_glitchfilter(struct device *dev,
  {
- 	struct ds1343_priv *priv = dev_get_drvdata(dev);
--	int res = 0;
+ 	struct ds1343_priv *priv = dev_get_drvdata(dev->parent);
+ 	int glitch_filt_status, data;
 +	int res;
- 	unsigned int stat;
  
- 	if (priv->irq <= 0)
- 		return -EINVAL;
- 
--	mutex_lock(&priv->mutex);
--
- 	res = regmap_read(priv->map, DS1343_STATUS_REG, &stat);
- 	if (res)
--		goto out;
+-	regmap_read(priv->map, DS1343_CONTROL_REG, &data);
++	res = regmap_read(priv->map, DS1343_CONTROL_REG, &data);
++	if (res)
 +		return res;
  
- 	alarm->enabled = !!(priv->irqen & RTC_AF);
- 	alarm->pending = !!(stat & DS1343_IRQF0);
-@@ -310,21 +307,16 @@ static int ds1343_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
- 	alarm->time.tm_hour = priv->alarm_hour < 0 ? 0 : priv->alarm_hour;
- 	alarm->time.tm_mday = priv->alarm_mday < 0 ? 0 : priv->alarm_mday;
+ 	glitch_filt_status = !!(data & DS1343_EGFIL);
  
--out:
--	mutex_unlock(&priv->mutex);
--	return res;
-+	return 0;
- }
- 
- static int ds1343_set_alarm(struct device *dev, struct rtc_wkalrm *alarm)
+@@ -147,10 +150,12 @@ static ssize_t ds1343_show_tricklecharger(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
  {
- 	struct ds1343_priv *priv = dev_get_drvdata(dev);
--	int res = 0;
+ 	struct ds1343_priv *priv = dev_get_drvdata(dev->parent);
+-	int data;
++	int res, data;
+ 	char *diodes = "disabled", *resistors = " ";
  
- 	if (priv->irq <= 0)
- 		return -EINVAL;
+-	regmap_read(priv->map, DS1343_TRICKLE_REG, &data);
++	res = regmap_read(priv->map, DS1343_TRICKLE_REG, &data);
++	if (res)
++		return res;
  
--	mutex_lock(&priv->mutex);
--
- 	priv->alarm_sec = alarm->time.tm_sec;
- 	priv->alarm_min = alarm->time.tm_min;
- 	priv->alarm_hour = alarm->time.tm_hour;
-@@ -333,33 +325,22 @@ static int ds1343_set_alarm(struct device *dev, struct rtc_wkalrm *alarm)
- 	if (alarm->enabled)
- 		priv->irqen |= RTC_AF;
- 
--	res = ds1343_update_alarm(dev);
--
--	mutex_unlock(&priv->mutex);
--
--	return res;
-+	return ds1343_update_alarm(dev);
- }
- 
- static int ds1343_alarm_irq_enable(struct device *dev, unsigned int enabled)
- {
- 	struct ds1343_priv *priv = dev_get_drvdata(dev);
--	int res = 0;
- 
- 	if (priv->irq <= 0)
- 		return -EINVAL;
- 
--	mutex_lock(&priv->mutex);
--
- 	if (enabled)
- 		priv->irqen |= RTC_AF;
- 	else
- 		priv->irqen &= ~RTC_AF;
- 
--	res = ds1343_update_alarm(dev);
--
--	mutex_unlock(&priv->mutex);
--
--	return res;
-+	return ds1343_update_alarm(dev);
- }
- 
- static irqreturn_t ds1343_thread(int irq, void *dev_id)
-@@ -368,7 +349,7 @@ static irqreturn_t ds1343_thread(int irq, void *dev_id)
- 	unsigned int stat, control;
- 	int res = 0;
- 
--	mutex_lock(&priv->mutex);
-+	rtc_lock(priv->rtc);
- 
- 	res = regmap_read(priv->map, DS1343_STATUS_REG, &stat);
- 	if (res)
-@@ -389,7 +370,7 @@ static irqreturn_t ds1343_thread(int irq, void *dev_id)
- 	}
- 
- out:
--	mutex_unlock(&priv->mutex);
-+	rtc_unlock(priv->rtc);
- 	return IRQ_HANDLED;
- }
- 
-@@ -422,7 +403,6 @@ static int ds1343_probe(struct spi_device *spi)
- 		return -ENOMEM;
- 
- 	priv->spi = spi;
--	mutex_init(&priv->mutex);
- 
- 	/* RTC DS1347 works in spi mode 3 and
- 	 * its chip select is active high
-@@ -500,9 +480,7 @@ static int ds1343_remove(struct spi_device *spi)
- 	struct ds1343_priv *priv = spi_get_drvdata(spi);
- 
- 	if (spi->irq) {
--		mutex_lock(&priv->mutex);
- 		priv->irqen &= ~RTC_AF;
--		mutex_unlock(&priv->mutex);
- 
- 		dev_pm_clear_wake_irq(&spi->dev);
- 		device_init_wakeup(&spi->dev, false);
+ 	if ((data & 0xf0) == DS1343_TRICKLE_MAGIC) {
+ 		switch (data & 0x0c) {
 -- 
 2.21.0
 
