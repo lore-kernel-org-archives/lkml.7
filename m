@@ -2,118 +2,112 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E09AECA9EAC
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 17:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61498CA9EAD
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 17:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEE3121D80
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 17:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A453222BD
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 17:48:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ea4Qn9qq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i55waEal"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726142AbfJSRmw (ORCPT
+        id S1726152AbfJSRsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 13:42:52 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:42881 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726049AbfJSRmw (ORCPT
+        Sat, 19 Oct 2019 13:48:06 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35953 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfJSRsG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 13:42:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571506970;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PUAbi9gtDB4keSixIsPuiPWGKniK/ln01xBgx44eiIk=;
-        b=ea4Qn9qqhg/9wQ3f1gG2qPzikGKpc/tX1bifHzSTHY5APK2DJov+X/Q8/CxEiAdRSMAAw+
-        Z7t4vsJvtLlwtRnFocU0xFXvrSMqpIXMYEM+M4NLTdkkgN02n+NPMJtaJVbNkkkf1HWrjW
-        6wJXbsgTOI1sq4BcZ3ZG6/hTuh4QDZI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-222-qtmdEK9XN_KGZg_BcM5sJw-1; Sat, 19 Oct 2019 13:42:46 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3390D1800DC7;
-        Sat, 19 Oct 2019 17:42:45 +0000 (UTC)
-Received: from krava (ovpn-204-36.brq.redhat.com [10.40.204.36])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 322EA100194E;
-        Sat, 19 Oct 2019 17:42:41 +0000 (UTC)
-Date:   Sat, 19 Oct 2019 19:42:41 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: Re: [PATCH 07/10] libperf: Add tests_mmap_cpus test
-Message-ID: <20191019174241.GB12782@krava>
-References: <20191017105918.20873-1-jolsa@kernel.org>
- <20191017105918.20873-8-jolsa@kernel.org>
- <20191018181429.GE1797@kernel.org>
- <20191018181631.GF1797@kernel.org>
+        Sat, 19 Oct 2019 13:48:06 -0400
+Received: by mail-io1-f67.google.com with SMTP id b136so11211863iof.3;
+        Sat, 19 Oct 2019 10:48:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kz0/FsscmNPnfhryu7+x8j2fQp1ZICmOKUwPPB93gHo=;
+        b=i55waEalpeARsWe2kn6Q4q375oqabBYRyBGwWVACSm4Q3/7d3COTb9PVrApFE70Lp+
+         XFVlS6xBe1ftzUsawcKHJUK6CovX7wzlSRK6d0Hae2WJP0erLoyRXBFF48/wW8Wsleud
+         jnv0Kae/Eo5PViwh6122oxPtKk+qGziWxiVJM1zGvlCJ9Xf3ZjbMnnRxIH+gvSuUppsF
+         JuEBcyMi2JyWFyF0KKZH7A8UdkZ0fho+8rB4cnrEezN3+nfkOZM8/YSswpC/0QRXnSV1
+         y0jtw0BEFvtTVVc71wkAI6LyRd0HUsRlYHAzvcsrMwqx3UGnW74arc3IYPJ2In3jFfzh
+         OOBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kz0/FsscmNPnfhryu7+x8j2fQp1ZICmOKUwPPB93gHo=;
+        b=i6xC1gRNVvwPgHeXR9camWgxK8eP5clm+jOWqZb1W5lbITJMlSSGujJeFHvtUfDIdN
+         WUPLp4v5kkfweCGTEfeeQ16afINbZeKuxOKwdFa4KY40yspKuEu/y3TvkZvm7sA3FZ0M
+         Bm3TC7lKVqLKpuXQqqT23PIa3DR25tpR2vrV5sFWYxXEJMjn3VOZHeaMiKSpnO5CVJRN
+         dXSLesiW30lxSJ8kloWVlUqCaMxOct28FEqI96gtfCbKegHjAKN2iEFE5g1elhbUfg8V
+         YR2gTdL5m8moiy+Ntbi4sv1YGaImm9MvHhNA/wvCm0hialHGsFEzU9LhV275w/o7CyUt
+         iHhw==
+X-Gm-Message-State: APjAAAUyemMY5/tKu1sNqvYmO5eYiUA+msez5ZHWz/EWZ7XEMueoYE+m
+        SSXdh5z8hwYPUB31PMdjmXt4sSxhp3V/Z+6TQoM=
+X-Google-Smtp-Source: APXvYqxo3Fr0kuSJMEqgKM6kl3CHK537pta2eV/yClGVePf9vOCnH87rNjy+8mu9SJc9u5hIR2Dwdu72XQGW0yLsUuo=
+X-Received: by 2002:a6b:ef0d:: with SMTP id k13mr3210056ioh.178.1571507283798;
+ Sat, 19 Oct 2019 10:48:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191018181631.GF1797@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: qtmdEK9XN_KGZg_BcM5sJw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+References: <20191019054039.vsWMD_v7t%akpm@linux-foundation.org>
+In-Reply-To: <20191019054039.vsWMD_v7t%akpm@linux-foundation.org>
+From:   Konstantin Khlebnikov <koct9i@gmail.com>
+Date:   Sat, 19 Oct 2019 20:47:52 +0300
+Message-ID: <CALYGNiNVJ6WZwDETrq4X4oaPBOx7wC89Gh8-ZOScY_Bf8H5Mdw@mail.gmail.com>
+Subject: Re: mmotm 2019-10-18-22-40 uploaded
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     broonie@kernel.org, linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, linux-next@vger.kernel.org,
+        Michal Hocko <mhocko@suse.cz>, mm-commits@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 03:16:31PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Oct 18, 2019 at 03:14:29PM -0300, Arnaldo Carvalho de Melo escrev=
-eu:
-> > Em Thu, Oct 17, 2019 at 12:59:15PM +0200, Jiri Olsa escreveu:
-> > > Adding mmaping tests that generates prctl call on
-> > > every cpu validates it gets all the related events
-> > > in ring buffer.
-> >=20
-> > So _here_ we need _GNU_SOURCE, for this specific test:
->=20
-> Added, to this test:
->=20
-> [acme@quaco perf]$ git diff
-> diff --git a/tools/perf/lib/tests/test-evlist.c b/tools/perf/lib/tests/te=
-st-evlist.c
-> index d8c52ebfa53a..741bc1bb4524 100644
-> --- a/tools/perf/lib/tests/test-evlist.c
-> +++ b/tools/perf/lib/tests/test-evlist.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
-> -#include <stdio.h>
-> +#define _GNU_SOURCE // needed for sched.h to get sched_[gs]etaffinity an=
-d CPU_(ZERO,SET)
->  #include <sched.h>
-> +#include <stdio.h>
->  #include <stdarg.h>
->  #include <unistd.h>
->  #include <stdlib.h>
-> [acme@quaco perf]$
->=20
-> We can go the big hammer way if this is more generally needed, but first
-> lets try to use it only when needed, ok?
+On Sat, Oct 19, 2019 at 8:40 AM <akpm@linux-foundation.org> wrote:
+>
+> The mm-of-the-moment snapshot 2019-10-18-22-40 has been uploaded to
+>
+>    http://www.ozlabs.org/~akpm/mmotm/
+>
+> mmotm-readme.txt says
+>
+> README for mm-of-the-moment:
+>
+> http://www.ozlabs.org/~akpm/mmotm/
+>
+> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> more than once a week.
+>
+> You will need quilt to apply these patches to the latest Linus release (5.x
+> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+> http://ozlabs.org/~akpm/mmotm/series
+>
+> The file broken-out.tar.gz contains two datestamp files: .DATE and
+> .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+> followed by the base kernel version against which this patch series is to
+> be applied.
+>
+> This tree is partially included in linux-next.  To see which patches are
+> included in linux-next, consult the `series' file.  Only the patches
+> within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
+> linux-next.
+>
+>
+> A full copy of the full kernel tree with the linux-next and mmotm patches
+> already applied is available through git within an hour of the mmotm
+> release.  Individual mmotm releases are tagged.  The master branch always
+> points to the latest release, so it's constantly rebasing.
+>
+> http://git.cmpxchg.org/cgit.cgi/linux-mmotm.git/
 
-ok, thanks
-
-FYI so it's quite easy now to separate the lib and move it under
-tools/lib/perf..  I'll post it together with docs/tutorial update
-
-jirka
-
+I seems git mirror does not update anymore.
+Latest tag is v5.3-rc7-mmots-2019-09-03-21-33
