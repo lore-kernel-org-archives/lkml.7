@@ -2,129 +2,178 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3774CA9EAC
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 12:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AACCA9EAB
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 13:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 982CF21897
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 12:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC04621925
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 13:07:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AsUELhBF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+Az/r8I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725970AbfJSM4r (ORCPT
+        id S1725992AbfJSNHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 08:56:47 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:52786 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbfJSM4r (ORCPT
+        Sat, 19 Oct 2019 09:07:40 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34878 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbfJSNHj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 08:56:47 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9JCmho8063860;
-        Sat, 19 Oct 2019 12:56:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2019-08-05;
- bh=aYLRWpfL1Vz6cb5bmcY4y8jfwnHj32sBl0+aCwtNA40=;
- b=AsUELhBF0y0oGgyt1hNjcpO5YKOcikvCFt6Jj9NNBuYR3AC4w7FlC2wOMZK2XqAP0+T5
- bc0nvlSXOTXHNwyfcakSO4Hy+xz8hHTzEmMh3wDRhVMS1mC7CZIiiMVBTitun77FbDs/
- yeZgOTu6Gi2eFSrZf/OcPjhMLlozbvF9HI9JRl3rm0tHDO8FwA9fJfshl5P2IQalY09m
- HyZc8oJSJTNkJ95I/sZ3tszlPpeh1avoxrPkOGOstLvWu6R9CP2WhXCx0hE5syuDwhoY
- hvEAPB4AppY3IC9WI/VOj8j4yuLuB0BIl6O1R1Q79RsIWxEZ6VQnlv9TpzaBEa6BvGT8 nw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2vqu4q8xxa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 19 Oct 2019 12:56:21 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9JCnAUt024498;
-        Sat, 19 Oct 2019 12:56:21 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2vqqmhmjb1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 19 Oct 2019 12:56:20 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9JCuCtB002409;
-        Sat, 19 Oct 2019 12:56:13 GMT
-Received: from dhcp-10-175-221-34.vpn.oracle.com (/10.175.221.34)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 19 Oct 2019 12:56:12 +0000
-Date:   Sat, 19 Oct 2019 13:56:01 +0100 (BST)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@dhcp-10-175-221-34.vpn.oracle.com
-To:     Luis Chamberlain <mcgrof@kernel.org>
-cc:     Brendan Higgins <brendanhiggins@google.com>,
-        Matthias Maennich <maennich@google.com>, shuah@kernel.org,
-        john.johansen@canonical.com, jmorris@namei.org, serge@hallyn.com,
-        keescook@chromium.org, alan.maguire@oracle.com, yzaikin@google.com,
-        davidgow@google.com, tytso@mit.edu, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kselftest@vger.kernel.org,
-        Mike Salvatore <mike.salvatore@canonical.com>
-Subject: Re: [PATCH linux-kselftest/test v1] apparmor: add AppArmor KUnit
- tests for policy unpack
-In-Reply-To: <20191018122949.GD11244@42.do-not-panic.com>
-Message-ID: <alpine.LRH.2.20.1910191348280.11804@dhcp-10-175-221-34.vpn.oracle.com>
-References: <20191018001816.94460-1-brendanhiggins@google.com> <20191018122949.GD11244@42.do-not-panic.com>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+        Sat, 19 Oct 2019 09:07:39 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 205so5546723pfw.2;
+        Sat, 19 Oct 2019 06:07:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OXt3/b6OC4Z7HRZ9VLAnHYXWYrRq0AR98MVlOlUAeUg=;
+        b=J+Az/r8IT1XKl0+ikMjDtZgB02dwdvZDUwWXsbKrQaWpnha3ej8x8ZU/rJoU8Qm+Z+
+         mSyA1+EP549KnXf6I1zGsgCO0KAPSjafZYVv+Wp8r3TIr7vx8NWYwA7dkCfz92apRun4
+         iKuSj6IJDgC0aSjNrTBux3Jtr6YEi4M239Hi+y6f4PdlJh/RSysFEt4x15o5UhYd6U/Q
+         HRRbO6bqfBQ2avJYJDKl5kEJfbQh1XkZuf1NdBG8CtpAHIPw2/7FUC8c2ckpwKcoyKVv
+         9VtLXu9KSsUfb5FSu9ob8DNeeuiJwWu1aDUCbQFjK8iAIzmnBwAm2h5anZzdVBOsikZq
+         cczA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OXt3/b6OC4Z7HRZ9VLAnHYXWYrRq0AR98MVlOlUAeUg=;
+        b=XyzkhcHhhQrvzxyLF2xWxjlgJ6Wb7rreHi65jT/FKQZwe+xPEff3kHqoVOVrnP6L1E
+         KFqoDxfVAOADudZpo8TzCz4Yosw4IskrO2sm1Q/yw8P6d6fGClNo+1mj+rJulw4Dwvp0
+         KFxLAkLlthJqikrYHJsducwsgnOVIkZvZcQBy/Wjbey5ulQEEBjhygiTTei8j/kLiIdz
+         LH53053btoY9r6z4gAVQfbV2Qx18KsH9JVqMSdZ6bowHBxJMhToCve+SbDh30s3Yx7iH
+         N+o4O20YME/auq6/aN2towXsPJT8kCeqtbQYlQKqlVf+T9wSSx4smrDtJwR+mqc+trFt
+         vifg==
+X-Gm-Message-State: APjAAAVTdQ7nXyi7iMvO2/0UpjC1nddXb66MMWZK4IV0EmTFV8NnVq26
+        cM9wGmkHQJDwy788uFEPcx8=
+X-Google-Smtp-Source: APXvYqz6fJOLOE0C2jNhhzo+7YrOJinDxiDJ9c3SZ/cvhGhX8n2nGHOlRUCQH/AA6b+NCx1aYVYE4Q==
+X-Received: by 2002:a17:90a:a00c:: with SMTP id q12mr17283753pjp.102.1571490458652;
+        Sat, 19 Oct 2019 06:07:38 -0700 (PDT)
+Received: from Gentoo.localdomain ([103.231.90.170])
+        by smtp.gmail.com with ESMTPSA id v35sm11851012pgn.89.2019.10.19.06.07.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 19 Oct 2019 06:07:37 -0700 (PDT)
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     yamada.masahiro@socionext.com, michal.lkml@markovi.net
+Cc:     rdunlap@infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bfields@fieldses.org,
+        Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Subject: [PATCH] scripts: prune-kernel : prune kernels generalized way
+Date:   Sat, 19 Oct 2019 18:37:22 +0530
+Message-Id: <20191019130722.8067-1-unixbhaskar@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9414 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=887
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910190118
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9414 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910190118
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 18 Oct 2019, Luis Chamberlain wrote:
+This patch will remove old kernel from the system in a selective way.
 
-> On Thu, Oct 17, 2019 at 05:18:16PM -0700, Brendan Higgins wrote:
-> > From: Mike Salvatore <mike.salvatore@canonical.com>
-> > 
-> > In order to write the tests against the policy unpacking code, some
-> > static functions needed to be exposed for testing purposes. One of the
-> > goals of this patch is to establish a pattern for which testing these
-> > kinds of functions should be done in the future.
-> 
-> And you'd run into the same situation expressed elsewhere with kunit of
-> an issue of the kunit test as built-in working but if built as a module
-> then it would not work, given the lack of exports. Symbols namespaces
-> should resolve this [0], and we'd be careful where a driver imports this
-> namespace.
-> 
-> [0] https://lwn.net/Articles/798254/
->
+Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+---
+ scripts/prune-kernel | 86 ++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 72 insertions(+), 14 deletions(-)
 
-Thanks for the link! Looks interesting for us definitely!
+diff --git a/scripts/prune-kernel b/scripts/prune-kernel
+index e8aa940bc0a9..9d839a4e4539 100755
+--- a/scripts/prune-kernel
++++ b/scripts/prune-kernel
+@@ -5,17 +5,75 @@
+ # again, /boot and /lib/modules/ eventually fill up.
+ # Dumb script to purge that stuff:
 
-WRT adding tests, I think what we're aiming at is a set of best practices 
-to advise test developers using KUnit, while attempting to minimize 
-side-effects of any changes we need to make to support testability.
+-for f in "$@"
+-do
+-        if rpm -qf "/lib/modules/$f" >/dev/null; then
+-                echo "keeping $f (installed from rpm)"
+-        elif [ $(uname -r) = "$f" ]; then
+-                echo "keeping $f (running kernel) "
+-        else
+-                echo "removing $f"
+-                rm -f "/boot/initramfs-$f.img" "/boot/System.map-$f"
+-                rm -f "/boot/vmlinuz-$f"   "/boot/config-$f"
+-                rm -rf "/lib/modules/$f"
+-                new-kernel-pkg --remove $f
+-        fi
+-done
++#for f in "$@"
++#do
++#       if rpm -qf "/lib/modules/$f" >/dev/null; then
++#                echo "keeping $f (installed from rpm)"
++#        elif [ $(uname -r) = "$f" ]; then
++#                echo "keeping $f (running kernel) "
++#        else
++#                echo "removing $f"
++#                rm -f "/boot/initramfs-$f.img" "/boot/System.map-$f"
++#                rm -f "/boot/vmlinuz-$f"   "/boot/config-$f"
++#                rm -rf "/lib/modules/$f"
++#                new-kernel-pkg --remove $f
++#       fi
++#done
++boot_dir=/boot
++modules_dir=/lib/modules
++
++function remove_old_kernel(){
++	cd $boot_dir
++	rm -If vmlinuz-$kernel_version System.map-$kernel_version config-$kernel_version
++}
++
++function remove_old_modules_dir(){
++	cd $modules_dir
++	rm -rf $modules_version
++}
++
++printf "\n\n Enlist the installed kernels \n\n"
++
++
++find $boot_dir -name "vmlinuz-*" -type f -exec ls -1 {} \;
++
++printf "\n\n\n Please give the kernel version to remove: %s"
++read kernel_version
++
++if [[ $kernel_version == "" ]];then
++	exit 1
++else
++	remove_old_kernel
++fi
++
++printf "\n\n Enlist the installed modules directory \n\n"
++
++find $modules_dir -maxdepth 0 -type d -exec ls -1 {} \;
++
++printf "\n\n Please give the full modules directory name to remove: %s"
++read modules_version
++
++if [[ $modules_version == "" ]];then
++	printf "You have forgotten to give the modules dir to remove"
++else
++	remove_old_modules_dir
++fi
++
++printf "\n\n\n Removed kernel version:$kernel_version and associated modules:$modules_version ...Done \n"
++
++while :
++ do
++    printf "\n\n Do you want to remove another?[YN]: %s"
++    read response
++       if [[ $response == "Y" ]];then
++	 printf "Please give another version to remove: %s"
++	 read kernel_version
++	 remove_old_kernel
++	 printf "Please give the full modules directory name to remove: %s"
++	 read modules_version
++	 remove_old_modules_dir
++	 printf "\n\n\n Removed kernel version:$kernel_version and associated modules:$modules_version ..Done \n\n"
++      elif [[ $response == "N" ]];then
++	 exit 1
++    fi
++ done
+--
+2.21.0
 
-One aspect of this we probably have to consider is inlining of code. For 
-cases like this where the functions are small and are called in a small 
-number of cases, any testability changes we make may push a 
-previously-inlined function to not be inlined, with potential performance 
-side-effects for the subsystem.  In such cases, I wonder if the right 
-answer would be to suggest actually defining the functions as 
-inline in the header file? That way the compiler still gets to decide (as 
-opposed to __always_inline), and we don't perturb performance too much.
-
-Thanks!
-
-Alan
-
->   Luis
-> 
