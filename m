@@ -4,38 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C51CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 08:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DF4CA9EAC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 08:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 802B5222C5
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 08:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0461B222C2
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 08:03:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbfJSIDb (ORCPT
+        id S1728048AbfJSID3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 04:03:31 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:33896 "EHLO huawei.com"
+        Sat, 19 Oct 2019 04:03:29 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:33752 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727994AbfJSIDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 04:03:30 -0400
+        id S1727020AbfJSID2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 19 Oct 2019 04:03:28 -0400
 Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E6B6AFFBB50D7F4584B9;
+        by Forcepoint Email with ESMTP id CF36BB28670C8405D61D;
         Sat, 19 Oct 2019 16:03:25 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 19 Oct 2019 16:03:15 +0800
+ 14.3.439.0; Sat, 19 Oct 2019 16:03:17 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
-        Guojia Liao <liaoguojia@huawei.com>,
-        "Huazhong Tan" <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 2/8] net: hns3: optimized MAC address in management table.
-Date:   Sat, 19 Oct 2019 16:03:50 +0800
-Message-ID: <1571472236-17401-3-git-send-email-tanhuazhong@huawei.com>
+        Yunsheng Lin <linyunsheng@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 7/8] net: hns3: do not allocate linear data for fraglist skb
+Date:   Sat, 19 Oct 2019 16:03:55 +0800
+Message-ID: <1571472236-17401-8-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1571472236-17401-1-git-send-email-tanhuazhong@huawei.com>
 References: <1571472236-17401-1-git-send-email-tanhuazhong@huawei.com>
@@ -48,56 +47,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guojia Liao <liaoguojia@huawei.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-mac_addr_hi32 and mac_addr_lo16 are used to store the MAC address
-for management table. But using array of mac_addr[ETH_ALEN] would
-be more general and not need to care about the big-endian mode of
-the CPU.
+Currently, napi_alloc_skb() is used to allocate skb for fraglist
+when the head skb is not enough to hold the remaining data, and
+the remaining data is added to the frags part of the fraglist skb,
+leaving the linear part unused.
 
-Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
+So this patch passes length of 0 to allocate fraglist skb with
+zero size of linear data.
+
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h  | 4 ++--
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 3 +--
- 2 files changed, 3 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-index 3578832..919911f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-@@ -5,6 +5,7 @@
- #define __HCLGE_CMD_H
- #include <linux/types.h>
- #include <linux/io.h>
-+#include <linux/etherdevice.h>
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 1c5e0d2..0fdd684 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -2863,8 +2863,7 @@ static int hns3_add_frag(struct hns3_enet_ring *ring, struct hns3_desc *desc,
+ 			return -ENXIO;
  
- #define HCLGE_CMDQ_TX_TIMEOUT		30000
- 
-@@ -712,8 +713,7 @@ struct hclge_mac_mgr_tbl_entry_cmd {
- 	u8      flags;
- 	u8      resp_code;
- 	__le16  vlan_tag;
--	__le32  mac_addr_hi32;
--	__le16  mac_addr_lo16;
-+	u8      mac_addr[ETH_ALEN];
- 	__le16  rsv1;
- 	__le16  ethter_type;
- 	__le16  egress_port;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 8a3a4fd..ffdb8ce 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -325,8 +325,7 @@ static const struct hclge_mac_mgr_tbl_entry_cmd hclge_mgr_table[] = {
- 	{
- 		.flags = HCLGE_MAC_MGR_MASK_VLAN_B,
- 		.ethter_type = cpu_to_le16(ETH_P_LLDP),
--		.mac_addr_hi32 = cpu_to_le32(htonl(0x0180C200)),
--		.mac_addr_lo16 = cpu_to_le16(htons(0x000E)),
-+		.mac_addr = {0x01, 0x80, 0xc2, 0x00, 0x00, 0x0e},
- 		.i_port_bitmap = 0x1,
- 	},
- };
+ 		if (unlikely(ring->frag_num >= MAX_SKB_FRAGS)) {
+-			new_skb = napi_alloc_skb(&ring->tqp_vector->napi,
+-						 HNS3_RX_HEAD_SIZE);
++			new_skb = napi_alloc_skb(&ring->tqp_vector->napi, 0);
+ 			if (unlikely(!new_skb)) {
+ 				hns3_rl_err(ring_to_netdev(ring),
+ 					    "alloc rx fraglist skb fail\n");
 -- 
 2.7.4
 
