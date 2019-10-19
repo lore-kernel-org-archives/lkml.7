@@ -2,169 +2,275 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C40F2CA9EAC
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 16:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 717E3CA9EAC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 16:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99FDB20869
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 16:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DDD720869
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 16:05:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xldzWlYe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbfJSQBn (ORCPT
+        id S1726106AbfJSQFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 12:01:43 -0400
-Received: from fieldses.org ([173.255.197.46]:39520 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725924AbfJSQBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 12:01:43 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 5DF6A1C95; Sat, 19 Oct 2019 12:01:42 -0400 (EDT)
-Date:   Sat, 19 Oct 2019 12:01:42 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Cc:     yamada.masahiro@socionext.com, michal.lkml@markovi.net,
-        rdunlap@infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scripts: prune-kernel : prune kernels generalized way
-Message-ID: <20191019160142.GA31839@fieldses.org>
-References: <20191019130722.8067-1-unixbhaskar@gmail.com>
+        Sat, 19 Oct 2019 12:05:21 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45384 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725924AbfJSQFV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 19 Oct 2019 12:05:21 -0400
+Received: by mail-pl1-f196.google.com with SMTP id y24so408937plr.12
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 09:05:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=if4J4OgwfiN0nuHNDveKFrieOk+JvNfoIIbUEv3+cXc=;
+        b=xldzWlYehnsHSzax+Grwy/OCfGyxfdF8CbYr7b5ajVBIXZjHn6/qNlENK/bDIMTjOv
+         cbURxz6Jm1NBffNfDppnKGHp+ZYngR70NwwOXubKE028F4xXO+Yl76sPnermpnzdFFzc
+         VAixnrTLSu+hOsxu26ni+2ZUnna9z1JbPN1jCb/0i6C/kS835njSSP2H92Z7qewxkOre
+         mJB2vZ8lzOxEz/5t6fLjK8z98+1taapj+2e+z8+sLIYw+/VxQiu6Za/Z9wOXLbQsLblp
+         gWnybt9VK1UdBx3eHz7x0iV0qsEhsFN2pU/pys2rACoNFcT8MluntRujrQjYkDIISG25
+         i3yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=if4J4OgwfiN0nuHNDveKFrieOk+JvNfoIIbUEv3+cXc=;
+        b=rN9yIucF+oCFHPkr1BUhcPFGcAhh6wMgtnbW990Qg4/a0xXNS6x0qnHSU/tLsn8UoH
+         luuvG8sUWEhTVdy3pbvsCtYbIXZOxTBwfB3Et3qmuLkZk8FeznbxOH47t9A06AtgTo1a
+         dIbmu3E6qIygXtAMm6kVZN1brWk2Kq6PkScmqTviaJ+joyteqIQNWn5MsY6xxfbbeJaK
+         b790bHb3BG5GILei2NRKVij6khwKyoDOyfo8W62r1IkjKFtfSX6IQWU+ZrP7CNitbPgl
+         cGCnIZBZOg5JiAqvhabmKbtBE7Q90hIGsAEAj59zN3w3FZIKp5IzRAOkZ1+H949TqwMC
+         c+vQ==
+X-Gm-Message-State: APjAAAU67It4n5niVv4dHf/qwM9Yj2ohdSTsJC5Hgx3s3W6cjpyf2cvG
+        kcd0DPh16VBN0hk39xJ+oRqx
+X-Google-Smtp-Source: APXvYqzxTyoVM/nCPhOi4590sHGLCt9a7zfWKZa1YFUHhDMOloiiBNQLsoPqoinoRGsW+JQAVUD7gg==
+X-Received: by 2002:a17:902:aa41:: with SMTP id c1mr10283530plr.153.1571501119997;
+        Sat, 19 Oct 2019 09:05:19 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:1f:c4d3:81c6:faf1:b3a2:6750])
+        by smtp.gmail.com with ESMTPSA id m19sm8557620pjl.28.2019.10.19.09.05.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 19 Oct 2019 09:05:19 -0700 (PDT)
+Date:   Sat, 19 Oct 2019 21:35:13 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-unisoc@lists.infradead.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>
+Subject: Re: [PATCH v2 3/4] gpio: Add RDA Micro GPIO controller support
+Message-ID: <20191019160513.GA17631@Mani-XPS-13-9360>
+References: <20191015173026.9962-1-manivannan.sadhasivam@linaro.org>
+ <20191015173026.9962-4-manivannan.sadhasivam@linaro.org>
+ <CACRpkdZRY138RAf8N2xGam89r66ik2vW44OZx0bDcCt4P2GBLA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191019130722.8067-1-unixbhaskar@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <CACRpkdZRY138RAf8N2xGam89r66ik2vW44OZx0bDcCt4P2GBLA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 19, 2019 at 06:37:22PM +0530, Bhaskar Chowdhury wrote:
-> This patch will remove old kernel from the system in a selective way.
+Hi Linus,
 
-Please don't comment out code, just delete it, git's there to keep the
-old code.
+Thanks for the review! Please see comments inline.
 
-There's some redundant code that should be inside a loop.
-
-A little more detail in the changelog might be useful to those of us who
-are lazy about reading bash script....
-
-Looks like this just prompts for each individual delete?  Actually it
-looks like it requires the user to enter the module path and kernel
-version for each one which makes it not much more convenient use than a
-bare "ls" and "rm".
-
-I personally use this in unattended scripts.  I mean, I don't really
-care what we do with this, as I use my own copy of the script, so
-whatever's useful to more people is fine.
-
-But if somebody does actually use it as-is, it'd be nicer to keep the
-current behavior and add an option ("-i" or something) for the
-interactive behavior.
-
---b.
-
+On Wed, Oct 16, 2019 at 02:41:32PM +0200, Linus Walleij wrote:
+> Hi Manivannan!
 > 
-> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-> ---
->  scripts/prune-kernel | 86 ++++++++++++++++++++++++++++++++++++--------
->  1 file changed, 72 insertions(+), 14 deletions(-)
+> Thanks for your patch!
 > 
-> diff --git a/scripts/prune-kernel b/scripts/prune-kernel
-> index e8aa940bc0a9..9d839a4e4539 100755
-> --- a/scripts/prune-kernel
-> +++ b/scripts/prune-kernel
-> @@ -5,17 +5,75 @@
->  # again, /boot and /lib/modules/ eventually fill up.
->  # Dumb script to purge that stuff:
+> On Tue, Oct 15, 2019 at 7:30 PM Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
 > 
-> -for f in "$@"
-> -do
-> -        if rpm -qf "/lib/modules/$f" >/dev/null; then
-> -                echo "keeping $f (installed from rpm)"
-> -        elif [ $(uname -r) = "$f" ]; then
-> -                echo "keeping $f (running kernel) "
-> -        else
-> -                echo "removing $f"
-> -                rm -f "/boot/initramfs-$f.img" "/boot/System.map-$f"
-> -                rm -f "/boot/vmlinuz-$f"   "/boot/config-$f"
-> -                rm -rf "/lib/modules/$f"
-> -                new-kernel-pkg --remove $f
-> -        fi
-> -done
-> +#for f in "$@"
-> +#do
-> +#       if rpm -qf "/lib/modules/$f" >/dev/null; then
-> +#                echo "keeping $f (installed from rpm)"
-> +#        elif [ $(uname -r) = "$f" ]; then
-> +#                echo "keeping $f (running kernel) "
-> +#        else
-> +#                echo "removing $f"
-> +#                rm -f "/boot/initramfs-$f.img" "/boot/System.map-$f"
-> +#                rm -f "/boot/vmlinuz-$f"   "/boot/config-$f"
-> +#                rm -rf "/lib/modules/$f"
-> +#                new-kernel-pkg --remove $f
-> +#       fi
-> +#done
-> +boot_dir=/boot
-> +modules_dir=/lib/modules
-> +
-> +function remove_old_kernel(){
-> +	cd $boot_dir
-> +	rm -If vmlinuz-$kernel_version System.map-$kernel_version config-$kernel_version
-> +}
-> +
-> +function remove_old_modules_dir(){
-> +	cd $modules_dir
-> +	rm -rf $modules_version
-> +}
-> +
-> +printf "\n\n Enlist the installed kernels \n\n"
-> +
-> +
-> +find $boot_dir -name "vmlinuz-*" -type f -exec ls -1 {} \;
-> +
-> +printf "\n\n\n Please give the kernel version to remove: %s"
-> +read kernel_version
-> +
-> +if [[ $kernel_version == "" ]];then
-> +	exit 1
-> +else
-> +	remove_old_kernel
-> +fi
-> +
-> +printf "\n\n Enlist the installed modules directory \n\n"
-> +
-> +find $modules_dir -maxdepth 0 -type d -exec ls -1 {} \;
-> +
-> +printf "\n\n Please give the full modules directory name to remove: %s"
-> +read modules_version
-> +
-> +if [[ $modules_version == "" ]];then
-> +	printf "You have forgotten to give the modules dir to remove"
-> +else
-> +	remove_old_modules_dir
-> +fi
-> +
-> +printf "\n\n\n Removed kernel version:$kernel_version and associated modules:$modules_version ...Done \n"
-> +
-> +while :
-> + do
-> +    printf "\n\n Do you want to remove another?[YN]: %s"
-> +    read response
-> +       if [[ $response == "Y" ]];then
-> +	 printf "Please give another version to remove: %s"
-> +	 read kernel_version
-> +	 remove_old_kernel
-> +	 printf "Please give the full modules directory name to remove: %s"
-> +	 read modules_version
-> +	 remove_old_modules_dir
-> +	 printf "\n\n\n Removed kernel version:$kernel_version and associated modules:$modules_version ..Done \n\n"
-> +      elif [[ $response == "N" ]];then
-> +	 exit 1
-> +    fi
-> + done
-> --
-> 2.21.0
+> > Add support for GPIO controller from RDA Micro.
+> >
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> Please use a little bit more verbose commit message, who
+> made this hardware and what is it for. If you know!
+> 
+
+okay.
+
+> > +config GPIO_RDA
+> > +       bool "RDA Micro GPIO controller support"
+> > +       depends on ARCH_RDA || COMPILE_TEST
+> > +       depends on OF_GPIO
+> > +       select GPIOLIB_IRQCHIP
+> 
+> select GPIO_GENERIC
+> 
+
+hmm.. I don't think this driver can use it. Please see the justification
+below.
+
+> > +#include <linux/bitops.h>
+> 
+> Do you need this or just <linux/bits.h>?
+> 
+
+I need this for for_each_set_bit() macro.
+
+> > +#define RDA_GPIO_OEN_VAL               0x00
+> > +#define RDA_GPIO_OEN_SET_OUT           0x04
+> > +#define RDA_GPIO_OEN_SET_IN            0x08
+> > +#define RDA_GPIO_VAL                   0x0c
+> > +#define RDA_GPIO_SET                   0x10
+> > +#define RDA_GPIO_CLR                   0x14
+> > +#define RDA_GPIO_INT_CTRL_SET          0x18
+> > +#define RDA_GPIO_INT_CTRL_CLR          0x1c
+> > +#define RDA_GPIO_INT_CLR               0x20
+> > +#define RDA_GPIO_INT_STATUS            0x24
+> 
+> This is a very clear cut MMIO GPIO so use GPIO_GENERIC with this
+> hardware.
+> 
+
+So, I'd be happy to use gpio-mmio driver if applicable. In fact, I looked into
+that while starting to write this driver since most of the `set*` APIs are
+like dups. But one thing which blocked me was, `gpio_get` API.
+
+As you can see in this driver, there are 2 separate registers needs to be
+read in order to get the value. RDA_GPIO_VAL needs to be read when the pin
+is in input state and RDA_GPIO_SET needs to be read when the pin is in output
+state.
+
+The MMIO driver relies on a single `dat` register to read the GPIO state and
+this won't fit for this driver and hence my justification for not using it.
+
+> > +static void rda_gpio_update(struct gpio_chip *chip, unsigned int offset,
+> > +                           u16 reg, int val)
+> 
+> Maybe keep this if it saves code from the IRQ callbacks,
+> inline it to register writes if it doesn't get called much.
+> 
+
+It is being called from multiple places, so I'd like to keep it as a normal
+function.
+
+> > +static int rda_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
+> > +static int rda_gpio_direction_output(struct gpio_chip *chip,
+> > +                                    unsigned int offset, int value)
+> > +static int rda_gpio_get(struct gpio_chip *chip, unsigned int offset)
+> > +static void rda_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
+> 
+> This can all be replaces by select GPIO_GENERIC and passing
+> the right offsets into bgpio_init(). Look at for example
+> gpio-ftgpio010.c and the documentation for bgpio_init()
+> in gpio-mmio.c for help.
+> 
+> This will also implement get/set_multiple for you for
+> free!
+> 
+> > +static void rda_gpio_irq_mask(struct irq_data *data)
+> > +static void rda_gpio_irq_ack(struct irq_data *data)
+> 
+> Looks good
+> 
+> > +static int rda_gpio_set_irq(struct gpio_chip *chip, u32 offset,
+> > +                           unsigned int flow_type)
+> 
+> Maybe _setup_irq()? Not sure, just that the name doesn't
+> obviously imply how it is used as it is called from two
+> places.
+> 
+
+Well, this routine sets the irq_type. But it has multiple usecase.
+Like, it is being used to unmask as irq and also to set irq type.
+So to be in a equillibrium state, I went for rda_gpio_set_irq().
+
+> The rest of the IRQ code looks good!
+> 
+> > +static int rda_gpio_probe(struct platform_device *pdev)
+> > +{
+> > +       struct device_node *np = pdev->dev.of_node;
+> > +       struct gpio_irq_chip *irq_chip;
+> 
+> Since irq_chip is the name of a struct in the kernel I usually
+> just call this "girq" as in "GPIO irq chip".
+> 
+
+Ah, a name change again... will do ;-)
+
+> > +       struct rda_gpio *rda_gpio;
+> > +       u32 ngpios;
+> > +       int ret;
+> 
+> Create a struct device *dev = &pdev->dev; helper variable
+> to make the following code easier to read. (The pointer
+> &pdev->dev is used in many places...)
+> 
+
+okay.
+
+> > +       /*
+> > +        * Not all ports have interrupt capability. For instance, on
+> > +        * RDA8810PL, GPIOC doesn't support interrupt. So we must handle
+> > +        * those also.
+> > +        */
+> > +       rda_gpio->irq = platform_get_irq(pdev, 0);
+> > +
+> > +       rda_gpio->base = devm_platform_ioremap_resource(pdev, 0);
+> > +       if (IS_ERR(rda_gpio->base))
+> > +               return PTR_ERR(rda_gpio->base);
+> > +
+> > +       spin_lock_init(&rda_gpio->lock);
+> > +
+> > +       rda_gpio->chip.label = dev_name(&pdev->dev);
+> > +       rda_gpio->chip.ngpio = ngpios;
+> > +       rda_gpio->chip.base = -1;
+> > +       rda_gpio->chip.parent = &pdev->dev;
+> > +       rda_gpio->chip.of_node = np;
+> > +       rda_gpio->chip.get = rda_gpio_get;
+> > +       rda_gpio->chip.set = rda_gpio_set;
+> > +       rda_gpio->chip.direction_input = rda_gpio_direction_input;
+> > +       rda_gpio->chip.direction_output = rda_gpio_direction_output;
+> > +
+> > +       if (rda_gpio->irq >= 0) {
+> > +               rda_gpio->irq_chip.name = "rda-gpio",
+> > +               rda_gpio->irq_chip.irq_ack = rda_gpio_irq_ack,
+> > +               rda_gpio->irq_chip.irq_mask = rda_gpio_irq_mask,
+> > +               rda_gpio->irq_chip.irq_unmask = rda_gpio_irq_unmask,
+> > +               rda_gpio->irq_chip.irq_set_type = rda_gpio_irq_set_type,
+> > +               rda_gpio->irq_chip.flags = IRQCHIP_SKIP_SET_WAKE,
+> > +
+> > +               irq_chip = &rda_gpio->chip.irq;
+> > +               irq_chip->chip = &rda_gpio->irq_chip;
+> > +               irq_chip->handler = handle_bad_irq;
+> > +               irq_chip->default_type = IRQ_TYPE_NONE;
+> > +               irq_chip->parent_handler = rda_gpio_irq_handler;
+> > +               irq_chip->parent_handler_data = rda_gpio;
+> > +               irq_chip->num_parents = 1;
+> > +               irq_chip->parents = &rda_gpio->irq;
+> 
+> That works but ... please devm_kzalloc() like the other drivers
+> do:
+> 
+> girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
+>                                      GFP_KERNEL);
+>         if (!girq->parents) {
+>                 ret = -ENOMEM;
+> (...)
+> 
+> Unless you have a real good reason to optimize it. I just
+> want it to follow the pattern since I want to minimize
+> cognitive stress for the maintainers. (Me.)
+> 
+
+no issues for me, will do.
+
+Thanks,
+Mani
+
+> Yours,
+> Linus Walleij
