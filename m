@@ -2,110 +2,111 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD85CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 18:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C849CA9EAC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 18:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8F83222BD
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 18:36:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571510211;
-	bh=g5tXeNOPML2mI9NqUPxPA2wgk1bWP2HdlmqAKHK8u58=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j6ThZ75BvjEmmotz71nXcLxl6bfbeZsKnaKsK9bT0vHn6zLzyVOsvNkkYHB8sJzxO
-	 lPrYXxOpMkjg4GRS21wZ++qppOSG1SFJspxSG5gUxyDUpZb8QgIb5t2trDwhC4nmP+
-	 cM3YOXsdyjmZETeZN6iTHCROjax6k082XHZ67uz4=
+	by mail.kernel.org (Postfix) with ESMTP id 1E008222BD
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 18:41:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="INxsEi6i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbfJSSgr (ORCPT
+        id S1726383AbfJSSlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 14:36:47 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42838 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfJSSgr (ORCPT
+        Sat, 19 Oct 2019 14:41:51 -0400
+Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.124]:11081 "EHLO
+        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbfJSSlu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 14:36:47 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q12so5811858pff.9;
-        Sat, 19 Oct 2019 11:36:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=diC5OhcgPAQon4MoTk8oBGJIDhBSL5N3IWATCx4/9pA=;
-        b=fPzpyISqGRrzhG3UjcuuoLYaIWtp+frAaLeP6a6dfGgX/cLKXk+T9NFIDUtYY8oPGG
-         4KYgmWPdyz5bbiBKd0DnLXt1lVV02TSCMB/oGkGKqBl1BcoAQ13vKI3Mh3j1nwwUcLSR
-         w0ciXPA6NjD5BbhhT2B5pHfd9iAySV0pbzPut53QAPVKvIafm+B6odLaeMzb8qd9ZQ+b
-         hI/7pmc/NdMRZpioE30XcpiaGGGQxunwG6ZjH01FIo6xRQoSFL5gXwoa+DAeYS3m0xx/
-         L8u9i0KTn2vTAHbRz/bsLlfJMT+tp9hkHpQtE7T/s3NZ6g9rO0o9QxjezZntUHgC5Rwq
-         M5zw==
-X-Gm-Message-State: APjAAAXxbk1au8JZEnFgCwO5OJwP27r9DQX7fV4mc8NKB/eJ0xM+lMgX
-        0TTRJHXV0jR3vWNCcmpPFL4=
-X-Google-Smtp-Source: APXvYqzcpP34+frn1/CdUknue2M5Tq2aDYuthXzjQKvIYfvhH7DL4POvzlf4Nw6JCIodII+YDGkI6Q==
-X-Received: by 2002:a63:1e04:: with SMTP id e4mr16626950pge.4.1571510205979;
-        Sat, 19 Oct 2019 11:36:45 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id e192sm10404393pfh.83.2019.10.19.11.36.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Oct 2019 11:36:44 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 8F7D440256; Sat, 19 Oct 2019 18:36:43 +0000 (UTC)
-Date:   Sat, 19 Oct 2019 18:36:43 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        Matthias Maennich <maennich@google.com>, shuah@kernel.org,
-        john.johansen@canonical.com, jmorris@namei.org, serge@hallyn.com,
-        keescook@chromium.org, yzaikin@google.com, davidgow@google.com,
-        tytso@mit.edu, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kselftest@vger.kernel.org,
-        Mike Salvatore <mike.salvatore@canonical.com>
-Subject: Re: [PATCH linux-kselftest/test v1] apparmor: add AppArmor KUnit
- tests for policy unpack
-Message-ID: <20191019183643.GG11244@42.do-not-panic.com>
-References: <20191018001816.94460-1-brendanhiggins@google.com>
- <20191018122949.GD11244@42.do-not-panic.com>
- <alpine.LRH.2.20.1910191348280.11804@dhcp-10-175-221-34.vpn.oracle.com>
+        Sat, 19 Oct 2019 14:41:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571510508;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=m5FFZdsdBCqqg1hmXc2h2EqcsFELI7K5BJyc80+siFs=;
+        b=INxsEi6iU3Mm6GQAZ5Aguf97myydAd51gUmLrzjxCrjS7V0gMDdvC+vFH0X9J4+ofi
+        zefVz056kZSByXOJi/YFY/pcydIbTHIQYk9Guy0CJoEXo1lglCsQceKlSPyJBUgEr642
+        l505Ogx4K9ohlj5RcFU9ySFr6oL3h2OJRp11BQMeL9bQ56MA6yKU5N76vgBtcd+lCRyP
+        NHkIRHhKGg/YynMUFTMQYSiBWbvWCJi83tGzKMVy82mTIyvdAirFXlcvRas8PZhGlFqV
+        OHDznFx/j0dB+8AUncVnU0u4SxZ9aWFXdOqJXnTollgpUbQBOsqnr8gwmJp/m7Fj5eHQ
+        D//A==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pAyXkHTz8="
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
+        with ESMTPSA id R0b2a8v9JIfbFMV
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Sat, 19 Oct 2019 20:41:37 +0200 (CEST)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        David Sterba <dsterba@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, stable@vger.kernel.org
+Subject: [PATCH v2 10/11] net: wireless: ti: wl1251 use new SDIO_VENDOR_ID_TI_WL1251 definition
+Date:   Sat, 19 Oct 2019 20:41:25 +0200
+Message-Id: <e6624c904e767924911068c2c169d078eae35839.1571510481.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <cover.1571510481.git.hns@goldelico.com>
+References: <cover.1571510481.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.20.1910191348280.11804@dhcp-10-175-221-34.vpn.oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 19, 2019 at 01:56:01PM +0100, Alan Maguire wrote:
-> On Fri, 18 Oct 2019, Luis Chamberlain wrote:
-> 
-> > On Thu, Oct 17, 2019 at 05:18:16PM -0700, Brendan Higgins wrote:
-> > > From: Mike Salvatore <mike.salvatore@canonical.com>
-> > > 
-> > > In order to write the tests against the policy unpacking code, some
-> > > static functions needed to be exposed for testing purposes. One of the
-> > > goals of this patch is to establish a pattern for which testing these
-> > > kinds of functions should be done in the future.
-> > 
-> > And you'd run into the same situation expressed elsewhere with kunit of
-> > an issue of the kunit test as built-in working but if built as a module
-> > then it would not work, given the lack of exports. Symbols namespaces
-> > should resolve this [0], and we'd be careful where a driver imports this
-> > namespace.
-> > 
-> > [0] https://lwn.net/Articles/798254/
-> >
-> 
-> Thanks for the link! Looks interesting for us definitely!
-> 
-> WRT adding tests, I think what we're aiming at is a set of best practices 
-> to advise test developers using KUnit, while attempting to minimize 
-> side-effects of any changes we need to make to support testability.
-> 
-> One aspect of this we probably have to consider is inlining of code. 
+SDIO_VENDOR_ID_TI_WL1251 is now defined in mmc/sdio_ids.h separately
+from SDIO_VENDOR_ID_TI for wl1271.
 
-Sure. Makes sense.
+Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks file")
 
-  Luis
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Acked-by: Kalle Valo <kvalo@codeaurora.org>
+Cc: <stable@vger.kernel.org> # 4.11.0
+---
+ drivers/net/wireless/ti/wl1251/sdio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/ti/wl1251/sdio.c b/drivers/net/wireless/ti/wl1251/sdio.c
+index c54a273713ed..42b55f3a50df 100644
+--- a/drivers/net/wireless/ti/wl1251/sdio.c
++++ b/drivers/net/wireless/ti/wl1251/sdio.c
+@@ -52,7 +52,7 @@ static void wl1251_sdio_interrupt(struct sdio_func *func)
+ }
+ 
+ static const struct sdio_device_id wl1251_devices[] = {
+-	{ SDIO_DEVICE(SDIO_VENDOR_ID_TI, SDIO_DEVICE_ID_TI_WL1251) },
++	{ SDIO_DEVICE(SDIO_VENDOR_ID_TI_WL1251, SDIO_DEVICE_ID_TI_WL1251) },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(sdio, wl1251_devices);
+-- 
+2.19.1
+
