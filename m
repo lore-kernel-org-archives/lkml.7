@@ -2,275 +2,167 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 717E3CA9EAC
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 16:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A790CA9EAC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 16:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DDD720869
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 16:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 229A1222C5
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 16:37:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xldzWlYe"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="oaPHJjyj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726106AbfJSQFV (ORCPT
+        id S1726128AbfJSQgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 12:05:21 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45384 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbfJSQFV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 12:05:21 -0400
-Received: by mail-pl1-f196.google.com with SMTP id y24so408937plr.12
-        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 09:05:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=if4J4OgwfiN0nuHNDveKFrieOk+JvNfoIIbUEv3+cXc=;
-        b=xldzWlYehnsHSzax+Grwy/OCfGyxfdF8CbYr7b5ajVBIXZjHn6/qNlENK/bDIMTjOv
-         cbURxz6Jm1NBffNfDppnKGHp+ZYngR70NwwOXubKE028F4xXO+Yl76sPnermpnzdFFzc
-         VAixnrTLSu+hOsxu26ni+2ZUnna9z1JbPN1jCb/0i6C/kS835njSSP2H92Z7qewxkOre
-         mJB2vZ8lzOxEz/5t6fLjK8z98+1taapj+2e+z8+sLIYw+/VxQiu6Za/Z9wOXLbQsLblp
-         gWnybt9VK1UdBx3eHz7x0iV0qsEhsFN2pU/pys2rACoNFcT8MluntRujrQjYkDIISG25
-         i3yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=if4J4OgwfiN0nuHNDveKFrieOk+JvNfoIIbUEv3+cXc=;
-        b=rN9yIucF+oCFHPkr1BUhcPFGcAhh6wMgtnbW990Qg4/a0xXNS6x0qnHSU/tLsn8UoH
-         luuvG8sUWEhTVdy3pbvsCtYbIXZOxTBwfB3Et3qmuLkZk8FeznbxOH47t9A06AtgTo1a
-         dIbmu3E6qIygXtAMm6kVZN1brWk2Kq6PkScmqTviaJ+joyteqIQNWn5MsY6xxfbbeJaK
-         b790bHb3BG5GILei2NRKVij6khwKyoDOyfo8W62r1IkjKFtfSX6IQWU+ZrP7CNitbPgl
-         cGCnIZBZOg5JiAqvhabmKbtBE7Q90hIGsAEAj59zN3w3FZIKp5IzRAOkZ1+H949TqwMC
-         c+vQ==
-X-Gm-Message-State: APjAAAU67It4n5niVv4dHf/qwM9Yj2ohdSTsJC5Hgx3s3W6cjpyf2cvG
-        kcd0DPh16VBN0hk39xJ+oRqx
-X-Google-Smtp-Source: APXvYqzxTyoVM/nCPhOi4590sHGLCt9a7zfWKZa1YFUHhDMOloiiBNQLsoPqoinoRGsW+JQAVUD7gg==
-X-Received: by 2002:a17:902:aa41:: with SMTP id c1mr10283530plr.153.1571501119997;
-        Sat, 19 Oct 2019 09:05:19 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:1f:c4d3:81c6:faf1:b3a2:6750])
-        by smtp.gmail.com with ESMTPSA id m19sm8557620pjl.28.2019.10.19.09.05.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 19 Oct 2019 09:05:19 -0700 (PDT)
-Date:   Sat, 19 Oct 2019 21:35:13 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-unisoc@lists.infradead.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>
-Subject: Re: [PATCH v2 3/4] gpio: Add RDA Micro GPIO controller support
-Message-ID: <20191019160513.GA17631@Mani-XPS-13-9360>
-References: <20191015173026.9962-1-manivannan.sadhasivam@linaro.org>
- <20191015173026.9962-4-manivannan.sadhasivam@linaro.org>
- <CACRpkdZRY138RAf8N2xGam89r66ik2vW44OZx0bDcCt4P2GBLA@mail.gmail.com>
+        Sat, 19 Oct 2019 12:36:35 -0400
+Received: from mout.web.de ([212.227.15.3]:53507 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725943AbfJSQge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 19 Oct 2019 12:36:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1571502971;
+        bh=B0hMDu2p0XqY5CPGLIJ5L0kA11pQyDcIMiKt83mRZMo=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=oaPHJjyjJTZD4vHRw/Tvqpo5Mz1tiz+f9fxvVQsTW3NHc3s+fgHf+NZ/7cY7SdRXx
+         Rub6AGrNdFJUAPKDhgoiCYyTpv5gRnRqf4thbfIkqVMhmTSiUYSNigfV3BDyooSLYn
+         2dVBSTlD2XIhB0fqZQNv6PvXA/aKnEl6Hrp5/iBA=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.48.29.47]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MIBu2-1iKD123SNa-003uva; Sat, 19
+ Oct 2019 18:36:11 +0200
+Subject: Re: [PATCH] coccinelle: api/devm_platform_ioremap_resource: remove
+ useless script
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        kernel-janitors@vger.kernel.org, Coccinelle <cocci@systeme.lip6.fr>
+Cc:     Julia Lawall <Julia.Lawall@lip6.fr>,
+        Himanshu Jha <himanshujha199640@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20191017142237.9734-1-alexandre.belloni@bootlin.com>
+ <81269cd6-e26d-b8aa-cf17-3a2285851564@web.de>
+ <20191019120941.GL3125@piout.net>
+ <CAMpxmJVEXubtBhQs5wH00wvK=yp8nr0cZ04x9t8eCTLVU=O1JA@mail.gmail.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <88b84610-0789-3bdf-affe-de242f84554d@web.de>
+Date:   Sat, 19 Oct 2019 18:36:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZRY138RAf8N2xGam89r66ik2vW44OZx0bDcCt4P2GBLA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAMpxmJVEXubtBhQs5wH00wvK=yp8nr0cZ04x9t8eCTLVU=O1JA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Provags-ID: V03:K1:RqEjkPj0dj1gUDbQZXEho1GqQnd02nd97QjCF5lXXOl0+VfE/Df
+ mJ0RWFhmQoHlpKqGPOoWUG4C+RuL9OdcjwU/TENoQBPbs99ulFPdVbbMKsYwQ0sEY8BG+7a
+ JBJHgYE3hE6zkypvEf5Zl9M4saOVWlNT5jYc9tO5CMoFOtFlmRfKnkiMKlbGASWlJ9pOpu+
+ GWH1b7LtGhLPAqISeo7yw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:MuDYgV3wfwk=:zrzQa6oOmZTV3vpCtBOlFD
+ 80djKuQmUctIWFdbUbRVDYyeKB/wMSe4ggtb/l8UmVyXhm2VxLd4xNTgdQedBBdx3h2H/SH3g
+ GGjNWDYN6/iRhQhyQuGxWYfPuOntU5SrnXzYc0hgnJMyrQneYrzT4oNI97RMu7ozCIUfzw6bC
+ S1hT71y0qRCB9UxolL3bxPkqrq72+MRxvnD0XyblfJ8GubHQErrZAmIYdoIi++YvQWpHlBuC3
+ Jyq+CJJBQz4tDTcYVaN9kbkd4sybdWytcexEZaHzwNfmCYkSKxS58MOxyQq4lsLXTtO1obfRR
+ w0xbI2TRhYXVG1OWAFCzgSYOnPEXFiq9hTK/JkR6odFgO7flQcOGu0QrjC83CNoje4YdlkfSQ
+ 8igOroq3I70LEXboV6ic9RLImrka8m+bMbcjOktWCb72nPpkM4uclxJjdYgGKrTAwzwN9N2iS
+ vDzJgme/naJHYil7ZSHHGXE4FEHfFJINMEr7QHKy8tPmPfTthLWLu+zCbCGS+VY7Ao/MybNRr
+ Kkme/RjFW+O+7x0mqMX67NOXqznBvdOCSYc1Wp7Cz+PgTEgE8I6WCfct8OThdmWKiBlXtu4gL
+ rRrJh9tfCipJn3oyP2QdB7yvHpaAGWavNEsJlrhmpczJIHoytpUi8MWUQ7DTIdSVHEddsQSXv
+ 0aTHSgDdqwtmmbf0RprD7LwGVppnmcjdASKgVU36+QKz98ADK0xvGy8T/x9cLmE4SJ0FTsqOl
+ eUoDjHl5W6xFvl6cpMunkxj4iuxrJYai0qDL3OlUOl4/rtjZm5zWWngyD9u1y3YLwdrqjk9iM
+ w/miYYkE0z1oKjdMZI6vZsH6Uao4aAJzTOHzNtuAT/sydNHSEH/gKP48YGVfmz0/DBV28U5xF
+ 5dlvuAMjhUFCkKumehJWHkTNnoqPdXQyyN+WZDvVKwx+i4g/qouqlGNB8SBpgibiuVRN4Plzx
+ 5e25TCEao59ecdTH2hRlvGZtPD8kwdKLP6LOsZdYd+g+3/OIgtliy3uAmWy+3dCz6RJFo1jdg
+ 0l6V01lXkCC/NaRgFcYxkxZu5w7ncV5TP4dwCb2uJgd5jy5fzxLhUVcVG8pHpHd2fLz0v/j1u
+ 14EFG1gJ3ojl7Vuz71RFWtLOa7cWTbQIjfCrLEbzSEWrYBo35M4362AdpfvccWONX86R5WMjv
+ ++MA3+bRjgFNUbelYkxoDmBDlwr/D9CnHut67TtdBdjSFUyNW5wLaWZHeUz++IF1hIlkrxJXv
+ 2XdV85vi2JslK1/47cvX8/fWWWNmqwJMv+GvkClLZtKQcXDNZ82KzuS+W044=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+> Markus has been black-listed by several core maintainers already,
 
-Thanks for the review! Please see comments inline.
+I am still curious if this communication filter will ever be adjusted
+in more positive directions.
 
-On Wed, Oct 16, 2019 at 02:41:32PM +0200, Linus Walleij wrote:
-> Hi Manivannan!
-> 
-> Thanks for your patch!
-> 
-> On Tue, Oct 15, 2019 at 7:30 PM Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> 
-> > Add support for GPIO controller from RDA Micro.
-> >
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> Please use a little bit more verbose commit message, who
-> made this hardware and what is it for. If you know!
-> 
 
-okay.
+> I think you're wasting your time arguing.
 
-> > +config GPIO_RDA
-> > +       bool "RDA Micro GPIO controller support"
-> > +       depends on ARCH_RDA || COMPILE_TEST
-> > +       depends on OF_GPIO
-> > +       select GPIOLIB_IRQCHIP
-> 
-> select GPIO_GENERIC
-> 
+I hope that also this software development discussion can become
+more constructive.
 
-hmm.. I don't think this driver can use it. Please see the justification
-below.
 
-> > +#include <linux/bitops.h>
-> 
-> Do you need this or just <linux/bits.h>?
-> 
+> WRT the patch: when introducing this wrapper, I definitely didn't expect
+> people to send hundreds of often wrong patches based on coccinelle reports,
 
-I need this for for_each_set_bit() macro.
+The reality can provide various surprises.
 
-> > +#define RDA_GPIO_OEN_VAL               0x00
-> > +#define RDA_GPIO_OEN_SET_OUT           0x04
-> > +#define RDA_GPIO_OEN_SET_IN            0x08
-> > +#define RDA_GPIO_VAL                   0x0c
-> > +#define RDA_GPIO_SET                   0x10
-> > +#define RDA_GPIO_CLR                   0x14
-> > +#define RDA_GPIO_INT_CTRL_SET          0x18
-> > +#define RDA_GPIO_INT_CTRL_CLR          0x1c
-> > +#define RDA_GPIO_INT_CLR               0x20
-> > +#define RDA_GPIO_INT_STATUS            0x24
-> 
-> This is a very clear cut MMIO GPIO so use GPIO_GENERIC with this
-> hardware.
-> 
 
-So, I'd be happy to use gpio-mmio driver if applicable. In fact, I looked into
-that while starting to write this driver since most of the `set*` APIs are
-like dups. But one thing which blocked me was, `gpio_get` API.
+> so I guess removing the script is correct.
 
-As you can see in this driver, there are 2 separate registers needs to be
-read in order to get the value. RDA_GPIO_VAL needs to be read when the pin
-is in input state and RDA_GPIO_SET needs to be read when the pin is in output
-state.
+I suggest to reconsider this conclusion once more.
+The application of SmPL script variants can be continued despite
+of the recently committed file removal.
 
-The MMIO driver relies on a single `dat` register to read the GPIO state and
-this won't fit for this driver and hence my justification for not using it.
 
-> > +static void rda_gpio_update(struct gpio_chip *chip, unsigned int offset,
-> > +                           u16 reg, int val)
-> 
-> Maybe keep this if it saves code from the IRQ callbacks,
-> inline it to register writes if it doesn't get called much.
-> 
+The constraints for the usage of available scripts for the semantic patch language
+are explained to some degree.
+https://bottest.wiki.kernel.org/coccicheck
 
-It is being called from multiple places, so I'd like to keep it as a normal
-function.
-
-> > +static int rda_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
-> > +static int rda_gpio_direction_output(struct gpio_chip *chip,
-> > +                                    unsigned int offset, int value)
-> > +static int rda_gpio_get(struct gpio_chip *chip, unsigned int offset)
-> > +static void rda_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
-> 
-> This can all be replaces by select GPIO_GENERIC and passing
-> the right offsets into bgpio_init(). Look at for example
-> gpio-ftgpio010.c and the documentation for bgpio_init()
-> in gpio-mmio.c for help.
-> 
-> This will also implement get/set_multiple for you for
-> free!
-> 
-> > +static void rda_gpio_irq_mask(struct irq_data *data)
-> > +static void rda_gpio_irq_ack(struct irq_data *data)
-> 
-> Looks good
-> 
-> > +static int rda_gpio_set_irq(struct gpio_chip *chip, u32 offset,
-> > +                           unsigned int flow_type)
-> 
-> Maybe _setup_irq()? Not sure, just that the name doesn't
-> obviously imply how it is used as it is called from two
-> places.
-> 
-
-Well, this routine sets the irq_type. But it has multiple usecase.
-Like, it is being used to unmask as irq and also to set irq type.
-So to be in a equillibrium state, I went for rda_gpio_set_irq().
-
-> The rest of the IRQ code looks good!
-> 
-> > +static int rda_gpio_probe(struct platform_device *pdev)
-> > +{
-> > +       struct device_node *np = pdev->dev.of_node;
-> > +       struct gpio_irq_chip *irq_chip;
-> 
-> Since irq_chip is the name of a struct in the kernel I usually
-> just call this "girq" as in "GPIO irq chip".
-> 
-
-Ah, a name change again... will do ;-)
-
-> > +       struct rda_gpio *rda_gpio;
-> > +       u32 ngpios;
-> > +       int ret;
-> 
-> Create a struct device *dev = &pdev->dev; helper variable
-> to make the following code easier to read. (The pointer
-> &pdev->dev is used in many places...)
-> 
-
-okay.
-
-> > +       /*
-> > +        * Not all ports have interrupt capability. For instance, on
-> > +        * RDA8810PL, GPIOC doesn't support interrupt. So we must handle
-> > +        * those also.
-> > +        */
-> > +       rda_gpio->irq = platform_get_irq(pdev, 0);
-> > +
-> > +       rda_gpio->base = devm_platform_ioremap_resource(pdev, 0);
-> > +       if (IS_ERR(rda_gpio->base))
-> > +               return PTR_ERR(rda_gpio->base);
-> > +
-> > +       spin_lock_init(&rda_gpio->lock);
-> > +
-> > +       rda_gpio->chip.label = dev_name(&pdev->dev);
-> > +       rda_gpio->chip.ngpio = ngpios;
-> > +       rda_gpio->chip.base = -1;
-> > +       rda_gpio->chip.parent = &pdev->dev;
-> > +       rda_gpio->chip.of_node = np;
-> > +       rda_gpio->chip.get = rda_gpio_get;
-> > +       rda_gpio->chip.set = rda_gpio_set;
-> > +       rda_gpio->chip.direction_input = rda_gpio_direction_input;
-> > +       rda_gpio->chip.direction_output = rda_gpio_direction_output;
-> > +
-> > +       if (rda_gpio->irq >= 0) {
-> > +               rda_gpio->irq_chip.name = "rda-gpio",
-> > +               rda_gpio->irq_chip.irq_ack = rda_gpio_irq_ack,
-> > +               rda_gpio->irq_chip.irq_mask = rda_gpio_irq_mask,
-> > +               rda_gpio->irq_chip.irq_unmask = rda_gpio_irq_unmask,
-> > +               rda_gpio->irq_chip.irq_set_type = rda_gpio_irq_set_type,
-> > +               rda_gpio->irq_chip.flags = IRQCHIP_SKIP_SET_WAKE,
-> > +
-> > +               irq_chip = &rda_gpio->chip.irq;
-> > +               irq_chip->chip = &rda_gpio->irq_chip;
-> > +               irq_chip->handler = handle_bad_irq;
-> > +               irq_chip->default_type = IRQ_TYPE_NONE;
-> > +               irq_chip->parent_handler = rda_gpio_irq_handler;
-> > +               irq_chip->parent_handler_data = rda_gpio;
-> > +               irq_chip->num_parents = 1;
-> > +               irq_chip->parents = &rda_gpio->irq;
-> 
-> That works but ... please devm_kzalloc() like the other drivers
-> do:
-> 
-> girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
->                                      GFP_KERNEL);
->         if (!girq->parents) {
->                 ret = -ENOMEM;
-> (...)
-> 
-> Unless you have a real good reason to optimize it. I just
-> want it to follow the pattern since I want to minimize
-> cognitive stress for the maintainers. (Me.)
-> 
-
-no issues for me, will do.
-
-Thanks,
-Mani
-
-> Yours,
-> Linus Walleij
+Regards,
+Markus
