@@ -2,105 +2,119 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB5FCA9EAC
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 11:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C44FCA9EAC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 11:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9963222BD
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 11:46:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dzVvXOwN"
+	by mail.kernel.org (Postfix) with ESMTP id 0CC59222BD
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 11:54:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726050AbfJSLo0 (ORCPT
+        id S1725970AbfJSLsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 07:44:26 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46777 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725777AbfJSLoZ (ORCPT
+        Sat, 19 Oct 2019 07:48:00 -0400
+Received: from pindarots.xs4all.nl ([82.161.210.87]:33780 "EHLO
+        pindarots.xs4all.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbfJSLr7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 07:44:25 -0400
-Received: by mail-lf1-f65.google.com with SMTP id t8so6600305lfc.13
-        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 04:44:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=6HRz68HiFzZlP3tRHK3yJFb4gohgu9mfexY7/E4XFuo=;
-        b=dzVvXOwNZVEhQAT3J19DzsIwKiOGDrNfX6yeD5enDt8ABHfAC68SibKoY9Aswoz1rO
-         HGcJ1bXQtHQURP9YqelyPplOWP2VK+4MvYz3bQZ3Kkqo7dM22VaICh624eO0fgxVW9n/
-         9GnjK2P9hCaOwmOSF+cQXL/gaOGiwrpiXdqZiY2tuh1pXw0HYbWRb2g+vRRuGZrcGwKz
-         p8CtoN+O44120d9Y53S/6Dgf+xPLPcC4/2Cb+uULInzvyltZxKzDTf5zkeWFOmJBjhNz
-         D83QY6s1eZjSszzwM+dWQ93nd25YOlVCkN5W5ae/ylgfgcNzWqiqsyWE12/2Y+XTLz6Z
-         Ar/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=6HRz68HiFzZlP3tRHK3yJFb4gohgu9mfexY7/E4XFuo=;
-        b=kmi+W2MY9B+76HicuULAV+EJM1uhut+b4H/+6PIVikgllC5mNkN1t7WPGn8/juN6Do
-         ji6OuzIJJY/m8XlUnPM1ZkxBjwUi2hvqAqhwSDbYzyiOp0NvRO1KQkPVYIg0AUZN5uxD
-         pHF3usKryPG6ESvVX85XmB8grbG2K6NdhksfEEPrzXBOfkpAaW/Z7f27snVOjz08GDgk
-         orVMVreLQjFeeJJkDyWBMw8IqqWFD4G76fMbb91k77Wz3whrWRW6iB/86ACttZh350pT
-         9e8E7tbhPtrZn1JgGAuCXfGp2GfYT2id8yM6AsRpGmM2lfO4Dx5LTloaYO06wH1Tlh3W
-         8AGg==
-X-Gm-Message-State: APjAAAUXzKifvhPokAAEvw4FeeVUZ6A9Cw2LKCWS9m4XzGIudkC1xhnl
-        tn8H43qdP3ZV5qYnFlsm31xTKc/u9a0=
-X-Google-Smtp-Source: APXvYqxasR8A21Fxv3CR/wZsNTUdZdw8jBooa+ZPVxia1U6TFwp7bZXJ0aHPSjwwj1EBSIbfqgb5ag==
-X-Received: by 2002:ac2:5542:: with SMTP id l2mr8769192lfk.119.1571485463481;
-        Sat, 19 Oct 2019 04:44:23 -0700 (PDT)
-Received: from uranus.localdomain ([5.18.199.94])
-        by smtp.gmail.com with ESMTPSA id e7sm3905877lfn.12.2019.10.19.04.44.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Oct 2019 04:44:22 -0700 (PDT)
-Received: by uranus.localdomain (Postfix, from userid 1000)
-        id DDA7E460CFB; Sat, 19 Oct 2019 14:44:21 +0300 (MSK)
-Date:   Sat, 19 Oct 2019 14:44:21 +0300
-From:   Cyrill Gorcunov <gorcunov@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>, linux-mm@kvack.org,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [BUG -tip] kmemleak and stacktrace cause page faul
-Message-ID: <20191019114421.GK9698@uranus.lan>
+        Sat, 19 Oct 2019 07:47:59 -0400
+Received: from surfplank2.hierzo (localhost.localdomain [127.0.0.1])
+        by pindarots.xs4all.nl (8.15.2/8.14.5) with ESMTPS id x9JBlwwA004476
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO)
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 13:47:58 +0200
+Subject: Re: [5.3.*] nvme issue
+From:   Udo van den Heuvel <udovdh@xs4all.nl>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <7f230245-a999-1cf3-fce5-d68a41b13d17@xs4all.nl>
+Autocrypt: addr=udovdh@xs4all.nl; prefer-encrypt=mutual; keydata=
+ mQINBFTtuO0BEACwwf5qDINuMWL9poNLJdZh/FM5RxwfCFgfbM29Aip4wAUD3CaQHRLILtNO
+ Oo4JwIPtDp7fXZ3MB82tqhBRU3W3HVHodSzvUk2VzV0dE1prJiVizpPtIeYRRDr4KnWTvJOx
+ Fd3I7CiLv8oTH9j5yPTMfZ58Prp6Fgssarv66EdPWpKjQMY4mS8sl7/3SytvXiACeFTYPBON
+ 1I2yPIeYK4pKoMq9y/zQ9RjGai5dg2nuiCvvHANzKLJJ2dzfnQNGaCTxdEAuCbmMQDb5M+Gs
+ 8AT+cf0IWNO4xpExo61aRDT9N7dUPm/URcLjCAGenX10kPdeJP6I3RauEUU+QEDReYCMRnOM
+ +nSiW7C/hUIIbiVEBn9QlgmoFINO3o5uAxpQ2mYViNbG76fnsEgxySnasVQ57ROXdEfgBcgv
+ YSl4anSKyCVLoFUFCUif4NznkbrKkh7gi26aNmD8umK94E3a9kPWwXV9LkbEucFne/B7jHnH
+ QM6rZImF+I/Xm5qiwo3p2MU4XjWJ1hhf4RBA3ZN9QVgn5zqluGHjGChg/WxhZVRdBl8Un3AY
+ uixd0Rd9jFSUhZm/rcgoKyeW6c1Vkh8a2F+joZ/8wzxk6A8keiWq/pE00Lo9/Ed2w5dVBe1p
+ N7rNh2+7DjAqpCSshYIsHYs0l5Q2W+0zYfuPM1kRbUdQF1PK0wARAQABtCVVZG8gdmFuIGRl
+ biBIZXV2ZWwgPHVkb3ZkaEB4czRhbGwubmw+iQJiBBMBAgBMJhpodHRwOi8vcGluZGFyb3Rz
+ LnhzNGFsbC5ubC9wb2xpY3kudHh0AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCVkiW
+ pwIZAQAKCRCOFcDCBOMObsjdD/oDH+DvcAFakVThGdFi00o1W0j7fFcPhrP34Ulf+5idkgJm
+ RzarJrz7Av7L6fwCS3JtrzfEJ+qoP84ONxnhNhj5ItHpVUlxyRWPBisklNlGJWK277Naw3BT
+ mql2edPRIcR5Ypd8O7DBXIypG0CigjOVWfWLspjLmEGlinqpjHWuv4/LJ3qwSbbpW0rXpb44
+ xSWB+u605pfrO3vDox5ORGCLktN8IXWISm9mS6vSXAi797KHwVX55OsiKqCbNkSM3bl6XfHh
+ CPUpbOHXHzZXvP7JTINZfSfTPJx0iWCn3KArcsy7MzSwpUpUpDizrWwVRW1XySQydb8m+lnl
+ 8IVpJFiXiFEYGhFYU9HbUFSNGku134O5tf3VurfpOXmxGyeoyXWt4m9l7fcSaBAZq21iJT+S
+ VCSmsI0JfhxMHjMbwdghPQ3UYK4q95TOcVRUkH0h+b2cZPirol4htc+ZCSzPKI++AGjXWIc5
+ ZyQbthmFesrYGGttNIFFWsj3RUkyB58toDE7gXmarkhBg74tsSGbCyJp8/foy5hrci5sSi5P
+ cygZxEDytCTNw1Dno/EAHUOpI2lJsVN8ACws16a6vh/UgQnBPsVFgVd0HSnlEX9XLO65lHlX
+ aXo0zXomy+DDYD1sKARt8sKJk/H/VGs3SMRH3QtSBtWcUQKyJXMafWP/8A1Bz7kCDQRU7bjt
+ ARAAwdK6VLsLLfyqYuA2/X+agquHh3U44IVxuRGAjQ7NSec9il+ENpbsaK6QGFBlyaWHkqcL
+ e2u7DWTmG1uBqU9XqXGgeQJiOY8aof0rMsOVd1yYZsQO7+t2yfMOuS9+eRDxxj5l8gZXOKl3
+ eQ5akqlKIWJy4G4D5pwCKuA5XFphpikPLm84Fb4V8IgRuiHaeHjeZyfkwYhKqxiyneGZ387b
+ S3r4pMKprXlvFzWTr+x2TxexAECP3Tjg9ZakOIaVmgvFtl8L12ib6YJke7HxY/a3P3Glt+Zl
+ 5r/qcbWQoqyKBX+flWAjCPw+9EbdQNjBnIes3sPTTZ4YP4s2qC9rd/afeTSy3iUJhjGrEF+5
+ d0AB1F+ZipmnZkGFF7tlvu6T/66JzsndOiEaLBYUa4VqJ+T0pvgX+MkbueYaQlsDl9eB24sC
+ HTwfexUnvK5sUKnFFn5ZYZoIein2XHXb8EjbiT1G3G0Yj/q/DrRH1T7EiP6JPIIFdVVccnth
+ j6rinWVJPiXRC8Gby/uSZP8t7HmQRYKV+xCESfRb4ZEfZqVm1/3wo3wYL5ek71yLEZC57+Hb
+ RWgjaZuQg7Pn59Bh+M6cx5xTdyQ3PSeR14uXWLvMnVO2yF5pd6Ou2ySWatgtqmeTd77MpJ9+
+ mPZTSG/lDGXpL2s1P6GiroiY0g3aicCgObwzr/MAEQEAAYkCRgQYAQIAMAUCVO247SYaaHR0
+ cDovL3BpbmRhcm90cy54czRhbGwubmwvcG9saWN5LnR4dAIbDAAKCRCOFcDCBOMObqXID/9+
+ lT7u4VJlreAFpSXOxwRlAtN88rzap3sZyQ1Z4YCxEZLHg4Ew2X0xS8w6t5jM4atOiuUW6fHY
+ nI5KiYV7GARWWhZe/zsTjSs/tZVC68Q9qNwE1Ck+tuBV7d59l8qLBgQITsl6HCiYBaGJR2BF
+ RdhP8a/aC6i3MWP8umK0yLJrV7gvP0sL8EKuz1zBARL5WuvzgsTA72QsilEQ/ZGYXwWnPOiI
+ vTrGxZHD9apKOacSoY+CT+W+xe+tAKT0I8k4Ejda/hg6jMnaNNONX6rtiQEoUxv3R+iRhnaA
+ NIsdTpUoZAbvFwStnRWgn+LgIMvKa5uW0Mjk0ynd14UxFluPs7J3saUukF4jXJGiWS2APD2K
+ nNc7sAZraeSk/JFy0Y0WFCCr/UHzVLZnwdWpdw3inoIQeKtN2jWpuPP2l+4fgLybHJVnrDAs
+ jujgAUTyaLDYoUryBiodY8G8gdZxTZvXk0RA9ux2TnFJJvdw8rR1sej5Lax1CZnQYwXNLvIi
+ OcFUtIrTXnUj2uK2teab0RBIE4QedGoTGGHPuua8WqFpvVzC9iCIQlVtfGw6CVvq92icqbdz
+ QYrlFbsVCXOM9TvO5ppqJowfdKmqFUjQPAsO40bwbphkt1NBalgZaxMCinpqEggVm/rGqbj2
+ JjyRAfO8kEkwCkTZ6/Mnrxsunx9VNLGDEw==
+Organization: hierzo
+Message-ID: <702351dd-7160-f398-3447-3c9a45351d82@xs4all.nl>
+Date:   Sat, 19 Oct 2019 13:47:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <7f230245-a999-1cf3-fce5-d68a41b13d17@xs4all.nl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi! I'm not sure if I've CC'ed proper persons, so please sorry if I did.
-Anyway, today's -tip (07b4dbf1d830) refused to boot
+On 19-10-2019 13:22, Udo van den Heuvel wrote:
+> When I boot this workstation, the nvme disks appear in /dev/ without
+> their partitions. 
 
-[    0.024793] No NUMA configuration found
-[    0.025406] Faking a node at [mem 0x0000000000000000-0x000000007ffdefff]
-[    0.026462] NODE_DATA(0) allocated [mem 0x7ffdb000-0x7ffdefff]
-[    0.027246] BUG: unable to handle page fault for address: 0000000000001ff0
-[    0.028160] #PF: supervisor read access in kernel mode
-[    0.028992] #PF: error_code(0x0000) - not-present page
-[    0.029820] PGD 0 P4D 0 
-[    0.030226] Oops: 0000 [#1] PREEMPT SMP PTI
-[    0.031069] CPU: 0 PID: 0 Comm: swapper Not tainted 5.4.0-rc3-00258-g07b4dbf1d830 #93
-[    0.032317] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.11.2-0-gf9626ccb91-prebuilt.qemu-project.org 04/01/2014
-[    0.034163] RIP: 0010:get_stack_info+0xb3/0x148
-[    0.034903] Code: 04 d5 84 48 01 82 66 85 c0 74 25 8b 0c d5 80 48 01 82 0f b7 14 d5 86 48 01 82 48 01 f1 89 13 48 01 c8 48 89 4b 08 48 89 43 10 <48> 8b 40 f0 eb 2b 65 48 8b 05 1f f4 f9 7e 48 8d 90 00 c0 ff ff 48
-[    0.037579] RSP: 0000:ffffffff82603be0 EFLAGS: 00010006
+# ls -l /dev/nv*
+crw------- 1 root root 251,   0 Oct 19 13:43 /dev/nvme0
+brw-rw---- 1 root disk 259,   1 Oct 19 13:43 /dev/nvme0n1
+crw------- 1 root root 251,   1 Oct 19 13:43 /dev/nvme1
+brw-rw---- 1 root disk 259,   0 Oct 19 13:43 /dev/nvme1n1
+crw------- 1 root root  10, 144 Oct 19 13:43 /dev/nvram
+# partprobe /dev/nvme0n1
+# partprobe /dev/nvme1n1
+# ls -l /dev/nv*
+crw------- 1 root root 251,   0 Oct 19 13:43 /dev/nvme0
+brw-rw---- 1 root disk 259,   1 Oct 19 13:46 /dev/nvme0n1
+brw-rw---- 1 root disk 259,   2 Oct 19 13:46 /dev/nvme0n1p1
+brw-rw---- 1 root disk 259,   3 Oct 19 13:46 /dev/nvme0n1p2
+crw------- 1 root root 251,   1 Oct 19 13:43 /dev/nvme1
+brw-rw---- 1 root disk 259,   0 Oct 19 13:46 /dev/nvme1n1
+brw-rw---- 1 root disk 259,   4 Oct 19 13:46 /dev/nvme1n1p1
+brw-rw---- 1 root disk 259,   5 Oct 19 13:46 /dev/nvme1n1p2
+crw------- 1 root root  10, 144 Oct 19 13:43 /dev/nvram
+#
 
-I nailed it down to the following kmemleak code
+The partitions should have appeared sooner? (during boot)
 
-create_object
-  ...
-  object->trace_len = __save_stack_trace(object->trace);
+Any idea on how to fix this?
 
-if I drop this line out it boots fine. Just wanted to share the observation,
-probably it is known issue already.
 
-Sidenote: The last -tip kernel which I've been working with is dated Sep 18
-so the changes which cause the problem should be introduced last month.
+Kind regards,
+Udo
