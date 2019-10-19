@@ -2,107 +2,405 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A62FCA9EAB
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 19:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD34DCA9EAB
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 20:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CB8A222C5
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 19:58:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uG/U93b2"
+	by mail.kernel.org (Postfix) with ESMTP id 7C20421925
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 20:02:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726180AbfJST6S (ORCPT
+        id S1726191AbfJSUCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 15:58:18 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38290 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfJST6S (ORCPT
+        Sat, 19 Oct 2019 16:02:38 -0400
+Received: from smtprelay0116.hostedemail.com ([216.40.44.116]:39769 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726129AbfJSUCi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 15:58:18 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w3so5248377pgt.5
-        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 12:58:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=266Y0hXS9BC8c58tj7q4sT9jtJ0HQTa0yWk7IcR2wTs=;
-        b=uG/U93b2A8I0PII6bxFfdt6TH1kECEIuI+qHTm6K3KY0l7I1StEOvn+GUkCZFZGlKr
-         R0K3mq75ExZFMrumknpnY8XIfzX8oBIdma6UHZyEJugAdc5XYAgbJ7WPC1spzgoS8emV
-         G3iopRckBMDrp3PlUBrjv4fjm4ExFy/LGiWIS9ynO+IJ73IGDDfJppCnZLKCr7RE0qSI
-         QV8Bzds8wI6i2DkYLb1iysEgMiSirDuwBooSKX1WvMkelE1av2pCwKMl4gowVrybBF7y
-         6bYl0xgazXqgiJ3fMHyi+1BOvcAaJzrdmhccY3RSdG6uSN3+MeeqZLlcxiSX/movlg6k
-         1s/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=266Y0hXS9BC8c58tj7q4sT9jtJ0HQTa0yWk7IcR2wTs=;
-        b=C3JWU8foYSyG0HYRzdTFR+4JmwSScnCTcGQGpjwPo/VvR5fzIV0P8/KioS4qjhy2HV
-         omca4Ev21HpA88mF5yoJY9rSrF7xYWYcREfg/RW//1oBdAoCJTPFHF5sJvjxIz64TR+v
-         k5iwBSxdoW8L5/qNRdYhCVfMyudBOm7uUEyVHbTvqPig3fgtzTGH5X1pmwqXeDZAHn0S
-         Px8gJ7gXZBVm16TnOCKqpujrCsh3GJXSCY9PlsIFYV1qVjpTen9ixbLtBBiRXDoV7WFN
-         8gtQgG8xFFtzz/F9malIDsCiU2vjBD92iFvBRsmN+OOqkcWSUIZgIyWHlKKHfWoye5VM
-         LfZQ==
-X-Gm-Message-State: APjAAAX6wL9m9UOet2IP6N82lGkJy/swUKqEnEDJZVZ7lojArE41eGoL
-        RQy73YpCoZB9Telc2fKPPOzg7A==
-X-Google-Smtp-Source: APXvYqxthdjowhAfa+DBog8jfZPwJlkwc/5bBE/nJLagsS8UKZv/Dc/OwAsuZFQAQGcWOh+laGTHFw==
-X-Received: by 2002:a17:90a:bd0b:: with SMTP id y11mr19444285pjr.28.1571515097002;
-        Sat, 19 Oct 2019 12:58:17 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id v1sm10183866pjd.22.2019.10.19.12.58.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Oct 2019 12:58:16 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Olof Johansson <olof@lixom.net>,
-        Maxime Ripard <mripard@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v2] arm64: defconfig: Enable Qualcomm pseudo rng
-Date:   Sat, 19 Oct 2019 12:58:12 -0700
-Message-Id: <20191019195812.3834545-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.23.0
+        Sat, 19 Oct 2019 16:02:38 -0400
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave08.hostedemail.com (Postfix) with ESMTP id CAF4318022DE2
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 20:02:34 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id E10B9181D2FC1;
+        Sat, 19 Oct 2019 20:02:33 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: pig59_33562b54e1f19
+X-Filterd-Recvd-Size: 12928
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf20.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 19 Oct 2019 20:02:32 +0000 (UTC)
+Message-ID: <336960fdf88dbed69dd3ed2689a5fb1d2892ace8.camel@perches.com>
+Subject: Re: [PATCH v1 1/5] staging: wfx: fix warnings of no space is
+ necessary
+From:   Joe Perches <joe@perches.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Jules Irenge <jbi.octave@gmail.com>
+Cc:     devel@driverdev.osuosl.org, outreachy-kernel@googlegroups.com,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
+Date:   Sat, 19 Oct 2019 13:02:31 -0700
+In-Reply-To: <20191019180514.GI24678@kadam>
+References: <20191019140719.2542-1-jbi.octave@gmail.com>
+         <20191019140719.2542-2-jbi.octave@gmail.com> <20191019142443.GH24678@kadam>
+         <alpine.LFD.2.21.1910191603520.6740@ninjahub.org>
+         <20191019180514.GI24678@kadam>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most Qualcomm platforms contain a pseudo random number generator
-hardware block. Enable the driver for this block and also enable the
-interface for exposing this to userspace.
+On Sat, 2019-10-19 at 21:05 +0300, Dan Carpenter wrote:
+> On Sat, Oct 19, 2019 at 04:09:03PM +0100, Jules Irenge wrote:
+> > Checkpatch was complaining about  space between type cast and the 
+> > variable. I just get rid of the space. Well I don't know whether this was 
+> > false positive one.
+> > 
+> > Thanks for the feedback. I will update the patch.
+> 
+> No no.  The patch is fine.  I was saying that in the *future* you might
+> want to look at the void casts.  Some of them are not required and
+> others are buggy code.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Hello Jules.
+
+Frequently, checkpatch is not the best tool to find and
+possibly correct various unnecessary code styles.
+
+checkpatch is OK to look at some odd uses
+
+coccinelle is frequently a better overall tool for these uses.
+
+A trivial cocci script to remove some unnecessary void * casts
+from mem<foo> and str<foo> calls might be like the below, but
+watch out for __iomem and __force uses where coccinelle doesn't
+understand the syntax.
+
+$ cat unnecessary_void_ptr.cocci
+@@
+type T1;
+type T2;
+T1 *p1;
+T2 *p2;
+@@
+
+	\(memcpy\|memmove\|strcpy\|strncmp\)(
+-	(void *)
+	p1,
+-	(void *)
+	p2, ...)
+
+@@
+type T1;
+type T2;
+T1 *p1;
+T2 *p2;
+@@
+
+	\(memcpy\|memmove\|strcpy\|strncmp\)(
+	p1,
+-	(void *)
+	p2, ...)
+
+@@
+type T;
+T *p;
+@@
+
+	\(memcpy\|memset\|memmove\|memzero\|strcpy\|strncmp\|strnlen\)(
+-	(void *)
+	p, ...)
+
+$
+
+For instance, when run over today's drivers/staging, this produces:
+
+$ spatch --very-quiet -sp-file unnecessary_void_ptr.cocci drivers/staging
 ---
- arch/arm64/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+diff -u -p a/exfat/exfat_core.c b/exfat/exfat_core.c
+--- a/exfat/exfat_core.c
++++ b/exfat/exfat_core.c
+@@ -3427,7 +3427,7 @@ s32 rename_file(struct inode *inode, str
+ 			return FFS_MEDIAERR;
+ 		}
+ 
+-		memcpy((void *)epnew, (void *)epold, DENTRY_SIZE);
++		memcpy(epnew, epold, DENTRY_SIZE);
+ 		if (fs_func->get_entry_type(epnew) == TYPE_FILE) {
+ 			fs_func->set_entry_attr(epnew,
+ 						fs_func->get_entry_attr(epnew) |
+@@ -3449,7 +3449,7 @@ s32 rename_file(struct inode *inode, str
+ 				return FFS_MEDIAERR;
+ 			}
+ 
+-			memcpy((void *)epnew, (void *)epold, DENTRY_SIZE);
++			memcpy(epnew, epold, DENTRY_SIZE);
+ 			buf_modify(sb, sector_new);
+ 			buf_unlock(sb, sector_old);
+ 		}
+@@ -3538,7 +3538,7 @@ s32 move_file(struct inode *inode, struc
+ 		return FFS_MEDIAERR;
+ 	}
+ 
+-	memcpy((void *)epnew, (void *)epmov, DENTRY_SIZE);
++	memcpy(epnew, epmov, DENTRY_SIZE);
+ 	if (fs_func->get_entry_type(epnew) == TYPE_FILE) {
+ 		fs_func->set_entry_attr(epnew, fs_func->get_entry_attr(epnew) |
+ 					ATTR_ARCHIVE);
+@@ -3558,7 +3558,7 @@ s32 move_file(struct inode *inode, struc
+ 			return FFS_MEDIAERR;
+ 		}
+ 
+-		memcpy((void *)epnew, (void *)epmov, DENTRY_SIZE);
++		memcpy(epnew, epmov, DENTRY_SIZE);
+ 		buf_modify(sb, sector_new);
+ 		buf_unlock(sb, sector_mov);
+ 	} else if (fs_func->get_entry_type(epnew) == TYPE_DIR) {
+diff -u -p a/qlge/qlge_main.c b/qlge/qlge_main.c
+--- a/qlge/qlge_main.c
++++ b/qlge/qlge_main.c
+@@ -2583,7 +2583,7 @@ static netdev_tx_t qlge_send(struct sk_b
+ 	}
+ 	tx_ring_desc = &tx_ring->q[tx_ring->prod_idx];
+ 	mac_iocb_ptr = tx_ring_desc->queue_entry;
+-	memset((void *)mac_iocb_ptr, 0, sizeof(*mac_iocb_ptr));
++	memset(mac_iocb_ptr, 0, sizeof(*mac_iocb_ptr));
+ 
+ 	mac_iocb_ptr->opcode = OPCODE_OB_MAC_IOCB;
+ 	mac_iocb_ptr->tid = tx_ring_desc->index;
+@@ -3029,7 +3029,7 @@ static int ql_start_rx_ring(struct ql_ad
+ 	/* PCI doorbell mem area + 0x1c */
+ 	rx_ring->sbq.prod_idx_db_reg = (u32 __iomem *)(doorbell_area + 0x1c);
+ 
+-	memset((void *)cqicb, 0, sizeof(struct cqicb));
++	memset(cqicb, 0, sizeof(struct cqicb));
+ 	cqicb->msix_vect = rx_ring->irq;
+ 
+ 	cqicb->len = cpu_to_le16(QLGE_FIT16(rx_ring->cq_len) | LEN_V |
+@@ -3473,7 +3473,7 @@ static int ql_start_rss(struct ql_adapte
+ 	int i;
+ 	u8 *hash_id = (u8 *) ricb->hash_cq_id;
+ 
+-	memset((void *)ricb, 0, sizeof(*ricb));
++	memset(ricb, 0, sizeof(*ricb));
+ 
+ 	ricb->base_cq = RSS_L4K;
+ 	ricb->flags =
+@@ -3486,8 +3486,8 @@ static int ql_start_rss(struct ql_adapte
+ 	for (i = 0; i < 1024; i++)
+ 		hash_id[i] = (i & (qdev->rss_ring_count - 1));
+ 
+-	memcpy((void *)&ricb->ipv6_hash_key[0], init_hash_seed, 40);
+-	memcpy((void *)&ricb->ipv4_hash_key[0], init_hash_seed, 16);
++	memcpy(&ricb->ipv6_hash_key[0], init_hash_seed, 40);
++	memcpy(&ricb->ipv4_hash_key[0], init_hash_seed, 16);
+ 
+ 	status = ql_write_cfg(qdev, ricb, sizeof(*ricb), CFG_LR, 0);
+ 	if (status) {
+@@ -3983,7 +3983,7 @@ static int ql_configure_rings(struct ql_
+ 
+ 	for (i = 0; i < qdev->tx_ring_count; i++) {
+ 		tx_ring = &qdev->tx_ring[i];
+-		memset((void *)tx_ring, 0, sizeof(*tx_ring));
++		memset(tx_ring, 0, sizeof(*tx_ring));
+ 		tx_ring->qdev = qdev;
+ 		tx_ring->wq_id = i;
+ 		tx_ring->wq_len = qdev->tx_ring_size;
+@@ -3999,7 +3999,7 @@ static int ql_configure_rings(struct ql_
+ 
+ 	for (i = 0; i < qdev->rx_ring_count; i++) {
+ 		rx_ring = &qdev->rx_ring[i];
+-		memset((void *)rx_ring, 0, sizeof(*rx_ring));
++		memset(rx_ring, 0, sizeof(*rx_ring));
+ 		rx_ring->qdev = qdev;
+ 		rx_ring->cq_id = i;
+ 		rx_ring->cpu = i % cpu_cnt;	/* CPU to run handler on. */
+@@ -4414,7 +4414,7 @@ static int ql_init_device(struct pci_dev
+ 	struct ql_adapter *qdev = netdev_priv(ndev);
+ 	int err = 0;
+ 
+-	memset((void *)qdev, 0, sizeof(*qdev));
++	memset(qdev, 0, sizeof(*qdev));
+ 	err = pci_enable_device(pdev);
+ 	if (err) {
+ 		dev_err(&pdev->dev, "PCI device enable failed.\n");
+diff -u -p a/rtl8188eu/core/rtw_ieee80211.c b/rtl8188eu/core/rtw_ieee80211.c
+--- a/rtl8188eu/core/rtw_ieee80211.c
++++ b/rtl8188eu/core/rtw_ieee80211.c
+@@ -132,7 +132,7 @@ u8 *rtw_set_ie
+ 	*(pbuf + 1) = (u8)len;
+ 
+ 	if (len > 0)
+-		memcpy((void *)(pbuf + 2), (void *)source, len);
++		memcpy((pbuf + 2), source, len);
+ 
+ 	*frlen = *frlen + (len + 2);
+ 
+diff -u -p a/rtl8188eu/core/rtw_mlme_ext.c b/rtl8188eu/core/rtw_mlme_ext.c
+--- a/rtl8188eu/core/rtw_mlme_ext.c
++++ b/rtl8188eu/core/rtw_mlme_ext.c
+@@ -2858,7 +2858,7 @@ static unsigned int OnAuthClient(struct
+ 			if (p == NULL)
+ 				goto authclnt_fail;
+ 
+-			memcpy((void *)(pmlmeinfo->chg_txt), (void *)(p + 2), len);
++			memcpy((void *)(pmlmeinfo->chg_txt), (p + 2), len);
+ 			pmlmeinfo->auth_seq = 3;
+ 			issue_auth(padapter, NULL, 0);
+ 			set_link_timer(pmlmeext, REAUTH_TO);
+diff -u -p a/rtl8192e/rtl819x_HTProc.c b/rtl8192e/rtl819x_HTProc.c
+--- a/rtl8192e/rtl819x_HTProc.c
++++ b/rtl8192e/rtl819x_HTProc.c
+@@ -655,13 +655,13 @@ void HTInitializeHTInfo(struct rtllib_de
+ 	pHTInfo->CurrentMPDUDensity = pHTInfo->MPDU_Density;
+ 	pHTInfo->CurrentAMPDUFactor = pHTInfo->AMPDU_Factor;
+ 
+-	memset((void *)(&(pHTInfo->SelfHTCap)), 0,
++	memset((&(pHTInfo->SelfHTCap)), 0,
+ 		sizeof(pHTInfo->SelfHTCap));
+-	memset((void *)(&(pHTInfo->SelfHTInfo)), 0,
++	memset((&(pHTInfo->SelfHTInfo)), 0,
+ 		sizeof(pHTInfo->SelfHTInfo));
+-	memset((void *)(&(pHTInfo->PeerHTCapBuf)), 0,
++	memset((&(pHTInfo->PeerHTCapBuf)), 0,
+ 		sizeof(pHTInfo->PeerHTCapBuf));
+-	memset((void *)(&(pHTInfo->PeerHTInfoBuf)), 0,
++	memset((&(pHTInfo->PeerHTInfoBuf)), 0,
+ 		sizeof(pHTInfo->PeerHTInfoBuf));
+ 
+ 	pHTInfo->bSwBwInProgress = false;
+diff -u -p a/rtl8192u/r819xU_cmdpkt.c b/rtl8192u/r819xU_cmdpkt.c
+--- a/rtl8192u/r819xU_cmdpkt.c
++++ b/rtl8192u/r819xU_cmdpkt.c
+@@ -373,7 +373,7 @@ static void cmpk_handle_tx_status(struct
+ {
+ 	cmpk_tx_status_t	rx_tx_sts;
+ 
+-	memcpy((void *)&rx_tx_sts, (void *)pmsg, sizeof(cmpk_tx_status_t));
++	memcpy(&rx_tx_sts, pmsg, sizeof(cmpk_tx_status_t));
+ 	/* 2. Use tx feedback info to count TX statistics. */
+ 	cmpk_count_tx_status(dev, &rx_tx_sts);
+ }
+diff -u -p a/rtl8712/ieee80211.c b/rtl8712/ieee80211.c
+--- a/rtl8712/ieee80211.c
++++ b/rtl8712/ieee80211.c
+@@ -90,7 +90,7 @@ u8 *r8712_set_ie(u8 *pbuf, sint index, u
+ 	*pbuf = (u8)index;
+ 	*(pbuf + 1) = (u8)len;
+ 	if (len > 0)
+-		memcpy((void *)(pbuf + 2), (void *)source, len);
++		memcpy((pbuf + 2), source, len);
+ 	*frlen = *frlen + (len + 2);
+ 	return pbuf + len + 2;
+ }
+diff -u -p a/rtl8723bs/core/rtw_ieee80211.c b/rtl8723bs/core/rtw_ieee80211.c
+--- a/rtl8723bs/core/rtw_ieee80211.c
++++ b/rtl8723bs/core/rtw_ieee80211.c
+@@ -112,7 +112,7 @@ int rtw_check_network_type(unsigned char
+ u8 *rtw_set_fixed_ie(unsigned char *pbuf, unsigned int len, unsigned char *source,
+ 				unsigned int *frlen)
+ {
+-	memcpy((void *)pbuf, (void *)source, len);
++	memcpy(pbuf, source, len);
+ 	*frlen = *frlen + len;
+ 	return pbuf + len;
+ }
+@@ -132,7 +132,7 @@ u8 *rtw_set_ie
+ 	*(pbuf + 1) = (u8)len;
+ 
+ 	if (len > 0)
+-		memcpy((void *)(pbuf + 2), (void *)source, len);
++		memcpy((pbuf + 2), source, len);
+ 
+ 	*frlen = *frlen + (len + 2);
+ 
+diff -u -p a/rtl8723bs/core/rtw_mlme_ext.c b/rtl8723bs/core/rtw_mlme_ext.c
+--- a/rtl8723bs/core/rtw_mlme_ext.c
++++ b/rtl8723bs/core/rtw_mlme_ext.c
+@@ -1132,7 +1132,7 @@ unsigned int OnAuthClient(struct adapter
+ 				goto authclnt_fail;
+ 			}
+ 
+-			memcpy((void *)(pmlmeinfo->chg_txt), (void *)(p + 2), len);
++			memcpy((void *)(pmlmeinfo->chg_txt), (p + 2), len);
+ 			pmlmeinfo->auth_seq = 3;
+ 			issue_auth(padapter, NULL, 0);
+ 			set_link_timer(pmlmeext, REAUTH_TO);
+diff -u -p a/rtl8723bs/hal/rtl8723b_hal_init.c b/rtl8723bs/hal/rtl8723b_hal_init.c
+--- a/rtl8723bs/hal/rtl8723b_hal_init.c
++++ b/rtl8723bs/hal/rtl8723b_hal_init.c
+@@ -2432,13 +2432,13 @@ void Hal_InitPGData(struct adapter *pada
+ 		if (!pEEPROM->EepromOrEfuse) {
+ 			/*  Read EFUSE real map to shadow. */
+ 			EFUSE_ShadowMapUpdate(padapter, EFUSE_WIFI, false);
+-			memcpy((void *)PROMContent, (void *)pEEPROM->efuse_eeprom_data, HWSET_MAX_SIZE_8723B);
++			memcpy(PROMContent, (void *)pEEPROM->efuse_eeprom_data, HWSET_MAX_SIZE_8723B);
+ 		}
+ 	} else {/* autoload fail */
+ 		RT_TRACE(_module_hci_hal_init_c_, _drv_notice_, ("AutoLoad Fail reported from CR9346!!\n"));
+ 		if (!pEEPROM->EepromOrEfuse)
+ 			EFUSE_ShadowMapUpdate(padapter, EFUSE_WIFI, false);
+-		memcpy((void *)PROMContent, (void *)pEEPROM->efuse_eeprom_data, HWSET_MAX_SIZE_8723B);
++		memcpy(PROMContent, (void *)pEEPROM->efuse_eeprom_data, HWSET_MAX_SIZE_8723B);
+ 	}
+ }
+ 
+diff -u -p a/rtl8723bs/os_dep/ioctl_cfg80211.c b/rtl8723bs/os_dep/ioctl_cfg80211.c
+--- a/rtl8723bs/os_dep/ioctl_cfg80211.c
++++ b/rtl8723bs/os_dep/ioctl_cfg80211.c
+@@ -98,7 +98,7 @@ static struct ieee80211_channel rtw_2ghz
+ 
+ static void rtw_2g_channels_init(struct ieee80211_channel *channels)
+ {
+-	memcpy((void*)channels, (void*)rtw_2ghz_channels,
++	memcpy(channels, (void*)rtw_2ghz_channels,
+ 		sizeof(struct ieee80211_channel)*RTW_2G_CHANNELS_NUM
+ 	);
+ }
+@@ -2548,7 +2548,7 @@ static netdev_tx_t rtw_cfg80211_monitor_
+ 
+ 		pframe = (u8 *)(pmgntframe->buf_addr) + TXDESC_OFFSET;
+ 
+-		memcpy(pframe, (void*)buf, len);
++		memcpy(pframe, buf, len);
+ 		pattrib->pktlen = len;
+ 
+ 		pwlanhdr = (struct ieee80211_hdr *)pframe;
+@@ -2750,7 +2750,7 @@ static int rtw_add_beacon(struct adapter
+ 		return -ENOMEM;
+ 
+ 	memcpy(pbuf, (void *)head+24, head_len-24);/*  24 =beacon header len. */
+-	memcpy(pbuf+head_len-24, (void *)tail, tail_len);
++	memcpy(pbuf+head_len-24, tail, tail_len);
+ 
+ 	len = head_len+tail_len-24;
+ 
+@@ -3041,7 +3041,7 @@ static int _cfg80211_rtw_mgmt_tx(struct
+ 
+ 	pframe = (u8 *)(pmgntframe->buf_addr) + TXDESC_OFFSET;
+ 
+-	memcpy(pframe, (void*)buf, len);
++	memcpy(pframe, buf, len);
+ 	pattrib->pktlen = len;
+ 
+ 	pwlanhdr = (struct ieee80211_hdr *)pframe;
+diff -u -p a/vt6655/rxtx.c b/vt6655/rxtx.c
+--- a/vt6655/rxtx.c
++++ b/vt6655/rxtx.c
+@@ -1170,7 +1170,7 @@ s_cbFillTxBufHead(struct vnt_private *pD
+ 
+ 	td_info->mic_hdr = pMICHDR;
+ 
+-	memset((void *)(pbyTxBufferAddr + wTxBufSize), 0, (cbHeaderLength - wTxBufSize));
++	memset((pbyTxBufferAddr + wTxBufSize), 0, (cbHeaderLength - wTxBufSize));
+ 
+ 	/* Fill FIFO,RrvTime,RTS,and CTS */
+ 	s_vGenerateTxParameter(pDevice, byPktType, tx_buffer_head, pvRrvTime, pvRTS, pvCTS,
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 6baf90875263..4591bf1303da 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -860,6 +860,8 @@ CONFIG_NLS_ISO8859_1=y
- CONFIG_SECURITY=y
- CONFIG_CRYPTO_ECHAINIV=y
- CONFIG_CRYPTO_ANSI_CPRNG=y
-+CONFIG_CRYPTO_USER_API_RNG=m
-+CONFIG_CRYPTO_DEV_QCOM_RNG=m
- CONFIG_DMA_CMA=y
- CONFIG_CMA_SIZE_MBYTES=32
- CONFIG_PRINTK_TIME=y
--- 
-2.23.0
 
