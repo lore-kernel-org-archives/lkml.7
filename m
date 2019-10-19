@@ -2,96 +2,232 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFF5CA9EAC
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 06:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED260CA9EAB
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 06:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9CDC22468
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 06:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6644222BD
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 06:24:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="GXS2mzRg"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="YbLnBkcT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbfJSGRW (ORCPT
+        id S1727815AbfJSGYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 02:17:22 -0400
-Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.221]:16803 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727534AbfJSGRW (ORCPT
+        Sat, 19 Oct 2019 02:24:17 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45585 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726939AbfJSGYR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 02:17:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571465837;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=sbcwBRWbNmQCmaGaYkUnDbc4/AISoqZ+XLU5lXo3+NE=;
-        b=GXS2mzRgqbNhTN0UBrH0b5d7p1xLC0aezDrUnIwgew84TMcfFoNWQpuHVOkk8gd1ZN
-        70N5yATlwP6E+fqmmUKqxlDuHZ4Yw3avbtuVDjPBHX3GvIARF+OQcDCohZIcB9RDmUMs
-        Xo4RdC5GUA/7OuIzzVhDnokMPq2WPKVFLJaH1A5w0KyG7Z/AxNR6WmNy/VgjCor4GvjS
-        lszFqOUDCVATZP0Su21HxV2ufH7RTtPNRHNWegUMSBOB8jyQVJmMVM0LwDg1jnAw4j6q
-        Eat/hO7F1S4Gugz0DSEGH/9ynCzb75zqzIuu9WHMMAslyt5i6MlPJ8DbedvxyYOVhTqW
-        aRQg==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAkw4voSw=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
-        with ESMTPSA id R0b2a8v9J6HGEIa
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Sat, 19 Oct 2019 08:17:16 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: ARM: add __always_inline to functions called from __get_user_check()
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CAK7LNARFk--KYWNrrduiPgeBAu6T49brJXd_Nb8ZQOfYrbFmAA@mail.gmail.com>
-Date:   Sat, 19 Oct 2019 08:17:15 +0200
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>
+        Sat, 19 Oct 2019 02:24:17 -0400
+Received: by mail-wr1-f66.google.com with SMTP id q13so3365595wrs.12
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 23:24:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from:cc;
+        bh=NaB317VPEWYoyCGfauf4XqD6zwPbIGUmflkZmicnPS8=;
+        b=YbLnBkcTmO9kH2rGbc7u6GFXiaa7dIYcNYn9BAtlqlGUuyV+V4IWG3nWOYeC4px9Oj
+         iqUS9AZ2IoytDFN37+dS2zP5xfkR+7d+kiLTAWX+JKE+E5O/NZt31rCPl79/tAQesSf1
+         pxb7wAYiIchzjqonPfKuKR21VwY5KXLqXlNJAqaX0fn94nCJvVGakiJhcI9EzIICckqZ
+         /YDkX++zmLoT0fN0YLXbkZy1ezi8SASkViEFw5jDsGj3w8dR2lYscZ9FJfh0bU6b9nLx
+         iVGnF67CcFQLU/CPSkvDGpF7BSDusQ6cc2+ME9fEC083UJkf8QtTrrHeDoE9avumggJ9
+         nS0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from:cc;
+        bh=NaB317VPEWYoyCGfauf4XqD6zwPbIGUmflkZmicnPS8=;
+        b=RRQcLbGgbif0ehA29kTsburt7bt3hp/NjtnrllkCC0AAe24odf6x8LFkwvN4MplDRp
+         5O/U8myI75gs8fTJTCS+6PQfVgJ26Yt4/vRMRwIm9z1lpFNTmUoaBOmHH3xFjuMLS03K
+         1iib4LpY0HdD94r3lhzzbevvwXHnaD0ziJsos782NnlwE1oDeOkwXEoQPQKxM+hzgvxI
+         b1i3luM1B6qU4OUT5aCt+5ll7dYfqyH8hoZVcTTf67b4b0zV7Z9cKqYw75FDdVRMnESi
+         Bwdt58mRl2I5c8zc9mhY9Civ7sOND8von0nIp0Mu/DJwrXi3e9i+L0WVgl93g0Tsz/9m
+         VvuA==
+X-Gm-Message-State: APjAAAW6MLUa50XoireEF0Meogr7qp0XPaa2BqZduyoWfzCRYzBd2bEi
+        /lEG+ghzAwMEkNH+Qx8zbROuPg==
+X-Google-Smtp-Source: APXvYqxbRXnH9dhmc0b7p235t7/I3YoheY6CeABtmWPImtm2uAGk8R19vGzSr5lr/aNIHxPiNaL+7w==
+X-Received: by 2002:adf:fd08:: with SMTP id e8mr4905652wrr.42.1571466254197;
+        Fri, 18 Oct 2019 23:24:14 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id a14sm6594678wmm.44.2019.10.18.23.24.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 18 Oct 2019 23:24:13 -0700 (PDT)
+Message-ID: <5daaac0d.1c69fb81.12761.2a24@mx.google.com>
+Date:   Fri, 18 Oct 2019 23:24:13 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <8798A27C-868A-4845-AF31-C25A38A30EC2@goldelico.com>
-References: <1823C41A-3296-4DEA-B71F-5AD548335F8B@goldelico.com> <CAK7LNARFk--KYWNrrduiPgeBAu6T49brJXd_Nb8ZQOfYrbFmAA@mail.gmail.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-X-Mailer: Apple Mail (2.3124)
+X-Kernelci-Lab-Name: lab-collabora
+X-Kernelci-Branch: for-next
+X-Kernelci-Tree: broonie-spi
+X-Kernelci-Report-Type: bisect
+X-Kernelci-Kernel: v5.4-rc3-73-gc673f2d99c3d
+Subject: broonie-spi/for-next boot bisection: v5.4-rc3-73-gc673f2d99c3d on
+ jetson-tk1
+To:     Mark Brown <broonie@kernel.org>, tomeu.vizoso@collabora.com,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        guillaume.tucker@collabora.com, mgalka@collabora.com,
+        broonie@kernel.org, matthew.hart@linaro.org, khilman@baylibre.com,
+        enric.balletbo@collabora.com
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* This automated bisection report was sent to you on the basis  *
+* that you may be involved with the breaking commit it has      *
+* found.  No manual investigation has been done to verify it,   *
+* and the root cause of the problem may be somewhere else.      *
+*                                                               *
+* If you do send a fix, please include this trailer:            *
+*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+*                                                               *
+* Hope this helps!                                              *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-> Am 19.10.2019 um 03:59 schrieb Masahiro Yamada =
-<yamada.masahiro@socionext.com>:
->=20
-> On Fri, Oct 18, 2019 at 7:06 PM H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->>=20
->> Hi,
->> I wonder what happened to your patch. We were "hit" by it in v5.4-rc1 =
-and
->> after finding, it made our OMAP based device bootable again (using =
-our
->> own defconfig which optimizes for SIZE).
->>=20
->> But it does not seem to have arrived in linux-next
->=20
-> It is in linux-next.
+broonie-spi/for-next boot bisection: v5.4-rc3-73-gc673f2d99c3d on jetson-tk1
 
-Ah, now I found it.
+Summary:
+  Start:      c673f2d99c3d Merge remote-tracking branch 'spi/topic/ptp' int=
+o spi-next
+  Details:    https://kernelci.org/boot/id/5daa485f59b5142f647525a0
+  Plain log:  https://storage.kernelci.org//broonie-spi/for-next/v5.4-rc3-7=
+3-gc673f2d99c3d/arm/multi_v7_defconfig+CONFIG_SMP=3Dn/gcc-8/lab-collabora/b=
+oot-tegra124-jetson-tk1.txt
+  HTML log:   https://storage.kernelci.org//broonie-spi/for-next/v5.4-rc3-7=
+3-gc673f2d99c3d/arm/multi_v7_defconfig+CONFIG_SMP=3Dn/gcc-8/lab-collabora/b=
+oot-tegra124-jetson-tk1.html
+  Result:     3e5ec1db8bfe spi: Fix SPI_CS_HIGH setting when using native a=
+nd GPIO CS
 
-It has a "8908/1:" in its title so that search by (full) subject could =
-not find it. Thanks!
+Checks:
+  revert:     PASS
+  verify:     PASS
 
->=20
->=20
->> and should IMHO
->> be fixed during the v5.4 release candidate cycle.
->=20
-> I agree.
->=20
->=20
-> Masahiro
+Parameters:
+  Tree:       broonie-spi
+  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.g=
+it
+  Branch:     for-next
+  Target:     jetson-tk1
+  CPU arch:   arm
+  Lab:        lab-collabora
+  Compiler:   gcc-8
+  Config:     multi_v7_defconfig+CONFIG_SMP=3Dn
+  Test suite: boot
 
-BR and thanks,
-Nikolaus
+Breaking commit found:
 
+---------------------------------------------------------------------------=
+----
+commit 3e5ec1db8bfee845d9f8560d1c64aeaccd586398
+Author: Gregory CLEMENT <gregory.clement@bootlin.com>
+Date:   Fri Oct 18 17:29:29 2019 +0200
+
+    spi: Fix SPI_CS_HIGH setting when using native and GPIO CS
+    =
+
+    When improving the CS GPIO support at core level, the SPI_CS_HIGH
+    has been enabled for all the CS lines used for a given SPI controller.
+    =
+
+    However, the SPI framework allows to have on the same controller native
+    CS and GPIO CS. The native CS may not support the SPI_CS_HIGH, so they
+    should not be setup automatically.
+    =
+
+    With this patch the setting is done only for the CS that will use a
+    GPIO as CS
+    =
+
+    Fixes: f3186dd87669 ("spi: Optionally use GPIO descriptors for CS GPIOs=
+")
+    Cc: <stable@vger.kernel.org>
+    Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+    Link: https://lore.kernel.org/r/20191018152929.3287-1-gregory.clement@b=
+ootlin.com
+    Signed-off-by: Mark Brown <broonie@kernel.org>
+
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index f8b4654a57d3..d07517151340 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -1711,15 +1711,7 @@ static int of_spi_parse_dt(struct spi_controller *ct=
+lr, struct spi_device *spi,
+ 		spi->mode |=3D SPI_3WIRE;
+ 	if (of_property_read_bool(nc, "spi-lsb-first"))
+ 		spi->mode |=3D SPI_LSB_FIRST;
+-
+-	/*
+-	 * For descriptors associated with the device, polarity inversion is
+-	 * handled in the gpiolib, so all chip selects are "active high" in
+-	 * the logical sense, the gpiolib will invert the line if need be.
+-	 */
+-	if (ctlr->use_gpio_descriptors)
+-		spi->mode |=3D SPI_CS_HIGH;
+-	else if (of_property_read_bool(nc, "spi-cs-high"))
++	if (of_property_read_bool(nc, "spi-cs-high"))
+ 		spi->mode |=3D SPI_CS_HIGH;
+ =
+
+ 	/* Device DUAL/QUAD mode */
+@@ -1783,6 +1775,14 @@ static int of_spi_parse_dt(struct spi_controller *ct=
+lr, struct spi_device *spi,
+ 	}
+ 	spi->chip_select =3D value;
+ =
+
++	/*
++	 * For descriptors associated with the device, polarity inversion is
++	 * handled in the gpiolib, so all gpio chip selects are "active high"
++	 * in the logical sense, the gpiolib will invert the line if need be.
++	 */
++	if ((ctlr->use_gpio_descriptors) && ctlr->cs_gpiods[spi->chip_select])
++		spi->mode |=3D SPI_CS_HIGH;
++
+ 	/* Device speed */
+ 	rc =3D of_property_read_u32(nc, "spi-max-frequency", &value);
+ 	if (rc) {
+---------------------------------------------------------------------------=
+----
+
+
+Git bisection log:
+
+---------------------------------------------------------------------------=
+----
+git bisect start
+# good: [4f5cafb5cb8471e54afdc9054d973535614f7675] Linux 5.4-rc3
+git bisect good 4f5cafb5cb8471e54afdc9054d973535614f7675
+# bad: [c673f2d99c3d644733cc1b0ceabdec47047bbe80] Merge remote-tracking bra=
+nch 'spi/topic/ptp' into spi-next
+git bisect bad c673f2d99c3d644733cc1b0ceabdec47047bbe80
+# good: [b2c98153f45fc17b9fcb241000f2d131ddea6030] spi: introduce spi_delay=
+ struct as "value + unit" & spi_delay_exec()
+git bisect good b2c98153f45fc17b9fcb241000f2d131ddea6030
+# good: [4f3d957718e7f0ac2b033dbf48c7cddecd0a8dd3] spi: pxa2xx: No need to =
+keep pointer to platform device
+git bisect good 4f3d957718e7f0ac2b033dbf48c7cddecd0a8dd3
+# good: [1cb84b02bf130f34ee81f99bc7dee5bca2943ed7] spi: atmel: Remove platf=
+orm data support
+git bisect good 1cb84b02bf130f34ee81f99bc7dee5bca2943ed7
+# bad: [fed8d8c7a6dc2a76d7764842853d81c770b0788e] spi: atmel: fix handling =
+of cs_change set on non-last xfer
+git bisect bad fed8d8c7a6dc2a76d7764842853d81c770b0788e
+# bad: [3e5ec1db8bfee845d9f8560d1c64aeaccd586398] spi: Fix SPI_CS_HIGH sett=
+ing when using native and GPIO CS
+git bisect bad 3e5ec1db8bfee845d9f8560d1c64aeaccd586398
+# good: [b2662a164f9dc48da8822e56600686d639056282] spi: pxa2xx: Set control=
+ler->max_transfer_size in dma mode
+git bisect good b2662a164f9dc48da8822e56600686d639056282
+# first bad commit: [3e5ec1db8bfee845d9f8560d1c64aeaccd586398] spi: Fix SPI=
+_CS_HIGH setting when using native and GPIO CS
+---------------------------------------------------------------------------=
+----
