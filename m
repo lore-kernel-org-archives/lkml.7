@@ -2,203 +2,131 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 808ACCA9EAC
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 17:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF143CA9EAB
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 17:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 408AB222BD
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 17:01:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571504510;
-	bh=fajAlAZqTugB5UWjIoE5vMmFSKGDVO1aaKB0JdZrWcA=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=sNsyVLB9wCj7zBrmhGaRIxTFoFuhAl8a3WRgIqyk8VfhJUoo8SOI4rygrf53Usorr
-	 FjGvGYLMJWIOHDFf23WzXBa9cH/3VFz3YZ0sj3Doj+kl//Xmsiu6MYZDnEF9hdSYUp
-	 PIi0DX63zrqGY3xzR+lkdKdIVKgk+LhsPA1REwag=
+	by mail.kernel.org (Postfix) with ESMTP id B951C222C2
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 17:37:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hYvrYOeo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbfJSRBr (ORCPT
+        id S1726145AbfJSRhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 13:01:47 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:42699 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbfJSRBr (ORCPT
+        Sat, 19 Oct 2019 13:37:43 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52229 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfJSRhm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 13:01:47 -0400
-Received: by mail-qk1-f193.google.com with SMTP id f16so8323042qkl.9;
-        Sat, 19 Oct 2019 10:01:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=38ukDg6v8LzizblKy4R2j0RSGFLL8YYA9eWGRF9AGus=;
-        b=JUD/23hU4Mo2uD2286zu3BYxl0mQSOAegANJp70s5q5u0KQoJNPwPbpdE2QtEgYBwv
-         9TrOpZUWfRAy+veAJbWwzHhEiOXnVyOC7QaSAdxTehqtmt/aUYO7IqzOv45jSrTSG6Wo
-         1UoXHw91DbGQ5b/5TbkIVZ9UVgWzg/Xv36O1JNtaKOkVmZirpDPQGZS+P6BZ3DbnnSJU
-         fYjv+7S1Vos3gp7GYbEYEHr1+q1sGT7qBoXNqdpUb3pnWsdJ0YxkcCsR7bcz1nwH/ygr
-         DrG8/wQ6Hq6tq8OzDoOqJISDTq96fg+qObTBWFWwAlZ09Q3ccCwpyLKRHVnyIzV5jPO+
-         +N+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=38ukDg6v8LzizblKy4R2j0RSGFLL8YYA9eWGRF9AGus=;
-        b=QB1nTzRmYaaR+wUW9LnIuHYS4n/xCmXHZAtxOaLIQX94Y0ODaOvIfr3Y6XAOzkzHIc
-         u69ovi9VvwhUGLj3LDZ9t93PR1A5b1lbiTLZiden2eBj3eUjN8U8WnTyD9TXp5pXKvDs
-         001eFrCDF52g9+QigpejxaboIi/MYrJGzLic1+0CCUu+/gHiizXzF+HyzWxLXa8IznJF
-         RjtMEE1OADK1377W2E+22xLl/ZcgQ1ZTay3CdU5WF8mbCpJoUr0Ogc8USlcSTeXZRHHx
-         0glJiEENwA/DOslijoIMNKS/Lkf/+u856fX5wpvYTfcITpnoUVUVqAa+KC1RlTcFn7WQ
-         wtow==
-X-Gm-Message-State: APjAAAUrp+JcAPgMDUu+H+SvpVoUXUFNz4b3AaLFLqMm6tZonP/vPb7X
-        1WXxApvVdtEusYjNVws780E=
-X-Google-Smtp-Source: APXvYqxAvZI7YFOQcPdLVEYxFx2B66SsHWgmjPccV4L/VIqVGl98IbL+90alk+068fN7Go00HPBHNg==
-X-Received: by 2002:a05:620a:74f:: with SMTP id i15mr14408297qki.199.1571504505434;
-        Sat, 19 Oct 2019 10:01:45 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::c67b])
-        by smtp.gmail.com with ESMTPSA id j19sm1174170qtr.6.2019.10.19.10.01.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 19 Oct 2019 10:01:44 -0700 (PDT)
-Date:   Sat, 19 Oct 2019 10:01:41 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, kernel-team@fb.com,
-        linux-kernel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>
-Subject: [PATCH] net: fix sk_page_frag() recursion from memory reclaim
-Message-ID: <20191019170141.GQ18794@devbig004.ftw2.facebook.com>
+        Sat, 19 Oct 2019 13:37:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571506661;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=S75KVaigEsZGCuPhN7Kb1Ly3J9PYVWcRgyzkShz1eL0=;
+        b=hYvrYOeoCDrerTHUhnHZkg1NnfvelsCDXlCtGdDTkUPE2SJ64xLgQ2x493VhzhW4W00tS3
+        XxMObFVtOS8Q++6V2TaXTHJRff7kd1DrXDI1TG20lP+/ZDtnUZz7Rp1Ta7N16k3CW2ZuqT
+        VglQ6f4CAw2KXpvuke1+ewpWOwkvGY4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-10-dFlC1cbBPziNCJflHEh2lA-1; Sat, 19 Oct 2019 13:37:37 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E7D5A80183D;
+        Sat, 19 Oct 2019 17:37:35 +0000 (UTC)
+Received: from krava (ovpn-204-36.brq.redhat.com [10.40.204.36])
+        by smtp.corp.redhat.com (Postfix) with SMTP id C6EE5600C6;
+        Sat, 19 Oct 2019 17:37:32 +0000 (UTC)
+Date:   Sat, 19 Oct 2019 19:37:31 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: Re: [PATCH 05/10] libperf: Add _GNU_SOURCE define to compilation
+Message-ID: <20191019173731.GA12782@krava>
+References: <20191017105918.20873-1-jolsa@kernel.org>
+ <20191017105918.20873-6-jolsa@kernel.org>
+ <20191018180738.GD1797@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20191018180738.GD1797@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: dFlC1cbBPziNCJflHEh2lA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From f0335a5d14d3596d36e3ffddb2fd4fa0dc6ca9c2 Mon Sep 17 00:00:00 2001
-From: Tejun Heo <tj@kernel.org>
-Date: Sat, 19 Oct 2019 09:10:57 -0700
+On Fri, Oct 18, 2019 at 03:07:38PM -0300, Arnaldo Carvalho de Melo wrote:
+>=20
+> Why?
 
-sk_page_frag() optimizes skb_frag allocations by using per-task
-skb_frag cache when it knows it's the only user.  The condition is
-determined by seeing whether the socket allocation mask allows
-blocking - if the allocation may block, it obviously owns the task's
-context and ergo exclusively owns current->task_frag.
+it's passed when the library is compiled with perf, but not
+when you compile it standalone.. and 2 '-D_GNU_SOURCE' on
+command line are ok
 
-Unfortunately, this misses recursion through memory reclaim path.
-Please take a look at the following backtrace.
+jirka
 
- [2] RIP: 0010:tcp_sendmsg_locked+0xccf/0xe10
-     ...
-     tcp_sendmsg+0x27/0x40
-     sock_sendmsg+0x30/0x40
-     sock_xmit.isra.24+0xa1/0x170 [nbd]
-     nbd_send_cmd+0x1d2/0x690 [nbd]
-     nbd_queue_rq+0x1b5/0x3b0 [nbd]
-     __blk_mq_try_issue_directly+0x108/0x1b0
-     blk_mq_request_issue_directly+0xbd/0xe0
-     blk_mq_try_issue_list_directly+0x41/0xb0
-     blk_mq_sched_insert_requests+0xa2/0xe0
-     blk_mq_flush_plug_list+0x205/0x2a0
-     blk_flush_plug_list+0xc3/0xf0
- [1] blk_finish_plug+0x21/0x2e
-     _xfs_buf_ioapply+0x313/0x460
-     __xfs_buf_submit+0x67/0x220
-     xfs_buf_read_map+0x113/0x1a0
-     xfs_trans_read_buf_map+0xbf/0x330
-     xfs_btree_read_buf_block.constprop.42+0x95/0xd0
-     xfs_btree_lookup_get_block+0x95/0x170
-     xfs_btree_lookup+0xcc/0x470
-     xfs_bmap_del_extent_real+0x254/0x9a0
-     __xfs_bunmapi+0x45c/0xab0
-     xfs_bunmapi+0x15/0x30
-     xfs_itruncate_extents_flags+0xca/0x250
-     xfs_free_eofblocks+0x181/0x1e0
-     xfs_fs_destroy_inode+0xa8/0x1b0
-     destroy_inode+0x38/0x70
-     dispose_list+0x35/0x50
-     prune_icache_sb+0x52/0x70
-     super_cache_scan+0x120/0x1a0
-     do_shrink_slab+0x120/0x290
-     shrink_slab+0x216/0x2b0
-     shrink_node+0x1b6/0x4a0
-     do_try_to_free_pages+0xc6/0x370
-     try_to_free_mem_cgroup_pages+0xe3/0x1e0
-     try_charge+0x29e/0x790
-     mem_cgroup_charge_skmem+0x6a/0x100
-     __sk_mem_raise_allocated+0x18e/0x390
-     __sk_mem_schedule+0x2a/0x40
- [0] tcp_sendmsg_locked+0x8eb/0xe10
-     tcp_sendmsg+0x27/0x40
-     sock_sendmsg+0x30/0x40
-     ___sys_sendmsg+0x26d/0x2b0
-     __sys_sendmsg+0x57/0xa0
-     do_syscall_64+0x42/0x100
-     entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-In [0], tcp_send_msg_locked() was using current->page_frag when it
-called sk_wmem_schedule().  It already calculated how many bytes can
-be fit into current->page_frag.  Due to memory pressure,
-sk_wmem_schedule() called into memory reclaim path which called into
-xfs and then IO issue path.  Because the filesystem in question is
-backed by nbd, the control goes back into the tcp layer - back into
-tcp_sendmsg_locked().
-
-nbd sets sk_allocation to (GFP_NOIO | __GFP_MEMALLOC) which makes
-sense - it's in the process of freeing memory and wants to be able to,
-e.g., drop clean pages to make forward progress.  However, this
-confused sk_page_frag() called from [2].  Because it only tests
-whether the allocation allows blocking which it does, it now thinks
-current->page_frag can be used again although it already was being
-used in [0].
-
-After [2] used current->page_frag, the offset would be increased by
-the used amount.  When the control returns to [0],
-current->page_frag's offset is increased and the previously calculated
-number of bytes now may overrun the end of allocated memory leading to
-silent memory corruptions.
-
-Fix it by updating sk_page_frag() to test __GFP_MEMALLOC and not use
-current->task_frag if set.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: Josef Bacik <josef@toxicpanda.com>
-Cc: stable@vger.kernel.org
----
- include/net/sock.h | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
-
-diff --git a/include/net/sock.h b/include/net/sock.h
-index 2c53f1a1d905..4e2ca38acc3c 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -2233,12 +2233,21 @@ struct sk_buff *sk_stream_alloc_skb(struct sock *sk, int size, gfp_t gfp,
-  * sk_page_frag - return an appropriate page_frag
-  * @sk: socket
-  *
-- * If socket allocation mode allows current thread to sleep, it means its
-- * safe to use the per task page_frag instead of the per socket one.
-+ * Use the per task page_frag instead of the per socket one for
-+ * optimization when we know there can be no other users.
-+ *
-+ * 1. The socket allocation mode allows current thread to sleep.  This is
-+ *    the sleepable context which owns the task page_frag.
-+ *
-+ * 2. The socket allocation mode doesn't indicate that the socket is being
-+ *    used to reclaim memory.  Memory reclaim may nest inside other socket
-+ *    operations and end up recursing into sk_page_frag() while it's
-+ *    already in use.
-  */
- static inline struct page_frag *sk_page_frag(struct sock *sk)
- {
--	if (gfpflags_allow_blocking(sk->sk_allocation))
-+	if (gfpflags_allow_blocking(sk->sk_allocation) &&
-+	    !(sk->sk_allocation & __GFP_MEMALLOC))
- 		return &current->task_frag;
- 
- 	return &sk->sk_frag;
--- 
-2.17.1
+>=20
+>=20
+> Em Thu, Oct 17, 2019 at 12:59:13PM +0200, Jiri Olsa escreveu:
+> > Link: http://lkml.kernel.org/n/tip-m7t1e9kgea4jc3piyvjju7ps@git.kernel.=
+org
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  tools/perf/lib/Makefile       | 1 +
+> >  tools/perf/lib/tests/Makefile | 2 ++
+> >  2 files changed, 3 insertions(+)
+> >=20
+> > diff --git a/tools/perf/lib/Makefile b/tools/perf/lib/Makefile
+> > index 0f233638ef1f..20396f68fcad 100644
+> > --- a/tools/perf/lib/Makefile
+> > +++ b/tools/perf/lib/Makefile
+> > @@ -73,6 +73,7 @@ override CFLAGS +=3D -Werror -Wall
+> >  override CFLAGS +=3D -fPIC
+> >  override CFLAGS +=3D $(INCLUDES)
+> >  override CFLAGS +=3D -fvisibility=3Dhidden
+> > +override CFLAGS +=3D -D_GNU_SOURCE
+> > =20
+> >  all:
+> > =20
+> > diff --git a/tools/perf/lib/tests/Makefile b/tools/perf/lib/tests/Makef=
+ile
+> > index a43cd08c5c03..78c3d8c83c53 100644
+> > --- a/tools/perf/lib/tests/Makefile
+> > +++ b/tools/perf/lib/tests/Makefile
+> > @@ -12,6 +12,8 @@ else
+> >    CFLAGS :=3D -g -Wall
+> >  endif
+> > =20
+> > +CFLAGS +=3D -D_GNU_SOURCE
+> > +
+> >  all:
+> > =20
+> >  include $(srctree)/tools/scripts/Makefile.include
+> > --=20
+> > 2.21.0
+>=20
+> --=20
+>=20
+> - Arnaldo
 
