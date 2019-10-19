@@ -2,47 +2,48 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CFDCA9EAB
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 09:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16388CA9EAC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 09:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4DF8222C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 09:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC6572082F
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 09:44:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbfJSJjO convert rfc822-to-8bit (ORCPT
+        id S1726524AbfJSJon convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 05:39:14 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:57969 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbfJSJjN (ORCPT
+        Sat, 19 Oct 2019 05:44:43 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:40889 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbfJSJom (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 05:39:13 -0400
+        Sat, 19 Oct 2019 05:44:42 -0400
 X-Originating-IP: 91.224.148.103
 Received: from xps13 (unknown [91.224.148.103])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 43C3A20002;
-        Sat, 19 Oct 2019 09:39:01 +0000 (UTC)
-Date:   Sat, 19 Oct 2019 11:39:00 +0200
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 4C90DE0009;
+        Sat, 19 Oct 2019 09:44:36 +0000 (UTC)
+Date:   Sat, 19 Oct 2019 11:44:34 +0200
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Brian Norris <computersforpeace@gmail.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
         Richard Weinberger <richard@nod.at>,
         David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
         Marek Vasut <marek.vasut@gmail.com>,
         Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org (open list:BROADCOM STB NAND FLASH DRIVER),
-        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM STB NAND
-        FLASH DRIVER), linux-kernel@vger.kernel.org (open list)
-Subject: Re: [PATCH] mtd: rawnand: brcmnand: Fix sparse warning in
- has_flash_dma()
-Message-ID: <20191019113824.15fa4f52@xps13>
-In-Reply-To: <20191018233844.23838-1-f.fainelli@gmail.com>
-References: <20191018233844.23838-1-f.fainelli@gmail.com>
+        linux-mtd@lists.infradead.org
+Subject: Re: [PATCH 11/46] ARM: pxa: cmx270: use platform device for nand
+Message-ID: <20191019114417.5268f7e4@xps13>
+In-Reply-To: <20191018154201.1276638-11-arnd@arndb.de>
+References: <20191018154052.1276506-1-arnd@arndb.de>
+        <20191018154201.1276638-11-arnd@arndb.de>
 Organization: Bootlin
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
@@ -53,38 +54,251 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Florian,
+Hi Arnd,
 
-Florian Fainelli <f.fainelli@gmail.com> wrote on Fri, 18 Oct 2019
-16:38:44 -0700:
+Arnd Bergmann <arnd@arndb.de> wrote on Fri, 18 Oct 2019 17:41:26 +0200:
 
-> Sparse rightfully complained about has_flash_dma():
-> +drivers/mtd/nand/brcmnand/brcmnand.c:951:40: warning: Using plain integer as NULL pointer [sparse]
+> The driver traditionally hardcodes the MMIO register address and
+> the GPIO numbers from data defined in platform header files.
+> 
+> To make it indepdendent of that, use a memory resource for the
+> registers, and a gpio lookup table to replace the gpio numbers.
 
-I don't get why would sparse complain about this... Anyway I prefer
-the !!(<pointer>) alternative if you don't mind. Otherwise the "!=
-NULL" comparison feels wrong.
+Looks good to me besides the typo s/indepdendent/independent/.
+
+Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
 > 
-> Fixes: 27c5b17cd1b1 ("mtd: nand: add NAND driver "library" for Broadcom STB NAND controller")
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+> Cc: Richard Weinberger <richard@nod.at>
+> Cc: David Woodhouse <dwmw2@infradead.org>
+> Cc: Brian Norris <computersforpeace@gmail.com>
+> Cc: Marek Vasut <marek.vasut@gmail.com>
+> Cc: Vignesh Raghavendra <vigneshr@ti.com>
+> Cc: linux-mtd@lists.infradead.org
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/arm/mach-pxa/cm-x270.c        | 25 +++++++++
+>  drivers/mtd/nand/raw/cmx270_nand.c | 88 +++++++++++-------------------
+>  2 files changed, 56 insertions(+), 57 deletions(-)
 > 
-> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> index 15ef30b368a5..73f7a0945399 100644
-> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> @@ -909,7 +909,7 @@ static inline void brcmnand_set_wp(struct brcmnand_controller *ctrl, bool en)
+> diff --git a/arch/arm/mach-pxa/cm-x270.c b/arch/arm/mach-pxa/cm-x270.c
+> index 9baad11314f2..6d80400d8887 100644
+> --- a/arch/arm/mach-pxa/cm-x270.c
+> +++ b/arch/arm/mach-pxa/cm-x270.c
+> @@ -40,6 +40,10 @@
+>  #define GPIO19_WLAN_STRAP	(19)
+>  #define GPIO102_WLAN_RST	(102)
 >  
->  static inline bool has_flash_dma(struct brcmnand_controller *ctrl)
+> +/* NAND GPIOS */
+> +#define GPIO_NAND_CS		(11)
+> +#define GPIO_NAND_RB		(89)
+> +
+>  static unsigned long cmx270_pin_config[] = {
+>  	/* AC'97 */
+>  	GPIO28_AC97_BITCLK,
+> @@ -403,6 +407,26 @@ static void __init cmx270_init_spi(void)
+>  static inline void cmx270_init_spi(void) {}
+>  #endif
+>  
+> +static struct gpiod_lookup_table cmx270_nand_gpio_table = {
+> +	.dev_id = "cmx270-nand",
+> +	.table = {
+> +		GPIO_LOOKUP("gpio-pxa", GPIO_NAND_CS, "cs", GPIO_ACTIVE_HIGH),
+> +		GPIO_LOOKUP("gpio-pxa", GPIO_NAND_RB, "rb", GPIO_ACTIVE_HIGH),
+> +		{ },
+> +	},
+> +};
+> +
+> +static struct resource cmx270_nand_resources[] __initdata = {
+> +	DEFINE_RES_MEM(PXA_CS1_PHYS, 12),
+> +};
+> +
+> +static void __init cmx270_init_nand(void)
+> +{
+> +	platform_device_register_simple("cmx270-nand", -1,
+> +					cmx270_nand_resources, 1);
+> +	gpiod_add_lookup_table(&cmx270_nand_gpio_table);
+> +}
+> +
+>  void __init cmx270_init(void)
 >  {
-> -	return ctrl->flash_dma_base;
-> +	return ctrl->flash_dma_base != NULL;
+>  	pxa2xx_mfp_config(ARRAY_AND_SIZE(cmx270_pin_config));
+> @@ -416,4 +440,5 @@ void __init cmx270_init(void)
+>  	cmx270_init_ohci();
+>  	cmx270_init_2700G();
+>  	cmx270_init_spi();
+> +	cmx270_init_nand();
+>  }
+> diff --git a/drivers/mtd/nand/raw/cmx270_nand.c b/drivers/mtd/nand/raw/cmx270_nand.c
+> index 7af3d0bdcdb8..31cb20858c46 100644
+> --- a/drivers/mtd/nand/raw/cmx270_nand.c
+> +++ b/drivers/mtd/nand/raw/cmx270_nand.c
+> @@ -15,18 +15,17 @@
+>  #include <linux/mtd/rawnand.h>
+>  #include <linux/mtd/partitions.h>
+>  #include <linux/slab.h>
+> -#include <linux/gpio.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/module.h>
+>  #include <linux/soc/pxa/cpu.h>
+> +#include <linux/platform_device.h>
+>  
+>  #include <asm/io.h>
+>  #include <asm/irq.h>
+>  #include <asm/mach-types.h>
+>  
+> -#include <mach/addr-map.h>
+> -
+> -#define GPIO_NAND_CS	(11)
+> -#define GPIO_NAND_RB	(89)
+> +static struct gpio_desc *gpiod_nand_cs;
+> +static struct gpio_desc *gpiod_nand_rb;
+>  
+>  /* MTD structure for CM-X270 board */
+>  static struct mtd_info *cmx270_nand_mtd;
+> @@ -70,14 +69,14 @@ static void cmx270_read_buf(struct nand_chip *this, u_char *buf, int len)
+>  
+>  static inline void nand_cs_on(void)
+>  {
+> -	gpio_set_value(GPIO_NAND_CS, 0);
+> +	gpiod_set_value(gpiod_nand_cs, 0);
 >  }
 >  
->  static inline void disable_ctrl_irqs(struct brcmnand_controller *ctrl)
+>  static void nand_cs_off(void)
+>  {
+>  	dsb();
+>  
+> -	gpio_set_value(GPIO_NAND_CS, 1);
+> +	gpiod_set_value(gpiod_nand_cs, 1);
+>  }
+>  
+>  /*
+> @@ -120,48 +119,41 @@ static int cmx270_device_ready(struct nand_chip *this)
+>  {
+>  	dsb();
+>  
+> -	return (gpio_get_value(GPIO_NAND_RB));
+> +	return (gpiod_get_value(gpiod_nand_rb));
+>  }
+>  
+>  /*
+>   * Main initialization routine
+>   */
+> -static int __init cmx270_init(void)
+> +static int cmx270_probe(struct platform_device *pdev)
+>  {
+>  	struct nand_chip *this;
+> +	struct device *dev = &pdev->dev;
+>  	int ret;
+>  
+> -	if (!(machine_is_armcore() && cpu_is_pxa27x()))
+> -		return -ENODEV;
+> -
+> -	ret = gpio_request(GPIO_NAND_CS, "NAND CS");
+> +	gpiod_nand_cs = devm_gpiod_get(dev, "cs", GPIOD_OUT_HIGH);
+> +	ret = PTR_ERR_OR_ZERO(gpiod_nand_cs);
+>  	if (ret) {
+>  		pr_warn("CM-X270: failed to request NAND CS gpio\n");
+>  		return ret;
+>  	}
+>  
+> -	gpio_direction_output(GPIO_NAND_CS, 1);
+> -
+> -	ret = gpio_request(GPIO_NAND_RB, "NAND R/B");
+> +	gpiod_nand_rb = devm_gpiod_get(dev, "rb", GPIOD_IN);
+> +	ret = PTR_ERR_OR_ZERO(gpiod_nand_rb);
+>  	if (ret) {
+>  		pr_warn("CM-X270: failed to request NAND R/B gpio\n");
+> -		goto err_gpio_request;
+> +		return ret;
+>  	}
+>  
+> -	gpio_direction_input(GPIO_NAND_RB);
+> -
+>  	/* Allocate memory for MTD device structure and private data */
+> -	this = kzalloc(sizeof(struct nand_chip), GFP_KERNEL);
+> -	if (!this) {
+> -		ret = -ENOMEM;
+> -		goto err_kzalloc;
+> -	}
+> +	this = devm_kzalloc(dev, sizeof(struct nand_chip), GFP_KERNEL);
+> +	if (!this)
+> +		return -ENOMEM;
+>  
+> -	cmx270_nand_io = ioremap(PXA_CS1_PHYS, 12);
+> +	cmx270_nand_io = devm_platform_ioremap_resource(pdev, 0);
+>  	if (!cmx270_nand_io) {
+>  		pr_debug("Unable to ioremap NAND device\n");
+> -		ret = -EINVAL;
+> -		goto err_ioremap;
+> +		return -EINVAL;
+>  	}
+>  
+>  	cmx270_nand_mtd = nand_to_mtd(this);
+> @@ -189,48 +181,30 @@ static int __init cmx270_init(void)
+>  	ret = nand_scan(this, 1);
+>  	if (ret) {
+>  		pr_notice("No NAND device\n");
+> -		goto err_scan;
+> +		return ret;
+>  	}
+>  
+>  	/* Register the partitions */
+> -	ret = mtd_device_register(cmx270_nand_mtd, partition_info,
+> -				  NUM_PARTITIONS);
+> -	if (ret)
+> -		goto err_scan;
+> -
+> -	/* Return happy */
+> -	return 0;
+> -
+> -err_scan:
+> -	iounmap(cmx270_nand_io);
+> -err_ioremap:
+> -	kfree(this);
+> -err_kzalloc:
+> -	gpio_free(GPIO_NAND_RB);
+> -err_gpio_request:
+> -	gpio_free(GPIO_NAND_CS);
+> -
+> -	return ret;
+> -
+> +	return mtd_device_register(cmx270_nand_mtd, partition_info,
+> +				   NUM_PARTITIONS);
+>  }
+> -module_init(cmx270_init);
+>  
+>  /*
+>   * Clean up routine
+>   */
+> -static void __exit cmx270_cleanup(void)
+> +static int cmx270_remove(struct platform_device *pdev)
+>  {
+> -	/* Release resources, unregister device */
+>  	nand_release(mtd_to_nand(cmx270_nand_mtd));
+>  
+> -	gpio_free(GPIO_NAND_RB);
+> -	gpio_free(GPIO_NAND_CS);
+> -
+> -	iounmap(cmx270_nand_io);
+> -
+> -	kfree(mtd_to_nand(cmx270_nand_mtd));
+> +	return 0;
+>  }
+> -module_exit(cmx270_cleanup);
+> +
+> +static struct platform_driver cmx270_nand_driver = {
+> +	.driver.name = "cmx270-nand",
+> +	.probe = cmx270_probe,
+> +	.remove = cmx270_remove,
+> +};
+> +module_platform_driver(cmx270_nand_driver);
+>  
+>  MODULE_LICENSE("GPL");
+>  MODULE_AUTHOR("Mike Rapoport <mike@compulab.co.il>");
+
+
 
 
 Thanks,
