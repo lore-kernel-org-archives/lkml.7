@@ -2,250 +2,178 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 623E9CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFADCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32916222C5
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78CC721897
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:33:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="BXnjn+z1";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="FrG5tG6o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbfJSB2p (ORCPT
+        id S1726373AbfJSBdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 21:28:45 -0400
-Received: from mga07.intel.com ([134.134.136.100]:54933 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726152AbfJSB2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 21:28:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 18:28:44 -0700
-X-IronPort-AV: E=Sophos;i="5.67,313,1566889200"; 
-   d="scan'208";a="190530675"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.171.209]) ([10.249.171.209])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 18 Oct 2019 18:28:42 -0700
-Subject: Re: [PATCH v2 3/3] KVM: VMX: Some minor refactor of MSR bitmap
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191018093723.102471-1-xiaoyao.li@intel.com>
- <20191018093723.102471-4-xiaoyao.li@intel.com>
- <20191018172741.GF26319@linux.intel.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <f6327d92-7b25-a621-2f5c-aacb6f30793a@intel.com>
-Date:   Sat, 19 Oct 2019 09:28:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191018172741.GF26319@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Fri, 18 Oct 2019 21:33:09 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:55106 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726195AbfJSBdJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 21:33:09 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9J1OUmY008131;
+        Fri, 18 Oct 2019 18:31:48 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=JzJAuyL4X8TOkA0ZlOlw3S7qDTKXT0p/n731er8IjTk=;
+ b=BXnjn+z1ZB1uoUB7UWAJ7UPCbbLT4xpPxzGXpEG7dm5S9Ab+QXgLioal+i01ygWUp1zd
+ j2YaK1aO9hiQKMNR1V47zDHXOns8+DCqVZViR4toF1G4JEd/U1YmgO0811SFP21YNqKt
+ xMQ+J7OiA+8MD+rTkrUYJEjb4+rKJNV/g84= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2vqhgjsvxp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 18 Oct 2019 18:31:48 -0700
+Received: from prn-hub06.TheFacebook.com (2620:10d:c081:35::130) by
+ prn-hub06.TheFacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Fri, 18 Oct 2019 18:31:46 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.30) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Fri, 18 Oct 2019 18:31:46 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=C1YJTbVbwBZpkEhRs/LH+d/oUt/zFyjfAGbSfyYbNmtCtpYPvCNXWiENisNE3uXPQLRvCtgATq4YyTMQqX6Kimec1wGRg+t5kEy4rZq30PuvuIKnOjw8mShjsnJ4n1B4xCtkB0YqFc09mfmVLrkThF0rBksObknKB0zkzunNsoyfgLhZ9NX/TbXk/hfF+HGoliQMWP8o3t6j9ZJWldAKvNQGDWQNCGpW3gnDRMDVNGMJy54Unk4J0NkdItqqYQGQ9+O4NU/sCxh1I0Q4t9CQSsM6xBHjxCvivEMVINtC9UPueZdgiBK/jdXliWo5onNv58jWCLcDZzjy2yqlggKRWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JzJAuyL4X8TOkA0ZlOlw3S7qDTKXT0p/n731er8IjTk=;
+ b=J4ui0SX02Chfn7ICTB34gygJDEPId3eBD96+fSol8IkEs4lpBF3RxVFIBzv/w0wAu86t+srCbKw9XlYmRor3fA05QkKPHiDht+sbMD5v4WICz8mEt6OJpE8tGIb/V31lB6C98rcN7HMXiZOmBoIV2GXVXpvwqj1junNsOUQ0w0Jl0lgru//kGim/oF53JabRBAWGwMd063o6Yn/pcV9xyZDH2KCrmnqLVmhlpLnClkB3rZ8YaNVZujwR6OHY8mAw8CGnDrs35u8nidsxXcmHghchSiTC81GWHzYAfTUZrkNgVJqJZ6MI0G71ngxIY4US+DQPY+sxoIlYaxRhunXbPA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JzJAuyL4X8TOkA0ZlOlw3S7qDTKXT0p/n731er8IjTk=;
+ b=FrG5tG6oi58ueiXJwPLCVUl6G8Q9rFpPYPcuuHOKXy0za9YFMrFV1PeSk9ZkbaFYxMiliqOZyGI4ftpju50KjN851m+4bv0wFNjWgwCCtdHaGT0vJzMV5VV1GAkmMZqvEDjid1VjlhdliKmoL0Ttg/VH2og31RnHGzXq7LucBeM=
+Received: from BY5PR15MB3636.namprd15.prod.outlook.com (52.133.252.91) by
+ BY5PR15MB3649.namprd15.prod.outlook.com (52.133.253.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.21; Sat, 19 Oct 2019 01:31:46 +0000
+Received: from BY5PR15MB3636.namprd15.prod.outlook.com
+ ([fe80::7887:4f9c:70df:285c]) by BY5PR15MB3636.namprd15.prod.outlook.com
+ ([fe80::7887:4f9c:70df:285c%4]) with mapi id 15.20.2347.024; Sat, 19 Oct 2019
+ 01:31:45 +0000
+From:   Vijay Khemka <vijaykhemka@fb.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "Sven Van Asbroeck" <TheSven73@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        "Bhupesh Sharma" <bhsharma@redhat.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        Sai Dasari <sdasari@fb.com>
+Subject: Re: [PATCH v2] ftgmac100: Disable HW checksum generation on AST2500
+Thread-Topic: [PATCH v2] ftgmac100: Disable HW checksum generation on AST2500
+Thread-Index: AQHVgIJ8iNM2JFB8dkCGpaKji+MwkKdeE2WAgADjLwCAAIm8gP//mREAgAB8xoCAAP8DAIAAiv4A//+jaYA=
+Date:   Sat, 19 Oct 2019 01:31:45 +0000
+Message-ID: <3D78AA04-A502-4A9F-87A0-0D62D56952AF@fb.com>
+References: <20191011213027.2110008-1-vijaykhemka@fb.com>
+ <3a1176067b745fddfc625bbd142a41913ee3e3a1.camel@kernel.crashing.org>
+ <0C0BC813-5A84-403F-9C48-9447AAABD867@fb.com>
+ <071cf1eeefcbfc14633a13bc2d15ad7392987a88.camel@kernel.crashing.org>
+ <9AA81274-01F2-4803-8905-26F0521486CE@fb.com>
+ <f6d5cb45a9aa167533135c5b218b45b1d210d31a.camel@kernel.crashing.org>
+ <529EF9B4-DFDE-4DB7-BE26-3AED8D814134@fb.com>
+ <0ef567e985ce3fe821cbd80265f85a35d16be373.camel@kernel.crashing.org>
+In-Reply-To: <0ef567e985ce3fe821cbd80265f85a35d16be373.camel@kernel.crashing.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2620:10d:c090:200::7259]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 21b0d7a1-8c0c-4af6-3ca6-08d754341abc
+x-ms-traffictypediagnostic: BY5PR15MB3649:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR15MB3649A5965417FCDC20331D8DDD6F0@BY5PR15MB3649.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 01952C6E96
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(39860400002)(136003)(376002)(346002)(199004)(189003)(486006)(476003)(6486002)(446003)(36756003)(2616005)(11346002)(46003)(7736002)(6512007)(305945005)(7416002)(256004)(14444005)(6436002)(6116002)(4001150100001)(54906003)(110136005)(6246003)(229853002)(2906002)(25786009)(2501003)(71190400001)(33656002)(478600001)(99286004)(2201001)(14454004)(102836004)(71200400001)(4326008)(81166006)(81156014)(86362001)(76116006)(8676002)(66446008)(64756008)(66556008)(66476007)(186003)(8936002)(5660300002)(76176011)(316002)(6506007)(91956017)(66946007)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:BY5PR15MB3649;H:BY5PR15MB3636.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5re7MZzsxXdY3OvtbNuvxZN7WADHgVveTnbC/tRQgKqX3oJBO55Ei5Atv+voZKB96D/Dc6+eMSVelaFOBmE7jqJeU1h9d0kTiNXRPmVV+Y+UAOMPNdEr2U26J2kDQVDYvf9jR4fZRMJ7+UpHPi7bChwj4oomyDIgnDhoqVn3ODMaYfeTjfAy6CpJo3uhbVcNExHU+MLP532oZpHSVZS9HSzbnlH/oq93zll46RWlJqPVp5EuQ8Wq5wbqeN2ypg8fRYFT/095Mi2ipOLyUal2kXNWON111XmCrIaCQR75vefa6AiZdXFoFCnyYD9ECvkBNub/xU9zBKktONO+oegbnqnf6CzgAW0yj1ULJPBuKapdxwT33dyoNi1Y6APeA3Y5egTJZVAObi5SDTmgfAAbMrX1ZCU7qj6PpWY5IxYHq2Q=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E39D3B3187B71345A399D0A6D0E51DC7@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 21b0d7a1-8c0c-4af6-3ca6-08d754341abc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Oct 2019 01:31:45.8771
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: eFuNK9htYYsBB+XGU4nvPNL6lV82gaD0Fkh3qkaIPntaHgLarZa3F8G1J51PndXsHX+HfkeIjYt+M1OQM3PMlw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR15MB3649
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-18_06:2019-10-18,2019-10-18 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=0
+ malwarescore=0 lowpriorityscore=0 phishscore=0 mlxscore=0 impostorscore=0
+ clxscore=1015 bulkscore=0 mlxlogscore=812 adultscore=0 priorityscore=1501
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910190009
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/19/2019 1:27 AM, Sean Christopherson wrote:
-> On Fri, Oct 18, 2019 at 05:37:23PM +0800, Xiaoyao Li wrote:
->> Move the MSR bitmap capability check from vmx_disable_intercept_for_msr()
->> and vmx_enable_intercept_for_msr(), so that we can do the check far
->> early before we really want to touch the bitmap.
->>
->> Also, we can move the common MSR not-intercept setup to where msr bitmap
->> is actually used.
->>
->> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
->> ---
->> Changes in v2:
->>    - Remove the check of cpu_has_vmx_msr_bitmap() from
->>      vmx_{disable,enable}_intercept_for_msr (Krish)
->> ---
->>   arch/x86/kvm/vmx/vmx.c | 65 +++++++++++++++++++++---------------------
->>   1 file changed, 33 insertions(+), 32 deletions(-)
->>
->> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->> index b083316a598d..017689d0144e 100644
->> --- a/arch/x86/kvm/vmx/vmx.c
->> +++ b/arch/x86/kvm/vmx/vmx.c
->> @@ -343,8 +343,8 @@ module_param_cb(vmentry_l1d_flush, &vmentry_l1d_flush_ops, NULL, 0644);
->>   
->>   static bool guest_state_valid(struct kvm_vcpu *vcpu);
->>   static u32 vmx_segment_access_rights(struct kvm_segment *var);
->> -static __always_inline void vmx_disable_intercept_for_msr(unsigned long *msr_bitmap,
->> -							  u32 msr, int type);
->> +static __always_inline void vmx_set_intercept_for_msr(unsigned long *msr_bitmap,
->> +		u32 msr, int type, bool value);
->>   
->>   void vmx_vmexit(void);
->>   
->> @@ -2000,9 +2000,9 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->>   		 * in the merging. We update the vmcs01 here for L1 as well
->>   		 * since it will end up touching the MSR anyway now.
->>   		 */
->> -		vmx_disable_intercept_for_msr(vmx->vmcs01.msr_bitmap,
->> -					      MSR_IA32_SPEC_CTRL,
->> -					      MSR_TYPE_RW);
->> +		vmx_set_intercept_for_msr(vmx->vmcs01.msr_bitmap,
->> +					  MSR_IA32_SPEC_CTRL,
->> +					  MSR_TYPE_RW, false);
-> 
-> IMO this is a net negative.  The explicit "disable" is significantly more
-> intuitive than "set" with a %false param, e.g. at a quick glance it would
-> be easy to think this code is "setting", i.e. "enabling" interception.
->
-
-How about renaming it to vmx_switch_intercept_for_msr()?
-or just add the cpu_has_vmx_msr_bitmap() check outside because the check 
-is removed in vmx_disable_intercept_for_msr()
-
->>   		break;
->>   	case MSR_IA32_PRED_CMD:
->>   		if (!msr_info->host_initiated &&
->> @@ -2028,8 +2028,9 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->>   		 * vmcs02.msr_bitmap here since it gets completely overwritten
->>   		 * in the merging.
->>   		 */
->> -		vmx_disable_intercept_for_msr(vmx->vmcs01.msr_bitmap, MSR_IA32_PRED_CMD,
->> -					      MSR_TYPE_W);
->> +		vmx_set_intercept_for_msr(vmx->vmcs01.msr_bitmap,
->> +					  MSR_IA32_PRED_CMD,
->> +					  MSR_TYPE_W, false);
->>   		break;
->>   	case MSR_IA32_CR_PAT:
->>   		if (!kvm_pat_valid(data))
->> @@ -3599,9 +3600,6 @@ static __always_inline void vmx_disable_intercept_for_msr(unsigned long *msr_bit
->>   {
->>   	int f = sizeof(unsigned long);
->>   
->> -	if (!cpu_has_vmx_msr_bitmap())
->> -		return;
-> 
-> As above, I'd rather keep these here.  Functionally it changes nothing on
-> CPUs with an MSR bitmap.  For old CPUs, it saves all of two uops in paths
-> that aren't performance critical.
-> 
->> -
->>   	if (static_branch_unlikely(&enable_evmcs))
->>   		evmcs_touch_msr_bitmap();
->>   
->> @@ -3637,9 +3635,6 @@ static __always_inline void vmx_enable_intercept_for_msr(unsigned long *msr_bitm
->>   {
->>   	int f = sizeof(unsigned long);
->>   
->> -	if (!cpu_has_vmx_msr_bitmap())
->> -		return;
->> -
->>   	if (static_branch_unlikely(&enable_evmcs))
->>   		evmcs_touch_msr_bitmap();
->>   
->> @@ -3673,6 +3668,9 @@ static __always_inline void vmx_enable_intercept_for_msr(unsigned long *msr_bitm
->>   static __always_inline void vmx_set_intercept_for_msr(unsigned long *msr_bitmap,
->>   			     			      u32 msr, int type, bool value)
->>   {
->> +	if (!cpu_has_vmx_msr_bitmap())
->> +		return;
->> +
->>   	if (value)
->>   		vmx_enable_intercept_for_msr(msr_bitmap, msr, type);
->>   	else
->> @@ -4163,11 +4161,30 @@ static void ept_set_mmio_spte_mask(void)
->>   
->>   static void vmx_vmcs_setup(struct vcpu_vmx *vmx)
->>   {
->> +	unsigned long *msr_bitmap;
->> +
->>   	if (nested)
->>   		nested_vmx_vmcs_setup();
->>   
->> -	if (cpu_has_vmx_msr_bitmap())
->> +	if (cpu_has_vmx_msr_bitmap()) {
->> +		msr_bitmap = vmx->vmcs01.msr_bitmap;
->> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_TSC, MSR_TYPE_R);
->> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_FS_BASE, MSR_TYPE_RW);
->> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_GS_BASE, MSR_TYPE_RW);
->> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_KERNEL_GS_BASE, MSR_TYPE_RW);
->> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_CS, MSR_TYPE_RW);
->> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_ESP, MSR_TYPE_RW);
->> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_EIP, MSR_TYPE_RW);
->> +		if (kvm_cstate_in_guest(vmx->vcpu.kvm)) {
->> +			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C1_RES, MSR_TYPE_R);
->> +			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C3_RESIDENCY, MSR_TYPE_R);
->> +			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
->> +			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
->> +		}
->> +
->>   		vmcs_write64(MSR_BITMAP, __pa(vmx->vmcs01.msr_bitmap));
->> +	}
->> +	vmx->msr_bitmap_mode = 0;
-> 
-> Zeroing msr_bitmap_mode can be skipped as well.
-> 
->>   	vmcs_write64(VMCS_LINK_POINTER, -1ull); /* 22.3.1.5 */
->>   
->> @@ -6074,7 +6091,8 @@ void vmx_set_virtual_apic_mode(struct kvm_vcpu *vcpu)
->>   	}
->>   	secondary_exec_controls_set(vmx, sec_exec_control);
->>   
->> -	vmx_update_msr_bitmap(vcpu);
->> +	if (cpu_has_vmx_msr_bitmap())
->> +		vmx_update_msr_bitmap(vcpu);
->>   }
->>   
->>   static void vmx_set_apic_access_page_addr(struct kvm_vcpu *vcpu, hpa_t hpa)
->> @@ -6688,7 +6706,6 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
->>   {
->>   	int err;
->>   	struct vcpu_vmx *vmx;
->> -	unsigned long *msr_bitmap;
->>   	int i, cpu;
->>   
->>   	BUILD_BUG_ON_MSG(offsetof(struct vcpu_vmx, vcpu) != 0,
->> @@ -6745,22 +6762,6 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
->>   	if (err < 0)
->>   		goto free_msrs;
->>   
->> -	msr_bitmap = vmx->vmcs01.msr_bitmap;
->> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_TSC, MSR_TYPE_R);
->> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_FS_BASE, MSR_TYPE_RW);
->> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_GS_BASE, MSR_TYPE_RW);
->> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_KERNEL_GS_BASE, MSR_TYPE_RW);
->> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_CS, MSR_TYPE_RW);
->> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_ESP, MSR_TYPE_RW);
->> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_EIP, MSR_TYPE_RW);
->> -	if (kvm_cstate_in_guest(kvm)) {
->> -		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C1_RES, MSR_TYPE_R);
->> -		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C3_RESIDENCY, MSR_TYPE_R);
->> -		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
->> -		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
->> -	}
->> -	vmx->msr_bitmap_mode = 0;
-> 
-> Keep this code here to be consistent with the previous change that moved
-> the guest_msrs intialization *out* of the VMCS specific function.  Both
-> are collateral pages that are not directly part of the VMCS.
-> 
-> I'd be tempted to use a goto to skip the code, the line length is bad
-> enough as it is, e.g.:
-> 
-> 	if (!cpu_has_vmx_msr_bitmap())
-> 		goto skip_msr_bitmap;
-> 
-> 	vmx->msr_bitmap_mode = 0;
-> skip_msr_bitmap:
-> 
->> -
->>   	vmx->loaded_vmcs = &vmx->vmcs01;
->>   	cpu = get_cpu();
->>   	vmx_vcpu_load(&vmx->vcpu, cpu);
->> -- 
->> 2.19.1
->>
+DQoNCu+7v09uIDEwLzE4LzE5LCA1OjAzIFBNLCAiQmVuamFtaW4gSGVycmVuc2NobWlkdCIgPGJl
+bmhAa2VybmVsLmNyYXNoaW5nLm9yZz4gd3JvdGU6DQoNCiAgICBPbiBGcmksIDIwMTktMTAtMTgg
+YXQgMjI6NTAgKzAwMDAsIFZpamF5IEtoZW1rYSB3cm90ZToNCiAgICA+IEkgZG9uJ3QgaGF2ZSBt
+dWNoIHVuZGVyc3RhbmRpbmcgb2YgSVAgU3RhY2sgYnV0IEkgd2VudCB0aHJvdWdoIGNvZGUgZGV0
+YWlscyBhbmQgDQogICAgPiB5b3UgYXJlIHJpZ2h0IGFuZCBmb3VuZCB0aGF0IGl0IHNob3VsZCBm
+YWxsYmFjayB0byBTVyBjYWxjdWxhdGlvbiBmb3IgSVBWNiBidXQgaXQgZG9lc24ndA0KICAgID4g
+aGFwcGVuIGJlY2F1c2UgZnRnbWFjMTAwX2hhcmRfc3RhcnRfeG1pdCBjaGVja3MgZm9yIENIRUNL
+U1VNX1BBUlRJQUwgYmVmb3JlDQogICAgPiBzZXR0aW5nIEhXIGNoZWNrc3VtIGFuZCBjYWxsaW5n
+IGZ0Z21hYzEwMF9wcmVwX3R4X2NzdW0gZnVuY3Rpb24uIEFuZCBpbiBteSANCiAgICA+IHVuZGVy
+c3RhbmRpbmcsIHRoaXMgdmFsdWUgaXMgc2V0IENIRUNLU1VNX1BBUlRJQUwgaW4gSVAgc3RhY2su
+IEkgbG9va2VkIHVwIElQIHN0YWNrIGZvcg0KICAgID4gSVBWNiwgZmlsZSBuZXQvaXB2Ni9pcDZf
+b3V0cHV0LmMsIGZ1bmN0aW9uIF9faXA2X2FwcGVuZF9kYXRhOiBoZXJlIGl0IHNldHMgDQogICAg
+PiBDSEVDS1NVTV9QQVJUSUFMIG9ubHkgZm9yIFVEUCBwYWNrZXRzIG5vdCBmb3IgVENQIHBhY2tl
+dHMuIFBsZWFzZSBsb29rIGF0IGxpbmUNCiAgICA+ICBudW1iZXIgMTg4MC4gVGhpcyBjb3VsZCBi
+ZSBhbiBpc3N1ZSB3ZSBhcmUgc2VlaW5nIGhlcmUgYXMgd2h5DQogICAgPiBmdGdtYWMxMDBfcHJl
+cF90eF9jc3VtIGlzIG5vdCBnZXR0aW5nIHRyaWdnZXJlZCBmb3IgSVBWNiB3aXRoIFRDUC4gUGxl
+YXNlIGNvcnJlY3QNCiAgICA+IG1lIGlmIG15IHVuZGVyc3RhbmRpbmcgaXMgd3JvbmcuDQogICAg
+PiAgICAgDQogICAgDQogICAgTm90IGVudGlyZWx5IHN1cmUuIHRjcF92Nl9zZW5kX3Jlc3BvbnNl
+KCkgaW4gdGNwX2lwdjYuYyBkb2VzIHNldA0KICAgIENIRUNLU1VNX1BBUlRJQUwgYXMgd2VsbC4g
+SSBkb24ndCByZWFsbHkga25vdyBob3cgdGhpbmdzIGFyZSBiZWluZw0KICAgIGhhbmRsZWQgaW4g
+dGhhdCBwYXJ0IG9mIHRoZSBuZXR3b3JrIHN0YWNrIHRob3VnaC4NCiAgICANCiAgICBGcm9tIGEg
+ZHJpdmVyIHBlcnNwZWN0aXZlLCBpZiB0aGUgdmFsdWUgb2YgaXBfc3VtbWVkIGlzIG5vdA0KICAg
+IENIRUNLU1VNX1BBUlRJQUwgaXQgbWVhbnMgd2Ugc2hvdWxkIG5vdCBoYXZlIHRvIGNhbGN1bGF0
+ZSBhbnkgY2hlY2tzdW0uDQogICAgQXQgbGVhc3QgdGhhdCdzIG15IHVuZGVyc3RhbmRpbmcgaGVy
+ZS4NCiAgICANCiAgICBZb3UgbWF5IG5lZWQgdG8gYWRkIHNvbWUgdHJhY2VzIHRvIHRoZSBkcml2
+ZXIgdG8gc2VlIHdoYXQgeW91IGdldCBpbg0KICAgIHRoZXJlLCB3aGF0IHByb3RvY29sIGluZGlj
+YXRpb24gZXRjLi4uIGFuZCBhbmFseXplIHRoZSBjb3JyZXNwb25kaW5nDQogICAgcGFja2V0cyB3
+aXRoIHNvbWV0aGluZyBsaWtlIHRjcGR1bXAgb3Igd2lyZXNoYXJrIG9uIHRoZSBvdGhlciBlbmQu
+DQoNClRoYW5rcyBCZW4sDQpJIHdpbGwgdHJ5IHRvIGFkZCBzb21lIHRyYWNlIGFuZCB0ZXN0IHdo
+YXRldmVyIHBvc3NpYmxlIGFuZCB0ZXN0IGl0LiBBcyB3ZQ0KZG9uJ3QgaGF2ZSB0Y3BkdW1wIGlu
+dG8gb3VyIGltYWdlIGFuZCBJIGhhdmUgbGltaXRlZCB1bmRlcnN0YW5kaW5nIG9mDQpuZXR3b3Jr
+aW5nIHN0YWNrIHNvIGlmIHlvdSBnZXQgc29tZSB0aW1lIHRvIHZlcmlmeSBpcHY2LCBpdCB3aWxs
+IGJlIHJlYWxseQ0KaGVscGZ1bC4gDQogICAgDQogICAgQ2hlZXJzLA0KICAgIEJlbi4NCiAgICAN
+CiAgICANCiAgICANCg0K
