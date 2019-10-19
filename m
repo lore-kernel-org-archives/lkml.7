@@ -2,166 +2,152 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E84CA9EAC
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 08:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EE7CA9EAD
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 08:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8380020872
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 08:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCBF7222C2
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 08:59:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="HMLHp/EO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SLFAWYRR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728533AbfJSIgs (ORCPT
+        id S1728229AbfJSI7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 04:36:48 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39177 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728326AbfJSIgS (ORCPT
+        Sat, 19 Oct 2019 04:59:05 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40912 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727068AbfJSI7F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 04:36:18 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v17so8151137wml.4
-        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 01:36:15 -0700 (PDT)
+        Sat, 19 Oct 2019 04:59:05 -0400
+Received: by mail-pf1-f195.google.com with SMTP id x127so5305885pfb.7
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 01:59:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=l2IW6NowdeBUIPfd3VNaI3dgAIYTgpRJtcprF0UeLqs=;
-        b=HMLHp/EOn7D85bvZcEzeR75AlaOniQc19ENmHjj8gJXXdEEkq6jPm42L87jXMJEsrv
-         sewZFUp34htOHovu0XlCfkXlcVXNND+ijmRLoBkT0CXyUBpBTtzL2MN1PzuN0Se+NIwi
-         IC+V5Mt5H/7iKH7vTUOg0kCalZ3PwNEsWCuIw5VyQcln48tzMcrRVQkIJVVaSp0g4tWT
-         tqGxZzPrS0Trm7oaF+Td7cyfMuWG8vuAWRMfbZSxpYVobQaZyJONblOO4q3VyTXZdFvg
-         zMgaQMhUvogJWVDu0cKeilyNoJGYARpuA73fg4vIebg8CzLUFoi3V0FN6M/NZfjfYcBN
-         6isg==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=9P1Hc5zx6KpRJ1G0QDp0Is0b1Emh/h9sENDo50qYI+0=;
+        b=SLFAWYRRuzx0BVXm1R600VMfhtaXBl6PtH7su/FogBYhDtCIjomJmM39OqKr6+Wbwe
+         gTusfVa5GpPt+Qj7S24AfwOjwWhMvz/nBeioFA4uAerjvZsdmP2o58lmAFSE/Xke42Vx
+         aQZ6ELf9LeXI0LTYqr0+TuJkrmbOwZPxD1l5WhUn5ejUJepWWv29MATcr/I2WV4OzCU5
+         DZv1G5Ns7MYGsI0isGkelC4SlvkeCNAiOA2khWCUQ620NEKAAxSgRmcm+YsSaGUi1mJf
+         0cjlEryBk6hVzBw6ZjdmeTTsf5Xap7lI3a/D2f3vwvUdheBqOwEOApbEIb80dsJSjiZA
+         c9Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=l2IW6NowdeBUIPfd3VNaI3dgAIYTgpRJtcprF0UeLqs=;
-        b=WHW7XAvFnUazoP0jBBpEvRDZYwTmCjvOoiLMSFQtlmv7MJGfA/ApuY3Rf6l2GZ4faa
-         +vFUPTdaV4wIZyG0WDrTjbQ9nmhTzG42omYV/2XTFHBF/zpKAQ0HYLdnTEPOzG2KnLsY
-         1m1EdS5dD29T3UJig6ujSSAkSqYhUZH2SK43nHUcWOfkxnJbeCWSVwMhAyVflU/d9OVe
-         zLWbjaMfNTu+56u4VarW8yJuZ2kJrVt26u6UnX8ilYnrb1dXIZ4a2EyE7myNvpPvErJM
-         Yy8p5e7uTA6OxQVMAi5APRbB98VGQ87pn6MUxDUcLrokft8jsIYA32hx7JZnUAeETTsh
-         /nmw==
-X-Gm-Message-State: APjAAAX6dvsfFt9fPyX1O9EApZGOLmLOxkjZp+V5r/W/d7PrBPITbN0W
-        xHp39vwfCHw0KcDtfY1uNeKuAg==
-X-Google-Smtp-Source: APXvYqw3NydOO+Nuq280jVny5Giey8kePuzmSc0rGbxCZeyXpiGDAaroan7UA2mv4I22jq8kYvhYpQ==
-X-Received: by 2002:a1c:9cc6:: with SMTP id f189mr10385114wme.144.1571474175115;
-        Sat, 19 Oct 2019 01:36:15 -0700 (PDT)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id u1sm7242627wmc.38.2019.10.19.01.36.13
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=9P1Hc5zx6KpRJ1G0QDp0Is0b1Emh/h9sENDo50qYI+0=;
+        b=l/942nPxZkSmk4124ZLVeirTUX8bkZt7E1z0wFlvM0cr+3okKU1v673dRGCKTbT0j/
+         j01vKfbykMd86RPLdRyQzwVMjSIJuZFtPTloohfWFfE/n8vfMSgE0i+xtGqA0enk6ptv
+         y7w2WJ6iblhpxi8OV9/O0DDjCHrL8Y/tWJV1oVJ/lSBm3XGsQOJKFbfU3W/RYikZ3fyN
+         F0oFK1TuroVpzQetjA8I3YnWUeiCqoarF7X3JFQAVJ5jGIYU8P25ulu2Wq3bU/fsWbIY
+         VR4U2XKf9FM5Lf5M40DcVwni5f5CP2hWTE5oA0rVtkPlC328b/rZX9TNvlf+gV+MRS6O
+         ScaQ==
+X-Gm-Message-State: APjAAAUA10NEAv4VbecgizAmYlOJILaRXPB43YrRE0FsmLLU+9kSxYuJ
+        oU1u9KTb25sORsVbQTvHN8GBjg==
+X-Google-Smtp-Source: APXvYqx01bELy8Vsdb65I8HmRPcBNWlKJoUuWytBKnuVV3b6pEgQDNnpTSe5QSXLIHzXuDLGD24tpg==
+X-Received: by 2002:aa7:9156:: with SMTP id 22mr11523471pfi.246.1571475543864;
+        Sat, 19 Oct 2019 01:59:03 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id y20sm4045137pge.48.2019.10.19.01.59.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Oct 2019 01:36:14 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jacopo Mondi <jacopo@jmondi.org>
-Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v6 4/9] sh: ecovec24: add additional properties to the backlight device
-Date:   Sat, 19 Oct 2019 10:35:51 +0200
-Message-Id: <20191019083556.19466-5-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191019083556.19466-1-brgl@bgdev.pl>
-References: <20191019083556.19466-1-brgl@bgdev.pl>
+        Sat, 19 Oct 2019 01:59:02 -0700 (PDT)
+Date:   Sat, 19 Oct 2019 01:59:02 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     "Kalra, Ashish" <Ashish.Kalra@amd.com>
+cc:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "Hook, Gary" <Gary.Hook@amd.com>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "info@metux.net" <info@metux.net>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "Singh, Brijesh" <brijesh.singh@amd.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH] crypto: ccp - Retry SEV INIT command in case of integrity
+ check failure.
+In-Reply-To: <20191017223459.64281-1-Ashish.Kalra@amd.com>
+Message-ID: <alpine.DEB.2.21.1910190156210.140416@chino.kir.corp.google.com>
+References: <20191017223459.64281-1-Ashish.Kalra@amd.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Thu, 17 Oct 2019, Kalra, Ashish wrote:
 
-Add a GPIO lookup entry and a device property for GPIO backlight to the
-board file. Tie them to the platform device which is now registered using
-platform_device_register_full() because of the properties. These changes
-are inactive now but will be used once the gpio backlight driver is
-modified.
+> From: Ashish Kalra <ashish.kalra@amd.com>
+> 
+> SEV INIT command loads the SEV related persistent data from NVS
+> and initializes the platform context. The firmware validates the
+> persistent state. If validation fails, the firmware will reset
+> the persisent state and return an integrity check failure status.
+> 
+> At this point, a subsequent INIT command should succeed, so retry
+> the command. The INIT command retry is only done during driver
+> initialization.
+> 
+> Additional enums along with SEV_RET_SECURE_DATA_INVALID are added
+> to sev_ret_code to maintain continuity and relevance of enum values.
+> 
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> ---
+>  drivers/crypto/ccp/psp-dev.c | 12 ++++++++++++
+>  include/uapi/linux/psp-sev.h |  3 +++
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git a/drivers/crypto/ccp/psp-dev.c b/drivers/crypto/ccp/psp-dev.c
+> index 6b17d179ef8a..f9318d4482f2 100644
+> --- a/drivers/crypto/ccp/psp-dev.c
+> +++ b/drivers/crypto/ccp/psp-dev.c
+> @@ -1064,6 +1064,18 @@ void psp_pci_init(void)
+>  
+>  	/* Initialize the platform */
+>  	rc = sev_platform_init(&error);
+> +	if (rc && (error == SEV_RET_SECURE_DATA_INVALID)) {
+> +		/*
+> +		 * INIT command returned an integrity check failure
+> +		 * status code, meaning that firmware load and
+> +		 * validation of SEV related persistent data has
+> +		 * failed and persistent state has been erased.
+> +		 * Retrying INIT command here should succeed.
+> +		 */
+> +		dev_dbg(sp->dev, "SEV: retrying INIT command");
+> +		rc = sev_platform_init(&error);
+> +	}
+> +
+>  	if (rc) {
+>  		dev_err(sp->dev, "SEV: failed to INIT error %#x\n", error);
+>  		return;
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
- arch/sh/boards/mach-ecovec24/setup.c | 30 +++++++++++++++++++++++-----
- 1 file changed, 25 insertions(+), 5 deletions(-)
+Curious why this isn't done in __sev_platform_init_locked() since 
+sev_platform_init() can be called when loading the kvm module and the same 
+init failure can happen that way.
 
-diff --git a/arch/sh/boards/mach-ecovec24/setup.c b/arch/sh/boards/mach-ecovec24/setup.c
-index acaa97459531..aaa8ea62636f 100644
---- a/arch/sh/boards/mach-ecovec24/setup.c
-+++ b/arch/sh/boards/mach-ecovec24/setup.c
-@@ -371,6 +371,19 @@ static struct platform_device lcdc_device = {
- 	},
- };
- 
-+static struct gpiod_lookup_table gpio_backlight_lookup = {
-+	.dev_id		= "gpio-backlight.0",
-+	.table = {
-+		GPIO_LOOKUP("sh7724_pfc", GPIO_PTR1, NULL, GPIO_ACTIVE_HIGH),
-+		{ }
-+	},
-+};
-+
-+static struct property_entry gpio_backlight_props[] = {
-+	PROPERTY_ENTRY_BOOL("default-on"),
-+	{ }
-+};
-+
- static struct gpio_backlight_platform_data gpio_backlight_data = {
- 	.fbdev = &lcdc_device.dev,
- 	.gpio = GPIO_PTR1,
-@@ -378,13 +391,15 @@ static struct gpio_backlight_platform_data gpio_backlight_data = {
- 	.name = "backlight",
- };
- 
--static struct platform_device gpio_backlight_device = {
-+static const struct platform_device_info gpio_backlight_device_info = {
- 	.name = "gpio-backlight",
--	.dev = {
--		.platform_data = &gpio_backlight_data,
--	},
-+	.data = &gpio_backlight_data,
-+	.size_data = sizeof(gpio_backlight_data),
-+	.properties = gpio_backlight_props,
- };
- 
-+static struct platform_device *gpio_backlight_device;
-+
- /* CEU0 */
- static struct ceu_platform_data ceu0_pdata = {
- 	.num_subdevs			= 2,
-@@ -1006,7 +1021,6 @@ static struct platform_device *ecovec_devices[] __initdata = {
- 	&usb1_common_device,
- 	&usbhs_device,
- 	&lcdc_device,
--	&gpio_backlight_device,
- 	&keysc_device,
- 	&cn12_power,
- #if defined(CONFIG_MMC_SDHI) || defined(CONFIG_MMC_SDHI_MODULE)
-@@ -1462,6 +1476,12 @@ static int __init arch_setup(void)
- #endif
- #endif
- 
-+	gpiod_add_lookup_table(&gpio_backlight_lookup);
-+	gpio_backlight_device = platform_device_register_full(
-+					&gpio_backlight_device_info);
-+	if (IS_ERR(gpio_backlight_device))
-+		return PTR_ERR(gpio_backlight_device);
-+
- 	return platform_add_devices(ecovec_devices,
- 				    ARRAY_SIZE(ecovec_devices));
- }
--- 
-2.23.0
-
+> diff --git a/include/uapi/linux/psp-sev.h b/include/uapi/linux/psp-sev.h
+> index 8654b2442f6a..a8537f4e5e08 100644
+> --- a/include/uapi/linux/psp-sev.h
+> +++ b/include/uapi/linux/psp-sev.h
+> @@ -58,6 +58,9 @@ typedef enum {
+>  	SEV_RET_HWSEV_RET_PLATFORM,
+>  	SEV_RET_HWSEV_RET_UNSAFE,
+>  	SEV_RET_UNSUPPORTED,
+> +	SEV_RET_INVALID_PARAM,
+> +	SEV_RET_RESOURCE_LIMIT,
+> +	SEV_RET_SECURE_DATA_INVALID,
+>  	SEV_RET_MAX,
+>  } sev_ret_code;
+>  
