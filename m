@@ -2,95 +2,75 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D57A5CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 10:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 254B8CA9EAB
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 10:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B760B222C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 10:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF01C21D7C
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 10:13:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbfJSKJ4 (ORCPT
+        id S1726246AbfJSKN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 06:09:56 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:57501 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbfJSKJy (ORCPT
+        Sat, 19 Oct 2019 06:13:57 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59107 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725823AbfJSKN5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 06:09:54 -0400
-Received: from mail-qk1-f175.google.com ([209.85.222.175]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1Md66H-1hmA0q38lP-00aBTh; Sat, 19 Oct 2019 12:09:52 +0200
-Received: by mail-qk1-f175.google.com with SMTP id u184so7726616qkd.4;
-        Sat, 19 Oct 2019 03:09:50 -0700 (PDT)
-X-Gm-Message-State: APjAAAV6BC7+dJNdNnbp0uBhqhWjVJbpXA0P+NWDqHRQrLjjeNPea+9O
-        UsfK6mxzuQugSbt2MHqE8UxQN6gKkEIDC4IrnOw=
-X-Google-Smtp-Source: APXvYqxDnkD1LGxVOqOKBA1bv73+2FIM7aUPofN3DdgTjR6MZneEs/uqd6EIDns9KMja9p9yGzmHvgB/h9FVcJa5zrw=
-X-Received: by 2002:a37:a614:: with SMTP id p20mr4599817qke.352.1571479789607;
- Sat, 19 Oct 2019 03:09:49 -0700 (PDT)
+        Sat, 19 Oct 2019 06:13:57 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iLlkA-0004MK-9K; Sat, 19 Oct 2019 12:13:54 +0200
+Date:   Sat, 19 Oct 2019 12:13:53 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ingo Molnar <mingo@kernel.org>
+cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        =?UTF-8?Q?J=C3=B6rn_Engel?= <joern@purestorage.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] random: make try_to_generate_entropy() more robust
+In-Reply-To: <20191019073907.GA101301@gmail.com>
+Message-ID: <alpine.DEB.2.21.1910191211410.2098@nanos.tec.linutronix.de>
+References: <20191018203704.GC31027@cork> <20191018204220.GD31027@cork> <CAHk-=wi80VJ+4cUny2kwm0RxrmVdh24VPz5ZHjY4qCWR5iQBDQ@mail.gmail.com> <20191019073907.GA101301@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20191018154052.1276506-1-arnd@arndb.de> <803f6fa5-b929-007c-5302-4a2d5042241c@roeck-us.net>
-In-Reply-To: <803f6fa5-b929-007c-5302-4a2d5042241c@roeck-us.net>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sat, 19 Oct 2019 12:09:33 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0t-P_w705z0BSXxzj8MmmKVCagLtidiP+NX51zGce0ag@mail.gmail.com>
-Message-ID: <CAK8P3a0t-P_w705z0BSXxzj8MmmKVCagLtidiP+NX51zGce0ag@mail.gmail.com>
-Subject: Re: [PATCH 00/46] ARM: pxa: towards multiplatform support
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        IDE-ML <linux-ide@vger.kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        linux-leds@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-rtc@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:JoUK9zIsRwlckwxRsQPyrjTR+CJ+e1NzjrnywlpJZpvLQsrki/O
- 6oqUixG3wGmHbC1gSpDeC2OejM6V4LXMb9u1x0OmYrMxGcagKms+P8T/tjhy15NahnZvLsx
- 1gNVUhsGYzHMtoVbEaqcMjalLGwbYPFfNThqwVnR8BgbXGDhRMK7Adn2Vavriz2ulAIvmZU
- H5PZHrbqDUGaqIhXvsl4Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:pA8x/njXmAI=:U9yaOvxfltjLDDMpfRuSsq
- 3HS+Uk5OMnTj7jXsSqT09WlnY5kJE4lyndiUAbmRhkwH8a1mpWaZtSeNW5l9XHblbovqqlFen
- I2hdy64SanS7+hdxQClxrj9MOTCMH+jQ/guAzqyyIS+ZJghWWRA96XK07WeYTSksO3Z3wi4PL
- oeUQfeMOmonDkSFZQJSU0pUDf5ibRuBWvHgYEqc4ZFCtQoMh4HxHg4DcDHz0GcvNIW8zWcUi+
- kGvUwPLgDOL+yFjxr4/A3kz9Dyp14ontGslHGkjqxAOAVjxv5J33fiBooNoR5GvtvGscuR2lq
- suA01emt1k4nZL14WT/4N/ifAN322ft1kJa84NI7AHbBVjq+Ty7vVxQJynTFU9qV2TtVeePTh
- z6LuoYpDlFdSQRZE9ZHsyb7Zbahb2icMEExmeS1b+ZHYjPQQSvKmuopKiOnFdVjBzVpbAs7Sq
- OWKgo9HdQ3faFXmP1ql0IgKuQZAqcUuGMxzZ3qQRC6iZ+w6Fjnw74/gf6IBz3WfI6QsztRmxr
- IChwQdXXDBnXtNhHmN5s+cYfz3SB5+3akBzydwjYiFDmkVYlrVsdsXPNkFi5WLrKvEs+jRXnT
- 7x949r2gXzMwOU6maKqn9s+IqzNassNQF5qaczd5/st4LlH7WfivxkcQH4ofJColsHPGPKZh8
- iktcGfmOnhb78/0TpIR8Pj7ulZJkGfkCzLvPJIWmyicG65izSidWtbu0o4peBVdS3AWBMLVL+
- RO1hs5zPp4BOBWIHL0DmrFqHNsNyUF9ne462ySkT6FJvnaVrgtoV5lzoQCIgWh5yfmbR3zfdh
- +cJJ58BOZyJDYKmZfk9jV62B7juGiiPu74mnB7POA41ONooMvzSSBTNUZFPGnif+VoMzuLyEz
- 8oK7rdh0sSaKcju6RlWA==
+Content-Type: multipart/mixed; boundary="8323329-1579266021-1571480034=:2098"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 19, 2019 at 3:03 AM Guenter Roeck <linux@roeck-us.net> wrote:
-> On 10/18/19 8:40 AM, Arnd Bergmann wrote:
->
-> I don't get very far.
->
-> $ make-arm pxa_defconfig
-> arch/arm/Kconfig:677: can't open file "arch/arm/plat-pxa/Kconfig"
-> scripts/kconfig/Makefile:90: recipe for target 'pxa_defconfig' failed
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
->
-> Did I pick the wrong tree ?
+--8323329-1579266021-1571480034=:2098
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-It seems that one line got lost in a rebase and ended up in a different patch
-that was not part of the series. I updated the git tree now.
+On Sat, 19 Oct 2019, Ingo Molnar wrote:
+> * Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> > On Fri, Oct 18, 2019 at 4:42 PM Jörn Engel <joern@purestorage.com> wrote:
+> 
+> But from a softirq or threaded irq context that 'interrupted' regs 
+> context might potentially be NULL.
+> 
+> NULL isn't a good thing to pass to mix_pool_bytes(), because the first 
+> use of 'in' (='bytes') in _mix_pool_bytes() is a dereference without a 
+> NULL check AFAICS:
+> 
+>                 w = rol32(*bytes++, input_rotate);
+> 
+> So at minimum I'd only mix this entropy into the pool if 'regs' is 
+> non-zero. This would automatically do the right thing and not crash the 
+> kernel on weird irq execution models such as threaded-only or -rt.
 
-        Arnd
+You don't even need threaded-only or RT. The timer is fired in the softirq
+which very well can happen from thread context in mainline.
+
+Thanks,
+
+	tglx
+--8323329-1579266021-1571480034=:2098--
