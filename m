@@ -2,39 +2,38 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EFBCA9EAC
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 20:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A41DBCA9EAC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 20:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1446222C5
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 20:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80B4F222CC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 20:50:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfJSUuN (ORCPT
+        id S1726571AbfJSUuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 16:50:13 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:56831 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbfJSUtr (ORCPT
+        Sat, 19 Oct 2019 16:50:39 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:35057 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726145AbfJSUui (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 16:49:47 -0400
+        Sat, 19 Oct 2019 16:50:38 -0400
+X-Originating-IP: 86.202.229.42
 Received: from localhost (lfbn-lyo-1-146-42.w86-202.abo.wanadoo.fr [86.202.229.42])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 29F64240003;
-        Sat, 19 Oct 2019 20:49:45 +0000 (UTC)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 9E2351C0002;
+        Sat, 19 Oct 2019 20:50:36 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     linux-rtc@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 4/9] rtc: ds1343: use rtc_add_group
-Date:   Sat, 19 Oct 2019 22:49:36 +0200
-Message-Id: <20191019204941.6203-4-alexandre.belloni@bootlin.com>
+Subject: [PATCH] rtc: introduce lock helpers
+Date:   Sat, 19 Oct 2019 22:50:34 +0200
+Message-Id: <20191019205034.6382-1-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191019204941.6203-1-alexandre.belloni@bootlin.com>
-References: <20191019204941.6203-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -42,115 +41,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use rtc_add_group to add the sysfs group in a race free manner.
-This has the side effect of moving the files to their proper location.
+Introduce rtc_lock and rtc_unlock to shorten the code when locking and
+unlocking ops_lock from drivers.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-ds1343.c | 47 ++++++++++++++--------------------------
- 1 file changed, 16 insertions(+), 31 deletions(-)
+ include/linux/rtc.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/rtc/rtc-ds1343.c b/drivers/rtc/rtc-ds1343.c
-index 8a4f1fbb57fd..ec8d1e82d7ac 100644
---- a/drivers/rtc/rtc-ds1343.c
-+++ b/drivers/rtc/rtc-ds1343.c
-@@ -90,7 +90,7 @@ struct ds1343_priv {
- static ssize_t ds1343_show_glitchfilter(struct device *dev,
- 				struct device_attribute *attr, char *buf)
- {
--	struct ds1343_priv *priv = dev_get_drvdata(dev);
-+	struct ds1343_priv *priv = dev_get_drvdata(dev->parent);
- 	int glitch_filt_status, data;
+diff --git a/include/linux/rtc.h b/include/linux/rtc.h
+index e86a9f307b82..4e9d3c71addb 100644
+--- a/include/linux/rtc.h
++++ b/include/linux/rtc.h
+@@ -159,6 +159,9 @@ struct rtc_device {
+ };
+ #define to_rtc_device(d) container_of(d, struct rtc_device, dev)
  
- 	regmap_read(priv->map, DS1343_CONTROL_REG, &data);
-@@ -107,7 +107,7 @@ static ssize_t ds1343_store_glitchfilter(struct device *dev,
- 					struct device_attribute *attr,
- 					const char *buf, size_t count)
- {
--	struct ds1343_priv *priv = dev_get_drvdata(dev);
-+	struct ds1343_priv *priv = dev_get_drvdata(dev->parent);
- 	int data;
- 
- 	regmap_read(priv->map, DS1343_CONTROL_REG, &data);
-@@ -148,7 +148,7 @@ static int ds1343_nvram_read(void *priv, unsigned int off, void *val,
- static ssize_t ds1343_show_tricklecharger(struct device *dev,
- 				struct device_attribute *attr, char *buf)
- {
--	struct ds1343_priv *priv = dev_get_drvdata(dev);
-+	struct ds1343_priv *priv = dev_get_drvdata(dev->parent);
- 	int data;
- 	char *diodes = "disabled", *resistors = " ";
- 
-@@ -189,28 +189,15 @@ static ssize_t ds1343_show_tricklecharger(struct device *dev,
- 
- static DEVICE_ATTR(trickle_charger, S_IRUGO, ds1343_show_tricklecharger, NULL);
- 
--static int ds1343_sysfs_register(struct device *dev)
--{
--	int err;
--
--	err = device_create_file(dev, &dev_attr_glitch_filter);
--	if (err)
--		return err;
--
--	err = device_create_file(dev, &dev_attr_trickle_charger);
--	if (!err)
--		return 0;
--
--	device_remove_file(dev, &dev_attr_glitch_filter);
--
--	return err;
--}
-+static struct attribute *ds1343_attrs[] = {
-+	&dev_attr_glitch_filter.attr,
-+	&dev_attr_trickle_charger.attr,
-+	NULL
-+};
- 
--static void ds1343_sysfs_unregister(struct device *dev)
--{
--	device_remove_file(dev, &dev_attr_glitch_filter);
--	device_remove_file(dev, &dev_attr_trickle_charger);
--}
-+static const struct attribute_group ds1343_attr_group = {
-+	.attrs  = ds1343_attrs,
-+};
- 
- static int ds1343_read_time(struct device *dev, struct rtc_time *dt)
- {
-@@ -474,6 +461,11 @@ static int ds1343_probe(struct spi_device *spi)
- 	priv->rtc->range_min = RTC_TIMESTAMP_BEGIN_2000;
- 	priv->rtc->range_max = RTC_TIMESTAMP_END_2099;
- 
-+	res = rtc_add_group(priv->rtc, &ds1343_attr_group);
-+	if (res)
-+		dev_err(&spi->dev,
-+			"unable to create sysfs entries for rtc ds1343\n");
++#define rtc_lock(d) mutex_lock(&d->ops_lock)
++#define rtc_unlock(d) mutex_unlock(&d->ops_lock)
 +
- 	res = rtc_register_device(priv->rtc);
- 	if (res)
- 		return res;
-@@ -497,11 +489,6 @@ static int ds1343_probe(struct spi_device *spi)
- 		}
- 	}
- 
--	res = ds1343_sysfs_register(&spi->dev);
--	if (res)
--		dev_err(&spi->dev,
--			"unable to create sysfs entries for rtc ds1343\n");
--
- 	return 0;
- }
- 
-@@ -521,8 +508,6 @@ static int ds1343_remove(struct spi_device *spi)
- 
- 	spi_set_drvdata(spi, NULL);
- 
--	ds1343_sysfs_unregister(&spi->dev);
--
- 	return 0;
- }
- 
+ /* useful timestamps */
+ #define RTC_TIMESTAMP_BEGIN_0000	-62167219200ULL /* 0000-01-01 00:00:00 */
+ #define RTC_TIMESTAMP_BEGIN_1900	-2208988800LL /* 1900-01-01 00:00:00 */
 -- 
 2.21.0
 
