@@ -2,93 +2,99 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDBECA9EAB
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3F0CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7CE2222C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:17:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571447836;
-	bh=YSDA0LTaYm8hf+ryniy6+Xi/I6lsN9xC1wzmmMaHRqw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fYyfaGGTVwEAQ8jYD0yQp99yCtRMn3RWFIxOQodu0lR9c4P3BxdReghEgEyK5J+0T
-	 TQgdFypFL5S+XOHb+8O4niXPpSiGioa0rDUDH9kt06QuXJMtC2RE38/W+KuPR2DEFP
-	 WZkgwG4OuukXC08XmwFQRmqPY3AuGZIGPblNowPA=
+	by mail.kernel.org (Postfix) with ESMTP id 44F95222C5
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:19:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726033AbfJSBRO (ORCPT
+        id S1726124AbfJSBTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 21:17:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46232 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725800AbfJSBRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 21:17:13 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDBAD222C5;
-        Sat, 19 Oct 2019 01:17:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571447833;
-        bh=YSDA0LTaYm8hf+ryniy6+Xi/I6lsN9xC1wzmmMaHRqw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nCA1LfoLCIO49G4uoXUsN/ZE/0GmrUfc7zMv3nVdr4yhB18lVhrw6QknGKxs116+f
-         Me1B/Jo/gRiELN1blfBonF3x1X6ah3hp2jo5Vgywhuwty/vV/d3l2ja1EM2kXxgDWZ
-         xYN7TwUYohNvp+RkX2ZzG9wRZNxSmiliUDbsaNRo=
-Date:   Fri, 18 Oct 2019 18:17:12 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <matthew.wilcox@oracle.com>, <kernel-team@fb.com>,
-        <william.kucharski@oracle.com>, <kirill.shutemov@linux.intel.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH v3] mm,thp: recheck each page before collapsing file THP
-Message-Id: <20191018181712.91dd9e9f9941642300e1b8d9@linux-foundation.org>
-In-Reply-To: <20191018180345.4188310-1-songliubraving@fb.com>
-References: <20191018180345.4188310-1-songliubraving@fb.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 18 Oct 2019 21:19:21 -0400
+Received: from smtprelay0208.hostedemail.com ([216.40.44.208]:35928 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725800AbfJSBTU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 21:19:20 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 268FB182CED28;
+        Sat, 19 Oct 2019 01:19:19 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: books16_8b4f00402920f
+X-Filterd-Recvd-Size: 3041
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf02.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 19 Oct 2019 01:19:17 +0000 (UTC)
+Message-ID: <184cdd47d4064420b05c16f10588595c65f789e5.camel@perches.com>
+Subject: Re: [PATCH] omapfb: reduce stack usage
+From:   Joe Perches <joe@perches.com>
+To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Ladislav Michl <ladis@linux-mips.org>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
+Date:   Fri, 18 Oct 2019 18:19:15 -0700
+In-Reply-To: <20191018223012.tkpwbo3mg5mthlnz@debian>
+References: <20191018163004.23498-1-sudipm.mukherjee@gmail.com>
+         <20191018172728.GA11857@lenoch> <20191018223012.tkpwbo3mg5mthlnz@debian>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 18 Oct 2019 11:03:45 -0700 Song Liu <songliubraving@fb.com> wrote:
+On Fri, 2019-10-18 at 23:30 +0100, Sudip Mukherjee wrote:
+> On Fri, Oct 18, 2019 at 07:27:28PM +0200, Ladislav Michl wrote:
+> > On Fri, Oct 18, 2019 at 05:30:04PM +0100, Sudip Mukherjee wrote:
+> > > The build of xtensa allmodconfig is giving a warning of:
+> > > In function 'dsi_dump_dsidev_irqs':
+> > > warning: the frame size of 1120 bytes is larger than 1024 bytes
+> > > 
+> > > Allocate the memory for 'struct dsi_irq_stats' dynamically instead
+> > > of assigning it in stack.
+> > 
+> > So now function can fail silently, executes longer, code is sligthly
+> > bigger... And all that to silent warning about exceeding frame size.
+> > Is it really worth "fixing"?
 
-> In collapse_file(), after locking the page, it is necessary to recheck
-> that the page is up-to-date. Add PageUptodate() check for both shmem THP
-> and file THP.
+Depends if it could fail in practice due to a stack overrun.
+
+> The only point of failure is if kmalloc() fails and if kmalloc() fails then
+> there will be error prints in dmesg to tell the user that there is no
+> memory left in the system. About the size bigger, it seems
+> the drivers/video/fbdev/omap2/omapfb/dss/dsi.o file is smaller with the
+> patch.
+> This is without the patch:
+> -rw-r--r-- 1 sudip sudip 316856 Oct 18 22:27 drivers/video/fbdev/omap2/omapfb/dss/dsi.o
+> And this is with the patch:
+> -rw-r--r-- 1 sudip sudip 316436 Oct 18 20:09 drivers/video/fbdev/omap2/omapfb/dss/dsi.o
 > 
-> Current khugepaged should not try to collapse dirty file THP, because it
-> is limited to read only text. Add a PageDirty check and warning for file
-> THP. This is added after page_mapping() check, because if the page is
-> truncated, it might be dirty.
+> And also, objdump shows me that <dsi_dump_dsidev_irqs> was taking up 0xD7D
+> bytes, and now with the patch it is taking up 0xBED bytes, thats a saving
+> of 400 bytes. If it has 400 bytes of less code to execute will it not be
+> faster now?
 
-When fixing a bug, please always fully describe the end-user visible
-effects of that bug.  This is vital information for people who are
-considering the fix for backporting.
+You should try compiling without all the debugging symbols (defconfig)
 
-I'm suspecting that you've found a race condition which can trigger a
-VM_BUG_ON_PAGE(), which is rather serious.  But that was just a wild
-guess.  Please don't make us wildly guess :(
+> But, I may be totally wrong in my thinking, and in that case, please feel
+> free to reject the patch.
 
-The old code looked rather alarming:
+Without your patch:
 
-			} else if (!PageUptodate(page)) {
-				xas_unlock_irq(&xas);
-				wait_on_page_locked(page);
-				if (!trylock_page(page)) {
-					result = SCAN_PAGE_LOCK;
-					goto xa_unlocked;
-				}
-				get_page(page);
+$ objdump -x drivers/video/fbdev/omap2/omapfb/dss/dsi.o | grep dsi_dump_dsidev_irqs
+00000d20 l     F .text	0000061c dsi_dump_dsidev_irqs
 
-We don't have a ref on that page.  After we've released the xarray lock
-we have no business playing with *page at all, correct?
+With your patch:
+
+$ objdump -x drivers/video/fbdev/omap2/omapfb/dss/dsi.o | grep dsi_dump_dsidev_irqs
+00000d20 l     F .text	00000638 dsi_dump_dsidev_irqs
+
 
