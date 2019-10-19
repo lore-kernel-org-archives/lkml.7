@@ -2,93 +2,169 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A4DCA9EAC
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 07:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5CDCA9EAB
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 07:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96EBA222BD
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 07:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47954222BD
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 07:34:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbfJSHcz (ORCPT
+        id S1727900AbfJSHeh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 03:32:55 -0400
-Received: from mta-08-4.privateemail.com ([198.54.122.58]:26312 "EHLO
-        MTA-08-4.privateemail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbfJSHcy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 03:32:54 -0400
-X-Greylist: delayed 495 seconds by postgrey-1.27 at vger.kernel.org; Sat, 19 Oct 2019 03:32:54 EDT
-Received: from MTA-08.privateemail.com (localhost [127.0.0.1])
-        by MTA-08.privateemail.com (Postfix) with ESMTP id 7DB0760046;
-        Sat, 19 Oct 2019 03:32:54 -0400 (EDT)
-Received: from wambui.zuku.co.ke (unknown [10.20.151.218])
-        by MTA-08.privateemail.com (Postfix) with ESMTPA id 038DC60033;
-        Sat, 19 Oct 2019 07:32:50 +0000 (UTC)
-From:   Wambui Karuga <wambui@karuga.xyz>
-To:     dri-devel@lists.freedesktop.org
-Cc:     linux-kernel@vger.kernel.org, alexander.deucher@amd.com,
-        christian.koenig@amd.com, David1.Zhou@amd.com, airlied@linux.ie,
-        daniel@ffwll.ch, amd-gfx@lists.freedesktop.org,
-        outreachy-kernel@googlegroups.com
-Subject: [PATCH] drm/radeon: remove assignment for return value
-Date:   Sat, 19 Oct 2019 10:32:42 +0300
-Message-Id: <20191019073242.21652-1-wambui@karuga.xyz>
-X-Mailer: git-send-email 2.23.0
+        Sat, 19 Oct 2019 03:34:37 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47598 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726672AbfJSHeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 19 Oct 2019 03:34:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2057DB149;
+        Sat, 19 Oct 2019 07:34:34 +0000 (UTC)
+Date:   Sat, 19 Oct 2019 09:34:24 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     tip-bot2 for Jiri Slaby <tip-bot2@linutronix.de>,
+        linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+        Jiri Slaby <jslaby@suse.cz>, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        linux-arch@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>
+Subject: Re: [tip: x86/asm] x86/asm/ftrace: Mark function_hook as function
+Message-ID: <20191019073424.GA27353@zn.tnic>
+References: <20191011115108.12392-22-jslaby@suse.cz>
+ <157141622788.29376.4016565749507481510.tip-bot2@tip-bot2>
+ <20191018124800.0a7006bb@gandalf.local.home>
+ <20191018124956.764ac42e@gandalf.local.home>
+ <20191018171354.GB20368@zn.tnic>
+ <20191018133735.77e90e36@gandalf.local.home>
+ <20191018194856.GC20368@zn.tnic>
+ <20191018163125.346e078d@gandalf.local.home>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <20191018163125.346e078d@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unnecessary assignment for return value and have the
-function return the required value directly.
-Issue found by coccinelle:
-@@
-local idexpression ret;
-expression e;
-@@
+On Fri, Oct 18, 2019 at 04:31:25PM -0400, Steven Rostedt wrote:
+> Still looks ugly ;-)
 
--ret =
-+return
-     e;
--return ret;
+See below. I think it's not so bad. It is only built-tested on 64-bit and
+objtool complains about something again:
 
-Signed-off-by: Wambui Karuga <wambui@karuga.xyz>
+arch/x86/kernel/ftrace_64.o: warning: objtool: .entry.text+0x0: unreachable instruction
+
+but I think it is the better thing to do.
+
+> I do the talks hoping someone else will finally sit down and write the
+> documentation!
+
+Well, you can put down the outline of the doc and flesh out section by
+section gradually. Besides, you have all the text in your slides so it
+is actually more or less a copy+paste.
+
 ---
- drivers/gpu/drm/radeon/cik.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+diff --git a/Documentation/asm-annotations.rst b/Documentation/asm-annotations.rst
+index 29ccd6e61fe5..f55c2bb74d00 100644
+--- a/Documentation/asm-annotations.rst
++++ b/Documentation/asm-annotations.rst
+@@ -117,9 +117,9 @@ This section covers ``SYM_FUNC_*`` and ``SYM_CODE_*`` enumerated above.
+   So in most cases, developers should write something like in the following
+   example, having some asm instructions in between the macros, of course::
+ 
+-    SYM_FUNC_START(function_hook)
++    SYM_FUNC_START(memset)
+         ... asm insns ...
+-    SYM_FUNC_END(function_hook)
++    SYM_FUNC_END(memset)
+ 
+   In fact, this kind of annotation corresponds to the now deprecated ``ENTRY``
+   and ``ENDPROC`` macros.
+diff --git a/arch/x86/kernel/ftrace_32.S b/arch/x86/kernel/ftrace_32.S
+index 8ed1f5d371f0..77be7e7e5e59 100644
+--- a/arch/x86/kernel/ftrace_32.S
++++ b/arch/x86/kernel/ftrace_32.S
+@@ -12,18 +12,16 @@
+ #include <asm/frame.h>
+ #include <asm/asm-offsets.h>
+ 
+-# define function_hook	__fentry__
+-EXPORT_SYMBOL(__fentry__)
+-
+ #ifdef CONFIG_FRAME_POINTER
+ # define MCOUNT_FRAME			1	/* using frame = true  */
+ #else
+ # define MCOUNT_FRAME			0	/* using frame = false */
+ #endif
+ 
+-SYM_FUNC_START(function_hook)
++SYM_CODE_START(__fentry__)
+ 	ret
+-SYM_FUNC_END(function_hook)
++SYM_CODE_END(__fentry__)
++EXPORT_SYMBOL(__fentry__)
+ 
+ SYM_CODE_START(ftrace_caller)
+ 
+diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
+index 69c8d1b9119e..3029fe4f8547 100644
+--- a/arch/x86/kernel/ftrace_64.S
++++ b/arch/x86/kernel/ftrace_64.S
+@@ -14,9 +14,6 @@
+ 	.code64
+ 	.section .entry.text, "ax"
+ 
+-# define function_hook	__fentry__
+-EXPORT_SYMBOL(__fentry__)
+-
+ #ifdef CONFIG_FRAME_POINTER
+ /* Save parent and function stack frames (rip and rbp) */
+ #  define MCOUNT_FRAME_SIZE	(8+16*2)
+@@ -132,9 +129,10 @@ EXPORT_SYMBOL(__fentry__)
+ 
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ 
+-SYM_FUNC_START(function_hook)
++SYM_CODE_START(__fentry__)
+ 	retq
+-SYM_FUNC_END(function_hook)
++SYM_CODE_END(__fentry__)
++EXPORT_SYMBOL(__fentry__)
+ 
+ SYM_FUNC_START(ftrace_caller)
+ 	/* save_mcount_regs fills in first two parameters */
+@@ -248,7 +246,7 @@ SYM_FUNC_END(ftrace_regs_caller)
+ 
+ #else /* ! CONFIG_DYNAMIC_FTRACE */
+ 
+-SYM_FUNC_START(function_hook)
++SYM_CODE_START(__fentry__)
+ 	cmpq $ftrace_stub, ftrace_trace_function
+ 	jnz trace
+ 
+@@ -279,7 +277,8 @@ trace:
+ 	restore_mcount_regs
+ 
+ 	jmp fgraph_trace
+-SYM_FUNC_END(function_hook)
++SYM_CODE_END(__fentry__)
++EXPORT_SYMBOL(__fentry__)
+ #endif /* CONFIG_DYNAMIC_FTRACE */
+ 
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
 
-diff --git a/drivers/gpu/drm/radeon/cik.c b/drivers/gpu/drm/radeon/cik.c
-index 62eab82a64f9..daff9a2af3be 100644
---- a/drivers/gpu/drm/radeon/cik.c
-+++ b/drivers/gpu/drm/radeon/cik.c
-@@ -221,9 +221,7 @@ int ci_get_temp(struct radeon_device *rdev)
- 	else
- 		actual_temp = temp & 0x1ff;
- 
--	actual_temp = actual_temp * 1000;
--
--	return actual_temp;
-+	return actual_temp * 1000;
- }
- 
- /* get temperature in millidegrees */
-@@ -239,9 +237,7 @@ int kv_get_temp(struct radeon_device *rdev)
- 	else
- 		actual_temp = 0;
- 
--	actual_temp = actual_temp * 1000;
--
--	return actual_temp;
-+	return actual_temp * 1000;
- }
- 
- /*
 -- 
-2.23.0
+Regards/Gruss,
+    Boris.
 
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
