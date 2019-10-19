@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14184CA9EAC
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33708CA9EAB
 	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 20:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E297621925
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 20:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F99F222C2
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 20:49:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbfJSUtt (ORCPT
+        id S1726484AbfJSUtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sat, 19 Oct 2019 16:49:49 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:45275 "EHLO
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:58351 "EHLO
         relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726136AbfJSUtr (ORCPT
+        with ESMTP id S1726421AbfJSUtt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 16:49:47 -0400
+        Sat, 19 Oct 2019 16:49:49 -0400
 X-Originating-IP: 86.202.229.42
 Received: from localhost (lfbn-lyo-1-146-42.w86-202.abo.wanadoo.fr [86.202.229.42])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 997351C0002;
-        Sat, 19 Oct 2019 20:49:45 +0000 (UTC)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 854181C0009;
+        Sat, 19 Oct 2019 20:49:47 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     linux-rtc@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 5/9] rtc: ds1343: use regmap_update_bits for glitch filter
-Date:   Sat, 19 Oct 2019 22:49:37 +0200
-Message-Id: <20191019204941.6203-5-alexandre.belloni@bootlin.com>
+Subject: [PATCH 9/9] rtc: ds1343: cleanup .remove
+Date:   Sat, 19 Oct 2019 22:49:41 +0200
+Message-Id: <20191019204941.6203-9-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191019204941.6203-1-alexandre.belloni@bootlin.com>
 References: <20191019204941.6203-1-alexandre.belloni@bootlin.com>
@@ -42,46 +42,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use regmap_update_bits to update DS1343_CONTROL_REG in a race free manner
-when setting the glitch filter.
+It is not necessary to call device_init_wakeup(dev, false) in .remove as
+device_del will take care of that. It is also not necessary to
+devm_free_irq. Finally, dev_pm_clear_wake_irq can be called
+unconditionally.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-ds1343.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ drivers/rtc/rtc-ds1343.c | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
 diff --git a/drivers/rtc/rtc-ds1343.c b/drivers/rtc/rtc-ds1343.c
-index ec8d1e82d7ac..7532a2e8407e 100644
+index 3e2957983703..73513688f6f7 100644
 --- a/drivers/rtc/rtc-ds1343.c
 +++ b/drivers/rtc/rtc-ds1343.c
-@@ -108,20 +108,18 @@ static ssize_t ds1343_store_glitchfilter(struct device *dev,
- 					const char *buf, size_t count)
+@@ -437,15 +437,7 @@ static int ds1343_probe(struct spi_device *spi)
+ 
+ static int ds1343_remove(struct spi_device *spi)
  {
- 	struct ds1343_priv *priv = dev_get_drvdata(dev->parent);
--	int data;
+-	struct ds1343_priv *priv = spi_get_drvdata(spi);
 -
--	regmap_read(priv->map, DS1343_CONTROL_REG, &data);
-+	int data = 0;
-+	int res;
- 
- 	if (strncmp(buf, "enabled", 7) == 0)
--		data |= DS1343_EGFIL;
+-	if (spi->irq) {
+-		dev_pm_clear_wake_irq(&spi->dev);
+-		device_init_wakeup(&spi->dev, false);
+-		devm_free_irq(&spi->dev, spi->irq, priv);
+-	}
 -
--	else if (strncmp(buf, "disabled", 8) == 0)
--		data &= ~(DS1343_EGFIL);
--
--	else
-+		data = DS1343_EGFIL;
-+	else if (strncmp(buf, "disabled", 8))
- 		return -EINVAL;
+-	spi_set_drvdata(spi, NULL);
++	dev_pm_clear_wake_irq(&spi->dev);
  
--	regmap_write(priv->map, DS1343_CONTROL_REG, data);
-+	res = regmap_update_bits(priv->map, DS1343_CONTROL_REG,
-+				 DS1343_EGFIL, data);
-+	if (res)
-+		return res;
- 
- 	return count;
+ 	return 0;
  }
 -- 
 2.21.0
