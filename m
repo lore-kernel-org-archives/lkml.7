@@ -2,87 +2,124 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE1CCA9EAB
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 10:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CAFCA9EAC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 10:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A36E21D7C
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 10:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18E1B21D7C
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 10:09:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725818AbfJSKBs (ORCPT
+        id S1725945AbfJSKI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 06:01:48 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59086 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbfJSKBs (ORCPT
+        Sat, 19 Oct 2019 06:08:57 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:55093 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbfJSKI5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 06:01:48 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iLlYH-0004Fy-IZ; Sat, 19 Oct 2019 12:01:37 +0200
-Date:   Sat, 19 Oct 2019 12:01:32 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Huacai Chen <chenhc@lemote.com>
-cc:     Andy Lutomirski <luto@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Paul Burton <paul.burton@mips.com>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] lib/vdso: Use __arch_use_vsyscall() to indicate
- fallback
-In-Reply-To: <CAAhV-H6VkW5-hMOrzAQeyHT4pYGExZR6eTRbPHSPK50GAkigCw@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1910191156240.2098@nanos.tec.linutronix.de>
-References: <1571367619-13573-1-git-send-email-chenhc@lemote.com> <CALCETrWXRgkQOJGRqa_sOLAG2zhjsEX6b86T2VTsNYN9ECRrtA@mail.gmail.com> <CAAhV-H6VkW5-hMOrzAQeyHT4pYGExZR6eTRbPHSPK50GAkigCw@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sat, 19 Oct 2019 06:08:57 -0400
+Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MYNeM-1iYKiy05tC-00VRj4; Sat, 19 Oct 2019 12:08:54 +0200
+Received: by mail-qt1-f178.google.com with SMTP id o49so5087510qta.7;
+        Sat, 19 Oct 2019 03:08:52 -0700 (PDT)
+X-Gm-Message-State: APjAAAWq0NWMODCvCKKoRrJcY/xROCatDSgq6KWDVdw8kmm1tqupxvij
+        aR1dAZRiDHReU9iKYIP0dXkqUsX3odTklIG2JjA=
+X-Google-Smtp-Source: APXvYqx0KL/4UEXxK6gF6MT84x40msmTgoc3wUmUnzQ2wz5CAlnxhFheu9zzXtORTNxkRfpad8/dgIDVulcScXUuQ7U=
+X-Received: by 2002:ac8:33d4:: with SMTP id d20mr14268876qtb.204.1571479731943;
+ Sat, 19 Oct 2019 03:08:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20191018154052.1276506-1-arnd@arndb.de> <803f6fa5-b929-007c-5302-4a2d5042241c@roeck-us.net>
+In-Reply-To: <803f6fa5-b929-007c-5302-4a2d5042241c@roeck-us.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sat, 19 Oct 2019 12:08:35 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3gOn6qkvvKaBzqYUzZToMKv3E587_8fQHmaF2u7erd5w@mail.gmail.com>
+Message-ID: <CAK8P3a3gOn6qkvvKaBzqYUzZToMKv3E587_8fQHmaF2u7erd5w@mail.gmail.com>
+Subject: Re: [PATCH 00/46] ARM: pxa: towards multiplatform support
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        IDE-ML <linux-ide@vger.kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        linux-leds@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-rtc@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:FZS9JDtsgTvMyAvtTQLTKE7kn5paGDi0HxqdNrrd4gOc2eoZ/Z2
+ fhSPM4tI72K4/B00X6YSoSQH7qIOx9a8fTZHZlpQ4k1k8FgHiB4ZVtWGgSFJI8gBQCBiT5E
+ 2ygk6PWUY4TfC8bGxwEhbmQbK+sKe6rq0vnZwNFubQcxQATFWsmhDC8qThHRz2skgs/Itqd
+ f5aOytM1gFUEhp+xEku7g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mfjjeu6X63c=:idOfewmnr/3xCGPwUHNLfF
+ 9B27mgsqWAsMCRUn7Lb6AvPTlJxFpGJF+8LaS+wgMbQcESTIQSXIezszm7taCti8jyxUURItp
+ JKLrCbBMPjm5kNckunFQ0Zc7tyRIgs/dwFlWEK/qtmB2sdjlWXZyyBGEiLjqtemgoBoH+oNZZ
+ ilUmnapk2UZJ7Pq8Yui5T/glSBy4WWqRrVBs5agIMBTHBg5wckmqim4eMUhQIvEDUFYOUZQWl
+ K9gbRcy1uhuK1OBT/F3fD+WGFV9rYXtQVytgy2CJDDO5ugHtVuQJPCAmUDZkAd/95XzGZbMvP
+ sLcXyN9J4n7HB0v6K4timSvJT9o71OHTSIf3nKNEI6Svs18/WfO93UootFdGuWkTvZczNXkNG
+ BtR4RqYVEFvI2WFtM39SZBhRqC4x+MDPwIvIl8Ea99J6BS0FuNwJ/otfeE0Lb3EduAuYtW7LR
+ ivyg/+2El01fWGnGewKNtbF/gFCcflpfEYL8yrojAFmi6KrouahOduhlOtA8YL/qUAbkjUsoT
+ uSr3VwPOFircEWYa4joZhdYBM78LTZ40AjgtYPzgSkRMidassP/Nkehhq7KxwUeKdhtIjZiQU
+ C+X80LQ5wKgi7LbUjd+0AZktlbTywqTTQo48mLaS/ERk7IEgMFRDMSB8vyv+hK+7SOMgg+O0m
+ TaWSL/H0NJ5s1wDMsEkTkdhtjkvBSvPD6Awpco4hzbti1UNSClmqoncvgyT7JbcyobIAMULwf
+ GsphosJGED9vx+f9NwPl6bU5gSP21UjVPQOG7ZKnZb6aa4ELwNuAUf+4ywVoHiRq4x1nNYM3m
+ sOmS3W5FtKHytXuFAhDuW8dbdcq9121LVQFiTPPgMz7T3LLqoSyeSxhTSHvpBDAx2dlBVJQya
+ l5Jvr8dp+tU/iADO8uRQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 19 Oct 2019, Huacai Chen wrote:
-> On Fri, Oct 18, 2019 at 11:15 AM Andy Lutomirski <luto@kernel.org> wrote:
+On Sat, Oct 19, 2019 at 3:03 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On 10/18/19 8:40 AM, Arnd Bergmann wrote:
 > >
-> > On Thu, Oct 17, 2019 at 7:57 PM Huacai Chen <chenhc@lemote.com> wrote:
-> > >
-> > > In do_hres(), we currently use whether the return value of __arch_get_
-> > > hw_counter() is negtive to indicate fallback, but this is not a good
-> > > idea. Because:
-> > >
-> > > 1, ARM64 returns ULL_MAX but MIPS returns 0 when clock_mode is invalid;
-> > > 2, For a 64bit counter, a "negtive" value of counter is actually valid.
+> > Hi PXA maintainers,
 > >
-> > s/negtive/negative
+> > I'm in the process of getting the old ARM platforms to all build
+> > in a single kernel. The largest part of that work is changing all
+> > the device drivers to no longer require mach/*.h header files.
 > >
-> > What's the actual bug?  Is it that MIPS is returning 0 but the check
-> > is < 0?  Sounds like MIPS should get fixed.
-> My original bug is what Vincenzo said, MIPS has a boot failure if no
-> valid clock_mode, and surely MIPS need to fix. However, when I try to
-> fix it, I found that clock_getres() has another problem, because
-> __cvdso_clock_getres_common() get vd[CS_HRES_COARSE].hrtimer_res, but
-> hrtimer_res is set in update_vdso_data() which relies on
-> __arch_use_vsyscall().
-
-__arch_use_vsyscall() is a pointless exercise TBH. The VDSO data should be
-updated unconditionally so all the trivial interfaces like time() and
-getres() just work independently of the functions which depend on the
-underlying clocksource.
-
-This functions have a fallback operation already:
-
-Let __arch_get_hw_counter() return U64_MAX and the syscall fallback is
-invoked.
-
-__arch_use_vsyscall() should just be removed.
-
-Thanks,
-
-	tglx
+> > This series does it for arch/pxa/.
+> >
+> > As with the omap1 and s3c24xx series I sent before, I don't
+> > expect this all to be correct in the first version, though
+> > a lot of the patches are fairly simple and I did exhaustive
+> > compile-time testing on them.
+> >
+> > Please test if you have the hardware, or review!
+> >
+>
+> I don't get very far.
+>
+> $ make-arm pxa_defconfig
+> arch/arm/Kconfig:677: can't open file "arch/arm/plat-pxa/Kconfig"
+> scripts/kconfig/Makefile:90: recipe for target 'pxa_defconfig' failed
+> make[1]: *** [pxa_defconfig] Error 1
+> Makefile:567: recipe for target 'pxa_defconfig' failed
+> make: *** [pxa_defconfig] Error 2
+> $ git describe
+> v5.4-rc3-52-gfcc4181cd625
+>
+> Also:
+>
+> $ git grep plat-pxa
+> Documentation/arm/marvel.rst:   arch/arm/plat-pxa
+> Documentation/arm/marvel.rst:   arch/arm/plat-pxa
+> Documentation/arm/marvel.rst:   directory. The plat-pxa/ would therefore disappear.
+> arch/arm/Kconfig:source "arch/arm/plat-pxa/Kconfig"
+> arch/arm/mach-mmp/Makefile:ccflags-$(CONFIG_ARCH_MULTIPLATFORM) := -I$(srctree)/arch/arm/plat-pxa/include
+> drivers/gpio/gpio-pxa.c: *  linux/arch/arm/plat-pxa/gpio.c
+> drivers/soc/pxa/mfp.c: * linux/arch/arm/plat-pxa/mfp.c
+>
+> Did I pick the wrong tree ?
+>
+> Guenter
