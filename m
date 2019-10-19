@@ -2,206 +2,217 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D7BCA9EAC
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 17:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F13DCA9EAC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 18:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7552B222BD
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 17:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E92C21925
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 18:06:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726258AbfJSRtg (ORCPT
+        id S1726133AbfJSSGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 13:49:36 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:9939 "EHLO
-        mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726049AbfJSRtg (ORCPT
+        Sat, 19 Oct 2019 14:06:41 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54374 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726052AbfJSSGl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 13:49:36 -0400
-X-IronPort-AV: E=Sophos;i="5.67,316,1566856800"; 
-   d="scan'208";a="323310689"
-Received: from ip-121.net-89-2-166.rev.numericable.fr (HELO hadrien) ([89.2.166.121])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Oct 2019 19:49:30 +0200
-Date:   Sat, 19 Oct 2019 19:49:29 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Suwan Kim <suwan.kim027@gmail.com>
-cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org
-Subject: drivers/usb/usbip/vhci_tx.c:150:8-18: ERROR: reference preceded by
- free on line 150 (fwd)
-Message-ID: <alpine.DEB.2.21.1910191946510.5888@hadrien>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Sat, 19 Oct 2019 14:06:41 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9JI6dJu055594
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 14:06:39 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vqx4qv2b1-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 14:06:39 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
+        Sat, 19 Oct 2019 19:06:32 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 19 Oct 2019 19:06:28 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9JI6Q4O44761160
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 19 Oct 2019 18:06:26 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 883625204F;
+        Sat, 19 Oct 2019 18:06:26 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.85.146.216])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id C8F555204E;
+        Sat, 19 Oct 2019 18:06:23 +0000 (GMT)
+From:   Nayna Jain <nayna@linux.ibm.com>
+To:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Subject: [PATCH v8 0/8] powerpc: Enabling IMA arch specific secure boot policies
+Date:   Sat, 19 Oct 2019 14:06:09 -0400
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 19101918-0020-0000-0000-0000037B06E9
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101918-0021-0000-0000-000021D1391D
+Message-Id: <1571508377-23603-1-git-send-email-nayna@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-19_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910190171
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Is it guaranteed that if usb_pipetype(urb->pipe) == PIPE_ISOCHRONOUS (line
-123) is true on one iteration, then it will be true on all iterations? If
-not, then it could be good to set iso_buffer to NULL after the kfree on
-line 150.
+This patchset extends the previous version[1] by adding support for
+checking against a blacklist of binary hashes.
 
-julia
+The IMA subsystem supports custom, built-in, arch-specific policies to
+define the files to be measured and appraised. These policies are honored
+based on priority, where arch-specific policy is the highest and custom
+is the lowest.
 
----------- Forwarded message ----------
-Date: Sun, 20 Oct 2019 01:40:11 +0800
-From: kbuild test robot <lkp@intel.com>
-To: kbuild@lists.01.org
-Cc: Julia Lawall <julia.lawall@lip6.fr>
-Subject: drivers/usb/usbip/vhci_tx.c:150:8-18: ERROR: reference preceded by free
-     on line 150
+PowerNV system uses a Linux-based bootloader to kexec the OS. The
+bootloader kernel relies on IMA for signature verification of the OS
+kernel before doing the kexec. This patchset adds support for powerpc
+arch-specific IMA policies that are conditionally defined based on a
+system's secure boot and trusted boot states. The OS secure boot and
+trusted boot states are determined via device-tree properties.
 
-CC: kbuild-all@lists.01.org
-CC: linux-kernel@vger.kernel.org
-CC: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+The verification needs to be performed only for binaries that are not
+blacklisted. The kernel currently only checks against the blacklist of
+keys. However, doing so results in blacklisting all the binaries that
+are signed by the same key. In order to prevent just one particular
+binary from being loaded, it must be checked against a blacklist of
+binary hashes. This patchset also adds support to IMA for checking
+against a hash blacklist for files. signed by appended signature.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   998d75510e373aab5644d777d3b058312d550159
-commit: ea44d190764b4422af4d1c29eaeb9e69e353b406 usbip: Implement SG support to vhci-hcd and stub driver
-date:   7 weeks ago
-:::::: branch date: 7 hours ago
-:::::: commit date: 7 weeks ago
+[1] http://patchwork.ozlabs.org/cover/1149262/ 
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+Changelog:
+v8:
+* Updates the Patch Description as per Michael's and Mimi's feedback
+* Includes feedbacks from Michael for the device tree and policies
+  * removes the arch-policy hack by defining three arrays.
+  * fixes related to device-tree calls 
+  * other code specific feedbacks
+* Includes feedbacks from Mimi on the blacklist
+  * generic blacklist function is modified than previous version
+  * other coding fixes
 
->> drivers/usb/usbip/vhci_tx.c:150:8-18: ERROR: reference preceded by free on line 150
-   drivers/usb/usbip/vhci_tx.c:159:7-17: ERROR: reference preceded by free on line 150
+v7:
+* Removes patch related to dt-bindings as per input from Rob Herring. 
+* fixes Patch 1/8 to use new device-tree updates as per Oliver
+  feedback to device-tree documentation in skiboot mailing list.
+(https://lists.ozlabs.org/pipermail/skiboot/2019-September/015329.html)
+* Includes feedbacks from Mimi, Thiago
+  * moves function get_powerpc_fw_sb_node() from Patch 1 to Patch 3 
+  * fixes Patch 2/8 to use CONFIG_MODULE_SIG_FORCE.
+  * updates Patch description in Patch 5/8
+  * adds a new patch to add wrapper is_binary_blacklisted()
+  * removes the patch that deprecated permit_directio
 
-# https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ea44d190764b4422af4d1c29eaeb9e69e353b406
-git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-git remote update linus
-git checkout ea44d190764b4422af4d1c29eaeb9e69e353b406
-vim +150 drivers/usb/usbip/vhci_tx.c
+v6:
+* includes feedbacks from Michael Ellerman on the patchset v5
+  * removed email ids from comments
+  * add the doc for the device-tree
+  * renames the secboot.c to secure_boot.c and secboot.h to secure_boot.h
+  * other code specific fixes
+* split the patches to differentiate between secureboot and trustedboot
+state of the system
+* adds the patches to support the blacklisting of the binary hash.
 
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   51
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   52  static int vhci_send_cmd_submit(struct vhci_device *vdev)
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   53  {
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   54  	struct usbip_iso_packet_descriptor *iso_buffer = NULL;
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   55  	struct vhci_priv *priv = NULL;
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   56  	struct scatterlist *sg;
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   57
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   58  	struct msghdr msg;
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   59  	struct kvec *iov;
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   60  	size_t txsize;
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   61
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   62  	size_t total_size = 0;
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   63  	int iovnum;
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   64  	int err = -ENOMEM;
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   65  	int i;
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   66
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   67  	while ((priv = dequeue_from_priv_tx(vdev)) != NULL) {
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   68  		int ret;
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   69  		struct urb *urb = priv->urb;
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   70  		struct usbip_header pdu_header;
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   71
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   72  		txsize = 0;
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   73  		memset(&pdu_header, 0, sizeof(pdu_header));
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   74  		memset(&msg, 0, sizeof(msg));
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   75  		memset(&iov, 0, sizeof(iov));
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   76
-8272d099d05f7a drivers/usb/usbip/vhci_tx.c     Shuah Khan         2017-12-18   77  		usbip_dbg_vhci_tx("setup txdata urb seqnum %lu\n",
-8272d099d05f7a drivers/usb/usbip/vhci_tx.c     Shuah Khan         2017-12-18   78  				  priv->seqnum);
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   79
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   80  		if (urb->num_sgs && usb_pipeout(urb->pipe))
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   81  			iovnum = 2 + urb->num_sgs;
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   82  		else
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   83  			iovnum = 3;
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   84
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   85  		iov = kcalloc(iovnum, sizeof(*iov), GFP_KERNEL);
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   86  		if (!iov) {
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   87  			usbip_event_add(&vdev->ud, SDEV_EVENT_ERROR_MALLOC);
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   88  			return -ENOMEM;
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   89  		}
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   90
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   91  		if (urb->num_sgs)
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   92  			urb->transfer_flags |= URB_DMA_MAP_SG;
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   93
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   94  		/* 1. setup usbip_header */
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   95  		setup_cmd_submit_pdu(&pdu_header, urb);
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   96  		usbip_header_correct_endian(&pdu_header, 1);
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   97  		iovnum = 0;
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09   98
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28   99  		iov[iovnum].iov_base = &pdu_header;
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  100  		iov[iovnum].iov_len  = sizeof(pdu_header);
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  101  		txsize += sizeof(pdu_header);
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  102  		iovnum++;
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  103
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  104  		/* 2. setup transfer buffer */
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  105  		if (!usb_pipein(urb->pipe) && urb->transfer_buffer_length > 0) {
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  106  			if (urb->num_sgs &&
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  107  				      !usb_endpoint_xfer_isoc(&urb->ep->desc)) {
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  108  				for_each_sg(urb->sg, sg, urb->num_sgs, i) {
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  109  					iov[iovnum].iov_base = sg_virt(sg);
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  110  					iov[iovnum].iov_len = sg->length;
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  111  					iovnum++;
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  112  				}
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  113  			} else {
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  114  				iov[iovnum].iov_base = urb->transfer_buffer;
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  115  				iov[iovnum].iov_len  =
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  116  						urb->transfer_buffer_length;
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  117  				iovnum++;
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  118  			}
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  119  			txsize += urb->transfer_buffer_length;
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  120  		}
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  121
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  122  		/* 3. setup iso_packet_descriptor */
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  123  		if (usb_pipetype(urb->pipe) == PIPE_ISOCHRONOUS) {
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  124  			ssize_t len = 0;
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  125
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  126  			iso_buffer = usbip_alloc_iso_desc_pdu(urb, &len);
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  127  			if (!iso_buffer) {
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  128  				usbip_event_add(&vdev->ud,
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  129  						SDEV_EVENT_ERROR_MALLOC);
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  130  				goto err_iso_buffer;
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  131  			}
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  132
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  133  			iov[iovnum].iov_base = iso_buffer;
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  134  			iov[iovnum].iov_len  = len;
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  135  			iovnum++;
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  136  			txsize += len;
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  137  		}
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  138
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  139  		ret = kernel_sendmsg(vdev->ud.tcp_socket, &msg, iov, iovnum,
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  140  				     txsize);
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  141  		if (ret != txsize) {
-1a4b6f66285785 drivers/staging/usbip/vhci_tx.c matt mooney        2011-05-19  142  			pr_err("sendmsg failed!, ret=%d for %zd\n", ret,
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  143  			       txsize);
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  144  			usbip_event_add(&vdev->ud, VDEV_EVENT_ERROR_TCP);
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  145  			err = -EPIPE;
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  146  			goto err_tx;
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  147  		}
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  148
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  149  		kfree(iov);
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09 @150  		kfree(iso_buffer);
-b8868e45c5f895 drivers/staging/usbip/vhci_tx.c Brian G. Merrell   2009-07-21  151  		usbip_dbg_vhci_tx("send txdata\n");
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  152
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  153  		total_size += txsize;
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  154  	}
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  155
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  156  	return total_size;
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  157
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  158  err_tx:
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  159  	kfree(iso_buffer);
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  160  err_iso_buffer:
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  161  	kfree(iov);
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  162
-ea44d190764b44 drivers/usb/usbip/vhci_tx.c     Suwan Kim          2019-08-28  163  	return err;
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  164  }
-04679b3489e048 drivers/staging/usbip/vhci_tx.c Takahiro Hirofuchi 2008-07-09  165
+v5:
+* secureboot state is now read via device tree entry rather than OPAL
+secure variables
+* ima arch policies are updated to use policy based template for
+measurement rules
 
-:::::: The code at line 150 was first introduced by commit
-:::::: 04679b3489e048cd5dae79e050a3afed8e4e42b6 Staging: USB/IP: add client driver
+v4:
+* Fixed the build issue as reported by Satheesh Rajendran.
 
-:::::: TO: Takahiro Hirofuchi <hirofuchi@users.sourceforge.net>
-:::::: CC: Greg Kroah-Hartman <gregkh@suse.de>
+v3:
+* OPAL APIs in Patch 1 are updated to provide generic interface based on
+key/keylen. This patchset updates kernel OPAL APIs to be compatible with
+generic interface.
+* Patch 2 is cleaned up to use new OPAL APIs.
+* Since OPAL can support different types of backend which can vary in the
+variable interpretation, the Patch 2 is updated to add a check for the
+backend version
+* OPAL API now expects consumer to first check the supported backend version
+before calling other secvar OPAL APIs. This check is now added in patch 2.
+* IMA policies in Patch 3 is updated to specify appended signature and
+per policy template.
+* The patches now are free of any EFIisms.
 
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+v2:
+
+* Removed Patch 1: powerpc/include: Override unneeded early ioremap
+functions
+* Updated Subject line and patch description of the Patch 1 of this series
+* Removed dependency of OPAL_SECVAR on EFI, CPU_BIG_ENDIAN and UCS2_STRING
+* Changed OPAL APIs from static to non-static. Added opal-secvar.h for the
+same
+* Removed EFI hooks from opal_secvar.c
+* Removed opal_secvar_get_next(), opal_secvar_enqueue() and
+opal_query_variable_info() function
+* get_powerpc_sb_mode() in secboot.c now directly calls OPAL Runtime API
+rather than via EFI hooks.
+* Fixed log messages in get_powerpc_sb_mode() function.
+* Added dependency for PPC_SECURE_BOOT on configs PPC64 and OPAL_SECVAR
+* Replaced obj-$(CONFIG_IMA) with obj-$(CONFIG_PPC_SECURE_BOOT) in
+arch/powerpc/kernel/Makefile
+
+Nayna Jain (8):
+  powerpc: detect the secure boot mode of the system
+  powerpc/ima: add support to initialize ima policy rules
+  powerpc: detect the trusted boot state of the system
+  powerpc/ima: add measurement rules to ima arch specific policy
+  ima: make process_buffer_measurement() generic
+  certs: add wrapper function to check blacklisted binary hash
+  ima: check against blacklisted hashes for files with modsig
+  powerpc/ima: update ima arch policy to check for blacklist
+
+ Documentation/ABI/testing/ima_policy   |  1 +
+ arch/powerpc/Kconfig                   | 11 ++++
+ arch/powerpc/include/asm/secure_boot.h | 29 +++++++++++
+ arch/powerpc/kernel/Makefile           |  2 +
+ arch/powerpc/kernel/ima_arch.c         | 71 ++++++++++++++++++++++++++
+ arch/powerpc/kernel/secure_boot.c      | 54 ++++++++++++++++++++
+ certs/blacklist.c                      |  9 ++++
+ include/keys/system_keyring.h          |  6 +++
+ include/linux/ima.h                    |  3 +-
+ security/integrity/ima/ima.h           | 11 ++++
+ security/integrity/ima/ima_appraise.c  | 31 +++++++++++
+ security/integrity/ima/ima_main.c      | 63 +++++++++++++++--------
+ security/integrity/ima/ima_policy.c    | 10 +++-
+ security/integrity/integrity.h         |  1 +
+ 14 files changed, 277 insertions(+), 25 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/secure_boot.h
+ create mode 100644 arch/powerpc/kernel/ima_arch.c
+ create mode 100644 arch/powerpc/kernel/secure_boot.c
+
+-- 
+2.20.1
+
