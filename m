@@ -2,149 +2,70 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10092CA9EAD
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 18:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0461CA9EAB
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 18:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD256222CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 18:42:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="UjQnHb+A"
+	by mail.kernel.org (Postfix) with ESMTP id B70F8222CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 18:42:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbfJSSmB (ORCPT
+        id S1726656AbfJSSmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 14:42:01 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.81]:19862 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbfJSSl5 (ORCPT
+        Sat, 19 Oct 2019 14:42:19 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:42348 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbfJSSmQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 14:41:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571510511;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=l0qWMjci4TxLI+eOGNNufcvgLLDB/JaT6TCyJXXhCcU=;
-        b=UjQnHb+AQOaMSFBBI3VrgZgtWeLGA/znD4j9UHbEfOKWtuG+Ir0kG7/M48dVz7ifyP
-        tQDdWO0VYp5GgydokGuAoXTfMyrPxOxh44VkuwO6GXrMq5kBUGN3iPlv2eUMW84THkGp
-        hBZ2Os8m0SUzRO9MDw8hGnEeZc2OpLlPwAQmSM3SYVXjCXaBXXhB1AFiMrtsctoZhcUb
-        xgkwr0xZncMleSPV9z8Q6lqs/l1Fwm0/XTfpVbJyV7BM8qgxLhyYoL6beQ0jbnzXjIOy
-        LzGgblDvJrYDgd3N7815drXPtIudHqF+7oI2vdhrb/pGqkb7hZ5CT+psh7uqgEVkC6b6
-        qcRA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pAyXkHTz8="
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
-        with ESMTPSA id R0b2a8v9JIfRFML
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Sat, 19 Oct 2019 20:41:27 +0200 (CEST)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        David Sterba <dsterba@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: [PATCH v2 00/11] OpenPandora: make wl1251 connected to mmc3 sdio port of OpenPandora work again
-Date:   Sat, 19 Oct 2019 20:41:15 +0200
-Message-Id: <cover.1571510481.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.19.1
-MIME-Version: 1.0
-DT:     Pandora: fixes and extensions
-Content-Transfer-Encoding: 8bit
+        Sat, 19 Oct 2019 14:42:16 -0400
+Received: from localhost (unknown [64.79.112.2])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 85E3F148E09FD;
+        Sat, 19 Oct 2019 11:42:15 -0700 (PDT)
+Date:   Sat, 19 Oct 2019 11:42:01 -0700 (PDT)
+Message-Id: <20191019.114201.1452663573197641033.davem@davemloft.net>
+To:     tanhuazhong@huawei.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        salil.mehta@huawei.com, yisen.zhuang@huawei.com,
+        linuxarm@huawei.com, jakub.kicinski@netronome.com,
+        liuyonglong@huawei.com
+Subject: Re: [PATCH net] net: hns3: fix mis-counting IRQ vector numbers
+ issue
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1571370179-52008-1-git-send-email-tanhuazhong@huawei.com>
+References: <1571370179-52008-1-git-send-email-tanhuazhong@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.2
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 19 Oct 2019 11:42:15 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Huazhong Tan <tanhuazhong@huawei.com>
+Date: Fri, 18 Oct 2019 11:42:59 +0800
 
-* added acked-by for wl1251 patches - Kalle Valo <kvalo@codeaurora.org>
-* really removed old pdata-quirks code (not through #if 0)
-* splited out a partial revert of
-	efdfeb079cc3b ("regulator: fixed: Convert to use GPIO descriptor only")
-  because that was introduced after v4.19 and stops the removal of
-  the pdata-quirks patch from cleanly applying to v4.9, v4.14, v4.19
-  - reported by Sasha Levin <sashal@kernel.org>
-* added a new patch to remove old omap hsmmc since pdata quirks
-  were last user - suggested by Tony Lindgren <tony@atomide.com>
+> From: Yonglong Liu <liuyonglong@huawei.com>
+> 
+> Currently, the num_msi_left means the vector numbers of NIC,
+> but if the PF supported RoCE, it contains the vector numbers
+> of NIC and RoCE(Not expected).
+> 
+> This may cause interrupts lost in some case, because of the
+> NIC module used the vector resources which belongs to RoCE.
+> 
+> This patch adds a new variable num_nic_msi to store the vector
+> numbers of NIC, and adjust the default TQP numbers and rss_size
+> according to the value of num_nic_msi.
+> 
+> Fixes: 46a3df9f9718 ("net: hns3: Add HNS3 Acceleration Engine & Compatibility Layer Support")
+> Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 
-PATCH V1 2019-10-18 22:25:39:
-
-Here we have a set of scattered patches to make the OpenPandora WiFi work again.
-
-v4.7 did break the pdata-quirks which made the mmc3 interface
-fail completely, because some code now assumes device tree
-based instantiation.
-
-Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
-
-v4.11 did break the sdio qirks for wl1251 which made the driver no longer
-load, although the device was found as an sdio client.
-
-Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks file")
-
-To solve these issues:
-* we convert mmc3 and wl1251 initialization from pdata-quirks
-  to device tree
-* we make the wl1251 driver read properties from device tree
-* we fix the mmc core vendor ids and quirks
-* we fix the wl1251 (and wl1271) driver to use only vendor ids
-  from header file instead of (potentially conflicting) local
-  definitions
-
-
-H. Nikolaus Schaller (11):
-  Documentation: dt: wireless: update wl1251 for sdio
-  net: wireless: ti: wl1251 add device tree support
-  DTS: ARM: pandora-common: define wl1251 as child node of mmc3
-  mmc: host: omap_hsmmc: add code for special init of wl1251 to get rid
-    of pandora_wl1251_init_card
-  omap: pdata-quirks: revert pandora specific gpiod additions
-  omap: pdata-quirks: remove openpandora quirks for mmc3 and wl1251
-  omap: remove old hsmmc.[ch] and in Makefile
-  mmc: sdio: fix wl1251 vendor id
-  mmc: core: fix wl1251 sdio quirks
-  net: wireless: ti: wl1251 use new SDIO_VENDOR_ID_TI_WL1251 definition
-  net: wireless: ti: remove local VENDOR_ID and DEVICE_ID definitions
-
- .../bindings/net/wireless/ti,wl1251.txt       |  26 +++
- arch/arm/boot/dts/omap3-pandora-common.dtsi   |  37 +++-
- arch/arm/mach-omap2/Makefile                  |   1 -
- arch/arm/mach-omap2/hsmmc.c                   | 171 ------------------
- arch/arm/mach-omap2/hsmmc.h                   |  32 ----
- arch/arm/mach-omap2/pdata-quirks.c            | 105 -----------
- drivers/mmc/core/quirks.h                     |   7 +
- drivers/mmc/host/omap_hsmmc.c                 |  21 +++
- drivers/net/wireless/ti/wl1251/sdio.c         |  23 ++-
- drivers/net/wireless/ti/wlcore/sdio.c         |   8 -
- include/linux/mmc/sdio_ids.h                  |   2 +
- 11 files changed, 105 insertions(+), 328 deletions(-)
- delete mode 100644 arch/arm/mach-omap2/hsmmc.c
- delete mode 100644 arch/arm/mach-omap2/hsmmc.h
-
--- 
-2.19.1
-
+Applied, thanks.
