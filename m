@@ -2,148 +2,150 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA52CA9EAC
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 21:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3BDCA9EAC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 22:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9914C22468
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 21:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CFE621D7C
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 22:05:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbfJSVwB (ORCPT
+        id S1726205AbfJSWFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 17:52:01 -0400
-Received: from mx2a.mailbox.org ([80.241.60.219]:47915 "EHLO mx2a.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726143AbfJSVwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 17:52:01 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2a.mailbox.org (Postfix) with ESMTPS id 4239FA3391;
-        Sat, 19 Oct 2019 23:51:57 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
-        with ESMTP id SVBYNqVDiOMf; Sat, 19 Oct 2019 23:51:53 +0200 (CEST)
-Subject: Re: [musl] [PATCH] arm64: uapi: Fix user space compile with musl libc
-To:     musl@lists.openwall.com, Rich Felker <dalias@libc.org>
-Cc:     catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, stable@vger.kernel.org
-References: <20191019201717.15358-1-hauke@hauke-m.de>
- <20191019202950.GC16318@brightrain.aerifal.cx>
-From:   Hauke Mehrtens <hauke@hauke-m.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=hauke@hauke-m.de; keydata=
- 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
-Message-ID: <8fcff553-3309-7153-b245-6593d2728678@hauke-m.de>
-Date:   Sat, 19 Oct 2019 23:51:51 +0200
+        Sat, 19 Oct 2019 18:05:00 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:44631 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726145AbfJSWFA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 19 Oct 2019 18:05:00 -0400
+X-Originating-IP: 86.202.229.42
+Received: from localhost (lfbn-lyo-1-146-42.w86-202.abo.wanadoo.fr [86.202.229.42])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id C9A101BF204;
+        Sat, 19 Oct 2019 22:04:56 +0000 (UTC)
+Date:   Sun, 20 Oct 2019 00:04:56 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Jinke Fan <fanjinke@hygon.cn>
+Cc:     a.zummo@towertech.it, puwen@hygon.cn, thomas.lendacky@amd.com,
+        kim.phillips@amd.com, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND RFC PATCH v3] rtc: Fix the AltCentury value on AMD/Hygon
+ platform
+Message-ID: <20191019220456.GP3125@piout.net>
+References: <20191015080827.11589-1-fanjinke@hygon.cn>
 MIME-Version: 1.0
-In-Reply-To: <20191019202950.GC16318@brightrain.aerifal.cx>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015080827.11589-1-fanjinke@hygon.cn>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/19/19 10:29 PM, Rich Felker wrote:
-> On Sat, Oct 19, 2019 at 10:17:17PM +0200, Hauke Mehrtens wrote:
->> musl libc also defines the structures in their arch/aarch64/bits/signal.h
->> header file. Some applications like strace and gdb include both of them
->> and then the structure definitions are clashing and the build of these
->> user space applications fails.
->>
->> This patch allows a libc to define a constant which tells the kernel
->> header file that the libc already defined these structures and that they
->> should not be defined by the kernel uapi header files any more to
->> prevent clashes. This is done in a similar way as it is already done for
->> other header files.
->>
->> When this patch was accepted into the kernel I will also update musl
->> libc to define these constants.
+On 15/10/2019 16:08:27+0800, Jinke Fan wrote:
+> When using following operations:
+> date -s "21190910 19:20:00"
+> hwclock -w
+> to change date from 2019 to 2119 for test, it will fail on Hygon
+> Dhyana and AMD Zen CPUs, while the same operations run ok on Intel i7
+> platform.
 > 
-> I don't entirely object to this outright, but I'd really like to avoid
-> adding further __UAPI_DEF_* suppressions. AIUI asm/sigcontext.h is not
-> intended to be used with userspace headers. Is it still being
-> indirectly included via some other uapi headers? (I thought that was
-> fixed..) If so, that should really be fixed first, and then we can see
-> if there's still motivation for the patch here.
+> MC146818 driver use function mc146818_set_time() to set register
+> RTC_FREQ_SELECT(RTC_REG_A)'s bit4-bit6 field which means divider stage
+> reset value on Intel platform to 0x7.
 > 
-> Rich
+> While AMD/Hygon RTC_REG_A(0Ah)'s bit4 is defined as DV0 [Reference]:
+> DV0 = 0 selects Bank 0, DV0 = 1 selects Bank 1. Bit5-bit6 is defined
+> as reserved.
 > 
-Hi Rich,
+> DV0 is set to 1, it will select Bank 1, which will disable AltCentury
+> register(0x32) access. As UEFI pass acpi_gbl_FADT.century 0x32
+> (AltCentury), the CMOS write will be failed on code:
+> CMOS_WRITE(century, acpi_gbl_FADT.century).
+> 
+> Correct RTC_REG_A bank select bit(DV0) to 0 on AMD/Hygon CPUs, it will
+> enable AltCentury(0x32) register writing and finally setup century as
+> expected.
+> 
+> Test results on AMD/Hygon machine show that it works as expected.
+> 
+> Reference:
+> https://www.amd.com/system/files/TechDocs/51192_Bolton_FCH_RRG.pdf
+> section: 3.13 Real Time Clock (RTC)
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Jinke Fan <fanjinke@hygon.cn>
+> ---
+> 
+> v2->v3:
+>   - Make the changes only relevant to AMD/Hygon.
+> 
+> v1->v2:
+>   - Fix the compile errors on sparc64/alpha platform.
+> 
+>  drivers/rtc/rtc-mc146818-lib.c | 11 ++++++++++-
+>  include/linux/mc146818rtc.h    |  6 ++++++
+>  2 files changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/rtc/rtc-mc146818-lib.c b/drivers/rtc/rtc-mc146818-lib.c
+> index 2ecd8752b088..70502881785d 100644
+> --- a/drivers/rtc/rtc-mc146818-lib.c
+> +++ b/drivers/rtc/rtc-mc146818-lib.c
+> @@ -172,7 +172,16 @@ int mc146818_set_time(struct rtc_time *time)
+>  	save_control = CMOS_READ(RTC_CONTROL);
+>  	CMOS_WRITE((save_control|RTC_SET), RTC_CONTROL);
+>  	save_freq_select = CMOS_READ(RTC_FREQ_SELECT);
+> -	CMOS_WRITE((save_freq_select|RTC_DIV_RESET2), RTC_FREQ_SELECT);
+> +
+> +#ifdef CONFIG_X86
+> +	if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||
+> +	    boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
+> +		CMOS_WRITE((save_freq_select & (~RTC_DV0)), RTC_FREQ_SELECT);
 
-I did some more research and it looks like this patch also fixes my
-problem with strace and gdb compile:
-https://git.kernel.org/linus/9966a05c7b80f075f2bc7e48dbb108d3f2927234
+This should probably use ~RTC_DIV_RESET2.
 
-I will backport it in OpenWrt to kernel 4.19.
+> +	else
+> +		CMOS_WRITE((save_freq_select | RTC_DIV_RESET2), RTC_FREQ_SELECT);
+> +#else
+> +	CMOS_WRITE((save_freq_select | RTC_DIV_RESET2), RTC_FREQ_SELECT);
+> +#endif
 
-Please drop my patch.
+Also, later you have:
 
-It would be nice if it could go into the stable 4.19 kernel.
+CMOS_WRITE(save_freq_select, RTC_FREQ_SELECT);
 
-Hauke
+This may write bit4 again which would make mc146818_get_time fail so you
+probably want to update save_freq_select.
+
+>  
+>  #ifdef CONFIG_MACH_DECSTATION
+>  	CMOS_WRITE(real_yrs, RTC_DEC_YEAR);
+> diff --git a/include/linux/mc146818rtc.h b/include/linux/mc146818rtc.h
+> index 0661af17a758..7066a7bced61 100644
+> --- a/include/linux/mc146818rtc.h
+> +++ b/include/linux/mc146818rtc.h
+> @@ -86,6 +86,12 @@ struct cmos_rtc_board_info {
+>     /* 2 values for divider stage reset, others for "testing purposes only" */
+>  #  define RTC_DIV_RESET1	0x60
+>  #  define RTC_DIV_RESET2	0x70
+> +
+> +#ifdef CONFIG_X86
+> +   /* DV0 = 0 selects Bank 0, DV0 = 1 selects Bank 1 on AMD/Hygon platform */
+> +#  define RTC_DV0		0x10
+> +#endif
+> +
+>    /* Periodic intr. / Square wave rate select. 0=none, 1=32.8kHz,... 15=2Hz */
+>  # define RTC_RATE_SELECT 	0x0F
+>  
+> -- 
+> 2.17.1
+> 
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
