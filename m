@@ -2,99 +2,250 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3F0CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 623E9CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44F95222C5
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32916222C5
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:28:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbfJSBTV (ORCPT
+        id S1726294AbfJSB2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 21:19:21 -0400
-Received: from smtprelay0208.hostedemail.com ([216.40.44.208]:35928 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725800AbfJSBTU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 21:19:20 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 268FB182CED28;
-        Sat, 19 Oct 2019 01:19:19 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: books16_8b4f00402920f
-X-Filterd-Recvd-Size: 3041
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 19 Oct 2019 01:19:17 +0000 (UTC)
-Message-ID: <184cdd47d4064420b05c16f10588595c65f789e5.camel@perches.com>
-Subject: Re: [PATCH] omapfb: reduce stack usage
-From:   Joe Perches <joe@perches.com>
-To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Ladislav Michl <ladis@linux-mips.org>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
-Date:   Fri, 18 Oct 2019 18:19:15 -0700
-In-Reply-To: <20191018223012.tkpwbo3mg5mthlnz@debian>
-References: <20191018163004.23498-1-sudipm.mukherjee@gmail.com>
-         <20191018172728.GA11857@lenoch> <20191018223012.tkpwbo3mg5mthlnz@debian>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Fri, 18 Oct 2019 21:28:45 -0400
+Received: from mga07.intel.com ([134.134.136.100]:54933 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726152AbfJSB2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 21:28:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Oct 2019 18:28:44 -0700
+X-IronPort-AV: E=Sophos;i="5.67,313,1566889200"; 
+   d="scan'208";a="190530675"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.171.209]) ([10.249.171.209])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 18 Oct 2019 18:28:42 -0700
+Subject: Re: [PATCH v2 3/3] KVM: VMX: Some minor refactor of MSR bitmap
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191018093723.102471-1-xiaoyao.li@intel.com>
+ <20191018093723.102471-4-xiaoyao.li@intel.com>
+ <20191018172741.GF26319@linux.intel.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <f6327d92-7b25-a621-2f5c-aacb6f30793a@intel.com>
+Date:   Sat, 19 Oct 2019 09:28:40 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191018172741.GF26319@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-10-18 at 23:30 +0100, Sudip Mukherjee wrote:
-> On Fri, Oct 18, 2019 at 07:27:28PM +0200, Ladislav Michl wrote:
-> > On Fri, Oct 18, 2019 at 05:30:04PM +0100, Sudip Mukherjee wrote:
-> > > The build of xtensa allmodconfig is giving a warning of:
-> > > In function 'dsi_dump_dsidev_irqs':
-> > > warning: the frame size of 1120 bytes is larger than 1024 bytes
-> > > 
-> > > Allocate the memory for 'struct dsi_irq_stats' dynamically instead
-> > > of assigning it in stack.
-> > 
-> > So now function can fail silently, executes longer, code is sligthly
-> > bigger... And all that to silent warning about exceeding frame size.
-> > Is it really worth "fixing"?
-
-Depends if it could fail in practice due to a stack overrun.
-
-> The only point of failure is if kmalloc() fails and if kmalloc() fails then
-> there will be error prints in dmesg to tell the user that there is no
-> memory left in the system. About the size bigger, it seems
-> the drivers/video/fbdev/omap2/omapfb/dss/dsi.o file is smaller with the
-> patch.
-> This is without the patch:
-> -rw-r--r-- 1 sudip sudip 316856 Oct 18 22:27 drivers/video/fbdev/omap2/omapfb/dss/dsi.o
-> And this is with the patch:
-> -rw-r--r-- 1 sudip sudip 316436 Oct 18 20:09 drivers/video/fbdev/omap2/omapfb/dss/dsi.o
+On 10/19/2019 1:27 AM, Sean Christopherson wrote:
+> On Fri, Oct 18, 2019 at 05:37:23PM +0800, Xiaoyao Li wrote:
+>> Move the MSR bitmap capability check from vmx_disable_intercept_for_msr()
+>> and vmx_enable_intercept_for_msr(), so that we can do the check far
+>> early before we really want to touch the bitmap.
+>>
+>> Also, we can move the common MSR not-intercept setup to where msr bitmap
+>> is actually used.
+>>
+>> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+>> ---
+>> Changes in v2:
+>>    - Remove the check of cpu_has_vmx_msr_bitmap() from
+>>      vmx_{disable,enable}_intercept_for_msr (Krish)
+>> ---
+>>   arch/x86/kvm/vmx/vmx.c | 65 +++++++++++++++++++++---------------------
+>>   1 file changed, 33 insertions(+), 32 deletions(-)
+>>
+>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>> index b083316a598d..017689d0144e 100644
+>> --- a/arch/x86/kvm/vmx/vmx.c
+>> +++ b/arch/x86/kvm/vmx/vmx.c
+>> @@ -343,8 +343,8 @@ module_param_cb(vmentry_l1d_flush, &vmentry_l1d_flush_ops, NULL, 0644);
+>>   
+>>   static bool guest_state_valid(struct kvm_vcpu *vcpu);
+>>   static u32 vmx_segment_access_rights(struct kvm_segment *var);
+>> -static __always_inline void vmx_disable_intercept_for_msr(unsigned long *msr_bitmap,
+>> -							  u32 msr, int type);
+>> +static __always_inline void vmx_set_intercept_for_msr(unsigned long *msr_bitmap,
+>> +		u32 msr, int type, bool value);
+>>   
+>>   void vmx_vmexit(void);
+>>   
+>> @@ -2000,9 +2000,9 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>>   		 * in the merging. We update the vmcs01 here for L1 as well
+>>   		 * since it will end up touching the MSR anyway now.
+>>   		 */
+>> -		vmx_disable_intercept_for_msr(vmx->vmcs01.msr_bitmap,
+>> -					      MSR_IA32_SPEC_CTRL,
+>> -					      MSR_TYPE_RW);
+>> +		vmx_set_intercept_for_msr(vmx->vmcs01.msr_bitmap,
+>> +					  MSR_IA32_SPEC_CTRL,
+>> +					  MSR_TYPE_RW, false);
 > 
-> And also, objdump shows me that <dsi_dump_dsidev_irqs> was taking up 0xD7D
-> bytes, and now with the patch it is taking up 0xBED bytes, thats a saving
-> of 400 bytes. If it has 400 bytes of less code to execute will it not be
-> faster now?
+> IMO this is a net negative.  The explicit "disable" is significantly more
+> intuitive than "set" with a %false param, e.g. at a quick glance it would
+> be easy to think this code is "setting", i.e. "enabling" interception.
+>
 
-You should try compiling without all the debugging symbols (defconfig)
+How about renaming it to vmx_switch_intercept_for_msr()?
+or just add the cpu_has_vmx_msr_bitmap() check outside because the check 
+is removed in vmx_disable_intercept_for_msr()
 
-> But, I may be totally wrong in my thinking, and in that case, please feel
-> free to reject the patch.
-
-Without your patch:
-
-$ objdump -x drivers/video/fbdev/omap2/omapfb/dss/dsi.o | grep dsi_dump_dsidev_irqs
-00000d20 l     F .text	0000061c dsi_dump_dsidev_irqs
-
-With your patch:
-
-$ objdump -x drivers/video/fbdev/omap2/omapfb/dss/dsi.o | grep dsi_dump_dsidev_irqs
-00000d20 l     F .text	00000638 dsi_dump_dsidev_irqs
-
-
+>>   		break;
+>>   	case MSR_IA32_PRED_CMD:
+>>   		if (!msr_info->host_initiated &&
+>> @@ -2028,8 +2028,9 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>>   		 * vmcs02.msr_bitmap here since it gets completely overwritten
+>>   		 * in the merging.
+>>   		 */
+>> -		vmx_disable_intercept_for_msr(vmx->vmcs01.msr_bitmap, MSR_IA32_PRED_CMD,
+>> -					      MSR_TYPE_W);
+>> +		vmx_set_intercept_for_msr(vmx->vmcs01.msr_bitmap,
+>> +					  MSR_IA32_PRED_CMD,
+>> +					  MSR_TYPE_W, false);
+>>   		break;
+>>   	case MSR_IA32_CR_PAT:
+>>   		if (!kvm_pat_valid(data))
+>> @@ -3599,9 +3600,6 @@ static __always_inline void vmx_disable_intercept_for_msr(unsigned long *msr_bit
+>>   {
+>>   	int f = sizeof(unsigned long);
+>>   
+>> -	if (!cpu_has_vmx_msr_bitmap())
+>> -		return;
+> 
+> As above, I'd rather keep these here.  Functionally it changes nothing on
+> CPUs with an MSR bitmap.  For old CPUs, it saves all of two uops in paths
+> that aren't performance critical.
+> 
+>> -
+>>   	if (static_branch_unlikely(&enable_evmcs))
+>>   		evmcs_touch_msr_bitmap();
+>>   
+>> @@ -3637,9 +3635,6 @@ static __always_inline void vmx_enable_intercept_for_msr(unsigned long *msr_bitm
+>>   {
+>>   	int f = sizeof(unsigned long);
+>>   
+>> -	if (!cpu_has_vmx_msr_bitmap())
+>> -		return;
+>> -
+>>   	if (static_branch_unlikely(&enable_evmcs))
+>>   		evmcs_touch_msr_bitmap();
+>>   
+>> @@ -3673,6 +3668,9 @@ static __always_inline void vmx_enable_intercept_for_msr(unsigned long *msr_bitm
+>>   static __always_inline void vmx_set_intercept_for_msr(unsigned long *msr_bitmap,
+>>   			     			      u32 msr, int type, bool value)
+>>   {
+>> +	if (!cpu_has_vmx_msr_bitmap())
+>> +		return;
+>> +
+>>   	if (value)
+>>   		vmx_enable_intercept_for_msr(msr_bitmap, msr, type);
+>>   	else
+>> @@ -4163,11 +4161,30 @@ static void ept_set_mmio_spte_mask(void)
+>>   
+>>   static void vmx_vmcs_setup(struct vcpu_vmx *vmx)
+>>   {
+>> +	unsigned long *msr_bitmap;
+>> +
+>>   	if (nested)
+>>   		nested_vmx_vmcs_setup();
+>>   
+>> -	if (cpu_has_vmx_msr_bitmap())
+>> +	if (cpu_has_vmx_msr_bitmap()) {
+>> +		msr_bitmap = vmx->vmcs01.msr_bitmap;
+>> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_TSC, MSR_TYPE_R);
+>> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_FS_BASE, MSR_TYPE_RW);
+>> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_GS_BASE, MSR_TYPE_RW);
+>> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_KERNEL_GS_BASE, MSR_TYPE_RW);
+>> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_CS, MSR_TYPE_RW);
+>> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_ESP, MSR_TYPE_RW);
+>> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_EIP, MSR_TYPE_RW);
+>> +		if (kvm_cstate_in_guest(vmx->vcpu.kvm)) {
+>> +			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C1_RES, MSR_TYPE_R);
+>> +			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C3_RESIDENCY, MSR_TYPE_R);
+>> +			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
+>> +			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
+>> +		}
+>> +
+>>   		vmcs_write64(MSR_BITMAP, __pa(vmx->vmcs01.msr_bitmap));
+>> +	}
+>> +	vmx->msr_bitmap_mode = 0;
+> 
+> Zeroing msr_bitmap_mode can be skipped as well.
+> 
+>>   	vmcs_write64(VMCS_LINK_POINTER, -1ull); /* 22.3.1.5 */
+>>   
+>> @@ -6074,7 +6091,8 @@ void vmx_set_virtual_apic_mode(struct kvm_vcpu *vcpu)
+>>   	}
+>>   	secondary_exec_controls_set(vmx, sec_exec_control);
+>>   
+>> -	vmx_update_msr_bitmap(vcpu);
+>> +	if (cpu_has_vmx_msr_bitmap())
+>> +		vmx_update_msr_bitmap(vcpu);
+>>   }
+>>   
+>>   static void vmx_set_apic_access_page_addr(struct kvm_vcpu *vcpu, hpa_t hpa)
+>> @@ -6688,7 +6706,6 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
+>>   {
+>>   	int err;
+>>   	struct vcpu_vmx *vmx;
+>> -	unsigned long *msr_bitmap;
+>>   	int i, cpu;
+>>   
+>>   	BUILD_BUG_ON_MSG(offsetof(struct vcpu_vmx, vcpu) != 0,
+>> @@ -6745,22 +6762,6 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
+>>   	if (err < 0)
+>>   		goto free_msrs;
+>>   
+>> -	msr_bitmap = vmx->vmcs01.msr_bitmap;
+>> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_TSC, MSR_TYPE_R);
+>> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_FS_BASE, MSR_TYPE_RW);
+>> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_GS_BASE, MSR_TYPE_RW);
+>> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_KERNEL_GS_BASE, MSR_TYPE_RW);
+>> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_CS, MSR_TYPE_RW);
+>> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_ESP, MSR_TYPE_RW);
+>> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_EIP, MSR_TYPE_RW);
+>> -	if (kvm_cstate_in_guest(kvm)) {
+>> -		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C1_RES, MSR_TYPE_R);
+>> -		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C3_RESIDENCY, MSR_TYPE_R);
+>> -		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
+>> -		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
+>> -	}
+>> -	vmx->msr_bitmap_mode = 0;
+> 
+> Keep this code here to be consistent with the previous change that moved
+> the guest_msrs intialization *out* of the VMCS specific function.  Both
+> are collateral pages that are not directly part of the VMCS.
+> 
+> I'd be tempted to use a goto to skip the code, the line length is bad
+> enough as it is, e.g.:
+> 
+> 	if (!cpu_has_vmx_msr_bitmap())
+> 		goto skip_msr_bitmap;
+> 
+> 	vmx->msr_bitmap_mode = 0;
+> skip_msr_bitmap:
+> 
+>> -
+>>   	vmx->loaded_vmcs = &vmx->vmcs01;
+>>   	cpu = get_cpu();
+>>   	vmx_vcpu_load(&vmx->vcpu, cpu);
+>> -- 
+>> 2.19.1
+>>
