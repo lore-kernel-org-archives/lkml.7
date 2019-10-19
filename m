@@ -2,304 +2,1602 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D72CA9EAD
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 14:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D28CCA9EAB
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 14:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B564D222C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 14:08:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rRWOZNzb"
+	by mail.kernel.org (Postfix) with ESMTP id 2F71B21835
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 14:11:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbfJSOHw (ORCPT
+        id S1725948AbfJSOLO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 10:07:52 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40911 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbfJSOHt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 10:07:49 -0400
-Received: by mail-wr1-f66.google.com with SMTP id o28so9090155wro.7
-        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 07:07:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=t1oSD9yvg5gmEXonhSx+4hOlKXRU+VMChnziQ21P88w=;
-        b=rRWOZNzbvdsYfRVf+DQoWcNdG5jOBr12IFbRzBf+sl6Z11/dWtoUfuLRyaH0U6AVw0
-         EnUXa3YNJ6hqzDHQ9I8vdjU/G4F0qi+0rainbRxDI0ukqJSzvlJTC7iVei1qJ34RY2Wz
-         0h1KvK1eSthbY1YHKjvxQc4aahY2vCYkuws6yBWYi95nM+cQTgarM/UQixycHan7mtzs
-         qEpM6k02g475aN+7hz0mdeZE3kR/Az62alRpml8z0IMNvHzEgyV2iWIwHWgCCj95cl6E
-         JYewVWE1so1NAj56PtyuiT4qqNgnmyHZtpuRCT3ADV+ADxpz5eCYgDqGYZo2E0KIeH4l
-         frYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=t1oSD9yvg5gmEXonhSx+4hOlKXRU+VMChnziQ21P88w=;
-        b=Qbws+ZCDZ8aBNW5ttTXgEJgGhiytK+DpCrUpkX71FDSpjBPyapXr4lKB1D7BsbX7IE
-         Zw7eTf8SN9nwbr2Dz6ILI6RukMoXe29ZYmB43a+JKEBIkrl1kZ+XtD5p8Tszomhm9tvR
-         Y9fb3lJsNgP+Ce9F5pFZS5oo1fB6sG6c865KAhLppucSPjYtHO0I58oW3wZ+wLyxbZrR
-         ciO7O8pCWI6fVkugaLlUK+B371YgVCrQNNYUlsOSNZ8i9tjfxDv6iH/ca8K+V1HMSyao
-         OJlpGWwDQm/d5gRCs5z/Yh9+Dq0BiOP5GJ8VowDrS1WMYJgRBDwDWLS/FNtICQTblK44
-         oFjg==
-X-Gm-Message-State: APjAAAVfYzqijejo6SiUUHSAY7vauo9x/k6/r6dlAASedK1ug7+zCxsd
-        RUB4Yi0OTdJKE3BUpgEMUw==
-X-Google-Smtp-Source: APXvYqxO4soD9g8B2NXEpDqszFgjzgsrWg9WyveItixSlbb+ATzui2UCxazkLKkQw63w3GKD1qQjgA==
-X-Received: by 2002:a5d:4612:: with SMTP id t18mr11514876wrq.255.1571494065629;
-        Sat, 19 Oct 2019 07:07:45 -0700 (PDT)
-Received: from ninjahub.lan (host-92-23-80-57.as13285.net. [92.23.80.57])
-        by smtp.googlemail.com with ESMTPSA id t4sm7893080wrm.13.2019.10.19.07.07.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Oct 2019 07:07:45 -0700 (PDT)
-From:   Jules Irenge <jbi.octave@gmail.com>
-To:     outreachy-kernel@googlegroups.com
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        jerome.pouiller@silabs.com, linux-kernel@vger.kernel.org,
-        Jules Irenge <jbi.octave@gmail.com>
-Subject: [PATCH v1 1/5] staging: wfx: fix warnings of no space is necessary
-Date:   Sat, 19 Oct 2019 15:07:15 +0100
-Message-Id: <20191019140719.2542-2-jbi.octave@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191019140719.2542-1-jbi.octave@gmail.com>
-References: <20191019140719.2542-1-jbi.octave@gmail.com>
+        Sat, 19 Oct 2019 10:11:14 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:50782 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725890AbfJSOLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 19 Oct 2019 10:11:13 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 36E46FB03;
+        Sat, 19 Oct 2019 16:11:10 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id VLCgsYuBdfeV; Sat, 19 Oct 2019 16:11:04 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id BCEA349B0C; Sat, 19 Oct 2019 16:11:03 +0200 (CEST)
+Date:   Sat, 19 Oct 2019 16:11:03 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6 2/2] drm/bridge: Add NWL MIPI DSI host controller
+ support
+Message-ID: <20191019141103.GA21138@bogon.m.sigxcpu.org>
+References: <cover.1569170717.git.agx@sigxcpu.org>
+ <CGME20190922164727epcas4p3da05d770057f57cbf00d8dfd01ae06b6@epcas4p3.samsung.com>
+ <c0ac0b203fb65ae7efd1b9b54664b491ca2fb157.1569170717.git.agx@sigxcpu.org>
+ <c86b7ca2-7799-eafd-c380-e4b551520837@samsung.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <c86b7ca2-7799-eafd-c380-e4b551520837@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix warnings of no space is necessary after a cast.
-Issue detected by checkpatch tool.
+Hi Andrzej,
+thanks for your comments! See inline for follow ups.
 
-Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
----
- drivers/staging/wfx/bh.c       |  8 ++++----
- drivers/staging/wfx/bus_sdio.c |  6 +++---
- drivers/staging/wfx/bus_spi.c  |  2 +-
- drivers/staging/wfx/data_rx.c  |  8 ++++----
- drivers/staging/wfx/data_tx.c  | 20 ++++++++++----------
- drivers/staging/wfx/data_tx.h  |  4 ++--
- 6 files changed, 24 insertions(+), 24 deletions(-)
+On Mon, Sep 23, 2019 at 12:01:51PM +0200, Andrzej Hajda wrote:
+> On 22.09.2019 18:47, Guido Günther wrote:
+> > This adds initial support for the NWL MIPI DSI Host controller found on
+> > i.MX8 SoCs.
+> >
+> > It adds support for the i.MX8MQ but the same IP can be found on
+> > e.g. the i.MX8QXP.
+> >
+> > It has been tested on the Librem 5 devkit using mxsfb.
+> >
+> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> > Co-developed-by: Robert Chiras <robert.chiras@nxp.com>
+> > Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+> > Tested-by: Robert Chiras <robert.chiras@nxp.com>
+> > ---
+> >  drivers/gpu/drm/bridge/Kconfig   |   16 +
+> >  drivers/gpu/drm/bridge/Makefile  |    3 +
+> >  drivers/gpu/drm/bridge/nwl-dsi.c | 1180 ++++++++++++++++++++++++++++++
+> >  drivers/gpu/drm/bridge/nwl-dsi.h |  144 ++++
+> >  4 files changed, 1343 insertions(+)
+> >  create mode 100644 drivers/gpu/drm/bridge/nwl-dsi.c
+> >  create mode 100644 drivers/gpu/drm/bridge/nwl-dsi.h
+> >
+> > diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+> > index 1cc9f502c1f2..13021f9a6107 100644
+> > --- a/drivers/gpu/drm/bridge/Kconfig
+> > +++ b/drivers/gpu/drm/bridge/Kconfig
+> > @@ -65,6 +65,22 @@ config DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW
+> >            to DP++. This is used with the i.MX6 imx-ldb
+> >            driver. You are likely to say N here.
+> >  
+> > +config DRM_NWL_MIPI_DSI
+> > +	tristate "Northwest Logic MIPI DSI Host controller"
+> > +	depends on DRM
+> > +	depends on COMMON_CLK
+> > +	depends on OF && HAS_IOMEM
+> > +	select DRM_KMS_HELPER
+> > +	select DRM_MIPI_DSI
+> > +	select DRM_PANEL_BRIDGE
+> > +	select GENERIC_PHY_MIPI_DPHY
+> > +	select MFD_SYSCON
+> > +	select MULTIPLEXER
+> > +	select REGMAP_MMIO
+> > +	help
+> > +	  This enables the Northwest Logic MIPI DSI Host controller as
+> > +	  for example found on NXP's i.MX8 Processors.
+> > +
+> >  config DRM_NXP_PTN3460
+> >  	tristate "NXP PTN3460 DP/LVDS bridge"
+> >  	depends on OF
+> > diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+> > index 4934fcf5a6f8..c3f3a43e9b8f 100644
+> > --- a/drivers/gpu/drm/bridge/Makefile
+> > +++ b/drivers/gpu/drm/bridge/Makefile
+> > @@ -16,4 +16,7 @@ obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix/
+> >  obj-$(CONFIG_DRM_I2C_ADV7511) += adv7511/
+> >  obj-$(CONFIG_DRM_TI_SN65DSI86) += ti-sn65dsi86.o
+> >  obj-$(CONFIG_DRM_TI_TFP410) += ti-tfp410.o
+> > +obj-$(CONFIG_DRM_NWL_MIPI_DSI) += nwl-dsi.o
+> >  obj-y += synopsys/
+> > +
+> > +header-test-y += nwl-dsi.h
+> > diff --git a/drivers/gpu/drm/bridge/nwl-dsi.c b/drivers/gpu/drm/bridge/nwl-dsi.c
+> > new file mode 100644
+> > index 000000000000..dea5429a1e17
+> > --- /dev/null
+> > +++ b/drivers/gpu/drm/bridge/nwl-dsi.c
+> > @@ -0,0 +1,1180 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * i.MX8 NWL MIPI DSI host driver
+> > + *
+> > + * Copyright (C) 2017 NXP
+> > + * Copyright (C) 2019 Purism SPC
+> > + */
+> > +
+> > +#include <linux/bitfield.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/irq.h>
+> > +#include <linux/math64.h>
+> > +#include <linux/mfd/syscon.h>
+> > +#include <linux/module.h>
+> > +#include <linux/mux/consumer.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_platform.h>
+> > +#include <linux/phy/phy.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/reset.h>
+> > +#include <linux/sys_soc.h>
+> > +#include <linux/time64.h>
+> > +
+> > +#include <drm/drm_atomic_helper.h>
+> > +#include <drm/drm_bridge.h>
+> > +#include <drm/drm_mipi_dsi.h>
+> > +#include <drm/drm_of.h>
+> > +#include <drm/drm_panel.h>
+> > +#include <drm/drm_print.h>
+> > +#include <drm/drm_probe_helper.h>
+> > +
+> > +#include <video/mipi_display.h>
+> > +#include <video/videomode.h>
+> > +
+> > +#include "nwl-dsi.h"
+> > +
+> > +#define DRV_NAME "nwl-dsi"
+> > +
+> > +/* i.MX8 NWL quirks */
+> > +/* i.MX8MQ errata E11418 */
+> > +#define E11418_HS_MODE_QUIRK	BIT(0)
+> > +/* Skip DSI bits in SRC on disable to avoid blank display on enable */
+> > +#define SRC_RESET_QUIRK		BIT(1)
+> > +
+> > +#define NWL_DSI_MIPI_FIFO_TIMEOUT msecs_to_jiffies(500)
+> > +
+> > +enum transfer_direction {
+> > +	DSI_PACKET_SEND,
+> > +	DSI_PACKET_RECEIVE,
+> > +};
+> > +
+> > +/* Possible platform specific clocks */
+> > +#define NWL_DSI_CLK_CORE	    "core"
+> > +#define NWL_DSI_MAX_PLATFORM_CLOCKS 1
+> > +
+> > +struct nwl_dsi_plat_clk_config {
+> > +	const char *id;
+> > +	struct clk *clk;
+> > +	bool present;
+> > +};
+> > +
+> > +struct nwl_dsi_transfer {
+> > +	const struct mipi_dsi_msg *msg;
+> > +	struct mipi_dsi_packet packet;
+> > +	struct completion completed;
+> > +
+> > +	int status; /* status of transmission */
+> > +	enum transfer_direction direction;
+> > +	bool need_bta;
+> > +	u8 cmd;
+> > +	u16 rx_word_count;
+> > +	size_t tx_len; /* in bytes */
+> > +	size_t rx_len; /* in bytes */
+> > +};
+> > +
+> > +struct nwl_dsi {
+> > +	struct drm_bridge bridge;
+> > +	struct mipi_dsi_host dsi_host;
+> > +	struct drm_bridge *panel_bridge;
+> > +	struct device *dev;
+> > +	struct phy *phy;
+> > +	union phy_configure_opts phy_cfg;
+> > +	unsigned int quirks;
+> > +
+> > +	struct regmap *regmap;
+> > +	int irq;
+> > +	struct reset_control *rstc;
+> > +	struct mux_control *mux;
+> > +
+> > +	/* DSI clocks */
+> > +	struct clk *phy_ref_clk;
+> > +	struct clk *rx_esc_clk;
+> > +	struct clk *tx_esc_clk;
+> > +	/* Platform dependent clocks */
+> > +	struct nwl_dsi_plat_clk_config clk_config[NWL_DSI_MAX_PLATFORM_CLOCKS];
+> 
+> 
+> These clocks are not documented.
 
-diff --git a/drivers/staging/wfx/bh.c b/drivers/staging/wfx/bh.c
-index 3355183fc86c..573216b08042 100644
---- a/drivers/staging/wfx/bh.c
-+++ b/drivers/staging/wfx/bh.c
-@@ -69,13 +69,13 @@ static int rx_helper(struct wfx_dev *wdev, size_t read_len, int *is_cnf)
- 	if (wfx_data_read(wdev, skb->data, alloc_len))
- 		goto err;
- 
--	piggyback = le16_to_cpup((u16 *) (skb->data + alloc_len - 2));
-+	piggyback = le16_to_cpup((u16 *)(skb->data + alloc_len - 2));
- 	_trace_piggyback(piggyback, false);
- 
--	hif = (struct hif_msg *) skb->data;
-+	hif = (struct hif_msg *)skb->data;
- 	WARN(hif->encrypted & 0x1, "unsupported encryption type");
- 	if (hif->encrypted == 0x2) {
--		if (wfx_sl_decode(wdev, (void *) hif)) {
-+		if (wfx_sl_decode(wdev, (void *)hif)) {
- 			dev_kfree_skb(skb);
- 			// If frame was a confirmation, expect trouble in next
- 			// exchange. However, it is harmless to fail to decode
-@@ -102,7 +102,7 @@ static int rx_helper(struct wfx_dev *wdev, size_t read_len, int *is_cnf)
- 	if (!(hif->id & HIF_ID_IS_INDICATION)) {
- 		(*is_cnf)++;
- 		if (hif->id == HIF_CNF_ID_MULTI_TRANSMIT)
--			release_count = le32_to_cpu(((struct hif_cnf_multi_transmit *) hif->body)->num_tx_confs);
-+			release_count = le32_to_cpu(((struct hif_cnf_multi_transmit *)hif->body)->num_tx_confs);
- 		else
- 			release_count = 1;
- 		WARN(wdev->hif.tx_buffers_used < release_count, "corrupted buffer counter");
-diff --git a/drivers/staging/wfx/bus_sdio.c b/drivers/staging/wfx/bus_sdio.c
-index f97360513150..184e20dfdd62 100644
---- a/drivers/staging/wfx/bus_sdio.c
-+++ b/drivers/staging/wfx/bus_sdio.c
-@@ -38,7 +38,7 @@ static int wfx_sdio_copy_from_io(void *priv, unsigned int reg_id,
- 	int ret;
- 
- 	WARN(reg_id > 7, "chip only has 7 registers");
--	WARN(((uintptr_t) dst) & 3, "unaligned buffer size");
-+	WARN(((uintptr_t)dst) & 3, "unaligned buffer size");
- 	WARN(count & 3, "unaligned buffer address");
- 
- 	/* Use queue mode buffers */
-@@ -59,14 +59,14 @@ static int wfx_sdio_copy_to_io(void *priv, unsigned int reg_id,
- 	int ret;
- 
- 	WARN(reg_id > 7, "chip only has 7 registers");
--	WARN(((uintptr_t) src) & 3, "unaligned buffer size");
-+	WARN(((uintptr_t)src) & 3, "unaligned buffer size");
- 	WARN(count & 3, "unaligned buffer address");
- 
- 	/* Use queue mode buffers */
- 	if (reg_id == WFX_REG_IN_OUT_QUEUE)
- 		sdio_addr |= bus->buf_id_tx << 7;
- 	// FIXME: discards 'const' qualifier for src
--	ret = sdio_memcpy_toio(bus->func, sdio_addr, (void *) src, count);
-+	ret = sdio_memcpy_toio(bus->func, sdio_addr, (void *)src, count);
- 	if (!ret && reg_id == WFX_REG_IN_OUT_QUEUE)
- 		bus->buf_id_tx = (bus->buf_id_tx + 1) % 32;
- 
-diff --git a/drivers/staging/wfx/bus_spi.c b/drivers/staging/wfx/bus_spi.c
-index f65f7d75e731..effd07957753 100644
---- a/drivers/staging/wfx/bus_spi.c
-+++ b/drivers/staging/wfx/bus_spi.c
-@@ -90,7 +90,7 @@ static int wfx_spi_copy_to_io(void *priv, unsigned int addr,
- 	struct wfx_spi_priv *bus = priv;
- 	u16 regaddr = (addr << 12) | (count / 2);
- 	// FIXME: use a bounce buffer
--	u16 *src16 = (void *) src;
-+	u16 *src16 = (void *)src;
- 	int ret, i;
- 	struct spi_message      m;
- 	struct spi_transfer     t_addr = {
-diff --git a/drivers/staging/wfx/data_rx.c b/drivers/staging/wfx/data_rx.c
-index 3a79089c8501..3a79ab93e97e 100644
---- a/drivers/staging/wfx/data_rx.c
-+++ b/drivers/staging/wfx/data_rx.c
-@@ -29,7 +29,7 @@ static int wfx_handle_pspoll(struct wfx_vif *wvif, struct sk_buff *skb)
- 	rcu_read_lock();
- 	sta = ieee80211_find_sta(wvif->vif, pspoll->ta);
- 	if (sta)
--		link_id = ((struct wfx_sta_priv *) &sta->drv_priv)->link_id;
-+		link_id = ((struct wfx_sta_priv *)&sta->drv_priv)->link_id;
- 	rcu_read_unlock();
- 	if (link_id)
- 		pspoll_mask = BIT(link_id);
-@@ -102,8 +102,8 @@ void wfx_rx_cb(struct wfx_vif *wvif, struct hif_ind_rx *arg, struct sk_buff *skb
- {
- 	int link_id = arg->rx_flags.peer_sta_id;
- 	struct ieee80211_rx_status *hdr = IEEE80211_SKB_RXCB(skb);
--	struct ieee80211_hdr *frame = (struct ieee80211_hdr *) skb->data;
--	struct ieee80211_mgmt *mgmt = (struct ieee80211_mgmt *) skb->data;
-+	struct ieee80211_hdr *frame = (struct ieee80211_hdr *)skb->data;
-+	struct ieee80211_mgmt *mgmt = (struct ieee80211_mgmt *)skb->data;
- 	struct wfx_link_entry *entry = NULL;
- 	bool early_data = false;
- 
-@@ -173,7 +173,7 @@ void wfx_rx_cb(struct wfx_vif *wvif, struct hif_ind_rx *arg, struct sk_buff *skb
- 
- 		tim_ie = cfg80211_find_ie(WLAN_EID_TIM, ies, ies_len);
- 		if (tim_ie) {
--			struct ieee80211_tim_ie *tim = (struct ieee80211_tim_ie *) &tim_ie[2];
-+			struct ieee80211_tim_ie *tim = (struct ieee80211_tim_ie *)&tim_ie[2];
- 
- 			if (wvif->dtim_period != tim->dtim_period) {
- 				wvif->dtim_period = tim->dtim_period;
-diff --git a/drivers/staging/wfx/data_tx.c b/drivers/staging/wfx/data_tx.c
-index 8ed38cac19f6..cf73b83ccc9e 100644
---- a/drivers/staging/wfx/data_tx.c
-+++ b/drivers/staging/wfx/data_tx.c
-@@ -427,7 +427,7 @@ void wfx_link_id_work(struct work_struct *work)
- 
- static bool ieee80211_is_action_back(struct ieee80211_hdr *hdr)
- {
--	struct ieee80211_mgmt *mgmt = (struct ieee80211_mgmt *) hdr;
-+	struct ieee80211_mgmt *mgmt = (struct ieee80211_mgmt *)hdr;
- 
- 	if (!ieee80211_is_action(mgmt->frame_control))
- 		return false;
-@@ -591,7 +591,7 @@ static int wfx_tx_inner(struct wfx_vif *wvif, struct ieee80211_sta *sta, struct
- 	struct wfx_tx_priv *tx_priv;
- 	struct ieee80211_tx_info *tx_info = IEEE80211_SKB_CB(skb);
- 	struct ieee80211_key_conf *hw_key = tx_info->control.hw_key;
--	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *) skb->data;
-+	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *)skb->data;
- 	int queue_id = tx_info->hw_queue;
- 	size_t offset = (size_t) skb->data & 3;
- 	int wmsg_len = sizeof(struct hif_msg) + sizeof(struct hif_req_tx) + offset;
-@@ -602,7 +602,7 @@ static int wfx_tx_inner(struct wfx_vif *wvif, struct ieee80211_sta *sta, struct
- 	// From now tx_info->control is unusable
- 	memset(tx_info->rate_driver_data, 0, sizeof(struct wfx_tx_priv));
- 	// Fill tx_priv
--	tx_priv = (struct wfx_tx_priv *) tx_info->rate_driver_data;
-+	tx_priv = (struct wfx_tx_priv *)tx_info->rate_driver_data;
- 	tx_priv->tid = wfx_tx_get_tid(hdr);
- 	tx_priv->raw_link_id = wfx_tx_get_raw_link_id(wvif, sta, hdr);
- 	tx_priv->link_id = tx_priv->raw_link_id;
-@@ -619,7 +619,7 @@ static int wfx_tx_inner(struct wfx_vif *wvif, struct ieee80211_sta *sta, struct
- 	skb_put(skb, wfx_tx_get_icv_len(tx_priv->hw_key));
- 	skb_push(skb, wmsg_len);
- 	memset(skb->data, 0, wmsg_len);
--	hif_msg = (struct hif_msg *) skb->data;
-+	hif_msg = (struct hif_msg *)skb->data;
- 	hif_msg->len = cpu_to_le16(skb->len);
- 	hif_msg->id = HIF_REQ_ID_TX;
- 	hif_msg->interface = wvif->id;
-@@ -631,7 +631,7 @@ static int wfx_tx_inner(struct wfx_vif *wvif, struct ieee80211_sta *sta, struct
- 	}
- 
- 	// Fill tx request
--	req = (struct hif_req_tx *) hif_msg->body;
-+	req = (struct hif_req_tx *)hif_msg->body;
- 	req->packet_id = queue_id << 16 | IEEE80211_SEQ_TO_SN(le16_to_cpu(hdr->seq_ctrl));
- 	req->data_flags.fc_offset = offset;
- 	req->queue_id.peer_sta_id = tx_priv->raw_link_id;
-@@ -654,7 +654,7 @@ void wfx_tx(struct ieee80211_hw *hw, struct ieee80211_tx_control *control,
- 	struct wfx_vif *wvif;
- 	struct ieee80211_sta *sta = control ? control->sta : NULL;
- 	struct ieee80211_tx_info *tx_info = IEEE80211_SKB_CB(skb);
--	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *) skb->data;
-+	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *)skb->data;
- 	size_t driver_data_room = FIELD_SIZEOF(struct ieee80211_tx_info, rate_driver_data);
- 
- 	compiletime_assert(sizeof(struct wfx_tx_priv) <= driver_data_room,
-@@ -662,7 +662,7 @@ void wfx_tx(struct ieee80211_hw *hw, struct ieee80211_tx_control *control,
- 	WARN(skb->next || skb->prev, "skb is already member of a list");
- 	// control.vif can be NULL for injected frames
- 	if (tx_info->control.vif)
--		wvif = (struct wfx_vif *) tx_info->control.vif->drv_priv;
-+		wvif = (struct wfx_vif *)tx_info->control.vif->drv_priv;
- 	else
- 		wvif = wvif_iterate(wdev, NULL);
- 	if (WARN_ON(!wvif))
-@@ -762,7 +762,7 @@ static void wfx_notify_buffered_tx(struct wfx_vif *wvif, struct sk_buff *skb,
- 				   struct hif_req_tx *req)
- {
- 	struct ieee80211_sta *sta;
--	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *) skb->data;
-+	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *)skb->data;
- 	int tid = wfx_tx_get_tid(hdr);
- 	int raw_link_id = req->queue_id.peer_sta_id;
- 	u8 *buffered;
-@@ -787,8 +787,8 @@ static void wfx_notify_buffered_tx(struct wfx_vif *wvif, struct sk_buff *skb,
- 
- void wfx_skb_dtor(struct wfx_dev *wdev, struct sk_buff *skb)
- {
--	struct hif_msg *hif = (struct hif_msg *) skb->data;
--	struct hif_req_tx *req = (struct hif_req_tx *) hif->body;
-+	struct hif_msg *hif = (struct hif_msg *)skb->data;
-+	struct hif_req_tx *req = (struct hif_req_tx *)hif->body;
- 	struct wfx_vif *wvif = wdev_to_wvif(wdev, hif->interface);
- 	unsigned int offset = sizeof(struct hif_req_tx) + sizeof(struct hif_msg) + req->data_flags.fc_offset;
- 
-diff --git a/drivers/staging/wfx/data_tx.h b/drivers/staging/wfx/data_tx.h
-index 0a19ef10a4ab..f74d1988925d 100644
---- a/drivers/staging/wfx/data_tx.h
-+++ b/drivers/staging/wfx/data_tx.h
-@@ -79,12 +79,12 @@ static inline struct wfx_tx_priv *wfx_skb_tx_priv(struct sk_buff *skb)
- 	if (!skb)
- 		return NULL;
- 	tx_info = IEEE80211_SKB_CB(skb);
--	return (struct wfx_tx_priv *) tx_info->rate_driver_data;
-+	return (struct wfx_tx_priv *)tx_info->rate_driver_data;
- }
- 
- static inline struct hif_req_tx *wfx_skb_txreq(struct sk_buff *skb)
- {
--	struct hif_msg *hif = (struct hif_msg *) skb->data;
-+	struct hif_msg *hif = (struct hif_msg *)skb->data;
- 	struct hif_req_tx *req = (struct hif_req_tx *) hif->body;
- 
- 	return req;
--- 
-2.21.0
+we have
+
+      - description: DSI core clock
+      - description: RX_ESC clock (used in escape mode)
+      - description: TX_ESC clock (used in escape mode)
+      - description: PHY_REF clock
+
+in th yaml. The core clock is the only platform specific one, imx8qm
+will add more.
+
+> 
+> 
+> > +
+> > +	/* dsi lanes */
+> > +	u32 lanes;
+> > +	enum mipi_dsi_pixel_format format;
+> > +	struct drm_display_mode mode;
+> > +	unsigned long dsi_mode_flags;
+> > +
+> > +	struct nwl_dsi_transfer *xfer;
+> > +
+> > +	const struct nwl_dsi_platform_data *pdata;
+> > +};
+> > +
+> > +/* Platform specific hooks to enable other SoCs like the i.MX8QM */
+> > +struct nwl_dsi_platform_data {
+> > +	int (*poweron)(struct nwl_dsi *dsi);
+> > +	int (*poweroff)(struct nwl_dsi *dsi);
+> > +	int (*select_input)(struct nwl_dsi *dsi);
+> > +	int (*deselect_input)(struct nwl_dsi *dsi);
+> > +	struct nwl_dsi_plat_clk_config clk_config[NWL_DSI_MAX_PLATFORM_CLOCKS];
+> > +};
+> > +
+> > +static const struct regmap_config nwl_dsi_regmap_config = {
+> > +	.reg_bits = 16,
+> > +	.val_bits = 32,
+> > +	.reg_stride = 4,
+> > +	.max_register = NWL_DSI_IRQ_MASK2,
+> > +	.name = DRV_NAME,
+> > +};
+> > +
+> > +static inline struct nwl_dsi *bridge_to_dsi(struct drm_bridge *bridge)
+> > +{
+> > +	return container_of(bridge, struct nwl_dsi, bridge);
+> > +}
+> > +
+> > +
+> 
+> 
+> spare empty line
+
+dropped.
+> 
+> 
+> > +static int nwl_dsi_write(struct nwl_dsi *dsi, unsigned int reg, u32 val)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = regmap_write(dsi->regmap, reg, val);
+> > +	if (ret < 0)
+> > +		DRM_DEV_ERROR(dsi->dev,
+> > +			      "Failed to write NWL DSI reg 0x%x: %d\n", reg,
+> > +			      ret);
+> > +	return ret;
+> > +}
+> > +
+> > +static u32 nwl_dsi_read(struct nwl_dsi *dsi, u32 reg)
+> > +{
+> > +	unsigned int val;
+> > +	int ret;
+> > +
+> > +	ret = regmap_read(dsi->regmap, reg, &val);
+> > +	if (ret < 0)
+> > +		DRM_DEV_ERROR(dsi->dev, "Failed to read NWL DSI reg 0x%x: %d\n",
+> > +			      reg, ret);
+> > +
+> > +	return val;
+> 
+> 
+> Error is logged, but not propagated, as a result caller will assume the
+> read was successful, quite fishy.
+
+Agreed, we can use the same pattern as for write errors.
+
+> 
+> 
+> > +}
+> > +
+> > +static u32 nwl_dsi_get_dpi_pixel_format(enum mipi_dsi_pixel_format format)
+> > +{
+> > +	switch (format) {
+> > +	case MIPI_DSI_FMT_RGB565:
+> > +		return NWL_DSI_PIXEL_FORMAT_16;
+> > +	case MIPI_DSI_FMT_RGB666:
+> > +		return NWL_DSI_PIXEL_FORMAT_18L;
+> > +	case MIPI_DSI_FMT_RGB666_PACKED:
+> > +		return NWL_DSI_PIXEL_FORMAT_18;
+> > +	case MIPI_DSI_FMT_RGB888:
+> > +		return NWL_DSI_PIXEL_FORMAT_24;
+> > +	default:
+> > +		return -EINVAL;
+> 
+> 
+> return type should be signed
+
+Fixed.
+
+> 
+> 
+> > +	}
+> > +}
+> > +
+> > +/*
+> > + * ps2bc - Picoseconds to byte clock cycles
+> > + */
+> > +static u32 ps2bc(struct nwl_dsi *dsi, unsigned long long ps)
+> > +{
+> > +	u32 bpp = mipi_dsi_pixel_format_to_bpp(dsi->format);
+> > +
+> > +	return DIV64_U64_ROUND_UP(ps * dsi->mode.clock * bpp,
+> > +				  dsi->lanes * 8 * NSEC_PER_SEC);
+> > +}
+> > +
+> > +/*
+> > + * ui2bc - UI time periods to byte clock cycles
+> > + */
+> > +static u32 ui2bc(struct nwl_dsi *dsi, unsigned long long ui)
+> > +{
+> > +	u32 bpp = mipi_dsi_pixel_format_to_bpp(dsi->format);
+> > +
+> > +	return DIV64_U64_ROUND_UP(ui * dsi->lanes,
+> > +				  dsi->mode.clock * 1000 * bpp);
+> > +}
+> > +
+> > +/*
+> > + * us2bc - micro seconds to lp clock cycles
+> > + */
+> > +static u32 us2lp(u32 lp_clk_rate, unsigned long us)
+> > +{
+> > +	return DIV_ROUND_UP(us * lp_clk_rate, USEC_PER_SEC);
+> > +}
+> > +
+> > +static int nwl_dsi_config_host(struct nwl_dsi *dsi)
+> > +{
+> > +	u32 cycles;
+> > +	struct phy_configure_opts_mipi_dphy *cfg = &dsi->phy_cfg.mipi_dphy;
+> > +
+> > +	if (dsi->lanes < 1 || dsi->lanes > 4)
+> > +		return -EINVAL;
+> > +
+> > +	DRM_DEV_DEBUG_DRIVER(dsi->dev, "DSI Lanes %d\n", dsi->lanes);
+> > +	nwl_dsi_write(dsi, NWL_DSI_CFG_NUM_LANES, dsi->lanes - 1);
+> > +
+> > +	if (dsi->dsi_mode_flags & MIPI_DSI_CLOCK_NON_CONTINUOUS) {
+> > +		nwl_dsi_write(dsi, NWL_DSI_CFG_NONCONTINUOUS_CLK, 0x01);
+> > +		nwl_dsi_write(dsi, NWL_DSI_CFG_AUTOINSERT_EOTP, 0x01);
+> > +	} else {
+> > +		nwl_dsi_write(dsi, NWL_DSI_CFG_NONCONTINUOUS_CLK, 0x00);
+> > +		nwl_dsi_write(dsi, NWL_DSI_CFG_AUTOINSERT_EOTP, 0x00);
+> > +	}
+> > +
+> > +	/* values in byte clock cycles */
+> > +	cycles = ui2bc(dsi, cfg->clk_pre);
+> > +	DRM_DEV_DEBUG_DRIVER(dsi->dev, "cfg_t_pre: 0x%x\n", cycles);
+> > +	nwl_dsi_write(dsi, NWL_DSI_CFG_T_PRE, cycles);
+> > +	cycles = ps2bc(dsi, cfg->lpx + cfg->clk_prepare + cfg->clk_zero);
+> > +	DRM_DEV_DEBUG_DRIVER(dsi->dev, "cfg_tx_gap (pre): 0x%x\n", cycles);
+> > +	cycles += ui2bc(dsi, cfg->clk_pre);
+> > +	DRM_DEV_DEBUG_DRIVER(dsi->dev, "cfg_t_post: 0x%x\n", cycles);
+> > +	nwl_dsi_write(dsi, NWL_DSI_CFG_T_POST, cycles);
+> > +	cycles = ps2bc(dsi, cfg->hs_exit);
+> > +	DRM_DEV_DEBUG_DRIVER(dsi->dev, "cfg_tx_gap: 0x%x\n", cycles);
+> > +	nwl_dsi_write(dsi, NWL_DSI_CFG_TX_GAP, cycles);
+> > +
+> > +	nwl_dsi_write(dsi, NWL_DSI_CFG_EXTRA_CMDS_AFTER_EOTP, 0x01);
+> > +	nwl_dsi_write(dsi, NWL_DSI_CFG_HTX_TO_COUNT, 0x00);
+> > +	nwl_dsi_write(dsi, NWL_DSI_CFG_LRX_H_TO_COUNT, 0x00);
+> > +	nwl_dsi_write(dsi, NWL_DSI_CFG_BTA_H_TO_COUNT, 0x00);
+> > +	/* In LP clock cycles */
+> > +	cycles = us2lp(cfg->lp_clk_rate, cfg->wakeup);
+> > +	DRM_DEV_DEBUG_DRIVER(dsi->dev, "cfg_twakeup: 0x%x\n", cycles);
+> > +	nwl_dsi_write(dsi, NWL_DSI_CFG_TWAKEUP, cycles);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int nwl_dsi_config_dpi(struct nwl_dsi *dsi)
+> > +{
+> > +	u32 color_format, mode;
+> > +	bool burst_mode;
+> > +	int hfront_porch, hback_porch, vfront_porch, vback_porch;
+> > +	int hsync_len, vsync_len;
+> > +
+> > +	hfront_porch = dsi->mode.hsync_start - dsi->mode.hdisplay;
+> > +	hsync_len = dsi->mode.hsync_end - dsi->mode.hsync_start;
+> > +	hback_porch = dsi->mode.htotal - dsi->mode.hsync_end;
+> > +
+> > +	vfront_porch = dsi->mode.vsync_start - dsi->mode.vdisplay;
+> > +	vsync_len = dsi->mode.vsync_end - dsi->mode.vsync_start;
+> > +	vback_porch = dsi->mode.vtotal - dsi->mode.vsync_end;
+> > +
+> > +	DRM_DEV_DEBUG_DRIVER(dsi->dev, "hfront_porch = %d\n", hfront_porch);
+> > +	DRM_DEV_DEBUG_DRIVER(dsi->dev, "hback_porch = %d\n", hback_porch);
+> > +	DRM_DEV_DEBUG_DRIVER(dsi->dev, "hsync_len = %d\n", hsync_len);
+> > +	DRM_DEV_DEBUG_DRIVER(dsi->dev, "hdisplay = %d\n", dsi->mode.hdisplay);
+> > +	DRM_DEV_DEBUG_DRIVER(dsi->dev, "vfront_porch = %d\n", vfront_porch);
+> > +	DRM_DEV_DEBUG_DRIVER(dsi->dev, "vback_porch = %d\n", vback_porch);
+> > +	DRM_DEV_DEBUG_DRIVER(dsi->dev, "vsync_len = %d\n", vsync_len);
+> > +	DRM_DEV_DEBUG_DRIVER(dsi->dev, "vactive = %d\n", dsi->mode.vdisplay);
+> > +	DRM_DEV_DEBUG_DRIVER(dsi->dev, "clock = %d kHz\n", dsi->mode.clock);
+> > +
+> > +	color_format = nwl_dsi_get_dpi_pixel_format(dsi->format);
+> > +	if (color_format < 0) {
+> 
+> 
+> As robot mentioned  it is always false.
+
+Fixed.
+
+> 
+> 
+> > +		DRM_DEV_ERROR(dsi->dev, "Invalid color format 0x%x\n",
+> > +			      dsi->format);
+> > +		return color_format;
+> > +	}
+> > +	DRM_DEV_DEBUG_DRIVER(dsi->dev, "pixel fmt = %d\n", dsi->format);
+> > +
+> > +	nwl_dsi_write(dsi, NWL_DSI_INTERFACE_COLOR_CODING, NWL_DSI_DPI_24_BIT);
+> > +	nwl_dsi_write(dsi, NWL_DSI_PIXEL_FORMAT, color_format);
+> > +	/*
+> > +	 * Adjusting input polarity based on the video mode results in
+> > +	 * a black screen so always pick active low:
+> > +	 */
+> > +	nwl_dsi_write(dsi, NWL_DSI_VSYNC_POLARITY,
+> > +		      NWL_DSI_VSYNC_POLARITY_ACTIVE_LOW);
+> > +	nwl_dsi_write(dsi, NWL_DSI_HSYNC_POLARITY,
+> > +		      NWL_DSI_HSYNC_POLARITY_ACTIVE_LOW);
+> > +
+> > +	burst_mode = (dsi->dsi_mode_flags & MIPI_DSI_MODE_VIDEO_BURST) &&
+> > +		     !(dsi->dsi_mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE);
+> > +
+> > +	if (burst_mode) {
+> > +		nwl_dsi_write(dsi, NWL_DSI_VIDEO_MODE, NWL_DSI_VM_BURST_MODE);
+> > +		nwl_dsi_write(dsi, NWL_DSI_PIXEL_FIFO_SEND_LEVEL, 256);
+> > +	} else {
+> > +		mode = ((dsi->dsi_mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE) ?
+> > +				NWL_DSI_VM_BURST_MODE_WITH_SYNC_PULSES :
+> > +				NWL_DSI_VM_NON_BURST_MODE_WITH_SYNC_EVENTS);
+> > +		nwl_dsi_write(dsi, NWL_DSI_VIDEO_MODE, mode);
+> > +		nwl_dsi_write(dsi, NWL_DSI_PIXEL_FIFO_SEND_LEVEL,
+> > +			      dsi->mode.hdisplay);
+> > +	}
+> > +
+> > +	nwl_dsi_write(dsi, NWL_DSI_HFP, hfront_porch);
+> > +	nwl_dsi_write(dsi, NWL_DSI_HBP, hback_porch);
+> > +	nwl_dsi_write(dsi, NWL_DSI_HSA, hsync_len);
+> > +
+> > +	nwl_dsi_write(dsi, NWL_DSI_ENABLE_MULT_PKTS, 0x0);
+> > +	nwl_dsi_write(dsi, NWL_DSI_BLLP_MODE, 0x1);
+> > +	nwl_dsi_write(dsi, NWL_DSI_USE_NULL_PKT_BLLP, 0x0);
+> > +	nwl_dsi_write(dsi, NWL_DSI_VC, 0x0);
+> > +
+> > +	nwl_dsi_write(dsi, NWL_DSI_PIXEL_PAYLOAD_SIZE, dsi->mode.hdisplay);
+> > +	nwl_dsi_write(dsi, NWL_DSI_VACTIVE, dsi->mode.vdisplay - 1);
+> > +	nwl_dsi_write(dsi, NWL_DSI_VBP, vback_porch);
+> > +	nwl_dsi_write(dsi, NWL_DSI_VFP, vfront_porch);
+> 
+> 
+> No checks for results of nwl_dsi_write. You should either add check
+> after every call, or try "error state" pattern (see for example for
+> tc358764.c driver).
+
+'error state' pattern looks like a good fit, thanks!
+
+> 
+> 
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void nwl_dsi_init_interrupts(struct nwl_dsi *dsi)
+> > +{
+> > +	u32 irq_enable;
+> > +
+> > +	nwl_dsi_write(dsi, NWL_DSI_IRQ_MASK, 0xffffffff);
+> > +	nwl_dsi_write(dsi, NWL_DSI_IRQ_MASK2, 0x7);
+> > +
+> > +	irq_enable = ~(u32)(NWL_DSI_TX_PKT_DONE_MASK |
+> > +			    NWL_DSI_RX_PKT_HDR_RCVD_MASK |
+> > +			    NWL_DSI_TX_FIFO_OVFLW_MASK |
+> > +			    NWL_DSI_HS_TX_TIMEOUT_MASK);
+> 
+> 
+> I wonder if lack of '(u32)' would lead to some bugs/warnings.
+
+drivers/gpu/drm/bridge/nwl-dsi.c: In function ‘nwl_dsi_init_interrupts’:
+drivers/gpu/drm/bridge/nwl-dsi.c:345:15: warning: conversion from ‘long unsigned int’ to ‘u32’ {aka ‘unsigned int’} changes value from ‘18446744071562067829’ to ‘2147483509’ [-Woverflow]
+  irq_enable = ~(NWL_DSI_TX_PKT_DONE_MASK |
+               
+> > +
+> > +	nwl_dsi_write(dsi, NWL_DSI_IRQ_MASK, irq_enable);
+> > +}
+> > +
+> > +static int nwl_dsi_host_attach(struct mipi_dsi_host *dsi_host,
+> > +			       struct mipi_dsi_device *device)
+> > +{
+> > +	struct nwl_dsi *dsi = container_of(dsi_host, struct nwl_dsi, dsi_host);
+> > +	struct device *dev = dsi->dev;
+> > +	struct drm_bridge *bridge;
+> > +	struct drm_panel *panel;
+> > +	int ret;
+> > +
+> > +	DRM_DEV_INFO(dev, "lanes=%u, format=0x%x flags=0x%lx\n", device->lanes,
+> > +		     device->format, device->mode_flags);
+> > +
+> > +	if (device->lanes < 1 || device->lanes > 4)
+> > +		return -EINVAL;
+> 
+> 
+> I guess this sanity check should be rather in mipi_dsi_attach, but since
+> it is not there let's leave it here.
+> 
+> 
+> > +
+> > +	dsi->lanes = device->lanes;
+> > +	dsi->format = device->format;
+> > +	dsi->dsi_mode_flags = device->mode_flags;
+> > +
+> > +	ret = drm_of_find_panel_or_bridge(dsi->dev->of_node, 1, 0, &panel,
+> > +					  &bridge);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	if (panel) {
+> > +		bridge = drm_panel_bridge_add(panel, DRM_MODE_CONNECTOR_DSI);
+> > +		if (IS_ERR(bridge))
+> > +			return PTR_ERR(bridge);
+> > +	}
+> > +
+> > +	dsi->panel_bridge = bridge;
+> > +	drm_bridge_add(&dsi->bridge);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int nwl_dsi_host_detach(struct mipi_dsi_host *dsi_host,
+> > +			       struct mipi_dsi_device *device)
+> > +{
+> > +	struct nwl_dsi *dsi = container_of(dsi_host, struct nwl_dsi, dsi_host);
+> > +
+> > +	drm_of_panel_bridge_remove(dsi->dev->of_node, 1, 0);
+> > +	drm_bridge_remove(&dsi->bridge);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static bool nwl_dsi_read_packet(struct nwl_dsi *dsi, u32 status)
+> > +{
+> > +	struct device *dev = dsi->dev;
+> > +	struct nwl_dsi_transfer *xfer = dsi->xfer;
+> > +	u8 *payload = xfer->msg->rx_buf;
+> > +	u32 val;
+> > +	u16 word_count;
+> > +	u8 channel;
+> > +	u8 data_type;
+> > +
+> > +	xfer->status = 0;
+> > +
+> > +	if (xfer->rx_word_count == 0) {
+> > +		if (!(status & NWL_DSI_RX_PKT_HDR_RCVD))
+> > +			return false;
+> > +		/* Get the RX header and parse it */
+> > +		val = nwl_dsi_read(dsi, NWL_DSI_RX_PKT_HEADER);
+> > +		word_count = NWL_DSI_WC(val);
+> > +		channel = NWL_DSI_RX_VC(val);
+> > +		data_type = NWL_DSI_RX_DT(val);
+> > +
+> > +		if (channel != xfer->msg->channel) {
+> > +			DRM_DEV_ERROR(dev,
+> > +				      "[%02X] Channel mismatch (%u != %u)\n",
+> > +				      xfer->cmd, channel, xfer->msg->channel);
+> > +			return true;
+> > +		}
+> > +
+> > +		switch (data_type) {
+> > +		case MIPI_DSI_RX_GENERIC_SHORT_READ_RESPONSE_2BYTE:
+> > +			/* Fall through */
+> > +		case MIPI_DSI_RX_DCS_SHORT_READ_RESPONSE_2BYTE:
+> > +			if (xfer->msg->rx_len > 1) {
+> > +				/* read second byte */
+> > +				payload[1] = word_count >> 8;
+> > +				++xfer->rx_len;
+> > +			}
+> > +			/* Fall through */
+> > +		case MIPI_DSI_RX_GENERIC_SHORT_READ_RESPONSE_1BYTE:
+> > +			/* Fall through */
+> > +		case MIPI_DSI_RX_DCS_SHORT_READ_RESPONSE_1BYTE:
+> > +			if (xfer->msg->rx_len > 0) {
+> > +				/* read first byte */
+> > +				payload[0] = word_count & 0xff;
+> > +				++xfer->rx_len;
+> > +			}
+> > +			xfer->status = xfer->rx_len;
+> > +			return true;
+> > +		case MIPI_DSI_RX_ACKNOWLEDGE_AND_ERROR_REPORT:
+> > +			word_count &= 0xff;
+> > +			DRM_DEV_ERROR(dev, "[%02X] DSI error report: 0x%02x\n",
+> > +				      xfer->cmd, word_count);
+> > +			xfer->status = -EPROTO;
+> > +			return true;
+> > +		}
+> > +
+> > +		if (word_count > xfer->msg->rx_len) {
+> > +			DRM_DEV_ERROR(
+> > +				dev,
+> > +				"[%02X] Receive buffer too small: %zu (< %u)\n",
+> > +				xfer->cmd, xfer->msg->rx_len, word_count);
+> > +			return true;
+> > +		}
+> > +
+> > +		xfer->rx_word_count = word_count;
+> > +	} else {
+> > +		/* Set word_count from previous header read */
+> > +		word_count = xfer->rx_word_count;
+> > +	}
+> > +
+> > +	/* If RX payload is not yet received, wait for it */
+> > +	if (!(status & NWL_DSI_RX_PKT_PAYLOAD_DATA_RCVD))
+> > +		return false;
+> > +
+> > +	/* Read the RX payload */
+> > +	while (word_count >= 4) {
+> > +		val = nwl_dsi_read(dsi, NWL_DSI_RX_PAYLOAD);
+> > +		payload[0] = (val >> 0) & 0xff;
+> > +		payload[1] = (val >> 8) & 0xff;
+> > +		payload[2] = (val >> 16) & 0xff;
+> > +		payload[3] = (val >> 24) & 0xff;
+> > +		payload += 4;
+> > +		xfer->rx_len += 4;
+> > +		word_count -= 4;
+> > +	}
+> > +
+> > +	if (word_count > 0) {
+> > +		val = nwl_dsi_read(dsi, NWL_DSI_RX_PAYLOAD);
+> > +		switch (word_count) {
+> > +		case 3:
+> > +			payload[2] = (val >> 16) & 0xff;
+> > +			++xfer->rx_len;
+> > +			/* Fall through */
+> > +		case 2:
+> > +			payload[1] = (val >> 8) & 0xff;
+> > +			++xfer->rx_len;
+> > +			/* Fall through */
+> > +		case 1:
+> > +			payload[0] = (val >> 0) & 0xff;
+> > +			++xfer->rx_len;
+> > +			break;
+> > +		}
+> > +	}
+> > +
+> > +	xfer->status = xfer->rx_len;
+> > +
+> > +	return true;
+> > +}
+> > +
+> > +static void nwl_dsi_finish_transmission(struct nwl_dsi *dsi, u32 status)
+> > +{
+> > +	struct nwl_dsi_transfer *xfer = dsi->xfer;
+> > +	bool end_packet = false;
+> > +
+> > +	if (!xfer)
+> > +		return;
+> > +
+> > +	if (xfer->direction == DSI_PACKET_SEND &&
+> > +	    status & NWL_DSI_TX_PKT_DONE) {
+> > +		xfer->status = xfer->tx_len;
+> > +		end_packet = true;
+> > +	} else if (status & NWL_DSI_DPHY_DIRECTION &&
+> > +		   ((status & (NWL_DSI_RX_PKT_HDR_RCVD |
+> > +			       NWL_DSI_RX_PKT_PAYLOAD_DATA_RCVD)))) {
+> > +		end_packet = nwl_dsi_read_packet(dsi, status);
+> > +	}
+> > +
+> > +	if (end_packet)
+> > +		complete(&xfer->completed);
+> > +}
+> > +
+> > +static void nwl_dsi_begin_transmission(struct nwl_dsi *dsi)
+> > +{
+> > +	struct nwl_dsi_transfer *xfer = dsi->xfer;
+> > +	struct mipi_dsi_packet *pkt = &xfer->packet;
+> > +	const u8 *payload;
+> > +	size_t length;
+> > +	u16 word_count;
+> > +	u8 hs_mode;
+> > +	u32 val;
+> > +	u32 hs_workaround = 0;
+> > +
+> > +	/* Send the payload, if any */
+> > +	length = pkt->payload_length;
+> > +	payload = pkt->payload;
+> > +
+> > +	while (length >= 4) {
+> > +		val = *(u32 *)payload;
+> > +		hs_workaround |= !(val & 0xFFFF00);
+> > +		nwl_dsi_write(dsi, NWL_DSI_TX_PAYLOAD, val);
+> > +		payload += 4;
+> > +		length -= 4;
+> > +	}
+> > +	/* Send the rest of the payload */
+> > +	val = 0;
+> > +	switch (length) {
+> > +	case 3:
+> > +		val |= payload[2] << 16;
+> > +		/* Fall through */
+> > +	case 2:
+> > +		val |= payload[1] << 8;
+> > +		hs_workaround |= !(val & 0xFFFF00);
+> > +		/* Fall through */
+> > +	case 1:
+> > +		val |= payload[0];
+> > +		nwl_dsi_write(dsi, NWL_DSI_TX_PAYLOAD, val);
+> > +		break;
+> > +	}
+> > +	xfer->tx_len = pkt->payload_length;
+> > +
+> > +	/*
+> > +	 * Send the header
+> > +	 * header[0] = Virtual Channel + Data Type
+> > +	 * header[1] = Word Count LSB (LP) or first param (SP)
+> > +	 * header[2] = Word Count MSB (LP) or second param (SP)
+> > +	 */
+> > +	word_count = pkt->header[1] | (pkt->header[2] << 8);
+> > +	if (hs_workaround && (dsi->quirks & E11418_HS_MODE_QUIRK)) {
+> > +		DRM_DEV_DEBUG_DRIVER(dsi->dev,
+> > +				     "Using hs mode workaround for cmd 0x%x\n",
+> > +				     xfer->cmd);
+> > +		hs_mode = 1;
+> > +	} else {
+> > +		hs_mode = (xfer->msg->flags & MIPI_DSI_MSG_USE_LPM) ? 0 : 1;
+> > +	}
+> > +	val = NWL_DSI_WC(word_count) | NWL_DSI_TX_VC(xfer->msg->channel) |
+> > +	      NWL_DSI_TX_DT(xfer->msg->type) | NWL_DSI_HS_SEL(hs_mode) |
+> > +	      NWL_DSI_BTA_TX(xfer->need_bta);
+> > +	nwl_dsi_write(dsi, NWL_DSI_PKT_CONTROL, val);
+> > +
+> > +	/* Send packet command */
+> > +	nwl_dsi_write(dsi, NWL_DSI_SEND_PACKET, 0x1);
+> > +}
+> > +
+> > +static ssize_t nwl_dsi_host_transfer(struct mipi_dsi_host *dsi_host,
+> > +				     const struct mipi_dsi_msg *msg)
+> > +{
+> > +	struct nwl_dsi *dsi = container_of(dsi_host, struct nwl_dsi, dsi_host);
+> > +	struct nwl_dsi_transfer xfer;
+> > +	ssize_t ret = 0;
+> > +
+> > +	/* Create packet to be sent */
+> > +	dsi->xfer = &xfer;
+> > +	ret = mipi_dsi_create_packet(&xfer.packet, msg);
+> > +	if (ret < 0) {
+> > +		dsi->xfer = NULL;
+> > +		return ret;
+> > +	}
+> > +
+> > +	if ((msg->type & MIPI_DSI_GENERIC_READ_REQUEST_0_PARAM ||
+> > +	     msg->type & MIPI_DSI_GENERIC_READ_REQUEST_1_PARAM ||
+> > +	     msg->type & MIPI_DSI_GENERIC_READ_REQUEST_2_PARAM ||
+> > +	     msg->type & MIPI_DSI_DCS_READ) &&
+> > +	    msg->rx_len > 0 && msg->rx_buf != NULL)
+> > +		xfer.direction = DSI_PACKET_RECEIVE;
+> > +	else
+> > +		xfer.direction = DSI_PACKET_SEND;
+> > +
+> > +	xfer.need_bta = (xfer.direction == DSI_PACKET_RECEIVE);
+> > +	xfer.need_bta |= (msg->flags & MIPI_DSI_MSG_REQ_ACK) ? 1 : 0;
+> > +	xfer.msg = msg;
+> > +	xfer.status = -ETIMEDOUT;
+> > +	xfer.rx_word_count = 0;
+> > +	xfer.rx_len = 0;
+> > +	xfer.cmd = 0x00;
+> > +	if (msg->tx_len > 0)
+> > +		xfer.cmd = ((u8 *)(msg->tx_buf))[0];
+> > +	init_completion(&xfer.completed);
+> > +
+> > +	ret = clk_prepare_enable(dsi->rx_esc_clk);
+> > +	if (ret < 0) {
+> > +		DRM_DEV_ERROR(dsi->dev, "Failed to enable rx_esc clk: %zd\n",
+> > +			      ret);
+> > +		return ret;
+> > +	}
+> > +	DRM_DEV_DEBUG_DRIVER(dsi->dev, "Enabled rx_esc clk @%lu Hz\n",
+> > +			     clk_get_rate(dsi->rx_esc_clk));
+> > +
+> > +	/* Initiate the DSI packet transmision */
+> > +	nwl_dsi_begin_transmission(dsi);
+> > +
+> > +	if (!wait_for_completion_timeout(&xfer.completed,
+> > +					 NWL_DSI_MIPI_FIFO_TIMEOUT)) {
+> > +		DRM_DEV_ERROR(dsi_host->dev, "[%02X] DSI transfer timed out\n",
+> > +			      xfer.cmd);
+> > +		ret = -ETIMEDOUT;
+> > +	} else {
+> > +		ret = xfer.status;
+> > +	}
+> > +
+> > +	clk_disable_unprepare(dsi->rx_esc_clk);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static const struct mipi_dsi_host_ops nwl_dsi_host_ops = {
+> > +	.attach = nwl_dsi_host_attach,
+> > +	.detach = nwl_dsi_host_detach,
+> > +	.transfer = nwl_dsi_host_transfer,
+> > +};
+> > +
+> > +static irqreturn_t nwl_dsi_irq_handler(int irq, void *data)
+> > +{
+> > +	u32 irq_status;
+> > +	struct nwl_dsi *dsi = data;
+> > +
+> > +	irq_status = nwl_dsi_read(dsi, NWL_DSI_IRQ_STATUS);
+> > +
+> > +	if (irq_status & NWL_DSI_TX_FIFO_OVFLW)
+> > +		DRM_DEV_ERROR_RATELIMITED(dsi->dev, "tx fifo overflow\n");
+> > +
+> > +	if (irq_status & NWL_DSI_HS_TX_TIMEOUT)
+> > +		DRM_DEV_ERROR_RATELIMITED(dsi->dev, "HS tx timeout\n");
+> > +
+> > +	if (irq_status & NWL_DSI_TX_PKT_DONE ||
+> > +	    irq_status & NWL_DSI_RX_PKT_HDR_RCVD ||
+> > +	    irq_status & NWL_DSI_RX_PKT_PAYLOAD_DATA_RCVD)
+> > +		nwl_dsi_finish_transmission(dsi, irq_status);
+> > +
+> > +	return IRQ_HANDLED;
+> > +}
+> > +
+> > +static int nwl_dsi_enable(struct nwl_dsi *dsi)
+> > +{
+> > +	struct device *dev = dsi->dev;
+> > +	union phy_configure_opts *phy_cfg = &dsi->phy_cfg;
+> > +	int ret;
+> > +
+> > +	if (!dsi->lanes) {
+> > +		DRM_DEV_ERROR(dev, "Need DSI lanes: %d\n", dsi->lanes);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	ret = phy_init(dsi->phy);
+> > +	if (ret < 0) {
+> > +		DRM_DEV_ERROR(dev, "Failed to init DSI phy: %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	ret = phy_configure(dsi->phy, phy_cfg);
+> > +	if (ret < 0) {
+> > +		DRM_DEV_ERROR(dev, "Failed to configure DSI phy: %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	ret = clk_prepare_enable(dsi->tx_esc_clk);
+> > +	if (ret < 0) {
+> > +		DRM_DEV_ERROR(dsi->dev, "Failed to enable tx_esc clk: %d\n",
+> > +			      ret);
+> > +		return ret;
+> > +	}
+> > +	DRM_DEV_DEBUG_DRIVER(dsi->dev, "Enabled tx_esc clk @%lu Hz\n",
+> > +			     clk_get_rate(dsi->tx_esc_clk));
+> > +
+> > +	ret = nwl_dsi_config_host(dsi);
+> > +	if (ret < 0) {
+> > +		DRM_DEV_ERROR(dev, "Failed to set up DSI: %d", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	ret = nwl_dsi_config_dpi(dsi);
+> > +	if (ret < 0) {
+> > +		DRM_DEV_ERROR(dev, "Failed to set up DPI: %d", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	ret = phy_power_on(dsi->phy);
+> > +	if (ret < 0) {
+> > +		DRM_DEV_ERROR(dev, "Failed to power on DPHY (%d)\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	nwl_dsi_init_interrupts(dsi);
+> > +
+> > +	return 0;
+> 
+> 
+> no unwinding in case of error
+
+no idea how i missed that, thanks.
+
+
+> > +}
+> > +
+> > +static int nwl_dsi_disable(struct nwl_dsi *dsi)
+> > +{
+> > +	struct device *dev = dsi->dev;
+> > +
+> > +	DRM_DEV_DEBUG_DRIVER(dev, "Disabling clocks and phy\n");
+> > +
+> > +	phy_power_off(dsi->phy);
+> > +	phy_exit(dsi->phy);
+> > +
+> > +	/* Disabling the clock before the phy breaks enabling dsi again */
+> > +	clk_disable_unprepare(dsi->tx_esc_clk);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int nwl_dsi_set_platform_clocks(struct nwl_dsi *dsi, bool enable)
+> > +{
+> > +	struct device *dev = dsi->dev;
+> > +	const char *id;
+> > +	struct clk *clk;
+> > +	size_t i;
+> > +	unsigned long rate;
+> > +	int ret, result = 0;
+> > +
+> > +	DRM_DEV_DEBUG_DRIVER(dev, "%s platform clocks\n",
+> > +			     enable ? "enabling" : "disabling");
+> > +	for (i = 0; i < ARRAY_SIZE(dsi->pdata->clk_config); i++) {
+> > +		if (!dsi->clk_config[i].present)
+> > +			continue;
+> > +		id = dsi->clk_config[i].id;
+> > +		clk = dsi->clk_config[i].clk;
+> > +
+> > +		if (enable) {
+> > +			ret = clk_prepare_enable(clk);
+> > +			if (ret < 0) {
+> > +				DRM_DEV_ERROR(dev,
+> > +					      "Failed to enable %s clk: %d\n",
+> > +					      id, ret);
+> > +				result = result ?: ret;
+> > +			}
+> > +			rate = clk_get_rate(clk);
+> > +			DRM_DEV_DEBUG_DRIVER(dev, "Enabled %s clk @%lu Hz\n",
+> > +					     id, rate);
+> > +		} else {
+> > +			clk_disable_unprepare(clk);
+> > +			DRM_DEV_DEBUG_DRIVER(dev, "Disabled %s clk\n", id);
+> > +		}
+> > +	}
+> > +
+> > +	return result;
+> > +}
+> > +
+> > +static int nwl_dsi_plat_enable(struct nwl_dsi *dsi)
+> > +{
+> > +	struct device *dev = dsi->dev;
+> > +	int ret;
+> > +
+> > +	if (dsi->pdata->select_input)
+> > +		dsi->pdata->select_input(dsi);
+> > +
+> > +	ret = nwl_dsi_set_platform_clocks(dsi, true);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	ret = dsi->pdata->poweron(dsi);
+> > +	if (ret < 0)
+> > +		DRM_DEV_ERROR(dev, "Failed to power on DSI: %d\n", ret);
+> > +	return ret;
+> > +}
+> > +
+> > +static void nwl_dsi_plat_disable(struct nwl_dsi *dsi)
+> > +{
+> > +	dsi->pdata->poweroff(dsi);
+> > +	nwl_dsi_set_platform_clocks(dsi, false);
+> > +	if (dsi->pdata->deselect_input)
+> > +		dsi->pdata->deselect_input(dsi);
+> > +}
+> > +
+> > +static void nwl_dsi_bridge_disable(struct drm_bridge *bridge)
+> > +{
+> > +	struct nwl_dsi *dsi = bridge_to_dsi(bridge);
+> > +
+> > +	nwl_dsi_disable(dsi);
+> > +	nwl_dsi_plat_disable(dsi);
+> > +	pm_runtime_put(dsi->dev);
+> > +}
+> > +
+> > +static int nwl_dsi_get_dphy_params(struct nwl_dsi *dsi,
+> > +				   const struct drm_display_mode *mode,
+> > +				   union phy_configure_opts *phy_opts)
+> > +{
+> > +	unsigned long rate;
+> > +	int ret;
+> > +
+> > +	if (dsi->lanes < 1 || dsi->lanes > 4)
+> > +		return -EINVAL;
+> > +
+> > +	/*
+> > +	 * So far the DPHY spec minimal timings work for both mixel
+> > +	 * dphy and nwl dsi host
+> > +	 */
+> > +	ret = phy_mipi_dphy_get_default_config(
+> > +		mode->crtc_clock * 1000,
+> > +		mipi_dsi_pixel_format_to_bpp(dsi->format), dsi->lanes,
+> > +		&phy_opts->mipi_dphy);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	rate = clk_get_rate(dsi->tx_esc_clk);
+> > +	DRM_DEV_DEBUG_DRIVER(dsi->dev, "LP clk is @%lu Hz\n", rate);
+> > +	phy_opts->mipi_dphy.lp_clk_rate = rate;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static bool nwl_dsi_bridge_mode_fixup(struct drm_bridge *bridge,
+> > +				      const struct drm_display_mode *mode,
+> > +				      struct drm_display_mode *adjusted_mode)
+> > +{
+> > +	/* At least LCDIF + NWL needs active high sync */
+> > +	adjusted_mode->flags |= (DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC);
+> > +	adjusted_mode->flags &= ~(DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC);
+> > +
+> > +	return true;
+> > +}
+> > +
+> > +static enum drm_mode_status
+> > +nwl_dsi_bridge_mode_valid(struct drm_bridge *bridge,
+> > +			  const struct drm_display_mode *mode)
+> > +{
+> > +	struct nwl_dsi *dsi = bridge_to_dsi(bridge);
+> > +	int bpp = mipi_dsi_pixel_format_to_bpp(dsi->format);
+> > +
+> > +	if (mode->clock * bpp > 15000000 * dsi->lanes)
+> > +		return MODE_CLOCK_HIGH;
+> > +
+> > +	if (mode->clock * bpp < 80000 * dsi->lanes)
+> > +		return MODE_CLOCK_LOW;
+> > +
+> > +	return MODE_OK;
+> > +}
+> > +
+> > +static void
+> > +nwl_dsi_bridge_mode_set(struct drm_bridge *bridge,
+> > +			const struct drm_display_mode *mode,
+> > +			const struct drm_display_mode *adjusted_mode)
+> > +{
+> > +	struct nwl_dsi *dsi = bridge_to_dsi(bridge);
+> > +	struct device *dev = dsi->dev;
+> > +	union phy_configure_opts new_cfg;
+> > +	unsigned long phy_ref_rate;
+> > +	int ret;
+> > +
+> > +	ret = nwl_dsi_get_dphy_params(dsi, adjusted_mode, &new_cfg);
+> > +	if (ret < 0)
+> > +		return;
+> > +
+> > +	/*
+> > +	 * If hs clock is unchanged, we're all good - all parameters are
+> > +	 * derived from it atm.
+> > +	 */
+> > +	if (new_cfg.mipi_dphy.hs_clk_rate == dsi->phy_cfg.mipi_dphy.hs_clk_rate)
+> > +		return;
+> > +
+> > +	phy_ref_rate = clk_get_rate(dsi->phy_ref_clk);
+> > +	DRM_DEV_DEBUG_DRIVER(dev, "PHY at ref rate: %lu\n", phy_ref_rate);
+> > +	/* Save the new desired phy config */
+> > +	memcpy(&dsi->phy_cfg, &new_cfg, sizeof(new_cfg));
+> > +
+> > +	memcpy(&dsi->mode, adjusted_mode, sizeof(dsi->mode));
+> > +	drm_mode_debug_printmodeline(adjusted_mode);
+> > +}
+> > +
+> > +static void nwl_dsi_bridge_pre_enable(struct drm_bridge *bridge)
+> > +{
+> > +	struct nwl_dsi *dsi = bridge_to_dsi(bridge);
+> > +
+> > +	pm_runtime_get_sync(dsi->dev);
+> > +	nwl_dsi_plat_enable(dsi);
+> > +	nwl_dsi_enable(dsi);
+> > +}
+> > +
+> > +static int nwl_dsi_bridge_attach(struct drm_bridge *bridge)
+> > +{
+> > +	struct nwl_dsi *dsi = bridge->driver_private;
+> 
+> 
+> Please use container_of here, driver_private shouldn't be used in
+> embeded bridges.
+
+Done.
+
+> 
+> 
+> > +
+> > +	return drm_bridge_attach(bridge->encoder, dsi->panel_bridge, bridge);
+> > +}
+> > +
+> > +static const struct drm_bridge_funcs nwl_dsi_bridge_funcs = {
+> > +	.pre_enable = nwl_dsi_bridge_pre_enable,
+> > +	.disable    = nwl_dsi_bridge_disable,
+> > +	.mode_fixup = nwl_dsi_bridge_mode_fixup,
+> > +	.mode_set   = nwl_dsi_bridge_mode_set,
+> > +	.mode_valid = nwl_dsi_bridge_mode_valid,
+> > +	.attach	    = nwl_dsi_bridge_attach,
+> > +};
+> > +
+> > +static int nwl_dsi_parse_dt(struct nwl_dsi *dsi)
+> > +{
+> > +	struct platform_device *pdev = to_platform_device(dsi->dev);
+> > +	struct clk *clk;
+> > +	const char *clk_id;
+> > +	void __iomem *base;
+> > +	int i, ret;
+> > +
+> > +	dsi->phy = devm_phy_get(dsi->dev, "dphy");
+> > +	if (IS_ERR(dsi->phy)) {
+> > +		ret = PTR_ERR(dsi->phy);
+> > +		if (ret != -EPROBE_DEFER)
+> > +			DRM_DEV_ERROR(dsi->dev, "Could not get PHY: %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	/* Platform dependent clocks */
+> > +	memcpy(dsi->clk_config, dsi->pdata->clk_config,
+> > +	       sizeof(dsi->pdata->clk_config));
+> > +
+> > +	for (i = 0; i < ARRAY_SIZE(dsi->pdata->clk_config); i++) {
+> > +		if (!dsi->clk_config[i].present)
+> > +			continue;
+> > +
+> > +		clk_id = dsi->clk_config[i].id;
+> > +		clk = devm_clk_get(dsi->dev, clk_id);
+> > +		if (IS_ERR(clk)) {
+> > +			ret = PTR_ERR(clk);
+> > +			DRM_DEV_ERROR(dsi->dev, "Failed to get %s clock: %d\n",
+> > +				      clk_id, ret);
+> > +			return ret;
+> > +		}
+> > +		DRM_DEV_DEBUG_DRIVER(dsi->dev, "Setup clk %s (rate: %lu)\n",
+> > +				     clk_id, clk_get_rate(clk));
+> > +		dsi->clk_config[i].clk = clk;
+> > +	}
+> 
+> 
+> As I said earlier this is undocumented.
+> 
+> 
+> > +
+> > +	/* DSI clocks */
+> > +	clk = devm_clk_get(dsi->dev, "phy_ref");
+> > +	if (IS_ERR(clk)) {
+> > +		ret = PTR_ERR(clk);
+> > +		DRM_DEV_ERROR(dsi->dev, "Failed to get phy_ref clock: %d\n",
+> > +			      ret);
+> > +		return ret;
+> > +	}
+> > +	dsi->phy_ref_clk = clk;
+> > +
+> > +	clk = devm_clk_get(dsi->dev, "rx_esc");
+> > +	if (IS_ERR(clk)) {
+> > +		ret = PTR_ERR(clk);
+> > +		DRM_DEV_ERROR(dsi->dev, "Failed to get rx_esc clock: %d\n",
+> > +			      ret);
+> > +		return ret;
+> > +	}
+> > +	dsi->rx_esc_clk = clk;
+> > +
+> > +	clk = devm_clk_get(dsi->dev, "tx_esc");
+> > +	if (IS_ERR(clk)) {
+> > +		ret = PTR_ERR(clk);
+> > +		DRM_DEV_ERROR(dsi->dev, "Failed to get tx_esc clock: %d\n",
+> > +			      ret);
+> > +		return ret;
+> > +	}
+> > +	dsi->tx_esc_clk = clk;
+> > +
+> > +	dsi->mux = devm_mux_control_get(dsi->dev, NULL);
+> > +	if (IS_ERR(dsi->mux)) {
+> > +		ret = PTR_ERR(dsi->mux);
+> > +		if (ret != -EPROBE_DEFER)
+> > +			DRM_DEV_ERROR(dsi->dev, "Failed to get mux: %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	base = devm_platform_ioremap_resource(pdev, 0);
+> > +	if (IS_ERR(base))
+> > +		return PTR_ERR(base);
+> > +
+> > +	dsi->regmap =
+> > +		devm_regmap_init_mmio(dsi->dev, base, &nwl_dsi_regmap_config);
+> > +	if (IS_ERR(dsi->regmap)) {
+> > +		ret = PTR_ERR(dsi->regmap);
+> > +		DRM_DEV_ERROR(dsi->dev, "Failed to create NWL DSI regmap: %d\n",
+> > +			      ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	dsi->irq = platform_get_irq(pdev, 0);
+> > +	if (dsi->irq < 0) {
+> > +		DRM_DEV_ERROR(dsi->dev, "Failed to get device IRQ: %d\n",
+> > +			      dsi->irq);
+> > +		return dsi->irq;
+> > +	}
+> > +
+> > +	dsi->rstc = devm_reset_control_array_get(dsi->dev, false, true);
+> > +	if (IS_ERR(dsi->rstc)) {
+> > +		DRM_DEV_ERROR(dsi->dev, "Failed to get resets: %ld\n",
+> > +			      PTR_ERR(dsi->rstc));
+> > +		return PTR_ERR(dsi->rstc);
+> > +	}
+> 
+> 
+> You should not error log in case of EPROBE_DEFER.
+
+Added a check.
+
+> 
+> 
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int imx8mq_dsi_select_input(struct nwl_dsi *dsi)
+> > +{
+> > +	struct device_node *remote;
+> > +	u32 use_dcss = 1;
+> > +	int ret;
+> > +
+> > +	remote = of_graph_get_remote_node(dsi->dev->of_node, 0, 0);
+> > +	if (strcmp(remote->name, "lcdif") == 0)
+> > +		use_dcss = 0;
+> 
+> 
+> Checking name of remote note does not look correct, you should check
+> only props from your node.
+> 
+> If the ip has separate lines for DCSS and LCDIF you should distinguish
+> by port number. If they are shared
+
+I changed it to be based on endpoint. Hope it makes sense now.
+
+Cheers and thanks again for your review,
+ -- Guido
+
+
+> 
+> you can use endpoint number to specify DCSS or LCDIF, in both cases
+> bindings should be adjusted.
+> 
+> 
+> Regards
+> 
+> Andrzej
+> 
+> 
+> > +
+> > +	DRM_DEV_INFO(dsi->dev, "Using %s as input source\n",
+> > +		     (use_dcss) ? "DCSS" : "LCDIF");
+> > +
+> > +	ret = mux_control_try_select(dsi->mux, use_dcss);
+> > +	if (ret < 0)
+> > +		DRM_DEV_ERROR(dsi->dev, "Failed to select input: %d\n", ret);
+> > +
+> > +	of_node_put(remote);
+> > +	return ret;
+> > +}
+> > +
+> > +
+> > +static int imx8mq_dsi_deselect_input(struct nwl_dsi *dsi)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = mux_control_deselect(dsi->mux);
+> > +	if (ret < 0)
+> > +		DRM_DEV_ERROR(dsi->dev, "Failed to deselect input: %d\n", ret);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +
+> > +static int imx8mq_dsi_poweron(struct nwl_dsi *dsi)
+> > +{
+> > +	int ret = 0;
+> > +
+> > +	/* otherwise the display stays blank */
+> > +	usleep_range(200, 300);
+> > +
+> > +	if (dsi->rstc)
+> > +		ret = reset_control_deassert(dsi->rstc);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static int imx8mq_dsi_poweroff(struct nwl_dsi *dsi)
+> > +{
+> > +	int ret = 0;
+> > +
+> > +	if (dsi->quirks & SRC_RESET_QUIRK)
+> > +		return 0;
+> > +
+> > +	if (dsi->rstc)
+> > +		ret = reset_control_assert(dsi->rstc);
+> > +	return ret;
+> > +}
+> > +
+> > +static const struct drm_bridge_timings nwl_dsi_timings = {
+> > +	.input_bus_flags = DRM_BUS_FLAG_DE_LOW,
+> > +};
+> > +
+> > +static const struct nwl_dsi_platform_data imx8mq_dev = {
+> > +	.poweron = &imx8mq_dsi_poweron,
+> > +	.poweroff = &imx8mq_dsi_poweroff,
+> > +	.select_input = &imx8mq_dsi_select_input,
+> > +	.deselect_input = &imx8mq_dsi_deselect_input,
+> > +	.clk_config = {
+> > +		{ .id = NWL_DSI_CLK_CORE, .present = true },
+> > +	},
+> > +};
+> > +
+> > +static const struct of_device_id nwl_dsi_dt_ids[] = {
+> > +	{ .compatible = "fsl,imx8mq-nwl-dsi", .data = &imx8mq_dev, },
+> > +	{ /* sentinel */ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, nwl_dsi_dt_ids);
+> > +
+> > +static const struct soc_device_attribute nwl_dsi_quirks_match[] = {
+> > +	{ .soc_id = "i.MX8MQ", .revision = "2.0",
+> > +	  .data = (void *)(E11418_HS_MODE_QUIRK | SRC_RESET_QUIRK) },
+> > +	{ /* sentinel. */ },
+> > +};
+> > +
+> > +static int nwl_dsi_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *dev = &pdev->dev;
+> > +	const struct of_device_id *of_id = of_match_device(nwl_dsi_dt_ids, dev);
+> > +	const struct nwl_dsi_platform_data *pdata = of_id->data;
+> > +	const struct soc_device_attribute *attr;
+> > +	struct nwl_dsi *dsi;
+> > +	int ret;
+> > +
+> > +	dsi = devm_kzalloc(dev, sizeof(*dsi), GFP_KERNEL);
+> > +	if (!dsi)
+> > +		return -ENOMEM;
+> > +
+> > +	dsi->dev = dev;
+> > +	dsi->pdata = pdata;
+> > +
+> > +	ret = nwl_dsi_parse_dt(dsi);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = devm_request_irq(dev, dsi->irq, nwl_dsi_irq_handler, 0,
+> > +			       dev_name(dev), dsi);
+> > +	if (ret < 0) {
+> > +		DRM_DEV_ERROR(dev, "Failed to request IRQ %d: %d\n", dsi->irq,
+> > +			      ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	dsi->dsi_host.ops = &nwl_dsi_host_ops;
+> > +	dsi->dsi_host.dev = dev;
+> > +	ret = mipi_dsi_host_register(&dsi->dsi_host);
+> > +	if (ret) {
+> > +		DRM_DEV_ERROR(dev, "Failed to register MIPI host: %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	attr = soc_device_match(nwl_dsi_quirks_match);
+> > +	if (attr)
+> > +		dsi->quirks = (uintptr_t)attr->data;
+> > +
+> > +	dsi->bridge.driver_private = dsi;
+> > +	dsi->bridge.funcs = &nwl_dsi_bridge_funcs;
+> > +	dsi->bridge.of_node = dev->of_node;
+> > +	dsi->bridge.timings = &nwl_dsi_timings;
+> > +
+> > +	dev_set_drvdata(dev, dsi);
+> > +	pm_runtime_enable(dev);
+> > +	return 0;
+> > +}
+> > +
+> > +static int nwl_dsi_remove(struct platform_device *pdev)
+> > +{
+> > +	struct nwl_dsi *dsi = platform_get_drvdata(pdev);
+> > +
+> > +	mipi_dsi_host_unregister(&dsi->dsi_host);
+> > +	pm_runtime_disable(&pdev->dev);
+> > +	return 0;
+> > +}
+> > +
+> > +static struct platform_driver nwl_dsi_driver = {
+> > +	.probe		= nwl_dsi_probe,
+> > +	.remove		= nwl_dsi_remove,
+> > +	.driver		= {
+> > +		.of_match_table = nwl_dsi_dt_ids,
+> > +		.name	= DRV_NAME,
+> > +	},
+> > +};
+> > +
+> > +module_platform_driver(nwl_dsi_driver);
+> > +
+> > +MODULE_AUTHOR("NXP Semiconductor");
+> > +MODULE_AUTHOR("Purism SPC");
+> > +MODULE_DESCRIPTION("Northwest Logic MIPI-DSI driver");
+> > +MODULE_LICENSE("GPL"); /* GPLv2 or later */
+> > diff --git a/drivers/gpu/drm/bridge/nwl-dsi.h b/drivers/gpu/drm/bridge/nwl-dsi.h
+> > new file mode 100644
+> > index 000000000000..a247a8a11c7c
+> > --- /dev/null
+> > +++ b/drivers/gpu/drm/bridge/nwl-dsi.h
+> > @@ -0,0 +1,144 @@
+> > +/* SPDX-License-Identifier: GPL-2.0+ */
+> > +/*
+> > + * NWL MIPI DSI host driver
+> > + *
+> > + * Copyright (C) 2017 NXP
+> > + * Copyright (C) 2019 Purism SPC
+> > + */
+> > +#ifndef __NWL_DSI_H__
+> > +#define __NWL_DSI_H__
+> > +
+> > +/* DSI HOST registers */
+> > +#define NWL_DSI_CFG_NUM_LANES			0x0
+> > +#define NWL_DSI_CFG_NONCONTINUOUS_CLK		0x4
+> > +#define NWL_DSI_CFG_T_PRE			0x8
+> > +#define NWL_DSI_CFG_T_POST			0xc
+> > +#define NWL_DSI_CFG_TX_GAP			0x10
+> > +#define NWL_DSI_CFG_AUTOINSERT_EOTP		0x14
+> > +#define NWL_DSI_CFG_EXTRA_CMDS_AFTER_EOTP	0x18
+> > +#define NWL_DSI_CFG_HTX_TO_COUNT		0x1c
+> > +#define NWL_DSI_CFG_LRX_H_TO_COUNT		0x20
+> > +#define NWL_DSI_CFG_BTA_H_TO_COUNT		0x24
+> > +#define NWL_DSI_CFG_TWAKEUP			0x28
+> > +#define NWL_DSI_CFG_STATUS_OUT			0x2c
+> > +#define NWL_DSI_RX_ERROR_STATUS			0x30
+> > +
+> > +/* DSI DPI registers */
+> > +#define NWL_DSI_PIXEL_PAYLOAD_SIZE		0x200
+> > +#define NWL_DSI_PIXEL_FIFO_SEND_LEVEL		0x204
+> > +#define NWL_DSI_INTERFACE_COLOR_CODING		0x208
+> > +#define NWL_DSI_PIXEL_FORMAT			0x20c
+> > +#define NWL_DSI_VSYNC_POLARITY			0x210
+> > +#define NWL_DSI_VSYNC_POLARITY_ACTIVE_LOW	0
+> > +#define NWL_DSI_VSYNC_POLARITY_ACTIVE_HIGH	BIT(1)
+> > +
+> > +#define NWL_DSI_HSYNC_POLARITY			0x214
+> > +#define NWL_DSI_HSYNC_POLARITY_ACTIVE_LOW	0
+> > +#define NWL_DSI_HSYNC_POLARITY_ACTIVE_HIGH	BIT(1)
+> > +
+> > +#define NWL_DSI_VIDEO_MODE			0x218
+> > +#define NWL_DSI_HFP				0x21c
+> > +#define NWL_DSI_HBP				0x220
+> > +#define NWL_DSI_HSA				0x224
+> > +#define NWL_DSI_ENABLE_MULT_PKTS		0x228
+> > +#define NWL_DSI_VBP				0x22c
+> > +#define NWL_DSI_VFP				0x230
+> > +#define NWL_DSI_BLLP_MODE			0x234
+> > +#define NWL_DSI_USE_NULL_PKT_BLLP		0x238
+> > +#define NWL_DSI_VACTIVE				0x23c
+> > +#define NWL_DSI_VC				0x240
+> > +
+> > +/* DSI APB PKT control */
+> > +#define NWL_DSI_TX_PAYLOAD			0x280
+> > +#define NWL_DSI_PKT_CONTROL			0x284
+> > +#define NWL_DSI_SEND_PACKET			0x288
+> > +#define NWL_DSI_PKT_STATUS			0x28c
+> > +#define NWL_DSI_PKT_FIFO_WR_LEVEL		0x290
+> > +#define NWL_DSI_PKT_FIFO_RD_LEVEL		0x294
+> > +#define NWL_DSI_RX_PAYLOAD			0x298
+> > +#define NWL_DSI_RX_PKT_HEADER			0x29c
+> > +
+> > +/* DSI IRQ handling */
+> > +#define NWL_DSI_IRQ_STATUS			0x2a0
+> > +#define NWL_DSI_SM_NOT_IDLE			BIT(0)
+> > +#define NWL_DSI_TX_PKT_DONE			BIT(1)
+> > +#define NWL_DSI_DPHY_DIRECTION			BIT(2)
+> > +#define NWL_DSI_TX_FIFO_OVFLW			BIT(3)
+> > +#define NWL_DSI_TX_FIFO_UDFLW			BIT(4)
+> > +#define NWL_DSI_RX_FIFO_OVFLW			BIT(5)
+> > +#define NWL_DSI_RX_FIFO_UDFLW			BIT(6)
+> > +#define NWL_DSI_RX_PKT_HDR_RCVD			BIT(7)
+> > +#define NWL_DSI_RX_PKT_PAYLOAD_DATA_RCVD	BIT(8)
+> > +#define NWL_DSI_BTA_TIMEOUT			BIT(29)
+> > +#define NWL_DSI_LP_RX_TIMEOUT			BIT(30)
+> > +#define NWL_DSI_HS_TX_TIMEOUT			BIT(31)
+> > +
+> > +#define NWL_DSI_IRQ_STATUS2			0x2a4
+> > +#define NWL_DSI_SINGLE_BIT_ECC_ERR		BIT(0)
+> > +#define NWL_DSI_MULTI_BIT_ECC_ERR		BIT(1)
+> > +#define NWL_DSI_CRC_ERR				BIT(2)
+> > +
+> > +#define NWL_DSI_IRQ_MASK			0x2a8
+> > +#define NWL_DSI_SM_NOT_IDLE_MASK		BIT(0)
+> > +#define NWL_DSI_TX_PKT_DONE_MASK		BIT(1)
+> > +#define NWL_DSI_DPHY_DIRECTION_MASK		BIT(2)
+> > +#define NWL_DSI_TX_FIFO_OVFLW_MASK		BIT(3)
+> > +#define NWL_DSI_TX_FIFO_UDFLW_MASK		BIT(4)
+> > +#define NWL_DSI_RX_FIFO_OVFLW_MASK		BIT(5)
+> > +#define NWL_DSI_RX_FIFO_UDFLW_MASK		BIT(6)
+> > +#define NWL_DSI_RX_PKT_HDR_RCVD_MASK		BIT(7)
+> > +#define NWL_DSI_RX_PKT_PAYLOAD_DATA_RCVD_MASK	BIT(8)
+> > +#define NWL_DSI_BTA_TIMEOUT_MASK		BIT(29)
+> > +#define NWL_DSI_LP_RX_TIMEOUT_MASK		BIT(30)
+> > +#define NWL_DSI_HS_TX_TIMEOUT_MASK		BIT(31)
+> > +
+> > +#define NWL_DSI_IRQ_MASK2			0x2ac
+> > +#define NWL_DSI_SINGLE_BIT_ECC_ERR_MASK		BIT(0)
+> > +#define NWL_DSI_MULTI_BIT_ECC_ERR_MASK		BIT(1)
+> > +#define NWL_DSI_CRC_ERR_MASK			BIT(2)
+> > +
+> > +/*
+> > + * PKT_CONTROL format:
+> > + * [15: 0] - word count
+> > + * [17:16] - virtual channel
+> > + * [23:18] - data type
+> > + * [24]	   - LP or HS select (0 - LP, 1 - HS)
+> > + * [25]	   - perform BTA after packet is sent
+> > + * [26]	   - perform BTA only, no packet tx
+> > + */
+> > +#define NWL_DSI_WC(x)		FIELD_PREP(GENMASK(15, 0), (x))
+> > +#define NWL_DSI_TX_VC(x)	FIELD_PREP(GENMASK(17, 16), (x))
+> > +#define NWL_DSI_TX_DT(x)	FIELD_PREP(GENMASK(23, 18), (x))
+> > +#define NWL_DSI_HS_SEL(x)	FIELD_PREP(GENMASK(24, 24), (x))
+> > +#define NWL_DSI_BTA_TX(x)	FIELD_PREP(GENMASK(25, 25), (x))
+> > +#define NWL_DSI_BTA_NO_TX(x)	FIELD_PREP(GENMASK(26, 26), (x))
+> > +
+> > +/*
+> > + * RX_PKT_HEADER format:
+> > + * [15: 0] - word count
+> > + * [21:16] - data type
+> > + * [23:22] - virtual channel
+> > + */
+> > +#define NWL_DSI_RX_DT(x)	FIELD_GET(GENMASK(21, 16), (x))
+> > +#define NWL_DSI_RX_VC(x)	FIELD_GET(GENMASK(23, 22), (x))
+> > +
+> > +/* DSI Video mode */
+> > +#define NWL_DSI_VM_BURST_MODE_WITH_SYNC_PULSES		0
+> > +#define NWL_DSI_VM_NON_BURST_MODE_WITH_SYNC_EVENTS	BIT(0)
+> > +#define NWL_DSI_VM_BURST_MODE				BIT(1)
+> > +
+> > +/* * DPI color coding */
+> > +#define NWL_DSI_DPI_16_BIT_565_PACKED	0
+> > +#define NWL_DSI_DPI_16_BIT_565_ALIGNED	1
+> > +#define NWL_DSI_DPI_16_BIT_565_SHIFTED	2
+> > +#define NWL_DSI_DPI_18_BIT_PACKED	3
+> > +#define NWL_DSI_DPI_18_BIT_ALIGNED	4
+> > +#define NWL_DSI_DPI_24_BIT		5
+> > +
+> > +/* * DPI Pixel format */
+> > +#define NWL_DSI_PIXEL_FORMAT_16  0
+> > +#define NWL_DSI_PIXEL_FORMAT_18  BIT(0)
+> > +#define NWL_DSI_PIXEL_FORMAT_18L BIT(1)
+> > +#define NWL_DSI_PIXEL_FORMAT_24  (BIT(0) | BIT(1))
+> > +
+> > +#endif /* __NWL_DSI_H__ */
+> 
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
