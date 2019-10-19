@@ -2,150 +2,92 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3BDCA9EAC
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 22:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BD1CA9EAC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 22:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CFE621D7C
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 22:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8157821D7C
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 22:07:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571522863;
+	bh=MgOOisiszHQPO6KQxxDY1PW6tN5BF8IbCZPaqqGRooo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=iTGJxWpUNKjC3vk6Qv6Ssi13SOHcF1BAa+RqBtf8IyT0eB7J1zZW6rjDDS0rATSOi
+	 O7X+GYYC6WTKqy6Wxar+QLIrQDuh/hdDh3y+Ktq74/wHCfiTouTr+DQaLmhpA7vOz/
+	 b1t84ufb1RZxOJiyKjYvgGQ+54TqOilI50ApkLUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbfJSWFA (ORCPT
+        id S1726263AbfJSWHe convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 18:05:00 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:44631 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbfJSWFA (ORCPT
+        Sat, 19 Oct 2019 18:07:34 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47043 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726143AbfJSWHe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 18:05:00 -0400
-X-Originating-IP: 86.202.229.42
-Received: from localhost (lfbn-lyo-1-146-42.w86-202.abo.wanadoo.fr [86.202.229.42])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id C9A101BF204;
-        Sat, 19 Oct 2019 22:04:56 +0000 (UTC)
-Date:   Sun, 20 Oct 2019 00:04:56 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Jinke Fan <fanjinke@hygon.cn>
-Cc:     a.zummo@towertech.it, puwen@hygon.cn, thomas.lendacky@amd.com,
-        kim.phillips@amd.com, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND RFC PATCH v3] rtc: Fix the AltCentury value on AMD/Hygon
- platform
-Message-ID: <20191019220456.GP3125@piout.net>
-References: <20191015080827.11589-1-fanjinke@hygon.cn>
+        Sat, 19 Oct 2019 18:07:34 -0400
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-134-nL5Y94MiNzGK8GvS41-CuQ-1; Sat, 19 Oct 2019 18:07:30 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5AAB1800D4E;
+        Sat, 19 Oct 2019 22:07:29 +0000 (UTC)
+Received: from krava.redhat.com (ovpn-204-25.brq.redhat.com [10.40.204.25])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5033E19C7F;
+        Sat, 19 Oct 2019 22:07:27 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc:     Jan Stancek <jstancek@redhat.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: [PATCH] perf/x86/intel/pt: Fix base for single entry topa
+Date:   Sun, 20 Oct 2019 00:07:26 +0200
+Message-Id: <20191019220726.12213-1-jolsa@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015080827.11589-1-fanjinke@hygon.cn>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: nL5Y94MiNzGK8GvS41-CuQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/10/2019 16:08:27+0800, Jinke Fan wrote:
-> When using following operations:
-> date -s "21190910 19:20:00"
-> hwclock -w
-> to change date from 2019 to 2119 for test, it will fail on Hygon
-> Dhyana and AMD Zen CPUs, while the same operations run ok on Intel i7
-> platform.
-> 
-> MC146818 driver use function mc146818_set_time() to set register
-> RTC_FREQ_SELECT(RTC_REG_A)'s bit4-bit6 field which means divider stage
-> reset value on Intel platform to 0x7.
-> 
-> While AMD/Hygon RTC_REG_A(0Ah)'s bit4 is defined as DV0 [Reference]:
-> DV0 = 0 selects Bank 0, DV0 = 1 selects Bank 1. Bit5-bit6 is defined
-> as reserved.
-> 
-> DV0 is set to 1, it will select Bank 1, which will disable AltCentury
-> register(0x32) access. As UEFI pass acpi_gbl_FADT.century 0x32
-> (AltCentury), the CMOS write will be failed on code:
-> CMOS_WRITE(century, acpi_gbl_FADT.century).
-> 
-> Correct RTC_REG_A bank select bit(DV0) to 0 on AMD/Hygon CPUs, it will
-> enable AltCentury(0x32) register writing and finally setup century as
-> expected.
-> 
-> Test results on AMD/Hygon machine show that it works as expected.
-> 
-> Reference:
-> https://www.amd.com/system/files/TechDocs/51192_Bolton_FCH_RRG.pdf
-> section: 3.13 Real Time Clock (RTC)
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Jinke Fan <fanjinke@hygon.cn>
-> ---
-> 
-> v2->v3:
->   - Make the changes only relevant to AMD/Hygon.
-> 
-> v1->v2:
->   - Fix the compile errors on sparc64/alpha platform.
-> 
->  drivers/rtc/rtc-mc146818-lib.c | 11 ++++++++++-
->  include/linux/mc146818rtc.h    |  6 ++++++
->  2 files changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/rtc/rtc-mc146818-lib.c b/drivers/rtc/rtc-mc146818-lib.c
-> index 2ecd8752b088..70502881785d 100644
-> --- a/drivers/rtc/rtc-mc146818-lib.c
-> +++ b/drivers/rtc/rtc-mc146818-lib.c
-> @@ -172,7 +172,16 @@ int mc146818_set_time(struct rtc_time *time)
->  	save_control = CMOS_READ(RTC_CONTROL);
->  	CMOS_WRITE((save_control|RTC_SET), RTC_CONTROL);
->  	save_freq_select = CMOS_READ(RTC_FREQ_SELECT);
-> -	CMOS_WRITE((save_freq_select|RTC_DIV_RESET2), RTC_FREQ_SELECT);
-> +
-> +#ifdef CONFIG_X86
-> +	if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||
-> +	    boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
-> +		CMOS_WRITE((save_freq_select & (~RTC_DV0)), RTC_FREQ_SELECT);
+Jan reported failing ltp test for pt. It looks like the reason
+is commit 38bb8d77d0b9, that did not keep the TOPA_SHIFT for
+entry base, adding it back.
 
-This should probably use ~RTC_DIV_RESET2.
+[1] https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/tracing/pt_test/pt_test.c
 
-> +	else
-> +		CMOS_WRITE((save_freq_select | RTC_DIV_RESET2), RTC_FREQ_SELECT);
-> +#else
-> +	CMOS_WRITE((save_freq_select | RTC_DIV_RESET2), RTC_FREQ_SELECT);
-> +#endif
+Reported-by: Jan Stancek <jstancek@redhat.com>
+Fixes: 38bb8d77d0b9 ("perf/x86/intel/pt: Split ToPA metadata and page layout")
+Signed-off-by: Jiri Olsa <jolsa@redhat.com>
+---
+ arch/x86/events/intel/pt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Also, later you have:
-
-CMOS_WRITE(save_freq_select, RTC_FREQ_SELECT);
-
-This may write bit4 again which would make mc146818_get_time fail so you
-probably want to update save_freq_select.
-
->  
->  #ifdef CONFIG_MACH_DECSTATION
->  	CMOS_WRITE(real_yrs, RTC_DEC_YEAR);
-> diff --git a/include/linux/mc146818rtc.h b/include/linux/mc146818rtc.h
-> index 0661af17a758..7066a7bced61 100644
-> --- a/include/linux/mc146818rtc.h
-> +++ b/include/linux/mc146818rtc.h
-> @@ -86,6 +86,12 @@ struct cmos_rtc_board_info {
->     /* 2 values for divider stage reset, others for "testing purposes only" */
->  #  define RTC_DIV_RESET1	0x60
->  #  define RTC_DIV_RESET2	0x70
-> +
-> +#ifdef CONFIG_X86
-> +   /* DV0 = 0 selects Bank 0, DV0 = 1 selects Bank 1 on AMD/Hygon platform */
-> +#  define RTC_DV0		0x10
-> +#endif
-> +
->    /* Periodic intr. / Square wave rate select. 0=none, 1=32.8kHz,... 15=2Hz */
->  # define RTC_RATE_SELECT 	0x0F
->  
-> -- 
-> 2.17.1
-> 
-
+diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+index 74e80ed9c6c4..05e43d0f430b 100644
+--- a/arch/x86/events/intel/pt.c
++++ b/arch/x86/events/intel/pt.c
+@@ -627,7 +627,7 @@ static struct topa *topa_alloc(int cpu, gfp_t gfp)
+ 	 * link as the 2nd entry in the table
+ 	 */
+ 	if (!intel_pt_validate_hw_cap(PT_CAP_topa_multiple_entries)) {
+-		TOPA_ENTRY(&tp->topa, 1)->base = page_to_phys(p);
++		TOPA_ENTRY(&tp->topa, 1)->base = page_to_phys(p) >> TOPA_SHIFT;
+ 		TOPA_ENTRY(&tp->topa, 1)->end = 1;
+ 	}
+ 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.21.0
+
