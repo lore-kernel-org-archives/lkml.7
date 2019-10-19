@@ -5,66 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6DACA9EAE
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 14:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3092DCA9EAB
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 14:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D36CE21835
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 14:08:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF69221835
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 14:08:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OTlhg+47"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HkEq50yY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbfJSOH5 (ORCPT
+        id S1726259AbfJSOHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 10:07:57 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42067 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbfJSOHy (ORCPT
+        Sat, 19 Oct 2019 10:07:53 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36715 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbfJSOHv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 10:07:54 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n14so9080331wrw.9
-        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 07:07:53 -0700 (PDT)
+        Sat, 19 Oct 2019 10:07:51 -0400
+Received: by mail-wm1-f66.google.com with SMTP id m18so8649725wmc.1
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 07:07:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=4oUvDhII8vHajj9ZiQGmAkvxzCNzCrUqcLrW308wtI8=;
-        b=OTlhg+47jcB5gxIcILG5r1UG97FdYGTVDsDnYGGZzjNvG7bjVyaqz7jPqyXCAghaa3
-         LPi48tzw2hDyfkJrpTf8k4P0ElQgwXzrX4OReDd0ltxCXyToQTTrF5JXgYNV6PeI0F22
-         bx1KPArFHLdDDVfqmRDKt1PTpNa4oC9B7knY+yo2+W9/tFK4PJccfZf4YkRWrGkY7d0P
-         FaUflFfKc2jwnPyrE5SAd8sdn7GvQY9m12+tyUbRReLoy1Xt9AbotZtxIhsA02FH6E5g
-         M2+ddw4Ev4EMGIF48SQBBFdvJFC6O1cMV/uz6K1IRW3ciuqXsijFtYc2Seyyw3bYBnPD
-         70zQ==
+        bh=M5yxLqHvJwEUftu3qq2vEcIwK5tNn7BPR5RV6UrprK4=;
+        b=HkEq50yYpejf11Cniqi05m3vcZDHop3874Kzy4g2Kj12LuSSKtF+pgqnmh5Y3zNevp
+         nNaXYI+QbTc9sSxa2WNg8u9yvGNJ/tii6rdgQ9Dr2BTsC35iaKcFWOnFjQIFKU+XTlu3
+         TckWfGtWEjyCeFzVldoNfcMWDAmBRmyfSMMhnMAkiuxtMTXIHKg9kR5gXvGOwXl1Rgx9
+         /1lVb42/u0aKnkHx64u1VKM8Uxi5c7T+6fT+w/5DAkYyHRrKbuatdcdsEl5+6FA3TDlc
+         +ciRFO1Be6BfipSzm/xqXti7rFY8fNPMwNxLh9enEcSLAV2nxcgnLeQNS8QEAlOKFbih
+         Tipg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4oUvDhII8vHajj9ZiQGmAkvxzCNzCrUqcLrW308wtI8=;
-        b=iSCRb8ydhcplgt7bjXcT9Hc7alAlWxm+aDwMEWWXSM+S0O2OVK6iDsGMNj2HyN6NQN
-         ALVxO1/KQRaP+Ags6q7sY4wbgdvCanK/gCNbxT25S1YJpoI31P/vAzurmvYM1i8CdEJa
-         b5cKMedJgrccO1v6KZZXlnHwhpyLZ3eCiWye1UpcVpyaUD4QrNas4KLT5KNrr+/jH8y8
-         Y78IwtTOvY3qz4nEUBphqEAtDFnfMO3rz/PMKEt/DuU2hLXYgkQQ9o+occxFJbkHQeqV
-         fj8Gl1Ocw2aaJcljE+867AqlcjF+YgdIZf1sTq5TPwagUDCbiY5mHjO2E8PawN1Iz2Jv
-         AYAg==
-X-Gm-Message-State: APjAAAUdrj/7pijq4jDo3EbjEOHPGiSe2zR78ssDYgVxK25/mOgD4g9E
-        WEIRV6ezwu3hcN70yE3E3Q==
-X-Google-Smtp-Source: APXvYqxE4GeJX/ZROGt0CXiJsmc0ZNTDAM07dTSILyQQIQcj3WZUbVCgaiSa15PgD61gFKs78uaSbg==
-X-Received: by 2002:adf:f7c6:: with SMTP id a6mr11513756wrq.272.1571494072579;
-        Sat, 19 Oct 2019 07:07:52 -0700 (PDT)
+        bh=M5yxLqHvJwEUftu3qq2vEcIwK5tNn7BPR5RV6UrprK4=;
+        b=OJsIoU6XJSuVtRm6QmmOLEBoL6MR4Ry1vqNUFWknhQDEkVhouOJ8GqPPe554NF6Opu
+         mt0KsHvyBEsVZh4ICuBjXBLcaQ6zYJj/gNySNByyyPA/AqYgHKznaZu9MAFsB4nuPItr
+         Po7iXmQuaL9ZjHJpLQr8iCNQKQcUQ8wnbZMrXn58SAp3DJuwVa36lkVuAxKf/0WRquMI
+         D1l23c5SQdS5Q0YKgaFfpXfadhm4iajJFGjmpPqql7f7P7COWerDodENQcrgz0KfChn5
+         jUyBbn3lPALvP3jS7DzvHZM4oPnTHjmf6ceRInxODk1gYqfNxNMs3CN1UTA9lqCL1zTD
+         3iYw==
+X-Gm-Message-State: APjAAAUYA4rI+n0+a7G5RcgNO4mDYGzJmeA0XRPTVC0uA+LSnJ2nnVnP
+        mHNCp6bFhmIJz2W33XwTwQ==
+X-Google-Smtp-Source: APXvYqztUdZGlbcfhCigQINd+0oJLXMU0znxbWmQdJd83Q9ohdeEAAXs/g1xcQ3T6QYnoFiDa8cgZA==
+X-Received: by 2002:a7b:c049:: with SMTP id u9mr11544614wmc.12.1571494067103;
+        Sat, 19 Oct 2019 07:07:47 -0700 (PDT)
 Received: from ninjahub.lan (host-92-23-80-57.as13285.net. [92.23.80.57])
-        by smtp.googlemail.com with ESMTPSA id t4sm7893080wrm.13.2019.10.19.07.07.51
+        by smtp.googlemail.com with ESMTPSA id t4sm7893080wrm.13.2019.10.19.07.07.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Oct 2019 07:07:52 -0700 (PDT)
+        Sat, 19 Oct 2019 07:07:46 -0700 (PDT)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     outreachy-kernel@googlegroups.com
 Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
         jerome.pouiller@silabs.com, linux-kernel@vger.kernel.org,
         Jules Irenge <jbi.octave@gmail.com>
-Subject: [PATCH v1 5/5] staging: wfx: fix warnings of alignment should match open parenthesis
-Date:   Sat, 19 Oct 2019 15:07:19 +0100
-Message-Id: <20191019140719.2542-6-jbi.octave@gmail.com>
+Subject: [PATCH v1 2/5] staging: wfx: fix warning of line over 80 characters
+Date:   Sat, 19 Oct 2019 15:07:16 +0100
+Message-Id: <20191019140719.2542-3-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191019140719.2542-1-jbi.octave@gmail.com>
 References: <20191019140719.2542-1-jbi.octave@gmail.com>
@@ -75,74 +75,456 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-: Fix warnings of alignment should match open parenthesis.
+Fix warning of lines over 80 characters.
 Issue detected by checkpatch tool.
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- drivers/staging/wfx/data_rx.c |  2 +-
- drivers/staging/wfx/data_tx.c |  2 +-
- drivers/staging/wfx/debug.c   | 14 ++++++++------
- 3 files changed, 10 insertions(+), 8 deletions(-)
+ drivers/staging/wfx/bh.c       |  17 ++++--
+ drivers/staging/wfx/bus.h      |   6 +-
+ drivers/staging/wfx/bus_sdio.c |   3 +-
+ drivers/staging/wfx/bus_spi.c  |   9 ++-
+ drivers/staging/wfx/data_rx.c  |  15 +++--
+ drivers/staging/wfx/data_tx.c  | 101 ++++++++++++++++++++++-----------
+ 6 files changed, 102 insertions(+), 49 deletions(-)
 
+diff --git a/drivers/staging/wfx/bh.c b/drivers/staging/wfx/bh.c
+index 573216b08042..955ed3a1dd73 100644
+--- a/drivers/staging/wfx/bh.c
++++ b/drivers/staging/wfx/bh.c
+@@ -32,7 +32,8 @@ static void device_wakeup(struct wfx_dev *wdev)
+ 		// completion without consume it (a kind of
+ 		// wait_for_completion_done_timeout()). So we have to emulate
+ 		// it.
+-		if (wait_for_completion_timeout(&wdev->hif.ctrl_ready, msecs_to_jiffies(2) + 1))
++		if (wait_for_completion_timeout(&wdev->hif.ctrl_ready,
++						msecs_to_jiffies(2) + 1))
+ 			complete(&wdev->hif.ctrl_ready);
+ 		else
+ 			dev_err(wdev->dev, "timeout while wake up chip\n");
+@@ -179,8 +180,9 @@ static void tx_helper(struct wfx_dev *wdev, struct hif_msg *hif)
+ 	wdev->hif.tx_seqnum = (wdev->hif.tx_seqnum + 1) % (HIF_COUNTER_MAX + 1);
+ 
+ 	if (wfx_is_secure_command(wdev, hif->id)) {
+-		len = round_up(len - sizeof(hif->len), 16) + sizeof(hif->len)
+-		      + sizeof(struct hif_sl_msg_hdr) + sizeof(struct hif_sl_tag);
++		len = round_up(len - sizeof(hif->len), 16) + sizeof(hif->len) +
++			sizeof(struct hif_sl_msg_hdr) +
++			sizeof(struct hif_sl_tag);
+ 		// AES support encryption in-place. However, mac80211 access to
+ 		// 802.11 header after frame was sent (to get MAC addresses).
+ 		// So, keep origin buffer clear.
+@@ -241,7 +243,8 @@ static void ack_sdio_data(struct wfx_dev *wdev)
+ 
+ 	config_reg_read(wdev, &cfg_reg);
+ 	if (cfg_reg & 0xFF) {
+-		dev_warn(wdev->dev, "chip reports errors: %02x\n", cfg_reg & 0xFF);
++		dev_warn(wdev->dev, "chip reports errors: %02x\n",
++			 cfg_reg & 0xFF);
+ 		config_reg_write_bits(wdev, 0xFF, 0x00);
+ 	}
+ }
+@@ -268,11 +271,13 @@ static void bh_work(struct work_struct *work)
+ 
+ 	if (last_op_is_rx)
+ 		ack_sdio_data(wdev);
+-	if (!wdev->hif.tx_buffers_used && !work_pending(work) && !atomic_read(&wdev->scan_in_progress)) {
++	if (!wdev->hif.tx_buffers_used && !work_pending(work) &&
++	    !atomic_read(&wdev->scan_in_progress)) {
+ 		device_release(wdev);
+ 		release_chip = true;
+ 	}
+-	_trace_bh_stats(stats_ind, stats_req, stats_cnf, wdev->hif.tx_buffers_used, release_chip);
++	_trace_bh_stats(stats_ind, stats_req, stats_cnf,
++			wdev->hif.tx_buffers_used, release_chip);
+ }
+ 
+ /*
+diff --git a/drivers/staging/wfx/bus.h b/drivers/staging/wfx/bus.h
+index eb77abc09ec2..62d6ecabe4cb 100644
+--- a/drivers/staging/wfx/bus.h
++++ b/drivers/staging/wfx/bus.h
+@@ -21,8 +21,10 @@
+ #define WFX_REG_FRAME_OUT     0x7
+ 
+ struct hwbus_ops {
+-	int (*copy_from_io)(void *bus_priv, unsigned int addr, void *dst, size_t count);
+-	int (*copy_to_io)(void *bus_priv, unsigned int addr, const void *src, size_t count);
++	int (*copy_from_io)(void *bus_priv, unsigned int addr,
++			    void *dst, size_t count);
++	int (*copy_to_io)(void *bus_priv, unsigned int addr,
++			  const void *src, size_t count);
+ 	void (*lock)(void *bus_priv);
+ 	void (*unlock)(void *bus_priv);
+ 	size_t (*align_size)(void *bus_priv, size_t size);
+diff --git a/drivers/staging/wfx/bus_sdio.c b/drivers/staging/wfx/bus_sdio.c
+index 184e20dfdd62..375e07d6d9ae 100644
+--- a/drivers/staging/wfx/bus_sdio.c
++++ b/drivers/staging/wfx/bus_sdio.c
+@@ -180,7 +180,8 @@ static int wfx_sdio_probe(struct sdio_func *func,
+ 		}
+ 		bus->of_irq = irq_of_parse_and_map(np, 0);
+ 	} else {
+-		dev_warn(&func->dev, "device is not declared in DT, features will be limited\n");
++		dev_warn(&func->dev,
++			 "device is not declared in DT, features will be limited\n");
+ 		// FIXME: ignore VID/PID and only rely on device tree
+ 		// return -ENODEV;
+ 	}
+diff --git a/drivers/staging/wfx/bus_spi.c b/drivers/staging/wfx/bus_spi.c
+index effd07957753..ab0cda1e124f 100644
+--- a/drivers/staging/wfx/bus_spi.c
++++ b/drivers/staging/wfx/bus_spi.c
+@@ -178,11 +178,14 @@ static int wfx_spi_probe(struct spi_device *func)
+ 		return ret;
+ 	// Trace below is also displayed by spi_setup() if compiled with DEBUG
+ 	dev_dbg(&func->dev, "SPI params: CS=%d, mode=%d bits/word=%d speed=%d\n",
+-		func->chip_select, func->mode, func->bits_per_word, func->max_speed_hz);
++		func->chip_select, func->mode, func->bits_per_word,
++		func->max_speed_hz);
+ 	if (func->bits_per_word != 16 && func->bits_per_word != 8)
+-		dev_warn(&func->dev, "unusual bits/word value: %d\n", func->bits_per_word);
++		dev_warn(&func->dev, "unusual bits/word value: %d\n",
++			 func->bits_per_word);
+ 	if (func->max_speed_hz > 49000000)
+-		dev_warn(&func->dev, "%dHz is a very high speed\n", func->max_speed_hz);
++		dev_warn(&func->dev, "%dHz is a very high speed\n",
++			 func->max_speed_hz);
+ 
+ 	bus = devm_kzalloc(&func->dev, sizeof(*bus), GFP_KERNEL);
+ 	if (!bus)
 diff --git a/drivers/staging/wfx/data_rx.c b/drivers/staging/wfx/data_rx.c
-index 52fb0f255dcd..e7fcce8d0cc4 100644
+index 3a79ab93e97e..522592d71aac 100644
 --- a/drivers/staging/wfx/data_rx.c
 +++ b/drivers/staging/wfx/data_rx.c
-@@ -77,7 +77,7 @@ static int wfx_drop_encrypt_data(struct wfx_dev *wdev, struct hif_ind_rx *arg, s
- 		break;
- 	default:
- 		dev_err(wdev->dev, "unknown encryption type %d\n",
--			 arg->rx_flags.encryp);
-+			arg->rx_flags.encryp);
- 		return -EIO;
+@@ -98,7 +98,8 @@ static int wfx_drop_encrypt_data(struct wfx_dev *wdev, struct hif_ind_rx *arg, s
+ 
+ }
+ 
+-void wfx_rx_cb(struct wfx_vif *wvif, struct hif_ind_rx *arg, struct sk_buff *skb)
++void wfx_rx_cb(struct wfx_vif *wvif, struct hif_ind_rx *arg,
++	       struct sk_buff *skb)
+ {
+ 	int link_id = arg->rx_flags.peer_sta_id;
+ 	struct ieee80211_rx_status *hdr = IEEE80211_SKB_RXCB(skb);
+@@ -118,7 +119,8 @@ void wfx_rx_cb(struct wfx_vif *wvif, struct hif_ind_rx *arg, struct sk_buff *skb
+ 	if (link_id && link_id <= WFX_MAX_STA_IN_AP_MODE) {
+ 		entry = &wvif->link_id_db[link_id - 1];
+ 		entry->timestamp = jiffies;
+-		if (entry->status == WFX_LINK_SOFT && ieee80211_is_data(frame->frame_control))
++		if (entry->status == WFX_LINK_SOFT &&
++		    ieee80211_is_data(frame->frame_control))
+ 			early_data = true;
  	}
  
+@@ -137,7 +139,8 @@ void wfx_rx_cb(struct wfx_vif *wvif, struct hif_ind_rx *arg, struct sk_buff *skb
+ 			goto drop;
+ 
+ 	hdr->band = NL80211_BAND_2GHZ;
+-	hdr->freq = ieee80211_channel_to_frequency(arg->channel_number, hdr->band);
++	hdr->freq = ieee80211_channel_to_frequency(arg->channel_number,
++						   hdr->band);
+ 
+ 	if (arg->rxed_rate >= 14) {
+ 		hdr->encoding = RX_ENC_HT;
+@@ -166,7 +169,8 @@ void wfx_rx_cb(struct wfx_vif *wvif, struct hif_ind_rx *arg, struct sk_buff *skb
+ 		goto drop;
+ 	if (ieee80211_is_beacon(frame->frame_control)
+ 	    && !arg->status && wvif->vif
+-	    && ether_addr_equal(ieee80211_get_SA(frame), wvif->vif->bss_conf.bssid)) {
++	    && ether_addr_equal(ieee80211_get_SA(frame),
++				wvif->vif->bss_conf.bssid)) {
+ 		const u8 *tim_ie;
+ 		u8 *ies = mgmt->u.beacon.variable;
+ 		size_t ies_len = skb->len - (ies - skb->data);
+@@ -183,7 +187,8 @@ void wfx_rx_cb(struct wfx_vif *wvif, struct hif_ind_rx *arg, struct sk_buff *skb
+ 
+ 		/* Disable beacon filter once we're associated... */
+ 		if (wvif->disable_beacon_filter &&
+-		    (wvif->vif->bss_conf.assoc || wvif->vif->bss_conf.ibss_joined)) {
++		    (wvif->vif->bss_conf.assoc ||
++		     wvif->vif->bss_conf.ibss_joined)) {
+ 			wvif->disable_beacon_filter = false;
+ 			schedule_work(&wvif->update_filtering_work);
+ 		}
 diff --git a/drivers/staging/wfx/data_tx.c b/drivers/staging/wfx/data_tx.c
-index a02692f3210d..ea4205ac2149 100644
+index cf73b83ccc9e..619ab2cac5fc 100644
 --- a/drivers/staging/wfx/data_tx.c
 +++ b/drivers/staging/wfx/data_tx.c
-@@ -40,7 +40,7 @@ static int wfx_get_hw_rate(struct wfx_dev *wdev,
- /* TX policy cache implementation */
+@@ -20,7 +20,8 @@
+ #define WFX_LINK_ID_NO_ASSOC   15
+ #define WFX_LINK_ID_GC_TIMEOUT ((unsigned long)(10 * HZ))
  
- static void wfx_tx_policy_build(struct wfx_vif *wvif, struct tx_policy *policy,
--			    struct ieee80211_tx_rate *rates)
-+				struct ieee80211_tx_rate *rates)
+-static int wfx_get_hw_rate(struct wfx_dev *wdev, const struct ieee80211_tx_rate *rate)
++static int wfx_get_hw_rate(struct wfx_dev *wdev,
++			   const struct ieee80211_tx_rate *rate)
  {
- 	int i;
- 	size_t count;
-diff --git a/drivers/staging/wfx/debug.c b/drivers/staging/wfx/debug.c
-index 761ad9b4f27e..0a9ca109039c 100644
---- a/drivers/staging/wfx/debug.c
-+++ b/drivers/staging/wfx/debug.c
-@@ -141,10 +141,11 @@ static int wfx_rx_stats_show(struct seq_file *seq, void *v)
- 	mutex_lock(&wdev->rx_stats_lock);
- 	seq_printf(seq, "Timestamp: %dus\n", st->date);
- 	seq_printf(seq, "Low power clock: frequency %uHz, external %s\n",
--		st->pwr_clk_freq,
--		st->is_ext_pwr_clk ? "yes" : "no");
--	seq_printf(seq, "Num. of frames: %d, PER (x10e4): %d, Throughput: %dKbps/s\n",
--		st->nb_rx_frame, st->per_total, st->throughput);
-+		   st->pwr_clk_freq,
-+		   st->is_ext_pwr_clk ? "yes" : "no");
-+	seq_printf(seq,
-+		   "N. of frames: %d, PER (x10e4): %d, Throughput: %dKbps/s\n",
-+		   st->nb_rx_frame, st->per_total, st->throughput);
- 	seq_puts(seq, "       Num. of      PER     RSSI      SNR      CFO\n");
- 	seq_puts(seq, "        frames  (x10e4)    (dBm)     (dB)    (kHz)\n");
- 	for (i = 0; i < ARRAY_SIZE(channel_names); i++) {
-@@ -160,8 +161,9 @@ static int wfx_rx_stats_show(struct seq_file *seq, void *v)
+ 	if (rate->idx < 0)
+ 		return -1;
+@@ -120,12 +121,14 @@ static void wfx_tx_policy_build(struct wfx_vif *wvif, struct tx_policy *policy,
+ 	}
  }
- DEFINE_SHOW_ATTRIBUTE(wfx_rx_stats);
  
--static ssize_t wfx_send_pds_write(struct file *file, const char __user *user_buf,
--			     size_t count, loff_t *ppos)
-+static ssize_t wfx_send_pds_write(struct file *file,
-+				  const char __user *user_buf,
-+				  size_t count, loff_t *ppos)
+-static bool tx_policy_is_equal(const struct tx_policy *a, const struct tx_policy *b)
++static bool tx_policy_is_equal(const struct tx_policy *a,
++			       const struct tx_policy *b)
  {
- 	struct wfx_dev *wdev = file->private_data;
- 	char *buf;
+ 	return !memcmp(a->rates, b->rates, sizeof(a->rates));
+ }
+ 
+-static int wfx_tx_policy_find(struct tx_policy_cache *cache, struct tx_policy *wanted)
++static int wfx_tx_policy_find(struct tx_policy_cache *cache,
++			      struct tx_policy *wanted)
+ {
+ 	struct tx_policy *it;
+ 
+@@ -138,13 +141,15 @@ static int wfx_tx_policy_find(struct tx_policy_cache *cache, struct tx_policy *w
+ 	return -1;
+ }
+ 
+-static void wfx_tx_policy_use(struct tx_policy_cache *cache, struct tx_policy *entry)
++static void wfx_tx_policy_use(struct tx_policy_cache *cache,
++			      struct tx_policy *entry)
+ {
+ 	++entry->usage_count;
+ 	list_move(&entry->link, &cache->used);
+ }
+ 
+-static int wfx_tx_policy_release(struct tx_policy_cache *cache, struct tx_policy *entry)
++static int wfx_tx_policy_release(struct tx_policy_cache *cache,
++				 struct tx_policy *entry)
+ {
+ 	int ret = --entry->usage_count;
+ 
+@@ -153,8 +158,9 @@ static int wfx_tx_policy_release(struct tx_policy_cache *cache, struct tx_policy
+ 	return ret;
+ }
+ 
+-static int wfx_tx_policy_get(struct wfx_vif *wvif, struct ieee80211_tx_rate *rates,
+-			 bool *renew)
++static int wfx_tx_policy_get(struct wfx_vif *wvif,
++			     struct ieee80211_tx_rate *rates,
++			     bool *renew)
+ {
+ 	int idx;
+ 	struct tx_policy_cache *cache = &wvif->tx_policy_cache;
+@@ -211,7 +217,10 @@ static int wfx_tx_policy_upload(struct wfx_vif *wvif)
+ 	int i;
+ 	struct tx_policy_cache *cache = &wvif->tx_policy_cache;
+ 	struct hif_mib_set_tx_rate_retry_policy *arg =
+-		kzalloc(struct_size(arg, tx_rate_retry_policy, HIF_MIB_NUM_TX_RATE_RETRY_POLICIES), GFP_KERNEL);
++		kzalloc(struct_size(arg,
++				    tx_rate_retry_policy,
++				    HIF_MIB_NUM_TX_RATE_RETRY_POLICIES),
++			GFP_KERNEL);
+ 	struct hif_mib_tx_rate_retry_policy *dst;
+ 
+ 	spin_lock_bh(&cache->lock);
+@@ -220,7 +229,8 @@ static int wfx_tx_policy_upload(struct wfx_vif *wvif)
+ 		struct tx_policy *src = &cache->cache[i];
+ 
+ 		if (!src->uploaded && memzcmp(src->rates, sizeof(src->rates))) {
+-			dst = arg->tx_rate_retry_policy + arg->num_tx_rate_policies;
++			dst = arg->tx_rate_retry_policy +
++				arg->num_tx_rate_policies;
+ 
+ 			dst->policy_index = i;
+ 			dst->short_retry_count = 255;
+@@ -326,7 +336,8 @@ int wfx_find_link_id(struct wfx_vif *wvif, const u8 *mac)
+ 	return ret;
+ }
+ 
+-static int wfx_map_link(struct wfx_vif *wvif, struct wfx_link_entry *link_entry, int sta_id)
++static int wfx_map_link(struct wfx_vif *wvif,
++			struct wfx_link_entry *link_entry, int sta_id)
+ {
+ 	int ret;
+ 
+@@ -437,7 +448,8 @@ static bool ieee80211_is_action_back(struct ieee80211_hdr *hdr)
+ }
+ 
+ static void wfx_tx_manage_pm(struct wfx_vif *wvif, struct ieee80211_hdr *hdr,
+-			     struct wfx_tx_priv *tx_priv, struct ieee80211_sta *sta)
++			     struct wfx_tx_priv *tx_priv,
++			     struct ieee80211_sta *sta)
+ {
+ 	u32 mask = ~BIT(tx_priv->raw_link_id);
+ 
+@@ -447,7 +459,8 @@ static void wfx_tx_manage_pm(struct wfx_vif *wvif, struct ieee80211_hdr *hdr,
+ 		wvif->pspoll_mask &= mask;
+ 	}
+ 
+-	if (tx_priv->link_id == WFX_LINK_ID_AFTER_DTIM && !wvif->mcast_buffered) {
++	if (tx_priv->link_id == WFX_LINK_ID_AFTER_DTIM &&
++	    !wvif->mcast_buffered) {
+ 		wvif->mcast_buffered = true;
+ 		if (wvif->sta_asleep_mask)
+ 			schedule_work(&wvif->mcast_start_work);
+@@ -464,9 +477,12 @@ static void wfx_tx_manage_pm(struct wfx_vif *wvif, struct ieee80211_hdr *hdr,
+ 		ieee80211_sta_set_buffered(sta, tx_priv->tid, true);
+ }
+ 
+-static uint8_t wfx_tx_get_raw_link_id(struct wfx_vif *wvif, struct ieee80211_sta *sta, struct ieee80211_hdr *hdr)
++static uint8_t wfx_tx_get_raw_link_id(struct wfx_vif *wvif,
++				      struct ieee80211_sta *sta,
++				      struct ieee80211_hdr *hdr)
+ {
+-	struct wfx_sta_priv *sta_priv = sta ? (struct wfx_sta_priv *) &sta->drv_priv : NULL;
++	struct wfx_sta_priv *sta_priv =
++		sta ? (struct wfx_sta_priv *) &sta->drv_priv : NULL;
+ 	const u8 *da = ieee80211_get_DA(hdr);
+ 	int ret;
+ 
+@@ -505,8 +521,11 @@ static void wfx_tx_fixup_rates(struct ieee80211_tx_rate *rates)
+ 	do {
+ 		finished = true;
+ 		for (i = 0; i < IEEE80211_TX_MAX_RATES - 1; i++) {
+-			if (rates[i + 1].idx == rates[i].idx && rates[i].idx != -1) {
+-				rates[i].count =  max_t(int, rates[i].count, rates[i + 1].count);
++			if (rates[i + 1].idx == rates[i].idx &&
++			    rates[i].idx != -1) {
++				rates[i].count =
++					max_t(int, rates[i].count,
++					      rates[i + 1].count);
+ 				rates[i + 1].idx = -1;
+ 				rates[i + 1].count = 0;
+ 
+@@ -523,12 +542,14 @@ static void wfx_tx_fixup_rates(struct ieee80211_tx_rate *rates)
+ 		rates[i].flags &= ~IEEE80211_TX_RC_SHORT_GI;
+ }
+ 
+-static uint8_t wfx_tx_get_rate_id(struct wfx_vif *wvif, struct ieee80211_tx_info *tx_info)
++static uint8_t wfx_tx_get_rate_id(struct wfx_vif *wvif,
++				  struct ieee80211_tx_info *tx_info)
+ {
+ 	bool tx_policy_renew = false;
+ 	uint8_t rate_id;
+ 
+-	rate_id = wfx_tx_policy_get(wvif, tx_info->driver_rates, &tx_policy_renew);
++	rate_id = wfx_tx_policy_get(wvif,
++				    tx_info->driver_rates, &tx_policy_renew);
+ 	WARN(rate_id == WFX_INVALID_RATE_ID, "unable to get a valid Tx policy");
+ 
+ 	if (tx_policy_renew) {
+@@ -584,7 +605,8 @@ static int wfx_tx_get_icv_len(struct ieee80211_key_conf *hw_key)
+ 	return hw_key->icv_len + mic_space;
+ }
+ 
+-static int wfx_tx_inner(struct wfx_vif *wvif, struct ieee80211_sta *sta, struct sk_buff *skb)
++static int wfx_tx_inner(struct wfx_vif *wvif, struct ieee80211_sta *sta,
++			struct sk_buff *skb)
+ {
+ 	struct hif_msg *hif_msg;
+ 	struct hif_req_tx *req;
+@@ -594,7 +616,8 @@ static int wfx_tx_inner(struct wfx_vif *wvif, struct ieee80211_sta *sta, struct
+ 	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *)skb->data;
+ 	int queue_id = tx_info->hw_queue;
+ 	size_t offset = (size_t) skb->data & 3;
+-	int wmsg_len = sizeof(struct hif_msg) + sizeof(struct hif_req_tx) + offset;
++	int wmsg_len = sizeof(struct hif_msg) +
++			sizeof(struct hif_req_tx) + offset;
+ 
+ 	WARN(queue_id >= IEEE80211_NUM_ACS, "unsupported queue_id");
+ 	wfx_tx_fixup_rates(tx_info->driver_rates);
+@@ -632,7 +655,8 @@ static int wfx_tx_inner(struct wfx_vif *wvif, struct ieee80211_sta *sta, struct
+ 
+ 	// Fill tx request
+ 	req = (struct hif_req_tx *)hif_msg->body;
+-	req->packet_id = queue_id << 16 | IEEE80211_SEQ_TO_SN(le16_to_cpu(hdr->seq_ctrl));
++	req->packet_id = queue_id << 16 |
++			 IEEE80211_SEQ_TO_SN(le16_to_cpu(hdr->seq_ctrl));
+ 	req->data_flags.fc_offset = offset;
+ 	req->queue_id.peer_sta_id = tx_priv->raw_link_id;
+ 	// Queue index are inverted between firmware and Linux
+@@ -655,7 +679,8 @@ void wfx_tx(struct ieee80211_hw *hw, struct ieee80211_tx_control *control,
+ 	struct ieee80211_sta *sta = control ? control->sta : NULL;
+ 	struct ieee80211_tx_info *tx_info = IEEE80211_SKB_CB(skb);
+ 	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *)skb->data;
+-	size_t driver_data_room = FIELD_SIZEOF(struct ieee80211_tx_info, rate_driver_data);
++	size_t driver_data_room = FIELD_SIZEOF(struct ieee80211_tx_info,
++					       rate_driver_data);
+ 
+ 	compiletime_assert(sizeof(struct wfx_tx_priv) <= driver_data_room,
+ 			   "struct tx_priv is too large");
+@@ -692,12 +717,15 @@ void wfx_tx_confirm_cb(struct wfx_vif *wvif, struct hif_cnf_tx *arg)
+ 
+ 	skb = wfx_pending_get(wvif->wdev, arg->packet_id);
+ 	if (!skb) {
+-		dev_warn(wvif->wdev->dev, "received unknown packet_id (%#.8x) from chip\n", arg->packet_id);
++		dev_warn(wvif->wdev->dev,
++			 "received unknown packet_id (%#.8x) from chip\n",
++			 arg->packet_id);
+ 		return;
+ 	}
+ 	tx_info = IEEE80211_SKB_CB(skb);
+ 	tx_priv = wfx_skb_tx_priv(skb);
+-	_trace_tx_stats(arg, skb, wfx_pending_get_pkt_us_delay(wvif->wdev, skb));
++	_trace_tx_stats(arg, skb,
++			wfx_pending_get_pkt_us_delay(wvif->wdev, skb));
+ 
+ 	// You can touch to tx_priv, but don't touch to tx_info->status.
+ 	tx_count = arg->ack_failures;
+@@ -710,9 +738,12 @@ void wfx_tx_confirm_cb(struct wfx_vif *wvif, struct hif_cnf_tx *arg)
+ 		if (tx_count < rate->count && arg->status && arg->ack_failures)
+ 			dev_dbg(wvif->wdev->dev, "all retries were not consumed: %d != %d\n",
+ 				rate->count, tx_count);
+-		if (tx_count <= rate->count && tx_count && arg->txed_rate != wfx_get_hw_rate(wvif->wdev, rate))
+-			dev_dbg(wvif->wdev->dev, "inconsistent tx_info rates: %d != %d\n",
+-				arg->txed_rate, wfx_get_hw_rate(wvif->wdev, rate));
++		if (tx_count <= rate->count && tx_count &&
++		    arg->txed_rate != wfx_get_hw_rate(wvif->wdev, rate))
++			dev_dbg(wvif->wdev->dev,
++				"inconsistent tx_info rates: %d != %d\n",
++				arg->txed_rate,
++				wfx_get_hw_rate(wvif->wdev, rate));
+ 		if (tx_count > rate->count) {
+ 			tx_count -= rate->count;
+ 		} else if (!tx_count) {
+@@ -724,7 +755,8 @@ void wfx_tx_confirm_cb(struct wfx_vif *wvif, struct hif_cnf_tx *arg)
+ 		}
+ 	}
+ 	if (tx_count)
+-		dev_dbg(wvif->wdev->dev, "%d more retries than expected\n", tx_count);
++		dev_dbg(wvif->wdev->dev,
++			"%d more retries than expected\n", tx_count);
+ 	skb_trim(skb, skb->len - wfx_tx_get_icv_len(tx_priv->hw_key));
+ 
+ 	// From now, you can touch to tx_info->status, but do not touch to
+@@ -734,9 +766,11 @@ void wfx_tx_confirm_cb(struct wfx_vif *wvif, struct hif_cnf_tx *arg)
+ 	memset(tx_info->pad, 0, sizeof(tx_info->pad));
+ 
+ 	if (!arg->status) {
+-		if (wvif->bss_loss_state && arg->packet_id == wvif->bss_loss_confirm_id)
++		if (wvif->bss_loss_state &&
++		    arg->packet_id == wvif->bss_loss_confirm_id)
+ 			wfx_cqm_bssloss_sm(wvif, 0, 1, 0);
+-		tx_info->status.tx_time = arg->media_delay - arg->tx_queue_delay;
++		tx_info->status.tx_time =
++		arg->media_delay - arg->tx_queue_delay;
+ 		if (tx_info->flags & IEEE80211_TX_CTL_NO_ACK)
+ 			tx_info->flags |= IEEE80211_TX_STAT_NOACK_TRANSMITTED;
+ 		else
+@@ -752,7 +786,8 @@ void wfx_tx_confirm_cb(struct wfx_vif *wvif, struct hif_cnf_tx *arg)
+ 		wfx_suspend_resume(wvif, &suspend);
+ 		tx_info->flags |= IEEE80211_TX_STAT_TX_FILTERED;
+ 	} else {
+-		if (wvif->bss_loss_state && arg->packet_id == wvif->bss_loss_confirm_id)
++		if (wvif->bss_loss_state &&
++		    arg->packet_id == wvif->bss_loss_confirm_id)
+ 			wfx_cqm_bssloss_sm(wvif, 0, 0, 1);
+ 	}
+ 	wfx_pending_remove(wvif->wdev, skb);
+@@ -790,7 +825,9 @@ void wfx_skb_dtor(struct wfx_dev *wdev, struct sk_buff *skb)
+ 	struct hif_msg *hif = (struct hif_msg *)skb->data;
+ 	struct hif_req_tx *req = (struct hif_req_tx *)hif->body;
+ 	struct wfx_vif *wvif = wdev_to_wvif(wdev, hif->interface);
+-	unsigned int offset = sizeof(struct hif_req_tx) + sizeof(struct hif_msg) + req->data_flags.fc_offset;
++	unsigned int offset = sizeof(struct hif_req_tx) +
++				sizeof(struct hif_msg) +
++				req->data_flags.fc_offset;
+ 
+ 	WARN_ON(!wvif);
+ 	skb_pull(skb, offset);
 -- 
 2.21.0
 
