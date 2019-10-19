@@ -2,174 +2,95 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5F3CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 14:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E89CA9EAB
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 14:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5E8721835
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 14:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8727222BD
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 14:07:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="mQUAaPV8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u2z5pF25"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726136AbfJSOHf (ORCPT
+        id S1726167AbfJSOHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 10:07:35 -0400
-Received: from mout.web.de ([212.227.15.14]:60475 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbfJSOHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 10:07:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1571494016;
-        bh=goxpnIqn08LvtbB+mF1ScYlAdurBJ4Yjq07d+k9DSyg=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=mQUAaPV8V7lknvytzxgLveYBSFze0XgoF9OUuLaxGZOcuXSERdNcTrCWSIFgow13+
-         r93v1LUWxbv8zlqVEMGL99ZfOPc8hJauI81YN3dAOlW1mUN7DyOcivbKNJHWmgCb6n
-         9JHhiVa1A5f+NcDOSrc++0Kdr8mvrVD/oZD8E2gY=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.29.47]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LxaUl-1hx1Rr1QEt-017Ec9; Sat, 19
- Oct 2019 16:06:56 +0200
-Subject: Re: coccinelle: api/devm_platform_ioremap_resource: remove useless
- script
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Himanshu Jha <himanshujha199640@gmail.com>,
-        kernel-janitors@vger.kernel.org,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Julia Lawall <Julia.Lawall@lip6.fr>, Arnd Bergmann <arnd@arndb.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        YueHaibing <yuehaibing@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191017142237.9734-1-alexandre.belloni@bootlin.com>
- <81269cd6-e26d-b8aa-cf17-3a2285851564@web.de>
- <20191019120941.GL3125@piout.net>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <389d4ad6-7f57-2060-f00a-ac2295052b22@web.de>
-Date:   Sat, 19 Oct 2019 16:06:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Sat, 19 Oct 2019 10:07:48 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39961 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfJSOHs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 19 Oct 2019 10:07:48 -0400
+Received: by mail-wm1-f65.google.com with SMTP id b24so8618091wmj.5
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 07:07:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=p7Q5YgxIlsTOJ6RN4Gx4aIi4gFkJcajKi+6SvF9kn/0=;
+        b=u2z5pF250EIkte8lyu3Ud+41Bfg4Xea7dGxk3D+jBXT0gHXPBYH9VVaD3TxBHfA881
+         Cd3V9utv9g4a1wc56H+4/cEQp8oNWsXiuBmMF3YB92lffUuFSi2qRO1Euq3z7s0prnSk
+         Y1NACEZccO7vIpybvASZjcVifQ8NVXMB6U/ngK8IsG7dOS8nYgCyMjeWC2zDy5XWwf9v
+         mRBTngY0mj5t6SOMIhPBske3Z/mReI+wmSmd70MlXkVxd3MNeQibNq3MizisP2SPKrVf
+         tpvns7yRRNyx5+vxyhoHMx/yeQcEsi476a7sYwhE7/apT8tocqn6hBM+9cnc50eHu0Cm
+         VhHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=p7Q5YgxIlsTOJ6RN4Gx4aIi4gFkJcajKi+6SvF9kn/0=;
+        b=B6ZQmVuXfM53DOlU0UEH/8guJ9vnjpvJNg9/PhKTblU2FqowqRWJlH/bTcDf6uy7N4
+         cWPk7+3yziYpUu4Mg30Z1gEgURP6ScmbjBb4SFeTBc3pH1glFObTduayifFy10khqm1X
+         EZM6C8VrikS8xgTu2VSyPTpn4U5MlgJ700LYlfU12P0dhOMXX2d5VS8uGk7aF5d342ki
+         HPdBptHmStDFX9W+/4UknI/5KuCdwW/bNGYMjEeVxgEhKsSF6037LunxgdPYTQxQhzBo
+         Aw4m2ATXpjmeWeYebWxYfh9EFTDyv9+xh3gkwxpldenaPOLYWDGL/yHhDJeYNqsNkPYS
+         GD1g==
+X-Gm-Message-State: APjAAAXVdD9T4MBZMMS72Rz3o9F7zGzAp1Orkkw3oMtqkUr77A5y09fz
+        0hcj2dr7KWSCUPpgyJOl5w==
+X-Google-Smtp-Source: APXvYqxtjRpbCww16AMVNk3tJbdUfa7U59DGmNm1JpB6NrtOCrVeSeMPlsYvSBPpcQp30APalPxJ7A==
+X-Received: by 2002:a1c:1bc5:: with SMTP id b188mr12424365wmb.88.1571494064634;
+        Sat, 19 Oct 2019 07:07:44 -0700 (PDT)
+Received: from ninjahub.lan (host-92-23-80-57.as13285.net. [92.23.80.57])
+        by smtp.googlemail.com with ESMTPSA id t4sm7893080wrm.13.2019.10.19.07.07.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 19 Oct 2019 07:07:43 -0700 (PDT)
+From:   Jules Irenge <jbi.octave@gmail.com>
+To:     outreachy-kernel@googlegroups.com
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        jerome.pouiller@silabs.com, linux-kernel@vger.kernel.org,
+        Jules Irenge <jbi.octave@gmail.com>
+Subject: [PATCH v1 0/5]  staging: wfx: fix checkpatch warnings
+Date:   Sat, 19 Oct 2019 15:07:14 +0100
+Message-Id: <20191019140719.2542-1-jbi.octave@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20191019120941.GL3125@piout.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:nxbycm+4JVDolwO+UCZRu+C+DlyZ+YhblHTz+cXQZCUM6R8yjl6
- Qe9+jfZh/LA7uyxJ+UV3SOfmjLo+RTt/8G9RgCiAljs9YdBMF7xPgx7gVEsIH6RSjMGk3dD
- DuBb8i0E74ilusmzVGK2BFxhiVO9bgCLpleEJdvri7qkFOnKiXKjbQizxfRdvR+UEwwataD
- ZfBsW2C1a8YHUOpliVLhA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:c7m4hD3KMWY=:zJuWbf6rH4BoluSt+VZLy4
- ij2apV9nVQwlZ/7th5UkD1FLCHmNFZR+0UVuP6wLsaJ95P/F5IfKrMyB6Vb9FA8e9/HnJp7Nf
- nnzh7DyYwXaGJjOIF/qxPxtoEhmcvZ5ni68g+wuKdZVPmehMNrcwvkFXfJNnlBPh5XB3fdzIq
- uUDswuz0A22dUBHkdoJnSXF7RjFmlQd8yvtcmMN8kt9Drj2MOAU7zSjDh5qLAGTnT2LzOgASY
- qYNVBNOeITofBRKuqZGdWkydjOHrg2iGO+TFTg5JPTFvqQpZbdVcNlGD1TLCJ+gGWNUcbAHd/
- F9cqdh5pgpUnt5BGquH0futP8m7W1Xx7oSio04LN2MZzPMnxZ3LSTxK8xr+znZ2Deg3eFuWJg
- 3zQKaUD1sTsNXBAhqmacBQTN3heLMPTZldXCiYq+cu3kEmafqTMlWfw7QMQ8hpnLnZ05rk5EF
- 6aKrAZGKKMi9TAl/8T45y/NTqLTDDWkbmQ6QmoTAXLNx9qozkr9D3P84cYK5P4/k9Z9T5y+8K
- g10G9D0MkmvcIGBBTVlDcP0K1Jbkl+fCik7UL3Al9ygfuHqe/ELEKX+uKOV/cIxcFi6zrf1vB
- F38zGPyEZHWCiRk9UEIecDAggSpvOd0WMn7vfjqfouGiWjkJj+biSyCTnEAvBA65mbPDyJBPx
- xULH+YKe+v+sdN+Y7V9AItbc8yZ6GW3AlfUSpX2g9nDJYlmXy767LUBkcNSpWbIr/HMVrGVIE
- MAR171W3YTyJ/l/iy+tS3+uL3+ihijyaJWfDggEgS2IwxXpQLe7My9XxqfvqsMpyYTKcO+LcZ
- W2zlbUWqA4I7wBlxQkwdWKI5/2egOe67eI7TQ/lSz9cCC3aN0WMDcw9SfQbsnMsXIdWxbCJaf
- 9VpEjIhxHRQe0sgH0Mg1Qzc+GsjiCZ5HpKrBD50PXEB/HUaVmgWqR7p9VhxkUrYIJ7JqATGeL
- pxPoYbLgEC8x+RFvRGd39VlKjmgmUb1ijRVKeGpHLYkmAonPynZApffSc5y8Srs2nb3ZEEymM
- OyJv0Suj26b/2uEL4t3HnocVaBA8Yk9qgZvTp8pd/xq+8G01H5Xk93tR4uJLTT3ZaF+4nMuCZ
- bKyIg6DZLx97JPlzfHQjfWbzTKpY56humZiA0vug64qSwsaHzwC+oFgRisqYdfBMShIbDxBbC
- Zkfq1vkr+W2jZb4LApfysBzE1oO75d3VTSoPo/dap9/zuo8tO+YE7LXSIe1hFng1JmvLsQsbK
- WhQ1W27DJcXx4qYpJ+s5ApLkNNJ0YKFPLDIOWzrrSHqxfj23srFMQPd7gQI0=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> What are the additional effects?
+Fix checkpatch warnings.
 
-I suggest to take another look at the commit 7945f929f1a77a1c8887a97ca07f8=
-7626858ff42
-("drivers: provide devm_platform_ioremap_resource()" from 2019-02-20)
-which triggered the discussed software evolution.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/dri=
-vers/base/platform.c
+Jules Irenge (5):
+  staging: wfx: fix warnings of no space is necessary
+  staging: wfx: fix warning of line over 80 characters
+  staging: wfx: fix warnings of logical continuation
+  staging: wfx: correct misspelled words
+  staging: wfx: fix warnings of alignment should match open parenthesis
 
+ drivers/staging/wfx/bh.c       |  25 ++++---
+ drivers/staging/wfx/bus.h      |   6 +-
+ drivers/staging/wfx/bus_sdio.c |   9 +--
+ drivers/staging/wfx/bus_spi.c  |  11 +--
+ drivers/staging/wfx/data_rx.c  |  35 +++++----
+ drivers/staging/wfx/data_tx.c  | 127 +++++++++++++++++++++------------
+ drivers/staging/wfx/data_tx.h  |   4 +-
+ drivers/staging/wfx/debug.c    |  14 ++--
+ 8 files changed, 143 insertions(+), 88 deletions(-)
 
-> What is the end goal of converting all the existing drivers to devm_plat=
-form_ioremap_resource?
+-- 
+2.21.0
 
-It was accepted by well-known Linux developers to put two function calls
-into another wrapper function.
-
-
-> This is not an evolution, it is unnecessary churn. Those patches have no
-> benefit and eat up very valuable reviewer time.
-
-I am curious if other contributors would like to describe more variants
-of software development opinions in affected areas.
-
-
->> How will such feedback influence the development and integration of
->> further scripts for the semantic patch language (Coccinelle software)?
->
-> There are a few other scripts that have no added value when applied to
-> existing code, like ptr_ret.cocci.
-
-Would you like to clarify concerns around such source code transformation
-approaches in more detail?
-
-Regards,
-Markus
