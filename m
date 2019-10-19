@@ -2,306 +2,185 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05602CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DDBCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFA4C222CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87F4721897
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:40:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571449239;
+	bh=g2s7DIla01Hjq/ujtCCOV9iLU60FNUozPmziSr01GAA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sm2G6xuw+iURVpFZJnj/srIpshwqwPu9GjRb+umzKr4bKzCQEC6E5Ql+0vtSD294C
+	 StQzIsrFjobygGhSEljmIKIj96As/tofwsWwxVrtZh+INen4hkpoFra6x7LQKbDH+b
+	 77cvy1KBTp3ns5qOvAk7bl7q1tT5o6Tjz2HZfBug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfJSBjc (ORCPT
+        id S1726557AbfJSBk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 21:39:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55076 "EHLO mx1.redhat.com"
+        Fri, 18 Oct 2019 21:40:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726195AbfJSBjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 21:39:32 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726195AbfJSBk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 21:40:26 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3B7FE18CB8E6;
-        Sat, 19 Oct 2019 01:39:27 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EFB0A19C7F;
-        Sat, 19 Oct 2019 01:39:06 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 21:39:04 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org
-Cc:     Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        eparis@parisplace.org, serge@hallyn.com, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, dwalsh@redhat.com, mpatel@redhat.com
-Subject: Re: [PATCH ghak90 V7 20/21] audit: add capcontid to set contid
- outside init_user_ns
-Message-ID: <20191019013904.uevmrzbmztsbhpnh@madcap2.tricolour.ca>
-References: <cover.1568834524.git.rgb@redhat.com>
- <214163d11a75126f610bcedfad67a4d89575dc77.1568834525.git.rgb@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <214163d11a75126f610bcedfad67a4d89575dc77.1568834525.git.rgb@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Sat, 19 Oct 2019 01:39:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CE1C21897;
+        Sat, 19 Oct 2019 01:40:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571449224;
+        bh=g2s7DIla01Hjq/ujtCCOV9iLU60FNUozPmziSr01GAA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LXRNUGRTCrrH1kM4V1G0z4mK+A4NqvpQnalanUdSuAz05Ko+0QKs/a1q1fIgVLaoL
+         QPncMLbw2xT32S4J2L7OsewKlJfObhx9Dw6HO3X7DmBe526Jr9i0Cek0wcFGqGOIve
+         JpiBTl0RB9y8VWLn8yFlgnhmXD5xJfvtaj0g+Fvw=
+Date:   Fri, 18 Oct 2019 18:40:24 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Michal Hocko <mhocko@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Borislav Petkov <bp@alien8.de>, Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] mm, meminit: Recalculate pcpu batch and high limits
+ after init completes
+Message-Id: <20191018184024.2bb1a69997a9365c5d4ccf1c@linux-foundation.org>
+In-Reply-To: <20191018140959.GK3321@techsingularity.net>
+References: <20191018105606.3249-1-mgorman@techsingularity.net>
+        <20191018105606.3249-3-mgorman@techsingularity.net>
+        <20191018130127.GP5017@dhcp22.suse.cz>
+        <20191018140959.GK3321@techsingularity.net>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-18 21:22, Richard Guy Briggs wrote:
-> Provide a mechanism similar to CAP_AUDIT_CONTROL to explicitly give a
-> process in a non-init user namespace the capability to set audit
-> container identifiers.
+On Fri, 18 Oct 2019 15:09:59 +0100 Mel Gorman <mgorman@techsingularity.net> wrote:
+
+> > > Cc: stable@vger.kernel.org # v4.15+
+> > 
+> > Hmm, are you sure about 4.15? Doesn't this go all the way down to
+> > deferred initialization? I do not see any recent changes on when
+> > setup_per_cpu_pageset is called.
+> > 
 > 
-> Use audit netlink message types AUDIT_GET_CAPCONTID 1027 and
-> AUDIT_SET_CAPCONTID 1028.  The message format includes the data
-> structure:
-> struct audit_capcontid_status {
->         pid_t   pid;
->         u32     enable;
-> };
+> No, I'm not 100% sure. It looks like this was always an issue from the
+> code but did not happen on at least one 4.12-based distribution kernel for
+> reasons that are non-obvious. Either way, the tag should have been "v4.1+"
 
-Paul, can I get a review of the general idea here to see if you're ok
-with this way of effectively extending CAP_AUDIT_CONTROL for the sake of
-setting contid from beyond the init user namespace where capable() can't
-reach and ns_capable() is meaningless for these purposes?
+I could mark
 
-Last weekend was Canadian Thanksgiving where I took an extra day for an
-annual bike trip and I'm buried to my neck in a complete kitchen gut
-(down to 1920 structural double brick and knob/tube wiring), but I've
-got fixes or responses to almost everything else you've raised which
-I'll post shortly.
+mm-pcp-share-common-code-between-memory-hotplug-and-percpu-sysctl-handler.patch
+mm-meminit-recalculate-pcpu-batch-and-high-limits-after-init-completes.patch
 
-Thanks!
+as Cc: <stable@vger.kernel.org>	[4.1+]
 
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> ---
->  include/linux/audit.h      | 14 +++++++
->  include/uapi/linux/audit.h |  2 +
->  kernel/audit.c             | 98 +++++++++++++++++++++++++++++++++++++++++++++-
->  kernel/audit.h             |  5 +++
->  4 files changed, 117 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/audit.h b/include/linux/audit.h
-> index 1ce27af686ea..dcc53e62e266 100644
-> --- a/include/linux/audit.h
-> +++ b/include/linux/audit.h
-> @@ -117,6 +117,7 @@ struct audit_task_info {
->  	kuid_t			loginuid;
->  	unsigned int		sessionid;
->  	struct audit_cont	*cont;
-> +	u32			capcontid;
->  #ifdef CONFIG_AUDITSYSCALL
->  	struct audit_context	*ctx;
->  #endif
-> @@ -224,6 +225,14 @@ static inline unsigned int audit_get_sessionid(struct task_struct *tsk)
->  	return tsk->audit->sessionid;
->  }
->  
-> +static inline u32 audit_get_capcontid(struct task_struct *tsk)
-> +{
-> +	if (!tsk->audit)
-> +		return 0;
-> +	return tsk->audit->capcontid;
-> +}
-> +
-> +extern int audit_set_capcontid(struct task_struct *tsk, u32 enable);
->  extern int audit_set_contid(struct task_struct *tsk, u64 contid);
->  
->  static inline u64 audit_get_contid(struct task_struct *tsk)
-> @@ -309,6 +318,11 @@ static inline unsigned int audit_get_sessionid(struct task_struct *tsk)
->  	return AUDIT_SID_UNSET;
->  }
->  
-> +static inline u32 audit_get_capcontid(struct task_struct *tsk)
-> +{
-> +	return 0;
-> +}
-> +
->  static inline u64 audit_get_contid(struct task_struct *tsk)
->  {
->  	return AUDIT_CID_UNSET;
-> diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
-> index eef42c8eea77..011b0a8ee9b2 100644
-> --- a/include/uapi/linux/audit.h
-> +++ b/include/uapi/linux/audit.h
-> @@ -78,6 +78,8 @@
->  #define AUDIT_GET_LOGINUID	1024	/* Get loginuid of a task */
->  #define AUDIT_SET_LOGINUID	1025	/* Set loginuid of a task */
->  #define AUDIT_GET_SESSIONID	1026	/* Set sessionid of a task */
-> +#define AUDIT_GET_CAPCONTID	1027	/* Get cap_contid of a task */
-> +#define AUDIT_SET_CAPCONTID	1028	/* Set cap_contid of a task */
->  
->  #define AUDIT_FIRST_USER_MSG	1100	/* Userspace messages mostly uninteresting to kernel */
->  #define AUDIT_USER_AVC		1107	/* We filter this differently */
-> diff --git a/kernel/audit.c b/kernel/audit.c
-> index a70c9184e5d9..7160da464849 100644
-> --- a/kernel/audit.c
-> +++ b/kernel/audit.c
-> @@ -1192,6 +1192,14 @@ static int audit_netlink_ok(struct sk_buff *skb, u16 msg_type)
->  	case AUDIT_GET_SESSIONID:
->  		return 0;
->  		break;
-> +	case AUDIT_GET_CAPCONTID:
-> +	case AUDIT_SET_CAPCONTID:
-> +	case AUDIT_GET_CONTID:
-> +	case AUDIT_SET_CONTID:
-> +		if (!netlink_capable(skb, CAP_AUDIT_CONTROL) && !audit_get_capcontid(current))
-> +			return -EPERM;
-> +		return 0;
-> +		break;
->  	default:  /* do more checks below */
->  		break;
->  	}
-> @@ -1227,8 +1235,6 @@ static int audit_netlink_ok(struct sk_buff *skb, u16 msg_type)
->  	case AUDIT_TTY_SET:
->  	case AUDIT_TRIM:
->  	case AUDIT_MAKE_EQUIV:
-> -	case AUDIT_GET_CONTID:
-> -	case AUDIT_SET_CONTID:
->  	case AUDIT_SET_LOGINUID:
->  		/* Only support auditd and auditctl in initial pid namespace
->  		 * for now. */
-> @@ -1304,6 +1310,23 @@ static int audit_get_contid_status(struct sk_buff *skb)
->  	return 0;
->  }
->  
-> +static int audit_get_capcontid_status(struct sk_buff *skb)
-> +{
-> +	struct nlmsghdr *nlh = nlmsg_hdr(skb);
-> +	u32 seq = nlh->nlmsg_seq;
-> +	void *data = nlmsg_data(nlh);
-> +	struct audit_capcontid_status cs;
-> +
-> +	cs.pid = ((struct audit_capcontid_status *)data)->pid;
-> +	if (!cs.pid)
-> +		cs.pid = task_tgid_nr(current);
-> +	rcu_read_lock();
-> +	cs.enable = audit_get_capcontid(find_task_by_vpid(cs.pid));
-> +	rcu_read_unlock();
-> +	audit_send_reply(skb, seq, AUDIT_GET_CAPCONTID, 0, 0, &cs, sizeof(cs));
-> +	return 0;
-> +}
-> +
->  struct audit_loginuid_status { uid_t loginuid; };
->  
->  static int audit_get_loginuid_status(struct sk_buff *skb)
-> @@ -1779,6 +1802,27 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
->  		if (err)
->  			return err;
->  		break;
-> +	case AUDIT_SET_CAPCONTID: {
-> +		struct audit_capcontid_status *s = data;
-> +		struct task_struct *tsk;
-> +
-> +		/* check if new data is valid */
-> +		if (nlmsg_len(nlh) < sizeof(*s))
-> +			return -EINVAL;
-> +		tsk = find_get_task_by_vpid(s->pid);
-> +		if (!tsk)
-> +			return -EINVAL;
-> +
-> +		err = audit_set_capcontid(tsk, s->enable);
-> +		put_task_struct(tsk);
-> +		return err;
-> +		break;
-> +	}
-> +	case AUDIT_GET_CAPCONTID:
-> +		err = audit_get_capcontid_status(skb);
-> +		if (err)
-> +			return err;
-> +		break;
->  	case AUDIT_SET_LOGINUID: {
->  		uid_t *loginuid = data;
->  		kuid_t kloginuid;
-> @@ -2711,6 +2755,56 @@ static struct task_struct *audit_cont_owner(struct task_struct *tsk)
->  	return NULL;
->  }
->  
-> +int audit_set_capcontid(struct task_struct *task, u32 enable)
-> +{
-> +	u32 oldcapcontid;
-> +	int rc = 0;
-> +	struct audit_buffer *ab;
-> +	uid_t uid;
-> +	struct tty_struct *tty;
-> +	char comm[sizeof(current->comm)];
-> +
-> +	if (!task->audit)
-> +		return -ENOPROTOOPT;
-> +	oldcapcontid = audit_get_capcontid(task);
-> +	/* if task is not descendant, block */
-> +	if (task == current)
-> +		rc = -EBADSLT;
-> +	else if (!task_is_descendant(current, task))
-> +		rc = -EXDEV;
-> +	else if (current_user_ns() == &init_user_ns) {
-> +		if (!capable(CAP_AUDIT_CONTROL) && !audit_get_capcontid(current))
-> +			rc = -EPERM;
-> +	}
-> +	if (!rc)
-> +		task->audit->capcontid = enable;
-> +
-> +	if (!audit_enabled)
-> +		return rc;
-> +
-> +	ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_SET_CAPCONTID);
-> +	if (!ab)
-> +		return rc;
-> +
-> +	uid = from_kuid(&init_user_ns, task_uid(current));
-> +	tty = audit_get_tty();
-> +	audit_log_format(ab,
-> +			 "opid=%d capcontid=%u old-capcontid=%u pid=%d uid=%u auid=%u tty=%s ses=%u",
-> +			 task_tgid_nr(task), enable, oldcapcontid,
-> +			 task_tgid_nr(current), uid,
-> +			 from_kuid(&init_user_ns, audit_get_loginuid(current)),
-> +			 tty ? tty_name(tty) : "(none)",
-> +			 audit_get_sessionid(current));
-> +	audit_put_tty(tty);
-> +	audit_log_task_context(ab);
-> +	audit_log_format(ab, " comm=");
-> +	audit_log_untrustedstring(ab, get_task_comm(comm, current));
-> +	audit_log_d_path_exe(ab, current->mm);
-> +	audit_log_format(ab, " res=%d", !rc);
-> +	audit_log_end(ab);
-> +	return rc;
-> +}
-> +
->  /*
->   * audit_set_contid - set current task's audit contid
->   * @task: target task
-> diff --git a/kernel/audit.h b/kernel/audit.h
-> index cb25341c1a0f..ac4694e88485 100644
-> --- a/kernel/audit.h
-> +++ b/kernel/audit.h
-> @@ -231,6 +231,11 @@ struct audit_contid_status {
->  	u64	id;
->  };
->  
-> +struct audit_capcontid_status {
-> +	pid_t	pid;
-> +	u32	enable;
-> +};
-> +
->  #define AUDIT_CONTID_DEPTH	5
->  
->  /* Indicates that audit should log the full pathname. */
-> -- 
-> 1.8.3.1
-> 
+But for backporting purposes it's a bit cumbersome that [2/3] is the
+important patch.  I think I'll switch the ordering so that
+mm-meminit-recalculate-pcpu-batch-and-high-limits-after-init-completes.patch
+is the first patch and the other two can be queued for 5.5-rc1, OK?
 
-- RGB
+Also, is a Reported-by:Matt appropriate here?
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+
+From: Mel Gorman <mgorman@techsingularity.net>
+Subject: mm, meminit: recalculate pcpu batch and high limits after init completes
+
+Deferred memory initialisation updates zone->managed_pages during the
+initialisation phase but before that finishes, the per-cpu page allocator
+(pcpu) calculates the number of pages allocated/freed in batches as well
+as the maximum number of pages allowed on a per-cpu list.  As
+zone->managed_pages is not up to date yet, the pcpu initialisation
+calculates inappropriately low batch and high values.
+
+This increases zone lock contention quite severely in some cases with the
+degree of severity depending on how many CPUs share a local zone and the
+size of the zone.  A private report indicated that kernel build times were
+excessive with extremely high system CPU usage.  A perf profile indicated
+that a large chunk of time was lost on zone->lock contention.
+
+This patch recalculates the pcpu batch and high values after deferred
+initialisation completes on each node.  It was tested on a 2-socket AMD
+EPYC 2 machine using a kernel compilation workload -- allmodconfig and all
+available CPUs.
+
+mmtests configuration: config-workload-kernbench-max Configuration was
+modified to build on a fresh XFS partition.
+
+kernbench
+                                5.4.0-rc3              5.4.0-rc3
+                                  vanilla         resetpcpu-v1r1
+Amean     user-256    13249.50 (   0.00%)    15928.40 * -20.22%*
+Amean     syst-256    14760.30 (   0.00%)     4551.77 *  69.16%*
+Amean     elsp-256      162.42 (   0.00%)      118.46 *  27.06%*
+Stddev    user-256       42.97 (   0.00%)       50.83 ( -18.30%)
+Stddev    syst-256      336.87 (   0.00%)       33.70 (  90.00%)
+Stddev    elsp-256        2.46 (   0.00%)        0.81 (  67.01%)
+
+                   5.4.0-rc3   5.4.0-rc3
+                     vanillaresetpcpu-v1r1
+Duration User       39766.24    47802.92
+Duration System     44298.10    13671.93
+Duration Elapsed      519.11      387.65
+
+The patch reduces system CPU usage by 69.16% and total build time by
+27.06%.  The variance of system CPU usage is also much reduced.
+
+Link: http://lkml.kernel.org/r/20191018105606.3249-3-mgorman@techsingularity.net
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+Tested-by: Matt Fleming <matt@codeblueprint.co.uk>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: <stable@vger.kernel.org>	[4.1+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
+
+ mm/page_alloc.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+--- a/mm/page_alloc.c~mm-meminit-recalculate-pcpu-batch-and-high-limits-after-init-completes
++++ a/mm/page_alloc.c
+@@ -1818,6 +1818,14 @@ static int __init deferred_init_memmap(v
+ 	 */
+ 	while (spfn < epfn)
+ 		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
++
++	/*
++	 * The number of managed pages has changed due to the initialisation
++	 * so the pcpu batch and high limits needs to be updated or the limits
++	 * will be artificially small.
++	 */
++	zone_pcp_update(zone);
++
+ zone_empty:
+ 	pgdat_resize_unlock(pgdat, &flags);
+ 
+@@ -8514,7 +8522,6 @@ void free_contig_range(unsigned long pfn
+ 	WARN(count != 0, "%d pages are still in use!\n", count);
+ }
+ 
+-#ifdef CONFIG_MEMORY_HOTPLUG
+ /*
+  * The zone indicated has a new number of managed_pages; batch sizes and percpu
+  * page high values need to be recalulated.
+@@ -8528,7 +8535,6 @@ void __meminit zone_pcp_update(struct zo
+ 				per_cpu_ptr(zone->pageset, cpu));
+ 	mutex_unlock(&pcp_batch_high_lock);
+ }
+-#endif
+ 
+ void zone_pcp_reset(struct zone *zone)
+ {
+_
+
