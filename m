@@ -2,227 +2,232 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE6ECA9EAC
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 18:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0342BCA9EAB
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 18:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFC4B21925
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 18:15:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A0SZSwDA"
+	by mail.kernel.org (Postfix) with ESMTP id D148821D7C
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 18:27:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbfJSSPc (ORCPT
+        id S1726152AbfJSS1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 14:15:32 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39959 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbfJSSPc (ORCPT
+        Sat, 19 Oct 2019 14:27:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7876 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726078AbfJSS1i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 14:15:32 -0400
-Received: by mail-pf1-f193.google.com with SMTP id x127so5800534pfb.7;
-        Sat, 19 Oct 2019 11:15:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Hpln9PUIoPv5oft5uSHAYxpNgr53ZiQaS7Vg+5P2qqU=;
-        b=A0SZSwDAcdMl3Kqqq+5k6AZh6epqsi6Nphk6a/+Z00/PwLSzZMeKVIl0vFnoOF8NKM
-         2+Iq5a9l+R5igupTWpXRxpH1QrQMC0ArIr9aBPUMVDApn1o2NowpcIkBlItjVMl7OWRb
-         5FyUH4ddmBXyCpJJ7HVPSFq6b+I+4N3upeJHH+bWRyir0jDbEJ2WaKcwXaePmD0aOrav
-         jcEuulUBdngtkCl8R0v93EHH7YcW4A3TFjN6McIYOLwnGXWMVB7MX4X2IXAG8ow+nW/V
-         ghmfoOXPEPJVV2wliFrqo/Izr37t55zaLJ3m/QDKNkkllKy2Xontcj32hIe+hHoLSoRS
-         eRJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Hpln9PUIoPv5oft5uSHAYxpNgr53ZiQaS7Vg+5P2qqU=;
-        b=HCSW9QaAIHr4tkH9x6vjF4K/XUj3a35LDDn30Fkoj8Tr6fxlcYgkwAfseH3hVCRJO4
-         MlyWMxWg9fw/PjobLA17kiFWwt7kn1wfJIMorXWuA08Uybpyt2w51fm343I2osseK2Th
-         jgzDQROTS5HkTu8PzMIp46wZl6O2GEJYQYaOlyCu6CeXjuDIaApTYScAnjj6q98Fs5B2
-         SHVWt81qwoKSl9ShMeZx1WkoLfUP+Bv8CfFG98avulObIPsOwBLhzv5kWW1ADBaEB1zY
-         mnggFjymn8nf4F0b/5GAhTnwAOBuXIu4PUPXRPlp6vICKWiJS3113szbOEzPx926n3GQ
-         9BIw==
-X-Gm-Message-State: APjAAAUrKQo9jpgup4AabVY0NPEFhhiZjjQynbMTWIig7xo0rG85tLsa
-        61b6LZBhnvH3wv9n3n6s//8=
-X-Google-Smtp-Source: APXvYqyVUOx8svIWYOi2E2AqQLkghA2rODjFQGz6vtBg5bXahSguxuVAcNkSZDOU13dQaSqqsDooSg==
-X-Received: by 2002:a17:90a:aa81:: with SMTP id l1mr141147pjq.73.1571508930842;
-        Sat, 19 Oct 2019 11:15:30 -0700 (PDT)
-Received: from [192.168.86.235] (c-73-241-150-70.hsd1.ca.comcast.net. [73.241.150.70])
-        by smtp.gmail.com with ESMTPSA id g35sm9462179pgg.42.2019.10.19.11.15.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 19 Oct 2019 11:15:29 -0700 (PDT)
-Subject: Re: [PATCH] net: fix sk_page_frag() recursion from memory reclaim
-To:     Tejun Heo <tj@kernel.org>, "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, kernel-team@fb.com,
-        linux-kernel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>
-References: <20191019170141.GQ18794@devbig004.ftw2.facebook.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <dc6ff540-e7fc-695e-ed71-2bc0a92a0a9b@gmail.com>
-Date:   Sat, 19 Oct 2019 11:15:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sat, 19 Oct 2019 14:27:38 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9JI6gdE139327;
+        Sat, 19 Oct 2019 14:27:14 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vqv3tfb2p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 19 Oct 2019 14:27:14 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x9JI75Hl140249;
+        Sat, 19 Oct 2019 14:27:14 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vqv3tfb2e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 19 Oct 2019 14:27:13 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x9JIPMQS000439;
+        Sat, 19 Oct 2019 18:27:13 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma04wdc.us.ibm.com with ESMTP id 2vqt46msw1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 19 Oct 2019 18:27:13 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9JIRBnc63373698
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 19 Oct 2019 18:27:11 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 13B36136060;
+        Sat, 19 Oct 2019 18:27:11 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 79FD3136051;
+        Sat, 19 Oct 2019 18:27:08 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.85.146.216])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Sat, 19 Oct 2019 18:27:08 +0000 (GMT)
+Subject: Re: [PATCH v7 4/8] powerpc/ima: add measurement rules to ima arch
+ specific policy
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>
+References: <1570497267-13672-1-git-send-email-nayna@linux.ibm.com>
+ <1570497267-13672-5-git-send-email-nayna@linux.ibm.com>
+ <8736fuuu0x.fsf@mpe.ellerman.id.au>
+From:   Nayna <nayna@linux.vnet.ibm.com>
+Message-ID: <6f1d20dc-fb1e-58ed-a060-1537c19beed0@linux.vnet.ibm.com>
+Date:   Sat, 19 Oct 2019 14:27:07 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20191019170141.GQ18794@devbig004.ftw2.facebook.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <8736fuuu0x.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-19_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910190171
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Michael,
 
 
-On 10/19/19 10:01 AM, Tejun Heo wrote:
-> From f0335a5d14d3596d36e3ffddb2fd4fa0dc6ca9c2 Mon Sep 17 00:00:00 2001
-> From: Tejun Heo <tj@kernel.org>
-> Date: Sat, 19 Oct 2019 09:10:57 -0700
-> 
-> sk_page_frag() optimizes skb_frag allocations by using per-task
-> skb_frag cache when it knows it's the only user.  The condition is
-> determined by seeing whether the socket allocation mask allows
-> blocking - if the allocation may block, it obviously owns the task's
-> context and ergo exclusively owns current->task_frag.
-> 
-> Unfortunately, this misses recursion through memory reclaim path.
-> Please take a look at the following backtrace.
-> 
->  [2] RIP: 0010:tcp_sendmsg_locked+0xccf/0xe10
->      ...
->      tcp_sendmsg+0x27/0x40
->      sock_sendmsg+0x30/0x40
->      sock_xmit.isra.24+0xa1/0x170 [nbd]
->      nbd_send_cmd+0x1d2/0x690 [nbd]
->      nbd_queue_rq+0x1b5/0x3b0 [nbd]
->      __blk_mq_try_issue_directly+0x108/0x1b0
->      blk_mq_request_issue_directly+0xbd/0xe0
->      blk_mq_try_issue_list_directly+0x41/0xb0
->      blk_mq_sched_insert_requests+0xa2/0xe0
->      blk_mq_flush_plug_list+0x205/0x2a0
->      blk_flush_plug_list+0xc3/0xf0
->  [1] blk_finish_plug+0x21/0x2e
->      _xfs_buf_ioapply+0x313/0x460
->      __xfs_buf_submit+0x67/0x220
->      xfs_buf_read_map+0x113/0x1a0
->      xfs_trans_read_buf_map+0xbf/0x330
->      xfs_btree_read_buf_block.constprop.42+0x95/0xd0
->      xfs_btree_lookup_get_block+0x95/0x170
->      xfs_btree_lookup+0xcc/0x470
->      xfs_bmap_del_extent_real+0x254/0x9a0
->      __xfs_bunmapi+0x45c/0xab0
->      xfs_bunmapi+0x15/0x30
->      xfs_itruncate_extents_flags+0xca/0x250
->      xfs_free_eofblocks+0x181/0x1e0
->      xfs_fs_destroy_inode+0xa8/0x1b0
->      destroy_inode+0x38/0x70
->      dispose_list+0x35/0x50
->      prune_icache_sb+0x52/0x70
->      super_cache_scan+0x120/0x1a0
->      do_shrink_slab+0x120/0x290
->      shrink_slab+0x216/0x2b0
->      shrink_node+0x1b6/0x4a0
->      do_try_to_free_pages+0xc6/0x370
->      try_to_free_mem_cgroup_pages+0xe3/0x1e0
->      try_charge+0x29e/0x790
->      mem_cgroup_charge_skmem+0x6a/0x100
->      __sk_mem_raise_allocated+0x18e/0x390
->      __sk_mem_schedule+0x2a/0x40
->  [0] tcp_sendmsg_locked+0x8eb/0xe10
->      tcp_sendmsg+0x27/0x40
->      sock_sendmsg+0x30/0x40
->      ___sys_sendmsg+0x26d/0x2b0
->      __sys_sendmsg+0x57/0xa0
->      do_syscall_64+0x42/0x100
->      entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> In [0], tcp_send_msg_locked() was using current->page_frag when it
-> called sk_wmem_schedule().  It already calculated how many bytes can
-> be fit into current->page_frag.  Due to memory pressure,
-> sk_wmem_schedule() called into memory reclaim path which called into
-> xfs and then IO issue path.  Because the filesystem in question is
-> backed by nbd, the control goes back into the tcp layer - back into
-> tcp_sendmsg_locked().
-> 
-> nbd sets sk_allocation to (GFP_NOIO | __GFP_MEMALLOC) which makes
-> sense - it's in the process of freeing memory and wants to be able to,
-> e.g., drop clean pages to make forward progress.  However, this
-> confused sk_page_frag() called from [2].  Because it only tests
-> whether the allocation allows blocking which it does, it now thinks
-> current->page_frag can be used again although it already was being
-> used in [0].
-> 
-> After [2] used current->page_frag, the offset would be increased by
-> the used amount.  When the control returns to [0],
-> current->page_frag's offset is increased and the previously calculated
-> number of bytes now may overrun the end of allocated memory leading to
-> silent memory corruptions.
-> 
-> Fix it by updating sk_page_frag() to test __GFP_MEMALLOC and not use
-> current->task_frag if set.
-> 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Cc: Josef Bacik <josef@toxicpanda.com>
-> Cc: stable@vger.kernel.org
-> ---
->  include/net/sock.h | 15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/net/sock.h b/include/net/sock.h
-> index 2c53f1a1d905..4e2ca38acc3c 100644
-> --- a/include/net/sock.h
-> +++ b/include/net/sock.h
-> @@ -2233,12 +2233,21 @@ struct sk_buff *sk_stream_alloc_skb(struct sock *sk, int size, gfp_t gfp,
->   * sk_page_frag - return an appropriate page_frag
->   * @sk: socket
->   *
-> - * If socket allocation mode allows current thread to sleep, it means its
-> - * safe to use the per task page_frag instead of the per socket one.
-> + * Use the per task page_frag instead of the per socket one for
-> + * optimization when we know there can be no other users.
-> + *
-> + * 1. The socket allocation mode allows current thread to sleep.  This is
-> + *    the sleepable context which owns the task page_frag.
-> + *
-> + * 2. The socket allocation mode doesn't indicate that the socket is being
-> + *    used to reclaim memory.  Memory reclaim may nest inside other socket
-> + *    operations and end up recursing into sk_page_frag() while it's
-> + *    already in use.
->   */
->  static inline struct page_frag *sk_page_frag(struct sock *sk)
->  {
-> -	if (gfpflags_allow_blocking(sk->sk_allocation))
-> +	if (gfpflags_allow_blocking(sk->sk_allocation) &&
-> +	    !(sk->sk_allocation & __GFP_MEMALLOC))
->  		return &current->task_frag;
->  
->  	return &sk->sk_frag;
-> 
+On 10/15/2019 07:29 AM, Michael Ellerman wrote:
+> Nayna Jain <nayna@linux.ibm.com> writes:
+>> This patch adds the measurement rules to the arch specific policies on
+>> trusted boot enabled systems.
+>>
+>> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+>> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+>> ---
+>>   arch/powerpc/kernel/ima_arch.c | 45 +++++++++++++++++++++++++++++++---
+>>   1 file changed, 42 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
+>> index c22d82965eb4..88bfe4a1a9a5 100644
+>> --- a/arch/powerpc/kernel/ima_arch.c
+>> +++ b/arch/powerpc/kernel/ima_arch.c
+>> @@ -12,8 +12,19 @@ bool arch_ima_get_secureboot(void)
+>>   	return is_powerpc_os_secureboot_enabled();
+>>   }
+>>   
+>> -/* Defines IMA appraise rules for secureboot */
+>> +/*
+>> + * The "arch_rules" contains both the securebot and trustedboot rules for adding
+>> + * the kexec kernel image and kernel modules file hashes to the IMA measurement
+>> + * list and verifying the file signatures against known good values.
+>> + *
+>> + * The "appraise_type=imasig|modsig" option allows the good signature to be
+>> + * stored as an xattr or as an appended signature. The "template=ima-modsig"
+>> + * option includes the appended signature, when available, in the IMA
+>> + * measurement list.
+>> + */
+>>   static const char *const arch_rules[] = {
+>> +	"measure func=KEXEC_KERNEL_CHECK template=ima-modsig",
+>> +	"measure func=MODULE_CHECK template=ima-modsig",
+>>   	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
+>>   #if !IS_ENABLED(CONFIG_MODULE_SIG_FORCE)
+>>   	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
+>> @@ -22,12 +33,40 @@ static const char *const arch_rules[] = {
+>>   };
+>>   
+>>   /*
+>> - * Returns the relevant IMA arch policies based on the system secureboot state.
+>> + * The "measure_rules" are enabled only on "trustedboot" enabled systems.
+>> + * These rules add the kexec kernel image and kernel modules file hashes to
+>> + * the IMA measurement list.
+>> + */
+>> +static const char *const measure_rules[] = {
+>> +	"measure func=KEXEC_KERNEL_CHECK",
+>> +	"measure func=MODULE_CHECK",
+> Why do these ones not have "template=ima-modsig" on the end?
 
-It seems compiler generates better code with :
+ima-modsig template is applicable only when IMA "collects" the appended 
+signatures. IMA can then include it in the measurement list.
 
-diff --git a/include/net/sock.h b/include/net/sock.h
-index ab905c4b1f0efd42ebdcae333b3f0a2c7c1b2248..56de6ac99f0952bd0bc003353c094ce3a5a852f4 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -2238,7 +2238,8 @@ struct sk_buff *sk_stream_alloc_skb(struct sock *sk, int size, gfp_t gfp,
-  */
- static inline struct page_frag *sk_page_frag(struct sock *sk)
- {
--       if (gfpflags_allow_blocking(sk->sk_allocation))
-+       if (likely((sk->sk_allocation & (__GFP_DIRECT_RECLAIM | __GFP_MEMALLOC)) ==
-+                   __GFP_DIRECT_RECLAIM))
-                return &current->task_frag;
- 
-        return &sk->sk_frag;
+>
+>> +	NULL
+>> +};
+>> +
+>> +/*
+>> + * Returns the relevant IMA arch policies based on the system secureboot
+>> + * and trustedboot state.
+>>    */
+>>   const char *const *arch_get_ima_policy(void)
+>>   {
+>> -	if (is_powerpc_os_secureboot_enabled())
+>> +	const char *const *rules;
+>> +	int offset = 0;
+>> +
+>> +	for (rules = arch_rules; *rules != NULL; rules++) {
+>> +		if (strncmp(*rules, "appraise", 8) == 0)
+>> +			break;
+>> +		offset++;
+>> +	}
+> This seems like kind of a hack, doesn't it? :)
+>
+> What we really want is three sets of rules isn't it? But some of them
+> are shared between the different sets. But they just have to be flat
+> arrays of strings.
+>
+> I think it would probably be cleaner to just use a #define for the
+> shared part of the rules, eg something like:
+>
+> #ifdef CONFIG_MODULE_SIG_FORCE
+> #define APPRAISE_MODULE
+> #else
+> #define APPRAISE_MODULE \
+> 	"appraise func=MODULE_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
+> #endif
+>
+> #define APPRAISE_KERNEL \
+> 	"appraise func=KEXEC_KERNEL_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig"
+>
+> #define MEASURE_KERNEL \
+> 	"measure func=KEXEC_KERNEL_CHECK"
+>
+> #define MEASURE_MODULE \
+> 	"measure func=MODULE_CHECK"
+>
+> #define APPEND_TEMPLATE_IMA_MODSIG		\
+> 	" template=ima-modsig"
+>
+> static const char *const secure_and_trusted_rules[] = {
+> 	MEASURE_KERNEL APPEND_TEMPLATE_IMA_MODSIG,
+> 	MEASURE_MODULE APPEND_TEMPLATE_IMA_MODSIG,
+> 	APPRAISE_KERNEL,
+> 	APPRAISE_MODULE
+> 	NULL
+> };
+>
+> static const char *const secure_rules[] = {
+> 	APPRAISE_KERNEL,
+> 	APPRAISE_MODULE
+> 	NULL
+> };
+>
+> static const char *const trusted_rules[] = {
+> 	MEASURE_KERNEL,
+> 	MEASURE_MODULE,
+> 	NULL
+> };
 
+Yes, I agree it is sort of a hack to walk through the rules to find the 
+start of the appraise policy.  While trying your suggestion, I realized 
+that defining three arrays, with some rule duplication, can fix the hack 
+without #defines. This also improves readability of the rules. I have 
+just now posted the new version with the changes. Please let me know if 
+this looks ok.
 
-WDYT ?
+Thanks & Regards,
+      - Nayna
 
-Thanks !
