@@ -2,89 +2,125 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECAFCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 00:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC21BCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 00:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D40BA222C5
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 00:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7661D21897
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 00:13:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="qiFlhYVB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403947AbfJSADw (ORCPT
+        id S2390932AbfJSANt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 20:03:52 -0400
-Received: from gate.crashing.org ([63.228.1.57]:50059 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730521AbfJSADw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 20:03:52 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x9J038G6009788;
-        Fri, 18 Oct 2019 19:03:10 -0500
-Message-ID: <0ef567e985ce3fe821cbd80265f85a35d16be373.camel@kernel.crashing.org>
-Subject: Re: [PATCH v2] ftgmac100: Disable HW checksum generation on AST2500
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Vijay Khemka <vijaykhemka@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        Sai Dasari <sdasari@fb.com>
-Date:   Sat, 19 Oct 2019 11:03:08 +1100
-In-Reply-To: <529EF9B4-DFDE-4DB7-BE26-3AED8D814134@fb.com>
-References: <20191011213027.2110008-1-vijaykhemka@fb.com>
-         <3a1176067b745fddfc625bbd142a41913ee3e3a1.camel@kernel.crashing.org>
-         <0C0BC813-5A84-403F-9C48-9447AAABD867@fb.com>
-         <071cf1eeefcbfc14633a13bc2d15ad7392987a88.camel@kernel.crashing.org>
-         <9AA81274-01F2-4803-8905-26F0521486CE@fb.com>
-         <f6d5cb45a9aa167533135c5b218b45b1d210d31a.camel@kernel.crashing.org>
-         <529EF9B4-DFDE-4DB7-BE26-3AED8D814134@fb.com>
+        Fri, 18 Oct 2019 20:13:49 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:30391 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728453AbfJSANs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 20:13:48 -0400
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x9J0DhVI017441;
+        Sat, 19 Oct 2019 09:13:44 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x9J0DhVI017441
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1571444024;
+        bh=Wv7SDO7TGz/Tz/kPoq97RTLIMVXEt2S+6Yr6mw+gDCQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qiFlhYVBWH7HcAHa04a0nidYNnCnZHQY+DeY0xGKGwNJa1W70j6ualaYq5jjbei7Q
+         P0um+gifV5M5Isba1elISoevdeTYTvYVo+IEQZvfPEPAi3ROzpZ97MNGbVtXp/hr6S
+         C7NJr+SBe2+MffR3Mmv4rXjGb4m703A0rEuKsGUFbbvRVUMxdlarZPmASzStUihaTW
+         F7PTu2wrtwAtPEmVRw52VavGHZ7/s9dcNkNl6ZviYD+KYHI/Y0HoxDDFKJn/x6KaOm
+         U/aN4/z6b3N8Es3NGkKRp/W04yH52En28mxmOllC7turK959Lb1IJcMKhaLE4Ojp6B
+         3Mg4brqp1262Q==
+X-Nifty-SrcIP: [209.85.222.46]
+Received: by mail-ua1-f46.google.com with SMTP id l13so2338807uap.8;
+        Fri, 18 Oct 2019 17:13:44 -0700 (PDT)
+X-Gm-Message-State: APjAAAX/TkFC5XQJsNcLY2bIJo7JNP6DZM2EPPfir952rYF9Fs9bfqkL
+        n1AUebqcGfqaLUcOu+3uDlbXLT4LsEk3cJl/CcY=
+X-Google-Smtp-Source: APXvYqwLdG24TcKRI2xGdPVyXycA/P86iGVpj388RYLudVH3Yy2vabgr2OOiiA0cJgKnUH8lbg94E4aPGHgyjlzHrec=
+X-Received: by 2002:ab0:59ed:: with SMTP id k42mr7047231uad.25.1571444023192;
+ Fri, 18 Oct 2019 17:13:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191018220525.9042-1-sashal@kernel.org> <20191018220525.9042-77-sashal@kernel.org>
+In-Reply-To: <20191018220525.9042-77-sashal@kernel.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 19 Oct 2019 09:13:07 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATx=yY2Tmfd-BkmPjsqOFc+wUAtKzR7UpmU83LueVDQQw@mail.gmail.com>
+Message-ID: <CAK7LNATx=yY2Tmfd-BkmPjsqOFc+wUAtKzR7UpmU83LueVDQQw@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 4.19 077/100] kbuild: fix build error of 'make
+ nsdeps' in clean tree
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Matthias Maennich <maennich@google.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-10-18 at 22:50 +0000, Vijay Khemka wrote:
-> I don't have much understanding of IP Stack but I went through code details and 
-> you are right and found that it should fallback to SW calculation for IPV6 but it doesn't
-> happen because ftgmac100_hard_start_xmit checks for CHECKSUM_PARTIAL before
-> setting HW checksum and calling ftgmac100_prep_tx_csum function. And in my 
-> understanding, this value is set CHECKSUM_PARTIAL in IP stack. I looked up IP stack for
-> IPV6, file net/ipv6/ip6_output.c, function __ip6_append_data: here it sets 
-> CHECKSUM_PARTIAL only for UDP packets not for TCP packets. Please look at line
->  number 1880. This could be an issue we are seeing here as why
-> ftgmac100_prep_tx_csum is not getting triggered for IPV6 with TCP. Please correct
-> me if my understanding is wrong.
->     
+Hi Sasha,
 
-Not entirely sure. tcp_v6_send_response() in tcp_ipv6.c does set
-CHECKSUM_PARTIAL as well. I don't really know how things are being
-handled in that part of the network stack though.
-
-From a driver perspective, if the value of ip_summed is not
-CHECKSUM_PARTIAL it means we should not have to calculate any checksum.
-At least that's my understanding here.
-
-You may need to add some traces to the driver to see what you get in
-there, what protocol indication etc... and analyze the corresponding
-packets with something like tcpdump or wireshark on the other end.
-
-Cheers,
-Ben.
+On Sat, Oct 19, 2019 at 7:18 AM Sasha Levin <sashal@kernel.org> wrote:
+>
+> From: Masahiro Yamada <yamada.masahiro@socionext.com>
+>
+> [ Upstream commit d85103ac78a6d8573b21348b36f4cca2e1839a31 ]
+>
+> Running 'make nsdeps' in a clean source tree fails as follows:
+>
+> $ make -s clean; make -s defconfig; make nsdeps
+>    [ snip ]
+> awk: fatal: cannot open file `init/modules.order' for reading (No such file or directory)
+> make: *** [Makefile;1307: modules.order] Error 2
+> make: *** Deleting file 'modules.order'
+> make: *** Waiting for unfinished jobs....
+>
+> The cause of the error is 'make nsdeps' does not build modules at all.
+> Set KBUILD_MODULES to fix it.
+>
+> Reviewed-by: Matthias Maennich <maennich@google.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Signed-off-by: Jessica Yu <jeyu@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
 
 
+nsdeps was introduced in v5.4
+
+Please do not backport this commit.
+
+Thanks.
+
+
+>  Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Makefile b/Makefile
+> index 4d29c7370b464..80f169534c4a7 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -566,7 +566,7 @@ endif
+>  # in addition to whatever we do anyway.
+>  # Just "make" or "make all" shall build modules as well
+>
+> -ifneq ($(filter all _all modules,$(MAKECMDGOALS)),)
+> +ifneq ($(filter all _all modules nsdeps,$(MAKECMDGOALS)),)
+>    KBUILD_MODULES := 1
+>  endif
+>
+> --
+> 2.20.1
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
