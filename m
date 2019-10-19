@@ -2,227 +2,82 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A0B1CA9EAB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7931FCA9EAD
 	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 20:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D60B4222C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 20:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FB5F22473
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 20:44:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbfJSUok (ORCPT
+        id S1726335AbfJSUom convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 16:44:40 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:46139 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbfJSUok (ORCPT
+        Sat, 19 Oct 2019 16:44:42 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:49748 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726136AbfJSUol (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 16:44:40 -0400
-Received: from mail-qt1-f182.google.com ([209.85.160.182]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MK3eI-1iboa22IXO-00LZoG for <linux-kernel@vger.kernel.org>; Sat, 19 Oct
- 2019 22:44:36 +0200
-Received: by mail-qt1-f182.google.com with SMTP id o12so14491240qtf.3
-        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 13:44:36 -0700 (PDT)
-X-Gm-Message-State: APjAAAW1+p40N9WWlz+HURBpDyevLWuPx9dv3A1ICu8k1f09+0KHa0F/
-        TZQSbd0/3N39dp84JcVNeYC6ul1/vXWk5+1rqng=
-X-Google-Smtp-Source: APXvYqwTYjWwH/dr7P8eVD9tFv812uR9utN1gTO3QpV//KWihS4RAiftduUE3FA547xXMIiNQEepk1FXzT5z9CnmhCc=
-X-Received: by 2002:ac8:729a:: with SMTP id v26mr16655827qto.18.1571517875474;
- Sat, 19 Oct 2019 13:44:35 -0700 (PDT)
+        Sat, 19 Oct 2019 16:44:41 -0400
+Received: from turkeyburger.collabora.co.uk (turkeyburger.collabora.co.uk [46.235.227.230])
+        by bhuna.collabora.co.uk (Postfix) with ESMTP id C2434263BB2;
+        Sat, 19 Oct 2019 21:44:38 +0100 (BST)
+Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <5DA9EE2F.4030603@zoho.com>
+From:   "Ezequiel Garcia" <ezequiel.garcia@collabora.com>
+X-Forward: 81.67.116.94
+Date:   Sat, 19 Oct 2019 21:44:38 +0100
+Cc:     "Ulf Hansson" <ulf.hansson@linaro.org>,
+        "Paul Cercueil" <paul@crapouillou.net>, linux-mips@vger.kernel.org,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        =?utf-8?q?linux-mmc=40vger=2Ekernel=2Eorg?= 
+        <linux-mmc@vger.kernel.org>, "DTML" <devicetree@vger.kernel.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Paul Burton" <paul.burton@mips.com>,
+        "Mark Rutland" <mark.rutland@arm.com>, syq@debian.org,
+        "Linus Walleij" <linus.walleij@linaro.org>, armijn@tjaldur.nl,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "YueHaibing" <yuehaibing@huawei.com>,
+        "Mathieu Malaterre" <malat@debian.org>
+To:     "Zhou Yanjie" <zhouyanjie@zoho.com>
 MIME-Version: 1.0
-References: <20191018163047.1284736-1-arnd@arndb.de> <20191018163047.1284736-2-arnd@arndb.de>
- <20191019184234.4cdb37a735fe632528880d76@gmail.com> <CAK8P3a0LWeGJshr=AdeE3QXHYe2jVmc90K_2prc=4=ZFk0hr=g@mail.gmail.com>
- <20191019222413.52f7b79369d085c4ce29bc23@gmail.com>
-In-Reply-To: <20191019222413.52f7b79369d085c4ce29bc23@gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sat, 19 Oct 2019 22:44:18 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3UztT5aqDTiBNDssHWcdYQNqbhiY_hxJ+AHuM54hgCWQ@mail.gmail.com>
-Message-ID: <CAK8P3a3UztT5aqDTiBNDssHWcdYQNqbhiY_hxJ+AHuM54hgCWQ@mail.gmail.com>
-Subject: Re: [PATCH 2/6] ARM: ep93xx: enable SPARSE_IRQ
-To:     Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc:     Hubert Feurstein <hubert.feurstein@contec.at>,
-        Hartley Sweeten <hsweeten@visionengravers.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Lukasz Majewski <lukma@denx.de>
-Content-Type: multipart/mixed; boundary="000000000000ba2049059549847a"
-X-Provags-ID: V03:K1:WcSPqQcDLLJFRQwVlWP5cFYHKGiE4HJxxp7aOKDPYfoBLWd35bN
- rfneTtSht2kx6D4l2R8HQOP841EihjLW6YEUNUFb0VBTtUGvyRU4DhPZ4osypGI2c07nKep
- mgeBhYS0tz6t1A+mI/RgYt0rC67Vz8pM61eJuXr2ILFCT+8RKkA2s4zivhsThvQP8AFp2xG
- 4k2JIwexDJP8cBNrY2RRQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4ZReCf1vAro=:BPeaby2c4K1cGKiwBZlGpp
- tUm7cO569s1Pw/h+xrim/PqVYb7xOSPvXEzKwrappg4smsUy6bKNRGLTqF78YHPM+fwoyM72x
- xQM284YAScuKHQu57KUgRJBCkU8TLF7xrZybKKj0aUHfCUQdZkVDkNjj7TAb+j2ZNI1Iu8uz4
- 4MNIk79uBnMV74iklvtkGcCWQrykoYkhFgNjUdYi46wWVPDcx3PKeVGJeRwH8EBSb3hxYySUp
- +QcCnj3BfAeiOMBq4pnGCZQj3Aiem8RFWxSQhR88dUo6HDbKzxDvCbpulHUnLQ9Ownn5ZrPFH
- ltRGrN1TBR3k4fWx35vhLngZLCSmVmS7p8nG71J56WmF+dCYS6dKjqLj2QUJYmWw5UVP6gCLW
- BB0wX2UjQ0sLUG0PBjIygTST/QDiW1W7AgqMaeaWr4w/x9RaPLQ1HwlNIoTJSCR35v3kxIY1a
- r555lGM8rY9anC8KYakbrKjg3obIkqzQforQidUdMrlfW/dHdOONtSqQ8mqxuBI2e4ueFuE4Z
- CbqVNzFpsRY9MA0oECbGvAukzgDSnPIuDWc90A/ZOBTZuYd27uG69K5LZUrCxW4pM/rI882v0
- /6se5dYXSbfwouwJghVzEhdTj6wj+a2j69ef7qzAM0MIPdu+DGJymbIE1UP2v91UXLqXLHRc/
- nuGp7q1eBwIKEj6ZKK+90By9XkeLep5QoFB/lH+LiEEiDJJ4udIYCvrcyeEPfKWc4NVqBxg/8
- lzWQzbHGLRW40c3Ms+XM9mUQk0hEm2HQErG3g7e5a+/PEh3ecAw31G229WgcjOJH1WEaffQ5t
- Sq4lBRZjq/C9fvZ43aB705G/+hC1/iPkdK/tlq2zff722z0gdoOHHzSEvvmWzL/LGEmRN49eD
- waWif6FwtZIaZlqlfUag==
+Message-ID: <47f6-5dab7580-33-5680128@176712317>
+Subject: =?utf-8?q?Re=3A?==?utf-8?q?_=5BPATCH?==?utf-8?q?_6=2F6?==?utf-8?q?_v2=5D?=
+ =?utf-8?q?_MMC=3A?==?utf-8?q?_JZ4740=3A?= Add support for 
+ =?utf-8?q?LPM=2E?=
+User-Agent: SOGoMail 4.0.7
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000ba2049059549847a
-Content-Type: text/plain; charset="UTF-8"
+On Friday, October 18, 2019 13:54 -03, Zhou Yanjie <zhouyanjie@zoho.com> wrote: 
+ 
 
-On Sat, Oct 19, 2019 at 10:24 PM Alexander Sverdlin
-<alexander.sverdlin@gmail.com> wrote:
-> On Sat, 19 Oct 2019 22:08:40 +0200
-> Arnd Bergmann <arnd@arndb.de> wrote:
->
-> > > # cat /proc/interrupts
-> > >            CPU0
-> > >  39:        146       VIC   7 Edge      eth0
-> > >  51:     162161       VIC  19 Edge      ep93xx timer
-> > >  52:        139       VIC  20 Edge      uart-pl010
-> > >  53:          4       VIC  21 Edge      ep93xx-spi
-> > >  60:          0       VIC  28 Edge      ep93xx-i2s
-> > > Err:          0
+> 
 > >
-> > I guess that is partial success: some irqs do work ;-)
->
-> Yep, VIC1 is working, while VIC0 is not.
->
-> > The two interrupts that did not get registered are for the
-> > dmaengine driver, and that makes sense given the error
-> > message about the DMA not working. No idea how
-> > that would be a result of the irq changes though.
->
-> Seems, that it has exposed some incompatibilities of
-> starting IRQ 0 in EP93xx platform fir VIC0 and VIC code
-> itself, which assumes 0 means "auto assignment" (refer
-> to vic_init()).
+> > I also have a general question. Should we perhaps rename the driver
+> > from jz4740_mmc.c to ingenic.c (and the file for the DT bindings, the
+> > Kconfig, etc), as that seems like a more appropriate name? No?
+> 
+> I am very much in favor of this proposal. Now jz4740_mmc.c is not only used
+> for the JZ4740 processor, it is also used for JZ4725, JZ4760, JZ4770, JZ4780
+> and X1000, and now Ingenic's processor is no longer named after JZ47xx,
+> it is divided into three product lines: M, T, and X. It is easy to cause 
+> some
+> misunderstandings by using jz4740_mmc.c. At the same time, I think that
+> some register names also need to be adjusted. For example, the STLPPL
+> register name has only appeared in JZ4730 and JZ4740, and this register
+> in all subsequent processors is called CTRL. This time I was confused by
+> the STLPPL when I added drivers for the JZ4760's and X1000's LPM.
+> 
 
-Ah, that makes sense. so all interrupt numbers need to
-be shifted by a fixed number (e.g. 1) like we did for
-other platforms (see attachment).
+I am very much against renamings, for several reasons. As Paul already mentioned, it's pointless and just adds noise to the git-log, making history harder to recover. Driver file names don't really have to reflect the device exactly. For the compatibility list, it's far easier to just git-grep for compatible strings, or git-grep Documentation and/or Kconfig.
 
-      Arnd
+Renaming macros and register names, is equally pointless and equally git-history invasive. Simply adding some documentation is enough.
 
---000000000000ba2049059549847a
-Content-Type: text/x-patch; charset="US-ASCII"; name="ep93xx_vic.patch"
-Content-Disposition: attachment; filename="ep93xx_vic.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k1y153yi0>
-X-Attachment-Id: f_k1y153yi0
+Thanks,
+Ezequiel
 
-ZGlmZiAtLWdpdCBhL2FyY2gvYXJtL21hY2gtZXA5M3h4L2NvcmUuYyBiL2FyY2gvYXJtL21hY2gt
-ZXA5M3h4L2NvcmUuYwppbmRleCA2ZmIxOWEzOTNmZDIuLmYwYTcxZDRlMDc2ZiAxMDA2NDQKLS0t
-IGEvYXJjaC9hcm0vbWFjaC1lcDkzeHgvY29yZS5jCisrKyBiL2FyY2gvYXJtL21hY2gtZXA5M3h4
-L2NvcmUuYwpAQCAtNDcsNiArNDcsNyBAQAogI2luY2x1ZGUgPGFzbS9tYWNoL21hcC5oPgogCiAj
-aW5jbHVkZSAic29jLmgiCisjaW5jbHVkZSAiaXJxcy5oIgogCiAvKioqKioqKioqKioqKioqKioq
-KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKgog
-ICogU3RhdGljIEkvTyBtYXBwaW5ncyB0aGF0IGFyZSBuZWVkZWQgZm9yIGFsbCBFUDkzeHggcGxh
-dGZvcm1zCkBAIC03NSw4ICs3Niw4IEBAIHZvaWQgX19pbml0IGVwOTN4eF9tYXBfaW8odm9pZCkK
-ICAqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
-KioqKioqKioqKioqKioqKioqLwogdm9pZCBfX2luaXQgZXA5M3h4X2luaXRfaXJxKHZvaWQpCiB7
-Ci0JdmljX2luaXQoRVA5M1hYX1ZJQzFfQkFTRSwgMCwgRVA5M1hYX1ZJQzFfVkFMSURfSVJRX01B
-U0ssIDApOwotCXZpY19pbml0KEVQOTNYWF9WSUMyX0JBU0UsIDMyLCBFUDkzWFhfVklDMl9WQUxJ
-RF9JUlFfTUFTSywgMCk7CisJdmljX2luaXQoRVA5M1hYX1ZJQzFfQkFTRSwgSVJRX0VQOTNYWF9W
-SUMwLCBFUDkzWFhfVklDMV9WQUxJRF9JUlFfTUFTSywgMCk7CisJdmljX2luaXQoRVA5M1hYX1ZJ
-QzJfQkFTRSwgSVJRX0VQOTNYWF9WSUMxLCBFUDkzWFhfVklDMl9WQUxJRF9JUlFfTUFTSywgMCk7
-CiB9CiAKIApkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC1lcDkzeHgvaXJxcy5oIGIvYXJjaC9h
-cm0vbWFjaC1lcDkzeHgvaXJxcy5oCmluZGV4IDNmZmRiM2EyZjNlNC4uMzUzMjAxYjkwYzY2IDEw
-MDY0NAotLS0gYS9hcmNoL2FybS9tYWNoLWVwOTN4eC9pcnFzLmgKKysrIGIvYXJjaC9hcm0vbWFj
-aC1lcDkzeHgvaXJxcy5oCkBAIC0yLDY5ICsyLDczIEBACiAjaWZuZGVmIF9fQVNNX0FSQ0hfSVJR
-U19ICiAjZGVmaW5lIF9fQVNNX0FSQ0hfSVJRU19ICiAKLSNkZWZpbmUgSVJRX0VQOTNYWF9DT01N
-UlgJCTIKLSNkZWZpbmUgSVJRX0VQOTNYWF9DT01NVFgJCTMKLSNkZWZpbmUgSVJRX0VQOTNYWF9U
-SU1FUjEJCTQKLSNkZWZpbmUgSVJRX0VQOTNYWF9USU1FUjIJCTUKLSNkZWZpbmUgSVJRX0VQOTNY
-WF9BQUNJTlRSCQk2Ci0jZGVmaW5lIElSUV9FUDkzWFhfRE1BTTJQMAkJNwotI2RlZmluZSBJUlFf
-RVA5M1hYX0RNQU0yUDEJCTgKLSNkZWZpbmUgSVJRX0VQOTNYWF9ETUFNMlAyCQk5Ci0jZGVmaW5l
-IElSUV9FUDkzWFhfRE1BTTJQMwkJMTAKLSNkZWZpbmUgSVJRX0VQOTNYWF9ETUFNMlA0CQkxMQot
-I2RlZmluZSBJUlFfRVA5M1hYX0RNQU0yUDUJCTEyCi0jZGVmaW5lIElSUV9FUDkzWFhfRE1BTTJQ
-NgkJMTMKLSNkZWZpbmUgSVJRX0VQOTNYWF9ETUFNMlA3CQkxNAotI2RlZmluZSBJUlFfRVA5M1hY
-X0RNQU0yUDgJCTE1Ci0jZGVmaW5lIElSUV9FUDkzWFhfRE1BTTJQOQkJMTYKLSNkZWZpbmUgSVJR
-X0VQOTNYWF9ETUFNMk0wCQkxNwotI2RlZmluZSBJUlFfRVA5M1hYX0RNQU0yTTEJCTE4Ci0jZGVm
-aW5lIElSUV9FUDkzWFhfR1BJTzBNVVgJCTE5Ci0jZGVmaW5lIElSUV9FUDkzWFhfR1BJTzFNVVgJ
-CTIwCi0jZGVmaW5lIElSUV9FUDkzWFhfR1BJTzJNVVgJCTIxCi0jZGVmaW5lIElSUV9FUDkzWFhf
-R1BJTzNNVVgJCTIyCi0jZGVmaW5lIElSUV9FUDkzWFhfVUFSVDFSWAkJMjMKLSNkZWZpbmUgSVJR
-X0VQOTNYWF9VQVJUMVRYCQkyNAotI2RlZmluZSBJUlFfRVA5M1hYX1VBUlQyUlgJCTI1Ci0jZGVm
-aW5lIElSUV9FUDkzWFhfVUFSVDJUWAkJMjYKLSNkZWZpbmUgSVJRX0VQOTNYWF9VQVJUM1JYCQky
-NwotI2RlZmluZSBJUlFfRVA5M1hYX1VBUlQzVFgJCTI4Ci0jZGVmaW5lIElSUV9FUDkzWFhfS0VZ
-CQkJMjkKLSNkZWZpbmUgSVJRX0VQOTNYWF9UT1VDSAkJMzAKKyNkZWZpbmUgSVJRX0VQOTNYWF9W
-SUMwCQkJMQorCisjZGVmaW5lIElSUV9FUDkzWFhfQ09NTVJYCQkoSVJRX0VQOTNYWF9WSUMwICsg
-MikKKyNkZWZpbmUgSVJRX0VQOTNYWF9DT01NVFgJCShJUlFfRVA5M1hYX1ZJQzAgKyAzKQorI2Rl
-ZmluZSBJUlFfRVA5M1hYX1RJTUVSMQkJKElSUV9FUDkzWFhfVklDMCArIDQpCisjZGVmaW5lIElS
-UV9FUDkzWFhfVElNRVIyCQkoSVJRX0VQOTNYWF9WSUMwICsgNSkKKyNkZWZpbmUgSVJRX0VQOTNY
-WF9BQUNJTlRSCQkoSVJRX0VQOTNYWF9WSUMwICsgNikKKyNkZWZpbmUgSVJRX0VQOTNYWF9ETUFN
-MlAwCQkoSVJRX0VQOTNYWF9WSUMwICsgNykKKyNkZWZpbmUgSVJRX0VQOTNYWF9ETUFNMlAxCQko
-SVJRX0VQOTNYWF9WSUMwICsgOCkKKyNkZWZpbmUgSVJRX0VQOTNYWF9ETUFNMlAyCQkoSVJRX0VQ
-OTNYWF9WSUMwICsgOSkKKyNkZWZpbmUgSVJRX0VQOTNYWF9ETUFNMlAzCQkoSVJRX0VQOTNYWF9W
-SUMwICsgMTApCisjZGVmaW5lIElSUV9FUDkzWFhfRE1BTTJQNAkJKElSUV9FUDkzWFhfVklDMCAr
-IDExKQorI2RlZmluZSBJUlFfRVA5M1hYX0RNQU0yUDUJCShJUlFfRVA5M1hYX1ZJQzAgKyAxMikK
-KyNkZWZpbmUgSVJRX0VQOTNYWF9ETUFNMlA2CQkoSVJRX0VQOTNYWF9WSUMwICsgMTMpCisjZGVm
-aW5lIElSUV9FUDkzWFhfRE1BTTJQNwkJKElSUV9FUDkzWFhfVklDMCArIDE0KQorI2RlZmluZSBJ
-UlFfRVA5M1hYX0RNQU0yUDgJCShJUlFfRVA5M1hYX1ZJQzAgKyAxNSkKKyNkZWZpbmUgSVJRX0VQ
-OTNYWF9ETUFNMlA5CQkoSVJRX0VQOTNYWF9WSUMwICsgMTYpCisjZGVmaW5lIElSUV9FUDkzWFhf
-RE1BTTJNMAkJKElSUV9FUDkzWFhfVklDMCArIDE3KQorI2RlZmluZSBJUlFfRVA5M1hYX0RNQU0y
-TTEJCShJUlFfRVA5M1hYX1ZJQzAgKyAxOCkKKyNkZWZpbmUgSVJRX0VQOTNYWF9HUElPME1VWAkJ
-KElSUV9FUDkzWFhfVklDMCArIDE5KQorI2RlZmluZSBJUlFfRVA5M1hYX0dQSU8xTVVYCQkoSVJR
-X0VQOTNYWF9WSUMwICsgMjApCisjZGVmaW5lIElSUV9FUDkzWFhfR1BJTzJNVVgJCShJUlFfRVA5
-M1hYX1ZJQzAgKyAyMSkKKyNkZWZpbmUgSVJRX0VQOTNYWF9HUElPM01VWAkJKElSUV9FUDkzWFhf
-VklDMCArIDIyKQorI2RlZmluZSBJUlFfRVA5M1hYX1VBUlQxUlgJCShJUlFfRVA5M1hYX1ZJQzAg
-KyAyMykKKyNkZWZpbmUgSVJRX0VQOTNYWF9VQVJUMVRYCQkoSVJRX0VQOTNYWF9WSUMwICsgMjQp
-CisjZGVmaW5lIElSUV9FUDkzWFhfVUFSVDJSWAkJKElSUV9FUDkzWFhfVklDMCArIDI1KQorI2Rl
-ZmluZSBJUlFfRVA5M1hYX1VBUlQyVFgJCShJUlFfRVA5M1hYX1ZJQzAgKyAyNikKKyNkZWZpbmUg
-SVJRX0VQOTNYWF9VQVJUM1JYCQkoSVJRX0VQOTNYWF9WSUMwICsgMjcpCisjZGVmaW5lIElSUV9F
-UDkzWFhfVUFSVDNUWAkJKElSUV9FUDkzWFhfVklDMCArIDI4KQorI2RlZmluZSBJUlFfRVA5M1hY
-X0tFWQkJCShJUlFfRVA5M1hYX1ZJQzAgKyAyOSkKKyNkZWZpbmUgSVJRX0VQOTNYWF9UT1VDSAkJ
-KElSUV9FUDkzWFhfVklDMCArIDMwKQogI2RlZmluZSBFUDkzWFhfVklDMV9WQUxJRF9JUlFfTUFT
-SwkweDdmZmZmZmZjCiAKLSNkZWZpbmUgSVJRX0VQOTNYWF9FWFQwCQkJMzIKLSNkZWZpbmUgSVJR
-X0VQOTNYWF9FWFQxCQkJMzMKLSNkZWZpbmUgSVJRX0VQOTNYWF9FWFQyCQkJMzQKLSNkZWZpbmUg
-SVJRX0VQOTNYWF82NEhaCQkJMzUKLSNkZWZpbmUgSVJRX0VQOTNYWF9XQVRDSERPRwkJMzYKLSNk
-ZWZpbmUgSVJRX0VQOTNYWF9SVEMJCQkzNwotI2RlZmluZSBJUlFfRVA5M1hYX0lSREEJCQkzOAot
-I2RlZmluZSBJUlFfRVA5M1hYX0VUSEVSTkVUCQkzOQotI2RlZmluZSBJUlFfRVA5M1hYX0VYVDMJ
-CQk0MAotI2RlZmluZSBJUlFfRVA5M1hYX1BST0cJCQk0MQotI2RlZmluZSBJUlFfRVA5M1hYXzFI
-WgkJCTQyCi0jZGVmaW5lIElSUV9FUDkzWFhfVlNZTkMJCTQzCi0jZGVmaW5lIElSUV9FUDkzWFhf
-VklERU9fRklGTwkJNDQKLSNkZWZpbmUgSVJRX0VQOTNYWF9TU1AxUlgJCTQ1Ci0jZGVmaW5lIElS
-UV9FUDkzWFhfU1NQMVRYCQk0NgotI2RlZmluZSBJUlFfRVA5M1hYX0dQSU80TVVYCQk0NwotI2Rl
-ZmluZSBJUlFfRVA5M1hYX0dQSU81TVVYCQk0OAotI2RlZmluZSBJUlFfRVA5M1hYX0dQSU82TVVY
-CQk0OQotI2RlZmluZSBJUlFfRVA5M1hYX0dQSU83TVVYCQk1MAotI2RlZmluZSBJUlFfRVA5M1hY
-X1RJTUVSMwkJNTEKLSNkZWZpbmUgSVJRX0VQOTNYWF9VQVJUMQkJNTIKLSNkZWZpbmUgSVJRX0VQ
-OTNYWF9TU1AJCQk1MwotI2RlZmluZSBJUlFfRVA5M1hYX1VBUlQyCQk1NAotI2RlZmluZSBJUlFf
-RVA5M1hYX1VBUlQzCQk1NQotI2RlZmluZSBJUlFfRVA5M1hYX1VTQgkJCTU2Ci0jZGVmaW5lIElS
-UV9FUDkzWFhfRVRIRVJORVRfUE1FCQk1NwotI2RlZmluZSBJUlFfRVA5M1hYX0RTUAkJCTU4Ci0j
-ZGVmaW5lIElSUV9FUDkzWFhfR1BJT19BQgkJNTkKLSNkZWZpbmUgSVJRX0VQOTNYWF9TQUkJCQk2
-MAorI2RlZmluZSBJUlFfRVA5M1hYX1ZJQzEJCQkoSVJRX0VQOTNYWF9WSUMwICsgMzIpCisKKyNk
-ZWZpbmUgSVJRX0VQOTNYWF9FWFQwCQkJKElSUV9FUDkzWFhfVklDMSArIDApCisjZGVmaW5lIElS
-UV9FUDkzWFhfRVhUMQkJCShJUlFfRVA5M1hYX1ZJQzEgKyAxKQorI2RlZmluZSBJUlFfRVA5M1hY
-X0VYVDIJCQkoSVJRX0VQOTNYWF9WSUMxICsgMikKKyNkZWZpbmUgSVJRX0VQOTNYWF82NEhaCQkJ
-KElSUV9FUDkzWFhfVklDMSArIDMpCisjZGVmaW5lIElSUV9FUDkzWFhfV0FUQ0hET0cJCShJUlFf
-RVA5M1hYX1ZJQzEgKyA0KQorI2RlZmluZSBJUlFfRVA5M1hYX1JUQwkJCShJUlFfRVA5M1hYX1ZJ
-QzEgKyA1KQorI2RlZmluZSBJUlFfRVA5M1hYX0lSREEJCQkoSVJRX0VQOTNYWF9WSUMxICsgNikK
-KyNkZWZpbmUgSVJRX0VQOTNYWF9FVEhFUk5FVAkJKElSUV9FUDkzWFhfVklDMSArIDcpCisjZGVm
-aW5lIElSUV9FUDkzWFhfRVhUMwkJCShJUlFfRVA5M1hYX1ZJQzEgKyA4KQorI2RlZmluZSBJUlFf
-RVA5M1hYX1BST0cJCQkoSVJRX0VQOTNYWF9WSUMxICsgOSkKKyNkZWZpbmUgSVJRX0VQOTNYWF8x
-SFoJCQkoSVJRX0VQOTNYWF9WSUMxICsgMTApCisjZGVmaW5lIElSUV9FUDkzWFhfVlNZTkMJCShJ
-UlFfRVA5M1hYX1ZJQzEgKyAxMSkKKyNkZWZpbmUgSVJRX0VQOTNYWF9WSURFT19GSUZPCQkoSVJR
-X0VQOTNYWF9WSUMxICsgMTIpCisjZGVmaW5lIElSUV9FUDkzWFhfU1NQMVJYCQkoSVJRX0VQOTNY
-WF9WSUMxICsgMTMpCisjZGVmaW5lIElSUV9FUDkzWFhfU1NQMVRYCQkoSVJRX0VQOTNYWF9WSUMx
-ICsgMTQpCisjZGVmaW5lIElSUV9FUDkzWFhfR1BJTzRNVVgJCShJUlFfRVA5M1hYX1ZJQzEgKyAx
-NSkKKyNkZWZpbmUgSVJRX0VQOTNYWF9HUElPNU1VWAkJKElSUV9FUDkzWFhfVklDMSArIDE2KQor
-I2RlZmluZSBJUlFfRVA5M1hYX0dQSU82TVVYCQkoSVJRX0VQOTNYWF9WSUMxICsgMTcpCisjZGVm
-aW5lIElSUV9FUDkzWFhfR1BJTzdNVVgJCShJUlFfRVA5M1hYX1ZJQzEgKyAxOCkKKyNkZWZpbmUg
-SVJRX0VQOTNYWF9USU1FUjMJCShJUlFfRVA5M1hYX1ZJQzEgKyAxOSkKKyNkZWZpbmUgSVJRX0VQ
-OTNYWF9VQVJUMQkJKElSUV9FUDkzWFhfVklDMSArIDIwKQorI2RlZmluZSBJUlFfRVA5M1hYX1NT
-UAkJCShJUlFfRVA5M1hYX1ZJQzEgKyAyMSkKKyNkZWZpbmUgSVJRX0VQOTNYWF9VQVJUMgkJKElS
-UV9FUDkzWFhfVklDMSArIDIyKQorI2RlZmluZSBJUlFfRVA5M1hYX1VBUlQzCQkoSVJRX0VQOTNY
-WF9WSUMxICsgMjMpCisjZGVmaW5lIElSUV9FUDkzWFhfVVNCCQkJKElSUV9FUDkzWFhfVklDMSAr
-IDI0KQorI2RlZmluZSBJUlFfRVA5M1hYX0VUSEVSTkVUX1BNRQkJKElSUV9FUDkzWFhfVklDMSAr
-IDI1KQorI2RlZmluZSBJUlFfRVA5M1hYX0RTUAkJCShJUlFfRVA5M1hYX1ZJQzEgKyAyNikKKyNk
-ZWZpbmUgSVJRX0VQOTNYWF9HUElPX0FCCQkoSVJRX0VQOTNYWF9WSUMxICsgMjcpCisjZGVmaW5l
-IElSUV9FUDkzWFhfU0FJCQkJKElSUV9FUDkzWFhfVklDMSArIDI4KQogI2RlZmluZSBFUDkzWFhf
-VklDMl9WQUxJRF9JUlFfTUFTSwkweDFmZmZmZmZmCiAKLSNkZWZpbmUgTlJfRVA5M1hYX0lSUVMJ
-CQkoNjQgKyAyNCkKKyNkZWZpbmUgTlJfRVA5M1hYX0lSUVMJCQkoSVJRX0VQOTNYWF9WSUMxICsg
-MzIgKyAyNCkKIAogI2RlZmluZSBFUDkzWFhfQk9BUkRfSVJRKHgpCQkoTlJfRVA5M1hYX0lSUVMg
-KyAoeCkpCiAjZGVmaW5lIEVQOTNYWF9CT0FSRF9JUlFTCQkzMgo=
---000000000000ba2049059549847a--
