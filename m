@@ -2,237 +2,227 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A77CA9EAC
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 18:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE6ECA9EAC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 18:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E76321925
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 18:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFC4B21925
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 18:15:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mMN1/u7x"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A0SZSwDA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726180AbfJSSNK (ORCPT
+        id S1726205AbfJSSPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 14:13:10 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40464 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbfJSSNK (ORCPT
+        Sat, 19 Oct 2019 14:15:32 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39959 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbfJSSPc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 14:13:10 -0400
-Received: by mail-pg1-f195.google.com with SMTP id e13so5161777pga.7
-        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 11:13:09 -0700 (PDT)
+        Sat, 19 Oct 2019 14:15:32 -0400
+Received: by mail-pf1-f193.google.com with SMTP id x127so5800534pfb.7;
+        Sat, 19 Oct 2019 11:15:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=THRrp/Ex+10EZKFSZ17SjdGISreGoqTYFjW18IRfuUo=;
-        b=mMN1/u7x9RFPXYmLVW92jcxFJNIhr4sXnEADaI/y3eaKvRTqNna3yPXsemg9R37y/f
-         xIa3nhuX6wbU93aIXH1Nd1VRmqaxYR310LrIW7p8ieeQ0TLNchb5dePN01iRdzz/8P3k
-         0Wbsp7pabKG52FeCh/Kip/yOcrKIRl756owv4=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Hpln9PUIoPv5oft5uSHAYxpNgr53ZiQaS7Vg+5P2qqU=;
+        b=A0SZSwDAcdMl3Kqqq+5k6AZh6epqsi6Nphk6a/+Z00/PwLSzZMeKVIl0vFnoOF8NKM
+         2+Iq5a9l+R5igupTWpXRxpH1QrQMC0ArIr9aBPUMVDApn1o2NowpcIkBlItjVMl7OWRb
+         5FyUH4ddmBXyCpJJ7HVPSFq6b+I+4N3upeJHH+bWRyir0jDbEJ2WaKcwXaePmD0aOrav
+         jcEuulUBdngtkCl8R0v93EHH7YcW4A3TFjN6McIYOLwnGXWMVB7MX4X2IXAG8ow+nW/V
+         ghmfoOXPEPJVV2wliFrqo/Izr37t55zaLJ3m/QDKNkkllKy2Xontcj32hIe+hHoLSoRS
+         eRJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=THRrp/Ex+10EZKFSZ17SjdGISreGoqTYFjW18IRfuUo=;
-        b=lscqG+sOUTJuRahvA9YkWyiBaf2LMaCUirwRmzhDCu44sTjCsYr/oD4fNksaGvY0eZ
-         53sV0D6ifvCRKu42Qe2D+DWdi0J6Mc/zJma0IKoKcw5L2Av8ubvxukDwQCYoRuqlnS4O
-         wf41PKxF6iw1MJXGqQBtSXkKbaQsyhQdB3a8c6Wp05IdYBVkSWiGr0t1Gc2lb9cPqp+Y
-         MY5QdOFqIh2c1Sx9zSrMMhDsoJ/glFbUWBpmskuNfhxJHDEmVP5toEblYJgzq2nvEqsn
-         8Ga+i5JD6Z9VBJvZJXyI4fUeeh+ZT29NmWqrVs79DUXksTYMuUl0HHgM42oLXjruM7ZJ
-         JpbQ==
-X-Gm-Message-State: APjAAAVsLG63ObxllUq/heJC748m+R2qLl6q0cW3e5OS6pCiwcFmlkQW
-        PNvYHZJWKGMiNMY4zHOEjoiiyA==
-X-Google-Smtp-Source: APXvYqyqjdiEpPjvVxGmB8CeGzQy1F+O/Zu+CxdB3XQj32hzbbujF1/jQA0q3pytSyak+G1ZcJ4iJw==
-X-Received: by 2002:a17:90a:f495:: with SMTP id bx21mr17765653pjb.84.1571508788795;
-        Sat, 19 Oct 2019 11:13:08 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id m2sm14567461pff.154.2019.10.19.11.13.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Oct 2019 11:13:08 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc:     Pavel Labath <labath@google.com>,
-        Pratyush Anand <panand@redhat.com>, mka@chromium.org,
-        kinaba@google.com, Douglas Anderson <dianders@chromium.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: hw_breakpoint: Handle inexact watchpoint addresses
-Date:   Sat, 19 Oct 2019 11:12:26 -0700
-Message-Id: <20191019111216.1.I82eae759ca6dc28a245b043f485ca490e3015321@changeid>
-X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
+        bh=Hpln9PUIoPv5oft5uSHAYxpNgr53ZiQaS7Vg+5P2qqU=;
+        b=HCSW9QaAIHr4tkH9x6vjF4K/XUj3a35LDDn30Fkoj8Tr6fxlcYgkwAfseH3hVCRJO4
+         MlyWMxWg9fw/PjobLA17kiFWwt7kn1wfJIMorXWuA08Uybpyt2w51fm343I2osseK2Th
+         jgzDQROTS5HkTu8PzMIp46wZl6O2GEJYQYaOlyCu6CeXjuDIaApTYScAnjj6q98Fs5B2
+         SHVWt81qwoKSl9ShMeZx1WkoLfUP+Bv8CfFG98avulObIPsOwBLhzv5kWW1ADBaEB1zY
+         mnggFjymn8nf4F0b/5GAhTnwAOBuXIu4PUPXRPlp6vICKWiJS3113szbOEzPx926n3GQ
+         9BIw==
+X-Gm-Message-State: APjAAAUrKQo9jpgup4AabVY0NPEFhhiZjjQynbMTWIig7xo0rG85tLsa
+        61b6LZBhnvH3wv9n3n6s//8=
+X-Google-Smtp-Source: APXvYqyVUOx8svIWYOi2E2AqQLkghA2rODjFQGz6vtBg5bXahSguxuVAcNkSZDOU13dQaSqqsDooSg==
+X-Received: by 2002:a17:90a:aa81:: with SMTP id l1mr141147pjq.73.1571508930842;
+        Sat, 19 Oct 2019 11:15:30 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-70.hsd1.ca.comcast.net. [73.241.150.70])
+        by smtp.gmail.com with ESMTPSA id g35sm9462179pgg.42.2019.10.19.11.15.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 19 Oct 2019 11:15:29 -0700 (PDT)
+Subject: Re: [PATCH] net: fix sk_page_frag() recursion from memory reclaim
+To:     Tejun Heo <tj@kernel.org>, "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, kernel-team@fb.com,
+        linux-kernel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>
+References: <20191019170141.GQ18794@devbig004.ftw2.facebook.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <dc6ff540-e7fc-695e-ed71-2bc0a92a0a9b@gmail.com>
+Date:   Sat, 19 Oct 2019 11:15:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191019170141.GQ18794@devbig004.ftw2.facebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is commit fdfeff0f9e3d ("arm64: hw_breakpoint: Handle inexact
-watchpoint addresses") but ported to arm32, which has the same
-problem.
 
-This problem was found by Android CTS tests, notably the
-"watchpoint_imprecise" test [1].  I tested locally against a copycat
-(simplified) version of the test though.
 
-[1] https://android.googlesource.com/platform/bionic/+/master/tests/sys_ptrace_test.cpp
+On 10/19/19 10:01 AM, Tejun Heo wrote:
+> From f0335a5d14d3596d36e3ffddb2fd4fa0dc6ca9c2 Mon Sep 17 00:00:00 2001
+> From: Tejun Heo <tj@kernel.org>
+> Date: Sat, 19 Oct 2019 09:10:57 -0700
+> 
+> sk_page_frag() optimizes skb_frag allocations by using per-task
+> skb_frag cache when it knows it's the only user.  The condition is
+> determined by seeing whether the socket allocation mask allows
+> blocking - if the allocation may block, it obviously owns the task's
+> context and ergo exclusively owns current->task_frag.
+> 
+> Unfortunately, this misses recursion through memory reclaim path.
+> Please take a look at the following backtrace.
+> 
+>  [2] RIP: 0010:tcp_sendmsg_locked+0xccf/0xe10
+>      ...
+>      tcp_sendmsg+0x27/0x40
+>      sock_sendmsg+0x30/0x40
+>      sock_xmit.isra.24+0xa1/0x170 [nbd]
+>      nbd_send_cmd+0x1d2/0x690 [nbd]
+>      nbd_queue_rq+0x1b5/0x3b0 [nbd]
+>      __blk_mq_try_issue_directly+0x108/0x1b0
+>      blk_mq_request_issue_directly+0xbd/0xe0
+>      blk_mq_try_issue_list_directly+0x41/0xb0
+>      blk_mq_sched_insert_requests+0xa2/0xe0
+>      blk_mq_flush_plug_list+0x205/0x2a0
+>      blk_flush_plug_list+0xc3/0xf0
+>  [1] blk_finish_plug+0x21/0x2e
+>      _xfs_buf_ioapply+0x313/0x460
+>      __xfs_buf_submit+0x67/0x220
+>      xfs_buf_read_map+0x113/0x1a0
+>      xfs_trans_read_buf_map+0xbf/0x330
+>      xfs_btree_read_buf_block.constprop.42+0x95/0xd0
+>      xfs_btree_lookup_get_block+0x95/0x170
+>      xfs_btree_lookup+0xcc/0x470
+>      xfs_bmap_del_extent_real+0x254/0x9a0
+>      __xfs_bunmapi+0x45c/0xab0
+>      xfs_bunmapi+0x15/0x30
+>      xfs_itruncate_extents_flags+0xca/0x250
+>      xfs_free_eofblocks+0x181/0x1e0
+>      xfs_fs_destroy_inode+0xa8/0x1b0
+>      destroy_inode+0x38/0x70
+>      dispose_list+0x35/0x50
+>      prune_icache_sb+0x52/0x70
+>      super_cache_scan+0x120/0x1a0
+>      do_shrink_slab+0x120/0x290
+>      shrink_slab+0x216/0x2b0
+>      shrink_node+0x1b6/0x4a0
+>      do_try_to_free_pages+0xc6/0x370
+>      try_to_free_mem_cgroup_pages+0xe3/0x1e0
+>      try_charge+0x29e/0x790
+>      mem_cgroup_charge_skmem+0x6a/0x100
+>      __sk_mem_raise_allocated+0x18e/0x390
+>      __sk_mem_schedule+0x2a/0x40
+>  [0] tcp_sendmsg_locked+0x8eb/0xe10
+>      tcp_sendmsg+0x27/0x40
+>      sock_sendmsg+0x30/0x40
+>      ___sys_sendmsg+0x26d/0x2b0
+>      __sys_sendmsg+0x57/0xa0
+>      do_syscall_64+0x42/0x100
+>      entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> In [0], tcp_send_msg_locked() was using current->page_frag when it
+> called sk_wmem_schedule().  It already calculated how many bytes can
+> be fit into current->page_frag.  Due to memory pressure,
+> sk_wmem_schedule() called into memory reclaim path which called into
+> xfs and then IO issue path.  Because the filesystem in question is
+> backed by nbd, the control goes back into the tcp layer - back into
+> tcp_sendmsg_locked().
+> 
+> nbd sets sk_allocation to (GFP_NOIO | __GFP_MEMALLOC) which makes
+> sense - it's in the process of freeing memory and wants to be able to,
+> e.g., drop clean pages to make forward progress.  However, this
+> confused sk_page_frag() called from [2].  Because it only tests
+> whether the allocation allows blocking which it does, it now thinks
+> current->page_frag can be used again although it already was being
+> used in [0].
+> 
+> After [2] used current->page_frag, the offset would be increased by
+> the used amount.  When the control returns to [0],
+> current->page_frag's offset is increased and the previously calculated
+> number of bytes now may overrun the end of allocated memory leading to
+> silent memory corruptions.
+> 
+> Fix it by updating sk_page_frag() to test __GFP_MEMALLOC and not use
+> current->task_frag if set.
+> 
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Cc: Josef Bacik <josef@toxicpanda.com>
+> Cc: stable@vger.kernel.org
+> ---
+>  include/net/sock.h | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/net/sock.h b/include/net/sock.h
+> index 2c53f1a1d905..4e2ca38acc3c 100644
+> --- a/include/net/sock.h
+> +++ b/include/net/sock.h
+> @@ -2233,12 +2233,21 @@ struct sk_buff *sk_stream_alloc_skb(struct sock *sk, int size, gfp_t gfp,
+>   * sk_page_frag - return an appropriate page_frag
+>   * @sk: socket
+>   *
+> - * If socket allocation mode allows current thread to sleep, it means its
+> - * safe to use the per task page_frag instead of the per socket one.
+> + * Use the per task page_frag instead of the per socket one for
+> + * optimization when we know there can be no other users.
+> + *
+> + * 1. The socket allocation mode allows current thread to sleep.  This is
+> + *    the sleepable context which owns the task page_frag.
+> + *
+> + * 2. The socket allocation mode doesn't indicate that the socket is being
+> + *    used to reclaim memory.  Memory reclaim may nest inside other socket
+> + *    operations and end up recursing into sk_page_frag() while it's
+> + *    already in use.
+>   */
+>  static inline struct page_frag *sk_page_frag(struct sock *sk)
+>  {
+> -	if (gfpflags_allow_blocking(sk->sk_allocation))
+> +	if (gfpflags_allow_blocking(sk->sk_allocation) &&
+> +	    !(sk->sk_allocation & __GFP_MEMALLOC))
+>  		return &current->task_frag;
+>  
+>  	return &sk->sk_frag;
+> 
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+It seems compiler generates better code with :
 
- arch/arm/kernel/hw_breakpoint.c | 96 ++++++++++++++++++++++++---------
- 1 file changed, 70 insertions(+), 26 deletions(-)
-
-diff --git a/arch/arm/kernel/hw_breakpoint.c b/arch/arm/kernel/hw_breakpoint.c
-index b0c195e3a06d..d394878409db 100644
---- a/arch/arm/kernel/hw_breakpoint.c
-+++ b/arch/arm/kernel/hw_breakpoint.c
-@@ -680,26 +680,62 @@ static void disable_single_step(struct perf_event *bp)
- 	arch_install_hw_breakpoint(bp);
- }
- 
-+/*
-+ * Arm32 hardware does not always report a watchpoint hit address that matches
-+ * one of the watchpoints set. It can also report an address "near" the
-+ * watchpoint if a single instruction access both watched and unwatched
-+ * addresses. There is no straight-forward way, short of disassembling the
-+ * offending instruction, to map that address back to the watchpoint. This
-+ * function computes the distance of the memory access from the watchpoint as a
-+ * heuristic for the likelyhood that a given access triggered the watchpoint.
-+ *
-+ * See this same function in the arm64 platform code, which has the same
-+ * problem.
-+ *
-+ * The function returns the distance of the address from the bytes watched by
-+ * the watchpoint. In case of an exact match, it returns 0.
-+ */
-+static u32 get_distance_from_watchpoint(unsigned long addr, u32 val,
-+					struct arch_hw_breakpoint_ctrl *ctrl)
-+{
-+	u32 wp_low, wp_high;
-+	u32 lens, lene;
-+
-+	lens = __ffs(ctrl->len);
-+	lene = __fls(ctrl->len);
-+
-+	wp_low = val + lens;
-+	wp_high = val + lene;
-+	if (addr < wp_low)
-+		return wp_low - addr;
-+	else if (addr > wp_high)
-+		return addr - wp_high;
-+	else
-+		return 0;
-+}
-+
- static void watchpoint_handler(unsigned long addr, unsigned int fsr,
- 			       struct pt_regs *regs)
+diff --git a/include/net/sock.h b/include/net/sock.h
+index ab905c4b1f0efd42ebdcae333b3f0a2c7c1b2248..56de6ac99f0952bd0bc003353c094ce3a5a852f4 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -2238,7 +2238,8 @@ struct sk_buff *sk_stream_alloc_skb(struct sock *sk, int size, gfp_t gfp,
+  */
+ static inline struct page_frag *sk_page_frag(struct sock *sk)
  {
--	int i, access;
--	u32 val, ctrl_reg, alignment_mask;
-+	int i, access, closest_match = 0;
-+	u32 min_dist = -1, dist;
-+	u32 val, ctrl_reg;
- 	struct perf_event *wp, **slots;
- 	struct arch_hw_breakpoint *info;
- 	struct arch_hw_breakpoint_ctrl ctrl;
+-       if (gfpflags_allow_blocking(sk->sk_allocation))
++       if (likely((sk->sk_allocation & (__GFP_DIRECT_RECLAIM | __GFP_MEMALLOC)) ==
++                   __GFP_DIRECT_RECLAIM))
+                return &current->task_frag;
  
- 	slots = this_cpu_ptr(wp_on_reg);
- 
-+	/*
-+	 * Find all watchpoints that match the reported address. If no exact
-+	 * match is found. Attribute the hit to the closest watchpoint.
-+	 */
-+	rcu_read_lock();
- 	for (i = 0; i < core_num_wrps; ++i) {
--		rcu_read_lock();
--
- 		wp = slots[i];
--
- 		if (wp == NULL)
--			goto unlock;
-+			continue;
- 
--		info = counter_arch_bp(wp);
- 		/*
- 		 * The DFAR is an unknown value on debug architectures prior
- 		 * to 7.1. Since we only allow a single watchpoint on these
-@@ -708,33 +744,31 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
- 		 */
- 		if (debug_arch < ARM_DEBUG_ARCH_V7_1) {
- 			BUG_ON(i > 0);
-+			info = counter_arch_bp(wp);
- 			info->trigger = wp->attr.bp_addr;
- 		} else {
--			if (info->ctrl.len == ARM_BREAKPOINT_LEN_8)
--				alignment_mask = 0x7;
--			else
--				alignment_mask = 0x3;
--
--			/* Check if the watchpoint value matches. */
--			val = read_wb_reg(ARM_BASE_WVR + i);
--			if (val != (addr & ~alignment_mask))
--				goto unlock;
--
--			/* Possible match, check the byte address select. */
--			ctrl_reg = read_wb_reg(ARM_BASE_WCR + i);
--			decode_ctrl_reg(ctrl_reg, &ctrl);
--			if (!((1 << (addr & alignment_mask)) & ctrl.len))
--				goto unlock;
--
- 			/* Check that the access type matches. */
- 			if (debug_exception_updates_fsr()) {
- 				access = (fsr & ARM_FSR_ACCESS_MASK) ?
- 					  HW_BREAKPOINT_W : HW_BREAKPOINT_R;
- 				if (!(access & hw_breakpoint_type(wp)))
--					goto unlock;
-+					continue;
- 			}
- 
-+			val = read_wb_reg(ARM_BASE_WVR + i);
-+			ctrl_reg = read_wb_reg(ARM_BASE_WCR + i);
-+			decode_ctrl_reg(ctrl_reg, &ctrl);
-+			dist = get_distance_from_watchpoint(addr, val, &ctrl);
-+			if (dist < min_dist) {
-+				min_dist = dist;
-+				closest_match = i;
-+			}
-+			/* Is this an exact match? */
-+			if (dist != 0)
-+				continue;
-+
- 			/* We have a winner. */
-+			info = counter_arch_bp(wp);
- 			info->trigger = addr;
- 		}
- 
-@@ -748,10 +782,20 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
- 		 */
- 		if (is_default_overflow_handler(wp))
- 			enable_single_step(wp, instruction_pointer(regs));
-+	}
- 
--unlock:
--		rcu_read_unlock();
-+	if (min_dist > 0 && min_dist != -1) {
-+		/* No exact match found. */
-+		wp = slots[closest_match];
-+		info = counter_arch_bp(wp);
-+		info->trigger = addr;
-+		pr_debug("watchpoint fired: address = 0x%x\n", info->trigger);
-+		perf_bp_event(wp, regs);
-+		if (is_default_overflow_handler(wp))
-+			enable_single_step(wp, instruction_pointer(regs));
- 	}
-+
-+	rcu_read_unlock();
- }
- 
- static void watchpoint_single_step_handler(unsigned long pc)
--- 
-2.23.0.866.gb869b98d4c-goog
+        return &sk->sk_frag;
 
+
+WDYT ?
+
+Thanks !
