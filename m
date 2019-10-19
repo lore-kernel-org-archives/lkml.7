@@ -2,128 +2,93 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF1ECA9EAC
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDBECA9EAB
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7BF6222C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:03:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZFvZMeNd"
+	by mail.kernel.org (Postfix) with ESMTP id D7CE2222C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:17:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571447836;
+	bh=YSDA0LTaYm8hf+ryniy6+Xi/I6lsN9xC1wzmmMaHRqw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fYyfaGGTVwEAQ8jYD0yQp99yCtRMn3RWFIxOQodu0lR9c4P3BxdReghEgEyK5J+0T
+	 TQgdFypFL5S+XOHb+8O4niXPpSiGioa0rDUDH9kt06QuXJMtC2RE38/W+KuPR2DEFP
+	 WZkgwG4OuukXC08XmwFQRmqPY3AuGZIGPblNowPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728741AbfJSBDD (ORCPT
+        id S1726033AbfJSBRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 21:03:03 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44573 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726743AbfJSBDC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 21:03:02 -0400
-Received: by mail-pg1-f193.google.com with SMTP id e10so4236408pgd.11;
-        Fri, 18 Oct 2019 18:03:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=O2vDP5dhX90+NEeZF4xwy/6nZiyy5Chs2FfT8NPVR7E=;
-        b=ZFvZMeNde3XSQbCX5z+A8LC9qIkMj77Zzi+EgKADvigb12CI/Atx5eiO423UuVNTZ4
-         FMRj0TTh5vYpzBJFf3onEv/NHctJbLDMvw72Wm/UAs/vKZecv2U7aiKsK5O98DMCY3LN
-         6P8SWWQFoi0WW7dNj9CrT+uf0KK0LjF+3+/cSfQNkEYtvDykIjEQuh6qD2TVjSbIXoLH
-         0NoyZAo/m7sgpGHXCa5h6dWvnJlDsRbI4TfaO4uSF0QgVAzYFE5KMcLQFbvw7OGqrAEI
-         4v0uNLLBBCk7L6lzLHiVmoKSbmmeLfyP8LnUo6lczAWEEIGT7byS+WfZ7fYM1pCa1V6t
-         b94w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=O2vDP5dhX90+NEeZF4xwy/6nZiyy5Chs2FfT8NPVR7E=;
-        b=Cs6svu5TBVneapfDeF1cl88fLEO4eJMVjiW0eRMaVqngna/yQfIeyXNksrhczPppab
-         F9DZFufQuoMgQVF4AqjK1BB3/Pijc1wl2THZzorzyf5HS0LJC4vKw+JkCjKmF5YB6YTa
-         HH3dpKVCjMepemN8nl7VMuFmukJfZ7Ym3dsCGY+1v0YM97fb0niWl+nJaX1//pwcpeim
-         hC60cnZJPN8ST8ZrqWO6oA/aB00BmQGj4Ox7MALU1LQFzC7j3PkouKievz5lHO/6Cap9
-         uyrWE9s23t2gFWYpHLtTjSXmsoZmNKfATgBiJ4OkoFtRO/QhffUzValM1xCtjF0s8EKC
-         1VPw==
-X-Gm-Message-State: APjAAAVgsokVXL/etNlbNK/7y3eQxkJvFNsnT7BEvWNrAdzDaHrp2Paj
-        50g0IEeTefgzQ7e1OFoc9qexMMNU
-X-Google-Smtp-Source: APXvYqyfRaTHhsimbDLjYp5YZtM7EeE6UsAbtJraEIbyzdK0a87RqNrOa51iK+zxPIPUiG8is3MEFw==
-X-Received: by 2002:a63:f5a:: with SMTP id 26mr13333625pgp.63.1571446981132;
-        Fri, 18 Oct 2019 18:03:01 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id h14sm7304535pfo.15.2019.10.18.18.02.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 18 Oct 2019 18:03:00 -0700 (PDT)
-Subject: Re: [PATCH 00/46] ARM: pxa: towards multiplatform support
-To:     Arnd Bergmann <arnd@arndb.de>, Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-clk@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-References: <20191018154052.1276506-1-arnd@arndb.de>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <803f6fa5-b929-007c-5302-4a2d5042241c@roeck-us.net>
-Date:   Fri, 18 Oct 2019 18:02:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191018154052.1276506-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Fri, 18 Oct 2019 21:17:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46232 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725800AbfJSBRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 21:17:13 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDBAD222C5;
+        Sat, 19 Oct 2019 01:17:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571447833;
+        bh=YSDA0LTaYm8hf+ryniy6+Xi/I6lsN9xC1wzmmMaHRqw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nCA1LfoLCIO49G4uoXUsN/ZE/0GmrUfc7zMv3nVdr4yhB18lVhrw6QknGKxs116+f
+         Me1B/Jo/gRiELN1blfBonF3x1X6ah3hp2jo5Vgywhuwty/vV/d3l2ja1EM2kXxgDWZ
+         xYN7TwUYohNvp+RkX2ZzG9wRZNxSmiliUDbsaNRo=
+Date:   Fri, 18 Oct 2019 18:17:12 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <matthew.wilcox@oracle.com>, <kernel-team@fb.com>,
+        <william.kucharski@oracle.com>, <kirill.shutemov@linux.intel.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Hugh Dickins <hughd@google.com>
+Subject: Re: [PATCH v3] mm,thp: recheck each page before collapsing file THP
+Message-Id: <20191018181712.91dd9e9f9941642300e1b8d9@linux-foundation.org>
+In-Reply-To: <20191018180345.4188310-1-songliubraving@fb.com>
+References: <20191018180345.4188310-1-songliubraving@fb.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/18/19 8:40 AM, Arnd Bergmann wrote:
-> 
-> Hi PXA maintainers,
-> 
-> I'm in the process of getting the old ARM platforms to all build
-> in a single kernel. The largest part of that work is changing all
-> the device drivers to no longer require mach/*.h header files.
-> 
-> This series does it for arch/pxa/.
-> 
-> As with the omap1 and s3c24xx series I sent before, I don't
-> expect this all to be correct in the first version, though
-> a lot of the patches are fairly simple and I did exhaustive
-> compile-time testing on them.
-> 
-> Please test if you have the hardware, or review!
-> 
+On Fri, 18 Oct 2019 11:03:45 -0700 Song Liu <songliubraving@fb.com> wrote:
 
-I don't get very far.
+> In collapse_file(), after locking the page, it is necessary to recheck
+> that the page is up-to-date. Add PageUptodate() check for both shmem THP
+> and file THP.
+> 
+> Current khugepaged should not try to collapse dirty file THP, because it
+> is limited to read only text. Add a PageDirty check and warning for file
+> THP. This is added after page_mapping() check, because if the page is
+> truncated, it might be dirty.
 
-$ make-arm pxa_defconfig
-arch/arm/Kconfig:677: can't open file "arch/arm/plat-pxa/Kconfig"
-scripts/kconfig/Makefile:90: recipe for target 'pxa_defconfig' failed
-make[1]: *** [pxa_defconfig] Error 1
-Makefile:567: recipe for target 'pxa_defconfig' failed
-make: *** [pxa_defconfig] Error 2
-$ git describe
-v5.4-rc3-52-gfcc4181cd625
+When fixing a bug, please always fully describe the end-user visible
+effects of that bug.  This is vital information for people who are
+considering the fix for backporting.
 
-Also:
+I'm suspecting that you've found a race condition which can trigger a
+VM_BUG_ON_PAGE(), which is rather serious.  But that was just a wild
+guess.  Please don't make us wildly guess :(
 
-$ git grep plat-pxa
-Documentation/arm/marvel.rst:   arch/arm/plat-pxa
-Documentation/arm/marvel.rst:   arch/arm/plat-pxa
-Documentation/arm/marvel.rst:   directory. The plat-pxa/ would therefore disappear.
-arch/arm/Kconfig:source "arch/arm/plat-pxa/Kconfig"
-arch/arm/mach-mmp/Makefile:ccflags-$(CONFIG_ARCH_MULTIPLATFORM) := -I$(srctree)/arch/arm/plat-pxa/include
-drivers/gpio/gpio-pxa.c: *  linux/arch/arm/plat-pxa/gpio.c
-drivers/soc/pxa/mfp.c: * linux/arch/arm/plat-pxa/mfp.c
+The old code looked rather alarming:
 
-Did I pick the wrong tree ?
+			} else if (!PageUptodate(page)) {
+				xas_unlock_irq(&xas);
+				wait_on_page_locked(page);
+				if (!trylock_page(page)) {
+					result = SCAN_PAGE_LOCK;
+					goto xa_unlocked;
+				}
+				get_page(page);
 
-Guenter
+We don't have a ref on that page.  After we've released the xarray lock
+we have no business playing with *page at all, correct?
+
