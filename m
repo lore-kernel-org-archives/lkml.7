@@ -4,95 +4,167 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 009FDCA9EAC
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 06:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C232DCA9EAD
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 07:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D14D220854
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 06:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A37C6222C5
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 07:20:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbfJSGsk (ORCPT
+        id S1726452AbfJSHUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 02:48:40 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:53114 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726939AbfJSGsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 02:48:40 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 32D2A64B5132D11857F5;
-        Sat, 19 Oct 2019 14:48:37 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 19 Oct 2019 14:48:34 +0800
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-To:     <bhelgaas@google.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mhocko@kernel.org>, <peterz@infradead.org>,
-        <robin.murphy@arm.com>, <geert@linux-m68k.org>,
-        <gregkh@linuxfoundation.org>, <paul.burton@mips.com>
-Subject: [PATCH] PCI: Warn about host bridge device when its numa node is NO_NODE
-Date:   Sat, 19 Oct 2019 14:45:43 +0800
-Message-ID: <1571467543-26125-1-git-send-email-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Sat, 19 Oct 2019 03:20:45 -0400
+Received: from www17.your-server.de ([213.133.104.17]:55088 "EHLO
+        www17.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbfJSHUp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 19 Oct 2019 03:20:45 -0400
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www17.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <thomas@m3y3r.de>)
+        id 1iLj2Y-0001pf-Kr; Sat, 19 Oct 2019 09:20:42 +0200
+Received: from [2a02:908:4c22:ec00:8ad5:993:4cda:a89f] (helo=localhost.localdomain)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <thomas@m3y3r.de>)
+        id 1iLj2Y-0000W2-Ey; Sat, 19 Oct 2019 09:20:42 +0200
+From:   Thomas Meyer <thomas@m3y3r.de>
+To:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org
+Cc:     Thomas Meyer <thomas@m3y3r.de>
+Subject: [PATCH 1/2] lib/bsearch.c: introduce bsearch_idx
+Date:   Sat, 19 Oct 2019 09:20:32 +0200
+Message-Id: <20191019072033.17744-1-thomas@m3y3r.de>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: thomas@m3y3r.de
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25606/Fri Oct 18 10:58:40 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As the disscusion in [1]:
-A PCI device really _MUST_ have a node assigned. It is possible to
-have a PCI bridge shared between two nodes, such that the PCI
-devices have equidistance. But the moment you scale this out, you
-either get devices that are 'local' to a package while having
-multiple packages, or if you maintain a single bridge in a big
-system, things become so slow it all doesn't matter anyway.
-Assigning a node (one of the shared) is, in the generic ase of
-multiple packages, the better solution over assigning all nodes.
+many existing bsearch implementations don't want to have the pointer to the
+found element, but the index position, or if the searched element doesn't
+exist, the index position the search element would be placed in the array.
 
-As pci_device_add() will assign the pci device' node according to
-the bus the device is on, which is decided by pcibus_to_node().
-Currently different arch may implement the pcibus_to_node() based
-on bus->sysdata or bus device' node, which has the same node as
-the bridge device.
-
-And for devices behind another bridge case, the child bus device
-is setup with proper parent bus device and inherit its parent'
-sysdata in pci_alloc_child_bus(), so the pcie device under the
-child bus should have the same node as the parent bridge when
-device_add() is called, which will set the node to its parent's
-node when the child device' node is NUMA_NO_NODE.
-
-So this patch only warns about the case when a host bridge device
-is registered with a node of NO_NODE in pci_register_host_bridge().
-And it only warns about that when there are more than one numa
-nodes in the system.
-
-[1] https://lore.kernel.org/lkml/1568724534-146242-1-git-send-email-linyunsheng@huawei.com/
-
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Thomas Meyer <thomas@m3y3r.de>
 ---
- drivers/pci/probe.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/bsearch.h |  7 +++++
+ lib/bsearch.c           | 62 +++++++++++++++++++++++++++++++++--------
+ 2 files changed, 58 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 3d5271a..22be96a 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -927,6 +927,9 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
- 	list_add_tail(&bus->node, &pci_root_buses);
- 	up_write(&pci_bus_sem);
+diff --git a/include/linux/bsearch.h b/include/linux/bsearch.h
+index 62b1eb3488584..0c40c8b39b881 100644
+--- a/include/linux/bsearch.h
++++ b/include/linux/bsearch.h
+@@ -7,4 +7,11 @@
+ void *bsearch(const void *key, const void *base, size_t num, size_t size,
+ 	      int (*cmp)(const void *key, const void *elt));
  
-+	if (nr_node_ids > 1 && dev_to_node(bus->bridge) == NUMA_NO_NODE)
-+		dev_err(bus->bridge, FW_BUG "No node assigned on NUMA capable HW by BIOS. Please contact your vendor for updates.\n");
++struct bsearch_result { size_t idx; bool found; };
 +
- 	return 0;
++struct bsearch_result bsearch_idx(const void *key, const void *base,
++		      size_t num,
++		      size_t size,
++		      int (*cmp)(const void *key, const void *elt));
++
+ #endif /* _LINUX_BSEARCH_H */
+diff --git a/lib/bsearch.c b/lib/bsearch.c
+index 8baa839681628..5c46d0ec1e473 100644
+--- a/lib/bsearch.c
++++ b/lib/bsearch.c
+@@ -10,8 +10,8 @@
+ #include <linux/bsearch.h>
+ #include <linux/kprobes.h>
  
- unregister:
+-/*
+- * bsearch - binary search an array of elements
++/**
++ * bsearch() - binary search an array of elements
+  * @key: pointer to item being searched for
+  * @base: pointer to first element to search
+  * @num: number of elements
+@@ -27,28 +27,68 @@
+  * could compare the string with the struct's name field.  However, if
+  * the key and elements in the array are of the same type, you can use
+  * the same comparison function for both sort() and bsearch().
++ *
++ * Return: Either a pointer to the search element or NULL if not found.
+  */
+ void *bsearch(const void *key, const void *base, size_t num, size_t size,
+ 	      int (*cmp)(const void *key, const void *elt))
+ {
+-	const char *pivot;
++	struct bsearch_result idx = bsearch_idx(key, base, num, size, cmp);
++
++	if (idx.found == true)
++		return (void *)base + idx.idx * size;
++
++	return NULL;
++}
++EXPORT_SYMBOL(bsearch);
++NOKPROBE_SYMBOL(bsearch);
++
++/**
++ * bsearch_idx() - binary search an array of elements
++ * @key: pointer to item being searched for
++ * @base: pointer to first element to search
++ * @num: number of elements
++ * @size: size of each element
++ * @cmp: pointer to comparison function
++ *
++ * This function does a binary search on the given array.  The
++ * contents of the array should already be in ascending sorted order
++ * under the provided comparison function.
++ *
++ * Returns an index position and a bool if an exact match was found
++ * if an exact match was found the idx is the index in the base array.
++ * if no exact match was found the idx will point the the next higher index
++ * entry in the base array. this can also be base[num], i.e. after the actual
++ * allocated array.
++ */
++struct bsearch_result bsearch_idx(const void *key, const void *base,
++				  size_t num,
++				  size_t size,
++				  int (*cmp)(const void *key, const void *elt))
++{
++	struct bsearch_result res = { .found = false };
+ 	int result;
++	size_t base_idx = 0;
++	size_t pivot_idx;
+ 
+ 	while (num > 0) {
+-		pivot = base + (num >> 1) * size;
+-		result = cmp(key, pivot);
++		pivot_idx = base_idx + (num >> 1);
++		result = cmp(key, base + pivot_idx * size);
+ 
+-		if (result == 0)
+-			return (void *)pivot;
++		if (result == 0) {
++			res.idx = pivot_idx;
++			res.found = true;
++			return res;
++		}
+ 
+ 		if (result > 0) {
+-			base = pivot + size;
++			base_idx = pivot_idx + 1;
+ 			num--;
+ 		}
+ 		num >>= 1;
+ 	}
+ 
+-	return NULL;
++	res.idx = base_idx;
++	return res;
+ }
+-EXPORT_SYMBOL(bsearch);
+-NOKPROBE_SYMBOL(bsearch);
++EXPORT_SYMBOL(bsearch_idx);
 -- 
-2.8.1
+2.21.0
 
