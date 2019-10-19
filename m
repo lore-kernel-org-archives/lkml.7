@@ -6,59 +6,89 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 541DECA9EAC
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 14:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 589D4CA9EAC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 14:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3387721835
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 14:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B9B7222BD
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 14:23:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbfJSONV (ORCPT
+        id S1725970AbfJSOXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 10:13:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38876 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725911AbfJSONV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 10:13:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2F10EB234;
-        Sat, 19 Oct 2019 14:13:20 +0000 (UTC)
-From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-To:     linux-realtek-soc@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: Add mailing list for Realtek SoCs
-Date:   Sat, 19 Oct 2019 16:13:10 +0200
-Message-Id: <20191019141310.26892-1-afaerber@suse.de>
-X-Mailer: git-send-email 2.16.4
+        Sat, 19 Oct 2019 10:23:31 -0400
+Received: from 2.mo68.mail-out.ovh.net ([46.105.52.162]:43604 "EHLO
+        2.mo68.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfJSOXa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 19 Oct 2019 10:23:30 -0400
+Received: from player714.ha.ovh.net (unknown [10.108.42.196])
+        by mo68.mail-out.ovh.net (Postfix) with ESMTP id EF17B145F3D
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 16:07:01 +0200 (CEST)
+Received: from sk2.org (gw.sk2.org [88.186.243.14])
+        (Authenticated sender: steve@sk2.org)
+        by player714.ha.ovh.net (Postfix) with ESMTPSA id BA673B1A3FB1;
+        Sat, 19 Oct 2019 14:06:51 +0000 (UTC)
+From:   Stephen Kitt <steve@sk2.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Tony Lindgren <tony@atomide.com>, linux-clk@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephen Kitt <steve@sk2.org>
+Subject: [PATCH v3] clk/ti/adpll: allocate room for terminating null
+Date:   Sat, 19 Oct 2019 16:06:34 +0200
+Message-Id: <20191019140634.15596-1-steve@sk2.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191019155441.2b1b349f@heffalump.sk2.org>
+References: <20191019155441.2b1b349f@heffalump.sk2.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 1766818431945362904
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrkedugddtiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document linux-realtek-soc mailing list to be CC'ed on patches.
+The buffer allocated in ti_adpll_clk_get_name doesn't account for the
+terminating null. This patch switches to devm_kasprintf to avoid
+overflowing.
 
-Signed-off-by: Andreas Färber <afaerber@suse.de>
+Signed-off-by: Stephen Kitt <steve@sk2.org>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Changes since v2:
+  - Move "adpll" into the format string and drop base_name entirely.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c7b48525822a..8be71b3d25e7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2168,6 +2168,7 @@ F:	Documentation/devicetree/bindings/timer/rda,8810pl-timer.txt
- ARM/REALTEK ARCHITECTURE
- M:	Andreas Färber <afaerber@suse.de>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+L:	linux-realtek-soc@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	arch/arm64/boot/dts/realtek/
- F:	Documentation/devicetree/bindings/arm/realtek.yaml
+Changes since v1:
+  - Use devm_kasprintf instead of manually allocating the target
+    buffer.
+---
+ drivers/clk/ti/adpll.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/clk/ti/adpll.c b/drivers/clk/ti/adpll.c
+index fdfb90058504..bb2f2836dab2 100644
+--- a/drivers/clk/ti/adpll.c
++++ b/drivers/clk/ti/adpll.c
+@@ -194,15 +194,8 @@ static const char *ti_adpll_clk_get_name(struct ti_adpll_data *d,
+ 		if (err)
+ 			return NULL;
+ 	} else {
+-		const char *base_name = "adpll";
+-		char *buf;
+-
+-		buf = devm_kzalloc(d->dev, 8 + 1 + strlen(base_name) + 1 +
+-				    strlen(postfix), GFP_KERNEL);
+-		if (!buf)
+-			return NULL;
+-		sprintf(buf, "%08lx.%s.%s", d->pa, base_name, postfix);
+-		name = buf;
++		name = devm_kasprintf(d->dev, GFP_KERNEL, "%08lx.adpll.%s",
++				      d->pa, postfix);
+ 	}
+ 
+ 	return name;
 -- 
-2.16.4
+2.20.1
 
