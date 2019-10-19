@@ -2,244 +2,128 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MALFORMED_FREEMAIL,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B96CA9EAD
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 15:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EED4CA9EAD
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 15:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB91222D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 15:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E7322459
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 15:09:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dSRNpF8K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t92CWFWj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726061AbfJSPHA (ORCPT
+        id S1726112AbfJSPJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 11:07:00 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:44905 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbfJSPHA (ORCPT
+        Sat, 19 Oct 2019 11:09:14 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35457 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbfJSPJN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 11:07:00 -0400
-Received: by mail-qk1-f194.google.com with SMTP id u22so8136403qkk.11;
-        Sat, 19 Oct 2019 08:06:59 -0700 (PDT)
+        Sat, 19 Oct 2019 11:09:13 -0400
+Received: by mail-wr1-f67.google.com with SMTP id l10so8771558wrb.2
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 08:09:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4x2DM6vZJfp7GFqVdyd8aE+i5ANpX3rPocujCcf6n+Q=;
-        b=dSRNpF8Km8Wl/VGIETvgMHBBkwRJyKufEUVuc4wNpOE356LHlaiGiAYHBOVBX/FPgr
-         ZJXNGncPQpgh6fTjruSxIV4sdslVcxJiBcNyhTY7sH+J8Uxx+P3NOPwcaJJKN7O7I0/+
-         SASQOrK/14FVJDhBc3g+8VJMGKiHP9kyOs5AYz5jH+pm0N66bQT4wnBuj5X/Ntsi5YdU
-         112WZFoLH3l9x1tVjdUrrgEIdRILB3F0Fxek+Q5R4do7T3u6lxn4c53nXLnhzFf5hYX5
-         8TdtnCbq1wcBmyq4rUE448Ki2aOFyJfMfw3GRpmbyyc5eIS6cDlcstWGy2Lg4MY1aeh9
-         e2nQ==
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=Ay4timk1xWotJvsgSoLnsWO4oyPYDoeHPtFGTfhtgfI=;
+        b=t92CWFWjyR94g1Dx9rLLDBajpCwSVgP9bI+BzzLmMWZgV5Vh/vgSRVH9WwcAtPk2Do
+         Xj4UA6iD8Am3EqTrRbGqnY9iFTeScopQVDrgzgE3PHlLQWcFQVXhgY2YkjR6m4GXKYyo
+         BCoYiHBP244f7Rpf7FTvRaBA0fp9Um9xEa+Pf70IjThEsRkF5q0kyTmWK2s9pJ8+LqVY
+         jseC6rLkbvcasZ5ZCWPYTEcAIX39kcjutHWqaV6QeyB6kuurSRfhTNs34cTYuayoJ/uY
+         0iro7dl30v60hbWNDYSZnfg6MJn+j1fz4QqKCztV0Lf/wjQENXhpmuFZtVlJ6NNuKMkD
+         GmZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4x2DM6vZJfp7GFqVdyd8aE+i5ANpX3rPocujCcf6n+Q=;
-        b=Rq6Jx9ilqTxMsvVwTXLXCM89Hpon3mE1rMR9rDVUhi6jK7hei2fyRTsbgYCet6wBLx
-         pH+YvFBOv0ySb51cidwAtgRecQ7DrMWrwLEUxKthJo2MTC7fLjBJuIRxXk00TPIaNSUl
-         H3Qs0N5gxUzOwaGOo5/aKCtvy9LQSecVblFp3Swb6iem8tGzghpXnYrhZEDUJkG6xBZ2
-         JPMMOTI+jBld3GRwCQKcmHwQx3qXgZdKWRLSWhCXqXeWNnmH2q+YcLkG9ApH1DoK8Exi
-         i3bfvWustAGV9hZNYaRNnhQNkxoyZ1uqd2TRa83ssF2g8n3qHZdQAuTY/PHzYRTyYAea
-         zZtg==
-X-Gm-Message-State: APjAAAVJ52Pib72AmKrYcWgrjZIioRS8HlTkgOhc9X6ni6vVM2RcbsGR
-        63a15QnXlJE2MAnPoGmTSUQ=
-X-Google-Smtp-Source: APXvYqxhgQLri63K/LbZFQj7lcnficy1+XLo94yeZlvK5RP4VuJQeAGIK9vTjSodOLSIirkggjI2Ag==
-X-Received: by 2002:a37:8d01:: with SMTP id p1mr14038731qkd.210.1571497618475;
-        Sat, 19 Oct 2019 08:06:58 -0700 (PDT)
-Received: from smtp.gmail.com ([143.107.45.1])
-        by smtp.gmail.com with ESMTPSA id o5sm3120283qtq.10.2019.10.19.08.06.56
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=Ay4timk1xWotJvsgSoLnsWO4oyPYDoeHPtFGTfhtgfI=;
+        b=nN/giHm+LajitVlYJ4EX7gbsu+CDVL9O6DJkbEimEP3mv7KL4HPQgM7OQfPNe5eGmS
+         YjHzNwMC9m1kOwB9LPbgGHKOpPjT/RmW4dNpPs+Py5/sKR/XtdDLCCxOlL+iIXJpvS2X
+         z24Vdq1EQuJZYcUmRkvf1iP914UAmHgfnuYwvJ0SMULNfU29sn7DgTaZDi81oKCDtc/H
+         vVAxsoCexYmb4suXaYOqhNOmKvfnKTXqGm728gM8NzNd8/mPh7pw1LwbDs/6Dc1gOniU
+         +89IXqc7xAJqXiOm9ZuPW+mOTrewrvdaE5avvlboAFeLwjB2oyxvuolUYJg8qVWfauSb
+         NvRg==
+X-Gm-Message-State: APjAAAVDrHeDFbFmZFtSuLY6VUNhGSEL9+0+UYLR2aoOG5/j9rb1sjwS
+        Q4Iyj2PMsGSSXmODB29n3g==
+X-Google-Smtp-Source: APXvYqz7qO0W/vfzKmX4qN6UybbkVEuAp7v+lMxgcQwDTZpgHCDRYgUylsJfDwmszlw+CZ4cd3T+jg==
+X-Received: by 2002:adf:fc4c:: with SMTP id e12mr1750054wrs.179.1571497751485;
+        Sat, 19 Oct 2019 08:09:11 -0700 (PDT)
+Received: from ninjabhubz.org (host-92-23-80-57.as13285.net. [92.23.80.57])
+        by smtp.gmail.com with ESMTPSA id t13sm10742318wra.70.2019.10.19.08.09.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Oct 2019 08:06:58 -0700 (PDT)
-Date:   Sat, 19 Oct 2019 12:06:54 -0300
-From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     jic23@kernel.org, dragos.bogdan@analog.com,
-        alexandru.ardelean@analog.com, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        kernel-usp@googlegroups.com
-Subject: Re: [PATCH v2 2/2] dt-bindings: iio: adc: Add DT docs for AD7292
-Message-ID: <20191019150652.h6bkfz2w2ohemvwy@smtp.gmail.com>
-References: <20191016025220.td3xb7oxlfkznxl6@smtp.gmail.com>
- <20191017191152.GA11222@bogus>
+        Sat, 19 Oct 2019 08:09:10 -0700 (PDT)
+From:   Jules Irenge <jbi.octave@gmail.com>
+X-Google-Original-From: Jules Irenge <maxx@ninjahub.org>
+Date:   Sat, 19 Oct 2019 16:09:03 +0100 (BST)
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+cc:     Jules Irenge <jbi.octave@gmail.com>,
+        outreachy-kernel@googlegroups.com, devel@driverdev.osuosl.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/5] staging: wfx: fix warnings of no space is
+ necessary
+In-Reply-To: <20191019142443.GH24678@kadam>
+Message-ID: <alpine.LFD.2.21.1910191603520.6740@ninjahub.org>
+References: <20191019140719.2542-1-jbi.octave@gmail.com> <20191019140719.2542-2-jbi.octave@gmail.com> <20191019142443.GH24678@kadam>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191017191152.GA11222@bogus>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob
 
-Thanks for the review.
 
-I'm having some trouble with the DTC.
-I installed the DT tool from https://github.com/robherring/dt-schema.
-Running make -k dt_binding_check goes through all the checks (CHKDT), producing
-the .example.dts files but then gives errors like:
+On Sat, 19 Oct 2019, Dan Carpenter wrote:
 
-  DTC     Documentation/devicetree/bindings/arm/calxeda.example.dt.yaml
-FATAL ERROR: Unknown output format "yaml"
-make[1]: *** [scripts/Makefile.lib:314: Documentation/devicetree/bindings/arm/calxeda.example.dt.yaml] Error 1
-make[1]: *** Deleting file 'Documentation/devicetree/bindings/arm/calxeda.example.dt.yaml'
+> On Sat, Oct 19, 2019 at 03:07:15PM +0100, Jules Irenge wrote:
+> > diff --git a/drivers/staging/wfx/bh.c b/drivers/staging/wfx/bh.c
+> > index 3355183fc86c..573216b08042 100644
+> > --- a/drivers/staging/wfx/bh.c
+> > +++ b/drivers/staging/wfx/bh.c
+> > @@ -69,13 +69,13 @@ static int rx_helper(struct wfx_dev *wdev, size_t read_len, int *is_cnf)
+> >  	if (wfx_data_read(wdev, skb->data, alloc_len))
+> >  		goto err;
+> >  
+> > -	piggyback = le16_to_cpup((u16 *) (skb->data + alloc_len - 2));
+> > +	piggyback = le16_to_cpup((u16 *)(skb->data + alloc_len - 2));
+> >  	_trace_piggyback(piggyback, false);
+> >  
+> > -	hif = (struct hif_msg *) skb->data;
+> > +	hif = (struct hif_msg *)skb->data;
+> >  	WARN(hif->encrypted & 0x1, "unsupported encryption type");
+> >  	if (hif->encrypted == 0x2) {
+> > -		if (wfx_sl_decode(wdev, (void *) hif)) {
+> > +		if (wfx_sl_decode(wdev, (void *)hif)) {
+> 
+> In the future you may want to go through and remove the (void *) casts.
+> It's not required here.
+> 
+> > diff --git a/drivers/staging/wfx/bus_spi.c b/drivers/staging/wfx/bus_spi.c
+> > index f65f7d75e731..effd07957753 100644
+> > --- a/drivers/staging/wfx/bus_spi.c
+> > +++ b/drivers/staging/wfx/bus_spi.c
+> > @@ -90,7 +90,7 @@ static int wfx_spi_copy_to_io(void *priv, unsigned int addr,
+> >  	struct wfx_spi_priv *bus = priv;
+> >  	u16 regaddr = (addr << 12) | (count / 2);
+> >  	// FIXME: use a bounce buffer
+> > -	u16 *src16 = (void *) src;
+> > +	u16 *src16 = (void *)src;
+> 
+> Here we are just getting rid of the constness.  Apparently we are doing
+> that so we can modify it without GCC pointing out the bug!!  I don't
+> know the code but this seems very wrong.
+> 
+Checkpatch was complaining about  space between type cast and the 
+variable. I just get rid of the space. Well I don't know whether this was 
+false positive one.
 
-My pip3 installation has:
-jsonschema jsonschema-3.1.2.dev6+g0d827f3
-rfc3987 1.3.8
+Thanks for the feedback. I will update the patch.
 
-$HOME/.local/bin is listed in my shell's PATH variable.
-
-I was trying to follow the documentation at:
-Documentation/devicetree/writing-schema.rst
-
-Are there any other DTC dependencies that I am missing?
-
-On 10/17, Rob Herring wrote:
-> On Tue, Oct 15, 2019 at 11:52:23PM -0300, Marcelo Schmitt wrote:
-> > Add a device tree binding doc for AD7292 monitor and control system.
-> > 
-> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> > ---
-> >  .../bindings/iio/adc/adi,ad7292.yaml          | 107 ++++++++++++++++++
-> >  MAINTAINERS                                   |   1 +
-> >  2 files changed, 108 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> > new file mode 100644
-> > index 000000000000..40028332d9e2
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> > @@ -0,0 +1,107 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/adc/adi,ad7292.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Analog Devices AD7292 10-Bit Monitor and Control System
-> > +
-> > +maintainers:
-> > +  - Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> > +
-> > +description: |
-> > +  Analog Devices AD7292 10-Bit Monitor and Control System with ADC, DACs,
-> > +  Temperature Sensor, and GPIOs
-> > +
-> > +  Specifications about the part can be found at:
-> > +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - adi,ad7292
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  vref-supply:
-> > +    description: |
-> > +      The regulator supply for ADC and DAC reference voltage.
-> > +    maxItems: 1
-> 
-> Not necessary, regulator supplies are always 1 item, so drop maxItems.
-> 
-> > +
-> > +  spi-cpha:
-> > +    description: |
-> > +      See Documentation/devicetree/bindings/spi/spi-controller.yaml
-> > +    maxItems: 1
-> 
-> This is just wrong because spi-cpha is a boolean. Just 'spi-cpha: true' 
-> is sufficient. If this device needs this property, then it should 
-> probably be required.
-> 
-> > +
-> > +  '#address-cells':
-> > +    const: 1
-> > +
-> > +  '#size-cells':
-> > +    const: 0
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +patternProperties:
-> > +  "^channel@[0-7]$":
-> > +    type: object
-> > +    description: |
-> > +      Represents the external channels which are connected to the ADC.
-> > +      See Documentation/devicetree/bindings/iio/adc/adc.txt.
-> > +
-> > +    properties:
-> > +      reg:
-> > +        description: |
-> > +          The channel number. It can have up to 8 channels numbered from 0 to 7.
-> > +        maxItems: 1
-> > +
-> > +      diff-channels:
-> > +        description: see Documentation/devicetree/bindings/iio/adc/adc.txt
-> > +        maxItems: 1
-> > +
-> > +    required:
-> > +      - reg
-> > +
-> > +examples:
-> > +  - |
-> > +    spi {
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +
-> > +      ad7292: ad7292@0 {
-> 
-> adc@0
-> 
-> > +        compatible = "adi,ad7292";
-> > +        reg = <0>;
-> > +
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        spi-max-frequency = <25000000>;
-> > +        vref-supply = <&adc_vref>;
-> > +        spi-cpha;
-> > +
-> > +        channel@0 {
-> > +          reg = <0>;
-> > +          diff-channels = <0 1>;
-> > +        };
-> > +        channel@2 {
-> > +          reg = <2>;
-> > +        };
-> > +        channel@3 {
-> > +          reg = <3>;
-> > +        };
-> > +        channel@4 {
-> > +          reg = <4>;
-> > +        };
-> > +        channel@5 {
-> > +          reg = <5>;
-> > +        };
-> > +        channel@6 {
-> > +          reg = <6>;
-> > +        };
-> > +        channel@7 {
-> > +          reg = <7>;
-> > +        };
-> > +      };
-> > +    }
-> 
-> Missing ';'. Make sure this builds with 'make -k dt_binding_check'. The 
-> '-k' is due to some other breakage ATM.
-> 
-> Rob
+Regards,
+Jules
