@@ -2,104 +2,117 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B85CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 20:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 726C8CA9EAB
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 20:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58B5C222C5
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 20:50:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VBOM8ALH"
+	by mail.kernel.org (Postfix) with ESMTP id 4D91721925
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 20:50:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfJSUuF (ORCPT
+        id S1726366AbfJSUtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 16:50:05 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38264 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbfJSUuE (ORCPT
+        Sat, 19 Oct 2019 16:49:47 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:48895 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbfJSUtq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 16:50:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=vbPmDbJYJWKyeK0k+G+8kKAF+nSpAsbuTcFnR8Fac1Q=; b=VBOM8ALHBxuQDtxSnr/K8IhOk
-        YS+OXjD7EM96EzTrltFEBRFvyu3vTQyScYFIgXlRrWU/SS00QDJsCAJjBa7VtZKv3e+vnUrC7QO4W
-        Wzdg/9xg1SzJYKmEREwmo4y9jKEQcOg9CErjABpBg1umbq9nSBgQ+fmurJelYsVegUwwI7QFVl+jd
-        Jhaz5NByjv1d8wIJrg7ISfs2lYSVYm4tyKUzqnRTYPFKOsFeJndEYCKko/t+leEfBB5dNIEXP11sU
-        2JUIokXixpXQuE5VjXPTujvDwqBvhC0OIbrBoCYHW/NnQZ4TnwpeZvoD2+B2p+qmmIMTlU4VDY0q9
-        650UY7YBw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iLvfn-0003xi-MD; Sat, 19 Oct 2019 20:50:03 +0000
-Date:   Sat, 19 Oct 2019 13:50:03 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-fsdevel@vger.kernel.org, Jeff Smits <jeff.smits@intel.com>,
-        Doug Nelson <doug.nelson@intel.com>, stable@vger.kernel.org,
-        Jan Kara <jack@suse.cz>, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs/dax: Fix pmd vs pte conflict detection
-Message-ID: <20191019205003.GN32665@bombadil.infradead.org>
-References: <157150237973.3940076.12626102230619807187.stgit@dwillia2-desk3.amr.corp.intel.com>
+        Sat, 19 Oct 2019 16:49:46 -0400
+X-Originating-IP: 86.202.229.42
+Received: from localhost (lfbn-lyo-1-146-42.w86-202.abo.wanadoo.fr [86.202.229.42])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id B727F240008;
+        Sat, 19 Oct 2019 20:49:44 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     linux-rtc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 3/9] rtc: ds1343: use burst write to set time
+Date:   Sat, 19 Oct 2019 22:49:35 +0200
+Message-Id: <20191019204941.6203-3-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191019204941.6203-1-alexandre.belloni@bootlin.com>
+References: <20191019204941.6203-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <157150237973.3940076.12626102230619807187.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 19, 2019 at 09:26:19AM -0700, Dan Williams wrote:
-> Check for NULL entries before checking the entry order, otherwise NULL
-> is misinterpreted as a present pte conflict. The 'order' check needs to
-> happen before the locked check as an unlocked entry at the wrong order
-> must fallback to lookup the correct order.
-> 
-> Reported-by: Jeff Smits <jeff.smits@intel.com>
-> Reported-by: Doug Nelson <doug.nelson@intel.com>
-> Cc: <stable@vger.kernel.org>
-> Fixes: 23c84eb78375 ("dax: Fix missed wakeup with PMD faults")
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  fs/dax.c |    5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/dax.c b/fs/dax.c
-> index a71881e77204..08160011d94c 100644
-> --- a/fs/dax.c
-> +++ b/fs/dax.c
-> @@ -221,10 +221,11 @@ static void *get_unlocked_entry(struct xa_state *xas, unsigned int order)
->  
->  	for (;;) {
->  		entry = xas_find_conflict(xas);
-> +		if (!entry || WARN_ON_ONCE(!xa_is_value(entry)))
-> +			return entry;
->  		if (dax_entry_order(entry) < order)
->  			return XA_RETRY_ENTRY;
-> -		if (!entry || WARN_ON_ONCE(!xa_is_value(entry)) ||
-> -				!dax_is_locked(entry))
-> +		if (!dax_is_locked(entry))
->  			return entry;
+To avoid possible race condition, use regmap_bulk_write to write all the
+date/time registers at once instead of sequentially.
 
-Yes, I think this works.  Should we also add:
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/rtc/rtc-ds1343.c | 52 ++++++++++------------------------------
+ 1 file changed, 12 insertions(+), 40 deletions(-)
 
- static unsigned int dax_entry_order(void *entry)
+diff --git a/drivers/rtc/rtc-ds1343.c b/drivers/rtc/rtc-ds1343.c
+index 9d7d571e722b..8a4f1fbb57fd 100644
+--- a/drivers/rtc/rtc-ds1343.c
++++ b/drivers/rtc/rtc-ds1343.c
+@@ -236,46 +236,18 @@ static int ds1343_read_time(struct device *dev, struct rtc_time *dt)
+ static int ds1343_set_time(struct device *dev, struct rtc_time *dt)
  {
-+	BUG_ON(!xa_is_value(entry));
- 	if (xa_to_value(entry) & DAX_PMD)
- 		return PMD_ORDER;
- 	return 0;
+ 	struct ds1343_priv *priv = dev_get_drvdata(dev);
+-	int res;
+-
+-	res = regmap_write(priv->map, DS1343_SECONDS_REG,
+-				bin2bcd(dt->tm_sec));
+-	if (res)
+-		return res;
+-
+-	res = regmap_write(priv->map, DS1343_MINUTES_REG,
+-				bin2bcd(dt->tm_min));
+-	if (res)
+-		return res;
+-
+-	res = regmap_write(priv->map, DS1343_HOURS_REG,
+-				bin2bcd(dt->tm_hour) & 0x3F);
+-	if (res)
+-		return res;
+-
+-	res = regmap_write(priv->map, DS1343_DAY_REG,
+-				bin2bcd(dt->tm_wday + 1));
+-	if (res)
+-		return res;
+-
+-	res = regmap_write(priv->map, DS1343_DATE_REG,
+-				bin2bcd(dt->tm_mday));
+-	if (res)
+-		return res;
+-
+-	res = regmap_write(priv->map, DS1343_MONTH_REG,
+-				bin2bcd(dt->tm_mon + 1));
+-	if (res)
+-		return res;
+-
+-	dt->tm_year %= 100;
+-
+-	res = regmap_write(priv->map, DS1343_YEAR_REG,
+-				bin2bcd(dt->tm_year));
+-	if (res)
+-		return res;
+-
+-	return 0;
++	u8 buf[7];
++
++	buf[0] = bin2bcd(dt->tm_sec);
++	buf[1] = bin2bcd(dt->tm_min);
++	buf[2] = bin2bcd(dt->tm_hour) & 0x3F;
++	buf[3] = bin2bcd(dt->tm_wday + 1);
++	buf[4] = bin2bcd(dt->tm_mday);
++	buf[5] = bin2bcd(dt->tm_mon + 1);
++	buf[6] = bin2bcd(dt->tm_year - 100);
++
++	return regmap_bulk_write(priv->map, DS1343_SECONDS_REG,
++				 buf, sizeof(buf));
  }
+ 
+ static int ds1343_update_alarm(struct device *dev)
+-- 
+2.21.0
 
-which would have caught this logic error before it caused a performance
-regression?
