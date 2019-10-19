@@ -2,59 +2,66 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB683CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 10:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CCDCA9EAC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 10:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9EFE222CC
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 10:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBAFF222C2
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 10:51:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JIVpdTb5";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="itmLqvHz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725924AbfJSKfM (ORCPT
+        id S1726027AbfJSKvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 06:35:12 -0400
-Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:49557 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725777AbfJSKfM (ORCPT
+        Sat, 19 Oct 2019 06:51:37 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:40652 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbfJSKvh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 06:35:12 -0400
-Received: from belgarion ([90.76.41.223])
-        by mwinf5d17 with ME
-        id FNb42100B4otT8A03Nb44m; Sat, 19 Oct 2019 12:35:10 +0200
-X-ME-Helo: belgarion
-X-ME-Auth: amFyem1pay5yb2JlcnRAb3JhbmdlLmZy
-X-ME-Date: Sat, 19 Oct 2019 12:35:10 +0200
-X-ME-IP: 90.76.41.223
-From:   Robert Jarzmik <robert.jarzmik@free.fr>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        IDE-ML <linux-ide@vger.kernel.org>,
-        "open list\:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        linux-leds@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-rtc@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
-Subject: Re: [PATCH 00/46] ARM: pxa: towards multiplatform support
-References: <20191018154052.1276506-1-arnd@arndb.de>
-        <87v9slg9k5.fsf@belgarion.home>
-        <CAK8P3a1JDtHsOW=iaxEycbJ4TBkR9MHUyDMeJnwxCtb=tefnBQ@mail.gmail.com>
-        <CAK8P3a0376Anmoc8VWXcEBg+z2B+1vcxJoywYYROBQNxpVmZuA@mail.gmail.com>
-X-URL:  http://belgarath.falguerolles.org/
-Date:   Sat, 19 Oct 2019 12:35:03 +0200
-In-Reply-To: <CAK8P3a0376Anmoc8VWXcEBg+z2B+1vcxJoywYYROBQNxpVmZuA@mail.gmail.com>
-        (Arnd Bergmann's message of "Fri, 18 Oct 2019 21:32:36 +0200")
-Message-ID: <87r239f2g8.fsf@belgarion.home>
-User-Agent: Gnus/5.130008 (Ma Gnus v0.8) Emacs/26 (gnu/linux)
+        Sat, 19 Oct 2019 06:51:37 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 417FA60716; Sat, 19 Oct 2019 10:51:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571482296;
+        bh=Zmkpjo/I5aAU8+rQ0bWrjNgIdtKvqhgADZlmRlXPBm8=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=JIVpdTb5hoQJW07ua7UwHE4TvwkRjQhxXAxRY5sG307Clow3ZH9z1xie9xYTZ/1Vs
+         oJigZKG1victBwDsok7I7V9H89f68SGi2avSZGqF/A2S1Hnziw3ulvd82RpZvE2P5s
+         73llfWQpu16kLQGa1J2+Ha922N1o45/2IpX0hIkA=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C01D16039E;
+        Sat, 19 Oct 2019 10:51:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571482295;
+        bh=Zmkpjo/I5aAU8+rQ0bWrjNgIdtKvqhgADZlmRlXPBm8=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=itmLqvHzzIsUWuwGTlA7pacgaBs22Lo7f/HNrlCNoJY1SW9BeRo7Asd8cyAoFOIGp
+         5H+Hx775cjy0eOeuPiDLD2ZaOaOA+sziSF4zU0yZWZGGiS+prjqUlBL9sOgfBxH16i
+         PoRjcFqUNZK4gXhicUXrxYE4UMsASg5wWKck7OeU=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C01D16039E
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Laura Abbott <labbott@redhat.com>
+Cc:     Ping-Ke Shih <pkshih@realtek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Nicolas Waisman <nico@semmle.com>
+Subject: Re: [PATCH v2] rtlwifi: Fix potential overflow on P2P code
+References: <20191018114321.13131-1-labbott@redhat.com>
+Date:   Sat, 19 Oct 2019 13:51:30 +0300
+In-Reply-To: <20191018114321.13131-1-labbott@redhat.com> (Laura Abbott's
+        message of "Fri, 18 Oct 2019 07:43:21 -0400")
+Message-ID: <871rv9xb2l.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -62,42 +69,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd Bergmann <arnd@arndb.de> writes:
+Laura Abbott <labbott@redhat.com> writes:
 
-> On Fri, Oct 18, 2019 at 9:17 PM Arnd Bergmann <arnd@arndb.de> wrote:
->> On Fri, Oct 18, 2019 at 9:04 PM Robert Jarzmik <robert.jarzmik@free.fr> wrote:
->> > Arnd Bergmann <arnd@arndb.de> writes:
->> >
->> > > Hi PXA maintainers,
->> > >
->> > > I'm in the process of getting the old ARM platforms to all build
->> > > in a single kernel. The largest part of that work is changing all
->> > > the device drivers to no longer require mach/*.h header files.
->> > >
->> > > This series does it for arch/pxa/.
->> > >
->> > > As with the omap1 and s3c24xx series I sent before, I don't
->> > > expect this all to be correct in the first version, though
->> > > a lot of the patches are fairly simple and I did exhaustive
->> > > compile-time testing on them.
->> > >
->> > > Please test if you have the hardware, or review!
->> >
->> > Hi Arnd,
->> >
->> > Would you have a git tree I can pull from ?
->> > That would make my life easier than applying manually 46 patches...
->>
->> I've now pushed it to
->>
->> git://git.kernel.org:/pub/scm/linux/kernel/git/arnd/playground.git
->> pxa-multiplatform
+> Nicolas Waisman noticed that even though noa_len is checked for
+> a compatible length it's still possible to overrun the buffers
+> of p2pinfo since there's no check on the upper bound of noa_num.
+> Bound noa_num against P2P_MAX_NOA_NUM.
 >
-> Sorry for the duplication, I had some problems with email configuration
-> so my reply got rejected, let's see if it goes through this time.
-I have it now, thanks, I'll test and review as soon as I can.
+> Reported-by: Nicolas Waisman <nico@semmle.com>
+> Signed-off-by: Laura Abbott <labbott@redhat.com>
+> ---
+> v2: Use P2P_MAX_NOA_NUM instead of erroring out.
+> ---
+>  drivers/net/wireless/realtek/rtlwifi/ps.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/net/wireless/realtek/rtlwifi/ps.c b/drivers/net/wireless/realtek/rtlwifi/ps.c
+> index 70f04c2f5b17..fff8dda14023 100644
+> --- a/drivers/net/wireless/realtek/rtlwifi/ps.c
+> +++ b/drivers/net/wireless/realtek/rtlwifi/ps.c
+> @@ -754,6 +754,9 @@ static void rtl_p2p_noa_ie(struct ieee80211_hw *hw, void *data,
+>  				return;
+>  			} else {
+>  				noa_num = (noa_len - 2) / 13;
+> +				if (noa_num > P2P_MAX_NOA_NUM)
+> +					noa_num = P2P_MAX_NOA_NUM;
+> +
+>  			}
+>  			noa_index = ie[3];
+>  			if (rtlpriv->psc.p2p_ps_info.p2p_ps_mode ==
+> @@ -848,6 +851,9 @@ static void rtl_p2p_action_ie(struct ieee80211_hw *hw, void *data,
+>  				return;
+>  			} else {
+>  				noa_num = (noa_len - 2) / 13;
+> +				if (noa_num > P2P_MAX_NOA_NUM)
+> +					noa_num = P2P_MAX_NOA_NUM;
 
-Cheers.
+IMHO using min() would be cleaner, but I'm fine with this as well. Up to
+you.
 
 -- 
-Robert
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
