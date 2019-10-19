@@ -2,155 +2,216 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B87CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51113CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8471C222CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:59:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571450340;
-	bh=GWYlF/iOYA1FbDRl6AS4IwAeF86kJLhjlrh3zMQI9OA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1uun9qjihNzw6aoEUrd4MNTVE/p/QjP8W2ocmfbso3dXb6XlCR3D/SDcU+UY51m58
-	 aUopnDFpFe13/CGQrYvmzfxpyI0V/63T2u6srTc+Et0mDsiLvoxwDWFix1lleaUVIp
-	 RkcyB2s7bgCCZmnOuLHfvLkyzbZ20wSSDm1LzOb8=
+	by mail.kernel.org (Postfix) with ESMTP id 1DAB5222C2
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:59:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="bc4c74Lh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbfJSB67 (ORCPT
+        id S1726694AbfJSB7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 21:58:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50142 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726033AbfJSB67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 21:58:59 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30A80222C2;
-        Sat, 19 Oct 2019 01:58:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571450337;
-        bh=GWYlF/iOYA1FbDRl6AS4IwAeF86kJLhjlrh3zMQI9OA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=l56rdP0f9iXMTAUXnT5mvBkd8G9OESNitxSge0+9JSeYosNk39wnMmHTYF48/jsUY
-         eF+88V+rmk/e38F9ME1C0VO9uDi5X2FVanpc6NbVRamIE8QqgR2fT2n0H0CmgQBrw9
-         QzMaZ0a2d45b0vbZ/bZVX9GRNOBkJ0a2dOXPJ0l8=
-Date:   Fri, 18 Oct 2019 18:58:56 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     Michal Hocko <mhocko@kernel.org>, Daniel Wagner <dwagner@suse.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Hillf Danton <hdanton@sina.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v3 2/3] mm/vmalloc: respect passed gfp_mask when do
- preloading
-Message-Id: <20191018185856.1a77fc3a14a58ec18ca76a59@linux-foundation.org>
-In-Reply-To: <20191018094049.GB8744@pc636>
-References: <20191016095438.12391-1-urezki@gmail.com>
-        <20191016095438.12391-2-urezki@gmail.com>
-        <20191016110604.GT317@dhcp22.suse.cz>
-        <20191018094049.GB8744@pc636>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 18 Oct 2019 21:59:36 -0400
+Received: from mail-40130.protonmail.ch ([185.70.40.130]:53161 "EHLO
+        mail-40130.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfJSB7g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 18 Oct 2019 21:59:36 -0400
+Date:   Sat, 19 Oct 2019 01:59:30 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=default; t=1571450372;
+        bh=zQWVAXWLYp9EvFOfLtaotaB5R/JfQb5AnLhmiAorc78=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
+         Feedback-ID:From;
+        b=bc4c74LhxwrRUAFlqIHALaF763By4U5gTv8Y1WPbE+5Ucek/WT2yw2Nisj834LOCH
+         UujMWtU/087YczsrfQB9S/NkVK+sqFr98rkP8Tnq7cLIYUdJeINinl90GG8itrKKbA
+         ybUnPllkXp1XIlxYWDofhdc79eVMZ43shdoJ7oQk=
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+From:   Mazin Rezk <mnrzk@protonmail.com>
+Cc:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "jikos@kernel.org" <jikos@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>,
+        "mnrzk@protonmail.com" <mnrzk@protonmail.com>
+Reply-To: Mazin Rezk <mnrzk@protonmail.com>
+Subject: Re: [PATCH v6 1/2] HID: logitech: Add MX Master over Bluetooth
+Message-ID: <_ctOOBM46unM-iL5c36pEP4zeFE8_8KbMqOYERMCDjbAqRkn8S5i8ZVOGegxOgWcyvc9YzCqQT6yITRG8h6YXaELI-KMIrgMFWfFONmusXg=@protonmail.com>
+In-Reply-To: <CAO-hwJJ18L3nDMQ_OqCZPyA+FFk3QsnbY=dYSNkELWzTSAnQLA@mail.gmail.com>
+References: <ggKipcQplIlTFmoP3hPnrQ-7_5-C0PKGd5feFymts3uenIBA8zOwz47YmKheD34H1rpkguDAGdx5YbS9UqpwfjT5Ir0Lji941liLVp--QtQ=@protonmail.com>
+ <CAO-hwJJ18L3nDMQ_OqCZPyA+FFk3QsnbY=dYSNkELWzTSAnQLA@mail.gmail.com>
+Feedback-ID: 18B_FC5q-t32TXzMsVp9BgkgrdNH3iwklfW8WOrHrcxZA0WRj7JodCh5VXKxs6A3OaiHK0QNd8wi3SImKex8yQ==:Ext:ProtonMail
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 18 Oct 2019 11:40:49 +0200 Uladzislau Rezki <urezki@gmail.com> wrote:
+On Friday, October 18, 2019 11:36 AM, Benjamin Tissoires <benjamin.tissoire=
+s@redhat.com> wrote:
 
-> > > alloc_vmap_area() is given a gfp_mask for the page allocator.
-> > > Let's respect that mask and consider it even in the case when
-> > > doing regular CPU preloading, i.e. where a context can sleep.
-> > 
-> > This is explaining what but it doesn't say why. I would go with
-> > "
-> > Allocation functions should comply with the given gfp_mask as much as
-> > possible. The preallocation code in alloc_vmap_area doesn't follow that
-> > pattern and it is using a hardcoded GFP_KERNEL. Although this doesn't
-> > really make much difference because vmalloc is not GFP_NOWAIT compliant
-> > in general (e.g. page table allocations are GFP_KERNEL) there is no
-> > reason to spread that bad habit and it is good to fix the antipattern.
-> > "
-> I can go with that, agree. I am not sure if i need to update the patch
-> and send v4. Or maybe Andrew can directly update it in his tree.
-> 
-> Andrew, should i send or can update?
+> Hi Mazin,
+>
+> On Mon, Oct 14, 2019 at 8:36 PM Mazin Rezk mnrzk@protonmail.com wrote:
+>
+> > This patch adds support for the MX Master (b01e and b012) and also adds
+> > foundational code for other Bluetooth LE HID++ devices to be added.
+> > Some devices do not support short reports and thus have a quirk
+> > (HIDPP_QUIRK_MISSING_SHORT_REPORTS) that forces short reports to be sen=
+t as
+> > long reports. Since all Bluetooth LE HID++ devices seem to act this way=
+,
+> > HIDPP_QUIRK_CLASS_BLUETOOTH_LE aliases this quirk.
+> > To allow for some space for future quirks, I changed the comment that
+> > defines the bits reserved for classes from 2...20 to 2..15.
+> >
+> > Signed-off-by: Mazin Rezk mnrzk@protonmail.com
+> >
+> > -----------------------------------------------
+> >
+> > drivers/hid/hid-logitech-hidpp.c | 24 +++++++++++++++++++++++-
+> > 1 file changed, 23 insertions(+), 1 deletion(-)
+> > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitec=
+h-hidpp.c
+> > index 0179f7ed77e5..997b1056850a 100644
+> > --- a/drivers/hid/hid-logitech-hidpp.c
+> > +++ b/drivers/hid/hid-logitech-hidpp.c
+> > @@ -59,7 +59,8 @@ MODULE_PARM_DESC(disable_tap_to_click,
+> > #define HIDPP_QUIRK_CLASS_G920 BIT(3)
+> > #define HIDPP_QUIRK_CLASS_K750 BIT(4)
+> > -/* bits 2..20 are reserved for classes /
+> > +/ bits 2..15 are reserved for classes /
+> > +#define HIDPP_QUIRK_MISSING_SHORT_REPORTS BIT(20)
+> > / #define HIDPP_QUIRK_CONNECT_EVENTS BIT(21) disabled */#define HIDPP_Q=
+UIRK_WTP_PHYSICAL_BUTTONS BIT(22)
+> > #define HIDPP_QUIRK_NO_HIDINPUT BIT(23)
+> > @@ -81,6 +82,8 @@ MODULE_PARM_DESC(disable_tap_to_click,
+> > HIDPP_QUIRK_HI_RES_SCROLL_X2120 | \
+> > HIDPP_QUIRK_HI_RES_SCROLL_X2121)
+> > +#define HIDPP_QUIRK_CLASS_BLUETOOTH_LE HIDPP_QUIRK_MISSING_SHORT_REPOR=
+TS
+> > +
+> > #define HIDPP_QUIRK_DELAYED_INIT HIDPP_QUIRK_NO_HIDINPUT
+> > #define HIDPP_CAPABILITY_HIDPP10_BATTERY BIT(0)
+> > @@ -340,6 +343,12 @@ static int hidpp_send_rap_command_sync(struct hidp=
+p_device *hidpp_dev,
+> > struct hidpp_report *message;
+> > int ret, max_count;
+> >
+> > -         /* Force long reports on devices that do not support short re=
+ports */
+> >
+> >
+> > -         if (hidpp_dev->quirks & HIDPP_QUIRK_MISSING_SHORT_REPORTS &&
+> >
+> >
+> > -             report_id =3D=3D REPORT_ID_HIDPP_SHORT)
+> >
+> >
+> > -                 report_id =3D REPORT_ID_HIDPP_LONG;
+> >
+> >
+>
+> Wouldn't it be faster to just store which report needs to be put here
+> in struct hidpp_device?
+>
+> > -
+> > -         switch (report_id) {
+> >           case REPORT_ID_HIDPP_SHORT:
+> >                   max_count =3D HIDPP_REPORT_SHORT_LENGTH - 4;
+> >
+> >
+> >
+> > @@ -3482,6 +3491,12 @@ static bool hidpp_validate_report(struct hid_dev=
+ice *hdev, int id,
+> > static bool hidpp_validate_device(struct hid_device *hdev)
+> > {
+> >
+> > -         struct hidpp_device *hidpp =3D hid_get_drvdata(hdev);
+> >
+> >
+> > -         /* Skip the short report check if the device does not support=
+ it */
+> >
+> >
+> > -         if (hidpp->quirks & HIDPP_QUIRK_MISSING_SHORT_REPORTS)
+> >
+> >
+> > -                 return hidpp_validate_report(hdev, REPORT_ID_HIDPP_LO=
+NG,
+> >
+> >
+> > -                                              HIDPP_REPORT_LONG_LENGTH=
+, false);
+> >
+> >
+> > -
+>
+> I just merged Andrey's report detection, which means you will need to
+> update this hunk:
+> https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git/commit/?h=3Df=
+or-5.4/upstream-fixes&id=3D905d754c53a522aacf806ea1d3e7c929148c1910
+>
+> The good thing, is that now you can simply auto-detect if the short
+> report is missing. If the returned report_length is null, you know
+> that the report is missing (and thus you can remember to set the
+> quirk/which report id is needed).
+>
+> Cheers,
+> Benjamin
 
-I updated the changelog with Michal's words prior to committing.  You
-were cc'ed :)
+Thank you, I'll try to rework this patch based on the changes introduced in
+that commit.
 
+Thanks,
+Mazin
 
-From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Subject: mm/vmalloc: respect passed gfp_mask when doing preloading
+>
+> >         return hidpp_validate_report(hdev, REPORT_ID_HIDPP_SHORT,
+> >                                      HIDPP_REPORT_SHORT_LENGTH, false) =
+&&
+> >                hidpp_validate_report(hdev, REPORT_ID_HIDPP_LONG,
+> >
+> >
+> > @@ -3773,6 +3788,13 @@ static const struct hid_device_id hidpp_devices[=
+] =3D {
+> > { /* MX5500 keyboard over Bluetooth */
+> > HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb30b),
+> > .driver_data =3D HIDPP_QUIRK_HIDPP_CONSUMER_VENDOR_KEYS },
+> >
+> > -         { /* MX Master mouse over Bluetooth */
+> >
+> >
+> > -           HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb012),
+> >
+> >
+> > -           .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 |
+> >
+> >
+> > -                          HIDPP_QUIRK_CLASS_BLUETOOTH_LE },
+> >
+> >
+> > -         { HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb01e),
+> >
+> >
+> > -           .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 |
+> >
+> >
+> > -                          HIDPP_QUIRK_CLASS_BLUETOOTH_LE },
+> >           {}
+> >
+> >
+> >
+> > };
+> > --
+> > 2.23.0
 
-Allocation functions should comply with the given gfp_mask as much as
-possible.  The preallocation code in alloc_vmap_area doesn't follow that
-pattern and it is using a hardcoded GFP_KERNEL.  Although this doesn't
-really make much difference because vmalloc is not GFP_NOWAIT compliant in
-general (e.g.  page table allocations are GFP_KERNEL) there is no reason
-to spread that bad habit and it is good to fix the antipattern.
-
-[mhocko@suse.com: rewrite changelog]
-Link: http://lkml.kernel.org/r/20191016095438.12391-2-urezki@gmail.com
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Daniel Wagner <dwagner@suse.de>
-Cc: Hillf Danton <hdanton@sina.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- mm/vmalloc.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
---- a/mm/vmalloc.c~mm-vmalloc-respect-passed-gfp_mask-when-do-preloading
-+++ a/mm/vmalloc.c
-@@ -1063,9 +1063,9 @@ static struct vmap_area *alloc_vmap_area
- 		return ERR_PTR(-EBUSY);
- 
- 	might_sleep();
-+	gfp_mask = gfp_mask & GFP_RECLAIM_MASK;
- 
--	va = kmem_cache_alloc_node(vmap_area_cachep,
--			gfp_mask & GFP_RECLAIM_MASK, node);
-+	va = kmem_cache_alloc_node(vmap_area_cachep, gfp_mask, node);
- 	if (unlikely(!va))
- 		return ERR_PTR(-ENOMEM);
- 
-@@ -1073,7 +1073,7 @@ static struct vmap_area *alloc_vmap_area
- 	 * Only scan the relevant parts containing pointers to other objects
- 	 * to avoid false negatives.
- 	 */
--	kmemleak_scan_area(&va->rb_node, SIZE_MAX, gfp_mask & GFP_RECLAIM_MASK);
-+	kmemleak_scan_area(&va->rb_node, SIZE_MAX, gfp_mask);
- 
- retry:
- 	/*
-@@ -1099,7 +1099,7 @@ retry:
- 		 * Just proceed as it is. If needed "overflow" path
- 		 * will refill the cache we allocate from.
- 		 */
--		pva = kmem_cache_alloc_node(vmap_area_cachep, GFP_KERNEL, node);
-+		pva = kmem_cache_alloc_node(vmap_area_cachep, gfp_mask, node);
- 
- 	spin_lock(&vmap_area_lock);
- 
-_
 
