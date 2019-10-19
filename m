@@ -2,203 +2,224 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCE8CA9EAC
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 05:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9524BCA9EAC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 05:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 294AF20854
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 05:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 531FF20854
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 05:25:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="h+7narE1";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="UKaWYaZ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbfJSFXK (ORCPT
+        id S1727588AbfJSFYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 01:23:10 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:35096 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727540AbfJSFXJ (ORCPT
+        Sat, 19 Oct 2019 01:24:16 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:55508 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727540AbfJSFYQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 01:23:09 -0400
-Received: by mail-io1-f71.google.com with SMTP id r5so11304900iop.2
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 22:23:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=0KNjLuEPgiDLg6oET9WRUGpjddnu/sNONOWUjhZ/J7E=;
-        b=BRmIgugYweUiFmYRphdqAThmb0nM7jr9fKcvzAL/DS39vdJLTBO8rg42A6B0tYhyDR
-         9LI0HwI30sy5eFCo0umgukVF5r5YgKZnHq1/AjCAyRjxPqxnRqH4beldkxdGMl5EciT1
-         dlEajsWJJS+jzvPgjRwYyVKEDUIRv1eXXez2rLjCt6lnpAgScOiBIbylc6zViuXay8IB
-         QBOuD+FQ+OxRaFGQdwBYAeGB2z6gLEmuwEqwQlTuT47TGqAA+JbqW6d2pbsjFRjabHNf
-         jFkzaF+/LSOU/bPBWa1ns7nwbzA8h6aKxlKVwQHMajfyCiYPExgdhPctkpIPq1FpVMoH
-         17ow==
-X-Gm-Message-State: APjAAAWgl1sZ7hAWI+LpJHBzgtlk2W9Tmko6+OkqhLoAlu29sr+w1YIy
-        rBLGhoAkNO8XA6zoUB5wLsjgNP4VsSjBvwpBX5aiQUQsCack
-X-Google-Smtp-Source: APXvYqy9aGv6CB4zhJa7/C44XCiINnaznRSe2UdcpIcJFzhqLwvWmY8TeIzFTyYMYhiSHxSa8uC6kParUuf8rO0R/GPf887dgYNB
+        Sat, 19 Oct 2019 01:24:16 -0400
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9J5Ki0D029812;
+        Fri, 18 Oct 2019 22:24:04 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=hhKUR9Nnvz9d1T6jabtzf0VBPeBRMcBD3JUxZTD7MkA=;
+ b=h+7narE1P74yD/k6sACORJk5/sSRcgPWxdTTDbjtaaQOFa6DAv+0G1qtSRgxfKo/6AfW
+ 9oljmLkvbh0l5YA5IXode8K2Ffi4icrdYSGTkYi7zRp4RWBaq2e+elBuVXwKtYbD1P/t
+ M2DDI4i8tkvufBQ5g9mnoJeP4/E2dxGLILg= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2vq5d8dbp3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 18 Oct 2019 22:24:04 -0700
+Received: from ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) by
+ ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 18 Oct 2019 22:24:02 -0700
+Received: from NAM01-SN1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Fri, 18 Oct 2019 22:24:02 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RcsmCwW4wDECA3h7W9Jl7BC+MaMFjIY8HLAKBkZUUg/MWAL/QwdncU5fVjEllCaG6PpcJlLqOYQtomqSWdy+lyHyohol76AOARcna1Xf28L8sqTOjyJEodCqCHUxg6XvOKI1yZCnSIN2t7X/JDD5cJj9P6GsHMiy1ZF79jmgPyotL/eCRkwz80o2Rr5h5ReoD00xZspGMOkKVQIoqe0AU7Wwy8O5C01RHHm8wIzTHSxVkZS5LpUf30gStIT2MjbAzkQe8TEpdMIng+wq4KZp1uyZ8NXDHxKxH3Hp7zhfHuiHSzalliBFXaR1YQMOLaJLaFFiNIDpjQYthSB4R/tmCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hhKUR9Nnvz9d1T6jabtzf0VBPeBRMcBD3JUxZTD7MkA=;
+ b=XdrR6B0t9A4Tu4ySZ/q93eJY8JyZg3GjtMX844Q2J/DesRDDpLnIRHLLA43ckWkH3QaEGo/OhEYtN1OmB4GTNAFqItgGOxlGQNGMfiHgnedxzwjw5+dYhk0PKrHZFssNafcSh2aQmlMyXdA+VyhGI161vRVPqHXhNVvxL2GhSPHUriHzlfp7Mnwtu02asefGwsh0B69NdFM60xzVdwX8suWbDNL0XDCyvgCOoW5zkm6ivYOLXjxU7dNY9zw3OCJ+49SzZrM554Y5Um1FZ9Bxb9l3mWKY9bEfFgEGZTOO/ghQg5GdwPGzE4yRooyZ/GNNs72KEbUyL3QZy6pm67u7DQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hhKUR9Nnvz9d1T6jabtzf0VBPeBRMcBD3JUxZTD7MkA=;
+ b=UKaWYaZ3mQInVdENgswOYLB31YZmtxJRPCXctEkCFtPc6oWLLouC6jbR1FUJvXu4HNEN4HyCfc+6EZTMpH/Q3iGyDvpOlSLsGpF0/OY4FI60iLrfl8mJdEXD/+/oHAov0FMHu1y4ibJyJNQPxvbdqVtcorhn2s7FpRDj2l7Iz5Y=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
+ MWHPR15MB1584.namprd15.prod.outlook.com (10.173.234.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.21; Sat, 19 Oct 2019 05:24:01 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::fdc8:5546:bace:15f5]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::fdc8:5546:bace:15f5%5]) with mapi id 15.20.2367.019; Sat, 19 Oct 2019
+ 05:24:01 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     open list <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
+        Kernel Team <Kernel-team@fb.com>,
+        "william.kucharski@oracle.com" <william.kucharski@oracle.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "Johannes Weiner" <hannes@cmpxchg.org>,
+        Hugh Dickins <hughd@google.com>
+Subject: Re: [PATCH v3] mm,thp: recheck each page before collapsing file THP
+Thread-Topic: [PATCH v3] mm,thp: recheck each page before collapsing file THP
+Thread-Index: AQHVhd5xLYpzi8cJoUynxajagY1vhadhKiEAgABE9QA=
+Date:   Sat, 19 Oct 2019 05:24:00 +0000
+Message-ID: <9DC29F5B-1DF5-408F-BEDF-FD1FBAAB1361@fb.com>
+References: <20191018180345.4188310-1-songliubraving@fb.com>
+ <20191018181712.91dd9e9f9941642300e1b8d9@linux-foundation.org>
+In-Reply-To: <20191018181712.91dd9e9f9941642300e1b8d9@linux-foundation.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3594.4.19)
+x-originating-ip: [2620:10d:c090:180::b337]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 31a989e3-2e79-4b08-c8ab-08d754548cb6
+x-ms-traffictypediagnostic: MWHPR15MB1584:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR15MB15844B4B1B0E00D13E8A4271B36F0@MWHPR15MB1584.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2201;
+x-forefront-prvs: 01952C6E96
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(346002)(39850400004)(376002)(396003)(189003)(199004)(102836004)(99286004)(486006)(66946007)(476003)(76116006)(66446008)(66476007)(64756008)(66556008)(71190400001)(2906002)(71200400001)(5660300002)(6116002)(11346002)(446003)(14444005)(186003)(76176011)(2616005)(46003)(256004)(53546011)(5024004)(6506007)(33656002)(54906003)(316002)(305945005)(8676002)(50226002)(81166006)(81156014)(14454004)(8936002)(6916009)(7736002)(25786009)(478600001)(86362001)(36756003)(4326008)(229853002)(6436002)(6486002)(6246003)(6512007)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1584;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kwa1WNLrPa+rUjQlXaxNDeiDkvXgOzQFoTlYucD2dkv3WOPdsmbK8FT2aK3aqt/pSO7Njw1n1p3UIHUGE88kypLsCm7DqGZ4AfW5S6ps0RB58oRKpTRleCZrMNAQOq5QBr9v6U94HWN5/W+gyHdAvjrZF/xs/THFf8YcjfCCA0NYyvaYmX2NfInF/i7reexMcPsbdtzFdwKc2oZB3Fa/bqBB0edwTbIu/zIewNAlcgEKNGyybfsBFjLY5PcgH6SbXWYj782cg53i56LTAvGa7LPa2NoLF05TFLkQMU0KVIXYTOXnw2HkAnDUFy3/BzIcZtywotHs0covQxz2SlraM2RwApBgg0N1x+lHc+FFUtDtiylHPpiTs3Rajj+VIUvgz7ppW6DLvTMtT0Y+oTF4Wd7U3R/t8TKYrXKntIk+ZjohmpMSradr6y2TrKN06pPT
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1BC2B7C527BB184C8A960CE6306B5F95@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9856:: with SMTP id p22mr12053973ios.29.1571462588703;
- Fri, 18 Oct 2019 22:23:08 -0700 (PDT)
-Date:   Fri, 18 Oct 2019 22:23:08 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000060ad7d05953ca54f@google.com>
-Subject: KASAN: use-after-free Read in fuse_request_end
-From:   syzbot <syzbot+ae0bb7aae3de6b4594e2@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        miklos@szeredi.hu, mszeredi@redhat.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-MS-Exchange-CrossTenant-Network-Message-Id: 31a989e3-2e79-4b08-c8ab-08d754548cb6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Oct 2019 05:24:00.9230
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kd3nGSiLxO1Mzh9QqU1L5wz6T4d2Vnpt99znTkZp01hyThkrk0ARQWz66P9XTYKAWn/oqtQP46owLhWZBRp5zQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1584
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-19_01:2019-10-18,2019-10-19 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0
+ mlxlogscore=999 priorityscore=1501 lowpriorityscore=0 malwarescore=0
+ suspectscore=0 adultscore=0 phishscore=0 clxscore=1015 mlxscore=0
+ spamscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1908290000 definitions=main-1910190051
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    283ea345 coccinelle: api/devm_platform_ioremap_resource: r..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13afce90e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e0ac4d9b35046343
-dashboard link: https://syzkaller.appspot.com/bug?extid=ae0bb7aae3de6b4594e2
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14018fa0e00000
-
-The bug was bisected to:
-
-commit d49937749fef2597f6bcaf2a0ed67e88e347b7fb
-Author: Miklos Szeredi <mszeredi@redhat.com>
-Date:   Tue Sep 10 13:04:11 2019 +0000
-
-     fuse: stop copying args to fuse_req
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16110927600000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=15110927600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=11110927600000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+ae0bb7aae3de6b4594e2@syzkaller.appspotmail.com
-Fixes: d49937749fef ("fuse: stop copying args to fuse_req")
-
-==================================================================
-BUG: KASAN: use-after-free in fuse_request_end+0x825/0x990 fs/fuse/dev.c:279
-Read of size 8 at addr ffff8880a15b8468 by task syz-executor.0/8726
-
-CPU: 0 PID: 8726 Comm: syz-executor.0 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
-  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:634
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
-  fuse_request_end+0x825/0x990 fs/fuse/dev.c:279
-  fuse_dev_do_read.isra.0+0x115b/0x1df0 fs/fuse/dev.c:1295
-  fuse_dev_read+0x165/0x200 fs/fuse/dev.c:1328
-  call_read_iter include/linux/fs.h:1889 [inline]
-  new_sync_read+0x4d7/0x800 fs/read_write.c:414
-  __vfs_read+0xe1/0x110 fs/read_write.c:427
-  vfs_read+0x1f0/0x440 fs/read_write.c:461
-  ksys_read+0x14f/0x290 fs/read_write.c:587
-  __do_sys_read fs/read_write.c:597 [inline]
-  __se_sys_read fs/read_write.c:595 [inline]
-  __x64_sys_read+0x73/0xb0 fs/read_write.c:595
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459a59
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f764c086c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459a59
-RDX: 00000000fffffed0 RSI: 00000000200030c0 RDI: 0000000000000003
-RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f764c0876d4
-R13: 00000000004c70e6 R14: 00000000004dca70 R15: 00000000ffffffff
-
-Allocated by task 8726:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:510 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
-  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3550
-  kmalloc include/linux/slab.h:556 [inline]
-  kzalloc include/linux/slab.h:690 [inline]
-  fuse_send_init+0x48/0x440 fs/fuse/inode.c:974
-  fuse_fill_super+0x2a6/0x3a0 fs/fuse/inode.c:1257
-  vfs_get_super+0x13e/0x2e0 fs/super.c:1189
-  get_tree_nodev+0x23/0x30 fs/super.c:1219
-  fuse_get_tree+0x12e/0x190 fs/fuse/inode.c:1282
-  vfs_get_tree+0x8e/0x300 fs/super.c:1545
-  do_new_mount fs/namespace.c:2823 [inline]
-  do_mount+0x143d/0x1d10 fs/namespace.c:3143
-  ksys_mount+0xdb/0x150 fs/namespace.c:3352
-  __do_sys_mount fs/namespace.c:3366 [inline]
-  __se_sys_mount fs/namespace.c:3363 [inline]
-  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3363
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 8724:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  kasan_set_free_info mm/kasan/common.c:332 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
-  __cache_free mm/slab.c:3425 [inline]
-  kfree+0x10a/0x2c0 mm/slab.c:3756
-  process_init_reply+0xfb/0x1620 fs/fuse/inode.c:964
-  fuse_request_end+0x388/0x990 fs/fuse/dev.c:326
-  end_requests+0x16c/0x240 fs/fuse/dev.c:2049
-  fuse_abort_conn+0xa4d/0xdb0 fs/fuse/dev.c:2144
-  fuse_sb_destroy+0xa3/0x120 fs/fuse/inode.c:1325
-  fuse_kill_sb_anon+0x16/0x30 fs/fuse/inode.c:1336
-  deactivate_locked_super+0x95/0x100 fs/super.c:335
-  deactivate_super fs/super.c:366 [inline]
-  deactivate_super+0x1b2/0x1d0 fs/super.c:362
-  cleanup_mnt+0x351/0x4c0 fs/namespace.c:1102
-  __cleanup_mnt+0x16/0x20 fs/namespace.c:1109
-  task_work_run+0x145/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
-  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
-  do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8880a15b8400
-  which belongs to the cache kmalloc-192 of size 192
-The buggy address is located 104 bytes inside of
-  192-byte region [ffff8880a15b8400, ffff8880a15b84c0)
-The buggy address belongs to the page:
-page:ffffea0002856e00 refcount:1 mapcount:0 mapping:ffff8880aa400000  
-index:0x0
-flags: 0x1fffc0000000200(slab)
-raw: 01fffc0000000200 ffffea000286d508 ffffea000285ba48 ffff8880aa400000
-raw: 0000000000000000 ffff8880a15b8000 0000000100000010 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8880a15b8300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8880a15b8380: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-> ffff8880a15b8400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                           ^
-  ffff8880a15b8480: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-  ffff8880a15b8500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-==================================================================
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> On Oct 18, 2019, at 6:17 PM, Andrew Morton <akpm@linux-foundation.org> wr=
+ote:
+>=20
+> On Fri, 18 Oct 2019 11:03:45 -0700 Song Liu <songliubraving@fb.com> wrote=
+:
+>=20
+>> In collapse_file(), after locking the page, it is necessary to recheck
+>> that the page is up-to-date. Add PageUptodate() check for both shmem THP
+>> and file THP.
+>>=20
+>> Current khugepaged should not try to collapse dirty file THP, because it
+>> is limited to read only text. Add a PageDirty check and warning for file
+>> THP. This is added after page_mapping() check, because if the page is
+>> truncated, it might be dirty.
+>=20
+> When fixing a bug, please always fully describe the end-user visible
+> effects of that bug.  This is vital information for people who are
+> considering the fix for backporting.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+The end user effect is, corruption in page cache. While grouping pages=20
+into a huge page, the page cache mistakenly includes some pages that=20
+are not uptodate, and considers the huge page is uptodate.=20
+
+I am attaching updated commit log to the end.=20
+
+>=20
+> I'm suspecting that you've found a race condition which can trigger a
+> VM_BUG_ON_PAGE(), which is rather serious.  But that was just a wild
+> guess.  Please don't make us wildly guess :(
+>=20
+> The old code looked rather alarming:
+>=20
+> 			} else if (!PageUptodate(page)) {
+> 				xas_unlock_irq(&xas);
+> 				wait_on_page_locked(page);
+> 				if (!trylock_page(page)) {
+> 					result =3D SCAN_PAGE_LOCK;
+> 					goto xa_unlocked;
+> 				}
+> 				get_page(page);
+>=20
+> We don't have a ref on that page.  After we've released the xarray lock
+> we have no business playing with *page at all, correct?
+
+Yeah, this piece is not just redundant, but also buggy. I am also=20
+including some information about it.=20
+
+Updated commit log:
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D 8< =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+In collapse_file(), for !is_shmem case, current check cannot guarantee=20
+the locked page is up-to-date. Specifically, xas_unlock_irq() should not
+be called before lock_page() and get_page(); and it is necessary to=20
+recheck PageUptodate() after locking the page.=20
+
+With this bug and CONFIG_READ_ONLY_THP_FOR_FS=3Dy, madvise(HUGE)'ed .text=20
+may contain corrupted data. This is because khugepaged mistakenly=20
+collapses some not up-to-date sub pages into a huge page, and assumes the=20
+huge page is up-to-date. This will NOT corrupt data in the disk, because=20
+the page is read-only and never written back. Fix this by properly=20
+checking PageUptodate() after locking the page. This check replaces=20
+"VM_BUG_ON_PAGE(!PageUptodate(page), page);".=20
+
+Also, move PageDirty() check after locking the page. Current khugepaged=20
+should not try to collapse dirty file THP, because it is limited to=20
+read-only .text. Add a warning with the PageDirty() check as it should=20
+not happen. This warning is added after page_mapping() check, because=20
+if the page is truncated, it might be dirty.
+
+Fixes: 99cb0dbd47a1 ("mm,thp: add read-only THP support for (non-shmem) FS"=
+)
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: William Kucharski <william.kucharski@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D 8< =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+Thanks,
+Song
+
+
