@@ -2,232 +2,268 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B2ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 02:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8626CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 02:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 113FE222C5
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 02:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4182222C5
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 02:03:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="LKhQM7IT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbfJSCBW (ORCPT
+        id S1726817AbfJSCDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 22:01:22 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34002 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfJSCBV (ORCPT
+        Fri, 18 Oct 2019 22:03:20 -0400
+Received: from mail-40136.protonmail.ch ([185.70.40.136]:25534 "EHLO
+        mail-40136.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726773AbfJSCDU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 22:01:21 -0400
-Received: by mail-io1-f66.google.com with SMTP id q1so9691348ion.1;
-        Fri, 18 Oct 2019 19:01:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h2Om4jrmaYSV3RVSH6Bll8Mfy0zcDVPMDEzdsJPKN50=;
-        b=FksOxxu2bx2/tUZaoTAY24KwqRmLnzOCbxsJfqC3PGiDIlTnw3uUj9yS9AuWW1p0Da
-         ZkNFN+Jb19tYrz5Fk8sfz9tODFfrEffcIXoM8wOL59g1UC/RKyeSg+cLkUGI68r3y9i8
-         0Yyr05+/soI+KJUIFx5xnhza82740QUvpaYgliHvIY1os+e5kneDust13D7HKewZfKhi
-         hcxVhZzYX2aO0Dzll5SFA0ZxXmtgvF7P8+NMty4KSUbHWZAi2/pFdhOYjfEld5WVtiMN
-         02Bhy9GPN40I3lpPpUBg7e0Q0fjlrAWjQpU9K48Py9d/4mk4NlQhH6zzcyZwOsjkvGNu
-         QE5A==
-X-Gm-Message-State: APjAAAXxim+o+rYrZd1kz46/nJ1PBhAMh95fFNrgx8S4YtlR5aDNwxp7
-        FOXl7F7h29X+vHJSbB/s+BUVf/gpqYfO/JafGyE=
-X-Google-Smtp-Source: APXvYqwHrQhnbWkOoQLJVQp2N+es0LAx2Wmn9w8QNgxiqk1apZzW4d5JGiFF1Io/cEidwgaS33xtQf1YEbr309wTW3I=
-X-Received: by 2002:a6b:5c0f:: with SMTP id z15mr11805568ioh.173.1571450479050;
- Fri, 18 Oct 2019 19:01:19 -0700 (PDT)
+        Fri, 18 Oct 2019 22:03:20 -0400
+Date:   Sat, 19 Oct 2019 02:03:15 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=default; t=1571450596;
+        bh=fGAFKa0dt3dcLpVCJE+L98SsSJUmX8cOpMelXd7ommA=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
+         Feedback-ID:From;
+        b=LKhQM7IT+rWYuQYXt5TlWIaiNvQ+cHVFsTt0GVCOImKx473RTHlBwYEFX4N+5CIDO
+         W6SLr0FoM4qxKb3L1wq+hUjEcRMlkRh6/9JCIL6K7s5jPtTGDUNFWa9zhP+7KCuv6r
+         I5dtrTrisHdSGo4rhCXgkEyLLXz6VuVHyemzG408=
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+From:   Mazin Rezk <mnrzk@protonmail.com>
+Cc:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "jikos@kernel.org" <jikos@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>,
+        "mnrzk@protonmail.com" <mnrzk@protonmail.com>
+Reply-To: Mazin Rezk <mnrzk@protonmail.com>
+Subject: Re: [PATCH v6 2/2] HID: logitech: Support WirelessDeviceStatus connect events
+Message-ID: <_XAAROgmVQtz0wM-41RjBE2iGA8WwIQA_CBMMzPBdAuwXU6KbN8K5owaFm6FbU9kSjazcpp2N5GvlNXKrsobND18-I3dRzK4ZBCzMyJasYs=@protonmail.com>
+In-Reply-To: <CAO-hwJK3Q1Bu+6JVbXmbZ2-JqaPzX=dEVPfue=v2LRJsU7FmGA@mail.gmail.com>
+References: <_1Ewv9AvBhbWTNcFOkmvCyjVph73eQIz23Plyv5ffgaWWHnmPBTbSIJhs47AnYatJsmDWu4JlMjcsKE8Cf31lvmwQipYEu47YglNfroyJtM=@protonmail.com>
+ <CAO-hwJK3Q1Bu+6JVbXmbZ2-JqaPzX=dEVPfue=v2LRJsU7FmGA@mail.gmail.com>
+Feedback-ID: 18B_FC5q-t32TXzMsVp9BgkgrdNH3iwklfW8WOrHrcxZA0WRj7JodCh5VXKxs6A3OaiHK0QNd8wi3SImKex8yQ==:Ext:ProtonMail
 MIME-Version: 1.0
-References: <1571367619-13573-1-git-send-email-chenhc@lemote.com> <CALCETrWXRgkQOJGRqa_sOLAG2zhjsEX6b86T2VTsNYN9ECRrtA@mail.gmail.com>
-In-Reply-To: <CALCETrWXRgkQOJGRqa_sOLAG2zhjsEX6b86T2VTsNYN9ECRrtA@mail.gmail.com>
-From:   Huacai Chen <chenhc@lemote.com>
-Date:   Sat, 19 Oct 2019 10:06:42 +0800
-Message-ID: <CAAhV-H6VkW5-hMOrzAQeyHT4pYGExZR6eTRbPHSPK50GAkigCw@mail.gmail.com>
-Subject: Re: [PATCH] lib/vdso: Use __arch_use_vsyscall() to indicate fallback
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Paul Burton <paul.burton@mips.com>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Andy,
+On Friday, October 18, 2019 11:38 AM, Benjamin Tissoires <benjamin.tissoire=
+s@redhat.com> wrote:
 
-On Fri, Oct 18, 2019 at 11:15 AM Andy Lutomirski <luto@kernel.org> wrote:
+> On Mon, Oct 14, 2019 at 8:36 PM Mazin Rezk mnrzk@protonmail.com wrote:
 >
-> On Thu, Oct 17, 2019 at 7:57 PM Huacai Chen <chenhc@lemote.com> wrote:
+> > This patch allows WirelessDeviceStatus (0x1d4b) events to be detected a=
+s
+> > connection events in the hid-logitech-hidpp module.
+> > Devices with HIDPP_QUIRK_WIRELESS_DEVICE_STATUS use WirelessDeviceStatu=
+s
+> > instead of traditional connect events. Since all Bluetooth LE devices s=
+eem
+> > to act this way, HIDPP_QUIRK_CLASS_BLUETOOTH_LE aliases this quirk.
 > >
-> > In do_hres(), we currently use whether the return value of __arch_get_
-> > hw_counter() is negtive to indicate fallback, but this is not a good
-> > idea. Because:
+> > Signed-off-by: Mazin Rezk mnrzk@protonmail.com
 > >
-> > 1, ARM64 returns ULL_MAX but MIPS returns 0 when clock_mode is invalid;
-> > 2, For a 64bit counter, a "negtive" value of counter is actually valid.
+> > -----------------------------------------------
+> >
+> > drivers/hid/hid-logitech-hidpp.c | 42 ++++++++++++++++++++++++++++----
+> > 1 file changed, 37 insertions(+), 5 deletions(-)
+> > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitec=
+h-hidpp.c
+> > index 997b1056850a..9b3df57ca857 100644
+> > --- a/drivers/hid/hid-logitech-hidpp.c
+> > +++ b/drivers/hid/hid-logitech-hidpp.c
+> > @@ -60,6 +60,7 @@ MODULE_PARM_DESC(disable_tap_to_click,
+> > #define HIDPP_QUIRK_CLASS_K750 BIT(4)
+> > /* bits 2..15 are reserved for classes /
+> > +#define HIDPP_QUIRK_WIRELESS_DEVICE_STATUS BIT(19)
+> > #define HIDPP_QUIRK_MISSING_SHORT_REPORTS BIT(20)
+> > / #define HIDPP_QUIRK_CONNECT_EVENTS BIT(21) disabled */#define HIDPP_Q=
+UIRK_WTP_PHYSICAL_BUTTONS BIT(22)
+> > @@ -82,7 +83,8 @@ MODULE_PARM_DESC(disable_tap_to_click,
+> > HIDPP_QUIRK_HI_RES_SCROLL_X2120 | \
+> > HIDPP_QUIRK_HI_RES_SCROLL_X2121)
+> > -#define HIDPP_QUIRK_CLASS_BLUETOOTH_LE HIDPP_QUIRK_MISSING_SHORT_REPOR=
+TS
+> > +#define HIDPP_QUIRK_CLASS_BLUETOOTH_LE (HIDPP_QUIRK_MISSING_SHORT_REPO=
+RTS | \
+> >
+> > -                                          HIDPP_QUIRK_WIRELESS_DEVICE_=
+STATUS)
+> >
+> >
+> >
+> > #define HIDPP_QUIRK_DELAYED_INIT HIDPP_QUIRK_NO_HIDINPUT
+> > @@ -189,6 +191,8 @@ struct hidpp_device {
+> >
+> >         struct hidpp_battery battery;
+> >         struct hidpp_scroll_counter vertical_wheel_counter;
+> >
+> >
+> > -
+> > -         u8 wireless_feature_index;
+> >
+> >
+> >
+> > };
+> > /* HID++ 1.0 error codes */
+> > @@ -402,10 +406,14 @@ static inline bool hidpp_match_error(struct hidpp=
+_report *question,
+> > (answer->fap.params[0] =3D=3D question->fap.funcindex_clientid);
+> > }
+> > -static inline bool hidpp_report_is_connect_event(struct hidpp_report *=
+report)
+> > +static inline bool hidpp_report_is_connect_event(struct hidpp_device *=
+hidpp,
+> >
+> > -                                                  struct hidpp_report =
+*report)
+> >
+> >
+> >
+> > {
+> >
+> > -         return (report->report_id =3D=3D REPORT_ID_HIDPP_SHORT) &&
+> >
+> >
+> > -                 (report->rap.sub_id =3D=3D 0x41);
+> >
+> >
+> >
+> > -         return ((hidpp->quirks & HIDPP_QUIRK_WIRELESS_DEVICE_STATUS) =
+&&
+> >
+> >
+> > -                 (report->fap.feature_index =3D=3D hidpp->wireless_fea=
+ture_index)) ||
+> >
+> >
+> > -               (((report->report_id =3D=3D REPORT_ID_HIDPP_SHORT) ||
+> >
+> >
+> > -                 (hidpp->quirks & HIDPP_QUIRK_MISSING_SHORT_REPORTS)) =
+&&
+> >
+> >
+> > -                 (report->rap.sub_id =3D=3D 0x41));
+> >
+> >
 >
-> s/negtive/negative
+> I wonder if we need a quirk after all: if
+> hidpp->wireless_feature_index is non null, that means that we have the
+> quirk.
+> Unless the feature is present for non BLE devices, in which case, we
+> might want to enable them one by one, for now.
 >
-> What's the actual bug?  Is it that MIPS is returning 0 but the check
-> is < 0?  Sounds like MIPS should get fixed.
-My original bug is what Vincenzo said, MIPS has a boot failure if no
-valid clock_mode, and surely MIPS need to fix. However, when I try to
-fix it, I found that clock_getres() has another problem, because
-__cvdso_clock_getres_common() get vd[CS_HRES_COARSE].hrtimer_res, but
-hrtimer_res is set in update_vdso_data() which relies on
-__arch_use_vsyscall().
+> Cheers,
+> Benjamin
+
+Come to think of it, it does seem redundant. I'll likely extend the
+WirelessDeviceStatus check to all HID++ 2.0 devices and just forgo the
+added quirks entirely.
+
+Thanks,
+Mazin
 
 >
+> > }
+> > /**
+> > @@ -1282,6 +1290,24 @@ static int hidpp_battery_get_property(struct pow=
+er_supply *psy,
+> > return ret;
+> > }
+> > +/* -------------------------------------------------------------------=
+------- /
+> > +/ 0x1d4b: Wireless device status /
+> > +/ --------------------------------------------------------------------=
+------ */+#define HIDPP_PAGE_WIRELESS_DEVICE_STATUS 0x1d4b
+> > +
+> > +static int hidpp_set_wireless_feature_index(struct hidpp_device *hidpp=
+)
+> > +{
 > >
-> > To solve this problem, we use U64_MAX as the only "invalid" return
-> > value -- this is still not fully correct, but has no problem in most
-> > cases.
->
-> I'm sort of okay with that, but...
->
-> > Moreover, all vdso time-related functions should rely on the
-> > return value of __arch_use_vsyscall(), because update_vdso_data() and
-> > update_vsyscall_tz() also rely on it. So, in the core functions of
-> > __cvdso_gettimeofday(), __cvdso_clock_gettime() and __cvdso_clock_
-> > getres(), if __arch_use_vsyscall() returns false, we use the fallback
-> > functions directly.
->
-> __arch_use_vsyscall() is not currently intended for use in the vDSO at all.
->
+> > -         u8 feature_type;
 > >
-> > Fixes: 00b26474c2f1613d7ab894c5 ("lib/vdso: Provide generic VDSO implementation")
-> > Cc: stable@vger.kernel.org
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Paul Burton <paul.burton@mips.com>
-> > Cc: linux-mips@vger.kernel.org
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Signed-off-by: Huacai Chen <chenhc@lemote.com>
-> > ---
-> >  arch/arm64/include/asm/vdso/vsyscall.h |  2 +-
-> >  arch/mips/include/asm/vdso/vsyscall.h  |  2 +-
-> >  include/asm-generic/vdso/vsyscall.h    |  2 +-
-> >  lib/vdso/gettimeofday.c                | 12 +++++++++++-
-> >  4 files changed, 14 insertions(+), 4 deletions(-)
 > >
-> > diff --git a/arch/arm64/include/asm/vdso/vsyscall.h b/arch/arm64/include/asm/vdso/vsyscall.h
-> > index 0c731bf..406e6de 100644
-> > --- a/arch/arm64/include/asm/vdso/vsyscall.h
-> > +++ b/arch/arm64/include/asm/vdso/vsyscall.h
-> > @@ -31,7 +31,7 @@ int __arm64_get_clock_mode(struct timekeeper *tk)
-> >  #define __arch_get_clock_mode __arm64_get_clock_mode
+> > -         int ret;
 > >
-> >  static __always_inline
-> > -int __arm64_use_vsyscall(struct vdso_data *vdata)
-> > +int __arm64_use_vsyscall(const struct vdso_data *vdata)
-> >  {
-> >         return !vdata[CS_HRES_COARSE].clock_mode;
-> >  }
-> > diff --git a/arch/mips/include/asm/vdso/vsyscall.h b/arch/mips/include/asm/vdso/vsyscall.h
-> > index 1953147..8b10dd7 100644
-> > --- a/arch/mips/include/asm/vdso/vsyscall.h
-> > +++ b/arch/mips/include/asm/vdso/vsyscall.h
-> > @@ -29,7 +29,7 @@ int __mips_get_clock_mode(struct timekeeper *tk)
-> >  #define __arch_get_clock_mode __mips_get_clock_mode
 > >
-> >  static __always_inline
-> > -int __mips_use_vsyscall(struct vdso_data *vdata)
-> > +int __mips_use_vsyscall(const struct vdso_data *vdata)
-> >  {
-> >         return (vdata[CS_HRES_COARSE].clock_mode != VDSO_CLOCK_NONE);
-> >  }
-> > diff --git a/include/asm-generic/vdso/vsyscall.h b/include/asm-generic/vdso/vsyscall.h
-> > index e94b1978..ac05a625 100644
-> > --- a/include/asm-generic/vdso/vsyscall.h
-> > +++ b/include/asm-generic/vdso/vsyscall.h
-> > @@ -26,7 +26,7 @@ static __always_inline int __arch_get_clock_mode(struct timekeeper *tk)
-> >  #endif /* __arch_get_clock_mode */
+> > -
+> > -         ret =3D hidpp_root_get_feature(hidpp,
 > >
-> >  #ifndef __arch_use_vsyscall
-> > -static __always_inline int __arch_use_vsyscall(struct vdso_data *vdata)
-> > +static __always_inline int __arch_use_vsyscall(const struct vdso_data *vdata)
-> >  {
-> >         return 1;
-> >  }
-> > diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-> > index e630e7f..4ad062e 100644
-> > --- a/lib/vdso/gettimeofday.c
-> > +++ b/lib/vdso/gettimeofday.c
-> > @@ -9,6 +9,7 @@
-> >  #include <linux/hrtimer_defs.h>
-> >  #include <vdso/datapage.h>
-> >  #include <vdso/helpers.h>
-> > +#include <vdso/vsyscall.h>
 > >
-> >  /*
-> >   * The generic vDSO implementation requires that gettimeofday.h
-> > @@ -50,7 +51,7 @@ static int do_hres(const struct vdso_data *vd, clockid_t clk,
-> >                 cycles = __arch_get_hw_counter(vd->clock_mode);
-> >                 ns = vdso_ts->nsec;
-> >                 last = vd->cycle_last;
-> > -               if (unlikely((s64)cycles < 0))
-> > +               if (unlikely(cycles == U64_MAX))
-> >                         return -1;
->
-> I would actually prefer:
->
-> if (unlikely(cycles < last))
->
-> or perhaps:
->
-> if (unlikely((s64)(cycles-last) < 0))
->
-> which would have the nice side effect of getting rid of the annoying
-> x86 special case in vdso_calc_delta().  The former version is
-> compatible with U64_MAX, whereas the latter version would need the
-> error case to return last-1 or similar.  The benefit of the latter
-> version is that it can survive wrap-around.
-When you say if (unlikely(cycles < last)), do you means if
-(unlikely(cycles <= last))? If __arch_get_hw_counter() return U64_MAX
-every time, I don't think cycles can be less than last.
+> > -                                      HIDPP_PAGE_WIRELESS_DEVICE_STATU=
+S,
+> >
+> >
+> > -                                      &hidpp->wireless_feature_index,
+> >
+> >
+> > -                                      &feature_type);
+> >
+> >
+> > -
+> > -         return ret;
+> >
+> >
+> >
+> > +}
+> > +
+> > /* --------------------------------------------------------------------=
+------ /
+> > / 0x2120: Hi-resolution scrolling /
+> > / ---------------------------------------------------------------------=
+----- */@@ -3077,7 +3103,7 @@ static int hidpp_raw_hidpp_event(struct hidpp=
+_device *hidpp, u8 *data,
+> > }
+> > }
+> >
+> > -         if (unlikely(hidpp_report_is_connect_event(report))) {
+> >
+> >
+> >
+> > -         if (unlikely(hidpp_report_is_connect_event(hidpp, report))) {
+> >                   atomic_set(&hidpp->connected,
+> >                                   !(report->rap.params[0] & (1 << 6)));
+> >                   if (schedule_work(&hidpp->work) =3D=3D 0)
+> >
+> >
+> >
+> > @@ -3624,6 +3650,12 @@ static int hidpp_probe(struct hid_device *hdev, =
+const struct hid_device_id *id)
+> > hidpp_overwrite_name(hdev);
+> > }
+> >
+> > -         if (connected && (hidpp->quirks & HIDPP_QUIRK_WIRELESS_DEVICE=
+_STATUS)) {
+> >
+> >
+> > -                 ret =3D hidpp_set_wireless_feature_index(hidpp);
+> >
+> >
+> > -                 if (ret)
+> >
+> >
+> > -                         goto hid_hw_init_fail;
+> >
+> >
+> > -         }
+> >
+> >
+> > -         if (connected && (hidpp->quirks & HIDPP_QUIRK_CLASS_WTP)) {
+> >                   ret =3D wtp_get_config(hidpp);
+> >                   if (ret)
+> >
+> >
+> >
+> > --
+> > 2.23.0
 
-Huacai
->
-> >
-> >                 ns += vdso_calc_delta(cycles, last, vd->mask, vd->mult);
-> > @@ -91,6 +92,9 @@ __cvdso_clock_gettime_common(clockid_t clock, struct __kernel_timespec *ts)
-> >         if (unlikely((u32) clock >= MAX_CLOCKS))
-> >                 return -1;
-> >
-> > +       if (!__arch_use_vsyscall(vd))
-> > +               return -1;
-> > +
->
-> NAK.  I don't think this is helpful or correct.  It doesn't appear to
-> do anything valid, and it's racy.
->
-> >         /*
-> >          * Convert the clockid to a bitmask and use it to check which
-> >          * clocks are handled in the VDSO directly.
-> > @@ -145,6 +149,9 @@ __cvdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz)
-> >  {
-> >         const struct vdso_data *vd = __arch_get_vdso_data();
-> >
-> > +       if (!__arch_use_vsyscall(vd))
-> > +               return gettimeofday_fallback(tv, tz);
-> > +
->
-> Ditto.
->
-> >         if (likely(tv != NULL)) {
-> >                 struct __kernel_timespec ts;
-> >
-> > @@ -189,6 +196,9 @@ int __cvdso_clock_getres_common(clockid_t clock, struct __kernel_timespec *res)
-> >         if (unlikely((u32) clock >= MAX_CLOCKS))
-> >                 return -1;
-> >
-> > +       if (!__arch_use_vsyscall(vd))
-> > +               return -1;
-> > +
->
-> Ditto.
+
