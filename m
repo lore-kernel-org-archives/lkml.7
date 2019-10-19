@@ -6,82 +6,108 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3B5CA9EAC
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 07:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36993CA9EAC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 07:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9608E222C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 07:24:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1243D206C1
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 07:26:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfJSHYl (ORCPT
+        id S1727356AbfJSH0L convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 03:24:41 -0400
-Received: from h3.fbrelay.privateemail.com ([131.153.2.44]:44232 "EHLO
-        h3.fbrelay.privateemail.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726252AbfJSHYl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 03:24:41 -0400
-X-Greylist: delayed 351 seconds by postgrey-1.27 at vger.kernel.org; Sat, 19 Oct 2019 03:24:40 EDT
-Received: from MTA-10-4.privateemail.com (mta-10.privateemail.com [68.65.122.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by h3.fbrelay.privateemail.com (Postfix) with ESMTPS id 33DFE80843
-        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 03:24:40 -0400 (EDT)
-Received: from MTA-10.privateemail.com (localhost [127.0.0.1])
-        by MTA-10.privateemail.com (Postfix) with ESMTP id 2144160038;
-        Sat, 19 Oct 2019 03:24:39 -0400 (EDT)
-Received: from wambui.zuku.co.ke (unknown [10.20.151.221])
-        by MTA-10.privateemail.com (Postfix) with ESMTPA id A45FA60033;
-        Sat, 19 Oct 2019 07:24:35 +0000 (UTC)
-From:   Wambui Karuga <wambui@karuga.xyz>
-To:     dri-devel@lists.freedesktop.org
-Cc:     linux-kernel@vger.kernel.org, alexander.deucher@amd.com,
-        christian.koenig@amd.com, David1.Zhou@amd.com, airlied@linux.ie,
-        daniel@ffwll.ch, amd-gfx@lists.freedesktop.org,
-        outreachy-kernel@googlegroups.com
-Subject: [PATCH] drm/amd/amdgpu: make undeclared variables static
-Date:   Sat, 19 Oct 2019 10:24:26 +0300
-Message-Id: <20191019072426.20535-1-wambui@karuga.xyz>
-X-Mailer: git-send-email 2.23.0
+        Sat, 19 Oct 2019 03:26:11 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:31120 "EHLO mxhk.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727174AbfJSH0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 19 Oct 2019 03:26:11 -0400
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id B03D8734A3179D6AD7A2;
+        Sat, 19 Oct 2019 15:26:04 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id x9J7Pkjr067896;
+        Sat, 19 Oct 2019 15:25:46 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019101915260155-30950 ;
+          Sat, 19 Oct 2019 15:26:01 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     robh@kernel.org
+Cc:     tomeu.vizoso@collabora.com, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn, up2wing@gmail.com,
+        wang.liang82@zte.com.cn
+Subject: [PATCH] drm/panfrost: fix -Wmissing-prototypes warnings
+Date:   Sat, 19 Oct 2019 15:28:14 +0800
+Message-Id: <1571470094-39589-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-10-19 15:26:01,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-10-19 15:25:53
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-MAIL: mse-fl1.zte.com.cn x9J7Pkjr067896
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make the `amdgpu_lockup_timeout` and `amdgpu_exp_hw_support` variables
-static to remove the following sparse warnings:
-drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c:103:19: warning: symbol 'amdgpu_lockup_timeout' was not declared. Should it be static?
-drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c:117:18: warning: symbol 'amdgpu_exp_hw_support' was not declared. Should it be static?
+We get these warnings when build kernel W=1:
+drivers/gpu/drm/panfrost/panfrost_perfcnt.c:35:6: warning: no previous prototype for ‘panfrost_perfcnt_clean_cache_done’ [-Wmissing-prototypes]
+drivers/gpu/drm/panfrost/panfrost_perfcnt.c:40:6: warning: no previous prototype for ‘panfrost_perfcnt_sample_done’ [-Wmissing-prototypes]
+drivers/gpu/drm/panfrost/panfrost_perfcnt.c:190:5: warning: no previous prototype for ‘panfrost_ioctl_perfcnt_enable’ [-Wmissing-prototypes]
+drivers/gpu/drm/panfrost/panfrost_perfcnt.c:218:5: warning: no previous prototype for ‘panfrost_ioctl_perfcnt_dump’ [-Wmissing-prototypes]
+drivers/gpu/drm/panfrost/panfrost_perfcnt.c:250:6: warning: no previous prototype for ‘panfrost_perfcnt_close’ [-Wmissing-prototypes]
+drivers/gpu/drm/panfrost/panfrost_perfcnt.c:264:5: warning: no previous prototype for ‘panfrost_perfcnt_init’ [-Wmissing-prototypes]
+drivers/gpu/drm/panfrost/panfrost_perfcnt.c:320:6: warning: no previous prototype for ‘panfrost_perfcnt_fini’ [-Wmissing-prototypes]
+drivers/gpu/drm/panfrost/panfrost_mmu.c:227:6: warning: no previous prototype for ‘panfrost_mmu_flush_range’ [-Wmissing-prototypes]
+drivers/gpu/drm/panfrost/panfrost_mmu.c:435:5: warning: no previous prototype for ‘panfrost_mmu_map_fault_addr’ [-Wmissing-prototypes]
 
-Signed-off-by: Wambui Karuga <wambui@karuga.xyz>
+For file panfrost_mmu.c, make functions static to fix this.
+For file panfrost_perfcnt.c, include head file can fix this.
+
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/panfrost/panfrost_mmu.c     | 5 +++--
+ drivers/gpu/drm/panfrost/panfrost_perfcnt.c | 1 +
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-index 3fae1007143e..c5b3c0c9193b 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-@@ -100,7 +100,7 @@ int amdgpu_disp_priority = 0;
- int amdgpu_hw_i2c = 0;
- int amdgpu_pcie_gen2 = -1;
- int amdgpu_msi = -1;
--char amdgpu_lockup_timeout[AMDGPU_MAX_TIMEOUT_PARAM_LENTH];
-+static char amdgpu_lockup_timeout[AMDGPU_MAX_TIMEOUT_PARAM_LENTH];
- int amdgpu_dpm = -1;
- int amdgpu_fw_load_type = -1;
- int amdgpu_aspm = -1;
-@@ -114,7 +114,7 @@ int amdgpu_vm_block_size = -1;
- int amdgpu_vm_fault_stop = 0;
- int amdgpu_vm_debug = 0;
- int amdgpu_vm_update_mode = -1;
--int amdgpu_exp_hw_support = 0;
-+static int amdgpu_exp_hw_support;
- int amdgpu_dc = -1;
- int amdgpu_sched_jobs = 32;
- int amdgpu_sched_hw_submission = 2;
+diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+index bdd9905..d0458a5 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
++++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+@@ -224,7 +224,7 @@ static size_t get_pgsize(u64 addr, size_t size)
+ 	return SZ_2M;
+ }
+ 
+-void panfrost_mmu_flush_range(struct panfrost_device *pfdev,
++static void panfrost_mmu_flush_range(struct panfrost_device *pfdev,
+ 			      struct panfrost_mmu *mmu,
+ 			      u64 iova, size_t size)
+ {
+@@ -432,7 +432,8 @@ void panfrost_mmu_pgtable_free(struct panfrost_file_priv *priv)
+ 
+ #define NUM_FAULT_PAGES (SZ_2M / PAGE_SIZE)
+ 
+-int panfrost_mmu_map_fault_addr(struct panfrost_device *pfdev, int as, u64 addr)
++static int panfrost_mmu_map_fault_addr(struct panfrost_device *pfdev, int as,
++		u64 addr)
+ {
+ 	int ret, i;
+ 	struct panfrost_gem_object *bo;
+diff --git a/drivers/gpu/drm/panfrost/panfrost_perfcnt.c b/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
+index 83c57d3..7493dc0 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
++++ b/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
+@@ -17,6 +17,7 @@
+ #include "panfrost_job.h"
+ #include "panfrost_mmu.h"
+ #include "panfrost_regs.h"
++#include "panfrost_perfcnt.h"
+ 
+ #define COUNTERS_PER_BLOCK		64
+ #define BYTES_PER_COUNTER		4
 -- 
-2.23.0
+1.8.3.1
 
