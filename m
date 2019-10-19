@@ -2,232 +2,97 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED260CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 06:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 009FDCA9EAC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 06:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6644222BD
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 06:24:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="YbLnBkcT"
+	by mail.kernel.org (Postfix) with ESMTP id D14D220854
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 06:48:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbfJSGYR (ORCPT
+        id S1727865AbfJSGsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 02:24:17 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45585 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbfJSGYR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 02:24:17 -0400
-Received: by mail-wr1-f66.google.com with SMTP id q13so3365595wrs.12
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Oct 2019 23:24:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from:cc;
-        bh=NaB317VPEWYoyCGfauf4XqD6zwPbIGUmflkZmicnPS8=;
-        b=YbLnBkcTmO9kH2rGbc7u6GFXiaa7dIYcNYn9BAtlqlGUuyV+V4IWG3nWOYeC4px9Oj
-         iqUS9AZ2IoytDFN37+dS2zP5xfkR+7d+kiLTAWX+JKE+E5O/NZt31rCPl79/tAQesSf1
-         pxb7wAYiIchzjqonPfKuKR21VwY5KXLqXlNJAqaX0fn94nCJvVGakiJhcI9EzIICckqZ
-         /YDkX++zmLoT0fN0YLXbkZy1ezi8SASkViEFw5jDsGj3w8dR2lYscZ9FJfh0bU6b9nLx
-         iVGnF67CcFQLU/CPSkvDGpF7BSDusQ6cc2+ME9fEC083UJkf8QtTrrHeDoE9avumggJ9
-         nS0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from:cc;
-        bh=NaB317VPEWYoyCGfauf4XqD6zwPbIGUmflkZmicnPS8=;
-        b=RRQcLbGgbif0ehA29kTsburt7bt3hp/NjtnrllkCC0AAe24odf6x8LFkwvN4MplDRp
-         5O/U8myI75gs8fTJTCS+6PQfVgJ26Yt4/vRMRwIm9z1lpFNTmUoaBOmHH3xFjuMLS03K
-         1iib4LpY0HdD94r3lhzzbevvwXHnaD0ziJsos782NnlwE1oDeOkwXEoQPQKxM+hzgvxI
-         b1i3luM1B6qU4OUT5aCt+5ll7dYfqyH8hoZVcTTf67b4b0zV7Z9cKqYw75FDdVRMnESi
-         Bwdt58mRl2I5c8zc9mhY9Civ7sOND8von0nIp0Mu/DJwrXi3e9i+L0WVgl93g0Tsz/9m
-         VvuA==
-X-Gm-Message-State: APjAAAW6MLUa50XoireEF0Meogr7qp0XPaa2BqZduyoWfzCRYzBd2bEi
-        /lEG+ghzAwMEkNH+Qx8zbROuPg==
-X-Google-Smtp-Source: APXvYqxbRXnH9dhmc0b7p235t7/I3YoheY6CeABtmWPImtm2uAGk8R19vGzSr5lr/aNIHxPiNaL+7w==
-X-Received: by 2002:adf:fd08:: with SMTP id e8mr4905652wrr.42.1571466254197;
-        Fri, 18 Oct 2019 23:24:14 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id a14sm6594678wmm.44.2019.10.18.23.24.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 18 Oct 2019 23:24:13 -0700 (PDT)
-Message-ID: <5daaac0d.1c69fb81.12761.2a24@mx.google.com>
-Date:   Fri, 18 Oct 2019 23:24:13 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Sat, 19 Oct 2019 02:48:40 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:53114 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726939AbfJSGsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 19 Oct 2019 02:48:40 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 32D2A64B5132D11857F5;
+        Sat, 19 Oct 2019 14:48:37 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.439.0; Sat, 19 Oct 2019 14:48:34 +0800
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+To:     <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mhocko@kernel.org>, <peterz@infradead.org>,
+        <robin.murphy@arm.com>, <geert@linux-m68k.org>,
+        <gregkh@linuxfoundation.org>, <paul.burton@mips.com>
+Subject: [PATCH] PCI: Warn about host bridge device when its numa node is NO_NODE
+Date:   Sat, 19 Oct 2019 14:45:43 +0800
+Message-ID: <1571467543-26125-1-git-send-email-linyunsheng@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Lab-Name: lab-collabora
-X-Kernelci-Branch: for-next
-X-Kernelci-Tree: broonie-spi
-X-Kernelci-Report-Type: bisect
-X-Kernelci-Kernel: v5.4-rc3-73-gc673f2d99c3d
-Subject: broonie-spi/for-next boot bisection: v5.4-rc3-73-gc673f2d99c3d on
- jetson-tk1
-To:     Mark Brown <broonie@kernel.org>, tomeu.vizoso@collabora.com,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        guillaume.tucker@collabora.com, mgalka@collabora.com,
-        broonie@kernel.org, matthew.hart@linaro.org, khilman@baylibre.com,
-        enric.balletbo@collabora.com
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* This automated bisection report was sent to you on the basis  *
-* that you may be involved with the breaking commit it has      *
-* found.  No manual investigation has been done to verify it,   *
-* and the root cause of the problem may be somewhere else.      *
-*                                                               *
-* If you do send a fix, please include this trailer:            *
-*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-*                                                               *
-* Hope this helps!                                              *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+As the disscusion in [1]:
+A PCI device really _MUST_ have a node assigned. It is possible to
+have a PCI bridge shared between two nodes, such that the PCI
+devices have equidistance. But the moment you scale this out, you
+either get devices that are 'local' to a package while having
+multiple packages, or if you maintain a single bridge in a big
+system, things become so slow it all doesn't matter anyway.
+Assigning a node (one of the shared) is, in the generic ase of
+multiple packages, the better solution over assigning all nodes.
 
-broonie-spi/for-next boot bisection: v5.4-rc3-73-gc673f2d99c3d on jetson-tk1
+As pci_device_add() will assign the pci device' node according to
+the bus the device is on, which is decided by pcibus_to_node().
+Currently different arch may implement the pcibus_to_node() based
+on bus->sysdata or bus device' node, which has the same node as
+the bridge device.
 
-Summary:
-  Start:      c673f2d99c3d Merge remote-tracking branch 'spi/topic/ptp' int=
-o spi-next
-  Details:    https://kernelci.org/boot/id/5daa485f59b5142f647525a0
-  Plain log:  https://storage.kernelci.org//broonie-spi/for-next/v5.4-rc3-7=
-3-gc673f2d99c3d/arm/multi_v7_defconfig+CONFIG_SMP=3Dn/gcc-8/lab-collabora/b=
-oot-tegra124-jetson-tk1.txt
-  HTML log:   https://storage.kernelci.org//broonie-spi/for-next/v5.4-rc3-7=
-3-gc673f2d99c3d/arm/multi_v7_defconfig+CONFIG_SMP=3Dn/gcc-8/lab-collabora/b=
-oot-tegra124-jetson-tk1.html
-  Result:     3e5ec1db8bfe spi: Fix SPI_CS_HIGH setting when using native a=
-nd GPIO CS
+And for devices behind another bridge case, the child bus device
+is setup with proper parent bus device and inherit its parent'
+sysdata in pci_alloc_child_bus(), so the pcie device under the
+child bus should have the same node as the parent bridge when
+device_add() is called, which will set the node to its parent's
+node when the child device' node is NUMA_NO_NODE.
 
-Checks:
-  revert:     PASS
-  verify:     PASS
+So this patch only warns about the case when a host bridge device
+is registered with a node of NO_NODE in pci_register_host_bridge().
+And it only warns about that when there are more than one numa
+nodes in the system.
 
-Parameters:
-  Tree:       broonie-spi
-  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.g=
-it
-  Branch:     for-next
-  Target:     jetson-tk1
-  CPU arch:   arm
-  Lab:        lab-collabora
-  Compiler:   gcc-8
-  Config:     multi_v7_defconfig+CONFIG_SMP=3Dn
-  Test suite: boot
+[1] https://lore.kernel.org/lkml/1568724534-146242-1-git-send-email-linyunsheng@huawei.com/
 
-Breaking commit found:
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+---
+ drivers/pci/probe.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
----------------------------------------------------------------------------=
-----
-commit 3e5ec1db8bfee845d9f8560d1c64aeaccd586398
-Author: Gregory CLEMENT <gregory.clement@bootlin.com>
-Date:   Fri Oct 18 17:29:29 2019 +0200
-
-    spi: Fix SPI_CS_HIGH setting when using native and GPIO CS
-    =
-
-    When improving the CS GPIO support at core level, the SPI_CS_HIGH
-    has been enabled for all the CS lines used for a given SPI controller.
-    =
-
-    However, the SPI framework allows to have on the same controller native
-    CS and GPIO CS. The native CS may not support the SPI_CS_HIGH, so they
-    should not be setup automatically.
-    =
-
-    With this patch the setting is done only for the CS that will use a
-    GPIO as CS
-    =
-
-    Fixes: f3186dd87669 ("spi: Optionally use GPIO descriptors for CS GPIOs=
-")
-    Cc: <stable@vger.kernel.org>
-    Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-    Link: https://lore.kernel.org/r/20191018152929.3287-1-gregory.clement@b=
-ootlin.com
-    Signed-off-by: Mark Brown <broonie@kernel.org>
-
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index f8b4654a57d3..d07517151340 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1711,15 +1711,7 @@ static int of_spi_parse_dt(struct spi_controller *ct=
-lr, struct spi_device *spi,
- 		spi->mode |=3D SPI_3WIRE;
- 	if (of_property_read_bool(nc, "spi-lsb-first"))
- 		spi->mode |=3D SPI_LSB_FIRST;
--
--	/*
--	 * For descriptors associated with the device, polarity inversion is
--	 * handled in the gpiolib, so all chip selects are "active high" in
--	 * the logical sense, the gpiolib will invert the line if need be.
--	 */
--	if (ctlr->use_gpio_descriptors)
--		spi->mode |=3D SPI_CS_HIGH;
--	else if (of_property_read_bool(nc, "spi-cs-high"))
-+	if (of_property_read_bool(nc, "spi-cs-high"))
- 		spi->mode |=3D SPI_CS_HIGH;
- =
-
- 	/* Device DUAL/QUAD mode */
-@@ -1783,6 +1775,14 @@ static int of_spi_parse_dt(struct spi_controller *ct=
-lr, struct spi_device *spi,
- 	}
- 	spi->chip_select =3D value;
- =
-
-+	/*
-+	 * For descriptors associated with the device, polarity inversion is
-+	 * handled in the gpiolib, so all gpio chip selects are "active high"
-+	 * in the logical sense, the gpiolib will invert the line if need be.
-+	 */
-+	if ((ctlr->use_gpio_descriptors) && ctlr->cs_gpiods[spi->chip_select])
-+		spi->mode |=3D SPI_CS_HIGH;
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 3d5271a..22be96a 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -927,6 +927,9 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+ 	list_add_tail(&bus->node, &pci_root_buses);
+ 	up_write(&pci_bus_sem);
+ 
++	if (nr_node_ids > 1 && dev_to_node(bus->bridge) == NUMA_NO_NODE)
++		dev_err(bus->bridge, FW_BUG "No node assigned on NUMA capable HW by BIOS. Please contact your vendor for updates.\n");
 +
- 	/* Device speed */
- 	rc =3D of_property_read_u32(nc, "spi-max-frequency", &value);
- 	if (rc) {
----------------------------------------------------------------------------=
-----
+ 	return 0;
+ 
+ unregister:
+-- 
+2.8.1
 
-
-Git bisection log:
-
----------------------------------------------------------------------------=
-----
-git bisect start
-# good: [4f5cafb5cb8471e54afdc9054d973535614f7675] Linux 5.4-rc3
-git bisect good 4f5cafb5cb8471e54afdc9054d973535614f7675
-# bad: [c673f2d99c3d644733cc1b0ceabdec47047bbe80] Merge remote-tracking bra=
-nch 'spi/topic/ptp' into spi-next
-git bisect bad c673f2d99c3d644733cc1b0ceabdec47047bbe80
-# good: [b2c98153f45fc17b9fcb241000f2d131ddea6030] spi: introduce spi_delay=
- struct as "value + unit" & spi_delay_exec()
-git bisect good b2c98153f45fc17b9fcb241000f2d131ddea6030
-# good: [4f3d957718e7f0ac2b033dbf48c7cddecd0a8dd3] spi: pxa2xx: No need to =
-keep pointer to platform device
-git bisect good 4f3d957718e7f0ac2b033dbf48c7cddecd0a8dd3
-# good: [1cb84b02bf130f34ee81f99bc7dee5bca2943ed7] spi: atmel: Remove platf=
-orm data support
-git bisect good 1cb84b02bf130f34ee81f99bc7dee5bca2943ed7
-# bad: [fed8d8c7a6dc2a76d7764842853d81c770b0788e] spi: atmel: fix handling =
-of cs_change set on non-last xfer
-git bisect bad fed8d8c7a6dc2a76d7764842853d81c770b0788e
-# bad: [3e5ec1db8bfee845d9f8560d1c64aeaccd586398] spi: Fix SPI_CS_HIGH sett=
-ing when using native and GPIO CS
-git bisect bad 3e5ec1db8bfee845d9f8560d1c64aeaccd586398
-# good: [b2662a164f9dc48da8822e56600686d639056282] spi: pxa2xx: Set control=
-ler->max_transfer_size in dma mode
-git bisect good b2662a164f9dc48da8822e56600686d639056282
-# first bad commit: [3e5ec1db8bfee845d9f8560d1c64aeaccd586398] spi: Fix SPI=
-_CS_HIGH setting when using native and GPIO CS
----------------------------------------------------------------------------=
-----
