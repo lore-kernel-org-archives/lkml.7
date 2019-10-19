@@ -2,216 +2,91 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51113CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B08FCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 02:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DAB5222C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 01:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D26AF222C2
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 02:00:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="bc4c74Lh"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="M6VCMhS3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfJSB7g (ORCPT
+        id S1726726AbfJSCA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 18 Oct 2019 21:59:36 -0400
-Received: from mail-40130.protonmail.ch ([185.70.40.130]:53161 "EHLO
-        mail-40130.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfJSB7g (ORCPT
+        Fri, 18 Oct 2019 22:00:28 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:21032 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfJSCA2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 18 Oct 2019 21:59:36 -0400
-Date:   Sat, 19 Oct 2019 01:59:30 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=default; t=1571450372;
-        bh=zQWVAXWLYp9EvFOfLtaotaB5R/JfQb5AnLhmiAorc78=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
-         Feedback-ID:From;
-        b=bc4c74LhxwrRUAFlqIHALaF763By4U5gTv8Y1WPbE+5Ucek/WT2yw2Nisj834LOCH
-         UujMWtU/087YczsrfQB9S/NkVK+sqFr98rkP8Tnq7cLIYUdJeINinl90GG8itrKKbA
-         ybUnPllkXp1XIlxYWDofhdc79eVMZ43shdoJ7oQk=
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-From:   Mazin Rezk <mnrzk@protonmail.com>
-Cc:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "jikos@kernel.org" <jikos@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>,
-        "mnrzk@protonmail.com" <mnrzk@protonmail.com>
-Reply-To: Mazin Rezk <mnrzk@protonmail.com>
-Subject: Re: [PATCH v6 1/2] HID: logitech: Add MX Master over Bluetooth
-Message-ID: <_ctOOBM46unM-iL5c36pEP4zeFE8_8KbMqOYERMCDjbAqRkn8S5i8ZVOGegxOgWcyvc9YzCqQT6yITRG8h6YXaELI-KMIrgMFWfFONmusXg=@protonmail.com>
-In-Reply-To: <CAO-hwJJ18L3nDMQ_OqCZPyA+FFk3QsnbY=dYSNkELWzTSAnQLA@mail.gmail.com>
-References: <ggKipcQplIlTFmoP3hPnrQ-7_5-C0PKGd5feFymts3uenIBA8zOwz47YmKheD34H1rpkguDAGdx5YbS9UqpwfjT5Ir0Lji941liLVp--QtQ=@protonmail.com>
- <CAO-hwJJ18L3nDMQ_OqCZPyA+FFk3QsnbY=dYSNkELWzTSAnQLA@mail.gmail.com>
-Feedback-ID: 18B_FC5q-t32TXzMsVp9BgkgrdNH3iwklfW8WOrHrcxZA0WRj7JodCh5VXKxs6A3OaiHK0QNd8wi3SImKex8yQ==:Ext:ProtonMail
+        Fri, 18 Oct 2019 22:00:28 -0400
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x9J20N5O031630;
+        Sat, 19 Oct 2019 11:00:23 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x9J20N5O031630
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1571450424;
+        bh=IXeAOItcs0JKX4/at0twHz9xHrOXD8X+b3ZQGcBCOXY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=M6VCMhS3NLozRLvjZ32JcW9YVaeQpewvOA9t3n/aZ+U0gVMiws9wyk8r6RAxWS5Xt
+         JuLOiUIK2RpDMXuW3P9JQfnc/d5++NWCe6prlS1TZRF4ZIEHx0kL/mBaV5IKajOCxq
+         T//RmnN/C1OtETwpdGr4OYLi5SaI+A08+lHCYTSm9Cgrlf5bh0IJxbHmlB0kZAGhoq
+         gnPOExPizinuLOHVc2WG0EzJ6RoxvCWWHOPgqTBxClC5MBVgxWzxTQkpfVlQIEEcxH
+         DvVCjjgezDiI54jSfBFIcJmv+9sNDNTopfmQwF/mfpSflaNuhAEdBk2GbHXkwrTVrS
+         ehY9Ilb6dNqvw==
+X-Nifty-SrcIP: [209.85.217.53]
+Received: by mail-vs1-f53.google.com with SMTP id y129so5305762vsc.6;
+        Fri, 18 Oct 2019 19:00:23 -0700 (PDT)
+X-Gm-Message-State: APjAAAUj+6atop3V3aUYD1IO6cUGSBfvSd/3dWnIWa/kzQ0PDgY9P3bz
+        Ee8SxoeN5g9O7H0snLZUcqhTVpOKpD3hZRAWCJI=
+X-Google-Smtp-Source: APXvYqwn0eSTPeUejo/av+n/6ebQWpCbKXjt+ofHiw8ZGV8MqIwAmIp0JR53ZIzhSRo/C6tjmshPUaAIkGG7MkcyZEE=
+X-Received: by 2002:a67:e354:: with SMTP id s20mr7386598vsm.54.1571450422335;
+ Fri, 18 Oct 2019 19:00:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <1823C41A-3296-4DEA-B71F-5AD548335F8B@goldelico.com>
+In-Reply-To: <1823C41A-3296-4DEA-B71F-5AD548335F8B@goldelico.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 19 Oct 2019 10:59:46 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARFk--KYWNrrduiPgeBAu6T49brJXd_Nb8ZQOfYrbFmAA@mail.gmail.com>
+Message-ID: <CAK7LNARFk--KYWNrrduiPgeBAu6T49brJXd_Nb8ZQOfYrbFmAA@mail.gmail.com>
+Subject: Re: ARM: add __always_inline to functions called from __get_user_check()
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, October 18, 2019 11:36 AM, Benjamin Tissoires <benjamin.tissoire=
-s@redhat.com> wrote:
+On Fri, Oct 18, 2019 at 7:06 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>
+> Hi,
+> I wonder what happened to your patch. We were "hit" by it in v5.4-rc1 and
+> after finding, it made our OMAP based device bootable again (using our
+> own defconfig which optimizes for SIZE).
+>
+> But it does not seem to have arrived in linux-next
 
-> Hi Mazin,
->
-> On Mon, Oct 14, 2019 at 8:36 PM Mazin Rezk mnrzk@protonmail.com wrote:
->
-> > This patch adds support for the MX Master (b01e and b012) and also adds
-> > foundational code for other Bluetooth LE HID++ devices to be added.
-> > Some devices do not support short reports and thus have a quirk
-> > (HIDPP_QUIRK_MISSING_SHORT_REPORTS) that forces short reports to be sen=
-t as
-> > long reports. Since all Bluetooth LE HID++ devices seem to act this way=
-,
-> > HIDPP_QUIRK_CLASS_BLUETOOTH_LE aliases this quirk.
-> > To allow for some space for future quirks, I changed the comment that
-> > defines the bits reserved for classes from 2...20 to 2..15.
-> >
-> > Signed-off-by: Mazin Rezk mnrzk@protonmail.com
-> >
-> > -----------------------------------------------
-> >
-> > drivers/hid/hid-logitech-hidpp.c | 24 +++++++++++++++++++++++-
-> > 1 file changed, 23 insertions(+), 1 deletion(-)
-> > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitec=
-h-hidpp.c
-> > index 0179f7ed77e5..997b1056850a 100644
-> > --- a/drivers/hid/hid-logitech-hidpp.c
-> > +++ b/drivers/hid/hid-logitech-hidpp.c
-> > @@ -59,7 +59,8 @@ MODULE_PARM_DESC(disable_tap_to_click,
-> > #define HIDPP_QUIRK_CLASS_G920 BIT(3)
-> > #define HIDPP_QUIRK_CLASS_K750 BIT(4)
-> > -/* bits 2..20 are reserved for classes /
-> > +/ bits 2..15 are reserved for classes /
-> > +#define HIDPP_QUIRK_MISSING_SHORT_REPORTS BIT(20)
-> > / #define HIDPP_QUIRK_CONNECT_EVENTS BIT(21) disabled */#define HIDPP_Q=
-UIRK_WTP_PHYSICAL_BUTTONS BIT(22)
-> > #define HIDPP_QUIRK_NO_HIDINPUT BIT(23)
-> > @@ -81,6 +82,8 @@ MODULE_PARM_DESC(disable_tap_to_click,
-> > HIDPP_QUIRK_HI_RES_SCROLL_X2120 | \
-> > HIDPP_QUIRK_HI_RES_SCROLL_X2121)
-> > +#define HIDPP_QUIRK_CLASS_BLUETOOTH_LE HIDPP_QUIRK_MISSING_SHORT_REPOR=
-TS
-> > +
-> > #define HIDPP_QUIRK_DELAYED_INIT HIDPP_QUIRK_NO_HIDINPUT
-> > #define HIDPP_CAPABILITY_HIDPP10_BATTERY BIT(0)
-> > @@ -340,6 +343,12 @@ static int hidpp_send_rap_command_sync(struct hidp=
-p_device *hidpp_dev,
-> > struct hidpp_report *message;
-> > int ret, max_count;
-> >
-> > -         /* Force long reports on devices that do not support short re=
-ports */
-> >
-> >
-> > -         if (hidpp_dev->quirks & HIDPP_QUIRK_MISSING_SHORT_REPORTS &&
-> >
-> >
-> > -             report_id =3D=3D REPORT_ID_HIDPP_SHORT)
-> >
-> >
-> > -                 report_id =3D REPORT_ID_HIDPP_LONG;
-> >
-> >
->
-> Wouldn't it be faster to just store which report needs to be put here
-> in struct hidpp_device?
->
-> > -
-> > -         switch (report_id) {
-> >           case REPORT_ID_HIDPP_SHORT:
-> >                   max_count =3D HIDPP_REPORT_SHORT_LENGTH - 4;
-> >
-> >
-> >
-> > @@ -3482,6 +3491,12 @@ static bool hidpp_validate_report(struct hid_dev=
-ice *hdev, int id,
-> > static bool hidpp_validate_device(struct hid_device *hdev)
-> > {
-> >
-> > -         struct hidpp_device *hidpp =3D hid_get_drvdata(hdev);
-> >
-> >
-> > -         /* Skip the short report check if the device does not support=
- it */
-> >
-> >
-> > -         if (hidpp->quirks & HIDPP_QUIRK_MISSING_SHORT_REPORTS)
-> >
-> >
-> > -                 return hidpp_validate_report(hdev, REPORT_ID_HIDPP_LO=
-NG,
-> >
-> >
-> > -                                              HIDPP_REPORT_LONG_LENGTH=
-, false);
-> >
-> >
-> > -
->
-> I just merged Andrey's report detection, which means you will need to
-> update this hunk:
-> https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git/commit/?h=3Df=
-or-5.4/upstream-fixes&id=3D905d754c53a522aacf806ea1d3e7c929148c1910
->
-> The good thing, is that now you can simply auto-detect if the short
-> report is missing. If the returned report_length is null, you know
-> that the report is missing (and thus you can remember to set the
-> quirk/which report id is needed).
->
-> Cheers,
-> Benjamin
-
-Thank you, I'll try to rework this patch based on the changes introduced in
-that commit.
-
-Thanks,
-Mazin
-
->
-> >         return hidpp_validate_report(hdev, REPORT_ID_HIDPP_SHORT,
-> >                                      HIDPP_REPORT_SHORT_LENGTH, false) =
-&&
-> >                hidpp_validate_report(hdev, REPORT_ID_HIDPP_LONG,
-> >
-> >
-> > @@ -3773,6 +3788,13 @@ static const struct hid_device_id hidpp_devices[=
-] =3D {
-> > { /* MX5500 keyboard over Bluetooth */
-> > HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb30b),
-> > .driver_data =3D HIDPP_QUIRK_HIDPP_CONSUMER_VENDOR_KEYS },
-> >
-> > -         { /* MX Master mouse over Bluetooth */
-> >
-> >
-> > -           HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb012),
-> >
-> >
-> > -           .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 |
-> >
-> >
-> > -                          HIDPP_QUIRK_CLASS_BLUETOOTH_LE },
-> >
-> >
-> > -         { HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb01e),
-> >
-> >
-> > -           .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 |
-> >
-> >
-> > -                          HIDPP_QUIRK_CLASS_BLUETOOTH_LE },
-> >           {}
-> >
-> >
-> >
-> > };
-> > --
-> > 2.23.0
+It is in linux-next.
 
 
+> and should IMHO
+> be fixed during the v5.4 release candidate cycle.
+
+I agree.
+
+
+Masahiro
+
+>
+> BR and thanks,
+> Nikolaus Schaller
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
