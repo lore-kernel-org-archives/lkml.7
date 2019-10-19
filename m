@@ -2,122 +2,148 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0583CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 21:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA52CA9EAC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 21:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3646021925
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 21:45:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="WhkbdhaL"
+	by mail.kernel.org (Postfix) with ESMTP id 9914C22468
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 21:52:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbfJSVpW (ORCPT
+        id S1726205AbfJSVwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 17:45:22 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:48770 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726136AbfJSVpW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 17:45:22 -0400
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id A17602E1553;
-        Sun, 20 Oct 2019 00:45:18 +0300 (MSK)
-Received: from myt4-4db2488e778a.qloud-c.yandex.net (myt4-4db2488e778a.qloud-c.yandex.net [2a02:6b8:c00:884:0:640:4db2:488e])
-        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 0cxZ4mrudZ-jIeWRQNh;
-        Sun, 20 Oct 2019 00:45:18 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1571521518; bh=mpv/3rNpDDzOLRHg2UtS9q80dpzHH4Vx3ZzURITMRC4=;
-        h=Message-ID:Date:To:From:Subject:Cc;
-        b=WhkbdhaLAe1prhIQH03uzIVboooPUeJhs710pRq6E7DaZvQmhsnT6kDdr10KRlJ3Q
-         VBhzx/7Qlq0/C0xQn2W8HO+GRpHuhouljep9e9K52c9EItYjt+iiD7TmIUYKXgLgXw
-         NC77uKCPOS0Nh3Pg6h+EIPY8B+0gV4RPilOhhdzA=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from unknown (unknown [2a02:6b8:b080:7010::1:5])
-        by myt4-4db2488e778a.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id gDwauKkseK-jIICb97J;
-        Sun, 20 Oct 2019 00:45:18 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH] mm/vmstat: do not use size of vmstat_text as count of
- /proc/vmstat items
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>
-Date:   Sun, 20 Oct 2019 00:45:17 +0300
-Message-ID: <157152151769.4139.15423465513138349343.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
+        Sat, 19 Oct 2019 17:52:01 -0400
+Received: from mx2a.mailbox.org ([80.241.60.219]:47915 "EHLO mx2a.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726143AbfJSVwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 19 Oct 2019 17:52:01 -0400
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2a.mailbox.org (Postfix) with ESMTPS id 4239FA3391;
+        Sat, 19 Oct 2019 23:51:57 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
+        with ESMTP id SVBYNqVDiOMf; Sat, 19 Oct 2019 23:51:53 +0200 (CEST)
+Subject: Re: [musl] [PATCH] arm64: uapi: Fix user space compile with musl libc
+To:     musl@lists.openwall.com, Rich Felker <dalias@libc.org>
+Cc:     catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, stable@vger.kernel.org
+References: <20191019201717.15358-1-hauke@hauke-m.de>
+ <20191019202950.GC16318@brightrain.aerifal.cx>
+From:   Hauke Mehrtens <hauke@hauke-m.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=hauke@hauke-m.de; keydata=
+ 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
+Message-ID: <8fcff553-3309-7153-b245-6593d2728678@hauke-m.de>
+Date:   Sat, 19 Oct 2019 23:51:51 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191019202950.GC16318@brightrain.aerifal.cx>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Strings from vmstat_text[] will be used for printing memory cgroup
-statistics which exists even if CONFIG_VM_EVENT_COUNTERS=n.
+On 10/19/19 10:29 PM, Rich Felker wrote:
+> On Sat, Oct 19, 2019 at 10:17:17PM +0200, Hauke Mehrtens wrote:
+>> musl libc also defines the structures in their arch/aarch64/bits/signal.h
+>> header file. Some applications like strace and gdb include both of them
+>> and then the structure definitions are clashing and the build of these
+>> user space applications fails.
+>>
+>> This patch allows a libc to define a constant which tells the kernel
+>> header file that the libc already defined these structures and that they
+>> should not be defined by the kernel uapi header files any more to
+>> prevent clashes. This is done in a similar way as it is already done for
+>> other header files.
+>>
+>> When this patch was accepted into the kernel I will also update musl
+>> libc to define these constants.
+> 
+> I don't entirely object to this outright, but I'd really like to avoid
+> adding further __UAPI_DEF_* suppressions. AIUI asm/sigcontext.h is not
+> intended to be used with userspace headers. Is it still being
+> indirectly included via some other uapi headers? (I thought that was
+> fixed..) If so, that should really be fixed first, and then we can see
+> if there's still motivation for the patch here.
+> 
+> Rich
+> 
+Hi Rich,
 
-This should be applied before patch "mm/memcontrol: use vmstat names
-for printing statistics".
+I did some more research and it looks like this patch also fixes my
+problem with strace and gdb compile:
+https://git.kernel.org/linus/9966a05c7b80f075f2bc7e48dbb108d3f2927234
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Link: https://lore.kernel.org/linux-mm/cd1c42ae-281f-c8a8-70ac-1d01d417b2e1@infradead.org/T/#u
----
- mm/vmstat.c |   26 ++++++++++++--------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
+I will backport it in OpenWrt to kernel 4.19.
 
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index 590aeca27cab..13e36da70f3c 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1638,25 +1638,23 @@ static const struct seq_operations zoneinfo_op = {
- 	.show	= zoneinfo_show,
- };
- 
-+#define NR_VMSTAT_ITEMS (NR_VM_ZONE_STAT_ITEMS + \
-+			 NR_VM_NUMA_STAT_ITEMS + \
-+			 NR_VM_NODE_STAT_ITEMS + \
-+			 NR_VM_WRITEBACK_STAT_ITEMS + \
-+			 (IS_ENABLED(CONFIG_VM_EVENT_COUNTERS) ? \
-+			  NR_VM_EVENT_ITEMS : 0))
-+
- static void *vmstat_start(struct seq_file *m, loff_t *pos)
- {
- 	unsigned long *v;
--	int i, stat_items_size;
-+	int i;
- 
--	if (*pos >= ARRAY_SIZE(vmstat_text))
-+	if (*pos >= NR_VMSTAT_ITEMS)
- 		return NULL;
--	stat_items_size = NR_VM_ZONE_STAT_ITEMS * sizeof(unsigned long) +
--			  NR_VM_NUMA_STAT_ITEMS * sizeof(unsigned long) +
--			  NR_VM_NODE_STAT_ITEMS * sizeof(unsigned long) +
--			  NR_VM_WRITEBACK_STAT_ITEMS * sizeof(unsigned long);
--
--#ifdef CONFIG_VM_EVENT_COUNTERS
--	stat_items_size += sizeof(struct vm_event_state);
--#endif
- 
--	BUILD_BUG_ON(stat_items_size !=
--		     ARRAY_SIZE(vmstat_text) * sizeof(unsigned long));
--	v = kmalloc(stat_items_size, GFP_KERNEL);
-+	BUILD_BUG_ON(ARRAY_SIZE(vmstat_text) < NR_VMSTAT_ITEMS);
-+	v = kmalloc_array(NR_VMSTAT_ITEMS, sizeof(unsigned long), GFP_KERNEL);
- 	m->private = v;
- 	if (!v)
- 		return ERR_PTR(-ENOMEM);
-@@ -1689,7 +1687,7 @@ static void *vmstat_start(struct seq_file *m, loff_t *pos)
- static void *vmstat_next(struct seq_file *m, void *arg, loff_t *pos)
- {
- 	(*pos)++;
--	if (*pos >= ARRAY_SIZE(vmstat_text))
-+	if (*pos >= NR_VMSTAT_ITEMS)
- 		return NULL;
- 	return (unsigned long *)m->private + *pos;
- }
+Please drop my patch.
 
+It would be nice if it could go into the stable 4.19 kernel.
+
+Hauke
