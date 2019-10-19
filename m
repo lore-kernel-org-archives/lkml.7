@@ -2,75 +2,79 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E16CA9EAC
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 07:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8F9CA9EAC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 07:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3229222C5
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 07:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4645220872
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 07:59:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbfJSHlR (ORCPT
+        id S1726858AbfJSH5K convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 03:41:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39390 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726192AbfJSHlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 03:41:16 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9660C8553A;
-        Sat, 19 Oct 2019 07:41:16 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 814B460600;
-        Sat, 19 Oct 2019 07:41:16 +0000 (UTC)
-Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id D7D7318089DC;
-        Sat, 19 Oct 2019 07:41:15 +0000 (UTC)
-Date:   Sat, 19 Oct 2019 03:41:15 -0400 (EDT)
-From:   Jan Stancek <jstancek@redhat.com>
-To:     ammy.yi@intel.com, alexander.shishkin@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org, LTP List <ltp@lists.linux.it>,
-        acme@redhat.com, jolsa@redhat.com, peterz@infradead.org,
-        eranian@google.com, tglx@linutronix.de, vincent.weaver@maine.edu,
-        mingo@kernel.org, Jan Stancek <jstancek@redhat.com>
-Message-ID: <1311286607.7121481.1571470875734.JavaMail.zimbra@redhat.com>
-In-Reply-To: <1953570088.7121417.1571470108567.JavaMail.zimbra@redhat.com>
-Subject: [bug?] LTP pt_test failing after 38bb8d77d0b9 "perf/x86/intel/pt:
- Split ToPA metadata and page layout"
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.43.17.163, 10.4.195.8]
-Thread-Topic: LTP pt_test failing after 38bb8d77d0b9 "perf/x86/intel/pt: Split ToPA metadata and page layout"
-Thread-Index: j9qJ/TG5JAarLcJjLYhfq641vXqALw==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Sat, 19 Oct 2019 07:41:16 +0000 (UTC)
+        Sat, 19 Oct 2019 03:57:10 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:52943 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbfJSH5J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 19 Oct 2019 03:57:09 -0400
+Received: from surfer-172-29-2-69-hotspot.internet-for-guests.com (p2E5701B0.dip0.t-ipconnect.de [46.87.1.176])
+        by mail.holtmann.org (Postfix) with ESMTPSA id F3E01CED04;
+        Sat, 19 Oct 2019 10:06:05 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.19\))
+Subject: Re: [PATCH -next] Bluetooth: btusb: Remove return statement in
+ btintel_reset_to_bootloader
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20191018222924.49256-1-natechancellor@gmail.com>
+Date:   Sat, 19 Oct 2019 09:57:06 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Amit K Bag <amit.k.bag@intel.com>,
+        Chethan T N <chethan.tumkur.narayan@intel.com>,
+        Raghuram Hegde <raghuram.hegde@intel.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <859945F9-E674-4906-A18D-BCA6027AA535@holtmann.org>
+References: <20191018111343.5a34ee33@canb.auug.org.au>
+ <20191018222924.49256-1-natechancellor@gmail.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+X-Mailer: Apple Mail (2.3594.4.19)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Nathan,
 
-All variants of pt_test:
-  https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/tracing/pt_test/pt_test.c
-started failing after:
-  38bb8d77d0b9 ("perf/x86/intel/pt: Split ToPA metadata and page layout")
+> When building with Clang and CONFIG_BT_INTEL unset, the following error
+> occurs:
+> 
+> In file included from drivers/bluetooth/hci_ldisc.c:34:
+> drivers/bluetooth/btintel.h:188:2: error: void function
+> 'btintel_reset_to_bootloader' should not return a value [-Wreturn-type]
+>        return -EOPNOTSUPP;
+>        ^      ~~~~~~~~~~~
+> 1 error generated.
+> 
+> Remove the unneeded return statement to fix this.
+> 
+> Fixes: b9a2562f4918 ("Bluetooth: btusb: Trigger Intel FW download error recovery")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/743
+> Reported-by: <ci_notify@linaro.org>
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+> drivers/bluetooth/btintel.h | 1 -
+> 1 file changed, 1 deletion(-)
 
-with following error on console/dmesg:
-  pt: ToPA ERROR encountered, trying to recover
+patch has been applied to bluetooth-next tree.
 
-on Broadwell-EP:
+Regards
 
-vendor_id       : GenuineIntel
-cpu family      : 6
-model           : 79
-model name      : Intel(R) Xeon(R) CPU E5-2699 v4 @ 2.20GHz
-stepping        : 1
+Marcel
 
-Regards,
-Jan
