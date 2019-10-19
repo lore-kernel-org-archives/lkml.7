@@ -2,130 +2,60 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA61CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 18:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A91CA9EAC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 18:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45FA0222C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 18:43:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="X2N01twc"
+	by mail.kernel.org (Postfix) with ESMTP id A812921925
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 18:51:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbfJSSlt (ORCPT
+        id S1726205AbfJSSvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 14:41:49 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.81]:12824 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbfJSSlt (ORCPT
+        Sat, 19 Oct 2019 14:51:17 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:42420 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbfJSSvR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 14:41:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571510506;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=tdCWw/zmBvEFdY9U+zojU/H5xTfVzrhdPsoCDI94GlQ=;
-        b=X2N01twcoqVYaM79cUyQsT3uiCb+FjnbcDvtI3067p/esh37KqLiCMG3kbuTIB37Lq
-        Ph8h75NyBiPBQ6EsvRLxtjUeV+KDiL29LwORLVuqn1pCeIEVtZeXSdlQXlUb5wQDEsU4
-        ZBvkAGSXKBhmKKlHr2dtlRSNS2+FkQ+Gevdgu4tArMCS/SVFiuPtIKCMAPuPrJKdsA+I
-        whAS6lNHfuRJYKaoNm3wk1KUMTX42OMbn1x/KtCK3ST3YMSweAWlOTiCPVSm6nKA65BR
-        SDCWDSjEIYD4fZ1X/vQo9RyO700g1sG6tKhyNKsechTXAW/3Ahcu6cTAKM164yMcnRS/
-        2QtA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pAyXkHTz8="
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
-        with ESMTPSA id R0b2a8v9JIfTFMM
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Sat, 19 Oct 2019 20:41:29 +0200 (CEST)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        David Sterba <dsterba@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: [PATCH v2 01/11] Documentation: dt: wireless: update wl1251 for sdio
-Date:   Sat, 19 Oct 2019 20:41:16 +0200
-Message-Id: <741828f69eca2a9c9a0a7e80973c91f50cc71f9b.1571510481.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <cover.1571510481.git.hns@goldelico.com>
-References: <cover.1571510481.git.hns@goldelico.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 19 Oct 2019 14:51:17 -0400
+Received: from localhost (unknown [64.79.112.2])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 606A9148F63AD;
+        Sat, 19 Oct 2019 11:51:15 -0700 (PDT)
+Date:   Sat, 19 Oct 2019 11:51:14 -0700 (PDT)
+Message-Id: <20191019.115114.563831481451365693.davem@davemloft.net>
+To:     jgross@suse.com
+Cc:     xen-devel@lists.xenproject.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, wei.liu@kernel.org, paul@xen.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] xen/netback: fix error path of xenvif_connect_data()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191018074549.4778-1-jgross@suse.com>
+References: <20191018074549.4778-1-jgross@suse.com>
+X-Mailer: Mew version 6.8 on Emacs 26.2
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 19 Oct 2019 11:51:15 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The standard method for sdio devices connected to
-an sdio interface is to define them as a child node
-like we can see with wlcore.
+From: Juergen Gross <jgross@suse.com>
+Date: Fri, 18 Oct 2019 09:45:49 +0200
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Acked-by: Kalle Valo <kvalo@codeaurora.org>
----
- .../bindings/net/wireless/ti,wl1251.txt       | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
+> xenvif_connect_data() calls module_put() in case of error. This is
+> wrong as there is no related module_get().
+> 
+> Remove the superfluous module_put().
+> 
+> Fixes: 279f438e36c0a7 ("xen-netback: Don't destroy the netdev until the vif is shut down")
+> Signed-off-by: Juergen Gross <jgross@suse.com>
+> Reviewed-by: Paul Durrant <paul@xen.org>
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
-index bb2fcde6f7ff..88612ff29f2d 100644
---- a/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
-@@ -35,3 +35,29 @@ Examples:
- 		ti,power-gpio = <&gpio3 23 GPIO_ACTIVE_HIGH>; /* 87 */
- 	};
- };
-+
-+&mmc3 {
-+	vmmc-supply = <&wlan_en>;
-+
-+	bus-width = <4>;
-+	non-removable;
-+	ti,non-removable;
-+	cap-power-off-card;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc3_pins>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	wlan: wl1251@1 {
-+		compatible = "ti,wl1251";
-+
-+		reg = <1>;
-+
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;	/* GPIO_21 */
-+
-+		ti,wl1251-has-eeprom;
-+	};
-+};
--- 
-2.19.1
-
+Applied and queued up for -stable.
