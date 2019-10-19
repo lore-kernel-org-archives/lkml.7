@@ -2,112 +2,146 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61498CA9EAD
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 17:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E9BCA9EAC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 17:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A453222BD
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 17:48:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BBEE222BD
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 17:49:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i55waEal"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Axjl9NCq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726152AbfJSRsG (ORCPT
+        id S1726191AbfJSRtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 13:48:06 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35953 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfJSRsG (ORCPT
+        Sat, 19 Oct 2019 13:49:11 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:44923 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726049AbfJSRtL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 13:48:06 -0400
-Received: by mail-io1-f67.google.com with SMTP id b136so11211863iof.3;
-        Sat, 19 Oct 2019 10:48:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kz0/FsscmNPnfhryu7+x8j2fQp1ZICmOKUwPPB93gHo=;
-        b=i55waEalpeARsWe2kn6Q4q375oqabBYRyBGwWVACSm4Q3/7d3COTb9PVrApFE70Lp+
-         XFVlS6xBe1ftzUsawcKHJUK6CovX7wzlSRK6d0Hae2WJP0erLoyRXBFF48/wW8Wsleud
-         jnv0Kae/Eo5PViwh6122oxPtKk+qGziWxiVJM1zGvlCJ9Xf3ZjbMnnRxIH+gvSuUppsF
-         JuEBcyMi2JyWFyF0KKZH7A8UdkZ0fho+8rB4cnrEezN3+nfkOZM8/YSswpC/0QRXnSV1
-         y0jtw0BEFvtTVVc71wkAI6LyRd0HUsRlYHAzvcsrMwqx3UGnW74arc3IYPJ2In3jFfzh
-         OOBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kz0/FsscmNPnfhryu7+x8j2fQp1ZICmOKUwPPB93gHo=;
-        b=i6xC1gRNVvwPgHeXR9camWgxK8eP5clm+jOWqZb1W5lbITJMlSSGujJeFHvtUfDIdN
-         WUPLp4v5kkfweCGTEfeeQ16afINbZeKuxOKwdFa4KY40yspKuEu/y3TvkZvm7sA3FZ0M
-         Bm3TC7lKVqLKpuXQqqT23PIa3DR25tpR2vrV5sFWYxXEJMjn3VOZHeaMiKSpnO5CVJRN
-         dXSLesiW30lxSJ8kloWVlUqCaMxOct28FEqI96gtfCbKegHjAKN2iEFE5g1elhbUfg8V
-         YR2gTdL5m8moiy+Ntbi4sv1YGaImm9MvHhNA/wvCm0hialHGsFEzU9LhV275w/o7CyUt
-         iHhw==
-X-Gm-Message-State: APjAAAUyemMY5/tKu1sNqvYmO5eYiUA+msez5ZHWz/EWZ7XEMueoYE+m
-        SSXdh5z8hwYPUB31PMdjmXt4sSxhp3V/Z+6TQoM=
-X-Google-Smtp-Source: APXvYqxo3Fr0kuSJMEqgKM6kl3CHK537pta2eV/yClGVePf9vOCnH87rNjy+8mu9SJc9u5hIR2Dwdu72XQGW0yLsUuo=
-X-Received: by 2002:a6b:ef0d:: with SMTP id k13mr3210056ioh.178.1571507283798;
- Sat, 19 Oct 2019 10:48:03 -0700 (PDT)
+        Sat, 19 Oct 2019 13:49:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571507349;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vZdwEj7cPSAel4SZdlpSMvftLlMkdlo96xYd1wqGr2Y=;
+        b=Axjl9NCqdGrkxf9hu2cZ7nwq0BRXzMBy+2OBAoGjNQUCRoCD8hs2d/EGuWrLknTja6QOx2
+        +ugkKrXZv0J+LIfKrKlsKbwHU0j7v19aUxTf+9BqBUywOlCMHi/BnzoOU0u6+H+Eklu6wP
+        0MP2D9pQUGk+h36lqu97X8kbvtrxd1k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-224-AjFTUP5VNkKdsxK9GMRXKQ-1; Sat, 19 Oct 2019 13:49:05 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F20F480183D;
+        Sat, 19 Oct 2019 17:49:03 +0000 (UTC)
+Received: from krava (ovpn-204-36.brq.redhat.com [10.40.204.36])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 507E01001B00;
+        Sat, 19 Oct 2019 17:49:01 +0000 (UTC)
+Date:   Sat, 19 Oct 2019 19:49:00 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Steve MacLean <steve.maclean@linux.microsoft.com>
+Cc:     Steve MacLean <Steve.MacLean@microsoft.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND] perf inject --jit: Remove //anon mmap events
+Message-ID: <20191019174900.GC12782@krava>
+References: <1571336600-21843-1-git-send-email-steve.maclean@linux.microsoft.com>
 MIME-Version: 1.0
-References: <20191019054039.vsWMD_v7t%akpm@linux-foundation.org>
-In-Reply-To: <20191019054039.vsWMD_v7t%akpm@linux-foundation.org>
-From:   Konstantin Khlebnikov <koct9i@gmail.com>
-Date:   Sat, 19 Oct 2019 20:47:52 +0300
-Message-ID: <CALYGNiNVJ6WZwDETrq4X4oaPBOx7wC89Gh8-ZOScY_Bf8H5Mdw@mail.gmail.com>
-Subject: Re: mmotm 2019-10-18-22-40 uploaded
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     broonie@kernel.org, linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, linux-next@vger.kernel.org,
-        Michal Hocko <mhocko@suse.cz>, mm-commits@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1571336600-21843-1-git-send-email-steve.maclean@linux.microsoft.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: AjFTUP5VNkKdsxK9GMRXKQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 19, 2019 at 8:40 AM <akpm@linux-foundation.org> wrote:
->
-> The mm-of-the-moment snapshot 2019-10-18-22-40 has been uploaded to
->
->    http://www.ozlabs.org/~akpm/mmotm/
->
-> mmotm-readme.txt says
->
-> README for mm-of-the-moment:
->
-> http://www.ozlabs.org/~akpm/mmotm/
->
-> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> more than once a week.
->
-> You will need quilt to apply these patches to the latest Linus release (5.x
-> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-> http://ozlabs.org/~akpm/mmotm/series
->
-> The file broken-out.tar.gz contains two datestamp files: .DATE and
-> .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-> followed by the base kernel version against which this patch series is to
-> be applied.
->
-> This tree is partially included in linux-next.  To see which patches are
-> included in linux-next, consult the `series' file.  Only the patches
-> within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
-> linux-next.
->
->
-> A full copy of the full kernel tree with the linux-next and mmotm patches
-> already applied is available through git within an hour of the mmotm
-> release.  Individual mmotm releases are tagged.  The master branch always
-> points to the latest release, so it's constantly rebasing.
->
-> http://git.cmpxchg.org/cgit.cgi/linux-mmotm.git/
+On Thu, Oct 17, 2019 at 11:23:20AM -0700, Steve MacLean wrote:
+> From: Steve MacLean <Steve.MacLean@Microsoft.com>
+>=20
+> While a JIT is jitting code it will eventually need to commit more pages =
+and
+> change these pages to executable permissions.
+>=20
+> Typically the JIT will want these colocated to minimize branch displaceme=
+nts.
+>=20
+> The kernel will coalesce these anonymous mapping with identical permissio=
+ns
+> before sending an MMAP event for the new pages. This means the mmap event=
+ for
+> the new pages will include the older pages.
+>=20
+> These anonymous mmap events will obscure the jitdump injected pseudo even=
+ts.
+> This means that the jitdump generated symbols, machine code, debugging in=
+fo,
+> and unwind info will no longer be used.
+>=20
+> Observations:
+>=20
+> When a process emits a jit dump marker and a jitdump file, the perf-xxx.m=
+ap
+> file represents inferior information which has been superceded by the
+> jitdump jit-xxx.dump file.
+>=20
+> Further the '//anon*' mmap events are only required for the legacy
+> perf-xxx.map mapping.
+>=20
+> Summary:
+>=20
+> Add rbtree to track which pids have sucessfully injected a jitdump file.
+>=20
+> During "perf inject --jit", discard "//anon*" mmap events for any pid whi=
+ch
+> has sucessfully processed a jitdump file.
+>=20
+> Committer testing:
+>=20
+> // jitdump case
+> perf record <app with jitdump>
+> perf inject --jit --input perf.data --output perfjit.data
+>=20
+> // verify mmap "//anon" events present initially
+> perf script --input perf.data --show-mmap-events | grep '//anon'
+> // verify mmap "//anon" events removed
+> perf script --input perfjit.data --show-mmap-events | grep '//anon'
+>=20
+> // no jitdump case
+> perf record <app without jitdump>
+> perf inject --jit --input perf.data --output perfjit.data
+>=20
+> // verify mmap "//anon" events present initially
+> perf script --input perf.data --show-mmap-events | grep '//anon'
+> // verify mmap "//anon" events not removed
+> perf script --input perfjit.data --show-mmap-events | grep '//anon'
+>=20
+> Repro:
+>=20
+> This issue was discovered while testing the initial CoreCLR jitdump
+> implementation. https://github.com/dotnet/coreclr/pull/26897.
 
-I seems git mirror does not update anymore.
-Latest tag is v5.3-rc7-mmots-2019-09-03-21-33
+I posted some questions for previous version in here,
+but can't find answers:
+  https://lore.kernel.org/lkml/20191003105716.GB23291@krava/
+
+thanks,
+jirka
+
