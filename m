@@ -2,258 +2,149 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 102D6CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 14:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A098CA9EAC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 14:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5259222BD
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 14:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28E302082F
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 14:30:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1tP4sHwY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726101AbfJSO1L (ORCPT
+        id S1726130AbfJSOaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 10:27:11 -0400
-Received: from shell.v3.sk ([90.176.6.54]:54118 "EHLO shell.v3.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725924AbfJSO1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 10:27:11 -0400
-X-Greylist: delayed 400 seconds by postgrey-1.27 at vger.kernel.org; Sat, 19 Oct 2019 10:27:09 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id B22B34F1C0;
-        Sat, 19 Oct 2019 16:20:26 +0200 (CEST)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id DjxP6GpsWBXi; Sat, 19 Oct 2019 16:20:16 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 7EC60501B1;
-        Sat, 19 Oct 2019 16:20:15 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 6LVNgAAGEd2u; Sat, 19 Oct 2019 16:20:12 +0200 (CEST)
-Received: from nedofet.lan (unknown [109.183.109.54])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id D9D2B4F1C0;
-        Sat, 19 Oct 2019 16:20:10 +0200 (CEST)
-Message-ID: <4d6920e9fab519ddf69aae9da13a1cd02d13bddd.camel@v3.sk>
-Subject: Re: [PATCH 44/46] ARM: mmp: remove tavorevb board support
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Arnd Bergmann <arnd@arndb.de>, Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 19 Oct 2019 16:20:07 +0200
-In-Reply-To: <20191018154201.1276638-44-arnd@arndb.de>
-References: <20191018154052.1276506-1-arnd@arndb.de>
-         <20191018154201.1276638-44-arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.0 (3.34.0-1.fc31) 
+        Sat, 19 Oct 2019 10:30:04 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41046 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbfJSOaD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 19 Oct 2019 10:30:03 -0400
+Received: by mail-oi1-f195.google.com with SMTP id g81so7587461oib.8
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 07:30:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ghDSQm39Jlx5gmXnVANSIgsOJIuDnV4Wo+ABz1BaRQU=;
+        b=1tP4sHwYNnpUfkWS3qnr2mj9w0eS2pve2ZqGcA7RzVnVzMz+noVDjBSoCquw3GTUSk
+         f++M1+Rc6MGqcbC/TbG/SmndF5rQSjKZTrOEuHH9ie83u+6B1tSC005RK6D1DxL2ZlTh
+         Xllcir1nEKTJ7o0C8pxtRmkgEUBu9uehNb45RopqUyZIfHkcbzhZ9BGJiD8F8x7R1eBZ
+         FZwAgKrK8ZE1SNh4s3+j78KnVFNduRwTearMxrg3K2DGSzMocmiDQicDO/JE+c+fa5jV
+         /G6KTl3E1eIIPgv0if1LsVYBbc6ru8l7X979qo6qXHCDcLrtYbAYwp6XQ0LZYec+SXHg
+         B43g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ghDSQm39Jlx5gmXnVANSIgsOJIuDnV4Wo+ABz1BaRQU=;
+        b=a8rZnGjLIo0CPNxfFOsy889xihLRHj5yfDGdgbQDV1xuujks+8xi0J/r36Xa9niyF0
+         LRhDoFg82pZKZNUwEMVGtU/Qm51vChj1vwaBDCIym5RapV0AorUDenq2l8L2ZHMqhdKz
+         w342i2fFu1uSwiZ5HHM7zpjzpfuhsaySk0AljUMFXloylE3RT/XaJtB16JXcz4pTOeT/
+         ihZz3wwxrjyW/8MwxiCAvxN7MbPIbKgZKYr7xZBQbEqmCvCQqzeKDLizsDrLH+RTD68a
+         j6W2SavRmcfKyRprS3h6NtRshFAm2o3Uu6SgDR7mHSHQ+2dZOxXRfrbExtVMSBtREhV1
+         8IaQ==
+X-Gm-Message-State: APjAAAUEe55Qr/JypvYS0oH/r5gx8T7HNAwOQW5OB1H4/wzLvfpOKmyJ
+        m41Pwe9GqNm0khYMqeQ4caAA4jzAzHoUqa6ujK4zSg==
+X-Google-Smtp-Source: APXvYqy7kFGbeJUVk96O4myEcxmRrSHyTc66p9xYDDub/LBqYgX2CKrxiG35GXcyGwr8n6C75UtxLrayLoJT/v4Zxsk=
+X-Received: by 2002:a54:4e83:: with SMTP id c3mr12411782oiy.170.1571495400968;
+ Sat, 19 Oct 2019 07:30:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20191017142237.9734-1-alexandre.belloni@bootlin.com>
+ <81269cd6-e26d-b8aa-cf17-3a2285851564@web.de> <20191019120941.GL3125@piout.net>
+In-Reply-To: <20191019120941.GL3125@piout.net>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Sat, 19 Oct 2019 16:29:49 +0200
+Message-ID: <CAMpxmJVEXubtBhQs5wH00wvK=yp8nr0cZ04x9t8eCTLVU=O1JA@mail.gmail.com>
+Subject: Re: [PATCH] coccinelle: api/devm_platform_ioremap_resource: remove
+ useless script
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Markus Elfring <Markus.Elfring@web.de>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Himanshu Jha <himanshujha199640@gmail.com>,
+        kernel-janitors@vger.kernel.org,
+        Coccinelle <cocci@systeme.lip6.fr>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-10-18 at 17:41 +0200, Arnd Bergmann wrote:
-> There are two tavorevb boards in the kernel, one using a PXA930 chip in
-> mach-pxa, and one using the later PXA910 chip in mach-mmp.  They use the
-> same board number, which is generally a bad idea, and in a multiplatform
-> kernel, we can end up with funny link errors like this one resulting
-> from two boards gettting controlled by the same Kconfig symbol:
-> 
-> arch/arm/mach-mmp/tavorevb.o: In function `tavorevb_init':
-> tavorevb.c:(.init.text+0x4c): undefined reference to `pxa910_device_uart1'
-> tavorevb.c:(.init.text+0x50): undefined reference to `pxa910_device_gpio'
-> tavorevb.o:(.arch.info.init+0x54): undefined reference to `pxa910_init_irq'
-> tavorevb.o:(.arch.info.init+0x58): undefined reference to `pxa910_timer_init'
-> 
-> The mach-pxa TavorEVB seems much more complete than the mach-mmp one
-> that supports only uart, gpio and ethernet. Further, I could find no
-> information about the board on the internet aside from references to
-> the Linux kernel, so I assume this was never available outside of Marvell
-> and can be removed entirely.
-> 
-> There is a third board named TavorEVB in the Kconfig description,
-> but this refers to the "TTC_DKB" machine. The two are clearly
-> related, so I change the Kconfig description to just list both
-> names.
-> 
-> Cc: Lubomir Rintel <lkundrak@v3.sk>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+sob., 19 pa=C5=BA 2019 o 14:09 Alexandre Belloni
+<alexandre.belloni@bootlin.com> napisa=C5=82(a):
+>
+> On 19/10/2019 11:00:47+0200, Markus Elfring wrote:
+> > > While it is useful for new drivers to use devm_platform_ioremap_resou=
+rce,
+> >
+> > This is nice.
+> >
+> >
+> > > this script is currently used to spam maintainers,
+> >
+> > This view is unfortunate.
+> >
+> > Do we stumble on a target conflict again?
+> >
+> >
+> > > often updating very old drivers.
+> >
+> > This can also happen.
+> >
+> >
+> > > The net benefit is the removal of 2 lines of code in the driver
+> >
+> > Additional effects can be reconsidered, can't they?
+> >
+>
+> What are the additional effects? What is the end goal of converting all
+> the existing drivers to devm_platform_ioremap_resource? The existing
+> code is currently always correct and it is difficult to see how this
+> would lead to any bug avoidance in the long term.
+>
+> > > but the review load for the maintainers is huge.
+> >
+> > Does collateral evolution trigger a remarkable amount of changes occasi=
+onally?
+> >
+>
+> This is not an evolution, it is unnecessary churn. Those patches have no
+> benefit and eat up very valuable reviewer time.
+>
+> >
+> > How will such feedback influence the development and integration of
+> > further scripts for the semantic patch language (Coccinelle software)?
+> >
+>
+> There are a few other scripts that have no added value when applied to
+> existing code, like ptr_ret.cocci.
+>
+> --
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
 
-Reviewed-by: Lubomir Rintel <lkundrak@v3.sk>
+Hi Alexandre,
 
-In fact, I'd love to see more non-DT boards go from mach-mmp. There are
-good indications nobody is looking after MMP2-based "Jasper", "Flint"
-and "Brownstone" and they probably weren't seen outside Marvell either.
-The latter has a DTS file.
+Markus has been black-listed by several core maintainers already, I
+think you're wasting your time arguing. WRT the patch: when
+introducing this wrapper, I definitely didn't expect people to send
+hundreds of often wrong patches based on coccinelle reports, so I
+guess removing the script is correct.
 
-Would anybody miss them?
-
-Thanks
-Lubo
-
-> ---
->  arch/arm/mach-mmp/Kconfig    |  10 +---
->  arch/arm/mach-mmp/Makefile   |   1 -
->  arch/arm/mach-mmp/tavorevb.c | 113 -----------------------------------
->  3 files changed, 1 insertion(+), 123 deletions(-)
->  delete mode 100644 arch/arm/mach-mmp/tavorevb.c
-> 
-> diff --git a/arch/arm/mach-mmp/Kconfig b/arch/arm/mach-mmp/Kconfig
-> index 0440109e973b..fc8cbe0064ae 100644
-> --- a/arch/arm/mach-mmp/Kconfig
-> +++ b/arch/arm/mach-mmp/Kconfig
-> @@ -39,16 +39,8 @@ config MACH_AVENGERS_LITE
->  	  Say 'Y' here if you want to support the Marvell PXA168-based
->  	  Avengers Lite Development Board.
->  
-> -config MACH_TAVOREVB
-> -	bool "Marvell's PXA910 TavorEVB Development Board"
-> -	depends on ARCH_MULTI_V5
-> -	select CPU_PXA910
-> -	help
-> -	  Say 'Y' here if you want to support the Marvell PXA910-based
-> -	  TavorEVB Development Board.
-> -
->  config MACH_TTC_DKB
-> -	bool "Marvell's PXA910 TavorEVB Development Board"
-> +	bool "Marvell's PXA910 TavorEVB/TTC_DKB Development Board"
->  	depends on ARCH_MULTI_V5
->  	select CPU_PXA910
->  	help
-> diff --git a/arch/arm/mach-mmp/Makefile b/arch/arm/mach-mmp/Makefile
-> index 8f267c7bc6e8..0dc07e1f3196 100644
-> --- a/arch/arm/mach-mmp/Makefile
-> +++ b/arch/arm/mach-mmp/Makefile
-> @@ -27,7 +27,6 @@ endif
->  obj-$(CONFIG_MACH_ASPENITE)	+= aspenite.o
->  obj-$(CONFIG_MACH_ZYLONITE2)	+= aspenite.o
->  obj-$(CONFIG_MACH_AVENGERS_LITE)+= avengers_lite.o
-> -obj-$(CONFIG_MACH_TAVOREVB)	+= tavorevb.o
->  obj-$(CONFIG_MACH_TTC_DKB)	+= ttc_dkb.o
->  obj-$(CONFIG_MACH_BROWNSTONE)	+= brownstone.o
->  obj-$(CONFIG_MACH_FLINT)	+= flint.o
-> diff --git a/arch/arm/mach-mmp/tavorevb.c b/arch/arm/mach-mmp/tavorevb.c
-> deleted file mode 100644
-> index 3261d2322198..000000000000
-> --- a/arch/arm/mach-mmp/tavorevb.c
-> +++ /dev/null
-> @@ -1,113 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0-only
-> -/*
-> - *  linux/arch/arm/mach-mmp/tavorevb.c
-> - *
-> - *  Support for the Marvell PXA910-based TavorEVB Development Platform.
-> - */
-> -#include <linux/gpio.h>
-> -#include <linux/gpio-pxa.h>
-> -#include <linux/init.h>
-> -#include <linux/kernel.h>
-> -#include <linux/platform_device.h>
-> -#include <linux/smc91x.h>
-> -
-> -#include <asm/mach-types.h>
-> -#include <asm/mach/arch.h>
-> -#include "addr-map.h"
-> -#include "mfp-pxa910.h"
-> -#include "pxa910.h"
-> -#include "irqs.h"
-> -
-> -#include "common.h"
-> -
-> -static unsigned long tavorevb_pin_config[] __initdata = {
-> -	/* UART2 */
-> -	GPIO47_UART2_RXD,
-> -	GPIO48_UART2_TXD,
-> -
-> -	/* SMC */
-> -	SM_nCS0_nCS0,
-> -	SM_ADV_SM_ADV,
-> -	SM_SCLK_SM_SCLK,
-> -	SM_SCLK_SM_SCLK,
-> -	SM_BE0_SM_BE0,
-> -	SM_BE1_SM_BE1,
-> -
-> -	/* DFI */
-> -	DF_IO0_ND_IO0,
-> -	DF_IO1_ND_IO1,
-> -	DF_IO2_ND_IO2,
-> -	DF_IO3_ND_IO3,
-> -	DF_IO4_ND_IO4,
-> -	DF_IO5_ND_IO5,
-> -	DF_IO6_ND_IO6,
-> -	DF_IO7_ND_IO7,
-> -	DF_IO8_ND_IO8,
-> -	DF_IO9_ND_IO9,
-> -	DF_IO10_ND_IO10,
-> -	DF_IO11_ND_IO11,
-> -	DF_IO12_ND_IO12,
-> -	DF_IO13_ND_IO13,
-> -	DF_IO14_ND_IO14,
-> -	DF_IO15_ND_IO15,
-> -	DF_nCS0_SM_nCS2_nCS0,
-> -	DF_ALE_SM_WEn_ND_ALE,
-> -	DF_CLE_SM_OEn_ND_CLE,
-> -	DF_WEn_DF_WEn,
-> -	DF_REn_DF_REn,
-> -	DF_RDY0_DF_RDY0,
-> -};
-> -
-> -static struct pxa_gpio_platform_data pxa910_gpio_pdata = {
-> -	.irq_base	= MMP_GPIO_TO_IRQ(0),
-> -};
-> -
-> -static struct smc91x_platdata tavorevb_smc91x_info = {
-> -	.flags	= SMC91X_USE_16BIT | SMC91X_NOWAIT,
-> -};
-> -
-> -static struct resource smc91x_resources[] = {
-> -	[0] = {
-> -		.start	= SMC_CS1_PHYS_BASE + 0x300,
-> -		.end	= SMC_CS1_PHYS_BASE + 0xfffff,
-> -		.flags	= IORESOURCE_MEM,
-> -	},
-> -	[1] = {
-> -		.start	= MMP_GPIO_TO_IRQ(80),
-> -		.end	= MMP_GPIO_TO_IRQ(80),
-> -		.flags	= IORESOURCE_IRQ | IORESOURCE_IRQ_HIGHEDGE,
-> -	}
-> -};
-> -
-> -static struct platform_device smc91x_device = {
-> -	.name		= "smc91x",
-> -	.id		= 0,
-> -	.dev		= {
-> -		.platform_data = &tavorevb_smc91x_info,
-> -	},
-> -	.num_resources	= ARRAY_SIZE(smc91x_resources),
-> -	.resource	= smc91x_resources,
-> -};
-> -
-> -static void __init tavorevb_init(void)
-> -{
-> -	mfp_config(ARRAY_AND_SIZE(tavorevb_pin_config));
-> -
-> -	/* on-chip devices */
-> -	pxa910_add_uart(1);
-> -	platform_device_add_data(&pxa910_device_gpio, &pxa910_gpio_pdata,
-> -				 sizeof(struct pxa_gpio_platform_data));
-> -	platform_device_register(&pxa910_device_gpio);
-> -
-> -	/* off-chip devices */
-> -	platform_device_register(&smc91x_device);
-> -}
-> -
-> -MACHINE_START(TAVOREVB, "PXA910 Evaluation Board (aka TavorEVB)")
-> -	.map_io		= mmp_map_io,
-> -	.nr_irqs	= MMP_NR_IRQS,
-> -	.init_irq       = pxa910_init_irq,
-> -	.init_time	= pxa910_timer_init,
-> -	.init_machine   = tavorevb_init,
-> -	.restart	= mmp_restart,
-> -MACHINE_END
-
+Bart
