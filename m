@@ -2,193 +2,90 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AC8CA9EAC
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 09:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CFDCA9EAB
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 09:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15683222CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 09:13:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="lBOY46KT"
+	by mail.kernel.org (Postfix) with ESMTP id A4DF8222C2
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 09:39:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728612AbfJSJNH (ORCPT
+        id S1726381AbfJSJjO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 05:13:07 -0400
-Received: from sender4-pp-o94.zoho.com ([136.143.188.94]:25408 "EHLO
-        sender4-pp-o94.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728576AbfJSJNH (ORCPT
+        Sat, 19 Oct 2019 05:39:14 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:57969 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbfJSJjN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 05:13:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1571476359; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=m3d0u3qP4oNi3v+fMNa6jESURQm/++vNAIq0yiEVB+2rkYgM6/OqvpeuRQAzkY36K5egtZgXHlEjBkwgR3Y8Dnl+bkg5q4AwpvPmrtojiS2b+8JlUvkv3/OibF5HJaUfXOgwKhDL8DGnAmJlb7kyJCDpbzPhu20VfAu7V6ICq5o=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1571476359; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=c1LHMbjebCq/p3Q155rI1KuvyuVAzusZr5to+xYs/3Y=; 
-        b=QrXmWfFLUs4BridPXlNzFzLXNd9VvhFO3XJF3lq61ZPTlpTuGfO6IIcyEShePM+2MQqK19yvcl/Ptu5BtsJURziemN3dkDooQ+I1Q6SBBdVC4Jw1yE4Ja02jpk9JN7xIGSXK6grdHVPj5Es90Q0XFAIqPntC4Pomnqsw+1mFDvE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
-  b=cELFXnRKTQMsh/d7U6m9uSQj1zZL1r3EQ0Bj+IQ+NQ54Fq//zg5tJTdDx0T1wR0ANa02B0X2CnE7
-    z3t5UwGUy5kWt4cH1USKiRjtUOlMyA4yf/DyIupa2PPLskAKqUqA  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1571476359;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        l=3710; bh=c1LHMbjebCq/p3Q155rI1KuvyuVAzusZr5to+xYs/3Y=;
-        b=lBOY46KTxJ0ked4LpLHBvpFqWSIZ+FXjk63gMf8WxKuj+tif6kmawyqa8jZmKjQd
-        OTRYBhw0IwRUgCrNN6krcJBQV4PD0Hk0NXu4zWBkLUNxWOJaDoF7+X+pRK9kxTsEksc
-        YSOxHMU0FaJMzpzULwnvU8pshbi32oJOUXDBe8MU=
-Received: from [192.168.10.218] (171.221.113.199 [171.221.113.199]) by mx.zohomail.com
-        with SMTPS id 1571476358155716.0469073276595; Sat, 19 Oct 2019 02:12:38 -0700 (PDT)
-Subject: Re: [PATCH 6/6 v2] MMC: JZ4740: Add support for LPM.
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Paul Cercueil <paul@crapouillou.net>
-References: <1567669089-88693-1-git-send-email-zhouyanjie@zoho.com>
- <1570857203-49192-1-git-send-email-zhouyanjie@zoho.com>
- <1570857203-49192-7-git-send-email-zhouyanjie@zoho.com>
- <CAPDyKFo9juNmf6hrcBjzOprS6GwzAPBq8y3ReGu=ry+MdxT9Bg@mail.gmail.com>
-Cc:     linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Mark Rutland <mark.rutland@arm.com>, syq@debian.org,
-        Linus Walleij <linus.walleij@linaro.org>, armijn@tjaldur.nl,
-        Thomas Gleixner <tglx@linutronix.de>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Mathieu Malaterre <malat@debian.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-Message-ID: <5DA9EE2F.4030603@zoho.com>
-Date:   Sat, 19 Oct 2019 00:54:07 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Sat, 19 Oct 2019 05:39:13 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 43C3A20002;
+        Sat, 19 Oct 2019 09:39:01 +0000 (UTC)
+Date:   Sat, 19 Oct 2019 11:39:00 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Brian Norris <computersforpeace@gmail.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org (open list:BROADCOM STB NAND FLASH DRIVER),
+        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM STB NAND
+        FLASH DRIVER), linux-kernel@vger.kernel.org (open list)
+Subject: Re: [PATCH] mtd: rawnand: brcmnand: Fix sparse warning in
+ has_flash_dma()
+Message-ID: <20191019113824.15fa4f52@xps13>
+In-Reply-To: <20191018233844.23838-1-f.fainelli@gmail.com>
+References: <20191018233844.23838-1-f.fainelli@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFo9juNmf6hrcBjzOprS6GwzAPBq8y3ReGu=ry+MdxT9Bg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uffe,
+Hi Florian,
 
-On 2019=E5=B9=B410=E6=9C=8818=E6=97=A5 16:52, Ulf Hansson wrote:
-> On Sat, 12 Oct 2019 at 07:19, Zhou Yanjie <zhouyanjie@zoho.com> wrote:
->> add support for low power mode of Ingenic's MMC/SD Controller.
->>
->> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
-> I couldn't find a proper coverletter for the series, please provide
-> that next time as it really helps review.
+Florian Fainelli <f.fainelli@gmail.com> wrote on Fri, 18 Oct 2019
+16:38:44 -0700:
 
-I'm sorry, maybe some problems with my git send-email cause cover
-later not to be sent out, next time I will pay attention to this problem.
+> Sparse rightfully complained about has_flash_dma():
+> +drivers/mtd/nand/brcmnand/brcmnand.c:951:40: warning: Using plain integer as NULL pointer [sparse]
 
-> Additionally, it seems like
-> you forgot to change the prefix of the patches to "mmc: jz4740" (or at
-> least you chosed upper case letters), but I will take care of that
-> this time. So, I have applied the series for next, thanks!
+I don't get why would sparse complain about this... Anyway I prefer
+the !!(<pointer>) alternative if you don't mind. Otherwise the "!=
+NULL" comparison feels wrong.
 
-I'm very sorry, I have misunderstood, before I thought jz4740 as a proper
-noun needs to be capitalized, I will pay attention to this next time.
-
->
-> I also have a general question. Should we perhaps rename the driver
-> from jz4740_mmc.c to ingenic.c (and the file for the DT bindings, the
-> Kconfig, etc), as that seems like a more appropriate name? No?
-
-I am very much in favor of this proposal. Now jz4740_mmc.c is not only used
-for the JZ4740 processor, it is also used for JZ4725, JZ4760, JZ4770, JZ478=
-0
-and X1000, and now Ingenic's processor is no longer named after JZ47xx,
-it is divided into three product lines: M, T, and X. It is easy to cause=20
-some
-misunderstandings by using jz4740_mmc.c. At the same time, I think that
-some register names also need to be adjusted. For example, the STLPPL
-register name has only appeared in JZ4730 and JZ4740, and this register
-in all subsequent processors is called CTRL. This time I was confused by
-the STLPPL when I added drivers for the JZ4760's and X1000's LPM.
-
-I also can send a patch to rename it if you need.
-
-Best regards!
-
->
-> Kind regards
-> Uffe
->
->
->> ---
->>   drivers/mmc/host/jz4740_mmc.c | 23 +++++++++++++++++++++++
->>   1 file changed, 23 insertions(+)
->>
->> diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc=
-.c
->> index 44a04fe..4cbe7fb 100644
->> --- a/drivers/mmc/host/jz4740_mmc.c
->> +++ b/drivers/mmc/host/jz4740_mmc.c
->> @@ -43,6 +43,7 @@
->>   #define JZ_REG_MMC_RESP_FIFO   0x34
->>   #define JZ_REG_MMC_RXFIFO      0x38
->>   #define JZ_REG_MMC_TXFIFO      0x3C
->> +#define JZ_REG_MMC_LPM         0x40
->>   #define JZ_REG_MMC_DMAC                0x44
->>
->>   #define JZ_MMC_STRPCL_EXIT_MULTIPLE BIT(7)
->> @@ -102,6 +103,12 @@
->>   #define JZ_MMC_DMAC_DMA_SEL BIT(1)
->>   #define JZ_MMC_DMAC_DMA_EN BIT(0)
->>
->> +#define        JZ_MMC_LPM_DRV_RISING BIT(31)
->> +#define        JZ_MMC_LPM_DRV_RISING_QTR_PHASE_DLY BIT(31)
->> +#define        JZ_MMC_LPM_DRV_RISING_1NS_DLY BIT(30)
->> +#define        JZ_MMC_LPM_SMP_RISING_QTR_OR_HALF_PHASE_DLY BIT(29)
->> +#define        JZ_MMC_LPM_LOW_POWER_MODE_EN BIT(0)
->> +
->>   #define JZ_MMC_CLK_RATE 24000000
->>
->>   enum jz4740_mmc_version {
->> @@ -860,6 +867,22 @@ static int jz4740_mmc_set_clock_rate(struct jz4740_=
-mmc_host *host, int rate)
->>          }
->>
->>          writew(div, host->base + JZ_REG_MMC_CLKRT);
->> +
->> +       if (real_rate > 25000000) {
->> +               if (host->version >=3D JZ_MMC_X1000) {
->> +                       writel(JZ_MMC_LPM_DRV_RISING_QTR_PHASE_DLY |
->> +                                  JZ_MMC_LPM_SMP_RISING_QTR_OR_HALF_PHA=
-SE_DLY |
->> +                                  JZ_MMC_LPM_LOW_POWER_MODE_EN,
->> +                                  host->base + JZ_REG_MMC_LPM);
->> +               } else if (host->version >=3D JZ_MMC_JZ4760) {
->> +                       writel(JZ_MMC_LPM_DRV_RISING |
->> +                                  JZ_MMC_LPM_LOW_POWER_MODE_EN,
->> +                                  host->base + JZ_REG_MMC_LPM);
->> +               } else if (host->version >=3D JZ_MMC_JZ4725B)
->> +                       writel(JZ_MMC_LPM_LOW_POWER_MODE_EN,
->> +                                  host->base + JZ_REG_MMC_LPM);
->> +       }
->> +
->>          return real_rate;
->>   }
->>
->> --
->> 2.7.4
->>
->>
+> 
+> Fixes: 27c5b17cd1b1 ("mtd: nand: add NAND driver "library" for Broadcom STB NAND controller")
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> index 15ef30b368a5..73f7a0945399 100644
+> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> @@ -909,7 +909,7 @@ static inline void brcmnand_set_wp(struct brcmnand_controller *ctrl, bool en)
+>  
+>  static inline bool has_flash_dma(struct brcmnand_controller *ctrl)
+>  {
+> -	return ctrl->flash_dma_base;
+> +	return ctrl->flash_dma_base != NULL;
+>  }
+>  
+>  static inline void disable_ctrl_irqs(struct brcmnand_controller *ctrl)
 
 
-
+Thanks,
+Miquèl
