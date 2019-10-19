@@ -2,215 +2,118 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B89DCA9EAB
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 19:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40287CA9EAB
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 19:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7A0D21925
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 19:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14A41222BD
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 19:35:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfJSTTo convert rfc822-to-8bit (ORCPT
+        id S1726164AbfJSTez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 15:19:44 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:33758 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbfJSTTn (ORCPT
+        Sat, 19 Oct 2019 15:34:55 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:40477 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfJSTez (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 15:19:43 -0400
-Received: from marcel-macbook.fritz.box (p4FEFC197.dip0.t-ipconnect.de [79.239.193.151])
-        by mail.holtmann.org (Postfix) with ESMTPSA id D9D2CCED0E;
-        Sat, 19 Oct 2019 21:28:40 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.19\))
-Subject: Re: [PATCH] Bluetooth: hci_qca: Add delay for wcn3990 stability
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20191018213354.GC20212@google.com>
-Date:   Sat, 19 Oct 2019 21:19:40 +0200
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        c-hbandi@codeaurora.org, bgodavar@codeaurora.org,
-        linux-bluetooth@vger.kernel.org,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <1E6A718E-ABEA-4B68-9A5A-C34880273550@holtmann.org>
-References: <20191017212955.6266-1-jeffrey.l.hugo@gmail.com>
- <20191018180339.GQ87296@google.com>
- <CAOCk7NrN0sjLk3onvZn7+bhs_v3A4H6CHh=XPo_NU2XzUWeEGw@mail.gmail.com>
- <20191018194039.GB20212@google.com>
- <CAOCk7NqacfVLzKueTRTFQ6aWbLXFyMQaQNXeXENzLTyMNLSp9w@mail.gmail.com>
- <20191018213354.GC20212@google.com>
-To:     Matthias Kaehlcke <mka@chromium.org>
-X-Mailer: Apple Mail (2.3594.4.19)
+        Sat, 19 Oct 2019 15:34:55 -0400
+Received: from mail-qt1-f175.google.com ([209.85.160.175]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M7rxE-1iPmNb1R2o-0054s6 for <linux-kernel@vger.kernel.org>; Sat, 19 Oct
+ 2019 21:34:53 +0200
+Received: by mail-qt1-f175.google.com with SMTP id u40so14289720qth.11
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 12:34:53 -0700 (PDT)
+X-Gm-Message-State: APjAAAXp61ezAskyvlbWXoSEccXbtKpe9OTZNpRqOZQnloRp0KH2aAtM
+        jTCx8oIBaOQ6OyEV2i9eYjXwk5WNd9LrwoN0QEE=
+X-Google-Smtp-Source: APXvYqy22GrAJBe0FkPxmOqPm4Xlz+XL09o/POQr34X5BMu5W279MixtQUydyM5HiIo/UQu7OEriNwiYVGEphslC9R0=
+X-Received: by 2002:ac8:38e3:: with SMTP id g32mr16775838qtc.304.1571513692155;
+ Sat, 19 Oct 2019 12:34:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191018154052.1276506-1-arnd@arndb.de> <20191018154201.1276638-44-arnd@arndb.de>
+ <4d6920e9fab519ddf69aae9da13a1cd02d13bddd.camel@v3.sk>
+In-Reply-To: <4d6920e9fab519ddf69aae9da13a1cd02d13bddd.camel@v3.sk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sat, 19 Oct 2019 21:34:36 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1buT7K7YWAdztqnZ83Jq6f4q-7x_G3Ed09cKQxtKLJSQ@mail.gmail.com>
+Message-ID: <CAK8P3a1buT7K7YWAdztqnZ83Jq6f4q-7x_G3Ed09cKQxtKLJSQ@mail.gmail.com>
+Subject: Re: [PATCH 44/46] ARM: mmp: remove tavorevb board support
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:RFAmhEsdA6kxFpSgM8lHmA0wEEu5pmby0DqOCGFNm8WHjYai81X
+ mboWZnK33Gy9CvXEZfq59LPyr5/8DNMpr+DdT/jLOCYxTuW3iDLGAnslJVAcC4WdN5aL9om
+ Zv/g9rOIkdCRLckdZ4knl3Z9jY195TnU+YNLfoYgm/7vbPnGrUujrBaS6d/VZVpkOP4OQH6
+ /4jJmEvDrWKW7eToU1f6w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:QR2VVtTc4E0=:OUJCyA2sxeW9lmDH7B0ySm
+ vaggIeLEmCvcPpmFq3CvNbJ6zy51dDgs/dzfHcilMsLOaPhgGtGiOc3bBZgQxwvJ76bq4CRVV
+ sV9pYXD0DqsGVtt0dw0VpWjD+YjTDk2vG6X5GxwNXi+KD5x/e6O7t+RKSmytg14otQBGVfmu4
+ TGMGfG++/yq+oQuuewRsT8GUfDdRvieaLF+lTD8AuyAyR4pjrd5Vqr4MS5N9y3JSTxlIRT0wl
+ u8O2DBRUPqXXZjMA8rVnHhKl1tosPKZw7rEeT7HUgKzz2M9speeeC6O7QFSlVlcd7po/c6bHY
+ mnCC3Rf7LMxn5AlyaHq+pXdzx4dFezSnO8/+fZcXSUarczwZMHWCTNR5L4Rpajag0VmUz5vFH
+ ma8ZwIjfoIH0nuowMv451LMVIyMA/kPj20smAALUg583QHEI9KjJq1Yl80VDGtvewVOjbQbHb
+ iq/jpPXh0M7n3JCuIZhK029e0//e8sNUijndQ7R9v1zzSoCICb8EYON8YQpRkUyiO+Nahb87Z
+ cEyICM9X8h0la7tAxOl3Ne7b0W6W049wHnRE1BRynkGGsogWiWQ7H+BiYrb9jjBC19KTKU69n
+ wpH48h1Osshg2TU7L2ZvxVrlOxboKkayc26LNYGWyQr/tFwWrksseKHHYzjtwXYzD/zeNkcFR
+ 0OMMbZva9SeszrebpGgSgdRW194kVT2E0E1EWdryr6Mb5TE+E0V4GMGaQYsN4w+0UNSTrraiB
+ iFLE6Tl62gSuB55WNZdRXpgIbnn/vec0EIaBgpw+fdFpWTgIPlKrngS52rJJOAPRcw+F1Shs5
+ dl9ud8mdAyuWRQgZCQZj2YkJFahxuIBNQBbr0Fo//bwmYXvCnrbcOIvEVG9SMa2VrHsxy1CqV
+ f9jRwjuqA0Oa3MKF3d9Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+On Sat, Oct 19, 2019 at 4:20 PM Lubomir Rintel <lkundrak@v3.sk> wrote:
+> On Fri, 2019-10-18 at 17:41 +0200, Arnd Bergmann wrote:
+> >
+> > There is a third board named TavorEVB in the Kconfig description,
+> > but this refers to the "TTC_DKB" machine. The two are clearly
+> > related, so I change the Kconfig description to just list both
+> > names.
+> >
+> > Cc: Lubomir Rintel <lkundrak@v3.sk>
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> Reviewed-by: Lubomir Rintel <lkundrak@v3.sk>
+>
+> In fact, I'd love to see more non-DT boards go from mach-mmp. There are
+> good indications nobody is looking after MMP2-based "Jasper", "Flint"
+> and "Brownstone" and they probably weren't seen outside Marvell either.
+> The latter has a DTS file.
+>
+> Would anybody miss them?
 
->>>>>> On the msm8998 mtp, the response to the baudrate change command is never
->>>>>> received.  On the Lenovo Miix 630, the response to the baudrate change
->>>>>> command is corrupted - "Frame reassembly failed (-84)".
->>>>>> 
->>>>>> Adding a 50ms delay before re-enabling flow to receive the baudrate change
->>>>>> command response from the wcn3990 addesses both issues, and allows
->>>>>> bluetooth to become functional.
->>>>> 
->>>>> From my earlier debugging on sdm845 I don't think this is what happens.
->>>>> The problem is that the wcn3990 sends the response to the baudrate change
->>>>> command using the new baudrate, while the UART on the SoC still operates
->>>>> with the prior speed (for details see 2faa3f15fa2f ("Bluetooth: hci_qca:
->>>>> wcn3990: Drop baudrate change vendor event"))
->>>>> 
->>>>> IIRC the 50ms delay causes the HCI core to discard the received data,
->>>>> which is why the "Frame reassembly failed" message disappears, not
->>>>> because the response was received. In theory commit 78e8fa2972e5
->>>>> ("Bluetooth: hci_qca: Deassert RTS while baudrate change command")
->>>>> should have fixed those messages, do you know if CTS/RTS are connected
->>>>> on the Bluetooth UART of the Lenovo Miix 630?
->>>> 
->>>> I was testing with 5.4-rc1 which contains the indicated RTS fix.
->>>> 
->>>> Yes, CTS/RTS are connected on the Lenovo Miix 630.
->>>> 
->>>> I added debug statements which indicated that data was received,
->>>> however it was corrupt, and the packet type did not match what was
->>>> expected, hence the frame reassembly errors.
->>> 
->>> Do you know if any data is received during the delay? In theory that
->>> shouldn't be the case since RTS is deasserted, just double-checking.
->> 
->> I don't think so, but I've run so many tests, I'm not 100% positive.
->> Let me go double check and get back to you.
->> 
->>> 
->>> What happens if you add a longer delay (e.g. 1s) before/after setting
->>> the host baudrate?
->> 
->> Hmm, not exactly sure.  I will test.
->> 
->>> 
->>>> In response to this patch, Balakrishna pointed me to a bug report
->>>> which indicated that some of the UART GPIO lines need to have a bias
->>>> applied to prevent errant data from floating lines -
->>>> 
->>>> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1391888
->>> 
->>> Yeah, that was another source of frame reassembly errors that we were
->>> seeing on SDM845.
->>> 
->>> Balakrishna, please post these kind of replies on-list, so that
->>> everybody can benefit from possible solutions or contribute to the
->>> discussion.
->>> 
->>>> It turns out this fix was never applied to msm8998.  Applying the fix
->>>> does cause the the frame reassembly errors to go away, however then
->>>> the host SoC never receives the baud rate change response (I increased
->>>> the timeout from 2faa3f15fa2f ("Bluetooth: hci_qca: wcn3990: Drop
->>>> baudrate change vendor event") to 5 seconds).  As of now, this patch
->>>> is still required.
->>> 
->>> Interesting.
->>> 
->>> FTR, this is the full UART pin configuration for cheza (SDM845):
->>> 
->>> &qup_uart6_default {
->>>        /* Change pinmux to all 4 pins since CTS and RTS are connected */
->>>        pinmux {
->>>                pins = "gpio45", "gpio46",
->>>                       "gpio47", "gpio48";
->>>        };
->>> 
->>>        pinconf-cts {
->>>                /*
->>>                 * Configure a pull-down on 45 (CTS) to match the pull of
->>>                 * the Bluetooth module.
->>>                 */
->>>                pins = "gpio45";
->>>                bias-pull-down;
->>>        };
->>> 
->>>        pinconf-rts-tx {
->>>                /* We'll drive 46 (RTS) and 47 (TX), so no pull */
->>>                pins = "gpio46", "gpio47";
->>>                drive-strength = <2>;
->>>                bias-disable;
->>>        };
->>> 
->>>        pinconf-rx {
->>>                /*
->>>                 * Configure a pull-up on 48 (RX). This is needed to avoid
->>>                 * garbage data when the TX pin of the Bluetooth module is
->>>                 * in tri-state (module powered off or not driving the
->>>                 * signal yet).
->>>                 */
->>>                pins = "gpio48";
->>>                bias-pull-up;
->>>        };
->>> };
->>> 
->>> Does this correspond to what you tried on the Lenovo Miix 630?
->> 
->> Which GPIO maps to which pin is different -
->> 45 - TX
->> 46 - RX
->> 47 - CTS
->> 48 - RFR (RTS)
->> 
->> However, accounting for that, yes that corresponds to what I used.
-> 
-> Thanks for re-confirming.
-> 
->>>> I have no idea why the delay is required, and was hoping that posting
->>>> this patch would result in someone else providing some missing pieces
->>>> to determine the real root cause.  I suspect that asserting RTS at the
->>>> wrong time may cause an issue for the wcn3990, but I have no data nor
->>>> documentation to support this guess.  I welcome any further insights
->>>> you may have.
->>> 
->>> Unfortunately I don't have a clear suggestion at this point, debugging
->>> the original problem which lead to 2faa3f15fa2f ("Bluetooth: hci_qca:
->>> wcn3990: Drop baudrate change vendor event") involved quite some time
->>> and hooking up a scope/logic analyzer ...
->>> 
->>> I also suspect RTS is involved, and potentially the configuration of
->>> the pulls. It might be interesting to analyze the data that leads to
->>> the frame assembly error and determine if it is just noise (wrong
->>> pulls/drive strength?) or received with a non-matching baud-rate.
->> 
->> I don't have a scope/logic analyzer, but since I hooked up the
->> blsp_bam I'm able to see the raw data from the uart before it gets to
->> the HCI stack or anything.  As a side note, having the bam or not
->> seemed to have no effect on the issue.
-> 
-> It's not exactly the same though. I suppose with the blsp_bam you only
-> see the actual data when the UART runs at the same speed as it's
-> counterpart. With a logic analyzer you can change the speed after
-> data capture, which might convert apparent garbage into reasonable
-> data.
-> 
->> Most of the time the data was one byte (zero), some times it was a
->> string of zero bytes.  Rarely it would be random data.
-> 
-> In terms of data ss there difference between a string of zero bytes
-> and a single zero byte?
-> 
-> From my notes the response (vendor event) to a baudrate change
-> command on the WCN3990 is:
-> 
-> 04 0e 04 01 00 00 00
-> 
-> The tail *might* be the zero(s) you are seeing, and the first part gets
-> lost for some reason?
+Probably not, but I had a hard time identifying any boards in mmp
+and some other platforms that are actually worth keeping.
 
-you could allow the zero bytes be a valid sequence. See BCM_RECV_NULL for an example on how to include that into the H:4 receive code. Then remove the extra msleep and run btmon to see if you get zero bytes and how many.
+Back in the days, a common way the platforms were maintained
+was to only have the official development board in mainline Linux,
+while many products were left with out of tree board files.
+This means it's impossible to see which SoCs actually got used
+in the field and which ones did not. It also means the other
+machines stopped getting forward-ported and nobody could test
+the mainline changes.
 
-Regards
+I wouldn't mind just removing all of the machines that were clearly
+reference hardware rather than actual products unless we know of
+someone still using them.
 
-Marcel
+In case of MMP, that doesn't leave a lot though, the gplugD is the
+only one that clearly meant as an end-user product. I'd also leave
+all the DT based platforms as a rule, mainly because the DT has
+made it possible to support additional boards with a custom dt blob
+and no kernel changes.
 
+If you have any more insight into what particular boards actually
+were used for, and which ones can get removed, that would
+be very welcome.
+
+        Arnd
