@@ -2,80 +2,102 @@ Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9629CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 10:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB683CA9EAB
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 10:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97CF520659
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 10:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9EFE222CC
+	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 10:35:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725965AbfJSK0S (ORCPT
+        id S1725924AbfJSKfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 06:26:18 -0400
-Received: from gate.crashing.org ([63.228.1.57]:35061 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725883AbfJSK0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 06:26:18 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x9JAPXS6004953;
-        Sat, 19 Oct 2019 05:25:34 -0500
-Message-ID: <72d1a78d7807b1bda00e1bafe0c2ecefe267918b.camel@kernel.crashing.org>
-Subject: Re: [PATCH v2] ftgmac100: Disable HW checksum generation on AST2500
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Vijay Khemka <vijaykhemka@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        Sai Dasari <sdasari@fb.com>
-Date:   Sat, 19 Oct 2019 21:25:32 +1100
-In-Reply-To: <3D78AA04-A502-4A9F-87A0-0D62D56952AF@fb.com>
-References: <20191011213027.2110008-1-vijaykhemka@fb.com>
-         <3a1176067b745fddfc625bbd142a41913ee3e3a1.camel@kernel.crashing.org>
-         <0C0BC813-5A84-403F-9C48-9447AAABD867@fb.com>
-         <071cf1eeefcbfc14633a13bc2d15ad7392987a88.camel@kernel.crashing.org>
-         <9AA81274-01F2-4803-8905-26F0521486CE@fb.com>
-         <f6d5cb45a9aa167533135c5b218b45b1d210d31a.camel@kernel.crashing.org>
-         <529EF9B4-DFDE-4DB7-BE26-3AED8D814134@fb.com>
-         <0ef567e985ce3fe821cbd80265f85a35d16be373.camel@kernel.crashing.org>
-         <3D78AA04-A502-4A9F-87A0-0D62D56952AF@fb.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sat, 19 Oct 2019 06:35:12 -0400
+Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:49557 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725777AbfJSKfM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 19 Oct 2019 06:35:12 -0400
+Received: from belgarion ([90.76.41.223])
+        by mwinf5d17 with ME
+        id FNb42100B4otT8A03Nb44m; Sat, 19 Oct 2019 12:35:10 +0200
+X-ME-Helo: belgarion
+X-ME-Auth: amFyem1pay5yb2JlcnRAb3JhbmdlLmZy
+X-ME-Date: Sat, 19 Oct 2019 12:35:10 +0200
+X-ME-IP: 90.76.41.223
+From:   Robert Jarzmik <robert.jarzmik@free.fr>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        IDE-ML <linux-ide@vger.kernel.org>,
+        "open list\:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        linux-leds@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-rtc@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
+Subject: Re: [PATCH 00/46] ARM: pxa: towards multiplatform support
+References: <20191018154052.1276506-1-arnd@arndb.de>
+        <87v9slg9k5.fsf@belgarion.home>
+        <CAK8P3a1JDtHsOW=iaxEycbJ4TBkR9MHUyDMeJnwxCtb=tefnBQ@mail.gmail.com>
+        <CAK8P3a0376Anmoc8VWXcEBg+z2B+1vcxJoywYYROBQNxpVmZuA@mail.gmail.com>
+X-URL:  http://belgarath.falguerolles.org/
+Date:   Sat, 19 Oct 2019 12:35:03 +0200
+In-Reply-To: <CAK8P3a0376Anmoc8VWXcEBg+z2B+1vcxJoywYYROBQNxpVmZuA@mail.gmail.com>
+        (Arnd Bergmann's message of "Fri, 18 Oct 2019 21:32:36 +0200")
+Message-ID: <87r239f2g8.fsf@belgarion.home>
+User-Agent: Gnus/5.130008 (Ma Gnus v0.8) Emacs/26 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-10-19 at 01:31 +0000, Vijay Khemka wrote:
-> Thanks Ben,
-> I will try to add some trace and test whatever possible and test it.
-> As we
-> don't have tcpdump into our image and I have limited understanding of
-> networking stack so if you get some time to verify ipv6, it will be
-> really
-> helpful. 
->     
+Arnd Bergmann <arnd@arndb.de> writes:
 
-You only need tcpdump (or wireshark) on the *other end* of the link,
-could even be your laptop, to look at what the generated frames look
-like and compare with your traces.
+> On Fri, Oct 18, 2019 at 9:17 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>> On Fri, Oct 18, 2019 at 9:04 PM Robert Jarzmik <robert.jarzmik@free.fr> wrote:
+>> > Arnd Bergmann <arnd@arndb.de> writes:
+>> >
+>> > > Hi PXA maintainers,
+>> > >
+>> > > I'm in the process of getting the old ARM platforms to all build
+>> > > in a single kernel. The largest part of that work is changing all
+>> > > the device drivers to no longer require mach/*.h header files.
+>> > >
+>> > > This series does it for arch/pxa/.
+>> > >
+>> > > As with the omap1 and s3c24xx series I sent before, I don't
+>> > > expect this all to be correct in the first version, though
+>> > > a lot of the patches are fairly simple and I did exhaustive
+>> > > compile-time testing on them.
+>> > >
+>> > > Please test if you have the hardware, or review!
+>> >
+>> > Hi Arnd,
+>> >
+>> > Would you have a git tree I can pull from ?
+>> > That would make my life easier than applying manually 46 patches...
+>>
+>> I've now pushed it to
+>>
+>> git://git.kernel.org:/pub/scm/linux/kernel/git/arnd/playground.git
+>> pxa-multiplatform
+>
+> Sorry for the duplication, I had some problems with email configuration
+> so my reply got rejected, let's see if it goes through this time.
+I have it now, thanks, I'll test and review as soon as I can.
 
-Cheers,
-Ben.
+Cheers.
 
-
+-- 
+Robert
