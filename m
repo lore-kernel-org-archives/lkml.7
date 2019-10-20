@@ -1,211 +1,171 @@
-Return-Path: <SRS0=/uHP=YM=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 327A3CA9EAB
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 23:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B05CA9EAC
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 00:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAE1221744
-	for <linux-kernel@archiver.kernel.org>; Sat, 19 Oct 2019 23:35:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AO7vJZY4"
+	by mail.kernel.org (Postfix) with ESMTP id EC74D21D7C
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 00:17:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbfJSXfD (ORCPT
+        id S1726189AbfJTARE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 19:35:03 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35999 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbfJSXfC (ORCPT
+        Sat, 19 Oct 2019 20:17:04 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:65132 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725871AbfJTARE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 19:35:02 -0400
-Received: by mail-wm1-f66.google.com with SMTP id c22so181598wmd.1;
-        Sat, 19 Oct 2019 16:35:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=id0wNIusA/qeB14i09dYcOborXEJQDy7nJNJMntOntg=;
-        b=AO7vJZY4HBTCdjICedw1mdF1zp8mvoHgahAm4iFoQomsr+r0GhUOYSp/S6DsUCpvpk
-         yr6AhtY4ftEVi31btmXRm6FWEMY76FoshNiIeVnXHO7BMGot/wwvMFoh8cemp6ihaoYy
-         gpnLEoGNdxdCup1Q/oZunkhhUC9IqYhTq4mYnJVIVm/Spi4po4JlV3uSa6GIPY069ojV
-         VNmiowOluOxX3dPa7fP6A6oLYmtc2/YPHu4Y8JVWM74ldhqYdi6RQMbZTcDu+gqQ5ugk
-         rzZa4bU2Z/NkIVgc8oxCs34gAtCx19WJNr+GTEV4d0iA0JQ/enJVkXnjxJlsK28k8VKE
-         IxnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=id0wNIusA/qeB14i09dYcOborXEJQDy7nJNJMntOntg=;
-        b=erNuAL/vUeB4YYq3icdB8EOHJXRHGE4rZI3x+Qjcq0adQVK2oANTN7zz3tj0fICgKC
-         bjzb7Lk9O1+J8j81MWHSlFYwX3ZZK6uf9ZXQJ0BlwDTaQpgtFBYvwgl4nlg0iNS/Bkln
-         fnpEhgf2Fuuv7e/rEpysaN0pnXF0KTexra9xRmk1OXh8D3Fo/HiWG2+K5wyYvGGvkcBd
-         IuDt62kP7213WpFjqRFYzxQzc9N+P5NecGiuzxb7fXxT8Qco3cYONM+MUe70TGGLEt/J
-         va/KEhZit70L63agy04EUtqzj0wxo5nLBj8hzmaL2nNNKK4ACkJFkx/QFJPbyqiLj5/q
-         YuxA==
-X-Gm-Message-State: APjAAAWmOHs9IAr+ygQHceJ5C431MzptZHGTVKfr1611S0gufyWmbVO1
-        flvfyzbw/qDF4eJla26ifkw=
-X-Google-Smtp-Source: APXvYqz+d1LHfM2LHvAOL0DN3LJQL0gzkWZzFoLIsuea+7bUn+0OYoXJ8uft1ehaL90prw8AXC2pJg==
-X-Received: by 2002:a05:600c:2185:: with SMTP id e5mr13503623wme.78.1571528099345;
-        Sat, 19 Oct 2019 16:34:59 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id l18sm13632896wrn.48.2019.10.19.16.34.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 19 Oct 2019 16:34:58 -0700 (PDT)
-Date:   Sun, 20 Oct 2019 01:34:49 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-Cc:     "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH] fs: exFAT read-only driver GPL implementation by Paragon
- Software.
-Message-ID: <20191019233449.bgimi755vt32itnf@pali>
-References: <453A1153-9493-4A04-BF66-CE6A572DEBDB@paragon-software.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="emnqsyvtskz5hswi"
-Content-Disposition: inline
-In-Reply-To: <453A1153-9493-4A04-BF66-CE6A572DEBDB@paragon-software.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Sat, 19 Oct 2019 20:17:04 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9K0Buru120257
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 20:17:02 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vqwssbxde-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Oct 2019 20:17:02 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Sun, 20 Oct 2019 01:17:00 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 20 Oct 2019 01:16:55 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9K0Gs6I60227790
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 20 Oct 2019 00:16:54 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2716811C050;
+        Sun, 20 Oct 2019 00:16:54 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EDF1C11C04C;
+        Sun, 20 Oct 2019 00:16:51 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.181.232])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sun, 20 Oct 2019 00:16:51 +0000 (GMT)
+Subject: Re: [PATCH v8 4/8] powerpc/ima: add measurement rules to ima arch
+ specific policy
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Date:   Sat, 19 Oct 2019 20:16:50 -0400
+In-Reply-To: <1571508377-23603-5-git-send-email-nayna@linux.ibm.com>
+References: <1571508377-23603-1-git-send-email-nayna@linux.ibm.com>
+         <1571508377-23603-5-git-send-email-nayna@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19102000-0016-0000-0000-000002BA20E6
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102000-0017-0000-0000-0000331B51ED
+Message-Id: <1571530610.5250.311.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-19_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910200000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 2019-10-19 at 14:06 -0400, Nayna Jain wrote:
+> This patch adds the measurement rules to the arch specific policies on
+> trusted boot enabled systems.
 
---emnqsyvtskz5hswi
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This version does not add rules to the existing arch specific policy,
+but defines an arch specific trusted boot only policy and a combined
+secure and trusted boot policy.
 
-Hello! I have not read deeply whole implementation, just spotted
-suspicious options. See below.
-
-On Friday 18 October 2019 15:18:39 Konstantin Komarov wrote:
-> diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
-> new file mode 100644
-> index 000000000000..5f8713fe1b0c
-> --- /dev/null
-> +++ b/fs/exfat/exfat_fs.h
-> @@ -0,0 +1,388 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
+> 
+> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> ---
+>  arch/powerpc/kernel/ima_arch.c | 34 +++++++++++++++++++++++++++++++++-
+>  1 file changed, 33 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
+> index 65d82ee74ea4..710872ea8f35 100644
+> --- a/arch/powerpc/kernel/ima_arch.c
+> +++ b/arch/powerpc/kernel/ima_arch.c
+> @@ -26,6 +26,32 @@ static const char *const secure_rules[] = {
+>  	NULL
+>  };
+>  
 > +/*
-> + *  linux/fs/exfat/super.c
-> + *
-> + * Copyright (c) 2010-2019 Paragon Software GmbH, All rights reserved.
-> + *
+> + * The "measure_rules" are enabled only on "trustedboot" enabled systems.
+
+Please update the policy name to reflect the new "trusted_rules" name.
+
+> + * These rules add the kexec kernel image and kernel modules file hashes to
+> + * the IMA measurement list.
 > + */
-> +
-> +#include <linux/buffer_head.h>
-> +#include <linux/hash.h>
-> +#include <linux/nls.h>
-> +#include <linux/ratelimit.h>
-> +
-> +struct exfat_mount_options {
-> +	kuid_t fs_uid;
-> +	kgid_t fs_gid;
-> +	u16 fs_fmask;
-> +	u16 fs_dmask;
-> +	u16 codepage; /* Codepage for shortname conversions */
-
-According to exFAT specification, section 7.7.3 FileName Field there is
-no 8.3 shortname support with DOS/OEM codepage.
-
-https://docs.microsoft.com/en-us/windows/win32/fileio/exfat-specification#7=
-73-filename-field
-
-Plus it looks like that this member codepage is only set and never
-accessed in whole driver.
-
-So it can be clean it up and removed?
-
-> +	/* minutes bias=3D UTC - local time. Eastern time zone: +300, */
-> +	/*Paris,Berlin: -60, Moscow: -180*/
-> +	int bias;
-> +	u16 allow_utime; /* permission for setting the [am]time */
-> +	unsigned quiet : 1, /* set =3D fake successful chmods and chowns */
-> +		showexec : 1, /* set =3D only set x bit for com/exe/bat */
-> +		sys_immutable : 1, /* set =3D system files are immutable */
-> +		utf8 : 1, /* Use of UTF-8 character set (Default) */
-> +		/* create escape sequences for unhandled Unicode */
-> +		unicode_xlate : 1, flush : 1, /* write things quickly */
-> +		tz_set : 1, /* Filesystem timestamps' offset set */
-> +		discard : 1 /* Issue discard requests on deletions */
-> +		;
-> +};
-
-=2E..
-
-> diff --git a/fs/exfat/super.c b/fs/exfat/super.c
-> new file mode 100644
-> index 000000000000..0705dab3c3fc
-> --- /dev/null
-> +++ b/fs/exfat/super.c
-=2E..
-> +enum {
-> +	Opt_uid, Opt_gid, Opt_umask, Opt_dmask, Opt_fmask, Opt_allow_utime,
-> +	Opt_codepage, Opt_quiet, Opt_showexec, Opt_debug, Opt_immutable,
-> +	Opt_utf8_no, Opt_utf8_yes, Opt_uni_xl_no, Opt_uni_xl_yes, Opt_flush,
-> +	Opt_tz_utc, Opt_discard, Opt_nfs, Opt_bias, Opt_err,
+> +static const char *const trusted_rules[] = {
+> +	"measure func=KEXEC_KERNEL_CHECK",
+> +	"measure func=MODULE_CHECK",
+> +	NULL
 > +};
 > +
-> +static const match_table_t fat_tokens =3D {
-> +	{ Opt_uid, "uid=3D%u" },
-> +	{ Opt_gid, "gid=3D%u" },
-> +	{ Opt_umask, "umask=3D%o" },
-> +	{ Opt_dmask, "dmask=3D%o" },
-> +	{ Opt_fmask, "fmask=3D%o" },
-> +	{ Opt_allow_utime, "allow_utime=3D%o" },
-> +	{ Opt_codepage, "codepage=3D%u" },
-> +	{ Opt_quiet, "quiet" },
-> +	{ Opt_showexec, "showexec" },
-> +	{ Opt_debug, "debug" },
-> +	{ Opt_immutable, "sys_immutable" },
-> +	{ Opt_flush, "flush" },
-> +	{ Opt_tz_utc, "tz=3DUTC" },
-> +	{ Opt_bias, "bias=3D%d" },
-> +	{ Opt_discard, "discard" },
-> +	{ Opt_utf8_no, "utf8=3D0" }, /* 0 or no or false */
-> +	{ Opt_utf8_no, "utf8=3Dno" },
-> +	{ Opt_utf8_no, "utf8=3Dfalse" },
-> +	{ Opt_utf8_yes, "utf8=3D1" }, /* empty or 1 or yes or true */
-> +	{ Opt_utf8_yes, "utf8=3Dyes" },
-> +	{ Opt_utf8_yes, "utf8=3Dtrue" },
-> +	{ Opt_utf8_yes, "utf8" },
-
-There are lot of utf8 mount options. Are they really needed?
-
-Would not it be better to use just one "iocharset" mount option like
-other Unicode based filesystem have it (e.g. vfat, jfs, iso9660, udf or
-ntfs)?
-
-> +	{ Opt_uni_xl_no, "uni_xlate=3D0" }, /* 0 or no or false */
-> +	{ Opt_uni_xl_no, "uni_xlate=3Dno" },
-> +	{ Opt_uni_xl_no, "uni_xlate=3Dfalse" },
-> +	{ Opt_uni_xl_yes, "uni_xlate=3D1" }, /* empty or 1 or yes or true */
-> +	{ Opt_uni_xl_yes, "uni_xlate=3Dyes" },
-> +	{ Opt_uni_xl_yes, "uni_xlate=3Dtrue" },
-> +	{ Opt_uni_xl_yes, "uni_xlate" },
-> +	{ Opt_err, NULL }
+> +/*
+> + * The "secure_and_trusted_rules" contains rules for both the secure boot and
+> + * trusted boot. The "template=ima-modsig" option includes the appended
+> + * signature, when available, in the IMA measurement list.
+> + */
+> +static const char *const secure_and_trusted_rules[] = {
+> +	"measure func=KEXEC_KERNEL_CHECK template=ima-modsig",
+> +	"measure func=MODULE_CHECK template=ima-modsig",
+> +	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
+> +#ifndef CONFIG_MODULE_SIG_FORCE
+> +	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
+> +#endif
+> +	NULL
 > +};
+> +
+>  /*
+>   * Returns the relevant IMA arch-specific policies based on the system secure
+>   * boot state.
+> @@ -33,7 +59,13 @@ static const char *const secure_rules[] = {
+>  const char *const *arch_get_ima_policy(void)
+>  {
+>  	if (is_ppc_secureboot_enabled())
+> -		return secure_rules;
+> +		if (is_ppc_trustedboot_enabled())
+> +			return secure_and_trusted_rules;
+> +		else
+> +			return secure_rules;
+> +	else
+> +		if (is_ppc_trustedboot_enabled())
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+No need for the "if" statement to be on a separate line.  Please
+combine the "else" and "if" statements.
 
---emnqsyvtskz5hswi
-Content-Type: application/pgp-signature; name="signature.asc"
+Mimi
 
------BEGIN PGP SIGNATURE-----
+> +			return trusted_rules;
+>  
+>  	return NULL;
+>  }
 
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXaudlgAKCRCL8Mk9A+RD
-UvG4AJ9bGUB4FsHJFlupSy64yCLVxsmJXACgjhbbLlUZ+jqI0NJdYz0q9RCigp8=
-=2Gnf
------END PGP SIGNATURE-----
-
---emnqsyvtskz5hswi--
