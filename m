@@ -2,121 +2,142 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17860CA9EAD
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 12:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 844B0CA9EAD
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 12:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E825721744
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 12:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63E6B2190F
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 12:49:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbfJTMoo (ORCPT
+        id S1726366AbfJTMtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 08:44:44 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60310 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbfJTMon (ORCPT
+        Sun, 20 Oct 2019 08:49:12 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63938 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726294AbfJTMtM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 08:44:43 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iMAZR-0000C6-Vq; Sun, 20 Oct 2019 14:44:30 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 70C271C0093;
-        Sun, 20 Oct 2019 14:44:29 +0200 (CEST)
-Date:   Sun, 20 Oct 2019 12:44:29 -0000
-From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/x86/intel/pt: Fix base for single entry topa
-Cc:     Jan Stancek <jstancek@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191019220726.12213-1-jolsa@kernel.org>
-References: <20191019220726.12213-1-jolsa@kernel.org>
-MIME-Version: 1.0
-Message-ID: <157157546913.29376.8671150238400899852.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+        Sun, 20 Oct 2019 08:49:12 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9KCW75Z192823
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 08:49:10 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vrg53214q-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 08:49:10 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Sun, 20 Oct 2019 13:49:08 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 20 Oct 2019 13:49:03 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9KCn1i542270820
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 20 Oct 2019 12:49:01 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 583E4A405B;
+        Sun, 20 Oct 2019 12:49:01 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F40D0A4054;
+        Sun, 20 Oct 2019 12:48:58 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.180.10])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sun, 20 Oct 2019 12:48:58 +0000 (GMT)
+Subject: Re: [PATCH v8 3/8] powerpc: detect the trusted boot state of the
+ system
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Date:   Sun, 20 Oct 2019 08:48:58 -0400
+In-Reply-To: <1571508377-23603-4-git-send-email-nayna@linux.ibm.com>
+References: <1571508377-23603-1-git-send-email-nayna@linux.ibm.com>
+         <1571508377-23603-4-git-send-email-nayna@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-TM-AS-GCONF: 00
+x-cbid: 19102012-0020-0000-0000-0000037B7AD1
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102012-0021-0000-0000-000021D1ADE1
+Message-Id: <1571575738.5342.7.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-20_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=840 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910200126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
+On Sat, 2019-10-19 at 14:06 -0400, Nayna Jain wrote:
+> While secure boot permits only properly verified signed kernels to be
+> booted, trusted boot takes a measurement of the kernel image prior to
+> boot that can be subsequently compared against good known values via
+> attestation services.
+> 
 
-Commit-ID:     13301c6b16a6d809b331bb88e40ab9ce38238b8b
-Gitweb:        https://git.kernel.org/tip/13301c6b16a6d809b331bb88e40ab9ce38238b8b
-Author:        Jiri Olsa <jolsa@kernel.org>
-AuthorDate:    Sun, 20 Oct 2019 00:07:26 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sun, 20 Oct 2019 14:42:28 +02:00
+Instead of "takes a measurement", either "stores a measurement" or
+"calculates the file hash of the kernel image and stores the
+measurement prior to boot, that".
 
-perf/x86/intel/pt: Fix base for single entry topa
+> This patch reads the trusted boot state of a PowerNV system. The state
+> is used to conditionally enable additional measurement rules in the IMA
+> arch-specific policies.
+> 
+> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> ---
+>  arch/powerpc/include/asm/secure_boot.h |  6 ++++++
+>  arch/powerpc/kernel/secure_boot.c      | 24 ++++++++++++++++++++++++
+>  2 files changed, 30 insertions(+)
+> 
+> diff --git a/arch/powerpc/include/asm/secure_boot.h b/arch/powerpc/include/asm/secure_boot.h
+> index 07d0fe0ca81f..a2ff556916c6 100644
+> --- a/arch/powerpc/include/asm/secure_boot.h
+> +++ b/arch/powerpc/include/asm/secure_boot.h
+> 
+> diff --git a/arch/powerpc/kernel/secure_boot.c b/arch/powerpc/kernel/secure_boot.c
+> index 99bba7915629..9753470ab08a 100644
+> --- a/arch/powerpc/kernel/secure_boot.c
+> +++ b/arch/powerpc/kernel/secure_boot.c
+> @@ -7,6 +7,17 @@
+>  #include <linux/of.h>
+>  #include <asm/secure_boot.h>
+>  
+> +static struct device_node *get_ppc_fw_sb_node(void)
+> +{
+> +	static const struct of_device_id ids[] = {
+> +		{ .compatible = "ibm,secureboot-v1", },
+> +		{ .compatible = "ibm,secureboot-v2", },
+> +		{},
+> +	};
+> +
 
-Jan reported failing ltp test for PT:
+scripts/checkpatch.pl is complaining that secureboot-v1, secureboot-v2 
+are not documented in the device tree bindings.
 
-  https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/tracing/pt_test/pt_test.c
+Mimi
 
-It looks like the reason is this new commit added in this v5.4 merge window:
-
-  38bb8d77d0b9 ("perf/x86/intel/pt: Split ToPA metadata and page layout")
-
-which did not keep the TOPA_SHIFT for entry base.
-
-Add it back.
-
-Reported-by: Jan Stancek <jstancek@redhat.com>
-Signed-off-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Fixes: 38bb8d77d0b9 ("perf/x86/intel/pt: Split ToPA metadata and page layout")
-Link: https://lkml.kernel.org/r/20191019220726.12213-1-jolsa@kernel.org
-[ Minor changelog edits. ]
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/events/intel/pt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
-index 74e80ed..05e43d0 100644
---- a/arch/x86/events/intel/pt.c
-+++ b/arch/x86/events/intel/pt.c
-@@ -627,7 +627,7 @@ static struct topa *topa_alloc(int cpu, gfp_t gfp)
- 	 * link as the 2nd entry in the table
- 	 */
- 	if (!intel_pt_validate_hw_cap(PT_CAP_topa_multiple_entries)) {
--		TOPA_ENTRY(&tp->topa, 1)->base = page_to_phys(p);
-+		TOPA_ENTRY(&tp->topa, 1)->base = page_to_phys(p) >> TOPA_SHIFT;
- 		TOPA_ENTRY(&tp->topa, 1)->end = 1;
- 	}
- 
