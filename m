@@ -2,129 +2,105 @@ Return-Path: <SRS0=BTkm=YO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1882CA9EAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 00:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB934CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 00:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B28F1218BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 00:08:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BeMyn70H"
+	by mail.kernel.org (Postfix) with ESMTP id AC2FF218BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 21 Oct 2019 00:14:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfJUAIH (ORCPT
+        id S1726716AbfJUAOG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 20:08:07 -0400
-Received: from ozlabs.org ([203.11.71.1]:60091 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726576AbfJUAIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 20:08:07 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46xH5w6D4Nz9sNx;
-        Mon, 21 Oct 2019 11:08:04 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1571616485;
-        bh=X9w5V/XTy4bCeUmkoajC65IM6vFKbBsy/YOD7h9VvnA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=BeMyn70HjTuQED2UU0IF+TeZAEmEE8infGIEHcwdKmVz1u1HCYrdA/dCVoa/dSADU
-         QA/xgnstFLEoUvv6W+mDuEwip4wU2TWJLg/VwvT9wcPr48d3kmTa1Yp7uy1l7UFEUT
-         b8poZEZiGqHlQetJ65+cnOy/0TTcVh2XwpmJxM0rT6EdPU7n+LWDOO99x2WpHRz/AC
-         50cmAYp0YIkDNtzNTVZn1RdBcEfr7qA5sdJMUd+l2Vm2yZn79Ou+lDoW47YYDYAAnK
-         5QL6eKtzTATDpKz861VWNwVmJNt+l36AsiUuoJ9sXuVbXm1Vz93Bmh7y5lY8ZDFOop
-         walcMpYzqnubw==
-Date:   Mon, 21 Oct 2019 11:07:45 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Jiri Pirko <jiri@mellanox.com>
-Subject: linux-next: manual merge of the net-next tree with Linus' tree
-Message-ID: <20191021110745.3c7563a4@canb.auug.org.au>
+        Sun, 20 Oct 2019 20:14:06 -0400
+Received: from mxszcu.zte.com.cn ([210.21.236.131]:30260 "EHLO mxct.zte.com.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726576AbfJUAOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 20:14:06 -0400
+X-Greylist: delayed 949 seconds by postgrey-1.27 at vger.kernel.org; Sun, 20 Oct 2019 20:14:05 EDT
+Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
+        by Forcepoint Email with ESMTPS id DA3A3E7E4B382DB64841;
+        Mon, 21 Oct 2019 07:58:04 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
+        by mse-fl2.zte.com.cn with ESMTP id x9KNvpgJ066673;
+        Mon, 21 Oct 2019 07:57:51 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019102107473211-44142 ;
+          Mon, 21 Oct 2019 07:47:32 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     paulmck@kernel.org
+Cc:     josh@joshtriplett.org, rostedt@goodmis.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        joel@joelfernandes.org, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, up2wing@gmail.com, wang.liang82@zte.com.cn
+Subject: [PATCH] rcu/rcu_segcblist: fix -Wmissing-prototypes warnings
+Date:   Mon, 21 Oct 2019 07:49:55 +0800
+Message-Id: <1571615395-3657-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/QMu1u_AWC0pXc5bHC_x_aNk";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-10-21 07:47:32,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-10-21 07:57:52
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-MAIL: mse-fl2.zte.com.cn x9KNvpgJ066673
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/QMu1u_AWC0pXc5bHC_x_aNk
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+We get these warnings when build kernel W=1:
+kernel/rcu/rcu_segcblist.c:91:6: warning: no previous prototype for ‘rcu_segcblist_set_len’ [-Wmissing-prototypes]
+kernel/rcu/rcu_segcblist.c:107:6: warning: no previous prototype for ‘rcu_segcblist_add_len’ [-Wmissing-prototypes]
+kernel/rcu/rcu_segcblist.c:137:6: warning: no previous prototype for ‘rcu_segcblist_xchg_len’ [-Wmissing-prototypes]
 
-Hi all,
+Commit eda669a6a2c5 ("rcu/nocb: Atomic ->len field in rcu_segcblist
+structure") introduced this, and make the functions static to fix
+them.
 
-Today's linux-next merge of the net-next tree got a conflict in:
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+---
+ kernel/rcu/rcu_segcblist.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-  include/net/net_namespace.h
+diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
+index 495c58c..cbc87b8 100644
+--- a/kernel/rcu/rcu_segcblist.c
++++ b/kernel/rcu/rcu_segcblist.c
+@@ -88,7 +88,7 @@ struct rcu_head *rcu_cblist_dequeue(struct rcu_cblist *rclp)
+ }
+ 
+ /* Set the length of an rcu_segcblist structure. */
+-void rcu_segcblist_set_len(struct rcu_segcblist *rsclp, long v)
++static void rcu_segcblist_set_len(struct rcu_segcblist *rsclp, long v)
+ {
+ #ifdef CONFIG_RCU_NOCB_CPU
+ 	atomic_long_set(&rsclp->len, v);
+@@ -104,7 +104,7 @@ void rcu_segcblist_set_len(struct rcu_segcblist *rsclp, long v)
+  * This increase is fully ordered with respect to the callers accesses
+  * both before and after.
+  */
+-void rcu_segcblist_add_len(struct rcu_segcblist *rsclp, long v)
++static void rcu_segcblist_add_len(struct rcu_segcblist *rsclp, long v)
+ {
+ #ifdef CONFIG_RCU_NOCB_CPU
+ 	smp_mb__before_atomic(); /* Up to the caller! */
+@@ -134,7 +134,7 @@ void rcu_segcblist_inc_len(struct rcu_segcblist *rsclp)
+  * with the actual number of callbacks on the structure.  This exchange is
+  * fully ordered with respect to the callers accesses both before and after.
+  */
+-long rcu_segcblist_xchg_len(struct rcu_segcblist *rsclp, long v)
++static long rcu_segcblist_xchg_len(struct rcu_segcblist *rsclp, long v)
+ {
+ #ifdef CONFIG_RCU_NOCB_CPU
+ 	return atomic_long_xchg(&rsclp->len, v);
+-- 
+1.8.3.1
 
-between commit:
-
-  2a06b8982f8f ("net: reorder 'struct net' fields to avoid false sharing")
-
-from Linus' tree and commit:
-
-  a30c7b429f2d ("net: introduce per-netns netdevice notifiers")
-
-from the net-next tree.
-
-I fixed it up (see below - but it clearly needs more thought) and can
-carry the fix as necessary. This is now fixed as far as linux-next is
-concerned, but any non trivial conflicts should be mentioned to your
-upstream maintainer when your tree is submitted for merging.  You may
-also want to consider cooperating with the maintainer of the conflicting
-tree to minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc include/net/net_namespace.h
-index 4c2cd9378699,5ac2bb16d4b3..000000000000
---- a/include/net/net_namespace.h
-+++ b/include/net/net_namespace.h
-@@@ -102,14 -94,14 +103,15 @@@ struct net=20
- =20
-  	struct uevent_sock	*uevent_sock;		/* uevent socket */
- =20
- -	struct list_head 	dev_base_head;
-  	struct hlist_head 	*dev_name_head;
-  	struct hlist_head	*dev_index_head;
-+ 	struct raw_notifier_head	netdev_chain;
- +	/* Note that @hash_mix can be read millions times per second,
- +	 * it is critical that it is on a read_mostly cache line.
- +	 */
- +	u32			hash_mix;
- =20
- -	unsigned int		dev_base_seq;	/* protected by rtnl_mutex */
- -	int			ifindex;
- -	unsigned int		dev_unreg_count;
- +	struct net_device       *loopback_dev;          /* The loopback */
- =20
-  	/* core fib_rules */
-  	struct list_head	rules_ops;
-
---Sig_/QMu1u_AWC0pXc5bHC_x_aNk
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2s9tEACgkQAVBC80lX
-0GwZpwgAkoebksFVR77r9Wjmyx1QSfLT6xE+3K8mT+eQ70TVcHY4DzSFxuqNhp9C
-nwCyGorGYrcdi4toAQrE7pxExLdArXdma90EHa7HjRxyO6hJO+UUJKE6wTQVF9Hw
-pX85LM0jtoUJewpPdngcv+lY4T2Q75GqLyNHUeTcJCdosATgrCmvsiB9zKGUPJo8
-yZtXvQexcfDTKZmRclVAxBCCuhe78R+2Ptc0EwbBmnDisZFoXLUYT2A/ZyOjVoWR
-RK9803tVm0KVNCVHvpwTyTR4zRIi23GnzmH2oMkNoykdbGioT0gIC+5muEvlVy9+
-hhw2kK5a7Ml6ROqFRgJYhhvn25hCVQ==
-=fbdo
------END PGP SIGNATURE-----
-
---Sig_/QMu1u_AWC0pXc5bHC_x_aNk--
