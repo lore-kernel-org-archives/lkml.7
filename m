@@ -2,111 +2,121 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2421CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 05:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A49CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 06:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA617222C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 05:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E9E621929
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 06:18:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sJi8/6+E"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cZyW+1CM";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JxHoOUp4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbfJTFw6 (ORCPT
+        id S1726275AbfJTGSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 01:52:58 -0400
-Received: from mail-wr1-f51.google.com ([209.85.221.51]:35934 "EHLO
-        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbfJTFw5 (ORCPT
+        Sun, 20 Oct 2019 02:18:34 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:57224 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbfJTGSd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 01:52:57 -0400
-Received: by mail-wr1-f51.google.com with SMTP id w18so9697324wrt.3;
-        Sat, 19 Oct 2019 22:52:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=51TklpCVmpWzv8/2EcsxOdE6xXoYYK++w+3ck6sGq7g=;
-        b=sJi8/6+EPXDLkFwM84PDzxNA+xm/Ty4OLsEENxPDWuFLSe6Q0NpSWlMUiamI2quZHb
-         QzqxmXKuEHPbdVFNCl0m/57mbcREyxdyo0vB+W+2RWSpDjNvQFsLrNfv4OzmwtsxgXDG
-         9Xw5z/G7Gl0wzF3x/mhNzIrcai5ZYPq3vxNHWteLj2igr+OCPCCds43IDPuXqe1P6JSp
-         +BR7+k31QxCk+elV8cgZWQJE1iYqq4tIn1PS9dV8VV21YevDhSwcYTsXyMh/NtD353Hm
-         +pbftBm+DMYlO4H8I3L4JLCPrCkt1PdBmTLi0sbfy94PW2DqZpFrCUApyV6oTf0pBZf9
-         ls6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=51TklpCVmpWzv8/2EcsxOdE6xXoYYK++w+3ck6sGq7g=;
-        b=CHV9FH4bbw95H/L8/OpS30Nwej838e+/iiuyZBSGh1uq66A4AYpnd2xk5Ioh9WwqBR
-         7Cl4KSENuTkscNFmMoMjMgSuOQoKYTTMkct5XoSOOk1guwURCcCLdlw5Hg+gdEfnc2G7
-         FzaXkWaETQGAL1jaya+Jz7MDDgPeNQG4oZVecUgM8JC2cedRUJXMQ6P3gnuDSxYKaV7p
-         u1mZ17ZlZCAjeX9/XLtslf5MwoYa+DWN+SEriCAVoPf3PEhhjCVJQPy5ZdErYzUJy6U1
-         m5jpzSKsusK8hHqE4pChmM1BEigeYh/y7nE1d7ohROoNrAClnT8gRng9+7tVf1l0S1lm
-         Dhvg==
-X-Gm-Message-State: APjAAAV1Rug2YTV5o+welT+P+LTY95RWAvI9fTlXgRt9FFcHJU/r7U5H
-        pD8kSmAh9mrLZ0DBVicI0zc=
-X-Google-Smtp-Source: APXvYqzT7vAv/SjZ4jxekx/DUQnVMu+sCN6LLI8uruB8JJJ5aEqCJhSP422smgKO0FpK9ZmuJZWuBw==
-X-Received: by 2002:a5d:4142:: with SMTP id c2mr13624286wrq.208.1571550775205;
-        Sat, 19 Oct 2019 22:52:55 -0700 (PDT)
-Received: from ltop.local ([2a02:a03f:40ac:ce00:9cfc:63f1:4c41:b934])
-        by smtp.gmail.com with ESMTPSA id u7sm1283982wre.59.2019.10.19.22.52.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 19 Oct 2019 22:52:54 -0700 (PDT)
-Date:   Sun, 20 Oct 2019 07:52:53 +0200
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
-        Sparse Mailing-list <linux-sparse@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: sparse: __pure declaration only
-Message-ID: <20191020055252.2ymxfrskpodxhuxs@ltop.local>
-References: <09d824ac-5371-830e-466d-7f78ccdae065@codethink.co.uk>
- <CAHk-=wiYQ=F5H-uwQvj4eMS3xREmqE6tPuDVVLVML02xaThqVQ@mail.gmail.com>
+        Sun, 20 Oct 2019 02:18:33 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 72B4560D52; Sun, 20 Oct 2019 06:18:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571552312;
+        bh=Q9+5wS+TPeabeVxkWEkwzYGbJK3BhjhTAvD4VfK2Chk=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=cZyW+1CM1NSGdUdRiMHlW/UPWIxx6ztSzBtxDOyfspPDcTZfmSoiZYIbRiX2fHEJj
+         OLim2yl9MdMpAH4lcghYnJTGxWAToWu581MCwL2q3fjs+sGdKzkTusGJ6jaDmBFgzm
+         zbxo0CDloNezzQ7aYiCtJ6yw+sgmUrcoJf77PvJ0=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DF74860BFA;
+        Sun, 20 Oct 2019 06:18:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571552311;
+        bh=Q9+5wS+TPeabeVxkWEkwzYGbJK3BhjhTAvD4VfK2Chk=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=JxHoOUp4Q9gSTQgs9tH2kkjOaSSubWWLbaH8cCYPTXO9YuV4+Ufihal/9Z9xyigPI
+         jqxbhn2kG/C29pQSvE9jt9Hh6cRiql/eCJeEJm5YZbqCxaGHzqct33nzpLUrGuCHQ2
+         ALfqhVG5MJyIWl2e1V9xkHTSr/jcgcnG6WR8PUhU=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DF74860BFA
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Laura Abbott <labbott@redhat.com>
+Cc:     Ping-Ke Shih <pkshih@realtek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Nicolas Waisman <nico@semmle.com>
+Subject: Re: [PATCH v2] rtlwifi: Fix potential overflow on P2P code
+References: <20191018114321.13131-1-labbott@redhat.com>
+        <871rv9xb2l.fsf@kamboji.qca.qualcomm.com>
+        <51b732bf-4575-d7d1-daff-ec1c2171a303@redhat.com>
+Date:   Sun, 20 Oct 2019 09:18:26 +0300
+In-Reply-To: <51b732bf-4575-d7d1-daff-ec1c2171a303@redhat.com> (Laura Abbott's
+        message of "Sat, 19 Oct 2019 15:02:47 -0400")
+Message-ID: <878spgvt1p.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wiYQ=F5H-uwQvj4eMS3xREmqE6tPuDVVLVML02xaThqVQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 08:31:48AM -0700, Linus Torvalds wrote:
-> On Fri, Oct 18, 2019 at 4:15 AM Ben Dooks <ben.dooks@codethink.co.uk> wrote:
-> >
-> > is this a valid warning? if not, should sparse be ignoring these.
-> 
-> It's technically valid, but maybe it's not useful.
-> 
-> If we make sure that any pure bits from a declaration always make it
-> into the definition, then I suspect that the "was not declared"
-> warning (if the definition is non-static and seen without a
-> declaration) is sufficient.
-> 
-> Of course, sparse doesn't actually _care_ about "pure" in the
-> definition, only in the use, so right now it doesn't even make any
-> difference to sparse whether the definition has the "pure" or not.
-> It's only when the function is used that the "pure" matters (it makes
-> the call instruction be CSE'd like any other random instruction).
+Laura Abbott <labbott@redhat.com> writes:
 
-Yes, for 'pure' it doesn't matter much but it's a problem anyway.
-For example with 'static':
+> On 10/19/19 6:51 AM, Kalle Valo wrote:
+>> Laura Abbott <labbott@redhat.com> writes:
+>>
+>>> Nicolas Waisman noticed that even though noa_len is checked for
+>>> a compatible length it's still possible to overrun the buffers
+>>> of p2pinfo since there's no check on the upper bound of noa_num.
+>>> Bound noa_num against P2P_MAX_NOA_NUM.
+>>>
+>>> Reported-by: Nicolas Waisman <nico@semmle.com>
+>>> Signed-off-by: Laura Abbott <labbott@redhat.com>
+>>> ---
+>>> v2: Use P2P_MAX_NOA_NUM instead of erroring out.
+>>> ---
+>>>   drivers/net/wireless/realtek/rtlwifi/ps.c | 6 ++++++
+>>>   1 file changed, 6 insertions(+)
+>>>
+>>> diff --git a/drivers/net/wireless/realtek/rtlwifi/ps.c b/drivers/net/wireless/realtek/rtlwifi/ps.c
+>>> index 70f04c2f5b17..fff8dda14023 100644
+>>> --- a/drivers/net/wireless/realtek/rtlwifi/ps.c
+>>> +++ b/drivers/net/wireless/realtek/rtlwifi/ps.c
+>>> @@ -754,6 +754,9 @@ static void rtl_p2p_noa_ie(struct ieee80211_hw *hw, void *data,
+>>>   				return;
+>>>   			} else {
+>>>   				noa_num = (noa_len - 2) / 13;
+>>> +				if (noa_num > P2P_MAX_NOA_NUM)
+>>> +					noa_num = P2P_MAX_NOA_NUM;
+>>> +
+>>>   			}
+>>>   			noa_index = ie[3];
+>>>   			if (rtlpriv->psc.p2p_ps_info.p2p_ps_mode ==
+>>> @@ -848,6 +851,9 @@ static void rtl_p2p_action_ie(struct ieee80211_hw *hw, void *data,
+>>>   				return;
+>>>   			} else {
+>>>   				noa_num = (noa_len - 2) / 13;
+>>> +				if (noa_num > P2P_MAX_NOA_NUM)
+>>> +					noa_num = P2P_MAX_NOA_NUM;
+>>
+>> IMHO using min() would be cleaner, but I'm fine with this as well. Up to
+>> you.
+>>
+>
+> I believe the intention is to re-write this anyway so I'd prefer to
+> just get this in given the uptick this issue seems to have gotten.
 
-$ cat file.c
-static void foo(void);
-void foo(void) { }
+Ok, I'll queue this to v5.4.
 
-$ sparse file.c
-file.c:2:6: warning: symbol 'foo' was not declared. Should it be static?
-
-Which is kinda absurd: foo() was declared and was even declared static.
-But the definition is a different symbol than its declaration (OK) which
-doesn't 'inherit' the declaration's specifier/modifier/attributes.
-It's on my to-be-fixed list for a long time but ..
-
--- Luc
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
