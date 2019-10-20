@@ -2,132 +2,98 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A6ECA9EAD
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 09:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16ECCCA9EA9
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 09:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19BC92064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 09:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB97218BA
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 09:32:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbfJTJ0M (ORCPT
+        id S1726205AbfJTJck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 05:26:12 -0400
-Received: from mga12.intel.com ([192.55.52.136]:39083 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725893AbfJTJ0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 05:26:11 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 02:26:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,319,1566889200"; 
-   d="scan'208";a="348494041"
-Received: from lxy-clx-4s.sh.intel.com ([10.239.43.57])
-  by orsmga004.jf.intel.com with ESMTP; 20 Oct 2019 02:26:08 -0700
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/4] KVM: VMX: Initialize vmx->guest_msrs[] right after allocation
-Date:   Sun, 20 Oct 2019 17:11:00 +0800
-Message-Id: <20191020091101.125516-4-xiaoyao.li@intel.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20191020091101.125516-1-xiaoyao.li@intel.com>
-References: <20191020091101.125516-1-xiaoyao.li@intel.com>
+        Sun, 20 Oct 2019 05:32:40 -0400
+Received: from outbound-smtp03.blacknight.com ([81.17.249.16]:54578 "EHLO
+        outbound-smtp03.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725893AbfJTJck (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 05:32:40 -0400
+Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
+        by outbound-smtp03.blacknight.com (Postfix) with ESMTPS id CFAE698BA8
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 10:32:37 +0100 (IST)
+Received: (qmail 31103 invoked from network); 20 Oct 2019 09:32:37 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.19.210])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 20 Oct 2019 09:32:37 -0000
+Date:   Sun, 20 Oct 2019 10:32:35 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Michal Hocko <mhocko@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Borislav Petkov <bp@alien8.de>, Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] mm, meminit: Recalculate pcpu batch and high limits
+ after init completes
+Message-ID: <20191020093235.GL3321@techsingularity.net>
+References: <20191018105606.3249-1-mgorman@techsingularity.net>
+ <20191018105606.3249-3-mgorman@techsingularity.net>
+ <20191018130127.GP5017@dhcp22.suse.cz>
+ <20191018140959.GK3321@techsingularity.net>
+ <20191018184024.2bb1a69997a9365c5d4ccf1c@linux-foundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20191018184024.2bb1a69997a9365c5d4ccf1c@linux-foundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the initialization of vmx->guest_msrs[] from vmx_vcpu_setup() to
-vmx_create_vcpu(), and put it right after its allocation.
+On Fri, Oct 18, 2019 at 06:40:24PM -0700, Andrew Morton wrote:
+> On Fri, 18 Oct 2019 15:09:59 +0100 Mel Gorman <mgorman@techsingularity.net> wrote:
+> 
+> > > > Cc: stable@vger.kernel.org # v4.15+
+> > > 
+> > > Hmm, are you sure about 4.15? Doesn't this go all the way down to
+> > > deferred initialization? I do not see any recent changes on when
+> > > setup_per_cpu_pageset is called.
+> > > 
+> > 
+> > No, I'm not 100% sure. It looks like this was always an issue from the
+> > code but did not happen on at least one 4.12-based distribution kernel for
+> > reasons that are non-obvious. Either way, the tag should have been "v4.1+"
+> 
+> I could mark
+> 
+> mm-pcp-share-common-code-between-memory-hotplug-and-percpu-sysctl-handler.patch
+> mm-meminit-recalculate-pcpu-batch-and-high-limits-after-init-completes.patch
+> 
+> as Cc: <stable@vger.kernel.org>	[4.1+]
+> 
 
-This also is the preperation for next patch.
+That would be fine.
 
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
----
- arch/x86/kvm/vmx/vmx.c | 34 ++++++++++++++++------------------
- 1 file changed, 16 insertions(+), 18 deletions(-)
+> But for backporting purposes it's a bit cumbersome that [2/3] is the
+> important patch.  I think I'll switch the ordering so that
+> mm-meminit-recalculate-pcpu-batch-and-high-limits-after-init-completes.patch
+> is the first patch and the other two can be queued for 5.5-rc1, OK?
+> 
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index ec7c42f57b65..84c32395d887 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4166,8 +4166,6 @@ static void ept_set_mmio_spte_mask(void)
-  */
- static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
- {
--	int i;
--
- 	if (nested)
- 		nested_vmx_vcpu_setup();
- 
-@@ -4226,21 +4224,6 @@ static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
- 	if (vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_IA32_PAT)
- 		vmcs_write64(GUEST_IA32_PAT, vmx->vcpu.arch.pat);
- 
--	for (i = 0; i < ARRAY_SIZE(vmx_msr_index); ++i) {
--		u32 index = vmx_msr_index[i];
--		u32 data_low, data_high;
--		int j = vmx->nmsrs;
--
--		if (rdmsr_safe(index, &data_low, &data_high) < 0)
--			continue;
--		if (wrmsr_safe(index, data_low, data_high) < 0)
--			continue;
--		vmx->guest_msrs[j].index = i;
--		vmx->guest_msrs[j].data = 0;
--		vmx->guest_msrs[j].mask = -1ull;
--		++vmx->nmsrs;
--	}
--
- 	vm_exit_controls_set(vmx, vmx_vmexit_ctrl());
- 
- 	/* 22.2.1, 20.8.1 */
-@@ -6700,7 +6683,7 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
- 	int err;
- 	struct vcpu_vmx *vmx;
- 	unsigned long *msr_bitmap;
--	int cpu;
-+	int i, cpu;
- 
- 	BUILD_BUG_ON_MSG(offsetof(struct vcpu_vmx, vcpu) != 0,
- 		"struct kvm_vcpu must be at offset 0 for arch usercopy region");
-@@ -6752,6 +6735,21 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
- 	if (!vmx->guest_msrs)
- 		goto free_pml;
- 
-+	for (i = 0; i < ARRAY_SIZE(vmx_msr_index); ++i) {
-+		u32 index = vmx_msr_index[i];
-+		u32 data_low, data_high;
-+		int j = vmx->nmsrs;
-+
-+		if (rdmsr_safe(index, &data_low, &data_high) < 0)
-+			continue;
-+		if (wrmsr_safe(index, data_low, data_high) < 0)
-+			continue;
-+		vmx->guest_msrs[j].index = i;
-+		vmx->guest_msrs[j].data = 0;
-+		vmx->guest_msrs[j].mask = -1ull;
-+		++vmx->nmsrs;
-+	}
-+
- 	err = alloc_loaded_vmcs(&vmx->vmcs01);
- 	if (err < 0)
- 		goto free_msrs;
+It might be easier to simply collapse patch 1 and 2 together. They were
+only split to make the review easier and to avoid two relatively big
+changes in one patch.
+
+> Also, is a Reported-by:Matt appropriate here?
+> 
+
+I don't object but I'm not actually sure who reported this first. I think
+it was Thomas who talked to Boris about an EPYC performance issue, who
+talked to Matt thinking it might be a scheduler issue who identified it
+was my problem :P
+
 -- 
-2.19.1
-
+Mel Gorman
+SUSE Labs
