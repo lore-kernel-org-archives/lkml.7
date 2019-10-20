@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD175CA9EAE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA21CA9EA0
 	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 16:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D9E8222BD
+	by mail.kernel.org (Postfix) with ESMTP id 7CCB321D80
 	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 16:14:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfJTQOE (ORCPT
+        id S1726689AbfJTQOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 12:14:04 -0400
-Received: from mga06.intel.com ([134.134.136.31]:28692 "EHLO mga06.intel.com"
+        Sun, 20 Oct 2019 12:14:02 -0400
+Received: from mga17.intel.com ([192.55.52.151]:25889 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726511AbfJTQN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726524AbfJTQN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 20 Oct 2019 12:13:59 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 09:13:58 -0700
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 09:13:58 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,320,1566889200"; 
-   d="scan'208";a="203147502"
+   d="scan'208";a="195909355"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by FMSMGA003.fm.intel.com with ESMTP; 20 Oct 2019 09:13:58 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 20 Oct 2019 09:13:58 -0700
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 393F430038C; Sun, 20 Oct 2019 09:13:58 -0700 (PDT)
+        id 265D53002A2; Sun, 20 Oct 2019 09:13:58 -0700 (PDT)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     acme@kernel.org
 Cc:     jolsa@kernel.org, eranian@google.com, kan.liang@linux.intel.com,
         peterz@infradead.org, linux-kernel@vger.kernel.org,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v1 4/9] perf affinity: Add infrastructure to save/restore affinity
-Date:   Sun, 20 Oct 2019 09:13:41 -0700
-Message-Id: <20191020161346.18938-5-andi@firstfloor.org>
+Subject: [PATCH v1 1/9] perf evsel: Always preserve errno while cleaning up perf_event_open failures
+Date:   Sun, 20 Oct 2019 09:13:38 -0700
+Message-Id: <20191020161346.18938-2-andi@firstfloor.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191020161346.18938-1-andi@firstfloor.org>
 References: <20191020161346.18938-1-andi@firstfloor.org>
@@ -50,135 +50,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-The kernel perf subsystem has to IPI to the target CPU for many
-operations. On systems with many CPUs and when managing many events the
-overhead can be dominated by lots of IPIs.
+In some cases when perf_event_open fails, it may do some closes to clean
+up. In special cases these closes can fail too, which overwrites the
+errno of the perf_event_open, which is then incorrectly reported.
 
-An alternative is to set up CPU affinity in the perf tool, then set up
-all the events for that CPU, and then move on to the next CPU.
-
-Add some affinity management infrastructure to enable such a model.
-Used in followon patches.
+Save/restore errno around closes.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 ---
- tools/perf/util/Build      |  1 +
- tools/perf/util/affinity.c | 71 ++++++++++++++++++++++++++++++++++++++
- tools/perf/util/affinity.h | 15 ++++++++
- 3 files changed, 87 insertions(+)
- create mode 100644 tools/perf/util/affinity.c
- create mode 100644 tools/perf/util/affinity.h
+ tools/perf/util/evsel.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 5477f6afe735..302c7fda1e3a 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -74,6 +74,7 @@ perf-y += sort.o
- perf-y += hist.o
- perf-y += util.o
- perf-y += cpumap.o
-+perf-y += affinity.o
- perf-y += cputopo.o
- perf-y += cgroup.o
- perf-y += target.o
-diff --git a/tools/perf/util/affinity.c b/tools/perf/util/affinity.c
-new file mode 100644
-index 000000000000..12e8024a6300
---- /dev/null
-+++ b/tools/perf/util/affinity.c
-@@ -0,0 +1,71 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Manage affinity to optimize IPIs inside the kernel perf API. */
-+#define _GNU_SOURCE 1
-+#include <sched.h>
-+#include <stdlib.h>
-+#include <linux/zalloc.h>
-+#include "perf.h"
-+#include "cpumap.h"
-+#include "affinity.h"
-+
-+static int get_cpu_set_size(void)
-+{
-+	int sz = (cpu__max_cpu() + 64 - 1) / 64;
-+	/*
-+	 * sched_getaffinity doesn't like masks smaller than the kernel.
-+	 * Hopefully that's big enough.
-+	 */
-+	if (sz < 4096/8)
-+		sz = 4096/8;
-+	return sz;
-+}
-+
-+int affinity__setup(struct affinity *a)
-+{
-+	int cpu_set_size = get_cpu_set_size();
-+
-+	a->orig_cpus = malloc(cpu_set_size);
-+	if (!a->orig_cpus)
-+		return -1;
-+        sched_getaffinity(0, cpu_set_size, (cpu_set_t *)a->orig_cpus);
-+	a->sched_cpus = zalloc(cpu_set_size);
-+	if (!a->sched_cpus) {
-+		free(a->orig_cpus);
-+		return -1;
-+	}
-+	a->changed = false;
-+	return 0;
-+}
-+
-+/*
-+ * perf_event_open does an IPI internally to the target CPU.
-+ * It is more efficient to change perf's affinity to the target
-+ * CPU and then set up all events on that CPU, so we amortize
-+ * CPU communication.
-+ */
-+void affinity__set(struct affinity *a, int cpu)
-+{
-+	int cpu_set_size = get_cpu_set_size();
-+
-+	if (cpu == -1)
-+		return;
-+	a->changed = true;
-+	a->sched_cpus[cpu / 8] |= 1 << (cpu % 8);
-+	/*
-+	 * We ignore errors because affinity is just an optimization.
-+	 * This could happen for example with isolated CPUs or cpusets.
-+	 * In this case the IPIs inside the kernel's perf API still work.
-+	 */
-+	sched_setaffinity(0, cpu_set_size, (cpu_set_t *)a->sched_cpus);
-+	a->sched_cpus[cpu / 8] ^= 1 << (cpu % 8);
-+}
-+
-+void affinity__cleanup(struct affinity *a)
-+{
-+	int cpu_set_size = get_cpu_set_size();
-+
-+	if (a->changed)
-+		sched_setaffinity(0, cpu_set_size, (cpu_set_t *)a->orig_cpus);
-+	free(a->sched_cpus);
-+	free(a->orig_cpus);
-+}
-diff --git a/tools/perf/util/affinity.h b/tools/perf/util/affinity.h
-new file mode 100644
-index 000000000000..e56148607e33
---- /dev/null
-+++ b/tools/perf/util/affinity.h
-@@ -0,0 +1,15 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#ifndef AFFINITY_H
-+#define AFFINITY_H 1
-+
-+struct affinity {
-+	unsigned char *orig_cpus;
-+	unsigned char *sched_cpus;
-+	bool changed;
-+};
-+
-+void affinity__cleanup(struct affinity *a);
-+void affinity__set(struct affinity *a, int cpu);
-+int affinity__setup(struct affinity *a);
-+
-+#endif
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 85825384f9e8..a646975a20f3 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1740,7 +1740,7 @@ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
+ {
+ 	int cpu, thread, nthreads;
+ 	unsigned long flags = PERF_FLAG_FD_CLOEXEC;
+-	int pid = -1, err;
++	int pid = -1, err, old_errno;
+ 	enum { NO_CHANGE, SET_TO_MAX, INCREASED_MAX } set_rlimit = NO_CHANGE;
+ 
+ 	if ((perf_missing_features.write_backward && evsel->core.attr.write_backward) ||
+@@ -1893,8 +1893,8 @@ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 	 */
+ 	if (err == -EMFILE && set_rlimit < INCREASED_MAX) {
+ 		struct rlimit l;
+-		int old_errno = errno;
+ 
++		old_errno = errno;
+ 		if (getrlimit(RLIMIT_NOFILE, &l) == 0) {
+ 			if (set_rlimit == NO_CHANGE)
+ 				l.rlim_cur = l.rlim_max;
+@@ -1978,6 +1978,7 @@ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 	if (err)
+ 		threads->err_thread = thread;
+ 
++	old_errno = errno;
+ 	do {
+ 		while (--thread >= 0) {
+ 			close(FD(evsel, cpu, thread));
+@@ -1985,6 +1986,7 @@ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 		}
+ 		thread = nthreads;
+ 	} while (--cpu >= 0);
++	errno = old_errno;
+ 	return err;
+ }
+ 
 -- 
 2.21.0
 
