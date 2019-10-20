@@ -2,29 +2,29 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C51E2CA9EAD
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 19:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7C3CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 19:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F14221929
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 19:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40F2C21929
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 19:52:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbfJTTsL (ORCPT
+        id S1726453AbfJTTwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 15:48:11 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:26144 "EHLO
+        Sun, 20 Oct 2019 15:52:51 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:26445 "EHLO
         mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725818AbfJTTsL (ORCPT
+        by vger.kernel.org with ESMTP id S1725938AbfJTTwv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 15:48:11 -0400
+        Sun, 20 Oct 2019 15:52:51 -0400
 X-IronPort-AV: E=Sophos;i="5.67,320,1566856800"; 
-   d="scan'208";a="407081194"
+   d="scan'208";a="407081613"
 Received: from ip-121.net-89-2-166.rev.numericable.fr (HELO hadrien) ([89.2.166.121])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 21:48:08 +0200
-Date:   Sun, 20 Oct 2019 21:48:07 +0200 (CEST)
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 21:52:48 +0200
+Date:   Sun, 20 Oct 2019 21:52:48 +0200 (CEST)
 From:   Julia Lawall <julia.lawall@lip6.fr>
 X-X-Sender: jll@hadrien
 To:     Joe Perches <joe@perches.com>
@@ -35,7 +35,7 @@ cc:     Dan Carpenter <dan.carpenter@oracle.com>,
 Subject: Re: [Outreachy kernel] Re: [PATCH v1 1/5] staging: wfx: fix warnings
  of no space is necessary
 In-Reply-To: <6e6bc92cac0858fe5bd37b28f688d3da043f4bef.camel@perches.com>
-Message-ID: <alpine.DEB.2.21.1910202147530.10441@hadrien>
+Message-ID: <alpine.DEB.2.21.1910202149140.10441@hadrien>
 References: <20191019140719.2542-1-jbi.octave@gmail.com>  <20191019140719.2542-2-jbi.octave@gmail.com> <20191019142443.GH24678@kadam>  <alpine.LFD.2.21.1910191603520.6740@ninjahub.org>  <20191019180514.GI24678@kadam>  <336960fdf88dbed69dd3ed2689a5fb1d2892ace8.camel@perches.com>
   <20191020191759.GJ24678@kadam> <6e6bc92cac0858fe5bd37b28f688d3da043f4bef.camel@perches.com>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
@@ -66,11 +66,6 @@ On Sun, 20 Oct 2019, Joe Perches wrote:
 > drivers/staging/rtl8723bs/include/sta_info.h:151:       unsigned char chg_txt[128];
 >
 > I think the cocci transforms for an array do not match a pointer
-
-This is also correct.
-
-julia
-
 > and I wrote the cocci script without much care.
 >
 > btw;
@@ -78,6 +73,35 @@ julia
 > There's probably a generic cocci mechanism to check function
 > prototypes and then remove uses of unnecessary void pointer casts
 > in function calls.  I'm not going to try to figure out that syntax.
+
+With the --recursive-includes option, perhaps:
+
+@r@
+identifier f;
+parameter list[n] ps;
+type T;
+identifier i;
+@@
+
+T f(ps, void *i, ...);
+
+@@
+expression e;
+identifier r.f;
+expression list[r.n] es;
+@@
+
+f(es,
+- (void *)(e)
++ e
+  ,...)
+
+This of course only works for functions that have prototypes, and not for
+macros.  It will also run slowly.
+
+julia
+
+
 >
 > > [ The rest of the email is bonus comments for outreachy developers ].
 > >
