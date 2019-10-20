@@ -6,47 +6,43 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3540CA9EAD
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 19:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D85FECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 19:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 891C021A4A
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 19:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0D99218BA
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 19:40:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbfJTTgy (ORCPT
+        id S1726410AbfJTTke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 15:36:54 -0400
-Received: from smtprelay0094.hostedemail.com ([216.40.44.94]:58675 "EHLO
+        Sun, 20 Oct 2019 15:40:34 -0400
+Received: from smtprelay0015.hostedemail.com ([216.40.44.15]:55989 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725818AbfJTTgy (ORCPT
+        by vger.kernel.org with ESMTP id S1725818AbfJTTkd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 15:36:54 -0400
+        Sun, 20 Oct 2019 15:40:33 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 9D95852C6;
-        Sun, 20 Oct 2019 19:36:52 +0000 (UTC)
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 427531803521A;
+        Sun, 20 Oct 2019 19:40:32 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: place89_1ebe01dc52621
-X-Filterd-Recvd-Size: 3658
+X-HE-Tag: match22_3ec1646977b17
+X-Filterd-Recvd-Size: 2851
 Received: from XPS-9350.home (unknown [47.151.135.224])
         (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 20 Oct 2019 19:36:51 +0000 (UTC)
-Message-ID: <6e6bc92cac0858fe5bd37b28f688d3da043f4bef.camel@perches.com>
-Subject: Re: [PATCH v1 1/5] staging: wfx: fix warnings of no space is
- necessary
+        by omf14.hostedemail.com (Postfix) with ESMTPA;
+        Sun, 20 Oct 2019 19:40:31 +0000 (UTC)
+Message-ID: <0f7518736a2508371fecf91db6e28d50494360b3.camel@perches.com>
+Subject: Re: byteorder: cpu_to_le32_array vs cpu_to_be32_array function API
+ differences
 From:   Joe Perches <joe@perches.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Julia Lawall <julia.lawall@lip6.fr>
-Cc:     Jules Irenge <jbi.octave@gmail.com>, devel@driverdev.osuosl.org,
-        outreachy-kernel@googlegroups.com, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org
-Date:   Sun, 20 Oct 2019 12:36:50 -0700
-In-Reply-To: <20191020191759.GJ24678@kadam>
-References: <20191019140719.2542-1-jbi.octave@gmail.com>
-         <20191019140719.2542-2-jbi.octave@gmail.com> <20191019142443.GH24678@kadam>
-         <alpine.LFD.2.21.1910191603520.6740@ninjahub.org>
-         <20191019180514.GI24678@kadam>
-         <336960fdf88dbed69dd3ed2689a5fb1d2892ace8.camel@perches.com>
-         <20191020191759.GJ24678@kadam>
+To:     Anatol Belski <weltling@outlook.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Sun, 20 Oct 2019 12:40:30 -0700
+In-Reply-To: <AM0PR0502MB3668C7B77C05918FF96EF10DBA6E0@AM0PR0502MB3668.eurprd05.prod.outlook.com>
+References: <2acb30fb3c9a86ac8cc882fb787cd04e5864224b.camel@perches.com>
+         <AM0PR0502MB3668C7B77C05918FF96EF10DBA6E0@AM0PR0502MB3668.eurprd05.prod.outlook.com>
 Content-Type: text/plain; charset="ISO-8859-1"
 User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
@@ -56,71 +52,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2019-10-20 at 22:17 +0300, Dan Carpenter wrote:
-> On Sat, Oct 19, 2019 at 01:02:31PM -0700, Joe Perches wrote:
-> > diff -u -p a/rtl8723bs/core/rtw_mlme_ext.c b/rtl8723bs/core/rtw_mlme_ext.c
-[]
-> > @@ -1132,7 +1132,7 @@ unsigned int OnAuthClient(struct adapter
-> >  				goto authclnt_fail;
-> >  			}
-> >  
-> > -			memcpy((void *)(pmlmeinfo->chg_txt), (void *)(p + 2), len);
-> > +			memcpy((void *)(pmlmeinfo->chg_txt), (p + 2), len);
+On Sun, 2019-10-20 at 19:28 +0000, Anatol Belski wrote:
+> Hi,
+
+Hello.
+
+> On Sun, 2019-10-20 at 12:02 -0700, Joe Perches wrote:
+> > There's an argument inconsistency between these 4 functions
+> > in include/linux/byteorder/generic.h
+> > 
+> > It'd be more a consistent API with one form and not two.
+> > 
+> >    static inline void le32_to_cpu_array(u32 *buf, unsigned int words)
+> >    {
+> >    	while (words--) {
+> >    		__le32_to_cpus(buf);
+> >    		buf++;
+> >    	}
+> >    }
+> > 
+> >    static inline void cpu_to_le32_array(u32 *buf, unsigned int words)
+> >    {
+> >    	while (words--) {
+> >    		__cpu_to_le32s(buf);
+> >    		buf++;
+> >    	}
+> >    }
+> > 
+> > vs
+> > 
+> >    static inline void cpu_to_be32_array(__be32 *dst, const u32 *src,
+> > size_t len)
+> >    {
+> >    	int i;
+> > 
+> >    	for (i = 0; i < len; i++)
+> >    		dst[i] = cpu_to_be32(src[i]);
+> >    }
+> > 
+> >    static inline void be32_to_cpu_array(u32 *dst, const __be32 *src,
+> > size_t len)
+> >    {
+> >    	int i;
+> > 
+> >    	for (i = 0; i < len; i++)
+> >    		dst[i] = be32_to_cpu(src[i]);
+> >    }
+> > 
+> > 
 > 
-> I wonder why it didn't remove the first void cast?
+> size_t is the right choice for this, as it'll generate more correct
+> binary depending on 32/64 bit. I've sent a patch in
+> 'include/linux/byteorder/generic.h: fix signed/unsigned warnings'
+> before, but only touched the place where i've seen warnings. My very
+> bet is, that changing between size_t/unsigned, while it would be
+> consistent, wouldn't change the functionality. It'd probably make sense
+> to extend the aforementioned patch to move unsigned -> size_t.
 
-drivers/staging/rtl8723bs/include/sta_info.h:151:       unsigned char chg_txt[128];
+True, but my point was the le versions have 2 arguments and
+convert the buf input, and the be versions have 3 arguments
+and convert src to dst.
 
-I think the cocci transforms for an array do not match a pointer
-and I wrote the cocci script without much care.
-
-btw;
-
-There's probably a generic cocci mechanism to check function
-prototypes and then remove uses of unnecessary void pointer casts
-in function calls.  I'm not going to try to figure out that syntax.
-
-> [ The rest of the email is bonus comments for outreachy developers ].
-> 
-> And someone needs to check the final patch probably to remove the extra
-> parentheses around "(p + 2)".  Those were necessary when for the cast
-> but not required after the cast is gone.
-> 
-> >  			pmlmeinfo->auth_seq = 3;
-> >  			issue_auth(padapter, NULL, 0);
-> >  			set_link_timer(pmlmeext, REAUTH_TO);
-> 
-> It's sort of tricky to know what "one thing per patch means".
-
-It seems somewhat arbitrary and based on Greg's understanding
-of the experience of the patch submitter and also the language
-of the potential commit message.
-
-> -       memset((void *)(&(pHTInfo->SelfHTCap)), 0,
-> +       memset((&(pHTInfo->SelfHTCap)), 0,
->                 sizeof(pHTInfo->SelfHTCap));
-> 
-> Here the parentheses were never related to the cast so we should leave
-> them as is.  In other words, in the first example, if we didn't remove
-> the cast that would be "half a thing per patch" and in the second
-> example that would be "two things in one patch".
-
-For style patches, it's frequently easier and better to 
-do all the code transformation at once.
-
-IMO the last should be:
-
-	memset(&pHTInfo->SelfHTCap, 0, sizeof(pHTInfo->SelfHTCap));
-
-like it is here:
-
-drivers/staging/rtl8192u/ieee80211/rtl819x_HTProc.c:1056:       memset(&pHTInfo->SelfHTCap, 0, sizeof(pHTInfo->SelfHTCap));
-
-btw2:
-
-I really dislike all the code inconsistencies and
-unnecessary code duplication with miscellaneous changes
-in the rtl staging drivers....
-
-Horrid stuff.
+cheers, Joe
 
