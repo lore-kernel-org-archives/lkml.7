@@ -2,109 +2,183 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9276FCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 17:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1C3CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 17:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D5B3205ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 17:37:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="qKEkBRN+"
+	by mail.kernel.org (Postfix) with ESMTP id C89E521897
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 17:52:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfJTRhf (ORCPT
+        id S1726750AbfJTRwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 13:37:35 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43030 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbfJTRhf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 13:37:35 -0400
-Received: by mail-pf1-f195.google.com with SMTP id a2so6836345pfo.10
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 10:37:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=vmU9pgUKQcEuMSYv/BBcahpMF4UtOam9a0i9ZLAtxwE=;
-        b=qKEkBRN+OgbmOLStSpTKuai/Xfu9qXtg1CINfl5SyuNp17UtrCIRg4cYlTHvTP7jvi
-         iySsIaj77Mkq5ikwpFE1Xm/HeB9gXw7gMQ9+8+PbXbc8crqm0BUMsyzxHH8y43gvMhWM
-         ZPqaZTwEpYG8bwy6YiqNQc1EtjsPyI3fSxBuepTvDf3qjb3uJLon9kJhgE/dinrNL/1d
-         KZru/zmy2IyvTIGkhnRqVhuRfzge3ksp3hSNQjh9rO7kaCgQf1K9d8g2B0hgk4eiYUK6
-         2caH3dikfd1EuVemAEzIBBhrl8BglKur+OZCB/z0GRnm39nGICVdA73ecO+5tC5KLM6h
-         coHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=vmU9pgUKQcEuMSYv/BBcahpMF4UtOam9a0i9ZLAtxwE=;
-        b=hi170lBAhusHMVVEhaGNS9dqp1b9PTzKV1Sf789lr5t8plfOVNt0mtyOupd/d4/NJL
-         N085VvE550KusB29Sa/qj8S/fsOBFd6S0aV12TiFkPYujFTYPz3k+GS2lWGxhXdpIL+K
-         fX1RHsa5bBNpl1nQqBL3vj5jZz4E8fOqymR3nzOQeyGnAui7XxaAzjOgLAAB22dkb6By
-         s54b8egwkaYYxjUytm0pw0Qe5pbftrnKgnQABoP/zVsYK313TtywWMu7FEt3/JSZNlrM
-         AzlOdGsuZBRp1m434j753SRwcN46E3HmmPEwke2aWuyTRAn2QWcUlByZ81Pky9refMXa
-         PN2g==
-X-Gm-Message-State: APjAAAUFxZWdl2UiAIoh8R0c3PVw+n3DN12vyAqA75h19HpCT4sKjuBa
-        MzJ0T7Lsf0cRsOkJQs1Sws9v5Q==
-X-Google-Smtp-Source: APXvYqyeYLW2YaKmo1xJfJxB58IOQE39T7c3Z1n8MrWodF2BnuK8nbT7D29rYLyZtNnd4qsV0pqqdw==
-X-Received: by 2002:a63:4622:: with SMTP id t34mr21669219pga.0.1571593052820;
-        Sun, 20 Oct 2019 10:37:32 -0700 (PDT)
-Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
-        by smtp.gmail.com with ESMTPSA id e192sm13018937pfh.83.2019.10.20.10.37.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Oct 2019 10:37:32 -0700 (PDT)
-Date:   Sun, 20 Oct 2019 10:37:29 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Huazhong Tan <tanhuazhong@huawei.com>
-Cc:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <salil.mehta@huawei.com>,
-        <yisen.zhuang@huawei.com>, <linuxarm@huawei.com>
-Subject: Re: [PATCH net-next 0/8] net: hns3: add some cleanups &
- optimizations
-Message-ID: <20191020103729.0aebf696@cakuba.netronome.com>
-In-Reply-To: <1571472236-17401-1-git-send-email-tanhuazhong@huawei.com>
-References: <1571472236-17401-1-git-send-email-tanhuazhong@huawei.com>
-Organization: Netronome Systems, Ltd.
+        Sun, 20 Oct 2019 13:52:31 -0400
+Received: from mga01.intel.com ([192.55.52.88]:3315 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726561AbfJTRwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 13:52:30 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 10:52:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,320,1566889200"; 
+   d="scan'208";a="190893275"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
+  by orsmga008.jf.intel.com with ESMTP; 20 Oct 2019 10:52:30 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 1892B300393; Sun, 20 Oct 2019 10:52:30 -0700 (PDT)
+From:   Andi Kleen <andi@firstfloor.org>
+To:     acme@kernel.org
+Cc:     linux-kernel@vger.kernel.org, jolsa@kernel.org, eranian@google.com,
+        kan.liang@linux.intel.com, peterz@infradead.org,
+        Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH v2 4/9] perf affinity: Add infrastructure to save/restore affinity
+Date:   Sun, 20 Oct 2019 10:51:57 -0700
+Message-Id: <20191020175202.32456-5-andi@firstfloor.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191020175202.32456-1-andi@firstfloor.org>
+References: <20191020175202.32456-1-andi@firstfloor.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 19 Oct 2019 16:03:48 +0800, Huazhong Tan wrote:
-> This patchset includes some cleanups and optimizations for the HNS3
-> ethernet driver.
-> 
-> [patch 1/8] removes unused and unnecessary structures.
-> 
-> [patch 2/8] uses a ETH_ALEN u8 array to replace two mac_addr_*
-> field in struct hclge_mac_mgr_tbl_entry_cmd.
-> 
-> [patch 3/8] optimizes the barrier used in the IO path.
-> 
-> [patch 4/8] introduces macro ring_to_netdev() to get netdevive
-> from struct hns3_enet_ring variable.
-> 
-> [patch 5/8] makes struct hns3_enet_ring to be cacheline aligned
-> 
-> [patch 6/8] adds a minor cleanup for hns3_handle_rx_bd().
-> 
-> [patch 7/8] removes linear data allocating for fraglist SKB.
-> 
-> [patch 8/8] clears hardware error when resetting.
-> 
-> ---
-> note:
-> In previous patchset, there are some bugfixes which needs below
-> new feature, which is only in 'net-next' but not in 'net' now:
-> net: hns3: support tx-scatter-gather-fraglist feature
-> net: hns3: add support for spoof check setting
-> 
-> So, these bugfixes will be upstreamed when the patch needed is
-> on 'net' tree.
+From: Andi Kleen <ak@linux.intel.com>
 
-Thanks! Looks good to me now.
+The kernel perf subsystem has to IPI to the target CPU for many
+operations. On systems with many CPUs and when managing many events the
+overhead can be dominated by lots of IPIs.
+
+An alternative is to set up CPU affinity in the perf tool, then set up
+all the events for that CPU, and then move on to the next CPU.
+
+Add some affinity management infrastructure to enable such a model.
+Used in followon patches.
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+---
+ tools/perf/util/Build      |  1 +
+ tools/perf/util/affinity.c | 71 ++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/affinity.h | 15 ++++++++
+ 3 files changed, 87 insertions(+)
+ create mode 100644 tools/perf/util/affinity.c
+ create mode 100644 tools/perf/util/affinity.h
+
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 2c1504fe924c..c7d4eab017e5 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -76,6 +76,7 @@ perf-y += sort.o
+ perf-y += hist.o
+ perf-y += util.o
+ perf-y += cpumap.o
++perf-y += affinity.o
+ perf-y += cputopo.o
+ perf-y += cgroup.o
+ perf-y += target.o
+diff --git a/tools/perf/util/affinity.c b/tools/perf/util/affinity.c
+new file mode 100644
+index 000000000000..c42a6b9d63f0
+--- /dev/null
++++ b/tools/perf/util/affinity.c
+@@ -0,0 +1,71 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Manage affinity to optimize IPIs inside the kernel perf API. */
++#define _GNU_SOURCE 1
++#include <sched.h>
++#include <stdlib.h>
++#include <linux/zalloc.h>
++#include "perf.h"
++#include "cpumap.h"
++#include "affinity.h"
++
++static int get_cpu_set_size(void)
++{
++	int sz = (cpu__max_cpu() + 64 - 1) / 64;
++	/*
++	 * sched_getaffinity doesn't like masks smaller than the kernel.
++	 * Hopefully that's big enough.
++	 */
++	if (sz < 4096/8)
++		sz = 4096/8;
++	return sz;
++}
++
++int affinity__setup(struct affinity *a)
++{
++	int cpu_set_size = get_cpu_set_size();
++
++	a->orig_cpus = malloc(cpu_set_size);
++	if (!a->orig_cpus)
++		return -1;
++	sched_getaffinity(0, cpu_set_size, (cpu_set_t *)a->orig_cpus);
++	a->sched_cpus = zalloc(cpu_set_size);
++	if (!a->sched_cpus) {
++		free(a->orig_cpus);
++		return -1;
++	}
++	a->changed = false;
++	return 0;
++}
++
++/*
++ * perf_event_open does an IPI internally to the target CPU.
++ * It is more efficient to change perf's affinity to the target
++ * CPU and then set up all events on that CPU, so we amortize
++ * CPU communication.
++ */
++void affinity__set(struct affinity *a, int cpu)
++{
++	int cpu_set_size = get_cpu_set_size();
++
++	if (cpu == -1)
++		return;
++	a->changed = true;
++	a->sched_cpus[cpu / 8] |= 1 << (cpu % 8);
++	/*
++	 * We ignore errors because affinity is just an optimization.
++	 * This could happen for example with isolated CPUs or cpusets.
++	 * In this case the IPIs inside the kernel's perf API still work.
++	 */
++	sched_setaffinity(0, cpu_set_size, (cpu_set_t *)a->sched_cpus);
++	a->sched_cpus[cpu / 8] ^= 1 << (cpu % 8);
++}
++
++void affinity__cleanup(struct affinity *a)
++{
++	int cpu_set_size = get_cpu_set_size();
++
++	if (a->changed)
++		sched_setaffinity(0, cpu_set_size, (cpu_set_t *)a->orig_cpus);
++	free(a->sched_cpus);
++	free(a->orig_cpus);
++}
+diff --git a/tools/perf/util/affinity.h b/tools/perf/util/affinity.h
+new file mode 100644
+index 000000000000..e56148607e33
+--- /dev/null
++++ b/tools/perf/util/affinity.h
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: GPL-2.0
++#ifndef AFFINITY_H
++#define AFFINITY_H 1
++
++struct affinity {
++	unsigned char *orig_cpus;
++	unsigned char *sched_cpus;
++	bool changed;
++};
++
++void affinity__cleanup(struct affinity *a);
++void affinity__set(struct affinity *a, int cpu);
++int affinity__setup(struct affinity *a);
++
++#endif
+-- 
+2.21.0
+
