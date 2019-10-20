@@ -2,135 +2,105 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E00A3CA9EAD
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 15:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1465FCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 15:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A88912190F
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 15:46:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bq/XcSfk"
+	by mail.kernel.org (Postfix) with ESMTP id E43092190F
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 15:59:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbfJTPqZ (ORCPT
+        id S1726568AbfJTP7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 11:46:25 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46320 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726383AbfJTPqZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 11:46:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571586383;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=NYB5YLU3InOkXCV2AcZVtukurd9BwBDSqfTnbkNJyC8=;
-        b=bq/XcSfkXbhphf9CLs5z6dK3sKoTap6FyvaWccsshUz0wmjjMZ64ssyLZw8ZbEomNiKZAX
-        Jkn6k4RzARE/B/zunKnBSgQcIvXcYZR8QMrzBcXVKaZi4Zz5tdAKJ6xLtLtP04Ya8FxVrN
-        RYQ2QxhLuzmA68of5b34iDv8qM1pSSg=
-Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com
- [209.85.219.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-170-u8pBYw6VMEGmEOPvYo7TJw-1; Sun, 20 Oct 2019 11:46:22 -0400
-Received: by mail-yb1-f197.google.com with SMTP id j2so7734308ybm.14
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 08:46:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=Alu6ppHvSW114ed3pBahWURj9wM8iWBEEGZ8MLoKgAk=;
-        b=qvlDVc6Sb+cCQQ1tiz7wADQxmEZpfhfcPNk0tKeR4VF/XMZtL6ucbbVf+bxUoChMsr
-         0mEmEFDukZixb80TXzD2q4xGYnqyr3qGBnJv28LvkorvjErQScRUWF4g6HOa2XwmuAbc
-         fGNNoeFcc8ThoBbtc4oI0YtBz1zN5E/5YFwG0T7YaeWSXF7a6LbL78CWCVUG/MT9Gwrv
-         evWSFRnM0FxoT3qwzkMVLGkCOXNWJ82Q9pHiwlfhG9pORc4TakGHPb+TuTPj/8/KcqNP
-         MybodTOQiRKy+hT7dxDIp+E7gdqkJBr96SXiFYG5qCoJ6hz7drZQfKYvILlQwy09y7LQ
-         l9Yw==
-X-Gm-Message-State: APjAAAVGLWMXo/9XiLWYh82an62g5KfwWk5rKI4w3PjGHXwlQDD9o6HX
-        hx6ZH4ocbGCBu2AfW7HWKZv8NhaRvcGtEn7UkNds7wRA5Z4E5IP8uyPA1tkDug/iLU7XiqeB6Iq
-        k6ntNT7FC0OOpKTMF0mp2sSNSBTlrtTID8w3GeAvV
-X-Received: by 2002:a25:2005:: with SMTP id g5mr11581343ybg.233.1571586381778;
-        Sun, 20 Oct 2019 08:46:21 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxyKemkRcFRU3wzlgi/T4+K9AZ2BopYayuoVNBd36p+ggns4HBGKTFdfgg55BfQj8iXlviOeklLwD73HIE9Azs=
-X-Received: by 2002:a25:2005:: with SMTP id g5mr11581330ybg.233.1571586381452;
- Sun, 20 Oct 2019 08:46:21 -0700 (PDT)
+        Sun, 20 Oct 2019 11:59:54 -0400
+Received: from mga02.intel.com ([134.134.136.20]:54570 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726383AbfJTP7y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 11:59:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 08:59:53 -0700
+X-IronPort-AV: E=Sophos;i="5.67,320,1566889200"; 
+   d="scan'208";a="398438094"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 08:59:53 -0700
+From:   ira.weiny@intel.com
+To:     linux-kernel@vger.kernel.org
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH 0/5] Enable per-file/directory DAX operations
+Date:   Sun, 20 Oct 2019 08:59:30 -0700
+Message-Id: <20191020155935.12297-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-From:   Tom Rix <trix@redhat.com>
-Date:   Sun, 20 Oct 2019 08:46:10 -0700
-Message-ID: <CACVy4SVuw0Qbjiv6PLRn1symoxGzyBMZx2F5O23+jGZG6WHuYA@mail.gmail.com>
-Subject: [PATCH] xfrm : lock input tasklet skb queue
-To:     steffen.klassert@secunet.com, herbert@gondor.apana.org.au,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-X-MC-Unique: u8pBYw6VMEGmEOPvYo7TJw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On PREEMPT_RT_FULL while running netperf, a corruption
-of the skb queue causes an oops.
+From: Ira Weiny <ira.weiny@intel.com>
 
-This appears to be caused by a race condition here
-        __skb_queue_tail(&trans->queue, skb);
-        tasklet_schedule(&trans->tasklet);
-Where the queue is changed before the tasklet is locked by
-tasklet_schedule.
+At LSF/MM'19 [1] [2] we discussed applications that overestimate memory
+consumption due to their inability to detect whether the kernel will
+instantiate page cache for a file, and cases where a global dax enable via a
+mount option is too coarse.
 
-The fix is to use the skb queue lock.
+The following patch series enables selecting the use of DAX on individual files
+and/or directories on xfs, and lays some groundwork to do so in ext4.  In this
+scheme the dax mount option can be omitted to allow the per-file property to
+take effect.
 
-Signed-off-by: Tom Rix <trix@redhat.com>
----
- net/xfrm/xfrm_input.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+The insight at LSF/MM was to separate the per-mount or per-file "physical"
+capability switch from an "effective" attribute for the file.
 
-diff --git a/net/xfrm/xfrm_input.c b/net/xfrm/xfrm_input.c
-index 9b599ed66d97..226dead86828 100644
---- a/net/xfrm/xfrm_input.c
-+++ b/net/xfrm/xfrm_input.c
-@@ -758,12 +758,16 @@ static void xfrm_trans_reinject(unsigned long data)
-     struct xfrm_trans_tasklet *trans =3D (void *)data;
-     struct sk_buff_head queue;
-     struct sk_buff *skb;
-+    unsigned long flags;
+At LSF/MM we discussed the difficulties of switching the mode of a file with
+active mappings / page cache. Rather than solve those races the decision was to
+just limit mode flips to 0-length files.
 
-     __skb_queue_head_init(&queue);
-+    spin_lock_irqsave(&trans->queue.lock, flags);
-     skb_queue_splice_init(&trans->queue, &queue);
+Finally, the physical DAX flag inheritance is maintained from previous work on 
+XFS but should be added for other file systems for consistence.
 
-     while ((skb =3D __skb_dequeue(&queue)))
-         XFRM_TRANS_SKB_CB(skb)->finish(dev_net(skb->dev), NULL, skb);
-+
-+    spin_unlock_irqrestore(&trans->queue.lock, flags);
- }
 
- int xfrm_trans_queue(struct sk_buff *skb,
-@@ -771,15 +775,20 @@ int xfrm_trans_queue(struct sk_buff *skb,
-                    struct sk_buff *))
- {
-     struct xfrm_trans_tasklet *trans;
-+    unsigned long flags;
+[1] https://lwn.net/Articles/787973/
+[2] https://lwn.net/Articles/787233/
 
-     trans =3D this_cpu_ptr(&xfrm_trans_tasklet);
-+    spin_lock_irqsave(&trans->queue.lock, flags);
+To: linux-kernel@vger.kernel.org
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Dave Chinner <david@fromorbit.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc: Jan Kara <jack@suse.cz>
+Cc: linux-ext4@vger.kernel.org
+Cc: linux-xfs@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
 
--    if (skb_queue_len(&trans->queue) >=3D netdev_max_backlog)
-+    if (skb_queue_len(&trans->queue) >=3D netdev_max_backlog) {
-+        spin_unlock_irqrestore(&trans->queue.lock, flags);
-         return -ENOBUFS;
-+    }
+Ira Weiny (5):
+  fs/stat: Define DAX statx attribute
+  fs/xfs: Isolate the physical DAX flag from effective
+  fs/xfs: Separate functionality of xfs_inode_supports_dax()
+  fs/xfs: Clean up DAX support check
+  fs/xfs: Allow toggle of physical DAX flag
 
-     XFRM_TRANS_SKB_CB(skb)->finish =3D finish;
-     __skb_queue_tail(&trans->queue, skb);
-     tasklet_schedule(&trans->tasklet);
-+    spin_unlock_irqrestore(&trans->queue.lock, flags);
-     return 0;
- }
- EXPORT_SYMBOL(xfrm_trans_queue);
---=20
-2.23.0
+ fs/stat.c                 |  3 +++
+ fs/xfs/xfs_ioctl.c        | 32 ++++++++++++++------------------
+ fs/xfs/xfs_iops.c         | 36 ++++++++++++++++++++++++++++++------
+ fs/xfs/xfs_iops.h         |  2 ++
+ include/uapi/linux/stat.h |  1 +
+ 5 files changed, 50 insertions(+), 24 deletions(-)
+
+-- 
+2.20.1
 
