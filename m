@@ -6,35 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 959DCCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 04:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B189CA9EAD
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 04:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75A6421D7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 04:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BE862173E
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 04:08:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbfJTEI3 (ORCPT
+        id S1726347AbfJTEIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 00:08:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37122 "EHLO mx1.suse.de"
+        Sun, 20 Oct 2019 00:08:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37166 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725851AbfJTEI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 00:08:28 -0400
+        id S1726125AbfJTEI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 00:08:29 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 605AAACCA;
-        Sun, 20 Oct 2019 04:08:26 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id ACD5CAF87;
+        Sun, 20 Oct 2019 04:08:27 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-realtek-soc@lists.infradead.org
 Cc:     linux-arm-kernel@lists.infradead.org,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/8] dt-bindings: rtc: realtek: Convert RTD119x to schema
-Date:   Sun, 20 Oct 2019 06:08:11 +0200
-Message-Id: <20191020040817.16882-3-afaerber@suse.de>
+Subject: [PATCH v2 5/8] arm64: dts: realtek: Change dual-license from MIT to BSD
+Date:   Sun, 20 Oct 2019 06:08:14 +0200
+Message-Id: <20191020040817.16882-6-afaerber@suse.de>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20191020040817.16882-1-afaerber@suse.de>
 References: <20191020040817.16882-1-afaerber@suse.de>
@@ -46,84 +45,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the RTD119x binding to a YAML schema.
+Move the SPDX-License-Identifier to the top line and update to SPDX 2.0.
+While at it, switch from GPLv2+/MIT to GPLv2+/BSD2c before adding more.
 
+Suggested-by: Rob Herring <robh@kernel.org>
+Cc: Rob Herring <robh@kernel.org>
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
  v2: New
  
- .../devicetree/bindings/rtc/realtek,rtd119x.txt    | 16 ---------
- .../devicetree/bindings/rtc/realtek,rtd119x.yaml   | 38 ++++++++++++++++++++++
- 2 files changed, 38 insertions(+), 16 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/rtc/realtek,rtd119x.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
+ arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts | 3 +--
+ arch/arm64/boot/dts/realtek/rtd1295.dtsi          | 3 +--
+ arch/arm64/boot/dts/realtek/rtd129x.dtsi          | 3 +--
+ 3 files changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/rtc/realtek,rtd119x.txt b/Documentation/devicetree/bindings/rtc/realtek,rtd119x.txt
-deleted file mode 100644
-index bbf1ccb5df31..000000000000
---- a/Documentation/devicetree/bindings/rtc/realtek,rtd119x.txt
-+++ /dev/null
-@@ -1,16 +0,0 @@
--Realtek RTD129x Real-Time Clock
--===============================
--
--Required properties:
--- compatible :  Should be "realtek,rtd1295-rtc"
--- reg        :  Specifies the physical base address and size
--- clocks     :  Specifies the clock gate
--
--
--Example:
--
--	rtc@9801b600 {
--		compatible = "realtek,rtd1295-clk";
--		reg = <0x9801b600 0x100>;
--		clocks = <&clkc RTD1295_CLK_EN_MISC_RTC>;
--	};
-diff --git a/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml b/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
-new file mode 100644
-index 000000000000..71b7396bd469
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
-@@ -0,0 +1,38 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/rtc/realtek,rtd119x.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Realtek RTD129x Real-Time Clock
-+
-+allOf:
-+  - $ref: "rtc.yaml#"
-+
-+maintainers:
-+  - Andreas Färber <afaerber@suse.de>
-+
-+properties:
-+  compatible:
-+    const: realtek,rtd1295-rtc
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+    description: Specifies the clock gate
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+
-+examples:
-+  - |
-+	rtc@9801b600 {
-+		compatible = "realtek,rtd1295-clk";
-+		reg = <0x9801b600 0x100>;
-+		clocks = <&clkc RTD1295_CLK_EN_MISC_RTC>;
-+	};
-+...
+diff --git a/arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts b/arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts
+index da19faab29d5..e98e508b9514 100644
+--- a/arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts
++++ b/arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts
+@@ -1,7 +1,6 @@
++// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+ /*
+  * Copyright (c) 2016-2017 Andreas Färber
+- *
+- * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+  */
+ 
+ /dts-v1/;
+diff --git a/arch/arm64/boot/dts/realtek/rtd1295.dtsi b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
+index 41d7858da826..93f0e1d97721 100644
+--- a/arch/arm64/boot/dts/realtek/rtd1295.dtsi
++++ b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
+@@ -1,9 +1,8 @@
++// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+ /*
+  * Realtek RTD1295 SoC
+  *
+  * Copyright (c) 2016-2017 Andreas Färber
+- *
+- * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+  */
+ 
+ #include "rtd129x.dtsi"
+diff --git a/arch/arm64/boot/dts/realtek/rtd129x.dtsi b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
+index b9cb92466fc7..a26c375ee1bb 100644
+--- a/arch/arm64/boot/dts/realtek/rtd129x.dtsi
++++ b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
+@@ -1,9 +1,8 @@
++// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+ /*
+  * Realtek RTD1293/RTD1295/RTD1296 SoC
+  *
+  * Copyright (c) 2016-2017 Andreas Färber
+- *
+- * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+  */
+ 
+ /memreserve/	0x0000000000000000 0x0000000000030000;
 -- 
 2.16.4
 
