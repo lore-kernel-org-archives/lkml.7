@@ -2,87 +2,128 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C28CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 04:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 959DCCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 04:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 781472173E
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 04:01:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Jd3e4VFM"
+	by mail.kernel.org (Postfix) with ESMTP id 75A6421D7C
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 04:08:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726016AbfJTEBX (ORCPT
+        id S1726313AbfJTEI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 00:01:23 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36829 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbfJTEBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 00:01:23 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46wmKX4Rnkz9sP6;
-        Sun, 20 Oct 2019 15:01:20 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1571544080;
-        bh=A5NG6wBGHdQxoA6uV3LIcCnuwg/zZS43zd4ihERmpy0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Jd3e4VFMSbqS6nOxCu6DiIjWYGImoclTe+29yvZpy3kVlJ5hPvkpBpL6i6Cy7Im1Y
-         YuGkAf2NypMfbrBitTiTM8daaClbFz1ijiRbYTXKvwkITljx/141MMS7w43oIbo/zu
-         ZnPZXbvIjxo818x2mAz+neW1C+oYlYMTzmJ/pGdi78NV/Yssm+ZdafbpjFqvOxABPA
-         +TrGUAsw/71sKzwek+NUmfm8Ophm0LXHzpfsidEAe2jfq0abHoMJEzVqnFY+o4RfqQ
-         iwmtNXk2qVqK0QVsQLEDVJqzifzWsRjDGpybCDt2neiuAE/CExXkz54F3HtyJb3Yff
-         cWheuOKtIbCkg==
-Date:   Sun, 20 Oct 2019 15:01:19 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andreas =?UTF-8?B?RsOkcmJlcg==?= <afaerber@suse.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: remove the actions tree
-Message-ID: <20191020150119.1f997025@canb.auug.org.au>
+        Sun, 20 Oct 2019 00:08:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37122 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725851AbfJTEI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 00:08:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 605AAACCA;
+        Sun, 20 Oct 2019 04:08:26 +0000 (UTC)
+From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+To:     linux-realtek-soc@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/8] dt-bindings: rtc: realtek: Convert RTD119x to schema
+Date:   Sun, 20 Oct 2019 06:08:11 +0200
+Message-Id: <20191020040817.16882-3-afaerber@suse.de>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20191020040817.16882-1-afaerber@suse.de>
+References: <20191020040817.16882-1-afaerber@suse.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/s6DPuxFm2n.b3NOvDxL/DTz";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/s6DPuxFm2n.b3NOvDxL/DTz
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Convert the RTD119x binding to a YAML schema.
 
-Hi all,
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+---
+ v2: New
+ 
+ .../devicetree/bindings/rtc/realtek,rtd119x.txt    | 16 ---------
+ .../devicetree/bindings/rtc/realtek,rtd119x.yaml   | 38 ++++++++++++++++++++++
+ 2 files changed, 38 insertions(+), 16 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/rtc/realtek,rtd119x.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
 
-The actions tree
-(git://git.kernel.org/pub/scm/linux/kernel/git/afaerber/linux-actions.git#f=
-or-next)
-has not been updated in more than a year, so I have removed it from
-linux-next.  Please let me know if/when you want it reinstated.
+diff --git a/Documentation/devicetree/bindings/rtc/realtek,rtd119x.txt b/Documentation/devicetree/bindings/rtc/realtek,rtd119x.txt
+deleted file mode 100644
+index bbf1ccb5df31..000000000000
+--- a/Documentation/devicetree/bindings/rtc/realtek,rtd119x.txt
++++ /dev/null
+@@ -1,16 +0,0 @@
+-Realtek RTD129x Real-Time Clock
+-===============================
+-
+-Required properties:
+-- compatible :  Should be "realtek,rtd1295-rtc"
+-- reg        :  Specifies the physical base address and size
+-- clocks     :  Specifies the clock gate
+-
+-
+-Example:
+-
+-	rtc@9801b600 {
+-		compatible = "realtek,rtd1295-clk";
+-		reg = <0x9801b600 0x100>;
+-		clocks = <&clkc RTD1295_CLK_EN_MISC_RTC>;
+-	};
+diff --git a/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml b/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
+new file mode 100644
+index 000000000000..71b7396bd469
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
+@@ -0,0 +1,38 @@
++# SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/rtc/realtek,rtd119x.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Realtek RTD129x Real-Time Clock
++
++allOf:
++  - $ref: "rtc.yaml#"
++
++maintainers:
++  - Andreas Färber <afaerber@suse.de>
++
++properties:
++  compatible:
++    const: realtek,rtd1295-rtc
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++    description: Specifies the clock gate
++
++required:
++  - compatible
++  - reg
++  - clocks
++
++examples:
++  - |
++	rtc@9801b600 {
++		compatible = "realtek,rtd1295-clk";
++		reg = <0x9801b600 0x100>;
++		clocks = <&clkc RTD1295_CLK_EN_MISC_RTC>;
++	};
++...
+-- 
+2.16.4
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/s6DPuxFm2n.b3NOvDxL/DTz
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2r3A8ACgkQAVBC80lX
-0GwsJggAiNQT/+VyHJBekHdRz9lIqrpY1m8Ux4A69BVlhyRe/Dd/aUTAfPFo7odD
-a2vQJJ6wpgpUdQ5JxJWIXjv8xJPb8dCSWFn6uilQfUuI5FJN56QY31826xe60sTh
-6Up1SbMfGVFEraRFtjp2bV21f+2aySDu/J3lM2200XsT2jjsTAS1PN0gvnJBBcm1
-gVqt1evE/ER9v/gbw3h0XOGLXKXtRtAGHlATnfxQ2slJPaYeFnLfvOMW+BwZ2iBM
-B3ZIG8gzMguVEEYDyfKdkDr6XPftvPHf/rWOTBaA5M0UfGkIPBCIl4N1hZTz6Z9G
-kkfA9ye8kN8cQTB1oD+hyH+YM8vqhw==
-=FFZ1
------END PGP SIGNATURE-----
-
---Sig_/s6DPuxFm2n.b3NOvDxL/DTz--
