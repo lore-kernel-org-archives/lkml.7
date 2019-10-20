@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5683CA9EAD
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 16:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD175CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 16:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BBD521D80
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 16:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D9E8222BD
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 16:14:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbfJTQOA (ORCPT
+        id S1726708AbfJTQOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 12:14:00 -0400
-Received: from mga11.intel.com ([192.55.52.93]:10303 "EHLO mga11.intel.com"
+        Sun, 20 Oct 2019 12:14:04 -0400
+Received: from mga06.intel.com ([134.134.136.31]:28692 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726492AbfJTQN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726511AbfJTQN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 20 Oct 2019 12:13:59 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 09:13:58 -0700
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 09:13:58 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,320,1566889200"; 
-   d="scan'208";a="371959739"
+   d="scan'208";a="203147502"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by orsmga005.jf.intel.com with ESMTP; 20 Oct 2019 09:13:58 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 20 Oct 2019 09:13:58 -0700
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 534FF30034D; Sun, 20 Oct 2019 09:13:58 -0700 (PDT)
+        id 393F430038C; Sun, 20 Oct 2019 09:13:58 -0700 (PDT)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     acme@kernel.org
 Cc:     jolsa@kernel.org, eranian@google.com, kan.liang@linux.intel.com,
         peterz@infradead.org, linux-kernel@vger.kernel.org,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v1 8/9] perf stat: Use affinity for reading
-Date:   Sun, 20 Oct 2019 09:13:45 -0700
-Message-Id: <20191020161346.18938-9-andi@firstfloor.org>
+Subject: [PATCH v1 4/9] perf affinity: Add infrastructure to save/restore affinity
+Date:   Sun, 20 Oct 2019 09:13:41 -0700
+Message-Id: <20191020161346.18938-5-andi@firstfloor.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191020161346.18938-1-andi@firstfloor.org>
 References: <20191020161346.18938-1-andi@firstfloor.org>
@@ -50,170 +50,135 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Restructure event reading to use affinity to minimize the number
-of IPIs needed.
+The kernel perf subsystem has to IPI to the target CPU for many
+operations. On systems with many CPUs and when managing many events the
+overhead can be dominated by lots of IPIs.
 
-Before on a large test case with 94 CPUs:
+An alternative is to set up CPU affinity in the perf tool, then set up
+all the events for that CPU, and then move on to the next CPU.
 
-% time     seconds  usecs/call     calls    errors syscall
------- ----------- ----------- --------- --------- ----------------
-  3.16    0.106079           4     22082           read
-
-After:
-
-  3.43    0.081295           3     22082           read
+Add some affinity management infrastructure to enable such a model.
+Used in followon patches.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 ---
- tools/perf/builtin-stat.c | 97 ++++++++++++++++++++++-----------------
- tools/perf/util/evsel.h   |  1 +
- 2 files changed, 57 insertions(+), 41 deletions(-)
+ tools/perf/util/Build      |  1 +
+ tools/perf/util/affinity.c | 71 ++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/affinity.h | 15 ++++++++
+ 3 files changed, 87 insertions(+)
+ create mode 100644 tools/perf/util/affinity.c
+ create mode 100644 tools/perf/util/affinity.h
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 651ee9ddf0a3..b52121bb28a3 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -264,15 +264,10 @@ static int read_single_counter(struct evsel *counter, int cpu,
-  * Read out the results of a single counter:
-  * do not aggregate counts across CPUs in system-wide mode
-  */
--static int read_counter(struct evsel *counter, struct timespec *rs)
-+static int read_counter(struct evsel *counter, struct timespec *rs, int cpu)
- {
- 	int nthreads = perf_thread_map__nr(evsel_list->core.threads);
--	int ncpus, cpu, thread;
--
--	if (target__has_cpu(&target) && !target__has_per_thread(&target))
--		ncpus = perf_evsel__nr_cpus(counter);
--	else
--		ncpus = 1;
-+	int thread;
- 
- 	if (!counter->supported)
- 		return -ENOENT;
-@@ -281,40 +276,38 @@ static int read_counter(struct evsel *counter, struct timespec *rs)
- 		nthreads = 1;
- 
- 	for (thread = 0; thread < nthreads; thread++) {
--		for (cpu = 0; cpu < ncpus; cpu++) {
--			struct perf_counts_values *count;
--
--			count = perf_counts(counter->counts, cpu, thread);
--
--			/*
--			 * The leader's group read loads data into its group members
--			 * (via perf_evsel__read_counter) and sets threir count->loaded.
--			 */
--			if (!perf_counts__is_loaded(counter->counts, cpu, thread) &&
--			    read_single_counter(counter, cpu, thread, rs)) {
--				counter->counts->scaled = -1;
--				perf_counts(counter->counts, cpu, thread)->ena = 0;
--				perf_counts(counter->counts, cpu, thread)->run = 0;
--				return -1;
--			}
-+		struct perf_counts_values *count;
- 
--			perf_counts__set_loaded(counter->counts, cpu, thread, false);
-+		count = perf_counts(counter->counts, cpu, thread);
- 
--			if (STAT_RECORD) {
--				if (perf_evsel__write_stat_event(counter, cpu, thread, count)) {
--					pr_err("failed to write stat event\n");
--					return -1;
--				}
--			}
-+		/*
-+		 * The leader's group read loads data into its group members
-+		 * (via perf_evsel__read_counter) and sets threir count->loaded.
-+		 */
-+		if (!perf_counts__is_loaded(counter->counts, cpu, thread) &&
-+		    read_single_counter(counter, cpu, thread, rs)) {
-+			counter->counts->scaled = -1;
-+			perf_counts(counter->counts, cpu, thread)->ena = 0;
-+			perf_counts(counter->counts, cpu, thread)->run = 0;
-+			return -1;
-+		}
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 5477f6afe735..302c7fda1e3a 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -74,6 +74,7 @@ perf-y += sort.o
+ perf-y += hist.o
+ perf-y += util.o
+ perf-y += cpumap.o
++perf-y += affinity.o
+ perf-y += cputopo.o
+ perf-y += cgroup.o
+ perf-y += target.o
+diff --git a/tools/perf/util/affinity.c b/tools/perf/util/affinity.c
+new file mode 100644
+index 000000000000..12e8024a6300
+--- /dev/null
++++ b/tools/perf/util/affinity.c
+@@ -0,0 +1,71 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Manage affinity to optimize IPIs inside the kernel perf API. */
++#define _GNU_SOURCE 1
++#include <sched.h>
++#include <stdlib.h>
++#include <linux/zalloc.h>
++#include "perf.h"
++#include "cpumap.h"
++#include "affinity.h"
 +
-+		perf_counts__set_loaded(counter->counts, cpu, thread, false);
- 
--			if (verbose > 1) {
--				fprintf(stat_config.output,
--					"%s: %d: %" PRIu64 " %" PRIu64 " %" PRIu64 "\n",
--						perf_evsel__name(counter),
--						cpu,
--						count->val, count->ena, count->run);
-+		if (STAT_RECORD) {
-+			if (perf_evsel__write_stat_event(counter, cpu, thread, count)) {
-+				pr_err("failed to write stat event\n");
-+				return -1;
- 			}
- 		}
++static int get_cpu_set_size(void)
++{
++	int sz = (cpu__max_cpu() + 64 - 1) / 64;
++	/*
++	 * sched_getaffinity doesn't like masks smaller than the kernel.
++	 * Hopefully that's big enough.
++	 */
++	if (sz < 4096/8)
++		sz = 4096/8;
++	return sz;
++}
 +
-+		if (verbose > 1) {
-+			fprintf(stat_config.output,
-+				"%s: %d: %" PRIu64 " %" PRIu64 " %" PRIu64 "\n",
-+					perf_evsel__name(counter),
-+					cpu,
-+					count->val, count->ena, count->run);
-+		}
- 	}
- 
- 	return 0;
-@@ -323,15 +316,37 @@ static int read_counter(struct evsel *counter, struct timespec *rs)
- static void read_counters(struct timespec *rs)
- {
- 	struct evsel *counter;
--	int ret;
-+	struct affinity affinity;
-+	int i, ncpus;
-+	struct perf_cpu_map *cpus;
++int affinity__setup(struct affinity *a)
++{
++	int cpu_set_size = get_cpu_set_size();
 +
-+	if (affinity__setup(&affinity) < 0)
-+		return;
-+
-+	cpus = evlist__cpu_iter_start(evsel_list);
-+
-+	ncpus = cpus->nr;
-+	if (!(target__has_cpu(&target) && !target__has_per_thread(&target)))
-+		ncpus = 1;
-+	for (i = 0; i < ncpus; i++) {
-+		int cpu = cpus->map[i];
-+		affinity__set(&affinity, cpu);
-+
-+		evlist__for_each_entry(evsel_list, counter) {
-+			if (evlist__cpu_iter_skip(counter, cpu))
-+				continue;
-+			counter->err = read_counter(counter, rs, counter->cpu_index);
-+			evlist__cpu_iter_next(counter);
-+		}
++	a->orig_cpus = malloc(cpu_set_size);
++	if (!a->orig_cpus)
++		return -1;
++        sched_getaffinity(0, cpu_set_size, (cpu_set_t *)a->orig_cpus);
++	a->sched_cpus = zalloc(cpu_set_size);
++	if (!a->sched_cpus) {
++		free(a->orig_cpus);
++		return -1;
 +	}
-+	affinity__cleanup(&affinity);
- 
- 	evlist__for_each_entry(evsel_list, counter) {
--		ret = read_counter(counter, rs);
--		if (ret)
-+		if (counter->err)
- 			pr_debug("failed to read counter %s\n", counter->name);
--
--		if (ret == 0 && perf_stat_process_counter(&stat_config, counter))
-+		if (counter->err == 0 && perf_stat_process_counter(&stat_config, counter))
- 			pr_warning("failed to process counter %s\n", counter->name);
-+		counter->err = 0;
- 	}
- }
- 
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 28692abe1d42..ef87b76c0565 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -163,6 +163,7 @@ struct evsel {
- 	struct list_head	config_terms;
- 	struct bpf_object	*bpf_obj;
- 	int			bpf_fd;
-+	int			err;
- 	bool			auto_merge_stats;
- 	bool			merged_stat;
- 	const char *		metric_expr;
++	a->changed = false;
++	return 0;
++}
++
++/*
++ * perf_event_open does an IPI internally to the target CPU.
++ * It is more efficient to change perf's affinity to the target
++ * CPU and then set up all events on that CPU, so we amortize
++ * CPU communication.
++ */
++void affinity__set(struct affinity *a, int cpu)
++{
++	int cpu_set_size = get_cpu_set_size();
++
++	if (cpu == -1)
++		return;
++	a->changed = true;
++	a->sched_cpus[cpu / 8] |= 1 << (cpu % 8);
++	/*
++	 * We ignore errors because affinity is just an optimization.
++	 * This could happen for example with isolated CPUs or cpusets.
++	 * In this case the IPIs inside the kernel's perf API still work.
++	 */
++	sched_setaffinity(0, cpu_set_size, (cpu_set_t *)a->sched_cpus);
++	a->sched_cpus[cpu / 8] ^= 1 << (cpu % 8);
++}
++
++void affinity__cleanup(struct affinity *a)
++{
++	int cpu_set_size = get_cpu_set_size();
++
++	if (a->changed)
++		sched_setaffinity(0, cpu_set_size, (cpu_set_t *)a->orig_cpus);
++	free(a->sched_cpus);
++	free(a->orig_cpus);
++}
+diff --git a/tools/perf/util/affinity.h b/tools/perf/util/affinity.h
+new file mode 100644
+index 000000000000..e56148607e33
+--- /dev/null
++++ b/tools/perf/util/affinity.h
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: GPL-2.0
++#ifndef AFFINITY_H
++#define AFFINITY_H 1
++
++struct affinity {
++	unsigned char *orig_cpus;
++	unsigned char *sched_cpus;
++	bool changed;
++};
++
++void affinity__cleanup(struct affinity *a);
++void affinity__set(struct affinity *a, int cpu);
++int affinity__setup(struct affinity *a);
++
++#endif
 -- 
 2.21.0
 
