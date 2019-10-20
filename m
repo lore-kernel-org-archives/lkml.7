@@ -2,70 +2,73 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE35CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 03:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 233F0CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 03:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 910B72064B
+	by mail.kernel.org (Postfix) with ESMTP id ED31A2064B
 	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 03:20:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1yac6Af"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XKy8QYVI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbfJTDUK (ORCPT
+        id S1726383AbfJTDUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 23:20:10 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33909 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfJTDUK (ORCPT
+        Sat, 19 Oct 2019 23:20:13 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33362 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfJTDUL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 23:20:10 -0400
-Received: by mail-qt1-f196.google.com with SMTP id 3so15295542qta.1;
-        Sat, 19 Oct 2019 20:20:07 -0700 (PDT)
+        Sat, 19 Oct 2019 23:20:11 -0400
+Received: by mail-qt1-f194.google.com with SMTP id r5so15318943qtd.0;
+        Sat, 19 Oct 2019 20:20:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1fcpE/05mFjdeOSWH1fYTkKpdxpp4wtvZEoFQwIMUx4=;
-        b=E1yac6Afza7+qa5Gb75xG0MbQtnqh1GGlpayudcaYU3w2qbVdkKARYG1KIqLTeT3jT
-         k0BIUdytud0TSFnHnEHO5qR/h7nTKKQU+0bpK8y7e9yx0hs0XtudotWj2oFzHmyTC93P
-         //jvCxECLb6rM2bM5VcwzTOkkrqwXEBhl7uleuzxiYaKzIYDMoRnNjJmA0gMEdbkW0sk
-         WaUhaHT/FyBYzhRaBTbcIXDkiP99/JA28p8YKs2d1Z+WpUu2Ax/0WRjWyim1EF/ZvfLf
-         Jw5QsH9qsnfzA8cdWpvjlF7hvQ7ohSL7bhpO2JfLbgi/PTBwsjVurPpxZ4OGl4htMQHE
-         eHJQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=mLh2s3gJ1w56tVuUDIAWtO5cV52zmuk8dwt4nrNGvLs=;
+        b=XKy8QYVI+civRs3nMUu80bw5ez+TW79n2WvUyAWgI5R5DsjfuwL5tr4qlrVLMr3gsX
+         GLuRRW65HUq/Vtrib2Is0bYDuv/m/dKttVAJwCxLrQ28A1sV+65gaozVy0L+GAKtU/Vs
+         Yig31vQmcHpC+b+DbLapTQ6+wR1oKxhuEjg77immCua47rfIDq/apbQrai4XdnBXfZf4
+         ObsBvTxEiZqjD7NtxMgA1TS46Xyg0aH7aVfrScSJ3KCsoger+TmtxgaV/b7FI8LssjEy
+         F+8WY756un7WelFeSAhIAvM+YWYkohvDmkT11cqvCRco7iC28pRfncHVv1mYQXVuxLtr
+         +WnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1fcpE/05mFjdeOSWH1fYTkKpdxpp4wtvZEoFQwIMUx4=;
-        b=cCjYgROHQGtiP6U4wLHcmhMPmjtBZEaLCUp9WpxtDbd8HAm8KWvDUZsw8hgAQN5sg9
-         Uec4eVAyPvHHNOsjqFMx0pwg6kGc7jQdkQ8PXnXB2pubKJNfJ769XYwCAwE4c38HZwdt
-         pnKF5BJtOo5QQQ6aoJASgtZlMNMMno97KmNIhL1ffvoD4JMUKLYVIZZoo9xQUb3ZHy91
-         hGSG3r2d+uZrcqESidUV2PZosNZ3n81j0jvzKnMhPRzNa2RvlOEquN+/dQSl8fd1heKX
-         n4nqwsZ7FDLARh3nGvjJDOsGy9LAyZyHr4xde9yVNQRCBBxtIh2eddPWlPh826VU3+q+
-         NbVg==
-X-Gm-Message-State: APjAAAWkTcqeI7lc4SDdXd3wsWZ5fTE9OIbaoOgO8PoG2Bb5z0X9mqYh
-        iWO1ZvtQkccOsRZxeXr2uQY=
-X-Google-Smtp-Source: APXvYqw9+Y5cVVZrYlP9h3m2RsO9LKAC8MKCJ4xQgIqNBz7f03FOjbw43pdrUsvWbm3jHc776sdq3Q==
-X-Received: by 2002:a0c:fd91:: with SMTP id p17mr5161048qvr.28.1571541607150;
-        Sat, 19 Oct 2019 20:20:07 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mLh2s3gJ1w56tVuUDIAWtO5cV52zmuk8dwt4nrNGvLs=;
+        b=qh6vZimGsX6XC/ddoDpB/faiq7XBSLDCaRrGFcedcswEMQnnZ1BC6r4d+B4yXqERE4
+         RGM8oY7/uYOkuT/siV8znhuk1ZNOPR2WkUOcOhZrI+tI5RBqlba17L0L8po0QIioyMBi
+         oivPyQvHy9wHZ7cb5XZpd9ObkEit49RE2eNUprvIudcqsdYQDIh4P91Nck8trQuEhney
+         ggmt6U3gS2rlnum+Rw5LyjZ54eA8DFlsHJD2CV0Vyrlbv3ADC2741NRRUVeTmOLgkgjs
+         J3+uyN1yfAXeRpPCx3fSsjoSwAMyA7n3T0P8+y2cWnbe0vH9Z3RHU9GktWB43xTtm0gi
+         Eiqw==
+X-Gm-Message-State: APjAAAWyl6d+ckLkVGf4b/koQ2UraayGe/B3TTtacyhzlVd3RdfLoM2p
+        wLM3djsTa5QanK4qyxPAHL0=
+X-Google-Smtp-Source: APXvYqzmrQ5I5TA49AseUPXl1AQVTpnH7GRmEiaQ4lg8MnyN4vgPpD3b4bfWugMxsxmEGLLKlRfAzg==
+X-Received: by 2002:ac8:474c:: with SMTP id k12mr18489852qtp.319.1571541610128;
+        Sat, 19 Oct 2019 20:20:10 -0700 (PDT)
 Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id y10sm5291694qkb.55.2019.10.19.20.20.05
+        by smtp.gmail.com with ESMTPSA id z200sm6883273qkb.5.2019.10.19.20.20.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Oct 2019 20:20:06 -0700 (PDT)
+        Sat, 19 Oct 2019 20:20:09 -0700 (PDT)
 From:   Vivien Didelot <vivien.didelot@gmail.com>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     linux-kernel@vger.kernel.org,
         Vivien Didelot <vivien.didelot@gmail.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org
-Subject: [PATCH net-next 00/16] net: dsa: turn arrays of ports into a list
-Date:   Sat, 19 Oct 2019 23:19:25 -0400
-Message-Id: <20191020031941.3805884-1-vivien.didelot@gmail.com>
+Subject: [PATCH net-next 02/16] net: dsa: add ports list in the switch fabric
+Date:   Sat, 19 Oct 2019 23:19:27 -0400
+Message-Id: <20191020031941.3805884-3-vivien.didelot@gmail.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191020031941.3805884-1-vivien.didelot@gmail.com>
+References: <20191020031941.3805884-1-vivien.didelot@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,69 +76,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The dsa_switch structure represents the physical switch device itself,
-and is allocated by the driver. The dsa_switch_tree and dsa_port structures
-represent the logical switch fabric (eventually composed of multiple switch
-devices) and its ports, and are allocated by the DSA core.
+Add a list of switch ports within the switch fabric. This will help the
+lookup of a port inside the whole fabric, and it is the first step
+towards supporting multiple CPU ports, before deprecating the usage of
+the unique dst->cpu_dp pointer.
 
-This branch lists the logical ports directly in the fabric which simplifies
-the iteration over all ports when assigning the default CPU port or configuring
-the D in DSA in drivers like mv88e6xxx.
+In preparation for a future allocation of the dsa_port structures,
+return -ENOMEM in case no structure is returned, even though this
+error cannot be reached yet.
 
-This also removes the unique dst->cpu_dp pointer and is a first step towards
-supporting multiple CPU ports and dropping the DSA_MAX_PORTS limitation.
+Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
+---
+ include/net/dsa.h |  5 +++++
+ net/dsa/dsa2.c    | 48 +++++++++++++++++++++++++++++++++++++++++------
+ 2 files changed, 47 insertions(+), 6 deletions(-)
 
-Because the dsa_port structures are not tight to the dsa_switch structure
-anymore, we do not need to provide an helper for the drivers to allocate a
-switch structure. Like in many other subsystems, drivers can now embed their
-dsa_switch structure as they wish into their private structure. This will
-be particularly interesting for the Broadcom drivers which were currently
-limited by the dynamically allocated array of DSA ports.
-
-The series implements the list of dsa_port structures, makes use of it,
-then drops dst->cpu_dp and the dsa_switch_alloc helper.
-
-
-Vivien Didelot (16):
-  net: dsa: use dsa_to_port helper everywhere
-  net: dsa: add ports list in the switch fabric
-  net: dsa: use ports list in dsa_to_port
-  net: dsa: use ports list to find slave
-  net: dsa: use ports list to setup switches
-  net: dsa: use ports list for routing table setup
-  net: dsa: use ports list to find a port by node
-  net: dsa: use ports list to setup multiple master devices
-  net: dsa: use ports list to find first CPU port
-  net: dsa: use ports list to setup default CPU port
-  net: dsa: mv88e6xxx: silently skip PVT ops
-  net: dsa: mv88e6xxx: use ports list to map port VLAN
-  net: dsa: mv88e6xxx: use ports list to map bridge
-  net: dsa: sja1105: register switch before assigning port private data
-  net: dsa: allocate ports on touch
-  net: dsa: remove dsa_switch_alloc helper
-
- drivers/net/dsa/b53/b53_common.c       |  11 +-
- drivers/net/dsa/bcm_sf2.c              |   8 +-
- drivers/net/dsa/bcm_sf2_cfp.c          |   6 +-
- drivers/net/dsa/dsa_loop.c             |   5 +-
- drivers/net/dsa/lan9303-core.c         |   4 +-
- drivers/net/dsa/lantiq_gswip.c         |   4 +-
- drivers/net/dsa/microchip/ksz_common.c |   5 +-
- drivers/net/dsa/mt7530.c               |  17 +-
- drivers/net/dsa/mv88e6060.c            |   4 +-
- drivers/net/dsa/mv88e6xxx/chip.c       |  87 ++++----
- drivers/net/dsa/qca8k.c                |   7 +-
- drivers/net/dsa/realtek-smi-core.c     |   5 +-
- drivers/net/dsa/sja1105/sja1105_main.c |  37 ++--
- drivers/net/dsa/vitesse-vsc73xx-core.c |   5 +-
- include/net/dsa.h                      |  26 ++-
- net/dsa/dsa.c                          |   8 +-
- net/dsa/dsa2.c                         | 282 +++++++++++++------------
- net/dsa/dsa_priv.h                     |  23 +-
- net/dsa/switch.c                       |   4 +-
- net/dsa/tag_8021q.c                    |   6 +-
- 20 files changed, 297 insertions(+), 257 deletions(-)
-
+diff --git a/include/net/dsa.h b/include/net/dsa.h
+index 2e4fe2f8962b..6ff6dfcdc61d 100644
+--- a/include/net/dsa.h
++++ b/include/net/dsa.h
+@@ -125,6 +125,9 @@ struct dsa_switch_tree {
+ 	 */
+ 	struct dsa_port		*cpu_dp;
+ 
++	/* List of switch ports */
++	struct list_head ports;
++
+ 	/*
+ 	 * Data for the individual switch chips.
+ 	 */
+@@ -195,6 +198,8 @@ struct dsa_port {
+ 	struct work_struct	xmit_work;
+ 	struct sk_buff_head	xmit_queue;
+ 
++	struct list_head list;
++
+ 	/*
+ 	 * Give the switch driver somewhere to hang its per-port private data
+ 	 * structures (accessible from the tagger).
+diff --git a/net/dsa/dsa2.c b/net/dsa/dsa2.c
+index 1716535167ee..b6536641ac99 100644
+--- a/net/dsa/dsa2.c
++++ b/net/dsa/dsa2.c
+@@ -45,6 +45,8 @@ static struct dsa_switch_tree *dsa_tree_alloc(int index)
+ 
+ 	dst->index = index;
+ 
++	INIT_LIST_HEAD(&dst->ports);
++
+ 	INIT_LIST_HEAD(&dst->list);
+ 	list_add_tail(&dst->list, &dsa_tree_list);
+ 
+@@ -616,6 +618,22 @@ static int dsa_tree_add_switch(struct dsa_switch_tree *dst,
+ 	return err;
+ }
+ 
++static struct dsa_port *dsa_port_touch(struct dsa_switch *ds, int index)
++{
++	struct dsa_switch_tree *dst = ds->dst;
++	struct dsa_port *dp;
++
++	dp = &ds->ports[index];
++
++	dp->ds = ds;
++	dp->index = index;
++
++	INIT_LIST_HEAD(&dp->list);
++	list_add(&dp->list, &dst->ports);
++
++	return dp;
++}
++
+ static int dsa_port_parse_user(struct dsa_port *dp, const char *name)
+ {
+ 	if (!name)
+@@ -742,6 +760,20 @@ static int dsa_switch_parse_member_of(struct dsa_switch *ds,
+ 	return 0;
+ }
+ 
++static int dsa_switch_touch_ports(struct dsa_switch *ds)
++{
++	struct dsa_port *dp;
++	int port;
++
++	for (port = 0; port < ds->num_ports; port++) {
++		dp = dsa_port_touch(ds, port);
++		if (!dp)
++			return -ENOMEM;
++	}
++
++	return 0;
++}
++
+ static int dsa_switch_parse_of(struct dsa_switch *ds, struct device_node *dn)
+ {
+ 	int err;
+@@ -750,6 +782,10 @@ static int dsa_switch_parse_of(struct dsa_switch *ds, struct device_node *dn)
+ 	if (err)
+ 		return err;
+ 
++	err = dsa_switch_touch_ports(ds);
++	if (err)
++		return err;
++
+ 	return dsa_switch_parse_ports_of(ds, dn);
+ }
+ 
+@@ -807,6 +843,8 @@ static int dsa_switch_parse_ports(struct dsa_switch *ds,
+ 
+ static int dsa_switch_parse(struct dsa_switch *ds, struct dsa_chip_data *cd)
+ {
++	int err;
++
+ 	ds->cd = cd;
+ 
+ 	/* We don't support interconnected switches nor multiple trees via
+@@ -817,6 +855,10 @@ static int dsa_switch_parse(struct dsa_switch *ds, struct dsa_chip_data *cd)
+ 	if (!ds->dst)
+ 		return -ENOMEM;
+ 
++	err = dsa_switch_touch_ports(ds);
++	if (err)
++		return err;
++
+ 	return dsa_switch_parse_ports(ds, cd);
+ }
+ 
+@@ -849,7 +891,6 @@ static int dsa_switch_probe(struct dsa_switch *ds)
+ struct dsa_switch *dsa_switch_alloc(struct device *dev, size_t n)
+ {
+ 	struct dsa_switch *ds;
+-	int i;
+ 
+ 	ds = devm_kzalloc(dev, struct_size(ds, ports, n), GFP_KERNEL);
+ 	if (!ds)
+@@ -858,11 +899,6 @@ struct dsa_switch *dsa_switch_alloc(struct device *dev, size_t n)
+ 	ds->dev = dev;
+ 	ds->num_ports = n;
+ 
+-	for (i = 0; i < ds->num_ports; ++i) {
+-		ds->ports[i].index = i;
+-		ds->ports[i].ds = ds;
+-	}
+-
+ 	return ds;
+ }
+ EXPORT_SYMBOL_GPL(dsa_switch_alloc);
 -- 
 2.23.0
 
