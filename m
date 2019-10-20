@@ -2,127 +2,172 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A29CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 17:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E228CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 17:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 915802190F
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 17:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD4E621A4A
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 17:30:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SVx3vkZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbfJTRWf convert rfc822-to-8bit (ORCPT
+        id S1726691AbfJTRaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 13:22:35 -0400
-Received: from mail-oln040092071064.outbound.protection.outlook.com ([40.92.71.64]:7910
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726556AbfJTRWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 13:22:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SLiTFYVN9kwUqrWJfdX32ZNWYFiU09DICWBUrpdDAS1bwJiMXXjOpZjcKmUHiiWhNWrcixAnufPBkVtvaZtwovHisSiWpSroDv2kaz3Ny0yjHn2sZh6uTgGI4xNNAHyKTPumcctJS2HfYeyfwFYWYer6eWjOkZyRIThOPRQ6KxLqih/EYAGrTdmVwR8xLotL1AM4spkni2KJgjEy8i4mB21SAzqidjg4AUrLF1Dt73HpjOaT3dFuehc4BxcsUWZVpKxqQ3N1HwJxJgDLv2DdMYikaTKyvTY0FnNQOumYHA8lU6ZWNFTC7Qapw7z8yDDZ2Nc/HsenPYXr7q1V7R+CiA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mmnm8Nw7F5FpwL4E/v80xnFG7xQV2oCDi3cYIGiH3l8=;
- b=IViSyzAlcWUar6TbIz25Pk8JWJY0SP/htCqsk3yWcLDarYX+sPtGCnBu6m8+wOiNzLJx89+dPGLavY05ePrjfh9CSyI0bQGN5PKbXCnyq0smAxrRurdO1yQpoaEq2mcD1+ritao0ZgHjaXoh3wcOaqdv/ChixAjMPVD1Jr3tVossL3L9pPJPuLaPr2CRUFkWHHtuwe+HOtWUg1Ov29ScOX3vxMq+VUNp7WAFjSET7qTd4crzyKVvAskeE65UPsLKL+tftEdpy26CTsK1EsAzq1LcL6xQ8gOHjdJMyWgJ/JzkVs94YWlIuF9S1i8yPGK4wRL2mD/rdBf7ONTRY6tDrQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from DB5EUR03FT030.eop-EUR03.prod.protection.outlook.com
- (10.152.20.53) by DB5EUR03HT204.eop-EUR03.prod.protection.outlook.com
- (10.152.21.153) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2305.15; Sun, 20 Oct
- 2019 17:22:30 +0000
-Received: from AM0PR0502MB3668.eurprd05.prod.outlook.com (10.152.20.54) by
- DB5EUR03FT030.mail.protection.outlook.com (10.152.20.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2305.15 via Frontend Transport; Sun, 20 Oct 2019 17:22:30 +0000
-Received: from AM0PR0502MB3668.eurprd05.prod.outlook.com
- ([fe80::b1e4:568d:bbc:8247]) by AM0PR0502MB3668.eurprd05.prod.outlook.com
- ([fe80::b1e4:568d:bbc:8247%6]) with mapi id 15.20.2347.028; Sun, 20 Oct 2019
- 17:22:30 +0000
-From:   Anatol Belski <weltling@outlook.de>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Yehezkel Bernat <yehezkel.bernat@intel.com>,
-        "David S . Miller" <davem@davemloft.net>
-CC:     "trivial@kernel.org" <trivial@kernel.org>
-Subject: [PATCH] include/linux/byteorder/generic.h: fix signed/unsigned
- warnings
-Thread-Topic: [PATCH] include/linux/byteorder/generic.h: fix signed/unsigned
- warnings
-Thread-Index: AQHVh2rzQudqiWaARkuhjP20crUqsA==
-Date:   Sun, 20 Oct 2019 17:22:30 +0000
-Message-ID: <AM0PR0502MB3668B1A0EC328690DA25E9C6BA6E0@AM0PR0502MB3668.eurprd05.prod.outlook.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.20.1
-x-clientproxiedby: AM3PR03CA0054.eurprd03.prod.outlook.com
- (2603:10a6:207:5::12) To AM0PR0502MB3668.eurprd05.prod.outlook.com
- (2603:10a6:208:19::11)
-x-incomingtopheadermarker: OriginalChecksum:4AD9A2D64179B1FC26103107CEE42BB475C3FDF8CF5FC05E64837A5A4E1E6ED4;UpperCasedChecksum:548BF0AFF53993A14385870947799789786C6933F5FED8B0CA148F17D96BB349;SizeAsReceived:7732;Count:50
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [BWuIjoFCIraVKXtT4WOWg5iFdM9bo4L3]
-x-microsoft-original-message-id: <20191020172159.18175-1-weltling@outlook.de>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 50
-x-eopattributedmessage: 0
-x-ms-traffictypediagnostic: DB5EUR03HT204:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zPUSuJWLSert7Fh0ugTq8YgUW/14HSp8S1cvxBHCi903uURbb2Cc4xkXJ8eym/FYZv/vK8jilZcsrUPq2G6SIlFmBVwNdZk1pQ4XQzFEkJflCTSN7uWcmXTNDT0t/RAfbKODDofhzdfgV1AN7cFScNrHPdGI+cV2ivC58s1jqw7s/rSbP9ewWCAHDw1rndHs
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Sun, 20 Oct 2019 13:30:15 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45665 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfJTRaP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 13:30:15 -0400
+Received: by mail-wr1-f68.google.com with SMTP id q13so6267996wrs.12;
+        Sun, 20 Oct 2019 10:30:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=Hp6/7aiRcZ0yQQZ/KGKHJFbeoYr0FPIkHZCliAG4wpw=;
+        b=SVx3vkZLaoVR+ubRyrKDjia4xbpjAv1zlKzbH4bo+G0emFjLxUWQjkT/dNfEzzZwkm
+         6zrP4h7r9GYsBl6U6i2xHlerl7ib9HhtelLYiRXYQRwyfLq8WrnFZd6Qg3uuaz9Fb/gm
+         HWaoDy39ZfeXiqfEeXkqfuwtt0opZ3dO9fw5+DfA+Ut+JpQ2Eu/Vbhp1Nip5+CF2rlxB
+         cUdRy9yXIscqP+zdQ9zLrVZpGsSGvAaUrAAiphVa2gOhfLzBZNkAoTjQxDnNroYBHXzc
+         KUF1daL3lsdNt4JY7fg3st2B9lm3RxVGVcfwmSOgg8RbpuS70JOScfPde86DoAJ6vUJx
+         LLdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Hp6/7aiRcZ0yQQZ/KGKHJFbeoYr0FPIkHZCliAG4wpw=;
+        b=DaqfEbDkhqgbbEf9kwuYUbTyU0zClVUQuE9IlortbtLhRty2MBuYl1eiOkDLhXcsrP
+         8at06Zpq9SsOWwxWGc4a/Uqr1GvDy7MqEqN/e7W9RpN6ugUGYj8LoRgFyPrAhBfrjmCA
+         p5mQFgru9PjD5wOdcd8BC4EYrVKZ1EI4szw8oGUwW/19i02UtenNmB0pP3/d/kLn4cqu
+         u90F+8MpoL7pKqntAOM5S/hvTsbPHJBZgp1UFPRJ7NGWSNVM51aO2OriVQSjkeMyTTwi
+         BfJG9plP9qDTpfCuUEZsGIDtGzaSKHTQBEWLcNFJY0LuUMoeqL/lTaaRgbFt38UBGk/Y
+         Vc4A==
+X-Gm-Message-State: APjAAAUKTfxDuY5/DPyZD5/ue1Mi7fNDRi034DejJp8fFLLDgSFd33qq
+        8X83iwHSC5z8Kk0P6FuxFQ==
+X-Google-Smtp-Source: APXvYqzSA9ZMmuXEmm67nRUhHr1P0lids01/BF5eido3mjpTKGQ53FFREhGvNlFykkelY8q3NG9oLA==
+X-Received: by 2002:adf:9044:: with SMTP id h62mr10556717wrh.91.1571592613209;
+        Sun, 20 Oct 2019 10:30:13 -0700 (PDT)
+Received: from avx2 ([46.53.254.76])
+        by smtp.gmail.com with ESMTPSA id a3sm11251353wmc.3.2019.10.20.10.30.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 20 Oct 2019 10:30:12 -0700 (PDT)
+Date:   Sun, 20 Oct 2019 20:30:10 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        elver@google.com, viro@zeniv.linux.org.uk
+Subject: [PATCH] proc: fix inode uid/gid writeback race
+Message-ID: <20191020173010.GA14744@avx2>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9ab3d4af-0e5c-4c26-ff71-08d7558215d0
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Oct 2019 17:22:30.1989
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB5EUR03HT204
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anatol Belski <anbelski@microsoft.com>
+(euid, egid) pair is snapshotted correctly from task under RCU,
+but writeback to inode can be done in any order.
 
-Signed-off-by: Anatol Belski <anbelski@microsoft.com>
+Fix by doing writeback under inode->i_lock where necessary
+(/proc/* , /proc/*/fd/* , /proc/*/map_files/* revalidate).
+
+Reported-by: syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
 ---
- include/linux/byteorder/generic.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/byteorder/generic.h b/include/linux/byteorder/generic.h
-index 4b13e0a3e15b..c9a4c96c9943 100644
---- a/include/linux/byteorder/generic.h
-+++ b/include/linux/byteorder/generic.h
-@@ -190,7 +190,7 @@ static inline void be64_add_cpu(__be64 *var, u64 val)
- 
- static inline void cpu_to_be32_array(__be32 *dst, const u32 *src, size_t len)
- {
--	int i;
-+	size_t i;
- 
- 	for (i = 0; i < len; i++)
- 		dst[i] = cpu_to_be32(src[i]);
-@@ -198,7 +198,7 @@ static inline void cpu_to_be32_array(__be32 *dst, const u32 *src, size_t len)
- 
- static inline void be32_to_cpu_array(u32 *dst, const __be32 *src, size_t len)
- {
--	int i;
-+	size_t i;
- 
- 	for (i = 0; i < len; i++)
- 		dst[i] = be32_to_cpu(src[i]);
--- 
-2.20.1
+ fs/proc/base.c     |   25 +++++++++++++++++++++++--
+ fs/proc/fd.c       |    2 +-
+ fs/proc/internal.h |    2 ++
+ 3 files changed, 26 insertions(+), 3 deletions(-)
 
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -1743,6 +1743,25 @@ void task_dump_owner(struct task_struct *task, umode_t mode,
+ 	*rgid = gid;
+ }
+ 
++/* use if inode is live */
++void task_dump_owner_to_inode(struct task_struct *task, umode_t mode,
++			      struct inode *inode)
++{
++	kuid_t uid;
++	kgid_t gid;
++
++	task_dump_owner(task, mode, &uid, &gid);
++	/*
++	 * There is no atomic "change all credentials at once" system call,
++	 * guaranteeing more than _some_ snapshot from "struct cred" ends up
++	 * in inode is not possible.
++	 */
++	spin_lock(&inode->i_lock);
++	inode->i_uid = uid;
++	inode->i_gid = gid;
++	spin_unlock(&inode->i_lock);
++}
++
+ struct inode *proc_pid_make_inode(struct super_block * sb,
+ 				  struct task_struct *task, umode_t mode)
+ {
+@@ -1769,6 +1788,7 @@ struct inode *proc_pid_make_inode(struct super_block * sb,
+ 	if (!ei->pid)
+ 		goto out_unlock;
+ 
++	/* fresh inode -- no races */
+ 	task_dump_owner(task, 0, &inode->i_uid, &inode->i_gid);
+ 	security_task_to_inode(task, inode);
+ 
+@@ -1802,6 +1822,7 @@ int pid_getattr(const struct path *path, struct kstat *stat,
+ 			 */
+ 			return -ENOENT;
+ 		}
++		/* "struct kstat" is thread local, atomic snapshot is enough */
+ 		task_dump_owner(task, inode->i_mode, &stat->uid, &stat->gid);
+ 	}
+ 	rcu_read_unlock();
+@@ -1815,7 +1836,7 @@ int pid_getattr(const struct path *path, struct kstat *stat,
+  */
+ void pid_update_inode(struct task_struct *task, struct inode *inode)
+ {
+-	task_dump_owner(task, inode->i_mode, &inode->i_uid, &inode->i_gid);
++	task_dump_owner_to_inode(task, inode->i_mode, inode);
+ 
+ 	inode->i_mode &= ~(S_ISUID | S_ISGID);
+ 	security_task_to_inode(task, inode);
+@@ -1990,7 +2011,7 @@ static int map_files_d_revalidate(struct dentry *dentry, unsigned int flags)
+ 	mmput(mm);
+ 
+ 	if (exact_vma_exists) {
+-		task_dump_owner(task, 0, &inode->i_uid, &inode->i_gid);
++		task_dump_owner_to_inode(task, 0, inode);
+ 
+ 		security_task_to_inode(task, inode);
+ 		status = 1;
+--- a/fs/proc/fd.c
++++ b/fs/proc/fd.c
+@@ -101,7 +101,7 @@ static bool tid_fd_mode(struct task_struct *task, unsigned fd, fmode_t *mode)
+ static void tid_fd_update_inode(struct task_struct *task, struct inode *inode,
+ 				fmode_t f_mode)
+ {
+-	task_dump_owner(task, 0, &inode->i_uid, &inode->i_gid);
++	task_dump_owner_to_inode(task, 0, inode);
+ 
+ 	if (S_ISLNK(inode->i_mode)) {
+ 		unsigned i_mode = S_IFLNK;
+--- a/fs/proc/internal.h
++++ b/fs/proc/internal.h
+@@ -123,6 +123,8 @@ static inline struct task_struct *get_proc_task(const struct inode *inode)
+ 
+ void task_dump_owner(struct task_struct *task, umode_t mode,
+ 		     kuid_t *ruid, kgid_t *rgid);
++void task_dump_owner_to_inode(struct task_struct *task, umode_t mode,
++			      struct inode *inode);
+ 
+ unsigned name_to_int(const struct qstr *qstr);
+ /*
