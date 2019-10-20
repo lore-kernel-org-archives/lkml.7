@@ -4,227 +4,227 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 596CDCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 14:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB68CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 14:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A7D2190F
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 14:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54EE821897
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 14:35:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SO7qycVi"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="S5KHl+cR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfJTOYi (ORCPT
+        id S1726479AbfJTOfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 10:24:38 -0400
-Received: from mail-eopbgr10040.outbound.protection.outlook.com ([40.107.1.40]:52864
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        Sun, 20 Oct 2019 10:35:54 -0400
+Received: from mail-eopbgr60082.outbound.protection.outlook.com ([40.107.6.82]:60193
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726299AbfJTOYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 10:24:38 -0400
+        id S1726372AbfJTOfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 10:35:54 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TpVf9BTRjoskvxEc5j58WbltWIC+3s8qilONwx+hSBwzkdzUqsjFIWSqt+huept/5dbs5MKbsoIYgPSIVGUXYGcCT8koCEBCmlSU1AYXD8Q/X4I6jTLF33+oFJdrPZocGcNS9EdnIggrb9AZX3D9seH9DakT7l3uCIOmCpc8h8NQRrB1r/6ojPNQgBJ0jW8MpPq2SObWIefVVQBJsTif9ALitNArXE2N5a47UBdouBCpqOGfqpCqMPhm/YO9GJFEDxsP/OIO1N8MAhbWyeZSfsM6lSlnr94cnvYaD633IBAQSQempdLRJwMpRfStwFpDCu8xjMwzW+KVIqQHzlhJSQ==
+ b=a/NRTe9QbYqtq+8ebXEIemLMFdeiJtPCKTuuFGQvaF3AO6NTi5T1AOUDpgeoIMsgpBXaWCwO2P0P943WvK6XJpkAGebl5dO0K9mRn4M6Ig4wWrCklnfBIAvE7HhDcjouZcPXww6Pwj5tcwoLnVhh2+phuvd+SIQYh59Q2xbxq18iyb+HHBTVBrAMrq7Fu1r9K+x3m/qcy9CTBowvJA6y4MGx7R1Qg6IvBP5TP9blXGPLxL7nhbetTw4cjPaWQUwaNoUSUqHaTmwE4C2zlnUJzKjICcW6za6oFiLNoz4dORkEakyeUFdsyTDSdUcacWPNKzi6NeYxociFeVM/u2x8xQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kxHkV/5Hlhgkc2c9pKbRzP3cQaWUTLXCFFifDeFuShA=;
- b=U9v8p1/MnJXh90s0gTg6LdsAu6Udc5bU8qnTmUQr2qXK9sZl6nPoX4i+UIOkW5t3dpIFtVxDvNTh/tsj7bsxnr3JWLzYNN6g/ZZnIX4lQSG080ebXxoawKsJOYmZEyLuRSbIHkgWvIkQPWTNFem9Ese6BRkIuIb37C8Uj7xqB3tkrLTFZVPxjin/Yh/MJYUqWVEkf0fkkG1ByHBKD3Ww/9kN4LVmRqa9EyJCChUzx+FrUQP+gqsM0fzP/4lSdhk5w8/ZxiLloOdKWHauevKK4O0sVuokiURx2sl7JEkAXezvCxX+KR1/8o7YtojxRdVAQrslYNccsNDL3YWMsVxBWQ==
+ bh=ZunBzdSgqBn83vfFWhTnPpKuEPQF6jQl+q0Vn5Js/uo=;
+ b=b/cmwZ1z+Wl6eNgBhv5m+bZ+XpztWFGocXSDD6BKhex0v0lp6IgHg+3wcw1SHvy4T95vdikx2YzLCvP/4McHuZ1Vl4JPcZ+5rSjGuHxoBtHyZUmLXHWCfBua7watEoJzThfdQB+j2T0AJX0eD/6cB3eakONDMrLpamt4hZYq3RH28OZD3rrRiaiFqm52+r1WE1oTlZYQtloUJOUQ3gvHOk5SWfFaUe+ffq26P1hUafD587Igsg6pdpK91VsBx+Qcpygvy//KeTsjdDcxebgYsLILi/gRr+PH020Seo30KSmTvLmpelWtHcE3smPUD8dbOGdLGfekqPsB0l33lT0vOQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kxHkV/5Hlhgkc2c9pKbRzP3cQaWUTLXCFFifDeFuShA=;
- b=SO7qycVikloy+yLOyGBRq73aGQKQfdZNOBueCIYS8f5riOnbW1QYa4DcmtM6oLwuc+u7wbY+wyOGDCcLdNysTE368x+Es0C5yHAzt6FG3dK+BtMTjDzzRlkv8OktIPCyOtGRXK591JYbfrbToObl547L9OSN7CsXyJvDpDmxvas=
+ bh=ZunBzdSgqBn83vfFWhTnPpKuEPQF6jQl+q0Vn5Js/uo=;
+ b=S5KHl+cRFBuMCen/Hht51k5T7zqT5LbG5DzrqNGmEPjOaqGKkVvPYmWw+FAnuPor5Kot2HoB7Z7IDMzppZitPBTUK6v5D99wWpBsaBchObAilvZpRc8UZBEoysOWZYXmNWW0KJ3PzW5bAPfcdSMmIcNgMnHBAePgQkXxqcMvLkQ=
 Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
- AM0PR04MB4017.eurprd04.prod.outlook.com (52.134.92.159) with Microsoft SMTP
+ AM0PR04MB4644.eurprd04.prod.outlook.com (52.135.149.138) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.18; Sun, 20 Oct 2019 14:24:32 +0000
+ 15.20.2347.16; Sun, 20 Oct 2019 14:35:47 +0000
 Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
  ([fe80::4122:fda5:e903:8c02]) by AM0PR04MB5779.eurprd04.prod.outlook.com
  ([fe80::4122:fda5:e903:8c02%3]) with mapi id 15.20.2347.028; Sun, 20 Oct 2019
- 14:24:32 +0000
+ 14:35:47 +0000
 From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Peng Fan <peng.fan@nxp.com>
-CC:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
+To:     Anson Huang <anson.huang@nxp.com>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
         "shawnguo@kernel.org" <shawnguo@kernel.org>,
         "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
         "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>, Jun Li <jun.li@nxp.com>,
         Jacky Bai <ping.bai@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "jon@solid-run.com" <jon@solid-run.com>,
+        "baruch@tkos.co.il" <baruch@tkos.co.il>,
+        "angus@akkea.ca" <angus@akkea.ca>, "pavel@ucw.cz" <pavel@ucw.cz>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        Troy Kisky <troy.kisky@boundarydevices.com>,
+        Gary Bisson <gary.bisson@boundarydevices.com>,
+        "dafna.hirschfeld@collabora.com" <dafna.hirschfeld@collabora.com>,
+        Richard Hu <richard.hu@technexion.com>,
+        "andradanciu1997@gmail.com" <andradanciu1997@gmail.com>,
+        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Andy Duan <fugang.duan@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH 1/3] clk: imx: imx8mm: mark sys_pll1/2 as fixed clock
-Thread-Topic: [PATCH 1/3] clk: imx: imx8mm: mark sys_pll1/2 as fixed clock
-Thread-Index: AQHVfogREXMSqkErfE+B9jsiOEYyjqdjpxsA
-Date:   Sun, 20 Oct 2019 14:24:32 +0000
-Message-ID: <20191020141355.px6o3ifnjy45hli4@fsr-ub1664-175>
-References: <1570614940-17239-1-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1570614940-17239-1-git-send-email-peng.fan@nxp.com>
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 1/5] arm64: dts: imx8qxp: Move usdhc clocks assignment to
+ board DT
+Thread-Topic: [PATCH 1/5] arm64: dts: imx8qxp: Move usdhc clocks assignment to
+ board DT
+Thread-Index: AQHVg8fd9TcILJytHEmYMksBHN4gSadjn8CA
+Date:   Sun, 20 Oct 2019 14:35:46 +0000
+Message-ID: <20191020143545.we56f4epnbgjr5lw@fsr-ub1664-175>
+References: <1571192067-19600-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1571192067-19600-1-git-send-email-Anson.Huang@nxp.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM5PR0601CA0028.eurprd06.prod.outlook.com
- (2603:10a6:203:68::14) To AM0PR04MB5779.eurprd04.prod.outlook.com
+x-clientproxiedby: AM6P192CA0073.EURP192.PROD.OUTLOOK.COM
+ (2603:10a6:209:8d::14) To AM0PR04MB5779.eurprd04.prod.outlook.com
  (2603:10a6:208:131::23)
 x-originating-ip: [89.37.124.34]
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=abel.vesa@nxp.com; 
 x-ms-exchange-messagesentrepresentingtype: 1
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ed3f786e-eec7-4cc2-16a9-08d755693974
+x-ms-office365-filtering-correlation-id: 35bc6452-3df7-4ee2-39f1-08d7556acb9d
 x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: AM0PR04MB4017:|AM0PR04MB4017:
+x-ms-traffictypediagnostic: AM0PR04MB4644:|AM0PR04MB4644:|AM0PR04MB4644:
+x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB4017CF00E0B0A69D99814FD1F66E0@AM0PR04MB4017.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2399;
+x-microsoft-antispam-prvs: <AM0PR04MB4644B26C226E1890CD2135CDF66E0@AM0PR04MB4644.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
 x-forefront-prvs: 0196A226D1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(366004)(376002)(136003)(346002)(39860400002)(396003)(199004)(189003)(3846002)(446003)(1076003)(316002)(11346002)(102836004)(44832011)(99286004)(66476007)(66556008)(64756008)(66446008)(476003)(53546011)(486006)(66946007)(71190400001)(71200400001)(54906003)(8676002)(76176011)(52116002)(8936002)(186003)(6506007)(26005)(5660300002)(81166006)(81156014)(66066001)(6116002)(25786009)(386003)(9686003)(6512007)(6636002)(86362001)(2906002)(4326008)(305945005)(7736002)(6246003)(6862004)(478600001)(229853002)(256004)(14454004)(33716001)(6486002)(6436002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4017;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(366004)(346002)(136003)(396003)(376002)(39860400002)(189003)(199004)(6246003)(25786009)(66946007)(6436002)(71200400001)(5660300002)(52116002)(76176011)(26005)(71190400001)(6862004)(6486002)(66476007)(66556008)(64756008)(66446008)(386003)(6506007)(53546011)(229853002)(6512007)(4326008)(9686003)(186003)(33716001)(66066001)(476003)(486006)(256004)(6636002)(2906002)(44832011)(54906003)(14444005)(14454004)(3846002)(6116002)(86362001)(102836004)(81156014)(81166006)(7736002)(11346002)(8676002)(446003)(305945005)(8936002)(99286004)(7416002)(478600001)(1076003)(316002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4644;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: kUG079oKzexEOP4s/pAI3GvP/q8LM+qBk8PsoeREX4K6661tRhT+b0ETz/xG0t5rCt/iZo3hFMzHmNDQogQaC/Y+ruUaoiamr//dhPhK2BmZen8Im+CsdH+QQNwv/o1KnDROsH5AYTvAfUiIHSvg7L1hFZf6+Yrv5BjL38h5zaAdBtxh3MzjQcufxZ7KDl+l6CI6uQgkIDEsy1bdz0m/HBbKIDKAHE2gJ2JbarllWVQos3krA6JTDOkNJBeT+J92tT0R3DtbjbKpwiIqZy6+moyWkwC2Zg1JkvGuftC2lmTlEvPYuMeHeKfbTnOE7iy3jvYIrCst/qXm53/WbhtN61V3nW70PLOLMKeXXbQMFc4gGB9iMfaMBUuIhJBRuzGDqTatUgw5ZscK17Wx2N2jYdfx57ESK+M8zgIQo+P0ijg=
+x-microsoft-antispam-message-info: LN4tolFxqJRH8nh5vr8WB+TS2sD8bkkBeDOL4Cb1t0GiHDhnS+5GcKISAYn3N83hUbyR/MALaoBYshwRyUlVM59seDb+E4jcJR2BRZB4gSoxhBuD8YvhuJWJq9/32gknscFvRl612iB+Qz+4TS6aLvtSsPoyY8Wue+VeSlaRak1ZClJawfi0/VjF2CVGLIzOLrHHXeyxh0KJHN5dqmC9mryiMn6D6RFO6rHdOCyPgY37VtoBBuUAbJl1CSHKOC2CSvqF5mOTJHnCjCmu1PVbc4GhqNhAs0iMDJyVNaRk5zz0ikoQRDxRpI90alwe2yjexpP0TxjI66olTvRTJPXrRLIDsR4cJST1zoC8WRd5uDCtCTjy9ZgegVXfeaxsZxx/MlS99yYVOi+ycbgFhDVpgUBu4oVpyBBkpDvY1Nm7EA4=
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1D7E3E0C12D6B14B809F90044067B5F6@eurprd04.prod.outlook.com>
+Content-ID: <DEBBB76B9937294C881230836D0D6976@eurprd04.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ed3f786e-eec7-4cc2-16a9-08d755693974
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Oct 2019 14:24:32.1989
+X-MS-Exchange-CrossTenant-Network-Message-Id: 35bc6452-3df7-4ee2-39f1-08d7556acb9d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Oct 2019 14:35:46.9826
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: c0Z9ZqCowJLvO0x0rHUh8+usw5DYfnoktaswke1nF1vGAETP9FpaBB++nbZDAqcSsz9IT2fRzx3I/pSiK3C99w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4017
+X-MS-Exchange-CrossTenant-userprincipalname: n7yG0oOLB3WuPSGrrzplBkEBZ4J03TgkvH3DDwgtxMjpY/9UwgaSQE2bRzPKArHpJU8yCrBvYLeMkJvCslnp1g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4644
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-10-09 09:58:14, Peng Fan wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On 19-10-16 10:14:23, Anson Huang wrote:
+> usdhc's clock rate is different according to different devices
+> connected, so clock rate assignment should be placed in board
+> DT according to different devices connected on each usdhc port.
 >=20
-> According Architecture definition guide, SYS_PLL1 is fixed at
-> 800MHz, SYS_PLL2 is fixed at 1000MHz, so let's use imx_clk_fixed
-> to register the clocks and drop code that could change the rate.
->=20
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-For the entire series:
+For the entire patchset:
 
 Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
 
 > ---
->  drivers/clk/imx/clk-imx8mm.c | 14 ++++----------
->  1 file changed, 4 insertions(+), 10 deletions(-)
+>  arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8qxp-mek.dts   | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8qxp.dtsi      | 6 ------
+>  3 files changed, 8 insertions(+), 6 deletions(-)
 >=20
-> diff --git a/drivers/clk/imx/clk-imx8mm.c b/drivers/clk/imx/clk-imx8mm.c
-> index 04876ec66127..ae7321ab7837 100644
-> --- a/drivers/clk/imx/clk-imx8mm.c
-> +++ b/drivers/clk/imx/clk-imx8mm.c
-> @@ -34,8 +34,6 @@ static const char *dram_pll_bypass_sels[] =3D {"dram_pl=
-l", "dram_pll_ref_sel", };
->  static const char *gpu_pll_bypass_sels[] =3D {"gpu_pll", "gpu_pll_ref_se=
-l", };
->  static const char *vpu_pll_bypass_sels[] =3D {"vpu_pll", "vpu_pll_ref_se=
-l", };
->  static const char *arm_pll_bypass_sels[] =3D {"arm_pll", "arm_pll_ref_se=
-l", };
-> -static const char *sys_pll1_bypass_sels[] =3D {"sys_pll1", "sys_pll1_ref=
-_sel", };
-> -static const char *sys_pll2_bypass_sels[] =3D {"sys_pll2", "sys_pll2_ref=
-_sel", };
->  static const char *sys_pll3_bypass_sels[] =3D {"sys_pll3", "sys_pll3_ref=
-_sel", };
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts b/arch/arm64=
+/boot/dts/freescale/imx8qxp-ai_ml.dts
+> index 91eef97..a3f8cf1 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts
+> @@ -133,6 +133,8 @@
+>  &usdhc1 {
+>  	#address-cells =3D <1>;
+>  	#size-cells =3D <0>;
+> +	assigned-clocks =3D <&clk IMX_CONN_SDHC0_CLK>;
+> +	assigned-clock-rates =3D <200000000>;
+>  	pinctrl-names =3D "default";
+>  	pinctrl-0 =3D <&pinctrl_usdhc1>;
+>  	bus-width =3D <4>;
+> @@ -149,6 +151,8 @@
 > =20
->  /* CCM ROOT */
-> @@ -325,8 +323,6 @@ static int imx8mm_clocks_probe(struct platform_device=
- *pdev)
->  	clks[IMX8MM_GPU_PLL_REF_SEL] =3D imx_clk_mux("gpu_pll_ref_sel", base + =
-0x64, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
->  	clks[IMX8MM_VPU_PLL_REF_SEL] =3D imx_clk_mux("vpu_pll_ref_sel", base + =
-0x74, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
->  	clks[IMX8MM_ARM_PLL_REF_SEL] =3D imx_clk_mux("arm_pll_ref_sel", base + =
-0x84, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
-> -	clks[IMX8MM_SYS_PLL1_REF_SEL] =3D imx_clk_mux("sys_pll1_ref_sel", base =
-+ 0x94, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
-> -	clks[IMX8MM_SYS_PLL2_REF_SEL] =3D imx_clk_mux("sys_pll2_ref_sel", base =
-+ 0x104, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
->  	clks[IMX8MM_SYS_PLL3_REF_SEL] =3D imx_clk_mux("sys_pll3_ref_sel", base =
-+ 0x114, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+>  /* SD */
+>  &usdhc2 {
+> +	assigned-clocks =3D <&clk IMX_CONN_SDHC1_CLK>;
+> +	assigned-clock-rates =3D <200000000>;
+>  	pinctrl-names =3D "default";
+>  	pinctrl-0 =3D <&pinctrl_usdhc2>;
+>  	bus-width =3D <4>;
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts b/arch/arm64/b=
+oot/dts/freescale/imx8qxp-mek.dts
+> index 88dd9132..d3d26cc 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+> @@ -137,6 +137,8 @@
+>  };
 > =20
->  	clks[IMX8MM_AUDIO_PLL1] =3D imx_clk_pll14xx("audio_pll1", "audio_pll1_r=
-ef_sel", base, &imx_1443x_pll);
-> @@ -336,8 +332,8 @@ static int imx8mm_clocks_probe(struct platform_device=
- *pdev)
->  	clks[IMX8MM_GPU_PLL] =3D imx_clk_pll14xx("gpu_pll", "gpu_pll_ref_sel", =
-base + 0x64, &imx_1416x_pll);
->  	clks[IMX8MM_VPU_PLL] =3D imx_clk_pll14xx("vpu_pll", "vpu_pll_ref_sel", =
-base + 0x74, &imx_1416x_pll);
->  	clks[IMX8MM_ARM_PLL] =3D imx_clk_pll14xx("arm_pll", "arm_pll_ref_sel", =
-base + 0x84, &imx_1416x_pll);
-> -	clks[IMX8MM_SYS_PLL1] =3D imx_clk_pll14xx("sys_pll1", "sys_pll1_ref_sel=
-", base + 0x94, &imx_1416x_pll);
-> -	clks[IMX8MM_SYS_PLL2] =3D imx_clk_pll14xx("sys_pll2", "sys_pll2_ref_sel=
-", base + 0x104, &imx_1416x_pll);
-> +	clks[IMX8MM_SYS_PLL1] =3D imx_clk_fixed("sys_pll1", 800000000);
-> +	clks[IMX8MM_SYS_PLL2] =3D imx_clk_fixed("sys_pll2", 1000000000);
->  	clks[IMX8MM_SYS_PLL3] =3D imx_clk_pll14xx("sys_pll3", "sys_pll3_ref_sel=
-", base + 0x114, &imx_1416x_pll);
+>  &usdhc1 {
+> +	assigned-clocks =3D <&clk IMX_CONN_SDHC0_CLK>;
+> +	assigned-clock-rates =3D <200000000>;
+>  	pinctrl-names =3D "default";
+>  	pinctrl-0 =3D <&pinctrl_usdhc1>;
+>  	bus-width =3D <8>;
+> @@ -147,6 +149,8 @@
+>  };
 > =20
->  	/* PLL bypass out */
-> @@ -348,8 +344,6 @@ static int imx8mm_clocks_probe(struct platform_device=
- *pdev)
->  	clks[IMX8MM_GPU_PLL_BYPASS] =3D imx_clk_mux_flags("gpu_pll_bypass", bas=
-e + 0x64, 28, 1, gpu_pll_bypass_sels, ARRAY_SIZE(gpu_pll_bypass_sels), CLK_=
-SET_RATE_PARENT);
->  	clks[IMX8MM_VPU_PLL_BYPASS] =3D imx_clk_mux_flags("vpu_pll_bypass", bas=
-e + 0x74, 28, 1, vpu_pll_bypass_sels, ARRAY_SIZE(vpu_pll_bypass_sels), CLK_=
-SET_RATE_PARENT);
->  	clks[IMX8MM_ARM_PLL_BYPASS] =3D imx_clk_mux_flags("arm_pll_bypass", bas=
-e + 0x84, 28, 1, arm_pll_bypass_sels, ARRAY_SIZE(arm_pll_bypass_sels), CLK_=
-SET_RATE_PARENT);
-> -	clks[IMX8MM_SYS_PLL1_BYPASS] =3D imx_clk_mux_flags("sys_pll1_bypass", b=
-ase + 0x94, 28, 1, sys_pll1_bypass_sels, ARRAY_SIZE(sys_pll1_bypass_sels), =
-CLK_SET_RATE_PARENT);
-> -	clks[IMX8MM_SYS_PLL2_BYPASS] =3D imx_clk_mux_flags("sys_pll2_bypass", b=
-ase + 0x104, 28, 1, sys_pll2_bypass_sels, ARRAY_SIZE(sys_pll2_bypass_sels),=
- CLK_SET_RATE_PARENT);
->  	clks[IMX8MM_SYS_PLL3_BYPASS] =3D imx_clk_mux_flags("sys_pll3_bypass", b=
-ase + 0x114, 28, 1, sys_pll3_bypass_sels, ARRAY_SIZE(sys_pll3_bypass_sels),=
- CLK_SET_RATE_PARENT);
-> =20
->  	/* PLL out gate */
-> @@ -360,8 +354,8 @@ static int imx8mm_clocks_probe(struct platform_device=
- *pdev)
->  	clks[IMX8MM_GPU_PLL_OUT] =3D imx_clk_gate("gpu_pll_out", "gpu_pll_bypas=
-s", base + 0x64, 11);
->  	clks[IMX8MM_VPU_PLL_OUT] =3D imx_clk_gate("vpu_pll_out", "vpu_pll_bypas=
-s", base + 0x74, 11);
->  	clks[IMX8MM_ARM_PLL_OUT] =3D imx_clk_gate("arm_pll_out", "arm_pll_bypas=
-s", base + 0x84, 11);
-> -	clks[IMX8MM_SYS_PLL1_OUT] =3D imx_clk_gate("sys_pll1_out", "sys_pll1_by=
-pass", base + 0x94, 11);
-> -	clks[IMX8MM_SYS_PLL2_OUT] =3D imx_clk_gate("sys_pll2_out", "sys_pll2_by=
-pass", base + 0x104, 11);
-> +	clks[IMX8MM_SYS_PLL1_OUT] =3D imx_clk_gate("sys_pll1_out", "sys_pll1", =
-base + 0x94, 11);
-> +	clks[IMX8MM_SYS_PLL2_OUT] =3D imx_clk_gate("sys_pll2_out", "sys_pll2", =
-base + 0x104, 11);
->  	clks[IMX8MM_SYS_PLL3_OUT] =3D imx_clk_gate("sys_pll3_out", "sys_pll3_by=
-pass", base + 0x114, 11);
-> =20
->  	/* SYS PLL fixed output */
+>  &usdhc2 {
+> +	assigned-clocks =3D <&clk IMX_CONN_SDHC1_CLK>;
+> +	assigned-clock-rates =3D <200000000>;
+>  	pinctrl-names =3D "default";
+>  	pinctrl-0 =3D <&pinctrl_usdhc2>;
+>  	bus-width =3D <4>;
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot=
+/dts/freescale/imx8qxp.dtsi
+> index 2d69f1a..9646a41 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> @@ -368,8 +368,6 @@
+>  				 <&conn_lpcg IMX_CONN_LPCG_SDHC0_PER_CLK>,
+>  				 <&conn_lpcg IMX_CONN_LPCG_SDHC0_HCLK>;
+>  			clock-names =3D "ipg", "per", "ahb";
+> -			assigned-clocks =3D <&clk IMX_CONN_SDHC0_CLK>;
+> -			assigned-clock-rates =3D <200000000>;
+>  			power-domains =3D <&pd IMX_SC_R_SDHC_0>;
+>  			status =3D "disabled";
+>  		};
+> @@ -383,8 +381,6 @@
+>  				 <&conn_lpcg IMX_CONN_LPCG_SDHC1_PER_CLK>,
+>  				 <&conn_lpcg IMX_CONN_LPCG_SDHC1_HCLK>;
+>  			clock-names =3D "ipg", "per", "ahb";
+> -			assigned-clocks =3D <&clk IMX_CONN_SDHC1_CLK>;
+> -			assigned-clock-rates =3D <200000000>;
+>  			power-domains =3D <&pd IMX_SC_R_SDHC_1>;
+>  			fsl,tuning-start-tap =3D <20>;
+>  			fsl,tuning-step=3D <2>;
+> @@ -400,8 +396,6 @@
+>  				 <&conn_lpcg IMX_CONN_LPCG_SDHC2_PER_CLK>,
+>  				 <&conn_lpcg IMX_CONN_LPCG_SDHC2_HCLK>;
+>  			clock-names =3D "ipg", "per", "ahb";
+> -			assigned-clocks =3D <&clk IMX_CONN_SDHC2_CLK>;
+> -			assigned-clock-rates =3D <200000000>;
+>  			power-domains =3D <&pd IMX_SC_R_SDHC_2>;
+>  			status =3D "disabled";
+>  		};
 > --=20
-> 2.16.4
+> 2.7.4
 >=20
