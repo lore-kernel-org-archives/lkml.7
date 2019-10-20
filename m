@@ -5,67 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D94F6CA9EAD
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 03:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D86CA9EAD
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 03:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B08CB20820
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 03:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 768B620659
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 03:21:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S1o27lKs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PjdrYfVG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbfJTDVI (ORCPT
+        id S1726485AbfJTDUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 23:21:08 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:35470 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbfJTDUW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 19 Oct 2019 23:20:22 -0400
-Received: by mail-qk1-f195.google.com with SMTP id w2so9092209qkf.2;
-        Sat, 19 Oct 2019 20:20:21 -0700 (PDT)
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:41394 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbfJTDUT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 19 Oct 2019 23:20:19 -0400
+Received: by mail-qt1-f195.google.com with SMTP id c17so12253684qtn.8;
+        Sat, 19 Oct 2019 20:20:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=CflRWxTTSuHHI9dat0IWG+C1/a3J48CuHdxeuay/vjU=;
-        b=S1o27lKspW+W28Wh1Dk4eg+u5fpO0kJw/lmlxD9iz/27oNPT44UHK5MJpUNsU1f91h
-         8vmXYBeij1G8gI2xj0V5MSPW0q+YEyDCldvEHxoKjNU8e89BmssweJ4jRhrDQEsUDzAo
-         K2j2AgHfhsD7x46iMli/a63gDYS6P6vxRqTo0b++sq4i/Y1ufkl06QBm4kkxKjU96rpV
-         pjdbD9pTAH/+9uMvHYX81mGV1/4HY6rJwE2vug3kEjIa8cd4ODcuyt84WxfLYeEEfpy4
-         kopaIY2eo+qbkcSZQqAQ5d3k1xTdX6fisDQ9Jcc5LKnC7Bxv4f46aqAEeS9HgmT7fN7J
-         GRug==
+        bh=j9hDHfsSAKK+yajqRer2bUPE7TxRgMBzPOn+n08Gyj4=;
+        b=PjdrYfVGdYPMFjrMWWt2SOPJ3ML/vTGkTbpPs1vepNzjDygt2q/VdB8doop4iLs2se
+         h057Dv4X9HnXLC6TCa+UGQRJdbgyuCLw7bwK5psIc79YZvCdgWG6vfI3A4QENpj3w+4H
+         dU9ETm6mqWYApWp1mlPqNcr17PRXjGFyg7WoZw18OYvMiOEnj96LO2toG77A+Q8ZhMs5
+         Xw2fYYSltHokvZwTBpKSgcr3qUayEjucUa/dKC8Exex4uqRa4r3fCw3btBpvDcOhYNR0
+         BQMSx7pKIIKpnp3hskq50pOEg7YuEnrEDThfSBHDNaSF7hJHoXgTmMR/JsWkurySZcPf
+         Rkqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=CflRWxTTSuHHI9dat0IWG+C1/a3J48CuHdxeuay/vjU=;
-        b=URr6cU01xtoj+vZ8gBU9Z+lxiplpAle/O0ebgL0xrVOrYRNmyWcphZ2ofjrPYlbjd4
-         rZIS8XN8MHIQ50hkc5CUQC7kI65BsmA0GcrBBROZON5P6htn2XxBwagWUlsvmbu/iVVD
-         Dw8kO73VHBUBdXTe9bGZ9Hk2OZhpQ4Nwy7P8Q0XZMa0DYjBCPN3fo6chNXVfNnc0YiRP
-         agoan1WgCTW5JsbiXCjgV85FWf2ueCCGhGw4bpvGMtZasALWMMv2BEZ7RzPtMJp5peYe
-         GDjytD1gZ6+9abdeJlRAYkAi+HV/ZNqOLEniLq9UUwB5gHvq1sEdAEpgqungQNi2bm4o
-         TEeg==
-X-Gm-Message-State: APjAAAXDFW/Zzs/xhQXVEwmO/tgqTG8mTghvzSzavFmuJGvnU881Z2tY
-        enSBT6CYlBWBBHn0HGIvdaQ=
-X-Google-Smtp-Source: APXvYqyCk6NnL1as17Ndsa6bK+QwAdfufgVpAjQhblRl1nBI5EwTEDN652FFbJwhxT7pl51qf5i0Ww==
-X-Received: by 2002:a37:4c42:: with SMTP id z63mr15291733qka.79.1571541621148;
-        Sat, 19 Oct 2019 20:20:21 -0700 (PDT)
+        bh=j9hDHfsSAKK+yajqRer2bUPE7TxRgMBzPOn+n08Gyj4=;
+        b=RNnZEIBpDpiJuil8HJwij2HWxPMtZ3VXUVtORXjvBb0rXemv6kJB/rBDv+Zuhz7GB2
+         iNvn5ETz2sb0s8i+aeKcvI0IVtLaY8r0zd4b+Wx2yNeHThuhsjip1UK2n3vdcqZndWXI
+         +J12tsW6otOUW0iC7fQ2EsC+GkvZ+YN82pcAMqWqtfWmAezhSfBeNpvverfVJhgw9hLn
+         GwA78D7uT7AJMpNN3O6Ljr4YCySHe0/Qb/JWDeqFqJk4H2d9fhK5gmkWwnVfKxfRodha
+         RUTinuLhvXhFhQc3j+wbYfzj6xFF+BflOMzzpTV5B3U/fAGvKnGySgErrNaFJ9+rE0vF
+         vzMg==
+X-Gm-Message-State: APjAAAWXqhLN07ttOk6rFHqi9tKIgQQE3u7DGKpEg5RsQTJq3cZW0bro
+        UHVbQEzakrW9Ud5t+j7c8O00MeI4
+X-Google-Smtp-Source: APXvYqzzGv+GzXIwugfDEY99ZABisV67Z65C1Nlohi/TPcPx2Vv1XyUKF72ATOfzCUAFIOOK3AUemw==
+X-Received: by 2002:ac8:27b7:: with SMTP id w52mr18395725qtw.78.1571541618477;
+        Sat, 19 Oct 2019 20:20:18 -0700 (PDT)
 Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id u43sm6057529qte.19.2019.10.19.20.20.20
+        by smtp.gmail.com with ESMTPSA id g10sm5507994qki.41.2019.10.19.20.20.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Oct 2019 20:20:20 -0700 (PDT)
+        Sat, 19 Oct 2019 20:20:17 -0700 (PDT)
 From:   Vivien Didelot <vivien.didelot@gmail.com>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     linux-kernel@vger.kernel.org,
         Vivien Didelot <vivien.didelot@gmail.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org
-Subject: [PATCH net-next 10/16] net: dsa: use ports list to setup default CPU port
-Date:   Sat, 19 Oct 2019 23:19:35 -0400
-Message-Id: <20191020031941.3805884-11-vivien.didelot@gmail.com>
+Subject: [PATCH net-next 08/16] net: dsa: use ports list to setup multiple master devices
+Date:   Sat, 19 Oct 2019 23:19:33 -0400
+Message-Id: <20191020031941.3805884-9-vivien.didelot@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191020031941.3805884-1-vivien.didelot@gmail.com>
 References: <20191020031941.3805884-1-vivien.didelot@gmail.com>
@@ -76,90 +76,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new ports list instead of iterating over switches and their
-ports when setting up the default CPU port. Unassign it on teardown.
-
-Now that we can iterate over multiple CPU ports, remove dst->cpu_dp.
-
-At the same time, provide a better error message for CPU-less tree.
+Now that we have a potential list of CPU ports, make use of it instead
+of only configuring the master device of an unique CPU port.
 
 Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
 ---
- include/net/dsa.h |  5 -----
- net/dsa/dsa2.c    | 33 ++++++++++++---------------------
- 2 files changed, 12 insertions(+), 26 deletions(-)
+ net/dsa/dsa2.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/include/net/dsa.h b/include/net/dsa.h
-index b199a8ca6393..020f5db8666b 100644
---- a/include/net/dsa.h
-+++ b/include/net/dsa.h
-@@ -120,11 +120,6 @@ struct dsa_switch_tree {
- 	 */
- 	struct dsa_platform_data	*pd;
- 
--	/*
--	 * The switch port to which the CPU is attached.
--	 */
--	struct dsa_port		*cpu_dp;
--
- 	/* List of switch ports */
- 	struct list_head ports;
- 
 diff --git a/net/dsa/dsa2.c b/net/dsa/dsa2.c
-index 99f5dab06787..772deacc33d3 100644
+index 8b038cc56769..3b8de155bc0b 100644
 --- a/net/dsa/dsa2.c
 +++ b/net/dsa/dsa2.c
-@@ -197,38 +197,29 @@ static struct dsa_port *dsa_tree_find_first_cpu(struct dsa_switch_tree *dst)
+@@ -501,19 +501,27 @@ static void dsa_tree_teardown_switches(struct dsa_switch_tree *dst)
  
- static int dsa_tree_setup_default_cpu(struct dsa_switch_tree *dst)
+ static int dsa_tree_setup_master(struct dsa_switch_tree *dst)
  {
--	struct dsa_switch *ds;
--	struct dsa_port *dp;
--	int device, port;
-+	struct dsa_port *cpu_dp, *dp;
- 
--	/* DSA currently only supports a single CPU port */
--	dst->cpu_dp = dsa_tree_find_first_cpu(dst);
--	if (!dst->cpu_dp) {
--		pr_warn("Tree has no master device\n");
-+	cpu_dp = dsa_tree_find_first_cpu(dst);
-+	if (!cpu_dp) {
-+		pr_err("DSA: tree %d has no CPU port\n", dst->index);
- 		return -EINVAL;
- 	}
- 
- 	/* Assign the default CPU port to all ports of the fabric */
--	for (device = 0; device < DSA_MAX_SWITCHES; device++) {
--		ds = dst->ds[device];
--		if (!ds)
--			continue;
--
--		for (port = 0; port < ds->num_ports; port++) {
--			dp = &ds->ports[port];
--
--			if (dsa_port_is_user(dp) || dsa_port_is_dsa(dp))
--				dp->cpu_dp = dst->cpu_dp;
--		}
--	}
-+	list_for_each_entry(dp, &dst->ports, list)
-+		if (dsa_port_is_user(dp) || dsa_port_is_dsa(dp))
-+			dp->cpu_dp = cpu_dp;
- 
- 	return 0;
- }
- 
- static void dsa_tree_teardown_default_cpu(struct dsa_switch_tree *dst)
- {
--	/* DSA currently only supports a single CPU port */
--	dst->cpu_dp = NULL;
+-	struct dsa_port *cpu_dp = dst->cpu_dp;
+-	struct net_device *master = cpu_dp->master;
 +	struct dsa_port *dp;
++	int err;
+ 
+-	/* DSA currently supports a single pair of CPU port and master device */
+-	return dsa_master_setup(master, cpu_dp);
++	list_for_each_entry(dp, &dst->ports, list) {
++		if (dsa_port_is_cpu(dp)) {
++			err = dsa_master_setup(dp->master, dp);
++			if (err)
++				return err;
++		}
++	}
 +
-+	list_for_each_entry(dp, &dst->ports, list)
-+		if (dsa_port_is_user(dp) || dsa_port_is_dsa(dp))
-+			dp->cpu_dp = NULL;
++	return 0;
  }
  
- static int dsa_port_setup(struct dsa_port *dp)
+ static void dsa_tree_teardown_master(struct dsa_switch_tree *dst)
+ {
+-	struct dsa_port *cpu_dp = dst->cpu_dp;
+-	struct net_device *master = cpu_dp->master;
++	struct dsa_port *dp;
+ 
+-	return dsa_master_teardown(master);
++	list_for_each_entry(dp, &dst->ports, list)
++		if (dsa_port_is_cpu(dp))
++			dsa_master_teardown(dp->master);
+ }
+ 
+ static int dsa_tree_setup(struct dsa_switch_tree *dst)
 -- 
 2.23.0
 
