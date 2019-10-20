@@ -2,86 +2,130 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7466BCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 20:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A07CA9EAD
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 20:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4772720869
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 20:48:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fqSKegbn"
+	by mail.kernel.org (Postfix) with ESMTP id 80F7521897
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 20:59:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571605148;
+	bh=boQTUh6Tu3qH0IM4MLL8CiD1+e4eE1S96fTvHVhm1ag=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZaYzB20B6p7a09XjVoZ94eEkC0eu7yo8GYhWSD/98JZlT2/N2t1waMa8W9W08RqSy
+	 xplebuAaGe748XrnMJccM0+JLHkVrdaY2r3g3E8lL5quaBLqbkdbJAbKdCMfmJ572R
+	 ZEwrtSRMSlJFgZRwJDJTUEE+H6sskH1rWzvK1bsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbfJTUsG (ORCPT
+        id S1726541AbfJTU7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 16:48:06 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:60449 "EHLO ozlabs.org"
+        Sun, 20 Oct 2019 16:59:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725945AbfJTUsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 16:48:05 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726130AbfJTU7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 16:59:04 -0400
+Received: from earth.universe (cust-west-pareq2-46-193-15-226.wb.wifirst.net [46.193.15.226])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46xBg73nSkz9sP6;
-        Mon, 21 Oct 2019 07:48:03 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1571604483;
-        bh=s8XV+vnfYhlu8LE2McxxMrvzRJVfDt0FJGFhECkLs04=;
-        h=Date:From:To:Cc:Subject:From;
-        b=fqSKegbnVBw5KFgVWCb21RN9hbe+bHzMvpbpcW7HqfFbtJOgjWdKgpNJnjlCWnX3C
-         k81NX0H5E3z88Wmy2wbuEx1QE79svFRT/MdC8GDHMjfOkPYyn5LIAiDRJiaOudPDGl
-         25g/iGoZaP8kILOvMbgDLJhOo+na4BthQbrAj0PoAvPp1sXvhpIOklXo1sADGzD1YG
-         F4UO0tEZ4wJQokZyvk1d77318EAktOJOCOMGl2wiFh2Vip/ommO0y7g82eL4rG3tiR
-         tr3TQ8q42bpefQoYU3PU71aDi3zuMbO3OLl67yK8ZR2gyiFiO6U8wPIJgm0VTjKsQm
-         T7t/PZCGJPPBg==
-Date:   Mon, 21 Oct 2019 07:48:02 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the coresight tree
-Message-ID: <20191021074802.3404e7e4@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 4018721897;
+        Sun, 20 Oct 2019 20:59:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571605143;
+        bh=boQTUh6Tu3qH0IM4MLL8CiD1+e4eE1S96fTvHVhm1ag=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NBG1cM5qOQrze7OykO5KU0Se1QvaaBaF8whQY3PDe5eW2IrcDjZETeURTMQdLBMA0
+         G4y8eZW3jdwVGn5KAFEzXj2MrTlnSmyOMqDlaVo+069m6wpn6vRMZOcHJgfO2IZXWs
+         Wu+0LmS5tyC5L0qz7PrqHBKcI17esRVmp6DVQUAI=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 3C7253C0CA0; Sun, 20 Oct 2019 22:59:01 +0200 (CEST)
+Date:   Sun, 20 Oct 2019 22:59:01 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Tony Lindgren <tony@atomide.com>, Adam Ford <aford173@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-bluetooth@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com
+Subject: Re: [PATCHv2 4/4] Bluetooth: btwilink: drop superseded driver
+Message-ID: <20191020205901.56bafijk7cu3rpaj@earth.universe>
+References: <20191003134147.9458-1-sre@kernel.org>
+ <20191003134147.9458-5-sre@kernel.org>
+ <BC1F82AC-2988-4BC6-99EA-1C9F9289E582@holtmann.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/mF7A4S=VEP82na/Kspps.yt";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="td6khbzgjxudi7vx"
+Content-Disposition: inline
+In-Reply-To: <BC1F82AC-2988-4BC6-99EA-1C9F9289E582@holtmann.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/mF7A4S=VEP82na/Kspps.yt
-Content-Type: text/plain; charset=US-ASCII
+
+--td6khbzgjxudi7vx
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Hi,
 
-Commit
+On Wed, Oct 16, 2019 at 09:15:03PM +0200, Marcel Holtmann wrote:
+> > All users of this driver have been converted to the serdev based
+> > hci_ll driver. The unused driver can be safely dropped now.
+> >=20
+> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> > ---
+> > drivers/bluetooth/Kconfig    |  11 --
+> > drivers/bluetooth/Makefile   |   1 -
+> > drivers/bluetooth/btwilink.c | 337 -----------------------------------
+> > 3 files changed, 349 deletions(-)
+> > delete mode 100644 drivers/bluetooth/btwilink.c
+>=20
+> patch has been applied to bluetooth-next tree.
+>=20
+> However what I really like to see is that you re-introduce a
+> btwilink driver that is purely serdev based and doesn=E2=80=99t rely on
+> any hci_uart/hci_ldisc code. A clean serdev only driver is that
+> best and easier to maintain long term.
 
-  38c2d9afa62b ("coresight: etm4x: Fix input validation for sysfs.")
+So basically move the serdev implementation from hci_ll.c into its
+own driver and make hci_ll hci_uart based only? That effectively
+means, that we have two implementations of the protocol. I don't
+think this will improve maintainability, since then bugs needs to
+be fixed in two places? Note, that we have a couple of drivers
+with serdev+hci_uart by now:
 
-is missing a Signed-off-by from its committer.
+for file in $(grep -l serdev drivers/bluetooth/hci_*c) ; grep -l hci_uart_r=
+egister_proto "${file}"
+hci_bcm.c
+hci_h5.c
+hci_ldisc.c
+hci_ll.c
+hci_mrvl.c
+hci_qca.c
 
---=20
-Cheers,
-Stephen Rothwell
+-- Sebastian
 
---Sig_/mF7A4S=VEP82na/Kspps.yt
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--td6khbzgjxudi7vx
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2syAIACgkQAVBC80lX
-0GxKegf9HKJpkMbw11vH8CgEBz0ubvO96TMMUY8ESpgRmPA/99qNshnpu9DcXaeD
-1cd2YfjxeGB9J/VFEM5PzovtkppyS4KR3nvV1QiC28qFty2qTqR1YIX9e+FeaLnK
-o/dAUwI3rjQfpZJ8WRkZjz0Z4HS/c8WEPIAHU0+Liyco7zVsJbXTVyt5cQHvy7Ev
-ciX/hVrtR8gUDQlnrE14qpxqKtkGUOl9sRmBjTHRgjN36znEk+jmhlMnz/Q0V8NP
-7IchxaBrZ6cQLLRiGnQIi6C+s1i52Ol22/zD/dHwnwcBhNbimFgdBWlA4rEl6elP
-XEkolnMLFSp8fZyd4YEAq6b4iDQt+Q==
-=k9UN
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2sypEACgkQ2O7X88g7
++pp5QQ/9HZr+yWBHDmBiphnMo30Xi90YCZ1Ov6RyGhUJWw2lvBcGkkHGCLuk8M/6
+qvfk4YCI7zdqajXZkVSB7+dRp6QWkt4D5+B8ORjDC1zc103auFsIZmdTBn3c/8/O
+Ed5DR6BKdGgtpdYxnsidYb3GJ5oMCHW9emRVJ603nUrbaipJTlEELjtyC8qemPtK
+px9eTLAAD15WLhImFcq3vs9zP6mZV7EkTIgoIYAoUSJ6MQyapAeQbN19WTn7j+i8
+YF3bB9+NCmM6Y2WJtuzBfq8n4B06OqSB8Yx2oNqRAFNlajIk7AnFwdU9JUj8rdYi
+UrPzL+F0jzitbw0ES05xushHWmMXP+0I4XljEcjiq+UUd3/VkYYYegca+gXmTl+4
+9DSQuITzpuhnKKgV7+VnlxIRg21KFrvC5Xib0BkDCYyTJq085hCq7b97aMlK/YJW
+o04C9zu2vlvtFflQ5ENR5T/t7A6mSpUVcwCOme3o2AhhW7rWWrGZAhFhIq2PFxLp
+9uOTquKl+WbW+rZM+Jx9RhrgGPivmEs+zFzV+bNESuLLcPB3v+b865NvRD+ESzZw
+lFMocVKVE6zgwgy5UiX9/43dcBIdaPeSLdcgz1KoTt91ugDEwzLaaBMkeJjZtsdi
+8qcw1yxVVk+sRBf4PgApEwvvaei+KF4AoNE59m4b5OIkZo4+bPQ=
+=OkWc
 -----END PGP SIGNATURE-----
 
---Sig_/mF7A4S=VEP82na/Kspps.yt--
+--td6khbzgjxudi7vx--
