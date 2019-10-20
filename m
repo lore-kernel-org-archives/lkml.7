@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1C3CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 17:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD7ECA9EAE
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 17:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C89E521897
+	by mail.kernel.org (Postfix) with ESMTP id E99DC21A4A
 	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 17:52:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbfJTRwb (ORCPT
+        id S1726812AbfJTRwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 13:52:31 -0400
-Received: from mga01.intel.com ([192.55.52.88]:3315 "EHLO mga01.intel.com"
+        Sun, 20 Oct 2019 13:52:32 -0400
+Received: from mga09.intel.com ([134.134.136.24]:24807 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726561AbfJTRwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 13:52:30 -0400
+        id S1726740AbfJTRwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 13:52:31 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 10:52:30 -0700
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 10:52:30 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,320,1566889200"; 
-   d="scan'208";a="190893275"
+   d="scan'208";a="371971244"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by orsmga008.jf.intel.com with ESMTP; 20 Oct 2019 10:52:30 -0700
+  by orsmga005.jf.intel.com with ESMTP; 20 Oct 2019 10:52:30 -0700
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 1892B300393; Sun, 20 Oct 2019 10:52:30 -0700 (PDT)
+        id 38C8C30034D; Sun, 20 Oct 2019 10:52:30 -0700 (PDT)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     acme@kernel.org
 Cc:     linux-kernel@vger.kernel.org, jolsa@kernel.org, eranian@google.com,
         kan.liang@linux.intel.com, peterz@infradead.org,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v2 4/9] perf affinity: Add infrastructure to save/restore affinity
-Date:   Sun, 20 Oct 2019 10:51:57 -0700
-Message-Id: <20191020175202.32456-5-andi@firstfloor.org>
+Subject: [PATCH v2 9/9] perf stat: Use affinity for enabling/disabling events
+Date:   Sun, 20 Oct 2019 10:52:02 -0700
+Message-Id: <20191020175202.32456-10-andi@firstfloor.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191020175202.32456-1-andi@firstfloor.org>
 References: <20191020175202.32456-1-andi@firstfloor.org>
@@ -50,135 +50,243 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-The kernel perf subsystem has to IPI to the target CPU for many
-operations. On systems with many CPUs and when managing many events the
-overhead can be dominated by lots of IPIs.
+Restructure event enabling/disabling to use affinity, which
+minimizes the number of IPIs needed.
 
-An alternative is to set up CPU affinity in the perf tool, then set up
-all the events for that CPU, and then move on to the next CPU.
+Before on a large test case with 94 CPUs:
 
-Add some affinity management infrastructure to enable such a model.
-Used in followon patches.
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 54.65    1.899986          22     84812       660 ioctl
+
+after:
+
+ 39.21    0.930451          10     84796       644 ioctl
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 ---
- tools/perf/util/Build      |  1 +
- tools/perf/util/affinity.c | 71 ++++++++++++++++++++++++++++++++++++++
- tools/perf/util/affinity.h | 15 ++++++++
- 3 files changed, 87 insertions(+)
- create mode 100644 tools/perf/util/affinity.c
- create mode 100644 tools/perf/util/affinity.h
+ tools/perf/lib/evsel.c              | 49 ++++++++++++++++++++--------
+ tools/perf/lib/include/perf/evsel.h |  2 ++
+ tools/perf/util/evlist.c            | 50 ++++++++++++++++++++++++++---
+ tools/perf/util/evsel.c             | 13 ++++++++
+ tools/perf/util/evsel.h             |  2 ++
+ 5 files changed, 98 insertions(+), 18 deletions(-)
 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 2c1504fe924c..c7d4eab017e5 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -76,6 +76,7 @@ perf-y += sort.o
- perf-y += hist.o
- perf-y += util.o
- perf-y += cpumap.o
-+perf-y += affinity.o
- perf-y += cputopo.o
- perf-y += cgroup.o
- perf-y += target.o
-diff --git a/tools/perf/util/affinity.c b/tools/perf/util/affinity.c
-new file mode 100644
-index 000000000000..c42a6b9d63f0
---- /dev/null
-+++ b/tools/perf/util/affinity.c
-@@ -0,0 +1,71 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Manage affinity to optimize IPIs inside the kernel perf API. */
-+#define _GNU_SOURCE 1
-+#include <sched.h>
-+#include <stdlib.h>
-+#include <linux/zalloc.h>
-+#include "perf.h"
-+#include "cpumap.h"
-+#include "affinity.h"
-+
-+static int get_cpu_set_size(void)
+diff --git a/tools/perf/lib/evsel.c b/tools/perf/lib/evsel.c
+index ea775dacbd2d..89ddfade0b96 100644
+--- a/tools/perf/lib/evsel.c
++++ b/tools/perf/lib/evsel.c
+@@ -198,38 +198,61 @@ int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
+ }
+ 
+ static int perf_evsel__run_ioctl(struct perf_evsel *evsel,
+-				 int ioc,  void *arg)
++				 int ioc,  void *arg,
++				 int cpu)
+ {
+-	int cpu, thread;
++	int thread;
+ 
+-	for (cpu = 0; cpu < xyarray__max_x(evsel->fd); cpu++) {
+-		for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
+-			int fd = FD(evsel, cpu, thread),
+-			    err = ioctl(fd, ioc, arg);
++	for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
++		int fd = FD(evsel, cpu, thread),
++		    err = ioctl(fd, ioc, arg);
+ 
+-			if (err)
+-				return err;
+-		}
++		if (err)
++			return err;
+ 	}
+ 
+ 	return 0;
+ }
+ 
++int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu)
 +{
-+	int sz = (cpu__max_cpu() + 64 - 1) / 64;
-+	/*
-+	 * sched_getaffinity doesn't like masks smaller than the kernel.
-+	 * Hopefully that's big enough.
-+	 */
-+	if (sz < 4096/8)
-+		sz = 4096/8;
-+	return sz;
++	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, 0, cpu);
 +}
 +
-+int affinity__setup(struct affinity *a)
-+{
-+	int cpu_set_size = get_cpu_set_size();
+ int perf_evsel__enable(struct perf_evsel *evsel)
+ {
+-	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, 0);
++	int i;
++	int err = 0;
 +
-+	a->orig_cpus = malloc(cpu_set_size);
-+	if (!a->orig_cpus)
-+		return -1;
-+	sched_getaffinity(0, cpu_set_size, (cpu_set_t *)a->orig_cpus);
-+	a->sched_cpus = zalloc(cpu_set_size);
-+	if (!a->sched_cpus) {
-+		free(a->orig_cpus);
-+		return -1;
-+	}
-+	a->changed = false;
-+	return 0;
++	for (i = 0; i < evsel->cpus->nr && !err; i++)
++		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, 0, i);
++	return err;
 +}
 +
-+/*
-+ * perf_event_open does an IPI internally to the target CPU.
-+ * It is more efficient to change perf's affinity to the target
-+ * CPU and then set up all events on that CPU, so we amortize
-+ * CPU communication.
-+ */
-+void affinity__set(struct affinity *a, int cpu)
++int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu)
 +{
-+	int cpu_set_size = get_cpu_set_size();
++	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, 0, cpu);
+ }
+ 
+ int perf_evsel__disable(struct perf_evsel *evsel)
+ {
+-	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, 0);
++	int i;
++	int err = 0;
 +
-+	if (cpu == -1)
++	for (i = 0; i < evsel->cpus->nr && !err; i++)
++		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, 0, i);
++	return err;
+ }
+ 
+ int perf_evsel__apply_filter(struct perf_evsel *evsel, const char *filter)
+ {
+-	return perf_evsel__run_ioctl(evsel,
++	int err = 0, i;
++
++	for (i = 0; i < evsel->cpus->nr && !err; i++)
++		err = perf_evsel__run_ioctl(evsel,
+ 				     PERF_EVENT_IOC_SET_FILTER,
+-				     (void *)filter);
++				     (void *)filter, i);
++	return err;
+ }
+ 
+ struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel)
+diff --git a/tools/perf/lib/include/perf/evsel.h b/tools/perf/lib/include/perf/evsel.h
+index ed10a914cd3f..db31e512a120 100644
+--- a/tools/perf/lib/include/perf/evsel.h
++++ b/tools/perf/lib/include/perf/evsel.h
+@@ -32,7 +32,9 @@ LIBPERF_API void perf_evsel__close_cpu(struct perf_evsel *evsel, int cpu);
+ LIBPERF_API int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
+ 				 struct perf_counts_values *count);
+ LIBPERF_API int perf_evsel__enable(struct perf_evsel *evsel);
++LIBPERF_API int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu);
+ LIBPERF_API int perf_evsel__disable(struct perf_evsel *evsel);
++LIBPERF_API int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu);
+ LIBPERF_API struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel);
+ LIBPERF_API struct perf_thread_map *perf_evsel__threads(struct perf_evsel *evsel);
+ LIBPERF_API struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel);
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index bcb8a3670f3f..55f38a71ad30 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -378,26 +378,66 @@ void evlist__cpu_iter_next(struct evsel *ev)
+ void evlist__disable(struct evlist *evlist)
+ {
+ 	struct evsel *pos;
++	struct affinity affinity;
++	struct perf_cpu_map *cpus;
++	int i;
+ 
++	if (affinity__setup(&affinity) < 0)
 +		return;
-+	a->changed = true;
-+	a->sched_cpus[cpu / 8] |= 1 << (cpu % 8);
-+	/*
-+	 * We ignore errors because affinity is just an optimization.
-+	 * This could happen for example with isolated CPUs or cpusets.
-+	 * In this case the IPIs inside the kernel's perf API still work.
-+	 */
-+	sched_setaffinity(0, cpu_set_size, (cpu_set_t *)a->sched_cpus);
-+	a->sched_cpus[cpu / 8] ^= 1 << (cpu % 8);
-+}
 +
-+void affinity__cleanup(struct affinity *a)
++	cpus = evlist__cpu_iter_start(evlist);
++	for (i = 0; i < cpus->nr; i++) {
++		int cpu = cpus->map[i];
++		affinity__set(&affinity, cpu);
++
++		evlist__for_each_entry(evlist, pos) {
++			if (evlist__cpu_iter_skip(pos, cpu))
++				continue;
++			if (pos->disabled || !perf_evsel__is_group_leader(pos) || !pos->core.fd)
++				continue;
++			evsel__disable_cpu(pos, pos->cpu_index);
++			evlist__cpu_iter_next(pos);
++		}
++	}
++	affinity__cleanup(&affinity);
+ 	evlist__for_each_entry(evlist, pos) {
+-		if (pos->disabled || !perf_evsel__is_group_leader(pos) || !pos->core.fd)
++		if (!perf_evsel__is_group_leader(pos) || !pos->core.fd)
+ 			continue;
+-		evsel__disable(pos);
++		pos->disabled = true;
+ 	}
+-
+ 	evlist->enabled = false;
+ }
+ 
+ void evlist__enable(struct evlist *evlist)
+ {
+ 	struct evsel *pos;
++	struct affinity affinity;
++	struct perf_cpu_map *cpus;
++	int i;
++
++	if (affinity__setup(&affinity) < 0)
++		return;
++
++	cpus = evlist__cpu_iter_start(evlist);
++	for (i = 0; i < cpus->nr; i++) {
++		int cpu = cpus->map[i];
++		affinity__set(&affinity, cpu);
+ 
++		evlist__for_each_entry(evlist, pos) {
++			if (evlist__cpu_iter_skip(pos, cpu))
++				continue;
++			if (!perf_evsel__is_group_leader(pos) || !pos->core.fd)
++				continue;
++			evsel__enable_cpu(pos, pos->cpu_index);
++			evlist__cpu_iter_next(pos);
++		}
++	}
++	affinity__cleanup(&affinity);
+ 	evlist__for_each_entry(evlist, pos) {
+ 		if (!perf_evsel__is_group_leader(pos) || !pos->core.fd)
+ 			continue;
+-		evsel__enable(pos);
++		pos->disabled = false;
+ 	}
+-
+ 	evlist->enabled = true;
+ }
+ 
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 7106f9a067df..79050a6f4991 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1205,13 +1205,26 @@ int perf_evsel__append_addr_filter(struct evsel *evsel, const char *filter)
+ 	return perf_evsel__append_filter(evsel, "%s,%s", filter);
+ }
+ 
++/* Caller has to clear disabled after going through all CPUs. */
++int evsel__enable_cpu(struct evsel *evsel, int cpu)
 +{
-+	int cpu_set_size = get_cpu_set_size();
-+
-+	if (a->changed)
-+		sched_setaffinity(0, cpu_set_size, (cpu_set_t *)a->orig_cpus);
-+	free(a->sched_cpus);
-+	free(a->orig_cpus);
++	int err = perf_evsel__enable_cpu(&evsel->core, cpu);
++	return err;
 +}
-diff --git a/tools/perf/util/affinity.h b/tools/perf/util/affinity.h
-new file mode 100644
-index 000000000000..e56148607e33
---- /dev/null
-+++ b/tools/perf/util/affinity.h
-@@ -0,0 +1,15 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#ifndef AFFINITY_H
-+#define AFFINITY_H 1
 +
-+struct affinity {
-+	unsigned char *orig_cpus;
-+	unsigned char *sched_cpus;
-+	bool changed;
-+};
-+
-+void affinity__cleanup(struct affinity *a);
-+void affinity__set(struct affinity *a, int cpu);
-+int affinity__setup(struct affinity *a);
-+
-+#endif
+ int evsel__enable(struct evsel *evsel)
+ {
+ 	int err = perf_evsel__enable(&evsel->core);
+ 
+ 	if (!err)
+ 		evsel->disabled = false;
++	return err;
++}
+ 
++/* Caller has to set disabled after going through all CPUs. */
++int evsel__disable_cpu(struct evsel *evsel, int cpu)
++{
++	int err = perf_evsel__disable_cpu(&evsel->core, cpu);
+ 	return err;
+ }
+ 
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 9fc9f6698aa4..15977bbe7b63 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -222,8 +222,10 @@ int perf_evsel__set_filter(struct evsel *evsel, const char *filter);
+ int perf_evsel__append_tp_filter(struct evsel *evsel, const char *filter);
+ int perf_evsel__append_addr_filter(struct evsel *evsel,
+ 				   const char *filter);
++int evsel__enable_cpu(struct evsel *evsel, int cpu);
+ int evsel__enable(struct evsel *evsel);
+ int evsel__disable(struct evsel *evsel);
++int evsel__disable_cpu(struct evsel *evsel, int cpu);
+ 
+ int perf_evsel__open_per_cpu(struct evsel *evsel,
+ 			     struct perf_cpu_map *cpus,
 -- 
 2.21.0
 
