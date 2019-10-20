@@ -2,142 +2,144 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 844B0CA9EAD
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 12:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2ACCA9EAD
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 12:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63E6B2190F
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 12:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E3D20640
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 12:58:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571576308;
+	bh=a4cIo6o/+l6MkZI3kV4/Qt6TYtKNFU41pnysG7BhNLE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZjuEjprIfJcy57HeVHs/CBRL4ARxoJ40eQEifwMUKrdOSYqISrivCheQzibdfLYe9
+	 6inWzxEhS0UZuUA4O/TVnnrcjJ9KQ+v3gmvzuom+NK/hvYizJgnXQZLYmlLN0psCly
+	 v406g/BmbK9vxS5PXH9YhsgYXutQEI4D+U9w2JAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbfJTMtM (ORCPT
+        id S1726342AbfJTM5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 08:49:12 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63938 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726294AbfJTMtM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 08:49:12 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9KCW75Z192823
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 08:49:10 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vrg53214q-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 08:49:10 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Sun, 20 Oct 2019 13:49:08 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 20 Oct 2019 13:49:03 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9KCn1i542270820
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 20 Oct 2019 12:49:01 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 583E4A405B;
-        Sun, 20 Oct 2019 12:49:01 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F40D0A4054;
-        Sun, 20 Oct 2019 12:48:58 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.180.10])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sun, 20 Oct 2019 12:48:58 +0000 (GMT)
-Subject: Re: [PATCH v8 3/8] powerpc: detect the trusted boot state of the
- system
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Date:   Sun, 20 Oct 2019 08:48:58 -0400
-In-Reply-To: <1571508377-23603-4-git-send-email-nayna@linux.ibm.com>
-References: <1571508377-23603-1-git-send-email-nayna@linux.ibm.com>
-         <1571508377-23603-4-git-send-email-nayna@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19102012-0020-0000-0000-0000037B7AD1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102012-0021-0000-0000-000021D1ADE1
-Message-Id: <1571575738.5342.7.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-20_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=840 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910200126
+        Sun, 20 Oct 2019 08:57:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58316 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726295AbfJTM5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 08:57:50 -0400
+Received: from earth.universe (tmo-104-243.customers.d1-online.com [80.187.104.243])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F33620640;
+        Sun, 20 Oct 2019 12:57:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571576269;
+        bh=a4cIo6o/+l6MkZI3kV4/Qt6TYtKNFU41pnysG7BhNLE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=v1FjeWn5SBJeVRD2R9oZ/FgQSCB2L8VZ2hrOLgLrKlgCzlkL1k3ELGFGSR36OB15G
+         NUQgyUo7xENX9ro6WV+FPiKPFiZBi7VOufshihqPfwBfxDsB7E0H5DukzE6AGNZUf9
+         SNvbvbadbi0ruBS5aJ+ss6wglmJI31pweTp4Qr2A=
+Received: by earth.universe (Postfix, from userid 1000)
+        id CAF6D3C09B1; Sun, 20 Oct 2019 14:57:37 +0200 (CEST)
+Date:   Sun, 20 Oct 2019 14:57:37 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     madhuparnabhowmik04@gmail.com
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] Power: supply: abx500_chargalg.c: Fixed a code
+ indentation error
+Message-ID: <20191020125737.t4lx6nshoszojbtx@earth.universe>
+References: <20191015161341.26868-1-madhuparnabhowmik04@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tlbqmfvintztvz3z"
+Content-Disposition: inline
+In-Reply-To: <20191015161341.26868-1-madhuparnabhowmik04@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-10-19 at 14:06 -0400, Nayna Jain wrote:
-> While secure boot permits only properly verified signed kernels to be
-> booted, trusted boot takes a measurement of the kernel image prior to
-> boot that can be subsequently compared against good known values via
-> attestation services.
-> 
 
-Instead of "takes a measurement", either "stores a measurement" or
-"calculates the file hash of the kernel image and stores the
-measurement prior to boot, that".
+--tlbqmfvintztvz3z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> This patch reads the trusted boot state of a PowerNV system. The state
-> is used to conditionally enable additional measurement rules in the IMA
-> arch-specific policies.
-> 
-> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+Hi,
+
+On Tue, Oct 15, 2019 at 09:43:41PM +0530, madhuparnabhowmik04@gmail.com wro=
+te:
+> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+>=20
+> Fixed Code indentation error caused due to using spaces
+> instead of tabs.
+> The error reported by checkpatch.pl is:
+>  ERROR: code indent should use tabs where possible
+> The warning reported by checkpatch.pl is:
+>  WARNING: please, no spaces at the start of a line
+>=20
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 > ---
->  arch/powerpc/include/asm/secure_boot.h |  6 ++++++
->  arch/powerpc/kernel/secure_boot.c      | 24 ++++++++++++++++++++++++
->  2 files changed, 30 insertions(+)
-> 
-> diff --git a/arch/powerpc/include/asm/secure_boot.h b/arch/powerpc/include/asm/secure_boot.h
-> index 07d0fe0ca81f..a2ff556916c6 100644
-> --- a/arch/powerpc/include/asm/secure_boot.h
-> +++ b/arch/powerpc/include/asm/secure_boot.h
-> 
-> diff --git a/arch/powerpc/kernel/secure_boot.c b/arch/powerpc/kernel/secure_boot.c
-> index 99bba7915629..9753470ab08a 100644
-> --- a/arch/powerpc/kernel/secure_boot.c
-> +++ b/arch/powerpc/kernel/secure_boot.c
-> @@ -7,6 +7,17 @@
->  #include <linux/of.h>
->  #include <asm/secure_boot.h>
->  
-> +static struct device_node *get_ppc_fw_sb_node(void)
-> +{
-> +	static const struct of_device_id ids[] = {
-> +		{ .compatible = "ibm,secureboot-v1", },
-> +		{ .compatible = "ibm,secureboot-v2", },
-> +		{},
-> +	};
-> +
 
-scripts/checkpatch.pl is complaining that secureboot-v1, secureboot-v2 
-are not documented in the device tree bindings.
+Thanks, queued to power-supply's for-next branch.
 
-Mimi
+-- Sebastian
 
+>  drivers/power/supply/abx500_chargalg.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/abx500_chargalg.c b/drivers/power/suppl=
+y/abx500_chargalg.c
+> index 23757fb10479..e6e37d4f20e4 100644
+> --- a/drivers/power/supply/abx500_chargalg.c
+> +++ b/drivers/power/supply/abx500_chargalg.c
+> @@ -354,13 +354,13 @@ static int abx500_chargalg_check_charger_enable(str=
+uct abx500_chargalg *di)
+> =20
+>  	if (di->chg_info.charger_type & USB_CHG) {
+>  		return di->usb_chg->ops.check_enable(di->usb_chg,
+> -                         di->bm->bat_type[di->bm->batt_id].normal_vol_lv=
+l,
+> -                         di->bm->bat_type[di->bm->batt_id].normal_cur_lv=
+l);
+> +			di->bm->bat_type[di->bm->batt_id].normal_vol_lvl,
+> +			di->bm->bat_type[di->bm->batt_id].normal_cur_lvl);
+>  	} else if ((di->chg_info.charger_type & AC_CHG) &&
+>  		   !(di->ac_chg->external)) {
+>  		return di->ac_chg->ops.check_enable(di->ac_chg,
+> -                         di->bm->bat_type[di->bm->batt_id].normal_vol_lv=
+l,
+> -                         di->bm->bat_type[di->bm->batt_id].normal_cur_lv=
+l);
+> +			di->bm->bat_type[di->bm->batt_id].normal_vol_lvl,
+> +			di->bm->bat_type[di->bm->batt_id].normal_cur_lvl);
+>  	}
+>  	return 0;
+>  }
+> --=20
+> 2.17.1
+>=20
+
+--tlbqmfvintztvz3z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2sWb4ACgkQ2O7X88g7
++po7UA/7ByxXHbLl3FPKRDFfRH9tDLdQeF9MUepCzmywVN5jpt4CULuUhoFmkKvz
+6uQOQLN52Nm2NlLL2WbvKBtdmuMCuJn4EpiWG0R7er85lpAJJQoP7U0GWB0PDCfe
+g7BSrYEWqYCs3S8GV+xPJNVCoefg6gnWDcorBluP0z6PZnp4wJq8KV6nX9O5Pdzw
+8qkw5ZVyWvuhwvPpvVpK9vFS+e2NE5T9sCa4dlmJZWgWBzJjoaU6VY/aXspJMZim
+K1ZFwriD4SmDKtgu1BvQ1eZuYL1my2dxf1R0QkgweEVBUeCID+SzSFoFCHQEB2of
+jfTFJocQL7xA3YYZ9DzcibzXqBWB0AeQpd9RklVoHPLdNL3S79tZVYd8lwZpNU9V
+6ZgWGAG/+23ir6flUS+lNK60AnhAN7NIrhIDCZ5+WSxcjIZ8EY+l2jvrRcRPA4yx
+/gPoCQqVKckivRyEgQvSWX/3hkh+i4bOXavpZUj6Io5Z2vXwXE8ohq1lN1couO+2
+4aZItc0r54y5WdIoCLpDj5TtHclomfSHEX3Z5HYOwnqbwf4GjV572nl0OPd0PkIM
+jzQkCZJwc9L1VlwPmNbMMt6LfYs0J9Fp73zEV9XulnBfVlCRrSuYYWI42BpiMMIb
+OlbGtE4oF55v9JnttA0YvvCyg1UcBIaBZMcmCLs300nJyfLaIEM=
+=ROpJ
+-----END PGP SIGNATURE-----
+
+--tlbqmfvintztvz3z--
