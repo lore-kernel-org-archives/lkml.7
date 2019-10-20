@@ -2,159 +2,121 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA9AFCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 12:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17860CA9EAD
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 12:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9057321744
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 12:43:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571575423;
-	bh=Mkt4V0ubKfu0vpl/nX8DPcWJKgzBgQDUxIY7+f3r7k0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nKnwpuxMlsL2MRwSPS6GGgJzrQfnGaDBpUxqwCZIKziWbcCp7GYjRrdu4gt8Z1VBe
-	 R/vCk/kPZclZY9JHQuV0vmoDWJtcNRKBmfZI8III/PSokT3T4KRBGzXICDW/mfdT+m
-	 MvlFRBPeqzZ+RXo25ox1lTzAvd/rehlbQlKokbWA=
+	by mail.kernel.org (Postfix) with ESMTP id E825721744
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 12:44:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbfJTMnm (ORCPT
+        id S1726403AbfJTMoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 08:43:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56000 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726289AbfJTMnm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 08:43:42 -0400
-Received: from earth.universe (tmo-104-243.customers.d1-online.com [80.187.104.243])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E98C921744;
-        Sun, 20 Oct 2019 12:43:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571575421;
-        bh=Mkt4V0ubKfu0vpl/nX8DPcWJKgzBgQDUxIY7+f3r7k0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AUj7Ga4ToHdEPVacR8j30ucKTOjDvGAuxGGoC/Yg5zfk3ID4ORDrMI2Wl9tKacB0z
-         fcdP9S/x7lIzUM0lvKkbZEdslYexRTVy+AA/qLnM2WBKWqfxTWw9LcyKJ3R0mONym7
-         6/ZGWNabsvZEOBKCqzgQnLRQ365sP00G3t3v39cE=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 43D153C09B1; Sun, 20 Oct 2019 14:43:35 +0200 (CEST)
-Date:   Sun, 20 Oct 2019 14:43:35 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] power: supply: bq2515x: Introduce the bq2515x family
-Message-ID: <20191020124335.gssoiyjmdtpygwqy@earth.universe>
-References: <20190930143137.21624-1-dmurphy@ti.com>
- <20190930143137.21624-3-dmurphy@ti.com>
+        Sun, 20 Oct 2019 08:44:44 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60310 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfJTMon (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 08:44:43 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iMAZR-0000C6-Vq; Sun, 20 Oct 2019 14:44:30 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 70C271C0093;
+        Sun, 20 Oct 2019 14:44:29 +0200 (CEST)
+Date:   Sun, 20 Oct 2019 12:44:29 -0000
+From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf/x86/intel/pt: Fix base for single entry topa
+Cc:     Jan Stancek <jstancek@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191019220726.12213-1-jolsa@kernel.org>
+References: <20191019220726.12213-1-jolsa@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pug62zvjsqlqwju4"
-Content-Disposition: inline
-In-Reply-To: <20190930143137.21624-3-dmurphy@ti.com>
-User-Agent: NeoMutt/20180716
+Message-ID: <157157546913.29376.8671150238400899852.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the perf/urgent branch of tip:
 
---pug62zvjsqlqwju4
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Commit-ID:     13301c6b16a6d809b331bb88e40ab9ce38238b8b
+Gitweb:        https://git.kernel.org/tip/13301c6b16a6d809b331bb88e40ab9ce38238b8b
+Author:        Jiri Olsa <jolsa@kernel.org>
+AuthorDate:    Sun, 20 Oct 2019 00:07:26 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sun, 20 Oct 2019 14:42:28 +02:00
 
-Hi,
+perf/x86/intel/pt: Fix base for single entry topa
 
-Here are some more notes.
+Jan reported failing ltp test for PT:
 
-On Mon, Sep 30, 2019 at 09:31:37AM -0500, Dan Murphy wrote:
-> Introduce the bq25150 and bq25155 supply chargers.
->=20
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
+  https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/tracing/pt_test/pt_test.c
 
-[...]
+It looks like the reason is this new commit added in this v5.4 merge window:
 
-> +/* initial field values, converted to register values */
-> +struct bq2515x_init_data {
-> +	u8 ichg;	/* charge current		*/
-> +	u8 vreg;	/* regulation voltage		*/
+  38bb8d77d0b9 ("perf/x86/intel/pt: Split ToPA metadata and page layout")
 
-The following 4 entries seem to be unused.
+which did not keep the TOPA_SHIFT for entry base.
 
-> +	u8 iterm;	/* termination current		*/
-> +	u8 iprechg;	/* precharge current		*/
-> +	u8 sysvmin;	/* minimum system voltage limit */
-> +	u8 ilim;	/* ILIM current contol		*/
-> +};
+Add it back.
 
-[...]
+Reported-by: Jan Stancek <jstancek@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Fixes: 38bb8d77d0b9 ("perf/x86/intel/pt: Split ToPA metadata and page layout")
+Link: https://lkml.kernel.org/r/20191019220726.12213-1-jolsa@kernel.org
+[ Minor changelog edits. ]
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/events/intel/pt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +static int get_const_charge_current(struct bq2515x_device *bq2515x)
-> +{
-> +	int ret;
-> +	int intval;
-> +	int iin_msb;
-> +	int iin_lsb;
-> +	u16 ichg_measurement;
-> +	int ilim_val, ichg_multiplier;
-> +
-> +	if (!bq2515x_is_ps_online(bq2515x))
-> +		return -ENODATA;
-> +
-> +	ret =3D regmap_read(bq2515x->regmap, BQ2515X_ADC_IIN_M, &iin_msb);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret =3D regmap_read(bq2515x->regmap, BQ2515X_ADC_IIN_L, &iin_lsb);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ichg_measurement =3D (iin_msb << 8) | iin_lsb;
-> +	ret =3D regmap_read(bq2515x->regmap, BQ2515X_ILIMCTRL, &ilim_val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (ilim_val >=3D BQ2515X_ILIM_150MA)
-> +		ichg_multiplier =3D 350;
-> +	else
-> +		ichg_multiplier =3D 750;
-> +
-> +	intval =3D (ichg_measurement * 100 / BQ2515X_DIVISOR) * ichg_multiplier;
-> +	return intval / 100;
-> +}
-> [...]
-
-I just checked the calculation and you return mA. This is incorrect,
-since the power-supply ABI uses =B5A. Please also re-check the other
-calculations. You can find some information about the power-supply
-subsystem here:
-
-Documentation/power/power_supply_class.rst
-
--- Sebastian
-
---pug62zvjsqlqwju4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2sVnQACgkQ2O7X88g7
-+poKkQ//Ul4FyYqJe7GL08pax4RATZxfc9jZlRJqwfOfzHzwZlDSG9VAIP/IqySU
-DMZ3uD1qbjNpJYzGzvDJ4Wtr6n0nwoaiGRMnzgEzWNXRjF+mZMTZX/PyZZ2Kvnww
-G4xdqz5QgcdVnvdy52qYTlM0f7YKKFdvHKSmEtQCsGTEU0/A9K3bibpAttyCYQGU
-Z/LbuuWJfIYCPBi3oYktvO0mtRmD8rK991EeihVuThJ8urtg60/UjQPfgVtBJ9Nz
-LNf8dNe/cOS5pKyzrKCr7/5yalLlt5ekAX1INwS3roML6agn+EunkZ/gtE2gxotx
-6xG132LE/0o5S/3P10ghlAdb0gVNxSMvA48FA96A4slKgO5W8potHCiR2n56Sedk
-MiM6jTyXSjK1c3c7SxJM1B7lsFA+Sr2TDGBdoT6QIzisTo1LlpIbYa6dDavEPLbZ
-HrST846Pw7LBPfQzbUI9g+OGJx1n6GHsQLN/MSs/MsVxufl5S5xAbLehwMdae+Ir
-3Z2M3uSgtC8v5vpBccHCutfgnd/pYhPeX1hvOQIv2CHQfPBTk6jwb3BMR/bO4GU/
-7+x1a/Bsak2jOis2hXQi0QoWP4jjBh1venLqt2QtWxKGCR1zejd3/9wU52rS9x7/
-KO7JXiraWHwxCPGdSLL7tJkppc4c8zN4CoYNgR3eFpnrwXKQjsE=
-=8M8k
------END PGP SIGNATURE-----
-
---pug62zvjsqlqwju4--
+diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+index 74e80ed..05e43d0 100644
+--- a/arch/x86/events/intel/pt.c
++++ b/arch/x86/events/intel/pt.c
+@@ -627,7 +627,7 @@ static struct topa *topa_alloc(int cpu, gfp_t gfp)
+ 	 * link as the 2nd entry in the table
+ 	 */
+ 	if (!intel_pt_validate_hw_cap(PT_CAP_topa_multiple_entries)) {
+-		TOPA_ENTRY(&tp->topa, 1)->base = page_to_phys(p);
++		TOPA_ENTRY(&tp->topa, 1)->base = page_to_phys(p) >> TOPA_SHIFT;
+ 		TOPA_ENTRY(&tp->topa, 1)->end = 1;
+ 	}
+ 
