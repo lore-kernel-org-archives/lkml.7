@@ -2,79 +2,86 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B292DCA9EB2
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 04:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 940A6CA9EA9
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 04:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9010A21D7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 04:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F022173E
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 04:12:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NAiqjLYk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbfJTEIw (ORCPT
+        id S1726205AbfJTEMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 00:08:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37158 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725747AbfJTEI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 00:08:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1C371AF24;
-        Sun, 20 Oct 2019 04:08:27 +0000 (UTC)
-From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-To:     linux-realtek-soc@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        info@synology.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/8] dt-bindings: arm: realtek: Document RTD1293 and Synology DS418j
-Date:   Sun, 20 Oct 2019 06:08:13 +0200
-Message-Id: <20191020040817.16882-5-afaerber@suse.de>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20191020040817.16882-1-afaerber@suse.de>
-References: <20191020040817.16882-1-afaerber@suse.de>
+        Sun, 20 Oct 2019 00:12:46 -0400
+Received: from ozlabs.org ([203.11.71.1]:55935 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbfJTEMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 00:12:45 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46wmZg0d2Zz9sP3;
+        Sun, 20 Oct 2019 15:12:42 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1571544763;
+        bh=vUO5FyjRz6us2s8d9hUuODU6VYygG8CADYAuTgIgPQ8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=NAiqjLYkB0mVWfKcxdEufPATVODOLwFthu5PGkbiywyhDbeWeOEW22MzYCpfTbjw2
+         Q2eYKRzaKhJT8Puv/FJ/CxvD72IuiE1iZJ5PR6EfivKyl0CMWSDyFhh2g7SPDas8gD
+         dZM3RrWZeEw6k9QrNdjHDfDXIAPPWycA/346rXUQwSVXNoPh9tCI2nOhx0THAXx5rK
+         BW0/uUJ1ph1sGWIr8BbyKOZ70vhdHVmds/GFKIRkdRLHOyjaG+Tbz9XKgureKVKU6X
+         7sQ8etVfFsIO+YHzwiQzpDeLbSJKt+sBHtKPp5inW4wc7R90OPGEIHGAHNUNRj8M09
+         /HkkCfF/44awg==
+Date:   Sun, 20 Oct 2019 15:12:41 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: remove the pcmcia tree
+Message-ID: <20191020151241.3e9d1575@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/bHsc7ua3qy8Q9=guUcWhEhP";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define compatible strings for Realtek RTD1293 SoC and Synology
-DiskStation DS418j NAS.
+--Sig_/bHsc7ua3qy8Q9=guUcWhEhP
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Cc: info@synology.com
-Acked-by: Rob Herring <robh@kernel.org>
-[AF: Converted to json-schema]
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- v1 -> v2:
- * Converted to YAML schema
- 
- Documentation/devicetree/bindings/arm/realtek.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+Hi all,
 
-diff --git a/Documentation/devicetree/bindings/arm/realtek.yaml b/Documentation/devicetree/bindings/arm/realtek.yaml
-index 66458a3f422d..6ea3a79825cc 100644
---- a/Documentation/devicetree/bindings/arm/realtek.yaml
-+++ b/Documentation/devicetree/bindings/arm/realtek.yaml
-@@ -14,6 +14,12 @@ properties:
-     const: '/'
-   compatible:
-     oneOf:
-+      # RTD1293 SoC based boards
-+      - items:
-+          - enum:
-+              - synology,ds418j # Synology DiskStation DS418j
-+          - const: realtek,rtd1293
-+
-       # RTD1295 SoC based boards
-       - items:
-           - enum:
--- 
-2.16.4
+The pcmcia tree
+(git://git.kernel.org/pub/scm/linux/kernel/git/brodo/linux.git#pcmcia-next)
+has not been updated in more than a year, so I have removed it from
+linux-next.  Please let me know if/when you want it reinstated.
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/bHsc7ua3qy8Q9=guUcWhEhP
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2r3rkACgkQAVBC80lX
+0GzM/Qf/az35Nnwu0i5xGwCrrWyMWNID2MdjkQazRPVF9pxvIOnDMHu9L0cCEPLX
+KoZqfhtCMzrJ7GQgIJvvnBU9RiuLqXbX2SuJo7NqAVDNRsPJ465j74/z2vCsP7mT
+/cNKshJ8lYH2Vdh3UCVjHLUCVhJ4diMfKz6y8iqjFjaov9EVCNhV+ve7T7742ch8
+z2iLX3LzCIo6jevMqcMGugD3XykJgFLMEYgX044LX09pwEqdYU/gVWmCWbgLwY9o
+FgBpGq3uFckqOcBZyy5wT+j3vP0w9ZnzqAiDm/Yn2jPdoDT/wxi5fnqGOkB0sWWR
+YOSsmx8Y40WODRD0sqAszObfUK0SVA==
+=a7gz
+-----END PGP SIGNATURE-----
+
+--Sig_/bHsc7ua3qy8Q9=guUcWhEhP--
