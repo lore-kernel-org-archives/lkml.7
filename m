@@ -2,141 +2,104 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F249CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 18:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B42ECA9EAD
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 18:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17C6921928
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 18:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0E9F21928
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 18:56:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571597814;
+	bh=DMWKjIExqTNEr+jTC8Cfcm9xcLhUQN9BnsaReJNFJ8M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hHvNPpsTpgM4Ft9Jt6WygFW5/L4pW7Sth723JKY27HtTvYeXOB+oQJmq/tHQISbKK
+	 rsFDrYV/JqSRikl7TbL6CDmk9F2WQL37DAwqEC8rIu7nJlzcuWC1dJsWJhcR1c1//a
+	 6ASSIovFD7xb9b2hAFdedcTeYsfW9p03BPfX4Cho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfJTSvL (ORCPT
+        id S1726794AbfJTS4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 14:51:11 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:36399 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726281AbfJTSvL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 14:51:11 -0400
-Received: from static-50-53-33-191.bvtn.or.frontiernet.net ([50.53.33.191] helo=[192.168.192.153])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <john.johansen@canonical.com>)
-        id 1iMGGs-00035d-7A; Sun, 20 Oct 2019 18:49:42 +0000
-Subject: Re: [PATCH] apparmor: Fix use-after-free in aa_audit_rule_init
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        linux-security-module@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Tyler Hicks <tyhicks@canonical.com>
-References: <20191017014619.26708-1-navid.emamdoost@gmail.com>
- <83dcacc2-a820-fe63-a1b9-1809e8f14f2f@web.de>
-From:   John Johansen <john.johansen@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=john.johansen@canonical.com; prefer-encrypt=mutual; keydata=
- xsFNBE5mrPoBEADAk19PsgVgBKkImmR2isPQ6o7KJhTTKjJdwVbkWSnNn+o6Up5knKP1f49E
- BQlceWg1yp/NwbR8ad+eSEO/uma/K+PqWvBptKC9SWD97FG4uB4/caomLEU97sLQMtnvGWdx
- rxVRGM4anzWYMgzz5TZmIiVTZ43Ou5VpaS1Vz1ZSxP3h/xKNZr/TcW5WQai8u3PWVnbkjhSZ
- PHv1BghN69qxEPomrJBm1gmtx3ZiVmFXluwTmTgJOkpFol7nbJ0ilnYHrA7SX3CtR1upeUpM
- a/WIanVO96WdTjHHIa43fbhmQube4txS3FcQLOJVqQsx6lE9B7qAppm9hQ10qPWwdfPy/+0W
- 6AWtNu5ASiGVCInWzl2HBqYd/Zll93zUq+NIoCn8sDAM9iH+wtaGDcJywIGIn+edKNtK72AM
- gChTg/j1ZoWH6ZeWPjuUfubVzZto1FMoGJ/SF4MmdQG1iQNtf4sFZbEgXuy9cGi2bomF0zvy
- BJSANpxlKNBDYKzN6Kz09HUAkjlFMNgomL/cjqgABtAx59L+dVIZfaF281pIcUZzwvh5+JoG
- eOW5uBSMbE7L38nszooykIJ5XrAchkJxNfz7k+FnQeKEkNzEd2LWc3QF4BQZYRT6PHHga3Rg
- ykW5+1wTMqJILdmtaPbXrF3FvnV0LRPcv4xKx7B3fGm7ygdoowARAQABzR1Kb2huIEpvaGFu
- c2VuIDxqb2huQGpqbXgubmV0PsLBegQTAQoAJAIbAwULCQgHAwUVCgkICwUWAgMBAAIeAQIX
- gAUCTo0YVwIZAQAKCRAFLzZwGNXD2LxJD/9TJZCpwlncTgYeraEMeDfkWv8c1IsM1j0AmE4V
- tL+fE780ZVP9gkjgkdYSxt7ecETPTKMaZSisrl1RwqU0oogXdXQSpxrGH01icu/2n0jcYSqY
- KggPxy78BGs2LZq4XPfJTZmHZGnXGq/eDr/mSnj0aavBJmMZ6jbiPz6yHtBYPZ9fdo8btczw
- P41YeWoIu26/8II6f0Xm3VC5oAa8v7Rd+RWZa8TMwlhzHExxel3jtI7IzzOsnmE9/8Dm0ARD
- 5iTLCXwR1cwI/J9BF/S1Xv8PN1huT3ItCNdatgp8zqoJkgPVjmvyL64Q3fEkYbfHOWsaba9/
- kAVtBNz9RTFh7IHDfECVaToujBd7BtPqr+qIjWFadJD3I5eLCVJvVrrolrCATlFtN3YkQs6J
- n1AiIVIU3bHR8Gjevgz5Ll6SCGHgRrkyRpnSYaU/uLgn37N6AYxi/QAL+by3CyEFLjzWAEvy
- Q8bq3Iucn7JEbhS/J//dUqLoeUf8tsGi00zmrITZYeFYARhQMtsfizIrVDtz1iPf/ZMp5gRB
- niyjpXn131cm3M3gv6HrQsAGnn8AJru8GDi5XJYIco/1+x/qEiN2nClaAOpbhzN2eUvPDY5W
- 0q3bA/Zp2mfG52vbRI+tQ0Br1Hd/vsntUHO903mMZep2NzN3BZ5qEvPvG4rW5Zq2DpybWc7B
- TQROZqz6ARAAoqw6kkBhWyM1fvgamAVjeZ6nKEfnRWbkC94L1EsJLup3Wb2X0ABNOHSkbSD4
- pAuC2tKF/EGBt5CP7QdVKRGcQzAd6b2c1Idy9RLw6w4gi+nn/d1Pm1kkYhkSi5zWaIg0m5RQ
- Uk+El8zkf5tcE/1N0Z5OK2JhjwFu5bX0a0l4cFGWVQEciVMDKRtxMjEtk3SxFalm6ZdQ2pp2
- 822clnq4zZ9mWu1d2waxiz+b5Ia4weDYa7n41URcBEUbJAgnicJkJtCTwyIxIW2KnVyOrjvk
- QzIBvaP0FdP2vvZoPMdlCIzOlIkPLgxE0IWueTXeBJhNs01pb8bLqmTIMlu4LvBELA/veiaj
- j5s8y542H/aHsfBf4MQUhHxO/BZV7h06KSUfIaY7OgAgKuGNB3UiaIUS5+a9gnEOQLDxKRy/
- a7Q1v9S+Nvx+7j8iH3jkQJhxT6ZBhZGRx0gkH3T+F0nNDm5NaJUsaswgJrqFZkUGd2Mrm1qn
- KwXiAt8SIcENdq33R0KKKRC80Xgwj8Jn30vXLSG+NO1GH0UMcAxMwy/pvk6LU5JGjZR73J5U
- LVhH4MLbDggD3mPaiG8+fotTrJUPqqhg9hyUEPpYG7sqt74Xn79+CEZcjLHzyl6vAFE2W0kx
- lLtQtUZUHO36afFv8qGpO3ZqPvjBUuatXF6tvUQCwf3H6XMAEQEAAcLBXwQYAQoACQUCTmas
- +gIbDAAKCRAFLzZwGNXD2D/XD/0ddM/4ai1b+Tl1jznKajX3kG+MeEYeI4f40vco3rOLrnRG
- FOcbyyfVF69MKepie4OwoI1jcTU0ADecnbWnDNHpr0SczxBMro3bnrLhsmvjunTYIvssBZtB
- 4aVJjuLILPUlnhFqa7fbVq0ZQjbiV/rt2jBENdm9pbJZ6GjnpYIcAbPCCa/ffL4/SQRSYHXo
- hGiiS4y5jBTmK5ltfewLOw02fkexH+IJFrrGBXDSg6n2Sgxnn++NF34fXcm9piaw3mKsICm+
- 0hdNh4afGZ6IWV8PG2teooVDp4dYih++xX/XS8zBCc1O9w4nzlP2gKzlqSWbhiWpifRJBFa4
- WtAeJTdXYd37j/BI4RWWhnyw7aAPNGj33ytGHNUf6Ro2/jtj4tF1y/QFXqjJG/wGjpdtRfbt
- UjqLHIsvfPNNJq/958p74ndACidlWSHzj+Op26KpbFnmwNO0psiUsnhvHFwPO/vAbl3RsR5+
- 0Ro+hvs2cEmQuv9r/bDlCfpzp2t3cK+rhxUqisOx8DZfz1BnkaoCRFbvvvk+7L/fomPntGPk
- qJciYE8TGHkZw1hOku+4OoM2GB5nEDlj+2TF/jLQ+EipX9PkPJYvxfRlC6dK8PKKfX9KdfmA
- IcgHfnV1jSn+8yH2djBPtKiqW0J69aIsyx7iV/03paPCjJh7Xq9vAzydN5U/UA==
-Organization: Canonical
-Message-ID: <57b61298-cbeb-f0ff-c6ba-b8f64d5d0287@canonical.com>
-Date:   Sun, 20 Oct 2019 11:49:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sun, 20 Oct 2019 14:56:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39498 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726281AbfJTS4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 14:56:51 -0400
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DB6021929;
+        Sun, 20 Oct 2019 18:56:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571597810;
+        bh=DMWKjIExqTNEr+jTC8Cfcm9xcLhUQN9BnsaReJNFJ8M=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=g8+tJDxW537aodtTeA4/otxkxK01TEF9iPF9sSrkoDF3ukvWcWA//yZavpwqlni8Y
+         9fa6tqxNT/JEmkxpKvFzIrbd2Kl8ESLMW4Or00HmBVPMj4wVtxXxU8L0V6iA6zq3Qg
+         hlTKF4uSm1pgkha1yNEkF3TKb/aeLvREYzn6YuK0=
+Received: by mail-qt1-f182.google.com with SMTP id c17so14294315qtn.8;
+        Sun, 20 Oct 2019 11:56:50 -0700 (PDT)
+X-Gm-Message-State: APjAAAXj62PmDOvIh/nwiZu+CZOpaZM8OZxj9UtBcnNZKmjG0WYDzgUu
+        xp2kMmMWKmU1ADlmknmsB1bSJvkU0mVC++HBsw==
+X-Google-Smtp-Source: APXvYqzezxKnvH4ddIHzD22MnL1TUymJkjpa1epQZ/YP39BDEZsjaDCXMab8nDnoewNjHMIBJSM56RP3ixQbzXmu1kU=
+X-Received: by 2002:ac8:741a:: with SMTP id p26mr6395369qtq.143.1571597809618;
+ Sun, 20 Oct 2019 11:56:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <83dcacc2-a820-fe63-a1b9-1809e8f14f2f@web.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+References: <20190911093123.11312-1-colin.king@canonical.com> <4aa3bcde-1ad1-98ec-8deb-4a8ab1bbb41c@gmail.com>
+In-Reply-To: <4aa3bcde-1ad1-98ec-8deb-4a8ab1bbb41c@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Sun, 20 Oct 2019 13:56:38 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKETEt3SstdoRBV0s63fKeE7pPnOf405147r22ZC6XcgQ@mail.gmail.com>
+Message-ID: <CAL_JsqKETEt3SstdoRBV0s63fKeE7pPnOf405147r22ZC6XcgQ@mail.gmail.com>
+Subject: Re: [PATCH] dtc: fix spelling mistake "mmory" -> "memory"
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Colin King <colin.king@canonical.com>, devicetree@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/20/19 7:16 AM, Markus Elfring wrote:
->> … But after this release the the return statement
->> tries to access the label field of the rule which results in
->> use-after-free. Before releaseing the rule, copy errNo and return it
->> after releasing rule.
-> 
-Navid thanks for finding this, and Markus thanks for the review
+On Thu, Oct 17, 2019 at 2:08 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> Hi Rob,
+>
+>
+> On 09/11/2019 04:31, Colin King wrote:
+> > From: Colin Ian King <colin.king@canonical.com>
+> >
+> > There is a spelling mistake in an error message. Fix it.
+> >
+> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> > ---
+> >  scripts/dtc/fdtput.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/scripts/dtc/fdtput.c b/scripts/dtc/fdtput.c
+> > index a363c3cabc59..3755e5f68a5a 100644
+> > --- a/scripts/dtc/fdtput.c
+> > +++ b/scripts/dtc/fdtput.c
+> > @@ -84,7 +84,7 @@ static int encode_value(struct display_info *disp, char **arg, int arg_count,
+> >                       value_size = (upto + len) + 500;
+> >                       value = realloc(value, value_size);
+> >                       if (!value) {
+> > -                             fprintf(stderr, "Out of mmory: cannot alloc "
+> > +                             fprintf(stderr, "Out of memory: cannot alloc "
+> >                                       "%d bytes\n", value_size);
+> >                               return -1;
+> >                       }
+> >
+>
+> This is a very old version of the upstream file.  update-dtc-source.sh does
+> not pull new versions of this file.
+>
+> We don't actually build fdtput, is there any reason to not just remove
+> scripts/dtc/fdtput.c?
 
-> Please avoid a duplicate word and a typo in this change description.
-> My preference would be a v2 version of the patch with the small clean-ups
-that Markus has pointed out.
+Yes, we should just remove it.
 
-If I don't see a v2 this week I can pull this one in and do the revisions
-myself adding a little fix-up note.
-
-> 
-> …
->> +++ b/security/apparmor/audit.c
-> …
->> @@ -197,8 +198,9 @@ int aa_audit_rule_init(u32 field, u32 op, char *rulestr, void **vrule)
->>  	rule->label = aa_label_parse(&root_ns->unconfined->label, rulestr,
->>  				     GFP_KERNEL, true, false);
->>  	if (IS_ERR(rule->label)) {
->> +		err = rule->label;
-> 
-> How do you think about to define the added local variable in this if branch directly?
-> 
-> +		int err = rule->label;
-> 
-
-yes, since err isn't defined or in use else where this would be preferable
-
->>  		aa_audit_rule_free(rule);
->> -		return PTR_ERR(rule->label);
->> +		return PTR_ERR(err);
->>  	}
->>
->>  	*vrule = rule;
-> 
-> 
-> Regards,
-> Markus
-> 
-
+Rob
