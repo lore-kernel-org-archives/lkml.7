@@ -2,121 +2,202 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0ACCA9EAD
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 19:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0397BCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 19:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7252120869
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 19:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D136220869
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 19:28:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wjk/GMBQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfJTT2v (ORCPT
+        id S1726189AbfJTT2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 15:28:51 -0400
-Received: from mail-oln040092071092.outbound.protection.outlook.com ([40.92.71.92]:32130
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725818AbfJTT2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 20 Oct 2019 15:28:50 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kh8NIKCMseYRDKP9+mbJxiJ8beOFj0AK041oY/ougZZxeF7k5UlmvgadNkzYqCCNf1ascDywDTrNvLWjHYhvdisGgbk0ZB/VtzV2c4z66MfWSjdZQ8VWiqhkVZBPzMA/hhxaCiivolNU/ndxrgidhF8/lDb+W1BLxY8vEHj6yHOoHahGSQJQ9e8THnAPrVCXciDkiYCrc7tXAftZJQjqj6lO5uMOkfgGW+gCTSSyM/Db9H2IbmV9vm4Et0pZC0s+vecIBeOT71FmwgkWLvv+5SVPF/Xqrk/7XMJK05KfxQBlLL+HNfOGTeS8OPs3tQUkdDQ7uO94tAbYfh3WyTosQw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=56xACLdxG0IWQT7TR8hxsIp6mfe5Bof1mY4889BoPBI=;
- b=Nq4V6g1M+30Xwx268imnsLze0LpnlUj0IvqaoZVlhy5Pvk9Vhu37GifkgKQtleLSGzWLIFhNKaRqPRv6NdYGOshzqwVimEFgW8lCee4KTZSdv1tSWPJFILA9kEYBM9v3JFi76T8HiqHIaA2nk7xaQdn803W8aN6T1eqWqseEhyD+42vzVkfOEpLRhhFUXQtD401eedlZdx2gi72c7kN34YrKtRBlmzf7IljIgXaXQEhqCVbPY44eIga6PMmICoMwmIROL44JAOuO//n3OA7+jvg/Bcjlu/RuZNF/TDimuDw/cuw3aSJELwcJq8hD30OeFgo0l6VHL3/O2tOURoZKAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from VE1EUR03FT014.eop-EUR03.prod.protection.outlook.com
- (10.152.18.55) by VE1EUR03HT068.eop-EUR03.prod.protection.outlook.com
- (10.152.18.206) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2305.15; Sun, 20 Oct
- 2019 19:28:46 +0000
-Received: from AM0PR0502MB3668.eurprd05.prod.outlook.com (10.152.18.56) by
- VE1EUR03FT014.mail.protection.outlook.com (10.152.19.38) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2305.15 via Frontend Transport; Sun, 20 Oct 2019 19:28:46 +0000
-Received: from AM0PR0502MB3668.eurprd05.prod.outlook.com
- ([fe80::b1e4:568d:bbc:8247]) by AM0PR0502MB3668.eurprd05.prod.outlook.com
- ([fe80::b1e4:568d:bbc:8247%6]) with mapi id 15.20.2347.028; Sun, 20 Oct 2019
- 19:28:46 +0000
-From:   Anatol Belski <weltling@outlook.de>
-To:     Joe Perches <joe@perches.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-CC:     linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: byteorder: cpu_to_le32_array vs cpu_to_be32_array function API
- differences
-Thread-Topic: byteorder: cpu_to_le32_array vs cpu_to_be32_array function API
- differences
-Thread-Index: AQHVh3kRz65p1edy+E6pOH2HIjxbDqdj6jkA
-Date:   Sun, 20 Oct 2019 19:28:46 +0000
-Message-ID: <AM0PR0502MB3668C7B77C05918FF96EF10DBA6E0@AM0PR0502MB3668.eurprd05.prod.outlook.com>
-References: <2acb30fb3c9a86ac8cc882fb787cd04e5864224b.camel@perches.com>
-In-Reply-To: <2acb30fb3c9a86ac8cc882fb787cd04e5864224b.camel@perches.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-clientproxiedby: AM0PR0102CA0021.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:14::34) To AM0PR0502MB3668.eurprd05.prod.outlook.com
- (2603:10a6:208:19::11)
-x-incomingtopheadermarker: OriginalChecksum:34E4B76D9F3F8D3463DD07D6A91B9D0E7BF226EF968246F7FD672651207FA4FC;UpperCasedChecksum:6A5DC56BF886D8078465498BECA0E6B802512E071F8032C56841F8C0C10B08A5;SizeAsReceived:7944;Count:52
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [XpTXFOEhg9lwYh/gR+QFvRr1m2dmPYZrPI/NCTo/zJiIBclTro3Cn+fwtAPOyI4RvKyyyFZgy7U=]
-x-microsoft-original-message-id: <600e3aaa36fb26cfac68ba54c12524b162b58312.camel@outlook.de>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 52
-x-eopattributedmessage: 0
-x-ms-traffictypediagnostic: VE1EUR03HT068:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vdznUPoFImj7TL6fsSZrCzkrTSuN3xITjWAaD7wU61hkty2I4sTPhBr39XdusjKQyerbScL6FIS8JYnpRjTCJlsTC35APvZGiR6YI0q6yEFqbf3wYHGWuLnoTeFA1PhjOXtf5RBaOjWdEgWI30hXbsHPN/mTZI26DJ/q17tl7PYMNrwlqno7aW/TGkj24gnt
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8B22F3BAB9733B4A90060234ADBB8930@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 53bacc7f-2e69-43e0-c6ae-08d75593b973
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Oct 2019 19:28:46.2966
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR03HT068
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41952 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfJTT2u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 15:28:50 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q7so6943136pfh.8
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 12:28:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=nR5/PUycvY3vVFKY1gw3WwFO6bJ14K3sXYLBVXSi9VY=;
+        b=Wjk/GMBQLsHEzT2/w1aDaC/FhEwRz5PVMC+wyOxAnn+YhUDJzFix/mmNmDYxsOIygj
+         Z5U1v2OphFon6mejTVenFgy4cfkeY3YzrbtTE2WBn8KzgvPyUc9Uao66q7JI6B6SMHaL
+         xcmH0FWJB6Px8d5ILH9yeEWdKP9+EE8BMifIxZ+VAei9LRX5dfpeo7YD04u1RAIeN0bp
+         zlcPXLnkL4vezEXbBewAZXmjPUuRkiMKSw2QNrNWuwXFvnbh16tXx+Szyu7jNoq2FC8d
+         DbOkKX3nuSZ8OwHwUO2gGq1UICUFEbf0JGCiLPaQtWOK70WqId6DZFbFULBAANvKDhvz
+         zDkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=nR5/PUycvY3vVFKY1gw3WwFO6bJ14K3sXYLBVXSi9VY=;
+        b=Ad7956s8ZnwbNOlPSqjOE7kgobNOANwLrULguzP6sEoCTjcOYApSCvjAv5FUCydVAS
+         xovcAL0rWevkQn/Jq6pM+B8DBEVAqr7p+edmhsiaCxIgFJmqxcoHTZ5VY2Cxt1lrnKID
+         ISxx6bbxI2Bz+gfZ7TadN8FXrxs2HeTSGpWsJErgjdmuuGunJm01Fgh6LxPjvqT5/zYa
+         moq1nSTUZxKtZTzaNnBbl0mor2ifVzYcSsZW3+ElXpJjI9Yv5m7tGmyxP+k/tuUtAnG0
+         eGHYHfAP+IOnoAvIfD3KUkpOw6obSFaaWgBSBLPd93b0Avl/T6FDtAVln60xYwYXGJs9
+         6RoA==
+X-Gm-Message-State: APjAAAVXrb6ly+esOAJxj1PviEYuNFCtqynGPHhjW7rym5pUhqzwInu6
+        LYCdYY6N7N74g4Cu4r7ASNo=
+X-Google-Smtp-Source: APXvYqwp7wjSNWzeTWuX/bI6akg2I4lMGylDNLvJ0EkJJHQpeuRn8Aza+tyzcHjom9yq8uEbMs2mOA==
+X-Received: by 2002:a17:90a:d588:: with SMTP id v8mr23905743pju.51.1571599729521;
+        Sun, 20 Oct 2019 12:28:49 -0700 (PDT)
+Received: from localhost.localdomain ([103.97.240.176])
+        by smtp.gmail.com with ESMTPSA id p88sm12494994pjp.22.2019.10.20.12.28.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 20 Oct 2019 12:28:48 -0700 (PDT)
+From:   Pratik Shinde <pratikshinde320@gmail.com>
+To:     linux-erofs@lists.ozlabs.org, gaoxiang25@huawei.com,
+        yuchao0@huawei.com
+Cc:     linux-kernel@vger.kernel.org,
+        Pratik Shinde <pratikshinde320@gmail.com>
+Subject: [PATCH] erofs: code for verifying superblock checksum of an erofs image.
+Date:   Mon, 21 Oct 2019 00:58:28 +0530
+Message-Id: <20191020192828.10772-1-pratikshinde320@gmail.com>
+X-Mailer: git-send-email 2.9.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCk9uIFN1biwgMjAxOS0xMC0yMCBhdCAxMjowMiAtMDcwMCwgSm9lIFBlcmNoZXMgd3Jv
-dGU6DQo+IFRoZXJlJ3MgYW4gYXJndW1lbnQgaW5jb25zaXN0ZW5jeSBiZXR3ZWVuIHRoZXNlIDQg
-ZnVuY3Rpb25zDQo+IGluIGluY2x1ZGUvbGludXgvYnl0ZW9yZGVyL2dlbmVyaWMuaA0KPiANCj4g
-SXQnZCBiZSBtb3JlIGEgY29uc2lzdGVudCBBUEkgd2l0aCBvbmUgZm9ybSBhbmQgbm90IHR3by4N
-Cj4gDQo+ICAgIHN0YXRpYyBpbmxpbmUgdm9pZCBsZTMyX3RvX2NwdV9hcnJheSh1MzIgKmJ1Ziwg
-dW5zaWduZWQgaW50IHdvcmRzKQ0KPiAgICB7DQo+ICAgIAl3aGlsZSAod29yZHMtLSkgew0KPiAg
-ICAJCV9fbGUzMl90b19jcHVzKGJ1Zik7DQo+ICAgIAkJYnVmKys7DQo+ICAgIAl9DQo+ICAgIH0N
-Cj4gDQo+ICAgIHN0YXRpYyBpbmxpbmUgdm9pZCBjcHVfdG9fbGUzMl9hcnJheSh1MzIgKmJ1Ziwg
-dW5zaWduZWQgaW50IHdvcmRzKQ0KPiAgICB7DQo+ICAgIAl3aGlsZSAod29yZHMtLSkgew0KPiAg
-ICAJCV9fY3B1X3RvX2xlMzJzKGJ1Zik7DQo+ICAgIAkJYnVmKys7DQo+ICAgIAl9DQo+ICAgIH0N
-Cj4gDQo+IHZzDQo+IA0KPiAgICBzdGF0aWMgaW5saW5lIHZvaWQgY3B1X3RvX2JlMzJfYXJyYXko
-X19iZTMyICpkc3QsIGNvbnN0IHUzMiAqc3JjLA0KPiBzaXplX3QgbGVuKQ0KPiAgICB7DQo+ICAg
-IAlpbnQgaTsNCj4gDQo+ICAgIAlmb3IgKGkgPSAwOyBpIDwgbGVuOyBpKyspDQo+ICAgIAkJZHN0
-W2ldID0gY3B1X3RvX2JlMzIoc3JjW2ldKTsNCj4gICAgfQ0KPiANCj4gICAgc3RhdGljIGlubGlu
-ZSB2b2lkIGJlMzJfdG9fY3B1X2FycmF5KHUzMiAqZHN0LCBjb25zdCBfX2JlMzIgKnNyYywNCj4g
-c2l6ZV90IGxlbikNCj4gICAgew0KPiAgICAJaW50IGk7DQo+IA0KPiAgICAJZm9yIChpID0gMDsg
-aSA8IGxlbjsgaSsrKQ0KPiAgICAJCWRzdFtpXSA9IGJlMzJfdG9fY3B1KHNyY1tpXSk7DQo+ICAg
-IH0NCj4gDQo+IA0KDQpzaXplX3QgaXMgdGhlIHJpZ2h0IGNob2ljZSBmb3IgdGhpcywgYXMgaXQn
-bGwgZ2VuZXJhdGUgbW9yZSBjb3JyZWN0DQpiaW5hcnkgZGVwZW5kaW5nIG9uIDMyLzY0IGJpdC4g
-SSd2ZSBzZW50IGEgcGF0Y2ggaW4NCidpbmNsdWRlL2xpbnV4L2J5dGVvcmRlci9nZW5lcmljLmg6
-IGZpeCBzaWduZWQvdW5zaWduZWQgd2FybmluZ3MnDQpiZWZvcmUsIGJ1dCBvbmx5IHRvdWNoZWQg
-dGhlIHBsYWNlIHdoZXJlIGkndmUgc2VlbiB3YXJuaW5ncy4gTXkgdmVyeQ0KYmV0IGlzLCB0aGF0
-IGNoYW5naW5nIGJldHdlZW4gc2l6ZV90L3Vuc2lnbmVkLCB3aGlsZSBpdCB3b3VsZCBiZQ0KY29u
-c2lzdGVudCwgd291bGRuJ3QgY2hhbmdlIHRoZSBmdW5jdGlvbmFsaXR5LiBJdCdkIHByb2JhYmx5
-IG1ha2Ugc2Vuc2UNCnRvIGV4dGVuZCB0aGUgYWZvcmVtZW50aW9uZWQgcGF0Y2ggdG8gbW92ZSB1
-bnNpZ25lZCAtPiBzaXplX3QuDQoNClJlZ2FyZHMNCg0KQW5hdG9sDQoNCg==
+Patch for kernel side changes of checksum feature.I used kernel's
+crc32c library for calculating the checksum.
+
+Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
+---
+ fs/erofs/erofs_fs.h |  5 +++--
+ fs/erofs/internal.h |  2 +-
+ fs/erofs/super.c    | 50 ++++++++++++++++++++++++++++++++++++++++++++++----
+ 3 files changed, 50 insertions(+), 7 deletions(-)
+
+diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+index b1ee565..bab5506 100644
+--- a/fs/erofs/erofs_fs.h
++++ b/fs/erofs/erofs_fs.h
+@@ -17,6 +17,7 @@
+  */
+ #define EROFS_FEATURE_INCOMPAT_LZ4_0PADDING	0x00000001
+ #define EROFS_ALL_FEATURE_INCOMPAT		EROFS_FEATURE_INCOMPAT_LZ4_0PADDING
++#define EROFS_FEATURE_SB_CHKSUM 0x0001
+ 
+ /* 128-byte erofs on-disk super block */
+ struct erofs_super_block {
+@@ -37,8 +38,8 @@ struct erofs_super_block {
+ 	__u8 uuid[16];          /* 128-bit uuid for volume */
+ 	__u8 volume_name[16];   /* volume name */
+ 	__le32 feature_incompat;
+-
+-	__u8 reserved2[44];
++	__le32 chksum_blocks;	/* number of blocks used for checksum */
++	__u8 reserved2[40];
+ };
+ 
+ /*
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 544a453..cd3af45 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -86,7 +86,7 @@ struct erofs_sb_info {
+ 	u8 uuid[16];                    /* 128-bit uuid for volume */
+ 	u8 volume_name[16];             /* volume name */
+ 	u32 feature_incompat;
+-
++	u32 features;
+ 	unsigned int mount_opt;
+ };
+ 
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 0e36949..94e1d6a 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -9,6 +9,7 @@
+ #include <linux/statfs.h>
+ #include <linux/parser.h>
+ #include <linux/seq_file.h>
++#include <linux/crc32c.h>
+ #include "xattr.h"
+ 
+ #define CREATE_TRACE_POINTS
+@@ -46,6 +47,45 @@ void _erofs_info(struct super_block *sb, const char *function,
+ 	va_end(args);
+ }
+ 
++static int erofs_validate_sb_chksum(struct erofs_super_block *dsb,
++				       struct super_block *sb)
++{
++	u32 disk_chksum = le32_to_cpu(dsb->checksum);
++	u32 nblocks = le32_to_cpu(dsb->chksum_blocks);
++	u32 crc;
++	struct erofs_super_block *dsb2;
++	char *buf;
++	unsigned int off = 0;
++	void *kaddr;
++	struct page *page;
++	int i, ret = -EINVAL;
++
++	buf = kmalloc(nblocks * EROFS_BLKSIZ, GFP_KERNEL);
++	if (!buf)
++		goto out;
++	for (i = 0; i < nblocks; i++) {
++		page = erofs_get_meta_page(sb, i);
++		if (IS_ERR(page))
++			goto out;
++		kaddr = kmap_atomic(page);
++		(void) memcpy(buf + off, kaddr, EROFS_BLKSIZ);
++		kunmap_atomic(kaddr);
++		unlock_page(page);
++		/* first page will be released by erofs_read_superblock */
++		if (i != 0)
++			put_page(page);
++		off += EROFS_BLKSIZ;
++	}
++	dsb2 = (struct erofs_super_block *)(buf + EROFS_SUPER_OFFSET);
++	dsb2->checksum = 0;
++	crc = crc32c(0, buf, nblocks * EROFS_BLKSIZ);
++	if (crc != disk_chksum)
++		goto out;
++	ret = 0;
++out:	kfree(buf);
++	return ret;
++}
++
+ static void erofs_inode_init_once(void *ptr)
+ {
+ 	struct erofs_inode *vi = ptr;
+@@ -109,18 +149,20 @@ static int erofs_read_superblock(struct super_block *sb)
+ 		erofs_err(sb, "cannot read erofs superblock");
+ 		return PTR_ERR(page);
+ 	}
+-
+ 	sbi = EROFS_SB(sb);
+-
+ 	data = kmap_atomic(page);
+ 	dsb = (struct erofs_super_block *)(data + EROFS_SUPER_OFFSET);
+-
+ 	ret = -EINVAL;
+ 	if (le32_to_cpu(dsb->magic) != EROFS_SUPER_MAGIC_V1) {
+ 		erofs_err(sb, "cannot find valid erofs superblock");
+ 		goto out;
+ 	}
+-
++	if (dsb->feature_compat & EROFS_FEATURE_SB_CHKSUM) {
++		if (erofs_validate_sb_chksum(dsb, sb)) {
++			erofs_err(sb, "super block checksum incorrect");
++			goto out;
++		}
++	}
+ 	blkszbits = dsb->blkszbits;
+ 	/* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
+ 	if (blkszbits != LOG_BLOCK_SIZE) {
+-- 
+2.9.3
+
