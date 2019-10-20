@@ -2,159 +2,229 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 689F3CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 14:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 596CDCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 14:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AFD02190F
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 14:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15A7D2190F
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 14:25:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="RUsW1Yl+"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SO7qycVi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbfJTOQo (ORCPT
+        id S1726463AbfJTOYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 10:16:44 -0400
-Received: from mout.web.de ([212.227.17.11]:34333 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726296AbfJTOQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 10:16:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1571580983;
-        bh=neiNXpq2gExAgXOAcUsnHmBM+tC0ymwFnq2XSxyqe7c=;
-        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
-        b=RUsW1Yl+UUiSOtwQtIuYRD7KrgJhrGS/yKSkmalXSDv7tFdT3SDKnyAtEx6Xn4561
-         E0kcd/y0Evxdyg6VbdgGpTsqPAY7mMXzWFQgjjd8F3FLANAHWhNEUkXbYgyYUnx7Jg
-         0TC4Mfoo9UjNlNTN7Yqme4eQ8idfxQDZWtGmWfTA=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.112.181]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MeBDG-1ifNZx2f3G-00Puqv; Sun, 20
- Oct 2019 16:16:23 +0200
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        James Morris <jmorris@namei.org>,
-        John Johansen <john.johansen@canonical.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Tyler Hicks <tyhicks@canonical.com>
-References: <20191017014619.26708-1-navid.emamdoost@gmail.com>
-Subject: Re: [PATCH] apparmor: Fix use-after-free in aa_audit_rule_init
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        linux-security-module@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <83dcacc2-a820-fe63-a1b9-1809e8f14f2f@web.de>
-Date:   Sun, 20 Oct 2019 16:16:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-MIME-Version: 1.0
-In-Reply-To: <20191017014619.26708-1-navid.emamdoost@gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Sun, 20 Oct 2019 10:24:38 -0400
+Received: from mail-eopbgr10040.outbound.protection.outlook.com ([40.107.1.40]:52864
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726299AbfJTOYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 10:24:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TpVf9BTRjoskvxEc5j58WbltWIC+3s8qilONwx+hSBwzkdzUqsjFIWSqt+huept/5dbs5MKbsoIYgPSIVGUXYGcCT8koCEBCmlSU1AYXD8Q/X4I6jTLF33+oFJdrPZocGcNS9EdnIggrb9AZX3D9seH9DakT7l3uCIOmCpc8h8NQRrB1r/6ojPNQgBJ0jW8MpPq2SObWIefVVQBJsTif9ALitNArXE2N5a47UBdouBCpqOGfqpCqMPhm/YO9GJFEDxsP/OIO1N8MAhbWyeZSfsM6lSlnr94cnvYaD633IBAQSQempdLRJwMpRfStwFpDCu8xjMwzW+KVIqQHzlhJSQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kxHkV/5Hlhgkc2c9pKbRzP3cQaWUTLXCFFifDeFuShA=;
+ b=U9v8p1/MnJXh90s0gTg6LdsAu6Udc5bU8qnTmUQr2qXK9sZl6nPoX4i+UIOkW5t3dpIFtVxDvNTh/tsj7bsxnr3JWLzYNN6g/ZZnIX4lQSG080ebXxoawKsJOYmZEyLuRSbIHkgWvIkQPWTNFem9Ese6BRkIuIb37C8Uj7xqB3tkrLTFZVPxjin/Yh/MJYUqWVEkf0fkkG1ByHBKD3Ww/9kN4LVmRqa9EyJCChUzx+FrUQP+gqsM0fzP/4lSdhk5w8/ZxiLloOdKWHauevKK4O0sVuokiURx2sl7JEkAXezvCxX+KR1/8o7YtojxRdVAQrslYNccsNDL3YWMsVxBWQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kxHkV/5Hlhgkc2c9pKbRzP3cQaWUTLXCFFifDeFuShA=;
+ b=SO7qycVikloy+yLOyGBRq73aGQKQfdZNOBueCIYS8f5riOnbW1QYa4DcmtM6oLwuc+u7wbY+wyOGDCcLdNysTE368x+Es0C5yHAzt6FG3dK+BtMTjDzzRlkv8OktIPCyOtGRXK591JYbfrbToObl547L9OSN7CsXyJvDpDmxvas=
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
+ AM0PR04MB4017.eurprd04.prod.outlook.com (52.134.92.159) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.18; Sun, 20 Oct 2019 14:24:32 +0000
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::4122:fda5:e903:8c02]) by AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::4122:fda5:e903:8c02%3]) with mapi id 15.20.2347.028; Sun, 20 Oct 2019
+ 14:24:32 +0000
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Peng Fan <peng.fan@nxp.com>
+CC:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH 1/3] clk: imx: imx8mm: mark sys_pll1/2 as fixed clock
+Thread-Topic: [PATCH 1/3] clk: imx: imx8mm: mark sys_pll1/2 as fixed clock
+Thread-Index: AQHVfogREXMSqkErfE+B9jsiOEYyjqdjpxsA
+Date:   Sun, 20 Oct 2019 14:24:32 +0000
+Message-ID: <20191020141355.px6o3ifnjy45hli4@fsr-ub1664-175>
+References: <1570614940-17239-1-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1570614940-17239-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM5PR0601CA0028.eurprd06.prod.outlook.com
+ (2603:10a6:203:68::14) To AM0PR04MB5779.eurprd04.prod.outlook.com
+ (2603:10a6:208:131::23)
+x-originating-ip: [89.37.124.34]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=abel.vesa@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ed3f786e-eec7-4cc2-16a9-08d755693974
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: AM0PR04MB4017:|AM0PR04MB4017:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB4017CF00E0B0A69D99814FD1F66E0@AM0PR04MB4017.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2399;
+x-forefront-prvs: 0196A226D1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(366004)(376002)(136003)(346002)(39860400002)(396003)(199004)(189003)(3846002)(446003)(1076003)(316002)(11346002)(102836004)(44832011)(99286004)(66476007)(66556008)(64756008)(66446008)(476003)(53546011)(486006)(66946007)(71190400001)(71200400001)(54906003)(8676002)(76176011)(52116002)(8936002)(186003)(6506007)(26005)(5660300002)(81166006)(81156014)(66066001)(6116002)(25786009)(386003)(9686003)(6512007)(6636002)(86362001)(2906002)(4326008)(305945005)(7736002)(6246003)(6862004)(478600001)(229853002)(256004)(14454004)(33716001)(6486002)(6436002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4017;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kUG079oKzexEOP4s/pAI3GvP/q8LM+qBk8PsoeREX4K6661tRhT+b0ETz/xG0t5rCt/iZo3hFMzHmNDQogQaC/Y+ruUaoiamr//dhPhK2BmZen8Im+CsdH+QQNwv/o1KnDROsH5AYTvAfUiIHSvg7L1hFZf6+Yrv5BjL38h5zaAdBtxh3MzjQcufxZ7KDl+l6CI6uQgkIDEsy1bdz0m/HBbKIDKAHE2gJ2JbarllWVQos3krA6JTDOkNJBeT+J92tT0R3DtbjbKpwiIqZy6+moyWkwC2Zg1JkvGuftC2lmTlEvPYuMeHeKfbTnOE7iy3jvYIrCst/qXm53/WbhtN61V3nW70PLOLMKeXXbQMFc4gGB9iMfaMBUuIhJBRuzGDqTatUgw5ZscK17Wx2N2jYdfx57ESK+M8zgIQo+P0ijg=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1D7E3E0C12D6B14B809F90044067B5F6@eurprd04.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:NKPjIAHdAWmE7ymm724jjg8Fh/+QqRUENKgKBemUKxV/mgFbB2C
- c+LbIcr9wWY8vB+2AomoVpNJktj9QQ+65fBFbNIlkfp59SsB9RhgSp942OhzX6Y8hTxZ9AU
- TT1WWSyV2iRf/MswEL4hohNpiRVjG+knnvrc1umH6oSIsT1clGgGtF5EI1EgWZEhm3xrEjZ
- Bu0v2IStBptbQ9AdVrOOA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0/XNbgdHIc0=:IMI/5WKmhUbGOA3Q2UUnNC
- fGqyzQxwx+nOlU7yuwSjQt6X1DYYPqbpRDG+bRHl5Q9l+4xIifittfEU03gfUBGgbdnTGqvBE
- QVKHFdaPRl5CWGWdqQrc2RUjoiDdQELiPuPfF7Oiz25LF/XfO1ys8iOvZdQBNWnAPYE9f2a1U
- ZbIG4UjrF0bfr3K7+cr0+xTPtOyfkEvEcoR65bysVy+aqgpi113xcMNvCCJjbkoVZqSyKCygx
- 5UD54UvSsB6X3znxeSTeY6l9C8eqLoE0gRO8p986zVzQCb7y2Fba+U46TeMG4z4XDwP+c3eu4
- 5av/Sk2Wnv+Gpd5qCLPDmkHdr1lk8J2G8z3tMrdv1bNx6iOIVc5NNhXylGWo9UlvQ0tj53ab2
- guo9pp49FJM5UK7E5aPjjBTa+lYr/nY7x8hAcVj1MRtDoAp7BcLEi4FXFCAnfeknLPe/B6Dv7
- eejSq8R+p/HkNbsDvRITfFf/lPBpuAshRZTECGrErCGTfsW0hVD3M6lSEYHq/TP3OkmPdjn7R
- foImBOr5gIpXOqmg4dcQ8UhjGr/nCxeNUZRY1E305fHn/UZkteHLVlbQq5rr8ApWL6uDK00up
- pZdXh12dRo7Tz4RkchbqrZwnlEEpzorg1lUBiNqqZYGGe5myjXLhwDRukDLMoEG6Yn3HxDyeo
- J/ntOh4YbJcFX4G1WVkkFZ8BNR1Fh52ckZ67hZN7Cjma1wLDeMNdYQB6FRj6qq867dvlxQprb
- h5wi83XnEnlgXCD2GUo5t2+1TxyOj6obkjTascy8Kg2VuIcGBCvHqS6ZThSNPb76/mY9n8O0w
- sjsdKr5yAh29lwf1OWOsmTHlU8ooh4fhW79S0+LCf041gCLM98jBWPH4h2FUbqL8jvIKJa7g8
- QGzNzI5vl6mubB2q+sJLtuPMiBlvi9T/ixVbMJo9q1wK4LZ6cGgpwBOnT7Bka8n5401T6k2S7
- WZsUGNLCIj+FkOVPIGbx/uM5Si0qjEZj+Rluwd4pvaIjmGO6rluajcKY+8h+SQ+1H0xmXPEwf
- pjNRTr4iUaLOhkJ20CLqHi71HoFribs7TmldrvI3YhXdEZFiVqN4GZ1bqlHyuAANj8m7spz3F
- PVvDrj1nB+SI201h7avnPKdiEUa0IYzZ8eR3Qdo3pXwqbt6jPZ9NHKXhfMvB++RBP9BQPx8Zn
- 8wPQSj17Sjs77TFHq1PNaMuq2AMz9uZK/XXJrLCLwl7UDSpDHlfufmAk2uRF4jKDm3YKYGrpK
- ck/gBokfLmzbvxVZEiwMHermMaq1mJn9AyBuJXJGjK7KCw9oIN/9c20tVuAI=
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed3f786e-eec7-4cc2-16a9-08d755693974
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Oct 2019 14:24:32.1989
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: c0Z9ZqCowJLvO0x0rHUh8+usw5DYfnoktaswke1nF1vGAETP9FpaBB++nbZDAqcSsz9IT2fRzx3I/pSiK3C99w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4017
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> =E2=80=A6 But after this release the the return statement
-> tries to access the label field of the rule which results in
-> use-after-free. Before releaseing the rule, copy errNo and return it
-> after releasing rule.
+On 19-10-09 09:58:14, Peng Fan wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+>=20
+> According Architecture definition guide, SYS_PLL1 is fixed at
+> 800MHz, SYS_PLL2 is fixed at 1000MHz, so let's use imx_clk_fixed
+> to register the clocks and drop code that could change the rate.
+>=20
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-Please avoid a duplicate word and a typo in this change description.
+For the entire series:
 
+Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
 
-=E2=80=A6
-> +++ b/security/apparmor/audit.c
-=E2=80=A6
-> @@ -197,8 +198,9 @@ int aa_audit_rule_init(u32 field, u32 op, char *rule=
-str, void **vrule)
->  	rule->label =3D aa_label_parse(&root_ns->unconfined->label, rulestr,
->  				     GFP_KERNEL, true, false);
->  	if (IS_ERR(rule->label)) {
-> +		err =3D rule->label;
-
-How do you think about to define the added local variable in this if branc=
-h directly?
-
-+		int err =3D rule->label;
-
->  		aa_audit_rule_free(rule);
-> -		return PTR_ERR(rule->label);
-> +		return PTR_ERR(err);
->  	}
->
->  	*vrule =3D rule;
-
-
-Regards,
-Markus
+> ---
+>  drivers/clk/imx/clk-imx8mm.c | 14 ++++----------
+>  1 file changed, 4 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/drivers/clk/imx/clk-imx8mm.c b/drivers/clk/imx/clk-imx8mm.c
+> index 04876ec66127..ae7321ab7837 100644
+> --- a/drivers/clk/imx/clk-imx8mm.c
+> +++ b/drivers/clk/imx/clk-imx8mm.c
+> @@ -34,8 +34,6 @@ static const char *dram_pll_bypass_sels[] =3D {"dram_pl=
+l", "dram_pll_ref_sel", };
+>  static const char *gpu_pll_bypass_sels[] =3D {"gpu_pll", "gpu_pll_ref_se=
+l", };
+>  static const char *vpu_pll_bypass_sels[] =3D {"vpu_pll", "vpu_pll_ref_se=
+l", };
+>  static const char *arm_pll_bypass_sels[] =3D {"arm_pll", "arm_pll_ref_se=
+l", };
+> -static const char *sys_pll1_bypass_sels[] =3D {"sys_pll1", "sys_pll1_ref=
+_sel", };
+> -static const char *sys_pll2_bypass_sels[] =3D {"sys_pll2", "sys_pll2_ref=
+_sel", };
+>  static const char *sys_pll3_bypass_sels[] =3D {"sys_pll3", "sys_pll3_ref=
+_sel", };
+> =20
+>  /* CCM ROOT */
+> @@ -325,8 +323,6 @@ static int imx8mm_clocks_probe(struct platform_device=
+ *pdev)
+>  	clks[IMX8MM_GPU_PLL_REF_SEL] =3D imx_clk_mux("gpu_pll_ref_sel", base + =
+0x64, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+>  	clks[IMX8MM_VPU_PLL_REF_SEL] =3D imx_clk_mux("vpu_pll_ref_sel", base + =
+0x74, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+>  	clks[IMX8MM_ARM_PLL_REF_SEL] =3D imx_clk_mux("arm_pll_ref_sel", base + =
+0x84, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+> -	clks[IMX8MM_SYS_PLL1_REF_SEL] =3D imx_clk_mux("sys_pll1_ref_sel", base =
++ 0x94, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+> -	clks[IMX8MM_SYS_PLL2_REF_SEL] =3D imx_clk_mux("sys_pll2_ref_sel", base =
++ 0x104, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+>  	clks[IMX8MM_SYS_PLL3_REF_SEL] =3D imx_clk_mux("sys_pll3_ref_sel", base =
++ 0x114, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+> =20
+>  	clks[IMX8MM_AUDIO_PLL1] =3D imx_clk_pll14xx("audio_pll1", "audio_pll1_r=
+ef_sel", base, &imx_1443x_pll);
+> @@ -336,8 +332,8 @@ static int imx8mm_clocks_probe(struct platform_device=
+ *pdev)
+>  	clks[IMX8MM_GPU_PLL] =3D imx_clk_pll14xx("gpu_pll", "gpu_pll_ref_sel", =
+base + 0x64, &imx_1416x_pll);
+>  	clks[IMX8MM_VPU_PLL] =3D imx_clk_pll14xx("vpu_pll", "vpu_pll_ref_sel", =
+base + 0x74, &imx_1416x_pll);
+>  	clks[IMX8MM_ARM_PLL] =3D imx_clk_pll14xx("arm_pll", "arm_pll_ref_sel", =
+base + 0x84, &imx_1416x_pll);
+> -	clks[IMX8MM_SYS_PLL1] =3D imx_clk_pll14xx("sys_pll1", "sys_pll1_ref_sel=
+", base + 0x94, &imx_1416x_pll);
+> -	clks[IMX8MM_SYS_PLL2] =3D imx_clk_pll14xx("sys_pll2", "sys_pll2_ref_sel=
+", base + 0x104, &imx_1416x_pll);
+> +	clks[IMX8MM_SYS_PLL1] =3D imx_clk_fixed("sys_pll1", 800000000);
+> +	clks[IMX8MM_SYS_PLL2] =3D imx_clk_fixed("sys_pll2", 1000000000);
+>  	clks[IMX8MM_SYS_PLL3] =3D imx_clk_pll14xx("sys_pll3", "sys_pll3_ref_sel=
+", base + 0x114, &imx_1416x_pll);
+> =20
+>  	/* PLL bypass out */
+> @@ -348,8 +344,6 @@ static int imx8mm_clocks_probe(struct platform_device=
+ *pdev)
+>  	clks[IMX8MM_GPU_PLL_BYPASS] =3D imx_clk_mux_flags("gpu_pll_bypass", bas=
+e + 0x64, 28, 1, gpu_pll_bypass_sels, ARRAY_SIZE(gpu_pll_bypass_sels), CLK_=
+SET_RATE_PARENT);
+>  	clks[IMX8MM_VPU_PLL_BYPASS] =3D imx_clk_mux_flags("vpu_pll_bypass", bas=
+e + 0x74, 28, 1, vpu_pll_bypass_sels, ARRAY_SIZE(vpu_pll_bypass_sels), CLK_=
+SET_RATE_PARENT);
+>  	clks[IMX8MM_ARM_PLL_BYPASS] =3D imx_clk_mux_flags("arm_pll_bypass", bas=
+e + 0x84, 28, 1, arm_pll_bypass_sels, ARRAY_SIZE(arm_pll_bypass_sels), CLK_=
+SET_RATE_PARENT);
+> -	clks[IMX8MM_SYS_PLL1_BYPASS] =3D imx_clk_mux_flags("sys_pll1_bypass", b=
+ase + 0x94, 28, 1, sys_pll1_bypass_sels, ARRAY_SIZE(sys_pll1_bypass_sels), =
+CLK_SET_RATE_PARENT);
+> -	clks[IMX8MM_SYS_PLL2_BYPASS] =3D imx_clk_mux_flags("sys_pll2_bypass", b=
+ase + 0x104, 28, 1, sys_pll2_bypass_sels, ARRAY_SIZE(sys_pll2_bypass_sels),=
+ CLK_SET_RATE_PARENT);
+>  	clks[IMX8MM_SYS_PLL3_BYPASS] =3D imx_clk_mux_flags("sys_pll3_bypass", b=
+ase + 0x114, 28, 1, sys_pll3_bypass_sels, ARRAY_SIZE(sys_pll3_bypass_sels),=
+ CLK_SET_RATE_PARENT);
+> =20
+>  	/* PLL out gate */
+> @@ -360,8 +354,8 @@ static int imx8mm_clocks_probe(struct platform_device=
+ *pdev)
+>  	clks[IMX8MM_GPU_PLL_OUT] =3D imx_clk_gate("gpu_pll_out", "gpu_pll_bypas=
+s", base + 0x64, 11);
+>  	clks[IMX8MM_VPU_PLL_OUT] =3D imx_clk_gate("vpu_pll_out", "vpu_pll_bypas=
+s", base + 0x74, 11);
+>  	clks[IMX8MM_ARM_PLL_OUT] =3D imx_clk_gate("arm_pll_out", "arm_pll_bypas=
+s", base + 0x84, 11);
+> -	clks[IMX8MM_SYS_PLL1_OUT] =3D imx_clk_gate("sys_pll1_out", "sys_pll1_by=
+pass", base + 0x94, 11);
+> -	clks[IMX8MM_SYS_PLL2_OUT] =3D imx_clk_gate("sys_pll2_out", "sys_pll2_by=
+pass", base + 0x104, 11);
+> +	clks[IMX8MM_SYS_PLL1_OUT] =3D imx_clk_gate("sys_pll1_out", "sys_pll1", =
+base + 0x94, 11);
+> +	clks[IMX8MM_SYS_PLL2_OUT] =3D imx_clk_gate("sys_pll2_out", "sys_pll2", =
+base + 0x104, 11);
+>  	clks[IMX8MM_SYS_PLL3_OUT] =3D imx_clk_gate("sys_pll3_out", "sys_pll3_by=
+pass", base + 0x114, 11);
+> =20
+>  	/* SYS PLL fixed output */
+> --=20
+> 2.16.4
+>=20
