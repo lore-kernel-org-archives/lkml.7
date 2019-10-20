@@ -2,104 +2,120 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B42ECA9EAD
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 18:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 847F1CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 19:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E9F21928
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 18:56:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571597814;
-	bh=DMWKjIExqTNEr+jTC8Cfcm9xcLhUQN9BnsaReJNFJ8M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hHvNPpsTpgM4Ft9Jt6WygFW5/L4pW7Sth723JKY27HtTvYeXOB+oQJmq/tHQISbKK
-	 rsFDrYV/JqSRikl7TbL6CDmk9F2WQL37DAwqEC8rIu7nJlzcuWC1dJsWJhcR1c1//a
-	 6ASSIovFD7xb9b2hAFdedcTeYsfW9p03BPfX4Cho=
+	by mail.kernel.org (Postfix) with ESMTP id 5A72C218BA
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 19:09:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbfJTS4v (ORCPT
+        id S1726752AbfJTTC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 14:56:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39498 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726281AbfJTS4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 14:56:51 -0400
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DB6021929;
-        Sun, 20 Oct 2019 18:56:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571597810;
-        bh=DMWKjIExqTNEr+jTC8Cfcm9xcLhUQN9BnsaReJNFJ8M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=g8+tJDxW537aodtTeA4/otxkxK01TEF9iPF9sSrkoDF3ukvWcWA//yZavpwqlni8Y
-         9fa6tqxNT/JEmkxpKvFzIrbd2Kl8ESLMW4Or00HmBVPMj4wVtxXxU8L0V6iA6zq3Qg
-         hlTKF4uSm1pgkha1yNEkF3TKb/aeLvREYzn6YuK0=
-Received: by mail-qt1-f182.google.com with SMTP id c17so14294315qtn.8;
-        Sun, 20 Oct 2019 11:56:50 -0700 (PDT)
-X-Gm-Message-State: APjAAAXj62PmDOvIh/nwiZu+CZOpaZM8OZxj9UtBcnNZKmjG0WYDzgUu
-        xp2kMmMWKmU1ADlmknmsB1bSJvkU0mVC++HBsw==
-X-Google-Smtp-Source: APXvYqzezxKnvH4ddIHzD22MnL1TUymJkjpa1epQZ/YP39BDEZsjaDCXMab8nDnoewNjHMIBJSM56RP3ixQbzXmu1kU=
-X-Received: by 2002:ac8:741a:: with SMTP id p26mr6395369qtq.143.1571597809618;
- Sun, 20 Oct 2019 11:56:49 -0700 (PDT)
+        Sun, 20 Oct 2019 15:02:56 -0400
+Received: from smtprelay0026.hostedemail.com ([216.40.44.26]:53540 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726281AbfJTTC4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 15:02:56 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id ABBD6100E7B42;
+        Sun, 20 Oct 2019 19:02:54 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: level02_194bc56e7ad54
+X-Filterd-Recvd-Size: 2682
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Sun, 20 Oct 2019 19:02:53 +0000 (UTC)
+Message-ID: <2acb30fb3c9a86ac8cc882fb787cd04e5864224b.camel@perches.com>
+Subject: byteorder: cpu_to_le32_array vs cpu_to_be32_array function API
+ differences
+From:   Joe Perches <joe@perches.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Sun, 20 Oct 2019 12:02:52 -0700
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-References: <20190911093123.11312-1-colin.king@canonical.com> <4aa3bcde-1ad1-98ec-8deb-4a8ab1bbb41c@gmail.com>
-In-Reply-To: <4aa3bcde-1ad1-98ec-8deb-4a8ab1bbb41c@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Sun, 20 Oct 2019 13:56:38 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKETEt3SstdoRBV0s63fKeE7pPnOf405147r22ZC6XcgQ@mail.gmail.com>
-Message-ID: <CAL_JsqKETEt3SstdoRBV0s63fKeE7pPnOf405147r22ZC6XcgQ@mail.gmail.com>
-Subject: Re: [PATCH] dtc: fix spelling mistake "mmory" -> "memory"
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Colin King <colin.king@canonical.com>, devicetree@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 2:08 PM Frank Rowand <frowand.list@gmail.com> wrote:
->
-> Hi Rob,
->
->
-> On 09/11/2019 04:31, Colin King wrote:
-> > From: Colin Ian King <colin.king@canonical.com>
-> >
-> > There is a spelling mistake in an error message. Fix it.
-> >
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > ---
-> >  scripts/dtc/fdtput.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/scripts/dtc/fdtput.c b/scripts/dtc/fdtput.c
-> > index a363c3cabc59..3755e5f68a5a 100644
-> > --- a/scripts/dtc/fdtput.c
-> > +++ b/scripts/dtc/fdtput.c
-> > @@ -84,7 +84,7 @@ static int encode_value(struct display_info *disp, char **arg, int arg_count,
-> >                       value_size = (upto + len) + 500;
-> >                       value = realloc(value, value_size);
-> >                       if (!value) {
-> > -                             fprintf(stderr, "Out of mmory: cannot alloc "
-> > +                             fprintf(stderr, "Out of memory: cannot alloc "
-> >                                       "%d bytes\n", value_size);
-> >                               return -1;
-> >                       }
-> >
->
-> This is a very old version of the upstream file.  update-dtc-source.sh does
-> not pull new versions of this file.
->
-> We don't actually build fdtput, is there any reason to not just remove
-> scripts/dtc/fdtput.c?
+There's an argument inconsistency between these 4 functions
+in include/linux/byteorder/generic.h
 
-Yes, we should just remove it.
+It'd be more a consistent API with one form and not two.
 
-Rob
+   static inline void le32_to_cpu_array(u32 *buf, unsigned int words)
+   {
+   	while (words--) {
+   		__le32_to_cpus(buf);
+   		buf++;
+   	}
+   }
+
+   static inline void cpu_to_le32_array(u32 *buf, unsigned int words)
+   {
+   	while (words--) {
+   		__cpu_to_le32s(buf);
+   		buf++;
+   	}
+   }
+
+vs
+
+   static inline void cpu_to_be32_array(__be32 *dst, const u32 *src, size_t len)
+   {
+   	int i;
+
+   	for (i = 0; i < len; i++)
+   		dst[i] = cpu_to_be32(src[i]);
+   }
+
+   static inline void be32_to_cpu_array(u32 *dst, const __be32 *src, size_t len)
+   {
+   	int i;
+
+   	for (i = 0; i < len; i++)
+   		dst[i] = be32_to_cpu(src[i]);
+   }
+
+Added via 2 different commits:
+
+commit f2f2efb807d339513199b1bb771806c90cce83ae
+Author: Mika Westerberg <mika.westerberg@linux.intel.com>
+Date:   Mon Oct 2 13:38:28 2017 +0300
+
+    byteorder: Move {cpu_to_be32, be32_to_cpu}_array() from Thunderbolt to core
+    
+    We will be using these when communicating XDomain discovery protocol
+    over Thunderbolt link but they might be useful for other drivers as
+    well.
+    
+    Make them available through byteorder/generic.h.
+    
+    Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+and
+
+commit 9def051018c08e65c532822749e857eb4b2e12e7
+Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Date:   Wed Mar 21 19:01:40 2018 +0200
+
+    crypto: Deduplicate le32_to_cpu_array() and cpu_to_le32_array()
+    
+    Deduplicate le32_to_cpu_array() and cpu_to_le32_array() by moving them
+    to the generic header.
+    
+    No functional change implied.
+    
+    Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+    Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+
