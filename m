@@ -2,103 +2,130 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C355CCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 13:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E955ECA9EAE
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 13:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 923A1218BA
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 13:23:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ukB5Uznv"
+	by mail.kernel.org (Postfix) with ESMTP id C024C21927
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 13:24:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571577843;
+	bh=JUeyhbY4XLPzl8wkAxz5gj6htNnsDXVN8k8a2GTjy1A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ppylZk6MMvy8ITSvxrAYPvZGa1SHpvK8E3gpiO7UK7RpDCIKF2OxvxWTvBcHyaKz+
+	 qmcMTvWUJwoexK/8mdUoUhO3KificW4MCXPVFlkZmbR/hikWBzz9XXvmcxIgmhKBDm
+	 IdExrsZ9t5C09nY5itG7euSg1VF+WUBN4iA36kS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbfJTNXp (ORCPT
+        id S1726466AbfJTNYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 09:23:45 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33696 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726301AbfJTNXp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 09:23:45 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i76so6011603pgc.0;
-        Sun, 20 Oct 2019 06:23:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IQVDW7+SUCrGzKTHK4lHvxCTx5Hl2Z+Wu3sxv6NNXDM=;
-        b=ukB5UznvwcpJx3YHnsvIuV55k54M2QKyi3xw3HtiLKj/T6xu7S7tZjlFOKzAq8I5Ya
-         ukc35ZmZbJvGuLQChLZLKxZpTbWIH6uuVpsn+41h7cNtp7X5+OpP9Lwq4v3ymSQvdnjy
-         IOC43s5ktSkDulAu2uMu+O8DQ/tN2Sl5XBMskVxDpZBNhMeOlZVLzcU5QZMUGQeRAubb
-         H27AhbU5r0NysgYc+s8/lgHCCbDMkkGSncUekd2j33p5LhbZb+km+N2DP+bp+G1FiMwP
-         Fz5HBNZyxN6usur1eHLbFsAfZD0zKg2w0nmdKAGQQzBJ73CKzepgqJ1zkWv+LdyNJiBn
-         CjfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IQVDW7+SUCrGzKTHK4lHvxCTx5Hl2Z+Wu3sxv6NNXDM=;
-        b=iNHwsVHXSWvkOTdPuyOKshkbIf2NkhEIu5LGpLrtkls9jIxLyzSF1T5sjuoG0aJYmf
-         ZaBUS4KRV2JvZVIHAgJqwBJ5s0NDiJbgJtJ2172QKGUV9Ej8I1/SDk4ezbvbbrltQp0F
-         4V05KfKrYfiCk2TaiBGgW0BYCb4cSnilRPPiD7ctJunxHqbNUMH8ndn7wt2eVQYxf5DM
-         gCeCEu6TD0XPdIpo2lt4+zB8PJR7PXelxUjvoxMiyh4cEsfwPa1nXwM3pjrN8JhUZz15
-         dv1FsDyd1vdq6311z4id54bBqDVhrKIT157WIklfLj5groqiuk1Yq3V9UlbaAztTNkcH
-         bYJg==
-X-Gm-Message-State: APjAAAWMOJGIVD8lCsHxiDm7i4/ohPglf5aQFtKMcXkcpxEPxdH1AQeu
-        E78YCiHXW0ZDlkf1xUC5PME=
-X-Google-Smtp-Source: APXvYqxQ/gT//V0dbnEM+U61UBdb45KOQSGZtqcO1IxW0yBrgmv8grrBnNkbO+IkPQNN1PXBGAokSw==
-X-Received: by 2002:a17:90a:8003:: with SMTP id b3mr22790979pjn.43.1571577824154;
-        Sun, 20 Oct 2019 06:23:44 -0700 (PDT)
-Received: from localhost.localdomain ([111.199.15.214])
-        by smtp.gmail.com with ESMTPSA id o185sm17414198pfg.136.2019.10.20.06.23.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Oct 2019 06:23:43 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Jiri Kosina <trivial@kernel.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH] kernel-doc: trivial improvement for warning message
-Date:   Sun, 20 Oct 2019 21:23:23 +0800
-Message-Id: <20191020132323.29658-1-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Sun, 20 Oct 2019 09:24:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33928 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726298AbfJTNYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 09:24:02 -0400
+Received: from earth.universe (tmo-104-243.customers.d1-online.com [80.187.104.243])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6989218BA;
+        Sun, 20 Oct 2019 13:23:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571577841;
+        bh=JUeyhbY4XLPzl8wkAxz5gj6htNnsDXVN8k8a2GTjy1A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=u5296DppeCP7gcRjsD5Ko3IbgyouQOgb9XoB8emX153V/EMvyLDkFDoGUYxh7LwB8
+         xTqZ2yCcAfeo4GfEPMurOZ80hpOZmt7vt7trMvqd0gKqtcBE79LmUEWuvzjzpFh1fw
+         T1Tfo8h9cnf4okIUkT8g8bsIzDeENCn6jxLgH49A=
+Received: by earth.universe (Postfix, from userid 1000)
+        id ADA5B3C09B1; Sun, 20 Oct 2019 15:23:52 +0200 (CEST)
+Date:   Sun, 20 Oct 2019 15:23:52 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFT 1/3] power: supply: ab8500: Cleanup probe in reverse order
+Message-ID: <20191020132352.seo2seahsq2k32mb@earth.universe>
+References: <20191004150738.6542-1-krzk@kernel.org>
+ <CACRpkdYSnnOJomJi=Db2nkrrdNQmBnNKny1c7ZpDj6KdmKD9Mg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bpnqgwqyh5qys2js"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYSnnOJomJi=Db2nkrrdNQmBnNKny1c7ZpDj6KdmKD9Mg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The message "Function parameter or member ..." looks weird.
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
----
- scripts/kernel-doc | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+--bpnqgwqyh5qys2js
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/scripts/kernel-doc b/scripts/kernel-doc
-index 81dc91760b23..cd3d2ca52c34 100755
---- a/scripts/kernel-doc
-+++ b/scripts/kernel-doc
-@@ -1475,8 +1475,13 @@ sub push_parameter($$$$) {
- 		$parameterdescs{$param} = $undescribed;
- 
- 	        if (show_warnings($type, $declaration_name) && $param !~ /\./) {
--			print STDERR
--			      "${file}:$.: warning: Function parameter or member '$param' not described in '$declaration_name'\n";
-+			if ($decl_type eq "struct" or $decl_type eq 'union') {
-+				print STDERR
-+					"${file}:$.: warning: $decl_type member '$param' not described in '$declaration_name'\n";
-+			} else {
-+				print STDERR
-+					"${file}:$.: warning: $decl_type parameter '$param' not described in '$declaration_name'\n";
-+			}
- 			++$warnings;
- 		}
- 	}
--- 
-2.20.1
+Hi,
 
+On Wed, Oct 16, 2019 at 10:33:12AM +0200, Linus Walleij wrote:
+> On Fri, Oct 4, 2019 at 5:07 PM Krzysztof Kozlowski <krzk@kernel.org> wrot=
+e:
+>=20
+> > It is logical to cleanup in probe's error path in reverse order to
+> > previous actions.  It also makes easier to add additional goto labels
+> > within this error path.
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>=20
+> For all 3 patches:
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>=20
+> The battery charging code is currently disabled on ux500 simply
+> because no platforms with batteries were available for testing
+> or supported by any device trees.
+>=20
+> This is getting fix: PostmarketOS is brewing patches for enabling
+> all Ux500-based Samsung phones, all with batteries. So we will
+> soon be able to test and turn this on.
+>=20
+> The patches are fine to merge, however notice that we are
+> refactoring all drivers using ADC through the IIO tree:
+> https://lore.kernel.org/linux-iio/20191011071805.5554-4-linus.walleij@lin=
+aro.org/
+> https://lore.kernel.org/linux-iio/20191011071805.5554-2-linus.walleij@lin=
+aro.org/
+> https://lore.kernel.org/linux-iio/20191011071805.5554-3-linus.walleij@lin=
+aro.org/
+>=20
+> It would be nice if we could avoid colissions.
+
+Thanks, I merged your immutable branch for the ADC work
+and this patchset.
+
+-- Sebastian
+
+--bpnqgwqyh5qys2js
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2sX+UACgkQ2O7X88g7
++poy/w/8DMZnLieBPLWUCwhIO5fbuByhIgR2X4Aa8sgjZMXRD5ZyreiZNY5HopAV
+5NhV18pa8YcqWLaZO5uar+snOyI959yctBrTSU0ddwt+WAflTxR/sS3d49pNwZDY
+OPz6j85seXjYVqlwSjv+FlN3oBBOoAt2dC0F688OZKyoRQ2+rGoVMasNcG3hIeLm
+XtJ1Snmb05Jbky8j2YD9WJ/6txAMdoy1xYRpLQxM2J6W6ekZ+DBfFkQc2MPYnuBm
+hNKQHvm3wiZ/wXr33UumZc/qJ0ZJx6qzASF9zeiyThn7lGbXMRCyTY1Gow+ECo39
+ZxboDpTt7bGbhcDDjl1mAFeDhC7ceZh1iimq6s5n4dgz8Kg3/uPGacMn+ilZnh8a
+Ab021CnrZzpwDw2+hgfkJfc7GwgkmwfJ5WwvW37iu/0FITDAvIDZMbsAlRLv6c/d
+amB+4VwuA8GXziINCde7f362Gvd0XDJzqSt7ZD3NMR4YNNeYaGd1NZYxd/ox3k6X
+KFrF6Wyl8oQlSkGjBAgSCkh9zqjUv6AN8XtLFzd0G+YnyVqC7WzjPxco+ZA95Aft
+kASFujCAFOBtyU4q1mwIcHhbcZUPHSD9WJ7uzrbH7lx8lrwbs87XV2iIPRCJN66s
+CoCbsUz4ryxNbUcd9xQaAXp9e4wPVb/6rfhBNr+iYVVCjd4agAk=
+=rfQl
+-----END PGP SIGNATURE-----
+
+--bpnqgwqyh5qys2js--
