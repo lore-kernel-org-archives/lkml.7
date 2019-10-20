@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A511CA9EA9
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 03:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B58CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 03:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9B8222CC
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 03:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46ADD222C5
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 03:20:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l3qU4JL0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tRxlI4u+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbfJTDUk (ORCPT
+        id S1726597AbfJTDUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 23:20:40 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39278 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbfJTDU1 (ORCPT
+        Sat, 19 Oct 2019 23:20:31 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:43051 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfJTDUQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 23:20:27 -0400
-Received: by mail-qk1-f193.google.com with SMTP id 4so9077774qki.6;
-        Sat, 19 Oct 2019 20:20:25 -0700 (PDT)
+        Sat, 19 Oct 2019 23:20:16 -0400
+Received: by mail-qt1-f193.google.com with SMTP id t20so15223061qtr.10;
+        Sat, 19 Oct 2019 20:20:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=NCuQ5c3Q5Co4XOtKERxmNTHt3o/cAKRwvT16Zs2Sg08=;
-        b=l3qU4JL0yU4oehIXYFwmj9J2TJe64ma8+HiqVRi/SUmhUIM8Y7W9O0JiW+YenGk7Ba
-         SXhG2SFXTdHoe6m9FFmeG03AO0CidZfTRp5lqFRQm5z0V8HcFUXBO6hdOpF1z3/s3yMJ
-         JX36HPRiPAhPnUwcTla0QJv3oz/QctciC9CN5gJ/b7DlmX/K05Fsq36TR3nMAKg6Qhk5
-         1vOyZAGszHQwfG/nckTjvsEgdZHJzPCybZJVwFOc4z5OEKl2gueKPDMNmIjEj/SwsVoP
-         EH2olq24/syiWVMBC5tyn1VXWvTSL2HB6khejJ3KsQ69EJHEKiXCsz/DLC4NRPFxUgbm
-         de1Q==
+        bh=DiYXjj+rdzvH3hyjdoa4vh5vwNi7WALd3XOKliIHKPs=;
+        b=tRxlI4u+B+ce24ynEdYm96Tq+1+uBH33HQVCvNlQI6nLlG76ooEBY3YdsbHx3F9QyT
+         VFzm/T1H88s7uZafS4vsxM+sZ+4kgVGq7v5yDX4BbfefePA/ZDfyEe0LwrFW9B0zsuGw
+         RwofGehWEiDTHrEwnyJeaIrHeiJl/TPmpq4kbTQKsZaWRwCbDqtfExJV00ACHjoYO/kL
+         aq6G1k56Sz0GBdBXj+f90W5QLZTRN2nwHkQHiholkIjFTxv11kax2i9RmlsaAZ2IUmvF
+         A29Dl+e2/HwtnNpMoMhXy1w28YJ1mi85CmKsX1D0i/J7X9XhnSQL4DcMOH8o9YNh9tS+
+         +mpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NCuQ5c3Q5Co4XOtKERxmNTHt3o/cAKRwvT16Zs2Sg08=;
-        b=PqAspuWKaN8U8ovjL6bh92fLq14glx+RX77NAwMZ+jAlXn0Q9vOC7msXbg9ecbadmE
-         md1+pzX96zarTDX7ZFkfh11Hw/TmXE/zDFOz1EO/NrA0RVauUNiEPpkJT4BYiNv5eInF
-         6cH7/DNTOXyRQzspdDi4Z3MkBBHWE8MSOe7TTe3CFGM0ttGYjvPDwwYVF6W5EuDpjd1X
-         ijtmNA07o0qlkNcvZF6sx8uyWqX3P/bqejyo+zLoe57Y/hsbjGRVKGbLBcc8Bhh5dRvr
-         JScwdBxFsGR1O6iDpXduJzHnCrSX0oQRKq5sOl3gbrFlTfhgxoxkEQkXlCBQfufcD3ZX
-         ZYtQ==
-X-Gm-Message-State: APjAAAXllnrZW7ldsatSm23fDWG5OuUDYXGuu+Ww5ndfFIw7TvWQXfBH
-        W/6leuVrQreCv9qHryfGzms=
-X-Google-Smtp-Source: APXvYqwNQFA/t+ETCVjVpQH36IurcQm2Ki0ciznWBe33OxOmKSCau1YIFb4WIVraqEpe33GyBmgYlA==
-X-Received: by 2002:a05:620a:214d:: with SMTP id m13mr16763921qkm.104.1571541625354;
-        Sat, 19 Oct 2019 20:20:25 -0700 (PDT)
+        bh=DiYXjj+rdzvH3hyjdoa4vh5vwNi7WALd3XOKliIHKPs=;
+        b=tZnVWGjtcTRaHC7tG4Wbyiut8f+/ook5KuuU9kf07fX4CkMznJHSJYJcj+Gxa86lGS
+         Pq0xlt7r1Mdeu+XqhLjyLHdKbOf7irak9uqDLdSHghv+uNmPYT5s6RN7H/vT6W1OMjtb
+         Yz0l5LlSk4O96XlAqQEeu6zqk/sOPiYErZM5mhS3NANzoCCzsNI8XbZeVN9kTUkOxc5F
+         TQ/kN+IFqwHpBf8zVe6b1p8Ksf5pXE7DFAEd5gRiU3+Yu7foBkz4FJynoYjbj/aphJNo
+         GRZDSat2yEEPA/Tvo00bDHOF9urBrmf8lYqPJChx12dlt/uXSGwHB3rcdtPsClYZrfKi
+         iX9g==
+X-Gm-Message-State: APjAAAXJrSBKKBLxEHLi+UMUIEQ11X0q+uEgbCQ1i8zOi9cBtFG0aqfi
+        llj0yfTKGsgNvom71F7NAac=
+X-Google-Smtp-Source: APXvYqyCm762Y8lBHpw1GT6GZ1jqyZvWqMgsKljgaLsOnX0a+6gk5F22Dm1MEV+tzylPhMvIwsIOzg==
+X-Received: by 2002:a0c:8964:: with SMTP id 33mr17992633qvq.241.1571541615655;
+        Sat, 19 Oct 2019 20:20:15 -0700 (PDT)
 Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id z72sm7110305qka.115.2019.10.19.20.20.24
+        by smtp.gmail.com with ESMTPSA id q25sm4903902qtr.25.2019.10.19.20.20.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Oct 2019 20:20:24 -0700 (PDT)
+        Sat, 19 Oct 2019 20:20:15 -0700 (PDT)
 From:   Vivien Didelot <vivien.didelot@gmail.com>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     linux-kernel@vger.kernel.org,
         Vivien Didelot <vivien.didelot@gmail.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org
-Subject: [PATCH net-next 13/16] net: dsa: mv88e6xxx: use ports list to map bridge
-Date:   Sat, 19 Oct 2019 23:19:38 -0400
-Message-Id: <20191020031941.3805884-14-vivien.didelot@gmail.com>
+Subject: [PATCH net-next 06/16] net: dsa: use ports list for routing table setup
+Date:   Sat, 19 Oct 2019 23:19:31 -0400
+Message-Id: <20191020031941.3805884-7-vivien.didelot@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191020031941.3805884-1-vivien.didelot@gmail.com>
 References: <20191020031941.3805884-1-vivien.didelot@gmail.com>
@@ -76,66 +76,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of digging into the other dsa_switch structures of the fabric
-and relying too much on the dsa_to_port helper, use the new list
-of switch fabric ports to remap the Port VLAN Map of local bridge
-group members or remap the Port VLAN Table entry of external bridge
-group members.
+Use the new ports list instead of accessing the dsa_switch array
+of ports when iterating over DSA ports of a switch to set up the
+routing table.
 
 Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
 ---
- drivers/net/dsa/mv88e6xxx/chip.c | 36 +++++++++++++-------------------
- 1 file changed, 15 insertions(+), 21 deletions(-)
+ net/dsa/dsa2.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-index af8943142053..8771f2525932 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -2043,29 +2043,23 @@ static int mv88e6xxx_port_fdb_dump(struct dsa_switch *ds, int port,
- static int mv88e6xxx_bridge_map(struct mv88e6xxx_chip *chip,
- 				struct net_device *br)
- {
--	struct dsa_switch *ds;
--	int port;
--	int dev;
-+	struct dsa_switch *ds = chip->ds;
-+	struct dsa_switch_tree *dst = ds->dst;
-+	struct dsa_port *dp;
- 	int err;
+diff --git a/net/dsa/dsa2.c b/net/dsa/dsa2.c
+index fd2b7f157f97..84afeaeef141 100644
+--- a/net/dsa/dsa2.c
++++ b/net/dsa/dsa2.c
+@@ -157,6 +157,7 @@ static bool dsa_port_setup_routing_table(struct dsa_port *dp)
  
--	/* Remap the Port VLAN of each local bridge group member */
--	for (port = 0; port < mv88e6xxx_num_ports(chip); ++port) {
--		if (dsa_to_port(chip->ds, port)->bridge_dev == br) {
--			err = mv88e6xxx_port_vlan_map(chip, port);
--			if (err)
--				return err;
--		}
--	}
+ static bool dsa_switch_setup_routing_table(struct dsa_switch *ds)
+ {
++	struct dsa_switch_tree *dst = ds->dst;
+ 	bool complete = true;
+ 	struct dsa_port *dp;
+ 	int i;
+@@ -164,10 +165,8 @@ static bool dsa_switch_setup_routing_table(struct dsa_switch *ds)
+ 	for (i = 0; i < DSA_MAX_SWITCHES; i++)
+ 		ds->rtable[i] = DSA_RTABLE_NONE;
+ 
+-	for (i = 0; i < ds->num_ports; i++) {
+-		dp = &ds->ports[i];
 -
--	/* Remap the Port VLAN of each cross-chip bridge group member */
--	for (dev = 0; dev < DSA_MAX_SWITCHES; ++dev) {
--		ds = chip->ds->dst->ds[dev];
--		if (!ds)
--			break;
--
--		for (port = 0; port < ds->num_ports; ++port) {
--			if (dsa_to_port(ds, port)->bridge_dev == br) {
--				err = mv88e6xxx_pvt_map(chip, dev, port);
+-		if (dsa_port_is_dsa(dp)) {
 +	list_for_each_entry(dp, &dst->ports, list) {
-+		/* Remap the Port VLAN Map of local bridge group members and
-+		 * remap the PVT entry of external bridge group members.
-+		 */
-+		if (dp->bridge_dev == br) {
-+			if (dp->ds == ds) {
-+				err = mv88e6xxx_port_vlan_map(chip, dp->index);
-+				if (err)
-+					return err;
-+			} else {
-+				err = mv88e6xxx_pvt_map(chip, dp->ds->index,
-+							dp->index);
- 				if (err)
- 					return err;
- 			}
++		if (dp->ds == ds && dsa_port_is_dsa(dp)) {
+ 			complete = dsa_port_setup_routing_table(dp);
+ 			if (!complete)
+ 				break;
 -- 
 2.23.0
 
