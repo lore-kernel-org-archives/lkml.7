@@ -2,180 +2,129 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21081CA9EAD
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 12:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB746CA9EAD
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 12:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7FF42067B
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 12:30:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571574648;
-	bh=LG3hIT3vIYsy7sPs1hGybqcgmHmIm04Fv7pjm9ecXvY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Oetn8hENjdCln81Y8gZHLKqbKeiN+NXZ6lI9O9EcdXUBO350BJkepKLZ1CCBVPZ7K
-	 Admatlb4QRv/X+kprToFbqdHZXVsPovg+NWywcqM1CPbuCwQcpZFzkGr3d0lX0RIPT
-	 1ZCL5GwTptWkWiJ/zOM8CYloIrxbqGykpLmPDk6U=
+	by mail.kernel.org (Postfix) with ESMTP id ACB882089C
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 12:33:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=colorfullife-com.20150623.gappssmtp.com header.i=@colorfullife-com.20150623.gappssmtp.com header.b="JVnQHtwc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbfJTMa3 (ORCPT
+        id S1726352AbfJTMdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 08:30:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51886 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726194AbfJTMa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 08:30:28 -0400
-Received: from earth.universe (tmo-104-243.customers.d1-online.com [80.187.104.243])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77A8F21927;
-        Sun, 20 Oct 2019 12:30:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571574627;
-        bh=LG3hIT3vIYsy7sPs1hGybqcgmHmIm04Fv7pjm9ecXvY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BWf9naJQt/VNuenutvPgOZ6HDOBa+t5mw7harMq8X9V8ZwrBFIX+GbXgVra1k9NPP
-         BTbUcPHbSmlM6i6emPMxVZRRpY2iXK4+YpG32pU7TlXcUiz8HrnNX8TXuljq2u7oIa
-         uYUdU+My+WWBZ8KXHry9gDdWIeoAUwjqg1LlNR1o=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 6E8AE3C09B1; Sun, 20 Oct 2019 14:30:14 +0200 (CEST)
-Date:   Sun, 20 Oct 2019 14:30:14 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt: power: Add the bq2515x family dt bindings
-Message-ID: <20191020123014.trvn5auxbv6ftngj@earth.universe>
-References: <20190930143137.21624-1-dmurphy@ti.com>
- <20190930143137.21624-2-dmurphy@ti.com>
+        Sun, 20 Oct 2019 08:33:20 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38473 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbfJTMdT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 08:33:19 -0400
+Received: by mail-wr1-f66.google.com with SMTP id o15so10375158wru.5
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Oct 2019 05:33:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=colorfullife-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TVdUtdIiIo8QZJ1H1ltXBxEchxvLqSiQXsKdQA4dkCI=;
+        b=JVnQHtwcfzGLibv56bs4NqnvmgoA5t2TLwKaEOMxADpLrvMCV6zRci4OdnTb+1C00a
+         6NOxwwp+SXRIkZkZI/Z1/a6VqhRc/Yfw4undpsijTbpXK55i2berbh9fgPRb5wDOEZC9
+         8dfreepgdjieAo17hZnHknxpqs6X809cBz6R8q1hycRL79JjfpzDsnvWBvoIoAuk+Uv4
+         SoUugTJF6h6QYI7oBlZCzXZ/zv/U2aLklY5bSSuPubP2xJdVcaK5teNBDrHfR4VGj9zs
+         PyyzPmXUP10GpFy1f76T0fZXVad0dAN3EPNCrKgHa3dcpfAOOVMyxgelAdZ1SRNNVDVF
+         PuKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TVdUtdIiIo8QZJ1H1ltXBxEchxvLqSiQXsKdQA4dkCI=;
+        b=tFlMvaE39lj5txAGRYppgJWlM84UHXcrgatjGy09/WbFhsqPeGAmZU1CKjwOeRR+aI
+         3rnaj8AkMOCY7xgxNp+usDouNQ9q+1HlaPxIYxztKnUVXu5vwxGxwJPHtK0Ja2w8H5UQ
+         dZgtHHVghLZ3Y5tyxSaAPM4VLK2C5ot953JQa53gpGavVSSXZvqfqFkltRkpN5A5ZtSC
+         RJ2hVU2P/PYTAE+aJ1ucjqAv2CKp1uuTy1QNJFySYYYiGICnrAp7sMuiKZEr+gQByTPH
+         9wKwNGwDLgGqjcLtUgjVwqw5iabWrNNdKaWq0wgI8ScHAYWfY0MoYOcEYkVjd8rWHP4l
+         U8GQ==
+X-Gm-Message-State: APjAAAWHBgi7MhiEH/r1aeXkETXzLP8D+867Jr0n7HYI9fBTPycy2Rhe
+        DEfnT3pyrdYIrlfRanKkWK65NhHgcyg=
+X-Google-Smtp-Source: APXvYqy7klSagyBu146d20zW+4n26g7QgSwHtECvKHKGQxFxLBJI07F4VwOn1UyMc7SpS5krEFHfKA==
+X-Received: by 2002:adf:ef4f:: with SMTP id c15mr15818748wrp.296.1571574797446;
+        Sun, 20 Oct 2019 05:33:17 -0700 (PDT)
+Received: from linux.fritz.box (p200300D99703FC00226A5479D1389944.dip0.t-ipconnect.de. [2003:d9:9703:fc00:226a:5479:d138:9944])
+        by smtp.googlemail.com with ESMTPSA id t13sm15065400wra.70.2019.10.20.05.33.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 20 Oct 2019 05:33:16 -0700 (PDT)
+From:   Manfred Spraul <manfred@colorfullife.com>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Waiman Long <longman@redhat.com>
+Cc:     1vier1@web.de, Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Manfred Spraul <manfred@colorfullife.com>
+Subject: [PATCH 0/5] V3: Clarify/standardize memory barriers for ipc
+Date:   Sun, 20 Oct 2019 14:33:00 +0200
+Message-Id: <20191020123305.14715-1-manfred@colorfullife.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rtitbtohtnvbnysq"
-Content-Disposition: inline
-In-Reply-To: <20190930143137.21624-2-dmurphy@ti.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---rtitbtohtnvbnysq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Updated series, based on input from Davidlohr and Peter Zijlstra:
 
-Hi Dan,
+- I've dropped the documentation update for wake_q_add, as what it
+  states is normal: When you call a function and pass a parameter
+  to a structure, you as caller are responsible to ensure that the 
+  parameter is valid, and remains valid for the duration of the
+  function call, including any tearing due to memory reordering.
+  In addition, I've switched ipc to wake_q_add_safe().
 
-On Mon, Sep 30, 2019 at 09:31:36AM -0500, Dan Murphy wrote:
-> Add the bindings for the bq25150 and bq25155 500mA
->  charging IC from Texas Instruments.
->=20
-> Datasheet:
-> http://www.ti.com/lit/ds/symlink/bq25150.pdf
-> http://www.ti.com/lit/ds/symlink/bq25155.pdf
->=20
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  .../bindings/power/supply/bq2515x.txt         | 48 +++++++++++++++++++
+- The patch to Documentation/memory_barriers.txt now as first change.
+  @Davidlohr: You proposed to have 2 paragraphs: First, one for
+  add/subtract, then one for failed cmpxchg. I didn't like that:
+  We have one rule (can be combined with non-mb RMW ops), and then
+  examples what are non-mb RMW ops. Listing special cases just ask
+  for issues later.
+  What I don't know is if there should be examples at all in
+  Documentation/memory_barriers, or just
+  "See Documentation/atomic_t.txt for examples of RMW ops that
+  do not contain a memory barrier"
 
-This should use the new YAML binding style.
+- For the memory barrier pairs in ipc/<whatever>, I have now added
+  /* See ABC_BARRIER for purpose/pairing */ as standard comment,
+  and then a block near the relevant structure where purpose, pairing
+  races, ... are explained. I think this makes it easier to read,
+  compared to adding it to both the _release and _acquire branches.
 
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/bq2515=
-x.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/bq2515x.txt b=
-/Documentation/devicetree/bindings/power/supply/bq2515x.txt
-> new file mode 100644
-> index 000000000000..98203ab53d44
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/bq2515x.txt
-> @@ -0,0 +1,48 @@
-> +Binding for TI bq25150 500-mA Linear charger
-> +
-> +The BQ25150 is a highly integrated battery charge management IC that int=
-egrates
-> +the most common functions for wearable devices, namely a charger, an
-> +output voltage rail, ADC for battery and system monitoring, and
-> +push-button controller.
-> +
-> +Required Properties:
-> +	- compatible: Should contain one of the following:
-> +		"ti,bq25150"
-> +		"ti,bq25155"
-> +	- reg: int I2c address 0x6b
-> +	- #address-cells: 1;
-> +	- #size-cells: =3D 0;
-> +
-> +Optional Properties:
-> +	- ti,battery-regulation-voltage: integer, maximum charging voltage in m=
-V.
-> +		Values range from 3600->4600mV
-> +	- ti,charge-current: integer, maximum charging current in mA.
-> +		Values range from 50->600mA
+Description/purpose:
 
-Those values should be in uV and uA. Also the values basically
-describe the dumb battery, so please use this binding:
+The memory barriers in ipc are not properly documented, and at least
+for some architectures insufficient:
+Reading the xyz->status is only a control barrier, thus
+smp_acquire__after_ctrl_dep() was missing in mqueue.c and msg.c
+sem.c contained a full smp_mb(), which is not required.
 
-Documentation/devicetree/bindings/power/supply/battery.txt
+Patches:
+Patch 1: Documentation for smp_mb__{before,after}_atomic().
 
-> +	- reset-gpios: GPIO used for Master reset
-> +	- low-power-gpios: GPIO used for low power mode of IC.
-> +	- charge-enable-gpios: GPIO used to turn on and off charging.
-> +	- pg-gpios: GPIO used for connecting the bq2515x device PG (Power Good)
-> +		pin.  This pin should be used if possible as this is the
-> +		recommended way to obtain the charger's input PG state.
-> +		If this pin is not specified a software-based approach for PG
-> +		detection is used.
-> +
-> +Example
-> +bq25150@6b {
+Patch 2: Remove code duplication inside ipc/mqueue.c
 
-charger@6b
+Patch 3-5: Update the ipc code, especially add missing
+           smp_mb__after_ctrl_dep() and switch to wake_q_add_safe().
 
-> +	compatible =3D "ti,bq25150";
-> +	reg =3D <0x6b>;
-> +	#address-cells =3D <1>;
-> +	#size-cells =3D <0>;
-> +
-> +	pg-gpios =3D <&gpio1 28 GPIO_ACTIVE_HIGH>;
-> +	reset-gpios =3D <&gpio0 14 GPIO_ACTIVE_HIGH>;
-> +	low-power-gpios =3D <&gpio0 15 GPIO_ACTIVE_HIGH>;
-> +	charge-enable-gpios =3D <&gpio0 13 GPIO_ACTIVE_LOW>;
-> +
-> +	ti,charge-current =3D <300>;
-> +	ti,battery-regulation-voltage =3D <4200>;
-> +};
-> +
-> +Reference Datasheet:
-> +http://www.ti.com/lit/ds/symlink/bq25150.pdf
-> +http://www.ti.com/lit/ds/symlink/bq25155.pdf
-> --=20
-> 2.22.0.214.g8dca754b1e
->=20
+Clarify that smp_mb__{before,after}_atomic() are compatible with all
+RMW atomic operations, not just the operations that do not return a value.
 
--- Sebastian
+Open issues:
+- More testing. I did some tests, but doubt that the tests would be
+  sufficient to show issues with regards to incorrect memory barriers.
 
---rtitbtohtnvbnysq
-Content-Type: application/pgp-signature; name="signature.asc"
+What do you think?
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2sU1YACgkQ2O7X88g7
-+pqvZA//fM8eIVmOvdIvzuodwv79zMkuzA/5HrJENqTYa/T773WMaP40yDvuX9Yl
-kO9WCni/qc2GWPcDPhILF+0XmHdhguWNA23Rr4/g5cFvHDSvEYdmEYmJr7jXSA7u
-JsH5u2lcc3ou4dHizRlX73PJJH42mhuhydkcmmqUHVZI0RIOboEmjpRi+4zczF0h
-qg7ED6/0PAUbc/QrAj89tTUuVqDma05YZUTAK0ZHITGGnuGNbgIzZBVm+/gf1j8Q
-KaGyGbq1AWKypDY8BSRvndC1Jpsv/A9i0mbqEtFN/U4+CVMG8j1yDT16M0pq5fB0
-iNgJQkCPSxJKLE56BpDoESBAb25AdZ5fEjTPCy7A4lB0aVpTVxXzwkc8rpPPkCXv
-6uaOgmucLH9oDpNQizDjP6DCUKEUXx/eXIXySJYYDYeATcZK2txU2VHYSjYi7uSE
-HjdsBmRUVhTukqQBOQeIwcRAYL66hjDap/AJXvdcKZ3tLpmXv2uO5/YiRmAQH6hB
-RPAvm7maH0hp66+9C/NJ8UAnvuSILPgzzkrbYjFtu55mBFDv4SIM1GflnwR8wGeJ
-qiUmgsnZmUuNbbO77vvMR1owYsa2a/ao4bHeNemJG8ptjIrHTlVhG9T/Y6G9SIh3
-UMcxDvl6sPbr0DMZFDNxHyyl4bVfgG3/TzQiGtUlQdc0zrtc0uU=
-=2E8i
------END PGP SIGNATURE-----
-
---rtitbtohtnvbnysq--
+--
+	Manfred
