@@ -2,62 +2,108 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79276CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 22:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DFCCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 23:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ECEF21928
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 22:54:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8317620869
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 23:14:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbfJTWvL (ORCPT
+        id S1726684AbfJTXN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 18:51:11 -0400
-Received: from gentwo.org ([3.19.106.255]:45014 "EHLO gentwo.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726374AbfJTWvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 18:51:11 -0400
-Received: by gentwo.org (Postfix, from userid 1002)
-        id E10FB3EEDB; Sun, 20 Oct 2019 22:51:10 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-        by gentwo.org (Postfix) with ESMTP id DE8FA3EB25;
-        Sun, 20 Oct 2019 22:51:10 +0000 (UTC)
-Date:   Sun, 20 Oct 2019 22:51:10 +0000 (UTC)
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@www.lameter.com
-To:     Roman Gushchin <guro@fb.com>
-cc:     linux-mm@kvack.org, Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH 02/16] mm: vmstat: use s32 for vm_node_stat_diff in struct
- per_cpu_nodestat
-In-Reply-To: <20191018002820.307763-3-guro@fb.com>
-Message-ID: <alpine.DEB.2.21.1910202250010.593@www.lameter.com>
-References: <20191018002820.307763-1-guro@fb.com> <20191018002820.307763-3-guro@fb.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 20 Oct 2019 19:13:26 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:57447 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726565AbfJTXN0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 19:13:26 -0400
+X-Originating-IP: 86.202.229.42
+Received: from localhost (lfbn-lyo-1-146-42.w86-202.abo.wanadoo.fr [86.202.229.42])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 6B16040003;
+        Sun, 20 Oct 2019 23:13:23 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     linux-rtc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        syzbot+08116743f8ad6f9a6de7@syzkaller.appspotmail.com
+Subject: [PATCH] rtc: disable uie before setting time and enable after
+Date:   Mon, 21 Oct 2019 01:13:20 +0200
+Message-Id: <20191020231320.8191-1-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 17 Oct 2019, Roman Gushchin wrote:
+When setting the time in the future with the uie timer enabled,
+rtc_timer_do_work will loop for a while because the expiration of the uie
+timer was way before the current RTC time and a new timer will be enqueued
+until the current rtc time is reached.
 
-> Currently s8 type is used for per-cpu caching of per-node statistics.
-> It works fine because the overfill threshold can't exceed 125.
->
-> But if some counters are in bytes (and the next commit in the series
-> will convert slab counters to bytes), it's not gonna work:
-> value in bytes can easily exceed s8 without exceeding the threshold
-> converted to bytes. So to avoid overfilling per-cpu caches and breaking
-> vmstats correctness, let's use s32 instead.
+If the uie timer is enabled, disable it before setting the time and enable
+it after expiring current timers (which may actually be an alarm).
 
-Actually this is inconsistenct since the other counters are all used to
-account for pages. Some of the functions in use for the page counters will
-no longer make sense. inc/dec_node_state() etc.
+This is the safest thing to do to ensure the uie timer is still
+synchronized with the RTC, especially in the UIE emulation case.
+
+Reported-by: syzbot+08116743f8ad6f9a6de7@syzkaller.appspotmail.com
+Fixes: 6610e0893b8b ("RTC: Rework RTC code to use timerqueue for events")
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/rtc/interface.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/rtc/interface.c b/drivers/rtc/interface.c
+index eea700723976..f8b7c004d6ec 100644
+--- a/drivers/rtc/interface.c
++++ b/drivers/rtc/interface.c
+@@ -125,7 +125,7 @@ EXPORT_SYMBOL_GPL(rtc_read_time);
+ 
+ int rtc_set_time(struct rtc_device *rtc, struct rtc_time *tm)
+ {
+-	int err;
++	int err, uie;
+ 
+ 	err = rtc_valid_tm(tm);
+ 	if (err != 0)
+@@ -137,6 +137,17 @@ int rtc_set_time(struct rtc_device *rtc, struct rtc_time *tm)
+ 
+ 	rtc_subtract_offset(rtc, tm);
+ 
++#ifdef CONFIG_RTC_INTF_DEV_UIE_EMUL
++	uie = rtc->uie_rtctimer.enabled || rtc->uie_irq_active;
++#else
++	uie = rtc->uie_rtctimer.enabled;
++#endif
++	if (uie) {
++		err = rtc_update_irq_enable(rtc, 0);
++		if (err)
++			return err;
++	}
++
+ 	err = mutex_lock_interruptible(&rtc->ops_lock);
+ 	if (err)
+ 		return err;
+@@ -153,6 +164,12 @@ int rtc_set_time(struct rtc_device *rtc, struct rtc_time *tm)
+ 	/* A timer might have just expired */
+ 	schedule_work(&rtc->irqwork);
+ 
++	if (uie) {
++		err = rtc_update_irq_enable(rtc, 1);
++		if (err)
++			return err;
++	}
++
+ 	trace_rtc_set_time(rtc_tm_to_time64(tm), err);
+ 	return err;
+ }
+-- 
+2.21.0
+
