@@ -5,67 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B58CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 03:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D702CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 03:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46ADD222C5
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 03:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 649CE20659
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 03:20:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tRxlI4u+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nYgFwAfG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfJTDUb (ORCPT
+        id S1726728AbfJTDU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 19 Oct 2019 23:20:31 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:43051 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfJTDUQ (ORCPT
+        Sat, 19 Oct 2019 23:20:56 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:44209 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbfJTDU2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 19 Oct 2019 23:20:16 -0400
-Received: by mail-qt1-f193.google.com with SMTP id t20so15223061qtr.10;
-        Sat, 19 Oct 2019 20:20:16 -0700 (PDT)
+        Sat, 19 Oct 2019 23:20:28 -0400
+Received: by mail-qk1-f193.google.com with SMTP id u22so9052135qkk.11;
+        Sat, 19 Oct 2019 20:20:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DiYXjj+rdzvH3hyjdoa4vh5vwNi7WALd3XOKliIHKPs=;
-        b=tRxlI4u+B+ce24ynEdYm96Tq+1+uBH33HQVCvNlQI6nLlG76ooEBY3YdsbHx3F9QyT
-         VFzm/T1H88s7uZafS4vsxM+sZ+4kgVGq7v5yDX4BbfefePA/ZDfyEe0LwrFW9B0zsuGw
-         RwofGehWEiDTHrEwnyJeaIrHeiJl/TPmpq4kbTQKsZaWRwCbDqtfExJV00ACHjoYO/kL
-         aq6G1k56Sz0GBdBXj+f90W5QLZTRN2nwHkQHiholkIjFTxv11kax2i9RmlsaAZ2IUmvF
-         A29Dl+e2/HwtnNpMoMhXy1w28YJ1mi85CmKsX1D0i/J7X9XhnSQL4DcMOH8o9YNh9tS+
-         +mpg==
+        bh=6L5GXEQf2TmKkQqvOj5hVJ0JGfsrXHOwa855xP48opA=;
+        b=nYgFwAfG9IeAPQkw5LGeKx+etzNbngpM1Mld5rAXDsaEkKOIevDO8SUskffzBefvDL
+         ek3u2PVhjRsR21BIrJ7TAUcGZM2N2lTKAgL/3zD/VInb8bPuyklhDLU3L36YSI2qXbV4
+         WyArz3jTEL9UoqX4byDznnRPMkm/HxofMaPGnanKnTLlBRyHJzcVLATTO5Wttfoae8AZ
+         BkX7wd3vAcETfBCtuStGpj21DKjAsWlalr/xJQ6xSffrHkQKNUMACH9cUXcQBkAU82Ui
+         vr9qk67uk37CbPi/2NXMD92oYf7di8TOo+MH/HIRNRoRzWbT9iERszFZDmYo0EdJY7b/
+         vv1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DiYXjj+rdzvH3hyjdoa4vh5vwNi7WALd3XOKliIHKPs=;
-        b=tZnVWGjtcTRaHC7tG4Wbyiut8f+/ook5KuuU9kf07fX4CkMznJHSJYJcj+Gxa86lGS
-         Pq0xlt7r1Mdeu+XqhLjyLHdKbOf7irak9uqDLdSHghv+uNmPYT5s6RN7H/vT6W1OMjtb
-         Yz0l5LlSk4O96XlAqQEeu6zqk/sOPiYErZM5mhS3NANzoCCzsNI8XbZeVN9kTUkOxc5F
-         TQ/kN+IFqwHpBf8zVe6b1p8Ksf5pXE7DFAEd5gRiU3+Yu7foBkz4FJynoYjbj/aphJNo
-         GRZDSat2yEEPA/Tvo00bDHOF9urBrmf8lYqPJChx12dlt/uXSGwHB3rcdtPsClYZrfKi
-         iX9g==
-X-Gm-Message-State: APjAAAXJrSBKKBLxEHLi+UMUIEQ11X0q+uEgbCQ1i8zOi9cBtFG0aqfi
-        llj0yfTKGsgNvom71F7NAac=
-X-Google-Smtp-Source: APXvYqyCm762Y8lBHpw1GT6GZ1jqyZvWqMgsKljgaLsOnX0a+6gk5F22Dm1MEV+tzylPhMvIwsIOzg==
-X-Received: by 2002:a0c:8964:: with SMTP id 33mr17992633qvq.241.1571541615655;
-        Sat, 19 Oct 2019 20:20:15 -0700 (PDT)
+        bh=6L5GXEQf2TmKkQqvOj5hVJ0JGfsrXHOwa855xP48opA=;
+        b=JMZO2Lrs3YW+jGpIwpA2QASj43PVysXZ1Kfhg9qxI/0akBLewHcI3fIjMYaYxrsNrr
+         nNwOlxW9d5+HDqzCcxy0P60zot4BEbrEZvlIKXSqb7ApeSUTmSk+4E6U/ZmhO4J6wZiA
+         RYGZBI4aFh4BX0s1K8bvXpT5GesaIZqqzMpv/MPWcR3zET7XnakQDoWsni8oqZ6A6qrf
+         xkzD1nVYo6V5JKSi1N691cTAZLA5/J/JJZknD/rrzuhwmLPHI8+Ts5/m1R7K63bbRfIa
+         IE5m3sacCB4YOl2s+/YtG+PpNg+aV6iM3AdzyAFtFmxlGXKjd6oSI98Q6QubJ+8/mzf+
+         hBbw==
+X-Gm-Message-State: APjAAAW7b1tpoDmmcF+nIuLLmuuU10V+hqVN4W1yCRY8ydUlNGPIRZYk
+        g/nfB1WQRAgAM6AJkRyoVKY=
+X-Google-Smtp-Source: APXvYqzDWDVgJV5SGzc9MSkGZxKdfdxFVN9xTO3RvdAvQLh24QqV3ajaT1nIIbIg9OTjx8rwA3atKw==
+X-Received: by 2002:a37:8101:: with SMTP id c1mr16605609qkd.287.1571541627190;
+        Sat, 19 Oct 2019 20:20:27 -0700 (PDT)
 Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id q25sm4903902qtr.25.2019.10.19.20.20.14
+        by smtp.gmail.com with ESMTPSA id q16sm2602742qke.22.2019.10.19.20.20.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Oct 2019 20:20:15 -0700 (PDT)
+        Sat, 19 Oct 2019 20:20:26 -0700 (PDT)
 From:   Vivien Didelot <vivien.didelot@gmail.com>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     linux-kernel@vger.kernel.org,
         Vivien Didelot <vivien.didelot@gmail.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org
-Subject: [PATCH net-next 06/16] net: dsa: use ports list for routing table setup
-Date:   Sat, 19 Oct 2019 23:19:31 -0400
-Message-Id: <20191020031941.3805884-7-vivien.didelot@gmail.com>
+Subject: [PATCH net-next 14/16] net: dsa: sja1105: register switch before assigning port private data
+Date:   Sat, 19 Oct 2019 23:19:39 -0400
+Message-Id: <20191020031941.3805884-15-vivien.didelot@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191020031941.3805884-1-vivien.didelot@gmail.com>
 References: <20191020031941.3805884-1-vivien.didelot@gmail.com>
@@ -76,40 +76,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new ports list instead of accessing the dsa_switch array
-of ports when iterating over DSA ports of a switch to set up the
-routing table.
+Like the dsa_switch_tree structures, the dsa_port structures will be
+allocated on switch registration.
+
+The SJA1105 driver is the only one accessing the dsa_port structure
+after the switch allocation and before the switch registration.
+For that reason, move switch registration prior to assigning the priv
+member of the dsa_port structures.
 
 Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
 ---
- net/dsa/dsa2.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/net/dsa/sja1105/sja1105_main.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/net/dsa/dsa2.c b/net/dsa/dsa2.c
-index fd2b7f157f97..84afeaeef141 100644
---- a/net/dsa/dsa2.c
-+++ b/net/dsa/dsa2.c
-@@ -157,6 +157,7 @@ static bool dsa_port_setup_routing_table(struct dsa_port *dp)
+diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
+index 4b0cb779f187..0ebbda5ca665 100644
+--- a/drivers/net/dsa/sja1105/sja1105_main.c
++++ b/drivers/net/dsa/sja1105/sja1105_main.c
+@@ -2057,6 +2057,15 @@ static int sja1105_probe(struct spi_device *spi)
  
- static bool dsa_switch_setup_routing_table(struct dsa_switch *ds)
- {
-+	struct dsa_switch_tree *dst = ds->dst;
- 	bool complete = true;
- 	struct dsa_port *dp;
- 	int i;
-@@ -164,10 +165,8 @@ static bool dsa_switch_setup_routing_table(struct dsa_switch *ds)
- 	for (i = 0; i < DSA_MAX_SWITCHES; i++)
- 		ds->rtable[i] = DSA_RTABLE_NONE;
+ 	tagger_data = &priv->tagger_data;
  
--	for (i = 0; i < ds->num_ports; i++) {
--		dp = &ds->ports[i];
++	mutex_init(&priv->ptp_data.lock);
++	mutex_init(&priv->mgmt_lock);
++
++	sja1105_tas_setup(ds);
++
++	rc = dsa_register_switch(priv->ds);
++	if (rc)
++		return rc;
++
+ 	/* Connections between dsa_port and sja1105_port */
+ 	for (i = 0; i < SJA1105_NUM_PORTS; i++) {
+ 		struct sja1105_port *sp = &priv->ports[i];
+@@ -2065,12 +2074,8 @@ static int sja1105_probe(struct spi_device *spi)
+ 		sp->dp = dsa_to_port(ds, i);
+ 		sp->data = tagger_data;
+ 	}
+-	mutex_init(&priv->ptp_data.lock);
+-	mutex_init(&priv->mgmt_lock);
+ 
+-	sja1105_tas_setup(ds);
 -
--		if (dsa_port_is_dsa(dp)) {
-+	list_for_each_entry(dp, &dst->ports, list) {
-+		if (dp->ds == ds && dsa_port_is_dsa(dp)) {
- 			complete = dsa_port_setup_routing_table(dp);
- 			if (!complete)
- 				break;
+-	return dsa_register_switch(priv->ds);
++	return 0;
+ }
+ 
+ static int sja1105_remove(struct spi_device *spi)
 -- 
 2.23.0
 
