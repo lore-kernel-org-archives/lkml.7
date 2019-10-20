@@ -2,116 +2,126 @@ Return-Path: <SRS0=ATYp=YN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBD9CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 20:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E51C1CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 20:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56C6E21929
-	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 20:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACB3821928
+	for <linux-kernel@archiver.kernel.org>; Sun, 20 Oct 2019 20:33:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571603638;
+	bh=VKo6tnVqdhqTowY1VnS1hBJGvtyol6K5bDgkYDXR64Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lt2djKjt7FZnVGeLilMoXtImkvourczTvkbTu8gASouD8/UjHaLcemM+ttEzvL0fe
+	 jJVwXpD1oBzl61Iisq+amFdkS+sQ43aA2rHXAEu2U0fPk2zYgjOCr+ytmIAcXZMmVW
+	 3v6QLepcGuCuLkIWKtks0E2OEnasVlk04TbumPIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfJTU3i (ORCPT
+        id S1726449AbfJTUd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 20 Oct 2019 16:29:38 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:46461 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725941AbfJTU3i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 20 Oct 2019 16:29:38 -0400
-X-IronPort-AV: E=Sophos;i="5.67,320,1566856800"; 
-   d="scan'208";a="407084399"
-Received: from ip-121.net-89-2-166.rev.numericable.fr (HELO hadrien) ([89.2.166.121])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 22:29:35 +0200
-Date:   Sun, 20 Oct 2019 22:29:35 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Joe Perches <joe@perches.com>
-cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Jules Irenge <jbi.octave@gmail.com>,
-        devel@driverdev.osuosl.org, outreachy-kernel@googlegroups.com,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
-Subject: Re: [Outreachy kernel] Re: [PATCH v1 1/5] staging: wfx: fix warnings
- of no space is necessary
-In-Reply-To: <7ef650e0a6487a3eefc8df9eaf0ab20b5d26bad1.camel@perches.com>
-Message-ID: <alpine.DEB.2.21.1910202227480.10441@hadrien>
-References: <20191019140719.2542-1-jbi.octave@gmail.com>   <20191019140719.2542-2-jbi.octave@gmail.com>  <20191019142443.GH24678@kadam>   <alpine.LFD.2.21.1910191603520.6740@ninjahub.org>   <20191019180514.GI24678@kadam>   <336960fdf88dbed69dd3ed2689a5fb1d2892ace8.camel@perches.com>
-  <20191020191759.GJ24678@kadam>  <6e6bc92cac0858fe5bd37b28f688d3da043f4bef.camel@perches.com>  <alpine.DEB.2.21.1910202149140.10441@hadrien> <7ef650e0a6487a3eefc8df9eaf0ab20b5d26bad1.camel@perches.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 20 Oct 2019 16:33:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52382 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725941AbfJTUdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 20 Oct 2019 16:33:55 -0400
+Received: from earth.universe (cust-west-pareq2-46-193-15-226.wb.wifirst.net [46.193.15.226])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AAE321928;
+        Sun, 20 Oct 2019 20:33:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571603635;
+        bh=VKo6tnVqdhqTowY1VnS1hBJGvtyol6K5bDgkYDXR64Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nefM2rBeS7MO0nW8qLsuoMl/A6qamPKWt68X8Cm3qyFFQIRkI5iOYSw9OqkEvIpnv
+         350SJawfCGWveKacCRkVfnQljtNRe6kQ5mv5mvb9fQQywUbab6v8UK4VeaSoxv/2lC
+         BckYSV6oc4i1JAiLOPk5detrPTAY+zzY5vlHS2AA=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 000B13C0CA0; Sun, 20 Oct 2019 22:33:52 +0200 (CEST)
+Date:   Sun, 20 Oct 2019 22:33:52 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Adam Ford <aford173@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-bluetooth@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com
+Subject: Re: [PATCHv2 0/4] Convert all btwilink users to hci_ll and drop
+ btwilink
+Message-ID: <20191020203352.rh3n6qpagiyift7d@earth.universe>
+References: <20191003134147.9458-1-sre@kernel.org>
+ <20191008143116.GF5610@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="sm5ahi5a3wy7vwrr"
+Content-Disposition: inline
+In-Reply-To: <20191008143116.GF5610@atomide.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--sm5ahi5a3wy7vwrr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 20 Oct 2019, Joe Perches wrote:
+Hi Tony,
 
-> On Sun, 2019-10-20 at 21:52 +0200, Julia Lawall wrote:
-> > On Sun, 20 Oct 2019, Joe Perches wrote:
-> []
-> > > There's probably a generic cocci mechanism to check function
-> > > prototypes and then remove uses of unnecessary void pointer casts
-> > > in function calls.  I'm not going to try to figure out that syntax.
-> >
-> > With the --recursive-includes option, perhaps:
-> >
-> > @r@
-> > identifier f;
-> > parameter list[n] ps;
-> > type T;
-> > identifier i;
-> > @@
-> >
-> > T f(ps, void *i, ...);
-> >
-> > @@
-> > expression e;
-> > identifier r.f;
-> > expression list[r.n] es;
-> > @@
-> >
-> > f(es,
-> > - (void *)(e)
-> > + e
-> >   ,...)
-> >
-> > This of course only works for functions that have prototypes, and not for
-> > macros.  It will also run slowly.
->
-> You are not kidding about slow, but it doesn't seem to work
-> for mem<foo>, maybe because system includes aren't analyzed.
+On Tue, Oct 08, 2019 at 07:31:16AM -0700, Tony Lindgren wrote:
+> * Sebastian Reichel <sre@kernel.org> [191003 06:42]:
+> > This moves the remaining users of btwilink to the "new" serdev based hc=
+i_ll
+> > driver and drops the btwilink driver afterwards. The patches were only =
+compile
+> > tested by me, but Enric tested the IGEP platform and Adam will test the=
+ LogicPD
+> > platform.
+> >=20
+> > I kept the TI_ST driver for now, since I plan to send a second patchset=
+ for the
+> > FM radio driver. Once the FM driver has been converted to also use hci_=
+ll, we
+> > can remove TI_ST completly.
+> >=20
+> > My suggestion is for the patch handling is, that everything simply goes=
+ through
+> > Tony's tree.
+>=20
+> Sounds good to me, good to see kim gone with patch 3/4 :)
+>=20
+> Marcel, care to ack the old driver removal patch?
 
-No they are not.
+Looks like Marcel missed the extra messages and merged the 4th
+patch, so I guess you can just merge patches 1-3. Technically that
+might lead to temporarily missing BT support on those two devices
+when the BT tree is merged before ARM tree during the merge window.
+Not a big issue I guess.
 
-> Single file processing time on an XPS13 averages more than
-> 100 seconds per file.
+-- Sebastian
 
-Not surprising.
+--sm5ahi5a3wy7vwrr
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Actually, --include-headers-for-types should provide some benefit.  That
-discards the header files after the type inference.
+-----BEGIN PGP SIGNATURE-----
 
-> Also:
->
-> 	expression e;
->
-> could probably be better as:
->
-> 	type T;
-> 	T *p;
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2sxK0ACgkQ2O7X88g7
++prIog//SHiTMzn4T99dMKj3MWuzk7SikJRKPSRc4rnLfbXHvx0WAXEADzr/fabi
+8Ek3V2rGN7RUAQmXvkqI2+cUVs/9+EwGjW2NfVvDECrhaitscUuX9IJ7+lQ3Mw4j
+eptrRQkRQtdmlP1ppPL5m8zBqomcGSMZnOwmYMuUA/Sh8968iQkECsqvUKsC5A08
+QpBNlLw+ZQgA8/C7/87ZiBnyQNr/EG+KSQCoKxVg8mt390DA3gMLCwLrbzqznDVB
+Q7ZZpxcRovyuVxDPHqzvHLcCKPWCbPIQ1mToXIGWaAkkzbRBON28UhRed8nvXT5Y
+ctZffUovpG3iXfpg7WmxMqZIf7X7wAHVbDakDIrrqgxn+WCOAUqKQ/kzFwi1P8fE
+sY4TwCTxZDpvGuTVNov+Rt1RMgEesNWT/wCVaLIA3xDSGzbz2hY9xImVrZ7WfFaA
+NelFzGcuNsdok3witPD+pf/kyULA0FE3bjS4yP1vrxqvB4TFkjAayPaTsZmteevA
+DZTKOEToREcx23/D6eXQtL5u+Y0tYlWAqXxGKSqj5NeDnykaRvXHEpyAjENCSza4
+mCAMNGeBLy+EAYhRztWADLKbxqogKNMnvYFmuiXO/GNwHKGOnAW8Dt7njbkipXrx
+k//UTEB3wKEz3zlrnbbfNg01YQP+9DiaBqXsOq1YgMLtVo4A354=
+=xq8e
+-----END PGP SIGNATURE-----
 
-Good point.  expression *e; would be sufficient.
-
-julia
-
->
-> as some of the expressions cast to void are int or size_t
-> and it's probably better to restrict the conversions to
-> just pointer or array types.
->
->
->
+--sm5ahi5a3wy7vwrr--
